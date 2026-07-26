@@ -285,7 +285,38 @@ MAPPED_MAY = [
     ("WC-RSK-159", "One rig, three lines", "risk_room", "risk_uncertainty", "execution_control", "manufacturing_industrial", "evidence_diagnosis", "professional", 12, 151),
 ]
 assert len(MAPPED_MAY) == 25
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY
+
+# ── June authored pack: procurement, contracts, claims and supplier decisions. ──
+MAPPED_JUN = [
+    ("WC-PRC-175", "The answer that changed the question", "daily_decision", "procurement_contracts", "procurement_mobilization", "cross_sector", "single_decision", "foundation", 6, 152),
+    ("WC-STK-195", "The mobilization team that hasn't finished demobilizing", "stakeholder_dilemma", "resources_leadership", "procurement_mobilization", "cross_sector", "single_decision", "professional", 6, 153),
+    ("WC-SCO-189", "Freeze it before you price it", "logic_sequence", "scope_requirements", "procurement_mobilization", "cross_sector", "order_rank", "foundation", 7, 154),
+    ("WC-SCH-192", "Order the orders", "schedule_strategy", "schedule_planning", "procurement_mobilization", "construction_infrastructure", "order_rank", "professional", 9, 155),
+    ("WC-CAP-199", "Make, buy, or regret", "executive_mission", "integration_governance", "procurement_mobilization", "manufacturing_industrial", "multi_stage_decision", "expert", 24, 156),
+    ("WC-PRC-176", "The bid with the asterisk", "daily_decision", "procurement_contracts", "procurement_mobilization", "construction_infrastructure", "single_decision", "foundation", 7, 157),
+    ("WC-STK-196", "The village heard it from the winner", "stakeholder_dilemma", "stakeholders_communication", "procurement_mobilization", "energy_utilities", "single_decision", "professional", 7, 158),
+    ("WC-SCO-190", "Addendum or answer", "logic_sequence", "scope_requirements", "procurement_mobilization", "climate_sustainability", "order_rank", "foundation", 5, 159),
+    ("WC-SCH-193", "First fence, then everything", "schedule_strategy", "schedule_planning", "procurement_mobilization", "cross_sector", "order_rank", "professional", 10, 160),
+    ("WC-CAP-200", "The platform and the exit", "executive_mission", "integration_governance", "procurement_mobilization", "technology_digital", "multi_stage_decision", "expert", 22, 161),
+    ("WC-PRC-177", "Lunch with the incumbent", "daily_decision", "procurement_contracts", "procurement_mobilization", "cross_sector", "single_decision", "foundation", 5, 162),
+    ("WC-STK-197", "Two tenders, one bid manager", "stakeholder_dilemma", "resources_leadership", "procurement_mobilization", "cross_sector", "single_decision", "professional", 7, 163),
+    ("WC-SCO-191", "Ready is a checklist, not a feeling", "logic_sequence", "scope_requirements", "procurement_mobilization", "public_sector", "order_rank", "foundation", 7, 164),
+    ("WC-SCH-194", "The possession chain", "schedule_strategy", "schedule_planning", "procurement_mobilization", "transport_logistics", "order_rank", "professional", 8, 169),
+    ("WC-PRC-178", "Ninety days, ninety-one", "daily_decision", "procurement_contracts", "procurement_mobilization", "cross_sector", "single_decision", "foundation", 6, 170),
+    ("WC-STK-198", "The local firm and the local paper", "stakeholder_dilemma", "stakeholders_communication", "procurement_mobilization", "professional_services_other", "single_decision", "professional", 5, 171),
+    ("WC-PRC-179", "Money before metal", "daily_decision", "procurement_contracts", "procurement_mobilization", "energy_utilities", "single_decision", "foundation", 7, 172),
+    ("WC-PRC-180", "Clause 14.3, quietly evergreen", "daily_decision", "procurement_contracts", "procurement_mobilization", "technology_digital", "single_decision", "foundation", 5, 173),
+    ("WC-PRC-181", "Start Monday, sign eventually", "daily_decision", "procurement_contracts", "procurement_mobilization", "construction_infrastructure", "single_decision", "foundation", 6, 174),
+    ("WC-PRC-182", "The debrief that becomes evidence", "daily_decision", "procurement_contracts", "procurement_mobilization", "cross_sector", "single_decision", "foundation", 7, 175),
+    ("WC-PRC-183", "Promises by the tonne", "daily_decision", "procurement_contracts", "procurement_mobilization", "public_sector", "single_decision", "foundation", 5, 176),
+    ("WC-PRC-184", "The damages nobody believes", "daily_decision", "procurement_contracts", "procurement_mobilization", "transport_logistics", "single_decision", "foundation", 6, 177),
+    ("WC-QLT-185", "The certificate that lapsed in transit", "daily_decision", "quality_assurance", "procurement_mobilization", "healthcare_life_sciences", "single_decision", "foundation", 5, 178),
+    ("WC-QLT-186", "Approve it from the photos", "daily_decision", "quality_assurance", "procurement_mobilization", "construction_infrastructure", "single_decision", "foundation", 6, 179),
+    ("WC-GOV-188", "Award now, fund later", "daily_decision", "integration_governance", "procurement_mobilization", "cross_sector", "single_decision", "foundation", 6, 180),
+    ("WC-QLT-187", "Nine welders, six tickets", "daily_decision", "quality_assurance", "procurement_mobilization", "energy_utilities", "single_decision", "foundation", 5, 181),
+]
+assert len(MAPPED_JUN) == 26
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -298,7 +329,8 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-PRD-036": 104, "WC-EVM-018": 105, "WC-CSH-004": 106, "WC-CBS-027": 107,
                    "WC-EVM-049": 108,
                    "WC-RSK-033": 134, "WC-RSK-020": 135, "WC-RSK-003": 136, "WC-PRT-008": 137,
-                   "WC-PRT-021": 138, "WC-PRT-039": 139}
+                   "WC-PRT-021": 138, "WC-PRT-039": 139,
+                   "WC-PRC-046": 165, "WC-PRC-014": 166, "WC-BOQ-012": 167, "WC-BOQ-035": 168}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

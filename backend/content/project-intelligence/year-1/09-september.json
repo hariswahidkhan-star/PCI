@@ -9,7 +9,7 @@
    "day": 244,
    "status": "planned",
    "source_challenge": null,
-   "title": "The inspection that was signed, not done — a portfolio review",
+   "title": "Rework the dashboard called progress — a census-scale IT programme",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -17,14 +17,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "cross_sector"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D245",
    "day": 245,
    "status": "planned",
    "source_challenge": null,
-   "title": "The backlog that ate the baseline — a joint-venture delivery office",
+   "title": "Where the fit-out ends and the asset begins — a coastal resilience scheme",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "practitioner",
@@ -32,14 +32,14 @@
    "est_minutes": 6,
    "interaction": "order_rank",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "cross_sector"
+   "sector": "climate_sustainability"
   },
   {
    "code": "PI-Y1-D246",
    "day": 246,
    "status": "planned",
    "source_challenge": null,
-   "title": "A non-conformance on the critical path — a courts modernisation programme",
+   "title": "The hold point under commercial pressure — an airport baggage upgrade",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -47,14 +47,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "public_sector"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D247",
    "day": 247,
    "status": "planned",
    "source_challenge": null,
-   "title": "A forecast the trend does not support — a river crossing",
+   "title": "The recovery plan that borrowed from testing — a mixed-use development",
    "experience_type": "logic_sequence",
    "primary_domain": "schedule_planning",
    "difficulty_band": "practitioner",
@@ -69,7 +69,7 @@
    "day": 248,
    "status": "planned",
    "source_challenge": null,
-   "title": "The audit trail with a missing week — a depot modernisation",
+   "title": "Assurance evidence that proved too little — a wind farm repowering",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -77,14 +77,14 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "transport_logistics"
+   "sector": "climate_sustainability"
   },
   {
    "code": "PI-Y1-D249",
    "day": 249,
    "status": "planned",
    "source_challenge": null,
-   "title": "The requirement nobody owned — a framework programme",
+   "title": "The exclusion that came back — a refinery turnaround",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "advanced",
@@ -92,14 +92,14 @@
    "est_minutes": 6,
    "interaction": "order_rank",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "cross_sector"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D250",
    "day": 250,
    "status": "planned",
    "source_challenge": null,
-   "title": "Rework the dashboard called progress — a flood defence scheme",
+   "title": "The inspection that was signed, not done — a grid reinforcement project",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -107,14 +107,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "construction_infrastructure"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D251",
    "day": 251,
    "status": "planned",
    "source_challenge": null,
-   "title": "The handover date that moved twice — a grid reinforcement project",
+   "title": "Sequencing the work nobody wants first — a festival build",
    "experience_type": "logic_sequence",
    "primary_domain": "schedule_planning",
    "difficulty_band": "advanced",
@@ -122,14 +122,14 @@
    "est_minutes": 7,
    "interaction": "order_rank",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "energy_utilities"
+   "sector": "professional_services_other"
   },
   {
    "code": "PI-Y1-D252",
    "day": 252,
    "status": "planned",
    "source_challenge": null,
-   "title": "The hold point under commercial pressure — a water treatment upgrade",
+   "title": "A non-conformance on the critical path — a framework programme",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -137,14 +137,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "energy_utilities"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D253",
    "day": 253,
    "status": "planned",
    "source_challenge": null,
-   "title": "A deliverable with three definitions — a plant expansion",
+   "title": "Acceptance criteria, written after the fact — a core-system replacement",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "advanced",
@@ -152,14 +152,14 @@
    "est_minutes": 6,
    "interaction": "order_rank",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "manufacturing_industrial"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D254",
    "day": 254,
    "status": "planned",
    "source_challenge": null,
-   "title": "Assurance evidence that proved too little — a core-system replacement",
+   "title": "The audit trail with a missing week — a stadium fit-out",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -167,14 +167,14 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "technology_digital"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D255",
    "day": 255,
    "status": "planned",
    "source_challenge": null,
-   "title": "The float that was already spent — an enterprise transformation",
+   "title": "The calendar the site never agreed to — a flood defence scheme",
    "experience_type": "logic_sequence",
    "primary_domain": "schedule_planning",
    "difficulty_band": "advanced",
@@ -182,14 +182,14 @@
    "est_minutes": 7,
    "interaction": "order_rank",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "cross_sector"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D256",
    "day": 256,
    "status": "planned",
    "source_challenge": null,
-   "title": "The inspection that was signed, not done — a joint-venture delivery office",
+   "title": "Rework the dashboard called progress — an enterprise transformation",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -204,7 +204,7 @@
    "day": 257,
    "status": "planned",
    "source_challenge": null,
-   "title": "A non-conformance on the critical path — a framework programme",
+   "title": "The hold point under commercial pressure — a data-centre build",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -212,7 +212,7 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "cross_sector"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D258",
@@ -249,7 +249,7 @@
    "day": 260,
    "status": "planned",
    "source_challenge": null,
-   "title": "The audit trail with a missing week — a stadium fit-out",
+   "title": "Assurance evidence that proved too little — a multi-site capital programme",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -257,14 +257,14 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "construction_infrastructure"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D261",
    "day": 261,
    "status": "planned",
    "source_challenge": null,
-   "title": "Rework the dashboard called progress — a vaccine plant upgrade",
+   "title": "The inspection that was signed, not done — a highway upgrade",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "practitioner",
@@ -272,14 +272,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "healthcare_life_sciences"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D262",
    "day": 262,
    "status": "planned",
    "source_challenge": null,
-   "title": "The shortcut the schedule invited — a production line install",
+   "title": "The shortcut the schedule invited — a substation replacement",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -287,14 +287,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "manufacturing_industrial"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D263",
    "day": 263,
    "status": "planned",
    "source_challenge": null,
-   "title": "A near miss the report softened — an enterprise transformation",
+   "title": "A near miss the report softened — a portfolio review",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -309,7 +309,7 @@
    "day": 264,
    "status": "planned",
    "source_challenge": null,
-   "title": "Embodied carbon versus programme — a multi-site capital programme",
+   "title": "Embodied carbon versus programme — a clinical trials expansion",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -317,14 +317,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "cross_sector"
+   "sector": "healthcare_life_sciences"
   },
   {
    "code": "PI-Y1-D265",
    "day": 265,
    "status": "planned",
    "source_challenge": null,
-   "title": "The social value promise coming due — an offshore maintenance campaign",
+   "title": "The social value promise coming due — an equipment overhaul",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -332,14 +332,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "energy_utilities"
+   "sector": "manufacturing_industrial"
   },
   {
    "code": "PI-Y1-D266",
    "day": 266,
    "status": "planned",
    "source_challenge": null,
-   "title": "A permit condition discovered late — a network modernisation",
+   "title": "A permit condition discovered late — a hospital trust capital plan",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -347,14 +347,14 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "technology_digital"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D267",
    "day": 267,
    "status": "planned",
    "source_challenge": null,
-   "title": "Safety evidence the client asked to see — a highway upgrade",
+   "title": "Safety evidence the client asked to see — a fleet transition",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -362,14 +362,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "construction_infrastructure"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D268",
    "day": 268,
    "status": "planned",
    "source_challenge": null,
-   "title": "The shortcut the schedule invited — a schools estate programme",
+   "title": "The shortcut the schedule invited — a joint-venture delivery office",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -377,14 +377,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "public_sector"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D269",
    "day": 269,
    "status": "planned",
    "source_challenge": null,
-   "title": "A near miss the report softened — a port expansion",
+   "title": "A near miss the report softened — a river crossing",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -392,14 +392,14 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "transport_logistics"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D270",
    "day": 270,
    "status": "planned",
    "source_challenge": null,
-   "title": "Embodied carbon versus programme — a portfolio review",
+   "title": "Embodied carbon versus programme — a national rollout",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -407,14 +407,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "cross_sector"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D271",
    "day": 271,
    "status": "planned",
    "source_challenge": null,
-   "title": "The social value promise coming due — an EV charging rollout",
+   "title": "The social value promise coming due — a framework programme",
    "experience_type": "daily_decision",
    "primary_domain": "safety_sustainability",
    "difficulty_band": "practitioner",
@@ -422,14 +422,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "climate_sustainability"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D272",
    "day": 272,
    "status": "planned",
    "source_challenge": null,
-   "title": "The go/no-go with missing evidence — a headquarters relocation",
+   "title": "A delegation question with teeth — an enterprise transformation",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "practitioner",
@@ -437,14 +437,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "professional_services_other"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D273",
    "day": 273,
    "status": "planned",
    "source_challenge": null,
-   "title": "The stage gate that split the board — a platform migration",
+   "title": "The baseline the board never saw — a multi-site capital programme",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "advanced",
@@ -452,7 +452,7 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "commissioning_handover",
-   "sector": "technology_digital"
+   "sector": "cross_sector"
   }
  ]
 }

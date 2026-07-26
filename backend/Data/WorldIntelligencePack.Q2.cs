@@ -1678,5 +1678,817 @@ public static partial class WorldIntelligencePack
              "profile_map":{"decision":"Strategic Programme Leader","balanced":"Strategic Programme Leader"},
              "share_line":"Answered someone else's collapse with a dated review, briefed clients and a standing protocol."}
             """),
+
+        // ═════════════ JUNE — procurement, contracts, claims and supplier decisions ═════════════
+        // ───────────── Daily Decisions · procurement · foundation ─────────────
+
+        ("WC-PRC-175", "The answer that changed the question", "Your clarification response just made the tender mean something different.",
+            "Enterprise Programmes", "Tender Manager", "project_management", "foundation", 6,
+            """["procurement","governance"]""",
+            """
+            {"context":"Mid-tender for a facilities integration package, a bidder's clarification question exposes an ambiguity: the specification can be read as including OR excluding the legacy-system decommissioning — a 15% swing in scope. Your drafted answer resolves it (included). Three of six bidders have already priced; the deadline is in eight days.",
+             "evidence":[
+               {"label":"Ambiguity","value":"Decommissioning in or out — ~15% of scope"},
+               {"label":"Your answer","value":"Resolves it: included"},
+               {"label":"State","value":"3 of 6 bidders have already priced"},
+               {"label":"Deadline","value":"8 days"}],
+             "decisions":[
+               {"key":"issue","prompt":"How do you issue the resolution?",
+                "options":[
+                  {"key":"all_extend","label":"Issue the clarification to ALL bidders as a formal addendum, with a deadline extension proportionate to the scope impact","quality":100,
+                   "consequence":"All six price the same job; the extension costs a week and buys an award that survives challenge — because every bid answered the same question.",
+                   "principle":"A clarification that changes scope is an addendum, and an addendum resets the clock for everyone equally."},
+                  {"key":"asker","label":"Answer only the bidder who asked — the others read the spec the obvious way anyway","quality":0,
+                   "consequence":"One bidder prices the real scope, five price a guess; the losing bidders' debrief discovers the asymmetry and the award dies in challenge.",
+                   "principle":"Information given to one bidder is a competition given to one bidder."},
+                  {"key":"silent","label":"Hold the answer — resolving it post-award with the winner avoids re-pricing chaos","quality":10,
+                   "consequence":"The winner priced the exclusion reading; the 15% arrives as the contract's first variation, at post-award rates, with the ambiguity email in the claim bundle.",
+                   "principle":"Ambiguity deferred to post-award is scope bought at monopoly prices."}]}],
+             "hints":["Test whether the answer changes what bidders would PRICE — that is the addendum threshold.",
+               "Whatever is said must reach all bidders identically and auditably.",
+               "Price the extension against the cost of an award challenge or a day-one variation."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Turned a scope-changing clarification into a clean addendum for all six bidders."}
+            """),
+
+        ("WC-PRC-176", "The bid with the asterisk", "Lowest price, best quality score — and one quietly excluded obligation.",
+            "Construction", "Procurement Coordinator", "project_management", "foundation", 7,
+            """["procurement","commercial_management"]""",
+            """
+            {"context":"Evaluating groundworks bids, the leading tender — best price, best quality — carries one qualification: it excludes 'dealing with unexpected obstructions', which the contract places squarely with the contractor. The instructions to tenderers said qualifications 'may render bids non-compliant'. The evaluation panel wants to 'note it and sort it in contract finalisation'.",
+             "evidence":[
+               {"label":"Leading bid","value":"Best price AND quality — one exclusion"},
+               {"label":"The exclusion","value":"Unexpected obstructions — contractually the contractor's risk"},
+               {"label":"ITT wording","value":"Qualifications 'may render bids non-compliant'"},
+               {"label":"Panel mood","value":"'Note it, sort it in finalisation'"}],
+             "decisions":[
+               {"key":"handle","prompt":"Your recommendation to the panel?",
+                "options":[
+                  {"key":"normalise","label":"Put the qualification through the tender's own machinery: require its withdrawal or a priced adjustment BEFORE evaluation concludes, so all bids are compared on the same risk allocation","quality":100,
+                   "consequence":"The bidder withdraws the exclusion for a 2% adjustment; still cheapest, now comparable — and the ranking would survive any losing bidder's lawyer.",
+                   "principle":"Bids are only comparable on identical risk allocations — normalise before ranking, never after award."},
+                  {"key":"later","label":"Award as evaluated and negotiate the exclusion out during contract finalisation","quality":10,
+                   "consequence":"Post-award, the leverage is gone: the 'negotiation' prices the obstruction risk at 6%, and second place — who included it — has grounds to ask why compliance was optional.",
+                   "principle":"Whatever is unresolved at award is resolved at the winner's prices afterwards."},
+                  {"key":"exclude","label":"Rule the bid non-compliant and evaluate the rest","quality":30,
+                   "consequence":"Within the rules — and the best bid dies for a defect the ITT's 'may' gave you discretion to cure; the estate pays the second-best price for procedural tidiness.",
+                   "principle":"Where discretion to cure exists, curing beats excluding — use the 'may' you wrote."}]}],
+             "hints":["Ask what the exclusion would cost if it materialised — that is the bid's real price gap.",
+               "Check what discretion the ITT wording actually gives you.",
+               "Whatever you do with one qualification becomes precedent for every future bidder."],
+             "profile_map":{"decision":"Cost Guardian","balanced":"Governance Steward"},
+             "share_line":"Normalised a qualified bid before ranking instead of paying for it after award."}
+            """),
+
+        ("WC-PRC-177", "Lunch with the incumbent", "A friendly invitation, a live tender, and a probity line you can't unsee.",
+            "Enterprise Programmes", "Category Manager", "project_management", "foundation", 5,
+            """["procurement","governance"]""",
+            """
+            {"context":"Your managed-services contract is out to competitive tender; the incumbent is bidding. Their account director — a genuinely good professional relationship over four years — invites you to 'a catch-up lunch, nothing about the tender, promise'. Your procurement policy requires all bidder contact during live tenders to go through the tender inbox. Declining feels rude; accepting feels wrong; the relationship matters whoever wins.",
+             "evidence":[
+               {"label":"Status","value":"Live tender; incumbent bidding"},
+               {"label":"Invitation","value":"'Catch-up lunch, nothing about the tender'"},
+               {"label":"Policy","value":"All bidder contact via tender channels during live process"},
+               {"label":"Relationship","value":"4 good years; valuable whoever wins"}],
+             "decisions":[
+               {"key":"lunch","prompt":"Your reply?",
+                "options":[
+                  {"key":"decline_warm","label":"Decline warmly and explicitly: 'during the tender everything goes through the process — protects your bid as much as us; lunch is on me the week it concludes' — and log the contact per policy","quality":100,
+                   "consequence":"The account director — a professional — respects it instantly; if their bid wins, it is unchallengeable, and if it loses, the lunch happens anyway.",
+                   "principle":"Probity rules protect the compliant bidder most of all — declining properly is a favour to the relationship, not an insult."},
+                  {"key":"accept","label":"Accept — grown professionals can have lunch without discussing a tender","quality":5,
+                   "consequence":"Nothing improper is said; the losing bidder's challenge doesn't need anything to have been said — the lunch's existence, logged by whoever saw you, is the exhibit.",
+                   "principle":"In a live tender, the appearance of access IS the breach — intent never gets a hearing."},
+                  {"key":"ghost","label":"Quietly not reply until the tender concludes","quality":25,
+                   "consequence":"The silence reads as coldness to a four-year relationship and teaches nothing about why; the next incumbent tries harder.",
+                   "principle":"An unexplained no protects you once; an explained no protects the process permanently."}]}],
+             "hints":["Ask how the invitation would look in a losing bidder's challenge bundle.",
+               "The rule protects the incumbent's bid too — say so when declining.",
+               "Log the contact; probity is a records discipline, not just a behaviour."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Executive Communicator"},
+             "share_line":"Declined the incumbent's lunch in a way that strengthened both the process and the relationship."}
+            """),
+
+        ("WC-PRC-178", "Ninety days, ninety-one", "The bids expire tomorrow. The approval meeting is next week.",
+            "Enterprise Programmes", "Procurement Analyst", "project_management", "foundation", 6,
+            """["procurement","governance"]""",
+            """
+            {"context":"The security-services tender's bids carry a 90-day validity that expires tomorrow; the award approval — delayed twice by committee scheduling — is next Wednesday. Three bidders remain. Steel prices and wage rates have moved since submission. Your options memo is due today.",
+             "evidence":[
+               {"label":"Validity","value":"90 days, expiring tomorrow"},
+               {"label":"Approval","value":"Committee next Wednesday — delayed twice already"},
+               {"label":"Market","value":"Input prices moved since submission"},
+               {"label":"Field","value":"3 bidders remain"}],
+             "decisions":[
+               {"key":"validity","prompt":"Your memo recommends:",
+                "options":[
+                  {"key":"extend_now","label":"Request written validity extensions from all three TODAY — same terms, same prices, defined new date — before expiry, noting any refusal as evaluation-relevant fact","quality":100,
+                   "consequence":"Two extend unconditionally; the third extends with a 1.5% indexation caveat the committee can see and weigh — the competition survives intact and informed.",
+                   "principle":"Ask for the extension while the bids are still alive — an expired bid is a negotiation, a valid one is a commitment."},
+                  {"key":"lapse","label":"Let them lapse — bidders always honour their prices rather than lose the work","quality":10,
+                   "consequence":"Two honour; the leader, whose costs genuinely moved, 'reconfirms' at +4% — legally free to, because you let the commitment die.",
+                   "principle":"After expiry every price is voluntary, and voluntary prices track the market, not the tender."},
+                  {"key":"rush","label":"Force an emergency approval today to beat the expiry","quality":30,
+                   "consequence":"A same-day paper to a twice-delayed committee gets a deferral anyway — governance does not accelerate for procurement's calendar mistakes, and now the bids are dead too.",
+                   "principle":"Fix the validity clock you control before gambling on the committee clock you don't."}]}],
+             "hints":["Check who holds the commitment after expiry — the answer changes at midnight.",
+               "An extension request is routine; a lapsed-bid reconfirmation is a renegotiation.",
+               "A conditioned extension is information — put it in front of the decision-makers."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Kept three bids alive through a committee delay with a same-day extension request."}
+            """),
+
+        ("WC-PRC-179", "Money before metal", "The transformer maker wants 30% up front. The last supplier who asked went bust holding it.",
+            "Energy Networks", "Contracts Officer", "project_management", "foundation", 7,
+            """["procurement","commercial_management"]""",
+            """
+            {"context":"Your substation project's transformer supplier requests a 30% advance payment at order — 'standard for long-lead plant, covers our copper purchase'. It genuinely is common in the market. It is also how your organisation lost 400,000 two years ago when a different supplier entered administration holding an advance. The order must be placed within three weeks to hold the delivery slot.",
+             "evidence":[
+               {"label":"Request","value":"30% advance at order — 'covers copper purchase'"},
+               {"label":"Market reality","value":"Advances genuinely common for long-lead plant"},
+               {"label":"History","value":"400k lost to a supplier insolvency holding an advance"},
+               {"label":"Clock","value":"Order within 3 weeks to hold the slot"}],
+             "decisions":[
+               {"key":"advance","prompt":"Your position on the advance?",
+                "options":[
+                  {"key":"secured","label":"Agree the advance AGAINST security: an advance-payment bond from their bank, or vesting of the copper and work-in-progress with marked storage and inspection rights","quality":100,
+                   "consequence":"The supplier provides a bond for 1.1% — a price both sides consider cheap; the order lands in the window, and the advance is money with a parachute.",
+                   "principle":"Advances are a normal market feature; UNSECURED advances are a normal insolvency loss — separate the two."},
+                  {"key":"refuse","label":"Refuse all advances — corporate memory of 400k should mean something","quality":20,
+                   "consequence":"The supplier, needing the copper cash flow, reprices +5% or slips the slot; the blanket rule pays more than the bond would have.",
+                   "principle":"A scar is a reason for security, not a substitute for analysis."},
+                  {"key":"pay","label":"Pay it plain — the supplier is reputable and the slot matters","quality":5,
+                   "consequence":"Probably fine — as it was probably fine last time; 'reputable' is what every counterparty is until the administrators write.",
+                   "principle":"Reputation is not collateral."}]}],
+             "hints":["The question is never 'advance or no advance' — it is 'secured how'.",
+               "Price the bond against the repricing that refusal would trigger.",
+               "Vesting plus inspection turns paid-for materials into YOUR materials in an insolvency."],
+             "profile_map":{"decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Secured a 30% advance with a bond instead of relying on reputation."}
+            """),
+
+        ("WC-PRC-180", "Clause 14.3, quietly evergreen", "The SaaS contract renews itself forever unless someone remembers a date.",
+            "Technology Programmes", "Vendor Contracts Analyst", "project_management", "foundation", 5,
+            """["procurement","commercial_management"]""",
+            """
+            {"context":"Reviewing the analytics platform contract ahead of signature, you find clause 14.3: automatic 12-month renewals at 'then-current list pricing' unless terminated with 6 months' notice — a notice window that will always fall mid-delivery, when nobody is reading contracts. Procurement wants signature this week; the vendor calls the clause 'completely standard'.",
+             "evidence":[
+               {"label":"Clause 14.3","value":"Auto-renewal at list price; 6-month notice to exit"},
+               {"label":"Trap","value":"Notice window lands mid-delivery, every year"},
+               {"label":"Vendor","value":"'Completely standard'"},
+               {"label":"Pressure","value":"Signature wanted this week"}],
+             "decisions":[
+               {"key":"clause","prompt":"Before signature, you:",
+                "options":[
+                  {"key":"amend","label":"Negotiate the two words that matter: renewal at CAPPED pricing (index or fixed %) and notice reduced to 90 days — accepting the auto-renewal mechanism itself","quality":100,
+                   "consequence":"The vendor concedes both in a day — they were priced for negotiation — and the contract renews conveniently instead of expensively; a diary entry covers the rest.",
+                   "principle":"Auto-renewal is convenience; auto-renewal at LIST price with a long notice tail is a pricing mechanism wearing convenience's coat."},
+                  {"key":"sign","label":"Sign as drafted — it is genuinely standard and the schedule wants the platform","quality":10,
+                   "consequence":"Year 2 renews at list — 18% above the negotiated rate — during a cutover month when nobody saw the notice window close.",
+                   "principle":"'Standard' describes how often a clause appears, not who it serves."},
+                  {"key":"strike","label":"Demand removal of auto-renewal entirely — contracts should end when they end","quality":30,
+                   "consequence":"The vendor resists hard (renewal is their revenue model), the negotiation eats three weeks, and manual renewal later lapses the service by accident.",
+                   "principle":"Fight the price mechanism, not the convenience — pick the two words that move money."}]}],
+             "hints":["Find where the clause moves money — it is rarely the renewal itself.",
+               "Cap the price and shorten the notice; concede the mechanism.",
+               "Whatever survives, diarise the notice window somewhere that outlives the project team."],
+             "profile_map":{"decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Renegotiated the two words in an evergreen clause that actually moved money."}
+            """),
+
+        ("WC-PRC-181", "Start Monday, sign eventually", "The novation is 'a formality'. The subcontractor's insurer hasn't heard of it.",
+            "Construction", "Assistant Contracts Manager", "project_management", "foundation", 6,
+            """["procurement","governance"]""",
+            """
+            {"context":"Your design-and-build project inherits the client's steelwork subcontractor via novation — agreed in principle, papers with the lawyers. The programme wants the subcontractor mobilised Monday; the novation will complete 'in a week or two'. You check: until it completes, the subcontractor's contract — and its insurance obligations — still run to the CLIENT, not to you. On your site, under your CDM duties.",
+             "evidence":[
+               {"label":"Novation","value":"Agreed in principle; papers with lawyers, '1–2 weeks'"},
+               {"label":"Programme","value":"Wants mobilisation Monday"},
+               {"label":"Gap","value":"Until completion, their contract & insurances run to the client"},
+               {"label":"Site","value":"Yours — your CDM duties, your incident book"}],
+             "decisions":[
+               {"key":"gap","prompt":"Monday's mobilisation?",
+                "options":[
+                  {"key":"bridge","label":"Mobilise WITH a bridge: a short interim works order between you and the subcontractor — insurances confirmed to you, site rules bound, terms mirroring the novation — dying automatically when the novation completes","quality":100,
+                   "consequence":"Steel starts Monday; the week-three crane clip incident lands inside a contract that names you — instead of inside a legal seminar about whose subcontractor was on whose site.",
+                   "principle":"Never let bodies mobilise ahead of the paper that answers 'who is responsible when it goes wrong TODAY'."},
+                  {"key":"go","label":"Mobilise Monday — the novation is agreed in principle and everyone is acting in good faith","quality":5,
+                   "consequence":"Good faith survives until the incident; the insurer's first question is contractual privity, and 'in principle' is not an answer they underwrite.",
+                   "principle":"An agreement in principle allocates risk to whoever can least afford the ambiguity — usually you."},
+                  {"key":"wait","label":"Hold mobilisation until the novation completes — no paper, no boots","quality":35,
+                   "consequence":"Clean, and the 'week or two' becomes three; the steel window slips behind a following trade and the programme pays more than the bridge's drafting would have cost.",
+                   "principle":"When a bridging instrument exists, refusing to build it is choosing the delay."}]}],
+             "hints":["Ask who the subcontractor's obligations run TO on Monday morning, as drafted.",
+               "The test scenario is an incident on day three — walk the liability chain.",
+               "Interim instruments exist precisely for novation gaps; they take a day to draft."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Bridged a novation gap before the steel — and the liability — arrived on site."}
+            """),
+
+        ("WC-PRC-182", "The debrief that becomes evidence", "The losing bidder wants to know why. Every word you choose is discoverable.",
+            "Enterprise Programmes", "Senior Procurement Officer", "project_management", "foundation", 7,
+            """["procurement","governance"]""",
+            """
+            {"context":"The integration-partner award is decided; the runner-up — 2 points behind on 100 — has requested a debrief and is known to litigate procurements. Their bid scored lower on delivery methodology; one evaluator's scoring notes, you discover while preparing, contain a comment comparing the bidder unfavourably to 'their usual standard' — a criterion that appears nowhere in the ITT.",
+             "evidence":[
+               {"label":"Margin","value":"2 points in 100; methodology drove it"},
+               {"label":"Requester","value":"Runner-up, litigious history"},
+               {"label":"Discovery","value":"One evaluator's note references 'their usual standard' — not an ITT criterion"},
+               {"label":"Task","value":"Debrief to prepare and deliver"}],
+             "decisions":[
+               {"key":"note","prompt":"The off-criterion note — what do you do with it?",
+                "options":[
+                  {"key":"test","label":"Test its materiality BEFORE the debrief: re-run that evaluator's scoring against the ITT criteria only — if the ranking holds, document the exercise; if it flips, escalate to the process owner before any award letter goes out","quality":100,
+                   "consequence":"The re-score holds the ranking by 1 point — thin but genuine; the debrief proceeds on documented, criterion-based reasons, and the note has a recorded answer if it ever surfaces.",
+                   "principle":"An off-criterion comment is a defect; whether it is a FATAL defect is a question you answer yourself, in writing, before your opponent asks it."},
+                  {"key":"ignore","label":"Deliver the standard debrief — one stray comment in one evaluator's notes changes nothing","quality":5,
+                   "consequence":"Disclosure in the ensuing challenge produces the note; 'changes nothing' becomes YOUR counsel's burden to prove, at hearing rates, with the process suspended.",
+                   "principle":"The document you decided not to examine is the one the tribunal examines first."},
+                  {"key":"rescore","label":"Quietly have the evaluator amend their notes to remove the comment","quality":0,
+                   "consequence":"The amendment's metadata outlives everyone's career.",
+                   "principle":"There is no procurement problem that document tampering does not convert into a personal one."}]}],
+             "hints":["Read your own file as the challenger's lawyer would, before they do.",
+               "Materiality is testable: does the ranking survive criterion-only scoring?",
+               "Debrief content should be criterion-referenced, specific, and boringly consistent with the record."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Found the weak note in my own tender file and answered it before the challenger could."}
+            """),
+
+        ("WC-PRC-183", "Promises by the tonne", "The winning bid's social value is wonderful, local and arithmetically impossible.",
+            "Public Programmes", "Social Value Officer", "project_management", "foundation", 5,
+            """["procurement","governance"]""",
+            """
+            {"context":"The leisure-centre contract's preferred bidder scored heavily on social value: 14 local apprenticeships, 60% local-SME spend, and a schools programme. Reviewing before award, you calculate: the apprenticeship number exceeds what a contract of this size can host under the training body's supervision ratios, and the local-SME figure exceeds the region's relevant supply capacity. The commitments won the tender; the tender rules make them contractual.",
+             "evidence":[
+               {"label":"Commitments","value":"14 apprenticeships · 60% local-SME spend · schools programme"},
+               {"label":"Your check","value":"Both figures exceed structural capacity (ratios; regional supply)"},
+               {"label":"Status","value":"Preferred bidder; commitments become contractual at award"},
+               {"label":"Scoring","value":"Social value decided the ranking"}],
+             "decisions":[
+               {"key":"act","prompt":"Before award, you:",
+                "options":[
+                  {"key":"verify","label":"Require a pre-award delivery plan for the commitments — ratios, named partners, phasing — through the tender's verification provisions; award proceeds when the plan reconciles or the bid is re-scored on what is actually deliverable","quality":100,
+                   "consequence":"The bidder's plan reconciles 9 of 14 apprenticeships and 45% SME spend; re-scoring holds their win by a smaller margin — and the contract starts with commitments someone can actually keep.",
+                   "principle":"A commitment that cannot be delivered is a scoring device, not social value — verify before it becomes both contractual and fictional."},
+                  {"key":"award","label":"Award as scored — monitoring will catch shortfalls and remedies exist","quality":10,
+                   "consequence":"Year one delivers 4 apprenticeships; the remedies clause was written for shortfalls, not for arithmetic impossibility, and the council member who championed the scoring asks who checked.",
+                   "principle":"Monitoring an impossible promise just schedules the disappointment."},
+                  {"key":"disqualify","label":"Recommend disqualification for material misrepresentation","quality":25,
+                   "consequence":"Heavy-handed for what may be optimism rather than deceit — and the verification route the ITT already contains would have distinguished the two.",
+                   "principle":"Use the process that separates ambition from misrepresentation before choosing which to allege."}]}],
+             "hints":["Check the commitments against structural constraints, not just against other bids.",
+               "The tender's own verification clauses are the legitimate pre-award instrument.",
+               "Re-score on the deliverable version — the ranking must survive reality."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Reconciled an award-winning social-value promise with arithmetic before it became a contract."}
+            """),
+
+        ("WC-PRC-184", "The damages nobody believes", "The preferred bidder wants the LDs halved — 'they'd never survive anyway'.",
+            "Transport Infrastructure", "Commercial Officer", "project_management", "foundation", 6,
+            """["procurement","commercial_management"]""",
+            """
+            {"context":"In pre-contract finalisation for a depot electrification package, the preferred bidder challenges the liquidated damages rate: 'It's a penalty, it would never survive in court — halve it and we'll sign this week.' The rate was calculated from the operator's genuine standing costs — replacement bus hire, staff, lost grant milestones — and the calculation is on file. Signature pressure is real: the possession calendar needs the contract signed within a fortnight.",
+             "evidence":[
+               {"label":"Challenge","value":"'A penalty — halve it and we sign this week'"},
+               {"label":"Your file","value":"LD rate built from documented standing costs"},
+               {"label":"Law","value":"Genuine pre-estimates of loss are enforceable; penalties are not"},
+               {"label":"Clock","value":"Possession calendar wants signature in 2 weeks"}],
+             "decisions":[
+               {"key":"lds","prompt":"Your response?",
+                "options":[
+                  {"key":"show","label":"Show the build-up: walk them through the standing-cost calculation, invite them to challenge any line — and hold the rate that survives that walk-through","quality":100,
+                   "consequence":"Confronted with an evidenced pre-estimate, the 'penalty' argument evaporates — it only works against round numbers; they sign inside the week, and the LDs now carry MORE force for having been examined.",
+                   "principle":"A liquidated damages rate you can derive is a rate you can keep — the challenge tests the file, not the number."},
+                  {"key":"halve","label":"Halve it — LDs are rarely levied anyway and the signature matters more","quality":5,
+                   "consequence":"Signed this week; eight months later the electrification slips six weeks and the halved rate recovers half the operator's real standing costs — the other half is your variance now.",
+                   "principle":"Discounting damages you calculated honestly is donating the difference to the counterparty's schedule risk."},
+                  {"key":"trade","label":"Trade it: hold the rate but add a longer grace period before LDs bite","quality":45,
+                   "consequence":"Workable if the grace period is priced against the possession calendar — less workable discovered afterwards that the grace period covers exactly the slip they were already planning.",
+                   "principle":"Trade structure for structure only when you know what the other side already knows."}]}],
+             "hints":["The penalty argument attacks unjustified numbers — check whether yours is one.",
+               "An LD rate with a derivation file is an asset; use the file, not your negotiating voice.",
+               "Any concession here re-prices the counterparty's lateness, not your generosity."],
+             "profile_map":{"decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Defended a liquidated damages rate with its own derivation file."}
+            """),
+
+        // ───────────── June · quality & governance dailies · foundation ─────────────
+
+        ("WC-QLT-185", "The certificate that lapsed in transit", "The sterile-consumables supplier's ISO cert expired between award and mobilization.",
+            "Healthcare Estates", "Supplier Quality Officer", "project_management", "foundation", 5,
+            """["quality_management","procurement"]""",
+            """
+            {"context":"Mobilising the hospital project's sterile-consumables supply contract, a routine document check finds the supplier's ISO 13485 certificate expired five weeks ago — after tender evaluation but before contract start. The supplier says recertification audit is 'booked and routine'; the certificate was a condition of award; first deliveries are due in twelve days.",
+             "evidence":[
+               {"label":"Finding","value":"ISO 13485 expired 5 weeks ago"},
+               {"label":"Timeline","value":"Valid at evaluation; expired before start"},
+               {"label":"Supplier","value":"'Recert audit booked, routine'"},
+               {"label":"Contract","value":"Certification is a condition; deliveries in 12 days"}],
+             "decisions":[
+               {"key":"cert","prompt":"You:",
+                "options":[
+                  {"key":"bridge_verify","label":"Verify the audit booking with the certification body directly, require the supplier's interim quality evidence (last audit report, CAPA status), and gate first deliveries on either the renewed certificate or an enhanced incoming-inspection regime agreed with clinical quality","quality":100,
+                   "consequence":"The body confirms the audit in 8 days; two deliveries run under enhanced inspection, the certificate renews, and the file shows the condition was managed rather than waived.",
+                   "principle":"A lapsed certificate is a verification problem with a bridge, not a shrug — gate the risk, don't suspend the world or ignore it."},
+                  {"key":"trust","label":"Accept 'booked and routine' — certificates lapse administratively all the time","quality":5,
+                   "consequence":"The 'routine' audit raises two majors; the recertification takes eleven weeks, during which uncertified sterile products entered a hospital on your acceptance.",
+                   "principle":"A condition of award that lapses quietly was either never needed or is being ignored — find out which before deliveries, not after."},
+                  {"key":"suspend","label":"Suspend the contract until the certificate is renewed","quality":30,
+                   "consequence":"Contractually available and clinically expensive: the wards' consumables gap is covered by spot purchases at triple cost, for a lapse a bridge could have managed.",
+                   "principle":"Proportionality: verify and bridge before you suspend."}]}],
+             "hints":["Verify with the certification body, not the certified.",
+               "Ask what evidence substitutes for the certificate DURING the gap.",
+               "The condition of award still matters — document how it is being met, not waived."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Bridged a lapsed ISO certificate with verification instead of trust or paralysis."}
+            """),
+
+        ("WC-QLT-186", "Approve it from the photos", "The benchmark mock-up is ready. The approver is offered a slideshow.",
+            "Construction", "Quality Engineer", "project_management", "foundation", 6,
+            """["quality_management","governance"]""",
+            """
+            {"context":"The facade package requires client approval of a physical benchmark mock-up before mass fabrication — the contract's quality anchor for 14,000 m² of cladding. The mock-up is ready at the fabricator's works, 300 km away. The architect proposes approving 'from the photo set and video walkthrough' to save the trip; fabrication slots are booked for Monday.",
+             "evidence":[
+               {"label":"Requirement","value":"Physical benchmark approval before mass fabrication"},
+               {"label":"Stake","value":"Anchors quality for 14,000 m² of cladding"},
+               {"label":"Proposal","value":"Approve from photos + video, skip the 300 km"},
+               {"label":"Pressure","value":"Fabrication slots booked Monday"}],
+             "decisions":[
+               {"key":"benchmark","prompt":"Your advice?",
+                "options":[
+                  {"key":"attend","label":"Hold the physical review — colour, texture, joint tolerance and panel flatness are exactly the properties cameras flatter — and book the visit for Friday so Monday holds","quality":100,
+                   "consequence":"Friday's inspection catches a sealant colour mismatch invisible in every photo; corrected in the benchmark for hundreds instead of across 14,000 m² for a number nobody says aloud.",
+                   "principle":"A benchmark approved remotely benchmarks the photography, not the facade."},
+                  {"key":"photos","label":"Accept the photo approval — modern imaging is good and the slots are booked","quality":5,
+                   "consequence":"Mass fabrication reproduces what the camera could not show; the dispute at first delivery is now anchored to an approval YOUR file says was informed.",
+                   "principle":"The approver who skipped the viewing owns what the viewing would have caught."},
+                  {"key":"delegate","label":"Send a junior engineer with a checklist instead of the approver","quality":40,
+                   "consequence":"Better than photos — but the contract names the client's approver for a reason: the judgment calls (acceptable variation in stone veining) aren't delegable by checklist.",
+                   "principle":"Presence can be delegated; approval judgment mostly cannot."}]}],
+             "hints":["List which properties the approval exists to judge — then ask if a camera transmits them.",
+               "The cost comparison is one site visit versus 14,000 m² of reproduced error.",
+               "Solve the calendar (go Friday) rather than the requirement (skip it)."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Insisted the facade benchmark be approved by eyes, not lenses."}
+            """),
+
+        ("WC-QLT-187", "Nine welders, six tickets", "Mobilization audit, day two: the quals folder is thinner than the crew.",
+            "Energy Networks", "Site Quality Coordinator", "project_management", "foundation", 5,
+            """["quality_management","governance"]""",
+            """
+            {"context":"Day two of pipeline-tie-in mobilization, your audit of the welding contractor finds nine welders on site and six current qualification records: two tickets expired last month, one welder's paperwork is 'following from the last job'. Production welding starts Thursday; the contractor's supervisor proposes the three 'crack on with fit-up work while the paperwork catches up'.",
+             "evidence":[
+               {"label":"Found","value":"9 welders, 6 current quals"},
+               {"label":"Gaps","value":"2 expired last month; 1 'paperwork following'"},
+               {"label":"Proposal","value":"Unverified three do fit-up while papers 'catch up'"},
+               {"label":"Clock","value":"Production welding Thursday"}],
+             "decisions":[
+               {"key":"welders","prompt":"Your ruling?",
+                "options":[
+                  {"key":"gate","label":"The three do no welding — including tacks on production joints — until verified: expired pair sit requalification tests on site this week, the third's records verified with the issuing body TODAY; fit-up that involves no arc is fine","quality":100,
+                   "consequence":"One requalifies Wednesday, one fails on overhead position — better discovered on a test coupon than a tie-in weld; the third's 'following' paperwork turns out to expire next week too.",
+                   "principle":"A weld by an unverified welder is a defect with good intentions — the arc waits for the ticket, not the other way round."},
+                  {"key":"flex","label":"Allow tacking and non-critical welds while paperwork catches up — Thursday matters","quality":5,
+                   "consequence":"'Non-critical' tacks get buried in production joints by Friday; the NDT contractor's records now contain welds with no qualified welder against them, permanently.",
+                   "principle":"There is no such thing as a temporary weld by an unqualified welder — metal doesn't know about paperwork timelines."},
+                  {"key":"reject","label":"Stand down all nine until the contractor's quality system is re-audited","quality":25,
+                   "consequence":"Six verified welders idle for three days over a records gap affecting three — the schedule pays for rigour the risk didn't ask for.",
+                   "principle":"Gate the unverified, work the verified — precision beats blanket."}]}],
+             "hints":["Separate the verified six from the unverified three — the ruling need not be uniform.",
+               "On-site requalification is usually days, not weeks — start it immediately.",
+               "'Paperwork following' is a claim; the issuing body answers phones."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Held three unverified welders at the gate and kept six working."}
+            """),
+
+        ("WC-GOV-188", "Award now, fund later", "The approval paper asks for a contract signature before the money exists.",
+            "Enterprise Programmes", "Governance Analyst", "project_management", "foundation", 6,
+            """["governance","procurement"]""",
+            """
+            {"context":"The network-refresh tender is evaluated and the award recommendation drafted — but the capital release for years 2 and 3 of the contract sits in next quarter's investment committee, not yet approved. The delivery director wants the three-year contract signed now to lock the pricing: 'the funding is a formality; it always comes through'. The contract has no break clause at year one.",
+             "evidence":[
+               {"label":"Award","value":"3-year contract ready; pricing locked if signed now"},
+               {"label":"Funding","value":"Years 2–3 capital not yet approved — next quarter"},
+               {"label":"Director's view","value":"'Funding is a formality'"},
+               {"label":"Contract","value":"No year-one break clause as drafted"}],
+             "decisions":[
+               {"key":"commit","prompt":"Your governance advice?",
+                "options":[
+                  {"key":"structure","label":"Sign WITH the funding reality built in: a year-one break exercisable if the capital release fails, or funding-conditional years 2–3 — the vendor keeps most pricing certainty, the organisation never commits money it doesn't have","quality":100,
+                   "consequence":"The vendor accepts a break clause for 1% on the option years; the capital release does come through — and the file shows the organisation never bet on it.",
+                   "principle":"Commit to the term you have funded; buy an option on the term you haven't."},
+                  {"key":"sign","label":"Sign the full term — the funding has never not come through","quality":5,
+                   "consequence":"The quarter the funding pattern breaks — a spending freeze — the organisation holds a three-year obligation against one year of money, and the signature page holds your advice.",
+                   "principle":"'It always comes through' is a base rate, not an authority."},
+                  {"key":"wait","label":"Hold the award until the funding is approved — clean sequencing","quality":35,
+                   "consequence":"Correct and costly: the pricing validity lapses in the wait, and next quarter's signature is 4% dearer than the break clause would have been.",
+                   "principle":"Perfect sequencing has a price too — compare it with the structured alternative."}]}],
+             "hints":["Match the commitment term to the approved funding term — then bridge the gap contractually.",
+               "Price the break clause against both the repricing risk AND the unfunded-commitment risk.",
+               "Whose risk appetite is 'it always comes through'? Not yours to sign on."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Cost Guardian"},
+             "share_line":"Matched a three-year signature to one year of approved money — with a priced option on the rest."}
+            """),
+
+        // ───────────── June · Logic & Sequence · scope at procurement · foundation ─────────────
+
+        ("WC-SCO-189", "Freeze it before you price it", "Five things must happen before tender issue. The team wants to do them in the wrong order.",
+            "Enterprise Programmes", "Procurement Planning Analyst", "project_controls", "foundation", 7,
+            """["scope_discipline","procurement"]""",
+            """
+            {"context":"The workplace-refit package goes to tender next month. Five pre-issue steps remain: design freeze sign-off, employer's-requirements drafting, scope-boundary agreement with the FM contract, cost-plan reconciliation, and tender-document assembly. The team, racing the date, proposes assembling tender documents now and 'slotting the rest in as they land'.",
+             "evidence":[
+               {"label":"Steps outstanding","value":"Design freeze · ERs drafting · FM boundary · cost reconciliation · document assembly"},
+               {"label":"Proposal","value":"Assemble documents first, slot the rest in"},
+               {"label":"Constraint","value":"ERs must reflect the frozen design; boundary feeds the ERs"},
+               {"label":"Date","value":"Tender issue next month"}],
+             "decisions":[
+               {"key":"order","prompt":"The right sequence is:",
+                "options":[
+                  {"key":"logic","label":"Boundary agreement → design freeze → ERs drafted FROM the frozen design → cost plan reconciled against it → documents assembled last (they are the OUTPUT of the other four)","quality":100,
+                   "consequence":"Each step feeds the next; the tender issues three days later than the racing plan promised and zero addenda follow — the compressed alternative historically averaged five.",
+                   "principle":"Tender documents are the last step because they are the record of the other steps — assembling them first just documents the unfinished."},
+                  {"key":"parallel","label":"Run all five in parallel — dependencies are for waterfall thinkers","quality":15,
+                   "consequence":"The ERs are drafted against a design that then changes at freeze; the documents assemble two versions of the truth, and bidders find both.",
+                   "principle":"Parallel work on sequential dependencies manufactures internal contradictions at speed."},
+                  {"key":"assemble","label":"As proposed — assemble now, patch as things land","quality":5,
+                   "consequence":"The tender issues on time containing TBCs; the addenda that follow re-price the job twice and the extension eats the time 'saved'.",
+                   "principle":"Issuing on time with holes is issuing late with extra steps."}]}],
+             "hints":["Trace which step's output is which step's input — the sequence writes itself.",
+               "Ask what bidders would find if the documents assembled today.",
+               "Three honest days late beats five addenda — count the whole cycle."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sequenced five pre-tender steps by their data dependencies, not their deadlines."}
+            """),
+
+        ("WC-SCO-190", "Addendum or answer", "Six queries from bidders. Three change the job. Three don't. Sort them.",
+            "Renewables", "Tender Coordinator", "project_controls", "foundation", 5,
+            """["scope_discipline","procurement"]""",
+            """
+            {"context":"Mid-tender on a battery-storage balance-of-plant package, six bidder queries await response: (1) confirm the grid-connection voltage stated in the spec; (2) may HDPE duct substitute for the specified steel in the cable route?; (3) what is the site access route?; (4) does the employer's insurance cover delivery transit?; (5) can the completion date move two weeks for procurement lead times?; (6) clarify a drawing-note typo. Classify before answering: which are clarifications, which are CHANGES needing an addendum to all bidders?",
+             "evidence":[
+               {"label":"Q1, Q3, Q6","value":"Restate existing information (voltage, access, typo)"},
+               {"label":"Q2","value":"Material substitution — changes the specification"},
+               {"label":"Q4","value":"Risk allocation — changes who insures transit"},
+               {"label":"Q5","value":"Changes the completion date — the schedule basis"}],
+             "decisions":[
+               {"key":"classify","prompt":"The correct routing?",
+                "options":[
+                  {"key":"split","label":"Q1/Q3/Q6 answered as clarifications to all; Q2, Q4 and Q5 treated as change candidates — decided internally first, then issued as addenda (or declined) to ALL bidders with deadline impact assessed","quality":100,
+                   "consequence":"Bidders price one consistent job; the substitution is accepted as an addendum, the insurance stays as drafted, the date holds — all on the record, all symmetric.",
+                   "principle":"A query that changes spec, risk or schedule is not answered — it is DECIDED, then published symmetrically."},
+                  {"key":"answer_all","label":"Answer all six as clarifications — bidders asked questions, questions get answers","quality":10,
+                   "consequence":"The 'answer' to Q2 quietly amends the specification for whoever read that response most carefully; the award inherits an asymmetry audit will find.",
+                   "principle":"Answering a change as a clarification changes the tender for some bidders and not others."},
+                  {"key":"defer_all","label":"Defer Q2/Q4/Q5 to post-award discussion with the winner","quality":20,
+                   "consequence":"Bidders price three unknowns three different ways; the 'discussions' happen at single-supplier leverage on all three.",
+                   "principle":"Whatever is undecided at tender close is negotiated after it — at worse prices."}]}],
+             "hints":["Sort by what each answer would change: information, specification, risk, or schedule.",
+               "Changes are decisions with owners — route them to the owner before any bidder hears.",
+               "Symmetry is the whole game: all bidders, same information, same moment."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sorted six bidder queries into answers and addenda before replying to any."}
+            """),
+
+        ("WC-SCO-191", "Ready is a checklist, not a feeling", "Mobilization Monday. Order the readiness gates so the ones that gate actually gate.",
+            "Public Estates", "Mobilization Coordinator", "project_controls", "foundation", 7,
+            """["scope_discipline","governance"]""",
+            """
+            {"context":"A schools maintenance framework mobilises Monday. Outstanding readiness items: signed contract (with legal, 'imminent'); contractor's insurances verified; DBS clearances for operative access to occupied schools; asset-data handover from the outgoing contractor; helpdesk phone lines transferred. The incoming contractor proposes starting with 'low-risk jobs' Monday regardless — 'we'll be ready by the time it matters'.",
+             "evidence":[
+               {"label":"Outstanding","value":"Contract signature · insurance verification · DBS clearances · asset data · helpdesk transfer"},
+               {"label":"Context","value":"Occupied schools — children present"},
+               {"label":"Proposal","value":"Start low-risk jobs Monday, ready 'by the time it matters'"},
+               {"label":"Reality","value":"Any job in an occupied school needs access; access needs DBS"}],
+             "decisions":[
+               {"key":"gates","prompt":"Which items actually gate Monday, in order?",
+                "options":[
+                  {"key":"ranked","label":"Hard gates first: signed contract and verified insurance gate ANY work; DBS gates any occupied-school access — so Monday's scope is exactly the jobs those three permit (empty sites, cleared operatives); asset data and helpdesk are service-level items managed on a dated plan","quality":100,
+                   "consequence":"Monday starts legally, insured, and safeguarded — on a narrower front than hoped; the helpdesk transfers Wednesday and nobody ever has to explain an uncleared operative in a school corridor.",
+                   "principle":"Readiness items divide into gates and gradients — know which is which before promising Monday."},
+                  {"key":"start","label":"Start as proposed — momentum matters and the paperwork is genuinely imminent","quality":0,
+                   "consequence":"An uninsured, uncontracted operative without DBS clearance changes a ballast in an occupied primary school on Monday morning; every word of that sentence is a separate governance failure.",
+                   "principle":"'Low-risk jobs' is a claim about the work; the gates are about the worker, the contract and the child."},
+                  {"key":"delay_all","label":"Delay the whole mobilization until every item is complete","quality":30,
+                   "consequence":"Safe, and the outgoing contractor's demob date doesn't move — three days of no maintenance cover for 40 schools over items that never gated work at empty sites.",
+                   "principle":"Blanket delay treats gradients as gates and pays gate prices for them."}]}],
+             "hints":["For each item ask: what specifically cannot happen without it?",
+               "Safeguarding items are absolute gates in occupied settings — no proportionality argument exists.",
+               "Scope Monday to what the completed gates permit — a narrow start beats a late one or an illegal one."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sorted mobilization readiness into hard gates and managed gradients — and started safely on Monday."}
+            """),
+
+        // ───────────── June · Schedule Strategy · sequencing · practitioner ─────────────
+
+        ("WC-SCH-192", "Order the orders", "Six packages, one design team, and lead times that don't care about your preferences.",
+            "Construction", "Procurement Planner", "project_controls", "professional", 9,
+            """["schedule_analysis","procurement"]""",
+            """
+            {"context":"A distribution-centre project must sequence six procurement packages against design-release capacity (one package's employer's requirements per fortnight) and site need dates. The packages: steel frame (26-week lead, needed week 40), roof & cladding (16-week, week 46), dock equipment (30-week, week 52), MEP (20-week, week 48), sprinklers (14-week, week 50), external works (8-week, week 44). The commercial team wants to tender 'biggest value first'.",
+             "evidence":[
+               {"label":"Design capacity","value":"1 package's ERs per fortnight"},
+               {"label":"Steel","value":"26wk lead, need wk40 → order by wk14"},
+               {"label":"Dock equipment","value":"30wk lead, need wk52 → order by wk22"},
+               {"label":"MEP","value":"20wk lead, need wk48 → order by wk28"},
+               {"label":"Roof/cladding · sprinklers · externals","value":"16/14/8wk leads, needs wk46/50/44"},
+               {"label":"Commercial preference","value":"'Biggest value first'"}],
+             "decisions":[
+               {"key":"sequence","prompt":"The tendering order should be set by:",
+                "options":[
+                  {"key":"latest_start","label":"Required-order-date (need date minus lead time), scheduled back through the design-release constraint: steel first (wk14), dock equipment second (wk22), MEP third (wk28), then roof, sprinklers, externals by their own latest dates","quality":100,
+                   "consequence":"Every package orders inside its window with design capacity never double-booked; the sequence looks odd to commercial — dock equipment before cladding — and works perfectly.",
+                   "principle":"Procurement sequence is a scheduling calculation: latest order date through the release constraint — value has no lead time."},
+                  {"key":"value","label":"Biggest value first — commercial attention where the money is","quality":10,
+                   "consequence":"Steel (biggest) is fine by luck; dock equipment (fourth by value, longest lead) tenders in week 30 against a week-22 deadline, and the building finishes before its doors can load a lorry.",
+                   "principle":"Ranking by value answers 'what matters most', not 'what must move first' — the schedule only asks the second."},
+                  {"key":"easy","label":"Simplest packages first to build tendering momentum","quality":15,
+                   "consequence":"External works tenders beautifully in week 10, twenty-six weeks before anyone could use the result; steel starts late and everything behind it inherits the slip.",
+                   "principle":"Momentum on the wrong items is motion, not progress."}]}],
+             "hints":["Compute each package's latest order date: need date minus lead time.",
+               "Layer the design-release constraint: one ER set per fortnight is a queue — who must be first in it?",
+               "Check the counterintuitive results twice; long leads on 'minor' packages surprise everyone."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sequenced six tenders by latest-order-date arithmetic, not by size or ease."}
+            """),
+
+        ("WC-SCH-193", "First fence, then everything", "Twelve mobilization activities, one correct spine.",
+            "Enterprise Programmes", "Site Mobilization Planner", "project_controls", "professional", 10,
+            """["schedule_analysis","sequencing"]""",
+            """
+            {"context":"Planning a data-centre campus mobilization, twelve activities compete to be 'first': hoarding/fencing, site accommodation, power connection for the compound, drainage survey, topsoil strip, access road base, security systems, welfare facilities, LV distribution, spoil storage setup, wheel wash, signage. The subcontractors all want their item prioritised. Build the spine: what genuinely precedes what?",
+             "evidence":[
+               {"label":"Hard rules","value":"No workforce without welfare · no welfare without power & accommodation · no accommodation before fencing (security) · no muck-shift before wheel wash & spoil setup"},
+               {"label":"Utilities","value":"Compound power precedes accommodation fit-out; drainage survey precedes topsoil strip"},
+               {"label":"Everyone's claim","value":"'Ours is first'"}],
+             "decisions":[
+               {"key":"spine","prompt":"The mobilization spine is:",
+                "options":[
+                  {"key":"secure_power_people","label":"Fence → access road base → compound power → accommodation & welfare → security/signage → drainage survey → wheel wash & spoil setup → topsoil strip — secure the boundary, energise the compound, house the people, THEN move the earth","quality":100,
+                   "consequence":"Each trade lands on a site that can legally and practically receive it; the earthworks start a week 'late' by the loudest subcontractor's reckoning and zero days late by the programme's.",
+                   "principle":"Mobilization has a physics: boundary, then services, then people, then production — lobbying doesn't change which activities consume which."},
+                  {"key":"parallel_all","label":"Mobilise everything in parallel — twelve crews, twelve fronts, maximum speed","quality":10,
+                   "consequence":"The accommodation arrives before its power, the earthmovers before the wheel wash, and the unfenced compound loses a generator on night three.",
+                   "principle":"Parallelism without precedence is how mobilizations mobilise chaos."},
+                  {"key":"production_first","label":"Topsoil strip first — visible progress reassures the client","quality":15,
+                   "consequence":"Muck leaves an unfenced site past no wheel wash onto a public road; the council's enforcement call reassures nobody.",
+                   "principle":"Visible progress that violates its own prerequisites is visible liability."}]}],
+             "hints":["List what each activity CONSUMES (security, power, welfare, access) — providers precede consumers.",
+               "The workforce-welfare-power chain is usually the spine's core.",
+               "Client-visible progress is a communication problem; solve it with communication, not sequence."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Built a mobilization spine from what-consumes-what, not who-shouts-loudest."}
+            """),
+
+        ("WC-SCH-194", "The possession chain", "Four approvals, one weekend, zero slack. Order them or lose the window.",
+            "Rail Infrastructure", "Possession Planning Engineer", "project_controls", "professional", 8,
+            """["schedule_analysis","sequencing"]""",
+            """
+            {"context":"Early works for a depot connection need a 54-hour weekend possession in 16 weeks. The dependency chain to secure it: possession application to the network operator (12-week statutory lead), which requires an approved safe-work pack, which requires the temporary works design, which requires the topographical survey — and the survey itself needs 2 weeks' track access via a separate minor-access request (3-week lead). The team has been treating these as five parallel tasks.",
+             "evidence":[
+               {"label":"Possession","value":"In 16 weeks; application lead 12 weeks"},
+               {"label":"Chain","value":"Application ← safe-work pack ← temp works design ← survey"},
+               {"label":"Survey","value":"Needs track access: separate request, 3-week lead + 2-week execution"},
+               {"label":"Current state","value":"All five 'in progress in parallel'"}],
+             "decisions":[
+               {"key":"chain","prompt":"Reading the arithmetic, you:",
+                "options":[
+                  {"key":"backpass","label":"Run the backward pass and act on it TODAY: the access request must go in this week (3+2 weeks of survey + design + pack inside the 4 weeks before the application deadline) — the chain has days of float, not weeks, and the access request is the trigger everyone thought was parallel","quality":100,
+                   "consequence":"The access request files Tuesday; the chain lands the application with three days' float, and the possession confirms — the 'parallel' plan would have missed the deadline by a fortnight discovered in week 10.",
+                   "principle":"Approval chains are series circuits wearing parallel clothes — backward-pass them from the immovable date before believing any 'in progress'."},
+                  {"key":"parallel","label":"Keep all five moving in parallel — overlap is how deadlines get met","quality":5,
+                   "consequence":"Design 'progresses' against an unsurveyed alignment and reworks when the survey lands; the application misses the 12-week line and the possession moves to next quarter's calendar.",
+                   "principle":"Work done ahead of its inputs is inventory of guesses."},
+                  {"key":"expedite","label":"Ask the network operator to waive the 12-week lead given the project's importance","quality":15,
+                   "consequence":"The operator's answer is the same one they give every 'important' project; the week spent asking was the week the access request needed.",
+                   "principle":"Statutory leads are the fixed points — plan back from them, don't negotiate with them."}]}],
+             "hints":["Anchor on the immovable date and walk backwards through every dependency.",
+               "Find the item with the longest total chain — that is today's action, whatever its apparent urgency.",
+               "'In progress' on a task whose inputs don't exist is not progress."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Backward-passed a possession chain and found this week's hidden deadline."}
+            """),
+
+        // ───────────── June · Stakeholder Dilemmas · practitioner ─────────────
+
+        ("WC-STK-195", "The mobilization team that hasn't finished demobilizing", "Your new project's A-team is still someone else's A-team for six more weeks.",
+            "Enterprise Programmes", "Incoming Project Manager", "project_management", "professional", 6,
+            """["resource_management","stakeholder_communication"]""",
+            """
+            {"context":"Your logistics-platform project mobilises in three weeks with a named core team — the same five people currently closing out another director's project, which has slipped six weeks. That director, senior to you, has told resourcing the team 'finishes what it started'. Your contract with the client names three of the five as key personnel from day one.",
+             "evidence":[
+               {"label":"Your mobilization","value":"3 weeks; 3 of 5 named as key personnel in the client contract"},
+               {"label":"Their status","value":"Closing out a project that slipped 6 weeks"},
+               {"label":"Other director","value":"Senior; 'the team finishes what it started'"},
+               {"label":"Resourcing","value":"Caught between two instructions"}],
+             "decisions":[
+               {"key":"resolve","prompt":"You:",
+                "options":[
+                  {"key":"broker","label":"Convene both directors with a taper proposal: the three key-personnel names join you on contract day (client obligation), the other two follow at closeout milestones — with a named closeout support engineer backfilling the old project's tail","quality":100,
+                   "consequence":"The contract obligation — the one fact neither director can argue with — anchors the deal; the old project's tail gets adequate cover, and neither director had to lose.",
+                   "principle":"Resource standoffs settle fastest around external obligations — find the immovable fact and build the taper against it."},
+                  {"key":"escalate","label":"Escalate to the portfolio director to rule between the two projects","quality":30,
+                   "consequence":"A ruling arrives — for you, mostly — along with a senior colleague who lost a resourcing fight in front of their boss and remembers it at every future interface.",
+                   "principle":"A brokered deal both sides own beats a ruling one side resents — escalate only when brokering fails."},
+                  {"key":"wait","label":"Let the six weeks run — starting with a partial team is normal","quality":10,
+                   "consequence":"Normal, except for the contract: the client's first governance meeting notes two absent key personnel, and your project opens with a breach letter instead of a kickoff.",
+                   "principle":"Contractual key-personnel clauses convert resourcing preferences into obligations — read yours before conceding."}]}],
+             "hints":["Find the fact that binds regardless of seniority — the key-personnel clause is it.",
+               "A taper with backfill lets both projects be right at different times.",
+               "Save the escalation card; a brokered outcome spends less relationship."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Split a contested team along a contract clause both directors had to respect."}
+            """),
+
+        ("WC-STK-196", "The village heard it from the winner", "The contractor announced their win on LinkedIn. The parish council had heard nothing.",
+            "Energy Networks", "Consents & Community Manager", "project_management", "professional", 7,
+            """["stakeholder_communication","governance"]""",
+            """
+            {"context":"Your battery-storage project's construction contract was awarded Tuesday. Thursday morning, the winning contractor's LinkedIn post — 'thrilled to deliver this exciting project' — reaches the village Facebook group before your planned community letter, which was scheduled with the newsletter cycle for next week. The parish council chair, who chaired two constructive liaison meetings during consenting, emails: 'We had an understanding about hearing things first.'",
+             "evidence":[
+               {"label":"The leak","value":"Contractor's LinkedIn post, 2 days after award"},
+               {"label":"Your plan","value":"Community letter scheduled next week with newsletter"},
+               {"label":"The relationship","value":"2 constructive liaison meetings; an 'understanding'"},
+               {"label":"The email","value":"'We had an understanding about hearing things first'"}],
+             "decisions":[
+               {"key":"repair","prompt":"Your response?",
+                "options":[
+                  {"key":"own_fast","label":"Call the chair TODAY — own the sequencing failure without blaming the contractor, bring forward the letter to tomorrow with construction-phase liaison arrangements, and add a communications protocol to the contractor's contract administration this week","quality":100,
+                   "consequence":"The chair, called before lunch, stays a partner; the contractor gets a comms clause conversation; the village learns the details from your letter a day later — order restored, one apology cheap.",
+                   "principle":"When a communication sequence breaks, repair the RELATIONSHIP first, the schedule second, the process third — same week, that order."},
+                  {"key":"blame","label":"Reply explaining the contractor posted without authorisation — factually true","quality":20,
+                   "consequence":"True and useless to the chair, who didn't ask whose fault it was; the village reads 'they can't control their own contractor' — a worse story than the original.",
+                   "principle":"Attribution answers your need, not the stakeholder's — they asked whether the understanding still stands."},
+                  {"key":"schedule","label":"Keep the letter on its newsletter cycle — accelerating it rewards the leak with panic","quality":10,
+                   "consequence":"Five more days of the contractor's LinkedIn post being the village's only official information; the liaison meetings' capital drains by the day.",
+                   "principle":"After a leak, your planned schedule is already broken — the only question is who fills the gap."}]}],
+             "hints":["The chair's email is about the relationship, not the mechanics — answer that first.",
+               "Speed of repair matters more than elegance; a call today beats a perfect letter next week.",
+               "Fix the class of failure: contractor comms protocols belong in contract administration."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Executive Communicator"},
+             "share_line":"Repaired a broken heard-it-first promise inside one news cycle."}
+            """),
+
+        ("WC-STK-197", "Two tenders, one bid manager", "Both directors booked the same person for the same fortnight. Neither will blink.",
+            "Enterprise Programmes", "Head of Bid Management", "project_management", "professional", 7,
+            """["resource_management","conflict_management"]""",
+            """
+            {"context":"Your best bid manager is claimed by two directors for overlapping must-win tenders: a framework renewal (deadline day 12) and a new-market bid (deadline day 14). Both cite prior claims; both have escalated to you in writing within an hour of each other. The bid manager, consulted privately, says the framework renewal is 'a known machine — strong second could run it with my review', while the new-market bid 'needs original thinking daily'.",
+             "evidence":[
+               {"label":"Clash","value":"Two must-wins, deadlines day 12 and 14"},
+               {"label":"Directors","value":"Both claim priority, both escalated in writing"},
+               {"label":"Expert's own read","value":"Renewal = 'known machine, second could run it' · New market = 'needs original thinking daily'"},
+               {"label":"Bench","value":"One strong second-chair bid manager available"}],
+             "decisions":[
+               {"key":"allocate","prompt":"Your allocation?",
+                "options":[
+                  {"key":"fit","label":"Follow the work's nature, not the directors' volume: the second chairs the framework renewal with the expert's structured review at three checkpoints; the expert leads the new-market bid daily — and both directors hear the reasoning together, once","quality":100,
+                   "consequence":"The renewal — genuinely a known machine — scores its usual marks under the second; the new-market bid gets the originality it needed and shortlists; the joint explanation prevents a season of relitigating.",
+                   "principle":"Allocate scarce expertise by what the work actually requires — the person doing the work usually knows, if anyone asks."},
+                  {"key":"seniority","label":"The framework renewal wins — it protects existing revenue and its director is senior","quality":20,
+                   "consequence":"The expert polishes a machine that ran itself while the new-market bid — the one needing invention — gets the second chair, and the shortlist announcement shows it.",
+                   "principle":"Seniority-based allocation optimises for the org chart, not the outcome."},
+                  {"key":"split_days","label":"Split the fortnight — alternate days on each bid","quality":10,
+                   "consequence":"Two bids each get half a distracted expert at their most intense phase; both directors, briefly placated, jointly furious by day 10.",
+                   "principle":"Splitting a person across two deadline sprints delivers two half-sprints."}]}],
+             "hints":["Ask the expert which work actually needs THEM — the answer is usually honest and specific.",
+               "Structured review of a known process is delegable; daily invention is not.",
+               "Announce the reasoning to both claimants at once — separate explanations breed separate grievances."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Allocated a contested expert by the shape of the work, not the seniority of the shouting."}
+            """),
+
+        ("WC-STK-198", "The local firm and the local paper", "The hometown bidder lost fairly. Tomorrow's front page won't say so.",
+            "Events & Venues", "Programme Director's Adviser", "project_management", "professional", 5,
+            """["stakeholder_communication","governance"]""",
+            """
+            {"context":"The conference-centre refit contract went to a national firm; the losing local contractor — a prominent employer whose owner sits on the chamber of commerce — has told the local paper the process 'favoured outsiders'. The journalist calls for comment on tomorrow's story. The evaluation was clean: the local bid scored lower on programme certainty and price. A standard debrief was offered and not yet taken up.",
+             "evidence":[
+               {"label":"The claim","value":"'Process favoured outsiders' — to local press"},
+               {"label":"The record","value":"Clean evaluation; local bid lower on certainty and price"},
+               {"label":"Status","value":"Debrief offered, not yet taken"},
+               {"label":"Deadline","value":"Journalist wants comment today"}],
+             "decisions":[
+               {"key":"respond","prompt":"Your advice on the comment?",
+                "options":[
+                  {"key":"process_facts","label":"A short factual comment — criteria published in advance, evaluation followed them, debrief offered and remains open — plus a same-day private call to the losing owner renewing the debrief offer BEFORE the story runs","quality":100,
+                   "consequence":"The story runs balanced ('council defends process; firm offered debrief'); the owner takes the debrief, learns exactly where the bid fell short, and bids better — and quieter — next time.",
+                   "principle":"Answer a fairness attack with the process's own artifacts, and give the aggrieved party a private route to the facts before the public one hardens."},
+                  {"key":"detail","label":"Rebut in detail — release the scores showing exactly why the local bid lost","quality":10,
+                   "consequence":"Publishing a bidder's weaknesses to their hometown paper converts a process complaint into a public humiliation — and breaches the confidence every future bidder relies on.",
+                   "principle":"Winning the argument by disclosing a bidder's failings loses every future bidder's trust."},
+                  {"key":"decline","label":"'No comment on procurement matters' — dignified silence","quality":20,
+                   "consequence":"The story runs on the complaint alone; 'declined to comment' sits under the headline doing exactly what it always does.",
+                   "principle":"In a fairness story, silence is scored as evidence for the accuser."}]}],
+             "hints":["The public answer defends the PROCESS; the private call serves the PERSON — do both, today.",
+               "Never litigate a specific bid's weaknesses in public, even winning.",
+               "The debrief offer is your best exhibit — renew it where the journalist can see."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Governance Steward"},
+             "share_line":"Answered a hometown-bias headline with process facts and a private door."}
+            """),
+
+        // ───────────── June · Executive Missions · capstone ─────────────
+
+        ("WC-CAP-199", "Make, buy, or regret", "The plant expansion's central question, asked properly for once.",
+            "Industrial Manufacturing", "Programme Procurement Director", "project_management", "expert", 24,
+            """["procurement","strategy_execution","governance"]""",
+            """
+            {"context":"Your food-processing group's three-plant expansion needs its delivery model decided: the process lines are the group's crown jewels (in-house engineering knows them cold), but the group has never delivered three sites in parallel. The gateway wants your position on the make-or-buy split, the contract strategy for whatever is bought, and how to protect the group's process IP through whichever route wins.",
+             "evidence":[
+               {"label":"Capability","value":"In-house team: deep process knowledge, never run 3 parallel sites"},
+               {"label":"Market","value":"Two integrators could deliver turnkey; both work for competitors too"},
+               {"label":"Scope shape","value":"Process lines (differentiating) · utilities/buildings (commodity)"},
+               {"label":"Constraint","value":"All three sites needed inside 30 months"}],
+             "decisions":[
+               {"key":"split","prompt":"Stage 1 — the make-or-buy split?",
+                "options":[
+                  {"key":"core_edge","label":"Split by differentiation: process-line design and commissioning stay in-house (the crown jewels), buildings and utilities bought as packages, with integrator support bought AS CAPACITY under your team's direction for the parallel-site load","quality":100,
+                   "consequence":"The in-house team leads what makes the group different and rents arms and legs for what doesn't; three sites run in parallel without the crown jewels ever leaving the building.",
+                   "principle":"Make what differentiates, buy what doesn't, and rent capacity — not control — for the surge."},
+                  {"key":"turnkey","label":"Buy turnkey — three parallel sites is exactly what integrators are for","quality":15,
+                   "consequence":"The integrator delivers competently and now understands your process lines as well as you do; their next client's plant looks familiar in ways nobody can litigate.",
+                   "principle":"A turnkey contract for differentiating scope is a technology transfer with invoicing."},
+                  {"key":"inhouse","label":"All in-house — hire up for the parallel load; nobody outside touches anything","quality":25,
+                   "consequence":"The hiring market delivers half the engineers the plan needs; month 10 finds three sites sharing two teams, and the 30-month window closing on the slowest.",
+                   "principle":"Protecting everything with capacity you don't have protects nothing on schedule."}]},
+               {"key":"contract","prompt":"Stage 2 — contract strategy for the bought scope?",
+                "options":[
+                  {"key":"portfolio","label":"One buildings/utilities framework across all three sites — common design, sequenced awards, volume leverage — with site-level call-offs and shared learning provisions","quality":100,
+                   "consequence":"Site 2's building prices 8% under site 1's on repetition; the framework's shared-learning clause moves the site-1 snag list into site-2's kickoff.",
+                   "principle":"Parallel similar sites are a portfolio — contract them like one and collect the repetition dividend."},
+                  {"key":"separate","label":"Three separate site contracts — local markets, local competition, clean interfaces","quality":30,
+                   "consequence":"Three competitions, three learning curves, zero shared lessons; site 3 makes site 1's mistakes at site 1's prices.",
+                   "principle":"Treating repeatable work as unique forfeits the only discount parallel delivery offers."},
+                  {"key":"single_mega","label":"One contractor for everything at all three sites — one throat to choke","quality":20,
+                   "consequence":"The single throat prices its indispensability by month 12; 'choke' turns out to be mutual.",
+                   "principle":"Concentration for convenience becomes leverage against you at the first variation."}]},
+               {"key":"ip","prompt":"Stage 3 — protecting the process IP through delivery?",
+                "options":[
+                  {"key":"architecture","label":"Protect by ARCHITECTURE, not just paper: integrator capacity works on your systems under your engineers' direction, process-critical parameters compartmentalised, contracts carrying confidentiality WITH audit rights and key-personnel non-poaching","quality":100,
+                   "consequence":"The rented engineers see pieces, never the recipe; two years later a competitor's integrator-built plant conspicuously lacks the yield the group's parameters deliver.",
+                   "principle":"IP leaks through work organisation before it leaks through documents — design the work so the secret never assembles outside your walls."},
+                  {"key":"nda","label":"Strong NDAs and confidentiality clauses — the standard legal armour","quality":25,
+                   "consequence":"The NDAs are signed and sincere; the knowledge walks anyway, in the heads of engineers who genuinely can't un-know how the lines balance.",
+                   "principle":"Paper protects against bad faith; work design protects against human memory."},
+                  {"key":"secrecy","label":"Share nothing — integrator staff work from redacted drawings only","quality":15,
+                   "consequence":"Redacted drawings produce redacted quality: the capacity you rented can't do useful work blind, and the schedule pays for the paranoia.",
+                   "principle":"Protection that prevents the work isn't protection; it is a slower way to fail."}]}],
+             "hints":["Split scope by what differentiates the business, not by what is biggest.",
+               "Three similar sites are one portfolio — price the repetition.",
+               "IP protection is mostly work design: who sees enough to reassemble the recipe?"],
+             "profile_map":{"decision":"Strategic Programme Leader","balanced":"Strategic Programme Leader"},
+             "share_line":"Split a three-plant expansion into make, buy and rent — and kept the recipe home."}
+            """),
+
+        ("WC-CAP-200", "The platform and the exit", "Choosing the vendor is easy. Choosing how you'll leave them is the decision.",
+            "Technology Programmes", "Chief Procurement Adviser", "project_management", "expert", 22,
+            """["procurement","strategy_execution","governance"]""",
+            """
+            {"context":"Your organisation is procuring the core operations platform for the next decade — a two-horse race between an integrated suite (deep functionality, deep lock-in) and a composable best-of-breed stack (flexibility, integration burden). The board asks for your recommendation on the architecture choice, the commercial protections whichever wins, and the honest answer to 'how would we ever leave?'",
+             "evidence":[
+               {"label":"Option A","value":"Integrated suite — best functionality fit, proprietary data model, few reference exits"},
+               {"label":"Option B","value":"Composable stack — standard interfaces, 30% more integration effort, swappable parts"},
+               {"label":"Horizon","value":"10-year platform decision"},
+               {"label":"Board question","value":"'How would we ever leave?'"}],
+             "decisions":[
+               {"key":"architecture","prompt":"Stage 1 — the architecture recommendation?",
+                "options":[
+                  {"key":"fit_with_exits","label":"Recommend on TOTAL lifecycle terms: the suite's functionality lead is real, so recommend it — CONDITIONAL on contractually-secured exit assets (data model documentation, standard-format export rights, escrow) priced into the deal before signature, when competition still exists","quality":100,
+                   "consequence":"The suite wins on merits with exit rights bought at tender prices — the vendor concedes in competition what they would never concede in renewal; the board gets function AND a documented door.",
+                   "principle":"Choose on fit; contract for exit — and buy the exit while the vendor still has a rival in the room."},
+                  {"key":"flexibility","label":"Recommend the composable stack — lock-in risk outweighs functionality on a 10-year horizon","quality":35,
+                   "consequence":"Defensible — and the 30% integration burden compounds annually into its own lock-in: by year 4 the bespoke integration layer is harder to leave than any vendor.",
+                   "principle":"Composability's exit story assumes someone maintains the doors; integration debt welds them shut just as surely."},
+                  {"key":"function","label":"Recommend the suite on functionality — lock-in is tomorrow's problem and every platform has it","quality":15,
+                   "consequence":"Tomorrow arrives at first renewal: +22%, take it or leave it, and 'leave it' has no documented meaning.",
+                   "principle":"A ten-year decision made on year-one criteria is a nine-year regret."}]},
+               {"key":"commercial","prompt":"Stage 2 — the commercial protections?",
+                "options":[
+                  {"key":"renewal_math","label":"Fix the renewal arithmetic NOW: price caps indexed on renewals, usage-band pricing agreed to year 10, benchmarking rights with teeth, and service credits that escalate — all while two bidders still exist","quality":100,
+                   "consequence":"Year-5's renewal is a formula, not a negotiation; the benchmarking clause gets exercised once, corrects pricing 9%, and is never needed again — its existence did the work.",
+                   "principle":"Every protection is cheap at tender and unbuyable at renewal — the competition window is the only leverage you will ever have."},
+                  {"key":"standard","label":"Take the vendor's enterprise agreement with legal's standard amendments","quality":10,
+                   "consequence":"The standard amendments protect against standard problems; the renewal cliff, usage redefinitions and module re-bundling were all non-standard by design.",
+                   "principle":"The vendor's paper is optimised for the vendor's decade, not yours."},
+                  {"key":"short","label":"Sign short — 3 years, renegotiate often, stay agile","quality":25,
+                   "consequence":"Three years is exactly when switching costs peak and alternatives haven't matured: each 'renegotiation' is a renewal with theatre.",
+                   "principle":"Short terms without exit assets just schedule your weakest negotiating moments more often."}]},
+               {"key":"exit","prompt":"Stage 3 — the honest answer to 'how would we leave?'",
+                "options":[
+                  {"key":"rehearsed","label":"An exit that is MAINTAINED, not just contracted: annual data-export verification, the exit runbook kept current, switching costs re-estimated at each renewal and reported to the board as a standing figure","quality":100,
+                   "consequence":"The board's annual pack carries a real number for 'cost to leave'; the vendor, aware the number exists and is current, prices renewals against a credible alternative for a decade.",
+                   "principle":"An exit you never rehearse is a clause, not a capability — the credible THREAT of leaving is what you're actually maintaining."},
+                  {"key":"contracted","label":"'The contract gives us export rights and escrow — we can leave if we must'","quality":30,
+                   "consequence":"Year 7 tests the theory: the export runs for the first time ever, produces a format nobody has parsed, and the 'if we must' turns out to cost 18 months.",
+                   "principle":"Exit rights unexercised decay like any other untested capability."},
+                  {"key":"honest_never","label":"'Realistically, we never leave — platforms this deep are marriages; let's optimise the relationship instead'","quality":20,
+                   "consequence":"Honest, and self-fulfilling: the vendor's account team hears it within a quarter, and every subsequent negotiation prices your candour.",
+                   "principle":"Declaring you'll never leave sets the price of staying."}]}],
+             "hints":["The moment of maximum leverage is before signature — inventory what must be bought then.",
+               "Lock-in comes from data models and integration debt as much as contracts.",
+               "An exit is a capability with a maintenance schedule, not a clause with a signature."],
+             "profile_map":{"decision":"Strategic Programme Leader","balanced":"Strategic Programme Leader"},
+             "share_line":"Bought the platform on fit and the exit on competition — then kept the exit alive."}
+            """),
     };
 }

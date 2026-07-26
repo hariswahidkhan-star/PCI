@@ -9,7 +9,7 @@
    "day": 182,
    "status": "planned",
    "source_challenge": null,
-   "title": "The change that arrived as a fact — a national rollout",
+   "title": "The change that arrived as a fact — a multi-site capital programme",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -17,29 +17,29 @@
    "est_minutes": 15,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D183",
    "day": 183,
    "status": "planned",
    "source_challenge": null,
-   "title": "The forecast that flattered the month — a joint-venture delivery office",
+   "title": "The forecast that flattered the month — a depot modernisation",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 11,
+   "est_minutes": 9,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "transport_logistics"
   },
   {
    "code": "PI-Y1-D184",
    "day": 184,
    "status": "planned",
    "source_challenge": null,
-   "title": "The programme that outgrew its case — a mixed-use development",
+   "title": "The stage gate that split the board — a joint-venture delivery office",
    "experience_type": "daily_decision",
    "primary_domain": "integration_governance",
    "difficulty_band": "foundation",
@@ -47,14 +47,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D185",
    "day": 185,
    "status": "planned",
    "source_challenge": null,
-   "title": "A handover the team was not ready for — an offshore maintenance campaign",
+   "title": "Two projects, one senior engineer — a portfolio review",
    "experience_type": "stakeholder_dilemma",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
@@ -62,14 +62,14 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D186",
    "day": 186,
    "status": "planned",
    "source_challenge": null,
-   "title": "Where the fit-out ends and the asset begins — a multi-site capital programme",
+   "title": "The requirement nobody owned — a museum gallery rebuild",
    "experience_type": "logic_sequence",
    "primary_domain": "scope_requirements",
    "difficulty_band": "foundation",
@@ -77,29 +77,29 @@
    "est_minutes": 6,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "professional_services_other"
   },
   {
    "code": "PI-Y1-D187",
    "day": 187,
    "status": "planned",
    "source_challenge": null,
-   "title": "The recovery plan that borrowed from testing — a broadcast facility move",
+   "title": "The float that was already spent — a national rollout",
    "experience_type": "schedule_strategy",
    "primary_domain": "schedule_planning",
    "difficulty_band": "practitioner",
    "duration_band": "standard",
-   "est_minutes": 10,
+   "est_minutes": 11,
    "interaction": "order_rank",
    "lifecycle_stage": "execution_control",
-   "sector": "professional_services_other"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D188",
    "day": 188,
    "status": "planned",
    "source_challenge": null,
-   "title": "A claim built from diary pages — a stadium fit-out",
+   "title": "A claim built from diary pages — a highway upgrade",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -114,22 +114,22 @@
    "day": 189,
    "status": "planned",
    "source_challenge": null,
-   "title": "Contingency, spent in silence — a retrofit programme",
+   "title": "Contingency, spent in silence — an enterprise transformation",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 12,
+   "est_minutes": 10,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "climate_sustainability"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D190",
    "day": 190,
    "status": "planned",
    "source_challenge": null,
-   "title": "Rework the dashboard called progress — a portfolio review",
+   "title": "The inspection that was signed, not done — a framework programme",
    "experience_type": "daily_decision",
    "primary_domain": "quality_assurance",
    "difficulty_band": "foundation",
@@ -144,7 +144,7 @@
    "day": 191,
    "status": "planned",
    "source_challenge": null,
-   "title": "The regulator's question you saw coming — a network modernisation",
+   "title": "The update that landed badly — a flood defence scheme",
    "experience_type": "stakeholder_dilemma",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "practitioner",
@@ -152,14 +152,14 @@
    "est_minutes": 7,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D192",
    "day": 192,
    "status": "planned",
    "source_challenge": null,
-   "title": "Re-baselining without losing the story — a plant expansion",
+   "title": "Re-baselining without losing the story — a portfolio review",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -167,29 +167,29 @@
    "est_minutes": 18,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "manufacturing_industrial"
+   "sector": "cross_sector"
   },
   {
    "code": "PI-Y1-D193",
    "day": 193,
    "status": "planned",
    "source_challenge": null,
-   "title": "A value engineering call under pressure — a defence facility upgrade",
+   "title": "A value engineering call under pressure — a sterile facility build",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 9,
+   "est_minutes": 8,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "public_sector"
+   "sector": "healthcare_life_sciences"
   },
   {
    "code": "PI-Y1-D194",
    "day": 194,
    "status": "planned",
    "source_challenge": null,
-   "title": "An escalation drafted in anger — a hospital ward refurbishment",
+   "title": "A community meeting with one answer left — a schools estate programme",
    "experience_type": "daily_decision",
    "primary_domain": "stakeholders_communication",
    "difficulty_band": "foundation",
@@ -197,7 +197,7 @@
    "est_minutes": 6,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "healthcare_life_sciences"
+   "sector": "public_sector"
   },
   {
    "code": "PI-Y1-D195",
@@ -279,7 +279,7 @@
    "day": 200,
    "status": "planned",
    "source_challenge": null,
-   "title": "The specialist who became the bottleneck — a flood defence scheme",
+   "title": "The crew that was promised twice — a plant expansion",
    "experience_type": "stakeholder_dilemma",
    "primary_domain": "resources_leadership",
    "difficulty_band": "practitioner",
@@ -287,14 +287,14 @@
    "est_minutes": 5,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "manufacturing_industrial"
   },
   {
    "code": "PI-Y1-D201",
    "day": 201,
    "status": "planned",
    "source_challenge": null,
-   "title": "The acceleration that cost more than the delay — an enterprise transformation",
+   "title": "The acceleration that cost more than the delay — a platform migration",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -302,29 +302,29 @@
    "est_minutes": 16,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D202",
    "day": 202,
    "status": "planned",
    "source_challenge": null,
-   "title": "The cash curve that crossed the facility — a rail resignalling project",
+   "title": "The cash curve that crossed the facility — a mixed-use development",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 10,
+   "est_minutes": 11,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "transport_logistics"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D203",
    "day": 203,
    "status": "planned",
    "source_challenge": null,
-   "title": "Scope growth in committee minutes — a multi-site capital programme",
+   "title": "Scope growth in committee minutes — a joint-venture delivery office",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -339,22 +339,22 @@
    "day": 204,
    "status": "planned",
    "source_challenge": null,
-   "title": "Unit rates that stopped meaning anything — a river crossing",
+   "title": "Unit rates that stopped meaning anything — a data-centre build",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 8,
+   "est_minutes": 12,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "technology_digital"
   },
   {
    "code": "PI-Y1-D205",
    "day": 205,
    "status": "planned",
    "source_challenge": null,
-   "title": "The recovery plan with two owners — a highway upgrade",
+   "title": "The recovery plan with two owners — a grid reinforcement project",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -362,19 +362,19 @@
    "est_minutes": 15,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "construction_infrastructure"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D206",
    "day": 206,
    "status": "planned",
    "source_challenge": null,
-   "title": "The commitment ledger nobody reconciled — a framework programme",
+   "title": "The commitment ledger nobody reconciled — a multi-site capital programme",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 11,
+   "est_minutes": 9,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
    "sector": "cross_sector"
@@ -384,7 +384,7 @@
    "day": 207,
    "status": "planned",
    "source_challenge": null,
-   "title": "The change that arrived as a fact — a laboratory relocation",
+   "title": "The change that arrived as a fact — a river crossing",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -392,29 +392,29 @@
    "est_minutes": 13,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "healthcare_life_sciences"
+   "sector": "construction_infrastructure"
   },
   {
    "code": "PI-Y1-D208",
    "day": 208,
    "status": "planned",
    "source_challenge": null,
-   "title": "An estimate at completion with three authors — a factory relocation",
+   "title": "An estimate at completion with three authors — a solar portfolio build-out",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 12,
+   "est_minutes": 10,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "manufacturing_industrial"
+   "sector": "climate_sustainability"
   },
   {
    "code": "PI-Y1-D209",
    "day": 209,
    "status": "planned",
    "source_challenge": null,
-   "title": "A claim built from diary pages — a portfolio review",
+   "title": "A claim built from diary pages — a framework programme",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -429,22 +429,22 @@
    "day": 210,
    "status": "planned",
    "source_challenge": null,
-   "title": "The margin that left in small pieces — an enterprise transformation",
+   "title": "The margin that left in small pieces — a substation replacement",
    "experience_type": "cost_value",
    "primary_domain": "cost_commercial",
    "difficulty_band": "foundation",
    "duration_band": "standard",
-   "est_minutes": 9,
+   "est_minutes": 8,
    "interaction": "single_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "cross_sector"
+   "sector": "energy_utilities"
   },
   {
    "code": "PI-Y1-D211",
    "day": 211,
    "status": "planned",
    "source_challenge": null,
-   "title": "Re-baselining without losing the story — a water treatment upgrade",
+   "title": "Re-baselining without losing the story — a production line install",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -452,14 +452,14 @@
    "est_minutes": 16,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "energy_utilities"
+   "sector": "manufacturing_industrial"
   },
   {
    "code": "PI-Y1-D212",
    "day": 212,
    "status": "planned",
    "source_challenge": null,
-   "title": "The acceleration that cost more than the delay — a core-system replacement",
+   "title": "The acceleration that cost more than the delay — a courts modernisation programme",
    "experience_type": "project_rescue",
    "primary_domain": "change_claims_recovery",
    "difficulty_band": "practitioner",
@@ -467,7 +467,7 @@
    "est_minutes": 14,
    "interaction": "multi_stage_decision",
    "lifecycle_stage": "execution_control",
-   "sector": "technology_digital"
+   "sector": "public_sector"
   }
  ]
 }
