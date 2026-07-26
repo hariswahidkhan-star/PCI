@@ -671,6 +671,53 @@ public static class WorldAdmin
             return J(new { participant = diag });
         });
 
+        // ── OAuth client registry (owner-only): the dedicated-domain move is a row here, not a
+        //    deploy. Exact redirect URIs only; the seeded first-party client cannot be deleted. ──
+        app.MapGet("/api/world-admin/oauth-clients", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "admin", out _) is { } blocked) return blocked;
+            var rows = db.Query("SELECT client_id, name, redirect_uris, first_party, created_at FROM pciworld_oauth_clients ORDER BY client_id")
+                .Select(r => new { client_id = H.Str(r["client_id"]), name = H.Str(r["name"]),
+                                   redirect_uris = H.Str(r["redirect_uris"]), first_party = H.L(r["first_party"]) == 1,
+                                   created_at = H.Str(r["created_at"]) });
+            return J(new { rows });
+        });
+
+        app.MapPost("/api/world-admin/oauth-clients", async (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "admin", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var id = H.GetS(b, "client_id");
+            var err = WorldOAuth.UpsertClient(db, id, H.GetS(b, "name"), H.GetS(b, "redirect_uris"), create: true,
+                firstParty: H.GetEl(b, "first_party") is { ValueKind: System.Text.Json.JsonValueKind.True });
+            if (err is not null) return Results.Json(new { error = err }, statusCode: 400);
+            Audit(adm!.Id, "oauth_client_create", id ?? "");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/oauth-clients/{id}", async (HttpContext ctx, string id) =>
+        {
+            if (Gate(ctx, "admin", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var err = WorldOAuth.UpsertClient(db, id, H.GetS(b, "name"), H.GetS(b, "redirect_uris"), create: false,
+                firstParty: H.GetEl(b, "first_party") is { } fpEl && fpEl.ValueKind != System.Text.Json.JsonValueKind.Undefined
+                    ? fpEl.ValueKind == System.Text.Json.JsonValueKind.True : null);
+            if (err is not null) return Results.Json(new { error = err }, statusCode: err == "not_found" ? 404 : 400);
+            Audit(adm!.Id, "oauth_client_update", id);
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world-admin/oauth-clients/{id}/delete", (HttpContext ctx, string id) =>
+        {
+            if (Gate(ctx, "admin", out var adm) is { } blocked) return blocked;
+            var err = WorldOAuth.DeleteClient(db, id);
+            if (err is not null) return Results.Json(new { error = err,
+                message = err == "load_bearing" ? "The seeded first-party client is what the live surface signs in through — edit it, never delete it." : null },
+                statusCode: err == "not_found" ? 404 : 400);
+            Audit(adm!.Id, "oauth_client_delete", id);
+            return J(new { ok = true });
+        });
+
         app.MapGet("/api/world-admin/users", (HttpContext ctx) =>
         {
             if (Gate(ctx, "admin", out _) is { } blocked) return blocked;
@@ -1338,8 +1385,61 @@ public static class WorldAdmin
                '<div><label for="nu_role">Role</label><select id="nu_role">'+
                ['viewer','author','reviewer','publisher','owner'].map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div>'+
                '<div><label for="nu_pw">Initial password (min 12)</label><input id="nu_pw" type="password" autocomplete="new-password"></div>'+
-               '</div><p><button id="nu_go">Create admin</button> <span id="nu_msg" role="status"></span></p>';
+               '</div><p><button id="nu_go">Create admin</button> <span id="nu_msg" role="status"></span></p>'+
+               '<h2 style="margin-top:18px">OAuth clients</h2>'+
+               '<p><small>Applications that may sign participants in through the authorization flow. Redirect URIs are '+
+               'matched EXACTLY (comma-separated; a path starting / or an https:// URL; max 5). The seeded '+
+               'first-party client can be edited but never deleted. Registering a future dedicated-domain app '+
+               'is one entry here — no deploy.</small></p>'+
+               '<div id="oa_list"></div>'+
+               '<div class="row" style="max-width:820px;margin-top:8px">'+
+               '<div><label for="oa_nid">New client id</label><input id="oa_nid" placeholder="pciworld-site"></div>'+
+               '<div><label for="oa_nname">Name</label><input id="oa_nname"></div>'+
+               '<div><label for="oa_nuri">Redirect URIs</label><input id="oa_nuri" placeholder="https://pciworld.org/auth/callback"></div>'+
+               '</div><p><button id="oa_new" class="ghost">Register client</button> <span id="oa_msg" role="status"></span></p>';
             $('tab-users').innerHTML=h;
+            function oaSay(t){$('oa_msg').textContent=t;}
+            function loadClients(){
+              api('/api/world-admin/oauth-clients').then(function(o2){
+                var ch='';
+                o2.rows.forEach(function(c){
+                  ch+='<div class="row" style="max-width:820px;align-items:flex-end" data-oaclient="'+esc(c.client_id)+'">'+
+                    '<div><label>Client</label><input value="'+esc(c.client_id)+'" disabled></div>'+
+                    '<div><label for="oan_'+esc(c.client_id)+'">Name</label><input id="oan_'+esc(c.client_id)+'" value="'+esc(c.name)+'"></div>'+
+                    '<div style="flex:2"><label for="oau_'+esc(c.client_id)+'">Redirect URIs</label><input id="oau_'+esc(c.client_id)+'" value="'+esc(c.redirect_uris)+'"></div>'+
+                    '<div><label for="oaf_'+esc(c.client_id)+'">First-party</label><input type="checkbox" id="oaf_'+esc(c.client_id)+'"'+(c.first_party?' checked':'')+' title="First-party clients skip the consent screen; every other client requires explicit consent (server-enforced)."></div>'+
+                    '<div><button data-oasave="'+esc(c.client_id)+'" class="ghost">Save</button> '+
+                    (c.client_id==='pciworld-app'?'':'<button data-oadel="'+esc(c.client_id)+'" class="ghost">Delete</button>')+'</div></div>';
+                });
+                $('oa_list').innerHTML=ch;
+                $('oa_list').querySelectorAll('[data-oasave]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    var id=b.dataset.oasave;b.disabled=true;
+                    api('/api/world-admin/oauth-clients/'+encodeURIComponent(id),'POST',
+                        {name:$('oan_'+id).value,redirect_uris:$('oau_'+id).value,first_party:$('oaf_'+id).checked})
+                      .then(function(){oaSay('Saved.');loadClients();})
+                      .catch(function(e){b.disabled=false;oaSay((e&&(e.message||e.error))||'Save failed');});
+                  });
+                });
+                $('oa_list').querySelectorAll('[data-oadel]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    var id=b.dataset.oadel;
+                    if(!confirm('Delete OAuth client '+id+'? Its outstanding sign-in codes die with it; existing sessions are unaffected.'))return;
+                    b.disabled=true;
+                    api('/api/world-admin/oauth-clients/'+encodeURIComponent(id)+'/delete','POST',{})
+                      .then(function(){oaSay('Deleted.');loadClients();})
+                      .catch(function(e){b.disabled=false;oaSay((e&&(e.message||e.error))||'Delete failed');});
+                  });
+                });
+              });
+            }
+            loadClients();
+            $('oa_new').addEventListener('click',function(){
+              api('/api/world-admin/oauth-clients','POST',
+                  {client_id:$('oa_nid').value,name:$('oa_nname').value,redirect_uris:$('oa_nuri').value})
+                .then(function(){oaSay('Registered.');$('oa_nid').value='';$('oa_nname').value='';$('oa_nuri').value='';loadClients();})
+                .catch(function(e){oaSay((e&&(e.message||e.error))||'Could not register');});
+            });
             $('nu_go').addEventListener('click',function(){
               $('nu_msg').textContent='';
               api('/api/world-admin/users','POST',{email:$('nu_email').value,name:$('nu_name').value,

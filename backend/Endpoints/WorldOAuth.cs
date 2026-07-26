@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Text;
 using PCI.Backend.Core;
 using PCI.Backend.Data;
@@ -39,14 +40,23 @@ public static class WorldOAuth
             .Contains(redirectUri, StringComparer.Ordinal);
     }
 
+    /// <summary>What an authorization grants, in words a person can weigh. The scope is fixed and
+    /// narrow by design: World practice sign-in only — never certifications or entitlements.</summary>
+    public const string ScopeDescription =
+        "Sign you in to PCI World and see your practice activity — never your certifications, exams, or billing.";
+
     /// <summary>Issue a single-use authorization code bound to client + redirect + S256 challenge.
-    /// S256 is the ONLY accepted method (OAuth 2.1 drops 'plain').</summary>
+    /// S256 is the ONLY accepted method (OAuth 2.1 drops 'plain'). Consent is SERVER-enforced:
+    /// a client not marked first-party needs the person's explicit consent=true in the authorize
+    /// call — a UI that skips the consent screen cannot skip the contract.</summary>
     public static (string? Err, string Code) IssueCode(Db db, long worldUserId, string clientId,
-        string redirectUri, string codeChallenge, string method)
+        string redirectUri, string codeChallenge, string method, bool consent = false)
     {
         if (method != "S256") return ("unsupported_challenge_method", "");
         if (!ValidChallenge(codeChallenge)) return ("invalid_challenge", "");
         if (!RedirectAllowed(db, clientId, redirectUri)) return ("invalid_client_or_redirect", "");
+        var client = db.QueryOne("SELECT first_party FROM pciworld_oauth_clients WHERE client_id=?", clientId)!;
+        if (H.L(client["first_party"]) != 1 && !consent) return ("consent_required", "");
         var code = "WOA" + Convert.ToHexString(RandomNumberGenerator.GetBytes(24));
         db.Execute($@"INSERT INTO pciworld_oauth_codes
                 (code_sha, client_id, world_user_id, redirect_uri, code_challenge, expires_at)
@@ -94,6 +104,66 @@ public static class WorldOAuth
         return (null, worldId, token);
     }
 
+    // ───────────────────────── registry management (owner-gated in WorldAdmin) ─────────────────────────
+
+    /// <summary>Each entry: a relative path starting '/' (not protocol-relative) or an absolute
+    /// https:// URL. No wildcards, fragments or whitespace; at most 5 entries of ≤200 chars.
+    /// Anything looser reopens the redirect hole the exact-match registry exists to close.</summary>
+    public static string? ValidateRedirects(string? uris, out string normalized)
+    {
+        normalized = "";
+        var parts = (uris ?? "").Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return "no_redirects";
+        if (parts.Length > 5) return "too_many_redirects";
+        foreach (var p in parts)
+        {
+            if (p.Length > 200 || p.Contains('#') || p.Contains('*') || p.Any(char.IsWhiteSpace)) return "bad_redirect";
+            var ok = p.StartsWith('/')
+                ? !p.StartsWith("//")
+                : Uri.TryCreate(p, UriKind.Absolute, out var u) && u.Scheme == "https";
+            if (!ok) return "bad_redirect";
+        }
+        normalized = string.Join(",", parts.Distinct(StringComparer.Ordinal));
+        return null;
+    }
+
+    /// <summary>firstParty is settable ONLY through the owner-gated admin endpoints that call this
+    /// — the public OAuth surface never touches it. Omitting it (null) leaves the flag unchanged.</summary>
+    public static string? UpsertClient(Db db, string? clientId, string? name, string? redirectUris, bool create,
+        bool? firstParty = null)
+    {
+        clientId = (clientId ?? "").Trim();
+        if (!System.Text.RegularExpressions.Regex.IsMatch(clientId, "^[a-z0-9][a-z0-9-]{2,63}$"))
+            return "bad_client_id";
+        var err = ValidateRedirects(redirectUris, out var norm);
+        if (err is not null) return err;
+        name = (name ?? "").Trim();
+        if (name.Length is 0 or > 120) return "bad_name";
+        var exists = db.QueryOne("SELECT client_id FROM pciworld_oauth_clients WHERE client_id=?", clientId) is not null;
+        if (create && exists) return "already_exists";
+        if (!create && !exists) return "not_found";
+        if (create)
+            db.Execute("INSERT INTO pciworld_oauth_clients(client_id,name,redirect_uris,first_party) VALUES(?,?,?,?)",
+                clientId, name, norm, firstParty == true ? 1 : 0);
+        else if (firstParty is null)
+            db.Execute("UPDATE pciworld_oauth_clients SET name=?, redirect_uris=? WHERE client_id=?", name, norm, clientId);
+        else
+            db.Execute("UPDATE pciworld_oauth_clients SET name=?, redirect_uris=?, first_party=? WHERE client_id=?",
+                name, norm, firstParty == true ? 1 : 0, clientId);
+        return null;
+    }
+
+    /// <summary>The seeded first-party client is load-bearing — the live surface signs in through
+    /// it — so it can be edited but never deleted. Outstanding codes die with a deleted client.</summary>
+    public static string? DeleteClient(Db db, string? clientId)
+    {
+        clientId = (clientId ?? "").Trim();
+        if (clientId == "pciworld-app") return "load_bearing";
+        if (db.Execute("DELETE FROM pciworld_oauth_clients WHERE client_id=?", clientId) == 0) return "not_found";
+        db.Execute("DELETE FROM pciworld_oauth_codes WHERE client_id=?", clientId);
+        return null;
+    }
+
     // ───────────────────────── endpoints ─────────────────────────
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string> log)
@@ -109,9 +179,10 @@ public static class WorldOAuth
         {
             if (!Enabled()) return Disabled();
             var clientId = ctx.Request.Query["client_id"].ToString();
-            var c = db.QueryOne("SELECT client_id, name FROM pciworld_oauth_clients WHERE client_id=?", clientId);
+            var c = db.QueryOne("SELECT client_id, name, first_party FROM pciworld_oauth_clients WHERE client_id=?", clientId);
             if (c is null) return Err("unknown_client", 404);
-            return Results.Json(new { client_id = H.Str(c["client_id"]), name = H.Str(c["name"]) });
+            return Results.Json(new { client_id = H.Str(c["client_id"]), name = H.Str(c["name"]),
+                first_party = H.L(c["first_party"]) == 1, scope_description = ScopeDescription });
         });
 
         // Authorization: the PORTAL identity (canonical student session) authorizes the World
@@ -126,9 +197,19 @@ public static class WorldOAuth
             var b = await H.Body(ctx.Request);
             var (lerr, worldId) = WorldAccount.LinkStudent(db, s.Id, s.Email, ($"{s.FirstName} {s.LastName}").Trim());
             if (lerr is not null) return Err(lerr, lerr == "email_in_use" ? 409 : 403);
-            var (err, code) = IssueCode(db, worldId,
-                H.GetS(b, "client_id") ?? "", H.GetS(b, "redirect_uri") ?? "",
-                H.GetS(b, "code_challenge") ?? "", H.GetS(b, "code_challenge_method") ?? "");
+            var clientId = H.GetS(b, "client_id") ?? "";
+            var (err, code) = IssueCode(db, worldId, clientId, H.GetS(b, "redirect_uri") ?? "",
+                H.GetS(b, "code_challenge") ?? "", H.GetS(b, "code_challenge_method") ?? "",
+                consent: H.GetEl(b, "consent") is { ValueKind: JsonValueKind.True });
+            if (err == "consent_required")
+            {
+                // Enough for the caller to RENDER the consent screen — the person decides there,
+                // and the retry carries consent:true. Nothing is issued until they do.
+                var c = db.QueryOne("SELECT name FROM pciworld_oauth_clients WHERE client_id=?", clientId);
+                return Results.Json(new { error = "consent_required",
+                    client_name = c is null ? clientId : H.Str(c["name"]),
+                    scope_description = ScopeDescription }, statusCode: 400);
+            }
             if (err is not null) return Err(err, 400);
             log(s.Id, "world_oauth_authorize", $"student #{s.Id} → world #{worldId}");
             return Results.Json(new { ok = true, code, expires_in = CodeLifetimeSeconds });
