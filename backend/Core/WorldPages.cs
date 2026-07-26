@@ -1231,20 +1231,59 @@ public static class WorldPages
             noindex: true);
     }
 
-    public static string VerifyEmail(Db db, bool ok) => Layout(db,
-        ok ? "Email verified — PCI World" : "Verification link invalid — PCI World",
+    /// <summary>
+    /// Email verification page (journey repair P1-03). States: "confirm" — the token is valid and
+    /// verification happens only on the deliberate button press (the POST consumes it; a GET from
+    /// a mail scanner or link preview changes nothing); "already" — the account is verified, the
+    /// press would be a no-op and says so; "invalid" — expired, used or malformed.
+    /// </summary>
+    public static string VerifyEmail(Db db, string state) => Layout(db,
+        state switch
+        {
+            "confirm" => "Confirm your email — PCI World",
+            "already" => "Email already verified — PCI World",
+            _ => "Verification link invalid — PCI World",
+        },
         "PCI World email verification.",
-        ok
-            ? """
-              <h1>Email verified</h1>
-              <p class="lede">Your PCI World account email is confirmed. You can now publish your Passport when you choose to.</p>
-              <p><a class="btn" href="/world/account">Go to your account</a></p>
-              """
-            : """
-              <h1>That link didn&rsquo;t work</h1>
-              <p class="lede">The verification link is invalid or has expired. Sign in and request a new one from your account page.</p>
+        state switch
+        {
+            "confirm" => """
+              <span class="kicker">Account</span>
+              <h1>Confirm your email address</h1>
+              <div class="card" style="max-width:480px">
+                <p class="lede" style="margin-top:0">Press the button to verify this email for your PCI World account.
+                Nothing happens until you do — opening this link alone changes nothing.</p>
+                <p><button class="btn" id="ve_go">Verify my email</button></p>
+                <p id="ve_msg" role="status"></p>
+              </div>
+              <script>
+              (function(){
+              'use strict';
+              var btn=document.getElementById('ve_go'),msg=document.getElementById('ve_msg');
+              btn.addEventListener('click',function(){
+                btn.disabled=true;
+                var t=new URLSearchParams(location.search).get('t')||'';
+                fetch('/api/world/account/verify-email',{method:'POST',headers:{'Content-Type':'application/json'},
+                  body:JSON.stringify({token:t})})
+                .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});})
+                .then(function(){msg.innerHTML='<span class="ok">Email verified.</span> <a href="/world/account">Go to your account</a> to continue.';})
+                .catch(function(e){btn.disabled=false;
+                  msg.innerHTML='<span class="bad">'+((e&&e.message)||'That link is no longer valid — request a new one from your account page.')+'</span>';});
+              });
+              })();
+              </script>
+              """,
+            "already" => """
+              <h1>This email is already verified</h1>
+              <p class="lede">Nothing more to do — your PCI World account email is confirmed and this link has no further effect.</p>
               <p><a class="btn" href="/world/account">Go to your account</a></p>
               """,
+            _ => """
+              <h1>That link didn&rsquo;t work</h1>
+              <p class="lede">The verification link is invalid, has expired, or was already used. Sign in and request a new one from your account page — sending again is free and takes seconds.</p>
+              <p><a class="btn" href="/world/account">Go to your account</a></p>
+              """,
+        },
         "/world/account", noindex: true);
 
     public static string ResetPassword(Db db) => Layout(db,
@@ -1281,7 +1320,7 @@ public static class WorldPages
     /// answer, never presented as a credential.</summary>
     public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows,
         WorldPassport.Disclosure? show = null, string? verifyUrl = null, string? token = null, string? expiresAt = null,
-        string? photoUrl = null)
+        string? photoUrl = null, long? totalCompleted = null, long? totalIndustries = null, long? totalTracks = null)
     {
         // Field-level disclosure is enforced HERE, at render, not by hiding columns in CSS: a value
         // the owner did not publish never reaches the page at all.
@@ -1297,8 +1336,14 @@ public static class WorldPages
               {(show.Dates ? $"<td class=\"num\">{E((H.Str(r["completed_at"]) ?? "").Split(' ')[0])}</td>" : "")}
             </tr>
             """));
-        var industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
-        var tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        // Whole-history totals when the caller supplies them (P1-06); the page of rows is only a
+        // window, and the stats must never understate a long history.
+        var completedTotal = totalCompleted ?? rows.Count;
+        var industries = totalIndustries ?? rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var tracks = totalTracks ?? rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var truncated = completedTotal > rows.Count
+            ? $"<p class=\"meta\"><span>Showing the {rows.Count} most recent of {completedTotal} published challenges.</span></p>"
+            : "";
         var verifyBlock = verifyUrl is null ? "" : $"""
             <div class="card" id="verify">
               <span class="kicker">Verification</span>
@@ -1319,7 +1364,7 @@ public static class WorldPages
             """;
         return Layout(db,
             $"{name} — PCI World Passport",
-            $"Verified virtual project experience: {rows.Count} completed PCI World challenge{(rows.Count == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
+            $"Verified virtual project experience: {completedTotal} completed PCI World challenge{(completedTotal == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
             $"""
             <div class="ppt-cover" style="margin-top:6px">
               <div class="ppt-lines" aria-hidden="true"></div>
@@ -1338,7 +1383,7 @@ public static class WorldPages
                 {SealSvg()}
               </div>
               <div class="ppt-stats">
-                <div><span class="kicker">Challenges</span><b class="score num">{rows.Count}</b></div>
+                <div><span class="kicker">Challenges</span><b class="score num">{completedTotal}</b></div>
                 <div><span class="kicker">Industries</span><b class="score num">{industries}</b></div>
                 <div><span class="kicker">Tracks</span><b class="score num">{tracks}</b></div>
               </div>
@@ -1360,6 +1405,7 @@ public static class WorldPages
                 <tbody>{items}</tbody>
               </table>
               </div>
+              {truncated}
             </div>
             <div class="card">
               <h2 style="margin-top:0">How to read this Passport</h2>
@@ -1753,8 +1799,8 @@ public static class WorldPages
                '<p style="color:var(--slate)">Tick the results you want on your public Passport. Nothing is shown without your choice.</p>'+
                '<div class="tbl-wrap"><table><thead><tr><th scope="col">Show</th><th scope="col">Challenge</th>'+
                '<th scope="col">Score</th><th scope="col">Profile</th><th scope="col">Date</th></tr></thead><tbody>';
-            (p.evidence||[]).forEach(function(e2){
-              h+='<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
+            function evRow(e2){
+              return '<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
                  ' aria-label="Show '+esc(e2.title)+' on public Passport"></td>'+
                  '<td><b>'+esc(e2.title)+'</b>'+
                  // Traceability line: code + immutable version, linking back to the challenge —
@@ -1764,8 +1810,15 @@ public static class WorldPages
                  (e2.difficulty?' &middot; '+esc(pretty(e2.difficulty)):'')+'</small></td>'+
                  '<td class="num">'+esc(e2.score)+'</td><td>'+esc(pretty(e2.profile))+'</td>'+
                  '<td class="num">'+esc((e2.completed_at||'').split(' ')[0])+'</td></tr>';
-            });
+            }
+            (p.evidence||[]).forEach(function(e2){h+=evRow(e2);});
             h+='</tbody></table></div>'+
+               // Whole-history honesty (P1-06): the table is a window; the totals above are SQL
+               // truth, and every older row stays reachable through Load more.
+               (p.evidence_total>(p.evidence||[]).length
+                 ?'<p class="meta"><span id="evshown" role="status">Showing '+(p.evidence||[]).length+' of '+p.evidence_total+' completed challenges</span></p>'+
+                  '<p><button class="btn secondary" id="evmore">Load more</button></p>'
+                 :'')+
                ((p.evidence||[]).length?'':'<p style="color:var(--slate)">No completed challenges yet — '+
                  '<a href="/world">today&rsquo;s challenge</a> takes five to ten minutes, and it will appear here the moment you finish.</p>')+
                '</div>'+
@@ -1835,11 +1888,30 @@ public static class WorldPages
             if($('unpub'))$('unpub').addEventListener('click',function(){
               api('/api/world/passport/publish',{publish:false}).then(load);
             });
-            $('me').querySelectorAll('input[data-att]').forEach(function(cb){
-              cb.addEventListener('change',function(){
-                api('/api/world/passport/evidence',{attempt_id:parseInt(cb.dataset.att,10),visible:cb.checked});
+            function bindEv(scope){
+              scope.querySelectorAll('input[data-att]').forEach(function(cb){
+                if(cb.dataset.bound)return;cb.dataset.bound='1';
+                cb.addEventListener('change',function(){
+                  api('/api/world/passport/evidence',{attempt_id:parseInt(cb.dataset.att,10),visible:cb.checked});
+                });
               });
-            });
+            }
+            bindEv($('me'));
+            if($('evmore')){
+              var evCount=(p.evidence||[]).length;
+              $('evmore').addEventListener('click',function(){
+                $('evmore').disabled=true;
+                api('/api/world/passport?offset='+evCount).then(function(q){
+                  var tb=$('me').querySelector('table tbody');
+                  (q.evidence||[]).forEach(function(e2){tb.insertAdjacentHTML('beforeend',evRow(e2));});
+                  bindEv(tb);
+                  evCount+=(q.evidence||[]).length;
+                  $('evshown').textContent='Showing '+evCount+' of '+q.evidence_total+' completed challenges';
+                  $('evmore').disabled=false;
+                  if(!(q.evidence||[]).length||evCount>=q.evidence_total)$('evmore').hidden=true;
+                }).catch(function(){$('evmore').disabled=false;});
+              });
+            }
             $('signout').addEventListener('click',function(){
               api('/api/world/account/logout',{}).catch(function(){});
               localStorage.removeItem(KEY);showAuth();
