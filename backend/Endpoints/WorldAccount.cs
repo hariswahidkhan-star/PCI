@@ -624,6 +624,9 @@ public static class WorldAccount
             var s = WorldDashboard.Build(db, u, DateTime.UtcNow);
             return J(new
             {
+                // The sign-in email is CANONICAL PCI identity data (PW-US-058): World shows it,
+                // and says where it is managed — it never grows its own email-change divergence.
+                email = u.Email,
                 display_name = u.DisplayName,
                 email_verified = u.EmailVerified,
                 primary_action = s.PrimaryAction,
