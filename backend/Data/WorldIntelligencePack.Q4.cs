@@ -895,5 +895,952 @@ public static partial class WorldIntelligencePack
              "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
              "share_line":"Unstacked three defensible optimisms before the board spent against their total."}
             """),
+
+        // ═════════════ NOVEMBER — integrated project controls and executive trade-offs ═════════════
+        // ───────────── Daily Decisions · governance · advanced · deep ─────────────
+
+        ("WC-GOV-312", "A delegation question with teeth", "The limits were written for a smaller programme. Today they bite a real decision.",
+            "Framework Programmes", "Programme Director", "project_management", "advanced", 13,
+            """["governance","decision_quality","delegation"]""",
+            """
+            {"context":"Your framework programme's delegation schedule authorises you to approve changes to £250k; above that, the quarterly investment board. Today a supplier's insolvency requires novating its three live packages within ten working days — total value £1.9m, but the novation itself costs £180k in assignment fees and re-warranting. Legal advice: delay past ten days and the administrator re-tenders the packages, costing months. The next board is five weeks away. The schedule's author left years ago; the vice-chair says by phone that 'the fees are the decision and they're within your limit'; the finance director, also by phone, says 'you are moving £1.9m of contractual obligation — that is a board matter'. Both will stand by their view in writing. The clock runs either way.",
+             "evidence":[
+               {"label":"Delegation","value":"You: £250k. Investment board: above. Next board: 5 weeks"},
+               {"label":"Decision","value":"Novate 3 packages (£1.9m obligations) in 10 working days; direct fees £180k"},
+               {"label":"Vice-chair","value":"'Fees are the decision — within your limit'"},
+               {"label":"Finance director","value":"'£1.9m of obligation moves — board matter'"}],
+             "decisions":[
+               {"key":"authority","prompt":"You:",
+                "options":[
+                  {"key":"urgent_provision","label":"Use the governance the schedule actually provides for its own gaps: invoke the urgent-decision provision (chair's action or emergency written resolution of board members), present the novation with both readings of the limit stated, and obtain a decision at board authority inside the ten days — while recording the ambiguity for the schedule's revision","quality":100,
+                   "consequence":"Written resolutions land in six days; the novation completes with board-level cover under either reading, and the delegation schedule gains an obligation-value test at its next revision — closing the gap the insolvency found.",
+                   "principle":"When a limit is ambiguous, the safe harbour is the higher authority's confirmation — and mature schedules contain an urgent route to it precisely because clocks don't wait for quarters."},
+                  {"key":"take_fees","label":"Proceed on the vice-chair's reading — the cash decision is £180k, it is within your limit, and ten days leaves no practical alternative","quality":15,
+                   "consequence":"The novation holds until one package later fails, at which point the £1.9m reading is argued by insurers, and the phone-call authority you acted on has become 'a conversation the vice-chair recalls differently'.",
+                   "principle":"An ambiguous limit read in your own favour, on oral advice, is exactly the file that looks worst in hindsight."},
+                  {"key":"wait","label":"Hold for the board — moving £1.9m of obligation on a contested reading is precisely what limits exist to prevent","quality":25,
+                   "consequence":"Principled and avoidable: the administrator re-tenders on day eleven, the packages fragment across new suppliers at a five-month delay, and the board you protected asks why its urgent-decision provision was never used.",
+                   "principle":"Escalation that ignores the express route arrives as abdication — the duty is to obtain a fast decision, not to decline a slow one."}]}],
+             "hints":["Separate the cash amount from the obligation amount — the two readings price the same decision differently.",
+               "Look for what the delegation schedule says about urgency before concluding it says nothing.",
+               "Whatever happens in ten days, the file should show a decision made at, or confirmed by, the higher authority."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Found the urgent-decision route through an ambiguous delegation limit — six days inside a ten-day clock."}
+            """),
+
+        ("WC-GOV-315", "The baseline the board never saw", "Every report says 'on plan'. The plan it means is not the one the board approved.",
+            "Climate & Retrofit", "Programme Director", "project_management", "advanced", 18,
+            """["governance","baseline_management","reporting_integrity"]""",
+            """
+            {"context":"Taking over the housing retrofit programme, you trace its reporting lineage. The board approved a baseline three years ago: 18,000 homes, £310m, four years. Since then, the delivery team has 're-planned' three times — each a sensible response to real events (a supplier failure, a specification change forced by new regulations, an access-rate discovery), each approved at delivery-group level, none taken back to the board. Current reports show 'green — on plan' against the third re-plan: 11,400 homes, £298m, five and a half years. The board believes it is funding the original. The board papers you inherit for next month contain the same green. Your predecessor's handover note says only: 'reporting basis is settled practice — do not reopen'.",
+             "evidence":[
+               {"label":"Approved baseline","value":"18,000 homes, £310m, 4 years — board, 3 years ago"},
+               {"label":"Current basis","value":"Re-plan #3: 11,400 homes, £298m, 5.5 years — never board-approved"},
+               {"label":"Reports","value":"'Green — on plan' against re-plan #3"},
+               {"label":"Handover","value":"'Reporting basis is settled practice — do not reopen'"}],
+             "decisions":[
+               {"key":"baseline","prompt":"Your first board paper:",
+                "options":[
+                  {"key":"rebase","label":"Reopens it: present the full lineage — approved baseline, three re-plans, what each changed and why — report current performance against BOTH the board's baseline and the working plan, and ask the board to formally adopt, amend or reject a re-baseline so that 'green' regains a meaning","quality":100,
+                   "consequence":"The meeting is the worst of your tenure and the turning point of the programme: the board adopts a revised baseline at 12,100 homes with a funded access-rate workaround, two members note they would have challenged re-plan #2 — and every future green means what it says.",
+                   "principle":"A baseline is the board's property; performance reported against an unapproved plan is not reporting, it is the delivery team marking its own homework at 37% scope loss."},
+                  {"key":"settle","label":"Follows the handover — the re-plans were each defensible, the practice is established, and reopening three years of reporting destabilises a programme that is genuinely delivering","quality":0,
+                   "consequence":"An audit committee member eventually asks the innocent question — 'green against what?' — and the answer unravels in public: three years of reports, your name on the recent ones, all green against a plan the board never saw.",
+                   "principle":"Settled practice that the governing body doesn't know about is not settled — it is undiscovered."},
+                  {"key":"quiet_fix","label":"Adopts the working plan as the new baseline via delivery-group approval — regularising the practice through the same route that created it, without a board confrontation","quality":10,
+                   "consequence":"A fourth unapproved re-plan now papers over the first three; the mechanism that caused the drift has been used as its remedy, and the gap between board belief and delivery reality is one re-plan wider.",
+                   "principle":"You cannot cure an authority gap with another act at the wrong authority — the route that caused the disease is not its treatment."}]},
+               {"key":"forward","prompt":"To prevent recurrence, you also propose:",
+                "options":[
+                  {"key":"control","label":"A baseline-change control with a materiality threshold: re-plans below it are delivery-group business reported to the board as variances; anything touching scope, completion date or approved cost above threshold goes to the board before the plan changes — with the reporting basis named on every dashboard","quality":100,
+                   "consequence":"Re-plan #4 — and there is one, within the year — takes eleven days through the new control instead of zero through the old habit, and the board approves it knowing exactly what it trades.",
+                   "principle":"The fix for baseline drift is not heroic honesty once — it is a threshold that makes the next drift impossible to do quietly."},
+                  {"key":"trust","label":"A commitment that the delivery group will 'escalate significant re-plans' — keeping flexibility without bureaucracy","quality":15,
+                   "consequence":"'Significant' is judged by the people doing the re-planning, which is how 18,000 homes became 11,400 without a board paper; the commitment restates the failure as a promise.",
+                   "principle":"A control whose trigger is the controlled party's own judgement is a description of the status quo."}]}],
+             "hints":["Trace what the board actually approved, then what each report's 'plan' actually refers to.",
+               "Report against both baselines in one paper — the gap between them IS the message.",
+               "The lasting fix is a materiality threshold on baseline changes, not a promise to behave."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Put three years of quiet re-plans back in front of the board — and gave 'green' its meaning back."}
+            """),
+
+        ("WC-GOV-318", "Strategy says yes, capacity says no", "The board wants the relocation accelerated. The people who'd do it are already double-booked.",
+            "Life Sciences", "Programme Director", "project_management", "advanced", 16,
+            """["governance","resource_management","decision_quality"]""",
+            """
+            {"context":"The laboratory relocation is strategically urgent: the new owner wants the consolidated campus operational a year early, and the executive has publicly committed to explore acceleration. Your capacity analysis is unambiguous the other way: the relocation's critical resource is not money but a small pool of validation scientists — eleven people who must re-validate every assay in the new facility — and that pool is already committed at 110% through the original schedule, borrowed against by two other programmes. Acceleration on paper is easy; every acceleration scenario your planners model either strips validation (regulatory suicide), hires seniors who take a year to be effective, or cannibalises the other two programmes the same executive also sponsors. The steering committee expects an acceleration plan next week.",
+             "evidence":[
+               {"label":"Ask","value":"Campus operational a year early — public executive commitment to explore"},
+               {"label":"Constraint","value":"11 validation scientists at 110% commitment; hiring lead time ~1 year to effectiveness"},
+               {"label":"Scenarios","value":"Strip validation / hire seniors / cannibalise 2 sibling programmes"},
+               {"label":"Forum","value":"Steering committee expects an acceleration plan in a week"}],
+             "decisions":[
+               {"key":"present","prompt":"To the steering committee you bring:",
+                "options":[
+                  {"key":"tradeoff","label":"The constraint itself, priced as an executive trade-off: the validation pool is the programme's true critical path, so acceleration is possible only by taking scientists from named sibling programmes with named consequences — presented as a portfolio decision for the executive who sponsors all three, alongside the one real mitigation (contract validation capacity with a 5-month qualification lead, buying ~4 months, not 12)","quality":100,
+                   "consequence":"The executive, seeing for the first time that 'accelerate' means choosing between her own programmes, takes the 4-month contract option and re-frames the public commitment around phased occupancy — strategy amended by capacity fact, which is the system working.",
+                   "principle":"When strategy and capacity conflict, the professional act is to price the conflict and hand it to the only level that can resolve it — not to promise the strategy or hoard the constraint."},
+                  {"key":"comply","label":"An acceleration plan built on the least-bad scenario — stretch the validation pool with overtime and re-prioritised assays — because the committee asked for a plan, not a problem","quality":0,
+                   "consequence":"The plan is approved and fails in month four exactly as the analysis predicted: validation backlog, two burned-out resignations from the eleven, and an acceleration that ends net slower than the original schedule.",
+                   "principle":"A plan you know the constraint will defeat is not a plan — it is a scheduled disappointment with your name on the cover."},
+                  {"key":"refuse","label":"A recommendation against acceleration, with the capacity analysis attached — the numbers speak for themselves","quality":30,
+                   "consequence":"The numbers do not speak; they are spoken over. The committee reads refusal as inflexibility, commissions an external 'deliverability review' that takes eight weeks to find your analysis was right, and the relationship damage outlives the vindication.",
+                   "principle":"'No' without options invites someone else to say yes on your behalf — constraints persuade only when priced into choices."}]},
+               {"key":"protect","prompt":"Whatever the committee chooses, you also:",
+                "options":[
+                  {"key":"visible","label":"Make the validation pool a permanently visible, portfolio-level resource: its commitments across all three programmes on one view, owned above programme level, so no future strategy is formed in ignorance of the constraint that governs all of them","quality":100,
+                   "consequence":"Six months later a fourth programme's business case is amended at draft stage because the pool's view shows no capacity — the first strategic decision the constraint has informed before being discovered.",
+                   "principle":"A shared constraint managed inside one programme will be promised by all of them — critical capacity belongs on the portfolio's books, not in a planner's spreadsheet."},
+                  {"key":"local","label":"Keep the pool's management inside the relocation where the expertise sits, sharing the analysis when asked","quality":20,
+                   "consequence":"'When asked' turns out to be after the next commitment; the pool is re-promised within two quarters by a programme that never knew to ask.",
+                   "principle":"Constraints that are only visible on request are invisible at the moment strategies are made."}]}],
+             "hints":["Find the real critical path — it is people, not money, and it is shared with two other programmes.",
+               "Price each acceleration scenario in consequences the executive owns, not in planning objections.",
+               "The deliverable is a trade-off the right level can decide — plus permanent visibility of the constraint."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Priced a public acceleration promise against eleven validation scientists — and let the executive choose with open eyes."}
+            """),
+
+        ("WC-GOV-321", "The go/no-go with missing evidence", "Two of nine readiness criteria are unproven. The window closes tonight either way.",
+            "Advanced Manufacturing", "Programme Director", "project_management", "advanced", 14,
+            """["governance","decision_quality","risk_management"]""",
+            """
+            {"context":"The plant expansion's tie-in to the live production line happens in tonight's maintenance window or in eleven weeks — the next scheduled shutdown. The go/no-go board convenes at 14:00. Seven of nine readiness criteria are green with evidence. Two are not: the reverse-flow interlock test could not be completed because the test rig failed this morning (the interlock itself is installed and visually verified, but unproven under load), and the operations team's competency sign-off covers only two of the three shifts — the night shift's assessor was ill. The commercial pressure is real: eleven weeks of delay costs seven figures and a customer commitment. The tie-in, if it goes wrong, stops the existing line — the one currently earning all the money.",
+             "evidence":[
+               {"label":"Window","value":"Tonight, or +11 weeks (next shutdown)"},
+               {"label":"Green","value":"7 of 9 criteria evidenced"},
+               {"label":"Open","value":"Interlock unproven under load (rig failed); night-shift competency unsigned"},
+               {"label":"Stakes","value":"Delay: 7 figures + customer promise. Failure: stops the earning line"}],
+             "decisions":[
+               {"key":"gonogo","prompt":"As the accountable chair, you:",
+                "options":[
+                  {"key":"criteria","label":"Interrogate the two open criteria for what they actually protect and whether equivalent evidence or containment exists tonight: an alternative load test via the commissioning skid for the interlock, and restricting tonight's work to the two signed-off shifts with the tie-in's night activities re-sequenced — go only if both criteria are genuinely satisfied by other means, and say no if either can't be","quality":100,
+                   "consequence":"The commissioning skid proves the interlock by 19:00; the re-sequence puts night-shift work under day-shift supervision overlap. The tie-in proceeds with nine criteria met — two by routes the checklist never imagined — and the record shows why each was equivalent.",
+                   "principle":"Readiness criteria protect specific failure modes, not paperwork completeness — the honest question is never 'are all boxes ticked' but 'is each failure mode actually closed tonight'."},
+                  {"key":"go_risk","label":"Go — seven of nine is strong, the interlock is installed and inspected, and eleven weeks against two soft criteria is not a serious trade","quality":0,
+                   "consequence":"The tie-in works; the culture doesn't. 'Seven of nine is a go' enters the plant's folklore, and the next go/no-go — with different criteria open — cites tonight as precedent for the shortcut that eventually finds the failure mode a criterion existed to catch.",
+                   "principle":"Every criterion waived without equivalent evidence teaches the organisation which criteria are decorative — a lesson it will apply when you are not in the chair."},
+                  {"key":"no_go","label":"No-go — the criteria exist precisely for this moment, incomplete is incomplete, and the eleven weeks is the price of a rig that failed","quality":35,
+                   "consequence":"Defensible, expensive, and less rigorous than it looks: equivalent evidence for both criteria was available by evening, and the seven-figure delay bought no risk reduction the alternatives couldn't have — rigidity mistaken for rigour.",
+                   "principle":"Treating the checklist as the safety case — rather than the failure modes behind it — fails in both directions; automatic no is judgement abdicated just as surely as automatic go."}]}],
+             "hints":["Ask what each open criterion protects against — then whether that protection can be achieved another way tonight.",
+               "Distinguish evidence that is missing from evidence that is late — a failed rig is not a failed interlock.",
+               "Whatever you decide, the record must show failure modes closed, not boxes negotiated."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Closed two open readiness criteria by equivalent evidence before a one-night window — and kept the checklist honest."}
+            """),
+
+        ("WC-GOV-323", "The second gate that split the board", "Same deadlock, higher stakes — and this time the criteria were yours.",
+            "Enterprise Transformation", "Programme Director", "project_management", "advanced", 15,
+            """["governance","decision_quality","benefits_management"]""",
+            """
+            {"context":"The enterprise transformation's release-two gate has deadlocked its board — and this time the gate criteria are the improved ones you introduced after last year's near-miss: benefits measured at original dates by an independent owner. The measurement has duly landed, and it is genuinely ambiguous: the efficiency benefit is real but 40% smaller than the case; the revenue benefit is above case but driven substantially by a market change no one predicted; the adoption metric passed its threshold the week of measurement after two months below it. Half the board reads this as 'the case is broken — pause and re-plan'; half as 'the portfolio effect is positive — proceed'. Your criteria produced honest numbers; they did not produce a verdict. All eyes turn to the programme director.",
+             "evidence":[
+               {"label":"Efficiency benefit","value":"Real, but 40% below case"},
+               {"label":"Revenue benefit","value":"Above case — driven largely by an unforecast market change"},
+               {"label":"Adoption","value":"Passed threshold in measurement week, after 2 months below"},
+               {"label":"Board","value":"Split: 'case broken — pause' vs 'portfolio positive — proceed'"}],
+             "decisions":[
+               {"key":"verdict","prompt":"Your counsel:",
+                "options":[
+                  {"key":"recast","label":"Separate what the numbers settle from what they cannot: attribution — recommend proceeding with release two re-scoped to the efficiency shortfall's root cause (the numbers show where it lives), the revenue benefit re-based so the case no longer claims the market's work as the programme's, and adoption put on a 3-month confirmation measure rather than a single-week pass","quality":100,
+                   "consequence":"Both camps get the half they were right about: delivery continues where evidence supports it, the case stops flattering itself with borrowed revenue, and the adoption question resolves itself on the confirmation measure two months later — downward, vindicating the check.",
+                   "principle":"Honest measurement often returns a mixed verdict — the gate's job then is decomposition, not adjudication: proceed where the evidence is real, re-base where it is borrowed, re-measure where it is thin."},
+                  {"key":"proceed","label":"Advise proceeding on the aggregate — total benefits exceed the case, and boards that relitigate composition when the total is positive teach programmes to stop measuring honestly","quality":20,
+                   "consequence":"The aggregate holds until the market change reverses eighteen months later, at which point the case's real performance — efficiency 40% light, adoption soft — stands exposed without the borrowed revenue that had been covering it.",
+                   "principle":"An aggregate that mixes earned and lucky is not a verdict, it is a coincidence with a total."},
+                  {"key":"pause","label":"Advise pausing — a 40% efficiency shortfall and a one-week adoption pass are exactly what the improved criteria were built to catch","quality":30,
+                   "consequence":"The pause treats the strongest evidence (real, above-case revenue delivery capability) identically to the weakest (the adoption blip); four months of re-planning later, the plan restarts substantially unchanged, minus momentum and two key engineers.",
+                   "principle":"Criteria built to catch weak evidence should not be used to discard strong evidence that arrives in the same envelope."}]}],
+             "hints":["Decompose before you adjudicate: which number is earned, which is borrowed, which is thin?",
+               "A benefit driven by an unforecast market change belongs in the case's honesty, not its victory column.",
+               "One-week threshold passes after two months below are measured again, not celebrated."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Split a mixed benefits verdict into proceed, re-base and re-measure — instead of forcing it to one word."}
+            """),
+
+        ("WC-GOV-325", "Benefits in the ground", "The road opened on time. The case it was built on opens later — if anyone checks.",
+            "Highways", "Programme Director", "project_management", "advanced", 13,
+            """["governance","benefits_management","reporting_integrity"]""",
+            """
+            {"context":"The highway upgrade opened four months ago, on time and within budget — the celebration is over and the delivery team largely demobilised. The business case promised three benefits: journey-time savings (the headline), casualty reduction, and unlocked development land at two junctions. Your closure obligations include a benefits plan handover — and the uncomfortable discovery is that nobody remains to receive it: the council's transport strategy team, named as benefits owner in the case, was reorganised out of existence last year. Early data is mixed: journey times improved less than modelled because traffic grew to fill the new capacity faster than forecast; casualty data needs three years to mean anything; the development land sits in a planning process the case never mentioned. The path of least resistance is a closure report noting benefits 'transferred to the council' — which is technically the case's own wording.",
+             "evidence":[
+               {"label":"Delivery","value":"Opened on time, within budget, team demobilising"},
+               {"label":"Named owner","value":"Council strategy team — reorganised out of existence"},
+               {"label":"Early data","value":"Journey times below model (induced demand); casualties need 3 years; land in unmentioned planning process"},
+               {"label":"Easy path","value":"Closure notes benefits 'transferred to the council' — the case's own words"}],
+             "decisions":[
+               {"key":"handover","prompt":"Your closure report:",
+                "options":[
+                  {"key":"real_owner","label":"Refuses the fictional transfer: escalate that the named benefits owner no longer exists, secure a real successor owner with the council's executive before closure, and hand over a live measurement plan — induced-demand-adjusted journey metrics, the casualty measurement dates, and the planning dependency the case omitted, stated plainly","quality":100,
+                   "consequence":"Closure takes six weeks longer and means something: the successor owner exists, the three-year casualty measurement is calendared with funding, and the induced-demand finding feeds the next scheme's model instead of being buried with this one's.",
+                   "principle":"A benefit handed to an owner that doesn't exist has been abandoned, not transferred — closure's last duty is making sure the case's promises land on a desk that is real."},
+                  {"key":"transfer","label":"Uses the case's wording — benefits transfer to the council at closure, the delivery organisation's accountability ends at the ribbon, and the owner's reorganisation is the council's problem to solve","quality":0,
+                   "consequence":"No one measures anything; three years later a road-safety FOI request finds no casualty evaluation was ever done on a scheme part-justified by casualty reduction, and the resulting coverage names the closure report that made it nobody's job.",
+                   "principle":"'Technically transferred' to a void is the mechanism by which most promised benefits are never measured at all."},
+                  {"key":"extend","label":"Keeps benefits measurement inside the programme — extend a small team three years to do the measurement properly rather than trust the council","quality":25,
+                   "consequence":"Well-intentioned overreach: the sponsor declines to fund a delivery body doing a strategy body's job for three years, closure stalls in the argument, and the actual fix — a real council owner — is delayed by the attempt to substitute for one.",
+                   "principle":"Delivery organisations are scaffolding; the answer to a missing owner is finding one, not becoming one."}]}],
+             "hints":["Check whether the named benefits owner still exists before writing 'transferred'.",
+               "The induced-demand shortfall is a finding worth handing over, not an embarrassment worth burying.",
+               "Closure's test: three years from now, is each measurement someone's funded, calendared job?"],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Held a road scheme's closure open until its promised benefits had a real owner and a funded measurement plan."}
+            """),
+
+        // ───────────── Risk Room · advanced · deep · evidence diagnosis ─────────────
+
+        ("WC-RSK-313", "The single point of failure everyone knew", "It's in three risk workshops' outputs. It's in nobody's plan.",
+            "River Crossings", "Programme Risk Analyst", "project_controls", "advanced", 16,
+            """["risk_management","evidence_analysis","concept_planning"]""",
+            """
+            {"context":"At concept stage for the river crossing, you review the risk inheritance from three optioneering workshops. One item appears in all three outputs, worded differently each time: the entire scheme depends on a single grid connection through one substation for the tunnel-boring phase — 'power resilience (parked pending route decision)', 'TBM supply — single feed, discuss with DNO', 'energy SPOF — carried forward'. Each workshop noted it; each parked it; none owned it. The concept design freezes in eight weeks, and the design as drawn provides one connection point, because providing for a second was 'a detail for detailed design'. Your enquiry to the distribution operator reveals the fact nobody had collected: a second feed is possible from the southern network — but only if the concept safeguards a cable corridor that the current preferred site layout builds over.",
+             "evidence":[
+               {"label":"Pattern","value":"Same single-feed dependency parked in all 3 workshop outputs, differently worded"},
+               {"label":"Design","value":"Concept freezes in 8 weeks with one connection point"},
+               {"label":"DNO fact","value":"Second feed possible — needs a cable corridor the preferred layout builds over"},
+               {"label":"Status","value":"No owner, no plan line, 'detail for detailed design'"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"The finding you escalate:",
+                "options":[
+                  {"key":"window","label":"This is a concept-stage decision disguised as a detail: the single point of failure is only cheap to fix before the layout freezes — safeguarding the corridor costs a layout adjustment now, versus a network-priced diversion or an accepted months-long TBM outage risk forever after — and it needs an owner and a decision in the next eight weeks","quality":100,
+                   "consequence":"The layout adjusts — one compound moves 40 metres — and the corridor is safeguarded at negligible cost; the risk that three workshops parked closes for the price of a drawing revision, which is what concept stage is for.",
+                   "principle":"Risks 'parked for detailed design' that depend on concept-stage geometry are not parked, they are being decided by default — the window to fix them cheaply is exactly the window in which they look ignorable."},
+                  {"key":"carry","label":"Carry it properly at last: register it with an owner, a probability, a TBM-outage impact, and a mitigation study in detailed design — correcting the process failure without disrupting the concept freeze","quality":15,
+                   "consequence":"The register is finally honest and the layout freezes over the corridor; detailed design's mitigation study duly reports that the second feed is now a seven-figure diversion, and the register carries a permanently expensive risk that was briefly a free one.",
+                   "principle":"Registering a risk after its cheap window closes is bookkeeping, not management — the workshop-parking failure repeats itself in better handwriting."},
+                  {"key":"procure","label":"Attack resilience directly: specify on-site generation capacity for the TBM phase as a design requirement, making the grid question moot","quality":35,
+                   "consequence":"Feasible and steep: continuous TBM-scale generation means a compound, consenting burden, fuel logistics and a noise fight — a seven-figure standing answer to a question the corridor safeguard answers for a drawing change.",
+                   "principle":"Engineering your way around a constraint you could design your way through is valour where the job wanted judgement."}]},
+               {"key":"process","prompt":"On the pattern itself — three workshops parking the same risk — you:",
+                "options":[
+                  {"key":"aging","label":"Add a parked-risk aging rule to the programme's risk procedure: anything parked twice, or parked across a stage boundary, is force-escalated to the stage gate with a named owner — because parking is a legitimate act with an illegitimate half-life","quality":100,
+                   "consequence":"The next gate surfaces four multi-parked items; three are genuinely fine and one is the ground-investigation scope everyone assumed someone else had commissioned. The rule pays for itself before the crossing leaves concept.",
+                   "principle":"Workshops park risks in good faith; the failure is systemic only if nothing ever forces the parked list to be re-read — aging rules convert parking from oblivion into deferral."},
+                  {"key":"note","label":"Note the lesson in the workshop guidance — facilitators should assign owners to parked items in future","quality":20,
+                   "consequence":"The guidance is followed at the next workshop and forgotten by the third; guidance without a forcing mechanism regresses to the mean that created this finding.",
+                   "principle":"A lesson written into guidance changes behaviour until the first busy afternoon; a lesson written into the gate criteria changes it permanently."}]}],
+             "hints":["Ask why the same risk was parked three times — then ask what makes it cheap to fix, and until when.",
+               "The DNO enquiry is the evidence nobody collected: the fix depends on geometry the concept is about to freeze.",
+               "Escalate it as a dated decision with a price that changes at freeze, not as a register entry."],
+             "profile_map":{"decision":"Risk Strategist","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Closed a three-times-parked single point of failure for the price of a drawing change — eight weeks before it froze expensive."}
+            """),
+
+        ("WC-RSK-316", "A residual risk with no owner", "The mitigation is complete. What's left over is looking for a home.",
+            "Framework Programmes", "Programme Risk Analyst", "project_controls", "advanced", 16,
+            """["risk_management","governance","closeout"]""",
+            """
+            {"context":"Closing the framework programme's risk register, you audit what 'closed' has meant. Most closures are clean. One is not: the ground-gas risk at the remediated depot site was mitigated by a membrane-and-venting design, installed, verified — and closed as 'mitigated'. But the design documentation states the membrane's protection assumes the venting layer is inspected annually and the site's end users never penetrate the slab without gas-safe procedures. The framework is ending; the site transferred to a community trust eighteen months ago; the register's closure note names no residual controls, no inspection regime, no owner. The trust's building manager — you telephone to check — has never heard of the venting layer and is currently pricing quotes to anchor new play equipment through the slab.",
+             "evidence":[
+               {"label":"Closure","value":"Ground gas 'mitigated — closed': membrane + venting, installed and verified"},
+               {"label":"Design assumption","value":"Annual venting inspection; no slab penetration without gas-safe procedures"},
+               {"label":"Transfer","value":"Site with community trust for 18 months; no controls communicated"},
+               {"label":"Live fact","value":"Trust pricing quotes to anchor play equipment through the slab"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"Your reading of the situation:",
+                "options":[
+                  {"key":"residual","label":"The risk was never 'closed' — it was converted from an event risk into a standing dependency on controls nobody transferred; the immediate hazard is the slab penetration, and the finding is a class defect: every 'mitigated-closed' entry whose mitigation carries operating assumptions needs the same audit before the programme dissolves","quality":100,
+                   "consequence":"The trust's contractor is stopped two weeks before drilling; the audit finds three more closures with orphaned operating assumptions across the framework — a fire-curtain maintenance regime, a drainage easement, an anchor-testing schedule — each rehomed while an organisation still exists to rehome them.",
+                   "principle":"Mitigation by engineered control doesn't close a risk, it transforms it into a dependency on the control's upkeep — and a dependency without an owner is the original risk on a timer."},
+                  {"key":"single","label":"An urgent one-off: stop the drilling, brief the trust, hand over the inspection regime — and close the register with a corrected note","quality":40,
+                   "consequence":"The depot site is made safe; the fire-curtain regime, drainage easement and anchor schedule — same failure, other sites — dissolve with the framework and are found by their consequences.",
+                   "principle":"When an audit finds one orphaned control, the finding is the class, not the instance — programmes rarely make a filing error exactly once."},
+                  {"key":"legal","label":"Primarily a liability question: refer the transfer documentation to legal to establish whether the disclosure obligation was met at handover","quality":10,
+                   "consequence":"Legal review confirms the paperwork ambiguity in eleven weeks; the drilling was quoted for week three. The liability analysis is thorough and the hazard never read it.",
+                   "principle":"Who should have told them is a question for after someone has told them."}]},
+               {"key":"act","prompt":"Before the framework's closure date, you:",
+                "options":[
+                  {"key":"rehome","label":"Run a residual-controls handover as formal closure scope: every engineered mitigation with operating assumptions gets a written transfer — the control, its regime, its consequences of neglect — accepted by a named owner in the receiving organisation, with the trust's transfer done first and in person","quality":100,
+                   "consequence":"Four control regimes land with named owners and budget lines; the trust's building manager, walked through the venting layer on site, becomes its most reliable inspector. The framework dissolves owing nothing to the future.",
+                   "principle":"A programme's last product is the set of standing obligations it leaves behind — closure is complete when each has an owner who has said yes in writing, not when the register says closed."},
+                  {"key":"letter","label":"Issue a residual-risks letter to each receiving organisation listing the controls and assumptions, discharging the duty before the closure date","quality":25,
+                   "consequence":"The letters arrive at front desks of organisations that don't know why they matter; two are filed unread. Sent is not received, and received is not owned — the depot near-miss already proved that chain breaks.",
+                   "principle":"Disclosure transfers information; only acceptance transfers responsibility."}]}],
+             "hints":["Read the mitigation's design documentation for the words 'assumes', 'annually' and 'provided that'.",
+               "Ask who, today, is performing each operating assumption — a control nobody operates is a risk nobody closed.",
+               "One orphaned control found late in a programme is a class finding: audit every engineered closure the same way."],
+             "profile_map":{"decision":"Risk Strategist","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Stopped a slab-drilling near-miss and rehomed four orphaned control regimes before the programme dissolved."}
+            """),
+
+        ("WC-RSK-319", "The weather window and the reserve", "One calm fortnight, one contingency pot, two claims on both.",
+            "Broadcast & Media", "Programme Risk Analyst", "project_controls", "advanced", 16,
+            """["risk_management","schedule_analysis","cost_management"]""",
+            """
+            {"context":"The broadcast facility move — studios, transmission chain, master control — pivots on one constraint: the transmission mast's antenna swap needs a ten-day calm-weather window, and the reliable calm season at the site is a six-week band starting in nine weeks. Mobilisation planning surfaces a collision. The rigging contractor wants an early mobilisation premium to guarantee readiness for the front of the calm band; the transmission-chain vendor, running late on factory acceptance, wants funded acceleration to avoid arriving after the band. Both requests draw on the same programme reserve, and the reserve covers one of them fully, or both thinly. The schedule shows the antenna swap cannot happen before the transmission chain is accepted — but the risk model shows the calm band historically delivers two usable ten-day windows in seven years out of ten, and one window in the rest.",
+             "evidence":[
+               {"label":"Constraint","value":"10 calm days needed; 6-week calm band starts in 9 weeks"},
+               {"label":"Riggers","value":"Early-mobilisation premium to guarantee front-of-band readiness"},
+               {"label":"Vendor","value":"Late on acceptance; wants funded acceleration to make the band"},
+               {"label":"Reserve","value":"Covers one request fully or both thinly; historically band gives 2 windows (70%) or 1 (30%)"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"Working the logic and the weather statistics together, the sound allocation is:",
+                "options":[
+                  {"key":"sequence","label":"Fund the vendor's acceleration fully and hold the riggers to standard mobilisation for mid-band: acceptance gates the swap, so rigger earliness buys nothing while the chain is late — the risk that matters is missing the band entirely, and the acceleration attacks it directly while mid-band readiness still reaches the second historical window in most years","quality":100,
+                   "consequence":"The chain accepts three days before the band opens; weather takes the first window away and grants the second, as it does most years — the swap completes on day 34 of the band, and the premium that would have bought idle riggers at the front of it was never spent.",
+                   "principle":"Reserve follows the binding constraint: money spent making a successor early while its predecessor is late buys queue position in a queue that isn't moving."},
+                  {"key":"both","label":"Fund both thinly — each risk is real, and partial cover on both beats full cover on one","quality":10,
+                   "consequence":"Thin acceleration compresses the vendor's plan without funding its overtime, delivering acceptance mid-band anyway; the thinned rigger premium buys a readiness date the weather ignores. Both risks arrive, both mitigations underfunded.",
+                   "principle":"Splitting reserve across sequential risks ignores the sequence — a chain is funded at its binding link, not averaged across its length."},
+                  {"key":"riggers","label":"Fund the riggers' premium — the weather is the uncontrollable, so guaranteed front-of-band readiness protects against the 30% one-window years","quality":25,
+                   "consequence":"The riggers stand ready at the band's front; the transmission chain, unaccelerated, accepts in week four of six. The one asset money couldn't influence — weather — was insured, while the one it could — the vendor — ran uninsured and consumed the band.",
+                   "principle":"Insuring the uncontrollable while the controllable runs late is risk theatre — spend where spending changes the probability."}]},
+               {"key":"protect","prompt":"You also recommend:",
+                "options":[
+                  {"key":"trigger","label":"A dated decision trigger and a protected fallback: if factory acceptance isn't achieved by the band's minus-two-weeks point, pre-book the next calm season's rigging slot and re-plan broadcast continuity for the interim — a decision made by calendar, not by hope, while fallback slots still exist","quality":100,
+                   "consequence":"Acceptance makes the date and the trigger never fires — but the pre-negotiated fallback slot, held for a modest fee, is the reason nobody spends the band's final fortnight improvising a continuity plan under pressure.",
+                   "principle":"A weather-gated plan needs its abandon-criteria written before the season starts — the worst place to design a fallback is inside the closing window."},
+                  {"key":"watch","label":"Weekly monitoring of vendor progress against the band, with escalation if the margin erodes","quality":20,
+                   "consequence":"The margin erodes in increments too small to trigger any single escalation; week minus-one arrives with everyone informed, nobody decided, and the fallback slots gone.",
+                   "principle":"Monitoring without a pre-committed decision point observes the failure in high resolution."}]}],
+             "hints":["Draw the dependency: which request gates the other? Earliness behind a late predecessor is worthless.",
+               "Use the window statistics — mid-band readiness still catches the second window in most years.",
+               "Write the abandon-trigger date now: fallback options exist only before they're needed."],
+             "profile_map":{"decision":"Risk Strategist","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Put the whole reserve on the binding constraint and wrote the abandon-date before the calm season opened."}
+            """),
+
+        // ───────────── Daily Decisions · cost & commercial · advanced · deep · evidence diagnosis ─────────────
+
+        ("WC-CST-327", "Contingency, spent in silence", "The pot is half gone. The register says nothing happened.",
+            "Capital Programmes", "Cost Manager", "project_finance", "advanced", 18,
+            """["cost_management","governance","evidence_analysis"]""",
+            """
+            {"context":"Mobilising the capital programme's second tranche, you inherit the cost book. Contingency drawn to date: 48% — against a programme 30% complete. The drawdown log shows the mechanics but not the story: no drawdown links to a risk register entry; the register's top risks all show 'no change' since baseline; and the largest single draw — for 'design development' across four sites — was approved in one line at a delivery meeting whose minutes record no discussion. The programme director's explanation is candid: 'contingency was doing its job — absorbing the small stuff so we didn't drown the change process'. The small stuff, summed, is not small. Tranche two's contingency is sized on the same assumptions as tranche one's.",
+             "evidence":[
+               {"label":"Position","value":"48% contingency drawn at 30% complete"},
+               {"label":"Traceability","value":"No draw links to a register entry; top risks 'no change' since baseline"},
+               {"label":"Largest draw","value":"'Design development', 4 sites, one line, no minuted discussion"},
+               {"label":"Director","value":"'Absorbing the small stuff so the change process didn't drown'"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"Reading the cost book, the drawdown log and the static register together, your finding is:",
+                "options":[
+                  {"key":"blind","label":"The programme has been running without its early-warning system: untraced drawdown means the risks actually occurring never updated the register, so the register's 'no change' is silence, not stability — and tranche two's contingency is sized on assumptions tranche one has already disproven, which is the finding that outranks the burn rate itself","quality":100,
+                   "consequence":"Reconstructing the draws against causes shows a pattern: 70% trace to design maturity, concentrated at two sites — a specific, insurable, tranche-two risk the register never learned. Tranche two re-sizes with eyes open, and drawdown gains a register-link rule.",
+                   "principle":"Contingency drawdown is the programme's risk data speaking — spend it untraced and you fund your surprises while deleting the evidence they were arriving."},
+                  {"key":"burn","label":"The burn rate is the headline: 48% at 30% complete forecasts exhaustion near 62% complete, and tranche two must not start until the run-rate is explained and arrested","quality":40,
+                   "consequence":"The arithmetic is right and shallow: the run-rate analysis triggers a spending freeze that punishes current work, while the actual finding — which risks were occurring and whether tranche two inherits them — stays undone inside the frozen numbers.",
+                   "principle":"A burn rate is a symptom reading; diagnosis is knowing what the money treated."},
+                  {"key":"process","label":"A change-control failure: draws without linked justification are unauthorised in substance, and the one-line design-development approval should go to audit","quality":20,
+                   "consequence":"Audit confirms in nine weeks what the book showed in one: weak linkage. The forward question — what the spending pattern means for tranche two's sizing — is not in audit's terms of reference and is answered by tranche two's overruns instead.",
+                   "principle":"Referring the past to audit is not the same as extracting its information for the future."}]},
+               {"key":"act","prompt":"For tranche two, you require:",
+                "options":[
+                  {"key":"rewire","label":"Reconstruct tranche one's draws into a cause-coded history, re-size tranche two's contingency from that evidence (not the original assumptions), and wire the mechanics together permanently: no drawdown without a register linkage, and a monthly reconciliation of contingency movement against risk movement","quality":100,
+                   "consequence":"The reconstruction re-prices tranche two's contingency upward at the two design-immature sites and downward elsewhere — a defensible number that survives its first board challenge because every pound traces to a named, evidenced cause.",
+                   "principle":"The cheapest risk data a programme will ever own is the money it has already spent — refuse to size the future on assumptions the past has priced."},
+                  {"key":"topup","label":"Restore tranche one's contingency to plan via a change request, keeping tranche two's sizing as approved","quality":10,
+                   "consequence":"The pot refills; the blindness that drained it remains plumbed in, and the refilled contingency drains on the same untraced pattern — now with a precedent that exhaustion is met by top-up.",
+                   "principle":"Refilling an instrumentless tank prepares it to empty the same way twice."}]}],
+             "hints":["Put three artifacts side by side: drawdown log, risk register, minutes — the story is in what doesn't connect.",
+               "A static register during heavy drawdown is the tell: the risks were happening, unrecorded.",
+               "Reconstruct draws by cause before sizing anything — tranche one already priced tranche two's risks."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Read half a spent contingency pot as risk data — and re-sized the next tranche from what the money already knew."}
+            """),
+
+        ("WC-CST-329", "A value engineering call under pressure", "The saving is real. So is what it quietly deletes.",
+            "Water Utilities", "Cost Manager", "project_finance", "advanced", 16,
+            """["cost_management","value_engineering","evidence_analysis"]""",
+            """
+            {"context":"The water treatment upgrade is over budget at final design, and the value engineering workshop has produced its shortlist. The headline item: substituting the specified stainless dosing pipework for coated carbon steel — a substantial, genuine capital saving, vendor-verified, programme-neutral. The papers recommend approval. Cross-checking the operations submissions from a year ago, you find the specification's origin: the works' chlorine dosing regime was uprated two years back after a compliance incident, and the stainless specification was the corrosion engineer's response — the coated alternative was explicitly assessed then and rejected on maintenance-outage grounds, because recoating requires draining a process street the works can only spare in winter. The workshop paper does not mention this history; its whole-life cost line reads 'comparable — subject to maintenance regime'.",
+             "evidence":[
+               {"label":"Saving","value":"Stainless → coated carbon steel: large, verified, programme-neutral"},
+               {"label":"History","value":"Spec originated from a compliance incident; coated option assessed and rejected on outage grounds"},
+               {"label":"Constraint","value":"Recoating needs a process street drained — winter-only at this works"},
+               {"label":"Paper","value":"Whole-life line: 'comparable — subject to maintenance regime'; history absent"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"Your assessment of the VE item:",
+                "options":[
+                  {"key":"history","label":"The item re-litigates a settled engineering decision without disclosing it: the 'subject to maintenance regime' caveat is carrying the entire question, because the maintenance regime is exactly what the works cannot deliver outside winter — the substitution must go back through the corrosion engineer with the incident history on the table, and the workshop's other items screened for the same pattern","quality":100,
+                   "consequence":"The corrosion engineer, consulted rather than bypassed, kills the substitution in a day — and identifies a different, real saving (duplex grade only on the four wetted runs) worth 60% of the original claim with the outage constraint respected. The screen finds one more history-blind item.",
+                   "principle":"Value engineering that doesn't know why the specification exists isn't engineering value — it is rediscovering the incident that wrote the spec, at the price of repeating it."},
+                  {"key":"take","label":"Approve it — the saving is verified, the programme needs it, and maintenance regimes are operations' concern to manage after handover","quality":0,
+                   "consequence":"The budget closes; four years later a summer recoating need meets a works that cannot drain the street, the dosing line runs coated-and-failing through a compliance season, and the incident that wrote the original spec repeats with the VE paper in its audit trail.",
+                   "principle":"A capital saving whose cost lands in operations' constraint calendar hasn't been saved — it has been posted to a different department with interest."},
+                  {"key":"wlc","label":"Commission a full independent whole-life cost study on the substitution before deciding — the caveated line is too thin to approve or reject on","quality":35,
+                   "consequence":"The study takes seven weeks to conclude what the operations archive said in an afternoon: the outage constraint dominates. Right answer, wrong price — the design freeze slips a month for want of reading the file.",
+                   "principle":"Before commissioning new analysis, exhaust the old — the cheapest study is the one the last incident already paid for."}]},
+               {"key":"act","prompt":"On the VE process itself, you:",
+                "options":[
+                  {"key":"provenance","label":"Add a specification-provenance step to every VE item: before costing an alternative, the workshop must state why the current specification exists and who owns that reason — with the owning engineer's response filed with the item, so no saving is booked against an undisclosed history","quality":100,
+                   "consequence":"The next workshop runs slower and lands better: two items die at the provenance step, one is strengthened by it, and the programme's VE savings stop being challenged at design review because the challenges have already happened inside the process.",
+                   "principle":"Every specification is the answer to a question — value engineering is only safe when it knows what the question was."},
+                  {"key":"trust","label":"Circulate the dosing-pipework lesson to future workshops as a cautionary example","quality":20,
+                   "consequence":"The example is memorable for two workshops and mythology by the fourth; the next history-blind substitution arrives in a different discipline, where the story about pipework never felt relevant.",
+                   "principle":"A cautionary tale changes the people who heard it; a process step changes the people who didn't."}]}],
+             "hints":["Ask why the specification says stainless before pricing what doesn't — specs have authors and reasons.",
+               "The caveat 'subject to maintenance regime' is doing all the work: test it against the works' actual outage calendar.",
+               "Route the decision through the engineer who owns the original reason — bypass is how incidents recur."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Traced a verified saving back to the compliance incident that forbade it — and found a better saving in the file."}
+            """),
+
+        ("WC-CST-331", "The cash curve that crossed the facility", "The forecast is fine annually. Monthly, it breaks the bank in March.",
+            "Defence Estates", "Cost Manager", "project_finance", "advanced", 14,
+            """["cost_management","cashflow","evidence_analysis"]""",
+            """
+            {"context":"The defence facility upgrade's funding is annual: a fixed in-year allocation, spend it or lose it, with a hard rule against exceeding it in any month cumulatively. Assembling the mobilisation cost plan, you overlay three curves nobody had put on one page: the contractor's resourced programme (heavily front-loaded — piling and long-lead steel orders), the client's allocation profile (flat twelfths), and the security-clearance pipeline for site inductions (which throttles early manpower and pushes the contractor's real curve right). The overlay shows two problems in opposite directions: the contract's payment schedule crosses the cumulative allocation ceiling in month five — a breach — while the clearance throttle means the programme will likely underspend the first quarter, risking an end-of-year clawback under the spend-it-or-lose-it rule. Both facts are invisible in the annual view everyone has been managing to.",
+             "evidence":[
+               {"label":"Funding rule","value":"Annual allocation, flat profile, hard monthly cumulative ceiling, year-end clawback"},
+               {"label":"Contract curve","value":"Front-loaded: piling + long-lead steel; ceiling breach at month 5"},
+               {"label":"Clearance throttle","value":"Induction pipeline delays early manpower — real curve shifts right"},
+               {"label":"Net position","value":"Q1 underspend risk AND month-5 breach risk, simultaneously"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"The reconciliation that matters:",
+                "options":[
+                  {"key":"replan","label":"The two problems partially solve each other, but only if engineered deliberately: the clearance throttle's rightward shift can be used to re-phase the payment schedule under the ceiling — re-sequencing the steel order into a vesting arrangement that spreads its cash while protecting the delivery slot — and the Q1 headroom redirected to clearance-independent work brought forward, attacking the clawback with real progress rather than manufactured spend","quality":100,
+                   "consequence":"The re-cut curve clears the ceiling with margin, Q1 lands within clawback tolerance on genuinely useful early works, and the steel slot survives inside a vesting certificate — three curves, one page, one plan.",
+                   "principle":"Cashflow, programme and constraints are one system — managed on separate pages they generate contradictory crises that a single overlay dissolves."},
+                  {"key":"breach_first","label":"The month-5 breach is the hard-rule violation, so the priority is renegotiating the payment schedule down; the Q1 underspend is next quarter's problem","quality":30,
+                   "consequence":"The payment schedule flattens, the breach clears — and the untreated Q1 underspend matures into a year-end clawback that permanently shrinks the allocation the flattened schedule now depends on.",
+                   "principle":"Sequential treatment of simultaneous constraints fixes the loud one and funds the quiet one's damage."},
+                  {"key":"annual","label":"The annual position is balanced, and the funder's own review is annual — flag both wrinkles in the risk register and manage in-year with virements as they arise","quality":0,
+                   "consequence":"Month five arrives; the cumulative breach triggers the funding body's automatic escalation, payments suspend for six weeks of process, and the piling contractor's standing time costs more than the steel vesting arrangement would have.",
+                   "principle":"A hard monthly rule managed on an annual view is a breach with a scheduled date."}]},
+               {"key":"act","prompt":"You institutionalise the finding by:",
+                "options":[
+                  {"key":"overlay","label":"Making the three-curve overlay the programme's standing cash instrument — contract payments, allocation ceiling and constraint-adjusted progress on one monthly view, owned in the cost report, with breach and clawback trip-wires calculated forward twelve weeks at every issue","quality":100,
+                   "consequence":"In month seven the overlay flags a new ceiling approach eleven weeks out — a design-change payment landing early — and the re-phase happens in a routine meeting instead of an emergency one.",
+                   "principle":"The instrument that found the problem is the instrument that prevents its siblings — one-off overlays decay; standing ones govern."},
+                  {"key":"monthly","label":"Adding a monthly cashflow commentary to the existing cost report against the annual profile","quality":20,
+                   "consequence":"The commentary narrates the curves it doesn't overlay; month seven's early payment is commented on the month after it approaches the ceiling.",
+                   "principle":"Commentary describes; instruments warn."}]}],
+             "hints":["Put all three curves on one page: contract payments, the funding ceiling, and clearance-adjusted reality.",
+               "Notice the two risks lean opposite ways — the shift that causes the underspend can be used against the breach.",
+               "Attack the clawback with real early work, never manufactured spend — and vest the steel rather than pay it early."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Overlaid three curves nobody had put on one page — and turned two opposite funding crises into one plan."}
+            """),
+
+        ("WC-CST-333", "Unit rates that stopped meaning anything", "The benchmark says fine. The basis of every number in it has drifted.",
+            "Technology Programmes", "Cost Manager", "project_finance", "advanced", 15,
+            """["cost_management","estimating","evidence_analysis"]""",
+            """
+            {"context":"The core-system replacement prices its remaining releases using the programme's 'calibrated' unit rates — cost per integrated interface, per migrated data domain, per regression cycle — refreshed quarterly from actuals and benchmarked green against industry. Preparing the release-four estimate, you audit the rates' construction. The interface rate's denominator has quietly changed twice: early releases counted every interface including trivial file transfers, recent ones count only 'complex' interfaces after a definition change — so the rate rose while apparent productivity 'held steady'. The migration rate excludes the data-cleansing labour that was moved to a 'business readiness' budget line in release two. And the regression rate is calibrated on releases one to three, all of which ran on the legacy scheduler — release four is first on the new platform. The benchmark comparison uses none of these footnotes.",
+             "evidence":[
+               {"label":"Interface rate","value":"Denominator redefined twice — 'all interfaces' → 'complex only'"},
+               {"label":"Migration rate","value":"Cleansing labour moved to a different budget line in R2"},
+               {"label":"Regression rate","value":"Calibrated on legacy scheduler; R4 is first on new platform"},
+               {"label":"Benchmark","value":"Green — footnote-free"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"Your finding on the estimating basis:",
+                "options":[
+                  {"key":"basis","label":"The rates have suffered silent basis drift — each individually explicable, collectively a broken instrument: rebuild the three rates on a stated, versioned basis (one interface definition applied retrospectively, cleansing cost re-included, regression rate flagged uncalibrated for the new platform with an explicit uncertainty range), and re-estimate release four on the rebuilt basis before it is priced","quality":100,
+                   "consequence":"The rebuilt basis moves the release-four estimate up materially — and honestly; the board approves it grumbling about the number and complimenting the footnotes, which is the correct way round. The old basis would have surfaced as an overrun instead.",
+                   "principle":"A unit rate is a ratio, and a ratio with a drifting denominator measures nothing — an estimate's authority lives entirely in the stability of its basis."},
+                  {"key":"green","label":"The rates pass external benchmark and internal trend — the definitional changes were each approved at the time, and re-litigating them re-opens three settled quarters","quality":0,
+                   "consequence":"Release four, priced on rates that exclude cleansing and assume the old scheduler, overruns by the sum of the footnotes that weren't written; the post-mortem reconstructs the basis drift in a week and asks who owned the rates.",
+                   "principle":"Individually approved changes can still compound into a collectively false instrument — approval history is not accuracy."},
+                  {"key":"contingency","label":"Keep the rates, price release four with an enlarged contingency to absorb the definitional uncertainty","quality":25,
+                   "consequence":"The padded estimate is challenged, halved in negotiation — pads always are — and the release inherits the original error at half protection, with the rates' drift still uncorrected for release five.",
+                   "principle":"Contingency is for uncertainty you can't remove, not inaccuracy you won't — padding a broken basis rents time and fixes nothing."}]},
+               {"key":"act","prompt":"To keep the instrument honest, you:",
+                "options":[
+                  {"key":"version","label":"Put the rate book under basis control: every rate carries its definition, inclusions, calibration set and version; any basis change re-states history or opens a new versioned series — and the benchmark comparison discloses basis differences or doesn't run","quality":100,
+                   "consequence":"The next definitional pressure — a vendor proposing to reclassify defect-fix effort — arrives as a visible version decision debated for a week, instead of a silent drift discovered in an estimate three releases later.",
+                   "principle":"Rates are instruments; instruments need calibration control — a rate book without basis governance is a rumour with decimals."},
+                  {"key":"owner","label":"Assign the rate book a named owner responsible for challenging future definitional changes","quality":30,
+                   "consequence":"The owner catches the next drift and misses the one after — ownership without a versioning mechanism depends on one person's memory of three quarters of footnotes.",
+                   "principle":"Name an owner and give them the machinery; either alone is half a control."}]}],
+             "hints":["Audit each rate's denominator across its history — drift hides in definitions, not arithmetic.",
+               "Check what left the numerator too: costs moved to other budget lines still get spent.",
+               "A rate calibrated on the old platform is a hypothesis on the new one — price the uncertainty explicitly."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Rebuilt three quietly-drifted unit rates before they priced a release — and put the rate book under basis control."}
+            """),
+
+        ("WC-CST-335", "The commitment ledger nobody reconciled", "Spend says affordable. Commitments say otherwise. Both are 'the number'.",
+            "Rail Systems", "Cost Manager", "project_finance", "advanced", 13,
+            """["cost_management","governance","evidence_analysis"]""",
+            """
+            {"context":"Mobilising the resignalling project's supply chain, you are asked to confirm affordability of the next two orders — the interlocking hardware and the detection subsystem. The finance system says yes comfortably: spend to date is well inside budget. But finance records cost at invoice. Assembling the commitment picture from contract awards, purchase orders, signed variations and two letters of intent the project director issued directly, you build the ledger nobody keeps: committed-but-uninvoiced obligations that consume most of the apparent headroom. One letter of intent — for the temporary signalling during stagework — was never converted to a PO and sits in no system at all; the supplier has mobilised against it. On the commitment basis, the two orders are affordable only if the stagework letter's scope is descoped, novated or funded by change.",
+             "evidence":[
+               {"label":"Finance view","value":"Invoice-based spend — comfortable headroom"},
+               {"label":"Commitment ledger","value":"Awards + POs + variations + 2 letters of intent ≈ headroom consumed"},
+               {"label":"Orphan","value":"Stagework LOI: no PO, in no system, supplier mobilised against it"},
+               {"label":"Ask","value":"Confirm affordability of interlocking + detection orders"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"Your affordability answer:",
+                "options":[
+                  {"key":"commit_basis","label":"Answer on the commitment basis or not at all: the orders are affordable only against decisions not yet made — regularise the orphan letter first (it is a live obligation whether or not a system holds it), then present affordability as commitments-versus-budget with the invoice view demoted to a cash-timing report","quality":100,
+                   "consequence":"The stagework letter converts to a priced PO — larger than anyone remembered promising — and the two orders proceed re-phased by a month to stay inside genuine headroom. The project's first true affordability statement is its least comfortable and most useful.",
+                   "principle":"Affordability is a question about obligations, not invoices — a budget minus its commitments is the only headroom that exists."},
+                  {"key":"confirm","label":"Confirm against the finance system — it is the system of record, the orders are within its headroom, and the commitment work can proceed in parallel","quality":0,
+                   "consequence":"Both orders place; the stagework supplier invoices against its letter three months later, and the project discovers it has spent the same headroom twice — in the exact month the interlocking milestone payment lands.",
+                   "principle":"Confirming affordability on the invoice view is spending money that is already promised to someone who hasn't billed yet."},
+                  {"key":"halt","label":"Refuse to confirm and freeze all new orders until a full commitment reconciliation is complete across the project","quality":30,
+                   "consequence":"Prudence at panic pricing: the interlocking slot — the one order with a genuine factory queue — is lost in the freeze, costing eleven weeks, when the reconciliation needed for these two orders was three days of work.",
+                   "principle":"Reconcile at the speed of the decision that needs it — a targeted answer this week beats a perfect ledger after the slot is gone."}]},
+               {"key":"act","prompt":"Structurally, you:",
+                "options":[
+                  {"key":"ledger","label":"Stand up the commitment ledger as the project's affordability instrument — every obligation-creating instrument (award, PO, variation, letter, side agreement) registered at signature, reconciled monthly to finance, with letters of intent expiring by default unless converted — and affordability sign-offs referencing it by version","quality":100,
+                   "consequence":"The next direct-issued letter — habits persist — is caught at the monthly reconciliation instead of at invoice, and its author now routes commitments through the ledger because that is where affordability answers come from.",
+                   "principle":"Obligations are created by signatures, not by systems — a project that only tracks what its systems ingest will always have a second, invisible ledger, and it is the one that ruins them."},
+                  {"key":"policy","label":"Issue a policy that letters of intent require commercial sign-off, addressing the root cause directly","quality":25,
+                   "consequence":"The policy governs future letters; the existing invisible commitments stay invisible, and the affordability question that started this remains answered on the wrong basis.",
+                   "principle":"Policy prevents the next orphan; only the ledger finds the current ones."}]}],
+             "hints":["Ask what basis the 'affordable' answer uses — invoiced, accrued or committed — before trusting it.",
+               "Hunt for obligation-creating paper outside the systems: letters, side agreements, instructed variations.",
+               "A letter of intent a supplier has mobilised against is a commitment, whatever the ledger says."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Built the commitment ledger nobody kept — and found the headroom had already been promised away."}
+            """),
+
+        // ───────────── Project Rescue · advanced · deep · multi-stage ─────────────
+
+        ("WC-RSC-311", "An estimate at completion with three authors", "Three EACs, three owners, one board that wants one number.",
+            "Portfolio Management", "Recovery Cost Director", "project_finance", "advanced", 18,
+            """["cost_management","forecasting","governance"]""",
+            """
+            {"context":"You are parachuted into a troubled flagship programme whose estimate at completion has become a war. The delivery director's EAC assumes recovery of current productivity to plan levels 'as the learning curve completes'. The client-side cost assurance team's EAC extrapolates cumulative performance to date, mechanically. The main contractor's commercial team submits a third figure that anticipates successful claims recoveries. The spread between lowest and highest is 30% of budget, each number has an institutional author defending it, and the portfolio board — which must decide whether to re-scope the programme — has responded by averaging the three, which satisfies nobody and informs nothing.",
+             "evidence":[
+               {"label":"EAC 1 — delivery","value":"Assumes productivity recovers to plan as learning completes"},
+               {"label":"EAC 2 — assurance","value":"Mechanical extrapolation of cumulative performance"},
+               {"label":"EAC 3 — contractor","value":"Nets off anticipated claims recoveries"},
+               {"label":"Board","value":"Spread = 30% of budget; board currently averaging the three"}],
+             "decisions":[
+               {"key":"untangle","prompt":"Stage 1 — you:",
+                "options":[
+                  {"key":"assumptions","label":"Stop the number war by decomposing it: force each EAC onto a common structure — same scope basis, same treatment of claims (gross, with recoveries shown as a separate risked line), and each forecast's productivity assumption stated as a testable claim against the last six periods' actual trend","quality":100,
+                   "consequence":"On a common basis the three numbers become one disagreement: the productivity recovery assumption. Six periods of data show partial recovery on repetitive work, none on complex — a fact that replaces two of the three institutional positions.",
+                   "principle":"Competing forecasts rarely disagree about arithmetic — decompose them to the assumption where they diverge and test that, instead of negotiating between totals."},
+                  {"key":"independent","label":"Commission a fourth, independent EAC from an external quantity surveyor — an umpire figure with no institutional stake","quality":25,
+                   "consequence":"Eight weeks and a fee later, the fourth number lands between the others and inherits their problem: a fourth set of assumptions to argue about, now with less programme knowledge behind it.",
+                   "principle":"Adding an umpire number to a forecast dispute adds a forecast, not an answer — the disagreement lives in assumptions only decomposition can reach."},
+                  {"key":"pick","label":"Adopt the assurance team's extrapolation as the governing figure — it is the only one free of advocacy","quality":35,
+                   "consequence":"Mechanically pure and knowably wrong: pure extrapolation prices the learning that has demonstrably occurred on repetitive work at zero, and the board re-scopes against a number the next three periods disprove upward.",
+                   "principle":"Freedom from advocacy is not accuracy — an assumption of no change is still an assumption, just an unexamined one."}]},
+               {"key":"number","prompt":"Stage 2 — the evidence supports partial recovery. The EAC you take to the board:",
+                "options":[
+                  {"key":"range","label":"One evidence-based EAC with its structure showing: demonstrated productivity by work type (not hoped), claims shown gross with recoveries as a separately-risked line, and the residual uncertainty expressed as a range with the two or three variables that drive it named — plus what each variable's resolution date is","quality":100,
+                   "consequence":"The board re-scopes against the range's prudent end and — for the first time — knows which three facts to watch quarterly; the EAC stops being a war because it has stopped being a negotiation.",
+                   "principle":"A decision-grade EAC is a structure, not a number: what is demonstrated, what is claimed, what is uncertain, and when each uncertainty resolves."},
+                  {"key":"single","label":"A single point figure at the evidence-based central estimate — boards decide on numbers, not ranges","quality":30,
+                   "consequence":"The point lands, the board decides — and every subsequent variance from the point re-opens the credibility question the range would have priced in; by quarter three the forecast war has new authors.",
+                   "principle":"A point estimate spends its credibility on the first variance; a structured range banks it."}]},
+               {"key":"institution","prompt":"Stage 3 — so the war doesn't restart, you:",
+                "options":[
+                  {"key":"onebasis","label":"Institute a single forecast basis owned by one accountable forecaster: contributions from delivery, assurance and the contractor arrive as inputs on the common structure, disagreements are logged against named assumptions with evidence requirements, and the board sees one EAC with its dissent register — not three EACs with none","quality":100,
+                   "consequence":"The next quarter's genuine disagreement — a claims recovery the contractor rates high — appears as a risked line with both positions and a resolution path, and the board spends its time on the decision instead of the arithmetic.",
+                   "principle":"Organisations get forecast wars when the forecast has no single owner — accountability plus a dissent register beats consensus plus three numbers."},
+                  {"key":"committee","label":"Create a monthly EAC reconciliation committee where the three teams align their figures before each board","quality":20,
+                   "consequence":"The committee negotiates convergence; the published number becomes a diplomatic artifact that drifts from all three teams' honest views, which resume divergence in private.",
+                   "principle":"Reconciliation by negotiation produces agreement, not accuracy — and the board can no longer see either."}]}],
+             "hints":["Put the three EACs on one scope and claims basis before comparing anything.",
+               "The real disagreement is one assumption — find it and test it against period actuals by work type.",
+               "Take the board a structure with a range and named drivers, owned by one forecaster with a dissent register."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Ended a three-way forecast war by finding the one assumption the numbers actually disagreed about."}
+            """),
+
+        ("WC-RSC-314", "The long-lead item with no float", "Ordered on time, promised to a date the rest of the plan quietly left behind.",
+            "Joint Ventures", "Recovery Programme Manager", "project_management", "advanced", 14,
+            """["procurement","schedule_analysis","recovery_management"]""",
+            """
+            {"context":"The joint venture's delivery office calls you in when someone finally connects two documents. The custom switchgear — the project's longest-lead item, 54 weeks — was ordered early and diligently against the original schedule, deliverable to site in week 61. Since then, the civils programme re-baselined twice; the switchgear room is now ready in week 74. Storage looks like the easy answer, but the order was placed ex-works with the manufacturer's standard terms: warranty starts at delivery, the JV has no suitable storage for HV equipment, and the manufacturer's 'extended factory storage' quote arrives priced at 2% of contract value per month with warranty suspension. Meanwhile the manufacturer hints that another customer would happily take the production slot — with a delivery next year that is worse than even the storage option.",
+             "evidence":[
+               {"label":"Mismatch","value":"Switchgear lands week 61; room ready week 74"},
+               {"label":"Terms","value":"Ex-works, warranty from delivery, no JV HV storage"},
+               {"label":"Factory storage","value":"2%/month + warranty suspension"},
+               {"label":"Pressure","value":"Manufacturer hints at reselling the slot; next slot lands later than any option"}],
+             "decisions":[
+               {"key":"frame","prompt":"Stage 1 — you frame the problem as:",
+                "options":[
+                  {"key":"system","label":"A schedule-procurement integration failure with a 13-week gap to close from BOTH ends: re-examine the civils path for what actually gates the switchgear room (not the whole building), and re-open the delivery terms as a package — staged delivery, factory-retained warranty, storage, commissioning support — rather than accepting the storage quote as the only lever","quality":100,
+                   "consequence":"The room's true gate is its dedicated slab and envelope — separable from the main civils path and accelerable by 8 weeks for modest cost; the residual 5 weeks becomes a negotiated staged delivery with warranty preserved. The gap closes from both ends at a fraction of the storage quote.",
+                   "principle":"A gap between an early order and a late site is closed from both ends — the room's real readiness and the delivery's real flexibility are both softer than their headline dates."},
+                  {"key":"storage","label":"A storage procurement problem: negotiate the factory storage rate down and secure warranty continuation — the schedule is what it is","quality":20,
+                   "consequence":"The rate negotiates down to 1.4% with partial warranty; thirteen weeks of it still costs multiples of the slab acceleration nobody priced, because the schedule was treated as fixed when it was merely unexamined.",
+                   "principle":"Accepting one side of a gap as immovable doubles the price of closing it."},
+                  {"key":"slot","label":"A slot retention crisis: the manufacturer's hint is the emergency — secure the production slot contractually before optimising anything","quality":30,
+                   "consequence":"The slot was never truly at risk — the hint was negotiating leverage — and the retention deed signed in haste concedes the storage rate and delivery terms that were the real money.",
+                   "principle":"A counterparty's manufactured urgency is aimed at exactly this decision — verify the threat before paying to remove it."}]},
+               {"key":"prevent","prompt":"Stage 2 — the JV has forty more procurement packages. You:",
+                "options":[
+                  {"key":"link","label":"Wire long-lead procurement to the schedule permanently: every package above a lead-time threshold carries a need-by date derived from the live schedule, re-validated at every re-baseline as a mandatory checklist item, with delivery flexibility (staging, storage, warranty terms) negotiated at order time when leverage is highest — not at crisis time when it is gone","quality":100,
+                   "consequence":"The next re-baseline flags two more orders drifting toward the same mismatch — both re-sequenced by letter while the changes cost nothing; the switchgear lesson becomes machinery instead of folklore.",
+                   "principle":"Orders placed against a schedule that later moves are orphans unless something re-marries them at every move — flexibility is bought cheap at order and dear at delivery."},
+                  {"key":"review","label":"Add long-lead items as a standing agenda item at the monthly delivery review","quality":25,
+                   "consequence":"The agenda item surfaces mismatches when someone happens to notice them — which is the process that noticed this one in week 58 of 61.",
+                   "principle":"Agenda items observe; only baseline-change triggers catch drift at the moment it happens."}]}],
+             "hints":["Measure the real gap: what gates the switchgear room specifically, not the building.",
+               "Re-open delivery as a package — staging, warranty, support — while the manufacturer still wants the relationship.",
+               "The class fix: need-by dates re-validated at every re-baseline, and flexibility negotiated at order time."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Closed a 13-week early-order gap from both ends — for a fraction of the storage quote on the table."}
+            """),
+
+        ("WC-RSC-317", "The change that arrived as a fact", "The turbines are already different. The change control starts today, apparently.",
+            "Renewable Energy", "Recovery Programme Manager", "project_management", "advanced", 15,
+            """["change_control","project_finance","governance"]""",
+            """
+            {"context":"On the wind farm repowering, you inherit a mess with rotating blades. The turbine supplier, mid-manufacture, substituted an upgraded nacelle variant — better output curve, different mass, different loads — and notified the project through a technical bulletin that nobody routed into change control. Eleven of twenty-eight units are already delivered; four are installed. The substitution surfaced when the foundations designer, reviewing an unrelated query, noticed the delivered mass exceeds the certified foundation loads' basis. The supplier's position: the bulletin constituted notice, the variant is 'equal or better', and the contract's fitness-for-purpose clause covers it. The certification body has not been told. The next four units install in three weeks.",
+             "evidence":[
+               {"label":"Fact","value":"Upgraded nacelle variant substituted mid-manufacture; 11 delivered, 4 installed"},
+               {"label":"Trigger","value":"Delivered mass exceeds certified foundation-load basis"},
+               {"label":"Supplier","value":"'Bulletin was notice; equal or better; fitness-for-purpose covers it'"},
+               {"label":"Clock","value":"Certifier not told; next 4 units install in 3 weeks"}],
+             "decisions":[
+               {"key":"triage","prompt":"Stage 1 — your first 72 hours:",
+                "options":[
+                  {"key":"engineering","label":"Engineering truth before commercial position: hold the three-week installations, commission the foundations designer to assess the four installed units against actual delivered loads as the urgent case, and notify the certification body yourself — because a certificate based on superseded loads is everyone's problem and nobody's bargaining chip","quality":100,
+                   "consequence":"The assessment shows the installed foundations carry the new loads inside their material margins — relief, documented; two of the remaining foundation designs need rebar revisions before their units install. The certifier, told early by you, treats it as a managed variance instead of a discovered concealment.",
+                   "principle":"When a change arrives as a fact, sequence is everything: make the physical state safe and the certification honest first — the commercial argument keeps; the engineering risk doesn't."},
+                  {"key":"commercial","label":"Commercial position first: reject the bulletin as notice, put the supplier formally in breach, and freeze payments while liability for the substitution is established","quality":15,
+                   "consequence":"The breach letter is legally sound and operationally hollow: installations pause indefinitely while lawyers exchange positions, the certification gap sits unaddressed for six weeks, and the supplier's engineers — the people who know the variant — disengage behind their own counsel.",
+                   "principle":"Leading with breach converts the people who understand the change into witnesses for the other side, while the physical risk waits."},
+                  {"key":"absorb","label":"Accept the upgrade pragmatically — better turbines, and a retrospective change order regularising it keeps the programme moving","quality":10,
+                   "consequence":"The retrospective order signs away the review that would have caught the two deficient foundation designs; unit seventeen's foundation shows early distress in year two, and the 'pragmatic' acceptance is the document the insurers read aloud.",
+                   "principle":"Regularising a fait accompli without engineering review doesn't manage the change — it co-signs it."}]},
+               {"key":"commercial2","prompt":"Stage 2 — foundations assessed, certifier engaged. The commercial settlement you drive:",
+                "options":[
+                  {"key":"package","label":"A single change order that prices the whole event honestly in both directions: the supplier funds the foundation reassessments, rebar revisions, delay and recertification (their unnotified change caused them); the project credits the genuine output uplift at its evidenced value; and the bulletin-as-notice doctrine is explicitly extinguished for the remaining seventeen units","quality":100,
+                   "consequence":"The settlement lands in five weeks because each line traces to evidence; the supplier pays real costs, banks a fair share of the uplift, and the next bulletin — there is one — arrives through change control with a cover note requesting review.",
+                   "principle":"A change that arrived wrongly can still be settled rightly: price the harm to its causer, the benefit at its evidence, and kill the doctrine that let it happen."},
+                  {"key":"punitive","label":"Maximum recovery: claim every cost including the output uplift's value — the supplier's process failure forfeits its benefit","quality":25,
+                   "consequence":"The claim overreaches into arbitration; eighteen months later the award lands near what the package settlement offered, minus fees and a supplier relationship the operations phase needed.",
+                   "principle":"Pricing a counterparty's failure above the harm it caused converts a strong position into a long dispute."}]}],
+             "hints":["Order of operations: physical safety, certification honesty, then commercial settlement.",
+               "The installed units are the urgent engineering case — assess against actual loads before the next four go in.",
+               "Settle both directions on evidence: their failure's real costs, the upgrade's real value, and the notice doctrine dead."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Turned an already-installed unauthorised change into a certified, fairly-priced one — in that order."}
+            """),
+
+        ("WC-RSC-320", "The exclusion whose premise died", "The words that kept the estimate low are about to keep the ward shut.",
+            "Healthcare Estates", "Recovery Project Manager", "project_management", "advanced", 13,
+            """["scope_management","stakeholder_communication","concept_planning"]""",
+            """
+            {"context":"The hospital ward refurbishment's business case sailed through approval eighteen months ago — partly, you now see, because its scope carried a quiet exclusion: 'ventilation plant serving the ward is excluded, being subject to the Trust's separate plant replacement programme'. That separate programme has since been deferred indefinitely by the Trust's capital squeeze. The refurbished ward's clinical model — respiratory step-down — requires air change rates the existing plant cannot deliver. Design is 60% complete; the clinical team assumed ventilation was in scope ('it's a respiratory ward'); the project board is chaired by the executive who signed the case with the exclusion in it. Without the plant, the ward as designed cannot open for its intended use.",
+             "evidence":[
+               {"label":"Exclusion","value":"Ventilation excluded — assigned to a plant programme since deferred indefinitely"},
+               {"label":"Requirement","value":"Respiratory step-down needs air changes existing plant can't deliver"},
+               {"label":"Status","value":"Design 60%; clinical team assumed in-scope"},
+               {"label":"Politics","value":"Board chair signed the case containing the exclusion"}],
+             "decisions":[
+               {"key":"surface","prompt":"Stage 1 — you take this to the board as:",
+                "options":[
+                  {"key":"decision_paper","label":"A scope-integrity decision with options priced: the exclusion's premise has failed, so the case must choose — fund the plant inside this project (priced), re-scope the ward to a clinical model the existing air handles (priced, with the clinical team's assessment), or pause at a defined design milestone — presented without prosecuting who wrote the exclusion","quality":100,
+                   "consequence":"The chair, given options instead of an accusation, funds the plant through a case addendum — the arithmetic of an unusable ward makes the argument no confrontation needed to make. Design proceeds with eleven days' slip.",
+                   "principle":"An exclusion is a bet that someone else will do the work — when the bet fails, the honest move is repricing the choice, not relitigating the bet."},
+                  {"key":"quiet","label":"Work the problem at officer level first — get estates to resurrect a minimal plant scheme inside the deferred programme, avoiding a board confrontation entirely","quality":20,
+                   "consequence":"Estates sympathises and cannot conjure deferred capital; six officer-level weeks pass, design reaches 85% around an unresolved hole, and the board learns of the issue late — with less design flexibility and more sunk cost than the day you found it.",
+                   "principle":"Problems that need a governance decision only age at officer level — the workaround hunt is usually the delay dressed as diplomacy."},
+                  {"key":"design_on","label":"Direct the design team to complete with ventilation 'interfaces provided for' — protecting programme while the plant question resolves in parallel","quality":10,
+                   "consequence":"'Provision for' hardens into a fiction: the ward completes beautiful and unopenable for its clinical purpose, and the completed-but-idle ward becomes a news story the Trust answers for a year.",
+                   "principle":"Designing around a failed premise doesn't hold the programme — it delivers the failure on schedule."}]},
+               {"key":"class","prompt":"Stage 2 — before the case addendum signs, you:",
+                "options":[
+                  {"key":"audit","label":"Audit every exclusion and dependency in the business case the same way: each one names what it depends on, that dependency's current status is verified with its owner, and any failed premise is surfaced in the addendum now — one governance moment instead of serial surprises","quality":100,
+                   "consequence":"The audit finds one more failed premise — the 'existing nurse-call infrastructure to be reused' assumption died with an IT refresh — caught at addendum stage for a fraction of its later cost. The addendum passes containing both, credibility intact.",
+                   "principle":"Exclusions are a business case's load-bearing assumptions in disguise — when one fails, the only professional response is to test them all."},
+                  {"key":"single","label":"Handle the ventilation addendum cleanly on its own — one issue, one fix, minimal governance noise","quality":25,
+                   "consequence":"The addendum passes; the nurse-call premise fails at commissioning, and the second surprise costs more than money — the board now reads every paper from the project looking for the third.",
+                   "principle":"Serial surprises compound reputationally in a way one thorough audit never does."}]}],
+             "hints":["Find why the exclusion existed — then check whether its premise still stands.",
+               "Bring the board priced options, not a post-mortem: the chair signed the exclusion.",
+               "One failed premise means the case's other exclusions need the same verification — now, in one pass."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Re-priced a business-case exclusion whose premise had quietly died — before the ward became beautifully unopenable."}
+            """),
+
+        ("WC-RSC-322", "Sequencing the work nobody wants first", "Every stakeholder's preferred order starts with someone else's disruption.",
+            "Manufacturing", "Recovery Planning Lead", "project_management", "advanced", 18,
+            """["schedule_analysis","stakeholder_communication","logistics"]""",
+            """
+            {"context":"The factory relocation — 140 machines, three production halls, a hard exit date on the old lease — has stalled in its mobilisation planning because no stakeholder will accept going first. Production wants machines moved in reverse order of utilisation ('idle ones first' — but the idle machines are the deep foundations jobs that need the new slab cured longest). Sales has promised customers no line stops longer than a fortnight, which every sequence violates for someone. The fit-out contractor wants zone-by-zone completion of the new facility, which strands early-moved machines without services. Facilities wants the hazardous plating line moved last ('fewest permits while both sites run') — but the plating line's permits take five months and gate the products that feed two other lines. Fourteen weeks of workshops have produced three mutually exclusive 'agreed' sequences and no plan.",
+             "evidence":[
+               {"label":"Constraints","value":"140 machines, 3 halls, hard lease exit; plating permits 5 months and gate 2 lines"},
+               {"label":"Production","value":"Idle-first — but idle machines need longest slab cure"},
+               {"label":"Sales","value":"No line stop > 2 weeks — violated by every sequence for someone"},
+               {"label":"Standoff","value":"3 mutually exclusive 'agreed' sequences after 14 weeks"}],
+             "decisions":[
+               {"key":"reframe","prompt":"Stage 1 — you break the deadlock by:",
+                "options":[
+                  {"key":"constraints_first","label":"Taking sequencing away from preference entirely: build the sequence from the physics and law outward — permit lead times, slab cure, service availability, product-flow dependencies — as a constraint network that admits only feasible orders, then let stakeholders optimise their interests inside the feasible set, not compete to define it","quality":100,
+                   "consequence":"The network reveals what fourteen weeks of workshops hid: the plating line's permit clock makes it first or the exit date fails — a fact, not a preference. Within the feasible set, sales' fortnight promise survives for all but one line, which gets a negotiated build-ahead stock instead.",
+                   "principle":"Sequence disputes persist while hard constraints and preferences argue in the same forum — separate what physics decides from what people may, and most of the fight evaporates."},
+                  {"key":"mediate","label":"Running a decision workshop with executive sponsorship where the three factions trade concessions to a compromise sequence","quality":15,
+                   "consequence":"Workshop four produces compromise sequence four — politically balanced, physically wrong: it schedules the plating move at month nine of a five-month permit runway that needed starting at month one.",
+                   "principle":"Compromise between preferences cannot repair a violation of physics — some orders are wrong regardless of who agrees to them."},
+                  {"key":"impose","label":"Imposing the least-bad of the three existing sequences by programme authority — fourteen weeks of consensus-seeking is the actual problem","quality":25,
+                   "consequence":"Decisiveness lands well for a month — until the imposed sequence (built from production's preference) strands the deep-foundation machines on uncured slab, and authority spent on the wrong plan is unavailable for the right one.",
+                   "principle":"Imposing an infeasible plan quickly is not decisiveness — the constraint analysis was the missing ingredient, not the willpower."}]},
+               {"key":"protect","prompt":"Stage 2 — the feasible sequence makes the plating line first, into a partially fitted-out facility. You:",
+                "options":[
+                  {"key":"enable","label":"Make going-first survivable by design: complete the plating zone's services out of zone order (the fit-out contractor re-sequences for a priced variation), pre-build the two dependent lines' buffer stock against the plating outage, and give the plating team the relocation's best support — because the first move's success recruits every reluctant stakeholder behind moves two through onwards","quality":100,
+                   "consequence":"The plating line moves on permit-day-one into a zone fitted for it; its four-week outage is bridged by the buffer stock; and the sequence's loudest opponent tours the new line and asks when theirs goes. The remaining 139 machines follow a proven playbook.",
+                   "principle":"Whoever goes first is bearing risk for the whole sequence — resource them like it, because the first move is also the argument for the rest."},
+                  {"key":"asis","label":"Hold the fit-out contractor to its zone-by-zone plan — re-sequencing costs money and the plating team can work around temporary services","quality":10,
+                   "consequence":"Temporary services for a hazardous plating line fail their permit inspection — as temporary services for hazardous processes do — and the five-month permit clock restarts against a lease exit that cannot move.",
+                   "principle":"Sending the sequence's most regulated process into its least-ready zone converts the schedule's one immovable constraint into its likeliest failure."}]}],
+             "hints":["List what is physically and legally immovable — permits, cure times, service dependencies — before any preference.",
+               "The five-month permit runway is the sequence's real author: work backward from the lease exit.",
+               "Fund and favour whoever goes first — their success is the plan's best persuasion."],
+             "profile_map":{"decision":"Schedule Analyst","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Let physics write the move sequence three factions couldn't agree — then made going first the best job in the factory."}
+            """),
+
+        ("WC-RSC-324", "Liquidated damages, tested", "The delay is real, the clause is clear, and applying it might be the expensive choice.",
+            "Urban Development", "Recovery Commercial Director", "project_finance", "advanced", 14,
+            """["contract_management","commercial_awareness","decision_quality"]""",
+            """
+            {"context":"The mixed-use development's shell-and-core contractor is eight weeks late into the fit-out handover, with six more forecast. The contract's liquidated damages are clear, capped, and — your quantity surveyor confirms — enforceable: about £40k per week. The board wants them applied in full, immediately, 'as a matter of principle'. Your review of the wider position complicates the principle: the contractor's delay analysis attributes three of the eight weeks to late employer design decisions (arguably right on one, weak on two); the same contractor holds the fit-out contract's only viable price for the north block, currently in negotiation; and the contractor's parent company is — market intelligence suggests — deciding which of its regional businesses to recapitalise this quarter. LDs applied in full may be the event that tips this one from 'support' to 'manage decline'.",
+             "evidence":[
+               {"label":"Position","value":"8 weeks late + 6 forecast; LDs clear, capped, enforceable at ~£40k/week"},
+               {"label":"Counter","value":"Contractor attributes 3 weeks to employer decisions — 1 arguable, 2 weak"},
+               {"label":"Entanglement","value":"Same contractor holds the only viable north-block fit-out price"},
+               {"label":"Fragility","value":"Parent deciding this quarter which regional businesses to recapitalise"}],
+             "decisions":[
+               {"key":"posture","prompt":"Stage 1 — your recommendation on the LDs:",
+                "options":[
+                  {"key":"instrument","label":"Apply them as an instrument, not a verdict: levy LDs from week one net of the one arguable employer week (rejecting the two weak ones with reasons), but structure application to serve the outcome — deductions phased against a completion-incentive agreement that returns a portion for hitting the recovered date, with the whole package negotiated alongside, but not traded against, the north-block price","quality":100,
+                   "consequence":"The contractor's parent sees a client that enforces contracts and structures paths to survival — the regional business makes the recapitalisation list; completion lands two weeks inside the incentive date; and the north-block negotiation proceeds on its own merits, LDs having proven the client reads its own contracts.",
+                   "principle":"Liquidated damages are compensation machinery, not a virtue signal — applied with structure they change behaviour; applied 'on principle' they mostly test whether your counterparty can survive your principles."},
+                  {"key":"full","label":"Apply in full from week one, no netting, no structure — the clause is clear and the board's principle is right: contracts mean what they say","quality":15,
+                   "consequence":"Legally impeccable; commercially self-harming: the parent reads the full-force deduction as the signal to manage decline, the contractor thins resources on your site to stem losses, completion drifts five more weeks — LD-capped — and the north-block price arrives 12% higher from the only other bidder.",
+                   "principle":"Enforcement that ignores the counterparty's response function isn't rigour — a clause can be applied correctly and still be the most expensive available decision."},
+                  {"key":"waive","label":"Hold LDs in reserve as negotiating leverage for the north-block price — the entanglement is the real commercial event","quality":10,
+                   "consequence":"The unapplied clause reads as unappliable; the delay extends unpriced, the north-block negotiation now carries an implicit LD-waiver the auditors later call what it is, and the board's principle returns as a governance finding about yours.",
+                   "principle":"Trading enforcement of one contract for price on another corrupts both — and teaches every counterparty that your clauses are opening positions."}]},
+               {"key":"delay_truth","prompt":"Stage 2 — on the contractor's three claimed employer weeks, you:",
+                "options":[
+                  {"key":"adjudicate","label":"Deal with them now, on the evidence, at project level: accept the arguable week with its records, reject the two weak ones in a reasoned response, and offer the contract's dispute ladder if they disagree — because unresolved attribution compounds into exactly the global claim that outlives completion","quality":100,
+                   "consequence":"The contractor takes the one week, tests one rejection up the ladder half-heartedly, and drops it; completion arrives with attribution settled and no claims tail — the quiet victory nobody notices because nothing happens.",
+                   "principle":"Delay attribution settles cheapest in the present tense — every unresolved week is an invoice maturing in a claims consultant's drawer."},
+                  {"key":"defer","label":"Park attribution until completion — the recovery needs everyone building, not arguing records","quality":20,
+                   "consequence":"The parked three weeks return at final account as fourteen, professionally assembled, with the contemporaneous records you didn't contest now curated into their exhibit bundle.",
+                   "principle":"Deferred attribution doesn't stay the same size — it is compound interest in someone else's favour."}]}],
+             "hints":["Ask what the LDs are for — compensation and behaviour — then structure application to get both.",
+               "Model the counterparty's response: a clause can be enforceable and still ruinous to enforce naively.",
+               "Settle the attribution argument now, on records, at project level — parked weeks multiply."],
+             "profile_map":{"decision":"Commercial Strategist","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Applied liquidated damages as machinery, not principle — and kept both the completion date and the counterparty alive."}
+            """),
+
+        ("WC-RSC-326", "A claim built from diary pages", "Ninety-one days of handwriting, one number at the end, and a vessel on standby.",
+            "Offshore Energy", "Recovery Commercial Director", "project_finance", "advanced", 15,
+            """["change_control","claims_management","evidence_analysis"]""",
+            """
+            {"context":"The offshore maintenance campaign ends with the contractor's claim on your desk: a substantial sum for weather standby and access delays, substantiated — in the claim's words — 'by contemporaneous site diaries'. The diaries are real: ninety-one days of the barge master's handwriting. Reading them against the claim's schedule is instructive. The diaries record weather honestly, but the claim counts every 'WOW' (waiting on weather) day at full spread rate — including fourteen days when the diary also records the crew executing deferred inspection work; the claim's access-delay days include five when the diary notes the contractor's own permit paperwork as the blocker; and the claimed vessel day-rate is the storm-season contingency rate, applied across all ninety-one days rather than the contracted split. The claim is not fabricated — it is real records, aggregated in one direction. Your own client-side records for the period are thinner than the diaries.",
+             "evidence":[
+               {"label":"Claim basis","value":"91 days of genuine barge-master diaries"},
+               {"label":"Aggregation","value":"14 WOW days show productive deferred work; 5 access days show contractor's own permit failures"},
+               {"label":"Rate","value":"Storm-season contingency rate applied to all days, not the contracted split"},
+               {"label":"Your records","value":"Thinner than the diaries"}],
+             "decisions":[
+               {"key":"respond","prompt":"Stage 1 — your response to the claim:",
+                "options":[
+                  {"key":"their_records","label":"Assess it from the contractor's own diaries, line by line: build the counter-schedule from the same ninety-one pages — WOW days netted for recorded productive work, access days attributed per the diary's own notes, rates mapped to the contracted split — and respond with a reasoned valuation that cites their document on every adjusted line","quality":100,
+                   "consequence":"The valuation lands at roughly 60% of the claim, and the contractor's commercial team finds itself arguing against its own barge master's handwriting; settlement concludes in six weeks at close to your figure, without a formal dispute.",
+                   "principle":"The strongest answer to a records-based claim is the records — a claim's own evidence, read completely instead of selectively, is usually the best counter-schedule available."},
+                  {"key":"reject","label":"Reject it globally — the double-counting you've spotted taints the whole submission, and a claim with padded lines deserves no line-by-line dignity","quality":15,
+                   "consequence":"Global rejection of genuinely-evidenced weather days converts a 60% settlement into a formal dispute; the adjudicator, unimpressed by wholesale rejection of real diaries, awards nearer 85% — plus costs.",
+                   "principle":"A claim that is 60% good and 40% aggregation is beaten by arithmetic, not indignation — global rejection surrenders the strong ground to defend the weak."},
+                  {"key":"negotiate","label":"Go straight to commercial settlement — open at 40%, land near half, and save the analysis cost; final accounts are horse-trading anyway","quality":25,
+                   "consequence":"The deal lands at 55% and teaches the market that your claims process is a bazaar; next campaign's claim arrives 30% padded in anticipation of the same haircut, from a contractor who now writes thinner diaries.",
+                   "principle":"Settling unanalysed claims by percentage prices your future claims at whatever the other side chooses to open with."}]},
+               {"key":"records","prompt":"Stage 2 — your own records were the weakness. For the next campaign, you:",
+                "options":[
+                  {"key":"joint","label":"Institute joint daily records: one shared log — weather, access, activity, delays and their causes — signed by both representatives each shift, with disagreements noted in the log itself the day they occur, as a condition of the next campaign's contract","quality":100,
+                   "consequence":"The next campaign's final account settles in nine days: there is nothing to argue about, because every standby day was attributed the day it happened by both signatures. The claims consultant's fee is not incurred.",
+                   "principle":"Claims are won and lost at the daily record, months before anyone writes the word 'claim' — a jointly-signed log is the cheapest dispute resolution ever invented."},
+                  {"key":"own","label":"Strengthen your own side's daily reporting — a client representative logging independently on every shift","quality":40,
+                   "consequence":"Better, and half the fix: the next dispute features two divergent unilateral records instead of one, and the argument moves from 'what happened' to 'whose log is better' — closer, but still an argument.",
+                   "principle":"Parallel records dispute each other; joint records prevent the dispute."}]}],
+             "hints":["Read all ninety-one pages, not the claim's summary of them — the diary is both their evidence and yours.",
+               "Net the WOW days against recorded productive work, and attribute access delays by the diary's own causes.",
+               "The forward fix is a jointly-signed daily log — attribution agreed the day it happens, not the year after."],
+             "profile_map":{"decision":"Commercial Strategist","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Answered a diary-based claim with the same diaries, read completely — and settled at the arithmetic, not the anger."}
+            """),
+
+        ("WC-RSC-328", "Acceptance criteria, written after the fact", "The system is built. Now they'd like to define what 'working' means.",
+            "Technology Programmes", "Recovery Delivery Director", "project_management", "advanced", 13,
+            """["scope_management","requirements_management","negotiation"]""",
+            """
+            {"context":"The network modernisation's build is complete, and user acceptance has stalled into trench warfare. The contract's acceptance annex was left as 'criteria to be agreed during delivery' — and never was. Now the operator's acceptance team, staffed late in the programme by people who inherited none of the design compromises, is writing acceptance criteria retrospectively: their draft demands performance levels the design was never scoped to meet ('sub-50ms failover site-to-site' — the approved design targets 200ms), test conditions that never applied ('acceptance under simultaneous dual-site failure'), and documentation formats from their previous vendor's standard. Meanwhile the built system demonstrably meets the design specification it was actually built to, go-live is holding a revenue date, and each week of standoff runs parallel-operation costs.",
+             "evidence":[
+               {"label":"Gap","value":"Acceptance annex: 'to be agreed during delivery' — never agreed"},
+               {"label":"Retro draft","value":"Sub-50ms failover (design: 200ms); dual-failure test conditions; alien doc formats"},
+               {"label":"Fact","value":"System meets the approved design specification"},
+               {"label":"Cost","value":"Go-live holds revenue; every standoff week burns parallel-running"}],
+             "decisions":[
+               {"key":"anchor","prompt":"Stage 1 — you re-anchor acceptance by:",
+                "options":[
+                  {"key":"design_basis","label":"Proposing the only defensible basis: acceptance criteria derived from the approved design specification and the operational requirements it traceably implements — with the acceptance team's draft triaged against it into three lists: covered by design (accept-testable now), genuine operational needs the design missed (change candidates, priced), and imported preferences (declined with reasons)","quality":100,
+                   "consequence":"The triage converts warfare into a work plan: 70% of the draft maps to the design and tests within a month; two items are real gaps the operator funds as fast-follower changes; the dual-failure test and the doc formats die as imports. Go-live holds.",
+                   "principle":"When acceptance criteria arrive after the build, the design specification is the contract's memory — acceptance tests what was commissioned, and change control prices what was wished for."},
+                  {"key":"negotiate_all","label":"Negotiating the draft as a whole — meet them partway on failover, split the difference on test conditions, concede the documentation — because go-live needs their signature more than it needs doctrinal purity","quality":10,
+                   "consequence":"Splitting the difference on sub-50ms yields a 'commitment' to 125ms the design cannot physically meet; the system fails its own negotiated acceptance, and the standoff resumes with your signature on the impossible number.",
+                   "principle":"Acceptance criteria negotiated as concessions rather than derived from the design produce targets unmoored from the machine — which then fails them."},
+                  {"key":"escalate","label":"Escalating to the contract executive: the annex gap is a mutual contract-management failure, and criteria imposed retrospectively are unenforceable — let the executives instruct the acceptance team","quality":30,
+                   "consequence":"The executives duly instruct 'pragmatic acceptance' — with no basis specified; the acceptance team pragmatically re-tables 80% of its draft, and the standoff resumes one level down, four weeks later.",
+                   "principle":"Escalation without a proposed basis returns as an instruction to agree — which was the problem, not the answer."}]},
+               {"key":"protect","prompt":"Stage 2 — on the two genuine gaps the triage found, you:",
+                "options":[
+                  {"key":"decouple","label":"Decouple them from go-live explicitly: accept the system against the design basis now, with the two funded changes scheduled as a post-live release on a committed date and the residual risk of the interim state assessed and signed by the operator — go-live proceeds, gaps close on a plan, nothing is quietly waived","quality":100,
+                   "consequence":"Revenue starts on the held date; the two changes land in the first quarterly release; and the acceptance file shows exactly what was accepted, what was deferred, and who owned each — the closeout audit finds nothing to find.",
+                   "principle":"Real gaps deserve real treatment — funded, dated and risk-assessed — not a hostage position across a go-live that neither closes them faster nor prices them honestly."},
+                  {"key":"gate","label":"Hold go-live until both gaps close — accepting a system with known operational shortfalls transfers their risk to the operator's night shifts","quality":25,
+                   "consequence":"Twelve more weeks of parallel-running costs exceed both changes' price several times over, and the 'shortfalls' — a reporting view and a failover alarm refinement — were never night-shift-critical; the caution was real, its price-check wasn't.",
+                   "principle":"Gaps gate go-live only when their operational risk outweighs the delay's cost — that comparison must actually be run, not assumed."}]}],
+             "hints":["Find the document with contractual memory: the approved design specification is the anchor.",
+               "Triage the retro draft into design-covered, genuine gap, and import — each list gets different machinery.",
+               "Genuine gaps get funded dates and signed risk, not hostage status across go-live."],
+             "profile_map":{"decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Re-anchored after-the-fact acceptance criteria to the design the system was actually built to — and held the revenue date."}
+            """),
+
+        ("WC-RSC-330", "Two projects, one senior engineer", "Both critical paths run through the same person. Both boards were promised her.",
+            "Public Sector Technology", "Recovery Programme Manager", "project_management", "advanced", 14,
+            """["resource_management","governance","stakeholder_communication"]""",
+            """
+            {"context":"The census-scale IT programme's two flagship projects — the data-processing platform and the field-operations system — are both in delivery trouble, and unpicking the schedules reveals the same name on both critical paths: the programme's principal data architect. The platform needs her full-time for the schema-migration design (twelve weeks); field operations needs her full-time for the integration security model (nine weeks); both windows are now, both project boards have separately been assured of her availability, and both project managers have been quietly booking her — she has been working sixty-hour weeks splitting the difference and telling neither side. There is no second person with her clearance-plus-domain combination in the organisation; contractors with equivalent clearance take four months to onboard. The statutory census date moves for nobody.",
+             "evidence":[
+               {"label":"Collision","value":"Same architect on both critical paths — 12-week and 9-week full-time windows, both now"},
+               {"label":"Governance","value":"Both boards separately promised her; both PMs booking her"},
+               {"label":"Human cost","value":"60-hour weeks, splitting the difference, telling neither side"},
+               {"label":"Market","value":"No internal substitute; cleared contractors: 4 months to onboard"}],
+             "decisions":[
+               {"key":"truth","prompt":"Stage 1 — you:",
+                "options":[
+                  {"key":"joint","label":"Surface the collision to both boards at once, as one paper with the census date as arbiter: her time is a single programme resource, the two windows must be sequenced or restructured by census-criticality (the schema migration gates the statutory processing chain; the security model has a documented interim-accreditation path), and her working pattern is named in the paper as a risk being managed, not a buffer being spent","quality":100,
+                   "consequence":"The boards, seeing one truth instead of two promises, sequence her: platform first with a defined handoff, field ops on the interim-accreditation path with her at one structured day a week. Her hours return to human; the census date holds on a plan that acknowledges arithmetic.",
+                   "principle":"A person on two critical paths is a programme decision wearing a rota problem — the fix is one paper to all the promised parties, sequenced by what the immovable date actually needs."},
+                  {"key":"optimise","label":"Rebuild both schedules around fractional allocation — 60/40 with protected deep-work blocks, tightly managed — before troubling two boards with a resourcing matter","quality":15,
+                   "consequence":"The optimised split fails the way splits fail: both design tasks need sustained immersion, both proceed at 30% effective, and six weeks later the collision reaches the boards anyway — larger, later, and with her resignation letter attached as context.",
+                   "principle":"Fractionalising a person across two immersion-depth tasks is not allocation, it is scheduled failure of both — some resources genuinely don't divide."},
+                  {"key":"hire","label":"Treat it as a capacity emergency: start the four-month contractor clearance now and bridge with her overtime formalised and compensated","quality":30,
+                   "consequence":"Right long-term move, wrong sole move: the contractor lands after both windows close, and 'formalised overtime' converts an unsustainable pattern into an approved one — the census date is protected by hoping she doesn't break.",
+                   "principle":"A pipeline fix for a present-tense collision protects the next crisis, not this one — and paying for burnout is still burnout."}]},
+               {"key":"structure","prompt":"Stage 2 — beyond the sequencing decision, you:",
+                "options":[
+                  {"key":"depth","label":"Attack the single point of failure structurally: her twelve platform weeks are re-scoped to include a named deputy shadowing the schema design with explicit knowledge-transfer deliverables, the contractor clearance starts anyway for the operations phase, and 'individuals on more than one critical path' becomes a standing programme-level resource check at every re-plan","quality":100,
+                   "consequence":"By week eight the deputy is fielding platform queries alone; the cleared contractor arrives in time for census operations; and the next re-plan's resource check catches a network engineer double-booked across two cutovers — caught at planning, costing nothing.",
+                   "principle":"The lasting fix for a keystone person is never a better rota — it is deliberate redundancy: shadows, pipelines, and a standing check that finds the next keystone before both boards promise them."},
+                  {"key":"ringfence","label":"Ring-fence her formally to the programme's disposal — a resource-control decision preventing either project from booking her directly again","quality":25,
+                   "consequence":"The booking symptom is cured; the keystone disease remains — she is still the only person who can do either task, and the ring-fence's first real test is her first week of illness.",
+                   "principle":"Controlling access to a single point of failure is custody, not resilience."}]}],
+             "hints":["Two separate promises to two boards is the actual failure — reunify the truth before optimising the rota.",
+               "Sequence by what the statutory date needs: one path gates it directly, one has an interim route.",
+               "Then break the keystone pattern: shadow, pipeline, and a re-plan check for double-booked names."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Reunified two boards' incompatible promises of the same architect — and then made sure no one person gated the census again."}
+            """),
+
+        ("WC-RSC-332", "The slide that reached the wrong room", "One slide about delay, three hundred furious ground staff, and a retraction that made it worse.",
+            "Aviation", "Recovery Programme Director", "project_management", "advanced", 15,
+            """["stakeholder_communication","governance","concept_planning"]""",
+            """
+            {"context":"The airport baggage-system upgrade needed to tell its stakeholders about a four-month delay. What happened instead: a programme-office slide deck — drafted for the executive steering group, stating that the delay 'enables workforce transition planning for the automation phase' — was forwarded, unredacted, to the airline community distribution list, and from there to the ground-handlers' union. Three hundred baggage staff read, in a bullet point, that the project automating their work was using its delay to plan their 'transition'. A hasty programme-office retraction called the slide 'poorly worded and not reflective of any agreed position' — which the union read, reasonably, as confirmation plus evasion. Two handling agents have paused their operational data-sharing with the programme; the airport's CEO wants a recovery plan for the relationship, not just the schedule; and the underlying truth is uncomfortable: automation WILL reduce baggage-hall headcount, and the workforce planning bullet was accurate.",
+             "evidence":[
+               {"label":"Leak","value":"Steering-group slide → airline list → union; 'workforce transition' bullet"},
+               {"label":"Retraction","value":"'Poorly worded, not an agreed position' — read as confirmation plus evasion"},
+               {"label":"Damage","value":"2 handling agents paused data-sharing; CEO wants relationship recovery"},
+               {"label":"Truth","value":"Automation will reduce headcount; the bullet was accurate"}],
+             "decisions":[
+               {"key":"posture","prompt":"Stage 1 — the recovery's foundation:",
+                "options":[
+                  {"key":"honest","label":"Stop retracting the truth and start owning it: the programme's leadership meets the union and handling agents directly with the real position — what automation changes, what it doesn't, the honest headcount trajectory with dates, and the transition commitments (retraining, redeployment, timeline guarantees) that the leaked bullet gestured at but nobody had actually built — with the workforce package now developed WITH the union rather than about it","quality":100,
+                   "consequence":"The first meeting is brutal and the second is a negotiation: the union has known automation was coming since the business case leaked years ago — what it couldn't accept was planning conducted about its members in slides they weren't meant to see. Data-sharing resumes against the joint working group's first output.",
+                   "principle":"A leak of an uncomfortable truth cannot be repaired by disowning the truth — it is repaired by upgrading the people who read it from subjects of the plan to parties in it."},
+                  {"key":"contain","label":"Contain and rebuild slowly: let the retraction stand, restore relationships bilaterally through the handling agents' commercial channels, and fold workforce messaging into the consultation the HR workstream had scheduled for next year","quality":0,
+                   "consequence":"The union, holding a slide that says one thing and a retraction that says nothing, fills the silence: a work-to-rule in the baggage hall meets the programme's next integration test window, and next year's 'scheduled consultation' opens with zero credibility against a story the union now owns.",
+                   "principle":"Between a leaked truth and a scheduled consultation lies a vacuum — and vacuums are filled by whoever is angriest."},
+                  {"key":"blame","label":"Make it a leak-control matter first: investigate the forwarding chain, tighten distribution controls, and let steering decide the workforce narrative once the channel is secure","quality":10,
+                   "consequence":"The investigation finds what leak investigations find — a well-meaning forward — while three hundred people's question ('what happens to us?') goes unanswered for six more weeks; the channel gets secured around a relationship that no longer exists.",
+                   "principle":"When the leaked content is true, the leak is not the problem — treating disclosure as the failure confirms every suspicion about what else is being withheld."}]},
+               {"key":"machinery","prompt":"Stage 2 — so communication stops being the programme's leading risk, you:",
+                "options":[
+                  {"key":"audience","label":"Rebuild communications around audiences instead of documents: every material message — starting with the delay itself — gets an audience map (who is affected, what they need to know, in what order, from whom), impacted-workforce audiences hear consequential news from named leaders before wider circulation, and anything drafted for one audience is written as if every audience will read it — because this programme now knows they will","quality":100,
+                   "consequence":"The next hard message — a phased go-live that changes shift patterns — lands through the joint working group, face first, slides later; it produces questions instead of grievances, and the union rep's summary to members is more accurate than the programme's own slide would have been.",
+                   "principle":"In a multi-stakeholder programme, there is no such thing as an internal document — sequencing who hears hard news from whom IS the communications strategy; the slides are just its residue."},
+                  {"key":"approvals","label":"Introduce a communications approval gate: nothing leaves the programme office without sign-off against a sensitivity checklist","quality":30,
+                   "consequence":"The gate catches the next careless forward and adds four days to every message; what it cannot catch is the pattern that caused this one — true things written about people who were never meant to be in the room.",
+                   "principle":"Approval gates filter documents; the failure was in audiences — a checklist cannot fix who the plan was talking about instead of to."}]}],
+             "hints":["Separate the leak from the truth it leaked — only one of them can be fixed, and it isn't the leak.",
+               "The retraction failed because it disowned an accurate statement — recovery starts by owning it, with commitments attached.",
+               "Rebuild around audiences: the affected hear it first, from leaders, and every document is written as if everyone reads it."],
+             "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Recovered a leaked automation slide by making its uncomfortable truth the opening offer of a real negotiation."}
+            """),
+
+        ("WC-RSC-334", "The supplier who asked for help early", "The letter says 'we have a problem'. The contract says that's their problem. Reality disagrees.",
+            "Flood Defence", "Recovery Commercial Director", "project_finance", "advanced", 13,
+            """["procurement","supply_chain","commercial_awareness"]""",
+            """
+            {"context":"Four weeks into mobilisation of the flood defence scheme, the precast supplier — sole source for the specialist wave-return units, 40% of the programme's critical path — writes candidly: input cost movements on steel fibre and cement have opened a loss on its fixed-price contract; it can complete, but doing so 'will require decisions about production priorities across our order book', and it is raising this 'now, while options exist, rather than at the point of failure'. The contract is watertight: fixed price, no fluctuation provision, supplier bears input risk — your board's procurement adviser notes the letter 'has no contractual foundation' and recommends holding the supplier to its bid. Market checks confirm both halves of the story: input costs genuinely moved beyond any bidder's forecast, and the two alternative suppliers quote 30% higher with 14-week mould lead times. The letter is either the beginning of a negotiation or the beginning of an insolvency — possibly both.",
+             "evidence":[
+               {"label":"Letter","value":"Candid early warning: loss-making, can complete, 'raising now while options exist'"},
+               {"label":"Contract","value":"Fixed price, no fluctuation clause — input risk is the supplier's"},
+               {"label":"Market","value":"Input moves genuine; alternatives +30% with 14-week mould lead times"},
+               {"label":"Exposure","value":"Sole source, 40% of critical path"}],
+             "decisions":[
+               {"key":"respond","prompt":"Stage 1 — your response to the letter:",
+                "options":[
+                  {"key":"engage","label":"Treat the early warning as the asset it is: verify the loss with open-book access (their claim, their books), then structure relief that buys something real — a price adjustment tied to verified input indices, in exchange for enhanced security (vesting of moulds and WIP, step-in rights, priority production slots) — priced against the true alternative, which is 30%-plus-14-weeks, not the contract's comfortable zero","quality":100,
+                   "consequence":"Open book verifies a genuine 9% loss, not the feared negotiation theatre; relief lands at 6% with vesting and slot guarantees the original contract never had. The units arrive on programme — and when a second supplier fails industry-wide that winter, yours doesn't.",
+                   "principle":"A supplier who signals distress early is handing you options — the contract says you needn't pay, but the critical path says you can't afford their failure; buy the relief with protections, priced against the real alternative."},
+                  {"key":"hold","label":"Hold them to the bid — the adviser is right, the contract allocated input risk deliberately, and repricing fixed-price contracts on request destroys the meaning of tendering","quality":10,
+                   "consequence":"The supplier, refused, does what its letter foreshadowed: reprioritises its order book toward paying customers. Deliveries slip 'for production reasons' that never quite constitute breach; by the time default is provable, the 14-week mould lead time is your programme's problem, at 30% premium, in flood season.",
+                   "principle":"Contractual rightness and commercial survival are different questions — a watertight contract with an insolvent counterparty is watertight paper."},
+                  {"key":"retender","label":"Start the alternative suppliers' qualification now and let the incumbent's letter compete with real quotes — negotiate, if at all, from a dual-source position","quality":35,
+                   "consequence":"Sensible as insurance, ruinous as a lead strategy: the 14-week mould lead time means the 'alternative' matures after the critical path needs units flowing, and the incumbent — reading the qualification enquiries in a small market within days — stops seeing a partnership worth losing money for.",
+                   "principle":"Building alternatives is prudent; brandishing unready ones is not leverage, it is a countdown the other side can read."}]},
+               {"key":"govern","prompt":"Stage 2 — the board asks how relief squares with procurement discipline. You:",
+                "options":[
+                  {"key":"paper","label":"Put it through governance as the priced decision it is: the relief's cost versus the verified alternative (premium, lead time, flood-season exposure), the protections obtained, an index-linked mechanism replacing ad-hoc mercy — and an honest note that the tender's risk allocation failed against unforecastable input moves, feeding the next procurement's fluctuation-clause design","quality":100,
+                   "consequence":"The board approves a decision instead of ratifying a fait accompli; the audit committee later cites the paper as model practice — relief bounded by verification, bought with security, and converted into a lesson the next tender actually implements.",
+                   "principle":"Discretionary relief survives scrutiny only as a documented value-for-money decision — verified need, priced alternative, purchased protections, and a fixed mechanism replacing repeatable mercy."},
+                  {"key":"quiet","label":"Handle it as commercial management within delegated authority — boards ratify outcomes, and a 6% adjustment inside contingency needs no governance theatre","quality":15,
+                   "consequence":"The adjustment surfaces at audit as an undocumented concession on a watertight contract; the absent paperwork converts a defensible decision into a finding, and the officer who made it into its subject.",
+                   "principle":"The decision that is right and unrecorded is indistinguishable, later, from the one that was wrong."}]}],
+             "hints":["Price the real alternative first: 30% premium plus 14 weeks plus flood season — that is what 'hold them to it' costs.",
+               "Verify before relieving: open book converts a letter into evidence, or exposes it as theatre.",
+               "Buy relief, don't grant it — vesting, step-in rights and priority slots are what the distress is worth."],
+             "profile_map":{"decision":"Commercial Strategist","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Bought verified relief with vesting and step-in rights — because the watertight contract's alternative was 30% and fourteen weeks."}
+            """),
+
+        ("WC-RSC-336", "The calendar the site never agreed to", "Head office planned the transformation by quarters. The plant runs by campaigns.",
+            "Enterprise Programmes", "Recovery Planning Lead", "project_management", "advanced", 18,
+            """["schedule_analysis","stakeholder_communication","concept_planning"]""",
+            """
+            {"context":"The enterprise transformation — new ERP, new maintenance regime, new reporting spine across nine manufacturing sites — is eighteen months in and site adoption has collapsed at the three largest plants. Unpicking why, you find the programme calendar was built in head office around fiscal quarters: releases land at quarter boundaries, training in the weeks before, cutover on quarter-start weekends. The plants run on a different clock entirely: the largest runs continuous campaigns with shutdown windows twice a year (already booked two years out); the second is seasonal, at 130% capacity all summer; the third schedules maintenance around its largest customer's certification audits. Each plant, asked to cut over mid-campaign, has quietly deferred — 'go-live achieved' in programme reports means the software is on and the old spreadsheets still run everything. The steering group believes seven of nine sites are live. Two are.",
+             "evidence":[
+               {"label":"Design","value":"Calendar built on fiscal quarters — releases, training, quarter-start cutovers"},
+               {"label":"Reality","value":"Campaign cycles, seasonal peaks, audit-driven maintenance windows — none aligned to quarters"},
+               {"label":"Adoption","value":"'Live' sites running parallel spreadsheets; real adoption 2 of 9"},
+               {"label":"Governance","value":"Steering believes 7 of 9"}],
+             "decisions":[
+               {"key":"truth","prompt":"Stage 1 — you:",
+                "options":[
+                  {"key":"recalendar","label":"Tell steering the real number and bring the fix in the same paper: adoption re-measured by an honest definition (old tools retired, not software installed), and the rollout re-planned around each site's operational calendar — cutover in shutdown windows, training in low-season, the fiscal-quarter cadence retained only for what head office actually controls — with the schedule consequence stated: longer to full rollout, shorter to real adoption","quality":100,
+                   "consequence":"Steering absorbs '2 of 9' badly and 'here is the plan that makes it real' well; the largest plant's booked shutdown window in month 4 becomes the first genuine cutover, and its campaign restarts on the new system — the reference case that recruits the other six.",
+                   "principle":"A rollout calendar is a claim about other people's time — where the programme's clock and the operation's clock disagree, the operation's wins, because adoption happens on site, not in head office."},
+                  {"key":"enforce","label":"Recover the plan as approved: escalate the deferrals as non-compliance, mandate cutover dates through the executive, and dismantle the parallel spreadsheets by policy","quality":0,
+                   "consequence":"The mandate lands mid-campaign at the largest plant; the forced cutover meets its first stock reconciliation during a production run, output drops for nine days, and the plant director's account of why — the booked shutdown was four months away — ends the programme director's tenure, not the spreadsheets.",
+                   "principle":"Mandating adoption against an operational calendar doesn't defeat the resistance — it schedules the incident that proves the resistance right."},
+                  {"key":"soften","label":"Keep the reported position and quietly fix forward — re-phase the remaining sites sensibly while 'maturing' the seven declared sites through an adoption workstream","quality":15,
+                   "consequence":"The quiet fix inherits a loud problem: steering keeps making decisions — decommissioning legacy licences, releasing support staff — against seven live sites that are two; the licence decommissioning hits a 'live' plant's actual system of record in month three.",
+                   "principle":"A false adoption number is not a reporting nicety — it is an input other decisions are consuming right now."}]},
+               {"key":"design","prompt":"Stage 2 — re-planning around nine operational calendars, you:",
+                "options":[
+                  {"key":"windows","label":"Build the plan from the sites' windows outward: every plant's shutdown, low-season and audit calendar collected as planning constraints, cutovers assigned to real windows with site sign-off as a plan input (not a communication afterward), a repeatable cutover kit so each window needs less programme presence — and the fiscal-quarter reporting recut to track window-readiness, since windows, not quarters, are now the unit of progress","quality":100,
+                   "consequence":"The re-cut plan runs eleven months longer on paper and delivers real adoption faster than the old plan's fiction; by the fifth site the cutover kit runs in a long weekend, and two plants ask to move earlier — into windows the programme would never have found from head office.",
+                   "principle":"Nine sites means nine calendars — a deliverable rollout is designed from the windows the operation already protects, and progress is measured in windows made, not quarters passed."},
+                  {"key":"hybrid","label":"Compromise: keep quarterly release trains for efficiency, with sites choosing which train to board — flexibility inside the existing cadence","quality":25,
+                   "consequence":"The trains run on time and half-empty: sites whose windows fall between quarters still defer, now with a legitimate-sounding reason ('waiting for the Q3 train'), and the cadence's efficiency serves the programme office's convenience at the adoption rate's expense.",
+                   "principle":"Letting sites choose among the programme's dates is not the same as planning around the sites' dates — the constraint never moved."}]}],
+             "hints":["Audit what 'live' means in the reports before planning anything — retired old tools, or installed new ones?",
+               "Collect the nine operational calendars first: shutdowns, seasons, audits — those windows are the real plan.",
+               "Recut progress reporting to windows, not quarters — you deliver in the operation's units or not at all."],
+             "profile_map":{"decision":"Schedule Analyst","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Replanned a nine-site rollout around the calendars the plants actually run on — and made '2 of 9' into the honest start of 9 of 9."}
+            """),
     };
 }

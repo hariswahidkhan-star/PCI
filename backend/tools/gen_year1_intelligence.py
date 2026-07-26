@@ -446,7 +446,38 @@ MAPPED_OCT = [
     ("WC-CST-310", "The forecast that flattered the month", "daily_decision", "cost_commercial", "closeout_lessons", "construction_infrastructure", "single_decision", "advanced", 15, 304),
 ]
 assert len(MAPPED_OCT) == 27
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG + MAPPED_SEP + MAPPED_OCT
+
+# ── November authored pack: integrated project controls and executive trade-offs. ──
+MAPPED_NOV = [
+    ("WC-RSC-311", "An estimate at completion with three authors", "project_rescue", "cost_commercial", "closeout_lessons", "cross_sector", "multi_stage_decision", "advanced", 18, 305),
+    ("WC-GOV-312", "A delegation question with teeth", "daily_decision", "integration_governance", "closeout_lessons", "cross_sector", "single_decision", "advanced", 13, 306),
+    ("WC-RSK-313", "The single point of failure everyone knew", "risk_room", "risk_uncertainty", "concept_business_case", "construction_infrastructure", "evidence_diagnosis", "advanced", 16, 307),
+    ("WC-RSC-314", "The long-lead item with no float", "project_rescue", "procurement_contracts", "procurement_mobilization", "cross_sector", "multi_stage_decision", "advanced", 14, 308),
+    ("WC-GOV-315", "The baseline the board never saw", "daily_decision", "integration_governance", "closeout_lessons", "climate_sustainability", "single_decision", "advanced", 18, 309),
+    ("WC-RSK-316", "A residual risk with no owner", "risk_room", "risk_uncertainty", "closeout_lessons", "cross_sector", "evidence_diagnosis", "advanced", 16, 310),
+    ("WC-RSC-317", "The change that arrived as a fact", "project_rescue", "change_claims_recovery", "closeout_lessons", "climate_sustainability", "multi_stage_decision", "advanced", 15, 311),
+    ("WC-GOV-318", "Strategy says yes, capacity says no", "daily_decision", "integration_governance", "closeout_lessons", "healthcare_life_sciences", "single_decision", "advanced", 16, 312),
+    ("WC-RSK-319", "The weather window and the reserve", "risk_room", "risk_uncertainty", "procurement_mobilization", "professional_services_other", "evidence_diagnosis", "advanced", 16, 313),
+    ("WC-RSC-320", "The exclusion whose premise died", "project_rescue", "scope_requirements", "concept_business_case", "healthcare_life_sciences", "multi_stage_decision", "advanced", 13, 314),
+    ("WC-GOV-321", "The go/no-go with missing evidence", "daily_decision", "integration_governance", "closeout_lessons", "manufacturing_industrial", "single_decision", "advanced", 14, 315),
+    ("WC-RSC-322", "Sequencing the work nobody wants first", "project_rescue", "schedule_planning", "procurement_mobilization", "manufacturing_industrial", "multi_stage_decision", "advanced", 18, 316),
+    ("WC-GOV-323", "The second gate that split the board", "daily_decision", "integration_governance", "closeout_lessons", "cross_sector", "single_decision", "advanced", 15, 317),
+    ("WC-RSC-324", "Liquidated damages, tested", "project_rescue", "procurement_contracts", "concept_business_case", "construction_infrastructure", "multi_stage_decision", "advanced", 14, 322),
+    ("WC-GOV-325", "Benefits in the ground", "daily_decision", "integration_governance", "closeout_lessons", "construction_infrastructure", "single_decision", "advanced", 13, 323),
+    ("WC-RSC-326", "A claim built from diary pages", "project_rescue", "change_claims_recovery", "procurement_mobilization", "energy_utilities", "multi_stage_decision", "advanced", 15, 324),
+    ("WC-CST-327", "Contingency, spent in silence", "daily_decision", "cost_commercial", "procurement_mobilization", "cross_sector", "evidence_diagnosis", "advanced", 18, 325),
+    ("WC-RSC-328", "Acceptance criteria, written after the fact", "project_rescue", "scope_requirements", "closeout_lessons", "technology_digital", "multi_stage_decision", "advanced", 13, 326),
+    ("WC-CST-329", "A value engineering call under pressure", "daily_decision", "cost_commercial", "closeout_lessons", "energy_utilities", "evidence_diagnosis", "advanced", 16, 327),
+    ("WC-RSC-336", "The calendar the site never agreed to", "project_rescue", "schedule_planning", "concept_business_case", "cross_sector", "multi_stage_decision", "advanced", 18, 328),
+    ("WC-CST-331", "The cash curve that crossed the facility", "daily_decision", "cost_commercial", "procurement_mobilization", "public_sector", "evidence_diagnosis", "advanced", 14, 329),
+    ("WC-RSC-330", "Two projects, one senior engineer", "project_rescue", "resources_leadership", "closeout_lessons", "public_sector", "multi_stage_decision", "advanced", 14, 330),
+    ("WC-CST-333", "Unit rates that stopped meaning anything", "daily_decision", "cost_commercial", "closeout_lessons", "technology_digital", "evidence_diagnosis", "advanced", 15, 331),
+    ("WC-RSC-332", "The slide that reached the wrong room", "project_rescue", "stakeholders_communication", "concept_business_case", "transport_logistics", "multi_stage_decision", "advanced", 15, 332),
+    ("WC-CST-335", "The commitment ledger nobody reconciled", "daily_decision", "cost_commercial", "procurement_mobilization", "transport_logistics", "evidence_diagnosis", "advanced", 13, 333),
+    ("WC-RSC-334", "The supplier who asked for help early", "project_rescue", "procurement_contracts", "procurement_mobilization", "construction_infrastructure", "multi_stage_decision", "advanced", 13, 334),
+]
+assert len(MAPPED_NOV) == 26
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG + MAPPED_SEP + MAPPED_OCT + MAPPED_NOV
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -465,7 +496,8 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-CSH-034": 199,
                    "WC-RES-013": 228, "WC-RES-037": 229,
                    "WC-TRC-052": 258, "WC-TRC-051": 259,
-                   "WC-AIA-029": 288, "WC-AIA-010": 289, "WC-DQA-017": 290, "WC-DQ-045": 291}
+                   "WC-AIA-029": 288, "WC-AIA-010": 289, "WC-DQA-017": 290, "WC-DQ-045": 291,
+                   "WC-CBS-038": 318, "WC-CSH-019": 319, "WC-PRD-011": 320, "WC-EVM-031": 321}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}
