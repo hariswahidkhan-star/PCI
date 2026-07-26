@@ -54,6 +54,31 @@ or writes exam, entitlement, credential, membership or platform `users` tables; 
 never create certification evidence; learner payloads are allow-listed (`PublicView`) so reference
 values, option qualities and consequences cannot leak pre-submission.
 
+## 1b. Phase B slice 1 (second change on this branch)
+
+Delivered on top of Phase A:
+
+- **Progressive authored hints (PI-US-051)** — `hints` is now a first-class, validated content
+  field: exactly three non-empty strings when present, scanned by the answer-leakage gate
+  (a hint may teach the method, never the value). `PublicView` exposes only `hints_available`;
+  hint text leaves the server solely through `POST /api/world/attempts/{id}/hint` — one hint per
+  request, in authored order, in-progress attempts only, guarded increment (`hints_used`), no
+  hidden score effect. Verified by four new gate tests and a live smoke (reveal 1→2→3, idempotent
+  at 3, 409 after submit).
+- **January fully authored** — `Data/WorldIntelligencePack.cs` adds 28 new experiences written TO
+  their plan slots (11 Daily Decisions, 8 Stakeholder Dilemmas, 6 Risk Rooms with EMV reference
+  solves, 2 Schedule Strategies with CPM networks, 1 Cost & Value with EVM), every one carrying
+  the full editorial contract (three hints, consequence + principle per option, share line) and
+  passing the publication validator and reference solve in CI. With the three existing
+  January-mapped bank items pinned in place, **all 31 January days are backed: runway_days = 31**
+  — still below the 60-day bar, so the runway alert correctly remains raised.
+- **Plan-quality improvements to the generator** — mapped items rotate across theme-matching
+  months, planned Executive Missions are capped at two per month, types are interleaved within
+  each month, and sectors are apportioned largest-remainder so every sector appears all year.
+  All distribution tables remain exact (CI-verified).
+
+The bank now holds **80 published house challenges** (52 legacy + 28 Year-1 January).
+
 ## 2. Audit of the existing 52-challenge bank
 
 Every house challenge (`WC-…-001` … `WC-…-052`) was classified into the Project Intelligence
@@ -129,8 +154,8 @@ Deferred items per the specification's own mechanism (owner, reason, risk, targe
 | # | Deferred item | Reason | Risk | Owner | Target |
 |---|---|---|---|---|---|
 | D1 | World React participant + admin shells (`/world/app`, `/world-admin` SPA) | The spec makes React-shell completion an explicit prerequisite phase; current World learner surface is the server-rendered workspace, which already serves attempts safely | Learner UX stays classic until built | Frontend lead | Phase B |
-| D2 | Authoring the 313 + 55 planned experiences (content, hints, debriefs, rubrics) | 420 editorially-complete experiences require SME/editorial review that cannot be fabricated; the governed plan + gates ship first so authoring is trackable | Runway alert stays raised (by design) | Content governance lead | Rolling, runway-first (Jan → Dec) |
-| D3 | Remediation of the 52 mapped items (hints, coach context, review-by dates) | Requires the authoring fields of D2's pipeline | Mapped items stay "conditional" in coverage | SME reviewers | Phase B |
+| D2 | Authoring the remaining 285 + 55 planned experiences (January's 28 are done — runway 31 days) | 420 editorially-complete experiences require SME/editorial review that cannot be fabricated; the governed plan + gates ship first so authoring is trackable | Runway alert stays raised until ≥60 authored days | Content governance lead | Rolling, runway-first (Feb → Dec) |
+| D3 | Remediation of the 52 legacy mapped items (hints, coach context, review-by dates) | The hints field and validator now exist (Phase B slice 1); backfilling 52 legacy configs is SME work | Legacy items stay "conditional" in coverage | SME reviewers | Phase B |
 | D4 | Attempt-level PI features (bookmarks, mastery, recommendations, streaks) | Requires participant-account data model extensions; the single attempt pipeline must stay unforked | Learner home shows library + today only | Backend lead | Phase B |
 | D5 | AI Coach (bounded hinting, leakage tests, fallback) | Depends on D2's per-item coach-boundary fields; deterministic hints must exist first | No coach at launch (spec allows: fully functional without) | AI safety engineer | Phase C |
 | D6 | Shared-identity bridge to the platform student account | The one-login SSO bridge exists (`student_user_id`); the full canonical-profile prefill journey is a separate identity workstream | World accounts remain practice-identity-only (safe default) | Identity lead | Phase C |

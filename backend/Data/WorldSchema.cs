@@ -22,6 +22,7 @@ public static class WorldSchema
         Tables(db);
         Seed(db);
         WorldContentPack.Seed(db);
+        WorldIntelligencePack.Seed(db);
         WorldArticlePack.Seed(db);
         // Project Intelligence taxonomy backfill — idempotent, house rows only, metadata only
         // (never config_json, never a version snapshot). Runs after the pack so a fresh install
@@ -244,6 +245,9 @@ public static class WorldSchema
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+        // Progressive hints (PI-US-051): how many authored hints this attempt has revealed.
+        // Transparent by design — hints carry NO hidden score penalty; the count is simply recorded.
+        AddCol("pciworld_attempts", "hints_used", "hints_used INTEGER DEFAULT 0");
 
         // ── Project Intelligence taxonomy (Core/WorldIntelligence.cs). Catalogue metadata on the
         //    WORKING COPY only — deliberately not on pciworld_challenge_versions, because facets

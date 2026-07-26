@@ -23,6 +23,12 @@ public static class WorldContentPack
         foreach (var p in Pilots) Upsert(db, p);
     }
 
+    /// <summary>House-content upsert for sibling packs (WorldIntelligencePack): same replay-immutability
+    /// discipline — a config change is a NEW immutable version, operator rows are never touched.</summary>
+    internal static void UpsertHouse(Db db, string code, string title, string hook, string industry, string role,
+        string track, string difficulty, int minutes, string competenciesJson, string configJson) =>
+        Upsert(db, new Pilot(code, title, hook, industry, role, track, difficulty, minutes, competenciesJson, configJson));
+
     static void Upsert(Db db, Pilot p)
     {
         var existing = db.QueryOne("SELECT id,author_id,status,current_version,config_json FROM pciworld_challenges WHERE code=?", p.Code);

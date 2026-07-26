@@ -214,6 +214,37 @@ public static class WorldIntelligence
         ["WC-CPM-050"] = new("schedule_strategy", "schedule_planning", "definition_planning", "transport_logistics", "numeric_calculation"),
         ["WC-TRC-051"] = new("daily_decision", "quality_assurance", "execution_control", "professional_services_other", "evidence_diagnosis"),
         ["WC-TRC-052"] = new("daily_decision", "quality_assurance", "execution_control", "healthcare_life_sciences", "evidence_diagnosis"),
+
+        // ── Year-1 January authored pack (WorldIntelligencePack) — each item is authored TO its
+        //    plan slot, so these assignments are fixed by the manifest, not re-derived. ──
+        ["WC-GOV-053"] = new("daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision"),
+        ["WC-GOV-054"] = new("daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision"),
+        ["WC-GOV-055"] = new("daily_decision", "integration_governance", "concept_business_case", "construction_infrastructure", "single_decision"),
+        ["WC-GOV-056"] = new("daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision"),
+        ["WC-GOV-057"] = new("daily_decision", "integration_governance", "concept_business_case", "energy_utilities", "single_decision"),
+        ["WC-GOV-058"] = new("daily_decision", "integration_governance", "concept_business_case", "technology_digital", "single_decision"),
+        ["WC-GOV-059"] = new("daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision"),
+        ["WC-GOV-060"] = new("daily_decision", "integration_governance", "concept_business_case", "construction_infrastructure", "single_decision"),
+        ["WC-GOV-061"] = new("daily_decision", "integration_governance", "concept_business_case", "manufacturing_industrial", "single_decision"),
+        ["WC-GOV-062"] = new("daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision"),
+        ["WC-GOV-063"] = new("daily_decision", "integration_governance", "concept_business_case", "public_sector", "single_decision"),
+        ["WC-STK-064"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "public_sector", "negotiation_communication"),
+        ["WC-STK-065"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "transport_logistics", "negotiation_communication"),
+        ["WC-STK-066"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "construction_infrastructure", "negotiation_communication"),
+        ["WC-STK-067"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "technology_digital", "negotiation_communication"),
+        ["WC-STK-068"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "cross_sector", "negotiation_communication"),
+        ["WC-STK-069"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "cross_sector", "negotiation_communication"),
+        ["WC-STK-070"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "energy_utilities", "negotiation_communication"),
+        ["WC-STK-071"] = new("stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "construction_infrastructure", "negotiation_communication"),
+        ["WC-RSK-072"] = new("risk_room", "risk_uncertainty", "concept_business_case", "cross_sector", "numeric_calculation"),
+        ["WC-RSK-073"] = new("risk_room", "risk_uncertainty", "concept_business_case", "energy_utilities", "numeric_calculation"),
+        ["WC-RSK-074"] = new("risk_room", "risk_uncertainty", "concept_business_case", "healthcare_life_sciences", "numeric_calculation"),
+        ["WC-RSK-075"] = new("risk_room", "risk_uncertainty", "concept_business_case", "climate_sustainability", "numeric_calculation"),
+        ["WC-RSK-076"] = new("risk_room", "risk_uncertainty", "concept_business_case", "cross_sector", "numeric_calculation"),
+        ["WC-RSK-077"] = new("risk_room", "risk_uncertainty", "concept_business_case", "technology_digital", "numeric_calculation"),
+        ["WC-CPM-078"] = new("schedule_strategy", "schedule_planning", "concept_business_case", "construction_infrastructure", "numeric_calculation"),
+        ["WC-CPM-079"] = new("schedule_strategy", "schedule_planning", "concept_business_case", "manufacturing_industrial", "numeric_calculation"),
+        ["WC-EVM-080"] = new("cost_value", "cost_commercial", "concept_business_case", "cross_sector", "numeric_calculation"),
     };
 
     /// <summary>

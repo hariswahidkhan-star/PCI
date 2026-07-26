@@ -138,6 +138,43 @@ MAPPED = [
 ]
 assert len(MAPPED) == 52
 
+# ── January authored pack (Data/WorldIntelligencePack.cs): items authored TO their plan slot and
+#    therefore PINNED to a specific day. Same shape as MAPPED plus the day-of-year. ──
+MAPPED_JAN = [
+    ("WC-GOV-053", "The gate you cannot half-pass", "daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision", "foundation", 6, 1),
+    ("WC-STK-064", "The update that landed badly", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "public_sector", "negotiation_communication", "professional", 7, 2),
+    ("WC-RSK-072", "The register nobody opened", "risk_room", "risk_uncertainty", "concept_business_case", "cross_sector", "numeric_calculation", "professional", 9, 3),
+    ("WC-CPM-078", "The float that was already spent", "schedule_strategy", "schedule_planning", "concept_business_case", "construction_infrastructure", "numeric_calculation", "professional", 12, 4),
+    ("WC-EVM-080", "The pilot that flattered the case", "cost_value", "cost_commercial", "concept_business_case", "cross_sector", "numeric_calculation", "foundation", 8, 5),
+    ("WC-GOV-054", "The benefits slide nobody measured", "daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision", "foundation", 7, 6),
+    ("WC-STK-065", "Forty residents, one unanswerable question", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "transport_logistics", "negotiation_communication", "professional", 5, 7),
+    ("WC-RSK-073", "Drawdown or discipline", "risk_room", "risk_uncertainty", "concept_business_case", "energy_utilities", "numeric_calculation", "professional", 10, 8),
+    ("WC-CPM-079", "Two paths, both critical", "schedule_strategy", "schedule_planning", "concept_business_case", "manufacturing_industrial", "numeric_calculation", "professional", 10, 9),
+    ("WC-GOV-055", "Two mandates, one road", "daily_decision", "integration_governance", "concept_business_case", "construction_infrastructure", "single_decision", "foundation", 5, 10),
+    ("WC-STK-066", "The question you knew was coming", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "construction_infrastructure", "negotiation_communication", "professional", 6, 11),
+    ("WC-RSK-074", "The delay that pays", "risk_room", "risk_uncertainty", "concept_business_case", "healthcare_life_sciences", "numeric_calculation", "professional", 8, 12),
+    ("WC-GOV-056", "The case that kept growing", "daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision", "foundation", 6, 13),
+    ("WC-STK-067", "The email you should not send", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "technology_digital", "negotiation_communication", "professional", 7, 14),
+    ("WC-RSK-075", "Five greens and a cliff", "risk_room", "risk_uncertainty", "concept_business_case", "climate_sustainability", "numeric_calculation", "professional", 11, 18),
+    ("WC-GOV-057", "Sign here, or send it up?", "daily_decision", "integration_governance", "concept_business_case", "energy_utilities", "single_decision", "foundation", 7, 19),
+    ("WC-STK-068", "One pack, two rooms", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "cross_sector", "negotiation_communication", "professional", 5, 20),
+    ("WC-RSK-076", "Everyone knew about the gantry", "risk_room", "risk_uncertainty", "concept_business_case", "cross_sector", "numeric_calculation", "professional", 9, 21),
+    ("WC-GOV-058", "The baseline that skipped the board", "daily_decision", "integration_governance", "concept_business_case", "technology_digital", "single_decision", "foundation", 5, 22),
+    ("WC-STK-069", "Say it first, say it whole", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "cross_sector", "negotiation_communication", "professional", 6, 23),
+    ("WC-RSK-077", "Accepted, says who", "risk_room", "risk_uncertainty", "concept_business_case", "technology_digital", "numeric_calculation", "professional", 11, 24),
+    ("WC-GOV-059", "Yes to the strategy, no to the start date", "daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision", "foundation", 6, 25),
+    ("WC-STK-070", "The partner who heard it in the market", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "energy_utilities", "negotiation_communication", "professional", 7, 26),
+    ("WC-GOV-060", "Go, no-go, or not yet", "daily_decision", "integration_governance", "concept_business_case", "construction_infrastructure", "single_decision", "foundation", 7, 27),
+    ("WC-STK-071", "The corridor promise", "stakeholder_dilemma", "stakeholders_communication", "concept_business_case", "construction_infrastructure", "negotiation_communication", "professional", 5, 28),
+    ("WC-GOV-061", "The gate review with one author", "daily_decision", "integration_governance", "concept_business_case", "manufacturing_industrial", "single_decision", "foundation", 5, 29),
+    ("WC-GOV-062", "Benefits now, capability later", "daily_decision", "integration_governance", "concept_business_case", "cross_sector", "single_decision", "foundation", 6, 30),
+    ("WC-GOV-063", "One estate, two ministries", "daily_decision", "integration_governance", "concept_business_case", "public_sector", "single_decision", "foundation", 6, 31),
+]
+assert len(MAPPED_JAN) == 28
+
+# Existing bank items that complete January — pinned so the month stays fully authored.
+PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17}
+
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}
 def duration_band(m): return "quick" if m <= 7 else "standard" if m <= 12 else "deep" if m <= 20 else "capstone"
@@ -277,20 +314,39 @@ def main():
     rt, rd = Counter(SCHED_TYPE), Counter(SCHED_DOMAIN)
     rdi, rb = Counter(SCHED_DIFF), Counter(SCHED_BAND)
     ri, rl, rs = Counter(SCHED_INTER), Counter(SCHED_LIFE), Counter(SCHED_SECTOR)
-    for (_c, _t, ty, dom, life, sec, inter, diff, mins) in MAPPED:
+    for (_c, _t, ty, dom, life, sec, inter, diff, mins) in MAPPED + [t[:9] for t in MAPPED_JAN]:
         rt[ty] -= 1; rd[dom] -= 1; rdi[DIFF_BAND[diff]] -= 1; rb[duration_band(mins)] -= 1
         ri[inter] -= 1; rl[life] -= 1; rs[sec] -= 1
     for c in (rt, rd, rdi, rb, ri, rl, rs):
         assert all(v >= 0 for v in c.values()), f"mapped bank exceeds a quota: {c}"
 
-    # place mapped items into theme-matching months, spread across each month
+    # place mapped items into theme-matching months, ROTATING among matching months so no single
+    # month absorbs a whole domain (three Executive Missions on consecutive weeks is a plan;
+    # three in one month is a rut)
     month_free = {m[0]: list(range(m[3], m[3] + m[2])) for m in MONTHS}  # day-of-year lists
     month_domains = {m[0]: m[5] for m in MONTHS}
+    month_mapped = Counter()
     placed = {}  # day -> mapped tuple
+    # Pinned items first: they own their day outright.
+    for t in MAPPED_JAN:
+        day = t[9]
+        placed[day] = t[:9]
+        for no in month_free:
+            if day in month_free[no]:
+                month_free[no].remove(day); month_mapped[no] += 1
     for item in MAPPED:
+        if item[0] in PINNED_EXISTING:
+            day = PINNED_EXISTING[item[0]]
+            placed[day] = item
+            for no in month_free:
+                if day in month_free[no]:
+                    month_free[no].remove(day); month_mapped[no] += 1
+            continue
         dom = item[3]
         pref = [no for no, doms in month_domains.items() if dom in doms and month_free[no]]
-        no = pref[0] if pref else max(month_free, key=lambda n: len(month_free[n]))
+        pool = pref if pref else [no for no in month_free if month_free[no]]
+        no = min(pool, key=lambda n: (month_mapped[n], -len(month_free[n])))
+        month_mapped[no] += 1
         free = month_free[no]
         day = free[len(free) // 2]          # middle of what's left → even spread
         free.remove(day)
@@ -298,7 +354,7 @@ def main():
 
     # fill the remaining 313 slots
     entries = {}
-    used_titles = set(t for (_c, t, *_rest) in MAPPED)
+    used_titles = set(t for (_c, t, *_rest) in MAPPED) | set(t for (_c, t, *_rest) in MAPPED_JAN)
     topic_idx = Counter(); setting_idx = Counter(); minute_idx = Counter()
 
     def title_for(dom, sec):
@@ -313,6 +369,13 @@ def main():
         raise SystemExit(f"could not find a unique working title for {dom}/{sec}")
 
     month_dom_count = Counter()  # (month, domain) soft cap so no month becomes one topic
+    sector_quota = {s2: rs[s2] for s2 in SECTORS}  # planned-only apportionment base
+    month_exec = Counter()       # planned Executive Missions per month (mapped counted below)
+    for d, item in placed.items():
+        if item[2] == "executive_mission":
+            for (no, _n, days, first, *_r) in MONTHS:
+                if first <= d < first + days:
+                    month_exec[no] += 1
     for (no, _name, days, first, _theme, theme_doms) in MONTHS:
         cap = max(6, days // 3)
         for day in range(first, first + days):
@@ -330,12 +393,23 @@ def main():
                         sorted(DOMAINS, key=lambda d: -rd[d])
             dom = take(rd, dom_prefs, DOMAINS)
             month_dom_count[(no, dom)] += 1
-            ty = take(rt, TYPE_FOR_DOMAIN[dom], TYPES)
+            # Capstone missions are punctuation, not a diet: at most two planned Executive
+            # Missions in any month (mapped ones are already spread by the placement above).
+            exec_capped = month_exec[no] >= 2
+            ty_prefs = [t for t in TYPE_FOR_DOMAIN[dom] if not (exec_capped and t == "executive_mission")]
+            ty_pool = [t for t in TYPES if not (exec_capped and t == "executive_mission")] or TYPES
+            ty = take(rt, ty_prefs, ty_pool)
+            if ty == "executive_mission":
+                month_exec[no] += 1
             inter = take(ri, INTER_FOR_TYPE[ty], INTERACTIONS)
             band = take(rb, BAND_FOR_TYPE[ty], BANDS)
             diff = take(rdi, DIFF_FOR_TYPE[ty], DIFFS)
             life = take(rl, LIFE_FOR_MONTH.get(no, []) + ["execution_control", "definition_planning"], LIFECYCLES)
-            sec = take(rs, [], SECTORS)  # max-remaining → even spread
+            # Largest-remainder apportionment keeps every sector present all year round, instead
+            # of the biggest quota monopolising the early months.
+            sec = min((s2 for s2 in SECTORS if rs[s2] > 0),
+                      key=lambda s2: ((sector_quota[s2] - rs[s2] + 1) / max(1, sector_quota[s2]), s2))
+            rs[sec] -= 1
             mins = MINUTES[band][minute_idx[band] % len(MINUTES[band])]; minute_idx[band] += 1
             entries[day] = {
                 "code": f"PI-Y1-D{day:03d}", "day": day, "status": "planned", "source_challenge": None,
@@ -343,6 +417,25 @@ def main():
                 "difficulty_band": diff, "duration_band": band, "est_minutes": mins,
                 "interaction": inter, "lifecycle_stage": life, "sector": sec,
             }
+
+    # Within-month interleave: the day-by-day fill produces runs of one experience type (all the
+    # theme-domain slots land first). Re-deal each month's PLANNED entries across its planned days
+    # round-robin by type, largest group first — mapped days stay exactly where they were placed.
+    for (no, _name, days, first, _theme, _doms) in MONTHS:
+        planned_days = [d for d in range(first, first + days) if entries[d]["status"] == "planned"]
+        groups = {}
+        for d in planned_days:
+            groups.setdefault(entries[d]["experience_type"], []).append(entries[d])
+        order = sorted(groups, key=lambda t: (-len(groups[t]), t))
+        dealt = []
+        while any(groups[t] for t in order):
+            for t in order:
+                if groups[t]:
+                    dealt.append(groups[t].pop(0))
+        for d, e in zip(planned_days, dealt):
+            e["day"] = d
+            e["code"] = f"PI-Y1-D{d:03d}"
+            entries[d] = e
 
     # every scheduled quota must be exactly exhausted
     for label, c in [("type", rt), ("domain", rd), ("difficulty", rdi), ("band", rb),

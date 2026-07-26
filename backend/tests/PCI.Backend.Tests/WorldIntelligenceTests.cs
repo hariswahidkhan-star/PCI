@@ -50,7 +50,8 @@ public class WorldIntelligenceTests
     {
         var db = NewWorldDb();
         var rows = db.Query("SELECT code,pi_type,pi_domain,pi_lifecycle,pi_sector,pi_interaction FROM pciworld_challenges WHERE author_id IS NULL");
-        Assert.Equal(52, rows.Count);
+        Assert.Equal(WorldContentPack.Count + WorldIntelligencePack.Count, rows.Count);
+        Assert.Equal(80, rows.Count);
         foreach (var r in rows)
         {
             var code = H.Str(r["code"])!;
@@ -102,6 +103,83 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         foreach (var r in db.Query("SELECT code,title,hook FROM pciworld_challenges"))
             Assert.Empty(WorldIntelligence.LanguageIssues(H.Str(r["title"]), H.Str(r["hook"])));
+    }
+
+    // ───────────────────────── progressive hints (PI-US-051) ─────────────────────────
+
+    [Fact]
+    public void Every_january_pack_item_carries_exactly_three_hints_that_pass_the_gates()
+    {
+        var db = NewWorldDb();
+        var rows = db.Query("SELECT code,title,hook,config_json FROM pciworld_challenges WHERE author_id IS NULL");
+        var packCodes = rows.Select(r => H.Str(r["code"])!).Where(c =>
+            System.Text.RegularExpressions.Regex.IsMatch(c, "^WC-(GOV|STK)-0(5[3-9]|6[0-9]|7[0-1])$") ||
+            System.Text.RegularExpressions.Regex.IsMatch(c, "^WC-(RSK-07[2-7]|CPM-07[8-9]|EVM-080)$")).ToHashSet();
+        Assert.Equal(WorldIntelligencePack.Count, packCodes.Count);
+        foreach (var r in rows.Where(r => packCodes.Contains(H.Str(r["code"])!)))
+        {
+            var hints = WorldContent.Hints(H.Str(r["config_json"])!);
+            Assert.True(hints.Count == 3, $"{r["code"]}: expected 3 hints, found {hints.Count}");
+            foreach (var h in hints)
+            {
+                Assert.False(string.IsNullOrWhiteSpace(h));
+                Assert.Empty(WorldIntelligence.LanguageIssues(h));
+            }
+        }
+    }
+
+    [Fact]
+    public void Hint_validation_requires_exactly_three_and_scans_for_leakage()
+    {
+        // Two hints → invalid.
+        var two = """
+            {"context":"Ctx with PV 100.","share_line":"s",
+             "task":"evm","given":{"pv":100,"ev":50,"ac":100,"bac":200},
+             "ask":[{"key":"cv","label":"CV","type":"number"}],"tolerance":0.01,
+             "hints":["one","two"]}
+            """;
+        var issues = WorldContent.Validate(new WorldContent.ChallengeInput(
+            "WC-TST-901", "T", "H", "I", "project_controls", "foundation", 8, true, two));
+        Assert.Contains(issues, i => i.Code == "hints" && i.Sev == WorldContent.Severity.Error);
+
+        // A hint that hands over the reference value (cv = -50 ... use a config whose answer is long enough to scan).
+        var leak = """
+            {"context":"Ctx.","share_line":"s",
+             "task":"evm","given":{"pv":900000,"ev":750000,"ac":800000,"bac":2000000},
+             "ask":[{"key":"cv","label":"CV","type":"number"}],"tolerance":0.01,
+             "hints":["EV minus AC","Look closely","The answer is -50000"]}
+            """;
+        var issues2 = WorldContent.Validate(new WorldContent.ChallengeInput(
+            "WC-TST-902", "T", "H", "I", "project_controls", "foundation", 8, true, leak));
+        Assert.Contains(issues2, i => i.Code == "leak" && i.Sev == WorldContent.Severity.Error);
+    }
+
+    [Fact]
+    public void PublicView_exposes_hint_count_but_never_hint_text()
+    {
+        var db = NewWorldDb();
+        var row = db.QueryOne("SELECT config_json FROM pciworld_challenges WHERE code='WC-GOV-053'");
+        var json = System.Text.Json.JsonSerializer.Serialize(WorldContent.PublicView(H.Str(row!["config_json"])!));
+        var view = System.Text.Json.JsonDocument.Parse(json).RootElement;
+        Assert.Equal(3, view.GetProperty("hints_available").GetInt32());
+        foreach (var hint in WorldContent.Hints(H.Str(row["config_json"])!))
+            Assert.DoesNotContain(hint, json, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Attempts_track_hint_reveals_in_a_guarded_column()
+    {
+        var db = NewWorldDb();
+        Assert.Contains("hints_used", db.Columns("pciworld_attempts"));
+        db.Execute("INSERT INTO pciworld_sessions(token_sha) VALUES('t')");
+        var ch = db.QueryOne("SELECT id,current_version FROM pciworld_challenges WHERE code='WC-GOV-053'")!;
+        var att = db.ExecuteReturningId("INSERT INTO pciworld_attempts(session_id,challenge_id,version,answers_json) VALUES(1,?,?, '{}')",
+            H.L(ch["id"]), H.L(ch["current_version"]));
+        // The guarded increment: only one of two concurrent identical updates wins.
+        var n1 = db.Execute("UPDATE pciworld_attempts SET hints_used=? WHERE id=? AND hints_used=?", 1, att, 0);
+        var n2 = db.Execute("UPDATE pciworld_attempts SET hints_used=? WHERE id=? AND hints_used=?", 1, att, 0);
+        Assert.Equal(1, n1);
+        Assert.Equal(0, n2);
     }
 
     // ───────────────────────── Year-1 plan: structure ─────────────────────────
@@ -229,7 +307,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var plan = Plan();
         var mapped = plan.Scheduled.Where(e => e.Status == "mapped").ToList();
-        Assert.Equal(52, mapped.Count);
+        Assert.Equal(80, mapped.Count);
         Assert.All(plan.Reserve, e => Assert.Equal("planned", e.Status));
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var e in mapped)
@@ -265,12 +343,13 @@ public class WorldIntelligenceTests
         Assert.Equal(365, (int)G("scheduled_total"));
         Assert.Equal(55, (int)G("reserve_total"));
         Assert.Equal(420, (int)G("bank_total"));
-        Assert.Equal(52, (int)G("mapped"));
-        Assert.Equal(313, (int)G("planned"));
-        Assert.Equal(52, (int)G("backed_by_published_challenge"));
-        // 52 mapped items spread across a 365-day plan cannot form a 60-day unbroken runway —
-        // the alert must be RAISED. This is the "no unsupported capacity claims" rule as a test.
+        Assert.Equal(80, (int)G("mapped"));
+        Assert.Equal(285, (int)G("planned"));
+        Assert.Equal(80, (int)G("backed_by_published_challenge"));
+        // January is fully authored (31 consecutive backed days) and February day 32 is planned,
+        // so the runway is exactly 31 — still below the 60-day bar, so the alert must be RAISED.
+        // This is the "no unsupported capacity claims" rule as a test.
+        Assert.Equal(31, (int)G("runway_days"));
         Assert.True((bool)G("runway_alert"));
-        Assert.InRange((int)G("runway_days"), 0, 59);
     }
 }
