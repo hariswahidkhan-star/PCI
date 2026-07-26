@@ -1735,6 +1735,44 @@ public static class WorldPages
             var seal=(document.getElementById('sealTpl')||{innerHTML:''}).innerHTML;
             function pretty(s){s=(s||'').replace(/_/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
             var h='';
+            // ── Onboarding walkthrough (§7.3): brief, resumable, server-ordered. Rendered only
+            //    while incomplete; each step persists before the next appears, so a refresh or a
+            //    device switch resumes exactly where the person stopped. ──
+            if(d&&d.onboarding_state&&d.onboarding_state!=='completed'){
+              var ob=d.onboarding_state,oh='';
+              function obNext(step,inner,btn){
+                return inner+'<p style="margin-top:14px"><button class="btn" id="obGo" data-step="'+step+'">'+btn+'</button> <span id="obMsg" role="status"></span></p>';
+              }
+              if(ob==='not_started'){
+                oh=obNext('welcome',
+                  '<h2 style="margin-top:0">Welcome to PCI World</h2>'+
+                  '<p style="color:var(--slate)">A realistic project decision every day, with deterministic scoring and synthetic data. '+
+                  'PCI World is <b>practice, not certification</b> — completing challenges builds verifiable practice evidence, never a formal credential. '+
+                  'It is operated by the Project Controls Institute.</p>','Got it — continue');
+              }else if(ob==='welcome'){
+                oh=obNext('goal',
+                  '<h2 style="margin-top:0">Why are you practising?</h2>'+
+                  '<p style="color:var(--slate)">Your goal shapes what the dashboard suggests — nothing else. You can change it any time.</p>'+
+                  '<select id="obGoal">'+
+                  [['daily_practice','Daily practice'],['certification_prep','Certification preparation'],
+                   ['evidence','Build verifiable practice evidence'],['explore','Explore project controls']].map(function(g){
+                    return '<option value="'+g[0]+'">'+g[1]+'</option>';}).join('')+'</select>','Save & continue');
+              }else if(ob==='goal'){
+                oh=obNext('preferences',
+                  '<h2 style="margin-top:0">Your practice rhythm</h2>'+
+                  '<label for="obTz">Timezone (optional)</label><input id="obTz" maxlength="64" placeholder="Europe/Berlin">'+
+                  '<label for="obWt" style="margin-top:10px">Weekly target (daily challenges per week, optional)</label>'+
+                  '<select id="obWt"><option value="">No target</option>'+
+                  [1,2,3,4,5,6,7].map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('')+'</select>','Save & continue');
+              }else if(ob==='preferences'){
+                oh=obNext('privacy',
+                  '<h2 style="margin-top:0">Private until you say otherwise</h2>'+
+                  '<p style="color:var(--slate)">Your challenge answers stay between you and the scoring engine — no public surface ever shows them. '+
+                  'Nothing about you is public by default: your Passport publishes only when you deliberately publish it, '+
+                  'and every evidence item and field on it is a separate choice.</p>','I understand — finish setup');
+              }
+              h+='<div class="card" id="onboard-card" style="border-color:var(--gilt,#c8a24b)"><span class="kicker">Getting started</span>'+oh+'</div>';
+            }
             // ── The dashboard head (journey repair P1-01): who you are, ONE next action, today's
             //    state, unfinished work, recent results — computed server-side, rendered here. ──
             if(d){
@@ -1742,6 +1780,7 @@ public static class WorldPages
               var cta;
               switch(d.primary_action){
                 case 'verify_email':cta='<button class="btn" id="pa_verify">Verify my email</button>';break;
+                case 'continue_onboarding':cta='<a class="btn" href="#onboard-card">Continue setting up</a>';break;
                 case 'continue_today':cta='<a class="btn" href="'+todayHref+'">Continue today&rsquo;s challenge</a>';break;
                 case 'view_result':cta='<a class="btn" href="'+todayHref+'">View today&rsquo;s result</a>';break;
                 case 'start_today':cta='<a class="btn" href="'+todayHref+'">Start today&rsquo;s challenge</a>';break;
@@ -2025,6 +2064,26 @@ public static class WorldPages
               }).catch(function(){$('sessbox').innerHTML='<p class="meta"><span>Could not load sessions just now.</span></p>';});
             }
             $('sessShow').addEventListener('click',loadSessions);
+            if($('obGo'))$('obGo').addEventListener('click',function(){
+              var step=$('obGo').dataset.step;$('obGo').disabled=true;
+              function advance(){
+                return api('/api/world/me/onboarding',{step:step}).then(function(){
+                  // The privacy step is the last one — finishing it completes onboarding.
+                  return step==='privacy'?api('/api/world/me/onboarding',{step:'completed'}):null;
+                });
+              }
+              var pre=Promise.resolve();
+              if(step==='goal')pre=api('/api/world/me/preferences',{goal:$('obGoal').value},'PATCH');
+              if(step==='preferences'){
+                var body={};
+                if($('obTz').value.trim())body.timezone=$('obTz').value.trim();
+                if($('obWt').value)body.weekly_target=parseInt($('obWt').value,10);
+                pre=Object.keys(body).length?api('/api/world/me/preferences',body,'PATCH'):Promise.resolve();
+              }
+              pre.then(advance).then(load)
+                 .catch(function(e2){$('obGo').disabled=false;
+                   $('obMsg').textContent=(e2&&e2.message)||'Could not save this step — try again.';});
+            });
             function loadShares(){
               api('/api/world/me/shares').then(function(o){
                 var res=(o.results||[]),inv=(o.invitations||[]);

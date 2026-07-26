@@ -45,8 +45,14 @@ public class WorldDashboardTests
         Assert.NotNull(s.TodayState.Code);           // today exists and is pinned
         Assert.False(string.IsNullOrEmpty(s.TodayState.ChangesAtUtc));
 
-        // 2. Verified, nothing started → start today.
+        // 2. Verified but not yet onboarded → onboarding outranks daily play (§9.1 order).
         db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", uid);
+        s = WorldDashboard.Build(db, Ctx(db, uid), Day);
+        Assert.Equal("continue_onboarding", s.PrimaryAction);
+
+        // 3. Onboarded, nothing started → start today.
+        foreach (var step in new[] { "welcome", "goal", "preferences", "privacy", "completed" })
+            Assert.Null(WorldIdentity.AdvanceOnboarding(db, uid, step));
         s = WorldDashboard.Build(db, Ctx(db, uid), Day);
         Assert.Equal("start_today", s.PrimaryAction);
         Assert.Equal(s.TodayState.Code, s.PrimaryCode);

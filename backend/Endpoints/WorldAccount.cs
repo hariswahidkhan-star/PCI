@@ -572,6 +572,15 @@ public static class WorldAccount
                 streak_days = s.StreakDays,
                 week_done = s.WeekDone,
                 week_target = s.WeekTarget,
+                onboarding_state = s.OnboardingState,
+                // Ecosystem switcher groundwork (P1-11): honest per-product entry state — never a
+                // certification/membership/entitlement claim.
+                products = new
+                {
+                    pci_world = new { state = s.OnboardingState is not null && s.OnboardingState != "completed"
+                        ? "onboarding_required" : "active" },
+                    pci_ai = new { state = s.CanonicalLinked ? "ready" : "not_linked" },
+                },
                 recent = s.RecentResults.Select(r => new
                 {
                     attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
@@ -710,6 +719,29 @@ public static class WorldAccount
                 WHERE revoked=0 AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)", u.Id);
             log(null, "world_invite_revoke_all", $"world #{u.Id}: {n}");
             return J(new { ok = true, revoked = n });
+        });
+
+        // ── World onboarding (§7.3): server-owned steps, order enforced — a manipulated route can
+        //    never mark a missing required step complete. ──
+        app.MapGet("/api/world/me/onboarding", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var state = WorldIdentity.OnboardingState(db, u.Id);
+            return J(new { linked = state is not null, state, steps = WorldIdentity.OnboardingSteps });
+        });
+
+        app.MapPost("/api/world/me/onboarding", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var err = WorldIdentity.AdvanceOnboarding(db, u.Id, H.GetS(b, "step") ?? "");
+            if (err is not null) return Err(err, err == "not_linked" ? 409 : 400,
+                err == "out_of_order" ? "Complete the earlier steps first." : null);
+            return J(new { ok = true, state = WorldIdentity.OnboardingState(db, u.Id) });
         });
 
         // ── World preferences (§10.5): product data on the participation row, never the profile. ──

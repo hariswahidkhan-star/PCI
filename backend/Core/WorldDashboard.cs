@@ -27,7 +27,7 @@ public static class WorldDashboard
         Today TodayState, PassportState Passport, WorldAccount.Stats Progress,
         List<Dictionary<string, object?>> RecentResults, List<Dictionary<string, object?>> InProgress,
         string? RecommendedCode, string? RecommendedTitle, long StreakDays,
-        long WeekDone, long? WeekTarget);
+        long WeekDone, long? WeekTarget, string? OnboardingState, bool CanonicalLinked);
 
     /// <summary>Daily completions over the last seven rotation days (rolling, honest label:
     /// "the last 7 days" — no calendar-week gymnastics), measured against the participant's
@@ -152,7 +152,7 @@ public static class WorldDashboard
         //    industries not yet practised). Still a rule, still says so. ──
         var canonical = WorldIdentity.CanonicalUserFor(db, u.Id);
         var participant = canonical is null ? null
-            : db.QueryOne("SELECT goal, weekly_target FROM pciworld_participants WHERE user_id=?", canonical);
+            : db.QueryOne("SELECT goal, weekly_target, onboarding_state FROM pciworld_participants WHERE user_id=?", canonical);
         var goal = participant is null ? null : H.Str(participant["goal"]);
         var order = goal switch
         {
@@ -170,9 +170,11 @@ public static class WorldDashboard
             {order} LIMIT 1";
         var rec = goal == "explore" ? db.QueryOne(recSql, u.Id, u.Id) : db.QueryOne(recSql, u.Id);
 
-        // ── exactly ONE primary action (§9.1) ──
+        // ── exactly ONE primary action (§9.1) — onboarding outranks daily play ──
+        var onboarding = participant is null ? null : (H.Str(participant["onboarding_state"]) ?? "not_started");
         string action; long? actionAttempt = null; string? actionCode = today.Code;
         if (!u.EmailVerified) action = "verify_email";
+        else if (onboarding is not null && onboarding != "completed") action = "continue_onboarding";
         else if (todayState == "in_progress") { action = "continue_today"; actionAttempt = todayAttempt; }
         else if (todayState == "completed") { action = "view_result"; actionAttempt = todayAttempt; }
         else if (today.Code is not null) action = "start_today";
@@ -184,6 +186,7 @@ public static class WorldDashboard
             recent, open, rec is null ? null : H.Str(rec["code"]), rec is null ? null : H.Str(rec["title"]),
             Streak(db, u.Id, utcNow),
             WeekDone(db, u.Id, utcNow),
-            participant?["weekly_target"] is null ? null : H.L(participant!["weekly_target"]));
+            participant?["weekly_target"] is null ? null : H.L(participant!["weekly_target"]),
+            onboarding, canonical is not null);
     }
 }

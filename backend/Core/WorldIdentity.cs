@@ -106,6 +106,22 @@ public static class WorldIdentity
         }
 
         already = (int)db.Scalar<long>("SELECT COUNT(*) FROM pciworld_user_map") - linked - created - conflicts - upgraded;
+
+        // ONE-TIME onboarding backfill: accounts already practising when the onboarding state
+        // machine shipped are established participants — gating them behind a welcome tour they
+        // never needed would be a regression, not a journey. Runs once (flagged), so accounts
+        // created afterwards go through onboarding normally even if they claimed anonymous work.
+        if (Settings.Str(db, "world_onboarding_backfilled", "0") != "1")
+        {
+            db.Execute(@"UPDATE pciworld_participants SET onboarding_state='completed',
+                    onboarded_at=COALESCE(onboarded_at, datetime('now'))
+                WHERE onboarding_state='not_started' AND user_id IN (
+                    SELECT m.canonical_user_id FROM pciworld_user_map m
+                    WHERE m.canonical_user_id IS NOT NULL AND EXISTS(
+                        SELECT 1 FROM pciworld_attempts a
+                        WHERE a.user_id=m.legacy_world_id AND a.status='completed'))");
+            Settings.Put(db, "world_onboarding_backfilled", "1");
+        }
         return new Reconciliation(linked, created, conflicts, upgraded, Math.Max(0, already));
     }
 
@@ -234,6 +250,60 @@ public static class WorldIdentity
             db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => $"`{k}`=?"))} WHERE user_id=?", vals);
         }
         Endpoints.Account.RecomputeCompletion(db, uid.Value);
+        return null;
+    }
+
+    // ───────────────────────── World onboarding state machine (§7.3) ─────────────────────────
+    //
+    //   not_started → welcome → goal → preferences → privacy → completed
+    //
+    // Each step persists server-side on the participation row; order is ENFORCED here, so a
+    // manipulated client route can never mark a missing required step complete. Completion is
+    // idempotent and stamps onboarded_at exactly once.
+
+    public static readonly string[] OnboardingSteps =
+        { "not_started", "welcome", "goal", "preferences", "privacy", "completed" };
+
+    public static string? OnboardingState(Db db, long worldUserId)
+    {
+        var uid = CanonicalUserFor(db, worldUserId);
+        if (uid is null) return null;
+        EnsureParticipant(db, uid.Value);
+        return H.Str(db.QueryOne("SELECT onboarding_state FROM pciworld_participants WHERE user_id=?", uid)!["onboarding_state"])
+               ?? "not_started";
+    }
+
+    /// <summary>Record one step as DONE. Valid only when it is the current step's successor —
+    /// re-posting an already-passed step is an idempotent no-op (resume after refresh), and
+    /// jumping ahead is refused. Returns an error key or null.</summary>
+    public static string? AdvanceOnboarding(Db db, long worldUserId, string step)
+    {
+        var uid = CanonicalUserFor(db, worldUserId);
+        if (uid is null) return "not_linked";
+        EnsureParticipant(db, uid.Value);
+        var target = Array.IndexOf(OnboardingSteps, step);
+        if (target <= 0) return "bad_step";
+        if (step == "completed") return CompleteOnboarding(db, worldUserId);
+        var current = Array.IndexOf(OnboardingSteps, OnboardingState(db, worldUserId) ?? "not_started");
+        if (target <= current) return null;                    // already passed — resume is a no-op
+        if (target != current + 1) return "out_of_order";      // no skipping by route manipulation
+        db.Execute("UPDATE pciworld_participants SET onboarding_state=?, last_activity_at=datetime('now') WHERE user_id=?",
+            step, uid);
+        return null;
+    }
+
+    /// <summary>Finish onboarding: every prior step must be done. Idempotent; onboarded_at is
+    /// stamped once and never moves.</summary>
+    public static string? CompleteOnboarding(Db db, long worldUserId)
+    {
+        var uid = CanonicalUserFor(db, worldUserId);
+        if (uid is null) return "not_linked";
+        EnsureParticipant(db, uid.Value);
+        var state = OnboardingState(db, worldUserId) ?? "not_started";
+        if (state == "completed") return null;                 // idempotent
+        if (state != "privacy") return "out_of_order";
+        db.Execute(@"UPDATE pciworld_participants SET onboarding_state='completed',
+            onboarded_at=COALESCE(onboarded_at, datetime('now')), last_activity_at=datetime('now') WHERE user_id=?", uid);
         return null;
     }
 
