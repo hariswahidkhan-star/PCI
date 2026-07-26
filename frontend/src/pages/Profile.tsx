@@ -173,7 +173,11 @@ function PassportCard() {
     setBusy(true)
     setErr(null)
     try {
-      const r = await api.post<{ token: string; url?: string }>('/api/me/world-passport/sso', {})
+      // Pass the browser's anonymous PCI World session so the bridge claims any challenges
+      // completed here before signing in — without it that work never reaches the Passport.
+      const r = await api.post<{ token: string; url?: string }>('/api/me/world-passport/sso', {
+        world_session: localStorage.getItem('world_session') || undefined,
+      })
       localStorage.setItem('world_account', r.token)
       window.location.assign(r.url || '/world/account')
     } catch (e) {

@@ -42,6 +42,28 @@ public static class WorldPassport
             };
     }
 
+    /// <summary>
+    /// Apply a disclosure update. EVERY field is independent (journey repair P0-06): a null means
+    /// "the caller did not touch this" and the stored value survives — saving a visibility switch
+    /// can never silently clear the link expiry, and vice versa. expiresInDays: 0 or negative
+    /// deliberately clears the expiry; a positive value sets one (capped at five years).
+    /// </summary>
+    public static void ApplyDisclosure(Db db, long userId,
+        bool? showScores, bool? showProfiles, bool? showDates, double? expiresInDays)
+    {
+        foreach (var (v, col) in new (bool?, string)[] { (showScores, "passport_show_scores"),
+                                                         (showProfiles, "passport_show_profiles"),
+                                                         (showDates, "passport_show_dates") })
+            if (v is { } b)
+                db.Execute($"UPDATE pciworld_users SET {col}=? WHERE id=?", b ? 1 : 0, userId);
+        if (expiresInDays is { } days)
+        {
+            if (days <= 0) db.Execute("UPDATE pciworld_users SET passport_expires_at=NULL WHERE id=?", userId);
+            else db.Execute("UPDATE pciworld_users SET passport_expires_at=? WHERE id=?",
+                DateTime.UtcNow.AddDays(Math.Min(days, 1825)).ToString("yyyy-MM-dd HH:mm:ss"), userId);
+        }
+    }
+
     /// <summary>True when a published Passport link has passed its owner-set expiry.</summary>
     public static bool Expired(Dictionary<string, object?> user)
     {

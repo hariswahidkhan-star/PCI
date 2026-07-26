@@ -429,7 +429,7 @@ public static class WorldAccount
         // links or creates the matching world account once (LinkStudent), and mints an ordinary
         // PCI World session for the browser to carry to /world/account. World code still never
         // reads exam, entitlement or credential data.
-        app.MapPost("/api/me/world-passport/sso", (HttpContext ctx) =>
+        app.MapPost("/api/me/world-passport/sso", async (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
             var s = Auth.UserFromReq(ctx.Request, db);
@@ -441,6 +441,23 @@ public static class WorldAccount
             if (err is not null) return Err(err, err == "email_in_use" ? 409 : 403, err == "email_in_use"
                 ? "A PCI World account with your email address is linked to a different sign-in — contact support."
                 : null);
+            // Claim the browser's CURRENT anonymous World session too (journey repair P0-01): the
+            // portal bridge used to link the account without adopting the anonymous work sitting in
+            // this very browser, so challenges completed before pressing "open my Passport" never
+            // appeared in it. Claim-only-unowned, identical to register/login. The portal client
+            // passes the anonymous token in the body (its typed wrapper sets no custom headers).
+            var sessionId = WorldSessionId(ctx);
+            if (sessionId is null)
+            {
+                var b = await H.Body(ctx.Request);
+                var anon = H.GetS(b, "world_session");
+                if (!string.IsNullOrWhiteSpace(anon))
+                {
+                    var row = db.QueryOne("SELECT id FROM pciworld_sessions WHERE token_sha=?", Security.Sha(anon));
+                    if (row is not null) sessionId = H.L(row["id"]);
+                }
+            }
+            ClaimSession(db, worldId, sessionId);
             var token = MintSession(db, worldId);
             log(s.Id, "world_passport_sso", $"student #{s.Id} → world #{worldId}");
             return J(new { ok = true, token, url = "/world/account" });
@@ -533,23 +550,12 @@ public static class WorldAccount
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var b = await H.Body(ctx.Request);
-            foreach (var (key, col) in new[] { ("show_scores", "passport_show_scores"),
-                                               ("show_profiles", "passport_show_profiles"),
-                                               ("show_dates", "passport_show_dates") })
-                if (H.GetBool(b, key) is { } v)
-                    db.Execute($"UPDATE pciworld_users SET {col}=? WHERE id=?", v ? 1 : 0, u.Id);
-
-            // expires_in_days: 0 or absent clears the expiry; a positive value sets one. Capped at
-            // five years so "expiry" always means something.
-            if (H.GetNum(b, "expires_in_days") is { } days)
-            {
-                if (days <= 0) db.Execute("UPDATE pciworld_users SET passport_expires_at=NULL WHERE id=?", u.Id);
-                else
-                {
-                    var when = DateTime.UtcNow.AddDays(Math.Min(days, 1825)).ToString("yyyy-MM-dd HH:mm:ss");
-                    db.Execute("UPDATE pciworld_users SET passport_expires_at=? WHERE id=?", when, u.Id);
-                }
-            }
+            // Independent fields (P0-06): absent keys leave stored values — including the link
+            // expiry — untouched. Sending expires_in_days is the ONLY way to change the expiry;
+            // 0 clears it deliberately, a positive value sets one (capped at five years).
+            WorldPassport.ApplyDisclosure(db, u.Id,
+                H.GetBool(b, "show_scores"), H.GetBool(b, "show_profiles"), H.GetBool(b, "show_dates"),
+                H.GetNum(b, "expires_in_days"));
             var me = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", u.Id)!;
             var show = WorldPassport.Disclosure.From(me);
             return J(new { ok = true, show_scores = show.Scores, show_profiles = show.Profiles,

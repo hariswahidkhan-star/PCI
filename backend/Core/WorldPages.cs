@@ -812,8 +812,12 @@ public static class WorldPages
         function $(id){ return document.getElementById(id); }
         function esc(s){ var d = document.createElement('span'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
         function api(path, body){
+          // The signed-in account travels with EVERY workspace call (journey repair P0-01):
+          // without it, challenges completed while signed in stayed anonymous and never reached
+          // the account's history or Passport until some later login happened to claim them.
           return fetch(path, { method:'POST', headers:{ 'Content-Type':'application/json',
-            'X-World-Session': localStorage.getItem('world_session') || '' },
+            'X-World-Session': localStorage.getItem('world_session') || '',
+            'X-World-Account': localStorage.getItem('world_account') || '' },
             body: JSON.stringify(body || {}) }).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw j; return j; }); });
         }
         function mintSession(){
@@ -982,7 +986,8 @@ public static class WorldPages
                '<label for="dispname" style="margin-top:0">Name on your public result (leave blank to stay anonymous)</label>' +
                '<input type="text" id="dispname" maxlength="80" autocomplete="name">' +
                '<p style="margin-top:12px"><button class="btn" type="button" id="mkshare">Get my verified result link</button> ' +
-               '<button class="btn secondary" type="button" id="mkinvite">Challenge a friend</button></p>' +
+               '<button class="btn secondary" type="button" id="mkinvite">Challenge a friend</button> ' +
+               '<button class="btn secondary" type="button" id="mkretake">Retake this challenge</button></p>' +
                '<div id="sharebox"></div><div id="invitebox"></div>' +
                '<p style="margin-top:14px"><a href="/world/account">Create your free PCI World Passport</a> to keep this result as verified evidence — challenges completed in this browser are added automatically.</p>' +
                '<p class="notice">Your answers are never shown on the public result page.</p></div>';
@@ -997,6 +1002,14 @@ public static class WorldPages
               .then(function(s){ $('invitebox').innerHTML =
                 '<p>Send this to someone who thinks they can do better:</p>' + shareLinks(s.url); })
               .catch(function(){ $('invitebox').innerHTML = '<p class="bad">Could not create the invitation — try again.</p>'; });
+          });
+          // Retake is a DELIBERATE act (journey repair P0-04): it opens a fresh linked attempt on the
+          // server, then reloads so the workspace resumes it — the completed original is untouched.
+          $('mkretake').addEventListener('click', function(){
+            withSession(function(){
+              return api('/api/world/attempts', { code: WORLD.code, invite: WORLD.invite, retake: true });
+            }).then(function(){ location.reload(); })
+              .catch(function(){ $('invitebox').innerHTML = '<p class="bad">Could not start a retake — try again.</p>'; });
           });
           // Honour prefers-reduced-motion: a smooth scroll is motion the user asked us not to make.
           var smooth = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -1722,7 +1735,11 @@ public static class WorldPages
                'a Passport says nothing. Your answers are never shown.</small></p></fieldset>'+
                '<label for="sw_exp">Link expiry</label>'+
                '<select id="sw_exp">'+
-               '<option value="0"'+(p.expires_at?'':' selected')+'>Never expires</option>'+
+               // The stored expiry is its own persisted setting: the dropdown must REPRESENT it,
+               // not silently overwrite it. "Keep" is selected whenever an expiry exists, and only
+               // an explicit different choice is ever sent to the server (journey repair P0-06).
+               (p.expires_at?'<option value="keep" selected>Keep current expiry ('+esc(p.expires_at)+')</option>':'')+
+               '<option value="0"'+(p.expires_at?'':' selected')+'>Never expires'+(p.expires_at?' (removes the current expiry)':'')+'</option>'+
                '<option value="90">Expires in 90 days</option>'+
                '<option value="180">Expires in 6 months</option>'+
                '<option value="365">Expires in 12 months</option>'+
@@ -1835,9 +1852,12 @@ public static class WorldPages
             });
             $('saveShow').addEventListener('click',function(){
               $('showmsg').textContent='';
-              api('/api/world/passport/disclosure',{
-                show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
-                show_dates:$('sw_dates').checked,expires_in_days:parseInt($('sw_exp').value,10)||0})
+              // expires_in_days is included ONLY when the owner chose something other than "keep":
+              // an unrelated disclosure save can never touch the stored expiry (P0-06).
+              var body={show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
+                show_dates:$('sw_dates').checked};
+              if($('sw_exp').value!=='keep')body.expires_in_days=parseInt($('sw_exp').value,10)||0;
+              api('/api/world/passport/disclosure',body)
                 .then(load).then(function(){$('showmsg').textContent='Saved.';})
                 .catch(function(){$('showmsg').textContent='Could not save — try again.';});
             });

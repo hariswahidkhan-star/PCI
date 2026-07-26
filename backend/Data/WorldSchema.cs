@@ -175,6 +175,7 @@ public static class WorldSchema
             result_token_sha VARCHAR(64),
             result_revoked INTEGER DEFAULT 0,
             invite_id INTEGER,
+            parent_attempt_id INTEGER,
             started_at TEXT DEFAULT (datetime('now')),
             completed_at VARCHAR(32),                      -- bounded: indexed with status, see the note there
             updated_at TEXT DEFAULT (datetime('now')))");
@@ -240,6 +241,9 @@ public static class WorldSchema
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+        // Retake lineage (journey repair P0-04): a fresh attempt after completion is an explicit
+        // retake linked to the attempt it retries — the original stays immutable evidence.
+        AddCol("pciworld_attempts", "parent_attempt_id", "parent_attempt_id INTEGER");
 
         // Passport disclosure is per FIELD as well as per item: publishing evidence of what you
         // have practised should not force you to publish your scores. Defaults preserve the
