@@ -154,6 +154,35 @@ public class WorldDashboardTests
     }
 
     [Fact]
+    public void Dashboard_reads_match_both_ownership_namespaces_without_double_counting()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-flip')");
+        var (_, wid, _) = WorldAccount.Register(db, "flip@x.test", "long-password-1", "F", null);
+        db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", wid);
+        foreach (var step in new[] { "welcome", "goal", "preferences", "privacy", "completed" })
+            WorldIdentity.AdvanceOnboarding(db, wid, step);
+        var uid = WorldIdentity.CanonicalUserFor(db, wid)!.Value;
+
+        // A dual-stamped completion (the normal shape) appears exactly once.
+        var code = H.Str(db.QueryOne("SELECT code FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!["code"])!;
+        var start = WorldAttempts.Start(db, sess, wid, code, null, false, Day);
+        WorldAttempts.Submit(db, sess, wid, start.AttemptId, System.Text.Json.JsonDocument.Parse("""{"a":"1"}""").RootElement);
+        var s = WorldDashboard.Build(db, Ctx(db, wid), Day);
+        Assert.Single(s.RecentResults);
+
+        // Work stamped ONLY canonically (a different legacy row of the same person — the exact
+        // case the legacy namespace loses) is visible through the union read.
+        var ch2 = db.QueryOne(@"SELECT id, current_version FROM pciworld_challenges
+            WHERE current_version>=1 ORDER BY id DESC LIMIT 1")!;
+        db.Execute(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,canonical_user_id,completed_at)
+            VALUES(?,?,?, 'completed', 91, ?, datetime('now'))", sess, ch2["id"], ch2["current_version"], uid);
+        var s2 = WorldDashboard.Build(db, Ctx(db, wid), Day);
+        Assert.Equal(2, s2.RecentResults.Count);
+        Assert.Contains(s2.RecentResults, r => Convert.ToDouble(r["score"]) == 91.0);
+    }
+
+    [Fact]
     public void The_recommendation_is_a_challenge_the_account_has_not_completed()
     {
         var db = NewWorldDb();

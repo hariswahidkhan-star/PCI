@@ -76,6 +76,16 @@ public static class WorldDashboard
 
     public static Snapshot Build(Db db, WorldAccount.UserCtx u, DateTime utcNow)
     {
+        // Canonical resolution up front (cutover read-flip): every ownership query below matches
+        // the legacy World id OR the stamped canonical id, so work stamped canonically — even
+        // from a different legacy row of the same person — is never invisible here. -1 never
+        // matches when the account is unmapped.
+        var canonical = WorldIdentity.CanonicalUserFor(db, u.Id);
+        var participant = canonical is null ? null
+            : db.QueryOne("SELECT goal, weekly_target, onboarding_state FROM pciworld_participants WHERE user_id=?", canonical);
+        var canonicalKey = canonical ?? -1;
+        const string Owned = "(a.user_id=? OR a.canonical_user_id=?)";
+
         // ── today, from the one version authority (the rotation period) ──
         var zone = Settings.Str(db, "world_rotation_timezone", "UTC");
         var changesAt = WorldRotation.NextBoundaryUtc(WorldRotation.Zone(db), utcNow).ToString("yyyy-MM-ddTHH:mm:ssZ");
@@ -95,10 +105,10 @@ public static class WorldDashboard
         {
             // The account's attempt on today's pinned (challenge, version) — daily state is per
             // OWNER, and a completed attempt outranks a stray later in-progress one for state.
-            var att = db.QueryOne(@"SELECT id, status FROM pciworld_attempts
-                WHERE user_id=? AND challenge_id=? AND version=?
-                ORDER BY CASE status WHEN 'completed' THEN 0 ELSE 1 END, id DESC LIMIT 1",
-                u.Id, H.L(period["challenge_id"]), H.L(snapshot["version"]));
+            var att = db.QueryOne($@"SELECT a.id, a.status FROM pciworld_attempts a
+                WHERE {Owned} AND a.challenge_id=? AND a.version=?
+                ORDER BY CASE a.status WHEN 'completed' THEN 0 ELSE 1 END, a.id DESC LIMIT 1",
+                u.Id, canonicalKey, H.L(period["challenge_id"]), H.L(snapshot["version"]));
             if (att is not null)
             {
                 todayState = H.Str(att["status"]) == "completed" ? "completed" : "in_progress";
@@ -132,27 +142,24 @@ public static class WorldDashboard
             !string.IsNullOrWhiteSpace(u.DisplayName), visible);
 
         // ── recent + unfinished work, account-scoped ──
-        var recent = db.Query(@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
+        var recent = db.Query($@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
                 c.code, a.version, v.title, v.difficulty
             FROM pciworld_attempts a
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=? AND a.status='completed'
-            ORDER BY a.completed_at DESC, a.id DESC LIMIT 5", u.Id);
-        var open = db.Query(@"SELECT a.id, a.updated_at, c.code, a.version, v.title
+            WHERE {Owned} AND a.status='completed'
+            ORDER BY a.completed_at DESC, a.id DESC LIMIT 5", u.Id, canonicalKey);
+        var open = db.Query($@"SELECT a.id, a.updated_at, c.code, a.version, v.title
             FROM pciworld_attempts a
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=? AND a.status='in_progress'
-            ORDER BY a.updated_at DESC LIMIT 5", u.Id);
+            WHERE {Owned} AND a.status='in_progress'
+            ORDER BY a.updated_at DESC LIMIT 5", u.Id, canonicalKey);
 
         // ── a rule-based recommendation, honestly labelled as such by the client: the next
         //    servable challenge this account has not completed, ordered by the participant's
         //    CHOSEN goal (certification preparation prefers harder material; exploration prefers
         //    industries not yet practised). Still a rule, still says so. ──
-        var canonical = WorldIdentity.CanonicalUserFor(db, u.Id);
-        var participant = canonical is null ? null
-            : db.QueryOne("SELECT goal, weekly_target, onboarding_state FROM pciworld_participants WHERE user_id=?", canonical);
         var goal = participant is null ? null : H.Str(participant["goal"]);
         var order = goal switch
         {
