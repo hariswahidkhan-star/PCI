@@ -46,6 +46,11 @@ public static class WorldAccount
         var id = db.ExecuteReturningId("INSERT INTO pciworld_users(email,password_hash,display_name) VALUES(?,?,?)",
             email, BCrypt.Net.BCrypt.HashPassword(password), Trunc(displayName, 80));
         ClaimSession(db, id, worldSessionId);
+        // Canonical identity from the moment the account exists (P0-00): a standalone World
+        // registration creates its canonical users/student_profiles pair immediately (same bcrypt
+        // hash, so the one password works on both products); an email already registered on the
+        // platform is quarantined in the map, never silently merged.
+        try { WorldIdentity.MapOne(db, id); } catch { /* mapping must never break registration */ }
         return (null, id, MintSession(db, id));
     }
 
@@ -53,19 +58,48 @@ public static class WorldAccount
     {
         email = email.Trim().ToLowerInvariant();
         var u = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
-        if (u is null) { LoginGuard.BurnTime(password); return ("invalid_credentials", 0, ""); }
-        if (LoginGuard.IsLocked(db, "pciworld_users", u["id"])) return ("account_locked", 0, "");
-        if (!Security.VerifyPassword(password, u["password_hash"] as string))
+
+        // Legacy World credential first (transitional back-compat while pciworld_users remains).
+        if (u is not null)
         {
-            LoginGuard.OnFail(db, "pciworld_users", u["id"]);
-            return ("invalid_credentials", 0, "");
+            if (LoginGuard.IsLocked(db, "pciworld_users", u["id"])) return ("account_locked", 0, "");
+            if (Security.VerifyPassword(password, u["password_hash"] as string))
+            {
+                LoginGuard.OnSuccess(db, "pciworld_users", u["id"]);
+                if (H.Str(u["status"]) != "active") return ("account_suspended", 0, "");
+                var id = H.L(u["id"]);
+                ClaimSession(db, id, worldSessionId);
+                db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", id);
+                return (null, id, MintSession(db, id));
+            }
         }
-        LoginGuard.OnSuccess(db, "pciworld_users", u["id"]);
-        if (H.Str(u["status"]) != "active") return ("account_suspended", 0, "");
-        var id = H.L(u["id"]);
-        ClaimSession(db, id, worldSessionId);
-        db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", id);
-        return (null, id, MintSession(db, id));
+
+        // Canonical PCI credentials (journey repair P0-00/P0-02): the same email/password a student
+        // uses on the PCI AI portal signs them into PCI World — one credential authority, no second
+        // password. Verification happens against `users`; on success the World account is linked or
+        // created through the same guarded bridge the portal SSO uses (an email held by a DIFFERENT
+        // student is refused, never hijacked). This also makes a portal-side password change
+        // effective here: the canonical hash is the one that wins.
+        var cu = db.QueryOne("SELECT * FROM users WHERE lower(email)=?", email);
+        if (cu is not null && !LoginGuard.IsLocked(db, "users", cu["id"]) &&
+            Security.VerifyPassword(password, cu["password_hash"] as string))
+        {
+            if (H.Str(cu["status"]) != "active") return ("account_suspended", 0, "");
+            LoginGuard.OnSuccess(db, "users", cu["id"]);
+            var (lerr, wid) = LinkStudent(db, H.L(cu["id"]), email,
+                ($"{H.Str(cu["first_name"])} {H.Str(cu["last_name"])}").Trim());
+            if (lerr is not null) return (lerr, 0, "");
+            ClaimSession(db, wid, worldSessionId);
+            db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", wid);
+            return (null, wid, MintSession(db, wid));
+        }
+
+        // Failure: one generic answer (no enumeration), counted against whichever record exists so
+        // central lockout cannot be bypassed by alternating product login pages.
+        if (u is null && cu is null) { LoginGuard.BurnTime(password); return ("invalid_credentials", 0, ""); }
+        if (u is not null) LoginGuard.OnFail(db, "pciworld_users", u["id"]);
+        else LoginGuard.OnFail(db, "users", cu!["id"]);
+        return ("invalid_credentials", 0, "");
     }
 
     /// <summary>Adopt the anonymous session's attempts into the account — only unclaimed ones;
@@ -119,15 +153,22 @@ public static class WorldAccount
         {
             var byEmail = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
             if (byEmail is null)
-                return (null, db.ExecuteReturningId(
+            {
+                var fresh = db.ExecuteReturningId(
                     "INSERT INTO pciworld_users(email,password_hash,display_name,email_verified,student_user_id) VALUES(?,?,?,1,?)",
-                    email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId));
+                    email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId);
+                try { WorldIdentity.MapOne(db, fresh); WorldIdentity.EnsureParticipant(db, studentId); } catch { }
+                return (null, fresh);
+            }
             var linked = H.L(byEmail["student_user_id"]);
             if (linked != 0 && linked != studentId) return ("email_in_use", 0);
             db.Execute("UPDATE pciworld_users SET student_user_id=?, email_verified=1 WHERE id=?", studentId, byEmail["id"]);
             u = byEmail;
         }
         if (H.Str(u["status"]) != "active") return ("account_suspended", 0);
+        // The bridge proved the canonical identity (the student is signed in): record the mapping
+        // and the participation row keyed by canonical users.id (P0-00).
+        try { WorldIdentity.MapOne(db, H.L(u["id"])); WorldIdentity.EnsureParticipant(db, studentId); } catch { }
         return (null, H.L(u["id"]));
     }
 

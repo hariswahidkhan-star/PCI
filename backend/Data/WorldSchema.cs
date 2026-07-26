@@ -23,6 +23,12 @@ public static class WorldSchema
         Seed(db);
         WorldContentPack.Seed(db);
         WorldArticlePack.Seed(db);
+        // Canonical-identity bridge (journey repair P0-00): the participation aggregate keyed by
+        // canonical users.id, plus the reversible legacy pciworld_users → users mapping. Idempotent
+        // on every boot; conflicts are quarantined in the map, never silently merged.
+        Core.WorldIdentity.Ensure(db);
+        try { Core.WorldIdentity.Run(db); }
+        catch (Exception e) { Console.Error.WriteLine($"[pciworld identity] legacy mapping pass failed: {e.Message}"); }
     }
 
     static void Tables(Db db)

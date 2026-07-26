@@ -1,0 +1,185 @@
+using PCI.Backend.Data;
+
+namespace PCI.Backend.Core;
+
+/// <summary>
+/// PCI World — canonical-identity unification (journey repair P0-00).
+///
+/// TARGET MODEL: the platform's `users` table is the ONLY student credential authority, and
+/// `student_profiles` (+ repeaters) the only canonical student profile. PCI World keeps a
+/// product-PARTICIPATION record per canonical user (pciworld_participants) — World status,
+/// onboarding state, goal, preferences and timestamps — never a second email, password hash,
+/// MFA secret or copied professional profile.
+///
+/// LEGACY: pciworld_users is a separate credential table (own email + bcrypt hash), linked to a
+/// student at best via student_user_id. This class installs the two bridge tables and runs the
+/// reversible legacy→canonical mapping:
+///
+///   Rule LINKED     a World row with a valid student_user_id maps to exactly that users.id.
+///   Rule CREATED    an unlinked World row whose email matches NO canonical user creates one
+///                   canonical users + student_profiles pair, PRESERVING the bcrypt hash (the
+///                   platform verifies with the same BCrypt), so the person's one password now
+///                   works on both products. registration_no stays NULL — the platform assigns
+///                   it lazily, exactly as it does for portal-registered students.
+///   Rule CONFLICT   an unlinked World row whose email matches an EXISTING canonical user is
+///                   QUARANTINED, never silently merged: linking two credential rows on a string
+///                   match alone could hand one person's evidence to another. Resolution needs
+///                   verified reauthentication or audited support action (a later phase).
+///
+/// The map is append-only and idempotent: a legacy row is evaluated once, its outcome recorded in
+/// pciworld_user_map, and never re-decided — except a CONFLICT row that later gains a real
+/// student_user_id link, which upgrades to LINKED (the person proved the identity in the portal).
+/// Nothing here renumbers pciworld_attempts.user_id or changes the runtime auth path yet — the
+/// map is the prerequisite that makes that cutover a mechanical, reversible step.
+/// </summary>
+public static class WorldIdentity
+{
+    public static void Ensure(Db db)
+    {
+        // One row per canonical user who participates in PCI World. Product data ONLY — the
+        // absence of email/password/profile columns here is the design, not an omission.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_participants(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,                      -- canonical users.id — the ONLY identity key
+            status VARCHAR(16) NOT NULL DEFAULT 'active',  -- active | suspended | erased
+            suspension_reason TEXT,
+            onboarding_state VARCHAR(24) NOT NULL DEFAULT 'not_started', -- not_started|welcome|goal|preferences|privacy|completed
+            goal VARCHAR(32),                              -- daily_practice|certification_prep|evidence|explore
+            timezone VARCHAR(64),
+            weekly_target INTEGER,
+            preferences_json TEXT,                         -- reminders/interests; never profile data
+            first_entered_at TEXT DEFAULT (datetime('now')),
+            onboarded_at TEXT,
+            last_activity_at VARCHAR(32) DEFAULT (datetime('now')),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldpart_user ON pciworld_participants(user_id)");
+
+        // Reversible legacy→canonical ledger. Append-only; the rollback path is "read the map".
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_user_map(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            legacy_world_id INTEGER NOT NULL,
+            canonical_user_id INTEGER,                     -- NULL while quarantined
+            outcome VARCHAR(16) NOT NULL,                  -- linked | created | conflict
+            detail TEXT,
+            resolved_at TEXT,                              -- set when a conflict is later resolved
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldmap_legacy ON pciworld_user_map(legacy_world_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldmap_user ON pciworld_user_map(canonical_user_id)");
+    }
+
+    public sealed record Reconciliation(int Linked, int Created, int Conflicts, int Upgraded, int AlreadyMapped)
+    {
+        public int Total => Linked + Created + Conflicts + Upgraded + AlreadyMapped;
+    }
+
+    /// <summary>Map every legacy World account to a canonical identity (rules above). Idempotent —
+    /// safe on every boot; each legacy row is decided once and the decision is durable.</summary>
+    public static Reconciliation Run(Db db)
+    {
+        int linked = 0, created = 0, conflicts = 0, upgraded = 0, already = 0;
+
+        // A quarantined row that has SINCE been linked in the portal is the one legitimate
+        // re-decision: the person authenticated as the student, so the link is proven, not guessed.
+        foreach (var stale in db.Query(@"SELECT m.id AS map_id, w.id AS wid, w.student_user_id
+                FROM pciworld_user_map m JOIN pciworld_users w ON w.id=m.legacy_world_id
+                WHERE m.outcome='conflict' AND w.student_user_id IS NOT NULL"))
+        {
+            var canonical = H.L(stale["student_user_id"]);
+            if (db.QueryOne("SELECT id FROM users WHERE id=?", canonical) is null) continue;
+            db.Execute(@"UPDATE pciworld_user_map SET canonical_user_id=?, outcome='linked',
+                    detail='conflict resolved by portal link', resolved_at=datetime('now') WHERE id=?",
+                canonical, stale["map_id"]);
+            EnsureParticipant(db, canonical);
+            upgraded++;
+        }
+
+        foreach (var w in db.Query(@"SELECT w.* FROM pciworld_users w
+                LEFT JOIN pciworld_user_map m ON m.legacy_world_id=w.id
+                WHERE m.id IS NULL ORDER BY w.id"))
+        {
+            switch (Decide(db, w))
+            {
+                case "linked": linked++; break;
+                case "created": created++; break;
+                default: conflicts++; break;
+            }
+        }
+
+        already = (int)db.Scalar<long>("SELECT COUNT(*) FROM pciworld_user_map") - linked - created - conflicts - upgraded;
+        return new Reconciliation(linked, created, conflicts, upgraded, Math.Max(0, already));
+    }
+
+    /// <summary>Map ONE legacy/new World account right away (used at registration and at the portal
+    /// bridge, so every account gains its canonical identity the moment it exists). No-op when the
+    /// row is already mapped.</summary>
+    public static void MapOne(Db db, long worldId)
+    {
+        if (db.QueryOne("SELECT id FROM pciworld_user_map WHERE legacy_world_id=?", worldId) is not null) return;
+        var w = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", worldId);
+        if (w is not null) Decide(db, w);
+    }
+
+    /// <summary>Apply the LINKED / CREATED / CONFLICT rules to one World row and record the outcome.</summary>
+    static string Decide(Db db, Dictionary<string, object?> w)
+    {
+        var wid = H.L(w["id"]);
+        var email = (H.Str(w["email"]) ?? "").Trim().ToLowerInvariant();
+
+        // Rule LINKED — the portal already proved this identity.
+        if (w["student_user_id"] is not null)
+        {
+            var sid = H.L(w["student_user_id"]);
+            if (db.QueryOne("SELECT id FROM users WHERE id=?", sid) is not null)
+            {
+                Map(db, wid, sid, "linked", "student_user_id link");
+                EnsureParticipant(db, sid);
+                return "linked";
+            }
+            // A link pointing at a deleted user is a conflict, not a crash.
+            Map(db, wid, null, "conflict", $"student_user_id #{sid} no longer exists");
+            return "conflict";
+        }
+
+        // Rule CONFLICT — an email match alone must never merge two credential rows.
+        if (db.QueryOne("SELECT id FROM users WHERE lower(email)=?", email) is not null)
+        {
+            Map(db, wid, null, "conflict",
+                "email matches an existing canonical account — requires verified reauthentication to merge");
+            return "conflict";
+        }
+
+        // Rule CREATED — a standalone World learner becomes a first-class canonical student.
+        var (first, last) = SplitName(H.Str(w["display_name"]));
+        var uid = db.ExecuteReturningId(@"INSERT INTO users(email,first_name,last_name,password_hash,role,status)
+                VALUES(?,?,?,?,'student','active')",
+            email, first, last, H.Str(w["password_hash"]));
+        db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
+        db.Execute("UPDATE pciworld_users SET student_user_id=? WHERE id=? AND student_user_id IS NULL", uid, wid);
+        Map(db, wid, uid, "created", "canonical identity created from standalone World account (bcrypt hash preserved)");
+        EnsureParticipant(db, uid);
+        return "created";
+    }
+
+    /// <summary>The canonical users.id behind a legacy World account, when the mapping resolved one.</summary>
+    public static long? CanonicalFor(Db db, long legacyWorldId)
+    {
+        var m = db.QueryOne(@"SELECT canonical_user_id FROM pciworld_user_map
+            WHERE legacy_world_id=? AND canonical_user_id IS NOT NULL", legacyWorldId);
+        return m is null ? null : H.L(m["canonical_user_id"]);
+    }
+
+    public static void EnsureParticipant(Db db, long canonicalUserId) =>
+        db.Execute("INSERT OR IGNORE INTO pciworld_participants(user_id) VALUES(?)", canonicalUserId);
+
+    static void Map(Db db, long legacyId, long? canonicalId, string outcome, string detail) =>
+        db.Execute(@"INSERT OR IGNORE INTO pciworld_user_map(legacy_world_id,canonical_user_id,outcome,detail)
+            VALUES(?,?,?,?)", legacyId, canonicalId, outcome, detail);
+
+    static (string? First, string? Last) SplitName(string? display)
+    {
+        var s = display?.Trim();
+        if (string.IsNullOrEmpty(s)) return (null, null);
+        var i = s.IndexOf(' ');
+        return i < 0 ? (s, null) : (s[..i], s[(i + 1)..].Trim());
+    }
+}
