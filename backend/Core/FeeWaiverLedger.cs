@@ -112,6 +112,16 @@ public static class FeeWaiverLedger
         return (newId, true);
     }
 
+    /// <summary>
+    /// Release a claim whose grant then failed. The claim is the race guard, so it is written before the
+    /// grant is attempted; if the grant throws, the key must NOT stay claimed or every retry would replay
+    /// a "success" for a grant that never happened. Only ever called for a row this request just created.
+    /// </summary>
+    public static void ReleaseClaim(Db db, long waiverId)
+    {
+        try { db.Execute("DELETE FROM fee_waivers WHERE id=?", waiverId); } catch { }
+    }
+
     /// <summary>Stable replay payload for an existing ledger row (partial or full).</summary>
     public static object ReplayResponse(Db db, Dictionary<string, object?> row)
     {

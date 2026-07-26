@@ -103,6 +103,9 @@ jobs:
       - name: Waiver idempotency regression (RES-026 — durable request key on every waiver grant)
         run: python3 tests/waiver_idempotency_test.py
 
+      - name: Vendor-stall availability regression (no network I/O under the global DB lock)
+        run: python3 tests/waiver_vendor_stall_test.py
+
       - name: Founding-stage suite (codes, applications, waiver settlement)
         run: python3 tests/founding_test.py
 

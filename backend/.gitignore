@@ -54,3 +54,6 @@ tests/_waiver_idem_boot.log
 tests/_drrest_boot.log
 tests/_smoke_ci.db*
 tests/_smoke_storage/
+tests/_waiver_stall.db*
+tests/_waiver_stall_storage/
+tests/_waiver_stall_boot.log

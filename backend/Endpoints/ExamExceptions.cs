@@ -319,40 +319,39 @@ public static class ExamExceptions
                 var incidentId = H.GetNum(b, "incident_id") is double iid && iid > 0 ? (long?)(long)iid : null;
                 var institutionId = H.GetNum(b, "institution_id") is double i2 && i2 > 0 ? (long?)(long)i2 : null;
                 long? seatPayId = null;
-                long waiverId = 0;
-                var raced = false;
-                db.Transaction(() =>
+                // Claim the idempotency key FIRST (its own atomic INSERT OR IGNORE — the race guard), then
+                // grant the seat OUTSIDE any transaction. GrantAttempt goes through Settlement.Grant, which
+                // performs outbound network I/O (Certuvo provisioning, integration webhooks, the receipt
+                // email), and Db.Transaction holds `_gate` — the single global lock guarding EVERY database
+                // operation — for its whole body: granting inside the transaction froze every request in the
+                // process until the slowest vendor replied, and permanently when one never did. A failed
+                // grant releases the claim so the operator's retry is not replayed into a grant that never
+                // happened.
+                var (waiverId, created) = FeeWaiverLedger.TryInsert(db, idemKey, uid, "exam", cid,
+                    percent >= 100 ? "full" : "partial", feeType, waiverType,
+                    original, waived, payable, payable, reason, S(b, "note"), adm.Id,
+                    expiresAt: S(b, "expires"), sponsor: S(b, "sponsor"),
+                    institutionId: institutionId, incidentId: incidentId, evidenceRef: S(b, "evidence_ref"));
+                if (!created && idemKey is not null)
                 {
-                    // Claim the idempotency key on the ledger first so a concurrent retry cannot grant a
-                    // second seat / second ledger line after the first request already succeeded.
-                    bool created;
-                    (waiverId, created) = FeeWaiverLedger.TryInsert(db, idemKey, uid, "exam", cid,
-                        percent >= 100 ? "full" : "partial", feeType, waiverType,
-                        original, waived, payable, payable, reason, S(b, "note"), adm.Id,
-                        expiresAt: S(b, "expires"), sponsor: S(b, "sponsor"),
-                        institutionId: institutionId, incidentId: incidentId, evidenceRef: S(b, "evidence_ref"));
-                    if (!created && idemKey is not null)
-                    {
-                        raced = true;
-                        return;
-                    }
-                    // A full exam/retake waiver materialises a schedulable $0 seat immediately (no checkout);
-                    // reschedule fees never gate booking, so those are recorded but grant no new seat.
-                    // recordFeeWaiver:false — this handler owns the single ledger row (with idempotency).
-                    if (percent >= 100 && feeType != "reschedule")
+                    var (won, wonMismatch) = FeeWaiverLedger.FindForSubject(db, idemKey, uid);
+                    if (wonMismatch) return Results.Json(new { error = "idempotency_key_conflict", message = "This idempotency key was already used for a different student." }, statusCode: 409);
+                    return J(FeeWaiverLedger.ReplayResponse(db, won!));
+                }
+                // A full exam/retake waiver materialises a schedulable $0 seat immediately (no checkout);
+                // reschedule fees never gate booking, so those are recorded but grant no new seat.
+                // recordFeeWaiver:false — this handler owns the single ledger row (with idempotency).
+                if (percent >= 100 && feeType != "reschedule")
+                {
+                    try
                     {
                         var g = ExamAuthorization.GrantAttempt(db, uid, cid, "complimentary", true, reason, S(b, "note"), incidentId, false, true, adm.Id,
                             recordFeeWaiver: false, feeType: feeType);
                         seatPayId = g.GetType().GetProperty("payment_id")?.GetValue(g) as long?;
-                        if (seatPayId is not null)
-                            db.Execute("UPDATE fee_waivers SET payment_id=? WHERE id=?", seatPayId, waiverId);
                     }
-                });
-                if (raced)
-                {
-                    var (won, wonMismatch) = FeeWaiverLedger.FindForSubject(db, idemKey!, uid);
-                    if (wonMismatch) return Results.Json(new { error = "idempotency_key_conflict", message = "This idempotency key was already used for a different student." }, statusCode: 409);
-                    return J(FeeWaiverLedger.ReplayResponse(db, won!));
+                    catch { FeeWaiverLedger.ReleaseClaim(db, waiverId); throw; }
+                    if (seatPayId is not null)
+                        db.Execute("UPDATE fee_waivers SET payment_id=? WHERE id=?", seatPayId, waiverId);
                 }
                 log(adm.Id, "exam_fee_waived", $"user {uid} cert {cid} {feeType} {percent}% payable {payable} — {reason}");
                 NotifyStudent(uid, "An exam fee has been waived",
