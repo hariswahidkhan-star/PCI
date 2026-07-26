@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
@@ -71,12 +71,24 @@ export default function Layout() {
         <div className="nav-label">{t('shell.menu')}</div>
         <nav className="nav">
           {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
-              <Icon name={n.icon} size={17} className="nav-ic" />
-              <span>{t(n.tkey)}</span>
-              {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
-              {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
-            </NavLink>
+            <Fragment key={n.to}>
+              <NavLink to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
+                <Icon name={n.icon} size={17} className="nav-ic" />
+                <span>{t(n.tkey)}</span>
+                {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
+                {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
+              </NavLink>
+              {/* PCI World lives beside the Practice Lab in the "learn" run of the menu (journey
+                  repair P1-09): daily practice must be discoverable from primary navigation, not
+                  buried at the bottom of Profile. A plain anchor — it is a separate product
+                  surface, not a portal route. */}
+              {n.to === '/lab' && (
+                <a href="/world" onClick={() => setMenuOpen(false)}>
+                  <Icon name="globe" size={17} className="nav-ic" />
+                  <span>{t('nav.world')}</span>
+                </a>
+              )}
+            </Fragment>
           ))}
         </nav>
         <div className="sidebar-foot">

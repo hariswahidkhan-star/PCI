@@ -23,6 +23,12 @@ public static class WorldSchema
         Seed(db);
         WorldContentPack.Seed(db);
         WorldArticlePack.Seed(db);
+        // Canonical-identity bridge (journey repair P0-00): the participation aggregate keyed by
+        // canonical users.id, plus the reversible legacy pciworld_users → users mapping. Idempotent
+        // on every boot; conflicts are quarantined in the map, never silently merged.
+        Core.WorldIdentity.Ensure(db);
+        try { Core.WorldIdentity.Run(db); }
+        catch (Exception e) { Console.Error.WriteLine($"[pciworld identity] legacy mapping pass failed: {e.Message}"); }
     }
 
     static void Tables(Db db)
@@ -175,6 +181,7 @@ public static class WorldSchema
             result_token_sha VARCHAR(64),
             result_revoked INTEGER DEFAULT 0,
             invite_id INTEGER,
+            parent_attempt_id INTEGER,
             started_at TEXT DEFAULT (datetime('now')),
             completed_at VARCHAR(32),                      -- bounded: indexed with status, see the note there
             updated_at TEXT DEFAULT (datetime('now')))");
@@ -231,6 +238,21 @@ public static class WorldSchema
             expires_at TEXT NOT NULL,
             created_at TEXT DEFAULT (datetime('now')))");
 
+        // ── One-time cross-surface handoff codes (journey repair P0-02). The portal→World bridge
+        //    used to hand the browser a REUSABLE 30-day bearer token through the portal origin;
+        //    now it mints a hashed, two-minute, single-consumption code instead. The raw code
+        //    travels once in a URL fragment (never a query string the server logs) and dies at
+        //    first redemption — replay, expiry and "never existed" are indistinguishable. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_handoff_codes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code_sha VARCHAR(64) UNIQUE NOT NULL,
+            world_user_id INTEGER NOT NULL,
+            return_to VARCHAR(128),
+            expires_at VARCHAR(32) NOT NULL,
+            consumed_at VARCHAR(32),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldhandoff_user ON pciworld_handoff_codes(world_user_id)");
+
         // Additive upgrade columns for installs created before Phase 1b (fresh installs get them
         // from CREATE TABLE below/above; both providers share this code path).
         void AddCol(string table, string col, string ddl)
@@ -240,6 +262,19 @@ public static class WorldSchema
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+        // Retake lineage (journey repair P0-04): a fresh attempt after completion is an explicit
+        // retake linked to the attempt it retries — the original stays immutable evidence.
+        AddCol("pciworld_attempts", "parent_attempt_id", "parent_attempt_id INTEGER");
+        // Daily provenance (P1-07/PW-US-028): an attempt started as TODAY'S challenge records the
+        // rotation period it belonged to, so daily completion and the practice streak are derived
+        // from the ledger — archive plays and retakes can never inflate them. NULL = not a daily.
+        AddCol("pciworld_attempts", "rotation_period_id", "rotation_period_id INTEGER");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_period ON pciworld_attempts(rotation_period_id)");
+        // Namespace cutover step 1 (P0-00): canonical ownership stamped ALONGSIDE the legacy
+        // World-id ownership. New/claimed attempts carry both; the boot backfill converges old
+        // rows through the map; reads flip to this column only once parity is proven.
+        AddCol("pciworld_attempts", "canonical_user_id", "canonical_user_id INTEGER");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_canonical ON pciworld_attempts(canonical_user_id)");
 
         // Passport disclosure is per FIELD as well as per item: publishing evidence of what you
         // have practised should not force you to publish your scores. Defaults preserve the
