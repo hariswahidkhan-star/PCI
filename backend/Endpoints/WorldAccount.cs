@@ -388,9 +388,9 @@ public static class WorldAccount
         // The browser sessions themselves are removed, then the attempts are stripped.
         db.Execute($@"DELETE FROM pciworld_sessions
             WHERE id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
-        db.Execute($@"UPDATE pciworld_attempts SET user_id=NULL, canonical_user_id=NULL, passport_visible=0,
+        db.Execute(@"UPDATE pciworld_attempts SET user_id=NULL, canonical_user_id=NULL, passport_visible=0,
             display_name=NULL, result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0
-            WHERE id IN (SELECT a.id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
+            WHERE (user_id=? OR canonical_user_id=?)", userId, ckDel);
         db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_handoff_codes WHERE world_user_id=?", userId);
@@ -751,10 +751,10 @@ public static class WorldAccount
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var b = await H.Body(ctx.Request);
-            var (owned, ck) = OwnedBy(db, u.Id);
-            var n = db.Execute($@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
-                WHERE id IN (SELECT a.id FROM pciworld_attempts a WHERE a.id=? AND {owned})
-                  AND result_token_sha IS NOT NULL",
+            // Direct union predicate — MySQL refuses a subquery on the table being updated (1093).
+            var (_, ck) = OwnedBy(db, u.Id);
+            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE id=? AND (user_id=? OR canonical_user_id=?) AND result_token_sha IS NOT NULL",
                 (long)(H.GetNum(b, "attempt_id") ?? 0), u.Id, ck);
             if (n == 0) return Err("not_found", 404);
             log(null, "world_share_revoke", $"world #{u.Id}");
@@ -766,9 +766,9 @@ public static class WorldAccount
             if (!Enabled()) return Disabled();
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
-            var (ownedAll, ckAll) = OwnedBy(db, u.Id);
-            var n = db.Execute($@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
-                WHERE id IN (SELECT a.id FROM pciworld_attempts a WHERE {ownedAll})
+            var (_, ckAll) = OwnedBy(db, u.Id);
+            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE (user_id=? OR canonical_user_id=?)
                   AND result_token_sha IS NOT NULL AND result_revoked=0", u.Id, ckAll);
             log(null, "world_share_revoke_all", $"world #{u.Id}: {n}");
             return J(new { ok = true, revoked = n });
