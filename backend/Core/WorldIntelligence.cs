@@ -273,6 +273,26 @@ public static class WorldIntelligence
         ["WC-RSK-104"] = new("risk_room", "risk_uncertainty", "definition_planning", "cross_sector", "numeric_calculation"),
         ["WC-CPM-105"] = new("schedule_strategy", "schedule_planning", "definition_planning", "climate_sustainability", "numeric_calculation"),
         ["WC-CPM-106"] = new("schedule_strategy", "schedule_planning", "definition_planning", "energy_utilities", "numeric_calculation"),
+
+        // ── Year-1 March authored pack — planning, sequencing and critical-path judgment. ──
+        ["WC-SCH-107"] = new("schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation"),
+        ["WC-SCH-108"] = new("schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation"),
+        ["WC-SCH-109"] = new("schedule_strategy", "schedule_planning", "definition_planning", "construction_infrastructure", "numeric_calculation"),
+        ["WC-SCH-110"] = new("schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation"),
+        ["WC-SCH-111"] = new("schedule_strategy", "schedule_planning", "definition_planning", "energy_utilities", "numeric_calculation"),
+        ["WC-SCH-112"] = new("schedule_strategy", "schedule_planning", "definition_planning", "technology_digital", "numeric_calculation"),
+        ["WC-SCH-113"] = new("schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation"),
+        ["WC-SCH-114"] = new("schedule_strategy", "schedule_planning", "definition_planning", "construction_infrastructure", "numeric_calculation"),
+        ["WC-SCH-115"] = new("schedule_strategy", "schedule_planning", "definition_planning", "manufacturing_industrial", "numeric_calculation"),
+        ["WC-CBS-116"] = new("cost_value", "cost_commercial", "definition_planning", "public_sector", "numeric_calculation"),
+        ["WC-CSH-117"] = new("cost_value", "cost_commercial", "definition_planning", "cross_sector", "numeric_calculation"),
+        ["WC-BOQ-118"] = new("cost_value", "cost_commercial", "definition_planning", "healthcare_life_sciences", "numeric_calculation"),
+        ["WC-RSK-119"] = new("risk_room", "risk_uncertainty", "definition_planning", "cross_sector", "numeric_calculation"),
+        ["WC-RSK-120"] = new("risk_room", "risk_uncertainty", "definition_planning", "construction_infrastructure", "numeric_calculation"),
+        ["WC-RSK-121"] = new("risk_room", "risk_uncertainty", "definition_planning", "technology_digital", "evidence_diagnosis"),
+        ["WC-CAP-122"] = new("executive_mission", "integration_governance", "definition_planning", "transport_logistics", "multi_stage_decision"),
+        ["WC-CAP-123"] = new("executive_mission", "integration_governance", "definition_planning", "energy_utilities", "multi_stage_decision"),
+        ["WC-STK-124"] = new("stakeholder_dilemma", "resources_leadership", "definition_planning", "cross_sector", "negotiation_communication"),
     };
 
     /// <summary>

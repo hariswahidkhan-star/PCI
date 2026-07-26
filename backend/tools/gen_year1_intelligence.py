@@ -202,11 +202,39 @@ MAPPED_FEB = [
     ("WC-STK-098", "The requirement announced to the press", "stakeholder_dilemma", "stakeholders_communication", "definition_planning", "cross_sector", "negotiation_communication", "professional", 5, 59),
 ]
 assert len(MAPPED_FEB) == 26
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB
 
-# Existing bank items that complete January and February — pinned so the months stay fully authored.
+# ── March authored pack: planning, sequencing and critical-path judgment. ──
+MAPPED_MAR = [
+    ("WC-SCH-107", "Float is a budget, not a rumour", "schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation", "professional", 9, 60),
+    ("WC-CBS-116", "Where the estate money stands", "cost_value", "cost_commercial", "definition_planning", "public_sector", "numeric_calculation", "foundation", 12, 61),
+    ("WC-RSK-119", "The register meets the review board", "risk_room", "risk_uncertainty", "definition_planning", "cross_sector", "numeric_calculation", "professional", 9, 62),
+    ("WC-CAP-122", "The corridor decade", "executive_mission", "integration_governance", "definition_planning", "transport_logistics", "multi_stage_decision", "expert", 24, 63),
+    ("WC-STK-124", "Two projects, one principal engineer", "stakeholder_dilemma", "resources_leadership", "definition_planning", "cross_sector", "negotiation_communication", "professional", 6, 64),
+    ("WC-SCH-108", "The shorter path the client watches", "schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation", "professional", 10, 65),
+    ("WC-CSH-117", "The programme that must borrow to breathe", "cost_value", "cost_commercial", "definition_planning", "cross_sector", "numeric_calculation", "foundation", 10, 66),
+    ("WC-RSK-120", "Drawdown at definition", "risk_room", "risk_uncertainty", "definition_planning", "construction_infrastructure", "numeric_calculation", "professional", 8, 67),
+    ("WC-CAP-123", "The outage portfolio", "executive_mission", "integration_governance", "definition_planning", "energy_utilities", "multi_stage_decision", "expert", 22, 68),
+    ("WC-SCH-109", "A milestone without a parent", "schedule_strategy", "schedule_planning", "definition_planning", "construction_infrastructure", "numeric_calculation", "professional", 8, 82),
+    ("WC-BOQ-118", "Price the alternative before you praise it", "cost_value", "cost_commercial", "definition_planning", "healthcare_life_sciences", "numeric_calculation", "foundation", 11, 83),
+    ("WC-RSK-121", "Three documents, one real risk", "risk_room", "risk_uncertainty", "definition_planning", "technology_digital", "evidence_diagnosis", "professional", 12, 84),
+    ("WC-SCH-110", "The recovery that raided the test window", "schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation", "professional", 11, 85),
+    ("WC-SCH-111", "Do the ugly work first", "schedule_strategy", "schedule_planning", "definition_planning", "energy_utilities", "numeric_calculation", "professional", 12, 86),
+    ("WC-SCH-112", "Three estimates for one calendar", "schedule_strategy", "schedule_planning", "definition_planning", "technology_digital", "numeric_calculation", "professional", 9, 87),
+    ("WC-SCH-113", "The trend already voted", "schedule_strategy", "schedule_planning", "definition_planning", "cross_sector", "numeric_calculation", "professional", 10, 88),
+    ("WC-SCH-114", "The handover date, third edition", "schedule_strategy", "schedule_planning", "definition_planning", "construction_infrastructure", "numeric_calculation", "professional", 8, 89),
+    ("WC-SCH-115", "Eighty percent done, twice", "schedule_strategy", "schedule_planning", "definition_planning", "manufacturing_industrial", "numeric_calculation", "professional", 11, 90),
+]
+assert len(MAPPED_MAR) == 18
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR
+
+# Existing bank items that complete January, February and March — pinned so the months stay
+# fully authored (March's thirteen legacy schedule items hold their theme-month days).
 PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
-                   "WC-WBS-048": 45, "WC-WBS-026": 46}
+                   "WC-WBS-048": 45, "WC-WBS-026": 46,
+                   "WC-CPM-050": 69, "WC-TML-042": 70, "WC-CPM-032": 71, "WC-TML-025": 72,
+                   "WC-CPM-022": 73, "WC-ESC-007": 74, "WC-SCH-002": 75, "WC-PRG-006": 76,
+                   "WC-TML-009": 77, "WC-ESC-024": 78, "WC-PRG-028": 79, "WC-ESC-041": 80,
+                   "WC-PRG-047": 81}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

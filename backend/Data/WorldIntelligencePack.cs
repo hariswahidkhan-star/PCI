@@ -2044,5 +2044,751 @@ public static class WorldIntelligencePack
              "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
              "share_line":"Sized a refinery outage window with its buffer in daylight."}
             """),
+
+        // ═════════════ MARCH — planning, sequencing and critical-path judgment ═════════════
+        // ───────────── Schedule Strategy · practitioner ─────────────
+
+        ("WC-SCH-107", "Float is a budget, not a rumour", "Two teams have both promised away the same four days.",
+            "Capital Programmes", "Programme Planner", "project_controls", "professional", 9,
+            """["schedule_analysis","critical_path"]""",
+            """
+            {"context":"A programme integration schedule has six activities. The systems team told the client integration testing (E) 'has slack if needed'; separately, the design team promised the same slack to a late supplier feeding C. Run the network to find how much float actually exists on that branch — and who, if anyone, can spend it.",
+             "evidence":[
+               {"label":"A — Mobilise","value":"3 days, no predecessors"},
+               {"label":"B — Core build","value":"5 days, after A"},
+               {"label":"C — Interface design","value":"4 days, after A"},
+               {"label":"D — Core commissioning","value":"6 days, after B"},
+               {"label":"E — Integration testing","value":"4 days, after C"},
+               {"label":"F — Programme handover","value":"2 days, after D and E"}],
+             "task":"cpm",
+             "given":{"activities":[
+               {"id":"A","dur":3,"preds":[]},{"id":"B","dur":5,"preds":["A"]},{"id":"C","dur":4,"preds":["A"]},
+               {"id":"D","dur":6,"preds":["B"]},{"id":"E","dur":4,"preds":["C"]},{"id":"F","dur":2,"preds":["D","E"]}]},
+             "ask":[
+               {"key":"project_duration","label":"Programme duration (days)","type":"number"},
+               {"key":"float_C","label":"Total float of C — interface design (days)","type":"number"},
+               {"key":"float_E","label":"Total float of E — integration testing (days)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"ledger","prompt":"Both promises draw on the same branch. Your ruling?",
+                "options":[
+                  {"key":"single","label":"Publish the branch's float as ONE shared budget with an owner — spends are logged against it, and the two promises are reconciled to what remains","quality":100,
+                   "consequence":"The supplier gets three days, testing keeps one, and the fourth promise dies in a meeting instead of on the critical path.",
+                   "principle":"Float on a path is one budget however many activities sit on it — double-promising it is double-spending."},
+                  {"key":"both","label":"Honour both promises — each activity 'has float', after all","quality":10,
+                   "consequence":"Both teams spend the same days; the branch overruns the merge point and the handover slips with everyone technically correct.",
+                   "principle":"Per-activity float readings hide the fact that a path shares one pool."},
+                  {"key":"neither","label":"Revoke both promises — float belongs to the programme, not to teams","quality":40,
+                   "consequence":"Defensible, but two commitments made in good faith are broken at once, and teams learn to stop telling the planner anything.",
+                   "principle":"Reclaiming float without a spend process just drives float trading underground."}]}],
+             "hints":["Work both paths through to F — the branch through C and E is one chain.",
+               "Total float on that chain is shared: C and E do not each get their own copy.",
+               "Treat the computed float as a budget: who owns it, what has been pledged, what remains."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Reconciled two promises drawn on the same four days of float."}
+            """),
+
+        ("WC-SCH-108", "The shorter path the client watches", "The client's favourite milestone is not on the critical path. Nobody has told them.",
+            "Framework Programmes", "Senior Planner", "project_controls", "professional", 10,
+            """["schedule_analysis","stakeholder_communication"]""",
+            """
+            {"context":"A framework programme's definition schedule has six activities. The client tracks one milestone obsessively: completion of the pilot conversion (D). Your network says the pilot branch is not what drives the end date — the approvals branch is. The client has asked for 'everything possible' to accelerate D.",
+             "evidence":[
+               {"label":"A — Programme setup","value":"4 days, no predecessors"},
+               {"label":"B — Pilot design","value":"4 days, after A"},
+               {"label":"C — Approvals & consents","value":"7 days, after A"},
+               {"label":"D — Pilot conversion","value":"5 days, after B"},
+               {"label":"E — Approvals implementation","value":"4 days, after C"},
+               {"label":"F — Definition close-out","value":"3 days, after D and E"}],
+             "task":"cpm",
+             "given":{"activities":[
+               {"id":"A","dur":4,"preds":[]},{"id":"B","dur":4,"preds":["A"]},{"id":"C","dur":7,"preds":["A"]},
+               {"id":"D","dur":5,"preds":["B"]},{"id":"E","dur":4,"preds":["C"]},{"id":"F","dur":3,"preds":["D","E"]}]},
+             "ask":[
+               {"key":"project_duration","label":"Schedule duration (days)","type":"number"},
+               {"key":"float_B","label":"Total float of B — pilot design (days)","type":"number"},
+               {"key":"float_D","label":"Total float of D — pilot conversion (days)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"client","prompt":"The client wants D accelerated. You:",
+                "options":[
+                  {"key":"redirect","label":"Show the client the two branches: D can finish earlier but the END DATE is owned by approvals — offer to spend acceleration money where it moves what they actually care about","quality":100,
+                   "consequence":"The client redirects the budget to expediting approvals and still gets the pilot two days early from its existing float.",
+                   "principle":"Accelerate what drives the date the stakeholder cares about, not the milestone they happen to watch."},
+                  {"key":"comply","label":"Accelerate D as asked — the client is paying and it's their milestone","quality":20,
+                   "consequence":"D finishes early into its own float; the end date does not move; the client concludes acceleration 'doesn't work' just before you need them to fund a real one.",
+                   "principle":"Money spent off the critical path buys a nicer-looking Gantt chart and nothing else."},
+                  {"key":"quiet","label":"Accelerate approvals instead without explaining the switch","quality":30,
+                   "consequence":"The right work gets faster and the client feels ignored; the next instruction arrives in writing, with less trust attached.",
+                   "principle":"Doing the right thing without the explanation converts good planning into bad faith."}]}],
+             "hints":["Compute both branches to F and see which one sets the duration.",
+               "Float on the pilot branch tells you what acceleration there would actually buy.",
+               "Answer the client's goal — the end date — not just their instruction."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Redirected a client's acceleration budget from the milestone they watch to the path that matters."}
+            """),
+
+        ("WC-SCH-109", "A milestone without a parent", "The contract lists a date no activity produces. The network has an opinion.",
+            "Water Infrastructure", "Contract Planner", "project_controls", "professional", 8,
+            """["schedule_analysis","governance"]""",
+            """
+            {"context":"A flood-alleviation contract carries a milestone — 'diversion channel operational, day 12' — inherited from the tender programme. In the definition schedule nobody can say which activities produce it: it sits in the plan with no predecessors, a date with no logic. Build the real network and see what the milestone's true date is.",
+             "evidence":[
+               {"label":"A — Site establishment","value":"2 days, no predecessors"},
+               {"label":"B — Channel excavation","value":"5 days, after A"},
+               {"label":"C — Lining works","value":"3 days, after B"},
+               {"label":"D — Inlet structure","value":"4 days, after B"},
+               {"label":"E — Diversion commissioning","value":"3 days, after C and D"},
+               {"label":"F — Operational handover","value":"1 day, after E"},
+               {"label":"Contract milestone","value":"'Diversion operational, day 12' — no logic behind it"}],
+             "task":"cpm",
+             "given":{"activities":[
+               {"id":"A","dur":2,"preds":[]},{"id":"B","dur":5,"preds":["A"]},{"id":"C","dur":3,"preds":["B"]},
+               {"id":"D","dur":4,"preds":["B"]},{"id":"E","dur":3,"preds":["C","D"]},{"id":"F","dur":1,"preds":["E"]}]},
+             "ask":[
+               {"key":"project_duration","label":"Days to operational handover","type":"number"},
+               {"key":"float_C","label":"Total float of C — lining works (days)","type":"number"},
+               {"key":"float_D","label":"Total float of D — inlet structure (days)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"milestone","prompt":"The network says the contract's day-12 milestone is not achievable. You:",
+                "options":[
+                  {"key":"notify","label":"Notify the client NOW with the logic-linked programme attached: the true date, the drivers, and the compression options with prices","quality":100,
+                   "consequence":"An awkward conversation in week one instead of a dispute in week three; the client buys one compression option and re-dates the milestone.",
+                   "principle":"A milestone nobody's logic produces is a claim in incubation — surface it before it hatches."},
+                  {"key":"hold","label":"Keep the milestone in the plan as a target and 'manage to it' — tender dates are commitments","quality":10,
+                   "consequence":"The team works to a date the network never supported; day 12 arrives, the channel doesn't, and the failure is now yours to explain.",
+                   "principle":"Managing to an impossible date is spelled d-e-l-a-y with extra steps."},
+                  {"key":"resequence","label":"Quietly overlap lining and inlet works to chase the date without telling anyone the plan changed","quality":25,
+                   "consequence":"The overlap creates a workspace clash the method statements prohibit; safety review halts the works and finds the unapproved resequence.",
+                   "principle":"Logic changes that dodge review dodge the review that exists for a reason."}]}],
+             "hints":["Trace the longest chain from A to F — both middle branches feed E.",
+               "The milestone's earliest honest date is the network's, not the tender's.",
+               "The gap between the contract date and the computed one is a decision for daylight."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Gave a logicless contract milestone its true date in week one."}
+            """),
+
+        ("WC-SCH-110", "The recovery that raided the test window", "The plan says month 6. Earned schedule says month 5's work just arrived.",
+            "Enterprise Programmes", "Programme Controls Analyst", "project_controls", "professional", 11,
+            """["earned_schedule","schedule_analysis"]""",
+            """
+            {"context":"A programme is at month 6 of a planned 8. The delivery lead's recovery plan 'holds the end date' — by compressing the final testing window. Before anyone signs, measure the schedule honestly in TIME: the plan's cumulative PV curve is below; earned value to date is 580.",
+             "evidence":[
+               {"label":"Planned duration","value":"8 months"},
+               {"label":"Now","value":"End of month 6"},
+               {"label":"Cumulative planned value","value":"M1: 80 · M2: 180 · M3: 300 · M4: 440 · M5: 580 · M6: 700 · M7: 800 · M8: 880 (thousands)"},
+               {"label":"Earned value to date","value":"580 (thousands)"},
+               {"label":"Recovery proposal","value":"Hold month 8 by halving the test window"}],
+             "task":"earned_schedule",
+             "given":{"planned_duration":8,"at":6,"ev":580,
+               "plan":[{"period":1,"pv":80},{"period":2,"pv":180},{"period":3,"pv":300},{"period":4,"pv":440},
+                       {"period":5,"pv":580},{"period":6,"pv":700},{"period":7,"pv":800},{"period":8,"pv":880}]},
+             "ask":[
+               {"key":"es","label":"Earned Schedule — ES (months)","type":"number"},
+               {"key":"sv_time","label":"Time-based schedule variance SV(t)","type":"number"},
+               {"key":"spi_time","label":"Time-based index SPI(t)","type":"number"},
+               {"key":"eac_time","label":"Forecast duration EAC(t)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"recovery","prompt":"Your position on the hold-the-date recovery?",
+                "options":[
+                  {"key":"honest","label":"Present the measured EAC(t) and reject test-window compression as the mechanism — offer real options: scope re-phasing, resource addition, or an honest re-date","quality":100,
+                   "consequence":"The board picks re-phasing plus a partial re-date; the test window survives, and so does the system it later catches two defects in.",
+                   "principle":"A recovery that funds itself from assurance time isn't recovery — it is risk transfer to the go-live."},
+                  {"key":"sign","label":"Sign the recovery — the end date is contractual and testing always squeezes anyway","quality":10,
+                   "consequence":"The date holds on paper until testing finds what testing finds, with half the time to fix it; the slip arrives anyway, now WITH defects.",
+                   "principle":"Compressing the window that proves the work does not compress the work."},
+                  {"key":"average","label":"Split the difference: compress testing by a quarter and hope performance improves","quality":30,
+                   "consequence":"SPI(t) has been stable for four months; hoping it improves is not a plan input, and the quarter-compression buys less than one month.",
+                   "principle":"Trends are evidence; hope is not a schedule variable."}]}],
+             "hints":["ES is the point on the PLAN curve where cumulative PV equals today's EV.",
+               "SV(t) is ES minus actual time; SPI(t) is ES divided by actual time.",
+               "EAC(t) projects the planned duration over SPI(t) — compare it with the proposal's promise."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Measured a slip in months, not currency — and saved the test window from paying for it."}
+            """),
+
+        ("WC-SCH-111", "Do the ugly work first", "Everyone wants to start with the clean scope. The network disagrees.",
+            "Energy Networks", "Outage Planner", "project_controls", "professional", 12,
+            """["schedule_analysis","sequencing"]""",
+            """
+            {"context":"Planning a substation outage's enabling phase, both site teams want to begin with the well-understood scaffold and cabling work and leave the contaminated-insulation removal — slow, unpopular, permit-heavy — until 'the works are flowing'. Run the network: the removal gates the weld repairs, which gate everything.",
+             "evidence":[
+               {"label":"A — Permits & isolations","value":"2 days, no predecessors"},
+               {"label":"B — Scaffold access","value":"3 days, after A"},
+               {"label":"C — Insulation removal (contaminated)","value":"4 days, after A"},
+               {"label":"D — Weld repairs","value":"6 days, after B and C"},
+               {"label":"E — Reinstatement","value":"2 days, after D"},
+               {"label":"Preference","value":"Both teams want C late — 'once the works are flowing'"}],
+             "task":"cpm",
+             "given":{"activities":[
+               {"id":"A","dur":2,"preds":[]},{"id":"B","dur":3,"preds":["A"]},{"id":"C","dur":4,"preds":["A"]},
+               {"id":"D","dur":6,"preds":["B","C"]},{"id":"E","dur":2,"preds":["D"]}]},
+             "ask":[
+               {"key":"project_duration","label":"Enabling duration (days)","type":"number"},
+               {"key":"float_B","label":"Total float of B — scaffold (days)","type":"number"},
+               {"key":"float_C","label":"Total float of C — insulation removal (days)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"sequence","prompt":"The teams push to start C late anyway. Your call?",
+                "options":[
+                  {"key":"front","label":"Hold C at its early start — it is the zero-float gate to everything — and show the teams the network that says so","quality":100,
+                   "consequence":"The removal starts day one behind the permits; when it uncovers extra contamination, the discovery happens with the whole float budget still alive.",
+                   "principle":"Front-load the work most likely to surprise you — discovery is cheapest when the schedule is youngest."},
+                  {"key":"defer","label":"Let C start after B — team morale is worth two days","quality":15,
+                   "consequence":"C starts late, finds the extra contamination late, and the outage extension request lands exactly when the system operator has no flexibility left.",
+                   "principle":"Deferring uncertain work moves its surprises to where they cost the most."},
+                  {"key":"split","label":"Split C into a survey slice now and removal later","quality":55,
+                   "consequence":"Better than pure deferral — the survey de-risks the estimate — but the removal duration itself still lands late in the window.",
+                   "principle":"Sampling uncertainty early helps; it is still not the same as retiring it early."}]}],
+             "hints":["Find which branch into D is longer — that branch owns the outage's start-critical work.",
+               "Zero float on C means every day it waits is a day the whole outage extends.",
+               "Ask which activity is most likely to produce surprises, and when you want to meet them."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Scheduled the unpopular work first, where its surprises were affordable."}
+            """),
+
+        ("WC-SCH-112", "Three estimates for one calendar", "The site swears ten weeks. The office swears six. PERT holds the pen.",
+            "Technology Rollouts", "Rollout Planning Analyst", "project_controls", "professional", 9,
+            """["schedule_analysis","estimating"]""",
+            """
+            {"context":"A national rollout's definition plan needs a duration for the three-stage store-conversion pipeline, and the site and office teams are four weeks apart on gut feel. You gather proper three-point estimates for the three sequential stages and let the arithmetic speak — then decide what date to put in the plan. The client wants a commitment at 27 days.",
+             "evidence":[
+               {"label":"A — Survey & make-ready","value":"optimistic 6, most likely 9, pessimistic 18 days"},
+               {"label":"B — Conversion","value":"optimistic 4, most likely 6, pessimistic 8 days"},
+               {"label":"C — Commission & handback","value":"optimistic 5, most likely 8, pessimistic 11 days"},
+               {"label":"Client ask","value":"Commit the pipeline at 27 days"}],
+             "task":"pert",
+             "given":{"activities":[
+               {"id":"A","o":6,"m":9,"p":18},{"id":"B","o":4,"m":6,"p":8},{"id":"C","o":5,"m":8,"p":11}],
+               "deadline":27},
+             "ask":[
+               {"key":"expected_duration","label":"PERT expected duration (days)","type":"number"},
+               {"key":"std_dev","label":"Pipeline standard deviation (days)","type":"number"},
+               {"key":"prob_on_time","label":"Probability of finishing within 27 days (%)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"commit","prompt":"What commitment goes to the client?",
+                "options":[
+                  {"key":"confidence","label":"Offer the expected duration for planning and a commitment date at a stated confidence level — with the probability arithmetic on the table","quality":100,
+                   "consequence":"The client chooses the higher-confidence date once they can see what 27 days actually buys; the first ten stores all land inside it.",
+                   "principle":"Commit at a confidence level you can name, not at a number someone liked."},
+                  {"key":"expected","label":"Commit at the expected duration exactly — it is the statistically fair number","quality":30,
+                   "consequence":"Fair, and roughly a coin flip per store: half the pipeline runs 'late' against a commitment that was never a commitment.",
+                   "principle":"The expected value is a planning number; a commitment needs headroom you chose on purpose."},
+                  {"key":"client","label":"Accept the client's 27 days — the probability is high enough and the relationship matters","quality":45,
+                   "consequence":"Workable this time — but nobody recorded that 27 was a probability choice, so the next negotiation starts from it as a fact.",
+                   "principle":"If you accept a probabilistic date, record the probability you accepted."}]}],
+             "hints":["Each stage's expected duration weights the most likely estimate four times: (o + 4m + p) / 6.",
+               "Stage variances add along the path; the path standard deviation is the square root of the sum.",
+               "The client's 27 days is a point on a distribution — find out which point before promising it."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Turned a four-week estimating argument into one distribution and a chosen confidence."}
+            """),
+
+        ("WC-SCH-113", "The trend already voted", "The plan says the programme recovers next quarter. Six months of SPI(t) say otherwise.",
+            "Portfolio & PMO", "Schedule Assurance Analyst", "project_controls", "professional", 10,
+            """["earned_schedule","forecasting"]""",
+            """
+            {"context":"A portfolio's flagship workstream is at month 5 of a planned 8, and its report claims the end date holds 'based on planned acceleration'. You run the time-based measure from the PV curve: earned value to date is 520. The steering group asks for the honest forecast before it endorses the report.",
+             "evidence":[
+               {"label":"Planned duration","value":"8 months"},
+               {"label":"Now","value":"End of month 5"},
+               {"label":"Cumulative planned value","value":"M1: 100 · M2: 220 · M3: 360 · M4: 520 · M5: 700 · M6: 860 · M7: 980 · M8: 1060 (thousands)"},
+               {"label":"Earned value to date","value":"520 (thousands)"},
+               {"label":"Report claim","value":"'End date holds, based on planned acceleration'"}],
+             "task":"earned_schedule",
+             "given":{"planned_duration":8,"at":5,"ev":520,
+               "plan":[{"period":1,"pv":100},{"period":2,"pv":220},{"period":3,"pv":360},{"period":4,"pv":520},
+                       {"period":5,"pv":700},{"period":6,"pv":860},{"period":7,"pv":980},{"period":8,"pv":1060}]},
+             "ask":[
+               {"key":"es","label":"Earned Schedule — ES (months)","type":"number"},
+               {"key":"spi_time","label":"Time-based index SPI(t)","type":"number"},
+               {"key":"eac_time","label":"Forecast duration EAC(t)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"endorse","prompt":"Does the steering group endorse 'the end date holds'?",
+                "options":[
+                  {"key":"trend","label":"No — present the measured EAC(t) as the base forecast, and admit the 'planned acceleration' only if it comes with named resources, funded actions and a revised curve","quality":100,
+                   "consequence":"The workstream returns a week later with a real acceleration package for half the gap and a re-dated remainder — a forecast the group can actually govern.",
+                   "principle":"A trend is overturned by funded actions, never by adjectives."},
+                  {"key":"endorse","label":"Yes — the team knows its work and acceleration plans deserve good faith","quality":10,
+                   "consequence":"Three reports later the date moves by exactly what SPI(t) predicted today, plus the credibility of everyone who endorsed it.",
+                   "principle":"Good faith is for people; forecasts get evidence."},
+                  {"key":"midpoint","label":"Endorse a date halfway between the report's and the measured forecast","quality":20,
+                   "consequence":"A number with no mechanism behind it satisfies the meeting and binds nobody; both dates are now wrong in the minutes.",
+                   "principle":"Averaging a measurement with a wish produces neither."}]}],
+             "hints":["Find where the plan curve reaches today's EV — that month is the ES.",
+               "SPI(t) = ES over actual months elapsed; below one means the calendar is losing.",
+               "Project the planned duration over SPI(t) and compare with the report's claim."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Let six months of SPI(t) outvote one adjective in a steering pack."}
+            """),
+
+        ("WC-SCH-114", "The handover date, third edition", "Twice moved, once by hope. This time the network sets it.",
+            "Urban Development", "Development Planner", "project_controls", "professional", 8,
+            """["schedule_analysis","critical_path"]""",
+            """
+            {"context":"A mixed-use development's phase-one handover date has moved twice — both times reset by negotiation rather than analysis. The incoming tenant's lawyers want a third date they can put liquidated damages against. This time, build it from the network.",
+             "evidence":[
+               {"label":"A — Complete core works","value":"3 days, no predecessors"},
+               {"label":"B — Lobby fit-out","value":"4 days, after A"},
+               {"label":"C — Building systems integration","value":"6 days, after A"},
+               {"label":"D — Fit-out completion","value":"3 days, after B"},
+               {"label":"E — Systems acceptance testing","value":"2 days, after C"},
+               {"label":"F — Handover certification","value":"2 days, after D and E"},
+               {"label":"History","value":"Two previous dates, both negotiated, both missed"}],
+             "task":"cpm",
+             "given":{"activities":[
+               {"id":"A","dur":3,"preds":[]},{"id":"B","dur":4,"preds":["A"]},{"id":"C","dur":6,"preds":["A"]},
+               {"id":"D","dur":3,"preds":["B"]},{"id":"E","dur":2,"preds":["C"]},{"id":"F","dur":2,"preds":["D","E"]}]},
+             "ask":[
+               {"key":"project_duration","label":"Days to certified handover","type":"number"},
+               {"key":"float_B","label":"Total float of B — lobby fit-out (days)","type":"number"},
+               {"key":"float_D","label":"Total float of D — fit-out completion (days)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"date","prompt":"The date that goes to the tenant's lawyers is:",
+                "options":[
+                  {"key":"network_risked","label":"The network date plus a disclosed risk allowance sized to the systems-testing uncertainty — with the build-up shown to the tenant","quality":100,
+                   "consequence":"The tenant's lawyers, shown how the date was built, accept it first time; the third date becomes the last date.",
+                   "principle":"A date that can show its arithmetic survives negotiation; a date that cannot, restarts it."},
+                  {"key":"network_exact","label":"The bare network date — allowances just invite Parkinson's law","quality":25,
+                   "consequence":"Systems testing finds what testing finds, the bare date breaks by two days, and the LDs you invited apply to you.",
+                   "principle":"A commitment with liquidated damages attached is priced risk — price it."},
+                  {"key":"negotiate","label":"Whatever date the tenant's side will accept — dates are commercial, not technical","quality":10,
+                   "consequence":"The third negotiated date joins the first two, for the same reason: nothing underneath it.",
+                   "principle":"A negotiated date without a network under it is a countdown to the fourth negotiation."}]}],
+             "hints":["The longer branch through systems work drives certification — compute both.",
+               "Floats on the fit-out branch tell you what is genuinely flexible in the tenant conversation.",
+               "A contractual date needs the network date PLUS a risk allowance you can defend line by line."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Built a tenant handover date that could show its own arithmetic."}
+            """),
+
+        ("WC-SCH-115", "Eighty percent done, twice", "The line conversion reported 80% in April. And in June. Weighted progress explains why.",
+            "Industrial Manufacturing", "Project Controls Engineer", "project_controls", "professional", 11,
+            """["progress_measurement","schedule_analysis"]""",
+            """
+            {"context":"A production-line conversion reported '80% complete' two months running — the site counts activities, not value. You rebuild the measure with budget-weighted progress from the four control accounts. The steering meeting expects the honest number and an explanation of why it moved backwards from the site's version.",
+             "evidence":[
+               {"label":"1.1 Strip-out & services","value":"weight 400,000 · 100% complete"},
+               {"label":"1.2 Line equipment install","value":"weight 900,000 · 70% complete"},
+               {"label":"1.3 Controls & integration","value":"weight 500,000 · 30% complete"},
+               {"label":"1.4 Commissioning & ramp","value":"weight 200,000 · 0% complete"},
+               {"label":"Site figure","value":"'80% complete' (activity count)"}],
+             "task":"progress",
+             "given":{"nodes":[
+               {"id":"1.1","name":"Strip-out","weight":400000,"percent":100},
+               {"id":"1.2","name":"Equipment","weight":900000,"percent":70},
+               {"id":"1.3","name":"Controls","weight":500000,"percent":30},
+               {"id":"1.4","name":"Commissioning","weight":200000,"percent":0}]},
+             "ask":[
+               {"key":"overall_percent","label":"Budget-weighted percent complete","type":"number"},
+               {"key":"total_weight","label":"Total weighting (budget)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"explain","prompt":"How do you land the corrected number at the steering meeting?",
+                "options":[
+                  {"key":"method","label":"Present both numbers WITH the method difference — activity count versus value weighting — and adopt the weighted measure as the single go-forward basis","quality":100,
+                   "consequence":"The room understands why '80%' was true-ish and useless; the weighted measure becomes the standard and the next report is comparable.",
+                   "principle":"Correct a measure by replacing the method, not just the number — or the old method regrows."},
+                  {"key":"silent","label":"Just report the weighted figure without mentioning the site's 80%","quality":25,
+                   "consequence":"The site team, blindsided by the 'drop', spends the meeting defending its old number instead of discussing the work.",
+                   "principle":"An unexplained correction reads as an accusation."},
+                  {"key":"blend","label":"Report a blended figure between the two methods to soften the transition","quality":5,
+                   "consequence":"A number computable by no one is now in the minutes; next month's 'progress' depends on which method regressed less.",
+                   "principle":"Two methods averaged is zero methods."}]}],
+             "hints":["Weight each account's percent by its budget share, then sum.",
+               "Notice where the remaining value sits — the heavy accounts are barely started.",
+               "The meeting needs the METHOD change explained, or the number change will be litigated."],
+             "profile_map":{"calculation":"Schedule Analyst","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Replaced an activity-count 80% with a value-weighted truth."}
+            """),
+
+        // ───────────── Cost & Value · foundation ─────────────
+
+        ("WC-CBS-116", "Where the estate money stands", "Three cost accounts, one rolled-up truth for the estates board.",
+            "Public Estates", "Estates Cost Analyst", "project_controls", "foundation", 12,
+            """["cost_control","reporting"]""",
+            """
+            {"context":"A schools estate programme's definition-stage cost report rolls up three cost accounts for the estates board. Roll the structure up, state the variance at the root — and handle the fact that the worst account's manager has asked you to 'present the overspend as timing'.",
+             "evidence":[
+               {"label":"1.1 Condition surveys & design","value":"budget 1,200,000 · actual 1,180,000"},
+               {"label":"1.2 Early enabling works","value":"budget 800,000 · actual 860,000"},
+               {"label":"1.3 Programme management","value":"budget 500,000 · actual 505,000"},
+               {"label":"Request","value":"1.2's manager: 'present it as timing'"}],
+             "task":"cbs",
+             "given":{"nodes":[
+               {"id":"1","parent":null,"name":"Estate programme"},
+               {"id":"1.1","parent":"1","name":"Surveys & design","budget":1200000,"actual":1180000},
+               {"id":"1.2","parent":"1","name":"Enabling works","budget":800000,"actual":860000},
+               {"id":"1.3","parent":"1","name":"Programme mgmt","budget":500000,"actual":505000}]},
+             "ask":[
+               {"key":"root_budget","label":"Total budget (root)","type":"number"},
+               {"key":"root_actual","label":"Total actual (root)","type":"number"},
+               {"key":"root_variance","label":"Root variance (budget − actual)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"timing","prompt":"The 'present it as timing' request. You:",
+                "options":[
+                  {"key":"test","label":"Test the claim: if it IS timing, the account's commitments and forecast will show the recovery — ask for that evidence, and report whichever story the evidence supports","quality":100,
+                   "consequence":"The evidence shows half timing, half genuine overspend; the report says exactly that, and the board trusts the next one.",
+                   "principle":"'Timing' is a testable claim, not a euphemism — test it."},
+                  {"key":"comply","label":"Report it as timing — account managers know their accounts","quality":10,
+                   "consequence":"The 'timing' never reverses; three reports later the board asks when the money is coming back, and the answer implicates the reporter.",
+                   "principle":"Every unverified 'timing' variance is an overspend on deferred disclosure."},
+                  {"key":"refuse","label":"Report raw numbers only — narratives are spin by definition","quality":30,
+                   "consequence":"Accurate and unhelpful: the board sees a variance with no explanation and invents a worse one.",
+                   "principle":"Numbers without narrative don't prevent stories; they just outsource them."}]}],
+             "hints":["Roll budget and actual up separately, then take the variance at the root.",
+               "Watch the signs: an actual above budget is a negative variance in this convention.",
+               "A timing claim predicts its own reversal — ask to see the forecast that shows it."],
+             "profile_map":{"calculation":"Cost Guardian","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Rolled up an estate cost report and tested a 'timing' story against evidence."}
+            """),
+
+        ("WC-CSH-117", "The programme that must borrow to breathe", "Profitable on paper, hungry in month two. Find the peak before the bank does.",
+            "Capital Programmes", "Programme Finance Analyst", "project_controls", "foundation", 10,
+            """["cash_flow","cost_control"]""",
+            """
+            {"context":"A capital programme's definition-stage funding paper needs its cash profile. The five-period forecast below is profitable overall — but the funding committee needs the peak funding requirement, because that, not the profit, is what the facility must cover.",
+             "evidence":[
+               {"label":"Period 1","value":"inflow 0 · outflow 300,000"},
+               {"label":"Period 2","value":"inflow 100,000 · outflow 450,000"},
+               {"label":"Period 3","value":"inflow 600,000 · outflow 350,000"},
+               {"label":"Period 4","value":"inflow 800,000 · outflow 200,000"},
+               {"label":"Period 5","value":"inflow 300,000 · outflow 100,000"}],
+             "task":"cashflow",
+             "given":{"periods":[
+               {"period":1,"inflow":0,"outflow":300000},{"period":2,"inflow":100000,"outflow":450000},
+               {"period":3,"inflow":600000,"outflow":350000},{"period":4,"inflow":800000,"outflow":200000},
+               {"period":5,"inflow":300000,"outflow":100000}]},
+             "ask":[
+               {"key":"final_position","label":"Final cash position","type":"number"},
+               {"key":"peak_funding","label":"Peak funding requirement","type":"number"},
+               {"key":"cumulative_2","label":"Cumulative position, end of period 2","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"facility","prompt":"What does the funding paper request?",
+                "options":[
+                  {"key":"peak_plus","label":"A facility sized on the computed peak plus a stated headroom for receipt timing risk — with the cumulative curve shown","quality":100,
+                   "consequence":"The committee sees exactly why the number is what it is; when period-3 receipts land two weeks late, the headroom absorbs it.",
+                   "principle":"Facilities are sized on the trough of the curve, plus the honesty to admit receipts slip."},
+                  {"key":"final","label":"A small facility — the programme ends cash-positive, after all","quality":5,
+                   "consequence":"The programme is solvent in period 5 and insolvent in period 2, which is the only period that matters to an unpaid contractor.",
+                   "principle":"Profitability is an end-state; liquidity is every Tuesday."},
+                  {"key":"round","label":"A round number comfortably above any scenario, to avoid going back twice","quality":30,
+                   "consequence":"The committee funds it, notices the padding at first drawdown review, and trims the NEXT programme's honest request in revenge.",
+                   "principle":"Unexplained headroom spends credibility that explained headroom would have banked."}]}],
+             "hints":["Run the cumulative position period by period: prior balance plus inflow minus outflow.",
+               "The peak funding requirement is the deepest negative point of that running balance.",
+               "The final position answers a different question from the peak — the paper needs both."],
+             "profile_map":{"calculation":"Cost Guardian","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Sized a programme funding facility on the trough, not the happy ending."}
+            """),
+
+        ("WC-BOQ-118", "Price the alternative before you praise it", "The value-engineering option sounds cheaper. The bill will decide.",
+            "Healthcare Estates", "Cost Planner", "project_controls", "foundation", 11,
+            """["estimating","value_engineering"]""",
+            """
+            {"context":"A hospital ward refurbishment's definition estimate is under pressure, and the design team proposes a value-engineering alternative for the wall protection package: fewer, higher-grade panels. Enthusiasm is high. Price the alternative's bill properly before anyone calls it a saving.",
+             "evidence":[
+               {"label":"Line A — Impact-rated panels","value":"250 m² at rate 120"},
+               {"label":"Line B — Corner & door protection","value":"80 units at rate 310"},
+               {"label":"Line C — Standard hygiene cladding","value":"500 m² at rate 22"},
+               {"label":"Line D — Specialist fixings & trims","value":"40 sets at rate 450"},
+               {"label":"Baseline package","value":"Current estimate carries 91,500"}],
+             "task":"boq",
+             "given":{"lines":[
+               {"id":"A","qty":250,"rate":120},{"id":"B","qty":80,"rate":310},
+               {"id":"C","qty":500,"rate":22},{"id":"D","qty":40,"rate":450}]},
+             "ask":[
+               {"key":"total","label":"Alternative bill total","type":"number"},
+               {"key":"line_count","label":"Number of bill lines","type":"number"},
+               {"key":"average_rate","label":"Average line rate (mean of the four rates)","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"verdict","prompt":"The bill total versus the 91,500 baseline — your recommendation?",
+                "options":[
+                  {"key":"whole_life","label":"Report the capital comparison honestly AND ask for the maintenance-cycle comparison before the VE decision is made — panels with different lives are different costs","quality":100,
+                   "consequence":"The alternative costs more capital but halves the repaint cycle; the whole-life view approves it for the corridors and rejects it for the plant rooms.",
+                   "principle":"Value engineering compares value, which has a time axis — not just this year's bill."},
+                  {"key":"reject","label":"Reject the alternative — the bill says it is not cheaper, end of analysis","quality":30,
+                   "consequence":"Arithmetically clean; the maintenance saving nobody priced walks out the door with the decision.",
+                   "principle":"A capital-only comparison is a partial answer delivered with full confidence."},
+                  {"key":"approve","label":"Approve it — the design team's enthusiasm reflects real site experience","quality":10,
+                   "consequence":"Enthusiasm meets arithmetic at the next cost report, and loses; the estimate absorbs the difference silently.",
+                   "principle":"Enthusiasm is a reason to price something, never a substitute for pricing it."}]}],
+             "hints":["Each line is quantity times rate; the bill is the sum of the lines.",
+               "The average line rate here is the simple mean of the four rates — quantities do not weight it.",
+               "Compare against the baseline — then ask what the comparison leaves out (lives, cycles, maintenance)."],
+             "profile_map":{"calculation":"Cost Guardian","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Priced a value-engineering option before its enthusiasm priced itself."}
+            """),
+
+        // ───────────── Risk Room · practitioner ─────────────
+
+        ("WC-RSK-119", "The register meets the review board", "Four lines, one challenge session, and a probability someone made up in a lift.",
+            "Enterprise Programmes", "Risk Review Facilitator", "project_controls", "professional", 9,
+            """["risk_management","governance"]""",
+            """
+            {"context":"A transformation programme's planning-stage register faces its first independent review board. Before the challenge session, the board wants the quantified position — net EMV and the two dominant exposures. During the session, R2's owner admits the 0.15 probability 'came from a corridor conversation'.",
+             "evidence":[
+               {"label":"R1 — Integration partner underperformance","value":"probability 0.35, impact -400,000"},
+               {"label":"R2 — Regulatory rule change mid-build","value":"probability 0.15, impact -1,400,000"},
+               {"label":"R3 — Data cleansing underestimate","value":"probability 0.45, impact -200,000"},
+               {"label":"R4 — Early licence retirement saving","value":"probability 0.40, impact +180,000"},
+               {"label":"Session admission","value":"R2's probability 'came from a corridor conversation'"}],
+             "task":"risk",
+             "given":{"risks":[
+               {"id":"R1","probability":0.35,"impact":-400000},{"id":"R2","probability":0.15,"impact":-1400000},
+               {"id":"R3","probability":0.45,"impact":-200000},{"id":"R4","probability":0.4,"impact":180000}]},
+             "ask":[
+               {"key":"emv","label":"Net register EMV","type":"number"},
+               {"key":"emv_R2","label":"EMV of R2 — regulatory change","type":"number"},
+               {"key":"emv_R3","label":"EMV of R3 — data cleansing","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"corridor","prompt":"R2's corridor-sourced probability dominates the register. The board should:",
+                "options":[
+                  {"key":"evidence","label":"Commission a proper basis for R2 — regulatory counsel's view, consultation-stage analysis — and mark the register EMV as provisional on that line until it lands","quality":100,
+                   "consequence":"Counsel's view moves the probability materially; the register's biggest number now stands on something other than a lift chat.",
+                   "principle":"The biggest line in the register deserves the best-evidenced probability, not the most convenient one."},
+                  {"key":"keep","label":"Keep 0.15 — expert intuition is a legitimate estimating basis and the owner is experienced","quality":25,
+                   "consequence":"Intuition is legitimate as a starting point; unexamined at this exposure it is the register's single largest unaudited assumption.",
+                   "principle":"Expert judgment earns its place through challenge, not through seniority."},
+                  {"key":"zero","label":"Strike R2 until it has a defensible probability — no basis, no line","quality":15,
+                   "consequence":"The register's dominant threat vanishes from the arithmetic entirely, which is a stronger claim than any probability would have been.",
+                   "principle":"Removing a poorly-estimated risk asserts a probability of zero — the least defensible estimate of all."}]}],
+             "hints":["Net the four lines, opportunity included, before the challenge session.",
+               "Notice which single line drives the total — that is where estimating quality matters most.",
+               "A weak basis is fixed by better evidence, not by deletion or deference."],
+             "profile_map":{"calculation":"Risk Strategist","decision":"Evidence-Based Decision Maker","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Put the register's biggest probability on evidence instead of a corridor."}
+            """),
+
+        ("WC-RSK-120", "Drawdown at definition", "The project hasn't started and already wants the contingency.",
+            "Bridges & Crossings", "Programme Risk Analyst", "project_controls", "professional", 8,
+            """["risk_management","cost_control"]""",
+            """
+            {"context":"A crossing scheme in definition holds contingency sized at its register's net EMV. The design team requests an immediate drawdown of a third of it — to fund additional ground investigation that would 'retire R3 before sanction'. Quantify the register first; then judge the request.",
+             "evidence":[
+               {"label":"R1 — Approach settlement design rework","value":"probability 0.50, impact -280,000"},
+               {"label":"R2 — Environmental survey season slip","value":"probability 0.25, impact -700,000"},
+               {"label":"R3 — Foundation conditions worse than desk study","value":"probability 0.10, impact -1,900,000"},
+               {"label":"R4 — Early contractor engagement saving","value":"probability 0.35, impact +140,000"},
+               {"label":"Request","value":"Draw a third of contingency for extra ground investigation"}],
+             "task":"risk",
+             "given":{"risks":[
+               {"id":"R1","probability":0.5,"impact":-280000},{"id":"R2","probability":0.25,"impact":-700000},
+               {"id":"R3","probability":0.1,"impact":-1900000},{"id":"R4","probability":0.35,"impact":140000}]},
+             "ask":[
+               {"key":"emv","label":"Net register EMV","type":"number"},
+               {"key":"emv_R1","label":"EMV of R1 — settlement rework","type":"number"},
+               {"key":"emv_R3","label":"EMV of R3 — foundation conditions","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"request","prompt":"Your recommendation on the drawdown?",
+                "options":[
+                  {"key":"scope","label":"Support the investigation, funded as definition scope through change control — and re-run the register when its results land, resizing contingency to what remains","quality":100,
+                   "consequence":"The boreholes go in as priced scope; R3's probability halves on the results, and contingency is resized from evidence, not raided in advance.",
+                   "principle":"Buying information is scope; contingency is for the risks the information hasn't retired yet."},
+                  {"key":"grant","label":"Grant the drawdown — retiring the tail risk is exactly what the money is for","quality":30,
+                   "consequence":"The investigation happens, but contingency is now down a third with every register line still open — the arithmetic of the remaining cover no longer matches any register anyone approved.",
+                   "principle":"Spending contingency on mitigation unsizes it from the register that justified it."},
+                  {"key":"deny","label":"Deny — nothing draws on contingency before sanction, as a matter of principle","quality":20,
+                   "consequence":"The principle holds and the boreholes wait for sanction — after which their findings arrive too late to shape the design they were meant to inform.",
+                   "principle":"A rule that delays cheap information until it is expensive information is protecting the wrong thing."}]}],
+             "hints":["EMV each line with signs; the contractor-engagement line is an opportunity.",
+               "Note the gap between R3's expected value and its full impact — that is the tail the investigation targets.",
+               "Distinguish paying to LEARN about a risk from paying because a risk HAPPENED."],
+             "profile_map":{"calculation":"Risk Strategist","decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Funded the boreholes as scope and kept the contingency honest."}
+            """),
+
+        ("WC-RSK-121", "Three documents, one real risk", "A register line, a trend chart and a supplier letter. Only one of them is shouting.",
+            "Technology Rollouts", "Programme Risk Analyst", "project_controls", "professional", 12,
+            """["risk_management","evidence_analysis"]""",
+            """
+            {"context":"A national rollout's planning review gives you three artifacts. The register's top-rated line is installer availability (red, much-discussed). A buried monthly trend shows survey-to-install conversion falling four months straight — 92, 84, 71, 63 percent. And a routine letter from the sole certified hardware supplier 'notes' that its component allocation is under review at group level. The review board asks: what is this programme's real emerging risk?",
+             "evidence":[
+               {"label":"Register top line","value":"Installer availability — red, well-staffed with actions"},
+               {"label":"Trend (buried)","value":"Survey-to-install conversion: 92 → 84 → 71 → 63 percent over 4 months"},
+               {"label":"Supplier letter","value":"Sole certified supplier: component allocation 'under review at group level'"},
+               {"label":"Board question","value":"'What is the real emerging risk here?'"}],
+             "decisions":[
+               {"key":"diagnose","prompt":"Reading the three artifacts together, the signal that most demands escalation is:",
+                "options":[
+                  {"key":"supplier","label":"The supplier letter — a sole-source allocation 'under review' is a polite notice of possible supply loss, with no register line, no owner and no plan","quality":100,
+                   "consequence":"Engagement with the supplier's group confirms allocations are being cut for a larger customer; caught now, an alternative certification path starts eight months before it is needed.",
+                   "principle":"The loudest risk is rarely the newest one — read routine correspondence as evidence, not filing."},
+                  {"key":"register","label":"The register's red line — it is the register's own top rating and ratings exist to be believed","quality":15,
+                   "consequence":"The well-staffed known risk gets more staffing; the unregistered supply risk matures quietly into a stoppage.",
+                   "principle":"A register describes yesterday's analysis; emerging risk lives in what the register hasn't met yet."},
+                  {"key":"trend","label":"The conversion trend — four consecutive drops is the only quantified deterioration on the table","quality":55,
+                   "consequence":"Real and worth chasing — but its likeliest root cause surfaces in the survey backlog data within weeks either way; the supply signal has no such self-announcing mechanism.",
+                   "principle":"Prefer the signal that will NOT surface itself if you ignore it."}]},
+               {"key":"respond","prompt":"For the signal you escalated, the right first move is:",
+                "options":[
+                  {"key":"engage","label":"Direct engagement at the right level to turn the ambiguity into facts — scope, timing, alternatives — feeding a new register line with an owner","quality":100,
+                   "consequence":"Facts replace the polite phrase; the register gains its most important line of the quarter, with a mitigation already moving.",
+                   "principle":"An emerging risk's first treatment is always the same: convert it from a phrase into facts with an owner."},
+                  {"key":"monitor","label":"Add it to the watch list and revisit at next month's review","quality":20,
+                   "consequence":"The next review inherits the same sentence with four fewer weeks of options attached.",
+                   "principle":"Watching an ambiguity is not an action; it is scheduled inaction."}]}],
+             "hints":["Ask of each artifact: if this signal is real, what is the blast radius, and who would tell you in time?",
+               "Sole-source plus 'allocation under review' is a supply risk wearing courtesy language.",
+               "Escalation priority follows detectability as much as impact — some risks won't announce themselves twice."],
+             "profile_map":{"decision":"Risk Strategist","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Found the programme's real risk in a polite letter nobody had filed as one."}
+            """),
+
+        // ───────────── Executive Mission · capstone ─────────────
+
+        ("WC-CAP-122", "The corridor decade", "One transport corridor, ten years, three decisions that decide the rest.",
+            "Transport Corridors", "Corridor Programme Director", "project_management", "expert", 24,
+            """["governance","strategy_execution","schedule_analysis"]""",
+            """
+            {"context":"You direct the definition of a ten-year multimodal transport corridor programme: junction rebuilds, rail capacity works and active-travel routes sharing one corridor, one funding envelope and one weary set of communities. The definition gateway wants your position on phasing strategy, the delivery-market approach, and what to commit to the communities in writing.",
+             "evidence":[
+               {"label":"Phasing options","value":"Geographic (end-to-end by section) · Modal (rail, then road, then active travel) · Outcome-led (worst bottlenecks first, any mode)"},
+               {"label":"Analysis","value":"Three bottlenecks cause 60% of corridor delay; each involves two modes"},
+               {"label":"Market","value":"Regional contractors can deliver sections; only two national players could take the whole corridor"},
+               {"label":"Communities","value":"Consultation fatigue high; two previous schemes over-promised"},
+               {"label":"Funding","value":"Envelope confirmed for years 1–4 only; later years indicative"}],
+             "decisions":[
+               {"key":"phasing","prompt":"Stage 1 — phasing strategy?",
+                "options":[
+                  {"key":"outcome","label":"Outcome-led: attack the three multi-modal bottlenecks first, sequenced so each phase's disruption windows are shared across modes","quality":100,
+                   "consequence":"Sixty percent of the corridor's pain is addressed inside the funded four years; later phases inherit momentum and a public that has seen results.",
+                   "principle":"Phase by the outcomes the funding horizon can actually reach, not by the tidiness of maps or modes."},
+                  {"key":"geographic","label":"Geographic: complete the corridor section by section, end to end","quality":25,
+                   "consequence":"Section one is beautiful and the worst bottleneck — in section four — waits six years; the programme's public case erodes annually.",
+                   "principle":"Geographic tidiness delivers benefit in the order of the map, not the order of the need."},
+                  {"key":"modal","label":"Modal: rail first — its consents are longest — then road, then active travel","quality":35,
+                   "consequence":"Defensible on consent logic, but every community experiences three separate waves of disruption at the same junctions over a decade.",
+                   "principle":"A sequencing that is efficient for the programme and brutal for its neighbours is not efficient."}]},
+               {"key":"market","prompt":"Stage 2 — delivery-market approach?",
+                "options":[
+                  {"key":"mixed","label":"A framework of regional contractors for section works, with the three bottleneck phases tendered as integrated multi-modal packages the nationals can lead","quality":100,
+                   "consequence":"Regional capacity is kept warm and competitive for a decade; the complex packages get the integrators they need without handing the corridor to a duopoly.",
+                   "principle":"Match package shape to market depth — and never let one procurement decision define a decade of leverage."},
+                  {"key":"mega","label":"One corridor-wide contract with a national player — single accountability","quality":15,
+                   "consequence":"Year one is smooth; by year four the corridor has one indispensable supplier, and every variation is priced accordingly.",
+                   "principle":"Single accountability at corridor scale is another name for single dependency."},
+                  {"key":"atomised","label":"Tender every scheme separately for maximum competition","quality":30,
+                   "consequence":"Forty procurements, forty interfaces, and the multi-modal bottleneck jobs fail to attract bidders who can integrate them.",
+                   "principle":"Competition per package is not the same as value across a programme."}]},
+               {"key":"communities","prompt":"Stage 3 — the written commitment to communities?",
+                "options":[
+                  {"key":"honest","label":"Commit to the funded phase-one outcomes with dates, name the later phases as unfunded intentions, and promise per-phase disruption budgets the programme will publish and track","quality":100,
+                   "consequence":"The corridor's communities get their first keepable promise in a decade; the disruption budgets become the programme's most-watched metric and its best discipline.",
+                   "principle":"Promise what is funded, label what is hoped, and give the community a number it can hold you to."},
+                  {"key":"vision","label":"Publish the full ten-year vision with indicative dates throughout — ambition builds support","quality":20,
+                   "consequence":"Year six's funding squeeze turns the indicative dates into the third broken promise; opposition to phase four is organised around your own leaflet.",
+                   "principle":"An indicative date reads as a promise the day it is printed."},
+                  {"key":"minimal","label":"Commit to nothing beyond statutory consultation — promises are hostages","quality":10,
+                   "consequence":"The vacuum fills with the two previous schemes' ghosts; consent processes triple in length for want of a constituency that believes anything.",
+                   "principle":"Refusing to promise is also a message, and communities hear it clearly."}]}],
+             "hints":["Map every option against the funded horizon — years one to four are the only real money.",
+               "The three bottlenecks are multi-modal: notice what that implies for both phasing and package shape.",
+               "Communities have been over-promised twice; design the commitment they can verify."],
+             "profile_map":{"decision":"Strategic Programme Leader","balanced":"Strategic Programme Leader"},
+             "share_line":"Set a decade-long corridor's phasing, market and public promises in one gateway."}
+            """),
+
+        ("WC-CAP-123", "The outage portfolio", "Nine ageing assets, five summers, one grid that must stay on.",
+            "Energy Networks", "Asset Renewal Programme Director", "project_management", "expert", 22,
+            """["governance","strategy_execution","risk_management"]""",
+            """
+            {"context":"You direct definition for a transmission asset-renewal portfolio: nine substation renewals over five summers, each needing outages the system operator grants reluctantly. Your gateway position must cover the bundling strategy, the outage philosophy, and how to handle the one asset — the oldest — whose condition data is too poor to plan confidently.",
+             "evidence":[
+               {"label":"Portfolio","value":"9 substation renewals, 5 summer windows"},
+               {"label":"Outages","value":"System operator grants ~2 major windows per summer, hates surprises"},
+               {"label":"Bundling options","value":"Per-site contracts · one portfolio partner · regional pairs"},
+               {"label":"The ninth asset","value":"Oldest unit; condition data sparse; could be worst or fine"},
+               {"label":"Supply chain","value":"Transformer lead times ~2 years and lengthening"}],
+             "decisions":[
+               {"key":"bundle","prompt":"Stage 1 — bundling strategy?",
+                "options":[
+                  {"key":"pairs","label":"Regional pairs with common design: four paired packages plus the ninth held separate, long-lead items ordered portfolio-wide NOW","quality":100,
+                   "consequence":"Paired sites share designs, spares and crews; the portfolio-wide transformer order beats the lengthening lead times by a full summer.",
+                   "principle":"Bundle where repetition pays, separate what is genuinely different, and buy the long-lead risk out first."},
+                  {"key":"one","label":"One portfolio partner for all nine — maximum learning-curve capture","quality":30,
+                   "consequence":"The learning curve is real; so is the year-three renegotiation, conducted with a partner who knows there is no alternative mobilised.",
+                   "principle":"Learning-curve savings quoted at tender have a habit of returning as leverage by mid-portfolio."},
+                  {"key":"nine","label":"Nine separate contracts — each site gets a fresh competition","quality":20,
+                   "consequence":"Nine mobilisations, nine design variants, and no bidder invests in the tooling that repetition would have justified.",
+                   "principle":"Treating a portfolio as nine strangers pays nine times for what repetition sells once."}]},
+               {"key":"outage","prompt":"Stage 2 — outage philosophy with the system operator?",
+                "options":[
+                  {"key":"partnership","label":"A five-year outage masterplan agreed WITH the operator now — windows, fallbacks and a no-surprises protocol — refreshed every winter","quality":100,
+                   "consequence":"The operator, treated as a planning partner, starts offering windows the programme didn't know existed; year one banks a spare window it later desperately needs.",
+                   "principle":"The scarcest resource in the programme is the outage calendar — govern it jointly with its owner or queue for it like a stranger."},
+                  {"key":"annual","label":"Request outages annually, season by season — flexibility beats a rigid masterplan","quality":25,
+                   "consequence":"Every spring becomes a negotiation from zero; by year three the portfolio is sequenced around whatever windows were left over.",
+                   "principle":"Flexibility without a framework means the other party's calendar wins by default."},
+                  {"key":"buffer","label":"Design every renewal for live-adjacent working to minimise outage dependency","quality":35,
+                   "consequence":"Outage need drops usefully — at a safety-case and cost premium that two of the nine sites cannot actually support.",
+                   "principle":"Engineering around a constraint is worth it selectively, not as a philosophy."}]},
+               {"key":"ninth","prompt":"Stage 3 — the data-poor ninth asset?",
+                "options":[
+                  {"key":"investigate","label":"A funded condition-assessment campaign this year, with the ninth's delivery slot held provisionally in summer four and a trigger plan if the data comes back bad","quality":100,
+                   "consequence":"The assessment finds the asset worse than hoped but better than feared; the trigger plan moves it to summer three calmly, inside a portfolio built to flex.",
+                   "principle":"For the asset you cannot plan, buy the data first and hold the option open — uncertainty scheduled last is uncertainty compounded."},
+                  {"key":"first","label":"Do it first — worst-case assets should be retired soonest","quality":30,
+                   "consequence":"The least-understood job becomes the portfolio's opening act; its surprises consume the contingency the other eight were counting on.",
+                   "principle":"Leading with your blindest asset teaches the whole portfolio to pay for one site's lessons."},
+                  {"key":"last","label":"Do it last — by summer five the team will be at its best","quality":25,
+                   "consequence":"Team capability peaks as planned; unfortunately the asset's condition was also compounding, and summer five meets a unit with fewer options left.",
+                   "principle":"Deferring the unknown does not preserve the option — the asset keeps ageing while you wait."}]}],
+             "hints":["Look for what repetition genuinely buys across nine similar assets — and what it doesn't.",
+               "The outage calendar belongs to someone else: design the relationship, not just the requests.",
+               "For the ninth asset, price the difference between deciding now and deciding after data."],
+             "profile_map":{"decision":"Strategic Programme Leader","balanced":"Strategic Programme Leader"},
+             "share_line":"Shaped a five-summer renewal portfolio around its scarcest resource: the outage calendar."}
+            """),
+
+        // ───────────── Stakeholder Dilemma · resources & leadership ─────────────
+
+        ("WC-STK-124", "Two projects, one principal engineer", "Both planning teams built their schedules around the same person. Neither asked her.",
+            "Capital Programmes", "Resource & Planning Manager", "project_management", "professional", 6,
+            """["resource_management","stakeholder_communication"]""",
+            """
+            {"context":"Reviewing two definition-stage schedules, you find both the tunnel project and the stations project have planned their critical design phases around the same principal geotechnical engineer — full-time, in the same quarter. Neither project director consulted the other, or her. She reports to a functional head who guards allocation decisions jealously, and both schedules are due at gateways within a month.",
+             "evidence":[
+               {"label":"Tunnel schedule","value":"Principal engineer: full-time, Q3, critical path"},
+               {"label":"Stations schedule","value":"Principal engineer: full-time, Q3, critical path"},
+               {"label":"The engineer","value":"Not consulted by either project"},
+               {"label":"Her line manager","value":"Functional head, guards allocation authority"},
+               {"label":"Gateways","value":"Both schedules due within a month"}],
+             "decisions":[
+               {"key":"resolve","prompt":"How do you resolve the double-booking?",
+                "options":[
+                  {"key":"convene","label":"Bring the functional head the facts FIRST and convene both directors with her: real availability, the two critical paths side by side, and options — staggering, a supporting engineer under her review, external support for one scope","quality":100,
+                   "consequence":"The functional head, given the allocation decision that is genuinely hers, staggers the phases and assigns a senior under supervision to the second project; both gateways pass with honest resourcing.",
+                   "principle":"Resolve resource conflicts through the person who owns the resource — with the facts arranged so the decision is easy to make well."},
+                  {"key":"first","label":"First gateway wins: the tunnel schedule submits first, so stations re-plans","quality":20,
+                   "consequence":"A scheduling accident becomes an allocation policy; the stations director appeals over your head, and the functional head learns two projects planned her engineer without asking.",
+                   "principle":"Sequence of submission is not a resourcing principle, and everyone involved knows it."},
+                  {"key":"split","label":"Allocate her half-time to each — fair, and it unblocks both gateways","quality":15,
+                   "consequence":"Two critical paths now depend on half a person context-switching weekly; both phases run late in a way neither schedule can explain.",
+                   "principle":"Halving a critical resource doubles the meetings and delivers neither path."}]},
+               {"key":"systemic","prompt":"To stop the next silent double-booking:",
+                "options":[
+                  {"key":"register","label":"A named-resource demand register for scarce specialists, checked at every schedule submission — conflicts surface at planning, not at mobilisation","quality":100,
+                   "consequence":"The next collision is caught as two lines in a register three months early, and resolved in one email.",
+                   "principle":"Scarce people are constraints like outages and cranes — plan them in one visible ledger."},
+                  {"key":"policy","label":"A policy memo requiring directors to consult functional heads before naming individuals","quality":30,
+                   "consequence":"The memo is agreed with, filed, and unenforced — there is still no mechanism that would surface a violation.",
+                   "principle":"A rule without a checkpoint is a wish with a letterhead."}]}],
+             "hints":["Identify who actually owns the allocation decision — it is neither project director.",
+               "Prepare options before convening: staggering, supervised delegation, external support.",
+               "The durable fix is a visible demand ledger for scarce named people, not a politeness rule."],
+             "profile_map":{"decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Un-double-booked a principal engineer through the person who actually owned her time."}
+            """),
     };
 }

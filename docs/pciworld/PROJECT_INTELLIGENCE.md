@@ -95,6 +95,23 @@ The bank now holds **80 published house challenges** (52 legacy + 28 Year-1 Janu
   React shell (D1) ships a dedicated ordering control, these items express sequencing through
   keyboard-accessible structured decisions and WBS roll-ups — accessible by construction.
 
+## 1d. Phase B slice 3 — March fully authored: **the 60-day runway alert clears**
+
+- **18 new experiences** (`WC-SCH-107..115`, `WC-CBS-116`, `WC-CSH-117`, `WC-BOQ-118`,
+  `WC-RSK-119..121`, `WC-CAP-122/123`, `WC-STK-124`) complete March (theme: planning, sequencing
+  and critical-path judgment). The nine Schedule Strategy items deliberately span four
+  deterministic engines — CPM networks, earned schedule (ES/SPI(t)/EAC(t)), PERT three-point
+  paths, and budget-weighted progress — plus CBS roll-up, cash-flow peak funding, BOQ pricing,
+  two EMV Risk Rooms, one evidence-diagnosis Risk Room, two capstone Executive Missions and a
+  resources-and-leadership Stakeholder Dilemma.
+- With March's thirteen legacy schedule items pinned to their theme-month days, **all 90 days of
+  Q1 are backed by published challenges: runway_days = 90 and the 60-day runway alert clears for
+  the first time — on real content, not a claim.** Bank: 124 published challenges.
+- Content-defect note found while verifying: the `boq` engine's `average_rate` is the simple mean
+  of line rates. `WC-BOQ-118`'s ask was corrected pre-publication; legacy `WC-BOQ-012`/`035` carry
+  the same "weighted average" label against the mean-of-rates engine — logged for the D3
+  remediation pass (label fix = new immutable version).
+
 ## 2. Audit of the existing 52-challenge bank
 
 Every house challenge (`WC-…-001` … `WC-…-052`) was classified into the Project Intelligence
