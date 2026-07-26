@@ -51,7 +51,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var rows = db.Query("SELECT code,pi_type,pi_domain,pi_lifecycle,pi_sector,pi_interaction FROM pciworld_challenges WHERE author_id IS NULL");
         Assert.Equal(WorldContentPack.Count + WorldIntelligencePack.Count, rows.Count);
-        Assert.Equal(124, rows.Count);
+        Assert.Equal(149, rows.Count);
         foreach (var r in rows)
         {
             var code = H.Str(r["code"])!;
@@ -305,7 +305,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var plan = Plan();
         var mapped = plan.Scheduled.Where(e => e.Status == "mapped").ToList();
-        Assert.Equal(124, mapped.Count);
+        Assert.Equal(149, mapped.Count);
         Assert.All(plan.Reserve, e => Assert.Equal("planned", e.Status));
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var e in mapped)
@@ -341,13 +341,12 @@ public class WorldIntelligenceTests
         Assert.Equal(365, (int)G("scheduled_total"));
         Assert.Equal(55, (int)G("reserve_total"));
         Assert.Equal(420, (int)G("bank_total"));
-        Assert.Equal(124, (int)G("mapped"));
-        Assert.Equal(241, (int)G("planned"));
-        Assert.Equal(124, (int)G("backed_by_published_challenge"));
-        // January–March are fully authored: 90 consecutive backed days from day 1, with April
-        // day 91 planned. The runway is exactly 90, so for the first time the 60-day alert
-        // CLEARS — with real published content, not a claim.
-        Assert.Equal(90, (int)G("runway_days"));
+        Assert.Equal(149, (int)G("mapped"));
+        Assert.Equal(216, (int)G("planned"));
+        Assert.Equal(149, (int)G("backed_by_published_challenge"));
+        // January–April are fully authored: 120 consecutive backed days from day 1, with May
+        // day 121 planned. The 60-day alert stays cleared — with real published content.
+        Assert.Equal(120, (int)G("runway_days"));
         Assert.False((bool)G("runway_alert"));
     }
 }

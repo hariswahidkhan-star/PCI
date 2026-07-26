@@ -52,7 +52,7 @@ public class WorldTests
         // reference-solved, plus the traceability pair (WC-TRC-051/052), plus the Project
         // Intelligence Year-1 packs. The count is asserted here so it can never be
         // claimed before it is real.
-        Assert.Equal(124, rows.Count);
+        Assert.Equal(149, rows.Count);
 
         // Release-2 gates: every difficulty and every track is represented, across a broad industry set.
         string S2(Dictionary<string, object?> r, string k) => Convert.ToString(r[k]) ?? "";

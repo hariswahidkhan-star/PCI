@@ -293,6 +293,33 @@ public static class WorldIntelligence
         ["WC-CAP-122"] = new("executive_mission", "integration_governance", "definition_planning", "transport_logistics", "multi_stage_decision"),
         ["WC-CAP-123"] = new("executive_mission", "integration_governance", "definition_planning", "energy_utilities", "multi_stage_decision"),
         ["WC-STK-124"] = new("stakeholder_dilemma", "resources_leadership", "definition_planning", "cross_sector", "negotiation_communication"),
+
+        // ── Year-1 April authored pack — cost, value, forecasting and commercial awareness. ──
+        ["WC-CST-125"] = new("cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision"),
+        ["WC-CST-126"] = new("cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision"),
+        ["WC-CST-127"] = new("cost_value", "cost_commercial", "execution_control", "construction_infrastructure", "single_decision"),
+        ["WC-CST-128"] = new("cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision"),
+        ["WC-CST-129"] = new("cost_value", "cost_commercial", "execution_control", "energy_utilities", "single_decision"),
+        ["WC-CST-130"] = new("cost_value", "cost_commercial", "execution_control", "technology_digital", "single_decision"),
+        ["WC-CST-131"] = new("cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision"),
+        ["WC-CST-132"] = new("cost_value", "cost_commercial", "execution_control", "construction_infrastructure", "single_decision"),
+        ["WC-CST-133"] = new("cost_value", "cost_commercial", "execution_control", "manufacturing_industrial", "single_decision"),
+        ["WC-CST-134"] = new("cost_value", "cost_commercial", "execution_control", "public_sector", "single_decision"),
+        ["WC-QLT-135"] = new("daily_decision", "quality_assurance", "execution_control", "healthcare_life_sciences", "single_decision"),
+        ["WC-PRC-136"] = new("daily_decision", "procurement_contracts", "execution_control", "climate_sustainability", "single_decision"),
+        ["WC-GOV-137"] = new("daily_decision", "integration_governance", "execution_control", "cross_sector", "single_decision"),
+        ["WC-QLT-138"] = new("daily_decision", "quality_assurance", "execution_control", "construction_infrastructure", "single_decision"),
+        ["WC-PRC-139"] = new("daily_decision", "procurement_contracts", "execution_control", "energy_utilities", "single_decision"),
+        ["WC-GOV-140"] = new("daily_decision", "integration_governance", "execution_control", "manufacturing_industrial", "single_decision"),
+        ["WC-RSK-141"] = new("risk_room", "risk_uncertainty", "execution_control", "transport_logistics", "evidence_diagnosis"),
+        ["WC-RSK-142"] = new("risk_room", "risk_uncertainty", "execution_control", "energy_utilities", "evidence_diagnosis"),
+        ["WC-RSK-143"] = new("risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis"),
+        ["WC-RSK-144"] = new("risk_room", "risk_uncertainty", "execution_control", "professional_services_other", "evidence_diagnosis"),
+        ["WC-STK-145"] = new("stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "negotiation_communication"),
+        ["WC-STK-146"] = new("stakeholder_dilemma", "resources_leadership", "execution_control", "technology_digital", "negotiation_communication"),
+        ["WC-STK-147"] = new("stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "single_decision"),
+        ["WC-CAP-148"] = new("executive_mission", "integration_governance", "execution_control", "cross_sector", "multi_stage_decision"),
+        ["WC-CAP-149"] = new("executive_mission", "integration_governance", "execution_control", "construction_infrastructure", "multi_stage_decision"),
     };
 
     /// <summary>

@@ -225,7 +225,37 @@ MAPPED_MAR = [
     ("WC-SCH-115", "Eighty percent done, twice", "schedule_strategy", "schedule_planning", "definition_planning", "manufacturing_industrial", "numeric_calculation", "professional", 11, 90),
 ]
 assert len(MAPPED_MAR) == 18
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR
+
+# ── April authored pack: cost, value, forecasting and commercial awareness. ──
+MAPPED_APR = [
+    ("WC-CST-125", "The savings that existed only in the forecast", "cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision", "foundation", 9, 91),
+    ("WC-QLT-135", "Signed, sealed, not inspected", "daily_decision", "quality_assurance", "execution_control", "healthcare_life_sciences", "single_decision", "foundation", 7, 92),
+    ("WC-RSK-141", "The register says calm. The depot says otherwise.", "risk_room", "risk_uncertainty", "execution_control", "transport_logistics", "evidence_diagnosis", "professional", 9, 93),
+    ("WC-STK-145", "One engineer, two emergencies", "stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "negotiation_communication", "professional", 6, 94),
+    ("WC-CAP-148", "The quarter everything slipped", "executive_mission", "integration_governance", "execution_control", "cross_sector", "multi_stage_decision", "expert", 24, 95),
+    ("WC-CST-126", "The contingency that bled quietly", "cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision", "foundation", 10, 96),
+    ("WC-PRC-136", "Forty percent below the next bid", "daily_decision", "procurement_contracts", "execution_control", "climate_sustainability", "single_decision", "foundation", 6, 97),
+    ("WC-RSK-142", "The drawdown for the wrong risk", "risk_room", "risk_uncertainty", "execution_control", "energy_utilities", "evidence_diagnosis", "professional", 10, 98),
+    ("WC-STK-146", "The implementation team that exists twice", "stakeholder_dilemma", "resources_leadership", "execution_control", "technology_digital", "negotiation_communication", "professional", 5, 99),
+    ("WC-CAP-149", "Ten percent less, same promise", "executive_mission", "integration_governance", "execution_control", "construction_infrastructure", "multi_stage_decision", "expert", 22, 100),
+    ("WC-CST-127", "The cheaper panel arrives tomorrow", "cost_value", "cost_commercial", "execution_control", "construction_infrastructure", "single_decision", "foundation", 8, 101),
+    ("WC-GOV-137", "The new sponsor wants a new baseline", "daily_decision", "integration_governance", "execution_control", "cross_sector", "single_decision", "foundation", 7, 102),
+    ("WC-RSK-143", "Twelve weeks late, one door open", "risk_room", "risk_uncertainty", "execution_control", "cross_sector", "evidence_diagnosis", "professional", 8, 103),
+    ("WC-STK-147", "Take the keys, or leave them", "stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "single_decision", "professional", 6, 109),
+    ("WC-CST-128", "The month the curve crossed the line", "cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision", "foundation", 11, 110),
+    ("WC-QLT-138", "The snag that wasn't a snag", "daily_decision", "quality_assurance", "execution_control", "construction_infrastructure", "single_decision", "foundation", 5, 111),
+    ("WC-RSK-144", "The green map and the red festival", "risk_room", "risk_uncertainty", "execution_control", "professional_services_other", "evidence_diagnosis", "professional", 11, 112),
+    ("WC-CST-129", "Rates from another market", "cost_value", "cost_commercial", "execution_control", "energy_utilities", "single_decision", "foundation", 12, 113),
+    ("WC-PRC-139", "Priced at midnight, mid-outage", "daily_decision", "procurement_contracts", "execution_control", "energy_utilities", "single_decision", "foundation", 7, 114),
+    ("WC-CST-130", "The ledger nobody reconciled", "cost_value", "cost_commercial", "execution_control", "technology_digital", "single_decision", "foundation", 9, 115),
+    ("WC-GOV-140", "Fifteen percent bigger, same business case", "daily_decision", "integration_governance", "execution_control", "manufacturing_industrial", "single_decision", "foundation", 5, 116),
+    ("WC-CST-131", "One project, three estimates at completion", "cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision", "foundation", 10, 117),
+    ("WC-CST-132", "Small yeses, thin margin", "cost_value", "cost_commercial", "execution_control", "construction_infrastructure", "single_decision", "foundation", 8, 118),
+    ("WC-CST-133", "The milestone that was paid early", "cost_value", "cost_commercial", "execution_control", "manufacturing_industrial", "single_decision", "foundation", 11, 119),
+    ("WC-CST-134", "Spend it by March", "cost_value", "cost_commercial", "execution_control", "public_sector", "single_decision", "foundation", 12, 120),
+]
+assert len(MAPPED_APR) == 25
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -234,7 +264,9 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-CPM-050": 69, "WC-TML-042": 70, "WC-CPM-032": 71, "WC-TML-025": 72,
                    "WC-CPM-022": 73, "WC-ESC-007": 74, "WC-SCH-002": 75, "WC-PRG-006": 76,
                    "WC-TML-009": 77, "WC-ESC-024": 78, "WC-PRG-028": 79, "WC-ESC-041": 80,
-                   "WC-PRG-047": 81}
+                   "WC-PRG-047": 81,
+                   "WC-PRD-036": 104, "WC-EVM-018": 105, "WC-CSH-004": 106, "WC-CBS-027": 107,
+                   "WC-EVM-049": 108}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

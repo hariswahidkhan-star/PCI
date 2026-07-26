@@ -9,7 +9,7 @@ distribution table, code range and mapped-slot assignment.
 | 01 January | Decision foundations and governance | 31 | PI-Y1-D001–D031 | 31 | 0 |
 | 02 February | Scope, requirements and stakeholder alignment | 28 | PI-Y1-D032–D059 | 28 | 0 |
 | 03 March | Planning, sequencing and critical-path judgment | 31 | PI-Y1-D060–D090 | 31 | 0 |
-| 04 April | Cost, value, forecasting and commercial awareness | 30 | PI-Y1-D091–D120 | 5 | 25 |
+| 04 April | Cost, value, forecasting and commercial awareness | 30 | PI-Y1-D091–D120 | 30 | 0 |
 | 05 May | Risk, opportunity, uncertainty and contingency | 31 | PI-Y1-D121–D151 | 6 | 25 |
 | 06 June | Procurement, contracts, claims and supplier decisions | 30 | PI-Y1-D152–D181 | 4 | 26 |
 | 07 July | Delivery control, change and recovery | 31 | PI-Y1-D182–D212 | 5 | 26 |
@@ -19,7 +19,7 @@ distribution table, code range and mapped-slot assignment.
 | 11 November | Integrated project controls and executive trade-offs | 30 | PI-Y1-D305–D334 | 4 | 26 |
 | 12 December | Handover, closeout, lessons and capstone missions | 31 | PI-Y1-D335–D365 | 2 | 29 |
 
-Scheduled: **365** (124 mapped to the published bank, 241 planned).
+Scheduled: **365** (149 mapped to the published bank, 216 planned).
 Reserve: **55** (PI-Y1-R001–R055, all planned).
 
 Mapped slots carry `source_challenge` (the immutable bank code). Audit status for every

@@ -13,12 +13,18 @@ namespace PCI.Backend.Data;
 ///
 /// January theme: decision foundations and governance, at concept / business-case stage.
 /// </summary>
-public static class WorldIntelligencePack
+public static partial class WorldIntelligencePack
 {
     public static int Count => Items.Length;
 
     /// <summary>Codes of every Year-1 pack item — the tests' authoritative list.</summary>
     public static IEnumerable<string> Codes => Items.Select(i => i.Code);
+
+    /// <summary>All authored Year-1 items across the quarterly partial files.</summary>
+    static (string Code, string Title, string Hook, string Industry, string Role, string Track,
+        string Difficulty, int Minutes, string Competencies, string Config)[] Items =>
+        _items ??= ItemsQ1.Concat(ItemsQ2).ToArray();
+    static (string, string, string, string, string, string, string, int, string, string)[]? _items;
 
     public static void Seed(Db db)
     {
@@ -27,7 +33,7 @@ public static class WorldIntelligencePack
     }
 
     static readonly (string Code, string Title, string Hook, string Industry, string Role, string Track,
-        string Difficulty, int Minutes, string Competencies, string Config)[] Items =
+        string Difficulty, int Minutes, string Competencies, string Config)[] ItemsQ1 =
     {
         // ───────────── Daily Decision · integration & governance · foundation ─────────────
 
