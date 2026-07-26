@@ -54,7 +54,7 @@ public static class DocStore
         if (bytes.LongLength == 0) return (null, "empty_file");
         if (bytes.LongLength > MaxBytes) return (null, "file_too_large");
         if (!SniffMatches(bytes, mime)) return (null, "content_mime_mismatch");
-        if (!ScanClean(bytes, mime, out _)) return (null, "malware_suspected");
+        if (!ScanClean(bytes, mime, out var scanReason)) return (null, scanReason ?? "malware_suspected");
         var sha = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
         return (new Decoded(bytes, mime, ext, sha), null);
     }
@@ -106,12 +106,12 @@ public static class DocStore
     /// by replacing the body — every upload already flows through here, so no caller changes are needed.</summary>
     public static bool ScanClean(byte[] b, string mime, out string? reason)
     {
-        reason = null;
-        // Reject a Windows PE ("MZ") or Unix ELF payload regardless of declared type — a document should
-        // never begin with an executable header. (OOXML/zip start with PK, PDFs with %PDF, etc.)
-        if (b.Length >= 2 && b[0] == 0x4D && b[1] == 0x5A) { reason = "executable_header"; return false; }
-        if (b.Length >= 4 && b[0] == 0x7F && b[1] == 0x45 && b[2] == 0x4C && b[3] == 0x46) { reason = "executable_header"; return false; }
-        return true;
+        // Delegates to the shared policy (RES-021) so documents and evidence/attachments are judged
+        // identically — and so wiring an external scanner covers every upload path at once, rather than
+        // leaving this one on its own executable-header heuristic.
+        var verdict = UploadScan.Scan(b, mime);
+        reason = verdict.Reason;
+        return verdict.Clean;
     }
 
     static readonly System.Text.RegularExpressions.Regex Unsafe =

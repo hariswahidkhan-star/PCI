@@ -324,12 +324,23 @@ RSS_FEED = """<?xml version="1.0" encoding="UTF-8"?>
 </item>
 </channel></rss>"""
 
+# What the ERP connectors actually sent, so the assertions can check the mapped objects rather than
+# just "a request arrived". (model/resource, payload) tuples appended by the mock vendor.
+ZOHO_CALLS: list = []
+ODOO_CALLS: list = []
+
 class _MockVendor(http.server.BaseHTTPRequestHandler):
     def _send(self, code, obj):
         b = json.dumps(obj).encode()
         self.send_response(code); self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(b))); self.end_headers(); self.wfile.write(b)
     def do_GET(self):
+        # Zoho Books contact lookup: the first email resolves to an existing contact, any other email
+        # returns none so the connector exercises its create-then-invoice path.
+        if "/books/v3/contacts" in self.path:
+            if "existing%40zoho.test" in self.path or "existing@zoho.test" in self.path:
+                return self._send(200, {"contacts": [{"contact_id": "ZC-EXISTING", "email": "existing@zoho.test"}]})
+            return self._send(200, {"contacts": []})
         if "/Results" in self.path: return self._send(200, {"value": [{"ScoreBandTitle": "Pass", "PercentageScore": 82, "MaxScore": 100}]})
         if "/Participants" in self.path: return self._send(200, {"value": []})           # Questionmark test-connection
         if "/eligibilities" in self.path: return self._send(200, {"status": "eligible", "eligible_to_schedule": True})
@@ -359,8 +370,39 @@ class _MockVendor(http.server.BaseHTTPRequestHandler):
         return self._send(200, {"ok": True})
     def do_POST(self):
         ln = int(self.headers.get("Content-Length") or 0)
-        try: body = json.loads(self.rfile.read(ln) or b"{}") if ln else {}
+        raw = self.rfile.read(ln) if ln else b"{}"
+        try: body = json.loads(raw or b"{}")
         except Exception: body = {}
+
+        # ---- Zoho Books (RES-008): OAuth token mint + contact/invoice creation ----
+        if "/oauth/v2/token" in self.path:
+            return self._send(200, {"access_token": "zoho-access-token", "expires_in": 3600, "api_domain": "https://www.zohoapis.com"})
+        if "/books/v3/contacts" in self.path:
+            ZOHO_CALLS.append(("contact", body))
+            return self._send(201, {"code": 0, "message": "success", "contact": {"contact_id": "ZC-NEW"}})
+        if "/books/v3/invoices" in self.path:
+            ZOHO_CALLS.append(("invoice", body))
+            return self._send(201, {"code": 0, "message": "success", "invoice": {"invoice_id": "ZI-1", "customer_id": body.get("customer_id")}})
+
+        # ---- Odoo (RES-009): JSON-RPC. Faults are HTTP 200 with an "error" member, which is exactly
+        # what the connector's ResponseProblem exists to catch. ----
+        if self.path.rstrip("/").endswith("/jsonrpc"):
+            params = body.get("params") or {}
+            service, method = params.get("service"), params.get("method")
+            args = params.get("args") or []
+            if service == "common" and method == "authenticate":
+                # args = [db, login, api_key, {}] — reject a wrong key so the failure path is real.
+                return self._send(200, {"jsonrpc": "2.0", "id": 1, "result": 7 if args[2:3] == ["odoo-api-key"] else False})
+            if service == "object" and method == "execute_kw":
+                model, call = (args[3] if len(args) > 3 else ""), (args[4] if len(args) > 4 else "")
+                ODOO_CALLS.append((model, call, args[5] if len(args) > 5 else None))
+                if call == "search":
+                    return self._send(200, {"jsonrpc": "2.0", "id": 1, "result": []})   # never found → create path
+                if call == "create":
+                    return self._send(200, {"jsonrpc": "2.0", "id": 1, "result": 4242 if model == "res.partner" else 5150})
+            return self._send(200, {"jsonrpc": "2.0", "id": 1, "error": {"code": 200, "message": "Odoo Server Error",
+                                                                        "data": {"message": "unsupported call"}}})
+
         rt = body.get("requestType")
         if rt:                                                                          # Kryterion EWS JSON-RPC
             return self._send(200, {
@@ -1046,6 +1088,125 @@ def _hon_app(email):
             "professional_summary": "A distinguished lifetime contribution to the profession.",
             "declaration": True, "eligibility_confirmed": True, "terms_accepted": True,
             "documents": [{"doc_kind": "resume", "filename": "cv.pdf", "data_uri": _HON_PDF}]}
+
+def test_erp_connectors(admin):
+    """Zoho Books (RES-008) and Odoo (RES-009) end to end over real HTTP against mock vendors.
+
+    Proves the two connectors are wired into the SAME outbox/delivery pipeline as the webhook and
+    QuickBooks connectors — a real member.registered / payment.recorded is mapped and delivered — and
+    that the Odoo JSON-RPC fault path is honest: Odoo answers failures with HTTP 200, so a bad API key
+    must record a FAILED delivery, never a delivered one."""
+    print("\n=== 64. ERP connectors: Zoho Books + Odoo (mapping, delivery, JSON-RPC fault honesty) ===")
+    srv, mport = start_mock_vendor()
+    mock = f"http://127.0.0.1:{mport}"
+    ZOHO_CALLS.clear(); ODOO_CALLS.clear()
+    try:
+        # ---- both connectors appear in the provider catalogue ----
+        c, cat = jget("GET", "/api/admin/integrations", token=admin)
+        keys = {p.get("key") for p in cat.get("providers", [])}
+        chk("64a Zoho and Odoo are offered as connector types", c == 200 and {"zoho", "odoo"} <= keys, keys)
+
+        # ---- create the Zoho connector (api_base points at the mock; access token supplied directly) ----
+        c, z = jget("POST", "/api/admin/integrations", token=admin, body={
+            "provider": "zoho", "name": "Zoho Books (test)", "enabled": True,
+            "organization_id": "60000000123", "region": "eu", "api_base": mock,
+            "access_token": "zoho-access-token",
+            "event_filter": ["member.registered", "payment.recorded"]})
+        chk("64b Zoho connector created", c == 200 and z.get("id"), z)
+        zid = z.get("id")
+
+        # ---- create the Odoo connector ----
+        c, o = jget("POST", "/api/admin/integrations", token=admin, body={
+            "provider": "odoo", "name": "Odoo (test)", "enabled": True,
+            "url": mock, "database": "pcidb", "login": "ops@pci.test", "api_key": "odoo-api-key",
+            "event_filter": ["member.registered", "payment.recorded"]})
+        chk("64c Odoo connector created", c == 200 and o.get("id"), o)
+        oid = o.get("id")
+
+        # ---- secrets are write-only: the values never read back, only which fields are set ----
+        c, lst = jget("GET", "/api/admin/integrations", token=admin)
+        rows = {r["id"]: r for r in lst.get("rows", [])}
+        zrow, orow = rows.get(zid, {}), rows.get(oid, {})
+        blob = json.dumps(lst)
+        chk("64d connector secrets are never returned by the API",
+            "zoho-access-token" not in blob and "odoo-api-key" not in blob)
+        chk("64e Zoho reports which OAuth fields are set", "access_token" in (zrow.get("secret_fields") or []), zrow.get("secret_fields"))
+        chk("64f Odoo reports that its API key is set", "api_key" in (orow.get("secret_fields") or []), orow.get("secret_fields"))
+        chk("64g Zoho region is stored normalised (eu)", (zrow.get("config") or {}).get("region") == "eu", zrow.get("config"))
+
+        # ---- a real member registration + settlement drives both connectors ----
+        _tok, uid = register_student("erp.member@ex.co")
+        c, mp = jget("POST", f"/api/admin/students/{uid}/mark-paid", token=admin, body={"product": "membership", "amount": 149})
+        chk("64h settlement recorded (emits payment.recorded)", c == 200 and mp.get("ok"), mp)
+
+        # The dispatcher drains every ~20s; poll until both connectors have terminal deliveries.
+        def deliveries_for(integ_id):
+            _c, d = jget("GET", "/api/admin/integrations/deliveries", token=admin)
+            return [r for r in d.get("rows", []) if r.get("integration_id") == integ_id]
+        deadline = time.time() + 90
+        while time.time() < deadline:
+            zd, od = deliveries_for(zid), deliveries_for(oid)
+            if zd and od and all(r.get("status") in ("delivered", "failed", "skipped") for r in zd + od): break
+            time.sleep(2)
+        zd, od = deliveries_for(zid), deliveries_for(oid)
+
+        chk("64i Zoho deliveries are delivered (none failed)",
+            len(zd) > 0 and all(r.get("status") == "delivered" for r in zd),
+            [(r.get("event_type"), r.get("status"), r.get("last_error")) for r in zd])
+        chk("64j Odoo deliveries are delivered (none failed)",
+            len(od) > 0 and all(r.get("status") == "delivered" for r in od),
+            [(r.get("event_type"), r.get("status"), r.get("last_error")) for r in od])
+
+        # ---- the mapped objects are what each ERP expects, not just "a request arrived" ----
+        zoho_kinds = [k for k, _ in ZOHO_CALLS]
+        chk("64k Zoho created a Contact for the member", "contact" in zoho_kinds, zoho_kinds)
+        contact = next((b for k, b in ZOHO_CALLS if k == "contact"), {})
+        chk("64l the Zoho contact carries the member's email", contact.get("email") == "erp.member@ex.co", contact)
+        invoice = next((b for k, b in ZOHO_CALLS if k == "invoice"), None)
+        if invoice is not None:
+            chk("64m the Zoho invoice is bound to a contact and has a priced line",
+                invoice.get("customer_id") and (invoice.get("line_items") or [{}])[0].get("rate", 0) > 0, invoice)
+
+        odoo_models = [m for m, _c, _v in ODOO_CALLS]
+        chk("64n Odoo wrote a res.partner for the member", "res.partner" in odoo_models, odoo_models)
+        partner_create = next((v for m, c2, v in ODOO_CALLS if m == "res.partner" and c2 == "create"), None)
+        chk("64o the Odoo partner is flagged as a customer",
+            partner_create is not None and (partner_create[0] or {}).get("customer_rank") == 1, partner_create)
+        move = next((v for m, c2, v in ODOO_CALLS if m == "account.move" and c2 == "create"), None)
+        if move is not None:
+            vals = (move[0] or {})
+            chk("64p the Odoo invoice is an out_invoice with an inline line",
+                vals.get("move_type") == "out_invoice" and vals.get("invoice_line_ids"), vals)
+
+        # ---- JSON-RPC fault honesty: a wrong API key must FAIL, not silently 'deliver' on HTTP 200 ----
+        c, bad = jget("POST", "/api/admin/integrations", token=admin, body={
+            "provider": "odoo", "name": "Odoo (bad key)", "enabled": True,
+            "url": mock, "database": "pcidb", "login": "ops@pci.test", "api_key": "wrong-key",
+            "event_filter": ["member.registered"]})
+        badid = bad.get("id")
+        _tok2, _uid2 = register_student("erp.badkey@ex.co")
+        deadline = time.time() + 90
+        while time.time() < deadline:
+            bd = deliveries_for(badid)
+            if bd and all(r.get("status") in ("delivered", "failed", "skipped") for r in bd): break
+            time.sleep(2)
+        bd = deliveries_for(badid)
+        chk("64q an Odoo credential fault is recorded as FAILED even though it arrives as HTTP 200",
+            len(bd) > 0 and all(r.get("status") != "delivered" for r in bd),
+            [(r.get("status"), r.get("last_error")) for r in bd])
+        chk("64r the failure reason names the credential problem",
+            any("credential" in (r.get("last_error") or "").lower() or "authenticat" in (r.get("last_error") or "").lower() for r in bd),
+            [r.get("last_error") for r in bd])
+
+        # ---- an unmapped event is skipped, never retried forever ----
+        c, t = jget("POST", f"/api/admin/integrations/{zid}/test", token=admin)
+        chk("64s a ping has no accounting object and is skipped, not failed", t.get("status") == "skipped", t)
+
+        for gone in (zid, oid, badid):
+            jget("POST", f"/api/admin/integrations/{gone}/delete", token=admin)
+    finally:
+        srv.shutdown()
+
 
 def test_certuvo_integration(admin):
     """Section 15 — the PCI ↔ Certuvo provisioning integration end to end: PCI-generated usernames &
@@ -3554,6 +3715,7 @@ def run(proc):
     test_proctoring_analytics_gaps(admin)
     test_time_sweeps(admin)
     test_integration_health(admin)
+    test_erp_connectors(admin)
     test_simlab(admin)
 
     print("\n(assertions complete)")

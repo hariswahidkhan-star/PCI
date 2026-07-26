@@ -76,6 +76,11 @@ public static class Storage
         catch { return (null, mime, "invalid_base64"); }
         if (bytes.LongLength > MaxBytes) return (null, mime, "file_too_large");
         if (!SniffMatches(bytes, mime)) return (null, mime, "content_mime_mismatch");
+        // RES-021 — one malware policy for every upload door. Evidence, identity documents and support
+        // attachments come through here; before this they were the only uploads with no content-safety
+        // check at all, while DocStore's path rejected executables.
+        if (UploadScan.Scan(bytes, mime) is { Clean: false } verdict)
+            return (null, mime, verdict.Reason ?? "malware_suspected");
         return (bytes, mime, null);
     }
 

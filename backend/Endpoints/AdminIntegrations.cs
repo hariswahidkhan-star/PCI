@@ -35,19 +35,32 @@ public static class AdminIntegrations
         // delivery path and must obey the same private-address restrictions (Core/Egress.cs).
         var http = Egress.CreateClient(TimeSpan.FromSeconds(15));
 
-        // Which QuickBooks secret sub-fields are set (values are NEVER returned — write-only).
-        string[] QboSecretKeys = { "client_secret", "refresh_token", "access_token" };
+        // Which structured secret sub-fields are set (values are NEVER returned — write-only).
+        // QuickBooks and Zoho are both OAuth (client id/secret + refresh token); Odoo authenticates with a
+        // single user API key. A webhook keeps one opaque signing secret.
+        string[] OAuthSecretKeys = { "client_secret", "refresh_token", "access_token" };
+        string[] OdooSecretKeys = { "api_key" };
+        string[] SecretKeysFor(string provider) => provider switch
+        {
+            "quickbooks" or "zoho" => OAuthSecretKeys,
+            "odoo" => OdooSecretKeys,
+            _ => Array.Empty<string>(),
+        };
         object Redact(Dictionary<string, object?> r)
         {
             var provider = H.Str(r["provider"]) ?? "webhook";
             var secretRaw = H.Str(r["secret"]) ?? "";
             var secretFields = new List<string>();
-            if (provider == "quickbooks")
+            var structuredKeys = SecretKeysFor(provider);
+            if (structuredKeys.Length > 0)
             {
                 try
                 {
-                    var e = System.Text.Json.JsonDocument.Parse(secretRaw.Length > 0 ? secretRaw : "{}").RootElement;
-                    foreach (var k in QboSecretKeys)
+                    // Stored structured secrets are envelope-encrypted; decrypt before reporting which
+                    // fields are populated (the values themselves are never returned).
+                    var plain = Security.DecryptSecret(secretRaw) ?? secretRaw;
+                    var e = System.Text.Json.JsonDocument.Parse(plain.Length > 0 ? plain : "{}").RootElement;
+                    foreach (var k in structuredKeys)
                         if (e.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String && (v.GetString() ?? "").Length > 0) secretFields.Add(k);
                 }
                 catch { }
@@ -75,6 +88,8 @@ public static class AdminIntegrations
                 {
                     new { key = "webhook", label = "Generic webhook", description = "Signed JSON POST to any HTTPS endpoint or automation bridge." },
                     new { key = "quickbooks", label = "QuickBooks Online", description = "Members → Customers, payments → Sales Receipts, via the QuickBooks API (OAuth)." },
+                    new { key = "zoho", label = "Zoho Books", description = "Members → Contacts, payments → Invoices, via the Zoho Books API (OAuth, region-aware)." },
+                    new { key = "odoo", label = "Odoo", description = "Members → res.partner, payments → customer invoices, via Odoo JSON-RPC (database + API key)." },
                 },
             })));
 
@@ -86,10 +101,16 @@ public static class AdminIntegrations
             var b = await H.Body(ctx.Request);
             var id = (long)(H.GetNum(b, "id") ?? 0);
             var provider = (H.GetS(b, "provider") ?? "webhook").Trim().ToLowerInvariant();
-            if (provider is not ("webhook" or "quickbooks"))
-                return Results.Json(new { error = "unsupported_provider", message = "Supported providers: webhook, quickbooks." }, statusCode: 400);
+            if (provider is not ("webhook" or "quickbooks" or "zoho" or "odoo"))
+                return Results.Json(new { error = "unsupported_provider", message = "Supported providers: webhook, quickbooks, zoho, odoo." }, statusCode: 400);
             var name = (H.GetS(b, "name") ?? "").Trim();
-            if (name.Length == 0) name = provider == "quickbooks" ? "QuickBooks Online" : "Webhook";
+            if (name.Length == 0) name = provider switch
+            {
+                "quickbooks" => "QuickBooks Online",
+                "zoho" => "Zoho Books",
+                "odoo" => "Odoo",
+                _ => "Webhook",
+            };
             var endpoint = (H.GetS(b, "endpoint_url") ?? "").Trim();
             if (provider == "webhook" && endpoint.Length > 0 && Egress.UrlProblem(endpoint) is { } prob)
                 return Results.Json(new { error = "bad_endpoint", message = prob }, statusCode: 400);
@@ -125,35 +146,73 @@ public static class AdminIntegrations
                 }
                 configJson = JsonSerializer.Serialize(cfg);
             }
-            // Secret handling is write-only. Webhook: a plain signing-secret string. QuickBooks: a JSON of
-            // OAuth secrets, merged with what's stored so a single field can be updated without re-entering all.
+            // Zoho Books: organization + data-centre region (a token is only valid in the region that
+            // minted it), plus an optional API-host override for pointing at a test receiver.
+            else if (provider == "zoho")
+            {
+                var cfg = new Dictionary<string, object?>
+                {
+                    ["organization_id"] = (H.GetS(b, "organization_id") ?? "").Trim(),
+                    ["region"] = ZohoConnector.NormaliseRegion(H.GetS(b, "region")),
+                    ["client_id"] = (H.GetS(b, "client_id") ?? "").Trim(),
+                };
+                if (H.GetS(b, "api_base") is { Length: > 0 } zab)
+                {
+                    if (Egress.UrlProblem(zab.Trim()) is { } zabProb)
+                        return Results.Json(new { error = "bad_api_base", message = zabProb }, statusCode: 400);
+                    cfg["api_base"] = zab.Trim();
+                }
+                configJson = JsonSerializer.Serialize(cfg);
+            }
+            // Odoo: the instance URL is an outbound destination like any other, so it obeys the same
+            // egress rules; database + login identify the account the API key belongs to.
+            else if (provider == "odoo")
+            {
+                var url = (H.GetS(b, "url") ?? "").Trim();
+                if (url.Length == 0) return Results.Json(new { error = "url_required", message = "Odoo needs the instance URL (https://your-instance.odoo.com)." }, statusCode: 400);
+                if (Egress.UrlProblem(url) is { } urlProb)
+                    return Results.Json(new { error = "bad_url", message = urlProb }, statusCode: 400);
+                var cfg = new Dictionary<string, object?>
+                {
+                    ["url"] = url.TrimEnd('/'),
+                    ["database"] = (H.GetS(b, "database") ?? "").Trim(),
+                    ["login"] = (H.GetS(b, "login") ?? "").Trim(),
+                };
+                if (H.GetS(b, "partner_model") is { Length: > 0 } pm) cfg["partner_model"] = pm.Trim();
+                if (H.GetS(b, "invoice_model") is { Length: > 0 } im) cfg["invoice_model"] = im.Trim();
+                configJson = JsonSerializer.Serialize(cfg);
+            }
+            // Secret handling is write-only. Webhook: a plain signing-secret string. QuickBooks/Zoho: a JSON
+            // of OAuth secrets; Odoo: a JSON holding the user API key. Structured secrets are merged with
+            // what's stored so a single field can be updated without re-entering all of them.
             // EXT-P1-03 — envelope-encrypt secrets at rest.
-            string MergeQbo(string? existing)
+            var structuredKeys = SecretKeysFor(provider);
+            string MergeStructured(string? existing)
             {
                 var plain = Security.DecryptSecret(existing) ?? existing;
                 Dictionary<string, string> cur = new();
                 try { if (!string.IsNullOrEmpty(plain)) cur = JsonSerializer.Deserialize<Dictionary<string, string>>(plain) ?? new(); } catch { }
-                foreach (var k in QboSecretKeys)
+                foreach (var k in structuredKeys)
                     if (H.GetS(b, k) is { } v) { if (v.Length == 0) cur.Remove(k); else cur[k] = v; }
                 return Security.EncryptSecret(JsonSerializer.Serialize(cur)) ?? JsonSerializer.Serialize(cur);
             }
-            bool AnyQboSecretInBody() => QboSecretKeys.Any(k => H.GetEl(b, k) is not null);
+            bool AnyStructuredSecretInBody() => structuredKeys.Any(k => H.GetEl(b, k) is not null);
 
             if (id > 0 && db.QueryOne("SELECT secret FROM integrations WHERE id=?", id) is { } existing)
             {
                 db.Execute("UPDATE integrations SET provider=?, name=?, endpoint_url=?, config=COALESCE(?,config), event_filter=?, enabled=?, updated_at=datetime('now') WHERE id=?",
                     provider, name, endpoint, configJson, filter, enabled, id);
-                if (provider == "quickbooks")
+                if (structuredKeys.Length > 0)
                 {
-                    if (AnyQboSecretInBody())
-                        db.Execute("UPDATE integrations SET secret=? WHERE id=?", MergeQbo(H.Str(existing["secret"])), id);
+                    if (AnyStructuredSecretInBody())
+                        db.Execute("UPDATE integrations SET secret=? WHERE id=?", MergeStructured(H.Str(existing["secret"])), id);
                 }
                 else if (H.GetEl(b, "secret") is { ValueKind: JsonValueKind.String } sEl)
                     db.Execute("UPDATE integrations SET secret=? WHERE id=?", Security.EncryptSecret(sEl.GetString() ?? "") ?? "", id);
                 log(actorId, "integration.update", $"{id} {name} ({provider})");
                 return J(new { ok = true, id });
             }
-            var secretVal = provider == "quickbooks" ? MergeQbo(null) : (Security.EncryptSecret(H.GetS(b, "secret") ?? "") ?? "");
+            var secretVal = structuredKeys.Length > 0 ? MergeStructured(null) : (Security.EncryptSecret(H.GetS(b, "secret") ?? "") ?? "");
             var newId = db.ExecuteReturningId("INSERT INTO integrations(provider,name,endpoint_url,secret,config,event_filter,enabled) VALUES(?,?,?,?,?,?,?)",
                 provider, name, endpoint, secretVal, configJson, filter, enabled);
             log(actorId, "integration.create", $"{newId} {name} ({provider})");
