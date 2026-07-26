@@ -112,6 +112,40 @@ The bank now holds **80 published house challenges** (52 legacy + 28 Year-1 Janu
   the same "weighted average" label against the mean-of-rates engine — logged for the D3
   remediation pass (label fix = new immutable version).
 
+## 1e. Phase B slices 4–13 — April through December + the reserve: **the Year-1 bank is complete**
+
+Authored month-by-month on this branch, each slice gated on the full xUnit suite (commit only on
+`Failed: 0`) with the distribution tables re-verified exactly at every step:
+
+| Slice | Month/theme | New items | Runway after |
+|---|---|---|---|
+| 4 | April — cost, value & commercial | 25 | 120 |
+| 5 | May — risk & uncertainty | 25 | 151 |
+| 6 | June — scope, requirements & logic | 26 | 181 |
+| 7 | July — delivery control, change & recovery (Project Rescue month) | 26 | 212 |
+| 8 | August — leadership, teams & communication | 29 | 243 |
+| 9 | September — commissioning, handover & closeout quality | 28 | 273 |
+| 10 | October — digital delivery, data quality & responsible AI (all advanced band) | 27 | 304 |
+| 11 | November — integrated controls & executive trade-offs (all deep band) | 26 | 334 |
+| 12 | December — handover, closeout, lessons & capstones (six capstones, five executive) | 29 | **365** |
+| 13 | Reserve bank PI-Y1-R001–R055 (`WorldIntelligencePack.R.cs`, WC-*-366..420) | 55 | — |
+
+**End state: all 420 slots of the governed Year-1 plan are mapped to published, validated bank
+challenges** — 365 scheduled days (runway 365, alert permanently cleared) plus the 55-slot reserve
+substitution stock (20 foundation dailies, 8 practitioner rescues, 12 numeric rooms across risk/
+schedule/cost engines, 4 negotiation dilemmas, 4 order/rank sequences, 2 executive capstones).
+Every item carries exactly three progressive hints, passes the premium-language and answer-leakage
+gates, and solves through the reference solver. D2 in the deferral register is **closed**; D3
+(legacy-item remediation) remains open.
+
+Incidents worth remembering (all caught by the gates, all fixed before merge): a banned-language
+hint in June ("the whole game") that briefly reached the branch when a commit was gated on the
+wrong grep pattern — the gate is now `grep -q "Failed:     0"` on the full-suite output; a
+`trivia` in a September hint; four December capstones authored with four hints instead of three;
+an invalid `commercial_management` track value; and five title collisions across the 420-slot
+uniqueness gate. The `boq` `average_rate` label defect (simple mean, not weighted) found in April
+remains logged against legacy WC-BOQ-012/035 under D3.
+
 ## 2. Audit of the existing 52-challenge bank
 
 Every house challenge (`WC-…-001` … `WC-…-052`) was classified into the Project Intelligence
@@ -187,7 +221,7 @@ Deferred items per the specification's own mechanism (owner, reason, risk, targe
 | # | Deferred item | Reason | Risk | Owner | Target |
 |---|---|---|---|---|---|
 | D1 | World React participant + admin shells (`/world/app`, `/world-admin` SPA) | The spec makes React-shell completion an explicit prerequisite phase; current World learner surface is the server-rendered workspace, which already serves attempts safely | Learner UX stays classic until built | Frontend lead | Phase B |
-| D2 | Authoring the remaining 285 + 55 planned experiences (January's 28 are done — runway 31 days) | 420 editorially-complete experiences require SME/editorial review that cannot be fabricated; the governed plan + gates ship first so authoring is trackable | Runway alert stays raised until ≥60 authored days | Content governance lead | Rolling, runway-first (Feb → Dec) |
+| D2 | ~~Authoring the remaining planned experiences~~ **CLOSED (Phase B slices 4–13):** all 420 slots authored, validated and published — 365-day runway, reserve fully stocked | — | — | Content governance lead | Done |
 | D3 | Remediation of the 52 legacy mapped items (hints, coach context, review-by dates) | The hints field and validator now exist (Phase B slice 1); backfilling 52 legacy configs is SME work | Legacy items stay "conditional" in coverage | SME reviewers | Phase B |
 | D4 | Attempt-level PI features (bookmarks, mastery, recommendations, streaks) | Requires participant-account data model extensions; the single attempt pipeline must stay unforked | Learner home shows library + today only | Backend lead | Phase B |
 | D5 | AI Coach (bounded hinting, leakage tests, fallback) | Depends on D2's per-item coach-boundary fields; deterministic hints must exist first | No coach at launch (spec allows: fully functional without) | AI safety engineer | Phase C |

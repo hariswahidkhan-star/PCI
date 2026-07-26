@@ -51,7 +51,7 @@ public class WorldIntelligenceTests
         var db = NewWorldDb();
         var rows = db.Query("SELECT code,pi_type,pi_domain,pi_lifecycle,pi_sector,pi_interaction FROM pciworld_challenges WHERE author_id IS NULL");
         Assert.Equal(WorldContentPack.Count + WorldIntelligencePack.Count, rows.Count);
-        Assert.Equal(365, rows.Count);
+        Assert.Equal(420, rows.Count);
         foreach (var r in rows)
         {
             var code = H.Str(r["code"])!;
@@ -304,9 +304,9 @@ public class WorldIntelligenceTests
     {
         var db = NewWorldDb();
         var plan = Plan();
-        var mapped = plan.Scheduled.Where(e => e.Status == "mapped").ToList();
-        Assert.Equal(365, mapped.Count);
-        Assert.All(plan.Reserve, e => Assert.Equal("planned", e.Status));
+        var mapped = plan.Scheduled.Concat(plan.Reserve).Where(e => e.Status == "mapped").ToList();
+        Assert.Equal(420, mapped.Count);
+        Assert.All(plan.Reserve, e => Assert.Equal("mapped", e.Status));
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var e in mapped)
         {

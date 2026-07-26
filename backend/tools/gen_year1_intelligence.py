@@ -801,6 +801,40 @@ def main():
                      ("interaction", ri), ("lifecycle", rl), ("sector", rs)]:
         assert all(v == 0 for v in c.values()), f"unexhausted {label} quota: {c}"
 
+
+    # ── Reserve bank authored items: R-number → (bank code, authored title). ──
+    RESERVE_MAPPED = {
+        1: ("WC-CHG-366", "Two versions of the recovery plan"), 2: ("WC-PRC-367", "The early warning in the loading bay"),
+        3: ("WC-QLT-368", "The test evidence that predates the test"), 4: ("WC-AIA-369", "The tool that learned the old factory"),
+        5: ("WC-SAF-370", "The lesson that praised the luck"), 6: ("WC-GOV-371", "Split board, junior analyst, one slide"),
+        7: ("WC-CHG-372", "The variation that started itself"), 8: ("WC-PRC-373", "'Just get it delivered' is not a scope"),
+        9: ("WC-QLT-374", "The snag that outranks the list"), 10: ("WC-DQA-375", "Green on the dashboard, red in the room"),
+        11: ("WC-SAF-376", "The near miss the draft softened"), 12: ("WC-GOV-377", "The benefit that sailed already"),
+        13: ("WC-CHG-378", "Read the diary before the claim does"), 14: ("WC-PRC-379", "The answer that widened the job"),
+        15: ("WC-QLT-380", "The week the scanner was down"), 16: ("WC-AIA-381", "The projection nobody can explain"),
+        17: ("WC-SAF-382", "The carbon line in the closeout"), 18: ("WC-GOV-383", "Two mandates, one coastline"),
+        19: ("WC-CHG-384", "The re-baseline the stage crew remembers"), 20: ("WC-PRC-385", "Sixty percent of the estimate"),
+        21: ("WC-RSC-386", "The abutment nobody wants to pour"), 22: ("WC-RSC-387", "The month the forecast forgave"),
+        23: ("WC-RSC-388", "Everyone knew about the gateway"), 24: ("WC-RSC-389", "Faster, said the business case"),
+        25: ("WC-RSC-390", "Four hundred vans, one master date"), 26: ("WC-RSC-391", "The pot the trust already spent"),
+        27: ("WC-RSC-392", "The risk that retired with her"), 28: ("WC-RSC-393", "Minuted into the megawatts"),
+        29: ("WC-RSK-394", "The move window and the reserve"), 30: ("WC-RSK-395", "The risk nobody would put a number on"),
+        31: ("WC-RSK-396", "Reading a register everyone stopped reading"), 32: ("WC-RSK-397", "Drawdown against the risks that remain"),
+        33: ("WC-RSK-398", "The delay with a silver lining"), 34: ("WC-RSK-399", "Twenty greens, one shared assumption"),
+        35: ("WC-RES-400", "What the overtime actually bought"), 36: ("WC-SCH-401", "The trend the business case ignores"),
+        37: ("WC-RES-402", "Staff the ward build before you promise it"), 38: ("WC-SCH-403", "The handover network behind the promise"),
+        39: ("WC-RES-404", "One team, three ballrooms"), 40: ("WC-SCH-405", "Float, promised to three owners"),
+        41: ("WC-CHG-406", "Roll only what was approved"), 42: ("WC-CST-407", "Two mixes, one honest comparison"),
+        43: ("WC-PRC-408", "The deposit schedule behind the discount"), 44: ("WC-CST-409", "The month the plant pays for itself"),
+        45: ("WC-PRC-410", "The damages the dashboard can't see"), 46: ("WC-STK-411", "Both heads want the same engineer"),
+        47: ("WC-STK-412", "The sponsor wants a warmer ending"), 48: ("WC-STK-413", "Two rooms, one retrofit"),
+        49: ("WC-STK-414", "The joiners were promised to the gallery"), 50: ("WC-QLT-415", "Progress, or rework wearing its badge"),
+        51: ("WC-SCO-416", "The de-scoped stand returns at half-time"), 52: ("WC-SCH-417", "Which path gets the weekend"),
+        53: ("WC-QLT-418", "The hold point and the go-live party"), 54: ("WC-CAP-419", "Sign here, factory by factory"),
+        55: ("WC-CAP-420", "The plan of record, resignalled"),
+    }
+    assert len(RESERVE_MAPPED) == 55
+
     # reserve bank: 55 slots, type table only (the approved reserve constraint)
     reserve = []
     rt2 = Counter(RESERVE_TYPE)
@@ -813,9 +847,10 @@ def main():
             band = BAND_FOR_TYPE[ty][0]
             diff = DIFF_FOR_TYPE[ty][0]
             mins = MINUTES[band][n % len(MINUTES[band])]
+            r_code, r_title = RESERVE_MAPPED[n]
             reserve.append({
-                "code": f"PI-Y1-R{n:03d}", "day": None, "status": "planned", "source_challenge": None,
-                "title": title_for(dom, sec), "experience_type": ty, "primary_domain": dom,
+                "code": f"PI-Y1-R{n:03d}", "day": None, "status": "mapped", "source_challenge": r_code,
+                "title": r_title, "experience_type": ty, "primary_domain": dom,
                 "difficulty_band": diff, "duration_band": band, "est_minutes": mins,
                 "interaction": INTER_FOR_TYPE[ty][0], "lifecycle_stage": LIFECYCLES[n % len(LIFECYCLES)],
                 "sector": sec,
