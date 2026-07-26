@@ -334,6 +334,23 @@ public static class WorldRotation
     /// </summary>
     public static Dictionary<string, object?>? Current(Db db, DateTime utcNow)
     {
+        var period = CurrentPeriod(db, utcNow);
+        return period is null ? null : db.QueryOne("SELECT * FROM pciworld_challenges WHERE id=?", period["challenge_id"]);
+    }
+
+    /// <summary>
+    /// The period record in force right now — the AUTHORITY for both the featured challenge id AND
+    /// the pinned version it plays. Serving from the challenge's mutable current_version instead of
+    /// this row meant a midday publish changed the challenge later participants faced; every read
+    /// surface (home, Today API, attempt start) must pin from here.
+    ///
+    /// Pause semantics: pausing rotation stops the boundary from opening NEW days, it does not take
+    /// the product offline. When today has no period because rotation is paused, the previous active
+    /// period keeps serving — exactly what the admin copy promises ("the current challenge remains
+    /// featured"). Only a ledger with no periods at all serves nothing.
+    /// </summary>
+    public static Dictionary<string, object?>? CurrentPeriod(Db db, DateTime utcNow)
+    {
         var day = DayKey(db, utcNow);
         var period = ActivePeriod(db, day);
         if (period is null)
@@ -341,6 +358,9 @@ public static class WorldRotation
             try { RunDue(db, utcNow); } catch (Exception e) { Console.Error.WriteLine($"[world-rotation] on-demand open failed: {e.Message}"); }
             period = ActivePeriod(db, day);
         }
+        // Paused across the boundary: keep the last featured challenge on the air rather than
+        // serving an empty product. The ledger is untouched — resume opens today normally.
+        if (period is null && Paused(db)) period = LastPeriod(db);
         if (period is null) return null;
 
         // A period is a record, not a promise to keep serving broken content: if the featured
@@ -351,11 +371,11 @@ public static class WorldRotation
         {
             var replacement = Eligible(db).FirstOrDefault(x => x != id);
             if (replacement == 0) return null;
-            Substitute(db, day, replacement, 0, "automatic: the featured challenge is no longer eligible to be served");
-            period = ActivePeriod(db, day);
+            Substitute(db, H.Str(period["day_key"])!, replacement, 0, "automatic: the featured challenge is no longer eligible to be served");
+            period = ActivePeriod(db, H.Str(period["day_key"])!);
             if (period is null) return null;
         }
-        return db.QueryOne("SELECT * FROM pciworld_challenges WHERE id=?", period["challenge_id"]);
+        return period;
     }
 
     /// <summary>What the engine would feature next, for the admin console. Read-only: previewing
@@ -456,6 +476,13 @@ public sealed class WorldRetentionService : BackgroundService
         removed += db.Execute("DELETE FROM pciworld_user_sessions WHERE expires_at<=datetime('now')");
         removed += db.Execute("DELETE FROM pciworld_admin_sessions WHERE expires_at<=datetime('now')");
         removed += db.Execute("DELETE FROM pciworld_user_tokens WHERE expires_at<=datetime('now')");
+        // Handoff codes live two minutes and are single-use — anything expired or consumed is
+        // pure residue (P0-02 hygiene: dead security artefacts must not accumulate).
+        removed += db.Execute("DELETE FROM pciworld_handoff_codes WHERE expires_at<=datetime('now') OR consumed_at IS NOT NULL");
+        // OAuth authorization codes are the same kind of residue once expired — but CONSUMED ones
+        // must outlive their two minutes: the replay-detection path needs the consumed row (and
+        // its minted-token hash) to catch a stolen code presented later.
+        removed += db.Execute("DELETE FROM pciworld_oauth_codes WHERE expires_at<=datetime('now','-1 days')");
 
         // Dormant anonymous sessions. An anonymous session is browser continuity; once it has been
         // idle this long it can only serve to link past activity together. Sessions that still own

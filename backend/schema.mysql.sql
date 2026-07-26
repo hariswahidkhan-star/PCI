@@ -764,7 +764,7 @@ CREATE TABLE IF NOT EXISTS code_redemptions (
   redeemed_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
 );
 CREATE INDEX IF NOT EXISTS ix_redemptions_code ON code_redemptions(code_id);
-CREATE INDEX IF NOT EXISTS ix_redemptions_email ON code_redemptions(email);
+CREATE INDEX IF NOT EXISTS ix_redemptions_email ON code_redemptions(email(191));
 CREATE UNIQUE INDEX IF NOT EXISTS ux_payments_provider ON payments(provider_payment_id(191));
 CREATE INDEX IF NOT EXISTS ix_payments_date ON payments(payment_date(191));
 CREATE INDEX IF NOT EXISTS ix_payments_status ON payments(payment_status(191));

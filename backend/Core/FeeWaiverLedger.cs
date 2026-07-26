@@ -34,6 +34,21 @@ public static class FeeWaiverLedger
         db.QueryOne("SELECT * FROM fee_waivers WHERE idempotency_key=?", key);
 
     /// <summary>
+    /// Resolve a replay for <paramref name="key"/> against the subject it is being used for.
+    /// An idempotency key identifies ONE grant intent, so it must never bridge students: replaying a
+    /// key across subjects would answer <c>ok/replayed</c> with another student's waiver, payment id
+    /// and code while granting this student nothing — a silent no-op on a real grant, and a leak of an
+    /// unrelated financial record. Returns (null, false) when unseen (proceed), (row, false) for a
+    /// genuine replay of this subject's own grant, and (row, true) when the caller must refuse.
+    /// </summary>
+    public static (Dictionary<string, object?>? Row, bool SubjectMismatch) FindForSubject(Db db, string key, long userId)
+    {
+        var row = Find(db, key);
+        if (row is null) return (null, false);
+        return H.L(row["user_id"]) == userId ? (row, false) : (row, true);
+    }
+
+    /// <summary>
     /// Insert a ledger row. When <paramref name="idempotencyKey"/> is set, uses INSERT OR IGNORE so a
     /// concurrent/replayed request cannot create a second row. Returns (row id, created).
     /// </summary>
@@ -95,6 +110,16 @@ public static class FeeWaiverLedger
             reason, note, sponsor, institutionId, incidentId, evidenceRef,
             approvedBy, paymentId, codeId, expiresAt, status);
         return (newId, true);
+    }
+
+    /// <summary>
+    /// Release a claim whose grant then failed. The claim is the race guard, so it is written before the
+    /// grant is attempted; if the grant throws, the key must NOT stay claimed or every retry would replay
+    /// a "success" for a grant that never happened. Only ever called for a row this request just created.
+    /// </summary>
+    public static void ReleaseClaim(Db db, long waiverId)
+    {
+        try { db.Execute("DELETE FROM fee_waivers WHERE id=?", waiverId); } catch { }
     }
 
     /// <summary>Stable replay payload for an existing ledger row (partial or full).</summary>

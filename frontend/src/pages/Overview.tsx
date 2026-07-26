@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
+import { api } from '../api/client'
 import { useT } from '../i18n'
 import { Card, Stat, StatusBadge, Spinner, Badge } from '../components/ui'
 import Ring from '../components/Ring'
@@ -75,6 +77,81 @@ function buildChecklist(me: Me, t: TFn): ChecklistItem[] {
     { label: t('overview.checklistPayExamFee'), done: me.lifecycle.candidate_status === 'exam_fee_paid' || me.exams.length > 0, to: '/billing' },
     { label: t('overview.checklistBookExam'), done: ['booked', 'in_progress', 'submitted'].includes(me.lifecycle.exam_status), to: '/certifications' },
   ]
+}
+
+interface WorldToday {
+  available: boolean
+  code?: string
+  title?: string
+  difficulty?: string
+  est_minutes?: number
+}
+
+/** "Continue learning" card (journey repair P1-09): today's PCI World challenge on the Overview,
+ * entered through the secure one-time handoff so completed work is owned by this account from the
+ * first answer. Honest copy — practice evidence, never a certification claim. */
+function WorldCard() {
+  const t = useT()
+  const [today, setToday] = useState<WorldToday | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  useEffect(() => {
+    fetch('/api/world/today')
+      .then((r) => (r.ok ? r.json() : { available: false }))
+      .then(setToday)
+      .catch(() => setToday({ available: false }))
+  }, [])
+
+  async function open(returnTo: string) {
+    setBusy(true)
+    setErr(null)
+    try {
+      // The SSO bridge claims this browser's anonymous World work and answers with a one-time
+      // fragment-carried handoff code — never a reusable token through this origin.
+      const r = await api.post<{ url?: string }>('/api/me/world-passport/sso', {
+        world_session: localStorage.getItem('world_session') || undefined,
+        return_to: returnTo,
+      })
+      window.location.assign(r.url || '/world')
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Could not open PCI World.')
+      setBusy(false)
+    }
+  }
+
+  if (today === null) return null
+  return (
+    <Card title={t('world.cardTitle')}>
+      <div className="spread">
+        <div>
+          {today.available ? (
+            <>
+              <h3 style={{ marginBottom: '.25rem' }}>{today.title}</h3>
+              <p className="muted small" style={{ margin: 0 }}>
+                {[today.difficulty && titleCase(today.difficulty), today.est_minutes ? `~${today.est_minutes} min` : null]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </p>
+            </>
+          ) : (
+            <h3 style={{ marginBottom: '.25rem' }}>{t('world.cardTitle')}</h3>
+          )}
+          <p className="muted small" style={{ marginBottom: 0, marginTop: '.4rem' }}>{t('world.blurb')}</p>
+          {err && <p className="muted small" style={{ color: 'var(--err, #b00020)' }}>{err}</p>}
+        </div>
+        <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+          {today.available && today.code && (
+            <button className="btn" disabled={busy} onClick={() => open(`/world/challenge/${today.code}`)}>
+              {t('world.startToday')}
+            </button>
+          )}
+          <button className="btn secondary" disabled={busy} onClick={() => open('/world/account')}>
+            {t('world.open')}
+          </button>
+        </div>
+      </div>
+    </Card>
+  )
 }
 
 export default function Overview() {
@@ -169,6 +246,8 @@ export default function Overview() {
 
         </Card>
       )}
+
+      <WorldCard />
 
       <div className="grid cols-2">
         <Card title={t('overview.certificationJourney')}>

@@ -116,11 +116,33 @@ def convert(sql):
     # done by post-processing: add a default at connection level instead (simpler + safe).
     return out
 
+def table_bodies(sql):
+    """Yield (table, body) for every CREATE TABLE by scanning to the BALANCED closing paren.
+    A regex that stops at the first "\n)" mis-parses one-line tables (e.g. site_settings): the
+    non-greedy match runs past the real close into later tables, silently dropping them from the
+    type map — which is how code_redemptions lost its email(191) index prefix."""
+    for m in re.finditer(r"CREATE TABLE(?: IF NOT EXISTS)?\s+(\w+)\s*\(", sql):
+        depth, i = 1, m.end()
+        while i < len(sql) and depth > 0:
+            ch = sql[i]
+            if ch == "'":  # skip string literals (may contain parens)
+                i += 1
+                while i < len(sql) and sql[i] != "'":
+                    i += 1
+            elif ch == "-" and sql[i:i+2] == "--":  # skip line comments (may contain parens)
+                while i < len(sql) and sql[i] != "\n":
+                    i += 1
+            elif ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+            i += 1
+        yield m.group(1), sql[m.end():i-1]
+
 def add_index_prefixes(sql):
     # column type map: {table: {col: type_keyword}}
     types = {}
-    for m in re.finditer(r"CREATE TABLE(?: IF NOT EXISTS)?\s+(\w+)\s*\((.*?)\n\)", sql, re.S):
-        table, body = m.group(1), m.group(2)
+    for table, body in table_bodies(sql):
         cols = {}
         for line in body.split("\n"):
             line = line.strip().strip(",")

@@ -77,6 +77,14 @@ public static class WorldAdmin
             return J(new { token, name = H.Str(a["name"]), role = H.Str(a["role"]) });
         });
 
+        // Who am I — lets the shell restore the signed-in admin's role after a reload, so the UI
+        // can hide what WorldRbac will refuse anyway (the backend stays the authority).
+        app.MapGet("/api/world-admin/auth/me", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out var adm) is { } blocked) return blocked;
+            return J(new { name = adm!.Name, email = adm.Email, role = adm.Role });
+        });
+
         app.MapPost("/api/world-admin/auth/logout", (HttpContext ctx) =>
         {
             var h = ctx.Request.Headers.Authorization.ToString();
@@ -438,6 +446,11 @@ public static class WorldAdmin
                 seq_no = period is null ? (long?)null : H.L(period["seq_no"]),
                 source = period is null ? null : H.Str(period["source"]),
                 reason = period is null ? null : H.Str(period["reason"]),
+                // Operator clarity (P2): the version the DAY pinned versus the challenge's current
+                // published version — when they differ, a revision shipped mid-day and participants
+                // are (correctly) still playing the pinned one.
+                pinned_version = period is null ? (long?)null : H.L(period["version"]),
+                current_version = H.L(ch["current_version"]),
             };
 
         app.MapGet("/api/world-admin/rotation", (HttpContext ctx) =>
@@ -572,10 +585,13 @@ public static class WorldAdmin
             if (Gate(ctx, "read", out _) is { } blocked) return blocked;
             var status = ctx.Request.Query["status"].ToString();
             if (status != "resolved") status = "open";
-            var rows = db.Query(@"SELECT r.id, r.category, r.message, r.status, r.resolution, r.created_at, r.resolved_at,
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 50), 1, 200);
+            var offset = Math.Max(0, (int)(H.QL(ctx, "offset") ?? 0));
+            var total = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_reports WHERE status=?", status);
+            var rows = db.Query($@"SELECT r.id, r.category, r.message, r.status, r.resolution, r.created_at, r.resolved_at,
                     c.code, c.title
                 FROM pciworld_reports r LEFT JOIN pciworld_challenges c ON c.id=r.challenge_id
-                WHERE r.status=? ORDER BY r.id DESC LIMIT 200", status)
+                WHERE r.status=? ORDER BY r.id DESC LIMIT {limit} OFFSET {offset}", status)
                 .Select(r => new
                 {
                     id = H.L(r["id"]), category = H.Str(r["category"]), message = H.Str(r["message"]),
@@ -583,7 +599,7 @@ public static class WorldAdmin
                     code = H.Str(r["code"]), title = H.Str(r["title"]),
                     created_at = H.Str(r["created_at"]), resolved_at = H.Str(r["resolved_at"]),
                 });
-            return J(new { rows });
+            return J(new { rows, total, offset, limit });
         });
 
         app.MapPost("/api/world-admin/reports/{id:long}/resolve", async (HttpContext ctx, long id) =>
@@ -603,12 +619,17 @@ public static class WorldAdmin
         app.MapGet("/api/world-admin/audit", (HttpContext ctx) =>
         {
             if (Gate(ctx, "read", out _) is { } blocked) return blocked;
-            var rows = db.Query(@"SELECT a.id, a.admin_id, u.email, a.action, a.detail, a.created_at
+            // Real pagination (P2): the log is append-only history — an operator must be able to
+            // reach ALL of it, and the first page must say how much more there is.
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 50), 1, 200);
+            var offset = Math.Max(0, (int)(H.QL(ctx, "offset") ?? 0));
+            var total = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_audit");
+            var rows = db.Query($@"SELECT a.id, a.admin_id, u.email, a.action, a.detail, a.created_at
                 FROM pciworld_audit a LEFT JOIN pciworld_admin_users u ON u.id=a.admin_id
-                ORDER BY a.id DESC LIMIT 200")
+                ORDER BY a.id DESC LIMIT {limit} OFFSET {offset}")
                 .Select(r => new { id = H.L(r["id"]), email = H.Str(r["email"]), action = H.Str(r["action"]),
                                    detail = H.Str(r["detail"]), created_at = H.Str(r["created_at"]) });
-            return J(new { rows });
+            return J(new { rows, total, offset, limit });
         });
 
         app.MapGet("/api/world-admin/overview", (HttpContext ctx) =>
@@ -635,6 +656,19 @@ public static class WorldAdmin
                     invites = Count("SELECT COUNT(*) FROM pciworld_invites WHERE revoked=0"),
                 },
             });
+        });
+
+        // Support diagnostics (PW-US-050): safe lookup for a stuck participant journey — identity
+        // references, mapping outcome, states and counts. Never answers, tokens, disclosure
+        // choices or photo references; support sees THAT a Passport exists, not its content.
+        app.MapGet("/api/world-admin/participants", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "read", out var adm) is { } blocked) return blocked;
+            var q = ctx.Request.Query["q"].ToString();
+            var diag = Core.WorldIdentity.SupportDiagnostics(db, q);
+            if (diag is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            Audit(adm!.Id, "participant_lookup", $"#{diag["world_id"]}");
+            return J(new { participant = diag });
         });
 
         app.MapGet("/api/world-admin/users", (HttpContext ctx) =>
@@ -670,10 +704,40 @@ public static class WorldAdmin
             var b = await H.Body(ctx.Request);
             var status = H.GetS(b, "status") == "suspended" ? "suspended" : "active";
             if (id == adm!.Id) return Results.Json(new { error = "self", message = "You cannot change your own status." }, statusCode: 409);
+            // Never suspend the final active owner (PW-US-049): a realm with no owner cannot
+            // manage itself again. (Suspending yourself is already blocked above, so the acting
+            // owner survives — this guards against suspending the OTHER last owner by mistake
+            // when the actor is not an owner-by-row, e.g. after their own role changed mid-session.)
+            if (status == "suspended" &&
+                db.QueryOne("SELECT role FROM pciworld_admin_users WHERE id=?", id) is { } target &&
+                H.Str(target["role"]) == "owner" &&
+                db.Scalar<long>("SELECT COUNT(*) FROM pciworld_admin_users WHERE role='owner' AND status='active' AND id<>?", id) == 0)
+                return Results.Json(new { error = "last_owner", message = "This is the last active owner — appoint another owner first." }, statusCode: 409);
             db.Execute("UPDATE pciworld_admin_users SET status=? WHERE id=?", status, id);
             db.Execute("DELETE FROM pciworld_admin_sessions WHERE admin_id=?", id);
             Audit(adm.Id, "admin_user_status", $"#{id} → {status}");
             return J(new { ok = true });
+        });
+
+        // Role changes (PW-US-049): audited, never your own role, never demoting the last active
+        // owner. The UI offers this on the Users tab; the guard lives here, where it counts.
+        app.MapPost("/api/world-admin/users/{id:long}/role", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "admin", out var adm) is { } blocked) return blocked;
+            var b = await H.Body(ctx.Request);
+            var role = H.GetS(b, "role") ?? "";
+            if (!WorldRbac.Roles.Contains(role)) return Results.Json(new { error = "bad_role" }, statusCode: 400);
+            if (id == adm!.Id) return Results.Json(new { error = "self", message = "You cannot change your own role." }, statusCode: 409);
+            var target = db.QueryOne("SELECT role,status FROM pciworld_admin_users WHERE id=?", id);
+            if (target is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(target["role"]) == "owner" && role != "owner" &&
+                db.Scalar<long>("SELECT COUNT(*) FROM pciworld_admin_users WHERE role='owner' AND status='active' AND id<>?", id) == 0)
+                return Results.Json(new { error = "last_owner", message = "This is the last active owner — appoint another owner first." }, statusCode: 409);
+            db.Execute("UPDATE pciworld_admin_users SET role=? WHERE id=?", role, id);
+            // A narrower role must apply immediately — live sessions carry the OLD role otherwise.
+            db.Execute("DELETE FROM pciworld_admin_sessions WHERE admin_id=?", id);
+            Audit(adm.Id, "admin_user_role", $"#{id} → {role}");
+            return J(new { ok = true, role });
         });
 
         // ───────────────────────────── admin application shell ─────────────────────────────
@@ -771,6 +835,7 @@ public static class WorldAdmin
             <button role="tab" id="t-editorial" aria-controls="tab-editorial" data-tab="editorial" aria-selected="false" tabindex="-1">Editorial</button>
             <button role="tab" id="t-calendar" aria-controls="tab-calendar" data-tab="calendar" aria-selected="false" tabindex="-1">Calendar</button>
             <button role="tab" id="t-reports" aria-controls="tab-reports" data-tab="reports" aria-selected="false" tabindex="-1">Reports</button>
+            <button role="tab" id="t-users" aria-controls="tab-users" data-tab="users" aria-selected="false" tabindex="-1" hidden>Users</button>
             <button role="tab" id="t-audit" aria-controls="tab-audit" data-tab="audit" aria-selected="false" tabindex="-1">Audit</button>
           </nav>
           <div id="tab-overview" class="card" role="tabpanel" aria-labelledby="t-overview" tabindex="0"></div>
@@ -804,6 +869,7 @@ public static class WorldAdmin
           <div id="tab-editorial" class="card" role="tabpanel" aria-labelledby="t-editorial" tabindex="0" hidden></div>
           <div id="tab-calendar" class="card" role="tabpanel" aria-labelledby="t-calendar" tabindex="0" hidden></div>
           <div id="tab-reports" class="card" role="tabpanel" aria-labelledby="t-reports" tabindex="0" hidden></div>
+          <div id="tab-users" class="card" role="tabpanel" aria-labelledby="t-users" tabindex="0" hidden></div>
           <div id="tab-audit" class="card" role="tabpanel" aria-labelledby="t-audit" tabindex="0" hidden></div>
         </div>
         </main>
@@ -820,7 +886,22 @@ public static class WorldAdmin
           .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});});
         }
         function show(logged){$('login').hidden=logged;$('appmain').hidden=!logged;$('logout').hidden=!logged;}
-        var TABS=['overview','challenges','editor','rotation','editorial','calendar','reports','audit'];
+        // Role-aware UI (PW-US-047): the shell mirrors WorldRbac so people see only what they can
+        // do — a hidden button is comfort, never authorization; every endpoint re-checks.
+        var ROLE=localStorage.getItem('world_admin_role')||'';
+        function can(action){
+          if(ROLE==='owner')return true;
+          if(ROLE==='author')return action==='read'||action==='author';
+          if(ROLE==='reviewer')return action==='read'||action==='review';
+          if(ROLE==='publisher')return action==='read'||action==='publish';
+          if(ROLE==='viewer')return action==='read';
+          return false;
+        }
+        function applyRole(){
+          $('t-editor').hidden=!(can('author'));
+          $('t-users').hidden=!(can('admin'));
+        }
+        var TABS=['overview','challenges','editor','rotation','editorial','calendar','reports','users','audit'];
         function tab(name,moveFocus){
           TABS.forEach(function(t){
             $('tab-'+t).hidden=t!==name;
@@ -835,6 +916,7 @@ public static class WorldAdmin
           if(name==='rotation')loadRotation();
           if(name==='editorial')loadEditorial();
           if(name==='calendar')loadCalendar(); if(name==='reports')loadReports(); if(name==='audit')loadAudit();
+          if(name==='users')loadUsers();
         }
         document.querySelectorAll('[data-tab]').forEach(function(b){
           b.addEventListener('click',function(){tab(b.dataset.tab);});
@@ -849,12 +931,14 @@ public static class WorldAdmin
         $('doLogin').addEventListener('click',function(){
           $('loginerr').textContent='';
           api('/api/world-admin/auth/login','POST',{email:$('em').value,password:$('pw').value})
-            .then(function(r){localStorage.setItem(KEY,r.token);show(true);tab('overview');})
+            .then(function(r){localStorage.setItem(KEY,r.token);
+              ROLE=r.role||'';localStorage.setItem('world_admin_role',ROLE);applyRole();
+              show(true);tab('overview');})
             .catch(function(e){$('loginerr').textContent=(e&&e.message)||'Sign-in failed.';});
         });
         $('logout').addEventListener('click',function(){
           api('/api/world-admin/auth/logout','POST',{}).catch(function(){});
-          localStorage.removeItem(KEY);show(false);
+          localStorage.removeItem(KEY);localStorage.removeItem('world_admin_role');ROLE='';show(false);
         });
         function loadOverview(){
           api('/api/world-admin/overview').then(function(o){
@@ -880,7 +964,7 @@ public static class WorldAdmin
         }
         function lifecycleButtons(r){
           var b='';
-          function act(a,label,ghost){b+='<button '+(ghost?'class="ghost" ':'')+'data-act="'+a+'" data-id="'+r.id+'">'+label+'</button> ';}
+          function act(a,label,ghost){b+='<button '+(ghost?'class="ghost" ':'')+'data-act="'+a+'" data-id="'+r.id+'" data-code="'+esc(r.code)+'">'+label+'</button> ';}
           act('open','Open',true);
           if(r.status==='draft')act('submit-review','Submit for review');
           if(r.status==='in_review'){act('approve','Approve');act('reject','Reject',true);}
@@ -984,8 +1068,13 @@ public static class WorldAdmin
             var s=res[0],p=res[1],r=res[2];
             function card(c,label){
               if(!c)return '<div><span class="kicker">'+label+'</span><p>None</p></div>';
+              // Pinned vs current (operator clarity): when a revision shipped mid-day the day KEEPS
+              // its pinned version — participants are not moved, and the card says so plainly.
+              var ver=c.pinned_version?(' · playing v'+c.pinned_version+
+                (c.current_version&&c.current_version!==c.pinned_version
+                  ?' <b>(a newer v'+c.current_version+' is published — today stays pinned)</b>':'')):'';
               return '<div><span class="kicker">'+label+'</span><p><b>'+esc(c.code)+'</b> — '+esc(c.title)+'<br>'+
-                '<small>'+esc(c.difficulty||'')+(c.source?' · '+esc(c.source):'')+
+                '<small>'+esc(c.difficulty||'')+(c.source?' · '+esc(c.source):'')+ver+
                 (c.reason?' · '+esc(c.reason):'')+'</small></p></div>';
             }
             var health=s.last_run
@@ -998,15 +1087,19 @@ public static class WorldAdmin
               (s.paused?' · <b>PAUSED</b>':'')+'</p>'+
               '<div class="row">'+card(s.current,'Today')+card(s.next,'Next')+'</div>'+
               '<p><small>Health: '+health+'</small></p>'+
-              '<p><button id="rot_run">Run the boundary now</button> '+
-              '<button id="rot_pause" class="ghost">'+(s.paused?'Resume rotation':'Pause rotation')+'</button></p>'+
-              '<h2 style="margin-top:18px">Emergency substitution</h2>'+
-              '<p><small>Replaces what is featured on a day. The day it replaces is kept in the ledger, never deleted.</small></p>'+
-              '<div class="row" style="max-width:720px">'+
-              '<div><label for="sub_day">Day (YYYY-MM-DD)</label><input id="sub_day" value="'+esc(s.day_key)+'"></div>'+
-              '<div><label for="sub_code">Challenge code</label><input id="sub_code" placeholder="WC-EVM-001"></div>'+
-              '<div><label for="sub_why">Reason (recorded)</label><input id="sub_why" placeholder="Calculation error reported"></div>'+
-              '</div><p><button id="rot_sub">Substitute</button> <span id="rot_msg" role="status"></span></p>'+
+              // Operating controls are a publisher's tools (PW-US-047): other roles see the state
+              // of the day — never buttons the backend would refuse anyway.
+              (can('publish')
+                ?'<p><button id="rot_run">Run the boundary now</button> '+
+                 '<button id="rot_pause" class="ghost">'+(s.paused?'Resume rotation':'Pause rotation')+'</button></p>'+
+                 '<h2 style="margin-top:18px">Emergency substitution</h2>'+
+                 '<p><small>Replaces what is featured on a day. The day it replaces is kept in the ledger, never deleted.</small></p>'+
+                 '<div class="row" style="max-width:720px">'+
+                 '<div><label for="sub_day">Day (YYYY-MM-DD)</label><input id="sub_day" value="'+esc(s.day_key)+'"></div>'+
+                 '<div><label for="sub_code">Challenge code</label><input id="sub_code" placeholder="WC-EVM-001"></div>'+
+                 '<div><label for="sub_why">Reason (recorded)</label><input id="sub_why" placeholder="Calculation error reported"></div>'+
+                 '</div><p><button id="rot_sub">Substitute</button> <span id="rot_msg" role="status"></span></p>'
+                :'<p><small>Rotation controls are available to publishers and owners.</small></p>')+
               '<h2 style="margin-top:18px">Recorded days</h2>'+
               '<table><thead><tr><th scope="col">Day</th><th scope="col">Challenge</th><th scope="col">Cycle</th>'+
               '<th scope="col">Source</th><th scope="col">Note</th></tr></thead><tbody>';
@@ -1024,15 +1117,15 @@ public static class WorldAdmin
             });
             h+='</tbody></table>';
             $('tab-rotation').innerHTML=h;
-            $('rot_run').addEventListener('click',function(){
+            if($('rot_run'))$('rot_run').addEventListener('click',function(){
               api('/api/world-admin/rotation/run','POST',{}).then(loadRotation)
                 .catch(function(e){$('rot_msg').textContent=(e&&(e.message||e.error))||'Failed';});
             });
-            $('rot_pause').addEventListener('click',function(){
+            if($('rot_pause'))$('rot_pause').addEventListener('click',function(){
               api('/api/world-admin/rotation/pause','POST',{paused:!s.paused}).then(loadRotation)
                 .catch(function(e){$('rot_msg').textContent=(e&&(e.message||e.error))||'Failed';});
             });
-            $('rot_sub').addEventListener('click',function(){
+            if($('rot_sub'))$('rot_sub').addEventListener('click',function(){
               $('rot_msg').textContent='';
               api('/api/world-admin/rotation/substitute','POST',
                   {day_key:$('sub_day').value,code:$('sub_code').value,reason:$('sub_why').value})
@@ -1054,17 +1147,23 @@ public static class WorldAdmin
             $('tab-challenges').innerHTML=h;
             $('newch').addEventListener('click',function(){editingId=null;clearEditor();tab('editor');});
             $('tab-challenges').querySelectorAll('[data-act]').forEach(function(btn){
-              btn.addEventListener('click',function(){doAction(btn.dataset.act,btn.dataset.id);});
+              btn.addEventListener('click',function(){doAction(btn.dataset.act,btn.dataset.id,btn);});
             });
           });
         }
-        function doAction(act,id){
+        function doAction(act,id,btn){
           if(act==='open'){openChallenge(id);return;}
+          var code=(btn&&btn.dataset.code)||'this challenge';
+          // Destructive actions confirm FIRST and name their target (P2): retiring takes content
+          // off the air, so nobody does it by a slipped click.
+          if(act==='retire'&&!confirm('Retire '+code+'? It leaves the daily rotation and the public archive immediately. '+
+            'Published history and completed attempts are untouched, and Restore can bring it back.'))return;
           var body={};
           if(act==='reject'){var note=prompt('Rejection note for the author:')||'';body={note:note};}
+          if(btn)btn.disabled=true;   // pending state — no double fire while the call runs
           api('/api/world-admin/challenges/'+id+'/'+act,'POST',body)
             .then(loadChallenges)
-            .catch(function(e){alert((e&&(e.message||e.error))||'Action failed');});
+            .catch(function(e){if(btn)btn.disabled=false;alert((e&&(e.message||e.error))||'Action failed');});
         }
         function clearEditor(){
           ['f_code','f_title','f_industry','f_role','f_hook','f_comp','f_config'].forEach(function(f){$(f).value='';});
@@ -1127,37 +1226,153 @@ public static class WorldAdmin
           });
         }
         function loadReports(){
-          api('/api/world-admin/reports?status=open').then(function(o){
-            var h='<h2>Open content reports ('+o.rows.length+')</h2>';
+          api('/api/world-admin/reports?status=open&limit=50').then(function(o){
+            var h='<h2>Open content reports ('+o.total+')</h2>';
+            function repRow(r){
+              return '<tr><td>WR-'+r.id+'</td><td>'+esc(r.created_at)+'</td><td>'+esc(r.code||'—')+'</td>'+
+                 '<td>'+esc(r.category)+'</td><td style="max-width:380px">'+esc(r.message)+'</td>'+
+                 '<td><button data-resolve="'+r.id+'">Resolve</button></td></tr>';
+            }
             if(!o.rows.length)h+='<p>No open reports — the queue is clear.</p>';
             else{
-              h+='<table><thead><tr><th>Ref</th><th>When (UTC)</th><th>Challenge</th><th>Category</th><th>Report</th><th></th></tr></thead><tbody>';
-              o.rows.forEach(function(r){
-                h+='<tr><td>WR-'+r.id+'</td><td>'+esc(r.created_at)+'</td><td>'+esc(r.code||'—')+'</td>'+
-                   '<td>'+esc(r.category)+'</td><td style="max-width:380px">'+esc(r.message)+'</td>'+
-                   '<td><button data-resolve="'+r.id+'">Resolve</button></td></tr>';
-              });
-              h+='</tbody></table>';
+              h+='<table><thead><tr><th>Ref</th><th>When (UTC)</th><th>Challenge</th><th>Category</th><th>Report</th><th></th></tr></thead>'+
+                 '<tbody id="repBody">';
+              o.rows.forEach(function(r){h+=repRow(r);});
+              h+='</tbody></table>'+
+                 (o.total>o.rows.length?'<p><button id="repMore" class="ghost">Older reports</button></p>':'');
             }
+            // Support lookup (PW-US-050): read-gated diagnostics for a stuck participant journey.
+            // The answer is states and counts — never answers, tokens, disclosure or photos.
+            h+='<h2 style="margin-top:22px">Participant lookup (support)</h2>'+
+               '<div class="row" style="max-width:560px">'+
+               '<div><label for="pl_q">World account id or email</label><input id="pl_q" placeholder="42 or person@example.org"></div>'+
+               '</div><p><button id="pl_go">Look up</button></p><div id="pl_out"></div>';
             $('tab-reports').innerHTML=h;
-            $('tab-reports').querySelectorAll('[data-resolve]').forEach(function(btn){
-              btn.addEventListener('click',function(){
-                var note=prompt('Resolution note (what was checked or changed):')||'';
-                api('/api/world-admin/reports/'+btn.dataset.resolve+'/resolve','POST',{note:note})
-                  .then(loadReports)
-                  .catch(function(e){alert((e&&(e.message||e.error))||'Could not resolve');});
+            $('pl_go').addEventListener('click',function(){
+              $('pl_out').innerHTML='';
+              api('/api/world-admin/participants?q='+encodeURIComponent($('pl_q').value))
+                .then(function(o){
+                  var p=o.participant,rows=[
+                    ['World account','#'+p.world_id+' · '+p.email+' · '+p.status+(p.email_verified?' · verified':' · unverified')],
+                    ['Canonical identity',p.canonical_user_id?('users #'+p.canonical_user_id+' ('+p.mapping_outcome+')'):('none — '+p.mapping_outcome+(p.mapping_detail?': '+p.mapping_detail:''))],
+                    ['Participation',(p.participation_status||'—')+' · onboarding '+(p.onboarding_state||'—')+(p.goal?' · goal '+p.goal:'')],
+                    ['Attempts',p.attempts_total+' total · '+p.attempts_completed+' completed · '+p.attempts_in_progress+' in progress'],
+                    ['Passport',(p.passport_public?'published':'private')+(p.passport_expired?' (expired)':'')+' · '+p.visible_evidence+' selected evidence item(s)'],
+                    ['Sessions',p.live_sessions+' live'],
+                    ['Signed up',p.created_at+(p.last_login_at?' · last sign-in '+p.last_login_at:'')]];
+                  var t='<table><tbody>';
+                  rows.forEach(function(r2){t+='<tr><th style="text-align:left;padding-right:12px">'+esc(r2[0])+'</th><td>'+esc(r2[1])+'</td></tr>';});
+                  $('pl_out').innerHTML=t+'</tbody></table>'+
+                    '<p><small>Diagnostics only: answers, tokens, disclosure choices and photographs are never shown here.</small></p>';
+                })
+                .catch(function(e){$('pl_out').innerHTML='<p class="bad">'+esc((e&&e.error)==='not_found'?'No PCI World account matches that.':'Lookup failed — try again.')+'</p>';});
+            });
+            function bindResolve(scope){
+              scope.querySelectorAll('[data-resolve]').forEach(function(btn){
+                if(btn.dataset.bound)return;btn.dataset.bound='1';
+                btn.addEventListener('click',function(){
+                  var note=prompt('Resolution note (what was checked or changed):')||'';
+                  btn.disabled=true;
+                  api('/api/world-admin/reports/'+btn.dataset.resolve+'/resolve','POST',{note:note})
+                    .then(loadReports)
+                    .catch(function(e){btn.disabled=false;alert((e&&(e.message||e.error))||'Could not resolve');});
+                });
+              });
+            }
+            bindResolve($('tab-reports'));
+            if($('repMore')){
+              var repOffset=o.rows.length;
+              $('repMore').addEventListener('click',function(){
+                api('/api/world-admin/reports?status=open&limit=50&offset='+repOffset).then(function(o2){
+                  o2.rows.forEach(function(r){$('repBody').insertAdjacentHTML('beforeend',repRow(r));});
+                  bindResolve($('repBody'));
+                  repOffset+=o2.rows.length;
+                  if(repOffset>=o2.total||!o2.rows.length)$('repMore').hidden=true;
+                });
+              });
+            }
+          });
+        }
+        var auditOffset=0;
+        function loadAudit(more){
+          if(!more)auditOffset=0;
+          api('/api/world-admin/audit?limit=50&offset='+auditOffset).then(function(o){
+            var body=o.rows.map(function(r){
+              return '<tr><td>'+esc(r.created_at)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.action)+'</td><td>'+esc(r.detail)+'</td></tr>';
+            }).join('');
+            if(!more){
+              $('tab-audit').innerHTML='<h2>Audit log ('+o.total+')</h2>'+
+                '<table><thead><tr><th>When (UTC)</th><th>Who</th><th>Action</th><th>Detail</th></tr></thead>'+
+                '<tbody id="auditBody">'+body+'</tbody></table>'+
+                '<p><button id="auditMore" class="ghost">Older entries</button></p>';
+              $('auditMore').addEventListener('click',function(){loadAudit(true);});
+            }else $('auditBody').insertAdjacentHTML('beforeend',body);
+            auditOffset+=o.rows.length;
+            if($('auditMore'))$('auditMore').hidden=auditOffset>=o.total||!o.rows.length;
+          });
+        }
+        function loadUsers(){
+          api('/api/world-admin/users').then(function(o){
+            var h='<h2>World admin users</h2>'+
+              '<p><small>Roles: owner (everything) · author (draft &amp; edit) · reviewer (approve/reject) · '+
+              'publisher (publish, rotation, calendar) · viewer (read only). Every change is audited; '+
+              'the last active owner can never be demoted or suspended.</small></p>'+
+              '<table><thead><tr><th scope="col">Email</th><th scope="col">Name</th><th scope="col">Role</th>'+
+              '<th scope="col">Status</th><th scope="col">Last sign-in</th><th scope="col">Actions</th></tr></thead><tbody>';
+            o.rows.forEach(function(u){
+              var roleSel='<select data-role-for="'+u.id+'">'+
+                ['owner','author','reviewer','publisher','viewer'].map(function(x){
+                  return '<option value="'+x+'"'+(u.role===x?' selected':'')+'>'+x+'</option>';}).join('')+'</select>';
+              h+='<tr><td>'+esc(u.email)+'</td><td>'+esc(u.name||'')+'</td>'+
+                 '<td>'+roleSel+' <button class="ghost" data-setrole="'+u.id+'">Set</button></td>'+
+                 '<td><span class="pill">'+esc(u.status)+'</span></td>'+
+                 '<td><small>'+esc(u.last_login_at||'never')+'</small></td>'+
+                 '<td><button class="ghost" data-status="'+u.id+'" data-next="'+(u.status==='active'?'suspended':'active')+'">'+
+                 (u.status==='active'?'Suspend':'Reactivate')+'</button></td></tr>';
+            });
+            h+='</tbody></table>'+
+               '<h2 style="margin-top:18px">Invite an admin</h2>'+
+               '<div class="row" style="max-width:820px">'+
+               '<div><label for="nu_email">Email</label><input id="nu_email" type="email"></div>'+
+               '<div><label for="nu_name">Name</label><input id="nu_name"></div>'+
+               '<div><label for="nu_role">Role</label><select id="nu_role">'+
+               ['viewer','author','reviewer','publisher','owner'].map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div>'+
+               '<div><label for="nu_pw">Initial password (min 12)</label><input id="nu_pw" type="password" autocomplete="new-password"></div>'+
+               '</div><p><button id="nu_go">Create admin</button> <span id="nu_msg" role="status"></span></p>';
+            $('tab-users').innerHTML=h;
+            $('nu_go').addEventListener('click',function(){
+              $('nu_msg').textContent='';
+              api('/api/world-admin/users','POST',{email:$('nu_email').value,name:$('nu_name').value,
+                role:$('nu_role').value,password:$('nu_pw').value})
+                .then(loadUsers)
+                .catch(function(e){$('nu_msg').textContent=(e&&(e.message||e.error))||'Could not create the admin.';});
+            });
+            document.querySelectorAll('[data-status]').forEach(function(b){
+              b.addEventListener('click',function(){
+                api('/api/world-admin/users/'+b.dataset.status+'/status','POST',{status:b.dataset.next})
+                  .then(loadUsers)
+                  .catch(function(e){alert((e&&(e.message||e.error))||'Refused.');});
+              });
+            });
+            document.querySelectorAll('[data-setrole]').forEach(function(b){
+              b.addEventListener('click',function(){
+                var sel=document.querySelector('[data-role-for="'+b.dataset.setrole+'"]');
+                api('/api/world-admin/users/'+b.dataset.setrole+'/role','POST',{role:sel.value})
+                  .then(loadUsers)
+                  .catch(function(e){alert((e&&(e.message||e.error))||'Refused.');});
               });
             });
           });
         }
-        function loadAudit(){
-          api('/api/world-admin/audit').then(function(o){
-            var h='<h2>Audit log</h2><table><thead><tr><th>When (UTC)</th><th>Who</th><th>Action</th><th>Detail</th></tr></thead><tbody>';
-            o.rows.forEach(function(r){h+='<tr><td>'+esc(r.created_at)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.action)+'</td><td>'+esc(r.detail)+'</td></tr>';});
-            $('tab-audit').innerHTML=h+'</tbody></table>';
-          });
-        }
-        if(localStorage.getItem(KEY)){show(true);tab('overview');}else{show(false);}
+        if(localStorage.getItem(KEY)){
+          show(true);applyRole();tab('overview');
+          // Restore the role after a reload — the shell must never guess it from stale storage
+          // alone when the server can say for sure (a mid-session role change signs sessions out,
+          // so a live answer here is always current).
+          api('/api/world-admin/auth/me').then(function(m){
+            ROLE=m.role||'';localStorage.setItem('world_admin_role',ROLE);applyRole();
+          }).catch(function(){});
+        }else{show(false);}
         })();
         </script>
         </body>

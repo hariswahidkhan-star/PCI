@@ -124,7 +124,8 @@ public static class AdminOps
                 return Err(400, "idempotency_key_required", "Partial waivers require an Idempotency-Key (header or body).");
             if (idemKey is not null)
             {
-                var prior = FeeWaiverLedger.Find(db, idemKey);
+                var (prior, mismatch) = FeeWaiverLedger.FindForSubject(db, idemKey, id);
+                if (mismatch) return Err(409, "idempotency_key_conflict", "This idempotency key was already used for a different student.");
                 if (prior is not null) return J(FeeWaiverLedger.ReplayResponse(db, prior));
             }
 
@@ -141,29 +142,34 @@ public static class AdminOps
                     if (open is not null && product == "exam" && !allowDup) return Err(409, "already_entitled");
                 }
                 // Full waiver — the same immediate settlement as mark-paid amount 0.
-                // When a client key is present, claim the ledger first so a retry cannot Grant twice.
+                //
+                // Claim the ledger key FIRST (its own atomic INSERT OR IGNORE — the race guard), then grant
+                // OUTSIDE any transaction. Settlement.Grant performs outbound network I/O (Certuvo
+                // provisioning, integration webhooks, the receipt email) and Db.Transaction holds `_gate`,
+                // the single global lock guarding EVERY database operation, for its whole body — so granting
+                // inside the transaction froze every request in the process until the slowest vendor replied,
+                // and froze it permanently when a vendor never replied. If the grant then fails, the claim is
+                // released so the operator's retry is not replayed into a grant that never happened.
                 var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
-                long payId = 0;
-                long waiverId = 0;
-                var raced = false;
-                db.Transaction(() =>
+                var (waiverId, created) = FeeWaiverLedger.TryInsert(db, idemKey, id, product, certId, "full",
+                    feeType: product == "membership" ? "membership" : "exam", waiverType: "full",
+                    originalAmount: listPrice, waivedAmount: listPrice, finalAmount: 0, payableAmount: 0,
+                    reason: reason, note: note.Length > 0 ? note : null, approvedBy: adm.Id);
+                if (!created && idemKey is not null)
                 {
-                    bool created;
-                    (waiverId, created) = FeeWaiverLedger.TryInsert(db, idemKey, id, product, certId, "full",
-                        feeType: product == "membership" ? "membership" : "exam", waiverType: "full",
-                        originalAmount: listPrice, waivedAmount: listPrice, finalAmount: 0, payableAmount: 0,
-                        reason: reason, note: note.Length > 0 ? note : null, approvedBy: adm.Id);
-                    if (!created && idemKey is not null)
-                    {
-                        raced = true;
-                        return;
-                    }
+                    var (won, wonMismatch) = FeeWaiverLedger.FindForSubject(db, idemKey, id);
+                    if (wonMismatch) return Err(409, "idempotency_key_conflict", "This idempotency key was already used for a different student.");
+                    return J(FeeWaiverLedger.ReplayResponse(db, won!));
+                }
+                long payId;
+                try
+                {
                     payId = Settlement.Grant(db, id, H.Str(u["email"]), product, certId, 0, reference, "admin_waiver",
                         new Settlement.Meta { Note = note.Length > 0 ? note : reason, RecordedBy = adm.Id, OriginalAmount = listPrice });
                     if ((product is "exam" or "bundle") && certId > 1) Settlement.RetargetEntitlement(db, payId, certId);
-                    db.Execute("UPDATE fee_waivers SET payment_id=? WHERE id=?", payId, waiverId);
-                });
-                if (raced) return J(FeeWaiverLedger.ReplayResponse(db, FeeWaiverLedger.Find(db, idemKey!)!));
+                }
+                catch { FeeWaiverLedger.ReleaseClaim(db, waiverId); throw; }
+                db.Execute("UPDATE fee_waivers SET payment_id=? WHERE id=?", payId, waiverId);
                 db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your fee has been waived', ?)", id,
                     $"The institute has waived your {product} fee in full ({reason}). Your access is active — no payment is needed.");
                 log(adm.Id, "fee_waiver_full", $"{product} 100% ({reason}) by {adm.Id} (subject {id}) pay {payId}");
@@ -198,7 +204,12 @@ public static class AdminOps
                     codeStr, percent, product == "bundle" ? "all" : product, expires.Length > 0 ? expires : null, $"Partial waiver: {reason} (admin {adm.Id})", criteria);
                 db.Execute("UPDATE fee_waivers SET code_id=? WHERE id=?", codeId, partialWaiverId);
             });
-            if (partialRaced) return J(FeeWaiverLedger.ReplayResponse(db, FeeWaiverLedger.Find(db, idemKey!)!));
+            if (partialRaced)
+            {
+                var (wonPartial, partialMismatch) = FeeWaiverLedger.FindForSubject(db, idemKey!, id);
+                if (partialMismatch) return Err(409, "idempotency_key_conflict", "This idempotency key was already used for a different student.");
+                return J(FeeWaiverLedger.ReplayResponse(db, wonPartial!));
+            }
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Account', 'A fee reduction has been applied for you', ?, 'Go to billing', '/billing')", id,
                 $"The institute has granted you a {percent:0.#}% reduction on your {product} fee ({reason}). Use code {codeStr} at checkout{(expires.Length > 0 ? $" before {expires}" : "")}.");
             log(adm.Id, "fee_waiver_partial", $"{product} {percent:0.#}% code {codeStr} ({reason}) by {adm.Id} (subject {id})");

@@ -6,7 +6,7 @@ BACKEND = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DLL = os.path.join(BACKEND, "bin", "Release", "net8.0", "PCI.Backend.dll")
 passed = failed = 0
 
-def check(name, overrides):
+def check(name, overrides, must_mention=None):
     global passed, failed
     work = tempfile.mkdtemp(prefix="pci_prod_preflight_")
     db = os.path.join(work, "must-not-exist.db")
@@ -24,6 +24,8 @@ def check(name, overrides):
         ["dotnet", DLL], cwd=BACKEND, env=env, text=True,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30)
     ok = proc.returncode == 78 and not os.path.exists(db)
+    if ok and must_mention:
+        ok = must_mention in proc.stdout
     if ok:
         passed += 1
         print(f"  PASS  {name}")
@@ -84,6 +86,13 @@ check("ALLOW_SQLITE_IN_PRODUCTION rejects an ephemeral (non-/data) path",
       {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "sqlite",
        "ALLOW_SQLITE_IN_PRODUCTION": "true",
        "DATABASE_FILE": os.path.join("/tmp", "platform-must-not-open.db")})
+# EXT-P1-09 — STORAGE_PROVIDER=s3 with no S3_BUCKET must be a named hard blocker, never a silent
+# local-disk fallback (the config error must call out S3_BUCKET by name).
+check("STORAGE_PROVIDER=s3 without S3_BUCKET refuses production boot",
+      {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "mysql",
+       "MYSQL_HOST": "127.0.0.1", "MYSQL_PASSWORD": "wrong-on-purpose",
+       "STORAGE_PROVIDER": "s3"},
+      must_mention="S3_BUCKET")
 
 # The PCIWorld image's zero-config contract (PCIWorld/README.md): world-only + the explicit
 # bridge + a /data database must BOOT — with the base-URL/CORS/at-rest-key blockers downgraded

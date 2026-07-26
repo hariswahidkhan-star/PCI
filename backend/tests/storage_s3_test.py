@@ -76,7 +76,10 @@ def main():
         # create the bucket via the raw S3 REST API (no boto3 needed)
         urllib.request.urlopen(urllib.request.Request(f"{S3EP}/{BUCKET}", method="PUT"))
 
+        # ASPNETCORE_ENVIRONMENT must be explicit: unset, ASP.NET defaults to Production and the boot
+        # config validator refuses the throwaway SQLite DB — the suite then "ran" without testing S3.
         env = dict(os.environ, DATABASE_FILE=DB, PORT=str(APPPORT),
+                   ASPNETCORE_ENVIRONMENT="Development",
                    STORAGE_PROVIDER="s3", S3_BUCKET=BUCKET, S3_ENDPOINT=S3EP, S3_REGION="us-east-1",
                    AWS_ACCESS_KEY_ID="testing", AWS_SECRET_ACCESS_KEY="testing",
                    STORAGE_ROOT=os.path.join(HERE, "_s3_localroot"))
@@ -148,8 +151,11 @@ def main():
             except Exception:
                 p.kill()
 
-    # fallback honesty: s3 selected but no bucket → local fallback with a warning
+    # fail-closed honesty (EXT-P1-09): s3 selected but no bucket must NEVER silently become a working
+    # local backend. Non-production boots but logs the config error; Storage.Put refuses at runtime
+    # (production refuses to boot outright — covered by production_config_test.py).
     env2 = dict(os.environ, DATABASE_FILE=DB, PORT=str(free_port()), STORAGE_PROVIDER="s3",
+                ASPNETCORE_ENVIRONMENT="Development",
                 STORAGE_ROOT=os.path.join(HERE, "_s3_localroot"))
     env2.pop("S3_BUCKET", None)
     p2 = subprocess.Popen(["dotnet", DLL], env=env2, cwd=BACKEND, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -161,7 +167,11 @@ def main():
     p2.terminate()
     try: p2.wait(timeout=10)
     except Exception: p2.kill()
-    chk("no-bucket fallback warns and uses local", "S3_BUCKET is not set" in line and "falling back to local" in line, line.strip())
+    # Development boots (the hard Production refusal is production_config_test.py's case), but the
+    # provider must REMAIN s3 — never silently rebadged as a working local backend; Storage.Put
+    # then refuses every write until the bucket is configured.
+    chk("no-bucket boot keeps the s3 provider selected (no silent local fallback)",
+        "storage: s3" in line and "local" not in line, line.strip())
 
     print(f"\n  ══ {passed}/{passed+failed} PASSED ══")
     sys.exit(0 if failed == 0 else 1)
