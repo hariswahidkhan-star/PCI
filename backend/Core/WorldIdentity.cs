@@ -237,6 +237,57 @@ public static class WorldIdentity
         return null;
     }
 
+    // ───────────────────────── World preferences on the participation row ─────────────────────────
+    //
+    // Product data ONLY (§10.5): the goal, timezone and weekly target live on
+    // pciworld_participants keyed by canonical users.id — never on the canonical profile.
+
+    public static readonly string[] Goals = { "daily_practice", "certification_prep", "evidence", "explore" };
+
+    /// <summary>The account's World preferences, or null when it has no resolved canonical
+    /// identity (quarantined conflict — there is no participation row to hold them).</summary>
+    public static Dictionary<string, object?>? ReadPreferences(Db db, long worldUserId)
+    {
+        var uid = CanonicalUserFor(db, worldUserId);
+        if (uid is null) return null;
+        EnsureParticipant(db, uid.Value);
+        var p = db.QueryOne("SELECT goal, timezone, weekly_target, onboarding_state FROM pciworld_participants WHERE user_id=?", uid)!;
+        return new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["goal"] = H.Str(p["goal"]),
+            ["timezone"] = H.Str(p["timezone"]),
+            ["weekly_target"] = p["weekly_target"] is null ? null : H.L(p["weekly_target"]),
+            ["onboarding_state"] = H.Str(p["onboarding_state"]),
+        };
+    }
+
+    /// <summary>Update World preferences. Absent keys leave stored values untouched (the P0-06
+    /// lesson, applied everywhere). Returns an error key or null.</summary>
+    public static string? UpdatePreferences(Db db, long worldUserId,
+        string? goal, string? timezone, long? weeklyTarget)
+    {
+        var uid = CanonicalUserFor(db, worldUserId);
+        if (uid is null) return "not_linked";
+        EnsureParticipant(db, uid.Value);
+        if (goal is not null)
+        {
+            if (!Goals.Contains(goal)) return "bad_goal";
+            db.Execute("UPDATE pciworld_participants SET goal=?, last_activity_at=datetime('now') WHERE user_id=?", goal, uid);
+        }
+        if (timezone is not null)
+        {
+            var tz = timezone.Trim();
+            if (tz.Length is 0 or > 64) return "bad_timezone";
+            db.Execute("UPDATE pciworld_participants SET timezone=? WHERE user_id=?", tz, uid);
+        }
+        if (weeklyTarget is not null)
+        {
+            if (weeklyTarget is < 0 or > 7) return "bad_target";
+            db.Execute("UPDATE pciworld_participants SET weekly_target=? WHERE user_id=?", weeklyTarget, uid);
+        }
+        return null;
+    }
+
     // ───────────────────────── attempt-namespace reconciliation (cutover groundwork) ─────────────────────────
 
     public sealed record OwnershipAudit(long OwnedAttempts, long Resolvable, long Orphaned)

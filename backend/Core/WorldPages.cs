@@ -1727,9 +1727,10 @@ public static class WorldPages
           // management body. The aggregate failing quietly never blocks the Passport tools.
           return Promise.all([api('/api/world/passport'),
                               api('/api/world/me/dashboard').catch(function(){return null;}),
-                              api('/api/world/me/profile').catch(function(){return null;})])
+                              api('/api/world/me/profile').catch(function(){return null;}),
+                              api('/api/world/me/preferences').catch(function(){return null;})])
           .then(function(res){
-            var p=res[0],d=res[1],prof=res[2];
+            var p=res[0],d=res[1],prof=res[2],prefs=res[3];
             $('auth').hidden=true;$('me').hidden=false;$('me').focus();
             var seal=(document.getElementById('sealTpl')||{innerHTML:''}).innerHTML;
             function pretty(s){s=(s||'').replace(/_/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
@@ -1757,7 +1758,22 @@ public static class WorldPages
                  // and never used to shame a gap (a zero simply says nothing).
                  (d.streak_days>0?' <b>'+d.streak_days+'-day practice streak</b> <small>(a habit, not a credential)</small>':'')+
                  '</p>'+
-                 '<p>'+cta+'</p></div>';
+                 '<p>'+cta+'</p>'+
+                 // The World goal (§10.5): product data on the participation record, changeable
+                 // any time — it shapes what the dashboard suggests, and nothing else.
+                 (prefs&&prefs.linked
+                   ?'<p><label for="goalSel" style="display:inline">Why you practise:</label> '+
+                    '<select id="goalSel" style="width:auto;display:inline-block">'+
+                    [['','Choose a goal…'],['daily_practice','Daily practice'],
+                     ['certification_prep','Certification preparation'],
+                     ['evidence','Build verifiable practice evidence'],
+                     ['explore','Explore project controls']].map(function(g){
+                      return '<option value="'+g[0]+'"'+((prefs.preferences&&prefs.preferences.goal)===g[0]?' selected':'')+'>'+g[1]+'</option>';
+                    }).join('')+'</select> '+
+                    '<button class="btn secondary" id="goalSave">Set goal</button> '+
+                    '<span id="goalMsg" role="status"></span></p>'
+                   :'')+
+                 '</div>';
               if(d.today&&d.today.code){
                 var reset=d.today.changes_at?new Date(d.today.changes_at):null;
                 h+='<div class="card"><span class="kicker">Today&rsquo;s challenge</span>'+
@@ -1941,12 +1957,15 @@ public static class WorldPages
                '</div>'+
                '<div class="card"><span class="kicker">Your data</span>'+
                '<h2 style="margin-top:0">Yours to take or erase</h2>'+
+               // Sessions (PW-US-043): what is signed in as this account, and the power to end it.
+               '<div id="sessbox"><p><button class="btn secondary" id="sessShow">Show active sessions</button></p></div>'+
                // A plain link cannot work here: the export is authenticated by the X-World-Account
                // header, which a navigation never sends, so this always answered 401. It is fetched
-               // and saved as a blob instead.
-               '<p><button class="btn secondary" id="dlexport">Export my data (JSON)</button> '+
+               // and saved as a blob instead. Scope in the label (PW-US-044): this is the WORLD
+               // export — the complete PCI account export lives in the Institute student portal.
+               '<p><button class="btn secondary" id="dlexport">Export my PCI World data (JSON)</button> '+
                '<button class="btn secondary" id="signout">Sign out</button> '+
-               '<button class="btn secondary" id="delacct">Delete my account</button></p>'+
+               '<button class="btn secondary" id="delacct">Delete my PCI World participation</button></p>'+
                // A labelled password field, not window.prompt(): prompt() shows the password in
                // clear text, carries no label, cannot be styled or translated, and is blocked
                // outright by some browsers.
@@ -1967,6 +1986,44 @@ public static class WorldPages
             $('me').innerHTML=h;
             $('saveName').addEventListener('click',function(){
               api('/api/world/account/profile',{display_name:$('dn').value}).then(load);
+            });
+            function loadSessions(){
+              api('/api/world/me/sessions').then(function(o){
+                var rows=(o.rows||[]);
+                var sh='<h3 style="margin:6px 0">Active sessions ('+rows.length+')</h3>'+
+                  '<div class="tbl-wrap"><table><thead><tr><th scope="col">Signed in</th>'+
+                  '<th scope="col">Expires</th><th scope="col"></th></tr></thead><tbody>';
+                rows.forEach(function(s2){
+                  sh+='<tr><td class="num">'+esc((s2.created_at||'').split(' ')[0])+
+                      (s2.current?' <b>(this device)</b>':'')+'</td>'+
+                      '<td class="num">'+esc((s2.expires_at||'').split(' ')[0])+'</td>'+
+                      '<td>'+(s2.current?'':'<button class="btn secondary" data-revoke="'+s2.id+'">Sign out</button>')+'</td></tr>';
+                });
+                sh+='</tbody></table></div>'+
+                  (rows.length>1?'<p><button class="btn secondary" id="sessOthers">Sign out all other devices</button></p>':'')+
+                  '<p id="sessmsg" role="status"></p>';
+                $('sessbox').innerHTML=sh;
+                $('sessbox').querySelectorAll('[data-revoke]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/sessions/revoke',{id:parseInt(b.dataset.revoke,10)})
+                      .then(loadSessions)
+                      .catch(function(){if($('sessmsg'))$('sessmsg').textContent='Could not revoke — try again.';});
+                  });
+                });
+                if($('sessOthers'))$('sessOthers').addEventListener('click',function(){
+                  api('/api/world/me/sessions/revoke-others',{})
+                    .then(loadSessions)
+                    .catch(function(){if($('sessmsg'))$('sessmsg').textContent='Could not revoke — try again.';});
+                });
+              }).catch(function(){$('sessbox').innerHTML='<p class="meta"><span>Could not load sessions just now.</span></p>';});
+            }
+            $('sessShow').addEventListener('click',loadSessions);
+            if($('goalSave'))$('goalSave').addEventListener('click',function(){
+              var g=$('goalSel').value;
+              if(!g){$('goalMsg').textContent='Choose a goal first.';return;}
+              api('/api/world/me/preferences',{goal:g},'PATCH')
+                .then(function(){$('goalMsg').textContent='Saved.';})
+                .catch(function(){$('goalMsg').textContent='Could not save — try again.';});
             });
             if($('spSave'))$('spSave').addEventListener('click',function(){
               $('spMsg').textContent='';

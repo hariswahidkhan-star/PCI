@@ -255,6 +255,12 @@ public static class WorldAccount
         return (null, H.L(u["id"]));
     }
 
+    /// <summary>This account's live World sessions — metadata only, never a token value (they are
+    /// stored hashed and cannot be reprinted anyway). Feeds the sessions view (PW-US-043).</summary>
+    public static List<Dictionary<string, object?>> Sessions(Db db, long userId) =>
+        db.Query(@"SELECT id, token, created_at, expires_at FROM pciworld_user_sessions
+            WHERE user_id=? AND expires_at>datetime('now') ORDER BY created_at DESC, id DESC", userId);
+
     /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).
     /// Paginated (journey repair P1-06): the page size is a window, never the truth — totals come
     /// from <see cref="EvidenceStats"/> so an account with 1,000 attempts counts 1,000.</summary>
@@ -559,6 +565,78 @@ public static class WorldAccount
             });
         });
 
+        // ── Sessions (PW-US-043): what is signed in as me, and the power to end it. World
+        //    sessions only — PCI AI and platform sessions belong to the portal's security view. ──
+        string CallerSha(HttpContext ctx)
+        {
+            var t = ctx.Request.Headers["X-World-Account"].ToString();
+            if (string.IsNullOrWhiteSpace(t)) t = ctx.Request.Cookies[SessionCookie] ?? "";
+            return string.IsNullOrWhiteSpace(t) ? "" : Security.Sha(t);
+        }
+
+        app.MapGet("/api/world/me/sessions", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var mine = CallerSha(ctx);
+            var rows = Sessions(db, u.Id).Select(s => new
+            {
+                id = H.L(s["id"]),
+                created_at = H.Str(s["created_at"]),
+                expires_at = H.Str(s["expires_at"]),
+                current = H.Str(s["token"]) == mine,
+            });
+            return J(new { rows });
+        });
+
+        app.MapPost("/api/world/me/sessions/revoke", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var id = (long)(H.GetNum(b, "id") ?? 0);
+            // Ownership in SQL; revoking the CURRENT session is a legitimate sign-out-here.
+            var n = db.Execute("DELETE FROM pciworld_user_sessions WHERE id=? AND user_id=?", id, u.Id);
+            if (n == 0) return Err("not_found", 404);
+            log(null, "world_session_revoke", $"world #{u.Id} session #{id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world/me/sessions/revoke-others", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var n = db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=? AND token<>?", u.Id, CallerSha(ctx));
+            log(null, "world_session_revoke_others", $"world #{u.Id}: {n} session(s)");
+            return J(new { ok = true, revoked = n });
+        });
+
+        // ── World preferences (§10.5): product data on the participation row, never the profile. ──
+        app.MapGet("/api/world/me/preferences", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var prefs = WorldIdentity.ReadPreferences(db, u.Id);
+            return J(new { linked = prefs is not null, preferences = prefs, goals = WorldIdentity.Goals });
+        });
+
+        app.MapPatch("/api/world/me/preferences", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var err = WorldIdentity.UpdatePreferences(db, u.Id,
+                H.GetS(b, "goal"), H.GetS(b, "timezone"),
+                H.GetNum(b, "weekly_target") is { } wt ? (long)wt : null);
+            if (err is not null) return Err(err, err == "not_linked" ? 409 : 400);
+            return J(new { ok = true, preferences = WorldIdentity.ReadPreferences(db, u.Id) });
+        });
+
         // ── The shared canonical student profile (P1-10): the SAME record the PCI portal reads
         //    and writes — reused, never copied. Nothing here reaches any public surface without
         //    the separate Passport disclosure consent. ──
@@ -652,9 +730,31 @@ public static class WorldAccount
                                    message = H.Str(r["message"]), status = H.Str(r["status"]),
                                    created_at = H.Str(r["created_at"]) });
             ctx.Response.Headers["Content-Disposition"] = "attachment; filename=\"pciworld-my-data.json\"";
-            return J(new { exported_at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+            // Scope honesty (PW-US-044): this file is the PCI WORLD product export. It says what
+            // it contains and — as importantly — what it does not, so nobody mistakes it for a
+            // complete PCI account export. Shared profile fields ride along for context, labelled
+            // as canonical PCI data owned by the Institute account.
+            var sharedProfile = WorldIdentity.ReadSharedProfile(db, u.Id);
+            return J(new
+            {
+                scope = new
+                {
+                    product = "pci_world",
+                    contains = new[] { "world_account_identity", "challenge_attempts_and_answers",
+                        "passport_configuration", "content_reports" },
+                    does_not_contain = "PCI AI certification applications, payments, memberships, exams, " +
+                        "certificates or documents — request a complete PCI account export from the Institute student portal.",
+                },
+                exported_at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 email = u.Email, display_name = u.DisplayName, email_verified = u.EmailVerified,
-                passport_public = u.PassportPublic, attempts, reports });
+                passport_public = u.PassportPublic,
+                canonical_pci_profile = sharedProfile is null ? null : new
+                {
+                    note = "Canonical PCI student-profile data shared with the Institute account — included for context; it belongs to your PCI identity, not to PCI World.",
+                    profile = sharedProfile,
+                },
+                attempts, reports,
+            });
         });
 
         app.MapPost("/api/world/account/delete", async (HttpContext ctx) =>
