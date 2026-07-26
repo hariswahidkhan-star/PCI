@@ -32,11 +32,11 @@ Node 22, Python 3.11, Playwright + preinstalled Chromium.
 | Audit gate (was) | Result this cycle |
 |---|---|
 | Backend compile — **Blocked** | `dotnet build -c Release`: **0 warnings, 0 errors** |
-| Backend xUnit (audit counted 399 declared cases) — **Blocked** | **930/930 passed**, 0 skipped (suite has grown since the audit snapshot) |
+| Backend xUnit (audit counted 399 declared cases) — **Blocked** | **951/951 passed**, 0 skipped (suite has grown since the audit snapshot) |
 | Secure-exam build/tests — **Blocked** | Core builds on Linux; xUnit **21/21 passed** |
 | Oracle MySQL clean/second boot + migration integrity — **Blocked** | `migration_integrity_test.py` vs MySQL 8.0.46: **23/23 passed** (double boot, sentinel, column parity across 241 shared tables, money-column DECIMAL checks) |
 | MySQL adversarial integration — **Blocked** | integration suite vs MySQL: **1220/1220 passed** (after fixing one genuine MySQL-parity defect this run surfaced — see §4); founding **46/46**, honorary **19/19**, honorary-application **48/48** on MySQL |
-| SQLite adversarial integration — not run | **1220/1220 passed** |
+| SQLite adversarial integration — not run | **1231/1231 passed** (after fixing DEF-27, which hung the suite outright — see §4) |
 | 500-sweep (every route × anon/student/owner) — not run | **0 × 500 — PASS** |
 | Live smoke suite — not run | **65/65 passed** (see §5) |
 | Migration versioning/lock (P0-6) — CI pending | **8/8 passed** |
@@ -44,7 +44,7 @@ Node 22, Python 3.11, Playwright + preinstalled Chromium.
 | Retake wait (P0-7) — CI pending | **4/4 passed** |
 | Backup → restore round-trip (DR-1) — **Not evidenced** | **7/7 passed** (mysqldump → restore, against live MySQL) |
 | S3 storage behaviour — **Blocked** (`moto` absent) | **9/9 passed** against a live moto S3 server — after fixing the suite itself, which had never actually run (DEF-23, §4) |
-| Frontend typecheck/tests/build — passing | Re-confirmed: typecheck clean, **291/291** unit tests (44 files), student + admin production builds OK |
+| Frontend typecheck/tests/build — passing | Re-confirmed: typecheck clean, **296/296** unit tests (45 files), student + admin production builds OK |
 | Playwright browser suite (audit discovered 82) — **Not executed** | **110 scenarios** now exist in 24 spec files; chromium project **84 passed / 2 skipped / 0 failed**, mobile-chrome smoke **6/6** (see §5) |
 | Python logic suites — passing | Re-confirmed: production-config 11/11 (one case added), lifecycle, release, casework, settings, publication, storage — all pass |
 | Generated MySQL schema determinism | Regeneration is byte-identical to the committed file (SHA-256 `993f2833…`) — after fixing a real generator bug the audit's hash-check could never have caught (DEF-22, §4) |
@@ -69,8 +69,11 @@ to main's `WorkerLease` semantics, and wired into CI.
 
 ## 4. New defects found *and fixed* by running the gates (this branch)
 
-Executing the previously-blocked gates surfaced five genuine defects, each now fixed with a
-regression test (see `docs/testing/DEFECT_REGISTER.md` DEF-22..26 and the commit history):
+Executing the previously-blocked gates surfaced six genuine defects, each now fixed with a
+regression test (see `docs/testing/DEFECT_REGISTER.md` DEF-22..27 and the commit history). The most
+serious of them, DEF-27, was only reachable by actually running the adversarial suite — it is
+invisible to code review because the offending call is three layers below the transaction that
+causes the damage:
 
 1. **DEF-22 — schema generator dropped a table from its type map** (`tools/sqlite_to_mysql.py`).
    A one-line `CREATE TABLE` made the body-parsing regex swallow the next table
@@ -118,6 +121,21 @@ Plus one audit item implemented as designed:
    nothing. Fail-safe against over-granting, but it silently no-ops a legitimate grant and discloses
    an unrelated financial record. New `FindForSubject` guards every pre-check and race path in
    `AdminOps` and `ExamExceptions` with **409 `idempotency_key_conflict`**.
+
+7. **DEF-27 (Critical, availability) — a stalled vendor froze the entire backend.** `Db.Transaction`
+   holds `_gate`, the single global lock guarding *every* database operation, for its whole body. The
+   RES-026 work wrapped `Settlement.Grant` in a transaction to make the ledger claim atomic — but that
+   method performs outbound network I/O (Certuvo provisioning, integration webhooks, receipt email).
+   One admin waiver therefore held the global DB lock across a vendor round-trip, blocking every other
+   request in the process, permanently when the vendor never answered.
+
+   **Measured** with Certuvo pointed at a listener that accepts and never replies: an unrelated
+   `GET /api/certifications` timed out after **25 s** (baseline 0.01 s) and the waiver never returned.
+   This is what hung the adversarial integration suite at §13a for 6.5 hours at 0 % CPU. After the fix
+   (claim → grant → record, with the grant outside any transaction and a compensating claim release on
+   failure) the unrelated read is served in **0.0 s**, the waiver still completes, the integration
+   suite passes **1231/1231**, and idempotency is unchanged at 19/19. Pinned by
+   `waiver_vendor_stall_test.py` (6/6), blocking in CI.
 
 Plus the audit item that main and this branch fixed independently:
 
