@@ -168,6 +168,75 @@ public static class WorldIdentity
         return m is null ? null : H.L(m["canonical_user_id"]);
     }
 
+    /// <summary>The canonical user for any World account: the map first, then the direct
+    /// student_user_id link (older rows the boot pass has not decided yet). Null = unmapped
+    /// (a quarantined conflict, or a deleted canonical row).</summary>
+    public static long? CanonicalUserFor(Db db, long worldUserId)
+    {
+        var viaMap = CanonicalFor(db, worldUserId);
+        if (viaMap is not null) return viaMap;
+        var w = db.QueryOne("SELECT student_user_id FROM pciworld_users WHERE id=?", worldUserId);
+        return w?["student_user_id"] is null ? null : H.L(w["student_user_id"]);
+    }
+
+    // ───────────────────────── shared canonical profile (P1-10) ─────────────────────────
+    //
+    // ONE student profile, both products. PCI World reads and writes the SAME canonical
+    // users/student_profiles records the PCI AI portal uses — never a copy, never a sync job.
+    // The Passport's disclosure layer is a separate consent: nothing read here becomes public
+    // anywhere without the owner's explicit Passport choices.
+
+    /// <summary>The writable subset — exactly the portal's PATCH /api/me/profile allow-list minus
+    /// profile_photo (the Passport photograph is a separate, World-scoped consent).</summary>
+    public static readonly string[] SharedProfileFields =
+    {
+        "mobile", "country", "city", "preferred_language", "current_role", "company",
+        "industry_sector", "years_experience", "highest_qualification", "project_controls_area",
+        "enrollment_purpose", "linkedin_url",
+    };
+
+    /// <summary>The canonical profile as the World surface may see it. Null when the World account
+    /// has no resolved canonical identity (quarantined conflict).</summary>
+    public static Dictionary<string, object?>? ReadSharedProfile(Db db, long worldUserId)
+    {
+        var uid = CanonicalUserFor(db, worldUserId);
+        if (uid is null) return null;
+        var u = db.QueryOne("SELECT first_name, last_name FROM users WHERE id=?", uid);
+        if (u is null) return null;
+        var p = db.QueryOne("SELECT * FROM student_profiles WHERE user_id=?", uid);
+        var outRow = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["user_id"] = uid,
+            ["first_name"] = H.Str(u["first_name"]),
+            ["last_name"] = H.Str(u["last_name"]),
+            ["profile_completion_percentage"] = p is null ? 20L : H.L(p["profile_completion_percentage"]),
+        };
+        foreach (var f in SharedProfileFields) outRow[f] = p is null ? null : H.Str(p[f]);
+        return outRow;
+    }
+
+    /// <summary>Write allow-listed fields through to the canonical student_profiles row — the same
+    /// mutation, caps and completion recompute the portal performs, so a save made here is simply
+    /// THE profile on the next portal read. Returns an error key or null.</summary>
+    public static string? UpdateSharedProfile(Db db, long worldUserId, Dictionary<string, System.Text.Json.JsonElement> body)
+    {
+        var uid = CanonicalUserFor(db, worldUserId);
+        if (uid is null) return "not_linked";
+        if (db.QueryOne("SELECT user_id FROM student_profiles WHERE user_id=?", uid) is null)
+            db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
+        var set = SharedProfileFields.Where(body.ContainsKey).ToList();
+        if (set.Count > 0)
+        {
+            // Same 1000-char cap and back-quoted identifiers as the portal (`current_role` is a
+            // reserved word on MySQL/MariaDB).
+            var vals = set.Select(k => { var s = H.GetS(body, k) ?? ""; return (object?)(s.Length > 1000 ? s[..1000] : s); })
+                .Append(uid).ToArray();
+            db.Execute($"UPDATE student_profiles SET {string.Join(",", set.Select(k => $"`{k}`=?"))} WHERE user_id=?", vals);
+        }
+        Endpoints.Account.RecomputeCompletion(db, uid.Value);
+        return null;
+    }
+
     public static void EnsureParticipant(Db db, long canonicalUserId) =>
         db.Execute("INSERT OR IGNORE INTO pciworld_participants(user_id) VALUES(?)", canonicalUserId);
 

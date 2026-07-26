@@ -45,11 +45,16 @@ public static class WorldAttempts
         var version = H.L(ch["current_version"]);
 
         // Daily pin: when this is today's featured challenge, play the version the period pinned at
-        // the boundary — the rotation ledger is the authority, not the mutable working copy.
+        // the boundary — the rotation ledger is the authority, not the mutable working copy. The
+        // attempt records the period it belonged to (daily provenance for streak/daily state).
+        long? rotationPeriodId = null;
         var period = WorldRotation.CurrentPeriod(db, utcNow);
         if (period is not null && H.L(period["challenge_id"]) == challengeId &&
             WorldLifecycle.PinnedVersion(db, challengeId, H.L(period["version"])) is not null)
+        {
             version = H.L(period["version"]);
+            rotationPeriodId = H.L(period["id"]);
+        }
 
         long? inviteId = null;
         if (!string.IsNullOrEmpty(inviteToken))
@@ -94,10 +99,13 @@ public static class WorldAttempts
             return new(null, H.L(completed["id"]), true, true, H.Str(completed["answers_json"]), challengeId, version);
 
         var attemptId = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts
-                (session_id,challenge_id,version,invite_id,answers_json,user_id,parent_attempt_id)
-            VALUES(?,?,?,?, '{}', ?, ?)",
+                (session_id,challenge_id,version,invite_id,answers_json,user_id,parent_attempt_id,rotation_period_id)
+            VALUES(?,?,?,?, '{}', ?, ?, ?)",
             sessionId, challengeId, version, inviteId, userId,
-            retake && completed is not null ? H.L(completed["id"]) : (long?)null);
+            retake && completed is not null ? H.L(completed["id"]) : (long?)null,
+            // An invitation is its own play context, and a retake is not the day's first play —
+            // neither earns daily provenance (streak fairness, §7.5).
+            inviteId is null && !retake ? rotationPeriodId : null);
         return new(null, attemptId, false, false, null, challengeId, version);
     }
 

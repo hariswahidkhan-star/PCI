@@ -26,7 +26,36 @@ public static class WorldDashboard
     public sealed record Snapshot(string PrimaryAction, long? PrimaryAttemptId, string? PrimaryCode,
         Today TodayState, PassportState Passport, WorldAccount.Stats Progress,
         List<Dictionary<string, object?>> RecentResults, List<Dictionary<string, object?>> InProgress,
-        string? RecommendedCode, string? RecommendedTitle);
+        string? RecommendedCode, string? RecommendedTitle, long StreakDays);
+
+    /// <summary>
+    /// The optional practice streak (§7.5 / PW-US-028), derived from the rotation LEDGER: one
+    /// qualifying completion per rotation day — an attempt that recorded its period (a genuine
+    /// daily play; invitations and retakes never carry one). Consecutive days counted back from
+    /// today; a today not yet completed doesn't break the run mid-day (no-blame grace), and a
+    /// substituted period still counts through any of the day's revisions.
+    /// </summary>
+    public static long Streak(Db db, long userId, DateTime utcNow)
+    {
+        var today = WorldRotation.DayKey(db, utcNow);
+        var days = db.Query(@"SELECT p.day_key,
+                MAX(CASE WHEN a.id IS NULL THEN 0 ELSE 1 END) AS done
+            FROM pciworld_rotation_periods p
+            LEFT JOIN pciworld_attempts a ON a.rotation_period_id=p.id
+                AND a.user_id=? AND a.status='completed' AND a.parent_attempt_id IS NULL
+            WHERE p.day_key<=?
+            GROUP BY p.day_key ORDER BY p.day_key DESC LIMIT 366", userId, today);
+        long streak = 0;
+        for (var i = 0; i < days.Count; i++)
+        {
+            var done = H.L(days[i]["done"]) == 1;
+            if (done) { streak++; continue; }
+            // The only forgivable miss is TODAY, still in progress — and only at the head.
+            if (i == 0 && H.Str(days[i]["day_key"]) == today) continue;
+            break;
+        }
+        return streak;
+    }
 
     public static Snapshot Build(Db db, WorldAccount.UserCtx u, DateTime utcNow)
     {
@@ -118,6 +147,7 @@ public static class WorldDashboard
         else action = "browse_archive";
 
         return new Snapshot(action, actionAttempt, actionCode, today, passport, progress,
-            recent, open, rec is null ? null : H.Str(rec["code"]), rec is null ? null : H.Str(rec["title"]));
+            recent, open, rec is null ? null : H.Str(rec["code"]), rec is null ? null : H.Str(rec["title"]),
+            Streak(db, u.Id, utcNow));
     }
 }

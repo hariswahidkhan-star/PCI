@@ -102,6 +102,52 @@ public class WorldDashboardTests
     }
 
     [Fact]
+    public void The_streak_counts_daily_completions_only_and_forgives_an_unfinished_today()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-streak')");
+        var (_, uid, _) = WorldAccount.Register(db, "streak@x.test", "long-password-1", "S", null);
+        var json = System.Text.Json.JsonDocument.Parse("""{"a":"1"}""").RootElement;
+
+        // Complete the daily challenge on three consecutive days, through the real start path
+        // (which records the rotation period).
+        for (var d = 0; d < 3; d++)
+        {
+            var day = new DateTime(2026, 10, 1 + d, 12, 0, 0, DateTimeKind.Utc);
+            var code = H.Str(db.QueryOne("SELECT c.code FROM pciworld_challenges c WHERE c.id=?",
+                WorldRotation.CurrentPeriod(db, day)!["challenge_id"])!["code"])!;
+            var start = WorldAttempts.Start(db, sess, uid, code, null, false, day);
+            Assert.False(start.Completed);
+            WorldAttempts.Submit(db, sess, uid, start.AttemptId, json);
+        }
+        Assert.Equal(3, WorldDashboard.Streak(db, uid, new DateTime(2026, 10, 3, 18, 0, 0, DateTimeKind.Utc)));
+
+        // The next morning, before playing, the run is intact (no-blame grace for an open today)…
+        var day4 = new DateTime(2026, 10, 4, 9, 0, 0, DateTimeKind.Utc);
+        WorldRotation.RunDue(db, day4);
+        Assert.Equal(3, WorldDashboard.Streak(db, uid, day4));
+
+        // …a RETAKE that day does not extend it (not a first daily play)…
+        var code4 = H.Str(db.QueryOne("SELECT code FROM pciworld_challenges WHERE id=?",
+            WorldRotation.CurrentPeriod(db, day4)!["challenge_id"])!["code"])!;
+        var first4 = WorldAttempts.Start(db, sess, uid, code4, null, false, day4);
+        WorldAttempts.Submit(db, sess, uid, first4.AttemptId, json);
+        var retake = WorldAttempts.Start(db, sess, uid, code4, null, true, day4);
+        WorldAttempts.Submit(db, sess, uid, retake.AttemptId, json);
+        Assert.Equal(4, WorldDashboard.Streak(db, uid, day4));
+        Assert.Null(db.QueryOne("SELECT rotation_period_id FROM pciworld_attempts WHERE id=?", retake.AttemptId)!["rotation_period_id"]);
+
+        // …and a genuinely missed whole day resets the run to the new head.
+        var day6 = new DateTime(2026, 10, 6, 12, 0, 0, DateTimeKind.Utc);
+        WorldRotation.RunDue(db, day6);   // opens day 5 and day 6; day 5 never played
+        var code6 = H.Str(db.QueryOne("SELECT code FROM pciworld_challenges WHERE id=?",
+            WorldRotation.CurrentPeriod(db, day6)!["challenge_id"])!["code"])!;
+        var s6 = WorldAttempts.Start(db, sess, uid, code6, null, false, day6);
+        WorldAttempts.Submit(db, sess, uid, s6.AttemptId, json);
+        Assert.Equal(1, WorldDashboard.Streak(db, uid, day6));
+    }
+
+    [Fact]
     public void The_recommendation_is_a_challenge_the_account_has_not_completed()
     {
         var db = NewWorldDb();

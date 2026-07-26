@@ -63,7 +63,12 @@ public static class WorldAccount
         if (!email.Contains('@') || email.Length < 6) return ("bad_email", 0, "");
         if (password.Length < 10) return ("weak_password", 0, "");
         if (db.QueryOne("SELECT id FROM pciworld_users WHERE email=?", email) is not null) return ("duplicate_email", 0, "");
-        var id = db.ExecuteReturningId("INSERT INTO pciworld_users(email,password_hash,display_name) VALUES(?,?,?)",
+        // Privacy-safe defaults (journey repair P1-05): a NEW account publishes nothing beyond
+        // challenge titles until its owner deliberately switches fields on. Pre-existing rows keep
+        // the schema default (visible) — the behaviour every already-published Passport had.
+        var id = db.ExecuteReturningId(@"INSERT INTO pciworld_users
+                (email,password_hash,display_name,passport_show_scores,passport_show_profiles,passport_show_dates)
+            VALUES(?,?,?,0,0,0)",
             email, BCrypt.Net.BCrypt.HashPassword(password), Trunc(displayName, 80));
         ClaimSession(db, id, worldSessionId);
         // Canonical identity from the moment the account exists (P0-00): a standalone World
@@ -180,11 +185,10 @@ public static class WorldAccount
     public static bool VerifyAccountPassword(Db db, long worldUserId, string? password)
     {
         if (string.IsNullOrEmpty(password)) return false;
-        var row = db.QueryOne("SELECT password_hash, student_user_id FROM pciworld_users WHERE id=?", worldUserId);
+        var row = db.QueryOne("SELECT password_hash FROM pciworld_users WHERE id=?", worldUserId);
         if (row is null) return false;
         if (Security.VerifyPassword(password, row["password_hash"] as string)) return true;
-        var canonical = WorldIdentity.CanonicalFor(db, worldUserId)
-                        ?? (row["student_user_id"] is null ? (long?)null : H.L(row["student_user_id"]));
+        var canonical = WorldIdentity.CanonicalUserFor(db, worldUserId);
         if (canonical is null) return false;
         var cu = db.QueryOne("SELECT password_hash FROM users WHERE id=? AND status='active'", canonical);
         return cu is not null && Security.VerifyPassword(password, cu["password_hash"] as string);
@@ -198,6 +202,12 @@ public static class WorldAccount
         if (u is null) return ("not_found", null);
         if (H.L(u["email_verified"]) != 1) return ("email_unverified", null);
         if (string.IsNullOrWhiteSpace(H.Str(u["display_name"]))) return ("no_display_name", null);
+        // Publish-order safety (journey repair P1-05): an empty public Passport is a page that
+        // says nothing about its owner and invites confusion about what it claims. At least one
+        // deliberately selected evidence item is part of readiness, enforced server-side.
+        if (db.Scalar<long>(@"SELECT COUNT(*) FROM pciworld_attempts
+                WHERE user_id=? AND status='completed' AND passport_visible=1", userId) == 0)
+            return ("no_evidence", null);
         var token = Security.RandomHex(32);
         db.Execute("UPDATE pciworld_users SET passport_public=1, passport_token_sha=? WHERE id=?",
             Security.Sha(token), userId);
@@ -225,8 +235,10 @@ public static class WorldAccount
             var byEmail = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
             if (byEmail is null)
             {
-                var fresh = db.ExecuteReturningId(
-                    "INSERT INTO pciworld_users(email,password_hash,display_name,email_verified,student_user_id) VALUES(?,?,?,1,?)",
+                var fresh = db.ExecuteReturningId(@"INSERT INTO pciworld_users
+                        (email,password_hash,display_name,email_verified,student_user_id,
+                         passport_show_scores,passport_show_profiles,passport_show_dates)
+                    VALUES(?,?,?,1,?,0,0,0)",
                     email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId);
                 try { WorldIdentity.MapOne(db, fresh); WorldIdentity.EnsureParticipant(db, studentId); } catch { }
                 return (null, fresh);
@@ -530,6 +542,7 @@ public static class WorldAccount
                     visible_evidence = s.Passport.VisibleEvidence,
                 },
                 progress = new { completed = s.Progress.Completed, industries = s.Progress.Industries, tracks = s.Progress.Tracks },
+                streak_days = s.StreakDays,
                 recent = s.RecentResults.Select(r => new
                 {
                     attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
@@ -544,6 +557,31 @@ public static class WorldAccount
                 }),
                 recommended = s.RecommendedCode is null ? null : new { code = s.RecommendedCode, title = s.RecommendedTitle },
             });
+        });
+
+        // ── The shared canonical student profile (P1-10): the SAME record the PCI portal reads
+        //    and writes — reused, never copied. Nothing here reaches any public surface without
+        //    the separate Passport disclosure consent. ──
+        app.MapGet("/api/world/me/profile", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var profile = WorldIdentity.ReadSharedProfile(db, u.Id);
+            return J(new { linked = profile is not null, profile });
+        });
+
+        app.MapPatch("/api/world/me/profile", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var err = WorldIdentity.UpdateSharedProfile(db, u.Id, b);
+            if (err is not null) return Err(err, 409,
+                "This World account has no linked PCI identity yet — sign in with your PCI credentials to link it.");
+            log(null, "world_profile_update", $"world #{u.Id}");
+            return J(new { ok = true, profile = WorldIdentity.ReadSharedProfile(db, u.Id) });
         });
 
         app.MapGet("/api/world/account", (HttpContext ctx) =>
@@ -835,6 +873,7 @@ public static class WorldAccount
             {
                 "email_unverified" => "Verify your email before publishing a public Passport.",
                 "no_display_name" => "Choose the display name that should appear on your public Passport first.",
+                "no_evidence" => "Select at least one completed challenge to appear on your Passport before publishing.",
                 _ => null,
             });
             log(null, "world_passport_publish", $"#{u.Id}");
