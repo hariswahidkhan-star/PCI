@@ -72,8 +72,8 @@ def make(ctx):
                f'100 % &#8212; cannot pay at any probability</text>')
     asym = (f'<line x1="{L}" y1="{Y(ASY):.1f}" x2="{W - R}" y2="{Y(ASY):.1f}" '
             f'stroke="{SLATE}" stroke-width="1" stroke-dasharray="3 4"/>'
-            f'<text x="{W - R - 4}" y="{Y(ASY) - 6:.1f}" font-size="10.5" fill="{SLATE}" '
-            f'text-anchor="end">asymptote 28.2224 % (margin differential alone)</text>')
+            f'<text x="{L + 140}" y="{Y(ASY) + 16:.1f}" font-size="10.5" fill="{SLATE}">'
+            f'asymptote 28.2224 % &#8212; the margin differential alone</text>')
     xcross = (f'<line x1="{X(CROSS100):.1f}" y1="{Y(100):.1f}" x2="{X(CROSS100):.1f}" '
               f'y2="{H - B}" stroke="{CRIMSON}" stroke-width="1" stroke-dasharray="3 3"/>'
               f'<text x="{X(CROSS100) + 5:.1f}" y="{H - B - 6:.1f}" font-size="10" '
@@ -153,16 +153,16 @@ def make(ctx):
     am = line(lambda c: (c - AMORT) / 30e6 * 100.0, CRIMSON, 2.6)
 
     cross = (f'<circle cx="{Xc(6e6):.1f}" cy="{Yr(6.0):.1f}" r="4" fill="{INK}"/>'
-             f'<text x="{Xc(6e6) - 6:.1f}" y="{Yr(6.0) - 10:.1f}" font-size="10.5" fill="{INK}" '
-             f'text-anchor="end">crossover 6,000,000: both 6.0 %</text>')
+             f'<text x="{Xc(6.2e6):.1f}" y="{Yr(2.4):.1f}" font-size="10.5" fill="{INK}">'
+             f'crossover 6,000,000: both 6.0 %</text>')
     cliffs = (f'<line x1="{Xc(IO):.1f}" y1="{Yr(0):.1f}" x2="{Xc(IO):.1f}" y2="{H - B}" '
               f'stroke="{BLUE}" stroke-width="1" stroke-dasharray="3 3"/>'
               f'<text x="{Xc(IO) + 4:.1f}" y="{H - B - 8:.1f}" font-size="10" fill="{BLUE}">'
               f'4,200,000 (&#8722;65.00 %)</text>'
               f'<line x1="{Xc(AMORT):.1f}" y1="{Yr(0):.1f}" x2="{Xc(AMORT):.1f}" y2="{H - B}" '
               f'stroke="{CRIMSON}" stroke-width="1" stroke-dasharray="3 3"/>'
-              f'<text x="{Xc(AMORT) + 4:.1f}" y="{H - B - 24:.1f}" font-size="10" '
-              f'fill="{CRIMSON}">8,349,392 (&#8722;30.4217 %)</text>')
+              f'<text x="{Xc(AMORT) - 5:.1f}" y="{H - B - 26:.1f}" font-size="10" '
+              f'fill="{CRIMSON}" text-anchor="end">8,349,392 (&#8722;30.4217 %)</text>')
     cov = (f'<line x1="{Xc(10019270.47):.1f}" y1="{T}" x2="{Xc(10019270.47):.1f}" '
            f'y2="{H - B}" stroke="{INK}" stroke-width="1" stroke-dasharray="5 4" opacity="0.6"/>'
            f'<text x="{Xc(10019270.47):.1f}" y="{T - 8:.1f}" font-size="10.5" fill="{INK}" '

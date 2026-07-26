@@ -112,6 +112,62 @@ FRONT = """
   <p><strong>Legal and jurisdictional note.</strong> Nothing here is legal, tax, accounting or
   investment advice. Treatments differ by jurisdiction and by reporting framework; specific matters
   must be referred to qualified professional advisers in the relevant jurisdiction.</p>
+
+  <h2 style="page-break-before: always;">How to use this book</h2>
+
+  <p>This is a reference, not a course. It is written to be read in order once and consulted
+  out of order thereafter, and the apparatus below exists to make the second use as easy as the
+  first.</p>
+
+  <p><strong>How anything is addressed.</strong> Content is numbered <em>Domain.KnowledgeArea.Topic</em>
+  — so <em>7.3.2</em> is the second topic of the third Knowledge Area of Domain 7, and a
+  cross-reference of the form <em>KA 10.2</em> is precise. Page numbers are never used for
+  cross-references, because this volume is regenerated from source and its pagination is not stable
+  across editions. Every reference in the text is therefore still valid in the next one.</p>
+
+  <p><strong>The worked examples are the spine of the book.</strong> Each follows the same five
+  steps — Setup, Formula, Substitution, Result, Interpretation — and the <em>Interpretation</em> is
+  deliberately the longest and the most valuable. It is where the number is turned into a decision:
+  what breaks the result, what the breakeven is, which assumption the conclusion is most sensitive
+  to, and what a reviewer should check. If you read only one part of a worked example, read that
+  one. The four steps before it exist so that you can reproduce the number and disagree with it.</p>
+
+  <p><strong>Every number can be checked, and should be.</strong> Every figure printed as a result
+  anywhere in this volume — in worked examples, in the text, in multiple-choice options, in exercise
+  solutions, in case studies — is recomputed independently with decimal arithmetic by a verification
+  suite that must pass in full before any chapter is accepted. Appendix C records how many checks
+  stand behind each domain. If you find a number that does not reproduce from its stated method and
+  inputs, that is a defect in this book and worth reporting.</p>
+
+  <p><strong>The <em>AI in this KA</em> sections are not an appendix to the subject.</strong> Each
+  states three things: where AI genuinely earns its place in that Knowledge Area, where it must not
+  go, and how to verify its output concretely. They exist because the alternative — a single chapter
+  about AI at the back — teaches that the question is separable from the work, and it is not. One
+  principle governs all of them: <em>AI proposes; the professional verifies, decides and remains
+  accountable.</em></p>
+
+  <p><strong>What the sections at the end of each domain are for.</strong> <em>Advanced topics</em>
+  extend the domain past the level a candidate is assessed on, and each closes with a list of
+  invariants a reviewer can test. <em>Industry variations</em> say what changes by sector, and are
+  written so that a reader in one sector can see what a reader in another is dealing with.
+  <em>Case studies</em> carry real arithmetic and are the place where several Knowledge Areas have to
+  work together. <em>Executive perspective</em> is what a director cannot delegate. <em>Calculation
+  exercises</em> each carry a full solution and a <em>Common error</em> note, and the common error is
+  frequently the more useful half. The <em>Practitioner's toolkit</em> items are meant to be adopted
+  and then left stable; adapt the headings to your organisation and stop changing them.
+  <em>Exam preparation</em> lists what is assessed, the calculations to be able to do under time
+  pressure, and the traps — each cross-referenced to where it is taught.</p>
+
+  <p><strong>Two conventions worth knowing before you meet them.</strong> Where a result is
+  established in one domain, the others <em>cite</em> it rather than re-derive it; if two domains
+  appear to derive the same thing independently, that is a defect. And where one word carries two
+  genuinely different concepts, the later use states the collision explicitly rather than leaving
+  you to infer it. Appendix B lists both.</p>
+
+  <p><strong>If you are studying for the examination</strong>, work the calculation exercises before
+  reading their solutions, and treat the <em>Common error</em> notes as the syllabus they effectively
+  are. If you are using this at work, start from the Practitioner's toolkit of the domain you need
+  and follow its cross-references back into the treatment.</p>
 </div>
 """
 
