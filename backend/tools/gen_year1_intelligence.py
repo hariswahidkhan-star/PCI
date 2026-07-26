@@ -477,7 +477,41 @@ MAPPED_NOV = [
     ("WC-RSC-334", "The supplier who asked for help early", "project_rescue", "procurement_contracts", "procurement_mobilization", "construction_infrastructure", "multi_stage_decision", "advanced", 13, 334),
 ]
 assert len(MAPPED_NOV) == 26
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG + MAPPED_SEP + MAPPED_OCT + MAPPED_NOV
+
+# ── December authored pack: handover, closeout, lessons and capstone missions. ──
+MAPPED_DEC = [
+    ("WC-RSC-337", "A community meeting with one answer left", "project_rescue", "stakeholders_communication", "closeout_lessons", "cross_sector", "multi_stage_decision", "advanced", 18, 335),
+    ("WC-RSK-338", "Quantifying the risk nobody would name", "risk_room", "risk_uncertainty", "closeout_lessons", "healthcare_life_sciences", "evidence_diagnosis", "advanced", 14, 336),
+    ("WC-RSC-339", "The regulator's question you saw coming", "project_rescue", "stakeholders_communication", "closeout_lessons", "cross_sector", "multi_stage_decision", "advanced", 16, 337),
+    ("WC-RSK-346", "The go-live register, read backwards", "risk_room", "risk_uncertainty", "commissioning_handover", "cross_sector", "evidence_diagnosis", "advanced", 15, 338),
+    ("WC-RSC-341", "An escalation drafted in anger", "project_rescue", "stakeholders_communication", "closeout_lessons", "energy_utilities", "multi_stage_decision", "advanced", 14, 339),
+    ("WC-RSK-340", "The reserve the business case never had", "risk_room", "risk_uncertainty", "concept_business_case", "climate_sustainability", "evidence_diagnosis", "advanced", 24, 340),
+    ("WC-RSC-343", "The steering pack with two audiences", "project_rescue", "stakeholders_communication", "closeout_lessons", "technology_digital", "multi_stage_decision", "advanced", 15, 341),
+    ("WC-RSK-342", "Sequencing a season that cannot slip", "risk_room", "risk_uncertainty", "concept_business_case", "professional_services_other", "order_rank", "expert", 26, 342),
+    ("WC-RSC-345", "Re-baselining without losing the story", "project_rescue", "change_claims_recovery", "closeout_lessons", "construction_infrastructure", "multi_stage_decision", "advanced", 13, 343),
+    ("WC-RSK-344", "Order the recovery, not just the claim", "risk_room", "change_claims_recovery", "procurement_mobilization", "transport_logistics", "order_rank", "expert", 22, 344),
+    ("WC-RSC-347", "The shadow project in the minor-works log", "project_rescue", "scope_requirements", "closeout_lessons", "cross_sector", "multi_stage_decision", "advanced", 18, 345),
+    ("WC-RSC-348", "A forecast the trend does not support", "project_rescue", "schedule_planning", "closeout_lessons", "climate_sustainability", "multi_stage_decision", "advanced", 16, 346),
+    ("WC-RSC-349", "The crew that was promised twice", "project_rescue", "resources_leadership", "commissioning_handover", "manufacturing_industrial", "multi_stage_decision", "advanced", 15, 347),
+    ("WC-RSC-350", "An instruction the contract never defined", "project_rescue", "procurement_contracts", "commissioning_handover", "cross_sector", "multi_stage_decision", "advanced", 13, 348),
+    ("WC-RSC-351", "The acceleration that cost more than the delay", "project_rescue", "change_claims_recovery", "commissioning_handover", "public_sector", "multi_stage_decision", "advanced", 18, 349),
+    ("WC-RSC-352", "Charging points, uncharged responsibilities", "project_rescue", "scope_requirements", "commissioning_handover", "transport_logistics", "multi_stage_decision", "advanced", 16, 352),
+    ("WC-RSC-353", "The handover date that moved twice", "project_rescue", "schedule_planning", "commissioning_handover", "construction_infrastructure", "multi_stage_decision", "advanced", 14, 353),
+    ("WC-RSC-354", "A handover the team was not ready for", "project_rescue", "resources_leadership", "commissioning_handover", "energy_utilities", "multi_stage_decision", "advanced", 13, 354),
+    ("WC-RSC-355", "The tender clarification that changed the job", "project_rescue", "procurement_contracts", "concept_business_case", "technology_digital", "multi_stage_decision", "advanced", 18, 355),
+    ("WC-RSC-356", "Scope growth in committee minutes", "project_rescue", "change_claims_recovery", "procurement_mobilization", "cross_sector", "multi_stage_decision", "advanced", 16, 356),
+    ("WC-RSC-357", "One deck, three dictionaries", "project_rescue", "scope_requirements", "concept_business_case", "construction_infrastructure", "multi_stage_decision", "advanced", 14, 357),
+    ("WC-RSC-358", "The float ledger, read at mobilisation", "project_rescue", "schedule_planning", "procurement_mobilization", "cross_sector", "evidence_diagnosis", "advanced", 15, 358),
+    ("WC-RSC-359", "The specialist who became the bottleneck", "project_rescue", "resources_leadership", "procurement_mobilization", "construction_infrastructure", "evidence_diagnosis", "advanced", 22, 359),
+    ("WC-RSC-360", "The price that answered a different question", "project_rescue", "procurement_contracts", "concept_business_case", "cross_sector", "evidence_diagnosis", "advanced", 26, 360),
+    ("WC-RSC-361", "The recovery plan with two owners", "project_rescue", "change_claims_recovery", "procurement_mobilization", "energy_utilities", "evidence_diagnosis", "advanced", 28, 361),
+    ("WC-RSC-362", "Order the ward's words", "project_rescue", "scope_requirements", "concept_business_case", "healthcare_life_sciences", "order_rank", "advanced", 24, 362),
+    ("WC-RSC-363", "Two critical paths, one overhaul window", "project_rescue", "schedule_planning", "procurement_mobilization", "manufacturing_industrial", "order_rank", "expert", 22, 363),
+    ("WC-RSC-364", "Overtime as a plan, again", "project_rescue", "resources_leadership", "procurement_mobilization", "public_sector", "order_rank", "expert", 28, 364),
+    ("WC-RSC-365", "Order the counter-offer", "project_rescue", "procurement_contracts", "concept_business_case", "technology_digital", "order_rank", "expert", 24, 365),
+]
+assert len(MAPPED_DEC) == 29
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL + MAPPED_AUG + MAPPED_SEP + MAPPED_OCT + MAPPED_NOV + MAPPED_DEC
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -497,7 +531,8 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-RES-013": 228, "WC-RES-037": 229,
                    "WC-TRC-052": 258, "WC-TRC-051": 259,
                    "WC-AIA-029": 288, "WC-AIA-010": 289, "WC-DQA-017": 290, "WC-DQ-045": 291,
-                   "WC-CBS-038": 318, "WC-CSH-019": 319, "WC-PRD-011": 320, "WC-EVM-031": 321}
+                   "WC-CBS-038": 318, "WC-CSH-019": 319, "WC-PRD-011": 320, "WC-EVM-031": 321,
+                   "WC-DEC-016": 350, "WC-PFO-043": 351}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}

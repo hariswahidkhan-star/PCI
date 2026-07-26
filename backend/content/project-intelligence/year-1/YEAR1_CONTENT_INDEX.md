@@ -17,9 +17,9 @@ distribution table, code range and mapped-slot assignment.
 | 09 September | Quality, assurance, safety and sustainability | 30 | PI-Y1-D244–D273 | 30 | 0 |
 | 10 October | Digital delivery, data quality and responsible AI | 31 | PI-Y1-D274–D304 | 31 | 0 |
 | 11 November | Integrated project controls and executive trade-offs | 30 | PI-Y1-D305–D334 | 30 | 0 |
-| 12 December | Handover, closeout, lessons and capstone missions | 31 | PI-Y1-D335–D365 | 2 | 29 |
+| 12 December | Handover, closeout, lessons and capstone missions | 31 | PI-Y1-D335–D365 | 31 | 0 |
 
-Scheduled: **365** (336 mapped to the published bank, 29 planned).
+Scheduled: **365** (365 mapped to the published bank, 0 planned).
 Reserve: **55** (PI-Y1-R001–R055, all planned).
 
 Mapped slots carry `source_challenge` (the immutable bank code). Audit status for every
