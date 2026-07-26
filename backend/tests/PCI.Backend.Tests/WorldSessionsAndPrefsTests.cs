@@ -125,6 +125,45 @@ public class WorldSessionsAndPrefsTests
     }
 
     [Fact]
+    public void Streak_publish_shares_and_deletion_follow_both_namespaces()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-un-all')");
+        var (_, wid, _) = WorldAccount.Register(db, "un-all@x.test", "long-password-1", "U N", null);
+        db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", wid);
+        var uid = WorldIdentity.CanonicalUserFor(db, wid)!.Value;
+
+        // One canonical-only completed DAILY attempt (rotation provenance), shared publicly.
+        var day = new DateTime(2026, 12, 20, 12, 0, 0, DateTimeKind.Utc);
+        var period = WorldRotation.CurrentPeriod(db, day)!;
+        var att = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts
+                (session_id,challenge_id,version,status,score,canonical_user_id,rotation_period_id,
+                 passport_visible,result_token_sha,answers_json,completed_at)
+            VALUES(?,?,?, 'completed', 85, ?, ?, 1, ?, '{""x"":""private""}', datetime('now'))",
+            sess, period["challenge_id"], period["version"], uid, period["id"], Security.Sha("un-share"));
+
+        // Streak sees the canonical-only daily completion.
+        Assert.Equal(1, WorldDashboard.Streak(db, wid, day));
+        // The publish guard counts it as selected evidence — publication succeeds.
+        Assert.Null(WorldAccount.PublishPassport(db, wid).Error);
+        // The sharing list reaches it.
+        Assert.Contains(WorldAccount.ShareLinks(db, wid), r => H.L(r["id"]) == att);
+        // A stranger sees none of it.
+        var (_, strangerWid, _) = WorldAccount.Register(db, "un-stranger@x.test", "long-password-1", "X", null);
+        Assert.Empty(WorldAccount.ShareLinks(db, strangerWid));
+        Assert.Equal(0, WorldDashboard.Streak(db, strangerWid, day));
+
+        // World-only deletion de-identifies the canonical-only row too — nothing personal survives.
+        WorldAccount.DeleteAccount(db, wid);
+        var gone = db.QueryOne("SELECT * FROM pciworld_attempts WHERE id=?", att)!;
+        Assert.Null(gone["user_id"]);
+        Assert.Null(gone["canonical_user_id"]);
+        Assert.Null(gone["answers_json"]);
+        Assert.Equal(1L, Convert.ToInt64(gone["result_revoked"]));
+        Assert.Equal(0L, Convert.ToInt64(gone["passport_visible"]));
+    }
+
+    [Fact]
     public void Preferences_live_on_the_participation_row_and_are_validated()
     {
         var db = NewWorldDb();

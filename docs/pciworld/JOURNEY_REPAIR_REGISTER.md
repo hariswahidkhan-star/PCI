@@ -37,6 +37,7 @@ it8 993 · it9 996 · it10 1000 · it11 1004 · it12 1006 · it13 1008 — all g
 | PW-US-046 | Suspension/deactivation mislabelled or leaky | P1 | Suspended sessions collapsed to 401 "not registered"; a deactivated canonical identity kept World access via the legacy password | `AccountState` resolves "suspended" distinctly; dashboard/passport answer 403 `account_suspended` with a dedicated UI screen (support path, PCI-account reassurance); World suspension provably never touches the canonical row; global deactivation blocks the legacy World password too | `Endpoints/WorldAccount.cs`, `Core/WorldPages.cs` | `WorldIdentityTests` suspension fact | 168db7c |
 | PW-US-010/043 | Sign-out scope invisible; no central sign-out | P1 | Logout only killed the presented carrier | Logout accepts `{everywhere:true}`: revokes ALL of the account's World sessions and — when canonically linked — the canonical portal sessions (`login_tokens`, purpose session), audited; suspension never blocks sign-out; two-choice UI with plain scope copy; bystanders' sessions untouched (proven) | `Endpoints/WorldAccount.cs`, `Core/WorldPages.cs` | `WorldSessionsAndPrefsTests` sign-out fact | it16 |
 | P0-00 (read flip) | Evidence reads keyed only on the legacy namespace | P0 | Pre-cutover queries | `EvidenceRows`/`EvidenceStats` (and everything they feed: account view, public Passport, PDF) now use the union ownership read (legacy OR canonical stamp) — canonical-only rows included, dual-stamped rows never double-counted, strangers excluded (proven) | `Endpoints/WorldAccount.cs` | `WorldSessionsAndPrefsTests` union fact, `WorldDashboardTests` union fact | 53fdbeb, it16 |
+| P0-00 (flip complete) | Remaining owner-keyed queries on the legacy namespace | P0 | Pre-cutover queries | Union predicate everywhere an owner keys a query: streak + weekly joins, dashboard visible-evidence count, the publish no_evidence guard, sharing lists, share/invitation revoke + revoke-all, and world-only deletion's whole de-identification sweep (canonical-only rows are revoked, stripped and de-identified too — no orphaned personal rows survive) | `Core/WorldDashboard.cs`, `Endpoints/WorldAccount.cs` | `WorldSessionsAndPrefsTests` streak/publish/shares/deletion union fact | it17 |
 
 ## Architecture delta (before → after)
 
@@ -67,9 +68,12 @@ repair, listed so nobody mistakes the register above for "done":
    embedded JS on the shared origin.
 2. A real OAuth 2.1/OIDC authorization service (state/nonce/PKCE, client registry, audience-scoped
    sessions) replacing the transitional handoff-code bridge for the dedicated-domain shape.
-3. Attempt-namespace read-flip completion: `canonical_user_id` is stamped and backfilled with a
-   parity audit; most read paths still key on the legacy id and must flip once `CutoverReady`
-   holds in production, followed by legacy-column retirement through a reviewed migration.
+3. Attempt-namespace cutover: the APP-LAYER flip is complete — every owner-keyed read and write
+   (dashboard, evidence, streak, publish guard, sharing, deletion) uses the union predicate
+   (legacy OR canonical stamp) with `canonical_user_id` stamped at every ownership event and
+   backfilled at boot. What remains is the DB-layer retirement: once `CutoverReady` holds in
+   production, drop the union back to canonical-only and retire the legacy `user_id` column and
+   `pciworld_users` credential fields through a reviewed migration.
 4. Legacy `pciworld_users` credential retirement (dry-run/staging/rollback rehearsal per §11.2) —
    the map and dual-login exist; the cutover has not been executed.
 5. Browser E2E, accessibility (WCAG 2.2 AA) and visual-regression suites for the new journeys;
