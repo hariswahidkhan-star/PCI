@@ -37,6 +37,21 @@ public static class WorldAccount
             MaxAge = TimeSpan.FromDays(30),
         });
 
+    /// <summary>The account state behind a request's session, WITHOUT the active-only filter:
+    /// null = no valid session; "active"; "suspended" (World product suspension — PW-US-046).
+    /// Lets read endpoints answer a suspended participant with 403 account_suspended instead of
+    /// the 401 that the UI would misread as "you are signed out / not registered".</summary>
+    public static string? AccountState(HttpRequest req, Db db)
+    {
+        var h = req.Headers["X-World-Account"].ToString();
+        if (string.IsNullOrWhiteSpace(h)) h = req.Cookies[SessionCookie] ?? "";
+        if (string.IsNullOrWhiteSpace(h)) return null;
+        var sess = db.QueryOne("SELECT * FROM pciworld_user_sessions WHERE token=? AND expires_at>datetime('now')", Security.Sha(h));
+        if (sess is null) return null;
+        var u = db.QueryOne("SELECT status FROM pciworld_users WHERE id=?", sess["user_id"]);
+        return u is null ? null : (H.Str(u["status"]) == "active" ? "active" : "suspended");
+    }
+
     public static UserCtx? FromReq(HttpRequest req, Db db)
     {
         var h = req.Headers["X-World-Account"].ToString();
@@ -94,6 +109,12 @@ public static class WorldAccount
                 LoginGuard.OnSuccess(db, "pciworld_users", u["id"]);
                 if (H.Str(u["status"]) != "active") return ("account_suspended", 0, "");
                 var id = H.L(u["id"]);
+                // Global deactivation blocks BOTH products (PW-US-046): a deactivated canonical
+                // identity must not keep World access through a leftover legacy password.
+                var mapped = WorldIdentity.CanonicalUserFor(db, id);
+                if (mapped is not null && H.Str(db.QueryOne("SELECT status FROM users WHERE id=?", mapped)
+                        ?["status"]) == "deactivated")
+                    return ("account_suspended", 0, "");
                 ClaimSession(db, id, worldSessionId);
                 db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", id);
                 return (null, id, MintSession(db, id));
@@ -550,6 +571,10 @@ public static class WorldAccount
         app.MapGet("/api/world/me/dashboard", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
+            // A suspended participant has a real session and deserves the truth (PW-US-046):
+            // 403 account_suspended, never a 401 the UI would misread as "not registered".
+            if (AccountState(ctx.Request, db) == "suspended")
+                return Err("account_suspended", 403, "Your PCI World participation is suspended. Contact support to resolve it — your PCI student account is unaffected.");
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var s = WorldDashboard.Build(db, u, DateTime.UtcNow);
@@ -982,6 +1007,8 @@ public static class WorldAccount
         app.MapGet("/api/world/passport", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
+            if (AccountState(ctx.Request, db) == "suspended")
+                return Err("account_suspended", 403, "Your PCI World participation is suspended. Contact support to resolve it — your PCI student account is unaffected.");
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             // Whole-history statistics from SQL, a paged window of evidence (P1-06): an account

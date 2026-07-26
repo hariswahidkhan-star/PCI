@@ -2285,6 +2285,16 @@ public static class WorldPages
             // stored session, and offers a retry — presenting it as "you are not registered" made
             // people re-register and lose track of their account.
             if(e2&&(e2.error==='no_token'||e2.error==='world_disabled')){localStorage.removeItem(KEY);return showAuth();}
+            // Suspension is its own state (PW-US-046): not a sign-out, not an error to retry —
+            // an explanation, a support path, and reassurance about the PCI student account.
+            if(e2&&e2.error==='account_suspended'){
+              $('auth').hidden=true;$('me').hidden=false;
+              $('me').innerHTML='<div class="card" style="border-color:var(--crimson)"><span class="kicker">Account status</span>'+
+                '<h2 style="margin-top:0">Your PCI World participation is suspended</h2>'+
+                '<p style="color:var(--slate)">'+esc(e2.message||'Contact support to resolve this.')+'</p>'+
+                '<p><a class="btn secondary" href="/world/about">About PCI World</a></p></div>';
+              $('me').focus();return;
+            }
             $('auth').hidden=true;$('me').hidden=false;
             $('me').innerHTML='<div class="card"><span class="kicker">Connection problem</span>'+
               '<h2 style="margin-top:0">We could not load your account</h2>'+
