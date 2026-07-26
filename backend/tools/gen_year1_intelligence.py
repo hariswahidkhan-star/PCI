@@ -316,7 +316,38 @@ MAPPED_JUN = [
     ("WC-QLT-187", "Nine welders, six tickets", "daily_decision", "quality_assurance", "procurement_mobilization", "energy_utilities", "single_decision", "foundation", 5, 181),
 ]
 assert len(MAPPED_JUN) == 26
-MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN
+
+# ── July authored pack: delivery control, change and recovery. ──
+MAPPED_JUL = [
+    ("WC-RSC-201", "Eight weeks down, one story up", "project_rescue", "change_claims_recovery", "execution_control", "cross_sector", "multi_stage_decision", "professional", 15, 182),
+    ("WC-CST-211", "The index in the invoice", "cost_value", "cost_commercial", "execution_control", "transport_logistics", "single_decision", "foundation", 9, 183),
+    ("WC-GOV-219", "Signed above the line", "daily_decision", "integration_governance", "execution_control", "cross_sector", "single_decision", "foundation", 5, 184),
+    ("WC-STK-222", "The recovery is working. The people aren't.", "stakeholder_dilemma", "resources_leadership", "execution_control", "cross_sector", "single_decision", "professional", 6, 185),
+    ("WC-SCO-225", "Build the claim file backwards", "logic_sequence", "scope_requirements", "execution_control", "professional_services_other", "order_rank", "foundation", 6, 186),
+    ("WC-SCH-226", "Rank the rescues", "schedule_strategy", "schedule_planning", "execution_control", "technology_digital", "order_rank", "professional", 11, 187),
+    ("WC-RSC-202", "The wall that moved", "project_rescue", "change_claims_recovery", "execution_control", "construction_infrastructure", "multi_stage_decision", "professional", 13, 188),
+    ("WC-CST-212", "The quarter ends Friday. The invoices don't.", "cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision", "foundation", 10, 189),
+    ("WC-QLT-220", "Severity two, says who", "daily_decision", "quality_assurance", "execution_control", "cross_sector", "single_decision", "foundation", 7, 190),
+    ("WC-STK-223", "The clerk of works and the site team", "stakeholder_dilemma", "stakeholders_communication", "execution_control", "construction_infrastructure", "single_decision", "professional", 7, 191),
+    ("WC-RSC-203", "Sixty percent adopted, one hundred percent spent", "project_rescue", "change_claims_recovery", "execution_control", "cross_sector", "multi_stage_decision", "professional", 18, 192),
+    ("WC-CST-213", "The donor's wing", "cost_value", "cost_commercial", "execution_control", "healthcare_life_sciences", "single_decision", "foundation", 8, 193),
+    ("WC-COM-221", "The minister wants a hard hat", "daily_decision", "stakeholders_communication", "execution_control", "public_sector", "single_decision", "foundation", 6, 194),
+    ("WC-STK-224", "Two supervisors, one night shift", "stakeholder_dilemma", "resources_leadership", "execution_control", "manufacturing_industrial", "single_decision", "professional", 5, 200),
+    ("WC-RSC-204", "Third time, or never", "project_rescue", "change_claims_recovery", "execution_control", "technology_digital", "multi_stage_decision", "professional", 16, 201),
+    ("WC-CST-214", "Provisional no longer", "cost_value", "cost_commercial", "execution_control", "construction_infrastructure", "single_decision", "foundation", 11, 202),
+    ("WC-RSC-205", "The administrators answer the phone now", "project_rescue", "change_claims_recovery", "execution_control", "cross_sector", "multi_stage_decision", "professional", 14, 203),
+    ("WC-CST-215", "Capitalise the argument", "cost_value", "cost_commercial", "execution_control", "technology_digital", "single_decision", "foundation", 12, 204),
+    ("WC-RSC-206", "The fault that ate the outage", "project_rescue", "change_claims_recovery", "execution_control", "energy_utilities", "multi_stage_decision", "professional", 15, 205),
+    ("WC-CST-216", "The euro moved. The invoice didn't yet.", "cost_value", "cost_commercial", "execution_control", "cross_sector", "single_decision", "foundation", 9, 206),
+    ("WC-RSC-207", "Two metres of water, twelve weeks of plan", "project_rescue", "change_claims_recovery", "execution_control", "construction_infrastructure", "multi_stage_decision", "professional", 13, 207),
+    ("WC-CST-217", "Claim it in March, earn it in May", "cost_value", "cost_commercial", "execution_control", "climate_sustainability", "single_decision", "foundation", 10, 208),
+    ("WC-RSC-208", "All red at once", "project_rescue", "change_claims_recovery", "execution_control", "cross_sector", "multi_stage_decision", "professional", 18, 209),
+    ("WC-CST-218", "Time and a half, every week", "cost_value", "cost_commercial", "execution_control", "energy_utilities", "single_decision", "foundation", 8, 210),
+    ("WC-RSC-209", "Sixty percent of nameplate", "project_rescue", "change_claims_recovery", "execution_control", "manufacturing_industrial", "multi_stage_decision", "professional", 16, 211),
+    ("WC-RSC-210", "Rollback is also a decision", "project_rescue", "change_claims_recovery", "execution_control", "public_sector", "multi_stage_decision", "professional", 14, 212),
+]
+assert len(MAPPED_JUL) == 26
+MAPPED_JAN = MAPPED_JAN + MAPPED_FEB + MAPPED_MAR + MAPPED_APR + MAPPED_MAY + MAPPED_JUN + MAPPED_JUL
 
 # Existing bank items that complete January, February and March — pinned so the months stay
 # fully authored (March's thirteen legacy schedule items hold their theme-month days).
@@ -330,7 +361,9 @@ PINNED_EXISTING = {"WC-DEC-044": 15, "WC-PTF-015": 16, "WC-CAP-030": 17,
                    "WC-EVM-049": 108,
                    "WC-RSK-033": 134, "WC-RSK-020": 135, "WC-RSK-003": 136, "WC-PRT-008": 137,
                    "WC-PRT-021": 138, "WC-PRT-039": 139,
-                   "WC-PRC-046": 165, "WC-PRC-014": 166, "WC-BOQ-012": 167, "WC-BOQ-035": 168}
+                   "WC-PRC-046": 165, "WC-PRC-014": 166, "WC-BOQ-012": 167, "WC-BOQ-035": 168,
+                   "WC-CHG-040": 195, "WC-CHG-023": 196, "WC-EVM-001": 197, "WC-CHG-005": 198,
+                   "WC-CSH-034": 199}
 
 DIFF_BAND = {"foundation": "foundation", "developing": "foundation", "professional": "practitioner",
              "advanced": "advanced", "expert": "executive"}
