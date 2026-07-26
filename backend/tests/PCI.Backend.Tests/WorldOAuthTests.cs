@@ -102,6 +102,47 @@ public class WorldOAuthTests
     }
 
     [Fact]
+    public void The_registry_admin_validates_hard_and_protects_the_seeded_client()
+    {
+        var db = NewWorldDb();
+
+        // Redirect validation: every hole an attacker would try is refused.
+        foreach (var bad in new[] {
+            "http://pciworld.org/cb",                 // https only
+            "javascript:alert(1)",                    // scheme smuggling
+            "https://pciworld.org/cb#frag",           // fragments
+            "https://pciworld.org/*",                 // wildcards
+            "//evil.example/cb",                      // protocol-relative
+            "/cb one",                                // whitespace
+            "/a,/b,/c,/d,/e,/f",                      // more than five
+            "",                                       // nothing
+            "https://pciworld.org/" + new string('a', 220) })  // overlong
+            Assert.NotNull(WorldOAuth.ValidateRedirects(bad, out _));
+        Assert.Null(WorldOAuth.ValidateRedirects("/world/account, https://pciworld.org/auth/callback", out var norm));
+        Assert.Equal("/world/account,https://pciworld.org/auth/callback", norm);
+
+        // Create + immediate effect on the authorization path.
+        Assert.Null(WorldOAuth.UpsertClient(db, "pciworld-site", "PCI World site", "https://pciworld.org/cb", create: true));
+        Assert.True(WorldOAuth.RedirectAllowed(db, "pciworld-site", "https://pciworld.org/cb"));
+        Assert.Equal("already_exists", WorldOAuth.UpsertClient(db, "pciworld-site", "x", "/cb", create: true));
+        Assert.Equal("bad_client_id", WorldOAuth.UpsertClient(db, "Bad Id!", "x", "/cb", create: true));
+
+        // Update swaps the allow-list atomically — the old URI stops matching at once.
+        Assert.Null(WorldOAuth.UpsertClient(db, "pciworld-site", "PCI World site", "https://pciworld.org/cb2", create: false));
+        Assert.False(WorldOAuth.RedirectAllowed(db, "pciworld-site", "https://pciworld.org/cb"));
+        Assert.True(WorldOAuth.RedirectAllowed(db, "pciworld-site", "https://pciworld.org/cb2"));
+
+        // Deletion kills the client and its outstanding codes; the seeded client is untouchable.
+        var wid = NewWorldUser(db, "oauth-admin@x.test");
+        WorldOAuth.IssueCode(db, wid, "pciworld-site", "https://pciworld.org/cb2", WorldOAuth.S256(Verifier), "S256");
+        Assert.Null(WorldOAuth.DeleteClient(db, "pciworld-site"));
+        Assert.Equal(0L, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_oauth_codes WHERE client_id='pciworld-site'"));
+        Assert.Equal("load_bearing", WorldOAuth.DeleteClient(db, "pciworld-app"));
+        Assert.Equal("not_found", WorldOAuth.DeleteClient(db, "never-was"));
+        Assert.True(WorldOAuth.RedirectAllowed(db, "pciworld-app", "/world/account"));
+    }
+
+    [Fact]
     public void Expired_codes_fail_and_the_sweep_keeps_consumed_rows_for_replay_detection()
     {
         var db = NewWorldDb();

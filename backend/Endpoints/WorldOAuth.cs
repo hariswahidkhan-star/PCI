@@ -94,6 +94,59 @@ public static class WorldOAuth
         return (null, worldId, token);
     }
 
+    // ───────────────────────── registry management (owner-gated in WorldAdmin) ─────────────────────────
+
+    /// <summary>Each entry: a relative path starting '/' (not protocol-relative) or an absolute
+    /// https:// URL. No wildcards, fragments or whitespace; at most 5 entries of ≤200 chars.
+    /// Anything looser reopens the redirect hole the exact-match registry exists to close.</summary>
+    public static string? ValidateRedirects(string? uris, out string normalized)
+    {
+        normalized = "";
+        var parts = (uris ?? "").Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return "no_redirects";
+        if (parts.Length > 5) return "too_many_redirects";
+        foreach (var p in parts)
+        {
+            if (p.Length > 200 || p.Contains('#') || p.Contains('*') || p.Any(char.IsWhiteSpace)) return "bad_redirect";
+            var ok = p.StartsWith('/')
+                ? !p.StartsWith("//")
+                : Uri.TryCreate(p, UriKind.Absolute, out var u) && u.Scheme == "https";
+            if (!ok) return "bad_redirect";
+        }
+        normalized = string.Join(",", parts.Distinct(StringComparer.Ordinal));
+        return null;
+    }
+
+    public static string? UpsertClient(Db db, string? clientId, string? name, string? redirectUris, bool create)
+    {
+        clientId = (clientId ?? "").Trim();
+        if (!System.Text.RegularExpressions.Regex.IsMatch(clientId, "^[a-z0-9][a-z0-9-]{2,63}$"))
+            return "bad_client_id";
+        var err = ValidateRedirects(redirectUris, out var norm);
+        if (err is not null) return err;
+        name = (name ?? "").Trim();
+        if (name.Length is 0 or > 120) return "bad_name";
+        var exists = db.QueryOne("SELECT client_id FROM pciworld_oauth_clients WHERE client_id=?", clientId) is not null;
+        if (create && exists) return "already_exists";
+        if (!create && !exists) return "not_found";
+        if (create)
+            db.Execute("INSERT INTO pciworld_oauth_clients(client_id,name,redirect_uris) VALUES(?,?,?)", clientId, name, norm);
+        else
+            db.Execute("UPDATE pciworld_oauth_clients SET name=?, redirect_uris=? WHERE client_id=?", name, norm, clientId);
+        return null;
+    }
+
+    /// <summary>The seeded first-party client is load-bearing — the live surface signs in through
+    /// it — so it can be edited but never deleted. Outstanding codes die with a deleted client.</summary>
+    public static string? DeleteClient(Db db, string? clientId)
+    {
+        clientId = (clientId ?? "").Trim();
+        if (clientId == "pciworld-app") return "load_bearing";
+        if (db.Execute("DELETE FROM pciworld_oauth_clients WHERE client_id=?", clientId) == 0) return "not_found";
+        db.Execute("DELETE FROM pciworld_oauth_codes WHERE client_id=?", clientId);
+        return null;
+    }
+
     // ───────────────────────── endpoints ─────────────────────────
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string> log)
