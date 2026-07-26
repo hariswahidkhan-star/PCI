@@ -1698,6 +1698,7 @@ public static class WorldPages
             <div><b>Leaving</b><span>Export your PCI World data as JSON at any time. Deleting your PCI World participation removes your World sign-in, Passport and every public link — your PCI student account and any certifications are untouched; completed challenges survive only as anonymous statistics.</span></div>
           </div>
         </div>
+        <script>var PORTAL_URL='{E(WorldOnly.Enabled ? InstituteUrl(db) : "/app/")}';</script>
         <script>{AccountJs}</script>
         """,
         "/world/account", noindex: true);
@@ -1726,13 +1727,53 @@ public static class WorldPages
           // page's head (one primary action, today's state, unfinished work), the Passport its
           // management body. The aggregate failing quietly never blocks the Passport tools.
           return Promise.all([api('/api/world/passport'),
-                              api('/api/world/me/dashboard').catch(function(){return null;})])
+                              api('/api/world/me/dashboard').catch(function(){return null;}),
+                              api('/api/world/me/profile').catch(function(){return null;}),
+                              api('/api/world/me/preferences').catch(function(){return null;})])
           .then(function(res){
-            var p=res[0],d=res[1];
+            var p=res[0],d=res[1],prof=res[2],prefs=res[3];
             $('auth').hidden=true;$('me').hidden=false;$('me').focus();
             var seal=(document.getElementById('sealTpl')||{innerHTML:''}).innerHTML;
             function pretty(s){s=(s||'').replace(/_/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
             var h='';
+            // ── Onboarding walkthrough (§7.3): brief, resumable, server-ordered. Rendered only
+            //    while incomplete; each step persists before the next appears, so a refresh or a
+            //    device switch resumes exactly where the person stopped. ──
+            if(d&&d.onboarding_state&&d.onboarding_state!=='completed'){
+              var ob=d.onboarding_state,oh='';
+              function obNext(step,inner,btn){
+                return inner+'<p style="margin-top:14px"><button class="btn" id="obGo" data-step="'+step+'">'+btn+'</button> <span id="obMsg" role="status"></span></p>';
+              }
+              if(ob==='not_started'){
+                oh=obNext('welcome',
+                  '<h2 style="margin-top:0">Welcome to PCI World</h2>'+
+                  '<p style="color:var(--slate)">A realistic project decision every day, with deterministic scoring and synthetic data. '+
+                  'PCI World is <b>practice, not certification</b> — completing challenges builds verifiable practice evidence, never a formal credential. '+
+                  'It is operated by the Project Controls Institute.</p>','Got it — continue');
+              }else if(ob==='welcome'){
+                oh=obNext('goal',
+                  '<h2 style="margin-top:0">Why are you practising?</h2>'+
+                  '<p style="color:var(--slate)">Your goal shapes what the dashboard suggests — nothing else. You can change it any time.</p>'+
+                  '<select id="obGoal">'+
+                  [['daily_practice','Daily practice'],['certification_prep','Certification preparation'],
+                   ['evidence','Build verifiable practice evidence'],['explore','Explore project controls']].map(function(g){
+                    return '<option value="'+g[0]+'">'+g[1]+'</option>';}).join('')+'</select>','Save & continue');
+              }else if(ob==='goal'){
+                oh=obNext('preferences',
+                  '<h2 style="margin-top:0">Your practice rhythm</h2>'+
+                  '<label for="obTz">Timezone (optional)</label><input id="obTz" maxlength="64" placeholder="Europe/Berlin">'+
+                  '<label for="obWt" style="margin-top:10px">Weekly target (daily challenges per week, optional)</label>'+
+                  '<select id="obWt"><option value="">No target</option>'+
+                  [1,2,3,4,5,6,7].map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('')+'</select>','Save & continue');
+              }else if(ob==='preferences'){
+                oh=obNext('privacy',
+                  '<h2 style="margin-top:0">Private until you say otherwise</h2>'+
+                  '<p style="color:var(--slate)">Your challenge answers stay between you and the scoring engine — no public surface ever shows them. '+
+                  'Nothing about you is public by default: your Passport publishes only when you deliberately publish it, '+
+                  'and every evidence item and field on it is a separate choice.</p>','I understand — finish setup');
+              }
+              h+='<div class="card" id="onboard-card" style="border-color:var(--gilt,#c8a24b)"><span class="kicker">Getting started</span>'+oh+'</div>';
+            }
             // ── The dashboard head (journey repair P1-01): who you are, ONE next action, today's
             //    state, unfinished work, recent results — computed server-side, rendered here. ──
             if(d){
@@ -1740,6 +1781,7 @@ public static class WorldPages
               var cta;
               switch(d.primary_action){
                 case 'verify_email':cta='<button class="btn" id="pa_verify">Verify my email</button>';break;
+                case 'continue_onboarding':cta='<a class="btn" href="#onboard-card">Continue setting up</a>';break;
                 case 'continue_today':cta='<a class="btn" href="'+todayHref+'">Continue today&rsquo;s challenge</a>';break;
                 case 'view_result':cta='<a class="btn" href="'+todayHref+'">View today&rsquo;s result</a>';break;
                 case 'start_today':cta='<a class="btn" href="'+todayHref+'">Start today&rsquo;s challenge</a>';break;
@@ -1751,8 +1793,28 @@ public static class WorldPages
                  '<h2 style="margin-top:0">Welcome back'+(p.display_name?', '+esc(p.display_name):'')+'</h2>'+
                  '<p style="color:var(--slate)">'+(p.email_verified?'Email verified.':'Email not verified yet — publishing your Passport needs it.')+
                  ' '+d.progress.completed+' completed challenge'+(d.progress.completed===1?'':'s')+
-                 (d.progress.completed>0?' across '+d.progress.industries+' industr'+(d.progress.industries===1?'y':'ies'):'')+'.</p>'+
-                 '<p>'+cta+'</p></div>';
+                 (d.progress.completed>0?' across '+d.progress.industries+' industr'+(d.progress.industries===1?'y':'ies'):'')+'.'+
+                 // The streak is a practice habit, never a credential — shown only when it exists,
+                 // and never used to shame a gap (a zero simply says nothing).
+                 (d.streak_days>0?' <b>'+d.streak_days+'-day practice streak</b> <small>(a habit, not a credential)</small>':'')+
+                 (d.week_target?' &middot; This week: <b>'+d.week_done+' of '+d.week_target+'</b> daily challenges (last 7 days).':'')+
+                 '</p>'+
+                 '<p>'+cta+'</p>'+
+                 // The World goal (§10.5): product data on the participation record, changeable
+                 // any time — it shapes what the dashboard suggests, and nothing else.
+                 (prefs&&prefs.linked
+                   ?'<p><label for="goalSel" style="display:inline">Why you practise:</label> '+
+                    '<select id="goalSel" style="width:auto;display:inline-block">'+
+                    [['','Choose a goal…'],['daily_practice','Daily practice'],
+                     ['certification_prep','Certification preparation'],
+                     ['evidence','Build verifiable practice evidence'],
+                     ['explore','Explore project controls']].map(function(g){
+                      return '<option value="'+g[0]+'"'+((prefs.preferences&&prefs.preferences.goal)===g[0]?' selected':'')+'>'+g[1]+'</option>';
+                    }).join('')+'</select> '+
+                    '<button class="btn secondary" id="goalSave">Set goal</button> '+
+                    '<span id="goalMsg" role="status"></span></p>'
+                   :'')+
+                 '</div>';
               if(d.today&&d.today.code){
                 var reset=d.today.changes_at?new Date(d.today.changes_at):null;
                 h+='<div class="card"><span class="kicker">Today&rsquo;s challenge</span>'+
@@ -1789,6 +1851,18 @@ public static class WorldPages
                    '<h2 style="margin-top:0">Recommended next</h2>'+
                    '<p style="color:var(--slate)">'+esc(d.recommended.title||'')+' <small>(rule-based: a challenge you have not completed yet)</small></p>'+
                    '<p><a class="btn secondary" href="/world/challenge/'+encodeURIComponent(d.recommended.code||'')+'">Open this challenge</a></p></div>';
+              }
+              // ── The PCI ecosystem (P1-11): bidirectional discoverability. The portal shows a
+              //    PCI World card; this is the RETURN direction — current product marked, the
+              //    destination's honest state, and never a certification or entitlement claim. ──
+              if(d.products&&d.products.pci_ai){
+                h+='<div class="card"><span class="kicker">PCI ecosystem &middot; you are in PCI World</span>'+
+                   '<h2 style="margin-top:0">PCI Institute student portal</h2>'+
+                   (d.products.pci_ai.state==='ready'
+                     ?'<p style="color:var(--slate)">Your PCI student identity is linked. Certifications, exams, membership and billing live in the Institute student portal — you practise here, and your one PCI sign-in works in both places.</p>'+
+                      '<p><a class="btn secondary" href="'+esc(typeof PORTAL_URL!=='undefined'?PORTAL_URL:'/app/')+'">Open the student portal</a></p>'
+                     :'<p style="color:var(--slate)">This World account is not linked to a PCI student identity yet. Sign in to PCI World with the same email and password you use on the Institute student portal and the two link automatically — no second account is ever created. If you believe this is wrong, contact support.</p>')+
+                   '</div>';
               }
             }
             // The cover: the owner's own Passport drawn as the artefact a reader of the public
@@ -1849,6 +1923,32 @@ public static class WorldPages
                 :((p.email_verified&&p.display_name)?''
                   :'<p style="color:var(--slate);font-size:14px">Publishing needs a verified email and a display name — the two things that make the record worth reading.</p>'))+
               '</div>';
+            // ── The shared PCI student profile (P1-10): ONE record, both products. Edits here land
+            //    on the same canonical profile the Institute portal reads — and nothing from it is
+            //    ever public on the Passport without the separate disclosure consent below. ──
+            if(prof&&prof.linked&&prof.profile){
+              var sp=prof.profile;
+              h+='<div class="card"><span class="kicker">PCI student profile</span>'+
+                 '<h2 style="margin-top:0">Your shared profile</h2>'+
+                 '<p style="color:var(--slate)">This is your one PCI student profile — the same record your Institute student portal uses. '+
+                 'A change saved here appears there, and vice versa. Nothing from it is shown on your public Passport unless you choose so in Disclosure below.</p>'+
+                 '<p><b>'+esc(((sp.first_name||'')+' '+(sp.last_name||'')).trim()||'Name not set')+'</b> '+
+                 '<small style="color:var(--slate)">&middot; profile '+esc(sp.profile_completion_percentage)+'% complete</small></p>'+
+                 '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">'+
+                 [['sp_role','Current role','current_role'],['sp_company','Company','company'],
+                  ['sp_country','Country','country'],['sp_city','City','city']].map(function(f){
+                   return '<div><label for="'+f[0]+'">'+f[1]+'</label>'+
+                          '<input id="'+f[0]+'" maxlength="200" value="'+esc(sp[f[2]]||'')+'"></div>';
+                 }).join('')+
+                 '</div>'+
+                 '<p style="margin-top:14px"><button class="btn secondary" id="spSave">Save profile</button> '+
+                 '<span id="spMsg" role="status"></span></p></div>';
+            }else if(prof&&!prof.linked){
+              h+='<div class="card"><span class="kicker">PCI student profile</span>'+
+                 '<h2 style="margin-top:0">Not linked yet</h2>'+
+                 '<p style="color:var(--slate)">This World account is not linked to a PCI student identity yet, so there is no shared profile to show. '+
+                 'Sign in with your PCI credentials (the ones you use on the Institute student portal), or contact support if you believe this is wrong.</p></div>';
+            }
             // Field-level disclosure: publishing WHAT you have practised should never force you to
             // publish your scores as well. These switches apply to the public page and the PDF alike.
             h+='<div class="card"><span class="kicker">Disclosure</span>'+
@@ -1908,14 +2008,23 @@ public static class WorldPages
                ((p.evidence||[]).length?'':'<p style="color:var(--slate)">No completed challenges yet — '+
                  '<a href="/world">today&rsquo;s challenge</a> takes five to ten minutes, and it will appear here the moment you finish.</p>')+
                '</div>'+
+               // Sharing (PW-US-039/040): every public surface this account minted, in one place.
+               '<div class="card"><span class="kicker">Sharing</span>'+
+               '<h2 style="margin-top:0">Links you have created</h2>'+
+               '<p style="color:var(--slate)">Result links and invitations you minted — withdraw any of them at any moment. A withdrawn link simply stops resolving.</p>'+
+               '<div id="sharemgr"><p><button class="btn secondary" id="shareShow">Show my links &amp; invitations</button></p></div>'+
+               '</div>'+
                '<div class="card"><span class="kicker">Your data</span>'+
                '<h2 style="margin-top:0">Yours to take or erase</h2>'+
+               // Sessions (PW-US-043): what is signed in as this account, and the power to end it.
+               '<div id="sessbox"><p><button class="btn secondary" id="sessShow">Show active sessions</button></p></div>'+
                // A plain link cannot work here: the export is authenticated by the X-World-Account
                // header, which a navigation never sends, so this always answered 401. It is fetched
-               // and saved as a blob instead.
-               '<p><button class="btn secondary" id="dlexport">Export my data (JSON)</button> '+
+               // and saved as a blob instead. Scope in the label (PW-US-044): this is the WORLD
+               // export — the complete PCI account export lives in the Institute student portal.
+               '<p><button class="btn secondary" id="dlexport">Export my PCI World data (JSON)</button> '+
                '<button class="btn secondary" id="signout">Sign out</button> '+
-               '<button class="btn secondary" id="delacct">Delete my account</button></p>'+
+               '<button class="btn secondary" id="delacct">Delete my PCI World participation</button></p>'+
                // A labelled password field, not window.prompt(): prompt() shows the password in
                // clear text, carries no label, cannot be styled or translated, and is blocked
                // outright by some browsers.
@@ -1937,9 +2046,126 @@ public static class WorldPages
             $('saveName').addEventListener('click',function(){
               api('/api/world/account/profile',{display_name:$('dn').value}).then(load);
             });
+            function loadSessions(){
+              api('/api/world/me/sessions').then(function(o){
+                var rows=(o.rows||[]);
+                var sh='<h3 style="margin:6px 0">Active sessions ('+rows.length+')</h3>'+
+                  '<div class="tbl-wrap"><table><thead><tr><th scope="col">Signed in</th>'+
+                  '<th scope="col">Expires</th><th scope="col"></th></tr></thead><tbody>';
+                rows.forEach(function(s2){
+                  sh+='<tr><td class="num">'+esc((s2.created_at||'').split(' ')[0])+
+                      (s2.current?' <b>(this device)</b>':'')+'</td>'+
+                      '<td class="num">'+esc((s2.expires_at||'').split(' ')[0])+'</td>'+
+                      '<td>'+(s2.current?'':'<button class="btn secondary" data-revoke="'+s2.id+'">Sign out</button>')+'</td></tr>';
+                });
+                sh+='</tbody></table></div>'+
+                  (rows.length>1?'<p><button class="btn secondary" id="sessOthers">Sign out all other devices</button></p>':'')+
+                  '<p id="sessmsg" role="status"></p>';
+                $('sessbox').innerHTML=sh;
+                $('sessbox').querySelectorAll('[data-revoke]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/sessions/revoke',{id:parseInt(b.dataset.revoke,10)})
+                      .then(loadSessions)
+                      .catch(function(){if($('sessmsg'))$('sessmsg').textContent='Could not revoke — try again.';});
+                  });
+                });
+                if($('sessOthers'))$('sessOthers').addEventListener('click',function(){
+                  api('/api/world/me/sessions/revoke-others',{})
+                    .then(loadSessions)
+                    .catch(function(){if($('sessmsg'))$('sessmsg').textContent='Could not revoke — try again.';});
+                });
+              }).catch(function(){$('sessbox').innerHTML='<p class="meta"><span>Could not load sessions just now.</span></p>';});
+            }
+            $('sessShow').addEventListener('click',loadSessions);
+            if($('obGo'))$('obGo').addEventListener('click',function(){
+              var step=$('obGo').dataset.step;$('obGo').disabled=true;
+              function advance(){
+                return api('/api/world/me/onboarding',{step:step}).then(function(){
+                  // The privacy step is the last one — finishing it completes onboarding.
+                  return step==='privacy'?api('/api/world/me/onboarding',{step:'completed'}):null;
+                });
+              }
+              var pre=Promise.resolve();
+              if(step==='goal')pre=api('/api/world/me/preferences',{goal:$('obGoal').value},'PATCH');
+              if(step==='preferences'){
+                var body={};
+                if($('obTz').value.trim())body.timezone=$('obTz').value.trim();
+                if($('obWt').value)body.weekly_target=parseInt($('obWt').value,10);
+                pre=Object.keys(body).length?api('/api/world/me/preferences',body,'PATCH'):Promise.resolve();
+              }
+              pre.then(advance).then(load)
+                 .catch(function(e2){$('obGo').disabled=false;
+                   $('obMsg').textContent=(e2&&e2.message)||'Could not save this step — try again.';});
+            });
+            function loadShares(){
+              api('/api/world/me/shares').then(function(o){
+                var res=(o.results||[]),inv=(o.invitations||[]);
+                var sh='<h3 style="margin:6px 0">Result links ('+res.length+')</h3>';
+                if(res.length){
+                  sh+='<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th>'+
+                      '<th scope="col">Status</th><th scope="col"></th></tr></thead><tbody>';
+                  res.forEach(function(r2){
+                    sh+='<tr><td>'+esc(r2.title)+' <small class="num">'+esc(r2.code||'')+'</small></td>'+
+                        '<td>'+(r2.revoked?'<span>Withdrawn</span>':'<span class="ok">Live</span>')+'</td>'+
+                        '<td>'+(r2.revoked?'':'<button class="btn secondary" data-shrev="'+r2.attempt_id+'">Withdraw</button>')+'</td></tr>';
+                  });
+                  sh+='</tbody></table></div>';
+                }else sh+='<p style="color:var(--slate)">No result links yet.</p>';
+                sh+='<h3 style="margin:14px 0 6px">Invitations ('+inv.length+')</h3>';
+                if(inv.length){
+                  sh+='<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th>'+
+                      '<th scope="col">Pinned</th><th scope="col">Status</th><th scope="col"></th></tr></thead><tbody>';
+                  inv.forEach(function(r2){
+                    sh+='<tr><td>'+esc(r2.title)+' <small class="num">'+esc(r2.code||'')+'</small></td>'+
+                        '<td class="num">v'+esc(r2.version)+'</td>'+
+                        '<td>'+(r2.revoked?'<span>Withdrawn</span>':'<span class="ok">Live</span>')+'</td>'+
+                        '<td>'+(r2.revoked?'':'<button class="btn secondary" data-invrev="'+r2.invite_id+'">Withdraw</button>')+'</td></tr>';
+                  });
+                  sh+='</tbody></table></div>';
+                }else sh+='<p style="color:var(--slate)">No invitations yet.</p>';
+                sh+='<p style="margin-top:12px">'+
+                    (res.some(function(r2){return !r2.revoked;})?'<button class="btn secondary" id="shrevAll">Withdraw all result links</button> ':'')+
+                    (inv.some(function(r2){return !r2.revoked;})?'<button class="btn secondary" id="invrevAll">Withdraw all invitations</button>':'')+
+                    '</p><p id="sharemsg" role="status"></p>';
+                $('sharemgr').innerHTML=sh;
+                $('sharemgr').querySelectorAll('[data-shrev]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/shares/revoke',{attempt_id:parseInt(b.dataset.shrev,10)}).then(loadShares)
+                      .catch(function(){if($('sharemsg'))$('sharemsg').textContent='Could not withdraw — try again.';});
+                  });
+                });
+                $('sharemgr').querySelectorAll('[data-invrev]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/invitations/revoke',{invite_id:parseInt(b.dataset.invrev,10)}).then(loadShares)
+                      .catch(function(){if($('sharemsg'))$('sharemsg').textContent='Could not withdraw — try again.';});
+                  });
+                });
+                if($('shrevAll'))$('shrevAll').addEventListener('click',function(){
+                  api('/api/world/me/shares/revoke-all',{}).then(loadShares).catch(function(){});
+                });
+                if($('invrevAll'))$('invrevAll').addEventListener('click',function(){
+                  api('/api/world/me/invitations/revoke-all',{}).then(loadShares).catch(function(){});
+                });
+              }).catch(function(){$('sharemgr').innerHTML='<p class="meta"><span>Could not load your links just now.</span></p>';});
+            }
+            $('shareShow').addEventListener('click',loadShares);
+            if($('goalSave'))$('goalSave').addEventListener('click',function(){
+              var g=$('goalSel').value;
+              if(!g){$('goalMsg').textContent='Choose a goal first.';return;}
+              api('/api/world/me/preferences',{goal:g},'PATCH')
+                .then(function(){$('goalMsg').textContent='Saved.';})
+                .catch(function(){$('goalMsg').textContent='Could not save — try again.';});
+            });
+            if($('spSave'))$('spSave').addEventListener('click',function(){
+              $('spMsg').textContent='';
+              api('/api/world/me/profile',{current_role:$('sp_role').value,company:$('sp_company').value,
+                country:$('sp_country').value,city:$('sp_city').value},'PATCH')
+                .then(function(){$('spMsg').textContent='Saved — your PCI profile is updated everywhere.';})
+                .catch(function(){$('spMsg').textContent='Could not save — try again.';});
+            });
             if($('pa_verify'))$('pa_verify').addEventListener('click',function(){
               api('/api/world/account/resend-verification',{})
-                .then(function(){$('pa_verify').textContent='Verification email sent — check your inbox.';$('pa_verify').disabled=true;})
+                .then(function(){$('pa_verify').textContent='Verification email queued — it should reach your inbox shortly.';$('pa_verify').disabled=true;})
                 .catch(function(){$('pa_verify').textContent='Could not send — try again shortly.';});
             });
             // The cover preview is authenticated by the account header, which an <img> navigation
@@ -1966,7 +2192,7 @@ public static class WorldPages
                 .catch(function(){$('photomsg').textContent='Could not remove the photo.';});
             });
             if($('resend'))$('resend').addEventListener('click',function(){
-              api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email sent.';});
+              api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email queued for delivery.';});
             });
             if($('pub'))$('pub').addEventListener('click',function(){
               api('/api/world/passport/publish',{publish:true})

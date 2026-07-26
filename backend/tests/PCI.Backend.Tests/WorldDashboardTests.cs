@@ -45,8 +45,14 @@ public class WorldDashboardTests
         Assert.NotNull(s.TodayState.Code);           // today exists and is pinned
         Assert.False(string.IsNullOrEmpty(s.TodayState.ChangesAtUtc));
 
-        // 2. Verified, nothing started → start today.
+        // 2. Verified but not yet onboarded → onboarding outranks daily play (§9.1 order).
         db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", uid);
+        s = WorldDashboard.Build(db, Ctx(db, uid), Day);
+        Assert.Equal("continue_onboarding", s.PrimaryAction);
+
+        // 3. Onboarded, nothing started → start today.
+        foreach (var step in new[] { "welcome", "goal", "preferences", "privacy", "completed" })
+            Assert.Null(WorldIdentity.AdvanceOnboarding(db, uid, step));
         s = WorldDashboard.Build(db, Ctx(db, uid), Day);
         Assert.Equal("start_today", s.PrimaryAction);
         Assert.Equal(s.TodayState.Code, s.PrimaryCode);
@@ -99,6 +105,81 @@ public class WorldDashboardTests
         Assert.Equal("published_active", WorldDashboard.Build(db, Ctx(db, uid), Day).Passport.State);
         db.Execute("UPDATE pciworld_users SET passport_expires_at=datetime('now','-1 days') WHERE id=?", uid);
         Assert.Equal("expired", WorldDashboard.Build(db, Ctx(db, uid), Day).Passport.State);
+    }
+
+    [Fact]
+    public void The_streak_counts_daily_completions_only_and_forgives_an_unfinished_today()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-streak')");
+        var (_, uid, _) = WorldAccount.Register(db, "streak@x.test", "long-password-1", "S", null);
+        var json = System.Text.Json.JsonDocument.Parse("""{"a":"1"}""").RootElement;
+
+        // Complete the daily challenge on three consecutive days, through the real start path
+        // (which records the rotation period).
+        for (var d = 0; d < 3; d++)
+        {
+            var day = new DateTime(2026, 10, 1 + d, 12, 0, 0, DateTimeKind.Utc);
+            var code = H.Str(db.QueryOne("SELECT c.code FROM pciworld_challenges c WHERE c.id=?",
+                WorldRotation.CurrentPeriod(db, day)!["challenge_id"])!["code"])!;
+            var start = WorldAttempts.Start(db, sess, uid, code, null, false, day);
+            Assert.False(start.Completed);
+            WorldAttempts.Submit(db, sess, uid, start.AttemptId, json);
+        }
+        Assert.Equal(3, WorldDashboard.Streak(db, uid, new DateTime(2026, 10, 3, 18, 0, 0, DateTimeKind.Utc)));
+
+        // The next morning, before playing, the run is intact (no-blame grace for an open today)…
+        var day4 = new DateTime(2026, 10, 4, 9, 0, 0, DateTimeKind.Utc);
+        WorldRotation.RunDue(db, day4);
+        Assert.Equal(3, WorldDashboard.Streak(db, uid, day4));
+
+        // …a RETAKE that day does not extend it (not a first daily play)…
+        var code4 = H.Str(db.QueryOne("SELECT code FROM pciworld_challenges WHERE id=?",
+            WorldRotation.CurrentPeriod(db, day4)!["challenge_id"])!["code"])!;
+        var first4 = WorldAttempts.Start(db, sess, uid, code4, null, false, day4);
+        WorldAttempts.Submit(db, sess, uid, first4.AttemptId, json);
+        var retake = WorldAttempts.Start(db, sess, uid, code4, null, true, day4);
+        WorldAttempts.Submit(db, sess, uid, retake.AttemptId, json);
+        Assert.Equal(4, WorldDashboard.Streak(db, uid, day4));
+        Assert.Null(db.QueryOne("SELECT rotation_period_id FROM pciworld_attempts WHERE id=?", retake.AttemptId)!["rotation_period_id"]);
+
+        // …and a genuinely missed whole day resets the run to the new head.
+        var day6 = new DateTime(2026, 10, 6, 12, 0, 0, DateTimeKind.Utc);
+        WorldRotation.RunDue(db, day6);   // opens day 5 and day 6; day 5 never played
+        var code6 = H.Str(db.QueryOne("SELECT code FROM pciworld_challenges WHERE id=?",
+            WorldRotation.CurrentPeriod(db, day6)!["challenge_id"])!["code"])!;
+        var s6 = WorldAttempts.Start(db, sess, uid, code6, null, false, day6);
+        WorldAttempts.Submit(db, sess, uid, s6.AttemptId, json);
+        Assert.Equal(1, WorldDashboard.Streak(db, uid, day6));
+    }
+
+    [Fact]
+    public void Dashboard_reads_match_both_ownership_namespaces_without_double_counting()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-flip')");
+        var (_, wid, _) = WorldAccount.Register(db, "flip@x.test", "long-password-1", "F", null);
+        db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", wid);
+        foreach (var step in new[] { "welcome", "goal", "preferences", "privacy", "completed" })
+            WorldIdentity.AdvanceOnboarding(db, wid, step);
+        var uid = WorldIdentity.CanonicalUserFor(db, wid)!.Value;
+
+        // A dual-stamped completion (the normal shape) appears exactly once.
+        var code = H.Str(db.QueryOne("SELECT code FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!["code"])!;
+        var start = WorldAttempts.Start(db, sess, wid, code, null, false, Day);
+        WorldAttempts.Submit(db, sess, wid, start.AttemptId, System.Text.Json.JsonDocument.Parse("""{"a":"1"}""").RootElement);
+        var s = WorldDashboard.Build(db, Ctx(db, wid), Day);
+        Assert.Single(s.RecentResults);
+
+        // Work stamped ONLY canonically (a different legacy row of the same person — the exact
+        // case the legacy namespace loses) is visible through the union read.
+        var ch2 = db.QueryOne(@"SELECT id, current_version FROM pciworld_challenges
+            WHERE current_version>=1 ORDER BY id DESC LIMIT 1")!;
+        db.Execute(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,canonical_user_id,completed_at)
+            VALUES(?,?,?, 'completed', 91, ?, datetime('now'))", sess, ch2["id"], ch2["current_version"], uid);
+        var s2 = WorldDashboard.Build(db, Ctx(db, wid), Day);
+        Assert.Equal(2, s2.RecentResults.Count);
+        Assert.Contains(s2.RecentResults, r => Convert.ToDouble(r["score"]) == 91.0);
     }
 
     [Fact]

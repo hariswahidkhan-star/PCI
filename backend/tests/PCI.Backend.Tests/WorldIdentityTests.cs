@@ -235,6 +235,98 @@ public class WorldIdentityTests
     }
 
     [Fact]
+    public void Attempt_ownership_reconciles_to_canonical_identities_before_any_cutover()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-audit')");
+        var (_, wid, _) = WorldAccount.Register(db, "audit-own@x.test", "long-password-1", "A O", null);
+        var ch = db.QueryOne("SELECT id,current_version FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!;
+        var att = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,user_id,completed_at)
+            VALUES(?,?,?, 'completed', 66, ?, datetime('now'))", sess, ch["id"], ch["current_version"], wid);
+        db.Execute(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status) VALUES(?,?,?, 'in_progress')",
+            sess, ch["id"], ch["current_version"]);   // anonymous — not part of the owned count
+
+        var audit = WorldIdentity.AuditAttemptOwnership(db);
+        Assert.Equal(1, audit.OwnedAttempts);
+        Assert.Equal(1, audit.Resolvable);
+        Assert.True(audit.CutoverReady);
+        Assert.Equal(WorldIdentity.CanonicalUserFor(db, wid), WorldIdentity.CanonicalOwnerOfAttempt(db, att));
+
+        // An attempt owned by a World id with NO canonical resolution (quarantined conflict)
+        // makes the audit fail closed — the cutover must wait for the mapping, never strand work.
+        CanonicalUser(db, "clash-own@x.test");
+        var clashWid = LegacyWorld(db, "clash-own@x.test");
+        WorldIdentity.Run(db);
+        db.Execute(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,user_id,completed_at)
+            VALUES(?,?,?, 'completed', 50, ?, datetime('now'))", sess, ch["id"], ch["current_version"], clashWid);
+        var audit2 = WorldIdentity.AuditAttemptOwnership(db);
+        Assert.Equal(2, audit2.OwnedAttempts);
+        Assert.Equal(1, audit2.Orphaned);
+        Assert.False(audit2.CutoverReady);
+        Assert.Null(WorldIdentity.CanonicalOwnerOfAttempt(db, db.Scalar<long>(
+            "SELECT id FROM pciworld_attempts WHERE user_id=?", clashWid)));
+    }
+
+    [Fact]
+    public void New_and_claimed_attempts_are_stamped_in_both_ownership_namespaces()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-dual')");
+        var ch = db.QueryOne("SELECT code FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!;
+
+        // Anonymous work first, then registration claims it — BOTH columns stamped in the claim.
+        var anon = WorldAttempts.Start(db, sess, null, H.Str(ch["code"])!, null, false, DateTime.UtcNow);
+        var (_, wid, _) = WorldAccount.Register(db, "dual@x.test", "long-password-1", "D", sess);
+        var uid = WorldIdentity.CanonicalUserFor(db, wid)!.Value;
+        var claimed = db.QueryOne("SELECT user_id, canonical_user_id FROM pciworld_attempts WHERE id=?", anon.AttemptId)!;
+        Assert.Equal(wid, Convert.ToInt64(claimed["user_id"]));
+        Assert.Equal(uid, Convert.ToInt64(claimed["canonical_user_id"]));
+
+        // A signed-in start is dual-stamped from the INSERT.
+        var fresh = WorldAttempts.Start(db, sess, wid, H.Str(ch["code"])!, null, true, DateTime.UtcNow);
+        var row = db.QueryOne("SELECT user_id, canonical_user_id FROM pciworld_attempts WHERE id=?", fresh.AttemptId)!;
+        Assert.Equal(wid, Convert.ToInt64(row["user_id"]));
+        Assert.Equal(uid, Convert.ToInt64(row["canonical_user_id"]));
+        Assert.Equal(uid, WorldIdentity.CanonicalOwnerOfAttempt(db, fresh.AttemptId));
+    }
+
+    [Fact]
+    public void The_ownership_backfill_converges_idempotently_and_leaves_conflicts_null()
+    {
+        var db = NewWorldDb();
+        var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-bf')");
+        var ch = db.QueryOne("SELECT id,current_version FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!;
+
+        // A resolvable legacy-owned attempt (stamp missing, as pre-cutover rows are)…
+        var student = CanonicalUser(db, "bf-linked@x.test");
+        var okWid = LegacyWorld(db, "bf-linked@x.test", null, student);
+        var okAtt = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,user_id,completed_at)
+            VALUES(?,?,?, 'completed', 70, ?, datetime('now'))", sess, ch["id"], ch["current_version"], okWid);
+        // …and a quarantined-conflict-owned attempt that must stay NULL.
+        CanonicalUser(db, "bf-clash@x.test");
+        var clashWid = LegacyWorld(db, "bf-clash@x.test");
+        var clashAtt = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts(session_id,challenge_id,version,status,score,user_id,completed_at)
+            VALUES(?,?,?, 'completed', 50, ?, datetime('now'))", sess, ch["id"], ch["current_version"], clashWid);
+
+        WorldIdentity.Run(db);   // maps + backfills
+        Assert.Equal(student, Convert.ToInt64(
+            db.QueryOne("SELECT canonical_user_id FROM pciworld_attempts WHERE id=?", okAtt)!["canonical_user_id"]));
+        Assert.Null(db.QueryOne("SELECT canonical_user_id FROM pciworld_attempts WHERE id=?", clashAtt)!["canonical_user_id"]);
+
+        // Idempotent: a second pass stamps nothing new and reassigns nothing.
+        Assert.Equal(0, WorldIdentity.BackfillAttemptOwnership(db));
+        Assert.Equal(student, Convert.ToInt64(
+            db.QueryOne("SELECT canonical_user_id FROM pciworld_attempts WHERE id=?", okAtt)!["canonical_user_id"]));
+
+        // PARITY (the flip precondition): evidence counted by the canonical stamp equals the
+        // legacy-namespace statistics for the same person.
+        var legacyStats = WorldAccount.EvidenceStats(db, okWid, visibleOnly: false);
+        var byCanonical = db.Scalar<long>(
+            "SELECT COUNT(*) FROM pciworld_attempts WHERE canonical_user_id=? AND status='completed'", student);
+        Assert.Equal(legacyStats.Completed, byCanonical);
+    }
+
+    [Fact]
     public void Participation_rows_hold_product_data_only_and_are_unique_per_user()
     {
         var db = NewWorldDb();

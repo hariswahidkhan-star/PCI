@@ -86,11 +86,15 @@ public class WorldAccountTests
         var db = NewWorldDb();
         var (_, uid, _) = WorldAccount.Register(db, "pp@x.test", "long-password-1", null, null);
 
-        // Unverified email → refused; verified but no display name → refused.
+        // Unverified email → refused; verified but no display name → refused; named but with no
+        // selected evidence → refused (P1-05: a Passport cannot publish empty).
         Assert.Equal("email_unverified", WorldAccount.PublishPassport(db, uid).Error);
         db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", uid);
         Assert.Equal("no_display_name", WorldAccount.PublishPassport(db, uid).Error);
         db.Execute("UPDATE pciworld_users SET display_name='Haris' WHERE id=?", uid);
+        Assert.Equal("no_evidence", WorldAccount.PublishPassport(db, uid).Error);
+        var evSess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-pp-ev')");
+        db.Execute("UPDATE pciworld_attempts SET passport_visible=1 WHERE id=?", Attempt(db, evSess, "WC-EVM-001", uid));
 
         var (err, url) = WorldAccount.PublishPassport(db, uid);
         Assert.Null(err);

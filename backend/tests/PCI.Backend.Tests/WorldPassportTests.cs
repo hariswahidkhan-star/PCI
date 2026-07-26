@@ -51,7 +51,17 @@ public class WorldPassportTests
         var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
         Assert.Equal(2, rows.Count);
 
-        // Everything on by default — the behaviour every already-published Passport had.
+        // Privacy-safe defaults (P1-05): a NEW account publishes nothing beyond challenge titles
+        // until its owner deliberately switches fields on. (Pre-existing rows keep the schema
+        // default — visible — so already-published Passports are unchanged; proven below.)
+        var fresh = WorldPassport.Disclosure.From(db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", userId)!);
+        Assert.False(fresh.Scores || fresh.Profiles || fresh.Dates);
+        var legacy = db.ExecuteReturningId("INSERT INTO pciworld_users(email,password_hash) VALUES('legacy-disc@x.test','x')");
+        var kept = WorldPassport.Disclosure.From(db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", legacy)!);
+        Assert.True(kept.Scores && kept.Profiles && kept.Dates);
+
+        // The owner deliberately publishes every field.
+        db.Execute("UPDATE pciworld_users SET passport_show_scores=1, passport_show_profiles=1, passport_show_dates=1 WHERE id=?", userId);
         var all = WorldPassport.Disclosure.From(db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", userId)!);
         Assert.True(all.Scores && all.Profiles && all.Dates);
         var full = WorldPages.PublicPassport(db, "Sam Rivera", rows, all);

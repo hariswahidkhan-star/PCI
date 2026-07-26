@@ -265,6 +265,16 @@ public static class WorldSchema
         // Retake lineage (journey repair P0-04): a fresh attempt after completion is an explicit
         // retake linked to the attempt it retries — the original stays immutable evidence.
         AddCol("pciworld_attempts", "parent_attempt_id", "parent_attempt_id INTEGER");
+        // Daily provenance (P1-07/PW-US-028): an attempt started as TODAY'S challenge records the
+        // rotation period it belonged to, so daily completion and the practice streak are derived
+        // from the ledger — archive plays and retakes can never inflate them. NULL = not a daily.
+        AddCol("pciworld_attempts", "rotation_period_id", "rotation_period_id INTEGER");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_period ON pciworld_attempts(rotation_period_id)");
+        // Namespace cutover step 1 (P0-00): canonical ownership stamped ALONGSIDE the legacy
+        // World-id ownership. New/claimed attempts carry both; the boot backfill converges old
+        // rows through the map; reads flip to this column only once parity is proven.
+        AddCol("pciworld_attempts", "canonical_user_id", "canonical_user_id INTEGER");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_canonical ON pciworld_attempts(canonical_user_id)");
 
         // Passport disclosure is per FIELD as well as per item: publishing evidence of what you
         // have practised should not force you to publish your scores. Defaults preserve the

@@ -63,14 +63,20 @@ public static class WorldAccount
         if (!email.Contains('@') || email.Length < 6) return ("bad_email", 0, "");
         if (password.Length < 10) return ("weak_password", 0, "");
         if (db.QueryOne("SELECT id FROM pciworld_users WHERE email=?", email) is not null) return ("duplicate_email", 0, "");
-        var id = db.ExecuteReturningId("INSERT INTO pciworld_users(email,password_hash,display_name) VALUES(?,?,?)",
+        // Privacy-safe defaults (journey repair P1-05): a NEW account publishes nothing beyond
+        // challenge titles until its owner deliberately switches fields on. Pre-existing rows keep
+        // the schema default (visible) — the behaviour every already-published Passport had.
+        var id = db.ExecuteReturningId(@"INSERT INTO pciworld_users
+                (email,password_hash,display_name,passport_show_scores,passport_show_profiles,passport_show_dates)
+            VALUES(?,?,?,0,0,0)",
             email, BCrypt.Net.BCrypt.HashPassword(password), Trunc(displayName, 80));
-        ClaimSession(db, id, worldSessionId);
         // Canonical identity from the moment the account exists (P0-00): a standalone World
         // registration creates its canonical users/student_profiles pair immediately (same bcrypt
         // hash, so the one password works on both products); an email already registered on the
-        // platform is quarantined in the map, never silently merged.
+        // platform is quarantined in the map, never silently merged. Mapping runs BEFORE the
+        // claim so claimed attempts are stamped with canonical ownership in the same breath.
         try { WorldIdentity.MapOne(db, id); } catch { /* mapping must never break registration */ }
+        ClaimSession(db, id, worldSessionId);
         return (null, id, MintSession(db, id));
     }
 
@@ -123,12 +129,14 @@ public static class WorldAccount
     }
 
     /// <summary>Adopt the anonymous session's attempts into the account — only unclaimed ones;
-    /// attempts already owned by another account never move.</summary>
+    /// attempts already owned by another account never move. Ownership is stamped in BOTH
+    /// namespaces (legacy World id + canonical users.id) for the cutover.</summary>
     public static void ClaimSession(Db db, long userId, long? worldSessionId)
     {
         if (worldSessionId is null) return;
-        db.Execute("UPDATE pciworld_attempts SET user_id=? WHERE session_id=? AND user_id IS NULL",
-            userId, worldSessionId);
+        var canonical = WorldIdentity.CanonicalUserFor(db, userId);
+        db.Execute("UPDATE pciworld_attempts SET user_id=?, canonical_user_id=? WHERE session_id=? AND user_id IS NULL",
+            userId, canonical, worldSessionId);
     }
 
     static string MintSession(Db db, long userId)
@@ -180,11 +188,10 @@ public static class WorldAccount
     public static bool VerifyAccountPassword(Db db, long worldUserId, string? password)
     {
         if (string.IsNullOrEmpty(password)) return false;
-        var row = db.QueryOne("SELECT password_hash, student_user_id FROM pciworld_users WHERE id=?", worldUserId);
+        var row = db.QueryOne("SELECT password_hash FROM pciworld_users WHERE id=?", worldUserId);
         if (row is null) return false;
         if (Security.VerifyPassword(password, row["password_hash"] as string)) return true;
-        var canonical = WorldIdentity.CanonicalFor(db, worldUserId)
-                        ?? (row["student_user_id"] is null ? (long?)null : H.L(row["student_user_id"]));
+        var canonical = WorldIdentity.CanonicalUserFor(db, worldUserId);
         if (canonical is null) return false;
         var cu = db.QueryOne("SELECT password_hash FROM users WHERE id=? AND status='active'", canonical);
         return cu is not null && Security.VerifyPassword(password, cu["password_hash"] as string);
@@ -198,6 +205,12 @@ public static class WorldAccount
         if (u is null) return ("not_found", null);
         if (H.L(u["email_verified"]) != 1) return ("email_unverified", null);
         if (string.IsNullOrWhiteSpace(H.Str(u["display_name"]))) return ("no_display_name", null);
+        // Publish-order safety (journey repair P1-05): an empty public Passport is a page that
+        // says nothing about its owner and invites confusion about what it claims. At least one
+        // deliberately selected evidence item is part of readiness, enforced server-side.
+        if (db.Scalar<long>(@"SELECT COUNT(*) FROM pciworld_attempts
+                WHERE user_id=? AND status='completed' AND passport_visible=1", userId) == 0)
+            return ("no_evidence", null);
         var token = Security.RandomHex(32);
         db.Execute("UPDATE pciworld_users SET passport_public=1, passport_token_sha=? WHERE id=?",
             Security.Sha(token), userId);
@@ -225,8 +238,10 @@ public static class WorldAccount
             var byEmail = db.QueryOne("SELECT * FROM pciworld_users WHERE email=?", email);
             if (byEmail is null)
             {
-                var fresh = db.ExecuteReturningId(
-                    "INSERT INTO pciworld_users(email,password_hash,display_name,email_verified,student_user_id) VALUES(?,?,?,1,?)",
+                var fresh = db.ExecuteReturningId(@"INSERT INTO pciworld_users
+                        (email,password_hash,display_name,email_verified,student_user_id,
+                         passport_show_scores,passport_show_profiles,passport_show_dates)
+                    VALUES(?,?,?,1,?,0,0,0)",
                     email, BCrypt.Net.BCrypt.HashPassword(Security.RandomHex(24)), Trunc(displayName, 80), studentId);
                 try { WorldIdentity.MapOne(db, fresh); WorldIdentity.EnsureParticipant(db, studentId); } catch { }
                 return (null, fresh);
@@ -242,6 +257,33 @@ public static class WorldAccount
         try { WorldIdentity.MapOne(db, H.L(u["id"])); WorldIdentity.EnsureParticipant(db, studentId); } catch { }
         return (null, H.L(u["id"]));
     }
+
+    /// <summary>This account's public result links (PW-US-039) — safe metadata only. The raw token
+    /// is not even stored (hash only), so it can never appear here.</summary>
+    public static List<Dictionary<string, object?>> ShareLinks(Db db, long userId) =>
+        db.Query(@"SELECT a.id, a.result_revoked, a.completed_at, a.updated_at, c.code, v.title
+            FROM pciworld_attempts a
+            JOIN pciworld_challenges c ON c.id=a.challenge_id
+            JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
+            WHERE a.user_id=? AND a.result_token_sha IS NOT NULL
+            ORDER BY a.updated_at DESC, a.id DESC LIMIT 200", userId);
+
+    /// <summary>This account's outstanding invitations (PW-US-040) — status and the pinned
+    /// version they carry, never the inviter's answers or a raw token.</summary>
+    public static List<Dictionary<string, object?>> Invitations(Db db, long userId) =>
+        db.Query(@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title
+            FROM pciworld_invites i
+            JOIN pciworld_attempts a ON a.id=i.attempt_id
+            JOIN pciworld_challenges c ON c.id=a.challenge_id
+            JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
+            WHERE a.user_id=?
+            ORDER BY i.id DESC LIMIT 200", userId);
+
+    /// <summary>This account's live World sessions — metadata only, never a token value (they are
+    /// stored hashed and cannot be reprinted anyway). Feeds the sessions view (PW-US-043).</summary>
+    public static List<Dictionary<string, object?>> Sessions(Db db, long userId) =>
+        db.Query(@"SELECT id, token, created_at, expires_at FROM pciworld_user_sessions
+            WHERE user_id=? AND expires_at>datetime('now') ORDER BY created_at DESC, id DESC", userId);
 
     /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).
     /// Paginated (journey repair P1-06): the page size is a window, never the truth — totals come
@@ -305,8 +347,9 @@ public static class WorldAccount
         // The browser sessions themselves are removed, then the attempts are stripped.
         db.Execute(@"DELETE FROM pciworld_sessions
             WHERE id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
-        db.Execute(@"UPDATE pciworld_attempts SET user_id=NULL, passport_visible=0, display_name=NULL,
-            result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0 WHERE user_id=?", userId);
+        db.Execute(@"UPDATE pciworld_attempts SET user_id=NULL, canonical_user_id=NULL, passport_visible=0,
+            display_name=NULL, result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0
+            WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_handoff_codes WHERE world_user_id=?", userId);
@@ -448,7 +491,9 @@ public static class WorldAccount
             if (u.EmailVerified) return J(new { ok = true, already = true });
             if (Throttled("verify|" + u.Id, 3)) return Err("rate_limited", 429);
             SendVerification(ctx, u.Id, u.Email);
-            return J(new { ok = true });
+            // Truthfulness (PW-US-005): the mail is QUEUED for delivery — this API cannot promise
+            // it reached an inbox, and must not claim to.
+            return J(new { ok = true, queued = true });
         });
 
         // ───────────── password reset ─────────────
@@ -530,6 +575,18 @@ public static class WorldAccount
                     visible_evidence = s.Passport.VisibleEvidence,
                 },
                 progress = new { completed = s.Progress.Completed, industries = s.Progress.Industries, tracks = s.Progress.Tracks },
+                streak_days = s.StreakDays,
+                week_done = s.WeekDone,
+                week_target = s.WeekTarget,
+                onboarding_state = s.OnboardingState,
+                // Ecosystem switcher groundwork (P1-11): honest per-product entry state — never a
+                // certification/membership/entitlement claim.
+                products = new
+                {
+                    pci_world = new { state = s.OnboardingState is not null && s.OnboardingState != "completed"
+                        ? "onboarding_required" : "active" },
+                    pci_ai = new { state = s.CanonicalLinked ? "ready" : "not_linked" },
+                },
                 recent = s.RecentResults.Select(r => new
                 {
                     attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
@@ -544,6 +601,203 @@ public static class WorldAccount
                 }),
                 recommended = s.RecommendedCode is null ? null : new { code = s.RecommendedCode, title = s.RecommendedTitle },
             });
+        });
+
+        // ── Sessions (PW-US-043): what is signed in as me, and the power to end it. World
+        //    sessions only — PCI AI and platform sessions belong to the portal's security view. ──
+        string CallerSha(HttpContext ctx)
+        {
+            var t = ctx.Request.Headers["X-World-Account"].ToString();
+            if (string.IsNullOrWhiteSpace(t)) t = ctx.Request.Cookies[SessionCookie] ?? "";
+            return string.IsNullOrWhiteSpace(t) ? "" : Security.Sha(t);
+        }
+
+        app.MapGet("/api/world/me/sessions", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var mine = CallerSha(ctx);
+            var rows = Sessions(db, u.Id).Select(s => new
+            {
+                id = H.L(s["id"]),
+                created_at = H.Str(s["created_at"]),
+                expires_at = H.Str(s["expires_at"]),
+                current = H.Str(s["token"]) == mine,
+            });
+            return J(new { rows });
+        });
+
+        app.MapPost("/api/world/me/sessions/revoke", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var id = (long)(H.GetNum(b, "id") ?? 0);
+            // Ownership in SQL; revoking the CURRENT session is a legitimate sign-out-here.
+            var n = db.Execute("DELETE FROM pciworld_user_sessions WHERE id=? AND user_id=?", id, u.Id);
+            if (n == 0) return Err("not_found", 404);
+            log(null, "world_session_revoke", $"world #{u.Id} session #{id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world/me/sessions/revoke-others", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var n = db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=? AND token<>?", u.Id, CallerSha(ctx));
+            log(null, "world_session_revoke_others", $"world #{u.Id}: {n} session(s)");
+            return J(new { ok = true, revoked = n });
+        });
+
+        // ── Sharing (PW-US-039/040): every public surface this account minted, in one place,
+        //    with the power to withdraw each — or all — immediately. Account-scoped ownership,
+        //    so links minted on another device are just as manageable here. ──
+        app.MapGet("/api/world/me/shares", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            return J(new
+            {
+                results = ShareLinks(db, u.Id).Select(r => new
+                {
+                    attempt_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
+                    completed_at = H.Str(r["completed_at"]), revoked = H.L(r["result_revoked"]) == 1,
+                }),
+                invitations = Invitations(db, u.Id).Select(r => new
+                {
+                    invite_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
+                    version = H.L(r["version"]), created_at = H.Str(r["created_at"]),
+                    inviter_name = H.Str(r["inviter_name"]), revoked = H.L(r["revoked"]) == 1,
+                }),
+            });
+        });
+
+        app.MapPost("/api/world/me/shares/revoke", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE id=? AND user_id=? AND result_token_sha IS NOT NULL",
+                (long)(H.GetNum(b, "attempt_id") ?? 0), u.Id);
+            if (n == 0) return Err("not_found", 404);
+            log(null, "world_share_revoke", $"world #{u.Id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world/me/shares/revoke-all", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE user_id=? AND result_token_sha IS NOT NULL AND result_revoked=0", u.Id);
+            log(null, "world_share_revoke_all", $"world #{u.Id}: {n}");
+            return J(new { ok = true, revoked = n });
+        });
+
+        app.MapPost("/api/world/me/invitations/revoke", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var n = db.Execute(@"UPDATE pciworld_invites SET revoked=1
+                WHERE id=? AND revoked=0
+                  AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)",
+                (long)(H.GetNum(b, "invite_id") ?? 0), u.Id);
+            if (n == 0) return Err("not_found", 404);
+            log(null, "world_invite_revoke", $"world #{u.Id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world/me/invitations/revoke-all", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var n = db.Execute(@"UPDATE pciworld_invites SET revoked=1
+                WHERE revoked=0 AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)", u.Id);
+            log(null, "world_invite_revoke_all", $"world #{u.Id}: {n}");
+            return J(new { ok = true, revoked = n });
+        });
+
+        // ── World onboarding (§7.3): server-owned steps, order enforced — a manipulated route can
+        //    never mark a missing required step complete. ──
+        app.MapGet("/api/world/me/onboarding", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var state = WorldIdentity.OnboardingState(db, u.Id);
+            return J(new { linked = state is not null, state, steps = WorldIdentity.OnboardingSteps });
+        });
+
+        app.MapPost("/api/world/me/onboarding", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var err = WorldIdentity.AdvanceOnboarding(db, u.Id, H.GetS(b, "step") ?? "");
+            if (err is not null) return Err(err, err == "not_linked" ? 409 : 400,
+                err == "out_of_order" ? "Complete the earlier steps first." : null);
+            return J(new { ok = true, state = WorldIdentity.OnboardingState(db, u.Id) });
+        });
+
+        // ── World preferences (§10.5): product data on the participation row, never the profile. ──
+        app.MapGet("/api/world/me/preferences", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var prefs = WorldIdentity.ReadPreferences(db, u.Id);
+            return J(new { linked = prefs is not null, preferences = prefs, goals = WorldIdentity.Goals });
+        });
+
+        app.MapPatch("/api/world/me/preferences", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var err = WorldIdentity.UpdatePreferences(db, u.Id,
+                H.GetS(b, "goal"), H.GetS(b, "timezone"),
+                H.GetNum(b, "weekly_target") is { } wt ? (long)wt : null,
+                H.GetBool(b, "reminders_enabled"),
+                H.GetNum(b, "reminder_hour") is { } rh ? (long)rh : null);
+            if (err is not null) return Err(err, err == "not_linked" ? 409 : 400);
+            return J(new { ok = true, preferences = WorldIdentity.ReadPreferences(db, u.Id) });
+        });
+
+        // ── The shared canonical student profile (P1-10): the SAME record the PCI portal reads
+        //    and writes — reused, never copied. Nothing here reaches any public surface without
+        //    the separate Passport disclosure consent. ──
+        app.MapGet("/api/world/me/profile", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var profile = WorldIdentity.ReadSharedProfile(db, u.Id);
+            return J(new { linked = profile is not null, profile });
+        });
+
+        app.MapPatch("/api/world/me/profile", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var err = WorldIdentity.UpdateSharedProfile(db, u.Id, b);
+            if (err is not null) return Err(err, 409,
+                "This World account has no linked PCI identity yet — sign in with your PCI credentials to link it.");
+            log(null, "world_profile_update", $"world #{u.Id}");
+            return J(new { ok = true, profile = WorldIdentity.ReadSharedProfile(db, u.Id) });
         });
 
         app.MapGet("/api/world/account", (HttpContext ctx) =>
@@ -614,9 +868,31 @@ public static class WorldAccount
                                    message = H.Str(r["message"]), status = H.Str(r["status"]),
                                    created_at = H.Str(r["created_at"]) });
             ctx.Response.Headers["Content-Disposition"] = "attachment; filename=\"pciworld-my-data.json\"";
-            return J(new { exported_at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+            // Scope honesty (PW-US-044): this file is the PCI WORLD product export. It says what
+            // it contains and — as importantly — what it does not, so nobody mistakes it for a
+            // complete PCI account export. Shared profile fields ride along for context, labelled
+            // as canonical PCI data owned by the Institute account.
+            var sharedProfile = WorldIdentity.ReadSharedProfile(db, u.Id);
+            return J(new
+            {
+                scope = new
+                {
+                    product = "pci_world",
+                    contains = new[] { "world_account_identity", "challenge_attempts_and_answers",
+                        "passport_configuration", "content_reports" },
+                    does_not_contain = "PCI AI certification applications, payments, memberships, exams, " +
+                        "certificates or documents — request a complete PCI account export from the Institute student portal.",
+                },
+                exported_at = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 email = u.Email, display_name = u.DisplayName, email_verified = u.EmailVerified,
-                passport_public = u.PassportPublic, attempts, reports });
+                passport_public = u.PassportPublic,
+                canonical_pci_profile = sharedProfile is null ? null : new
+                {
+                    note = "Canonical PCI student-profile data shared with the Institute account — included for context; it belongs to your PCI identity, not to PCI World.",
+                    profile = sharedProfile,
+                },
+                attempts, reports,
+            });
         });
 
         app.MapPost("/api/world/account/delete", async (HttpContext ctx) =>
@@ -835,6 +1111,7 @@ public static class WorldAccount
             {
                 "email_unverified" => "Verify your email before publishing a public Passport.",
                 "no_display_name" => "Choose the display name that should appear on your public Passport first.",
+                "no_evidence" => "Select at least one completed challenge to appear on your Passport before publishing.",
                 _ => null,
             });
             log(null, "world_passport_publish", $"#{u.Id}");

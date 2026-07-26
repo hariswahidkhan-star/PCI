@@ -476,6 +476,9 @@ public sealed class WorldRetentionService : BackgroundService
         removed += db.Execute("DELETE FROM pciworld_user_sessions WHERE expires_at<=datetime('now')");
         removed += db.Execute("DELETE FROM pciworld_admin_sessions WHERE expires_at<=datetime('now')");
         removed += db.Execute("DELETE FROM pciworld_user_tokens WHERE expires_at<=datetime('now')");
+        // Handoff codes live two minutes and are single-use — anything expired or consumed is
+        // pure residue (P0-02 hygiene: dead security artefacts must not accumulate).
+        removed += db.Execute("DELETE FROM pciworld_handoff_codes WHERE expires_at<=datetime('now') OR consumed_at IS NOT NULL");
 
         // Dormant anonymous sessions. An anonymous session is browser continuity; once it has been
         // idle this long it can only serve to link past activity together. Sessions that still own
