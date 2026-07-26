@@ -907,7 +907,9 @@ later is written by whoever needs the deliverable accepted.
 3. **Substitution.** `(71 + 27) × 320`; `9,600 + (1/3 × 0.5 × 14,280)`; `98 × 0.25 × 11,980`;
    `31,360 / (98 × 11,980)`.
 4. **Result.** **98** requirements are deficient — **20.42 %** of the baseline, comprising **14.79 %**
-   restated and **5.63 %** absent. Remediating all of them costs **USD 31,360**. Expected cost per
+   restated and **5.62 %** absent (the two class rates rounding to 20.41 against the combined 20.42 —
+   display rounding, as in 5.2.3, and one more reason the classes and not the total are the report).
+   Remediating all of them costs **USD 31,360**. Expected cost per
    dispute is **USD 11,980** (9,600 of rework plus **USD 2,380** of expected delay). Expected disputes
    are **24.5**, at an expected cost of **USD 293,510**. Remediation therefore nets **USD 262,150**, a
    return of **9.36 times**. And the **breakeven dispute probability is 2.67 %** against an observed
