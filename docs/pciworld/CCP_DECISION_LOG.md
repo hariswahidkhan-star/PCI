@@ -129,7 +129,7 @@ traceable.
 | | |
 |---|---|
 | Date | 2026-07-26 |
-| Status | **Proposed — needs owner sign-off** |
+| Status | **Accepted — owner decision, 2026-07-26: enforce MySQL platform-wide** |
 | Context | §2.2 requires MySQL authoritative in local integration testing, staging and production, with SQLite confined to isolated unit tests and explicitly *not* a production/development fallback. |
 
 **Conflict.** The platform ships SQLite as a *supported* production posture, deliberately. The boot
@@ -138,18 +138,39 @@ mount, or under `ALLOW_SQLITE_IN_PRODUCTION`, or under `PCIWORLD_ONLY` + `PCIWOR
 The in-code rationale at `Program.cs:88` is explicit: a previous fail-closed MySQL change "bricked
 every existing SQLite-on-disk deploy". Flipping this globally would repeat that outage.
 
-**Proposed resolution.** Scope the §2.2 requirement to the new increment rather than the platform:
+**Options considered.**
 
-1. New CCP tables and features require MySQL. The CCP feature flag refuses to enable on a
-   non-MySQL provider, with a clear operator message.
-2. Existing surfaces keep the current interim posture unchanged — no redeploy is bricked.
-3. CCP integration tests run against real MySQL only; SQLite is used solely for isolated unit tests
-   that cannot mask provider behaviour, per §2.2's own carve-out.
-4. The platform-wide SQLite→MySQL cutover stays a separate, already-documented programme
-   (`docs/MYSQL_MIGRATION.md`).
+1. *Scope MySQL to the new increment only* — CCP features refuse to enable on a non-MySQL provider;
+   existing surfaces keep the interim posture. Lowest risk, but leaves the platform split across two
+   providers indefinitely and does not satisfy §2.2 as written.
+2. **Selected — enforce MySQL platform-wide.** §2.2 is applied literally: MySQL becomes the only
+   authoritative provider for local integration testing, staging and production, and SQLite is
+   confined to isolated unit tests.
+3. *Leave the posture as-is* — rejected: provider-sensitive bugs in the new concurrency, outbox and
+   sequencing code would not surface until production.
 
-This satisfies §2.2's intent for everything this increment builds without an unrelated production
-outage. **It changes the operating posture of a live deployment, so it needs the owner's decision.**
+**Owner decision (2026-07-26): option 2.**
+
+**Implementation requirements — this is production-affecting and must not repeat the `Program.cs:88`
+outage.** Enforcement is only safe when delivered as a staged change, not a flag flip:
+
+1. **Announce before enforcing.** Ship a boot-time *warning* release first: any deployment still on
+   SQLite logs a dated deprecation notice naming the cutover release and pointing at
+   `docs/MYSQL_MIGRATION.md`. Enforcement lands in a later, separately deployed release.
+2. **Migration window.** Operators need a documented, rehearsed SQLite → MySQL migration path with
+   verified row-count reconciliation before the fail-closed release ships.
+3. **Retire the waivers deliberately.** `ALLOW_SQLITE_IN_PRODUCTION`, `PCIWORLD_ALLOW_SQLITE` and
+   the `/data`-persistent-disk auto-posture (`Program.cs:110-134`) all become hard failures at the
+   cutover release. `ALLOW_INSECURE_PRODUCTION` remains the documented emergency override so a
+   mid-incident deployment is never impossible.
+4. **Test both legs until cutover.** CI keeps its SQLite job until the enforcement release, so the
+   migration tooling itself stays covered on both providers.
+5. **SQLite stays legal in unit tests.** §2.2 explicitly permits it in isolated tests that cannot
+   mask MySQL behaviour; the existing xUnit temp-SQLite layer is unaffected.
+
+Sequenced this way it satisfies §2.2 without a repeat outage. **Steps 1–2 are prerequisites for the
+enforcement release and are tracked as CCP-P1-002; they are deliberately not bundled into the
+Phase 1 community slice**, which is a separate concern with its own exit gate.
 
 ---
 

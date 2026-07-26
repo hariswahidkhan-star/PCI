@@ -16,11 +16,37 @@ Fixed · Testing · Verified · Deferred · Blocked · Not reproducible.
 | Module | Toolchain / CI environment |
 | Requirement | §23, §24, §26 step 7, §28.20, §31; Phase 0 exit gate |
 | Severity | **P0** |
-| Status | **Blocked** |
+| Status | **Verified — resolved 2026-07-26** |
 | Owner | Platform / environment owner |
 
-**Issue.** The .NET SDK is absent and cannot be installed; there is no Docker daemon and no
-MySQL/MariaDB server. The ASP.NET Core backend therefore cannot be compiled, started, or tested.
+> **RESOLUTION.** No proxy change was needed after all. `builds.dotnet.microsoft.com` and
+> `dot.net` remain blocked, but **Ubuntu 24.04's own archive carries `dotnet-sdk-8.0`**
+> (`noble-updates/main`, candidate `8.0.129-0ubuntu1~24.04.1`), and `packages.microsoft.com`
+> answers 200. The toolchain was restored in-container:
+>
+> ```
+> apt-get install -y dotnet-sdk-8.0 mariadb-server mariadb-client
+> $ dotnet --version   →  8.0.129        (SDK at /usr/lib/dotnet/sdk)
+> $ mariadb -e 'SELECT VERSION()' →  10.11.14-MariaDB   (CI uses mariadb:10.11)
+> ```
+>
+> Verified after restore:
+> - `dotnet build -c Release` → **succeeded, 0 warnings, 0 errors**
+> - `python3 tools/sqlite_to_mysql.py --check` → `schema.mysql.sql is current`
+> - The five `dotnet`-dependent suites that previously aborted now pass: `migration_versioning`,
+>   `production_config`, `worker_leasing`, `impersonation_readonly`, `payments_replay` — all exit 0,
+>   no `FAIL`/`✗` markers.
+>
+> One incidental repair was required: the system `cryptography` build panics under
+> `pyo3_runtime.PanicException` when imported by `pymysql`, blocking the MySQL harness. Worked
+> around in-session; **this is an environment quirk, not a repository defect**, and CI is unaffected
+> because it uses `actions/setup-dotnet` and a MariaDB service container.
+>
+> **Recommendation for future sessions:** add `apt-get install -y dotnet-sdk-8.0 mariadb-server`
+> to the environment setup (or a SessionStart hook) so the backend is testable from the first turn.
+
+**Issue (as originally found).** The .NET SDK was absent; there was no Docker daemon and no
+MySQL/MariaDB server. The ASP.NET Core backend therefore could not be compiled, started, or tested.
 
 **Reproduction** (branch `claude/pci-world-increment-gyabvz`, commit `c17717d`, no feature flags):
 
@@ -64,12 +90,8 @@ and the egress policy blocks Microsoft's distribution hosts.
 **What still verifies here:** frontend typecheck (exit 0), 296 vitest tests across 45 files
 (exit 0), production build (exit 0), and 7 Python logic suites against real SQLite (all exit 0).
 
-**Proposed fix.** Allowlist `builds.dotnet.microsoft.com` and `dot.net` at the egress proxy, **or**
-provide a session image with .NET SDK 8 plus a MariaDB service (CI already uses `mariadb:10.11`).
-
-**Risk if not fixed.** Phase 1 is overwhelmingly C# — SignalR hub, moderation state machine,
-outbox, ~16 tables and migrations. Delivering it here would mean shipping uncompiled, untested,
-safety-critical code and making completion claims with no evidence, which §28.3/§28.20 forbid.
+**Fix applied.** Installed `dotnet-sdk-8.0` and `mariadb-server` from the Ubuntu archive (see the
+resolution box above). Phase 1 can now be built and tested with real evidence at every step.
 
 ---
 
