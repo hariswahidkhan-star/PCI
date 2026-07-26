@@ -2004,7 +2004,11 @@ public static class WorldPages
         if(hm){
           history.replaceState(null,'',location.pathname);
           api('/api/world/account/handoff',{code:hm[1]})
-            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .then(function(r){localStorage.setItem(KEY,r.token);
+              // The allow-listed destination the handoff preserved — deep entry (today's
+              // challenge, a result) continues there; the account page is only the default.
+              if(r.return_to&&r.return_to!=='/world/account'){location.href=r.return_to;return;}
+              load();})
             .catch(function(e2){showAuth();
               $('autherr').textContent=(e2&&e2.message)||'That sign-in link has expired — sign in below, or reopen your Passport from the student portal.';});
         }

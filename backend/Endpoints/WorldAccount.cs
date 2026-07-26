@@ -500,6 +500,52 @@ public static class WorldAccount
         app.MapGet("/world/reset-password", () => !Enabled() ? Disabled()
             : Results.Content(WorldPages.ResetPassword(db), "text/html; charset=utf-8"));
 
+        // The participant dashboard aggregate (P1-01/§9): one call, one server-computed primary
+        // action, whole-history progress — never an N+1 waterfall from the client.
+        app.MapGet("/api/world/me/dashboard", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var s = WorldDashboard.Build(db, u, DateTime.UtcNow);
+            return J(new
+            {
+                display_name = u.DisplayName,
+                email_verified = u.EmailVerified,
+                primary_action = s.PrimaryAction,
+                primary_attempt_id = s.PrimaryAttemptId,
+                primary_code = s.PrimaryCode,
+                today = new
+                {
+                    period_id = s.TodayState.PeriodId, day = s.TodayState.DayKey,
+                    timezone = s.TodayState.Timezone, changes_at = s.TodayState.ChangesAtUtc,
+                    paused = s.TodayState.Paused, code = s.TodayState.Code, title = s.TodayState.Title,
+                    difficulty = s.TodayState.Difficulty, est_minutes = s.TodayState.EstMinutes,
+                    version = s.TodayState.Version, state = s.TodayState.State, attempt_id = s.TodayState.AttemptId,
+                },
+                passport = new
+                {
+                    state = s.Passport.State, is_public = s.Passport.Public, expires_at = s.Passport.ExpiresAt,
+                    email_verified = s.Passport.EmailVerified, has_display_name = s.Passport.HasDisplayName,
+                    visible_evidence = s.Passport.VisibleEvidence,
+                },
+                progress = new { completed = s.Progress.Completed, industries = s.Progress.Industries, tracks = s.Progress.Tracks },
+                recent = s.RecentResults.Select(r => new
+                {
+                    attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
+                    title = H.Str(r["title"]), difficulty = H.Str(r["difficulty"]), score = r["score"],
+                    profile = H.Str(r["profile_key"]), completed_at = H.Str(r["completed_at"]),
+                    passport_visible = H.L(r["passport_visible"]) == 1,
+                }),
+                in_progress = s.InProgress.Select(r => new
+                {
+                    attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
+                    title = H.Str(r["title"]), updated_at = H.Str(r["updated_at"]),
+                }),
+                recommended = s.RecommendedCode is null ? null : new { code = s.RecommendedCode, title = s.RecommendedTitle },
+            });
+        });
+
         app.MapGet("/api/world/account", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
@@ -612,11 +658,11 @@ public static class WorldAccount
             // this very browser, so challenges completed before pressing "open my Passport" never
             // appeared in it. Claim-only-unowned, identical to register/login. The portal client
             // passes the anonymous token in the body (its typed wrapper sets no custom headers).
+            var body = await H.Body(ctx.Request);
             var sessionId = WorldSessionId(ctx);
             if (sessionId is null)
             {
-                var b = await H.Body(ctx.Request);
-                var anon = H.GetS(b, "world_session");
+                var anon = H.GetS(body, "world_session");
                 if (!string.IsNullOrWhiteSpace(anon))
                 {
                     var row = db.QueryOne("SELECT id FROM pciworld_sessions WHERE token_sha=?", Security.Sha(anon));
@@ -626,8 +672,10 @@ public static class WorldAccount
             ClaimSession(db, worldId, sessionId);
             // One-time handoff CODE, not a reusable bearer token (journey repair P0-02): the code
             // rides in the URL FRAGMENT (never sent to the server or its logs), lives two minutes,
-            // and dies at first redemption. The World page exchanges it for its own session.
-            var code = CreateHandoff(db, worldId, "/world/account");
+            // and dies at first redemption. The World page exchanges it for its own session, then
+            // continues to the allow-listed destination the caller asked for (deep entry into
+            // today's challenge from the portal Overview, for example).
+            var code = CreateHandoff(db, worldId, H.GetS(body, "return_to"));
             log(s.Id, "world_passport_sso", $"student #{s.Id} → world #{worldId}");
             return J(new { ok = true, url = "/world/account#h=" + code });
         });
