@@ -6,11 +6,13 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**397 terms**, consolidated from 409 key-terms entries across 16 domains.
+**434 terms**, consolidated from 447 key-terms entries across 16 domains.
 
 ## A
 
 **Accounting policy** — The permitted choice that shapes reported figures without changing cash. *(KA 2.1)*
+
+**Accretion** — The finance charge that unwinds the discount on a provision, taking it to the settlement amount. *(KA 2.3)*
 
 **Accrual basis** — Recognising the effects of transactions when they occur, not when cash moves. *(KA 2.1)*
 
@@ -21,16 +23,17 @@
 **AI model risk** — Loss from decisions or actions taken on model output — wrong model, wrong envelope, or misunderstood output. *(KA 11.4)*
 
 **All-in effective cost** — The rate solving `net proceeds = payment × AF(r, n)`; the only valid basis for tranche comparison. *(KA 9.3)*
+  <br/>· *Also read at KA 3.2:* The rate solved from the actual stream against net proceeds; fees are never added to a rate.
 
 **Allocation matrix** — Risk → bearing party → clause → financial limit → instrument; reveals orphan and doubly covered risks. *(KA 12.4)*
 
 **Amendment** — A change of terms — usually a covenant reset — for a fee, a margin uplift and tighter controls. *(KA 15.3)*
 
-**Annuity / annuity-due** — Level periodic stream, in arrears / in advance. *(KA 3.2)*
+**Annuity / annuity-due** — Level periodic stream, in arrears / in advance; the due form is worth `(1 + r)` times the ordinary. *(KA 3.2)*
 
-**Annuity factor AF(r,n)** — `(1 − (1+r)^−n)/r`; PV of 1 per period for `n` periods. *(KA 3.2)*
+**Annuity factor AF(r,n)** — `(1 − (1+r)^−n)/r`; PV of 1 per period for `n` periods; can never exceed `1/r`. *(KA 3.2)*
 
-**Annuity, level-principal, bullet** — The three canonical loan shapes. *(KA 3.2)*
+**Annuity, level-principal, bullet, holiday** — The four canonical loan shapes a term sheet offers. *(KA 3.2)*
 
 **Area rule** — `IDC = r_q × g × S × Σ cum(t−1)`; capitalised interest is proportional to the area under the drawdown curve. *(KA 8.2)*
 
@@ -41,7 +44,7 @@
 
 **Assessed claim exposure** — The SPV's and adviser's judgment of the probable settled cost of notified but unagreed claims. *(KA 14.2)*
 
-**Asset-capital matching** — Pairing project risk phases with the capital suited to hold them. *(KA 1.1)*
+**Asset-capital matching** — Pairing project risk phases with the capital suited to hold them — on two axes, risk-holding capability and timing. *(KA 1.1)*
 
 **At-risk commitment** — Option premiums, bid bonds, reservations — cash forfeited if the project dies. *(KA 5.1)*
 
@@ -75,11 +78,15 @@
 
 **Base date** — The price level at which an estimate's rates were compiled. *(KA 8.2)*
 
+**Base-case vs minimum-period test** — Coverage required in the period tested (usually year one) against coverage required in every period; on Kestrel the difference is 2,917,226 of debt. *(KA 10.1)*
+
 **Basis** — Pre/post-tax, accrual/cash, before/after working capital, levered/unlevered. *(KA 6.1)*
 
 **Basis bridge** — The documented reconciliation between two models of one project. *(KA 6.1)*
 
 **Basis risk (pass-through)** — Exposure remaining because the reference index differs from the price actually paid. *(KA 11.2)*
+
+**Binding covenant** — The covenant crossed by the smallest common stress; identified by solving each covenant for the same stress variable, not by comparing ratio levels. *(KA 10.2)*
 
 **Blended CPI artefact** — A performance index averaged across fixed-price and owner-retained scope; misattributes an overrun and forecasts neither scope. *(KA 14.2)*
 
@@ -95,7 +102,11 @@
 
 **Breakeven detection rate d** — `(fee + priced elapsed time) ÷ [p × (C − F)]`; the diligence spend divided by the expected avoidable loss. *(KA 13.1)*
 
+**Breakeven discovery probability** — Cost avoided by concealment ÷ loss on discovery; the arithmetic that has no upside term. *(KA 1.3)*
+
 **Breakeven disputed sum** — The dispute size above which litigating beats settling at the midpoint. *(KA 12.4)*
+
+**Breakeven failure probability p** — Incremental cost of the limited-recourse route ÷ the exposure the ring-fence removes. *(KA 1.1)*
 
 **Breakeven fee / error rate / detection rate** — The three points at which a review stops adding value. *(KA 6.4)*
 
@@ -120,11 +131,13 @@
 
 **Capacity (availability) charge** — Payment for making the asset available, independent of output taken. *(KA 7.1)*
 
-**Capex / opex** — Capitalised and depreciated vs expensed in the period; same cash, different profit. *(KA 2.3)*
+**Capex / opex** — Capitalised and depreciated vs expensed in the period; identical pre-tax cash, different profit. *(KA 2.3)*
 
 **Capital allowance** — Tax depreciation on the tax authority's profile and base; not accounting depreciation. *(KA 6.2)*
 
 **Capital cost** — The asset: contract price, owner's costs, land, connection, insurance in construction. *(KA 8.1)*
+
+**Capital employed** — Debt plus equity; the base a return on capital is measured against. *(KA 2.2)*
 
 **Capital rationing** — Budget binds before value runs out; pack by PI. *(KA 4.3)*
 
@@ -133,6 +146,10 @@
 **Case** — The named set of assumptions switched on (sponsor case, bank case, downside). *(KA 6.1)*
 
 **Cash call** — The equity injection a sufficiency failure requires before the next drawdown. *(KA 8.4)*
+
+**Cash conversion** — Operating cash flow ÷ net income; on a capital-intensive asset it measures capital intensity, not quality. *(KA 2.2)*
+
+**Cash interest cover** — `EBITDA` ÷ interest; the same test with depreciation added back — 0.9524 higher for Kestrel. *(KA 2.4)*
 
 **Cash sweep** — A defined share of distributable cash applied to mandatory prepayment; part of the price of consent. *(KA 15.3)*
   <br/>· *Also read at KA 10.1:* Mandatory prepayment from a defined share of surplus cash.
@@ -166,6 +183,8 @@
 **Class-weighted closure** — Progress measured by impact closed, not findings closed. *(KA 13.2)*
 
 **Close-cost budget** — Line-itemised transaction cost, reconciled to sources and uses; fixed component plus a proportional fee rate. *(KA 13.3)*
+
+**Close-cost premium** — The largely fixed excess of project-finance transaction costs over a corporate facility's; the source of the scale effect. *(KA 1.1)*
 
 **Commercial operations date (COD)** — Contractual start of operations: revenue, term debt and the operating covenant regime. *(KA 5.4)*
 
@@ -206,6 +225,8 @@
 
 **Consent register** — Every permission with authority, lead time, dependency, expiry, transferability and conditions. *(KA 5.3)*
 
+**Consistency rule** — One world per model; the two consistent treatments are identical to the cent, so a difference is an error and not a basis. *(KA 3.3)*
+
 **Content requirement** — Minimum share of contract value sourced from the supporting country. *(KA 9.3)*
 
 **Contingency** — Funded provision for identified risks within agreed scope; drawn on certification. *(KA 8.3)*
@@ -226,6 +247,8 @@
 
 **Correlation uplift** — The increase in a percentile from admitting `ρ` > 0; 837,478 at `ρ` = 0.30 on Kestrel's register. *(KA 11.4)*
 
+**Cost of retention** — The present value of the capital-structure change lenders impose when a risk is retained; the sponsor's true reservation price for transferring it. *(KA 1.2)*
+
 **Cost per month of slip** — Escalation on unbought scope + extra interest on drawn debt + deferred `CFADS`. *(KA 8.4)*
 
 **Cost per reviewed item** — Processing cost + (undetected-error rate × consequence of an error). *(KA 16.1)*
@@ -239,7 +262,7 @@
 
 **Covenant-preserving exposure ceiling** — Headroom × `AF(r, n)` — the present-value risk a structure can absorb (3,122,460 for Kestrel). *(KA 11.4)*
 
-**Covered interest parity** — Forward ≈ spot × interest-ratio; the no-arbitrage forward. *(KA 3.3)*
+**Covered interest parity** — Forward ≈ spot × interest-ratio; the no-arbitrage forward, and the reason two routes to one hedged value agree. *(KA 3.3)*
 
 **CP chain** — A dependency sequence of conditions; its duration is the sum of its links. *(KA 13.3)*
 
@@ -252,6 +275,8 @@
 **Crossover rate** — Rate where two NPV profiles intersect and rankings flip. *(KA 4.3)*
 
 **Cumulative PD** — `1 − (1 − PD)ⁿ`; the horizon matters and single-year `PD` understates a twelve-year exposure. *(KA 7.4)*
+
+**Cure identity P = C ÷ λ** — A prepayment cure costs `1 − 1/λ` less than a deemed-`CFADS` cure of the same breach — 16.6667 % at a 1.20× covenant — and also reduces later periods' debt service. *(KA 10.4)*
 
 **Currency mismatch** — Revenue and debt service in different currencies; unbounded and correlated with host-economy stress. *(KA 11.3)*
 
@@ -267,7 +292,11 @@
 
 **Data spine** — One set of numbers, two sets of questions; the controls-financing interface. *(KA 8.4)*
 
+**Day-count basis** — The contractual numerator and denominator for accruing interest; actual/360 is a `365/360` uplift on all interest. *(KA 3.3)*
+
 **Daylight test** — Would full disclosure of interests leave the advice trusted? *(KA 1.3)*
+
+**Days sales outstanding (DSO)** — Receivables ÷ revenue × days in the convention; the collection period a covenant can be restated in. *(KA 2.3)*
 
 **Debt capacity** — `CFADS`/target `DSCR` × `AF(r, n)`; a function of cash, coverage, rate and tenor only. *(KA 10.1)*
 
@@ -298,15 +327,19 @@
 
 **Direct agreement** — Tripartite notice, cure and step-in rights making contracts survive SPV default. *(KA 12.3)*
 
+**Direct method** — Reporting the gross operating cash flows: collections, supplier payments, interest, tax. *(KA 2.2)*
+
 **Discount factor DF(t)** — `1/(1+r)^t`; the PV of one unit received at `t`. *(KA 3.1)*
 
 **Discount rate** — The rate `r` used to move value across time; the required return for the risk. *(KA 3.1)*
 
 **Distributable amount** — `CFADS` less debt service less reserve top-ups, subject to every distribution condition. *(KA 15.2)*
 
+**Distribution condition** — The coverage level above which cash may leave the structure at all (1.25× on Kestrel); usually the operative constraint in a healthy project. *(KA 10.4)*
+
 **Distribution drought** — A run of periods generating cash that is not distributable; costs equity in cash and in timing. *(KA 15.2)*
 
-**Distribution lock-up** — Trapping equity cash when a test fails, short of default. *(KA 10.4)*
+**Distribution lock-up** — Trapping equity cash when a test fails, short of default; on Kestrel the 1.15× trigger, operative only in a sick project. *(KA 10.4)*
 
 **Distribution-block account** — Where cash that fails a distribution test is held; a pre-funding mechanism, not a penalty. *(KA 15.2)*
 
@@ -315,6 +348,8 @@
 **Draw-rate check** — Contingency drawn as a share of contingency funded, against progress; coincidental, and to be struck from reports. *(KA 14.2)*
 
 **DSCR** — `CFADS` ÷ debt service; the period test lenders covenant on. *(KA 10.2)*
+
+**DSCR ÷ LLCR** — A reading, not a market metric: 1.0000 for a level annuity against level cash; any excess measures principal deferred beyond the periods tested (1.1419 for a 25 % balloon, 1.9880 for a bullet). *(KA 10.2)*
 
 **DSRA** — Debt service reserve; buys payment continuity and time, not compliance. *(KA 10.3)*
 
@@ -336,6 +371,8 @@
 
 **Effective escalation rate** — The compound rate a partly indexed line actually achieves; computable only from shares and indices together. *(KA 7.3)*
 
+**Effective sculpting rate r** — `r × (1 − T/λ)`; the rate at which a sculpted profile discounts once the interest tax shield feeds back into `CFADS`. *(KA 10.1)*
+
 **Elasticity** — Percentage change in an output per one per cent change in an input. *(KA 6.4)*
 
 **Enforcement floor** — Net recovery from enforcing security and realising the asset; bounds every negotiation. *(KA 15.4)*
@@ -348,6 +385,8 @@
 **Equity bridge loan** — Construction-period facility funding equity, repaid by sponsors at completion. *(KA 5.2)*
 
 **Equity bridge loan (EBL)** — Construction facility against the equity commitment; accretive only below the equity `IRR` it defers. *(KA 9.1)*
+
+**Equity cliff** — The cash level at which debt service consumes all project cash; a function of the debt's *shape*, not only its size. *(KA 1.2)*
 
 **Equity contribution certificate** — Evidence that the equity share of a draw has been provided, conditioning the debt share. *(KA 14.1)*
 
@@ -394,7 +433,7 @@
 
 **First-of-a-kind premium** — The coverage, reserve or insurance cost of unproven technology, payable in equity. *(KA 5.3)*
 
-**Fisher relation** — `(1+i_nom) = (1+i_real)(1+π)`. *(KA 3.3)*
+**Fisher relation** — `(1+i_nom) = (1+i_real)(1+π)`; the subtraction shortcut always overstates `i_real`. *(KA 3.3)*
 
 **Fixed charge** — Debt service owed regardless of performance. *(KA 1.2)*
 
@@ -432,6 +471,10 @@
 
 **Grounds for transfer** — Control (changes the distribution) and capacity (cheaper holder); bargaining power is neither. *(KA 11.1)*
 
+**Growing (indexed) annuity** — Stream growing at `g`; `PV = A × AF(r*, n)` with `r* = (1+r)/(1+g) − 1`. *(KA 3.2)*
+
+**Growth-adjusted rate r** — `(1+r)/(1+g) − 1`; an arithmetic device inside one valuation, never a project hurdle. *(KA 3.2)*
+
 ## H
 
 **Handback** — Transfer of the asset at concession end in a specified condition; the residual obligation and its reserve. *(KA 15.4)*
@@ -442,7 +485,7 @@
 
 **Hedge ratio** — Share of floating debt fixed by swap or cap; lenders covenant a minimum rather than a full hedge. *(KA 11.3)*
 
-**Historic vs forward-looking test** — Measured on what happened vs on projection. *(KA 10.4)*
+**Historic vs forward-looking test** — Measured on what happened vs on projection; which binds follows the slope of the cash profile, not the drafting. *(KA 10.4)*
 
 **Horizon** — Periods valued, and the treatment of value beyond them. *(KA 6.1)*
 
@@ -454,13 +497,17 @@
 
 **Incremental IRR** — IRR of the difference project; narrates the NPV ranking. *(KA 4.3)*
 
-**Indexation** — Contractual escalation by a published index, with lags, caps, floors. *(KA 3.3)*
+**Indexation** — Contractual escalation by a published index, with lags, caps, floors and weightings. *(KA 3.3)*
 
 **Indexation architecture** — Which proportion of each line escalates, on which index — the negotiated structure, distinct from the index itself. *(KA 7.3)*
+
+**Indexation cap / lag / weighting** — `min(g, cap)` per period · index published in arrears, worth `1 − 1/(1+g)` of the stream · partial indexation at `w × g`. *(KA 3.3)*
 
 **Indexation mismatch** — Revenue index differs from the driver of cost escalation; appears as a trend in coverage, not in a single-year sensitivity. *(KA 11.2)*
 
 **Indexed share** — The proportion of a price that escalates; the remainder is fixed nominal and erodes in real terms. *(KA 7.3)*
+
+**Indifference stress s** — `1 − λ₂/λ₁`; the cash stress at which a lower coverage requirement stops being a concession. *(KA 10.1)*
 
 **Indirect method** — Deriving operating cash flow from profit by undoing accruals. *(KA 2.2)*
 
@@ -500,11 +547,19 @@
 
 **Label poisoning** — Influencing what a detector learns; detectable only by blind audit. *(KA 16.4)*
 
+**LC-backed reserve** — A reserve satisfied by a letter of credit rather than cash; cheapest for the sponsor, and a substitution of bank credit risk for cash. *(KA 10.3)*
+
 **Lender's cost-to-complete** — Money to completion on a commitment basis: remaining contract value + approved variations + assessed claim exposure + bottom-up owner scope + remaining financing costs. *(KA 14.2)*
 
 **Level annual charge** — Lumpy lifecycle PV converted to a level equivalent via `AF(r, n)` (Domain 4's `EAV`). *(KA 8.1)*
 
 **Leverage / gearing** — Debt's share of funding; amplifier of equity return and risk. *(KA 1.2)*
+
+**Leverage crossover** — The cash level at which the unlevered return equals the cost of debt, so gearing neither adds nor subtracts. *(KA 1.2)*
+
+**Leverage wedge** — `(D/E) × (ROCE after tax − k_d after tax)`; the amount gearing adds to `ROE`, and subtracts when the spread is negative. *(KA 2.4)*
+
+**Levered-return identity** — `r_e = r_u + (D/E) × (r_u − r_d)`; amplification is linear in gearing and proportional to the spread over the debt rate. *(KA 1.2)*
 
 **Liability asymmetry (O&M)** — Operator liability capped on fee while the loss it can cause is revenue-scaled. *(KA 12.1)*
 
@@ -523,6 +578,8 @@
 **Long-stop date** — Date after which commitments lapse; converts slippage into re-approval at today's market. *(KA 13.3)*
 
 ## M
+
+**Macaulay duration** — Present-value-weighted average time to receipt; for a level stream capped at `(1 + r)/r`, whatever the tenor. *(KA 1.1)*
 
 **Maintenance reserve (MRA)** — Funded account that converts a lifecycle spike into a distribution reduction. *(KA 8.1)*
 
@@ -569,7 +626,7 @@
 
 **Money multiple** — Total distributions ÷ equity contributed; a horizon-blind measure. *(KA 6.3)*
 
-**MRA** — Maintenance reserve; smooths lumpy major maintenance. *(KA 10.3)*
+**MRA** — Maintenance reserve; smooths lumpy major maintenance (sized in Domain 8, KA 8.1.3). *(KA 10.3)*
 
 **Multiple roots** — Two or more IRRs when flow signs change more than once. *(KA 4.1)*
 
@@ -589,7 +646,7 @@
 
 **Nominal / real rate** — Money-terms rate / purchasing-power rate; linked by Fisher. *(KA 3.3)*
 
-**Nominal rate / EAR** — Quoted annual rate with compounding frequency / its once-a-year equivalent. *(KA 3.2)*
+**Nominal rate / EAR** — Quoted annual rate with compounding frequency / its once-a-year equivalent; `EAR ≥ i_nom` always. *(KA 3.2)*
 
 **NPV** — Σ discounted cash flows − investment; the primary value measure. *(KA 4.1)*
 
@@ -621,6 +678,8 @@
 
 **Option value** — Value of flexibility the static NPV cannot see. *(KA 4.3)*
 
+**Outstanding balance B_k** — `A × AF(r, n − k)`; the PV of the payments that remain, and the prepayment base. *(KA 3.2)*
+
 **Owner's vs contractor's contingency** — Only the owner's is drawable by the project; the contractor's is inside the price. *(KA 8.3)*
 
 ## P
@@ -643,7 +702,7 @@
 
 **Periodicity** — Period length; an economic choice because compounding happens within periods. *(KA 6.1)*
 
-**Perpetuity** — Level stream forever; `PV = A/r`. *(KA 3.2)*
+**Perpetuity / growing perpetuity** — Level stream forever, `PV = A/r`; growing at `g < r`, `PV = A(1+g)/(r − g)`. *(KA 3.2)*
 
 **PI** — PV of inflows / `I₀`; value per scarce dollar, for rationing. *(KA 4.2)*
 
@@ -679,6 +738,8 @@
 
 **Recourse / non-recourse / limited recourse** — Whom the lender can pursue: the sponsor's balance sheet; the project only; the project plus bounded sponsor support. *(KA 1.1)*
 
+**Recourse sentence** — The three-limbed statement of sponsor support: who stands behind what, until when, capped at what. *(KA 1.1)*
+
 **Red-flag memorandum** — An early partial deliverable that lets findings be acted on inside the envelope. *(KA 13.1)*
 
 **Refinancing** — Replacement of a facility priced for a risk since retired; value comes from margin, tenor and covenant reset together. *(KA 15.3)*
@@ -687,11 +748,15 @@
 
 **Reinvestment assumption** — NPV assumes interim cash earns `r`; IRR assumes it earns the IRR. *(KA 4.1)*
 
+**Repayment holiday (grace)** — Interest-only periods followed by amortisation over the shortened remainder; concentrates rather than reduces service. *(KA 3.2)*
+
 **Replacement chain** — The explicit alternative when like-for-like replacement fails. *(KA 4.2)*
 
 **Required k** — `ln(α) ÷ ln(1 − p)`: scenarios needed to surface a mode at `1 − α` confidence. *(KA 16.2)*
 
 **Reserve release** — The return of a funded reserve at maturity; a source that lifts the final period's distribution. *(KA 6.3)*
+
+**Reserve tolerance** — `1 − DS × (1 − m/12) ÷ CFADS`; the single-year `CFADS` shortfall a reserve of `m` months survives — 6.5393 points per month on Kestrel, at 417,470 of funded cash each. *(KA 10.3)*
 
 **Responsible-AI principle** — AI proposes; the professional verifies, decides, remains accountable. *(KA 1.3)*
 
@@ -714,6 +779,8 @@
 **Risk register (financing)** — Identified events with probability, impact, owner **and mechanism**; granular enough for each line to be allocated separately. *(KA 11.1)*
 
 **Risk-adjusted cover** — Σ(face × probability of payment); the number to compare with exposure. *(KA 12.3)*
+
+**ROCE / ROE** — Return on capital employed and on equity; linked by the leverage identity, exact only on consistent bases. *(KA 2.4)*
 
 **Rolling test** — A covenant measured on a trailing window; it lags a deterioration by the window length. *(KA 15.1)*
 
@@ -738,6 +805,8 @@
 **Signing vs financial close** — Execution of documents vs satisfaction of all conditions and availability of funds. *(KA 13.4)*
 
 **Simple interest** — Interest accruing on original principal only: `FV(x) = x(1 + rn)`. *(KA 3.1)*
+
+**Source line** — The transaction, document and date behind a benchmark; without it a figure is an assertion, not evidence. *(KA 1.3)*
 
 **Sources and uses** — The funding requirement against its funding; identical totals by construction. *(KA 6.2)*
 
@@ -814,6 +883,8 @@
 
 **Unequal lives** — The comparison EAV exists to make honest. *(KA 4.2)*
 
+**Unrecovered advance** — Cash paid for value not yet received; a prepayment asset that reconciles with the opposite sign. *(KA 2.4)*
+
 **Use-of-proceeds instrument** — Green bond or loan; proceeds restricted to eligible assets. *(KA 9.4)*
 
 ## V
@@ -821,6 +892,8 @@
 **Variation / compensation event** — Instructed change; or an occurrence granting time and/or money without breach. *(KA 12.4)*
 
 **Verification duty** — The named human's obligation to check machine output before reliance. *(KA 1.3)*
+
+**Verifying a number vs a claim** — Recomputation by an independent route; versus tracing an assertion to a source that exists. *(KA 1.3)*
 
 **Vesting certificate** — Instrument transferring title in off-site materials to the SPV; with segregation and insurance, the condition of any off-site certification. *(KA 14.3)*
 
@@ -841,6 +914,8 @@
 **WARCT** — Weighted-average remaining contract term; the contracted horizon to be compared with loan tenor. *(KA 7.2)*
 
 **Waterfall tier** — A ranked deduction with a test, floored at zero, with the shortfall carried. *(KA 6.3)*
+
+**Weighted average life** — `Σ t × principal(t) ÷ Σ principal(t)`; the measure a sweep actually shortens (7.1887 → 6.4660 years on Kestrel). *(KA 10.3)*
 
 **Working capital** — Receivables + inventory − payables; growth consumes cash. *(KA 2.3)*
 

@@ -159,8 +159,8 @@ Breakeven failure probability  p* = incremental cost ÷ exposure the ring-fence 
    better than a **one-in-two** chance of a failure severe enough to leave 10,073,997 of debt
    unrecovered, and no board that has just approved a 60,000,000 plant believes anything of the
    kind. That is not an argument against project finance; it is the discovery that **project
-   finance is not bought with expected-value arithmetic**, and knowing precisely why is what
-   separates a leader from a spreadsheet. Three reasons the 51.64 % is the wrong sole test.
+   finance is not bought with expected-value arithmetic**. Three reasons the 51.64 % is the wrong
+   sole test.
    *First, it prices a mean and the sponsor is insuring a tail.* The loss that matters is not the
    10,073,997 itself but its correlation with everything else — a failed project consolidates
    onto the parent's balance sheet in the same quarter that its own lenders are re-testing
@@ -299,9 +299,7 @@ Limit as n → ∞:                    D → (1 + r)/r
    about the probability that the cash arrives at all. The correct professional conclusion is the
    layered one: **match risk first, then close the residual timing gap with instruments rather
    than with asset selection** — indexation in the revenue contract, and interest-rate or
-   inflation hedging at the fund level. The trap this example exists to disarm is the opposite
-   move: treating a long asset *life* as evidence of a long duration, which is how a portfolio
-   ends up believing it is hedged when it is roughly half hedged. One caution on the arithmetic
+   inflation hedging at the fund level. One caution on the arithmetic
    itself: duration is computed at a stated rate and moves with it, so a duration quoted without
    its discount rate is not a number — at 6 % the same 15-year level stream has a duration of
    **6.9260 years** and the ceiling rises to **17.6667**.
@@ -552,9 +550,7 @@ debt service**. Projects die of cash exhaustion, usually while reporting profits
    by `2,000,000 − 1,000,000 + 500,000 = 1,500,000` — which on quarterly revenue of 10,000,000 is
    **13.6875 days** of sales, on a 91.25-day quarter. The company did not miss that threshold by a
    little: at 3,000,000 its receivables are **27.3750 days**, twice the level at which the quarter
-   turns cash-negative. Expressing the constraint in *days* rather than in currency is what makes
-   it a management instruction, because collection days are something a team can be held to and a
-   currency amount is not. **The drain compounds if the pattern is structural rather than
+   turns cash-negative. **The drain compounds if the pattern is structural rather than
    seasonal.** A first quarter's working-capital build is a genuine one-off — the balance sheet is
    being filled — but the same absorption repeated through the year is **6,000,000** of cash gone
    against 8,000,000 of annual profit, and telling those two cases apart is the whole of the
@@ -565,9 +561,9 @@ debt service**. Projects die of cash exhaustion, usually while reporting profits
    discovered late because such statements are reviewed for arithmetic, which always balances,
    rather than for completeness, which does not.
 
-**From illustration to consequence.** The example above is deliberately generic. On a financed
-project the same divergence does not merely embarrass a management report — it walks a covenant,
-and the distance to that covenant can be stated in the one unit an operating team controls.
+On a financed project the same divergence does not merely embarrass a management report — it walks
+a covenant, and the distance to that covenant is best stated in the one unit an operating team
+controls, because collection days are something a team can be held to and a currency amount is not.
 
 **Worked example 1.2.2b — Kestrel's cash gap, in days of receivables.**
 
@@ -696,7 +692,8 @@ debt service is owed. That fixity cuts both ways.
    **identical at 4,200,000** in both columns; the entire difference is the **4,149,392.06** of
    principal repaid, and principal repayment is a *return of capital*, not a cost. The amortising
    equity is better off than the cash-on-cash figure implies, because it also owns a claim that is
-   de-levering by four million a year. Single-period cash-on-cash return is therefore the wrong
+   de-levering by 4,149,392 in the first year and by more in every year after it. Single-period
+   cash-on-cash return is therefore the wrong
    instrument for judging a levered structure whenever debt amortises, and the right one is the
    equity `IRR` over the whole life (Domain 4's measure, applied to the structure in Domain 9,
    KA 9.1.4) — which is exactly why an interest-only illustration of leverage, WE 1.2.3 included,
@@ -707,9 +704,7 @@ debt service is owed. That fixity cuts both ways.
    equity's own cash runs out at −30.42 %, and the interest-only reading suggested −65.00 %. An
    analyst who models leverage interest-only and reports the resilience of the structure has
    overstated the equity's cushion by a factor of roughly four, and the error is invisible in the
-   base case, where every number looks fine. This is the precise failure the AI note below this
-   Knowledge Area warns about, and it is not a machine-specific failure — it is available to anyone
-   who builds a scenario grid before settling the debt's shape. The caution to carry: the
+   base case, where every number looks fine. The caution to carry: the
    amortising column is not "worse". It is a **different bargain** — a structure that repays
    principal converts operating cash into ownership and buys future distribution capacity, which is
    why sculpted and back-ended profiles exist and why Domain 10's sizing levers include the
@@ -766,9 +761,8 @@ only the table. A grid that cannot reproduce
 `r_equity = r_unlevered + (D/E) × (r_unlevered − r_debt)` on its own base-case row has an error in
 it somewhere, and the check costs one line; a grid whose rows satisfy the identity is still wrong
 if the fixed charge is the wrong shape, so the second check is to confirm that the debt service in
-the table equals `debt ÷ AF(r, n)` for the documented tenor. Those two lines, in that order, catch
-the great majority of levered-return errors — machine-made or otherwise — and they are the
-foundations-level ancestor of the reviewer's list at 1.A.3.
+the table equals `debt ÷ AF(r, n)` for the documented tenor. Those are the first two entries on the
+reviewer's list at 1.A.3, and they are the two worth running before any other.
 
 ### Key terms — KA 1.2
 
@@ -1027,14 +1021,14 @@ what was found. Anything shorter is an assertion that checking happened.
    changed the position before it was taken. That asymmetry — hours against a million — is the whole
    economic case for the verification duty, and it is why "we did not have time to check" inverts
    the arithmetic. **The failure is not machine-specific, which is why the control is not
-   machine-specific.** A stale internal benchmark spreadsheet produces the identical loss; what the
+   machine-specific.** A stale internal benchmark spreadsheet produces the identical loss, and so
+   does a scenario grid built before the debt's shape is settled (WE 1.2.3b); what the
    machine changes is the *fluency*, and therefore the probability that an unsourced figure survives
    into a decision unchallenged. The control is accordingly a rule about numbers, not about tools:
    **no benchmark enters a negotiating position without a source line naming the transaction, the
    document and the date.** And **the accountability sits with a person.** No part of the 1,117,200
    is recoverable from a tool vendor, and none of it would have been mitigated by the tool being an
-   approved one — tool approval governs which tools may be used, never who answers for the output
-   (MCQ 1.3-C). Domain 16 builds the governance architecture that makes this systematic, including
+   approved one (MCQ 1.3-C). Domain 16 builds the governance architecture that makes this systematic, including
    how to measure a tool's error rate on your own material rather than trusting a general claim; the
    foundational point is smaller and prior: **a number without a source is not evidence, and a
    professional who presents one has made an assertion in their own name.**
@@ -1291,8 +1285,8 @@ priced against the exposure a failure creates, each sector's counterparty shape 
 arithmetic of WE 1.1.2 as well as the vocabulary.
 
 - **Power and water.** The offtaker is often a state utility, so sovereign credit and political risk
-  enter the stakeholder map (Domain 11) and the effective credit ceiling on the financing is the
-  sovereign's rather than the project's. The practical consequence for this domain: the enforcement
+  enter the stakeholder map (Domain 11) and the effective credit ceiling on the financing is usually
+  the sovereign's rather than the project's. The practical consequence for this domain: the enforcement
   recovery that drives the recourse breakeven is high in a contracted availability structure and
   collapses if the offtake terminates, so the recovery assumption — not the margin — is where the
   route decision is really decided.
@@ -1303,8 +1297,9 @@ arithmetic of WE 1.1.2 as well as the vocabulary.
   and argue harder about the ramp-up forecast than availability-payment sponsors ever do.
 - **Social PPPs.** The grantor's availability payment makes government the cash engine, handback
   condition a first-order obligation, and the concession term the binding constraint on tenor — which
-  matters directly for WE 1.1.4, because a fixed grantor payment with no indexation is the shortest
-  duration in the market and the hardest for liability-driven capital to use without hedging.
+  matters directly for WE 1.1.4, because a fixed grantor payment with no indexation carries a shorter
+  duration than an indexed stream of the same tenor, and is correspondingly harder for
+  liability-driven capital to use without hedging.
 - **Digital infrastructure.** Corporate credit-tenants replace state offtakers, so the credit
   analysis becomes a corporate one and refresh cycles shorten every horizon: shorter contracted terms
   mean shorter debt, which mechanically steepens the amortisation and moves the equity cliff of
@@ -1312,17 +1307,18 @@ arithmetic of WE 1.1.2 as well as the vocabulary.
 - **Natural resources.** The market itself is the offtaker, so hedging policy joins the foundations
   and the "cash" corner of the triangle is a price-distribution rather than a contract. Enforcement
   recovery is unusually low on a single-purpose processing asset with no contracted revenue, which
-  makes the exposure term large and the recourse breakeven correspondingly easy to clear — the
-  sectoral reason non-recourse structures are common here despite volatile cash.
+  makes the exposure term large and the recourse breakeven correspondingly easy to clear — one
+  sectoral reason ring-fenced structures are reached for here despite volatile cash.
 
 The leader's first map in any new sector: who pays, under what compulsion, and what can stop them.
 
 ## Case study — Domain 1: how Kestrel chose project finance (water)
 
-**Situation.** Kestrel's two sponsors — an international water operator holding 65 % and a
-regional infrastructure fund holding 35 % — faced a **USD 60,000,000** plant with a 25-year
-availability offtake. Corporate borrowing was available to the operator at attractive rates; the
-fund could not guarantee anything beyond its equity.
+**Situation.** Kestrel's sponsor group — an international water operator at **55 %**, a regional
+infrastructure fund at **35 %** and an industrial partner at **10 %** (the shares Domain 5,
+KA 5.2.3 carries) — faced a **USD 60,000,000** plant with a 25-year availability offtake.
+Corporate borrowing was available to the operator at attractive rates; neither of the other two
+could guarantee anything beyond its equity.
 
 **Analysis.** Corporate route: cheapest debt, fastest close — but the operator alone carries
 100 % of construction and performance risk on its balance sheet, the fund cannot participate
@@ -1351,7 +1347,7 @@ already earmarked for two other projects.
 **The decision.** Project finance — not because it was cheaper (it was not, by 5,202,128), but
 because it made the partnership possible, contained a correlated tail rather than an expected loss,
 and converted lender scrutiny into project quality. The recourse position was minuted in the
-three-limbed form: the sponsors stand behind cost overruns pro rata (65/35), to a cap of
+three-limbed form: the sponsors stand behind cost overruns pro rata (55/35/10), to a cap of
 **6,000,000** — **14.2857 %** of senior debt — until the completion test, after which the
 obligation falls away. WE 1.A.2 prices that undertaking at **1,408,486** of margin saving, which
 the board accepted as good value against its own view of the call probability.

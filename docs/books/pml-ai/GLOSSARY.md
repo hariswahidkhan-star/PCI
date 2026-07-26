@@ -6,7 +6,7 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**480 terms**, consolidated from 492 key-terms entries across 16 domains.
+**581 terms**, consolidated from 596 key-terms entries across 16 domains.
 
 ## A
 
@@ -34,6 +34,8 @@
 
 **Adaptive delivery** — A delivery mode fixing capacity and cadence and varying scope, correcting direction from working output at short intervals. *(KA 13.1)*
 
+**Adequacy ratio** — Remaining reserve ÷ the confidence-level requirement of the register still open; below 1.00 is a governance trigger. *(KA 8.3)*
+
 **Adoption** — The outcome measure linking an output to any benefit at all. *(KA 1.3)*
 
 **Aggregate-capacity illusion** — Judging feasibility on total capacity when the constraint binds period by period. *(KA 15.2)*
@@ -46,6 +48,10 @@
 
 **Alignment decay** — The erosion of strategic fit after approval, as strategy and understanding move. *(KA 2.1)*
 
+**Alignment half-life** — `ln(0.5) ÷ ln(1 − h)` — the delivery duration beyond which alignment is more likely lost than kept. *(KA 2.1)*
+
+**Alignment index** — `Σ min(declared weight, funded share)` — the overlap between stated priorities and funded spend. *(KA 2.1)*
+
 **Already-committed benefit** — Benefit claimed against a baseline that already assumes a saving committed elsewhere. *(KA 15.2)*
 
 **Amber compression** — The collapse of traffic-light status into a single uninformative colour, caused by author discretion over undefined thresholds. *(KA 11.2)*
@@ -54,9 +60,13 @@
 
 **Analytics ladder** — Descriptive → diagnostic → predictive → prescriptive; each rung depends on the one below being right. *(KA 14.2)*
 
+**Approval percentile** — The position of the approved number inside its own declared range; Auriga's baseline is a P33. *(KA 7.1)*
+
 **Assessed total impact** — Direct + schedule + rework + interface re-verification + regression + documentation + risk + benefit. *(KA 4.4)*
 
 **Assumption** — Something taken as true without being controlled, carrying an owner and a resolution date. *(KA 5.1)*
+
+**Assumption exposure ratio** — `Σ EMV ÷ NPV`; as it approaches one, the case is a bet rather than a value proposition. *(KA 2.3)*
 
 **Assumption register** — Statement, basis, impact-if-false, owner, test date, falsifying trigger. *(KA 2.3)*
 
@@ -69,6 +79,8 @@
 **Attitude** — Supportive, neutral, sceptical or opposed, assessed on evidence; predicts what an engagement contact will achieve. *(KA 11.1)*
 
 **Attributable act** — An output that confers authority or discharges an obligation, and therefore cannot be produced by a tool at any verification depth. *(KA 14.3)*
+
+**Attributable improvement** — Raw improvement less the counterfactual improvement; the difference of the two differences. *(KA 2.3)*
 
 **Attribution** — The portion of a measured improvement plausibly caused by this project. *(KA 2.3)*
 
@@ -83,6 +95,8 @@
 **Back-translation** — Independent re-translation to the source language as a check on anything carrying a commitment, instruction or safety implication. *(KA 11.4)*
 
 **Backward traceability** — Design or test → approved requirement; detects unrequested scope, and costs one query. *(KA 5.2)*
+
+**Base rate** — The prevalence of the condition a monitor looks for; with the saving-to-investigation ratio it decides how a monitor should be tuned. *(KA 8.4)*
 
 **Base-rate difference** — Unequal prevalence between groups, which makes simultaneous equalisation of all error measures impossible. *(KA 14.4)*
 
@@ -120,7 +134,7 @@
 
 **Bounded funding envelope** — Authority to spend a stated number of iterations before continuation requires an explicit decision. *(KA 13.4)*
 
-**Breakeven adoption** — The sustained adoption level at which NPV is zero — a more useful board sentence than NPV. *(KA 2.2)*
+**Breakeven adoption** — The adoption level at which NPV is zero — a more useful board sentence than NPV. *(KA 2.2)*
 
 **Breakeven breach cost** — Value forgone by reserving capacity ÷ the improvement in failure probability it buys. *(KA 15.3)*
 
@@ -132,9 +146,13 @@
 
 **Breakeven elimination rate** — The elimination rate at which a portfolio just satisfies its investment decision rule. *(KA 15.2)*
 
+**Breakeven error probability (P)** — `C_v ÷ [(1 − q) × L]` — the error rate above which a verification pays for itself. *(KA 1.4)*
+
 **Breakeven fidelity** — Twin cost ÷ gross benefit at perfect fidelity — the fidelity below which the twin destroys value. *(KA 14.2)*
 
 **Breakeven retrieval rate** — review cost ÷ (lessons × avoided cost per applied lesson) — the threshold above which reviewing pays. *(KA 16.3)*
+
+**Breakeven rework probability** — `p* = good outcome ÷ (good − bad)`; the probability at which an overlap stops paying. *(KA 6.4)*
 
 **Breakeven settlement premium** — `carrying cost × months saved + (EMV of determination − own assessed value)`. *(KA 16.2)*
 
@@ -149,6 +167,8 @@
 **Capability-specific capacity** — Capacity modelled per scarce capability, since the portfolio consumes them in component-specific mixes. *(KA 15.3)*
 
 **Capacity-based contract** — A funded team at a rate for a cadence; the buyer bears quantity risk, change is free at the boundary. *(KA 13.4)*
+
+**Capture–recapture estimate** — Register completeness inferred from the overlap of two independent identification methods: `N̂ = n₁n₂/m`. *(KA 8.1)*
 
 **Carrying cost of an open item** — Advisory + internal management + opportunity cost of locked cash, per period; invisible in every ledger. *(KA 16.2)*
 
@@ -178,11 +198,19 @@
 
 **Coaching time per report** — `(R − e(n − b))/n`; 65.00 minutes at 6 reports on Auriga, 17.50 at 12. *(KA 12.3)*
 
+**Commensurability** — Whether two figures may be compared directly; a capital variance and an annual benefit may not, without a horizon and a rate. *(KA 1.1)*
+
 **Commissioning** — Progressive proving of a deliverable in its operating environment, from component test to performance demonstration. *(KA 16.1)*
 
 **Commitment** — A contractual obligation (e.g. a PO); a funding fact, not yet a cost. *(KA 7.2)*
 
-**Committee capacity** — Meetings per year × substantive items per meeting; compared against decision demand. *(KA 3.2)*
+**Commitment coverage** — (`AC` + open commitments) ÷ `EAC` — the share of the forecast whose price is already fixed; 74.72 % on Auriga. *(KA 7.2)*
+
+**Commitment exposure** — Range width × cost of delay — what a date quoted from a ranged package risks. *(KA 6.3)*
+
+**Commitment lead-time rule** — The rolling-wave horizon must be at least as long as the longest commitment lead time inside it. *(KA 4.1)*
+
+**Committee capacity** — Meetings per year × substantive items per meeting; compared against decision demand — average, peak and off-peak. *(KA 3.2)*
 
 **Common data environment (CDE)** — A single agreed information store with explicit item states and authorised, recorded transitions. *(KA 14.1)*
 
@@ -193,6 +221,7 @@
 **Community stakeholder** — An unbounded, heterogeneous group with a legitimate interest in a project's effects, often with statutory engagement rights that vary by jurisdiction. *(KA 11.4)*
 
 **Comparison cohort** — Comparable units measured at baseline and review without receiving the change, used to net out other causes. *(KA 16.4)*
+  <br/>· *Also read at KA 2.3:* A group that did not receive the change, used to measure the counterfactual improvement.
 
 **Component** — A project or enabling activity within a programme, with a named owner and a stated consequence of cancellation. *(KA 15.1)*
 
@@ -204,6 +233,8 @@
 
 **Condition-based handover** — Handover triggered by a satisfied condition set rather than a calendar date. *(KA 16.1)*
 
+**Condition-closure rate (r)** — The share of a gate's conditions verified closed by the following gate. *(KA 3.3)*
+
 **Conditional acceptance** — Acceptance with open items; priced by moving each item up the correction ladder **by severity class**. *(KA 5.4)*
 
 **Conditional pass** — Proceeding subject to conditions — a real instrument only if the conditions have owners, dates and consequences. *(KA 3.3)*
@@ -214,6 +245,8 @@
 
 **Configuration management** — Knowing which version of every controlled item is approved, and how it came to be. *(KA 4.3)*
 
+**Confirmation rule** — The provision that stops a tolerance trigger firing on one period's measurement noise. *(KA 3.3)*
+
 **Conflict source** — Structural, resource, information, interest or interpersonal — each with a different remedy. *(KA 11.3)*
 
 **Consent risk** — Whether the party holds a veto, approval, licence, signature or practical ability to withhold cooperation; a property of position, not disposition. *(KA 11.1)*
@@ -223,6 +256,8 @@
 **Consent-risk floor** — A minimum engagement allocation to a party that can stop the work, justified by breakeven probability rather than by benefit rate. *(KA 11.1)*
 
 **Consequence per defect (uᵢ)** — The internally assessed cost of one defect of a class reaching use; assessed, owned and stated. *(KA 14.1)*
+
+**Consequence threshold** — A point where the consequence function steps rather than scales; where resilience is bought. *(KA 8.4)*
 
 **Consequence-weighted exposure** — `Σ nᵢdᵢuᵢ` — the expected cost of a data estate's defects. *(KA 14.1)*
 
@@ -235,6 +270,8 @@
 **Containment layer** — A review, test or inspection with a stated coverage, detection rate and unit correction cost. *(KA 9.2)*
 
 **Contestability** — The affected party's ability to challenge a decision and have it examined by a human with authority to change it. *(KA 14.4)*
+
+**Contingency draw index** — (Contingency drawn ÷ contingency) ÷ percent complete; above 1.00 the reserve is depleting faster than the work is being done. *(KA 7.1)*
 
 **Contingency reserve** — Inside the baseline; funds identified risks; PM-controlled. *(KA 7.1)*
 
@@ -267,19 +304,38 @@
 
 **Cost of quality (CoQ)** — Prevention + appraisal + internal failure + external failure. *(KA 9.1)*
 
+**Cost per crew-week of capacity** — The priced rungs of Domain 6's capacity ladder, from 15,200 at straight time to 45,000 for accepting the delay (7.4.1c). *(KA 7.4)*
+
+**Cost per productive hour** — Burdened pay ÷ (1 − non-productive share) × (1 + overhead); USD 100.79 against a USD 95.00 charge-out rate. *(KA 7.4)*
+
+**Cost slope** — An activity's crash cost per week, with a technical limit on weeks available. *(KA 6.4)*
+
 **Count view / size view** — Progress by item count against progress by size delivered; the first overstates when sequencing is optimal. *(KA 13.3)*
 
+**Counterfactual cost** — Cost incurred *only* in the do-nothing case, and therefore value created by avoiding it. *(KA 2.2)*
+
 **Counterfactual test** — What happens to the benefit if this bundle is not delivered? A zero answer means zero attributed value. *(KA 5.3)*
+
+**Counterparty risk (priced)** — The secondary `EMV` of a transfer: `p × P(cannot pay) × amount recovered`, usually correlated with the event transferred. *(KA 8.3)*
+
+**Coverage** — Distinct risks identified as a share of the estimated population; an optimistic figure, since shared blind spots deflate the population and so inflate it. *(KA 8.1)*
 
 **CPI SPI** — `EV/AC` · `EV/PV`, as ratios. *(KA 7.3)*
 
 **Crashing / fast-tracking** — Buying duration with money / with overlap risk. *(KA 6.4)*
 
+**Criterion influence** — `(score range) × weight` — the most a criterion can move a total, and therefore what the model cannot decide. *(KA 2.2)*
+
+**Critical chain** — The binding sequence once logic *and* capacity are honoured; need not be the critical path. *(KA 6.3)*
+
 **Critical path** — The zero-float longest path; the project's shortest possible duration. *(KA 6.2)*
+
+**Crossover horizon** — `R × (1 + d/g)` — the remaining work below which reinforcement finishes later, not earlier. *(KA 1.3)*
 
 **Crossover weighting (w)** — The price weight at which two bidders' weighted scores are equal. *(KA 10.2)*
 
-**Cumulative test** — A threshold on aggregated related changes over a stated period, set from the observed change rate. *(KA 4.3)*
+**Cumulative test** — The delegation-schedule provision that related decisions aggregating above `X` within period `P` require the authority appropriate to the aggregate. Setting `X` and `P` is arithmetic, not judgement, and is derived in Domain 4, KA 4.3.3 — a round number chosen without reference to the observed decision rate provides the appearance of a control and none of the function. *(KA 3.3)*
+  <br/>· *Also read at KA 4.3:* A threshold on aggregated related changes over a stated period, set from the observed change rate.
 
 **Cumulative-effect test** — The rule that related concessions aggregating above a threshold require the authority appropriate to the aggregate. *(KA 9.3)*
 
@@ -307,6 +363,10 @@
 
 **Decidable scope** — Enumerated deliverables, quantified extent, named interfaces, explicit exclusions. *(KA 5.1)*
 
+**Decision action window** — `(remaining duration − escalation latency) ÷ remaining duration`; negative means the escalation is ceremonial. *(KA 3.3)*
+
+**Decision breakeven adoption** — The adoption at which one priced decision stops paying — 36.76 % for Meridian's acceleration. Distinct from Domain 2's **breakeven adoption**, which is the level at which the whole investment's NPV is zero (41.05 %). *(KA 1.3)*
+
 **Decision convention** — Whether a meeting decides or ratifies, and whether authority is individual or collective. *(KA 11.4)*
 
 **Decision record** — The versioned, attributable log that converts a decision from a memory into an institutional fact. *(KA 3.3)*
@@ -329,9 +389,19 @@
 
 **Delegation schedule** — The statement of authority by decision class, on value, reversibility and externality. *(KA 3.2)*
 
+**Delivery verdict** — The project-level judgment: was the output delivered to time, cost and quality? A one-off variance. *(KA 1.1)*
+
+**Depth and kind** — Two separate verification choices: how hard to look, and what sort of looking finds this class of error. *(KA 1.4)*
+
+**Derived audit tolerance** — The item-level tolerance obtained by inverting `p^k` from an interface-level target: `p = q^(1/k)`. *(KA 4.3)*
+
+**Descope exchange rate** — `1/CPI` — the forecast cash saved per unit of budgeted scope removed; USD 1.10 per dollar on Auriga. *(KA 7.3)*
+
 **Detection rate (dᵢ)** — The share of defects reaching a layer that the layer finds. *(KA 9.2)*
 
 **Detection rate (q)** — The share of material errors present that a given review depth finds; a measured quantity, never asserted. *(KA 14.3)*
+
+**Deterministic bias** — `tₑ − m = (o − 2m + p)/6` — one sixth of the estimate's skew. *(KA 6.4)*
 
 **Deterrence cap vs compensation cap** — The service-credit cap needed to exceed the supplier's cost of compliance, against the cap needed to cover the buyer's loss; they differ. *(KA 10.3)*
 
@@ -351,6 +421,8 @@
 
 **Distributed team** — A team whose members' working hours do not fully coincide; time distance, not spatial distance, is the governing variable. *(KA 12.4)*
 
+**Do-minimum option** — The cheapest compliant alternative where inaction is not permissible; the honest comparator, and an option in its own right. *(KA 2.2)*
+
 **Do-nothing baseline** — The comparison against which all benefits are measured; without it value is unmeasurable. *(KA 2.2)*
 
 **Double-counting** — The same benefit claimed by more than one case; one claimant per benefit. *(KA 2.3)*
@@ -367,11 +439,17 @@
 
 **Early-warning indicator** — A leading measure tied to a risk, firing before the event. *(KA 8.3)*
 
+**Earning rule** — The convention by which physical progress becomes `EV`; fixed before the period it measures. On Auriga's ten-package group the choice moved `EV` by 15.00 % of budget. *(KA 7.3)*
+
+**Effective detection (q_eff)** — A gate's detection rate multiplied by its condition-closure rate: `q_eff = q × r`. *(KA 3.3)*
+
 **Elicitation** — Deliberate discovery of need, as distinct from collection of requests. *(KA 5.2)*
 
 **Elimination rate** — Eliminations ÷ gross claimed benefit; invariant to the adoption assumption. *(KA 15.2)*
 
 **Emergency change route** — A named authority, a short deadline and mandatory retrospective ratification. *(KA 4.4)*
+
+**Emergency-route share** — Emergency changes ÷ total requests — a latency diagnostic, so set a review trigger on it rather than a target. *(KA 4.4)*
 
 **Emotional intelligence** — Four practised operations — self-awareness, self-regulation, social awareness, relationship management — skills, not a trait score. *(KA 12.1)*
 
@@ -390,6 +468,8 @@
 **Entitlement** — The contractual basis for a claim; without it, merits are irrelevant. *(KA 10.4)*
 
 **Enumeration** — Evaluating every feasible subset under the constraint; the optimum where the candidate set is small enough. *(KA 5.3)*
+
+**Envelope coverage** — The share of a stream's above-authority decisions the delegated envelope contains. *(KA 3.1)*
 
 **Error escape rate (e)** — The share of units on which a route lets a material error through; differs between manual and automated routes and must be measured. *(KA 14.2)*
 
@@ -426,6 +506,8 @@
 
 **Explainability (decision sense)** — The property that a named human can state why an output says what it says, in the vocabulary of the obligation. *(KA 14.4)*
 
+**Exposed loss** — `(1 − q) × L` — the loss a verification is actually protecting against, after any downstream control. *(KA 1.4)*
+
 **Exposure per record** — `dᵢuᵢ` — the quantity that ranks remediation effort across classes. *(KA 14.1)*
 
 **External-failure unit cost** — The average cost of one escaped defect in the operating context; set by context, not the project. *(KA 9.1)*
@@ -433,6 +515,8 @@
 ## F
 
 **Factual-claims register** — Each claim in an external communication with its source document, retained with the issued item. *(KA 11.4)*
+
+**False stop / false continue** — Stopping a project that would have created value; continuing one that will not. The two errors a criterion trades. *(KA 2.4)*
 
 **Feasible frontier** — The top few feasible sets and what distinguishes them — the honest output of an enumeration. *(KA 15.2)*
 
@@ -448,11 +532,19 @@
 
 **Fitness for purpose** — Whether conforming, correctly graded output serves the use it was built for. *(KA 9.1)*
 
+**Flat-equivalent basis** — Breakeven stated as the level a profile flat from year one would need (Meridian 41.05 %). *(KA 2.2)*
+
+**Flip point** — The smallest weight shift that reverses a ranking; report it with the ranking or the ranking is unqualified. *(KA 2.2)*
+
 **Flow efficiency** — Active work time as a share of cycle time; typically low, and where the improvement lies. *(KA 13.2)*
 
 **Flow metric set** — Throughput, cycle-time distribution, work in progress with its blocked and aged shares, flow efficiency. *(KA 13.4)*
 
 **Forward / backward pass** — Left-to-right ES/EF computation; right-to-left LS/LF computation. *(KA 6.2)*
+
+**Forward breakeven** — The adoption or benefit level at which the *remaining* cost is just repaid; the only defensible level for a gate criterion. *(KA 2.4)*
+
+**Forward exit cost** — The cost of stopping — termination, demobilisation, disposal; a forward cost, never sunk. *(KA 2.4)*
 
 **Forward traceability** — Requirement → design → test → accepted deliverable; detects unmet scope. *(KA 5.2)*
 
@@ -462,11 +554,15 @@
 
 **FS / SS / FF / SF** — The four dependency types. *(KA 6.1)*
 
+**Funding absorbed** — Cash paid out − cash received; equals client exposure − payables + loss to date. Best stated in days of spend (44.80 on Auriga). *(KA 7.4)*
+
 ## G
 
 **Governance** — The decision rights, accountabilities and information flows through which an organisation directs and controls a project. *(KA 3.1)*
 
 **Governance artefact** — A report, portal or template — evidence of governance, never a substitute for decision rights. *(KA 3.1)*
+
+**Governance calendar** — The meeting and paper-deadline dates an approval event must be scheduled against, rather than approximated by a lag. *(KA 6.1)*
 
 **Governance latency** — The expected wait for a committee decision: `E[wait] = M/2 + L`. *(KA 3.2)*
 
@@ -475,6 +571,8 @@
 **Greedy ranking** — Taking candidates in ratio order while they fit; a heuristic that strands capacity when candidates are lumpy. *(KA 5.3)*
 
 **Gross latency-weeks** — Σ over decision classes of count × cumulative tier latency; the portfolio's total waiting. *(KA 15.4)*
+
+**Gross residual** — The sum of the reconciliation's error classes before netting — the figure that carries the finding. *(KA 4.3)*
 
 **Grounding** — Supplying and identifying the material an output must be derived from, with nothing outside it permitted. *(KA 14.3)*
 
@@ -503,6 +601,8 @@
 **Hypercare** — A bounded period of elevated support after go-live, with measured exit criteria and a receiving-organisation owner. *(KA 16.1)*
 
 ## I
+
+**Implied ETC efficiency** — The efficiency an `EAC` assumes for the remaining work; equal to the `TCPI` computed to that `EAC`. *(KA 7.3)*
 
 **Increment** — A slice of product complete against the definition of done and therefore judgeable, releasable or rejectable alone. *(KA 13.1)*
 
@@ -545,7 +645,7 @@
 
 **Key-person concentration** — The share of procedures executable by exactly one named individual; an availability risk no project register records. *(KA 16.3)*
 
-**Kill criteria** — Pre-agreed stop conditions; powerful only because agreed in advance. *(KA 2.4)*
+**Kill criteria** — Pre-agreed stop conditions; powerful only because agreed in advance, and only useful if calibrated. *(KA 2.4)*
 
 **Knowledge transfer** — Conversion of project knowledge into documentation, trained people and rehearsed procedures usable without the project team. *(KA 16.3)*
 
@@ -555,11 +655,21 @@
 
 **Last responsible moment** — The latest point a decision can be taken without foreclosing a needed option. *(KA 1.3)*
 
+**Latency-to-cycle ratio** — Governance latency ÷ the delivery cadence it governs; above 1.0 the answer arrives after the increment that asked. *(KA 3.1)*
+
 **Leadership (delivery context)** — The production of willing, aligned and informed effort under conditions the plan did not anticipate. *(KA 12.1)*
+
+**Least-cost duration** — The duration maximising net saving; found where the marginal week's cost first exceeds the value of a week. *(KA 6.4)*
+
+**Legal liability** — Who must compensate whom, set by contract and jurisdiction; distinct from professional accountability and capable of sitting elsewhere. *(KA 1.2)*
+
+**Legitimately product-free work** — Integration, testing, migration, training delivery, commissioning: real work with no product, and the class a product-derived WBS omits by construction. *(KA 4.2)*
 
 **Level of effort** — Earning by calendar (`EV ≡ PV`); can never show schedule variance. *(KA 7.3)*
 
 **Level variance** — The value effect of a wrong steady-state adoption or benefit-per-unit assumption. *(KA 16.4)*
+
+**Level-of-effort distortion** — `s × (1 − SPI_d)` — the amount a level-of-effort share `s` adds to a reported `SPI`; 0.28 at a 70 % share with discrete `SPI` 0.60. *(KA 7.3)*
 
 **Lineage** — The reconstructable path from source record to a displayed value. *(KA 14.1)*
 
@@ -568,6 +678,8 @@
 **Little's Law** — `W = T × C` for a system in steady state, independent of arrival and service distributions. *(KA 13.2)*
 
 **Local optimisation** — Function-level efficiency that degrades whole-system performance. *(KA 1.3)*
+
+**Logic density** — Links ÷ activities; the surplus over `n − 1` counts the network's convergences. *(KA 6.1)*
 
 **Logrolling (trading whole issues)** — Conceding entirely on issues valued asymmetrically, rather than partially on all of them. *(KA 11.3)*
 
@@ -580,6 +692,8 @@
 **Management reserve** — Outside the baseline; unknown-unknowns; sponsor-controlled. *(KA 7.1)*
 
 **Marginal capacity of the nth member** — `h − c(n − 1)`; zero at `n` = 81 under the same parameters. *(KA 12.2)*
+
+**Marginal value of the constraint** — `V(n) − V(n−1)` from enumeration; lumpy, non-monotone, and a property of the candidate set. *(KA 2.2)*
 
 **Marginal-dollar allocation identity** — For any payment mechanism, buyer share + supplier share of the next dollar of cost = 1; a contract allocates cost, it does not remove it. *(KA 10.3)*
 
@@ -609,6 +723,10 @@
 
 **Named owner** — The human who verified an AI-assisted artefact and answers for it. *(KA 1.4)*
 
+**Near-critical band** — The float threshold below which a path joins the monitored set; a decision, not a convention. *(KA 6.2)*
+
+**Need-by time** — The point beyond which a decision no longer changes what the team does; the test of whether a body can serve it. *(KA 3.1)*
+
 **Net drain** — Gross throughput minus arrival rate — the rate at which a backlog actually shrinks. *(KA 13.2)*
 
 **Net team capacity** — `hn − c·n(n − 1)/2`; maximised at 80–81 people under the illustrative parameters. *(KA 12.2)*
@@ -625,7 +743,11 @@
 
 **Operational transition** — Establishment of a funded, staffed, permanent capability to run and improve the delivered service. *(KA 16.2)*
 
+**Original-to-current reconciliation** — Original baseline + Σ approved changes = current baseline, exactly, every reporting period. *(KA 4.3)*
+
 **Orphan** — A design element or test case tracing to no approved requirement. *(KA 5.2)*
+
+**Orphan work package** — Budgeted work producing no product anyone asked for — waste that still reports 100 % complete. *(KA 4.2)*
 
 **Out-of-cycle mechanism** — A written-resolution or delegated-authority route used when the ordinary cadence is too slow. *(KA 3.3)*
 
@@ -639,6 +761,10 @@
 
 **Output vs input specification** — Specifying what must be achieved against how it must be built; determines who is answerable for fitness for purpose. *(KA 10.1)*
 
+**Outturn ratio** — Final cost ÷ approved cost for a comparable completed project; the unit of a reference class. *(KA 8.4)*
+
+**Over-claim share** — `counterfactual ÷ raw` — invariant to the valuation rate, the operating year and the number of adopters. *(KA 2.3)*
+
 **Over-trust through fluency** — Polished output suppressing the scrutiny rough output would attract. *(KA 1.4)*
 
 **Overlap window** — A deliberately created shared period, bought with unsocial hours that must be explicitly allocated. *(KA 12.4)*
@@ -647,7 +773,17 @@
 
 **P50 / P80** — Confidence levels — amounts covering the aggregate outcome with stated probability. *(KA 8.2)*
 
+**Paid-to-productive multiplier** — `1/(1 − n)` — 1.17647 at a 15 % non-productive share; the commonest silent under-funding in a labour estimate. *(KA 7.4)*
+
+**Pairwise configuration integrity** — `p^k` — the conformance of a relationship spanning `k` controlled items, always worse than the item rate `p`. *(KA 4.3)*
+
 **Paper lead time (L)** — How far before a meeting submissions close. *(KA 3.2)*
+
+**Partial horizon** — One element planned to work-package level ahead of the wave because its lead time demands it, labelled as such. *(KA 4.1)*
+
+**Party readiness (p)** — The probability that a party arrives at a cycle able to approve; countable as the share of items approved at first presentation. *(KA 3.1)*
+
+**Path float** — `PD` − path length; the slip a whole chain can absorb, shared by every activity on it. *(KA 6.2)*
 
 **Path migration** — The critical path moving as durations change; why passes are re-run. *(KA 6.4)*
 
@@ -658,6 +794,8 @@
 **Plan of plans** — The integrated set of subsidiary plans and the baselines they produce. *(KA 4.1)*
 
 **Plan survival probability** — The product over periods of the probability that each period's loss does not exceed its slack. *(KA 15.3)*
+
+**Plan-set consistency audit** — Reading the subsidiary plans against one another and pricing the findings, before baseline approval (WE 4.1.2). *(KA 4.1)*
 
 **Planning package** — A far-horizon element planned above work-package level, with its uncertainty stated. *(KA 4.1)*
   <br/>· *Also read at KA 6.3:* A far-wave summary activity with ranged duration awaiting elaboration.
@@ -686,7 +824,13 @@
 
 **Precedence rule** — The pre-agreed rule for which authority prevails in a matrix conflict. *(KA 3.1)*
 
+**Precision** — True alerts ÷ all alerts; worth investigating while precision exceeds investigation cost ÷ saving. *(KA 8.4)*
+
 **Price normalisation** — The formula converting prices into scores; the ratio and linear conventions give different scores and different crossovers. *(KA 10.2)*
+
+**Price of confidence** — The cost per percentage point of moving a reserve between confidence levels. *(KA 8.2)*
+
+**Priority rule** — The heuristic (commonly minimum total float first) used to break resource conflicts; beatable, and known to be. *(KA 6.3)*
 
 **Procurement** — Converting a need the project cannot meet internally into an enforceable obligation held by another organisation, and managing it to closure. *(KA 10.1)*
 
@@ -696,12 +840,16 @@
 
 **Product owner** — The single individual accountable for the order of the backlog within a value envelope set by the sponsor. *(KA 13.1)*
 
+**Product-to-work cross-match** — The traceability test that every product has work and every work package a product — a candidate list, not a finding. *(KA 4.2)*
+
 **Production lag (G)** — Elapsed time from data cut-off to publication; the more powerful of the two staleness levers, day for day. *(KA 14.2)*
 
 **Programme** — A temporary organisation delivering a coherent outcome through components that cannot deliver it individually. *(KA 15.1)*
   <br/>· *Also read at KA 1.1:* Related projects managed together for outcomes no one project delivers.
 
 **Programme dependency register** — The record of cross-boundary dependencies, whose critical column is the owner on the giving side. *(KA 15.1)*
+
+**Programme verdict** — The programme-level judgment: did the outcome and its benefit materialise? An annual flow. *(KA 1.1)*
 
 **Progressive elaboration** — Adding detail as it becomes knowable, at a stated horizon and cadence. *(KA 4.1)*
 
@@ -716,6 +864,8 @@
 **Provenance citation** — Each material assertion in an output referenced to the supplied source location it came from. *(KA 14.3)*
 
 **Psychological safety** — A shared belief that the team is safe for interpersonal risk-taking — candour without penalty. *(KA 12.2)*
+
+**PTA headroom** — The distance from the seller's current cost forecast to the `PTA`; 5.59 % on Auriga, and the figure to trend monthly. *(KA 7.4)*
 
 **PV EV AC** — Budgeted cost of work scheduled · performed · the cost actually incurred. *(KA 7.3)*
 
@@ -733,6 +883,8 @@
 
 **Quality-adjusted breakeven volume** — `F / [(m + eₘu) − (a + eₐu)]` — the volume at which an automation pays once escaped errors are priced. *(KA 14.2)*
 
+**Quantification threshold** — The impact above which a screened risk is quantified individually; a screen without one has replaced quantification. *(KA 8.2)*
+
 **Quantum** — The claim's money, built up by head of cost and evidenced contemporaneously. *(KA 10.4)*
 
 **Quoted direct cost** — The figure on the form — typically a minority of the true cost, and the wrong basis for a threshold. *(KA 4.4)*
@@ -741,6 +893,8 @@
 
 **Ramp-up loss** — Weeks of a replacement's tenure minus the sum of their weekly effectiveness, valued at a person-week. *(KA 12.2)*
 
+**Ramped basis** — Breakeven stated as the *steady state* a proportionally ramped profile must reach (Meridian 45.01 %). *(KA 2.2)*
+
 **Range forecast** — Backlog ÷ the observed high and low sustained net drains, with its assumptions stated. *(KA 13.2)*
 
 **Range of optimality** — The band of an uncertain input over which the recommended option stays recommended. *(KA 9.1)*
@@ -748,7 +902,11 @@
 **Re-baselining** — Domain 4's instrument (KA 4.3.3) seen from earned value: it resets the `PV` curve every index is measured against, which is exactly why it cannot be used to retire an adverse variance. *(KA 7.2)*
   <br/>· *Also read at KA 4.3:* Replacing a baseline that no longer conveys information — legitimate, and the most abused instrument in project control.
 
+**Re-decision tax** — The committee slots and delay cost consumed by questions that had already been decided. *(KA 3.3)*
+
 **Readiness conjunction** — `P(clean transition) = ∏ pᵢ` over the `k` necessary conditions; always at or below the averaged dashboard figure. *(KA 16.1)*
+
+**Reallocation distance** — The money that must move to close the gaps: `(1 − index) × denominator`; deficits equal surpluses. *(KA 2.1)*
 
 **Recall (by group)** — Flagged at-risk cases ÷ actual at-risk cases within a group. *(KA 14.4)*
 
@@ -767,9 +925,15 @@
 
 **Regrade** — Use of nonconforming output for a lesser purpose for which it conforms, with traceability. *(KA 9.3)*
 
+**Reinforcement trough** — The transient period after adding people in which progress is worse than it would have been; exists when supervision load per newcomer exceeds their ramp productivity. *(KA 1.3)*
+
 **Rejection entry** — The log record of a change not approved — the entry most often missing and the reason requests recur. *(KA 4.4)*
 
+**Relatedness class** — The set over which a cumulative test sums; widening it multiplies false trips and re-centralises the delegation. *(KA 3.3)*
+
 **Releasability** — The property that an increment can go live alone; it is what converts sequencing into value. *(KA 13.1)*
+
+**Released hours** — Capacity freed, not cash; a benefit only once redeployed to a stated use. *(KA 1.3)*
 
 **Released leader hours** — Status-quo leader hours less retained oversight; the actual product a delegation buys. *(KA 12.3)*
 
@@ -777,9 +941,13 @@
 
 **Reporting period (P)** — The interval of activity a report covers. *(KA 11.2)*
 
+**Required draw efficiency** — Remaining contingency ÷ (demonstrated draw rate × remaining progress) — the `TCPI` of the reserve. *(KA 7.1)*
+
 **Required per-dependency reliability** — The uniform probability each of `k` dependencies must carry to reach a target milestone confidence: the `k`-th root of the target. *(KA 15.1)*
 
 **Required rate** — Backlog ÷ target weeks, plus arrivals — the throughput a committed date presupposes. *(KA 13.2)*
+
+**Required throughput** — Backlog ÷ (successor's `LS` − stream start): what the network asks a cadence team to sustain. *(KA 6.4)*
 
 **Requirement bundle** — The smallest set of requirements that together delivers a measurable benefit — the unit of value attribution. *(KA 5.3)*
 
@@ -793,11 +961,15 @@
 
 **Reserved matter** — A decision class that requires the highest (often unanimous) authority; kept deliberately short. *(KA 3.1)*
 
+**Residual exposure** — `Σ pᵢ ∏(1 − qᵢⱼ) uᵢ` across an assurance map; the only quantity that ranks its rows. *(KA 3.3)*
+
 **Resilience** — Capability to absorb unidentified risk; buffers, optionality, modularity, redundancy, fast detection. *(KA 8.4)*
 
 **Resolution route** — The chosen mode, its cost, and the escalation path with its latency if the mode fails. *(KA 11.3)*
 
 **Resource histogram** — Demand per period from the loaded schedule. *(KA 6.3)*
+
+**Resource-feasible schedule** — A schedule in which no period's demand exceeds any resource cap. *(KA 6.3)*
 
 **Responsibility** — The obligation to do; shareable and delegable. *(KA 1.2)*
 
@@ -805,12 +977,14 @@
 
 **Restated criterion** — A criterion that repeats the requirement instead of stating a measurable condition — worse than an absent one, and commoner. *(KA 5.4)*
 
-**Retention** — A proportion of the contract sum withheld as security, released against defined events. *(KA 16.2)*
-  <br/>· *Also read at KA 7.4:* A withheld percentage of payment, released on completion criteria.
+**Retention** — A withheld percentage of payment, released on completion criteria; Auriga's 5 % is 55.00 % of the bid margin at completion. *(KA 7.4)*
+  <br/>· *Also read at KA 16.2:* A proportion of the contract sum withheld as security, released against defined events.
 
 **Retention schedule** — Class-by-class statement of what is kept, for how long, on what authority, and what disposal or de-identification follows. *(KA 16.4)*
 
 **Retrieval rate** — The proportion of captured lessons retrieved before a comparable decision; the term in which almost all lesson value is lost. *(KA 16.3)*
+
+**Reversal-cost ratio (ρ)** — Cost to undo a decision ÷ its value; authority reads on `max(value, cost to undo)`. *(KA 3.2)*
 
 **Reversion plan** — The rehearsed route back, with a trigger, a decision-maker, a time limit and a latest-possible-reversion point. *(KA 16.1)*
 
@@ -824,7 +998,7 @@
 
 **Risk loading** — The premium a risk-averse supplier adds above the risk-neutral price; the arguable, visible price of certainty. *(KA 10.3)*
 
-**Risk retirement** — Closing a risk whose window has passed; frees contingency for return. *(KA 8.3)*
+**Risk retirement** — Closing a risk whose window has passed; frees contingency for return — often far more than the risk's `EMV`. *(KA 8.3)*
 
 **Risk-neutral fixed price** — Expected cost plus the required margin; at this price, transferring risk costs the buyer nothing in expectation and buys variance reduction only. *(KA 10.3)*
 
@@ -858,6 +1032,8 @@
 
 **Scope-based contract** — A firm price for a defined body of work; the supplier bears effort risk, the buyer pays for change. *(KA 13.4)*
 
+**Screening ruling** — The recorded classification: the baseline clause relied on, the outcome, and a named technical authority — the only artefact that makes a classification contestable later. *(KA 4.4)*
+
 **Secondary risk** — Risk created by a response; a register without them is incomplete. *(KA 8.3)*
 
 **Self-consistent sampling plan** — One whose confidence bound lies below its own breakeven defective fraction. *(KA 9.3)*
@@ -867,6 +1043,10 @@
 **Share ratio** — The agreed buyer/seller split of over- and under-run. *(KA 7.4)*
 
 **Shared benefit** — One benefit claimed by two components that both genuinely contribute to it; counted once. *(KA 15.2)*
+
+**Silent measure** — An outcome measure reported by two parties, owned by neither, and never accompanied by a proposed action. *(KA 1.2)*
+
+**Simple payback** — Cost ÷ annual benefit, in periods; scales as the reciprocal of adoption. *(KA 1.3)*
 
 **Single-A test** — The check that each decision class has exactly one Accountable role. *(KA 3.3)*
 
@@ -881,6 +1061,10 @@
 **Source-dated figure** — A reported value carrying the date of its own source rather than the date of the pack. *(KA 15.4)*
 
 **Sponsor** — The individual accountable for the project's business outcome and mandate. *(KA 3.2)*
+
+**Sponsor load** — The annual diary hours the sponsor obligations imply; a portfolio allocation constraint, not a personal one. *(KA 3.2)*
+
+**Sponsor turnaround** — The measured interval from a decision reaching the sponsor to its return; read as a distribution, not a mean. *(KA 3.2)*
 
 **Stage gate** — A continuation decision by a named authority against pre-set criteria, with power to stop, hold or redirect. *(KA 3.3)*
 
@@ -906,7 +1090,9 @@
 
 **Sum test** — Attributed benefit across bundles must not exceed the business case, and any shortfall is explained, not distributed. *(KA 5.3)*
 
-**Sunk cost** — Unrecoverable spend, irrelevant to a continuation decision. *(KA 2.4)*
+**Sunk cost** — Unrecoverable spend carrying no information beyond the forecast; irrelevant to a continuation decision. *(KA 2.4)*
+
+**Supersession hazard** — The annual probability that a stated strategic priority is replaced, merged or de-prioritised. *(KA 2.1)*
 
 **Surplus** — Own reservation value less the price agreed (buyer), or price less own reservation value (seller). *(KA 11.3)*
 
@@ -915,6 +1101,8 @@
 **Systematic error** — An error repeating consistently across similar items — the characteristic shape of AI error, requiring stratified sampling. *(KA 9.4)*
 
 ## T
+
+**T&M/fixed-price breakeven** — `fixed price ÷ hourly rate`; the premium as a percentage of the estimate equals the hours overrun at which the two options cross. *(KA 7.4)*
 
 **Tailoring** — A recorded, owned decision to adapt method — never a silent omission. *(KA 4.1)*
 
@@ -928,6 +1116,8 @@
 
 **Temporary organisation** — A team with no accumulated trust or shared norms; both must be designed. *(KA 1.1)*
 
+**Test-order rule** — Rank assumptions by `EMV ÷ cost to test`, so the free tests are cleared before the paper is written. *(KA 2.3)*
+
 **Three lines of assurance** — Management controls; independent oversight inside management; independent audit outside it. *(KA 3.3)*
 
 **Three-point / PERT estimate** — `tₑ = (o+4m+p)/6`, `σ = (p−o)/6`. *(KA 6.4)*
@@ -940,15 +1130,20 @@
 
 **Time-phased cost baseline** — The `PV` curve; it must move whenever the schedule does. *(KA 4.3)*
 
+**Timing value of an escalation** — Weeks of earliness × the run rate the remedy recovers — what the *timing* alone is worth, separate from the remedy. *(KA 1.2)*
+
 **Timing variance** — The value effect of the benefit profile arriving later than the case assumed. *(KA 16.4)*
 
-**Tolerance** — The range within which output is conforming; a specification without one is untestable. *(KA 9.1)*
+**Tolerance** — The amount by which an objective may be exceeded before appetite is breached; the room inside which contingency sits. *(KA 8.3)*
+  <br/>· *Also read at KA 9.1:* The range within which output is conforming; a specification without one is untestable.
 
 **Total cost of ownership** — Whole-life cost of the service, including the operating cost that must appear in the receiving organisation's budget before closeout. *(KA 16.2)*
 
 **Total cost of ownership (TCO)** — Transition-in + operating cost over the period of need + transition-out; the only valid basis for make-or-buy. *(KA 10.1)*
 
 **Total float TF** — `LS − ES`; slip available without delaying the project. *(KA 6.2)*
+
+**Total funding requirement** — `BAC` + management reserve — the cash the sponsor must have available; Auriga's is USD 4,240,000. *(KA 7.1)*
 
 **Tranche** — A group of components delivered together to reach a usable intermediate state at which benefit begins. *(KA 15.1)*
 
@@ -968,6 +1163,8 @@
 
 **Uncertainty** — Conditions that cannot be meaningfully enumerated with probabilities. *(KA 8.1)*
 
+**Uncommitted forecast balance** — `EAC` − `AC` − open commitments; its excess over the baseline's uncommitted balance equals \ *(KA 7.2)*
+
 **Uniform yield requirement** — `RTY^(1/k)` — the per-step yield an end-to-end target implies over `k` steps. *(KA 9.4)*
 
 **Uniform-target defect** — Setting one rate target across classes of unequal consequence, which can cut defect counts while raising expected cost. *(KA 14.1)*
@@ -984,11 +1181,15 @@
 
 **Value of information** — The reduction in expected cost that knowing enables; zero if it changes no action. *(KA 8.2)*
 
+**Value of perfect information** — The most any signal could be worth: expected cost without information less expected cost knowing the truth free. *(KA 8.2)*
+
 **Value per unit of constrained effort** — Attributed benefit ÷ effort in the scarce resource — the ranking that engages the constraint. *(KA 5.3)*
 
 **Value per unit of constraint** — Ranking basis when a scarce resource binds; a heuristic, not an optimum. *(KA 2.2)*
 
 **Value-led core** — Engagement effort sized from the benefit arithmetic rather than from the salience score. *(KA 11.1)*
+
+**Variance contribution** — `p(1−p)I²` for one risk; quadratic in impact, so it ranks a register differently from `EMV`. *(KA 8.2)*
 
 **Velocity** — Throughput weighted by team-relative size units — a planning input inside a team, never a performance measure. *(KA 13.4)*
 
@@ -1010,6 +1211,8 @@
 
 **Weighted scoring** — Ranking by Σ(weight × ordinal score); forces criteria into the open, steerable by whoever sets weights. *(KA 2.2)*
 
+**Within-cell span** — The `EMV` range a single matrix cell contains: the product of its two band ratios. *(KA 8.2)*
+
 **Within-group variation** — The reason national-culture averages cannot predict an individual's behaviour. *(KA 12.4)*
 
 **Work in progress (W)** — Items started and not finished; a managed quantity with an explicit limit. *(KA 13.2)*
@@ -1023,6 +1226,8 @@
 **Works test / service test** — Whether the thing was built as specified / whether the organisation can actually run it. *(KA 16.1)*
 
 ## Z
+
+**Zero-fee cost** — `target cost + target fee ÷ seller share` — where the incentive fee is exhausted; on Auriga USD 2,500,000, above the `PTA`, which is why the ceiling binds first. *(KA 7.4)*
 
 **Zero-overlap pair** — Two groups with no common working hours; each exchange costs at least one working day. *(KA 12.4)*
 

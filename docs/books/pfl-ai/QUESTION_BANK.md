@@ -5,7 +5,7 @@
 > the chapters' own. To change an item, change it in its Knowledge Area and regenerate —
 > which is why there is no second copy to fall out of step.
 
-**241 items** across 16 domains. Every numeric option in every item is
+**276 items** across 16 domains. Every numeric option in every item is
 independently recomputed by the golden-answer suite, not only the correct one, so a
 distractor cannot be arithmetically impossible without the gate failing.
 
@@ -13,10 +13,11 @@ distractor cannot be arithmetically impossible without the gate failing.
 
 | Level | Items | Share |
 |---|---|---|
-| Recall | 13 | 5.4 % |
-| Application | 103 | 42.7 % |
-| Analysis | 120 | 49.8 % |
-| Evaluation | 5 | 2.1 % |
+| Recall | 13 | 4.7 % |
+| Comprehension | 2 | 0.7 % |
+| Application | 117 | 42.4 % |
+| Analysis | 128 | 46.4 % |
+| Evaluation | 16 | 5.8 % |
 
 A bank weighted heavily to recall tests memory rather than competence; one weighted
 heavily to Evaluation is unanswerable under time pressure. The distribution above is a fact
@@ -27,16 +28,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 | Domain | Items | Levels represented |
 |---|---|---|
-| 1 | 9 | Recall, Application, Analysis |
-| 2 | 14 | Recall, Application, Analysis |
-| 3 | 18 | Recall, Application, Analysis |
+| 1 | 18 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 2 | 24 | Recall, Application, Analysis, Evaluation |
+| 3 | 26 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 4 | 12 | Recall, Application, Analysis |
 | 5 | 16 | Application, Analysis |
 | 6 | 16 | Application, Analysis, Evaluation |
 | 7 | 16 | Application, Analysis |
 | 8 | 16 | Application, Analysis |
 | 9 | 16 | Recall, Application, Analysis |
-| 10 | 13 | Recall, Application, Analysis |
+| 10 | 21 | Recall, Application, Analysis, Evaluation |
 | 11 | 14 | Application, Analysis |
 | 12 | 15 | Recall, Application, Analysis |
 | 13 | 18 | Recall, Application, Analysis, Evaluation |
@@ -75,7 +76,37 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. development-stage equity at risk
 - D. short-term bridge lending
 
-*Rationale:* Long-dated stable liabilities match long-dated stable cash flows. A and C sit where construction and development specialists (banks, ECAs, developers) hold the risk; D matches a treasury desk, not a pension profile.
+*Rationale:* Long-dated stable liabilities match long-dated stable cash flows on the axis that dominates — risk-holding capability. A and C sit where construction and development specialists (banks, ECAs, developers) hold the risk; D matches a treasury desk, not a pension profile. Note that on the *timing* axis alone a deferred greenfield stream is the closer duration match (WE 1.1.4) — which is why the risk axis must be settled first.
+
+
+**1.1-D** `[1.1.2 · Application]` The limited-recourse route costs 5,202,128 more in present value than the corporate route and removes an enforcement exposure of 10,073,997. The breakeven probability of a parent-impairing failure is:
+
+- A. 12.39 %
+- B. 23.42 %
+- C. 51.64 % ✅
+- D. 28.22 %
+
+*Rationale:* `5,202,128/10,073,997 = 51.64 %` (WE 1.1.2). A divides the incremental cost by the 42,000,000 of debt instead of by the exposure — a cost intensity, not a breakeven; B uses only the 2,359,000 close-cost premium and drops the 2,843,128 margin differential; D is the large-facility asymptote, which omits the fixed close-cost premium altogether and therefore applies to no actual facility.
+
+
+**1.1-E** `[1.1.4 · Analysis]` A level availability stream pays 8,900,000 a year for 15 years, discounted at 8.0 %. Its Macaulay duration is closest to:
+
+- A. 6.59 years ✅
+- B. 8.00 years
+- C. 13.50 years
+- D. 15.00 years
+
+*Rationale:* `D = 1.08/0.08 − 15/(1.08¹⁵ − 1) = 6.5945` (WE 1.1.4). B is the *unweighted* mean of the payment dates 1 to 15 — the duration you get by forgetting to discount the weights; C is the `(1 + r)/r` ceiling, which a level stream approaches only as the tenor approaches infinity; D confuses the asset's life with its duration, the error the example exists to disarm.
+
+
+**1.1-F** `[1.1.2 · Evaluation]` A sponsor's board is shown a breakeven failure probability of 51.64 % and concludes that limited recourse "fails its own test" and should be abandoned. The best professional response is:
+
+- A. agree — the arithmetic is decisive
+- B. the expected-value test prices a mean while the sponsor is insuring a correlated tail, and it values none of the partnership or balance-sheet capacity the structure delivers; the breakeven is one input, not the decision ✅
+- C. recompute at a higher discount rate until the answer changes
+- D. the calculation is invalid because probabilities of project failure cannot be estimated
+
+*Rationale:* WE 1.1.2's own interpretation: the exposure term is an expected shortfall, not the correlated loss that would arise in the bad state, and the structure additionally buys an option (the fund's participation) the table does not contain. A treats one input as the decision; C is assumption-shopping, which is the misconduct 1.3.1 names; D overstates the objection — the parameter is uncertain, which is an argument for stating it and testing it, not for discarding the frame.
 
 
 **1.2-A** `[1.2.2 · Application]` A company reports quarterly profit of 2,000,000 while receivables rose 3,000,000, inventory rose 1,000,000 and payables rose 500,000. Its operating cash flow is:
@@ -108,6 +139,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* The triangle is conjunctive: mistimed cash defeats value and allocation. The cure is structural (sculpted or seasonal debt service, reserve accounts — Domains 9–10), not rejection (C) and not a return adjustment that changes nothing about timing (D).
 
 
+**1.2-D** `[1.2.3 · Application]` The same project (100,000,000 cost, 12,000,000 of annual operating cash, 70,000,000 of senior debt at 6.0 %, 30,000,000 of equity) is financed with debt **amortising over 12 years** rather than interest-only. `AF(0.06, 12) = 8.383844`. The base-case cash-on-cash equity return is:
+
+- A. 12.1687 % ✅
+- B. 26.0000 %
+- C. 40.0000 %
+- D. 12.0000 %
+
+*Rationale:* Instalment `70,000,000/8.383844 = 8,349,392.06`; `(12,000,000 − 8,349,392.06)/ 30,000,000 = 12.1687 %` (WE 1.2.3b). B is the interest-only reading, which charges only the 4,200,000 of interest; C divides project cash by equity and never pays the lender at all; D concludes that amortisation makes leverage exactly neutral — close, and wrong by the 17 basis points that are the whole of the remaining spread benefit.
+
+
+**1.2-E** `[1.2.2 · Application]` Kestrel's documented `CFADS` is 6,384,000, debt service is 5,009,635 and the covenant is 1.20×; annual revenue is 12,000,000. Expressed in days of revenue, the remaining covenant headroom is:
+
+- A. 11.33 days ✅
+- B. 18.25 days
+- C. 29.58 days
+- D. 1.52 days
+
+*Rationale:* Headroom `6,384,000 − 6,011,562 = 372,438`; `372,438/12,000,000 × 365 = 11.33 days` (WE 1.2.2b). B is the working capital *already* absorbed, which is history rather than headroom; C is the total tolerance measured from the pre-working-capital `CFADS` of 6,984,000, so it double-counts the 600,000 already spent; D is the sensitivity — the days worth 0.01× of `DSCR` — mistaken for the headroom itself.
+
+
+**1.2-F** `[1.2.1 · Evaluation]` A contractor offers to take a construction risk for 1,350,000; the sponsors' expected cost of the risk is 900,000, and lenders have said they will de-gear from 70 % to 62 % of a 60,000,000 envelope if it is retained. `k_e` = 15.42 %, `k_d` = 6.0 %, `AF(0.08, 12)` = 7.536078. The sound conclusion is:
+
+- A. refuse: the quote is loaded 50 % above expected cost
+- B. accept: retention costs 3,407,513 in present value through the capital structure, so the transfer creates 2,057,513 of value ✅
+- C. accept only if the contractor reduces the price to 900,000
+- D. indifferent: risk transfer is value-neutral by construction
+
+*Rationale:* `4,800,000 × (0.1542 − 0.0600) × 7.536078 = 3,407,513.04` (WE 1.2.1). A compares the quote with the risk's own expected cost and ignores where a retained risk is actually paid for; C demands a price at which no contractor would accept the risk, since the transferee must be paid for uncertainty as well as expectation; D denies the gain from trade that the equity-debt spread creates.
+
+
 **1.3-A** `[1.3.1 · Analysis]` An analyst is asked to present the upside case as the base case "because the committee needs confidence". The professional response is:
 
 - A. comply — labels are a presentation choice
@@ -136,6 +197,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. nobody, if the tool was approved
 
 *Rationale:* Accountability cannot be delegated to software or its supplier; tool approval governs *which* tools may be used, never *who* answers for the output.
+
+
+**1.3-D** `[1.3.2 · Application]` Disclosing a second mandate would cost a firm the 250,000 fee at risk on it. If concealed and later discovered, the firm loses 900,000 of unpaid fees, 12,750,000 of jurisdictional franchise and 400,000 of legal cost. The breakeven probability of discovery is:
+
+- A. 1.7794 % ✅
+- B. 27.7778 %
+- C. 1.9608 %
+- D. there is no breakeven — concealment can never pay at any probability
+
+*Rationale:* `250,000/14,050,000 = 1.7794 %` (WE 1.3.2). B divides by the 900,000 of forfeited fees alone and ignores the franchise, which is the largest term; C counts the franchise and drops the forfeited fees and legal cost. D is the answer a reader gives from the duty rather than from the arithmetic — the duty is indeed unconditional, but the calculation does have a finite breakeven, and being able to state it is what closes a commercial argument.
+
+
+**1.3-E** `[1.3.3 · Application]` A negotiating position taken on an unverified AI-reported benchmark held Kestrel's close nine weeks at a cost of delay of 124,133.33 per week. The cost of the episode was:
+
+- A. USD 1,117,200 ✅
+- B. USD 2,112,729
+- C. USD 252,000
+- D. USD 124,133
+
+*Rationale:* `9 × 124,133.33 = 1,117,200` (WE 1.3.3). B is the present value of the 60-basis-point prize the false benchmark appeared to offer — the amount at stake, not the amount spent; C is one year of that margin difference undiscounted; D prices a single week.
+
+
+**1.3-F** `[1.3.3 · Comprehension]` Under the responsible-AI principle as fixed in this domain, which statement is correct?
+
+- A. an approved tool's output may be relied on without further checking, since approval is the control
+- B. verifying a number and verifying a claim are different acts: the first is independent recomputation, the second is tracing the assertion to a source that exists and is the right version ✅
+- C. AI output must be disclosed to the client in every case, however immaterial
+- D. confidentiality obligations do not attach to data entered into an AI tool, because no third party reads it
+
+*Rationale:* 1.3.3 separates the two verification acts precisely because they fail differently and are caught by different habits. A confuses tool governance with output accountability (MCQ 1.3-C); C overstates the rule, which attaches to *material* use touching deliverables; D is wrong on the foundational point that entering deal data into a tool is itself a disclosure.
 
 
 ## Domain 2
@@ -168,6 +259,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. a foreign-currency effect that requires no action
 
 *Rationale:* Articulation is an identity (2.1.3). FX and presentation differences are disclosed and reconciled, not left unbalanced — an unreconciled set is a defect, and locating the break is the reader's fastest diagnostic.
+
+
+**2.1-D** `[2.1.1 · Analysis]` Over its first year a project reports accrual `EBITDA` of 7,500,000 and cash-basis `EBITDA` of 6,900,000. Receivables closed at 900,000 and payables at 300,000, both having opened at nil. The 600,000 difference is best described as:
+
+- A. an error, since the two measures should agree over a full year
+- B. the closing net working-capital balance — the divergence is the balance sheet, and it reverses when the trading cycle stops growing ✅
+- C. evidence that the accrual figures are optimistic
+- D. a timing difference that will never reverse
+
+*Rationale:* Cumulative accrual result less cumulative cash result equals net working capital (2.1.1), so the divergence is locatable in named accounts and is a growth profile rather than a quality-of-earnings verdict. A denies the identity; C reads a timing effect as a judgment; D is wrong because the balances unwind — cash accounting is late, not conservative.
+
+
+**2.1-E** `[2.1.2 · Evaluation]` An insurer has indicated it will probably meet a claim, and the amount is reliably estimable. The entity also faces a counterclaim it assesses as probable and estimable. The correct treatment of the pair is:
+
+- A. recognise both, since both are probable and estimable
+- B. recognise neither, since both are disputed
+- C. recognise the counterclaim as a provision; disclose the insurance recovery, which requires virtual certainty to be recognised ✅
+- D. net the two and recognise the difference
+
+*Rationale:* The recognition thresholds are deliberately asymmetric — probable for an obligation, virtually certain for a contingent asset (2.1.2) — so an entity in the same factual position on both sides reports the downside first. A applies one threshold to both; B ignores that the counterclaim passes its tests; D offsets two items that arise from different events, which the recognition tests are applied to individually.
 
 
 **2.2-A** `[2.2.1 · Application]` Revenue 12,000,000; cash operating costs 4,500,000; depreciation 2,400,000; interest 2,520,000; tax 20 %. Net income is:
@@ -210,6 +321,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Principal flows are financing. D confuses the *income statement's* silence on principal with absence from the cash-flow statement, where every cash movement appears.
 
 
+**2.2-E** `[2.2.2 · Application]` Opening cash nil; operating cash flow 3,864,000; principal repaid 2,489,635.23; no capex, distributions or contributions. Plant is 57,600,000 net, receivables 900,000, payables 300,000 and closing debt 39,510,364.77. Closing cash and total assets are:
+
+- A. cash 1,374,364.77; total assets 59,874,364.77 ✅
+- B. cash 3,864,000.00; total assets 62,364,000.00
+- C. cash (1,145,635.23); total assets 57,354,364.77
+- D. cash 1,374,364.77; total assets 58,500,000.00
+
+*Rationale:* Cash = 3,864,000 − 2,489,635.23, and total assets are the three lines summed. B omits the principal repayment (treating debt service as invisible to cash); C deducts the whole 5,009,635.23 instalment, double-counting the interest already inside operating cash flow; D omits the cash balance from the asset total.
+
+
+**2.2-F** `[2.2.3 · Evaluation]` Two otherwise identical projects report operating cash flow of 3,864,000 and 6,384,000. The second classifies interest paid within financing activities. The soundest conclusion is:
+
+- A. the second project generates 2,520,000 more cash from operations
+- B. the figures are not comparable: the 2,520,000 difference is a classification of interest, and restating one presentation makes them identical ✅
+- C. the second project must have lower interest costs
+- D. the first project has a working-capital problem
+
+*Rationale:* The classification of interest paid moves reported operating cash flow by the whole interest figure without changing any cash (2.2.3). A and C read a presentation choice as an economic difference — the specific error the `CFADS` identity is exposed to; D invents a cause the statements do not support.
+
+
 **2.3-A** `[2.3.1 · Application]` `EBITDA` 7,500,000; tax 516,000; working-capital increase 600,000; debt service 5,009,635. `DSCR` including the working-capital movement is:
 
 - A. 1.39
@@ -250,6 +381,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Cost-input measures reward spending, so inefficiency can raise apparent progress (2.3.2) — the gap is a signal to investigate, not to dismiss (A) or resolve by assumption (C, D).
 
 
+**2.3-E** `[2.3.1 · Application]` `CFADS` before working capital 6,984,000; payables held at 300,000; revenue 12,000,000; receivables opened at nil; debt service 5,009,635.23. The maximum days sales outstanding consistent with a 1.20× covenant, at a 365-day convention, is:
+
+- A. 27.3750 days
+- B. 31.0845 days
+- C. 38.7033 days ✅
+- D. 45.0000 days
+
+*Rationale:* The 1.20× trigger is `CFADS` 6,011,562.28, allowing 972,437.72 of absorption and therefore receivables of 1,272,437.72 — `1,272,437.72/12,000,000 × 365`. A is the actual position, not the limit; B is the 1.25× *distribution* threshold, the commonest confusion because both appear in the same clause; D is the scenario that breaches, at `DSCR` 1.1587.
+
+
+**2.3-F** `[2.3.4 · Application]` A restoration obligation of 4,500,000 falls due in 25 years and is discounted at 5.0 %. The amount recognised and the first-year charge against profit are:
+
+- A. provision 4,500,000; charge 180,000
+- B. provision 1,328,862.47; charge 119,597.62 ✅
+- C. provision 1,328,862.47; charge 66,443.12
+- D. provision 1,328,862.47; charge nil, since no cash moves
+
+*Rationale:* The provision is recognised at present value, and the first year carries both accretion 66,443.12 and depreciation of the capitalised restoration asset 53,154.50. A recognises the undiscounted amount; C takes the accretion alone and forgets the asset it created; D confuses a nil cash effect with a nil charge.
+
+
+**2.3-G** `[2.3.2 · Analysis]` A contractor has recognised 3,857,142.86 of cumulative profit on a 48,000,000 contract when a re-forecast makes expected total costs 49,500,000. The charge in the period is:
+
+- A. 1,500,000 — the expected loss
+- B. 5,357,142.86 — the expected loss plus the reversal of profit already recognised ✅
+- C. 1,500,000 spread over the remaining life of the contract
+- D. nil until the loss is actually incurred
+
+*Rationale:* The cumulative position must move from +3,857,142.86 to −1,500,000, so the period charge is the whole swing (2.3.2). A forgets the reversal; C is precisely what immediate recognition exists to prevent; D applies a cash-basis instinct to an accrual test.
+
+
 **2.4-A** `[2.4.2 · Application]` `EBIT` 5,100,000 and interest 2,520,000. Interest cover is:
 
 - A. 1.27×
@@ -278,6 +439,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. quote the capitalised figure, since it appears in the accounts
 
 *Rationale:* Five defensible figures exist (2.4.3); answering without establishing which one is meant guarantees a later dispute. Each of A, C and D picks one arbitrarily.
+
+
+**2.4-D** `[2.4.1 · Evaluation]` A project's first operating year shows after-tax return on capital employed of 6.8000 % against a `WACC` of 7.9860 %, while the appraisal recorded an `NPV` of +16,179,360 and an `IRR` of 12.19 %. The soundest conclusion is:
+
+- A. the appraisal was over-optimistic and should be revisited
+- B. a single early-year accounting return on a fully-carried asset is not comparable with a lifetime discounted return; both figures are correct ✅
+- C. the project is destroying value and should be restructured
+- D. the `WACC` must be wrong, since the project was approved
+
+*Rationale:* Accounting `ROCE` in year one is measured on the asset at its maximum carrying amount and rises mechanically as it depreciates (2.4.1) — year two is already 6.8486 % on unchanged `EBIT`. A and C treat a single-period ratio as a verdict on lifetime economics, the error Domains 3 and 4 exist to prevent; D reverses the logic of appraisal.
+
+
+**2.4-E** `[2.4.2 · Analysis]` A facility carries both a 1.20× `DSCR` covenant and a 2.00× interest-cover covenant. `CFADS` is 6,384,000, debt service 5,009,635.23, `EBIT` 5,100,000, interest 2,520,000, revenue 12,000,000 and the cash-to-revenue gearing 0.80. The binding covenant is:
+
+- A. the `DSCR` covenant, because coverage tests are stricter in project finance
+- B. the interest-cover covenant: it tolerates a 0.5000 % revenue fall against the `DSCR` covenant's 3.8796 % ✅
+- C. neither — they bite at the same point by construction
+- D. it cannot be determined without the lock-up threshold
+
+*Rationale:* Restating both in revenue units gives 60,000 of headroom on interest cover against 465,547.16 on `DSCR`, a factor of 7.7591 (2.4.2). A substitutes convention for arithmetic; C asserts a relationship that does not exist; D treats a separate distribution test as necessary to a covenant comparison.
+
+
+**2.4-F** `[2.4.3 · Analysis]` At a construction data date a project has incurred 33,945,403 and capitalised 34,003,326. The most likely explanation is:
+
+- A. an error, since capitalised cost cannot exceed cost incurred
+- B. capitalised interest entered the asset without a supplier invoice, more than offsetting costs that failed the capitalisation test ✅
+- C. the asset has been revalued upwards
+- D. retention withheld has been added to the asset
+
+*Rationale:* Capitalised interest of 677,923 exceeds the 620,000 of non-capitalisable owner's costs, so the asset legitimately carries 57,923 more than the cost report shows (2.4.3). A applies an intuition the reconciliation disproves; C invents a transaction; D confuses a payment timing item with a cost.
 
 
 ## Domain 3
@@ -342,6 +533,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* `250,000 × 1.07⁶ = 375,183`. A is simple interest (`1 + 0.07 × 6`); B compounds only 5 years; D divides instead of multiplying — discounting when the question asks for growth.
 
 
+**3.1-G** `[3.1.2 · Analysis]` A counterparty offers **USD 380,000 today** to extinguish an obligation to pay USD 500,000 in exactly five years. The annual rate of return the offer implies for the party giving up the wait is closest to:
+
+- A. 4.80 %
+- B. 5.64 % ✅
+- C. 6.32 %
+- D. 7.00 %
+
+*Rationale:* `(500,000/380,000)^(1/5) − 1 = 5.6422 %`. A divides the USD 120,000 premium by the *future* amount and by five (`120,000/500,000/5`) — a simple return computed on the wrong base; C annualises the 31.5789 % total premium by dividing by five, the simple-interest shortcut of KA 3.1.1 applied to a rate; D is the board's own required return, which is what the implied rate must be *compared against*, not the answer to the question asked.
+
+
+**3.1-H** `[3.1.3 · Comprehension]` A reviewer wants one arithmetic test that ties a twelve-row discount-factor column to the single annuity-factor cell that summarises it, without re-adding the column. The correct relationship is:
+
+- A. `AF(r,n) × r = 1 − DF(n)` ✅
+- B. `AF(r,n) = n × DF(n)`
+- C. `AF(r,n) × DF(n) = 1`
+- D. `AF(r,n) = 1/r − DF(n)`
+
+*Rationale:* At 6 % over 12 years, `8.383844 × 0.06 = 0.503031 = 1 − 0.496969` (WE 3.1.3b). B averages the row by its last term and gives 5.963632; C inverts a relationship that holds for no `r` (here 4.166514); D drops the division of `DF(n)` by `r` from the closed form and gives 16.169697 — each a plausible-looking rearrangement, and each falsifiable in one cell.
+
+
 **3.2-A** `[3.2.2 · Application]` A USD 42,000,000 loan is repaid by 12 equal annual instalments at 6 %. The instalment is closest to:
 
 - A. USD 3,500,000
@@ -402,6 +613,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Perpetuity `800,000/0.08 = 10,000,000`; 30-year annuity `800,000 × 11.257783 = 9,006,227`; the gap — 9.9 % of value — is the discounted tail. B waves away a million dollars; C invents a fraction; D confuses valuation arithmetic with a risk adjustment that belongs in the rate, not the formula choice.
 
 
+**3.2-G** `[3.2.1 · Application]` A 25-year availability payment of USD 5,600,000 in year-0 terms is **fully indexed at 2.5 %** a year; the discount rate is 8.0 %. Its present value is closest to:
+
+- A. USD 59,778,747
+- B. USD 76,111,457 ✅
+- C. USD 99,768,254
+- D. USD 104,363,636
+
+*Rationale:* `r* = 1.08/1.025 − 1 = 5.3659 %`, `AF(r*, 25) = 13.591332`, `PV = 5,600,000 × 13.591332 = 76,111,457` (WE 3.2.1d). A values the stream as level and ignores the indexation entirely; C escalates the flows **and** discounts at `r*`, the double-count of WE 3.2.1d; D applies the growing-perpetuity form `A(1+g)/(r − g)` and so values a stream that never ends.
+
+
+**3.2-H** `[3.2.2 · Evaluation]` Kestrel's sponsor obtains a three-year repayment holiday on the unchanged USD 42,000,000 / 12-year / 6.0 % facility, against a **1.30× minimum `DSCR`** covenant. The instalment for years 4 to 12 becomes USD 6,174,934 and year-4 `DSCR` falls to 1.0339 against documented `CFADS` of 6,384,000. The soundest professional conclusion is:
+
+- A. the holiday is cash-neutral, since the same principal is repaid over the same maturity and the lender's return is unchanged
+- B. the holiday is prudent: a year-1 `DSCR` of 2.5333 against a 1.30× covenant shows the structure is comfortably covered
+- C. the holiday concentrates rather than reduces debt service, costs USD 3,018,782 of extra interest and misses the covenant by USD 1,643,414 of `CFADS` ✅
+- D. the holiday reduces lifetime interest, because principal repayment is deferred and interest accrues on a smaller average balance
+
+*Rationale:* Lifetime interest rises from 18,115,623 to 21,134,405 and the binding test moves from year 1 to year 4, where `6,174,933.87 × 1.30 = 8,027,414.03` is needed against 6,384,000 available (WE 3.2.2c), so the holiday must be paired with a maturity extension or a smaller drawing. A ignores the three extra years of interest on an undiminished balance; B reads a single non-binding period as the covenant position, the specific error a holiday induces; D reverses the direction — deferring principal leaves the balance *larger*, not smaller, so interest rises.
+
+
+**3.2-I** `[3.2.3 · Application]` Kestrel's USD 42,000,000 / 12-year / 6.0 % facility carries an USD 840,000 arrangement fee deducted from proceeds. Its all-in effective cost is closest to:
+
+- A. 6.0000 %
+- B. 6.1667 %
+- C. 6.3704 % ✅
+- D. 8.0000 %
+
+*Rationale:* Solving `Σ 5,009,635.23/(1 + r)^t = 41,160,000` over 12 years gives 6.3704 % (WE 3.2.3b). A quotes the headline and ignores the fee; B spreads the 2.0 % fee straight-line across twelve years and adds 16.67 basis points to the coupon — the "amortise the fee" error, which omits the time value of paying it at once; D adds the whole 2.0 % to the rate, an error of a full 163 basis points in the same direction.
+
+
 **3.3-A** `[3.3.1 · Application]` Nominal return 9 %, inflation 3 %. The real return is closest to:
 
 - A. 6.00 %
@@ -460,6 +701,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. USD 2,318,548
 
 *Rationale:* `2,000,000 / 1.03⁵ = 1,725,218` — deflating by the price level, not discounting for time value (that happens separately, at a real rate). A ignores five years of inflation; C deflates simply (`2,000,000 × (1 − 0.03 × 5) = 1,700,000`); D multiplies by `1.03⁵` — inflating instead of deflating.
+
+
+**3.3-G** `[3.3.1 · Analysis]` A 25-year stream worth USD 5,600,000 a year **in year-0 purchasing power** is valued against a 9.0 % nominal hurdle with inflation at 3.0 %. Which statement is correct?
+
+- A. discounting the nominal (escalated) flows at 9.0 % and discounting the level real flows at 5.8252 % both give USD 72,791,113 — they are arithmetically identical ✅
+- B. discounting the level real flows at 9.0 % is correct, and gives USD 55,006,446
+- C. discounting the nominal flows at 5.8252 % is correct, and gives USD 100,366,400
+- D. the real treatment is an approximation of the nominal treatment and the two differ by the inflation cross term
+
+*Rationale:* The Fisher relation makes the two consistent treatments equal to the cent (WE 3.3.1b). B is the double-deduction defect, understating value by 24.4325 %; C is the mirror defect, overstating it by 37.8828 %; D asserts an approximation where an identity holds — the cross term is *inside* `i_real`, which is why the subtraction shortcut, and not the exact relation, is the approximation.
+
+
+**3.3-H** `[3.3.2 · Evaluation]` An O&M obligation of USD 2,700,000 at base date runs 25 years and is fully indexed; the forecast index is 4.0 % and the discount rate 8.0 %. A negotiator secures a **3.0 % cap** on annual indexation. The value of that concession to the payer is closest to:
+
+- A. nil — the cap only bites if the index exceeds 3.0 %, which is a future event
+- B. USD 398,941
+- C. USD 1,544,558
+- D. USD 4,258,610 ✅
+
+*Rationale:* `2,700,000 × [AF(3.846154 %, 25) − AF(4.854369 %, 25)] = 42,873,960 − 38,615,349 = 4,258,610` (WE 3.3.2b). A contradicts its own premise — the forecast *is* 4.0 %, so on the stated assumptions the cap bites in every period; B is the correct value expressed as a **level annual equivalent** (`÷ AF(0.08, 25)`), a right number answering a different question; C is the **year-25 single-period** saving, undiscounted and counted once.
+
+
+**3.3-I** `[3.3.4 · Application]` A USD 42,000,000 balance accrues at 6.0 % on an **actual/360** basis across a full 365-day year. The interest charged, and the quoted rate the convention is equivalent to, are:
+
+- A. 2,520,000 and 6.0000 %
+- B. 2,555,000 and 6.0833 % ✅
+- C. 2,562,000 and 6.1000 %
+- D. 2,485,479 and 5.9178 %
+
+*Rationale:* `42,000,000 × 0.06 × 365/360 = 2,555,000`, and `0.06 × 365/360 = 6.0833 %` (WE 3.3.4b). A is the 30/360 figure, which charges 360 days over 360; C is a 366-day leap year on the same convention; D inverts the fraction to `360/365`, the direction error that makes an expensive convention look cheap.
 
 
 ## Domain 4
@@ -1426,6 +1697,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Level service is constrained by the weakest period; sculpting holds coverage constant and so uses the stronger periods (10.1.3). C ignores that capacity is set period by period, not in total; D confuses sculpting with tenor structure.
 
 
+**10.1-D** `[10.1.3 · Application]` `CFADS` before the interest tax shield is 5,880,000, the loan rate is 6.0 %, tax is 20 %, the tenor 12 years and the target coverage 1.30×. The maximum sculpted debt is closest to:
+
+- A. USD 41,171,123
+- B. USD 39,915,812 ✅
+- C. USD 37,920,771
+- D. USD 38,253,896
+
+*Rationale:* `r* = 0.06 × (1 − 0.20/1.30) = 0.05076923`; `AF(0.05076923, 12) = 8.824924`; `5,880,000/1.30 × 8.824924 = 39,915,812` (10.1.3). A is the level, base-case answer on year-one `CFADS` of 6,384,000, which does not hold 1.30× in later periods; C ignores the tax shield's feedback and discounts at the full 6.0 % (`4,523,076.92 × 8.383844`); D is level service sized on the minimum period, which sculpting beats by 1,661,916.
+
+
+**10.1-E** `[10.1.2 · Evaluation]` A lender offers to reduce the target `DSCR` from 1.30× to 1.25× provided the test is run on a case 5 % below base. The sponsor should conclude that:
+
+- A. the offer is a concession worth 5 basis points of coverage
+- B. the offer destroys 494,053 of capacity, because the indifference stress at these two ratios is only 3.8462 % ✅
+- C. the offer is neutral, since ratio and case move in opposite directions
+- D. the offer cannot be evaluated without knowing the rate and tenor
+
+*Rationale:* `s* = 1 − 1.25/1.30 = 3.8462 %`, so a 5 % stress more than absorbs the relaxation: 40,677,069 against 41,171,123 (10.1.2b). A prices the ratio and ignores the case; C asserts an offset without testing its size; D is wrong because `s*` depends only on the two ratios — rate and tenor scale both sides equally.
+
+
 **10.2-A** `[10.2.1 · Application]` `CFADS` 6,384,000; debt service 5,009,635. The `DSCR` is:
 
 - A. 1.2743 ✅
@@ -1466,6 +1757,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* `ICR` can look healthy while principal is unpaid, and Domain 2 showed accounting classification flipping a profit-based covenant with no cash change. D confuses covenant drafting with accounting requirements.
 
 
+**10.2-E** `[10.2.3 · Analysis]` A 42,000,000 facility is restructured from a full amortisation to a 25 % balloon. Against level `CFADS` of 6,384,000 the `DSCR` rises from 1.2743 to 1.4551. The `LLCR` will:
+
+- A. rise in the same proportion
+- B. be unchanged at 1.2743, because it discounts all the cash to maturity against all the debt outstanding and is blind to when principal is scheduled ✅
+- C. fall, because more debt is outstanding for longer
+- D. become undefined, since there is no level instalment
+
+*Rationale:* `LLCR = 6,384,000 × 8.383844/42,000,000 = 1.2743` on any repayment profile (10.2.3). A confuses the period test with the horizon test; C describes the interest cost, which `LLCR` does not measure; D confuses `LLCR` with `DSCR`, which does need a periodic debt-service figure.
+
+
+**10.2-F** `[10.2.4 · Evaluation]` A facility carries `DSCR` ≥ 1.20× (breached by a 4.1382 % revenue fall), debt/`EBITDA` ≤ 6.00× (4.4444 %), `LLCR` ≥ 1.15× (4.9833 %) and `ICR` ≥ 2.50× (10.6667 %). The most useful conclusion for the treasury function is:
+
+- A. the `ICR` covenant is redundant and should be removed
+- B. `DSCR` binds first, so monitoring `DSCR` is sufficient
+- C. `DSCR` binds first but debt/`EBITDA` follows only 0.31 percentage points of revenue behind it, so both must be monitored — and the ordering would reverse if `ICR` were drafted at 2.90× ✅
+- D. the covenants are inconsistent and one of them must be wrong
+
+*Rationale:* The gap between the first and second triggers is what determines whether monitoring one covenant is enough, and the ordering is a drafting outcome — at 2.90× the `ICR` binds at 1.7067 % (10.2.4). A treats a loose covenant as a useless one; B ignores the 0.31-point gap; D mistakes different thresholds for an inconsistency.
+
+
 **10.3-A** `[10.3.2 · Application]` Annual debt service is 5,009,635 and the facility requires a six-month DSRA. The amount to be funded is:
 
 - A. USD 5,009,635
@@ -1496,6 +1807,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Reserves are replenished before equity is paid (10.3.3); senior service ranks above the top-up, and operating costs above both.
 
 
+**10.3-D** `[10.3.2 · Evaluation]` A sponsor must satisfy a 2,504,818 DSRA. Cash funding costs the spread between a 15.42 % cost of equity and a 3.00 % deposit rate; an LC is available at 1.25 %. The strongest professional conclusion is:
+
+- A. fund it from the senior facility, since after-tax debt at 4.80 % is the cheapest source
+- B. use the LC: the breakeven fee is 12.42 % a year, so 1.25 % saves 279,788 a year, and the residual questions are the issuer's standing and the LC's drafting ✅
+- C. fund it in cash, because lenders will not accept an LC
+- D. the routes are economically equivalent because the reserve is returned at maturity
+
+*Rationale:* Breakeven fee `= 0.1542 − 0.0300 = 12.42 %`; at 1.25 % the LC costs 31,310 against an equity carry of 311,098 (10.3.2b). A is the trap: inside a binding coverage constraint the debt route displaces capex borrowing one for one and enlarges the equity requirement to 3,333,695. C asserts a market position that is simply untrue where the facility permits an LC. D confuses the return of principal with the cost of carrying it for twelve years.
+
+
+**10.3-E** `[10.3.3 · Application]` A 42,000,000 loan at 6.0 % with a 5,009,635.23 level instalment over 12 years is subjected to a 50 % sweep of 774,364.77 of annual distributable cash. The metric that best states what the lenders have gained is:
+
+- A. the tenor, which is unchanged at 12 years
+- B. the reduction in weighted average life from 7.1887 to 6.4660 years — 0.7227 years, or 10.05 % of the exposure period ✅
+- C. the 1,821,314 of interest saved
+- D. the retirement in year 11 rather than year 12
+
+*Rationale:* Average life is the measure of exposure that margin is priced against and swap notionals are set from (10.3.3). A is true and uninformative; C is a benefit to *equity* — the lenders forgo that interest; D is a single date rather than the exposure profile, and it moves with the cash case.
+
+
 **10.4-A** `[10.4.2 · Analysis]` A facility has a 1.20× `DSCR` covenant and a 1.15× lock-up trigger. Why is the lock-up set *below* the covenant?
 
 - A. it is a drafting convention with no economic effect
@@ -1524,6 +1855,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. the loan's maturity date
 
 *Rationale:* The operational trigger is the cash level, which management can influence and monitor (10.4.4). The ratio alone conveys no magnitude of headroom.
+
+
+**10.4-D** `[10.4.3 · Application]` A `DSCR` covenant of 1.20× is breached with `CFADS` of 5,990,216 against debt service of 5,009,635.23. Under the two standard treatments the cure required is:
+
+- A. 21,346.73 whether the cash is deemed `CFADS` or applied to prepayment
+- B. 21,346.73 if deemed `CFADS`; 17,788.94 if applied to prepayment, since the prepayment reduces the denominator and `P = C ÷ λ` ✅
+- C. 21,346.73 if deemed `CFADS`; 25,616.08 if applied to prepayment
+- D. the breach cannot be cured with cash, only waived
+
+*Rationale:* `C = 1.20 × 5,009,635.23 − 5,990,215.54 = 21,346.73`, and `P = 5,009,635.23 − 5,990,215.54/1.20 = 17,788.94 = C/1.20` (10.4.3). A ignores that the two treatments act on different sides of the ratio; C multiplies by the covenant instead of dividing — a nameable sign error that makes the prepayment route look dearer; D confuses a cure right with a waiver.
+
+
+**10.4-E** `[10.4.2 · Evaluation]` A facility has a 1.25× distribution condition, a 1.20× covenant and a 1.15× lock-up trigger. On the lenders' bank case the project's `DSCR` runs from 1.2743 down to 1.1851. The sponsor's negotiating priority should be:
+
+- A. the 1.15× lock-up trigger, since it has the most severe consequence
+- B. the 1.25× distribution condition, which catches eight of the twelve years and 3,956,574 of dividend, while the 1.15× trigger is never reached on this case ✅
+- C. the 1.20× covenant, since breach is the event that matters
+- D. all three equally, since they are tested on the same ratio
+
+*Rationale:* The threshold that binds on the case being tested is the one worth negotiating capital on; here the lock-up trigger never engages (10.4.2). A optimises for a state the project does not reach on this case; C is the two-year problem rather than the eight-year one; D ignores that the same ratio crosses three different levels at three different times.
 
 
 ## Domain 11

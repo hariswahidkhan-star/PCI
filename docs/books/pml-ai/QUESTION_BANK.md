@@ -5,7 +5,7 @@
 > the chapters' own. To change an item, change it in its Knowledge Area and regenerate —
 > which is why there is no second copy to fall out of step.
 
-**289 items** across 16 domains. Every numeric option in every item is
+**363 items** across 16 domains. Every numeric option in every item is
 independently recomputed by the golden-answer suite, not only the correct one, so a
 distractor cannot be arithmetically impossible without the gate failing.
 
@@ -13,11 +13,11 @@ distractor cannot be arithmetically impossible without the gate failing.
 
 | Level | Items | Share |
 |---|---|---|
-| Recall | 10 | 3.5 % |
-| Comprehension | 20 | 6.9 % |
-| Application | 95 | 32.9 % |
-| Analysis | 108 | 37.4 % |
-| Evaluation | 56 | 19.4 % |
+| Recall | 10 | 2.8 % |
+| Comprehension | 22 | 6.1 % |
+| Application | 124 | 34.2 % |
+| Analysis | 133 | 36.6 % |
+| Evaluation | 74 | 20.4 % |
 
 A bank weighted heavily to recall tests memory rather than competence; one weighted
 heavily to Evaluation is unanswerable under time pressure. The distribution above is a fact
@@ -28,14 +28,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 | Domain | Items | Levels represented |
 |---|---|---|
-| 1 | 13 | Recall, Application, Analysis |
-| 2 | 13 | Recall, Application, Analysis |
-| 3 | 15 | Comprehension, Application, Analysis, Evaluation |
-| 4 | 17 | Comprehension, Application, Analysis, Evaluation |
+| 1 | 22 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 2 | 26 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 3 | 23 | Comprehension, Application, Analysis, Evaluation |
+| 4 | 26 | Comprehension, Application, Analysis, Evaluation |
 | 5 | 19 | Comprehension, Application, Analysis, Evaluation |
-| 6 | 22 | Recall, Application, Analysis |
-| 7 | 13 | Recall, Application, Analysis |
-| 8 | 15 | Recall, Application, Analysis |
+| 6 | 31 | Recall, Application, Analysis, Evaluation |
+| 7 | 27 | Recall, Application, Analysis, Evaluation |
+| 8 | 27 | Recall, Application, Analysis |
 | 9 | 23 | Comprehension, Application, Analysis, Evaluation |
 | 10 | 21 | Comprehension, Application, Analysis, Evaluation |
 | 11 | 20 | Comprehension, Application, Analysis, Evaluation |
@@ -79,6 +79,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Explicit clarity substitutes for familiarity the team has had no time to build. A is a by-product, C confuses artefacts, D is false — membership usually changes.
 
 
+**1.1-D** `[1.1.1 · Evaluation]` A programme delivers 3 % under an approved cost of 2,400,000 while adoption reaches 40 % against a planned 70 % on a full-potential benefit of 979,200 a year. The soundest single sentence for the board is:
+
+- A. the programme is 72,000 ahead, so the net position is positive
+- B. the delivery result is +72,000 once, the benefit result is (293,760) a year — 4.08 times the underspend in year one alone — and the two are a stock and a flow, so no net figure should be quoted without a horizon and a rate ✅
+- C. the programme has lost 221,760 net in its first year
+- D. no comparison is possible, since the two figures measure different things
+
+*Rationale:* Both verdicts must be reported, scaled against each other, and flagged as non-commensurable (1.1.1). A nets a one-off against a perpetuity and keeps only the flattering half; C performs the same illegitimate subtraction (`293,760 − 72,000`) and presents the remainder as a result; D uses non-commensurability as an excuse not to compare at all, when the ratio is precisely what makes the scale visible.
+
+
+**1.1-E** `[1.1.1 · Comprehension]` Which best describes what the governance-and-outcomes shift added to the project leader's duty?
+
+- A. a requirement to follow a certified process
+- B. an obligation to answer for whether the intended change landed, in addition to whether the output was built ✅
+- C. the replacement of scheduling technique by benefits management
+- D. a transfer of delivery accountability to the sponsor
+
+*Rationale:* Each shift added an obligation without removing an earlier one (1.1.1). A describes the preceding process-and-profession shift; C is the common misreading — technique was retained, not displaced; D inverts KA 1.2, where accountability for delivery stays with the leader.
+
+
 **1.2-A** `[1.2.1 · Application]` A leader outsources the migration design to a specialist vendor under a fixed-price contract. Accountability for the migration's success now rests with:
 
 - A. the vendor, under the contract
@@ -107,6 +127,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. defensible only if the overrun was under 10 %
 
 *Rationale:* The standard is conduct-based (1.2.3). A collapses care into outcome; C is false in substance — the expectation attaches to professional practice generally; D invents a threshold.
+
+
+**1.2-D** `[1.2.2 · Application]` An adoption shortfall of 12 clinics, each worth USD 510 a week, is visible at week 13 but escalated at week 39. The remedy costs USD 132,000 and recovers 11.2 of the 12 clinics. The value of the 26 weeks of earliness that were not taken is:
+
+- A. USD 159,120
+- B. USD 148,512 ✅
+- C. USD 16,512
+- D. USD 132,000
+
+*Rationale:* Earliness is worth the run rate the remedy *recovers*: `26 × 11.2 × 510 = 148,512` (1.2.2). A values it at the full 12-clinic gap (`26 × 6,120`), crediting the remedy with a recovery it does not achieve; C deducts the remedy cost, which is incurred either way and so does not belong in a timing comparison; D is the remedy cost itself.
+
+
+**1.2-E** `[1.2.1 · Analysis]` A programme's adoption measure appears in both the delivery report and the clinical directorate's report, with no proposed action in either. The most accurate diagnosis is:
+
+- A. duplicated reporting, which should be rationalised for efficiency
+- B. two accountable names and therefore none — the measure has no owner, and its trigger has become an incident rather than a threshold ✅
+- C. adequate governance, since two parties are monitoring the measure
+- D. a data-quality problem in the reporting pipeline
+
+*Rationale:* Dual accountability converts the trigger from a measure into an incident, and the signature is exactly this: reported twice, owned once by nobody, never with an action (1.2.1). A treats the symptom as an administrative annoyance; C mistakes visibility for ownership; D relocates a governance defect to the tooling.
 
 
 **1.3-A** `[1.3.2 · Application]` 40 clinics installed; 70 % adoption; 6 hours/week released per adopting clinic at USD 85/hour over 48 weeks. The defensible annual benefit is:
@@ -149,6 +189,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Pressure relocates (1.3.1); the leader's job is to find where. A accepts an unverified claim, C compounds it, D leaps to a conclusion the report does not support.
 
 
+**1.3-E** `[1.3.3 · Evaluation]` Reinforcing a crew saves 2.7778 weeks at a cost of delay of USD 14,280 a week and consumes 15.0 extra specialist-weeks at USD 4,200 each. The programme's cost of delay could not exceed USD 20,400 even at 100 % adoption. The strongest professional conclusion is:
+
+- A. approve — the work finishes 2.7778 weeks earlier, which is the objective
+- B. reject on delay grounds: the breakeven cost of delay is USD 22,680 a week, above the programme's maximum conceivable 20,400, so no adoption level makes it pay and any approval needs a different stated reason ✅
+- C. approve — 39,666.67 of delay value exceeds the 23,333.33 net loss
+- D. reject — adding people always makes a late project later
+
+*Rationale:* `63,000 / 2.7778 = 22,680`, which exceeds the 20,400 ceiling (1.3.3b). A optimises earliness rather than value; C compares the gross benefit against the net result, double-counting the benefit; D over-applies the coordination result of Domain 12 as a law — here reinforcement genuinely does finish earlier, it simply costs more than it saves.
+
+
+**1.3-F** `[1.3.2 · Application]` A cost of USD 2,400,000 against a full-potential benefit of USD 979,200 a year is assessed under a three-year simple payback rule. The adoption the rule requires is:
+
+- A. 70.00 %
+- B. 81.70 % ✅
+- C. 245.10 %
+- D. 41.05 %
+
+*Rationale:* The rule needs `2,400,000/3 = 800,000` a year, and `800,000/979,200 = 81.70 %` (1.3.2b). A is the case's assumption, which is the thing being tested; C divides the cost by the potential and reads the payback in years as a percentage; D is Domain 2's breakeven adoption for value creation — a different question, and 40.65 points lower.
+
+
+**1.3-G** `[1.3.3 · Evaluation]` Compressing the rollout by 8 weeks costs USD 60,000. Which statement best assesses the decision's robustness?
+
+- A. it is robust: the net is +54,240, comfortably positive
+- B. it pays at any adoption above 36.76 %, so the direction is robust, but at the 40 % adoption actually achieved the net falls to 5,280 — robust in direction, fragile in magnitude ✅
+- C. it is not robust, because it depends on an adoption assumption
+- D. robustness cannot be assessed without a discounted appraisal
+
+*Rationale:* `60,000/8 = 7,500` a week is 14.7059 clinics, or 36.76 % adoption; at 40 % the weekly benefit is 8,160 and the net is `8 × 8,160 − 60,000 = 5,280` (1.3.3). A quotes the point estimate as though it were the range; C treats any dependency as fatal and so never approves anything; D imports Domain 2's instrument into a decision whose horizon is eight weeks.
+
+
 **1.4-A** `[1.4.1 · Analysis]` A sponsor asks that the optimistic scenario be presented as the base case "to keep the board confident". The professional response is:
 
 - A. comply — scenario labels are presentational
@@ -179,6 +249,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Uniform depth over-checks the trivial and under-checks the critical (1.4.3). A mistakes uniformity for rigour; D abandons the duty entirely.
 
 
+**1.4-D** `[1.4.3 · Application]` Recomputing an AI-drafted board benefits figure costs USD 510. An error surviving into the paper would carry an overstatement of USD 293,760, and the chance of anyone catching it after tabling is 0.25. The breakeven error probability above which the recompute pays is:
+
+- A. 0.1736 %
+- B. 0.2315 % ✅
+- C. 0.6944 %
+- D. 0.1302 %
+
+*Rationale:* `510 / (0.75 × 293,760) = 0.2315 %` (1.4.3). A divides by the full loss and forgets that only 75 % of it is exposed; C multiplies by 0.25 instead of (1 − 0.25), using the catch probability as if it were the escape probability; D applies the escape fraction to the verification cost (`510 × 0.75`) rather than to the loss, which is the same slip in the opposite direction.
+
+
+**1.4-E** `[1.4.3 · Evaluation]` A safety review costing USD 12,000 has a breakeven error probability of 0.3158 %, while a USD 510 recompute has one of 0.2315 %. The most useful professional inference is:
+
+- A. the cheaper check is better value and should be preferred
+- B. the cost of checking is nearly irrelevant to whether to check — a 23.53-fold cost difference produces only a 1.36-fold difference in breakeven, because the exposed loss dominates ✅
+- C. both checks are unnecessary, since the breakevens are below 1 %
+- D. the safety review should be dropped, as its expected value is the weaker of the two
+
+*Rationale:* `P* = C_v/[(1 − q)L]`, and the exposed losses differ by more than the costs do (1.4.3). A compares the wrong quantity — the checks protect different exposures; C inverts the meaning of a breakeven, which is a threshold to exceed, not a hurdle to fail; D applies an expected-value test to a safety decision, which the example expressly rules out.
+
+
 ## Domain 2
 
 **2.1-A** `[2.1.3 · Analysis]` A project is delivering to plan, but the strategic priority it served has been superseded. The governance-sound response is:
@@ -199,6 +289,46 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. re-classify it as an objective
 
 *Rationale:* Only hard constraints (physics, law, contract) are untradeable; a soft one recorded as hard silently eliminates options (2.1.2). C loses real information; D confuses a limit with a goal.
+
+
+**2.1-C** `[2.1.1 · Application]` Declared weights are 40 / 25 / 20 / 15 %; the strategically mapped spend of USD 18,000,000 is funded 26.6667 / 36.6667 / 10.0000 / 26.6667 %. The reallocation distance is:
+
+- A. USD 8,400,000
+- B. USD 4,200,000 ✅
+- C. USD 2,400,000
+- D. USD 12,000,000
+
+*Rationale:* The positive deficits are `0.133333 × 18,000,000 = 2,400,000` and `0.10 × 18,000,000 = 1,800,000`, totalling **4,200,000**, which equals `(1 − 0.766667) × 18,000,000` (2.1.1). A adds the deficits to the surpluses, counting the same movement twice; C is the access deficit alone; D is the unmapped sustainment line, which is a separate finding about the denominator.
+
+
+**2.1-D** `[2.1.3 · Application]` A strategic priority is superseded at an annual rate of 15 %. The alignment half-life is:
+
+- A. 6.6667 years
+- B. 4.2650 years ✅
+- C. 3.3333 years
+- D. 4.6210 years
+
+*Rationale:* `ln(0.5)/ln(0.85) = 4.2650` (2.1.3). A is `1/h`, the mean waiting time under a different model, not the median; C halves linearly (`0.5/0.15`), ignoring compounding; D uses `ln(0.5)/h`, treating the annual hazard as a continuous rate — a near miss that is systematically too long.
+
+
+**2.1-E** `[2.1.1 · Evaluation]` An alignment index of 76.6667 % is reported on mapped spend while the index on all discretionary spend is 59.0000 %, the difference being 40 % of spend that maps to no objective. The soundest treatment is:
+
+- A. report the higher figure, since sustainment is not discretionary in practice
+- B. report the lower figure, since 40 % of the money is misaligned
+- C. report both, and make the recommendation about the unmapped 40 % — either give sustainment a declared weight or stop describing the other 60 % as the portfolio ✅
+- D. exclude sustainment and re-baseline the declared weights to the mapped spend
+
+*Rationale:* The denominator is the finding (2.1.1). A hides the largest single item; B misnames unstated strategy as misalignment; D quietly ratifies the omission by rebasing the weights to the spend they were meant to test.
+
+
+**2.1-F** `[2.1.1 · Comprehension]` A portfolio scores 100 % on the alignment index. It is therefore:
+
+- A. well balanced, since every objective is funded to its declared weight
+- B. correctly allocated against declared intent, which says nothing about risk profile, time to benefit, capability concentration or deliverability ✅
+- C. optimal, since no money needs to move
+- D. mis-measured, because a perfect score is not attainable in practice
+
+*Rationale:* The index measures money against stated intent and nothing else (2.1.1, 2.A.2). A and C read an allocation measure as a balance or optimality measure — a portfolio funded exactly to weight can still be entirely high-risk, entirely long-dated and entirely dependent on one scarce team. D is false: a perfect score simply means the funded shares match the declared weights.
 
 
 **2.2-A** `[2.2.2 · Application]` Full benefit potential is 979,200 per year; steady-state adoption is 70 %; the profile ramps 40 %/60 %/70 % and is appraised over 8 years at 7 % (`AF` = 5.971299). Against a flat full-potential case, the ramped NPV is lower by:
@@ -241,6 +371,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* An options set and evidence that permit a negative conclusion are what make it a decision (2.2.1). A is the compliance failure mode; C and D are outcomes, not tests.
 
 
+**2.2-E** `[2.2.2 · Application]` A case shows NPV +1,332,898 against a do-nothing option valued at zero. In fact doing nothing forces a mandatory 600,000 spend in year 4 and 40,000 a year in years 5–8; the rate is 7 % (`1/1.07⁴ = 0.762895`; `AF(0.07,8) − AF(0.07,4) = 2.584087`). The incremental NPV is:
+
+- A. USD 1,332,898
+- B. USD 1,893,998 ✅
+- C. USD 2,092,898
+- D. USD 771,797
+
+*Rationale:* Avoided cost PV is `457,737 + 103,363 = 561,101`, added to the project's NPV (2.2.2b). A omits the counterfactual entirely; C adds the **undiscounted** 760,000; D subtracts the avoided cost instead of adding it, treating a cost the project removes as a cost it incurs.
+
+
+**2.2-F** `[2.2.3 · Analysis]` Beta leads Meridian 4.05 to 3.95. Scores on strategic fit are Beta 5, Meridian 4; on benefit value Beta 3, Meridian 5. Shifting weight from strategic fit to benefit value flips the ranking at a shift of:
+
+- A. 10.00 percentage points
+- B. 3.33 percentage points ✅
+- C. 2.50 percentage points
+- D. no shift between these two criteria can flip it
+
+*Rationale:* Meridian gains `δ` and Beta loses `2δ`, so `3δ = 0.10` and `δ = 0.033333` (2.2.3c). A removes weight from fit without adding it to benefit, so the weights no longer sum to one; C divides the 0.10 margin by the 4-point score range; D is true of a fit-to-deliverability shift, where both candidates move identically, but not of this pair.
+
+
+**2.2-G** `[2.2.3 · Evaluation]` With 3 units of integration capacity the optimal set is Beta + Gamma at 2,100,000; with 4 units it is Meridian + Gamma at 2,593,072. The marginal value of the fourth unit is:
+
+- A. USD 900,000
+- B. USD 1,693,072
+- C. USD 493,072 ✅
+- D. USD 564,357
+
+*Rationale:* `2,593,072 − 2,100,000 = 493,072` (2.2.3b). A applies Gamma's best-in-set per-unit ratio to the marginal unit; B counts the whole NPV of the candidate newly admitted while ignoring that Beta is displaced; D is Meridian's own NPV per unit, which is an average and not a margin.
+
+
 **2.3-A** `[2.3.1 · Analysis]` A benefits map runs directly from "system installed" to "USD 685,440 released per year". Its principal defect is:
 
 - A. the benefit figure is too precise
@@ -281,6 +441,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Unpriced benefits are reported honestly in their own unit (2.3.3). A discards real value; C imports a price the organisation does not face; D confuses value with obligation.
 
 
+**2.3-E** `[2.3.2 · Application]` A pre-change baseline of 22.0 hours a week falls to 15.6 in the 28 adopting clinics and to 20.9 in the non-adopting comparison clinics. At USD 85 an hour over 48 weeks, the attributable annual benefit across the adopters is:
+
+- A. USD 731,136
+- B. USD 605,472 ✅
+- C. USD 685,440
+- D. USD 125,664
+
+*Rationale:* Attributable release is `6.4 − 1.1 = 5.3` hours, so `28 × 5.3 × 85 × 48 = 605,472` (2.3.2). A is the raw claim with no counterfactual deducted; C is the business case's 6.0-hour assumption, which is a forecast and not a measurement; D is the over-claim itself, not the benefit.
+
+
+**2.3-F** `[2.3.2 · Analysis]` A programme measures a raw improvement above its business-case assumption and reports benefits exceeding forecast. The comparison cohort improved by 1.1 of the 6.4 hours. The strongest professional statement is that:
+
+- A. benefits exceed forecast, since the measured improvement is larger than assumed
+- B. the attributable improvement is 5.3 hours — below the assumed 6.0 — so the case is not supported, and the over-claim is 17.1875 % of the raw figure whatever the valuation rate ✅
+- C. the result is unusable because no randomised comparison exists
+- D. the counterfactual should be added to the claim, since both improvements are real
+
+*Rationale:* Raw and attributable are different quantities, and the over-claim share is `counterfactual ÷ raw`, invariant to the rate, weeks and clinic count (2.3.2). A is the error the raw figure invites in a good year; C over-reaches — a convenience cohort is weak evidence, not no evidence; D claims an improvement the programme did not cause.
+
+
+**2.3-G** `[2.3.4 · Evaluation]` An assumption register carries EMVs of 466,612, 217,752, 114,434, 144,000 and 131,749 against a case NPV of 1,332,898; the last three cost nothing to test. The soundest first action is:
+
+- A. commission the 40,000 adoption study, since 466,612 is the largest exposure
+- B. clear the three free tests, resolving USD 390,184 — 36.31 % of the register's exposure — before the paper is written ✅
+- C. reduce the case's NPV by the total EMV of 1,074,548 and re-submit
+- D. no action: an exposure ratio of 0.8062 is below 1, so the case stands
+
+*Rationale:* Test priority ranks by EMV per unit of test cost, and a free test has no competitor (2.3.4). A is right on magnitude and wrong on order; C double-counts, since the EMVs are exposures around the NPV, not deductions from it; D treats a sanity ratio as an approval threshold.
+
+
 **2.4-A** `[2.4.2 · Application]` 1,800,000 is spent; completion needs a further 900,000; remaining benefit PV is 780,000. The correct decision and its basis are:
 
 - A. continue — stopping wastes the 1,800,000 already spent
@@ -309,6 +499,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. being confidential until invoked
 
 *Rationale:* Advance agreement converts assessment into decision (2.4.3); without it, whoever has most invested wins the argument. C removes independence; D prevents the behavioural effect entirely.
+
+
+**2.4-D** `[2.4.3 · Application]` At a gate, USD 900,000 is spent and USD 1,500,000 remains; the PV of remaining benefit is `5,332,711 × s` for sustained adoption `s`. The adoption at which the remaining spend is just repaid is:
+
+- A. 45.0053 %
+- B. 28.1283 % ✅
+- C. 41.0460 %
+- D. 62.5000 %
+
+*Rationale:* `1,500,000 / 5,332,711 = 28.1283 %` (2.4.3). A is the *whole-investment* breakeven on the same ramped basis, which reintroduces the sunk 900,000 into a forward decision; C is the flat-equivalent whole-investment breakeven, wrong on both counts; D divides remaining cost by total cost, which is a completion percentage and not a breakeven at all.
+
+
+**2.4-E** `[2.4.3 · Evaluation]` A criterion flags 80 % of Low-adoption programmes, 35 % of Mid and 10 % of High. Priors are 0.25 / 0.45 / 0.30 and forward NPVs (166,822) / 899,720 / 2,232,898. Stopping on a flag:
+
+- A. saves USD 33,364 of expected loss, so it is worth applying
+- B. destroys USD 175,328 of expected value, because the value of the good programmes it stops exceeds the loss of the bad ones it prevents ✅
+- C. is value-neutral, since the criterion is applied consistently to every programme
+- D. cannot be assessed without knowing each programme's actual outcome
+
+*Rationale:* `33,364 − (141,706 + 66,987) = (175,328)` (2.4.3). A counts only the benefit side of the trade — the standard omission; C confuses procedural consistency with expected value; D is the argument that prevents any criterion from ever being calibrated, since actual outcomes are by definition unavailable at the gate.
+
+
+**2.4-F** `[2.4.2 · Analysis]` Remaining cost is 900,000 and remaining benefit PV is 780,000, so forward NPV is (120,000). Terminating the principal supplier would cost 150,000. The correct decision is:
+
+- A. stop, since forward NPV is negative
+- B. continue, because the 150,000 exit cost is a forward cost of stopping and exceeds the 120,000 cost of completing ✅
+- C. stop, and treat the 150,000 as a sunk cost of the original decision
+- D. continue, because the 1,800,000 already spent would otherwise be wasted
+
+*Rationale:* Exit costs are forward costs, so the comparison is (120,000) against (150,000) (2.4.2). A applies the rule without completing the comparison; C misclassifies a future payment as sunk; D is the sunk-cost fallacy, which reaches the same answer here for entirely the wrong reason — and would reach the wrong answer if the exit cost were 50,000.
 
 
 ## Domain 3
@@ -351,6 +571,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. a deadlock-breaking mechanism with a deadline
 
 *Rationale:* Unanimity is indistinguishable from an inability to decide once interests diverge (3.1.2); the other three are the countermeasures.
+
+
+**3.1-E** `[3.1.2 · Application]` A three-party board meets every 4 weeks with a 2-week paper lead time. Each party is independently ready to approve in a given cycle with probability 0.70. Under unanimity, the expected wait for one decision is closest to:
+
+- A. 4.0 weeks
+- B. 5.7 weeks
+- C. 11.7 weeks ✅
+- D. 12.0 weeks
+
+*Rationale:* `p³ = 0.343`, so `E[cycles] = 1/0.343 = 2.9155` and `E[wait] = 4/2 + 2 + 1.9155 × 4 = 11.6618` weeks (3.1.2). A is the single-authority wait, ignoring the failure probability altogether. B applies the readiness probability once rather than to the power of three (`1/0.70 = 1.4286` cycles → 5.71 weeks) — the commonest error, because it treats the board as one actor. D adds one whole extra meeting interval instead of the expected 1.9155 of them.
+
+
+**3.1-F** `[3.1.3 · Evaluation]` A monthly committee with a 2-week paper deadline governs 2-week increments. Of 65 above-authority decisions, 41 are needed within the current increment, 9 at 2–3 weeks, 7 at 3–4 weeks and 8 beyond 4 weeks. Management proposes meeting fortnightly with a one-week deadline. The strongest evaluation of that proposal is that it:
+
+- A. solves the problem, because the committee will then be faster than the increment
+- B. raises servable coverage from 12.31 % to 36.92 % and therefore still leaves the majority of decisions unservable — only delegation changes the outcome ✅
+- C. fails, because committee latency is irrelevant to iterative delivery
+- D. raises servable coverage to 63.08 %, which is the minimum required
+
+*Rationale:* At `E[wait]` = 2.0 weeks the servable buckets are the 8, 7 and 9, i.e. 24 of 65 = 36.92 %, against 8 of 65 = 12.31 % as designed (3.1.3). A confuses `E[wait]` = 2.0 with a two-week meeting interval and ignores the paper lead time. C overcorrects: latency matters, it is simply not sufficient. D misreads 63.08 % — that is the minimum *envelope coverage* the same-increment decisions require, not a coverage the committee achieves.
 
 
 **3.2-A** `[3.2.3 · Application]` A committee meets every 6 weeks and closes papers 2 weeks before each meeting. The expected wait for a decision arising at a random point in the cycle is:
@@ -401,6 +641,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. know the project's schedule in detail
 
 *Rationale:* An advocate sponsor is committed to the project rather than the outcome and therefore cannot stop it (3.2.1). C is an obligation of the role; D is closer to the operational failure mode.
+
+
+**3.2-F** `[3.2.1 · Analysis]` A sponsor returned 22 decisions in a year: 9 in 1.0 week, 8 in 2.5 weeks and 5 in 9.0 weeks. Which statement best supports a proposal to change how sponsor decisions are handled?
+
+- A. the mean turnaround is 3.3636 weeks, which is too slow
+- B. the median is 2.5 weeks, so performance is acceptable
+- C. 22.73 % of the decisions carry 60.81 % of the total wait, so handling five items differently removes 43.92 % of the cost ✅
+- D. the sponsor is slower than a 4-week committee and the decisions should go to the committee
+
+*Rationale:* The mean (A) describes a distribution nobody experiences, and the median (B) hides the tail; the decisive presentation is the tail's share of the wait and the saving available from it (3.2.1). D is arithmetically wrong: 3.3636 weeks is *faster* than the committee's 4.0 weeks. Common error: arguing from the average, which invites a debate about diligence instead of about five items.
+
+
+**3.2-G** `[3.2.3 · Application]` A delegated change is worth USD 15,000 but would cost USD 180,000 to undo once deployed. Under a schedule that reads on value, reversibility and externality, the authority required is that appropriate to:
+
+- A. USD 15,000, since that is the change's value
+- B. USD 165,000, the net exposure
+- C. USD 180,000, because authority reads on `max(value, cost to undo)` ✅
+- D. USD 195,000, the sum of value and reversal cost
+
+*Rationale:* The reversal-cost ratio is `180,000/15,000 = 12`, and the rule reads authority on the larger of the two figures (3.2.3). A is the value-only failure of Case study B. B subtracts the value from the reversal cost, which double-counts nothing and describes nothing. D adds two quantities that are not additive — the reversal cost already includes undoing the 15,000 of work.
 
 
 **3.3-A** `[3.3.1 · Application]` A gate costs 45,000 in review effort and 6 weeks of elapsed time at a delay cost of 14,280 per week. Expected remediation cost with the gate is 82,800; without the gate it is 270,000. The gate's net value is:
@@ -463,6 +723,46 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* `3/12 = 25.0 %`, and the two failure types behave differently under stress, which is why they are distinguished rather than totalled (3.3.4).
 
 
+**3.3-G** `[3.3.1 · Evaluation]` A gate with a nominal detection rate of 0.80 has a net value of USD 56,520 and a breakeven detection probability of 55.85 %. Of the 23 conditions it issued, 9 were verified closed. The best evaluation of the gate is that it:
+
+- A. remains worthwhile, since its detection rate is well above the breakeven
+- B. has an effective detection rate of 31.30 %, is therefore below breakeven, and destroys USD 57,427.83 ✅
+- C. is worthwhile but should be shortened from 6 weeks to 4
+- D. has an effective detection rate of 39.13 % and is marginally below breakeven
+
+*Rationale:* `q_eff = q × r = 0.80 × 9/23 = 0.3130`, which is below the 0.5585 breakeven, inverting the gate's value (3.3.1b). A ignores closure altogether — the commonest error, because governance reports count conditions issued, not closed. C treats elapsed time as the binding constraint when the binding constraint is `r`. D mistakes the closure rate itself for the effective detection rate, omitting the multiplication by `q`.
+
+
+**3.3-H** `[3.3.2 · Evaluation]` An assurance map shows all three lines on a risk carrying 7.87 % of residual exposure and no line on the risk carrying 58.27 % of it. The soundest conclusion is that:
+
+- A. the third line should be discontinued, since its marginal detection value is negative
+- B. the third line's effort is pointed at the wrong risk; reallocating it reduces residual exposure at constant cost, but third-line existence is not justified on project-level detection economics ✅
+- C. the coverage is acceptable because the highest-consequence risk is the one with three lines
+- D. the uncovered risk should be accepted, since no line has the competence to assure it
+
+*Rationale:* Reallocating the third line's 30 days from R1 to R3 cut residual exposure by USD 74,361.60 for no extra spend, but third-line assurance exists to opine on the control system across a portfolio and is mispriced by a single project's detection arithmetic (3.3.2). A over-applies the arithmetic — the named error. C confuses consequence with residual exposure, which is consequence *after* detection. D treats a coverage gap as a capability fact.
+
+
+**3.3-I** `[3.3.3 · Application]` A 25-week project reaches week 13 and a trigger fires. The available escalation path has a total expected latency of 15.5 weeks. The decision action window is:
+
+- A. 66.67 %
+- B. 0 %
+- C. −29.17 %, so the decision arrives 3.5 weeks after planned completion ✅
+- D. 129.17 %
+
+*Rationale:* `(12 − 15.5)/12 = −0.2917` (3.3.3b). A is the window for the 4.0-week single-tier path. B assumes the window floors at zero, which hides the finding. D computes latency as a share of remaining duration (15.5/12) rather than the window itself — a real ratio, but not this one.
+
+
+**3.3-J** `[3.3.4 · Analysis]` A programme delegates 12 changes a year by raising its threshold, saving USD 171,360 in delay. It then adds a cumulative test at the same threshold, summed over workstreams, which trips 12 times a year. The consequence is that:
+
+- A. the control improves at negligible cost
+- B. the trip count equals the number of decisions the delegation released, so the rule cancels the saving exactly ✅
+- C. the saving falls by about a quarter
+- D. the rule is sound but the threshold should be lowered again
+
+*Rationale:* `12 × 0.25 × 57,120 = 171,360`, identical to the saving (3.3.4c). The trip count, driven by the width of the relatedness class, is the quantity to design against. A is the assumption a governance review makes when it does not count trips; C invents a partial figure; D compounds the error.
+
+
 ## Domain 4
 
 **4.1-A** `[4.1.1 · Comprehension]` The element of a charter whose absence most directly disables the project leader is:
@@ -493,6 +793,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. the frequency of progress reporting
 
 *Rationale:* Traceability of baseline change to authority, the decision record, and legal or contractual obligations are outside tailoring (4.1.3).
+
+
+**4.1-D** `[4.1.2 · Application]` In WE 4.1.2 the plan-set audit finds unfunded verification labour of 40,480, unfunded risk responses of 118,000, eight weeks of procurement lead-time exposure and 2.4 weeks of critical-path verification exposure, at a cost of delay of 14,280 per week. The quantified total is:
+
+- A. USD 158,480
+- B. USD 272,720
+- C. USD 306,992 ✅
+- D. USD 392,672
+
+*Rationale:* `40,480 + 118,000 + (8 × 14,280) + (2.4 × 14,280) = 306,992` (4.1.2). A totals only the two money classes; B omits the critical-path verification exposure; D prices the whole 14-week procurement lead time rather than the 8-week gap against the schedule.
+
+
+**4.1-E** `[4.1.2 · Evaluation]` A rolling-wave plan states a 12-week detailed horizon; the longest procurement lead time in the plan set is 14 weeks. The correct conclusion is that:
+
+- A. the procurement should be expedited to fit the horizon
+- B. the horizon cannot support its own commitments and must be lengthened on that path, or the item planned ahead of the wave as a stated partial horizon ✅
+- C. the horizon is a planning convention and the lead time is a supplier matter
+- D. the plan should carry a risk for late procurement
+
+*Rationale:* The order has to be placed before the work package specifying it exists, so no diligence inside the wave closes the gap (4.1.2). D converts a structural defect into a risk, which is the commonest way this finding is disposed of without being fixed.
 
 
 **4.2-A** `[4.2.3 · Application]` A programme integrates 12 components. The number of possible point-to-point interfaces is:
@@ -533,6 +853,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. product breakdowns are more detailed
 
 *Rationale:* Versioning is a property of things, not of activities (4.2.2); applying configuration control to activities is one of the two standard confusions.
+
+
+**4.2-E** `[4.2.2 · Analysis]` A product-to-work cross-match returns 21 raw exceptions, of which classification shows 14 to be granularity artefacts or legitimately product-free work. The correct reading is that:
+
+- A. the matrix has 21 defects requiring correction
+- B. the finding is the 7-item residue after each exception has been ruled on by the owner of the item ✅
+- C. a 66.67 % false-positive rate makes the check unreliable and it should be dropped
+- D. the false positives indicate the WBS is wrong at 14 places
+
+*Rationale:* The cross-match produces a candidate list; the ruling produces the finding (4.2.2). A mistakes the candidate list for a defect report; C discards a check for doing exactly what a candidate-generation step is meant to do; D miscounts artefacts of matrix granularity as WBS defects.
+
+
+**4.2-F** `[4.2.2 · Application]` In WE 4.2.2 the classified findings are 214,000 of products with no work and 26,000 of work with no product. Removing the orphan work packages from the WBS:
+
+- A. reduces the unallocated residue from 68,000 to 42,000
+- B. raises the unallocated residue from 68,000 to 94,000 ✅
+- C. leaves the residue unchanged, since the two findings offset
+- D. reduces the approved baseline by 26,000
+
+*Rationale:* Allocated cost falls to 2,306,000, so the gap against the approved 2,400,000 widens to 94,000 (4.2.2). A subtracts on the wrong side; C assumes an offset between a finding outside the baseline and one inside it; D confuses the estimate with the authorisation.
 
 
 **4.3-A** `[4.3.1 · Analysis]` A schedule change is approved and the time-phased cost baseline is not updated. The most serious consequence is that:
@@ -585,6 +925,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Visibility of the original preserves the ability to state performance against the original commitment (4.3.3). C is precisely the wrong authority.
 
 
+**4.3-F** `[4.3.2 · Application]` A configuration register holds 340 items of which 296 conform. Assuming independent defects, the expected share of **two-sided interfaces** whose verification cannot be relied on is closest to:
+
+- A. 12.94 %
+- B. 24.21 % ✅
+- C. 25.88 %
+- D. 75.79 %
+
+*Rationale:* `1 − (296/340)² = 1 − 0.7579 = 0.2421` (4.3.2b). A applies the item failure rate directly to interfaces; C doubles the item rate, which is the linear approximation and overstates slightly; D quotes the conformance rather than the failure.
+
+
+**4.3-G** `[4.3.3 · Analysis]` A reconciliation shows a residual of 32,200, which decomposes into 77,100 of baseline movement with no change reference and 44,900 of approved changes with no baseline effect. The correct reading is that:
+
+- A. the residual is 1.34 % of the baseline and immaterial
+- B. the gross error is 122,000 and must be reported as such, because the two classes have opposite signs ✅
+- C. the cost tool is correct and the change log needs updating
+- D. netting is appropriate because the classes offset within the same baseline
+
+*Rationale:* Opposite-signed classes make the net understate the gross by twice the smaller class (4.3.3b), so 89,800 of the 122,000 is concealed. A and D both read the net as the finding — A by applying a materiality test to it, D by asserting the offset is legitimate. C prejudges which record is wrong when the two classes have opposite remedies.
+
+
+**4.3-H** `[4.3.1 · Analysis]` A schedule change is approved and the `PV` curve is never re-phased. Which reported measure remains exactly correct?
+
+- A. `SPI`
+- B. `SV`
+- C. `CPI` ✅
+- D. the composite `EAC = AC + (BAC − EV)/(CPI × SPI)`
+
+*Rationale:* `CPI = EV/AC` contains no PV term, so it and the CPI-only forecasts are unaffected, which is why the defect passes a cost review (4.3.1). A and B are computed against PV directly; D is linear in PV and moves by USD 1.20 per USD 1 mis-phased on Auriga's figures.
+
+
 **4.4-A** `[4.4.2 · Application]` A change is quoted at 40,000 direct. Assessment adds 2 weeks of critical-path impact at 14,280 per week, 22,000 of rework, 3 interfaces at 6,000 each, 14,000 of regression testing and 9,000 of documentation. The assessed total is:
 
 - A. USD 40,000
@@ -633,6 +1003,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. assessment adds no value to rejected changes
 
 *Rationale:* The structural cause is that assessment is unfunded work preceding a decision (4.4.1, 4.4.2); the remedy is an explicit assessment budget.
+
+
+**4.4-F** `[4.4.1 · Application]` A re-screen finds 5 defects paid as changes at an average 6,800, and 3 changes ruled as clarifications carrying 29,200 of direct work plus 0.5 weeks of critical-path impact at 14,280 per week. The gross misclassification cost is:
+
+- A. USD 34,000
+- B. USD 36,340
+- C. USD 70,340 ✅
+- D. USD 2,340
+
+*Rationale:* `34,000 + 36,340 = 70,340` (4.4.1). A and B are the two classes taken alone; D is the net, which understates the gross by twice the smaller class and is the specific error the example exists to name.
+
+
+**4.4-G** `[4.4.3 · Evaluation]` Four untraced rejections recurred: three cost only a duplicated 4,400 assessment, and one was approved by another body at an assessed impact of 63,000. The defensible way to present the case for recording rejections is to:
+
+- A. quote the 209.35 ratio of total loss to recording cost
+- B. quote the 45.71 ratio excluding the reversed decision
+- C. quote both, stating that the modal cost is a wasted assessment and the tail cost is a reversed decision ✅
+- D. quote the mean loss of 20,150 per recurrence as typical
+
+*Rationale:* The mean is 4.58 times the modal case, so either ratio alone misleads — one as anecdote, the other by omitting the case that mattered (4.4.3). D presents a tail-dominated mean as typical.
 
 
 ## Domain 5
@@ -879,6 +1269,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* The L3 control schedule is the analytical model; L1/L2 summarise it and L4 elaborates near-term execution from it. Detail (D) is not the same as control — L4 churns weekly by design and is never the baselined network.
 
 
+**6.1-F** `[6.1.2 · Analysis]` A design finishing in week 23 needs approval from a committee meeting in weeks 20, 24 and 28 whose papers are due two weeks before each meeting. The planner has drawn the approval as a three-week lag and the path carries two weeks of total float. The correct reading is:
+
+- A. the lag is conservative, since the average wait for this committee is four weeks
+- B. the approval will actually take five weeks, the two-week understatement consumes the path's float, and the path is critical with no duration having changed ✅
+- C. the wait is four weeks, so one week of float remains
+- D. the lag is irrelevant because approvals are not project work
+
+*Rationale:* Week 23 misses the week-24 meeting (papers closed at week 22), so the first reachable meeting is week 28 and the wait is 5 weeks against 3 drawn (6.1.2b). A calls a three-week lag conservative against a five-week event; C substitutes Domain 3's expectation for a *planned* submission whose date is known, which is the category error 6.1.2b names; D is the lag-that-hides-work pitfall stated as a principle.
+
+
+**6.1-G** `[6.1.3 · Analysis]` A 400-activity network reports 310 dependency links. Before looking at anything else, a reviewer can conclude that:
+
+- A. the logic is admirably lean
+- B. the network cannot be fully connected, so it contains dangles ✅
+- C. the network is over-linked and float will be unresponsive
+- D. nothing at all — link counts carry no information
+
+*Rationale:* Connecting 400 activities needs at least 399 links, so 310 proves unbound activities exist (6.1.3). A mistakes a structural impossibility for economy; C is the opposite defect, which appears at densities far above 2; D denies a countable check that costs one division.
+
+
 **6.2-A** `[6.2.1 · Application]` In the Auriga network, activity D (duration 7, predecessor B finishing week 8, successors E and G) has `LS` = 9 and `ES` = 8. Its total float is:
 
 - A. 0
@@ -939,6 +1349,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* C was critical with zero float, so its extra week passes straight through: E runs 17–22, F finishes week 26. A assumes float absorbed a critical activity's slip; C adds the week twice; D subtracts it.
 
 
+**6.2-G** `[6.2.2 · Analysis]` A float report for Auriga lists D at `TF` = 1 and G at `TF` = 8. The cumulative slip the D–G chain can absorb without moving week 25 is:
+
+- A. 9 weeks — the sum of the two floats
+- B. 8 weeks, because both activities draw on the same path float of 8 ✅
+- C. 1 week, the smaller of the two floats
+- D. 7 weeks, since D must retain a week
+
+*Rationale:* Path A–B–D–G runs 17 weeks against a 25-week project, so `d + g ≤ 8` (6.2.2). A sums a shared quantity, the error that scales with schedule size — a ten-activity chain with five weeks of path float reports fifty. C takes the minimum instead of the shared total; D invents a reservation rule that no pass produces.
+
+
+**6.2-H** `[6.2.3 · Evaluation]` A team adopts a near-critical band of 2 % of project duration on Auriga. The consequence is:
+
+- A. none — 2 % is a standard threshold
+- B. path A–B–D–E–F, whose float is 4.00 % of the 25-week duration, falls outside the band and goes unmonitored ✅
+- C. all three paths are monitored, since 2 % is stricter
+- D. the band is invalid because bands must be at least 10 %
+
+*Rationale:* The band is 0.5 weeks and A–B–D–E–F's float is 1 week, so the second path — one week from binding — is excluded (6.2.3). A appeals to a convention nobody derived; C inverts what "stricter" does to a threshold; D invents a rule, when the correct test is whether the band captures the paths the leader wants to hear about.
+
+
 **6.3-A** `[6.3.1 · Application]` A planner clears a resource peak by delaying an activity with `TF` = 1, `FF` = 0 by one week. The immediate consequences are:
 
 - A. no schedule effect of any kind
@@ -987,6 +1417,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. nothing — 3 + 2 = 5 is within a 4-crew cap across two activities
 
 *Rationale:* Peak demand 5 against cap 4 leaves one excess crew-week in each of the seven overlap weeks — the precise quantity smoothing must relocate. B is total demand, not excess; C is the staging demand itself; D misreads the cap as per-activity when it is per-site.
+
+
+**6.3-F** `[6.3.1 · Analysis]` Auriga's engineering pool is capped at 6. Activity G needs 2 engineers for 2 weeks and carries 8 weeks of total float, but every week from its earliest start to the project end already commits 5 or 6 engineers. The correct conclusion is:
+
+- A. G is irrelevant to the end date, because it has eight weeks of float
+- B. G determines the resource-constrained duration despite its logical float, because float against logic is not float against capacity ✅
+- C. the cap must be wrong, since average utilisation is only 73.33 %
+- D. G should be deleted from the network and tracked separately
+
+*Rationale:* Under the cap G has nowhere to go, so it joins the critical chain even though its total float is 8 (6.3.1c). A applies a logic-network statement to a capacity problem; C reasons from an average when feasibility is a property of the peak; D removes the activity that is about to make the project late from the model that would show it.
+
+
+**6.3-G** `[6.3.1 · Evaluation]` A levelled Auriga schedule produced by the minimum-total-float priority rule runs 27 weeks; a search finds a feasible 26-week schedule that deliberately defers the critical activity E by one week. The professional reading is:
+
+- A. the 26-week schedule is invalid, because critical activities must never be deferred
+- B. the priority rule is a heuristic and here costs USD 45,000; a levelled schedule should state the rule used and whether better was sought ✅
+- C. both schedules are equally good, since both respect the cap
+- D. the rule is wrong and should never be used
+
+*Rationale:* Deferring E by one week releases G two weeks earlier, so the "protect the critical path" instinct loses a week worth 45,000 (6.3.1c). A elevates a heuristic to a constraint; C ignores a one-week difference in duration; D over-corrects — the rule is a sound default whose output needs a stated baseline, not abolition.
 
 
 **6.4-A** `[6.4.2 · Application]` Saving a week is worth USD 45,000; crashing the critical activity costs USD 30,000 per week for up to two weeks; after one week of crashing, a parallel path becomes co-critical. The value-maximising decision is:
@@ -1049,6 +1499,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* `tₑ = (3 + 16 + 8)/6 = 4.5`; `σ = (8 − 3)/6 = 0.83`. B reports the mode as the mean; C is the unweighted three-point average with a doubled spread; D confuses σ with the pessimistic-minus-optimistic range.
 
 
+**6.4-G** `[6.4.2 · Evaluation]` A compression menu offers successive weeks at marginal costs of 30,000, 40,000, 40,000, 55,000, 65,000 and 65,000. A week is worth 45,000. The least-cost plan buys:
+
+- A. one week, because only the first step is clearly cheap
+- B. three weeks, stopping at the first marginal cost above 45,000 ✅
+- C. six weeks, because the average cost of 49,167 is close to 45,000
+- D. four weeks, because the average cost of the first four (41,250) is below 45,000
+
+*Rationale:* Buy while the marginal step is at or below 45,000 — 30,000, 40,000, 40,000 — and stop at 55,000, giving 22 weeks and a net +25,000 (6.4.2b). C and D both reason from averages, the standard error: the fourth week costs 55,000 whatever the average of the first four is, and buying it loses 10,000. A stops at the single-lever answer of 6.4.2, which was correct only for a menu of one.
+
+
+**6.4-H** `[6.4.2 · Application]` An overlap saves 2 weeks worth 45,000 each; if it fails it costs 140,000 and gives back 1.5 weeks, and a certain crash plan would buy the same 2 weeks for 70,000. The probability of failure above which the overlap is worse than crashing is:
+
+- A. 43.37 %
+- B. 33.73 % ✅
+- C. 50.00 %
+- D. 25.00 %
+
+*Rationale:* The swing is `90,000 − (−117,500) = 207,500` and the crash's net is 20,000, so `p** = 70,000/207,500 = 33.73 %` (6.4.2c). A is the threshold against *doing nothing*, which is the wrong comparator once a certain alternative exists; C treats the choice as a symmetric coin toss — the answer if the two outcomes were equal in size, which they are not; D is the assessed probability, the input rather than the threshold.
+
+
+**6.4-I** `[6.4.1 · Application]` A cadence team must clear a 72-item package between week 5 and its successor's `LS` of week 21. Its observed throughput has ranged 3.6–4.5 items a week, averaging 4.0. The network's requirement is:
+
+- A. delivery by week 21, which the team should commit to
+- B. 4.5 items a week — the team's best observed rate, sustained for the full 16 weeks ✅
+- C. 4.0 items a week, since the mean is the fair planning figure
+- D. 3.6 items a week, since planning should use the worst observation
+
+*Rationale:* `72 ÷ (21 − 5) = 4.5` items a week (6.4.1). C and D quote the team's own forecast rates rather than deriving the requirement from the window — the mean fits an 18-week window and the worst rate a 20-week one, neither of which exists here. A restates the date instead of translating it, which is what leaves the requirement untested.
+
+
 ## Domain 7
 
 **7.1-A** `[7.1.2 · Application]` A package is estimated o = 680,000, m = 750,000, p = 1,000,000. Its PERT expected cost is:
@@ -1081,6 +1561,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Precision (digits) and accuracy (closeness to outturn) are independent; definition maturity governs the latter. Rounding changes no information (C), and every estimate carries a class (D).
 
 
+**7.1-D** `[7.1.1 · Analysis]` A point estimate of USD 4,000,000 carries a declared class range of −15 %/+30 %. Read as a triangular distribution, its expected cost is:
+
+- A. USD 4,000,000
+- B. USD 4,100,000
+- C. USD 4,200,000 ✅
+- D. USD 4,300,000
+
+*Rationale:* `(3,400,000 + 4,000,000 + 5,200,000)/3 = 4,200,000` (7.1.1). A treats the point estimate as the mean, which only holds for a symmetric range; B applies the PERT weighting, which weights the mode four times and is a different shape from the one asked for; D averages the two range endpoints and ignores the mode entirely.
+
+
+**7.1-E** `[7.1.3 · Application]` Control accounts total 3,640,000; contingency is 360,000; management reserve is 240,000. `BAC` and the total funding requirement are:
+
+- A. 3,640,000 and 4,000,000
+- B. 4,000,000 and 4,240,000 ✅
+- C. 4,240,000 and 4,240,000
+- D. 4,000,000 and 4,000,000
+
+*Rationale:* Contingency is inside the baseline and management reserve outside it (7.1.3). A excludes contingency from `BAC`, which would leave the project's own risk funding outside its authority; C puts management reserve inside the baseline, the error MCQ 7.1-B's misreading rests on; D omits the reserve from the funding requirement, so the sponsor holds no cash for it.
+
+
+**7.1-F** `[7.1.3 · Analysis]` Contingency of 360,000 is 190,000 drawn at 48.00 % complete. The draw efficiency the remaining work must achieve is:
+
+- A. 0.4722
+- B. 0.8259 ✅
+- C. 0.9095
+- D. 1.0995
+
+*Rationale:* `170,000/(3,958.33 × 52.00) = 0.8259` — the remainder must draw 17.41 % more slowly than demonstrated (7.1.3). A is the remaining balance as a share of the total, which is a level not an index; C inverts the two shares; D is the draw index itself — the rate at which contingency is being consumed relative to progress, not the efficiency required to recover.
+
+
 **7.2-A** `[7.2.1 · Analysis]` A project's `CPI` has read 1.02 for four months; then one month it drops to 0.91 with no change in productivity. The likeliest explanation is:
 
 - A. genuine sudden inefficiency
@@ -1099,6 +1609,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. reducing remaining budgets so the total still equals `BAC`
 
 *Rationale:* Only governed change preserves the measurement. A is a silent transfer, C is retrospective adjustment, D is the classic "make the numbers add up" manoeuvre — each destroys comparability.
+
+
+**7.2-C** `[7.2.1 · Application]` `EV` is 1,920,000; invoiced cost is 1,920,000; a further 200,000 of work has been received and accepted but neither invoiced nor accrued. Reported and true `CPI` are:
+
+- A. 1.00 and 0.91 ✅
+- B. 0.91 and 1.00
+- C. 1.00 and 1.00
+- D. 0.91 and 0.91
+
+*Rationale:* The report divides `EV` by the understated `AC` of 1,920,000 (1.00); the truth divides by 2,120,000 (0.9057, shown as 0.91) — 7.2.1. B reverses the two; C treats the receipted work as a commitment rather than a cost, which is the substantive error the accrual rule exists to prevent; D assumes the accrual was recognised, in which case there would be nothing to detect.
+
+
+**7.2-D** `[7.2.1 · Analysis]` In the month a 200,000 accrual backlog is finally invoiced, the reported period `CPI` is 0.67 while true period performance was 0.92. The soundest reading is:
+
+- A. productivity collapsed by a third in that period
+- B. the period absorbed a timing correction: the cumulative index is now right and the period reading is not ✅
+- C. `EV` was over-claimed in the period
+- D. the baseline for that period was too generous
+
+*Rationale:* Accrual omissions cancel cumulatively and misstate the periods in between (7.2.1), so the cumulative `CPI` of 0.9091 is now correct while the period figure is an artefact. A takes the artefact at face value and would launch an investigation into production that has nothing to find; C would depress the *earlier* periods too, not this one alone; D would show as a stable bias rather than a single-period step.
+
+
+**7.2-E** `[7.2.1 · Application]` `AC` is 2,120,000, open commitments are 1,180,000 and the `EAC` in use is 4,416,667. The balance of the forecast still to be committed is:
+
+- A. USD 700,000
+- B. USD 1,116,667 ✅
+- C. USD 1,316,667
+- D. USD 3,236,667
+
+*Rationale:* `4,416,667 − 2,120,000 − 1,180,000 = 1,116,667` (7.2.1b). A measures against `BAC` rather than the forecast, and the 416,667 difference between A and B is exactly \|`VAC`(b)\|; C uses `EV` in place of `AC`, double-counting the cost variance; D omits `AC` altogether.
 
 
 **7.3-A** `[7.3.2 · Application]` `BAC` 4,000,000; `PV` 2,080,000; `EV` 1,920,000; `AC` 2,120,000. `CPI` and `SPI` are:
@@ -1126,9 +1666,9 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - A. 0.91
 - B. 1.00
 - C. 1.11 ✅
-- D. 1.21
+- D. 1.08
 
-*Rationale:* `(4,000,000 − 1,920,000)/(4,000,000 − 2,120,000) = 2,080,000/1,880,000 = 1.11`. A is the demonstrated `CPI`; B assumes recovery needs only par performance; D uses `PV` in place of `AC` in the denominator.
+*Rationale:* `(4,000,000 − 1,920,000)/(4,000,000 − 2,120,000) = 2,080,000/1,880,000 = 1.11`. A is the demonstrated `CPI`; B assumes recovery needs only par performance; D uses `PV` in place of `AC` in the denominator — `2,080,000/1,920,000 = 1.08` — and so makes recovery look nearly free (Exercise 7.3).
 
 
 **7.3-D** `[7.3.1 · Analysis]` A control account is 70 % level-of-effort by budget. Its reported `SPI` of 1.00 most likely means:
@@ -1139,6 +1679,46 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. the earning rules were misapplied
 
 *Rationale:* LOE sets `EV` equal to `PV` by construction, so a heavily-LOE account reads 1.00 whatever happens — which is why practice segregates and caps it. C invents an offset the data cannot show; the rules may have been applied entirely correctly (D), and that is the problem.
+
+
+**7.3-E** `[7.3.1 · Application]` Ten equal work packages of 40,000: four complete, three at an objectively measured 30 % physical completion, three not started. `EV` under 50/50 and under objective percent-complete earning is:
+
+- A. 160,000 and 196,000
+- B. 220,000 and 196,000 ✅
+- C. 220,000 and 220,000
+- D. 196,000 and 220,000
+
+*Rationale:* 50/50 credits half of each in-progress package (`160,000 + 60,000`); percent complete credits the measured 30 % (`160,000 + 36,000`) — 7.3.1. A gives the 0/100 figure for the first rule; C assumes the in-progress work is genuinely 50 % done, which is the only condition under which 50/50 is unbiased; D transposes the two.
+
+
+**7.3-F** `[7.3.1 · Analysis]` A control account is 70 % level of effort by budget and its discrete work is running at `SPI` 0.60. The account's reported `SPI` is:
+
+- A. 0.60
+- B. 0.88 ✅
+- C. 1.00
+- D. 0.42
+
+*Rationale:* `1 − (1 − 0.70)(1 − 0.60) = 0.88`, a distortion of `0.70 × 0.40 = 0.28` (7.3.1). A ignores that the level-of-effort portion reads 1.00 by construction; C assumes it swamps the account entirely; D multiplies the share by the discrete index instead of blending them.
+
+
+**7.3-G** `[7.3.4 · Analysis]` For which target is `TCPI` exactly 1.00 on Auriga's week-13 figures?
+
+- A. `BAC` = 4,000,000
+- B. `AC + (BAC − EV)` = 4,200,000 ✅
+- C. `BAC/CPI` = 4,416,667
+- D. `AC + (BAC − EV)/(CPI × SPI)` = 4,608,056
+
+*Rationale:* `TCPI` to any `EAC` equals the efficiency that `EAC` assumes, and method (a) assumes the budgeted rate (7.3.4). A gives 1.1064, the recovery demand; C gives `CPI` 0.9057; D gives `CPI × SPI` 0.8360 — each the assumption of its own method.
+
+
+**7.3-H** `[7.3.3 · Evaluation]` The board authorises the method-(a) forecast of 4,200,000 and the demonstrated `CPI` of 0.9057 persists. The funding is exhausted at:
+
+- A. 100.00 % complete
+- B. 95.09 % complete ✅
+- C. 90.57 % complete
+- D. 52.00 % complete
+
+*Rationale:* The funded `ETC` of 2,080,000 buys `2,080,000 × 0.905660 = 1,883,774` of budgeted work, taking `EV` to 3,803,774 (7.3.3b). A is the position only if the remainder runs at the budgeted rate, which is the assumption being tested; C applies `CPI` to the whole of `BAC` rather than to the funded remainder; D is the share of work remaining, not a completion point.
 
 
 **7.4-A** `[7.4.3 · Application]` Target cost 2,000,000; target fee 150,000; share 70/30; actual cost 2,300,000. The seller's fee is:
@@ -1175,10 +1755,50 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 - A. USD 148.33
 - B. USD 130.63 ✅
-- C. USD 115.00
+- C. USD 112.31
 - D. USD 140.00
 
-*Rationale:* `10,450/80 = 130.63`. A averages the three rates unweighted; C weights toward the cheapest grade only; D takes the middle rate as representative.
+*Rationale:* `10,450/80 = 130.63`. A averages the three rates unweighted (`445/3`); C blends only the two cheapest grades, dropping the specialists (`7,300/65`); D takes the middle rate as representative.
+
+
+**7.4-E** `[7.4.1 · Application]` Base pay USD 55.00 per paid hour; on-costs 32 %; 15 % of paid hours are non-productive; recoverable overhead 18 %. The full cost of one productive hour is:
+
+- A. USD 85.41
+- B. USD 100.79 ✅
+- C. USD 98.52
+- D. USD 72.60
+
+*Rationale:* `55.00 × 1.32 ÷ 0.85 × 1.18 = 100.7859` (7.4.1b). A stops before overhead; C adds 15 % rather than dividing by 0.85, understating by the difference between an uplift and a divisor; D is the paid-hour cost, which is what most rate cards actually contain.
+
+
+**7.4-F** `[7.4.1 · Evaluation]` An agency crew charges USD 128 per hour against an in-house USD 95 with overtime at 1.5×. The agency crew is the cheaper purchase per productive crew-week only if its relative productivity is at least:
+
+- A. 74.22 %
+- B. 89.82 % ✅
+- C. 100.00 %
+- D. 66.67 %
+
+*Rationale:* `128/142.50 = 0.8982` — the agency rate against the overtime rate (7.4.1c). A compares the agency rate with straight time and so ignores the overtime premium being avoided; C assumes any productivity shortfall disqualifies the option, which the arithmetic refutes; D inverts the 1.5 premium.
+
+
+**7.4-G** `[7.4.2 · Application]` A firm fixed price of USD 480,000 is offered against time and materials at USD 130.625 per hour, with the package estimated at 3,200 hours. The breakeven hours and the premium over the estimate are:
+
+- A. 3,674.64 hours and 14.83 % ✅
+- B. 3,674.64 hours and 12.92 %
+- C. 3,428.57 hours and 14.83 %
+- D. 3,200 hours and nil
+
+*Rationale:* `480,000/130.625 = 3,674.64`; the premium is `62,000/418,000 = 14.83 %`, which equals the hours overrun at breakeven (7.4.2). B expresses the premium against the fixed price rather than the estimate, understating the tolerance the buyer is purchasing; C uses the mid-grade rate of 140 instead of the blend; D assumes the estimate is the crossing point.
+
+
+**7.4-H** `[7.4.4 · Application]` The contract price is USD 4,400,000 against a `BAC` of 4,000,000. At week 13 `EV` is 1,920,000 and `AC` is 2,120,000. The margin recognised to date is:
+
+- A. USD 400,000
+- B. (USD 8,000) ✅
+- C. USD 200,000
+- D. (USD 200,000)
+
+*Rationale:* Revenue at `1.10 × 1,920,000 = 2,112,000` against cost of 2,120,000 (7.4.4). A is the bid margin, which assumes nothing has gone wrong; C and D read the cost variance as the margin, which omits the 10 % mark-up earned on the work performed and so mis-states the position in both directions.
 
 
 ## Domain 8
@@ -1211,6 +1831,26 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. the register is too long and should be cut
 
 *Rationale:* A 95 % threat ratio reflects process framing rather than reality (8.1.3). C contradicts the definition of risk; D addresses a different problem.
+
+
+**8.1-D** `[8.1.3 · Application]` A workshop finds 34 risks and an independent assumption review finds 22, with 14 common to both. The estimated risk population and the estimated number still unidentified are:
+
+- A. 56 and 14
+- B. 53.43 and 11.43 ✅
+- C. 42 and nil — the two methods between them found everything
+- D. 78.61 and 36.61
+
+*Rationale:* `N̂ = (34 × 22)/14 = 53.4286`, and 42 distinct entries were identified, leaving **11.4286** (8.1.3). A adds the two lists without removing the 14 duplicates and then treats the overlap as the missing count; C assumes two methods exhaust the population, which is the assumption the estimator exists to test; D takes the coverage percentage (78.61) as a population count and subtracts the 42 from it.
+
+
+**8.1-E** `[8.1.3 · Analysis]` Two identification methods overlap heavily, giving a high coverage estimate. The soundest professional reading is:
+
+- A. identification is complete and can be closed
+- B. a large overlap deflates the population estimate, so high coverage is as consistent with a shared blind spot as with completeness ✅
+- C. one of the two methods was run incorrectly
+- D. the estimate is invalid whenever the overlap exceeds half of either list
+
+*Rationale:* `N̂ = n₁n₂/m` falls as `m` rises, so methods sharing a frame of reference produce reassuring coverage; the estimate is a floor on what is missing (8.1.3). A is the error the arithmetic is meant to prevent; C infers a process fault from a statistic that has other explanations; D invents a threshold the estimator does not have.
 
 
 **8.2-A** `[8.2.2 · Application]` A risk has probability 0.15 and impact USD 400,000. Its `EMV` is:
@@ -1263,6 +1903,46 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Ordinal scales support ordering, not arithmetic (8.2.1). Weighting (D) does not repair a scale that never carried magnitude.
 
 
+**8.2-F** `[8.2.1 · Application]` A matrix's medium probability band runs 0.10–0.35 and its medium impact band USD 60,000–250,000. The span of expected values inside that single cell is a factor of:
+
+- A. 3.5
+- B. 14.58 ✅
+- C. 4.17
+- D. 2.5
+
+*Rationale:* Within-cell span is the product of the two band ratios, `3.5 × 4.1667 = 14.5833` (8.2.1). A gives the probability ratio alone and C the impact ratio alone — each answers half the question; D subtracts one from the probability band ratio (3.5 − 1), the slip that reads a ratio as an increment.
+
+
+**8.2-G** `[8.2.4 · Analysis]` A register's contingency was set at a P80 of USD 490,624 on an independence assumption. Three of its risks are then found to share a subcontractor, raising σ from 252,642 to 340,339. The reserve is now:
+
+- A. still a P80 reserve, because the mean has not changed
+- B. a 73.4 % reserve — correlation widens the distribution without moving the mean, so the same amount covers fewer futures ✅
+- C. inadequate by USD 73,806 of expected cost
+- D. unaffected, since correlation is a modelling choice rather than a fact
+
+*Rationale:* `z = (490,624 − 278,000)/340,339 = 0.6247`, i.e. **73.4 %** (8.2.4b). A confuses the mean's invariance with the percentile's; C misreads the USD 73,806 — it is the extra reserve needed to restore 80 % confidence, not an increase in expected cost, which is unchanged at 278,000; D treats a shared supplier as an opinion.
+
+
+**8.2-H** `[8.2.3 · Analysis]` Twelve of 40 clinics run the configuration under suspicion. A two-clinic pilot chosen at random detects the problem with probability 0.5154; a two-clinic pilot chosen to include a suspect configuration detects it with certainty. Both cost USD 45,000. The right conclusion is:
+
+- A. the pilots are equivalent, since the cost and sample size are identical
+- B. the design choice is worth USD 59,189 at no additional cost, because the value of information depends on what the sample is capable of detecting ✅
+- C. the random pilot is preferable because it is unbiased
+- D. neither pilot is worthwhile, since 45,000 exceeds the redesign saving
+
+*Rationale:* Expected costs are 151,756.98 random against 92,568.00 designed (8.2.3b). A prices inputs rather than the information bought; C applies a sampling virtue that is irrelevant when a specific condition is being tested and Domain 9 (KA 9.3.2) warns about in its own instrument; D compares the pilot price with the wrong quantity — the comparison is against the 565,680 late case, and the designed pilot pays above an 11.05 % prior.
+
+
+**8.2-I** `[8.2.4 · Application]` Two responses cost the same and each removes the same proportion of a risk. Response A halves the probability; Response B halves the impact. Compared on the reserve they release:
+
+- A. they are equivalent, since both halve the `EMV`
+- B. B releases more, because variance goes as impact squared — halving an impact removes 75 % of that risk's variance while halving a probability removes between 25 % and 50 % ✅
+- C. A releases more, because probability drives whether the event happens at all
+- D. neither releases reserve, since contingency is set from `EMV`
+
+*Rationale:* `EMV` is linear in both, so A's premise is right and its conclusion wrong; variance is `p(1−p)I²` (8.2.4c). C reverses the result; D confuses a mean-based reserve with a confidence-based one, which is the error MCQ 8.2-D addresses.
+
+
 **8.3-A** `[8.3.1 · Application]` A mitigation costs USD 50,000 and reduces a risk's `EMV` from 84,000 to 20,000. The decision and its basis are:
 
 - A. reject — 50,000 is a large outlay
@@ -1291,6 +1971,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. required, since contingency is inside the baseline
 
 *Rationale:* Contingency is tied to identified risks; reallocating it to overspends destroys the link between reserve and exposure (8.3.2). C is the reasoning that makes the failure invisible.
+
+
+**8.3-D** `[8.3.1 · Analysis]` On one risk, transferring appears cheaper than reducing — USD 51,600 against 58,000 — until secondary risks are priced, after which reducing is cheaper at 62,000 against 64,200. The correct reading is:
+
+- A. the second calculation is double-counting, since the transfer already covers the risk
+- B. secondary risks are a selection rule, not only a completeness rule: here the transfer's counterparty exposure is correlated with the very event transferred, and pricing it changes the decision ✅
+- C. the difference is immaterial at USD 2,200 and either option may be taken
+- D. reducing is always preferable to transferring
+
+*Rationale:* The transfer's secondary `EMV` of 12,600 arises because the supplier's ability to pay is impaired by the disruption that triggers the claim (8.3.1). A misses that the counterparty may not perform; C ignores that the 2,200 is a *reversal* of a 6,400 apparent advantage and that the breakeven default probability, 20.63 %, is the thing to form a view on; D generalises one case into a rule.
+
+
+**8.3-E** `[8.3.2 · Application]` A risk with `p` 0.15 and impact USD 400,000 is retired when its window closes. Its `EMV` was USD 60,000, and recomputing the register's P80 without it falls by USD 97,239. The amount to return to the sponsor is:
+
+- A. USD 60,000 — the risk's `EMV`
+- B. USD 97,239, because the reserve was sized on a confidence level and the retired risk carried 31.96 % of the variance on 21.58 % of the `EMV` ✅
+- C. nil, since contingency stays inside the baseline
+- D. USD 37,239 — the difference between the two figures
+
+*Rationale:* A confidence-based reserve releases what recomputing it releases; variance is quadratic in impact, so a low-probability high-impact risk carries disproportionate reserve (8.3.2b). A returns the mean-based amount and leaves USD 37,239 idle; D returns only that idle remainder; C confuses where contingency sits with whether it may be released.
+
+
+**8.3-F** `[8.3.2 · Analysis]` A board states it will accept no more than a 10 % chance of exceeding approved cost by more than 5 %. The confidence level for contingency is therefore:
+
+- A. P80, the industry convention
+- B. P90, because "no more than a 10 % chance of exceeding" is the definition of the 90th percentile, and the tolerance is 5 % of approved cost ✅
+- C. P95, to be prudent
+- D. undetermined — appetite statements are qualitative
+
+*Rationale:* The appetite determines the confidence level (8.3.2); the leader's job is to derive it, not to select it. A inherits a convention that implies a 20 % acceptance of exceedance the board did not state; C substitutes caution for the board's decision; D is the position the arithmetic refutes.
 
 
 **8.4-A** `[8.4.2 · Application]` A programme's estimates have run 25 % low across four comparable past projects. The most effective countermeasure is:
@@ -1331,6 +2041,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. wait for complete information before acting
 
 *Rationale:* Stabilisation and factual grounding precede decisions, which are taken against a clock (8.4.3). D is the failure the sequence exists to prevent; C is never a first-hour activity.
+
+
+**8.4-E** `[8.4.1 · Analysis]` A resilience measure costs USD 18,000, is needed with probability 0.25 and saves five weeks of a USD 14,280-per-week delay. Its breakeven probability is 25.2101 %. The correct professional conclusion is:
+
+- A. reject it — the expected loss is USD 150
+- B. the breakeven lies inside the estimating error of the probability, so expected value cannot decide it; decide on the tail and on survivability ✅
+- C. accept it — a resilience measure is always worth buying
+- D. re-estimate the probability to three decimal places and re-run the comparison
+
+*Rationale:* No one estimates a capacity failure to a fifth of a percentage point, and the tail comparison is decisive at roughly 10 to 1 (8.4.1). A treats a noise-level difference as a result; C abandons the arithmetic entirely; D is false precision — the input cannot support the digits.
+
+
+**8.4-F** `[8.4.4 · Application]` A monitor's alerts are correct 7.91 % of the time. Investigating one costs USD 900 and catching a genuine problem saves USD 22,000. Investigating every alert is:
+
+- A. wasteful — over 92 % of investigations find nothing
+- B. worthwhile: the breakeven precision is 900/22,000 = 4.09 %, so 7.91 % returns 1.93 times the investigation cost ✅
+- C. worthwhile only if precision exceeds 50 %
+- D. impossible to assess without the monitor's sensitivity
+
+*Rationale:* An alert is worth investigating while precision exceeds cost ÷ saving (8.4.4). A counts the failures rather than valuing the successes — the arithmetic's whole point; C invents a threshold; D confuses what is needed to compare two calibrations with what is needed to decide whether to investigate a given alert.
+
+
+**8.4-G** `[8.4.2 · Analysis]` A bottom-up register gives a P80 contingency of USD 203,785 while a reference class of twelve comparable completed projects gives a P80 uplift of USD 964,800. The professional treatment is:
+
+- A. add them, giving USD 1,168,585 of required funding
+- B. treat them as two estimates of one quantity: use the reference class to challenge the total, attribute part of the gap to unidentified risks and the rest to optimism and scope growth, and hold the difference as management reserve ✅
+- C. discard the reference class, since the register is specific to this project
+- D. discard the register, since the reference class is evidence and the register is judgment
+
+*Rationale:* The reference class already contains the register's risks, so adding double-counts (8.4.2). C loses the only measurement of what the register cannot see; D discards the only basis for response and ownership — the reference class names no risk, no owner and no action.
 
 
 ## Domain 9

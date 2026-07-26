@@ -414,9 +414,8 @@ proof rather than a presentation.
    the year the project first performed. Over the 12-year loan the plant's carrying amount falls to
    **31,200,000** while the debt falls to nil — the two lines converge for unrelated reasons, and
    any covenant expressed as a ratio of debt to book asset value moves every year without a
-   transaction. In a regulated utility a second asset value — the regulatory asset base — runs on its
-   own depreciation profile beside this one, and the two must never be conflated (see the industry
-   variations at the end of this domain).
+   transaction. In a regulated utility a second asset value runs beside this one on its own profile
+   (see the industry variations at the end of this domain).
 
    **The debt balance falls by principal only.** Of the 5,009,635.23 instalment, 2,520,000 is
    interest (an expense) and **2,489,635.23** is principal (a balance-sheet movement, not an
@@ -487,16 +486,13 @@ conceals every one of them behind a net movement.
    applications and mandatory in none universally — operating cash flow would have been
    `3,864,000 + 2,520,000 =` **6,384,000**, which is *precisely* the documented `CFADS` figure.
    Nothing about the project changed; a single classification decision moved reported operating cash
-   flow by **65.2174 %** of itself. Three professional consequences. **Never compare operating cash
-   flow across two entities without checking where each puts interest** — the difference is one line
-   and it is larger than most of the differences analysts write about. **The identity `CFADS` =
+   flow by **65.2174 %** of itself. Two professional consequences. **Never compare operating cash
+   flow across two entities without checking where each puts interest** — on these figures the
+   classification alone is worth 65.2174 % of the reported number, so it can exceed the difference
+   being analysed without any difference in trading existing at all. And **the identity `CFADS` =
    operating cash flow + interest paid holds only on the operating-classification presentation**;
    Domain 6 (KA 6.2.2) uses it as a model check, and a reviewer applying it to a financing-classified
-   statement would double-count the interest and overstate `CFADS` by 2,520,000. And **the direct
-   method is the right internal format for a project**, because the four gross lines it reports —
-   collections, supplier payments, interest, tax — are the four things a monthly review can actually
-   act on. The indirect method's virtue is only that it starts where the income statement stops,
-   which is a convenience for the preparer and a cost to the reader.
+   statement would double-count the interest and overstate `CFADS` by 2,520,000.
 
 ### 2.2.4 Articulation demonstrated
 
@@ -557,10 +553,8 @@ conceals every one of them behind a net movement.
 ### AI in this KA
 
 **Where it earns its place.** The articulation checks of this Knowledge Area are ideal machine work,
-because each is a stated identity with a numeric answer: does the sheet balance, does closing cash
-tie to the cash-flow statement, does closing equity equal opening plus profit less distributions,
-does the depreciation add-back equal the income-statement charge, do the working-capital lines
-reconcile to the balance-sheet deltas. An assistant can run all of them across every period of a
+because each is a stated identity with a numeric answer — the eight invariants listed in 2.A.3 and
+checklisted in Toolkit 2.T.3. An assistant can run all of them across every period of a
 statement set in seconds and report where the first break occurs, which is precisely the diagnostic
 KA 2.1.3 says localises a problem — and it is tedious enough that humans skip it.
 
@@ -746,8 +740,9 @@ terms are a financing decision (Domain 1's cash discipline; Domain 14's drawdown
    people whose behaviour determines it. **The distribution condition is a 31-day collection
    covenant.** Nothing in the finance documents says so, no operations dashboard reports it, and the
    entire margin between a dividend and no dividend is **3.7095 days** of collection — less than one
-   invoice cycle, and well inside the ordinary variability of a public-sector offtaker's payment run.
-   That figure, not the 1.25 in the term sheet, is the number a finance director should put in front
+   invoice cycle. Whether that is inside the observed variability of a given offtaker's payment run is
+   an empirical question for that project's own collection history, and answering it is the point:
+   3.7095 days, not the 1.25 in the term sheet, is the number a finance director should put in front
    of the collections team.
 
    Read the sensitivity as a unit rate and it becomes a management metric: at 12,000,000 of revenue
@@ -842,10 +837,10 @@ asymmetry that stops a known loss being spread quietly across future periods.
    5,357,142.86 charge, because recognising a loss also requires *unwinding the profit already
    taken*. The multiple is not a quirk of these figures: it is `1 + profit recognised ÷ loss`, so the
    further into a contract the reversal comes, the larger the swing, and a contract that turns at
-   90 % complete produces a charge that can dwarf the loss it reports. This is the mechanism behind
-   the well-known pattern of construction results being stable and then violently negative, and it is
-   why a lender to a contractor reads the contract portfolio's cost-to-complete forecasts and not
-   its profit history.
+   90 % complete produces a charge that can dwarf the loss it reports. That is a property of the
+   arithmetic, not a claim about any market: wherever it operates, a reported result is stable until
+   the reversal and then abrupt, which is why a lender to a contractor reads the contract portfolio's
+   cost-to-complete forecasts and not its profit history.
 
    **The two disciplines must reconcile.** The SPV's earned value on this scope shows `CPI` = 1.0000
    by construction, because on a fixed-price milestone certification the amount certified *is* the
@@ -1754,17 +1749,15 @@ and `DSCR` were untouched, and its exposure was entirely to the contractor's sol
 delay that the additional works implied — which is where a lender's monitoring should have been
 looking, and was not.
 
-**What the domain teaches here.** Three things, in order of how often they are got wrong. **A
-divergence between an input and an output progress measure is evidence, and the two disciplines must
-be made to reconcile against the same underlying quantities** — neither an accounting percentage nor a
-certified percentage is capable of settling the question on its own (KA 2.3.2; PML-AI, Domain 7,
-KA 7.3.1). **The onerous-contract charge is dominated by the reversal, not the loss**, so the later a
-contract turns, the more violent the reported result, which is why contractor profit history is a poor
-predictor and cost-to-complete forecasts are the thing to read. And **a fixed price protects the SPV's
-statements and not the SPV**: the counterparty risk that a loss-making contract creates does not appear
-anywhere in the SPV's accounts, so it has to be monitored through the contractor's, which is a
-diligence and covenant design question (Domain 12, KA 12.1; Domain 14, KA 14.2.1) rather than an
-accounting one.
+**What the domain teaches here.** KA 2.3.2 supplies the mechanics — that neither an accounting
+percentage nor a certified percentage can settle a progress dispute on its own (PML-AI, Domain 7,
+KA 7.3.1), and that the onerous charge is dominated by the reversal rather than by the loss. What the
+quarter adds is the consequence for the party whose accounts do not move: **a fixed price protects the
+SPV's statements and not the SPV**. The counterparty risk a loss-making contract creates appears
+nowhere in the SPV's accounts, so it has to be monitored through the contractor's — a diligence and
+covenant-design question (Domain 12, KA 12.1; Domain 14, KA 14.2.1) rather than an accounting one.
+It is also why what settled this dispute was grouting quantities and not a percentage: where two
+measurement systems disagree, the adjudicating evidence is always underneath both of them.
 
 ---
 

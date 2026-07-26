@@ -93,7 +93,7 @@ professional verifies, decides and remains accountable.*
 
 ## Appendix C — Verification record
 
-**2,996 golden-answer checks** stand behind this volume. Every number printed as a *result* —
+**6,757 golden-answer checks** stand behind this volume. Every number printed as a *result* —
 in worked examples, in-text calculations, multiple-choice options (all of them, not only the correct
 one), exercise solutions, case studies and figure specifications — is recomputed independently with
 decimal arithmetic at 28-digit precision and compared to the printed value. Each domain's module also
@@ -102,14 +102,14 @@ claim cannot silently stop being true.
 
 | Domain | | Checks |
 |---|---|---|
-| 1 | The Project Leadership Profession | 20 |
-| 2 | Strategy, Selection and Business Alignment | 35 |
+| 1 | The Project Leadership Profession | 405 |
+| 2 | Strategy, Selection and Business Alignment | 450 |
 | 3 | Governance, Organization and Decision Rights | 98 |
-| 4 | Integration and Delivery Architecture | 80 |
+| 4 | Integration and Delivery Architecture | 1,947 |
 | 5 | Scope, Requirements and Value Definition | 326 |
-| 6 | Planning, Scheduling and Delivery Flow | 122 |
-| 7 | Cost, Resources and Commercial Awareness | 35 |
-| 8 | Risk, Uncertainty and Resilience | 34 |
+| 6 | Planning, Scheduling and Delivery Flow | 368 |
+| 7 | Cost, Resources and Commercial Awareness | 383 |
+| 8 | Risk, Uncertainty and Resilience | 534 |
 | 9 | Quality, Assurance and Continuous Improvement | 302 |
 | 10 | Procurement, Contracts and Supply Networks | 299 |
 | 11 | Stakeholders, Communication and Influence | 236 |
@@ -118,7 +118,7 @@ claim cannot silently stop being true.
 | 14 | Digital Delivery, Data and Responsible AI | 295 |
 | 15 | Programmes, Portfolios and Enterprise Delivery | 274 |
 | 16 | Transition, Closeout and Benefits Realization | 341 |
-| | **Total** | **2,996** |
+| | **Total** | **6,757** |
 
 Reproduce it with `python3 _build/verify_formulas.py`, or check one domain with
 `python3 _build/run_checks.py checks/<module>.py`. Both loaders are fail-closed: a check module that
