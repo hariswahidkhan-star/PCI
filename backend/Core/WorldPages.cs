@@ -1757,6 +1757,7 @@ public static class WorldPages
                  // The streak is a practice habit, never a credential — shown only when it exists,
                  // and never used to shame a gap (a zero simply says nothing).
                  (d.streak_days>0?' <b>'+d.streak_days+'-day practice streak</b> <small>(a habit, not a credential)</small>':'')+
+                 (d.week_target?' &middot; This week: <b>'+d.week_done+' of '+d.week_target+'</b> daily challenges (last 7 days).':'')+
                  '</p>'+
                  '<p>'+cta+'</p>'+
                  // The World goal (§10.5): product data on the participation record, changeable
@@ -1955,6 +1956,12 @@ public static class WorldPages
                ((p.evidence||[]).length?'':'<p style="color:var(--slate)">No completed challenges yet — '+
                  '<a href="/world">today&rsquo;s challenge</a> takes five to ten minutes, and it will appear here the moment you finish.</p>')+
                '</div>'+
+               // Sharing (PW-US-039/040): every public surface this account minted, in one place.
+               '<div class="card"><span class="kicker">Sharing</span>'+
+               '<h2 style="margin-top:0">Links you have created</h2>'+
+               '<p style="color:var(--slate)">Result links and invitations you minted — withdraw any of them at any moment. A withdrawn link simply stops resolving.</p>'+
+               '<div id="sharemgr"><p><button class="btn secondary" id="shareShow">Show my links &amp; invitations</button></p></div>'+
+               '</div>'+
                '<div class="card"><span class="kicker">Your data</span>'+
                '<h2 style="margin-top:0">Yours to take or erase</h2>'+
                // Sessions (PW-US-043): what is signed in as this account, and the power to end it.
@@ -2018,6 +2025,58 @@ public static class WorldPages
               }).catch(function(){$('sessbox').innerHTML='<p class="meta"><span>Could not load sessions just now.</span></p>';});
             }
             $('sessShow').addEventListener('click',loadSessions);
+            function loadShares(){
+              api('/api/world/me/shares').then(function(o){
+                var res=(o.results||[]),inv=(o.invitations||[]);
+                var sh='<h3 style="margin:6px 0">Result links ('+res.length+')</h3>';
+                if(res.length){
+                  sh+='<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th>'+
+                      '<th scope="col">Status</th><th scope="col"></th></tr></thead><tbody>';
+                  res.forEach(function(r2){
+                    sh+='<tr><td>'+esc(r2.title)+' <small class="num">'+esc(r2.code||'')+'</small></td>'+
+                        '<td>'+(r2.revoked?'<span>Withdrawn</span>':'<span class="ok">Live</span>')+'</td>'+
+                        '<td>'+(r2.revoked?'':'<button class="btn secondary" data-shrev="'+r2.attempt_id+'">Withdraw</button>')+'</td></tr>';
+                  });
+                  sh+='</tbody></table></div>';
+                }else sh+='<p style="color:var(--slate)">No result links yet.</p>';
+                sh+='<h3 style="margin:14px 0 6px">Invitations ('+inv.length+')</h3>';
+                if(inv.length){
+                  sh+='<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th>'+
+                      '<th scope="col">Pinned</th><th scope="col">Status</th><th scope="col"></th></tr></thead><tbody>';
+                  inv.forEach(function(r2){
+                    sh+='<tr><td>'+esc(r2.title)+' <small class="num">'+esc(r2.code||'')+'</small></td>'+
+                        '<td class="num">v'+esc(r2.version)+'</td>'+
+                        '<td>'+(r2.revoked?'<span>Withdrawn</span>':'<span class="ok">Live</span>')+'</td>'+
+                        '<td>'+(r2.revoked?'':'<button class="btn secondary" data-invrev="'+r2.invite_id+'">Withdraw</button>')+'</td></tr>';
+                  });
+                  sh+='</tbody></table></div>';
+                }else sh+='<p style="color:var(--slate)">No invitations yet.</p>';
+                sh+='<p style="margin-top:12px">'+
+                    (res.some(function(r2){return !r2.revoked;})?'<button class="btn secondary" id="shrevAll">Withdraw all result links</button> ':'')+
+                    (inv.some(function(r2){return !r2.revoked;})?'<button class="btn secondary" id="invrevAll">Withdraw all invitations</button>':'')+
+                    '</p><p id="sharemsg" role="status"></p>';
+                $('sharemgr').innerHTML=sh;
+                $('sharemgr').querySelectorAll('[data-shrev]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/shares/revoke',{attempt_id:parseInt(b.dataset.shrev,10)}).then(loadShares)
+                      .catch(function(){if($('sharemsg'))$('sharemsg').textContent='Could not withdraw — try again.';});
+                  });
+                });
+                $('sharemgr').querySelectorAll('[data-invrev]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/invitations/revoke',{invite_id:parseInt(b.dataset.invrev,10)}).then(loadShares)
+                      .catch(function(){if($('sharemsg'))$('sharemsg').textContent='Could not withdraw — try again.';});
+                  });
+                });
+                if($('shrevAll'))$('shrevAll').addEventListener('click',function(){
+                  api('/api/world/me/shares/revoke-all',{}).then(loadShares).catch(function(){});
+                });
+                if($('invrevAll'))$('invrevAll').addEventListener('click',function(){
+                  api('/api/world/me/invitations/revoke-all',{}).then(loadShares).catch(function(){});
+                });
+              }).catch(function(){$('sharemgr').innerHTML='<p class="meta"><span>Could not load your links just now.</span></p>';});
+            }
+            $('shareShow').addEventListener('click',loadShares);
             if($('goalSave'))$('goalSave').addEventListener('click',function(){
               var g=$('goalSel').value;
               if(!g){$('goalMsg').textContent='Choose a goal first.';return;}

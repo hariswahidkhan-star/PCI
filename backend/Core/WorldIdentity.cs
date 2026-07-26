@@ -251,20 +251,36 @@ public static class WorldIdentity
         var uid = CanonicalUserFor(db, worldUserId);
         if (uid is null) return null;
         EnsureParticipant(db, uid.Value);
-        var p = db.QueryOne("SELECT goal, timezone, weekly_target, onboarding_state FROM pciworld_participants WHERE user_id=?", uid)!;
+        var p = db.QueryOne("SELECT goal, timezone, weekly_target, onboarding_state, preferences_json FROM pciworld_participants WHERE user_id=?", uid)!;
+        bool remindersEnabled = false; long? reminderHour = null;
+        try
+        {
+            if (H.Str(p["preferences_json"]) is { } raw && raw.Length > 0)
+            {
+                var el = System.Text.Json.JsonDocument.Parse(raw).RootElement;
+                if (el.TryGetProperty("reminders_enabled", out var re)) remindersEnabled = re.ValueKind == System.Text.Json.JsonValueKind.True;
+                if (el.TryGetProperty("reminder_hour", out var rh) && rh.ValueKind == System.Text.Json.JsonValueKind.Number)
+                    reminderHour = rh.GetInt64();
+            }
+        }
+        catch { }
         return new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
         {
             ["goal"] = H.Str(p["goal"]),
             ["timezone"] = H.Str(p["timezone"]),
             ["weekly_target"] = p["weekly_target"] is null ? null : H.L(p["weekly_target"]),
             ["onboarding_state"] = H.Str(p["onboarding_state"]),
+            // Reminders are explicit OPT-IN (PW-US-030): absent means off, always.
+            ["reminders_enabled"] = remindersEnabled,
+            ["reminder_hour"] = reminderHour,
         };
     }
 
     /// <summary>Update World preferences. Absent keys leave stored values untouched (the P0-06
     /// lesson, applied everywhere). Returns an error key or null.</summary>
     public static string? UpdatePreferences(Db db, long worldUserId,
-        string? goal, string? timezone, long? weeklyTarget)
+        string? goal, string? timezone, long? weeklyTarget,
+        bool? remindersEnabled = null, long? reminderHour = null)
     {
         var uid = CanonicalUserFor(db, worldUserId);
         if (uid is null) return "not_linked";
@@ -284,6 +300,20 @@ public static class WorldIdentity
         {
             if (weeklyTarget is < 0 or > 7) return "bad_target";
             db.Execute("UPDATE pciworld_participants SET weekly_target=? WHERE user_id=?", weeklyTarget, uid);
+        }
+        // Reminder consent (PW-US-030): explicit opt-in stored in the participation record's
+        // preferences JSON. No mail is wired to this yet — the CONSENT is the contract, recorded
+        // first, so the future reminder job can never send to anyone who did not ask.
+        if (remindersEnabled is not null || reminderHour is not null)
+        {
+            if (reminderHour is < 0 or > 23) return "bad_hour";
+            var current = ReadPreferences(db, worldUserId)!;
+            var merged = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                reminders_enabled = remindersEnabled ?? (bool)(current["reminders_enabled"] ?? false),
+                reminder_hour = reminderHour ?? (long?)current["reminder_hour"],
+            });
+            db.Execute("UPDATE pciworld_participants SET preferences_json=? WHERE user_id=?", merged, uid);
         }
         return null;
     }

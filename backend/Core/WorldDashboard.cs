@@ -26,7 +26,24 @@ public static class WorldDashboard
     public sealed record Snapshot(string PrimaryAction, long? PrimaryAttemptId, string? PrimaryCode,
         Today TodayState, PassportState Passport, WorldAccount.Stats Progress,
         List<Dictionary<string, object?>> RecentResults, List<Dictionary<string, object?>> InProgress,
-        string? RecommendedCode, string? RecommendedTitle, long StreakDays);
+        string? RecommendedCode, string? RecommendedTitle, long StreakDays,
+        long WeekDone, long? WeekTarget);
+
+    /// <summary>Daily completions over the last seven rotation days (rolling, honest label:
+    /// "the last 7 days" — no calendar-week gymnastics), measured against the participant's
+    /// chosen weekly target when one is set (PW-US-030/P1-07).</summary>
+    public static long WeekDone(Db db, long userId, DateTime utcNow)
+    {
+        var today = WorldRotation.DayKey(db, utcNow);
+        var days = db.Query(@"SELECT p.day_key,
+                MAX(CASE WHEN a.id IS NULL THEN 0 ELSE 1 END) AS done
+            FROM pciworld_rotation_periods p
+            LEFT JOIN pciworld_attempts a ON a.rotation_period_id=p.id
+                AND a.user_id=? AND a.status='completed' AND a.parent_attempt_id IS NULL
+            WHERE p.day_key<=?
+            GROUP BY p.day_key ORDER BY p.day_key DESC LIMIT 7", userId, today);
+        return days.Count(r => H.L(r["done"]) == 1);
+    }
 
     /// <summary>
     /// The optional practice streak (§7.5 / PW-US-028), derived from the rotation LEDGER: one
@@ -130,11 +147,28 @@ public static class WorldDashboard
             ORDER BY a.updated_at DESC LIMIT 5", u.Id);
 
         // ── a rule-based recommendation, honestly labelled as such by the client: the next
-        //    servable challenge this account has not completed ──
-        var rec = db.QueryOne(@"SELECT code, title FROM pciworld_challenges
+        //    servable challenge this account has not completed, ordered by the participant's
+        //    CHOSEN goal (certification preparation prefers harder material; exploration prefers
+        //    industries not yet practised). Still a rule, still says so. ──
+        var canonical = WorldIdentity.CanonicalUserFor(db, u.Id);
+        var participant = canonical is null ? null
+            : db.QueryOne("SELECT goal, weekly_target FROM pciworld_participants WHERE user_id=?", canonical);
+        var goal = participant is null ? null : H.Str(participant["goal"]);
+        var order = goal switch
+        {
+            "certification_prep" =>
+                "ORDER BY CASE difficulty WHEN 'professional' THEN 0 WHEN 'advanced' THEN 0 WHEN 'expert' THEN 1 ELSE 2 END, id",
+            "explore" =>
+                @"ORDER BY CASE WHEN industry IN (SELECT v.industry FROM pciworld_attempts a
+                    JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
+                    WHERE a.user_id=? AND a.status='completed') THEN 1 ELSE 0 END, id",
+            _ => "ORDER BY id",
+        };
+        var recSql = $@"SELECT code, title FROM pciworld_challenges
             WHERE current_version>=1 AND retired=0
               AND id NOT IN (SELECT challenge_id FROM pciworld_attempts WHERE user_id=? AND status='completed')
-            ORDER BY id LIMIT 1", u.Id);
+            {order} LIMIT 1";
+        var rec = goal == "explore" ? db.QueryOne(recSql, u.Id, u.Id) : db.QueryOne(recSql, u.Id);
 
         // ── exactly ONE primary action (§9.1) ──
         string action; long? actionAttempt = null; string? actionCode = today.Code;
@@ -148,6 +182,8 @@ public static class WorldDashboard
 
         return new Snapshot(action, actionAttempt, actionCode, today, passport, progress,
             recent, open, rec is null ? null : H.Str(rec["code"]), rec is null ? null : H.Str(rec["title"]),
-            Streak(db, u.Id, utcNow));
+            Streak(db, u.Id, utcNow),
+            WeekDone(db, u.Id, utcNow),
+            participant?["weekly_target"] is null ? null : H.L(participant!["weekly_target"]));
     }
 }

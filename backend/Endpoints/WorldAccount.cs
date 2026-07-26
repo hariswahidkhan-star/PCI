@@ -255,6 +255,27 @@ public static class WorldAccount
         return (null, H.L(u["id"]));
     }
 
+    /// <summary>This account's public result links (PW-US-039) — safe metadata only. The raw token
+    /// is not even stored (hash only), so it can never appear here.</summary>
+    public static List<Dictionary<string, object?>> ShareLinks(Db db, long userId) =>
+        db.Query(@"SELECT a.id, a.result_revoked, a.completed_at, a.updated_at, c.code, v.title
+            FROM pciworld_attempts a
+            JOIN pciworld_challenges c ON c.id=a.challenge_id
+            JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
+            WHERE a.user_id=? AND a.result_token_sha IS NOT NULL
+            ORDER BY a.updated_at DESC, a.id DESC LIMIT 200", userId);
+
+    /// <summary>This account's outstanding invitations (PW-US-040) — status and the pinned
+    /// version they carry, never the inviter's answers or a raw token.</summary>
+    public static List<Dictionary<string, object?>> Invitations(Db db, long userId) =>
+        db.Query(@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title
+            FROM pciworld_invites i
+            JOIN pciworld_attempts a ON a.id=i.attempt_id
+            JOIN pciworld_challenges c ON c.id=a.challenge_id
+            JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
+            WHERE a.user_id=?
+            ORDER BY i.id DESC LIMIT 200", userId);
+
     /// <summary>This account's live World sessions — metadata only, never a token value (they are
     /// stored hashed and cannot be reprinted anyway). Feeds the sessions view (PW-US-043).</summary>
     public static List<Dictionary<string, object?>> Sessions(Db db, long userId) =>
@@ -549,6 +570,8 @@ public static class WorldAccount
                 },
                 progress = new { completed = s.Progress.Completed, industries = s.Progress.Industries, tracks = s.Progress.Tracks },
                 streak_days = s.StreakDays,
+                week_done = s.WeekDone,
+                week_target = s.WeekTarget,
                 recent = s.RecentResults.Select(r => new
                 {
                     attempt_id = H.L(r["id"]), code = H.Str(r["code"]), version = H.L(r["version"]),
@@ -614,6 +637,81 @@ public static class WorldAccount
             return J(new { ok = true, revoked = n });
         });
 
+        // ── Sharing (PW-US-039/040): every public surface this account minted, in one place,
+        //    with the power to withdraw each — or all — immediately. Account-scoped ownership,
+        //    so links minted on another device are just as manageable here. ──
+        app.MapGet("/api/world/me/shares", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            return J(new
+            {
+                results = ShareLinks(db, u.Id).Select(r => new
+                {
+                    attempt_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
+                    completed_at = H.Str(r["completed_at"]), revoked = H.L(r["result_revoked"]) == 1,
+                }),
+                invitations = Invitations(db, u.Id).Select(r => new
+                {
+                    invite_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
+                    version = H.L(r["version"]), created_at = H.Str(r["created_at"]),
+                    inviter_name = H.Str(r["inviter_name"]), revoked = H.L(r["revoked"]) == 1,
+                }),
+            });
+        });
+
+        app.MapPost("/api/world/me/shares/revoke", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE id=? AND user_id=? AND result_token_sha IS NOT NULL",
+                (long)(H.GetNum(b, "attempt_id") ?? 0), u.Id);
+            if (n == 0) return Err("not_found", 404);
+            log(null, "world_share_revoke", $"world #{u.Id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world/me/shares/revoke-all", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE user_id=? AND result_token_sha IS NOT NULL AND result_revoked=0", u.Id);
+            log(null, "world_share_revoke_all", $"world #{u.Id}: {n}");
+            return J(new { ok = true, revoked = n });
+        });
+
+        app.MapPost("/api/world/me/invitations/revoke", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var n = db.Execute(@"UPDATE pciworld_invites SET revoked=1
+                WHERE id=? AND revoked=0
+                  AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)",
+                (long)(H.GetNum(b, "invite_id") ?? 0), u.Id);
+            if (n == 0) return Err("not_found", 404);
+            log(null, "world_invite_revoke", $"world #{u.Id}");
+            return J(new { ok = true });
+        });
+
+        app.MapPost("/api/world/me/invitations/revoke-all", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var n = db.Execute(@"UPDATE pciworld_invites SET revoked=1
+                WHERE revoked=0 AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)", u.Id);
+            log(null, "world_invite_revoke_all", $"world #{u.Id}: {n}");
+            return J(new { ok = true, revoked = n });
+        });
+
         // ── World preferences (§10.5): product data on the participation row, never the profile. ──
         app.MapGet("/api/world/me/preferences", (HttpContext ctx) =>
         {
@@ -632,7 +730,9 @@ public static class WorldAccount
             var b = await H.Body(ctx.Request);
             var err = WorldIdentity.UpdatePreferences(db, u.Id,
                 H.GetS(b, "goal"), H.GetS(b, "timezone"),
-                H.GetNum(b, "weekly_target") is { } wt ? (long)wt : null);
+                H.GetNum(b, "weekly_target") is { } wt ? (long)wt : null,
+                H.GetBool(b, "reminders_enabled"),
+                H.GetNum(b, "reminder_hour") is { } rh ? (long)rh : null);
             if (err is not null) return Err(err, err == "not_linked" ? 409 : 400);
             return J(new { ok = true, preferences = WorldIdentity.ReadPreferences(db, u.Id) });
         });
