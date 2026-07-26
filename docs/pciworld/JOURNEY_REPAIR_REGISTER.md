@@ -68,9 +68,15 @@ it8 993 · it9 996 · it10 1000 · it11 1004 · it12 1006 · it13 1008 — all g
 These are the master prompt's re-platforming blocks — team-scale efforts beyond incremental
 repair, listed so nobody mistakes the register above for "done":
 
-1. Separate per-domain React applications (PCI World participant app on `pciworld.org`, distinct
-   build artefacts, CSP, sessions) — the current surfaces remain server-rendered pages with
-   embedded JS on the shared origin.
+1. Separate React applications — STARTED (it23): a third independent bundle (`/world-app/`,
+   `frontend/src/world/`, own Vite config/output, CI asset gate, Docker mount, SPA fallback)
+   ships the participant account home as a real React app on the shared origin: sign-in with
+   canonical PCI credentials, portal-handoff redemption, dashboard aggregate rendering with the
+   §9.1 single primary action, honest offline/suspended states, and the PKCE helpers for the
+   OAuth callback shape. Play/manage flows still deep-link to the server-rendered surfaces.
+   Remaining for the dedicated-domain shape: move screens (onboarding, Passport manager, play)
+   into the app, then change `base` + register the `pciworld.org` redirect URI (a registry row)
+   + per-client CORS and OIDC claims.
 2. ~~A real OAuth 2.1 authorization layer~~ — LANDED (it19–21): authorization-code + PKCE (S256
    only), exact-match client registry with owner-gated admin, server-enforced consent for
    non-first-party clients, replay revocation. Remaining from this block: the portal/World

@@ -1904,6 +1904,7 @@ var spaMounts = new[]
 {
     ("/app", Path.Combine(webRoot, "app", "index.html")),
     ("/admin", Path.Combine(webRoot, "admin", "index.html")),
+    ("/world-app", Path.Combine(webRoot, "world-app", "index.html")),
 };
 app.Use(async (ctx, next) =>
 {
