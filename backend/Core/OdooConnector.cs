@@ -28,19 +28,48 @@ public static class OdooConnector
     public const string PartnerModel = "res.partner";
     public const string InvoiceModel = "account.move";
 
-    sealed record Config(string url, string database, string login, string? partnerModel, string? invoiceModel);
+    sealed record Config(
+        string url, string database, string login, string? partnerModel, string? invoiceModel,
+        // ---- optional accounting mapping (all omitted from the write when unset, so Odoo applies
+        // the company's own defaults rather than being overridden with a blank) ----
+        long? companyId,           // res.company for a multi-company database
+        long? journalId,           // account.journal the invoice is posted to
+        long? productId,           // product.product the invoice line bills
+        long? accountId,           // account.account override for the line
+        long? taxId,               // account.tax applied to the line
+        long? currencyId,          // res.currency when it differs from the company default
+        long? paymentTermId,       // account.payment.term
+        long? teamId,              // crm.team for revenue attribution
+        bool partnerReuse);        // reuse an existing partner by email (default) vs always create
+    //
+    // NOTE — there is deliberately no "post the invoice" option. Posting is a SECOND RPC
+    // (account.move.action_post) after the create returns an id, and a delivery here is exactly one
+    // request whose status is the delivery's outcome. A setting that silently left every invoice in
+    // draft would be worse than not offering it, so invoices are created as drafts and an accountant
+    // posts them in Odoo — which is also the safer accounting default.
 
     static Config ParseConfig(string? json)
     {
         string G(JsonElement e, string k) => e.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() ?? "" : "";
+        static long? Id(JsonElement e, string k)
+        {
+            if (!e.TryGetProperty(k, out var v)) return null;
+            if (v.ValueKind == JsonValueKind.Number && v.TryGetInt64(out var n) && n > 0) return n;
+            if (v.ValueKind == JsonValueKind.String && long.TryParse(v.GetString(), out var s) && s > 0) return s;
+            return null;
+        }
         try
         {
             var e = JsonDocument.Parse(json ?? "{}").RootElement;
+            var reuse = !(e.TryGetProperty("partner_reuse", out var pr) && pr.ValueKind == JsonValueKind.False);
             return new Config(G(e, "url").TrimEnd('/'), G(e, "database"), G(e, "login"),
                 G(e, "partner_model") is { Length: > 0 } pm ? pm : null,
-                G(e, "invoice_model") is { Length: > 0 } im ? im : null);
+                G(e, "invoice_model") is { Length: > 0 } im ? im : null,
+                Id(e, "company_id"), Id(e, "journal_id"), Id(e, "product_id"), Id(e, "account_id"),
+                Id(e, "tax_id"), Id(e, "currency_id"), Id(e, "payment_term_id"), Id(e, "team_id"),
+                reuse);
         }
-        catch { return new Config("", "", "", null, null); }
+        catch { return new Config("", "", "", null, null, null, null, null, null, null, null, null, null, true); }
     }
 
     static string? ParseApiKey(string? json)
@@ -82,16 +111,29 @@ public static class OdooConnector
         return vals;
     }
 
+    /// <summary>Accounting mapping an operator can set, all optional.</summary>
+    public sealed record InvoiceOptions(
+        long? CompanyId = null, long? JournalId = null, long? ProductId = null, long? AccountId = null,
+        long? TaxId = null, long? CurrencyId = null, long? PaymentTermId = null, long? TeamId = null);
+
     /// <summary>The account.move values for a settled payment, against an already-resolved partner.
-    /// Odoo one2many writes use the (0, 0, values) command triple to create a line inline.</summary>
-    public static Dictionary<string, object?> InvoiceValues(long partnerId, double amount, string product, string? reference)
+    /// Odoo one2many writes use the (0, 0, values) command triple to create a line inline; a many2many
+    /// like tax_ids uses (6, 0, [ids]) to REPLACE the set, which is what "apply exactly this tax" means.
+    /// Unset options are omitted entirely so Odoo's own company defaults apply.</summary>
+    public static Dictionary<string, object?> InvoiceValues(long partnerId, double amount, string product, string? reference,
+        InvoiceOptions? options = null)
     {
+        var o = options ?? new InvoiceOptions();
         var line = new Dictionary<string, object?>
         {
             ["name"] = product.Length > 0 ? product : "PCI fee",
             ["quantity"] = 1,
             ["price_unit"] = Math.Round(amount, 2),
         };
+        if (o.ProductId is { } pid) line["product_id"] = pid;
+        if (o.AccountId is { } aid) line["account_id"] = aid;
+        if (o.TaxId is { } tid) line["tax_ids"] = new object[] { new object[] { 6, 0, new[] { tid } } };
+
         var vals = new Dictionary<string, object?>
         {
             ["move_type"] = "out_invoice",
@@ -99,6 +141,11 @@ public static class OdooConnector
             ["invoice_line_ids"] = new object[] { new object[] { 0, 0, line } },
         };
         if (!string.IsNullOrWhiteSpace(reference)) vals["ref"] = reference;
+        if (o.CompanyId is { } cid) vals["company_id"] = cid;
+        if (o.JournalId is { } jid) vals["journal_id"] = jid;
+        if (o.CurrencyId is { } curr) vals["currency_id"] = curr;
+        if (o.PaymentTermId is { } ptid) vals["invoice_payment_term_id"] = ptid;
+        if (o.TeamId is { } team) vals["team_id"] = team;
         return vals;
     }
 
@@ -178,10 +225,16 @@ public static class OdooConnector
             var email = S("email");
             if (email.Length == 0) throw new Exception("Odoo invoice needs the payer's email to resolve the partner.");
             var partnerModel = config.partnerModel ?? PartnerModel;
-            var partnerId = await ResolvePartnerId(http, endpoint, config.database, uid, apiKey, partnerModel, email)
+            // partner_reuse (default on) looks the payer up by email first; off makes every payment
+            // create a new partner, which duplicates customers in Odoo.
+            var partnerId = (config.partnerReuse
+                                ? await ResolvePartnerId(http, endpoint, config.database, uid, apiKey, partnerModel, email)
+                                : null)
                             ?? await CreatePartnerId(http, endpoint, config.database, uid, apiKey, partnerModel,
                                    PartnerValues(S("first_name"), S("last_name"), email));
-            values = InvoiceValues(partnerId, N("amount"), S("product"), S("reference") is { Length: > 0 } r ? r : null);
+            values = InvoiceValues(partnerId, N("amount"), S("product"), S("reference") is { Length: > 0 } r ? r : null,
+                new InvoiceOptions(config.companyId, config.journalId, config.productId, config.accountId,
+                    config.taxId, config.currencyId, config.paymentTermId, config.teamId));
         }
 
         var body = ExecuteKwBody(config.database, uid, apiKey, model, "create", new object[] { values });

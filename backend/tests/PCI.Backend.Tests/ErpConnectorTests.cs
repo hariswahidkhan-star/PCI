@@ -236,4 +236,87 @@ public class ErpConnectorTests
     [Fact]
     public void Odoo_NonJsonBodyIsAProblemNotASuccess() =>
         Assert.NotNull(OdooConnector.ResponseProblem("<html>502 Bad Gateway</html>"));
+
+    // ---------------------------------------------------------------- operator settings
+
+    [Fact]
+    public void Zoho_OptionalAccountingFieldsAreOmittedWhenUnset()
+    {
+        // Sending an empty currency/tax would OVERRIDE the Books organisation default with nothing;
+        // omitting the key is what "leave it to Books" actually means on this API.
+        var e = JsonDocument.Parse(ZohoConnector.InvoiceBody("42", 100, "Exam", null)).RootElement;
+        foreach (var absent in new[] { "currency_code", "place_of_supply", "salesperson_name", "notes", "payment_terms" })
+            Assert.False(e.TryGetProperty(absent, out _), $"{absent} should be omitted when unset");
+        var line = e.GetProperty("line_items")[0];
+        Assert.False(line.TryGetProperty("item_id", out _));
+        Assert.False(line.TryGetProperty("tax_id", out _));
+    }
+
+    [Fact]
+    public void Zoho_ConfiguredAccountingFieldsReachTheInvoice()
+    {
+        var opts = new ZohoConnector.InvoiceOptions(
+            Currency: "GBP", PlaceOfSupply: "GB", TaxId: "TAX-1", ItemId: "ITEM-9",
+            Salesperson: "Ada", PaymentTerms: "30", Notes: "Thanks");
+        var e = JsonDocument.Parse(ZohoConnector.InvoiceBody("42", 100, "Exam", "REF-1", opts)).RootElement;
+        Assert.Equal("GBP", e.GetProperty("currency_code").GetString());
+        Assert.Equal("GB", e.GetProperty("place_of_supply").GetString());
+        Assert.Equal("Ada", e.GetProperty("salesperson_name").GetString());
+        Assert.Equal("Thanks", e.GetProperty("notes").GetString());
+        Assert.Equal(30, e.GetProperty("payment_terms").GetInt32());
+        var line = e.GetProperty("line_items")[0];
+        Assert.Equal("ITEM-9", line.GetProperty("item_id").GetString());
+        Assert.Equal("TAX-1", line.GetProperty("tax_id").GetString());
+    }
+
+    [Fact]
+    public void Zoho_NonNumericPaymentTermsIsIgnoredRatherThanSentAsGarbage()
+    {
+        var opts = new ZohoConnector.InvoiceOptions(PaymentTerms: "net-30");
+        var e = JsonDocument.Parse(ZohoConnector.InvoiceBody("42", 100, "Exam", null, opts)).RootElement;
+        Assert.False(e.TryGetProperty("payment_terms", out _));
+    }
+
+    [Fact]
+    public void Zoho_RequiredScopesCoverExactlyWhatTheConnectorCalls()
+    {
+        // The connector creates contacts, reads them (to dedupe) and creates invoices — nothing else,
+        // so the scopes it asks an operator to grant should be exactly those three.
+        Assert.Contains("ZohoBooks.contacts.CREATE", ZohoConnector.RequiredScopes);
+        Assert.Contains("ZohoBooks.contacts.READ", ZohoConnector.RequiredScopes);
+        Assert.Contains("ZohoBooks.invoices.CREATE", ZohoConnector.RequiredScopes);
+        Assert.DoesNotContain("DELETE", ZohoConnector.RequiredScopes);
+    }
+
+    [Fact]
+    public void Odoo_OptionalAccountingIdsAreOmittedWhenUnset()
+    {
+        var vals = OdooConnector.InvoiceValues(1, 50, "Exam", null);
+        foreach (var absent in new[] { "company_id", "journal_id", "currency_id", "invoice_payment_term_id", "team_id" })
+            Assert.False(vals.ContainsKey(absent), $"{absent} should be omitted when unset");
+    }
+
+    [Fact]
+    public void Odoo_ConfiguredAccountingIdsReachTheInvoiceAndItsLine()
+    {
+        var opts = new OdooConnector.InvoiceOptions(
+            CompanyId: 2, JournalId: 3, ProductId: 4, AccountId: 5, TaxId: 6, CurrencyId: 7,
+            PaymentTermId: 8, TeamId: 9);
+        var vals = OdooConnector.InvoiceValues(1, 50, "Exam", null, opts);
+        Assert.Equal(2L, vals["company_id"]);
+        Assert.Equal(3L, vals["journal_id"]);
+        Assert.Equal(7L, vals["currency_id"]);
+        Assert.Equal(8L, vals["invoice_payment_term_id"]);
+        Assert.Equal(9L, vals["team_id"]);
+
+        var line = (Dictionary<string, object?>)((object[])((object[])vals["invoice_line_ids"]!)[0])[2]!;
+        Assert.Equal(4L, line["product_id"]);
+        Assert.Equal(5L, line["account_id"]);
+        // A many2many must be written with the (6, 0, [ids]) REPLACE command, not a bare id — a bare
+        // id is silently ignored by Odoo, which would ship untaxed invoices.
+        var taxCmd = (object[])((object[])line["tax_ids"]!)[0];
+        Assert.Equal(6, taxCmd[0]);
+        Assert.Equal(0, taxCmd[1]);
+        Assert.Equal(new long[] { 6 }, (long[])taxCmd[2]!);
+    }
 }

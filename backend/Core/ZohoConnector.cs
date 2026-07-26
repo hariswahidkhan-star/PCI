@@ -45,19 +45,42 @@ public static class ZohoConnector
         return key.Length > 0 && Regions.TryGetValue(key, out var dom) ? dom : "com";
     }
 
-    sealed record Config(string organizationId, string region, string? apiBase, string? clientId);
+    /// <summary>The OAuth scopes this connector needs. Shown in the admin UI so an operator grants
+    /// exactly these when creating the self-client in the Zoho API console — no more, no less.</summary>
+    public const string RequiredScopes = "ZohoBooks.contacts.CREATE,ZohoBooks.contacts.READ,ZohoBooks.invoices.CREATE";
+
+    /// <summary>Zoho Books allows 100 API calls per minute per organization and answers 429 beyond it.
+    /// A payment delivery costs up to three calls (token, contact lookup, invoice), which is what the
+    /// admin UI warns about when someone enables a high-volume event filter.</summary>
+    public const int RateLimitPerMinute = 100;
+
+    sealed record Config(
+        string organizationId, string region, string? apiBase, string? clientId,
+        // ---- optional accounting mapping (all have safe Books defaults when unset) ----
+        string? currency,          // currency_code on the invoice; Books uses the org default when null
+        string? placeOfSupply,     // GST/VAT jurisdictions require it on the invoice
+        string? taxId,             // tax_id applied to the line item
+        string? itemId,            // an existing Books item to bill against instead of an ad-hoc line
+        string? salesperson,       // salesperson_name, for revenue attribution inside Books
+        string? invoiceStatus,     // "draft" (default) or "sent" — whether Books emails the customer
+        string? paymentTerms,      // payment_terms in days
+        string? notes,             // notes printed on every generated invoice
+        bool contactReuse);        // reuse an existing contact by email (default) vs always create
 
     static Config ParseConfig(string? json)
     {
         string G(JsonElement e, string k) => e.TryGetProperty(k, out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() ?? "" : "";
+        string? N(JsonElement e, string k) => G(e, k) is { Length: > 0 } s ? s : null;
         try
         {
             var e = JsonDocument.Parse(json ?? "{}").RootElement;
+            var reuse = !(e.TryGetProperty("contact_reuse", out var cr) && cr.ValueKind == JsonValueKind.False);
             return new Config(G(e, "organization_id"), NormaliseRegion(G(e, "region")),
-                G(e, "api_base") is { Length: > 0 } ab ? ab : null,
-                G(e, "client_id") is { Length: > 0 } ci ? ci : null);
+                N(e, "api_base"), N(e, "client_id"),
+                N(e, "currency"), N(e, "place_of_supply"), N(e, "tax_id"), N(e, "item_id"),
+                N(e, "salesperson"), N(e, "invoice_status"), N(e, "payment_terms"), N(e, "notes"), reuse);
         }
-        catch { return new Config("", "com", null, null); }
+        catch { return new Config("", "com", null, null, null, null, null, null, null, null, null, null, true); }
     }
 
     static (string? clientSecret, string? refreshToken, string? accessToken) ParseSecret(string? json)
@@ -96,22 +119,42 @@ public static class ZohoConnector
         return JsonSerializer.Serialize(obj);
     }
 
-    /// <summary>The Invoice body for a settled payment, against an already-resolved contact.</summary>
-    public static string InvoiceBody(string contactId, double amount, string product, string? reference)
+    /// <summary>Options an operator can set for generated invoices, all optional.</summary>
+    public sealed record InvoiceOptions(
+        string? Currency = null, string? PlaceOfSupply = null, string? TaxId = null, string? ItemId = null,
+        string? Salesperson = null, string? PaymentTerms = null, string? Notes = null);
+
+    /// <summary>The Invoice body for a settled payment, against an already-resolved contact.
+    /// Every optional field is omitted when unset so Books applies its own organisation default —
+    /// sending an empty string instead would override that default with nothing.</summary>
+    public static string InvoiceBody(string contactId, double amount, string product, string? reference,
+        InvoiceOptions? options = null)
     {
+        var o = options ?? new InvoiceOptions();
+        var line = new Dictionary<string, object?>
+        {
+            ["name"] = product.Length > 0 ? product : "PCI fee",
+            ["description"] = product.Length > 0 ? product : "PCI fee",
+            ["rate"] = Math.Round(amount, 2),
+            ["quantity"] = 1,
+        };
+        // Billing an existing Books item keeps the invoice on the operator's chart of accounts and
+        // revenue reports; without it Books records an ad-hoc line against the default account.
+        if (!string.IsNullOrWhiteSpace(o.ItemId)) line["item_id"] = o.ItemId;
+        if (!string.IsNullOrWhiteSpace(o.TaxId)) line["tax_id"] = o.TaxId;
+
         var obj = new Dictionary<string, object?>
         {
             ["customer_id"] = contactId,
-            ["line_items"] = new[] { new Dictionary<string, object?>
-            {
-                ["name"] = product.Length > 0 ? product : "PCI fee",
-                ["description"] = product.Length > 0 ? product : "PCI fee",
-                ["rate"] = Math.Round(amount, 2),
-                ["quantity"] = 1,
-            } },
+            ["line_items"] = new[] { line },
         };
         if (!string.IsNullOrWhiteSpace(reference)) obj["reference_number"] = reference;
-        return obj is null ? "{}" : JsonSerializer.Serialize(obj);
+        if (!string.IsNullOrWhiteSpace(o.Currency)) obj["currency_code"] = o.Currency;
+        if (!string.IsNullOrWhiteSpace(o.PlaceOfSupply)) obj["place_of_supply"] = o.PlaceOfSupply;
+        if (!string.IsNullOrWhiteSpace(o.Salesperson)) obj["salesperson_name"] = o.Salesperson;
+        if (!string.IsNullOrWhiteSpace(o.Notes)) obj["notes"] = o.Notes;
+        if (o.PaymentTerms is { Length: > 0 } pt && int.TryParse(pt, out var days)) obj["payment_terms"] = days;
+        return JsonSerializer.Serialize(obj);
     }
 
     /// <summary>Which Books resource a canonical event maps to. Null = no Books representation (skip).</summary>
@@ -151,12 +194,22 @@ public static class ZohoConnector
             // than one call.
             var email = S("email");
             if (email.Length == 0) throw new Exception("Zoho Books invoice needs the payer's email to resolve the contact.");
-            var contactId = await ResolveContactId(http, apiBase, org, token, email)
+            // contact_reuse (default on) looks the payer up by email first. Turning it off makes every
+            // payment mint a fresh contact, which duplicates customers in Books — offered only because
+            // some organisations deliberately keep one contact per transaction.
+            var contactId = (config.contactReuse ? await ResolveContactId(http, apiBase, org, token, email) : null)
                             ?? await CreateContactId(http, apiBase, org, token, ContactBody(S("first_name"), S("last_name"), email));
-            body = InvoiceBody(contactId, N("amount"), S("product"), S("reference") is { Length: > 0 } r ? r : null);
+            body = InvoiceBody(contactId, N("amount"), S("product"), S("reference") is { Length: > 0 } r ? r : null,
+                new InvoiceOptions(config.currency, config.placeOfSupply, config.taxId, config.itemId,
+                    config.salesperson, config.paymentTerms, config.notes));
         }
 
-        var req = new HttpRequestMessage(HttpMethod.Post, $"{apiBase}/books/v3/{resource}?organization_id={org}")
+        // invoice_status=sent tells Books to mark the invoice sent (and mail it) instead of leaving a
+        // draft. Default is draft: generating customer-visible mail from an integration should be an
+        // explicit operator choice, not a side effect of switching the connector on.
+        var statusQ = resource == "invoices" && string.Equals(config.invoiceStatus, "sent", StringComparison.OrdinalIgnoreCase)
+            ? "&send=true" : "";
+        var req = new HttpRequestMessage(HttpMethod.Post, $"{apiBase}/books/v3/{resource}?organization_id={org}{statusQ}")
         {
             Content = new StringContent(body, Encoding.UTF8, "application/json"),
         };
