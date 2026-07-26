@@ -80,8 +80,10 @@ public static class WorldAttempts
         {
             // Adopt-on-resume: an unowned attempt from this session becomes the account's the moment
             // the signed-in owner touches it. Claim-only-unowned — never reassign between accounts.
+            // Stamped in BOTH namespaces (legacy + canonical) for the cutover.
             if (userId is not null && existing["user_id"] is null)
-                db.Execute("UPDATE pciworld_attempts SET user_id=? WHERE id=? AND user_id IS NULL", userId, existing["id"]);
+                db.Execute("UPDATE pciworld_attempts SET user_id=?, canonical_user_id=? WHERE id=? AND user_id IS NULL",
+                    userId, WorldIdentity.CanonicalUserFor(db, userId.Value), existing["id"]);
             return new(null, H.L(existing["id"]), true, false, H.Str(existing["answers_json"]), challengeId, version);
         }
 
@@ -99,9 +101,10 @@ public static class WorldAttempts
             return new(null, H.L(completed["id"]), true, true, H.Str(completed["answers_json"]), challengeId, version);
 
         var attemptId = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts
-                (session_id,challenge_id,version,invite_id,answers_json,user_id,parent_attempt_id,rotation_period_id)
-            VALUES(?,?,?,?, '{}', ?, ?, ?)",
+                (session_id,challenge_id,version,invite_id,answers_json,user_id,canonical_user_id,parent_attempt_id,rotation_period_id)
+            VALUES(?,?,?,?, '{}', ?, ?, ?, ?)",
             sessionId, challengeId, version, inviteId, userId,
+            userId is null ? null : WorldIdentity.CanonicalUserFor(db, userId.Value),
             retake && completed is not null ? H.L(completed["id"]) : (long?)null,
             // An invitation is its own play context, and a retake is not the day's first play —
             // neither earns daily provenance (streak fairness, §7.5).
@@ -141,9 +144,10 @@ public static class WorldAttempts
                 : CompletedReplay(raced, answersRaw);
         }
         // Ownership at completion: a signed-in submit of a still-unowned attempt adopts it, so work
-        // finished mid-sign-in never goes missing from the account.
+        // finished mid-sign-in never goes missing from the account. Both namespaces stamped.
         if (userId is not null && att["user_id"] is null)
-            db.Execute("UPDATE pciworld_attempts SET user_id=? WHERE id=? AND user_id IS NULL", userId, attemptId);
+            db.Execute("UPDATE pciworld_attempts SET user_id=?, canonical_user_id=? WHERE id=? AND user_id IS NULL",
+                userId, WorldIdentity.CanonicalUserFor(db, userId.Value), attemptId);
         return new(null, db.QueryOne("SELECT * FROM pciworld_attempts WHERE id=?", attemptId), false);
     }
 

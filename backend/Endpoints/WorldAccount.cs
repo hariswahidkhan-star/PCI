@@ -70,12 +70,13 @@ public static class WorldAccount
                 (email,password_hash,display_name,passport_show_scores,passport_show_profiles,passport_show_dates)
             VALUES(?,?,?,0,0,0)",
             email, BCrypt.Net.BCrypt.HashPassword(password), Trunc(displayName, 80));
-        ClaimSession(db, id, worldSessionId);
         // Canonical identity from the moment the account exists (P0-00): a standalone World
         // registration creates its canonical users/student_profiles pair immediately (same bcrypt
         // hash, so the one password works on both products); an email already registered on the
-        // platform is quarantined in the map, never silently merged.
+        // platform is quarantined in the map, never silently merged. Mapping runs BEFORE the
+        // claim so claimed attempts are stamped with canonical ownership in the same breath.
         try { WorldIdentity.MapOne(db, id); } catch { /* mapping must never break registration */ }
+        ClaimSession(db, id, worldSessionId);
         return (null, id, MintSession(db, id));
     }
 
@@ -128,12 +129,14 @@ public static class WorldAccount
     }
 
     /// <summary>Adopt the anonymous session's attempts into the account — only unclaimed ones;
-    /// attempts already owned by another account never move.</summary>
+    /// attempts already owned by another account never move. Ownership is stamped in BOTH
+    /// namespaces (legacy World id + canonical users.id) for the cutover.</summary>
     public static void ClaimSession(Db db, long userId, long? worldSessionId)
     {
         if (worldSessionId is null) return;
-        db.Execute("UPDATE pciworld_attempts SET user_id=? WHERE session_id=? AND user_id IS NULL",
-            userId, worldSessionId);
+        var canonical = WorldIdentity.CanonicalUserFor(db, userId);
+        db.Execute("UPDATE pciworld_attempts SET user_id=?, canonical_user_id=? WHERE session_id=? AND user_id IS NULL",
+            userId, canonical, worldSessionId);
     }
 
     static string MintSession(Db db, long userId)
@@ -344,8 +347,9 @@ public static class WorldAccount
         // The browser sessions themselves are removed, then the attempts are stripped.
         db.Execute(@"DELETE FROM pciworld_sessions
             WHERE id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
-        db.Execute(@"UPDATE pciworld_attempts SET user_id=NULL, passport_visible=0, display_name=NULL,
-            result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0 WHERE user_id=?", userId);
+        db.Execute(@"UPDATE pciworld_attempts SET user_id=NULL, canonical_user_id=NULL, passport_visible=0,
+            display_name=NULL, result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0
+            WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_handoff_codes WHERE world_user_id=?", userId);
@@ -487,7 +491,9 @@ public static class WorldAccount
             if (u.EmailVerified) return J(new { ok = true, already = true });
             if (Throttled("verify|" + u.Id, 3)) return Err("rate_limited", 429);
             SendVerification(ctx, u.Id, u.Email);
-            return J(new { ok = true });
+            // Truthfulness (PW-US-005): the mail is QUEUED for delivery — this API cannot promise
+            // it reached an inbox, and must not claim to.
+            return J(new { ok = true, queued = true });
         });
 
         // ───────────── password reset ─────────────

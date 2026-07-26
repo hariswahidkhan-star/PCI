@@ -270,6 +270,11 @@ public static class WorldSchema
         // from the ledger — archive plays and retakes can never inflate them. NULL = not a daily.
         AddCol("pciworld_attempts", "rotation_period_id", "rotation_period_id INTEGER");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_period ON pciworld_attempts(rotation_period_id)");
+        // Namespace cutover step 1 (P0-00): canonical ownership stamped ALONGSIDE the legacy
+        // World-id ownership. New/claimed attempts carry both; the boot backfill converges old
+        // rows through the map; reads flip to this column only once parity is proven.
+        AddCol("pciworld_attempts", "canonical_user_id", "canonical_user_id INTEGER");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_canonical ON pciworld_attempts(canonical_user_id)");
 
         // Passport disclosure is per FIELD as well as per item: publishing evidence of what you
         // have practised should not force you to publish your scores. Defaults preserve the

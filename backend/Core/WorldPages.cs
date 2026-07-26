@@ -2165,7 +2165,7 @@ public static class WorldPages
             });
             if($('pa_verify'))$('pa_verify').addEventListener('click',function(){
               api('/api/world/account/resend-verification',{})
-                .then(function(){$('pa_verify').textContent='Verification email sent — check your inbox.';$('pa_verify').disabled=true;})
+                .then(function(){$('pa_verify').textContent='Verification email queued — it should reach your inbox shortly.';$('pa_verify').disabled=true;})
                 .catch(function(){$('pa_verify').textContent='Could not send — try again shortly.';});
             });
             // The cover preview is authenticated by the account header, which an <img> navigation
@@ -2192,7 +2192,7 @@ public static class WorldPages
                 .catch(function(){$('photomsg').textContent='Could not remove the photo.';});
             });
             if($('resend'))$('resend').addEventListener('click',function(){
-              api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email sent.';});
+              api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email queued for delivery.';});
             });
             if($('pub'))$('pub').addEventListener('click',function(){
               api('/api/world/passport/publish',{publish:true})

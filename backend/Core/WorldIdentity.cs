@@ -122,6 +122,13 @@ public static class WorldIdentity
                         WHERE a.user_id=m.legacy_world_id AND a.status='completed'))");
             Settings.Put(db, "world_onboarding_backfilled", "1");
         }
+
+        // Cutover step 1: converge canonical ownership stamps on every resolvable owned attempt.
+        // Idempotent (only NULL stamps are touched) and safe on every boot; conflicts stay NULL
+        // and keep the cutover audit failing closed.
+        try { BackfillAttemptOwnership(db); }
+        catch (Exception e) { Console.Error.WriteLine($"[pciworld identity] ownership backfill failed: {e.Message}"); }
+
         return new Reconciliation(linked, created, conflicts, upgraded, Math.Max(0, already));
     }
 
@@ -412,13 +419,31 @@ public static class WorldIdentity
         return new(owned, resolvable, owned - resolvable);
     }
 
-    /// <summary>The canonical owner of an attempt (via its legacy World user id), or null for
-    /// anonymous/unresolvable attempts. The read path future product surfaces will use.</summary>
+    /// <summary>The canonical owner of an attempt, or null for anonymous/unresolvable attempts.
+    /// Prefers the STAMPED canonical column (cutover step 1); the legacy World-id resolution is
+    /// the fallback until the backfill has converged everywhere.</summary>
     public static long? CanonicalOwnerOfAttempt(Db db, long attemptId)
     {
-        var a = db.QueryOne("SELECT user_id FROM pciworld_attempts WHERE id=?", attemptId);
-        return a?["user_id"] is null ? null : CanonicalUserFor(db, H.L(a["user_id"]));
+        var a = db.QueryOne("SELECT user_id, canonical_user_id FROM pciworld_attempts WHERE id=?", attemptId);
+        if (a is null) return null;
+        if (a["canonical_user_id"] is not null) return H.L(a["canonical_user_id"]);
+        return a["user_id"] is null ? null : CanonicalUserFor(db, H.L(a["user_id"]));
     }
+
+    /// <summary>Idempotent backfill (cutover step 1): stamp canonical ownership on every owned
+    /// attempt whose legacy World id resolves through the map or the direct link. Quarantined
+    /// conflicts stay NULL — the cutover audit fails closed on them. Returns rows stamped.</summary>
+    public static int BackfillAttemptOwnership(Db db) =>
+        db.Execute(@"UPDATE pciworld_attempts SET canonical_user_id=(
+                SELECT COALESCE(m.canonical_user_id, w.student_user_id)
+                FROM pciworld_users w
+                LEFT JOIN pciworld_user_map m ON m.legacy_world_id=w.id AND m.canonical_user_id IS NOT NULL
+                WHERE w.id=pciworld_attempts.user_id)
+            WHERE user_id IS NOT NULL AND canonical_user_id IS NULL
+              AND (EXISTS(SELECT 1 FROM pciworld_user_map m2
+                          WHERE m2.legacy_world_id=pciworld_attempts.user_id AND m2.canonical_user_id IS NOT NULL)
+                   OR EXISTS(SELECT 1 FROM pciworld_users w2
+                             WHERE w2.id=pciworld_attempts.user_id AND w2.student_user_id IS NOT NULL))");
 
     // ───────────────────────── support diagnostics (PW-US-050) ─────────────────────────
 
