@@ -2145,7 +2145,7 @@ public static partial class WorldIntelligencePack
                    "principle":"Whatever is undecided at tender close is negotiated after it — at worse prices."}]}],
              "hints":["Sort by what each answer would change: information, specification, risk, or schedule.",
                "Changes are decisions with owners — route them to the owner before any bidder hears.",
-               "Symmetry is the whole game: all bidders, same information, same moment."],
+               "Symmetry is everything: all bidders, same information, same moment."],
              "profile_map":{"decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
              "share_line":"Sorted six bidder queries into answers and addenda before replying to any."}
             """),
