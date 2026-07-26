@@ -1176,8 +1176,7 @@ of cross-boundary integration.
 
 ---
 
-## Summary — Domain 4
-
+## Domain 4 summary
 Domains 1 to 3 produced accountability, a justified choice and a working decision structure, and none
 of them produced a project. Integration does — and integration fails in a characteristic way: the
 parts are managed and the joins are not.

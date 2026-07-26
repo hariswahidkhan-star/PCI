@@ -1182,8 +1182,7 @@ handles the risk-allocation face of the multi-party governance problem.
 
 ---
 
-## Summary — Domain 3
-
+## Domain 3 summary
 Governance is the decision rights, accountabilities and information flows through which an
 organisation directs a project — and it is not management, not assurance, and emphatically not the
 reporting apparatus that is usually offered in its place. A governance design must produce
