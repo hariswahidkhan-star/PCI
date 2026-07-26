@@ -37,6 +37,21 @@ public static class WorldAccount
             MaxAge = TimeSpan.FromDays(30),
         });
 
+    /// <summary>The account state behind a request's session, WITHOUT the active-only filter:
+    /// null = no valid session; "active"; "suspended" (World product suspension — PW-US-046).
+    /// Lets read endpoints answer a suspended participant with 403 account_suspended instead of
+    /// the 401 that the UI would misread as "you are signed out / not registered".</summary>
+    public static string? AccountState(HttpRequest req, Db db)
+    {
+        var h = req.Headers["X-World-Account"].ToString();
+        if (string.IsNullOrWhiteSpace(h)) h = req.Cookies[SessionCookie] ?? "";
+        if (string.IsNullOrWhiteSpace(h)) return null;
+        var sess = db.QueryOne("SELECT * FROM pciworld_user_sessions WHERE token=? AND expires_at>datetime('now')", Security.Sha(h));
+        if (sess is null) return null;
+        var u = db.QueryOne("SELECT status FROM pciworld_users WHERE id=?", sess["user_id"]);
+        return u is null ? null : (H.Str(u["status"]) == "active" ? "active" : "suspended");
+    }
+
     public static UserCtx? FromReq(HttpRequest req, Db db)
     {
         var h = req.Headers["X-World-Account"].ToString();
@@ -94,6 +109,12 @@ public static class WorldAccount
                 LoginGuard.OnSuccess(db, "pciworld_users", u["id"]);
                 if (H.Str(u["status"]) != "active") return ("account_suspended", 0, "");
                 var id = H.L(u["id"]);
+                // Global deactivation blocks BOTH products (PW-US-046): a deactivated canonical
+                // identity must not keep World access through a leftover legacy password.
+                var mapped = WorldIdentity.CanonicalUserFor(db, id);
+                if (mapped is not null && H.Str(db.QueryOne("SELECT status FROM users WHERE id=?", mapped)
+                        ?["status"]) == "deactivated")
+                    return ("account_suspended", 0, "");
                 ClaimSession(db, id, worldSessionId);
                 db.Execute("UPDATE pciworld_users SET last_login_at=datetime('now') WHERE id=?", id);
                 return (null, id, MintSession(db, id));
@@ -208,8 +229,9 @@ public static class WorldAccount
         // Publish-order safety (journey repair P1-05): an empty public Passport is a page that
         // says nothing about its owner and invites confusion about what it claims. At least one
         // deliberately selected evidence item is part of readiness, enforced server-side.
-        if (db.Scalar<long>(@"SELECT COUNT(*) FROM pciworld_attempts
-                WHERE user_id=? AND status='completed' AND passport_visible=1", userId) == 0)
+        var (ownedPub, ckPub) = OwnedBy(db, userId);
+        if (db.Scalar<long>($@"SELECT COUNT(*) FROM pciworld_attempts a
+                WHERE {ownedPub} AND a.status='completed' AND a.passport_visible=1", userId, ckPub) == 0)
             return ("no_evidence", null);
         var token = Security.RandomHex(32);
         db.Execute("UPDATE pciworld_users SET passport_public=1, passport_token_sha=? WHERE id=?",
@@ -260,24 +282,30 @@ public static class WorldAccount
 
     /// <summary>This account's public result links (PW-US-039) — safe metadata only. The raw token
     /// is not even stored (hash only), so it can never appear here.</summary>
-    public static List<Dictionary<string, object?>> ShareLinks(Db db, long userId) =>
-        db.Query(@"SELECT a.id, a.result_revoked, a.completed_at, a.updated_at, c.code, v.title
+    public static List<Dictionary<string, object?>> ShareLinks(Db db, long userId)
+    {
+        var (owned, ck) = OwnedBy(db, userId);
+        return db.Query($@"SELECT a.id, a.result_revoked, a.completed_at, a.updated_at, c.code, v.title
             FROM pciworld_attempts a
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=? AND a.result_token_sha IS NOT NULL
-            ORDER BY a.updated_at DESC, a.id DESC LIMIT 200", userId);
+            WHERE {owned} AND a.result_token_sha IS NOT NULL
+            ORDER BY a.updated_at DESC, a.id DESC LIMIT 200", userId, ck);
+    }
 
     /// <summary>This account's outstanding invitations (PW-US-040) — status and the pinned
     /// version they carry, never the inviter's answers or a raw token.</summary>
-    public static List<Dictionary<string, object?>> Invitations(Db db, long userId) =>
-        db.Query(@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title
+    public static List<Dictionary<string, object?>> Invitations(Db db, long userId)
+    {
+        var (owned, ck) = OwnedBy(db, userId);
+        return db.Query($@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title
             FROM pciworld_invites i
             JOIN pciworld_attempts a ON a.id=i.attempt_id
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=?
-            ORDER BY i.id DESC LIMIT 200", userId);
+            WHERE {owned}
+            ORDER BY i.id DESC LIMIT 200", userId, ck);
+    }
 
     /// <summary>This account's live World sessions — metadata only, never a token value (they are
     /// stored hashed and cannot be reprinted anyway). Feeds the sessions view (PW-US-043).</summary>
@@ -288,20 +316,29 @@ public static class WorldAccount
     /// <summary>The account's evidence rows (own view — includes hidden items so they can be toggled).
     /// Paginated (journey repair P1-06): the page size is a window, never the truth — totals come
     /// from <see cref="EvidenceStats"/> so an account with 1,000 attempts counts 1,000.</summary>
+    /// <summary>Union ownership predicate (cutover read-flip): a row belongs to this account when
+    /// its LEGACY World id matches, or its stamped canonical id does — one row either way, never
+    /// double-counted. -1 never matches when the account is unmapped.</summary>
+    static (string Sql, long CanonicalKey) OwnedBy(Db db, long userId) =>
+        ("(a.user_id=? OR a.canonical_user_id=?)", WorldIdentity.CanonicalUserFor(db, userId) ?? -1);
+
     public static List<Dictionary<string, object?>> EvidenceRows(Db db, long userId, bool visibleOnly,
-        int limit = 200, int offset = 0) =>
+        int limit = 200, int offset = 0)
+    {
+        var (owned, ck) = OwnedBy(db, userId);
         // Deliberately NO answers_json and NO session_id: this shape feeds the PUBLIC Passport and
         // the PDF, so anything selected here is one careless interpolation away from publication.
         // The data export fetches answers on its own, separate path.
-        db.Query($@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
+        return db.Query($@"SELECT a.id, a.score, a.profile_key, a.completed_at, a.passport_visible,
                 a.result_token_sha, a.result_revoked, c.code, a.version,
                 v.title, v.industry, v.track, v.difficulty
             FROM pciworld_attempts a
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=? AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}
+            WHERE {owned} AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}
             ORDER BY a.completed_at DESC, a.id DESC
-            LIMIT {Math.Clamp(limit, 1, 500)} OFFSET {Math.Max(0, offset)}", userId);
+            LIMIT {Math.Clamp(limit, 1, 500)} OFFSET {Math.Max(0, offset)}", userId, ck);
+    }
 
     public sealed record Stats(long Completed, long Industries, long Tracks);
 
@@ -309,11 +346,12 @@ public static class WorldAccount
     /// (P1-06). These feed the account view, the public Passport and the PDF alike.</summary>
     public static Stats EvidenceStats(Db db, long userId, bool visibleOnly)
     {
+        var (owned, ck) = OwnedBy(db, userId);
         var row = db.QueryOne($@"SELECT COUNT(*) AS c,
                 COUNT(DISTINCT v.industry) AS i, COUNT(DISTINCT v.track) AS t
             FROM pciworld_attempts a
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
-            WHERE a.user_id=? AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}", userId)!;
+            WHERE {owned} AND a.status='completed' {(visibleOnly ? "AND a.passport_visible=1" : "")}", userId, ck)!;
         return new(H.L(row["c"]), H.L(row["i"]), H.L(row["t"]));
     }
 
@@ -336,20 +374,23 @@ public static class WorldAccount
         var photoRef = H.Str(db.QueryOne("SELECT passport_photo_ref FROM pciworld_users WHERE id=?", userId)
             ?["passport_photo_ref"]);
         if (!string.IsNullOrEmpty(photoRef)) Storage.DeleteOne(photoRef);
+        // Ownership in BOTH namespaces (read-flip completion): the sweep must reach rows that are
+        // stamped only canonically, or deletion leaves orphaned personal rows behind.
+        var (ownedDel, ckDel) = OwnedBy(db, userId);
         // Any public link minted from this account's attempts stops resolving first.
-        db.Execute(@"UPDATE pciworld_invites SET revoked=1
-            WHERE attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)", userId);
+        db.Execute($@"UPDATE pciworld_invites SET revoked=1
+            WHERE attempt_id IN (SELECT a.id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
         // Content reports and analytics events lose the session linkage that could re-identify them.
-        db.Execute(@"UPDATE pciworld_reports SET session_id=NULL
-            WHERE session_id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
-        db.Execute(@"UPDATE pciworld_events SET session_id=NULL
-            WHERE session_id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
+        db.Execute($@"UPDATE pciworld_reports SET session_id=NULL
+            WHERE session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
+        db.Execute($@"UPDATE pciworld_events SET session_id=NULL
+            WHERE session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
         // The browser sessions themselves are removed, then the attempts are stripped.
-        db.Execute(@"DELETE FROM pciworld_sessions
-            WHERE id IN (SELECT session_id FROM pciworld_attempts WHERE user_id=?)", userId);
-        db.Execute(@"UPDATE pciworld_attempts SET user_id=NULL, canonical_user_id=NULL, passport_visible=0,
+        db.Execute($@"DELETE FROM pciworld_sessions
+            WHERE id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
+        db.Execute($@"UPDATE pciworld_attempts SET user_id=NULL, canonical_user_id=NULL, passport_visible=0,
             display_name=NULL, result_token_sha=NULL, result_revoked=1, answers_json=NULL, session_id=0
-            WHERE user_id=?", userId);
+            WHERE id IN (SELECT a.id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
         db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_user_tokens WHERE user_id=?", userId);
         db.Execute("DELETE FROM pciworld_handoff_codes WHERE world_user_id=?", userId);
@@ -435,16 +476,40 @@ public static class WorldAccount
                 email_verified = H.L(me["email_verified"]) == 1, passport_public = H.L(me["passport_public"]) == 1 });
         });
 
-        app.MapPost("/api/world/account/logout", (HttpContext ctx) =>
+        app.MapPost("/api/world/account/logout", async (HttpContext ctx) =>
         {
-            // Revoke BOTH carriers of the session (P0-07): the header token and the HttpOnly
-            // cookie, then clear the cookie so a shared browser holds nothing after sign-out.
+            // Sign-out scope (PW-US-010/043). Default: revoke BOTH carriers of THIS session
+            // (P0-07) and clear the cookie so a shared browser holds nothing. {everywhere:true}:
+            // the coordinated central sign-out — every World session for this account dies, and
+            // when the account is canonically linked, the canonical portal sessions
+            // (login_tokens, purpose 'session') die with them. Suspension never blocks a
+            // sign-out, so the owner is resolved from the raw session row, not the active-only
+            // resolver.
+            var b = await H.Body(ctx.Request);
+            var everywhere = H.GetEl(b, "everywhere") is { ValueKind: JsonValueKind.True };
+            long? owner = null;
             foreach (var tok in new[] { ctx.Request.Headers["X-World-Account"].ToString(),
                                         ctx.Request.Cookies[SessionCookie] ?? "" })
-                if (!string.IsNullOrWhiteSpace(tok))
-                    db.Execute("DELETE FROM pciworld_user_sessions WHERE token=?", Security.Sha(tok));
+            {
+                if (string.IsNullOrWhiteSpace(tok)) continue;
+                var row = db.QueryOne("SELECT user_id FROM pciworld_user_sessions WHERE token=?", Security.Sha(tok));
+                if (row is not null) owner ??= H.L(row["user_id"]);
+                db.Execute("DELETE FROM pciworld_user_sessions WHERE token=?", Security.Sha(tok));
+            }
+            var revokedWorld = 0; var revokedCanonical = 0;
+            if (everywhere && owner is not null)
+            {
+                revokedWorld = db.Execute("DELETE FROM pciworld_user_sessions WHERE user_id=?", owner);
+                var canonical = WorldIdentity.CanonicalUserFor(db, owner.Value);
+                if (canonical is not null)
+                    revokedCanonical = db.Execute(
+                        "DELETE FROM login_tokens WHERE user_id=? AND purpose='session'", canonical);
+                log(null, "world_logout_everywhere",
+                    $"world #{owner}: {revokedWorld} world + {revokedCanonical} canonical session(s)");
+            }
             ctx.Response.Cookies.Delete(SessionCookie, new CookieOptions { Path = "/" });
-            return J(new { ok = true });
+            return J(new { ok = true, everywhere,
+                revoked_world_sessions = revokedWorld, revoked_pci_sessions = revokedCanonical });
         });
 
         // Deliberate verification (journey repair P1-03): the GET only LOOKS — mail scanners and
@@ -550,6 +615,10 @@ public static class WorldAccount
         app.MapGet("/api/world/me/dashboard", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
+            // A suspended participant has a real session and deserves the truth (PW-US-046):
+            // 403 account_suspended, never a 401 the UI would misread as "not registered".
+            if (AccountState(ctx.Request, db) == "suspended")
+                return Err("account_suspended", 403, "Your PCI World participation is suspended. Contact support to resolve it — your PCI student account is unaffected.");
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var s = WorldDashboard.Build(db, u, DateTime.UtcNow);
@@ -682,9 +751,11 @@ public static class WorldAccount
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var b = await H.Body(ctx.Request);
-            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
-                WHERE id=? AND user_id=? AND result_token_sha IS NOT NULL",
-                (long)(H.GetNum(b, "attempt_id") ?? 0), u.Id);
+            var (owned, ck) = OwnedBy(db, u.Id);
+            var n = db.Execute($@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE id IN (SELECT a.id FROM pciworld_attempts a WHERE a.id=? AND {owned})
+                  AND result_token_sha IS NOT NULL",
+                (long)(H.GetNum(b, "attempt_id") ?? 0), u.Id, ck);
             if (n == 0) return Err("not_found", 404);
             log(null, "world_share_revoke", $"world #{u.Id}");
             return J(new { ok = true });
@@ -695,8 +766,10 @@ public static class WorldAccount
             if (!Enabled()) return Disabled();
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
-            var n = db.Execute(@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
-                WHERE user_id=? AND result_token_sha IS NOT NULL AND result_revoked=0", u.Id);
+            var (ownedAll, ckAll) = OwnedBy(db, u.Id);
+            var n = db.Execute($@"UPDATE pciworld_attempts SET result_revoked=1, updated_at=datetime('now')
+                WHERE id IN (SELECT a.id FROM pciworld_attempts a WHERE {ownedAll})
+                  AND result_token_sha IS NOT NULL AND result_revoked=0", u.Id, ckAll);
             log(null, "world_share_revoke_all", $"world #{u.Id}: {n}");
             return J(new { ok = true, revoked = n });
         });
@@ -707,10 +780,11 @@ public static class WorldAccount
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             var b = await H.Body(ctx.Request);
-            var n = db.Execute(@"UPDATE pciworld_invites SET revoked=1
+            var (ownedInv, ckInv) = OwnedBy(db, u.Id);
+            var n = db.Execute($@"UPDATE pciworld_invites SET revoked=1
                 WHERE id=? AND revoked=0
-                  AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)",
-                (long)(H.GetNum(b, "invite_id") ?? 0), u.Id);
+                  AND attempt_id IN (SELECT a.id FROM pciworld_attempts a WHERE {ownedInv})",
+                (long)(H.GetNum(b, "invite_id") ?? 0), u.Id, ckInv);
             if (n == 0) return Err("not_found", 404);
             log(null, "world_invite_revoke", $"world #{u.Id}");
             return J(new { ok = true });
@@ -721,8 +795,9 @@ public static class WorldAccount
             if (!Enabled()) return Disabled();
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
-            var n = db.Execute(@"UPDATE pciworld_invites SET revoked=1
-                WHERE revoked=0 AND attempt_id IN (SELECT id FROM pciworld_attempts WHERE user_id=?)", u.Id);
+            var (ownedIA, ckIA) = OwnedBy(db, u.Id);
+            var n = db.Execute($@"UPDATE pciworld_invites SET revoked=1
+                WHERE revoked=0 AND attempt_id IN (SELECT a.id FROM pciworld_attempts a WHERE {ownedIA})", u.Id, ckIA);
             log(null, "world_invite_revoke_all", $"world #{u.Id}: {n}");
             return J(new { ok = true, revoked = n });
         });
@@ -982,6 +1057,8 @@ public static class WorldAccount
         app.MapGet("/api/world/passport", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
+            if (AccountState(ctx.Request, db) == "suspended")
+                return Err("account_suspended", 403, "Your PCI World participation is suspended. Contact support to resolve it — your PCI student account is unaffected.");
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
             // Whole-history statistics from SQL, a paged window of evidence (P1-06): an account

@@ -585,10 +585,13 @@ public static class WorldAdmin
             if (Gate(ctx, "read", out _) is { } blocked) return blocked;
             var status = ctx.Request.Query["status"].ToString();
             if (status != "resolved") status = "open";
-            var rows = db.Query(@"SELECT r.id, r.category, r.message, r.status, r.resolution, r.created_at, r.resolved_at,
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 50), 1, 200);
+            var offset = Math.Max(0, (int)(H.QL(ctx, "offset") ?? 0));
+            var total = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_reports WHERE status=?", status);
+            var rows = db.Query($@"SELECT r.id, r.category, r.message, r.status, r.resolution, r.created_at, r.resolved_at,
                     c.code, c.title
                 FROM pciworld_reports r LEFT JOIN pciworld_challenges c ON c.id=r.challenge_id
-                WHERE r.status=? ORDER BY r.id DESC LIMIT 200", status)
+                WHERE r.status=? ORDER BY r.id DESC LIMIT {limit} OFFSET {offset}", status)
                 .Select(r => new
                 {
                     id = H.L(r["id"]), category = H.Str(r["category"]), message = H.Str(r["message"]),
@@ -596,7 +599,7 @@ public static class WorldAdmin
                     code = H.Str(r["code"]), title = H.Str(r["title"]),
                     created_at = H.Str(r["created_at"]), resolved_at = H.Str(r["resolved_at"]),
                 });
-            return J(new { rows });
+            return J(new { rows, total, offset, limit });
         });
 
         app.MapPost("/api/world-admin/reports/{id:long}/resolve", async (HttpContext ctx, long id) =>
@@ -616,12 +619,17 @@ public static class WorldAdmin
         app.MapGet("/api/world-admin/audit", (HttpContext ctx) =>
         {
             if (Gate(ctx, "read", out _) is { } blocked) return blocked;
-            var rows = db.Query(@"SELECT a.id, a.admin_id, u.email, a.action, a.detail, a.created_at
+            // Real pagination (P2): the log is append-only history — an operator must be able to
+            // reach ALL of it, and the first page must say how much more there is.
+            var limit = Math.Clamp((int)(H.QL(ctx, "limit") ?? 50), 1, 200);
+            var offset = Math.Max(0, (int)(H.QL(ctx, "offset") ?? 0));
+            var total = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_audit");
+            var rows = db.Query($@"SELECT a.id, a.admin_id, u.email, a.action, a.detail, a.created_at
                 FROM pciworld_audit a LEFT JOIN pciworld_admin_users u ON u.id=a.admin_id
-                ORDER BY a.id DESC LIMIT 200")
+                ORDER BY a.id DESC LIMIT {limit} OFFSET {offset}")
                 .Select(r => new { id = H.L(r["id"]), email = H.Str(r["email"]), action = H.Str(r["action"]),
                                    detail = H.Str(r["detail"]), created_at = H.Str(r["created_at"]) });
-            return J(new { rows });
+            return J(new { rows, total, offset, limit });
         });
 
         app.MapGet("/api/world-admin/overview", (HttpContext ctx) =>
@@ -956,7 +964,7 @@ public static class WorldAdmin
         }
         function lifecycleButtons(r){
           var b='';
-          function act(a,label,ghost){b+='<button '+(ghost?'class="ghost" ':'')+'data-act="'+a+'" data-id="'+r.id+'">'+label+'</button> ';}
+          function act(a,label,ghost){b+='<button '+(ghost?'class="ghost" ':'')+'data-act="'+a+'" data-id="'+r.id+'" data-code="'+esc(r.code)+'">'+label+'</button> ';}
           act('open','Open',true);
           if(r.status==='draft')act('submit-review','Submit for review');
           if(r.status==='in_review'){act('approve','Approve');act('reject','Reject',true);}
@@ -1139,17 +1147,23 @@ public static class WorldAdmin
             $('tab-challenges').innerHTML=h;
             $('newch').addEventListener('click',function(){editingId=null;clearEditor();tab('editor');});
             $('tab-challenges').querySelectorAll('[data-act]').forEach(function(btn){
-              btn.addEventListener('click',function(){doAction(btn.dataset.act,btn.dataset.id);});
+              btn.addEventListener('click',function(){doAction(btn.dataset.act,btn.dataset.id,btn);});
             });
           });
         }
-        function doAction(act,id){
+        function doAction(act,id,btn){
           if(act==='open'){openChallenge(id);return;}
+          var code=(btn&&btn.dataset.code)||'this challenge';
+          // Destructive actions confirm FIRST and name their target (P2): retiring takes content
+          // off the air, so nobody does it by a slipped click.
+          if(act==='retire'&&!confirm('Retire '+code+'? It leaves the daily rotation and the public archive immediately. '+
+            'Published history and completed attempts are untouched, and Restore can bring it back.'))return;
           var body={};
           if(act==='reject'){var note=prompt('Rejection note for the author:')||'';body={note:note};}
+          if(btn)btn.disabled=true;   // pending state — no double fire while the call runs
           api('/api/world-admin/challenges/'+id+'/'+act,'POST',body)
             .then(loadChallenges)
-            .catch(function(e){alert((e&&(e.message||e.error))||'Action failed');});
+            .catch(function(e){if(btn)btn.disabled=false;alert((e&&(e.message||e.error))||'Action failed');});
         }
         function clearEditor(){
           ['f_code','f_title','f_industry','f_role','f_hook','f_comp','f_config'].forEach(function(f){$(f).value='';});
@@ -1212,17 +1226,20 @@ public static class WorldAdmin
           });
         }
         function loadReports(){
-          api('/api/world-admin/reports?status=open').then(function(o){
-            var h='<h2>Open content reports ('+o.rows.length+')</h2>';
+          api('/api/world-admin/reports?status=open&limit=50').then(function(o){
+            var h='<h2>Open content reports ('+o.total+')</h2>';
+            function repRow(r){
+              return '<tr><td>WR-'+r.id+'</td><td>'+esc(r.created_at)+'</td><td>'+esc(r.code||'—')+'</td>'+
+                 '<td>'+esc(r.category)+'</td><td style="max-width:380px">'+esc(r.message)+'</td>'+
+                 '<td><button data-resolve="'+r.id+'">Resolve</button></td></tr>';
+            }
             if(!o.rows.length)h+='<p>No open reports — the queue is clear.</p>';
             else{
-              h+='<table><thead><tr><th>Ref</th><th>When (UTC)</th><th>Challenge</th><th>Category</th><th>Report</th><th></th></tr></thead><tbody>';
-              o.rows.forEach(function(r){
-                h+='<tr><td>WR-'+r.id+'</td><td>'+esc(r.created_at)+'</td><td>'+esc(r.code||'—')+'</td>'+
-                   '<td>'+esc(r.category)+'</td><td style="max-width:380px">'+esc(r.message)+'</td>'+
-                   '<td><button data-resolve="'+r.id+'">Resolve</button></td></tr>';
-              });
-              h+='</tbody></table>';
+              h+='<table><thead><tr><th>Ref</th><th>When (UTC)</th><th>Challenge</th><th>Category</th><th>Report</th><th></th></tr></thead>'+
+                 '<tbody id="repBody">';
+              o.rows.forEach(function(r){h+=repRow(r);});
+              h+='</tbody></table>'+
+                 (o.total>o.rows.length?'<p><button id="repMore" class="ghost">Older reports</button></p>':'');
             }
             // Support lookup (PW-US-050): read-gated diagnostics for a stuck participant journey.
             // The answer is states and counts — never answers, tokens, disclosure or photos.
@@ -1250,21 +1267,48 @@ public static class WorldAdmin
                 })
                 .catch(function(e){$('pl_out').innerHTML='<p class="bad">'+esc((e&&e.error)==='not_found'?'No PCI World account matches that.':'Lookup failed — try again.')+'</p>';});
             });
-            $('tab-reports').querySelectorAll('[data-resolve]').forEach(function(btn){
-              btn.addEventListener('click',function(){
-                var note=prompt('Resolution note (what was checked or changed):')||'';
-                api('/api/world-admin/reports/'+btn.dataset.resolve+'/resolve','POST',{note:note})
-                  .then(loadReports)
-                  .catch(function(e){alert((e&&(e.message||e.error))||'Could not resolve');});
+            function bindResolve(scope){
+              scope.querySelectorAll('[data-resolve]').forEach(function(btn){
+                if(btn.dataset.bound)return;btn.dataset.bound='1';
+                btn.addEventListener('click',function(){
+                  var note=prompt('Resolution note (what was checked or changed):')||'';
+                  btn.disabled=true;
+                  api('/api/world-admin/reports/'+btn.dataset.resolve+'/resolve','POST',{note:note})
+                    .then(loadReports)
+                    .catch(function(e){btn.disabled=false;alert((e&&(e.message||e.error))||'Could not resolve');});
+                });
               });
-            });
+            }
+            bindResolve($('tab-reports'));
+            if($('repMore')){
+              var repOffset=o.rows.length;
+              $('repMore').addEventListener('click',function(){
+                api('/api/world-admin/reports?status=open&limit=50&offset='+repOffset).then(function(o2){
+                  o2.rows.forEach(function(r){$('repBody').insertAdjacentHTML('beforeend',repRow(r));});
+                  bindResolve($('repBody'));
+                  repOffset+=o2.rows.length;
+                  if(repOffset>=o2.total||!o2.rows.length)$('repMore').hidden=true;
+                });
+              });
+            }
           });
         }
-        function loadAudit(){
-          api('/api/world-admin/audit').then(function(o){
-            var h='<h2>Audit log</h2><table><thead><tr><th>When (UTC)</th><th>Who</th><th>Action</th><th>Detail</th></tr></thead><tbody>';
-            o.rows.forEach(function(r){h+='<tr><td>'+esc(r.created_at)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.action)+'</td><td>'+esc(r.detail)+'</td></tr>';});
-            $('tab-audit').innerHTML=h+'</tbody></table>';
+        var auditOffset=0;
+        function loadAudit(more){
+          if(!more)auditOffset=0;
+          api('/api/world-admin/audit?limit=50&offset='+auditOffset).then(function(o){
+            var body=o.rows.map(function(r){
+              return '<tr><td>'+esc(r.created_at)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.action)+'</td><td>'+esc(r.detail)+'</td></tr>';
+            }).join('');
+            if(!more){
+              $('tab-audit').innerHTML='<h2>Audit log ('+o.total+')</h2>'+
+                '<table><thead><tr><th>When (UTC)</th><th>Who</th><th>Action</th><th>Detail</th></tr></thead>'+
+                '<tbody id="auditBody">'+body+'</tbody></table>'+
+                '<p><button id="auditMore" class="ghost">Older entries</button></p>';
+              $('auditMore').addEventListener('click',function(){loadAudit(true);});
+            }else $('auditBody').insertAdjacentHTML('beforeend',body);
+            auditOffset+=o.rows.length;
+            if($('auditMore'))$('auditMore').hidden=auditOffset>=o.total||!o.rows.length;
           });
         }
         function loadUsers(){

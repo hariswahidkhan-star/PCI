@@ -327,6 +327,32 @@ public class WorldIdentityTests
     }
 
     [Fact]
+    public void Suspension_and_global_deactivation_are_distinct_and_honest()
+    {
+        var db = NewWorldDb();
+        var (_, wid, token) = WorldAccount.Register(db, "susp@x.test", "long-password-1", "S", null);
+        var uid = WorldIdentity.CanonicalUserFor(db, wid)!.Value;
+
+        // WORLD suspension: sessions resolve to a "suspended" state (never a silent null that the
+        // UI would read as signed-out), and the active-only resolver refuses as before.
+        db.Execute("UPDATE pciworld_users SET status='suspended' WHERE id=?", wid);
+        var ctx = new Microsoft.AspNetCore.Http.DefaultHttpContext();
+        ctx.Request.Headers["X-World-Account"] = token;
+        Assert.Equal("suspended", WorldAccount.AccountState(ctx.Request, db));
+        Assert.Null(WorldAccount.FromReq(ctx.Request, db));
+        Assert.Equal("account_suspended", WorldAccount.Login(db, "susp@x.test", "long-password-1", null).Error);
+        // The canonical identity is untouched — PCI AI access is not World's to revoke.
+        Assert.Equal("active", db.Scalar<string>("SELECT status FROM users WHERE id=?", uid));
+
+        // GLOBAL deactivation blocks the legacy World password too: reactivate the World row,
+        // deactivate the canonical identity, and the old World credential no longer signs in.
+        db.Execute("UPDATE pciworld_users SET status='active' WHERE id=?", wid);
+        Assert.Null(WorldAccount.Login(db, "susp@x.test", "long-password-1", null).Error);
+        db.Execute("UPDATE users SET status='deactivated' WHERE id=?", uid);
+        Assert.Equal("account_suspended", WorldAccount.Login(db, "susp@x.test", "long-password-1", null).Error);
+    }
+
+    [Fact]
     public void Participation_rows_hold_product_data_only_and_are_unique_per_user()
     {
         var db = NewWorldDb();

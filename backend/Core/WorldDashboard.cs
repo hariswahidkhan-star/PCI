@@ -35,13 +35,15 @@ public static class WorldDashboard
     public static long WeekDone(Db db, long userId, DateTime utcNow)
     {
         var today = WorldRotation.DayKey(db, utcNow);
+        var ck = WorldIdentity.CanonicalUserFor(db, userId) ?? -1;
         var days = db.Query(@"SELECT p.day_key,
                 MAX(CASE WHEN a.id IS NULL THEN 0 ELSE 1 END) AS done
             FROM pciworld_rotation_periods p
             LEFT JOIN pciworld_attempts a ON a.rotation_period_id=p.id
-                AND a.user_id=? AND a.status='completed' AND a.parent_attempt_id IS NULL
+                AND (a.user_id=? OR a.canonical_user_id=?)
+                AND a.status='completed' AND a.parent_attempt_id IS NULL
             WHERE p.day_key<=?
-            GROUP BY p.day_key ORDER BY p.day_key DESC LIMIT 7", userId, today);
+            GROUP BY p.day_key ORDER BY p.day_key DESC LIMIT 7", userId, ck, today);
         return days.Count(r => H.L(r["done"]) == 1);
     }
 
@@ -55,13 +57,15 @@ public static class WorldDashboard
     public static long Streak(Db db, long userId, DateTime utcNow)
     {
         var today = WorldRotation.DayKey(db, utcNow);
+        var ck = WorldIdentity.CanonicalUserFor(db, userId) ?? -1;
         var days = db.Query(@"SELECT p.day_key,
                 MAX(CASE WHEN a.id IS NULL THEN 0 ELSE 1 END) AS done
             FROM pciworld_rotation_periods p
             LEFT JOIN pciworld_attempts a ON a.rotation_period_id=p.id
-                AND a.user_id=? AND a.status='completed' AND a.parent_attempt_id IS NULL
+                AND (a.user_id=? OR a.canonical_user_id=?)
+                AND a.status='completed' AND a.parent_attempt_id IS NULL
             WHERE p.day_key<=?
-            GROUP BY p.day_key ORDER BY p.day_key DESC LIMIT 366", userId, today);
+            GROUP BY p.day_key ORDER BY p.day_key DESC LIMIT 366", userId, ck, today);
         long streak = 0;
         for (var i = 0; i < days.Count; i++)
         {
@@ -127,8 +131,8 @@ public static class WorldDashboard
         // ── passport readiness (§7.6): private_empty → private_incomplete → private_ready →
         //    published_active | expired ──
         var me = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", u.Id)!;
-        var visible = db.Scalar<long>(
-            "SELECT COUNT(*) FROM pciworld_attempts WHERE user_id=? AND status='completed' AND passport_visible=1", u.Id);
+        var visible = db.Scalar<long>($@"SELECT COUNT(*) FROM pciworld_attempts a
+            WHERE {Owned} AND a.status='completed' AND a.passport_visible=1", u.Id, canonicalKey);
         var progress = WorldAccount.EvidenceStats(db, u.Id, visibleOnly: false);
         var expired = WorldPassport.Expired(me);
         var passportState =
