@@ -2031,6 +2031,13 @@ public static class WorldPages
                '<p><small style="color:var(--slate)">&ldquo;Sign out&rdquo; ends this device&rsquo;s PCI World session only. '+
                '&ldquo;Sign out of all PCI services&rdquo; ends every PCI World session on every device and, when your '+
                'account is linked, your Institute student-portal sessions too.</small></p>'+
+               // One email, one owner (PW-US-058): the sign-in email is canonical PCI identity
+               // data — World shows it and points at the one place it changes, so the two
+               // products can never drift apart on who you are.
+               (d&&d.email?'<p><small style="color:var(--slate)">Signed in as <b>'+esc(d.email)+'</b>. Your sign-in email is managed by your PCI account'+
+                 (d.products&&d.products.pci_ai&&d.products.pci_ai.state==='ready'
+                   ?' &mdash; change it in the <a href="'+esc(typeof PORTAL_URL!=='undefined'?PORTAL_URL:'/app/')+'">student portal</a> settings; the change applies here automatically.'
+                   :'; PCI World never edits it separately.')+'</small></p>':'')+
                // A labelled password field, not window.prompt(): prompt() shows the password in
                // clear text, carries no label, cannot be styled or translated, and is blocked
                // outright by some browsers.

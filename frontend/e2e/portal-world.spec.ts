@@ -53,10 +53,10 @@ test.describe('PCI World — public journey', () => {
 
   test('archive filters narrow the catalogue server-side', async ({ page }) => {
     await page.goto('/world/archive')
-    await expect(page.locator('main')).toContainText('52 challenges')
+    await expect(page.locator('main')).toContainText('420 challenges')
     await page.locator('#f_dif').selectOption('expert')
     await page.getByRole('button', { name: 'Filter' }).click()
-    await expect(page.locator('main')).toContainText('5 challenges')
+    await expect(page.locator('main')).toContainText('22 challenges')
     await expect(page.locator('main')).toContainText('The wind farm at the crossroads')
   })
 
@@ -162,16 +162,16 @@ test.describe('PCI World — public journey', () => {
     await page.locator('#r_name').fill('E2E Participant')
     await page.getByRole('button', { name: 'Create account' }).click()
 
-    // Disclosure is per field, not one switch: publishing what you practised must not force
-    // publishing your scores.
+    // Disclosure is per field, not one switch — and privacy-safe by default (P1-05): a NEW
+    // account publishes nothing beyond challenge titles until its owner deliberately opts in.
     const scores = page.locator('#sw_scores')
     await expect(scores).toBeVisible()
-    await expect(scores).toBeChecked()
-    await scores.uncheck()
+    await expect(scores).not.toBeChecked()                       // privacy-safe default
+    await scores.check()                                         // the owner opts in
     await page.locator('#sw_exp').selectOption('90')
     await page.getByRole('button', { name: 'Save these settings' }).click()
     await expect(page.locator('#showmsg')).toContainText('Saved')
-    await expect(page.locator('#sw_scores')).not.toBeChecked()   // survives the reload
+    await expect(page.locator('#sw_scores')).toBeChecked()       // survives the reload
     await expect(page.locator('main')).toContainText('Current link expires')
   })
 
@@ -230,11 +230,11 @@ test.describe('PCI World — separate admin realm', () => {
     await page.locator('#em').fill('owner@pciworld.local')
     await page.locator('#pw').fill(process.env.PCIWORLD_OWNER_PASSWORD || 'changeme-world-owner')
     await page.getByRole('button', { name: 'Sign in' }).click()
-    await expect(page.locator('#tab-overview')).toContainText('servable 52')
+    await expect(page.locator('#tab-overview')).toContainText('servable 420')
 
     // The reports queue is reachable and renders (empty or with the public test's report).
     await page.getByRole('tab', { name: 'Reports' }).click()
-    await expect(page.locator('#tab-reports h2')).toContainText('Open content reports')
+    await expect(page.locator('#tab-reports h2').first()).toContainText('Open content reports')
   })
 
   test('the rotation console shows the recorded day and substitutes without erasing it', async ({ page }) => {
@@ -242,7 +242,7 @@ test.describe('PCI World — separate admin realm', () => {
     await page.locator('#em').fill('owner@pciworld.local')
     await page.locator('#pw').fill(process.env.PCIWORLD_OWNER_PASSWORD || 'changeme-world-owner')
     await page.getByRole('button', { name: 'Sign in' }).click()
-    await expect(page.locator('#tab-overview')).toContainText('servable 52')
+    await expect(page.locator('#tab-overview')).toContainText('servable 420')
 
     await page.getByRole('tab', { name: 'Rotation' }).click()
     const panel = page.locator('#tab-rotation')
@@ -251,17 +251,19 @@ test.describe('PCI World — separate admin realm', () => {
     await expect(panel).toContainText('cycle')
     await expect(panel).toContainText('Recorded days')
 
-    // Re-running the boundary is idempotent: the scheduler log records the no-op rather than
-    // opening the day twice.
-    await panel.getByRole('button', { name: 'Run the boundary now' }).click()
-    await expect(panel).toContainText('skipped_exists')
-
-    // A substitution needs a reason, and the day it replaces stays in the ledger.
+    // A substitution needs a reason, and the day it replaces stays in the ledger. Substitute
+    // against the panel's initial render — the boundary button re-renders the panel, and filling
+    // across that re-render would race the fields away.
     await panel.locator('#sub_code').fill('WC-EVM-001')
     await panel.locator('#sub_why').fill('E2E: verifying the substitution ledger')
     await panel.getByRole('button', { name: 'Substitute' }).click()
     await expect(panel).toContainText('substitution')
     await expect(panel).toContainText('(superseded)')
+
+    // Re-running the boundary is idempotent: the scheduler log records the no-op rather than
+    // opening the day twice.
+    await panel.getByRole('button', { name: 'Run the boundary now' }).click()
+    await expect(panel).toContainText('skipped_exists')
   })
 
   test('the PCI admin SPA carries no PCI World navigation', async ({ page }) => {

@@ -2,3 +2,4 @@
 # Local translation/working scratch (not part of the app)
 scratchpad/
 node_modules/
+backend/pci.db.migrate.lock

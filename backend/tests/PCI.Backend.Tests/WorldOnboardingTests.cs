@@ -118,6 +118,9 @@ public class WorldOnboardingTests
         Assert.Equal("created", byId["mapping_outcome"]);
         Assert.NotNull(byId["canonical_user_id"]);
         Assert.Equal("not_started", byId["onboarding_state"]);
+        // Journey timestamps support can anchor a conversation on.
+        Assert.True(byId.ContainsKey("first_entered_at"));
+        Assert.True(byId.ContainsKey("onboarded_at"));
         Assert.Equal(1L, byId["attempts_completed"]);
         Assert.Equal(true, byId["passport_public"]);
         Assert.Equal(1L, byId["visible_evidence"]);
