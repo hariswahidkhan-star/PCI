@@ -1658,14 +1658,24 @@ confirm the legal test with counsel once per financing rather than once per divi
 **Situation.** Kestrel Water SPC's first operating year closes on the figures above: net income
 USD 2,064,000, `EBITDA` USD 7,500,000 — a good year by any account. The finance director's draft
 lender report quotes `DSCR` **1.39** and describes headroom as comfortable against the facility's
-**1.25** covenant.
+**1.25** distribution condition.
+
+**Which threshold, and why it matters that the report picked one.** Kestrel's facility tests coverage
+at the three levels tabulated in KA 2.3.1B — a 1.25× distribution condition, a 1.20× financial
+covenant and a 1.15× lock-up trigger, whose consequences Domain 10 (KA 10.4) builds. The draft report
+compared its figure against the distribution condition alone, which is the least severe of the three
+and the only one whose failure costs a dividend rather than triggering an event of default.
 
 **The problem.** The facility's definition of `CFADS` is struck **after** movements in working
 capital. Kestrel's receivables had grown USD 900,000 as the offtaker's payment process settled
 into a slower rhythm than modelled, against a USD 300,000 rise in payables — a net USD 600,000
 absorbed. On the documented definition, `CFADS` is USD 6,384,000 and `DSCR` is **1.27**, not 1.39.
-Headroom against the 1.25 covenant is USD 0.02 of ratio — roughly **USD 100,000 of cash** — not
-the comfortable margin reported.
+Headroom against the 1.25 distribution condition is USD 0.02 of ratio — **USD 121,956 of cash** —
+not the comfortable margin reported. Against the 1.20 covenant the headroom is **USD 372,438**, or
+**5.8 %** of `CFADS`, which is the figure Domain 10 (WE 10.2.1) computes and the one a board paper
+should carry. And note what the definitional choice cost: on the pre-working-capital figure the
+covenant headroom would have looked like **USD 972,438**, so **USD 600,000 — 61.7 % of the apparent
+margin — was never there.**
 
 **The margin, restated in the units that caused it.** The board's question — how close was this? —
 has a better answer than 0.02 of ratio. Kestrel's `DSCR` of 1.2743 corresponds to a collection period
