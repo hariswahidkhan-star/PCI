@@ -260,7 +260,9 @@ public static class WorldSchema
             client_id VARCHAR(64) PRIMARY KEY,
             name VARCHAR(120) NOT NULL,
             redirect_uris TEXT NOT NULL,
+            first_party INTEGER NOT NULL DEFAULT 0,
             created_at TEXT DEFAULT (datetime('now')))");
+        AddCol("pciworld_oauth_clients", "first_party", "first_party INTEGER NOT NULL DEFAULT 0");
         db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_oauth_codes(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             code_sha VARCHAR(64) UNIQUE NOT NULL,
@@ -272,7 +274,8 @@ public static class WorldSchema
             expires_at VARCHAR(32) NOT NULL,
             consumed_at VARCHAR(32),
             created_at TEXT DEFAULT (datetime('now')))");
-        db.Exec("INSERT OR IGNORE INTO pciworld_oauth_clients(client_id,name,redirect_uris) VALUES('pciworld-app','PCI World participant app','/world/account')");
+        db.Exec("INSERT OR IGNORE INTO pciworld_oauth_clients(client_id,name,redirect_uris,first_party) VALUES('pciworld-app','PCI World participant app','/world/account',1)");
+        db.Exec("UPDATE pciworld_oauth_clients SET first_party=1 WHERE client_id='pciworld-app' AND first_party=0");
 
         // Additive upgrade columns for installs created before Phase 1b (fresh installs get them
         // from CREATE TABLE below/above; both providers share this code path).

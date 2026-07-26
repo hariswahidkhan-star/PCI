@@ -676,9 +676,10 @@ public static class WorldAdmin
         app.MapGet("/api/world-admin/oauth-clients", (HttpContext ctx) =>
         {
             if (Gate(ctx, "admin", out _) is { } blocked) return blocked;
-            var rows = db.Query("SELECT client_id, name, redirect_uris, created_at FROM pciworld_oauth_clients ORDER BY client_id")
+            var rows = db.Query("SELECT client_id, name, redirect_uris, first_party, created_at FROM pciworld_oauth_clients ORDER BY client_id")
                 .Select(r => new { client_id = H.Str(r["client_id"]), name = H.Str(r["name"]),
-                                   redirect_uris = H.Str(r["redirect_uris"]), created_at = H.Str(r["created_at"]) });
+                                   redirect_uris = H.Str(r["redirect_uris"]), first_party = H.L(r["first_party"]) == 1,
+                                   created_at = H.Str(r["created_at"]) });
             return J(new { rows });
         });
 
@@ -687,7 +688,8 @@ public static class WorldAdmin
             if (Gate(ctx, "admin", out var adm) is { } blocked) return blocked;
             var b = await H.Body(ctx.Request);
             var id = H.GetS(b, "client_id");
-            var err = WorldOAuth.UpsertClient(db, id, H.GetS(b, "name"), H.GetS(b, "redirect_uris"), create: true);
+            var err = WorldOAuth.UpsertClient(db, id, H.GetS(b, "name"), H.GetS(b, "redirect_uris"), create: true,
+                firstParty: H.GetEl(b, "first_party") is { ValueKind: System.Text.Json.JsonValueKind.True });
             if (err is not null) return Results.Json(new { error = err }, statusCode: 400);
             Audit(adm!.Id, "oauth_client_create", id ?? "");
             return J(new { ok = true });
@@ -697,7 +699,9 @@ public static class WorldAdmin
         {
             if (Gate(ctx, "admin", out var adm) is { } blocked) return blocked;
             var b = await H.Body(ctx.Request);
-            var err = WorldOAuth.UpsertClient(db, id, H.GetS(b, "name"), H.GetS(b, "redirect_uris"), create: false);
+            var err = WorldOAuth.UpsertClient(db, id, H.GetS(b, "name"), H.GetS(b, "redirect_uris"), create: false,
+                firstParty: H.GetEl(b, "first_party") is { } fpEl && fpEl.ValueKind != System.Text.Json.JsonValueKind.Undefined
+                    ? fpEl.ValueKind == System.Text.Json.JsonValueKind.True : null);
             if (err is not null) return Results.Json(new { error = err }, statusCode: err == "not_found" ? 404 : 400);
             Audit(adm!.Id, "oauth_client_update", id);
             return J(new { ok = true });
@@ -1403,6 +1407,7 @@ public static class WorldAdmin
                     '<div><label>Client</label><input value="'+esc(c.client_id)+'" disabled></div>'+
                     '<div><label for="oan_'+esc(c.client_id)+'">Name</label><input id="oan_'+esc(c.client_id)+'" value="'+esc(c.name)+'"></div>'+
                     '<div style="flex:2"><label for="oau_'+esc(c.client_id)+'">Redirect URIs</label><input id="oau_'+esc(c.client_id)+'" value="'+esc(c.redirect_uris)+'"></div>'+
+                    '<div><label for="oaf_'+esc(c.client_id)+'">First-party</label><input type="checkbox" id="oaf_'+esc(c.client_id)+'"'+(c.first_party?' checked':'')+' title="First-party clients skip the consent screen; every other client requires explicit consent (server-enforced)."></div>'+
                     '<div><button data-oasave="'+esc(c.client_id)+'" class="ghost">Save</button> '+
                     (c.client_id==='pciworld-app'?'':'<button data-oadel="'+esc(c.client_id)+'" class="ghost">Delete</button>')+'</div></div>';
                 });
@@ -1411,7 +1416,7 @@ public static class WorldAdmin
                   b.addEventListener('click',function(){
                     var id=b.dataset.oasave;b.disabled=true;
                     api('/api/world-admin/oauth-clients/'+encodeURIComponent(id),'POST',
-                        {name:$('oan_'+id).value,redirect_uris:$('oau_'+id).value})
+                        {name:$('oan_'+id).value,redirect_uris:$('oau_'+id).value,first_party:$('oaf_'+id).checked})
                       .then(function(){oaSay('Saved.');loadClients();})
                       .catch(function(e){b.disabled=false;oaSay((e&&(e.message||e.error))||'Save failed');});
                   });
