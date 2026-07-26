@@ -943,9 +943,9 @@ app.MapGet("/api/admin/integrations/health", (HttpRequest req) =>
             // Delivery reality, not configuration: what the log says actually happened recently.
             last_24h = new
             {
-                sent = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='sent' AND created_at>=datetime('now','-1 day')"),
-                failed = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='failed' AND created_at>=datetime('now','-1 day')"),
-                console = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='console' AND created_at>=datetime('now','-1 day')"),
+                sent = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='sent' AND sent_at>=datetime('now','-1 day')"),
+                failed = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='failed' AND sent_at>=datetime('now','-1 day')"),
+                console = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='console' AND sent_at>=datetime('now','-1 day')"),
             },
         },
         integrations = new
