@@ -22,6 +22,7 @@ BACKEND = os.path.dirname(HERE)
 DLL = os.path.join(BACKEND, "bin", "Release", "net8.0", "PCI.Backend.dll")
 DB = os.path.join(HERE, "_community.db")
 STORAGE = os.path.join(HERE, "_community_storage")
+OWNER_PW = "CommunitySuiteOwner!99"
 
 # Provider-aware, exactly like integration_test.py. This matters: the suite reaches into the
 # database to enable the feature flag and seed a room, so running it against SQLite while CI
@@ -101,6 +102,7 @@ def boot():
         _reset_mysql()
         env = dict(os.environ, PORT=str(PORT), STORAGE_ROOT=STORAGE, DB_PROVIDER="mysql",
                    MYSQL_DATABASE=MYSQL["database"], ASPNETCORE_ENVIRONMENT="Development",
+                   PCIWORLD_OWNER_PASSWORD=OWNER_PW,
                    SEED_DEMO_EXAM="", CANONICAL_HOST="", CANONICAL_REDIRECT="")
         env.pop("MYSQL_CONNECTION_STRING", None)
     else:
@@ -108,6 +110,7 @@ def boot():
             if os.path.exists(p): os.remove(p)
         env = dict(os.environ, PORT=str(PORT), DATABASE_FILE=DB, STORAGE_ROOT=STORAGE,
                    ASPNETCORE_ENVIRONMENT="Development", DB_PROVIDER="sqlite",
+                   PCIWORLD_OWNER_PASSWORD=OWNER_PW,
                    SEED_DEMO_EXAM="", CANONICAL_HOST="", CANONICAL_REDIRECT="")
     proc = subprocess.Popen([os.environ.get("DOTNET", "dotnet"), DLL], cwd=BACKEND, env=env,
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -292,6 +295,100 @@ def main():
         allowed = sql("SELECT COUNT(*) FROM pciworld_community_messages WHERE status='allowed'")[0][0]
         chk("C35 broadcast events exactly match published messages, no more and no fewer",
             events == allowed, f"events={events} allowed={allowed}")
+
+        # ── Moderation console ─────────────────────────────────────────────────────────────
+        code, login = js("/api/world-admin/auth/login", "POST",
+                         {"email": "owner@pciworld.local", "password": OWNER_PW})
+        chk("C36 the world-admin realm authenticates", code == 200 and login.get("token"), str(login)[:200])
+        OWNER = {"Authorization": "Bearer " + login["token"]} if login.get("token") else {}
+
+        code, q = js("/api/world-admin/community/queue", "GET", None, OWNER)
+        chk("C37 the moderation queue is reachable by an authorised admin", code == 200, str(q)[:160])
+
+        code, anon_q = js("/api/world-admin/community/queue")
+        chk("C38 the queue rejects an unauthenticated caller", anon_q.get("error") == "no_token", str(anon_q))
+
+        # Seed a case + a restricted case directly, then prove the queue separation over HTTP.
+        sql("""INSERT INTO pciworld_moderation_cases(room_id,subject_kind,subject_ref,severity,status,restricted,reason_code)
+               VALUES(1,'guest_session','ordinary','normal','open',0,'abuse_blocked')""")
+        sql("""INSERT INTO pciworld_moderation_cases(room_id,subject_kind,subject_ref,severity,status,restricted,reason_code)
+               VALUES(1,'guest_session','restricted','critical','open',1,'grooming_severe')""")
+
+        code, q = js("/api/world-admin/community/queue", "GET", None, OWNER)
+        refs = [c["subject_kind"] for c in q.get("cases", [])]
+        restricted_visible = any(c.get("restricted") for c in q.get("cases", []))
+        chk("C39 restricted cases never appear in the ordinary queue", not restricted_visible, str(q)[:200])
+
+        code, rq = js("/api/world-admin/community/queue/restricted", "GET", None, OWNER)
+        chk("C40 restricted cases are reachable only on their own route", code == 200 and len(rq.get("cases", [])) == 1, str(rq)[:200])
+
+        # A case summary is for triage — it must not carry message bodies or risk keys.
+        blob = json.dumps(q)
+        chk("C41 the queue leaks no evidence", "risk_key" not in blob and "body" not in blob, blob[:200])
+
+        # ── Maker-checker over HTTP ────────────────────────────────────────────────────────
+        code, s1 = js("/api/world-admin/community/sanctions", "POST",
+                      {"subject_kind": "risk_key", "subject_ref": "rk-http", "type": "permanent",
+                       "reason": "hate_severe", "scope": "world"}, OWNER)
+        chk("C42 a permanent sanction is created awaiting approval",
+            code == 200 and s1.get("awaiting_approval") is True, str(s1))
+
+        code, self_ok = js(f"/api/world-admin/community/sanctions/{s1.get('id')}/approve", "POST", {}, OWNER)
+        chk("C43 the issuer cannot approve their own permanent sanction",
+            code == 403 and self_ok.get("error") == "maker_checker", f"{code} {self_ok}")
+
+        in_effect = sql("SELECT COUNT(*) FROM pciworld_sanctions WHERE id=%s AND approved_by IS NOT NULL"
+                        .replace("%s", "?"), (s1.get("id"),))[0][0]
+        chk("C44 and it still has no effect", in_effect == 0, f"approved rows={in_effect}")
+
+        code, noreason = js("/api/world-admin/community/sanctions", "POST",
+                            {"subject_kind": "risk_key", "subject_ref": "rk-2", "type": "mute", "reason": ""}, OWNER)
+        chk("C45 every sanction must carry a reason", code == 400 and noreason.get("error") == "reason_required", str(noreason))
+
+        # ── Rooms are created dark ─────────────────────────────────────────────────────────
+        code, room_new = js("/api/world-admin/community/rooms", "POST",
+                            {"slug": "new-room", "title": "A New Room"}, OWNER)
+        chk("C46 a new room is created as draft, never live", code == 200 and room_new.get("state") == "draft", str(room_new))
+
+        code, listed = js("/api/world/community/rooms")
+        slugs = [r["slug"] for r in listed.get("rooms", [])]
+        chk("C47 a draft room is not publicly listed", "new-room" not in slugs, str(slugs))
+
+        # ── The kill switch beats an open room ─────────────────────────────────────────────
+        code, _ = js("/api/world-admin/community/rooms/lobby/emergency", "POST", {"mode": "locked"}, OWNER)
+        code, blocked = js("/api/world/community/rooms/lobby/messages", "POST",
+                           {"body": "should not land", "client_message_id": "kill1"},
+                           {"X-Community-Session": again["token"]})
+        chk("C48 an emergency lock stops an open room accepting",
+            blocked.get("reason") == "room_not_accepting", str(blocked))
+
+        code, _ = js("/api/world-admin/community/rooms/lobby/emergency", "POST", {"mode": ""}, OWNER)
+        code, room_after = js("/api/world/community/rooms/lobby")
+        chk("C49 clearing the emergency restores the room's own state",
+            room_after.get("state") == "open" and room_after.get("accepting") is True, str(room_after))
+
+        # ── Guest appeals need the credential, not the reference ───────────────────────────
+        case_id = sql("SELECT id FROM pciworld_moderation_cases WHERE subject_ref='ordinary'")[0][0]
+        ref = "PCIW-TESTREF"
+        # credential 'letmein' hashed the same way the service stores it
+        import hashlib
+        cred = "letmein-appeal-credential"
+        cred_sha = hashlib.sha256(cred.encode()).hexdigest()
+        sql("""INSERT INTO pciworld_appeals(case_id,public_reference,credential_sha,status)
+               VALUES(?,?,?,'issued')""", (case_id, ref, cred_sha))
+
+        code, bad = js("/api/world/community/appeals", "POST",
+                       {"reference": ref, "credential": "wrong", "submission": "please"})
+        chk("C50 the reference alone cannot submit an appeal", code == 404, f"{code} {bad}")
+
+        code, good = js("/api/world/community/appeals", "POST",
+                        {"reference": ref, "credential": cred, "submission": "I was quoting a policy document."})
+        chk("C51 the credential submits the appeal without any account", code == 200 and good.get("ok"), str(good))
+
+        code, st = js("/api/world/community/appeals/status", "POST", {"reference": ref, "credential": cred})
+        chk("C52 a guest can retrieve a minimal status", code == 200 and st.get("status") == "submitted", str(st))
+        chk("C53 the status carries no evidence",
+            set(st.keys()) <= {"reference", "status", "outcome", "submitted", "decided_at"}, str(st.keys()))
 
     finally:
         shutdown()
