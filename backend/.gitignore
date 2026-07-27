@@ -13,6 +13,8 @@ wwwroot/world-app/
 # integration test artifacts
 tests/_integration.db*
 tests/_integration_storage/
+tests/_community.db*
+tests/_community_storage/
 tests/_impersonation.db*
 tests/_impersonation_storage/
 tests/_impersonation_boot.log
