@@ -157,20 +157,22 @@ def main():
                      {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v0"})
         chk("C06 a stale rules version is refused", code == 409 and r.get("error") == "rules_version_stale", str(r))
 
+        NET_A = {"X-Forwarded-For": "198.51.100.10"}
+        NET_B = {"X-Forwarded-For": "198.51.100.20"}
         code, alice = js("/api/world/community/guest-sessions", "POST",
-                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"})
+                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"}, NET_A)
         chk("C07 a valid guest joins with no account", code == 200 and alice.get("token"), str(alice))
-        A = {"X-Community-Session": alice["token"]}
+        A = {"X-Community-Session": alice["token"], **NET_A}
 
         code, r = js("/api/world/community/guest-sessions", "POST",
-                     {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"})
+                     {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"}, NET_A)
         chk("C08 a duplicate active name is refused with a suggestion",
             code == 400 and r.get("error") == "name_taken" and r.get("suggestion"), str(r))
 
         code, bob = js("/api/world/community/guest-sessions", "POST",
-                       {"room": "lobby", "display_name": "Sara Khan", "rules_version": "v1"})
+                       {"room": "lobby", "display_name": "Sara Khan", "rules_version": "v1"}, NET_B)
         chk("C09 a second guest joins", code == 200 and bob.get("token"))
-        B = {"X-Community-Session": bob["token"]}
+        B = {"X-Community-Session": bob["token"], **NET_B}
 
         # ── Send and replay ────────────────────────────────────────────────────────────────
         code, m = js("/api/world/community/rooms/lobby/messages", "POST",
@@ -203,6 +205,9 @@ def main():
         code, ej = js("/api/world/community/rooms/lobby/messages", "POST",
                       {"body": "f u c k this", "client_message_id": "b2"}, B)
         chk("C18 a severe violation ejects", code == 200 and ej.get("ejected") is True, str(ej))
+        chk("C18a the ejection hands over an appeal ticket there and then",
+            ej.get("appeal", {}).get("reference") and ej.get("appeal", {}).get("credential"), str(ej.get("appeal")))
+        EJECT_APPEAL = ej.get("appeal") or {}
 
         code, after = js("/api/world/community/rooms/lobby/messages", "POST",
                          {"body": "still here?", "client_message_id": "b3"}, B)
@@ -228,7 +233,7 @@ def main():
         chk("C25 a guest can leave", code == 200)
 
         code, again = js("/api/world/community/guest-sessions", "POST",
-                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"})
+                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"}, NET_A)
         chk("C26 leaving releases the display name", code == 200 and again.get("token"), str(again))
 
         # ── Anonymous access boundaries ────────────────────────────────────────────────────
@@ -243,7 +248,7 @@ def main():
         sql("UPDATE site_settings SET svalue='none' WHERE skey='world_community_moderator'")
         code, m = js("/api/world/community/rooms/lobby/messages", "POST",
                      {"body": "a perfectly ordinary sentence", "client_message_id": "z1"},
-                     {"X-Community-Session": again["token"]})
+                     {"X-Community-Session": again["token"], **NET_A})
         chk("C29 with no moderation provider nothing publishes",
             code == 200 and m["published"] is False and m["reason"] == "moderation_unavailable", str(m))
 
@@ -276,7 +281,7 @@ def main():
         code, hist_before = js("/api/world/community/rooms/lobby/messages")
         code, _ = js("/api/world/community/rooms/lobby/messages", "POST",
                      {"body": "sent over http, broadcast over the hub", "client_message_id": "h1"},
-                     {"X-Community-Session": again["token"]})
+                     {"X-Community-Session": again["token"], **NET_A})
         code, hist_after = js("/api/world/community/rooms/lobby/messages")
         chk("C33 messages still arrive through the durable path, not the hub",
             len(hist_after["messages"]) == len(hist_before["messages"]) + 1,
@@ -358,7 +363,7 @@ def main():
         code, _ = js("/api/world-admin/community/rooms/lobby/emergency", "POST", {"mode": "locked"}, OWNER)
         code, blocked = js("/api/world/community/rooms/lobby/messages", "POST",
                            {"body": "should not land", "client_message_id": "kill1"},
-                           {"X-Community-Session": again["token"]})
+                           {"X-Community-Session": again["token"], **NET_A})
         chk("C48 an emergency lock stops an open room accepting",
             blocked.get("reason") == "room_not_accepting", str(blocked))
 
@@ -389,6 +394,53 @@ def main():
         chk("C52 a guest can retrieve a minimal status", code == 200 and st.get("status") == "submitted", str(st))
         chk("C53 the status carries no evidence",
             set(st.keys()) <= {"reference", "status", "outcome", "submitted", "decided_at"}, str(st.keys()))
+
+        # ── The ejected guest completes an appeal with no account ──────────────────────────
+        # PW-US-053/054: the whole right of appeal for a guest rests on the ticket handed over at
+        # ejection, because there is no account to come back to.
+        code, appealed = js("/api/world/community/appeals", "POST",
+                            {"reference": EJECT_APPEAL.get("reference"),
+                             "credential": EJECT_APPEAL.get("credential"),
+                             "submission": "I was quoting a policy document, not directing it at anyone."})
+        chk("C54 an ejected guest can appeal using only the ticket they were given",
+            code == 200 and appealed.get("ok") is True, str(appealed))
+
+        code, st = js("/api/world/community/appeals/status", "POST",
+                      {"reference": EJECT_APPEAL.get("reference"), "credential": EJECT_APPEAL.get("credential")})
+        chk("C55 and can retrieve their own status", code == 200 and st.get("status") == "submitted", str(st))
+
+        # The ejection must actually have produced the case and the restriction, not just a token.
+        ej_cases = sql("SELECT COUNT(*) FROM pciworld_moderation_cases WHERE reason_code='profanity_severe'")[0][0]
+        chk("C56 the ejection opened a moderation case", ej_cases >= 1, f"cases={ej_cases}")
+
+        ej_restr = sql("SELECT COUNT(*) FROM pciworld_risk_restrictions")[0][0]
+        chk("C57 and a time-bounded restriction", ej_restr >= 1, f"restrictions={ej_restr}")
+        chk("C58 the guest is told when the restriction lifts", bool(EJECT_APPEAL.get("restricted_until")),
+            str(EJECT_APPEAL))
+
+        # ── An overturned appeal restores access ───────────────────────────────────────────
+        appeal_id = sql("SELECT id FROM pciworld_appeals WHERE public_reference=?",
+                        (EJECT_APPEAL.get("reference"),))[0][0]
+        code, decided = js(f"/api/world-admin/community/appeals/{appeal_id}/decide", "POST",
+                           {"decision": "overturn", "outcome": "Context accepted; restriction lifted."}, OWNER)
+        chk("C59 an authorised reviewer can overturn", code == 200 and decided.get("ok"), str(decided))
+
+        live = sql("SELECT COUNT(*) FROM pciworld_risk_restrictions WHERE expires_at > ?",
+                   (time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),))[0][0]
+        chk("C60 overturning lifts the restriction rather than leaving it to expire", live == 0, f"still live={live}")
+
+        code, st2 = js("/api/world/community/appeals/status", "POST",
+                       {"reference": EJECT_APPEAL.get("reference"), "credential": EJECT_APPEAL.get("credential")})
+        chk("C61 the guest sees the outcome without seeing any evidence",
+            st2.get("status") == "overturned" and set(st2.keys()) <= {"reference","status","outcome","submitted","decided_at"},
+            str(st2))
+
+        # ── A report reaches the queue ─────────────────────────────────────────────────────
+        rep_cases = sql("SELECT COUNT(*) FROM pciworld_moderation_cases WHERE reason_code='participant_report'")[0][0]
+        chk("C62 a participant report opens a case a moderator can actually see", rep_cases >= 1, f"cases={rep_cases}")
+
+        linked = sql("SELECT COUNT(*) FROM pciworld_community_reports WHERE case_id IS NOT NULL")[0][0]
+        chk("C63 and the report is attached to it as evidence", linked >= 1, f"linked={linked}")
 
     finally:
         shutdown()
