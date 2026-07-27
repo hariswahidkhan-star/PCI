@@ -17797,6 +17797,1218 @@
      "scope_structuring"
     ]
    }
+  },
+  {
+   "scenario_code": "GL-EVM-301",
+   "title": "Construction: EVM forecast for a coastal sea-wall reinforcement",
+   "kind": "guided_lab",
+   "industry": "Construction",
+   "project_type": "coastal sea-wall reinforcement",
+   "difficulty": "foundation",
+   "est_minutes": 12,
+   "certification_id": 1,
+   "competencies": [
+    "earned_value"
+   ],
+   "summary": "A coastal sea-wall reinforcement is earning slightly behind plan while tidal-window standby pushes cost up. Compute the foundation-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a coastal sea-wall reinforcement (construction sector). A coastal sea-wall reinforcement is earning slightly behind plan while tidal-window standby pushes cost up. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 620,000, EV = 560,000, AC = 610,000, BAC = 1,500,000.\n\nSchedule Variance: SV = EV − PV = -60,000.\nCost Variance: CV = EV − AC = -50,000.\nSchedule Performance Index: SPI = EV / PV = 0.90.\nCost Performance Index: CPI = EV / AC = 0.92.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A coastal sea-wall reinforcement is earning slightly behind plan while tidal-window standby pushes cost up. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 620000,
+     "ev": 560000,
+     "ac": 610000,
+     "bac": 1500000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 70,
+    "competencies": [
+     "earned_value"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SD-EVM-302",
+   "title": "Water: EVM forecast for a reservoir spillway refurbishment",
+   "kind": "skill_drill",
+   "industry": "Water",
+   "project_type": "reservoir spillway refurbishment",
+   "difficulty": "foundation",
+   "est_minutes": 10,
+   "certification_id": 1,
+   "competencies": [
+    "earned_value"
+   ],
+   "summary": "A reservoir spillway refurbishment posts its first month-end snapshot for a drawdown review. Compute the foundation-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a reservoir spillway refurbishment (water sector). A reservoir spillway refurbishment posts its first month-end snapshot for a drawdown review. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 300,000, EV = 288,000, AC = 305,000, BAC = 720,000.\n\nSchedule Variance: SV = EV − PV = -12,000.\nCost Variance: CV = EV − AC = -17,000.\nSchedule Performance Index: SPI = EV / PV = 0.96.\nCost Performance Index: CPI = EV / AC = 0.94.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A reservoir spillway refurbishment posts its first month-end snapshot for a drawdown review. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 300000,
+     "ev": 288000,
+     "ac": 305000,
+     "bac": 720000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 70,
+    "competencies": [
+     "earned_value"
+    ]
+   }
+  },
+  {
+   "scenario_code": "GL-EVM-303",
+   "title": "Manufacturing: EVM forecast for a paint-shop robot cell upgrade",
+   "kind": "guided_lab",
+   "industry": "Manufacturing",
+   "project_type": "paint-shop robot cell upgrade",
+   "difficulty": "foundation",
+   "est_minutes": 11,
+   "certification_id": 3,
+   "competencies": [
+    "earned_value"
+   ],
+   "summary": "A paint-shop robot cell upgrade reports early progress against a fixed shutdown budget. Compute the foundation-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a paint-shop robot cell upgrade (manufacturing sector). A paint-shop robot cell upgrade reports early progress against a fixed shutdown budget. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 210,000, EV = 195,000, AC = 208,000, BAC = 540,000.\n\nSchedule Variance: SV = EV − PV = -15,000.\nCost Variance: CV = EV − AC = -13,000.\nSchedule Performance Index: SPI = EV / PV = 0.93.\nCost Performance Index: CPI = EV / AC = 0.94.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A paint-shop robot cell upgrade reports early progress against a fixed shutdown budget. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 210000,
+     "ev": 195000,
+     "ac": 208000,
+     "bac": 540000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 70,
+    "competencies": [
+     "earned_value"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SD-EVM-304",
+   "title": "Utilities: EVM forecast for a smart-meter rollout wave",
+   "kind": "skill_drill",
+   "industry": "Utilities",
+   "project_type": "smart-meter rollout wave",
+   "difficulty": "foundation",
+   "est_minutes": 10,
+   "certification_id": 2,
+   "competencies": [
+    "earned_value"
+   ],
+   "summary": "A smart-meter rollout wave is tracking marginally behind on both cost and schedule. Compute the foundation-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a smart-meter rollout wave (utilities sector). A smart-meter rollout wave is tracking marginally behind on both cost and schedule. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 480,000, EV = 452,000, AC = 495,000, BAC = 1,250,000.\n\nSchedule Variance: SV = EV − PV = -28,000.\nCost Variance: CV = EV − AC = -43,000.\nSchedule Performance Index: SPI = EV / PV = 0.94.\nCost Performance Index: CPI = EV / AC = 0.91.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A smart-meter rollout wave is tracking marginally behind on both cost and schedule. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 480000,
+     "ev": 452000,
+     "ac": 495000,
+     "bac": 1250000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 70,
+    "competencies": [
+     "earned_value"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SC-EVM-305",
+   "title": "Energy: EVM forecast for a grid battery-storage substation",
+   "kind": "scenario",
+   "industry": "Energy",
+   "project_type": "grid battery-storage substation",
+   "difficulty": "intermediate",
+   "est_minutes": 16,
+   "certification_id": 1,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A grid battery-storage substation is midway through commissioning with weather-driven crane standby. Compute the intermediate-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a grid battery-storage substation (energy sector). A grid battery-storage substation is midway through commissioning with weather-driven crane standby. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 820,000, EV = 742,000, AC = 815,000, BAC = 1,980,000.\n\nSchedule Variance: SV = EV − PV = -78,000.\nCost Variance: CV = EV − AC = -73,000.\nSchedule Performance Index: SPI = EV / PV = 0.90.\nCost Performance Index: CPI = EV / AC = 0.91.\nEstimate at Completion: EAC = BAC / CPI = 2,174,798.\nVariance at Completion: VAC = BAC − EAC = -194,798.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A grid battery-storage substation is midway through commissioning with weather-driven crane standby. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Variance at Completion. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 820000,
+     "ev": 742000,
+     "ac": 815000,
+     "bac": 1980000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 75,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SD-EVM-306",
+   "title": "Rail: EVM forecast for a depot resignalling package",
+   "kind": "skill_drill",
+   "industry": "Rail",
+   "project_type": "depot resignalling package",
+   "difficulty": "intermediate",
+   "est_minutes": 14,
+   "certification_id": 3,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A depot resignalling package reports at the mid-point with possession overruns eroding cost efficiency. Compute the intermediate-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a depot resignalling package (rail sector). A depot resignalling package reports at the mid-point with possession overruns eroding cost efficiency. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 1,150,000, EV = 1,042,000, AC = 1,160,000, BAC = 2,600,000.\n\nSchedule Variance: SV = EV − PV = -108,000.\nCost Variance: CV = EV − AC = -118,000.\nSchedule Performance Index: SPI = EV / PV = 0.91.\nCost Performance Index: CPI = EV / AC = 0.90.\nEstimate at Completion: EAC = BAC / CPI = 2,894,434.\nVariance at Completion: VAC = BAC − EAC = -294,434.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A depot resignalling package reports at the mid-point with possession overruns eroding cost efficiency. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Variance at Completion. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 1150000,
+     "ev": 1042000,
+     "ac": 1160000,
+     "bac": 2600000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 75,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "GL-EVM-307",
+   "title": "Healthcare: EVM forecast for a diagnostic imaging suite fit-out",
+   "kind": "guided_lab",
+   "industry": "Healthcare",
+   "project_type": "diagnostic imaging suite fit-out",
+   "difficulty": "intermediate",
+   "est_minutes": 15,
+   "certification_id": 2,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A diagnostic imaging suite fit-out needs a forecast before the next capital release. Compute the intermediate-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a diagnostic imaging suite fit-out (healthcare sector). A diagnostic imaging suite fit-out needs a forecast before the next capital release. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 640,000, EV = 598,000, AC = 662,000, BAC = 1,550,000.\n\nSchedule Variance: SV = EV − PV = -42,000.\nCost Variance: CV = EV − AC = -64,000.\nSchedule Performance Index: SPI = EV / PV = 0.93.\nCost Performance Index: CPI = EV / AC = 0.90.\nEstimate at Completion: EAC = BAC / CPI = 1,715,886.\nVariance at Completion: VAC = BAC − EAC = -165,886.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A diagnostic imaging suite fit-out needs a forecast before the next capital release. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Variance at Completion. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 640000,
+     "ev": 598000,
+     "ac": 662000,
+     "bac": 1550000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 75,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SC-EVM-308",
+   "title": "Renewables: EVM forecast for a onshore wind civils package",
+   "kind": "scenario",
+   "industry": "Renewables",
+   "project_type": "onshore wind civils package",
+   "difficulty": "intermediate",
+   "est_minutes": 16,
+   "certification_id": 1,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "An onshore wind civils package reports a mixed cost/schedule position ahead of a board update. Compute the intermediate-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a onshore wind civils package (renewables sector). An onshore wind civils package reports a mixed cost/schedule position ahead of a board update. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 970,000, EV = 905,000, AC = 995,000, BAC = 2,350,000.\n\nSchedule Variance: SV = EV − PV = -65,000.\nCost Variance: CV = EV − AC = -90,000.\nSchedule Performance Index: SPI = EV / PV = 0.93.\nCost Performance Index: CPI = EV / AC = 0.91.\nEstimate at Completion: EAC = BAC / CPI = 2,583,702.\nVariance at Completion: VAC = BAC − EAC = -233,702.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "An onshore wind civils package reports a mixed cost/schedule position ahead of a board update. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Variance at Completion. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 970000,
+     "ev": 905000,
+     "ac": 995000,
+     "bac": 2350000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 75,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SC-EVM-309",
+   "title": "Defence: EVM forecast for a test-range instrumentation build",
+   "kind": "scenario",
+   "industry": "Defence",
+   "project_type": "test-range instrumentation build",
+   "difficulty": "advanced",
+   "est_minutes": 20,
+   "certification_id": 3,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A test-range instrumentation build is under performance pressure and needs a full forecast set. Compute the advanced-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a test-range instrumentation build (defence sector). A test-range instrumentation build is under performance pressure and needs a full forecast set. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 1,420,000, EV = 1,268,000, AC = 1,465,000, BAC = 3,400,000.\n\nSchedule Variance: SV = EV − PV = -152,000.\nCost Variance: CV = EV − AC = -197,000.\nSchedule Performance Index: SPI = EV / PV = 0.89.\nCost Performance Index: CPI = EV / AC = 0.87.\nEstimate at Completion: EAC = BAC / CPI = 3,928,233.\nEstimate to Complete: ETC = EAC − AC = 2,463,233.\nVariance at Completion: VAC = BAC − EAC = -528,233.\nTo-Complete Performance Index: TCPI = (BAC − EV) / (BAC − AC) = 1.10.\nPercent complete: EV / BAC = 0.37.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A test-range instrumentation build is under performance pressure and needs a full forecast set. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Estimate to Complete, Variance at Completion, To-Complete Performance Index, Percent complete. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 1420000,
+     "ev": 1268000,
+     "ac": 1465000,
+     "bac": 3400000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "etc",
+      "label": "Estimate to Complete (ETC)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     },
+     {
+      "key": "tcpi",
+      "label": "To-Complete Performance Index (TCPI to BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_complete",
+      "label": "Percent complete (EV/BAC, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 78,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SD-EVM-310",
+   "title": "Oil & Gas: EVM forecast for a refinery turnaround controls scope",
+   "kind": "skill_drill",
+   "industry": "Oil & Gas",
+   "project_type": "refinery turnaround controls scope",
+   "difficulty": "advanced",
+   "est_minutes": 18,
+   "certification_id": 1,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A refinery turnaround controls scope reports a demanding mid-turnaround snapshot. Compute the advanced-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a refinery turnaround controls scope (oil & gas sector). A refinery turnaround controls scope reports a demanding mid-turnaround snapshot. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 1,880,000, EV = 1,702,000, AC = 1,930,000, BAC = 4,200,000.\n\nSchedule Variance: SV = EV − PV = -178,000.\nCost Variance: CV = EV − AC = -228,000.\nSchedule Performance Index: SPI = EV / PV = 0.91.\nCost Performance Index: CPI = EV / AC = 0.88.\nEstimate at Completion: EAC = BAC / CPI = 4,762,632.\nEstimate to Complete: ETC = EAC − AC = 2,832,632.\nVariance at Completion: VAC = BAC − EAC = -562,632.\nTo-Complete Performance Index: TCPI = (BAC − EV) / (BAC − AC) = 1.10.\nPercent complete: EV / BAC = 0.41.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A refinery turnaround controls scope reports a demanding mid-turnaround snapshot. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Estimate to Complete, Variance at Completion, To-Complete Performance Index, Percent complete. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 1880000,
+     "ev": 1702000,
+     "ac": 1930000,
+     "bac": 4200000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "etc",
+      "label": "Estimate to Complete (ETC)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     },
+     {
+      "key": "tcpi",
+      "label": "To-Complete Performance Index (TCPI to BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_complete",
+      "label": "Percent complete (EV/BAC, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 78,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "GL-EVM-311",
+   "title": "Aerospace: EVM forecast for a satellite integration facility",
+   "kind": "guided_lab",
+   "industry": "Aerospace",
+   "project_type": "satellite integration facility",
+   "difficulty": "advanced",
+   "est_minutes": 21,
+   "certification_id": 2,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A satellite integration facility build needs a defensible estimate at completion for the sponsor. Compute the advanced-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a satellite integration facility (aerospace sector). A satellite integration facility build needs a defensible estimate at completion for the sponsor. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 1,330,000, EV = 1,205,000, AC = 1,372,000, BAC = 3,150,000.\n\nSchedule Variance: SV = EV − PV = -125,000.\nCost Variance: CV = EV − AC = -167,000.\nSchedule Performance Index: SPI = EV / PV = 0.91.\nCost Performance Index: CPI = EV / AC = 0.88.\nEstimate at Completion: EAC = BAC / CPI = 3,586,556.\nEstimate to Complete: ETC = EAC − AC = 2,214,556.\nVariance at Completion: VAC = BAC − EAC = -436,556.\nTo-Complete Performance Index: TCPI = (BAC − EV) / (BAC − AC) = 1.09.\nPercent complete: EV / BAC = 0.38.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A satellite integration facility build needs a defensible estimate at completion for the sponsor. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Estimate to Complete, Variance at Completion, To-Complete Performance Index, Percent complete. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 1330000,
+     "ev": 1205000,
+     "ac": 1372000,
+     "bac": 3150000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "etc",
+      "label": "Estimate to Complete (ETC)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     },
+     {
+      "key": "tcpi",
+      "label": "To-Complete Performance Index (TCPI to BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_complete",
+      "label": "Percent complete (EV/BAC, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 78,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SC-EVM-312",
+   "title": "Infrastructure: EVM forecast for a motorway smart-corridor deployment",
+   "kind": "scenario",
+   "industry": "Infrastructure",
+   "project_type": "motorway smart-corridor deployment",
+   "difficulty": "advanced",
+   "est_minutes": 20,
+   "certification_id": 3,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A motorway smart-corridor deployment reports a full mid-programme performance picture. Compute the advanced-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a motorway smart-corridor deployment (infrastructure sector). A motorway smart-corridor deployment reports a full mid-programme performance picture. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 2,050,000, EV = 1,876,000, AC = 2,110,000, BAC = 4,800,000.\n\nSchedule Variance: SV = EV − PV = -174,000.\nCost Variance: CV = EV − AC = -234,000.\nSchedule Performance Index: SPI = EV / PV = 0.92.\nCost Performance Index: CPI = EV / AC = 0.89.\nEstimate at Completion: EAC = BAC / CPI = 5,398,721.\nEstimate to Complete: ETC = EAC − AC = 3,288,721.\nVariance at Completion: VAC = BAC − EAC = -598,721.\nTo-Complete Performance Index: TCPI = (BAC − EV) / (BAC − AC) = 1.09.\nPercent complete: EV / BAC = 0.39.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A motorway smart-corridor deployment reports a full mid-programme performance picture. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Estimate to Complete, Variance at Completion, To-Complete Performance Index, Percent complete. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 2050000,
+     "ev": 1876000,
+     "ac": 2110000,
+     "bac": 4800000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "etc",
+      "label": "Estimate to Complete (ETC)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     },
+     {
+      "key": "tcpi",
+      "label": "To-Complete Performance Index (TCPI to BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_complete",
+      "label": "Percent complete (EV/BAC, 2 dp)",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 78,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SC-EVM-313",
+   "title": "Mining: EVM forecast for a ore-processing plant expansion",
+   "kind": "scenario",
+   "industry": "Mining",
+   "project_type": "ore-processing plant expansion",
+   "difficulty": "expert",
+   "est_minutes": 24,
+   "certification_id": 3,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "An ore-processing plant expansion requires the complete earned-value and multi-method forecast bank. Compute the expert-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a ore-processing plant expansion (mining sector). An ore-processing plant expansion requires the complete earned-value and multi-method forecast bank. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 3,250,000, EV = 2,915,000, AC = 3,380,000, BAC = 7,600,000.\n\nSchedule Variance: SV = EV − PV = -335,000.\nCost Variance: CV = EV − AC = -465,000.\nSchedule Performance Index: SPI = EV / PV = 0.90.\nCost Performance Index: CPI = EV / AC = 0.86.\nEstimate at Completion: EAC = BAC / CPI = 8,812,350.\nEstimate to Complete: ETC = EAC − AC = 5,432,350.\nVariance at Completion: VAC = BAC − EAC = -1,212,350.\nTo-Complete Performance Index: TCPI = (BAC − EV) / (BAC − AC) = 1.11.\nPercent complete: EV / BAC = 0.38.\nPercent spent: AC / BAC = 0.44.\nEAC — CPI method: EAC = BAC / CPI = 8,812,350.\nEAC — composite CPI×SPI method: EAC = AC + (BAC − EV) / (CPI × SPI) = 9,436,651.\nEAC — remaining-at-budget method: EAC = AC + (BAC − EV) = 8,065,000.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "An ore-processing plant expansion requires the complete earned-value and multi-method forecast bank. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Estimate to Complete, Variance at Completion, To-Complete Performance Index, Percent complete, Percent spent, EAC — CPI method, EAC — composite CPI×SPI method, EAC — remaining-at-budget method. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 3250000,
+     "ev": 2915000,
+     "ac": 3380000,
+     "bac": 7600000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "etc",
+      "label": "Estimate to Complete (ETC)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     },
+     {
+      "key": "tcpi",
+      "label": "To-Complete Performance Index (TCPI to BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_complete",
+      "label": "Percent complete (EV/BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_spent",
+      "label": "Percent spent (AC/BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac_cpi",
+      "label": "EAC — CPI method",
+      "type": "number"
+     },
+     {
+      "key": "eac_composite",
+      "label": "EAC — composite CPI×SPI method",
+      "type": "number"
+     },
+     {
+      "key": "eac_budget",
+      "label": "EAC — remaining-at-budget method",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 78,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SD-EVM-314",
+   "title": "Technology: EVM forecast for a hyperscale data-centre hall",
+   "kind": "skill_drill",
+   "industry": "Technology",
+   "project_type": "hyperscale data-centre hall",
+   "difficulty": "expert",
+   "est_minutes": 22,
+   "certification_id": 2,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A hyperscale data-centre hall fit-out is assessed across every EVM and forecast method at once. Compute the expert-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a hyperscale data-centre hall (technology sector). A hyperscale data-centre hall fit-out is assessed across every EVM and forecast method at once. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 2,740,000, EV = 2,498,000, AC = 2,865,000, BAC = 6,300,000.\n\nSchedule Variance: SV = EV − PV = -242,000.\nCost Variance: CV = EV − AC = -367,000.\nSchedule Performance Index: SPI = EV / PV = 0.91.\nCost Performance Index: CPI = EV / AC = 0.87.\nEstimate at Completion: EAC = BAC / CPI = 7,225,580.\nEstimate to Complete: ETC = EAC − AC = 4,360,580.\nVariance at Completion: VAC = BAC − EAC = -925,580.\nTo-Complete Performance Index: TCPI = (BAC − EV) / (BAC − AC) = 1.11.\nPercent complete: EV / BAC = 0.40.\nPercent spent: AC / BAC = 0.45.\nEAC — CPI method: EAC = BAC / CPI = 7,225,580.\nEAC — composite CPI×SPI method: EAC = AC + (BAC − EV) / (CPI × SPI) = 7,648,023.\nEAC — remaining-at-budget method: EAC = AC + (BAC − EV) = 6,667,000.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A hyperscale data-centre hall fit-out is assessed across every EVM and forecast method at once. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Estimate to Complete, Variance at Completion, To-Complete Performance Index, Percent complete, Percent spent, EAC — CPI method, EAC — composite CPI×SPI method, EAC — remaining-at-budget method. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 2740000,
+     "ev": 2498000,
+     "ac": 2865000,
+     "bac": 6300000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "etc",
+      "label": "Estimate to Complete (ETC)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     },
+     {
+      "key": "tcpi",
+      "label": "To-Complete Performance Index (TCPI to BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_complete",
+      "label": "Percent complete (EV/BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_spent",
+      "label": "Percent spent (AC/BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac_cpi",
+      "label": "EAC — CPI method",
+      "type": "number"
+     },
+     {
+      "key": "eac_composite",
+      "label": "EAC — composite CPI×SPI method",
+      "type": "number"
+     },
+     {
+      "key": "eac_budget",
+      "label": "EAC — remaining-at-budget method",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 78,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
+  },
+  {
+   "scenario_code": "SC-EVM-315",
+   "title": "Telecoms: EVM forecast for a national fibre backbone segment",
+   "kind": "scenario",
+   "industry": "Telecoms",
+   "project_type": "national fibre backbone segment",
+   "difficulty": "expert",
+   "est_minutes": 24,
+   "certification_id": 1,
+   "competencies": [
+    "earned_value",
+    "forecasting"
+   ],
+   "summary": "A national fibre backbone segment reports a full performance snapshot for an executive forecast review. Compute the expert-level earned-value measure set from a single snapshot.",
+   "brief": "You are the project controller for a national fibre backbone segment (telecoms sector). A national fibre backbone segment reports a full performance snapshot for an executive forecast review. Management has asked for the earned-value figures from this reporting period so the next decision can be taken on evidence rather than impression. Work only from the snapshot provided; all figures are synthetic and self-contained.",
+   "objectives": [
+    "Compute Schedule Variance correctly from the EVM snapshot",
+    "Compute Cost Variance correctly from the EVM snapshot",
+    "Compute Schedule Performance Index correctly from the EVM snapshot",
+    "Compute Cost Performance Index correctly from the EVM snapshot"
+   ],
+   "provenance": "Authored synthetically for the PCI Simulation Lab content library, 2026.",
+   "disclaimers": "All figures are synthetic and simplified for training; they do not represent any real project, company, or location.",
+   "worked_solution": "Given PV = 3,600,000, EV = 3,288,000, AC = 3,775,000, BAC = 8,400,000.\n\nSchedule Variance: SV = EV − PV = -312,000.\nCost Variance: CV = EV − AC = -487,000.\nSchedule Performance Index: SPI = EV / PV = 0.91.\nCost Performance Index: CPI = EV / AC = 0.87.\nEstimate at Completion: EAC = BAC / CPI = 9,644,161.\nEstimate to Complete: ETC = EAC − AC = 5,869,161.\nVariance at Completion: VAC = BAC − EAC = -1,244,161.\nTo-Complete Performance Index: TCPI = (BAC − EV) / (BAC − AC) = 1.11.\nPercent complete: EV / BAC = 0.39.\nPercent spent: AC / BAC = 0.45.\nEAC — CPI method: EAC = BAC / CPI = 9,644,161.\nEAC — composite CPI×SPI method: EAC = AC + (BAC − EV) / (CPI × SPI) = 10,201,088.\nEAC — remaining-at-budget method: EAC = AC + (BAC − EV) = 8,887,000.\n\nAll indices are rounded to 2 decimal places; variances and currency amounts are whole numbers. SPI and CPI below 1.00 indicate the package is behind schedule and over budget respectively.",
+   "config": {
+    "task": "evm",
+    "prompt": "A national fibre backbone segment reports a full performance snapshot for an executive forecast review. Using the reporting snapshot below — planned value (PV), earned value (EV), actual cost (AC) and budget at completion (BAC) — compute: Schedule Variance, Cost Variance, Schedule Performance Index, Cost Performance Index, Estimate at Completion, Estimate to Complete, Variance at Completion, To-Complete Performance Index, Percent complete, Percent spent, EAC — CPI method, EAC — composite CPI×SPI method, EAC — remaining-at-budget method. Report variances as plain numbers (negative if unfavourable), currency forecasts as whole numbers, and all indices to 2 decimal places.",
+    "given": {
+     "pv": 3600000,
+     "ev": 3288000,
+     "ac": 3775000,
+     "bac": 8400000
+    },
+    "ask": [
+     {
+      "key": "sv",
+      "label": "Schedule Variance (SV)",
+      "type": "number"
+     },
+     {
+      "key": "cv",
+      "label": "Cost Variance (CV)",
+      "type": "number"
+     },
+     {
+      "key": "spi",
+      "label": "Schedule Performance Index (SPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "cpi",
+      "label": "Cost Performance Index (CPI, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac",
+      "label": "Estimate at Completion (EAC, CPI method)",
+      "type": "number"
+     },
+     {
+      "key": "etc",
+      "label": "Estimate to Complete (ETC)",
+      "type": "number"
+     },
+     {
+      "key": "vac",
+      "label": "Variance at Completion (VAC)",
+      "type": "number"
+     },
+     {
+      "key": "tcpi",
+      "label": "To-Complete Performance Index (TCPI to BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_complete",
+      "label": "Percent complete (EV/BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "percent_spent",
+      "label": "Percent spent (AC/BAC, 2 dp)",
+      "type": "number"
+     },
+     {
+      "key": "eac_cpi",
+      "label": "EAC — CPI method",
+      "type": "number"
+     },
+     {
+      "key": "eac_composite",
+      "label": "EAC — composite CPI×SPI method",
+      "type": "number"
+     },
+     {
+      "key": "eac_budget",
+      "label": "EAC — remaining-at-budget method",
+      "type": "number"
+     }
+    ],
+    "tolerance": 0.01,
+    "pass_pct": 78,
+    "competencies": [
+     "earned_value",
+     "forecasting"
+    ]
+   }
   }
  ]
 }
