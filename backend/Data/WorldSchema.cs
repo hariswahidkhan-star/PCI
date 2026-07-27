@@ -283,8 +283,11 @@ public static class WorldSchema
             expires_at VARCHAR(32) NOT NULL,
             consumed_at VARCHAR(32),
             created_at TEXT DEFAULT (datetime('now')))");
-        db.Exec("INSERT OR IGNORE INTO pciworld_oauth_clients(client_id,name,redirect_uris,first_party) VALUES('pciworld-app','PCI World participant app','/world/account',1)");
+        db.Exec("INSERT OR IGNORE INTO pciworld_oauth_clients(client_id,name,redirect_uris,first_party) VALUES('pciworld-app','PCI World participant app','/world/account,/world-app/auth',1)");
         db.Exec("UPDATE pciworld_oauth_clients SET first_party=1 WHERE client_id='pciworld-app' AND first_party=0");
+        // Existing installs learn the React app's auth route — guarded so an owner-edited list is
+        // never clobbered.
+        db.Exec("UPDATE pciworld_oauth_clients SET redirect_uris='/world/account,/world-app/auth' WHERE client_id='pciworld-app' AND redirect_uris='/world/account'");
 
         // Additive upgrade columns for installs created before Phase 1b (fresh installs get them
         // from CREATE TABLE below/above; both providers share this code path).

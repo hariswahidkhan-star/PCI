@@ -68,9 +68,24 @@ it8 993 · it9 996 · it10 1000 · it11 1004 · it12 1006 · it13 1008 — all g
 These are the master prompt's re-platforming blocks — team-scale efforts beyond incremental
 repair, listed so nobody mistakes the register above for "done":
 
-1. Separate per-domain React applications (PCI World participant app on `pciworld.org`, distinct
-   build artefacts, CSP, sessions) — the current surfaces remain server-rendered pages with
-   embedded JS on the shared origin.
+1. Separate React applications — STARTED (it23): a third independent bundle (`/world-app/`,
+   `frontend/src/world/`, own Vite config/output, CI asset gate, Docker mount, SPA fallback)
+   ships the participant account home as a real React app on the shared origin: sign-in with
+   canonical PCI credentials, portal-handoff redemption, dashboard aggregate rendering with the
+   §9.1 single primary action, honest offline/suspended states, and the PKCE helpers for the
+   OAuth callback shape. The onboarding walkthrough (it24) and the settings/sessions/sign-out screens (it25 —
+   preferences with partial PATCH, immediate session revocation, both sign-out scopes with their
+   plain-words copy) and the Passport manager (it26 — publish/withdraw with the consent
+   guard, paged evidence with visibility toggles, partial-key disclosure incl. the never-auto-
+   submitted expiry) and sharing management (it27 — result links + invitations with
+   live/withdrawn state and per-item/withdraw-all revocation), registration (with the
+   anonymous-session claim) and data export/World-only deletion (it28) now run IN-APP — the
+   ACCOUNT SURFACE IS COMPLETE in the React app. The classic page's one remaining exclusive:
+   the challenge-play engine (config_json workspace renderer) — a multi-iteration port of the
+   product's core loop, deliberately left for a reviewed start.
+   Remaining for the dedicated-domain shape: move screens (Passport manager, preferences, play)
+   into the app, then change `base` + register the `pciworld.org` redirect URI (a registry row)
+   + per-client CORS and OIDC claims.
 2. ~~A real OAuth 2.1 authorization layer~~ — LANDED (it19–21): authorization-code + PKCE (S256
    only), exact-match client registry with owner-gated admin, server-enforced consent for
    non-first-party clients, replay revocation. Remaining from this block: the portal/World
