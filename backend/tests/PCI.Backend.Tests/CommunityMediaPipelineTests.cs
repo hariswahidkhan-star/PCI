@@ -277,6 +277,60 @@ public class CommunityMediaPipelineTests
     }
 
     [Fact]
+    public void ARetentionSweepDoesNotDestroyEscalatedEvidence()
+    {
+        // "Never delete production data" enforced by a check rather than a convention. The bytes are
+        // MOVED to the restricted category on escalation, and that category is exempt from the
+        // sweep — because an escalation carries a legal hold, and material a hold exists to preserve
+        // must not age out on a schedule. Deleting it is a deliberate, recorded act, never a side
+        // effect of a nightly job.
+        var db = NewDb();
+        var room = Room(db, "p-hold");
+        var guest = Guest(db, H.L(room["id"]), "hold-uploader");
+        var bytes = Png(20);
+        var up = CommunityMediaPipeline.Upload(db, room, guest, null, "u1", bytes, "image/png", "A chart");
+
+        var scanner = new DeterministicMediaScanner();
+        scanner.Register(CommunityMedia.Sanitise(bytes, "image/png").Derivative!, Categories.Grooming, Band.High);
+        Assert.Equal("restricted", CommunityMediaPipeline.ScanOnce(db, scanner, Policy).State);
+
+        var evidenceRef = H.Str(db.QueryOne(
+            "SELECT storage_ref FROM pciworld_restricted_evidence WHERE media_id=?", up.MediaId)!["storage_ref"]);
+        Assert.NotNull(evidenceRef);
+        Assert.NotNull(Storage.Get(evidenceRef)?.bytes);
+
+        // A sweep aggressive enough to remove everything eligible.
+        Storage.PurgeOlderThan(-1);
+
+        Assert.NotNull(Storage.Get(evidenceRef)?.bytes);
+    }
+
+    [Fact]
+    public void TheOrdinaryCopyOfEscalatedMediaIsNotLeftBehindInAPurgeableCategory()
+    {
+        // Recording the reference and leaving the file where it was would have left preserved
+        // evidence in a category the sweep does delete — the hold would have been a comment.
+        var db = NewDb();
+        var room = Room(db, "p-moved");
+        var guest = Guest(db, H.L(room["id"]), "moved-uploader");
+        var bytes = Png(21);
+        var up = CommunityMediaPipeline.Upload(db, room, guest, null, "u1", bytes, "image/png", "A chart");
+
+        var originalRef = H.Str(Media(db, up.MediaId)["storage_ref"]);
+        Assert.NotNull(originalRef);
+
+        var scanner = new DeterministicMediaScanner();
+        scanner.Register(CommunityMedia.Sanitise(bytes, "image/png").Derivative!, Categories.Grooming, Band.High);
+        CommunityMediaPipeline.ScanOnce(db, scanner, Policy);
+
+        var evidenceRef = H.Str(db.QueryOne(
+            "SELECT storage_ref FROM pciworld_restricted_evidence WHERE media_id=?", up.MediaId)!["storage_ref"]);
+        Assert.NotEqual(originalRef, evidenceRef);
+        Assert.Contains(CommunityMediaPipeline.RestrictedCategory, evidenceRef);
+        Assert.Null(Storage.Get(originalRef)?.bytes);
+    }
+
+    [Fact]
     public void ARestrictedVerdictDoesNotEndTheParticipantsSession()
     {
         // §28.5: no low-confidence-or-otherwise classifier result becomes an irreversible automatic

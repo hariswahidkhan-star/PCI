@@ -213,7 +213,14 @@ public static class CommunityMediaPipeline
         // ── Restricted: out of the ordinary pipeline entirely, and no derivative is ever made. ──
         if (decision.Outcome == Outcome.Escalate)
         {
-            Escalate(db, mediaId, queueId, media, decision, scanner, band);
+            // The bytes genuinely MOVE — they are re-stored under the restricted category, which the
+            // retention sweep never touches, and the ordinary copy is deleted. Recording the old
+            // reference and leaving the file where it was would have left preserved evidence sitting
+            // in a purgeable category, so a retention sweep would eventually have destroyed exactly
+            // the material a legal hold exists to keep. I/O first, transaction after.
+            var moved = Storage.Put(fetched.Value.bytes, rebuilt.Mime, RestrictedCategory).Reference;
+            Storage.DeleteOne(H.Str(media["storage_ref"]));
+            Escalate(db, mediaId, queueId, moved, media, decision, scanner, band);
             return new ScanOutcome(true, mediaId, "restricted", decision.ReasonCode, null);
         }
 
@@ -302,10 +309,10 @@ public static class CommunityMediaPipeline
         });
     }
 
-    static void Escalate(Db db, long mediaId, long queueId, Dictionary<string, object?> media,
+    static void Escalate(Db db, long mediaId, long queueId, string restrictedRef,
+                         Dictionary<string, object?> media,
                          Decision decision, IMediaScanner scanner, string band)
     {
-        var original = H.Str(media["storage_ref"]);
         db.Transaction(() =>
         {
             db.Execute(
@@ -322,7 +329,7 @@ public static class CommunityMediaPipeline
             db.Execute(
                 @"INSERT OR IGNORE INTO pciworld_restricted_evidence(media_id,storage_ref,content_sha256,reason,legal_hold)
                   VALUES(?,?,?,?,1)",
-                mediaId, original, media.TryGetValue("content_sha256", out var sha) ? sha : null,
+                mediaId, restrictedRef, media.TryGetValue("content_sha256", out var sha) ? sha : null,
                 decision.ReasonCode);
 
             db.Execute(
