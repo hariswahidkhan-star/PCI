@@ -81,17 +81,52 @@ public static class WorldUrl
 /// authorization; every world-admin endpoint calls Allowed() before touching data.</summary>
 public static class WorldRbac
 {
-    public static readonly string[] Roles = { "owner", "author", "reviewer", "publisher", "viewer" };
+    public static readonly string[] Roles =
+    {
+        // Editorial roles, unchanged.
+        "owner", "author", "reviewer", "publisher", "viewer",
+        // Community roles (CCP Phase 1). Added rather than folded into the editorial ones because
+        // the two jobs are genuinely different: a person who approves an article has no business
+        // ejecting a participant, and a live moderator has no business publishing content.
+        "live_moderator", "trust_safety", "appeals_reviewer", "safety_lead",
+    };
 
-    /// <summary>Action groups: read | author (draft CRUD, validate, submit for review) |
-    /// review (approve/reject) | publish (publish, retire/restore, calendar) | admin (user management).</summary>
+    /// <summary>
+    /// Action groups.
+    ///
+    /// Editorial: read | author (draft CRUD, validate, submit for review) | review (approve/reject)
+    /// | publish (publish, retire/restore, calendar) | admin (user management).
+    ///
+    /// Community: community.read (queue + case detail, redacted) | community.moderate (warn, mute,
+    /// eject, dismiss) | community.sanction (issue/revoke a sanction, incl. the maker side of a
+    /// permanent one) | community.sanction.approve (the CHECKER side — must be a different person)
+    /// | community.appeal (review and decide an appeal) | community.restricted (open a restricted
+    /// legal/safety case) | community.rooms (create/schedule/lock rooms, kill switches).
+    ///
+    /// Separation of duties is the point of the split. `live_moderator` can act in the moment but
+    /// cannot make anything permanent; `trust_safety` can issue sanctions but cannot approve their
+    /// own permanent ones; `appeals_reviewer` can overturn but cannot sanction, so the person who
+    /// hears an appeal is not the person who imposed the penalty. Only `safety_lead` and `owner`
+    /// can open restricted child-safety cases, because that evidence must stay out of the ordinary
+    /// queue (§8.7).
+    /// </summary>
     public static bool Allowed(string? role, string action) => role switch
     {
         "owner" => true,
         "author" => action is "read" or "author",
         "reviewer" => action is "read" or "review",
         "publisher" => action is "read" or "publish",
-        "viewer" => action is "read",
+        "viewer" => action is "read" or "community.read",
+
+        "live_moderator" => action is "read" or "community.read" or "community.moderate",
+        "trust_safety" => action is "read" or "community.read" or "community.moderate"
+                                  or "community.sanction" or "community.rooms",
+        // Deliberately NOT community.sanction: an appeals reviewer who can also punish is not
+        // independent, and §8.6 asks for independence where practical.
+        "appeals_reviewer" => action is "read" or "community.read" or "community.appeal",
+        "safety_lead" => action is "read" or "community.read" or "community.moderate"
+                                 or "community.sanction" or "community.sanction.approve"
+                                 or "community.appeal" or "community.restricted" or "community.rooms",
         _ => false,
     };
 }
