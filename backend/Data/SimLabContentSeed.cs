@@ -23,7 +23,10 @@ public static class SimLabContentSeed
     // portfolio, decision, data quality) plus the advanced/expert difficulty bands the first pass never
     // generated. Re-applies so installs already holding v2 pick up the new scenarios (existing rows are
     // untouched: inserts are guarded by scenario_code and the governance backfill only fills NULLs).
-    const int Version = 3;
+    // v4: P3 content-scale batch — 15 EVM-family forecast scenarios (GL/SD/SC-EVM-3xx) across four
+    // difficulty bands, lifting the published catalogue past the market-launch target (>=120 scenarios /
+    // 1000+ tasks). Re-applies so installs on v3 pick them up; existing rows are untouched.
+    const int Version = 4;
 
     public static void Apply(Db db)
     {
