@@ -346,6 +346,19 @@ public class CommunityCasesTests
     }
 
     [Fact]
+    public void OnlyASafetyLeadOrOwnerApprovesRestrictedEvidenceAccess()
+    {
+        // The checker side of two-person access to restricted media (Phase 2). The permission alone
+        // is not the whole control — the endpoint additionally refuses an approver who is the
+        // requester — but a role that cannot hold the permission cannot be either half.
+        Assert.True(WorldRbac.Allowed("safety_lead", "community.restricted.approve"));
+        Assert.True(WorldRbac.Allowed("owner", "community.restricted.approve"));
+        foreach (var role in new[] { "live_moderator", "trust_safety", "appeals_reviewer", "viewer", "author" })
+            Assert.False(WorldRbac.Allowed(role, "community.restricted.approve"),
+                         $"{role} must not approve access to restricted evidence");
+    }
+
+    [Fact]
     public void TheEditorialRolesGainNoCommunityPowers()
     {
         // Approving an article is not a licence to eject a participant.

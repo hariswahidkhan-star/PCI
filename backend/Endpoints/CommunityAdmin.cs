@@ -61,6 +61,158 @@ public static class CommunityAdmin
             return Results.Json(new { cases = CommunityCases.RestrictedQueue(db).Select(Summary) });
         });
 
+        // ── Image review (Phase 2) ────────────────────────────────────────────────────────────
+        //
+        // The ordinary media queue NEVER includes restricted items. It is not a filter that could be
+        // widened by a query parameter — the SQL excludes the state, and the restricted route below
+        // needs a different permission (§8.7, §28.7).
+
+        app.MapGet("/api/world-admin/community/media", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "community.read", out _) is { } deny) return deny;
+            var state = ctx.Request.Query["state"].ToString();
+            if (state is "restricted")
+                return Results.Json(new { error = "forbidden", required = "community.restricted" }, statusCode: 403);
+
+            var rows = db.Query(
+                @"SELECT m.id, m.room_id, m.state, m.declared_mime, m.byte_size, m.width, m.height,
+                         m.scan_band, m.withheld_reason, m.alt_text, m.created_at, m.verdict_at,
+                         r.slug AS room_slug
+                  FROM pciworld_community_media m
+                  LEFT JOIN pciworld_community_rooms r ON r.id = m.room_id
+                  WHERE m.state <> 'restricted' AND (? = '' OR m.state = ?)
+                  ORDER BY m.created_at DESC LIMIT 200",
+                state, state);
+
+            return Results.Json(new { media = rows.Select(m => new
+            {
+                id = H.L(m["id"]),
+                room = H.Str(m["room_slug"]),
+                state = H.Str(m["state"]),
+                band = H.Str(m["scan_band"]),
+                reason = H.Str(m["withheld_reason"]),
+                alt = H.Str(m["alt_text"]),
+                mime = H.Str(m["declared_mime"]),
+                bytes = H.L(m["byte_size"]),
+                width = H.L(m["width"]),
+                height = H.L(m["height"]),
+                at = H.Str(m["created_at"]),
+                decided_at = H.Str(m["verdict_at"]),
+                // A reviewer follows this only for an item that is actually servable; a withheld
+                // item has no derivative, so there is nothing behind it. Stated as a flag rather
+                // than as a URL that would 404.
+                viewable = H.Str(m["state"]) == "allowed",
+            }) });
+        });
+
+        // Suspected illegal material. TEXT ONLY, and that is the guarantee, not a UI preference:
+        // hash, size, dimensions, room, time and decision — never a thumbnail, never a link to
+        // bytes, because no renderable copy of a restricted item exists to link to (§28.7).
+        //
+        // The count is visible so the work is not hidden from the people responsible for it. The
+        // content is not.
+        app.MapGet("/api/world-admin/community/media/restricted", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "community.restricted", out var adm) is { } deny) return deny;
+            Audit(adm!.Id, "world_community_restricted_media_listed", null);
+
+            var rows = db.Query(
+                @"SELECT e.id, e.media_id, e.content_sha256, e.reason, e.legal_hold, e.preserved_until,
+                         e.requested_by, e.approved_by, e.accessed_count, e.created_at,
+                         m.byte_size, m.width, m.height, m.room_id, r.slug AS room_slug
+                  FROM pciworld_restricted_evidence e
+                  LEFT JOIN pciworld_community_media m ON m.id = e.media_id
+                  LEFT JOIN pciworld_community_rooms r ON r.id = m.room_id
+                  ORDER BY e.created_at DESC LIMIT 200");
+
+            return Results.Json(new
+            {
+                // Said in the response rather than left to a front-end to remember.
+                notice = "Text-only record. No preview of this material exists in this system, by design.",
+                evidence = rows.Select(e => new
+                {
+                    id = H.L(e["id"]),
+                    media_id = H.L(e["media_id"]),
+                    sha256 = H.Str(e["content_sha256"]),
+                    reason = H.Str(e["reason"]),
+                    legal_hold = H.B(e["legal_hold"]),
+                    preserved_until = H.Str(e["preserved_until"]),
+                    room = H.Str(e["room_slug"]),
+                    bytes = H.L(e["byte_size"]),
+                    width = H.L(e["width"]),
+                    height = H.L(e["height"]),
+                    at = H.Str(e["created_at"]),
+                    access_requested = e["requested_by"] is not null,
+                    access_approved = e["approved_by"] is not null,
+                    accessed_count = H.L(e["accessed_count"]),
+                }),
+            });
+        });
+
+        // Two-person access. A request and a DISTINCT approval, both recorded — the same
+        // maker-checker rule this module already applies to sanctions, for the same reason: the
+        // point of a second person is that they are a second person.
+        //
+        // Neither endpoint returns bytes. Approval records that access was authorised and by whom;
+        // retrieving the material itself is an out-of-band act performed under the escalation
+        // procedure, and building a download route here would defeat the control it stands beside.
+        app.MapPost("/api/world-admin/community/media/restricted/{id:long}/request-access", async (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "community.restricted", out var adm) is { } deny) return deny;
+            var b = await H.Body(ctx.Request);
+            var reason = (H.GetS(b, "reason") ?? "").Trim();
+            if (reason.Length < 10)
+                return Results.Json(new { error = "reason_required" }, statusCode: 400);
+
+            var row = db.QueryOne("SELECT id,requested_by FROM pciworld_restricted_evidence WHERE id=?", id);
+            if (row is null) return Results.NotFound();
+
+            db.Execute(
+                @"UPDATE pciworld_restricted_evidence
+                  SET requested_by=?, requested_at=datetime('now'), approved_by=NULL, approved_at=NULL,
+                      updated_at=datetime('now'), version=version+1
+                  WHERE id=?",
+                adm!.Id, id);
+            Audit(adm.Id, "world_community_restricted_access_requested", $"evidence={id}; {reason}");
+            log(adm.Id, "world_community_restricted_access_requested", $"evidence={id}");
+            return Results.Json(new { ok = true, awaiting = "a second approver" });
+        });
+
+        app.MapPost("/api/world-admin/community/media/restricted/{id:long}/approve-access", (HttpContext ctx, long id) =>
+        {
+            if (Gate(ctx, "community.restricted.approve", out var adm) is { } deny) return deny;
+
+            var row = db.QueryOne(
+                "SELECT id,requested_by,approved_by FROM pciworld_restricted_evidence WHERE id=?", id);
+            if (row is null) return Results.NotFound();
+            if (row["requested_by"] is null)
+                return Results.Json(new { error = "no_request_to_approve" }, statusCode: 400);
+
+            // The whole control. An approver who is also the requester is one person, and one
+            // person is what two-person access exists to prevent.
+            if (H.L(row["requested_by"]) == adm!.Id)
+            {
+                Audit(adm.Id, "world_community_restricted_self_approval_refused", $"evidence={id}");
+                return Results.Json(new { error = "approver_must_differ_from_requester" }, statusCode: 403);
+            }
+
+            db.Execute(
+                @"UPDATE pciworld_restricted_evidence
+                  SET approved_by=?, approved_at=datetime('now'), access_expires_at=?,
+                      accessed_count=accessed_count+1, last_accessed_at=datetime('now'),
+                      updated_at=datetime('now'), version=version+1
+                  WHERE id=?",
+                adm.Id, H.StampInMinutes(60), id);
+            Audit(adm.Id, "world_community_restricted_access_approved", $"evidence={id}");
+            log(adm.Id, "world_community_restricted_access_approved", $"evidence={id}");
+            return Results.Json(new
+            {
+                ok = true,
+                notice = "Access authorised and recorded. The material itself is retrieved out of band "
+                       + "under the escalation procedure; this system holds no preview of it.",
+            });
+        });
+
         app.MapGet("/api/world-admin/community/cases/{id:long}", (HttpContext ctx, long id) =>
         {
             if (Gate(ctx, "community.read", out var adm) is { } deny) return deny;

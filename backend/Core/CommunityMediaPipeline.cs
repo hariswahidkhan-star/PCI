@@ -173,7 +173,11 @@ public static class CommunityMediaPipeline
             return new ScanOutcome(false, mediaId, "", "lost_claim", null);
 
         var media = db.QueryOne(
-            "SELECT id,room_id,message_id,state,storage_ref,declared_mime FROM pciworld_community_media WHERE id=?",
+            // content_sha256 is selected because the escalation path copies it onto the evidence
+            // record. Omitting it left every restricted record with a NULL hash — and for a
+            // text-only record the hash is the identifying fact, the thing a specialist service is
+            // actually given. A silently empty column, not an error.
+            "SELECT id,room_id,message_id,state,storage_ref,declared_mime,content_sha256 FROM pciworld_community_media WHERE id=?",
             mediaId);
         if (media is null || H.Str(media["state"]) != "pending")
         {

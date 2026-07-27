@@ -322,6 +322,75 @@ def main():
         code, _ = req("GET", f"/api/world/community/media/{up4['media_id']}", headers=B, raw=True)
         chk("I31 and the image is not servable", code == 404, f"got {code}")
 
+        # ── The moderation surface ─────────────────────────────────────────────────────────
+        code, login = js("/api/world-admin/auth/login", "POST",
+                         {"email": "owner@pciworld.local", "password": OWNER_PW})
+        OWNER = {"Authorization": "Bearer " + login["token"]} if login.get("token") else {}
+        chk("I32 the world admin signs in", code == 200 and login.get("token"), f"{code} {login}")
+
+        code, r = js("/api/world-admin/community/media")
+        chk("I33 the media queue is not readable without a token", code == 401, f"got {code}")
+
+        code, q = js("/api/world-admin/community/media", headers=OWNER)
+        ids = [m["id"] for m in q.get("media", [])]
+        chk("I34 the ordinary media queue lists reviewable items",
+            code == 200 and media_id in ids, str(q)[:300])
+        chk("I35 the ordinary queue NEVER contains the restricted item",
+            up3["media_id"] not in ids, f"restricted item {up3['media_id']} was listed")
+        chk("I36 a withheld item IS in the ordinary queue, so the work is not hidden",
+            up2["media_id"] in ids, str(ids))
+
+        code, r = js("/api/world-admin/community/media?state=restricted", headers=OWNER)
+        chk("I37 restricted items cannot be reached by widening a query parameter",
+            code == 403, f"{code} {r}")
+
+        code, ev = js("/api/world-admin/community/media/restricted", headers=OWNER)
+        chk("I38 the restricted record is text only — hash, size, room, decision",
+            code == 200 and len(ev.get("evidence", [])) == 1
+            and ev["evidence"][0]["media_id"] == up3["media_id"], str(ev)[:300])
+        # Checked against the RECORDS, not the whole response — the response's own notice contains
+        # the word "preview" while saying there isn't one, and a substring match over that would be
+        # a test that fails for the opposite of the reason it claims.
+        blob = json.dumps(ev["evidence"])
+        chk("I39 and no record exposes a thumbnail, preview or link to bytes",
+            not any(k in blob for k in ("thumbnail", "preview", "derivative", "storage_ref")), blob[:300])
+        chk("I40 the count is visible even though the content is not",
+            ev["evidence"][0]["legal_hold"] is True, str(ev["evidence"][0]))
+        chk("I41 the identifying hash IS recorded — it is what a specialist service is given",
+            bool(ev["evidence"][0]["sha256"]), str(ev["evidence"][0]))
+
+        # ── Two-person access ──────────────────────────────────────────────────────────────
+        eid = ev["evidence"][0]["id"]
+        code, r = js(f"/api/world-admin/community/media/restricted/{eid}/request-access", "POST",
+                     {"reason": "short"}, OWNER)
+        chk("I42 an access request without a stated reason is refused",
+            code == 400 and r.get("error") == "reason_required", f"{code} {r}")
+
+        code, r = js(f"/api/world-admin/community/media/restricted/{eid}/approve-access", "POST", {}, OWNER)
+        chk("I43 there is nothing to approve before a request exists",
+            code == 400 and r.get("error") == "no_request_to_approve", f"{code} {r}")
+
+        code, r = js(f"/api/world-admin/community/media/restricted/{eid}/request-access", "POST",
+                     {"reason": "Referral to the specialist reporting route under the escalation procedure."}, OWNER)
+        chk("I44 an access request with a reason is recorded", code == 200 and r.get("ok"), f"{code} {r}")
+
+        code, r = js(f"/api/world-admin/community/media/restricted/{eid}/approve-access", "POST", {}, OWNER)
+        chk("I45 the requester cannot approve their own access request",
+            code == 403 and r.get("error") == "approver_must_differ_from_requester", f"{code} {r}")
+
+        rows = sql("SELECT approved_by, accessed_count FROM pciworld_restricted_evidence WHERE id=?", (eid,))
+        chk("I46 and the refused self-approval granted nothing",
+            rows and rows[0][0] is None and rows[0][1] == 0, str(rows))
+
+        rows = sql("SELECT COUNT(*) FROM pciworld_audit WHERE action=?",
+                   ("world_community_restricted_self_approval_refused",))
+        chk("I47 the refused self-approval is audited, not silently dropped",
+            rows and rows[0][0] == 1, str(rows))
+
+        rows = sql("SELECT COUNT(*) FROM pciworld_audit WHERE action=?",
+                   ("world_community_restricted_media_listed",))
+        chk("I48 merely listing restricted evidence is audited", rows and rows[0][0] >= 1, str(rows))
+
     finally:
         shutdown()
 

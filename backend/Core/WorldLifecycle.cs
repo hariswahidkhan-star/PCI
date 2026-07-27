@@ -101,7 +101,10 @@ public static class WorldRbac
     /// eject, dismiss) | community.sanction (issue/revoke a sanction, incl. the maker side of a
     /// permanent one) | community.sanction.approve (the CHECKER side — must be a different person)
     /// | community.appeal (review and decide an appeal) | community.restricted (open a restricted
-    /// legal/safety case) | community.rooms (create/schedule/lock rooms, kill switches).
+    /// legal/safety case, and REQUEST access to restricted evidence) |
+    /// community.restricted.approve (the CHECKER side of that access — the endpoint additionally
+    /// refuses an approver who is the requester, because the point of a second person is that they
+    /// are a second person) | community.rooms (create/schedule/lock rooms, kill switches).
     ///
     /// Separation of duties is the point of the split. `live_moderator` can act in the moment but
     /// cannot make anything permanent; `trust_safety` can issue sanctions but cannot approve their
@@ -126,7 +129,8 @@ public static class WorldRbac
         "appeals_reviewer" => action is "read" or "community.read" or "community.appeal",
         "safety_lead" => action is "read" or "community.read" or "community.moderate"
                                  or "community.sanction" or "community.sanction.approve"
-                                 or "community.appeal" or "community.restricted" or "community.rooms",
+                                 or "community.appeal" or "community.restricted"
+                                 or "community.restricted.approve" or "community.rooms",
         _ => false,
     };
 }
