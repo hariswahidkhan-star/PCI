@@ -279,6 +279,89 @@ session before the stashed baseline settled it.
 
 ---
 
+## CCP-P2-009 — Hub connect-time authorization is not covered by an automated test
+
+| Field | Value |
+|---|---|
+| Phase | 1 |
+| Module | `backend/Core/CommunityHub.cs` |
+| Requirement | §8.3 (hub authorization re-checked per invocation), E2E-012 |
+| Severity | **P2** |
+| Status | **Deferred** — needs a WebSocket-capable test client |
+| Owner | CCP |
+
+**Issue.** `CommunityHub.OnConnectedAsync` aborts any connection without a valid guest session, and
+`Acknowledge`/`Replay` re-check the session on every invocation so an ejected participant's live
+connection stops working. **None of that is exercised by an automated test.**
+
+The live suite asserts only that the transport is mounted (C32), because SignalR's `negotiate`
+handshake is unauthenticated *by design* — authorization happens at connect. A passing `negotiate`
+therefore proves reachability and nothing about authorization, and the assertion is named to say so
+rather than implying broader coverage.
+
+**Why not covered.** Driving a real connection needs a WebSocket client; neither `websockets` nor
+`websocket-client` is available in the test environment, and the repository's Python suites are
+deliberately dependency-light (stdlib + `pymysql`/`pypdf`).
+
+**What IS covered meanwhile.** The security property has a second, tested enforcement point: the
+HTTP accept path re-resolves the session on every send, so an ejected guest cannot post regardless
+of connection state (`C19` asserts the session is dead immediately after ejection). The hub cannot
+be used to send at all — sending is not a hub method — so the untested surface is limited to
+*receiving* broadcasts and replay.
+
+**Proposed fix.** Add a Playwright spec that opens a real SignalR connection (the repo already has
+a Playwright harness with browser context), asserting: an anonymous connect is refused; an ejected
+guest's live connection stops receiving; and a reconnect replays only messages after the
+acknowledged sequence. That is E2E-012 and part of E2E-028.
+
+**Risk if unfixed.** A regression in `OnConnectedAsync` would let an unauthenticated client receive
+room broadcasts, and no test would fail.
+
+---
+
+## CCP-P2-010 — An IP-derived risk key restricts everyone behind a shared address
+
+| Field | Value |
+|---|---|
+| Phase | 1 |
+| Module | `backend/Endpoints/CommunityPublic.cs` (`RiskKey`), `pciworld_risk_restrictions` |
+| Requirement | §7.1 (layered controls, honest limits), §28.5 (no irreversible sanction on weak signal) |
+| Severity | **P2** |
+| Status | **Accepted for Release 1, documented** |
+| Owner | Trust & Safety + Platform |
+
+**Issue.** The abuse identifier is `SHA256(pepper ‖ client-IP ‖ rotation-period)`. Ejecting one
+participant therefore restricts **every visitor sharing that IP** — an office NAT, a university, a
+school, a café, or carrier-grade NAT. CGNAT is the common case on mobile networks across much of the
+world, including regions PCI World specifically targets for Arabic and Urdu participants, so the
+collateral is not a corner case.
+
+**How it was found.** A live-suite failure, not review: ejecting one guest made an unrelated guest's
+re-entry fail with `access_restricted`, because the harness ran every simulated participant from
+`127.0.0.1`. The test was fixed to give each participant its own forwarded hop, which is realistic —
+but the underlying product behaviour is unchanged and real.
+
+**Why it is accepted rather than removed.** §8.6 requires a temporary guest restriction to exist as
+a sanction, and an ejection with no consequence is not a sanction. The mitigations already in place:
+
+- the restriction is **room-scoped and 24 hours**, not global or permanent;
+- it is **appealable without an account** — the ejected guest is handed a reference and credential in
+  the ejection response itself, and an overturn lifts the restriction immediately (asserted by
+  `C54`–`C61`);
+- §7.1's honesty requirement is met — this is described as a deterrent, never as ban enforcement,
+  and clearing a cookie or changing network defeats it anyway.
+
+**Proposed fix (post-Release 1).** Blend device-level and behavioural signals into the key so a
+single shared address is not the whole identity, and downgrade an IP-only match from a hard block to
+a risk score that raises the proof-of-human bar rather than refusing entry. Both need the abuse
+telemetry that only real traffic provides, so they are deliberately not guessed at now.
+
+**Risk accepted.** During Release 1 a genuine participant behind a shared address may be refused
+entry for up to 24 hours because of someone else's behaviour. They can appeal, and the appeal path is
+tested end to end — but they should not have to, and this should not survive contact with scale.
+
+---
+
 ## CCP-P3-007 — Pre-existing minor defects in main-PCI chat (out of CCP scope)
 
 | Field | Value |

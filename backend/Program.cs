@@ -292,6 +292,11 @@ builder.Services.AddHostedService<PCI.Backend.Core.ExamDeliveryDispatcher>();   
 builder.Services.AddHostedService<PCI.Backend.Core.CommsReminderService>();     // Comms §13: scheduled reminder sequences
 builder.Services.AddHostedService<PCI.Backend.Core.WorldRotationService>();     // PCI World: open each day's rotation period at the boundary
 builder.Services.AddHostedService<PCI.Backend.Core.WorldRetentionService>();   // PCI World: expire sessions/tokens/events (learner history untouched)
+// PCI World community rooms: realtime transport + the broadcast drain. SignalR comes from the
+// ASP.NET Core shared framework, so this adds no package dependency. The drain no-ops while
+// world_community_enabled is false, so a deployment with rooms off does no polling.
+builder.Services.AddSignalR(o => { o.EnableDetailedErrors = false; o.MaximumReceiveMessageSize = 32 * 1024; });
+builder.Services.AddHostedService<PCI.Backend.Core.CommunityBroadcastService>();
 
 var app = builder.Build();
 
@@ -1583,6 +1588,11 @@ PCI.Backend.Endpoints.Certuvo.Map(app, db, logFn);                    // Certuvo
 PCI.Backend.Endpoints.SimLab.Map(app, db, logFn);                     // AI Project Controls Simulation Lab (applied practice)
 PCI.Backend.Endpoints.World.Map(app, db, logFn);                      // PCI World — public challenge platform (separate product)
 PCI.Backend.Endpoints.CommunityPublic.Map(app, db, logFn);            // PCI World community rooms (gated on world_community_enabled, default off)
+// The realtime hub. Inside the World-only allowlist already, so no boundary change. Sending is NOT
+// a hub method: messages are posted over HTTP so the moderated accept path stays the single door
+// into a room. The hub only pushes notifications and serves reconnect replay.
+PCI.Backend.Endpoints.CommunityAdmin.Map(app, db, logFn);             // PCI World community moderation console + guest appeals
+app.MapHub<PCI.Backend.Core.CommunityHub>(PCI.Backend.Core.CommunityHub.Path);
 PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
 PCI.Backend.Endpoints.WorldAccount.Map(app, db, logFn);               // PCI World — participant accounts + Passport (practice identity only)
 PCI.Backend.Endpoints.WorldIntelligenceApi.Map(app, db, logFn);       // PCI Project Intelligence — versioned learner API + admin coverage

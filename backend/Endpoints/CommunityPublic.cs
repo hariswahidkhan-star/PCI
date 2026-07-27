@@ -262,9 +262,41 @@ public static class CommunityPublic
                                                Moderator(), Policy(), repetition: repetition,
                                                correlationId: ctx.TraceIdentifier);
 
+            // An ejection is not just a disconnect. §8.6 and PW-US-053 require that the person is
+            // told what happened and given a way to challenge it — and a guest has no account to
+            // come back to, so the appeal credential is minted HERE and returned exactly once. If
+            // it is not handed over in this response it is unrecoverable, which would make the
+            // right of appeal theoretical.
+            CommunityCases.AppealTicket? ticket = null;
+            string? restrictedUntil = null;
             if (result.Ejected)
             {
-                CommunityRooms.EndSession(db, H.L(session["id"]), "ejected", result.ReasonCode);
+                var riskKey = RiskKey(ctx);
+                var severe = result.ReasonCode is "grooming_severe" or "grooming_restricted"
+                                              or "sexual_severe" or "hate_severe" or "violence_credible_threat";
+                db.Transaction(() =>
+                {
+                    // A severe finding opens a RESTRICTED case, which keeps it out of the ordinary
+                    // moderator queue entirely (§8.7) rather than merely flagging it.
+                    var caseId = CommunityCases.OpenOrGet(db, H.L(room["id"]), "guest_session",
+                        H.L(session["id"]).ToString(), severe ? "critical" : "high",
+                        result.ReasonCode, restricted: severe, correlationId: ctx.TraceIdentifier);
+
+                    CommunityCases.Issue(db, "risk_key", riskKey, H.L(room["id"]), "eject",
+                        result.ReasonCode, issuedBy: 0, caseId: caseId, durationMinutes: 24 * 60,
+                        correlationId: ctx.TraceIdentifier);
+
+                    // The time-bounded consequence. Evadable by clearing a cookie or changing
+                    // network, which is stated honestly as a deterrent rather than enforcement.
+                    restrictedUntil = H.StampInMinutes(24 * 60);
+                    db.Execute(
+                        @"INSERT INTO pciworld_risk_restrictions(risk_key,scope,room_id,reason_code,case_id,expires_at)
+                          VALUES(?,'room',?,?,?,?)",
+                        riskKey, H.L(room["id"]), result.ReasonCode, caseId, restrictedUntil);
+
+                    ticket = CommunityCases.IssueAppeal(db, caseId);
+                    CommunityRooms.EndSession(db, H.L(session["id"]), "ejected", result.ReasonCode);
+                });
                 ctx.Response.Cookies.Delete("pciworld_room");
                 log(null, "world_community_eject", result.ReasonCode);
             }
@@ -278,6 +310,15 @@ public static class CommunityPublic
                 status = result.Status,
                 reason = result.ReasonCode,
                 ejected = result.Ejected,
+                // Shown once. The reference is safe to quote in support mail; the credential is the
+                // only thing that unlocks the appeal, and it is never retrievable again.
+                appeal = ticket is null ? null : new
+                {
+                    reference = ticket.Value.PublicReference,
+                    credential = ticket.Value.Credential,
+                    restricted_until = restrictedUntil,
+                    how = "/world/appeals",
+                },
             }, statusCode: result.ReasonCode is "room_not_accepting" or "message_too_long" or "empty_message" ? 400 : 200);
         });
 
@@ -309,10 +350,25 @@ public static class CommunityPublic
 
             try
             {
-                db.Execute(
-                    @"INSERT INTO pciworld_community_reports(room_id,message_id,reporter_session_id,reason_code,note)
-                      VALUES(?,?,?,?,?)",
-                    roomId, messageId, H.L(session["id"]), reason, H.GetS(b, "note"));
+                // The report and the case it belongs to are written together: a report that never
+                // reaches a queue is a complaint into a void, and a case created without its report
+                // has no evidence attached. OpenOrGet keeps a brigading burst to ONE case to work.
+                db.Transaction(() =>
+                {
+                    var reportedSession = messageId is null ? null : H.Str(db.QueryOne(
+                        "SELECT guest_session_id FROM pciworld_community_messages WHERE id=?", messageId)?["guest_session_id"]);
+
+                    var caseId = CommunityCases.OpenOrGet(db, roomId, "guest_session",
+                        reportedSession ?? $"message:{messageId}", "normal", "participant_report",
+                        correlationId: ctx.TraceIdentifier);
+
+                    db.Execute(
+                        @"INSERT INTO pciworld_community_reports(room_id,message_id,reported_session_id,reporter_session_id,reason_code,note,case_id)
+                          VALUES(?,?,?,?,?,?,?)",
+                        roomId, messageId,
+                        reportedSession is null ? null : (object)long.Parse(reportedSession),
+                        H.L(session["id"]), reason, H.GetS(b, "note"), caseId);
+                });
             }
             catch
             {
