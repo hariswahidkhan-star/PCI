@@ -103,12 +103,18 @@ public static class CommunityOutbox
                 // Exponential backoff with a cap. No jitter is added here because the retry time is
                 // stored per row and rows are claimed individually, so a thundering herd cannot form
                 // from a single failed batch the way it would with a shared in-memory timer.
-                var delaySeconds = (int)Math.Min(300, Math.Pow(2, attempt));
+                //
+                // The instant is computed with H.StampInMinutes and bound as a VALUE. Db.Translate's
+                // SQLite→MySQL rewrite is textual, so it can only see a modifier written as a
+                // literal; one arriving through a concatenation reaches MySQL as a function it does
+                // not have, while SQLite accepts it happily. That is what makes this failure mode
+                // provider-specific and easy to ship, and it is why the helper exists.
+                var delaySeconds = Math.Min(300, Math.Pow(2, attempt));
                 db.Execute(
                     @"UPDATE pciworld_community_outbox
                       SET status='queued', attempts=?, lease_owner=NULL, lease_until=NULL, last_error=?,
-                          next_attempt_at=datetime('now','+' || ? || ' seconds')
-                      WHERE id=?", attempt, error ?? "delivery_failed", delaySeconds, id);
+                          next_attempt_at=?
+                      WHERE id=?", attempt, error ?? "delivery_failed", H.StampInMinutes(delaySeconds / 60.0), id);
             }
         }
         return delivered;

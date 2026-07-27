@@ -97,8 +97,7 @@ public static class CommunityRooms
         // statement reaches MariaDB as SQLite syntax it cannot evaluate. SQLite accepts it happily,
         // which is exactly what makes this class of bug provider-specific and easy to miss — the
         // repository's own TestEnv.Stamp carries the same warning.
-        var expiresAt = DateTime.UtcNow.AddHours(Math.Clamp(sessionHours, 1, 24))
-                                       .ToString("yyyy-MM-dd HH:mm:ss");
+        var expiresAt = H.StampInMinutes(Math.Clamp(sessionHours, 1, 24) * 60);
         try
         {
             var id = db.ExecuteReturningId(
