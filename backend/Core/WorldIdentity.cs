@@ -486,6 +486,8 @@ public static class WorldIdentity
             ["canonical_user_id"] = canonical,
             ["participation_status"] = participant is null ? null : H.Str(participant["status"]),
             ["onboarding_state"] = participant is null ? null : H.Str(participant["onboarding_state"]),
+            ["first_entered_at"] = participant is null ? null : H.Str(participant["first_entered_at"]),
+            ["onboarded_at"] = participant is null ? null : H.Str(participant["onboarded_at"]),
             ["goal"] = participant is null ? null : H.Str(participant["goal"]),
             ["attempts_total"] = H.L(me["total"]),
             ["attempts_completed"] = H.L(me["done"]),

@@ -91,6 +91,60 @@ public static class AdminIntegrations
                     new { key = "zoho", label = "Zoho Books", description = "Members → Contacts, payments → Invoices, via the Zoho Books API (OAuth, region-aware)." },
                     new { key = "odoo", label = "Odoo", description = "Members → res.partner, payments → customer invoices, via Odoo JSON-RPC (database + API key)." },
                 },
+                // Field metadata so the console renders each ERP's setup form (and its help text) from
+                // the server rather than hardcoding a form per vendor: adding a connector stays a
+                // backend change. `secret: true` fields are write-only and never read back.
+                provider_fields = new
+                {
+                    zoho = new
+                    {
+                        setup = "Zoho API console → Self Client → generate a refresh token with the scopes below, then copy your Organization ID from Zoho Books → Settings → Organizations.",
+                        scopes = ZohoConnector.RequiredScopes,
+                        rate_limit = $"{ZohoConnector.RateLimitPerMinute} API calls/minute per organization (HTTP 429 beyond). A payment costs up to 3 calls.",
+                        fields = new object[]
+                        {
+                            new { key = "organization_id", label = "Organization ID", required = true, help = "Zoho Books → Settings → Organizations. Sent on every request; without it Zoho answers 'Organization not found' whatever the token." },
+                            new { key = "region", label = "Data centre", required = true, type = "select", options = new[] { "com", "eu", "in", "com.au", "jp", "ca" }, help = "The data centre your Zoho account lives in. A token minted in one region is INVALID in another, so this must match your account." },
+                            new { key = "client_id", label = "Client ID", required = false, help = "From the self-client you created. Needed only if you supply a refresh token rather than a direct access token." },
+                            new { key = "client_secret", label = "Client secret", required = false, secret = true },
+                            new { key = "refresh_token", label = "Refresh token", required = false, secret = true, help = "Preferred: the connector mints short-lived access tokens from it automatically." },
+                            new { key = "access_token", label = "Access token", required = false, secret = true, help = "Optional shortcut for testing. Zoho access tokens expire in ~1 hour, so a refresh token is the durable choice." },
+                            new { key = "invoice_status", label = "Invoice status", required = false, type = "select", options = new[] { "draft", "sent" }, help = "draft (default) creates the invoice without notifying the customer. 'sent' makes Zoho mail it — turn on deliberately." },
+                            new { key = "item_id", label = "Books item ID", required = false, help = "Bill against an existing Books item so invoices land on your chart of accounts. Without it an ad-hoc line is used." },
+                            new { key = "tax_id", label = "Tax ID", required = false },
+                            new { key = "currency", label = "Currency code", required = false, help = "e.g. USD. Leave blank to use the organisation default." },
+                            new { key = "place_of_supply", label = "Place of supply", required = false, help = "Required by GST/VAT jurisdictions." },
+                            new { key = "payment_terms", label = "Payment terms (days)", required = false },
+                            new { key = "salesperson", label = "Salesperson name", required = false },
+                            new { key = "notes", label = "Invoice notes", required = false },
+                            new { key = "contact_reuse", label = "Reuse existing contact by email", required = false, type = "bool", @default = true, help = "On (default): a returning payer reuses their contact. Off: every payment mints a new contact, duplicating customers." },
+                            new { key = "api_base", label = "API base override", required = false, help = "Point deliveries at a test receiver. The OAuth accounts host is deliberately NOT redirected, so real credentials are never sent to it." },
+                        },
+                    },
+                    odoo = new
+                    {
+                        setup = "Odoo → Preferences → Account Security → New API Key. Use your login email and that key; the database name is the one in your instance URL.",
+                        notes = "Invoices are created as DRAFTS. Posting is a separate step in Odoo, deliberately left to an accountant.",
+                        fields = new object[]
+                        {
+                            new { key = "url", label = "Instance URL", required = true, help = "https://your-instance.odoo.com — the connector posts JSON-RPC to {url}/jsonrpc." },
+                            new { key = "database", label = "Database name", required = true },
+                            new { key = "login", label = "Login (user email)", required = true },
+                            new { key = "api_key", label = "API key", required = true, secret = true, help = "Used in place of the password. Generated per user in Odoo." },
+                            new { key = "company_id", label = "Company ID", required = false, help = "Numeric res.company id — needed on multi-company databases." },
+                            new { key = "journal_id", label = "Journal ID", required = false, help = "Numeric account.journal id the invoice posts to." },
+                            new { key = "product_id", label = "Product ID", required = false, help = "Numeric product.product id the invoice line bills." },
+                            new { key = "account_id", label = "Account ID", required = false },
+                            new { key = "tax_id", label = "Tax ID", required = false, help = "Numeric account.tax id, applied as the line's only tax." },
+                            new { key = "currency_id", label = "Currency ID", required = false },
+                            new { key = "payment_term_id", label = "Payment term ID", required = false },
+                            new { key = "team_id", label = "Sales team ID", required = false },
+                            new { key = "partner_reuse", label = "Reuse existing partner by email", required = false, type = "bool", @default = true },
+                            new { key = "partner_model", label = "Partner model override", required = false, @default = OdooConnector.PartnerModel },
+                            new { key = "invoice_model", label = "Invoice model override", required = false, @default = OdooConnector.InvoiceModel },
+                        },
+                    },
+                },
             })));
 
         // ---------- create / update ----------
@@ -156,6 +210,17 @@ public static class AdminIntegrations
                     ["region"] = ZohoConnector.NormaliseRegion(H.GetS(b, "region")),
                     ["client_id"] = (H.GetS(b, "client_id") ?? "").Trim(),
                 };
+                // Optional accounting mapping — each is omitted from the invoice when unset so Books
+                // applies the organisation's own default rather than being overridden with a blank.
+                foreach (var k in new[] { "currency", "place_of_supply", "tax_id", "item_id", "salesperson", "payment_terms", "notes" })
+                    if (H.GetS(b, k) is { Length: > 0 } v) cfg[k] = v.Trim();
+                if (H.GetS(b, "invoice_status") is { Length: > 0 } inv)
+                {
+                    var st = inv.Trim().ToLowerInvariant();
+                    if (st is not ("draft" or "sent")) return Results.Json(new { error = "bad_invoice_status", message = "invoice_status must be draft or sent." }, statusCode: 400);
+                    cfg["invoice_status"] = st;
+                }
+                if (H.GetEl(b, "contact_reuse") is { ValueKind: JsonValueKind.False }) cfg["contact_reuse"] = false;
                 if (H.GetS(b, "api_base") is { Length: > 0 } zab)
                 {
                     if (Egress.UrlProblem(zab.Trim()) is { } zabProb)
@@ -180,6 +245,16 @@ public static class AdminIntegrations
                 };
                 if (H.GetS(b, "partner_model") is { Length: > 0 } pm) cfg["partner_model"] = pm.Trim();
                 if (H.GetS(b, "invoice_model") is { Length: > 0 } im) cfg["invoice_model"] = im.Trim();
+                // Optional accounting mapping. These are Odoo record IDs: a non-numeric value would be
+                // silently ignored by the connector, so it is rejected here where the operator can see it.
+                foreach (var k in new[] { "company_id", "journal_id", "product_id", "account_id", "tax_id", "currency_id", "payment_term_id", "team_id" })
+                    if (H.GetS(b, k) is { Length: > 0 } raw)
+                    {
+                        if (!long.TryParse(raw.Trim(), out var idVal) || idVal <= 0)
+                            return Results.Json(new { error = "bad_" + k, message = $"{k} must be a positive Odoo record id." }, statusCode: 400);
+                        cfg[k] = idVal;
+                    }
+                if (H.GetEl(b, "partner_reuse") is { ValueKind: JsonValueKind.False }) cfg["partner_reuse"] = false;
                 configJson = JsonSerializer.Serialize(cfg);
             }
             // Secret handling is write-only. Webhook: a plain signing-secret string. QuickBooks/Zoho: a JSON

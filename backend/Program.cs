@@ -400,16 +400,71 @@ app.Use(async (ctx, next) =>
 // CORS: responses honour ALLOWED_ORIGIN only; the boot validator rejects wildcard/empty in production,
 // so this reflects the single approved origin there and falls back to '*' only in development.
 var _allowedOrigin = Environment.GetEnvironmentVariable("ALLOWED_ORIGIN");
+// With the student panel on its own domain there are two legitimate origins, not one. Reflect the
+// portal origin when the request genuinely comes from it — still an allowlist of exactly the two
+// configured origins, never a wildcard, and never an echo of an arbitrary Origin header.
+var _portalOrigin = PCI.Backend.Core.PortalDomain.Enabled ? PCI.Backend.Core.PortalDomain.BaseUrl : null;
 app.Use(async (ctx, next) =>
 {
     var res = ctx.Response;
-    res.Headers["Access-Control-Allow-Origin"] = string.IsNullOrEmpty(_allowedOrigin) ? "*" : _allowedOrigin;
-    if (!string.IsNullOrEmpty(_allowedOrigin)) res.Headers["Vary"] = "Origin";
+    var reqOrigin = ctx.Request.Headers["Origin"].ToString();
+    var allow = _allowedOrigin;
+    if (_portalOrigin is not null && string.Equals(reqOrigin, _portalOrigin, StringComparison.OrdinalIgnoreCase))
+        allow = _portalOrigin;
+    res.Headers["Access-Control-Allow-Origin"] = string.IsNullOrEmpty(allow) ? "*" : allow;
+    if (!string.IsNullOrEmpty(allow)) res.Headers["Vary"] = "Origin";
     res.Headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
     res.Headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS";
     if (ctx.Request.Method == "OPTIONS") { res.StatusCode = 204; return; }
     await next();
 });
+
+// ── Student-portal domain separation (RES-013): the logged-in panel lives on its own domain
+// (mypci.org) while the marketing site stays on the institute domain. One deployment serves both;
+// this middleware keeps each path on exactly one canonical host.
+//
+// ORDERING: like the World mapping below, this runs AFTER security headers and CORS — it answers
+// some requests itself (redirects) and those responses must still carry CSP/nosniff/CORS.
+//
+// OFF unless PORTAL_BASE_URL (or PORTAL_HOSTS) is set, so single-domain deployments are unchanged.
+if (PCI.Backend.Core.PortalDomain.Enabled)
+{
+    app.Use(async (ctx, next) =>
+    {
+        var path = ctx.Request.Path;
+        // The API, assets, admin and World keep working on every host: the portal SPA calls /api on
+        // its own origin (so no cross-origin preflight), and operators keep whichever host they have
+        // bookmarked. Only the student-facing pages are steered.
+        if (!PCI.Backend.Core.PortalDomain.IsSharedPath(path))
+        {
+            var onPortalHost = PCI.Backend.Core.PortalDomain.IsPortalHost(ctx.Request.Host.Host);
+            var isPortalPath = PCI.Backend.Core.PortalDomain.IsPortalPath(path);
+            var qs = ctx.Request.QueryString.HasValue ? ctx.Request.QueryString.Value : "";
+
+            // A portal page asked for on the institute domain → send it to the portal domain.
+            if (!onPortalHost && isPortalPath)
+            {
+                // 308, not 301: the method and body must survive (a POSTed login must not silently
+                // become a GET), and the move is permanent so search engines stop indexing both.
+                ctx.Response.StatusCode = StatusCodes.Status308PermanentRedirect;
+                ctx.Response.Headers.Location = (PCI.Backend.Core.PortalDomain.BaseUrl ?? "") + path + qs;
+                return;
+            }
+            // A marketing page asked for on the portal domain → send it back to the institute domain,
+            // so the two hosts never serve duplicate copies of the same content.
+            if (onPortalHost && !isPortalPath && PCI.Backend.Core.PortalDomain.PublicBaseUrl is { } pub)
+            {
+                ctx.Response.StatusCode = StatusCodes.Status308PermanentRedirect;
+                ctx.Response.Headers.Location = pub + path + qs;
+                return;
+            }
+        }
+        // The logged-in surface is never a search result.
+        if (PCI.Backend.Core.PortalDomain.IsPortalHost(ctx.Request.Host.Host))
+            ctx.Response.Headers["X-Robots-Tag"] = "noindex, nofollow";
+        await next();
+    });
+}
 
 // ── PCI World host mapping: a dedicated PCI World service or domain lands directly on the
 // product instead of the Institute site. PCIWORLD_STANDALONE=true maps this whole service
@@ -526,7 +581,7 @@ app.Use(async (ctx, next) =>
 var stripeKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
 if(!string.IsNullOrEmpty(stripeKey)) Stripe.StripeConfiguration.ApiKey = stripeKey;
 if (string.IsNullOrEmpty(stripeKey)) Console.WriteLine("[boot] STRIPE_SECRET_KEY not set — payment endpoints will answer 503 until configured.");
-if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SMTP_HOST")) && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("RESEND_API_KEY")))
+if (PCI.Backend.Core.Mailer.ActiveProvider() == "console")
     Console.WriteLine("[boot] no email provider configured (RESEND_API_KEY or SMTP_HOST) — emails will print to the console instead of sending.");
 {
     var sp = (Environment.GetEnvironmentVariable("STORAGE_PROVIDER") ?? "local").ToLowerInvariant();
@@ -553,7 +608,25 @@ List<(string sev, string key, string msg)> ConfigIssues()
         if (string.IsNullOrEmpty(baseUrl) || baseUrl.Contains("localhost") || baseUrl.Contains("127.0.0.1")) Err("APP_BASE_URL", "must be a public HTTPS URL in production");
         if (string.IsNullOrEmpty(E("STRIPE_SECRET_KEY"))) Warn("STRIPE_SECRET_KEY", "payments will be disabled (503) until set");
         else if (string.IsNullOrEmpty(E("STRIPE_WEBHOOK_SECRET"))) Err("STRIPE_WEBHOOK_SECRET", "required to verify webhooks when Stripe is enabled");
-        if (string.IsNullOrEmpty(E("SMTP_HOST"))) Warn("SMTP_HOST", "emails will not send");
+        // Email posture. These are warnings, not boot blockers: a mail misconfiguration must not take a
+        // running service down, and every failure is already visible in email_logs. But each one below
+        // is a way for mail to look configured while candidates receive nothing, so it is called out.
+        var mailProvider = PCI.Backend.Core.Mailer.ActiveProvider();
+        if (mailProvider == "console")
+            Warn("RESEND_API_KEY/SMTP_HOST", "no email provider configured — every email prints to the console instead of sending");
+        else
+        {
+            var senderExplicit = !string.IsNullOrEmpty(E("MAIL_FROM")) || !string.IsNullOrEmpty(E("SMTP_FROM"));
+            var sender = PCI.Backend.Core.Mailer.ResolvedSender();
+            if (!senderExplicit)
+                Warn("MAIL_FROM", $"no sender configured — falling back to \"{sender}\", which the provider will reject unless that address is authorised");
+            if (!PCI.Backend.Core.Mailer.SenderParses(sender))
+                Warn("MAIL_FROM", $"sender \"{sender}\" is not a valid address — every send will fail");
+            if (mailProvider == "resend" && sender == PCI.Backend.Core.Mailer.ResendTestSender)
+                Warn("MAIL_FROM", "using Resend's shared onboarding sender: it delivers ONLY to the Resend account owner, so candidates receive nothing — set a verified domain sender");
+            if (mailProvider == "smtp" && string.IsNullOrEmpty(E("SMTP_USER")))
+                Warn("SMTP_USER", "SMTP configured without credentials — most relays reject unauthenticated senders");
+        }
         if (string.Equals(E("ENABLE_LEGACY_ADMIN_TOKEN"), "true", StringComparison.OrdinalIgnoreCase)) Err("ENABLE_LEGACY_ADMIN_TOKEN", "legacy admin token must be disabled in production");
         var origin = E("ALLOWED_ORIGIN");
         if (string.IsNullOrEmpty(origin) || origin == "*") Err("ALLOWED_ORIGIN", "CORS must not be wildcard in production; set an explicit origin");
@@ -850,7 +923,30 @@ app.MapGet("/api/admin/integrations/health", (HttpRequest req) =>
         {
             resend = !string.IsNullOrEmpty(E("RESEND_API_KEY")),
             smtp = !string.IsNullOrEmpty(E("SMTP_HOST")),
+            // Which provider a send would ACTUALLY use. Both configured is legal (Resend wins), but an
+            // operator who set SMTP and sees mail leaving via Resend deserves to be told why.
+            active_provider = PCI.Backend.Core.Mailer.ActiveProvider(),
+            // The sender recipients will see, including each provider's fallback — the single most
+            // common misconfiguration is a working API key paired with a sender nobody authorised.
+            sender = PCI.Backend.Core.Mailer.ResolvedSender(),
+            sender_explicit = !string.IsNullOrEmpty(E("MAIL_FROM")) || !string.IsNullOrEmpty(E("SMTP_FROM")),
+            sender_parses = PCI.Backend.Core.Mailer.SenderParses(PCI.Backend.Core.Mailer.ResolvedSender()),
+            // Resend's shared onboarding sender only delivers to the account owner: configured, but
+            // candidates receive nothing. Worth calling out by name rather than showing "resend: true".
+            using_resend_test_sender = PCI.Backend.Core.Mailer.ActiveProvider() == "resend"
+                && PCI.Backend.Core.Mailer.ResolvedSender() == PCI.Backend.Core.Mailer.ResendTestSender,
+            reply_to = PCI.Backend.Core.Mailer.ReplyTo(),
+            smtp_port = E("SMTP_PORT") ?? "587 (default)",
+            smtp_ssl = !string.Equals(E("SMTP_SSL"), "false", StringComparison.OrdinalIgnoreCase),
+            smtp_auth = !string.IsNullOrEmpty(E("SMTP_USER")),
             outbox = Queue("comm_outbox", "status IN ('queued','scheduled','retrying','processing')", "status='failed'"),
+            // Delivery reality, not configuration: what the log says actually happened recently.
+            last_24h = new
+            {
+                sent = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='sent' AND sent_at>=datetime('now','-1 day')"),
+                failed = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='failed' AND sent_at>=datetime('now','-1 day')"),
+                console = db.Scalar<long>("SELECT COUNT(*) FROM email_logs WHERE status='console' AND sent_at>=datetime('now','-1 day')"),
+            },
         },
         integrations = new
         {
@@ -1790,6 +1886,9 @@ app.Use(async (ctx, next) =>
                 rendered = PCI.Backend.Core.ListSections.Inject(db, rendered, lang);
                 rendered = PCI.Backend.Core.PriceTags.Inject(db, rendered);
                 rendered = PCI.Backend.Core.SeoTags.Inject(db, rendered, slug);   // GA4/GTM/Clarity + verification metas (admin-set, consent-gated)
+                // RES-013: point "Sign in"/"Join" straight at the portal domain when one is configured,
+                // so a student lands on mypci.org instead of being redirected a moment later. No-op off.
+                rendered = PCI.Backend.Core.PortalDomain.RewriteLinks(rendered);
                 PCI.Backend.Core.Analytics.PageView(db, ctx, slug);               // first-party, cookieless page view
                 ctx.Response.ContentType = "text/html; charset=utf-8";
                 ctx.Response.Headers.CacheControl = "no-cache";   // content is admin-editable — always revalidate

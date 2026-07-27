@@ -21,6 +21,37 @@ public static class Mailer
     // one shared client (socket hygiene); auth header goes per-request so a key rotation applies live
     static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(15) };
 
+    /// <summary>Resend's shared test sender. It delivers only to the account owner's own address, so a
+    /// deployment silently left on it looks configured while no candidate ever receives mail.</summary>
+    public const string ResendTestSender = "PCI Global <onboarding@resend.dev>";
+
+    /// <summary>The configured sender, exactly as the send path resolves it — including the fallback
+    /// each provider would use. Surfaced by system-check so an operator can see what recipients see.</summary>
+    public static string ResolvedSender()
+    {
+        if (!string.IsNullOrWhiteSpace(E("RESEND_API_KEY")))
+            return E("MAIL_FROM") ?? E("SMTP_FROM") ?? ResendTestSender;
+        return E("SMTP_FROM") ?? E("SMTP_USER") ?? "no-reply@projectcontrolsinstitute.org";
+    }
+
+    /// <summary>Which provider a send would actually use (precedence: Resend, then SMTP, then console).</summary>
+    public static string ActiveProvider() =>
+        !string.IsNullOrWhiteSpace(E("RESEND_API_KEY")) ? "resend"
+        : !string.IsNullOrWhiteSpace(E("SMTP_HOST")) ? "smtp"
+        : "console";
+
+    /// <summary>Optional Reply-To for transactional mail (MAIL_REPLY_TO). Without it, replies go to the
+    /// sender address, which is usually a no-reply mailbox nobody reads.</summary>
+    public static string? ReplyTo() => E("MAIL_REPLY_TO") is { Length: > 0 } r ? r.Trim() : null;
+
+    /// <summary>An address is usable if it parses — "Name &lt;a@b.c&gt;" and bare "a@b.c" both do.</summary>
+    public static bool SenderParses(string? address)
+    {
+        if (string.IsNullOrWhiteSpace(address)) return false;
+        try { _ = new System.Net.Mail.MailAddress(address); return true; }
+        catch { return false; }
+    }
+
     /// <summary>Public base URL for links in emails: APP_BASE_URL/SITE_BASE_URL, else the
     /// origin of the triggering request (correct for single-service deployments).</summary>
     public static string BaseUrl(HttpRequest? req = null)
@@ -31,9 +62,27 @@ public static class Mailer
         return "";
     }
 
-    /// <summary>The link a candidate opens to set (or reset) their password.</summary>
+    /// <summary>
+    /// Base URL for links into the STUDENT PANEL. With domain separation configured (RES-013) this is
+    /// the portal domain (mypci.org); otherwise it is the ordinary site base, so single-domain
+    /// deployments are unchanged. Use this for anything a signed-in student opens; keep
+    /// <see cref="BaseUrl"/> for public marketing links.
+    /// </summary>
+    public static string PortalBaseUrl(HttpRequest? req = null)
+        => PortalDomain.Enabled ? PortalDomain.BaseUrl! : BaseUrl(req);
+
+    /// <summary>An absolute link into the student panel (e.g. "/app/billing").</summary>
+    public static string PortalLink(string path, HttpRequest? req = null)
+    {
+        if (!path.StartsWith('/')) path = "/" + path;
+        return PortalBaseUrl(req).TrimEnd('/') + path;
+    }
+
+    /// <summary>The link a candidate opens to set (or reset) their password. This is a portal
+    /// destination: the form posts a credential, so it must live on the portal origin when one is
+    /// configured rather than bouncing the student across domains mid-flow.</summary>
     public static string SetupLink(string baseUrl, string plaintextToken)
-        => $"{baseUrl}/reset-password.html?token={plaintextToken}";
+        => $"{(PortalDomain.Enabled ? PortalDomain.BaseUrl! : baseUrl.TrimEnd('/'))}/reset-password.html?token={plaintextToken}";
 
     /// <summary>Load emails/&lt;name&gt;.html and substitute {KEY} and {{KEY}} placeholders.
     /// Falls back to a minimal HTML shell if the template file is missing.</summary>
@@ -49,8 +98,14 @@ public static class Mailer
         // suffix, or BODY) are substituted raw — encoding is only skipped for values the app controls.
         foreach (var (k, v) in vars)
         {
+            // RES-013 — a site-relative student-panel path in an email is a dead link once opened in a
+            // mail client, and points at the wrong host once the panel has its own domain. Absolutise
+            // /app paths to the portal domain (falls back to the site base when separation is off).
+            var value = v is { Length: > 0 } && v.StartsWith("/app", StringComparison.OrdinalIgnoreCase)
+                ? PortalLink(v)
+                : v;
             var raw = k == "BODY" || k.EndsWith("_URL", StringComparison.OrdinalIgnoreCase) || k.EndsWith("_HTML", StringComparison.OrdinalIgnoreCase);
-            var val = raw ? v : System.Net.WebUtility.HtmlEncode(v);
+            var val = raw ? value : System.Net.WebUtility.HtmlEncode(value);
             html = html.Replace("{{" + k + "}}", val).Replace("{" + k + "}", val);
         }
         return html;
@@ -69,11 +124,13 @@ public static class Mailer
             // Resend HTTPS API: the simplest production path (no SMTP ports/credentials).
             try
             {
-                var from = E("MAIL_FROM") ?? E("SMTP_FROM") ?? "PCI Global <onboarding@resend.dev>";
+                var from = E("MAIL_FROM") ?? E("SMTP_FROM") ?? ResendTestSender;
                 using var reqMsg = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails");
                 reqMsg.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", resendKey);
+                var payload = new Dictionary<string, object?> { ["from"] = from, ["to"] = new[] { to }, ["subject"] = subject, ["html"] = html };
+                if (ReplyTo() is { } rt) payload["reply_to"] = rt;
                 reqMsg.Content = new StringContent(
-                    System.Text.Json.JsonSerializer.Serialize(new { from, to = new[] { to }, subject, html }),
+                    System.Text.Json.JsonSerializer.Serialize(payload),
                     System.Text.Encoding.UTF8, "application/json");
                 using var resp = _http.Send(reqMsg);
                 status = resp.IsSuccessStatusCode ? "sent" : "failed";
@@ -109,6 +166,7 @@ public static class Mailer
                 if (!string.IsNullOrEmpty(user)) client.Credentials = new System.Net.NetworkCredential(user, E("SMTP_PASS"));
                 client.EnableSsl = !string.Equals(E("SMTP_SSL"), "false", StringComparison.OrdinalIgnoreCase);
                 using var msg = new System.Net.Mail.MailMessage(from, to, subject, html) { IsBodyHtml = true };
+                if (ReplyTo() is { } rt) { try { msg.ReplyToList.Add(new System.Net.Mail.MailAddress(rt)); } catch { } }
                 client.Send(msg);
                 status = "sent";
             }
@@ -140,7 +198,7 @@ public static class Mailer
         try
         {
             Comms.Fire(db, "account.welcome", userId, to, null,
-                new Dictionary<string, string?> { ["student_name"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!, ["portal_link"] = baseUrl + "/app/" },
+                new Dictionary<string, string?> { ["student_name"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!, ["portal_link"] = PortalLink("/app/") },
                 "Welcome to PCI", "<p>Welcome to the Project Controls Institute. Your account is ready — sign in to get started.</p>",
                 skipEmail: true);
         }
@@ -165,7 +223,7 @@ public static class Mailer
         try
         {
             Comms.Fire(db, "account.welcome", userId, to, null,
-                new Dictionary<string, string?> { ["student_name"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!, ["portal_link"] = baseUrl + "/app/" },
+                new Dictionary<string, string?> { ["student_name"] = string.IsNullOrWhiteSpace(firstName) ? "there" : firstName!, ["portal_link"] = PortalLink("/app/") },
                 "Welcome to PCI", "<p>Welcome to the Project Controls Institute. Your account is ready — sign in to get started.</p>",
                 skipEmail: true, dedupSuffix: dedupSuffix);
         }
