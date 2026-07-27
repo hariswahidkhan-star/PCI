@@ -322,9 +322,13 @@ function Room({ room, messages, pending, setPending, onWithheld, onEjected, onLe
         </p>
       )}
 
-      {/* role="log" + polite: new messages are announced without interrupting, and focus stays
-          exactly where the participant put it. */}
-      <ol className="cw-log" role="log" aria-live="polite" aria-relevant="additions" aria-label={`${room.title} messages`}>
+      {/* The live region is a WRAPPER, not the list itself.
+          Putting role="log" directly on the <ol> overrides its implicit list role, which orphans
+          every <li> from the accessibility tree — axe flags it, and a screen reader stops
+          announcing "list, 4 items". Wrapping keeps both: the region announces additions politely,
+          and the transcript is still a list. Found by the axe pass, not by writing it carefully. */}
+      <div className="cw-log-region" role="log" aria-live="polite" aria-relevant="additions" aria-label={`${room.title} messages`}>
+      <ol className="cw-log">
         {messages.map(m => (
           <li key={m.sequence} className="cw-msg">
             <span className="cw-author">{m.author ?? 'Guest'}</span>
@@ -339,6 +343,7 @@ function Room({ room, messages, pending, setPending, onWithheld, onEjected, onLe
           </li>
         )}
       </ol>
+      </div>
 
       <form onSubmit={submit} className="cw-composer">
         <label htmlFor="cw-draft">Your message</label>

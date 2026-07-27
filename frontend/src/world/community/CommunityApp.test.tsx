@@ -124,6 +124,9 @@ describe('World community rooms', () => {
     expect(log.getAttribute('aria-live')).toBe('polite')
     expect(log.getAttribute('aria-relevant')).toBe('additions')
     expect(log.getAttribute('aria-label')).toContain('Lobby')
+    // And the transcript inside it is still a LIST. role="log" on the <ol> itself would override
+    // the implicit list role and orphan every item — axe caught exactly that.
+    expect(screen.getByRole('list')).toBeTruthy()
   })
 
   it('conveys a withheld message in text rather than by colour alone', async () => {

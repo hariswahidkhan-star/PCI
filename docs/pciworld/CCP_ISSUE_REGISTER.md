@@ -362,6 +362,49 @@ tested end to end — but they should not have to, and this should not survive c
 
 ---
 
+## CCP-P2-011 — Layout-dependent accessibility rules have no automated coverage
+
+| Field | Value |
+|---|---|
+| Phase | 1 |
+| Module | `frontend/src/world/community/` |
+| Requirement | §18.1 (WCAG 2.2 AA), PW-US-040/041 |
+| Severity | **P2** |
+| Status | **Open** — needs a browser pass over the built bundle |
+| Owner | CCP |
+
+**Issue.** The community UI has an automated axe pass
+(`CommunityApp.a11y.test.tsx`, 6 scans across catalogue, empty state, entry form, entry error, room
+transcript and ejection screen). It runs in jsdom, which has **no rendering engine**, so a family of
+WCAG rules cannot be evaluated and axe silently skips them:
+
+- **colour contrast** (1.4.3) — explicitly disabled in the scan rather than left to report a false pass
+- **target size** (2.5.8) — likewise
+- **reflow at 400% zoom** (1.4.10) and **text spacing** (1.4.12)
+- **focus-visible appearance** (2.4.11/2.4.13)
+- anything depending on real focus order or scroll behaviour
+
+**What IS covered.** The structural rules — accessible names, form labelling and error association,
+ARIA validity, heading and landmark order, list semantics. Those are the ones this interface was
+most likely to get wrong, and the pass **already caught a genuine defect**: `role="log"` had been
+placed directly on the transcript `<ol>`, which overrides the implicit list role and orphans every
+`<li>` from the accessibility tree. Written by hand, believed correct, and wrong. The live region is
+now a wrapper and a regression test pins the list role.
+
+**Why not closed now.** A Playwright axe run would need `/world-app/` served, and CI's `e2e` job does
+not build the React bundles into `wwwroot` — closing this means changing a shared job, which is a
+larger change than belongs in the same commit as the UI it would test.
+
+**Proposed fix.** Add a bundle-build step to the `e2e` job, then a `community-a11y.spec.ts` that
+enables the feature flag, seeds a room, and runs axe with contrast and target-size **enabled** at
+several viewports, plus a keyboard-only traversal and a 400% zoom reflow check.
+
+**Risk if unfixed.** Contrast and focus-visibility failures ship unnoticed. Both are common, both
+affect exactly the participants least able to work around them, and neither is visible to the
+structural pass that currently guards this UI.
+
+---
+
 ## CCP-P3-007 — Pre-existing minor defects in main-PCI chat (out of CCP scope)
 
 | Field | Value |
