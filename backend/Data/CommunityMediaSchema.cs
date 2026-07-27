@@ -151,6 +151,36 @@ public static class CommunityMediaSchema
                   ON pciworld_restricted_evidence(media_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_wcevid_hold ON pciworld_restricted_evidence(legal_hold,preserved_until)");
 
+        // ── The scan queue. A SEPARATE table from the media record on purpose.
+        //
+        //    WorkerLease.TryClaim/RecoverExpired are the proven atomic-claim mechanism in this
+        //    codebase, and their contract is a specific column shape: status, lease_owner,
+        //    lease_until, updated_at. Bolting those onto pciworld_community_media would mean that
+        //    table carrying TWO status columns — `state` (what a participant and a moderator see)
+        //    and `status` (where a background worker has got to) — which is exactly the kind of
+        //    ambiguity that eventually gets read in the wrong place. A queue is a different thing
+        //    from a media record, so it is a different table, and the claiming machinery is reused
+        //    unchanged rather than reimplemented.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_media_scan_queue(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            media_id INTEGER NOT NULL,
+            status VARCHAR(16) NOT NULL DEFAULT 'queued',  -- queued|processing|done|failed|retrying
+            attempts INTEGER NOT NULL DEFAULT 0,
+            next_attempt_at VARCHAR(32),
+            lease_owner VARCHAR(64),
+            lease_until VARCHAR(32),
+            last_error TEXT,
+            correlation_id VARCHAR(64),
+            created_at VARCHAR(32) DEFAULT (datetime('now')),
+            updated_at VARCHAR(32) DEFAULT (datetime('now')),
+            completed_at VARCHAR(32))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_wcscanq_due ON pciworld_media_scan_queue(status,next_attempt_at)");
+        // One queue entry per media item: a retried upload must not queue a second scan for bytes
+        // that are already being scanned, which would be a second vendor call paid for and a second
+        // chance to race the verdict.
+        db.Exec(@"CREATE UNIQUE INDEX IF NOT EXISTS ux_wcscanq_media
+                  ON pciworld_media_scan_queue(media_id)");
+
         // ── Message linkage. Phase 1's message table gains a kind and a media reference rather
         //    than a parallel table, so ordering, idempotency and the sequence-is-publication rule
         //    are inherited unchanged. Guarded AddCol-style so existing databases converge.
