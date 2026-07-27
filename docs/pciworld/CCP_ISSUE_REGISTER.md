@@ -231,6 +231,54 @@ entire employer tenancy layer are all net-new rather than reusable.
 
 ---
 
+## CCP-P2-008 — World unit suites race each other on the shared MySQL test database
+
+| Field | Value |
+|---|---|
+| Phase | 1 |
+| Module | `backend/tests/PCI.Backend.Tests` harness |
+| Requirement | §23 (provider-sensitive integration tests must run on real MySQL) |
+| Severity | **P2** |
+| Status | **Reproduced** — pre-existing, not introduced by this increment |
+| Owner | Platform / test harness |
+
+**Issue.** All 17 existing World test classes call `WorldSchema.Ensure(db)`, and **none** declares
+`[Collection(DbCollection.Name)]`. xUnit runs distinct collections in parallel, and on MySQL every
+class shares one run database, so they race on `WorldSchema`'s non-idempotent admin seed.
+
+**Reproduction** (commit `6c7ee0f`, MariaDB 10.11.14, `TEST_DB_PROVIDER=mysql`):
+
+```
+dotnet test --filter "…CommunitySchemaTests|…WorldEditorialTests"
+  → MySqlException: Duplicate entry 'owner@pciworld.local' for key 'email'
+  → MySqlException: Duplicate entry 'why-your-spi-recovers-as-the-project-ends' for key 'slug'
+
+dotnet test --filter "…WorldEditorialTests"      (alone)  → 12/12 PASSED
+```
+
+**Evidence it is pre-existing.** With this increment's changes **stashed**, the full unit suite
+against MySQL on this machine reports **170 failed / 991 passed / 1164 total**, spanning suites this
+increment never touches (`SimStepTests`, `CommsReminderTests`, `WorldRotationTests`). With the
+changes applied the failures are equivalent. The contention scales with core count: CI's
+`backend-unit-mysql` job passes on a 2-core runner, while this container has substantially more.
+
+**Consequence for verification.** The full MySQL unit run is **not a usable local gate** on a
+high-core machine. The gates that do hold: the full SQLite suite (**1177/1177**), per-suite MySQL
+runs in isolation, and CI's own `backend-unit-mysql` job.
+
+**Proposed fix.** Either add `[Collection(DbCollection.Name)]` to the World suites so they serialise
+against the shared database, or make `WorldSchema`'s admin/article seeds idempotent
+(`INSERT OR IGNORE`) so a concurrent re-seed is a no-op. The second is preferable — it fixes the
+race rather than hiding it behind serialisation, and it costs no test wall-clock. **Deliberately not
+done here:** it touches 17 existing test files or a load-bearing seed path, neither of which belongs
+in a community-rooms commit.
+
+**Risk if unfixed.** A latent flake that widens as CI runners gain cores, and a misleading local
+signal that invites engineers to "fix" failures they did not cause — which cost real time in this
+session before the stashed baseline settled it.
+
+---
+
 ## CCP-P3-007 — Pre-existing minor defects in main-PCI chat (out of CCP scope)
 
 | Field | Value |
