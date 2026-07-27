@@ -148,6 +148,14 @@ export interface RoomDetail extends RoomSummary {
 export interface Message {
   sequence: number; body: string; author: string | null
   reply_to: number | null; at: string | null
+  // Phase 2. `kind` is absent on servers that predate images, so it is optional and defaults to
+  // text at the render site — an older server must not make the transcript blank.
+  kind?: string
+  media_id?: number | null
+}
+
+export interface UploadResult {
+  ok: boolean; media_id: number | null; state: string; reason: string; notice: string | null
 }
 
 export interface SendResult {
@@ -166,6 +174,17 @@ export const join = (room: string, display_name: string, rules_version: string) 
 export const leave = () => del<{ ok: boolean }>('/api/world/community/guest-sessions/current')
 export const send = (slug: string, body: string, client_message_id: string) =>
   post<SendResult>(`/api/world/community/rooms/${encodeURIComponent(slug)}/messages`, { body, client_message_id })
+// The upload returns a PENDING handle and no URL: at this point nothing renderable exists on the
+// server, which is the contract, not an omission. The image appears in the transcript later — if
+// and only if the server allows it — exactly like a text message does.
+export const uploadImage = (slug: string, data: string, alt: string, client_upload_id: string) =>
+  post<UploadResult>(`/api/world/community/rooms/${encodeURIComponent(slug)}/images`,
+    { data, alt, client_upload_id })
+
+// The one URL a client may build for an image. It 404s for anything not published, so it is safe
+// to render for any allowed message without the client having to re-check state it cannot see.
+export const mediaUrl = (id: number) => `/api/world/community/media/${id}`
+
 export const report = (sequence: number, reason: string, note?: string) =>
   post<{ ok: boolean }>('/api/world/community/reports', { sequence, reason, note })
 export const submitAppeal = (reference: string, credential: string, submission: string) =>
