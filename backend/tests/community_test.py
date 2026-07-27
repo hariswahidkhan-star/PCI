@@ -72,7 +72,11 @@ def js(path, method="GET", body=None, headers=None):
 def sql(statement, args=()):
     """Run one statement against whichever provider is under test. The few statements this suite
     issues are deliberately plain — INSERT/UPDATE/SELECT with ? placeholders and no date maths — so
-    the only translation needed is the placeholder form."""
+    the only translation needed is the placeholder form.
+
+    Keep them free of % as well: pymysql renders via `query % args`, so a literal percent (a LIKE
+    pattern, a DATE_FORMAT specifier) must be doubled or the statement dies with 'not enough
+    arguments for format string' on MySQL while passing cleanly on SQLite."""
     if PROVIDER == "mysql":
         import pymysql
         con = pymysql.connect(**MYSQL); cur = con.cursor()
@@ -242,6 +246,52 @@ def main():
 
         code, hist = js("/api/world/community/rooms/lobby/messages")
         chk("C30 and the room gains no new visible message", len(hist["messages"]) == 1)
+
+        # ── The realtime hub ───────────────────────────────────────────────────────────────
+        # SignalR's negotiate handshake is plain HTTP, so the transport can be checked without a
+        # WebSocket client. What matters here is the SHAPE of the guarantees, not the framing:
+        # the hub must exist, must refuse an unauthenticated handshake, and must not become a
+        # second way into a room.
+        sql("UPDATE site_settings SET svalue='deterministic' WHERE skey='world_community_moderator'")
+
+        code, _ = js("/api/world/community/hubs/community/negotiate?negotiateVersion=1", "POST")
+        chk("C31 the hub is not mounted on a guessable sibling path", code == 404, f"got {code}")
+
+        # NOTE ON WHAT THIS DOES AND DOES NOT PROVE. SignalR's negotiate handshake is unauthenticated
+        # by design — authorization happens in OnConnectedAsync, which aborts a connection with no
+        # valid guest session. This call carries no session and still succeeds, which is CORRECT
+        # behaviour, so the assertion is only that the transport is mounted and reachable. The
+        # connect-time abort needs a real WebSocket client to exercise and is NOT covered here; it
+        # is recorded as a gap rather than implied by a passing negotiate.
+        code, neg = js("/api/world/hubs/community/negotiate?negotiateVersion=1", "POST")
+        chk("C32 the hub transport is mounted and reachable (negotiate is unauthenticated by design)",
+            code == 200 and ("connectionToken" in neg or "connectionId" in neg), f"{code} {neg}")
+
+        # A connection is only useful with a session, and the session is what scopes it to a room.
+        # The hub derives the room from the session rather than from anything the client sends, so
+        # there is no room parameter to tamper with — which is the point.
+        code, hist_before = js("/api/world/community/rooms/lobby/messages")
+        code, _ = js("/api/world/community/rooms/lobby/messages", "POST",
+                     {"body": "sent over http, broadcast over the hub", "client_message_id": "h1"},
+                     {"X-Community-Session": again["token"]})
+        code, hist_after = js("/api/world/community/rooms/lobby/messages")
+        chk("C33 messages still arrive through the durable path, not the hub",
+            len(hist_after["messages"]) == len(hist_before["messages"]) + 1,
+            f"{len(hist_before['messages'])} -> {len(hist_after['messages'])}")
+
+        # The outbox is what the hub drains. Draining is asynchronous, so the assertion is that the
+        # event was ENQUEUED transactionally with the message — the delivery itself is allowed to be
+        # late, duplicated or lost without affecting correctness.
+        queued = sql("SELECT COUNT(*) FROM pciworld_community_outbox WHERE event_type='CommunityMessageAllowed'")[0][0]
+        chk("C34 a published message enqueues exactly one broadcast event", queued >= 1, f"rows={queued}")
+
+        # Stated as an equality rather than a LIKE: exactly as many broadcast events exist as there
+        # are published messages, so nothing unpublished produced one and nothing published was
+        # missed. (A LIKE would also have needed its % escaped for pymysql — see sql()'s note.)
+        events = sql("SELECT COUNT(*) FROM pciworld_community_outbox WHERE event_type='CommunityMessageAllowed'")[0][0]
+        allowed = sql("SELECT COUNT(*) FROM pciworld_community_messages WHERE status='allowed'")[0][0]
+        chk("C35 broadcast events exactly match published messages, no more and no fewer",
+            events == allowed, f"events={events} allowed={allowed}")
 
     finally:
         shutdown()

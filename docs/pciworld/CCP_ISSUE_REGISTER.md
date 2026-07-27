@@ -279,6 +279,46 @@ session before the stashed baseline settled it.
 
 ---
 
+## CCP-P2-009 — Hub connect-time authorization is not covered by an automated test
+
+| Field | Value |
+|---|---|
+| Phase | 1 |
+| Module | `backend/Core/CommunityHub.cs` |
+| Requirement | §8.3 (hub authorization re-checked per invocation), E2E-012 |
+| Severity | **P2** |
+| Status | **Deferred** — needs a WebSocket-capable test client |
+| Owner | CCP |
+
+**Issue.** `CommunityHub.OnConnectedAsync` aborts any connection without a valid guest session, and
+`Acknowledge`/`Replay` re-check the session on every invocation so an ejected participant's live
+connection stops working. **None of that is exercised by an automated test.**
+
+The live suite asserts only that the transport is mounted (C32), because SignalR's `negotiate`
+handshake is unauthenticated *by design* — authorization happens at connect. A passing `negotiate`
+therefore proves reachability and nothing about authorization, and the assertion is named to say so
+rather than implying broader coverage.
+
+**Why not covered.** Driving a real connection needs a WebSocket client; neither `websockets` nor
+`websocket-client` is available in the test environment, and the repository's Python suites are
+deliberately dependency-light (stdlib + `pymysql`/`pypdf`).
+
+**What IS covered meanwhile.** The security property has a second, tested enforcement point: the
+HTTP accept path re-resolves the session on every send, so an ejected guest cannot post regardless
+of connection state (`C19` asserts the session is dead immediately after ejection). The hub cannot
+be used to send at all — sending is not a hub method — so the untested surface is limited to
+*receiving* broadcasts and replay.
+
+**Proposed fix.** Add a Playwright spec that opens a real SignalR connection (the repo already has
+a Playwright harness with browser context), asserting: an anonymous connect is refused; an ejected
+guest's live connection stops receiving; and a reconnect replays only messages after the
+acknowledged sequence. That is E2E-012 and part of E2E-028.
+
+**Risk if unfixed.** A regression in `OnConnectedAsync` would let an unauthenticated client receive
+room broadcasts, and no test would fail.
+
+---
+
 ## CCP-P3-007 — Pre-existing minor defects in main-PCI chat (out of CCP scope)
 
 | Field | Value |
