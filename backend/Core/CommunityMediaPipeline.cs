@@ -42,6 +42,29 @@ public static class CommunityMediaPipeline
 
     public static bool ImagesEnabled(Db db) => Settings.Bool(db, "pciworld_community_images_enabled", false);
 
+    /// <summary>
+    /// The configured scanner. Anything other than an explicitly recognised name yields
+    /// <see cref="NullMediaScanner"/>, which classifies nothing and therefore publishes nothing.
+    /// A typo in this setting must fail CLOSED — leaving a room publishing unscanned images because
+    /// somebody misspelled a provider would be the worst possible reading of an unknown value.
+    /// </summary>
+    public static IMediaScanner ConfiguredScanner(Db db) =>
+        Settings.Str(db, "pciworld_community_image_scanner", "none") switch
+        {
+            "deterministic" => new DeterministicMediaScanner(),
+            _ => new NullMediaScanner(),
+        };
+
+    /// <summary>
+    /// Whether a media row may be served to a participant. The single place that question is
+    /// answered, so no handler can accidentally serve a pending, withheld or restricted item by
+    /// checking only one of the two conditions.
+    /// </summary>
+    public static bool IsServable(Dictionary<string, object?>? media) =>
+        media is not null
+        && H.Str(media["state"]) == "allowed"
+        && !string.IsNullOrEmpty(H.Str(media["derivative_ref"]));
+
     public record UploadResult(bool Ok, long MediaId, long MessageId, string State, string Reason)
     {
         public static UploadResult Rejected(string reason) => new(false, 0, 0, "rejected", reason);

@@ -106,6 +106,18 @@ public static class CommunityMediaScanners
                 var sha = Convert.ToHexString(SHA256.HashData(subject.Bytes)).ToLowerInvariant();
                 if (_table.TryGetValue(sha, out var hit))
                     return new Signal(hit.Category, SeverityOf(hit.Band), hit.Band, null, true);
+
+                // A second, hash-free way to select a verdict, for tests that drive the pipeline over
+                // real HTTP. Those cannot register a hash: the scanner sees the SERVER'S re-encoded
+                // derivative, whose bytes the client never has. So a fixture may instead carry its
+                // intended verdict in its top-left pixel — a marker the test paints deliberately.
+                //
+                // This exists ONLY so the withheld and restricted branches can be exercised through
+                // the real endpoints with an ordinary generated PNG and no harmful material. It is
+                // reachable only through this class, which the endpoint layer selects only under an
+                // explicit test/dev setting; the production default is NullMediaScanner.
+                if (Marker(subject.Bytes) is { } marked)
+                    return new Signal(marked.Category, SeverityOf(marked.Band), marked.Band, null, true);
                 // An unregistered fixture is ordinary. That is what makes the happy path testable;
                 // it is emphatically not a claim that unrecognised images are safe, which is why the
                 // production default is NullMediaScanner and not this.
@@ -123,5 +135,25 @@ public static class CommunityMediaScanners
             Band.Medium => "medium",
             _ => "low",
         };
+
+        /// <summary>The marker table. Colours are arbitrary and exact — an ordinary photograph will
+        /// not land on one by accident, and a test that means to hit one paints it.</summary>
+        static readonly Dictionary<(byte R, byte G, byte B), (string Category, Band Band)> Markers = new()
+        {
+            [(255, 0, 255)] = (CommunityModeration.Categories.Hate, Band.Medium),        // → withheld
+            [(255, 0, 254)] = (CommunityModeration.Categories.Grooming, Band.High),      // → restricted
+            [(255, 0, 253)] = (CommunityModeration.Categories.PiiDoxxing, Band.Low),     // → withheld at every band
+        };
+
+        static (string Category, Band Band)? Marker(byte[] bytes)
+        {
+            try
+            {
+                using var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(bytes);
+                var p = img[0, 0];
+                return Markers.TryGetValue((p.R, p.G, p.B), out var hit) ? hit : null;
+            }
+            catch { return null; }
+        }
     }
 }
