@@ -1170,8 +1170,11 @@ public static class WorldAccount
             var b = await H.Body(ctx.Request);
             var attemptId = (long)(H.GetNum(b, "attempt_id") ?? 0);
             var visible = H.GetEl(b, "visible") is { ValueKind: JsonValueKind.True };
-            var n = db.Execute("UPDATE pciworld_attempts SET passport_visible=? WHERE id=? AND user_id=? AND status='completed'",
-                visible ? 1 : 0, attemptId, u.Id);
+            // Union ownership (read-flip completion): canonical-only rows are toggleable too.
+            var (_, ckEv) = OwnedBy(db, u.Id);
+            var n = db.Execute(@"UPDATE pciworld_attempts SET passport_visible=?
+                WHERE id=? AND (user_id=? OR canonical_user_id=?) AND status='completed'",
+                visible ? 1 : 0, attemptId, u.Id, ckEv);
             return n == 0 ? Err("not_found", 404) : J(new { ok = true });
         });
 

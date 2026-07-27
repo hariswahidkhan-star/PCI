@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { api, clearToken, getToken, redeemHandoff, setToken, WorldApiError } from './api'
 import Onboarding from './Onboarding'
 import Settings from './Settings'
+import Passport from './Passport'
 
 // ── Dashboard aggregate (mirror of /api/world/me/dashboard) ──
 
@@ -146,7 +147,7 @@ function SignIn({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
 }
 
 function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<void>; onSignOut: () => void }) {
-  const [view, setView] = useState<'home' | 'settings'>('home')
+  const [view, setView] = useState<'home' | 'settings' | 'passport'>('home')
   const name = d.display_name || d.email
   const onboarding = d.onboarding_state !== null && d.onboarding_state !== 'completed'
   const actionHref =
@@ -154,11 +155,11 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
     : d.primary_action === 'verify_email' ? classic.account
     : d.primary_code ? classic.challenge(d.primary_code)
     : classic.archive
-  if (view === 'settings') {
+  if (view !== 'home') {
     return (
       <>
         <p><button className="ghost" onClick={() => setView('home')}>&larr; Back to your dashboard</button></p>
-        <Settings onSignOut={onSignOut} />
+        {view === 'settings' ? <Settings onSignOut={onSignOut} /> : <Passport />}
       </>
     )
   }
@@ -219,8 +220,9 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
         <h2>Your account</h2>
         <p><small>Signed in as <b>{d.email}</b>. Your sign-in email is managed by your PCI account{d.products.pci_ai.state === 'ready' ? ' — change it in the student portal settings.' : '.'}</small></p>
         <p>
+          <button className="secondary" onClick={() => setView('passport')}>Practice Passport</button>{' '}
           <button className="secondary" onClick={() => setView('settings')}>Settings &amp; sessions</button>{' '}
-          <a className="btn secondary" href={classic.account}>Passport &amp; sharing</a>{' '}
+          <a className="btn secondary" href={classic.account}>Sharing &amp; more</a>{' '}
           {d.products.pci_ai.state === 'ready' && <a className="btn secondary" href="/app/">Open the student portal</a>}
         </p>
         <p><button className="ghost" onClick={() => { void reload() }}>Refresh</button></p>

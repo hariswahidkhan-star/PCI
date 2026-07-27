@@ -75,7 +75,9 @@ repair, listed so nobody mistakes the register above for "done":
    §9.1 single primary action, honest offline/suspended states, and the PKCE helpers for the
    OAuth callback shape. The onboarding walkthrough (it24) and the settings/sessions/sign-out screens (it25 —
    preferences with partial PATCH, immediate session revocation, both sign-out scopes with their
-   plain-words copy) now run IN-APP. Play and the Passport manager still deep-link to the
+   plain-words copy) and the Passport manager (it26 — publish/withdraw with the consent
+   guard, paged evidence with visibility toggles, partial-key disclosure incl. the never-auto-
+   submitted expiry) now run IN-APP. Play and sharing management still deep-link to the
    server-rendered surfaces.
    Remaining for the dedicated-domain shape: move screens (Passport manager, preferences, play)
    into the app, then change `base` + register the `pciworld.org` redirect URI (a registry row)
