@@ -256,6 +256,13 @@ public static class SimLabSchema
             "[\"earned_value\",\"forecasting\",\"schedule_analysis\",\"decision_making\"]",
             "An expert five-step capstone: diagnose a distressed programme, take three linked recovery decisions, and carry their deterministic consequences through to the final outturn position.",
             ConfigCapstone);
+        // Cross-engine multi-step: the linked-state engine driven across FOUR different task engines
+        // (WBS → CPM → EVM → forecast), proving it is engine-agnostic. Two decisions carry deterministic
+        // consequences into the downstream EVM givens. Reference-solves on every branch (SimStepTests).
+        SeedScenario(db, "MS-INTEGRATED-001", "Integrated programme controls: breakdown to forecast", "scenario", "Transit", "advanced", 35,
+            "[\"scope_structuring\",\"schedule_analysis\",\"earned_value\",\"forecasting\",\"decision_making\"]",
+            "A four-step cross-engine scenario: structure the WBS, schedule the works and pick a sequencing strategy, read mid-programme EVM and choose a recovery, then confirm the outturn under the consequences of your decisions.",
+            ConfigIntegrated);
 
         // ── Content expansion (2026-07): additional synthetic scenarios across every task type, new
         //    industries and difficulty bands. Each reuses a proven task shape so the reference solver
@@ -648,6 +655,62 @@ public static class SimLabSchema
             "prompt":"At handover, confirm the final cost performance index (CPI) and percent complete against the approved budget.",
             "given":{"pv":560000,"ev":540000,"ac":560000,"bac":600000},"tolerance":0.01,
             "ask":[{"key":"cpi","label":"Final cost performance index (CPI)","type":"number"},
+                   {"key":"percent_complete","label":"Percent complete (EV / BAC)","type":"number"}]}]}
+        """;
+
+    // Cross-engine multi-step: the same linked-state engine driven across FOUR different task engines
+    // (WBS → CPM → EVM → forecast), proving the multi-step machine is engine-agnostic rather than an
+    // EVM-only construct. Two decisions carry deterministic consequences into the downstream EVM givens
+    // (a scheduling choice changes the actual cost; a recovery choice changes the outturn actual). Every
+    // step reference-solves on its base given and under each branch; all figures synthetic (USD, days).
+    const string ConfigIntegrated = """
+        {"multistep":true,
+         "prompt":"A metro depot programme is taken from work breakdown through schedule, performance and forecast. Structure the baseline, schedule the works and choose a sequencing strategy, read mid-programme performance and choose a recovery, then confirm the outturn under the consequences of your decisions. All figures are synthetic (USD, days).",
+         "pass_pct":72,
+         "competencies":["scope_structuring","schedule_analysis","earned_value","forecasting","decision_making"],
+         "steps":[
+           {"id":"s1","title":"Structure the baseline (WBS)","task":"wbs","competencies":["scope_structuring"],
+            "prompt":"Roll the depot work breakdown up from its leaf budgets to the root, and confirm the structure satisfies the 100 percent rule. The root roll-up is the programme's budget at completion for the later steps.",
+            "given":{"nodes":[
+              {"id":"1","parent":null,"name":"Metro depot programme"},
+              {"id":"1.1","parent":"1","name":"Design","value":90000},
+              {"id":"1.2","parent":"1","name":"Construction"},
+              {"id":"1.2.1","parent":"1.2","name":"Substructure","value":210000},
+              {"id":"1.2.2","parent":"1.2","name":"Superstructure","value":180000},
+              {"id":"1.3","parent":"1","name":"Systems","value":80000},
+              {"id":"1.4","parent":"1","name":"Commissioning","value":40000}]},"tolerance":0.01,
+            "ask":[{"key":"root_total","label":"Baseline budget (root roll-up)","type":"number"},
+                   {"key":"hundred_percent_valid","label":"Does the WBS satisfy the 100 percent rule?","type":"bool"}]},
+           {"id":"s2","title":"Schedule the works (CPM)","task":"cpm","competencies":["schedule_analysis","decision_making"],
+            "prompt":"Run the forward and backward pass on the works network. Report the project duration and the total float of activity C, then choose how to sequence delivery.",
+            "given":{"activities":[
+              {"id":"A","dur":2,"preds":[]},
+              {"id":"B","dur":5,"preds":["A"]},
+              {"id":"C","dur":3,"preds":["A"]},
+              {"id":"D","dur":4,"preds":["B"]},
+              {"id":"E","dur":6,"preds":["B","C"]},
+              {"id":"F","dur":2,"preds":["D","E"]}]},"tolerance":0.001,
+            "ask":[{"key":"project_duration","label":"Project duration (days)","type":"number"},
+                   {"key":"float_C","label":"Total float of activity C (days)","type":"number"}],
+            "decision":{"key":"sequencing","prompt":"How do you sequence delivery?",
+              "options":[
+                {"value":"fast_track","label":"Fast-track by overlapping works — adds 45000 to the actual cost at the mid-programme cut","effects":[{"step":"s3","path":"ac","op":"add","value":45000}]},
+                {"value":"as_planned","label":"Deliver as planned — no cost change","effects":[]}]}},
+           {"id":"s3","title":"Read mid-programme performance (EVM)","task":"evm","competencies":["earned_value","decision_making"],
+            "prompt":"At the mid-programme cut, using the actual cost that follows from your sequencing choice, compute the schedule variance (SV), cost performance index (CPI) and schedule performance index (SPI) against the 600000 baseline.",
+            "given":{"pv":360000,"ev":330000,"ac":360000,"bac":600000},"tolerance":0.01,
+            "ask":[{"key":"sv","label":"Schedule variance (SV)","type":"number"},
+                   {"key":"cpi","label":"Cost performance index (CPI)","type":"number"},
+                   {"key":"spi","label":"Schedule performance index (SPI)","type":"number"}],
+            "decision":{"key":"recovery","prompt":"How do you recover the programme?",
+              "options":[
+                {"value":"crash","label":"Crash the remaining critical path — adds 20000 to the outturn actual cost","effects":[{"step":"s4","path":"ac","op":"add","value":20000}]},
+                {"value":"absorb","label":"Absorb within contingency — no change to the outturn","effects":[]}]}},
+           {"id":"s4","title":"Confirm the outturn (forecast)","task":"evm","competencies":["forecasting","earned_value"],
+            "prompt":"At handover, using the outturn actual cost that follows from your recovery choice, forecast the estimate at completion (EAC, CPI method), the variance at completion (VAC) and the percent complete against the approved budget.",
+            "given":{"pv":555000,"ev":540000,"ac":560000,"bac":600000},"tolerance":0.01,
+            "ask":[{"key":"eac","label":"Estimate at completion (EAC, CPI method)","type":"number"},
+                   {"key":"vac","label":"Variance at completion (VAC)","type":"number"},
                    {"key":"percent_complete","label":"Percent complete (EV / BAC)","type":"number"}]}]}
         """;
 

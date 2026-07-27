@@ -165,6 +165,45 @@ public class SimStepTests
         }
     }
 
+    [Fact]
+    public void Cross_engine_multistep_spans_multiple_engines_and_grades_under_every_branch()
+    {
+        var db = TestEnv.NewMigratedDb();
+        SimLabSchema.Ensure(db);
+        var cfg = H.Str(db.QueryOne("SELECT config_json FROM simulation_scenarios WHERE scenario_code=?", "MS-INTEGRATED-001")!["config_json"])!;
+        var config = Parse(cfg);
+        Assert.True(SimStep.IsMultiStep(config));
+
+        // Engine-agnostic: the one linked-state scenario drives at least three DISTINCT task engines
+        // (here WBS, CPM and EVM) — not an EVM-only construct.
+        var steps = SimStep.ParseSteps(config);
+        var engines = steps.Select(s => s.Task).Distinct().ToList();
+        Assert.True(engines.Count >= 3, $"expected >=3 distinct engines, got: {string.Join(", ", engines)}");
+        Assert.Contains("wbs", engines);
+        Assert.Contains("cpm", engines);
+        Assert.Contains("evm", engines);
+
+        // Deterministic under EVERY combination of decisions (not just the first option): each branch
+        // reference-solves and grades to 100 with engine-derived answers.
+        var decisionSteps = steps.Where(s => s.Decision is not null).Select(s => s.Decision!).ToList();
+        Assert.NotEmpty(decisionSteps);
+        IEnumerable<Dictionary<string, string>> Combos(int i)
+        {
+            if (i == decisionSteps.Count) { yield return new Dictionary<string, string>(); yield break; }
+            foreach (var rest in Combos(i + 1))
+                foreach (var opt in decisionSteps[i].Options)
+                    yield return new Dictionary<string, string>(rest) { [decisionSteps[i].Key] = opt.Value };
+        }
+        var branches = 0;
+        foreach (var decisions in Combos(0))
+        {
+            var g = SimGrade.Grade(config, CorrectAnswers(cfg, decisions), "training");
+            Assert.Equal(100, g.Score);
+            branches++;
+        }
+        Assert.Equal(decisionSteps.Aggregate(1, (n, d) => n * d.Options.Count), branches);
+    }
+
     static SimContent.ScenarioInput Input(string config, string competencies = "[\"earned_value\",\"forecasting\",\"decision_making\"]") =>
         new("MS-TEST-001", "Recovery multi-step", "A synthetic linked EVM recovery scenario.", "intermediate", 1, competencies, config, SyntheticDeclared: true);
 
