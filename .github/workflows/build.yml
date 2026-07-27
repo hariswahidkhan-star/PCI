@@ -417,6 +417,10 @@ jobs:
       - name: Install frontend deps
         working-directory: frontend
         run: npm ci
+      - name: Stage the React bundles into wwwroot (so /app, /admin and /world-app are served)
+        working-directory: frontend
+        run: ./stage-bundles.sh
+
       - name: Install Playwright browser matrix
         working-directory: frontend
         # Chromium runs the full suite; Firefox/WebKit power cross-browser smoke + mobile profiles.
@@ -464,6 +468,11 @@ jobs:
       - name: Install frontend deps
         working-directory: frontend
         run: npm ci
+      - name: Stage the React bundles into wwwroot (so /app, /admin and /world-app are served)
+        # Same staging as the SQLite `e2e` job — the React routes must exist on BOTH legs, or the
+        # MySQL leg quietly tests a site whose /world-app is a 404.
+        working-directory: frontend
+        run: ./stage-bundles.sh
       - name: Install Playwright Chromium
         working-directory: frontend
         run: npx playwright install --with-deps chromium

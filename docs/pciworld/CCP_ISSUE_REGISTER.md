@@ -362,6 +362,65 @@ tested end to end — but they should not have to, and this should not survive c
 
 ---
 
+## CCP-P2-011 — Layout-dependent accessibility rules have no automated coverage
+
+| Field | Value |
+|---|---|
+| Phase | 1 |
+| Module | `frontend/src/world/community/` |
+| Requirement | §18.1 (WCAG 2.2 AA), PW-US-040/041 |
+| Severity | **P2** |
+| Status | **Verified — closed** (browser pass added, see resolution) |
+| Owner | CCP |
+
+**Issue.** The community UI has an automated axe pass
+(`CommunityApp.a11y.test.tsx`, 6 scans across catalogue, empty state, entry form, entry error, room
+transcript and ejection screen). It runs in jsdom, which has **no rendering engine**, so a family of
+WCAG rules cannot be evaluated and axe silently skips them:
+
+- **colour contrast** (1.4.3) — explicitly disabled in the scan rather than left to report a false pass
+- **target size** (2.5.8) — likewise
+- **reflow at 400% zoom** (1.4.10) and **text spacing** (1.4.12)
+- **focus-visible appearance** (2.4.11/2.4.13)
+- anything depending on real focus order or scroll behaviour
+
+**What IS covered.** The structural rules — accessible names, form labelling and error association,
+ARIA validity, heading and landmark order, list semantics. Those are the ones this interface was
+most likely to get wrong, and the pass **already caught a genuine defect**: `role="log"` had been
+placed directly on the transcript `<ol>`, which overrides the implicit list role and orphans every
+`<li>` from the accessibility tree. Written by hand, believed correct, and wrong. The live region is
+now a wrapper and a regression test pins the list role.
+
+**Why not closed now.** A Playwright axe run would need `/world-app/` served, and CI's `e2e` job does
+not build the React bundles into `wwwroot` — closing this means changing a shared job, which is a
+larger change than belongs in the same commit as the UI it would test.
+
+**Proposed fix.** Add a bundle-build step to the `e2e` job, then a `community-a11y.spec.ts` that
+enables the feature flag, seeds a room, and runs axe with contrast and target-size **enabled** at
+several viewports, plus a keyboard-only traversal and a 400% zoom reflow check.
+
+**RESOLUTION.** Closed by `frontend/e2e/community-a11y.spec.ts` — 7 checks in a real Chromium, with
+`colour-contrast`, `target-size` and the rest **enabled**, over the catalogue, entry screen, entry
+error state, populated transcript, keyboard-only traversal and a 320px reflow check. The CI `e2e`
+job now builds the React bundles into `wwwroot` first, because Playwright runs the backend directly
+rather than the Docker image, so without that step every React route 404s.
+
+Enabling the feature in the spec goes through a new `PATCH /api/world-admin/community/settings`
+rather than reaching into the database, so the fixture exercises the same path an operator uses and
+cannot drift from it. That endpoint allowlists the two community keys instead of writing whatever it
+is given — a settings route that takes arbitrary keys is a privilege-escalation primitive.
+
+Two defects in the spec itself were found and fixed rather than worked around: an empty `<ol>` is not
+exposed as a list by Chromium, so the list-role regression guard had to run against a populated
+transcript; and the tests shared a room with fixed display names, so the second to run was refused
+`name_taken` — names are now unique per test, which is what the product enforces anyway.
+
+**Residual.** Only Chromium runs this spec. Firefox and WebKit have their own accessibility-tree
+quirks (the empty-list difference above is exactly that class of thing), so a cross-browser pass
+remains worthwhile but is not blocking.
+
+---
+
 ## CCP-P3-007 — Pre-existing minor defects in main-PCI chat (out of CCP scope)
 
 | Field | Value |
