@@ -87,18 +87,28 @@ def boot(env, port, tag):
             logf.flush()
             with open(log_path, "r", errors="replace") as f: return f.read()[-4000:]
         except Exception: return "(no server log)"
-    deadline = time.time() + 120     # CI cold-start headroom, same allowance as integration_test.py
+    # Cold-start allowance. A first boot runs the whole migration AND the whole seed corpus —
+    # ~93k translation entries, ~13.5k page blocks, ~200 simulation scenarios — and on MySQL every
+    # one of those is a network round trip to a container on a shared CI disk. On a fast runner
+    # that is ~30s; on a slow one it has been observed past 120s, which is a timeout, not a defect.
+    # This is an infrastructure allowance and not the thing under test: nothing below asserts how
+    # FAST a boot is, only that the schema it produces is correct and idempotent. The elapsed time
+    # is printed on failure so a genuine slowdown is still visible rather than absorbed.
+    started = time.time()
+    budget = int(os.environ.get("MIGINT_BOOT_TIMEOUT", "300"))
     url = f"http://127.0.0.1:{port}/api/health"
-    while time.time() < deadline:
+    while time.time() - started < budget:
         if proc.poll() is not None:  # crashed before serving health
             raise SystemExit(f"[{tag}] server exited during boot (exit {proc.returncode})\n--- log tail ---\n{tail()}")
         try:
             with urllib.request.urlopen(url, timeout=2) as r:
-                if r.status == 200: return proc
+                if r.status == 200:
+                    print(f"  ....  [{tag}] booted in {time.time() - started:.0f}s", flush=True)
+                    return proc
         except Exception: pass
         time.sleep(0.5)
     proc.terminate()
-    raise SystemExit(f"[{tag}] server did not boot within 120s\n--- log tail ---\n{tail()}")
+    raise SystemExit(f"[{tag}] server did not boot within {budget}s\n--- log tail ---\n{tail()}")
 
 def stop(proc):
     proc.terminate()
