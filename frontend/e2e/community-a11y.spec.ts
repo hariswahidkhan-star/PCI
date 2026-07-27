@@ -38,7 +38,7 @@ test.describe('PCI World community rooms accessibility', () => {
     // Enable the feature and seed an open room through the world-admin API — the same surface an
     // operator uses, so the fixture cannot drift from the real configuration path.
     const login = await request.post('/api/world-admin/auth/login', {
-      data: { email: 'owner@pciworld.local', password: process.env.PCIWORLD_OWNER_PASSWORD ?? 'E2EWorldOwner!99' },
+      data: { email: 'owner@pciworld.local', password: process.env.PCIWORLD_OWNER_PASSWORD ?? 'changeme-world-owner' },
     })
     if (!login.ok()) test.skip(true, 'world-admin owner password not provided to the e2e server')
     const { token } = await login.json()

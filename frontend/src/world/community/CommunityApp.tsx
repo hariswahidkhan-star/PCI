@@ -328,6 +328,12 @@ function Room({ room, messages, pending, setPending, onWithheld, onEjected, onLe
           announcing "list, 4 items". Wrapping keeps both: the region announces additions politely,
           and the transcript is still a list. Found by the axe pass, not by writing it carefully. */}
       <div className="cw-log-region" role="log" aria-live="polite" aria-relevant="additions" aria-label={`${room.title} messages`}>
+      {messages.length === 0 && !pending && (
+          // An empty room must not collapse to nothing. Besides looking broken, a zero-height live
+          // region is treated as hidden by assistive technology and by Playwright alike, so the
+          // announcement channel would not exist until the first message arrived.
+          <p className="cw-log-empty">No messages yet. Say hello — your first message is checked before anyone sees it.</p>
+        )}
       <ol className="cw-log">
         {messages.map(m => (
           <li key={m.sequence} className="cw-msg">

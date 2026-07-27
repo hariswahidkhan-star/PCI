@@ -34,3 +34,24 @@ a { color: inherit; }
 .kicker { text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px; color: var(--gilt); margin: 0 0 6px; }
 .card.onboarding { border-color: var(--gilt); }
 select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; font: inherit; max-width: 420px; width: 100%; }
+
+/* ── PCI World community rooms ─────────────────────────────────────────────────────────────── */
+
+/* The live region keeps a floor height so an empty room does not collapse. A zero-height region is
+   reported as hidden to assistive technology, which would mean the announcement channel does not
+   exist until the first message arrives — exactly when it is needed least. */
+.cw-log-region { min-height: 6rem; display: block; }
+.cw-log { list-style: none; margin: 0; padding: 0; }
+.cw-log-empty { color: #55603d; margin: 0.75rem 0; }
+.cw-msg { display: flex; gap: 0.5rem; padding: 0.35rem 0; flex-wrap: wrap; }
+.cw-author { font-weight: 600; }
+/* Pending state is carried by the text tag as well as the styling — never colour alone. */
+.cw-msg-pending { opacity: 0.75; }
+.cw-tag { font-size: 0.85em; }
+.cw-notice { padding: 0.6rem 0.8rem; border-radius: 6px; }
+.cw-rooms { list-style: none; padding: 0; display: grid; gap: 1rem; }
+.cw-room-card { border: 1px solid #d8d8c8; border-radius: 8px; padding: 1rem; }
+.cw-help { font-size: 0.9em; color: #55603d; }
+.cw-err { color: #8a1c1c; font-weight: 600; }
+.cw-linkish { background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; font: inherit; color: inherit; }
+.cw-appeal code { user-select: all; word-break: break-all; }
