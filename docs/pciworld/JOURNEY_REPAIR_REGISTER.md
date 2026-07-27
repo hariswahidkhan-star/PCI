@@ -77,8 +77,9 @@ repair, listed so nobody mistakes the register above for "done":
    preferences with partial PATCH, immediate session revocation, both sign-out scopes with their
    plain-words copy) and the Passport manager (it26 — publish/withdraw with the consent
    guard, paged evidence with visibility toggles, partial-key disclosure incl. the never-auto-
-   submitted expiry) now run IN-APP. Play and sharing management still deep-link to the
-   server-rendered surfaces.
+   submitted expiry) and sharing management (it27 — result links + invitations with
+   live/withdrawn state and per-item/withdraw-all revocation) now run IN-APP. The classic
+   page's remaining exclusives: challenge play, registration, data export and deletion.
    Remaining for the dedicated-domain shape: move screens (Passport manager, preferences, play)
    into the app, then change `base` + register the `pciworld.org` redirect URI (a registry row)
    + per-client CORS and OIDC claims.
