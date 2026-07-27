@@ -108,13 +108,17 @@ public class WorldIntelligenceTests
     // ───────────────────────── progressive hints (PI-US-051) ─────────────────────────
 
     [Fact]
-    public void Every_year1_pack_item_carries_exactly_three_hints_that_pass_the_gates()
+    public void Every_house_item_carries_exactly_three_hints_that_pass_the_gates()
     {
+        // D3 closed the legacy gap: the exactly-three-hints gate now covers the WHOLE house bank —
+        // the 52 remediated legacy items and every Year-1 pack item alike. author_id IS NULL is
+        // the house predicate; operator-authored items are gated at authoring time instead.
         var db = NewWorldDb();
         var rows = db.Query("SELECT code,title,hook,config_json FROM pciworld_challenges WHERE author_id IS NULL");
         var packCodes = WorldIntelligencePack.Codes.ToHashSet(StringComparer.Ordinal);
         Assert.Equal(WorldIntelligencePack.Count, packCodes.Count);
-        foreach (var r in rows.Where(r => packCodes.Contains(H.Str(r["code"])!)))
+        Assert.True(rows.Count >= packCodes.Count + 52, $"expected the full house bank, found {rows.Count}");
+        foreach (var r in rows)
         {
             var hints = WorldContent.Hints(H.Str(r["config_json"])!);
             Assert.True(hints.Count == 3, $"{r["code"]}: expected 3 hints, found {hints.Count}");
