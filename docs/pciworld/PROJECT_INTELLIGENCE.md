@@ -135,8 +135,8 @@ challenges** — 365 scheduled days (runway 365, alert permanently cleared) plus
 substitution stock (20 foundation dailies, 8 practitioner rescues, 12 numeric rooms across risk/
 schedule/cost engines, 4 negotiation dilemmas, 4 order/rank sequences, 2 executive capstones).
 Every item carries exactly three progressive hints, passes the premium-language and answer-leakage
-gates, and solves through the reference solver. D2 in the deferral register is **closed**; D3
-(legacy-item remediation) remains open.
+gates, and solves through the reference solver. D2 in the deferral register is **closed**, and
+the D3 hints-and-label remediation has since closed too (Phase B slice 14, below).
 
 Incidents worth remembering (all caught by the gates, all fixed before merge): a banned-language
 hint in June ("the whole game") that briefly reached the branch when a commit was gated on the
@@ -144,7 +144,27 @@ wrong grep pattern — the gate is now `grep -q "Failed:     0"` on the full-sui
 `trivia` in a September hint; four December capstones authored with four hints instead of three;
 an invalid `commercial_management` track value; and five title collisions across the 420-slot
 uniqueness gate. The `boq` `average_rate` label defect (simple mean, not weighted) found in April
-remains logged against legacy WC-BOQ-012/035 under D3.
+was closed in slice 14: WC-BOQ-012's ask and context now state the simple mean (a new immutable
+version), and WC-BOQ-035 was audited clean — its asks never touched the rate.
+
+## 1f. Phase B slice 14 — D3 remediation: the legacy 52 join the editorial gates
+
+The 52 legacy items pre-dated the Project Intelligence editorial gates and were carried as
+CONDITIONALLY ACCEPTED. This slice closed the gap that was closable in content:
+
+- **Exactly three progressive hints** authored for every legacy item (method → step or trap →
+  near-procedural), inserted into the pack configs; the seeding discipline publishes each as a
+  new immutable version, so completed attempts still replay their original snapshot.
+- **Hints carry no digits at all**, so the answer-leakage scan can never match a reference value
+  inside them; all pass the premium-language gate.
+- **The CI hint gate widened** from pack items to the whole house bank
+  (`Every_house_item_carries_exactly_three_hints_that_pass_the_gates`): all 420 items are now
+  behind the same exactly-three-hints, leakage and language gates.
+- **WC-BOQ-012 label defect fixed** (context + ask now state the simple mean of line rates);
+  WC-BOQ-035 audited clean — its asks never exposed the rate.
+- **Coach-boundary fields and review-by dates** exist for no item in the model (authored items
+  included) and were already dependencies of the AI Coach workstream — consolidated under D5
+  rather than left dangling in D3.
 
 ## 2. Audit of the existing 52-challenge bank
 
@@ -152,7 +172,10 @@ Every house challenge (`WC-…-001` … `WC-…-052`) was classified into the Pr
 taxonomy — the classification is executable code (`WorldIntelligence.Classification`), backfilled
 idempotently at boot and asserted in CI, not a spreadsheet.
 
-**Verdict: 52 / 52 conditionally accepted — 0 fully accepted, 0 rejected.**
+**Verdict at audit time: 52 / 52 conditionally accepted — 0 fully accepted, 0 rejected.**
+*(Superseded by Phase B slice 14: the conditions that were content — exactly-three hints and the
+BOQ-012 label — are closed; the remaining conditions — coach-boundary fields, review-by dates —
+moved to D5 where their schema will first exist.)*
 
 Gates that already pass in CI for all 52:
 
@@ -222,9 +245,9 @@ Deferred items per the specification's own mechanism (owner, reason, risk, targe
 |---|---|---|---|---|---|
 | D1 | World React participant + admin shells (`/world/app`, `/world-admin` SPA) | The spec makes React-shell completion an explicit prerequisite phase; current World learner surface is the server-rendered workspace, which already serves attempts safely | Learner UX stays classic until built | Frontend lead | Phase B |
 | D2 | ~~Authoring the remaining planned experiences~~ **CLOSED (Phase B slices 4–13):** all 420 slots authored, validated and published — 365-day runway, reserve fully stocked | — | — | Content governance lead | Done |
-| D3 | Remediation of the 52 legacy mapped items (hints, coach context, review-by dates) | The hints field and validator now exist (Phase B slice 1); backfilling 52 legacy configs is SME work | Legacy items stay "conditional" in coverage | SME reviewers | Phase B |
+| D3 | ~~Remediation of the 52 legacy mapped items~~ **CLOSED (Phase B slice 14):** exactly-three hints backfilled behind the leakage + language gates for all 52; WC-BOQ-012 label defect fixed; coach-boundary fields and review-by dates consolidated under D5 (already its dependency) | — | — | Content governance lead | Done |
 | D4 | Attempt-level PI features (bookmarks, mastery, recommendations, streaks) | Requires participant-account data model extensions; the single attempt pipeline must stay unforked | Learner home shows library + today only | Backend lead | Phase B |
-| D5 | AI Coach (bounded hinting, leakage tests, fallback) | Depends on D2's per-item coach-boundary fields; deterministic hints must exist first | No coach at launch (spec allows: fully functional without) | AI safety engineer | Phase C |
+| D5 | AI Coach (bounded hinting, leakage tests, fallback) + per-item coach-boundary fields and editorial review-by dates (absorbed from D3) | Deterministic hints now exist bank-wide (D3 closed); the coach-boundary/review-by schema is this workstream's first deliverable | No coach at launch (spec allows: fully functional without) | AI safety engineer | Phase C |
 | D6 | Shared-identity bridge to the platform student account | The one-login SSO bridge exists (`student_user_id`); the full canonical-profile prefill journey is a separate identity workstream | World accounts remain practice-identity-only (safe default) | Identity lead | Phase C |
 | D7 | Localization (Arabic RTL interface test), analytics event dictionary, load tests at the 10k-DAU target | Sequenced after the React shells (D1) | — | Respective leads | Phase C |
 

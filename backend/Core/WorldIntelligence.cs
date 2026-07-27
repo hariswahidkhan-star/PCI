@@ -152,11 +152,12 @@ public static class WorldIntelligence
     }
 
     // ── Classification of the existing bank (the Section-2 audit, made executable). Every house
-    //    challenge is assigned exactly one value per facet. The audit verdict for all 52 is
-    //    CONDITIONALLY ACCEPTED: schema, calculation and originality gates pass in CI today;
-    //    the Project Intelligence editorial gates (three progressive hints, coach boundaries,
-    //    review-by dates) are remediation items tracked in docs/pciworld/PROJECT_INTELLIGENCE.md
-    //    — a mapped item does NOT count as approved Year-1 coverage until they close. ──
+    //    challenge is assigned exactly one value per facet. The audit verdict for all 52 was
+    //    CONDITIONALLY ACCEPTED; the D3 remediation (docs/pciworld/PROJECT_INTELLIGENCE.md) has
+    //    since closed the hints gap — every legacy item now carries exactly three progressive
+    //    hints behind the same leakage and language gates as the Year-1 pack, and the
+    //    WC-BOQ-012 rate-label defect is fixed. Coach-boundary fields and review-by dates are
+    //    consolidated under D5, where they were already a dependency. ──
 
     public sealed record Meta(string Type, string Domain, string Lifecycle, string Sector, string Interaction);
 
