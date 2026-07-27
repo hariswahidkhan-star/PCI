@@ -91,22 +91,37 @@ public static class CommunityRooms
 
         var token = Security.RandomHex(32);
         var folded = verdict.Folded!;
+        // The expiry is computed HERE and bound as a value, never written as
+        // datetime('now','+' || ? || ' hours'). Db.Translate rewrites only the LITERAL datetime form
+        // for MySQL by regex, so a modifier arriving as a bound parameter is invisible to it and the
+        // statement reaches MariaDB as SQLite syntax it cannot evaluate. SQLite accepts it happily,
+        // which is exactly what makes this class of bug provider-specific and easy to miss — the
+        // repository's own TestEnv.Stamp carries the same warning.
+        var expiresAt = DateTime.UtcNow.AddHours(Math.Clamp(sessionHours, 1, 24))
+                                       .ToString("yyyy-MM-dd HH:mm:ss");
         try
         {
             var id = db.ExecuteReturningId(
                 @"INSERT INTO pciworld_guest_sessions
                       (token_sha,room_id,display_name,display_name_folded,active_name_key,locale,
                        rules_version_accepted,risk_key,status,expires_at)
-                  VALUES(?,?,?,?,?,?,?,?,'active',datetime('now','+' || ? || ' hours'))",
+                  VALUES(?,?,?,?,?,?,?,?,'active',?)",
                 Security.Sha(token), roomId, verdict.Display, folded, folded, locale,
-                rulesVersion, riskKey, sessionHours);
+                rulesVersion, riskKey, expiresAt);
             return new JoinResult(true, null, token, id, null);
         }
         catch (Exception)
         {
-            // The unique index on (room_id, active_name_key) is the authority. Reaching here means
-            // another session took the name between validation and insert — exactly the race the
-            // index exists to lose safely. Offer a usable alternative rather than a bare error.
+            // The unique index on (room_id, active_name_key) is the authority for "name taken", so
+            // a failed insert USUALLY means another session won the race. But only usually — a
+            // blanket catch here would report every database fault as "name_taken", which is how a
+            // MySQL-only datetime bug first presented itself as a phantom duplicate name and hid
+            // its real cause. Confirm the name is genuinely held before claiming that; otherwise
+            // let the real error surface.
+            var taken = db.Scalar<long>(
+                "SELECT COUNT(*) FROM pciworld_guest_sessions WHERE room_id=? AND active_name_key=?",
+                roomId, folded) > 0;
+            if (!taken) throw;
             return JoinResult.Fail("name_taken", CommunityNames.SuggestAlternative(verdict.Display!, 2));
         }
     }
