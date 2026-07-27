@@ -73,8 +73,10 @@ repair, listed so nobody mistakes the register above for "done":
    ships the participant account home as a real React app on the shared origin: sign-in with
    canonical PCI credentials, portal-handoff redemption, dashboard aggregate rendering with the
    §9.1 single primary action, honest offline/suspended states, and the PKCE helpers for the
-   OAuth callback shape. Play/manage flows still deep-link to the server-rendered surfaces.
-   Remaining for the dedicated-domain shape: move screens (onboarding, Passport manager, play)
+   OAuth callback shape. The onboarding walkthrough now runs IN-APP (it24): the same server-ordered steps,
+   with the continue_onboarding primary action staying inside the app. Play/manage flows still
+   deep-link to the server-rendered surfaces.
+   Remaining for the dedicated-domain shape: move screens (Passport manager, preferences, play)
    into the app, then change `base` + register the `pciworld.org` redirect URI (a registry row)
    + per-client CORS and OIDC claims.
 2. ~~A real OAuth 2.1 authorization layer~~ — LANDED (it19–21): authorization-code + PKCE (S256

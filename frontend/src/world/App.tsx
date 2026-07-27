@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, clearToken, getToken, redeemHandoff, setToken, WorldApiError } from './api'
+import Onboarding from './Onboarding'
 
 // ── Dashboard aggregate (mirror of /api/world/me/dashboard) ──
 
@@ -145,12 +146,15 @@ function SignIn({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
 
 function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<void>; onSignOut: () => void }) {
   const name = d.display_name || d.email
+  const onboarding = d.onboarding_state !== null && d.onboarding_state !== 'completed'
   const actionHref =
-    d.primary_action === 'verify_email' || d.primary_action === 'continue_onboarding' ? classic.account
+    d.primary_action === 'continue_onboarding' ? '#onboarding'
+    : d.primary_action === 'verify_email' ? classic.account
     : d.primary_code ? classic.challenge(d.primary_code)
     : classic.archive
   return (
     <>
+      {onboarding && <Onboarding state={d.onboarding_state!} onDone={reload} />}
       <div className="card">
         <h1>Welcome back, {name}</h1>
         <p>

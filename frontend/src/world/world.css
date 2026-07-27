@@ -31,3 +31,6 @@ button:disabled { opacity: 0.6; cursor: default; }
 ul { padding-left: 20px; }
 footer { margin-top: 24px; color: var(--slate); }
 a { color: inherit; }
+.kicker { text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px; color: var(--gilt); margin: 0 0 6px; }
+.card.onboarding { border-color: var(--gilt); }
+select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; font: inherit; max-width: 420px; width: 100%; }
