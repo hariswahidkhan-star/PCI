@@ -116,33 +116,48 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 function SignIn({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
+  const [mode, setMode] = useState<'signin' | 'register'>('signin')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [displayName, setDisplayName] = useState('')
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setBusy(true); setErr('')
     try {
-      const r = await api<{ token: string }>('/api/world/account/login', { email, password })
+      const r = mode === 'signin'
+        ? await api<{ token: string }>('/api/world/account/login', { email, password })
+        : await api<{ token: string }>('/api/world/account/register', { email, password, display_name: displayName })
       setToken(r.token)
       await onSignedIn()
     } catch (e2) {
-      setErr(e2 instanceof WorldApiError ? e2.message : 'Sign-in failed — try again.')
+      // The quarantine conflict answers honestly: this email belongs to a different sign-in.
+      setErr(e2 instanceof WorldApiError ? e2.message : `${mode === 'signin' ? 'Sign-in' : 'Registration'} failed — try again.`)
       setBusy(false)
     }
   }
   return (
     <form className="card" onSubmit={(e) => { void submit(e) }}>
-      <h2>Sign in to PCI World</h2>
-      <p><small>One PCI account works everywhere: the same email and password you use on the Institute student portal signs you in here — no second account is ever created.</small></p>
+      <h2>{mode === 'signin' ? 'Sign in to PCI World' : 'Create your PCI World account'}</h2>
+      <p><small>One PCI account works everywhere: the same email and password works on the Institute student
+        portal and here — {mode === 'signin' ? 'no second account is ever created' : 'registering here creates your single PCI identity'}.
+        {mode === 'register' && ' Anything you practised in this browser before registering is claimed into your account.'}</small></p>
+      {mode === 'register' && (
+        <>
+          <label htmlFor="w_name">Display name (optional — appears on your Passport only if you publish one)</label>
+          <input id="w_name" maxLength={80} value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
+        </>
+      )}
       <label htmlFor="w_email">Email</label>
       <input id="w_email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-      <label htmlFor="w_pw">Password</label>
-      <input id="w_pw" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-      <p><button disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button></p>
+      <label htmlFor="w_pw">Password{mode === 'register' ? ' (min 10 characters)' : ''}</label>
+      <input id="w_pw" type="password" autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} required value={password} onChange={(e) => setPassword(e.target.value)} />
+      <p><button disabled={busy}>{busy ? 'Working…' : mode === 'signin' ? 'Sign in' : 'Create account'}</button></p>
       {err && <p role="alert" className="err">{err}</p>}
-      <p><small>New here? <a href={classic.account}>Create your account</a> on the classic page — everything you do appears in both places.</small></p>
+      <p><small>{mode === 'signin'
+        ? <>New here? <button type="button" className="ghost" onClick={() => { setMode('register'); setErr('') }}>Create your account</button></>
+        : <>Already registered? <button type="button" className="ghost" onClick={() => { setMode('signin'); setErr('') }}>Sign in instead</button></>}</small></p>
     </form>
   )
 }

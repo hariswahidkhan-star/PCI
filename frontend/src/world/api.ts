@@ -33,6 +33,10 @@ export async function api<T>(path: string, body?: unknown, method?: string): Pro
   const headers: Record<string, string> = {}
   const token = getToken()
   if (token) headers['X-World-Account'] = token
+  // The classic pages' ANONYMOUS session rides along (same key): registration and sign-in claim
+  // any unowned work from this browser, so nothing done before the account existed goes missing.
+  const anon = localStorage.getItem('world_session')
+  if (anon) headers['X-World-Session'] = anon
   if (body !== undefined) headers['Content-Type'] = 'application/json'
   const res = await fetch(path, {
     method: method ?? (body !== undefined ? 'POST' : 'GET'),

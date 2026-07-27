@@ -21,6 +21,52 @@ interface SessionRow {
   current: boolean
 }
 
+function DataAndAccount({ onSignOut }: { onSignOut: () => void }) {
+  const [pw, setPw] = useState('')
+  const [err, setErr] = useState('')
+
+  const exportData = async () => {
+    setErr('')
+    try {
+      const data = await api<unknown>('/api/world/account/export')
+      const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'pci-world-export.json'
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      setErr('Could not export your data — try again.')
+    }
+  }
+
+  const del = async () => {
+    if (!confirm('Delete your PCI World participation? Your World attempts are de-identified, your Passport and every shared link stop resolving, and your World sign-ins end everywhere. Your PCI student account, credentials and profile are NOT touched. This cannot be undone.')) return
+    setErr('')
+    try {
+      await api('/api/world/account/delete', { password: pw })
+      onSignOut()
+    } catch (e) {
+      setErr(e instanceof WorldApiError ? e.message : 'Deletion failed — check your password.')
+    }
+  }
+
+  return (
+    <div className="card">
+      <h2>Your data &amp; account</h2>
+      <p><small>The export contains everything PCI World holds about you — including the answers you gave,
+        which no other surface ever shows. Deletion is WORLD-ONLY in scope: it removes your practice
+        participation and de-identifies your attempts, while your PCI student account, sign-in and profile
+        remain exactly as they are.</small></p>
+      <p><button className="secondary" onClick={() => { void exportData() }}>Export my PCI World data (JSON)</button></p>
+      <label htmlFor="da_pw">Confirm with your PCI account password to delete</label>
+      <input id="da_pw" type="password" autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+      <p><button className="secondary" disabled={!pw} onClick={() => { void del() }}>Delete my PCI World participation</button></p>
+      {err && <p role="alert" className="err">{err}</p>}
+    </div>
+  )
+}
+
 const GOAL_LABELS: Record<string, string> = {
   daily_practice: 'Daily practice',
   certification_prep: 'Certification preparation',
@@ -123,6 +169,8 @@ export default function Settings({ onSignOut }: { onSignOut: () => void }) {
           <p><button className="ghost" onClick={() => { void revokeOthers() }}>Sign out all other devices</button></p>
         )}
       </div>
+
+      <DataAndAccount onSignOut={onSignOut} />
 
       <div className="card">
         <h2>Sign out</h2>

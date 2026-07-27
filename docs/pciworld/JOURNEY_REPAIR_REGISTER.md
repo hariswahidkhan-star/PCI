@@ -78,8 +78,11 @@ repair, listed so nobody mistakes the register above for "done":
    plain-words copy) and the Passport manager (it26 — publish/withdraw with the consent
    guard, paged evidence with visibility toggles, partial-key disclosure incl. the never-auto-
    submitted expiry) and sharing management (it27 — result links + invitations with
-   live/withdrawn state and per-item/withdraw-all revocation) now run IN-APP. The classic
-   page's remaining exclusives: challenge play, registration, data export and deletion.
+   live/withdrawn state and per-item/withdraw-all revocation), registration (with the
+   anonymous-session claim) and data export/World-only deletion (it28) now run IN-APP — the
+   ACCOUNT SURFACE IS COMPLETE in the React app. The classic page's one remaining exclusive:
+   the challenge-play engine (config_json workspace renderer) — a multi-iteration port of the
+   product's core loop, deliberately left for a reviewed start.
    Remaining for the dedicated-domain shape: move screens (Passport manager, preferences, play)
    into the app, then change `base` + register the `pciworld.org` redirect URI (a registry row)
    + per-client CORS and OIDC claims.
