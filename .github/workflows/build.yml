@@ -417,6 +417,21 @@ jobs:
       - name: Install frontend deps
         working-directory: frontend
         run: npm ci
+      - name: Build the React bundles into wwwroot (so /app, /admin and /world-app are served)
+        # Playwright's webServer runs the backend directly rather than the Docker image, so the
+        # bundles the Dockerfile normally copies in are absent and every React route 404s. The
+        # community accessibility spec needs /world-app served; staging all three here keeps the
+        # e2e environment matching what the image actually ships.
+        working-directory: frontend
+        run: |
+          npm run build
+          mkdir -p ../backend/wwwroot/app ../backend/wwwroot/admin ../backend/wwwroot/world-app
+          cp -r dist/. ../backend/wwwroot/app/
+          cp -r dist-admin/. ../backend/wwwroot/admin/
+          cp dist-admin/admin.html ../backend/wwwroot/admin/index.html
+          cp -r dist-world/. ../backend/wwwroot/world-app/
+          cp dist-world/world.html ../backend/wwwroot/world-app/index.html
+
       - name: Install Playwright browser matrix
         working-directory: frontend
         # Chromium runs the full suite; Firefox/WebKit power cross-browser smoke + mobile profiles.

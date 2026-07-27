@@ -87,6 +87,9 @@ export default defineConfig({
           ASPNETCORE_ENVIRONMENT: 'Development',
           STRIPE_SECRET_KEY: 'sk_test_e2e_browser_suite',
           STRIPE_WEBHOOK_SECRET: 'whsec_e2e_browser_suite',
+          // The world-admin owner password, so the community a11y spec can enable the feature
+          // through the real operator API rather than reaching into the database.
+          PCIWORLD_OWNER_PASSWORD: process.env.PCIWORLD_OWNER_PASSWORD ?? 'E2EWorldOwner!99',
           E2E_ADMIN_EMAIL: E2E_ADMIN.email,
           E2E_ADMIN_PASSWORD: E2E_ADMIN.password,
           SEED_DEMO_EXAM: 'true',

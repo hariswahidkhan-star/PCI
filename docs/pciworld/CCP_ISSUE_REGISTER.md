@@ -370,7 +370,7 @@ tested end to end — but they should not have to, and this should not survive c
 | Module | `frontend/src/world/community/` |
 | Requirement | §18.1 (WCAG 2.2 AA), PW-US-040/041 |
 | Severity | **P2** |
-| Status | **Open** — needs a browser pass over the built bundle |
+| Status | **Verified — closed** (browser pass added, see resolution) |
 | Owner | CCP |
 
 **Issue.** The community UI has an automated axe pass
@@ -399,9 +399,25 @@ larger change than belongs in the same commit as the UI it would test.
 enables the feature flag, seeds a room, and runs axe with contrast and target-size **enabled** at
 several viewports, plus a keyboard-only traversal and a 400% zoom reflow check.
 
-**Risk if unfixed.** Contrast and focus-visibility failures ship unnoticed. Both are common, both
-affect exactly the participants least able to work around them, and neither is visible to the
-structural pass that currently guards this UI.
+**RESOLUTION.** Closed by `frontend/e2e/community-a11y.spec.ts` — 7 checks in a real Chromium, with
+`colour-contrast`, `target-size` and the rest **enabled**, over the catalogue, entry screen, entry
+error state, populated transcript, keyboard-only traversal and a 320px reflow check. The CI `e2e`
+job now builds the React bundles into `wwwroot` first, because Playwright runs the backend directly
+rather than the Docker image, so without that step every React route 404s.
+
+Enabling the feature in the spec goes through a new `PATCH /api/world-admin/community/settings`
+rather than reaching into the database, so the fixture exercises the same path an operator uses and
+cannot drift from it. That endpoint allowlists the two community keys instead of writing whatever it
+is given — a settings route that takes arbitrary keys is a privilege-escalation primitive.
+
+Two defects in the spec itself were found and fixed rather than worked around: an empty `<ol>` is not
+exposed as a list by Chromium, so the list-role regression guard had to run against a populated
+transcript; and the tests shared a room with fixed display names, so the second to run was refused
+`name_taken` — names are now unique per test, which is what the product enforces anyway.
+
+**Residual.** Only Chromium runs this spec. Firefox and WebKit have their own accessibility-tree
+quirks (the empty-list difference above is exactly that class of thing), so a cross-browser pass
+remains worthwhile but is not blocking.
 
 ---
 

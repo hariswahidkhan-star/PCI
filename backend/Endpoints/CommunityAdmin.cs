@@ -276,6 +276,56 @@ public static class CommunityAdmin
             return Results.Json(new { ok = true, emergency_state = mode.Length == 0 ? null : mode });
         });
 
+        // ── Settings ──────────────────────────────────────────────────────────────────────────
+
+        app.MapGet("/api/world-admin/community/settings", (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "community.read", out _) is { } deny) return deny;
+            return Results.Json(new
+            {
+                enabled = CommunityRooms.Enabled(db),
+                moderator = Settings.Str(db, "world_community_moderator", "none"),
+                // Stated rather than implied: with no provider configured the rooms accept messages
+                // and publish none of them, which is the fail-closed posture and looks like a fault
+                // to an operator who has not been told.
+                publishes_messages = Settings.Str(db, "world_community_moderator", "none") != "none",
+            });
+        });
+
+        app.MapPatch("/api/world-admin/community/settings", async (HttpContext ctx) =>
+        {
+            if (Gate(ctx, "community.rooms", out var adm) is { } deny) return deny;
+            var b = await H.Body(ctx.Request);
+
+            // An allowlist, not a passthrough. A settings endpoint that writes whatever key it is
+            // given is a privilege-escalation primitive: world_community_* is this role's business,
+            // and everything else on the settings table is not.
+            var changed = new List<string>();
+            if (H.GetS(b, "enabled") is { } en && en is "0" or "1")
+            {
+                Settings.Put(db, "world_community_enabled", en);
+                changed.Add($"enabled={en}");
+            }
+            if (H.GetS(b, "moderator") is { } mod)
+            {
+                // Only providers that actually exist. A typo must not silently leave the rooms on
+                // the null moderator while an operator believes moderation is configured.
+                if (mod is not ("none" or "deterministic"))
+                    return Results.Json(new { error = "unknown_moderator" }, statusCode: 400);
+                Settings.Put(db, "world_community_moderator", mod);
+                changed.Add($"moderator={mod}");
+            }
+            if (changed.Count == 0) return Results.Json(new { error = "nothing_to_change" }, statusCode: 400);
+
+            Audit(adm!.Id, "world_community_settings", string.Join(",", changed));
+            return Results.Json(new
+            {
+                ok = true,
+                enabled = CommunityRooms.Enabled(db),
+                moderator = Settings.Str(db, "world_community_moderator", "none"),
+            });
+        });
+
         // ── Appeals (guest side, no account) ──────────────────────────────────────────────────
 
         app.MapPost("/api/world/community/appeals", async (HttpContext ctx) =>
