@@ -49,12 +49,20 @@ services:
       - key: MYSQL_SSL           # "required" for managed providers; "false" only for a private-network DB
         value: required
       # ---- data-at-rest encryption (REQUIRED in production) ----
-      # A 32-byte key (base64, hex, or a long passphrase) used to AES-256-GCM encrypt stored identity
-      # documents and displayable credentials. Production refuses to boot without it. Generate one with:
-      #   openssl rand -base64 32
-      # Store it in a vault; rotating it requires re-encrypting existing artefacts.
+      # A 32-byte key used to AES-256-GCM encrypt stored identity documents and displayable
+      # credentials. Production refuses to boot without it (exit 78).
+      #
+      # generateValue, not sync:false. A blank required secret guarantees that the FIRST deploy of a
+      # new service fails its health check, which is precisely how this key bricked deploys before:
+      # the preflight that requires it shipped in the same release as the key itself, so every
+      # subsequent commit re-reported a failure nobody had introduced. Render generates this once at
+      # service creation and then leaves it alone.
+      #
+      # It does NOT overwrite a value that already exists, so an existing service keeps the key its
+      # data was encrypted under. Rotating it still requires re-encrypting existing artefacts — to
+      # move to a vault-managed key, set the value explicitly on the dashboard and re-encrypt.
       - key: CREDENTIAL_ENCRYPTION_KEY
-        sync: false
+        generateValue: true
       # ---- fill these in on the Render dashboard (Settings → Environment) ----
       - key: APP_BASE_URL          # your public URL, e.g. https://pci-platform.onrender.com or https://www.yourdomain.org
         sync: false
