@@ -353,8 +353,17 @@ public static class CommunitySchema
             last_error TEXT,
             correlation_id VARCHAR(64),
             created_at VARCHAR(32) DEFAULT (datetime('now')),
+            -- Required by WorkerLease: both TryClaim and RecoverExpired write updated_at on every
+            -- claim, so it is part of the contract for any table they manage, not bookkeeping we
+            -- chose. Omitting it made every claim fail with 'no such column'.
+            updated_at VARCHAR(32) DEFAULT (datetime('now')),
             sent_at VARCHAR(32))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_wcoutbox_due ON pciworld_community_outbox(status,next_attempt_at)");
+        // Additive upgrade: the table shipped once without updated_at, so an install created from
+        // that revision needs the column added rather than only fresh installs getting it.
+        var outboxCols = db.Columns("pciworld_community_outbox");
+        if (outboxCols.Count > 0 && !outboxCols.Contains("updated_at"))
+            db.Exec("ALTER TABLE pciworld_community_outbox ADD COLUMN updated_at VARCHAR(32)");
     }
 
     static void Seed(Db db)
