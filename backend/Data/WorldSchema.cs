@@ -34,6 +34,10 @@ public static class WorldSchema
         Core.WorldIdentity.Ensure(db);
         try { Core.WorldIdentity.Run(db); }
         catch (Exception e) { Console.Error.WriteLine($"[pciworld identity] legacy mapping pass failed: {e.Message}"); }
+        // Community rooms (CCP Phase 1). Installing the tables is not launching the feature — it
+        // stays gated on the world_community_enabled setting, seeded false. Installed on every boot
+        // so the migration-parity gates cover it on both providers.
+        CommunitySchema.Ensure(db);
     }
 
     static void Tables(Db db)
