@@ -205,6 +205,30 @@ public static class CommunityNames
 
     /// <summary>The lossy comparison skeleton. Never displayed, never stored as the name — used only
     /// to decide "is this the same as, or pretending to be, something else?".</summary>
+    /// <summary>
+    /// The same folding as <see cref="Fold"/>, but preserving word breaks: each whitespace-separated
+    /// token is folded independently and rejoined with single spaces.
+    ///
+    /// Message moderation needs BOTH forms, because obfuscation runs in two directions. Padding a
+    /// word out ("f u c k") is only caught by the fully collapsed skeleton; a term embedded in a
+    /// longer legitimate word (the "Scunthorpe problem" — "classic", "assess", "Cockburn") is only
+    /// avoided by matching on whole words. Checking a term against both, with word-boundary rules
+    /// on this one, is what keeps the check strict without libelling ordinary English.
+    /// </summary>
+    public static string FoldWords(string? raw)
+    {
+        var display = Display(raw);
+        if (display.Length == 0) return "";
+        var parts = display.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var folded = new List<string>(parts.Length);
+        foreach (var p in parts)
+        {
+            var f = Fold(p);
+            if (f.Length > 0) folded.Add(f);
+        }
+        return string.Join(' ', folded);
+    }
+
     public static string Fold(string? raw)
     {
         var display = Display(raw);
