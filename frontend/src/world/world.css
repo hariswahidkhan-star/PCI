@@ -122,3 +122,52 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
   .portal-switcher-btn:hover:not(:disabled), .portal-switcher-btn:focus-visible { transform: none; }
   .portal-switcher-btn:hover:not(:disabled) .ps-arrow { transform: none; }
 }
+
+/* ── Share sheet (Phase 6 premium share experience) ────────────────────────────────────────── */
+
+/* One component, two shapes: a centred dialog on desktop, a bottom sheet on small screens. */
+.ss-backdrop {
+  position: fixed; inset: 0; z-index: 40;
+  background: rgba(20, 24, 29, 0.45);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.ss-panel {
+  background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--gilt);
+  border-radius: 8px; padding: 18px 20px; width: 100%; max-width: 460px;
+  max-height: min(86vh, 640px); overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(20, 24, 29, 0.25);
+  animation: ss-in 180ms ease-out;
+}
+@keyframes ss-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 640px) {
+  .ss-backdrop { align-items: flex-end; padding: 0; }
+  .ss-panel {
+    max-width: none; border-radius: 12px 12px 0 0; border-left: 0; border-right: 0; border-bottom: 0;
+    animation: ss-up 200ms ease-out;
+  }
+  @keyframes ss-up { from { transform: translateY(40%); } to { transform: none; } }
+}
+@media (prefers-reduced-motion: reduce) { .ss-panel { animation: none; } }
+
+.ss-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ss-head h2 { margin: 0; }
+.ss-close { background: none; border: 1px solid var(--line); color: var(--slate); border-radius: 4px;
+  font-size: 18px; line-height: 1; padding: 4px 10px; }
+.ss-disclosure { color: var(--ink); font-size: 14px; border-left: 3px solid var(--gilt);
+  padding-left: 10px; margin: 12px 0 14px; }
+.ss-channels { list-style: none; padding: 0; margin: 0 0 12px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 8px; }
+/* Every channel is icon + a VISIBLE text label — never an unlabelled glyph. */
+.ss-channel {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
+  padding: 9px 10px; font: inherit; font-size: 14px; cursor: pointer; text-decoration: none;
+}
+.ss-channel:hover, .ss-channel:focus-visible { border-color: var(--ink); }
+.ss-channel:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.ss-label { flex: 1; }
+.ss-instagram, .ss-footnote { color: var(--slate); font-size: 12.5px; margin: 8px 0 0; }
+.ss-note { color: var(--ink); font-size: 14px; margin: 8px 0 0; }
+.ss-fallback label { color: var(--ink); font-size: 13.5px; }
+.ss-fallback textarea { width: 100%; max-width: none; font: inherit; font-size: 13px; margin-top: 6px;
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; word-break: break-all; }

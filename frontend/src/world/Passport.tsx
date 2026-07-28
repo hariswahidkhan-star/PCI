@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, WorldApiError } from './api'
 import { PassportCard } from '../components/passport'
+import ShareSheet from './ShareSheet'
 import type { PassportSummary } from '../api/types'
 
 // The Passport manager, in-app. Same endpoints and rules as the classic page: publication needs a
@@ -80,6 +81,7 @@ export default function Passport() {
   const [err, setErr] = useState('')
   const [msg, setMsg] = useState('')
   const [publishedUrl, setPublishedUrl] = useState<string | null>(localStorage.getItem(URL_KEY))
+  const [shareOpen, setShareOpen] = useState(false)
 
   const load = useCallback(async () => {
     const p = await api<PassportData>('/api/world/passport')
@@ -143,10 +145,30 @@ export default function Passport() {
 
   return (
     <>
+      {d.passport_public && publishedUrl && (
+        <ShareSheet
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          url={publishedUrl}
+          // No client-side QR renderer exists in this app; the public page already carries the
+          // server-rendered verification QR, so the sheet deep-links to that block.
+          qrHref={`${publishedUrl}#verify`}
+          getCaption={async () => (await api<{ caption: string }>('/api/world/me/shares')).caption}
+        />
+      )}
       <PassportCard
         summary={toSummary(d, rows, publishedUrl)}
         actions={d.passport_public ? (
-          <button className="pp-btn pp-btn--ghost" onClick={withdraw}>Withdraw public Passport</button>
+          <>
+            {/* Share is only offered for a PUBLISHED Passport, and only when this device knows
+                the raw public link (the server stores its hash only — it cannot be reprinted).
+                The sheet shares that existing opaque URL; it never mints anything. */}
+            <button className="pp-btn" onClick={() => setShareOpen(true)} disabled={!publishedUrl}
+              title={publishedUrl ? undefined : 'The public link was shown on the device that published — republish here to get a shareable link.'}>
+              Share
+            </button>{' '}
+            <button className="pp-btn pp-btn--ghost" onClick={withdraw}>Withdraw public Passport</button>
+          </>
         ) : (
           <button className="pp-btn" onClick={() => { void publish() }}>Publish my Passport</button>
         )}

@@ -381,6 +381,38 @@ public static class WorldAccount
             ORDER BY i.id DESC LIMIT 200", userId, ck);
     }
 
+    /// <summary>The one disclaimer sentence every share caption carries — the World product's own
+    /// footer line, so a pasted caption can never oversell practice evidence as certification.</summary>
+    public const string ShareCaptionDisclaimer = "Practice evidence only — never a credential.";
+
+    /// <summary>Channel-agnostic share caption for the premium share sheet (Phase 6, §8.7–8.8) —
+    /// server truth, built from PUBLIC fields only: the display name the public Passport already
+    /// shows, the product name, and the disclaimer sentence. Never the email, never the Student
+    /// Number, never a token — nothing the public page itself would not show. The name is
+    /// neutralised so a hostile display name stays inert wherever the caption is pasted.</summary>
+    public static string ShareCaption(Db db, long userId)
+    {
+        var u = db.QueryOne("SELECT display_name FROM pciworld_users WHERE id=?", userId);
+        var name = NeutralCaptionText(u is null ? null : H.Str(u["display_name"]));
+        return (name.Length > 0 ? name + " — " : "") + "PCI World Passport. " + ShareCaptionDisclaimer;
+    }
+
+    /// <summary>Plain-text neutralisation for caption fragments: control characters become spaces
+    /// (a multi-line name cannot smuggle extra "sentences"), angle brackets are dropped outright
+    /// (markup can never survive into a caption someone pastes elsewhere), whitespace collapses,
+    /// and the result is capped at 80 characters — the display-name limit.</summary>
+    static string NeutralCaptionText(string? raw)
+    {
+        var sb = new System.Text.StringBuilder((raw ?? "").Length);
+        foreach (var ch in raw ?? "")
+        {
+            if (ch is '<' or '>') continue;
+            sb.Append(char.IsControl(ch) ? ' ' : ch);
+        }
+        var t = System.Text.RegularExpressions.Regex.Replace(sb.ToString(), @"\s+", " ").Trim();
+        return t.Length > 80 ? t[..80].TrimEnd() : t;
+    }
+
     /// <summary>This account's live World sessions — metadata only, never a token value (they are
     /// stored hashed and cannot be reprinted anyway). Feeds the sessions view (PW-US-043).</summary>
     public static List<Dictionary<string, object?>> Sessions(Db db, long userId) =>
@@ -821,10 +853,16 @@ public static class WorldAccount
             if (u is null) return Err("no_token", 401);
             return J(new
             {
+                // Server-truth caption for the share sheet's Copy-caption: public fields only —
+                // the display name the public Passport shows, the product name, the disclaimer.
+                caption = ShareCaption(db, u.Id),
                 results = ShareLinks(db, u.Id).Select(r => new
                 {
                     attempt_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
                     completed_at = H.Str(r["completed_at"]), revoked = H.L(r["result_revoked"]) == 1,
+                    // The mint endpoint stamps updated_at when it creates (or re-creates) the
+                    // link, so this is the link's creation instant — no new column needed.
+                    created_at = H.Str(r["updated_at"]),
                 }),
                 invitations = Invitations(db, u.Id).Select(r => new
                 {
