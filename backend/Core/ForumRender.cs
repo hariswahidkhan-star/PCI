@@ -140,6 +140,69 @@ public static class ForumRender
     /// World-only deployments too, and inheriting that shell would put navigation to a site those
     /// deployments do not serve on every forum page.
     /// </summary>
+    /// <summary>
+    /// The forum's front door: categories, and the discussions that are actually readable.
+    ///
+    /// THIS DID NOT EXIST UNTIL SOMEBODY ASKED WHERE THE FORUM WAS. Phase 3 built thread pages,
+    /// their JSON-LD, their accessibility coverage and their moderation queue, and shipped no index
+    /// — so a thread was reachable only by already knowing its URL, and neither a visitor nor a
+    /// crawler had any way in. Every test passed the whole time, because a test suite asks whether
+    /// the thing works, not whether anyone can find it.
+    ///
+    /// Only PUBLISHED threads with a published opening post appear, by the same predicate the
+    /// thread page uses: a held post that surfaced in a listing would be exactly the leak the
+    /// state filter exists to prevent, and a listing is the easier place to forget it.
+    /// </summary>
+    public static string? Index(Db db, string canonicalBase = "")
+    {
+        var cats = db.Query(
+            @"SELECT slug,title,description FROM pciworld_forum_categories
+              WHERE state IN ('open','read_only') ORDER BY sort, title");
+        if (cats.Count == 0) return null;
+
+        var sb = new StringBuilder();
+        sb.Append("<h1>PCI World forum</h1>");
+        sb.Append("<p>Project controls practice, discussed in the open. Reading needs no account.</p>");
+        sb.Append("<ul class=\"wf-posts\">");
+        foreach (var c in cats)
+        {
+            var slug = H.Str(c["slug"]) ?? "";
+            sb.Append("<li class=\"wf-post\">");
+            sb.Append($"<h2>{Esc(H.Str(c["title"]))}</h2>");
+            if (!string.IsNullOrWhiteSpace(H.Str(c["description"])))
+                sb.Append($"<p>{Esc(H.Str(c["description"]))}</p>");
+
+            // The state predicate is IN the query. Filtering afterwards would mean the held rows
+            // were already in memory, one logging change away from being disclosed.
+            var threads = db.Query(
+                @"SELECT t.slug,t.title FROM pciworld_forum_threads t
+                  JOIN pciworld_forum_categories c ON c.id = t.category_id
+                  WHERE c.slug=? AND t.state='open'
+                    AND EXISTS(SELECT 1 FROM pciworld_forum_posts p
+                                WHERE p.thread_id=t.id AND p.kind='opening' AND p.state='published')
+                  ORDER BY t.id DESC LIMIT 20", slug);
+
+            if (threads.Count == 0)
+            {
+                // Said in words rather than shown as an empty box: an empty category is a fact
+                // about the forum, not a rendering failure the reader has to diagnose.
+                sb.Append("<p>No discussions here yet.</p>");
+            }
+            else
+            {
+                sb.Append("<ul>");
+                foreach (var t in threads)
+                    sb.Append($"<li><a href=\"/world/forum/{Esc(slug)}/{Esc(H.Str(t["slug"]))}\">{Esc(H.Str(t["title"]))}</a></li>");
+                sb.Append("</ul>");
+            }
+            sb.Append("</li>");
+        }
+        sb.Append("</ul>");
+
+        return Document("Discussions", "Project controls practice discussed in the open on PCI World.",
+                        $"{canonicalBase}/world/forum", sb.ToString());
+    }
+
     static string Document(string title, string description, string canonical, string body) =>
         "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"/>"
         + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>"

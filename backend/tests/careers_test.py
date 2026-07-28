@@ -460,12 +460,27 @@ def main():
         chk("C72 a job title containing a script tag cannot escape the JSON-LD block",
             code == 200 and "<script>alert(1)</script>" not in html, "stored XSS on the job page")
 
+        # ── There is a way IN from the site's own navigation ─────────────────────────────
+        # Careers, the forum and the rooms were each built complete and linked from nowhere: the
+        # primary nav went Today's Challenge → Challenge Library → Writing → Passport → About. A
+        # visitor could only reach any of them by already knowing the URL. The link is conditional
+        # on the flag, because with the flag off the route 404s and a nav item pointing at a 404
+        # reads as a broken site rather than as a feature that has not launched.
+        code, raw = req("GET", "/world")
+        home = raw.decode(errors="replace")
+        chk("C73 with careers enabled the World nav offers a way in",
+            code == 200 and '/world/careers' in home, "no careers link in the primary nav")
+
         # ── The flag really is a kill switch ─────────────────────────────────────────────
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_careers_enabled','0')")
         code, _ = js(f"/api/world/careers/postings/{JOB2}/applications", "GET", None, BOSS)
         chk("C51 turning the flag off closes the surface again", code == 404, f"got {code}")
         rows = sql("SELECT COUNT(*) FROM pciworld_applications")[0][0]
         chk("C52 and touches no existing rows", rows >= 2, str(rows))
+        code, raw = req("GET", "/world")
+        chk("C74 and the nav stops advertising it — a link to a 404 reads as a broken site",
+            code == 200 and "/world/careers" not in raw.decode(errors="replace"),
+            "careers still linked with the flag off")
 
     finally:
         shutdown()
