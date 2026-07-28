@@ -38,6 +38,9 @@ public static class WorldSchema
         // stays gated on the world_community_enabled setting, seeded false. Installed on every boot
         // so the migration-parity gates cover it on both providers.
         CommunitySchema.Ensure(db);
+        // Phase 3 forum. Installed alongside the community tables so both are covered by the same
+        // migration-parity gates; also off by default (pciworld_forum_enabled).
+        ForumSchema.Ensure(db);
     }
 
     static void Tables(Db db)
