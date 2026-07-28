@@ -24,6 +24,32 @@ public static class WorldPages
         "any PCI certification, membership or credential.";
     public const string InstituteLinkLabel = "Visit the Project Controls Institute";
 
+    /// <summary>The share image every PCI World page advertises (Phase 6 / ID-09). One stable
+    /// branded 1200×630 asset that already ships in wwwroot — deliberately NOT a per-artifact
+    /// generator, and never the Passport photograph: a provider's image cache can outlive a
+    /// revoked token, so nothing person-specific may ever be the og:image. The version query
+    /// segment is a cache key: bump it when the asset changes and stale provider caches refetch.</summary>
+    public const string ShareImagePath = "/assets/og-image.jpg?v=1";
+    public const string ShareImageType = "image/jpeg";
+    public const int ShareImageWidth = 1200;
+    public const int ShareImageHeight = 630;
+    public const string ShareImageAlt =
+        "PCI World — a free daily project challenge from the Project Controls Institute.";
+
+    /// <summary>Length control for social metadata. Providers truncate unpredictably past these
+    /// sizes, and an unbounded interpolated string is how a hostile 10 KB display name becomes a
+    /// 10 KB meta tag. Cuts on a word boundary when one exists in the back half, and always
+    /// returns at most <paramref name="max"/> characters including the ellipsis.</summary>
+    public const int MetaTitleMax = 140;
+    public const int MetaDescMax = 300;
+    public static string Clip(string? s, int max)
+    {
+        s = (s ?? "").Trim();
+        if (s.Length <= max) return s;
+        var cut = s.LastIndexOf(' ', max - 1);
+        return s[..(cut > max / 2 ? cut : max - 1)].TrimEnd() + "…";
+    }
+
     public static string E(string? s) => WebUtility.HtmlEncode(s ?? "");
 
     /// <summary>Marks the nav item for the page being viewed. aria-current is the accessible signal;
@@ -528,11 +554,24 @@ public static class WorldPages
         """;
 
     /// <summary>Every PCI World page: institute link in header and footer, operated-by disclosure,
-    /// unique title/description, canonical, Open Graph.</summary>
+    /// unique title/description, canonical, and the full Open Graph / Twitter card set.
+    ///
+    /// The canonical and og:url are THIS page's own absolute address (ID-09): a token-specific
+    /// Passport or result must never advertise the World homepage as its canonical, or every share
+    /// card unfurls as the homepage. The base comes from WorldUrl.Base() with no request — operator
+    /// configuration or the compiled canonical constant, NEVER the request Host header, which is
+    /// attacker-supplied on every request and would let a forged Host poison the canonical a cache
+    /// or crawler stores. Everything interpolated into the head is HTML-encoded and
+    /// length-controlled; callers are responsible for passing only fields that are public for the
+    /// artifact being rendered (see PublicPassport / PublicResult).</summary>
     public static string Layout(Db db, string title, string metaDesc, string body,
         string canonicalPath, string? ogTitle = null, string? ogDesc = null, bool noindex = false)
     {
         var inst = E(InstituteUrl(db));
+        var pageUrl = WorldUrl.Base() + canonicalPath;
+        var image = WorldUrl.Base() + ShareImagePath;
+        var shareTitle = Clip(ogTitle ?? title, MetaTitleMax);
+        var shareDesc = Clip(ogDesc ?? metaDesc, MetaDescMax);
         return $"""
             <!doctype html>
             <html lang="en">
@@ -542,23 +581,31 @@ public static class WorldPages
             <meta name="color-scheme" content="light only">
             <meta name="theme-color" content="#0E1525">
             <title>{E(title)}</title>
-            <meta name="description" content="{E(metaDesc)}">
+            <meta name="description" content="{E(Clip(metaDesc, MetaDescMax))}">
             {(noindex
                 ? "<meta name=\"robots\" content=\"noindex, nofollow\">"
                 // Being explicit on indexable pages is worth the line: it authorises a large image
                 // preview and a full snippet, which the default leaves to each engine's guess.
                 : "<meta name=\"robots\" content=\"index, follow, max-image-preview:large, max-snippet:-1\">")}
-            <link rel="canonical" href="{E(WorldUrl.Base() + canonicalPath)}">
+            <link rel="canonical" href="{E(pageUrl)}">
             <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E1525%27/%3E%3Crect x=%2712%27 y=%2744%27 width=%2740%27 height=%274%27 rx=%272%27 fill=%27%23C13329%27/%3E%3Ctext x=%2732%27 y=%2738%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2722%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPW%3C/text%3E%3C/svg%3E">
             <meta property="og:site_name" content="PCI World">
-            <meta property="og:title" content="{E(ogTitle ?? title)}">
-            <meta property="og:description" content="{E(ogDesc ?? metaDesc)}">
+            <meta property="og:title" content="{E(shareTitle)}">
+            <meta property="og:description" content="{E(shareDesc)}">
             <meta property="og:type" content="website">
-            <meta property="og:url" content="{E(WorldUrl.Base() + canonicalPath)}">
+            <meta property="og:url" content="{E(pageUrl)}">
             <meta property="og:locale" content="en">
-            <meta name="twitter:card" content="summary">
-            <meta name="twitter:title" content="{E(ogTitle ?? title)}">
-            <meta name="twitter:description" content="{E(ogDesc ?? metaDesc)}">
+            <meta property="og:image" content="{E(image)}">
+            <meta property="og:image:secure_url" content="{E(image)}">
+            <meta property="og:image:type" content="{ShareImageType}">
+            <meta property="og:image:width" content="{ShareImageWidth}">
+            <meta property="og:image:height" content="{ShareImageHeight}">
+            <meta property="og:image:alt" content="{E(ShareImageAlt)}">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="{E(shareTitle)}">
+            <meta name="twitter:description" content="{E(shareDesc)}">
+            <meta name="twitter:image" content="{E(image)}">
+            <meta name="twitter:image:alt" content="{E(ShareImageAlt)}">
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             {FontLoader}
@@ -1261,7 +1308,14 @@ public static class WorldPages
             "/world/about");
     }
 
-    public static string PublicResult(Db db, Dictionary<string, object?> attempt, Dictionary<string, object?> version)
+    /// <summary>Public shared result. The og/twitter metadata derives ONLY from what this page
+    /// already shows to anyone holding the link: the display name the participant chose at share
+    /// time (or the anonymous fallback) and the published challenge title/share line. Scores,
+    /// dimensions and dates stay out of the metadata. Pass <paramref name="token"/> so the page
+    /// advertises its OWN address as canonical/og:url (ID-09); without it the metadata falls back
+    /// to the homepage path rather than guessing from the request.</summary>
+    public static string PublicResult(Db db, Dictionary<string, object?> attempt, Dictionary<string, object?> version,
+        string? token = null)
     {
         var name = H.Str(attempt["display_name"]);
         var who = string.IsNullOrWhiteSpace(name) ? "A PCI World participant" : name!;
@@ -1304,7 +1358,7 @@ public static class WorldPages
             <p><a class="btn" href="/world">Take today&rsquo;s challenge yourself</a></p>
             <p class="notice">This page shows a verified practice result. Participant answers are never published. {E(PracticeNotice)}</p>
             """,
-            "/world",
+            string.IsNullOrEmpty(token) ? "/world" : "/world/r/" + Uri.EscapeDataString(token),
             ogTitle: $"{who} — {title} — PCI World Challenge",
             ogDesc: share.Length > 0 ? share : $"Verified PCI World challenge result: {title}.",
             // A shared result is for the person the participant sent it to, not for a search index.
@@ -1509,9 +1563,15 @@ public static class WorldPages
             <p><a class="btn" href="/world">Take today&rsquo;s challenge yourself</a></p>
             <p class="notice">This Passport shows verified practice evidence its owner chose to publish. Answers are never shown, and nothing here ranks or compares people. {E(PracticeNotice)}</p>
             """,
-            "/world",
+            // The Passport's own opaque address is its canonical and og:url (ID-09) — a share card
+            // for this Passport must unfurl as this Passport, not as the World homepage. The og
+            // metadata carries ONLY always-public fields: the owner's chosen display name and the
+            // whole-history counts already printed on the cover. Disclosure-gated fields (scores,
+            // profiles, dates) and the photograph never reach a meta tag — og tags are served to
+            // anyone who fetches the URL, and a provider cache can outlive the token.
+            string.IsNullOrEmpty(token) ? "/world" : "/world/p/" + Uri.EscapeDataString(token),
             ogTitle: $"{name} — PCI World Passport",
-            ogDesc: $"Verified virtual project experience: {rows.Count} completed PCI World challenges.",
+            ogDesc: $"Verified virtual project experience: {completedTotal} completed PCI World challenge{(completedTotal == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
             // Same reasoning as a shared result: the Passport token is revocable and rotatable, and
             // a search index would outlive both. Sharing the link still works everywhere.
             noindex: true);
@@ -2454,6 +2514,9 @@ public static class WorldPages
             <p><a class="btn" href="/world/challenge/{E(code)}?i={E(token)}">Accept the challenge</a></p>
             <p class="notice">You will play the exact same version of this challenge. Their answers are not shown to you — or yours to them; only completed scores are ever compared. {E(PracticeNotice)}</p>
             """,
-            "/world", noindex: true);
+            // The invitation's own opaque address (ID-09): its share card must unfurl as this
+            // invitation. Metadata carries only what the page shows anyone: the inviter's chosen
+            // name (or "Someone") and the published challenge title — never a score or an answer.
+            "/world/i/" + Uri.EscapeDataString(token), noindex: true);
     }
 }
