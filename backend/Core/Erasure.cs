@@ -42,6 +42,16 @@ public static class Erasure
         try { db.Execute("UPDATE issued_credentials SET holder_name='(erased)' WHERE user_id=?", userId); } catch { }
 
         // 4. Anonymise the account itself and lock it out permanently.
+        //
+        // Retire the Student Number BEFORE clearing it. Clearing alone used to make the value
+        // reusable: nothing recorded that it had ever been issued, so a later backfill or a new
+        // account could be handed an erased person's public identifier — and every certificate,
+        // Passport and printed badge already carrying that number would then point at somebody
+        // else. Retiring keeps the reservation forever while releasing the person.
+        var erasedNumber = db.Scalar<string>("SELECT registration_no FROM users WHERE id=?", userId);
+        try { StudentNumberBackfill.Retire(db, erasedNumber, "erasure", null, null); }
+        catch { /* never let the ledger write block an erasure the person is entitled to */ }
+
         var pseudoEmail = $"erased-{userId}@deleted.invalid";
         db.Execute(@"UPDATE users SET first_name='Erased', last_name='User', email=?, registration_no=NULL,
             password_hash=?, status='erased', two_factor_enabled=0, totp_secret=NULL, totp_last_step=NULL,

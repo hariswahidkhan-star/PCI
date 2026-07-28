@@ -41,7 +41,7 @@ account, wrong number, blocked journey; P2 = partial workflow; P3 = cosmetic.
 | ID-03 | `Endpoints/Account.cs` | Signup created `users` + `student_profiles` with **no number and no transaction** | P1 | `CreateStudent` did two unwrapped inserts and returned | Account creation predates the number | **Fixed** (single transaction, issues in-band) |
 | ID-04 | `schema.sql` / `schema.mysql.sql` | `users.registration_no` nullable `TEXT`, **no uniqueness** | P0 (collision risk) | `grep registration_no schema*.sql`; no index anywhere in `Migrate.cs` | Column added additively, constraint never followed | **Partly fixed** — guarded unique index added; type narrowing deferred to Phase 2 |
 | ID-05 | `Endpoints/Books.cs` | Watermarked the internal `users.id` on distributable PDFs, labelled "PCI Student ID" | P2 | Line ~204, `$"… | PCI Student ID: {u.Id:D6} | …"` | Written before a public number existed | **Fixed** (uses the canonical number, or omits it) |
-| ID-06 | `Core/Erasure.cs` | Erasure clears `registration_no`, making the number **reusable** | P0 | `UPDATE users SET … registration_no=NULL` | No reservation ledger existed | **Mitigated** — the registry now retains the reservation permanently (E1/E2). The erasure endpoint itself still needs the explicit retire transition: Phase 2 |
+| ID-06 | `Core/Erasure.cs` | Erasure clears `registration_no`, making the number **reusable** | P0 | `UPDATE users SET … registration_no=NULL` | No reservation ledger existed | **Fixed** (Phase 2) — erasure retires the reservation *before* clearing the projection, and retiring an unrecorded historic number creates its reservation rather than leaving it unclaimed. Evidence G1–G3 |
 | ID-07 | 6 production paths wrote `users` directly | payment, admin-created, honorary, partner, World-canonical, self-signup — any could create a numberless student | P1 | `grep -rn "INSERT INTO users" --include=*.cs` | No central account service | **Fixed** — all six now call the one issuer |
 | ID-08 | `Endpoints/WorldAccount.cs` | Canonical-mapping failure is caught and registration continues → split identity | P1 | `try { WorldIdentity.MapOne(db, id); } catch { }` in `Register` | Defensive catch added to avoid breaking signup — it broke it instead | **Fixed** (Phase 1b; xUnit `WorldIdentityLinkTests`, CI-gated) |
 | ID-09 | `Core/WorldPages.cs` | Token-specific Passport/result pages advertise `/world` as canonical and `og:url` | P2 | Layout passes a fixed `/world` path | Metadata written for the homepage first | **Open — Phase 6** |
@@ -124,9 +124,39 @@ Evidence: `tests/PCI.Backend.Tests/WorldIdentityLinkTests.cs`, 5 facts, **CI-gat
 The rollback fact is SQLite-only and says why: its forcing function is DDL, which implicitly commits
 on MySQL and would leak into TestEnv's shared template.
 
+## 4b. Phase 2 (part 1) — backfill, reconciliation, retirement
+
+`Core/StudentNumberBackfill.cs`, plus `Endpoints/AdminIdentity.cs` and a new `identity` permission
+group. The ordering is the design: uniqueness cannot be enforced until the data is clean, and the
+data cannot be cleaned until somebody can see what is in it.
+
+- `Health` — counts only, never people. An operator diagnosing the estate does not need member
+  records to do it. Includes registry drift **in both directions** and `projection_index_eligible`,
+  which is the same predicate `Migrate` uses, so an operator can see whether the next boot will pick
+  the uniqueness index up.
+- `Preview` — returns the number that *would* be issued for each account, including whether it would
+  collide, and writes nothing. Verified as writing nothing (A3/A4), not merely asserted.
+- `Run` — resumable and idempotent *by construction*, not bookkeeping: it selects rows that still
+  lack a number, so restarting resumes and re-running after completion selects nothing. Each account
+  is its own transaction, so one collision quarantines that account and the batch carries on rather
+  than one bad row rolling back thousands of good ones.
+- `Retire` — the fix for ID-06, wired into `Erasure.cs` *before* the column is cleared.
+
+Permissions: `id_read`, `id_backfill`, `id_merge_request`, `id_merge_approve`, `id_audit`, in a group
+deliberately outside every named role bundle (owner excepted) — the `operations` pattern. Merge is
+split so maker-checker is enforced by the permission model itself, not a convention in a handler.
+There is **no issue permission**: a number an operator can type is a number an operator can collide.
+
+Evidence: `tests/student_number_backfill_test.py`, **24/24** against real SQLite — preview writes
+nothing; admin and erased accounts are never issued numbers; batch/resume/no-op; a collision
+quarantines one account and leaves it numberless rather than wrong; valid and malformed historic
+values both preserved; erasure retires and cannot be re-reserved; drift detected both directions.
+
 ## 5. Next, in order
 
-1. **Phase 2** — backfill and cutover: dry-run counts, quarantine duplicates, resumable batches,
+1. **Phase 2 (part 2)** — narrow `registration_no` to bounded VARCHAR once `duplicate_numbers` is 0,
+   then delete the `/api/me` backstop. Both are gated on a clean `Health` report, not on a date.
+2. **Phase 2 (part 3)** — the maker-checker merge workflow (`id_merge_request`/`id_merge_approve`): dry-run counts, quarantine duplicates, resumable batches,
    reconcile registry against projection, narrow `registration_no` to bounded VARCHAR, add the
    explicit retire transition to `Erasure.cs`, then delete the `/api/me` backstop.
 3. **Phase 3+** — handoff symmetry, shared Passport, verification, events, sharing.

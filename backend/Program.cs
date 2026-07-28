@@ -1551,6 +1551,7 @@ PCI.Backend.Endpoints.StudentExam.Map(app, db, logFn);
 PCI.Backend.Endpoints.ExamClient.Map(app, db, logFn);
 PCI.Backend.Endpoints.AdminProctoring.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.AdminStudents.Map(app, db, logFn, GateFn);
+PCI.Backend.Endpoints.AdminIdentity.Map(app, db, logFn, GateFn);       // Student Number health, backfill, reconciliation
 PCI.Backend.Endpoints.ExamExceptions.Map(app, db, logFn, GateFn);
 PCI.Backend.Endpoints.Public.Map(app, db, logFn);
 PCI.Backend.Endpoints.Account.Map(app, db, logFn);
