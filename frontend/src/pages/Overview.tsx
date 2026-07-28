@@ -8,6 +8,7 @@ import { Card, Stat, StatusBadge, Spinner, Badge } from '../components/ui'
 import Ring from '../components/Ring'
 import CountUp from '../components/CountUp'
 import ConsentsNotice from '../components/ConsentsNotice'
+import WorldPassportSection from './WorldPassportSection'
 import { fmtDate, titleCase, isPast } from '../format'
 import type { Lifecycle, Me } from '../api/types'
 
@@ -246,6 +247,8 @@ export default function Overview() {
 
         </Card>
       )}
+
+      <WorldPassportSection />
 
       <WorldCard />
 

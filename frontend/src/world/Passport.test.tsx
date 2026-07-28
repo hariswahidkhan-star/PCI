@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import Passport from './Passport'
 
 // The Passport manager's client contract: paged evidence appends without double counting,
@@ -45,7 +45,9 @@ describe('World Passport manager', () => {
     fireEvent.click(screen.getByText('Load older evidence'))
     await screen.findByText(/showing 4 of 4/)
     expect(calls.some(c => c.url === '/api/world/passport?offset=2')).toBe(true)
-    expect(screen.getAllByText(/Challenge \d/)).toHaveLength(4)
+    // scope to the evidence list — the shared summary band above also previews top highlights
+    const evidence = screen.getByText(/Evidence ·/).closest('.card') as HTMLElement
+    expect(within(evidence).getAllByText(/Challenge \d/)).toHaveLength(4)
     expect(screen.queryByText('Load older evidence')).toBeNull()
   })
 
