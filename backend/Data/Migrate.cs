@@ -181,6 +181,13 @@ public static class Migrate
             status TEXT DEFAULT 'registered',registered_at TEXT DEFAULT (datetime('now')),attended_at TEXT,cpd_entry_id INTEGER)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_event_reg ON event_registrations(event_id,user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_event_reg_user ON event_registrations(user_id)");
+        // ID-12 (exactly-once CPD): the CPD entry auto-credited for event attendance records its source
+        // event, and a guarded unique index makes a second credit for the same (event, user) impossible
+        // at the data layer — not merely in handler logic. Partial (WHERE) so ordinary member-logged CPD
+        // rows (NULL source_event_id) are exempt; Db.Translate strips the predicate for MySQL, where a
+        // composite UNIQUE already exempts NULL-bearing rows natively.
+        AddCol("cpd_entries", "source_event_id", "source_event_id INTEGER");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cpd_event_user ON cpd_entries(source_event_id,user_id) WHERE source_event_id IS NOT NULL");
         // Careers / job board. employment_type: full_time|part_time|contract|internship|temporary.
         // remote_type: onsite|remote|hybrid. apply_method: inplatform|url|email. status: draft|published|closed.
         db.Exec(@"CREATE TABLE IF NOT EXISTS job_postings(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,organisation TEXT,location TEXT,

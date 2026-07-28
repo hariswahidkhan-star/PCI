@@ -7,7 +7,17 @@ namespace PCI.Backend.Endpoints;
 /// Member events &amp; webinars (CPD-earning). Members browse published upcoming events and register; admins
 /// create/manage events and mark attendance. Marking a registrant "attended" credits their CPD with an
 /// APPROVED entry for the event's cpd_hours in its cpd_category — so events feed straight into the CPD
-/// framework and recertification. Idempotent: a second attendance mark never double-credits.
+/// framework and recertification.
+///
+/// Hardened against the Phase-0 event defects:
+///  • ID-10 — the final-seat decision is a transaction whose write re-checks the seat count in the SAME
+///    statement (atomic guard), so two concurrent requests for the last seat cannot both succeed; and
+///    only genuinely upcoming events are listed/registerable (past published events are closed).
+///  • ID-11 — admin surfaces use granular events_* permissions (legacy 'content' still accepted during
+///    migration), and a cancelled registration can never be marked attended.
+///  • ID-12 — the attendance flip and the CPD credit commit or roll back together, the credited entry
+///    records its source event, and a unique index on (source_event_id,user_id) makes a duplicate
+///    credit impossible at the data layer.
 /// </summary>
 public static class Events
 {
@@ -17,13 +27,40 @@ public static class Events
         IResult J(object o) => Results.Json(o);
         UserCtx? User(HttpRequest r) => Auth.UserFromReq(r, db);
 
+        // ID-11: granular event permissions (events_read / events_manage / events_checkin /
+        // events_attendance) with a migration fallback — an admin holding the legacy broad 'content'
+        // permission keeps access, so no existing operator is locked out while grants move over.
+        // GateFn stays the single authorisation door (401/403 shapes, owner override); this wrapper
+        // only chooses which of the two acceptable sections to present it with.
+        IResult EventsGate(HttpRequest req, string perm, Func<AdminCtx, IResult> ok)
+        {
+            var a = Auth.AdminFromReq(req, db);
+            var section = a is not null && !a.IsOwner && !a.Perms.Contains(perm) && a.Perms.Contains("content")
+                ? "content" : perm;
+            return gate(req, section, ok);
+        }
+
+        // ID-10: only genuinely upcoming events are listed. The comparison is deliberately on the
+        // 10-char date prefix: starts_at is admin-entered and may be 'YYYY-MM-DD',
+        // 'YYYY-MM-DD HH:MM:SS' or 'YYYY-MM-DDTHH:MM', and a full-string compare against
+        // datetime('now') is off-by-up-to-a-day for the 'T' form (' ' 0x20 < 'T' 0x54). The date
+        // prefix is identical across all three forms and both providers. An event stays visible and
+        // registerable throughout its start day; NULL/blank starts_at means "undated" and is kept.
+        const string Upcoming = "(starts_at IS NULL OR starts_at='' OR substr(starts_at,1,10) >= date('now'))";
+
+        // The same rule for a single already-fetched row (the register endpoint), so a past event
+        // refuses direct POSTs too, not only disappears from the list.
+        static bool IsPastEvent(string? startsAt) =>
+            !string.IsNullOrEmpty(startsAt) && startsAt.Length >= 10 &&
+            string.CompareOrdinal(startsAt[..10], DateTime.UtcNow.ToString("yyyy-MM-dd")) < 0;
+
         // ─────────────────────────── STUDENT ───────────────────────────
-        // Published events (upcoming first), each annotated with the caller's registration state + seats left.
+        // Published upcoming events (soonest first), each annotated with the caller's registration state + seats left.
         app.MapGet("/api/me/events", (HttpContext ctx) =>
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
             var rows = db.Query(@"SELECT id,title,summary,event_type,starts_at,ends_at,timezone,location,join_url,capacity,cpd_hours,cpd_category,status
-                FROM events WHERE status='published' ORDER BY (starts_at IS NULL), starts_at ASC, id DESC");
+                FROM events WHERE status='published' AND " + Upcoming + " ORDER BY (starts_at IS NULL), starts_at ASC, id DESC");
             var outRows = rows.Select(e =>
             {
                 var eid = H.L(e["id"]);
@@ -46,19 +83,43 @@ public static class Events
         app.MapPost("/api/me/events/{id}/register", (HttpContext ctx, long id) =>
         {
             var u = User(ctx.Request); if (u is null) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var e = db.QueryOne("SELECT id,capacity,status FROM events WHERE id=?", id);
+            var e = db.QueryOne("SELECT id,capacity,status,starts_at FROM events WHERE id=?", id);
             if (e is null || H.Str(e["status"]) != "published") return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var existing = db.QueryOne("SELECT id,status FROM event_registrations WHERE event_id=? AND user_id=?", id, u.Id);
-            if (existing is not null && H.Str(existing["status"]) is "registered" or "attended")
-                return J(new { ok = true, already = true });
+            // ID-10: a past event refuses registration even by direct POST (the list already hides it).
+            if (IsPastEvent(H.Str(e["starts_at"])))
+                return Results.Json(new { error = "event_past", message = "This event has already taken place." }, statusCode: 409);
             var cap = H.L(e["capacity"]);
-            if (cap > 0)
+            var already = false; var full = false;
+            // ID-10: the whole seat decision runs in one transaction, and the write itself re-checks
+            // the seat count in the same statement — so of two concurrent requests for the final seat
+            // exactly one confirms and the other is told the event is full. The seat count is read via
+            // a derived table so the guarded UPDATE stays legal on MySQL (error 1093) as well as SQLite.
+            const string SeatGuard =
+                "(SELECT COUNT(*) FROM (SELECT 1 FROM event_registrations r2 WHERE r2.event_id=? AND r2.status IN ('registered','attended')) taken) < ?";
+            db.Transaction(() =>
             {
-                var taken = db.Scalar<long>("SELECT COUNT(*) FROM event_registrations WHERE event_id=? AND status IN ('registered','attended')", id);
-                if (taken >= cap) return Results.Json(new { error = "full", message = "This event is fully booked." }, statusCode: 409);
-            }
-            if (existing is not null) db.Execute("UPDATE event_registrations SET status='registered', registered_at=datetime('now') WHERE id=?", existing["id"]);
-            else db.Execute("INSERT INTO event_registrations(event_id,user_id,status) VALUES(?,?, 'registered')", id, u.Id);
+                var existing = db.QueryOne("SELECT id,status FROM event_registrations WHERE event_id=? AND user_id=?", id, u.Id);
+                if (existing is not null && H.Str(existing["status"]) is "registered" or "attended") { already = true; return; }
+                if (cap > 0)
+                {
+                    long changes;
+                    if (existing is not null)
+                        changes = db.ExecuteWithChanges(
+                            "UPDATE event_registrations SET status='registered', registered_at=datetime('now') WHERE id=? AND " + SeatGuard,
+                            existing["id"], id, cap).changes;
+                    else
+                        changes = db.ExecuteWithChanges(
+                            "INSERT INTO event_registrations(event_id,user_id,status) SELECT ?,?, 'registered' FROM events e2 WHERE e2.id=? AND " + SeatGuard,
+                            id, u.Id, id, id, cap).changes;
+                    if (changes == 0) full = true;
+                }
+                else if (existing is not null)
+                    db.Execute("UPDATE event_registrations SET status='registered', registered_at=datetime('now') WHERE id=?", existing["id"]);
+                else
+                    db.Execute("INSERT INTO event_registrations(event_id,user_id,status) VALUES(?,?, 'registered')", id, u.Id);
+            });
+            if (already) return J(new { ok = true, already = true });
+            if (full) return Results.Json(new { error = "full", message = "This event is fully booked." }, statusCode: 409);
             log(u.Id, "event_register", id.ToString());
             return J(new { ok = true });
         });
@@ -74,14 +135,14 @@ public static class Events
             return J(new { ok = true });
         });
 
-        // ─────────────────────────── ADMIN (gated: content) ───────────────────────────
-        app.MapGet("/api/admin/events", (HttpContext ctx) => gate(ctx.Request, "content", _ =>
+        // ─────────────── ADMIN (gated: granular events_*; legacy 'content' accepted) ───────────────
+        app.MapGet("/api/admin/events", (HttpContext ctx) => EventsGate(ctx.Request, "events_read", _ =>
             J(new { rows = db.Query(@"SELECT e.*, (SELECT COUNT(*) FROM event_registrations r WHERE r.event_id=e.id AND r.status IN ('registered','attended')) registrations,
                 (SELECT COUNT(*) FROM event_registrations r WHERE r.event_id=e.id AND r.status='attended') attended
                 FROM events e ORDER BY (e.starts_at IS NULL), e.starts_at DESC, e.id DESC LIMIT 300") })));
 
         // Create or update (id present → update). Whitelisted fields only.
-        app.MapPost("/api/admin/events", (HttpContext ctx) => gate(ctx.Request, "content", adm =>
+        app.MapPost("/api/admin/events", (HttpContext ctx) => EventsGate(ctx.Request, "events_manage", adm =>
         {
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var title = (H.GetS(b, "title") ?? "").Trim();
@@ -111,13 +172,16 @@ public static class Events
             return J(new { ok = true, id = newId });
         }));
 
-        app.MapGet("/api/admin/events/{id}/registrations", (HttpContext ctx, long id) => gate(ctx.Request, "content", _ =>
+        app.MapGet("/api/admin/events/{id}/registrations", (HttpContext ctx, long id) => EventsGate(ctx.Request, "events_checkin", _ =>
             J(new { rows = db.Query(@"SELECT r.id,r.user_id,r.status,r.registered_at,r.attended_at,u.email,u.first_name,u.last_name
                 FROM event_registrations r LEFT JOIN users u ON u.id=r.user_id WHERE r.event_id=? ORDER BY r.id DESC", id) })));
 
-        // Mark (or unmark) attendance. Marking attended credits an APPROVED CPD entry for the event's hours,
-        // once — a second call is idempotent (the linked cpd_entry_id guards against double-crediting).
-        app.MapPost("/api/admin/events/{id}/attendance", (HttpContext ctx, long id) => gate(ctx.Request, "content", adm =>
+        // Mark (or unmark) attendance. Marking attended credits an APPROVED CPD entry for the event's
+        // hours exactly once (ID-12): the credit and the attendance flip share one transaction, the
+        // entry records its source event, and ux_cpd_event_user makes a second credit for the same
+        // (event, user) impossible even across a crash/retry. A cancelled registration is never
+        // attendable (ID-11) — the member must re-register first.
+        app.MapPost("/api/admin/events/{id}/attendance", (HttpContext ctx, long id) => EventsGate(ctx.Request, "events_attendance", adm =>
         {
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var uid = (long)(H.GetNum(b, "user_id") ?? 0);
@@ -129,27 +193,54 @@ public static class Events
 
             if (attended)
             {
-                if (H.Str(reg["status"]) == "attended") return J(new { ok = true, already = true });   // idempotent
-                long? cpdId = H.Ln(reg["cpd_entry_id"]);
-                var hours = H.D(ev["cpd_hours"]);
-                if (cpdId is null && hours > 0)
+                // ID-11: a cancelled registration holds no seat and earns no CPD.
+                if (H.Str(reg["status"]) == "cancelled")
+                    return Results.Json(new { error = "cancelled", message = "This registration was cancelled; the member must register again before attendance can be recorded." }, statusCode: 409);
+                var already = false;
+                db.Transaction(() =>
                 {
-                    var date = (H.Str(ev["starts_at"]) ?? DateTime.UtcNow.ToString("yyyy-MM-dd"));
-                    if (date.Length >= 10) date = date[..10];
-                    cpdId = db.ExecuteReturningId(@"INSERT INTO cpd_entries(user_id,activity_date,category,hours,description,status,reviewed_by,reviewed_at)
-                        VALUES(?,?,?,?,?, 'approved', ?, datetime('now'))",
-                        uid, date, H.Str(ev["cpd_category"]) ?? "Events & webinars", hours,
-                        "Attended: " + (H.Str(ev["title"]) ?? "PCI event"), adm.Id);
-                }
-                db.Execute("UPDATE event_registrations SET status='attended', attended_at=datetime('now'), cpd_entry_id=? WHERE id=?", cpdId, reg["id"]);
+                    // Re-read inside the transaction so two concurrent marks stay exactly-once.
+                    var r2 = db.QueryOne("SELECT id,status,cpd_entry_id FROM event_registrations WHERE id=?", reg["id"]);
+                    if (r2 is null || H.Str(r2["status"]) == "attended") { already = true; return; }
+                    long? cpdId = H.Ln(r2["cpd_entry_id"]);
+                    var hours = H.D(ev["cpd_hours"]);
+                    if (cpdId is null && hours > 0)
+                    {
+                        // Exactly-once: adopt an entry an earlier (pre-fix, crashed or retried) call
+                        // already created for this (event, user) rather than inserting a duplicate —
+                        // and if two writers ever raced past this read, ux_cpd_event_user would make
+                        // the second INSERT fail and roll this transaction back whole.
+                        var prior = db.QueryOne("SELECT id FROM cpd_entries WHERE source_event_id=? AND user_id=?", id, uid);
+                        if (prior is not null) cpdId = H.L(prior["id"]);
+                        else
+                        {
+                            var date = (H.Str(ev["starts_at"]) ?? DateTime.UtcNow.ToString("yyyy-MM-dd"));
+                            if (date.Length >= 10) date = date[..10];
+                            cpdId = db.ExecuteReturningId(@"INSERT INTO cpd_entries(user_id,activity_date,category,hours,description,status,reviewed_by,reviewed_at,source_event_id)
+                                VALUES(?,?,?,?,?, 'approved', ?, datetime('now'), ?)",
+                                uid, date, H.Str(ev["cpd_category"]) ?? "Events & webinars", hours,
+                                "Attended: " + (H.Str(ev["title"]) ?? "PCI event"), adm.Id, id);
+                        }
+                    }
+                    db.Execute("UPDATE event_registrations SET status='attended', attended_at=datetime('now'), cpd_entry_id=? WHERE id=?", cpdId, r2["id"]);
+                });
+                if (already) return J(new { ok = true, already = true });   // idempotent
                 log(adm.Id, "event_attended", $"event {id} (+{H.D(ev["cpd_hours"])}h CPD) (subject {uid})");
                 return J(new { ok = true, cpd_hours = H.D(ev["cpd_hours"]) });
             }
             else
             {
-                // Un-mark attendance: revert to registered and remove the auto-credited CPD entry (if any).
-                if (H.Ln(reg["cpd_entry_id"]) is { } cid) db.Execute("DELETE FROM cpd_entries WHERE id=?", cid);
-                db.Execute("UPDATE event_registrations SET status='registered', attended_at=NULL, cpd_entry_id=NULL WHERE id=?", reg["id"]);
+                // Un-mark attendance: only an attended registration reverts (never resurrects a
+                // cancelled one), and the CPD removal + status revert commit together (ID-12).
+                if (H.Str(reg["status"]) != "attended") return J(new { ok = true, already = true });
+                db.Transaction(() =>
+                {
+                    if (H.Ln(reg["cpd_entry_id"]) is { } cid) db.Execute("DELETE FROM cpd_entries WHERE id=?", cid);
+                    // Safety net: also remove any pre-fix orphan credited for this (event, user)
+                    // but never linked (the old non-transactional path could crash between writes).
+                    db.Execute("DELETE FROM cpd_entries WHERE source_event_id=? AND user_id=?", id, uid);
+                    db.Execute("UPDATE event_registrations SET status='registered', attended_at=NULL, cpd_entry_id=NULL WHERE id=?", reg["id"]);
+                });
                 log(adm.Id, "event_attendance_removed", $"event {id} (subject {uid})");
                 return J(new { ok = true });
             }

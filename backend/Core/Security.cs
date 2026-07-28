@@ -324,6 +324,11 @@ public static class Rbac
         // to be a different PERSON from the preparer, so holding all three still cannot self-approve.
         // Like the operations bundle these are owner + explicit-grant only — never implied by a job title.
         ["partner_finance"] = new[]{ "pf_view","pf_agreements","pf_prepare","pf_approve","pf_pay","pf_dispute" },
+        // Member events & webinars (ID-11): granular per-action permissions so viewing the calendar,
+        // creating/editing events, working the door list and marking attendance (which credits CPD)
+        // can be split across operators. The events gate still accepts the legacy broad 'content'
+        // permission during migration, so no existing operator is locked out; new grants use these.
+        ["events"] = new[]{ "events_read","events_manage","events_checkin","events_attendance" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();
