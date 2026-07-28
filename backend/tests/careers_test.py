@@ -400,6 +400,66 @@ def main():
         chk("C50 no candidate score/rank column is written anywhere in the careers code",
             not re.search(r"(match_score|candidate_score|rank_score|ORDER BY\s+score)", src, re.I), "found a ranking seam")
 
+        # ── The crawlable pages, over real HTTP ──────────────────────────────────────────
+        # Unit tests cover the renderer; these cover the WIRING, which is where this kind of route
+        # actually breaks. Structured data is a claim to a search engine, and a stale claim is a lie
+        # that outlives the page — so each assertion is about what a crawler is TOLD.
+        code, r = js(f"/api/world/careers/employers/{EMP}/postings", "GET", None, BOSS)
+        code, r = js(f"/api/world/careers/employers/{EMP}/postings", "POST",
+                     {"title": "Planning Lead", "slug": "planning-lead",
+                      "description": "Run the schedule baseline."}, BOSS)
+        JOB3 = r.get("posting_id")
+
+        code, raw = req("GET", "/world/careers/acme/planning-lead")
+        chk("C60 a DRAFT posting is a public 404, not a 403 — a 403 confirms it exists",
+            code == 404, f"got {code}")
+
+        js(f"/api/world/careers/postings/{JOB3}/publish", "POST", None, BOSS)
+        code, raw = req("GET", "/world/careers/acme/planning-lead")
+        html = raw.decode(errors="replace")
+        chk("C61 a live job page renders", code == 200 and "Planning Lead" in html, f"got {code}")
+        chk("C62 and carries JobPosting structured data", '"JobPosting"' in html, "no JobPosting block")
+        chk("C63 as a complete document a crawler can use",
+            "<!doctype html" in html.lower() and 'rel="canonical"' in html, "not a whole document")
+
+        code, raw = req("GET", "/world-sitemap.xml")
+        sm = raw.decode(errors="replace")
+        chk("C64 the sitemap lists the live job", "/world/careers/acme/planning-lead" in sm, "absent from sitemap")
+
+        js(f"/api/world/careers/postings/{JOB3}/close", "POST", None, BOSS)
+        code, raw = req("GET", "/world/careers/acme/planning-lead")
+        html = raw.decode(errors="replace")
+        chk("C65 a CLOSED job page stays reachable — a saved link should explain itself, not 404",
+            code == 200, f"got {code}")
+        chk("C66 but makes NO machine claim about a job nobody can apply for",
+            '"JobPosting"' not in html, "closed posting still emits JobPosting")
+        chk("C67 and tells crawlers not to index it", "noindex" in html, "closed page is still indexable")
+        code, raw = req("GET", "/world-sitemap.xml")
+        chk("C68 and it leaves the sitemap",
+            "/world/careers/acme/planning-lead" not in raw.decode(errors="replace"), "closed job still in sitemap")
+
+        # Suspension is ONE update, and it must take the whole public surface with it.
+        js(f"/api/world/careers/postings/{JOB3}/publish", "POST", None, BOSS)
+        js(f"/api/world-admin/careers/employers/{EMP}/state", "POST", {"state": "suspended"}, A)
+        code, raw = req("GET", "/world/careers/acme/planning-lead")
+        chk("C69 suspending the employer 404s its job pages", code == 404, f"got {code}")
+        code, raw = req("GET", "/world/employers/acme")
+        chk("C70 and its employer profile", code == 404, f"got {code}")
+        code, raw = req("GET", "/world-sitemap.xml")
+        chk("C71 and removes it from the sitemap with no sweep and no row change",
+            "/world/careers/acme/planning-lead" not in raw.decode(errors="replace"), "suspended job still in sitemap")
+        js(f"/api/world-admin/careers/employers/{EMP}/state", "POST", {"state": "verified"}, A)
+
+        # A hostile title must not break out of the ld+json block. This is the ForumRender bug,
+        # re-checked on the route that actually serves it.
+        code, r = js(f"/api/world/careers/employers/{EMP}/postings", "POST",
+                     {"title": "Planner </script><script>alert(1)</script>", "slug": "hostile"}, BOSS)
+        js(f"/api/world/careers/postings/{r.get('posting_id')}/publish", "POST", None, BOSS)
+        code, raw = req("GET", "/world/careers/acme/hostile")
+        html = raw.decode(errors="replace")
+        chk("C72 a job title containing a script tag cannot escape the JSON-LD block",
+            code == 200 and "<script>alert(1)</script>" not in html, "stored XSS on the job page")
+
         # ── The flag really is a kill switch ─────────────────────────────────────────────
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_careers_enabled','0')")
         code, _ = js(f"/api/world/careers/postings/{JOB2}/applications", "GET", None, BOSS)
