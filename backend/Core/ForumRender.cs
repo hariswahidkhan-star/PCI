@@ -123,7 +123,45 @@ public static class ForumRender
         }
         sb.Append("</ol></article>");
         sb.Append(JsonLd(title, canonical, thread, posts, solved));
-        return sb.ToString();
+        return Document(title, Summary(posts), canonical, sb.ToString());
+    }
+
+    /// <summary>
+    /// Wrap the article in a COMPLETE document.
+    ///
+    /// The first version of this returned a bare fragment, which is a mistake worth naming: a page
+    /// with no &lt;title&gt;, no lang attribute and no canonical is not "crawlable" in any sense
+    /// that matters. A crawler indexes it under whatever it can guess, a screen reader announces an
+    /// untitled document, and axe flags html-has-lang and document-title immediately. Calling the
+    /// fragment a crawlable page would have been the kind of claim that survives review because the
+    /// word "crawlable" appears in a comment next to it.
+    ///
+    /// Self-contained rather than composed into the Institute blog shell: this surface is served by
+    /// World-only deployments too, and inheriting that shell would put navigation to a site those
+    /// deployments do not serve on every forum page.
+    /// </summary>
+    static string Document(string title, string description, string canonical, string body) =>
+        "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"/>"
+        + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>"
+        + $"<title>{Esc(title)} — PCI World forum</title>"
+        + $"<meta name=\"description\" content=\"{Esc(description)}\"/>"
+        + $"<link rel=\"canonical\" href=\"{Esc(canonical)}\"/>"
+        + "<meta name=\"robots\" content=\"index, follow\"/>"
+        + "<link rel=\"stylesheet\" href=\"/assets/world.css\"/>"
+        + "</head><body>"
+        // A skip link: a thread page is mostly a long list, and a keyboard user should not have to
+        // traverse the breadcrumb on every one.
+        + "<a class=\"wf-skip\" href=\"#wf-main\">Skip to the discussion</a>"
+        + "<main id=\"wf-main\">" + body + "</main>"
+        + "</body></html>";
+
+    /// <summary>A meta description drawn from the opening post — the words that actually answer
+    /// "what is this thread about", rather than a generic site line.</summary>
+    static string Summary(List<Dictionary<string, object?>> posts)
+    {
+        var opening = posts.FirstOrDefault(p => H.Str(p["kind"]) == "opening") ?? posts[0];
+        var text = Strip(H.Str(opening["body_rendered"]));
+        return text.Length > 160 ? text[..157].TrimEnd() + "…" : text;
     }
 
     /// <summary>

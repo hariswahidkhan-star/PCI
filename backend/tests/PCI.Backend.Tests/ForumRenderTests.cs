@@ -245,6 +245,55 @@ public class ForumRenderTests
         Assert.DoesNotContain("Original point", html);
     }
 
+    // ── it must be a real document, not a fragment ────────────────────────────────────────────
+
+    [Fact]
+    public void ThePageIsACompleteDocumentWithATitleAndALanguage()
+    {
+        // The first version of the renderer returned a bare fragment. A page with no <title>, no
+        // lang and no canonical is not "crawlable" in any sense that matters — a crawler indexes it
+        // under whatever it can guess, a screen reader announces an untitled document, and axe
+        // flags html-has-lang and document-title on sight.
+        var db = NewDb();
+        var (_, thread) = Thread(db, "t-doc");
+        PostInState(db, thread, "published", "The float on activity B is eight days.", "opening");
+
+        var html = ForumRender.Thread(db, "c-t-doc", "t-doc", "https://world.example")!;
+        Assert.StartsWith("<!DOCTYPE html>", html);
+        Assert.Contains("<html lang=\"en\">", html);
+        Assert.Contains("<title>How do you model SPI recovery? — PCI World forum</title>", html);
+        Assert.Contains("<link rel=\"canonical\" href=\"https://world.example/world/forum/c-t-doc/t-doc\"/>", html);
+        Assert.Contains("<main id=\"wf-main\">", html);
+    }
+
+    [Fact]
+    public void TheMetaDescriptionComesFromTheOpeningPost()
+    {
+        // The words that actually answer "what is this thread about", rather than a generic site
+        // line repeated on every page — which is what search engines discard.
+        var db = NewDb();
+        var (_, thread) = Thread(db, "t-desc");
+        PostInState(db, thread, "published", "Rebaselining after a six-week slip on the piling works.", "opening");
+
+        var html = ForumRender.Thread(db, "c-t-desc", "t-desc")!;
+        Assert.Contains("Rebaselining after a six-week slip", html);
+        Assert.Contains("<meta name=\"description\"", html);
+    }
+
+    [Fact]
+    public void AKeyboardUserCanSkipTheBreadcrumb()
+    {
+        // A thread page is mostly a long list; traversing the breadcrumb on every one is the kind
+        // of small tax that makes a site unusable by keyboard rather than merely annoying.
+        var db = NewDb();
+        var (_, thread) = Thread(db, "t-skip");
+        PostInState(db, thread, "published", "x", "opening");
+
+        var html = ForumRender.Thread(db, "c-t-skip", "t-skip")!;
+        Assert.Contains("href=\"#wf-main\"", html);
+        Assert.Contains("id=\"wf-main\"", html);
+    }
+
     [Fact]
     public void TheTitleIsEscapedRatherThanTrusted()
     {
