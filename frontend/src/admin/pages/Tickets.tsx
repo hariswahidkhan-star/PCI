@@ -2,6 +2,17 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type TicketRow, type TicketDetail } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
+import {
+  PageHeader,
+  Toolbar,
+  SearchInput,
+  FilterSelect,
+  SortHeader,
+  EmptyState,
+  SkeletonTable,
+  Pagination,
+} from '../../components/premium'
+import { useTableControls } from '../../components/useTableControls'
 import { fmtDateTime, titleCase } from '../../format'
 
 const STATUSES = ['open', 'awaiting_student', 'resolved', 'closed']
@@ -80,44 +91,95 @@ function TicketDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
 export default function Tickets() {
   const [status, setStatus] = useState('')
   const [selected, setSelected] = useState<number | null>(null)
+  // Status stays a SERVER-side filter (the endpoint already supports ?status=); search, sort and
+  // pagination run over whatever that returns. Narrowing on the server first keeps the payload
+  // small on a busy queue, and the toolbar reads as one control set either way.
   const { data, loading, error, refetch } = useAdminQuery<{ rows: TicketRow[] }>(`/api/admin/tickets${status ? '?status=' + status : ''}`)
 
+  const rows = data?.rows ?? []
+  const t = useTableControls(rows, {
+    searchKeys: ['reference', 'subject', 'email', 'first_name', 'last_name'],
+    pageSize: 25,
+    initialSort: { key: 'updated_at', dir: 'desc' },
+  })
+
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <h1>Support tickets</h1>
+    <div className="page">
+      <PageHeader
+        eyebrow="Support"
+        title="Support tickets"
+        subtitle="Every request raised from the student portal, newest activity first."
+      />
 
-      <Card>
-        <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 220 }}>
-          <option value="">All statuses</option>
-          {STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
-        </select>
-      </Card>
+      <Toolbar count={t.total !== rows.length ? `${t.total} of ${rows.length} shown` : `${rows.length} ${rows.length === 1 ? 'ticket' : 'tickets'}`}>
+        <SearchInput
+          value={t.query}
+          onChange={t.setQuery}
+          label="Search"
+          placeholder="Search reference, subject or student…"
+        />
+        <FilterSelect
+          label="Status"
+          value={status}
+          onChange={setStatus}
+          allLabel="All statuses"
+          options={STATUSES.map((s) => ({ value: s, label: s.replace(/_/g, ' ') }))}
+        />
+      </Toolbar>
 
-      <Card>
+      <Card className="flat">
         {loading ? (
-          <Spinner />
+          <SkeletonTable rows={6} cols={6} />
         ) : error ? (
           <ErrorNote>{error}</ErrorNote>
-        ) : !data || data.rows.length === 0 ? (
-          <Empty>No tickets match.</Empty>
+        ) : rows.length === 0 ? (
+          <EmptyState
+            icon="life-buoy"
+            title={status ? 'No tickets with this status' : 'No support tickets yet'}
+            detail={
+              status
+                ? 'Nothing is currently in this state — clear the status filter to see the whole queue.'
+                : 'Requests raised from the student portal arrive here, with the full conversation thread.'
+            }
+            action={status ? <button className="btn secondary sm" onClick={() => setStatus('')}>Clear status filter</button> : undefined}
+          />
+        ) : t.total === 0 ? (
+          <EmptyState
+            icon="search"
+            title="No match"
+            detail="No ticket matches the current search."
+            action={<button className="btn secondary sm" onClick={() => t.setQuery('')}>Clear search</button>}
+          />
         ) : (
-          <table className="data">
-            <thead>
-              <tr><th>Reference</th><th>Subject</th><th>Student</th><th>Messages</th><th>Updated</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              {data.rows.map((t) => (
-                <tr key={t.id} {...rowActivate(() => setSelected(t.id))}>
-                  <td className="small muted">{t.reference}</td>
-                  <td><strong>{t.subject || '—'}</strong></td>
-                  <td className="small">{t.email}</td>
-                  <td>{t.msg_count ?? 0}</td>
-                  <td className="small muted">{fmtDateTime(t.updated_at)}</td>
-                  <td><StatusBadge status={t.status} /></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <>
+            <div className="table-scroll">
+              <table className="data">
+                <thead>
+                  <tr>
+                    <SortHeader {...t.sortProps('reference')} onSort={() => t.toggleSort('reference')}>Reference</SortHeader>
+                    <SortHeader {...t.sortProps('subject')} onSort={() => t.toggleSort('subject')}>Subject</SortHeader>
+                    <SortHeader {...t.sortProps('email')} onSort={() => t.toggleSort('email')}>Student</SortHeader>
+                    <SortHeader {...t.sortProps('msg_count')} onSort={() => t.toggleSort('msg_count')}>Messages</SortHeader>
+                    <SortHeader {...t.sortProps('updated_at')} onSort={() => t.toggleSort('updated_at')}>Updated</SortHeader>
+                    <SortHeader {...t.sortProps('status')} onSort={() => t.toggleSort('status')}>Status</SortHeader>
+                  </tr>
+                </thead>
+                <tbody>
+                  {t.rows.map((row) => (
+                    <tr key={row.id} {...rowActivate(() => setSelected(row.id))}>
+                      <td className="small muted">{row.reference}</td>
+                      <td><strong>{row.subject || '—'}</strong></td>
+                      <td className="small">{row.email}</td>
+                      <td>{row.msg_count ?? 0}</td>
+                      <td className="small muted">{fmtDateTime(row.updated_at)}</td>
+                      <td><StatusBadge status={row.status} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination page={t.page} pages={t.pages} total={t.total} pageSize={t.pageSize} onPage={t.setPage} />
+          </>
         )}
       </Card>
 
