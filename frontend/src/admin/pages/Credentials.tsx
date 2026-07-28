@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type CredentialRow, type MemberRow } from '../api'
 import { ApiError } from '../../api/client'
-import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
-import { PageHeader } from '../../components/premium'
+import { Card, StatusBadge, ErrorNote } from '../../components/ui'
+import { PageHeader, Toolbar, SearchInput, FilterSelect, SortHeader, EmptyState, SkeletonTable, Pagination } from '../../components/premium'
+import { useTableControls } from '../../components/useTableControls'
 import { fmtDate, isPast } from '../../format'
 
 function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
@@ -154,6 +155,9 @@ export default function Credentials() {
   if (dq) params.set('q', dq)
   const qs = params.toString()
   const { data, loading, error, refetch } = useAdminQuery<{ rows: CredentialRow[] }>(`/api/admin/credentials${qs ? '?' + qs : ''}`)
+  // Sorting and pagination over the server-filtered page. Issue date descending is the order an
+  // operator expects a registry in — the most recently issued credential is the one in question.
+  const t = useTableControls(data?.rows ?? [], { pageSize: 50, initialSort: { key: 'issued_at', dir: 'desc' } })
 
   async function setCredStatus(c: CredentialRow, s: string) {
     if (s === 'revoked' && !confirm(`Revoke credential ${c.credential_id}?`)) return
@@ -192,32 +196,56 @@ export default function Credentials() {
 
       <CredlyPanel />
 
-      <Card>
-        <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search ID or holder…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 300 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
-            <option value="">All statuses</option>
-            <option value="active">Active</option>
-            <option value="expired">Expired</option>
-            <option value="revoked">Revoked</option>
-          </select>
-        </div>
-      </Card>
+      {/* Search and status are SERVER-side (the endpoint owns ?q= and ?status=); sorting and
+          pagination below run over whatever that returns. */}
+      <Toolbar count={data ? `${data.rows.length} shown` : undefined}>
+        <SearchInput value={q} onChange={setQ} label="Search" placeholder="Search ID or holder…" />
+        <FilterSelect
+          label="Status"
+          value={status}
+          onChange={setStatus}
+          allLabel="All statuses"
+          options={[
+            { value: 'active', label: 'Active' },
+            { value: 'expired', label: 'Expired' },
+            { value: 'revoked', label: 'Revoked' },
+          ]}
+        />
+      </Toolbar>
 
-      <Card>
+      <Card className="flat">
         {loading ? (
-          <Spinner />
+          <SkeletonTable rows={8} cols={6} />
         ) : error ? (
           <ErrorNote>{error}</ErrorNote>
         ) : !data || data.rows.length === 0 ? (
-          <Empty>No credentials match.</Empty>
+          <EmptyState
+            icon="shield-check"
+            title={q || status ? 'No credentials match' : 'No credentials issued yet'}
+            detail={q || status
+              ? 'No credential matches the current search and status.'
+              : 'Credentials appear here as soon as the first one is issued, examined or honorary.'}
+            action={q || status
+              ? <button className="btn secondary sm" onClick={() => { setQ(''); setStatus('') }}>Clear filters</button>
+              : undefined}
+          />
         ) : (
+        <>
+          <div className="table-scroll">
           <table className="data">
             <thead>
-              <tr><th>Credential ID</th><th>Holder</th><th>Type</th><th>Issued</th><th>Expires</th><th>Status</th><th></th></tr>
+              <tr>
+                <SortHeader {...t.sortProps('credential_id')} onSort={() => t.toggleSort('credential_id')}>Credential ID</SortHeader>
+                <SortHeader {...t.sortProps('holder_name')} onSort={() => t.toggleSort('holder_name')}>Holder</SortHeader>
+                <SortHeader {...t.sortProps('credential')} onSort={() => t.toggleSort('credential')}>Type</SortHeader>
+                <SortHeader {...t.sortProps('issued_at')} onSort={() => t.toggleSort('issued_at')}>Issued</SortHeader>
+                <SortHeader {...t.sortProps('expires_at')} onSort={() => t.toggleSort('expires_at')}>Expires</SortHeader>
+                <SortHeader {...t.sortProps('status')} onSort={() => t.toggleSort('status')}>Status</SortHeader>
+                <th aria-label="Row actions" />
+              </tr>
             </thead>
             <tbody>
-              {data.rows.map((c) => {
+              {t.rows.map((c) => {
                 const lapsed = c.status === 'active' && isPast(c.expires_at)
                 return (
                   <tr key={c.id}>
@@ -246,6 +274,9 @@ export default function Credentials() {
               })}
             </tbody>
           </table>
+          </div>
+          <Pagination page={t.page} pages={t.pages} total={t.total} pageSize={t.pageSize} onPage={t.setPage} />
+        </>
         )}
       </Card>
 
