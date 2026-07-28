@@ -121,7 +121,7 @@ def table_bodies(sql):
     A regex that stops at the first "\n)" mis-parses one-line tables (e.g. site_settings): the
     non-greedy match runs past the real close into later tables, silently dropping them from the
     type map — which is how code_redemptions lost its email(191) index prefix."""
-    for m in re.finditer(r"CREATE TABLE(?: IF NOT EXISTS)?\s+(\w+)\s*\(", sql):
+    for m in re.finditer(r"CREATE TABLE(?: IF NOT EXISTS)?\s+`?(\w+)`?\s*\(", sql):
         depth, i = 1, m.end()
         while i < len(sql) and depth > 0:
             ch = sql[i]
