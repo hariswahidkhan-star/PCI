@@ -196,9 +196,29 @@ CI gates 15 logic suites. Render deploy note: a deploy failure surfaced for the 
 posture fails every deploy at health check, exit 78, prior deploy stays live) — resolution is a
 Render env change (managed MySQL, or ALLOW_SQLITE_IN_PRODUCTION=true) that only the operator can make.
 
+## 4f. Wave 4 (this branch)
+
+- **Phase 6 Release-1** — premium share sheet in the World app (LinkedIn/X/Facebook/WhatsApp/
+  Telegram/email/copy/native/QR; focus-trapped, labelled, reduced-motion, clipboard-denied
+  fallback), server-truth caption from PUBLIC fields only (hostile names neutralized — 34/34),
+  capability-honesty footnote, no fake direct-post button, Instagram deliberately absent with a
+  labelled copy-caption path. URL-sharing only; provider APIs and comment sync stay unbuilt by
+  design. One CI-caught test bug fixed (hardcoded unique-indexed id — the wave-1 constraint
+  working as designed).
+- **Phase 5A Release-1** — printable CR80 wallet card + 4×6 badge, exact page boxes, vector text,
+  ECC-M QR ≥0.45mm modules with 4-module quiet zone, refusal matrix (published+unexpired+active+
+  numbered only). Design decision: the raw public token is unrecoverable server-side (hash-only at
+  rest, everywhere), so the printed QR encodes a one-way /world/pd/{hash} route with the identical
+  lifecycle and resolution predicate — unpublish kills every printed QR instantly. 77/77 backend,
+  433/433 vitest. Known limitation: the documents endpoint is MyPCI-bearer-authenticated, so the
+  World app keeps its existing PDF rather than the new sheet. Event admission (entry passes,
+  gates, scanners, offline) is deliberately OUT of the Release-1 slice, stated on the sheet itself.
+
+CI gates 17 logic suites.
+
 ## 5. Next, in order
 
-1. **Phase 5A** — printable Passport wallet/badge PDFs + event admission passes: dry-run counts, quarantine duplicates, resumable batches,
+1. Acceptance sweep against spec §20 → `IDENTITY_ACCEPTANCE.md`: dry-run counts, quarantine duplicates, resumable batches,
    reconcile registry against projection, narrow `registration_no` to bounded VARCHAR, add the
    explicit retire transition to `Erasure.cs`, then delete the `/api/me` backstop.
 3. **Phase 3+** — handoff symmetry, shared Passport, verification, events, sharing.
