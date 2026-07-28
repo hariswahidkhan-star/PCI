@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote } from '../components/ui'
+import { PageHeader } from '../components/premium'
 import Ring from '../components/Ring'
 import RepeaterSection from '../components/RepeaterSection'
 import { EXPERIENCE_FIELDS, QUALIFICATION_FIELDS, HELD_CERT_FIELDS, monthsCovered } from '../data/wizardFields'
@@ -59,17 +60,13 @@ export default function Profile() {
   }
 
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <h1>{t('prof.title')}</h1>
-          <p className="muted" style={{ marginBottom: 0 }}>
-            {t('prof.subtitle')}{' '}
-            <Link to="/onboarding">{t('prof.runGuidedSetup')}</Link>
-          </p>
-        </div>
-        <Ring value={completion} label={t('prof.complete')} />
-      </div>
+    <div className="page fade-stagger">
+      <PageHeader
+        eyebrow={t('nav.profile')}
+        title={t('prof.title')}
+        subtitle={<>{t('prof.subtitle')}{' '}<Link to="/onboarding">{t('prof.runGuidedSetup')}</Link></>}
+        actions={<Ring value={completion} label={t('prof.complete')} />}
+      />
 
       <Card title={t('prof.account')}>
         <div className="grid cols-2 small">

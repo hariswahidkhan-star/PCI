@@ -3,6 +3,7 @@ import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../componen
 import { fmtDate, isPast, daysUntil } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 import type { Credential } from '../api/types'
 
 export default function Credentials() {
@@ -70,11 +71,8 @@ export default function Credentials() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>{t('cred.title')}</h1>
-        <p className="muted">{t('cred.subtitle')}</p>
-      </div>
+    <div className="page">
+      <PageHeader eyebrow={t('nav.credentials')} title={t('cred.title')} subtitle={t('cred.subtitle')} />
 
       {/* Honorary recognition is deliberately separate from exam-earned credentials: it is a
           board-conferred designation, not an examined certification credential. */}

@@ -11,6 +11,7 @@ import { studentToken } from '../files'
 import { fmtDate, fmtMoney, titleCase } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 import type { Payment, Me } from '../api/types'
 
 interface PriceBlock {
@@ -460,11 +461,8 @@ export default function Billing() {
   const currency = paid[0]?.currency || 'USD'
 
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>{t('billing.title')}</h1>
-        <p className="muted">{t('billing.subtitle')}</p>
-      </div>
+    <div className="page fade-stagger">
+      <PageHeader eyebrow={t('nav.billing')} title={t('billing.title')} subtitle={t('billing.subtitle')} />
 
       <PlansCard />
 

@@ -103,7 +103,7 @@ function CertuvoAccessPanel() {
 // rendered on this page, so nothing is lost and this can be re-enabled if the policy changes.
 export default function Certuvo() {
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
+    <div className="page fade-stagger">
       <div>
         <h1>Certuvo</h1>
         <p className="muted">

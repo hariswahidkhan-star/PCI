@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '../api/hooks'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 
 // Student portal → Templates. The members-only project-controls templates library (WBS, EVM tracker, risk
@@ -86,11 +87,8 @@ export default function Templates() {
   }
 
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>{t('tpl.title')}</h1>
-        <p className="muted">{t('tpl.subtitle')}</p>
-      </div>
+    <div className="page fade-stagger">
+      <PageHeader eyebrow={t('nav.templates')} title={t('tpl.title')} subtitle={t('tpl.subtitle')} />
 
       {msg && <div className="notice err" role="alert">{msg}</div>}
 
