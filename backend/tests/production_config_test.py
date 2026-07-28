@@ -34,6 +34,36 @@ def check(name, overrides, must_mention=None):
         print(f"  FAIL  {name}: exit={proc.returncode} db_exists={os.path.exists(db)}")
         print(proc.stdout[-1200:])
 
+def run(overrides, timeout=90):
+    """Boot the published app with a clean production-ish environment; return (proc, db_path).
+    For assertions that need to inspect the exit code / output directly (expect below), rather
+    than the fixed exit-78 contract check() asserts."""
+    work = tempfile.mkdtemp(prefix="pci_prod_preflight_")
+    db = os.path.join(work, "must-not-exist.db")
+    env = dict(os.environ)
+    for key in (
+        "ASPNETCORE_ENVIRONMENT", "DOTNET_ENVIRONMENT", "APP_ENV", "DB_PROVIDER",
+        "MYSQL_CONNECTION_STRING", "MYSQL_HOST", "MYSQL_PASSWORD",
+        "ALLOW_INSECURE_PRODUCTION", "PCIWORLD_ONLY", "PCIWORLD_ALLOW_SQLITE",
+        "ALLOW_SQLITE_IN_PRODUCTION",
+    ):
+        env.pop(key, None)
+    env.update(DATABASE_FILE=db, PORT="0")
+    env.update(overrides)
+    proc = subprocess.run(
+        ["dotnet", DLL], cwd=BACKEND, env=env, text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=timeout)
+    return proc, db
+
+def expect(name, condition, detail=""):
+    global passed, failed
+    if condition:
+        passed += 1
+        print(f"  PASS  {name}")
+    else:
+        failed += 1
+        print(f"  FAIL  {name}{': ' + detail if detail else ''}")
+
 def check_boots(name, overrides, db_file):
     """The inverse contract: this configuration must get PAST the fail-closed preflight and open
     its database. Passing the preflight is observable as the DB file appearing; the process is
@@ -142,6 +172,48 @@ try:
     if os.path.exists(auto_db): os.remove(auto_db)
 except OSError:
     print("  SKIP  /data boot-through checks (no writable /data in this environment)")
+
+# Base-URL rule consistency: the pre-DB preflight and ConfigIssues() now share one predicate
+# (IsPublicHttpsUrl — absolute, https, not loopback). Previously ConfigIssues() only searched the
+# string for "localhost"/"127.0.0.1", so system-check called an http:// or malformed base URL
+# healthy while the preflight refused to boot on it. Each bad shape must be refused BY NAME.
+_valid_but_for_url = {
+    "ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "mysql",
+    "MYSQL_HOST": "127.0.0.1", "MYSQL_PASSWORD": "wrong-on-purpose",
+    "ALLOWED_ORIGIN": "https://pci.example.org",
+    "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef",
+}
+check("malformed (non-absolute) APP_BASE_URL is refused by name",
+      {**_valid_but_for_url, "APP_BASE_URL": "pci.example.org"}, must_mention="APP_BASE_URL")
+check("http:// APP_BASE_URL is refused by name",
+      {**_valid_but_for_url, "APP_BASE_URL": "http://pci.example.org"}, must_mention="APP_BASE_URL")
+check("loopback https://localhost APP_BASE_URL is refused by name",
+      {**_valid_but_for_url, "APP_BASE_URL": "https://localhost:8443"}, must_mention="APP_BASE_URL")
+
+# An unreachable database must fail as a named, documented exit — never as an unhandled exception.
+# Regression: Db's connect-retry exception escaped the constructor (called outside any try/catch),
+# so a wrong MySQL host/credential aborted the process with exit 134 and a stack trace instead of
+# telling the operator which setting to fix. That is the single commonest production deploy failure.
+proc, db = run({
+    "ASPNETCORE_ENVIRONMENT": "Production",
+    "DB_PROVIDER": "mysql",
+    # 127.0.0.1:1 refuses immediately, so the retry loop finishes fast.
+    "MYSQL_HOST": "127.0.0.1", "MYSQL_PORT": "1",
+    "MYSQL_USER": "pci", "MYSQL_PASSWORD": "secret", "MYSQL_DATABASE": "pci",
+    "MYSQL_CONNECT_RETRIES": "1",
+    "APP_BASE_URL": "https://example.org", "ALLOWED_ORIGIN": "https://example.org",
+    "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef",
+})
+expect("unreachable MySQL exits 75 (EX_TEMPFAIL), not an unhandled crash",
+       proc.returncode == 75, f"exit={proc.returncode}")
+expect("unreachable MySQL names the cause and the settings to check",
+       "[db] refusing to start" in proc.stdout and "MYSQL_HOST" in proc.stdout)
+expect("unreachable MySQL does not print the password",
+       "secret" not in proc.stdout)
+expect("unreachable MySQL prints no unhandled-exception stack trace",
+       "Unhandled exception" not in proc.stdout)
+expect("unreachable MySQL never creates a fallback SQLite database",
+       not os.path.exists(db))
 
 print(f"\n  == {passed}/{passed + failed} PASSED ==")
 raise SystemExit(0 if failed == 0 else 1)
