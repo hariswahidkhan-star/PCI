@@ -4,6 +4,7 @@ import { useQuery } from '../api/hooks'
 import { Card, Spinner, ErrorNote, StatusBadge } from '../components/ui'
 import { fmtDate } from '../format'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 
 interface TicketMsg { sender: string; body: string; created_at?: string | null }
 interface TicketRow {
@@ -88,11 +89,8 @@ export default function Support() {
   const rows = data?.rows ?? []
 
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>{t('sup.title')}</h1>
-        <p className="muted">{t('sup.subtitle')}</p>
-      </div>
+    <div className="page fade-stagger">
+      <PageHeader eyebrow={t('nav.support')} title={t('sup.title')} subtitle={t('sup.subtitle')} />
 
       <Card title={t('sup.newRequest')}>
         {note && <div className={'notice' + (note.ok ? '' : ' err')} role={note.ok ? 'status' : 'alert'} style={{ marginBottom: '.75rem' }}>{note.text}</div>}

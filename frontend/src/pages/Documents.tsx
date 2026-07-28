@@ -6,6 +6,7 @@ import { DocumentRow, ViewDownloadActions } from '../components/documents/Docume
 import { studentToken } from '../files'
 import { fmtDate, titleCase } from '../format'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 
 interface DocRow {
   id: number
@@ -172,11 +173,8 @@ export default function Documents() {
   }
 
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>{t('doc.myDocuments')}</h1>
-        <p className="muted">{t('doc.myDocumentsIntro')}</p>
-      </div>
+    <div className="page fade-stagger">
+      <PageHeader eyebrow={t('nav.documents')} title={t('doc.myDocuments')} subtitle={t('doc.myDocumentsIntro')} />
 
       {rows.length === 0 ? (
         <Card><Empty>{t('doc.noDocuments')}</Empty></Card>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 // Admin Console → AI Visibility (Phase 6 — Generative Engine Optimization). Three tabs:
 // Overview (readiness: llms.txt / robots.txt / sitemap, structured-data coverage, crawler totals),
@@ -24,11 +25,11 @@ const TABS = ['Overview', 'AI crawlers', 'Access'] as const
 export default function AiVisibility() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Overview')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>AI Visibility</h1>
-        <p className="muted">How AI answer engines (ChatGPT, Claude, Perplexity, Gemini, Copilot) discover and cite PCI. Publishes an <code>llms.txt</code> map, controls which AI crawlers may access the site, and reports the AI-crawler traffic you actually receive.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="AI Visibility"
+        subtitle={<>How AI answer engines (ChatGPT, Claude, Perplexity, Gemini, Copilot) discover and cite PCI. Publishes an <code>llms.txt</code> map, controls which AI crawlers may access the site, and reports the AI-crawler traffic you actually receive.</>}
+      />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => (
           <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>

@@ -7,6 +7,7 @@ import { ViewDownloadActions } from '../components/documents/DocumentActions'
 import { fileToDataUri, fmtBytes, studentToken } from '../files'
 import { fmtDate } from '../format'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 
 interface CpdRow {
   id: number
@@ -115,11 +116,8 @@ export default function Cpd() {
     runMutation(async () => { await api.del(`/api/me/cpd/${id}`); refetch(); refetchMe() })
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>{t('cpd.heading')}</h1>
-        <p className="muted">{t('cpd.subtitle', { target })}</p>
-      </div>
+    <div className="page">
+      <PageHeader eyebrow={t('nav.cpd')} title={t('cpd.heading')} subtitle={t('cpd.subtitle', { target })} />
 
       <Card title={t('cpd.progress')}>
         <div className="spread" style={{ marginBottom: '.5rem' }}>

@@ -1,6 +1,7 @@
 import { useQuery } from '../api/hooks'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 
 interface ResourceRow {
   title: string
@@ -27,13 +28,8 @@ export default function Resources() {
   }
 
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>{t('res.title')}</h1>
-        <p className="muted">
-          {t('res.subtitle')}
-        </p>
-      </div>
+    <div className="page fade-stagger">
+      <PageHeader eyebrow={t('nav.resources')} title={t('res.title')} subtitle={t('res.subtitle')} />
 
       {rows.length === 0 ? (
         <Card><Empty>{t('res.empty')}</Empty></Card>

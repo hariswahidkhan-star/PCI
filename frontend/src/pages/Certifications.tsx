@@ -9,6 +9,7 @@ import { ViewDownloadActions } from '../components/documents/DocumentActions'
 import { studentToken } from '../files'
 import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
 import { useT } from '../i18n'
+import { PageHeader } from '../components/premium'
 import type { ExamEntry, IdentityDocument } from '../api/types'
 
 /** A certification from the public, backend-controlled catalogue (GET /api/certifications). */
@@ -566,11 +567,8 @@ export default function Certifications() {
   const holds = me.lifecycle.blocking_items.filter((b) => b in HOLD_LABELS)
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1.75rem' }}>
-      <div>
-        <h1>{t('cert.title')}</h1>
-        <p className="muted">{t('cert.subtitle')}</p>
-      </div>
+    <div className="page" style={{ gap: '1.75rem' }}>
+      <PageHeader eyebrow={t('nav.certifications')} title={t('cert.title')} subtitle={t('cert.subtitle')} />
 
       <IdentityCard doc={me.identity_document} onChanged={refetch} />
 

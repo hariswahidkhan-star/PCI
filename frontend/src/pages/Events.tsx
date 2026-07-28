@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PageHeader } from '../components/premium'
 import { useQuery } from '../api/hooks'
 import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
@@ -44,11 +45,12 @@ export default function Events() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Events &amp; webinars</h1>
-        <p className="muted">Register for PCI events. Attending an event earns CPD toward your recertification automatically.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        eyebrow="Events"
+        title="Events & webinars"
+        subtitle="Register for PCI events. Attending an event earns CPD toward your recertification automatically."
+      />
       {msg && <div className="notice err" role="alert">{msg}</div>}
 
       {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data || data.rows.length === 0 ? (
