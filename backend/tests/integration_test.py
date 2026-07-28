@@ -1794,8 +1794,16 @@ def test_leadership_suite(admin):
 
     st1, body1, _ = _raw_get(f"/api/me/cert-documents/{bid}/download", token=stok)
     txt = _pdf_text(body1)
-    chk("18m watermarked download carries the student identity + designation",
-        st1 == 200 and body1[:5] == b"%PDF-" and body1 != braw and "Personal Copy" in txt and "PCI Student ID" in txt, (st1, len(body1)))
+    # The watermark carries the CANONICAL public Student Number, never users.id. This assertion
+    # used to require the literal "PCI Student ID" — the old label for the database primary key,
+    # which is both a mislabel and a leak of an internal identifier onto a distributable PDF. It
+    # now pins the opposite: the canonical number is present, and the old label is gone.
+    c, meid = jget("GET", "/api/me", token=stok)
+    student_no = ((meid.get("user") or {}).get("registration_no")) or ""
+    chk("18m watermarked download carries the canonical PCI Student Number + designation",
+        st1 == 200 and body1[:5] == b"%PDF-" and body1 != braw and "Personal Copy" in txt
+        and student_no.startswith("PCI-") and "PCI Student Number:" in txt and student_no in txt
+        and "PCI Student ID" not in txt, (st1, len(body1), student_no))
     st2, body2, _ = _raw_get(f"/api/me/cert-documents/{pid2}/download", token=stok)
     chk("18n unwatermarked book is served byte-identical to the master", st2 == 200 and body2 == braw, (st2, len(body2)))
 
