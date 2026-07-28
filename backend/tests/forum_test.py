@@ -296,6 +296,45 @@ def main():
         code, _ = req("GET", "/world/forum/estimating/spi-recovery")
         chk("F35 a hidden post leaves the crawlable page immediately", code == 404, f"got {code}")
 
+        # ── Starting a thread ──────────────────────────────────────────────────────────────
+        code, r = js("/api/world/forum/categories/estimating/threads", "POST",
+                     {"title": "Short", "body": "A body long enough to pass."}, MEM)
+        chk("F39 a too-short title is refused", code == 400 and r.get("error") == "bad_title", str(r))
+
+        code, r = js("/api/world/forum/categories/estimating/threads", "POST",
+                     {"title": "Modelling escalation on a five-year job", "body": ""}, MEM)
+        chk("F40 a thread with no opening post is refused", code == 400, str(r))
+        rows = sql("SELECT COUNT(*) FROM pciworld_forum_threads WHERE title=?",
+                   ("Modelling escalation on a five-year job",))
+        chk("F41 and no empty thread is left behind — a title with nothing under it is not a discussion",
+            rows[0][0] == 0, str(rows))
+
+        code, r = js("/api/world/forum/categories/estimating/threads", "POST",
+                     {"title": "Modelling escalation on a five-year job",
+                      "body": "We used a blended index rather than a single CPI series."}, MEM)
+        chk("F42 a member can start a thread",
+            code == 200 and r.get("published") is True and r.get("slug"), str(r))
+        chk("F43 the slug is derived from the title",
+            r.get("slug") == "modelling-escalation-on-a-five-year-job", str(r))
+
+        code, html = req("GET", r["url"])
+        chk("F44 the new thread is immediately crawlable at its own URL",
+            code == 200 and "blended index" in html, f"{code}")
+
+        code, r2 = js("/api/world/forum/categories/estimating/threads", "POST",
+                      {"title": "Modelling escalation on a five-year job",
+                       "body": "A different discussion that happens to share a title."}, MEM)
+        chk("F45 a duplicate title gets a distinct slug rather than a refusal",
+            code == 200 and r2.get("slug") != r.get("slug"), str(r2))
+
+        code, r3 = js("/api/world/forum/categories/estimating/threads", "POST",
+                      {"title": "A perfectly reasonable question about float",
+                       "body": "Float on activity B keeps moving between updates."}, NEW)
+        chk("F46 a new account's thread is held, not published",
+            code == 200 and r3.get("published") is False, str(r3))
+        code, _ = req("GET", r3["url"])
+        chk("F47 and it leaves no crawlable husk behind while held", code == 404, f"got {code}")
+
         # ── Category floor ─────────────────────────────────────────────────────────────────
         code, r = js("/api/world-admin/forum/categories", "POST",
                      {"slug": "announcements", "title": "Announcements", "min_trust_to_post": "trusteed"}, OWNER)
@@ -315,6 +354,13 @@ def main():
                      {"body": "Replying to an announcement."}, MEM)
         chk("F38 the floor applies to REPLIES too — otherwise it is trivially bypassed",
             code == 400 and r.get("error") == "insufficient_trust_for_category", f"{code} {r}")
+
+        code, r = js("/api/world/forum/categories/announcements/threads", "POST",
+                     {"title": "Trying to start a thread here", "body": "Should not be allowed."}, MEM)
+        chk("F48 and to starting a thread, before any thread row is created",
+            code == 403 and r.get("error") == "insufficient_trust_for_category", f"{code} {r}")
+        rows = sql("SELECT COUNT(*) FROM pciworld_forum_threads WHERE slug LIKE ?", ("trying-to-start%",))
+        chk("F49 no orphan thread row was left by the refusal", rows[0][0] == 0, str(rows))
 
     finally:
         shutdown()

@@ -127,6 +127,83 @@ public static class ForumPublic
             });
         });
 
+        // Starting a discussion. A thread and its opening post are created in ONE call and ONE
+        // transaction, because a thread with no opening post is not a discussion — it is a title,
+        // and it would sit in the catalogue advertising content that does not exist. If the post is
+        // held or refused, the thread goes with it: ForumRender already declines to render a thread
+        // with nothing publishable, so a held opening post leaves no crawlable husk behind.
+        app.MapPost("/api/world/forum/categories/{slug}/threads", async (HttpContext ctx, string slug) =>
+        {
+            if (!Enabled()) return Disabled();
+            var user = WorldAccount.FromReq(ctx.Request, db);
+            if (user is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+
+            var cat = db.QueryOne(
+                "SELECT id,state,min_trust_to_post FROM pciworld_forum_categories WHERE slug=?", slug);
+            if (cat is null) return Results.NotFound();
+            if (H.Str(cat["state"]) != "open") return Results.Json(new { error = "category_not_open" }, statusCode: 400);
+
+            var level = LevelOf(user);
+            // Checked here as well as inside ForumPosts.Create. Not redundant: without it a refused
+            // author would still have created the THREAD before the post was rejected, leaving an
+            // empty title behind in a category they may not post to.
+            if (!ForumTrust.AtLeast(level, ForumTrust.Parse(H.Str(cat["min_trust_to_post"]))))
+                return Results.Json(new { error = "insufficient_trust_for_category" }, statusCode: 403);
+
+            var lastHour = db.Scalar<long>(
+                "SELECT COUNT(*) FROM pciworld_forum_posts WHERE author_user_id=? AND created_at > ?",
+                user.Id, H.StampInMinutes(-60));
+            if (lastHour >= ForumTrust.HourlyPostBudget(level))
+                return Results.Json(new { error = "rate_limited", retry_after_minutes = 60 }, statusCode: 429);
+
+            var b = await H.Body(ctx.Request);
+            var title = (H.GetS(b, "title") ?? "").Trim();
+            if (title.Length is < 8 or > 200) return Results.Json(new { error = "bad_title" }, statusCode: 400);
+
+            var threadSlug = Slugify(title);
+            if (threadSlug.Length < 3) return Results.Json(new { error = "bad_title" }, statusCode: 400);
+            // Slugs are unique per category, so an identical title in the same category needs
+            // distinguishing. A short suffix beats failing the request — the person wrote a thread,
+            // and refusing it over a URL collision would be the system's problem becoming theirs.
+            if (db.Scalar<long>(
+                    "SELECT COUNT(*) FROM pciworld_forum_threads WHERE category_id=? AND slug=?",
+                    H.L(cat["id"]), threadSlug) > 0)
+                threadSlug = threadSlug[..Math.Min(threadSlug.Length, 100)] + "-" + Guid.NewGuid().ToString("n")[..6];
+
+            long threadId = 0;
+            db.Transaction(() =>
+            {
+                threadId = db.ExecuteReturningId(
+                    @"INSERT INTO pciworld_forum_threads(category_id,slug,title,author_user_id,state)
+                      VALUES(?,?,?,?,'open')",
+                    H.L(cat["id"]), threadSlug, title, user.Id);
+            });
+
+            var r = ForumPosts.Create(db, threadId, user.Id, H.GetS(b, "body"), level,
+                                      Moderator(), Policy(), kind: "opening",
+                                      correlationId: ctx.TraceIdentifier);
+            if (!r.Ok)
+            {
+                // The opening post was refused outright (empty, too long, links from a new account).
+                // Remove the thread rather than leaving a title with nothing under it.
+                db.Execute("DELETE FROM pciworld_forum_threads WHERE id=?", threadId);
+                return Results.Json(new { error = r.Reason }, statusCode: 400);
+            }
+
+            RecordActivity(user.Id, r.Visible);
+            return Results.Json(new
+            {
+                ok = true,
+                thread_id = threadId,
+                slug = threadSlug,
+                url = $"/world/forum/{slug}/{threadSlug}",
+                state = r.State,
+                published = r.Visible,
+                notice = r.Visible ? null
+                       : "Your thread is waiting for a moderator. New accounts are reviewed before publication.",
+            });
+        });
+
         app.MapPost("/api/world/forum/threads/{threadId:long}/posts", async (HttpContext ctx, long threadId) =>
         {
             if (!Enabled()) return Disabled();
@@ -194,6 +271,22 @@ public static class ForumPublic
                 notice = "Your post is no longer visible. Its moderation record is kept while any report or appeal is open.",
             });
         });
+
+        /// <summary>URL-safe slug from a title. Lower-cased ASCII words joined by hyphens — a slug
+        /// is an identifier, not a translation, and a non-ASCII title still gets a usable one from
+        /// whatever ASCII it contains (with a generated fallback when it contains none).</summary>
+        static string Slugify(string title)
+        {
+            var lowered = title.ToLowerInvariant();
+            var sb = new System.Text.StringBuilder(lowered.Length);
+            foreach (var ch in lowered)
+                sb.Append(char.IsAsciiLetterOrDigit(ch) ? ch : '-');
+            var slug = System.Text.RegularExpressions.Regex.Replace(sb.ToString(), "-+", "-").Trim('-');
+            if (slug.Length > 120) slug = slug[..120].TrimEnd('-');
+            // A title written entirely in a non-Latin script leaves nothing to slugify. Falling back
+            // to a generated id keeps the URL valid rather than refusing the thread.
+            return slug.Length >= 3 ? slug : "t-" + Guid.NewGuid().ToString("n")[..10];
+        }
 
         /// <summary>
         /// Keep the standing facts current. Called after a post is created, so the ladder reflects
