@@ -839,9 +839,15 @@ CREATE TABLE IF NOT EXISTS cpd_entries (
   user_id BIGINT NOT NULL, activity_date TEXT, category TEXT,
   hours DOUBLE DEFAULT 0, description TEXT,
   evidence_name TEXT, evidence_data TEXT, admin_note TEXT, reviewed_by BIGINT, reviewed_at TEXT,
-  status TEXT DEFAULT ('recorded'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+  status TEXT DEFAULT ('recorded'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  -- The event that earned this credit. Carrying the source here is what makes CPD exactly-once:
+  -- the unique index below means a retry, a crash between the attendance flip and the credit, or a
+  -- double scan can only ever produce ONE credit per (event, attendee). Manual entries hold NULL
+  -- and are exempt — a member may legitimately record many unrelated activities.
+  source_event_id BIGINT
 );
 CREATE INDEX IF NOT EXISTS ix_cpd_user ON cpd_entries(user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_cpd_event_user ON cpd_entries(source_event_id, user_id);
 
 -- ===== panel: security, messages, enrollment resume =====
 CREATE TABLE IF NOT EXISTS login_events (

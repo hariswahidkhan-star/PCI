@@ -55,8 +55,17 @@ def fresh_db():
     d.row_factory = sqlite3.Row
     d.isolation_level = None  # explicit BEGIN/COMMIT, like Db.Transaction
     d.executescript(open(os.path.join(HERE, "..", "schema.sql")).read())
+    # Migrate.cs applies these through AddCol, which is guarded by db.Columns — so a column already
+    # declared in schema.sql is skipped rather than re-added. Transcribing that guard matters:
+    # source_event_id now ships in schema.sql (a fresh install has it) while AddCol still converges
+    # databases created before it existed. An unguarded ALTER here would fail on exactly the shape
+    # a fresh install produces, which is the one this suite is meant to reproduce.
     for ddl in MIGRATE_EVENT_DDL:
-        d.execute(ddl)
+        try:
+            d.execute(ddl)
+        except sqlite3.OperationalError as ex:
+            if "duplicate column name" not in str(ex):
+                raise
     return d
 
 
