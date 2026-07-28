@@ -21,30 +21,41 @@ public class WorldShareCaptionTests
         return db;
     }
 
-    static long User(Db db, string email, string? name) =>
-        db.ExecuteReturningId(@"INSERT INTO pciworld_users
+    // student_user_id is unique-indexed (ux_worldusers_student — one World participant per
+    // canonical user). A hardcoded value passed on SQLite only because every fact there gets a
+    // fresh database file; on MySQL the World tables outlive TestEnv's template reset (they are
+    // created by WorldSchema.Ensure AFTER it), so the second fact's insert collided. Mint a fresh
+    // id per call and return it with the row id so the leak assertion knows what to look for.
+    static long _nextStudentId = 4217;
+
+    static (long Id, long StudentId) User(Db db, string email, string? name)
+    {
+        var sid = System.Threading.Interlocked.Increment(ref _nextStudentId);
+        var id = db.ExecuteReturningId(@"INSERT INTO pciworld_users
                 (email,password_hash,display_name,email_verified,passport_public,passport_token_sha,student_user_id)
-            VALUES(?,?,?,1,1,?,4217)", email, "x", name, Security.Sha("passport-" + email));
+            VALUES(?,?,?,1,1,?,?)", email, "x", name, Security.Sha("passport-" + email), sid);
+        return (id, sid);
+    }
 
     [Fact]
     public void Caption_is_public_fields_only_and_never_carries_email_token_or_number()
     {
         var db = NewWorldDb();
-        var uid = User(db, "cap-owner@x.test", "Sam Rivera");
+        var (uid, studentId) = User(db, "cap-owner@x.test", "Sam Rivera");
         var cap = WorldAccount.ShareCaption(db, uid);
 
         Assert.Equal("Sam Rivera — PCI World Passport. " + WorldAccount.ShareCaptionDisclaimer, cap);
         Assert.DoesNotContain("cap-owner", cap);
         Assert.DoesNotContain("@", cap);
         Assert.DoesNotContain(Security.Sha("passport-cap-owner@x.test"), cap);
-        Assert.DoesNotContain("4217", cap);
+        Assert.DoesNotContain(studentId.ToString(), cap);
     }
 
     [Fact]
     public void A_hostile_display_name_arrives_neutral()
     {
         var db = NewWorldDb();
-        var uid = User(db, "cap-evil@x.test", "\"><script>alert(1)</script>\r\nFAKE LINE\tZoë");
+        var (uid, _) = User(db, "cap-evil@x.test", "\"><script>alert(1)</script>\r\nFAKE LINE\tZoë");
         var cap = WorldAccount.ShareCaption(db, uid);
 
         Assert.DoesNotContain("<", cap);
@@ -61,8 +72,8 @@ public class WorldShareCaptionTests
     {
         var db = NewWorldDb();
         var expected = "PCI World Passport. " + WorldAccount.ShareCaptionDisclaimer;
-        Assert.Equal(expected, WorldAccount.ShareCaption(db, User(db, "cap-none@x.test", null)));
-        Assert.Equal(expected, WorldAccount.ShareCaption(db, User(db, "cap-blank@x.test", "   ")));
+        Assert.Equal(expected, WorldAccount.ShareCaption(db, User(db, "cap-none@x.test", null).Id));
+        Assert.Equal(expected, WorldAccount.ShareCaption(db, User(db, "cap-blank@x.test", "   ").Id));
         // an unknown account leaks nothing and does not throw
         Assert.Equal(expected, WorldAccount.ShareCaption(db, 999_999));
     }
@@ -71,7 +82,7 @@ public class WorldShareCaptionTests
     public void An_overlong_name_is_capped_but_the_disclaimer_always_survives()
     {
         var db = NewWorldDb();
-        var cap = WorldAccount.ShareCaption(db, User(db, "cap-long@x.test", new string('N', 500)));
+        var cap = WorldAccount.ShareCaption(db, User(db, "cap-long@x.test", new string('N', 500)).Id);
         Assert.Equal(80, cap.Split(" — ")[0].Length);
         Assert.EndsWith("PCI World Passport. " + WorldAccount.ShareCaptionDisclaimer, cap);
     }
@@ -80,7 +91,7 @@ public class WorldShareCaptionTests
     public void Share_link_rows_carry_the_mint_instant_and_never_a_raw_token()
     {
         var db = NewWorldDb();
-        var uid = User(db, "cap-links@x.test", "Owner");
+        var (uid, _) = User(db, "cap-links@x.test", "Owner");
         var sess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES(?)", Security.Sha("s-cap"));
         var ch = db.QueryOne("SELECT id,current_version FROM pciworld_challenges WHERE current_version>=1 LIMIT 1")!;
         db.Execute(@"INSERT INTO pciworld_attempts
