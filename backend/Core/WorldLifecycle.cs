@@ -119,18 +119,25 @@ public static class WorldRbac
         "author" => action is "read" or "author",
         "reviewer" => action is "read" or "review",
         "publisher" => action is "read" or "publish",
-        "viewer" => action is "read" or "community.read",
+        "viewer" => action is "read" or "community.read" or "careers.read",
 
         "live_moderator" => action is "read" or "community.read" or "community.moderate",
+        // Careers verification is separated from careers moderation for the same reason forum
+        // moderation is separated from employer verification: deciding that an employer is REAL is
+        // an evidence judgement about a company, and taking a posting down is a content judgement.
+        // A person doing one has no particular standing to do the other, and bundling them would
+        // mean every content moderator could mint the assertion candidates rely on (§4.2).
         "trust_safety" => action is "read" or "community.read" or "community.moderate"
-                                  or "community.sanction" or "community.rooms",
+                                  or "community.sanction" or "community.rooms"
+                                  or "careers.read" or "careers.moderate",
         // Deliberately NOT community.sanction: an appeals reviewer who can also punish is not
         // independent, and §8.6 asks for independence where practical.
         "appeals_reviewer" => action is "read" or "community.read" or "community.appeal",
         "safety_lead" => action is "read" or "community.read" or "community.moderate"
                                  or "community.sanction" or "community.sanction.approve"
                                  or "community.appeal" or "community.restricted"
-                                 or "community.restricted.approve" or "community.rooms",
+                                 or "community.restricted.approve" or "community.rooms"
+                                 or "careers.read" or "careers.moderate" or "careers.verify",
         _ => false,
     };
 }

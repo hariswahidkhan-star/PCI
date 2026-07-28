@@ -533,6 +533,42 @@ Neither affects PCI World. Recorded so they are not rediscovered as new findings
 
 ---
 
+## CCP-P4-013 … CCP-P4-016 — Phase 4 careers is built, and its launch is blocked on decisions outside engineering
+
+| Field | Value |
+|---|---|
+| Phase | 4 |
+| Module | `backend/Endpoints/WorldCareers.cs`, `Core/CareersEmployers.cs`, `Core/CareersState.cs`, `Data/CareersSchema.cs` |
+| Severity | **P1** — blocks launch, not the build |
+| Status | **Open** — engineering complete and tested; every item below is owned outside this repository |
+
+The code ships flag-off and complete: `pciworld_careers_enabled` seeds `'0'`, 52 live-HTTP
+assertions pass on SQLite and MariaDB, and the verification gate, tenant isolation, frozen
+application snapshots and consent discipline are each asserted through more than one route. None of
+that is permission to turn it on, and §28.20 forbids calling it complete as though it were.
+
+**The gate that engineering cannot close.** `verified` is an assertion PCI makes to a candidate
+about who is behind a posting. The code enforces the gate — an unverified employer publishes
+nothing, by any route — but it cannot author the procedure behind the assertion. Until CCP-P4-013
+exists, **no employer can honestly reach `verified`**, so the flag stays off.
+
+| # | Decision needed | Owner |
+|---|---|---|
+| CCP-P4-013 | The employer verification standard: what evidence proves an employer is real (registry lookups, domain control, documents), who reviews it, to what SLA, whether a second approver is required, and the suspension/re-verification triggers. | Trust & Safety lead + Operations |
+| CCP-P4-014 | Employer terms of service, the applicant-facing privacy notice, and the consent wording. `pciworld_careers_policy_version` must hold **authored words**, not a placeholder — the apply endpoint returns 503 while it is unset rather than stamping a consent to nothing. Also the controller/processor split between PCI and the employer. | PCI legal counsel + Data Protection Officer |
+| CCP-P4-015 | Retention periods for applications and CVs per supported jurisdiction, and how an erasure request interacts with withdrawn-but-retained consent records. World CVs are deliberately **not** in the sweep-protected category list, so a retention period is required before launch, not after. | Data Protection Officer + legal counsel |
+| CCP-P4-016 | The commercial model — free, paid or tiered listings. Does not block this build (nothing here touches Stripe), but blocks any payment wiring and shapes the expected verification-queue volume. | Commercial owner |
+
+**What is deliberately absent rather than disabled.** There is no candidate scoring, ranking,
+auto-shortlisting or auto-rejection code path anywhere in the careers modules (§10.7), and a test
+asserts the absence rather than a configuration flag. There is no external apply URL, and no
+employer↔applicant free-form messaging.
+
+**What would close it.** Written decisions for each row above, a published policy version, and a
+deliberate act by a named person to set the flag.
+
+---
+
 ## Deferred scope (explicit, per §4.2 and §26 step 10)
 
 | Item | Reason | Target |
