@@ -22,46 +22,152 @@ BOOKS = {
         "run_title": "PCI PML-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI Project Management Leader – AI<br/>"
                      "Leadership · delivery systems · governance · the governed use of AI"),
-        "order": ["manuscript/domain-06-planning-scheduling-flow.md"],
-        "parts": [("Part Two", "Delivering the work",
-                   "Domains 5–10 — scope, planning and scheduling, cost and commercial awareness, "
-                   "risk, quality and procurement: the delivery disciplines a leader integrates.",
-                   "Domain 6 —")],
+        # (part number, title, description, domain range) — a divider is emitted only where the
+        # part's lowest-numbered EXISTING domain is found, so parts appear as authorship reaches them.
+        "parts": [
+            (1, "Part One", "Leading projects",
+             "Domains 1–4 — the profession, strategy and selection, governance and decision rights, "
+             "and delivery architecture: what a project leader is for and answerable for.", (1, 4)),
+            (2, "Part Two", "Delivering the work",
+             "Domains 5–10 — scope, planning and flow, cost and commercial, risk and resilience, "
+             "quality and assurance, and procurement: the machinery of delivery.", (5, 10)),
+            (3, "Part Three", "Leading people and organisations",
+             "Domains 11–13 — stakeholders and influence, leadership and teams, and adaptive "
+             "delivery: the work that is done through other people.", (11, 13)),
+            (4, "Part Four", "Enterprise delivery and the digital future",
+             "Domains 14–16 — digital delivery and responsible AI, programmes and portfolios, and "
+             "transition and benefits realisation: delivery at enterprise scale.", (14, 16)),
+        ],
     },
     "pfl-ai": {
         "title": "PFL-AI<br/>Body of Knowledge",
         "run_title": "PCI PFL-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI AI Project Finance Leader<br/>"
                      "Project economics · structuring · financial mathematics · the governed use of AI"),
-        "order": ["manuscript/domain-01-foundations.md",
-                  "manuscript/domain-03-time-value-of-money.md",
-                  "manuscript/domain-04-investment-appraisal.md"],
-        "parts": [("Part One", "Foundations",
-                   "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
-                   "investment appraisal: the financial grammar of project finance leadership.",
-                   "Domain 1 —")],
+        "parts": [
+            (1, "Part One", "Foundations",
+             "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
+             "investment appraisal: the financial grammar of project finance leadership.", (1, 4)),
+            (2, "Part Two", "Structuring and modelling",
+             "Domains 5–9 — development and bankability, financial modelling, revenue and demand, "
+             "cost and contingency, and funding structure: how a project becomes financeable.", (5, 9)),
+            (3, "Part Three", "Executing the transaction",
+             "Domains 10–13 — debt sizing and covenants, risk allocation, contracts and transaction "
+             "structure, and due diligence to financial close: turning an appraised project into a "
+             "funded one.", (10, 13)),
+            (4, "Part Four", "Operating and the future",
+             "Domains 14–16 — operations and asset management, refinancing and portfolio value, and "
+             "the future of project finance: the life after close.", (14, 16)),
+        ],
     },
 }
+
+
+def manuscript_order(book_dir: pathlib.Path) -> list:
+    """Every manuscript/domain-NN-*.md, in domain-number order. Authorship adds a FILE; no list
+    here needs editing, which is what lets domains be written concurrently."""
+    files = []
+    for f in (book_dir / "manuscript").glob("domain-*.md"):
+        m = re.match(r"domain-(\d+)-", f.name)
+        if m:
+            files.append((int(m.group(1)), f))
+    return [f for _, f in sorted(files, key=lambda x: (x[0], x[1].name))]
+
+
+def domain_numbers(book_dir: pathlib.Path) -> list:
+    return sorted(int(re.match(r"domain-(\d+)-", f.name).group(1))
+                  for f in manuscript_order(book_dir))
+
 
 FRONT = """
 <div class="titlepage">
   <h1>{title}</h1>
   <div class="subtitle">{subtitle}</div>
   <div class="rule"></div>
-  <div class="meta">FIRST EDITION — PHASE 1 PROTOTYPE (NOT FOR RELEASE)<br/>
+  <div class="meta">FIRST EDITION — DRAFT FOR EDITORIAL AND TECHNICAL REVIEW<br/>
+  NOT FOR RELEASE OR DISTRIBUTION<br/>
   PROJECT CONTROLS INSTITUTE GLOBAL<br/>
   <em>Finance intelligently. Control predictively. Deliver successfully.</em><br/>
   <em>AI proposes; the professional verifies, decides and remains accountable.</em></div>
 </div>
 <div class="frontmatter">
-  <h2 style="page-break-before: always;">Prototype notice</h2>
-  <p>This document is a <strong>Phase 1 production prototype</strong> of one domain, built to
-  validate the book's pattern, calculation-verification harness, figures and typesetting pipeline
-  before scaled authorship. It is not a released PCI publication and carries no entitlement,
-  syllabus or examination status. The released edition will carry the full copyright, disclaimer
-  and trademark notices of the PCI book family; all examples here are original and fictional, all
-  calculations pass the golden-answer suite (<code>verify_formulas.py</code>), and no standard's
-  text is reproduced.</p>
+  <h2 style="page-break-before: always;">Status of this draft</h2>
+  <p>This is a <strong>complete first draft</strong> of all {domains} domains of this volume, produced
+  under the phase-gated programme recorded in <code>docs/books/</code>. It is <strong>not a released
+  PCI publication</strong>: it carries no entitlement, syllabus or examination status, and the
+  released edition will carry the full copyright, disclaimer and notices of the PCI book family.</p>
+  <p><strong>What has been verified.</strong> Every number printed in this volume as a result — in
+  worked examples, in-text calculations, multiple-choice options, exercise solutions and case studies
+  — is recomputed independently with decimal arithmetic by the golden-answer suite
+  (<code>_build/verify_formulas.py</code>), which must pass in full before any domain passes gate. All
+  figures are PCI-original artwork generated from source in <code>_build/figures_src/</code>. No text,
+  table, diagram, question or distinctive structure from any other publisher or certification body is
+  reproduced; public standards are discussed and cited by name without reproducing their content. All
+  organisations, projects and cases are fictitious.</p>
+  <p><strong>What has not.</strong> This draft was <strong>AI-drafted and requires human editorial and
+  technical review before release</strong>. It is not attributed to any named author or expert, and no
+  claim of human authorship is made for it. Nothing in it should be presented as reviewed until that
+  review is recorded. Where a professional judgement is stated rather than a measured effect, the text
+  says so; readers should treat any unqualified generalisation as a drafting defect and report it.</p>
+  <p><strong>Legal and jurisdictional note.</strong> Nothing here is legal, tax, accounting or
+  investment advice. Treatments differ by jurisdiction and by reporting framework; specific matters
+  must be referred to qualified professional advisers in the relevant jurisdiction.</p>
+
+  <h2 style="page-break-before: always;">How to use this book</h2>
+
+  <p>This is a reference, not a course. It is written to be read in order once and consulted
+  out of order thereafter, and the apparatus below exists to make the second use as easy as the
+  first.</p>
+
+  <p><strong>How anything is addressed.</strong> Content is numbered <em>Domain.KnowledgeArea.Topic</em>
+  — so <em>7.3.2</em> is the second topic of the third Knowledge Area of Domain 7, and a
+  cross-reference of the form <em>KA 10.2</em> is precise. Page numbers are never used for
+  cross-references, because this volume is regenerated from source and its pagination is not stable
+  across editions. Every reference in the text is therefore still valid in the next one.</p>
+
+  <p><strong>The worked examples are the spine of the book.</strong> Each follows the same five
+  steps — Setup, Formula, Substitution, Result, Interpretation — and the <em>Interpretation</em> is
+  deliberately the longest and the most valuable. It is where the number is turned into a decision:
+  what breaks the result, what the breakeven is, which assumption the conclusion is most sensitive
+  to, and what a reviewer should check. If you read only one part of a worked example, read that
+  one. The four steps before it exist so that you can reproduce the number and disagree with it.</p>
+
+  <p><strong>Every number can be checked, and should be.</strong> Every figure printed as a result
+  anywhere in this volume — in worked examples, in the text, in multiple-choice options, in exercise
+  solutions, in case studies — is recomputed independently with decimal arithmetic by a verification
+  suite that must pass in full before any chapter is accepted. Appendix C records how many checks
+  stand behind each domain. If you find a number that does not reproduce from its stated method and
+  inputs, that is a defect in this book and worth reporting.</p>
+
+  <p><strong>The <em>AI in this KA</em> sections are not an appendix to the subject.</strong> Each
+  states three things: where AI genuinely earns its place in that Knowledge Area, where it must not
+  go, and how to verify its output concretely. They exist because the alternative — a single chapter
+  about AI at the back — teaches that the question is separable from the work, and it is not. One
+  principle governs all of them: <em>AI proposes; the professional verifies, decides and remains
+  accountable.</em></p>
+
+  <p><strong>What the sections at the end of each domain are for.</strong> <em>Advanced topics</em>
+  extend the domain past the level a candidate is assessed on, and each closes with a list of
+  invariants a reviewer can test. <em>Industry variations</em> say what changes by sector, and are
+  written so that a reader in one sector can see what a reader in another is dealing with.
+  <em>Case studies</em> carry real arithmetic and are the place where several Knowledge Areas have to
+  work together. <em>Executive perspective</em> is what a director cannot delegate. <em>Calculation
+  exercises</em> each carry a full solution and a <em>Common error</em> note, and the common error is
+  frequently the more useful half. The <em>Practitioner's toolkit</em> items are meant to be adopted
+  and then left stable; adapt the headings to your organisation and stop changing them.
+  <em>Exam preparation</em> lists what is assessed, the calculations to be able to do under time
+  pressure, and the traps — each cross-referenced to where it is taught.</p>
+
+  <p><strong>Two conventions worth knowing before you meet them.</strong> Where a result is
+  established in one domain, the others <em>cite</em> it rather than re-derive it; if two domains
+  appear to derive the same thing independently, that is a defect. And where one word carries two
+  genuinely different concepts, the later use states the collision explicitly rather than leaving
+  you to infer it. Appendix B lists both.</p>
+
+  <p><strong>If you are studying for the examination</strong>, work the calculation exercises before
+  reading their solutions, and treat the <em>Common error</em> notes as the syllabus they effectively
+  are. If you are using this at work, start from the Practitioner's toolkit of the domain you need
+  and follow its cross-references back into the treatment.</p>
 </div>
 """
 
@@ -85,7 +191,9 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
 def build(book: str, out: pathlib.Path) -> None:
     cfg = BOOKS[book]
     book_dir = ROOT / book
-    corpus = "\n\n".join((book_dir / n).read_text(encoding="utf-8") for n in cfg["order"])
+    files = manuscript_order(book_dir)
+    print(f"manuscripts: {len(files)} — " + ", ".join(f.name for f in files))
+    corpus = "\n\n".join(f.read_text(encoding="utf-8") for f in files)
     corpus = inject_figures(book_dir, corpus)
 
     html = markdown.markdown(corpus, extensions=["tables", "fenced_code", "toc"],
@@ -123,16 +231,21 @@ def build(book: str, out: pathlib.Path) -> None:
     # Figure-spec blockquotes hidden in print.
     html = re.sub(r'<blockquote>(\s*<p><strong>Fig\s)', r'<blockquote class="figspec">\1', html)
 
-    # Part divider before its first chapter.
-    for i, (num, title, desc, first_chap) in enumerate(cfg["parts"], start=1):
+    # Part divider before the first EXISTING chapter of each part.
+    present = domain_numbers(book_dir)
+    for pnum, num, title, desc, (lo, hi) in cfg["parts"]:
+        in_part = [d for d in present if lo <= d <= hi]
+        if not in_part:
+            continue                      # part not yet reached by authorship
+        kicker = f"Domain {in_part[0]}"
         kick_m = re.search(r'<div class="chapter"><div class="chapnum">\d+</div>'
-                           r'<div class="chapkicker">' + re.escape(first_chap.split(" ")[0]) +
-                           r' ' + re.escape(first_chap.split(" ")[1]), html)
-        part_html = (f'<div class="partpage"><div class="partghost">{i:02d}</div>'
+                           r'<div class="chapkicker">' + re.escape(kicker) + r'</div>', html)
+        if not kick_m:
+            continue
+        part_html = (f'<div class="partpage"><div class="partghost">{pnum:02d}</div>'
                      f'<div class="partnum">{num}</div><div class="parttitle">{title}</div>'
                      f'<div class="partdesc">{desc}</div><div class="partbar"></div></div>')
-        if kick_m:
-            html = html[:kick_m.start()] + part_html + html[kick_m.start():]
+        html = html[:kick_m.start()] + part_html + html[kick_m.start():]
 
     # Contents (h1 + h2 headings, in order).
     toc_items = []
@@ -179,10 +292,42 @@ def build(book: str, out: pathlib.Path) -> None:
     ix.append("</div></div>")
     print(f"index entries: {sum(len(v) for v in groups.values())}")
 
-    front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"])
+    # Back matter — the derived glossary (see make_glossary.py). Rendered from the same source as
+    # the chapters' key-terms tables, so it cannot disagree with them.
+    gloss_file = book_dir / "GLOSSARY.md"
+    gloss_html = ""
+    if gloss_file.exists():
+        gtext = gloss_file.read_text(encoding="utf-8")
+        # Drop the file's own H1 and the derivation note; the book supplies its own opener.
+        gbody = re.sub(r"\A# [^\n]*\n+(?:> [^\n]*\n)*\n?", "", gtext)
+        gbody = re.sub(r"\A\*\*\d[^\n]*\n+", "", gbody)
+        inner = markdown.markdown(gbody, extensions=["tables"])
+        inner = re.sub(r"<h2>([^<]+)</h2>", r'<div class="glossletter">\1</div>', inner)
+        inner = re.sub(r"<p><strong>", '<p class="glossentry"><strong>', inner)
+        n_terms = inner.count('class="glossentry"')
+        gloss_html = ('<div class="backmatter glossary">'
+                      '<h1 id="glossary" class="bmtitle">Glossary</h1>'
+                      '<p class="bmnote">Consolidated from every Knowledge Area\u2019s key-terms table. '
+                      'The Knowledge Area reference after each entry is the authority \u2014 the gloss '
+                      'points to the treatment and does not replace it.</p>'
+                      + inner + "</div>")
+        print(f"glossary entries: {n_terms}")
+
+    # Back matter — the derived appendices (see make_appendices.py).
+    app_file = book_dir / "APPENDICES.md"
+    app_html = ""
+    if app_file.exists():
+        atext = app_file.read_text(encoding="utf-8")
+        abody = re.sub(r"\A# [^\n]*\n+(?:> [^\n]*\n)*\n?", "", atext)
+        inner = markdown.markdown(abody, extensions=["tables"])
+        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h2 class="apptitle">\1</h2>', inner)
+        app_html = '<div class="backmatter appendices">' + inner + "</div>"
+        print(f"appendix tables: {inner.count('<table>')}")
+
+    front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
     doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{front}{''.join(toc)}{html}{''.join(ix)}</body></html>")
+                f"</head><body>{front}{''.join(toc)}{html}{app_html}{gloss_html}{''.join(ix)}</body></html>")
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
     html_file.write_text(doc_html, encoding="utf-8")
@@ -195,5 +340,5 @@ def build(book: str, out: pathlib.Path) -> None:
 
 if __name__ == "__main__":
     book = sys.argv[1]
-    out = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / book / "build" / f"{book}-prototype.pdf"
+    out = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / book / "build" / f"{book}-bok-draft.pdf"
     build(book, out)
