@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+"""Build each volume's appendices from the registries and the verified check suite.
+
+Like the glossary, the appendices are **derived** rather than maintained, so they cannot drift from
+the chapters or from the golden-answer suite. Three appendices per volume:
+
+  A. Formula and symbol sheet — from registries/FORMULAS.md, filtered to the symbols that volume
+     actually uses, with the verification status carried through. A formula that is registered but
+     not verified is shown as such rather than quietly listed alongside verified ones.
+  B. Notation and conventions — from registries/TERMINOLOGY.md plus the conventions the corpus
+     applies everywhere (datetime, currency, rounding, the D.K.T hierarchy, the context-flag rule).
+  C. Verification record — a per-domain table of how many golden checks stand behind the volume,
+     read live from _build/checks/ and verify_formulas.py. This is the appendix a professional
+     reader will actually use to decide how much to trust the arithmetic, and it is generated so it
+     cannot be overstated.
+
+Usage:  python3 make_appendices.py            # write both volumes
+        python3 make_appendices.py --check    # report only
+"""
+import pathlib
+import re
+import subprocess
+import sys
+
+HERE = pathlib.Path(__file__).resolve().parent
+ROOT = HERE.parent
+REG = ROOT / "registries"
+
+BOOKS = {"pml-ai": ("PML-AI", "PML-AI Body of Knowledge"),
+         "pfl-ai": ("PFL-AI", "PFL-AI Body of Knowledge")}
+
+
+def read_rows(path: pathlib.Path, section_re: str) -> list:
+    """Rows of the first markdown table inside the matched section."""
+    text = path.read_text(encoding="utf-8")
+    m = re.search(section_re + r"[\s\S]*?\n(\|[\s\S]*?)(?=\n##|\Z)", text)
+    if not m:
+        return []
+    rows = []
+    for line in m.group(1).strip().split("\n"):
+        if not line.startswith("|") or re.match(r"^\|[-| :]+\|$", line):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if cells and not cells[0].lower().startswith(("symbol", "term", "formula")):
+            rows.append(cells)
+    return rows
+
+
+def formula_rows(tag: str) -> list:
+    """Inherited symbols plus this volume's own, de-duplicated, with status preserved."""
+    out, seen = [], set()
+    for section in (r"## 1\. Symbols inherited", rf"## \d\. New symbols — {tag}"):
+        for cells in read_rows(REG / "FORMULAS.md", section):
+            sym = cells[0]
+            key = re.sub(r"[`*]", "", sym).strip().lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            # Inherited table has 4 columns (no "first home"); own tables have 5.
+            if len(cells) >= 5:
+                out.append((sym, cells[1], cells[2], cells[3], cells[4]))
+            elif len(cells) == 4:
+                out.append((sym, cells[1], cells[2], "inherited (PCP-AI master table)", cells[3]))
+    return out
+
+
+def check_counts() -> dict:
+    """book -> {domain: n_checks}, read from the suite's own runtime tally.
+
+    Nothing here counts source occurrences. Several sections of the suite assert inside loops, so a
+    source count understated the record by more than a thousand; and attributing modules by position
+    credited one domain with 6,595 of another's checks. The suite therefore tallies itself as it runs
+    and prints a TALLY line, which this reads. Appendix C states the size of the verification record to
+    a reader deciding how much to trust the arithmetic, so it is measured by the thing it describes.
+    """
+    r = subprocess.run([sys.executable, str(HERE / "verify_formulas.py")],
+                       capture_output=True, text=True, cwd=str(HERE), timeout=1800)
+    if r.returncode != 0:
+        raise SystemExit("the golden-answer suite does not pass — refusing to write a verification "
+                         "appendix for a failing suite:\n" + r.stdout[-2000:])
+    tally = [l for l in r.stdout.split("\n") if l.startswith("TALLY ")]
+    if not tally:
+        raise SystemExit("the suite printed no TALLY line — cannot state a verified total without it.")
+    counts = {"pml-ai": {}, "pfl-ai": {}}
+    for part in tally[0][len("TALLY "):].split(";"):
+        if not part.strip():
+            continue
+        key, n = part.split("=")
+        tag, dom = key.split(":")
+        counts["pml-ai" if tag == "PML-AI" else "pfl-ai"][int(dom)] = int(n)
+
+    emitted = len([l for l in r.stdout.split("\n") if l.startswith(("PASS  ", "FAIL  "))])
+    attributed = sum(sum(v.values()) for v in counts.values())
+    # The unattributed remainder is the loader self-test, which is real but is not book content.
+    if not 0 <= emitted - attributed <= 10:
+        raise SystemExit(f"appendix C reconciliation failed: {attributed} attributed against "
+                         f"{emitted} emitted. Fix before claiming a total.")
+    return counts
+
+
+def domain_titles(book: str) -> dict:
+    out = {}
+    for f in sorted((ROOT / book / "manuscript").glob("domain-*.md")):
+        dn = int(re.match(r"domain-(\d+)-", f.name).group(1))
+        first = f.read_text(encoding="utf-8").split("\n", 1)[0]
+        t = re.sub(r"^#\s*Domain\s*\d+\s*—\s*", "", first)
+        out[dn] = re.sub(r"\s*\*\(.*?\)\*\s*$", "", t).strip()
+    return out
+
+
+def build(book: str) -> str:
+    tag, title = BOOKS[book]
+    rows = formula_rows(tag)
+    verified = sum(1 for r in rows if "✅" in r[4])
+    counts = check_counts()[book]
+    titles = domain_titles(book)
+    total = sum(counts.values())
+
+    L = [f"# Appendices — {title}", "",
+         "> **Derived, not maintained.** Every table in these appendices is generated by",
+         "> `_build/make_appendices.py` from the shared registries and from the golden-answer suite",
+         "> itself, so none of it can drift from the chapters or overstate what has been verified.", ""]
+
+    # ---- Appendix A ----
+    L += ["## Appendix A — Formula and symbol sheet", "",
+          f"{len(rows)} symbols, of which **{verified} carry a verified worked example** in this volume or its",
+          "companion. A symbol marked *pending* is registered and used but does not yet have a golden-answer",
+          "check behind a printed result — treat its appearances with the same care you would any unchecked",
+          "number. Units are stated because a unit error is the commonest arithmetic failure in practice and the",
+          "hardest to see in a finished sentence.", "",
+          "| Symbol | Meaning | Unit | First home | Verified |",
+          "|---|---|---|---|---|"]
+    for sym, meaning, unit, home, status in rows:
+        v = "yes" if "✅" in status else "*pending*"
+        L.append(f"| {sym} | {meaning} | {unit} | {home} | {v} |")
+    L += ["",
+          "**Conventions that apply to every formula above.** Financial arithmetic is decimal, never binary",
+          "floating point. Intermediate values carry full precision; rounding happens only at display, which is",
+          "why a printed figure may not reproduce if you round as you go. Rates and periods must agree — an",
+          "annual rate against monthly periods is the error the golden suite catches most often. Datetimes are",
+          "`YYYY-MM-DD HH:MM:SS` in UTC and are compared as instants, never lexically.", ""]
+
+    # ---- Appendix B ----
+    L += ["## Appendix B — Notation, terminology and conventions", "",
+          "Terms fixed at programme level, which the chapters use without redefining:", "",
+          "| Term | As used in both volumes |", "|---|---|"]
+    for cells in read_rows(REG / "TERMINOLOGY.md", r"## 2\. Programme-level terms"):
+        if len(cells) >= 2:
+            L.append(f"| {cells[0]} | {cells[1]} |")
+    L += ["",
+          "### Conventions", "",
+          "**The hierarchy.** Content is addressed as `D.K.T` — Domain, Knowledge Area, Topic. A cross-reference",
+          "of the form *KA 7.3* or *10.2.2* is precise and is the authority; a page number is not used, because",
+          "the corpus is regenerated.", "",
+          "**Context flags.** Where one word carries two genuinely different concepts, the later use states the",
+          "collision explicitly rather than relying on the reader to infer it — *tailoring* of method against",
+          "*tailoring* of a message, `PV` as present value against `PV` as planned value, `A` as annuity payment",
+          "against `A` as assets. A flag is a signal that both meanings are live in the corpus, not a warning",
+          "that one is wrong.", "",
+          "**Citation over restatement.** A result established in one domain is cited from the others rather than",
+          "re-derived. If two domains appear to derive the same thing, that is a defect and worth reporting.", "",
+          "**Currency and units.** USD throughout, with SAR shown where it aids a Gulf reader at an indicative",
+          "`USD 1 ≈ SAR 3.75`. That rate is illustrative and is not a forecast or a quotation. Every worked",
+          "example states its units, its currency, its rounding and its date basis; where one is missing, treat",
+          "it as a drafting defect.", "",
+          "**Fictitious entities.** Every organisation, project, person and case in this volume is invented. Any",
+          "resemblance to a real entity is coincidental, and no real project's data is used.", "",
+          "**The responsible-AI principle**, which governs every *AI in this KA* section: *AI proposes; the",
+          "professional verifies, decides and remains accountable.*", ""]
+
+    # ---- Appendix C ----
+    L += ["## Appendix C — Verification record", "",
+          f"**{total:,} golden-answer checks** stand behind this volume. Every number printed as a *result* —",
+          "in worked examples, in-text calculations, multiple-choice options (all of them, not only the correct",
+          "one), exercise solutions, case studies and figure specifications — is recomputed independently with",
+          "decimal arithmetic at 28-digit precision and compared to the printed value. Each domain's module also",
+          "pins the *invariants* the domain claims: an identity, a breakeven, a bound, an inequality, so that a",
+          "claim cannot silently stop being true.", "",
+          "| Domain | | Checks |", "|---|---|---|"]
+    for dn in sorted(titles):
+        L.append(f"| {dn} | {titles[dn]} | {counts.get(dn, 0):,} |")
+    L += [f"| | **Total** | **{total:,}** |", "",
+          "Reproduce it with `python3 _build/verify_formulas.py`, or check one domain with",
+          "`python3 _build/run_checks.py checks/<module>.py`. Both loaders are fail-closed: a check module that",
+          "raises is a failure, not a skip.", "",
+          "**What this record does and does not establish.** It establishes that the arithmetic is right — that",
+          "each number is the one its stated method produces from its stated inputs. It does **not** establish",
+          "that the method chosen was the right method for the situation, that the professional judgements are",
+          "ones an experienced practitioner would endorse, that the emphasis across topics is well calibrated, or",
+          "that nothing important is missing. Those are questions for editorial and technical review, and a",
+          "reader should not read a large number in this appendix as an answer to them.", ""]
+
+    return "\n".join(L).rstrip() + "\n"
+
+
+def main() -> int:
+    check_only = "--check" in sys.argv
+    for book in BOOKS:
+        text = build(book)
+        out = ROOT / book / "APPENDICES.md"
+        if not check_only:
+            out.write_text(text, encoding="utf-8")
+        syms = text.count("\n| `") + text.count("\n| **")
+        print(f"{book}: appendices A-C, {len(text.split())} words"
+              f"{' (not written, --check)' if check_only else ' -> ' + str(out.relative_to(ROOT.parent))}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
