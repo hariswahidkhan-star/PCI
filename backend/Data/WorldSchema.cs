@@ -41,6 +41,9 @@ public static class WorldSchema
         // Phase 3 forum. Installed alongside the community tables so both are covered by the same
         // migration-parity gates; also off by default (pciworld_forum_enabled).
         ForumSchema.Ensure(db);
+        // Phase 4 careers marketplace. Same posture: installed on every boot so the parity gates
+        // cover both providers; off by default (pciworld_careers_enabled).
+        CareersSchema.Ensure(db);
     }
 
     static void Tables(Db db)
