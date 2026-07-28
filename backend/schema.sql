@@ -30,6 +30,27 @@ CREATE TABLE IF NOT EXISTS pci_student_number_registry (
   correlation_id VARCHAR(64),
   row_version INTEGER NOT NULL DEFAULT 1
 );
+
+-- Maker-checker duplicate-account merges (spec §4.11). One admin holding id_merge_request CREATES
+-- a request; a DIFFERENT admin holding id_merge_approve decides it — the maker can never approve
+-- their own request. The row is also the immutable execution record: before/after JSON snapshots
+-- of both accounts' affected-row counts, so the merge can be audited without re-deriving anything.
+CREATE TABLE IF NOT EXISTS pci_identity_merges (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_user_id INTEGER NOT NULL,          -- the account absorbed (the loser)
+  target_user_id INTEGER NOT NULL,          -- the account that survives, keeping its Student Number
+  reason TEXT,
+  status VARCHAR(16) NOT NULL DEFAULT 'pending',   -- pending | approved | rejected
+  requested_by INTEGER NOT NULL,            -- admin who created the request (the maker)
+  requested_at TEXT DEFAULT (datetime('now')),
+  decided_by INTEGER,                       -- admin who approved/rejected (the checker; never the maker on approve)
+  decided_at TEXT,
+  decision_note TEXT,
+  before_json TEXT,                         -- pre-merge snapshot: key fields + per-table counts, both users
+  after_json TEXT,                          -- post-merge snapshot of the same shape
+  correlation_id VARCHAR(64),
+  row_version INTEGER NOT NULL DEFAULT 1
+);
 CREATE TABLE IF NOT EXISTS enrollment_sessions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT NOT NULL, user_id INTEGER REFERENCES users(id),

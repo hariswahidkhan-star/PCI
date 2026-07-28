@@ -311,6 +311,18 @@ public static class Migrate
         // already hold a duplicate, and it is what makes GetOrIssue's insert the atomic claim.
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_student_number_registry ON pci_student_number_registry(student_number)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_student_number_registry_user ON pci_student_number_registry(resolves_to_user_id)");
+        // ── Maker-checker duplicate-account merges (Core/IdentityMerge.cs, spec §4.11). One admin
+        // requests, a DIFFERENT admin approves; the row doubles as the immutable execution record
+        // (before/after JSON snapshots of both accounts' affected-row counts). ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pci_identity_merges(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source_user_id INTEGER NOT NULL,target_user_id INTEGER NOT NULL,reason TEXT,
+            status VARCHAR(16) NOT NULL DEFAULT 'pending',requested_by INTEGER NOT NULL,
+            requested_at TEXT DEFAULT (datetime('now')),decided_by INTEGER,decided_at TEXT,
+            decision_note TEXT,before_json TEXT,after_json TEXT,correlation_id VARCHAR(64),
+            row_version INTEGER NOT NULL DEFAULT 1)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_identity_merges_status ON pci_identity_merges(status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_identity_merges_source ON pci_identity_merges(source_user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_identity_merges_target ON pci_identity_merges(target_user_id)");
         // The projection's uniqueness is NOT safe unconditionally — an existing database may already
         // carry duplicate or malformed numbers from the era when GET /api/me minted them lazily, and a
         // failed CREATE INDEX here would break boot for exactly the installs that need repairing most.
