@@ -172,6 +172,27 @@ public sealed class CommunityBroadcastService : Microsoft.Extensions.Hosting.Bac
             // Only work when the feature is on, so a deployment with rooms disabled does no polling.
             try { if (CommunityRooms.Enabled(_db)) CommunityOutbox.DrainOnce(_db, sink, 100); }
             catch (Exception e) { Console.Error.WriteLine($"[world community] broadcast drain failed: {e.Message}"); }
+
+            // The image scan queue rides the same loop, gated on ITS own flag so a deployment with
+            // images off does no image work at all. Recovery runs first: an item whose worker died
+            // mid-scan is stranded until its expired lease is returned to the queue, and nothing was
+            // published on the way, because publication only happens in the committing transaction.
+            //
+            // A bounded batch per tick, deliberately. Draining the whole queue in one pass would let
+            // a backlog monopolise this loop and stall broadcast delivery for everybody — the two
+            // jobs share a thread, so the image queue must not be able to starve the room.
+            try
+            {
+                if (CommunityRooms.Enabled(_db) && CommunityMediaPipeline.ImagesEnabled(_db))
+                {
+                    CommunityMediaPipeline.RecoverStranded(_db);
+                    var scanner = CommunityMediaPipeline.ConfiguredScanner(_db);
+                    var policy = CommunityModeration.DefaultImageMatrix();
+                    for (var i = 0; i < 5; i++)
+                        if (!CommunityMediaPipeline.ScanOnce(_db, scanner, policy).Claimed) break;
+                }
+            }
+            catch (Exception e) { Console.Error.WriteLine($"[world community] image scan failed: {e.Message}"); }
         }
         while (await WaitAsync(timer, stoppingToken));
     }

@@ -36,6 +36,10 @@ public static class CommunitySchema
     {
         Tables(db);
         Seed(db);
+        // Phase 2 media tables. Installed here (after the message table exists, which its message
+        // linkage upgrade depends on) so that both installers are covered by the same
+        // migration-parity gates. Also off by default — see CommunityMediaSchema.
+        CommunityMediaSchema.Ensure(db);
     }
 
     static void Tables(Db db)

@@ -421,6 +421,41 @@ remains worthwhile but is not blocking.
 
 ---
 
+## CCP-P2-012 — Phase 2 is built and tested, but its exit gate cannot be signed off here
+
+| Field | Value |
+|---|---|
+| Phase | 2 |
+| Module | Community image safety |
+| Requirement | §8.5, §19.3, §31, §28.6, §28.7 |
+| Severity | **P1** |
+| Status | **Blocked** (on CCP-P1-003 and CCP-P1-004) |
+| Owner | PCI legal counsel + Trust & Safety lead + procurement |
+
+**Where the code stands.** The pipeline is complete and exercised on both providers: sanitiser
+(re-encode, EXIF/GPS removal, header-bounded decode, SVG and animation refused), image policy
+matrix, durable scan queue with crash recovery, upload and serve endpoints, the moderation surface
+with two-person access to restricted evidence, retention exemption for held material, and the
+participant UI. `pciworld_community_images_enabled` is seeded `'0'` and a per-room grant is also
+required.
+
+**Why the gate is still open.** Nothing in this repository can satisfy §19.3's prerequisites
+(CCP-P1-003) or calibrate the confidence bands against a real provider and corpus (CCP-P1-004).
+Until both land:
+
+- the flag stays off, and the admin surface reports the outstanding prerequisites rather than a tick;
+- the bands driving the matrix are **uncalibrated**, which is why no image rule ejects anybody
+  (§28.5) — asserted as a property over the whole table, not row by row;
+- the restricted path is a *container and escalation route*, not detection. §28.6 forbids claiming a
+  general classifier finds every illegal image, and this system makes no such claim: it routes
+  suspicion to trained people and preserves the material under a hold.
+
+**What would close it.** Written counsel decisions per CCP-P1-003; a contracted provider plus the
+PCI benchmark corpus per CCP-P1-004; then band calibration recorded as versioned policy data, and a
+deliberate decision by a named person to turn the flag on.
+
+---
+
 ## CCP-P3-007 — Pre-existing minor defects in main-PCI chat (out of CCP scope)
 
 | Field | Value |

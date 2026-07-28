@@ -55,3 +55,10 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
 .cw-err { color: #8a1c1c; font-weight: 600; }
 .cw-linkish { background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; font: inherit; color: inherit; }
 .cw-appeal code { user-select: all; word-break: break-all; }
+
+/* A published image sits inside the transcript, bounded so a wide picture cannot force the page to
+   scroll sideways — WCAG 1.4.10 reflow applies to a room full of user-supplied images too, and a
+   guest cannot be trusted to upload something the layout likes. */
+.cw-img { display: block; max-width: 100%; height: auto; border-radius: 6px; margin-top: 0.35rem; }
+.cw-image-composer { margin-top: 1.25rem; border-top: 1px solid #d8d8c8; padding-top: 1rem; }
+.cw-composer-h { font-size: 1rem; margin: 0 0 0.5rem; }

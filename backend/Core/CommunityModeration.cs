@@ -267,6 +267,93 @@ public static class CommunityModeration
         return rows;
     }
 
+    /// <summary>
+    /// The image half of the matrix (Phase 2 — docs/pciworld/CCP_PHASE2_DESIGN.md §6.2). Same engine,
+    /// same <see cref="Resolve"/>, <c>contentType="image"</c>; only the rows differ.
+    ///
+    /// TWO DELIBERATE DIFFERENCES FROM THE TEXT MATRIX, both of which are safety properties rather
+    /// than taste:
+    ///
+    /// 1. **No image row ejects.** §28.5 forbids turning a classifier result into an irreversible
+    ///    automatic sanction, and image classification is materially less reliable than text
+    ///    classification — a photograph is ambiguous in ways a slur is not. A confident severe image
+    ///    signal therefore withholds the image and opens a case for a human; ending someone's session
+    ///    on an image signal alone is a decision a person makes, not one this table makes. There is a
+    ///    test asserting this over the whole table, so it cannot be eroded a row at a time.
+    ///
+    /// 2. **No mitigating-context rows.** "Educational" or "quoted" are claims a text classifier can
+    ///    find evidence for in the surrounding words. For a bare image there are no surrounding words,
+    ///    so a context row here would be an excuse with nothing behind it — the weakest link in the
+    ///    table, and precisely the one an abuser would aim at.
+    ///
+    /// The bands these rows key on are UNCALIBRATED until a provider is contracted and benchmarked
+    /// (CCP-P1-004). That is why nothing here is irreversible.
+    /// </summary>
+    public static IReadOnlyList<Rule> DefaultImageMatrix()
+    {
+        var rows = new List<Rule>();
+        var id = 0L;
+        void Add(string category, Band band, Outcome outcome, string reason, int sort = 100)
+            => rows.Add(new Rule(++id, "image", category, SeverityFor(band), band,
+                                 null, 0, outcome, reason, sort));
+
+        // An ordinary image publishes. Without this the engine would withhold everything as an
+        // unmatched category — the right fail-closed default, and a useless product.
+        Add(Categories.Ordinary, Band.Low, Outcome.Allow, "ok");
+        Add(Categories.Ordinary, Band.Medium, Outcome.Allow, "ok");
+        Add(Categories.Ordinary, Band.High, Outcome.Allow, "ok");
+
+        // Sexual imagery. High confidence escalates to restricted handling rather than sitting in the
+        // ordinary queue: the minors adjacency is exactly what §19.3 requires trained people for, and
+        // §28.7 forbids such material appearing in a routine admin thumbnail.
+        Add(Categories.Sexual, Band.Low, Outcome.Quarantine, "sexual_review");
+        Add(Categories.Sexual, Band.Medium, Outcome.Quarantine, "sexual_review");
+        Add(Categories.Sexual, Band.High, Outcome.Escalate, "sexual_restricted");
+
+        // Child-safety indicators go to restricted handling from Medium up and are NEVER an ordinary
+        // block, so this evidence never reaches the routine moderator queue (§8.7).
+        Add(Categories.Grooming, Band.Low, Outcome.Quarantine, "child_safety_review");
+        Add(Categories.Grooming, Band.Medium, Outcome.Escalate, "child_safety_restricted");
+        Add(Categories.Grooming, Band.High, Outcome.Escalate, "child_safety_restricted");
+
+        Add(Categories.Hate, Band.Low, Outcome.Quarantine, "hate_review");
+        Add(Categories.Hate, Band.Medium, Outcome.Block, "hate_blocked");
+        Add(Categories.Hate, Band.High, Outcome.Escalate, "hate_severe");
+
+        Add(Categories.Violence, Band.Low, Outcome.Quarantine, "violence_review");
+        Add(Categories.Violence, Band.Medium, Outcome.Block, "violence_blocked");
+        Add(Categories.Violence, Band.High, Outcome.Escalate, "violence_graphic");
+
+        // Self-harm imagery is treated differently from self-harm TEXT, on purpose. Text describing
+        // someone's own struggle is a request for support and suppressing it is a harm; a graphic
+        // image of self-injury is not the same artefact and is not published while a human looks.
+        Add(Categories.SelfHarm, Band.Low, Outcome.Quarantine, "self_harm_review");
+        Add(Categories.SelfHarm, Band.Medium, Outcome.Quarantine, "self_harm_review");
+        Add(Categories.SelfHarm, Band.High, Outcome.Escalate, "self_harm_crisis");
+
+        // A screenshot of somebody's passport, payslip or address does its damage the moment it is
+        // visible, and a later review does not undo it — so it is withheld at every band, exactly as
+        // the text matrix is stricter at Low for doxxing.
+        Add(Categories.PiiDoxxing, Band.Low, Outcome.Block, "pii_blocked");
+        Add(Categories.PiiDoxxing, Band.Medium, Outcome.Block, "pii_blocked");
+        Add(Categories.PiiDoxxing, Band.High, Outcome.Escalate, "pii_doxxing_severe");
+
+        Add(Categories.IllegalGoods, Band.Low, Outcome.Quarantine, "illegal_review");
+        Add(Categories.IllegalGoods, Band.Medium, Outcome.Block, "illegal_blocked");
+        Add(Categories.IllegalGoods, Band.High, Outcome.Block, "illegal_blocked");
+
+        Add(Categories.ScamSpam, Band.Low, Outcome.Quarantine, "spam_review");
+        Add(Categories.ScamSpam, Band.Medium, Outcome.Block, "spam_blocked");
+        Add(Categories.ScamSpam, Band.High, Outcome.Block, "spam_blocked");
+
+        // A rights question is a publication decision, not participant misconduct.
+        Add(Categories.Copyright, Band.Low, Outcome.Quarantine, "rights_review");
+        Add(Categories.Copyright, Band.Medium, Outcome.Quarantine, "rights_review");
+        Add(Categories.Copyright, Band.High, Outcome.Block, "rights_refused");
+
+        return rows;
+    }
+
     static string SeverityFor(Band band) => band switch
     {
         Band.High => "high",

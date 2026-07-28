@@ -338,7 +338,13 @@ function Room({ room, messages, pending, setPending, onWithheld, onEjected, onLe
         {messages.map(m => (
           <li key={m.sequence} className="cw-msg">
             <span className="cw-author">{m.author ?? 'Guest'}</span>
+            {/* An image message carries its alternative text in the SAME body field a text message
+                uses, so this renders something meaningful either way — and a screen reader gets the
+                description whether or not the picture loads. The <img> is additive. */}
             <span className="cw-body">{m.body}</span>
+            {m.kind === 'image' && typeof m.media_id === 'number' && (
+              <img className="cw-img" src={C.mediaUrl(m.media_id)} alt={m.body} loading="lazy" />
+            )}
           </li>
         ))}
         {pending && (
@@ -368,7 +374,92 @@ function Room({ room, messages, pending, setPending, onWithheld, onEjected, onLe
           {busy ? 'Sending…' : 'Send'}
         </button>
       </form>
+
+      {/* Images appear ONLY where the room actually allows them. Rendering a disabled control in
+          every room would advertise a feature most rooms do not have. */}
+      {room.images_allowed && <ImageComposer room={room} onNotice={onWithheld} />}
     </section>
+  )
+}
+
+// ── Image composer ──────────────────────────────────────────────────────────────────────────
+//
+// Two things this does NOT do, both deliberately:
+//
+//   • It never shows a local preview of the chosen file as though it were posted. A local preview
+//     is the image equivalent of an optimistic echo — the uploader would see their picture sitting
+//     in the room while the server had not yet decided, and might reasonably believe everyone else
+//     could see it too. What they get instead is an explicit "not visible yet" state, in words.
+//   • It does not let the image go without alternative text. The server requires it, and enforcing
+//     it here as well means the person finds out before they wait for an upload, not after.
+
+function ImageComposer({ room, onNotice }: { room: C.RoomDetail; onNotice: (text: string) => void }) {
+  const [file, setFile] = useState<File | null>(null)
+  const [alt, setAlt] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [state, setState] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!file || alt.trim().length === 0 || busy) return
+    setBusy(true)
+    setState(null)
+    try {
+      const data = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(String(reader.result))
+        reader.onerror = () => reject(new Error('read_failed'))
+        reader.readAsDataURL(file)
+      })
+      const clientId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
+      const r = await C.uploadImage(room.slug, data, alt.trim(), clientId)
+      if (r.ok || r.reason === 'duplicate') {
+        // The honest wording. "Uploaded" would read as "posted", and it is not: the room cannot
+        // see this, and depending on the verdict it may never be able to.
+        setState('Sent for checking. It is not visible to the room yet.')
+        setFile(null); setAlt('')
+        if (inputRef.current) inputRef.current.value = ''
+      } else {
+        onNotice(C.reasonText(r.reason))
+      }
+    } catch (err) {
+      onNotice(err instanceof C.CommunityError ? err.message : 'That image could not be sent.')
+    } finally { setBusy(false) }
+  }
+
+  return (
+    <form onSubmit={submit} className="cw-composer cw-image-composer">
+      <h3 className="cw-composer-h">Share an image</h3>
+      <label htmlFor="cw-file">Image file</label>
+      <input
+        id="cw-file" ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp"
+        onChange={e => setFile(e.target.files?.[0] ?? null)}
+        aria-describedby="cw-file-help"
+      />
+      <p id="cw-file-help" className="cw-help">
+        PNG, JPEG or WebP, up to 2&nbsp;MB. Images are checked before anyone else can see them, which
+        can take a moment. Location and camera details are removed automatically.
+      </p>
+
+      <label htmlFor="cw-alt">Describe the image</label>
+      <input
+        id="cw-alt" type="text" value={alt} maxLength={500}
+        onChange={e => setAlt(e.target.value)}
+        aria-describedby="cw-alt-help" required
+      />
+      <p id="cw-alt-help" className="cw-help">
+        Required. This is what people using a screen reader will hear, and what everyone sees if the
+        image cannot load.
+      </p>
+
+      {/* Conveyed in TEXT, not by colour — the same rule the rest of this surface follows. */}
+      {state && <p role="status" className="cw-notice cw-notice-info">{state}</p>}
+
+      <button type="submit" disabled={busy || !file || alt.trim().length === 0 || !room.accepting}>
+        {busy ? 'Sending…' : 'Send image'}
+      </button>
+    </form>
   )
 }
 

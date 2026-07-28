@@ -17,6 +17,8 @@ tests/_community.db*
 tests/_community_storage/
 tests/_community_abuse.db*
 tests/_community_abuse_storage/
+tests/_community_images.db*
+tests/_community_images_storage/
 tests/_impersonation.db*
 tests/_impersonation_storage/
 tests/_impersonation_boot.log

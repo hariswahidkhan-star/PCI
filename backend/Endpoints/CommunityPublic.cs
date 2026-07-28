@@ -87,6 +87,30 @@ public static class CommunityPublic
             return parsed;
         }
 
+        // Decode an image data URI under the COMMUNITY rules rather than Storage's.
+        // Storage.DecodeDataUri exists for evidence and attachments: it allows PDF, uses a different
+        // size cap, and is not the policy for an anonymous guest room. Reusing it would have quietly
+        // made "no PDFs in rooms" depend on a constant that belongs to another feature.
+        (byte[]? bytes, string mime, string? error) DecodeImageDataUri(string? dataUri)
+        {
+            if (string.IsNullOrEmpty(dataUri)) return (null, "", "no_file");
+            if (!dataUri.StartsWith("data:", StringComparison.Ordinal)) return (null, "", "not_a_data_uri");
+            var comma = dataUri.IndexOf(',');
+            var semi = dataUri.IndexOf(';');
+            if (comma < 0 || semi < 0 || semi > comma) return (null, "", "malformed_data_uri");
+            var mime = dataUri[5..semi];
+            // Size is bounded BEFORE allocating: base64 is about 4/3 of the bytes it encodes, so a
+            // payload that could not possibly fit is refused without materialising it.
+            if ((long)(dataUri.Length - comma) * 3 / 4 > CommunityMedia.MaxBytes + 1024)
+                return (null, mime, "file_too_large");
+            byte[] decoded;
+            try { decoded = Convert.FromBase64String(dataUri[(comma + 1)..]); }
+            catch { return (null, mime, "invalid_base64"); }
+            // Everything else — allow-list, sniff, bounds, re-encode — is CommunityMedia.Sanitise's
+            // job, called inside the pipeline. This function only gets the bytes out of the string.
+            return (decoded, mime, null);
+        }
+
         // The configured moderator. Absent configuration yields NullModerator, which classifies
         // nothing and therefore publishes nothing — the fail-closed default (§15).
         CommunityModeration.ITextModerator Moderator() =>
@@ -217,6 +241,12 @@ public static class CommunityPublic
                 author = H.Str(m["author_name"]),
                 reply_to = m["reply_to_message_id"] is null ? (long?)null : H.L(m["reply_to_message_id"]),
                 at = H.Str(m["published_at"]),
+                // An image message carries its alternative text in `body` — the same field a text
+                // message uses — so a client that has never heard of images still renders something
+                // meaningful rather than an empty bubble, and a screen reader gets the description
+                // either way. `media_id` is additive.
+                kind = H.Str(m["message_kind"]) ?? "text",
+                media_id = m.TryGetValue("media_id", out var mid) && mid is not null ? H.L(mid) : (long?)null,
             });
             return Results.Json(new { messages = msgs });
         });
@@ -320,6 +350,83 @@ public static class CommunityPublic
                     how = "/world/appeals",
                 },
             }, statusCode: result.ReasonCode is "room_not_accepting" or "message_too_long" or "empty_message" ? 400 : 200);
+        });
+
+        // ── Images (Phase 2) ──────────────────────────────────────────────────────────────────
+        //
+        // The upload endpoint returns a PENDING handle and never a URL. That is the whole contract:
+        // there is nothing in this response another participant could load, because at this point
+        // no renderable copy exists anywhere (see CommunityMediaPipeline).
+
+        app.MapPost("/api/world/community/rooms/{slug}/images", async (HttpContext ctx, string slug) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (!CommunityMediaPipeline.ImagesEnabled(db))
+                return Results.Json(new { error = "images_disabled" }, statusCode: 503);
+
+            var room = CommunityRooms.BySlug(db, slug);
+            if (room is null) return Results.NotFound();
+
+            var session = CommunityRooms.SessionByToken(db, GuestToken(ctx));
+            if (session is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+            if (H.L(session["room_id"]) != H.L(room["id"]))
+                return Results.Json(new { error = "wrong_room" }, statusCode: 403);
+
+            // Deliberately tighter than the text limit. An upload costs a sanitise, a store and a
+            // classifier call; text costs none of those.
+            if (Throttled("img|" + H.L(session["id"]), 6))
+                return Results.Json(new { error = "rate_limited" }, statusCode: 429);
+
+            var b = await H.Body(ctx.Request);
+            var uploadId = (H.GetS(b, "client_upload_id") ?? "").Trim();
+            if (uploadId.Length is 0 or > 64)
+                return Results.Json(new { error = "bad_client_upload_id" }, statusCode: 400);
+
+            var (bytes, mime, decodeError) = DecodeImageDataUri(H.GetS(b, "data"));
+            if (decodeError is not null)
+                return Results.Json(new { error = decodeError }, statusCode: 400);
+
+            var r = CommunityMediaPipeline.Upload(db, room, H.L(session["id"]), null, uploadId,
+                                                  bytes, mime, H.GetS(b, "alt"),
+                                                  correlationId: ctx.TraceIdentifier);
+
+            // A refusal is a 400 with a reason the participant can act on; a duplicate is a 200
+            // reporting the ORIGINAL outcome, because a retry is not an error.
+            var status = r.Ok || r.Reason == "duplicate" ? 200 : 400;
+            return Results.Json(new
+            {
+                ok = r.Ok,
+                media_id = r.MediaId == 0 ? (long?)null : r.MediaId,
+                state = r.State,
+                reason = r.Reason,
+                // Said plainly, because "uploaded" reads as "posted" and it is not: nobody else can
+                // see this yet, and they may never be able to.
+                notice = r.Ok ? "Your image is being checked and is not visible to the room yet." : null,
+            }, statusCode: status);
+        });
+
+        // Serving. Two conditions, checked in ONE place (CommunityMediaPipeline.IsServable) so a
+        // handler cannot satisfy itself with only one of them: state must be 'allowed' AND a
+        // derivative must exist. A pending, withheld or restricted item is a 404 — not a 403,
+        // because "this exists but you can't have it" is itself information about someone's
+        // moderation outcome.
+        app.MapGet("/api/world/community/media/{id:long}", (HttpContext ctx, long id) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (!CommunityMediaPipeline.ImagesEnabled(db))
+                return Results.Json(new { error = "images_disabled" }, statusCode: 503);
+
+            var media = db.QueryOne(
+                "SELECT id,state,derivative_ref,declared_mime FROM pciworld_community_media WHERE id=?", id);
+            if (!CommunityMediaPipeline.IsServable(media)) return Results.NotFound();
+
+            var fetched = Storage.Get(H.Str(media!["derivative_ref"]));
+            if (fetched?.bytes is null) return Results.NotFound();
+
+            // no-store rather than a long cache: a published image can later be withdrawn by a
+            // moderator or an appeal, and a year-long cache entry would outlive that decision.
+            ctx.Response.Headers["Cache-Control"] = "no-store";
+            return Results.File(fetched.Value.bytes, H.Str(media["declared_mime"]) ?? "image/png");
         });
 
         // ── Reports ───────────────────────────────────────────────────────────────────────────

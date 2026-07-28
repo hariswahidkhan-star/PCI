@@ -283,6 +283,7 @@ public static class CommunityRooms
     public static List<Dictionary<string, object?>> Since(Db db, long roomId, long afterSequence, int limit = 200)
         => db.Query(
             @"SELECT m.id, m.sequence, m.body, m.reply_to_message_id, m.published_at,
+                     m.message_kind, m.media_id,
                      g.display_name AS author_name
               FROM pciworld_community_messages m
               LEFT JOIN pciworld_guest_sessions g ON g.id = m.guest_session_id

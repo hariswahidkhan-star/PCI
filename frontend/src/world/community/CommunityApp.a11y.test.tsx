@@ -152,4 +152,33 @@ describe('World community rooms — accessibility', () => {
     // The screen carrying the only copy of someone's appeal code must be readable by everyone.
     expect(await scan(container)).toEqual([])
   })
+
+  it('the image composer is accessible', async () => {
+    // Scanned separately because ROOM above has images_allowed: false — the composer only renders
+    // where the room actually permits images, so a scan of the ordinary room would silently cover
+    // nothing at all and report a pass.
+    const IMAGE_ROOM = { ...ROOM, slug: 'lobby', images_allowed: true }
+    responder = url => {
+      if (url.includes('/community/rooms/lobby/messages')) return { messages: [] }
+      if (url.includes('/community/rooms/lobby')) return IMAGE_ROOM
+      return { rooms: [IMAGE_ROOM] }
+    }
+    const { container } = render(<CommunityApp />)
+    await screen.findByText('Lobby')
+    fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
+    await screen.findByLabelText('Display name')
+    fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ali Hassan' } })
+    fireEvent.click(screen.getByRole('checkbox'))
+    responder = url => {
+      if (url.includes('guest-sessions')) return { ok: true, token: 't', display_name: 'Ali Hassan' }
+      if (url.includes('afterSequence')) return { messages: [] }
+      return IMAGE_ROOM
+    }
+    fireEvent.click(screen.getByRole('button', { name: 'Join room' }))
+
+    // Guard the fixture: if the composer did not render, the scan below proves nothing.
+    expect(await screen.findByLabelText('Image file')).toBeTruthy()
+    expect(screen.getByLabelText('Describe the image')).toBeTruthy()
+    expect(await scan(container)).toEqual([])
+  })
 })
