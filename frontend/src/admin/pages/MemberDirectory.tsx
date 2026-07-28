@@ -1,6 +1,7 @@
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 // Admin moderation of the opt-in public member directory. Members list themselves from their profile;
 // admins can remove a listing. Backend: MemberDirectory.cs (gated 'members').
@@ -25,11 +26,11 @@ export default function MemberDirectory() {
     })
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Member directory</h1>
-        <p className="muted small" style={{ margin: 0 }}>Members who opted into the public find-a-professional directory (they also hold an active credential).</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Member directory"
+        subtitle="Members who opted into the public find-a-professional directory (they also hold an active credential)."
+      />
       <Card>
         {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data || data.rows.length === 0 ? (
           <Empty>No members are currently listed.</Empty>

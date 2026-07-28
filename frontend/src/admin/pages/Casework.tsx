@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDate } from '../../format'
 
@@ -151,11 +152,11 @@ function Accommodations() {
 export default function Casework() {
   const [tab, setTab] = useState<'appeals' | 'accommodations'>('appeals')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Appeals &amp; Accommodations</h1>
-        <p className="muted small" style={{ margin: 0 }}>Review the appeals, complaints and exam-accommodation requests candidates submit from their portal.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Appeals & Accommodations"
+        subtitle="Review the appeals, complaints and exam-accommodation requests candidates submit from their portal."
+      />
       <div className="row" style={{ gap: '.4rem' }}>
         <button className={'btn sm' + (tab === 'appeals' ? '' : ' secondary')} onClick={() => setTab('appeals')}>Appeals</button>
         <button className={'btn sm' + (tab === 'accommodations' ? '' : ' secondary')} onClick={() => setTab('accommodations')}>Accommodations</button>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Spinner, ErrorNote } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 /** Every field the public announcement modal renders. `key` is the suffix stored as `announce_<key>`
  * in site_settings and sent (without the prefix) on save; the backend resolves the {date} token. */
@@ -62,13 +63,11 @@ export default function Announcement() {
   if (error) return <ErrorNote>{error}</ErrorNote>
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Announcement</h1>
-        <p className="muted">The pop-up shown to visitors across the public website. Turn it on or off, change the
-          launch date, and edit every line here — no code change needed. The token <code>{'{date}'}</code> is replaced
-          with the launch date wherever it appears. Empty a field to use its built-in default.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Announcement"
+        subtitle={<>The pop-up shown to visitors across the public website. Turn it on or off, change the launch date, and edit every line here — no code change needed. The token <code>{'{date}'}</code> is replaced with the launch date wherever it appears. Empty a field to use its built-in default.</>}
+      />
       {msg && <div className="note ok">{msg}</div>}
       {err && <ErrorNote>{err}</ErrorNote>}
 
