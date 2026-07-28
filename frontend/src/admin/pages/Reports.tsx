@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type ReportData } from '../api'
 import { Card, Stat, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtMoney, titleCase } from '../../format'
 
 const EXPORTS = ['members', 'payments', 'enrollments', 'credentials', 'inquiries', 'redemptions', 'subscribers']
@@ -40,8 +41,8 @@ export default function Reports() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <h1>Reports</h1>
+    <div className="page">
+      <PageHeader title="Reports" />
 
       <Card title="Date range">
         <div className="row" style={{ flexWrap: 'wrap', alignItems: 'flex-end' }}>

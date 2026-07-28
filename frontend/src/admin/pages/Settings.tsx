@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { adminApi, type Settings as SettingsMap } from '../api'
 import { useAdminAuth } from '../AdminAuth'
 import { Card, Spinner, ErrorNote } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { titleCase } from '../../format'
 
 /** Self-service password change for the signed-in admin. Lives here in Settings → Security so a
@@ -216,11 +217,11 @@ export default function Settings() {
   if (error) return <ErrorNote>{error}</ErrorNote>
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Settings</h1>
-        <button className="btn sm" disabled={busy || Object.keys(edits).length === 0} onClick={save}>{busy ? 'Saving…' : `Save changes${Object.keys(edits).length ? ` (${Object.keys(edits).length})` : ''}`}</button>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Settings"
+        actions={<button className="btn sm" disabled={busy || Object.keys(edits).length === 0} onClick={save}>{busy ? 'Saving…' : `Save changes${Object.keys(edits).length ? ` (${Object.keys(edits).length})` : ''}`}</button>}
+      />
       {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status">{msg.text}</div>}
       <p className="muted small">Configuration is stored as key/value pairs. Some keys are restricted to specific roles; the server will report any it does not permit you to change.</p>
 

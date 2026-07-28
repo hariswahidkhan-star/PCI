@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type FormSubmission } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate, titleCase } from '../../format'
 
 export default function Submissions() {
@@ -16,8 +17,8 @@ export default function Submissions() {
   })
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <h1>Form submissions</h1>
+    <div className="page">
+      <PageHeader title="Form submissions" />
 
       <Card>
         <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>

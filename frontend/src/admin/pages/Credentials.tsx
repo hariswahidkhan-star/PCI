@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { adminApi, type CredentialRow, type MemberRow } from '../api'
 import { ApiError } from '../../api/client'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate, isPast } from '../../format'
 
 function IssueForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
@@ -183,11 +184,11 @@ export default function Credentials() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Credentials</h1>
-        <button className="btn sm" onClick={() => setIssuing(true)}>Issue credential</button>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Credentials"
+        actions={<button className="btn sm" onClick={() => setIssuing(true)}>Issue credential</button>}
+      />
 
       <CredlyPanel />
 

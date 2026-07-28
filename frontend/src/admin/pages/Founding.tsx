@@ -4,6 +4,7 @@ import { useAdminQuery } from '../hooks'
 import { useAdminAuth } from '../AdminAuth'
 import { adminApi, type FoundingApplication, type FoundingStat } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 const STATUS_TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn'> = {
@@ -101,11 +102,11 @@ export default function Founding() {
   const rows = data?.rows ?? []
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Founding stage</h1>
-        <Link className="btn secondary sm" to="/codes">Manage codes</Link>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Founding stage"
+        actions={<Link className="btn secondary sm" to="/codes">Manage codes</Link>}
+      />
 
       {canCodes && <StatsRow />}
 

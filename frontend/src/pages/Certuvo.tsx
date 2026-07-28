@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PageHeader } from '../components/premium'
 import { useQuery } from '../api/hooks'
 import { api, ApiError } from '../api/client'
 import { Card, Badge } from '../components/ui'
@@ -104,15 +105,11 @@ function CertuvoAccessPanel() {
 export default function Certuvo() {
   return (
     <div className="page fade-stagger">
-      <div>
-        <h1>Certuvo</h1>
-        <p className="muted">
-          Certuvo is PCI's official study &amp; practice platform for your PCI certification. Your Certuvo
-          account is created for you once your membership is active — use the access details below to sign in.
-          All practice questions, mock examinations and study tools live inside Certuvo. The credential is
-          still earned on the real examination.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Study & practice"
+        title="Certuvo"
+        subtitle="Certuvo is PCI's official study & practice platform for your PCI certification. Your Certuvo account is created for you once your membership is active — use the access details below to sign in. All practice questions, mock examinations and study tools live inside Certuvo. The credential is still earned on the real examination."
+      />
       <CertuvoAccessPanel />
     </div>
   )
