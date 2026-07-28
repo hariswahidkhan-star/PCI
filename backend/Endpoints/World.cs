@@ -168,7 +168,10 @@ public static class World
             var version = WorldLifecycle.PinnedVersion(db, H.L(att["challenge_id"]), H.L(att["version"]));
             if (version is null) return Results.NotFound();
             Track("result_viewed", H.L(att["challenge_id"]));
-            return Html(WorldPages.PublicResult(db, att, version));
+            // Pass the route token so the page advertises its OWN canonical/og:url. Without it the
+            // renderer falls back to the World homepage, which is the ID-09 defect: a shared result
+            // card would tell every crawler the homepage was the canonical for this result.
+            return Html(WorldPages.PublicResult(db, att, version, token));
         });
 
         app.MapGet("/world/i/{token}", (string token) =>

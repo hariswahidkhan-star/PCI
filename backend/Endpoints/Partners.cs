@@ -142,6 +142,7 @@ public static class Partners
                 if (user is null)
                 {
                     uid = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')", email, first, last);
+                    StudentNumbers.GetOrIssue(db, uid, "partner_created");
                     db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
                     var token = Security.RandomHex(32);
                     db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", uid, Security.Sha(token));

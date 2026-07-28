@@ -81,17 +81,39 @@ public static class WorldAccount
         // Privacy-safe defaults (journey repair P1-05): a NEW account publishes nothing beyond
         // challenge titles until its owner deliberately switches fields on. Pre-existing rows keep
         // the schema default (visible) — the behaviour every already-published Passport had.
-        var id = db.ExecuteReturningId(@"INSERT INTO pciworld_users
-                (email,password_hash,display_name,passport_show_scores,passport_show_profiles,passport_show_dates)
-            VALUES(?,?,?,0,0,0)",
-            email, BCrypt.Net.BCrypt.HashPassword(password), Trunc(displayName, 80));
         // Canonical identity from the moment the account exists (P0-00): a standalone World
         // registration creates its canonical users/student_profiles pair immediately (same bcrypt
         // hash, so the one password works on both products); an email already registered on the
         // platform is quarantined in the map, never silently merged. Mapping runs BEFORE the
         // claim so claimed attempts are stamped with canonical ownership in the same breath.
-        try { WorldIdentity.MapOne(db, id); } catch { /* mapping must never break registration */ }
-        ClaimSession(db, id, worldSessionId);
+        //
+        // All of it commits together or not at all. This used to be `try { MapOne } catch { }` with
+        // the note "mapping must never break registration" — but swallowing the failure is what
+        // broke it: the account came into existence with no canonical identity and no Student
+        // Number, registration reported success, and the split was invisible until something later
+        // tried to read an identity that was never created. A registration that cannot establish
+        // identity must fail and roll back, not report success on half an account.
+        //
+        // A quarantined email collision is NOT such a failure — it is a designed outcome. Those
+        // accounts are created and left in identity_link_pending (WorldIdentity.LinkPending), which
+        // the Passport gate below refuses to publish until ownership is proven.
+        long id = 0;
+        try
+        {
+            db.Transaction(() =>
+            {
+                id = db.ExecuteReturningId(@"INSERT INTO pciworld_users
+                        (email,password_hash,display_name,passport_show_scores,passport_show_profiles,passport_show_dates)
+                    VALUES(?,?,?,0,0,0)",
+                    email, BCrypt.Net.BCrypt.HashPassword(password), Trunc(displayName, 80));
+                WorldIdentity.MapOne(db, id);
+                ClaimSession(db, id, worldSessionId);
+            });
+        }
+        catch
+        {
+            return ("identity_unavailable", 0, "");
+        }
         return (null, id, MintSession(db, id));
     }
 
@@ -224,6 +246,12 @@ public static class WorldAccount
     {
         var u = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", userId);
         if (u is null) return ("not_found", null);
+        // An account with no canonical identity behind it must not publish a Passport. A public
+        // Passport speaks for a canonical PCI identity — carrying its Student Number and its
+        // evidence — so an account still quarantined for an unproven email collision has nothing
+        // it is entitled to publish. Enforced here rather than at the endpoint so every caller,
+        // including future admin and handoff paths, inherits it.
+        if (WorldIdentity.LinkPending(db, userId)) return ("identity_link_pending", null);
         if (H.L(u["email_verified"]) != 1) return ("email_unverified", null);
         if (string.IsNullOrWhiteSpace(H.Str(u["display_name"]))) return ("no_display_name", null);
         // Publish-order safety (journey repair P1-05): an empty public Passport is a page that
@@ -455,8 +483,16 @@ public static class WorldAccount
             var b = await H.Body(ctx.Request);
             var (err, userId, token) = Register(db, H.GetS(b, "email") ?? "", H.GetS(b, "password") ?? "",
                 H.GetS(b, "display_name"), WorldSessionId(ctx));
-            if (err is not null) return Err(err, err == "duplicate_email" ? 409 : 400,
-                err == "weak_password" ? "Use at least 10 characters." : null);
+            // identity_unavailable is ours, not the caller's: the account could not be given a
+            // canonical identity, so nothing was created. 503 (retryable) rather than 400, and the
+            // message must not invite the person to "fix" input that was never the problem.
+            if (err is not null) return Err(err, err switch { "duplicate_email" => 409, "identity_unavailable" => 503, _ => 400 },
+                err switch
+                {
+                    "weak_password" => "Use at least 10 characters.",
+                    "identity_unavailable" => "We could not set up your PCI identity just now, so no account was created. Please try again shortly.",
+                    _ => null,
+                });
             SendVerification(ctx, userId, (H.GetS(b, "email") ?? "").Trim().ToLowerInvariant());
             SetSessionCookie(ctx, token);
             log(null, "world_register", $"#{userId}");
@@ -883,8 +919,13 @@ public static class WorldAccount
             if (!Enabled()) return Disabled();
             var u = FromReq(ctx.Request, db);
             if (u is null) return Err("no_token", 401);
+            // identity_state lets the participant UI offer the "sign in to link your existing PCI
+            // account" journey instead of a dead end at publish time. It is a hint for rendering,
+            // never the gate — PublishPassport re-checks server-side regardless of what the client
+            // believes, so a forged value buys nothing.
             return J(new { email = u.Email, display_name = u.DisplayName,
-                email_verified = u.EmailVerified, passport_public = u.PassportPublic });
+                email_verified = u.EmailVerified, passport_public = u.PassportPublic,
+                identity_state = WorldIdentity.LinkPending(db, u.Id) ? "link_pending" : "linked" });
         });
 
         app.MapPost("/api/world/account/profile", async (HttpContext ctx) =>
@@ -1192,6 +1233,10 @@ public static class WorldAccount
             var (err, url) = PublishPassport(db, u.Id);
             if (err is not null) return Err(err, 409, err switch
             {
+                // Deliberately says an account exists without confirming anything about it — the
+                // person may not be its owner, and "an account with your email exists" is itself a
+                // disclosure. The resolution is proving ownership, not being told what was found.
+                "identity_link_pending" => "This email is already registered with PCI. Sign in with your existing PCI account to link it before publishing a Passport.",
                 "email_unverified" => "Verify your email before publishing a public Passport.",
                 "no_display_name" => "Choose the display name that should appear on your public Passport first.",
                 "no_evidence" => "Select at least one completed challenge to appear on your Passport before publishing.",

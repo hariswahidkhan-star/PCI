@@ -331,6 +331,9 @@ public static class Payments
                     if (existingId is null)
                     {
                         userId = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')", email, m.GetValueOrDefault("first_name"), m.GetValueOrDefault("last_name"));
+                        // Already inside the webhook's transaction — issue here so the number commits
+                        // with the account, and never open a nested one.
+                        StudentNumbers.GetOrIssue(db, userId, "payment_signup");
                         db.Execute("INSERT INTO student_profiles(user_id,country) VALUES(?,?)", userId, m.GetValueOrDefault("country"));
                         db.Execute("UPDATE payments SET user_id=? WHERE id=?", userId, payId); // backfill the FK now that the user exists
                     }

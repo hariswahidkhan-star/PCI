@@ -310,6 +310,7 @@ public static class HonoraryApplication
                     {
                         var newId = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')",
                             email, H.Str(a["first_name"]), H.Str(a["last_name"]));
+                        StudentNumbers.GetOrIssue(db, newId, "honorary_conversion");
                         db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", newId);
                         // Deliver login credentials the same way a new member gets them: a single-use set-password link.
                         var token = Security.RandomHex(32);

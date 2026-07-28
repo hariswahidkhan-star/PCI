@@ -98,8 +98,13 @@ public static class AdminStudents
                 return Results.Json(new { error = "email_exists" }, statusCode: 409);
             var first = H.GetS(b, "first_name", "first") ?? "";
             var last = H.GetS(b, "last_name", "last") ?? "";
-            var uid = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')", email, first, last);
-            db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
+            long uid = 0;
+            db.Transaction(() =>
+            {
+                uid = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')", email, first, last);
+                StudentNumbers.GetOrIssue(db, uid, "admin_created");
+                db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
+            });
             var token = Security.RandomHex(32);
             db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", uid, Security.Sha(token));
             var baseUrl = Mailer.BaseUrl(ctx.Request);

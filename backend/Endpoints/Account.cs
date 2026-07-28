@@ -53,13 +53,22 @@ public static class Account
             return (session, new { id = u["id"], email = u["email"], firstName = u["first_name"], lastName = u["last_name"] });
         }
 
+        // One transaction: user, PCI Student Number and profile commit together or not at all. A
+        // signup that cannot issue an identity must not report success and leave a half-built
+        // account behind, so StudentNumbers.GetOrIssue throwing rolls the whole thing back.
         Dictionary<string, object?> CreateStudent(string email, string? first, string? last, string? passwordHash, string? country, string? mobile)
         {
-            var uid = db.ExecuteReturningId(
-                "INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES(?,?,?, 'student','active',?)",
-                email, first ?? "", last ?? "", passwordHash);
-            db.Execute("INSERT INTO student_profiles(user_id,country,mobile) VALUES(?,?,?)", uid, country ?? "", mobile ?? "");
-            return db.QueryOne("SELECT * FROM users WHERE id=?", uid)!;
+            Dictionary<string, object?>? created = null;
+            db.Transaction(() =>
+            {
+                var uid = db.ExecuteReturningId(
+                    "INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES(?,?,?, 'student','active',?)",
+                    email, first ?? "", last ?? "", passwordHash);
+                StudentNumbers.GetOrIssue(db, uid, "self_signup");
+                db.Execute("INSERT INTO student_profiles(user_id,country,mobile) VALUES(?,?,?)", uid, country ?? "", mobile ?? "");
+                created = db.QueryOne("SELECT * FROM users WHERE id=?", uid)!;
+            });
+            return created!;
         }
 
         // ---- which optional sign-in providers are configured (safe to expose: a client id is public) ----

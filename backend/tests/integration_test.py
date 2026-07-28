@@ -1794,8 +1794,16 @@ def test_leadership_suite(admin):
 
     st1, body1, _ = _raw_get(f"/api/me/cert-documents/{bid}/download", token=stok)
     txt = _pdf_text(body1)
-    chk("18m watermarked download carries the student identity + designation",
-        st1 == 200 and body1[:5] == b"%PDF-" and body1 != braw and "Personal Copy" in txt and "PCI Student ID" in txt, (st1, len(body1)))
+    # The watermark carries the CANONICAL public Student Number, never users.id. This assertion
+    # used to require the literal "PCI Student ID" — the old label for the database primary key,
+    # which is both a mislabel and a leak of an internal identifier onto a distributable PDF. It
+    # now pins the opposite: the canonical number is present, and the old label is gone.
+    c, meid = jget("GET", "/api/me", token=stok)
+    student_no = ((meid.get("user") or {}).get("registration_no")) or ""
+    chk("18m watermarked download carries the canonical PCI Student Number + designation",
+        st1 == 200 and body1[:5] == b"%PDF-" and body1 != braw and "Personal Copy" in txt
+        and student_no.startswith("PCI-") and "PCI Student Number:" in txt and student_no in txt
+        and "PCI Student ID" not in txt, (st1, len(body1), student_no))
     st2, body2, _ = _raw_get(f"/api/me/cert-documents/{pid2}/download", token=stok)
     chk("18n unwatermarked book is served byte-identical to the master", st2 == 200 and body2 == braw, (st2, len(body2)))
 
@@ -5564,10 +5572,47 @@ def test_events_module(admin):
     st = con.execute("SELECT status FROM event_registrations WHERE event_id=? AND user_id=?", (eid, ub)).fetchone()
     con.close()
     chk("44o un-marking attendance removes the CPD entry and reverts to registered", cnt3 == 0 and bool(st) and st[0] == "registered", (cnt3, st))
-    # The admin events surface is content-gated (viewer 403).
+    # The admin events surface is permission-gated (viewer 403) — granular events_* or legacy 'content'.
     vtok = globals().get("_VIEWER_TOK")
-    chk("44p the admin events surface needs the 'content' permission (viewer 403)",
+    chk("44p the admin events surface needs an events permission (viewer 403)",
         bool(vtok) and jget("GET", "/api/admin/events", token=vtok)[0] == 403)
+    # ── ID-10/11/12 regression checks (events defect fixes) ──
+    # ID-10: a past published event is hidden from the member list and refuses direct registration.
+    c, pev = jget("POST", "/api/admin/events", token=admin,
+                  body={"title": "Yesterday's Webinar 44", "status": "published", "capacity": 0,
+                        "starts_at": "2020-01-01 09:00:00"})
+    pid = pev.get("id")
+    chk("44q an admin can still create a past published event (history)", c == 200 and bool(pid), pev)
+    _, mrows = jget("GET", "/api/me/events", token=tc)
+    chk("44r a past event is excluded from the member 'upcoming' list",
+        all(e.get("id") != pid for e in mrows.get("rows", [])), [e.get("id") for e in mrows.get("rows", [])])
+    c, rpast = jget("POST", f"/api/me/events/{pid}/register", token=tc)
+    chk("44s registering for a past event is refused (event_past, 409)",
+        c == 409 and rpast.get("error") == "event_past", rpast)
+    # ID-11: a cancelled registration cannot be marked attended (member A cancelled in 44g).
+    c, attc = jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ua, "attended": True})
+    chk("44t a cancelled registration cannot be marked attended (cancelled, 409)",
+        c == 409 and attc.get("error") == "cancelled", attc)
+    con = dbconn(); sta = con.execute("SELECT status FROM event_registrations WHERE event_id=? AND user_id=?", (eid, ua)).fetchone(); con.close()
+    chk("44u the refused mark leaves the registration cancelled and credits no CPD",
+        bool(sta) and sta[0] == "cancelled", sta)
+    # ID-12: re-mark B attended — the credited CPD entry records its source event, and the DB itself
+    # refuses a second credit for the same (event, user) even from raw SQL (exactly-once at the data layer).
+    jget("POST", f"/api/admin/events/{eid}/attendance", token=admin, body={"user_id": ub, "attended": True})
+    con = dbconn()
+    src = con.execute("SELECT source_event_id FROM cpd_entries WHERE user_id=? AND description LIKE ?", (ub, "Attended:%")).fetchone()
+    con.close()
+    chk("44v the credited CPD entry records its source event", bool(src) and src[0] == eid, src)
+    dup_blocked = False
+    con = dbconn()
+    try:
+        con.execute("INSERT INTO cpd_entries(user_id,activity_date,category,hours,description,status,source_event_id) VALUES(?,?,?,?,?,?,?)",
+                    (ub, "2026-09-01", "Events & webinars", 2, "Attended: dup probe 44", "approved", eid))
+        con.commit()
+    except Exception:
+        dup_blocked = True
+    con.close()
+    chk("44w ux_cpd_event_user refuses a second CPD credit for the same (event, user)", dup_blocked)
 
 def test_announcement_config(admin):
     # Incremental Testing Programme — the admin-controlled site announcement (Endpoints/Announcement.cs)

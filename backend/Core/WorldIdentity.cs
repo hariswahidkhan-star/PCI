@@ -19,8 +19,9 @@ namespace PCI.Backend.Core;
 ///   Rule CREATED    an unlinked World row whose email matches NO canonical user creates one
 ///                   canonical users + student_profiles pair, PRESERVING the bcrypt hash (the
 ///                   platform verifies with the same BCrypt), so the person's one password now
-///                   works on both products. registration_no stays NULL — the platform assigns
-///                   it lazily, exactly as it does for portal-registered students.
+///                   works on both products. The canonical PCI Student Number is issued right here,
+///                   in the same creating path a portal signup uses — one number per person, whichever
+///                   product they arrived through, and never one derived from a World-specific id.
 ///   Rule CONFLICT   an unlinked World row whose email matches an EXISTING canonical user is
 ///                   QUARANTINED, never silently merged: linking two credential rows on a string
 ///                   match alone could hand one person's evidence to another. Resolution needs
@@ -142,6 +143,19 @@ public static class WorldIdentity
         if (w is not null) Decide(db, w);
     }
 
+    /// <summary>
+    /// True when a World account has NO canonical identity behind it — the recoverable
+    /// <c>identity_link_pending</c> state.
+    ///
+    /// It arises legitimately: an email that already belongs to a canonical PCI account is
+    /// QUARANTINED rather than merged on a string match, because merging two credential rows on an
+    /// email alone could hand one person's evidence to another. The person keeps their World
+    /// account; what they do not get, until they prove ownership, is anything that speaks for the
+    /// canonical identity they have not yet shown they own — a public Passport, verified evidence,
+    /// or cross-portal movement. Recoverable by design, and gated at the backend, not the UI.
+    /// </summary>
+    public static bool LinkPending(Db db, long worldUserId) => CanonicalUserFor(db, worldUserId) is null;
+
     /// <summary>Apply the LINKED / CREATED / CONFLICT rules to one World row and record the outcome.</summary>
     static string Decide(Db db, Dictionary<string, object?> w)
     {
@@ -176,6 +190,9 @@ public static class WorldIdentity
         var uid = db.ExecuteReturningId(@"INSERT INTO users(email,first_name,last_name,password_hash,role,status)
                 VALUES(?,?,?,?,'student','active')",
             email, first, last, H.Str(w["password_hash"]));
+        // A World-first participant is a canonical PCI student, so they get the same canonical number
+        // here — not later, and not a World-specific one derived from a World id.
+        StudentNumbers.GetOrIssue(db, uid, "world_canonical_created");
         db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
         db.Execute("UPDATE pciworld_users SET student_user_id=? WHERE id=? AND student_user_id IS NULL", uid, wid);
         Map(db, wid, uid, "created", "canonical identity created from standalone World account (bcrypt hash preserved)");
