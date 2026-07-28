@@ -6,7 +6,7 @@ import AuthShell from '../components/AuthShell'
 import { useT } from '../i18n'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, notice } = useAuth()
   const t = useT()
   const nav = useNavigate()
   const loc = useLocation() as { state?: { from?: string } }
@@ -60,6 +60,8 @@ export default function Login() {
         <GoogleButton onError={setError} destination={deepDest ?? '/'} />
 
         <form onSubmit={submit}>
+          {/* Gentle, informational note (e.g. an expired World handoff link) — never an error wall. */}
+          {notice && !error && <div className="notice" role="status" style={{ marginBottom: '1rem' }}>{notice}</div>}
           {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
           <div className="field">
             <label htmlFor="email">{t('auth.email')}</label>

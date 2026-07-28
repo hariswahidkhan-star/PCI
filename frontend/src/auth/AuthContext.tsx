@@ -14,6 +14,8 @@ interface SessionUser {
 interface AuthState {
   user: SessionUser | null
   ready: boolean // finished the initial token check
+  /** Gentle sign-in note (e.g. an expired World handoff link) — informational, never an error wall. */
+  notice: string | null
   login: (email: string, password: string, totp?: string) => Promise<void>
   register: (data: { firstName: string; lastName: string; email: string; password: string; confirmPassword?: string; country?: string; mobile?: string }) => Promise<void>
   googleSignIn: (credential: string) => Promise<void>
@@ -30,6 +32,7 @@ interface MeProbe {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null)
   const [ready, setReady] = useState(false)
+  const [notice, setNotice] = useState<string | null>(null)
 
   const logout = useCallback(() => {
     // revoke server-side first (fire-and-forget), then clear local state
@@ -49,18 +52,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // doesn't bounce a still-valid session to the login screen.
   useEffect(() => {
     let cancelled = false
+    // World → MyPCI portal handoff: the World switcher navigates here with a one-time 90-second
+    // code in the FRAGMENT (#world-code=…) — never a query string, so it never reaches a server
+    // log. The fragment is cleared IMMEDIATELY, before any other work, so the code cannot linger
+    // in the address bar, history, or anything that reads location later; redemption happens in
+    // boot() below against the copy captured here.
+    let worldCode: string | null = null
     // Support-view / test-user hand-off: the admin console links to /app/#t=<token> with a ready
     // session token (impersonation or test account). Adopt it — replacing any existing session —
     // and scrub it from the URL so the token never lingers in the address bar or history.
     try {
       const h = window.location.hash
-      if (h.startsWith('#t=')) {
+      const wc = /[#&]world-code=([A-Za-z0-9]+)/.exec(h)
+      if (wc) {
+        worldCode = wc[1]
+        history.replaceState(null, '', window.location.pathname + window.location.search)
+      } else if (h.startsWith('#t=')) {
         const t = decodeURIComponent(h.slice(3))
         if (t) setToken(t)
         history.replaceState(null, '', window.location.pathname + window.location.search)
       }
     } catch { /* malformed hash — ignore */ }
     async function boot() {
+      if (worldCode) {
+        // One-use code → a FRESH 30-day portal session, stored exactly the way login stores it.
+        try {
+          const res = await api.post<LoginResponse>('/api/portal-handoff/redeem', { code: worldCode }, { allowUnauthorized: true })
+          setToken(res.token)
+          setUser({ id: res.user.id, email: res.user.email, firstName: res.user.firstName, lastName: res.user.lastName })
+          if (!cancelled) setReady(true)
+          return
+        } catch {
+          // Expired, replayed or offline: fall through to the normal boot — any existing session
+          // still signs in, and an anonymous visitor lands on the ordinary sign-in screen with a
+          // gentle notice, never an error wall.
+          setNotice('That sign-in link from PCI World has expired — please sign in below.')
+        }
+      }
       if (!getToken()) {
         setReady(true)
         return
@@ -102,7 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(res.user)
   }, [])
 
-  return <AuthContext.Provider value={{ user, ready, login, register, googleSignIn, logout }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ user, ready, notice, login, register, googleSignIn, logout }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth(): AuthState {
