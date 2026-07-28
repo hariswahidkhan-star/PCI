@@ -146,6 +146,13 @@ evidence store, two-person access and the preservation/legal-hold path shipped w
 **This is a declaration gate, not age verification**, and the code, the admin response
 (`age_assurance: "self_declared_only"`) and the participant-facing copy all say so.
 
+**Runbooks drafted (2026-07-28).** `CCP_RUNBOOKS.md` covers emergency room abuse, legal hold,
+suspected illegal material, reviewer welfare, provider outage and policy rollback. Every value that
+is a legal or organisational decision is marked **[COUNSEL]** or **[T&S]** and left blank on purpose
+— a plausible-looking number in a runbook is worse than an obvious gap, because it stops anybody
+asking. They close the DRAFTING limb only: a runbook is a control once a named person has approved
+it and the roles are filled by trained people.
+
 **Issue.** §19.3 makes the following hard prerequisites before open guest rooms and images launch,
 and none exists in the repository: minimum age and supported jurisdictions; grooming/enticement
 detection and trained escalation; specialist illegal-media detection, reporting and preservation
@@ -215,6 +222,17 @@ low-confidence result into an irreversible sanction — untuned bands would do e
 No amount of engineering substitutes for real labelled examples, and this repository must not
 manufacture them. What exists now is the harness, the scoring, the bars and the refusal — so the day
 a corpus and a provider exist, calibrating is running a report rather than writing a system.
+
+`Core/ModerationCorpus.cs` completes that path: the corpus is a JSON-lines file Trust & Safety drops
+in, strict by default — a malformed line is an error carrying its line number, never a row quietly
+dropped, because half a corpus that looks whole would produce a report as convincing as a correct
+one. A missing `harmful` label is refused rather than defaulted (defaulting it would invent a
+reviewer's judgement), and a mistyped category is caught at load rather than surfacing later as an
+unexplained "no category was scored".
+
+**Not built, deliberately:** an HTTP provider adapter. The `ITextModerator` seam is the right level
+of readiness — writing a concrete wire format before a vendor is contracted would be guessing at
+somebody's API and would need rewriting when the real one arrives.
 
 ---
 
