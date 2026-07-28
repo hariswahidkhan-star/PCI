@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api } from '../api/client'
 import type { PassportSummary } from '../api/types'
-import { PassportCard, PassportEmptyState, PassportSkeleton } from '../components/passport'
+import { PassportCard, PassportDownloadSheet, PassportEmptyState, PassportSkeleton } from '../components/passport'
 
 /**
  * The first-class "PCI World Passport" module on the MyPCI dashboard (Phase 4, spec §6): the SAME
@@ -15,6 +15,7 @@ export default function WorldPassportSection() {
   const [failed, setFailed] = useState(false)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const [showDownloads, setShowDownloads] = useState(false)
 
   useEffect(() => {
     let live = true
@@ -100,9 +101,23 @@ export default function WorldPassportSection() {
           <button className="pp-btn pp-btn--ghost" disabled={busy} onClick={() => { void open('/world') }}>
             Manage in PCI World
           </button>
+          {/* Phase 5A: the printable verification documents (wallet card + event badge). The
+              sheet mirrors the server's publication gate — downloads only while published. */}
+          <button
+            className="pp-btn pp-btn--ghost"
+            aria-expanded={showDownloads}
+            onClick={() => { setShowDownloads((v) => !v) }}
+          >
+            Download PCI Passport
+          </button>
         </>
       }
-      footer={err ? <p className="pp-err" role="alert">{err}</p> : null}
+      footer={
+        <>
+          {err && <p className="pp-err" role="alert">{err}</p>}
+          {showDownloads && <PassportDownloadSheet summary={summary} />}
+        </>
+      }
     />
   )
 }

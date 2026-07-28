@@ -12,6 +12,9 @@ vi.mock('../api/client', () => ({
     get: (path: string) => h.get(path),
     post: (path: string, body?: unknown) => h.post(path, body),
   },
+  // PassportDownloadSheet (rendered behind the "Download PCI Passport" toggle) reads the bearer
+  // token for its authenticated blob download.
+  getToken: () => 'test-token',
 }))
 
 import WorldPassportSection from './WorldPassportSection'
@@ -52,6 +55,19 @@ describe('WorldPassportSection (MyPCI dashboard module)', () => {
     expect(screen.getByText('Earned value under pressure')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'View full Passport' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Manage in PCI World' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Download PCI Passport' })).toBeInTheDocument()
+  })
+
+  it('the Download PCI Passport action reveals the printable-documents sheet', async () => {
+    h.get.mockResolvedValueOnce(summary())
+    render(<WorldPassportSection />)
+    const toggle = await screen.findByRole('button', { name: 'Download PCI Passport' })
+    expect(screen.queryByLabelText('Printable Passport documents')).toBeNull()
+    await userEvent.click(toggle)
+    expect(screen.getByLabelText('Printable Passport documents')).toBeInTheDocument()
+    expect(screen.getByText('Wallet card')).toBeInTheDocument()
+    expect(screen.getByText('Event badge')).toBeInTheDocument()
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
   })
 
   it('a fetch failure degrades to the quiet fallback card — never a crash', async () => {
