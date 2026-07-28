@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 import { ApiError } from '../../api/client'
 
@@ -66,15 +67,11 @@ export default function Honorary() {
   const rows = data?.rows ?? []
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Honorary Fellows</h1>
-        <p className="muted">
-          A board-conferred recognition of distinguished contribution. It is <strong>not</strong> the
-          examined certification credentials, involves no exam, and lives in its own registry (PCI-HON numbers) —
-          it can never appear as a passed examination.
-        </p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Honorary Fellows"
+        subtitle={<>A board-conferred recognition of distinguished contribution. It is <strong>not</strong> the examined certification credentials, involves no exam, and lives in its own registry (PCI-HON numbers) — it can never appear as a passed examination.</>}
+      />
 
       <Card title="Confer an honorary fellowship" action={<Badge tone="warn">Board / owner only</Badge>}>
         {msg && <div className={'notice' + (msg.ok ? '' : ' err')} role="status" style={{ marginBottom: '.75rem' }}>{msg.text}</div>}

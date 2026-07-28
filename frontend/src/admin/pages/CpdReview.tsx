@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Empty, ErrorNote, Spinner, StatusBadge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDate } from '../../format'
 
@@ -47,14 +48,11 @@ export default function CpdReview() {
 
   const rows = data?.rows ?? []
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>CPD review</h1>
-        <p className="muted">
-          Review continuing-professional-development activities submitted by credential holders.
-          Only approved hours count toward the member’s annual target.
-        </p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="CPD review"
+        subtitle="Review continuing-professional-development activities submitted by credential holders. Only approved hours count toward the member’s annual target."
+      />
 
       {message && <div className={'notice' + (message.ok ? '' : ' err')} role="status">{message.text}</div>}
 

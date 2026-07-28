@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 // Admin review of membership grade upgrades — chiefly Fellowship (FPCI) nominations submitted from the
@@ -35,11 +36,11 @@ export default function MembershipUpgrades() {
     })
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Membership grades</h1>
-        <p className="muted small" style={{ margin: 0 }}>Review Fellowship (FPCI) nominations and grade-upgrade applications.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Membership grades"
+        subtitle="Review Fellowship (FPCI) nominations and grade-upgrade applications."
+      />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap', marginBottom: '.6rem' }}>
