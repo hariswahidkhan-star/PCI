@@ -120,6 +120,11 @@ public static class WorldRbac
         "reviewer" => action is "read" or "review",
         "publisher" => action is "read" or "publish",
         "viewer" => action is "read" or "community.read" or "careers.read",
+        // Deciding WHO may publish under PCI's byline is a different job from editing what they
+        // wrote, so it is a different permission — the careers precedent, where verifying an
+        // employer is separated from moderating its postings. An `author`-role admin edits text and
+        // does not hand out standing.
+        "editorial_lead" => action is "read" or "author" or "review" or "publish" or "editorial.contributors",
 
         "live_moderator" => action is "read" or "community.read" or "community.moderate",
         // Careers verification is separated from careers moderation for the same reason forum
@@ -137,7 +142,11 @@ public static class WorldRbac
                                  or "community.sanction" or "community.sanction.approve"
                                  or "community.appeal" or "community.restricted"
                                  or "community.restricted.approve" or "community.rooms"
-                                 or "careers.read" or "careers.moderate" or "careers.verify",
+                                 or "careers.read" or "careers.moderate" or "careers.verify"
+                                 // A safety lead may revoke standing — revocation is a conduct
+                                 // decision — but note they do not get `publish`: taking someone's
+                                 // byline away and using it are not the same authority.
+                                 or "editorial.contributors",
         _ => false,
     };
 }

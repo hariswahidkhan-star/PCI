@@ -204,6 +204,11 @@ public static class WorldEditorial
         if (a is null) return "not_found";
         // A person cannot review their own work — the same rule as approval, applied earlier.
         if (a["author_id"] is not null && H.L(a["author_id"]) == reviewerId) return "maker_checker";
+        // …and the same rule again for a CONTRIBUTOR's manuscript, where the line above cannot
+        // help: author_id and reviewerId are both pciworld_admin_users ids, while a contributor is
+        // a pciworld_users row, so the two id spaces are disjoint and the comparison above would
+        // pass a staff editor reviewing their own submission. See WorldContributors.IsSelfReview.
+        if (WorldContributors.IsSelfReview(db, id, reviewerId)) return "maker_checker";
         db.Execute("INSERT INTO pciworld_article_reviews(article_id,kind,reviewer_id,outcome,note) VALUES(?,?,?,?,?)",
             id, kind, reviewerId, outcome, note);
         return null;
@@ -216,6 +221,11 @@ public static class WorldEditorial
         if (row is null) return "not_found";
         if (H.Str(row["status"]) == "published") return "already_published";
         if (row["author_id"] is not null && H.L(row["author_id"]) == approverId) return "maker_checker";
+        // The cross-namespace case: a contributor is a pciworld_users row, so the comparison above
+        // is between disjoint id spaces for a contributor's manuscript and can never fire. Without
+        // this line a staff editor could approve their own submission, which is the single thing
+        // this phase is required never to allow.
+        if (WorldContributors.IsSelfReview(db, id, approverId)) return "maker_checker";
         if (Validate(InputFor(db, row)).Count > 0) return "not_publishable";
         db.Execute("UPDATE pciworld_articles SET status='approved', approved_by=?, updated_at=datetime('now') WHERE id=?", approverId, id);
         return null;
@@ -231,7 +241,17 @@ public static class WorldEditorial
         var row = db.QueryOne("SELECT * FROM pciworld_articles WHERE id=?", id);
         if (row is null) return "not_found";
         if (H.Str(row["status"]) != "approved") return "not_approved";
+        // Maker-checker holds at publication too, not only at approval: publishing is the act that
+        // puts the text in front of the world, and a two-step workflow where only step one is
+        // guarded is guarded on paper.
+        if (row["author_id"] is not null && H.L(row["author_id"]) == publisherId) return "maker_checker";
+        if (WorldContributors.IsSelfReview(db, id, publisherId)) return "maker_checker";
         if (Validate(InputFor(db, row)).Count > 0) return "not_publishable";
+        // Standing can lapse between approval and publication in exactly the window that source
+        // validity can, and this gate is checked for the same reason: approval is necessary and
+        // never sufficient. An ALREADY published article is untouched by a later revocation —
+        // a sanction is about conduct, unpublishing is about content.
+        if (WorldContributors.PublishGate(db, id) is { } ineligible) return ineligible;
         var next = H.L(row["current_version"]) + 1;
         Snapshot(db, id, next, row, publisherId);
         db.Execute(@"UPDATE pciworld_articles SET status='published', current_version=?,

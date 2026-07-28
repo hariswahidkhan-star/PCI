@@ -606,6 +606,50 @@ certification run per destination. Not before.
 
 ---
 
+## CCP-P6-020 … CCP-P6-023 — Phase 6 contributor publishing is built; its launch is blocked on editorial and legal decisions
+
+| Field | Value |
+|---|---|
+| Phase | 6 |
+| Module | `backend/Core/WorldContributors.cs`, `Endpoints/WorldContributorsApi.cs`, `Data/ContributorSchema.cs`, `Core/WorldEditorial.cs` |
+| Severity | **P1** — blocks launch, not the build |
+| Status | **Open** — engineering complete and tested; every item below is owned outside this repository |
+
+Ships flag-off (`pciworld_contributors_enabled` seeds `'0'`). 34 live-HTTP assertions pass on SQLite
+and MariaDB.
+
+**A real defect was found and closed while building this, and it is worth recording because of what
+kind of defect it was.** `WorldEditorial.Approve` refuses when the acting admin is the article's
+`author_id` — a correct maker-checker for house content, where both values are
+`pciworld_admin_users` ids. A **contributor** is a `pciworld_users` row. The two id spaces are
+disjoint and shared no recorded link, so for a contributor's manuscript that comparison could never
+match: a staff editor who was also the contributor would have passed a control that reads, in code
+review, exactly like a control. Comparing emails instead would have been folklore, not identity.
+
+The fix is an explicit owner-managed link (`pciworld_admin_users.world_user_id`) and a refusal in
+`Review`, `Approve`, `Publish` **and** assignment. What the fix cannot do is stated rather than
+implied away: an admin whose link is unset and who quietly holds a second Passport account defeats
+it, because code cannot prove two accounts are one person when nobody has said so. That residue is
+the conflict-of-interest limb of CCP-P6-020 below.
+
+| # | Decision needed | Owner |
+|---|---|---|
+| CCP-P6-020 | Editorial acceptance policy: quality bar, subject scope, byline/pseudonym rules, AI-assistance and originality policy, the conflict-of-interest standard (including the undeclared-second-account residue above), review staffing and SLA. Until this exists no submission can honestly be accepted, and the flag stays off. | Editorial lead + Trust & Safety lead |
+| CCP-P6-021 | The defamation/legal review procedure for contributor text, the takedown procedure (who decides, to what SLA, counter-notice, tombstone wording), the retraction standard, and the erasure-vs-record rule for bylines inside immutable versions. | PCI legal counsel + Data Protection Officer |
+| CCP-P6-022 | Contributor terms: rights and licence, what PCI may keep serving after revocation, and `pciworld_contributor_terms_version` v1 as **authored words**. The application endpoint answers 503 while it is unset rather than recording acceptance of nothing. | PCI legal counsel + Editorial lead |
+| CCP-P6-023 | Whether contributors are ever paid, and the sponsorship/disclosure rules their declarations feed. Blocks payment wiring, not this build. | Commercial owner + Editorial lead |
+
+**What is absent rather than disabled.** No text classifier is wired to this surface: every
+submission already gets a human editor with the power to refuse, so a classifier could only re-order
+a queue while creating the low-confidence-score-near-a-sanction surface this phase otherwise
+structurally lacks. No HTML intake — the escape-first Markdown subset is the allowlist. No optimistic
+publication path at any trust level.
+
+**What would close it.** Written decisions for each row, published contributor terms, and a
+deliberate act by a named person to set the flag.
+
+---
+
 ## Deferred scope (explicit, per §4.2 and §26 step 10)
 
 | Item | Reason | Target |

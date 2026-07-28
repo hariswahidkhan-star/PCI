@@ -119,6 +119,13 @@ jobs:
         # the second route is the recurring defect this increment keeps finding.
         run: python3 tests/careers_test.py
 
+      - name: PCI World contributor publishing — maker-checker across two identity systems
+        # Phase 6. The load-bearing assertions are K10-K14: the editorial engine's maker-checker
+        # compares admin ids, while a contributor is a pciworld_users row, so for a contributor's
+        # manuscript the original comparison could never fire — a control that reads exactly like a
+        # control and does nothing. These tests fail if the cross-namespace check is removed.
+        run: python3 tests/contributors_test.py
+
       - name: Impersonation read-only regression (P0-1 — central fail-closed enforcement)
         run: python3 tests/impersonation_readonly_test.py
 
@@ -233,6 +240,7 @@ jobs:
           python3 tests/community_images_test.py
           python3 tests/forum_test.py
           python3 tests/careers_test.py
+          python3 tests/contributors_test.py
           python3 tests/founding_test.py
           python3 tests/honorary_test.py
           python3 tests/honorary_application_test.py

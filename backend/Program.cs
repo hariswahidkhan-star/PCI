@@ -1597,6 +1597,7 @@ PCI.Backend.Endpoints.ForumPublic.Map(app, db, logFn);                // PCI Wor
 PCI.Backend.Endpoints.ForumAdmin.Map(app, db, logFn);                 // PCI World forum: review queue, release/withhold, member flags, categories
 PCI.Backend.Endpoints.WorldCareers.Map(app, db, logFn);               // PCI World careers: employer tenancy, postings, consented applications (gated on pciworld_careers_enabled, default off)
 PCI.Backend.Endpoints.CareersPublic.Map(app, db, logFn);              // PCI World careers: crawlable public reading — list, job pages, employer profiles (same flag)
+PCI.Backend.Endpoints.WorldContributorsApi.Map(app, db, logFn);       // PCI World contributor publishing: standing grants, manuscripts, editorial thread (gated on pciworld_contributors_enabled, default off)
 app.MapHub<PCI.Backend.Core.CommunityHub>(PCI.Backend.Core.CommunityHub.Path);
 PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
 PCI.Backend.Endpoints.WorldAccount.Map(app, db, logFn);               // PCI World — participant accounts + Passport (practice identity only)
