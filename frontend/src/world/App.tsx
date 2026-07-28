@@ -5,6 +5,7 @@ import Settings from './Settings'
 import Passport from './Passport'
 import Sharing from './Sharing'
 import ForumApp from './forum/ForumApp'
+import PortalSwitcher from './PortalSwitcher'
 
 // ── Dashboard aggregate (mirror of /api/world/me/dashboard) ──
 
@@ -246,9 +247,11 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
           <button className="secondary" onClick={() => setView('forum')}>Start a discussion</button>{' '}
           <button className="secondary" onClick={() => setView('sharing')}>Sharing</button>{' '}
           <button className="secondary" onClick={() => setView('settings')}>Settings &amp; sessions</button>{' '}
-          <a className="btn secondary" href={classic.account}>Export &amp; account</a>{' '}
-          {d.products.pci_ai.state === 'ready' && <a className="btn secondary" href="/app/">Open the student portal</a>}
+          <a className="btn secondary" href={classic.account}>Export &amp; account</a>
         </p>
+        {/* Symmetric portal handoff: one press, no retyped credentials — a one-time code in the
+            URL fragment, exchanged for a fresh portal session on arrival. */}
+        {d.products.pci_ai.state === 'ready' && <PortalSwitcher />}
         <p><button className="ghost" onClick={() => { void reload() }}>Refresh</button></p>
       </div>
     </>

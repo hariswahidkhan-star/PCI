@@ -122,6 +122,109 @@ public class WorldHandoffTests
         Assert.Equal(1L, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_user_map WHERE legacy_world_id=?", wid));
     }
 
+    // ───────────── Phase 3: the REVERSE direction (World → MyPCI), same primitives ─────────────
+
+    [Fact]
+    public void A_portal_handoff_mints_a_hashed_90_second_code_in_login_tokens_and_redeems_exactly_once()
+    {
+        var db = NewWorldDb();
+        var student = CanonicalUser(db, "reverse@x.test");
+        var (lerr, wid) = WorldAccount.LinkStudent(db, student, "reverse@x.test", "Rev");
+        Assert.Null(lerr);
+
+        var (err, code, returnTo, canonical) = WorldAccount.CreatePortalHandoff(db, wid, "/app/billing");
+        Assert.Null(err);
+        Assert.Equal(student, canonical);
+        Assert.Equal("/app/billing", returnTo);
+
+        // NO NEW TABLE: the code lives in the existing login_tokens ledger, hash only, 90 s out.
+        Assert.Equal(0L, db.Scalar<long>("SELECT COUNT(*) FROM login_tokens WHERE token=?", code));
+        Assert.Equal(1L, db.Scalar<long>(@"SELECT COUNT(*) FROM login_tokens
+            WHERE token=? AND purpose='portal_handoff' AND user_id=?", Security.Sha(code), student));
+        Assert.Equal(1L, db.Scalar<long>(@"SELECT COUNT(*) FROM login_tokens
+            WHERE token=? AND expires_at>datetime('now') AND expires_at<=datetime('now','+91 seconds')",
+            Security.Sha(code)));
+
+        var first = Endpoints.Account.RedeemPortalHandoff(db, code);
+        Assert.Null(first.Error);
+        Assert.Equal(student, H.L(first.User!["id"]));
+        // The row is DELETED at redemption — one redemption ever; replay, garbage and empty are
+        // indistinguishable from each other and from never-existed.
+        Assert.Equal(0L, db.Scalar<long>("SELECT COUNT(*) FROM login_tokens WHERE purpose='portal_handoff'"));
+        Assert.Equal("invalid_code", Endpoints.Account.RedeemPortalHandoff(db, code).Error);
+        Assert.Equal("invalid_code", Endpoints.Account.RedeemPortalHandoff(db, new string('a', 64)).Error);
+        Assert.Equal("invalid_code", Endpoints.Account.RedeemPortalHandoff(db, "").Error);
+    }
+
+    [Fact]
+    public void An_expired_portal_handoff_code_is_dead()
+    {
+        var db = NewWorldDb();
+        var student = CanonicalUser(db, "exp-p@x.test");
+        var (_, wid) = WorldAccount.LinkStudent(db, student, "exp-p@x.test", "E");
+        var (_, code, _, _) = WorldAccount.CreatePortalHandoff(db, wid);
+        db.Execute("UPDATE login_tokens SET expires_at=datetime('now','-1 seconds') WHERE token=?",
+            Security.Sha(code));
+        Assert.Equal("invalid_code", Endpoints.Account.RedeemPortalHandoff(db, code).Error);
+    }
+
+    [Fact]
+    public void A_suspended_canonical_user_cannot_cross_in_either_direction()
+    {
+        var db = NewWorldDb();
+        var student = CanonicalUser(db, "susp-p@x.test");
+        var (_, wid) = WorldAccount.LinkStudent(db, student, "susp-p@x.test", "S");
+
+        // Suspended between mint and redeem: the SAME generic failure as garbage — an anonymous
+        // redeemer must never learn that a real, suspended account sat behind the code.
+        var (_, code, _, _) = WorldAccount.CreatePortalHandoff(db, wid);
+        db.Execute("UPDATE users SET status='suspended' WHERE id=?", student);
+        Assert.Equal("invalid_code", Endpoints.Account.RedeemPortalHandoff(db, code).Error);
+
+        // And a suspended canonical account cannot mint at all.
+        Assert.Equal("account_suspended", WorldAccount.CreatePortalHandoff(db, wid).Error);
+        Assert.Equal(0L, db.Scalar<long>("SELECT COUNT(*) FROM login_tokens WHERE purpose='portal_handoff'"));
+    }
+
+    [Fact]
+    public void An_identity_link_pending_account_cannot_mint_a_portal_handoff()
+    {
+        var db = NewWorldDb();
+        // A World account with no canonical identity behind it (the PublishPassport rule): it has
+        // not proven ownership of any portal account, so there is nothing to hand it into.
+        var pending = db.ExecuteReturningId(
+            "INSERT INTO pciworld_users(email,password_hash) VALUES('pending-p@x.test','x')");
+        Assert.True(WorldIdentity.LinkPending(db, pending));
+        var (err, _, _, _) = WorldAccount.CreatePortalHandoff(db, pending);
+        Assert.Equal("identity_link_pending", err);
+        Assert.Equal(0L, db.Scalar<long>("SELECT COUNT(*) FROM login_tokens WHERE purpose='portal_handoff'"));
+    }
+
+    [Fact]
+    public void The_portal_return_path_is_allow_listed_and_redemption_mints_no_session_itself()
+    {
+        var db = NewWorldDb();
+        var student = CanonicalUser(db, "rt-p@x.test");
+        var (_, wid) = WorldAccount.LinkStudent(db, student, "rt-p@x.test", "R");
+        foreach (var evil in new[] { "https://evil.example/phish", "//evil.example", "/world/account", "/admin.html", null, "" })
+        {
+            var (e, _, rt, _) = WorldAccount.CreatePortalHandoff(db, wid, evil);
+            Assert.Null(e);
+            Assert.Equal("/app/", rt);
+        }
+        var (_, code, ok, _) = WorldAccount.CreatePortalHandoff(db, wid, "/app/billing?product=membership");
+        Assert.Equal("/app/billing?product=membership", ok);
+
+        // Sessions stay product-specific: the redeem primitive consumes the code and returns the
+        // user — the fresh 30-day portal session is minted by the endpoint (StartSession), and a
+        // World session is NEVER copied or created here.
+        var sessionsBefore = db.Scalar<long>("SELECT COUNT(*) FROM login_tokens WHERE purpose='session'");
+        var worldBefore = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_user_sessions");
+        Assert.Null(Endpoints.Account.RedeemPortalHandoff(db, code).Error);
+        Assert.Equal(sessionsBefore, db.Scalar<long>("SELECT COUNT(*) FROM login_tokens WHERE purpose='session'"));
+        Assert.Equal(worldBefore, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_user_sessions"));
+    }
+
     [Fact]
     public void Redeeming_a_handoff_claims_nothing_by_itself_ownership_rules_still_hold()
     {
