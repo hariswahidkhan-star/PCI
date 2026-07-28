@@ -569,6 +569,43 @@ deliberate act by a named person to set the flag.
 
 ---
 
+## CCP-P5-017 … CCP-P5-019 — Phase 5 external ATS integration is designed and deliberately not built
+
+| Field | Value |
+|---|---|
+| Phase | 5 |
+| Module | `docs/pciworld/CCP_PHASE5_DESIGN.md` (design only — no code) |
+| Severity | **P2** — blocks the phase, blocks nothing already shipped |
+| Status | **Open** — blocked on vendor access, not on engineering effort |
+
+The baseline settled this before Phase 4 was written (`CCP_PHASE0_BASELINE.md:307`): external ATS
+vendors are *"contracts only until sandbox credentials exist"*, and §28 forbids marking an
+integration complete on mocks.
+
+**Why an adapter written against a fixture would be worse than none.** It would assert that our idea
+of a vendor's API is self-consistent. It cannot discover that the real endpoint paginates
+differently, rejects a field we always send, rate-limits at a tenth of the documented figure, or
+returns 200 with an error body — which is the entire class of defect an integration actually has.
+Shipping one and calling the phase done would be a claim of completeness with no evidence behind it.
+
+The design is written now, while it costs nothing, so that the day credentials arrive the work is
+wiring rather than design: outbox delivery on the proven `WorkerLease` mechanism, a per-destination
+consent distinct from the Phase 4 employer consent, write-only credentials, signed callbacks that
+can never move an application to a terminal state on their own, and a **certification gate** — no
+destination reaches `live` without a recorded run against the vendor's own sandbox, with no state
+path that skips it.
+
+| # | Needed | Owner |
+|---|---|---|
+| CCP-P5-017 | Sandbox credentials for at least one named vendor, and the commercial relationship behind them. Nothing here can be certified — or honestly called built — without this. | Commercial owner + Engineering |
+| CCP-P5-018 | The data-protection position on onward transfer to an employer's own processor, the per-destination consent wording, and whether any vendor region is disallowed. | Data Protection Officer + legal counsel |
+| CCP-P5-019 | Which vendors are in scope for release 1, and in what order — each is a separate validation surface. | Commercial owner + Product |
+
+**What would close it.** Credentials for a named vendor, then the build, then a recorded sandbox
+certification run per destination. Not before.
+
+---
+
 ## Deferred scope (explicit, per §4.2 and §26 step 10)
 
 | Item | Reason | Target |
