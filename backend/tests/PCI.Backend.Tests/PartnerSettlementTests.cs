@@ -442,4 +442,99 @@ public class PartnerSettlementTests
         Assert.NotEqual(first.Id, second.Id);
         Assert.Equal(2L, db.Scalar<long>("SELECT COUNT(DISTINCT settlement_no) FROM partner_settlements WHERE partner_id=?", pid));
     }
+
+    // ── refunds against an approved-but-unpaid batch ──────────────────────────────────────────────
+    // A reversal never edits the source transaction, so a batch prepared before the refund carries a
+    // frozen allocation that is now too large. Paying it anyway would hand the partner commission on
+    // money the student got back.
+
+    static long PaymentOf(Db db, long txnId)
+        => H.L(db.QueryOne("SELECT payment_id FROM partner_commission_transactions WHERE id=?", txnId)!["payment_id"]);
+
+    [Fact]
+    public void A_full_refund_after_approval_blocks_payment_of_the_batch()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        var txn = ApprovedSale(db, pid, 1000, 1);             // 100.00 commission
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        db.Execute("UPDATE payments SET payment_status='refunded', amount_refunded=1000 WHERE id=?", PaymentOf(db, txn));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txn)) > 0);
+
+        var pay = PartnerSettlement.Pay(db, s.Id, Payer, 10_000, "bank", "REF-REV", null, null);
+        Assert.False(pay.Ok);
+        Assert.Equal("stale_allocation", pay.Error);
+        Assert.Equal(0L, H.L(db.QueryOne("SELECT amount_paid_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_paid_minor"]));
+
+        // The prescribed recovery leads somewhere honest: cancel, and a fresh prepare finds nothing owed.
+        Assert.True(PartnerSettlement.Cancel(db, s.Id, Checker, "refunded before payment").Ok);
+        Assert.Equal("nothing_payable", PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null).Error);
+        Assert.Equal(0L, PartnerSettlement.PayableMinor(db, pid));
+    }
+
+    [Fact]
+    public void A_partial_refund_before_preparation_shrinks_the_allocation_to_the_net_worth()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        var txn = ApprovedSale(db, pid, 1000, 1);             // 100.00 commission
+        db.Execute("UPDATE payments SET payment_status='partially_refunded', amount_refunded=250 WHERE id=?", PaymentOf(db, txn));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txn)) > 0);   // −25.00
+
+        Assert.Equal(7_500L, PartnerSettlement.PayableMinor(db, pid));
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(s.Ok);
+        Assert.Equal(7_500L, H.L(db.QueryOne("SELECT amount_approved_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_approved_minor"]));
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        // The net amount pays; the pre-refund amount does not.
+        Assert.Equal("over_approved", PartnerSettlement.Pay(db, s.Id, Payer, 10_000, "bank", "REF-N1", null, null).Error);
+        Assert.True(PartnerSettlement.Pay(db, s.Id, Payer, 7_500, "bank", "REF-N2", null, null).Ok);
+    }
+
+    [Fact]
+    public void A_partial_refund_between_approval_and_payment_forces_a_re_prepare_at_the_net_amount()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        var txn = ApprovedSale(db, pid, 1000, 1);
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        db.Execute("UPDATE payments SET payment_status='partially_refunded', amount_refunded=250 WHERE id=?", PaymentOf(db, txn));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txn)) > 0);
+
+        var pay = PartnerSettlement.Pay(db, s.Id, Payer, 10_000, "bank", "REF-P1", null, null);
+        Assert.False(pay.Ok);
+        Assert.Equal("stale_allocation", pay.Error);
+
+        Assert.True(PartnerSettlement.Cancel(db, s.Id, Checker, "partial refund landed first").Ok);
+        var again = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(again.Ok);
+        Assert.Equal(7_500L, H.L(db.QueryOne("SELECT amount_approved_minor FROM partner_settlements WHERE id=?", again.Id)!["amount_approved_minor"]));
+        Assert.True(PartnerSettlement.Approve(db, again.Id, Checker).Ok);
+        Assert.True(PartnerSettlement.Pay(db, again.Id, Payer, 7_500, "bank", "REF-P2", null, null).Ok);
+    }
+
+    [Fact]
+    public void Retrying_a_payment_with_the_reference_already_recorded_on_the_settlement_is_refused()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        ApprovedSale(db, pid, 1000, 1);                       // 100.00 commission
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        Assert.True(PartnerSettlement.Pay(db, s.Id, Payer, 5_000, "bank", "WIRE-42", null, null).Ok);
+        // The same transfer submitted again (timeout retry, double-click) must not double-record.
+        var retry = PartnerSettlement.Pay(db, s.Id, Payer, 5_000, "bank", "WIRE-42", null, null);
+        Assert.False(retry.Ok);
+        Assert.Equal("duplicate_reference", retry.Error);
+        Assert.Equal(5_000L, H.L(db.QueryOne("SELECT amount_paid_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_paid_minor"]));
+        // A genuine second instalment arrives under its own reference and completes the batch.
+        Assert.True(PartnerSettlement.Pay(db, s.Id, Payer, 5_000, "bank", "WIRE-43", null, null).Ok);
+        Assert.Equal(10_000L, H.L(db.QueryOne("SELECT amount_paid_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_paid_minor"]));
+    }
 }
