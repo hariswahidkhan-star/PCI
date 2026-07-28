@@ -106,11 +106,21 @@ public class RetentionServiceTests : IClassFixture<DbFixture>
         var svc = new RetentionService(_db);
         await svc.StartAsync(CancellationToken.None);
         await Task.Delay(100);
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         await svc.StopAsync(cts.Token);
 
         Assert.NotNull(svc.ExecuteTask);
-        Assert.True(svc.ExecuteTask!.IsCompleted);   // OperationCanceledException translated to a clean stop
+        // Await the task rather than asserting IsCompleted the instant StopAsync returns.
+        //
+        // StopAsync can return because ITS OWN token fired, not because the service finished — so
+        // the original assertion was really measuring whether the runner was fast enough, and it
+        // duly failed once on a saturated CI machine after taking 1m44s to run a test that should
+        // take 100ms. Awaiting with a generous ceiling tests the same property (the service stops
+        // cleanly, translating cancellation rather than faulting) without the race, and a service
+        // that genuinely hangs still fails here on the timeout.
+        await svc.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(30));
+        Assert.True(svc.ExecuteTask.IsCompleted);   // OperationCanceledException translated to a clean stop
+        Assert.False(svc.ExecuteTask.IsFaulted);    // ...and not by throwing
         Assert.True(File.Exists(full));
         _db.Execute("DELETE FROM site_settings WHERE skey='evidence_retention_days'");
     }
