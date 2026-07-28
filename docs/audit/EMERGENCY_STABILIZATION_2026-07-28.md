@@ -38,7 +38,8 @@ exposure). All commits on this branch stage explicitly named files only, reviewe
 | `python3 tests/migration_integrity_test.py` | **13/13 PASS** (SQLite mode) |
 | 17 logic suites (CI's backend-job list, incl. pypdf) | **All pass** (no FAIL/✗; loop exit 0) |
 | Frontend `npm ci` + `typecheck` + `build` | **Pass** — student, admin and world bundles all emitted |
-| Backend unit tests / SecureExam Core tests | Run in this session — results recorded in the final session log; both are also CI-blocking jobs on push |
+| Backend unit tests (`dotnet test tests/PCI.Backend.Tests -c Release`) | **1648/1648 PASS** (0 failed, 0 skipped; 32 m 23 s) |
+| SecureExam Core tests (`dotnet test PCI.SecureExam.Tests -c Release`, Linux) | **21/21 PASS** |
 | MariaDB 10.11 / Oracle MySQL 8.4 parity, Playwright E2E (both providers), secureexam-windows | **Not runnable in this sandbox** (no DB service; Windows job) — covered by existing blocking CI jobs which run on this branch's push/PR |
 | Docker image build + boot | **Not runnable in this sandbox** — the session network policy blocks Docker Hub's CDN (`production.cloudfront.docker.com` 403). The new blocking `docker-image` CI job performs exactly this on GitHub runners; its first run on this branch is the evidence |
 
