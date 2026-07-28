@@ -90,3 +90,33 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
 .fw-composer textarea { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; }
 /* A pasted URL or a stack trace must not widen the page at a 320px viewport (WCAG 1.4.10). */
 .fw-post-body { overflow-wrap: anywhere; }
+
+/* ── PCI World careers (employer portal + my applications) ─────────────────────────────────── */
+
+/* Public job reading is server-rendered and styled by backend/wwwroot/assets/world.css; these
+   rules cover only the two authenticated React surfaces. Same discipline as the forum block:
+   every state is stated in the TEXT, and the colour only reinforces a sentence that already
+   carries the whole outcome — all pairs below keep AA contrast on their backgrounds. */
+
+.wc-notice { padding: 0.6rem 0.8rem; border-radius: 6px; border-left: 4px solid; }
+.wc-notice-info { background: #eef5ea; border-color: #3c6b2f; color: #24451c; }
+.wc-notice-held { background: #fdf3e3; border-color: #6b3f00; color: #6b3f00; }
+.wc-notice-error { background: #fdeaea; border-color: #8a1c1c; color: #8a1c1c; }
+
+.wc-signin { color: #55603d; }
+.wc-help { font-size: 0.9em; color: #55603d; margin: 0.2rem 0 0.75rem; }
+/* State words (draft/published/withdrawn…) are emphasised by weight, never by colour alone. */
+.wc-state { font-weight: 600; }
+
+.wc-section { border: 1px solid #d8d8c8; border-radius: 8px; padding: 0.75rem 1rem; margin: 0 0 1rem; background: #fff; }
+.wc-rows { list-style: none; padding: 0; margin: 0; }
+.wc-row { border-top: 1px solid #d8d8c8; padding: 0.6rem 0; }
+.wc-row:first-child { border-top: 0; }
+.wc-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+/* The consequence box before a consent withdrawal: bordered so it reads as a step, with the
+   words inside doing the explaining. */
+.wc-confirm { border: 1px solid #6b3f00; border-radius: 6px; padding: 0.6rem 0.8rem; margin: 0.5rem 0; }
+
+.wc textarea { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; }
+/* Long titles, policy versions and server notices must not widen a 320px viewport (WCAG 1.4.10). */
+.wc-row, .wc-notice { overflow-wrap: anywhere; }

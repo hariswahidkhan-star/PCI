@@ -343,6 +343,28 @@ def main():
         chk("C46 a posting past closes_at refuses applications without waiting for a sweep",
             code == 409, f"got {code} {r}")
 
+        # ── The employer can read back its own working copy ───────────────────────────────
+        # These reads were missing from the first cut, which meant a portal could only show what it
+        # had created in the current session. A write path with no matching read is a demo.
+        code, r = js(f"/api/world/careers/employers/{EMP}/postings", "GET", None, BOSS)
+        chk("C53 an employer lists its own postings, including drafts",
+            code == 200 and any(x["id"] == JOB for x in r.get("postings", [])), str(r))
+        code, r = js(f"/api/world/careers/employers/{EMP}/postings", "GET", None, RIVAL)
+        chk("C54 a rival cannot list them", code == 403, f"got {code} {r}")
+
+        code, r = js(f"/api/world/careers/postings/{JOB}/questions", "GET", None, BOSS)
+        chk("C55 an employer reads its own screening questions", code == 200, str(r))
+        code, r = js(f"/api/world/careers/postings/{JOB}/questions", "GET", None, RIVAL)
+        chk("C56 a rival cannot", code == 403, f"got {code} {r}")
+
+        code, r = js(f"/api/world/careers/employers/{EMP}/members", "GET", None, BOSS)
+        mem = r.get("members", [])
+        chk("C57 an employer lists who can act for it", code == 200 and len(mem) == 1, str(r))
+        chk("C58 and the roster carries no email addresses — a roster is not an address book",
+            all("email" not in m for m in mem), str(mem))
+        code, r = js(f"/api/world/careers/employers/{EMP}/members", "GET", None, RIVAL)
+        chk("C59 a rival cannot read the roster", code == 403, f"got {code} {r}")
+
         # ── Money is never a float, and never an amount without a currency ────────────────
         code, r = js(f"/api/world/careers/employers/{EMP}/postings", "POST",
                      {"title": "Cost Engineer", "slug": "cost-engineer", "salary_min_minor": 5000000}, BOSS)

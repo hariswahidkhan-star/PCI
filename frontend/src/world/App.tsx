@@ -5,6 +5,8 @@ import Settings from './Settings'
 import Passport from './Passport'
 import Sharing from './Sharing'
 import ForumApp from './forum/ForumApp'
+import EmployerPortal from './careers/EmployerPortal'
+import MyApplications from './careers/MyApplications'
 
 // ── Dashboard aggregate (mirror of /api/world/me/dashboard) ──
 
@@ -164,7 +166,7 @@ function SignIn({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
 }
 
 function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<void>; onSignOut: () => void }) {
-  const [view, setView] = useState<'home' | 'settings' | 'passport' | 'sharing' | 'forum'>('home')
+  const [view, setView] = useState<'home' | 'settings' | 'passport' | 'sharing' | 'forum' | 'employer' | 'applications'>('home')
   const name = d.display_name || d.email
   const onboarding = d.onboarding_state !== null && d.onboarding_state !== 'completed'
   const actionHref =
@@ -179,6 +181,8 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
         {view === 'settings' ? <Settings onSignOut={onSignOut} />
           : view === 'passport' ? <Passport />
           : view === 'forum' ? <ForumApp />
+          : view === 'employer' ? <EmployerPortal />
+          : view === 'applications' ? <MyApplications />
           : <Sharing />}
       </>
     )
@@ -244,6 +248,10 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
           {/* Reading the forum needs no account and lives on the server-rendered pages; this is the
               write path, so it belongs behind the signed-in dashboard rather than in public nav. */}
           <button className="secondary" onClick={() => setView('forum')}>Start a discussion</button>{' '}
+          {/* Careers' public job pages are server-rendered; these are the signed-in surfaces only —
+              acting for an employer tenant, and the applicant's own consented record. */}
+          <button className="secondary" onClick={() => setView('employer')}>Employer portal</button>{' '}
+          <button className="secondary" onClick={() => setView('applications')}>My job applications</button>{' '}
           <button className="secondary" onClick={() => setView('sharing')}>Sharing</button>{' '}
           <button className="secondary" onClick={() => setView('settings')}>Settings &amp; sessions</button>{' '}
           <a className="btn secondary" href={classic.account}>Export &amp; account</a>{' '}

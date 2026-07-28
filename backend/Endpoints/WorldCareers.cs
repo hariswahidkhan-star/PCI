@@ -215,6 +215,73 @@ public static class WorldCareers
             return Results.Json(new { ok = true, posting_id = postingId, slug, state = "draft" });
         });
 
+        // The employer's own working copy, read back. Absent from the first cut of this module,
+        // which meant a portal could only show what it had created in the current session and lost
+        // every earlier draft on reload — a write path with no matching read is not a usable
+        // feature, it is a demo. Membership-scoped, so this is also the route by which an employer
+        // sees its own DRAFTS: they are public 404s, and they must still be visible to their owner.
+        app.MapGet("/api/world/careers/employers/{id:long}/postings", (HttpContext ctx, long id) =>
+        {
+            if (!Enabled()) return Off();
+            var user = Who(ctx);
+            if (user is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+            if (!CareersEmployers.IsMember(db, id, user.Id))
+                return Results.Json(new { error = "not_a_member" }, statusCode: 403);
+            var rows = db.Query(
+                @"SELECT id,slug,title,state,location,employment_type,
+                         salary_min_minor,salary_max_minor,currency,published_at,closes_at,version
+                  FROM pciworld_job_postings WHERE employer_id=? ORDER BY id DESC", id);
+            return Results.Json(new { postings = rows.Select(p => new
+            {
+                id = H.L(p["id"]), slug = H.Str(p["slug"]), title = H.Str(p["title"]),
+                state = H.Str(p["state"]), location = H.Str(p["location"]),
+                employment_type = H.Str(p["employment_type"]),
+                salary_min_minor = H.Ln(p["salary_min_minor"]), salary_max_minor = H.Ln(p["salary_max_minor"]),
+                currency = H.Str(p["currency"]), published_at = H.Str(p["published_at"]),
+                closes_at = H.Str(p["closes_at"]), version = H.L(p["version"]),
+            }) });
+        });
+
+        app.MapGet("/api/world/careers/postings/{id:long}/questions", (HttpContext ctx, long id) =>
+        {
+            if (!Enabled()) return Off();
+            var user = Who(ctx);
+            if (user is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+            var p = db.QueryOne("SELECT employer_id FROM pciworld_job_postings WHERE id=?", id);
+            if (p is null) return Results.NotFound();
+            if (!CareersEmployers.IsMember(db, H.L(p["employer_id"]), user.Id))
+                return Results.Json(new { error = "not_a_member" }, statusCode: 403);
+            var rows = db.Query(
+                "SELECT id,sort,kind,prompt,required FROM pciworld_job_questions WHERE posting_id=? ORDER BY sort,id", id);
+            return Results.Json(new { questions = rows.Select(q => new
+            {
+                id = H.L(q["id"]), sort = H.L(q["sort"]), kind = H.Str(q["kind"]),
+                prompt = H.Str(q["prompt"]), required = H.B(q["required"]),
+            }) });
+        });
+
+        // Who can act for this employer. Returns account ids and display names — never emails: an
+        // employer roster must not become a way to read the email address behind an account the
+        // member did not choose to share with this tenant.
+        app.MapGet("/api/world/careers/employers/{id:long}/members", (HttpContext ctx, long id) =>
+        {
+            if (!Enabled()) return Off();
+            var user = Who(ctx);
+            if (user is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+            if (!CareersEmployers.IsMember(db, id, user.Id))
+                return Results.Json(new { error = "not_a_member" }, statusCode: 403);
+            var rows = db.Query(
+                @"SELECT m.user_id,m.role,m.created_at,u.display_name
+                  FROM pciworld_employer_members m JOIN pciworld_users u ON u.id=m.user_id
+                  WHERE m.employer_id=? ORDER BY m.role, m.id", id);
+            return Results.Json(new { members = rows.Select(m => new
+            {
+                user_id = H.L(m["user_id"]), role = H.Str(m["role"]),
+                display_name = H.Str(m["display_name"]), since = H.Str(m["created_at"]),
+                you = H.L(m["user_id"]) == user.Id,
+            }) });
+        });
+
         app.MapPost("/api/world/careers/postings/{id:long}/questions", async (HttpContext ctx, long id) =>
         {
             if (!Enabled()) return Off();
