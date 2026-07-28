@@ -3,3 +3,7 @@
 scratchpad/
 node_modules/
 backend/pci.db.migrate.lock
+
+# Python bytecode (regenerated on import; never useful in VCS)
+__pycache__/
+*.py[cod]
