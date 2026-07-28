@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type ExamSessionRow, type ExamSessionDetail } from '../api'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime, titleCase } from '../../format'
 
 function sevTone(sev?: string | null): 'err' | 'warn' | 'brand' | 'neutral' {
@@ -65,7 +66,7 @@ function SessionDrawer({ id, onClose, onChanged }: { id: number; onClose: () => 
         ) : error ? (
           <ErrorNote>{error}</ErrorNote>
         ) : !data ? null : (
-          <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+          <div className="page">
             <Card
               title={`${data.user.first_name ?? ''} ${data.user.last_name ?? ''}`.trim() || String(data.user.email ?? 'Candidate')}
               action={<StatusBadge status={String(attempt.result_status || attempt.status || '')} />}
@@ -176,14 +177,14 @@ export default function Proctoring() {
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Proctoring &amp; sessions</h1>
-        <div className="row">
+      <PageHeader
+        title="Proctoring & sessions"
+        actions={<div className="row">
           <button className={'btn sm' + (live ? '' : ' secondary')} onClick={() => setLive(true)}>Live</button>
           <button className={'btn sm' + (!live ? '' : ' secondary')} onClick={() => setLive(false)}>All sessions</button>
           <button className="btn ghost sm" onClick={() => refetch()}>Refresh</button>
-        </div>
-      </div>
+        </div>}
+      />
 
       <Card>
         {loading ? (

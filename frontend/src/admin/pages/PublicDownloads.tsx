@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fileToDataUri } from '../../files'
 import { fmtDate } from '../../format'
@@ -87,11 +88,11 @@ export default function PublicDownloads() {
   const rows = data?.rows ?? []
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Downloads Centre</h1>
-        <button className="btn sm" onClick={() => setCreating(true)}>New document</button>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Downloads Centre"
+        actions={<button className="btn sm" onClick={() => setCreating(true)}>New document</button>}
+      />
       <p className="muted" style={{ margin: 0 }}>
         Public governance, policy and legal documents distributed at <strong>/downloads</strong> without login.
         Only <strong>published + public</strong> versions are ever served; drafts, internal, withdrawn, archived

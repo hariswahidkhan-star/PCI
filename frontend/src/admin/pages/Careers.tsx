@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 // Admin management for the dynamic careers / job board. Create/edit/publish postings, and review applicants
@@ -70,11 +71,12 @@ export default function Careers() {
     && (!fType || j.employment_type === fType))
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <div><h1>Careers</h1><p className="muted small" style={{ margin: 0 }}>Manage the public job board, applicants, master data and candidate notifications.</p></div>
-        {tab === 'postings' && <button className="btn sm" onClick={() => setEdit({ ...EMPTY })}>New posting</button>}
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Careers"
+        subtitle="Manage the public job board, applicants, master data and candidate notifications."
+        actions={tab === 'postings' && <button className="btn sm" onClick={() => setEdit({ ...EMPTY })}>New posting</button>}
+      />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TAB_LABELS.map(([v, l]) => (
           <button key={v} className={`btn sm ${tab === v ? '' : 'ghost'}`} onClick={() => setTab(v)}>{l}</button>

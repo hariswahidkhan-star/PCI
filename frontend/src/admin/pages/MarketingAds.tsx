@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, Empty, Stat } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime } from '../../format'
 
 /* Marketing, Ads and Search Console centre. All data is MySQL-backed via the .NET backend. The guiding
@@ -34,14 +35,11 @@ const capBadge = (s: string) => { const c = CAP[s] ?? { label: s, tone: 'neutral
 export default function MarketingAds() {
   const [tab, setTab] = useState<Tab>('Dashboard')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread"><h1>Marketing, Ads and Search Console</h1></div>
-      <p className="muted" style={{ margin: 0 }}>
-        Manage LinkedIn, Google and Meta advertising, organic LinkedIn posts, Google Search Console,
-        promotions, leads and reporting — through official APIs only. Features become operational only
-        when a real, provider-approved connection exists; the Capability Registry shows the true status of
-        each one. Provider credentials live only in Render environment variables and are never shown here.
-      </p>
+    <div className="page">
+      <PageHeader
+        title="Marketing, Ads and Search Console"
+        subtitle="Manage LinkedIn, Google and Meta advertising, organic LinkedIn posts, Google Search Console, promotions, leads and reporting — through official APIs only. Features become operational only when a real, provider-approved connection exists; the Capability Registry shows the true status of each one. Provider credentials live only in Render environment variables and are never shown here."
+      />
       <div className="tabs" style={{ display: 'flex', gap: '.3rem', flexWrap: 'wrap', borderBottom: '1px solid var(--line)', paddingBottom: '.4rem' }}>
         {TABS.map((t) => <button key={t} className={'btn sm ' + (tab === t ? '' : 'ghost')} onClick={() => setTab(t)}>{t}</button>)}
       </div>
