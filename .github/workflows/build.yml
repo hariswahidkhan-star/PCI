@@ -29,6 +29,9 @@ jobs:
       - name: Logic tests (17 suites)
         run: |
           set -e
+          # passport_documents_test's section D parses assembled PDFs with pypdf; install it here
+          # so CI runs the strong form (the suite degrades to an explicit SKIP without it).
+          pip install --quiet --break-system-packages pypdf || pip install --quiet pypdf || true
           for t in tests/lifecycle_test.py tests/release_test.py tests/casework_test.py tests/settings_test.py tests/publication_test.py tests/storage_test.py tests/student_number_test.py tests/student_number_backfill_test.py tests/events_defects_test.py tests/world_og_metadata_test.py tests/world_passport_verify_test.py tests/identity_merge_test.py tests/portal_handoff_test.py tests/world_claim_referral_test.py tests/passport_summary_test.py tests/world_share_caption_test.py tests/passport_documents_test.py; do
             echo "=== $t ==="
             out=$(python3 "$t")
