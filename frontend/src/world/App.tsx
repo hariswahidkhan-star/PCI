@@ -4,6 +4,7 @@ import Onboarding from './Onboarding'
 import Settings from './Settings'
 import Passport from './Passport'
 import Sharing from './Sharing'
+import ForumApp from './forum/ForumApp'
 
 // ── Dashboard aggregate (mirror of /api/world/me/dashboard) ──
 
@@ -163,7 +164,7 @@ function SignIn({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
 }
 
 function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<void>; onSignOut: () => void }) {
-  const [view, setView] = useState<'home' | 'settings' | 'passport' | 'sharing'>('home')
+  const [view, setView] = useState<'home' | 'settings' | 'passport' | 'sharing' | 'forum'>('home')
   const name = d.display_name || d.email
   const onboarding = d.onboarding_state !== null && d.onboarding_state !== 'completed'
   const actionHref =
@@ -175,7 +176,10 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
     return (
       <>
         <p><button className="ghost" onClick={() => setView('home')}>&larr; Back to your dashboard</button></p>
-        {view === 'settings' ? <Settings onSignOut={onSignOut} /> : view === 'passport' ? <Passport /> : <Sharing />}
+        {view === 'settings' ? <Settings onSignOut={onSignOut} />
+          : view === 'passport' ? <Passport />
+          : view === 'forum' ? <ForumApp />
+          : <Sharing />}
       </>
     )
   }
@@ -237,6 +241,9 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
         <p><small>Signed in as <b>{d.email}</b>. Your sign-in email is managed by your PCI account{d.products.pci_ai.state === 'ready' ? ' — change it in the student portal settings.' : '.'}</small></p>
         <p>
           <button className="secondary" onClick={() => setView('passport')}>Practice Passport</button>{' '}
+          {/* Reading the forum needs no account and lives on the server-rendered pages; this is the
+              write path, so it belongs behind the signed-in dashboard rather than in public nav. */}
+          <button className="secondary" onClick={() => setView('forum')}>Start a discussion</button>{' '}
           <button className="secondary" onClick={() => setView('sharing')}>Sharing</button>{' '}
           <button className="secondary" onClick={() => setView('settings')}>Settings &amp; sessions</button>{' '}
           <a className="btn secondary" href={classic.account}>Export &amp; account</a>{' '}
