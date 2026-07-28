@@ -299,6 +299,14 @@ public static class Migrate
             merged_into_student_number VARCHAR(32),issued_at TEXT DEFAULT (datetime('now')),
             changed_at TEXT DEFAULT (datetime('now')),reason_code VARCHAR(48),changed_by_admin_id INTEGER,
             correlation_id VARCHAR(64),row_version INTEGER NOT NULL DEFAULT 1)");
+        // Bound the projection column on MySQL installs created before schema.sql declared it
+        // VARCHAR(32). SQLite needs (and permits) no ALTER — column types are affinity there, and
+        // every write already goes through the issuer, which caps the value's shape. Guarded and
+        // idempotent: re-running a MODIFY to the same type is a no-op, and legacy_v1 values are at
+        // most 20 characters so no data can be truncated by the narrowing.
+        if (db.Provider == Db.Kind.MySql)
+            try { db.Exec("ALTER TABLE users MODIFY registration_no VARCHAR(32)"); }
+            catch { /* never block a boot on a cosmetic type bound; Health reports the estate either way */ }
         // The reservation itself. This one is safe unconditionally: the table is new, so it cannot
         // already hold a duplicate, and it is what makes GetOrIssue's insert the atomic claim.
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_student_number_registry ON pci_student_number_registry(student_number)");

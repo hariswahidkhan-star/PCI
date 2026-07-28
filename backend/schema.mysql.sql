@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(500) UNIQUE NOT NULL,
   first_name TEXT, last_name TEXT,
-  registration_no TEXT,                     -- the canonical public PCI Student Number; issued by Core/StudentNumbers.cs only
+  registration_no VARCHAR(32),              -- the canonical public PCI Student Number; issued by Core/StudentNumbers.cs only
   registration_no_issued_at TEXT,
   password_hash TEXT,                       -- set by user via secure link; never an emailed plain password
   role TEXT NOT NULL DEFAULT ('student'),
