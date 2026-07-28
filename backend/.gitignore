@@ -21,6 +21,10 @@ tests/_community_images.db*
 tests/_community_images_storage/
 tests/_forum.db*
 tests/_forum_storage/
+tests/_careers.db*
+tests/_careers_storage/
+tests/_contrib.db*
+tests/_contrib_storage/
 tests/_impersonation.db*
 tests/_impersonation_storage/
 tests/_impersonation_boot.log

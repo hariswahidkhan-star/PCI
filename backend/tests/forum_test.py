@@ -362,6 +362,19 @@ def main():
         rows = sql("SELECT COUNT(*) FROM pciworld_forum_threads WHERE slug LIKE ?", ("trying-to-start%",))
         chk("F49 no orphan thread row was left by the refusal", rows[0][0] == 0, str(rows))
 
+        # ── The front door ───────────────────────────────────────────────────────────────
+        # Added after somebody asked where the forum actually was. Phase 3 shipped thread pages,
+        # their JSON-LD and their accessibility coverage, and no index — so a thread was reachable
+        # only by already knowing its URL. Every test passed the whole time, because a suite asks
+        # whether the thing works, not whether anyone can find it.
+        code, raw = req("GET", "/world/forum")
+        html = raw.decode(errors="replace") if isinstance(raw, bytes) else raw
+        chk("F60 the forum has an index page", code == 200, f"got {code}")
+        chk("F61 which lists the category", "Estimating" in html, "category missing from the index")
+        chk("F62 and links to a published thread", "/world/forum/estimating/" in html, "no thread link")
+        chk("F63 as a complete crawlable document",
+            "<!DOCTYPE html" in html and 'rel="canonical"' in html, "not a whole document")
+
     finally:
         shutdown()
 

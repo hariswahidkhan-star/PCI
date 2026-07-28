@@ -79,6 +79,16 @@ public static class ForumPublic
 
         // ── Server-rendered reading (no account required) ──────────────────────────────────────
 
+        // The front door. Without it a thread was reachable only by already knowing its URL —
+        // built, tested, crawlable and invisible.
+        app.MapGet("/world/forum", (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            var html = ForumRender.Index(db, WorldUrl.Base(ctx.Request));
+            if (html is null) return Results.NotFound();
+            return Results.Content(html, "text/html; charset=utf-8");
+        });
+
         app.MapGet("/world/forum/{category}/{thread}", (HttpContext ctx, string category, string thread) =>
         {
             var html = ForumRender.Thread(db, category, thread, WorldUrl.Base(ctx.Request));

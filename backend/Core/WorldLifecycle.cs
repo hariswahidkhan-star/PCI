@@ -119,18 +119,34 @@ public static class WorldRbac
         "author" => action is "read" or "author",
         "reviewer" => action is "read" or "review",
         "publisher" => action is "read" or "publish",
-        "viewer" => action is "read" or "community.read",
+        "viewer" => action is "read" or "community.read" or "careers.read",
+        // Deciding WHO may publish under PCI's byline is a different job from editing what they
+        // wrote, so it is a different permission — the careers precedent, where verifying an
+        // employer is separated from moderating its postings. An `author`-role admin edits text and
+        // does not hand out standing.
+        "editorial_lead" => action is "read" or "author" or "review" or "publish" or "editorial.contributors",
 
         "live_moderator" => action is "read" or "community.read" or "community.moderate",
+        // Careers verification is separated from careers moderation for the same reason forum
+        // moderation is separated from employer verification: deciding that an employer is REAL is
+        // an evidence judgement about a company, and taking a posting down is a content judgement.
+        // A person doing one has no particular standing to do the other, and bundling them would
+        // mean every content moderator could mint the assertion candidates rely on (§4.2).
         "trust_safety" => action is "read" or "community.read" or "community.moderate"
-                                  or "community.sanction" or "community.rooms",
+                                  or "community.sanction" or "community.rooms"
+                                  or "careers.read" or "careers.moderate",
         // Deliberately NOT community.sanction: an appeals reviewer who can also punish is not
         // independent, and §8.6 asks for independence where practical.
         "appeals_reviewer" => action is "read" or "community.read" or "community.appeal",
         "safety_lead" => action is "read" or "community.read" or "community.moderate"
                                  or "community.sanction" or "community.sanction.approve"
                                  or "community.appeal" or "community.restricted"
-                                 or "community.restricted.approve" or "community.rooms",
+                                 or "community.restricted.approve" or "community.rooms"
+                                 or "careers.read" or "careers.moderate" or "careers.verify"
+                                 // A safety lead may revoke standing — revocation is a conduct
+                                 // decision — but note they do not get `publish`: taking someone's
+                                 // byline away and using it are not the same authority.
+                                 or "editorial.contributors",
         _ => false,
     };
 }

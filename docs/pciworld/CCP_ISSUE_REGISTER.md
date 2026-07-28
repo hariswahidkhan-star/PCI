@@ -533,6 +533,123 @@ Neither affects PCI World. Recorded so they are not rediscovered as new findings
 
 ---
 
+## CCP-P4-013 … CCP-P4-016 — Phase 4 careers is built, and its launch is blocked on decisions outside engineering
+
+| Field | Value |
+|---|---|
+| Phase | 4 |
+| Module | `backend/Endpoints/WorldCareers.cs`, `Core/CareersEmployers.cs`, `Core/CareersState.cs`, `Data/CareersSchema.cs` |
+| Severity | **P1** — blocks launch, not the build |
+| Status | **Open** — engineering complete and tested; every item below is owned outside this repository |
+
+The code ships flag-off and complete: `pciworld_careers_enabled` seeds `'0'`, 52 live-HTTP
+assertions pass on SQLite and MariaDB, and the verification gate, tenant isolation, frozen
+application snapshots and consent discipline are each asserted through more than one route. None of
+that is permission to turn it on, and §28.20 forbids calling it complete as though it were.
+
+**The gate that engineering cannot close.** `verified` is an assertion PCI makes to a candidate
+about who is behind a posting. The code enforces the gate — an unverified employer publishes
+nothing, by any route — but it cannot author the procedure behind the assertion. Until CCP-P4-013
+exists, **no employer can honestly reach `verified`**, so the flag stays off.
+
+| # | Decision needed | Owner |
+|---|---|---|
+| CCP-P4-013 | The employer verification standard: what evidence proves an employer is real (registry lookups, domain control, documents), who reviews it, to what SLA, whether a second approver is required, and the suspension/re-verification triggers. | Trust & Safety lead + Operations |
+| CCP-P4-014 | Employer terms of service, the applicant-facing privacy notice, and the consent wording. `pciworld_careers_policy_version` must hold **authored words**, not a placeholder — the apply endpoint returns 503 while it is unset rather than stamping a consent to nothing. Also the controller/processor split between PCI and the employer. | PCI legal counsel + Data Protection Officer |
+| CCP-P4-015 | Retention periods for applications and CVs per supported jurisdiction, and how an erasure request interacts with withdrawn-but-retained consent records. World CVs are deliberately **not** in the sweep-protected category list, so a retention period is required before launch, not after. | Data Protection Officer + legal counsel |
+| CCP-P4-016 | The commercial model — free, paid or tiered listings. Does not block this build (nothing here touches Stripe), but blocks any payment wiring and shapes the expected verification-queue volume. | Commercial owner |
+
+**What is deliberately absent rather than disabled.** There is no candidate scoring, ranking,
+auto-shortlisting or auto-rejection code path anywhere in the careers modules (§10.7), and a test
+asserts the absence rather than a configuration flag. There is no external apply URL, and no
+employer↔applicant free-form messaging.
+
+**What would close it.** Written decisions for each row above, a published policy version, and a
+deliberate act by a named person to set the flag.
+
+---
+
+## CCP-P5-017 … CCP-P5-019 — Phase 5 external ATS integration is designed and deliberately not built
+
+| Field | Value |
+|---|---|
+| Phase | 5 |
+| Module | `docs/pciworld/CCP_PHASE5_DESIGN.md` (design only — no code) |
+| Severity | **P2** — blocks the phase, blocks nothing already shipped |
+| Status | **Open** — blocked on vendor access, not on engineering effort |
+
+The baseline settled this before Phase 4 was written (`CCP_PHASE0_BASELINE.md:307`): external ATS
+vendors are *"contracts only until sandbox credentials exist"*, and §28 forbids marking an
+integration complete on mocks.
+
+**Why an adapter written against a fixture would be worse than none.** It would assert that our idea
+of a vendor's API is self-consistent. It cannot discover that the real endpoint paginates
+differently, rejects a field we always send, rate-limits at a tenth of the documented figure, or
+returns 200 with an error body — which is the entire class of defect an integration actually has.
+Shipping one and calling the phase done would be a claim of completeness with no evidence behind it.
+
+The design is written now, while it costs nothing, so that the day credentials arrive the work is
+wiring rather than design: outbox delivery on the proven `WorkerLease` mechanism, a per-destination
+consent distinct from the Phase 4 employer consent, write-only credentials, signed callbacks that
+can never move an application to a terminal state on their own, and a **certification gate** — no
+destination reaches `live` without a recorded run against the vendor's own sandbox, with no state
+path that skips it.
+
+| # | Needed | Owner |
+|---|---|---|
+| CCP-P5-017 | Sandbox credentials for at least one named vendor, and the commercial relationship behind them. Nothing here can be certified — or honestly called built — without this. | Commercial owner + Engineering |
+| CCP-P5-018 | The data-protection position on onward transfer to an employer's own processor, the per-destination consent wording, and whether any vendor region is disallowed. | Data Protection Officer + legal counsel |
+| CCP-P5-019 | Which vendors are in scope for release 1, and in what order — each is a separate validation surface. | Commercial owner + Product |
+
+**What would close it.** Credentials for a named vendor, then the build, then a recorded sandbox
+certification run per destination. Not before.
+
+---
+
+## CCP-P6-020 … CCP-P6-023 — Phase 6 contributor publishing is built; its launch is blocked on editorial and legal decisions
+
+| Field | Value |
+|---|---|
+| Phase | 6 |
+| Module | `backend/Core/WorldContributors.cs`, `Endpoints/WorldContributorsApi.cs`, `Data/ContributorSchema.cs`, `Core/WorldEditorial.cs` |
+| Severity | **P1** — blocks launch, not the build |
+| Status | **Open** — engineering complete and tested; every item below is owned outside this repository |
+
+Ships flag-off (`pciworld_contributors_enabled` seeds `'0'`). 34 live-HTTP assertions pass on SQLite
+and MariaDB.
+
+**A real defect was found and closed while building this, and it is worth recording because of what
+kind of defect it was.** `WorldEditorial.Approve` refuses when the acting admin is the article's
+`author_id` — a correct maker-checker for house content, where both values are
+`pciworld_admin_users` ids. A **contributor** is a `pciworld_users` row. The two id spaces are
+disjoint and shared no recorded link, so for a contributor's manuscript that comparison could never
+match: a staff editor who was also the contributor would have passed a control that reads, in code
+review, exactly like a control. Comparing emails instead would have been folklore, not identity.
+
+The fix is an explicit owner-managed link (`pciworld_admin_users.world_user_id`) and a refusal in
+`Review`, `Approve`, `Publish` **and** assignment. What the fix cannot do is stated rather than
+implied away: an admin whose link is unset and who quietly holds a second Passport account defeats
+it, because code cannot prove two accounts are one person when nobody has said so. That residue is
+the conflict-of-interest limb of CCP-P6-020 below.
+
+| # | Decision needed | Owner |
+|---|---|---|
+| CCP-P6-020 | Editorial acceptance policy: quality bar, subject scope, byline/pseudonym rules, AI-assistance and originality policy, the conflict-of-interest standard (including the undeclared-second-account residue above), review staffing and SLA. Until this exists no submission can honestly be accepted, and the flag stays off. | Editorial lead + Trust & Safety lead |
+| CCP-P6-021 | The defamation/legal review procedure for contributor text, the takedown procedure (who decides, to what SLA, counter-notice, tombstone wording), the retraction standard, and the erasure-vs-record rule for bylines inside immutable versions. | PCI legal counsel + Data Protection Officer |
+| CCP-P6-022 | Contributor terms: rights and licence, what PCI may keep serving after revocation, and `pciworld_contributor_terms_version` v1 as **authored words**. The application endpoint answers 503 while it is unset rather than recording acceptance of nothing. | PCI legal counsel + Editorial lead |
+| CCP-P6-023 | Whether contributors are ever paid, and the sponsorship/disclosure rules their declarations feed. Blocks payment wiring, not this build. | Commercial owner + Editorial lead |
+
+**What is absent rather than disabled.** No text classifier is wired to this surface: every
+submission already gets a human editor with the power to refuse, so a classifier could only re-order
+a queue while creating the low-confidence-score-near-a-sanction surface this phase otherwise
+structurally lacks. No HTML intake — the escape-first Markdown subset is the allowlist. No optimistic
+publication path at any trust level.
+
+**What would close it.** Written decisions for each row, published contributor terms, and a
+deliberate act by a named person to set the flag.
+
+---
+
 ## Deferred scope (explicit, per §4.2 and §26 step 10)
 
 | Item | Reason | Target |

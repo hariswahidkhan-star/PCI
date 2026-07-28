@@ -44,6 +44,9 @@ public static class WorldSchema
         // Phase 4 careers marketplace. Same posture: installed on every boot so the parity gates
         // cover both providers; off by default (pciworld_careers_enabled).
         CareersSchema.Ensure(db);
+        // After the article tables exist: ContributorSchema adds guarded columns to
+        // pciworld_articles and pciworld_admin_users, so it must run once those are installed.
+        ContributorSchema.Ensure(db);
     }
 
     static void Tables(Db db)

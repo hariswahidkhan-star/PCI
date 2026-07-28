@@ -446,6 +446,13 @@ public static class CommunityAdmin
                 // "Nobody can join" is a configuration state, not a fault, and an operator staring
                 // at an empty room deserves to be told which it is.
                 forum_enabled = Settings.Bool(db, "pciworld_forum_enabled", false),
+                careers_enabled = Settings.Bool(db, "pciworld_careers_enabled", false),
+                contributors_enabled = Settings.Bool(db, "pciworld_contributors_enabled", false),
+                // Reported as booleans, never as the strings themselves: whether a policy exists is
+                // operational state an operator needs; the version string is content, and the two
+                // 503 gates key off presence, not value.
+                careers_policy_published = !string.IsNullOrWhiteSpace(Settings.Str(db, "pciworld_careers_policy_version", "")),
+                contributor_terms_published = !string.IsNullOrWhiteSpace(Settings.Str(db, "pciworld_contributor_terms_version", "")),
                 min_age = CommunityEligibility.MinAge(db),
                 jurisdictions = CommunityEligibility.Jurisdictions(db).OrderBy(c => c).ToArray(),
                 admits_anyone = CommunityEligibility.Configured(db),
@@ -510,6 +517,41 @@ public static class CommunityAdmin
             {
                 Settings.Put(db, "pciworld_forum_enabled", fe);
                 changed.Add($"forum_enabled={fe}");
+            }
+
+            // Careers (Phase 4) and contributor publishing (Phase 6), for exactly the reason
+            // written above the forum flag: both shipped reachable only by a direct database
+            // write, which is not a flag — it is a note in a design document. An operator who
+            // cannot turn a feature on without SQL cannot turn it OFF without SQL either, and the
+            // off direction is the one that matters during an incident.
+            if (H.GetS(b, "careers_enabled") is { } ce && ce is "0" or "1")
+            {
+                Settings.Put(db, "pciworld_careers_enabled", ce);
+                changed.Add($"careers_enabled={ce}");
+            }
+            if (H.GetS(b, "contributors_enabled") is { } ke && ke is "0" or "1")
+            {
+                Settings.Put(db, "pciworld_contributors_enabled", ke);
+                changed.Add($"contributors_enabled={ke}");
+            }
+
+            // The two policy-version strings that gate consent and terms acceptance. They are set
+            // here rather than seeded because they must be AUTHORED WORDS: until each holds a real
+            // version, the apply and application endpoints answer 503 rather than record acceptance
+            // of nothing (CCP-P4-014, CCP-P6-022). Setting one is the operator's assertion that the
+            // corresponding text has actually been published — which is why it is an explicit act
+            // and not a default.
+            if (H.GetS(b, "careers_policy_version") is { } cpv)
+            {
+                if (cpv.Trim().Length > 32) return Results.Json(new { error = "policy_version_too_long" }, statusCode: 400);
+                Settings.Put(db, "pciworld_careers_policy_version", cpv.Trim());
+                changed.Add($"careers_policy_version={cpv.Trim()}");
+            }
+            if (H.GetS(b, "contributor_terms_version") is { } ctv)
+            {
+                if (ctv.Trim().Length > 32) return Results.Json(new { error = "terms_version_too_long" }, statusCode: 400);
+                Settings.Put(db, "pciworld_contributor_terms_version", ctv.Trim());
+                changed.Add($"contributor_terms_version={ctv.Trim()}");
             }
 
             if (changed.Count == 0) return Results.Json(new { error = "nothing_to_change" }, statusCode: 400);

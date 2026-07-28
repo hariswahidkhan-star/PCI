@@ -56,6 +56,34 @@ public static class WorldPages
     /// the underline in the stylesheet hangs off the same attribute, so the visible state and the
     /// announced state can never disagree. "/world" matches only itself — every other World page
     /// lives under a longer path, so a prefix test would light up Today's Challenge everywhere.</summary>
+    /// <summary>
+    /// The nav entries for the surfaces that ship behind flags — community rooms, the forum and
+    /// careers.
+    ///
+    /// THIS EXISTS BECAUSE THEY WERE UNREACHABLE. Each phase built its surface, its tests and its
+    /// crawlable pages, and none of them added a way in: the primary nav went Today's Challenge →
+    /// Challenge Library → Writing → Passport → About, so a visitor could only find the forum or
+    /// the jobs board by already knowing the URL. Built, tested and invisible is the same class of
+    /// defect as a component with green tests that nothing imports — the tests pass either way,
+    /// which is exactly why nobody notices.
+    ///
+    /// Each link is conditional on its own flag, and that is not cosmetic. With a flag off the
+    /// routes return 404 by design, so an unconditional link would advertise a page that does not
+    /// exist — worse than no link, because a broken nav item reads as a broken site rather than as
+    /// a feature that has not launched.
+    /// </summary>
+    static string NavExtras(Db db, string canonicalPath)
+    {
+        var sb = new System.Text.StringBuilder();
+        if (Settings.Bool(db, "world_community_enabled", false))
+            sb.Append($"<a href=\"/world-app/community\"{Cur(canonicalPath, "/world-app/community")}>Rooms</a>");
+        if (Settings.Bool(db, "pciworld_forum_enabled", false))
+            sb.Append($"<a href=\"/world/forum\"{Cur(canonicalPath, "/world/forum")}>Forum</a>");
+        if (Settings.Bool(db, "pciworld_careers_enabled", false))
+            sb.Append($"<a href=\"/world/careers\"{Cur(canonicalPath, "/world/careers")}>Jobs</a>");
+        return sb.ToString();
+    }
+
     static string Cur(string canonicalPath, string href) =>
         canonicalPath == href || (href != "/world" && canonicalPath.StartsWith(href + "/", StringComparison.Ordinal))
             ? " aria-current=\"page\"" : "";
@@ -629,6 +657,7 @@ public static class WorldPages
                   <a href="/world"{Cur(canonicalPath, "/world")}>Today&rsquo;s Challenge</a>
                   <a href="/world/archive"{Cur(canonicalPath, "/world/archive")}>Challenge Library</a>
                   <a href="/world/blog"{Cur(canonicalPath, "/world/blog")}>Writing</a>
+                  {NavExtras(db, canonicalPath)}
                   <a href="/world/account"{Cur(canonicalPath, "/world/account")}>Passport</a>
                   <a href="/world/about"{Cur(canonicalPath, "/world/about")}>About</a>
                 </nav>

@@ -126,6 +126,12 @@ public static class CareersSchema
             posting_id INTEGER NOT NULL,
             applicant_user_id INTEGER NOT NULL,
             state VARCHAR(16) NOT NULL DEFAULT 'draft',    -- draft|submitted|withdrawn|shortlisted|rejected
+            -- Frozen at submission; see the AddCol block below for why these live here and not on
+            -- the applicant's profile. Fresh installs get them here, existing ones converge there.
+            cv_ref VARCHAR(255),
+            cv_sha256 VARCHAR(64),
+            cv_name VARCHAR(255),
+            cv_mime VARCHAR(96),
             submitted_at VARCHAR(32),
             withdrawn_at VARCHAR(32),
             created_at VARCHAR(32) DEFAULT (datetime('now')),
@@ -168,6 +174,68 @@ public static class CareersSchema
             policy_version VARCHAR(32),
             created_at VARCHAR(32) DEFAULT (datetime('now')))");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_wcarcons_app ON pciworld_application_consents(application_id)");
+
+        // ── The CV reference, FROZEN at submission (§5.2, §6). ──
+        //
+        // These live on the application rather than on the applicant's profile, and that placement
+        // is the whole point: the applicant may replace their stored CV tomorrow, and what the
+        // employer reviewed must not change underneath them. `cv_sha256` pins the exact bytes, so
+        // "is this the document they consented to disclose" is answerable from the row rather than
+        // from trust in the storage layer.
+        //
+        // There is NO public URL column and there never will be — the reference resolves only
+        // through the authenticated download endpoint that re-checks all four conditions of §6 on
+        // every request. A column holding a servable URL would be a way to bypass that check, so
+        // the absence is structural, not an omission.
+        AddCol(db, "pciworld_applications", "cv_ref", "cv_ref VARCHAR(255)");
+        AddCol(db, "pciworld_applications", "cv_sha256", "cv_sha256 VARCHAR(64)");
+        AddCol(db, "pciworld_applications", "cv_name", "cv_name VARCHAR(255)");
+        AddCol(db, "pciworld_applications", "cv_mime", "cv_mime VARCHAR(96)");
+
+        // ── Application events. Every state change after submission is a ROW, never an overwritten
+        //    column (§5.2). Main-PCI still overwrites `admin_note` in place (Careers.cs:377); that
+        //    is the mistake this table exists not to repeat — a note that replaces the previous note
+        //    destroys the reason a candidate was moved, which is precisely what a dispute asks for.
+        //    Append-only: there is no UPDATE path to this table anywhere in the codebase. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_application_events(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_id INTEGER NOT NULL,
+            event VARCHAR(32) NOT NULL,          -- submitted|withdrawn|reinstated|shortlisted|rejected|note
+            from_state VARCHAR(16),
+            to_state VARCHAR(16),
+            actor_kind VARCHAR(16) NOT NULL,     -- applicant|employer|admin|system
+            actor_id INTEGER,
+            note TEXT,
+            created_at VARCHAR(32) DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_wcarev_app ON pciworld_application_events(application_id,id)");
+
+        // ── CV access log. Written on EVERY download, employer or World admin (§6, §8).
+        //
+        // The stated purpose is to make bulk access a query rather than a forensic project: "one
+        // account pulled 400 CVs in an hour" has to be answerable, because the realistic scraping
+        // threat on this surface is a compromised member of a legitimate employer, not an outsider.
+        // Refused attempts are logged too (`allowed=0`) — a run of refusals is the signal that
+        // someone is probing ids, and logging only successes would hide exactly that. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_cv_access_log(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            application_id INTEGER NOT NULL,
+            employer_id INTEGER,
+            actor_kind VARCHAR(16) NOT NULL,     -- employer|admin
+            actor_id INTEGER,
+            allowed INTEGER NOT NULL DEFAULT 0,
+            refused_reason VARCHAR(48),
+            created_at VARCHAR(32) DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_wcarcv_actor ON pciworld_cv_access_log(actor_kind,actor_id,created_at)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_wcarcv_app ON pciworld_cv_access_log(application_id)");
+    }
+
+    // Add a column only if the table exists and lacks it, so an install created before these
+    // columns converges on the next boot without a migration step anyone has to remember to run.
+    // Mirrors Migrate.cs's AddCol; safe on both providers.
+    static void AddCol(Db db, string table, string col, string ddl)
+    {
+        var have = db.Columns(table);
+        if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
     }
 
     static void Seed(Db db)
