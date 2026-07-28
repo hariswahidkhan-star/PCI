@@ -282,6 +282,36 @@ public static class Migrate
         AddCol("sample_questions", "option_c", "option_c TEXT");
         AddCol("sample_questions", "option_d", "option_d TEXT");
         AddCol("users", "registration_no", "registration_no TEXT");
+        AddCol("users", "registration_no_issued_at", "registration_no_issued_at TEXT");
+        // ── The PCI Student Number reservation and audit ledger (Core/StudentNumbers.cs). ──
+        // A number is permanently reserved here the moment it is issued, so merge/retire/erasure can
+        // release the person's identity without ever releasing the number to somebody else.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pci_student_number_registry(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_number VARCHAR(32) NOT NULL,format_version VARCHAR(16) NOT NULL DEFAULT 'legacy_v1',
+            original_user_id INTEGER NOT NULL,resolves_to_user_id INTEGER,state VARCHAR(16) NOT NULL DEFAULT 'issued',
+            merged_into_student_number VARCHAR(32),issued_at TEXT DEFAULT (datetime('now')),
+            changed_at TEXT DEFAULT (datetime('now')),reason_code VARCHAR(48),changed_by_admin_id INTEGER,
+            correlation_id VARCHAR(64),row_version INTEGER NOT NULL DEFAULT 1)");
+        // The reservation itself. This one is safe unconditionally: the table is new, so it cannot
+        // already hold a duplicate, and it is what makes GetOrIssue's insert the atomic claim.
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_student_number_registry ON pci_student_number_registry(student_number)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_student_number_registry_user ON pci_student_number_registry(resolves_to_user_id)");
+        // The projection's uniqueness is NOT safe unconditionally — an existing database may already
+        // carry duplicate or malformed numbers from the era when GET /api/me minted them lazily, and a
+        // failed CREATE INDEX here would break boot for exactly the installs that need repairing most.
+        // So: create it only once the data is actually clean. Phase 2's backfill/quarantine pass makes
+        // it clean, and the next boot after that picks the index up. Fresh installs get it immediately.
+        try
+        {
+            // Counts '' as a value, not as an absence — two blank rows would fail the index just as
+            // two identical numbers would, and the partial predicate only exempts NULL.
+            var dupes = db.Scalar<long>(@"SELECT COUNT(*) FROM (SELECT registration_no FROM users
+                WHERE registration_no IS NOT NULL GROUP BY registration_no HAVING COUNT(*)>1) d");
+            if (dupes == 0)
+                db.Exec(@"CREATE UNIQUE INDEX IF NOT EXISTS ux_users_registration_no ON users(registration_no)
+                    WHERE registration_no IS NOT NULL");
+        }
+        catch { /* never let the uniqueness guard block a boot; Phase 2 reconciliation reports the drift */ }
         AddCol("exam_launch_codes", "code_hash", "code_hash TEXT");
         AddCol("discount_codes", "code_type", "code_type TEXT DEFAULT 'general'");
         AddCol("discount_codes", "org_name", "org_name TEXT");

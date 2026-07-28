@@ -13,7 +13,7 @@ namespace PCI.Backend.Endpoints;
 ///
 ///   Student download — authenticated, entitlement-scoped (same visibility rule as the
 ///   /api/me/cert-documents list), optional route restriction, and a per-recipient watermark on
-///   flagged PDFs: "{name} | PCI Student ID: NNNNNN | {designation}" with a
+///   flagged PDFs: "{name} | PCI Student Number: PCI-YYYY-NNNNNN | {designation}" with a
 ///   "Personal Copy — Not for Redistribution" footer carrying a stable per-copy id and the download
 ///   date. The stored master is never modified and never exposed; an unparseable PDF falls back to
 ///   the original with the audit recording it. Every download lands in cert_document_downloads.
@@ -200,8 +200,13 @@ public static class Books
                 if (fullName.Length == 0) fullName = u.Email;
                 var cert = certId is null ? null : Certs.ById(db, certId.Value);
                 var designation = H.Str(cert?["acronym"]) ?? H.Str(cert?["code"]) ?? "PCI";
+                // The canonical public Student Number — never users.id. The database primary key is
+                // an internal identifier; printing it on a distributable PDF both mislabels it and
+                // leaks a value that other endpoints treat as non-public. A user who somehow has no
+                // number yet is watermarked without one rather than with the wrong one.
+                var studentNo = StudentNumbers.Read(db, u.Id);
                 var wm = PdfWatermark.Apply(bytes,
-                    $"{fullName} | PCI Student ID: {u.Id:D6} | {designation}",
+                    $"{fullName}{(studentNo is null ? "" : $" | PCI Student Number: {studentNo}")} | {designation}",
                     $"Personal Copy - Not for Redistribution | Copy {copyId} | Downloaded {DateTime.UtcNow:yyyy-MM-dd}");
                 if (wm is not null) { bytes = wm; wmResult = "ok_watermarked"; } else wmResult = "ok_unwatermarked";
             }

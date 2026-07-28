@@ -10,11 +10,32 @@ CREATE TABLE IF NOT EXISTS users (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(500) UNIQUE NOT NULL,
   first_name TEXT, last_name TEXT,
-  registration_no TEXT,
+  registration_no TEXT,                     -- the canonical public PCI Student Number; issued by Core/StudentNumbers.cs only
+  registration_no_issued_at TEXT,
   password_hash TEXT,                       -- set by user via secure link; never an emailed plain password
   role TEXT NOT NULL DEFAULT ('student'),
   status TEXT NOT NULL DEFAULT ('pending'),   -- pending | active | deactivated
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+
+-- The PCI Student Number reservation and audit ledger. NOT a second identity authority and NOT a
+-- profile: users.registration_no stays the compatibility projection every reader already uses. This
+-- table exists so a number is permanently reserved — after a merge, a retirement or an erasure the
+-- value is still here and can never be handed to a different person.
+CREATE TABLE IF NOT EXISTS pci_student_number_registry (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  student_number VARCHAR(32) NOT NULL,
+  format_version VARCHAR(16) NOT NULL DEFAULT 'legacy_v1',
+  original_user_id BIGINT NOT NULL,        -- the canonical user it was first issued to; never rewritten
+  resolves_to_user_id BIGINT,              -- current canonical owner after an approved merge
+  state VARCHAR(16) NOT NULL DEFAULT 'issued',   -- issued | merged | retired | quarantined
+  merged_into_student_number VARCHAR(32),
+  issued_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  changed_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  reason_code VARCHAR(48),
+  changed_by_admin_id BIGINT,
+  correlation_id VARCHAR(64),
+  row_version BIGINT NOT NULL DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS enrollment_sessions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
