@@ -244,12 +244,11 @@ public static class CareersEmployers
     /// employer's postings — and (c) — consent — belong to the layers that own those rows.
     /// </summary>
     public static bool MayActFor(Db db, long employerId, long userId) =>
-        // MUTATION 3: employer_id predicate dropped — membership of ANY verified employer passes
         db.QueryOne(
             @"SELECT m.id FROM pciworld_employer_members m
               JOIN pciworld_employers e ON e.id = m.employer_id
-              WHERE m.user_id=? AND e.state='verified'",
-            userId) is not null;
+              WHERE m.employer_id=? AND m.user_id=? AND e.state='verified'",
+            employerId, userId) is not null;
 
     // ── internals ─────────────────────────────────────────────────────────────────────────────
 
