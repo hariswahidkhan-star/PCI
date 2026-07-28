@@ -49,6 +49,8 @@ describe('World community rooms', () => {
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Display name')
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ali Hassan' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = url => {
       if (url.includes('guest-sessions')) return { ok: true, token: 'tok-1', display_name: 'Ali Hassan' }
@@ -59,6 +61,37 @@ describe('World community rooms', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Join room' }))
     await screen.findByLabelText('Your message')
   }
+
+  // ── The eligibility gate, in the interface ──
+
+  it('cannot be submitted without the eligibility declaration', async () => {
+    // The server refuses entry without it (CCP-P1-003). Enforcing it here too means someone finds
+    // out before they have typed a display name and accepted the rules, rather than after.
+    render(<CommunityApp />)
+    await screen.findByText('Lobby')
+    fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
+    await screen.findByLabelText('Display name')
+
+    fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ali Hassan' } })
+    fireEvent.click(screen.getByRole('checkbox'))
+    expect(screen.getByRole('button', { name: 'Join room' })).toBeDisabled()
+
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    expect(screen.getByRole('button', { name: 'Join room' })).toBeDisabled()
+
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
+    expect(screen.getByRole('button', { name: 'Join room' })).not.toBeDisabled()
+  })
+
+  it('tells the person their date of birth is not kept', async () => {
+    // The gate records whether the minimum was met, not when anyone was born. Saying so at the
+    // point of asking is the difference between a proportionate check and a data grab.
+    render(<CommunityApp />)
+    await screen.findByText('Lobby')
+    fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
+    await screen.findByLabelText('Date of birth')
+    expect(screen.getByText(/not stored/i)).toBeTruthy()
+  })
 
   // ── The safety rule, in the interface ──
 
@@ -152,6 +185,8 @@ describe('World community rooms', () => {
     await screen.findByLabelText('Display name')
 
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'admin' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = () => ({ _status: 400, error: 'name_reserved' })
     fireEvent.click(screen.getByRole('button', { name: 'Join room' }))
@@ -167,6 +202,8 @@ describe('World community rooms', () => {
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Display name')
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ali Hassan' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = () => ({ _status: 400, error: 'name_taken', suggestion: 'Ali Hassan 2' })
     fireEvent.click(screen.getByRole('button', { name: 'Join room' }))

@@ -165,6 +165,11 @@ def main():
     try:
         # ── The feature ships dark, INDEPENDENTLY of rooms ─────────────────────────────────
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('world_community_enabled','1')")
+        # CCP-P1-003: the eligibility gate admits nobody until a jurisdiction list exists, which is
+        # the fail-closed posture the register calls for. A suite must configure it the way an
+        # operator would rather than have the gate relaxed to let tests through.
+        sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_community_jurisdictions','GB,AE,PK')")
+        sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_community_min_age','18')")
         sql("""INSERT INTO pciworld_community_rooms(slug,title,description,state,capacity,rules_version,image_allowed)
                VALUES('gallery','Gallery','Images','open',10,'v1',1)""")
 
@@ -178,12 +183,12 @@ def main():
         NET_A = {"X-Forwarded-For": "198.51.100.30"}
         NET_B = {"X-Forwarded-For": "198.51.100.40"}
         code, alice = js("/api/world/community/guest-sessions", "POST",
-                         {"room": "gallery", "display_name": "Ayesha Iqbal", "rules_version": "v1"}, NET_A)
+                         {"room": "gallery", "display_name": "Ayesha Iqbal", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_A)
         chk("I02 a guest joins the image room", code == 200 and alice.get("token"), str(alice))
         A = {"X-Community-Session": alice["token"], **NET_A}
 
         code, bob = js("/api/world/community/guest-sessions", "POST",
-                       {"room": "gallery", "display_name": "Omar Farooq", "rules_version": "v1"}, NET_B)
+                       {"room": "gallery", "display_name": "Omar Farooq", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_B)
         chk("I03 a second guest joins, to watch", code == 200 and bob.get("token"))
         B = {"X-Community-Session": bob["token"], **NET_B}
 
@@ -254,7 +259,7 @@ def main():
         # person uploading is what actually happens in a room.
         NET_C = {"X-Forwarded-For": "198.51.100.60"}
         code, carla = js("/api/world/community/guest-sessions", "POST",
-                         {"room": "gallery", "display_name": "Nadia Rahman", "rules_version": "v1"}, NET_C)
+                         {"room": "gallery", "display_name": "Nadia Rahman", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_C)
         C = {"X-Community-Session": carla["token"], **NET_C}
 
         code, up2 = js("/api/world/community/rooms/gallery/images", "POST",
@@ -273,7 +278,7 @@ def main():
         # ── Restricted ─────────────────────────────────────────────────────────────────────
         NET_D = {"X-Forwarded-For": "198.51.100.70"}
         code, dara = js("/api/world/community/guest-sessions", "POST",
-                        {"room": "gallery", "display_name": "Imran Sheikh", "rules_version": "v1"}, NET_D)
+                        {"room": "gallery", "display_name": "Imran Sheikh", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_D)
         D = {"X-Community-Session": dara["token"], **NET_D}
 
         code, up3 = js("/api/world/community/rooms/gallery/images", "POST",
@@ -299,7 +304,7 @@ def main():
         sql("""INSERT INTO pciworld_community_rooms(slug,title,description,state,capacity,rules_version,image_allowed)
                VALUES('textonly','Text only','No images','open',10,'v1',0)""")
         code, tguest = js("/api/world/community/guest-sessions", "POST",
-                          {"room": "textonly", "display_name": "Zara Malik", "rules_version": "v1"},
+                          {"room": "textonly", "display_name": "Zara Malik", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"},
                           {"X-Forwarded-For": "198.51.100.50"})
         T = {"X-Community-Session": tguest["token"], "X-Forwarded-For": "198.51.100.50"}
         code, r = js("/api/world/community/rooms/textonly/images", "POST",
@@ -311,7 +316,7 @@ def main():
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_community_image_scanner','typo-provider')")
         NET_E = {"X-Forwarded-For": "198.51.100.80"}
         code, eman = js("/api/world/community/guest-sessions", "POST",
-                        {"room": "gallery", "display_name": "Hina Baig", "rules_version": "v1"}, NET_E)
+                        {"room": "gallery", "display_name": "Hina Baig", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_E)
         E = {"X-Community-Session": eman["token"], **NET_E}
         code, up4 = js("/api/world/community/rooms/gallery/images", "POST",
                        {"client_upload_id": "typo1", "data": data_uri(png(MARK_OK)), "alt": "A chart"}, E)

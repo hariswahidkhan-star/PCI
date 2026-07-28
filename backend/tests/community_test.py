@@ -136,6 +136,11 @@ def main():
         # Enable it, and configure the deterministic moderator so the pipeline is exercisable
         # without a vendor. Both are settings, which is the point of the adapter seam.
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('world_community_enabled','1')")
+        # CCP-P1-003: the eligibility gate admits nobody until a jurisdiction list exists, which is
+        # the fail-closed posture the register calls for. A suite must configure it the way an
+        # operator would rather than have the gate relaxed to let tests through.
+        sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_community_jurisdictions','GB,AE,PK')")
+        sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_community_min_age','18')")
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('world_community_moderator','deterministic')")
         sql("""INSERT INTO pciworld_community_rooms(slug,title,description,state,capacity,rules_version)
                VALUES('lobby','Lobby','General discussion','open',3,'v1')""")
@@ -150,29 +155,68 @@ def main():
 
         # ── Guest entry ────────────────────────────────────────────────────────────────────
         code, r = js("/api/world/community/guest-sessions", "POST",
-                     {"room": "lobby", "display_name": "admin", "rules_version": "v1"})
+                     {"room": "lobby", "display_name": "admin", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"})
         chk("C05 a reserved display name is refused", code == 400 and r.get("error") == "name_reserved", str(r))
 
         code, r = js("/api/world/community/guest-sessions", "POST",
-                     {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v0"})
+                     {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v0", "birth_date": "1990-05-04", "jurisdiction": "GB"})
         chk("C06 a stale rules version is refused", code == 409 and r.get("error") == "rules_version_stale", str(r))
 
         NET_A = {"X-Forwarded-For": "198.51.100.10"}
         NET_B = {"X-Forwarded-For": "198.51.100.20"}
         code, alice = js("/api/world/community/guest-sessions", "POST",
-                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"}, NET_A)
+                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_A)
         chk("C07 a valid guest joins with no account", code == 200 and alice.get("token"), str(alice))
         A = {"X-Community-Session": alice["token"], **NET_A}
 
         code, r = js("/api/world/community/guest-sessions", "POST",
-                     {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"}, NET_A)
+                     {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_A)
         chk("C08 a duplicate active name is refused with a suggestion",
             code == 400 and r.get("error") == "name_taken" and r.get("suggestion"), str(r))
 
         code, bob = js("/api/world/community/guest-sessions", "POST",
-                       {"room": "lobby", "display_name": "Sara Khan", "rules_version": "v1"}, NET_B)
+                       {"room": "lobby", "display_name": "Sara Khan", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_B)
         chk("C09 a second guest joins", code == 200 and bob.get("token"))
         B = {"X-Community-Session": bob["token"], **NET_B}
+
+        # ── Eligibility gate (CCP-P1-003) ──────────────────────────────────────────────────
+        #
+        # A declaration gate, not verification: what these prove is that the service asked, that a
+        # refusal happened, and that the refusal was recorded — not that anyone told the truth.
+        NET_C = {"X-Forwarded-For": "198.51.100.60"}
+        code, r = js("/api/world/community/guest-sessions", "POST",
+                     {"room": "lobby", "display_name": "Young Person", "rules_version": "v1",
+                      "birth_date": "2015-01-01", "jurisdiction": "GB"}, NET_C)
+        chk("C09a someone below the minimum age is refused entry",
+            code == 403 and r.get("error") == "below_minimum_age", f"{code} {r}")
+
+        code, r = js("/api/world/community/guest-sessions", "POST",
+                     {"room": "lobby", "display_name": "Elsewhere Person", "rules_version": "v1",
+                      "birth_date": "1990-01-01", "jurisdiction": "ZZ"}, NET_C)
+        chk("C09b an unserved jurisdiction is refused",
+            code == 403 and r.get("error") == "not_available_in_your_location", f"{code} {r}")
+
+        code, r = js("/api/world/community/guest-sessions", "POST",
+                     {"room": "lobby", "display_name": "No Declaration", "rules_version": "v1",
+                      "jurisdiction": "GB"}, NET_C)
+        chk("C09c entry without an age declaration is refused",
+            code == 403 and r.get("error") == "age_declaration_required", f"{code} {r}")
+
+        rows = sql("SELECT COUNT(*) FROM pciworld_community_eligibility_log WHERE outcome<>'eligible'")
+        chk("C09d every refusal is recorded as evidence the gate was applied",
+            rows and rows[0][0] >= 3, str(rows))
+
+        rows = sql("SELECT COUNT(*) FROM pciworld_community_eligibility_log WHERE declared_age_band='under_13'")
+        chk("C09e the log keeps a coarse band, never a date of birth", rows and rows[0][0] >= 1, str(rows))
+
+        # A refused person never got a session, so the display name they tried is still free.
+        code, r = js("/api/world/community/guest-sessions", "POST",
+                     {"room": "lobby", "display_name": "Young Person", "rules_version": "v1",
+                      "birth_date": "1990-01-01", "jurisdiction": "GB"}, NET_C)
+        chk("C09f a refused entry consumed no display name and no capacity",
+            code == 200 and r.get("token"), f"{code} {r}")
+        js("/api/world/community/guest-sessions/current", "DELETE",
+           None, {"X-Community-Session": r.get("token", ""), **NET_C})
 
         # ── Send and replay ────────────────────────────────────────────────────────────────
         code, m = js("/api/world/community/rooms/lobby/messages", "POST",
@@ -233,7 +277,7 @@ def main():
         chk("C25 a guest can leave", code == 200)
 
         code, again = js("/api/world/community/guest-sessions", "POST",
-                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1"}, NET_A)
+                         {"room": "lobby", "display_name": "Ali Hassan", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, NET_A)
         chk("C26 leaving releases the display name", code == 200 and again.get("token"), str(again))
 
         # ── Anonymous access boundaries ────────────────────────────────────────────────────

@@ -354,6 +354,100 @@ public static class CommunityModeration
         return rows;
     }
 
+    /// <summary>
+    /// The forum half of the matrix (Phase 3 — docs/pciworld/CCP_PHASE3_DESIGN.md §2). Same engine,
+    /// <c>contentType="post"</c>.
+    ///
+    /// TRUST IS NOT AN INPUT HERE, AND MUST NEVER BECOME ONE.
+    ///
+    /// A forum post is durable, indexed and crawlable, so an adverse verdict has to mean the same
+    /// thing whoever wrote it. An author's trust level decides only whether their post waits for
+    /// this verdict or publishes and is withdrawn when it arrives — never what the verdict is. There
+    /// is a test asserting the engine returns the identical decision at every level, because a
+    /// "trusted authors get a softer rule" shortcut is exactly the kind of thing that looks
+    /// reasonable in a hurry.
+    ///
+    /// Unlike the room matrix, a post CAN carry mitigating context: a forum post has surrounding
+    /// prose a classifier can actually find evidence in, which was precisely the argument for
+    /// refusing context rows on a bare image.
+    /// </summary>
+    public static IReadOnlyList<Rule> DefaultPostMatrix()
+    {
+        var rows = new List<Rule>();
+        var id = 0L;
+        void Add(string category, Band band, Outcome outcome, string reason,
+                 string? context = null, int repetitionMin = 0, int sort = 100)
+            => rows.Add(new Rule(++id, "post", category, SeverityFor(band), band,
+                                 context, repetitionMin, outcome, reason, sort));
+
+        Add(Categories.Ordinary, Band.Low, Outcome.Allow, "ok");
+        Add(Categories.Ordinary, Band.Medium, Outcome.Allow, "ok");
+        Add(Categories.Ordinary, Band.High, Outcome.Allow, "ok");
+
+        // Professional register rather than a swear filter: a forum tolerates more than a guest
+        // room, so mild profanity is held for a human instead of blocking a technical argument that
+        // happened to be forceful.
+        Add(Categories.ProfanityMild, Band.Low, Outcome.Allow, "ok");
+        Add(Categories.ProfanityMild, Band.Medium, Outcome.Quarantine, "profanity_review");
+        Add(Categories.ProfanityMild, Band.High, Outcome.Block, "profanity_blocked");
+
+        Add(Categories.TargetedAbuse, Band.Low, Outcome.Quarantine, "abuse_review");
+        Add(Categories.TargetedAbuse, Band.Medium, Outcome.Block, "abuse_blocked");
+        Add(Categories.TargetedAbuse, Band.Medium, Outcome.Block, "abuse_repeated", repetitionMin: 3, sort: 40);
+        Add(Categories.TargetedAbuse, Band.High, Outcome.Block, "abuse_severe");
+
+        Add(Categories.Hate, Band.Low, Outcome.Quarantine, "hate_review");
+        Add(Categories.Hate, Band.Medium, Outcome.Block, "hate_blocked");
+        Add(Categories.Hate, Band.High, Outcome.Escalate, "hate_severe");
+
+        Add(Categories.Sexual, Band.Low, Outcome.Quarantine, "sexual_review");
+        Add(Categories.Sexual, Band.Medium, Outcome.Block, "sexual_blocked");
+        Add(Categories.Sexual, Band.High, Outcome.Escalate, "sexual_severe");
+
+        // A project-controls forum discusses site incidents, accidents and risk. News and
+        // educational framing is legitimate here in a way it is not for a bare image; a credible
+        // threat still has no context row to hide behind at High.
+        Add(Categories.Violence, Band.Low, Outcome.Allow, "violence_context_ok", context: "news", sort: 50);
+        Add(Categories.Violence, Band.Low, Outcome.Allow, "violence_context_ok", context: "educational", sort: 50);
+        Add(Categories.Violence, Band.Low, Outcome.Quarantine, "violence_review");
+        Add(Categories.Violence, Band.Medium, Outcome.Block, "violence_blocked");
+        Add(Categories.Violence, Band.High, Outcome.Escalate, "violence_credible_threat");
+
+        // Same reasoning as the text matrix: someone describing their own struggle needs support,
+        // not silence. Only the crisis band routes out, and it routes to help rather than to a
+        // punishment.
+        Add(Categories.SelfHarm, Band.Low, Outcome.Allow, "self_harm_support_ok");
+        Add(Categories.SelfHarm, Band.Medium, Outcome.Quarantine, "self_harm_review");
+        Add(Categories.SelfHarm, Band.High, Outcome.Escalate, "self_harm_crisis");
+
+        Add(Categories.Grooming, Band.Low, Outcome.Quarantine, "child_safety_review");
+        Add(Categories.Grooming, Band.Medium, Outcome.Escalate, "child_safety_restricted");
+        Add(Categories.Grooming, Band.High, Outcome.Escalate, "child_safety_restricted");
+
+        Add(Categories.IllegalGoods, Band.Low, Outcome.Allow, "illegal_context_ok", context: "news", sort: 50);
+        Add(Categories.IllegalGoods, Band.Low, Outcome.Quarantine, "illegal_review");
+        Add(Categories.IllegalGoods, Band.Medium, Outcome.Block, "illegal_blocked");
+        Add(Categories.IllegalGoods, Band.High, Outcome.Block, "illegal_solicitation");
+
+        // Spam is the forum's most common failure mode, so repetition escalates faster here than in
+        // a room: a second confident hit blocks rather than waiting for a third.
+        Add(Categories.ScamSpam, Band.Low, Outcome.Quarantine, "spam_review");
+        Add(Categories.ScamSpam, Band.Medium, Outcome.Block, "spam_blocked");
+        Add(Categories.ScamSpam, Band.High, Outcome.Block, "spam_coordinated");
+
+        // Publishing a colleague's phone number or payslip in an indexed, crawlable thread is worse
+        // than doing it in a transient room — a search engine will keep it. Blocked at every band.
+        Add(Categories.PiiDoxxing, Band.Low, Outcome.Block, "pii_blocked");
+        Add(Categories.PiiDoxxing, Band.Medium, Outcome.Block, "pii_blocked");
+        Add(Categories.PiiDoxxing, Band.High, Outcome.Escalate, "pii_doxxing_severe");
+
+        Add(Categories.Copyright, Band.Low, Outcome.Quarantine, "rights_review");
+        Add(Categories.Copyright, Band.Medium, Outcome.Quarantine, "rights_review");
+        Add(Categories.Copyright, Band.High, Outcome.Block, "rights_refused");
+
+        return rows;
+    }
+
     static string SeverityFor(Band band) => band switch
     {
         Band.High => "high",

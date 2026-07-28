@@ -441,6 +441,16 @@ public static class CommunityAdmin
                 // and publish none of them, which is the fail-closed posture and looks like a fault
                 // to an operator who has not been told.
                 publishes_messages = Settings.Str(db, "world_community_moderator", "none") != "none",
+
+                // The eligibility policy, and — more usefully — whether it admits anybody at all.
+                // "Nobody can join" is a configuration state, not a fault, and an operator staring
+                // at an empty room deserves to be told which it is.
+                min_age = CommunityEligibility.MinAge(db),
+                jurisdictions = CommunityEligibility.Jurisdictions(db).OrderBy(c => c).ToArray(),
+                admits_anyone = CommunityEligibility.Configured(db),
+                // §28.6 in miniature: the system must not let its own screens imply a stronger
+                // control than it has. This is a declaration gate; it is not verification.
+                age_assurance = "self_declared_only",
             });
         });
 
@@ -467,6 +477,30 @@ public static class CommunityAdmin
                 Settings.Put(db, "world_community_moderator", mod);
                 changed.Add($"moderator={mod}");
             }
+            // ── The eligibility policy (CCP-P1-003) ──
+            //
+            // This is where counsel's decision actually lands. The endpoint validates the SHAPE —
+            // two-letter codes, a minimum age inside a sane band — and takes no view on the values,
+            // because the values are a legal judgement and this is not the place to have one.
+            if (H.GetS(b, "jurisdictions") is { } juris)
+            {
+                var codes = juris.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                                 .Select(c => c.ToUpperInvariant()).ToArray();
+                // Rejected rather than silently filtered: an operator who typed "United Kingdom"
+                // must be told, not left believing they opened a country they did not.
+                if (codes.Any(c => c.Length != 2 || !c.All(char.IsAsciiLetterUpper)))
+                    return Results.Json(new { error = "jurisdiction_codes_must_be_iso_alpha2" }, statusCode: 400);
+                Settings.Put(db, CommunityEligibility.JurisdictionsKey, string.Join(",", codes.Distinct()));
+                changed.Add($"jurisdictions={codes.Length}");
+            }
+            if (H.GetS(b, "min_age") is { } minAge)
+            {
+                if (!int.TryParse(minAge, out var n) || n < 13 || n > CommunityEligibility.MaxConfigurableMinAge)
+                    return Results.Json(new { error = "min_age_out_of_range" }, statusCode: 400);
+                Settings.Put(db, CommunityEligibility.MinAgeKey, n.ToString());
+                changed.Add($"min_age={n}");
+            }
+
             if (changed.Count == 0) return Results.Json(new { error = "nothing_to_change" }, statusCode: 400);
 
             Audit(adm!.Id, "world_community_settings", string.Join(",", changed));

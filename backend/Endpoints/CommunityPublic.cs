@@ -198,10 +198,38 @@ public static class CommunityPublic
             if (CommunityRooms.Presence(db, H.L(room["id"])) >= H.L(room["capacity"]))
                 return Results.Json(new { error = "room_full" }, statusCode: 409);
 
+            // ── Eligibility (CCP-P1-003) ──
+            //
+            // Evaluated BEFORE a session exists, so an ineligible person never gets a token and
+            // never occupies a display name. The gate is a declaration gate, not verification —
+            // said plainly in the response as well as in the code, so nobody downstream mistakes a
+            // recorded answer for a checked one.
+            var eligibility = CommunityEligibility.Evaluate(
+                db, H.GetS(b, "birth_date"), H.GetS(b, "jurisdiction"), DateTime.UtcNow);
+            if (!eligibility.Allowed)
+            {
+                // Logged with no session id: the attempt is evidence that the gate was applied, and
+                // there is no session to attach it to precisely because it was refused.
+                CommunityEligibility.RecordDeclaration(db, 0, eligibility,
+                    Settings.Str(db, CommunityEligibility.PolicyVersionKey, "v1") ?? "v1");
+                return Results.Json(new
+                {
+                    error = eligibility.ReasonCode,
+                    minimum_age = eligibility.MinAge,
+                    // An operator needs to tell "nobody has configured this" apart from "you are in
+                    // the wrong country"; a participant does not, and the reason code above does not
+                    // distinguish them.
+                    configured = CommunityEligibility.Configured(db),
+                }, statusCode: 403);
+            }
+
             var r = CommunityRooms.Join(db, H.L(room["id"]), name, current, RiskKey(ctx),
                                         H.Str(room["locale"]) ?? "en");
             if (!r.Ok)
                 return Results.Json(new { error = r.ErrorCode, suggestion = r.Suggestion }, statusCode: 400);
+
+            CommunityEligibility.RecordDeclaration(db, r.SessionId, eligibility,
+                Settings.Str(db, CommunityEligibility.PolicyVersionKey, "v1") ?? "v1");
 
             // HttpOnly so page script cannot read it, SameSite=Strict so it is not sent
             // cross-site — the same posture as the World account cookie.

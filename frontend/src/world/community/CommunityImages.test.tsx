@@ -63,6 +63,8 @@ describe('World community images', () => {
     fireEvent.click(screen.getByRole('button', { name: new RegExp(`Enter ${room.title}`) }))
     await screen.findByLabelText('Display name')
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ayesha Iqbal' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = url => {
       if (url.includes('guest-sessions')) return { ok: true, token: 'tok-1', display_name: 'Ayesha Iqbal' }

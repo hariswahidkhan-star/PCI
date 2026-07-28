@@ -131,8 +131,27 @@ MySQL only. Satisfies §2.2's intent for new work without an unrelated productio
 | Module | Community / image safety / trust & safety operations |
 | Requirement | §7.1, §8.5, §19.3, §31 |
 | Severity | **P1** |
-| Status | **Blocked** (D-007) |
+| Status | **Partially resolved — engineering complete, decisions outstanding** (D-007) |
 | Owner | PCI legal counsel + Trust & Safety lead |
+
+**Built (2026-07-28).** The age and jurisdiction gate is implemented, enforced at guest entry and
+fail-closed: the jurisdiction allowlist ships EMPTY and an empty list admits nobody, so the service
+is closed until someone with authority opens it. Counsel's values land through the world-admin
+settings endpoint, which validates shape (ISO alpha-2, a sane age band) and takes no view on the
+values. Refusals and admissions are recorded as evidence that the gate was applied — a coarse age
+band, the jurisdiction, the minimum that applied, the outcome and the policy version. **No date of
+birth is stored anywhere**, asserted by a test. Grooming-category escalation, the restricted
+evidence store, two-person access and the preservation/legal-hold path shipped with Phase 2.
+
+**This is a declaration gate, not age verification**, and the code, the admin response
+(`age_assurance: "self_declared_only"`) and the participant-facing copy all say so.
+
+**Runbooks drafted (2026-07-28).** `CCP_RUNBOOKS.md` covers emergency room abuse, legal hold,
+suspected illegal material, reviewer welfare, provider outage and policy rollback. Every value that
+is a legal or organisational decision is marked **[COUNSEL]** or **[T&S]** and left blank on purpose
+— a plausible-looking number in a runbook is worse than an obvious gap, because it stops anybody
+asking. They close the DRAFTING limb only: a runbook is a control once a named person has approved
+it and the roles are filled by trained people.
 
 **Issue.** §19.3 makes the following hard prerequisites before open guest rooms and images launch,
 and none exists in the repository: minimum age and supported jurisdictions; grooming/enticement
@@ -144,9 +163,19 @@ arrangements; emergency and legal-hold runbooks; reviewer training and welfare p
 off. §28.6/§28.7 forbid representing a general image classifier as complete illegal-content control
 or surfacing suspected illegal media in ordinary admin thumbnails.
 
-**Proposed fix.** Obtain written counsel decisions before Phase 1 exit; keep the image feature flag
-off until then. Build the restricted evidence store and escalation path so the controls exist when
-the decisions land.
+**Still outstanding — none of it is engineering work.**
+
+| Outstanding | Owner |
+|---|---|
+| The minimum age, and the list of jurisdictions PCI will serve | Counsel |
+| A specialist illegal-media detection, reporting and preservation arrangement (a membership/contract, not code) | Counsel + Trust & Safety |
+| Trained escalation for grooming/enticement — the people, not the route | Trust & Safety |
+| Emergency and legal-hold runbooks approved for use | Counsel + Trust & Safety |
+| Reviewer training and welfare protection | Trust & Safety |
+| Whether identity-grade age assurance is required, given its own privacy consequences | Counsel |
+
+**Proposed fix.** Enter the age and jurisdiction values through World Admin once counsel rules;
+conclude the specialist arrangement; keep the image feature flag off until both are done.
 
 ---
 
@@ -158,8 +187,18 @@ the decisions land.
 | Module | Moderation policy engine |
 | Requirement | §8.4, §8.4.1 |
 | Severity | **P1** |
-| Status | **Blocked** (D-008) |
+| Status | **Partially resolved — engineering complete, corpus and contract outstanding** (D-008) |
 | Owner | Trust & Safety lead + procurement |
+
+**Built (2026-07-28).** `Core/ModerationCalibration.cs` implements the score→band mapping as
+per-provider versioned data and, more importantly, the gate that decides whether a band set may be
+called calibrated at all. `Certify()` refuses on: fewer than 200 samples; any category with fewer
+than 30; high-band precision below 95 %; a corpus missing Arabic or Urdu (§22); fewer than 30
+deliberately obfuscated examples; or a category with no configured thresholds — which is scored as
+*not measured* rather than as a pile of correct Low verdicts. `MaySanctionOn()` answers **false**
+for anything uncertified, so §28.5's prohibition is the default rather than a rule someone must
+remember. Every shortfall is reported together, so preparing a corpus is one pass rather than a
+week of discovering bars.
 
 **Issue.** §8.4.1 requires calibrated confidence bands derived from the configured provider and a
 PCI benchmark corpus, warning that a raw score from one provider does not equal another's. No
@@ -172,8 +211,28 @@ cannot be validated and the Phase 1 exit gate ("strict high-confidence ejection 
 quarantine work") cannot be evidenced against real language. §28.5 additionally forbids turning a
 low-confidence result into an irreversible sanction — untuned bands would do exactly that.
 
-**Proposed fix.** Select and contract a provider; author the PCI corpus (including Arabic/Urdu and
-obfuscation fixtures per §22); calibrate and record bands as versioned policy data.
+**Still outstanding — none of it is engineering work.**
+
+| Outstanding | Owner |
+|---|---|
+| Select and contract a moderation provider | Procurement |
+| Author and human-label the PCI benchmark corpus (English, Arabic, Urdu, code-switched, obfuscated) | Trust & Safety |
+| Run the corpus against the contracted provider and record the certified bands | Trust & Safety |
+
+No amount of engineering substitutes for real labelled examples, and this repository must not
+manufacture them. What exists now is the harness, the scoring, the bars and the refusal — so the day
+a corpus and a provider exist, calibrating is running a report rather than writing a system.
+
+`Core/ModerationCorpus.cs` completes that path: the corpus is a JSON-lines file Trust & Safety drops
+in, strict by default — a malformed line is an error carrying its line number, never a row quietly
+dropped, because half a corpus that looks whole would produce a report as convincing as a correct
+one. A missing `harmful` label is refused rather than defaulted (defaulting it would invent a
+reviewer's judgement), and a mistyped category is caught at load rather than surfacing later as an
+unexplained "no category was scored".
+
+**Not built, deliberately:** an HTTP provider adapter. The `ITextModerator` seam is the right level
+of readiness — writing a concrete wire format before a vendor is contracted would be guessing at
+somebody's API and would need rewriting when the real one arrives.
 
 ---
 

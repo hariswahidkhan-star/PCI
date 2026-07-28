@@ -45,7 +45,11 @@ test.describe('PCI World community rooms accessibility', () => {
     const auth = { Authorization: `Bearer ${token}` }
 
     await request.patch('/api/world-admin/community/settings', {
-      headers: auth, data: { enabled: '1', moderator: 'deterministic' },
+      // The eligibility policy goes through the SAME operator endpoint (CCP-P1-003). With no
+      // jurisdiction approved the gate admits nobody, which is the shipped fail-closed default —
+      // so a fixture that skipped this would be testing a service no one can enter.
+      headers: auth,
+      data: { enabled: '1', moderator: 'deterministic', jurisdictions: 'GB,AE,PK', min_age: '18' },
     })
 
     await request.post('/api/world-admin/community/rooms', {
@@ -77,6 +81,8 @@ test.describe('PCI World community rooms accessibility', () => {
     const enter = page.getByRole('button', { name: /Enter Accessibility Lobby/ })
     if (await enter.count() === 0) test.skip(true, 'community rooms not enabled on this server')
     await enter.click()
+    await page.getByLabel('Date of birth').fill('1990-05-04')
+    await page.getByLabel('Country or region').fill('GB')
     await page.getByLabel('Display name').fill('admin')          // reserved — guaranteed refusal
     await page.getByRole('checkbox').check()
     await page.getByRole('button', { name: 'Join room' }).click()
@@ -89,6 +95,8 @@ test.describe('PCI World community rooms accessibility', () => {
     const enter = page.getByRole('button', { name: /Enter Accessibility Lobby/ })
     if (await enter.count() === 0) test.skip(true, 'community rooms not enabled on this server')
     await enter.click()
+    await page.getByLabel('Date of birth').fill('1990-05-04')
+    await page.getByLabel('Country or region').fill('GB')
     await page.getByLabel('Display name').fill(uniqueName('Axe Tester'))
     await page.getByRole('checkbox').check()
     await page.getByRole('button', { name: 'Join room' }).click()
@@ -107,6 +115,8 @@ test.describe('PCI World community rooms accessibility', () => {
     const enter = page.getByRole('button', { name: /Enter Accessibility Lobby/ })
     if (await enter.count() === 0) test.skip(true, 'community rooms not enabled on this server')
     await enter.click()
+    await page.getByLabel('Date of birth').fill('1990-05-04')
+    await page.getByLabel('Country or region').fill('GB')
     await page.getByLabel('Display name').fill(uniqueName('Semantics Tester'))
     await page.getByRole('checkbox').check()
     await page.getByRole('button', { name: 'Join room' }).click()

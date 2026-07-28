@@ -181,6 +181,27 @@ public static class CommunityMediaSchema
         db.Exec(@"CREATE UNIQUE INDEX IF NOT EXISTS ux_wcscanq_media
                   ON pciworld_media_scan_queue(media_id)");
 
+        // ── Eligibility evidence (CCP-P1-003). One row per entry attempt that reached the gate.
+        //
+        //    DELIBERATELY NOT A BIRTHDAY LIST. The declared date of birth is never stored — only a
+        //    coarse age band, the jurisdiction, the minimum that applied and the outcome. What a
+        //    later dispute needs is evidence that the gate was applied and what it decided; keeping
+        //    an anonymous guest's date of birth would be collecting identifying personal data the
+        //    service has no use for and would then have to protect, disclose and delete.
+        //
+        //    policy_version pins WHICH policy was in force, so a decision taken under last month's
+        //    minimum age can still be explained after the minimum changes.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_community_eligibility_log(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            guest_session_id INTEGER,
+            jurisdiction VARCHAR(8),
+            min_age_required INTEGER NOT NULL DEFAULT 0,
+            declared_age_band VARCHAR(16),
+            outcome VARCHAR(32) NOT NULL,
+            policy_version VARCHAR(32),
+            created_at VARCHAR(32) DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_wcelig_outcome ON pciworld_community_eligibility_log(outcome,created_at)");
+
         // ── Message linkage. Phase 1's message table gains a kind and a media reference rather
         //    than a parallel table, so ordering, idempotency and the sequence-is-publication rule
         //    are inherited unchanged. Guarded AddCol-style so existing databases converge.
@@ -204,5 +225,15 @@ public static class CommunityMediaSchema
         // CCP-P1-003 resolves; the code cannot assert the prerequisites are met, and the admin
         // screen says so rather than showing a green tick this system did not earn.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('pciworld_community_images_enabled','0')");
+
+        // The eligibility policy (CCP-P1-003). The jurisdiction list is seeded EMPTY, and an empty
+        // list admits NOBODY. That looks unhelpful and is the point: counsel has not yet said which
+        // jurisdictions PCI serves or what minimum age applies in them, so the honest behaviour is
+        // to admit no one rather than to guess a default that would quietly become the policy.
+        // The minimum age seeds at the conservative end of the plausible range for the same reason:
+        // a default later tightened has admitted nobody it should not have; one later loosened has.
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('pciworld_community_min_age','18')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('pciworld_community_jurisdictions','')");
+        db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('pciworld_community_eligibility_version','v1')");
     }
 }
