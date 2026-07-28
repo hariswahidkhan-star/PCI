@@ -126,3 +126,79 @@ describe('Overview (candidate dashboard)', () => {
     expect(statValue('Active credentials')).toBe('1')
   })
 })
+
+// ---- premium dashboard upgrade: KPI tiles that navigate, per-step journey actions, journey
+// progress, and the quick-links band. The KPI tiles keep the legacy .stat/.n/.k structure, so the
+// statValue() helper above still reads them.
+describe('Overview (premium dashboard)', () => {
+  beforeEach(() => {
+    h.me = null
+    h.refetch.mockReset()
+  })
+
+  it('turns each headline metric into a link to the section that owns it', () => {
+    h.me = mkMe()
+    renderWithProviders(<Overview />)
+    expect(screen.getByText('Active credentials').closest('a')).toHaveAttribute('href', '/credentials')
+    expect(screen.getByText('CPD hours').closest('a')).toHaveAttribute('href', '/cpd')
+    expect(screen.getByText('Exam entitlements').closest('a')).toHaveAttribute('href', '/certifications')
+  })
+
+  it('surfaces the unread notification count as a metric', () => {
+    h.me = mkMe({ unread: 4 })
+    renderWithProviders(<Overview />)
+    expect(statValue('Unread updates')).toBe('4')
+    expect(screen.getByText('Unread updates').closest('a')).toHaveAttribute('href', '/messages')
+  })
+
+  it('reports how far through the journey the candidate is', () => {
+    h.me = mkMe({ lc: { membership_status: 'active', candidate_status: 'exam_fee_paid', next_step: 'schedule_exam' } })
+    renderWithProviders(<Overview />)
+    expect(screen.getByText('3 of 6 complete')).toBeInTheDocument()
+  })
+
+  it('gives the live journey step its own action, and only that step', () => {
+    h.me = mkMe() // membership step is current, everything after is todo
+    renderWithProviders(<Overview />)
+    const continues = screen.getAllByRole('link', { name: /Continue/ })
+    expect(continues).toHaveLength(1)
+    expect(continues[0]).toHaveAttribute('href', '/billing')
+  })
+
+  it('points a blocked step at the page that clears it', () => {
+    h.me = mkMe({
+      lc: { membership_status: 'active', candidate_status: 'exam_fee_paid', blocking_items: ['identity_document'], next_step: 'complete_eligibility' },
+    })
+    renderWithProviders(<Overview />)
+    const li = screen.getByText('Eligibility cleared').closest('li') as HTMLElement
+    expect(within(li).getByRole('link', { name: /Continue/ })).toHaveAttribute('href', '/profile')
+  })
+
+  it('offers no journey action once every step is done', () => {
+    h.me = mkMe({
+      lc: {
+        membership_status: 'active', candidate_status: 'exam_fee_paid', exam_status: 'submitted',
+        result_status: 'pass', credential_status: 'active', next_step: 'maintain_credential',
+      },
+    })
+    renderWithProviders(<Overview />)
+    expect(screen.queryByRole('link', { name: /Continue/ })).toBeNull()
+  })
+
+  it('links every portal surface from the quick-links band, with live counts', () => {
+    h.me = mkMe({ unread: 2, exams: [{ id: 1 }, { id: 2 }, { id: 3 }] })
+    const { container } = renderWithProviders(<Overview />)
+    const grid = container.querySelector('.quick-grid') as HTMLElement
+    expect(within(grid).getByRole('link', { name: /Documents/ })).toHaveAttribute('href', '/documents')
+    expect(within(grid).getByRole('link', { name: /Support/ })).toHaveAttribute('href', '/support')
+    expect(within(grid).getByRole('link', { name: /Certifications/ })).toHaveTextContent('3')
+    expect(within(grid).getByRole('link', { name: /Messages/ })).toHaveTextContent('2')
+  })
+
+  it('survives a payload that is missing a collection rather than blanking the dashboard', () => {
+    const { tickets: _t, ...partial } = mkMe() as Record<string, unknown>
+    h.me = partial
+    renderWithProviders(<Overview />)
+    expect(screen.getByText('Everything in your portal')).toBeInTheDocument()
+  })
+})
