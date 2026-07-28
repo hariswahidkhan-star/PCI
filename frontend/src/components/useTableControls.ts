@@ -59,7 +59,12 @@ function orderBy(a: unknown, b: unknown, dir: SortDir): number {
   return dir === 'asc' ? compare(a, b) : compare(b, a)
 }
 
-export function useTableControls<T extends Record<string, unknown>>(
+/** Read one column off a row. Rows are typed interfaces at the call sites (TicketRow, ExamReg,
+ *  …) and TS interfaces have no implicit index signature, so the constraint is `object` and the
+ *  indexing is localised here rather than pushed onto every caller as a cast. */
+const col = (row: object, key: string): unknown => (row as Record<string, unknown>)[key]
+
+export function useTableControls<T extends object>(
   all: T[] | null | undefined,
   opts: {
     /** Columns searched by the free-text box. Defaults to every key on the first row. */
@@ -96,10 +101,10 @@ export function useTableControls<T extends Record<string, unknown>>(
     const active = (filtersRef.current ?? []).filter(Boolean) as ((row: T) => boolean)[]
     let out = rowsIn
     if (active.length > 0) out = out.filter((r) => active.every((f) => f(r)))
-    if (needle) out = out.filter((r) => keys.some((k) => haystack(r[k]).includes(needle)))
+    if (needle) out = out.filter((r) => keys.some((k) => haystack(col(r, k)).includes(needle)))
     if (sortKey) {
       // slice() first — never sort the caller's array in place.
-      out = out.slice().sort((a, b) => orderBy(a[sortKey], b[sortKey], sortDir))
+      out = out.slice().sort((a, b) => orderBy(col(a, sortKey), col(b, sortKey), sortDir))
     }
     return out
     // filterKey is deliberately a dependency even though the body never reads it: it is the
