@@ -91,6 +91,8 @@ describe('World community rooms — accessibility', () => {
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Display name')
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'admin' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = () => ({ _status: 400, error: 'name_reserved', suggestion: 'admin 2' })
     fireEvent.click(screen.getByRole('button', { name: 'Join room' }))
@@ -104,6 +106,8 @@ describe('World community rooms — accessibility', () => {
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Display name')
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ali Hassan' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = url => {
       if (url.includes('guest-sessions')) return { ok: true, token: 't', display_name: 'Ali Hassan' }
@@ -127,6 +131,8 @@ describe('World community rooms — accessibility', () => {
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Display name')
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ali Hassan' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = url => {
       if (url.includes('guest-sessions')) return { ok: true, token: 't', display_name: 'Ali Hassan' }
@@ -168,6 +174,8 @@ describe('World community rooms — accessibility', () => {
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Display name')
     fireEvent.change(screen.getByLabelText('Display name'), { target: { value: 'Ali Hassan' } })
+    fireEvent.change(screen.getByLabelText('Date of birth'), { target: { value: '1990-05-04' } })
+    fireEvent.change(screen.getByLabelText('Country or region'), { target: { value: 'GB' } })
     fireEvent.click(screen.getByRole('checkbox'))
     responder = url => {
       if (url.includes('guest-sessions')) return { ok: true, token: 't', display_name: 'Ali Hassan' }

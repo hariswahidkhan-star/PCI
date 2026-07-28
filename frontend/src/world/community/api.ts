@@ -168,9 +168,13 @@ export const listRooms = () => get<{ rooms: RoomSummary[] }>('/api/world/communi
 export const getRoom = (slug: string) => get<RoomDetail>(`/api/world/community/rooms/${encodeURIComponent(slug)}`)
 export const since = (slug: string, afterSequence: number) =>
   get<{ messages: Message[] }>(`/api/world/community/rooms/${encodeURIComponent(slug)}/messages?afterSequence=${afterSequence}`)
-export const join = (room: string, display_name: string, rules_version: string) =>
+// birth_date and jurisdiction are the eligibility declaration (CCP-P1-003). The server refuses
+// entry without them, and refuses it again if the declaration does not meet the configured policy —
+// so this client cannot decide anybody is eligible, it can only pass on what they said.
+export const join = (room: string, display_name: string, rules_version: string,
+                     birth_date: string, jurisdiction: string) =>
   post<{ ok: boolean; token: string; display_name: string }>('/api/world/community/guest-sessions',
-    { room, display_name, rules_version })
+    { room, display_name, rules_version, birth_date, jurisdiction })
 export const leave = () => del<{ ok: boolean }>('/api/world/community/guest-sessions/current')
 export const send = (slug: string, body: string, client_message_id: string) =>
   post<SendResult>(`/api/world/community/rooms/${encodeURIComponent(slug)}/messages`, { body, client_message_id })

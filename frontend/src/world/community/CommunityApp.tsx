@@ -175,6 +175,11 @@ function EntryForm({ room, onJoined, onCancel }: {
   room: C.RoomDetail; onJoined: () => void; onCancel: () => void
 }) {
   const [name, setName] = useState('')
+  // The eligibility declaration (CCP-P1-003). Collected here because the server refuses entry
+  // without it — and asked as a plain date rather than an "I am over 18" tick box, because a tick
+  // box records only that somebody clicked, while a date records what was actually declared.
+  const [birthDate, setBirthDate] = useState('')
+  const [jurisdiction, setJurisdiction] = useState('')
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [suggestion, setSuggestion] = useState<string | null>(null)
@@ -185,7 +190,7 @@ function EntryForm({ room, onJoined, onCancel }: {
     e.preventDefault()
     setError(null); setSuggestion(null); setBusy(true)
     try {
-      const r = await C.join(room.slug, name, room.rules_version)
+      const r = await C.join(room.slug, name, room.rules_version, birthDate, jurisdiction)
       C.setRoomToken(r.token)
       onJoined()
     } catch (err) {
@@ -222,6 +227,32 @@ function EntryForm({ room, onJoined, onCancel }: {
           </p>
         )}
 
+        <fieldset className="cw-eligibility">
+          <legend>Before you join</legend>
+          <label htmlFor="cw-dob">Date of birth</label>
+          <input
+            id="cw-dob" type="date" value={birthDate} required
+            onChange={e => setBirthDate(e.target.value)}
+            aria-describedby="cw-dob-help"
+          />
+          <p id="cw-dob-help" className="cw-help">
+            These rooms are for adults working in project controls. Your date of birth is used only
+            to check you meet the minimum age and is <strong>not stored</strong> — only whether you
+            met it.
+          </p>
+
+          <label htmlFor="cw-country">Country or region</label>
+          <input
+            id="cw-country" type="text" value={jurisdiction} required maxLength={2}
+            onChange={e => setJurisdiction(e.target.value.toUpperCase())}
+            aria-describedby="cw-country-help" autoComplete="country"
+            placeholder="GB"
+          />
+          <p id="cw-country-help" className="cw-help">
+            Two-letter country code. The rooms are not yet available everywhere.
+          </p>
+        </fieldset>
+
         <div className="cw-rules">
           <h3>Room rules</h3>
           <ul>
@@ -242,7 +273,11 @@ function EntryForm({ room, onJoined, onCancel }: {
         </label>
 
         <div className="cw-actions">
-          <button type="submit" disabled={busy || !accepted || name.trim().length < 2}>
+          <button
+            type="submit"
+            disabled={busy || !accepted || name.trim().length < 2
+                      || birthDate.length === 0 || jurisdiction.trim().length !== 2}
+          >
             {busy ? 'Joining…' : 'Join room'}
           </button>
           <button type="button" onClick={onCancel}>Back to rooms</button>

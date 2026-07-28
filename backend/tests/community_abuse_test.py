@@ -113,13 +113,18 @@ def shutdown():
 
 def join(name, net, room="lobby"):
     code, r = js("/api/world/community/guest-sessions", "POST",
-                 {"room": room, "display_name": name, "rules_version": "v1"}, {"X-Forwarded-For": net})
+                 {"room": room, "display_name": name, "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"}, {"X-Forwarded-For": net})
     return r.get("token"), {"X-Community-Session": r.get("token", ""), "X-Forwarded-For": net}
 
 def main():
     boot()
     try:
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('world_community_enabled','1')")
+        # CCP-P1-003: the eligibility gate admits nobody until a jurisdiction list exists, which is
+        # the fail-closed posture the register calls for. A suite must configure it the way an
+        # operator would rather than have the gate relaxed to let tests through.
+        sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_community_jurisdictions','GB,AE,PK')")
+        sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('pciworld_community_min_age','18')")
         sql("INSERT OR REPLACE INTO site_settings(skey,svalue) VALUES('world_community_moderator','deterministic')")
         sql("""INSERT INTO pciworld_community_rooms(slug,title,state,capacity,rules_version,slow_mode_seconds)
                VALUES('lobby','Lobby','open',3,'v1',0)""")
@@ -159,7 +164,7 @@ def main():
         join("Sara Khan", "203.0.113.2")
         join("Omar Farouk", "203.0.113.3")
         code, r = js("/api/world/community/guest-sessions", "POST",
-                     {"room": "lobby", "display_name": "One Too Many", "rules_version": "v1"},
+                     {"room": "lobby", "display_name": "One Too Many", "rules_version": "v1", "birth_date": "1990-05-04", "jurisdiction": "GB"},
                      {"X-Forwarded-For": "203.0.113.4"})
         chk("A08 a full room refuses the next guest", code == 409 and r.get("error") == "room_full", str(r))
 
