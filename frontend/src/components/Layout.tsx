@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
 import { useT } from '../i18n'
 import LanguageSwitcher from './LanguageSwitcher'
+import NotificationBell from './NotificationBell'
 import { initials } from '../format'
 import { Icon, type IconName } from './icons'
 
@@ -121,6 +122,7 @@ export default function Layout() {
             </div>
             <div className="row">
               <LanguageSwitcher />
+              <NotificationBell />
               <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
               <div className="small" style={{ lineHeight: 1.2 }}>
                 <div style={{ fontWeight: 700 }}>{user ? `${user.firstName} ${user.lastName}`.trim() || user.email : ''}</div>

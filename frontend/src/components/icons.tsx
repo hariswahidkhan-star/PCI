@@ -33,6 +33,25 @@ export type IconName =
   | 'message-circle'
   | 'sliders'
   | 'x'
+  | 'bell'
+  | 'check'
+  | 'check-circle'
+  | 'alert-triangle'
+  | 'clock'
+  | 'download'
+  | 'chevron-down'
+  | 'chevron-left'
+  | 'chevron-right'
+  | 'arrow-right'
+  | 'arrow-up-right'
+  | 'trending-up'
+  | 'filter'
+  | 'inbox'
+  | 'activity'
+  | 'banknote'
+  | 'plus'
+  | 'sort'
+  | 'archive'
 
 const PATHS: Record<IconName, ReactNode> = {
   dashboard: (
@@ -217,6 +236,97 @@ const PATHS: Record<IconName, ReactNode> = {
     <>
       <path d="M18 6 6 18" />
       <path d="m6 6 12 12" />
+    </>
+  ),
+  bell: (
+    <>
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </>
+  ),
+  check: <path d="m20 6-11 11-5-5" />,
+  'check-circle': (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8.5 12.2 2.4 2.4 4.6-4.9" />
+    </>
+  ),
+  'alert-triangle': (
+    <>
+      <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <path d="M12 9v4" />
+      <path d="M12 17h.01" />
+    </>
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.2 1.9" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <path d="m7 10 5 5 5-5" />
+      <path d="M12 15V3" />
+    </>
+  ),
+  'chevron-down': <path d="m6 9 6 6 6-6" />,
+  'chevron-left': <path d="m15 18-6-6 6-6" />,
+  'chevron-right': <path d="m9 18 6-6-6-6" />,
+  'arrow-right': (
+    <>
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </>
+  ),
+  'arrow-up-right': (
+    <>
+      <path d="M7 17 17 7" />
+      <path d="M7 7h10v10" />
+    </>
+  ),
+  'trending-up': (
+    <>
+      <path d="m3 17 6-6 4 4 8-8" />
+      <path d="M14 7h7v7" />
+    </>
+  ),
+  filter: <path d="M22 3H2l8 9.46V19l4 2v-8.54z" />,
+  inbox: (
+    <>
+      <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+      <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+    </>
+  ),
+  activity: <path d="M22 12h-4l-3 9L9 3l-3 9H2" />,
+  banknote: (
+    <>
+      <rect x="2" y="6" width="20" height="12" rx="2" />
+      <circle cx="12" cy="12" r="2.5" />
+      <path d="M6 12h.01" />
+      <path d="M18 12h.01" />
+    </>
+  ),
+  plus: (
+    <>
+      <path d="M12 5v14" />
+      <path d="M5 12h14" />
+    </>
+  ),
+  sort: (
+    <>
+      <path d="M7 4v16" />
+      <path d="m4 8 3-4 3 4" />
+      <path d="M17 20V4" />
+      <path d="m14 16 3 4 3-4" />
+    </>
+  ),
+  archive: (
+    <>
+      <rect x="2" y="3" width="20" height="5" rx="1" />
+      <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+      <path d="M10 12h4" />
     </>
   ),
 }

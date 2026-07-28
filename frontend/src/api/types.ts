@@ -192,6 +192,11 @@ export interface Message {
   body?: string | null
   created_at?: string | null
   read_at?: string | null
+  /** Grouping written by the backend ("Support", "Documents", "Exam Exception", …). */
+  category?: string | null
+  /** Optional call to action the backend attached — the step that resolves the notification. */
+  cta_label?: string | null
+  cta_route?: string | null
   [k: string]: unknown
 }
 
