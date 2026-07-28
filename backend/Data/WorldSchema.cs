@@ -214,6 +214,28 @@ public static class WorldSchema
             revoked INTEGER DEFAULT 0,
             created_at TEXT DEFAULT (datetime('now')))");
 
+        // ── Share-link referral attribution (share→challenge→claim journey) — privacy-safe BY
+        //    SCHEMA, not by discipline: the row can name a share link only by its opaque token
+        //    hash (the same sha the invite itself is stored under), a session only by its numeric
+        //    id, and a claimed account only in referred_user_id (stamped at claim, never carried
+        //    in any URL and never joined into analytics output). No name, no email, no free text.
+        //    The sharer only ever reads AGGREGATE COUNTS over these rows — never who. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_referrals(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            share_ref VARCHAR(64) NOT NULL,                -- sha-256 of the share/invite token (opaque)
+            anonymous_world_session_id INTEGER NOT NULL,   -- pciworld_sessions.id
+            referred_user_id INTEGER,                      -- NULL until the session is claimed
+            challenge_id INTEGER NOT NULL,
+            challenge_version INTEGER NOT NULL,            -- the immutable pinned version the link carried
+            started_at TEXT DEFAULT (datetime('now')),
+            completed_at VARCHAR(32),
+            conversion_state VARCHAR(16) NOT NULL DEFAULT 'started',  -- started|completed|claimed
+            created_at TEXT DEFAULT (datetime('now')))");
+        // One row per (link, session, challenge): a refresh or double-start is an ignored insert,
+        // never a second row inflating the sharer's counts.
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldref ON pciworld_referrals(share_ref, anonymous_world_session_id, challenge_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldref_session ON pciworld_referrals(anonymous_world_session_id)");
+
         // ── Participant accounts (Phase 1b). Wholly separate from the platform's `users` — a PCI
         //    World account is practice identity only and can never reach exam or credential data.
         //    The passport token is the opaque, revocable public-profile URL; publication is

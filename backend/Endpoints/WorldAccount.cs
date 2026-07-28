@@ -178,8 +178,20 @@ public static class WorldAccount
     {
         if (worldSessionId is null) return;
         var canonical = WorldIdentity.CanonicalUserFor(db, userId);
+        // The guarded UPDATE is the claim lock: WHERE user_id IS NULL means exactly one account
+        // can ever win an attempt — a concurrent second claim matches 0 rows and is a no-op that
+        // neither steals nor duplicates. The same call retried by the winner is idempotent: its
+        // rows no longer match the guard and nothing changes.
         db.Execute("UPDATE pciworld_attempts SET user_id=?, canonical_user_id=? WHERE session_id=? AND user_id IS NULL",
             userId, canonical, worldSessionId);
+        // Referral conversion, same one-winner guard (referred_user_id IS NULL): the session's
+        // share-link rows attribute to the claiming account — an id in a pciworld_ row only,
+        // never a name/email and never anything that reaches a URL or the sharer's view, which
+        // reads aggregate counts exclusively.
+        db.Execute(@"UPDATE pciworld_referrals SET referred_user_id=?,
+                conversion_state=CASE WHEN completed_at IS NOT NULL THEN 'claimed' ELSE conversion_state END
+            WHERE anonymous_world_session_id=? AND referred_user_id IS NULL",
+            userId, worldSessionId);
     }
 
     internal static string MintSession(Db db, long userId)
@@ -355,7 +367,12 @@ public static class WorldAccount
     public static List<Dictionary<string, object?>> Invitations(Db db, long userId)
     {
         var (owned, ck) = OwnedBy(db, userId);
-        return db.Query($@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title
+        // Referral outcomes ride along as AGGREGATE COUNTS ONLY — the sharer learns how many
+        // people started, finished and signed up from their link, never who any of them are.
+        return db.Query($@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title,
+              (SELECT COUNT(*) FROM pciworld_referrals r WHERE r.share_ref=i.token_sha) AS ref_started,
+              (SELECT COUNT(*) FROM pciworld_referrals r WHERE r.share_ref=i.token_sha AND r.completed_at IS NOT NULL) AS ref_completed,
+              (SELECT COUNT(*) FROM pciworld_referrals r WHERE r.share_ref=i.token_sha AND r.referred_user_id IS NOT NULL) AS ref_claimed
             FROM pciworld_invites i
             JOIN pciworld_attempts a ON a.id=i.attempt_id
             JOIN pciworld_challenges c ON c.id=a.challenge_id
@@ -442,6 +459,11 @@ public static class WorldAccount
             WHERE session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
         db.Execute($@"UPDATE pciworld_events SET session_id=NULL
             WHERE session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
+        // Referral rows keep their aggregate value (started/completed counts) but lose both keys
+        // that could point back at a person: the claimed account id and the durable session key.
+        db.Execute("UPDATE pciworld_referrals SET referred_user_id=NULL WHERE referred_user_id=?", userId);
+        db.Execute($@"UPDATE pciworld_referrals SET anonymous_world_session_id=0
+            WHERE anonymous_world_session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
         // The browser sessions themselves are removed, then the attempts are stripped.
         db.Execute($@"DELETE FROM pciworld_sessions
             WHERE id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
@@ -809,6 +831,9 @@ public static class WorldAccount
                     invite_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
                     version = H.L(r["version"]), created_at = H.Str(r["created_at"]),
                     inviter_name = H.Str(r["inviter_name"]), revoked = H.L(r["revoked"]) == 1,
+                    // Counts only, deliberately: no journey exists from a sharer to a person.
+                    referrals = new { started = H.L(r["ref_started"]),
+                        completed = H.L(r["ref_completed"]), claimed = H.L(r["ref_claimed"]) },
                 }),
             });
         });
