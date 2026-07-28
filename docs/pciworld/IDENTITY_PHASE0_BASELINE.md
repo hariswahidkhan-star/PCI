@@ -43,7 +43,7 @@ account, wrong number, blocked journey; P2 = partial workflow; P3 = cosmetic.
 | ID-05 | `Endpoints/Books.cs` | Watermarked the internal `users.id` on distributable PDFs, labelled "PCI Student ID" | P2 | Line ~204, `$"… | PCI Student ID: {u.Id:D6} | …"` | Written before a public number existed | **Fixed** (uses the canonical number, or omits it) |
 | ID-06 | `Core/Erasure.cs` | Erasure clears `registration_no`, making the number **reusable** | P0 | `UPDATE users SET … registration_no=NULL` | No reservation ledger existed | **Mitigated** — the registry now retains the reservation permanently (E1/E2). The erasure endpoint itself still needs the explicit retire transition: Phase 2 |
 | ID-07 | 6 production paths wrote `users` directly | payment, admin-created, honorary, partner, World-canonical, self-signup — any could create a numberless student | P1 | `grep -rn "INSERT INTO users" --include=*.cs` | No central account service | **Fixed** — all six now call the one issuer |
-| ID-08 | `Endpoints/WorldAccount.cs` | Canonical-mapping failure is caught and registration continues → split identity | P1 | Read the try/catch around the canonical link | Defensive catch added to avoid breaking signup | **Open — Phase 1b** |
+| ID-08 | `Endpoints/WorldAccount.cs` | Canonical-mapping failure is caught and registration continues → split identity | P1 | `try { WorldIdentity.MapOne(db, id); } catch { }` in `Register` | Defensive catch added to avoid breaking signup — it broke it instead | **Fixed** (Phase 1b; xUnit `WorldIdentityLinkTests`, CI-gated) |
 | ID-09 | `Core/WorldPages.cs` | Token-specific Passport/result pages advertise `/world` as canonical and `og:url` | P2 | Layout passes a fixed `/world` path | Metadata written for the homepage first | **Open — Phase 6** |
 | ID-10 | `Endpoints/Events.cs` | Capacity check is not under a transaction/lock → final-seat overbooking | P1 | `test_events_module` only covers a sequential capacity=1 flow | Count-then-insert without a guard | **Open — Phase 5A** (not yet reproduced; needs a MySQL race harness, which needs the SDK) |
 | ID-11 | `Endpoints/Events.cs` | Attendance gated on broad `content` permission; cancelled registrations can be marked attended | P2 | Admin attendance handler | Granular event permissions never introduced | **Open — Phase 5A** |
@@ -98,11 +98,35 @@ key length, and `Db.Translate` strips the partial predicate (MySQL exempts NULL 
 `backend/tests/PCI.Backend.Tests/StudentNumberTests.cs` — 7 facts committed for CI, which runs on
 both SQLite and MariaDB. **Not executed locally** (no SDK); CI is the gate.
 
+## 4a. Phase 1b — World registration can no longer report success on a split identity
+
+`WorldAccount.Register` wrapped `pciworld_users` insert + canonical mapping + attempt claim in one
+transaction, and separated two outcomes the old single `catch` had conflated:
+
+- **Genuine failure to establish identity** → nothing is created; the caller gets
+  `identity_unavailable` and HTTP **503** (ours to fix, retryable — not a 400 inviting the person to
+  correct input that was never wrong).
+- **Quarantined email collision** → the account *is* created, in `identity_link_pending`. This is a
+  designed safety outcome, not an error: an email matching an existing canonical account must never
+  merge on a string match. `WorldIdentity.LinkPending` derives the state from the absence of a
+  canonical link rather than storing a duplicate flag, so it cannot drift.
+
+`PublishPassport` refuses `identity_link_pending` **before** every other precondition — a public
+Passport speaks for a canonical identity, carrying its Student Number and evidence, so an account
+that has not proven ownership has nothing it is entitled to publish. The gate is in the domain
+function, not the endpoint, so future admin and handoff callers inherit it. `GET /api/world/account`
+exposes `identity_state` purely so the UI can offer the linking journey; it is never the gate.
+
+The refusal message confirms nothing about the existing account — "an account with your email
+exists" is itself a disclosure, and the person may not be its owner.
+
+Evidence: `tests/PCI.Backend.Tests/WorldIdentityLinkTests.cs`, 5 facts, **CI-gated** (no local SDK).
+The rollback fact is SQLite-only and says why: its forcing function is DDL, which implicitly commits
+on MySQL and would leak into TestEnv's shared template.
+
 ## 5. Next, in order
 
-1. **Phase 1b** — ID-08: replace World signup's catch-and-continue with either an atomic rollback or
-   a modelled `identity_link_pending` state that cannot reach Passport, evidence or cross-portal SSO.
-2. **Phase 2** — backfill and cutover: dry-run counts, quarantine duplicates, resumable batches,
+1. **Phase 2** — backfill and cutover: dry-run counts, quarantine duplicates, resumable batches,
    reconcile registry against projection, narrow `registration_no` to bounded VARCHAR, add the
    explicit retire transition to `Erasure.cs`, then delete the `/api/me` backstop.
 3. **Phase 3+** — handoff symmetry, shared Passport, verification, events, sharing.

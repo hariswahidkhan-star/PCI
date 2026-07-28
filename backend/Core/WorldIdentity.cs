@@ -143,6 +143,19 @@ public static class WorldIdentity
         if (w is not null) Decide(db, w);
     }
 
+    /// <summary>
+    /// True when a World account has NO canonical identity behind it — the recoverable
+    /// <c>identity_link_pending</c> state.
+    ///
+    /// It arises legitimately: an email that already belongs to a canonical PCI account is
+    /// QUARANTINED rather than merged on a string match, because merging two credential rows on an
+    /// email alone could hand one person's evidence to another. The person keeps their World
+    /// account; what they do not get, until they prove ownership, is anything that speaks for the
+    /// canonical identity they have not yet shown they own — a public Passport, verified evidence,
+    /// or cross-portal movement. Recoverable by design, and gated at the backend, not the UI.
+    /// </summary>
+    public static bool LinkPending(Db db, long worldUserId) => CanonicalUserFor(db, worldUserId) is null;
+
     /// <summary>Apply the LINKED / CREATED / CONFLICT rules to one World row and record the outcome.</summary>
     static string Decide(Db db, Dictionary<string, object?> w)
     {
