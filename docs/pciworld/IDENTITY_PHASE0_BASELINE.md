@@ -152,11 +152,33 @@ nothing; admin and erased accounts are never issued numbers; batch/resume/no-op;
 quarantines one account and leaves it numberless rather than wrong; valid and malformed historic
 values both preserved; erasure retires and cannot be re-reserved; drift detected both directions.
 
+## 4c. Merged wave 1 (PR #186 → main caa15b3, main CI green — the merged C# is fully verified)
+
+Phases 0/1a/1b/2-part-1 plus the three parallel-agent deliverables: event defects ID-10/11/12
+(capacity race, granular events RBAC, exactly-once CPD), ID-09 canonical/og:url + full share-card
+metadata, and POST /api/public/world-passports/verify with the neutral-response invariant.
+
+## 4d. Wave 2 (this branch)
+
+- **Phase 2 part 2** — `registration_no` bounded to VARCHAR(32) (guarded MySQL MODIFY; SQLite is
+  affinity), and the `/api/me` lazy backstop behind `identity_lazy_backstop` (default ON). Cutover
+  gate is the Health report, not a date; flipping back is the rollback.
+- **Phase 2 part 3** — maker-checker merges: `pci_identity_merges`, preview-as-counts, deterministic
+  lock order, survivor keeps the number, loser's registry row → `merged` resolving to the survivor,
+  sessions/handoff codes revoked both sides, before/after snapshots. 47/47 local assertions.
+- **Phase 3** — symmetric World→MyPCI handoff on the existing primitives: 90 s hashed one-use code in
+  `login_tokens` (`purpose='portal_handoff'`, no new table), fragment-only carriage cleared before
+  any network call, DELETE-inside-transaction as the redemption lock, status re-validated at
+  redemption, `identity_link_pending` refused at mint, all failures one generic 401. Premium
+  switcher in the World app; MyPCI bootstrap redeems and stores the session exactly like login.
+  33/33 backend + 387/387 vitest + tsc clean. `/api/portal-handoff/redeem` added to the global
+  rate-limiter path list alongside `/api/login`.
+
+CI gates 13 logic suites.
+
 ## 5. Next, in order
 
-1. **Phase 2 (part 2)** — narrow `registration_no` to bounded VARCHAR once `duplicate_numbers` is 0,
-   then delete the `/api/me` backstop. Both are gated on a clean `Health` report, not on a date.
-2. **Phase 2 (part 3)** — the maker-checker merge workflow (`id_merge_request`/`id_merge_approve`): dry-run counts, quarantine duplicates, resumable batches,
+1. **Phase 4** — shared Passport summary DTO + shared React component in MyPCI (no iframe, no copy): dry-run counts, quarantine duplicates, resumable batches,
    reconcile registry against projection, narrow `registration_no` to bounded VARCHAR, add the
    explicit retire transition to `Erasure.cs`, then delete the `/api/me` backstop.
 3. **Phase 3+** — handoff symmetry, shared Passport, verification, events, sharing.

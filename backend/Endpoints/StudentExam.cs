@@ -64,8 +64,15 @@ public static class StudentExam
             // rather than reporting a wrong identity, but this is a dashboard read. A quarantined
             // number must not take the whole portal down with it — Phase 2's reconciliation is what
             // resolves the conflict, and until then the field is simply absent rather than wrong.
+            //
+            // The whole backstop sits behind a cutover flag (default ON, current behaviour). Once an
+            // operator has run the Phase 2 backfill and /api/admin/identity/student-numbers/health
+            // reports zero missing numbers, switching identity_lazy_backstop off makes this endpoint
+            // a pure read — the state the spec requires — without a deploy, and switching it back on
+            // is the rollback if a straggler account surfaces. The gate is the Health report, not a
+            // date, which is why this is a setting rather than deleted code.
             string? regNo = StudentNumbers.Read(db, u.Id);
-            if (regNo is null)
+            if (regNo is null && Settings.Bool(db, "identity_lazy_backstop", true))
             {
                 try { regNo = StudentNumbers.GetOrIssue(db, u.Id, "legacy_lazy_backfill"); }
                 catch (Exception ex) { log(u.Id, "student_number_issue_failed", ex.Message); }

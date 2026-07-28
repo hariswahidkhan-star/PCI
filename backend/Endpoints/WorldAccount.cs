@@ -221,6 +221,35 @@ public static class WorldAccount
         p is not null && p.StartsWith("/world") && !p.StartsWith("//") && !p.Contains("://")
             ? (p.Length <= 128 ? p : p[..128]) : "/world/account";
 
+    /// <summary>Mint the REVERSE handoff (World → MyPCI): the exact mirror of
+    /// <see cref="CreateHandoff"/> with the same primitives — a short-lived (90 s), one-use code
+    /// stored ONLY as a hash, in the existing login_tokens table under purpose='portal_handoff'
+    /// (no new table; the table already stores hashed tokens with a purpose and an expiry).
+    ///
+    /// An identity_link_pending account is refused for the same reason PublishPassport refuses it:
+    /// it has not proven ownership of a canonical identity, so it has no portal to cross into. A
+    /// canonical account that is not active is refused at mint time too — suspension must block
+    /// the crossing in both directions. The raw code is returned once, for the caller to place in
+    /// a URL FRAGMENT (never a query string), and dies at first redemption or after 90 seconds.</summary>
+    public static (string? Error, string Code, string ReturnTo, long CanonicalUserId) CreatePortalHandoff(
+        Db db, long worldUserId, string? returnTo = null)
+    {
+        var canonical = WorldIdentity.CanonicalUserFor(db, worldUserId);
+        if (canonical is null) return ("identity_link_pending", "", "", 0);
+        var cu = db.QueryOne("SELECT status FROM users WHERE id=?", canonical);
+        if (cu is null || H.Str(cu["status"]) != "active") return ("account_suspended", "", "", 0);
+        var code = Security.RandomHex(32);
+        db.Execute(@"INSERT INTO login_tokens(user_id,token,purpose,expires_at)
+            VALUES(?,?, 'portal_handoff', datetime('now','+90 seconds'))",
+            canonical, Security.Sha(code));
+        return (null, code, AllowedPortalReturnTo(returnTo), canonical.Value);
+    }
+
+    /// <summary>Relative, same-origin student-portal destinations only — never an open redirect.</summary>
+    static string AllowedPortalReturnTo(string? p) =>
+        p is not null && p.StartsWith("/app") && !p.StartsWith("//") && !p.Contains("://")
+            ? (p.Length <= 128 ? p : p[..128]) : "/app/";
+
     /// <summary>
     /// Verify the password for a sensitive World action (delete, password change). The canonical
     /// PCI credential is the authority (journey repair P0-03): accounts created through the portal
@@ -1094,6 +1123,31 @@ public static class WorldAccount
             return J(new { ok = true, token, return_to = returnTo ?? "/world/account",
                 display_name = H.Str(u["display_name"]),
                 email_verified = H.L(u["email_verified"]) == 1, passport_public = H.L(u["passport_public"]) == 1 });
+        });
+
+        // ───────────── portal handoff (World → MyPCI) — the mirror of the SSO above ─────────────
+        //
+        // A signed-in World PARTICIPANT reaches the student portal without retyping credentials —
+        // the symmetric counterpart of /api/me/world-passport/sso, built on the same reviewed
+        // primitives: hashed one-use code, 90-second life, fragment carriage, generic failure.
+        // The portal session is minted FRESH at redemption (/api/portal-handoff/redeem in
+        // Account.cs); nothing of the World session crosses the fence.
+        app.MapPost("/api/world/account/portal-handoffs/mypci", async (HttpContext ctx) =>
+        {
+            if (!Enabled()) return Disabled();
+            if (Throttled("phmint|" + Ip(ctx), 20)) return Err("rate_limited", 429);
+            var u = FromReq(ctx.Request, db);
+            if (u is null) return Err("no_token", 401);
+            var b = await H.Body(ctx.Request);
+            var (err, code, returnTo, canonical) = CreatePortalHandoff(db, u.Id, H.GetS(b, "return_to"));
+            if (err is not null) return Err(err, err == "identity_link_pending" ? 409 : 403,
+                err == "identity_link_pending"
+                    ? "This World account has no linked PCI identity yet — sign in once with your PCI credentials to link it first."
+                    : null);
+            // The raw code is never logged; the client puts it in the URL FRAGMENT (#world-code=…),
+            // which browsers never transmit, so no server log or referrer ever sees it.
+            log(canonical, "portal_handoff_mint", $"world #{u.Id} → student #{canonical}");
+            return J(new { ok = true, code, return_to = returnTo });
         });
 
         // ───────────── passport ─────────────
