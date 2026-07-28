@@ -230,3 +230,44 @@ export interface HeldCertification {
 export interface AuthConfig {
   googleClientId: string | null
 }
+
+// ---- PCI World Passport summary (GET /api/me/world-passport/summary) ----
+//
+// The ONE versioned read model both surfaces consume (backend/Endpoints/PassportSummary.cs):
+// the MyPCI dashboard module and the World Passport manager render the same contract, so the
+// Passport a student sees in MyPCI can never drift from the one PCI World shows.
+
+export type PassportParticipantState = 'none' | 'active' | 'link_pending'
+export type PassportState = 'not_created' | 'draft' | 'private' | 'published' | 'expired' | 'suspended'
+
+/** One disclosed evidence item. Score/profile/date are ABSENT (not null) when the owner's
+ *  field-level disclosure switches them off — mirroring the public Passport page. */
+export interface PassportEvidenceHighlight {
+  title: string
+  reference: string
+  industry?: string | null
+  track?: string | null
+  difficulty?: string | null
+  score?: number | null
+  profile?: string | null
+  completedOn?: string | null
+}
+
+export interface PassportSummary {
+  schemaVersion: number
+  studentNumber: string | null
+  displayName: string | null
+  participantState: PassportParticipantState
+  passportState: PassportState
+  completedChallengeCount: number
+  selectedEvidenceCount: number
+  evidenceHighlights: PassportEvidenceHighlight[]
+  disclosureSettings: { scores: boolean; profiles: boolean; dates: boolean }
+  /** Present ONLY when the raw public link is known to this surface. The backend stores a hash
+   *  and never re-mints a token on a read, so it omits this and sets canShowPublicUrl false. */
+  publicUrl?: string | null
+  canShowPublicUrl: boolean
+  expiresAt: string | null
+  lastUpdatedAt: string | null
+  availableActions: string[]
+}

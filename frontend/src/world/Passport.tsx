@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, WorldApiError } from './api'
+import { PassportCard } from '../components/passport'
+import ShareSheet from './ShareSheet'
+import type { PassportSummary } from '../api/types'
 
 // The Passport manager, in-app. Same endpoints and rules as the classic page: publication needs a
 // deliberate act with at least one selected evidence item; disclosure fields are INDEPENDENT —
@@ -36,12 +39,49 @@ interface PassportData {
 
 const URL_KEY = 'pciworld_passport_url'   // same key the classic page uses — one memory of the link
 
+/** Fold this manager's own state into the SHARED PassportSummary contract (Phase 4), so the
+ *  summary band here and the MyPCI dashboard module render the same component from the same
+ *  shape. The readiness expression mirrors the server's (WorldDashboard §7.6 / PassportSummary):
+ *  published/expired from the publication flags, otherwise private when verified + named with
+ *  selected evidence, else draft. Unlike the MyPCI read model, this surface KNOWS the raw public
+ *  link (it minted it), so canShowPublicUrl can be true. */
+function toSummary(d: PassportData, rows: EvidenceRow[], publishedUrl: string | null): PassportSummary {
+  const selected = rows.filter(r => r.passport_visible)
+  const state = d.passport_public
+    ? (d.expired ? 'expired' : 'published')
+    : d.email_verified && !!d.display_name?.trim() && selected.length > 0 ? 'private' : 'draft'
+  return {
+    schemaVersion: 1,
+    studentNumber: null,                     // the World manager band does not display the number
+    displayName: d.display_name,
+    participantState: 'active',
+    passportState: state,
+    completedChallengeCount: d.completed,
+    selectedEvidenceCount: selected.length,
+    evidenceHighlights: selected.slice(0, 3).map(r => ({
+      title: r.title,
+      reference: `${r.code} · v${r.version}`,
+      difficulty: r.difficulty,
+      ...(d.show_scores && r.score !== null ? { score: r.score } : {}),
+      ...(d.show_dates ? { completedOn: (r.completed_at || '').split(' ')[0] } : {}),
+    })),
+    disclosureSettings: { scores: d.show_scores, profiles: d.show_profiles, dates: d.show_dates },
+    ...(d.passport_public && publishedUrl ? { publicUrl: publishedUrl } : {}),
+    canShowPublicUrl: d.passport_public && !!publishedUrl,
+    expiresAt: d.expires_at,
+    lastUpdatedAt: rows.length > 0 ? rows[0].completed_at : null,
+    availableActions: state === 'published' ? ['manage'] : state === 'expired' ? ['manage', 'renew']
+      : state === 'private' ? ['manage', 'publish'] : ['manage', 'select_evidence'],
+  }
+}
+
 export default function Passport() {
   const [d, setD] = useState<PassportData | null>(null)
   const [rows, setRows] = useState<EvidenceRow[]>([])
   const [err, setErr] = useState('')
   const [msg, setMsg] = useState('')
   const [publishedUrl, setPublishedUrl] = useState<string | null>(localStorage.getItem(URL_KEY))
+  const [shareOpen, setShareOpen] = useState(false)
 
   const load = useCallback(async () => {
     const p = await api<PassportData>('/api/world/passport')
@@ -105,29 +145,45 @@ export default function Passport() {
 
   return (
     <>
-      <div className="card">
-        <h2>Practice Passport</h2>
-        <p className="stats">
-          <span><b>{d.completed}</b> completed</span>
-          <span><b>{d.industries}</b> industries</span>
-          <span><b>{d.tracks}</b> tracks</span>
-          <span>state: <b>{d.passport_public ? (d.expired ? 'published (link expired)' : 'published') : 'private'}</b></span>
-        </p>
-        {d.passport_public ? (
+      {d.passport_public && publishedUrl && (
+        <ShareSheet
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          url={publishedUrl}
+          // No client-side QR renderer exists in this app; the public page already carries the
+          // server-rendered verification QR, so the sheet deep-links to that block.
+          qrHref={`${publishedUrl}#verify`}
+          getCaption={async () => (await api<{ caption: string }>('/api/world/me/shares')).caption}
+        />
+      )}
+      <PassportCard
+        summary={toSummary(d, rows, publishedUrl)}
+        actions={d.passport_public ? (
           <>
-            {publishedUrl && <p><small>Public link: <a href={publishedUrl}>{publishedUrl}</a></small></p>}
-            <p><button className="secondary" onClick={withdraw}>Withdraw public Passport</button></p>
+            {/* Share is only offered for a PUBLISHED Passport, and only when this device knows
+                the raw public link (the server stores its hash only — it cannot be reprinted).
+                The sheet shares that existing opaque URL; it never mints anything. */}
+            <button className="pp-btn" onClick={() => setShareOpen(true)} disabled={!publishedUrl}
+              title={publishedUrl ? undefined : 'The public link was shown on the device that published — republish here to get a shareable link.'}>
+              Share
+            </button>{' '}
+            <button className="pp-btn pp-btn--ghost" onClick={withdraw}>Withdraw public Passport</button>
           </>
         ) : (
-          <>
-            <p><small>Publishing creates a public page under an unguessable link showing ONLY the evidence and fields you
-              selected below — never your answers, never certifications. Nothing is public until you press this.</small></p>
-            <p><button onClick={() => { void publish() }}>Publish my Passport</button></p>
-          </>
+          <button className="pp-btn" onClick={() => { void publish() }}>Publish my Passport</button>
         )}
-        {msg && <p role="status">{msg}</p>}
-        {err && <p role="alert" className="err">{err}</p>}
-      </div>
+        footer={
+          <>
+            {!d.passport_public && (
+              <p className="pp-note">Publishing creates a public page under an unguessable link showing ONLY the evidence and fields you
+                selected below — never your answers, never certifications. Nothing is public until you press this.</p>
+            )}
+            <p className="pp-note"><span><b>{d.industries}</b> industries</span> · <span><b>{d.tracks}</b> tracks</span></p>
+            {msg && <p role="status" className="pp-ok">{msg}</p>}
+            {err && <p role="alert" className="pp-err">{err}</p>}
+          </>
+        }
+      />
 
       <div className="card">
         <h2>What the public page shows</h2>

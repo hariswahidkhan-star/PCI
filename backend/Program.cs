@@ -1599,6 +1599,8 @@ app.MapHub<PCI.Backend.Core.CommunityHub>(PCI.Backend.Core.CommunityHub.Path);
 PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
 PCI.Backend.Endpoints.WorldAccount.Map(app, db, logFn);               // PCI World — participant accounts + Passport (practice identity only)
 PCI.Backend.Endpoints.WorldVerify.Map(app, db, logFn);                // Phase 5 — privacy-safe public Passport verification by PCI Student Number (POST-only)
+PCI.Backend.Endpoints.PassportSummary.Map(app, db, logFn);            // Phase 4 — the same authoritative Passport read model inside MyPCI (no iframe, no copy)
+PCI.Backend.Endpoints.PassportDocs.Map(app, db, logFn);               // Phase 5A — printable Passport documents (wallet card + event badge) + printed-QR verification landing
 PCI.Backend.Endpoints.WorldIntelligenceApi.Map(app, db, logFn);       // PCI Project Intelligence — versioned learner API + admin coverage
 PCI.Backend.Endpoints.WorldOAuth.Map(app, db, logFn);                 // PCI World — OAuth 2.1-shaped authorization (PKCE, client registry)
 PCI.Backend.Endpoints.AdminI18n.Map(app, db, logFn);

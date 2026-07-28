@@ -178,8 +178,20 @@ public static class WorldAccount
     {
         if (worldSessionId is null) return;
         var canonical = WorldIdentity.CanonicalUserFor(db, userId);
+        // The guarded UPDATE is the claim lock: WHERE user_id IS NULL means exactly one account
+        // can ever win an attempt — a concurrent second claim matches 0 rows and is a no-op that
+        // neither steals nor duplicates. The same call retried by the winner is idempotent: its
+        // rows no longer match the guard and nothing changes.
         db.Execute("UPDATE pciworld_attempts SET user_id=?, canonical_user_id=? WHERE session_id=? AND user_id IS NULL",
             userId, canonical, worldSessionId);
+        // Referral conversion, same one-winner guard (referred_user_id IS NULL): the session's
+        // share-link rows attribute to the claiming account — an id in a pciworld_ row only,
+        // never a name/email and never anything that reaches a URL or the sharer's view, which
+        // reads aggregate counts exclusively.
+        db.Execute(@"UPDATE pciworld_referrals SET referred_user_id=?,
+                conversion_state=CASE WHEN completed_at IS NOT NULL THEN 'claimed' ELSE conversion_state END
+            WHERE anonymous_world_session_id=? AND referred_user_id IS NULL",
+            userId, worldSessionId);
     }
 
     internal static string MintSession(Db db, long userId)
@@ -355,13 +367,50 @@ public static class WorldAccount
     public static List<Dictionary<string, object?>> Invitations(Db db, long userId)
     {
         var (owned, ck) = OwnedBy(db, userId);
-        return db.Query($@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title
+        // Referral outcomes ride along as AGGREGATE COUNTS ONLY — the sharer learns how many
+        // people started, finished and signed up from their link, never who any of them are.
+        return db.Query($@"SELECT i.id, i.revoked, i.created_at, i.inviter_name, c.code, a.version, v.title,
+              (SELECT COUNT(*) FROM pciworld_referrals r WHERE r.share_ref=i.token_sha) AS ref_started,
+              (SELECT COUNT(*) FROM pciworld_referrals r WHERE r.share_ref=i.token_sha AND r.completed_at IS NOT NULL) AS ref_completed,
+              (SELECT COUNT(*) FROM pciworld_referrals r WHERE r.share_ref=i.token_sha AND r.referred_user_id IS NOT NULL) AS ref_claimed
             FROM pciworld_invites i
             JOIN pciworld_attempts a ON a.id=i.attempt_id
             JOIN pciworld_challenges c ON c.id=a.challenge_id
             JOIN pciworld_challenge_versions v ON v.challenge_id=a.challenge_id AND v.version=a.version
             WHERE {owned}
             ORDER BY i.id DESC LIMIT 200", userId, ck);
+    }
+
+    /// <summary>The one disclaimer sentence every share caption carries — the World product's own
+    /// footer line, so a pasted caption can never oversell practice evidence as certification.</summary>
+    public const string ShareCaptionDisclaimer = "Practice evidence only — never a credential.";
+
+    /// <summary>Channel-agnostic share caption for the premium share sheet (Phase 6, §8.7–8.8) —
+    /// server truth, built from PUBLIC fields only: the display name the public Passport already
+    /// shows, the product name, and the disclaimer sentence. Never the email, never the Student
+    /// Number, never a token — nothing the public page itself would not show. The name is
+    /// neutralised so a hostile display name stays inert wherever the caption is pasted.</summary>
+    public static string ShareCaption(Db db, long userId)
+    {
+        var u = db.QueryOne("SELECT display_name FROM pciworld_users WHERE id=?", userId);
+        var name = NeutralCaptionText(u is null ? null : H.Str(u["display_name"]));
+        return (name.Length > 0 ? name + " — " : "") + "PCI World Passport. " + ShareCaptionDisclaimer;
+    }
+
+    /// <summary>Plain-text neutralisation for caption fragments: control characters become spaces
+    /// (a multi-line name cannot smuggle extra "sentences"), angle brackets are dropped outright
+    /// (markup can never survive into a caption someone pastes elsewhere), whitespace collapses,
+    /// and the result is capped at 80 characters — the display-name limit.</summary>
+    static string NeutralCaptionText(string? raw)
+    {
+        var sb = new System.Text.StringBuilder((raw ?? "").Length);
+        foreach (var ch in raw ?? "")
+        {
+            if (ch is '<' or '>') continue;
+            sb.Append(char.IsControl(ch) ? ' ' : ch);
+        }
+        var t = System.Text.RegularExpressions.Regex.Replace(sb.ToString(), @"\s+", " ").Trim();
+        return t.Length > 80 ? t[..80].TrimEnd() : t;
     }
 
     /// <summary>This account's live World sessions — metadata only, never a token value (they are
@@ -442,6 +491,11 @@ public static class WorldAccount
             WHERE session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
         db.Execute($@"UPDATE pciworld_events SET session_id=NULL
             WHERE session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
+        // Referral rows keep their aggregate value (started/completed counts) but lose both keys
+        // that could point back at a person: the claimed account id and the durable session key.
+        db.Execute("UPDATE pciworld_referrals SET referred_user_id=NULL WHERE referred_user_id=?", userId);
+        db.Execute($@"UPDATE pciworld_referrals SET anonymous_world_session_id=0
+            WHERE anonymous_world_session_id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
         // The browser sessions themselves are removed, then the attempts are stripped.
         db.Execute($@"DELETE FROM pciworld_sessions
             WHERE id IN (SELECT a.session_id FROM pciworld_attempts a WHERE {ownedDel})", userId, ckDel);
@@ -799,16 +853,25 @@ public static class WorldAccount
             if (u is null) return Err("no_token", 401);
             return J(new
             {
+                // Server-truth caption for the share sheet's Copy-caption: public fields only —
+                // the display name the public Passport shows, the product name, the disclaimer.
+                caption = ShareCaption(db, u.Id),
                 results = ShareLinks(db, u.Id).Select(r => new
                 {
                     attempt_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
                     completed_at = H.Str(r["completed_at"]), revoked = H.L(r["result_revoked"]) == 1,
+                    // The mint endpoint stamps updated_at when it creates (or re-creates) the
+                    // link, so this is the link's creation instant — no new column needed.
+                    created_at = H.Str(r["updated_at"]),
                 }),
                 invitations = Invitations(db, u.Id).Select(r => new
                 {
                     invite_id = H.L(r["id"]), code = H.Str(r["code"]), title = H.Str(r["title"]),
                     version = H.L(r["version"]), created_at = H.Str(r["created_at"]),
                     inviter_name = H.Str(r["inviter_name"]), revoked = H.L(r["revoked"]) == 1,
+                    // Counts only, deliberately: no journey exists from a sharer to a person.
+                    referrals = new { started = H.L(r["ref_started"]),
+                        completed = H.L(r["ref_completed"]), claimed = H.L(r["ref_claimed"]) },
                 }),
             });
         });

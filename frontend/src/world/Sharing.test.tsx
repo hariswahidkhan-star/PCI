@@ -6,8 +6,9 @@ import Sharing from './Sharing'
 // list refresh after a withdrawal, and the two withdraw-all endpoints.
 
 const sharesResponse = {
+  caption: 'P — PCI World Passport. Practice evidence only — never a credential.',
   results: [
-    { attempt_id: 11, code: 'WC-A', title: 'Alpha', completed_at: '2026-07-01', revoked: false },
+    { attempt_id: 11, code: 'WC-A', title: 'Alpha', completed_at: '2026-07-01', created_at: '2026-07-05', revoked: false },
     { attempt_id: 12, code: 'WC-B', title: 'Beta', completed_at: '2026-07-02', revoked: true },
   ],
   invitations: [
@@ -34,6 +35,8 @@ describe('World sharing management', () => {
     render(<Sharing />)
     await screen.findByText(/Shared result links · 1 live/)
     expect(screen.getAllByText('· withdrawn')).toHaveLength(1)
+    // the per-link mint time travels when the server provides it, and is absent-safe when not
+    expect(screen.getByText(/link created 2026-07-05/)).toBeInTheDocument()
     // one live result + one live invitation → two per-item Withdraw buttons
     expect(screen.getAllByText('Withdraw')).toHaveLength(2)
   })
