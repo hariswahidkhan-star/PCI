@@ -315,6 +315,19 @@ def main():
         n = sql("SELECT COUNT(*) FROM pciworld_articles WHERE contributor_user_id IS NOT NULL")[0][0]
         chk("K34 and touches no existing manuscripts", n >= 2, str(n))
 
+        # Same operator-reachability rule as careers: a flag only a database write can move is not
+        # a kill switch. The terms version is settable here too, because it is the operator's
+        # explicit assertion that real contributor terms have been published — which is exactly why
+        # it is an act and not a default.
+        code, r = js("/api/world-admin/community/settings", "PATCH", {"contributors_enabled": "1"}, A)
+        chk("K35 an operator can re-enable contributor publishing without SQL", code == 200, str(r))
+        code, r = js("/api/world/contributor/me", "GET", None, WRITER)
+        chk("K36 and the surface is back", code == 200, f"got {code}")
+        code, r = js("/api/world-admin/community/settings", "PATCH", {"contributor_terms_version": "v2-authored"}, A)
+        chk("K37 and can publish a new terms version", code == 200, str(r))
+        v = sql("SELECT svalue FROM site_settings WHERE skey=?", ("pciworld_contributor_terms_version",))[0][0]
+        chk("K38 which really is stored", v == "v2-authored", str(v))
+
     finally:
         shutdown()
 

@@ -477,6 +477,17 @@ def main():
         chk("C51 turning the flag off closes the surface again", code == 404, f"got {code}")
         rows = sql("SELECT COUNT(*) FROM pciworld_applications")[0][0]
         chk("C52 and touches no existing rows", rows >= 2, str(rows))
+        # An OPERATOR must be able to turn it back on, without SQL. The forum flag had this exact
+        # defect until an accessibility fixture could not enable the forum and exposed that nobody
+        # else could either. A flag reachable only by direct database write is not a flag — and the
+        # off direction is the one that matters during an incident.
+        code, r = js("/api/world-admin/community/settings", "PATCH", {"careers_enabled": "1"}, A)
+        chk("C75 an operator can enable careers through the settings endpoint", code == 200, str(r))
+        code, r = js("/api/world/careers/employers", "GET", None, BOSS)
+        chk("C76 and the surface really is back", code == 200, f"got {code}")
+        code, r = js("/api/world-admin/community/settings", "PATCH", {"careers_enabled": "0"}, A)
+        chk("C77 and can turn it off again", code == 200, str(r))
+
         code, raw = req("GET", "/world")
         chk("C74 and the nav stops advertising it — a link to a 404 reads as a broken site",
             code == 200 and "/world/careers" not in raw.decode(errors="replace"),
