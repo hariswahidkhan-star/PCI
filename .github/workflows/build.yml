@@ -26,10 +26,10 @@ jobs:
       - name: Production and staging fail closed before database open
         run: python3 tests/production_config_test.py
 
-      - name: Logic tests (13 suites)
+      - name: Logic tests (15 suites)
         run: |
           set -e
-          for t in tests/lifecycle_test.py tests/release_test.py tests/casework_test.py tests/settings_test.py tests/publication_test.py tests/storage_test.py tests/student_number_test.py tests/student_number_backfill_test.py tests/events_defects_test.py tests/world_og_metadata_test.py tests/world_passport_verify_test.py tests/identity_merge_test.py tests/portal_handoff_test.py; do
+          for t in tests/lifecycle_test.py tests/release_test.py tests/casework_test.py tests/settings_test.py tests/publication_test.py tests/storage_test.py tests/student_number_test.py tests/student_number_backfill_test.py tests/events_defects_test.py tests/world_og_metadata_test.py tests/world_passport_verify_test.py tests/identity_merge_test.py tests/portal_handoff_test.py tests/world_claim_referral_test.py tests/passport_summary_test.py; do
             echo "=== $t ==="
             out=$(python3 "$t")
             echo "$out"

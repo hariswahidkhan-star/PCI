@@ -176,9 +176,29 @@ metadata, and POST /api/public/world-passports/verify with the neutral-response 
 
 CI gates 13 logic suites.
 
+## 4e. Wave 3 (this branch)
+
+- **Phase 4** — one authoritative Passport in both portals: `GET /api/me/world-passport/summary`
+  builds `PassportSummaryDto` by CALLING the existing WorldPassport/WorldAccount functions (no new
+  count/status SQL), resolves canonical student → World account, folds state to
+  not_created|draft|private|published|expired|suspended. Shared React `components/passport/` family
+  consumed by the MyPCI dashboard module AND the World Passport page. Hash-only public token →
+  publicUrl omitted, never re-minted. World outage → quiet fallback card, MyPCI unaffected.
+  33/33 backend + 409/409 vitest + tsc 0. No iframe, no copied rows, no internal ids in the payload.
+- **Phase 7** — claim/referral hardened: one-winner claim race (guarded UPDATE … WHERE user_id IS
+  NULL, proven with a real two-connection interleave), idempotent re-claim, duplicate-submit
+  protection, tamper-proof backend scoring, invitation version pinning proven after edit,
+  privacy-safe `pciworld_referrals` (sha refs, counts-only sharer view, de-identified on account
+  delete), and an SQLite-authorizer proof the whole journey writes only `pciworld_*` tables. 43/43.
+
+CI gates 15 logic suites. Render deploy note: a deploy failure surfaced for the #185 merge; DEPLOY.md
+§"Deploys suddenly failing" documents the likely cause (service still on the SQLite-in-production
+posture fails every deploy at health check, exit 78, prior deploy stays live) — resolution is a
+Render env change (managed MySQL, or ALLOW_SQLITE_IN_PRODUCTION=true) that only the operator can make.
+
 ## 5. Next, in order
 
-1. **Phase 4** — shared Passport summary DTO + shared React component in MyPCI (no iframe, no copy): dry-run counts, quarantine duplicates, resumable batches,
+1. **Phase 5A** — printable Passport wallet/badge PDFs + event admission passes: dry-run counts, quarantine duplicates, resumable batches,
    reconcile registry against projection, narrow `registration_no` to bounded VARCHAR, add the
    explicit retire transition to `Erasure.cs`, then delete the `/api/me` backstop.
 3. **Phase 3+** — handoff symmetry, shared Passport, verification, events, sharing.
