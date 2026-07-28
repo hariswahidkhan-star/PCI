@@ -1,0 +1,124 @@
+/* PCI World — server-rendered surfaces (forum threads today; other crawlable pages as they land).
+ *
+ * WHY THIS FILE EXISTS AT ALL, AND WHY IT LANDED WHEN IT DID.
+ *
+ * The forum thread page referenced /assets/world.css before the file existed, so it rendered with
+ * browser defaults: black on white, which passes a colour-contrast audit trivially. The browser
+ * accessibility spec was therefore reporting "passes WCAG 2.x AA with contrast enabled" against a
+ * page that had no colours to get wrong — a pass it had not earned, and exactly the kind of claim
+ * that survives review because the words are all true individually.
+ *
+ * Every colour pair below is chosen to clear AA (4.5:1 for body text, 3:1 for large text and UI
+ * boundaries) with margin, so the scan is now measuring something real.
+ *
+ * CONSTRAINTS THIS FILE WORKS UNDER:
+ *   • No web fonts, no external anything. This surface is served by World-only deployments that do
+ *     not serve the Institute's asset tree.
+ *   • Reflow to a 320px viewport without horizontal scrolling (WCAG 1.4.10). A forum page is mostly
+ *     prose, so the realistic breakage is a long unbroken URL — hence the wrapping rules on bodies.
+ *   • Nothing conveys state by colour alone; every colour cue sits beside a word.
+ */
+
+:root {
+  --wf-ink: #1a1d21;        /* 15.8:1 on white */
+  --wf-muted: #4a5361;      /* 7.9:1 on white  */
+  --wf-link: #0b4fa8;       /* 8.1:1 on white  */
+  --wf-line: #c9cfd8;       /* boundaries only, never text */
+  --wf-accent-bg: #e7f3ea;
+  --wf-accent-ink: #14532d; /* 9.6:1 on --wf-accent-bg */
+  --wf-paper: #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--wf-paper);
+  color: var(--wf-ink);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+main {
+  /* ch rather than px: a measure is about characters per line, and it keeps working when someone
+     enlarges text rather than zooming. */
+  max-width: 72ch;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+a { color: var(--wf-link); }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  /* A visible focus ring that does not depend on the UA default, which some resets remove. */
+  outline: 3px solid var(--wf-link);
+  outline-offset: 2px;
+}
+
+/* The skip link: off-screen until focused, then unmistakably present. Hiding it with
+   display:none would remove it from the tab order and defeat the point. */
+.wf-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--wf-paper);
+  color: var(--wf-link);
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--wf-link);
+  z-index: 10;
+}
+.wf-skip:focus { left: 0; }
+
+.wf-crumbs ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;      /* wraps rather than forcing sideways scroll at 320px */
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--wf-muted);
+}
+.wf-crumbs li + li::before { content: "/"; margin-right: 0.5rem; color: var(--wf-muted); }
+
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 1rem; }
+
+.wf-locked {
+  /* State is carried by the sentence inside this element; the styling only reinforces it. */
+  background: #fdf3e3;
+  color: #6b3f00;      /* 7.4:1 on #fdf3e3 */
+  border-left: 4px solid #6b3f00;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1.5rem;
+}
+
+.wf-posts { list-style: none; margin: 0; padding: 0; }
+
+.wf-post {
+  border-top: 1px solid var(--wf-line);
+  padding: 1.25rem 0;
+}
+.wf-post:first-child { border-top: 0; }
+
+.wf-solved { background: var(--wf-accent-bg); padding-left: 1rem; padding-right: 1rem; }
+.wf-badge {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+  color: var(--wf-accent-ink);
+}
+
+.wf-body { overflow-wrap: anywhere; }   /* a pasted URL must not widen the page */
+.wf-body p { margin: 0 0 1rem; }
+.wf-body pre, .wf-body code {
+  /* Code is the other realistic source of horizontal overflow on a technical forum. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.wf-edited {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--wf-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -88,6 +88,12 @@ public class HonoraryIdvPurgeTests : IClassFixture<DbFixture>
     }
 }
 
+// Serialised with the other DB tests. Without this the class ran in PARALLEL with
+// CommunityMediaPipelineTests, which calls Storage.PurgeOlderThan(-1) — sweep everything — against
+// the same shared STORAGE_ROOT. The backdated artefact below is exactly what such a sweep deletes,
+// so this test was intermittently asserting that a file another test had legitimately removed still
+// existed. The cross-test race, not the service, was the defect.
+[Collection(DbCollection.Name)]
 public class RetentionServiceTests : IClassFixture<DbFixture>
 {
     readonly Db _db;
@@ -109,19 +115,19 @@ public class RetentionServiceTests : IClassFixture<DbFixture>
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
         await svc.StopAsync(cts.Token);
 
+        // Checked FIRST, and this ordering is deliberate. The property under test is that boot
+        // never deletes data, so it is asserted at the earliest moment it is decided — not after a
+        // wait that would only widen the window for something else to remove the file.
+        Assert.True(File.Exists(full));
+
         Assert.NotNull(svc.ExecuteTask);
-        // Await the task rather than asserting IsCompleted the instant StopAsync returns.
-        //
-        // StopAsync can return because ITS OWN token fired, not because the service finished — so
-        // the original assertion was really measuring whether the runner was fast enough, and it
-        // duly failed once on a saturated CI machine after taking 1m44s to run a test that should
-        // take 100ms. Awaiting with a generous ceiling tests the same property (the service stops
-        // cleanly, translating cancellation rather than faulting) without the race, and a service
-        // that genuinely hangs still fails here on the timeout.
+        // Await rather than asserting IsCompleted the instant StopAsync returns: StopAsync can
+        // return because ITS OWN token fired, not because the service finished, so the bare
+        // assertion measured whether the runner was fast enough. A service that genuinely hangs
+        // still fails here, on the timeout.
         await svc.ExecuteTask!.WaitAsync(TimeSpan.FromSeconds(30));
         Assert.True(svc.ExecuteTask.IsCompleted);   // OperationCanceledException translated to a clean stop
         Assert.False(svc.ExecuteTask.IsFaulted);    // ...and not by throwing
-        Assert.True(File.Exists(full));
         _db.Execute("DELETE FROM site_settings WHERE skey='evidence_retention_days'");
     }
 }

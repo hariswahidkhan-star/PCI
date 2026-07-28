@@ -1593,6 +1593,8 @@ PCI.Backend.Endpoints.CommunityPublic.Map(app, db, logFn);            // PCI Wor
 // a hub method: messages are posted over HTTP so the moderated accept path stays the single door
 // into a room. The hub only pushes notifications and serves reconnect replay.
 PCI.Backend.Endpoints.CommunityAdmin.Map(app, db, logFn);             // PCI World community moderation console + guest appeals
+PCI.Backend.Endpoints.ForumPublic.Map(app, db, logFn);                // PCI World forum: crawlable reading + authenticated composer (gated on pciworld_forum_enabled, default off)
+PCI.Backend.Endpoints.ForumAdmin.Map(app, db, logFn);                 // PCI World forum: review queue, release/withhold, member flags, categories
 app.MapHub<PCI.Backend.Core.CommunityHub>(PCI.Backend.Core.CommunityHub.Path);
 PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
 PCI.Backend.Endpoints.WorldAccount.Map(app, db, logFn);               // PCI World — participant accounts + Passport (practice identity only)

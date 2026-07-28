@@ -62,3 +62,31 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
 .cw-img { display: block; max-width: 100%; height: auto; border-radius: 6px; margin-top: 0.35rem; }
 .cw-image-composer { margin-top: 1.25rem; border-top: 1px solid #d8d8c8; padding-top: 1rem; }
 .cw-composer-h { font-size: 1rem; margin: 0 0 0.5rem; }
+
+/* ── PCI World forum composer ──────────────────────────────────────────────────────────────── */
+
+/* The forum's READ path is server-rendered and styled by backend/wwwroot/assets/world.css; these
+   rules cover only the authenticated composer that lives inside this app. The two stylesheets are
+   deliberately separate — the crawlable pages must render with no bundle loaded at all. */
+
+.fw-notice { padding: 0.6rem 0.8rem; border-radius: 6px; border-left: 4px solid; }
+/* Every tone below states its meaning in the text as well; the colour only reinforces a sentence
+   that already carries the whole outcome, so a held post reads as held without seeing the border. */
+.fw-notice-info { background: #eef5ea; border-color: #3c6b2f; color: #24451c; }
+.fw-notice-held { background: #fdf3e3; border-color: #6b3f00; color: #6b3f00; }
+.fw-notice-error { background: #fdeaea; border-color: #8a1c1c; color: #8a1c1c; }
+
+.fw-reviewed { background: #fdf3e3; color: #6b3f00; padding: 0.6rem 0.8rem; border-radius: 6px; }
+.fw-signin { color: #55603d; }
+.fw-help { font-size: 0.9em; color: #55603d; margin: 0.2rem 0 0.75rem; }
+
+.fw-cats { border: 1px solid #d8d8c8; border-radius: 8px; padding: 0.75rem 1rem; margin: 0 0 1rem; }
+.fw-cat { padding: 0.35rem 0; }
+.fw-cat label { display: flex; align-items: baseline; gap: 0.5rem; }
+/* A disabled category keeps readable contrast: the reason beside it is the actionable part, and
+   fading it to grey would hide the one sentence that says what would change the answer. */
+.fw-cat input:disabled + span { color: #55603d; }
+
+.fw-composer textarea { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; }
+/* A pasted URL or a stack trace must not widen the page at a 320px viewport (WCAG 1.4.10). */
+.fw-post-body { overflow-wrap: anywhere; }

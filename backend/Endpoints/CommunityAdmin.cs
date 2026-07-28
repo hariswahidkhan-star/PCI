@@ -445,6 +445,7 @@ public static class CommunityAdmin
                 // The eligibility policy, and — more usefully — whether it admits anybody at all.
                 // "Nobody can join" is a configuration state, not a fault, and an operator staring
                 // at an empty room deserves to be told which it is.
+                forum_enabled = Settings.Bool(db, "pciworld_forum_enabled", false),
                 min_age = CommunityEligibility.MinAge(db),
                 jurisdictions = CommunityEligibility.Jurisdictions(db).OrderBy(c => c).ToArray(),
                 admits_anyone = CommunityEligibility.Configured(db),
@@ -499,6 +500,16 @@ public static class CommunityAdmin
                     return Results.Json(new { error = "min_age_out_of_range" }, statusCode: 400);
                 Settings.Put(db, CommunityEligibility.MinAgeKey, n.ToString());
                 changed.Add($"min_age={n}");
+            }
+
+            // The forum's kill switch (Phase 3). It lives on this endpoint rather than a new one
+            // because it is the same operator doing the same job, and because a flag reachable ONLY
+            // by direct database write is not really a flag — it was, until an accessibility
+            // fixture could not turn the forum on and exposed that nobody else could either.
+            if (H.GetS(b, "forum_enabled") is { } fe && fe is "0" or "1")
+            {
+                Settings.Put(db, "pciworld_forum_enabled", fe);
+                changed.Add($"forum_enabled={fe}");
             }
 
             if (changed.Count == 0) return Results.Json(new { error = "nothing_to_change" }, statusCode: 400);
