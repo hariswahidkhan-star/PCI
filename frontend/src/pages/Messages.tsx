@@ -144,7 +144,10 @@ export default function Messages() {
             const ctaRoute = rawRoute && rawRoute.startsWith('/') ? rawRoute : null
             const isUnread = !m.read_at
             return (
-              <article key={m.id} className={'msg-row' + (isUnread ? ' unread' : '')}>
+              // A message row IS a card surface, and it keeps the `card` hook the support
+              // journey's e2e spec locates it by. `.msg-row` is declared after `.card` in
+              // premium.css, so it wins on the properties both set (padding, border, shadow).
+              <article key={m.id} className={'card msg-row' + (isUnread ? ' unread' : '')}>
                 <div className="msg-row-top">
                   {isUnread && <Badge tone="brand">{t('msg.new')}</Badge>}
                   {cat && <span className="chip">{titleCase(cat)}</span>}

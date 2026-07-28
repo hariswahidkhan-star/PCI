@@ -86,6 +86,17 @@ describe('Messages (premium inbox)', () => {
   const withCta = (over: Record<string, unknown> = {}) =>
     msg({ id: 9, category: 'Support', cta_label: 'View reply', cta_route: '/support', ...over })
 
+  // The support journey's e2e spec locates a notification with
+  // `page.locator('.card').filter({ hasText: ticket.reference })`. Pinning the hook here means
+  // a future restyle fails in seconds instead of eight minutes into the Playwright job.
+  it('keeps the .card hook on each message row', () => {
+    h.rows = [msg({ id: 7, title: 'Support replied to your ticket', body: 'TKT-ABC123' })]
+    const { container } = renderWithProviders(<Messages />)
+    const row = container.querySelector('.msg-row') as HTMLElement
+    expect(row).toHaveClass('card')
+    expect(row).toHaveTextContent('TKT-ABC123')
+  })
+
   it('renders the notification’s call to action as a link to its route', () => {
     h.rows = [withCta()]
     renderWithProviders(<Messages />)
