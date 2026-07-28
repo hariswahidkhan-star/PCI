@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import type { EmailLog } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime, titleCase } from '../../format'
 
 export default function Emails() {
@@ -14,11 +15,11 @@ export default function Emails() {
   const { data, loading, error } = useAdminQuery<{ rows: EmailLog[] }>(`/api/admin/emails${qs ? '?' + qs : ''}`)
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Email log</h1>
-        <p className="muted">A record of every email the platform has sent (or attempted).</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Email log"
+        subtitle="A record of every email the platform has sent (or attempted)."
+      />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>

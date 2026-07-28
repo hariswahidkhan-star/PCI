@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type PageRow, type PageBlock } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 function PageEditor({ page, onClose, onSaved }: { page: PageRow; onClose: () => void; onSaved: () => void }) {
   const [title, setTitle] = useState(page.title ?? '')
@@ -64,7 +65,7 @@ function PageEditor({ page, onClose, onSaved }: { page: PageRow; onClose: () => 
           ) : !blocks.data || blocks.data.rows.length === 0 ? (
             <Empty>No editable content blocks for this page.</Empty>
           ) : (
-            <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+            <div className="page">
               <div>
                 <input placeholder={`Filter ${blocks.data.rows.length} text blocks…`} value={blockQ} onChange={(e) => setBlockQ(e.target.value)} />
                 <div className="small muted" style={{ marginTop: '.35rem' }}>
@@ -151,10 +152,10 @@ export default function Pages() {
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Pages &amp; content</h1>
-        <p className="muted">Edit any page’s headline, SEO title and description. Changes go live immediately — no redeploy.</p>
-      </div>
+      <PageHeader
+        title="Pages & content"
+        subtitle="Edit any page’s headline, SEO title and description. Changes go live immediately — no redeploy."
+      />
 
       <Card>
         <input placeholder="Search pages…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />

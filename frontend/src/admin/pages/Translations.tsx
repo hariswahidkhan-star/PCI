@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 // Backend-owned multilingual control. All translation state lives in content_i18n and is managed here:
 // coverage per language, a configurable machine-translation provider, one-click auto-translate, and a
@@ -28,11 +29,11 @@ export default function Translations() {
   const { coverage, languages, provider, pages } = data
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Translations</h1>
-        <p className="muted">Control the public website’s languages from the backend — translations are stored in the database, machine-translated with your configured provider, and editable by hand. English is always the source.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Translations"
+        subtitle="Control the public website’s languages from the backend — translations are stored in the database, machine-translated with your configured provider, and editable by hand. English is always the source."
+      />
       {note && <div className="notice" role="status">{note}</div>}
 
       <ProviderCard provider={provider} onSaved={() => { setNote('Provider settings saved.'); refetch() }} />

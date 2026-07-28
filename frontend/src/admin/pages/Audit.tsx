@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import type { AuditRow } from '../api'
 import { Card, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime, titleCase } from '../../format'
 
 export default function Audit() {
@@ -15,11 +16,11 @@ export default function Audit() {
   }, [data, q])
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Audit log</h1>
-        <p className="muted">The 300 most recent recorded actions.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Audit log"
+        subtitle="The 300 most recent recorded actions."
+      />
 
       <Card>
         <input placeholder="Filter by action or detail…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />

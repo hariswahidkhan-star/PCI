@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { useAdminAuth } from '../AdminAuth'
 import { Card, Badge, Spinner, ErrorNote, Empty, Stat } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 // Admin Console → Content, SEO & Distribution Centre (Phase 1).
 // Tabs: Dashboard (editorial pipeline), Blog posts (CMS + workflow + SEO), Taxonomy (authors +
@@ -26,11 +27,11 @@ export default function ContentCentre() {
   const { can, me } = useAdminAuth()
   const [tab, setTab] = useState<(typeof TABS)[number]>('Dashboard')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Content, SEO &amp; Distribution</h1>
-        <p className="muted">A dynamic blog CMS with editorial workflow, server-rendered public articles, SEO, sitemaps and syndication feeds, an honest integration capability registry, and an assist-only AI studio for PCL-AI, PFL-AI and PML-AI content.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Content, SEO & Distribution"
+        subtitle="A dynamic blog CMS with editorial workflow, server-rendered public articles, SEO, sitemaps and syndication feeds, an honest integration capability registry, and an assist-only AI studio for PCL-AI, PFL-AI and PML-AI content."
+      />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => (<button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>))}
       </div>
