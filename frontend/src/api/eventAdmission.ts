@@ -89,7 +89,7 @@ const FIXTURE_PASSES: EventPass[] = [
     paymentState: 'paid',
     admissionMode: 'hybrid',
     validity: { opensAt: '2026-09-14 07:30:00', closesAt: '2026-09-14 12:00:00' },
-    entryToken: 'EVT-OK-501-9f3ab2c8d1',
+    entryToken: 'FIXTURE-PASS-OK-NOT-A-SECRET',
     history: [],
   },
   {
@@ -109,7 +109,7 @@ const FIXTURE_PASSES: EventPass[] = [
     paymentState: 'paid',
     admissionMode: 'qr',
     validity: { opensAt: '2026-05-02 07:00:00', closesAt: '2026-05-02 11:00:00' },
-    entryToken: 'EVT-USED-502-4c77e1aa02',
+    entryToken: 'FIXTURE-PASS-USED-NOT-A-SECRET',
     history: [
       { at: '2026-05-02 08:12:00', kind: 'entry', gateName: 'Hall 4 — Gate A', method: 'qr' },
       { at: '2026-05-02 12:40:00', kind: 'checkout', gateName: 'Hall 4 — Gate A', method: 'manual' },
