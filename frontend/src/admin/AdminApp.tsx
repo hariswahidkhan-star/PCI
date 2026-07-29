@@ -54,6 +54,9 @@ import Content from './pages/Content'
 import Announcement from './pages/Announcement'
 import Team from './pages/Team'
 import Settings from './pages/Settings'
+import Notifications from './pages/Notifications'
+import SystemCheck from './pages/SystemCheck'
+import IdentityMerges from './pages/IdentityMerges'
 import Exams from './pages/Exams'
 import Proctoring from './pages/Proctoring'
 import ExamExceptions from './pages/ExamExceptions'
@@ -146,6 +149,9 @@ export default function AdminApp() {
         <Route path="proctoring" element={<Perm section="proctoring"><Proctoring /></Perm>} />
         <Route path="exam-exceptions" element={<Perm section="ex_view"><ExamExceptions /></Perm>} />
         <Route path="settings" element={<AnyPerm sections={['settings', 'set_web', 'set_sp', 'set_exam']}><Settings /></AnyPerm>} />
+        <Route path="identity-merges" element={<Perm section="id_read"><IdentityMerges /></Perm>} />
+        <Route path="notifications" element={<Perm section="content"><Notifications /></Perm>} />
+        <Route path="readiness" element={<OwnerOnly><SystemCheck /></OwnerOnly>} />
         <Route path="team" element={<OwnerOnly><Team /></OwnerOnly>} />
         {CRUD_SECTIONS.map((c) => (
           <Route key={c.path} path={c.path} element={<Perm section={c.perm}><CrudSection config={c} /></Perm>} />

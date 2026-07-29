@@ -27,6 +27,7 @@ const NAV: NavItem[] = [
   { to: '/books', label: 'Books & materials', perm: 'resources', group: 'Students' },
   { to: '/membership-grades', label: 'Membership grades', perm: 'members', group: 'Students' },
   { to: '/member-directory', label: 'Member directory', perm: 'members', group: 'Students' },
+  { to: '/identity-merges', label: 'Identity merges', perm: 'id_read', group: 'Students' },
   { to: '/erasure-requests', label: 'Data erasure requests', perm: 'members', group: 'Students' },
 
   { to: '/communications', label: 'Communications Centre', perm: 'comms', group: 'Support' },
@@ -87,6 +88,8 @@ const NAV: NavItem[] = [
 
   { to: '/emails', label: 'Email log', perm: 'emails', group: 'Operations' },
   { to: '/audit', label: 'Audit log', perm: 'audit', group: 'Operations' },
+  { to: '/notifications', label: 'Notifications', perm: 'content', group: 'Operations' },
+  { to: '/readiness', label: 'Readiness', owner: true, group: 'Operations' },
   { to: '/settings', label: 'Settings', anyPerm: ['settings', 'set_web', 'set_sp', 'set_exam'], group: 'Operations' },
   { to: '/team', label: 'Team & Access', owner: true, group: 'Operations' },
 ]
