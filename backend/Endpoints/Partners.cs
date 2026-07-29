@@ -404,9 +404,12 @@ public static class Partners
 
         object SettlementSummary(long partnerId) => new
         {
+            // The scalar sums are exact only while the ledger holds a single currency; by_currency is the
+            // partitioned truth and what money displays should prefer.
             payable = Money.ToDecimal(PartnerSettlement.PayableMinor(db, partnerId)),
             recoverable = Money.ToDecimal(PartnerCommissionReversal.RecoverableMinor(db, partnerId)),
             recoverable_outstanding = Money.ToDecimal(PartnerSettlement.UnrecoveredMinor(db, partnerId)),
+            by_currency = PartnerSettlement.BalancesByCurrency(db, partnerId),
             settlements = db.Query(@"SELECT id, settlement_no, period_start, period_end, currency,
                     eligible_commission_minor, adjustments_minor, amount_approved_minor, amount_paid_minor,
                     closing_balance_minor, status, prepared_by, approved_by, paid_at, payment_method,
@@ -565,6 +568,7 @@ public static class Partners
             return J(new
             {
                 payable = Money.ToDecimal(PartnerSettlement.PayableMinor(db, p!.PartnerId)),
+                by_currency = PartnerSettlement.BalancesByCurrency(db, p.PartnerId),
                 settlements = db.Query(@"SELECT id, settlement_no, period_start, period_end, currency,
                         amount_approved_minor, amount_paid_minor, closing_balance_minor, status, paid_at,
                         payment_method, payment_reference, partner_note, created_at

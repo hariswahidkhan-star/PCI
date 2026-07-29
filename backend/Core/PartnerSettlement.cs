@@ -64,13 +64,18 @@ public static class PartnerSettlement
     /// The record is the settlement's own negative adjustments_minor, so the arithmetic stays inside the
     /// ledger rather than in a mutable running balance.
     /// </summary>
-    public static long UnrecoveredMinor(Db db, long partnerId)
+    public static long UnrecoveredMinor(Db db, long partnerId, string? currency = null)
     {
-        var gross = PartnerCommissionReversal.RecoverableMinor(db, partnerId);
+        var gross = PartnerCommissionReversal.RecoverableMinor(db, partnerId, currency);
         if (gross <= 0) return 0;
-        // A cancelled batch releases its offset along with its allocations.
-        var applied = -db.Scalar<long>(@"SELECT COALESCE(SUM(adjustments_minor),0) FROM partner_settlements
-            WHERE partner_id=? AND status<>'cancelled' AND adjustments_minor<0", partnerId);
+        // A cancelled batch releases its offset along with its allocations. A settlement's adjustment is
+        // denominated in the settlement's own currency, so a scoped balance only counts matching batches.
+        var applied = currency is null
+            ? -db.Scalar<long>(@"SELECT COALESCE(SUM(adjustments_minor),0) FROM partner_settlements
+                WHERE partner_id=? AND status<>'cancelled' AND adjustments_minor<0", partnerId)
+            : -db.Scalar<long>(@"SELECT COALESCE(SUM(adjustments_minor),0) FROM partner_settlements
+                WHERE partner_id=? AND status<>'cancelled' AND adjustments_minor<0
+                  AND UPPER(COALESCE(NULLIF(currency,''),'USD'))=?", partnerId, currency.Trim().ToUpperInvariant());
         return Math.Max(0, gross - applied);
     }
 
@@ -99,12 +104,20 @@ public static class PartnerSettlement
             LIMIT 1", settlementId);
     }
 
-    /// <summary>Commission that is approved for payment and not yet fully allocated to a settlement.</summary>
-    public static long PayableMinor(Db db, long partnerId)
+    /// <summary>
+    /// Commission that is approved for payment and not yet fully allocated to a settlement.
+    /// Pass <paramref name="currency"/> to scope the balance to one currency (minor units of different
+    /// currencies must never be summed); null keeps the legacy all-currency total for display code.
+    /// </summary>
+    public static long PayableMinor(Db db, long partnerId, string? currency = null)
     {
+        var cur = currency?.Trim().ToUpperInvariant();
+        var curFilter = cur is null ? "" : " AND UPPER(COALESCE(NULLIF(t.currency,''),'USD'))=?";
+        object?[] P(params object?[] args) => cur is null ? args : args.Append((object?)cur).ToArray();
         var approved = db.Scalar<long>(@"SELECT COALESCE(SUM(t.commission_minor),0)
             FROM partner_commission_transactions t
-            WHERE t.partner_id=? AND t.status IN ('approved_for_payment','scheduled','partially_paid')", partnerId);
+            WHERE t.partner_id=? AND t.status IN ('approved_for_payment','scheduled','partially_paid')" + curFilter,
+            P(partnerId));
         // Reversals of a commission that has NOT been paid out reduce what that commission is worth
         // directly (there is no money to recover — it never left). They carry status 'reversed', so the
         // sum above never sees them. Reversals of a partially-paid source are excluded: those are the
@@ -112,7 +125,8 @@ public static class PartnerSettlement
         var reversedOfUnpaid = db.Scalar<long>(@"SELECT COALESCE(SUM(r.commission_minor),0)
             FROM partner_commission_transactions r
             JOIN partner_commission_transactions t ON t.id=r.reversal_of_transaction_id
-            WHERE t.partner_id=? AND t.status IN ('approved_for_payment','scheduled')", partnerId);
+            WHERE t.partner_id=? AND t.status IN ('approved_for_payment','scheduled')" + curFilter,
+            P(partnerId));
         // The two sums MUST cover the same population. Allocations belonging to transactions that have
         // already reached 'paid' are not deducted here, because those transactions are equally absent from
         // the 'approved' sum above — counting them on one side only would subtract every historic payout a
@@ -122,10 +136,35 @@ public static class PartnerSettlement
             JOIN partner_commission_transactions t ON t.id=i.transaction_id
             JOIN partner_settlements s ON s.id=i.settlement_id
             WHERE t.partner_id=? AND s.status<>'cancelled'
-              AND t.status IN ('approved_for_payment','scheduled','partially_paid')", partnerId);
+              AND t.status IN ('approved_for_payment','scheduled','partially_paid')" + curFilter,
+            P(partnerId));
         // Commission already paid out and since reversed is owed back to PCI, so it reduces what is payable
         // — but only the part not already recouped through an earlier settlement.
-        return approved + reversedOfUnpaid - allocated - UnrecoveredMinor(db, partnerId);
+        return approved + reversedOfUnpaid - allocated - UnrecoveredMinor(db, partnerId, cur);
+    }
+
+    /// <summary>
+    /// Per-currency partition of the partner's balances, for display surfaces. One row per currency seen
+    /// in the partner's ledger — the scalar all-currency sums are only exact while a single currency is
+    /// in use, so anywhere money is shown should prefer this breakdown.
+    /// </summary>
+    public static List<object> BalancesByCurrency(Db db, long partnerId)
+    {
+        var currencies = db.Query(@"SELECT DISTINCT UPPER(COALESCE(NULLIF(currency,''),'USD')) c
+            FROM partner_commission_transactions WHERE partner_id=? ORDER BY c", partnerId);
+        var rows = new List<object>();
+        foreach (var r in currencies)
+        {
+            var c = H.Str(r["c"]) ?? "USD";
+            rows.Add(new
+            {
+                currency = c,
+                payable = Money.ToDecimal(PayableMinor(db, partnerId, c)),
+                recoverable = Money.ToDecimal(PartnerCommissionReversal.RecoverableMinor(db, partnerId, c)),
+                recoverable_outstanding = Money.ToDecimal(UnrecoveredMinor(db, partnerId, c)),
+            });
+        }
+        return rows;
     }
 
     /// <summary>
@@ -191,7 +230,10 @@ public static class PartnerSettlement
             return Result.Fail("nothing_payable", "No approved commission is waiting to be settled for this partner.");
         currency ??= "USD";
 
-        var recoverable = UnrecoveredMinor(db, partnerId);
+        // Offset ONLY same-currency recoverables: netting a debt denominated in one currency off a batch
+        // paid in another would invent an exchange rate of 1. A recoverable in a different currency waits
+        // for a batch in that currency (or a manual invoice) — surfaced by the per-currency balances.
+        var recoverable = UnrecoveredMinor(db, partnerId, currency);
         if (recoverable > 0 && total <= recoverable)
             return Result.Fail("offset_by_recoverable",
                 $"This partner owes {Money.Format(recoverable)} from reversed commission, which exceeds the {Money.Format(total)} payable. Nothing is due.");

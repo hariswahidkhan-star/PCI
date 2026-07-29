@@ -101,12 +101,21 @@ public static class PartnerCommissionReversal
     /// <summary>
     /// Recoverable balance: commission already paid out that has since been reversed. Positive means the
     /// partner owes PCI that much, to be offset against future approved commission rather than invoiced.
+    /// Pass <paramref name="currency"/> to scope the balance to one currency — minor units of different
+    /// currencies must never be summed or offset against each other (there is no FX here); null keeps the
+    /// legacy all-currency total for display code that predates the partition.
     /// </summary>
-    public static long RecoverableMinor(Db db, long partnerId)
+    public static long RecoverableMinor(Db db, long partnerId, string? currency = null)
     {
+        if (currency is null)
+            return db.Scalar<long>(@"SELECT COALESCE(SUM(-r.commission_minor),0)
+                FROM partner_commission_transactions r
+                JOIN partner_commission_transactions s ON s.id=r.reversal_of_transaction_id
+                WHERE r.partner_id=? AND s.status IN ('paid','partially_paid')", partnerId);
         return db.Scalar<long>(@"SELECT COALESCE(SUM(-r.commission_minor),0)
             FROM partner_commission_transactions r
             JOIN partner_commission_transactions s ON s.id=r.reversal_of_transaction_id
-            WHERE r.partner_id=? AND s.status IN ('paid','partially_paid')", partnerId);
+            WHERE r.partner_id=? AND s.status IN ('paid','partially_paid')
+              AND UPPER(COALESCE(NULLIF(r.currency,''),'USD'))=?", partnerId, currency.Trim().ToUpperInvariant());
     }
 }
