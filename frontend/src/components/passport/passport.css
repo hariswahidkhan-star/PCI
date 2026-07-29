@@ -1,0 +1,321 @@
+/* PCI World Passport — shared premium component family.
+ *
+ * One restrained visual language for every surface that renders the Passport summary (the MyPCI
+ * dashboard module and the World Passport manager): deep charcoal/navy ground, warm ivory type,
+ * one controlled gilt accent — the palette of the Passport PDF's cover band (Core/WorldPassport.cs:
+ * noir #0E1525, gilt #C8A24B, crimson #C13329). No confetti, no glows, no casino effects.
+ * Motion is a single opacity fade, and even that respects prefers-reduced-motion. */
+
+.pp-card {
+  --pp-noir: #0e1525;
+  --pp-noir-2: #141d33;
+  --pp-ivory: #f7f2e7;
+  --pp-ivory-dim: #cfc9ba;
+  --pp-gilt: #c8a24b;
+  --pp-gilt-faint: rgba(200, 162, 75, 0.35);
+  --pp-crimson: #c13329;
+  position: relative;
+  background: linear-gradient(160deg, var(--pp-noir-2) 0%, var(--pp-noir) 62%);
+  color: var(--pp-ivory);
+  border: 1px solid var(--pp-gilt-faint);
+  border-radius: 14px;
+  padding: 1.35rem 1.5rem 1.25rem;
+  overflow: hidden;
+  animation: pp-enter 320ms ease-out;
+}
+
+@keyframes pp-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-card, .pp-skeleton .pp-shimmer { animation: none !important; }
+}
+
+/* the hairline inner frame — the security-document rule the PDF draws */
+.pp-card::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(200, 162, 75, 0.18);
+  border-radius: 9px;
+  pointer-events: none;
+}
+
+.pp-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.pp-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pp-gilt);
+  margin: 0 0 0.35rem;
+}
+
+.pp-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 26px;
+  height: 3px;
+  background: var(--pp-crimson);
+  margin-right: 0.55rem;
+  vertical-align: middle;
+}
+
+.pp-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--pp-ivory);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pp-number {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--pp-gilt);
+  margin: 0.25rem 0 0;
+}
+
+/* the gilt seal — decorative only; every claim it decorates is stated in text */
+.pp-seal {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pp-gilt);
+  box-shadow: inset 0 0 0 3px var(--pp-noir), inset 0 0 0 4px rgba(200, 162, 75, 0.5);
+  display: grid;
+  place-items: center;
+  color: var(--pp-gilt);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.pp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+  padding: 0.18rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid rgba(247, 242, 231, 0.25);
+  color: var(--pp-ivory-dim);
+  background: rgba(247, 242, 231, 0.06);
+}
+
+.pp-status .pp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.pp-status--published { color: #d9c284; border-color: var(--pp-gilt-faint); background: rgba(200, 162, 75, 0.12); }
+.pp-status--private { color: #b9d3b3; }
+.pp-status--draft { color: var(--pp-ivory-dim); }
+.pp-status--expired,
+.pp-status--suspended { color: #e0a49e; border-color: rgba(193, 51, 41, 0.45); background: rgba(193, 51, 41, 0.12); }
+.pp-status--not_created { color: var(--pp-ivory-dim); }
+
+.pp-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  margin: 1.05rem 0 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(200, 162, 75, 0.22);
+}
+
+.pp-stat .pp-stat-n {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--pp-ivory);
+  line-height: 1.1;
+}
+
+.pp-stat .pp-stat-k {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-ivory-dim);
+  margin-top: 0.15rem;
+}
+
+.pp-highlights {
+  list-style: none;
+  margin: 0.9rem 0 0;
+  padding: 0;
+}
+
+.pp-highlights li {
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(247, 242, 231, 0.08);
+}
+
+.pp-highlights .pp-hl-title {
+  font-weight: 600;
+  color: var(--pp-ivory);
+  font-size: 0.92rem;
+}
+
+.pp-highlights .pp-hl-meta {
+  font-size: 0.76rem;
+  color: var(--pp-ivory-dim);
+  margin-top: 0.1rem;
+}
+
+.pp-highlights .pp-hl-score {
+  color: var(--pp-gilt);
+  font-weight: 600;
+}
+
+.pp-note {
+  font-size: 0.8rem;
+  color: var(--pp-ivory-dim);
+  margin: 0.8rem 0 0;
+}
+
+.pp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.05rem;
+}
+
+/* buttons inside the card pick up the passport palette without fighting host-app .btn styles */
+.pp-card .pp-btn {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1.05rem;
+  border-radius: 8px;
+  border: 1px solid var(--pp-gilt);
+  background: var(--pp-gilt);
+  color: var(--pp-noir);
+  text-decoration: none;
+}
+
+.pp-card .pp-btn:hover { filter: brightness(1.06); }
+
+.pp-card .pp-btn:focus-visible {
+  outline: 2px solid var(--pp-ivory);
+  outline-offset: 2px;
+}
+
+.pp-card .pp-btn[disabled] { opacity: 0.55; cursor: default; }
+
+.pp-card .pp-btn--ghost {
+  background: transparent;
+  color: var(--pp-ivory);
+  border-color: rgba(247, 242, 231, 0.35);
+}
+
+.pp-err { color: #e8b3ad; font-size: 0.82rem; margin: 0.6rem 0 0; }
+.pp-ok { color: #cfe3c8; font-size: 0.82rem; margin: 0.6rem 0 0; }
+
+/* ── empty / onboarding / unavailable states ── */
+.pp-empty { text-align: left; }
+.pp-empty .pp-empty-title { font-size: 1.1rem; font-weight: 700; margin: 0.6rem 0 0.25rem; color: var(--pp-ivory); }
+.pp-empty .pp-empty-body { font-size: 0.86rem; color: var(--pp-ivory-dim); margin: 0; max-width: 46rem; }
+
+/* ── printable documents sheet (Phase 5A) ── */
+.pp-downloads {
+  margin-top: 1.05rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(200, 162, 75, 0.22);
+}
+
+.pp-downloads .pp-dl-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pp-gilt, #c8a24b);
+  margin: 0 0 0.55rem;
+}
+
+.pp-dl-list {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+}
+
+.pp-dl-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid rgba(247, 242, 231, 0.08);
+}
+
+.pp-dl-item:first-child { border-top: none; }
+
+.pp-dl-info { min-width: 0; }
+
+.pp-dl-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--pp-ivory, #f7f2e7);
+}
+
+.pp-dl-meta {
+  font-size: 0.76rem;
+  color: var(--pp-ivory-dim, #cfc9ba);
+  margin-top: 0.1rem;
+}
+
+.pp-dl-guidance {
+  font-size: 0.76rem;
+  color: var(--pp-ivory-dim, #cfc9ba);
+  margin: 0.55rem 0 0;
+  max-width: 52rem;
+}
+
+/* the sheet reuses .pp-btn; give it a home when rendered outside .pp-card too */
+.pp-downloads .pp-btn {
+  appearance: none;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1.05rem;
+  border-radius: 8px;
+  border: 1px solid var(--pp-gilt, #c8a24b);
+  background: var(--pp-gilt, #c8a24b);
+  color: var(--pp-noir, #0e1525);
+  flex: none;
+}
+
+.pp-downloads .pp-btn[disabled] { opacity: 0.55; cursor: default; }
+
+.pp-downloads .pp-btn:focus-visible {
+  outline: 2px solid var(--pp-ivory, #f7f2e7);
+  outline-offset: 2px;
+}
+
+/* ── loading skeleton ── */
+.pp-skeleton .pp-shimmer {
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(247, 242, 231, 0.07) 25%, rgba(247, 242, 231, 0.14) 50%, rgba(247, 242, 231, 0.07) 75%);
+  background-size: 200% 100%;
+  animation: pp-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes pp-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}

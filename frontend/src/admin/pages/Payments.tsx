@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type PaymentRow } from '../api'
 import { Card, StatusBadge, Badge, Spinner, ErrorNote, Empty, Stat } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate, fmtMoney, titleCase } from '../../format'
 import { ApiError, UnauthorizedError } from '../../api/client'
 
@@ -15,8 +16,8 @@ const TABS = ['Payments', 'Reconciliation'] as const
 export default function Payments() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Payments')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <h1>Payments</h1>
+    <div className="page">
+      <PageHeader title="Payments" />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
       </div>

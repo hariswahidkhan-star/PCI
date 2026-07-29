@@ -34,7 +34,15 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `ES` | Earned Schedule (time-based schedule measure) | time | PML-AI D6 | ✅ |
 | `SPI(t)` | Schedule Performance Index (time) = `ES/AT` | ratio | PML-AI D6 | ✅ |
 | `TF`, `FF` | Total float, free float | time | PML-AI D6 | ✅ |
-| `EMV` | Expected monetary value = Σ(probability × impact) | currency | PML-AI D8 | ⏳ |
+| `EMV` | Expected monetary value = Σ(probability × impact) | currency | PML-AI D8 | ✅ |
+| `E[wait]` | Governance latency = `M`/2 + `L` (meeting interval `M`, paper lead time `L`) — the expected wait for a committee decision; sums across escalation tiers | time | PML-AI D3 | ✅ |
+| Cost of delay | Value forgone per unit of elapsed time; the price at which governance latency, gate duration and escalation paths are all evaluated | currency/period | PML-AI D1/D3 | ✅ |
+| Gate net value | `P(defect)` × build-fix cost − [review + elapsed × cost of delay + `P(defect)` × (`P(detect)` × design-fix + `P(miss)` × build-fix)] | currency | PML-AI D3 | ✅ |
+| Committee capacity | meetings per year × substantive items per meeting; utilisation = demand ÷ capacity | count | PML-AI D3 | ✅ |
+| Mesh / layered interfaces | `n(n−1)/2` possible pairwise interfaces against `n` to an integration layer — the architecture choice, priced | count | PML-AI D4 | ✅ |
+| Hundred-per-cent rule | Σ children − parent = 0 at every WBS level; a non-zero result is an omission or a duplication | currency | PML-AI D4 | ✅ |
+| Assessed total impact | direct + (schedule weeks × cost of delay) + rework + interface re-verification + regression + documentation (+ risk, + benefit) — the basis a delegation threshold must read on | currency | PML-AI D4 | ✅ |
+| Baseline drift | (change count × average direct cost) + (affected count × average weeks × cost of delay); cumulative-test threshold derived from the observed change rate | currency | PML-AI D4 | ✅ |
 | `EVA(benefit)` | Benefit measure in benefits register (named in words to avoid EV clash) | currency | PML-AI D2/D16 | ⏳ |
 
 ## 3. New symbols — PFL-AI
@@ -46,13 +54,18 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
 | `IRR` / `MIRR` | Internal / modified internal rate of return | %/period | PFL-AI D4 | ✅ |
 | `PI` | Profitability index = PV(future CF)/I₀ | ratio | PFL-AI D4 | ✅ |
 | `EAV` | Equivalent annual value | currency/period | PFL-AI D4 | ✅ |
-| `WACC` | Weighted average cost of capital | %/period | PFL-AI D4/D9 | ⏳ |
-| `CFADS` | Cash flow available for debt service | currency/period | PFL-AI D10 | ⏳ |
-| `DSCR` | Debt service coverage ratio = CFADS/(interest + scheduled principal) per period | ratio | PFL-AI D10 | ⏳ |
-| `LLCR` | Loan life coverage ratio = PV(CFADS over loan life, at loan rate)/outstanding debt | ratio | PFL-AI D10 | ⏳ |
-| `PLCR` | Project life coverage ratio = PV(CFADS over project life)/outstanding debt | ratio | PFL-AI D10 | ⏳ |
-| `ICR` | Interest coverage ratio | ratio | PFL-AI D10 | ⏳ |
-| `D/E` | Gearing (debt : equity) | ratio | PFL-AI D9 | ⏳ |
+| `WACC` | Weighted average cost of capital = g·k_d(1−T) + (1−g)·k_e — **derived** in PFL-AI D9, which discharges D4's use of 8 % as a given; note it is linear in gearing only while k_e is held fixed | %/period | PFL-AI D4/D9 | ✅ |
+| `CFADS` | Cash flow available for debt service (a **defined term** — see PFL-AI D2 KA 2.3.1: whether it is struck before or after working-capital movements changes every ratio built on it) | currency/period | PFL-AI D2/D10 | ✅ |
+| `DSCR` | Debt service coverage ratio = CFADS/(interest + scheduled principal) per period | ratio | PFL-AI D10 | ✅ |
+| `LLCR` | Loan life coverage ratio = PV(CFADS over loan life, at loan rate)/outstanding debt | ratio | PFL-AI D10 | ✅ |
+| `PLCR` | Project life coverage ratio = PV(CFADS over project life)/outstanding debt | ratio | PFL-AI D10 | ✅ |
+| `ICR` | Interest coverage ratio = EBIT (or EBITDA)/interest — accounting-based; ignores principal | ratio | PFL-AI D2/D10 | ✅ |
+| Max debt service | `CFADS` ÷ target `DSCR` per period | currency/period | PFL-AI D10 | ✅ |
+| Max debt capacity | max debt service × `AF(r, n)` at the loan rate and tenor | currency | PFL-AI D10 | ✅ |
+| Sculpted debt service | `CFADS(t)` ÷ target `DSCR` — coverage constant by construction | currency/period | PFL-AI D10 | ✅ |
+| Covenant / lock-up trigger in cash | debt service × threshold ratio (the number that belongs on a dashboard) | currency/period | PFL-AI D10 | ✅ |
+| DSRA | debt service × months/12 (funded reserve; expressed as the shortfall it survives) | currency | PFL-AI D10 | ✅ |
+| `D/E` | Gearing (debt : equity) | ratio | PFL-AI D9/D10 | ✅ |
 | `i_nom`, `i_real`, `π` | Nominal rate, real rate, inflation (Fisher: `1+i_nom = (1+i_real)(1+π)`) | %/period | PFL-AI D3 | ✅ |
 | `DF(t)` | Discount factor at period `t` = 1/(1+r)ᵗ | ratio | PFL-AI D3 | ✅ |
 | `A` | Annuity payment (context-flagged; PCP-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | ✅ |
@@ -67,3 +80,21 @@ Status legend: ✅ verified golden example exists · ⏳ registered, verificatio
   percentage-of-completion.
 - Every worked example in either book cites its registry row; a formula not in this registry cannot
   appear in a chapter.
+
+## 5. Where a formula's verification actually lives
+
+This registry names formulas and records whether a verified golden example exists. The **executable**
+record is the golden-answer suite:
+
+- `_build/verify_formulas.py` holds the checks for the twelve domains authored before scaled
+  authorship began, and loads every per-domain module.
+- `_build/checks/<book>_d<NN>.py` holds one module per domain authored since, each pinning every
+  printed number in that domain **and** each teaching invariant it claims — an identity, a breakeven,
+  a bound, an inequality — so that a claim cannot silently stop being true.
+- `_build/run_checks.py <module>` runs one module in isolation, which is what makes concurrent
+  authorship safe.
+
+A ✅ in the table above means such a check exists and passes. If you change a formula's treatment in a
+manuscript, the module is what will catch you; if you add a formula, add the row here **and** the check
+there, because a formula not in this registry cannot appear in a chapter and a number without a check
+cannot pass gate.

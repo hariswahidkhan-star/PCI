@@ -261,6 +261,8 @@ public static class World
             {
                 Track("challenge_started", o.ChallengeId, H.L(sess["id"]));
                 log(null, "world_attempt_start", $"{code} v{o.Version} #{o.AttemptId}");
+                if (inviteTok.Length > 0)
+                    RecordReferralStart(db, inviteTok, H.L(sess["id"]), acct?.Id, o.ChallengeId, o.Version);
             }
             return Results.Json(new
             {
@@ -351,6 +353,7 @@ public static class World
             {
                 Track("challenge_completed", H.L(att["challenge_id"]), H.L(sess["id"]));
                 log(null, "world_attempt_submit", $"#{id} {att["score"]}%");
+                RecordReferralCompletion(db, H.L(att["session_id"]), H.L(att["challenge_id"]), H.L(att["version"]));
             }
             return Results.Json(ResultFor(att, snapshot));
         });
@@ -470,6 +473,34 @@ public static class World
 
     public static readonly string[] WorldReportCategories =
         { "content_error", "calculation", "accessibility", "inappropriate", "other" };
+
+    /// <summary>Record that an anonymous session started a challenge from a share link — privacy-safe
+    /// by construction: the row carries the OPAQUE share reference (the invite token's sha, exactly
+    /// how the invite itself is stored), the numeric session id and the pinned challenge coordinates.
+    /// No name, no email, no raw id in any URL or analytics row; the sharer only ever reads aggregate
+    /// counts. INSERT OR IGNORE + the unique key make a refresh or double-start one row, and a
+    /// signed-in start is attributed to its account from creation. A revoked or mismatched invite
+    /// records nothing.</summary>
+    public static void RecordReferralStart(Db db, string inviteToken, long sessionId, long? userId, long challengeId, long version)
+    {
+        var inv = db.QueryOne(@"SELECT a.challenge_id FROM pciworld_invites i
+            JOIN pciworld_attempts a ON a.id=i.attempt_id
+            WHERE i.token_sha=? AND i.revoked=0", Security.Sha(inviteToken));
+        if (inv is null || H.L(inv["challenge_id"]) != challengeId) return;
+        db.Execute(@"INSERT OR IGNORE INTO pciworld_referrals
+                (share_ref,anonymous_world_session_id,referred_user_id,challenge_id,challenge_version)
+            VALUES(?,?,?,?,?)", Security.Sha(inviteToken), sessionId, userId, challengeId, version);
+    }
+
+    /// <summary>Advance the referral row for the session that STARTED the attempt (which, on a
+    /// cross-device account submit, is not necessarily the caller's session). Guarded on
+    /// completed_at IS NULL so a submit replay can never advance it twice; a session already
+    /// claimed goes straight to 'claimed' so completion order never loses the state.</summary>
+    public static void RecordReferralCompletion(Db db, long sessionId, long challengeId, long version) =>
+        db.Execute(@"UPDATE pciworld_referrals SET completed_at=datetime('now'),
+                conversion_state=CASE WHEN referred_user_id IS NULL THEN 'completed' ELSE 'claimed' END
+            WHERE anonymous_world_session_id=? AND challenge_id=? AND challenge_version=?
+              AND completed_at IS NULL", sessionId, challengeId, version);
 
     /// <summary>The result payload for a COMPLETED attempt, replayed deterministically from the
     /// pinned snapshot and the stored answers — submit, retry-after-lost-response, reload and the

@@ -1,7 +1,19 @@
-import { useState, type ReactNode } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { useAdminQuery } from './hooks'
 import { adminApi } from './api'
-import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
+import { Card, Badge, ErrorNote } from '../components/ui'
+import {
+  PageHeader,
+  Toolbar,
+  SearchInput,
+  FilterSelect,
+  SortHeader,
+  EmptyState,
+  SkeletonTable,
+  Pagination,
+} from '../components/premium'
+import { useTableControls } from '../components/useTableControls'
+import { Icon } from '../components/icons'
 
 export interface CrudField {
   key: string
@@ -37,6 +49,7 @@ function Editor({ config, row, onClose, onSaved }: { config: CrudConfig; row: Ro
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const set = (k: string, v: unknown) => setForm((p) => ({ ...p, [k]: v }))
+  const noun = config.title.replace(/s$/, '').toLowerCase()
 
   async function save() {
     setError(null)
@@ -70,9 +83,9 @@ function Editor({ config, row, onClose, onSaved }: { config: CrudConfig; row: Ro
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
-        <div className="spread" style={{ marginBottom: '1rem' }}>
-          <h2 style={{ margin: 0 }}>{isNew ? `New ${config.title.replace(/s$/, '').toLowerCase()}` : `Edit ${config.title.replace(/s$/, '').toLowerCase()}`}</h2>
+      <div className="drawer" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={isNew ? `New ${noun}` : `Edit ${noun}`}>
+        <div className="drawer-head">
+          <h2>{isNew ? `New ${noun}` : `Edit ${noun}`}</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
         </div>
         {error && <div className="notice err" role="alert" style={{ marginBottom: '1rem' }}>{error}</div>}
@@ -117,7 +130,33 @@ function cell(f: CrudField, v: unknown): ReactNode {
 export default function CrudSection({ config }: { config: CrudConfig }) {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Row[] }>(`/api/admin/${config.name}`)
   const [editing, setEditing] = useState<Row | null | undefined>(undefined) // undefined = closed
-  const listFields = config.fields.filter((f) => f.inList)
+  const listFields = useMemo(() => config.fields.filter((f) => f.inList), [config.fields])
+
+  // Dropdown filters are offered for every select/checkbox column the list shows — those are the
+  // columns with a small, known value set, which is exactly what an operator filters on.
+  const filterFields = useMemo(
+    () => listFields.filter((f) => f.type === 'select' || f.type === 'checkbox'),
+    [listFields],
+  )
+  const [filterVals, setFilterVals] = useState<Record<string, string>>({})
+  const setFilter = (k: string, v: string) => setFilterVals((p) => ({ ...p, [k]: v }))
+
+  const searchKeys = useMemo(() => listFields.map((f) => f.key), [listFields])
+  const filters = filterFields.map((f) => {
+    const want = filterVals[f.key]
+    if (!want) return null
+    if (f.type === 'checkbox') return (r: Row) => (want === 'yes') === isTruthy(r[f.key])
+    return (r: Row) => String(r[f.key] ?? '') === want
+  })
+
+  const t = useTableControls<Row>(data?.rows, {
+    searchKeys,
+    filters,
+    // The dropdown values ARE the filter state — a stable signature the hook can both
+    // memoise on and use to detect that the active filters changed.
+    filterKey: JSON.stringify(filterVals),
+    pageSize: 25,
+  })
 
   async function remove(row: Row) {
     if (!confirm('Delete this item? This cannot be undone.')) return
@@ -129,40 +168,106 @@ export default function CrudSection({ config }: { config: CrudConfig }) {
     }
   }
 
-  return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <div>
-          <h1>{config.title}</h1>
-          {config.description && <p className="muted" style={{ margin: 0 }}>{config.description}</p>}
-        </div>
-        <button className="btn sm" onClick={() => setEditing(null)}>{config.addLabel ?? 'Add'}</button>
-      </div>
+  const totalRows = data?.rows.length ?? 0
+  const filtered = t.total !== totalRows
+  const noun = config.title.toLowerCase()
 
-      <Card>
+  return (
+    <div className="page">
+      <PageHeader
+        title={config.title}
+        subtitle={config.description}
+        actions={
+          <button className="btn sm" onClick={() => setEditing(null)}>
+            <Icon name="plus" size={14} />
+            {config.addLabel ?? 'Add'}
+          </button>
+        }
+      />
+
+      {/* The toolbar is only useful once there is something to narrow. */}
+      {totalRows > 0 && (
+        <Toolbar count={filtered ? `${t.total} of ${totalRows} shown` : `${totalRows} ${totalRows === 1 ? 'record' : 'records'}`}>
+          <SearchInput
+            value={t.query}
+            onChange={t.setQuery}
+            label="Search"
+            placeholder={`Search ${noun}…`}
+          />
+          {filterFields.map((f) => (
+            <FilterSelect
+              key={f.key}
+              label={f.label}
+              value={filterVals[f.key] ?? ''}
+              onChange={(v) => setFilter(f.key, v)}
+              options={
+                f.type === 'checkbox'
+                  ? [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }]
+                  : (f.options ?? [])
+              }
+            />
+          ))}
+        </Toolbar>
+      )}
+
+      <Card className="flat">
         {loading ? (
-          <Spinner />
+          <SkeletonTable rows={6} cols={Math.max(2, listFields.length)} />
         ) : error ? (
           <ErrorNote>{error}</ErrorNote>
-        ) : !data || data.rows.length === 0 ? (
-          <Empty>Nothing here yet.</Empty>
+        ) : totalRows === 0 ? (
+          <EmptyState
+            icon="archive"
+            title={`No ${noun} yet`}
+            detail={`Nothing has been added to ${noun} yet. Everything you add here is published through the platform immediately.`}
+            action={<button className="btn sm" onClick={() => setEditing(null)}>{config.addLabel ?? 'Add'}</button>}
+          />
+        ) : t.total === 0 ? (
+          <EmptyState
+            icon="search"
+            title="No match"
+            detail="No record matches the current search and filters."
+            action={
+              <button
+                className="btn secondary sm"
+                onClick={() => {
+                  t.setQuery('')
+                  setFilterVals({})
+                }}
+              >
+                Clear filters
+              </button>
+            }
+          />
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table className="data">
-              <thead>
-                <tr>{listFields.map((f) => <th key={f.key}>{f.label}</th>)}<th></th><th></th></tr>
-              </thead>
-              <tbody>
-                {data.rows.map((row) => (
-                  <tr key={String(row.id)}>
-                    {listFields.map((f) => <td key={f.key} className="small">{cell(f, row[f.key])}</td>)}
-                    <td><button className="btn ghost sm" onClick={() => setEditing(row)}>Edit</button></td>
-                    <td><button className="btn ghost sm" onClick={() => remove(row)}>Delete</button></td>
+          <>
+            <div className="table-scroll">
+              <table className="data">
+                <thead>
+                  <tr>
+                    {listFields.map((f) => (
+                      <SortHeader key={f.key} {...t.sortProps(f.key)} onSort={() => t.toggleSort(f.key)}>
+                        {f.label}
+                      </SortHeader>
+                    ))}
+                    <th aria-label="Row actions" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {t.rows.map((row) => (
+                    <tr key={String(row.id)}>
+                      {listFields.map((f) => <td key={f.key} className="small">{cell(f, row[f.key])}</td>)}
+                      <td className="actions">
+                        <button className="btn ghost sm" onClick={() => setEditing(row)}>Edit</button>
+                        <button className="btn ghost sm" onClick={() => remove(row)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination page={t.page} pages={t.pages} total={t.total} pageSize={t.pageSize} onPage={t.setPage} />
+          </>
         )}
       </Card>
 

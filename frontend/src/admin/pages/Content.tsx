@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type SiteContentRow } from '../api'
 import { Card, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { titleCase } from '../../format'
 
 function Row({ row }: { row: SiteContentRow }) {
@@ -60,11 +61,11 @@ export default function Content() {
   }, [data, q])
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Site content</h1>
-        <p className="muted">Shared text used across the website (headers, footers, calls-to-action). Changes go live immediately.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Site content"
+        subtitle="Shared text used across the website (headers, footers, calls-to-action). Changes go live immediately."
+      />
 
       <Card>
         <input placeholder="Search content…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />

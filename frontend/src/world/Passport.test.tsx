@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import Passport from './Passport'
 
 // The Passport manager's client contract: paged evidence appends without double counting,
@@ -45,7 +45,9 @@ describe('World Passport manager', () => {
     fireEvent.click(screen.getByText('Load older evidence'))
     await screen.findByText(/showing 4 of 4/)
     expect(calls.some(c => c.url === '/api/world/passport?offset=2')).toBe(true)
-    expect(screen.getAllByText(/Challenge \d/)).toHaveLength(4)
+    // scope to the evidence list — the shared summary band above also previews top highlights
+    const evidence = screen.getByText(/Evidence ·/).closest('.card') as HTMLElement
+    expect(within(evidence).getAllByText(/Challenge \d/)).toHaveLength(4)
     expect(screen.queryByText('Load older evidence')).toBeNull()
   })
 
@@ -73,6 +75,35 @@ describe('World Passport manager', () => {
     await screen.findByText('Withdraw public Passport')
     fireEvent.click(screen.getByText('Withdraw public Passport'))
     expect(calls.some(c => c.url === '/api/world/passport/publish')).toBe(false)
+  })
+
+  it('Share appears only for a published Passport, needs the known link, and opens the sheet', async () => {
+    responder = () => ({ ...page(0, 4, [1, 2]), passport_public: true })
+    // this device does not know the raw link (hash-only server) → the button offers, disabled
+    render(<Passport />)
+    const btn = await screen.findByText('Share')
+    expect(btn).toBeDisabled()
+  })
+
+  it('with the published link known, Share opens the focus-trapped sheet on the SAME opaque URL', async () => {
+    responder = () => ({ ...page(0, 4, [1, 2]), passport_public: true })
+    localStorage.setItem('pciworld_passport_url', '/world/p/tok123')
+    render(<Passport />)
+    fireEvent.click(await screen.findByText('Share'))
+    const dialog = await screen.findByRole('dialog')
+    expect(dialog).toHaveAttribute('aria-modal', 'true')
+    expect(screen.getByText('Anyone with this link sees exactly what your public Passport shows.')).toBeInTheDocument()
+    const abs = new URL('/world/p/tok123', window.location.origin).toString()
+    expect(screen.getByText('LinkedIn').closest('a')!.getAttribute('href'))
+      .toBe(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(abs)}`)
+    // the QR affordance points at the server-rendered code on the public page — nothing is re-drawn
+    expect(screen.getByText('View QR code').closest('a')!.getAttribute('href')).toBe('/world/p/tok123#verify')
+  })
+
+  it('an unpublished Passport offers no Share control', async () => {
+    render(<Passport />)
+    await screen.findByText('Publish my Passport')
+    expect(screen.queryByText('Share')).toBeNull()
   })
 
   it('a disclosure change sends ONLY the changed key — never the expiry', async () => {

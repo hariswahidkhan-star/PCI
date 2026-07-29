@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { useAdminAuth } from '../AdminAuth'
 import { adminApi } from '../api'
 import { Card, Spinner, ErrorNote, Empty, Badge, StatusBadge, Stat } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime } from '../../format'
 
 // Marketing dashboard: one place for acquisition analytics (traffic, sources, UTM campaigns,
@@ -117,11 +118,11 @@ export default function Marketing() {
   const money = (v: number) => '$' + Number(v || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Marketing</h1>
-        <p className="muted">Acquisition analytics and outbound email campaigns in one place. Every campaign email automatically carries the compliance footer with a working one-click unsubscribe, and the suppression list is always honoured.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Marketing"
+        subtitle="Acquisition analytics and outbound email campaigns in one place. Every campaign email automatically carries the compliance footer with a working one-click unsubscribe, and the suppression list is always honoured."
+      />
 
       {err && <div className="notice err" role="alert">{err}</div>}
       {notice && <div className="notice ok" role="status">{notice}</div>}

@@ -303,6 +303,35 @@ public static class WorldContributorsApi
             }) });
         });
 
+        // The editor's queue, which the generic /api/world-admin/articles list cannot serve: it knows
+        // nothing about contributors, so it cannot show WHOSE submission a manuscript is, what they
+        // declared, or — the important one — that the person looking at it is the person who wrote
+        // it. Surfacing that conflict in the LIST rather than only on the refusal is the point: an
+        // editor should see it before they reach for the approve button, not after.
+        app.MapGet("/api/world-admin/editorial/queue", (HttpContext ctx) =>
+        {
+            if (AdminGate(ctx, "read", out var adm) is { } deny) return deny;
+            var rows = db.Query(
+                @"SELECT a.id,a.slug,a.title,a.status,a.updated_at,a.declarations_json,
+                         a.contributor_user_id,u.display_name
+                  FROM pciworld_articles a
+                  JOIN pciworld_users u ON u.id = a.contributor_user_id
+                  WHERE a.contributor_user_id IS NOT NULL AND a.status NOT IN ('published','archived')
+                  ORDER BY a.updated_at");
+            return Results.Json(new { queue = rows.Select(r => new
+            {
+                id = H.L(r["id"]), slug = H.Str(r["slug"]), title = H.Str(r["title"]),
+                status = H.Str(r["status"]), updated_at = H.Str(r["updated_at"]),
+                contributor = H.Str(r["display_name"]),
+                // What they declared AT SUBMISSION, so the editor reads the same words the record
+                // froze rather than a later edit of them.
+                declarations = H.Str(r["declarations_json"]),
+                // The maker-checker, evaluated per row for the admin actually looking. Advisory in
+                // the UI; the server refuses independently in Review/Approve/Publish.
+                self_review = WorldContributors.IsSelfReview(db, H.L(r["id"]), adm!.Id),
+            }) });
+        });
+
         app.MapPost("/api/world-admin/editorial/contributors/{userId:long}/decision", async (HttpContext ctx, long userId) =>
         {
             if (AdminGate(ctx, "editorial.contributors", out var adm) is { } deny) return deny;

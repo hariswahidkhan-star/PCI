@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type TeamMember, type TeamResponse } from '../api'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime, titleCase } from '../../format'
 
 function PermissionPicker({ sections, roleGrants, role, permissions, onChange }: {
@@ -164,11 +165,11 @@ export default function Team() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Team &amp; Access</h1>
-        {data && <button className="btn sm" onClick={() => setEditing(null)}>Add member</button>}
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Team & Access"
+        actions={data && <button className="btn sm" onClick={() => setEditing(null)}>Add member</button>}
+      />
 
       <Card>
         {loading ? (

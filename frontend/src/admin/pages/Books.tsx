@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 
 interface BookRow {
@@ -109,11 +110,11 @@ export default function Books() {
   const rows = data?.rows ?? []
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Books &amp; materials</h1>
-        <p className="muted">Candidate handbooks, Bodies of Knowledge and study guides, assignable per certification. Uploaded files are stored privately and served through the authenticated student download — watermarked copies are personalised per student.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Books & materials"
+        subtitle="Candidate handbooks, Bodies of Knowledge and study guides, assignable per certification. Uploaded files are stored privately and served through the authenticated student download — watermarked copies are personalised per student."
+      />
       {msg && <div className="note ok">{msg}</div>}
       {err && <ErrorNote>{err}</ErrorNote>}
 

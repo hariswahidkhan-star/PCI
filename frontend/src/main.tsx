@@ -5,6 +5,7 @@ import App from './App'
 import { AuthProvider } from './auth/AuthContext'
 import { I18nProvider } from './i18n'
 import './styles.css'
+import './premium.css'
 
 // Last-resort boundary: an uncaught render exception (e.g. an unexpected null API shape) would
 // otherwise unmount the whole tree to a blank page. Catch it and offer a recoverable reload.

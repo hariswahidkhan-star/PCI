@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import AdminApp from './AdminApp'
 import { AdminAuthProvider } from './AdminAuth'
 import '../styles.css'
+import '../premium.css'
 
 // Last-resort boundary: an uncaught render exception (e.g. an unexpected null API shape) would
 // otherwise unmount the whole tree to a blank page. Catch it and offer a recoverable reload.

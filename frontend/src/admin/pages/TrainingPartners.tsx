@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 import { ApiError } from '../../api/client'
 
@@ -64,11 +65,11 @@ const TABS = ['Directory', 'Applications'] as const
 export default function TrainingPartners() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Directory')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Training Partners</h1>
-        <p className="muted">Recognised organisations that deliver examination preparation, plus institutions and sponsors. Certification stays independent of training — partners prepare or fund candidates; PCI owns the examination and the certification decision. Use <strong>Portal logins</strong> to manage institution access, and <strong>Commissions</strong> for sponsorship progress and commission payouts.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Training Partners"
+        subtitle={<>Recognised organisations that deliver examination preparation, plus institutions and sponsors. Certification stays independent of training — partners prepare or fund candidates; PCI owns the examination and the certification decision. Use <strong>Portal logins</strong> to manage institution access, and <strong>Commissions</strong> for sponsorship progress and commission payouts.</>}
+      />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
       </div>

@@ -11,7 +11,10 @@ Proves:
   • replaying the async success event is a no-op (no duplicate payment / membership);
   • a genuine $0 'no_payment_required' session IS fulfilled;
   • invoice.paid (subscription_cycle) extends the term, a REPLAY of the same event does NOT extend
-    again (the historical "add another year on replay" bug), and a genuinely-new cycle event does.
+    again (the historical "add another year on replay" bug), and a genuinely-new cycle event does;
+  • a FAILED partner-commission write or reversal is never swallowed behind a 200: the webhook
+    refuses to ack (non-2xx), the settlement/refund transaction rolls back whole, and Stripe's
+    redelivery of the same event completes everything exactly once.
 
 Exit code 0 iff every assertion passes.  Run from backend/:
     python3 tests/payments_replay_test.py
@@ -145,6 +148,81 @@ def main():
         send_event("invoice.paid", invoice("cus_sub_1", pe2, "in_cycle_2"), "evt_inv_2")
         e_after2 = expiry()
         chk("C3 a new billing cycle extends again", e_after2 > e_after_replay, (e_after_replay, e_after2))
+
+        # ===== D. commission writes are never silently lost behind a 200 (finance P0) =====
+        # A commission/reversal failure used to be swallowed while the webhook acked — Stripe never
+        # redelivered and the money record was gone for good. Break the ledger table for real, prove the
+        # webhook refuses to ack and settles NOTHING, then repair and redeliver the same event.
+        con = dbconn()
+        pid = con.execute("INSERT INTO training_partners(name,tier,status,commission_pct,partner_type) "
+                          "VALUES('Webhook Partner','registered','active',10,'marketing')").lastrowid
+        aid = con.execute("INSERT INTO partner_agreements(partner_id,agreement_number,effective_from,status,refund_hold_days) "
+                          "VALUES(?,?, '2026-01-01','active',0)", (pid, f"AGR-WH-{pid}")).lastrowid
+        con.execute("INSERT INTO partner_commission_rules(agreement_id,partner_id,commission_type,commission_rate_bp,commission_basis,priority,active) "
+                    "VALUES(?,?, 'percentage',1000,'net_after_discount',100,1)", (aid, pid))
+        con.execute("INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,active,status,code_type,partner_id) "
+                    "VALUES('WH-CODE','percentage',0,'exam',1,'active','campaign',?)", (pid,))
+        con.commit(); con.close()
+
+        def coded_session(session_id, email, pi_id, amount=50000):
+            s = checkout_session(session_id, email, pi_id, "paid", product="exam", amount=amount)
+            s["metadata"]["discount_code"] = "WH-CODE"
+            return s
+
+        def break_ledger():
+            con = dbconn(); con.execute("ALTER TABLE partner_commission_transactions RENAME TO pct_broken"); con.commit(); con.close()
+        def repair_ledger():
+            con = dbconn(); con.execute("ALTER TABLE pct_broken RENAME TO partner_commission_transactions"); con.commit(); con.close()
+
+        c, _ = send_event("checkout.session.completed", coded_session("cs_wh_1", "wh.one@example.com", "pi_wh_1"), "evt_wh_1")
+        chk("D1 a partner-coded sale records its commission",
+            c == 200 and count("SELECT COUNT(*) FROM partner_commission_transactions") == 1, c)
+
+        break_ledger()
+        c, _ = send_event("checkout.session.completed", coded_session("cs_wh_2", "wh.two@example.com", "pi_wh_2"), "evt_wh_2")
+        rolled_back = (count("SELECT COUNT(*) FROM payments WHERE provider_payment_id='pi_wh_2'") == 0
+                       and count("SELECT COUNT(*) FROM users WHERE email='wh.two@example.com'") == 0
+                       and count("SELECT COUNT(*) FROM webhook_events WHERE event_id='evt_wh_2'") == 0)
+        chk("D2 a failed commission write is NOT acked and the settlement rolls back whole",
+            c >= 500 and rolled_back, (c, rolled_back))
+
+        repair_ledger()
+        c, _ = send_event("checkout.session.completed", coded_session("cs_wh_2", "wh.two@example.com", "pi_wh_2"), "evt_wh_2")
+        chk("D3 redelivery after repair settles once, commission included",
+            c == 200
+            and count("SELECT COUNT(*) FROM payments WHERE provider_payment_id='pi_wh_2' AND payment_status='paid'") == 1
+            and count("SELECT COUNT(*) FROM partner_commission_transactions t JOIN payments p ON p.id=t.payment_id "
+                      "WHERE p.provider_payment_id='pi_wh_2'") == 1, c)
+
+        charge = {"id": "ch_wh_1", "object": "charge", "payment_intent": "pi_wh_1",
+                  "refunded": True, "amount_refunded": 50000}
+        break_ledger()
+        c, _ = send_event("charge.refunded", charge, "evt_wh_refund_1")
+        chk("D4 a failed commission reversal is NOT acked and the refund flip rolls back",
+            c >= 500
+            and count("SELECT COUNT(*) FROM payments WHERE provider_payment_id='pi_wh_1' AND payment_status='paid'") == 1, c)
+
+        repair_ledger()
+        c, _ = send_event("charge.refunded", charge, "evt_wh_refund_1")
+        chk("D5 the redelivered refund flips the payment and reverses the commission",
+            c == 200
+            and count("SELECT COUNT(*) FROM payments WHERE provider_payment_id='pi_wh_1' AND payment_status='refunded'") == 1
+            and count("SELECT COUNT(*) FROM partner_commission_transactions WHERE reversal_of_transaction_id>0") == 1, c)
+
+        # A partial refund takes the other code path (no revocation transaction) — same contract.
+        part = {"id": "ch_wh_2", "object": "charge", "payment_intent": "pi_wh_2",
+                "refunded": False, "amount_refunded": 12500}
+        break_ledger()
+        c, _ = send_event("charge.refunded", part, "evt_wh_refund_2")
+        chk("D6 a failed PARTIAL-refund reversal is NOT acked and the flip rolls back",
+            c >= 500
+            and count("SELECT COUNT(*) FROM payments WHERE provider_payment_id='pi_wh_2' AND payment_status='paid'") == 1, c)
+        repair_ledger()
+        c, _ = send_event("charge.refunded", part, "evt_wh_refund_2")
+        chk("D7 the redelivered partial refund records and reverses proportionally",
+            c == 200
+            and count("SELECT COUNT(*) FROM payments WHERE provider_payment_id='pi_wh_2' AND payment_status='partially_refunded'") == 1
+            and count("SELECT COUNT(*) FROM partner_commission_transactions WHERE reversal_of_transaction_id>0") == 2, c)
 
         print(f"\n  == {passed}/{passed+failed} PASSED ==")
     finally:

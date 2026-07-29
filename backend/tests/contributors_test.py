@@ -260,6 +260,30 @@ def main():
         chk("K18 an approved article does NOT publish once its author's standing is gone",
             code in (400, 403, 409) and "contributor_not_eligible" in json.dumps(r), f"{code} {r}")
 
+        # ── The editor's queue ───────────────────────────────────────────────────────────
+        # The generic article list knows nothing about contributors, so it cannot show whose
+        # submission a manuscript is, what they declared, or that the reader IS the writer. This
+        # queue exists for the third one: the conflict has to be visible in the LIST, before an
+        # editor reaches for Approve, not only as a refusal afterwards.
+        sql("UPDATE pciworld_admin_users SET world_user_id=? WHERE email=?", (WRITER_ID, "owner@pciworld.local"))
+        code, r = js("/api/world-admin/editorial/queue", "GET", None, A)
+        row = next((x for x in r.get("queue", []) if x["id"] == ART), None)
+        chk("K41 the queue lists the contributor's manuscript", code == 200 and row, str(r)[:160])
+        chk("K42 with the contributor named", row and row.get("contributor"), str(row))
+        chk("K43 and flags a self-review BEFORE the editor clicks approve",
+            row and row.get("self_review") is True, str(row))
+        chk("K44 carrying the declarations frozen at submission",
+            row and row.get("declarations") and "originality" in row["declarations"], str(row)[:200])
+
+        sql("UPDATE pciworld_admin_users SET world_user_id=NULL WHERE email=?", ("owner@pciworld.local",))
+        code, r = js("/api/world-admin/editorial/queue", "GET", None, A)
+        row = next((x for x in r.get("queue", []) if x["id"] == ART), None)
+        chk("K45 and does not flag one when the reader is somebody else",
+            row and row.get("self_review") is False, str(row))
+
+        code, r = js("/api/world-admin/editorial/queue", "GET", None, WRITER)
+        chk("K46 the queue is admin-only", code in (401, 403), f"got {code} {r}")
+
         # ── Revocation is not retroactive content destruction ─────────────────────────────
         WRITER2, WRITER2_ID = member("writer2@people.test")
         js("/api/world/contributor/apply", "POST", {"statement": "Cost engineering."}, WRITER2)

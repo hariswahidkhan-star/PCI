@@ -11,6 +11,8 @@ interface ResultLink {
   code: string
   title: string
   completed_at: string
+  /** When the link itself was minted (server truth; absent on older payloads). */
+  created_at?: string
   revoked: boolean
 }
 
@@ -61,7 +63,7 @@ export default function Sharing() {
         <ul>
           {results.map(r => (
             <li key={r.attempt_id}>
-              {r.title} <small>({r.code} · {r.completed_at})</small>{' '}
+              {r.title} <small>({r.code} · {r.completed_at}{r.created_at ? ` · link created ${r.created_at}` : ''})</small>{' '}
               {r.revoked
                 ? <small>· withdrawn</small>
                 : <button className="ghost" onClick={() => call(() => api('/api/world/me/shares/revoke', { attempt_id: r.attempt_id }))}>Withdraw</button>}

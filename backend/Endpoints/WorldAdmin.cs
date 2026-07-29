@@ -850,6 +850,11 @@ public static class WorldAdmin
         .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
         .bad{color:var(--bad);font-weight:600} .ok{color:var(--ok);font-weight:600}
         .pill{display:inline-block;border:1.5px solid var(--field);border-radius:999px;padding:2px 11px;font-size:12px;font-weight:600}
+        /* A row an editor must not act on. The words "your own submission" carry the meaning and
+           the Approve button is replaced by a sentence, so the tint is reinforcement, not the
+           signal — remove this rule and the table still says the same thing. */
+        .warnrow{background:#fdf3e3}
+        .warnrow td{color:#6b3f00}
         #login{max-width:400px;margin:70px auto;padding:30px}
         #login h2{font-size:22px}
         nav.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
@@ -1033,14 +1038,106 @@ public static class WorldAdmin
                  '<td><span class="pill">'+esc(r.status)+'</span></td><td>'+r.version+'</td>'+
                  '<td>'+esc(r.author||'')+'</td><td>'+articleButtons(r)+'</td></tr>';
             });
-            h+='</tbody></table><div id="artedit"></div>';
+            h+='</tbody></table><div id="artedit"></div><div id="contribwrap"></div>';
             $('tab-editorial').innerHTML=h;
+            loadContributorQueue();
             $('newart').addEventListener('click',function(){newArticle('blog');});
             $('newnews').addEventListener('click',function(){newArticle('news');});
             $('tab-editorial').querySelectorAll('[data-aact]').forEach(function(btn){
               btn.addEventListener('click',function(){articleAction(btn.dataset.aact,btn.dataset.id);});
             });
           });
+        }
+        function loadContributorQueue(){
+          // Both calls are optional: with contributor publishing switched off these 404, and the
+          // section simply does not appear rather than showing an error for a feature nobody turned
+          // on. The rest of the Editorial tab keeps working either way.
+          Promise.all([
+            api('/api/world-admin/editorial/queue').catch(function(){return null;}),
+            api('/api/world-admin/editorial/contributors').catch(function(){return null;})
+          ]).then(function(res){
+            var q=res[0], c=res[1];
+            if(!q&&!c){$('contribwrap').innerHTML='';return;}
+            var h='<h2>Contributor submissions</h2>';
+            if(!q||!q.queue.length){
+              h+='<p><small>Nothing from contributors is waiting.</small></p>';
+            }else{
+              h+='<table><thead><tr><th scope="col">Manuscript</th><th scope="col">Contributor</th>'+
+                 '<th scope="col">Status</th><th scope="col">Declared</th><th scope="col">Actions</th>'+
+                 '</tr></thead><tbody>';
+              q.queue.forEach(function(r){
+                // The conflict is shown in the ROW, before anyone reaches for Approve — not only
+                // as a refusal afterwards. The server refuses independently; this is the courtesy.
+                var conflict=r.self_review;
+                h+='<tr'+(conflict?' class="warnrow"':'')+'><td>'+esc(r.title)+
+                   (conflict?' <span class="pill">your own submission</span>':'')+'</td>'+
+                   '<td>'+esc(r.contributor||'')+'</td>'+
+                   '<td><span class="pill">'+esc(r.status)+'</span></td>'+
+                   '<td>'+declSummary(r.declarations)+'</td><td>'+
+                   (conflict
+                     ? '<small>Needs a second editor</small>'
+                     : '<button class="ghost" data-aact="open" data-id="'+r.id+'">Open</button> '+
+                       '<button class="ghost" data-aact="approve" data-id="'+r.id+'">Approve</button>')+
+                   '</td></tr>';
+              });
+              h+='</tbody></table>';
+            }
+            if(c&&c.contributors.length){
+              h+='<h2>Contributor standing</h2><table><thead><tr><th scope="col">Person</th>'+
+                 '<th scope="col">State</th><th scope="col">Forum record</th><th scope="col">Statement</th>'+
+                 '<th scope="col">Actions</th></tr></thead><tbody>';
+              c.contributors.forEach(function(p){
+                h+='<tr><td>'+esc(p.display_name||('#'+p.user_id))+'</td>'+
+                   '<td><span class="pill">'+esc(p.state)+'</span>'+
+                   (p.revoke_reason?'<br><small>'+esc(p.revoke_reason)+'</small>':'')+'</td>'+
+                   '<td><small>'+p.forum_accepted_posts+' accepted · '+p.forum_upheld_reports+' upheld reports</small></td>'+
+                   '<td><small>'+esc(p.statement||'')+'</small></td><td>'+
+                   (p.state==='applied'
+                     ? '<button data-cact="granted" data-u="'+p.user_id+'" data-v="'+p.version+'">Grant</button> '+
+                       '<button class="ghost" data-cact="declined" data-u="'+p.user_id+'" data-v="'+p.version+'">Decline</button>'
+                     : p.state==='granted'
+                       ? '<button class="ghost" data-cact="revoked" data-u="'+p.user_id+'" data-v="'+p.version+'">Withdraw standing</button>'
+                       : '<button class="ghost" data-cact="granted" data-u="'+p.user_id+'" data-v="'+p.version+'">Reinstate</button>')+
+                   '</td></tr>';
+              });
+              h+='</tbody></table><p><small>Forum standing is evidence for your decision, never the '+
+                 'decision. Granting is an attributable act: your name is recorded against it.</small></p>';
+            }
+            $('contribwrap').innerHTML=h;
+            $('contribwrap').querySelectorAll('[data-aact]').forEach(function(b){
+              b.addEventListener('click',function(){articleAction(b.dataset.aact,b.dataset.id);});
+            });
+            $('contribwrap').querySelectorAll('[data-cact]').forEach(function(b){
+              b.addEventListener('click',function(){contributorDecision(b.dataset.cact,b.dataset.u,b.dataset.v);});
+            });
+          });
+        }
+        function declSummary(json){
+          if(!json)return '<small>—</small>';
+          try{
+            var d=JSON.parse(json);
+            // Anything the contributor answered with a qualification is what an editor needs to
+            // see; a wall of "No" is noise. Flag the exceptions and count the rest.
+            var flags=Object.keys(d).filter(function(k){
+              var v=String(d[k]||'');return v&&!/^(no|none|yes)$/i.test(v);});
+            return flags.length
+              ? '<span class="pill">'+flags.length+' to read</span> <small>'+
+                esc(flags.map(function(k){return k+': '+d[k];}).join(' · '))+'</small>'
+              : '<small>nothing declared</small>';
+          }catch(e){return '<small>unreadable</small>';}
+        }
+        function contributorDecision(decision,userId,version){
+          var reason=null;
+          if(decision==='revoked'){
+            // A revocation with no reason cannot be explained to the person it happened to, and the
+            // server refuses it — so ask here rather than let the refusal be the first they hear.
+            reason=window.prompt('Why is this standing being withdrawn? The person will be shown this.');
+            if(!reason)return;
+          }
+          api('/api/world-admin/editorial/contributors/'+userId+'/decision','POST',
+              {decision:decision,version:Number(version),reason:reason})
+            .then(function(){loadEditorial();})
+            .catch(function(e){alert((e&&(e.error||e.message))||'Could not record that decision');});
         }
         function articleButtons(r){
           var b='<button class="ghost" data-aact="open" data-id="'+r.id+'">Open</button> ';

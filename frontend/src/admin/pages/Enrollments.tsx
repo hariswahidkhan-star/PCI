@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type EnrollmentRow } from '../api'
-import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { Card, StatusBadge, ErrorNote } from '../../components/ui'
+import { PageHeader, Toolbar, SearchInput, FilterSelect, EmptyState, SkeletonTable } from '../../components/premium'
 import { fmtDateTime, titleCase } from '../../format'
 
 export default function Enrollments() {
@@ -25,31 +26,50 @@ export default function Enrollments() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Enrolments</h1>
-        {data && <span className="muted small">{data.total} total</span>}
-      </div>
+    <div className="page">
+      <PageHeader
+        eyebrow="Students"
+        title="Enrolments"
+        subtitle="Every enrolment session, including the ones that stalled before payment."
+      />
 
-      <Card>
-        <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search email…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
-            <option value="">All statuses</option>
-            <option value="in_progress">In progress</option>
-            <option value="paid">Paid</option>
-            <option value="abandoned">Abandoned</option>
-          </select>
-        </div>
-      </Card>
+      {/* Search and status are SERVER-side here (the endpoint owns ?q= and ?status=), so the
+          toolbar drives the query rather than filtering a local copy. */}
+      <Toolbar count={data ? `${data.total} total` : undefined}>
+        <SearchInput value={q} onChange={setQ} label="Search" placeholder="Search email…" />
+        <FilterSelect
+          label="Status"
+          value={status}
+          onChange={setStatus}
+          allLabel="All statuses"
+          options={[
+            { value: 'in_progress', label: 'In progress' },
+            { value: 'paid', label: 'Paid' },
+            { value: 'abandoned', label: 'Abandoned' },
+          ]}
+        />
+      </Toolbar>
 
-      <Card>
+      <Card className="flat">
         {loading ? (
-          <Spinner />
+          <SkeletonTable rows={6} cols={6} />
         ) : error ? (
           <ErrorNote>{error}</ErrorNote>
         ) : !data || data.rows.length === 0 ? (
-          <Empty>No enrolments match.</Empty>
+          <EmptyState
+            icon="clipboard"
+            title={q || status ? 'No enrolment matches' : 'No enrolments yet'}
+            detail={
+              q || status
+                ? 'No enrolment session matches the current search and status.'
+                : 'Sessions appear here as soon as a candidate begins the enrolment flow.'
+            }
+            action={
+              q || status ? (
+                <button className="btn secondary sm" onClick={() => { setQ(''); setStatus('') }}>Clear filters</button>
+              ) : undefined
+            }
+          />
         ) : (
           <table className="data">
             <thead>

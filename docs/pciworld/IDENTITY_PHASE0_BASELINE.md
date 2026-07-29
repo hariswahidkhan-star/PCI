@@ -176,9 +176,49 @@ metadata, and POST /api/public/world-passports/verify with the neutral-response 
 
 CI gates 13 logic suites.
 
+## 4e. Wave 3 (this branch)
+
+- **Phase 4** — one authoritative Passport in both portals: `GET /api/me/world-passport/summary`
+  builds `PassportSummaryDto` by CALLING the existing WorldPassport/WorldAccount functions (no new
+  count/status SQL), resolves canonical student → World account, folds state to
+  not_created|draft|private|published|expired|suspended. Shared React `components/passport/` family
+  consumed by the MyPCI dashboard module AND the World Passport page. Hash-only public token →
+  publicUrl omitted, never re-minted. World outage → quiet fallback card, MyPCI unaffected.
+  33/33 backend + 409/409 vitest + tsc 0. No iframe, no copied rows, no internal ids in the payload.
+- **Phase 7** — claim/referral hardened: one-winner claim race (guarded UPDATE … WHERE user_id IS
+  NULL, proven with a real two-connection interleave), idempotent re-claim, duplicate-submit
+  protection, tamper-proof backend scoring, invitation version pinning proven after edit,
+  privacy-safe `pciworld_referrals` (sha refs, counts-only sharer view, de-identified on account
+  delete), and an SQLite-authorizer proof the whole journey writes only `pciworld_*` tables. 43/43.
+
+CI gates 15 logic suites. Render deploy note: a deploy failure surfaced for the #185 merge; DEPLOY.md
+§"Deploys suddenly failing" documents the likely cause (service still on the SQLite-in-production
+posture fails every deploy at health check, exit 78, prior deploy stays live) — resolution is a
+Render env change (managed MySQL, or ALLOW_SQLITE_IN_PRODUCTION=true) that only the operator can make.
+
+## 4f. Wave 4 (this branch)
+
+- **Phase 6 Release-1** — premium share sheet in the World app (LinkedIn/X/Facebook/WhatsApp/
+  Telegram/email/copy/native/QR; focus-trapped, labelled, reduced-motion, clipboard-denied
+  fallback), server-truth caption from PUBLIC fields only (hostile names neutralized — 34/34),
+  capability-honesty footnote, no fake direct-post button, Instagram deliberately absent with a
+  labelled copy-caption path. URL-sharing only; provider APIs and comment sync stay unbuilt by
+  design. One CI-caught test bug fixed (hardcoded unique-indexed id — the wave-1 constraint
+  working as designed).
+- **Phase 5A Release-1** — printable CR80 wallet card + 4×6 badge, exact page boxes, vector text,
+  ECC-M QR ≥0.45mm modules with 4-module quiet zone, refusal matrix (published+unexpired+active+
+  numbered only). Design decision: the raw public token is unrecoverable server-side (hash-only at
+  rest, everywhere), so the printed QR encodes a one-way /world/pd/{hash} route with the identical
+  lifecycle and resolution predicate — unpublish kills every printed QR instantly. 77/77 backend,
+  433/433 vitest. Known limitation: the documents endpoint is MyPCI-bearer-authenticated, so the
+  World app keeps its existing PDF rather than the new sheet. Event admission (entry passes,
+  gates, scanners, offline) is deliberately OUT of the Release-1 slice, stated on the sheet itself.
+
+CI gates 17 logic suites.
+
 ## 5. Next, in order
 
-1. **Phase 4** — shared Passport summary DTO + shared React component in MyPCI (no iframe, no copy): dry-run counts, quarantine duplicates, resumable batches,
+1. Acceptance sweep against spec §20 → `IDENTITY_ACCEPTANCE.md`: dry-run counts, quarantine duplicates, resumable batches,
    reconcile registry against projection, narrow `registration_no` to bounded VARCHAR, add the
    explicit retire transition to `Erasure.cs`, then delete the `/api/me` backstop.
 3. **Phase 3+** — handoff symmetry, shared Passport, verification, events, sharing.

@@ -26,11 +26,32 @@ their subject matter without inheriting its defects.
 - **Phase 0 — Governance and blueprint:** complete ([`PHASE0_REPORT.md`](PHASE0_REPORT.md)).
 - **Phase 1 — Prototype domains:** production model proven; prototypes apparatus-complete with a
   depth-expansion condition ([`PHASE1_REPORT.md`](PHASE1_REPORT.md)). Toolchain in
-  [`_build/`](_build/): `verify_formulas.py` (99 golden checks), `make_figures.py`,
+  [`_build/`](_build/): `verify_formulas.py` (**4,675 golden checks**, all passing — no domain
+  passes gate while it fails), `make_figures.py` (69 PCI-original SVG masters, 20 of them from per-domain modules),
   `build_book.py` + `print.css`.
-- **Phase 2 — Foundation domains:** in progress under the production loop
-  ([`PHASE2_REPORT.md`](PHASE2_REPORT.md)); PFL-AI Domain 4 delivered.
-- Phases 3–8 proceed per the charter §8; no phase is skipped to meet page count.
+- **Phases 2, 3 and 4 — the domain corpus:** **complete and gate-passed**
+  ([`CORPUS_GATE_REPORT.md`](CORPUS_GATE_REPORT.md)). All 32 domains drafted:
+
+  | | Domains | Typeset | Words | Figures | Worked examples | MCQs | Exercises |
+  |---|---|---|---|---|---|---|---|
+  | PML-AI | 16 | 503 pp | 252,180 | 33 | 96 | 289 | 74 |
+  | PFL-AI | 16 | 494 pp | 242,943 | 36 | 129 | 241 | 76 |
+
+  **7,176 golden-answer checks, all passing** across 21 modules. Every printed result is recomputed
+  with decimal arithmetic — including every numeric MCQ option, not only the correct one.
+- **Phase 5 — cases, exercises and companions:** **not started.** This is where the remaining ~700
+  pages per volume legitimately come from: consolidated question banks, glossaries, appendices,
+  capstone cases, front and back matter. Both volumes are short of the 1,200-page target and the gap
+  must be closed with that content, never with typographic inflation, duplication or padded
+  appendices.
+- **Phase 6 independent review · Phase 7 copy edit and typesetting · Phase 8 pilot and release:**
+  not started.
+- **Human review is outstanding and is not optional.** The corpus was AI-drafted end to end and has
+  had no editorial or technical review. A passing verification suite establishes that the arithmetic
+  is right and that the numbers are the ones the methods produce. It does **not** establish that the
+  pedagogy is sound, the judgements are ones an experienced practitioner would endorse, the emphasis
+  is right, or that nothing important is missing. Nothing here should be presented to a candidate,
+  regulator, accreditation body or customer as reviewed material.
 
 ## Relationship to the rest of the repository
 

@@ -26,10 +26,16 @@ jobs:
       - name: Production and staging fail closed before database open
         run: python3 tests/production_config_test.py
 
-      - name: Logic tests (13 suites)
+      - name: MySQL schema-generator parser tests (table scan + index key lengths)
+        run: python3 tests/schema_generator_test.py
+
+      - name: Logic tests (17 suites)
         run: |
           set -e
-          for t in tests/lifecycle_test.py tests/release_test.py tests/casework_test.py tests/settings_test.py tests/publication_test.py tests/storage_test.py tests/student_number_test.py tests/student_number_backfill_test.py tests/events_defects_test.py tests/world_og_metadata_test.py tests/world_passport_verify_test.py tests/identity_merge_test.py tests/portal_handoff_test.py; do
+          # passport_documents_test's section D parses assembled PDFs with pypdf; install it here
+          # so CI runs the strong form (the suite degrades to an explicit SKIP without it).
+          pip install --quiet --break-system-packages pypdf || pip install --quiet pypdf || true
+          for t in tests/lifecycle_test.py tests/release_test.py tests/casework_test.py tests/settings_test.py tests/publication_test.py tests/storage_test.py tests/student_number_test.py tests/student_number_backfill_test.py tests/events_defects_test.py tests/world_og_metadata_test.py tests/world_passport_verify_test.py tests/identity_merge_test.py tests/portal_handoff_test.py tests/world_claim_referral_test.py tests/passport_summary_test.py tests/world_share_caption_test.py tests/passport_documents_test.py; do
             echo "=== $t ==="
             out=$(python3 "$t")
             echo "$out"
@@ -531,6 +537,75 @@ jobs:
             frontend/test-results
           retention-days: 30
           if-no-files-found: ignore
+
+  # The deployment artifact itself: build the root Dockerfile and BOOT the image against the
+  # production database provider (MySQL 8.4, matching render.yaml's DB_PROVIDER=mysql), with
+  # representative production env. Every prior job tests source builds; deploys were failing on
+  # container boot (entrypoint/env/preflight) while CI stayed green because nothing exercised the
+  # image. BLOCKING: a Docker build error, missing static bundle, boot refusal, or unhealthy
+  # /api/health fails the pipeline.
+  docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the production image
+        run: docker build -t pci-platform-ci .
+
+      - name: Boot MySQL 8.4 + the image, wait for /api/health
+        run: |
+          set -e
+          docker network create pci-ci
+          docker run -d --name pci-db --network pci-ci \
+            -e MYSQL_ROOT_PASSWORD=ci-root -e MYSQL_DATABASE=pci \
+            -e MYSQL_USER=pci -e MYSQL_PASSWORD=ci-password \
+            mysql:8.4
+          docker run -d --name pci-app --network pci-ci -p 8080:8080 \
+            -e ASPNETCORE_ENVIRONMENT=Production \
+            -e DB_PROVIDER=mysql -e MYSQL_HOST=pci-db -e MYSQL_DATABASE=pci \
+            -e MYSQL_USER=pci -e MYSQL_PASSWORD=ci-password -e MYSQL_SSL=false \
+            -e MYSQL_CONNECT_RETRIES=20 \
+            -e APP_BASE_URL=https://pci-ci.example.org \
+            -e ALLOWED_ORIGIN=https://pci-ci.example.org \
+            -e CREDENTIAL_ENCRYPTION_KEY=ci-only-key-0123456789abcdef0123456789abcdef \
+            pci-platform-ci
+          echo "waiting for /api/health…"
+          for i in $(seq 1 60); do
+            # the container must still be running — a boot refusal (exit 70/75/78) fails fast here
+            if [ "$(docker inspect -f '{{.State.Running}}' pci-app)" != "true" ]; then
+              echo "::error::app container exited before becoming healthy"; exit 1
+            fi
+            if curl -fsS http://localhost:8080/api/health > /tmp/health.json 2>/dev/null; then
+              cat /tmp/health.json; echo; break
+            fi
+            sleep 5
+            if [ "$i" = 60 ]; then echo "::error::/api/health never became ready"; exit 1; fi
+          done
+
+      - name: Health reports the production database provider
+        run: |
+          set -e
+          curl -fsS http://localhost:8080/api/health | tee /tmp/health.json
+          grep -q '"database_provider":"mysql"' /tmp/health.json
+
+      - name: Surfaces answer (site, student app, admin app, world app)
+        run: |
+          set -e
+          for path in / /app/ /admin/ /world-app/; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8080$path")
+            echo "$path -> $code"
+            case "$code" in 200|301|302|308) ;; *) echo "::error::$path returned $code"; exit 1;; esac
+          done
+
+      - name: Container logs (always — the boot transcript is the diagnostic)
+        if: always()
+        run: docker logs pci-app 2>&1 | tail -200 || true
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f pci-app pci-db 2>/dev/null || true
+          docker network rm pci-ci 2>/dev/null || true
 
   static-quality:
     # Static-quality & supply-chain gates (Increment A). BLOCKING: the NuGet vulnerable-package

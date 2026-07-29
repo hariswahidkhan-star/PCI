@@ -4,6 +4,7 @@
 Style per the pattern spec: brand blue #1D4ED8, crimson #C13329, ink #0F172A, slate greys,
 Inter labels, clean axes, no decoration. Deterministic output — safe to re-run.
 """
+import importlib.util
 import pathlib
 
 BLUE, CRIMSON, INK, SLATE, GRID = "#1D4ED8", "#C13329", "#0F172A", "#64748B", "#E2E8F0"
@@ -411,6 +412,463 @@ body = (f'<polygon points="{ax},{ay} {bx},{by} {cxx},{cyy}" fill="{BLUE}" opacit
         f'<text x="{(ax+cxx)/2+14}" y="{(ay+cyy)/2}" font-size="9" fill="{SLATE}" transform="rotate(60 {(ax+cxx)/2+14} {(ay+cyy)/2})">no cash corner → liquidity failure</text>'
         f'<text x="{W/2}" y="{by-12}" font-size="9" fill="{SLATE}" text-anchor="middle">no value corner → no equity</text>')
 (PFL / "fig_1_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 7.3.1 Auriga earned-value S-curves ---------------------------------------
+W, H, L, R, T, B = 660, 410, 88, 26, 26, 58
+BAC7, DD = 4000000.0, 13
+def Xw7(w): return L + w / 25 * (W - L - R)
+def Yc7(v): return H - B - v / 4600000 * (H - T - B)
+# Planned value: smooth S-curve over 25 weeks calibrated to 2,080,000 at week 13.
+def pv_at(w):
+    x = w / 25.0
+    return BAC7 * (x * x * (3 - 2 * x))
+scale = 2080000.0 / pv_at(DD)
+pv_pts = [(w, pv_at(w) * (scale if w <= DD else 1) if w <= DD else pv_at(w)) for w in range(26)]
+pv_line = " ".join(f"{Xw7(w)},{Yc7(v)}" for w, v in pv_pts)
+ev_line = " ".join(f"{Xw7(w)},{Yc7(pv_at(w) * scale * (1920000.0 / 2080000.0))}" for w in range(DD + 1))
+ac_line = " ".join(f"{Xw7(w)},{Yc7(pv_at(w) * scale * (2120000.0 / 2080000.0))}" for w in range(DD + 1))
+grid = "".join(f'<line x1="{L}" y1="{Yc7(v)}" x2="{W-R}" y2="{Yc7(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yc7(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v/1000000:.1f}m</text>'
+               for v in range(0, 4600001, 1000000))
+xt = "".join(f'<text x="{Xw7(w)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{w}</text>' for w in range(0, 26, 5))
+fan = "".join(f'<line x1="{Xw7(DD)}" y1="{Yc7(2120000)}" x2="{Xw7(25)}" y2="{Yc7(v)}" stroke="{c}" stroke-width="1.6" stroke-dasharray="4 3"/>'
+              f'<text x="{Xw7(25)-2}" y="{Yc7(v)-5}" font-size="9" fill="{c}" text-anchor="end">{lab}</text>'
+              for v, c, lab in ((4200000, INK, "EAC(a) 4.20m"), (4416667, CRIMSON, "EAC(b) 4.42m")))
+body = (grid + fan
+        + f'<line x1="{Xw7(DD)}" y1="{Yc7(0)}" x2="{Xw7(DD)}" y2="{T}" stroke="{SLATE}" stroke-dasharray="5 4"/>'
+        + f'<text x="{Xw7(DD)}" y="{T-6}" font-size="10" fill="{SLATE}" text-anchor="middle">data date wk 13</text>'
+        + f'<line x1="{L}" y1="{Yc7(BAC7)}" x2="{W-R}" y2="{Yc7(BAC7)}" stroke="{INK}" stroke-width="1" stroke-dasharray="6 4"/>'
+        + f'<text x="{L+6}" y="{Yc7(BAC7)-6}" font-size="9.5" fill="{INK}">BAC 4.00m</text>'
+        + f'<polyline points="{pv_line}" fill="none" stroke="{SLATE}" stroke-width="2.2"/>'
+        + f'<polyline points="{ac_line}" fill="none" stroke="{CRIMSON}" stroke-width="2.6"/>'
+        + f'<polyline points="{ev_line}" fill="none" stroke="{BLUE}" stroke-width="2.6"/>'
+        + f'<circle cx="{Xw7(DD)}" cy="{Yc7(2120000)}" r="3.4" fill="{CRIMSON}"/>'
+        + f'<circle cx="{Xw7(DD)}" cy="{Yc7(2080000)}" r="3.4" fill="{SLATE}"/>'
+        + f'<circle cx="{Xw7(DD)}" cy="{Yc7(1920000)}" r="3.4" fill="{BLUE}"/>'
+        + f'<text x="{Xw7(DD)+8}" y="{Yc7(2120000)-6}" font-size="9.5" fill="{CRIMSON}">AC 2.12m</text>'
+        + f'<text x="{Xw7(DD)+8}" y="{Yc7(2080000)+13}" font-size="9.5" fill="{SLATE}">PV 2.08m</text>'
+        + f'<text x="{Xw7(DD)+8}" y="{Yc7(1920000)+22}" font-size="9.5" fill="{BLUE}">EV 1.92m</text>'
+        + f'<text x="{L+8}" y="{T+14}" font-size="10.5" fill="{INK}">CV (200k) · SV (160k) · CPI 0.91 · SPI 0.92</text>'
+        + axes(L, T, W - R, H - B, "Week", "Cumulative cost (USD)") + xt)
+(PML / "fig_7_3_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 7.3.2 EAC fan + TCPI gap -------------------------------------------------
+W, H = 660, 330
+# left panel: forecast bars; right panel: CPI vs required TCPI
+def bar(x, y, w, h, fill, label, val, col=INK):
+    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="3" fill="{fill}"/>'
+            f'<text x="{x+w/2}" y="{y-7}" font-size="10" font-weight="600" fill="{col}" text-anchor="middle">{val}</text>'
+            f'<text x="{x+w/2}" y="{H-26}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{label}</text>')
+base, top = H - 46, 60
+def hgt(v, vmax): return (base - top) * (v / vmax)
+body = f'<text x="30" y="30" font-size="11.5" font-weight="700" fill="{INK}">The EAC fan (USD m)</text>'
+for i, (v, lab, col) in enumerate(((4000000, "BAC", SLATE), (4200000, "EAC(a)", BLUE),
+                                   (4416667, "EAC(b)", INK), (4608056, "EAC(c)", CRIMSON))):
+    h = hgt(v, 4800000)
+    body += bar(40 + i * 66, base - h, 46, h, col, lab, f"{v/1000000:.2f}")
+body += (f'<line x1="330" y1="40" x2="330" y2="{base}" stroke="{GRID}" stroke-width="1.5"/>'
+         f'<text x="360" y="30" font-size="11.5" font-weight="700" fill="{INK}">What TCPI demands</text>')
+for i, (v, lab, col) in enumerate(((0.9057, "CPI achieved", SLATE), (1.1064, "TCPI to BAC", CRIMSON))):
+    h = hgt(v, 1.25)
+    body += bar(400 + i * 96, base - h, 62, h, col, lab, f"{v:.2f}")
+body += (f'<line x1="{400+62}" y1="{base-hgt(0.9057,1.25)}" x2="{400+96}" y2="{base-hgt(0.9057,1.25)}" stroke="{INK}" stroke-dasharray="3 3"/>'
+         f'<text x="596" y="{base-hgt(1.0,1.25)}" font-size="9.5" fill="{CRIMSON}" text-anchor="end">the gap a recovery</text>'
+         f'<text x="596" y="{base-hgt(1.0,1.25)+12}" font-size="9.5" fill="{CRIMSON}" text-anchor="end">plan must close</text>'
+         f'<line x1="30" y1="{base}" x2="{W-24}" y2="{base}" stroke="{INK}" stroke-width="1.2"/>')
+(PML / "fig_7_3_2.svg").write_text(svg(W, H, body))
+
+# ---- Fig 1.3.1 the value chain and where it leaks ---------------------------------
+W, H = 700, 330
+stages = [("OUTPUT", "40 clinics installed", BLUE), ("OUTCOME", "28 clinics using it (70 %)", INK),
+          ("BENEFIT", "USD 685,440 / year released", INK), ("VALUE", "benefit vs cost and risk", SLATE)]
+bw, gap, y0 = 148, 24, 96
+body = f'<text x="30" y="44" font-size="12.5" font-weight="700" fill="{INK}">Each link can fail independently — an output claimed as a benefit overstates by construction</text>'
+for i, (title, sub, col) in enumerate(stages):
+    x = 30 + i * (bw + gap)
+    body += (f'<rect x="{x}" y="{y0}" width="{bw}" height="72" rx="8" fill="white" stroke="{col}" stroke-width="2.2"/>'
+             f'<text x="{x+bw/2}" y="{y0+27}" font-size="11.5" font-weight="800" fill="{col}" text-anchor="middle">{title}</text>')
+    # wrap the sub-label onto two lines at a sensible break
+    words, line1 = sub.split(), ""
+    while words and len(line1 + words[0]) < 20:
+        line1 += words.pop(0) + " "
+    body += (f'<text x="{x+bw/2}" y="{y0+46}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{line1.strip()}</text>'
+             f'<text x="{x+bw/2}" y="{y0+60}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{" ".join(words)}</text>')
+    if i < 3:
+        ax = x + bw
+        body += f'<line x1="{ax+3}" y1="{y0+36}" x2="{ax+gap-4}" y2="{y0+36}" stroke="{SLATE}" stroke-width="2" marker-end="url(#vc)"/>'
+leak_x = 30 + bw + gap / 2
+body = ('<defs><marker id="vc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">'
+        f'<path d="M0 0L10 5L0 10z" fill="{SLATE}"/></marker>'
+        '<marker id="vcr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">'
+        f'<path d="M0 0L10 5L0 10z" fill="{CRIMSON}"/></marker></defs>' + body
+        + f'<line x1="{leak_x}" y1="{y0+80}" x2="{leak_x}" y2="{y0+126}" stroke="{CRIMSON}" stroke-width="2.2" marker-end="url(#vcr)"/>'
+        + f'<text x="{leak_x+10}" y="{y0+110}" font-size="11" font-weight="700" fill="{CRIMSON}">30 % leaks here</text>'
+        + f'<text x="{leak_x+10}" y="{y0+126}" font-size="10" fill="{CRIMSON}">USD 293,760 of claimed value that never existed</text>'
+        + f'<text x="30" y="{y0+180}" font-size="10.5" fill="{SLATE}">Adoption is the outcome measure that links an output to any benefit at all — so it needs its own owner (Toolkit 1.T.1).</text>')
+(PML / "fig_1_3_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 2.2.1 accrual-to-cash bridge (waterfall) ---------------------------------
+W, H, L, R, T, B = 660, 400, 92, 26, 34, 66
+def Yb(v): return H - B - v / 5000000 * (H - T - B)
+steps = [("Net income", 0, 2064000, INK, False), ("+ Depreciation", 2064000, 2400000, BLUE, True),
+         ("− Receivables", 4464000, -900000, CRIMSON, True), ("+ Payables", 3564000, 300000, BLUE, True),
+         ("Operating cash", 0, 3864000, INK, False)]
+bw = 76
+grid = "".join(f'<line x1="{L}" y1="{Yb(v)}" x2="{W-R}" y2="{Yb(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yb(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v/1000000:.0f}m</text>'
+               for v in range(0, 5000001, 1000000))
+body = grid
+for i, (lab, base_v, delta, col, floating) in enumerate(steps):
+    x = L + 22 + i * (bw + 28)
+    lo = min(base_v, base_v + delta) if floating else 0
+    hi = max(base_v, base_v + delta) if floating else delta
+    opacity = ' opacity="0.85"' if floating else ""
+    sign = "+" if delta > 0 and floating else ""
+    word1, rest = lab.split()[0], " ".join(lab.split()[1:])
+    body += (f'<rect x="{x}" y="{Yb(hi)}" width="{bw}" height="{Yb(lo)-Yb(hi)}" rx="3" fill="{col}"{opacity}/>'
+             f'<text x="{x+bw/2}" y="{Yb(hi)-7}" font-size="10" font-weight="600" fill="{col}" text-anchor="middle">'
+             f'{sign}{delta/1000000:.2f}m</text>'
+             f'<text x="{x+bw/2}" y="{H-B+16}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{word1}</text>'
+             f'<text x="{x+bw/2}" y="{H-B+29}" font-size="9.5" fill="{SLATE}" text-anchor="middle">{rest}</text>')
+    if i < len(steps) - 1:
+        end_v = (base_v + delta) if floating else delta
+        body += f'<line x1="{x+bw}" y1="{Yb(end_v)}" x2="{x+bw+28}" y2="{Yb(end_v)}" stroke="{SLATE}" stroke-width="1" stroke-dasharray="3 3"/>'
+body += (f'<text x="{L+22}" y="{T-8}" font-size="11" fill="{SLATE}">the accrual adjustments — none of them cash decisions of this period</text>'
+         + axes(L, T, W - R, H - B, "", "USD"))
+(PFL / "fig_2_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 8.2.1 the survey decision tree -------------------------------------------
+W, H = 700, 380
+dx, dy = 70, H / 2
+body = (f'<rect x="{dx-11}" y="{dy-11}" width="22" height="22" fill="white" stroke="{INK}" stroke-width="2.2"/>'
+        f'<text x="{dx}" y="{dy+38}" font-size="10" fill="{SLATE}" text-anchor="middle">decide</text>')
+branches = [("Proceed directly", 96, 120000, [("0.40", 300000), ("0.60", 0)], SLATE, True),
+            ("Survey first (25,000)", 286, 61000, [("0.40", 115000), ("0.60", 25000)], BLUE, False)]
+for label, cy, ev, outcomes, col, rejected in branches:
+    body += (f'<line x1="{dx+12}" y1="{dy}" x2="{240-14}" y2="{cy}" stroke="{col}" stroke-width="2"/>'
+             f'<text x="{(dx+240)/2-6}" y="{(dy+cy)/2 - 8}" font-size="10" fill="{col}" text-anchor="middle">{label}</text>'
+             f'<circle cx="240" cy="{cy}" r="11" fill="white" stroke="{col}" stroke-width="2.2"/>')
+    for j, (p, val) in enumerate(outcomes):
+        oy = cy - 46 + j * 92
+        body += (f'<line x1="252" y1="{cy}" x2="{470}" y2="{oy}" stroke="{col}" stroke-width="1.5"/>'
+                 f'<text x="{356}" y="{(cy+oy)/2 - 5}" font-size="9.5" fill="{SLATE}" text-anchor="middle">p {p}</text>'
+                 f'<text x="480" y="{oy+4}" font-size="10.5" fill="{INK}">cost {val:,}</text>')
+    body += (f'<text x="{600}" y="{cy+4}" font-size="12" font-weight="700" fill="{col}">EV {ev:,}</text>')
+    if rejected:
+        body += f'<line x1="{dx+16}" y1="{dy-6}" x2="{224}" y2="{cy+10}" stroke="{CRIMSON}" stroke-width="1.6" stroke-dasharray="5 4"/>'
+body += (f'<text x="{600}" y="{(96+286)/2+4}" font-size="11.5" font-weight="700" fill="{CRIMSON}" text-anchor="middle">value of</text>'
+         f'<text x="{600}" y="{(96+286)/2+19}" font-size="11.5" font-weight="700" fill="{CRIMSON}" text-anchor="middle">information</text>'
+         f'<text x="{600}" y="{(96+286)/2+36}" font-size="12.5" font-weight="800" fill="{CRIMSON}" text-anchor="middle">59,000</text>'
+         f'<text x="30" y="26" font-size="11.5" font-weight="700" fill="{INK}">Survey worth buying: it converts a reactive 300,000 into a planned 90,000 in the 40 % of futures where the problem exists</text>')
+(PML / "fig_8_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 2.2.1 two Meridian business cases ----------------------------------------
+W, H, L, R, T, B = 660, 400, 90, 26, 40, 64
+POT, RAMP = 979200.0, [0.40, 0.60] + [0.70] * 6
+def Xy2(y): return L + (y - 0.5) / 8 * (W - L - R)
+def Yv2(v): return H - B - v / 1050000 * (H - T - B)
+grid = "".join(f'<line x1="{L}" y1="{Yv2(v)}" x2="{W-R}" y2="{Yv2(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yv2(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v/1000:.0f}k</text>'
+               for v in range(0, 1050001, 200000))
+bw2 = (W - L - R) / 8 * 0.34
+bars2 = ""
+for i in range(8):
+    x = Xy2(i + 1) - bw2 - 2
+    bars2 += (f'<rect x="{x:.1f}" y="{Yv2(POT):.1f}" width="{bw2:.1f}" height="{(H-B)-Yv2(POT):.1f}" fill="{SLATE}" opacity="0.5"/>'
+              f'<rect x="{x+bw2+4:.1f}" y="{Yv2(POT*RAMP[i]):.1f}" width="{bw2:.1f}" height="{(H-B)-Yv2(POT*RAMP[i]):.1f}" fill="{BLUE}"/>'
+              f'<text x="{Xy2(i+1):.1f}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{i+1}</text>')
+body = (grid + bars2 + axes(L, T, W - R, H - B, "Year", "Annual benefit (USD)")
+        + f'<rect x="{L+10}" y="{T-30}" width="11" height="11" fill="{SLATE}" opacity="0.5"/>'
+        + f'<text x="{L+26}" y="{T-21}" font-size="10.5" fill="{INK}">Flat, full potential (979,200) — NPV +3,447,096</text>'
+        + f'<rect x="{L+10}" y="{T-14}" width="11" height="11" fill="{BLUE}"/>'
+        + f'<text x="{L+26}" y="{T-5}" font-size="10.5" fill="{INK}">Ramped to 70 % steady state — NPV +1,332,898</text>'
+        + f'<text x="{W-R-6}" y="{Yv2(880000)}" font-size="10.5" font-weight="700" fill="{CRIMSON}" text-anchor="end">USD 2,114,198 of present value</text>'
+        + f'<text x="{W-R-6}" y="{Yv2(880000)+14}" font-size="10.5" font-weight="700" fill="{CRIMSON}" text-anchor="end">promised and never deliverable</text>'
+        + f'<text x="{W-R-6}" y="{Yv2(880000)+28}" font-size="10" fill="{CRIMSON}" text-anchor="end">158.6 % of the honest NPV</text>'
+        + f'<text x="{L+10}" y="{H-B+40}" font-size="10.5" fill="{INK}">Breakeven sustained adoption: 41.05 % — the sentence a board can actually monitor</text>')
+(PML / "fig_2_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 2.3.1 Meridian benefits map ----------------------------------------------
+W, H = 720, 420
+cols = [("OUTPUTS", ["Records system installed (40 clinics)", "Data migrated", "Interfaces live"], BLUE, "Programme"),
+        ("ENABLING CHANGE", ["Clinicians trained", "Workflows redesigned", "Clinical champions in place",
+                             "Legacy process retired"], CRIMSON, "Owned OUTSIDE the project"),
+        ("OUTCOME", ["28 clinics using it in daily practice (70 % adoption)"], INK, "Clinical directorate"),
+        ("BENEFIT", ["6 clinician-hours/week per adopting clinic", "= USD 685,440 per year"], INK, "Ops director"),
+        ("OBJECTIVE", ["Improved access and clinician capacity"], SLATE, "Executive")]
+cw, gap2 = 124, 22
+body = f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">Each link can fail independently — and the highlighted column is the one most maps omit</text>'
+for i, (title, items, col, owner) in enumerate(cols):
+    x = 24 + i * (cw + gap2)
+    hl = ' opacity="0.07"' if col == CRIMSON else ' opacity="0"'
+    body += (f'<rect x="{x-5}" y="52" width="{cw+10}" height="330" rx="8" fill="{col}"{hl}/>'
+             f'<text x="{x+cw/2}" y="70" font-size="10" font-weight="800" fill="{col}" text-anchor="middle">{title}</text>')
+    for j, it in enumerate(items):
+        y = 84 + j * 62
+        words, lines, cur = it.split(), [], ""
+        for wd in words:
+            if len(cur + wd) < 19:
+                cur += wd + " "
+            else:
+                lines.append(cur.strip()); cur = wd + " "
+        lines.append(cur.strip())
+        body += f'<rect x="{x}" y="{y}" width="{cw}" height="{max(34, 13*len(lines)+16)}" rx="5" fill="white" stroke="{col}" stroke-width="1.5"/>'
+        for k, ln in enumerate(lines[:4]):
+            body += f'<text x="{x+cw/2}" y="{y+17+k*12}" font-size="8.4" fill="{INK}" text-anchor="middle">{ln}</text>'
+    body += f'<text x="{x+cw/2}" y="372" font-size="8.6" fill="{col}" text-anchor="middle" font-weight="600">{owner}</text>'
+    if i < len(cols) - 1:
+        body += (f'<line x1="{x+cw+6}" y1="200" x2="{x+cw+gap2-6}" y2="200" stroke="{SLATE}" stroke-width="2" marker-end="url(#bm)"/>')
+body = ('<defs><marker id="bm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">'
+        f'<path d="M0 0L10 5L0 10z" fill="{SLATE}"/></marker></defs>' + body
+        + f'<text x="{24+cw+gap2+cw/2}" y="398" font-size="9.5" font-weight="700" fill="{CRIMSON}" text-anchor="middle">usually omitted — and where Meridian stalled at 40 %</text>')
+(PML / "fig_2_3_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 10.1.1 debt capacity vs coverage and tenor -------------------------------
+CF10 = 6384000.0
+def afx(r, n): return (1 - (1 + r) ** -n) / r
+W, H, L, R, T, B = 660, 410, 92, 118, 46, 64
+def Xd(d): return L + (d - 1.10) / 0.50 * (W - L - R)
+def Yd(v): return H - B - (v - 30) / 30 * (H - T - B)     # 30m..60m
+grid = "".join(f'<line x1="{L}" y1="{Yd(v)}" x2="{W-R}" y2="{Yd(v)}" stroke="{GRID}"/>'
+               f'<text x="{L-8}" y="{Yd(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}m</text>'
+               for v in range(30, 61, 5))
+xt = "".join(f'<text x="{Xd(d/100)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">'
+             f'{d/100:.2f}x</text>' for d in range(110, 165, 10))
+lines = ""
+for tenor, colour, width in ((10, SLATE, 2.0), (12, BLUE, 2.8), (15, INK, 2.0)):
+    af_t = afx(0.06, tenor)
+    pts = " ".join(f"{Xd(1.10 + k * 0.01):.1f},{Yd(CF10 / (1.10 + k * 0.01) * af_t / 1e6):.1f}"
+                   for k in range(51))
+    dash = "" if tenor == 12 else ' stroke-dasharray="6 4"'
+    yend = Yd(CF10 / 1.60 * af_t / 1e6)
+    lines += (f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="{width}"{dash}/>'
+              f'<text x="{W-R+6}" y="{yend+4}" font-size="10.5" font-weight="600" fill="{colour}">'
+              f'{tenor}-year</text>')
+af12 = afx(0.06, 12)
+req = Yd(42.0)
+body = (grid + xt + axes(L, T, W - R, H - B, "Target DSCR (base case)", "Maximum senior debt (USD m)")
+        + f'<line x1="{L}" y1="{req}" x2="{W-R}" y2="{req}" stroke="{CRIMSON}" stroke-width="1.4" stroke-dasharray="4 3"/>'
+        + f'<text x="{L+6}" y="{req-6}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          'Sponsors&#8217; request: USD 42.0m</text>'
+        + lines
+        + f'<circle cx="{Xd(1.30):.1f}" cy="{Yd(CF10/1.30*af12/1e6):.1f}" r="4" fill="{BLUE}"/>'
+        + f'<text x="{Xd(1.30)+9:.1f}" y="{Yd(CF10/1.30*af12/1e6)+15:.1f}" font-size="10.5" '
+          f'font-weight="700" fill="{BLUE}">41.17m at 1.30x — the lender&#8217;s answer</text>'
+        + f'<circle cx="{Xd(1.2743):.1f}" cy="{req}" r="4" fill="{CRIMSON}"/>'
+        + f'<text x="{Xd(1.2743)-6:.1f}" y="{req+30:.1f}" font-size="10.5" font-weight="700" '
+          f'fill="{CRIMSON}" text-anchor="end">1.2743x — the coverage 42.0m actually delivers</text>'
+        + f'<circle cx="{Xd(1.10):.1f}" cy="{Yd(CF10/1.10*af12/1e6):.1f}" r="3.5" fill="{BLUE}" opacity="0.7"/>'
+        + f'<text x="{Xd(1.10)+8:.1f}" y="{Yd(CF10/1.10*af12/1e6)-7:.1f}" font-size="10" fill="{BLUE}">48.66m</text>'
+        + f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+          'Debt capacity is arithmetic: CFADS 6,384,000 at 6 % — capacity falls as required coverage rises</text>'
+        + f'<text x="{L}" y="{H-B+42}" font-size="10.2" fill="{SLATE}">'
+          'The 828,877 gap at 1.30x is exactly the additional equity the sponsors must find</text>')
+(PFL / "fig_10_1_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 3.2.1 governance latency and its two levers ------------------------------
+COD3 = 14280
+W, H, L_, R, T, B = 660, 400, 84, 96, 46, 62
+def Xm(m): return L_ + (m - 1) / 12 * (W - L_ - R)
+def Yw(v): return H - B - v / 10 * (H - T - B)
+grid = "".join(f'<line x1="{L_}" y1="{Yw(v)}" x2="{W-R}" y2="{Yw(v)}" stroke="{GRID}"/>'
+               f'<text x="{L_-8}" y="{Yw(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}</text>'
+               for v in range(0, 11, 2))
+xt = "".join(f'<text x="{Xm(m)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{m}</text>'
+             for m in (1, 2, 4, 6, 8, 10, 13))
+lines = ""
+for lead, colour, width in ((0.5, GRID, 1.8), (1, SLATE, 2.0), (2, BLUE, 2.8), (3, INK, 2.0)):
+    pts = " ".join(f"{Xm(m):.1f},{Yw(m/2 + lead):.1f}" for m in range(1, 14))
+    dash = "" if lead == 2 else ' stroke-dasharray="6 4"'
+    lab = colour if lead != 0.5 else SLATE
+    lines += (f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="{width}"{dash}/>'
+              f'<text x="{W-R+6}" y="{Yw(13/2 + lead)+4:.1f}" font-size="10.5" font-weight="600" '
+              f'fill="{lab}">L = {lead:g} w</text>')
+mx, my = Xm(4), Yw(4.0)
+body = (grid + xt + axes(L_, T, W - R, H - B, "Meeting interval M (weeks)",
+                         "Expected wait E[wait] = M/2 + L (weeks)") + lines
+        + f'<circle cx="{mx:.1f}" cy="{my:.1f}" r="4.5" fill="{CRIMSON}"/>'
+        + f'<text x="{mx+10:.1f}" y="{my-16:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          'Meridian steering: M = 4, L = 2</text>'
+        + f'<text x="{mx+10:.1f}" y="{my-3:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          f'&#8594; 4.0 weeks = USD {4*COD3:,} per escalated decision</text>'
+        + f'<line x1="{mx:.1f}" y1="{my:.1f}" x2="{mx:.1f}" y2="{Yw(3.0):.1f}" stroke="{CRIMSON}" '
+          'stroke-width="1.6" marker-end="url(#gv)"/>'
+        + f'<text x="{mx-8:.1f}" y="{(my+Yw(3.0))/2+4:.1f}" font-size="10" font-weight="700" '
+          f'fill="{CRIMSON}" text-anchor="end">L: &#8722;1 w &#8594; saves 1.0 w</text>'
+        + f'<line x1="{mx:.1f}" y1="{my:.1f}" x2="{Xm(3):.1f}" y2="{Yw(3.5):.1f}" stroke="{SLATE}" '
+          'stroke-width="1.6" marker-end="url(#gv2)"/>'
+        + f'<text x="{Xm(3)-6:.1f}" y="{Yw(3.5)-8:.1f}" font-size="10" font-weight="700" '
+          f'fill="{SLATE}" text-anchor="end">M: &#8722;1 w &#8594; saves 0.5 w</text>'
+        + f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+          'The paper deadline is twice the lever the meeting interval is &#8212; and the cheaper one to move</text>')
+body = ('<defs>'
+        f'<marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" '
+        f'orient="auto"><path d="M0 0L10 5L0 10z" fill="{CRIMSON}"/></marker>'
+        f'<marker id="gv2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" '
+        f'orient="auto"><path d="M0 0L10 5L0 10z" fill="{SLATE}"/></marker>'
+        '</defs>' + body)
+(PML / "fig_3_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 3.3.1 the price of an escalation path ------------------------------------
+W, H = 700, 330
+BARX, BARW, TOTW = 210, 330, 15.5
+def wx(weeks): return weeks / TOTW * BARW
+segs = [("Project board", 2.0, SLATE), ("Programme board", 4.0, BLUE), ("Executive committee", 9.5, CRIMSON)]
+body = (f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+        'Count the tiers, add the latency, price it &#8212; then justify each tier against its cost</text>')
+y = 62
+x = BARX
+for name, wk, colour in segs:
+    body += (f'<rect x="{x:.1f}" y="{y}" width="{wx(wk):.1f}" height="34" fill="{colour}" opacity="0.9"/>'
+             f'<text x="{x+wx(wk)/2:.1f}" y="{y+22}" font-size="10.5" font-weight="700" fill="white" '
+             f'text-anchor="middle">{wk:g} w</text>')
+    x += wx(wk)
+body += (f'<text x="{BARX-10}" y="{y+15}" font-size="11" font-weight="700" fill="{INK}" text-anchor="end">'
+         'As designed</text>'
+         f'<text x="{BARX-10}" y="{y+29}" font-size="9.6" fill="{SLATE}" text-anchor="end">three tiers</text>'
+         f'<text x="{BARX+BARW+10}" y="{y+15}" font-size="11" font-weight="800" fill="{INK}">15.5 weeks</text>'
+         f'<text x="{BARX+BARW+10}" y="{y+29}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+         f'USD {int(15.5*14280):,}</text>')
+for name, wk, colour in segs[2:]:
+    body += (f'<text x="{BARX+wx(2.0)+wx(4.0)+wx(9.5)/2:.1f}" y="{y+50}" font-size="10" '
+             f'font-weight="700" fill="{CRIMSON}" text-anchor="middle">61 % of the latency &#8212; '
+             f'USD {int(9.5*14280):,}</text>')
+rows = [("One tier, executive informed", "programme board only", 4.0, BLUE, 164220, 74.2),
+        ("One tier, written resolution", "5 working days", 1.0, "#0F8A5F", 207060, 93.5)]
+y = 148
+for label, sub, wk, colour, sav, pct in rows:
+    body += (f'<rect x="{BARX}" y="{y}" width="{max(wx(wk), 26):.1f}" height="34" fill="{colour}"/>'
+             f'<text x="{BARX+max(wx(wk),26)+8:.1f}" y="{y+22}" font-size="10.5" font-weight="700" '
+             f'fill="{INK}">{wk:g} w &#183; USD {int(wk*14280):,}</text>'
+             f'<text x="{BARX-10}" y="{y+15}" font-size="11" font-weight="700" fill="{INK}" '
+             f'text-anchor="end">{label}</text>'
+             f'<text x="{BARX-10}" y="{y+29}" font-size="9.6" fill="{SLATE}" text-anchor="end">{sub}</text>'
+             f'<text x="{W-24}" y="{y+15}" font-size="10.5" font-weight="800" fill="{colour}" '
+             f'text-anchor="end">saves USD {sav:,}</text>'
+             f'<text x="{W-24}" y="{y+29}" font-size="10" font-weight="700" fill="{colour}" '
+             f'text-anchor="end">{pct} %</text>')
+    y += 62
+body += (f'<line x1="{BARX}" y1="{H-52}" x2="{W-24}" y2="{H-52}" stroke="{GRID}" stroke-width="1.2"/>'
+         f'<text x="{BARX}" y="{H-30}" font-size="10.2" fill="{SLATE}">'
+         'Each tier&#8217;s wait is M/2 + L: 2/2+1 = 2.0 &#183; 4/2+2 = 4.0 &#183; 13/2+3 = 9.5 &#8212; '
+         'priced at USD 14,280 per week</text>')
+(PML / "fig_3_3_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 4.2.1 interfaces grow combinatorially -------------------------------------
+IC4 = 18000
+W, H, L_, R, T, B = 660, 400, 84, 106, 46, 62
+def Xn(n): return L_ + (n - 2) / 18 * (W - L_ - R)
+def Yi(v): return H - B - v / 200 * (H - T - B)
+grid = "".join(f'<line x1="{L_}" y1="{Yi(v)}" x2="{W-R}" y2="{Yi(v)}" stroke="{GRID}"/>'
+               f'<text x="{L_-8}" y="{Yi(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v}</text>'
+               for v in range(0, 201, 50))
+xt = "".join(f'<text x="{Xn(n)}" y="{H-B+16}" font-size="10" fill="{SLATE}" text-anchor="middle">{n}</text>'
+             for n in (2, 5, 8, 12, 16, 20))
+mesh_pts = " ".join(f"{Xn(n):.1f},{Yi(n*(n-1)/2):.1f}" for n in range(2, 21))
+lay_pts = " ".join(f"{Xn(n):.1f},{Yi(n):.1f}" for n in range(2, 21))
+body = (grid + xt + axes(L_, T, W - R, H - B, "Number of components n", "Interfaces to specify, build and test")
+        + f'<polyline points="{mesh_pts}" fill="none" stroke="{CRIMSON}" stroke-width="2.8"/>'
+        + f'<polyline points="{lay_pts}" fill="none" stroke="{BLUE}" stroke-width="2.6" stroke-dasharray="7 4"/>'
+        + f'<text x="{W-R+6}" y="{Yi(190)+4:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          'mesh</text>'
+        + f'<text x="{W-R+6}" y="{Yi(190)+18:.1f}" font-size="9.6" fill="{CRIMSON}">n(n&#8722;1)/2 = 190</text>'
+        + f'<text x="{W-R+6}" y="{Yi(20)+4:.1f}" font-size="10.5" font-weight="700" fill="{BLUE}">layered</text>'
+        + f'<text x="{W-R+6}" y="{Yi(20)+18:.1f}" font-size="9.6" fill="{BLUE}">n = 20</text>'
+        + f'<line x1="{Xn(12):.1f}" y1="{Yi(66):.1f}" x2="{Xn(12):.1f}" y2="{Yi(12):.1f}" '
+          f'stroke="{INK}" stroke-width="1.4" stroke-dasharray="3 3"/>'
+        + f'<circle cx="{Xn(12):.1f}" cy="{Yi(66):.1f}" r="4" fill="{CRIMSON}"/>'
+        + f'<circle cx="{Xn(12):.1f}" cy="{Yi(12):.1f}" r="4" fill="{BLUE}"/>'
+        + f'<text x="{Xn(12)+9:.1f}" y="{Yi(66)-6:.1f}" font-size="10.5" font-weight="700" fill="{CRIMSON}">'
+          '66 at Meridian&#8217;s 12 components</text>'
+        + f'<text x="{Xn(12)+9:.1f}" y="{Yi(12)+14:.1f}" font-size="10.5" font-weight="700" fill="{BLUE}">12</text>'
+        + f'<text x="{Xn(12)+9:.1f}" y="{(Yi(66)+Yi(12))/2:.1f}" font-size="10.2" font-weight="700" '
+          f'fill="{INK}">54 interfaces &#8212; USD 972,000 of avoidable work</text>'
+        + f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+          'Components grow linearly; interfaces grow combinatorially &#8212; and the plan was written for the old count</text>'
+        + f'<text x="{L_}" y="{H-B+42}" font-size="10.2" fill="{SLATE}">'
+          f'Marginal cost of a 13th component: +12 interfaces (USD {12*IC4:,}) on a mesh &#183; '
+          f'+1 (USD {IC4:,}) layered</text>')
+(PML / "fig_4_2_1.svg").write_text(svg(W, H, body))
+
+# ---- Fig 4.4.1 what a change actually costs ---------------------------------------
+W, H, L_, R, T, B = 680, 400, 92, 24, 62, 74
+steps = [("Quoted direct build", 40000, SLATE), ("Schedule: 2 wk x 14,280", 28560, CRIMSON),
+         ("Rework of completed work", 22000, CRIMSON), ("3 interfaces x 6,000", 18000, CRIMSON),
+         ("Regression testing", 14000, CRIMSON), ("Docs and training", 9000, CRIMSON)]
+TOTAL4 = sum(v for _, v, _ in steps)
+def Yc(v): return H - B - v / 140000 * (H - T - B)
+grid = "".join(f'<line x1="{L_}" y1="{Yc(v)}" x2="{W-R}" y2="{Yc(v)}" stroke="{GRID}"/>'
+               f'<text x="{L_-8}" y="{Yc(v)+4}" font-size="10" fill="{SLATE}" text-anchor="end">{v//1000}k</text>'
+               for v in range(0, 140001, 20000))
+nb = len(steps) + 1
+slot = (W - L_ - R) / nb
+bw = slot * 0.56
+body = grid + axes(L_, T, W - R, H - B, "", "Cost of the change (USD)")
+run = 0
+for i, (label, val, colour) in enumerate(steps):
+    x = L_ + i * slot + (slot - bw) / 2
+    y0, y1 = Yc(run), Yc(run + val)
+    op = "0.55" if i == 0 else "0.9"
+    body += (f'<rect x="{x:.1f}" y="{y1:.1f}" width="{bw:.1f}" height="{y0-y1:.1f}" fill="{colour}" '
+             f'opacity="{op}"/>'
+             f'<text x="{x+bw/2:.1f}" y="{y1-6:.1f}" font-size="9.6" font-weight="700" fill="{INK}" '
+             f'text-anchor="middle">{"" if i == 0 else "+"}{val:,}</text>')
+    words, lines, cur = label.split(), [], ""
+    for wd in words:
+        if len(cur + wd) < 15:
+            cur += wd + " "
+        else:
+            lines.append(cur.strip()); cur = wd + " "
+    lines.append(cur.strip())
+    for k, ln in enumerate(lines[:3]):
+        body += (f'<text x="{x+bw/2:.1f}" y="{H-B+16+k*11}" font-size="8.6" fill="{SLATE}" '
+                 f'text-anchor="middle">{ln}</text>')
+    if i:
+        body += (f'<line x1="{x-(slot-bw):.1f}" y1="{y0:.1f}" x2="{x:.1f}" y2="{y0:.1f}" '
+                 f'stroke="{SLATE}" stroke-width="1" stroke-dasharray="2 2"/>')
+    run += val
+xt = L_ + len(steps) * slot + (slot - bw) / 2
+body += (f'<rect x="{xt:.1f}" y="{Yc(TOTAL4):.1f}" width="{bw:.1f}" height="{(H-B)-Yc(TOTAL4):.1f}" '
+         f'fill="{INK}"/>'
+         f'<text x="{xt+bw/2:.1f}" y="{Yc(TOTAL4)-6:.1f}" font-size="11" font-weight="800" fill="{INK}" '
+         f'text-anchor="middle">{TOTAL4:,}</text>'
+         f'<text x="{xt+bw/2:.1f}" y="{H-B+16}" font-size="8.8" font-weight="700" fill="{INK}" '
+         f'text-anchor="middle">Assessed total</text>'
+         f'<text x="{xt+bw/2:.1f}" y="{H-B+27}" font-size="8.8" font-weight="700" fill="{INK}" '
+         f'text-anchor="middle">3.29 x quoted</text>')
+body += (f'<line x1="{L_}" y1="{Yc(25000):.1f}" x2="{W-R}" y2="{Yc(25000):.1f}" stroke="{BLUE}" '
+         'stroke-width="1.5" stroke-dasharray="5 3"/>'
+         f'<text x="{W-R-4}" y="{Yc(25000)-6:.1f}" font-size="10" font-weight="700" fill="{BLUE}" '
+         'text-anchor="end">Delegation threshold 25,000 &#8212; read on the quoted figure</text>'
+         f'<text x="24" y="26" font-size="11.5" font-weight="700" fill="{INK}">'
+         'The quoted cost is 30.4 % of the true cost &#8212; and it is the only figure on the change form</text>'
+         f'<text x="24" y="42" font-size="10.2" fill="{SLATE}">'
+         'A change quoted at 22,000 with the same two weeks of critical-path impact truly costs 50,560 '
+         '&#8212; twice the threshold, decided without escalation</text>')
+(PML / "fig_4_4_1.svg").write_text(svg(W, H, body))
+
+# ---- Per-domain figure modules (parallel-safe contribution point) -----------------
+# Domains authored concurrently contribute figures_src/<book>_d<NN>.py exposing make(ctx) rather
+# than editing this file. See figures_src/_README.md for the contract.
+_FIG_CTX = {"svg": svg, "axes": axes, "PML": PML, "PFL": PFL, "FONT": FONT,
+            "BLUE": BLUE, "CRIMSON": CRIMSON, "INK": INK, "SLATE": SLATE, "GRID": GRID}
+_src_dir = pathlib.Path(__file__).resolve().parent / "figures_src"
+_fig_mods = sorted(_src_dir.glob("*.py")) if _src_dir.is_dir() else []
+_failed = []
+for _mp in _fig_mods:
+    if _mp.name.startswith("_"):
+        continue
+    _spec = importlib.util.spec_from_file_location(f"pci_figs_{_mp.stem}", _mp)
+    _m = importlib.util.module_from_spec(_spec)
+    try:
+        _spec.loader.exec_module(_m)
+        _m.make(_FIG_CTX)
+    except Exception as _e:
+        _failed.append(f"{_mp.name}: {type(_e).__name__}: {_e}")
+print(f"figure modules loaded: {len([m for m in _fig_mods if not m.name.startswith('_')])}")
+if _failed:
+    print("FIGURE MODULE FAILURES:", *_failed, sep="\n  ")
+    raise SystemExit(1)
 
 print("figures written:",
       *[p.relative_to(ROOT) for p in sorted(PFL.glob("*.svg")) + sorted(PML.glob("*.svg"))], sep="\n  ")

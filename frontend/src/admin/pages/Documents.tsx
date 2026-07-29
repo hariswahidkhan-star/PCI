@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDateTime } from '../../format'
 
@@ -199,11 +200,11 @@ export default function Documents() {
   const categories = cats.data?.rows ?? []
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Documents</h1>
-        <p className="muted">Private, per-student documents. Upload a file, target it at a student or a group, then publish to grant access and notify. Versions never overwrite history, and every view, download and acknowledgement is audited.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Documents"
+        subtitle="Private, per-student documents. Upload a file, target it at a student or a group, then publish to grant access and notify. Versions never overwrite history, and every view, download and acknowledgement is audited."
+      />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between' }}>
