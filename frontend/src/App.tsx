@@ -21,6 +21,7 @@ import Support from './pages/Support'
 import Appeals from './pages/Appeals'
 import Applications from './pages/Applications'
 import Events from './pages/Events'
+import EventPasses from './pages/EventPasses'
 import Profile from './pages/Profile'
 
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="resources" element={<Resources />} />
           <Route path="templates" element={<Templates />} />
           <Route path="events" element={<Events />} />
+          <Route path="event-passes" element={<EventPasses />} />
           <Route path="documents" element={<Documents />} />
           <Route path="messages" element={<Messages />} />
           <Route path="support" element={<Support />} />

@@ -276,3 +276,107 @@ export interface PassportSummary {
   lastUpdatedAt: string | null
   availableActions: string[]
 }
+
+// ---- Event admission (spec §7A: entry passes, gates, staff scanner) ----
+//
+// Typed contract for the event-admission backend, which DOES NOT EXIST YET. These types mirror the
+// §7A.6/§7A.7 vocabulary so the later SQL/endpoint build lands against a fixed wire shape. All
+// frontend access goes through the ONE seam module (src/api/eventAdmission.ts) — when the backend
+// ships, that file is the only place that changes.
+
+/** How attendees are admitted at the gate (§7A.6). */
+export type AdmissionMode = 'qr' | 'manual' | 'hybrid'
+
+/** Registration lifecycle of the underlying event registration (§7A.6). */
+export type RegistrationState = 'registered' | 'waitlisted' | 'cancelled'
+
+/** Payment lifecycle for the registration behind a pass (§7A.6). */
+export type PaymentState = 'not_required' | 'pending' | 'paid' | 'refunded' | 'waived'
+
+/** Lifecycle of one entry pass (§7A.6). Distinct from PassportState — an event pass is NOT the
+ *  public Passport and never shares its QR. */
+export type PassState = 'issued' | 'active' | 'used' | 'expired' | 'revoked' | 'replaced'
+
+export interface EventPassEvent {
+  id: number
+  title: string
+  /** 'YYYY-MM-DD HH:MM:SS' wall-clock in the event's own timezone. */
+  startsAt: string
+  endsAt: string | null
+  /** IANA timezone name, always shown beside times (attendees travel). */
+  timezone: string
+  venueName: string
+  venueAddress?: string | null
+}
+
+/** The window during which the pass admits (§7A.7) — NOT the same as the event start/end. */
+export interface EntryValidityWindow {
+  opensAt: string
+  closesAt: string
+}
+
+export type EntryHistoryKind = 'entry' | 'checkout'
+
+/** One gate movement recorded against a pass (§7A.7). */
+export interface EntryHistoryItem {
+  at: string
+  kind: EntryHistoryKind
+  gateName: string
+  method: 'qr' | 'manual'
+}
+
+export interface EventPass {
+  passId: string
+  /** Human-readable reference printed on the pass; what manual gate lookup matches on. */
+  passReference: string
+  state: PassState
+  event: EventPassEvent
+  registrationState: RegistrationState
+  paymentState: PaymentState
+  admissionMode: AdmissionMode
+  validity: EntryValidityWindow
+  /** Opaque single-purpose entry token behind the event QR. NEVER the public Passport QR/URL,
+   *  never a session token. Null until the pass is active (e.g. unpaid / waitlisted). */
+  entryToken: string | null
+  history: EntryHistoryItem[]
+  /** Set when this pass was replaced — the replacement is the live one. */
+  replacedByPassId?: string | null
+}
+
+/** The four gate outcomes (§7A.8). The SERVER decides; the client only renders. */
+export type AdmissionResult = 'admit' | 'already_checked_in' | 'manual_review' | 'do_not_admit'
+
+/** What gate staff may see about an attendee — deliberately minimal (mirrors the wallet page's
+ *  privacy note). No Passport contents, scores, or contact details. */
+export interface AdmissionAttendee {
+  displayName: string
+  registrationReference: string
+  studentNumber: string | null
+  passState: PassState | null
+}
+
+export interface AdmissionDecision {
+  /** Server-issued id the explicit confirm step is recorded against. */
+  decisionId: string
+  result: AdmissionResult
+  /** Operator-facing reason (e.g. 'pass_revoked', 'outside_entry_window'). */
+  reason: string | null
+  attendee: AdmissionAttendee | null
+  /** For already_checked_in: when/where the first entry happened. */
+  firstEntryAt?: string | null
+  firstEntryGate?: string | null
+}
+
+export interface EventGate {
+  id: string
+  name: string
+}
+
+/** An event as seen by gate staff when picking event + gate (§7A.8). */
+export interface StaffEvent {
+  id: number
+  title: string
+  startsAt: string
+  timezone: string
+  gates: EventGate[]
+}
