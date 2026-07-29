@@ -410,13 +410,14 @@ jobs:
           path: frontend/coverage
           retention-days: 30
           if-no-files-found: error
-      - name: Production build (student + admin + world)
+      - name: Production build (student + admin + world + world-admin)
         run: npm run build
       - name: Fail if any app produced no assets
         run: |
           test -f dist/index.html && ls dist/assets/*.js >/dev/null
           test -f dist-admin/admin.html && ls dist-admin/assets/*.js >/dev/null
           test -f dist-world/world.html && ls dist-world/assets/*.js >/dev/null
+          test -f dist-worldadmin/worldadmin.html && ls dist-worldadmin/assets/*.js >/dev/null
 
   secureexam-windows:
     runs-on: windows-latest      # WPF client needs Windows to compile

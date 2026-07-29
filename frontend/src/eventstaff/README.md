@@ -47,3 +47,12 @@ Sample events/gates load, and the mock decision service makes every state reacha
 | anything containing `USED`, or `PCI-EV-2026-000214` | ALREADY CHECKED IN |
 | anything containing `REVIEW` | MANUAL REVIEW |
 | anything else | DO NOT ADMIT |
+
+
+## Mount decision (made)
+
+Mounted in the PCI admin app at `/event-scanner` (Operations group), gated on
+`events_checkin`/`events_read` with `content` as the same migration fallback the backend
+accepts — the spec places the scanner in the PCI Global operations realm (§7A.8). Staff
+authentication is therefore the admin session; a dedicated device-enrollment flow remains
+future backend work.

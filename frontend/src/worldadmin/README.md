@@ -41,3 +41,12 @@ world-admin-authenticated page. It needs nothing else.
 | `fixtures.ts` | Sample data, including a hostile display name that proves escaping on sight |
 | `worldadmin.css` | `wa-`-prefixed styles matching the `/world-admin` shell's visual language |
 | `ShareConsole.test.tsx` | Vitest suite: escaping, revoke confirm, capability honesty, ordering, 404 state |
+
+
+## Mount decision (made)
+
+Shipped as the fourth independent bundle at `/world-admin-app/` (vite.worldadmin.config.ts →
+dist-worldadmin), keeping World-admin code out of both the participant and PCI-admin bundles —
+the bundle-level mirror of the server's realm separation. The mount gate renders a sign-in
+pointer when `localStorage['world_admin_token']` is absent; real authorization stays server-side
+on every API the console calls.

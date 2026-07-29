@@ -88,6 +88,7 @@ const NAV: NavItem[] = [
   { to: '/emails', label: 'Email log', perm: 'emails', group: 'Operations' },
   { to: '/audit', label: 'Audit log', perm: 'audit', group: 'Operations' },
   { to: '/identity', label: 'Identity & Student Numbers', anyPerm: ['id_read', 'id_backfill', 'id_merge_request', 'id_merge_approve', 'id_audit'], group: 'Operations' },
+  { to: '/event-scanner', label: 'Event check-in scanner', anyPerm: ['events_checkin', 'events_read', 'content'], group: 'Operations' },
   { to: '/settings', label: 'Settings', anyPerm: ['settings', 'set_web', 'set_sp', 'set_exam'], group: 'Operations' },
   { to: '/team', label: 'Team & Access', owner: true, group: 'Operations' },
 ]
