@@ -36,6 +36,13 @@ export class EventAdmissionUnavailableError extends Error {
 
 const FIXTURES_STORAGE_KEY = 'pci.eventAdmission.fixtures'
 
+/** Turn the sticky fixtures flag on — used by the "explore with sample data" actions so a
+ *  reviewer on the deployed site can see every screen without knowing the ?preview=1 convention.
+ *  Sample data is clearly labelled wherever it renders; the flag is per-tab (sessionStorage). */
+export function enableFixtures(): void {
+  try { sessionStorage.setItem(FIXTURES_STORAGE_KEY, '1') } catch { /* private mode: ?preview=1 still works */ }
+}
+
 /** Dev fixtures mode: `?preview=1` on the current URL, or the sticky sessionStorage flag. */
 export function fixturesEnabled(): boolean {
   try {

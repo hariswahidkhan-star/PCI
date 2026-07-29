@@ -5,6 +5,7 @@ import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
 import { openPrintable, escapeHtml } from '../print'
 import {
   EventAdmissionUnavailableError,
+  enableFixtures,
   fetchMyEventPasses,
   fixturesEnabled,
   replaceEventPass,
@@ -309,10 +310,14 @@ export default function EventPasses() {
               <Link to="/events">Events page</Link>. When admission goes live, a pass appears here
               automatically for every in-person registration.
             </div>
-            <div className="muted">
-              Reviewers: append <code>?preview=1</code> to this page's URL to see the wallet with
-              sample data.
-            </div>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => { enableFixtures(); void load() }}
+            >
+              Explore the wallet with sample data
+            </button>
+            <div className="muted">Sample data is clearly marked and touches nothing real.</div>
           </div>
         </Card>
       ) : error ? (

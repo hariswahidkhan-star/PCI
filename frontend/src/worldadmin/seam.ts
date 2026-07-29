@@ -75,9 +75,17 @@ export class ShareAdminNotEnabledError extends Error {
   }
 }
 
+const FIXTURES_KEY = 'pci.worldadmin.fixtures'
+
+/** Sticky fixtures switch for the "explore with sample data" action on the not-enabled card. */
+export function enableFixtures(): void {
+  try { sessionStorage.setItem(FIXTURES_KEY, '1') } catch { /* ?preview=1 remains the fallback */ }
+}
+
 /** ?preview=1 — same convention the task of previewing unbuilt surfaces uses elsewhere. */
 export function isFixturesMode(search: string): boolean {
-  return new URLSearchParams(search).get('preview') === '1'
+  if (new URLSearchParams(search).get('preview') === '1') return true
+  try { return sessionStorage.getItem(FIXTURES_KEY) === '1' } catch { return false }
 }
 
 // ── fixtures mode — in-memory, mutable copy of ./fixtures ───────────────────────────────────

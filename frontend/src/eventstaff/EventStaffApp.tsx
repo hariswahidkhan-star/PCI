@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { EventGate, StaffEvent } from '../api/types'
-import { EventAdmissionUnavailableError, fetchStaffEvents, fixturesEnabled } from '../api/eventAdmission'
+import { EventAdmissionUnavailableError, enableFixtures, fetchStaffEvents, fixturesEnabled } from '../api/eventAdmission'
 import ScanScreen from './ScanScreen'
 import { S } from './styles'
 
@@ -75,9 +75,15 @@ export default function EventStaffApp() {
           <h2 style={S.h2}>Event passes are not yet enabled on this server</h2>
           <p style={S.muted}>
             The event-admission service is not switched on for this installation. There is nothing
-            to scan yet — contact the event administrator. Reviewers can append{' '}
-            <code>?preview=1</code> to the URL to try the scanner with sample data.
+            to scan yet — contact the event administrator.
           </p>
+          <button
+            type="button"
+            style={S.button}
+            onClick={() => { enableFixtures(); window.location.reload() }}
+          >
+            Try the scanner with sample data
+          </button>
         </div>
       ) : error ? (
         <div role="alert" style={S.errNote}>

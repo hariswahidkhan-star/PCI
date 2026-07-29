@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>PCI Platform — feature preview map</title>
+  <style>
+    body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:#FBF7EF;color:#0E1525;line-height:1.55}
+    main{max-width:56rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+    h1{font-size:1.6rem;border-bottom:3px solid #C8A24B;padding-bottom:.4rem}
+    h2{font-size:1.1rem;margin-top:2.2rem;color:#0E1525}
+    table{width:100%;border-collapse:collapse;font-size:.92rem}
+    th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid #e4ddcf;vertical-align:top}
+    th{background:#0E1525;color:#FBF7EF}
+    code{background:#efe8d8;padding:.05rem .3rem;border-radius:3px;font-size:.85em}
+    .live{color:#1a6b32;font-weight:600}
+    .sample{color:#8A6F2F;font-weight:600}
+    .auth{color:#555}
+    .note{background:#fff;border-left:4px solid #C8A24B;padding:.8rem 1rem;margin:1.2rem 0}
+  </style>
+</head>
+<body>
+<main>
+  <h1>PCI Platform — feature preview map</h1>
+  <p>Every surface built for the shared-identity / Passport / sharing / events programme, where to
+  find it on this deployment, and what stands behind it. Built as a handoff for backend
+  development: <span class="live">live</span> means a real API serves it today;
+  <span class="sample">sample data</span> means the frontend is complete and renders labelled
+  fixtures until its backend exists — each such screen names the endpoints it expects in
+  <code>frontend/src/api/</code> or its seam module.</p>
+
+  <div class="note">Sign-ins: student surfaces need a student account (<code>/app/</code>);
+  admin surfaces need an admin sign-in (<code>/admin/</code>); the World admin console uses the
+  separate World-admin sign-in at <code>/world-admin</code>. Screens marked
+  <span class="sample">sample data</span> show an "explore with sample data" action when their
+  backend is absent.</div>
+
+  <h2>Student portal (MyPCI)</h2>
+  <table>
+    <tr><th>Feature</th><th>Where</th><th>Backend</th></tr>
+    <tr><td>PCI World Passport module — status, Student Number, evidence, secure handoff to World</td><td><code>/app/</code> dashboard</td><td class="live">live</td></tr>
+    <tr><td>Download PCI Passport — CR80 wallet card + 4×6 event badge PDFs with verification QR</td><td>Passport module → Download</td><td class="live">live</td></tr>
+    <tr><td>Event passes wallet — pass states, validity, entry QR area, ICS, replace, history</td><td><code>/app/#/event-passes</code></td><td class="sample">sample data</td></tr>
+  </table>
+
+  <h2>PCI World (participants)</h2>
+  <table>
+    <tr><th>Feature</th><th>Where</th><th>Backend</th></tr>
+    <tr><td>Passport, publication, disclosure, evidence</td><td><code>/world-app/</code></td><td class="live">live</td></tr>
+    <tr><td>Premium share sheet — LinkedIn/X/Facebook/WhatsApp/Telegram/email/copy/native/QR + crop previews</td><td>Passport → Share</td><td class="live">live</td></tr>
+    <tr><td>Portal switcher — World → MyPCI secure handoff</td><td>World app header</td><td class="live">live</td></tr>
+    <tr><td>Public Passport verification by Student Number</td><td><code>/world-app/verify-number</code></td><td class="live">live</td></tr>
+    <tr><td>Public Passport page, shared results, invitations (per-artifact share metadata)</td><td><code>/world/p/…</code> · <code>/world/r/…</code> · <code>/world/i/…</code></td><td class="live">live</td></tr>
+  </table>
+
+  <h2>PCI admin (operations)</h2>
+  <table>
+    <tr><th>Feature</th><th>Where</th><th>Backend</th></tr>
+    <tr><td>Identity &amp; Student Numbers — health, audited backfill, reconciliation, maker-checker merges</td><td><code>/admin/#/identity</code></td><td class="live">live</td></tr>
+    <tr><td>Event check-in scanner — gate selection, scan/manual lookup, ADMIT / ALREADY / REVIEW / DENY</td><td><code>/admin/#/event-scanner</code></td><td class="sample">sample data</td></tr>
+  </table>
+
+  <h2>PCI World admin (separate realm)</h2>
+  <table>
+    <tr><th>Feature</th><th>Where</th><th>Backend</th></tr>
+    <tr><td>Share management console — channels, caption templates, versioning, link moderation, capability honesty</td><td><code>/world-admin-app/</code></td><td class="sample">sample data</td></tr>
+  </table>
+
+  <h2>For the backend developer</h2>
+  <p>The contracts for every <span class="sample">sample data</span> surface are written down:
+  <code>frontend/src/api/eventAdmission.ts</code> (event passes + admission decisions, spec §7A) and
+  <code>frontend/src/worldadmin/seam.ts</code> (share administration, spec §10.2). The programme's
+  full evidence trail is in <code>docs/pciworld/IDENTITY_PHASE0_BASELINE.md</code> and
+  <code>docs/pciworld/IDENTITY_ACCEPTANCE.md</code>.</p>
+</main>
+</body>
+</html>

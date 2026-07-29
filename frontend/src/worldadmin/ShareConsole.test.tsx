@@ -175,7 +175,7 @@ describe('missing backend — designed state, not a crash', () => {
     render(<ShareConsole seam={notEnabledSeam} />)
     await screen.findByText(NOT_ENABLED_TITLE)
     expect(screen.getByText(/the console in front of you is finished, the service behind it is not/i)).toBeInTheDocument()
-    expect(screen.getByText(/\?preview=1/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /explore the console with sample data/i })).toBeInTheDocument()
     // the honesty panel needs no backend — it still renders
     expect(screen.getByText('Provider capabilities')).toBeInTheDocument()
     // and no fake management UI appears

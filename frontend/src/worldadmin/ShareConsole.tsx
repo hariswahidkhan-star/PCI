@@ -7,8 +7,7 @@ import {
 } from './template'
 import {
   ShareAdminNotEnabledError, createShareAdminSeam,
-  type ShareAdminSeam, type ShareChannel, type ShareLinkRow, type TemplateVersion,
-} from './seam'
+  type ShareAdminSeam, type ShareChannel, type ShareLinkRow, type TemplateVersion, enableFixtures } from './seam'
 
 // §10.2 PCI World share-management console — a self-contained component tree, NOT mounted in any
 // app shell (see this folder's README.md: the mount decision is deferred to integration). Every
@@ -329,9 +328,14 @@ export default function ShareConsole({ seam: injected }: { seam?: ShareAdminSeam
             in front of you is finished, the service behind it is not. Nothing is broken and
             nothing was lost; there is simply no share configuration to manage here yet.
           </p>
-          <p className="wa-help">
-            To explore the console against sample data, open it with <code>?preview=1</code>.
-          </p>
+          <button
+            type="button"
+            className="wa-btn"
+            onClick={() => { enableFixtures(); window.location.reload() }}
+          >
+            Explore the console with sample data
+          </button>
+          <p className="wa-help">Sample data is in-memory only and clearly not live configuration.</p>
         </section>
         <CapabilityCard />
       </div>
