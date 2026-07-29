@@ -202,6 +202,20 @@ def main():
 
         js(f"/api/world/contributor/articles/{ART}/submit", "POST", {"declarations": DECL}, WRITER)
 
+        # ── A second submit is refused, on the server ────────────────────────────────────
+        # Found by driving the real UI: the desk left the submit control up after submitting, and
+        # the server would have accepted it. That is not cosmetic — re-submitting re-answers the
+        # declarations AFTER an editor has read the first set, which is exactly what freezing them
+        # at submission exists to prevent. The event rows keep every version, so the record
+        # survives; what must not happen is the editor reviewing one declaration and the row
+        # showing another.
+        code, r = js(f"/api/world/contributor/articles/{ART}/submit", "POST", {"declarations": DECL}, WRITER)
+        chk("K39 a second submit is refused once the piece is with an editor",
+            code == 409 and r.get("error") == "already_submitted", f"{code} {r}")
+        n = sql("SELECT COUNT(*) FROM pciworld_contributor_events WHERE article_id=? AND event='submitted'", (ART,))[0][0]
+        chk("K40 and no second submission event was written", n == 1, str(n))
+
+
         # ── THE MAKER-CHECKER ACROSS TWO IDENTITY SYSTEMS ─────────────────────────────────
         # This is the phase's whole obligation. The editorial engine compares author_id (an
         # admin id) with the acting admin; a contributor is a pciworld_users row. Without the
@@ -245,6 +259,30 @@ def main():
         code, r = js(f"/api/world-admin/articles/{ART}/publish", "POST", None, A)
         chk("K18 an approved article does NOT publish once its author's standing is gone",
             code in (400, 403, 409) and "contributor_not_eligible" in json.dumps(r), f"{code} {r}")
+
+        # ── The editor's queue ───────────────────────────────────────────────────────────
+        # The generic article list knows nothing about contributors, so it cannot show whose
+        # submission a manuscript is, what they declared, or that the reader IS the writer. This
+        # queue exists for the third one: the conflict has to be visible in the LIST, before an
+        # editor reaches for Approve, not only as a refusal afterwards.
+        sql("UPDATE pciworld_admin_users SET world_user_id=? WHERE email=?", (WRITER_ID, "owner@pciworld.local"))
+        code, r = js("/api/world-admin/editorial/queue", "GET", None, A)
+        row = next((x for x in r.get("queue", []) if x["id"] == ART), None)
+        chk("K41 the queue lists the contributor's manuscript", code == 200 and row, str(r)[:160])
+        chk("K42 with the contributor named", row and row.get("contributor"), str(row))
+        chk("K43 and flags a self-review BEFORE the editor clicks approve",
+            row and row.get("self_review") is True, str(row))
+        chk("K44 carrying the declarations frozen at submission",
+            row and row.get("declarations") and "originality" in row["declarations"], str(row)[:200])
+
+        sql("UPDATE pciworld_admin_users SET world_user_id=NULL WHERE email=?", ("owner@pciworld.local",))
+        code, r = js("/api/world-admin/editorial/queue", "GET", None, A)
+        row = next((x for x in r.get("queue", []) if x["id"] == ART), None)
+        chk("K45 and does not flag one when the reader is somebody else",
+            row and row.get("self_review") is False, str(row))
+
+        code, r = js("/api/world-admin/editorial/queue", "GET", None, WRITER)
+        chk("K46 the queue is admin-only", code in (401, 403), f"got {code} {r}")
 
         # ── Revocation is not retroactive content destruction ─────────────────────────────
         WRITER2, WRITER2_ID = member("writer2@people.test")

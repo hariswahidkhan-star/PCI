@@ -176,7 +176,15 @@ public static class WorldContributorsApi
                 "SELECT status FROM pciworld_articles WHERE id=? AND contributor_user_id=?", id, user.Id);
             if (row is null) return Results.NotFound();
             var from = H.Str(row["status"]);
-            if (!WorldEditorial.CanEdit(from)) return Results.Json(new { error = "not_submittable", status = from }, statusCode: 409);
+            // Submittable is NARROWER than editable, deliberately. WorldEditorial.CanEdit still
+            // allows edits during technical_review — a first-stage reviewer working with the author
+            // is normal — but SUBMITTING again from there is not: it would let someone re-answer the
+            // declarations after an editor had already read the first set, which is precisely what
+            // freezing them at submission exists to prevent. The event rows keep every version, so
+            // the record survives either way; what must not happen is the editor being shown a
+            // different declaration from the one they reviewed.
+            if (from is not ("idea" or "drafting"))
+                return Results.Json(new { error = "already_submitted", status = from }, statusCode: 409);
 
             var b = await H.Body(ctx.Request);
             // Declarations are frozen into the submission event rather than kept as a mutable
@@ -292,6 +300,35 @@ public static class WorldContributorsApi
                     "SELECT COALESCE(MAX(accepted_posts),0) FROM pciworld_forum_standing WHERE user_id=?", H.L(c["user_id"])),
                 forum_upheld_reports = db.Scalar<long>(
                     "SELECT COALESCE(MAX(upheld_reports),0) FROM pciworld_forum_standing WHERE user_id=?", H.L(c["user_id"])),
+            }) });
+        });
+
+        // The editor's queue, which the generic /api/world-admin/articles list cannot serve: it knows
+        // nothing about contributors, so it cannot show WHOSE submission a manuscript is, what they
+        // declared, or — the important one — that the person looking at it is the person who wrote
+        // it. Surfacing that conflict in the LIST rather than only on the refusal is the point: an
+        // editor should see it before they reach for the approve button, not after.
+        app.MapGet("/api/world-admin/editorial/queue", (HttpContext ctx) =>
+        {
+            if (AdminGate(ctx, "read", out var adm) is { } deny) return deny;
+            var rows = db.Query(
+                @"SELECT a.id,a.slug,a.title,a.status,a.updated_at,a.declarations_json,
+                         a.contributor_user_id,u.display_name
+                  FROM pciworld_articles a
+                  JOIN pciworld_users u ON u.id = a.contributor_user_id
+                  WHERE a.contributor_user_id IS NOT NULL AND a.status NOT IN ('published','archived')
+                  ORDER BY a.updated_at");
+            return Results.Json(new { queue = rows.Select(r => new
+            {
+                id = H.L(r["id"]), slug = H.Str(r["slug"]), title = H.Str(r["title"]),
+                status = H.Str(r["status"]), updated_at = H.Str(r["updated_at"]),
+                contributor = H.Str(r["display_name"]),
+                // What they declared AT SUBMISSION, so the editor reads the same words the record
+                // froze rather than a later edit of them.
+                declarations = H.Str(r["declarations_json"]),
+                // The maker-checker, evaluated per row for the admin actually looking. Advisory in
+                // the UI; the server refuses independently in Review/Approve/Publish.
+                self_review = WorldContributors.IsSelfReview(db, H.L(r["id"]), adm!.Id),
             }) });
         });
 

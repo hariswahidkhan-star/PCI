@@ -152,51 +152,60 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
   .portal-switcher-btn:hover:not(:disabled) .ps-arrow { transform: none; }
 }
 
-/* ── Share sheet (Phase 6 premium share experience) ────────────────────────────────────────── */
+/* ── PCI World contributor desk (write, submit, talk to an editor) ─────────────────────────── */
 
-/* One component, two shapes: a centred dialog on desktop, a bottom sheet on small screens. */
-.ss-backdrop {
-  position: fixed; inset: 0; z-index: 40;
-  background: rgba(20, 24, 29, 0.45);
-  display: flex; align-items: center; justify-content: center; padding: 16px;
-}
-.ss-panel {
-  background: #fff; border: 1px solid var(--line); border-top: 3px solid var(--gilt);
-  border-radius: 8px; padding: 18px 20px; width: 100%; max-width: 460px;
-  max-height: min(86vh, 640px); overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(20, 24, 29, 0.25);
-  animation: ss-in 180ms ease-out;
-}
-@keyframes ss-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-@media (max-width: 640px) {
-  .ss-backdrop { align-items: flex-end; padding: 0; }
-  .ss-panel {
-    max-width: none; border-radius: 12px 12px 0 0; border-left: 0; border-right: 0; border-bottom: 0;
-    animation: ss-up 200ms ease-out;
-  }
-  @keyframes ss-up { from { transform: translateY(40%); } to { transform: none; } }
-}
-@media (prefers-reduced-motion: reduce) { .ss-panel { animation: none; } }
+/* Public article reading is server-rendered and styled elsewhere; these rules cover only the
+   authoring surface. Same discipline as the fw-* and wc-* blocks above: every state is carried by
+   the WORD, and colour only reinforces a sentence that already says the whole thing. */
 
-.ss-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.ss-head h2 { margin: 0; }
-.ss-close { background: none; border: 1px solid var(--line); color: var(--slate); border-radius: 4px;
-  font-size: 18px; line-height: 1; padding: 4px 10px; }
-.ss-disclosure { color: var(--ink); font-size: 14px; border-left: 3px solid var(--gilt);
-  padding-left: 10px; margin: 12px 0 14px; }
-.ss-channels { list-style: none; padding: 0; margin: 0 0 12px;
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 8px; }
-/* Every channel is icon + a VISIBLE text label — never an unlabelled glyph. */
-.ss-channel {
-  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
-  background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
-  padding: 9px 10px; font: inherit; font-size: 14px; cursor: pointer; text-decoration: none;
-}
-.ss-channel:hover, .ss-channel:focus-visible { border-color: var(--ink); }
-.ss-channel:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
-.ss-label { flex: 1; }
-.ss-instagram, .ss-footnote { color: var(--slate); font-size: 12.5px; margin: 8px 0 0; }
-.ss-note { color: var(--ink); font-size: 14px; margin: 8px 0 0; }
-.ss-fallback label { color: var(--ink); font-size: 13.5px; }
-.ss-fallback textarea { width: 100%; max-width: none; font: inherit; font-size: 13px; margin-top: 6px;
-  padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; word-break: break-all; }
+.cd h1 { font-size: 24px; margin: 0 0 6px; }
+.cd-section { border: 1px solid #d8d8c8; border-radius: 8px; padding: 1rem 1.15rem; margin: 0 0 1.1rem; background: #fff; }
+.cd-subsection { border-top: 1px solid #d8d8c8; margin-top: 1.1rem; padding-top: 0.9rem; }
+.cd-section h2 { font-size: 18px; margin: 0 0 0.5rem; }
+.cd-subsection h3 { font-size: 16px; margin: 0 0 0.5rem; }
+
+.cd-help { font-size: 0.9em; color: #55603d; margin: 0.25rem 0 0.7rem; }
+.cd-signin { color: #55603d; }
+.cd-quote { border-left: 3px solid #6b3f00; padding-left: 0.75rem; margin: 0.5rem 0; font-style: italic; }
+
+.cd-notice { padding: 0.6rem 0.8rem; border-radius: 6px; border-left: 4px solid; margin: 0.6rem 0; }
+.cd-notice-info { background: #eef5ea; border-color: #3c6b2f; color: #24451c; }
+.cd-notice-held { background: #fdf3e3; border-color: #6b3f00; color: #6b3f00; }
+.cd-notice-error { background: #fdeaea; border-color: #8a1c1c; color: #8a1c1c; }
+
+/* State pills. The label inside always names the state in full, so the colour is redundant by
+   design — remove the CSS and the screen still says exactly the same thing. */
+.cd-pill { display: inline-block; font-size: 0.8em; font-weight: 600; letter-spacing: 0.04em;
+           text-transform: uppercase; padding: 0.25rem 0.5rem; border-radius: 3px; }
+.cd-pill-live { background: #eef5ea; color: #24451c; }
+.cd-pill-held { background: #fdf3e3; color: #6b3f00; }
+.cd-pill-stop { background: #fdeaea; color: #8a1c1c; }
+.cd-pill-plain { background: #eee9dc; color: #4a4636; }
+
+.cd-rows { list-style: none; margin: 0; padding: 0; }
+.cd-row { border-top: 1px solid #d8d8c8; padding: 0.7rem 0; }
+.cd-row:first-child { border-top: 0; }
+.cd-row-title { margin: 0 0 0.25rem; font-weight: 600; overflow-wrap: anywhere; }
+.cd-row-meta { margin: 0 0 0.35rem; }
+
+.cd textarea, .cd input, .cd select { width: 100%; font: inherit; padding: 8px 10px;
+  border: 1px solid var(--line); border-radius: 4px; background: #fff; }
+.cd-decl { margin: 0 0 0.9rem; }
+.cd-actions { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; margin: 0.8rem 0 0; }
+
+.cd-thread { list-style: none; margin: 0 0 0.9rem; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+.cd-msg { border-left: 3px solid #d8d8c8; padding-left: 0.75rem; }
+/* An editor's message is marked by a rule AND by the word "Editor" above it. */
+.cd-msg-editor { border-left-color: var(--gilt); }
+.cd-msg-who { margin: 0 0 0.15rem; font-weight: 600; font-size: 0.92em; }
+.cd-msg-body { margin: 0; overflow-wrap: anywhere; }
+
+/* A draft is plain text with a small mark-up subset, so it must render with its own line breaks
+   intact rather than collapsing into one paragraph. */
+.cd-preserve { white-space: pre-wrap; overflow-wrap: anywhere; }
+.cd-readonly { border-left: 3px solid #d8d8c8; padding-left: 0.9rem; }
+
+.cd-linkish { background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer;
+              font: inherit; color: inherit; }
+.cd-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden;
+                      clip: rect(0 0 0 0); white-space: nowrap; }
