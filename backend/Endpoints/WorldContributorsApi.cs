@@ -176,7 +176,15 @@ public static class WorldContributorsApi
                 "SELECT status FROM pciworld_articles WHERE id=? AND contributor_user_id=?", id, user.Id);
             if (row is null) return Results.NotFound();
             var from = H.Str(row["status"]);
-            if (!WorldEditorial.CanEdit(from)) return Results.Json(new { error = "not_submittable", status = from }, statusCode: 409);
+            // Submittable is NARROWER than editable, deliberately. WorldEditorial.CanEdit still
+            // allows edits during technical_review — a first-stage reviewer working with the author
+            // is normal — but SUBMITTING again from there is not: it would let someone re-answer the
+            // declarations after an editor had already read the first set, which is precisely what
+            // freezing them at submission exists to prevent. The event rows keep every version, so
+            // the record survives either way; what must not happen is the editor being shown a
+            // different declaration from the one they reviewed.
+            if (from is not ("idea" or "drafting"))
+                return Results.Json(new { error = "already_submitted", status = from }, statusCode: 409);
 
             var b = await H.Body(ctx.Request);
             // Declarations are frozen into the submission event rather than kept as a mutable

@@ -202,6 +202,20 @@ def main():
 
         js(f"/api/world/contributor/articles/{ART}/submit", "POST", {"declarations": DECL}, WRITER)
 
+        # ── A second submit is refused, on the server ────────────────────────────────────
+        # Found by driving the real UI: the desk left the submit control up after submitting, and
+        # the server would have accepted it. That is not cosmetic — re-submitting re-answers the
+        # declarations AFTER an editor has read the first set, which is exactly what freezing them
+        # at submission exists to prevent. The event rows keep every version, so the record
+        # survives; what must not happen is the editor reviewing one declaration and the row
+        # showing another.
+        code, r = js(f"/api/world/contributor/articles/{ART}/submit", "POST", {"declarations": DECL}, WRITER)
+        chk("K39 a second submit is refused once the piece is with an editor",
+            code == 409 and r.get("error") == "already_submitted", f"{code} {r}")
+        n = sql("SELECT COUNT(*) FROM pciworld_contributor_events WHERE article_id=? AND event='submitted'", (ART,))[0][0]
+        chk("K40 and no second submission event was written", n == 1, str(n))
+
+
         # ── THE MAKER-CHECKER ACROSS TWO IDENTITY SYSTEMS ─────────────────────────────────
         # This is the phase's whole obligation. The editorial engine compares author_id (an
         # admin id) with the acting admin; a contributor is a pciworld_users row. Without the
