@@ -8,6 +8,7 @@ import ForumApp from './forum/ForumApp'
 import EmployerPortal from './careers/EmployerPortal'
 import MyApplications from './careers/MyApplications'
 import PortalSwitcher from './PortalSwitcher'
+import DemoBanner from '../components/DemoBanner'
 
 // ── Dashboard aggregate (mirror of /api/world/me/dashboard) ──
 
@@ -109,6 +110,8 @@ export default function App() {
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="world-shell">
+      {/* Above the header, so it is the first thing read on every World state including sign-in. */}
+      <DemoBanner />
       <header>
         <span className="brand">PCI <b>World</b></span>
         <span className="tag">practice, not certification</span>

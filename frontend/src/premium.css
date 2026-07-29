@@ -514,3 +514,19 @@ a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: va
   .card, .kpi { box-shadow: none; border-color: #cbd5e1; break-inside: avoid; }
   body::before { display: none; }
 }
+
+/* ---------------------------------------------------------------------------
+   21. Demonstration-mode banner — placement
+   The banner's own appearance lives in src/demo/banner.css so the PCI World bundle, which does
+   not load this stylesheet, gets exactly the same notice. What stays here is where the PORTAL
+   and ADMIN screens put it.
+   -------------------------------------------------------------------------- */
+/* On the auth screens the app shell doesn't exist yet, so AuthShell wraps the split in a column
+   and the banner is simply the strip above it — same full-width treatment as inside the shells. */
+.auth-page { display: flex; flex-direction: column; min-height: 100vh; }
+.auth-page > .auth-split { flex: 1 1 auto; min-height: 0; }
+/* The admin sign-in is a single centred block, so there the banner reads as a card of its own. */
+.center-page > .demo-banner {
+  border-radius: var(--r-sm); border: 1px solid #fcd34d;
+  max-width: 720px; width: 100%; margin: 0 auto var(--s4);
+}
