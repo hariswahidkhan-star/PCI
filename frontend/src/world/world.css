@@ -200,3 +200,31 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
 .ss-fallback label { color: var(--ink); font-size: 13.5px; }
 .ss-fallback textarea { width: 100%; max-width: none; font: inherit; font-size: 13px; margin-top: 6px;
   padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; word-break: break-all; }
+
+/* ── §8.6 share crop previews — pure CSS mock cards, no canvas, no fidelity claims ─────────── */
+.ss-tabs { display: flex; gap: 6px; margin: 0 0 12px; }
+.ss-tab {
+  background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
+  padding: 7px 14px; font: inherit; font-size: 14px; cursor: pointer;
+}
+.ss-tab[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.ss-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.ss-preview-note { color: var(--slate); font-size: 12.5px; margin: 0 0 10px; }
+.ss-crops { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.ss-crop { margin: 0; }
+.ss-crop-card {
+  width: 100%; border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+  background-color: #14181d; background-size: cover; background-position: center;
+  display: flex; align-items: flex-end;
+}
+/* Tall crops centre a smaller band of the landscape og:image — an honest approximation of how
+   networks letterbox/crop a 1200×630 card, not a re-render. */
+.ss-crop-scrim {
+  width: 100%; padding: 10px;
+  background: linear-gradient(transparent, rgba(10, 13, 17, 0.86) 45%);
+  color: #fff;
+}
+.ss-crop-title { margin: 0; font-size: 12.5px; font-weight: 700; overflow-wrap: anywhere; }
+.ss-crop-desc { margin: 3px 0 0; font-size: 11px; opacity: 0.92; }
+.ss-crop-disclaimer { margin: 3px 0 0; font-size: 10px; opacity: 0.8; font-style: italic; }
+.ss-crop-caption { color: var(--slate); font-size: 12px; margin-top: 5px; }

@@ -22,6 +22,47 @@ export const DISCLOSURE_LINE = 'Anyone with this link sees exactly what your pub
  *  server builds, minus the display name (which only the server should vouch for). */
 export const FALLBACK_CAPTION = 'PCI World Passport. Practice evidence only — never a credential.'
 
+// ── §8.6 share crop previews — pure CSS mock cards, honest by construction. ──────────────────
+//
+// The cards are built ONLY from the same public fields the server's OG metadata carries
+// (display name, challenge/industry counts, the practice disclaimer — WorldPages.OgHead) plus
+// the real og:image, which today is the static branded 1200×630 fallback at OG_IMAGE_URL —
+// rendered here as the card background via its public URL. There is no canvas export and no
+// per-network fidelity claim: each network re-crops and re-renders the link card its own way,
+// which is exactly what PREVIEW_NOTE says on screen.
+
+export const OG_IMAGE_URL = '/assets/og-image.jpg?v=1'
+
+export const PREVIEW_NOTE = 'Preview approximation — each network renders its own crop.'
+
+/** The practice disclaimer the public metadata carries — same line the caption ends with. */
+export const PREVIEW_DISCLAIMER = 'Practice evidence only — never a credential.'
+
+/** The four crops networks commonly cut a landscape link card into. */
+export const CROPS = [
+  { key: 'landscape', label: 'LinkedIn landscape', w: 1200, h: 630 },
+  { key: 'square', label: 'Square', w: 1080, h: 1080 },
+  { key: 'portrait', label: 'Portrait', w: 1080, h: 1350 },
+  { key: 'story', label: 'Story', w: 1080, h: 1920 },
+] as const
+
+/** The public fields the OG metadata is derived from — nothing more may reach a preview card. */
+export interface SharePreviewFields {
+  displayName: string | null
+  completedCount: number
+  industryCount: number
+}
+
+/** Mirrors the server's og:title for a Passport: "{name} — PCI World Passport". */
+export function previewTitle(displayName: string | null): string {
+  return `${(displayName ?? '').trim() || 'PCI World participant'} — PCI World Passport`
+}
+
+/** Mirrors the server's og:description, pluralisation included (WorldPages.cs Passport head). */
+export function previewDescription(completed: number, industries: number): string {
+  return `Verified virtual project experience: ${completed} completed PCI World challenge${completed === 1 ? '' : 's'} across ${industries} industr${industries === 1 ? 'y' : 'ies'}.`
+}
+
 /** The one-line honesty footnote, derived from the capability matrix rather than hand-written so
  *  it can never drift from what the sheet actually does. */
 export function capabilityFootnote(): string {
@@ -78,10 +119,32 @@ export interface ShareSheetProps {
   qrHref?: string | null
   /** Server-truth caption fetcher (Copy caption). Falls back to the neutral product caption. */
   getCaption?: () => Promise<string>
+  /** Public OG fields for the §8.6 crop previews. Absent → no Preview tab (sheet unchanged). */
+  preview?: SharePreviewFields
 }
 
-export default function ShareSheet({ open, onClose, url, qrHref, getCaption }: ShareSheetProps) {
+/** One pure-CSS mock card: the real og:image as background, the OG text fields on top. */
+function CropCard({ crop, fields }: { crop: (typeof CROPS)[number]; fields: SharePreviewFields }) {
+  return (
+    <figure className="ss-crop" data-crop={crop.key}>
+      <div
+        className="ss-crop-card"
+        style={{ aspectRatio: `${crop.w} / ${crop.h}`, backgroundImage: `url(${OG_IMAGE_URL})` }}
+      >
+        <div className="ss-crop-scrim">
+          <p className="ss-crop-title">{previewTitle(fields.displayName)}</p>
+          <p className="ss-crop-desc">{previewDescription(fields.completedCount, fields.industryCount)}</p>
+          <p className="ss-crop-disclaimer">{PREVIEW_DISCLAIMER}</p>
+        </div>
+      </div>
+      <figcaption className="ss-crop-caption">{crop.label} · {crop.w}×{crop.h}</figcaption>
+    </figure>
+  )
+}
+
+export default function ShareSheet({ open, onClose, url, qrHref, getCaption, preview }: ShareSheetProps) {
   const [caption, setCaption] = useState(FALLBACK_CAPTION)
+  const [tab, setTab] = useState<'share' | 'preview'>('share')
   const [note, setNote] = useState('')
   const [fallback, setFallback] = useState<{ kind: 'link' | 'caption'; value: string } | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -93,7 +156,7 @@ export default function ShareSheet({ open, onClose, url, qrHref, getCaption }: S
 
   useEffect(() => {
     if (!open) return
-    setNote(''); setFallback(null)
+    setNote(''); setFallback(null); setTab('share')
     let stale = false
     void getCaption?.().then(c => { if (!stale && c) setCaption(c) }).catch(() => { /* fallback stands */ })
     return () => { stale = true }
@@ -158,6 +221,28 @@ export default function ShareSheet({ open, onClose, url, qrHref, getCaption }: S
 
         <p className="ss-disclosure">{DISCLOSURE_LINE}</p>
 
+        {preview && (
+          <div role="tablist" aria-label="Share or preview" className="ss-tabs">
+            <button type="button" role="tab" id="ss-tab-share" aria-selected={tab === 'share'}
+              aria-controls="ss-panel-share" className="ss-tab" onClick={() => setTab('share')}>
+              Share
+            </button>
+            <button type="button" role="tab" id="ss-tab-preview" aria-selected={tab === 'preview'}
+              aria-controls="ss-panel-preview" className="ss-tab" onClick={() => setTab('preview')}>
+              Preview
+            </button>
+          </div>
+        )}
+
+        {preview && tab === 'preview' ? (
+          <div role="tabpanel" id="ss-panel-preview" aria-labelledby="ss-tab-preview" className="ss-previews">
+            <p className="ss-preview-note">{PREVIEW_NOTE}</p>
+            <div className="ss-crops">
+              {CROPS.map(c => <CropCard key={c.key} crop={c} fields={preview} />)}
+            </div>
+          </div>
+        ) : (
+          <div {...(preview ? { role: 'tabpanel', id: 'ss-panel-share', 'aria-labelledby': 'ss-tab-share' } : {})}>
         <ul className="ss-channels">
           {CHANNELS.map(c => (
             <li key={c.key}>
@@ -211,6 +296,8 @@ export default function ShareSheet({ open, onClose, url, qrHref, getCaption }: S
         )}
 
         <p className="ss-footnote">{capabilityFootnote()}</p>
+        </div>
+        )}
       </div>
     </div>
   )
