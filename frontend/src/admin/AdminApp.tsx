@@ -57,6 +57,7 @@ import Settings from './pages/Settings'
 import Exams from './pages/Exams'
 import Proctoring from './pages/Proctoring'
 import ExamExceptions from './pages/ExamExceptions'
+import Identity from './pages/Identity'
 import CrudSection from './CrudSection'
 import { CRUD_SECTIONS } from './crudConfigs'
 import { ErrorNote } from '../components/ui'
@@ -142,6 +143,7 @@ export default function AdminApp() {
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />
         <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />
         <Route path="audit" element={<Perm section="audit"><Audit /></Perm>} />
+        <Route path="identity" element={<AnyPerm sections={['id_read', 'id_backfill', 'id_merge_request', 'id_merge_approve', 'id_audit']}><Identity /></AnyPerm>} />
         <Route path="exams" element={<Perm section="exams"><Exams /></Perm>} />
         <Route path="proctoring" element={<Perm section="proctoring"><Proctoring /></Perm>} />
         <Route path="exam-exceptions" element={<Perm section="ex_view"><ExamExceptions /></Perm>} />

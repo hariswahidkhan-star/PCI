@@ -546,6 +546,91 @@ export interface ExamIncidentRow {
   certification_acronym?: string | null
 }
 
+// ---- Canonical identity & PCI Student Numbers (id_* permission group) ----
+
+/** Counts-only integrity report (GET /api/admin/identity/student-numbers/health). Deliberately
+ *  contains no member records. A count of -1 means that probe itself failed — render it as
+ *  unknown, never as zero. */
+export interface IdentityHealth {
+  eligible_students: number
+  missing_number: number
+  blank_number: number
+  duplicate_numbers: number
+  malformed_numbers: number
+  projection_without_reservation: number
+  reservation_without_projection: number
+  retired_reservations: number
+  quarantined_reservations: number
+  students_without_profile: number
+  /** Same predicate Migrate uses: whether the next boot will create the uniqueness index. */
+  projection_index_eligible: boolean
+}
+
+/** One row of the backfill dry-run (POST …/backfill/preview). Nothing is written. */
+export interface IdentityBackfillPreviewRow {
+  user_id: number
+  created_at?: string | null
+  would_issue: string
+  conflict: boolean
+}
+
+export interface IdentityBackfillPreview {
+  total_missing: number
+  sample_size: number
+  sample: IdentityBackfillPreviewRow[]
+  /** Always 0 — the endpoint exists to prove the run before it happens. */
+  writes: number
+}
+
+export interface IdentityBackfillFailure {
+  user_id: number
+  reason: string
+}
+
+/** Result of one backfill batch (POST …/backfill/run). */
+export interface IdentityBackfillResult {
+  examined: number
+  issued: number
+  quarantined: number
+  high_water_user_id: number
+  remaining: number
+  failures: IdentityBackfillFailure[]
+}
+
+/** Ledger-versus-projection drift (GET …/reconcile). Samples are numbers, never people. */
+export interface IdentityReconciliation {
+  projection_without_reservation: number
+  reservation_without_projection: number
+  sample_projection_without_reservation: string[]
+  sample_reservation_without_projection: string[]
+  reconciled: boolean
+}
+
+/** One maker-checker merge request (GET /api/admin/identity/merges). */
+export interface IdentityMergeRow {
+  id: number
+  source_user_id: number
+  target_user_id: number
+  reason?: string | null
+  status: string
+  requested_by: number
+  requested_at?: string | null
+  decided_by?: number | null
+  decided_at?: string | null
+  decision_note?: string | null
+  correlation_id?: string | null
+}
+
+/** Per-table affected-row counts for one account — the merge preview is the blast radius,
+ *  never member records. -1 means that table's count could not be read. */
+export type IdentityMergeCounts = Record<string, number>
+
+/** GET /api/admin/identity/merges/{id}: the request plus its live counts preview. */
+export interface IdentityMergeDetail {
+  request: IdentityMergeRow
+  preview: { source: IdentityMergeCounts; target: IdentityMergeCounts }
+}
+
 /** One exam window rule (GET/POST /api/admin/exam-window-rules). */
 export interface ExamWindowRule {
   id: number
