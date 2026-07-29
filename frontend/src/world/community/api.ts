@@ -5,6 +5,8 @@
 // lifetime. Mixing them would let an account token leak into a guest request or vice versa, and the
 // product rule is that a guest room needs no account at all.
 
+import { demoAwareFetch } from '../../demo/intercept'
+
 const ROOM_TOKEN_KEY = 'pciworld_room_session'
 
 export class CommunityError extends Error {
@@ -33,12 +35,15 @@ async function call<T>(path: string, method: string, body?: unknown): Promise<T>
   if (token) headers['X-Community-Session'] = token
   if (body !== undefined) headers['Content-Type'] = 'application/json'
 
-  const res = await fetch(path, {
+  // Demonstration mode short-circuits before the network; see src/demo/intercept.ts for the rule.
+  const attempt = await demoAwareFetch(path, {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
     credentials: 'same-origin',
-  })
+  }, body)
+  if (attempt.demo) return attempt.data as T
+  const res = attempt.res
 
   const text = await res.text()
   let data: Record<string, unknown> = {}

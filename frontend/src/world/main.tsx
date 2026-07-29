@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { initDemoMode } from '../demo/mode'
 import App from './App'
 import CommunityApp from './community/CommunityApp'
 import VerifyNumber from './VerifyNumber'
@@ -19,6 +20,8 @@ const isCommunity = window.location.pathname.startsWith('/world-app/community')
 // checking a number must never be asked to sign in, so it mounts beside — not inside — the
 // authenticated account shell.
 const isVerify = window.location.pathname.startsWith('/world-app/verify-number')
+
+initDemoMode()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

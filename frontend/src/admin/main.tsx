@@ -1,4 +1,5 @@
 import React from 'react'
+import { initDemoMode } from '../demo/mode'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import AdminApp from './AdminApp'
@@ -35,6 +36,8 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 }
 
 // Served by the backend under /admin/ (see backend/Program.cs SPA fallback).
+initDemoMode()
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>

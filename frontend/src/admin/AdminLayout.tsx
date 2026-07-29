@@ -5,6 +5,7 @@ import { CRUD_SECTIONS } from './crudConfigs'
 import { initials } from '../format'
 import { Icon, type IconName } from '../components/icons'
 import CommandPalette from './CommandPalette'
+import DemoBanner from '../components/DemoBanner'
 
 // Sections ported to the React admin so far. `perm` null = any authenticated admin;
 // `owner` = owner-only; `anyPerm` = visible if the admin holds any listed permission.
@@ -204,7 +205,9 @@ export default function AdminLayout() {
         </nav>
       </aside>
 
-      <div className="main" ref={mainRef}>
+      <div className="main-col">
+        <DemoBanner />
+        <div className="main" ref={mainRef}>
         <header className="topbar">
           <div className="row">
             <button className="menu-btn" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((o) => !o)}>☰</button>
@@ -236,6 +239,7 @@ export default function AdminLayout() {
         <main className="content route-fade" key={loc.pathname} style={{ maxWidth: 1180 }}>
           <Outlet />
         </main>
+        </div>
       </div>
 
       <CommandPalette items={paletteItems} open={paletteOpen} onClose={() => setPaletteOpen(false)} />

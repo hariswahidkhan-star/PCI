@@ -5,6 +5,7 @@ import { useMe } from '../data/MeContext'
 import { useT } from '../i18n'
 import LanguageSwitcher from './LanguageSwitcher'
 import NotificationBell from './NotificationBell'
+import DemoBanner from './DemoBanner'
 import { initials } from '../format'
 import { Icon, type IconName } from './icons'
 
@@ -104,6 +105,7 @@ export default function Layout() {
       </aside>
 
       <div className="main-col">
+        <DemoBanner />
         {impersonated && (
           <div className="impersonation-banner" role="status">
             Support view — you are viewing this account as PCI staff. Actions that belong to the student are disabled.

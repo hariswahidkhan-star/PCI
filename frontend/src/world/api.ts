@@ -5,6 +5,8 @@
 // carrier or a storage key. localStorage (not sessionStorage) matches the classic World pages,
 // so the classic /world/* surfaces and this app see the same signed-in state.
 
+import { demoAwareFetch } from '../demo/intercept'
+
 const TOKEN_KEY = 'pciworld_account'   // same key the classic World pages use — one sign-in state
 
 export class WorldApiError extends Error {
@@ -38,11 +40,20 @@ export async function api<T>(path: string, body?: unknown, method?: string): Pro
   const anon = localStorage.getItem('world_session')
   if (anon) headers['X-World-Session'] = anon
   if (body !== undefined) headers['Content-Type'] = 'application/json'
-  const res = await fetch(path, {
-    method: method ?? (body !== undefined ? 'POST' : 'GET'),
+  const verb = method ?? (body !== undefined ? 'POST' : 'GET')
+
+  // Demonstration mode short-circuits before the network; see src/demo/intercept.ts for the rule.
+  // A genuine network failure is rethrown UNWRAPPED, as it always was: callers here distinguish a
+  // WorldApiError (the server said no) from a transport failure (it never answered), and wrapping
+  // one as the other would put a socket message where a product message belongs.
+  const attempt = await demoAwareFetch(path, {
+    method: verb,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
-  })
+  }, body)
+  if (attempt.demo) return attempt.data as T
+  const res = attempt.res
+
   const text = await res.text()
   let parsed: unknown = null
   try { parsed = text ? JSON.parse(text) : null } catch { /* non-JSON error body */ }
