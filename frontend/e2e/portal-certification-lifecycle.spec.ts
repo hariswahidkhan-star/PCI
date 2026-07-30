@@ -5,11 +5,23 @@ import { captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
 
 const tinyPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
-async function browserLocalDateTime(page: import('@playwright/test').Page, hoursAhead: number): Promise<string> {
-  return page.evaluate((hours) => {
-    const d = new Date(Date.now() + hours * 3_600_000)
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16)
-  }, hoursAhead)
+/** Drive the portal's scheduling window (month calendar + slot grid): navigate from the initially
+ * shown month (the month of now + 2 h) to the month of `daysAhead`, click that day, then the slot.
+ * A slot `daysAhead` days out at 09:00 is always ≥ (24·daysAhead − 15) h away, so daysAhead = 4
+ * and 5 both clear the seeded 72 h reschedule cutoff whatever the wall-clock time. */
+async function pickCalendarSlot(page: import('@playwright/test').Page, daysAhead: number, slot: string): Promise<void> {
+  const target = await page.evaluate((days) => {
+    const shown = new Date(Date.now() + 2 * 3_600_000)
+    const t = new Date(Date.now() + days * 86_400_000)
+    return {
+      day: t.getDate(),
+      monthSteps: (t.getFullYear() - shown.getFullYear()) * 12 + (t.getMonth() - shown.getMonth()),
+    }
+  }, daysAhead)
+  for (let i = 0; i < target.monthSteps; i += 1)
+    await page.getByRole('button', { name: 'Next month', exact: true }).click()
+  await page.locator('.schedm-day:not([disabled])').filter({ hasText: new RegExp(`^${target.day}$`) }).click()
+  await page.getByRole('button', { name: slot, exact: true }).click()
 }
 
 test.describe('complete certification lifecycle', () => {
@@ -49,14 +61,14 @@ test.describe('complete certification lifecycle', () => {
     const schedule = page.getByRole('button', { name: 'Schedule exam', exact: true })
     await expect(schedule).toBeEnabled()
     await schedule.click()
-    await page.locator('#sched-when').fill(await browserLocalDateTime(page, 80))
+    await pickCalendarSlot(page, 4, '09:00')
     const bookedResponse = page.waitForResponse((r) => r.url().endsWith('/api/me/exam/book') && r.request().method() === 'POST')
     await page.getByRole('button', { name: 'Confirm slot', exact: true }).click()
     expect((await bookedResponse).ok()).toBeTruthy()
     await expect(page.getByText(/Your exam is scheduled for/i)).toBeVisible()
 
     await page.getByRole('button', { name: 'Reschedule', exact: true }).click()
-    await page.locator('#sched-when').fill(await browserLocalDateTime(page, 96))
+    await pickCalendarSlot(page, 5, '14:00')
     const rescheduledResponse = page.waitForResponse((r) => r.url().endsWith('/api/me/exam/reschedule') && r.request().method() === 'POST')
     await page.getByRole('button', { name: 'Confirm slot', exact: true }).click()
     const rescheduled = await rescheduledResponse
