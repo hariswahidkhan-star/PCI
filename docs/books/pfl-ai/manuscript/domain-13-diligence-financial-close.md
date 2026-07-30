@@ -374,7 +374,7 @@ shared assumption (13.1.2). A produces no evidence; C costs 124,133.33 a week fo
 register achieves free; D is out of scope — the audit tests the model against documents, not
 whether two advisers assumed the same thing.
 
-**MCQ 13.1-E `[13.1.4 · Evaluation]`** Kestrel's diligence envelope is twelve weeks, set by the
+**MCQ 13.1-E `[13.1.4 · Analysis]`** Kestrel's diligence envelope is twelve weeks, set by the
 environmental and social stream; the next-longest streams are legal at ten weeks and market at
 nine. Delay costs 124,133.33 a week. The environmental and social consultant offers to compress its
 stream to nine weeks for a 200,000 acceleration fee. The sponsor should:
@@ -405,25 +405,33 @@ fraction of the exposure in any case; D is a real procurement fact for several s
 notes the arithmetic then argues about timing and scope rather than about whether to run the stream.
 
 **MCQ 13.1-G `[13.1.5 · Evaluation]`** During diligence a demand study commissioned early in
-development is superseded by a second study with a lower central case. The sponsor's development
-team proposes removing the first study from the data room, on the ground that no party relies on it
-and its presence will only raise questions the second study has already answered. The soundest
-professional position is that the first study:
-- A. should be removed — a superseded document is not a disclosure, and leaving it in invites questions
-  about a forecast nobody relies on
+development is superseded by a second study with a lower central case. The sponsor's development team
+proposes removing the first study from the data room, on the ground that no party relies on it and its
+presence will only raise questions the second study has already answered. Counsel takes a different
+view: leave it in the room, marked, but keep it off the numbered disclosure index, since indexing a
+forecast nobody stands behind is an invitation to rely on it. The soundest professional position is
+that the first study:
+- A. should be removed — a superseded document is not a disclosure, and a central case nobody stands
+  behind is a liability in a room and nothing else
 - B. should stay, marked superseded with a date and a note, and appear on the numbered disclosure index —
-  because the index later determines what the lenders were told, and the trail is the evidence base for
-  the first covenant dispute, warranty claim and refinancing ✅
+  because the index is what later determines what the lenders were told, and a document available in the
+  room but absent from the index is the one combination that can be neither relied on nor disproved ✅
 - C. should stay unmarked, since both studies carry dates and a reader can see which is later
-- D. should be moved to a folder visible only to the sponsor's own advisers, so that it remains available
-  internally without being disclosed
+- D. should stay, marked superseded, but off the index as counsel proposes, so that the record shows the
+  second study as the only disclosed forecast
 
-*Rationale:* Version control with supersession **marked** rather than deleted is the discipline, and
-removal is the worse of the two failures because the trail disappears (13.1.5) — a superseded forecast
-left in a room without a supersession note is what Domain 6 (Case study B) priced. A treats disclosure
-as a presentational choice, and it is the choice a challenged representation will later be tested
-against. C leaves two live-looking central cases and no record of which was relied on. D is the same act
-as A with a record that the omission was deliberate.
+*Rationale:* Two of 13.1.5's three disciplines meet here: version control with supersession **marked**
+rather than deleted, and a disclosure index that is itself a document. **D** is the serious competitor
+and it is the position counsel actually takes — it keeps the document and shortens the record — but
+disclosure is a matter of what the lenders had, not of what the index chose to name: a document sitting
+in the room is disclosed whichever list it appears on, so leaving it off buys nothing and costs the
+ability to show what was disclosed and when, which is the one thing the index exists to do. The reliance
+concern D is answering is what the supersession note is for. **A** has real commercial force — a
+superseded central case does get read, and the second study did answer it — but it treats an evidentiary
+problem as a presentational one, and removal is the worse of the two failures because what disappears is
+the evidence base for the first covenant dispute, warranty claim and refinancing. **C** leaves two
+live-looking central cases and no record of which was relied on, which is the failure Domain 6 (Case
+study B) priced.
 
 ### Self-check — KA 13.1
 
@@ -664,7 +672,7 @@ implements a valid amortisation the finance documents do not provide for?
 (13.2.3); only conformance to the document detects it. D would trace the rate and tenor, both of
 which are right.
 
-**MCQ 13.2-E `[13.2.3 · Evaluation]`** Two Class 1 findings are almost identical in size: the
+**MCQ 13.2-E `[13.2.3 · Analysis]`** Two Class 1 findings are almost identical in size: the
 definitional and convention findings together resize the facility by **2,505,646**, and the funding
 plan omits the **2,504,818** debt-service reserve — a difference of 828. The credit paper can lead
 with one. Which is the more decisive finding, and why?

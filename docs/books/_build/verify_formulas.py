@@ -989,8 +989,16 @@ for _mod_path in _modules:
     # Any `_suffix` is accepted, not just `_ext`, so two authors working the same domain each add
     # their own file (`pfl_d05_mcq.py`, `pfl_d05_cases.py`) instead of contending for one.
     _mm = re.match(r"(pml|pfl)_d(\d+)(_[a-z0-9_]+)?\.py$", _mod_path.name)
-    section(("PML-AI" if _mm.group(1) == "pml" else "PFL-AI"), int(_mm.group(2))) if _mm \
-        else section(None, None)
+    if _mm:
+        section(("PML-AI" if _mm.group(1) == "pml" else "PFL-AI"), int(_mm.group(2)))
+    else:
+        # A module that genuinely spans domains (`pfl_mcq_d01_d03.py`) cannot be attributed to one
+        # of them without lying about it, so it goes to a labelled cross-domain bucket — domain 0 —
+        # which Appendix C reports as its own row. Anything with no book prefix at all (the loader
+        # self-test) stays unattributed, since it is harness content and not book content.
+        _bm = re.match(r"(pml|pfl)_", _mod_path.name)
+        section(("PML-AI" if _bm.group(1) == "pml" else "PFL-AI"), 0) if _bm \
+            else section(None, None)
     _spec = importlib.util.spec_from_file_location(f"pci_checks_{_mod_path.stem}", _mod_path)
     _mod = importlib.util.module_from_spec(_spec)
     try:

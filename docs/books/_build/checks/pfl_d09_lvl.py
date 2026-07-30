@@ -1,8 +1,12 @@
 """PFL-AI Domain 9 — golden checks for the Evaluation and Comprehension MCQs added to KA 9.1–9.4.
 
-Scope: every number printed in MCQ 9.1-E, 9.1-F, 9.2-E, 9.3-E, 9.3-F and 9.4-E — in the options and
-in the rationales. `pfl_d09.py` owns the domain's worked examples; this module owns only the added
-items, so the two never touch the same file. Master-thread values come from ctx, never re-typed.
+Scope: every number printed in the twelve items added to KA 9.1–9.4 — 9.1-E/F/G, 9.2-E/F, 9.3-E/F/G/H
+and 9.4-E/F/G — in the options and in the rationales. `pfl_d09.py` owns the domain's worked examples;
+this module owns only the added items, so the two never touch the same file. Master-thread values come
+from ctx, never re-typed.
+
+The verifier found the first six covered and the second six not: 9.1-G, 9.2-F, 9.3-G, 9.3-H, 9.4-F and
+9.4-G printed twenty-nine figures that no module recomputed. Section 5 closes that.
 
 Engines used:
 
@@ -17,6 +21,10 @@ Engines used:
      coverage target, so cost and capacity are never collapsed into one figure.
   4. Sustainability-linked breakeven (9.4.3) — ratchet and compliance cost as level annuities at the
      loan rate over the facility, plus the base-margin increment that turns the package positive.
+  5. The six items the first pass left unchecked: the covenant- and lock-up-binding gearings and the
+     price of the coverage constraint (9.1.4); negative arbitrage against commitment fees, levelised
+     (9.2.4); the capitalised ECA premium solved from proceeds (9.3.2); and the concessional loan's
+     grant element built period by period through grace and amortisation rather than quoted (9.4.2).
 """
 
 
@@ -132,3 +140,111 @@ def run(ctx):
     check("MCQ 9.4-E PV of a 10 bp base-margin reduction", q(base10 * AF6_12, 0), 352121)
     check("MCQ 9.4-E combined position with the base-margin reduction",
           q(base10 * AF6_12 + pv_ben - pv_cost, 0), 167677)
+
+    # ============ MCQ 9.1-G — the marginal exchange rate, and where it stops applying ============
+    # 9.1.4's table is computed on the exact annuity factor, so debt service is too.
+    AF_EX = af(RATE, N)
+    ds70, ds75 = DEBT / AF_EX, CAPEX * D("0.75") / AF_EX
+    check("MCQ 9.1-G debt service at 70 % gearing", q(ds70, 2), D("5009635.23"))
+    check("MCQ 9.1-G debt service at 75 % gearing", q(ds75, 2), D("5367466.32"))
+    check("MCQ 9.1-G DSCR at 70 %", q(CF / ds70, 4), D("1.2743"))
+    check("MCQ 9.1-G DSCR at 75 %", q(CF / ds75, 4), D("1.1894"))
+    coverage_sold = (CF / ds70 - CF / ds75) * 100          # in hundredths of a ratio point
+    check("MCQ 9.1-G coverage surrendered, hundredths", q(coverage_sold, 2), D("8.50"))
+    irr_gain = (D("13.0193") - D("12.5311")) * 100         # from 9.1.4's equity IRR column
+    check("MCQ 9.1-G equity IRR gain 70->75 %, basis points", q(irr_gain, 2), D("48.82"))
+    check("MCQ 9.1-G basis points of return per hundredth of coverage",
+          q(irr_gain / coverage_sold, 2), D("5.75"))
+    check("MCQ 9.1-G CFADS the 1.20 covenant needs at 75 %", q(ds75 * COV, 0), 6440960)
+    check("MCQ 9.1-G shortfall at 75 % before any stress", q(ds75 * COV - CF, 0), 56960)
+    cap_cov = CF / COV * AF_EX
+    g_cov = cap_cov / CAPEX
+    check("MCQ 9.1-G debt the 1.20 covenant binds at", q(cap_cov, 0), 44602050)
+    check("MCQ 9.1-G gearing the covenant binds at %", q(g_cov * 100, 4), D("74.3367"))
+    check("MCQ 9.1-G WACC at the covenant-binding gearing %", q(wacc_closed(g_cov), 4), D("7.9418"))
+    check("MCQ 9.1-G price of the coverage constraint against the 75 % ask, basis points",
+          q((wacc_closed(g_bind) - wacc_closed(D("0.75"))) * 100, 2), D("6.51"))
+    # the lock-up figures 9.1.4 quotes alongside, so the three binding points are one computation
+    cap_lock = CF / D("1.15") * AF_EX
+    check("MCQ 9.1-G debt the 1.15 lock-up binds at", q(cap_lock, 0), 46541269)
+    check("MCQ 9.1-G gearing the lock-up binds at %", q(cap_lock / CAPEX * 100, 4), D("77.5688"))
+
+    # ============ MCQ 9.2-F — drawing early against drawing progressively ============
+    IDLE = DEBT / 2                            # even two-year spend, so half the issue is idle
+    COUPON, DEPOSIT, COMMIT, YEARS = D("0.06"), D("0.03"), D("0.006"), 2
+    neg_arb = IDLE * (COUPON - DEPOSIT) * YEARS
+    commit = IDLE * COMMIT * YEARS
+    check("MCQ 9.2-F negative arbitrage", neg_arb, 1260000)
+    check("MCQ 9.2-F commitment fees on the bank alternative", commit, 252000)
+    check("MCQ 9.2-F the bank route is cheaper by", neg_arb - commit, 1008000)
+    check("MCQ 9.2-F negative arbitrage levelised over the facility, basis points",
+          q(neg_arb / AF6_12 / DEBT * 10000, 2), D("35.78"))
+    # the comparison the rationale draws: this one dimension against the whole WACC benefit of gearing
+    check("MCQ 9.2-F WACC benefit of twenty points of gearing, basis points",
+          q((wacc_closed(D("0.60")) - wacc_closed(D("0.80"))) * 100, 2), D("20.40"))
+
+    # ============ MCQ 9.3-G — the cheap tranche that creates the exposure ============
+    # The devaluation tolerance is Domain 11's (KA 11.3.2) and is rebuilt here from its own
+    # decomposition rather than quoted, because 9.3-G's rationale prints it.
+    HC_REV, HC_LOCAL_COST, HC_TAX, HC_WC = D(48000000), D(12600000), D(2064000), D(2400000)
+    USD_COST, X0 = D(1350000), D(4)
+    hc_num = HC_REV - HC_LOCAL_COST - HC_TAX - HC_WC
+    check("MCQ 9.3-G local numerator in HC", hc_num, 30936000)
+    check("MCQ 9.3-G the decomposition reproduces the master thread",
+          q(hc_num / X0 - USD_COST, 2), CF)
+    x_cov = hc_num / (COV * (DEBT / AF_EX) + USD_COST)
+    check("MCQ 9.3-G unindexed covenant breakeven rate", q(x_cov, 6), D("4.202369"))
+    check("MCQ 9.3-G devaluation that breaches with the whole local cost base offsetting %",
+          q((x_cov / X0 - 1) * 100, 2), D("5.06"))
+
+    # ============ MCQ 9.3-H — a premium capitalised into the loan ============
+    ECA, ECA_RATE, ECA_N, PREMIUM = D(15000000), D("0.038"), 14, D("0.06")
+    prem = ECA * PREMIUM
+    gross = ECA + prem
+    AF_ECA = af(ECA_RATE, ECA_N)
+    inst_eca = gross / AF_ECA
+    check("MCQ 9.3-H exposure premium", prem, 900000)
+    check("MCQ 9.3-H grossed-up loan", gross, 15900000)
+    check("MCQ 9.3-H AF(0.038,14)", q(AF_ECA, 6), D("10.703972"))
+    check("MCQ 9.3-H instalment on the grossed-up loan", q(inst_eca, 2), D("1485429.84"))
+    lo, hi = D("0.001"), D("0.30")             # proceeds are the 15,000,000, not the loan
+    for _ in range(300):
+        mid = (lo + hi) / 2
+        if inst_eca * af(mid, ECA_N) > ECA:
+            lo = mid
+        else:
+            hi = mid
+    check("MCQ 9.3-H all-in cost solved from proceeds %", q(lo * 100, 4), D("4.6895"))
+    check("MCQ 9.3-H above the 3.80 % headline, basis points",
+          q((lo * 100 - ECA_RATE * 100) * 100, 2), D("88.95"))
+    check("MCQ 9.3-H an arrangement fee deducted instead would cut proceeds, not raise the loan",
+          1 if gross > ECA else 0, 1)
+
+    # ============ MCQ 9.4-F — the grant element of a concessional tranche ============
+    CONC, CONC_RATE, CONC_N, GRACE = D(12000000), D("0.02"), 25, 7
+    grace_interest = CONC * CONC_RATE
+    AF_CONC = af(CONC_RATE, CONC_N - GRACE)
+    conc_inst = CONC / AF_CONC
+    check("MCQ 9.4-F interest during grace", grace_interest, 240000)
+    check("MCQ 9.4-F AF(0.02,18)", q(AF_CONC, 6), D("14.992031"))
+    check("MCQ 9.4-F amortising instalment after grace", q(conc_inst, 2), D("800425.23"))
+    pv_service = sum(grace_interest / (1 + RATE) ** t for t in range(1, GRACE + 1)) \
+        + sum(conc_inst / (1 + RATE) ** t for t in range(GRACE + 1, CONC_N + 1))
+    check("MCQ 9.4-F PV of debt service at the 6 % market rate", q(pv_service, 0), 7103613)
+    check("MCQ 9.4-F grant element %", q((1 - pv_service / CONC) * 100, 2), D("40.80"))
+    check("MCQ 9.4-F subsidy in present-value terms", q(CONC - pv_service, 0), 4896387)
+    check("MCQ 9.4-F borrowing content, millions to one decimal",
+          q(pv_service / 1000000, 1), D("7.1"))
+    check("MCQ 9.4-F support content, millions to one decimal",
+          q((CONC - pv_service) / 1000000, 1), D("4.9"))
+    # option C's error: the undiscounted interest saved is a different and larger number
+    undisc = sum(grace_interest for _ in range(GRACE)) \
+        + sum(conc_inst for _ in range(CONC_N - GRACE)) - CONC
+    check("MCQ 9.4-F undiscounted service above principal is not the grant element",
+          1 if undisc != q(CONC - pv_service, 0) else 0, 1)
+
+    # ============ MCQ 9.4-G — which face the support should strengthen ============
+    # 9.4.2's G1 case: the grant displaces equity, so DSCR is untouched and equity IRR jumps.
+    check("MCQ 9.4-G equity IRR uplift on the grant-displaces-equity case, basis points",
+          q((D("16.8231") - D("12.5311")) * 100, 2), D("429.20"))
+    check("MCQ 9.4-G DSCR is untouched on that case", q(CF / ds70, 4), D("1.2743"))

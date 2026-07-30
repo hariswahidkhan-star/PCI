@@ -1023,26 +1023,31 @@ caution — the paper should state and test its rate — but the sign does not t
 a reason to disclose an assumption, not a reason to abandon a computable negotiating position.
 
 **MCQ 15.3-F `[15.3.3 · Evaluation]`** At the year-two test date the backward `DSCR` is **1.1905** against
-a 1.20× covenant; nine months later it is **1.0386**. The lenders will grant an amendment. The sponsor's
-adviser proposes resetting the covenant to **1.10×**, which clears the current ratio with margin and prices
-below a deeper reset. The soundest recommendation is to:
-- A. reset to 1.10×, which the current 1.1905 clears with margin and which costs less in fee and margin
-  uplift than a deeper reset
-- B. reset to **1.00×** for two test dates before stepping to 1.10× and then 1.20×, because a reset sized on
-  the current ratio is breached again at the next test's 1.0386 — a second breach, a second fee and a second
-  negotiation from a materially worse position ✅
+a 1.20× covenant, and the forward view at the next test date, nine months out, is **1.0386**. The lenders
+will grant an amendment, and the sponsors hold **two** equity cures over the loan's life, neither used. The
+sponsor's adviser proposes resetting the covenant to **1.10×**, which clears the current ratio with margin
+and prices below a deeper reset. The soundest recommendation is to:
+- A. reset to 1.10× and keep a cure for the next test, which against that reset costs **307,662.27** — one
+  of the two cures the sponsors hold, and cheaper in fee and margin uplift than a deeper reset
+- B. reset to **1.00×** for two test dates before stepping to 1.10× and then 1.20×, so that the reset itself
+  carries the deterioration and both cures survive it — a reset sized on the current ratio pays a fee for a
+  covenant the next test breaches, and then spends an irreplaceable option to hold it ✅
 - C. reset to 1.00× for the remaining life, since a covenant that has been breached has been shown to be set
   too high
 - D. take a waiver at each test date instead: at **55,307.03** a waiver is far cheaper than the
   **743,436.62** the amendment costs
 
 *Rationale:* An amendment must be sized against the **stressed** case rather than the current one, and the
-deterioration was already visible — a 1.10× reset leaves a cash shortfall of **307,662.27** at the
-year-three test (15.3.3). A optimises the fee against the ratio in front of it, which is the same error as
-spending a cure on a marginal breach. C gives away the control permanently to solve a defined period of
-weakness, and no lender prices that kindly. D is right about a single date and wrong about a persistent
-profile: each waiver is a fresh consent sought from a worse position, and a deterioration that persists is
-not a waiver problem — the amendment Kestrel took resets four test dates.
+deterioration was already visible (15.3.3). **A** is genuinely arguable and is not arithmetically wrong:
+307,662.27 is **38.05 %** of the **808,625.80** the same test would cost as a cure against the unamended
+1.20×, and a sponsor expecting a recovery may rationally buy the shallower reset and bridge one date. It is
+the weaker course because a cure is an irreplaceable option whose value rises with the severity of the
+breach it meets — the 17.0× asymmetry of 15.3.3 — so spending one on a breach the amendment could have
+absorbed repeats the year-two error at a higher price, and the fee saved buys a covenant that fails at the
+very next test. **C** gives away the control permanently to solve a defined period of weakness, and no
+lender prices that kindly. **D** is right about a single date and wrong about a persistent profile: each
+waiver is a fresh consent sought from a worse position, and the amendment Kestrel took resets four test
+dates.
 
 **MCQ 15.3-G `[15.3.1 · Comprehension]`** Which statement best explains why a refinancing opportunity
 exists in an operating project financing at all?

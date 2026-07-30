@@ -924,8 +924,9 @@ and is not available for a sculpted or swept schedule. D is wrong: 312,957 is th
 convention, not an error.
 
 **MCQ 6.3-G `[6.3.3 · Evaluation]`** A board paper presents Kestrel's equity return as "5.028 times
-money, 13.52 % `IRR`". The bank case returns 9.83 %, and the whole 3.69-point difference comes from a
-2.967 % escalation assumption; the multiple covers the whole twenty-five-year concession. The soundest
+money, 13.52 % `IRR`", naming no case: the multiple is the **bank** case's, over the whole
+twenty-five-year concession, while the `IRR` is the **sponsor** case's, which a 2.967 % escalation
+assumption alone lifts 3.69 points above the bank case's 9.83 %. The soundest
 presentation:
 - A. leads with the 5.028 times multiple, because it counts every dollar actually distributed
 - B. reports the sponsor case, since it is the sponsors' central expectation and they are the investor
@@ -935,8 +936,10 @@ presentation:
 
 *Rationale:* a multiple has no time dimension, so 5.028 times says nothing about when the cash arrives
 and a multiple shown without its horizon is a long horizon dressed as a return, while an equity `IRR`
-without its case is worthless (6.3.3). A does exactly that; B presents the more flattering case
-unlabelled, when the habit the
+without its case is worthless — and pairing one case's multiple with another's `IRR` is a figure that
+describes no case at all (6.3.3). A does exactly that; B presents the more flattering case unlabelled,
+and would have to carry the sponsor case's own multiple of 8.419 times rather than the 5.028 the paper
+quotes, when the habit the
 domain prescribes is to state the escalation at which the return meets the hurdle and ask whether it
 is a right or a hope; D discards the sponsors' own economics, which is the case the equity decision
 turns on.
@@ -1339,7 +1342,7 @@ a 4.14 % fall (6.4.2). A carries the `CFADS` percentage across as if the two wer
 overstating the operations team's room by 41 %; C multiplies rather than divides by the elasticity;
 D is the fall at which payment itself fails.
 
-**MCQ 6.4-E `[6.4.3 · Evaluation]`** A model audit costs 180,000 and two weeks of delay worth
+**MCQ 6.4-E `[6.4.3 · Analysis]`** A model audit costs 180,000 and two weeks of delay worth
 248,267; `p` = 0.35, `d` = 0.85, `C` = 2,691,071, pre-close correction 184,133. Moving the audit
 early, so it adds no delay and correction costs only 60,000, changes its net value and breakeven
 error rate to:
@@ -1356,8 +1359,8 @@ rate.
 
 **MCQ 6.4-F `[6.4.1 · Evaluation]`** On the bank case Kestrel's `DSCR` falls from 1.2743 to 1.1851
 in year twelve, averaging 1.2340 against a 1.20× covenant, on the requested 42,000,000. The credit
-committee's sizing of 41,171,123 gives a year-twelve `DSCR` of 1.2087, and 41,472,081 is the largest
-facility whose year-twelve `DSCR` is exactly 1.20×. The soundest recommendation is:
+committee's sizing of 41,171,123 gives a year-twelve `DSCR` of 1.2087; at 41,472,081 the year-twelve
+`DSCR` is exactly 1.20×. The soundest recommendation is:
 
 - A. keep 42,000,000, disclose the year-twelve minimum, and rely on the 1.2340 average
 - B. size at 41,472,081 — the largest facility that holds the covenant in every period — and record that the 828,877 the committee withheld was already protecting a year-twelve exposure nobody in that negotiation had modelled ✅
@@ -1395,19 +1398,25 @@ that the audit is a condition the sponsor cannot trade away, and that the tail o
 distribution is averaged out of the expectation. D fixes the parameter and leaves the governance
 objection untouched.
 
-**MCQ 6.4-H `[6.4.2 · Comprehension]`** Sensitivity analysis and scenario analysis differ in that:
-- A. sensitivity moves inputs in percentages while a scenario moves them in absolute amounts
-- B. sensitivity is reported on value and a scenario on coverage
-- C. sensitivity moves one input at a time to measure the model's response, while a scenario moves a
-  coherent set of inputs together to represent a state of the world — so only the second can carry a
-  view about correlation ✅
-- D. they are the same procedure, a scenario being a sensitivity reported on more than one output
+**MCQ 6.4-H `[6.4.2 · Comprehension]`** A committee asks why the model's sensitivity table cannot
+answer the question "what happens to Kestrel in a recession". The best explanation is that:
+- A. the table's ±10 % steps are too small to represent a recession, so the range must be widened
+- B. a recession is a state of the world in which several drivers move together, and a table that
+  moves one input at a time carries no view about how they move together or how likely that is —
+  which is the object a scenario is built to represent ✅
+- C. the table is reported on value, and a recession is a coverage event, so the defect is the output
+  chosen rather than the technique
+- D. the two are the same procedure, so the recession case is the table's rows added together
 
-*Rationale:* 6.4.2 defines both, and identifies correlation and threshold behaviour — not the
-arithmetic of combining moves — as what one-at-a-time analysis cannot see. A and D describe
-presentation rather than construction. B assigns outputs to techniques, when the domain's insistence
-is the opposite: both must be run on coverage as well as value, because a table reporting only `NPV`
-ranks interest-rate risk last on Kestrel.
+*Rationale:* the difference is what each technique can represent, not the size or the number of the
+moves it makes: one-at-a-time measures the model's response to a single input and is silent on
+correlation and on behaviour at thresholds, which is what a coherent case exists to carry (6.4.2). A
+treats a difference in kind as a difference in degree — a wider step is still one input. C names a
+real discipline in the wrong place: coverage as well as value must be reported for *either* technique,
+which is why a table reporting only `NPV` ranks interest-rate risk last on Kestrel. D is the
+arithmetically tempting answer, because on this linear model a joint move is exactly the sum of the
+separate ones — and that is the trap, since adding the rows reproduces the number while still
+assigning the bundle no likelihood.
 
 ### Self-check — KA 6.4
 

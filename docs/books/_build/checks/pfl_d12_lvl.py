@@ -1,8 +1,13 @@
 """PFL-AI Domain 12 — golden checks for the Evaluation and Comprehension MCQs added to KA 12.1–12.4.
 
-Scope: every number printed in MCQ 12.1-E, 12.1-F, 12.2-E, 12.3-D, 12.4-E and 12.4-F — options and
-rationales. `pfl_d12.py` owns the domain's worked examples; this module owns only the added items.
-Master-thread values come from ctx, never re-typed.
+Scope: every number printed in the twelve items added to KA 12.1–12.4 — 12.1-E/F/G, 12.2-E/F/G,
+12.3-D/E/F and 12.4-E/F/G — options and rationales. `pfl_d12.py` owns the domain's worked examples;
+this module owns only the added items. Master-thread values come from ctx, never re-typed.
+
+The first pass covered six of the twelve. 12.1-G, 12.2-F, 12.2-G, 12.3-E and 12.4-G printed a further
+twenty-two figures that no module recomputed — the three make-good bases and the prepayment residue,
+the deduction ceiling, the amortisation schedule behind the termination gap, the parent guarantee at
+its assessed credit, and the prolongation asymmetry. Section 6 closes that.
 
 Engines used:
 
@@ -19,6 +24,14 @@ Engines used:
   5. The claim (12.4.3) — expected award discounted at 26 months, own costs at the 13-month midpoint,
      the settlement ceiling as the present value of fighting less the cost of settling, and the
      breakeven disputed sum solving `k D + PV(costs) = D/2 + negotiation cost`.
+  6. The five items the first pass left unchecked. The three make-good bases built from the same
+     output line — bare covenant by resizing the debt, sized coverage first-order on the shortfall
+     ratio, value as 25 years of lost `CFADS` — and the prepayment residue that shows a 12-year relief
+     cannot pay a 25-year loss (12.1.3). The deduction ceiling against covenant headroom (12.2.1).
+     The amortisation schedule rolled to year five, and five years of distributions against the equity
+     contributed, so the unreturned figure is a difference of computed values (12.2.3). The parent
+     guarantee at its assessed credit against the bond it would replace, with the bond's own fee
+     (12.3.2). And the two daily rates whose difference is the quantification argument (12.4.2).
 """
 
 
@@ -143,3 +156,90 @@ def run(ctx):
     check("MCQ 12.4-E breakeven disputed sum", q(d_star, 0), 6901234)
     check("MCQ 12.4-E own costs against annual covenant headroom",
           q(COSTS / HEAD, 3), D("2.148"))
+
+    # ============ MCQ 12.1-G — three bases, and the application clause ============
+    SHORT_PCT, LIFE = D("0.05"), ctx["KESTREL_LIFE"]
+    SLOPE = D(9060000)
+    annual_short = SLOPE * SHORT_PCT           # 453,000 of CFADS a year at a 5 % shortfall
+    check("MCQ 12.1-G annual CFADS shortfall at 5 %", annual_short, 453000)
+    AF8_25 = D("10.674776")                    # the registry literal 12.1.3 substitutes
+    check("MCQ 12.1-G AF(0.08,25) literal is the correct rounding",
+          q(af(BOARD, LIFE), 6), AF8_25)
+    value_basis = annual_short * AF8_25
+    check("MCQ 12.1-G value basis", q(value_basis, 2), D("4835673.53"))
+    DEBT = ctx["KESTREL_DEBT"]
+    sized_basis = DEBT * annual_short / CF     # first-order, per Domain 5 KA 5.4.3
+    check("MCQ 12.1-G sized-coverage basis", q(sized_basis, 2), D("2980263.16"))
+    cf95 = CF - annual_short
+    bare_basis = DEBT - (cf95 / COV) * AF6_12
+    check("MCQ 12.1-G stressed CFADS at 95 % output", cf95, 5931000)
+    check("MCQ 12.1-G bare covenant basis", q(bare_basis, 2), D("562851.03"))
+    check("MCQ 12.1-G spread between the extremes", q(value_basis / bare_basis, 3), D("8.591"))
+    check("MCQ 12.1-G value the sized basis concedes to equity",
+          q(value_basis - sized_basis, 0), 1855410)
+    check("MCQ 12.1-G the value basis exceeds the sub-cap",
+          1 if value_basis > PERF_CAP else 0, 1)
+    new_debt = DEBT - PERF_CAP                 # the full cap applied wholly to prepayment
+    relief = DS - new_debt / AF6_12
+    check("MCQ 12.1-G debt after prepayment", new_debt, 37200000)
+    check("MCQ 12.1-G instalment after prepayment", q(new_debt / AF6_12, 2), D("4437105.46"))
+    check("MCQ 12.1-G annual relief", q(relief, 2), D("572529.77"))
+    check("MCQ 12.1-G DSCR after prepayment", q(cf95 / (new_debt / AF6_12), 4), D("1.3367"))
+    check("MCQ 12.1-G AF(0.08,12) literal is the correct rounding",
+          q(af(BOARD, 12), 6), D("7.536078"))
+    AF8_12 = D("7.536078")                     # 12.1.3 substitutes the six-decimal factor
+    check("MCQ 12.1-G PV of twelve years of relief", q(relief * AF8_12, 2), D("4314628.99"))
+    check("MCQ 12.1-G residual gap a 12-year relief leaves on a 25-year loss",
+          q(value_basis - relief * AF8_12, 2), D("521044.53"))
+
+    # ============ MCQ 12.2-F — the deduction regime as an uncapped cap ============
+    check("MCQ 12.2-F annual deduction that breaches the covenant", q(HEAD, 0), 372438)
+    check("MCQ 12.2-F that ceiling against the tariff, %",
+          q(HEAD / D(12000000) * 100, 3), D("3.104"))
+    check("MCQ 12.2-F the deduction bites before any of the caps, which are per-event not annual",
+          1 if HEAD < DELAY_CAP else 0, 1)
+
+    # ============ MCQ 12.2-G — a debt-outstanding formula pays equity nothing ============
+    R = ctx["KESTREL_RATE"]
+    bal, sched = DEBT, {}
+    for t in range(1, ctx["KESTREL_TENOR"] + 1):
+        interest = bal * R
+        bal = bal - (DS - interest)
+        sched[t] = bal
+    check("MCQ 12.2-G debt outstanding at the end of year 1", q(sched[1], 2), D("39510364.77"))
+    check("MCQ 12.2-G debt outstanding at the end of year 5", q(sched[5], 0), 27965695)
+    # the cent-rounded instalment leaves 7 cents at maturity, which the schedule truncates
+    check("MCQ 12.2-G the schedule retires the debt", q(sched[12], 0), 0)
+    dist = CF - DS
+    check("MCQ 12.2-G annual distribution", q(dist, 0), 1374365)
+    check("MCQ 12.2-G five years of nominal distributions", q(dist * 5, 0), 6871824)
+    check("MCQ 12.2-G unreturned equity on a year-5 force-majeure termination",
+          q(EQUITY - dist * 5, 0), 11128176)
+    check("MCQ 12.2-G an 85 % formula's gap at the end of year 5",
+          q(sched[5] * D("0.15"), 0), 4194854)
+
+    # ============ MCQ 12.3-E — a larger face amount at a worse credit ============
+    PCG = D(5500000)
+    check("MCQ 12.3-E face amount offered above the bond", PCG - BOND, 700000)
+    check("MCQ 12.3-E the guarantee's worth at the assessed credit", PCG * PQ, 3850000)
+    check("MCQ 12.3-E cover given up against the bond", BOND - PCG * PQ, 950000)
+    check("MCQ 12.3-E face amount that would be equivalent", q(BOND / PQ, 0), 6857143)
+    check("MCQ 12.3-E the offered face is short of that by", q(BOND / PQ - PCG, 0), 1357143)
+    BOND_FEE_RATE, CONSTRUCTION_YEARS = D("0.012"), 3
+    fee = BOND * BOND_FEE_RATE * CONSTRUCTION_YEARS
+    check("MCQ 12.3-E bond fee over the construction period", q(fee, 0), 172800)
+    check("MCQ 12.3-E that fee as a share of what is given up %",
+          q(fee / (BOND - PCG * PQ) * 100, 2), D("18.19"))
+    check("MCQ 12.3-E the fee saving is less than a fifth of the cover surrendered",
+          1 if fee < (BOND - PCG * PQ) / 5 else 0, 1)
+    check("MCQ 12.3-E demand form does not change the obligor's credit", PCG * PQ, 3850000)
+
+    # ============ MCQ 12.4-G — the prolongation asymmetry ============
+    PROLONG = D(12500)
+    check("MCQ 12.4-G the contractor's rate", LDR, 20000)
+    check("MCQ 12.4-G the project company's asserted rate", PROLONG, 12500)
+    check("MCQ 12.4-G the asymmetry, per day", LDR - PROLONG, 7500)
+    check("MCQ 12.4-G the contractor's rate as a share of the daily economic cost %",
+          q(LDR / DAILY * 100, 2), D("80.86"))
+    check("MCQ 12.4-G symmetry at 12,500 would recover only, %",
+          q(PROLONG / DAILY * 100, 2), D("50.54"))

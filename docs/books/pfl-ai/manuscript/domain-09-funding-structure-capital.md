@@ -378,17 +378,17 @@ clause changes the coverage calculation without converting the instrument.
 case that will be shown to lenders and to the investment committee. The soundest professional
 position is that the shield:
 - A. belongs in the base case, because interest on a shareholder loan is deductible
-- B. should be excluded from the base case until a written tax opinion on this specific structure
+- B. should be halved, as a prudent allowance for jurisdictional uncertainty
+- C. should be excluded from the base case until a written tax opinion on this specific structure
   confirms deductibility, thin-capitalisation headroom and withholding treatment, and should then be
   disclosed as a documented upside rather than embedded in the cash flow ✅
-- C. should be halved, as a prudent allowance for jurisdictional uncertainty
 - D. means the shareholder loan should be replaced with ordinary share capital
 
 *Rationale:* A quarter of a tranche's face value created by a documentation choice is the most
 jurisdiction-dependent figure in this domain: thin-capitalisation limits, interest-deduction caps
 expressed as a share of `EBITDA`, transfer-pricing constraints on the rate and withholding tax on
 cross-border interest can each reduce it to nothing, so it is not an input until counsel says it is
-(9.1.2). A states one jurisdiction's treatment as though it were universal. C substitutes an
+(9.1.2). A states one jurisdiction's treatment as though it were universal. B substitutes an
 arbitrary haircut for a determination that is obtainable and close to binary. D discards a
 legitimate instrument to avoid a question of evidence — and the instrument's real danger is the
 ranking clause, not the shield.
@@ -396,16 +396,16 @@ ranking clause, not the shield.
 **MCQ 9.1-F `[9.1.3 · Comprehension]`** The build-up states `r_f`, `β_e × ERP`, `CRP` and `SP`
 separately rather than quoting a single required return because:
 - A. accounting standards require a disclosed decomposition of a discount rate
-- B. the cost of equity is constructed rather than observed, so separating the terms is what makes
+- B. only the risk-free rate is a judgment; the remaining terms are market data
+- C. the components must be summed in that order for the total to be correct
+- D. the cost of equity is constructed rather than observed, so separating the terms is what makes
   each judgment reviewable — and what allows the leverage term to be re-levered when gearing
   changes ✅
-- C. the components must be summed in that order for the total to be correct
-- D. only the risk-free rate is a judgment; the remaining terms are market data
 
 *Rationale:* `k_e` is not observed and never will be; stating the premiums separately is what turns
 an assertion into something a reviewer can challenge term by term, and the beta term is the one that
 must move with the structure or every structure comparison is invalid (9.1.3). A invents a reporting
-requirement. C confuses a sum with a sequence. D reverses the position — `ERP`, `β_a`, `CRP` and
+requirement. C confuses a sum with a sequence. B reverses the position — `ERP`, `β_a`, `CRP` and
 `SP` are all judgments, which is exactly why each needs a named, dated, owned source.
 
 **MCQ 9.1-G `[9.1.4 · Evaluation]`** The sponsors argue for **75 %** gearing on the exchange rate
@@ -414,17 +414,17 @@ points of `DSCR`, about **5.75 basis points of equity return per hundredth of co
 which they describe as the best-value structural trade available. The lenders size on a 1.30× target
 (41,171,123, 68.6185 % gearing, `WACC` 8.0001 %); the 1.20× covenant binds at 44,602,050 (74.3367 %
 gearing, `WACC` 7.9418 %). The soundest response is that the exchange-rate argument:
-- A. is correct and decisive — 5.75 basis points per hundredth is a favourable rate and the board
-  should mandate 75 %
-- B. is the right frame and stops applying at 74.34 %: above that gearing there is no coverage left
+- A. is the right frame and stops applying at 74.34 %: above that gearing there is no coverage left
   to sell, and at 75 % the covenant fails on the base case, so the trade should be priced inside the
   feasible region and the recommendation made at the 68.62 % the sizing target permits ✅
+- B. is correct and decisive — 5.75 basis points per hundredth is a favourable rate and the board
+  should mandate 75 %
 - C. is invalid, because coverage and equity return are not commensurable quantities
 - D. should be resolved by mandating 74.34 %, the highest gearing the covenant permits
 
 *Rationale:* At 75 % debt service of 5,367,466.32 requires `CFADS` of **6,440,960** against
 6,384,000 available — short by **56,960** before any stress — so the marginal rate is being quoted
-across a boundary at which the structure ceases to exist (9.1.4). A applies a valid marginal
+across a boundary at which the structure ceases to exist (9.1.4). B applies a valid marginal
 calculation outside its domain. C rejects the only honest way to argue a gearing: the exchange rate
 is exactly how the trade should be framed, and framing it is what reveals where it ends. D is the
 defensible weaker course — it satisfies the covenant arithmetically, with nil headroom, and lenders
@@ -731,15 +731,15 @@ the cash; C is incidental; D confuses drafting practice with reporting requireme
 `WACC` of the 80 % gearing structure — on the ground that it is the lowest cost of capital available
 to the project. The soundest position is that the appraisal should use:
 - A. 7.8840 %, because minimising `WACC` is the objective of a capital-structure decision
-- B. the `WACC` of a structure the project can actually raise — 8.0001 % at the coverage-binding
+- B. the sponsors' corporate `WACC`, since it is the sponsors' shareholders who set the hurdle
+- C. the `WACC` of a structure the project can actually raise — 8.0001 % at the coverage-binding
   gearing — quoted together with the structure it belongs to ✅
-- C. the sponsors' corporate `WACC`, since it is the sponsors' shareholders who set the hurdle
 - D. any rate between 7.8840 % and 8.0001 %, since the whole range is 11.61 basis points
 
 *Rationale:* A cost of capital is a property of one specific structure, and the 80 % structure fails
 the 1.20× covenant on the base case, so its rate prices a financing that does not exist; the
 coverage constraint costs 11.61 basis points of `WACC`, and that is the honest price of bankability
-(9.1.4, 9.2.3). A imports the corporate-finance objective into a constrained problem. C discounts a
+(9.1.4, 9.2.3). A imports the corporate-finance objective into a constrained problem. B discounts a
 single ring-fenced asset at a parent's blended risk. D is right about materiality and wrong about
 discipline: the difference is small only because someone checked it, and an unlabelled rate is
 reused in places where the difference is not small.
@@ -747,17 +747,18 @@ reused in places where the difference is not small.
 **MCQ 9.2-F `[9.2.4 · Evaluation]`** The board is attracted by a 20-year project bond at close: it
 matches institutional appetite to a 25-year asset and removes the refinancing question. Drawn in
 full at close against a two-year construction spend, the bond incurs **1,260,000** of negative
-arbitrage against **252,000** of commitment fees on a progressively drawn bank facility — **35.78
-basis points** a year on 42,000,000 — and it would carry make-whole prepayment protection. The
-soundest recommendation is:
-- A. issue the bond: 35.78 basis points is a modest price for twenty years of committed tenor
-- B. bank facility during construction, refinanced into bonds at or after completion — capturing
+arbitrage — **35.78 basis points** a year on 42,000,000, levelised over the facility — against
+**252,000** of commitment fees on a progressively drawn bank facility, and it would carry make-whole
+prepayment protection. The soundest recommendation is:
+- A. issue the bond: 35.78 basis points of negative arbitrage is a modest price for twenty years of
+  committed tenor
+- B. bank facility only: bonds are inappropriate for project financings because amendments are
+  impracticable across a dispersed holder base
+- C. issue the bond and negotiate a delayed-draw structure, which removes the negative arbitrage
+- D. bank facility during construction, refinanced into bonds at or after completion — capturing
   progressive drawdown while the spend is uncertain and institutional tenor once the risk profile
   has changed; and the bond's make-whole terms must be settled at that point, since they can
   eliminate the refinancing gain the sequencing exists to capture ✅
-- C. issue the bond and negotiate a delayed-draw structure, which removes the negative arbitrage
-- D. bank facility only: bonds are inappropriate for project financings because amendments are
-  impracticable across a dispersed holder base
 
 *Rationale:* The two instruments are strong in different phases, so the answer is sequencing rather
 than selection — and 1,008,000 of avoidable cost on this dimension alone is the same order as the
@@ -765,7 +766,7 @@ entire `WACC` benefit of twenty points of gearing (9.2.4). A treats a first-orde
 decision as an administrative detail. C is the defensible weaker course: a delayed-draw or
 forward-purchase structure does address negative arbitrage, at a commitment cost of its own, and it
 leaves the amendment inflexibility of a bond in place through the phase in which amendments are most
-likely. D promotes one true asymmetry into a prohibition and forgoes the tenor that makes a long
+likely. B promotes one true asymmetry into a prohibition and forgoes the tenor that makes a long
 concession financeable.
 
 ### Self-check — KA 9.2
@@ -1049,17 +1050,17 @@ liberates.
 the cheapest money in the structure". Its all-in economic cost, once a 1.00 % front-end fee, 350,000
 of advisory spend at close and 120,000 a year of monitoring across an 18-year tenor are counted, is
 7.2465 %. The soundest way to report the tranche is:
-- A. at 5.25 %, which is the contractual rate the facility agreement will carry
-- B. at 7.2465 % and, in a separate column, the capacity effect — six extra years of tenor lifting
+- A. at 7.2465 % and, in a separate column, the capacity effect — six extra years of tenor lifting
   debt capacity at a 1.30× target from 41,171,123 to 56,299,948 — with a statement of which
   compliance costs the project would have incurred in any event ✅
+- B. at 5.25 %, which is the contractual rate the facility agreement will carry
 - C. as rejected, because 7.2465 % exceeds the commercial market's 6.00 %
 - D. as one net figure combining the cost penalty and the capacity benefit
 
 *Rationale:* Cost and capacity are different effects with different causes and belong in separate
 columns; charging the whole of an environmental and social management system against the tranche also
 overstates its cost, because a well-run project wants the system and other lenders price the comfort
-it provides (9.3.3). A repeats the headline the worked example exists to destroy. C optimises cost
+it provides (9.3.3). B repeats the headline the worked example exists to destroy. C optimises cost
 while ignoring that coverage is the binding constraint. D collapses two decisions into one number and
 conceals which of them is driving it.
 
@@ -1086,35 +1087,35 @@ margin. The structuring team recommends the export-credit tranche on the strengt
 and tenor. The soundest position is:
 - A. accept the recommendation: the all-in cost and the capacity effect both favour the
   export-credit tranche, and cost and capacity are the two tests this Knowledge Area sets
-- B. the comparison is incomplete: the cheaper tranche creates a currency mismatch against
+- B. accept it and rely on the local cost base as a natural hedge, since local costs fall in
+  hard-currency terms as the currency weakens
+- C. reject the export-credit tranche: a currency mismatch is unmanageable at any margin
+- D. the comparison is incomplete: the cheaper tranche creates a currency mismatch against
   host-currency revenue, so the margin saving must be set against the cost of hedging or bearing
   that exposure — the natural hedge is worth paying for, and its price is exactly the margin
   forgone ✅
-- C. reject the export-credit tranche: a currency mismatch is unmanageable at any margin
-- D. accept it and rely on the local cost base as a natural hedge, since local costs fall in
-  hard-currency terms as the currency weakens
 
 *Rationale:* The cheapest tranche is frequently the one that creates the exposure, and a margin
 saving bought with an unhedged devaluation risk is not a saving (9.3.4). A applies the right two
 tests to the wrong currency. C forgoes a tranche that is perfectly usable where the revenue can be
-indexed or the exposure hedged — Domain 11 (KA 11.3.2) prices both. D is the seductive error: local
+indexed or the exposure hedged — Domain 11 (KA 11.3.2) prices both. B is the seductive error: local
 costs do provide a partial offset, and it is far too small, because debt service and hard-currency
 operating costs do not devalue at all — on Kestrel's numbers a **5.06 %** movement breaches the
 covenant even with the whole local cost base offsetting.
 
 **MCQ 9.3-H `[9.3.2 · Comprehension]`** An export credit agency's exposure premium is described as
 "capitalised into the loan". In cash-flow terms that means:
-- A. the premium is deducted from the amount advanced, so proceeds fall and repayments are unchanged
-- B. the premium is added to the amount borrowed, so cash proceeds are unchanged while the sum
+- A. the premium is added to the amount borrowed, so cash proceeds are unchanged while the sum
   repaid rises — which is why the headline rate understates the cost and only the rate solved from
   proceeds against instalments measures it ✅
+- B. the premium is deducted from the amount advanced, so proceeds fall and repayments are unchanged
 - C. the premium is treated as a capital cost of the project and depreciated
 - D. the premium is waived in exchange for a higher margin
 
 *Rationale:* Capitalisation grosses the loan up: 15,000,000 of eligible equipment financed with a
 6.0 % premium becomes a 15,900,000 loan against 15,000,000 of proceeds, and the all-in cost is
 **4.6895 %** against a 3.80 % headline — **88.95 basis points** the ranking would otherwise miss
-(9.3.2). A describes a deducted arrangement fee, which reduces proceeds instead. C is an accounting
+(9.3.2). B describes a deducted arrangement fee, which reduces proceeds instead. C is an accounting
 treatment, not a cash-flow mechanic, and it does not change what is repaid. D describes a different
 bargain altogether.
 
@@ -1420,16 +1421,16 @@ is worth 528,182 in present value against 712,627 of verification and reporting 
 **−184,445** — even assuming both key performance indicators are met every year. The soundest
 professional response is:
 - A. take the label: 15 basis points is a saving, and the reporting would be done anyway
-- B. ask the arranger what the label does to the **base** margin and to the size of the club, because
+- B. reject sustainability-linked structures generally, since the ratchet is value-negative
+- C. ask the arranger what the label does to the **base** margin and to the size of the club, because
   a 10 basis point base-margin reduction turns the combined position positive by 167,677 — and if
   the case rests on the ratchet alone there is no case ✅
-- C. reject sustainability-linked structures generally, since the ratchet is value-negative
 - D. accept the ratchet and set key performance indicators the project would meet in any event, so
   that the reduction is certain
 
 *Rationale:* A ratchet of this size cannot pay for a credible verification apparatus, so the
 negotiation belongs on the base margin and the lender pool, where the value actually is (9.4.3). A
-weighs a contingent benefit against a permanent cost and omits the cost. C generalises one
+weighs a contingent benefit against a permanent cost and omits the cost. B generalises one
 arithmetic result into a policy and forgoes a benefit the same arithmetic shows is available. D is
 the greenwashing failure in one sentence: a target the project would have met is not a target, it
 carries reputational and increasingly regulatory exposure, and because the ratchet is symmetric in
@@ -1456,18 +1457,18 @@ a project either as a capital grant reducing the amount to be financed or as a m
 guarantee capping the downside on a demand-based revenue line. Its stated objective is to get an
 otherwise unfinanceable project financed at the least fiscal cost. The soundest advice is:
 - A. give the guarantee: no cash leaves the budget, so the fiscal cost is nil
-- B. direct the support at the coverage face and, whichever instrument is chosen, value the
+- B. give whichever the sponsors prefer, since they are the party that must raise the financing
+- C. give the grant, because grants are always cheaper for a grantor than contingent commitments
+- D. direct the support at the coverage face and, whichever instrument is chosen, value the
   guarantee as the written option it is — support that improves coverage buys more financeability
   per unit of fiscal cost than support of equal value that improves return, and an unvalued
   guarantee is an unmeasured liability rather than a free one ✅
-- C. give the grant, because grants are always cheaper for a grantor than contingent commitments
-- D. give whichever the sponsors prefer, since they are the party that must raise the financing
 
 *Rationale:* Coverage is the binding constraint, so support aimed at the coverage face converts
 fiscal cost into financeability most efficiently — and a guarantee is a written option whose value
 can be estimated, so "no cash moves" is a budgeting statement and not a cost statement (9.4.1,
 9.1.4). A is the error the topic exists to correct. C reverses it and asserts a universal ranking:
-a guarantee that is never called costs nothing, and its expected cost is what has to be compared. D
+a guarantee that is never called costs nothing, and its expected cost is what has to be compared. B
 delegates the public-purpose judgement to the party whose interest lies in the return face — on the
 grant arithmetic of 9.4.2, the answer will be the structure that lifts equity `IRR` by 429.20 basis
 points and leaves `DSCR` untouched.

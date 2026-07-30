@@ -1111,7 +1111,7 @@ exists to correct. D is the interval for the payment detector (M2), whose `EMV` 
 **MCQ 16.3-E `[16.3.1 · Comprehension]`** Which restatement best captures the distinction 16.3.1
 draws between an explanation and a justification?
 - A. an explanation is qualitative, while a justification is quantitative
-- B. an explanation is a faithful account of how a model reached a number and says nothing about whether the number is right; establishing that is validation's job ✅
+- B. an explanation accounts for the route by which a number was arrived at; whether the destination is the right one is a separate claim, resting on separate evidence, and supplying that evidence is validation's job ✅
 - C. an explanation is what a lender is shown, while a justification is what an auditor is shown
 - D. an explanation is a ranking of which inputs mattered most to the output
 

@@ -122,6 +122,9 @@ def domain_titles(book: str) -> dict:
     for dn, label in BACK_MATTER.items():
         if dn > highest:
             out[dn] = label
+    # Domain 0 is the cross-domain bucket: check modules that span several domains and so cannot be
+    # attributed to one of them honestly. It is a row rather than a silent remainder.
+    out[0] = "*Cross-domain check modules (span several domains)*"
     return out
 
 

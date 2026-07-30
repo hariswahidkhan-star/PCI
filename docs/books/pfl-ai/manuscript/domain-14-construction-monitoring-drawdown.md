@@ -414,10 +414,14 @@ board?
 *Rationale:* At a fixed envelope the sequencing buys funded protection with no additional money,
 which is the form of the argument a credit committee and a board can both act on (14.1.3) — and the
 condition attached to it is the real one, because equity-first maximises the sponsor's exposure to an
-abandoned works. A is defensible and is what sponsors argue: it is weaker because 183,013 of present
-value is bought for 689,473 of nominal cost that the sponsor itself then funds as additional equity,
-so it is only rational at a sponsor cost of capital high enough to justify the trade — a test the
-recommendation must state rather than assume. C accepts a settlement in place of an analysis. D is
+abandoned works. A is defensible and is what sponsors argue — the 183,013 is a genuine present-value
+gain to the shareholders at the board's own 8 %, and it is already net of the extra 689,473 the
+sponsor must fund. It is weaker for two reasons the recommendation has to state. It prices only the
+timing of the sponsor's own cheque and puts nothing at all against the 742,647 of funded protection
+the same decision forgoes, whose value shows up precisely in the state where the works overrun. And
+its ground is wrong: a sponsor board that signs a funding order is also fixing the project's
+irrecoverable exposure and the lender's, so shareholder present value is the decisive interest only
+once the protection question has been answered. C accepts a settlement in place of an analysis. D is
 false: capitalised interest is drawn, enters the debt balance and is repaid with interest over the
 loan life.
 
@@ -1152,7 +1156,11 @@ vesting, segregation and insurance the money has bought a claim in someone else'
 (14.3.1). A is the finance team's own framing and is the specific error the topic names: pricing a
 security question as a cost question is how certification drift gets conceded, one certificate at a
 time. C raises a real and separate concern about the measured basis, but it is not what *this* request
-changes. D confuses the vendor's title with the SPV's.
+changes. D confuses the vendor's title with the SPV's. Whether a given vesting arrangement in fact
+defeats the vendor's insolvency, and what has to be filed or registered for it to do so, is a
+question of the law governing the goods and the contract on which this book states no jurisdiction's
+position; the reviewer's job is to require the question be put to counsel before the certificate is
+signed, not to answer it (14.3.1).
 
 **MCQ 14.3-F `[14.3.2 · Evaluation]`** The contractor requests the contracted **10 %** advance payment —
 **4,800,000** on the 48,000,000 price, secured by an advance payment bond — and declines any reduction in

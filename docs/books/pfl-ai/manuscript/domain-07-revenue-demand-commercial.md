@@ -1132,10 +1132,13 @@ monitor.
    | **−10 %** | 0.8001 | 0.9474 | 1.0947 | 1.2420 |
 
    At a 5 % tariff cut, despatch must **rise 0.9906 %** — to 24,237,739 m³ — to hold 1.20 ×.
-4. **Interpretation.** Read the matrix by its boundaries, not its cells. **Only three of the sixteen
-   cells clear the 1.20 × covenant**, and the covenant contour runs diagonally from just below the
-   base cell to the top-right corner — the visual statement that Kestrel has almost no joint
-   tolerance. **Five cells fall below 1.00 ×**, where debt service cannot be paid from operating
+4. **Interpretation.** Read the matrix by its boundaries, not its cells. **Six of the sixteen cells
+   clear the 1.20 × covenant, and not one of them at despatch below forecast**: the whole +10 %
+   despatch column clears, base despatch clears only at base tariff and above, and every cell at
+   −10 % despatch or worse fails. The covenant contour therefore runs down the right-hand edge and
+   steps left only in the top two tariff rows — the visual statement that Kestrel has almost no joint
+   tolerance, and none at all once volume falls. **Four cells fall below 1.00 ×**, three of them in
+   the −20 % despatch column, where debt service cannot be paid from operating
    cash at all and the debt-service reserve (2,504,818, Domain 10 KA 10.3.2) is the difference
    between a difficult year and a payment default. Two cells tie the matrix to the rest of the book:
    the base-despatch, −10 % tariff cell is **1.0947**, exactly Domain 6's revenue-down-10 % figure,
@@ -1227,9 +1230,10 @@ reduces (7.4.2). A applies the wrong metric to the decision, though it is the ri
 the provision; C is an unsupported generality; D is false — both effects are in present-value
 terms.
 
-**MCQ 7.4-D `[7.4.3 · Analysis]`** A stress matrix shows that only three of sixteen tariff and
-despatch combinations clear the 1.20 × covenant, and that a 5 % tariff cut requires despatch
-0.99 % above forecast to remain compliant. The most valuable observation for management is:
+**MCQ 7.4-D `[7.4.3 · Analysis]`** A stress matrix shows that six of sixteen tariff and
+despatch combinations clear the 1.20 × covenant — none of them at despatch below forecast — and that
+a 5 % tariff cut requires despatch 0.99 % above forecast to remain compliant. The most valuable
+observation for management is:
 - A. the matrix should be widened until more cells comply
 - B. the project has almost no joint tolerance, and it does not hold the lever — despatch is the offtaker's choice — that would recover a tariff cut ✅
 - C. the year-one figures understate the risk, so the matrix should be discarded
@@ -1240,7 +1244,7 @@ controls the driver that would avoid it (7.4.3). A is presentational dishonesty;
 year-one figures are optimistic, so the matrix should be *extended* to the minimum year, not
 discarded; D mistakes a covenant for the problem.
 
-**MCQ 7.4-E `[7.4.1 · Evaluation]`** Kestrel's offtaker exposure can be measured three defensible
+**MCQ 7.4-E `[7.4.1 · Analysis]`** Kestrel's offtaker exposure can be measured three defensible
 ways: the receivable of **2,958,904** on 90-day terms, the present value of contracted `CFADS` over
 the twelve loan years at 6 % (**53,522,460**), or the present value over the whole 25-year concession,
 which is larger again. The credit committee is deciding whether to advance 41,171,123. The exposure it
@@ -1258,17 +1262,17 @@ but selecting it here because it is the largest substitutes an instinct for prud
 asked, and it overstates what the lenders are relying on. D is arithmetic without meaning: three
 exposures answer three questions and their mean answers none.
 
-**MCQ 7.4-F `[7.4.3 · Evaluation]`** The stress matrix clears the 1.20 × covenant in only three of
-sixteen cells and falls below 1.00 × in five, and the unstressed bank case already reaches a
+**MCQ 7.4-F `[7.4.3 · Evaluation]`** The stress matrix clears the 1.20 × covenant in six of
+sixteen cells and falls below 1.00 × in four, and the unstressed bank case already reaches a
 year-twelve minimum of 1.1851 (Domain 6, Fig 6.4.1). Four requirements are proposed. Which should the
 committee impose first?
 - A. extend the matrix to the loan's minimum year, since every cell is a year-one snapshot and therefore optimistic about the loan's worst year ✅
 - B. widen the tariff and despatch ranges beyond the market adviser's credible bounds
 - C. attach a probability to each cell so that the committee can weigh the outcomes
-- D. increase the debt-service reserve from six months to twelve, because five cells cannot pay debt service from operating cash
+- D. increase the debt-service reserve from six months to twelve, because four cells cannot pay debt service from operating cash
 
 *Rationale:* the matrix understates the problem before any stress is applied: coverage already falls
-to 1.1851 by year twelve on the unstressed bank case, so thirteen failing cells is a floor rather than
+to 1.1851 by year twelve on the unstressed bank case, so ten failing cells is a floor rather than
 a finding (7.4.3). D is a real mitigant applied in the wrong order — a reserve sized against a
 mis-stated worst year is sized against the wrong number, and the right sequence is measure, then
 mitigate. C is what committees usually ask for and is the more dangerous request: joint probabilities

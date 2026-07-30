@@ -91,10 +91,15 @@ equity cash flow — after debt service — you must use the cost of equity, not
 
 Two consequences follow for the master appraisal. The 8,900,000 is a project-level figure, so
 the 8 % it meets is a project-level rate — a weighted average cost of capital, which Domain 9
-derives properly and KA 4.A.3 reconciles. And sunk costs stay out: the 1,400,000 already spent
-on Kestrel's feasibility work appears nowhere in the numerator, because a cost that cannot be
-avoided by deciding no is not part of the decision. It belongs in the record of what the
-development stage cost, which is Domain 5's question, not this one's.
+derives properly and KA 4.A.3 reconciles. And sunk costs stay out: Kestrel's feasibility and
+transaction spend — the development capital Domain 5 tracks as already at risk before this
+decision — appears nowhere in the numerator, because a cost that cannot be avoided by deciding no
+is not part of the decision. Note the discipline this cuts both ways: spend that *is* still
+avoidable belongs in the flows even if it has already been contracted, and a capital item absorbed
+into the 60,000,000 budget (Domain 5's corridor re-route is the thread's example) is part of `I₀`
+rather than a sunk cost, however early it was committed. The development spend that this appraisal
+excludes belongs in the record of what the development stage cost, which is Domain 5's question,
+not this one's.
 
 **Worked example 4.1.1b — the same money, later.**
 
@@ -287,11 +292,17 @@ outflow every real asset has.
 4. **Result.** **MIRR = 7.09 %** — against 9.73 % at an 8 % reinvestment rate and an IRR of
    12.19 %.
 5. **Interpretation.** More than five points of the headline IRR have now been accounted for, and
-   the accounting is worth reading in order. Roughly 2.46 points were the reinvestment fiction at
-   the opportunity cost; a further 2.64 points disappear when the reinvestment rate is set to what
-   the treasury can genuinely earn rather than to what the project earns; the membrane replacement
-   takes a smaller further bite. That is the whole point of MIRR: it does not make the project
-   worse, it makes the *assumptions visible*, and every point it removes was a point the IRR was
+   the accounting is worth reading in order — one change at a time, so that the three parts sum to
+   the whole. **2.46 points** were the reinvestment fiction at the opportunity cost (12.1921 % IRR
+   against 9.7327 % MIRR at an 8 % reinvestment rate). A further **2.21 points** disappear when the
+   reinvestment rate alone is moved from the project's own 8 % opportunity cost to the 4 % the
+   treasury can genuinely earn (MIRR 7.5273 %, still on the original outflow). The membrane
+   replacement, discounted at the 6.0 % finance rate, takes the last **0.44 points** (MIRR
+   7.0920 %). Those three add to **5.10 points**, which is exactly the gap between the published IRR
+   and the honest MIRR — and a decomposition whose parts do not sum is the first sign that two
+   changes have been made at once and one of them attributed twice. That is the whole point of
+   MIRR: it does not make the project
+   worse, it makes the *assumptions visible*, and every point it strips out was a point the IRR was
    quietly asserting. Note carefully what this does **not** mean. A MIRR of 7.09 % below the 8 %
    hurdle is not an accept/reject signal. Discount the same flows properly at the 8 % project
    rate — the membrane costs `6,000,000 × 0.540269 = 3,241,613` in present value — and the project
@@ -388,16 +399,22 @@ confuses a cost that cannot be avoided by deciding no with one that recurs becau
 decision. The mirror discipline: equity cash flow, after debt service, is discounted at the cost
 of equity instead.
 
-**MCQ 4.1-F `[4.1.3 · Comprehension]`** MIRR differs from IRR principally because MIRR:
-- A. always produces a higher rate
-- B. states the reinvestment rate explicitly instead of assuming interim cash earns the project's
-  own return, and is single-valued even when cash-flow signs change more than once ✅
-- C. discounts at the risk-free rate
-- D. requires no forecast of cash flows
+**MCQ 4.1-F `[4.1.3 · Comprehension]`** A paper reports the same 15-year project twice: IRR
+12.19 %, and MIRR 9.73 % computed with both the finance and the reinvestment rate set to the 8 %
+cost of capital. No cash flow and no rate has changed between the two lines. The 2.46-point gap
+exists because:
+- A. MIRR discounts the inflows twice, once to today and once to the terminal date
+- B. IRR's arithmetic assumes interim cash is reinvested at the IRR itself, while MIRR compounds it
+  at the rate stated — so the gap is the price of the reinvestment assumption, made explicit ✅
+- C. MIRR uses the risk-free rate rather than the cost of capital
+- D. the two measures answer the same question and one of them must have been mis-computed
 
-*Rationale:* Both properties belong to MIRR's construction (4.1.3). A is false in the usual
-direction — for a project whose IRR exceeds the reinvestment rate, MIRR is *lower*, which is the
-whole point. C names a rate MIRR does not use; D is true of no measure in this domain.
+*Rationale:* Nothing about the project changed; only the reinvestment assumption became explicit,
+and 12.19 % − 9.73 % is what that assumption was worth (4.1.3). A misdescribes the construction —
+inflows are compounded forward once and the result is annualised. C names a rate MIRR does not use.
+D is the misreading the item exists to close off: the two measures differ by construction, so a gap
+is expected rather than evidence of error, and it runs in this direction whenever the IRR exceeds
+the reinvestment rate.
 
 **MCQ 4.1-G `[4.1.3 · Evaluation]`** A sponsor's paper reports IRR 12.19 %, MIRR 7.09 % on a
 4 % treasury reinvestment rate, and NPV +12,937,747 at the 8 % project rate. A committee member
@@ -725,16 +742,22 @@ threshold while leaving the ranking intact — which is why the defect survives 
 B commits exactly that error: 0.31 on the net definition is a healthy project. C matters for EAV,
 not PI. D is unrelated to either definition.
 
-**MCQ 4.2-F `[4.2.1 · Comprehension]`** Payback and discounted payback are best described as
-measures of:
-- A. value created by the project
-- B. how long the invested capital remains at risk before it has been recovered — nominally in
-  the first case, in present-value terms in the second ✅
-- C. the project's return per unit of capital
-- D. the project's sensitivity to the discount rate
+**MCQ 4.2-F `[4.2.1 · Comprehension]`** The master appraisal's simple payback is 6.74 years and its
+discounted payback 10.07 years, on identical cash flows. What does the three-and-a-third-year gap
+between the two figures tell the board?
+- A. that discounting has removed three and a third years of cash flow from the forecast
+- B. that repaying the 60,000,000 in nominal cash by year seven does not return the capital's
+  *worth* until year ten — the gap is the price of time value, and both figures measure exposure
+  duration rather than value ✅
+- C. that the 8 % rate is too high for a fifteen-year concession
+- D. that the two measures disagree, so one of them has been computed on the wrong cash flows
 
-*Rationale:* Both are exposure measures and neither is a value measure, which is why they screen
-rather than decide (4.2.1). A is NPV's job; C is PI's or IRR's; D is what the NPV profile shows.
+*Rationale:* The same flows produce both numbers; the later crossing is what it costs to require
+recovery in present value rather than in nominal cash, and neither figure says anything about how
+much value the project creates (4.2.1). A confuses discounting a stream with shortening it. C reads
+a rate judgement out of an arithmetic consequence that holds at every positive rate. D treats an
+expected relationship — discounted payback is always the later of the two unless `r` = 0 — as a
+defect.
 
 **MCQ 4.2-G `[4.2.3 · Evaluation]`** An asset manager must choose between a 3-year and a 5-year
 dosing system. EAC favours the 5-year system by 336,699 a year; the 15-year replacement chain
@@ -911,11 +934,13 @@ taught as a heuristic and never as a rule.
 
 2. **Formula.** Greedy PI: take projects in descending index order, skipping any that no longer
    fits, until the budget is exhausted. Then compare against the value-maximising set found by
-   **enumerating every feasible combination** — with five projects there are 31 subsets, of which
-   a dozen fit, so exhaustive search is a minute's work, not a research problem.
+   **enumerating every feasible combination** — with five projects there are 31 non-empty subsets, of
+   which **16** fit the budget (all five singles, nine of the ten pairs, and two of the ten triples;
+   no set of four can fit, since the four cheapest already total 28,000,000), so exhaustive search is
+   a minute's work, not a research problem.
 3. **Substitution.** Greedy takes W (8,000,000; 12,000,000 left), then V (4,000,000; 8,000,000
    left), then skips X (12,000,000 — will not fit) and Y (10,000,000 — will not fit), then takes Z
-   (6,000,000; 2,000,000 left and nothing to spend it on). Enumeration tests all twelve feasible
+   (6,000,000; 2,000,000 left and nothing to spend it on). Enumeration tests all sixteen feasible
    sets.
 4. **Result.** Greedy funds **W + V + Z for NPV +4,580,000** on 18,000,000 spent. The
    value-maximising set is **W + X for NPV +5,400,000** on 20,000,000 spent exactly. Greedy leaves
@@ -1087,8 +1112,11 @@ profitability index sometimes fund a portfolio worth less than the best feasible
 projects and only a heuristic for lumpy ones (4.3.2). A and C misdescribe the index, which is built
 from a present value at the project rate. D is simply untrue.
 
-**MCQ 4.3-F `[4.3.3 · Comprehension]`** In the two-way NPV table of 4.3.3, why must the analyst
-read the joint cells rather than the two single-assumption sensitivities?
+**MCQ 4.3-F `[4.3.3 · Comprehension]`** A water project's sensitivity exhibit tabulates NPV across
+annual net inflow (80 % to 110 % of base) and discount rate (6 % to 10 %) jointly. Taken one at a
+time, the project survives a 20 % inflow shortfall and survives a 9 % cost of capital; taken
+together, those two movements destroy value. Why must the analyst read the joint cells rather than
+the two single-assumption sensitivities?
 - A. because joint cells are easier to compute
 - B. because the assumptions are correlated in reality — the conditions that depress availability
   revenue also tend to raise the cost of capital — so the combined case is a coherent scenario
@@ -1102,26 +1130,36 @@ C is false — one-way sensitivities are valid, merely insufficient. D contradic
 rows.
 
 **MCQ 4.3-G `[4.3.2 · Evaluation]`** A committee's rationing pack presents one funded set, ranked by
-PI, spending 18,000,000 of a 20,000,000 budget for NPV +4,580,000. Enumeration shows a feasible set
-spending 20,000,000 for +5,400,000. The soundest professional criticism of the pack is that:
-- A. the discount rate must be wrong, since the sets disagree
-- B. the pack presents a heuristic result as though it were the optimum, and omits both the unspent
-  2,000,000 and the runner-up set — so the board cannot see that its approval costs 820,000 ✅
-- C. the pack should have used IRR instead of PI
-- D. nothing is wrong: PI ranking is the accepted method
+PI, spending 18,000,000 of a 20,000,000 budget for NPV +4,580,000. You establish overnight, by
+enumeration, that a feasible set spends the full 20,000,000 for +5,400,000. Every NPV in the pack is
+correct. The board meets tomorrow and the pack has already circulated. The soundest course is to:
+- A. let the recommendation stand and log the finding for the next cycle: 820,000 is 15 % of the
+  value on the table but the pack's arithmetic is sound, and re-opening a circulated
+  recommendation the night before a board costs the committee credibility it will need later
+- B. table a one-page addendum carrying the enumerated set, the 2,000,000 the recommendation leaves
+  unspent and the runner-up set with its NPV, so the board approves a portfolio knowing that the
+  packing it was offered costs 820,000 ✅
+- C. withdraw the recommendation and present both sets without one, on the grounds that choosing
+  between them is the board's decision rather than the committee's
+- D. keep the PI ranking as the recommendation, since greedy indexing is the committee's
+  established method, and record the enumeration in an appendix for completeness
 
-*Rationale:* The defect is disclosure, not arithmetic — every NPV in the pack may be right while
-the recommendation is still 820,000 short, and the two omitted facts are exactly the ones that would
-reveal it (4.3.2). A misattributes the gap to the rate. C swaps one scale-blind ratio for another.
-D treats convention as sufficient, which is the position the worked example refutes.
+*Rationale:* The defect is disclosure, not arithmetic, and the remedy is proportionate to it: one
+page, in time, changes the decision the board actually takes (4.3.2). A is a real argument — process
+discipline has value and the number is not enormous — but it trades 820,000 of shareholder value for
+the committee's comfort, and the asymmetry decides it. C over-corrects: the committee is paid to
+recommend, and handing up two sets with no view transfers work rather than judgement. D is the
+subtlest wrong answer, because it discloses the finding while leaving it where nothing depends on it
+— an appendix that contradicts the recommendation is not disclosure, it is cover.
 
 **MCQ 4.3-H `[4.3.3 · Evaluation]`** A sponsor's appraisal shows Kestrel surviving a 21.24 % revenue
 shortfall at the board's rate. In tariff negotiation the offtaker asks for a 15 % reduction. The
 soundest use of that headroom figure is:
 - A. concede up to 21.24 %, since the project remains value-positive throughout
 - B. treat 21.24 % as the point at which the *investment case* fails, not as negotiating room —
-  a 15 % concession leaves 6.24 points of headroom against every other adverse assumption
-  combined, which the two-way table shows is not enough to absorb a rate rise as well ✅
+  a 15 % concession leaves 6.24 points of revenue headroom against every other adverse assumption
+  combined, and on the reduced tariff the project breaks even at a cost of capital of 9.28 %, so
+  barely 1.3 points of rate movement would exhaust what remains ✅
 - C. refuse any reduction, since the base case is the only defensible position
 - D. concede 15 % and re-run the model to show a positive NPV afterwards
 
@@ -1330,10 +1368,13 @@ The fuller list, in the order a reviewer should run it:
 - **Technology and corporate transformation.** Option value (4.3.3) dominates: staged
   investments are the norm, and static NPV is a floor, not an answer. Rationing is annual and
   lumpy — the optimisation caveat of 4.3.2 is the daily reality.
-- **Public-sector appraisal.** The discount rate is policy (a social time preference rate,
-  set centrally), distributional effects sit beside NPV, and appraisal guidance is published —
-  the numbers travel with a governance file, which is the direction this domain pushes every
-  sector.
+- **Public-sector appraisal.** Where a government publishes appraisal guidance, the discount rate is
+  a matter of policy rather than of estimation — typically a centrally set social time preference or
+  social discount rate — distributional effects sit beside NPV, and the method is prescribed rather
+  than chosen. The rate, its basis and the required sensitivities differ by jurisdiction and are
+  revised over time, so the applicable guidance is read at the date of the appraisal rather than
+  assumed; what generalises is only the shape, that the numbers travel with a governance file, which
+  is the direction this domain pushes every sector.
 - **Real estate and social infrastructure.** Terminal value dominates: a large share of NPV can sit
   in a single residual figure at the horizon, so the appraisal's centre of gravity moves from the
   cash-flow years to the exit assumption, and the sensitivity that matters is on that one line.
@@ -1441,7 +1482,7 @@ three figures side by side and the fund's strategic argument changes shape:
 |---|---|---|---|
 | Short-deal book | **25.9921 %** | **22.2467 %** | **19.5109 %** |
 | Declined concession | 14.4284 % | 14.4284 % | 14.4284 % |
-| **Advantage claimed** | **1,156.37 bp** | **781.84 bp** | **508.26 bp** |
+| **Advantage claimed** | **1,156.38 bp** | **781.84 bp** | **508.26 bp** |
 
 The honest conclusion is narrower than the one a reader expects, and stating it that way is the
 point. **The short-deal strategy was still the better one** — it compounded faster than the
@@ -1477,6 +1518,13 @@ was the only document in the building that disagreed. The lesson is therefore no
 about a **measurement system**: where the mandate, the incentive and the report all speak in
 percentages, no amount of NPV literacy in the analyst pool will change the decisions, because the
 analysts are not the ones deciding. Changing the outcome required changing the mandate.
+
+The case is an original illustration and no view is expressed on any real fund. Note also that how
+fund performance may be measured, presented and marketed to investors — and how carried interest is
+calculated against it — is regulated in most jurisdictions and governed by the fund's own
+constitutional documents. The appraisal point here is arithmetical; changing a mandate, an incentive
+formula or an investor report is a matter for the fund's counsel and its regulator, not for a
+measurement argument alone.
 
 **What a corrected pack looks like.** The remedy the fund eventually adopted is worth stating because
 it is cheap and general. Every deal paper now carries four figures beside the IRR: **NPV at the fund's

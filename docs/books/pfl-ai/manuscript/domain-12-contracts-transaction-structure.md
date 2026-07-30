@@ -75,9 +75,9 @@ documented `CFADS` **6,384,000** (6,984,000 before working-capital movements); `
 covenant (cash trigger **6,011,562**, headroom **372,438**) and a **1.15×** lock-up (cash trigger
 **5,761,081**). Its contracts are a fixed-price, date-certain EPC wrap at **48,000,000** (Domains 5,
 6 and 8), delay damages of **20,000 per day** capped at **10 %** of that price, and a 25-year water
-offtake inside a 27-year concession. This domain adds the rest of the stack — the performance-damages
-regime, the aggregate cap, the security package and the claims machinery — and computes what each
-is worth.
+offtake coterminous with the 25-year concession. This domain adds the rest of the stack — the
+performance-damages regime, the aggregate cap, the security package and the claims machinery — and
+computes what each is worth.
 
 ---
 
@@ -395,54 +395,54 @@ the cap with the loss; D ignores that prepayment raises distributions.
 **MCQ 12.1-E `[12.1.2 · Evaluation]`** Kestrel's delay damages run at 20,000 per day under a
 4,800,000 cap. With limited negotiating capital left before signature, the soundest priority is to:
 - A. press for a higher daily rate, since a higher rate raises recovery on every day of delay
-- B. compare the cap-binding day — 4,800,000 ÷ 20,000, day 240 — with the credible worst-case delay
+- B. press for the 20 % aggregate cap to be raised, since the aggregate is the real limit and a higher
+  aggregate extends delay recovery
+- C. compare the cap-binding day — 4,800,000 ÷ 20,000, day 240 — with the credible worst-case delay
   from the schedule risk analysis, and pair the cap with a termination-for-delay right at a long-stop
   date, because beyond the cap the contractor's marginal cost of a further day is zero ✅
-- C. press for the 20 % aggregate cap to be raised, since the aggregate is the real limit and a higher
-  aggregate extends delay recovery
 - D. accept the regime, since a 10 % delay cap under a 20 % aggregate is conventional
 
 *Rationale:* The rate governs recovery only to the cap-binding day, after which further delay is
 wholly uncompensated — 2,620,000 on a 300-day slip — so a cap that binds before the P80 delay does not
 cover the risk it was bought for (12.1.2). A spends leverage where sponsors habitually spend it and
-where it buys least. C is a true point misapplied: the aggregate binds only when a *third* head of
+where it buys least. B is a true point misapplied: the aggregate binds only when a *third* head of
 claim arises, and raising it extends the delay sub-cap by not one day. D substitutes market convention
 for the project's own schedule evidence, which is the only thing that can calibrate a cap.
 
 **MCQ 12.1-F `[12.1.4 · Comprehension]`** The "liability asymmetry" in an O&M agreement means that:
 - A. the operator's bonuses exceed the deductions it can suffer
-- B. the operator's liability cap is scaled to its fee while the loss its failure causes is scaled to
+- B. the cap binds the project company but not the operator
+- C. the operator's liability outlasts its appointment
+- D. the operator's liability cap is scaled to its fee while the loss its failure causes is scaled to
   the project's revenue, so the two are measured on different bases and the cap is smaller than the
   loss by construction ✅
-- C. the operator's liability outlasts its appointment
-- D. the cap binds the project company but not the operator
 
 *Rationale:* A cap expressed as one year's fee, or half of it, stands against an outage cost measured
 on the same daily basis as a construction delay, so a 30-day outage already exceeds a half-fee cap
 (12.1.4). That is why lenders price operating risk in the coverage ratio and the maintenance reserve
 rather than relying on the O&M contract. A describes an incentive regime, not a cap. C describes a
-survival period. D misstates whom the cap protects.
+survival period. B misstates whom the cap protects.
 
 **MCQ 12.1-G `[12.1.3 · Evaluation]`** Kestrel's negotiator proposes to accept performance damages on
 the sized-coverage basis, **2,980,263**, describing it as the market standard. The value of the
 sponsors' loss on a permanent 5 % output shortfall is **4,835,674**; the bare covenant-restoring figure
 is **562,851**; the performance sub-cap is 4,800,000. The recommendation to the investment committee
 should be:
-- A. accept 2,980,263: it restores the 1.2743 the debt was sized on, which is the standard the
-  financing was built to
-- B. ask for the value basis and, if the sized basis is conceded, direct part of the proceeds away from
+- A. ask for the value basis and, if the sized basis is conceded, direct part of the proceeds away from
   mandatory prepayment — because the sized basis gives up **1,855,410** of value loss, and even the
   full 4,800,000 applied wholly to prepayment under-compensates equity by **521,045** ✅
+- B. accept 2,980,263: it restores the 1.2743 the debt was sized on, which is the standard the
+  financing was built to
 - C. accept 562,851: the covenant is the only contractual test, so anything above it is a windfall
 - D. insist on 4,835,674, which the sub-cap makes deliverable
 
 *Rationale:* The three bases restore three different things, and only the value basis restores the
-sponsors' loss, so the ask and the fallback should each be stated with what it concedes (12.1.3). A is
+sponsors' loss, so the ask and the fallback should each be stated with what it concedes (12.1.3). B is
 the defensible weaker course — it is the common drafting and the coverage argument supports it — and it
 transfers 1,855,410 of value loss to equity without saying so. C adopts the lenders' interest as the
 equity case, an understatement of 8.591×. D overstates what is available: 4,835,674 exceeds the
 4,800,000 sub-cap, so the value basis requires the cap to move as well as the calibration, and asking
-for the number without the cap is asking for 4,800,000. The application point in B is the one that
+for the number without the cap is asking for 4,800,000. The application point in A is the one that
 costs nothing at signature and cannot be made afterwards: a 25-year loss compensated with 12 years of
 debt-service relief is short by construction, however generous the headline.
 
@@ -731,16 +731,16 @@ date-certain revenue contracts do not grant.
 capacity — a `DSCR` of 1.0935 against a 1.20× covenant that requires 95.8892 % — and asks the finance
 lead to sign it off so the bid can go in. The soundest professional response is:
 - A. sign it off: 90 % is a strong commercial outcome and a covenant can be reset at close
-- B. decline to treat the floor as a commercial term, restate it as a financing constraint with its
+- B. decline the transaction, since any floor below 100 % is unbankable
+- C. decline to treat the floor as a commercial term, restate it as a financing constraint with its
   derivation attached, and price the alternatives — 3,727,752 of additional equity, a compensating
   floor price, or a volume-shortfall payment that is take-or-pay under another name ✅
-- C. decline the transaction, since any floor below 100 % is unbankable
 - D. sign it off and rely on the 1.15× lock-up trigger, which sits at 93.1245 % of capacity
 
 *Rationale:* The floor is a financing deliverable computable before anyone sits down: each point of
 contracted volume is worth 0.0181 of coverage, so 372,438 of headroom buys 4.11 points and not ten
 (12.2.2). A concedes a breach and an automatic distribution lock-up from the first test date, on a
-plant performing exactly to specification and an offtaker performing exactly to contract. C is the
+plant performing exactly to specification and an offtaker performing exactly to contract. B is the
 opposite failure of judgment — the covenant requires 95.8892 %, not the sized case. D is
 self-defeating as well as misdirected: 90 % sits below the lock-up floor too, and a covenant breach is
 an event of default whether or not cash is trapped.
@@ -751,20 +751,20 @@ deduction and abatement schedule as "operational detail for the O&M team". The f
 intervention should be to:
 - A. accept the division of labour: deductions are operational, and the O&M team is closer to the
   metering and quality regime than the finance function
-- B. compute the maximum annual deduction the regime permits and compare it with covenant headroom — a
+- B. re-open the indexation schedule instead, since an indexation mismatch is the larger structural risk
+- C. require the deduction regime to be capped at the covenant headroom figure, since anything larger is
+  unbankable
+- D. compute the maximum annual deduction the regime permits and compare it with covenant headroom — a
   deduction regime is a liability cap in reverse, uncapped and running annually, and on Kestrel a
   deduction exceeding **372,438** in any year breaches the 1.20× covenant however well the plant
   performed in every other respect ✅
-- C. require the deduction regime to be capped at the covenant headroom figure, since anything larger is
-  unbankable
-- D. re-open the indexation schedule instead, since an indexation mismatch is the larger structural risk
 
 *Rationale:* Of the four load-bearing terms of a revenue contract, the deduction regime is the one with
 no ceiling and the one that bites on revenue before any of the project's own protections engage, so its
 worst annual case is a financing number and not an operating one (12.2.1). A hands the covenant to a
 team that is not measured on it. C is the defensible weaker course and the right thing to *ask* for
 second: a cap on aggregate annual deductions is a legitimate negotiating position, and it is not
-achievable at the headroom figure in most markets, so computing the exposure has to come first. D names
+achievable at the headroom figure in most markets, so computing the exposure has to come first. B names
 a genuine and larger risk that Domain 11 (KA 11.2.3) prices — and the indexation schedule is reported as
 agreed, while the deduction schedule has not been read by anyone with a covenant to protect.
 
@@ -1004,25 +1004,25 @@ security, a separate instrument.
 "fully covered up to the aggregate cap of 9,600,000". Risk-adjusted cover, on a 0.70 assessment of the
 parent guarantor, is 8,160,000 against a stress exposure of 12,255,674. The soundest reporting
 position is:
-- A. the memorandum is right: 9,600,000 is the contractual cover, and a credit assessment is not
-  contractual
-- B. report exposure and risk-adjusted cover side by side, with the residue stated in currency and as
+- A. report exposure and risk-adjusted cover side by side, with the residue stated in currency and as
   a share of equity — 4,095,674, or 22.75 % of the 18,000,000 cheque — and the 0.70 recorded as a
   dated range owned by the credit function ✅
+- B. the memorandum is right: 9,600,000 is the contractual cover, and a credit assessment is not
+  contractual
 - C. report the nominal residue of 2,655,674 only, since a probability of payment is speculative
 - D. raise the assumed probability to 0.85 to reflect the size of the parent's balance sheet
 
 *Rationale:* Netting cover against exposure without stating both is the reporting failure this
 Knowledge Area exists to prevent, and it is the residue that invites the questions which improve the
 package — a larger bond, a bank guarantee in place of the parent, an uncapped indemnity for defined
-heads, or a smaller stress accepted with eyes open (12.3.2, 12.3.4). A treats a promise as a recovery.
+heads, or a smaller stress accepted with eyes open (12.3.2, 12.3.4). B treats a promise as a recovery.
 C discards the credit dimension altogether, when even the single-point 0.70 already understates the
 problem by concealing that distress and non-payment are correlated. D answers a correlated exposure
 with a more confident number rather than a structural response: at 0.70 one dollar of unconditional
 bank cover is worth 1.4286 dollars of parent guarantee, so the remedy is an unconditional instrument
 or a larger face amount, not a kinder assumption.
 
-**MCQ 12.3-E `[12.3.2 · Evaluation]`** The contractor offers to replace the 4,800,000 on-demand bank
+**MCQ 12.3-E `[12.3.2 · Analysis]`** The contractor offers to replace the 4,800,000 on-demand bank
 bond with a parent company guarantee of **5,500,000**, pointing out that the face amount is 700,000
 higher and that the bond's fee of **172,800** over the construction period is priced into the contract
 sum in any event. The credit function assesses the parent at a 0.70 probability of paying in full. The
@@ -1048,17 +1048,17 @@ the governing jurisdiction.
 **MCQ 12.3-F `[12.3.1 · Comprehension]`** A performance bond and a parent company guarantee of the same
 face amount differ in the way a financier prices them because:
 - A. they differ only in cost, the bond carrying a fee and the guarantee none
-- B. an instrument is priced on three separate attributes — how much (face amount), how certain (the
+- B. a guarantee covers the defects-liability period and a bond does not
+- C. a bond is security over the asset while a guarantee is a contractual promise
+- D. an instrument is priced on three separate attributes — how much (face amount), how certain (the
   obligor's credit and the conditions on payment) and how long (expiry against the exposure it covers) —
   and the two instruments are alike only on the first ✅
-- C. a bond is security over the asset while a guarantee is a contractual promise
-- D. a guarantee covers the defects-liability period and a bond does not
 
 *Rationale:* Face amount, certainty and duration are three independent questions, and the third is the
 most frequently missed: a bond expiring at provisional completion does not reach the defects-liability
 period, and a guarantee expiring on a fixed date rather than on discharge of the underlying obligation
 is a gap in the stack with a date on it (12.3.1). A reduces three attributes to one — and the fee is the
-price of the certainty, not an extra. C confuses credit support with the lenders' own asset security. D
+price of the certainty, not an extra. C confuses credit support with the lenders' own asset security. B
 asserts as a rule what is a drafting question in each instrument.
 
 ### Self-check — KA 12.3
@@ -1383,17 +1383,17 @@ be proved after the event; on the claim of 12.4.3 it is asserted at **12,500 per
 before disruption and additional plant. Variations are valued on a cost-plus basis where the schedule of
 rates is silent, and changes below a consent threshold need no lender approval. With the change
 mechanics still open, the priority is to:
-- A. reduce the contractor's daily damages rate to 12,500, so that the regime is symmetrical
-- B. pre-agree the daily prolongation rate on the same evidence as the delay damages rate, and add a
+- A. pre-agree the daily prolongation rate on the same evidence as the delay damages rate, and add a
   cumulative consent threshold alongside the individual one — the asymmetry is **7,500 per day** of
   quantification argument, and serial changes below a threshold are how a fixed-price contract stops
   being fixed ✅
+- B. reduce the contractor's daily damages rate to 12,500, so that the regime is symmetrical
 - C. remove the cost-plus fallback and require all variations to be valued at contract rates
 - D. accept the mechanics: prolongation is proved on actual cost, which is the fairest measure available
 
 *Rationale:* Change mechanics decide who funds a change and whether the funding exists, and a pre-agreed
 prolongation rate removes the largest single area of claim-quantification argument — which is why it
-belongs beside the delay damages rate and on the same evidence (12.4.2). A achieves symmetry by
+belongs beside the delay damages rate and on the same evidence (12.4.2). B achieves symmetry by
 weakening the project's own recovery, which is the wrong direction from a rate that already recovers only
 80.86 % of the daily economic cost of delay. C is the defensible weaker course and only protective if the
 schedule of rates is complete: where it is not, contract rates simply relocate the argument, so the ask

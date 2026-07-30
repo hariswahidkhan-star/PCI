@@ -306,54 +306,54 @@ destroying 1,780,000 of value at a 40 % loading. A colleague proposes reducing t
 probabilities so that the full wrap can be recommended to the board on price grounds. The soundest
 professional position is:
 - A. adjust them: the register is a negotiating instrument and the full wrap has strategic value
-- B. hold the retained probabilities to their evidence base and negotiate item by item on that
+- B. adopt the bidder's probabilities throughout, since the bidder is the party pricing the risk
+- C. hold the retained probabilities to their evidence base and negotiate item by item on that
   evidence, because the register's probabilities *are* the negotiation and an input adjusted to reach
   a conclusion has inverted the analysis ✅
-- C. adopt the bidder's probabilities throughout, since the bidder is the party pricing the risk
 - D. abandon the arithmetic, since probabilities are subjective and cannot support a decision
 
 *Rationale:* The whole result rests on the honesty of the two `EMV` columns: a sponsor who understates
 its retained probabilities will "prove" that every transfer destroys value, and a bidder who
 overstates its own will justify any premium (11.1.3). A produces a recommendation the lender's
-diligence will reverse, at the cost of the register's credibility everywhere else. C imports the
+diligence will reverse, at the cost of the register's credibility everywhere else. B imports the
 less-informed party's assumptions about a ground investigation the owner commissioned, which is how an
 information advantage becomes a price disadvantage. D discards a rule that is transparent and
 challengeable in favour of instinct, which is neither.
 
-**MCQ 11.1-E `[11.1.3 · Evaluation]`** The preferred bidder declines to price Kestrel's register items
+**MCQ 11.1-E `[11.1.3 · Analysis]`** The preferred bidder declines to price Kestrel's register items
 separately and offers a single wrap covering all eight threats for a premium of **6,748,000** — the sum
 of the 2,128,000 it quoted on A1–A3 and the 4,620,000 it quoted on A4–A8. Retaining the whole register
 has an expected cost of 7,110,000; transferring A1–A3 alone and retaining the rest costs 4,818,000. The
 recommendation is:
 - A. accept the bundle: at an expected cost of **6,598,000** it beats full retention by **512,000**, and
   a single wrap removes every argument about which item a loss belongs to
-- B. refuse the bundle and require the items to be priced line by line — A1–A3 transferred and A4–A8
-  retained costs 4,818,000, which is **1,780,000** better than the bundle ✅
+- B. accept the bundle and negotiate the 40 % loading down, since the loading is where the value
+  destruction sits
 - C. refuse all transfer: the bidder's own expected cost on A4–A8 exceeds the owner's, so no wrap
   creates value
-- D. accept the bundle and negotiate the 40 % loading down, since the loading is where the value
-  destruction sits
+- D. refuse the bundle and require the items to be priced line by line — A1–A3 transferred and A4–A8
+  retained costs 4,818,000, which is **1,780,000** better than the bundle ✅
 
 *Rationale:* The bundle genuinely beats full retention, which is exactly what makes A the trap — it is
 defensible on its own comparison and leaves 1,780,000 on the table, because it buys five items the
 bidder cannot influence at the same time as three it can (11.1.3). C generalises the A4–A8 result across
-the register and forgoes the 2,292,000 the control-based transfers create. D misplaces the defect:
+the register and forgoes the 2,292,000 the control-based transfers create. B misplaces the defect:
 stripping the loading out entirely still destroys 460,000 on A4–A8, because the bidder's own expected
-cost there (3,300,000) exceeds the owner's (2,840,000). The negotiating point that follows from B is
+cost there (3,300,000) exceeds the owner's (2,840,000). The negotiating point that follows from D is
 that unbundling is itself the ask — a bidder that will not price line by line is charging for the items
 it would rather not discuss.
 
 **MCQ 11.1-F `[11.1.2 · Comprehension]`** An insurer accepts a risk it cannot influence in any way.
 Expressed in this domain's terms, that transfer rests on:
-- A. control, since the insurer's loss-prevention requirements change the project's behaviour
-- B. capacity: the insurer cannot change the distribution but holds it more cheaply, being diversified
+- A. capacity: the insurer cannot change the distribution but holds it more cheaply, being diversified
   across many such exposures — so value is created by moving the exposure to a cheaper holder rather
   than by improving it ✅
+- B. control, since the insurer's loss-prevention requirements change the project's behaviour
 - C. bargaining power, since the project has no alternative
 - D. no recognised ground, which is why insurance is a cost rather than a transfer
 
 *Rationale:* The two defensible grounds are control, which changes the underlying distribution, and
-capacity, which changes only who holds it; diversification is the classic capacity case (11.1.2). A
+capacity, which changes only who holds it; diversification is the classic capacity case (11.1.2). B
 describes a real secondary effect and names the wrong ground — the insurer's requirements do not put it
 in charge of the welding. C describes the indefensible ground and does not apply: the insurer is a
 willing party pricing an exposure it can bear. D denies a transfer that the pricing test of 11.1.3
@@ -588,48 +588,48 @@ D is contradicted by 11.2.2's arithmetic.
 percentage point to both the consumer price index and the power escalation rate, and reports that
 year-twelve `DSCR` rises from 1.2106 to 1.3088. The soundest reading is:
 - A. the structure is insensitive to escalation: both drivers were stressed and coverage improved
-- B. the test is not evidence — the exposure is the differential, which widens only from 2.70 to 2.90
+- B. the model contains an error, since escalation must reduce coverage
+- C. the test is not evidence — the exposure is the differential, which widens only from 2.70 to 2.90
   percentage points under this stress while every escalating line simply grows, so the case must be
   re-run on the spread between the cost driver and the revenue index ✅
-- C. the model contains an error, since escalation must reduce coverage
 - D. the test is adequate once a volume stress is added alongside it
 
 *Rationale:* Kestrel's revenue-weighted escalation of 2.00 % against a cost-weighted 4.70 % *is* the
 exposure; a stress that lifts both leaves that gap almost unchanged and makes the reported ratio look
 better, so it invites the opposite of the correct conclusion (11.2.3). A accepts a favourable output
-without asking what was varied — the level of power prices matters far less here than the spread. C
+without asking what was varied — the level of power prices matters far less here than the spread. B
 mistakes a modelling artefact for an arithmetic defect. D adds a second variable without repairing
 the first, and the joint table it implies would still test the wrong thing.
 
 **MCQ 11.2-E `[11.2.2 · Comprehension]`** A pass-through of 70 % of movements in an input price
 differs from a fixed-price supply contract for the same input in that the pass-through:
 - A. removes the exposure entirely, as the fixed price does
-- B. divides the exposure rather than removing it — the project keeps 30 % of every movement, and what
+- B. has no effect on coverage, since the cost is incurred either way
+- C. removes the exposure while a fixed price merely defers it
+- D. divides the exposure rather than removing it — the project keeps 30 % of every movement, and what
   it keeps also depends on the reference index and the reset frequency — whereas a fixed price
   replaces the price exposure with the supplier's willingness and ability to hold the price ✅
-- C. removes the exposure while a fixed price merely defers it
-- D. has no effect on coverage, since the cost is incurred either way
 
 *Rationale:* A pass-through divides an exposure and multiplies coverage tolerance by 1/(1 − `φ`); it
 eliminates nothing, and a share indexed to a published tariff the plant does not actually pay leaves
 basis risk inside the protected portion (11.2.2). A and C misstate what each instrument does — and a
-fixed price substitutes a counterparty credit question for a market one. D ignores that the retained
+fixed price substitutes a counterparty credit question for a market one. B ignores that the retained
 residual falls straight through to `CFADS`, which is the quantity the covenant divides.
 
 **MCQ 11.2-F `[11.2.4 · Evaluation]`** Kestrel's O&M agreement carries a 95 % availability guarantee
 with damages attached, and the project breaches its 1.20× covenant at **92.086 %** availability — so
 2.9 percentage points of availability separate compliance from breach. With one negotiating session
 left on the O&M agreement, the finance leader should spend it on:
-- A. the damages rate for missed availability, which is the operator's financial incentive to perform
-- B. the definition of an excusable outage — the availability/force-majeure boundary decides whether a
+- A. the definition of an excusable outage — the availability/force-majeure boundary decides whether a
   lost month counts against the guarantee at all, and it is worth more than the rate attached to it
   because force majeure suspends performance obligations and never suspends debt service ✅
+- B. the damages rate for missed availability, which is the operator's financial incentive to perform
 - C. the liability cap, which is scaled to the fee and therefore too small whatever the rate
 - D. the fee at risk, which gives the operator a running stake rather than a terminal liability
 
 *Rationale:* With 2.9 points of availability between compliance and breach, the question that decides
 the covenant is which lost days are counted, not what is paid for the days that are — and an outage
-reclassified as excusable lands squarely on coverage with no recovery at all (11.2.4, 11.3.4). A funds
+reclassified as excusable lands squarely on coverage with no recovery at all (11.2.4, 11.3.4). B funds
 the consequence rather than preventing it, and an operator's damages are capped on its fee in any case.
 C and D are both sound and both weaker: the cap is genuinely too small — a 30-day outage costs 742,000
 against a half-fee cap of 600,000 — and fee at risk is genuinely the better incentive design, but each
@@ -977,16 +977,16 @@ indexed to the exchange rate. The debt-service-matching share is 52.997 % and th
 minimum against a 25 % devaluation is 48.9318 %. The bid team argues that partial indexation is better
 than none. The soundest position is:
 - A. accept 40 %: partial protection is better than none, and the offtaker has moved once already
-- B. hold for a share at or above 48.9318 %: at 40 % the covenant fails on a **14.54 %** devaluation
+- B. refuse any host-currency tariff, since a twelve-year currency mismatch cannot be managed
+- C. hold for a share at or above 48.9318 %: at 40 % the covenant fails on a **14.54 %** devaluation
   and a 25 % devaluation leaves a `DSCR` of **1.1572**, while the clean structural ask of 52.997 %
   sits only 4.07 points above the minimum defensible one ✅
-- C. refuse any host-currency tariff, since a twelve-year currency mismatch cannot be managed
 - D. accept 40 % and hedge the residual exposure in the swap market
 
 *Rationale:* The tolerable devaluation runs 5.06 % unindexed, 14.54 % at a 40 % share and 37.17 % at
 the matching share, and because the matching share is barely more expensive than the minimum there is
 little to be gained by conceding to a partial one (11.3.2). A treats any movement as progress without
-testing it against the covenant. C forgoes a transfer that is well grounded on **capacity** — a payer
+testing it against the covenant. B forgoes a transfer that is well grounded on **capacity** — a payer
 with local-currency revenue and sovereign-adjacent standing bears a devaluation that would destroy the
 SPV — and it will be paid for in the tariff. D assumes a market that does not exist for a twelve-year
 tenor in most host economies at any price a project can pay.
@@ -994,40 +994,40 @@ tenor in most host economies at any price a project can pay.
 **MCQ 11.3-F `[11.3.1 · Comprehension]`** Saying "the covenant fails at an all-in rate of 6.7390 %" is
 a different kind of statement from forecasting the reference rate because a breakeven:
 - A. is a more accurate forecast, being derived from the schedule rather than from the market
-- B. is a fact about the structure — the level at which a named test fails, given the schedule, the
-  `CFADS` definition and the covenant — while a forecast is a claim about the world ✅
+- B. is the same statement expressed in different units
 - C. rests on no assumptions at all
-- D. is the same statement expressed in different units
+- D. is a fact about the structure — the level at which a named test fails, given the schedule, the
+  `CFADS` definition and the covenant — while a forecast is a claim about the world ✅
 
 *Rationale:* This is why the governed use of a model here is to compute breakevens rather than to
 predict rates: a breakeven can be monitored against a document, whereas a prediction can only be owned
 (11.3.1). A collapses the two categories into one. C overstates — the 6.7390 % still depends on the
 `CFADS` figure and the fixed-principal schedule it is computed from, which is why it must be
-recomputed after any amendment. D ignores that one statement is conditional and the other predictive.
+recomputed after any amendment. B ignores that one statement is conditional and the other predictive.
 
 **MCQ 11.3-G `[11.3.1 · Evaluation]`** Treasury proposes to leave Kestrel's floating facility unhedged,
 on the ground that scheduled debt service can be paid up to an all-in rate of **9.2723 %** and the
 reference rate stands at 4.00 %. A full hedge fixes coverage at **1.2533** at a year-one cash cost of
 **84,000**; a 75 % hedge holds **1.2085** at +200 basis points for **63,000**; and the minimum hedge
 ratio surviving that shock at the covenant is **70.0576 %**. The recommendation should be:
-- A. leave it unhedged: **327 basis points** of reference-rate headroom to payment failure is ample, and
-  the 84,000 is a certain cost against a contingent exposure
-- B. hedge at not less than 70.06 %, and in practice at 75 %: the exposure that binds is the covenant at
+- A. hedge at not less than 70.06 %, and in practice at 75 %: the exposure that binds is the covenant at
   **+73.9 basis points**, not payment at +327.2, and 0.0210 of coverage buys the removal of 0.4397 of
   coverage range — 20.92 units of range per unit surrendered ✅
+- B. leave it unhedged: **327 basis points** of reference-rate headroom to payment failure is ample, and
+  the 84,000 is a certain cost against a contingent exposure
 - C. hedge fully: a single covenanted coverage figure at any reference rate is the only defensible
   position for a project financing
 - D. leave it unhedged and rely on the debt service reserve, which covers a rate shock as readily as a
   cash shortfall
 
 *Rationale:* Interest-rate exposure is a covenant exposure long before it is a payment exposure, and
-treasury has answered the question four and a half times too generously (11.3.1). A is the
+treasury has answered the question four and a half times too generously (11.3.1). B is the
 under-hedging error in its usual form — the certain 84,000 is visible and the contingent range is not.
 C is the defensible weaker course and a common covenanted outcome: it does remove the whole range, and
 it pays 84,000 rather than 63,000, forgoes every benefit of falling rates, and enlarges the
 mark-to-market break cost that a later refinancing must pay. D misreads what a reserve does: it buys
 payment continuity and time, not compliance, and the breach at +73.9 basis points happens with the
-reserve fully funded. Two disciplines belong with B — the hedge profile should amortise with the
+reserve fully funded. Two disciplines belong with A — the hedge profile should amortise with the
 outstanding balance rather than sit flat, and the hedge counterparty's own credit is now inside the
 structure.
 
@@ -1299,17 +1299,17 @@ vendor liability caps are small relative to the exposure; D overstates a market 
 register probabilities by 1.5 and its impacts by 1.4 and admitting a 0.30 correlation, reproducing the
 order of magnitude the lender's advisers apply. The soundest professional position is:
 - A. the case is adequate, since it reproduces the multipliers the lender's advisers use
-- B. multipliers illustrate direction and order of magnitude only: the re-cut must be item-specific and
+- B. adopt the lender's P80 of 8,884,036 as the sponsor's base case, to remove the argument
+- C. present only the sponsor's own mean, since the lender will produce its own case regardless
+- D. multipliers illustrate direction and order of magnitude only: the re-cut must be item-specific and
   evidenced, because the disagreement is evidential and will be settled line by line — this
   probability on this ground investigation, this impact on this remediation quotation ✅
-- C. present only the sponsor's own mean, since the lender will produce its own case regardless
-- D. adopt the lender's P80 of 8,884,036 as the sponsor's base case, to remove the argument
 
 *Rationale:* A bank case produced by multiplication is the intellectually empty version of the
 exercise: it concedes the arithmetic without contesting a single input, and multipliers illustrate
 while evidence decides (11.4.2). A mistakes agreement on a multiplier for agreement on evidence. C
 arrives at a credit committee unable to reproduce the calculation that will set the debt quantum — the
-lender's re-cut removes 4,801,313 of capacity. D over-concedes: adopting a tail as a central case
+lender's re-cut removes 4,801,313 of capacity. B over-concedes: adopting a tail as a central case
 mis-sizes contingency, reserves and distributions, when the gap between the two cases is a financeable
 quantity to be closed by a reserve, a sponsor commitment or less debt.
 
@@ -1335,7 +1335,9 @@ argued item by item on the evidence (11.4.2), and adopting it unexamined surrend
 capacity before the argument has been had. D is simply wrong about the units, and it is the reason the
 comparison is so often not performed.
 
-**MCQ 11.4-G `[11.4.3 · Comprehension]`** On the shared registry's definition, **model risk** is:
+**MCQ 11.4-G `[11.4.3 · Comprehension]`** A board asks why the operating register carries a **model
+risk** line at all, given that every forecast in the model is already uncertain and that the cyber line
+covers the control network. Restated in the terms this KA uses, model risk is:
 - A. the risk that a model contains a coding error
 - B. the risk of loss from decisions or actions taken on the output of a model — because the model was
   flawed, because it was used outside the conditions it was validated for, or because its output was

@@ -422,15 +422,15 @@ tenor scale both sides equally.
 base-case test, 38,253,896 on the minimum-period test and 39,915,812 sculpted. An arranger asks the
 sponsor's adviser to confirm "the debt capacity". The soundest answer is:
 - A. 41,171,123, since the base-case test is what the market conventionally applies
-- B. that none of the three is "the" capacity: the figure is meaningless until the term states whether
+- B. 39,915,812, because sculpting is the technically superior structure
+- C. that none of the three is "the" capacity: the figure is meaningless until the term states whether
   coverage is tested on the base case or in every period, and whether service is level or sculpted —
   so the sizing basis must be agreed before any number circulates ✅
-- C. 39,915,812, because sculpting is the technically superior structure
 - D. 38,253,896, because prudence requires the lowest of the available answers
 
 *Rationale:* The three answers differ by 2,917,226 on identical cash flows, and the whole difference
 is definitional — it belongs in the term sheet, not in a footnote (10.1.3, Toolkit 10.T.4). A
-concedes the tested period without negotiating it, which is the easy half of the term. C recommends a
+concedes the tested period without negotiating it, which is the easy half of the term. B recommends a
 structure before its documentation, modelling and re-cutting cost has been weighed, and before the
 facility has said who re-cuts a sculpted profile when the forecast moves. D mistakes conservatism for
 analysis and surrenders the 1,661,916 that sculpting recovers without relaxing any period's
@@ -439,42 +439,46 @@ requirement by a basis point.
 **MCQ 10.1-G `[10.1.2 · Comprehension]`** A 1.30× target tested on the base case and the same 1.30×
 required in every period differ in that:
 - A. they are the same requirement expressed in two ways
-- B. the first requires the coverage only in the period tested — conventionally the first full
+- B. the distinction matters only where cash flow is level
+- C. the minimum-period test is the looser of the two, because it disregards the early years
+- D. the first requires the coverage only in the period tested — conventionally the first full
   operating year — while the second requires it in the weakest period, so on any uneven profile the
   second is the tighter constraint on the same cash flow ✅
-- C. the minimum-period test is the looser of the two, because it disregards the early years
-- D. the distinction matters only where cash flow is level
 
 *Rationale:* One ratio, two tests; the gap between them is a property of the shape of the cash flow
 rather than of the ratio (10.1.2, 10.1.3). A ignores that a single-period test says nothing about the
 other eleven periods. C inverts the definition — the minimum-period test binds precisely because it
-is measured on the worst period. D reverses the condition: where cash is level the two coincide, and
+is measured on the worst period. B reverses the condition: where cash is level the two coincide, and
 it is unevenness that separates them.
 
 **MCQ 10.1-H `[10.1.2 · Evaluation]`** The sponsors have asked for 42,000,000 and the 1.30× target
-supports 41,171,123, leaving the **828,877** gap. Kestrel's offtake runs 25 years inside a 27-year
-concession and the facility is drawn for 12. Of the resolutions available, the one a leader should
-test **first** is:
+supports 41,171,123, leaving the **828,877** gap. Kestrel's offtake and concession both run 25 years
+and the facility is drawn for 12. Of the resolutions available, the one a leader should test **first**
+is:
 - A. contribute the 828,877 as additional equity, which is the arithmetic residual and closes the gap
   with certainty
-- B. one additional year of tenor: at 13 years the same 1.30× target supports **43,473,483**, which
-  clears the request with 1,473,483 to spare, and the concession and offtake terms plainly accommodate
-  a 13-year facility ✅
-- C. argue the target down from 1.30× to the 1.2743 the requested amount delivers, since that is the
+- B. argue the target down from 1.30× to the 1.2743 the requested amount delivers, since that is the
   coverage the project actually produces
+- C. one additional year of tenor: at 13 years the same 1.30× target supports **43,473,483**, which
+  clears the request with 1,473,483 to spare, and a thirteenth year is a far smaller ask of the tail
+  than the fifteen years Case study A tried for ✅
 - D. raise `CFADS`, which is the only lever that improves the lender's position as well as the
   sponsors'
 
 *Rationale:* Debt capacity depends on cash, coverage, rate and tenor and on nothing else, so the
-question is which of the four is genuinely available — and tenor is available here, bounded by the
-offtake and concession rather than by appetite, while equity is the residual that is contributed when
+question is which of the four is worth testing first — and tenor is the one bounded by the offtake and
+concession rather than by the sponsors' cheque, while equity is the residual that is contributed when
 the other levers fail (10.1.2). A is defensible and is the answer of last resort: it closes the gap by
-funding it, and it should be priced against a lever that costs the sponsors nothing. C asks a credit
-committee to abandon the margin its target exists to create, which is the request least likely to
-succeed and the one that damages the negotiation elsewhere. D is the defensible weaker course on the
+funding it, and it should be priced against a lever that might cost the sponsors nothing — which is
+exactly the sequence Case study A ran, where the tenor ask was made at **fifteen** years, refused
+against the tail lenders required, and the 828,877 was then funded as equity. That the lever failed on
+that transaction is not a reason to stop asking for it on this one, and it is the reason the caution
+below belongs with C. B asks a credit committee to abandon the margin its target exists to create,
+which is the request least likely to succeed and the one that damages the negotiation elsewhere. D is
+the defensible weaker course on the
 right principle: it does help both parties, and the uplift required is **128,526** a year — **2.0132 %**
 of `CFADS` — which has to come from a revenue or cost commitment somebody will have to make good,
-whereas the thirteenth year is a drafting change. The two cautions on B belong with it: the extra year
+whereas the thirteenth year is a drafting change. The two cautions on C belong with it: the extra year
 must sit comfortably inside the tail lenders require, and at 42,000,000 over 13 years the year-one
 `DSCR` becomes **1.3456**, which is the number the committee will actually test.
 
@@ -832,16 +836,16 @@ different thresholds for an inconsistency.
 **MCQ 10.2-G `[10.2.3 · Evaluation]`** A sponsor's credit paper reports a `DSCR` of 1.4551 on a 25 %
 balloon structure, against 1.2743 fully amortising, as evidence of a stronger credit. The soundest
 professional position is:
-- A. the paper is right: `DSCR` is the covenanted ratio, and 1.4551 is more comfortable than 1.2743
-- B. the coverage is deferred rather than earned — `DSCR ÷ LLCR` is 1.1419 and the year-twelve
+- A. the coverage is deferred rather than earned — `DSCR ÷ LLCR` is 1.1419 and the year-twelve
   obligation is 14,887,226, against which that year's coverage on the same cash is 0.4288 — so the
   balloon is defensible only if it is sized against a stated refinancing plan, stress-tested, and
   reported with the maturity obligation beside the ratio ✅
+- B. the paper is right: `DSCR` is the covenanted ratio, and 1.4551 is more comfortable than 1.2743
 - C. balloons should not be used, because they convert a credit question into a market question
 - D. the two structures are equivalent, since `LLCR`, `PLCR` and `ICR` are identical in both
 
 *Rationale:* Nothing about the project, the cash it generates or the amount owed has changed, so a
-higher period ratio is information about the schedule and not about the credit (10.2.3). A reports an
+higher period ratio is information about the schedule and not about the credit (10.2.3). B reports an
 arithmetically correct figure that misdescribes the risk. C is the opposite failure of judgment: a
 balloon matched to a genuine cash profile is cheaper than the equity it displaces, and 10.1.3's
 1,667,864 balloon would have closed Kestrel's sizing gap for a deferral of 3.97 % of principal. D
@@ -1157,19 +1161,19 @@ that interest; D is a single date rather than the exposure profile, and it moves
 recommends conceding it, on the ground that the present-value cost to equity is only 315,488 at 8 %
 against a 3,871,824 nominal diversion. The soundest position is:
 - A. concede it: 315,488 is immaterial beside the 1,821,314 of interest the sweep saves the lenders
-- B. concede it only in exchange for something, and only on drafting settled first: the present-value
+- B. concede it and present the 0.7227-year reduction in weighted average life as a benefit shared
+  with the lenders
+- C. refuse any sweep, since diverting distributable cash always destroys equity value
+- D. concede it only in exchange for something, and only on drafting settled first: the present-value
   figure understates the cost because a swept structure de-gears faster, so the equity return falls
   even where present value barely moves ✅
-- C. refuse any sweep, since diverting distributable cash always destroys equity value
-- D. concede it and present the 0.7227-year reduction in weighted average life as a benefit shared
-  with the lenders
 
 *Rationale:* Prepaying 6 % debt while discounting equity cash at 8 % is close to value-neutral in
 present value, which is precisely why present value is the wrong test here; the real costs are
 leverage, flexibility and cash unavailable in the year it arises — and whether the sweep is taken
 before or after reserve top-ups will move the answer by more than raising the share from 50 % to 60 %
 would (10.3.3). A misattributes the interest saving, which accrues to equity: the lenders forgo it. C
-denies a trade routinely worth making against a covenant reset, a longer tenor or a lower margin. D
+denies a trade routinely worth making against a covenant reset, a longer tenor or a lower margin. B
 gives away the consideration the concession should have bought — the shorter average life is the
 lenders' benefit, not a mutual one.
 
@@ -1195,17 +1199,17 @@ tolerance and costs **417,470** of funded cash — **63,840** per percentage poi
 permits an LC-backed reserve at a market fee of 1.25 % against a breakeven of 12.42 %. The soundest
 response is:
 - A. refuse: six months is the market convention and twelve is excessive for an operating asset
-- B. accept the twelve months and satisfy them with a letter of credit: the quantity question is worth
+- B. accept the twelve months and fund them from the senior facility, since after-tax debt at 4.80 %
+  is the cheapest source
+- C. accept the twelve months and satisfy them with a letter of credit: the quantity question is worth
   arguing only if cash must be funded, and at 1.25 % against a 12.42 % breakeven the incremental
   2,504,818 of cover costs 31,310 a year rather than 311,098 ✅
-- C. accept the twelve months and fund them from the senior facility, since after-tax debt at 4.80 %
-  is the cheapest source
 - D. offer nine months as a midpoint, which buys 80.3821 % of tolerance
 
 *Rationale:* Twelve months takes single-year tolerance from **60.7641 %** to **100 %** — 39.2359 points
 for a further 2,504,818 — and the instrument, not the month count, is what determines whether that is
 expensive (10.3.2, 10.3.2b). A defends a convention against a request whose price the sponsor can make
-trivial. C is the trap the worked example exists to expose: inside a binding coverage constraint every
+trivial. B is the trap the worked example exists to expose: inside a binding coverage constraint every
 use of debt competes with every other at par, so the reserve displaces capex borrowing one for one and
 enlarges the equity requirement. D is the defensible weaker course — a genuine midpoint, correctly
 computed, which spends negotiating capital on a quantity that has stopped mattering once the
@@ -1576,18 +1580,18 @@ is deemed to be `CFADS` and **61,485** if it is applied to prepayment. Counsel p
 remaining negotiating capital on securing the prepayment treatment. The better judgement is:
 - A. agree: 34,711 is a 36.08 % saving, and `P = C ÷ λ` makes the drafting worth more the tighter the
   covenant
-- B. the drafting point is real and minor: a facility whose **base case** needs a cure has consumed an
+- B. disagree: cure rights are unlimited in number, so their cost is immaterial
+- C. disagree: cure cash is always deemed to be `CFADS`, so there is nothing to negotiate
+- D. the drafting point is real and minor: a facility whose **base case** needs a cure has consumed an
   option that should be held for a downside, so the capital belongs on the sizing — the year-twelve
   shortfall of 74,849 is the 828,877 resizing question in another form ✅
-- C. disagree: cure cash is always deemed to be `CFADS`, so there is nothing to negotiate
-- D. disagree: cure rights are unlimited in number, so their cost is immaterial
 
 *Rationale:* The cure arithmetic is correct and answers the smaller question, while the facility is
 being sized to breach on its own base case — which is a capacity problem the cure conceals, and the
 ground on which Domain 6's model auditor rejected an otherwise trivial 96,196 of curing (10.4.3,
 10.1.2). A is the defensible weaker course: the identity and the saving are both real, and both are
 small beside a structure that starts in breach. C asserts a single treatment where the domain describes
-two standard ones, and the negotiation is ordinarily about both limbs — cash in, and where it goes. D
+two standard ones, and the negotiation is ordinarily about both limbs — cash in, and where it goes. B
 is false: cures are limited in number and in consecutive periods, and each one consumed is unavailable
 later.
 

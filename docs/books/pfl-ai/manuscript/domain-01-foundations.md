@@ -1201,8 +1201,10 @@ delay (WE 1.3.3), four controls are proposed. Which should the leader adopt firs
 internal spreadsheet produces the identical loss — so the control that matches the failure is a rule
 about numbers rather than about tools (1.3.3). A is defensible and narrower than the risk: it forgoes
 a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the
-profession cannot rely on — none of the 1,117,200 would have been recoverable from a vendor, and tool
-approval governs *which* tools may be used, never *who* answers for the output (MCQ 1.3-C). D would
+profession cannot rely on — on Kestrel's facts none of the 1,117,200 was a loss the licence reached,
+and what a particular indemnity in fact covers is a question for the contract and for counsel rather
+than a planning assumption — and tool approval governs *which* tools may be used, never *who* answers
+for the output (MCQ 1.3-C). D would
 probably have caught this instance and is the right *second* control, applied to material items; as a
 blanket rule it charges a second analyst against every summary, most of which never reach a
 negotiation.

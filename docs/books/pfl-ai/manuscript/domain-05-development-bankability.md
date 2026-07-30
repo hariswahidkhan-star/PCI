@@ -509,8 +509,9 @@ sizing levers of Domain 10; conceding 3,000,000 unpriced is the failure. A is tr
 reads as modest, but treating an unpriced 3,000,000 as costless is the error. C is genuinely defensible and
 some lenders prefer it, but it holds the pool flat by moving the partner's worst case from 2,400,000 to
 7,800,000, a 3.25× rise on the least creditworthy member whose letter of credit is already a timetable
-risk, while the operator's rises only 20.5 %. D invents a threshold: 45.0 % is high and negotiable, not
-uncommercial.
+risk, while the operator's rises only 20.5 % — and the liability basis it trades away is a term for
+qualified counsel in the governing jurisdiction, not a modelling choice (5.2.3). D invents a threshold:
+45.0 % is high and negotiable, not uncommercial.
 
 **MCQ 5.2-F `[5.2.4 · Evaluation]`** Kestrel's equity bridge at 5.5 % adds 1,512,225 of interest to
 project cost and lifts the sponsors' equity `IRR`, because their money goes in later. The finance
@@ -533,9 +534,10 @@ decimal point.
 **MCQ 5.2-G `[5.2.2 · Comprehension]`** An `SPV` is said to deliver both **credit separation** and
 **bankruptcy remoteness**. The two differ in that:
 - A. they are one property, described from the lender's side and the sponsor's side
-- B. credit separation means the project is assessed on its own contracts rather than on the weakest
-  sponsor's rating, while bankruptcy remoteness is engineered by restrictions in the constitutional
-  and finance documents and does not follow from incorporating a vehicle ✅
+- B. credit separation is an outcome of how the project is underwritten — on its own contracts rather
+  than on the weakest sponsor's rating — while bankruptcy remoteness has to be built into the
+  vehicle's constitution and its finance documents, and incorporating a single-purpose entity does
+  not deliver it ✅
 - C. credit separation is a legal state and bankruptcy remoteness is a rating outcome
 - D. credit separation applies during construction and bankruptcy remoteness during operations
 
@@ -1082,7 +1084,11 @@ and the uncovered 4,104,000 does not move; the rate helps only for slips shorter
 right calibration aimed at the wrong lever for the scenario the credit committee actually runs — a
 defensible answer that buys nothing in the case being tested. C is available and is part of what the support
 exists for, but it converts a contractor obligation into sponsor cash at par and consumes 68.4 % of a pool
-that must also absorb overruns (5.2.3). D is false: the cap is a number, and it has just been priced.
+that must also absorb overruns (5.2.3). D is false as stated: the cap's *economic effect* is a number,
+and it has just been priced. Whether a given rate or cap is enforceable as drafted — as liquidated
+damages rather than as a penalty — is indeed a question for qualified counsel in the governing
+jurisdiction, and it is a question worth asking; but it is not a reason to leave the cap unpriced, and
+it is the cap rather than the rate that the 360-day case turns on.
 
 **MCQ 5.4-F `[5.4.4 · Evaluation]`** COD falls due in 30 days. The readiness gate reports the revenue
 meter not yet accepted by the offtaker and the permit to operate outstanding. The commercial team wants to

@@ -78,6 +78,9 @@ def run(ctx):
     # ================= MCQ 6.3-G — the multiple and the case =================
     DIST_BANK, DIST_SPON = D(90507502), D(151536729)
     check("MCQ 6.3-G money multiple, bank case", q(DIST_BANK / EQUITY, 3), D("5.028"))
+    # The board paper pairs the BANK case's multiple with the SPONSOR case's IRR. The item now names
+    # that, so the sponsor case's own multiple has to be printed and therefore checked.
+    check("MCQ 6.3-G money multiple, sponsor case", q(DIST_SPON / EQUITY, 3), D("8.419"))
     check("MCQ 6.3-G case difference in equity IRR points",
           D("13.52") - D("9.83"), D("3.69"))
     check("MCQ 6.3-G the escalation assumption behind it %", D("0.02967") * 100, D("2.967"))

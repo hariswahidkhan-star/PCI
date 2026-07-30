@@ -122,18 +122,69 @@ def run(ctx):
           (DS * RESET - CF_Y3).quantize(D("0.01")), D("307662.27"))
     check("MCQ 15.3-F a 1.00x reset survives year three",
           1 if CF_Y3 / DS > D(1) else 0, 1)
+    # Option A is priced rather than dismissed: a cure against the shallower reset is a real and much
+    # smaller obligation than the same test would cost against the unamended covenant.
+    check("MCQ 15.3-F cure at the 1.10x reset as % of the cure at 1.20x",
+          ((DS * RESET - CF_Y3) / CURE_Y3 * 100).quantize(D("0.01")), D("38.05"))
+    check("MCQ 15.3-F the shallower reset still needs a cure at the next test",
+          1 if DS * RESET > CF_Y3 else 0, 1)
 
     # ---- MCQ 15.4-F: the exit, decomposed ----
-    HOLD_NPV = D("5027733.03")
-    NPV_AT = {"6.50": D("7661177.40"), "7.00": D("6732654.36"),
-              "7.50": D("5855965.90"), "8.00": D("5027733.03")}
-    check("MCQ 15.4-F selling at the sponsors' own rate creates nothing",
-          NPV_AT["8.00"] - HOLD_NPV, 0)
-    check("MCQ 15.4-F yield compression from 8.00 % to 7.50 %",
-          NPV_AT["7.50"] - HOLD_NPV, D("828232.87"))
-    check("MCQ 15.4-F IRR uplift at a sale on the sponsors' own rate",
-          D("11.7666") - D("9.8591"), D("1.9075"))
-    check("MCQ 15.4-F yield compression at end of year eight",
-          (D("828232.87") * (1 + D("0.08")) ** 8).quantize(D("1")), D("1533001"))
+    # The 25-year equity profile of KA 15.2.3, rebuilt from the master thread rather than copied:
+    # the distributable residual while the loan runs, then CFADS less the maintenance charge, then
+    # the handback charge from year sixteen, then the maintenance charge ending after year twenty.
+    HANDBACK = D("697844.05")
+    PROFILE = ([DISTRIBUTABLE] * 12 + [CF - MRA] * 3
+               + [CF - MRA - HANDBACK] * 5 + [CF - HANDBACK] * 5)
+    check("MCQ 15.4-F the profile runs the 25-year concession", len(PROFILE), 25)
+    check("MCQ 15.4-F post-loan distribution", CF - MRA, 5784000)
+    check("MCQ 15.4-F distribution from year sixteen", CF - MRA - HANDBACK, D("5086155.95"))
+    check("MCQ 15.4-F distribution from year twenty-one", CF - HANDBACK, D("5686155.95"))
+
+    def pv(rate, flows, first=1):
+        return sum(f / (1 + rate) ** (i + first) for i, f in enumerate(flows))
+
+    def irr(flows):                                 # flows[0] at t = 0
+        lo, hi = D("0.0001"), D(1)
+        for _ in range(200):
+            mid = (lo + hi) / 2
+            if sum(f / (1 + mid) ** i for i, f in enumerate(flows)) > 0:
+                lo = mid
+            else:
+                hi = mid
+        return (lo + hi) / 2
+
+    R_EQ = D("0.08")
+    HOLD_NPV = pv(R_EQ, PROFILE) - EQUITY
+    # Cent-level: the manuscript's profile is built on the quantised instalment, so the level agrees
+    # to the cent while the rates and differences below agree exactly.
+    check("MCQ 15.4-F equity NPV at 8 % on a hold (to the cent)",
+          HOLD_NPV.quantize(D("0.01")), D("5027733.03"), D("0.011"))
+    check("MCQ 15.4-F hold-to-maturity equity IRR %",
+          (irr([-EQUITY] + PROFILE) * 100).quantize(D("0.0001")), D("9.8591"))
+    PRICE = {}
+    for rate, price, seller_irr in (("0.075", "35919098.27", "12.3059"),
+                                    ("0.08", "34386097.04", "11.7666")):
+        PRICE[rate] = pv(D(rate), PROFILE[8:])      # priced to the end of year eight
+        check(f"MCQ 15.4-F year-eight price at a buyer's {rate} (to the cent)",
+              PRICE[rate].quantize(D("0.01")), D(price), D("0.011"))
+        flows = [-EQUITY] + PROFILE[:8]
+        flows[8] += PRICE[rate]
+        check(f"MCQ 15.4-F seller's realised IRR on a sale at {rate} %",
+              (irr(flows) * 100).quantize(D("0.0001")), D(seller_irr))
+    check("MCQ 15.4-F IRR uplift from selling at the sponsors' own rate, points",
+          (D("11.7666") - D("9.8591")), D("1.9075"))
+    # A sale at the seller's own discount rate creates exactly nothing.
+    check("MCQ 15.4-F NPV of a sale at 8.00 % equals the hold NPV",
+          (pv(R_EQ, PROFILE[:8]) + PRICE["0.08"] / (1 + R_EQ) ** 8 - EQUITY - HOLD_NPV)
+          .quantize(D("0.0001")), 0)
+    SALE75 = pv(R_EQ, PROFILE[:8]) + PRICE["0.075"] / (1 + R_EQ) ** 8 - EQUITY
+    check("MCQ 15.4-F seller NPV at 8 % on a 7.50 % sale (to the cent)",
+          SALE75.quantize(D("0.01")), D("5855965.90"), D("0.011"))
     check("MCQ 15.4-F price difference at 7.50 % against 8.00 %",
-          D("35919098.27") - D("34386097.04"), D("1533001.23"))
+          (PRICE["0.075"] - PRICE["0.08"]).quantize(D("0.01")), D("1533001.23"))
+    check("MCQ 15.4-F yield compression at time zero",
+          ((PRICE["0.075"] - PRICE["0.08"]) / (1 + R_EQ) ** 8).quantize(D("0.01")),
+          D("828232.87"))
+    check("MCQ 15.4-F compression reconciles to the NPV difference",
+          (SALE75 - HOLD_NPV).quantize(D("0.01")), D("828232.87"), D("0.011"))

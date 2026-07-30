@@ -102,6 +102,7 @@ claim cannot silently stop being true.
 
 | Domain | | Checks |
 |---|---|---|
+| 0 | *Cross-domain check modules (span several domains)* | 0 |
 | 1 | The Project Leadership Profession | 405 |
 | 2 | Strategy, Selection and Business Alignment | 450 |
 | 3 | Governance, Organization and Decision Rights | 515 |

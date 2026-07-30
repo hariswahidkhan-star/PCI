@@ -18,6 +18,12 @@ Engines used:
   4. Credit (7.4.1, 7.4.2) — cumulative PD = 1 - (1-PD)^n; EL = cumulative PD x EAD x LGD; the
      four-payer loss distribution is binomial, so P(losing >= half) = P(at least two defaults) and
      P(losing all) = P(four defaults).
+  5. The KA 7.4.3 stress matrix, recounted. The verifier found that 7.4.3's interpretation and two
+     items (7.4-D, 7.4-F) miscounted a matrix whose sixteen printed cells are all correct: six cells
+     clear 1.20x and four fall below 1.00x, not three and five. The manuscript is corrected and the
+     counts are pinned here, because a count stated in prose is exactly the kind of number no
+     arithmetic check was watching. The worked example's reduced form is first PROVED identical to
+     the CFADS bridge above, so the cells are not taken on trust either.
 """
 
 
@@ -112,3 +118,39 @@ def run(ctx):
 
     # ================= MCQ 7.4-H — what LGD embeds =================
     check("MCQ 7.4-H LGD is the complement of the assumed recovery", 1 - D("0.55"), LGD)
+
+    # ======== KA 7.4.3 stress matrix — the counts 7.4.3, 7.4-D and 7.4-F now print ==========
+    def cell(pf, vf):
+        vol, rev = V0 * vf, P_UNIT * pf * V0 * vf
+        return (D("0.75") * rev - D("0.03") * vol - D(1896000)) / DS
+
+    # The reduced form is the bridge with symmetric tax: 0.8(R - FC - VC.V) + 0.2 x 4,920,000 - 0.05R
+    # collapses to 0.75R - 0.03V - 1,896,000. Proved at three cells with positive taxable profit.
+    for pf, vf in ((D("1.05"), D("0.80")), (D("1.00"), D("1.00")), (D("0.90"), D("1.10"))):
+        vol, rev = V0 * vf, P_UNIT * pf * V0 * vf
+        check(f"KA 7.4.3 reduced form equals the CFADS bridge at tariff {pf} despatch {vf}",
+              D("0.75") * rev - D("0.03") * vol - D(1896000), cfads(rev, vol), D("0.0000005"))
+
+    PRINTED = {
+        (D("1.05"), D("0.80")): D("1.0156"), (D("1.05"), D("0.90")): D("1.1899"),
+        (D("1.05"), D("1.00")): D("1.3642"), (D("1.05"), D("1.10")): D("1.5384"),
+        (D("1.00"), D("0.80")): D("0.9438"), (D("1.00"), D("0.90")): D("1.1091"),
+        (D("1.00"), D("1.00")): D("1.2743"), (D("1.00"), D("1.10")): D("1.4396"),
+        (D("0.95"), D("0.80")): D("0.8719"), (D("0.95"), D("0.90")): D("1.0282"),
+        (D("0.95"), D("1.00")): D("1.1845"), (D("0.95"), D("1.10")): D("1.3408"),
+        (D("0.90"), D("0.80")): D("0.8001"), (D("0.90"), D("0.90")): D("0.9474"),
+        (D("0.90"), D("1.00")): D("1.0947"), (D("0.90"), D("1.10")): D("1.2420"),
+    }
+    got = {k: q(cell(*k), 4) for k in PRINTED}
+    check("KA 7.4.3 all sixteen printed cells reproduce", 1 if got == PRINTED else 0, 1)
+    clear = sum(1 for v in got.values() if v >= COV)
+    below = sum(1 for v in got.values() if v < 1)
+    check("KA 7.4.3 cells clearing the 1.20x covenant (7.4.3, 7.4-D, 7.4-F)", clear, 6)
+    check("KA 7.4.3 cells below 1.00x (7.4.3, 7.4-F option D)", below, 4)
+    check("MCQ 7.4-F failing cells stated in the rationale", 16 - clear, 10)
+    check("KA 7.4.3 invariant: no clearing cell sits below forecast despatch",
+          1 if all(vf >= 1 for (pf, vf), v in got.items() if v >= COV) else 0, 1)
+    check("KA 7.4.3 invariant: three of the four sub-1.00x cells are in the -20 % column",
+          sum(1 for (pf, vf), v in got.items() if v < 1 and vf == D("0.80")), 3)
+    check("KA 7.4.3 invariant: base despatch clears only at base tariff and above",
+          sum(1 for (pf, vf), v in got.items() if vf == 1 and v >= COV), 2)

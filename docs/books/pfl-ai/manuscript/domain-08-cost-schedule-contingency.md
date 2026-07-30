@@ -340,7 +340,7 @@ operating error in a capital line; B confuses "not funded" with "no effect".
 totalling 48,000,000, can carry defensible contingencies differing by a factor of 6.25. The best
 explanation is:
 - A. one estimator is more conservative than the other
-- B. contingency provides for the range that the estimate's own definitional maturity implies, and that range narrows from −30 %/+50 % at screening to −5 %/+8 % once scope is contracted ✅
+- B. contingency provides for the range that the estimate's own definitional maturity implies, and that range narrows — on this book's illustrative ladder — from −30 %/+50 % at screening to −5 %/+8 % once scope is contracted ✅
 - C. contingency is a policy percentage, so the difference reflects two companies' policies
 - D. the two estimates must be stated at different base dates
 
@@ -359,8 +359,9 @@ reserve is required and ask what to deposit. The soundest recommendation is:
 - C. deposit nothing and fund the replacement from a standby facility drawn in year seven
 - D. defer the replacement to year eight, when the outstanding debt balance is lower
 
-*Rationale:* `4,098,909/6 = 683,151.48` must be in the account before the money is spent, with no
-credit taken for interest on the balance; six deposits of 644,606 total 3,867,636 and leave the
+*Rationale:* the whole 4,098,909 must be in the account before the money is spent, with no credit
+taken for interest on the balance — `4,098,909/6 = 683,151.50` a year, taken up to **683,152** so that
+six deposits are not themselves short; six deposits of 644,606 total 3,867,636 and leave the
 account **231,273** short in the one year it is needed (8.1.3). A is the right economic measure used
 as a funding plan — precisely the confusion the worked example warns against. C is genuinely
 available and is the weaker structure: it converts a funding certainty into a drawing risk in the
@@ -976,7 +977,7 @@ base-estimate uncertainty, leaving the owner the discrete retained register (8.3
 half the rule and would fund 2,266,700 against a risk the owner no longer carries. C is honest and
 insufficient — a named P69.7 beats an unnamed percentage but is still 600,692 short of the confidence
 the register supports. D is a real funding route that pre-empts the decision it should present:
-capitalising 600,692 takes the instalment to 5,081,284.04, the `DSCR` to 1.2564 and annual headroom
+capitalising 600,692 takes the instalment to 5,081,284, the `DSCR` to 1.2564 and annual headroom
 from 372,438 to 286,459 for the whole twelve-year loan life, which is a choice about where the money
 lands and belongs to the sponsors before close.
 

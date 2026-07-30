@@ -16,8 +16,8 @@ distractor cannot be arithmetically impossible without the gate failing.
 | Recall | 13 | 2.9 % |
 | Comprehension | 63 | 14.0 % |
 | Application | 117 | 26.0 % |
-| Analysis | 131 | 29.1 % |
-| Evaluation | 126 | 28.0 % |
+| Analysis | 137 | 30.4 % |
+| Evaluation | 120 | 26.7 % |
 
 A bank weighted heavily to recall tests memory rather than competence; one weighted
 heavily to Evaluation is unanswerable under time pressure. The distribution above is a fact
@@ -276,7 +276,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. procure an enterprise AI tool whose licence carries a vendor indemnity
 - D. require a second analyst to review every AI-generated summary before it is circulated
 
-*Rationale:* the loss arose because an unsourced number became a negotiating position, and a stale internal spreadsheet produces the identical loss — so the control that matches the failure is a rule about numbers rather than about tools (1.3.3). A is defensible and narrower than the risk: it forgoes a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the profession cannot rely on — none of the 1,117,200 would have been recoverable from a vendor, and tool approval governs *which* tools may be used, never *who* answers for the output (MCQ 1.3-C). D would probably have caught this instance and is the right *second* control, applied to material items; as a blanket rule it charges a second analyst against every summary, most of which never reach a negotiation.
+*Rationale:* the loss arose because an unsourced number became a negotiating position, and a stale internal spreadsheet produces the identical loss — so the control that matches the failure is a rule about numbers rather than about tools (1.3.3). A is defensible and narrower than the risk: it forgoes a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the profession cannot rely on — on Kestrel's facts none of the 1,117,200 was a loss the licence reached, and what a particular indemnity in fact covers is a question for the contract and for counsel rather than a planning assumption — and tool approval governs *which* tools may be used, never *who* answers for the output (MCQ 1.3-C). D would probably have caught this instance and is the right *second* control, applied to material items; as a blanket rule it charges a second analyst against every summary, most of which never reach a negotiation.
 
 
 **1.3-H** `[1.3.1 · Evaluation]` A board asks for "one number" for the incremental cost of the limited-recourse route, having been shown **5,202,128** built on a 140-basis-point margin differential and a 40 % enforcement recovery. The most professional response is:
@@ -965,14 +965,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* The discount rate *is* the cost of capital, debt included; putting debt service in the numerator as well double-counts it and rejects viable projects with arithmetic that is individually correct in every cell (4.1.1). C is plainly false — interest is paid in cash. D confuses a cost that cannot be avoided by deciding no with one that recurs because of the decision. The mirror discipline: equity cash flow, after debt service, is discounted at the cost of equity instead.
 
 
-**4.1-F** `[4.1.3 · Comprehension]` MIRR differs from IRR principally because MIRR:
+**4.1-F** `[4.1.3 · Comprehension]` A paper reports the same 15-year project twice: IRR 12.19 %, and MIRR 9.73 % computed with both the finance and the reinvestment rate set to the 8 % cost of capital. No cash flow and no rate has changed between the two lines. The 2.46-point gap exists because:
 
-- A. always produces a higher rate
-- B. states the reinvestment rate explicitly instead of assuming interim cash earns the project's own return, and is single-valued even when cash-flow signs change more than once ✅
-- C. discounts at the risk-free rate
-- D. requires no forecast of cash flows
+- A. MIRR discounts the inflows twice, once to today and once to the terminal date
+- B. IRR's arithmetic assumes interim cash is reinvested at the IRR itself, while MIRR compounds it at the rate stated — so the gap is the price of the reinvestment assumption, made explicit ✅
+- C. MIRR uses the risk-free rate rather than the cost of capital
+- D. the two measures answer the same question and one of them must have been mis-computed
 
-*Rationale:* Both properties belong to MIRR's construction (4.1.3). A is false in the usual direction — for a project whose IRR exceeds the reinvestment rate, MIRR is *lower*, which is the whole point. C names a rate MIRR does not use; D is true of no measure in this domain.
+*Rationale:* Nothing about the project changed; only the reinvestment assumption became explicit, and 12.19 % − 9.73 % is what that assumption was worth (4.1.3). A misdescribes the construction — inflows are compounded forward once and the result is annualised. C names a rate MIRR does not use. D is the misreading the item exists to close off: the two measures differ by construction, so a gap is expected rather than evidence of error, and it runs in this direction whenever the IRR exceeds the reinvestment rate.
 
 
 **4.1-G** `[4.1.3 · Evaluation]` A sponsor's paper reports IRR 12.19 %, MIRR 7.09 % on a 4 % treasury reinvestment rate, and NPV +12,937,747 at the 8 % project rate. A committee member moves to reject, on the grounds that MIRR is below the hurdle. The soundest response is that:
@@ -1045,14 +1045,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* The two published forms differ by a constant, so a mixed table corrupts the accept threshold while leaving the ranking intact — which is why the defect survives review (4.2.2). B commits exactly that error: 0.31 on the net definition is a healthy project. C matters for EAV, not PI. D is unrelated to either definition.
 
 
-**4.2-F** `[4.2.1 · Comprehension]` Payback and discounted payback are best described as measures of:
+**4.2-F** `[4.2.1 · Comprehension]` The master appraisal's simple payback is 6.74 years and its discounted payback 10.07 years, on identical cash flows. What does the three-and-a-third-year gap between the two figures tell the board?
 
-- A. value created by the project
-- B. how long the invested capital remains at risk before it has been recovered — nominally in the first case, in present-value terms in the second ✅
-- C. the project's return per unit of capital
-- D. the project's sensitivity to the discount rate
+- A. that discounting has removed three and a third years of cash flow from the forecast
+- B. that repaying the 60,000,000 in nominal cash by year seven does not return the capital's *worth* until year ten — the gap is the price of time value, and both figures measure exposure duration rather than value ✅
+- C. that the 8 % rate is too high for a fifteen-year concession
+- D. that the two measures disagree, so one of them has been computed on the wrong cash flows
 
-*Rationale:* Both are exposure measures and neither is a value measure, which is why they screen rather than decide (4.2.1). A is NPV's job; C is PI's or IRR's; D is what the NPV profile shows.
+*Rationale:* The same flows produce both numbers; the later crossing is what it costs to require recovery in present value rather than in nominal cash, and neither figure says anything about how much value the project creates (4.2.1). A confuses discounting a stream with shortening it. C reads a rate judgement out of an arithmetic consequence that holds at every positive rate. D treats an expected relationship — discounted payback is always the later of the two unless `r` = 0 — as a defect.
 
 
 **4.2-G** `[4.2.3 · Evaluation]` An asset manager must choose between a 3-year and a 5-year dosing system. EAC favours the 5-year system by 336,699 a year; the 15-year replacement chain favours it by 2,881,964 in present value; the two agree exactly. The plant, however, is on a concession with **seven years** left to run and no renewal right. The soundest position is that:
@@ -1125,7 +1125,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* The mechanism, not an arithmetic error: greedy selection is exact for divisible projects and only a heuristic for lumpy ones (4.3.2). A and C misdescribe the index, which is built from a present value at the project rate. D is simply untrue.
 
 
-**4.3-F** `[4.3.3 · Comprehension]` In the two-way NPV table of 4.3.3, why must the analyst read the joint cells rather than the two single-assumption sensitivities?
+**4.3-F** `[4.3.3 · Comprehension]` A water project's sensitivity exhibit tabulates NPV across annual net inflow (80 % to 110 % of base) and discount rate (6 % to 10 %) jointly. Taken one at a time, the project survives a 20 % inflow shortfall and survives a 9 % cost of capital; taken together, those two movements destroy value. Why must the analyst read the joint cells rather than the two single-assumption sensitivities?
 
 - A. because joint cells are easier to compute
 - B. because the assumptions are correlated in reality — the conditions that depress availability revenue also tend to raise the cost of capital — so the combined case is a coherent scenario rather than a remote corner ✅
@@ -1135,20 +1135,20 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Individually the project survives a 20 % revenue shortfall and survives a 9 % rate; jointly it does not, and correlation makes that combination realistic rather than extreme (4.3.3). C is false — one-way sensitivities are valid, merely insufficient. D contradicts the table's own rows.
 
 
-**4.3-G** `[4.3.2 · Evaluation]` A committee's rationing pack presents one funded set, ranked by PI, spending 18,000,000 of a 20,000,000 budget for NPV +4,580,000. Enumeration shows a feasible set spending 20,000,000 for +5,400,000. The soundest professional criticism of the pack is that:
+**4.3-G** `[4.3.2 · Evaluation]` A committee's rationing pack presents one funded set, ranked by PI, spending 18,000,000 of a 20,000,000 budget for NPV +4,580,000. You establish overnight, by enumeration, that a feasible set spends the full 20,000,000 for +5,400,000. Every NPV in the pack is correct. The board meets tomorrow and the pack has already circulated. The soundest course is to:
 
-- A. the discount rate must be wrong, since the sets disagree
-- B. the pack presents a heuristic result as though it were the optimum, and omits both the unspent 2,000,000 and the runner-up set — so the board cannot see that its approval costs 820,000 ✅
-- C. the pack should have used IRR instead of PI
-- D. nothing is wrong: PI ranking is the accepted method
+- A. let the recommendation stand and log the finding for the next cycle: 820,000 is 15 % of the value on the table but the pack's arithmetic is sound, and re-opening a circulated recommendation the night before a board costs the committee credibility it will need later
+- B. table a one-page addendum carrying the enumerated set, the 2,000,000 the recommendation leaves unspent and the runner-up set with its NPV, so the board approves a portfolio knowing that the packing it was offered costs 820,000 ✅
+- C. withdraw the recommendation and present both sets without one, on the grounds that choosing between them is the board's decision rather than the committee's
+- D. keep the PI ranking as the recommendation, since greedy indexing is the committee's established method, and record the enumeration in an appendix for completeness
 
-*Rationale:* The defect is disclosure, not arithmetic — every NPV in the pack may be right while the recommendation is still 820,000 short, and the two omitted facts are exactly the ones that would reveal it (4.3.2). A misattributes the gap to the rate. C swaps one scale-blind ratio for another. D treats convention as sufficient, which is the position the worked example refutes.
+*Rationale:* The defect is disclosure, not arithmetic, and the remedy is proportionate to it: one page, in time, changes the decision the board actually takes (4.3.2). A is a real argument — process discipline has value and the number is not enormous — but it trades 820,000 of shareholder value for the committee's comfort, and the asymmetry decides it. C over-corrects: the committee is paid to recommend, and handing up two sets with no view transfers work rather than judgement. D is the subtlest wrong answer, because it discloses the finding while leaving it where nothing depends on it — an appendix that contradicts the recommendation is not disclosure, it is cover.
 
 
 **4.3-H** `[4.3.3 · Evaluation]` A sponsor's appraisal shows Kestrel surviving a 21.24 % revenue shortfall at the board's rate. In tariff negotiation the offtaker asks for a 15 % reduction. The soundest use of that headroom figure is:
 
 - A. concede up to 21.24 %, since the project remains value-positive throughout
-- B. treat 21.24 % as the point at which the *investment case* fails, not as negotiating room — a 15 % concession leaves 6.24 points of headroom against every other adverse assumption combined, which the two-way table shows is not enough to absorb a rate rise as well ✅
+- B. treat 21.24 % as the point at which the *investment case* fails, not as negotiating room — a 15 % concession leaves 6.24 points of revenue headroom against every other adverse assumption combined, and on the reduced tariff the project breaks even at a cost of capital of 9.28 %, so barely 1.3 points of rate movement would exhaust what remains ✅
 - C. refuse any reduction, since the base case is the only defensible position
 - D. concede 15 % and re-run the model to show a positive NPV afterwards
 
@@ -1264,7 +1264,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. offer joint and several liability over the existing 6,000,000 pool instead, holding group committed capital at 40.0 % of capital cost
 - D. refuse, since committed capital above 40 % of capital cost makes a limited-recourse structure uncommercial
 
-*Rationale:* the request is a transfer of construction risk to the sponsors whose price is exactly knowable — 600,000 a point (5.2.3) — which makes it tradeable against the coverage, tenor, margin and sizing levers of Domain 10; conceding 3,000,000 unpriced is the failure. A is true, and is why the request reads as modest, but treating an unpriced 3,000,000 as costless is the error. C is genuinely defensible and some lenders prefer it, but it holds the pool flat by moving the partner's worst case from 2,400,000 to 7,800,000, a 3.25× rise on the least creditworthy member whose letter of credit is already a timetable risk, while the operator's rises only 20.5 %. D invents a threshold: 45.0 % is high and negotiable, not uncommercial.
+*Rationale:* the request is a transfer of construction risk to the sponsors whose price is exactly knowable — 600,000 a point (5.2.3) — which makes it tradeable against the coverage, tenor, margin and sizing levers of Domain 10; conceding 3,000,000 unpriced is the failure. A is true, and is why the request reads as modest, but treating an unpriced 3,000,000 as costless is the error. C is genuinely defensible and some lenders prefer it, but it holds the pool flat by moving the partner's worst case from 2,400,000 to 7,800,000, a 3.25× rise on the least creditworthy member whose letter of credit is already a timetable risk, while the operator's rises only 20.5 % — and the liability basis it trades away is a term for qualified counsel in the governing jurisdiction, not a modelling choice (5.2.3). D invents a threshold: 45.0 % is high and negotiable, not uncommercial.
 
 
 **5.2-F** `[5.2.4 · Evaluation]` Kestrel's equity bridge at 5.5 % adds 1,512,225 of interest to project cost and lifts the sponsors' equity `IRR`, because their money goes in later. The finance lead is asked how to put it to the investment committee. The soundest presentation:
@@ -1280,7 +1280,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **5.2-G** `[5.2.2 · Comprehension]` An `SPV` is said to deliver both **credit separation** and **bankruptcy remoteness**. The two differ in that:
 
 - A. they are one property, described from the lender's side and the sponsor's side
-- B. credit separation means the project is assessed on its own contracts rather than on the weakest sponsor's rating, while bankruptcy remoteness is engineered by restrictions in the constitutional and finance documents and does not follow from incorporating a vehicle ✅
+- B. credit separation is an outcome of how the project is underwritten — on its own contracts rather than on the weakest sponsor's rating — while bankruptcy remoteness has to be built into the vehicle's constitution and its finance documents, and incorporating a single-purpose entity does not deliver it ✅
 - C. credit separation is a legal state and bankruptcy remoteness is a rating outcome
 - D. credit separation applies during construction and bankruptcy remoteness during operations
 
@@ -1404,7 +1404,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. take neither and rely on the 6,000,000 of cost-overrun support, which covers the 4,104,000
 - D. take the rate, since a damages cap is a matter for counsel and cannot be priced
 
-*Rationale:* `4,800,000/24,733.33 = 194.07` days, so at 360 days recovery is the cap on either concession and the uncovered 4,104,000 does not move; the rate helps only for slips shorter than 194 days. A is the right calibration aimed at the wrong lever for the scenario the credit committee actually runs — a defensible answer that buys nothing in the case being tested. C is available and is part of what the support exists for, but it converts a contractor obligation into sponsor cash at par and consumes 68.4 % of a pool that must also absorb overruns (5.2.3). D is false: the cap is a number, and it has just been priced.
+*Rationale:* `4,800,000/24,733.33 = 194.07` days, so at 360 days recovery is the cap on either concession and the uncovered 4,104,000 does not move; the rate helps only for slips shorter than 194 days. A is the right calibration aimed at the wrong lever for the scenario the credit committee actually runs — a defensible answer that buys nothing in the case being tested. C is available and is part of what the support exists for, but it converts a contractor obligation into sponsor cash at par and consumes 68.4 % of a pool that must also absorb overruns (5.2.3). D is false as stated: the cap's *economic effect* is a number, and it has just been priced. Whether a given rate or cap is enforceable as drafted — as liquidated damages rather than as a penalty — is indeed a question for qualified counsel in the governing jurisdiction, and it is a question worth asking; but it is not a reason to leave the cap unpriced, and it is the cap rather than the rate that the 360-day case turns on.
 
 
 **5.4-F** `[5.4.4 · Evaluation]` COD falls due in 30 days. The readiness gate reports the revenue meter not yet accepted by the offtaker and the permit to operate outstanding. The commercial team wants to declare COD on the contractual date to start the 17,733.33 per day of `CFADS` the delay is costing. Holding COD for 30 days costs 742,000 of economic cost, of which delay damages recover 600,000, leaving 142,000 with the SPV. The better recommendation is:
@@ -1629,14 +1629,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* all three resolutions in 6.3.1 are honest, and average-balance interest is the more accurate measure of what the facility will actually charge; what is unacceptable is a resolution whose convergence nobody has tested, because the printed answer then depends on the order in which somebody pressed the keys. A is genuinely defensible and would restore reproducibility, but it buys it by surrendering 312,957 of correctly measured interest when documentation delivers both. C is also defensible and is the better answer for simple structures, but it is a rebuild rather than a control and is not available for a sculpted or swept schedule. D is wrong: 312,957 is the priced cost of a convention, not an error.
 
 
-**6.3-G** `[6.3.3 · Evaluation]` A board paper presents Kestrel's equity return as "5.028 times money, 13.52 % `IRR`". The bank case returns 9.83 %, and the whole 3.69-point difference comes from a 2.967 % escalation assumption; the multiple covers the whole twenty-five-year concession. The soundest presentation:
+**6.3-G** `[6.3.3 · Evaluation]` A board paper presents Kestrel's equity return as "5.028 times money, 13.52 % `IRR`", naming no case: the multiple is the **bank** case's, over the whole twenty-five-year concession, while the `IRR` is the **sponsor** case's, which a 2.967 % escalation assumption alone lifts 3.69 points above the bank case's 9.83 %. The soundest presentation:
 
 - A. leads with the 5.028 times multiple, because it counts every dollar actually distributed
 - B. reports the sponsor case, since it is the sponsors' central expectation and they are the investor
 - C. reports both cases with their labels, states the horizon the multiple covers, and states whether the 2.967 % escalation is contracted, indexed to a published index or merely assumed ✅
 - D. reports the bank case alone, because that is the case the lenders underwrite
 
-*Rationale:* a multiple has no time dimension, so 5.028 times says nothing about when the cash arrives and a multiple shown without its horizon is a long horizon dressed as a return, while an equity `IRR` without its case is worthless (6.3.3). A does exactly that; B presents the more flattering case unlabelled, when the habit the domain prescribes is to state the escalation at which the return meets the hurdle and ask whether it is a right or a hope; D discards the sponsors' own economics, which is the case the equity decision turns on.
+*Rationale:* a multiple has no time dimension, so 5.028 times says nothing about when the cash arrives and a multiple shown without its horizon is a long horizon dressed as a return, while an equity `IRR` without its case is worthless — and pairing one case's multiple with another's `IRR` is a figure that describes no case at all (6.3.3). A does exactly that; B presents the more flattering case unlabelled, and would have to carry the sponsor case's own multiple of 8.419 times rather than the 5.028 the paper quotes, when the habit the domain prescribes is to state the escalation at which the return meets the hurdle and ask whether it is a right or a hope; D discards the sponsors' own economics, which is the case the equity decision turns on.
 
 
 **6.4-A** `[6.4.1 · Analysis]` A modeller taxes `EBIT` of 5,100,000 at 20 % instead of taxable profit of 2,580,000. The balance sheet still balances. The check that catches it is:
@@ -1679,7 +1679,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* `CFADS` amplifies revenue by 1.4098, so the covenant breaks at revenue of 11,503,416, a 4.14 % fall (6.4.2). A carries the `CFADS` percentage across as if the two were interchangeable — overstating the operations team's room by 41 %; C multiplies rather than divides by the elasticity; D is the fall at which payment itself fails.
 
 
-**6.4-E** `[6.4.3 · Evaluation]` A model audit costs 180,000 and two weeks of delay worth 248,267; `p` = 0.35, `d` = 0.85, `C` = 2,691,071, pre-close correction 184,133. Moving the audit early, so it adds no delay and correction costs only 60,000, changes its net value and breakeven error rate to:
+**6.4-E** `[6.4.3 · Analysis]` A model audit costs 180,000 and two weeks of delay worth 248,267; `p` = 0.35, `d` = 0.85, `C` = 2,691,071, pre-close correction 184,133. Moving the audit early, so it adds no delay and correction costs only 60,000, changes its net value and breakeven error rate to:
 
 - A. 317,547 and 20.10 %
 - B. 602,744 and 8.05 % ✅
@@ -1689,7 +1689,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* `941,875 − [180,000 + 0.35 × (0.85 × 60,000 + 0.15 × 2,691,071)] = 602,744`, and `180,000/(0.85 × (2,691,071 − 60,000)) = 8.05 %` (6.4.3). A is the late-audit answer; C is the expected cost of no control at all; D pairs the late audit's breakeven fee with its breakeven error rate.
 
 
-**6.4-F** `[6.4.1 · Evaluation]` On the bank case Kestrel's `DSCR` falls from 1.2743 to 1.1851 in year twelve, averaging 1.2340 against a 1.20× covenant, on the requested 42,000,000. The credit committee's sizing of 41,171,123 gives a year-twelve `DSCR` of 1.2087, and 41,472,081 is the largest facility whose year-twelve `DSCR` is exactly 1.20×. The soundest recommendation is:
+**6.4-F** `[6.4.1 · Evaluation]` On the bank case Kestrel's `DSCR` falls from 1.2743 to 1.1851 in year twelve, averaging 1.2340 against a 1.20× covenant, on the requested 42,000,000. The credit committee's sizing of 41,171,123 gives a year-twelve `DSCR` of 1.2087; at 41,472,081 the year-twelve `DSCR` is exactly 1.20×. The soundest recommendation is:
 
 - A. keep 42,000,000, disclose the year-twelve minimum, and rely on the 1.2340 average
 - B. size at 41,472,081 — the largest facility that holds the covenant in every period — and record that the 828,877 the committee withheld was already protecting a year-twelve exposure nobody in that negotiation had modelled ✅
@@ -1709,14 +1709,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* machine checks are additive to review and never substitutive (6.4.4): a scanner finds structural defects and systematically misses the definitional ones — whether `CFADS` matches the facility's clause, whether the tax treatment is the jurisdiction's, whether the waterfall follows the drafted priority — which are precisely the errors with the largest cost, so treating detection as constant across error classes biases the comparison toward the cheap control. A does that. C ignores that the audit is a condition the sponsor cannot trade away, and that the tail of the cost distribution is averaged out of the expectation. D fixes the parameter and leaves the governance objection untouched.
 
 
-**6.4-H** `[6.4.2 · Comprehension]` Sensitivity analysis and scenario analysis differ in that:
+**6.4-H** `[6.4.2 · Comprehension]` A committee asks why the model's sensitivity table cannot answer the question "what happens to Kestrel in a recession". The best explanation is that:
 
-- A. sensitivity moves inputs in percentages while a scenario moves them in absolute amounts
-- B. sensitivity is reported on value and a scenario on coverage
-- C. sensitivity moves one input at a time to measure the model's response, while a scenario moves a coherent set of inputs together to represent a state of the world — so only the second can carry a view about correlation ✅
-- D. they are the same procedure, a scenario being a sensitivity reported on more than one output
+- A. the table's ±10 % steps are too small to represent a recession, so the range must be widened
+- B. a recession is a state of the world in which several drivers move together, and a table that moves one input at a time carries no view about how they move together or how likely that is — which is the object a scenario is built to represent ✅
+- C. the table is reported on value, and a recession is a coverage event, so the defect is the output chosen rather than the technique
+- D. the two are the same procedure, so the recession case is the table's rows added together
 
-*Rationale:* 6.4.2 defines both, and identifies correlation and threshold behaviour — not the arithmetic of combining moves — as what one-at-a-time analysis cannot see. A and D describe presentation rather than construction. B assigns outputs to techniques, when the domain's insistence is the opposite: both must be run on coverage as well as value, because a table reporting only `NPV` ranks interest-rate risk last on Kestrel.
+*Rationale:* the difference is what each technique can represent, not the size or the number of the moves it makes: one-at-a-time measures the model's response to a single input and is silent on correlation and on behaviour at thresholds, which is what a coherent case exists to carry (6.4.2). A treats a difference in kind as a difference in degree — a wider step is still one input. C names a real discipline in the wrong place: coverage as well as value must be reported for *either* technique, which is why a table reporting only `NPV` ranks interest-rate risk last on Kestrel. D is the arithmetically tempting answer, because on this linear model a joint move is exactly the sum of the separate ones — and that is the trap, since adding the rows reproduces the number while still assigning the bundle no likelihood.
 
 
 ## Domain 7
@@ -1951,7 +1951,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Enhancement is priced against the coverage and case it unlocks, not the provision it reduces (7.4.2). A applies the wrong metric to the decision, though it is the right metric for the provision; C is an unsupported generality; D is false — both effects are in present-value terms.
 
 
-**7.4-D** `[7.4.3 · Analysis]` A stress matrix shows that only three of sixteen tariff and despatch combinations clear the 1.20 × covenant, and that a 5 % tariff cut requires despatch 0.99 % above forecast to remain compliant. The most valuable observation for management is:
+**7.4-D** `[7.4.3 · Analysis]` A stress matrix shows that six of sixteen tariff and despatch combinations clear the 1.20 × covenant — none of them at despatch below forecast — and that a 5 % tariff cut requires despatch 0.99 % above forecast to remain compliant. The most valuable observation for management is:
 
 - A. the matrix should be widened until more cells comply
 - B. the project has almost no joint tolerance, and it does not hold the lever — despatch is the offtaker's choice — that would recover a tariff cut ✅
@@ -1961,7 +1961,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* A reverse stress test must identify both the failure point and whether the project controls the driver that would avoid it (7.4.3). A is presentational dishonesty; C is half right — year-one figures are optimistic, so the matrix should be *extended* to the minimum year, not discarded; D mistakes a covenant for the problem.
 
 
-**7.4-E** `[7.4.1 · Evaluation]` Kestrel's offtaker exposure can be measured three defensible ways: the receivable of **2,958,904** on 90-day terms, the present value of contracted `CFADS` over the twelve loan years at 6 % (**53,522,460**), or the present value over the whole 25-year concession, which is larger again. The credit committee is deciding whether to advance 41,171,123. The exposure it should be shown is:
+**7.4-E** `[7.4.1 · Analysis]` Kestrel's offtaker exposure can be measured three defensible ways: the receivable of **2,958,904** on 90-day terms, the present value of contracted `CFADS` over the twelve loan years at 6 % (**53,522,460**), or the present value over the whole 25-year concession, which is larger again. The credit committee is deciding whether to advance 41,171,123. The exposure it should be shown is:
 
 - A. the receivable, since that is the amount actually owed at any moment
 - B. 53,522,460, because the loss event for this decision is the loss of the contracted stream over the period being lent against, not an unpaid invoice ✅
@@ -1971,14 +1971,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* `EAD` follows from what the loss event is, and choosing it is a judgment tied to a decision (7.4.1). A is the working-capital exposure, trivial by comparison, and quoting it is exactly how a concentration problem gets presented as a working-capital matter. C is genuinely defensible and is the right number for a *different* decision — the sponsors' own exposure across the concession — but selecting it here because it is the largest substitutes an instinct for prudence for the question asked, and it overstates what the lenders are relying on. D is arithmetic without meaning: three exposures answer three questions and their mean answers none.
 
 
-**7.4-F** `[7.4.3 · Evaluation]` The stress matrix clears the 1.20 × covenant in only three of sixteen cells and falls below 1.00 × in five, and the unstressed bank case already reaches a year-twelve minimum of 1.1851 (Domain 6, Fig 6.4.1). Four requirements are proposed. Which should the committee impose first?
+**7.4-F** `[7.4.3 · Evaluation]` The stress matrix clears the 1.20 × covenant in six of sixteen cells and falls below 1.00 × in four, and the unstressed bank case already reaches a year-twelve minimum of 1.1851 (Domain 6, Fig 6.4.1). Four requirements are proposed. Which should the committee impose first?
 
 - A. extend the matrix to the loan's minimum year, since every cell is a year-one snapshot and therefore optimistic about the loan's worst year ✅
 - B. widen the tariff and despatch ranges beyond the market adviser's credible bounds
 - C. attach a probability to each cell so that the committee can weigh the outcomes
-- D. increase the debt-service reserve from six months to twelve, because five cells cannot pay debt service from operating cash
+- D. increase the debt-service reserve from six months to twelve, because four cells cannot pay debt service from operating cash
 
-*Rationale:* the matrix understates the problem before any stress is applied: coverage already falls to 1.1851 by year twelve on the unstressed bank case, so thirteen failing cells is a floor rather than a finding (7.4.3). D is a real mitigant applied in the wrong order — a reserve sized against a mis-stated worst year is sized against the wrong number, and the right sequence is measure, then mitigate. C is what committees usually ask for and is the more dangerous request: joint probabilities here would have to be invented, and a probability-weighted matrix built on assumed correlations implies knowledge nobody has (Domain 6, KA 6.A.1). B changes nothing, since the ranges are already the adviser's credible bounds and extending them past that only adds cells nobody will underwrite.
+*Rationale:* the matrix understates the problem before any stress is applied: coverage already falls to 1.1851 by year twelve on the unstressed bank case, so ten failing cells is a floor rather than a finding (7.4.3). D is a real mitigant applied in the wrong order — a reserve sized against a mis-stated worst year is sized against the wrong number, and the right sequence is measure, then mitigate. C is what committees usually ask for and is the more dangerous request: joint probabilities here would have to be invented, and a probability-weighted matrix built on assumed correlations implies knowledge nobody has (Domain 6, KA 6.A.1). B changes nothing, since the ranges are already the adviser's credible bounds and extending them past that only adds cells nobody will underwrite.
 
 
 **7.4-G** `[7.4.2 · Evaluation]` A credit paper records that the sole offtaker is investment grade, with an annual `PD` of 0.60 %, a twelve-year cumulative `PD` of 6.9671 % and an expected loss of 1,678,031 on exposure of 53,522,460. A single regional authority is the only buyer of the water. The soundest assessment of the paper is that it:
@@ -2046,7 +2046,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **8.1-E** `[8.1.2 · Comprehension]` A sponsor asks how two estimates of the same plant, both totalling 48,000,000, can carry defensible contingencies differing by a factor of 6.25. The best explanation is:
 
 - A. one estimator is more conservative than the other
-- B. contingency provides for the range that the estimate's own definitional maturity implies, and that range narrows from −30 %/+50 % at screening to −5 %/+8 % once scope is contracted ✅
+- B. contingency provides for the range that the estimate's own definitional maturity implies, and that range narrows — on this book's illustrative ladder — from −30 %/+50 % at screening to −5 %/+8 % once scope is contracted ✅
 - C. contingency is a policy percentage, so the difference reflects two companies' policies
 - D. the two estimates must be stated at different base dates
 
@@ -2060,7 +2060,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. deposit nothing and fund the replacement from a standby facility drawn in year seven
 - D. defer the replacement to year eight, when the outstanding debt balance is lower
 
-*Rationale:* `4,098,909/6 = 683,151.48` must be in the account before the money is spent, with no credit taken for interest on the balance; six deposits of 644,606 total 3,867,636 and leave the account **231,273** short in the one year it is needed (8.1.3). A is the right economic measure used as a funding plan — precisely the confusion the worked example warns against. C is genuinely available and is the weaker structure: it converts a funding certainty into a drawing risk in the year the project would otherwise be at 0.4561, which is the year a lender is least willing to be relied on. D subordinates a maintenance requirement to a credit calendar and does not remove the cliff — it moves it and escalates it to 4,246,470.
+*Rationale:* the whole 4,098,909 must be in the account before the money is spent, with no credit taken for interest on the balance — `4,098,909/6 = 683,151.50` a year, taken up to **683,152** so that six deposits are not themselves short; six deposits of 644,606 total 3,867,636 and leave the account **231,273** short in the one year it is needed (8.1.3). A is the right economic measure used as a funding plan — precisely the confusion the worked example warns against. C is genuinely available and is the weaker structure: it converts a funding certainty into a drawing risk in the year the project would otherwise be at 0.4561, which is the year a lender is least willing to be relied on. D subordinates a maintenance requirement to a credit calendar and does not remove the cliff — it moves it and escalates it to 4,246,470.
 
 
 **8.1-G** `[8.1.2 · Evaluation]` A team declines the fixed-price wrap because six separate packages priced lower, and proposes retaining the funded contingency of 3,645,403 — 7.59 % of the 48,000,000 base, which covers 94.93 % of a Stage E band and 25.32 % of a Stage C one. The soundest position is that:
@@ -2200,7 +2200,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. leave the funded 3,645,403 unchanged and disclose it as a P69.7 provision
 - D. fund the 600,692 by capitalising it into senior debt, the coverage cost being only 23.1 % of headroom
 
-*Rationale:* "take the higher" is where the reconciliation starts, not where it ends: the next question is which of the two uncertainties the contracting structure has eliminated, and a full wrap transfers base-estimate uncertainty, leaving the owner the discrete retained register (8.3.2, 8.1.2). A applies half the rule and would fund 2,266,700 against a risk the owner no longer carries. C is honest and insufficient — a named P69.7 beats an unnamed percentage but is still 600,692 short of the confidence the register supports. D is a real funding route that pre-empts the decision it should present: capitalising 600,692 takes the instalment to 5,081,284.04, the `DSCR` to 1.2564 and annual headroom from 372,438 to 286,459 for the whole twelve-year loan life, which is a choice about where the money lands and belongs to the sponsors before close.
+*Rationale:* "take the higher" is where the reconciliation starts, not where it ends: the next question is which of the two uncertainties the contracting structure has eliminated, and a full wrap transfers base-estimate uncertainty, leaving the owner the discrete retained register (8.3.2, 8.1.2). A applies half the rule and would fund 2,266,700 against a risk the owner no longer carries. C is honest and insufficient — a named P69.7 beats an unnamed percentage but is still 600,692 short of the confidence the register supports. D is a real funding route that pre-empts the decision it should present: capitalising 600,692 takes the instalment to 5,081,284, the `DSCR` to 1.2564 and annual headroom from 372,438 to 286,459 for the whole twelve-year loan life, which is a choice about where the money lands and belongs to the sponsors before close.
 
 
 **8.3-F** `[8.3.1 · Comprehension]` A delivery manager asks where management reserve sits in a project financing. The best explanation is:
@@ -2338,31 +2338,31 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **9.1-E** `[9.1.2 · Evaluation]` A sponsor's model carries the 144,000 annual tax shield on a 6,000,000 shareholder loan — 1,537,168 of present value, 25.62 % of the tranche — inside the base case that will be shown to lenders and to the investment committee. The soundest professional position is that the shield:
 
 - A. belongs in the base case, because interest on a shareholder loan is deductible
-- B. should be excluded from the base case until a written tax opinion on this specific structure confirms deductibility, thin-capitalisation headroom and withholding treatment, and should then be disclosed as a documented upside rather than embedded in the cash flow ✅
-- C. should be halved, as a prudent allowance for jurisdictional uncertainty
+- B. should be halved, as a prudent allowance for jurisdictional uncertainty
+- C. should be excluded from the base case until a written tax opinion on this specific structure confirms deductibility, thin-capitalisation headroom and withholding treatment, and should then be disclosed as a documented upside rather than embedded in the cash flow ✅
 - D. means the shareholder loan should be replaced with ordinary share capital
 
-*Rationale:* A quarter of a tranche's face value created by a documentation choice is the most jurisdiction-dependent figure in this domain: thin-capitalisation limits, interest-deduction caps expressed as a share of `EBITDA`, transfer-pricing constraints on the rate and withholding tax on cross-border interest can each reduce it to nothing, so it is not an input until counsel says it is (9.1.2). A states one jurisdiction's treatment as though it were universal. C substitutes an arbitrary haircut for a determination that is obtainable and close to binary. D discards a legitimate instrument to avoid a question of evidence — and the instrument's real danger is the ranking clause, not the shield.
+*Rationale:* A quarter of a tranche's face value created by a documentation choice is the most jurisdiction-dependent figure in this domain: thin-capitalisation limits, interest-deduction caps expressed as a share of `EBITDA`, transfer-pricing constraints on the rate and withholding tax on cross-border interest can each reduce it to nothing, so it is not an input until counsel says it is (9.1.2). A states one jurisdiction's treatment as though it were universal. B substitutes an arbitrary haircut for a determination that is obtainable and close to binary. D discards a legitimate instrument to avoid a question of evidence — and the instrument's real danger is the ranking clause, not the shield.
 
 
 **9.1-F** `[9.1.3 · Comprehension]` The build-up states `r_f`, `β_e × ERP`, `CRP` and `SP` separately rather than quoting a single required return because:
 
 - A. accounting standards require a disclosed decomposition of a discount rate
-- B. the cost of equity is constructed rather than observed, so separating the terms is what makes each judgment reviewable — and what allows the leverage term to be re-levered when gearing changes ✅
+- B. only the risk-free rate is a judgment; the remaining terms are market data
 - C. the components must be summed in that order for the total to be correct
-- D. only the risk-free rate is a judgment; the remaining terms are market data
+- D. the cost of equity is constructed rather than observed, so separating the terms is what makes each judgment reviewable — and what allows the leverage term to be re-levered when gearing changes ✅
 
-*Rationale:* `k_e` is not observed and never will be; stating the premiums separately is what turns an assertion into something a reviewer can challenge term by term, and the beta term is the one that must move with the structure or every structure comparison is invalid (9.1.3). A invents a reporting requirement. C confuses a sum with a sequence. D reverses the position — `ERP`, `β_a`, `CRP` and `SP` are all judgments, which is exactly why each needs a named, dated, owned source.
+*Rationale:* `k_e` is not observed and never will be; stating the premiums separately is what turns an assertion into something a reviewer can challenge term by term, and the beta term is the one that must move with the structure or every structure comparison is invalid (9.1.3). A invents a reporting requirement. C confuses a sum with a sequence. B reverses the position — `ERP`, `β_a`, `CRP` and `SP` are all judgments, which is exactly why each needs a named, dated, owned source.
 
 
 **9.1-G** `[9.1.4 · Evaluation]` The sponsors argue for **75 %** gearing on the exchange rate computed in 9.1.4: moving from 70 % to 75 % buys **48.82 basis points** of equity `IRR` for 8.50 points of `DSCR`, about **5.75 basis points of equity return per hundredth of coverage surrendered**, which they describe as the best-value structural trade available. The lenders size on a 1.30× target (41,171,123, 68.6185 % gearing, `WACC` 8.0001 %); the 1.20× covenant binds at 44,602,050 (74.3367 % gearing, `WACC` 7.9418 %). The soundest response is that the exchange-rate argument:
 
-- A. is correct and decisive — 5.75 basis points per hundredth is a favourable rate and the board should mandate 75 %
-- B. is the right frame and stops applying at 74.34 %: above that gearing there is no coverage left to sell, and at 75 % the covenant fails on the base case, so the trade should be priced inside the feasible region and the recommendation made at the 68.62 % the sizing target permits ✅
+- A. is the right frame and stops applying at 74.34 %: above that gearing there is no coverage left to sell, and at 75 % the covenant fails on the base case, so the trade should be priced inside the feasible region and the recommendation made at the 68.62 % the sizing target permits ✅
+- B. is correct and decisive — 5.75 basis points per hundredth is a favourable rate and the board should mandate 75 %
 - C. is invalid, because coverage and equity return are not commensurable quantities
 - D. should be resolved by mandating 74.34 %, the highest gearing the covenant permits
 
-*Rationale:* At 75 % debt service of 5,367,466.32 requires `CFADS` of **6,440,960** against 6,384,000 available — short by **56,960** before any stress — so the marginal rate is being quoted across a boundary at which the structure ceases to exist (9.1.4). A applies a valid marginal calculation outside its domain. C rejects the only honest way to argue a gearing: the exchange rate is exactly how the trade should be framed, and framing it is what reveals where it ends. D is the defensible weaker course — it satisfies the covenant arithmetically, with nil headroom, and lenders set a target above the covenant precisely so that a covenant is not a base-case condition; the constraint's price against the sponsors' proposal is **6.51 basis points** of `WACC`, which is what belongs in the paper.
+*Rationale:* At 75 % debt service of 5,367,466.32 requires `CFADS` of **6,440,960** against 6,384,000 available — short by **56,960** before any stress — so the marginal rate is being quoted across a boundary at which the structure ceases to exist (9.1.4). B applies a valid marginal calculation outside its domain. C rejects the only honest way to argue a gearing: the exchange rate is exactly how the trade should be framed, and framing it is what reveals where it ends. D is the defensible weaker course — it satisfies the covenant arithmetically, with nil headroom, and lenders set a target above the covenant precisely so that a covenant is not a base-case condition; the constraint's price against the sponsors' proposal is **6.51 basis points** of `WACC`, which is what belongs in the paper.
 
 
 **9.2-A** `[9.2.3 · Application]` A 150,000,000 project is funded with senior 80,000,000 at 5.2 %, mezzanine 20,000,000 at 10.8 % (both deductible) and equity 50,000,000 at 14.5 %; tax 30 %. The `WACC` is:
@@ -2408,21 +2408,21 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **9.2-E** `[9.2.3 · Evaluation]` A board paper discounts Kestrel's cash flows at 7.8840 % — the `WACC` of the 80 % gearing structure — on the ground that it is the lowest cost of capital available to the project. The soundest position is that the appraisal should use:
 
 - A. 7.8840 %, because minimising `WACC` is the objective of a capital-structure decision
-- B. the `WACC` of a structure the project can actually raise — 8.0001 % at the coverage-binding gearing — quoted together with the structure it belongs to ✅
-- C. the sponsors' corporate `WACC`, since it is the sponsors' shareholders who set the hurdle
+- B. the sponsors' corporate `WACC`, since it is the sponsors' shareholders who set the hurdle
+- C. the `WACC` of a structure the project can actually raise — 8.0001 % at the coverage-binding gearing — quoted together with the structure it belongs to ✅
 - D. any rate between 7.8840 % and 8.0001 %, since the whole range is 11.61 basis points
 
-*Rationale:* A cost of capital is a property of one specific structure, and the 80 % structure fails the 1.20× covenant on the base case, so its rate prices a financing that does not exist; the coverage constraint costs 11.61 basis points of `WACC`, and that is the honest price of bankability (9.1.4, 9.2.3). A imports the corporate-finance objective into a constrained problem. C discounts a single ring-fenced asset at a parent's blended risk. D is right about materiality and wrong about discipline: the difference is small only because someone checked it, and an unlabelled rate is reused in places where the difference is not small.
+*Rationale:* A cost of capital is a property of one specific structure, and the 80 % structure fails the 1.20× covenant on the base case, so its rate prices a financing that does not exist; the coverage constraint costs 11.61 basis points of `WACC`, and that is the honest price of bankability (9.1.4, 9.2.3). A imports the corporate-finance objective into a constrained problem. B discounts a single ring-fenced asset at a parent's blended risk. D is right about materiality and wrong about discipline: the difference is small only because someone checked it, and an unlabelled rate is reused in places where the difference is not small.
 
 
-**9.2-F** `[9.2.4 · Evaluation]` The board is attracted by a 20-year project bond at close: it matches institutional appetite to a 25-year asset and removes the refinancing question. Drawn in full at close against a two-year construction spend, the bond incurs **1,260,000** of negative arbitrage against **252,000** of commitment fees on a progressively drawn bank facility — **35.78 basis points** a year on 42,000,000 — and it would carry make-whole prepayment protection. The soundest recommendation is:
+**9.2-F** `[9.2.4 · Evaluation]` The board is attracted by a 20-year project bond at close: it matches institutional appetite to a 25-year asset and removes the refinancing question. Drawn in full at close against a two-year construction spend, the bond incurs **1,260,000** of negative arbitrage — **35.78 basis points** a year on 42,000,000, levelised over the facility — against **252,000** of commitment fees on a progressively drawn bank facility, and it would carry make-whole prepayment protection. The soundest recommendation is:
 
-- A. issue the bond: 35.78 basis points is a modest price for twenty years of committed tenor
-- B. bank facility during construction, refinanced into bonds at or after completion — capturing progressive drawdown while the spend is uncertain and institutional tenor once the risk profile has changed; and the bond's make-whole terms must be settled at that point, since they can eliminate the refinancing gain the sequencing exists to capture ✅
+- A. issue the bond: 35.78 basis points of negative arbitrage is a modest price for twenty years of committed tenor
+- B. bank facility only: bonds are inappropriate for project financings because amendments are impracticable across a dispersed holder base
 - C. issue the bond and negotiate a delayed-draw structure, which removes the negative arbitrage
-- D. bank facility only: bonds are inappropriate for project financings because amendments are impracticable across a dispersed holder base
+- D. bank facility during construction, refinanced into bonds at or after completion — capturing progressive drawdown while the spend is uncertain and institutional tenor once the risk profile has changed; and the bond's make-whole terms must be settled at that point, since they can eliminate the refinancing gain the sequencing exists to capture ✅
 
-*Rationale:* The two instruments are strong in different phases, so the answer is sequencing rather than selection — and 1,008,000 of avoidable cost on this dimension alone is the same order as the entire `WACC` benefit of twenty points of gearing (9.2.4). A treats a first-order structuring decision as an administrative detail. C is the defensible weaker course: a delayed-draw or forward-purchase structure does address negative arbitrage, at a commitment cost of its own, and it leaves the amendment inflexibility of a bond in place through the phase in which amendments are most likely. D promotes one true asymmetry into a prohibition and forgoes the tenor that makes a long concession financeable.
+*Rationale:* The two instruments are strong in different phases, so the answer is sequencing rather than selection — and 1,008,000 of avoidable cost on this dimension alone is the same order as the entire `WACC` benefit of twenty points of gearing (9.2.4). A treats a first-order structuring decision as an administrative detail. C is the defensible weaker course: a delayed-draw or forward-purchase structure does address negative arbitrage, at a commitment cost of its own, and it leaves the amendment inflexibility of a bond in place through the phase in which amendments are most likely. B promotes one true asymmetry into a prohibition and forgoes the tenor that makes a long concession financeable.
 
 
 **9.3-A** `[9.3.2 · Application]` A 40,000,000 tranche carries 4.10 % over 12 years with a 5.5 % exposure premium capitalised into the loan. The all-in cost on the 40,000,000 of proceeds is closest to:
@@ -2467,12 +2467,12 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 **9.3-E** `[9.3.3 · Evaluation]` A funding paper describes a 12,000,000 DFI tranche as "5.25 %, the cheapest money in the structure". Its all-in economic cost, once a 1.00 % front-end fee, 350,000 of advisory spend at close and 120,000 a year of monitoring across an 18-year tenor are counted, is 7.2465 %. The soundest way to report the tranche is:
 
-- A. at 5.25 %, which is the contractual rate the facility agreement will carry
-- B. at 7.2465 % and, in a separate column, the capacity effect — six extra years of tenor lifting debt capacity at a 1.30× target from 41,171,123 to 56,299,948 — with a statement of which compliance costs the project would have incurred in any event ✅
+- A. at 7.2465 % and, in a separate column, the capacity effect — six extra years of tenor lifting debt capacity at a 1.30× target from 41,171,123 to 56,299,948 — with a statement of which compliance costs the project would have incurred in any event ✅
+- B. at 5.25 %, which is the contractual rate the facility agreement will carry
 - C. as rejected, because 7.2465 % exceeds the commercial market's 6.00 %
 - D. as one net figure combining the cost penalty and the capacity benefit
 
-*Rationale:* Cost and capacity are different effects with different causes and belong in separate columns; charging the whole of an environmental and social management system against the tranche also overstates its cost, because a well-run project wants the system and other lenders price the comfort it provides (9.3.3). A repeats the headline the worked example exists to destroy. C optimises cost while ignoring that coverage is the binding constraint. D collapses two decisions into one number and conceals which of them is driving it.
+*Rationale:* Cost and capacity are different effects with different causes and belong in separate columns; charging the whole of an environmental and social management system against the tranche also overstates its cost, because a well-run project wants the system and other lenders price the comfort it provides (9.3.3). B repeats the headline the worked example exists to destroy. C optimises cost while ignoring that coverage is the binding constraint. D collapses two decisions into one number and conceals which of them is driving it.
 
 
 **9.3-F** `[9.3.1 · Comprehension]` In economic terms, an istisna'a facility differs from an ijara facility in that:
@@ -2488,21 +2488,21 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **9.3-G** `[9.3.4 · Evaluation]` A project whose availability payments are denominated in the host currency is offered two ways to fund the same 15,000,000: a hard-currency export-credit tranche at a materially lower margin and longer tenor, or a local-currency commercial tranche at the market margin. The structuring team recommends the export-credit tranche on the strength of its all-in cost and tenor. The soundest position is:
 
 - A. accept the recommendation: the all-in cost and the capacity effect both favour the export-credit tranche, and cost and capacity are the two tests this Knowledge Area sets
-- B. the comparison is incomplete: the cheaper tranche creates a currency mismatch against host-currency revenue, so the margin saving must be set against the cost of hedging or bearing that exposure — the natural hedge is worth paying for, and its price is exactly the margin forgone ✅
+- B. accept it and rely on the local cost base as a natural hedge, since local costs fall in hard-currency terms as the currency weakens
 - C. reject the export-credit tranche: a currency mismatch is unmanageable at any margin
-- D. accept it and rely on the local cost base as a natural hedge, since local costs fall in hard-currency terms as the currency weakens
+- D. the comparison is incomplete: the cheaper tranche creates a currency mismatch against host-currency revenue, so the margin saving must be set against the cost of hedging or bearing that exposure — the natural hedge is worth paying for, and its price is exactly the margin forgone ✅
 
-*Rationale:* The cheapest tranche is frequently the one that creates the exposure, and a margin saving bought with an unhedged devaluation risk is not a saving (9.3.4). A applies the right two tests to the wrong currency. C forgoes a tranche that is perfectly usable where the revenue can be indexed or the exposure hedged — Domain 11 (KA 11.3.2) prices both. D is the seductive error: local costs do provide a partial offset, and it is far too small, because debt service and hard-currency operating costs do not devalue at all — on Kestrel's numbers a **5.06 %** movement breaches the covenant even with the whole local cost base offsetting.
+*Rationale:* The cheapest tranche is frequently the one that creates the exposure, and a margin saving bought with an unhedged devaluation risk is not a saving (9.3.4). A applies the right two tests to the wrong currency. C forgoes a tranche that is perfectly usable where the revenue can be indexed or the exposure hedged — Domain 11 (KA 11.3.2) prices both. B is the seductive error: local costs do provide a partial offset, and it is far too small, because debt service and hard-currency operating costs do not devalue at all — on Kestrel's numbers a **5.06 %** movement breaches the covenant even with the whole local cost base offsetting.
 
 
 **9.3-H** `[9.3.2 · Comprehension]` An export credit agency's exposure premium is described as "capitalised into the loan". In cash-flow terms that means:
 
-- A. the premium is deducted from the amount advanced, so proceeds fall and repayments are unchanged
-- B. the premium is added to the amount borrowed, so cash proceeds are unchanged while the sum repaid rises — which is why the headline rate understates the cost and only the rate solved from proceeds against instalments measures it ✅
+- A. the premium is added to the amount borrowed, so cash proceeds are unchanged while the sum repaid rises — which is why the headline rate understates the cost and only the rate solved from proceeds against instalments measures it ✅
+- B. the premium is deducted from the amount advanced, so proceeds fall and repayments are unchanged
 - C. the premium is treated as a capital cost of the project and depreciated
 - D. the premium is waived in exchange for a higher margin
 
-*Rationale:* Capitalisation grosses the loan up: 15,000,000 of eligible equipment financed with a 6.0 % premium becomes a 15,900,000 loan against 15,000,000 of proceeds, and the all-in cost is **4.6895 %** against a 3.80 % headline — **88.95 basis points** the ranking would otherwise miss (9.3.2). A describes a deducted arrangement fee, which reduces proceeds instead. C is an accounting treatment, not a cash-flow mechanic, and it does not change what is repaid. D describes a different bargain altogether.
+*Rationale:* Capitalisation grosses the loan up: 15,000,000 of eligible equipment financed with a 6.0 % premium becomes a 15,900,000 loan against 15,000,000 of proceeds, and the all-in cost is **4.6895 %** against a 3.80 % headline — **88.95 basis points** the ranking would otherwise miss (9.3.2). B describes a deducted arrangement fee, which reduces proceeds instead. C is an accounting treatment, not a cash-flow mechanic, and it does not change what is repaid. D describes a different bargain altogether.
 
 
 **9.4-A** `[9.4.2 · Analysis]` A 6,000,000 grant applied to reduce **equity** leaves `DSCR` at 1.2743 and lifts equity `IRR` from 12.5311 % to 16.8231 %; applied to reduce **debt** it lifts `DSCR` to 1.4867 and equity `IRR` to 14.9940 %. If the grantor's stated objective is to make an otherwise unfinanceable project financeable, it should:
@@ -2548,11 +2548,11 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **9.4-E** `[9.4.3 · Evaluation]` A 15 basis point sustainability ratchet on a 42,000,000 facility is worth 528,182 in present value against 712,627 of verification and reporting cost — net **−184,445** — even assuming both key performance indicators are met every year. The soundest professional response is:
 
 - A. take the label: 15 basis points is a saving, and the reporting would be done anyway
-- B. ask the arranger what the label does to the **base** margin and to the size of the club, because a 10 basis point base-margin reduction turns the combined position positive by 167,677 — and if the case rests on the ratchet alone there is no case ✅
-- C. reject sustainability-linked structures generally, since the ratchet is value-negative
+- B. reject sustainability-linked structures generally, since the ratchet is value-negative
+- C. ask the arranger what the label does to the **base** margin and to the size of the club, because a 10 basis point base-margin reduction turns the combined position positive by 167,677 — and if the case rests on the ratchet alone there is no case ✅
 - D. accept the ratchet and set key performance indicators the project would meet in any event, so that the reduction is certain
 
-*Rationale:* A ratchet of this size cannot pay for a credible verification apparatus, so the negotiation belongs on the base margin and the lender pool, where the value actually is (9.4.3). A weighs a contingent benefit against a permanent cost and omits the cost. C generalises one arithmetic result into a policy and forgoes a benefit the same arithmetic shows is available. D is the greenwashing failure in one sentence: a target the project would have met is not a target, it carries reputational and increasingly regulatory exposure, and because the ratchet is symmetric in most drafting a KPI set chosen without headroom converts the initiative into a cost.
+*Rationale:* A ratchet of this size cannot pay for a credible verification apparatus, so the negotiation belongs on the base margin and the lender pool, where the value actually is (9.4.3). A weighs a contingent benefit against a permanent cost and omits the cost. B generalises one arithmetic result into a policy and forgoes a benefit the same arithmetic shows is available. D is the greenwashing failure in one sentence: a target the project would have met is not a target, it carries reputational and increasingly regulatory exposure, and because the ratchet is symmetric in most drafting a KPI set chosen without headroom converts the initiative into a cost.
 
 
 **9.4-F** `[9.4.2 · Comprehension]` A finance ministry official describes a concessional loan as "part loan and part gift". Expressed in this domain's terms, that means:
@@ -2568,11 +2568,11 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **9.4-G** `[9.4.1 · Evaluation]` A grantor with a fixed fiscal envelope can direct its support at a project either as a capital grant reducing the amount to be financed or as a minimum revenue guarantee capping the downside on a demand-based revenue line. Its stated objective is to get an otherwise unfinanceable project financed at the least fiscal cost. The soundest advice is:
 
 - A. give the guarantee: no cash leaves the budget, so the fiscal cost is nil
-- B. direct the support at the coverage face and, whichever instrument is chosen, value the guarantee as the written option it is — support that improves coverage buys more financeability per unit of fiscal cost than support of equal value that improves return, and an unvalued guarantee is an unmeasured liability rather than a free one ✅
+- B. give whichever the sponsors prefer, since they are the party that must raise the financing
 - C. give the grant, because grants are always cheaper for a grantor than contingent commitments
-- D. give whichever the sponsors prefer, since they are the party that must raise the financing
+- D. direct the support at the coverage face and, whichever instrument is chosen, value the guarantee as the written option it is — support that improves coverage buys more financeability per unit of fiscal cost than support of equal value that improves return, and an unvalued guarantee is an unmeasured liability rather than a free one ✅
 
-*Rationale:* Coverage is the binding constraint, so support aimed at the coverage face converts fiscal cost into financeability most efficiently — and a guarantee is a written option whose value can be estimated, so "no cash moves" is a budgeting statement and not a cost statement (9.4.1, 9.1.4). A is the error the topic exists to correct. C reverses it and asserts a universal ranking: a guarantee that is never called costs nothing, and its expected cost is what has to be compared. D delegates the public-purpose judgement to the party whose interest lies in the return face — on the grant arithmetic of 9.4.2, the answer will be the structure that lifts equity `IRR` by 429.20 basis points and leaves `DSCR` untouched.
+*Rationale:* Coverage is the binding constraint, so support aimed at the coverage face converts fiscal cost into financeability most efficiently — and a guarantee is a written option whose value can be estimated, so "no cash moves" is a budgeting statement and not a cost statement (9.4.1, 9.1.4). A is the error the topic exists to correct. C reverses it and asserts a universal ranking: a guarantee that is never called costs nothing, and its expected cost is what has to be compared. B delegates the public-purpose judgement to the party whose interest lies in the return face — on the grant arithmetic of 9.4.2, the answer will be the structure that lifts equity `IRR` by 429.20 basis points and leaves `DSCR` untouched.
 
 
 ## Domain 10
@@ -2630,31 +2630,31 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **10.1-F** `[10.1.3 · Evaluation]` Sizing Kestrel at a 1.30× target gives 41,171,123 on the base-case test, 38,253,896 on the minimum-period test and 39,915,812 sculpted. An arranger asks the sponsor's adviser to confirm "the debt capacity". The soundest answer is:
 
 - A. 41,171,123, since the base-case test is what the market conventionally applies
-- B. that none of the three is "the" capacity: the figure is meaningless until the term states whether coverage is tested on the base case or in every period, and whether service is level or sculpted — so the sizing basis must be agreed before any number circulates ✅
-- C. 39,915,812, because sculpting is the technically superior structure
+- B. 39,915,812, because sculpting is the technically superior structure
+- C. that none of the three is "the" capacity: the figure is meaningless until the term states whether coverage is tested on the base case or in every period, and whether service is level or sculpted — so the sizing basis must be agreed before any number circulates ✅
 - D. 38,253,896, because prudence requires the lowest of the available answers
 
-*Rationale:* The three answers differ by 2,917,226 on identical cash flows, and the whole difference is definitional — it belongs in the term sheet, not in a footnote (10.1.3, Toolkit 10.T.4). A concedes the tested period without negotiating it, which is the easy half of the term. C recommends a structure before its documentation, modelling and re-cutting cost has been weighed, and before the facility has said who re-cuts a sculpted profile when the forecast moves. D mistakes conservatism for analysis and surrenders the 1,661,916 that sculpting recovers without relaxing any period's requirement by a basis point.
+*Rationale:* The three answers differ by 2,917,226 on identical cash flows, and the whole difference is definitional — it belongs in the term sheet, not in a footnote (10.1.3, Toolkit 10.T.4). A concedes the tested period without negotiating it, which is the easy half of the term. B recommends a structure before its documentation, modelling and re-cutting cost has been weighed, and before the facility has said who re-cuts a sculpted profile when the forecast moves. D mistakes conservatism for analysis and surrenders the 1,661,916 that sculpting recovers without relaxing any period's requirement by a basis point.
 
 
 **10.1-G** `[10.1.2 · Comprehension]` A 1.30× target tested on the base case and the same 1.30× required in every period differ in that:
 
 - A. they are the same requirement expressed in two ways
-- B. the first requires the coverage only in the period tested — conventionally the first full operating year — while the second requires it in the weakest period, so on any uneven profile the second is the tighter constraint on the same cash flow ✅
+- B. the distinction matters only where cash flow is level
 - C. the minimum-period test is the looser of the two, because it disregards the early years
-- D. the distinction matters only where cash flow is level
+- D. the first requires the coverage only in the period tested — conventionally the first full operating year — while the second requires it in the weakest period, so on any uneven profile the second is the tighter constraint on the same cash flow ✅
 
-*Rationale:* One ratio, two tests; the gap between them is a property of the shape of the cash flow rather than of the ratio (10.1.2, 10.1.3). A ignores that a single-period test says nothing about the other eleven periods. C inverts the definition — the minimum-period test binds precisely because it is measured on the worst period. D reverses the condition: where cash is level the two coincide, and it is unevenness that separates them.
+*Rationale:* One ratio, two tests; the gap between them is a property of the shape of the cash flow rather than of the ratio (10.1.2, 10.1.3). A ignores that a single-period test says nothing about the other eleven periods. C inverts the definition — the minimum-period test binds precisely because it is measured on the worst period. B reverses the condition: where cash is level the two coincide, and it is unevenness that separates them.
 
 
-**10.1-H** `[10.1.2 · Evaluation]` The sponsors have asked for 42,000,000 and the 1.30× target supports 41,171,123, leaving the **828,877** gap. Kestrel's offtake runs 25 years inside a 27-year concession and the facility is drawn for 12. Of the resolutions available, the one a leader should test **first** is:
+**10.1-H** `[10.1.2 · Evaluation]` The sponsors have asked for 42,000,000 and the 1.30× target supports 41,171,123, leaving the **828,877** gap. Kestrel's offtake and concession both run 25 years and the facility is drawn for 12. Of the resolutions available, the one a leader should test **first** is:
 
 - A. contribute the 828,877 as additional equity, which is the arithmetic residual and closes the gap with certainty
-- B. one additional year of tenor: at 13 years the same 1.30× target supports **43,473,483**, which clears the request with 1,473,483 to spare, and the concession and offtake terms plainly accommodate a 13-year facility ✅
-- C. argue the target down from 1.30× to the 1.2743 the requested amount delivers, since that is the coverage the project actually produces
+- B. argue the target down from 1.30× to the 1.2743 the requested amount delivers, since that is the coverage the project actually produces
+- C. one additional year of tenor: at 13 years the same 1.30× target supports **43,473,483**, which clears the request with 1,473,483 to spare, and a thirteenth year is a far smaller ask of the tail than the fifteen years Case study A tried for ✅
 - D. raise `CFADS`, which is the only lever that improves the lender's position as well as the sponsors'
 
-*Rationale:* Debt capacity depends on cash, coverage, rate and tenor and on nothing else, so the question is which of the four is genuinely available — and tenor is available here, bounded by the offtake and concession rather than by appetite, while equity is the residual that is contributed when the other levers fail (10.1.2). A is defensible and is the answer of last resort: it closes the gap by funding it, and it should be priced against a lever that costs the sponsors nothing. C asks a credit committee to abandon the margin its target exists to create, which is the request least likely to succeed and the one that damages the negotiation elsewhere. D is the defensible weaker course on the right principle: it does help both parties, and the uplift required is **128,526** a year — **2.0132 %** of `CFADS` — which has to come from a revenue or cost commitment somebody will have to make good, whereas the thirteenth year is a drafting change. The two cautions on B belong with it: the extra year must sit comfortably inside the tail lenders require, and at 42,000,000 over 13 years the year-one `DSCR` becomes **1.3456**, which is the number the committee will actually test.
+*Rationale:* Debt capacity depends on cash, coverage, rate and tenor and on nothing else, so the question is which of the four is worth testing first — and tenor is the one bounded by the offtake and concession rather than by the sponsors' cheque, while equity is the residual that is contributed when the other levers fail (10.1.2). A is defensible and is the answer of last resort: it closes the gap by funding it, and it should be priced against a lever that might cost the sponsors nothing — which is exactly the sequence Case study A ran, where the tenor ask was made at **fifteen** years, refused against the tail lenders required, and the 828,877 was then funded as equity. That the lever failed on that transaction is not a reason to stop asking for it on this one, and it is the reason the caution below belongs with C. B asks a credit committee to abandon the margin its target exists to create, which is the request least likely to succeed and the one that damages the negotiation elsewhere. D is the defensible weaker course on the right principle: it does help both parties, and the uplift required is **128,526** a year — **2.0132 %** of `CFADS` — which has to come from a revenue or cost commitment somebody will have to make good, whereas the thirteenth year is a drafting change. The two cautions on C belong with it: the extra year must sit comfortably inside the tail lenders require, and at 42,000,000 over 13 years the year-one `DSCR` becomes **1.3456**, which is the number the committee will actually test.
 
 
 **10.2-A** `[10.2.1 · Application]` `CFADS` 6,384,000; debt service 5,009,635. The `DSCR` is:
@@ -2719,12 +2719,12 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 **10.2-G** `[10.2.3 · Evaluation]` A sponsor's credit paper reports a `DSCR` of 1.4551 on a 25 % balloon structure, against 1.2743 fully amortising, as evidence of a stronger credit. The soundest professional position is:
 
-- A. the paper is right: `DSCR` is the covenanted ratio, and 1.4551 is more comfortable than 1.2743
-- B. the coverage is deferred rather than earned — `DSCR ÷ LLCR` is 1.1419 and the year-twelve obligation is 14,887,226, against which that year's coverage on the same cash is 0.4288 — so the balloon is defensible only if it is sized against a stated refinancing plan, stress-tested, and reported with the maturity obligation beside the ratio ✅
+- A. the coverage is deferred rather than earned — `DSCR ÷ LLCR` is 1.1419 and the year-twelve obligation is 14,887,226, against which that year's coverage on the same cash is 0.4288 — so the balloon is defensible only if it is sized against a stated refinancing plan, stress-tested, and reported with the maturity obligation beside the ratio ✅
+- B. the paper is right: `DSCR` is the covenanted ratio, and 1.4551 is more comfortable than 1.2743
 - C. balloons should not be used, because they convert a credit question into a market question
 - D. the two structures are equivalent, since `LLCR`, `PLCR` and `ICR` are identical in both
 
-*Rationale:* Nothing about the project, the cash it generates or the amount owed has changed, so a higher period ratio is information about the schedule and not about the credit (10.2.3). A reports an arithmetically correct figure that misdescribes the risk. C is the opposite failure of judgment: a balloon matched to a genuine cash profile is cheaper than the equity it displaces, and 10.1.3's 1,667,864 balloon would have closed Kestrel's sizing gap for a deferral of 3.97 % of principal. D uses the horizon ratios' immunity to conclude that nothing differs, when the thing that differs — 14,887,226 falling due on one date — is the entire exposure.
+*Rationale:* Nothing about the project, the cash it generates or the amount owed has changed, so a higher period ratio is information about the schedule and not about the credit (10.2.3). B reports an arithmetically correct figure that misdescribes the risk. C is the opposite failure of judgment: a balloon matched to a genuine cash profile is cheaper than the equity it displaces, and 10.1.3's 1,667,864 balloon would have closed Kestrel's sizing gap for a deferral of 3.97 % of principal. D uses the horizon ratios' immunity to conclude that nothing differs, when the thing that differs — 14,887,226 falling due on one date — is the entire exposure.
 
 
 **10.2-H** `[10.2.2 · Comprehension]` `PLCR` exceeds `LLCR` whenever a project outlives its loan because:
@@ -2790,11 +2790,11 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **10.3-F** `[10.3.3 · Evaluation]` Lenders ask for a 50 % cash sweep. The sponsor's treasury recommends conceding it, on the ground that the present-value cost to equity is only 315,488 at 8 % against a 3,871,824 nominal diversion. The soundest position is:
 
 - A. concede it: 315,488 is immaterial beside the 1,821,314 of interest the sweep saves the lenders
-- B. concede it only in exchange for something, and only on drafting settled first: the present-value figure understates the cost because a swept structure de-gears faster, so the equity return falls even where present value barely moves ✅
+- B. concede it and present the 0.7227-year reduction in weighted average life as a benefit shared with the lenders
 - C. refuse any sweep, since diverting distributable cash always destroys equity value
-- D. concede it and present the 0.7227-year reduction in weighted average life as a benefit shared with the lenders
+- D. concede it only in exchange for something, and only on drafting settled first: the present-value figure understates the cost because a swept structure de-gears faster, so the equity return falls even where present value barely moves ✅
 
-*Rationale:* Prepaying 6 % debt while discounting equity cash at 8 % is close to value-neutral in present value, which is precisely why present value is the wrong test here; the real costs are leverage, flexibility and cash unavailable in the year it arises — and whether the sweep is taken before or after reserve top-ups will move the answer by more than raising the share from 50 % to 60 % would (10.3.3). A misattributes the interest saving, which accrues to equity: the lenders forgo it. C denies a trade routinely worth making against a covenant reset, a longer tenor or a lower margin. D gives away the consideration the concession should have bought — the shorter average life is the lenders' benefit, not a mutual one.
+*Rationale:* Prepaying 6 % debt while discounting equity cash at 8 % is close to value-neutral in present value, which is precisely why present value is the wrong test here; the real costs are leverage, flexibility and cash unavailable in the year it arises — and whether the sweep is taken before or after reserve top-ups will move the answer by more than raising the share from 50 % to 60 % would (10.3.3). A misattributes the interest saving, which accrues to equity: the lenders forgo it. C denies a trade routinely worth making against a covenant reset, a longer tenor or a lower margin. B gives away the consideration the concession should have bought — the shorter average life is the lenders' benefit, not a mutual one.
 
 
 **10.3-G** `[10.3.2 · Comprehension]` A newly appointed director is told that a debt service reserve "protects the covenant". Restated correctly, what the reserve does is:
@@ -2810,11 +2810,11 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **10.3-H** `[10.3.2 · Evaluation]` In final negotiation the lenders ask for a **twelfth** month of debt service reserve in place of six. Each month buys **6.5393 percentage points** of single-year cash tolerance and costs **417,470** of funded cash — **63,840** per percentage point — and the facility permits an LC-backed reserve at a market fee of 1.25 % against a breakeven of 12.42 %. The soundest response is:
 
 - A. refuse: six months is the market convention and twelve is excessive for an operating asset
-- B. accept the twelve months and satisfy them with a letter of credit: the quantity question is worth arguing only if cash must be funded, and at 1.25 % against a 12.42 % breakeven the incremental 2,504,818 of cover costs 31,310 a year rather than 311,098 ✅
-- C. accept the twelve months and fund them from the senior facility, since after-tax debt at 4.80 % is the cheapest source
+- B. accept the twelve months and fund them from the senior facility, since after-tax debt at 4.80 % is the cheapest source
+- C. accept the twelve months and satisfy them with a letter of credit: the quantity question is worth arguing only if cash must be funded, and at 1.25 % against a 12.42 % breakeven the incremental 2,504,818 of cover costs 31,310 a year rather than 311,098 ✅
 - D. offer nine months as a midpoint, which buys 80.3821 % of tolerance
 
-*Rationale:* Twelve months takes single-year tolerance from **60.7641 %** to **100 %** — 39.2359 points for a further 2,504,818 — and the instrument, not the month count, is what determines whether that is expensive (10.3.2, 10.3.2b). A defends a convention against a request whose price the sponsor can make trivial. C is the trap the worked example exists to expose: inside a binding coverage constraint every use of debt competes with every other at par, so the reserve displaces capex borrowing one for one and enlarges the equity requirement. D is the defensible weaker course — a genuine midpoint, correctly computed, which spends negotiating capital on a quantity that has stopped mattering once the instrument question is settled, and buys back a month the lenders may value more than the sponsor gives up.
+*Rationale:* Twelve months takes single-year tolerance from **60.7641 %** to **100 %** — 39.2359 points for a further 2,504,818 — and the instrument, not the month count, is what determines whether that is expensive (10.3.2, 10.3.2b). A defends a convention against a request whose price the sponsor can make trivial. B is the trap the worked example exists to expose: inside a binding coverage constraint every use of debt competes with every other at par, so the reserve displaces capex borrowing one for one and enlarges the equity requirement. D is the defensible weaker course — a genuine midpoint, correctly computed, which spends negotiating capital on a quantity that has stopped mattering once the instrument question is settled, and buys back a month the lenders may value more than the sponsor gives up.
 
 
 **10.4-A** `[10.4.2 · Analysis]` A facility has a 1.20× `DSCR` covenant and a 1.15× lock-up trigger. Why is the lock-up set *below* the covenant?
@@ -2880,11 +2880,11 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **10.4-G** `[10.4.3 · Evaluation]` Kestrel's mandated 42,000,000 facility breaches its 1.20× covenant in years eleven and twelve of the bank case. Curing both breaches costs **96,196** if the cash is deemed to be `CFADS` and **61,485** if it is applied to prepayment. Counsel proposes spending the remaining negotiating capital on securing the prepayment treatment. The better judgement is:
 
 - A. agree: 34,711 is a 36.08 % saving, and `P = C ÷ λ` makes the drafting worth more the tighter the covenant
-- B. the drafting point is real and minor: a facility whose **base case** needs a cure has consumed an option that should be held for a downside, so the capital belongs on the sizing — the year-twelve shortfall of 74,849 is the 828,877 resizing question in another form ✅
+- B. disagree: cure rights are unlimited in number, so their cost is immaterial
 - C. disagree: cure cash is always deemed to be `CFADS`, so there is nothing to negotiate
-- D. disagree: cure rights are unlimited in number, so their cost is immaterial
+- D. the drafting point is real and minor: a facility whose **base case** needs a cure has consumed an option that should be held for a downside, so the capital belongs on the sizing — the year-twelve shortfall of 74,849 is the 828,877 resizing question in another form ✅
 
-*Rationale:* The cure arithmetic is correct and answers the smaller question, while the facility is being sized to breach on its own base case — which is a capacity problem the cure conceals, and the ground on which Domain 6's model auditor rejected an otherwise trivial 96,196 of curing (10.4.3, 10.1.2). A is the defensible weaker course: the identity and the saving are both real, and both are small beside a structure that starts in breach. C asserts a single treatment where the domain describes two standard ones, and the negotiation is ordinarily about both limbs — cash in, and where it goes. D is false: cures are limited in number and in consecutive periods, and each one consumed is unavailable later.
+*Rationale:* The cure arithmetic is correct and answers the smaller question, while the facility is being sized to breach on its own base case — which is a capacity problem the cure conceals, and the ground on which Domain 6's model auditor rejected an otherwise trivial 96,196 of curing (10.4.3, 10.1.2). A is the defensible weaker course: the identity and the saving are both real, and both are small beside a structure that starts in breach. C asserts a single treatment where the domain describes two standard ones, and the negotiation is ordinarily about both limbs — cash in, and where it goes. B is false: cures are limited in number and in consecutive periods, and each one consumed is unavailable later.
 
 
 **10.4-H** `[10.4.2 · Comprehension]` A sponsor's board is told that the facility has "a 1.20× covenant and a 1.15× lock-up, so there are two levels to watch". The 1.25× distribution condition is not mentioned. The clearest statement of what the three thresholds do is:
@@ -2932,31 +2932,31 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **11.1-D** `[11.1.3 · Evaluation]` The allocation arithmetic shows the five uncontrollable items destroying 1,780,000 of value at a 40 % loading. A colleague proposes reducing the owner's retained probabilities so that the full wrap can be recommended to the board on price grounds. The soundest professional position is:
 
 - A. adjust them: the register is a negotiating instrument and the full wrap has strategic value
-- B. hold the retained probabilities to their evidence base and negotiate item by item on that evidence, because the register's probabilities *are* the negotiation and an input adjusted to reach a conclusion has inverted the analysis ✅
-- C. adopt the bidder's probabilities throughout, since the bidder is the party pricing the risk
+- B. adopt the bidder's probabilities throughout, since the bidder is the party pricing the risk
+- C. hold the retained probabilities to their evidence base and negotiate item by item on that evidence, because the register's probabilities *are* the negotiation and an input adjusted to reach a conclusion has inverted the analysis ✅
 - D. abandon the arithmetic, since probabilities are subjective and cannot support a decision
 
-*Rationale:* The whole result rests on the honesty of the two `EMV` columns: a sponsor who understates its retained probabilities will "prove" that every transfer destroys value, and a bidder who overstates its own will justify any premium (11.1.3). A produces a recommendation the lender's diligence will reverse, at the cost of the register's credibility everywhere else. C imports the less-informed party's assumptions about a ground investigation the owner commissioned, which is how an information advantage becomes a price disadvantage. D discards a rule that is transparent and challengeable in favour of instinct, which is neither.
+*Rationale:* The whole result rests on the honesty of the two `EMV` columns: a sponsor who understates its retained probabilities will "prove" that every transfer destroys value, and a bidder who overstates its own will justify any premium (11.1.3). A produces a recommendation the lender's diligence will reverse, at the cost of the register's credibility everywhere else. B imports the less-informed party's assumptions about a ground investigation the owner commissioned, which is how an information advantage becomes a price disadvantage. D discards a rule that is transparent and challengeable in favour of instinct, which is neither.
 
 
-**11.1-E** `[11.1.3 · Evaluation]` The preferred bidder declines to price Kestrel's register items separately and offers a single wrap covering all eight threats for a premium of **6,748,000** — the sum of the 2,128,000 it quoted on A1–A3 and the 4,620,000 it quoted on A4–A8. Retaining the whole register has an expected cost of 7,110,000; transferring A1–A3 alone and retaining the rest costs 4,818,000. The recommendation is:
+**11.1-E** `[11.1.3 · Analysis]` The preferred bidder declines to price Kestrel's register items separately and offers a single wrap covering all eight threats for a premium of **6,748,000** — the sum of the 2,128,000 it quoted on A1–A3 and the 4,620,000 it quoted on A4–A8. Retaining the whole register has an expected cost of 7,110,000; transferring A1–A3 alone and retaining the rest costs 4,818,000. The recommendation is:
 
 - A. accept the bundle: at an expected cost of **6,598,000** it beats full retention by **512,000**, and a single wrap removes every argument about which item a loss belongs to
-- B. refuse the bundle and require the items to be priced line by line — A1–A3 transferred and A4–A8 retained costs 4,818,000, which is **1,780,000** better than the bundle ✅
+- B. accept the bundle and negotiate the 40 % loading down, since the loading is where the value destruction sits
 - C. refuse all transfer: the bidder's own expected cost on A4–A8 exceeds the owner's, so no wrap creates value
-- D. accept the bundle and negotiate the 40 % loading down, since the loading is where the value destruction sits
+- D. refuse the bundle and require the items to be priced line by line — A1–A3 transferred and A4–A8 retained costs 4,818,000, which is **1,780,000** better than the bundle ✅
 
-*Rationale:* The bundle genuinely beats full retention, which is exactly what makes A the trap — it is defensible on its own comparison and leaves 1,780,000 on the table, because it buys five items the bidder cannot influence at the same time as three it can (11.1.3). C generalises the A4–A8 result across the register and forgoes the 2,292,000 the control-based transfers create. D misplaces the defect: stripping the loading out entirely still destroys 460,000 on A4–A8, because the bidder's own expected cost there (3,300,000) exceeds the owner's (2,840,000). The negotiating point that follows from B is that unbundling is itself the ask — a bidder that will not price line by line is charging for the items it would rather not discuss.
+*Rationale:* The bundle genuinely beats full retention, which is exactly what makes A the trap — it is defensible on its own comparison and leaves 1,780,000 on the table, because it buys five items the bidder cannot influence at the same time as three it can (11.1.3). C generalises the A4–A8 result across the register and forgoes the 2,292,000 the control-based transfers create. B misplaces the defect: stripping the loading out entirely still destroys 460,000 on A4–A8, because the bidder's own expected cost there (3,300,000) exceeds the owner's (2,840,000). The negotiating point that follows from D is that unbundling is itself the ask — a bidder that will not price line by line is charging for the items it would rather not discuss.
 
 
 **11.1-F** `[11.1.2 · Comprehension]` An insurer accepts a risk it cannot influence in any way. Expressed in this domain's terms, that transfer rests on:
 
-- A. control, since the insurer's loss-prevention requirements change the project's behaviour
-- B. capacity: the insurer cannot change the distribution but holds it more cheaply, being diversified across many such exposures — so value is created by moving the exposure to a cheaper holder rather than by improving it ✅
+- A. capacity: the insurer cannot change the distribution but holds it more cheaply, being diversified across many such exposures — so value is created by moving the exposure to a cheaper holder rather than by improving it ✅
+- B. control, since the insurer's loss-prevention requirements change the project's behaviour
 - C. bargaining power, since the project has no alternative
 - D. no recognised ground, which is why insurance is a cost rather than a transfer
 
-*Rationale:* The two defensible grounds are control, which changes the underlying distribution, and capacity, which changes only who holds it; diversification is the classic capacity case (11.1.2). A describes a real secondary effect and names the wrong ground — the insurer's requirements do not put it in charge of the welding. C describes the indefensible ground and does not apply: the insurer is a willing party pricing an exposure it can bear. D denies a transfer that the pricing test of 11.1.3 values in the ordinary way, as expected cost retained less loaded premium.
+*Rationale:* The two defensible grounds are control, which changes the underlying distribution, and capacity, which changes only who holds it; diversification is the classic capacity case (11.1.2). B describes a real secondary effect and names the wrong ground — the insurer's requirements do not put it in charge of the welding. C describes the indefensible ground and does not apply: the insurer is a willing party pricing an exposure it can bear. D denies a transfer that the pricing test of 11.1.3 values in the ordinary way, as expected cost retained less loaded premium.
 
 
 **11.2-A** `[11.2.2 · Application]` An input costs 1,800,000 a year; 70 % of its price movement passes through to revenue; covenant headroom is 372,437.72. The input-price rise that breaches the covenant is closest to:
@@ -2992,31 +2992,31 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **11.2-D** `[11.2.3 · Evaluation]` Asked by a credit committee to test escalation, a model adds a percentage point to both the consumer price index and the power escalation rate, and reports that year-twelve `DSCR` rises from 1.2106 to 1.3088. The soundest reading is:
 
 - A. the structure is insensitive to escalation: both drivers were stressed and coverage improved
-- B. the test is not evidence — the exposure is the differential, which widens only from 2.70 to 2.90 percentage points under this stress while every escalating line simply grows, so the case must be re-run on the spread between the cost driver and the revenue index ✅
-- C. the model contains an error, since escalation must reduce coverage
+- B. the model contains an error, since escalation must reduce coverage
+- C. the test is not evidence — the exposure is the differential, which widens only from 2.70 to 2.90 percentage points under this stress while every escalating line simply grows, so the case must be re-run on the spread between the cost driver and the revenue index ✅
 - D. the test is adequate once a volume stress is added alongside it
 
-*Rationale:* Kestrel's revenue-weighted escalation of 2.00 % against a cost-weighted 4.70 % *is* the exposure; a stress that lifts both leaves that gap almost unchanged and makes the reported ratio look better, so it invites the opposite of the correct conclusion (11.2.3). A accepts a favourable output without asking what was varied — the level of power prices matters far less here than the spread. C mistakes a modelling artefact for an arithmetic defect. D adds a second variable without repairing the first, and the joint table it implies would still test the wrong thing.
+*Rationale:* Kestrel's revenue-weighted escalation of 2.00 % against a cost-weighted 4.70 % *is* the exposure; a stress that lifts both leaves that gap almost unchanged and makes the reported ratio look better, so it invites the opposite of the correct conclusion (11.2.3). A accepts a favourable output without asking what was varied — the level of power prices matters far less here than the spread. B mistakes a modelling artefact for an arithmetic defect. D adds a second variable without repairing the first, and the joint table it implies would still test the wrong thing.
 
 
 **11.2-E** `[11.2.2 · Comprehension]` A pass-through of 70 % of movements in an input price differs from a fixed-price supply contract for the same input in that the pass-through:
 
 - A. removes the exposure entirely, as the fixed price does
-- B. divides the exposure rather than removing it — the project keeps 30 % of every movement, and what it keeps also depends on the reference index and the reset frequency — whereas a fixed price replaces the price exposure with the supplier's willingness and ability to hold the price ✅
+- B. has no effect on coverage, since the cost is incurred either way
 - C. removes the exposure while a fixed price merely defers it
-- D. has no effect on coverage, since the cost is incurred either way
+- D. divides the exposure rather than removing it — the project keeps 30 % of every movement, and what it keeps also depends on the reference index and the reset frequency — whereas a fixed price replaces the price exposure with the supplier's willingness and ability to hold the price ✅
 
-*Rationale:* A pass-through divides an exposure and multiplies coverage tolerance by 1/(1 − `φ`); it eliminates nothing, and a share indexed to a published tariff the plant does not actually pay leaves basis risk inside the protected portion (11.2.2). A and C misstate what each instrument does — and a fixed price substitutes a counterparty credit question for a market one. D ignores that the retained residual falls straight through to `CFADS`, which is the quantity the covenant divides.
+*Rationale:* A pass-through divides an exposure and multiplies coverage tolerance by 1/(1 − `φ`); it eliminates nothing, and a share indexed to a published tariff the plant does not actually pay leaves basis risk inside the protected portion (11.2.2). A and C misstate what each instrument does — and a fixed price substitutes a counterparty credit question for a market one. B ignores that the retained residual falls straight through to `CFADS`, which is the quantity the covenant divides.
 
 
 **11.2-F** `[11.2.4 · Evaluation]` Kestrel's O&M agreement carries a 95 % availability guarantee with damages attached, and the project breaches its 1.20× covenant at **92.086 %** availability — so 2.9 percentage points of availability separate compliance from breach. With one negotiating session left on the O&M agreement, the finance leader should spend it on:
 
-- A. the damages rate for missed availability, which is the operator's financial incentive to perform
-- B. the definition of an excusable outage — the availability/force-majeure boundary decides whether a lost month counts against the guarantee at all, and it is worth more than the rate attached to it because force majeure suspends performance obligations and never suspends debt service ✅
+- A. the definition of an excusable outage — the availability/force-majeure boundary decides whether a lost month counts against the guarantee at all, and it is worth more than the rate attached to it because force majeure suspends performance obligations and never suspends debt service ✅
+- B. the damages rate for missed availability, which is the operator's financial incentive to perform
 - C. the liability cap, which is scaled to the fee and therefore too small whatever the rate
 - D. the fee at risk, which gives the operator a running stake rather than a terminal liability
 
-*Rationale:* With 2.9 points of availability between compliance and breach, the question that decides the covenant is which lost days are counted, not what is paid for the days that are — and an outage reclassified as excusable lands squarely on coverage with no recovery at all (11.2.4, 11.3.4). A funds the consequence rather than preventing it, and an operator's damages are capped on its fee in any case. C and D are both sound and both weaker: the cap is genuinely too small — a 30-day outage costs 742,000 against a half-fee cap of 600,000 — and fee at risk is genuinely the better incentive design, but each allocates money after the event, while the boundary definition determines whether there is a claim to make. The wider lesson is the one 11.3.4 states: insurance waiting periods, cure periods and availability carve-outs are calibrated in time while covenants are calibrated in cash, and somebody has to perform the translation.
+*Rationale:* With 2.9 points of availability between compliance and breach, the question that decides the covenant is which lost days are counted, not what is paid for the days that are — and an outage reclassified as excusable lands squarely on coverage with no recovery at all (11.2.4, 11.3.4). B funds the consequence rather than preventing it, and an operator's damages are capped on its fee in any case. C and D are both sound and both weaker: the cap is genuinely too small — a 30-day outage costs 742,000 against a half-fee cap of 600,000 — and fee at risk is genuinely the better incentive design, but each allocates money after the event, while the boundary definition determines whether there is a claim to make. The wider lesson is the one 11.3.4 states: insurance waiting periods, cure periods and availability carve-outs are calibrated in time while covenants are calibrated in cash, and somebody has to perform the translation.
 
 
 **11.3-A** `[11.3.1 · Application]` Debt 42,000,000; fixed year-one principal 2,489,635.23; `CFADS` 6,384,000; covenant 1.20×. The all-in interest rate at which the covenant fails is closest to:
@@ -3062,31 +3062,31 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **11.3-E** `[11.3.2 · Evaluation]` The offtaker will accept a host-currency tariff with 40 % of it indexed to the exchange rate. The debt-service-matching share is 52.997 % and the covenant-preserving minimum against a 25 % devaluation is 48.9318 %. The bid team argues that partial indexation is better than none. The soundest position is:
 
 - A. accept 40 %: partial protection is better than none, and the offtaker has moved once already
-- B. hold for a share at or above 48.9318 %: at 40 % the covenant fails on a **14.54 %** devaluation and a 25 % devaluation leaves a `DSCR` of **1.1572**, while the clean structural ask of 52.997 % sits only 4.07 points above the minimum defensible one ✅
-- C. refuse any host-currency tariff, since a twelve-year currency mismatch cannot be managed
+- B. refuse any host-currency tariff, since a twelve-year currency mismatch cannot be managed
+- C. hold for a share at or above 48.9318 %: at 40 % the covenant fails on a **14.54 %** devaluation and a 25 % devaluation leaves a `DSCR` of **1.1572**, while the clean structural ask of 52.997 % sits only 4.07 points above the minimum defensible one ✅
 - D. accept 40 % and hedge the residual exposure in the swap market
 
-*Rationale:* The tolerable devaluation runs 5.06 % unindexed, 14.54 % at a 40 % share and 37.17 % at the matching share, and because the matching share is barely more expensive than the minimum there is little to be gained by conceding to a partial one (11.3.2). A treats any movement as progress without testing it against the covenant. C forgoes a transfer that is well grounded on **capacity** — a payer with local-currency revenue and sovereign-adjacent standing bears a devaluation that would destroy the SPV — and it will be paid for in the tariff. D assumes a market that does not exist for a twelve-year tenor in most host economies at any price a project can pay.
+*Rationale:* The tolerable devaluation runs 5.06 % unindexed, 14.54 % at a 40 % share and 37.17 % at the matching share, and because the matching share is barely more expensive than the minimum there is little to be gained by conceding to a partial one (11.3.2). A treats any movement as progress without testing it against the covenant. B forgoes a transfer that is well grounded on **capacity** — a payer with local-currency revenue and sovereign-adjacent standing bears a devaluation that would destroy the SPV — and it will be paid for in the tariff. D assumes a market that does not exist for a twelve-year tenor in most host economies at any price a project can pay.
 
 
 **11.3-F** `[11.3.1 · Comprehension]` Saying "the covenant fails at an all-in rate of 6.7390 %" is a different kind of statement from forecasting the reference rate because a breakeven:
 
 - A. is a more accurate forecast, being derived from the schedule rather than from the market
-- B. is a fact about the structure — the level at which a named test fails, given the schedule, the `CFADS` definition and the covenant — while a forecast is a claim about the world ✅
+- B. is the same statement expressed in different units
 - C. rests on no assumptions at all
-- D. is the same statement expressed in different units
+- D. is a fact about the structure — the level at which a named test fails, given the schedule, the `CFADS` definition and the covenant — while a forecast is a claim about the world ✅
 
-*Rationale:* This is why the governed use of a model here is to compute breakevens rather than to predict rates: a breakeven can be monitored against a document, whereas a prediction can only be owned (11.3.1). A collapses the two categories into one. C overstates — the 6.7390 % still depends on the `CFADS` figure and the fixed-principal schedule it is computed from, which is why it must be recomputed after any amendment. D ignores that one statement is conditional and the other predictive.
+*Rationale:* This is why the governed use of a model here is to compute breakevens rather than to predict rates: a breakeven can be monitored against a document, whereas a prediction can only be owned (11.3.1). A collapses the two categories into one. C overstates — the 6.7390 % still depends on the `CFADS` figure and the fixed-principal schedule it is computed from, which is why it must be recomputed after any amendment. B ignores that one statement is conditional and the other predictive.
 
 
 **11.3-G** `[11.3.1 · Evaluation]` Treasury proposes to leave Kestrel's floating facility unhedged, on the ground that scheduled debt service can be paid up to an all-in rate of **9.2723 %** and the reference rate stands at 4.00 %. A full hedge fixes coverage at **1.2533** at a year-one cash cost of **84,000**; a 75 % hedge holds **1.2085** at +200 basis points for **63,000**; and the minimum hedge ratio surviving that shock at the covenant is **70.0576 %**. The recommendation should be:
 
-- A. leave it unhedged: **327 basis points** of reference-rate headroom to payment failure is ample, and the 84,000 is a certain cost against a contingent exposure
-- B. hedge at not less than 70.06 %, and in practice at 75 %: the exposure that binds is the covenant at **+73.9 basis points**, not payment at +327.2, and 0.0210 of coverage buys the removal of 0.4397 of coverage range — 20.92 units of range per unit surrendered ✅
+- A. hedge at not less than 70.06 %, and in practice at 75 %: the exposure that binds is the covenant at **+73.9 basis points**, not payment at +327.2, and 0.0210 of coverage buys the removal of 0.4397 of coverage range — 20.92 units of range per unit surrendered ✅
+- B. leave it unhedged: **327 basis points** of reference-rate headroom to payment failure is ample, and the 84,000 is a certain cost against a contingent exposure
 - C. hedge fully: a single covenanted coverage figure at any reference rate is the only defensible position for a project financing
 - D. leave it unhedged and rely on the debt service reserve, which covers a rate shock as readily as a cash shortfall
 
-*Rationale:* Interest-rate exposure is a covenant exposure long before it is a payment exposure, and treasury has answered the question four and a half times too generously (11.3.1). A is the under-hedging error in its usual form — the certain 84,000 is visible and the contingent range is not. C is the defensible weaker course and a common covenanted outcome: it does remove the whole range, and it pays 84,000 rather than 63,000, forgoes every benefit of falling rates, and enlarges the mark-to-market break cost that a later refinancing must pay. D misreads what a reserve does: it buys payment continuity and time, not compliance, and the breach at +73.9 basis points happens with the reserve fully funded. Two disciplines belong with B — the hedge profile should amortise with the outstanding balance rather than sit flat, and the hedge counterparty's own credit is now inside the structure.
+*Rationale:* Interest-rate exposure is a covenant exposure long before it is a payment exposure, and treasury has answered the question four and a half times too generously (11.3.1). B is the under-hedging error in its usual form — the certain 84,000 is visible and the contingent range is not. C is the defensible weaker course and a common covenanted outcome: it does remove the whole range, and it pays 84,000 rather than 63,000, forgoes every benefit of falling rates, and enlarges the mark-to-market break cost that a later refinancing must pay. D misreads what a reserve does: it buys payment continuity and time, not compliance, and the breach at +73.9 basis points happens with the reserve fully funded. Two disciplines belong with A — the hedge profile should amortise with the outstanding balance rather than sit flat, and the hedge counterparty's own credit is now inside the structure.
 
 
 **11.4-A** `[11.4.1 · Application]` A register of independent items has a mean of 2,125,000 and a variance of 4,982,875,000,000. Its P80 is closest to:
@@ -3132,11 +3132,11 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **11.4-E** `[11.4.2 · Evaluation]` A sponsor prepares "the bank case" by multiplying its own register probabilities by 1.5 and its impacts by 1.4 and admitting a 0.30 correlation, reproducing the order of magnitude the lender's advisers apply. The soundest professional position is:
 
 - A. the case is adequate, since it reproduces the multipliers the lender's advisers use
-- B. multipliers illustrate direction and order of magnitude only: the re-cut must be item-specific and evidenced, because the disagreement is evidential and will be settled line by line — this probability on this ground investigation, this impact on this remediation quotation ✅
+- B. adopt the lender's P80 of 8,884,036 as the sponsor's base case, to remove the argument
 - C. present only the sponsor's own mean, since the lender will produce its own case regardless
-- D. adopt the lender's P80 of 8,884,036 as the sponsor's base case, to remove the argument
+- D. multipliers illustrate direction and order of magnitude only: the re-cut must be item-specific and evidenced, because the disagreement is evidential and will be settled line by line — this probability on this ground investigation, this impact on this remediation quotation ✅
 
-*Rationale:* A bank case produced by multiplication is the intellectually empty version of the exercise: it concedes the arithmetic without contesting a single input, and multipliers illustrate while evidence decides (11.4.2). A mistakes agreement on a multiplier for agreement on evidence. C arrives at a credit committee unable to reproduce the calculation that will set the debt quantum — the lender's re-cut removes 4,801,313 of capacity. D over-concedes: adopting a tail as a central case mis-sizes contingency, reserves and distributions, when the gap between the two cases is a financeable quantity to be closed by a reserve, a sponsor commitment or less debt.
+*Rationale:* A bank case produced by multiplication is the intellectually empty version of the exercise: it concedes the arithmetic without contesting a single input, and multipliers illustrate while evidence decides (11.4.2). A mistakes agreement on a multiplier for agreement on evidence. C arrives at a credit committee unable to reproduce the calculation that will set the debt quantum — the lender's re-cut removes 4,801,313 of capacity. B over-concedes: adopting a tail as a central case mis-sizes contingency, reserves and distributions, when the gap between the two cases is a financeable quantity to be closed by a reserve, a sponsor commitment or less debt.
 
 
 **11.4-F** `[11.4.4 · Evaluation]` Kestrel's operating register has a mean of **2,125,000** and a P80 of **4,003,649** on an independence assumption, against a covenant-preserving exposure ceiling of **3,122,460**. The team proposes to provision the mean, on the ground that it is the expected case. The soundest position is:
@@ -3149,7 +3149,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Both quantities are present values — the ceiling is headroom × `AF(0.06, 12)` precisely so that the comparison can be made — so the gap is a financeable quantity rather than a choice of percentile (11.4.4). A selects the measure that makes the problem disappear, against the project's own contingency policy on the construction side and against a covenant that is a fixed claim rather than an expectation. C is defensible and over-conservative: the lender's re-cut is a negotiating position to be argued item by item on the evidence (11.4.2), and adopting it unexamined surrenders 4,801,313 of debt capacity before the argument has been had. D is simply wrong about the units, and it is the reason the comparison is so often not performed.
 
 
-**11.4-G** `[11.4.3 · Comprehension]` On the shared registry's definition, **model risk** is:
+**11.4-G** `[11.4.3 · Comprehension]` A board asks why the operating register carries a **model risk** line at all, given that every forecast in the model is already uncertain and that the cyber line covers the control network. Restated in the terms this KA uses, model risk is:
 
 - A. the risk that a model contains a coding error
 - B. the risk of loss from decisions or actions taken on the output of a model — because the model was flawed, because it was used outside the conditions it was validated for, or because its output was misunderstood by whoever acted on it ✅
@@ -3204,31 +3204,31 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **12.1-E** `[12.1.2 · Evaluation]` Kestrel's delay damages run at 20,000 per day under a 4,800,000 cap. With limited negotiating capital left before signature, the soundest priority is to:
 
 - A. press for a higher daily rate, since a higher rate raises recovery on every day of delay
-- B. compare the cap-binding day — 4,800,000 ÷ 20,000, day 240 — with the credible worst-case delay from the schedule risk analysis, and pair the cap with a termination-for-delay right at a long-stop date, because beyond the cap the contractor's marginal cost of a further day is zero ✅
-- C. press for the 20 % aggregate cap to be raised, since the aggregate is the real limit and a higher aggregate extends delay recovery
+- B. press for the 20 % aggregate cap to be raised, since the aggregate is the real limit and a higher aggregate extends delay recovery
+- C. compare the cap-binding day — 4,800,000 ÷ 20,000, day 240 — with the credible worst-case delay from the schedule risk analysis, and pair the cap with a termination-for-delay right at a long-stop date, because beyond the cap the contractor's marginal cost of a further day is zero ✅
 - D. accept the regime, since a 10 % delay cap under a 20 % aggregate is conventional
 
-*Rationale:* The rate governs recovery only to the cap-binding day, after which further delay is wholly uncompensated — 2,620,000 on a 300-day slip — so a cap that binds before the P80 delay does not cover the risk it was bought for (12.1.2). A spends leverage where sponsors habitually spend it and where it buys least. C is a true point misapplied: the aggregate binds only when a *third* head of claim arises, and raising it extends the delay sub-cap by not one day. D substitutes market convention for the project's own schedule evidence, which is the only thing that can calibrate a cap.
+*Rationale:* The rate governs recovery only to the cap-binding day, after which further delay is wholly uncompensated — 2,620,000 on a 300-day slip — so a cap that binds before the P80 delay does not cover the risk it was bought for (12.1.2). A spends leverage where sponsors habitually spend it and where it buys least. B is a true point misapplied: the aggregate binds only when a *third* head of claim arises, and raising it extends the delay sub-cap by not one day. D substitutes market convention for the project's own schedule evidence, which is the only thing that can calibrate a cap.
 
 
 **12.1-F** `[12.1.4 · Comprehension]` The "liability asymmetry" in an O&M agreement means that:
 
 - A. the operator's bonuses exceed the deductions it can suffer
-- B. the operator's liability cap is scaled to its fee while the loss its failure causes is scaled to the project's revenue, so the two are measured on different bases and the cap is smaller than the loss by construction ✅
+- B. the cap binds the project company but not the operator
 - C. the operator's liability outlasts its appointment
-- D. the cap binds the project company but not the operator
+- D. the operator's liability cap is scaled to its fee while the loss its failure causes is scaled to the project's revenue, so the two are measured on different bases and the cap is smaller than the loss by construction ✅
 
-*Rationale:* A cap expressed as one year's fee, or half of it, stands against an outage cost measured on the same daily basis as a construction delay, so a 30-day outage already exceeds a half-fee cap (12.1.4). That is why lenders price operating risk in the coverage ratio and the maintenance reserve rather than relying on the O&M contract. A describes an incentive regime, not a cap. C describes a survival period. D misstates whom the cap protects.
+*Rationale:* A cap expressed as one year's fee, or half of it, stands against an outage cost measured on the same daily basis as a construction delay, so a 30-day outage already exceeds a half-fee cap (12.1.4). That is why lenders price operating risk in the coverage ratio and the maintenance reserve rather than relying on the O&M contract. A describes an incentive regime, not a cap. C describes a survival period. B misstates whom the cap protects.
 
 
 **12.1-G** `[12.1.3 · Evaluation]` Kestrel's negotiator proposes to accept performance damages on the sized-coverage basis, **2,980,263**, describing it as the market standard. The value of the sponsors' loss on a permanent 5 % output shortfall is **4,835,674**; the bare covenant-restoring figure is **562,851**; the performance sub-cap is 4,800,000. The recommendation to the investment committee should be:
 
-- A. accept 2,980,263: it restores the 1.2743 the debt was sized on, which is the standard the financing was built to
-- B. ask for the value basis and, if the sized basis is conceded, direct part of the proceeds away from mandatory prepayment — because the sized basis gives up **1,855,410** of value loss, and even the full 4,800,000 applied wholly to prepayment under-compensates equity by **521,045** ✅
+- A. ask for the value basis and, if the sized basis is conceded, direct part of the proceeds away from mandatory prepayment — because the sized basis gives up **1,855,410** of value loss, and even the full 4,800,000 applied wholly to prepayment under-compensates equity by **521,045** ✅
+- B. accept 2,980,263: it restores the 1.2743 the debt was sized on, which is the standard the financing was built to
 - C. accept 562,851: the covenant is the only contractual test, so anything above it is a windfall
 - D. insist on 4,835,674, which the sub-cap makes deliverable
 
-*Rationale:* The three bases restore three different things, and only the value basis restores the sponsors' loss, so the ask and the fallback should each be stated with what it concedes (12.1.3). A is the defensible weaker course — it is the common drafting and the coverage argument supports it — and it transfers 1,855,410 of value loss to equity without saying so. C adopts the lenders' interest as the equity case, an understatement of 8.591×. D overstates what is available: 4,835,674 exceeds the 4,800,000 sub-cap, so the value basis requires the cap to move as well as the calibration, and asking for the number without the cap is asking for 4,800,000. The application point in B is the one that costs nothing at signature and cannot be made afterwards: a 25-year loss compensated with 12 years of debt-service relief is short by construction, however generous the headline.
+*Rationale:* The three bases restore three different things, and only the value basis restores the sponsors' loss, so the ask and the fallback should each be stated with what it concedes (12.1.3). B is the defensible weaker course — it is the common drafting and the coverage argument supports it — and it transfers 1,855,410 of value loss to equity without saying so. C adopts the lenders' interest as the equity case, an understatement of 8.591×. D overstates what is available: 4,835,674 exceeds the 4,800,000 sub-cap, so the value basis requires the cap to move as well as the calibration, and asking for the number without the cap is asking for 4,800,000. The application point in A is the one that costs nothing at signature and cannot be made afterwards: a 25-year loss compensated with 12 years of debt-service relief is short by construction, however generous the headline.
 
 
 **12.2-A** `[12.2.2 · Application]` `CFADS(x) = 9,060,000x − 2,676,000`; debt service is 5,009,635.23; the covenant is 1.20×. The minimum contracted volume that holds the covenant is:
@@ -3274,21 +3274,21 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **12.2-E** `[12.2.2 · Evaluation]` The commercial team has agreed a take-or-pay floor of 90 % of capacity — a `DSCR` of 1.0935 against a 1.20× covenant that requires 95.8892 % — and asks the finance lead to sign it off so the bid can go in. The soundest professional response is:
 
 - A. sign it off: 90 % is a strong commercial outcome and a covenant can be reset at close
-- B. decline to treat the floor as a commercial term, restate it as a financing constraint with its derivation attached, and price the alternatives — 3,727,752 of additional equity, a compensating floor price, or a volume-shortfall payment that is take-or-pay under another name ✅
-- C. decline the transaction, since any floor below 100 % is unbankable
+- B. decline the transaction, since any floor below 100 % is unbankable
+- C. decline to treat the floor as a commercial term, restate it as a financing constraint with its derivation attached, and price the alternatives — 3,727,752 of additional equity, a compensating floor price, or a volume-shortfall payment that is take-or-pay under another name ✅
 - D. sign it off and rely on the 1.15× lock-up trigger, which sits at 93.1245 % of capacity
 
-*Rationale:* The floor is a financing deliverable computable before anyone sits down: each point of contracted volume is worth 0.0181 of coverage, so 372,438 of headroom buys 4.11 points and not ten (12.2.2). A concedes a breach and an automatic distribution lock-up from the first test date, on a plant performing exactly to specification and an offtaker performing exactly to contract. C is the opposite failure of judgment — the covenant requires 95.8892 %, not the sized case. D is self-defeating as well as misdirected: 90 % sits below the lock-up floor too, and a covenant breach is an event of default whether or not cash is trapped.
+*Rationale:* The floor is a financing deliverable computable before anyone sits down: each point of contracted volume is worth 0.0181 of coverage, so 372,438 of headroom buys 4.11 points and not ten (12.2.2). A concedes a breach and an automatic distribution lock-up from the first test date, on a plant performing exactly to specification and an offtaker performing exactly to contract. B is the opposite failure of judgment — the covenant requires 95.8892 %, not the sized case. D is self-defeating as well as misdirected: 90 % sits below the lock-up floor too, and a covenant breach is an event of default whether or not cash is trapped.
 
 
 **12.2-F** `[12.2.1 · Evaluation]` A draft water purchase agreement has been reviewed by the commercial team, which reports the tariff, its indexation and the take-or-pay level as agreed and the deduction and abatement schedule as "operational detail for the O&M team". The financier's first intervention should be to:
 
 - A. accept the division of labour: deductions are operational, and the O&M team is closer to the metering and quality regime than the finance function
-- B. compute the maximum annual deduction the regime permits and compare it with covenant headroom — a deduction regime is a liability cap in reverse, uncapped and running annually, and on Kestrel a deduction exceeding **372,438** in any year breaches the 1.20× covenant however well the plant performed in every other respect ✅
+- B. re-open the indexation schedule instead, since an indexation mismatch is the larger structural risk
 - C. require the deduction regime to be capped at the covenant headroom figure, since anything larger is unbankable
-- D. re-open the indexation schedule instead, since an indexation mismatch is the larger structural risk
+- D. compute the maximum annual deduction the regime permits and compare it with covenant headroom — a deduction regime is a liability cap in reverse, uncapped and running annually, and on Kestrel a deduction exceeding **372,438** in any year breaches the 1.20× covenant however well the plant performed in every other respect ✅
 
-*Rationale:* Of the four load-bearing terms of a revenue contract, the deduction regime is the one with no ceiling and the one that bites on revenue before any of the project's own protections engage, so its worst annual case is a financing number and not an operating one (12.2.1). A hands the covenant to a team that is not measured on it. C is the defensible weaker course and the right thing to *ask* for second: a cap on aggregate annual deductions is a legitimate negotiating position, and it is not achievable at the headroom figure in most markets, so computing the exposure has to come first. D names a genuine and larger risk that Domain 11 (KA 11.2.3) prices — and the indexation schedule is reported as agreed, while the deduction schedule has not been read by anyone with a covenant to protect.
+*Rationale:* Of the four load-bearing terms of a revenue contract, the deduction regime is the one with no ceiling and the one that bites on revenue before any of the project's own protections engage, so its worst annual case is a financing number and not an operating one (12.2.1). A hands the covenant to a team that is not measured on it. C is the defensible weaker course and the right thing to *ask* for second: a cap on aggregate annual deductions is a legitimate negotiating position, and it is not achievable at the headroom figure in most markets, so computing the exposure has to come first. B names a genuine and larger risk that Domain 11 (KA 11.2.3) prices — and the indexation schedule is reported as agreed, while the deduction schedule has not been read by anyone with a covenant to protect.
 
 
 **12.2-G** `[12.2.3 · Comprehension]` A grantor's adviser describes a compensation-on-termination formula measured on senior debt outstanding as one that "makes everybody whole". The accurate restatement is:
@@ -3333,15 +3333,15 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 **12.3-D** `[12.3.2 · Evaluation]` A bankability memorandum states that Kestrel's EPC exposure is "fully covered up to the aggregate cap of 9,600,000". Risk-adjusted cover, on a 0.70 assessment of the parent guarantor, is 8,160,000 against a stress exposure of 12,255,674. The soundest reporting position is:
 
-- A. the memorandum is right: 9,600,000 is the contractual cover, and a credit assessment is not contractual
-- B. report exposure and risk-adjusted cover side by side, with the residue stated in currency and as a share of equity — 4,095,674, or 22.75 % of the 18,000,000 cheque — and the 0.70 recorded as a dated range owned by the credit function ✅
+- A. report exposure and risk-adjusted cover side by side, with the residue stated in currency and as a share of equity — 4,095,674, or 22.75 % of the 18,000,000 cheque — and the 0.70 recorded as a dated range owned by the credit function ✅
+- B. the memorandum is right: 9,600,000 is the contractual cover, and a credit assessment is not contractual
 - C. report the nominal residue of 2,655,674 only, since a probability of payment is speculative
 - D. raise the assumed probability to 0.85 to reflect the size of the parent's balance sheet
 
-*Rationale:* Netting cover against exposure without stating both is the reporting failure this Knowledge Area exists to prevent, and it is the residue that invites the questions which improve the package — a larger bond, a bank guarantee in place of the parent, an uncapped indemnity for defined heads, or a smaller stress accepted with eyes open (12.3.2, 12.3.4). A treats a promise as a recovery. C discards the credit dimension altogether, when even the single-point 0.70 already understates the problem by concealing that distress and non-payment are correlated. D answers a correlated exposure with a more confident number rather than a structural response: at 0.70 one dollar of unconditional bank cover is worth 1.4286 dollars of parent guarantee, so the remedy is an unconditional instrument or a larger face amount, not a kinder assumption.
+*Rationale:* Netting cover against exposure without stating both is the reporting failure this Knowledge Area exists to prevent, and it is the residue that invites the questions which improve the package — a larger bond, a bank guarantee in place of the parent, an uncapped indemnity for defined heads, or a smaller stress accepted with eyes open (12.3.2, 12.3.4). B treats a promise as a recovery. C discards the credit dimension altogether, when even the single-point 0.70 already understates the problem by concealing that distress and non-payment are correlated. D answers a correlated exposure with a more confident number rather than a structural response: at 0.70 one dollar of unconditional bank cover is worth 1.4286 dollars of parent guarantee, so the remedy is an unconditional instrument or a larger face amount, not a kinder assumption.
 
 
-**12.3-E** `[12.3.2 · Evaluation]` The contractor offers to replace the 4,800,000 on-demand bank bond with a parent company guarantee of **5,500,000**, pointing out that the face amount is 700,000 higher and that the bond's fee of **172,800** over the construction period is priced into the contract sum in any event. The credit function assesses the parent at a 0.70 probability of paying in full. The response should be:
+**12.3-E** `[12.3.2 · Analysis]` The contractor offers to replace the 4,800,000 on-demand bank bond with a parent company guarantee of **5,500,000**, pointing out that the face amount is 700,000 higher and that the bond's fee of **172,800** over the construction period is priced into the contract sum in any event. The credit function assesses the parent at a 0.70 probability of paying in full. The response should be:
 
 - A. accept: a larger face amount from a substantial group is better cover than a bank instrument, and the fee saving is real money
 - B. accept, provided the guarantee is drafted in on-demand form
@@ -3354,11 +3354,11 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **12.3-F** `[12.3.1 · Comprehension]` A performance bond and a parent company guarantee of the same face amount differ in the way a financier prices them because:
 
 - A. they differ only in cost, the bond carrying a fee and the guarantee none
-- B. an instrument is priced on three separate attributes — how much (face amount), how certain (the obligor's credit and the conditions on payment) and how long (expiry against the exposure it covers) — and the two instruments are alike only on the first ✅
+- B. a guarantee covers the defects-liability period and a bond does not
 - C. a bond is security over the asset while a guarantee is a contractual promise
-- D. a guarantee covers the defects-liability period and a bond does not
+- D. an instrument is priced on three separate attributes — how much (face amount), how certain (the obligor's credit and the conditions on payment) and how long (expiry against the exposure it covers) — and the two instruments are alike only on the first ✅
 
-*Rationale:* Face amount, certainty and duration are three independent questions, and the third is the most frequently missed: a bond expiring at provisional completion does not reach the defects-liability period, and a guarantee expiring on a fixed date rather than on discharge of the underlying obligation is a gap in the stack with a date on it (12.3.1). A reduces three attributes to one — and the fee is the price of the certainty, not an extra. C confuses credit support with the lenders' own asset security. D asserts as a rule what is a drafting question in each instrument.
+*Rationale:* Face amount, certainty and duration are three independent questions, and the third is the most frequently missed: a bond expiring at provisional completion does not reach the defects-liability period, and a guarantee expiring on a fixed date rather than on discharge of the underlying obligation is a gap in the stack with a date on it (12.3.1). A reduces three attributes to one — and the fee is the price of the certainty, not an extra. C confuses credit support with the lenders' own asset security. B asserts as a rule what is a drafting question in each instrument.
 
 
 **12.4-A** `[12.4.3 · Application]` A contractor claims 90 days and 1,870,000; delay damages are 20,000 per day; the project company's daily economic cost of delay is 24,733.33. The total exposure of the event to the project company is closest to:
@@ -3423,12 +3423,12 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 **12.4-G** `[12.4.2 · Evaluation]` Kestrel's EPC contract fixes the contractor's delay liability at **20,000 per day** and leaves the project company's exposure to prolongation on an owner-caused delay to be proved after the event; on the claim of 12.4.3 it is asserted at **12,500 per day** of site overhead before disruption and additional plant. Variations are valued on a cost-plus basis where the schedule of rates is silent, and changes below a consent threshold need no lender approval. With the change mechanics still open, the priority is to:
 
-- A. reduce the contractor's daily damages rate to 12,500, so that the regime is symmetrical
-- B. pre-agree the daily prolongation rate on the same evidence as the delay damages rate, and add a cumulative consent threshold alongside the individual one — the asymmetry is **7,500 per day** of quantification argument, and serial changes below a threshold are how a fixed-price contract stops being fixed ✅
+- A. pre-agree the daily prolongation rate on the same evidence as the delay damages rate, and add a cumulative consent threshold alongside the individual one — the asymmetry is **7,500 per day** of quantification argument, and serial changes below a threshold are how a fixed-price contract stops being fixed ✅
+- B. reduce the contractor's daily damages rate to 12,500, so that the regime is symmetrical
 - C. remove the cost-plus fallback and require all variations to be valued at contract rates
 - D. accept the mechanics: prolongation is proved on actual cost, which is the fairest measure available
 
-*Rationale:* Change mechanics decide who funds a change and whether the funding exists, and a pre-agreed prolongation rate removes the largest single area of claim-quantification argument — which is why it belongs beside the delay damages rate and on the same evidence (12.4.2). A achieves symmetry by weakening the project's own recovery, which is the wrong direction from a rate that already recovers only 80.86 % of the daily economic cost of delay. C is the defensible weaker course and only protective if the schedule of rates is complete: where it is not, contract rates simply relocate the argument, so the ask is a complete schedule with a defined route for genuinely new work. D mistakes a measurement principle for a mechanism — proving actual cost after the event is precisely the exercise the pre-agreed rate exists to avoid, and it is conducted while the covenant is being tested.
+*Rationale:* Change mechanics decide who funds a change and whether the funding exists, and a pre-agreed prolongation rate removes the largest single area of claim-quantification argument — which is why it belongs beside the delay damages rate and on the same evidence (12.4.2). B achieves symmetry by weakening the project's own recovery, which is the wrong direction from a rate that already recovers only 80.86 % of the daily economic cost of delay. C is the defensible weaker course and only protective if the schedule of rates is complete: where it is not, contract rates simply relocate the argument, so the ask is a complete schedule with a defined route for genuinely new work. D mistakes a measurement principle for a mechanism — proving actual cost after the event is precisely the exercise the pre-agreed rate exists to avoid, and it is conducted while the covenant is being tested.
 
 
 ## Domain 13
@@ -3473,7 +3473,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* The overlap is where projects fail, and the countermeasure is single ownership of the shared assumption (13.1.2). A produces no evidence; C costs 124,133.33 a week for a control a register achieves free; D is out of scope — the audit tests the model against documents, not whether two advisers assumed the same thing.
 
 
-**13.1-E** `[13.1.4 · Evaluation]` Kestrel's diligence envelope is twelve weeks, set by the environmental and social stream; the next-longest streams are legal at ten weeks and market at nine. Delay costs 124,133.33 a week. The environmental and social consultant offers to compress its stream to nine weeks for a 200,000 acceleration fee. The sponsor should:
+**13.1-E** `[13.1.4 · Analysis]` Kestrel's diligence envelope is twelve weeks, set by the environmental and social stream; the next-longest streams are legal at ten weeks and market at nine. Delay costs 124,133.33 a week. The environmental and social consultant offers to compress its stream to nine weeks for a 200,000 acceleration fee. The sponsor should:
 
 - A. accept — three weeks at 124,133.33 is 372,399.99 against a 200,000 fee, a clear gain
 - B. accept, but recognise that the envelope then falls only to ten weeks on the legal stream, so the acceleration buys two weeks (248,266.66) for 200,000 — a thin 48,266.66, and worth pairing with legal compression before the fee is agreed ✅
@@ -3493,14 +3493,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Diligence buys information, and information has value only where a decision turns on it (13.1.1). A is the comfort purchase the topic warns against — uniform depth is a filing standard, not a value test; C confuses reliance with information value, and 13.A.1 shows the cap covers a small fraction of the exposure in any case; D is a real procurement fact for several streams, but 13.1.3 notes the arithmetic then argues about timing and scope rather than about whether to run the stream.
 
 
-**13.1-G** `[13.1.5 · Evaluation]` During diligence a demand study commissioned early in development is superseded by a second study with a lower central case. The sponsor's development team proposes removing the first study from the data room, on the ground that no party relies on it and its presence will only raise questions the second study has already answered. The soundest professional position is that the first study:
+**13.1-G** `[13.1.5 · Evaluation]` During diligence a demand study commissioned early in development is superseded by a second study with a lower central case. The sponsor's development team proposes removing the first study from the data room, on the ground that no party relies on it and its presence will only raise questions the second study has already answered. Counsel takes a different view: leave it in the room, marked, but keep it off the numbered disclosure index, since indexing a forecast nobody stands behind is an invitation to rely on it. The soundest professional position is that the first study:
 
-- A. should be removed — a superseded document is not a disclosure, and leaving it in invites questions about a forecast nobody relies on
-- B. should stay, marked superseded with a date and a note, and appear on the numbered disclosure index — because the index later determines what the lenders were told, and the trail is the evidence base for the first covenant dispute, warranty claim and refinancing ✅
+- A. should be removed — a superseded document is not a disclosure, and a central case nobody stands behind is a liability in a room and nothing else
+- B. should stay, marked superseded with a date and a note, and appear on the numbered disclosure index — because the index is what later determines what the lenders were told, and a document available in the room but absent from the index is the one combination that can be neither relied on nor disproved ✅
 - C. should stay unmarked, since both studies carry dates and a reader can see which is later
-- D. should be moved to a folder visible only to the sponsor's own advisers, so that it remains available internally without being disclosed
+- D. should stay, marked superseded, but off the index as counsel proposes, so that the record shows the second study as the only disclosed forecast
 
-*Rationale:* Version control with supersession **marked** rather than deleted is the discipline, and removal is the worse of the two failures because the trail disappears (13.1.5) — a superseded forecast left in a room without a supersession note is what Domain 6 (Case study B) priced. A treats disclosure as a presentational choice, and it is the choice a challenged representation will later be tested against. C leaves two live-looking central cases and no record of which was relied on. D is the same act as A with a record that the omission was deliberate.
+*Rationale:* Two of 13.1.5's three disciplines meet here: version control with supersession **marked** rather than deleted, and a disclosure index that is itself a document. **D** is the serious competitor and it is the position counsel actually takes — it keeps the document and shortens the record — but disclosure is a matter of what the lenders had, not of what the index chose to name: a document sitting in the room is disclosed whichever list it appears on, so leaving it off buys nothing and costs the ability to show what was disclosed and when, which is the one thing the index exists to do. The reliance concern D is answering is what the supersession note is for. **A** has real commercial force — a superseded central case does get read, and the second study did answer it — but it treats an evidentiary problem as a presentational one, and removal is the worse of the two failures because what disappears is the evidence base for the first covenant dispute, warranty claim and refinancing. **C** leaves two live-looking central cases and no record of which was relied on, which is the failure Domain 6 (Case study B) priced.
 
 
 **13.2-A** `[13.2.3 · Application]` A model builds the debt-service schedule as an annuity due rather than in arrears. On 42,000,000 at 6 % over 12 years (`AF` = 8.383844) with `CFADS` of 6,384,000, the reported `DSCR` and the truth are:
@@ -3543,7 +3543,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* An annuity due computes correctly and closes at zero, so layers A and B both pass (13.2.3); only conformance to the document detects it. D would trace the rate and tenor, both of which are right.
 
 
-**13.2-E** `[13.2.3 · Evaluation]` Two Class 1 findings are almost identical in size: the definitional and convention findings together resize the facility by **2,505,646**, and the funding plan omits the **2,504,818** debt-service reserve — a difference of 828. The credit paper can lead with one. Which is the more decisive finding, and why?
+**13.2-E** `[13.2.3 · Analysis]` Two Class 1 findings are almost identical in size: the definitional and convention findings together resize the facility by **2,505,646**, and the funding plan omits the **2,504,818** debt-service reserve — a difference of 828. The credit paper can lead with one. Which is the more decisive finding, and why?
 
 - A. the resize, because 2,505,646 is the larger number
 - B. the unfunded reserve, because a coverage shortfall is negotiated between the parties whereas a funding plan that does not fund a mandatory reserve produces a failed condition at first drawdown or a first-year breach ✅
@@ -3782,7 +3782,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. pro rata — it is neutral between the parties and is what the lender's draft provides
 - D. debt-first — capitalised interest is not a cash cost during construction, so the order is presentational
 
-*Rationale:* At a fixed envelope the sequencing buys funded protection with no additional money, which is the form of the argument a credit committee and a board can both act on (14.1.3) — and the condition attached to it is the real one, because equity-first maximises the sponsor's exposure to an abandoned works. A is defensible and is what sponsors argue: it is weaker because 183,013 of present value is bought for 689,473 of nominal cost that the sponsor itself then funds as additional equity, so it is only rational at a sponsor cost of capital high enough to justify the trade — a test the recommendation must state rather than assume. C accepts a settlement in place of an analysis. D is false: capitalised interest is drawn, enters the debt balance and is repaid with interest over the loan life.
+*Rationale:* At a fixed envelope the sequencing buys funded protection with no additional money, which is the form of the argument a credit committee and a board can both act on (14.1.3) — and the condition attached to it is the real one, because equity-first maximises the sponsor's exposure to an abandoned works. A is defensible and is what sponsors argue — the 183,013 is a genuine present-value gain to the shareholders at the board's own 8 %, and it is already net of the extra 689,473 the sponsor must fund. It is weaker for two reasons the recommendation has to state. It prices only the timing of the sponsor's own cheque and puts nothing at all against the 742,647 of funded protection the same decision forgoes, whose value shows up precisely in the state where the works overrun. And its ground is wrong: a sponsor board that signs a funding order is also fixing the project's irrecoverable exposure and the lender's, so shareholder present value is the decisive interest only once the protection question has been answered. C accepts a settlement in place of an analysis. D is false: capitalised interest is drawn, enters the debt balance and is repaid with interest over the loan life.
 
 
 **14.1-F** `[14.1.1 · Comprehension]` Which statement best restates why the restated sources-and-uses statement is a **test** where the financial-close statement is only an **identity**?
@@ -3922,7 +3922,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. the independent engineer's 92 % assessment of the incomplete milestone, since an assessed percentage is an opinion that drifts upward under schedule pressure
 - D. nothing — the materials are paid for, identifiable and represent real value to the project
 
-*Rationale:* `690,000 × 0.95 × 0.70 = 458,850` of debt advanced against work not in place, and absent vesting, segregation and insurance the money has bought a claim in someone else's liquidation (14.3.1). A is the finance team's own framing and is the specific error the topic names: pricing a security question as a cost question is how certification drift gets conceded, one certificate at a time. C raises a real and separate concern about the measured basis, but it is not what *this* request changes. D confuses the vendor's title with the SPV's.
+*Rationale:* `690,000 × 0.95 × 0.70 = 458,850` of debt advanced against work not in place, and absent vesting, segregation and insurance the money has bought a claim in someone else's liquidation (14.3.1). A is the finance team's own framing and is the specific error the topic names: pricing a security question as a cost question is how certification drift gets conceded, one certificate at a time. C raises a real and separate concern about the measured basis, but it is not what *this* request changes. D confuses the vendor's title with the SPV's. Whether a given vesting arrangement in fact defeats the vendor's insolvency, and what has to be filed or registered for it to do so, is a question of the law governing the goods and the contract on which this book states no jurisdiction's position; the reviewer's job is to require the question be put to counsel before the certificate is signed, not to answer it (14.3.1).
 
 
 **14.3-F** `[14.3.2 · Evaluation]` The contractor requests the contracted **10 %** advance payment — **4,800,000** on the 48,000,000 price, secured by an advance payment bond — and declines any reduction in the contract price. Re-running the funding model shows the advance costs **254,597** of capitalised interest: **5.30 %** of the advance and **0.53 %** of the EPC price. The SPV's finance lead proposes refusing the advance. The soundest position is to:
@@ -4207,14 +4207,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* A is arithmetically correct and is the trap: winning the price argument converts a small loss into a small gain and leaves 780,939 of tenor value on the table, because the margin saving is a thin flow on a rapidly amortising balance while the extension lends into the 1.9431 `PLCR` tail (15.3.1, 15.3.2). C generalises one priced structure into a rejection of the transaction. D is a real caution — the paper should state and test its rate — but the sign does not turn on it here, so it is a reason to disclose an assumption, not a reason to abandon a computable negotiating position.
 
 
-**15.3-F** `[15.3.3 · Evaluation]` At the year-two test date the backward `DSCR` is **1.1905** against a 1.20× covenant; nine months later it is **1.0386**. The lenders will grant an amendment. The sponsor's adviser proposes resetting the covenant to **1.10×**, which clears the current ratio with margin and prices below a deeper reset. The soundest recommendation is to:
+**15.3-F** `[15.3.3 · Evaluation]` At the year-two test date the backward `DSCR` is **1.1905** against a 1.20× covenant, and the forward view at the next test date, nine months out, is **1.0386**. The lenders will grant an amendment, and the sponsors hold **two** equity cures over the loan's life, neither used. The sponsor's adviser proposes resetting the covenant to **1.10×**, which clears the current ratio with margin and prices below a deeper reset. The soundest recommendation is to:
 
-- A. reset to 1.10×, which the current 1.1905 clears with margin and which costs less in fee and margin uplift than a deeper reset
-- B. reset to **1.00×** for two test dates before stepping to 1.10× and then 1.20×, because a reset sized on the current ratio is breached again at the next test's 1.0386 — a second breach, a second fee and a second negotiation from a materially worse position ✅
+- A. reset to 1.10× and keep a cure for the next test, which against that reset costs **307,662.27** — one of the two cures the sponsors hold, and cheaper in fee and margin uplift than a deeper reset
+- B. reset to **1.00×** for two test dates before stepping to 1.10× and then 1.20×, so that the reset itself carries the deterioration and both cures survive it — a reset sized on the current ratio pays a fee for a covenant the next test breaches, and then spends an irreplaceable option to hold it ✅
 - C. reset to 1.00× for the remaining life, since a covenant that has been breached has been shown to be set too high
 - D. take a waiver at each test date instead: at **55,307.03** a waiver is far cheaper than the **743,436.62** the amendment costs
 
-*Rationale:* An amendment must be sized against the **stressed** case rather than the current one, and the deterioration was already visible — a 1.10× reset leaves a cash shortfall of **307,662.27** at the year-three test (15.3.3). A optimises the fee against the ratio in front of it, which is the same error as spending a cure on a marginal breach. C gives away the control permanently to solve a defined period of weakness, and no lender prices that kindly. D is right about a single date and wrong about a persistent profile: each waiver is a fresh consent sought from a worse position, and a deterioration that persists is not a waiver problem — the amendment Kestrel took resets four test dates.
+*Rationale:* An amendment must be sized against the **stressed** case rather than the current one, and the deterioration was already visible (15.3.3). **A** is genuinely arguable and is not arithmetically wrong: 307,662.27 is **38.05 %** of the **808,625.80** the same test would cost as a cure against the unamended 1.20×, and a sponsor expecting a recovery may rationally buy the shallower reset and bridge one date. It is the weaker course because a cure is an irreplaceable option whose value rises with the severity of the breach it meets — the 17.0× asymmetry of 15.3.3 — so spending one on a breach the amendment could have absorbed repeats the year-two error at a higher price, and the fee saved buys a covenant that fails at the very next test. **C** gives away the control permanently to solve a defined period of weakness, and no lender prices that kindly. **D** is right about a single date and wrong about a persistent profile: each waiver is a fresh consent sought from a worse position, and the amendment Kestrel took resets four test dates.
 
 
 **15.3-G** `[15.3.1 · Comprehension]` Which statement best explains why a refinancing opportunity exists in an operating project financing at all?
@@ -4492,7 +4492,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 **16.3-E** `[16.3.1 · Comprehension]` Which restatement best captures the distinction 16.3.1 draws between an explanation and a justification?
 
 - A. an explanation is qualitative, while a justification is quantitative
-- B. an explanation is a faithful account of how a model reached a number and says nothing about whether the number is right; establishing that is validation's job ✅
+- B. an explanation accounts for the route by which a number was arrived at; whether the destination is the right one is a separate claim, resting on separate evidence, and supplying that evidence is validation's job ✅
 - C. an explanation is what a lender is shown, while a justification is what an auditor is shown
 - D. an explanation is a ranking of which inputs mattered most to the output
 

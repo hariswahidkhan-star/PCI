@@ -38,8 +38,16 @@ def run(ctx):
 
 
     # ---- MCQ 16.1-G: the breakeven that rises with consequence ----
-    MAN_PROC, MAN_ERR = D("13.60"), D("0.0180")
-    AUT_PROC, AUT_ERR = D("1.04"), D("0.0260")
+    # The two processing costs are built from the setup's minutes and rates, not re-typed: manual is
+    # 8.5 minutes at 1.60 a minute; the pipeline is 0.50 a record of platform and inference plus a
+    # 5 % referral rate at 6.75 adjudication minutes.
+    MAN_PROC = D("8.5") * D("1.60")
+    AUT_PROC = D("0.50") + D("0.05") * (D("6.75") * D("1.60"))
+    MAN_ERR, AUT_ERR = D("0.0180"), D("0.0260")
+    check("MCQ 16.1-G manual processing cost a record", MAN_PROC, D("13.60"))
+    check("MCQ 16.1-G automated processing cost a record", AUT_PROC, D("1.04"))
+    check("MCQ 16.1-G the automated residual error rate is the higher of the two",
+          1 if AUT_ERR > MAN_ERR else 0, 1)
     FIXED, KESTREL_RECS, ESTATE_RECS = D(148000), D(9400), D(56400)
 
     def per_item(cons):
@@ -55,7 +63,7 @@ def run(ctx):
         check(f"MCQ 16.1-G breakeven volume at {cons}", (FIXED / (m - a)).quantize(D("1")), bev)
     m320, a320 = per_item(D(320))
     check("MCQ 16.1-G automation at Kestrel's own volume",
-          (ESTATE_RECS * 0 + KESTREL_RECS * (m320 - a320) - FIXED).quantize(D("1")), -54000)
+          (KESTREL_RECS * (m320 - a320) - FIXED).quantize(D("1")), -54000)
     check("MCQ 16.1-G automation across the six-asset estate",
           (ESTATE_RECS * (m320 - a320) - FIXED).quantize(D("1")), 416000)
     check("MCQ 16.1-G estate manual total", ESTATE_RECS * m320, 1091904)
