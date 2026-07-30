@@ -1455,27 +1455,28 @@ forgiveness, a different instrument. C omits discounting, which is where a seven
 does most of its work. D confuses legal form with economic substance and would report 12,000,000 of
 borrowing where 7.1 million exists — misstating both the leverage and the support received.
 
-**MCQ 9.4-G `[9.4.1 · Evaluation]`** A grantor with a fixed fiscal envelope can direct its support at
+**MCQ 9.4-G `[9.4.1 · Comprehension]`** A grantor with a fixed fiscal envelope can direct its support at
 a project either as a capital grant reducing the amount to be financed or as a minimum revenue
 guarantee capping the downside on a demand-based revenue line. Its stated objective is to get an
 otherwise unfinanceable project financed at the least fiscal cost. Restated in the terms 9.4.1
 uses, the two professional points that decide the advice are that:
-- A. give the guarantee: no cash leaves the budget, so the fiscal cost is nil
-- B. give whichever the sponsors prefer, since they are the party that must raise the financing
-- C. give the grant, because grants are always cheaper for a grantor than contingent commitments
-- D. direct the support at the coverage face and, whichever instrument is chosen, value the
-  guarantee as the written option it is — support that improves coverage buys more financeability
-  per unit of fiscal cost than support of equal value that improves return, and an unvalued
-  guarantee is an unmeasured liability rather than a free one ✅
+- A. no cash leaves the budget when a guarantee is given, so its fiscal cost is nil
+- B. the choice belongs to the sponsors, since they are the party that must raise the financing
+- C. a grant is always cheaper for a grantor than a contingent commitment
+- D. support directed at the **coverage** face buys more financeability per unit of fiscal cost than
+  support of equal value directed at the return face; and a guarantee is a written option whose
+  value can be estimated, so an unvalued guarantee is an unmeasured liability rather than a free
+  one ✅
 
-*Rationale:* Coverage is the binding constraint, so support aimed at the coverage face converts
-fiscal cost into financeability most efficiently — and a guarantee is a written option whose value
-can be estimated, so "no cash moves" is a budgeting statement and not a cost statement (9.4.1,
-9.1.4). A is the error the topic exists to correct. C reverses it and asserts a universal ranking:
-a guarantee that is never called costs nothing, and its expected cost is what has to be compared. B
-delegates the public-purpose judgement to the party whose interest lies in the return face — on the
-grant arithmetic of 9.4.2, the answer will be the structure that lifts equity `IRR` by 429.20 basis
-points and leaves `DSCR` untouched.
+*Rationale:* Those are 9.4.1's two cross-cutting points, and both are needed here: coverage is the
+binding constraint, so support aimed at the coverage face converts fiscal cost into financeability
+most efficiently (9.1.4); and a guarantee is a written option whose value can be estimated, so "no
+cash moves" is a budgeting statement and not a cost statement. A is the error the topic exists to
+correct — a contingent liability is unbudgeted, not costless. C reverses it into a universal
+ranking: a guarantee that is never called costs nothing, and its expected cost is what has to be
+compared with the grant's certain one. B delegates a public-purpose judgement to the party whose
+interest lies in the return face — on the grant arithmetic of 9.4.2, the answer will be the
+structure that lifts equity `IRR` by 429.20 basis points and leaves `DSCR` untouched.
 
 ### Self-check — KA 9.4
 

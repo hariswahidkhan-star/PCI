@@ -30,9 +30,9 @@ summary. 63 of 63 and 61 of 61 Knowledge Areas have their key-terms table.
 
 | | Chapter words | Words in the PDF | Typeset pages | Figures | Glossary terms | Bank items |
 |---|---|---|---|---|---|---|
-| **PML-AI** | 352,816 | 370,463 | **721** | 51 | 581 | 363 |
-| **PFL-AI** | 335,901 | 350,541 | **697** | 45 | 446 | 444 |
-| **Total** | **688,717** | **721,004** | **1,418** | **96** | **1,027** | **807** |
+| **PML-AI** | 352,816 | 370,475 | **721** | 51 | 581 | 363 |
+| **PFL-AI** | 343,702 | 359,854 | **711** | 45 | 446 | 450 |
+| **Total** | **696,518** | **730,329** | **1,432** | **96** | **1,027** | **813** |
 
 Pages are measured, not estimated — WeasyPrint output from `_build/build_book.py` at the family's A4
 premium settings. "Words in the PDF" is chapters plus the rendered back matter (appendices, capstones,
@@ -44,20 +44,20 @@ report, so it is stated in full.
 
 An earlier revision of this section said the ~700-page gap would be closed by "the consolidated
 question banks, the glossaries, the appendices, the capstone case programme, and the front and back
-matter." All of that has now been built: two question banks (789 items), two glossaries (1,027 terms),
-five derived appendices per volume, and the first capstone in each. The corpus grew from 997 to 1,418
-pages — but **only about 100 of those 421 pages came from the companion content**. The rest came from
+matter." All of that has now been built: two question banks (813 items), two glossaries (1,027 terms),
+five derived appendices per volume, and three of the eight capstones (two in PFL-AI, one in PML-AI).
+The corpus grew from 997 to 1,432 pages — but **only about 100 of those 435 pages came from the companion content**. The rest came from
 writing the chapters deeper. Companion material is thin by nature; it indexes and consolidates, and
 this programme's own rules forbid it from repeating what the chapters say, which caps how many pages it
 can honestly contribute.
 
 So the remaining gap has to be sized against chapter content, and at the measured typesetting density
-(519 words a page in PML-AI, 510 in PFL-AI) the arithmetic is unforgiving:
+(514 words a page in PML-AI, 506 in PFL-AI) the arithmetic is unforgiving:
 
 | | Words now | Words for 1,200 pages | Shortfall | Equivalent |
 |---|---|---|---|---|
-| **PML-AI** | 370,463 | ~617,600 | **+247,100 (67 %)** | ~11 more domains at 22,000 words |
-| **PFL-AI** | 350,541 | ~617,600 | **+267,000 (76 %)** | ~12 more domains at 22,000 words |
+| **PML-AI** | 370,475 | ~616,600 | **+246,100 (66 %)** | ~11 more domains at 22,000 words |
+| **PFL-AI** | 359,854 | ~607,300 | **+247,500 (69 %)** | ~11 more domains at 22,000 words |
 
 Every one of the 32 existing domains is now between 17,800 and 24,000 words — a uniform depth reached
 by expanding the thinnest twelve, and the pattern's structure (three Knowledge Areas, advanced topics,
@@ -77,7 +77,7 @@ the programme owner can take, and there are three defensible answers:
    typesetting density, and it is a substantial professional text.
 
 **What is not available is meeting 1,200 pages with the current syllabus.** Doing so would require
-either 67–76 % more words about the same material — which is padding by definition — or typographic
+either 66–69 % more words about the same material — which is padding by definition — or typographic
 inflation, which the charter forbids and which any reviewer would see immediately. This report will not
 record the target as met by either route, and the remaining capstones (six of the eight) are worth
 perhaps 60 to 80 pages between them, not 1,000.
@@ -91,16 +91,17 @@ made so far.
 
 ## 4. Calculations validated
 
-**13,962 golden-answer checks, all passing**, across 50 modules:
+**15,081 golden-answer checks, all passing**, across 55 modules:
 
 | Source | Checks |
 |---|---|
 | PML-AI, 16 domains | 7,351 |
-| PFL-AI, 16 domains | 6,511 |
-| PML-AI Appendix G capstone | 50 |
-| PFL-AI Appendix G capstone | 46 |
+| PFL-AI, 16 domains | 6,821 |
+| PFL-AI cross-domain modules (span several domains) | 743 |
+| PML-AI Appendix G capstones | 50 |
+| PFL-AI Appendix G capstones | 112 |
 | loader self-test (pins the ctx contract itself) | 4 |
-| **Total** | **13,962** |
+| **Total** | **15,081** |
 
 Attribution is the suite's own runtime tally, not a source count: several sections assert inside loops,
 so counting occurrences understated the record by more than a thousand, and attributing modules by
@@ -135,9 +136,9 @@ Every figure has an alt-text description in its manuscript specification. Key-te
 
 ## 6. MCQs and exercises
 
-**807 MCQs** (363 PML-AI, 444 PFL-AI), each tagged with its topic and cognitive level; 150+ calculation
+**813 MCQs** (363 PML-AI, 450 PFL-AI), each tagged with its topic and cognitive level; 150+ calculation
 exercises, each with a full solution and a **common-error** note. Every numeric MCQ option is
-independently derived in the check modules. `_build/make_question_bank.py --check` audits all 807 for
+independently derived in the check modules. `_build/make_question_bank.py --check` audits all 813 for
 seven structural defects (no key, multiple keys, no rationale, too few options, no tag, bad level,
 stem asks nothing) and currently reports **0 open defects**.
 
@@ -147,10 +148,10 @@ weightings are right — the blueprint is an open decision (§9).
 | Level | PML-AI | PFL-AI |
 |---|---|---|
 | Recall | 10 (2.8 %) | 13 (2.9 %) |
-| Comprehension | 22 (6.1 %) | 61 (13.7 %) |
-| Application | 124 (34.2 %) | 117 (26.4 %) |
-| Analysis | 133 (36.6 %) | 131 (29.5 %) |
-| Evaluation | 74 (20.4 %) | 122 (27.5 %) |
+| Comprehension | 22 (6.1 %) | 63 (14.0 %) |
+| Application | 124 (34.2 %) | 117 (26.0 %) |
+| Analysis | 133 (36.6 %) | 137 (30.4 %) |
+| Evaluation | 74 (20.4 %) | 120 (26.7 %) |
 
 PFL-AI's distribution is the result of a deliberate correction. It previously ran 42.4 % Application and
 46.4 % Analysis against **0.7 % Comprehension and 5.8 % Evaluation** — for a *Leader* designation, a
@@ -220,10 +221,10 @@ Swept across all 32 manuscripts and separately audited per domain by a dedicated
 
 ## 9. Open decisions for a human expert
 
-1. **The page-target strategy — now the single largest open decision.** 1,418 against 2,400, and §2
+1. **The page-target strategy — now the single largest open decision.** 1,432 against 2,400, and §2
    records that the previously planned route to closing the gap has been **built and found
    insufficient**: the question banks, glossaries, appendices and first capstones together contributed
-   about 100 of the 421 pages added, because companion material that is forbidden to repeat the
+   about 100 of the 435 pages added, because companion material that is forbidden to repeat the
    chapters cannot honestly carry more. With every one of the 32 domains now between 17,800 and 24,000
    words and the pattern fully populated, there is no slack left inside the current syllabus. The
    programme owner must choose between **extending the syllabus** (roughly a dozen new domains per
@@ -235,11 +236,13 @@ Swept across all 32 manuscripts and separately audited per domain by a dedicated
    structure; the assessment weightings are not settled.
 3. **PFL-AI designation wording** (Phase 0, OD-1) — "AI Project Finance Leader" vs "Project Finance
    Leader – AI" is still inconsistent across platform artefacts.
-4. **The remaining six capstones.** One of the four per volume is written (each an assembly of that
-   volume's master thread, which is new content rather than a rework). The other six require new
-   projects with their own verified arithmetic on deliberately different risk and failure shapes. They
-   are in scope and unwritten; they are worth perhaps 60 to 80 pages between them, which is relevant to
-   decision 1 and does not resolve it.
+4. **The remaining five capstones.** Three of the eight are written: an assembly of each volume's
+   master thread — new content rather than a rework, since neither thread had ever been laid out in
+   one place — plus PFL-AI's Aurora Ridge, a new toll concession whose purpose is to show that one
+   change of revenue basis moves achievable gearing fourfold. The other five (two PFL-AI, three
+   PML-AI) require new projects with their own verified arithmetic on deliberately different risk and
+   failure shapes. They are in scope and unwritten; they are worth perhaps 50 to 70 pages between
+   them, which is relevant to decision 1 and does not resolve it.
 5. **Islamic-finance treatment** in PFL-AI D9 is described in economic terms only, with no
    jurisdictional or religious ruling implied. A qualified reviewer should confirm the framing.
 
