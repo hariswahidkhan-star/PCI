@@ -136,3 +136,124 @@ def run(ctx):
           D("87.49"), tol=D("0.005"))
     check("G.1.6 span as a multiple of the headline NPV", SPAN / NPV, D("1.8261"),
           tol=D("0.00005"))
+
+    # ===================== Capstone Two — Aurora Ridge (demand risk) =====================
+    # A new project, so nothing here is inherited: every figure is derived from the four stated
+    # inputs (capex, traffic, toll, cost) and the two stated rates. The capstone's spine is that
+    # ONE change of revenue basis produces a four-fold change in achievable gearing, so that
+    # comparison is asserted as an invariant rather than left as a narrative claim.
+    CAPEX_A, RATE_A = D(240000000), D("0.07")
+    VPD, TOLL, DAYS = D(18000), D("2.40"), 365
+    OM, PAVE = D(4200000), D(1368000)
+
+    def af_a(r, n):
+        r = D(str(r))
+        return (1 - (1 + r) ** -n) / r
+
+    AF20, AF17 = af_a(RATE_A, 20), af_a(RATE_A, 17)
+    check("G.2 AF(0.07,20)", AF20, D("10.594014"), tol=D("0.0000005"))
+    check("G.2 AF(0.07,17)", AF17, D("9.763223"), tol=D("0.0000005"))
+    REV_A = VPD * DAYS * TOLL
+    check("G.2 mature annual revenue", REV_A, D(15768000))
+    check("G.2 mature EBITDA", REV_A - OM, D(11568000))
+    CFADS_A = REV_A - OM - PAVE
+    check("G.2.1 mature CFADS", CFADS_A, D(10200000))
+
+    # G.2.1 the demand-risk premium
+    for tgt, svc, cap, gear in (("1.30", D("7846153.85"), D("83122265.62"), D("34.63")),
+                                ("1.40", D("7285714.29"), D("77184960.93"), D("32.16")),
+                                ("1.45", D("7034482.76"), D("74523410.55"), D("31.05"))):
+        check(f"G.2.1 service at {tgt}x", CFADS_A / D(tgt), svc, tol=D("0.01"))
+        check(f"G.2.1 debt capacity at {tgt}x", CFADS_A / D(tgt) * AF20, cap, tol=D("0.05"))
+        check(f"G.2.1 gearing at {tgt}x (%)", CFADS_A / D(tgt) * AF20 / CAPEX_A * 100, gear,
+              tol=D("0.005"))
+    CAP130, CAP140 = CFADS_A / D("1.30") * AF20, CFADS_A / D("1.40") * AF20
+    check("G.2.1 capacity lost to the extra tenth of a turn", CAP130 - CAP140,
+          D("5937304.69"), tol=D("0.05"))
+    check("G.2.1 that loss as a share of capacity (%)", (CAP130 - CAP140) / CAP130 * 100,
+          D("7.1429"), tol=D("0.00005"))
+    # the identity behind it: capacity is inversely proportional to the required ratio
+    check("G.2.1 INVARIANT the loss equals 1 - 1.30/1.40", (CAP130 - CAP140) / CAP130,
+          1 - D("1.30") / D("1.40"), tol=D("0.0000001"))
+
+    # G.2.2 the ramp
+    SVC140 = CFADS_A / D("1.40")
+    RAMP = ((1, D("0.60"), D(10800), D(9460800), D(3892800), D("0.5343")),
+            (2, D("0.80"), D(14400), D(12614400), D(7046400), D("0.9672")),
+            (3, D("1.00"), D(18000), D(15768000), D(10200000), D("1.4000")))
+    for yr, f, veh, rev, cf, dscr in RAMP:
+        check(f"G.2.2 year {yr} traffic", VPD * f, veh)
+        check(f"G.2.2 year {yr} revenue", REV_A * f, rev)
+        check(f"G.2.2 year {yr} CFADS", REV_A * f - OM - PAVE, cf)
+        check(f"G.2.2 year {yr} DSCR on level-sized service", (REV_A * f - OM - PAVE) / SVC140,
+              dscr, tol=D("0.00005"))
+    check("G.2.2 INVARIANT year one fails to pay, not merely to cover",
+          D(1) if (REV_A * D("0.60") - OM - PAVE) < SVC140 else D(0), D(1))
+    check("G.2.2 cash shortfall across years 1-2",
+          sum(SVC140 - (REV_A * f - OM - PAVE) for f in (D("0.60"), D("0.80"))),
+          D("3632228.57"), tol=D("0.01"))
+    check("G.2.2 covenant shortfall across the ramp",
+          sum(CFADS_A - (REV_A * f - OM - PAVE) for f in (D("0.60"), D("0.80"), D("1.00"))),
+          D(9460800))
+    C1 = REV_A * D("0.60") - OM - PAVE
+    check("G.2.2 capacity if sized on year one", C1 / D("1.40") * AF20, D("29457413.32"),
+          tol=D("0.05"))
+    check("G.2.2 capacity given up by sizing on year one",
+          SVC140 * AF20 - C1 / D("1.40") * AF20, D("47727547.61"), tol=D("0.05"))
+    check("G.2.2 that reduction as a share of level capacity (%)",
+          (SVC140 * AF20 - C1 / D("1.40") * AF20) / (SVC140 * AF20) * 100, D(62), tol=D("0.5"))
+
+    # G.2.3 sculpting, and which constraint binds
+    CAP_IO = (C1 / D("1.40")) / RATE_A
+    CAP_AM = (CFADS_A / D("1.40")) * AF17
+    check("G.2.3 year-one interest-only constraint", CAP_IO, D("39722448.98"), tol=D("0.01"))
+    check("G.2.3 steady-state amortisation constraint", CAP_AM, D("71132053.24"), tol=D("0.05"))
+    check("G.2.3 INVARIANT year-one interest cover is the binding constraint",
+          D(1) if CAP_IO < CAP_AM else D(0), D(1))
+    D_SC = min(CAP_IO, CAP_AM)
+    check("G.2.3 sculpted capacity", D_SC, D("39722448.98"), tol=D("0.01"))
+    check("G.2.3 binding constraint as a share of the amortisation test (%)",
+          CAP_IO / CAP_AM * 100, D("55.8"), tol=D("0.05"))
+    check("G.2.3 recovered over sizing on year one", D_SC - D("29457413.32"),
+          D("10265035.66"), tol=D("0.05"))
+    check("G.2.3 given up against level sizing", SVC140 * AF20 - D_SC, D("37462511.95"),
+          tol=D("0.05"))
+    check("G.2.3 sculpted gearing (%)", D_SC / CAPEX_A * 100, D("16.55"), tol=D("0.005"))
+    check("G.2.3 year-two cover on interest only",
+          (REV_A * D("0.80") - OM - PAVE) / (D_SC * RATE_A), D("2.5342"), tol=D("0.00005"))
+    check("G.2.3 steady-state service after amortisation begins", D_SC / AF17,
+          D("4068579.51"), tol=D("0.01"))
+    check("G.2.3 steady-state cover", CFADS_A / (D_SC / AF17), D("2.5070"), tol=D("0.00005"))
+    check("G.2.3 interest paid over three interest-only years", D_SC * RATE_A * 3,
+          D("8341714.29"), tol=D("0.01"))
+    check("G.2.3 equity or support at the sculpted structure (%)",
+          (CAPEX_A - D_SC) / CAPEX_A * 100, D("83.45"), tol=D("0.005"))
+    check("G.2.3 equity at level 1.40x sizing (%)",
+          (CAPEX_A - D("77184960.93")) / CAPEX_A * 100, D("67.84"), tol=D("0.005"))
+    # the capstone's headline comparison against Kestrel
+    check("G.2.3 support needed to reach a 30 % equity cheque",
+          CAPEX_A - D_SC - CAPEX_A * D("0.30"), D("128277551.02"), tol=D("0.05"))
+    check("G.2.3 that support as a share of capex (%)",
+          (CAPEX_A - D_SC - CAPEX_A * D("0.30")) / CAPEX_A * 100, D("53.45"), tol=D("0.005"))
+    check("G.2.3 INVARIANT availability gearing exceeds demand gearing fourfold",
+          D("68.6185") / (D_SC / CAPEX_A * 100), D("4.1459"), tol=D("0.00005"))
+
+    # G.2.4 the toll lever under inelastic demand
+    E = D("-0.40")
+    for pct, toll, veh, rev, chg in ((D("-0.10"), D("2.16"), D(18775), D("14802058.52"),
+                                      D("-6.1260")),
+                                     (D("0.10"), D("2.64"), D(17327), D("16695991.78"),
+                                      D("5.8853")),
+                                     (D("0.20"), D("2.88"), D(16734), D("17590790.60"),
+                                      D("11.5601"))):
+        m = 1 + pct
+        check(f"G.2.4 toll at {pct:+} change", TOLL * m, toll, tol=D("0.005"))
+        check(f"G.2.4 traffic at {pct:+} change", VPD * m ** E, veh, tol=D("1"))
+        check(f"G.2.4 revenue at {pct:+} change", REV_A * m * m ** E, rev, tol=D("0.05"))
+        check(f"G.2.4 revenue change at {pct:+} (%)", (m * m ** E - 1) * 100, chg,
+              tol=D("0.00005"))
+    check("G.2.4 INVARIANT inelastic demand gives no interior revenue optimum",
+          D(1) if all(REV_A * (1 + p) * (1 + p) ** E > REV_A
+                      for p in (D("0.10"), D("0.20"), D("0.50"), D("1.00"))) else D(0), D(1))
+    check("G.2.4 traffic lost at a 10 % toll rise (%)", (1 - D("1.10") ** E) * 100,
+          D("3.7406"), tol=D("0.00005"))

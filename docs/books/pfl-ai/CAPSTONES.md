@@ -200,16 +200,161 @@ informed and a board that has been persuaded.
 
 ---
 
-## Capstones Two to Four
+## Capstone Two — Aurora Ridge: the road that cannot be geared
 
-The three new-project capstones — the toll-road concession, the solar-plus-storage IPP and the
-hyperscale data centre — are **not yet written**. They are listed in this volume's plan and in
-`CORPUS_GATE_REPORT.md` as outstanding, and this appendix does not pretend otherwise. Each requires
-its own verified arithmetic on a different risk shape: unhedged demand risk on the toll road, resource
-and dispatch risk with a contracted price on the IPP, and re-contracting risk on a short-lived asset
-for the data centre. None of them may reuse Kestrel's figures, because the point of each is that a
-different risk shape produces a different binding constraint — which is precisely the finding G.1.3
-establishes for a water PPP and which cannot be assumed to transfer.
+Kestrel's revenue is an availability payment: a counterparty pays for a plant that is ready, and
+volume risk sits with the offtaker. Every ratio in Capstone One rests on that. **Aurora Ridge is the
+same discipline applied to a revenue nobody guarantees**, and the arithmetic does not merely shift —
+it changes what the project can be.
 
-Stating that plainly is the honest alternative to filling the space. A capstone that recycled the
-master thread's numbers under a new project name would add pages and subtract credibility.
+**The asset.** A 30-year concession to build and operate an inter-urban toll road. Capital
+expenditure **USD 240,000,000**. Design traffic **18,000 vehicles a day** at a **2.40** toll, so
+mature annual revenue is `18,000 × 365 × 2.40 =` **15,768,000**. Operations and routine maintenance
+**4,200,000** a year, largely fixed; a pavement and structures reserve of **1,368,000** a year, so
+mature **`CFADS` = 10,200,000**. Senior debt is offered at **7.0 %** over a **20-year** tenor. There
+is no offtaker, no availability payment, no minimum revenue guarantee, and no hedge for traffic —
+which is the whole point of the case. *(Fictitious project. Cash taxes are assumed nil in the ramp
+years under capital allowances and are excluded from `CFADS` here; the treatment is
+jurisdiction-specific and would need written advice, per Domain 4's cross-sector caution.)*
+
+### G.2.1 The demand-risk premium, in coverage and then in money
+
+Lenders price unhedged demand risk in the **required ratio**, not in the margin. Where Kestrel's
+availability structure was sized at **1.30×**, a merchant toll road is sized at **1.40×** or higher.
+That is a small-looking change:
+
+| Required `DSCR` | Annual service | Debt capacity on `AF(0.07, 20) = 10.594014` | Gearing |
+|---|---|---|---|
+| 1.30× | 7,846,153.85 | **83,122,265.62** | 34.63 % |
+| **1.40×** | 7,285,714.29 | **77,184,960.93** | **32.16 %** |
+| 1.45× | 7,034,482.76 | 74,523,410.55 | 31.05 % |
+
+Ten basis points of coverage costs **5,937,304.69** of debt capacity — **7.1429 %** of it, which is
+exactly `1 − 1.30/1.40`, because capacity is inversely proportional to the required ratio and nothing
+else in the calculation moved. That identity is worth carrying: **a coverage requirement is a
+proportional tax on debt capacity**, so a negotiation over "just a tenth of a turn" is a negotiation
+over seven per cent of the senior facility, and it should be conducted in money.
+
+Note the gearing column, though, because it is the finding. Even at the *lower* 1.30× requirement this
+road supports only **34.63 %** senior debt against Kestrel's 68.6185 %. Nothing is wrong with the
+road; the ratio is simply being asked to cover a cash flow that no one has promised.
+
+### G.2.2 The ramp is the project, and level sizing cannot see it
+
+Toll roads do not open at design traffic. Assume a conventional three-year ramp — **60 %, 80 %,
+100 %** of design traffic — with operating cost and the pavement reserve unchanged, because they are
+functions of the road and not of the traffic on it. That last clause is where the damage comes from:
+**revenue ramps and cost does not.**
+
+| Year | Traffic | Revenue | `CFADS` | `DSCR` on level-sized service of 7,285,714.29 |
+|---|---|---|---|---|
+| 1 | 10,800 | 9,460,800 | 3,892,800 | **0.5343** |
+| 2 | 14,400 | 12,614,400 | 7,046,400 | **0.9672** |
+| 3 | 18,000 | 15,768,000 | 10,200,000 | 1.4000 |
+
+Year one does not breach a covenant; it **fails to pay**, at barely half of debt service, and year two
+still cannot. The cash shortfall across the two years is **3,632,228.57** and the shortfall against the
+1.40× covenant across the ramp is **9,460,800**. A facility sized on mature `CFADS` was never
+financeable; it was arithmetically correct and commercially fictional.
+
+The instinctive correction is to size on year one instead. That produces a capacity of
+**29,457,413.32** — **47,727,547.61** less than level sizing, a 62 % reduction — and a gearing of
+12.27 %, which is not a project financing at all.
+
+### G.2.3 What actually works, and what it costs
+
+Neither extreme is the answer; the structure has to be **shaped to the ramp**. Take interest only for
+three years and amortise over the remaining seventeen, and two constraints now compete:
+
+```
+year-one interest cover at 1.40x :  0.07 x D  <=  3,892,800 / 1.40   ->  D <= 39,722,448.98
+steady-state amortisation at 1.40x:  D / AF(0.07,17) <= 10,200,000 / 1.40
+                                     with AF(0.07,17) = 9.763223     ->  D <= 71,132,053.24
+```
+
+**The binding constraint is year-one interest cover**, and it binds at **39,722,448.98** — 55.8 % of
+what the amortisation test would allow. Sculpting recovers **10,265,035.66** over sizing on year one
+and still gives up **37,462,511.95** against level sizing. The resulting structure is comfortable
+everywhere except the place it was built for: year-two cover on interest only is **2.5342×**, and
+steady-state cover after amortisation begins is **2.5070×** on a service of **4,068,579.51**. Three
+years of interest-only costs **8,341,714.29** of interest with no principal retired.
+
+Gearing lands at **16.55 %** of capital expenditure. Set that beside Capstone One:
+
+| | Kestrel Water | Aurora Ridge |
+|---|---|---|
+| Revenue basis | availability payment | unhedged demand |
+| Required `DSCR` | 1.30× | 1.40× |
+| Senior gearing achieved | **68.6185 %** | **16.55 %** |
+| Equity or support required | 31.38 % | **83.45 %** |
+
+**The same discipline, applied to a different revenue risk, produces a four-fold difference in
+gearing** — 4.1459× on these figures. This is the single most important thing a second capstone can
+teach, and it cannot be learned from Kestrel at any depth, because Kestrel's offtaker absorbed the
+risk that Aurora Ridge's structure has to absorb with capital.
+
+**Which is why real demand-risk roads are not financed the way this one has been.** Read the last row
+as a requirement rather than a result: to bring the equity cheque down to Kestrel's 30 %, the project
+needs **128,277,551.02** of support — **53.45 %** of capital expenditure — as a construction grant,
+availability element, minimum revenue guarantee, or subordinated public debt. That is not a subsidy
+smuggled in to rescue a weak project; it is the price of the risk transfer the market declines to make,
+computed rather than asserted. A leader who cannot produce that number is not in a position to argue
+for it, and a public authority that has not been shown it is being asked to approve a structure whose
+economics it has not seen.
+
+### G.2.4 The lever that looks free and is not
+
+Faced with the ramp, sponsors reach for the toll. With a constant-elasticity demand curve at
+**e = −0.40** — inelastic, as inter-urban traffic with no competing route usually is — a toll rise
+does raise revenue, and this is where judgement is needed rather than arithmetic:
+
+| Toll change | Toll | Traffic | Revenue | Change |
+|---|---|---|---|---|
+| −10 % | 2.16 | 18,775 | 14,802,058.52 | −6.1260 % |
+| base | 2.40 | 18,000 | 15,768,000.00 | — |
+| **+10 %** | 2.64 | 17,327 | **16,695,991.78** | **+5.8853 %** |
+| +20 % | 2.88 | 16,734 | 17,590,790.60 | +11.5601 % |
+
+Because |e| < 1, **revenue rises with every toll increase**, without limit inside the model. The
+revenue-maximising toll would require `e = −1`, and the model never reaches it. That is precisely the
+trap. **The binding limit on the toll is contractual and political, not economic**, so a model that
+optimises the toll will always recommend raising it, and will be right about the revenue and silent
+about the concession's cap, the escalation formula, the shadow-toll politics of a road whose users vote,
+and the diversion onto unpriced local roads that a 3.7 % traffic loss represents in someone else's
+network. An elasticity of −0.40 is also an estimate from a mature network applied to a road with no
+operating history — Domain 7's demand-forecast discipline applies in full, and the estimate should carry
+a range rather than a point.
+
+The professional handling is to price the toll lever, disclose that the model has no interior optimum,
+and put the ceiling where it belongs: in the concession agreement, negotiated once, rather than in an
+annual revenue decision the sponsor will always want to resolve one way.
+
+### G.2.5 The four questions Aurora Ridge adds to Capstone One
+
+1. **Who has promised this revenue?** If the answer is nobody, expect the required ratio to rise and
+   read the consequence in money — 7.1429 % of capacity per tenth of a turn here.
+2. **What does year one look like, not the mature year?** Level sizing on this project produced a
+   facility that fails to pay debt service in its first year at 0.5343× while every mature-case ratio
+   was healthy.
+3. **Which constraint binds after sculpting?** Here it is year-one interest cover at 39,722,448.98,
+   binding at 55.8 % of what the amortisation test allows — so effort spent negotiating tenor or
+   steady-state cover buys nothing.
+4. **If the structure needs support, how much, and stated as what?** 128,277,551.02, or 53.45 % of
+   capex, to reach a conventional equity cheque. A number of that size is a policy decision and must be
+   presented as one.
+
+---
+
+## Capstones Three and Four
+
+The remaining two new-project capstones — the **solar-plus-storage independent power project** and the
+**hyperscale data centre** — are **not yet written**, and are listed in this volume's plan and in
+`CORPUS_GATE_REPORT.md` as outstanding. Each needs its own verified arithmetic on a risk shape neither
+Kestrel nor Aurora Ridge exercises: a contracted price against an uncertain *resource*, with dispatch
+and degradation, for the IPP; and a short-lived asset whose entire case turns on **re-contracting**
+rather than on operations, for the data centre. Neither may reuse the figures above, because the point
+of each is that a different risk shape puts a different quantity in control — which is exactly what
+G.2.3 demonstrates by producing a four-fold gearing difference from one change of revenue basis.
+
+Saying so is the honest alternative to filling the space. A capstone that recycled another project's
+numbers under a new name would add pages and subtract credibility.
