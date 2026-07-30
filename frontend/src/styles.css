@@ -596,6 +596,36 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 [dir="rtl"] .docviewer-title{text-align:right;}
 
 /* ===== universal document viewer (student + admin) ===== */
+/* ---- exam scheduling window (student portal) ---- */
+.schedm-backdrop { position: fixed; inset: 0; background: rgba(10, 16, 36, .55); z-index: 80; display: grid; place-items: center; padding: 1.2rem; }
+.schedm {
+  background: var(--paper); border-radius: 14px; box-shadow: var(--shadow-lift);
+  width: min(720px, 100%); max-height: min(88vh, 100%); overflow-y: auto; padding: 1.1rem 1.2rem;
+}
+.schedm-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: .8rem; }
+.schedm-body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.2rem; }
+@media (max-width: 640px) { .schedm-body { grid-template-columns: 1fr; } }
+.schedm-cal-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; }
+.schedm-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.schedm-wd { text-align: center; font-size: .68rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--mist); padding: .2rem 0; }
+.schedm-day {
+  appearance: none; border: 1px solid transparent; background: none; border-radius: 9px;
+  padding: .45em 0; font: inherit; font-size: .88rem; font-weight: 600; color: var(--ink);
+  cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+}
+.schedm-day:hover:not(:disabled) { background: var(--canvas); }
+.schedm-day:disabled { color: #c2cad9; cursor: default; }
+.schedm-day.sel { background: var(--brand); color: #fff; }
+.schedm-slots { display: flex; flex-wrap: wrap; gap: .45rem; }
+.schedm-slot {
+  appearance: none; border: 1px solid var(--line); background: var(--paper); border-radius: 9px;
+  padding: .45em .85em; font: inherit; font-size: .88rem; font-weight: 700; color: var(--ink);
+  cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+}
+.schedm-slot:hover { border-color: var(--brand); color: var(--brand-600); }
+.schedm-slot.sel { background: var(--brand); border-color: var(--brand); color: #fff; }
+.schedm-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line); }
+
 .docviewer-backdrop{position:fixed;inset:0;background:rgba(10,16,36,.62);z-index:80;display:grid;place-items:center;padding:1.2rem;}
 .docviewer{width:min(1080px,100%);height:min(88vh,100%);background:var(--canvas,#fff);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(10,16,36,.35);}
 .docviewer.full{width:100%;height:100%;border-radius:0;}

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, waitFor, fireEvent } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../test/utils'
 import { ApiError } from '../api/client'
@@ -90,8 +90,16 @@ describe('Certifications', () => {
     })
   })
 
+  // Drives the calendar + slot-grid scheduling window: pick the last bookable day of the
+  // displayed month (always fully in range against the 2027 deadline), then a slot time.
+  const pickDayAndSlot = async (user: ReturnType<typeof userEvent.setup>) => {
+    const days = document.querySelectorAll<HTMLButtonElement>('.schedm-day:not([disabled])')
+    await user.click(days[days.length - 1])
+    await user.click(screen.getByRole('button', { name: '14:00' }))
+  }
+
   describe('booking form', () => {
-    it('opens the slot picker, keeps Confirm disabled until a time is chosen, then POSTs the booking', async () => {
+    it('opens the scheduling window, keeps Confirm disabled until a day and time are chosen, then POSTs the booking', async () => {
       const user = userEvent.setup()
       h.me = baseMe({ exams: [notScheduledEntry()] })
       renderWithProviders(<Certifications />)
@@ -99,9 +107,11 @@ describe('Certifications', () => {
 
       const confirm = await screen.findByRole('button', { name: 'Confirm slot' })
       expect(confirm).toBeDisabled()
-      // datetime-local is set directly (userEvent.type is unreliable for this input type).
-      const input = document.getElementById('sched-when') as HTMLInputElement
-      fireEvent.change(input, { target: { value: '2027-01-01T10:00' } })
+      const days = document.querySelectorAll<HTMLButtonElement>('.schedm-day:not([disabled])')
+      expect(days.length).toBeGreaterThan(0)
+      await user.click(days[days.length - 1])
+      expect(confirm).toBeDisabled() // a day alone is not enough
+      await user.click(screen.getByRole('button', { name: '14:00' }))
       expect(confirm).toBeEnabled()
 
       h.post.mockResolvedValueOnce(undefined)
@@ -117,8 +127,8 @@ describe('Certifications', () => {
       h.me = baseMe({ exams: [notScheduledEntry()] })
       renderWithProviders(<Certifications />)
       await user.click(screen.getByRole('button', { name: 'Schedule exam' }))
-      const input = document.getElementById('sched-when') as HTMLInputElement
-      fireEvent.change(input, { target: { value: '2027-01-01T10:00' } })
+      await screen.findByRole('button', { name: 'Confirm slot' })
+      await pickDayAndSlot(user)
       h.post.mockRejectedValueOnce(new ApiError(400, 'bad', { error: 'bad_slot' }))
       await user.click(screen.getByRole('button', { name: 'Confirm slot' }))
       expect(await screen.findByRole('alert')).toHaveTextContent('Please choose a time at least 2 hours from now.')

@@ -8,7 +8,7 @@ import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../componen
 import { ViewDownloadActions } from '../components/documents/DocumentActions'
 import { studentToken } from '../files'
 import { fmtDate, fmtDateTime, fmtMoney, daysUntil } from '../format'
-import { useT } from '../i18n'
+import { useT, useI18n } from '../i18n'
 import { PageHeader } from '../components/premium'
 import type { ExamEntry, IdentityDocument } from '../api/types'
 
@@ -57,21 +57,40 @@ const HOLD_LABELS: Record<string, string> = {
 // "To unlock scheduling:" frame, so they are shown under a "Scheduling is unavailable:" frame instead.
 const STATE_HOLDS = new Set(['account_hold', 'booking_closed'])
 
-function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDone: () => void; mode?: 'book' | 'reschedule' }) {
-  const t = useT()
-  const [when, setWhen] = useState('')
+// Fixed daily slot times, identical to the classic panel's scheduler — there is no
+// backend availability endpoint; the server validates the chosen instant on book.
+const SLOT_TIMES = ['09:00', '10:30', '12:00', '14:00', '15:30', '17:00']
+
+/** The scheduling window: a month calendar + slot grid in a modal, replacing the old bare
+ * datetime-local input so booking happens fully inside this panel (never the classic one). */
+function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEntry; onDone: () => void; onClose: () => void; mode?: 'book' | 'reschedule' }) {
+  const { t, lang } = useI18n()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone
 
+  // Earliest bookable instant is 2 h out (server enforces the same); latest is the entitlement deadline.
+  const minMs = Date.now() + 2 * 3600_000
+  const maxMs = entry.deadline ? Date.parse(String(entry.deadline).replace(' ', 'T') + 'Z') : Number.POSITIVE_INFINITY
+  const slotMs = (day: Date, hm: string) => {
+    const [h, m] = hm.split(':').map(Number)
+    return new Date(day.getFullYear(), day.getMonth(), day.getDate(), h, m).getTime()
+  }
+  const daySlots = (day: Date) => SLOT_TIMES.filter((s) => { const ms = slotMs(day, s); return ms >= minMs && ms <= maxMs })
+
+  const firstBookable = new Date(minMs)
+  const [month, setMonth] = useState(() => new Date(firstBookable.getFullYear(), firstBookable.getMonth(), 1))
+  const [selDay, setSelDay] = useState<Date | null>(null)
+  const [selSlot, setSelSlot] = useState<string | null>(null)
+
   async function submit() {
+    if (!selDay || !selSlot) return
     setError(null)
     setBusy(true)
     try {
-      // datetime-local yields local wall-clock "YYYY-MM-DDTHH:mm"; send with timezone so the server anchors it.
       await api.post(mode === 'reschedule' ? '/api/me/exam/reschedule' : '/api/me/exam/book', {
         certification_id: entry.certification_id,
-        scheduled_at: new Date(when).toISOString(),
+        scheduled_at: new Date(slotMs(selDay, selSlot)).toISOString(),
         timezone: tz,
       })
       onDone()
@@ -83,21 +102,76 @@ function ScheduleForm({ entry, onDone, mode = 'book' }: { entry: ExamEntry; onDo
     }
   }
 
-  // datetime-local reads its value/min/max as LOCAL wall-clock, so build the bounds in local time
-  // (not via toISOString, which is UTC). The deadline is stored as UTC, so parse it with a 'Z'.
-  const toLocalInput = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-  const min = toLocalInput(new Date(Date.now() + 2 * 3600_000))
-  const max = entry.deadline ? toLocalInput(new Date(String(entry.deadline).replace(' ', 'T') + 'Z')) : undefined
+  // Calendar grid: Monday-first weeks, localised labels via Intl (2024-01-01 was a Monday).
+  const weekdays = Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(lang, { weekday: 'short' }).format(new Date(2024, 0, 1 + i)))
+  const monthLabel = new Intl.DateTimeFormat(lang, { month: 'long', year: 'numeric' }).format(month)
+  const firstWd = (new Date(month.getFullYear(), month.getMonth(), 1).getDay() + 6) % 7
+  const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate()
+  const cells: (Date | null)[] = [
+    ...Array.from({ length: firstWd }, () => null),
+    ...Array.from({ length: daysInMonth }, (_, i) => new Date(month.getFullYear(), month.getMonth(), i + 1)),
+  ]
+  const sameDay = (a: Date, b: Date | null) => !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+  const selectedLabel = selDay && selSlot
+    ? `${new Intl.DateTimeFormat(lang, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(selDay)} · ${selSlot}`
+    : null
 
   return (
-    <div className="stack" style={{ marginTop: '.75rem' }}>
-      {error && <div className="notice err" role="alert">{error}</div>}
-      <div className="field" style={{ margin: 0 }}>
-        <label htmlFor="sched-when">{t('cert.chooseDateTime', { tz })}</label>
-        <input id="sched-when" type="datetime-local" value={when} min={min} max={max} onChange={(e) => setWhen(e.target.value)} />
-      </div>
-      <div className="row">
-        <button className="btn sm" disabled={!when || busy} onClick={submit}>{busy ? t('cert.scheduling') : t('cert.confirmSlot')}</button>
+    <div className="schedm-backdrop" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
+      <div className="schedm" role="dialog" aria-modal="true" aria-label={mode === 'reschedule' ? t('cert.reschedule') : t('cert.scheduleExam')}>
+        <div className="schedm-head">
+          <div>
+            <h3 style={{ margin: 0 }}>{mode === 'reschedule' ? t('cert.reschedule') : t('cert.scheduleExam')}</h3>
+            <div className="muted small">{entry.certification_name || t('cert.untitledCert', { id: entry.certification_id })}</div>
+          </div>
+          <button className="btn sm secondary" onClick={onClose}>{t('cert.close')}</button>
+        </div>
+        {error && <div className="notice err" role="alert">{error}</div>}
+        <div className="schedm-body">
+          <div>
+            <div className="schedm-cal-head">
+              <button className="btn sm secondary" aria-label={t('cert.sched.prevMonth')} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}>‹</button>
+              <strong>{monthLabel}</strong>
+              <button className="btn sm secondary" aria-label={t('cert.sched.nextMonth')} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}>›</button>
+            </div>
+            <div className="schedm-cal" role="grid">
+              {weekdays.map((w) => <span key={w} className="schedm-wd">{w}</span>)}
+              {cells.map((d, i) => d === null
+                ? <span key={`b${i}`} />
+                : (
+                  <button
+                    key={d.getDate()}
+                    className={'schedm-day' + (sameDay(d, selDay) ? ' sel' : '')}
+                    disabled={daySlots(d).length === 0}
+                    onClick={() => { setSelDay(d); setSelSlot(null) }}
+                  >
+                    {d.getDate()}
+                  </button>
+                ))}
+            </div>
+          </div>
+          <div>
+            <div className="small" style={{ fontWeight: 700, marginBottom: '.4rem' }}>{selDay ? t('cert.sched.pickTime') : t('cert.sched.pickDay')}</div>
+            {selDay && (
+              daySlots(selDay).length > 0 ? (
+                <div className="schedm-slots">
+                  {daySlots(selDay).map((s) => (
+                    <button key={s} className={'schedm-slot' + (s === selSlot ? ' sel' : '')} onClick={() => setSelSlot(s)}>{s}</button>
+                  ))}
+                </div>
+              ) : <div className="muted small">{t('cert.sched.noSlots')}</div>
+            )}
+            <p className="muted small" style={{ marginTop: '.8rem' }}>{t('cert.sched.tzNote', { tz })}</p>
+            <p className="muted small">{t('cert.sched.policy')}</p>
+            {entry.deadline && <p className="muted small">{t('cert.schedulingDeadline')} {fmtDate(entry.deadline)}</p>}
+          </div>
+        </div>
+        <div className="schedm-foot">
+          <div className="small muted">{selectedLabel ? t('cert.sched.selected', { when: selectedLabel }) : ''}</div>
+          <button className="btn" disabled={!selDay || !selSlot || busy} onClick={submit}>
+            {busy ? t('cert.scheduling') : t('cert.confirmSlot')}
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -377,9 +451,7 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
             </div>
           )}
           {scheduling && (
-            <div style={{ marginTop: '.6rem' }}>
-              <ScheduleForm entry={entry} mode="reschedule" onDone={() => { setScheduling(false); onChanged() }} />
-            </div>
+            <ScheduleForm entry={entry} mode="reschedule" onDone={() => { setScheduling(false); onChanged() }} onClose={() => setScheduling(false)} />
           )}
         </div>
       ) : attempt ? (
@@ -413,22 +485,19 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
         })()
       ) : (
         <div style={{ marginTop: '.75rem' }}>
-          {scheduling ? (
-            <ScheduleForm entry={entry} onDone={() => { setScheduling(false); onChanged() }} />
-          ) : (
-            <>
-              <button className="btn sm" disabled={holds.length > 0} onClick={() => setScheduling(true)}>{t('cert.scheduleExam')}</button>
-              {actionHolds.length > 0 && (
-                <div className="muted small" style={{ marginTop: '.5rem' }}>
-                  {t('cert.toUnlockScheduling')} {actionHolds.map((h) => HOLD_LABELS[h] ? t(HOLD_LABELS[h]) : h.replace(/_/g, ' ')).join(' · ')}.
-                </div>
-              )}
-              {stateHolds.length > 0 && (
-                <div className="muted small" style={{ marginTop: '.5rem' }}>
-                  {t('cert.schedulingUnavailable')} {stateHolds.map((h) => HOLD_LABELS[h] ? t(HOLD_LABELS[h]) : h.replace(/_/g, ' ')).join(' · ')}.
-                </div>
-              )}
-            </>
+          <button className="btn sm" disabled={holds.length > 0} onClick={() => setScheduling(true)}>{t('cert.scheduleExam')}</button>
+          {actionHolds.length > 0 && (
+            <div className="muted small" style={{ marginTop: '.5rem' }}>
+              {t('cert.toUnlockScheduling')} {actionHolds.map((h) => HOLD_LABELS[h] ? t(HOLD_LABELS[h]) : h.replace(/_/g, ' ')).join(' · ')}.
+            </div>
+          )}
+          {stateHolds.length > 0 && (
+            <div className="muted small" style={{ marginTop: '.5rem' }}>
+              {t('cert.schedulingUnavailable')} {stateHolds.map((h) => HOLD_LABELS[h] ? t(HOLD_LABELS[h]) : h.replace(/_/g, ' ')).join(' · ')}.
+            </div>
+          )}
+          {scheduling && (
+            <ScheduleForm entry={entry} onDone={() => { setScheduling(false); onChanged() }} onClose={() => setScheduling(false)} />
           )}
         </div>
       )}
