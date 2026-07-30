@@ -324,10 +324,26 @@ def build(book: str, out: pathlib.Path) -> None:
         app_html = '<div class="backmatter appendices">' + inner + "</div>"
         print(f"appendix tables: {inner.count('<table>')}")
 
+    # Back matter — the integrated capstones (Appendix G). Authored rather than derived: a capstone's
+    # content is the agreement between domains, which no generator can compute. It follows the
+    # derived appendices so the volume's lettering runs in order.
+    cap_file = book_dir / "CAPSTONES.md"
+    cap_html = ""
+    if cap_file.exists():
+        ctext = cap_file.read_text(encoding="utf-8")
+        cbody = re.sub(r"\A# [^\n]*\n+", "", ctext)
+        inner = markdown.markdown(cbody, extensions=["tables"])
+        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h2 class="apptitle">\1</h2>', inner)
+        cap_html = ('<div class="backmatter appendices">'
+                    '<h2 class="apptitle">Appendix G — Integrated capstones</h2>'
+                    + inner + "</div>")
+        print(f"capstone sections: {inner.count('<h3>')}")
+
     front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
     doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{front}{''.join(toc)}{html}{app_html}{gloss_html}{''.join(ix)}</body></html>")
+                f"</head><body>{front}{''.join(toc)}{html}{app_html}{cap_html}{gloss_html}"
+                f"{''.join(ix)}</body></html>")
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
     html_file.write_text(doc_html, encoding="utf-8")

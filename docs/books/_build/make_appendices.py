@@ -115,6 +115,13 @@ def domain_titles(book: str) -> dict:
         first = f.read_text(encoding="utf-8").split("\n", 1)[0]
         t = re.sub(r"^#\s*Domain\s*\d+\s*—\s*", "", first)
         out[dn] = re.sub(r"\s*\*\(.*?\)\*\s*$", "", t).strip()
+    # Check modules above the domain count belong to the back matter, not to a chapter. They are
+    # named here so Appendix C's table reconciles to its own total instead of quietly dropping them.
+    BACK_MATTER = {17: "Appendix G — integrated capstones"}
+    highest = max(out) if out else 0
+    for dn, label in BACK_MATTER.items():
+        if dn > highest:
+            out[dn] = label
     return out
 
 
