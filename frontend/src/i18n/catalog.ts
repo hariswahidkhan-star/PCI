@@ -38,6 +38,7 @@ export const CATALOG: Record<string, Entry> = {
   'nav.appeals': { en: 'Appeals & Accommodations', ko: '이의신청 및 편의지원', ar: 'الطعون والتيسيرات', es: 'Apelaciones y adaptaciones', fr: 'Recours et aménagements', zh: '申诉与便利安排', ru: 'Апелляции и условия' },
   'nav.applications': { en: 'My Applications', ko: '내 지원 내역', ar: 'طلباتي', es: 'Mis candidaturas', fr: 'Mes candidatures', zh: '我的申请', ru: 'Мои заявки' },
   'nav.events': { en: 'Events', ko: '이벤트', ar: 'الفعاليات', es: 'Eventos', fr: 'Événements', zh: '活动', ru: 'События' },
+  'nav.eventPasses': { en: 'My event passes', ko: '내 이벤트 패스', ar: 'تذاكر فعالياتي', es: 'Mis pases de eventos', fr: 'Mes pass événements', zh: '我的活动通行证', ru: 'Мои пропуска на события' },
   'nav.profile': { en: 'Profile', ko: '프로필', ar: 'الملف الشخصي', es: 'Perfil', fr: 'Profil', zh: '个人资料', ru: 'Профиль' },
 
   // ---- sign in ----

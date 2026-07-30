@@ -158,6 +158,56 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
    authoring surface. Same discipline as the fw-* and wc-* blocks above: every state is carried by
    the WORD, and colour only reinforces a sentence that already says the whole thing. */
 
+.ss-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ss-head h2 { margin: 0; }
+.ss-close { background: none; border: 1px solid var(--line); color: var(--slate); border-radius: 4px;
+  font-size: 18px; line-height: 1; padding: 4px 10px; }
+.ss-disclosure { color: var(--ink); font-size: 14px; border-left: 3px solid var(--gilt);
+  padding-left: 10px; margin: 12px 0 14px; }
+.ss-channels { list-style: none; padding: 0; margin: 0 0 12px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); gap: 8px; }
+/* Every channel is icon + a VISIBLE text label — never an unlabelled glyph. */
+.ss-channel {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
+  padding: 9px 10px; font: inherit; font-size: 14px; cursor: pointer; text-decoration: none;
+}
+.ss-channel:hover, .ss-channel:focus-visible { border-color: var(--ink); }
+.ss-channel:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.ss-label { flex: 1; }
+.ss-instagram, .ss-footnote { color: var(--slate); font-size: 12.5px; margin: 8px 0 0; }
+.ss-note { color: var(--ink); font-size: 14px; margin: 8px 0 0; }
+.ss-fallback label { color: var(--ink); font-size: 13.5px; }
+.ss-fallback textarea { width: 100%; max-width: none; font: inherit; font-size: 13px; margin-top: 6px;
+  padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; word-break: break-all; }
+
+/* ── §8.6 share crop previews — pure CSS mock cards, no canvas, no fidelity claims ─────────── */
+.ss-tabs { display: flex; gap: 6px; margin: 0 0 12px; }
+.ss-tab {
+  background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 6px;
+  padding: 7px 14px; font: inherit; font-size: 14px; cursor: pointer;
+}
+.ss-tab[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.ss-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.ss-preview-note { color: var(--slate); font-size: 12.5px; margin: 0 0 10px; }
+.ss-crops { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.ss-crop { margin: 0; }
+.ss-crop-card {
+  width: 100%; border: 1px solid var(--line); border-radius: 6px; overflow: hidden;
+  background-color: #14181d; background-size: cover; background-position: center;
+  display: flex; align-items: flex-end;
+}
+/* Tall crops centre a smaller band of the landscape og:image — an honest approximation of how
+   networks letterbox/crop a 1200×630 card, not a re-render. */
+.ss-crop-scrim {
+  width: 100%; padding: 10px;
+  background: linear-gradient(transparent, rgba(10, 13, 17, 0.86) 45%);
+  color: #fff;
+}
+.ss-crop-title { margin: 0; font-size: 12.5px; font-weight: 700; overflow-wrap: anywhere; }
+.ss-crop-desc { margin: 3px 0 0; font-size: 11px; opacity: 0.92; }
+.ss-crop-disclaimer { margin: 3px 0 0; font-size: 10px; opacity: 0.8; font-style: italic; }
+.ss-crop-caption { color: var(--slate); font-size: 12px; margin-top: 5px; }
 .cd h1 { font-size: 24px; margin: 0 0 6px; }
 .cd-section { border: 1px solid #d8d8c8; border-radius: 8px; padding: 1rem 1.15rem; margin: 0 0 1.1rem; background: #fff; }
 .cd-subsection { border-top: 1px solid #d8d8c8; margin-top: 1.1rem; padding-top: 0.9rem; }

@@ -9,6 +9,7 @@ obj/
 wwwroot/app/
 wwwroot/admin/
 wwwroot/world-app/
+wwwroot/world-admin-app/
 
 # integration test artifacts
 tests/_integration.db*

@@ -44,6 +44,14 @@ services:
       # ---- database: external managed MySQL (required in production) ----
       - key: DB_PROVIDER
         value: mysql
+      # INTERIM (operator-directed): deploys were failing at the health check because this service
+      # still runs the earlier SQLite-on-persistent-disk posture, and the production validator
+      # rightly refuses that silently. This waiver is the documented bridge (DEPLOY.md, "Deploys
+      # suddenly failing"): it waives ONLY the MySQL requirement — the database must live under
+      # /data and every other production check stays active. Remove it when managed MySQL is
+      # provisioned and the one-time data migration has run.
+      - key: ALLOW_SQLITE_IN_PRODUCTION
+        value: "true" 
       - key: MYSQL_HOST          # managed MySQL hostname
         sync: false
       - key: MYSQL_PORT

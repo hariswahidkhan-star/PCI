@@ -14,16 +14,18 @@ set -euo pipefail
 npm run build
 
 root=../backend/wwwroot
-mkdir -p "$root/app" "$root/admin" "$root/world-app"
+mkdir -p "$root/app" "$root/admin" "$root/world-app" "$root/world-admin-app"
 
 cp -r dist/. "$root/app/"
 cp -r dist-admin/. "$root/admin/"
 cp dist-admin/admin.html "$root/admin/index.html"
 cp -r dist-world/. "$root/world-app/"
 cp dist-world/world.html "$root/world-app/index.html"
+cp -r dist-worldadmin/. "$root/world-admin-app/"
+cp dist-worldadmin/worldadmin.html "$root/world-admin-app/index.html"
 
 # Fail loudly here rather than as a mystery 404 inside a browser test.
-for shell in "$root/app/index.html" "$root/admin/index.html" "$root/world-app/index.html"; do
+for shell in "$root/app/index.html" "$root/admin/index.html" "$root/world-app/index.html" "$root/world-admin-app/index.html"; do
   [ -s "$shell" ] || { echo "stage-bundles: missing or empty $shell" >&2; exit 1; }
 done
-echo "stage-bundles: staged /app, /admin and /world-app into backend/wwwroot"
+echo "stage-bundles: staged /app, /admin, /world-app and /world-admin-app into backend/wwwroot"
