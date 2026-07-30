@@ -103,7 +103,7 @@ test.describe('institution partner persona', () => {
     // Naming the sections rather than counting them: a bare count fails opaquely the next time a tab is
     // added, and says nothing about which section went missing when one genuinely disappears.
     await expect(page.getByRole('navigation', { name: 'Portal sections' }).getByRole('button'))
-      .toHaveText(['Overview', 'Codes', 'Students', 'Sponsorships', 'Commissions', 'Payments', 'Documents'])
+      .toHaveText(['Overview', 'Codes', 'Links', 'Students', 'Sponsorships', 'Commissions', 'Payments', 'Documents'])
     const partnerToken = await page.evaluate(() => sessionStorage.getItem('pci.partner.token'))
     expect(partnerToken).toBeTruthy()
     const revokedDeviceProbe = await request.get('/api/partner/me', {

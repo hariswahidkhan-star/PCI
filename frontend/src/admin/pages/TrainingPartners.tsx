@@ -62,21 +62,41 @@ const STATUS_TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn'> = { approved:
 const DOC_LABEL: Record<string, string> = { accreditation: 'Accreditation', company_profile: 'Company profile', curriculum: 'Curriculum', supporting: 'Supporting document' }
 const TABS = ['Directory', 'Applications'] as const
 
-export default function TrainingPartners() {
+/** One shared console, two sections: kind='training' (default) manages training providers,
+ * institutions and sponsors; kind='marketing' is the separate Marketing Partners section —
+ * organisations that promote PCI with discount codes and tracked links and earn commission,
+ * never sponsorship. Both drive the same backend directory, split on partner_type. */
+export type PartnerKind = 'training' | 'marketing'
+
+export default function TrainingPartners({ kind = 'training' }: { kind?: PartnerKind }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Directory')
+  const marketing = kind === 'marketing'
   return (
     <div className="page">
-      <PageHeader
-        title="Training Partners"
-        subtitle={<>Recognised organisations that deliver examination preparation, plus institutions and sponsors. Certification stays independent of training — partners prepare or fund candidates; PCI owns the examination and the certification decision. Use <strong>Portal logins</strong> to manage institution access, and <strong>Commissions</strong> for sponsorship progress and commission payouts.</>}
-      />
-      <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
-        {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
-      </div>
-      {tab === 'Directory' && <DirectoryTab />}
-      {tab === 'Applications' && <ApplicationsTab />}
+      {marketing ? (
+        <PageHeader
+          title="Marketing Partners"
+          subtitle={<>Organisations that promote PCI and earn commission on the payments their discount codes and tracked campaign links bring in. Issue portal logins with <strong>Portal logins</strong>; codes, campaign links, the commission ledger, statements and settlements live in the partner portal and the partner-finance APIs. Marketing partners never sponsor candidates directly.</>}
+        />
+      ) : (
+        <PageHeader
+          title="Training Partners"
+          subtitle={<>Recognised organisations that deliver examination preparation, plus institutions and sponsors. Certification stays independent of training — partners prepare or fund candidates; PCI owns the examination and the certification decision. Use <strong>Portal logins</strong> to manage institution access, and <strong>Commissions</strong> for sponsorship progress and commission payouts.</>}
+        />
+      )}
+      {!marketing && (
+        <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
+          {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
+        </div>
+      )}
+      {(marketing || tab === 'Directory') && <DirectoryTab kind={kind} />}
+      {!marketing && tab === 'Applications' && <ApplicationsTab />}
     </div>
   )
+}
+
+export function MarketingPartners() {
+  return <TrainingPartners kind="marketing" />
 }
 
 // ---------------- Test institutions ----------------
@@ -145,7 +165,7 @@ function TestPartnerButton({ onCreated }: { onCreated: () => void }) {
 }
 
 // ---------------- Directory (CRUD) ----------------
-function DirectoryTab() {
+function DirectoryTab({ kind = 'training' }: { kind?: PartnerKind }) {
   const { data, loading, error, refetch } = useAdminQuery<{ rows: Partner[] }>('/api/admin/training-partners')
   const [edit, setEdit] = useState<Partner | 'new' | null>(null)
   const [usageFor, setUsageFor] = useState<Partner | null>(null)
@@ -153,7 +173,10 @@ function DirectoryTab() {
   const [portal, setPortal] = useState<Partner | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
-  const rows = data?.rows ?? []
+  const marketing = kind === 'marketing'
+  // The two admin sections split one directory on partner_type.
+  const rows = (data?.rows ?? []).filter((p) =>
+    marketing ? p.partner_type === 'marketing' : p.partner_type !== 'marketing')
 
   async function togglePublish(p: Partner) {
     setErr(null)
@@ -175,17 +198,17 @@ function DirectoryTab() {
 
   return (
     <Card
-      title={`Partner directory (${rows.length})`}
+      title={marketing ? `Marketing partner directory (${rows.length})` : `Partner directory (${rows.length})`}
       action={
         <span className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
-          <TestPartnerButton onCreated={refetch} />
+          {!marketing && <TestPartnerButton onCreated={refetch} />}
           <button className="btn sm" onClick={() => setEdit('new')}>Add partner</button>
         </span>
       }
     >
       {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
       {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : rows.length === 0 ? (
-        <Empty>No partners yet. Add one, or approve an application.</Empty>
+        <Empty>{marketing ? 'No marketing partners yet. Add one to issue codes, links and commission.' : 'No partners yet. Add one, or approve an application.'}</Empty>
       ) : (
         <table className="data">
           <thead><tr><th>Name</th><th>Tier</th><th>Location</th><th>Published</th><th /></tr></thead>
@@ -212,7 +235,7 @@ function DirectoryTab() {
           </tbody>
         </table>
       )}
-      {edit && <PartnerEditor partner={edit === 'new' ? null : edit} busy={busy} setBusy={setBusy}
+      {edit && <PartnerEditor partner={edit === 'new' ? null : edit} defaultType={marketing ? 'marketing' : 'training'} busy={busy} setBusy={setBusy}
         onClose={() => setEdit(null)} onSaved={() => { setEdit(null); refetch() }} />}
       {usageFor && <PartnerUsage partner={usageFor} onClose={() => setUsageFor(null)} />}
       {loginsFor && <PartnerLogins partner={loginsFor} onClose={() => setLoginsFor(null)} />}
@@ -419,9 +442,9 @@ function PortalDrawer({ partner, onClose }: { partner: Partner; onClose: () => v
   )
 }
 
-function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
-  { partner: Partner | null; busy: boolean; setBusy: (b: boolean) => void; onClose: () => void; onSaved: () => void }) {
-  const [f, setF] = useState<Partial<Partner>>(partner ?? { tier: 'registered', listed: 0 })
+function PartnerEditor({ partner, defaultType = 'training', busy, setBusy, onClose, onSaved }:
+  { partner: Partner | null; defaultType?: string; busy: boolean; setBusy: (b: boolean) => void; onClose: () => void; onSaved: () => void }) {
+  const [f, setF] = useState<Partial<Partner>>(partner ?? { tier: 'registered', listed: 0, partner_type: defaultType })
   // "Share student names" drives privacy_fields: '["name"]' authorises names, '[]' masks them.
   const [shareNames, setShareNames] = useState<boolean>((partner?.privacy_fields ?? '').includes('name'))
   const [err, setErr] = useState<string | null>(null)
@@ -487,6 +510,7 @@ function PartnerEditor({ partner, busy, setBusy, onClose, onSaved }:
                 <option value="training">Training provider</option>
                 <option value="institution">Institution</option>
                 <option value="sponsor">Sponsor / employer</option>
+                <option value="marketing">Marketing partner</option>
               </select>
             </label>
           </div>
