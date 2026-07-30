@@ -57,6 +57,7 @@ import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Notifications from './pages/Notifications'
 import SystemCheck from './pages/SystemCheck'
+import WorldLaunch from './pages/WorldLaunch'
 import IdentityMerges from './pages/IdentityMerges'
 import Exams from './pages/Exams'
 import Proctoring from './pages/Proctoring'
@@ -156,6 +157,7 @@ export default function AdminApp() {
         <Route path="notifications" element={<Perm section="content"><Notifications /></Perm>} />
         <Route path="readiness" element={<OwnerOnly><SystemCheck /></OwnerOnly>} />
         <Route path="team" element={<OwnerOnly><Team /></OwnerOnly>} />
+        <Route path="world-launch" element={<OwnerOnly><WorldLaunch /></OwnerOnly>} />
         {CRUD_SECTIONS.map((c) => (
           <Route key={c.path} path={c.path} element={<Perm section={c.perm}><CrudSection config={c} /></Perm>} />
         ))}
