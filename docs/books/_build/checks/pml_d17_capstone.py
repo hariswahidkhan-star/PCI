@@ -96,8 +96,12 @@ def run(ctx):
     check("G.1.3 sequencing swing in weeks of delay cost", (D(386920) - D(231880)) / COD,
           D("10.8571"), tol=D("0.00005"))
     check("G.1.3 density beats ranking by cost of delay alone", D(276080) - D(231880), D(44200))
-    # D16's hold decision, in the same units as the objection's rework line
-    check("G.1.3 the hold cost equals the objection's rework line", D(96000), D(96000))
+    # D16's hold decision, in the same units as the objection's rework line. Written as a comparison
+    # of the DERIVED residue against D16's figure — `check(..., D(96000), D(96000))` stood here and
+    # compared a constant to itself, which can never fail and therefore establishes nothing.
+    HOLD_COST = D(96000)                    # D16: three weeks held, 96,000 spent
+    check("G.1.3 the objection's rework residue equals D16's hold cost",
+          OBJECTION - D(9) * COD, HOLD_COST)
     check("G.1.3 three weeks held, priced at the cost of delay", D(3) * COD, D(42840))
 
     # ---- G.1.4 the benefit was decided earlier -------------------------------------------

@@ -980,6 +980,37 @@ CTX = {
 }
 _checks_dir = pathlib.Path(__file__).resolve().parent / "checks"
 _modules = sorted(_checks_dir.glob("*.py")) if _checks_dir.is_dir() else []
+
+# A check that compares a literal to the identical literal can never fail. It is worse than no check,
+# because it reports coverage it does not provide: one such line sat where the manuscript claimed
+# twelve feasible subsets and enumeration finds sixteen, and it passed every run. Scan for the shape
+# before loading anything, and fail the suite on it — the guard has to be automatic, since the whole
+# point is that these lines look like coverage to a reader.
+#
+# It is a lint, not a proof, and the limit is worth stating because a reader will otherwise trust it
+# further than it deserves. It matches the `check("...", <literal>, <literal>)` shape the modules
+# actually use; it does NOT catch `ctx["check"](...)` spelled out longhand, a literal compared to a
+# variable that happens to hold the same literal, or a tautology assembled at runtime. Verified by
+# planting one of each: the standard form fails the suite with exit 1, the longhand form slips past.
+_TAUT = re.compile(r'check\(\s*"[^"]*"\s*,\s*(D\([^()]*\)|-?\d+(?:\.\d+)?)\s*,\s*'
+                   r'(D\([^()]*\)|-?\d+(?:\.\d+)?)\s*[,)]')
+_tauts = []
+for _mp in _modules:
+    if _mp.name.startswith("_"):
+        continue
+    _src = _mp.read_text(encoding="utf-8")
+    for _tm in _TAUT.finditer(_src):
+        # Skip matches inside a comment: the fix for one of these quotes the old line in prose.
+        _line_start = _src.rfind("\n", 0, _tm.start()) + 1
+        if _src[_line_start:_tm.start()].lstrip().startswith("#"):
+            continue
+        if _tm.group(1).strip() == _tm.group(2).strip():
+            _tauts.append(f"{_mp.name}:{_src[:_tm.start()].count(chr(10)) + 1}: "
+                          f"{_tm.group(0)[:80]}")
+if _tauts:
+    FAILURES.append(f"{len(_tauts)} tautological check(s): a literal compared to itself")
+    print(f"FAIL  tautological checks — these can never fail and must be derived or removed:",
+          *_tauts, sep="\n  ")
 for _mod_path in _modules:
     if _mod_path.name.startswith("_"):
         continue

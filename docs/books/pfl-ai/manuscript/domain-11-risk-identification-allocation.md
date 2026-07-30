@@ -636,7 +636,10 @@ against a half-fee cap of 600,000 — and fee at risk is genuinely the better in
 allocates money after the event, while the boundary definition determines whether there is a claim to
 make. The wider lesson is the one 11.3.4 states: insurance waiting periods, cure periods and
 availability carve-outs are calibrated in time while covenants are calibrated in cash, and somebody
-has to perform the translation.
+has to perform the translation. What counts as force majeure, and what relief it confers on which
+obligation, is a drafting and governing-law question in every contract — the structural asymmetry
+relied on here is that the *facility* agreement grants no equivalent relief; confirm the contractual
+position with qualified counsel before a coverage case is built on it.
 
 ### Self-check — KA 11.2
 

@@ -1399,7 +1399,10 @@ weakening the project's own recovery, which is the wrong direction from a rate t
 schedule of rates is complete: where it is not, contract rates simply relocate the argument, so the ask
 is a complete schedule with a defined route for genuinely new work. D mistakes a measurement principle
 for a mechanism — proving actual cost after the event is precisely the exercise the pre-agreed rate
-exists to avoid, and it is conducted while the covenant is being tested.
+exists to avoid, and it is conducted while the covenant is being tested. Whether a pre-agreed daily
+rate survives challenge as a penalty, and how a consent threshold interacts with the facility's
+negative covenants, are governing-law questions for qualified counsel; the commercial task is to
+price the asymmetry and ask for the term.
 
 ### Self-check — KA 12.4
 

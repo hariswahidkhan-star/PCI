@@ -323,7 +323,9 @@ def run(ctx):
     # ==================== MCQ 6.3-E — two returns, both real ====================
     check("MCQ 6.3-E project (unlevered, post-tax) IRR %",
           q(irr(fcf, LIFE, CAPEX) * 100, 2), D("8.54"))
-    check("MCQ 6.3-E equity IRR % (bank case, from the waterfall in 6.3.3)", D("9.83"), D("9.83"))
+    # The 9.83 % equity IRR is DERIVED from the waterfall in checks/pfl_d06.py ("6.3.3 equity IRR,
+    # bank case"), which is its home. Restating it here as `check(..., D("9.83"), D("9.83"))`
+    # compared a constant to itself and verified nothing; the invariant below is the real check.
     check("MCQ 6.3-E invariant: leverage lifts the equity return above the asset return",
           1 if D("9.83") > q(irr(fcf, LIFE, CAPEX) * 100, 2) else 0, 1)
     check("MCQ 6.3-E invariant: option C's 'project return plus the debt margin' would predict "
@@ -378,7 +380,8 @@ def run(ctx):
           q(year12(debt_exact)[3], 6), D("1.200000"))
     check("MCQ 6.4-F option C debt capacity forgone by the committee's figure",
           q(debt_exact - COMMITTEE, 0), 300958)
-    check("MCQ 6.4-F option D the lock-up the covenant would collapse onto", D("1.15"), D("1.15"))
+    # 1.15x is a stated contractual level, an INPUT to this item rather than a computed result,
+    # so there is nothing to recompute; the previous line compared it to itself.
     check("MCQ 6.4-F invariant: year-twelve DSCR falls as the facility grows, so the exact-1.20x "
           "facility lies between the committee's and the request",
           1 if COMMITTEE < debt_exact < DEBT else 0, 1)
@@ -542,7 +545,7 @@ def run(ctx):
     check("MCQ 7.4-F invariant: the unstressed bank case already breaches, so the matrix "
           "understates before any stress is applied",
           1 if dscr42 < COV else 0, 1)
-    check("MCQ 7.4-F option D reserve months proposed, from six", 12, 12)
+    # Twelve months is the proposal the item puts to the candidate — an input, not a result.
 
     # ==================== MCQ 8.1-E — the estimate-class ladder ====================
     LADDER = {"A": D("0.50"), "B": D("0.40"), "C": D("0.30"), "D": D("0.18"), "E": D("0.08")}
@@ -634,7 +637,11 @@ def run(ctx):
           (TOT_A / 100000).to_integral_value(rounding="ROUND_FLOOR") / 10, D("51.7"))
     check("MCQ 8.2-E rationale escalation assumption %", q(ESC * 100, 1), D("3.6"))
     check("MCQ 8.2-E rationale shape-neutral rate g x r %", q(GEAR * RATE * 100, 2), D("4.20"))
-    check("MCQ 8.2-E rationale computed breakeven, about %", D("4.17"), D("4.17"))
+    # The breakeven escalation rate is derived in checks/pfl_d08.py as 4.1659 %. What this item
+    # claims is the ROUNDING of it, so that is what is checked — and unlike a constant compared
+    # to itself, this fails if the manuscript ever rounds it differently.
+    check("MCQ 8.2-E rationale breakeven rounds to the stated 4.17 %",
+          q(D("4.1659"), 2), D("4.17"))
     check("MCQ 8.2-E option D a month of deferred commercial operations", CF / 12, 532000)
     check("MCQ 8.2-E invariant: both components dwarf the net, which is why they are reviewed "
           "separately",

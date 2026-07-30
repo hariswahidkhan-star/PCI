@@ -339,7 +339,14 @@ def run(ctx):
     check("4.3.2 optimal spend", sum(x[1] for x in bestset), D(20000000))
     check("4.3.2 optimal set size", D(len(bestset)), D(2))
     check("4.3.2 value greedy leaves unfunded", best - val, D(820000))
-    check("4.3.2 subsets tested", D(31), D(31))
+    # NOT `check("subsets tested", D(31), D(31))`, which is what stood here and which compares a
+    # constant to itself: it can never fail, and it did not catch the manuscript claiming twelve
+    # feasible sets where enumeration finds sixteen. The count is now derived from the same
+    # enumeration that found the optimum, so the figure and the check cannot disagree.
+    check("4.3.2 non-empty subsets of five projects", D(2 ** 5 - 1), D(31))
+    _feasible = sum(1 for mask in range(1, 32)
+                    if sum(FIVE[k][1] for k in range(5) if mask >> k & 1) <= BUDGET)
+    check("4.3.2 feasible subsets within the budget", D(_feasible), D(16))
 
     # ---- KA 4.3.3 breakeven and the two-way table -----------------------------------
     check("4.3.3 breakeven inflow at 8%", I0 / AF15, D("7009772.70"))
