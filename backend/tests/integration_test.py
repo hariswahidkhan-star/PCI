@@ -6705,8 +6705,12 @@ def test_free_templates(admin):
         (c, cat.get("total"), bool(wbs)))
 
     st, body, ctype = _raw_get("/api/me/templates/wbs-template/file", token=stok)
+    chk("61b the default download is a branded XLSX workbook (spreadsheetml content-type, ZIP magic)",
+        st == 200 and "spreadsheetml" in (ctype or "") and body[:4] == b"PK\x03\x04", (st, ctype, body[:4]))
+
+    st, body, ctype = _raw_get("/api/me/templates/wbs-template/file?format=csv", token=stok)
     text = body.decode("utf-8", "replace") if body else ""
-    chk("61b the CSV download streams the template body with a text/csv content-type",
+    chk("61b2 ?format=csv still streams the raw template body byte-exact with a text/csv content-type",
         st == 200 and "text/csv" in (ctype or "") and text.startswith("WBS ID,Parent ID"), (st, ctype, text[:24]))
 
     st, _b, _ct = _raw_get("/api/me/templates/does-not-exist/file", token=stok)

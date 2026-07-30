@@ -37,7 +37,7 @@ import SocialMedia from './pages/SocialMedia'
 import Analytics from './pages/Analytics'
 import AiVisibility from './pages/AiVisibility'
 import ContentCentre from './pages/ContentCentre'
-import TrainingPartners from './pages/TrainingPartners'
+import TrainingPartners, { MarketingPartners } from './pages/TrainingPartners'
 import Integrations from './pages/Integrations'
 import SimLab from './pages/SimLab'
 import Templates from './pages/Templates'
@@ -135,6 +135,7 @@ export default function AdminApp() {
         <Route path="ai-visibility" element={<Perm section="pages"><AiVisibility /></Perm>} />
         <Route path="content-centre" element={<Perm section="cc_view"><ContentCentre /></Perm>} />
         <Route path="training-partners" element={<Perm section="partners"><TrainingPartners /></Perm>} />
+        <Route path="marketing-partners" element={<Perm section="partners"><MarketingPartners /></Perm>} />
         <Route path="integrations" element={<Perm section="integrations"><Integrations /></Perm>} />
         <Route path="lab" element={<Perm section="sim_lab"><SimLab /></Perm>} />
         <Route path="templates" element={<Perm section="content"><Templates /></Perm>} />

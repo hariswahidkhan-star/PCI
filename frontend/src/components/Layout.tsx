@@ -65,7 +65,7 @@ export default function Layout() {
   return (
     <div className="shell">
       <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
-      <aside className={'sidebar' + (menuOpen ? ' open' : '')}>
+      <aside className={'sidebar sidebar--bright' + (menuOpen ? ' open' : '')}>
         <div className="brand">
           <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span>{t('shell.portal')}</span>
@@ -80,16 +80,6 @@ export default function Layout() {
                 {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
                 {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
               </NavLink>
-              {/* PCI World lives beside the Practice Lab in the "learn" run of the menu (journey
-                  repair P1-09): daily practice must be discoverable from primary navigation, not
-                  buried at the bottom of Profile. A plain anchor — it is a separate product
-                  surface, not a portal route. */}
-              {n.to === '/lab' && (
-                <a href="/world" onClick={() => setMenuOpen(false)}>
-                  <Icon name="globe" size={17} className="nav-ic" />
-                  <span>{t('nav.world')}</span>
-                </a>
-              )}
             </Fragment>
           ))}
         </nav>

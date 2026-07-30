@@ -77,6 +77,7 @@ const NAV: NavItem[] = [
   { to: '/ai-visibility', label: 'AI Visibility', perm: 'pages', group: 'AI Visibility' },
 
   { to: '/training-partners', label: 'Training Partners', perm: 'partners', group: 'Training Partners' },
+  { to: '/marketing-partners', label: 'Marketing Partners', perm: 'partners', group: 'Marketing Partners' },
 
   { to: '/integrations', label: 'Integrations & ERP', perm: 'integrations', group: 'Integrations' },
 
@@ -108,6 +109,7 @@ const GROUP_ICONS: Record<string, IconName> = {
   'Analytics': 'bar-chart',
   'AI Visibility': 'sparkles',
   'Training Partners': 'briefcase',
+  'Marketing Partners': 'megaphone',
   'Integrations': 'link',
   'Marketing': 'megaphone',
   'Community': 'message-circle',
