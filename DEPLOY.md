@@ -18,16 +18,19 @@ website; everything students do appears in the dashboard. There is nothing separ
 1. **Merge PR #1** so `main` has the deployable code (or deploy from the branch).
 2. Create an account at https://render.com and connect your GitHub.
 3. Dashboard → **New → Blueprint** → pick the `PCI` repository. Render reads `render.yaml`
-   and pre-configures the service, the health check, **external managed MySQL settings** (`DB_PROVIDER=mysql`), and a
-   **persistent disk at `/data`** for uploaded files (not the primary database).
-   - Provision MySQL separately; `render.yaml` does not create the database. Production **requires MySQL** — the app refuses to boot on SQLite in Production (see
-     `backend/MYSQL.md` and `docs/MYSQL_MIGRATION.md`). SQLite is local/dev and CI smoke only.
+   and pre-configures the service, the health check, the database (**SQLite at `/data/pci.db`**),
+   and the **persistent disk at `/data`** that holds it along with uploaded files.
+   - **No separate database to provision.** The blueprint deploys with nothing to sign up for:
+     Render offers no managed MySQL, so requiring one meant every deploy failed its health check
+     until a database had been bought elsewhere. The disk survives deploys and restarts, so the
+     database survives with it — but it is deleted with the service, so keep backups (below).
    - Choose the **Starter** plan or above. **Not the free tier** — free instances have no disk,
-     so uploads on `/data` would be wiped on every restart.
+     so the database *and* uploads on `/data` would be wiped on every restart.
+   - MySQL remains the recommended database once traffic or a second instance justifies it; it is
+     a dashboard change, not an edit to this repo. See “Moving to MySQL later” below.
 4. Fill in the environment variables it asks for:
    - `APP_BASE_URL` and `ALLOWED_ORIGIN`: your public URL, e.g. `https://pci-platform.onrender.com`
      (update both later if you attach a custom domain — no trailing slash).
-   - `MYSQL_*` / `DB_PROVIDER=mysql` (from the blueprint) — required for Production.
    - `ADMIN_OWNER_EMAIL` / `ADMIN_OWNER_PASSWORD`: your real admin login for first boot.
    - Leave the Stripe/SMTP ones empty for now if you just want to see the site (payments answer
      503 and emails print to the logs until configured).
@@ -36,7 +39,7 @@ website; everything students do appears in the dashboard. There is nothing separ
 6. Verify: log into `/admin.html` and open **System check** (owner-only) — everything should be
    green except Stripe/SMTP if you skipped them.
 
-### Deploys suddenly failing with “production requires DB_PROVIDER=mysql”?
+### Deploys failing at the health check with exit 78?
 
 The platform **fails closed in production**: a Production boot refuses to open a database unless
 one of the three supported postures below applies. The refusal happens *before* the database is
@@ -73,10 +76,11 @@ environment variables needed:
 1. Service → **Settings → Instance Type** → choose **Starter** (disks need a paid instance).
 2. Service → **Disks → Add Disk** → name it anything, **Mount Path `/data`**, size 5 GB → Save.
 
-The service restarts and the app **detects the disk automatically** for uploads under
-`/data/storage` (the boot log prints `persistent disk detected at /data`). With
-`DB_PROVIDER=mysql`, the app does **not** invent a SQLite file on `/data`. Data created before
-the disk existed was on the ephemeral filesystem and cannot be recovered — do this before
+The service restarts and the app **detects the disk automatically** — the database at
+`/data/pci.db` and uploads under `/data/storage` (the boot log prints
+`persistent disk detected at /data`). If the service is set to `DB_PROVIDER=mysql`, the app does
+**not** invent a SQLite file on `/data`; it holds out for the MySQL settings instead. Data created
+before the disk existed was on the ephemeral filesystem and cannot be recovered — do this before
 inviting real users.
 
 ### Enabling email (two options)
@@ -184,12 +188,31 @@ artefacts it originally encrypted (a generated replacement would not).
 
 ### Render first provision
 
-The Blueprint (`render.yaml`) sets `DB_PROVIDER=mysql` and concrete
+The Blueprint (`render.yaml`) sets the database (`DB_PROVIDER=sqlite`,
+`DATABASE_FILE=/data/pci.db`, `ALLOW_SQLITE_IN_PRODUCTION=true`), concrete
 `APP_BASE_URL`/`ALLOWED_ORIGIN` values derived from the service name, and generates
-`CREDENTIAL_ENCRYPTION_KEY`. The `sync: false` variables (`MYSQL_HOST`, `MYSQL_USER`,
-`MYSQL_PASSWORD`, `ADMIN_OWNER_*`, Stripe/email) are **blank until you fill them in** on
-Settings → Environment — until the MySQL ones are set, every deploy of a new service exits 75/78
-at the health check *by design*. Set them, then Manual Deploy.
+`CREDENTIAL_ENCRYPTION_KEY`. **Nothing is required before the first deploy** — a new service boots
+and serves on those alone. The remaining `sync: false` variables (`ADMIN_OWNER_*`, Stripe, email)
+are blank until you fill them in on Settings → Environment; without them the site still runs, with
+the seeded owner login, payments answering 503 and emails printing to the logs.
+
+`DB_PROVIDER` is declared with an explicit value rather than omitted on purpose: a blueprint only
+overwrites the keys it actually names, so a service that already carries `DB_PROVIDER=mysql` from
+an earlier configuration would otherwise keep it and keep failing.
+
+### Moving to MySQL later
+
+MySQL stays the recommended database once traffic or a second instance justifies it — SQLite is a
+single-writer file on one disk, which one instance handles well and two cannot share. The switch is
+a dashboard change with no edit to this repo:
+
+1. Provision MySQL 8 / MariaDB 10.11+ (PlanetScale, Aiven, RDS, DigitalOcean…).
+2. Run the one-time data migration: `backend/tools/migrate_sqlite_to_mysql.py`
+   (see `docs/MYSQL_MIGRATION.md`).
+3. Settings → Environment: set `DB_PROVIDER=mysql`, `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`,
+   `MYSQL_DATABASE`, `MYSQL_SSL=required`. `DB_PROVIDER=mysql` takes precedence over the SQLite
+   settings, which can be left in place.
+4. Keep the `/data` disk — uploaded evidence and attachments still live there.
 
 ## After first login — 3-minute checklist
 

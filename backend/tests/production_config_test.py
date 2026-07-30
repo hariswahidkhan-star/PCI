@@ -215,5 +215,56 @@ expect("unreachable MySQL prints no unhandled-exception stack trace",
 expect("unreachable MySQL never creates a fallback SQLite database",
        not os.path.exists(db))
 
+# ---------------------------------------------------------------------------------------------
+# The DEPLOYED configuration itself. render.yaml is the only production environment nothing else
+# in CI reads, and it is exactly where a fail-closed regression hides: the app can be perfectly
+# correct while the blueprint hands it a combination that exits 78 on every deploy, and the only
+# symptom is that the live site silently keeps serving the previous build.
+#
+# So: parse the blueprint, take the environment IT declares, and boot the real binary with it.
+# This is the config the platform actually deploys with, asserted against the real preflight
+# rather than against a copy of it that can drift.
+try:
+    import yaml
+except ImportError:
+    print("  SKIP  render.yaml blueprint checks (PyYAML not installed)")
+else:
+    blueprint = os.path.join(os.path.dirname(BACKEND), "render.yaml")
+    with open(blueprint) as fh:
+        service = yaml.safe_load(fh)["services"][0]
+
+    declared = {}
+    for entry in service.get("envVars", []):
+        if "value" in entry:
+            declared[entry["key"]] = str(entry["value"])
+        elif entry.get("generateValue"):
+            # Render mints this once at service creation; any 32-byte value models it faithfully.
+            declared[entry["key"]] = "blueprint-preflight-key-0123456789abcdef0123456789abcdef"
+        # sync:false keys are deliberately blank on a fresh service — leave them unset, because
+        # "boots before the operator has filled anything in" is precisely the property under test.
+
+    expect("blueprint mounts a persistent disk at /data",
+           service.get("disk", {}).get("mountPath") == "/data")
+    expect("blueprint keeps the health check on /api/health",
+           service.get("healthCheckPath") == "/api/health")
+    # A SQLite database anywhere but the mount is erased on every redeploy; the app refuses to open
+    # one there, so a blueprint that declared it would fail-closed on arrival.
+    if declared.get("DB_PROVIDER", "").lower() not in ("mysql", "mariadb"):
+        expect("blueprint puts the SQLite database on the persistent disk",
+               declared.get("DATABASE_FILE", "").startswith("/data/"))
+    expect("blueprint declares DB_PROVIDER explicitly (a blueprint cannot clear a key it omits)",
+           "DB_PROVIDER" in declared)
+
+    if os.path.isdir(data_dir) and os.access(data_dir, os.W_OK):
+        bp_db = os.path.join(data_dir, "blueprint-boot-test.db")
+        if os.path.exists(bp_db): os.remove(bp_db)
+        env = dict(declared)
+        env["DATABASE_FILE"] = bp_db      # same mount, a name that cannot collide with real data
+        check_boots("render.yaml as written boots a fresh service with NO dashboard values set",
+                    env, bp_db)
+        if os.path.exists(bp_db): os.remove(bp_db)
+    else:
+        print("  SKIP  render.yaml boot-through (no writable /data in this environment)")
+
 print(f"\n  == {passed}/{passed + failed} PASSED ==")
 raise SystemExit(0 if failed == 0 else 1)
