@@ -619,11 +619,81 @@ jobs:
         if: always()
         run: docker logs pci-app 2>&1 | tail -200 || true
 
+      # The SAME image in the posture render.yaml actually deploys: SQLite on the mounted disk, no
+      # database service at all. Both providers are supported, so both are proven on the artefact
+      # that ships — and this is the one the default blueprint uses, so leaving it untested meant
+      # the shipped default was the only configuration nothing booted.
+      - name: Boot the same image on SQLite over a mounted disk (the deployed posture)
+        run: |
+          set -e
+          docker rm -f pci-app 2>/dev/null || true
+          docker volume create pci-ci-data
+          docker run -d --name pci-app-sqlite -p 8081:8080 \
+            -v pci-ci-data:/data \
+            -e ASPNETCORE_ENVIRONMENT=Production \
+            -e DB_PROVIDER=sqlite -e DATABASE_FILE=/data/pci.db \
+            -e ALLOW_SQLITE_IN_PRODUCTION=true \
+            -e APP_BASE_URL=https://pci-ci.example.org \
+            -e ALLOWED_ORIGIN=https://pci-ci.example.org \
+            -e CREDENTIAL_ENCRYPTION_KEY=ci-only-key-0123456789abcdef0123456789abcdef \
+            pci-platform-ci
+          echo "waiting for /api/health…"
+          for i in $(seq 1 60); do
+            if [ "$(docker inspect -f '{{.State.Running}}' pci-app-sqlite)" != "true" ]; then
+              echo "::error::SQLite-posture container exited before becoming healthy"
+              docker logs pci-app-sqlite 2>&1 | tail -80; exit 1
+            fi
+            if curl -fsS http://localhost:8081/api/health > /tmp/health-sqlite.json 2>/dev/null; then
+              cat /tmp/health-sqlite.json; echo; break
+            fi
+            sleep 5
+            if [ "$i" = 60 ]; then echo "::error::/api/health never became ready on SQLite"; exit 1; fi
+          done
+          grep -q '"database_provider":"sqlite"' /tmp/health-sqlite.json
+          for path in / /app/ /admin/ /world-app/; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8081$path")
+            echo "$path -> $code"
+            case "$code" in 200|301|302|308) ;; *) echo "::error::$path returned $code"; exit 1;; esac
+          done
+
+      # The whole point of putting the database on a disk is that it outlives the container. A
+      # restart that silently started from an empty file would look identical to a healthy boot.
+      - name: The disk-backed database survives a container replacement
+        run: |
+          set -e
+          docker rm -f pci-app-sqlite
+          docker run --rm -v pci-ci-data:/data alpine:3 \
+            sh -c 'test -s /data/pci.db && echo "database present: $(stat -c%s /data/pci.db) bytes"'
+          docker run -d --name pci-app-sqlite2 -p 8082:8080 \
+            -v pci-ci-data:/data \
+            -e ASPNETCORE_ENVIRONMENT=Production \
+            -e DB_PROVIDER=sqlite -e DATABASE_FILE=/data/pci.db \
+            -e ALLOW_SQLITE_IN_PRODUCTION=true \
+            -e APP_BASE_URL=https://pci-ci.example.org \
+            -e ALLOWED_ORIGIN=https://pci-ci.example.org \
+            -e CREDENTIAL_ENCRYPTION_KEY=ci-only-key-0123456789abcdef0123456789abcdef \
+            pci-platform-ci
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8082/api/health >/dev/null 2>&1; then
+              echo "second container reopened the existing database"; exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::redeploy against the existing disk never became healthy"
+          docker logs pci-app-sqlite2 2>&1 | tail -80; exit 1
+
+      - name: SQLite container logs (always)
+        if: always()
+        run: |
+          docker logs pci-app-sqlite 2>&1 | tail -120 || true
+          docker logs pci-app-sqlite2 2>&1 | tail -120 || true
+
       - name: Cleanup
         if: always()
         run: |
-          docker rm -f pci-app pci-db 2>/dev/null || true
+          docker rm -f pci-app pci-db pci-app-sqlite pci-app-sqlite2 2>/dev/null || true
           docker network rm pci-ci 2>/dev/null || true
+          docker volume rm pci-ci-data 2>/dev/null || true
 
   static-quality:
     # Static-quality & supply-chain gates (Increment A). BLOCKING: the NuGet vulnerable-package

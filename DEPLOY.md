@@ -26,8 +26,8 @@ website; everything students do appears in the dashboard. There is nothing separ
      database survives with it — but it is deleted with the service, so keep backups (below).
    - Choose the **Starter** plan or above. **Not the free tier** — free instances have no disk,
      so the database *and* uploads on `/data` would be wiped on every restart.
-   - MySQL remains the recommended database once traffic or a second instance justifies it; it is
-     a dashboard change, not an edit to this repo. See “Moving to MySQL later” below.
+   - **MySQL/MariaDB is equally supported** and stays switchable from the dashboard — every
+     non-secret setting is already declared in the blueprint. See “Choosing a database” below.
 4. Fill in the environment variables it asks for:
    - `APP_BASE_URL` and `ALLOWED_ORIGIN`: your public URL, e.g. `https://pci-platform.onrender.com`
      (update both later if you attach a custom domain — no trailing slash).
@@ -48,11 +48,12 @@ successful deploy stays live.
 
 The three supported production postures:
 
-1. **Recommended — managed MySQL**: provision MySQL 8 / MariaDB (PlanetScale, Aiven, RDS,
+1. **Managed MySQL / MariaDB**: provision MySQL 8 / MariaDB 10.11+ (PlanetScale, Aiven, RDS,
    DigitalOcean…), set `DB_PROVIDER=mysql` + the `MYSQL_*` variables, and run the one-time data
    migration `backend/tools/migrate_sqlite_to_mysql.py` (see `docs/MYSQL_MIGRATION.md`).
-2. **Interim — SQLite on the persistent disk**: a SQLite database whose file lives under a
-   *writable mounted* `/data` keeps deploying **automatically, with no flag** — the boot log
+2. **SQLite on the persistent disk** — what `render.yaml` deploys by default. A SQLite database
+   whose file lives under a *writable mounted* `/data` keeps deploying **automatically, with no
+   flag** — the boot log
    prints a `[config:warn] production is running SQLite at … (supported interim posture)` warning
    on every start so the posture stays visible. A legacy hand-created service with only the disk
    and Render's own `RENDER_EXTERNAL_URL` boots with zero further config: the base URL is adopted
@@ -200,19 +201,43 @@ the seeded owner login, payments answering 503 and emails printing to the logs.
 overwrites the keys it actually names, so a service that already carries `DB_PROVIDER=mysql` from
 an earlier configuration would otherwise keep it and keep failing.
 
-### Moving to MySQL later
+### Choosing a database
 
-MySQL stays the recommended database once traffic or a second instance justifies it — SQLite is a
-single-writer file on one disk, which one instance handles well and two cannot share. The switch is
-a dashboard change with no edit to this repo:
+Both providers are first-class and both are maintained; pick on operational grounds.
+
+| | SQLite on `/data` *(blueprint default)* | MySQL 8.x / MariaDB 10.11+ |
+|---|---|---|
+| To set up | nothing — it just deploys | provision a managed instance, set 3 secrets |
+| Cost | included in the disk you already pay for | a second bill |
+| Instances | **one** (single-writer file) | many |
+| Backups | your job — copy the file off the disk | usually managed by the provider |
+| Durability | survives deploys and restarts; **deleted with the service** | independent of the service |
+| Good for | launch, one instance, low ops | scale-out, a second instance, managed backups |
+
+Neither is a shortcut. Application SQL is written once in SQLite dialect and translated at runtime
+(`backend/Data/Db.cs`), `schema.mysql.sql` is generated from `schema.sql` with CI failing on drift,
+and the full suite runs against **MariaDB 10.11** and **Oracle MySQL 8.4** on every push — plus the
+production Docker image is booted on **both** providers before any change lands.
+
+Start on SQLite. Move when you need a second instance or managed backups.
+
+### Switching to MySQL later
+
+A dashboard change with no edit to this repo — `MYSQL_PORT`, `MYSQL_DATABASE` and `MYSQL_SSL` are
+already declared in the blueprint, so only the three secrets and the provider are yours to set:
 
 1. Provision MySQL 8 / MariaDB 10.11+ (PlanetScale, Aiven, RDS, DigitalOcean…).
-2. Run the one-time data migration: `backend/tools/migrate_sqlite_to_mysql.py`
-   (see `docs/MYSQL_MIGRATION.md`).
-3. Settings → Environment: set `DB_PROVIDER=mysql`, `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`,
-   `MYSQL_DATABASE`, `MYSQL_SSL=required`. `DB_PROVIDER=mysql` takes precedence over the SQLite
-   settings, which can be left in place.
-4. Keep the `/data` disk — uploaded evidence and attachments still live there.
+2. Run the one-time data migration **first**: `backend/tools/migrate_sqlite_to_mysql.py`
+   (see `docs/MYSQL_MIGRATION.md`). Switching before the migration gives you an empty database,
+   not a broken one — the app creates its schema on first boot — so the data is still on the disk
+   and recoverable by switching back.
+3. Settings → Environment: set `MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`, then change
+   `DB_PROVIDER` to `mysql`. It takes precedence over every SQLite setting, so leave them in place.
+4. Keep the `/data` disk — uploaded evidence and attachments still live there under either provider.
+5. Confirm on `/api/health`: `"database_provider"` reads `mysql` or `mariadb`.
+
+**Switching back** is the same in reverse: set `DB_PROVIDER=sqlite`. The disk still holds the
+database as it was when you left it, so migrate again if MySQL has since moved ahead.
 
 ## After first login — 3-minute checklist
 
