@@ -374,6 +374,57 @@ shared assumption (13.1.2). A produces no evidence; C costs 124,133.33 a week fo
 register achieves free; D is out of scope — the audit tests the model against documents, not
 whether two advisers assumed the same thing.
 
+**MCQ 13.1-E `[13.1.4 · Evaluation]`** Kestrel's diligence envelope is twelve weeks, set by the
+environmental and social stream; the next-longest streams are legal at ten weeks and market at
+nine. Delay costs 124,133.33 a week. The environmental and social consultant offers to compress its
+stream to nine weeks for a 200,000 acceleration fee. The sponsor should:
+- A. accept — three weeks at 124,133.33 is 372,399.99 against a 200,000 fee, a clear gain
+- B. accept, but recognise that the envelope then falls only to ten weeks on the legal stream, so the acceleration buys two weeks (248,266.66) for 200,000 — a thin 48,266.66, and worth pairing with legal compression before the fee is agreed ✅
+- C. decline — 200,000 exceeds the 150,000 that a ten per cent reduction across the whole 1,500,000 fee book would save
+- D. decline — compression off the binding stream returns nothing
+
+*Rationale:* The envelope is the maximum of the stream durations, so compressing the binding stream
+returns weeks only until the second-longest stream becomes binding: `max(8, 5, 10, 6, 4, 9, 9) = 10`,
+giving `2 × 124,133.33 = 248,266.66` and a net **48,266.66**, not the 372,399.99 A assumes by
+crediting all three weeks. C compares an acceleration purchase against a fee negotiation as though
+the two were alternatives when both are available, and prefers the smaller saving. D applies 13.1.4's
+rule to the wrong stream — environmental and social *is* the binding stream; the rule bites on the
+legal ceiling, which is why the recommendation is conditional rather than negative.
+
+**MCQ 13.1-F `[13.1.1 · Comprehension]`** Which restatement most closely captures the test 13.1.1
+sets before any diligence stream is commissioned?
+- A. every discipline should be reviewed to a comparable depth, so that the file is complete
+- B. a stream is worth commissioning when a different answer would change a decision, and that decision is worth more than the stream costs ✅
+- C. a stream is worth commissioning when the adviser will accept liability for its conclusions
+- D. a stream is worth commissioning when the lenders require it as a condition precedent
+
+*Rationale:* Diligence buys information, and information has value only where a decision turns on it
+(13.1.1). A is the comfort purchase the topic warns against — uniform depth is a filing standard, not
+a value test; C confuses reliance with information value, and 13.A.1 shows the cap covers a small
+fraction of the exposure in any case; D is a real procurement fact for several streams, but 13.1.3
+notes the arithmetic then argues about timing and scope rather than about whether to run the stream.
+
+**MCQ 13.1-G `[13.1.5 · Evaluation]`** During diligence a demand study commissioned early in
+development is superseded by a second study with a lower central case. The sponsor's development
+team proposes removing the first study from the data room, on the ground that no party relies on it
+and its presence will only raise questions the second study has already answered. The soundest
+professional position is that the first study:
+- A. should be removed — a superseded document is not a disclosure, and leaving it in invites questions
+  about a forecast nobody relies on
+- B. should stay, marked superseded with a date and a note, and appear on the numbered disclosure index —
+  because the index later determines what the lenders were told, and the trail is the evidence base for
+  the first covenant dispute, warranty claim and refinancing ✅
+- C. should stay unmarked, since both studies carry dates and a reader can see which is later
+- D. should be moved to a folder visible only to the sponsor's own advisers, so that it remains available
+  internally without being disclosed
+
+*Rationale:* Version control with supersession **marked** rather than deleted is the discipline, and
+removal is the worse of the two failures because the trail disappears (13.1.5) — a superseded forecast
+left in a room without a supersession note is what Domain 6 (Case study B) priced. A treats disclosure
+as a presentational choice, and it is the choice a challenged representation will later be tested
+against. C leaves two live-looking central cases and no record of which was relied on. D is the same act
+as A with a record that the omission was deliberate.
+
 ### Self-check — KA 13.1
 
 1. *State the breakeven detection rate in words.* — The diligence spend divided by the expected
@@ -612,6 +663,53 @@ implements a valid amortisation the finance documents do not provide for?
 *Rationale:* An annuity due computes correctly and closes at zero, so layers A and B both pass
 (13.2.3); only conformance to the document detects it. D would trace the rate and tenor, both of
 which are right.
+
+**MCQ 13.2-E `[13.2.3 · Evaluation]`** Two Class 1 findings are almost identical in size: the
+definitional and convention findings together resize the facility by **2,505,646**, and the funding
+plan omits the **2,504,818** debt-service reserve — a difference of 828. The credit paper can lead
+with one. Which is the more decisive finding, and why?
+- A. the resize, because 2,505,646 is the larger number
+- B. the unfunded reserve, because a coverage shortfall is negotiated between the parties whereas a funding plan that does not fund a mandatory reserve produces a failed condition at first drawdown or a first-year breach ✅
+- C. neither, because at 828 apart they very nearly cancel
+- D. the resize, because `CFADS` is the model's most important line
+
+*Rationale:* Class 1 findings are ranked by the kind of consequence they create, not by magnitude:
+one changes a negotiating position, the other creates an event the documents will treat as a failure
+(13.2.3). A ranks by size where the two sizes are indistinguishable anyway. C is the netting fallacy
+13.2.2 forbids, applied more crudely still — these findings do not offset, they are simply similar in
+scale, and one of them is not a cash amount at all. D substitutes a slogan for the consequence test.
+
+**MCQ 13.2-F `[13.2.2 · Comprehension]`** A colleague new to model audit asks why the auditor will
+not report a single "findings closed" percentage. The best short explanation is:
+- A. the auditor prefers not to be measured on a number it does not control
+- B. the three classes are not commensurable, so one percentage adds findings that change the transaction to findings that change nothing; progress has to be measured by impact closed ✅
+- C. the percentage is never final, because new findings keep arriving until the model is frozen
+- D. the percentage understates progress, because Class 3 findings are the quickest to close
+
+*Rationale:* The objection is to combining unlike things, and the remedy is class-weighted closure
+(13.2.2). A imputes a motive where there is a measurement defect; C describes a practical nuisance
+that would apply equally to a class-weighted metric; D inverts the direction — Class 3 findings being
+quick and numerous is exactly what makes a count *overstate* progress, as "31 of 34, 91.2 %" does.
+
+**MCQ 13.2-G `[13.2.4 · Evaluation]`** A finding moves year-one `CFADS` by **180,000** —
+**0.0359×** of `DSCR`, against the stated materiality threshold of 0.01×, about **50,096** of annual
+`CFADS` — and the sponsor disputes it, arguing the auditor has misread the clause. The auditor does not
+agree. The deal team proposes recording it as "closed — no adjustment required", so that the register
+shows nothing outstanding at close. The soundest treatment is to record it:
+- A. as closed, since no adjustment was made and nothing further is to be done
+- B. as **accepted** rather than corrected, with its quantified effect, the written rationale, the name of
+  the person accepting it, and its disposition listed on the auditor's final letter ✅
+- C. as withdrawn, because a finding the auditor cannot substantiate against the sponsor's reading of the
+  clause is not a finding
+- D. as escalated to the credit committee, which alone can accept a finding the parties cannot resolve
+
+*Rationale:* Findings are sometimes accepted rather than corrected, and an accepted finding with a
+written rationale is professional whereas the same finding recorded as "closed" is not (13.2.4). A
+produces a register that misdescribes the position to every later reader — the defect Case study B shows
+costs money two years afterwards. C lets the party whose reading is disputed close the item. D is the
+right route for a Class 1 finding, but this one changes no conclusion — `DSCR` after it is **1.2384**,
+still clear of the 1.20 covenant, so it is Class 2 — and routing it upwards substitutes a governance
+step for the record the register exists to hold.
 
 ### Self-check — KA 13.2
 
@@ -970,6 +1068,65 @@ appropriately handled that way when:
 *outcome* risk into default risk, which is why A is the case for not closing rather than for an
 undertaking (13.3.5). D describes the defect Case study B prices.
 
+**MCQ 13.3-F `[13.3.4 · Evaluation]`** Kestrel's headline rate is 6.00 %; netting the 544,000 of
+lender fees from proceeds gives an all-in **6.2386 %**, and netting the whole 2,709,000 close-cost
+budget gives **7.2376 %**. The sponsor is choosing between this bank facility and a bond alternative
+that would require substantially the same diligence, sponsor-side legal and perfection costs. Which
+rate belongs in that comparison?
+- A. 6.00 %, because the other two include amounts that are not interest
+- B. 6.2386 %, because only costs that differ between the routes discriminate between them, and the diligence and sponsor-side costs are common to both ✅
+- C. 7.2376 %, because it is the full cost of raising the money and the more conservative figure to put to a board
+- D. all three, because each is correct and answers a different question
+
+*Rationale:* A route comparison is decided by the costs that differ, which is Domain 9's rule
+(KA 9.3.1) applied to close costs: the lender-payable 544,000 differs between a bank and a bond
+route, the 2,165,000 of adviser and perfection cost largely does not (13.3.4). C is defensible and
+commonly seen, but conservatism is not a selection rule — loading both routes with the same
+2,165,000 changes the level and not the ranking, while inviting the reader to treat a sunk common
+cost as a reason to prefer one lender over another. A is wrong because a fee paid to the lender for
+its money is part of the price of that money. D is true as a general statement and evades the
+question asked, which is a decision.
+
+**MCQ 13.3-G `[13.3.2 · Evaluation]`** Kestrel's conjunction gives a base close of **20 weeks**,
+`E[close]` of **22.4075 weeks**, and a close-date distribution of **34.125 %** at 20 weeks,
+**11.375 %** at 22 and **54.500 %** at 24. The EPC contractor is holding a price and the grantor is
+sequencing its own approvals; both have asked for the close date. The soundest thing to tell them is:
+- A. 20 weeks — the base date every chain owner is committed to, because publishing a later date is how a
+  later date is achieved
+- B. the distribution — roughly one chance in three of 20 weeks and better than one in two of 24 — because
+  a single date is a forecast the transaction knows to be 34 % likely, the counterparties' own decisions
+  turn on which outcome they should plan for, and the modelled independence of the chains makes even that
+  distribution optimistic ✅
+- C. 22.4075 weeks, the expected value, because it is the unbiased single figure and a single figure is
+  what was asked for
+- D. 24 weeks, the most likely single outcome, because under-promising protects the transaction and the
+  parties relying on it
+
+*Rationale:* The distribution is bimodal — **88.625 %** of the probability sits at 20 or 24 weeks and
+almost none near the mean — so C is arithmetically respectable and describes an outcome that will
+almost certainly not occur. A states as a plan a date known to be 34.125 % likely. D is defensible as a
+commitment and conceals a one-in-three chance of being four weeks early, which is exactly what a
+contractor holding a price and a grantor sequencing approvals need to know; it also presents as near
+certain a figure whose own basis — independent chains, one slip each — understates the right tail
+(13.3.2).
+
+**MCQ 13.3-H `[13.3.1 · Comprehension]`** Which restatement best captures why a close timetable treats
+**third-party** conditions differently from **corporate and authority** conditions?
+- A. third-party conditions are more numerous, so they consume more of the timetable
+- B. the two groups differ in who controls satisfaction: corporate conditions sit inside the sponsor group
+  and fail through inattention, so effort recovers them, whereas third-party conditions sit with
+  permitting authorities, offtakers and grantors and can be influenced but not compressed at will ✅
+- C. third-party conditions matter more to the lenders, so they are evidenced to a higher standard
+- D. corporate conditions may be waived by the lenders whereas third-party conditions may not
+
+*Rationale:* The five groups are distinguished by **how each fails**, and the corporate/third-party
+distinction is one of control rather than of importance or of evidentiary standard (13.3.1) — which is
+why third-party conditions are the standard source of close slippage, and why chain B, the permit and
+land chain, carries the largest slip risk in Kestrel's register. A may be true of a given transaction
+and is not the reason. C confuses a condition's ownership with its evidence requirement. D invents a
+rule: waiver is a lenders' decision available in principle to any condition, and a waived CP is not a
+satisfied CP whichever group it came from.
+
 ### Self-check — KA 13.3
 
 1. *Why is the expected close date later than the longest chain's expected duration?* — Close is a
@@ -1264,6 +1421,68 @@ consents remain outstanding. Its correct description is:
 *Rationale:* Signing and close are distinct, and the gap is where the long-stop date operates
 (13.4.5). C misuses a term for post-close obligations; D confuses an unsatisfied condition with a
 breach of an existing obligation.
+
+**MCQ 13.4-F `[13.4.4 · Evaluation]`** The arranger offers to cut the arrangement fee from 1.20 % to
+0.95 % of the 42,000,000 facility — a certain saving of 105,000 — in exchange for lifting the market-
+flex cap from 50 to 60 basis points. Twelve years, `AF(0.06, 12) = 8.383844`; the 1.20× covenant
+survives a rate rise of 111.38 basis points. The recommendation is:
+- A. accept — 105,000 is certain, and flex may never be exercised at all
+- B. reject — the extra ten basis points of flex is worth 352,121.45 in present value, 3.3535 times the fee saved, and it takes the cap from 44.89 % to 53.87 % of the covenant headroom ✅
+- C. reject — flex should not be granted at all, since it prices the sponsor's protection away
+- D. accept, provided the fee reduction is credited in cash at close rather than netted from proceeds
+
+*Rationale:* `42,000,000 × 0.0010 × 8.383844 = 352,121.45` against 105,000, so the trade would have
+to be exercised with probability below `105,000 ÷ 352,121.45 =` **29.82 %** to break even — and
+13.4.3 shows the arranger exercises precisely when the book is slow, which is the state in which the
+sponsor can least afford the coverage loss (13.4.4). A is the defensible version of the argument and
+is the one sponsors actually make; it fails because it prices a contingent claim at zero and ignores
+the 111.38 basis points of headroom being consumed. C is not available — an arranger without flex
+will either decline to underwrite or price the underwriting as if flex were already exercised. D
+negotiates the mechanics of the wrong side of the trade.
+
+**MCQ 13.4-G `[13.4.1 · Evaluation]`** Kestrel has a long-stop date, an EPC contractor holding a price
+and a grantor's fixed timetable. An arranger offers a **best-efforts** mandate at a materially lower fee
+than the underwritten alternative, observing that books for contracted water projects of this size rarely
+fail to fill. The itemised close-cost budget is **2,709,000** — **6.45 %** of debt raised — of which only
+**544,000** is payable to lenders. The soundest recommendation is to:
+- A. accept best-efforts, because the fee saving is certain while the risk it transfers has a low
+  probability
+- B. reject best-efforts here: what it transfers to the borrower is the risk that close does not happen at
+  all after the whole 2,709,000 has been spent, of which **2,165,000** is irrecoverable third-party and
+  sponsor-side cost, and certainty of funds against a fixed timetable is what underwriting economics buy ✅
+- C. accept best-efforts and manage the exposure by bringing the long-stop date forward
+- D. club the facility instead, since a club carries no distribution risk and no underwriting fee, and no
+  arranger then has an economic interest in flexing terms
+
+*Rationale:* The three routes differ in **who carries the risk that the market does not turn up**, and a
+transaction with a hard timetable is buying certainty (13.4.1). A prices a contingent claim at its
+probability and ignores its size: the budget at risk is **5.375 times** the 504,000 arrangement fee, and
+it is spent before the book is known to fill. C tightens the very constraint the sponsor is trying to
+satisfy. D is the genuine alternative and the right answer for a repeat sponsor with relationship banks
+and no hard date; it fails here because a club must be assembled before documentation and each bank
+commits only its own final hold, so it does not deliver certainty of funds against a fixed date — and
+the flex point, though correct, is a benefit the sponsor cannot collect if the group does not assemble in
+time.
+
+**MCQ 13.4-H `[13.4.2 · Comprehension]`** In a syndicated facility the **praecipium** is retained
+exclusively by the arranger while the **participation fee** is paid pro rata on final allocations. Which
+statement best explains the difference?
+- A. the split is a market convention with no economic content, which is why it is not disclosed to
+  borrowers
+- B. the two fees pay for different things: the praecipium prices structuring, documentation and standing
+  behind the whole amount before any other lender had agreed to lend, while the pool prices the capital
+  each lender ultimately commits ✅
+- C. the praecipium compensates the arranger for the margin it forgoes by selling part of its position down
+- D. the praecipium is the arranger's own pro-rata share of the pool, computed on its final hold
+
+*Rationale:* The praecipium prices work and risk only the arranger bears; the pool prices committed
+capital, which every lender provides — which is why the arranger's yield on its 15,000,000 hold is
+**1.650 %** against participants' **0.950 %**, a differential of **70.0 basis points** (13.4.2). A denies
+the economics and misstates practice: the total fee is disclosed, and the split is information a sponsor
+should ask for, because a large praecipium signals an arranger paid mostly for underwriting and therefore
+one that will reach for flex. C describes something that does not happen — a lender selling down transfers
+the margin with the position. D is the pool fee itself, which the arranger receives **in addition** to the
+praecipium.
 
 ### Self-check — KA 13.4
 

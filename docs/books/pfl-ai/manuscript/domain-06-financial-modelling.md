@@ -259,6 +259,57 @@ the base-case tax rate and nothing on any output page says so (6.1.1). A underst
 false — it can be changed, three times, which is the problem; D is wrong, because a consistent
 wrong number balances perfectly (6.4.1).
 
+**MCQ 6.1-D `[6.1.1 · Comprehension]`** A modeller adds a subtotal formula to a summary page and
+defends it: "it is only a sum". The statement that best conveys why the three-block rule forbids
+it is:
+
+- A. spreadsheets round subtotals differently from the cells beneath them
+- B. an output block that computes anything can disagree with the engine behind it, and a summary page that no longer ties to the model is the most damaging class of audit finding ✅
+- C. it enlarges the file and slows recalculation
+- D. subtotals belong in the inputs block, where they can be changed in one place
+
+*Rationale:* the separation exists so that each block can be read for one kind of defect — inputs
+for wrong assumptions, calculations for embedded constants, outputs for nothing at all, because they
+compute nothing (6.1.1). A invents a rounding problem; C is a performance claim, not the principle;
+D inverts the architecture, since the inputs block holds no formulae.
+
+**MCQ 6.1-E `[6.1.3 · Evaluation]`** A board paper reports "`NPV` +16,179,360, `IRR` 12.19 %" with
+no labels. The financing model shows +2,767,684 post-tax unlevered over 25 years on the flat case,
+and an unlevered post-tax `IRR` of 8.54 % against an 8 % hurdle. All four corrections below are
+legitimate. Which most changes the decision the board is being asked to take?
+
+- A. attach basis, horizon and case to both figures, as the standing rule requires
+- B. state that basis alone — cash tax and working capital — costs 17,221,195 of present value over the fifteen-year horizon
+- C. put the twenty-five-year post-tax flat case in front of them — +2,767,684, and an asset return of 8.54 % against an 8 % hurdle — because that is the basis on which the decision is close ✅
+- D. disclose the full defensible spread of 29,545,516, from −9,670,265 to +19,875,251
+
+*Rationale:* A is the standing rule and its breach is why the defect arose, but a *labelled*
++16,179,360 still tells the board a comfortable story; B is one of the three components of the gap
+and leaves horizon and case unaddressed; D discloses without recommending and invites a board to
+choose its own number from a range. Only C changes what the board is deciding, by showing the
+basis on which the asset barely clears its hurdle (6.1.3, 6.3.3) — after which the bridge,
+the labels and the spread are all supporting material.
+
+**MCQ 6.1-F `[6.1.2 · Evaluation]`** An assistant is asked to build Kestrel's construction model and,
+unprompted, chooses an annual timeline with interest on the opening balance. Capitalised interest
+comes out at 1,247,352 against the quarterly opening-balance figure of 2,114,597 — an understatement
+of 867,245, or 41.01 %. The modeller observes that every check in the model passes. The soundest
+position is that:
+- A. the choice is acceptable, because both conventions are defensible and the checks pass
+- B. periodicity and the interest accrual base are economic choices with a named owner, must be
+  stated in the conventions sheet, and here have understated the depreciable base by 867,245 as well
+  as the interest — a defect no check in the model can see ✅
+- C. the annual timeline is wrong and a quarterly one is always required
+- D. the difference is immaterial at 3.52 % of the envelope
+
+*Rationale:* an assistant must not choose the model's conventions, and this is the choice it makes
+(6.1.2, and the AI boundary in KA 6.1): the 41 % error needs the coarse timeline *and* the
+opening-balance base together, since an annual model on average balances lands within 367,022 of the
+quarterly answer. B is sounder than C because the pairing, not the period length, is the defect — and
+the understatement propagates, cutting annual depreciation by 34,690 and the present value of the tax
+it shelters by 74,061. A is the reasoning that lets a convention error survive review; D misquotes a
+share of the envelope as a measure of a 41 % error in one line.
+
 ### Self-check — KA 6.1
 
 1. *State the four additions that test a timeline.* — Construction flags sum to the construction
@@ -565,6 +616,61 @@ for five years, lifting year-one `DSCR` from 1.2743 to 1.3773 and debt capacity 
 disclosed and owned rather than banked or suppressed (6.2.3). A embeds a legislative forecast in a
 financing; B discards a real economic benefit; D is arithmetic without meaning.
 
+**MCQ 6.2-E `[6.2.1 · Evaluation]`** A comparable water project is modelled exactly as Kestrel was,
+inside a fixed 60,000,000 envelope, but with higher committed uses; the balancing contingency solves
+to 1,152,000 — **2.4 %** of its 48,000,000 EPC price, against Kestrel's 3,645,403 at 7.59 %. Sources
+equal uses to the cent. The soundest recommendation is:
+
+- A. accept the table, since sources equal uses and the identity is satisfied
+- B. report that a 60,000,000 envelope does not fund this project on a defensible contingency — a financing conversation about the envelope, not an adjustment to the table ✅
+- C. hold contingency at 7.59 % of the EPC price and let capitalised interest become the balancing line instead
+- D. present the contingency as 1,200,000, a cleaner figure, with the approximation noted
+
+*Rationale:* the identity is satisfied by construction and therefore proves nothing; what makes the
+balancing line informative is testing it against policy, and 2.4 % sits below the band a lender would
+expect for this technology and contract structure (6.2.1). A treats an identity as a check. C is the
+defensible-looking alternative and is the more dangerous answer: capitalised interest is *computed*
+from the drawdown profile, the rate and the interest convention, so making it the plug converts a
+derived quantity into an assumption and buries the funding gap in the one line nobody re-derives.
+D destroys the single tell that catches a plugged table, since a balancing line is never a round
+number.
+
+**MCQ 6.2-F `[6.2.2 · Evaluation]`** A sponsor's investment-committee paper shows first-operating-year
+distributions struck as `CFADS` less debt service — 1,374,365 — because the DSRA is described in the
+paper as "a balance-sheet item". Modelled through the waterfall the distribution is 121,956, or
+0.68 % of the 18,000,000 contributed, after 1,252,409 of reserve funding. The soundest position is
+that:
+- A. the paper is acceptable, since the reserve is indeed on the balance sheet and is repaid at
+  maturity
+- B. the paper overstates the first distribution by an order of magnitude: reserve funding ranks
+  above distributions, so a distribution forecast struck before it is an aspiration, and the
+  1,252,409 held in the DSRA is restricted cash unavailable to the business ✅
+- C. the paper is acceptable if a footnote records the reserve requirement
+- D. the paper is wrong because it ignores the lock-up test, which is the operative constraint at this
+  coverage
+
+*Rationale:* early cash is all the equity has, and the reserve is a claim on it ranking above
+distributions (6.2.2, 6.3.2). A and C treat a ranking in the waterfall as a disclosure matter. D
+names a real test that does not bite here — at a `DSCR` of 1.2743 the 1.15 × lock-up is not engaged,
+so the paper's error is the omitted reserve, not the omitted test; picking the wrong reason is how a
+correct objection gets dismissed.
+
+**MCQ 6.2-G `[6.2.3 · Comprehension]`** Kestrel's accounting depreciation is 2,400,000 a year and its
+year-one cash tax is 516,000. Accounting depreciation, tax depreciation and cash tax are best
+described as:
+- A. three names for one charge, presented on different bases
+- B. three different numbers — an allocation of cost under the reporting framework, a deduction on the
+  tax authority's own base and profile, and the amount actually paid — of which only the last enters
+  `CFADS` ✅
+- C. three deductions that all enter `CFADS`, at different points in the waterfall
+- D. two accounting measures and one forecast, so only the accounting figures are auditable
+
+*Rationale:* only cash actually paid reduces cash available for debt service, which is why cash tax
+and accounting tax are separate rows even in years when they are equal (6.2.3). A is the conflation
+Domain 2 (KA 2.A.1) names as the standard finding; C puts non-cash charges inside a cash measure;
+D invents an audit distinction — every one of the three is evidenced, and the tax line traces to a
+dated written opinion.
+
 ### Self-check — KA 6.2
 
 1. *State the `CFADS` tie and why it matters.* — `CFADS` = operating cash flow + interest paid;
@@ -711,7 +817,7 @@ example 6.2.1 prices that choice. And it must not be the source of a quoted retu
 is a number with a case attached, and the case is a governance object.
 
 **Verification, concretely.** Substitute any machine-produced `IRR` back into the present-value
-equation and confirm it returns zero (Domain 4, KA 4.A.3 — the cheapest audit that exists). Run the
+equation and confirm it returns zero (Domain 4, KA 4.A.5 — the cheapest audit that exists). Run the
 waterfall with a `CFADS` low enough to fail every tier and confirm that no tier goes negative, that
 the shortfall is carried, and that the lock-up traps cash rather than the model netting it away.
 Re-derive one period's interest and principal by hand and tie to the annexed schedule. And require
@@ -781,6 +887,59 @@ multiple has been shown:
 *Rationale:* A multiple has no time dimension; 5.028× over 25 years is 9.83 % a year (6.3.3, and
 Domain 4's insistence that rates and ratios explain rather than decide). C reverses the bias; D is
 false — the same multiple over ten years would be a materially higher rate.
+
+**MCQ 6.3-E `[6.3.3 · Comprehension]`** An investment committee member asks why one project has two
+reported returns, and which of them is the real one. The best restatement is:
+
+- A. the project return is struck before tax and the equity return after it
+- B. they answer different questions — the project return values the asset before financing, the equity return values the sponsors' position after every prior claim in the waterfall — so both are real and neither substitutes for the other ✅
+- C. the equity return is the project return plus the debt margin
+- D. the project return is the lenders' return and the equity return the sponsors'
+
+*Rationale:* the distinction is *whose* cash is being measured and after which claims, not a basis
+difference: on Kestrel both figures are post-tax, and the 8.54 % and 9.83 % differ because leverage
+reorders the cash (6.3.3). A names a real labelling axis (6.1.3) that is not this one; C invents an
+arithmetic relationship, when the gap depends on gearing, tenor and the shape of distributions;
+D miscasts the project return, which measures the asset and not any lender, whose return is its
+margin.
+
+**MCQ 6.3-F `[6.3.1 · Evaluation]`** A construction model charges interest on the average debt
+balance and resolves the resulting circularity by iteration, with no stated convergence criterion and
+no named owner. On Kestrel that convention is worth 2,427,554 of capitalised interest against
+2,114,597 on the opening-balance convention — a difference of 312,957. The reviewer's best
+recommendation is:
+
+- A. switch to opening-balance interest, which removes the circularity outright and is the convention the master model uses
+- B. keep the average-balance convention but require the resolution to be documented, with a tested convergence criterion and a named owner, because the defect is the undocumented resolution rather than the convention ✅
+- C. solve the interest algebraically instead, since a deterministic solution is always preferable
+- D. correct the 312,957, which is an overstatement of interest
+
+*Rationale:* all three resolutions in 6.3.1 are honest, and average-balance interest is the more
+accurate measure of what the facility will actually charge; what is unacceptable is a resolution
+whose convergence nobody has tested, because the printed answer then depends on the order in which
+somebody pressed the keys. A is genuinely defensible and would restore reproducibility, but it buys
+it by surrendering 312,957 of correctly measured interest when documentation delivers both. C is also
+defensible and is the better answer for simple structures, but it is a rebuild rather than a control
+and is not available for a sculpted or swept schedule. D is wrong: 312,957 is the priced cost of a
+convention, not an error.
+
+**MCQ 6.3-G `[6.3.3 · Evaluation]`** A board paper presents Kestrel's equity return as "5.028 times
+money, 13.52 % `IRR`". The bank case returns 9.83 %, and the whole 3.69-point difference comes from a
+2.967 % escalation assumption; the multiple covers the whole twenty-five-year concession. The soundest
+presentation:
+- A. leads with the 5.028 times multiple, because it counts every dollar actually distributed
+- B. reports the sponsor case, since it is the sponsors' central expectation and they are the investor
+- C. reports both cases with their labels, states the horizon the multiple covers, and states whether
+  the 2.967 % escalation is contracted, indexed to a published index or merely assumed ✅
+- D. reports the bank case alone, because that is the case the lenders underwrite
+
+*Rationale:* a multiple has no time dimension, so 5.028 times says nothing about when the cash arrives
+and a multiple shown without its horizon is a long horizon dressed as a return, while an equity `IRR`
+without its case is worthless (6.3.3). A does exactly that; B presents the more flattering case
+unlabelled, when the habit the
+domain prescribes is to state the escalation at which the return meets the hurdle and ask whether it
+is a right or a hope; D discards the sponsors' own economics, which is the case the equity decision
+turns on.
 
 ### Self-check — KA 6.3
 
@@ -1194,6 +1353,61 @@ error rate to:
 `180,000/(0.85 × (2,691,071 − 60,000)) = 8.05 %` (6.4.3). A is the late-audit answer; C is the
 expected cost of no control at all; D pairs the late audit's breakeven fee with its breakeven error
 rate.
+
+**MCQ 6.4-F `[6.4.1 · Evaluation]`** On the bank case Kestrel's `DSCR` falls from 1.2743 to 1.1851
+in year twelve, averaging 1.2340 against a 1.20× covenant, on the requested 42,000,000. The credit
+committee's sizing of 41,171,123 gives a year-twelve `DSCR` of 1.2087, and 41,472,081 is the largest
+facility whose year-twelve `DSCR` is exactly 1.20×. The soundest recommendation is:
+
+- A. keep 42,000,000, disclose the year-twelve minimum, and rely on the 1.2340 average
+- B. size at 41,472,081 — the largest facility that holds the covenant in every period — and record that the 828,877 the committee withheld was already protecting a year-twelve exposure nobody in that negotiation had modelled ✅
+- C. size at 41,171,123 as the committee proposed, since 1.2087 clears the covenant with margin
+- D. keep 42,000,000 and negotiate the covenant down to 1.15×, matching the lock-up
+
+*Rationale:* covenants are tested in periods, so the constraint is the minimum and the binding period
+is year twelve; the correct facility is therefore the largest that satisfies it everywhere (6.4.1,
+6.4.1b). A relies on an average that passes while the project breaches. C is defensible and safe, and
+it is the answer the committee will accept — but it was sized on year-one coverage and clears year
+twelve by accident, forgoing 300,958 of debt capacity for coverage the covenant does not ask for.
+D looks like an equivalent trade and is the weakest option: collapsing the covenant onto the 1.15 ×
+lock-up removes the tier between a distribution trap and an event of default, which is the early
+warning the whole structure depends on.
+
+**MCQ 6.4-G `[6.4.4 · Evaluation]`** On the domain's parameters an AI pre-check is worth 498,481, a
+late model audit 317,547, an early audit 602,744, and the pre-check with an early audit 670,716. A
+sponsor proposes replacing the audit with the pre-check, since the pre-check ranks above the late
+audit on expected value. The soundest position is that:
+- A. the substitution is right: 498,481 exceeds 317,547, so the cheaper control is the better one
+- B. it should be refused, and both funded — the audit brought earlier and the pre-check added —
+  because the audit is the lenders' condition precedent and the scanner's detection rate is not
+  independent of the error classes that carry the largest cost ✅
+- C. both should be refused, because a measured material-error rate below the 20.10 % breakeven means
+  neither pays
+- D. the substitution is right provided the pre-check's detection rate is first validated on this
+  asset class
+
+*Rationale:* machine checks are additive to review and never substitutive (6.4.4): a scanner finds
+structural defects and systematically misses the definitional ones — whether `CFADS` matches the
+facility's clause, whether the tax treatment is the jurisdiction's, whether the waterfall follows the
+drafted priority — which are precisely the errors with the largest cost, so treating detection as
+constant across error classes biases the comparison toward the cheap control. A does that. C ignores
+that the audit is a condition the sponsor cannot trade away, and that the tail of the cost
+distribution is averaged out of the expectation. D fixes the parameter and leaves the governance
+objection untouched.
+
+**MCQ 6.4-H `[6.4.2 · Comprehension]`** Sensitivity analysis and scenario analysis differ in that:
+- A. sensitivity moves inputs in percentages while a scenario moves them in absolute amounts
+- B. sensitivity is reported on value and a scenario on coverage
+- C. sensitivity moves one input at a time to measure the model's response, while a scenario moves a
+  coherent set of inputs together to represent a state of the world — so only the second can carry a
+  view about correlation ✅
+- D. they are the same procedure, a scenario being a sensitivity reported on more than one output
+
+*Rationale:* 6.4.2 defines both, and identifies correlation and threshold behaviour — not the
+arithmetic of combining moves — as what one-at-a-time analysis cannot see. A and D describe
+presentation rather than construction. B assigns outputs to techniques, when the domain's insistence
+is the opposite: both must be run on coverage as well as value, because a table reporting only `NPV`
+ranks interest-rate risk last on Kestrel.
 
 ### Self-check — KA 6.4
 

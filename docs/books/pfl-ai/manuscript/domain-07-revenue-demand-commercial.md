@@ -316,6 +316,58 @@ scales headroom directly (7.1.3). C inverts the logic — the multiplier is what
 breakpoint *closer*; D ignores that the deduction is computed on the charge and the multiplier
 together.
 
+**MCQ 7.1-E `[7.1.1 · Evaluation]`** Kestrel's offtaker will take volume risk under Structure A, but
+only for a capacity charge of **11,600,000** instead of 12,000,000. `CFADS` becomes 6,084,000, `DSCR`
+1.2145, and debt capacity at 1.30 × becomes **39,236,390** — against 41,171,123 at the full charge
+and 30,491,396 under the volume tariff sized on its low case. The 400,000 a year has a present value
+of 4,269,910 over the 25-year concession at 8 %. The soundest recommendation is:
+- A. reject the reduction: 4,269,910 of present value is surrendered permanently for a one-off financing benefit
+- B. accept it: the offtaker's price for taking volume risk is 4,269,910 of concession-life value against 8,744,994 of debt capacity released, so it is well below what the risk transfer is worth ✅
+- C. accept it, because an availability structure is always more bankable than a volume tariff
+- D. reject it and negotiate the 1.30 × target down instead, since the ratio is the variable that matters
+
+*Rationale:* this is the question KA 7.1.1 says is the professional act — is the offtaker's price for
+volume risk less than the equity the transfer releases? — and here it is, by a factor of more than
+two, with 1.2145 still clear of the covenant. A performs half the calculation: the capacity it buys
+is not a one-off benefit but equity permanently not subscribed. C is the unsupported generality, and
+7.1.3 shows what the structure actually does — converts demand risk into operational risk, with the
+covenant breaking at 92.09 % availability. D inverts the domain's central finding: the case moves as
+well as the ratio, and the case is the larger of the two variables.
+
+**MCQ 7.1-F `[7.1.3 · Evaluation]`** A contract summary renders the deduction clause — the capacity
+charge multiplied by the availability shortfall and by a 1.5 × liquidated-damage multiplier — as a
+pro-rata reduction of the charge, and the modeller builds it that way. The model balances and every
+check in it passes. The soundest professional position is that:
+- A. the difference is immaterial while the model is internally consistent and its checks pass
+- B. one period's revenue must be recomputed from the clause text by hand, at full and at reduced
+  availability, before any coverage ratio derived from it is quoted: the paraphrase cuts the slope of
+  `CFADS` against availability from 12,780,000 to 8,280,000 — 35.21 % — and moves the covenant
+  breakpoint from 92.086 % to 90.502 % ✅
+- C. the deduction schedule belongs to the technical adviser, so the commercial team should work from
+  the summary it was given
+- D. the target `DSCR` should be raised to restore the coverage the paraphrase removed
+
+*Rationale:* the slope is `9,000,000 × multiplier − 720,000`, so a multiplier read as 1.0 turns
+127,800 of `CFADS` a point into 82,800, and **no downstream check catches it** because the model is
+internally consistent and wrong (7.1.3). A is precisely the reasoning that lets the error survive
+review. C misallocates a first-order commercial term to a technical annexe. D prices a definitional
+error as though it were a risk, which buries it inside a ratio instead of correcting it.
+
+**MCQ 7.1-G `[7.1.2 · Comprehension]`** A take-or-pay minimum and an availability payment differ in
+what each leaves with the project:
+- A. they are equivalent, both being contracted revenue from a creditworthy payer
+- B. a take-or-pay floor covers volume below a contracted minimum — and is frequently a make-up right,
+  so the payer may take the volume later at no further charge — while an availability payment removes
+  volume risk altogether and substitutes an obligation to be available ✅
+- C. take-or-pay transfers operating risk to the payer, while an availability payment retains it
+- D. take-or-pay protects against price and an availability payment against cost
+
+*Rationale:* a floor is worth what the party writing it is good for and often protects cash timing far
+less than a summary suggests, while an availability structure converts demand risk into operational
+risk the project must then genuinely manage (7.1.2, 7.1.3). A ignores that the two leave different
+risks behind. C reverses the availability mechanism, whose whole point is that the project answers for
+availability. D names risks neither instrument addresses.
+
 ### Self-check — KA 7.1
 
 1. *Why does an expected `DSCR` convey nothing about bankability?* — Coverage is tested in a
@@ -564,6 +616,37 @@ applies a mechanism from a different revenue architecture.
 *Rationale:* Lenders price the low tail and equity owns the high one, so compressing both is a
 transfer, not a loss (7.2.2). A ignores the capacity gain; C treats expected cash as the sizing
 basis; D is false — the low case at 1.0516 still breaches the 1.20 × covenant.
+
+**MCQ 7.2-E `[7.2.3 · Comprehension]`** A sponsor complains that its lenders "refuse to count our
+sales pipeline". The statement that best conveys what a run-off case is:
+- A. lenders assume the business stops selling, which is conservatism for its own sake
+- B. it values only revenue already under contract, declining at the retention rate, so debt is sized on promises that exist rather than on sales not yet made ✅
+- C. it is the sponsor case with a standard haircut applied to forecast new sales
+- D. it assumes every customer leaves at the end of its current term
+
+*Rationale:* at 93 % net revenue retention the run-off case takes 24,000,000 of `ARR` to 22,320,000
+in the following year — a statement about what is signed, not a prediction that selling stops
+(7.2.3). A reads a sizing basis as a forecast; C describes a haircut to a sponsor case, which is a
+different and weaker discipline because it still lends against unsigned revenue; D describes nil
+retention rather than 93 %.
+
+**MCQ 7.2-F `[7.2.1 · Evaluation]`** A sponsor team proposes to present its central forecast as the
+base case and the same forecast with a flat 10 % haircut as "the bank case". On Kestrel the escalation
+assumption alone separates the sponsor and bank cases by 17,107,567 of `NPV`. The soundest position is
+that:
+- A. the approach is acceptable, since a 10 % haircut is a conservative adjustment in the sponsors'
+  own favour to concede
+- B. the bank case is a negotiating position built from specified haircuts, a slower ramp, no
+  unindexed growth and a conservative price deck, and a haircut with no stated composition cannot be
+  defended line by line — conceding the case unopposed concedes more than the coverage ratio does ✅
+- C. the work is unnecessary, because the lenders' market adviser will produce the bank case
+- D. only the sponsor case should be presented, leaving the lenders to make their own adjustments
+
+*Rationale:* the case moves as well as the ratio, and it is the larger of the two sizing variables
+(7.1.1, 7.2.1); a bank case is also a different object from a downside case, with a different purpose
+and owner. A dresses an arbitrary percentage as conservatism and cannot survive a question about which
+line it applies to. C and D hand the case to the counterparty that gains from choosing it, which is
+how sponsors arrive in credit committee with no position of their own.
 
 ### Self-check — KA 7.2
 
@@ -836,6 +919,56 @@ to a volume-managing team overstates their room by about 30 % (7.3.3). C is the 
 for the commercial team, which sets tariff, not for despatch; D is the correct volume figure for
 the *lock-up*, a different and later threshold.
 
+**MCQ 7.3-E `[7.3.1 · Comprehension]`** A colleague asks what the "indexed share" of a tariff is and
+why it is recorded separately from the index. The best explanation is:
+- A. it is the proportion by which the tariff rises each year
+- B. it is the proportion of the tariff's value that escalates; the remainder is a fixed nominal amount eroding in real terms, so the tariff's effective compound rate is lower than its headline index ✅
+- C. it is the share of the tariff denominated in the indexed currency
+- D. it is the ceiling on annual escalation the contract permits
+
+*Rationale:* Kestrel indexes 80 % of its tariff to an index assumed at 2.5 %, which compounds to an
+**effective** 2.101 % over 24 years rather than 2.5 % (7.3.1). A describes the index rate itself;
+C invents a currency mechanic; D names a different negotiated parameter — a cap limits the index in a
+period, while the indexed share limits the base the index applies to.
+
+**MCQ 7.3-F `[7.3.1 · Evaluation]`** Kestrel's O&M contractor offers a swap: it will index the
+currently fixed 30 % of the cost base at the same 3.2 %, and in exchange the offtaker will index
+100 % of the tariff at 2.5 % rather than 80 %. On the assumed rates the year-25 `EBITDA` margin moves
+from 59.23 % to **55.85 %** — a loss of 3.38 points — while the present value of `EBITDA` over the
+25-year concession at 8 % **rises by 1,516,002**, full tariff indexation adding 6,204,143 and full
+cost indexation removing 4,688,141. The soundest recommendation is:
+- A. reject: the fixed 30 % of the cost base saves 7.7164 margin points by year 25, more than twice the 3.6462 that full tariff indexation adds
+- B. accept: 1,516,002 of present value at 8 % over the concession is a real gain, and margin points at a single year are not the decision metric
+- C. accept, but only against a cap on the O&M index, because the 1,516,002 holds only at the assumed 3.2 % and the swap exchanges a fixed obligation for an unbounded indexed one ✅
+- D. accept, and seek a matching cap on the tariff index so that both sides are symmetrical
+
+*Rationale:* the two metrics genuinely disagree — the year-25 margin falls while discounted value
+rises, because the cost escalation compounds on a smaller base and lands later, where discounting
+bites — and B is right to prefer the discounted figure. What B misses, and C supplies, is that
+3.2 % is a *forecast* while indexation is a *term* (7.3.1): the tariff's gain is bounded by its
+index, the cost's loss is not, so the swap is sound conditioned on a cap and speculative without one.
+A applies the correct decomposition to the wrong horizon, comparing snapshot margin points instead of
+value over the concession. D concedes the one thing worth keeping, capping the escalation the project
+receives in order to cap the escalation it pays.
+
+**MCQ 7.3-G `[7.3.2 · Evaluation]`** A credit paper presents two projects as equivalent credits: both
+report a base `DSCR` of 1.30 × against a 1.20 × covenant. Project M's `CFADS` is 80 % of revenue and
+Project N's is 40 %, so the same 7.6923 % `CFADS` fall is reached by a 6.15 % demand fall in M and a
+3.08 % fall in N. The soundest position is that:
+- A. they are equivalent for credit purposes, since coverage and covenant are identical
+- B. cost structure must be reported beside the ratio, and high operating leverage matched by
+  structure — lower gearing, a larger reserve, a floor mechanism or sculpting — rather than treated as
+  a defect ✅
+- C. Project N is simply the weaker credit and should be declined
+- D. Project N's covenant should be raised to 1.30 × so that the two tolerances are equalised
+
+*Rationale:* two projects with the same ratio can have demand tolerances differing fourfold, and the
+ratio does not show it (7.3.2) — which is why cost structure belongs in a revenue-risk discussion. A
+is the error the generalised table exists to correct. C treats leverage as a fault, when it is what
+makes infrastructure profitable while demand holds; the requirement is that it be known, disclosed and
+matched. D moves the wrong lever: raising the covenant reduces N's tolerance further, since it shortens
+the distance from base coverage to the trigger.
+
 ### Self-check — KA 7.3
 
 1. *Why is the headline index not the rate that matters?* — Because the indexed share determines
@@ -1106,6 +1239,75 @@ despatch combinations clear the 1.20 × covenant, and that a 5 % tariff cut requ
 controls the driver that would avoid it (7.4.3). A is presentational dishonesty; C is half right —
 year-one figures are optimistic, so the matrix should be *extended* to the minimum year, not
 discarded; D mistakes a covenant for the problem.
+
+**MCQ 7.4-E `[7.4.1 · Evaluation]`** Kestrel's offtaker exposure can be measured three defensible
+ways: the receivable of **2,958,904** on 90-day terms, the present value of contracted `CFADS` over
+the twelve loan years at 6 % (**53,522,460**), or the present value over the whole 25-year concession,
+which is larger again. The credit committee is deciding whether to advance 41,171,123. The exposure it
+should be shown is:
+- A. the receivable, since that is the amount actually owed at any moment
+- B. 53,522,460, because the loss event for this decision is the loss of the contracted stream over the period being lent against, not an unpaid invoice ✅
+- C. the whole-concession figure, being the largest and therefore the most prudent
+- D. all three, averaged, so that the committee neither over- nor understates
+
+*Rationale:* `EAD` follows from what the loss event is, and choosing it is a judgment tied to a
+decision (7.4.1). A is the working-capital exposure, trivial by comparison, and quoting it is exactly
+how a concentration problem gets presented as a working-capital matter. C is genuinely defensible and
+is the right number for a *different* decision — the sponsors' own exposure across the concession —
+but selecting it here because it is the largest substitutes an instinct for prudence for the question
+asked, and it overstates what the lenders are relying on. D is arithmetic without meaning: three
+exposures answer three questions and their mean answers none.
+
+**MCQ 7.4-F `[7.4.3 · Evaluation]`** The stress matrix clears the 1.20 × covenant in only three of
+sixteen cells and falls below 1.00 × in five, and the unstressed bank case already reaches a
+year-twelve minimum of 1.1851 (Domain 6, Fig 6.4.1). Four requirements are proposed. Which should the
+committee impose first?
+- A. extend the matrix to the loan's minimum year, since every cell is a year-one snapshot and therefore optimistic about the loan's worst year ✅
+- B. widen the tariff and despatch ranges beyond the market adviser's credible bounds
+- C. attach a probability to each cell so that the committee can weigh the outcomes
+- D. increase the debt-service reserve from six months to twelve, because five cells cannot pay debt service from operating cash
+
+*Rationale:* the matrix understates the problem before any stress is applied: coverage already falls
+to 1.1851 by year twelve on the unstressed bank case, so thirteen failing cells is a floor rather than
+a finding (7.4.3). D is a real mitigant applied in the wrong order — a reserve sized against a
+mis-stated worst year is sized against the wrong number, and the right sequence is measure, then
+mitigate. C is what committees usually ask for and is the more dangerous request: joint probabilities
+here would have to be invented, and a probability-weighted matrix built on assumed correlations
+implies knowledge nobody has (Domain 6, KA 6.A.1). B changes nothing, since the ranges are already
+the adviser's credible bounds and extending them past that only adds cells nobody will underwrite.
+
+**MCQ 7.4-G `[7.4.2 · Evaluation]`** A credit paper records that the sole offtaker is investment grade,
+with an annual `PD` of 0.60 %, a twelve-year cumulative `PD` of 6.9671 % and an expected loss of
+1,678,031 on exposure of 53,522,460. A single regional authority is the only buyer of the water. The
+soundest assessment of the paper is that it:
+- A. is adequate: expected loss is the standard measure and the counterparty's grade is strong
+- B. is inadequate because a 0.60 % annual `PD` is implausibly low for a sub-sovereign counterparty
+- C. is incomplete: expected loss is identical whether one counterparty or four carry the same
+  revenue, so the paper must also state the probability of losing more revenue than the structure can
+  survive and what has been structured against it ✅
+- D. is inadequate, and the remedy is to split the offtake among four independent payers
+
+*Rationale:* expected loss is linear in exposure and therefore blind to concentration — four payers
+would show the same 1,678,031 while the probability of losing half or more of the revenue falls from
+6.9671 % to 2.6489 % and of losing all of it to 0.0024 % (7.4.2). A lets the expectation stand alone
+on a concentrated base. B attacks the one parameter the paper at least sources, and misses the
+omission. D prescribes a remedy this market does not offer: where concentration cannot be diversified
+away it must be structured against — guarantees, letters of credit, escrow, step-in rights,
+termination compensation that repays debt, or lower gearing.
+
+**MCQ 7.4-H `[7.4.1 · Comprehension]`** Kestrel's `LGD` of 45 % rests on an expectation of recovering
+55 % of contracted value. What that figure embeds is:
+- A. the proportion of an unpaid invoice that is written off
+- B. a market judgment — that a merchant market exists to re-sell into — together with a legal one,
+  that termination compensation, step-in rights and the security package work as drafted ✅
+- C. a figure fixed for each counterparty class by regulation, and therefore not an assumption at all
+- D. the probability that recovery efforts fail
+
+*Rationale:* `LGD` is the proportion of exposure not recovered, and on a project the recovery depends
+on both a market and a set of documents, so an `LGD` not traced to them is a guess wearing a decimal
+point (7.4.1). A describes a receivable write-off, not the loss of a contracted stream. C states as
+universal a treatment that is institution- and jurisdiction-specific. D is `PD`'s territory —
+likelihood — not the severity `LGD` measures.
 
 ### Self-check — KA 7.4
 

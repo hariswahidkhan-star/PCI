@@ -400,6 +400,62 @@ verifiable fact?
 requires a forecast of remaining cost and a view on what constitutes a *potential* default — which
 is why those two limbs are where the monitoring relationship is conducted (14.1.2).
 
+**MCQ 14.1-E `[14.1.3 · Evaluation]`** The facility agreement's funding-order sub-clause is still
+open. Equity-first capitalises **1,338,006** of interest against **2,114,597** pro rata and
+**2,804,070** debt-first; at a fixed 60,000,000 envelope, equity-first re-solves the balancing
+contingency from 3,645,403 to **4,388,050**. Deferring the equity cheque is worth **183,013** of
+present value to the sponsor at 8 %. What should the transaction lead recommend to the sponsor's
+board?
+- A. debt-first — it is worth 183,013 of present value to the shareholders, which is the only party the board represents
+- B. equity-first — it converts the 776,591 of interest saving into 742,647 of additional funded contingency, 9.14 % of the EPC price against 7.59 %, provided the sponsor can carry the larger irrecoverable exposure if the works are abandoned early ✅
+- C. pro rata — it is neutral between the parties and is what the lender's draft provides
+- D. debt-first — capitalised interest is not a cash cost during construction, so the order is presentational
+
+*Rationale:* At a fixed envelope the sequencing buys funded protection with no additional money,
+which is the form of the argument a credit committee and a board can both act on (14.1.3) — and the
+condition attached to it is the real one, because equity-first maximises the sponsor's exposure to an
+abandoned works. A is defensible and is what sponsors argue: it is weaker because 183,013 of present
+value is bought for 689,473 of nominal cost that the sponsor itself then funds as additional equity,
+so it is only rational at a sponsor cost of capital high enough to justify the trade — a test the
+recommendation must state rather than assume. C accepts a settlement in place of an analysis. D is
+false: capitalised interest is drawn, enters the debt balance and is repaid with interest over the
+loan life.
+
+**MCQ 14.1-F `[14.1.1 · Comprehension]`** Which statement best restates why the restated
+sources-and-uses statement is a **test** where the financial-close statement is only an **identity**?
+- A. the close statement was reviewed by the model auditor and the restated one is not
+- B. at close one line is solved so that the columns agree, whereas at a data date the two columns are built from independent sources — the agent's records, certified progress and a commitment schedule — so a gap between them carries information ✅
+- C. the restated statement replaces forecasts with actual costs
+- D. the restated statement adds remaining contingency as a source, which the close statement omits
+
+*Rationale:* An identity can always be satisfied by choosing the balancing line; a test can fail
+because nothing is free to move (14.1.1). C is only partly true and misleads on the important part —
+three of the four lines in Kestrel's remaining column are still forecasts. D describes the
+double-count 14.1.1 exists to forbid: contingency is a *use* funded by the same commitment.
+
+**MCQ 14.1-G `[14.1.2 · Evaluation]`** The quarter-five draw request must repeat the representation that
+the project is **in balance**. The certified cost report supporting it shows the columns reconciling; the
+finance team's own rolling funding forecast, issued internally the same week, shows a prospective
+shortfall of **1,927,740** on a commitment basis. The soundest course is to:
+- A. sign the request on the certified cost report, because a representation is made on certified
+  information and a forecast is not certified
+- B. not sign the in-balance representation on a basis the team knows to be superseded: disclose the
+  forecast position to the agent, name the cure and the party funding it, and submit the request with the
+  cure — because the cure is dated by the next draw and not by the reporting date ✅
+- C. sign the request now and disclose the forecast position in next month's report, when the cost report
+  will have caught up with it
+- D. withhold the draw request altogether until the cost report has been reissued on the forecast basis
+
+*Rationale:* "In balance" and "no potential default" are the two limbs of a draw request that are
+judgments rather than facts, and both are certifications by named officers with consequences attached
+(14.1.2); a certification cannot rest on a basis its signer knows to be out of date. A treats a
+representation as a document-assembly step. C is the commonest course and puts the misstatement and the
+delay together — the shortfall surfaces a month later, having consumed part of the time available to raise
+the money (14.2.3). D avoids the misstatement by converting a disclosure problem into a schedule problem
+at 415,000 a month of funded cost and 947,000 of economic cost (14.4.1); the shortfall is **4.6452 months**
+of that funded cost, so the delay route can consume the whole amount in a quarter and a half without
+curing any of it.
+
 ### Self-check — KA 14.1
 
 1. *Why is a restated sources-and-uses statement a test where the close statement is an identity?*
@@ -720,6 +776,58 @@ correct professional response is:
 programme (14.2.2); here the honest coverage on the remainder is 0.2893. C makes a trend out of a
 coincidence. D refines a measure that should not be relied on at all.
 
+**MCQ 14.2-E `[14.2.2 · Evaluation]`** A certifier reports contingency coverage on the remainder of
+**0.2893** — 1,500,000 against 3,420,000 of known committed claims plus a 1,764,289 P80 on the open
+register — and concludes: "coverage is thin; we recommend monthly monitoring of the contingency
+position." Should that conclusion be accepted?
+- A. yes — 0.2893 is thin, and closer monitoring is the proportionate response to a thin ratio
+- B. no — a ratio below one means contingency is already fully committed and 3,684,289 short, so the finding is a funding requirement, corroborated by the independently derived 1,927,740 in-balance shortfall; monitoring a known deficit does not fund it ✅
+- C. no — the 3,420,000 of known claims does not belong in the denominator, and on open risk alone coverage is 0.8502
+- D. yes, provided the ratio is recomputed at every data date with its denominator itemised
+
+*Rationale:* `1,500,000 − 5,184,289 = −3,684,289`: the number does not describe a margin that is
+narrow, it describes protection that has run out, and the in-balance route reaches the same
+conclusion from different inputs (14.2.1, 14.2.2). A and D are the defensible-sounding responses and
+both fail for the same reason — they answer a funding event with a reporting action. C is the
+argument the sponsor will make and 14.2.2 disposes of it: approved variations, assessed claim
+exposure and a bottom-up re-estimate are not risks that might happen, they are claims that have.
+
+**MCQ 14.2-F `[14.2.1 · Comprehension]`** A project controller's cost report and the lender's
+monitor produce cost-to-complete figures differing by 3,536,674 on identical underlying data. The
+explanation a board should be given is:
+- A. one of the two contains an error, and reconciliation will identify which
+- B. each discipline is structurally blind to items the other counts — earned value cannot see capitalised interest, approved but unbaselined variations or claim exposure, while a commitment basis cannot see cost-performance trend on scope that is fixed-price ✅
+- C. the monitor has applied a more conservative contingency allowance
+- D. the difference is the unallocated contingency balance
+
+*Rationale:* `840,000 + 1,260,000 + 1,436,674 = 3,536,674`, or 14.34 % of the lender's number, and
+every line of it is outside the control accounts by construction rather than by anyone's error
+(14.2.1). A is the instinct the bridge exists to correct. C invents a judgment difference where the
+difference is one of scope. D names a line that appears in neither cost-to-complete.
+
+**MCQ 14.2-G `[14.2.1 · Evaluation]`** The lender's cost-to-complete of **24,656,674** exceeds available
+commitment of **22,728,934** by **1,927,740**. The sponsor disputes two lines: the **1,260,000** of
+assessed exposure on notified but unagreed claims ("worth far less, and unagreed in any case") and the
+**2,400,000** bottom-up re-estimate of remaining owner-retained scope ("pessimistic"). Both arguments may
+have merit. The soundest treatment in the monitoring report is to:
+- A. adopt the sponsor's figures, since the SPV knows its own contracts and its own scope better than the
+  monitor does
+- B. hold both lines at the assessor's figures, name the assessor, and record the sponsor's case and its
+  basis beside them — because the disagreement is about the quantum of an exposure rather than about
+  whether it exists, and a report that omits a line instead of arguing about it cannot be relied on by
+  anyone ✅
+- C. exclude the claim exposure until the claims are agreed, since an unagreed claim is not yet a liability,
+  and hold the owner-scope line
+- D. publish two cost-to-completes, the monitor's and the sponsor's, and let the lenders choose between them
+
+*Rationale:* The choice of basis is a negotiation rather than a technique, and both sponsor arguments may
+be right — what cannot survive is a report that drops the lines rather than stating them with their basis
+and their assessor (14.2.1). C is the accrual instinct, and it is arithmetically insufficient as well:
+removing the 1,260,000 closes **65.36 %** of the gap and still leaves the project **667,740** out of
+balance. A hands the assessment to the party that will fund the cure. D looks even-handed and evades the
+purpose of a monitoring report, which is a number a drawing can be conditioned on; two numbers and no
+recommendation is the same omission as one number with a line missing.
+
 ### Self-check — KA 14.2
 
 1. *Name the three lines a lender's cost-to-complete contains that an `EAC` cannot see.* — Approved
@@ -1029,6 +1137,61 @@ conclusion is:
 lever that satisfies both (14.3.3). A ignores the covenant. B discards 711,946 of value that a
 funding decision can capture. D proposes to renegotiate a covenant over 271,053, which no lender
 would price kindly.
+
+**MCQ 14.3-E `[14.3.1 · Evaluation]`** The contractor asks for **690,000** of membrane racks, paid
+for and stored at the vendor's works, to be certified on a cost-incurred basis. The SPV's finance
+team supports the request, noting that the only consequence is a small amount of additional
+capitalised interest. Reviewing the request, what should be challenged first?
+- A. the additional capitalised interest, which the contractor rather than the SPV should bear
+- B. whether vesting of title in the SPV, identification and segregation at the vendor's works, and insurance in the SPV's name are all in place — the certification advances 458,850 of senior debt against goods in a third party's possession, which is a security question, not a cost question ✅
+- C. the independent engineer's 92 % assessment of the incomplete milestone, since an assessed percentage is an opinion that drifts upward under schedule pressure
+- D. nothing — the materials are paid for, identifiable and represent real value to the project
+
+*Rationale:* `690,000 × 0.95 × 0.70 = 458,850` of debt advanced against work not in place, and absent
+vesting, segregation and insurance the money has bought a claim in someone else's liquidation
+(14.3.1). A is the finance team's own framing and is the specific error the topic names: pricing a
+security question as a cost question is how certification drift gets conceded, one certificate at a
+time. C raises a real and separate concern about the measured basis, but it is not what *this* request
+changes. D confuses the vendor's title with the SPV's.
+
+**MCQ 14.3-F `[14.3.2 · Evaluation]`** The contractor requests the contracted **10 %** advance payment —
+**4,800,000** on the 48,000,000 price, secured by an advance payment bond — and declines any reduction in
+the contract price. Re-running the funding model shows the advance costs **254,597** of capitalised
+interest: **5.30 %** of the advance and **0.53 %** of the EPC price. The SPV's finance lead proposes
+refusing the advance. The soundest position is to:
+- A. refuse — an advance payment is a loan from the project to the contractor, and a project financing
+  exists to fund the works rather than the contractor's balance sheet
+- B. treat the 254,597 as the price of the advance and negotiate against it: where the contractor's own cost
+  of funds exceeds the project's the advance creates value for the transaction as a whole, so the
+  defensible outcomes are a price reduction of at least 0.53 %, a smaller advance, or an accepted and
+  recorded cost — not a refusal on principle ✅
+- C. accept — the advance payment bond covers the amount advanced, so the SPV carries neither cost nor
+  exposure
+- D. accept, and recover the 254,597 from the delay-damages account if the contractor completes late
+
+*Rationale:* An advance is a priced loan, and pricing it converts a posture into a position the contractor
+can check and argue about honestly (14.3.2). A is the reflex and forgoes a genuine joint gain wherever the
+contractor's marginal cost of funds is the higher of the two. C confuses a bond, which secures **recovery**
+if the advance is not earned, with the **carrying cost** of having advanced it — the 254,597 is incurred
+whether or not the bond is ever called, and it is **4.068 times** the 62,589 that retention saves in the
+other direction. D applies damages calibrated to delay against a cost caused by a payment term, and helps
+itself to a cap Domain 12 reserves for a different head.
+
+**MCQ 14.3-G `[14.3.1 · Comprehension]`** Setting the amounts aside, which statement best explains why
+**milestone** certification is the basis most closely aligned with the lenders' security?
+- A. it produces the smallest certified figure, so the least money leaves the account
+- B. a milestone has either been achieved or has not, so certified value corresponds to a completed thing
+  the security attaches to; a measured percentage is an opinion, and cost incurred may be goods in a third
+  party's possession ✅
+- C. it is the only basis an independent engineer is professionally qualified to certify
+- D. it removes the need for retention, since nothing is certified until it is complete
+
+*Rationale:* The three bases differ in **what they measure** — an achieved contractual event, an assessed
+percentage, and the contractor's spend — and only the first is binary and contractually defined, which is
+why 92 % of a milestone is worth exactly nothing and why that harshness *is* the alignment (14.3.1). A
+states a consequence rather than the reason, and a smaller figure is not by itself a virtue. C is false:
+certifiers apply all three, and the measured basis is the standard one on long linear works. D confuses
+the certification basis with retention, which secures defect rectification and is withheld on any basis.
 
 ### Self-check — KA 14.3
 
@@ -1371,6 +1534,65 @@ debt of 42,000,000, `AF(0.06, 12) = 8.383844`. The buy-down required to restore 
 *Rationale:* `42,000,000 − (5,900,000/1.274303) × 8.383844 = 3,184,211`. A restores only the 1.20×
 covenant, leaving zero headroom. C is the performance damages cap, not the calibrated amount. D
 confuses paying debt service with satisfying a covenant (Domain 10, KA 10.2.1).
+
+**MCQ 14.4-E `[14.4.2 · Evaluation]`** The term sheet provides a calendar-fixed first repayment date.
+On Kestrel's figures the 1.20× covenant fails beyond **0.7001 months** of slip, and the delivery team
+regards a slip of up to four months as a live risk. Four amendments are available and the sponsor can
+press for one. Which should be pressed first?
+- A. size the debt service reserve on the four-month slip scenario rather than on the six-month convention
+- B. set the first repayment date by reference to the actual commercial operations date, with a long-stop — it removes the mismatch between the test period and the obligation period instead of funding its consequences ✅
+- C. rely on delay damages being creditable to `CFADS`, which at a four-month slip is worth 0.4791 of coverage and turns a breach into a 1.3286 ratio
+- D. accept the calendar-fixed date and request a covenant waiver if the slip occurs
+
+*Rationale:* The defect is that the first test period contains less operating time than the
+obligation it is tested against, and only B removes it (14.4.2). A is defensible and cheap, but a
+reserve pays an instalment — it does not raise `CFADS`, so the covenant still fails at 0.7001 months
+and the reserve must then be replenished ahead of any distribution. C is genuinely valuable and worth
+negotiating alongside B, but it is a protection that expires: once the 4,800,000 cap binds at eight
+months the damages line stops growing while `CFADS` keeps shrinking, so the damages-credited ratio
+peaks at 1.3829 and re-crosses 1.20 at 9.7226 months. D is the worst available course — a waiver
+requested inside a delayed project is read as news about the project.
+
+**MCQ 14.4-F `[14.4.1 · Evaluation]`** The works are a month late at the commercial operations date. The
+contractor's negotiator argues that the contracted **20,000 a day** — **600,000** a month — is generous,
+because it recovers **144.58 %** of the **415,000** the project must actually raise while it is not yet
+earning. The soundest response is to:
+- A. accept the point — a damages rate that over-recovers the cash the project must raise is by definition
+  adequate, and the drawdown and in-balance tests confirm it
+- B. reject the framing: the funded cost excludes the **532,000** a month of forgone `CFADS`, so against the
+  full economic cost of **947,000** the same rate recovers **63.36 %** — the signature of a project whose
+  funding tests keep passing while equity value drains, which is the loss a damages rate exists to
+  compensate ✅
+- C. reject the rate on the ground that a recovery above 100 % shows the sum to be a penalty rather than a
+  genuine pre-estimate of loss
+- D. quote **80.86 %**, the recovery on interest plus forgone `CFADS`, as the neutral middle figure between
+  the two positions
+
+*Rationale:* One rate produces three recovery percentages, and the choice of basis is the whole argument:
+the economic cost is the correct calibration basis, while the drawdown and in-balance tests see only the
+funded one, which is why a delayed project can pass every test while destroying value (14.4.1). A mistakes
+a passing funding test for an absence of loss. C imports a legal conclusion the arithmetic cannot support —
+whether and how a contractual damages provision is enforceable is a question of the law governing the
+particular contract, on which this book states no jurisdiction's position, and a recovery above 100 % of
+*one* cost basis says nothing about the character of the sum. D is honest arithmetic on Domain 5's narrower
+basis and understates the monthly loss by the **205,000** of prolongation cost the SPV bears directly —
+**49.4 %** of the funded cost — so it is a figure to disclose, not the figure to negotiate on.
+
+**MCQ 14.4-G `[14.4.3 · Comprehension]`** Which statement best describes what a **buy-down** does and does
+not do when a plant completes on time at less than guaranteed output?
+- A. it compensates equity for the output permanently lost, restoring the return the sponsors priced
+- B. it is a lump sum, usually applied to prepay debt and calibrated so the financing survives a permanently
+  smaller plant — repairing the lenders' coverage directly and equity's only through the headroom it
+  restores; the equity return still falls, because the plant is smaller ✅
+- C. it is a reserve the contractor funds against the possibility of future underperformance
+- D. it replaces the delay-damages head once the commercial operations date has passed
+
+*Rationale:* A buy-down is a **prepayment**, not compensation: it shrinks the debt so that a smaller
+`CFADS` still supports it, which is why the drafting question — restore the covenant level, or restore the
+base-case coverage — is worth the difference between the two amounts (14.4.3). A is the misreading that
+makes a buy-down look like a settlement of equity's claim. C describes a reserve, which is funded before an
+event rather than paid after a failed test. D confuses two heads of damages, each with its own sub-cap
+under one aggregate cap (Domain 12, KA 12.1.2).
 
 ### Self-check — KA 14.4
 

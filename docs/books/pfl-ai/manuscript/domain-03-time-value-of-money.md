@@ -374,6 +374,24 @@ averages the row by its last term and gives 5.963632; C inverts a relationship t
 `r` (here 4.166514); D drops the division of `DF(n)` by `r` from the closed form and gives
 16.169697 — each a plausible-looking rearrangement, and each falsifiable in one cell.
 
+**MCQ 3.1-I `[3.1.2 · Evaluation]`** Kestrel will receive a USD 500,000 connection rebate in five
+years from a creditworthy utility under a signed connection agreement. A board member proposes
+discounting it at the project's 8.0 % appraisal rate "for consistency"; the treasurer proposes 6.0 %,
+the rate on the project's own senior debt. The values are **340,291.60** at 8 % and **373,629.09** at
+6 %. The sound recommendation is:
+- A. use 8.0 % — one project, one discount rate, and consistency is the stronger discipline
+- B. use a rate that reflects *this* cash flow's risk, which is a contracted receivable from a strong counterparty rather than the project's equity risk; state the rate chosen, and put any doubt about payment into the cash flow or an explicit credit adjustment rather than inside `r` ✅
+- C. use 6.0 %, because the rebate will be applied to reduce senior debt, which makes the debt rate the opportunity cost
+- D. use 8.0 % and additionally reduce the 500,000 for the risk of non-payment, capturing both effects
+
+*Rationale:* the discount rate must match the risk of the flow being discounted, and discounting
+handles timing rather than credit (3.1.2) — the two hundred basis points between the proposals move
+this single receipt by **33,337.49**, or **9.3515 %** of its value at 7 %. A applies a portfolio
+convention to an instrument of different risk and so understates it. C is the most defensible of the
+wrong answers and still picks its rate from the *use* of the money rather than the risk of receiving
+it. D uses the right technique for credit — an explicit haircut — and then leaves in place a rate set
+for a riskier flow, charging the same risk twice.
+
 ### Self-check — KA 3.1
 
 1. *Why must discount factors decline monotonically?* — Because `(1+r)^t` grows with `t` for any
@@ -1008,6 +1026,40 @@ twelve years and adds 16.67 basis points to the coupon — the "amortise the fee
 the time value of paying it at once; D adds the whole 2.0 % to the rate, an error of a full 163 basis
 points in the same direction.
 
+**MCQ 3.2-J `[3.2.2 · Comprehension]`** The closed form `B_k = A × AF(r, n − k)` gives Kestrel's
+principal outstanding after seven of twelve years as **21,102,406**. Which statement shows what the
+formula is, and is not?
+- A. it is the total of the instalments still to be paid, so after year 7 Kestrel owes 25,048,176
+- B. it is the present value of the payments that remain, which makes it a check on a schedule that has run exactly as contracted and simply wrong on one that has been restructured, swept or capitalised ✅
+- C. it is the prepayment price, so a borrower settling early pays `B_k` and nothing further
+- D. it equals the original principal less seven years of principal at the loan's average rate of retirement
+
+*Rationale:* the formula discounts the remaining contractual payments, which is why it agrees with the
+schedule recursion to a few cents and why any departure from the contract breaks the formula rather
+than the schedule (3.2.2). A confuses cash still to be paid with principal outstanding: the difference,
+**3,945,770.13**, is interest not yet accrued and is not a liability. C is nearly right and materially
+wrong — `B_k` is the *base*, and break costs or prepayment fees sit on top of it. D describes
+level-principal retirement; an annuity's principal is back-loaded, which is why **50.2438 %** of the
+loan is still outstanding after 58.33 % of the term.
+
+**MCQ 3.2-K `[3.2.3 · Analysis]`** Two like-for-like offers on the same 42,000,000, 12-year,
+annuity-shaped, equally secured facility: 6.00 % with an 840,000 arrangement fee deducted from
+proceeds — an all-in cost of 6.3704 % — or 6.15 % with no fee. The treasurer recommends the first,
+"because the coupon is lower and the fee is a one-off". The best response is:
+- A. agree: the 6.00 % coupon governs debt service, and the fee is a transaction cost outside the cost of funds
+- B. take the 6.15 % facility, which is cheaper by **22.04** basis points — and put a number on the table, since the fee that would equalise the two is **343,244**, so the arranger is asking **496,756** more than the market-equivalent fee ✅
+- C. take the 6.15 % facility, because an upfront fee is always a more expensive way to pay a lender than margin
+- D. reject both and require the arranger to convert the fee to margin at 16.67 basis points, being the 2.0 % fee spread across the twelve-year tenor
+
+*Rationale:* a fee is paid once and undiscounted while a margin is paid across a declining balance, so
+each 1.00 % of upfront fee costs **18.38** basis points of margin on this facility — making 2.0 % of
+fee worth about 37 and the 15-basis-point coupon difference the cheaper of the two (WE 3.2.3b). A
+treats the instalment as the cost of funds and ignores that the project receives only 41,160,000. C
+reaches the right verdict from an overstated rule: the exchange rate is computable, and a fee below
+343,244 would make the 6.00 % facility the cheaper one. D is the "amortise the fee" error — dividing a
+fee by the tenor omits the time value of paying it at time zero, and 16.67 basis points is under half
+the 37.04 the stream actually gives.
+
 ### Self-check — KA 3.2
 
 1. *What two instant checks validate any amortising schedule, and what tolerance applies?* — Final
@@ -1526,6 +1578,55 @@ equivalent to, are:
 A is the 30/360 figure, which charges 360 days over 360; C is a 366-day leap year on the same
 convention; D inverts the fraction to `360/365`, the direction error that makes an expensive
 convention look cheap.
+
+**MCQ 3.3-J `[3.3.1 · Analysis]`** A model audit finds that a project's real model values Kestrel's
+25-year support stream at **55,006,446** while its nominal model values the same stream at
+**72,791,113**. The modeller proposes to "reconcile the two bases and present the pair as a range".
+The reviewer should:
+- A. accept — a real and a nominal view of one project legitimately differ, and a range is the honest presentation
+- B. reject the proposal and require the defect to be found: the two consistent treatments are arithmetically identical to the cent, so a **17,784,667** difference is an error, and this one carries the signature of real flows discounted at the nominal 9.0 % rate ✅
+- C. accept the nominal figure and delete the real model, since covenants, tax and depreciation are nominal constructs
+- D. average the two, document the choice as an assumption, and proceed
+
+*Rationale:* the Fisher relation makes the consistent nominal and consistent real valuations equal, so
+a difference is not a basis to be reconciled but a defect to be located — and its size, **−24.4325 %**,
+identifies which defect it is (WE 3.3.1b). A dignifies an error as a perspective. C reaches a
+defensible destination by the wrong route: the model must indeed be nominal before any covenant or tax
+line can be computed, but deleting the real model conceals the error instead of fixing it, and the real
+model may well be the correct one. D averages a right number with a wrong one and calls the result an
+assumption.
+
+**MCQ 3.3-K `[3.3.2 · Evaluation]`** Kestrel's 3.0 % cap on the indexation of a 2,700,000 O&M base is
+worth **4,258,610** in present value at the sponsor's 4.0 % index forecast — a level annual equivalent
+of **398,941**. The contractor offers to remove the cap in exchange for cutting the base price by
+500,000 a year. The soundest recommendation is:
+- A. accept: 500,000 a year exceeds the cap's level annual equivalent by **101,059** a year, so the trade creates value
+- B. refuse on these terms: the cap is an option on the index and its value is convex in the outturn, so a single-point valuation understates it — at a 5.0 % outturn the cap is worth **9,157,382**, a level annual equivalent of **857,852**, and the trade must be priced against a stressed index ✅
+- C. refuse, because a project should never exchange a contractual protection for a price concession
+- D. accept, provided the 500,000 reduction is itself indexed at 3.0 % so that the two legs escalate together
+
+*Rationale:* the cap pays nothing at or below 3.0 % and more the further the index runs above it, so its
+expected value exceeds its value at the mean forecast, and 500,000 a year buys away protection worth
+857,852 a year in precisely the state the protection exists for (WE 3.3.2b). A is the arithmetic
+correctly done at one point of a convex payoff — the commonest way an option is given away. C forgoes a
+class of trade that is frequently value-creating; the objection is to the price, not the principle. D
+improves the fixed leg — an indexed 500,000 is worth **7,150,991** against **5,337,388** level — and
+still leaves the payer short in the stressed states, so it changes the price without answering the
+objection.
+
+**MCQ 3.3-L `[3.3.4 · Comprehension]`** A facility accrues interest on an **actual/360** basis. Which
+statement restates what that convention does?
+- A. it charges interest on actual days elapsed, so the cost depends on how many days each period happens to contain and averages out across a full year
+- B. over a full year it charges `365/360` of the interest a 365-day basis would — a **1.3889 %** uplift on all interest, independent of the rate, the balance and the tenor, and equivalent on a 6.0 % facility to a quoted **6.0833 %** ✅
+- C. it is the market standard for floating-rate lending, so it carries no cost relative to the quoted rate
+- D. it lowers the effective cost, because dividing by 360 rather than 365 produces a smaller daily rate
+
+*Rationale:* the denominator is short by five days while the numerator counts them, so the uplift is
+exactly `365/360` over a full year and does not average away (WE 3.3.4b) — **8.33** basis points at
+6 %, **35,000** on Kestrel's 42,000,000 balance for one year and **274,947** across the twelve-year
+schedule. A describes the numerator effect, which does reverse between a short February and a 92-day
+quarter, and misses the denominator effect, which does not. C confuses prevalence with price. D inverts
+the arithmetic: a smaller denominator produces a *larger* daily rate.
 
 ### Self-check — KA 3.3
 

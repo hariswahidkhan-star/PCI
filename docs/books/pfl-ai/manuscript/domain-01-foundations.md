@@ -435,6 +435,42 @@ assumption-shopping, which is the misconduct 1.3.1 names; D overstates the objec
 parameter is uncertain, which is an argument for stating it and testing it, not for discarding
 the frame.
 
+**MCQ 1.1-G `[1.1.4 · Analysis]`** An investment committee paper recommends a 25-year availability
+concession to an insurer whose liabilities have an average duration of 14 years, on the ground that
+"extending the tenor from 15 years to 25 brings the asset's duration into line with the liability".
+The stream is level and the discount rate is 8.0 %. The reviewer should:
+- A. accept the recommendation — a 25-year asset is the closest available match to a 14-year liability
+- B. reject the reasoning as arithmetically impossible: at 8 % a level stream's duration is capped at `(1 + r)/r` = 13.5000 years, and 25 years reaches only 9.2254, so no tenor closes the gap ✅
+- C. correct the reasoning but keep the recommendation — 9.2254 years is the longest duration the concession can offer, so tenor is still the right lever and the residual gap belongs to the liability side
+- D. reject the recommendation because duration is not a meaningful measure for infrastructure assets
+
+*Rationale:* extending 15 years to 25 buys **2.6309** years of duration (6.5945 → 9.2254) and the
+ceiling is never reached at any finite tenor, so the paper's stated mechanism cannot deliver what it
+claims (WE 1.1.4); duration is added by deferral (+3.0000 years), escalation (+0.4398 at 2.5 %) or a
+lower rate (the ceiling is 17.6667 at 6 %), and the residual gap is closed with instruments rather
+than asset selection. A confuses the asset's life with its duration, the error the example exists to
+disarm. C is the strongest of the wrong answers and gets halfway: it drops the paper's mechanism and
+then repeats its conclusion, when 9.2254 is *not* the longest duration available — deferring the same
+15-year stream by three years reaches **9.5945**, which is why WE 1.1.4 ranks the greenfield position
+ahead of the long concession. D discards a first-order measure the profession uses correctly; the
+defect is the claim made with it, not the measure.
+
+**MCQ 1.1-H `[1.1.2 · Comprehension]`** Kestrel's breakeven failure probability `p*` falls from
+93.7893 % on a 15,000,000 facility to 51.6392 % at 42,000,000 and approaches 28.2224 % on very large
+ones. Which statement restates the reason correctly?
+- A. lenders charge a lower margin on larger facilities, so the incremental cost of the project route shrinks
+- B. the close-cost premium is broadly fixed while the exposure the ring-fence removes scales with the facility, so a partly fixed cost divided by a proportional benefit falls toward the margin differential alone ✅
+- C. larger projects fail more often, so the probability required to justify the structure is lower
+- D. enforcement recoveries improve with project size, which enlarges the exposure the structure removes
+
+*Rationale:* the cost has a fixed element (the **2,359,000** close-cost premium) and a proportional
+one (140 basis points, worth **6.7694 %** of the debt in present value), while the exposure removed
+is proportional (**23.9857 %** of debt on these assumptions) — which is exactly why the curve is a
+hyperbola with 28.2224 % as its asymptote (1.1.2). A asserts a pricing pattern the example does not
+contain and the arithmetic does not need. C confuses the probability *required* with the probability
+*expected*. D reverses the direction: a better recovery reduces the exposure removed and therefore
+*raises* `p*` — at a 50 % recovery it reaches 127.6910 %.
+
 ### Self-check — KA 1.1
 
 1. *State the finance leader's one recurring question.* — Will the cash arrive, and who is
@@ -858,6 +894,40 @@ demands a price at which no contractor would accept the risk, since the transfer
 uncertainty as well as expectation; D denies the gain from trade that the equity-debt spread
 creates.
 
+**MCQ 1.2-G `[1.2.3 · Evaluation]`** An analyst's paper on the WE 1.2.3 project — 100,000,000 of
+capital cost, 12,000,000 of steady operating cash, 70,000,000 of senior debt at 6.0 % and 30,000,000
+of equity — reports that the structure "absorbs a 65 % fall in project cash before the equity's own
+cash runs out", having modelled the debt as interest-only when the facility amortises over 12 years
+and carries a 1.20× `DSCR` covenant. Each objection below is a fair one. Which is the more decisive
+for the credit committee?
+- A. the paper overstates the cushion that matters: on the amortising facility the equity's cash exhausts at a 30.42 % decline and the 1.20× covenant engages at 16.51 %, so the reported resilience is roughly four times the distance to the first consequence ✅
+- B. the paper's 26.0000 % cash-on-cash return is overstated, since the amortising structure returns 12.1687 %
+- C. the paper should have measured the equity with an `IRR` over the whole life rather than a single-period return
+- D. the paper omits the tax shield on the interest charge
+
+*Rationale:* A and B follow from the same substitution, but the committee is buying downside
+protection, and only A quantifies it — the covenant bites at −16.51 %, the equity's cash runs out at
+−30.42 %, and the paper reported −65.00 % (WE 1.2.3b). B is true and second-order, and on its own it
+is a *misleading* correction: the **4,149,392.06** of principal repaid is a return of capital rather
+than a cost, so the amortising equity is better off than 12.1687 % implies. C is a sound
+methodological point that quantifies nothing by itself. D is true of both columns equally —
+year-one interest is identical at 4,200,000 — so it cannot be an objection to this paper.
+
+**MCQ 1.2-H `[1.2.3 · Comprehension]`** The levered-return identity is
+`r_e = r_u + (D/E) × (r_u − r_d)`. Which statement restates what it says about a structure geared
+70/30 against debt costing 6.0 %?
+- A. gearing adds return in every state of the world, because debt is cheaper than equity
+- B. gearing adds 2.333333 times whatever the project earns above 6.0 % and subtracts 2.333333 times whatever it earns below it, so one structure amplifies in both directions ✅
+- C. gearing raises the equity return by the difference between the cost of equity and the cost of debt
+- D. gearing raises the equity return wherever the project's unlevered return exceeds the equity holders' required return
+
+*Rationale:* the identity multiplies the **spread over the debt rate** by the debt-to-equity ratio, so
+its sign follows the spread: at an unlevered 12.0 % it adds **14.0000** points to reach 26.0000 %, and
+at an unlevered 4.0 % it subtracts **4.6667** points to −0.6667 % (WE 1.2.3). A ignores the sign; below
+the crossover — project cash of 6,000,000 on this structure — leverage subtracts. C names the wrong
+spread: the identity uses `r_u − r_d`, not `k_e − k_d`. D substitutes the equity's required return for
+the debt rate and so puts the crossover in the wrong place.
+
 ### Self-check — KA 1.2
 
 1. *Why do lenders test CFADS rather than profit?* — Debt service is paid in cash; accrual
@@ -1120,6 +1190,38 @@ are caught by different habits. A confuses tool governance with output accountab
 C overstates the rule, which attaches to *material* use touching deliverables; D is wrong on the
 foundational point that entering deal data into a tool is itself a disclosure.
 
+**MCQ 1.3-G `[1.3.3 · Evaluation]`** After an unverified benchmark cost Kestrel **1,117,200** of
+delay (WE 1.3.3), four controls are proposed. Which should the leader adopt first?
+- A. prohibit general-purpose AI tools for market and precedent research
+- B. require that no benchmark enter a negotiating position without a source line naming the transaction, the document and the date ✅
+- C. procure an enterprise AI tool whose licence carries a vendor indemnity
+- D. require a second analyst to review every AI-generated summary before it is circulated
+
+*Rationale:* the loss arose because an unsourced number became a negotiating position, and a stale
+internal spreadsheet produces the identical loss — so the control that matches the failure is a rule
+about numbers rather than about tools (1.3.3). A is defensible and narrower than the risk: it forgoes
+a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the
+profession cannot rely on — none of the 1,117,200 would have been recoverable from a vendor, and tool
+approval governs *which* tools may be used, never *who* answers for the output (MCQ 1.3-C). D would
+probably have caught this instance and is the right *second* control, applied to material items; as a
+blanket rule it charges a second analyst against every summary, most of which never reach a
+negotiation.
+
+**MCQ 1.3-H `[1.3.1 · Evaluation]`** A board asks for "one number" for the incremental cost of the
+limited-recourse route, having been shown **5,202,128** built on a 140-basis-point margin
+differential and a 40 % enforcement recovery. The most professional response is:
+- A. give the 5,202,128 without qualification, since the board asked for a single figure
+- B. give 5,202,128 as the base case, name the two parameters that move it most, and state the consequence — at a 50 % recovery the breakeven rises to 127.6910 % and the route cannot pay at any probability ✅
+- C. decline to give a single figure, because the enforcement recovery is unknowable
+- D. give the figure computed on the 50 % recovery, as the more prudent of the two
+
+*Rationale:* candour about numbers means presenting a forecast with its assumptions and
+sensitivities, never as a certainty (1.3.1), and B does what the board asked while disclosing what
+would change the answer. A presents an estimate as a fact. C is a defensible instinct that fails the
+duty from the other side — declining to quantify leaves the judgment to whoever will. D substitutes
+one point estimate for another, and an unlabelled prudence misrepresents a forecast exactly as an
+unlabelled optimism does (MCQ 1.3-A).
+
 ### Self-check — KA 1.3
 
 1. *State the daylight test.* — Would every party, seeing the full relationship and fee map,
@@ -1238,7 +1340,7 @@ view of it.
 
 The invariants below hold by construction. Each is one line to check, and any violated line means
 a defect somewhere upstream — the foundations-level analogue of Domain 3's factor-table checks and
-Domain 4's appraisal invariants (KA 4.A.3), and wired into this programme's golden-answer harness.
+Domain 4's appraisal invariants (KA 4.A.5), and wired into this programme's golden-answer harness.
 
 - **The recourse sentence has three limbs.** Who stands behind what, until when, capped at what. A
   recourse description missing a limb is incomplete, not concise; the missing limb is usually the
