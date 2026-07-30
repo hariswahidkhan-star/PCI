@@ -40,6 +40,7 @@ public static class Templates
             {
                 var cat = H.Str(t["category"]) ?? "general";
                 categories.Add(cat);
+                var stored = (H.Str(t["format"]) ?? "csv").Trim();
                 rows.Add(new
                 {
                     slug = H.Str(t["slug"]),
@@ -47,7 +48,8 @@ public static class Templates
                     category = cat,
                     certification_id = t["certification_id"] is null ? (long?)null : H.L(t["certification_id"]),
                     summary = H.Str(t["summary"]),
-                    format = H.Str(t["format"]) ?? "csv",
+                    // CSV-shaped templates download as branded XLSX workbooks (see the file endpoint).
+                    format = stored is "" or "csv" ? "xlsx" : stored,
                     bytes = H.L(t["bytes"]),
                     download_count = H.L(t["download_count"]),
                     downloaded = mine.Contains(H.L(t["id"])),
@@ -57,11 +59,16 @@ public static class Templates
             return Results.Json(new { rows, total = rows.Count, categories });
         });
 
-        // ---- student file download (requires a logged-in portal session). Streams the CSV, counts the download. ----
+        // ---- student file download (requires a logged-in portal session). Counts the download. ----
+        // A CSV-shaped template is served as a BRANDED XLSX workbook by default (navy band + PCI emblem,
+        // title/summary/meta, styled header, frozen panes); `?format=csv` still streams the raw body
+        // byte-exact for anyone who wants plain data.
         app.MapGet("/api/me/templates/{slug}/file", (HttpContext ctx, string slug) =>
         {
             if (Auth.UserFromReq(ctx.Request, db) is not { } user) return Results.Json(new { error = "no_token" }, statusCode: 401);
-            var t = db.QueryOne("SELECT id,slug,title,format,body FROM templates WHERE slug=? AND published=1", slug);
+            var t = db.QueryOne(@"SELECT t.id,t.slug,t.title,t.summary,t.category,t.format,t.body,c.code AS cert_code
+                FROM templates t LEFT JOIN certifications c ON c.id=t.certification_id
+                WHERE t.slug=? AND t.published=1", slug);
             if (t is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var tid = H.L(t["id"]);
             db.Execute("UPDATE templates SET download_count=download_count+1 WHERE id=?", tid);
@@ -77,9 +84,21 @@ public static class Templates
                 db.Execute("UPDATE template_user_downloads SET count=count+1, last_at=datetime('now') WHERE user_id=? AND template_id=?", user.Id, tid);
             }
             var ext = (H.Str(t["format"]) ?? "csv").Trim();
+            var body = H.Str(t["body"]) ?? "";
+            var wantRaw = ctx.Request.Query["format"] == "csv";
+            if (ext is "" or "csv" && !wantRaw)
+            {
+                var metaBits = new[] { H.Str(t["cert_code"]), H.Str(t["category"]), "v1.0",
+                        $"issued {day}", "projectcontrolsinstitute.org" }
+                    .Where(s => !string.IsNullOrWhiteSpace(s));
+                var xlsx = SimpleXlsx.BuildBranded(H.Str(t["title"]) ?? "Template", H.Str(t["summary"]),
+                    string.Join("  ·  ", metaBits), body, LogoPng(app));
+                return Results.File(xlsx, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    $"{H.Str(t["slug"])}.xlsx");
+            }
             var name = $"{H.Str(t["slug"])}.{(ext.Length == 0 ? "csv" : ext)}";
-            var mime = ext == "csv" ? "text/csv" : "text/plain";
-            return Results.File(Encoding.UTF8.GetBytes(H.Str(t["body"]) ?? ""), mime, name);
+            var mime = ext is "" or "csv" ? "text/csv" : "text/plain";
+            return Results.File(Encoding.UTF8.GetBytes(body), mime, name);
         });
 
         // ---- admin: list every template (incl. drafts), with body + counts (gated 'content') ----
@@ -246,6 +265,23 @@ public static class Templates
             log(adm.Id, "template_delete", H.Str(t["slug"]));
             return Results.Json(new { id, deleted = true });
         }));
+    }
+
+    // The PCI emblem for the workbook brand band, read once from wwwroot. Null (band without the
+    // emblem) when the asset is missing — a branding miss must never fail a student download.
+    static byte[]? _logo;
+    static bool _logoLoaded;
+    static byte[]? LogoPng(WebApplication app)
+    {
+        if (_logoLoaded) return _logo;
+        try
+        {
+            var path = Path.Combine(app.Environment.WebRootPath ?? "wwwroot", "assets", "logo.png");
+            _logo = File.Exists(path) ? File.ReadAllBytes(path) : null;
+        }
+        catch { _logo = null; }
+        _logoLoaded = true;
+        return _logo;
     }
 
     // Conservative slug: lowercase, alphanumerics and hyphens only (safe in a URL path segment and filename).
