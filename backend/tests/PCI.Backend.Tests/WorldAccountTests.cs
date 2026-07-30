@@ -86,11 +86,15 @@ public class WorldAccountTests
         var db = NewWorldDb();
         var (_, uid, _) = WorldAccount.Register(db, "pp@x.test", "long-password-1", null, null);
 
-        // Unverified email → refused; verified but no display name → refused.
+        // Unverified email → refused; verified but no display name → refused; named but with no
+        // selected evidence → refused (P1-05: a Passport cannot publish empty).
         Assert.Equal("email_unverified", WorldAccount.PublishPassport(db, uid).Error);
         db.Execute("UPDATE pciworld_users SET email_verified=1 WHERE id=?", uid);
         Assert.Equal("no_display_name", WorldAccount.PublishPassport(db, uid).Error);
         db.Execute("UPDATE pciworld_users SET display_name='Haris' WHERE id=?", uid);
+        Assert.Equal("no_evidence", WorldAccount.PublishPassport(db, uid).Error);
+        var evSess = db.ExecuteReturningId("INSERT INTO pciworld_sessions(token_sha) VALUES('s-pp-ev')");
+        db.Execute("UPDATE pciworld_attempts SET passport_visible=1 WHERE id=?", Attempt(db, evSess, "WC-EVM-001", uid));
 
         var (err, url) = WorldAccount.PublishPassport(db, uid);
         Assert.Null(err);
@@ -164,8 +168,11 @@ public class WorldAccountTests
     {
         var db = NewWorldDb();
         WorldAccount.Register(db, "sep@x.test", "long-password-1", "S", null);
-        // A PCI World account creates NO row in the platform's users table — the identities never mix.
-        Assert.Equal(0L, db.Scalar<long>("SELECT COUNT(*) FROM users WHERE email='sep@x.test'"));
+        // Canonical-identity model (journey repair P0-00): a World registration creates exactly ONE
+        // canonical users row — the same credentials work on both products, and there is never a
+        // duplicate. Product SESSIONS stay separate (below); the identity does not.
+        Assert.Equal(1L, db.Scalar<long>("SELECT COUNT(*) FROM users WHERE email='sep@x.test'"));
+        Assert.Equal(1L, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_users WHERE email='sep@x.test'"));
         // And a platform student session token means nothing to the world-account resolver.
         var u = db.ExecuteReturningId(
             "INSERT INTO users(email,password_hash,status,first_name) VALUES('stud@pci.local','x','active','S')");

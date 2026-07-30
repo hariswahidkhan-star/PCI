@@ -24,12 +24,73 @@ public static class WorldPages
         "any PCI certification, membership or credential.";
     public const string InstituteLinkLabel = "Visit the Project Controls Institute";
 
+    /// <summary>The share image every PCI World page advertises (Phase 6 / ID-09). One stable
+    /// branded 1200×630 asset that already ships in wwwroot — deliberately NOT a per-artifact
+    /// generator, and never the Passport photograph: a provider's image cache can outlive a
+    /// revoked token, so nothing person-specific may ever be the og:image. The version query
+    /// segment is a cache key: bump it when the asset changes and stale provider caches refetch.</summary>
+    public const string ShareImagePath = "/assets/og-image.jpg?v=1";
+    public const string ShareImageType = "image/jpeg";
+    public const int ShareImageWidth = 1200;
+    public const int ShareImageHeight = 630;
+    public const string ShareImageAlt =
+        "PCI World — a free daily project challenge from the Project Controls Institute.";
+
+    /// <summary>Length control for social metadata. Providers truncate unpredictably past these
+    /// sizes, and an unbounded interpolated string is how a hostile 10 KB display name becomes a
+    /// 10 KB meta tag. Cuts on a word boundary when one exists in the back half, and always
+    /// returns at most <paramref name="max"/> characters including the ellipsis.</summary>
+    public const int MetaTitleMax = 140;
+    public const int MetaDescMax = 300;
+    public static string Clip(string? s, int max)
+    {
+        s = (s ?? "").Trim();
+        if (s.Length <= max) return s;
+        var cut = s.LastIndexOf(' ', max - 1);
+        return s[..(cut > max / 2 ? cut : max - 1)].TrimEnd() + "…";
+    }
+
     public static string E(string? s) => WebUtility.HtmlEncode(s ?? "");
 
     /// <summary>Marks the nav item for the page being viewed. aria-current is the accessible signal;
     /// the underline in the stylesheet hangs off the same attribute, so the visible state and the
     /// announced state can never disagree. "/world" matches only itself — every other World page
     /// lives under a longer path, so a prefix test would light up Today's Challenge everywhere.</summary>
+    /// <summary>
+    /// The nav entries for the surfaces that ship behind flags — community rooms, the forum and
+    /// careers.
+    ///
+    /// THIS EXISTS BECAUSE THEY WERE UNREACHABLE. Each phase built its surface, its tests and its
+    /// crawlable pages, and none of them added a way in: the primary nav went Today's Challenge →
+    /// Challenge Library → Writing → Passport → About, so a visitor could only find the forum or
+    /// the jobs board by already knowing the URL. Built, tested and invisible is the same class of
+    /// defect as a component with green tests that nothing imports — the tests pass either way,
+    /// which is exactly why nobody notices.
+    ///
+    /// Each link is conditional on its own flag, and that is not cosmetic. With a flag off the
+    /// routes return 404 by design, so an unconditional link would advertise a page that does not
+    /// exist — worse than no link, because a broken nav item reads as a broken site rather than as
+    /// a feature that has not launched.
+    /// </summary>
+    static string NavExtras(Db db, string canonicalPath)
+    {
+        var sb = new System.Text.StringBuilder();
+        if (Settings.Bool(db, "world_community_enabled", false))
+            sb.Append($"<a href=\"/world-app/community\"{Cur(canonicalPath, "/world-app/community")}>Rooms</a>");
+        if (Settings.Bool(db, "pciworld_forum_enabled", false))
+            sb.Append($"<a href=\"/world/forum\"{Cur(canonicalPath, "/world/forum")}>Forum</a>");
+        if (Settings.Bool(db, "pciworld_careers_enabled", false))
+            sb.Append($"<a href=\"/world/careers\"{Cur(canonicalPath, "/world/careers")}>Jobs</a>");
+        // The frontend preview is UNCONDITIONAL, and that is the point of it. Every link above
+        // depends on a flag, so on a deployment with the flags off — which is every deployment
+        // today — the nav shows none of this and a visitor cannot tell the features exist. The
+        // preview is a static file with no API, no flag and no database behind it, so it cannot
+        // 404 and cannot be hidden. It is how somebody sees the whole product surface, and how a
+        // developer picking up the server side sees what they are building toward.
+        sb.Append($"<a href=\"/world/preview/\"{Cur(canonicalPath, "/world/preview")}>Preview</a>");
+        return sb.ToString();
+    }
+
     static string Cur(string canonicalPath, string href) =>
         canonicalPath == href || (href != "/world" && canonicalPath.StartsWith(href + "/", StringComparison.Ordinal))
             ? " aria-current=\"page\"" : "";
@@ -76,6 +137,19 @@ public static class WorldPages
           if(!h) return;
           var t=function(){h.classList.toggle('is-stuck',window.scrollY>4)};
           addEventListener('scroll',t,{passive:true});t();
+          // Account-aware navigation (journey repair P1-07/PW-US-003): a signed-in participant
+          // sees "My dashboard", never an invitation to create what they already have. The token's
+          // PRESENCE is only a hint for the label — every real decision stays server-side.
+          try{
+            if(localStorage.getItem('world_account')){
+              document.querySelectorAll('a[href="/world/account"]').forEach(function(a){
+                var txt=(a.textContent||'').trim();
+                if(txt==='Passport')a.textContent='My dashboard';
+                if(txt==='Your Passport')a.textContent='My dashboard';
+                if(txt==='Start your Passport')a.textContent='Open my dashboard';
+              });
+            }
+          }catch(e){}
         })();
         </script>
         """;
@@ -107,6 +181,7 @@ public static class WorldPages
               --ease:cubic-bezier(.22,.61,.36,1)}
         *{box-sizing:border-box;margin:0}
         html{-webkit-text-size-adjust:100%}
+        ::selection{background:#BFDBFE}
         /* A cool wash across the top of the page so the first screen reads as a lit control room
            rather than a blank sheet. Painted as a background layer rather than an absolutely
            positioned element: a full-bleed div wider than the viewport adds a horizontal scrollbar
@@ -182,8 +257,11 @@ public static class WorldPages
         .card--noir .meta span{border-color:#26334a;color:#CBD5E1;background:transparent}
         .btn{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;border:2px solid var(--blue);
              font-family:var(--sans);font-weight:600;font-size:15.5px;padding:15px 28px;cursor:pointer;text-decoration:none;
-             border-radius:0;transition:background .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease)}
-        .btn:hover{background:var(--blue-deep);border-color:var(--blue-deep)}
+             border-radius:0;transition:background .16s var(--ease),border-color .16s var(--ease),color .16s var(--ease),
+             transform .16s var(--ease),box-shadow .16s var(--ease)}
+        .btn:hover{background:var(--blue-deep);border-color:var(--blue-deep);transform:translateY(-1px);
+             box-shadow:0 12px 26px -14px rgba(29,78,216,.55)}
+        .btn:active{transform:none;box-shadow:none}
         .btn.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--field);padding:15.5px 28px}
         .btn.secondary:hover{border-color:var(--ink);background:var(--paper)}
         /* On a noir surface the default ink-on-transparent secondary button is unreadable. It needs
@@ -338,40 +416,93 @@ public static class WorldPages
         @media (max-width:860px){.ft-grid{grid-template-columns:1fr 1fr}}
         @media (max-width:520px){.ft-grid{grid-template-columns:1fr}}
         /* ── the Passport artefact ─────────────────────────────────────────────
-           A passport cover, not a web card: deep noir with a corner sheen, hairline gilt frame,
-           engraved guilloché rings (pure CSS, deterministic), a seal, and letter-spaced labels.
-           Gilt (#C8A24B) is 7.5:1 on noir; slate labels 5.2:1; the name is white. */
-        .ppt-cover{position:relative;background:radial-gradient(130% 150% at 88% -30%,#1C2C4E 0%,var(--noir) 56%);
-             border-radius:18px;color:#CBD5E1;padding:42px 42px 34px;margin:28px 0;overflow:hidden;
-             box-shadow:0 2px 6px rgba(8,15,35,.16),0 40px 80px -34px rgba(8,15,35,.55)}
-        .ppt-cover::before{content:"";position:absolute;inset:11px;border:1px solid rgba(200,162,75,.42);
-             border-radius:11px;pointer-events:none}
-        .ppt-cover::after{content:"";position:absolute;inset:14px;border:1px solid rgba(200,162,75,.16);
-             border-radius:9px;pointer-events:none}
+           A passport data page, not a web card: deep noir with layered engraving. The material is
+           built from five deterministic layers — the lit ground, a fine guilloché with a corner
+           rosette (.ppt-lines), a diagonal sheen (.ppt-sheen), a gilt hairline frame with engraved
+           corner marks (::before/::after), and a machine-readable strip (.ppt-mrz) whose text only
+           restates what the page already says. Gilt (#C8A24B) is 7.5:1 on noir; the name is white. */
+        .ppt-cover{position:relative;color:#CBD5E1;padding:46px 46px 30px;margin:28px 0;overflow:hidden;
+             border-radius:20px;
+             background:radial-gradient(120% 150% at 86% -28%,#243761 0%,#1A2743 40%,var(--noir) 66%,#0A101C 100%);
+             box-shadow:0 1px 0 rgba(255,255,255,.07) inset,0 0 0 1px rgba(255,255,255,.04),
+                        0 2px 6px rgba(8,15,35,.18),0 48px 90px -38px rgba(8,15,35,.62)}
+        .ppt-cover::before{content:"";position:absolute;inset:12px;border:1px solid rgba(213,178,96,.44);
+             border-radius:12px;pointer-events:none;
+             box-shadow:0 0 0 3px rgba(200,162,75,.05),inset 0 0 0 1px rgba(200,162,75,.05)}
+        /* Engraved corner marks on the inner plate — eight hairline arms, two per corner. */
+        .ppt-cover::after{content:"";position:absolute;inset:17px;pointer-events:none;background:
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left top/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left top/1px 22px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right top/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right top/1px 22px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left bottom/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) left bottom/1px 22px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right bottom/22px 1px no-repeat,
+             linear-gradient(rgba(226,192,119,.85),rgba(226,192,119,.85)) right bottom/1px 22px no-repeat}
+        /* Guilloché: two ring systems and a fine ray rosette anchored past the lower-right corner,
+           echoed by a fainter silver system upper-left — engraving, not decoration, so it stays
+           under 10% opacity and fades toward the text. */
         .ppt-lines{position:absolute;inset:0;pointer-events:none;
-             background:repeating-radial-gradient(circle at 106% 112%,transparent 0 10px,rgba(200,162,75,.075) 10px 11px),
-                        repeating-radial-gradient(circle at -8% -14%,transparent 0 13px,rgba(148,163,184,.05) 13px 14px)}
+             background:repeating-radial-gradient(circle at 107% 114%,transparent 0 9px,rgba(200,162,75,.11) 9px 10px),
+                        repeating-radial-gradient(circle at 107% 114%,transparent 0 23px,rgba(226,192,119,.07) 23px 24.5px),
+                        repeating-conic-gradient(from 0deg at 107% 114%,rgba(200,162,75,.08) 0deg 1deg,transparent 1deg 5.5deg),
+                        repeating-radial-gradient(circle at -9% -16%,transparent 0 12px,rgba(148,163,184,.065) 12px 13px),
+                        repeating-radial-gradient(circle at -9% -16%,transparent 0 29px,rgba(148,163,184,.045) 29px 30.5px);
+             -webkit-mask-image:radial-gradient(115% 115% at 50% 45%,transparent 18%,#000 70%);
+             mask-image:radial-gradient(115% 115% at 50% 45%,transparent 18%,#000 70%)}
+        /* One still band of light across the plate, as on a photographed document. Static — the
+           artefact is an object, not an animation. */
+        .ppt-sheen{position:absolute;inset:0;pointer-events:none;
+             background:linear-gradient(112deg,transparent 34%,rgba(255,255,255,.045) 46%,rgba(255,255,255,.10) 51%,rgba(255,255,255,.035) 56%,transparent 68%)}
         .ppt-top{position:relative;display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:30px}
         .ppt-top .wordmark{font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.03em;color:#fff;white-space:nowrap}
         .ppt-top .bar{width:2px;height:24px;background:var(--crimson);border-radius:2px;flex:0 0 auto}
-        .ppt-top .ppt-word{margin-left:auto;font-weight:700;font-size:12px;letter-spacing:.42em;
+        /* The endorsement after the crimson rule — the same lockup the header draws: PCI World,
+           the red line, then who it is from. */
+        .ppt-top .ppt-from{font-weight:600;font-size:11.5px;letter-spacing:.02em;color:#94A3B8;
+             line-height:1.25;max-width:150px}
+        .ppt-top .ppt-word{margin-left:auto;font-weight:800;font-size:12.5px;letter-spacing:.46em;
              text-transform:uppercase;color:var(--gilt);padding-left:4px}
-        .ppt-kicker{position:relative;display:block;font-weight:700;font-size:11.5px;letter-spacing:.22em;
+        /* Foil, where the platform can print it: the word is clipped out of a metallic gradient.
+           Engines without background-clip:text keep the flat gilt above — same word, same colour
+           family, so nothing is lost. */
+        @supports ((-webkit-background-clip:text) or (background-clip:text)){
+          .ppt-top .ppt-word{background:linear-gradient(103deg,#8F6B2E 0%,#D9B96A 24%,#F4E4AF 40%,#BE9440 56%,#E8CD86 76%,#9E7833 100%);
+               -webkit-background-clip:text;background-clip:text;color:transparent}
+        }
+        /* The owner's photograph, mounted: a gilt bezel, a dark mat, and a drop into the page. */
+        .ppt-photo{flex:0 0 auto;width:112px;height:140px;object-fit:cover;border-radius:8px;
+             border:1px solid rgba(226,192,119,.7);display:block;background:#0A101C;
+             box-shadow:0 0 0 4px rgba(10,16,28,.85),0 0 0 5px rgba(200,162,75,.4),
+                        0 18px 34px -14px rgba(0,0,0,.65)}
+        .ppt-kicker{position:relative;display:block;font-weight:700;font-size:11.5px;letter-spacing:.24em;
              text-transform:uppercase;color:var(--gilt);margin-bottom:12px}
-        .ppt-name{position:relative;font-family:var(--display);font-weight:800;font-size:clamp(30px,4.8vw,46px);
-             line-height:1.05;letter-spacing:-.02em;color:#fff;margin:0 0 10px;text-wrap:balance;max-width:24ch}
+        /* The hairline grows out of the kicker — an engraver's rule, anchoring the name. */
+        .ppt-kicker::after{content:"";display:block;width:46px;height:1px;margin-top:11px;
+             background:linear-gradient(90deg,rgba(226,192,119,.9),rgba(226,192,119,0))}
+        .ppt-name{position:relative;font-family:var(--display);font-weight:900;font-size:clamp(30px,4.8vw,46px);
+             line-height:1.04;letter-spacing:-.022em;color:#fff;margin:0 0 10px;text-wrap:balance;max-width:24ch;
+             text-shadow:0 1px 0 rgba(0,0,0,.3)}
         .ppt-sub{position:relative;color:#94A3B8;font-size:15px;max-width:60ch;margin:0}
         .ppt-cover h2{position:relative}
-        .ppt-stats{position:relative;display:flex;flex-wrap:wrap;gap:0;margin-top:30px;padding-top:6px;
-             border-top:1px solid rgba(148,163,184,.28)}
-        .ppt-stats>div{padding:16px 36px 0 0;margin-right:36px;border-right:1px solid rgba(148,163,184,.16)}
+        .ppt-stats{position:relative;display:flex;flex-wrap:wrap;gap:0;margin-top:32px;padding-top:6px;
+             border-top:1px solid rgba(200,162,75,.32)}
+        .ppt-stats>div{padding:18px 38px 0 0;margin-right:38px;border-right:1px solid rgba(148,163,184,.14)}
         .ppt-stats>div:last-child{border-right:0;margin-right:0;padding-right:0}
-        .ppt-stats .kicker{color:#94A3B8;margin-bottom:5px;font-size:11.5px;letter-spacing:.18em}
-        .ppt-stats b{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.02em;
-             display:block;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums}
-        .ppt-seal{flex:0 0 auto;display:block}
-        .ppt-foot{position:relative;display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:26px;
-             font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7C8CA0}
+        .ppt-stats .kicker{color:#9FB0C6;margin-bottom:7px;font-size:11px;letter-spacing:.2em}
+        .ppt-stats b{font-family:var(--display);font-weight:900;font-size:42px;letter-spacing:-.02em;
+             display:block;line-height:1.05;color:#fff;font-variant-numeric:tabular-nums;
+             text-shadow:0 1px 0 rgba(0,0,0,.3)}
+        .ppt-seal{flex:0 0 auto;display:block;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35))}
+        .ppt-foot{position:relative;display:flex;gap:10px 26px;flex-wrap:wrap;margin-top:28px;
+             font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8595AB}
+        /* The machine-readable zone. Purely typographic — the strip restates, in the chevron idiom
+           every passport reader recognises, exactly what the cover already says in words. */
+        .ppt-mrz{position:relative;margin-top:22px;padding-top:15px;border-top:1px solid rgba(200,162,75,.26);
+             font-family:ui-monospace,'Cascadia Mono','Courier New',monospace;font-size:11.5px;
+             letter-spacing:.16em;line-height:2;color:rgba(203,213,225,.38);
+             white-space:nowrap;overflow:hidden}
+        .ppt-mrz span{display:block}
         /* Disclosure switches: still real checkboxes (the tests and assistive tech depend on that),
            drawn as instrument toggles. The control itself is the track, so it stays visible,
            focusable and clickable exactly as before. */
@@ -398,9 +529,11 @@ public static class WorldPages
         @media (max-width:700px){.auth-alt{border-inline-start:0;padding-inline-start:0;
              border-top:1.5px solid var(--line);padding-top:26px}}
         @media (max-width:560px){
-          .ppt-cover{padding:28px 22px 24px}
+          .ppt-cover{padding:30px 24px 22px}
           .ppt-stats>div{padding-right:22px;margin-right:22px}
           .ppt-stats b{font-size:31px}
+          .ppt-photo{width:88px;height:110px}
+          .ppt-mrz{font-size:9.5px;letter-spacing:.12em}
           .defn>div{grid-template-columns:1fr;gap:4px}
         }
         .crumbs{font-size:14px;color:var(--slate);margin-bottom:18px}
@@ -456,11 +589,24 @@ public static class WorldPages
         """;
 
     /// <summary>Every PCI World page: institute link in header and footer, operated-by disclosure,
-    /// unique title/description, canonical, Open Graph.</summary>
+    /// unique title/description, canonical, and the full Open Graph / Twitter card set.
+    ///
+    /// The canonical and og:url are THIS page's own absolute address (ID-09): a token-specific
+    /// Passport or result must never advertise the World homepage as its canonical, or every share
+    /// card unfurls as the homepage. The base comes from WorldUrl.Base() with no request — operator
+    /// configuration or the compiled canonical constant, NEVER the request Host header, which is
+    /// attacker-supplied on every request and would let a forged Host poison the canonical a cache
+    /// or crawler stores. Everything interpolated into the head is HTML-encoded and
+    /// length-controlled; callers are responsible for passing only fields that are public for the
+    /// artifact being rendered (see PublicPassport / PublicResult).</summary>
     public static string Layout(Db db, string title, string metaDesc, string body,
         string canonicalPath, string? ogTitle = null, string? ogDesc = null, bool noindex = false)
     {
         var inst = E(InstituteUrl(db));
+        var pageUrl = WorldUrl.Base() + canonicalPath;
+        var image = WorldUrl.Base() + ShareImagePath;
+        var shareTitle = Clip(ogTitle ?? title, MetaTitleMax);
+        var shareDesc = Clip(ogDesc ?? metaDesc, MetaDescMax);
         return $"""
             <!doctype html>
             <html lang="en">
@@ -470,23 +616,31 @@ public static class WorldPages
             <meta name="color-scheme" content="light only">
             <meta name="theme-color" content="#0E1525">
             <title>{E(title)}</title>
-            <meta name="description" content="{E(metaDesc)}">
+            <meta name="description" content="{E(Clip(metaDesc, MetaDescMax))}">
             {(noindex
                 ? "<meta name=\"robots\" content=\"noindex, nofollow\">"
                 // Being explicit on indexable pages is worth the line: it authorises a large image
                 // preview and a full snippet, which the default leaves to each engine's guess.
                 : "<meta name=\"robots\" content=\"index, follow, max-image-preview:large, max-snippet:-1\">")}
-            <link rel="canonical" href="{E(WorldUrl.Base() + canonicalPath)}">
+            <link rel="canonical" href="{E(pageUrl)}">
             <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E1525%27/%3E%3Crect x=%2712%27 y=%2744%27 width=%2740%27 height=%274%27 rx=%272%27 fill=%27%23C13329%27/%3E%3Ctext x=%2732%27 y=%2738%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2722%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPW%3C/text%3E%3C/svg%3E">
             <meta property="og:site_name" content="PCI World">
-            <meta property="og:title" content="{E(ogTitle ?? title)}">
-            <meta property="og:description" content="{E(ogDesc ?? metaDesc)}">
+            <meta property="og:title" content="{E(shareTitle)}">
+            <meta property="og:description" content="{E(shareDesc)}">
             <meta property="og:type" content="website">
-            <meta property="og:url" content="{E(WorldUrl.Base() + canonicalPath)}">
+            <meta property="og:url" content="{E(pageUrl)}">
             <meta property="og:locale" content="en">
-            <meta name="twitter:card" content="summary">
-            <meta name="twitter:title" content="{E(ogTitle ?? title)}">
-            <meta name="twitter:description" content="{E(ogDesc ?? metaDesc)}">
+            <meta property="og:image" content="{E(image)}">
+            <meta property="og:image:secure_url" content="{E(image)}">
+            <meta property="og:image:type" content="{ShareImageType}">
+            <meta property="og:image:width" content="{ShareImageWidth}">
+            <meta property="og:image:height" content="{ShareImageHeight}">
+            <meta property="og:image:alt" content="{E(ShareImageAlt)}">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="{E(shareTitle)}">
+            <meta name="twitter:description" content="{E(shareDesc)}">
+            <meta name="twitter:image" content="{E(image)}">
+            <meta name="twitter:image:alt" content="{E(ShareImageAlt)}">
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             {FontLoader}
@@ -510,6 +664,7 @@ public static class WorldPages
                   <a href="/world"{Cur(canonicalPath, "/world")}>Today&rsquo;s Challenge</a>
                   <a href="/world/archive"{Cur(canonicalPath, "/world/archive")}>Challenge Library</a>
                   <a href="/world/blog"{Cur(canonicalPath, "/world/blog")}>Writing</a>
+                  {NavExtras(db, canonicalPath)}
                   <a href="/world/account"{Cur(canonicalPath, "/world/account")}>Passport</a>
                   <a href="/world/about"{Cur(canonicalPath, "/world/about")}>About</a>
                 </nav>
@@ -570,15 +725,19 @@ public static class WorldPages
         // this host — the progression link must never dead-end inside our own allowlist.
         var simlab = WorldOnly.Enabled ? E(InstituteUrl(db)) : E(Settings.Str(db, "world_simlab_url", "/app/lab"));
         var primaryHref = today is not null ? $"/world/challenge/{E(H.Str(today["code"]))}" : "/world/archive";
+        // One boundary, said the same way everywhere (PW-US-019): operators set the rotation
+        // timezone, so "00:00 UTC" was simply wrong wherever they had — the copy follows the
+        // setting, exactly like the Today API's changes_at.
+        var rotZone = E(Settings.Str(db, "world_rotation_timezone", "UTC"));
         var todayCard = today is null || version is null
-            ? """
+            ? $"""
               <div class="card"><span class="kicker">Today's challenge</span>
               <h2>The first challenge is being prepared</h2>
-              <p style="color:var(--slate)">PCI World rotates a new project challenge every day at 00:00 UTC. Check back shortly.</p></div>
+              <p style="color:var(--slate)">PCI World rotates a new project challenge every day at midnight ({rotZone}). Check back shortly.</p></div>
               """
             : $"""
               <div class="card card--noir">
-                <span class="kicker">Today&rsquo;s challenge &middot; rotates daily at 00:00 UTC</span>
+                <span class="kicker">Today&rsquo;s challenge &middot; rotates daily at midnight ({rotZone})</span>
                 <h2>{E(H.Str(version["title"]))}</h2>
                 <p style="color:#CBD5E1;max-width:64ch">{E(H.Str(version["hook"]))}</p>
                 <div class="meta">
@@ -611,7 +770,7 @@ public static class WorldPages
                     <a class="btn secondary" href="/world/about">See how PCI World works</a>
                   </div>
                   <ul class="hero-facts">
-                    <li>Free</li><li>No account needed</li><li>New challenge daily at 00:00 UTC</li>
+                    <li>Free</li><li>No account needed</li><li>New challenge daily at midnight ({rotZone})</li>
                   </ul>
                 </div>
                 <div class="hero-panel" role="img" aria-label="A project performance chart: planned value as a dashed baseline, earned value tracking below plan, and actual cost running above earned value at the data date — the situation a PCI World challenge drops you into.">
@@ -654,6 +813,7 @@ public static class WorldPages
               <div class="ppt-lines" aria-hidden="true"></div>
               <div class="ppt-top">
                 <span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>
+                <span class="ppt-from">From the Project<br>Controls Institute</span>
                 {SealSvg(66)}
                 <span class="ppt-word">Passport</span>
               </div>
@@ -696,23 +856,35 @@ public static class WorldPages
 
     /// <summary>The Passport seal — an engraved-style emblem drawn as inline SVG. Deterministic,
     /// self-contained (no external references) and decorative by role: it never carries meaning
-    /// the surrounding text does not state.</summary>
+    /// the surrounding text does not state — the ring lettering repeats the operator and product
+    /// names already printed beside it. The gradient defs use fixed ids; at most one seal is ever
+    /// in the live DOM per page (the account page's second copy sits inert inside a template).</summary>
     public static string SealSvg(int size = 92) => $"""
         <svg class="ppt-seal" width="{size}" height="{size}" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
-          <circle cx="48" cy="48" r="45" fill="none" stroke="#C8A24B" stroke-width="1.5" opacity=".9"/>
-          <circle cx="48" cy="48" r="40.5" fill="none" stroke="#C8A24B" stroke-width=".7" opacity=".5"/>
-          <circle cx="48" cy="48" r="31" fill="none" stroke="#C8A24B" stroke-width=".9" opacity=".65"/>
-          <g stroke="#C8A24B" stroke-width="1.1" opacity=".75">
-            <line x1="89" y1="48" x2="93" y2="48"/><line x1="83.5" y1="68.5" x2="87" y2="70.5"/>
-            <line x1="68.5" y1="83.5" x2="70.5" y2="87"/><line x1="48" y1="89" x2="48" y2="93"/>
-            <line x1="27.5" y1="83.5" x2="25.5" y2="87"/><line x1="12.5" y1="68.5" x2="9" y2="70.5"/>
-            <line x1="7" y1="48" x2="3" y2="48"/><line x1="12.5" y1="27.5" x2="9" y2="25.5"/>
-            <line x1="27.5" y1="12.5" x2="25.5" y2="9"/><line x1="48" y1="7" x2="48" y2="3"/>
-            <line x1="68.5" y1="12.5" x2="70.5" y2="9"/><line x1="83.5" y1="27.5" x2="87" y2="25.5"/>
-          </g>
-          <text x="48" y="55" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-weight="900"
-                font-size="24" fill="#C8A24B" letter-spacing="-1">PW</text>
-          <rect x="39" y="61" width="18" height="2.5" rx="1.25" fill="#C13329"/>
+          <defs>
+            <linearGradient id="pwsealg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#EBD08C"/><stop offset=".38" stop-color="#C8A24B"/>
+              <stop offset=".62" stop-color="#9E7833"/><stop offset="1" stop-color="#E2C077"/>
+            </linearGradient>
+            <path id="pwsealat" d="M13.5 48a34.5 34.5 0 0 1 69 0"/>
+            <path id="pwsealab" d="M16.5 48a31.5 31.5 0 0 0 63 0"/>
+          </defs>
+          <circle cx="48" cy="48" r="45" fill="none" stroke="url(#pwsealg)" stroke-width="1.6"/>
+          <circle cx="48" cy="48" r="42.5" fill="none" stroke="#C8A24B" stroke-width=".5" opacity=".55"/>
+          <circle cx="48" cy="48" r="27.5" fill="none" stroke="url(#pwsealg)" stroke-width=".9"/>
+          <circle cx="48" cy="48" r="25.5" fill="none" stroke="#C8A24B" stroke-width=".45" opacity=".5"/>
+          <circle cx="13.5" cy="48" r="1.2" fill="#C8A24B"/><circle cx="82.5" cy="48" r="1.2" fill="#C8A24B"/>
+          <text font-family="Archivo,Arial,sans-serif" font-weight="700" font-size="4.9"
+                fill="#C8A24B" letter-spacing=".9">
+            <textPath href="#pwsealat" startOffset="50%" text-anchor="middle">PROJECT CONTROLS INSTITUTE</textPath>
+          </text>
+          <text font-family="Archivo,Arial,sans-serif" font-weight="700" font-size="6"
+                fill="#C8A24B" letter-spacing="3">
+            <textPath href="#pwsealab" startOffset="50%" text-anchor="middle">PCI WORLD</textPath>
+          </text>
+          <text x="48" y="53.5" text-anchor="middle" font-family="Archivo,Arial,sans-serif" font-weight="900"
+                font-size="19" fill="url(#pwsealg)" letter-spacing="-.5">PW</text>
+          <rect x="40.5" y="58.5" width="15" height="2.2" rx="1.1" fill="#C13329"/>
         </svg>
         """;
 
@@ -802,8 +974,12 @@ public static class WorldPages
         function $(id){ return document.getElementById(id); }
         function esc(s){ var d = document.createElement('span'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
         function api(path, body){
+          // The signed-in account travels with EVERY workspace call (journey repair P0-01):
+          // without it, challenges completed while signed in stayed anonymous and never reached
+          // the account's history or Passport until some later login happened to claim them.
           return fetch(path, { method:'POST', headers:{ 'Content-Type':'application/json',
-            'X-World-Session': localStorage.getItem('world_session') || '' },
+            'X-World-Session': localStorage.getItem('world_session') || '',
+            'X-World-Account': localStorage.getItem('world_account') || '' },
             body: JSON.stringify(body || {}) }).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw j; return j; }); });
         }
         function mintSession(){
@@ -972,9 +1148,14 @@ public static class WorldPages
                '<label for="dispname" style="margin-top:0">Name on your public result (leave blank to stay anonymous)</label>' +
                '<input type="text" id="dispname" maxlength="80" autocomplete="name">' +
                '<p style="margin-top:12px"><button class="btn" type="button" id="mkshare">Get my verified result link</button> ' +
-               '<button class="btn secondary" type="button" id="mkinvite">Challenge a friend</button></p>' +
+               '<button class="btn secondary" type="button" id="mkinvite">Challenge a friend</button> ' +
+               '<button class="btn secondary" type="button" id="mkretake">Retake this challenge</button></p>' +
                '<div id="sharebox"></div><div id="invitebox"></div>' +
-               '<p style="margin-top:14px"><a href="/world/account">Create your free PCI World Passport</a> to keep this result as verified evidence — challenges completed in this browser are added automatically.</p>' +
+               // Account-aware, and honest either way (P1-07/PW-US-003): signed-in work is owned
+               // from the first answer; anonymous work is adopted when this browser signs in.
+               (localStorage.getItem('world_account')
+                 ? '<p style="margin-top:14px"><a href="/world/account">Open your PCI World dashboard</a> — this result is saved to your account.</p>'
+                 : '<p style="margin-top:14px"><a href="/world/account">Create your free PCI World Passport</a> to keep this result as verified evidence — challenges completed in this browser are added when you sign up or sign in here.</p>') +
                '<p class="notice">Your answers are never shown on the public result page.</p></div>';
           el.innerHTML = h;
           $('mkshare').addEventListener('click', function(){
@@ -987,6 +1168,14 @@ public static class WorldPages
               .then(function(s){ $('invitebox').innerHTML =
                 '<p>Send this to someone who thinks they can do better:</p>' + shareLinks(s.url); })
               .catch(function(){ $('invitebox').innerHTML = '<p class="bad">Could not create the invitation — try again.</p>'; });
+          });
+          // Retake is a DELIBERATE act (journey repair P0-04): it opens a fresh linked attempt on the
+          // server, then reloads so the workspace resumes it — the completed original is untouched.
+          $('mkretake').addEventListener('click', function(){
+            withSession(function(){
+              return api('/api/world/attempts', { code: WORLD.code, invite: WORLD.invite, retake: true });
+            }).then(function(){ location.reload(); })
+              .catch(function(){ $('invitebox').innerHTML = '<p class="bad">Could not start a retake — try again.</p>'; });
           });
           // Honour prefers-reduced-motion: a smooth scroll is motion the user asked us not to make.
           var smooth = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -1155,7 +1344,14 @@ public static class WorldPages
             "/world/about");
     }
 
-    public static string PublicResult(Db db, Dictionary<string, object?> attempt, Dictionary<string, object?> version)
+    /// <summary>Public shared result. The og/twitter metadata derives ONLY from what this page
+    /// already shows to anyone holding the link: the display name the participant chose at share
+    /// time (or the anonymous fallback) and the published challenge title/share line. Scores,
+    /// dimensions and dates stay out of the metadata. Pass <paramref name="token"/> so the page
+    /// advertises its OWN address as canonical/og:url (ID-09); without it the metadata falls back
+    /// to the homepage path rather than guessing from the request.</summary>
+    public static string PublicResult(Db db, Dictionary<string, object?> attempt, Dictionary<string, object?> version,
+        string? token = null)
     {
         var name = H.Str(attempt["display_name"]);
         var who = string.IsNullOrWhiteSpace(name) ? "A PCI World participant" : name!;
@@ -1198,7 +1394,7 @@ public static class WorldPages
             <p><a class="btn" href="/world">Take today&rsquo;s challenge yourself</a></p>
             <p class="notice">This page shows a verified practice result. Participant answers are never published. {E(PracticeNotice)}</p>
             """,
-            "/world",
+            string.IsNullOrEmpty(token) ? "/world" : "/world/r/" + Uri.EscapeDataString(token),
             ogTitle: $"{who} — {title} — PCI World Challenge",
             ogDesc: share.Length > 0 ? share : $"Verified PCI World challenge result: {title}.",
             // A shared result is for the person the participant sent it to, not for a search index.
@@ -1208,20 +1404,59 @@ public static class WorldPages
             noindex: true);
     }
 
-    public static string VerifyEmail(Db db, bool ok) => Layout(db,
-        ok ? "Email verified — PCI World" : "Verification link invalid — PCI World",
+    /// <summary>
+    /// Email verification page (journey repair P1-03). States: "confirm" — the token is valid and
+    /// verification happens only on the deliberate button press (the POST consumes it; a GET from
+    /// a mail scanner or link preview changes nothing); "already" — the account is verified, the
+    /// press would be a no-op and says so; "invalid" — expired, used or malformed.
+    /// </summary>
+    public static string VerifyEmail(Db db, string state) => Layout(db,
+        state switch
+        {
+            "confirm" => "Confirm your email — PCI World",
+            "already" => "Email already verified — PCI World",
+            _ => "Verification link invalid — PCI World",
+        },
         "PCI World email verification.",
-        ok
-            ? """
-              <h1>Email verified</h1>
-              <p class="lede">Your PCI World account email is confirmed. You can now publish your Passport when you choose to.</p>
-              <p><a class="btn" href="/world/account">Go to your account</a></p>
-              """
-            : """
-              <h1>That link didn&rsquo;t work</h1>
-              <p class="lede">The verification link is invalid or has expired. Sign in and request a new one from your account page.</p>
+        state switch
+        {
+            "confirm" => """
+              <span class="kicker">Account</span>
+              <h1>Confirm your email address</h1>
+              <div class="card" style="max-width:480px">
+                <p class="lede" style="margin-top:0">Press the button to verify this email for your PCI World account.
+                Nothing happens until you do — opening this link alone changes nothing.</p>
+                <p><button class="btn" id="ve_go">Verify my email</button></p>
+                <p id="ve_msg" role="status"></p>
+              </div>
+              <script>
+              (function(){
+              'use strict';
+              var btn=document.getElementById('ve_go'),msg=document.getElementById('ve_msg');
+              btn.addEventListener('click',function(){
+                btn.disabled=true;
+                var t=new URLSearchParams(location.search).get('t')||'';
+                fetch('/api/world/account/verify-email',{method:'POST',headers:{'Content-Type':'application/json'},
+                  body:JSON.stringify({token:t})})
+                .then(function(r){return r.json().then(function(j){if(!r.ok)throw j;return j;});})
+                .then(function(){msg.innerHTML='<span class="ok">Email verified.</span> <a href="/world/account">Go to your account</a> to continue.';})
+                .catch(function(e){btn.disabled=false;
+                  msg.innerHTML='<span class="bad">'+((e&&e.message)||'That link is no longer valid — request a new one from your account page.')+'</span>';});
+              });
+              })();
+              </script>
+              """,
+            "already" => """
+              <h1>This email is already verified</h1>
+              <p class="lede">Nothing more to do — your PCI World account email is confirmed and this link has no further effect.</p>
               <p><a class="btn" href="/world/account">Go to your account</a></p>
               """,
+            _ => """
+              <h1>That link didn&rsquo;t work</h1>
+              <p class="lede">The verification link is invalid, has expired, or was already used. Sign in and request a new one from your account page — sending again is free and takes seconds.</p>
+              <p><a class="btn" href="/world/account">Go to your account</a></p>
+              """,
+        },
         "/world/account", noindex: true);
 
     public static string ResetPassword(Db db) => Layout(db,
@@ -1257,14 +1492,16 @@ public static class WorldPages
     /// <summary>Public Passport: consent-based, name-led, evidence only — never an email, never an
     /// answer, never presented as a credential.</summary>
     public static string PublicPassport(Db db, string name, List<Dictionary<string, object?>> rows,
-        WorldPassport.Disclosure? show = null, string? verifyUrl = null, string? token = null, string? expiresAt = null)
+        WorldPassport.Disclosure? show = null, string? verifyUrl = null, string? token = null, string? expiresAt = null,
+        string? photoUrl = null, long? totalCompleted = null, long? totalIndustries = null, long? totalTracks = null)
     {
         // Field-level disclosure is enforced HERE, at render, not by hiding columns in CSS: a value
         // the owner did not publish never reaches the page at all.
         show ??= new WorldPassport.Disclosure(true, true, true);
         var items = string.Join("", rows.Select(r => $"""
             <tr>
-              <td>{E(H.Str(r["title"]))}</td>
+              <td><b>{E(H.Str(r["title"]))}</b><br>
+                <small class="num" style="color:var(--slate)"><a href="/world/challenge/{E(H.Str(r["code"]))}">{E(H.Str(r["code"]))}</a> &middot; v{H.L(r["version"])}</small></td>
               <td>{E(H.Str(r["industry"]))}</td>
               <td>{E(Cap(H.Str(r["difficulty"])))}</td>
               {(show.Scores ? $"<td class=\"num\">{H.D(r["score"]):0.#}</td>" : "")}
@@ -1272,8 +1509,14 @@ public static class WorldPages
               {(show.Dates ? $"<td class=\"num\">{E((H.Str(r["completed_at"]) ?? "").Split(' ')[0])}</td>" : "")}
             </tr>
             """));
-        var industries = rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
-        var tracks = rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        // Whole-history totals when the caller supplies them (P1-06); the page of rows is only a
+        // window, and the stats must never understate a long history.
+        var completedTotal = totalCompleted ?? rows.Count;
+        var industries = totalIndustries ?? rows.Select(r => H.Str(r["industry"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var tracks = totalTracks ?? rows.Select(r => H.Str(r["track"])).Where(s => !string.IsNullOrEmpty(s)).Distinct().Count();
+        var truncated = completedTotal > rows.Count
+            ? $"<p class=\"meta\"><span>Showing the {rows.Count} most recent of {completedTotal} published challenges.</span></p>"
+            : "";
         var verifyBlock = verifyUrl is null ? "" : $"""
             <div class="card" id="verify">
               <span class="kicker">Verification</span>
@@ -1294,15 +1537,18 @@ public static class WorldPages
             """;
         return Layout(db,
             $"{name} — PCI World Passport",
-            $"Verified virtual project experience: {rows.Count} completed PCI World challenge{(rows.Count == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
+            $"Verified virtual project experience: {completedTotal} completed PCI World challenge{(completedTotal == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
             $"""
             <div class="ppt-cover" style="margin-top:6px">
               <div class="ppt-lines" aria-hidden="true"></div>
+              <div class="ppt-sheen" aria-hidden="true"></div>
               <div class="ppt-top">
                 <span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>
+                <span class="ppt-from">From the Project<br>Controls Institute</span>
                 <span class="ppt-word">Passport</span>
               </div>
               <div style="position:relative;display:flex;gap:28px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+                {(photoUrl is null ? "" : $"<img class=\"ppt-photo\" src=\"{E(photoUrl)}\" alt=\"Photograph of {E(name)}, provided by the Passport owner\">")}
                 <div style="flex:1;min-width:240px">
                   <span class="ppt-kicker">Verified virtual project experience</span>
                   <h1 class="ppt-name">{E(name)}</h1>
@@ -1311,13 +1557,17 @@ public static class WorldPages
                 {SealSvg()}
               </div>
               <div class="ppt-stats">
-                <div><span class="kicker">Challenges</span><b class="score num">{rows.Count}</b></div>
+                <div><span class="kicker">Challenges</span><b class="score num">{completedTotal}</b></div>
                 <div><span class="kicker">Industries</span><b class="score num">{industries}</b></div>
                 <div><span class="kicker">Tracks</span><b class="score num">{tracks}</b></div>
               </div>
               <div class="ppt-foot">
                 <span>Operated by the Project Controls Institute</span>
                 <span>Practice evidence &middot; not a certification</span>
+              </div>
+              <div class="ppt-mrz" aria-hidden="true">
+                <span>P&lt;PCIWORLD&lt;&lt;VERIFIED&lt;VIRTUAL&lt;PROJECT&lt;EXPERIENCE&lt;&lt;&lt;&lt;</span>
+                <span>PCIW&lt;&lt;PRACTICE&lt;EVIDENCE&lt;&lt;NOT&lt;A&lt;CERTIFICATION&lt;&lt;&lt;&lt;&lt;&lt;</span>
               </div>
             </div>
             <div class="card">
@@ -1333,12 +1583,14 @@ public static class WorldPages
                 <tbody>{items}</tbody>
               </table>
               </div>
+              {truncated}
             </div>
             <div class="card">
               <h2 style="margin-top:0">How to read this Passport</h2>
               <div class="defn">
                 {(show.Scores ? "<div><b>Scores</b><span>Deterministic, out of 100: the same answers always earn the same score, so a number here is reproducible arithmetic against a reference solution — not an opinion, and not a curve.</span></div>" : "")}
                 {(show.Profiles ? "<div><b>Decision profiles</b><span>A named description of how this person decides under pressure — evidence-led, schedule-first, and so on. Profiles characterise judgement style; they do not rank people.</span></div>" : "")}
+                <div><b>Traceability</b><span>Every row cites the challenge code and the exact published version it was completed against. Published versions are immutable, so the challenge behind the citation is the same one this participant faced — follow the code to read the brief yourself.</span></div>
                 <div><b>Consent</b><span>Every row was published deliberately, item by item. Fields the owner withheld are absent from this page entirely, and answers are never shown to anyone.</span></div>
                 <div><b>The live record</b><span>This page is served from PCI World&rsquo;s records at the moment you load it. If the owner withdraws the link, it stops resolving — which is exactly what makes it worth trusting while it does.</span></div>
               </div>
@@ -1347,9 +1599,15 @@ public static class WorldPages
             <p><a class="btn" href="/world">Take today&rsquo;s challenge yourself</a></p>
             <p class="notice">This Passport shows verified practice evidence its owner chose to publish. Answers are never shown, and nothing here ranks or compares people. {E(PracticeNotice)}</p>
             """,
-            "/world",
+            // The Passport's own opaque address is its canonical and og:url (ID-09) — a share card
+            // for this Passport must unfurl as this Passport, not as the World homepage. The og
+            // metadata carries ONLY always-public fields: the owner's chosen display name and the
+            // whole-history counts already printed on the cover. Disclosure-gated fields (scores,
+            // profiles, dates) and the photograph never reach a meta tag — og tags are served to
+            // anyone who fetches the URL, and a provider cache can outlive the token.
+            string.IsNullOrEmpty(token) ? "/world" : "/world/p/" + Uri.EscapeDataString(token),
             ogTitle: $"{name} — PCI World Passport",
-            ogDesc: $"Verified virtual project experience: {rows.Count} completed PCI World challenges.",
+            ogDesc: $"Verified virtual project experience: {completedTotal} completed PCI World challenge{(completedTotal == 1 ? "" : "s")} across {industries} industr{(industries == 1 ? "y" : "ies")}.",
             // Same reasoning as a shared result: the Passport token is revocable and rotatable, and
             // a search index would outlive both. Sharing the link still works everywhere.
             noindex: true);
@@ -1600,9 +1858,10 @@ public static class WorldPages
             <div><b>Your email</b><span>Used to sign in and to verify the account. It never appears on your Passport, the PDF, or any public page.</span></div>
             <div><b>Your answers</b><span>Grading detail stays between you and the scoring engine. No public surface shows an answer, under any setting.</span></div>
             <div><b>Your link</b><span>Stored only as a hash — the server itself cannot reprint it. Generating a new link retires the old one immediately.</span></div>
-            <div><b>Leaving</b><span>Export everything as JSON at any time. Deleting your account removes your identity, sign-in and every public link; completed challenges survive only as anonymous statistics.</span></div>
+            <div><b>Leaving</b><span>Export your PCI World data as JSON at any time. Deleting your PCI World participation removes your World sign-in, Passport and every public link — your PCI student account and any certifications are untouched; completed challenges survive only as anonymous statistics.</span></div>
           </div>
         </div>
+        <script>var PORTAL_URL='{E(WorldOnly.Enabled ? InstituteUrl(db) : "/app/")}';</script>
         <script>{AccountJs}</script>
         """,
         "/world/account", noindex: true);
@@ -1627,17 +1886,158 @@ public static class WorldPages
         // Returns its promise: load() replaces the whole panel, so anything that wants to leave a
         // message on screen has to write it AFTER the re-render, onto the node that survives.
         function load(){
-          return api('/api/world/passport').then(function(p){
+          // The dashboard aggregate and the Passport view load together — the dashboard is the
+          // page's head (one primary action, today's state, unfinished work), the Passport its
+          // management body. The aggregate failing quietly never blocks the Passport tools.
+          return Promise.all([api('/api/world/passport'),
+                              api('/api/world/me/dashboard').catch(function(){return null;}),
+                              api('/api/world/me/profile').catch(function(){return null;}),
+                              api('/api/world/me/preferences').catch(function(){return null;})])
+          .then(function(res){
+            var p=res[0],d=res[1],prof=res[2],prefs=res[3];
             $('auth').hidden=true;$('me').hidden=false;$('me').focus();
             var seal=(document.getElementById('sealTpl')||{innerHTML:''}).innerHTML;
             function pretty(s){s=(s||'').replace(/_/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+            var h='';
+            // ── Onboarding walkthrough (§7.3): brief, resumable, server-ordered. Rendered only
+            //    while incomplete; each step persists before the next appears, so a refresh or a
+            //    device switch resumes exactly where the person stopped. ──
+            if(d&&d.onboarding_state&&d.onboarding_state!=='completed'){
+              var ob=d.onboarding_state,oh='';
+              function obNext(step,inner,btn){
+                return inner+'<p style="margin-top:14px"><button class="btn" id="obGo" data-step="'+step+'">'+btn+'</button> <span id="obMsg" role="status"></span></p>';
+              }
+              if(ob==='not_started'){
+                oh=obNext('welcome',
+                  '<h2 style="margin-top:0">Welcome to PCI World</h2>'+
+                  '<p style="color:var(--slate)">A realistic project decision every day, with deterministic scoring and synthetic data. '+
+                  'PCI World is <b>practice, not certification</b> — completing challenges builds verifiable practice evidence, never a formal credential. '+
+                  'It is operated by the Project Controls Institute.</p>','Got it — continue');
+              }else if(ob==='welcome'){
+                oh=obNext('goal',
+                  '<h2 style="margin-top:0">Why are you practising?</h2>'+
+                  '<p style="color:var(--slate)">Your goal shapes what the dashboard suggests — nothing else. You can change it any time.</p>'+
+                  '<select id="obGoal">'+
+                  [['daily_practice','Daily practice'],['certification_prep','Certification preparation'],
+                   ['evidence','Build verifiable practice evidence'],['explore','Explore project controls']].map(function(g){
+                    return '<option value="'+g[0]+'">'+g[1]+'</option>';}).join('')+'</select>','Save & continue');
+              }else if(ob==='goal'){
+                oh=obNext('preferences',
+                  '<h2 style="margin-top:0">Your practice rhythm</h2>'+
+                  '<label for="obTz">Timezone (optional)</label><input id="obTz" maxlength="64" placeholder="Europe/Berlin">'+
+                  '<label for="obWt" style="margin-top:10px">Weekly target (daily challenges per week, optional)</label>'+
+                  '<select id="obWt"><option value="">No target</option>'+
+                  [1,2,3,4,5,6,7].map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('')+'</select>','Save & continue');
+              }else if(ob==='preferences'){
+                oh=obNext('privacy',
+                  '<h2 style="margin-top:0">Private until you say otherwise</h2>'+
+                  '<p style="color:var(--slate)">Your challenge answers stay between you and the scoring engine — no public surface ever shows them. '+
+                  'Nothing about you is public by default: your Passport publishes only when you deliberately publish it, '+
+                  'and every evidence item and field on it is a separate choice.</p>','I understand — finish setup');
+              }
+              h+='<div class="card" id="onboard-card" style="border-color:var(--gilt,#c8a24b)"><span class="kicker">Getting started</span>'+oh+'</div>';
+            }
+            // ── The dashboard head (journey repair P1-01): who you are, ONE next action, today's
+            //    state, unfinished work, recent results — computed server-side, rendered here. ──
+            if(d){
+              var todayHref='/world/challenge/'+encodeURIComponent((d.today&&d.today.code)||'');
+              var cta;
+              switch(d.primary_action){
+                case 'verify_email':cta='<button class="btn" id="pa_verify">Verify my email</button>';break;
+                case 'continue_onboarding':cta='<a class="btn" href="#onboard-card">Continue setting up</a>';break;
+                case 'continue_today':cta='<a class="btn" href="'+todayHref+'">Continue today&rsquo;s challenge</a>';break;
+                case 'view_result':cta='<a class="btn" href="'+todayHref+'">View today&rsquo;s result</a>';break;
+                case 'start_today':cta='<a class="btn" href="'+todayHref+'">Start today&rsquo;s challenge</a>';break;
+                case 'continue_passport':cta='<a class="btn" href="#evidence-card">Finish setting up your Passport</a>';break;
+                case 'recommended':cta='<a class="btn" href="/world/challenge/'+encodeURIComponent(d.primary_code||'')+'">Try a recommended challenge</a>';break;
+                default:cta='<a class="btn" href="/world/archive">Browse the challenge library</a>';
+              }
+              h+='<div class="card"><span class="kicker">Your dashboard</span>'+
+                 '<h2 style="margin-top:0">Welcome back'+(p.display_name?', '+esc(p.display_name):'')+'</h2>'+
+                 '<p style="color:var(--slate)">'+(p.email_verified?'Email verified.':'Email not verified yet — publishing your Passport needs it.')+
+                 ' '+d.progress.completed+' completed challenge'+(d.progress.completed===1?'':'s')+
+                 (d.progress.completed>0?' across '+d.progress.industries+' industr'+(d.progress.industries===1?'y':'ies'):'')+'.'+
+                 // The streak is a practice habit, never a credential — shown only when it exists,
+                 // and never used to shame a gap (a zero simply says nothing).
+                 (d.streak_days>0?' <b>'+d.streak_days+'-day practice streak</b> <small>(a habit, not a credential)</small>':'')+
+                 (d.week_target?' &middot; This week: <b>'+d.week_done+' of '+d.week_target+'</b> daily challenges (last 7 days).':'')+
+                 '</p>'+
+                 '<p>'+cta+'</p>'+
+                 // The World goal (§10.5): product data on the participation record, changeable
+                 // any time — it shapes what the dashboard suggests, and nothing else.
+                 (prefs&&prefs.linked
+                   ?'<p><label for="goalSel" style="display:inline">Why you practise:</label> '+
+                    '<select id="goalSel" style="width:auto;display:inline-block">'+
+                    [['','Choose a goal…'],['daily_practice','Daily practice'],
+                     ['certification_prep','Certification preparation'],
+                     ['evidence','Build verifiable practice evidence'],
+                     ['explore','Explore project controls']].map(function(g){
+                      return '<option value="'+g[0]+'"'+((prefs.preferences&&prefs.preferences.goal)===g[0]?' selected':'')+'>'+g[1]+'</option>';
+                    }).join('')+'</select> '+
+                    '<button class="btn secondary" id="goalSave">Set goal</button> '+
+                    '<span id="goalMsg" role="status"></span></p>'
+                   :'')+
+                 '</div>';
+              if(d.today&&d.today.code){
+                var reset=d.today.changes_at?new Date(d.today.changes_at):null;
+                h+='<div class="card"><span class="kicker">Today&rsquo;s challenge</span>'+
+                   '<h2 style="margin-top:0">'+esc(d.today.title||'')+'</h2>'+
+                   '<p style="color:var(--slate)">'+esc(pretty(d.today.difficulty||''))+
+                   (d.today.est_minutes?' &middot; ~'+d.today.est_minutes+' minutes':'')+
+                   (reset&&!isNaN(reset)?' &middot; next challenge '+esc(reset.toLocaleString())+' (your local time)':'')+
+                   (d.today.paused?' &middot; rotation is paused, so this challenge stays featured':'')+'</p>'+
+                   (d.today.state==='completed'?'<p class="ok">Completed today.</p>'
+                    :d.today.state==='in_progress'?'<p>In progress &mdash; your answers are saved.</p>':'')+
+                   '</div>';
+              }
+              if((d.in_progress||[]).length){
+                h+='<div class="card"><span class="kicker">Unfinished work</span>'+
+                   '<h2 style="margin-top:0">Pick up where you left off</h2>';
+                d.in_progress.forEach(function(w){
+                  h+='<p><a href="/world/challenge/'+encodeURIComponent(w.code||'')+'">Continue: '+esc(w.title)+'</a>'+
+                     ' <small style="color:var(--slate)">saved '+esc((w.updated_at||'').split(' ')[0])+'</small></p>';
+                });
+                h+='</div>';
+              }
+              if((d.recent||[]).length){
+                h+='<div class="card"><span class="kicker">Recent results</span>'+
+                   '<h2 style="margin-top:0">Your latest completions</h2>'+
+                   '<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th><th scope="col">Score</th><th scope="col">Date</th></tr></thead><tbody>';
+                d.recent.forEach(function(w){
+                  h+='<tr><td>'+esc(w.title)+'<br><small class="num" style="color:var(--slate)">'+esc(w.code||'')+' &middot; v'+esc(w.version)+'</small></td>'+
+                     '<td class="num">'+esc(w.score)+'</td><td class="num">'+esc((w.completed_at||'').split(' ')[0])+'</td></tr>';
+                });
+                h+='</tbody></table></div></div>';
+              }
+              if(d.recommended&&d.today&&d.today.state==='completed'){
+                h+='<div class="card"><span class="kicker">Keep going</span>'+
+                   '<h2 style="margin-top:0">Recommended next</h2>'+
+                   '<p style="color:var(--slate)">'+esc(d.recommended.title||'')+' <small>(rule-based: a challenge you have not completed yet)</small></p>'+
+                   '<p><a class="btn secondary" href="/world/challenge/'+encodeURIComponent(d.recommended.code||'')+'">Open this challenge</a></p></div>';
+              }
+              // ── The PCI ecosystem (P1-11): bidirectional discoverability. The portal shows a
+              //    PCI World card; this is the RETURN direction — current product marked, the
+              //    destination's honest state, and never a certification or entitlement claim. ──
+              if(d.products&&d.products.pci_ai){
+                h+='<div class="card"><span class="kicker">PCI ecosystem &middot; you are in PCI World</span>'+
+                   '<h2 style="margin-top:0">PCI Institute student portal</h2>'+
+                   (d.products.pci_ai.state==='ready'
+                     ?'<p style="color:var(--slate)">Your PCI student identity is linked. Certifications, exams, membership and billing live in the Institute student portal — you practise here, and your one PCI sign-in works in both places.</p>'+
+                      '<p><a class="btn secondary" href="'+esc(typeof PORTAL_URL!=='undefined'?PORTAL_URL:'/app/')+'">Open the student portal</a></p>'
+                     :'<p style="color:var(--slate)">This World account is not linked to a PCI student identity yet. Sign in to PCI World with the same email and password you use on the Institute student portal and the two link automatically — no second account is ever created. If you believe this is wrong, contact support.</p>')+
+                   '</div>';
+              }
+            }
             // The cover: the owner's own Passport drawn as the artefact a reader of the public
             // page will see — same seal, same stats, same honesty line.
-            var h='<div class="ppt-cover">'+
+            h+='<div class="ppt-cover">'+
               '<div class="ppt-lines" aria-hidden="true"></div>'+
+              '<div class="ppt-sheen" aria-hidden="true"></div>'+
               '<div class="ppt-top"><span class="wordmark">PCI World</span><span class="bar" aria-hidden="true"></span>'+
+              '<span class="ppt-from">From the Project<br>Controls Institute</span>'+
               '<span class="ppt-word">Passport</span></div>'+
               '<div style="position:relative;display:flex;gap:28px;flex-wrap:wrap;align-items:center;justify-content:space-between">'+
+              (p.has_photo?'<img id="photoPrev" class="ppt-photo" alt="Your Passport photograph">':'')+
               '<div style="flex:1;min-width:240px"><span class="ppt-kicker">Verified virtual project experience</span>'+
               '<h2 class="ppt-name" style="font-size:clamp(26px,4vw,38px)">'+esc(p.display_name||'Unnamed participant')+'</h2>'+
               '<p class="ppt-sub">'+(p.passport_public?'Published — anyone with your link sees the live record.':'Private — nothing is public until you publish.')+'</p></div>'+
@@ -1648,13 +2048,33 @@ public static class WorldPages
               '<div><span class="kicker">Tracks</span><b class="score num">'+p.tracks+'</b></div></div>'+
               '<div class="ppt-foot"><span>Operated by the Project Controls Institute</span>'+
               '<span>Practice evidence &middot; not a certification</span></div>'+
+              '<div class="ppt-mrz" aria-hidden="true">'+
+              '<span>P&lt;PCIWORLD&lt;&lt;VERIFIED&lt;VIRTUAL&lt;PROJECT&lt;EXPERIENCE&lt;&lt;&lt;&lt;</span>'+
+              '<span>PCIW&lt;&lt;PRACTICE&lt;EVIDENCE&lt;&lt;NOT&lt;A&lt;CERTIFICATION&lt;&lt;&lt;&lt;&lt;&lt;</span></div>'+
               '</div>';
+            // The panel is where practice and evidence meet: the next challenge is always one
+            // click away, and every completed one below is traceable to its published version.
+            h+='<div class="card"><span class="kicker">Challenges</span>'+
+              '<h2 style="margin-top:0">Keep practising</h2>'+
+              '<p style="color:var(--slate)">A new challenge is published every day, and the archive keeps every published one playable. Each challenge you complete becomes a traceable record below &mdash; pinned to the exact published version you faced.</p>'+
+              '<p><a class="btn" href="/world">Today&rsquo;s challenge</a> '+
+              '<a class="btn secondary" href="/world/archive">Browse the archive</a></p></div>';
             h+='<div class="card"><span class="kicker">Identity &amp; publication</span>'+
               '<h2 style="margin-top:0">Your name on the record</h2>'+
               '<label for="dn">Display name</label><input id="dn" maxlength="80" value="'+esc(p.display_name||'')+'">'+
               '<p style="margin-top:12px"><button class="btn secondary" id="saveName">Save name</button> '+
               (p.email_verified?'<span class="ok">Email verified.</span>'
                 :'<span class="bad">Email not verified.</span> <button class="btn secondary" id="resend">Resend verification</button>')+'</p>'+
+              // The optional photograph. Uploading it is the consent to show it: it appears on the
+              // cover above and on the public page while published, and Remove deletes the stored
+              // image itself, not just the link to it.
+              '<label for="photoFile">Passport photograph (optional &mdash; shown on your public Passport)</label>'+
+              '<input id="photoFile" type="file" accept="image/jpeg,image/png,image/webp">'+
+              '<p style="margin-top:12px"><button class="btn secondary" id="photoUp">'+
+              (p.has_photo?'Replace photo':'Upload photo')+'</button> '+
+              (p.has_photo?'<button class="btn secondary" id="photoRm">Remove photo</button> ':'')+
+              '<span id="photomsg" role="status"></span></p>'+
+              '<p><small>JPEG, PNG or WebP, up to 3&nbsp;MB. Removing it deletes the image &mdash; it is not kept anywhere.</small></p>'+
               '<p style="margin-top:16px">'+
               (p.passport_public
                 ?'<button class="btn secondary" id="unpub">Make Passport private</button>'
@@ -1670,6 +2090,32 @@ public static class WorldPages
                 :((p.email_verified&&p.display_name)?''
                   :'<p style="color:var(--slate);font-size:14px">Publishing needs a verified email and a display name — the two things that make the record worth reading.</p>'))+
               '</div>';
+            // ── The shared PCI student profile (P1-10): ONE record, both products. Edits here land
+            //    on the same canonical profile the Institute portal reads — and nothing from it is
+            //    ever public on the Passport without the separate disclosure consent below. ──
+            if(prof&&prof.linked&&prof.profile){
+              var sp=prof.profile;
+              h+='<div class="card"><span class="kicker">PCI student profile</span>'+
+                 '<h2 style="margin-top:0">Your shared profile</h2>'+
+                 '<p style="color:var(--slate)">This is your one PCI student profile — the same record your Institute student portal uses. '+
+                 'A change saved here appears there, and vice versa. Nothing from it is shown on your public Passport unless you choose so in Disclosure below.</p>'+
+                 '<p><b>'+esc(((sp.first_name||'')+' '+(sp.last_name||'')).trim()||'Name not set')+'</b> '+
+                 '<small style="color:var(--slate)">&middot; profile '+esc(sp.profile_completion_percentage)+'% complete</small></p>'+
+                 '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">'+
+                 [['sp_role','Current role','current_role'],['sp_company','Company','company'],
+                  ['sp_country','Country','country'],['sp_city','City','city']].map(function(f){
+                   return '<div><label for="'+f[0]+'">'+f[1]+'</label>'+
+                          '<input id="'+f[0]+'" maxlength="200" value="'+esc(sp[f[2]]||'')+'"></div>';
+                 }).join('')+
+                 '</div>'+
+                 '<p style="margin-top:14px"><button class="btn secondary" id="spSave">Save profile</button> '+
+                 '<span id="spMsg" role="status"></span></p></div>';
+            }else if(prof&&!prof.linked){
+              h+='<div class="card"><span class="kicker">PCI student profile</span>'+
+                 '<h2 style="margin-top:0">Not linked yet</h2>'+
+                 '<p style="color:var(--slate)">This World account is not linked to a PCI student identity yet, so there is no shared profile to show. '+
+                 'Sign in with your PCI credentials (the ones you use on the Institute student portal), or contact support if you believe this is wrong.</p></div>';
+            }
             // Field-level disclosure: publishing WHAT you have practised should never force you to
             // publish your scores as well. These switches apply to the public page and the PDF alike.
             h+='<div class="card"><span class="kicker">Disclosure</span>'+
@@ -1688,7 +2134,11 @@ public static class WorldPages
                'a Passport says nothing. Your answers are never shown.</small></p></fieldset>'+
                '<label for="sw_exp">Link expiry</label>'+
                '<select id="sw_exp">'+
-               '<option value="0"'+(p.expires_at?'':' selected')+'>Never expires</option>'+
+               // The stored expiry is its own persisted setting: the dropdown must REPRESENT it,
+               // not silently overwrite it. "Keep" is selected whenever an expiry exists, and only
+               // an explicit different choice is ever sent to the server (journey repair P0-06).
+               (p.expires_at?'<option value="keep" selected>Keep current expiry ('+esc(p.expires_at)+')</option>':'')+
+               '<option value="0"'+(p.expires_at?'':' selected')+'>Never expires'+(p.expires_at?' (removes the current expiry)':'')+'</option>'+
                '<option value="90">Expires in 90 days</option>'+
                '<option value="180">Expires in 6 months</option>'+
                '<option value="365">Expires in 12 months</option>'+
@@ -1697,39 +2147,77 @@ public static class WorldPages
                '<p style="margin-top:16px"><button class="btn secondary" id="saveShow">Save these settings</button> '+
                '<span id="showmsg" role="status"></span></p>'+
                '</div>';
-            h+='<div class="card"><span class="kicker">Evidence</span>'+
+            h+='<div class="card" id="evidence-card"><span class="kicker">Evidence</span>'+
                '<h2 style="margin-top:0">Choose what appears</h2>'+
                '<p style="color:var(--slate)">Tick the results you want on your public Passport. Nothing is shown without your choice.</p>'+
                '<div class="tbl-wrap"><table><thead><tr><th scope="col">Show</th><th scope="col">Challenge</th>'+
                '<th scope="col">Score</th><th scope="col">Profile</th><th scope="col">Date</th></tr></thead><tbody>';
-            (p.evidence||[]).forEach(function(e2){
-              h+='<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
+            function evRow(e2){
+              return '<tr><td><input type="checkbox" class="ev-check" data-att="'+e2.attempt_id+'" '+(e2.passport_visible?'checked':'')+
                  ' aria-label="Show '+esc(e2.title)+' on public Passport"></td>'+
-                 '<td><b>'+esc(e2.title)+'</b><br><small style="color:var(--slate)">'+esc(e2.industry||'')+
+                 '<td><b>'+esc(e2.title)+'</b>'+
+                 // Traceability line: code + immutable version, linking back to the challenge —
+                 // the same citation the public Passport and the PDF carry.
+                 '<br><small class="num"><a href="/world/challenge/'+encodeURIComponent(e2.code||'')+'">'+esc(e2.code||'')+'</a> &middot; v'+esc(e2.version)+'</small>'+
+                 '<br><small style="color:var(--slate)">'+esc(e2.industry||'')+
                  (e2.difficulty?' &middot; '+esc(pretty(e2.difficulty)):'')+'</small></td>'+
                  '<td class="num">'+esc(e2.score)+'</td><td>'+esc(pretty(e2.profile))+'</td>'+
                  '<td class="num">'+esc((e2.completed_at||'').split(' ')[0])+'</td></tr>';
-            });
+            }
+            (p.evidence||[]).forEach(function(e2){h+=evRow(e2);});
             h+='</tbody></table></div>'+
+               // Whole-history honesty (P1-06): the table is a window; the totals above are SQL
+               // truth, and every older row stays reachable through Load more.
+               (p.evidence_total>(p.evidence||[]).length
+                 ?'<p class="meta"><span id="evshown" role="status">Showing '+(p.evidence||[]).length+' of '+p.evidence_total+' completed challenges</span></p>'+
+                  '<p><button class="btn secondary" id="evmore">Load more</button></p>'
+                 :'')+
                ((p.evidence||[]).length?'':'<p style="color:var(--slate)">No completed challenges yet — '+
                  '<a href="/world">today&rsquo;s challenge</a> takes five to ten minutes, and it will appear here the moment you finish.</p>')+
                '</div>'+
+               // Sharing (PW-US-039/040): every public surface this account minted, in one place.
+               '<div class="card"><span class="kicker">Sharing</span>'+
+               '<h2 style="margin-top:0">Links you have created</h2>'+
+               '<p style="color:var(--slate)">Result links and invitations you minted — withdraw any of them at any moment. A withdrawn link simply stops resolving.</p>'+
+               '<div id="sharemgr"><p><button class="btn secondary" id="shareShow">Show my links &amp; invitations</button></p></div>'+
+               '</div>'+
                '<div class="card"><span class="kicker">Your data</span>'+
                '<h2 style="margin-top:0">Yours to take or erase</h2>'+
+               // Sessions (PW-US-043): what is signed in as this account, and the power to end it.
+               '<div id="sessbox"><p><button class="btn secondary" id="sessShow">Show active sessions</button></p></div>'+
                // A plain link cannot work here: the export is authenticated by the X-World-Account
                // header, which a navigation never sends, so this always answered 401. It is fetched
-               // and saved as a blob instead.
-               '<p><button class="btn secondary" id="dlexport">Export my data (JSON)</button> '+
+               // and saved as a blob instead. Scope in the label (PW-US-044): this is the WORLD
+               // export — the complete PCI account export lives in the Institute student portal.
+               '<p><button class="btn secondary" id="dlexport">Export my PCI World data (JSON)</button> '+
                '<button class="btn secondary" id="signout">Sign out</button> '+
-               '<button class="btn secondary" id="delacct">Delete my account</button></p>'+
+               '<button class="btn secondary" id="signoutAll">Sign out of all PCI services</button> '+
+               '<button class="btn secondary" id="delacct">Delete my PCI World participation</button></p>'+
+               // Scope, in plain words (PW-US-010): the person always knows which doors they are
+               // closing before they close them.
+               '<p><small style="color:var(--slate)">&ldquo;Sign out&rdquo; ends this device&rsquo;s PCI World session only. '+
+               '&ldquo;Sign out of all PCI services&rdquo; ends every PCI World session on every device and, when your '+
+               'account is linked, your Institute student-portal sessions too.</small></p>'+
+               // One email, one owner (PW-US-058): the sign-in email is canonical PCI identity
+               // data — World shows it and points at the one place it changes, so the two
+               // products can never drift apart on who you are.
+               (d&&d.email?'<p><small style="color:var(--slate)">Signed in as <b>'+esc(d.email)+'</b>. Your sign-in email is managed by your PCI account'+
+                 (d.products&&d.products.pci_ai&&d.products.pci_ai.state==='ready'
+                   ?' &mdash; change it in the <a href="'+esc(typeof PORTAL_URL!=='undefined'?PORTAL_URL:'/app/')+'">student portal</a> settings; the change applies here automatically.'
+                   :'; PCI World never edits it separately.')+'</small></p>':'')+
                // A labelled password field, not window.prompt(): prompt() shows the password in
                // clear text, carries no label, cannot be styled or translated, and is blocked
                // outright by some browsers.
                '<div id="delbox" hidden class="card" style="border-color:var(--crimson)">'+
-               '<h2 style="margin-top:0">Delete your account</h2>'+
-               '<p>This removes your Passport, every public link you minted and your sign-in. '+
-               'Completed challenges are kept as anonymous statistics with nothing that identifies you.</p>'+
-               '<label for="delpw">Confirm your password</label>'+
+               '<h2 style="margin-top:0">Delete your PCI World participation</h2>'+
+               '<p>This removes your PCI World Passport, every public link you minted, your World '+
+               'preferences and your World sign-in. Completed challenges are kept as anonymous '+
+               'statistics with nothing that identifies you.</p>'+
+               '<p><b>Your PCI student account is not affected.</b> If you also hold a Project '+
+               'Controls Institute student account (certifications, exams, payments), it stays '+
+               'exactly as it is — deleting the complete PCI account is a separate action in the '+
+               'student portal.</p>'+
+               '<label for="delpw">Confirm your PCI password</label>'+
                '<input id="delpw" type="password" autocomplete="current-password">'+
                '<p style="margin-top:14px"><button class="btn" id="delgo">Delete my account permanently</button> '+
                '<button class="btn secondary" id="delno">Keep my account</button></p></div>'+
@@ -1738,8 +2226,153 @@ public static class WorldPages
             $('saveName').addEventListener('click',function(){
               api('/api/world/account/profile',{display_name:$('dn').value}).then(load);
             });
+            function loadSessions(){
+              api('/api/world/me/sessions').then(function(o){
+                var rows=(o.rows||[]);
+                var sh='<h3 style="margin:6px 0">Active sessions ('+rows.length+')</h3>'+
+                  '<div class="tbl-wrap"><table><thead><tr><th scope="col">Signed in</th>'+
+                  '<th scope="col">Expires</th><th scope="col"></th></tr></thead><tbody>';
+                rows.forEach(function(s2){
+                  sh+='<tr><td class="num">'+esc((s2.created_at||'').split(' ')[0])+
+                      (s2.current?' <b>(this device)</b>':'')+'</td>'+
+                      '<td class="num">'+esc((s2.expires_at||'').split(' ')[0])+'</td>'+
+                      '<td>'+(s2.current?'':'<button class="btn secondary" data-revoke="'+s2.id+'">Sign out</button>')+'</td></tr>';
+                });
+                sh+='</tbody></table></div>'+
+                  (rows.length>1?'<p><button class="btn secondary" id="sessOthers">Sign out all other devices</button></p>':'')+
+                  '<p id="sessmsg" role="status"></p>';
+                $('sessbox').innerHTML=sh;
+                $('sessbox').querySelectorAll('[data-revoke]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/sessions/revoke',{id:parseInt(b.dataset.revoke,10)})
+                      .then(loadSessions)
+                      .catch(function(){if($('sessmsg'))$('sessmsg').textContent='Could not revoke — try again.';});
+                  });
+                });
+                if($('sessOthers'))$('sessOthers').addEventListener('click',function(){
+                  api('/api/world/me/sessions/revoke-others',{})
+                    .then(loadSessions)
+                    .catch(function(){if($('sessmsg'))$('sessmsg').textContent='Could not revoke — try again.';});
+                });
+              }).catch(function(){$('sessbox').innerHTML='<p class="meta"><span>Could not load sessions just now.</span></p>';});
+            }
+            $('sessShow').addEventListener('click',loadSessions);
+            if($('obGo'))$('obGo').addEventListener('click',function(){
+              var step=$('obGo').dataset.step;$('obGo').disabled=true;
+              function advance(){
+                return api('/api/world/me/onboarding',{step:step}).then(function(){
+                  // The privacy step is the last one — finishing it completes onboarding.
+                  return step==='privacy'?api('/api/world/me/onboarding',{step:'completed'}):null;
+                });
+              }
+              var pre=Promise.resolve();
+              if(step==='goal')pre=api('/api/world/me/preferences',{goal:$('obGoal').value},'PATCH');
+              if(step==='preferences'){
+                var body={};
+                if($('obTz').value.trim())body.timezone=$('obTz').value.trim();
+                if($('obWt').value)body.weekly_target=parseInt($('obWt').value,10);
+                pre=Object.keys(body).length?api('/api/world/me/preferences',body,'PATCH'):Promise.resolve();
+              }
+              pre.then(advance).then(load)
+                 .catch(function(e2){$('obGo').disabled=false;
+                   $('obMsg').textContent=(e2&&e2.message)||'Could not save this step — try again.';});
+            });
+            function loadShares(){
+              api('/api/world/me/shares').then(function(o){
+                var res=(o.results||[]),inv=(o.invitations||[]);
+                var sh='<h3 style="margin:6px 0">Result links ('+res.length+')</h3>';
+                if(res.length){
+                  sh+='<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th>'+
+                      '<th scope="col">Status</th><th scope="col"></th></tr></thead><tbody>';
+                  res.forEach(function(r2){
+                    sh+='<tr><td>'+esc(r2.title)+' <small class="num">'+esc(r2.code||'')+'</small></td>'+
+                        '<td>'+(r2.revoked?'<span>Withdrawn</span>':'<span class="ok">Live</span>')+'</td>'+
+                        '<td>'+(r2.revoked?'':'<button class="btn secondary" data-shrev="'+r2.attempt_id+'">Withdraw</button>')+'</td></tr>';
+                  });
+                  sh+='</tbody></table></div>';
+                }else sh+='<p style="color:var(--slate)">No result links yet.</p>';
+                sh+='<h3 style="margin:14px 0 6px">Invitations ('+inv.length+')</h3>';
+                if(inv.length){
+                  sh+='<div class="tbl-wrap"><table><thead><tr><th scope="col">Challenge</th>'+
+                      '<th scope="col">Pinned</th><th scope="col">Status</th><th scope="col"></th></tr></thead><tbody>';
+                  inv.forEach(function(r2){
+                    sh+='<tr><td>'+esc(r2.title)+' <small class="num">'+esc(r2.code||'')+'</small></td>'+
+                        '<td class="num">v'+esc(r2.version)+'</td>'+
+                        '<td>'+(r2.revoked?'<span>Withdrawn</span>':'<span class="ok">Live</span>')+'</td>'+
+                        '<td>'+(r2.revoked?'':'<button class="btn secondary" data-invrev="'+r2.invite_id+'">Withdraw</button>')+'</td></tr>';
+                  });
+                  sh+='</tbody></table></div>';
+                }else sh+='<p style="color:var(--slate)">No invitations yet.</p>';
+                sh+='<p style="margin-top:12px">'+
+                    (res.some(function(r2){return !r2.revoked;})?'<button class="btn secondary" id="shrevAll">Withdraw all result links</button> ':'')+
+                    (inv.some(function(r2){return !r2.revoked;})?'<button class="btn secondary" id="invrevAll">Withdraw all invitations</button>':'')+
+                    '</p><p id="sharemsg" role="status"></p>';
+                $('sharemgr').innerHTML=sh;
+                $('sharemgr').querySelectorAll('[data-shrev]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/shares/revoke',{attempt_id:parseInt(b.dataset.shrev,10)}).then(loadShares)
+                      .catch(function(){if($('sharemsg'))$('sharemsg').textContent='Could not withdraw — try again.';});
+                  });
+                });
+                $('sharemgr').querySelectorAll('[data-invrev]').forEach(function(b){
+                  b.addEventListener('click',function(){
+                    api('/api/world/me/invitations/revoke',{invite_id:parseInt(b.dataset.invrev,10)}).then(loadShares)
+                      .catch(function(){if($('sharemsg'))$('sharemsg').textContent='Could not withdraw — try again.';});
+                  });
+                });
+                if($('shrevAll'))$('shrevAll').addEventListener('click',function(){
+                  api('/api/world/me/shares/revoke-all',{}).then(loadShares).catch(function(){});
+                });
+                if($('invrevAll'))$('invrevAll').addEventListener('click',function(){
+                  api('/api/world/me/invitations/revoke-all',{}).then(loadShares).catch(function(){});
+                });
+              }).catch(function(){$('sharemgr').innerHTML='<p class="meta"><span>Could not load your links just now.</span></p>';});
+            }
+            $('shareShow').addEventListener('click',loadShares);
+            if($('goalSave'))$('goalSave').addEventListener('click',function(){
+              var g=$('goalSel').value;
+              if(!g){$('goalMsg').textContent='Choose a goal first.';return;}
+              api('/api/world/me/preferences',{goal:g},'PATCH')
+                .then(function(){$('goalMsg').textContent='Saved.';})
+                .catch(function(){$('goalMsg').textContent='Could not save — try again.';});
+            });
+            if($('spSave'))$('spSave').addEventListener('click',function(){
+              $('spMsg').textContent='';
+              api('/api/world/me/profile',{current_role:$('sp_role').value,company:$('sp_company').value,
+                country:$('sp_country').value,city:$('sp_city').value},'PATCH')
+                .then(function(){$('spMsg').textContent='Saved — your PCI profile is updated everywhere.';})
+                .catch(function(){$('spMsg').textContent='Could not save — try again.';});
+            });
+            if($('pa_verify'))$('pa_verify').addEventListener('click',function(){
+              api('/api/world/account/resend-verification',{})
+                .then(function(){$('pa_verify').textContent='Verification email queued — it should reach your inbox shortly.';$('pa_verify').disabled=true;})
+                .catch(function(){$('pa_verify').textContent='Could not send — try again shortly.';});
+            });
+            // The cover preview is authenticated by the account header, which an <img> navigation
+            // never sends — so it is fetched as a blob, the same way the data export is.
+            if($('photoPrev')){
+              fetch('/api/world/passport/photo',{headers:{'X-World-Account':localStorage.getItem(KEY)||''}})
+                .then(function(r){if(!r.ok)throw r;return r.blob();})
+                .then(function(b){$('photoPrev').src=URL.createObjectURL(b);})
+                .catch(function(){});
+            }
+            $('photoUp').addEventListener('click',function(){
+              var f=($('photoFile').files||[])[0];
+              if(!f){$('photomsg').textContent='Choose an image first.';return;}
+              var rd=new FileReader();
+              rd.onload=function(){
+                api('/api/world/passport/photo',{photo:rd.result})
+                  .then(load)
+                  .catch(function(e2){$('photomsg').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not upload the photo.';});
+              };
+              rd.readAsDataURL(f);
+            });
+            if($('photoRm'))$('photoRm').addEventListener('click',function(){
+              api('/api/world/passport/photo',{remove:true}).then(load)
+                .catch(function(){$('photomsg').textContent='Could not remove the photo.';});
+            });
             if($('resend'))$('resend').addEventListener('click',function(){
-              api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email sent.';});
+              api('/api/world/account/resend-verification',{}).then(function(){$('acctmsg').textContent='Verification email queued for delivery.';});
             });
             if($('pub'))$('pub').addEventListener('click',function(){
               api('/api/world/passport/publish',{publish:true})
@@ -1752,14 +2385,38 @@ public static class WorldPages
             if($('unpub'))$('unpub').addEventListener('click',function(){
               api('/api/world/passport/publish',{publish:false}).then(load);
             });
-            $('me').querySelectorAll('input[data-att]').forEach(function(cb){
-              cb.addEventListener('change',function(){
-                api('/api/world/passport/evidence',{attempt_id:parseInt(cb.dataset.att,10),visible:cb.checked});
+            function bindEv(scope){
+              scope.querySelectorAll('input[data-att]').forEach(function(cb){
+                if(cb.dataset.bound)return;cb.dataset.bound='1';
+                cb.addEventListener('change',function(){
+                  api('/api/world/passport/evidence',{attempt_id:parseInt(cb.dataset.att,10),visible:cb.checked});
+                });
               });
-            });
+            }
+            bindEv($('me'));
+            if($('evmore')){
+              var evCount=(p.evidence||[]).length;
+              $('evmore').addEventListener('click',function(){
+                $('evmore').disabled=true;
+                api('/api/world/passport?offset='+evCount).then(function(q){
+                  var tb=$('me').querySelector('table tbody');
+                  (q.evidence||[]).forEach(function(e2){tb.insertAdjacentHTML('beforeend',evRow(e2));});
+                  bindEv(tb);
+                  evCount+=(q.evidence||[]).length;
+                  $('evshown').textContent='Showing '+evCount+' of '+q.evidence_total+' completed challenges';
+                  $('evmore').disabled=false;
+                  if(!(q.evidence||[]).length||evCount>=q.evidence_total)$('evmore').hidden=true;
+                }).catch(function(){$('evmore').disabled=false;});
+              });
+            }
             $('signout').addEventListener('click',function(){
               api('/api/world/account/logout',{}).catch(function(){});
               localStorage.removeItem(KEY);showAuth();
+            });
+            if($('signoutAll'))$('signoutAll').addEventListener('click',function(){
+              api('/api/world/account/logout',{everywhere:true}).catch(function(){});
+              localStorage.removeItem(KEY);localStorage.removeItem('pciworld_passport_url');showAuth();
+              $('autherr').textContent='Signed out of all PCI services on every device.';
             });
             if($('lastlink')){
               var saved=localStorage.getItem('pciworld_passport_url');
@@ -1774,9 +2431,12 @@ public static class WorldPages
             });
             $('saveShow').addEventListener('click',function(){
               $('showmsg').textContent='';
-              api('/api/world/passport/disclosure',{
-                show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
-                show_dates:$('sw_dates').checked,expires_in_days:parseInt($('sw_exp').value,10)||0})
+              // expires_in_days is included ONLY when the owner chose something other than "keep":
+              // an unrelated disclosure save can never touch the stored expiry (P0-06).
+              var body={show_scores:$('sw_scores').checked,show_profiles:$('sw_profiles').checked,
+                show_dates:$('sw_dates').checked};
+              if($('sw_exp').value!=='keep')body.expires_in_days=parseInt($('sw_exp').value,10)||0;
+              api('/api/world/passport/disclosure',body)
                 .then(load).then(function(){$('showmsg').textContent='Saved.';})
                 .catch(function(){$('showmsg').textContent='Could not save — try again.';});
             });
@@ -1804,18 +2464,51 @@ public static class WorldPages
                 .then(function(){localStorage.removeItem(KEY);showAuth();})
                 .catch(function(){$('acctmsg').textContent='Password incorrect — account not deleted.';$('delpw').focus();});
             });
-          }).catch(showAuth);
+          }).catch(function(e2){
+            // A failure to LOAD is not a sign-out (journey repair P1-04): only a rejected token
+            // shows the sign-in panel. A network drop or server error says so honestly, keeps the
+            // stored session, and offers a retry — presenting it as "you are not registered" made
+            // people re-register and lose track of their account.
+            if(e2&&(e2.error==='no_token'||e2.error==='world_disabled')){localStorage.removeItem(KEY);return showAuth();}
+            // Suspension is its own state (PW-US-046): not a sign-out, not an error to retry —
+            // an explanation, a support path, and reassurance about the PCI student account.
+            if(e2&&e2.error==='account_suspended'){
+              $('auth').hidden=true;$('me').hidden=false;
+              $('me').innerHTML='<div class="card" style="border-color:var(--crimson)"><span class="kicker">Account status</span>'+
+                '<h2 style="margin-top:0">Your PCI World participation is suspended</h2>'+
+                '<p style="color:var(--slate)">'+esc(e2.message||'Contact support to resolve this.')+'</p>'+
+                '<p><a class="btn secondary" href="/world/about">About PCI World</a></p></div>';
+              $('me').focus();return;
+            }
+            $('auth').hidden=true;$('me').hidden=false;
+            $('me').innerHTML='<div class="card"><span class="kicker">Connection problem</span>'+
+              '<h2 style="margin-top:0">We could not load your account</h2>'+
+              '<p style="color:var(--slate)">'+(navigator.onLine===false
+                ?'You appear to be offline. Your account and evidence are safe on the server — reconnect and try again.'
+                :'The service did not answer just now. You are still signed in; nothing has been lost.')+'</p>'+
+              '<p><button class="btn" id="retryLoad">Try again</button></p></div>';
+            $('me').focus();
+            $('retryLoad').addEventListener('click',function(){load();});
+          });
+        }
+        // Preserved destination (§6 compatibility): a deep link that sent someone here to sign in
+        // continues to that exact safe place afterwards. Same-origin /world paths only — an
+        // external or protocol-relative destination is ignored, never followed.
+        function afterAuth(){
+          var rt=new URLSearchParams(location.search).get('returnTo')||'';
+          if(rt.indexOf('/world')===0&&rt.indexOf('//')!==0&&rt.indexOf(':')<0){location.href=rt;return true;}
+          return false;
         }
         $('doRegister').addEventListener('click',function(){
           $('autherr').textContent='';
           api('/api/world/account/register',{email:$('r_email').value,password:$('r_pw').value,display_name:$('r_name').value})
-            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .then(function(r){localStorage.setItem(KEY,r.token);if(!afterAuth())load();})
             .catch(function(e2){$('autherr').textContent=(e2&&e2.message)||(e2&&e2.error)||'Could not create the account.';});
         });
         $('doLogin').addEventListener('click',function(){
           $('autherr').textContent='';
           api('/api/world/account/login',{email:$('l_email').value,password:$('l_pw').value})
-            .then(function(r){localStorage.setItem(KEY,r.token);load();})
+            .then(function(r){localStorage.setItem(KEY,r.token);if(!afterAuth())load();})
             .catch(function(e2){$('autherr').textContent=(e2&&e2.error)==='account_locked'?'Too many attempts — try later.':'Sign-in failed.';});
         });
         $('doForgot').addEventListener('click',function(){
@@ -1824,7 +2517,22 @@ public static class WorldPages
             .then(function(r){$('autherr').textContent=r.message||'If that address has an account, a reset link is on its way.';})
             .catch(function(){$('autherr').textContent='Could not send the reset email — try again shortly.';});
         });
-        if(localStorage.getItem(KEY))load();else showAuth();
+        // Portal handoff (P0-02): the SSO bridge sends a one-time code in the URL FRAGMENT (never
+        // in a query string the server would log). Exchange it once for a session, then scrub it
+        // from the address bar and history immediately.
+        var hm=(location.hash||'').match(/h=([a-f0-9]{48,64})/);
+        if(hm){
+          history.replaceState(null,'',location.pathname);
+          api('/api/world/account/handoff',{code:hm[1]})
+            .then(function(r){localStorage.setItem(KEY,r.token);
+              // The allow-listed destination the handoff preserved — deep entry (today's
+              // challenge, a result) continues there; the account page is only the default.
+              if(r.return_to&&r.return_to!=='/world/account'){location.href=r.return_to;return;}
+              load();})
+            .catch(function(e2){showAuth();
+              $('autherr').textContent=(e2&&e2.message)||'That sign-in link has expired — sign in below, or reopen your Passport from the student portal.';});
+        }
+        else if(localStorage.getItem(KEY))load();else showAuth();
         })();
         """;
 
@@ -1842,6 +2550,9 @@ public static class WorldPages
             <p><a class="btn" href="/world/challenge/{E(code)}?i={E(token)}">Accept the challenge</a></p>
             <p class="notice">You will play the exact same version of this challenge. Their answers are not shown to you — or yours to them; only completed scores are ever compared. {E(PracticeNotice)}</p>
             """,
-            "/world", noindex: true);
+            // The invitation's own opaque address (ID-09): its share card must unfurl as this
+            // invitation. Metadata carries only what the page shows anyone: the inviter's chosen
+            // name (or "Someone") and the published challenge title — never a score or an answer.
+            "/world/i/" + Uri.EscapeDataString(token), noindex: true);
     }
 }

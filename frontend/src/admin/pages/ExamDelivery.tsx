@@ -2,6 +2,7 @@ import { Fragment, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 // Admin Console → Exam Delivery. Configure the third-party certification exam-delivery / proctoring
 // vendors (Pearson VUE/OnVUE, Kryterion Webassessor, PSI, TestReach, Questionmark), map PCI
@@ -34,11 +35,11 @@ const TABS = ['Providers', 'Bookings'] as const
 export default function ExamDelivery() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Providers')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Exam Delivery</h1>
-        <p className="muted">Deliver PCI examinations through third-party certification vendors — Pearson VUE / OnVUE, Kryterion Webassessor, PSI, TestReach and Questionmark. Configure a vendor, map each certification to its exam code, and student bookings are routed automatically: candidate registration → eligibility/authorization → scheduling → results → credential. Vendor credentials are write-only and every call is logged. Point a vendor at a sandbox (or a mock host via <em>API base override</em>) to validate before going live.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Exam Delivery"
+        subtitle={<>Deliver PCI examinations through third-party certification vendors — Pearson VUE / OnVUE, Kryterion Webassessor, PSI, TestReach and Questionmark. Configure a vendor, map each certification to its exam code, and student bookings are routed automatically: candidate registration → eligibility/authorization → scheduling → results → credential. Vendor credentials are write-only and every call is logged. Point a vendor at a sandbox (or a mock host via <em>API base override</em>) to validate before going live.</>}
+      />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
       </div>

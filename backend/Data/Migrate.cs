@@ -181,6 +181,13 @@ public static class Migrate
             status TEXT DEFAULT 'registered',registered_at TEXT DEFAULT (datetime('now')),attended_at TEXT,cpd_entry_id INTEGER)");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_event_reg ON event_registrations(event_id,user_id)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_event_reg_user ON event_registrations(user_id)");
+        // ID-12 (exactly-once CPD): the CPD entry auto-credited for event attendance records its source
+        // event, and a guarded unique index makes a second credit for the same (event, user) impossible
+        // at the data layer — not merely in handler logic. Partial (WHERE) so ordinary member-logged CPD
+        // rows (NULL source_event_id) are exempt; Db.Translate strips the predicate for MySQL, where a
+        // composite UNIQUE already exempts NULL-bearing rows natively.
+        AddCol("cpd_entries", "source_event_id", "source_event_id INTEGER");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_cpd_event_user ON cpd_entries(source_event_id,user_id) WHERE source_event_id IS NOT NULL");
         // Careers / job board. employment_type: full_time|part_time|contract|internship|temporary.
         // remote_type: onsite|remote|hybrid. apply_method: inplatform|url|email. status: draft|published|closed.
         db.Exec(@"CREATE TABLE IF NOT EXISTS job_postings(id INTEGER PRIMARY KEY AUTOINCREMENT,title TEXT NOT NULL,organisation TEXT,location TEXT,
@@ -282,6 +289,56 @@ public static class Migrate
         AddCol("sample_questions", "option_c", "option_c TEXT");
         AddCol("sample_questions", "option_d", "option_d TEXT");
         AddCol("users", "registration_no", "registration_no TEXT");
+        AddCol("users", "registration_no_issued_at", "registration_no_issued_at TEXT");
+        // ── The PCI Student Number reservation and audit ledger (Core/StudentNumbers.cs). ──
+        // A number is permanently reserved here the moment it is issued, so merge/retire/erasure can
+        // release the person's identity without ever releasing the number to somebody else.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pci_student_number_registry(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_number VARCHAR(32) NOT NULL,format_version VARCHAR(16) NOT NULL DEFAULT 'legacy_v1',
+            original_user_id INTEGER NOT NULL,resolves_to_user_id INTEGER,state VARCHAR(16) NOT NULL DEFAULT 'issued',
+            merged_into_student_number VARCHAR(32),issued_at TEXT DEFAULT (datetime('now')),
+            changed_at TEXT DEFAULT (datetime('now')),reason_code VARCHAR(48),changed_by_admin_id INTEGER,
+            correlation_id VARCHAR(64),row_version INTEGER NOT NULL DEFAULT 1)");
+        // Bound the projection column on MySQL installs created before schema.sql declared it
+        // VARCHAR(32). SQLite needs (and permits) no ALTER — column types are affinity there, and
+        // every write already goes through the issuer, which caps the value's shape. Guarded and
+        // idempotent: re-running a MODIFY to the same type is a no-op, and legacy_v1 values are at
+        // most 20 characters so no data can be truncated by the narrowing.
+        if (db.Provider == Db.Kind.MySql)
+            try { db.Exec("ALTER TABLE users MODIFY registration_no VARCHAR(32)"); }
+            catch { /* never block a boot on a cosmetic type bound; Health reports the estate either way */ }
+        // The reservation itself. This one is safe unconditionally: the table is new, so it cannot
+        // already hold a duplicate, and it is what makes GetOrIssue's insert the atomic claim.
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_student_number_registry ON pci_student_number_registry(student_number)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_student_number_registry_user ON pci_student_number_registry(resolves_to_user_id)");
+        // ── Maker-checker duplicate-account merges (Core/IdentityMerge.cs, spec §4.11). One admin
+        // requests, a DIFFERENT admin approves; the row doubles as the immutable execution record
+        // (before/after JSON snapshots of both accounts' affected-row counts). ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pci_identity_merges(id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source_user_id INTEGER NOT NULL,target_user_id INTEGER NOT NULL,reason TEXT,
+            status VARCHAR(16) NOT NULL DEFAULT 'pending',requested_by INTEGER NOT NULL,
+            requested_at TEXT DEFAULT (datetime('now')),decided_by INTEGER,decided_at TEXT,
+            decision_note TEXT,before_json TEXT,after_json TEXT,correlation_id VARCHAR(64),
+            row_version INTEGER NOT NULL DEFAULT 1)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_identity_merges_status ON pci_identity_merges(status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_identity_merges_source ON pci_identity_merges(source_user_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_identity_merges_target ON pci_identity_merges(target_user_id)");
+        // The projection's uniqueness is NOT safe unconditionally — an existing database may already
+        // carry duplicate or malformed numbers from the era when GET /api/me minted them lazily, and a
+        // failed CREATE INDEX here would break boot for exactly the installs that need repairing most.
+        // So: create it only once the data is actually clean. Phase 2's backfill/quarantine pass makes
+        // it clean, and the next boot after that picks the index up. Fresh installs get it immediately.
+        try
+        {
+            // Counts '' as a value, not as an absence — two blank rows would fail the index just as
+            // two identical numbers would, and the partial predicate only exempts NULL.
+            var dupes = db.Scalar<long>(@"SELECT COUNT(*) FROM (SELECT registration_no FROM users
+                WHERE registration_no IS NOT NULL GROUP BY registration_no HAVING COUNT(*)>1) d");
+            if (dupes == 0)
+                db.Exec(@"CREATE UNIQUE INDEX IF NOT EXISTS ux_users_registration_no ON users(registration_no)
+                    WHERE registration_no IS NOT NULL");
+        }
+        catch { /* never let the uniqueness guard block a boot; Phase 2 reconciliation reports the drift */ }
         AddCol("exam_launch_codes", "code_hash", "code_hash TEXT");
         AddCol("discount_codes", "code_type", "code_type TEXT DEFAULT 'general'");
         AddCol("discount_codes", "org_name", "org_name TEXT");
@@ -492,6 +549,36 @@ public static class Migrate
         AddCol("fee_waivers", "appeal_id", "appeal_id INTEGER");
         AddCol("fee_waivers", "evidence_ref", "evidence_ref TEXT");
         AddCol("fee_waivers", "payable_amount", "payable_amount DECIMAL(12,2)");
+        // Client idempotency for partial / reschedule-only (and optional full) waiver requests.
+        // Unique when present so retries cannot create duplicate ledger rows or discount codes.
+        AddCol("fee_waivers", "idempotency_key", "idempotency_key VARCHAR(120)");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_fee_waivers_idem ON fee_waivers(idempotency_key)");
+
+        // RES-001/002 — checkout reservation holds + immutable partner attribution on payments.
+        // reserved_count is capacity held by open Stripe sessions; used_count is settled redemptions.
+        AddCol("discount_codes", "reserved_count", "reserved_count INTEGER DEFAULT 0");
+        AddCol("payments", "discount_code_id", "discount_code_id INTEGER");
+        AddCol("payments", "partner_id", "partner_id INTEGER");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS checkout_reservations(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            idempotency_key VARCHAR(120) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            product_type VARCHAR(32) NOT NULL,
+            certification_id INTEGER,
+            discount_code_id INTEGER,
+            partner_id INTEGER,
+            amount_minor INTEGER NOT NULL DEFAULT 0,
+            currency VARCHAR(8) NOT NULL DEFAULT 'USD',
+            stripe_session_id VARCHAR(128),
+            status VARCHAR(16) NOT NULL DEFAULT 'reserved',
+            payment_id INTEGER,
+            expires_at TEXT NOT NULL,
+            created_at TEXT DEFAULT (datetime('now')),
+            updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_checkout_res_idem ON checkout_reservations(idempotency_key)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_checkout_res_code ON checkout_reservations(discount_code_id, status)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_checkout_res_session ON checkout_reservations(stripe_session_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_payments_partner ON payments(partner_id)");
 
         // Authorization links so history + policy join cleanly.
         AddCol("exam_bookings", "authorization_id", "authorization_id INTEGER");

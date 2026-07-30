@@ -87,6 +87,12 @@ export default defineConfig({
           ASPNETCORE_ENVIRONMENT: 'Development',
           STRIPE_SECRET_KEY: 'sk_test_e2e_browser_suite',
           STRIPE_WEBHOOK_SECRET: 'whsec_e2e_browser_suite',
+          // The world-admin owner password. Pinned to the SAME well-known default the backend
+          // seeds in a non-production posture, which portal-world.spec.ts already types. Setting a
+          // different value here seeds the server with one password while every existing spec types
+          // another — the server env and the test process do not share variables — and the
+          // world-admin sign-in tests fail for a reason that looks nothing like its cause.
+          PCIWORLD_OWNER_PASSWORD: process.env.PCIWORLD_OWNER_PASSWORD ?? 'changeme-world-owner',
           E2E_ADMIN_EMAIL: E2E_ADMIN.email,
           E2E_ADMIN_PASSWORD: E2E_ADMIN.password,
           SEED_DEMO_EXAM: 'true',

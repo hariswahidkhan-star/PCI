@@ -1,6 +1,7 @@
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 // Admin moderation for the public community forum. Community flags auto-hide a post at 3 reports; this
@@ -32,14 +33,11 @@ export default function ForumModeration() {
         : <StatusBadge status={p.status} />
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Forum moderation</h1>
-        <p className="muted small" style={{ margin: 0 }}>
-          Flagged and hidden community posts. Posts auto-hide after 3 community reports; restore, hide or delete
-          them here. The author IP is never shown.
-        </p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Forum moderation"
+        subtitle="Flagged and hidden community posts. Posts auto-hide after 3 community reports; restore, hide or delete them here. The author IP is never shown."
+      />
 
       {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : (
         <>

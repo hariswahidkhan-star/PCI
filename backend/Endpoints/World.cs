@@ -59,10 +59,11 @@ public static class World
         app.MapGet("/world", (HttpContext ctx) =>
         {
             if (!Enabled()) return Disabled();
-            var today = WorldLifecycle.Today(db, DateTime.UtcNow);
-            var version = today is null ? null : WorldLifecycle.LiveVersion(db, H.L(today["id"]));
+            // The rotation period is the version authority — the home page shows the snapshot the
+            // day pinned, so a midday publish never changes what participants see (P0-05).
+            var pinned = WorldLifecycle.TodayPinned(db, DateTime.UtcNow);
             Track("home_viewed");
-            return Html(WorldPages.Home(db, today, version));
+            return Html(WorldPages.Home(db, pinned?.Challenge, pinned?.Version));
         });
 
         app.MapGet("/world/challenge/{code}", (HttpContext ctx, string code) =>
@@ -167,7 +168,10 @@ public static class World
             var version = WorldLifecycle.PinnedVersion(db, H.L(att["challenge_id"]), H.L(att["version"]));
             if (version is null) return Results.NotFound();
             Track("result_viewed", H.L(att["challenge_id"]));
-            return Html(WorldPages.PublicResult(db, att, version));
+            // Pass the route token so the page advertises its OWN canonical/og:url. Without it the
+            // renderer falls back to the World homepage, which is the ID-09 defect: a shared result
+            // card would tell every crawler the homepage was the canonical for this result.
+            return Html(WorldPages.PublicResult(db, att, version, token));
         });
 
         app.MapGet("/world/i/{token}", (string token) =>
@@ -200,12 +204,14 @@ public static class World
         app.MapGet("/api/world/today", () =>
         {
             if (!Enabled()) return Disabled();
-            var today = WorldLifecycle.Today(db, DateTime.UtcNow);
-            var version = today is null ? null : WorldLifecycle.LiveVersion(db, H.L(today["id"]));
-            if (today is null || version is null) return Results.Json(new { available = false });
+            // Same pinned period/version as the home page and attempt start — one authority (P0-05).
+            var pinned = WorldLifecycle.TodayPinned(db, DateTime.UtcNow);
+            if (pinned is null) return Results.Json(new { available = false });
+            var (today, version) = pinned.Value;
             return Results.Json(new
             {
                 available = true,
+                paused = WorldRotation.Paused(db),
                 code = H.Str(today["code"]),
                 title = H.Str(version["title"]),
                 hook = H.Str(version["hook"]),
@@ -231,51 +237,43 @@ public static class World
             var b = await H.Body(ctx.Request);
             var code = (H.GetS(b, "code") ?? "").Trim();
             var inviteTok = (H.GetS(b, "invite") ?? "").Trim();
+            var retake = H.GetEl(b, "retake") is { ValueKind: JsonValueKind.True };
+            // A signed-in start is OWNED FROM CREATION (P0-01): the account travels with the
+            // request, so the attempt never depends on a later login to be claimed.
+            var acct = WorldAccount.FromReq(ctx.Request, db);
 
-            var ch = db.QueryOne("SELECT * FROM pciworld_challenges WHERE code=? AND current_version>=1 AND retired=0", code);
-            if (ch is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            var challengeId = H.L(ch["id"]);
-            var version = H.L(ch["current_version"]);
-            long? inviteId = null;
-            if (inviteTok.Length > 0)
-            {
-                var inv = db.QueryOne(@"SELECT i.id, a.challenge_id, a.version FROM pciworld_invites i
-                    JOIN pciworld_attempts a ON a.id=i.attempt_id
-                    WHERE i.token_sha=? AND i.revoked=0", Security.Sha(inviteTok));
-                if (inv is not null && H.L(inv["challenge_id"]) == challengeId)
-                { version = H.L(inv["version"]); inviteId = H.L(inv["id"]); }
-            }
-            var snapshot = WorldLifecycle.PinnedVersion(db, challengeId, version);
-            if (snapshot is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var o = WorldAttempts.Start(db, H.L(sess["id"]), acct?.Id, code,
+                inviteTok.Length > 0 ? inviteTok : null, retake, DateTime.UtcNow);
+            if (o.Error is not null) return Results.Json(new { error = o.Error }, statusCode: 404);
+            var snapshot = WorldLifecycle.PinnedVersion(db, o.ChallengeId, o.Version)!;
 
-            var existing = db.QueryOne(@"SELECT * FROM pciworld_attempts
-                WHERE session_id=? AND challenge_id=? AND version=? AND status='in_progress'
-                ORDER BY id DESC LIMIT 1", H.L(sess["id"]), challengeId, version);
-            long attemptId;
             object? saved = null;
-            if (existing is not null)
+            try { saved = JsonDocument.Parse(o.AnswersJson ?? "{}").RootElement.Clone(); } catch { saved = new { }; }
+
+            object? result = null;
+            if (o.Completed)
             {
-                attemptId = H.L(existing["id"]);
-                try { saved = JsonDocument.Parse(H.Str(existing["answers_json"]) ?? "{}").RootElement.Clone(); }
-                catch { saved = new { }; }
+                // Reload-after-completion returns the stored result instead of a duplicate (P0-04).
+                var att = db.QueryOne("SELECT * FROM pciworld_attempts WHERE id=?", o.AttemptId)!;
+                result = ResultFor(att, snapshot);
             }
-            else
+            else if (!o.Resumed)
             {
-                attemptId = db.ExecuteReturningId(@"INSERT INTO pciworld_attempts
-                    (session_id,challenge_id,version,invite_id,answers_json) VALUES(?,?,?,?, '{}')",
-                    H.L(sess["id"]), challengeId, version, inviteId);
-                Track("challenge_started", challengeId, H.L(sess["id"]));
-                log(null, "world_attempt_start", $"{code} v{version} #{attemptId}");
+                Track("challenge_started", o.ChallengeId, H.L(sess["id"]));
+                log(null, "world_attempt_start", $"{code} v{o.Version} #{o.AttemptId}");
+                if (inviteTok.Length > 0)
+                    RecordReferralStart(db, inviteTok, H.L(sess["id"]), acct?.Id, o.ChallengeId, o.Version);
             }
             return Results.Json(new
             {
-                attempt_id = attemptId,
-                resumed = existing is not null,
-                completed = false,
+                attempt_id = o.AttemptId,
+                resumed = o.Resumed,
+                completed = o.Completed,
                 answers = saved,
                 title = H.Str(snapshot["title"]),
-                version,
+                version = o.Version,
                 view = WorldContent.PublicView(H.Str(snapshot["config_json"])!),
+                result,
             });
         });
 
@@ -293,6 +291,43 @@ public static class World
                 : Results.Json(new { ok = true });
         });
 
+        // ── Progressive authored hints (PI-US-051). One hint per request, in authored order, for
+        //    an in-progress attempt the caller owns. Reveals are recorded (hints_used) and carry no
+        //    hidden penalty; already-revealed hints are returned again so a refresh loses nothing.
+        //    Hint text NEVER appears in PublicView — this endpoint is its only exit. ──
+        app.MapPost("/api/world/attempts/{id:long}/hint", (HttpContext ctx, long id) =>
+        {
+            if (!Enabled()) return Disabled();
+            var sess = Session(ctx);
+            if (sess is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
+            if (Throttled("hint|" + H.L(sess["id"]), 60))
+                return Results.Json(new { error = "rate_limited" }, statusCode: 429);
+            var att = db.QueryOne("SELECT * FROM pciworld_attempts WHERE id=? AND session_id=?", id, H.L(sess["id"]));
+            if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (H.Str(att["status"]) != "in_progress")
+                return Results.Json(new { error = "not_in_progress", message = "Hints are only available before submission." }, statusCode: 409);
+            var snapshot = WorldLifecycle.PinnedVersion(db, H.L(att["challenge_id"]), H.L(att["version"]));
+            if (snapshot is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            var hints = WorldContent.Hints(H.Str(snapshot["config_json"])!);
+            if (hints.Count == 0)
+                return Results.Json(new { error = "no_hints", message = "This experience has no authored hints." }, statusCode: 404);
+            var used = (int)H.L(att["hints_used"]);
+            if (used < hints.Count)
+            {
+                // Guarded increment: a double-click reveals one hint, not two.
+                var n = db.Execute("UPDATE pciworld_attempts SET hints_used=?, updated_at=datetime('now') WHERE id=? AND hints_used=?",
+                    used + 1, id, used);
+                if (n > 0) { used += 1; Track("hint_requested", H.L(att["challenge_id"]), H.L(sess["id"])); }
+                else used = (int)H.L(db.QueryOne("SELECT hints_used FROM pciworld_attempts WHERE id=?", id)!["hints_used"]);
+            }
+            return Results.Json(new
+            {
+                ok = true,
+                revealed = hints.Take(Math.Min(used, hints.Count)).Select((t, i) => new { index = i + 1, text = t }),
+                remaining = Math.Max(0, hints.Count - used),
+            });
+        });
+
         app.MapPost("/api/world/attempts/{id:long}/submit", async (HttpContext ctx, long id) =>
         {
             if (!Enabled()) return Disabled();
@@ -301,34 +336,26 @@ public static class World
             if (Throttled("submit|" + H.L(sess["id"]), 40))
                 return Results.Json(new { error = "rate_limited" }, statusCode: 429);
 
-            var att = db.QueryOne("SELECT * FROM pciworld_attempts WHERE id=? AND session_id=?", id, H.L(sess["id"]));
-            if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            if (H.Str(att["status"]) == "completed")
-                return Results.Json(new { error = "already_submitted", message = "This attempt is already graded." }, statusCode: 409);
-
-            var snapshot = WorldLifecycle.PinnedVersion(db, H.L(att["challenge_id"]), H.L(att["version"]));
-            if (snapshot is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-
             var b = await H.Body(ctx.Request);
             var answersEl = H.GetEl(b, "answers") is { ValueKind: JsonValueKind.Object } a ? a : default;
-            var answersRaw = answersEl.ValueKind == JsonValueKind.Object ? answersEl.GetRawText() : "{}";
-            var config = JsonDocument.Parse(H.Str(snapshot["config_json"])!).RootElement;
-            var r = WorldScore.Grade(config, answersEl);
+            var acct = WorldAccount.FromReq(ctx.Request, db);
 
-            var dims = JsonSerializer.Serialize(new { calculation = r.Calculation, decision = r.Decision });
-            // First submit wins — a second submit races into the 0-rows branch and gets 409.
-            var n = db.Execute(@"UPDATE pciworld_attempts SET status='completed', answers_json=?, score=?,
-                    dimensions_json=?, profile_key=?, completed_at=datetime('now'), updated_at=datetime('now')
-                WHERE id=? AND status='in_progress'",
-                answersRaw, r.Score, dims, r.ProfileKey, id);
-            if (n == 0) return Results.Json(new { error = "already_submitted" }, statusCode: 409);
+            // Idempotent (P0-04): a retry of the same payload after a lost response replays the
+            // stored result with 200; only a DIFFERENT payload against a graded attempt is refused.
+            var o = WorldAttempts.Submit(db, H.L(sess["id"]), acct?.Id, id, answersEl);
+            if (o.Error is not null) return Results.Json(new { error = o.Error,
+                message = o.Error == "already_submitted" ? "This attempt is already graded." : null },
+                statusCode: o.Error == "already_submitted" ? 409 : 404);
 
-            Track("challenge_completed", H.L(att["challenge_id"]), H.L(sess["id"]));
-            log(null, "world_attempt_submit", $"#{id} {r.Score}%");
-            string shareLine = "";
-            if (config.TryGetProperty("share_line", out var sl) && sl.ValueKind == JsonValueKind.String)
-                shareLine = sl.GetString() ?? "";
-            return Results.Json(ResultPayload(r, shareLine));
+            var att = o.Attempt!;
+            var snapshot = WorldLifecycle.PinnedVersion(db, H.L(att["challenge_id"]), H.L(att["version"]))!;
+            if (!o.Replayed)
+            {
+                Track("challenge_completed", H.L(att["challenge_id"]), H.L(sess["id"]));
+                log(null, "world_attempt_submit", $"#{id} {att["score"]}%");
+                RecordReferralCompletion(db, H.L(att["session_id"]), H.L(att["challenge_id"]), H.L(att["version"]));
+            }
+            return Results.Json(ResultFor(att, snapshot));
         });
 
         app.MapGet("/api/world/attempts/{id:long}", (HttpContext ctx, long id) =>
@@ -336,23 +363,13 @@ public static class World
             if (!Enabled()) return Disabled();
             var sess = Session(ctx);
             if (sess is null) return Results.Json(new { error = "no_session" }, statusCode: 401);
-            var att = db.QueryOne("SELECT * FROM pciworld_attempts WHERE id=? AND session_id=?", id, H.L(sess["id"]));
+            // Cross-device: the account that owns an attempt can load it from any session.
+            var acct = WorldAccount.FromReq(ctx.Request, db);
+            var att = WorldAttempts.Owned(db, H.L(sess["id"]), acct?.Id, id);
             if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var snapshot = WorldLifecycle.PinnedVersion(db, H.L(att["challenge_id"]), H.L(att["version"]));
             if (snapshot is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
-            object? result = null;
-            if (H.Str(att["status"]) == "completed")
-            {
-                // Deterministic replay from the pinned snapshot and the stored answers.
-                var config = JsonDocument.Parse(H.Str(snapshot["config_json"])!).RootElement;
-                JsonElement answers = default;
-                try { answers = JsonDocument.Parse(H.Str(att["answers_json"]) ?? "{}").RootElement; } catch { }
-                var r = WorldScore.Grade(config, answers);
-                string shareLine = "";
-                if (config.TryGetProperty("share_line", out var sl) && sl.ValueKind == JsonValueKind.String)
-                    shareLine = sl.GetString() ?? "";
-                result = ResultPayload(r, shareLine);
-            }
+            object? result = H.Str(att["status"]) == "completed" ? ResultFor(att, snapshot) : null;
             return Results.Json(new
             {
                 attempt_id = id,
@@ -456,6 +473,49 @@ public static class World
 
     public static readonly string[] WorldReportCategories =
         { "content_error", "calculation", "accessibility", "inappropriate", "other" };
+
+    /// <summary>Record that an anonymous session started a challenge from a share link — privacy-safe
+    /// by construction: the row carries the OPAQUE share reference (the invite token's sha, exactly
+    /// how the invite itself is stored), the numeric session id and the pinned challenge coordinates.
+    /// No name, no email, no raw id in any URL or analytics row; the sharer only ever reads aggregate
+    /// counts. INSERT OR IGNORE + the unique key make a refresh or double-start one row, and a
+    /// signed-in start is attributed to its account from creation. A revoked or mismatched invite
+    /// records nothing.</summary>
+    public static void RecordReferralStart(Db db, string inviteToken, long sessionId, long? userId, long challengeId, long version)
+    {
+        var inv = db.QueryOne(@"SELECT a.challenge_id FROM pciworld_invites i
+            JOIN pciworld_attempts a ON a.id=i.attempt_id
+            WHERE i.token_sha=? AND i.revoked=0", Security.Sha(inviteToken));
+        if (inv is null || H.L(inv["challenge_id"]) != challengeId) return;
+        db.Execute(@"INSERT OR IGNORE INTO pciworld_referrals
+                (share_ref,anonymous_world_session_id,referred_user_id,challenge_id,challenge_version)
+            VALUES(?,?,?,?,?)", Security.Sha(inviteToken), sessionId, userId, challengeId, version);
+    }
+
+    /// <summary>Advance the referral row for the session that STARTED the attempt (which, on a
+    /// cross-device account submit, is not necessarily the caller's session). Guarded on
+    /// completed_at IS NULL so a submit replay can never advance it twice; a session already
+    /// claimed goes straight to 'claimed' so completion order never loses the state.</summary>
+    public static void RecordReferralCompletion(Db db, long sessionId, long challengeId, long version) =>
+        db.Execute(@"UPDATE pciworld_referrals SET completed_at=datetime('now'),
+                conversion_state=CASE WHEN referred_user_id IS NULL THEN 'completed' ELSE 'claimed' END
+            WHERE anonymous_world_session_id=? AND challenge_id=? AND challenge_version=?
+              AND completed_at IS NULL", sessionId, challengeId, version);
+
+    /// <summary>The result payload for a COMPLETED attempt, replayed deterministically from the
+    /// pinned snapshot and the stored answers — submit, retry-after-lost-response, reload and the
+    /// attempt GET all serialize through this one path, so they can never disagree.</summary>
+    static object ResultFor(Dictionary<string, object?> att, Dictionary<string, object?> snapshot)
+    {
+        var config = JsonDocument.Parse(H.Str(snapshot["config_json"])!).RootElement;
+        JsonElement answers = default;
+        try { answers = JsonDocument.Parse(H.Str(att["answers_json"]) ?? "{}").RootElement; } catch { }
+        var r = WorldScore.Grade(config, answers);
+        string shareLine = "";
+        if (config.TryGetProperty("share_line", out var sl) && sl.ValueKind == JsonValueKind.String)
+            shareLine = sl.GetString() ?? "";
+        return ResultPayload(r, shareLine);
+    }
 
     /// <summary>The post-submit payload — the ONLY place reference values and consequences are
     /// serialized, and only after grading (reveal policy: after_submit).</summary>

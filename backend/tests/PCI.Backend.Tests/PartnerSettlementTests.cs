@@ -442,4 +442,171 @@ public class PartnerSettlementTests
         Assert.NotEqual(first.Id, second.Id);
         Assert.Equal(2L, db.Scalar<long>("SELECT COUNT(DISTINCT settlement_no) FROM partner_settlements WHERE partner_id=?", pid));
     }
+
+    // ── refunds against an approved-but-unpaid batch ──────────────────────────────────────────────
+    // A reversal never edits the source transaction, so a batch prepared before the refund carries a
+    // frozen allocation that is now too large. Paying it anyway would hand the partner commission on
+    // money the student got back.
+
+    static long PaymentOf(Db db, long txnId)
+        => H.L(db.QueryOne("SELECT payment_id FROM partner_commission_transactions WHERE id=?", txnId)!["payment_id"]);
+
+    [Fact]
+    public void A_full_refund_after_approval_blocks_payment_of_the_batch()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        var txn = ApprovedSale(db, pid, 1000, 1);             // 100.00 commission
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        db.Execute("UPDATE payments SET payment_status='refunded', amount_refunded=1000 WHERE id=?", PaymentOf(db, txn));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txn)) > 0);
+
+        var pay = PartnerSettlement.Pay(db, s.Id, Payer, 10_000, "bank", "REF-REV", null, null);
+        Assert.False(pay.Ok);
+        Assert.Equal("stale_allocation", pay.Error);
+        Assert.Equal(0L, H.L(db.QueryOne("SELECT amount_paid_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_paid_minor"]));
+
+        // The prescribed recovery leads somewhere honest: cancel, and a fresh prepare finds nothing owed.
+        Assert.True(PartnerSettlement.Cancel(db, s.Id, Checker, "refunded before payment").Ok);
+        Assert.Equal("nothing_payable", PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null).Error);
+        Assert.Equal(0L, PartnerSettlement.PayableMinor(db, pid));
+    }
+
+    [Fact]
+    public void A_partial_refund_before_preparation_shrinks_the_allocation_to_the_net_worth()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        var txn = ApprovedSale(db, pid, 1000, 1);             // 100.00 commission
+        db.Execute("UPDATE payments SET payment_status='partially_refunded', amount_refunded=250 WHERE id=?", PaymentOf(db, txn));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txn)) > 0);   // −25.00
+
+        Assert.Equal(7_500L, PartnerSettlement.PayableMinor(db, pid));
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(s.Ok);
+        Assert.Equal(7_500L, H.L(db.QueryOne("SELECT amount_approved_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_approved_minor"]));
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        // The net amount pays; the pre-refund amount does not.
+        Assert.Equal("over_approved", PartnerSettlement.Pay(db, s.Id, Payer, 10_000, "bank", "REF-N1", null, null).Error);
+        Assert.True(PartnerSettlement.Pay(db, s.Id, Payer, 7_500, "bank", "REF-N2", null, null).Ok);
+    }
+
+    [Fact]
+    public void A_partial_refund_between_approval_and_payment_forces_a_re_prepare_at_the_net_amount()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        var txn = ApprovedSale(db, pid, 1000, 1);
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        db.Execute("UPDATE payments SET payment_status='partially_refunded', amount_refunded=250 WHERE id=?", PaymentOf(db, txn));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txn)) > 0);
+
+        var pay = PartnerSettlement.Pay(db, s.Id, Payer, 10_000, "bank", "REF-P1", null, null);
+        Assert.False(pay.Ok);
+        Assert.Equal("stale_allocation", pay.Error);
+
+        Assert.True(PartnerSettlement.Cancel(db, s.Id, Checker, "partial refund landed first").Ok);
+        var again = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(again.Ok);
+        Assert.Equal(7_500L, H.L(db.QueryOne("SELECT amount_approved_minor FROM partner_settlements WHERE id=?", again.Id)!["amount_approved_minor"]));
+        Assert.True(PartnerSettlement.Approve(db, again.Id, Checker).Ok);
+        Assert.True(PartnerSettlement.Pay(db, again.Id, Payer, 7_500, "bank", "REF-P2", null, null).Ok);
+    }
+
+    [Fact]
+    public void Retrying_a_payment_with_the_reference_already_recorded_on_the_settlement_is_refused()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+        ApprovedSale(db, pid, 1000, 1);                       // 100.00 commission
+        var s = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, s.Id, Checker).Ok);
+
+        Assert.True(PartnerSettlement.Pay(db, s.Id, Payer, 5_000, "bank", "WIRE-42", null, null).Ok);
+        // The same transfer submitted again (timeout retry, double-click) must not double-record.
+        var retry = PartnerSettlement.Pay(db, s.Id, Payer, 5_000, "bank", "WIRE-42", null, null);
+        Assert.False(retry.Ok);
+        Assert.Equal("duplicate_reference", retry.Error);
+        Assert.Equal(5_000L, H.L(db.QueryOne("SELECT amount_paid_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_paid_minor"]));
+        // A genuine second instalment arrives under its own reference and completes the batch.
+        Assert.True(PartnerSettlement.Pay(db, s.Id, Payer, 5_000, "bank", "WIRE-43", null, null).Ok);
+        Assert.Equal(10_000L, H.L(db.QueryOne("SELECT amount_paid_minor FROM partner_settlements WHERE id=?", s.Id)!["amount_paid_minor"]));
+    }
+
+    // ── currency partition ────────────────────────────────────────────────────────────────────────
+    // Minor units of different currencies must never be summed or offset against each other — netting a
+    // EUR debt off a USD batch invents an exchange rate of 1. Commission snapshots the agreement's
+    // currency at earn time, so an agreement moving from EUR to USD legitimately leaves one partner
+    // holding balances in both.
+
+    [Fact]
+    public void A_recoverable_in_one_currency_never_offsets_or_blocks_a_batch_in_another()
+    {
+        var db = Fresh();
+        var pid = Partner(db);
+
+        // EUR era: earn, settle and pay EUR 100.00 of commission, then the sale fully refunds —
+        // leaving a recoverable of EUR 100.00 (money already left; owed back).
+        db.Execute("UPDATE partner_agreements SET currency='EUR' WHERE partner_id=?", pid);
+        var txnE = ApprovedSale(db, pid, 1000, 1);
+        var sE = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, sE.Id, Checker).Ok);
+        Assert.True(PartnerSettlement.Pay(db, sE.Id, Payer, 10_000, "bank", "EUR-WIRE-1", null, null).Ok);
+        db.Execute("UPDATE payments SET payment_status='refunded', amount_refunded=1000 WHERE id=?", PaymentOf(db, txnE));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txnE)) > 0);
+
+        // USD era: a fresh approved USD 50.00 commission.
+        db.Execute("UPDATE partner_agreements SET currency='USD' WHERE partner_id=?", pid);
+        ApprovedSale(db, pid, 500, 2);
+
+        // The balances partition; nothing bleeds across the currency boundary.
+        Assert.Equal(10_000L, PartnerCommissionReversal.RecoverableMinor(db, pid, "EUR"));
+        Assert.Equal(0L, PartnerCommissionReversal.RecoverableMinor(db, pid, "USD"));
+        Assert.Equal(10_000L, PartnerSettlement.UnrecoveredMinor(db, pid, "EUR"));
+        Assert.Equal(0L, PartnerSettlement.UnrecoveredMinor(db, pid, "USD"));
+        Assert.Equal(5_000L, PartnerSettlement.PayableMinor(db, pid, "USD"));
+        // Negative payable in a currency = the partner owes that much in it (the EUR claw-back).
+        Assert.Equal(-10_000L, PartnerSettlement.PayableMinor(db, pid, "EUR"));
+
+        // The USD batch prepares at its full worth: no EUR offset in the adjustment, and no
+        // "offset_by_recoverable" refusal computed from a debt in a different currency.
+        var sU = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(sU.Ok);
+        var row = db.QueryOne("SELECT currency, amount_approved_minor, adjustments_minor FROM partner_settlements WHERE id=?", sU.Id)!;
+        Assert.Equal("USD", H.Str(row["currency"]));
+        Assert.Equal(5_000L, H.L(row["amount_approved_minor"]));
+        Assert.Equal(0L, H.L(row["adjustments_minor"]));
+        Assert.True(PartnerSettlement.Approve(db, sU.Id, Checker).Ok);
+        Assert.True(PartnerSettlement.Pay(db, sU.Id, Payer, 5_000, "bank", "USD-WIRE-1", null, null).Ok);
+
+        // The EUR debt is still fully on the books, untouched by the USD settlement.
+        Assert.Equal(10_000L, PartnerSettlement.UnrecoveredMinor(db, pid, "EUR"));
+    }
+
+    [Fact]
+    public void A_same_currency_recoverable_still_offsets_the_next_batch()
+    {
+        var db = Fresh();
+        var pid = Partner(db);                                // agreement currency defaults to USD
+
+        var txn1 = ApprovedSale(db, pid, 1000, 1);            // USD 100.00, settled and paid
+        var s1 = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(PartnerSettlement.Approve(db, s1.Id, Checker).Ok);
+        Assert.True(PartnerSettlement.Pay(db, s1.Id, Payer, 10_000, "bank", "OFF-WIRE-1", null, null).Ok);
+        db.Execute("UPDATE payments SET payment_status='refunded', amount_refunded=1000 WHERE id=?", PaymentOf(db, txn1));
+        Assert.True(PartnerCommissionReversal.EnsureForPayment(db, PaymentOf(db, txn1)) > 0);
+
+        ApprovedSale(db, pid, 1500, 2);                       // USD 150.00 newly approved
+        var s2 = PartnerSettlement.Prepare(db, pid, Maker, null, null, null, null);
+        Assert.True(s2.Ok);
+        var row = db.QueryOne("SELECT amount_approved_minor, adjustments_minor FROM partner_settlements WHERE id=?", s2.Id)!;
+        // The USD debt nets off the USD batch exactly as before the currency partition.
+        Assert.Equal(-10_000L, H.L(row["adjustments_minor"]));
+        Assert.Equal(5_000L, H.L(row["amount_approved_minor"]));
+    }
 }

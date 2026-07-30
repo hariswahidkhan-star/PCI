@@ -9,6 +9,7 @@ import {
   type ExamWindowRule,
 } from '../api'
 import { Card, StatusBadge, Badge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate, fmtDateTime, titleCase } from '../../format'
 
 // ---------------------------------------------------------------- shared helpers
@@ -252,7 +253,10 @@ function WaiveFeeCard({ userId, certificationId, onDone }: { userId: number; cer
 
   async function go() {
     if (!reason.trim()) { setMsg({ ok: false, text: 'A reason is required — every waiver must record why.' }); return }
+    if (busy) return
     setBusy(true); setMsg(null)
+    // Durable client key — required server-side for partial and reschedule-only waivers.
+    const idempotencyKey = crypto.randomUUID()
     try {
       const r = await adminApi.post<{ payable?: number; skips_checkout?: boolean }>('/api/admin/exam-fee-waiver', {
         user_id: userId,
@@ -264,6 +268,7 @@ function WaiveFeeCard({ userId, certificationId, onDone }: { userId: number; cer
         sponsor: sponsor || undefined,
         evidence_ref: evidence || undefined,
         expires: toIso(expires),
+        idempotency_key: idempotencyKey,
       })
       setMsg({ ok: true, text: r.skips_checkout ? `${titleCase(feeType)} fee waived — access granted (no checkout needed).` : `${titleCase(feeType)} fee waiver recorded — payable $${r.payable ?? 0}.` })
       setReason(''); setNote('')
@@ -402,7 +407,7 @@ function AuthDrawer({ row, onClose, onChanged }: { row: ExamExceptionRow; onClos
           <button className="btn secondary sm" onClick={onClose}>Close</button>
         </div>
         {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data ? null : (
-          <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+          <div className="page">
             <Card className="entity" title={name} action={<StatusBadge status={row.status} />}>
               <div className="grid cols-2 small">
                 <div><span className="muted">Email</span><div>{sv(row.email)}</div></div>
@@ -995,7 +1000,7 @@ export default function ExamExceptions() {
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div className="spread">
-        <h1>Exam Exceptions &amp; Authorizations</h1>
+        <PageHeader title="Exam Exceptions & Authorizations" />
       </div>
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}

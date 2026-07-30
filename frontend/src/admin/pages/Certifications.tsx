@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { adminApi, type CertRow, CERT_STATUSES } from '../api'
 import { ApiError } from '../../api/client'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtMoney } from '../../format'
 
 type Draft = Partial<CertRow>
@@ -263,11 +264,11 @@ export default function Certifications() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Certifications</h1>
-        <button className="btn sm" onClick={() => setEditing(null)}>New certification</button>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Certifications"
+        actions={<button className="btn sm" onClick={() => setEditing(null)}>New certification</button>}
+      />
 
       <Card>
         {loading ? (

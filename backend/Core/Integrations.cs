@@ -135,13 +135,19 @@ public static class Integrations
             // does not represent (e.g. QuickBooks has no object for membership.activated) — that delivery
             // is terminal ('skipped'), not a failure to retry.
             HttpRequestMessage req;
-            if (provider == "quickbooks")
+            if (provider is "quickbooks" or "zoho" or "odoo")
             {
-                var built = await QuickBooksConnector.BuildRequest(db, http, integ, eventType, payloadRaw);
+                var built = provider switch
+                {
+                    "quickbooks" => await QuickBooksConnector.BuildRequest(db, http, integ, eventType, payloadRaw),
+                    "zoho" => await ZohoConnector.BuildRequest(db, http, integ, eventType, payloadRaw),
+                    _ => await OdooConnector.BuildRequest(db, http, integ, eventType, payloadRaw),
+                };
                 if (built is null)
                 {
+                    var label = provider switch { "quickbooks" => "QuickBooks", "zoho" => "Zoho Books", _ => "Odoo" };
                     db.Execute("UPDATE integration_deliveries SET status='skipped', attempts=?, last_error=?, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?",
-                        attempts, "event not mapped for QuickBooks", deliveryId);
+                        attempts, $"event not mapped for {label}", deliveryId);
                     return;
                 }
                 req = built;
@@ -154,6 +160,14 @@ public static class Integrations
                 var code = (int)resp.StatusCode;
                 if (resp.IsSuccessStatusCode)
                 {
+                    // Odoo speaks JSON-RPC, which reports faults with HTTP 200 and an "error" member. A
+                    // status-code-only check would record a delivery that never happened, so the body is
+                    // what decides for that provider.
+                    if (provider == "odoo" && OdooConnector.ResponseProblem(await resp.Content.ReadAsStringAsync()) is { } rpcProblem)
+                    {
+                        Fail(db, deliveryId, attempts, code, rpcProblem, integId);
+                        return;
+                    }
                     db.Execute("UPDATE integration_deliveries SET status='delivered', attempts=?, response_code=?, last_error=NULL, lease_owner=NULL, lease_until=NULL, updated_at=datetime('now') WHERE id=?", attempts, code, deliveryId);
                     db.Execute("UPDATE integrations SET status='ok', last_delivery_at=datetime('now'), updated_at=datetime('now') WHERE id=?", integId);
                 }

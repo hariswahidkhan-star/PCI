@@ -23,6 +23,12 @@ public static class WorldContentPack
         foreach (var p in Pilots) Upsert(db, p);
     }
 
+    /// <summary>House-content upsert for sibling packs (WorldIntelligencePack): same replay-immutability
+    /// discipline — a config change is a NEW immutable version, operator rows are never touched.</summary>
+    internal static void UpsertHouse(Db db, string code, string title, string hook, string industry, string role,
+        string track, string difficulty, int minutes, string competenciesJson, string configJson) =>
+        Upsert(db, new Pilot(code, title, hook, industry, role, track, difficulty, minutes, competenciesJson, configJson));
+
     static void Upsert(Db db, Pilot p)
     {
         var existing = db.QueryOne("SELECT id,author_id,status,current_version,config_json FROM pciworld_challenges WHERE code=?", p.Code);
@@ -96,7 +102,11 @@ public static class WorldContentPack
                    "consequence":"The variance surfaces anyway through finance — a month late and no longer yours to frame.",
                    "principle":"Withheld bad news compounds; controlled bad news builds trust."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Diagnosed a metro fit-out's true cost and schedule position from raw EVM data."}
+             "share_line":"Diagnosed a metro fit-out's true cost and schedule position from raw EVM data.",
+             "hints":[
+               "Earned value is the anchor: both variances start from what the work actually earned, not from what was spent or planned.",
+               "Schedule measures compare earned against planned; cost measures compare earned against actual — subtraction gives the variance, division gives the index.",
+               "Negative variances and indices below one point the same way; compute all four from the same three cumulative figures and let the paragraph follow the arithmetic."]}
             """),
 
         new("WC-SCH-002", "Find the path that actually matters",
@@ -134,7 +144,11 @@ public static class WorldContentPack
                    "consequence":"A real acceleration opportunity on E is missed.",
                    "principle":"The network, not instinct, says whether acceleration is possible."}]}],
              "profile_map":{"calculation":"Schedule Detective","decision":"Recovery Leader","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Ran the critical path on a data-centre commissioning network and put acceleration money where it works."}
+             "share_line":"Ran the critical path on a data-centre commissioning network and put acceleration money where it works.",
+             "hints":[
+               "Work the network forward for earliest dates, then backward for latest — the duration is fixed by the longest chain of dependent activities.",
+               "An activity's total float is the gap between its latest and earliest start; the critical path is the chain where that gap is zero.",
+               "Before agreeing to crash anything, check whether the activity in question carries float — money spent accelerating a non-critical activity buys no finish date at all."]}
             """),
 
         new("WC-RSK-003", "Price the storm before it hits",
@@ -172,7 +186,11 @@ public static class WorldContentPack
                    "consequence":"The number survives one meeting, then fails its first audit question.",
                    "principle":"A contingency that cannot be traced to the register cannot be defended."}]}],
              "profile_map":{"calculation":"Risk Strategist","decision":"Risk Strategist","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Priced an offshore wind risk register and split expected value from tail protection."}
+             "share_line":"Priced an offshore wind risk register and split expected value from tail protection.",
+             "hints":[
+               "Each register line's expected value is probability multiplied by impact, keeping the sign — threats negative, opportunities positive.",
+               "The register value nets every line's expected value, threats against opportunities.",
+               "The largest single exposure is read line by line before netting; a healthy net figure can hide one line the committee should see on its own."]}
             """),
 
         new("WC-CSH-004", "The project that ran out of cash while profitable",
@@ -210,7 +228,11 @@ public static class WorldContentPack
                    "consequence":"Payroll misses in month 2. Profitability at completion never got a chance.",
                    "principle":"Profit is an opinion; cash is a fact with a date on it."}]}],
              "profile_map":{"calculation":"Finance Thinker","decision":"Finance Thinker","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Sized the real funding gap on a profitable project from its month-by-month cash curve."}
+             "share_line":"Sized the real funding gap on a profitable project from its month-by-month cash curve.",
+             "hints":[
+               "Run the months in order: each period's net movement is inflow minus outflow, and the cumulative line carries the running total.",
+               "The peak funding requirement is the deepest point the cumulative line reaches below zero — not the largest single monthly outflow.",
+               "Profit at completion and cash through the middle are different questions; the facility is sized by the worst cumulative point, and the closing position confirms the profit."]}
             """),
 
         new("WC-CHG-005", "The scope wants to grow. The budget doesn't.",
@@ -249,7 +271,11 @@ public static class WorldContentPack
                    "consequence":"The audit trail eventually surfaces it as misallocation — worse than the original problem.",
                    "principle":"Hiding scope in other budgets converts a cost issue into an integrity issue."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Strategic Project Controller","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Rebuilt a hospital project baseline from its change register — approved changes only."}
+             "share_line":"Rebuilt a hospital project baseline from its change register — approved changes only.",
+             "hints":[
+               "Only changes in an approved state move the baseline; pending, rejected and withdrawn items stay out of it entirely.",
+               "Apply each approved item's cost delta to the baseline budget and its time delta to the baseline duration — nothing else in the register touches either.",
+               "Count the approved items as you apply them; if the count disagrees with the deltas you applied, one register line has been mis-read."]}
             """),
 
         new("WC-PRG-006", "Percent complete, or percent hoped?",
@@ -285,7 +311,11 @@ public static class WorldContentPack
                    "consequence":"The true-up lands in the same month as the first schedule slip — twice the bad news, half the trust.",
                    "principle":"Optimistic progress borrows credibility at compound interest."}]}],
              "profile_map":{"calculation":"Strategic Project Controller","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Measured real weighted progress on a production line — and defended it."}
+             "share_line":"Measured real weighted progress on a production line — and defended it.",
+             "hints":[
+               "Weight each package's percent complete by its budget share — walking the floor counts big and small packages equally, the money does not.",
+               "Multiply each package's completion by its budget, sum the results, and divide by the total budget.",
+               "If the weighted figure disagrees with the walked impression, the difference usually sits in the heaviest package — check the biggest budget lines first."]}
             """),
 
         new("WC-ESC-007", "The schedule says fine. Time says otherwise.",
@@ -320,7 +350,11 @@ public static class WorldContentPack
                    "consequence":"The group prefers the comfortable number. So did the last programme that missed by a quarter.",
                    "principle":"Presenting contradictory measures without a recommendation is delegation of judgement, not transparency."}]}],
              "profile_map":{"calculation":"Schedule Detective","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Exposed a hidden schedule slip with Earned Schedule after cost-based SPI said 'fine'."}
+             "share_line":"Exposed a hidden schedule slip with Earned Schedule after cost-based SPI said 'fine'.",
+             "hints":[
+               "Earned schedule asks when the plan expected today's earned value — project the earned figure back onto the planned curve and read the time.",
+               "Find the period whose cumulative plan brackets the earned value, then interpolate within it for the fraction.",
+               "Time variance is earned schedule minus time elapsed, and the time index divides the two — near the end of a plan, only the time-based pair keeps telling the truth."]}
             """),
 
         new("WC-PRT-008", "Three estimates, one promise",
@@ -356,7 +390,11 @@ public static class WorldContentPack
                    "consequence":"The operator books the longer possession; the airline recovers the unused days from your reputation.",
                    "principle":"Silent padding is schedule contingency without governance."}]}],
              "profile_map":{"calculation":"Risk Strategist","decision":"Commercial Negotiator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Turned three-point estimates into a defensible cutover commitment with a stated confidence."}
+             "share_line":"Turned three-point estimates into a defensible cutover commitment with a stated confidence.",
+             "hints":[
+               "Each activity's expected duration weights the most likely estimate four times against one each of optimistic and pessimistic, divided by six.",
+               "Path variance adds the activity variances — each is the pessimistic-minus-optimistic span divided by six, then squared — and the standard deviation is its square root.",
+               "The probability comes from the normal curve: how many standard deviations sit between the expected duration and the promised window."]}
             """),
 
         new("WC-TML-009", "Read the trend, not the month",
@@ -400,7 +438,11 @@ public static class WorldContentPack
                    "consequence":"An arithmetic compromise nobody can defend at the select committee.",
                    "principle":"Forecasts are derived, not negotiated."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Forecast a government programme's year-end position from six months of earned-value trend."}
+             "share_line":"Forecast a government programme's year-end position from six months of earned-value trend.",
+             "hints":[
+               "Use the cumulative figures at the data date — the monthly increments are the story, the cumulative line is the position.",
+               "The completion forecast divides the total budget by cumulative cost performance; variance at completion is the budget minus that forecast.",
+               "Compute the indices first and carry them unrounded into the forecast — rounding before the division moves the year-end answer by more than the tolerance."]}
             """),
 
         new("WC-AIA-010", "The AI says relax. The data says don't.",
@@ -444,7 +486,11 @@ public static class WorldContentPack
                    "consequence":"The drafting productivity is lost and the ungoverned spreadsheets it replaced come back.",
                    "principle":"The failure was missing assurance, not the existence of the tool."}]}],
              "profile_map":{"calculation":"AI Assurance Reviewer","decision":"AI Assurance Reviewer","balanced":"AI Assurance Reviewer"},
-             "share_line":"Audited an AI-drafted cost forecast against the measured data — and corrected it before the CFO saw it."}
+             "share_line":"Audited an AI-drafted cost forecast against the measured data — and corrected it before the CFO saw it.",
+             "hints":[
+               "Ignore the narrative and re-derive the position: earned against actual gives cost performance, and the forecast follows from it.",
+               "The forecast on measured performance divides the full budget by the cost index — not by hope that variance is timing-related.",
+               "Compare the derived forecast with the assistant's figure; the gap between them is the size of the claim being walked past the CFO."]}
             """),
 
         // ── Release-2 batch (WC-…-011…030): the remaining engine families + broader industries. ──
@@ -479,7 +525,11 @@ public static class WorldContentPack
                    "consequence":"The overrun surfaces at the next valuation with two months of momentum behind it.",
                    "principle":"Hours without quantities is spend, not progress."}]}],
              "profile_map":{"calculation":"Strategic Project Controller","decision":"Recovery Leader","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Measured real crew productivity on a façade package and found the true constraint."}
+             "share_line":"Measured real crew productivity on a façade package and found the true constraint.",
+             "hints":[
+               "Productivity is measured output per input hour — planned quantity over planned hours, and installed quantity over booked hours.",
+               "The factor divides actual productivity by planned; effort and appearance play no part in either number.",
+               "A factor below one with heavy booked hours says the constraint is in the conditions, not the crew — look for what is stealing the hours before Friday."]}
             """),
 
         new("WC-BOQ-012", "Price the bill before you sign it",
@@ -487,7 +537,7 @@ public static class WorldContentPack
             "Real Estate", "Quantity Surveyor", "project_controls", "foundation", 7,
             """["cost_control","procurement"]""",
             """
-            {"context":"A tenant fit-out bill of quantities arrives for sign-off. Recompute the bill total and the weighted average rate before it goes to the client.",
+            {"context":"A tenant fit-out bill of quantities arrives for sign-off. Recompute the bill total and the average line rate before it goes to the client.",
              "evidence":[
                {"label":"A — Partitions","value":"120 m² at 85 per m²"},
                {"label":"B — Raised floor","value":"45 m² at 240 per m²"},
@@ -499,7 +549,7 @@ public static class WorldContentPack
              "ask":[
                {"key":"total","label":"Bill total","type":"number"},
                {"key":"line_count","label":"Number of bill lines","type":"number"},
-               {"key":"average_rate","label":"Weighted average rate","type":"number"}],
+               {"key":"average_rate","label":"Average line rate (simple mean of the line rates)","type":"number"}],
              "tolerance":0.01,
              "decisions":[
                {"key":"rate","prompt":"Line B's rate is 40% above the framework schedule. What now?",
@@ -514,7 +564,11 @@ public static class WorldContentPack
                    "consequence":"The supplier disputes the deduction; the relationship sours over what a query would have fixed.",
                    "principle":"Correction goes through agreement, not through the payment run."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Commercial Negotiator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Recomputed a fit-out bill of quantities and caught the rate that didn't belong."}
+             "share_line":"Recomputed a fit-out bill of quantities and caught the rate that didn't belong.",
+             "hints":[
+               "Each line extends quantity times rate; the bill total is the sum of the extensions.",
+               "The average asked for here is the simple mean across the line rates — a reasonableness check on pricing, not a priced quantity.",
+               "Count the priced lines as you extend them, and hold any rate that looks out of family against the framework schedule before certifying."]}
             """),
 
         new("WC-RES-013", "Five weeks, one crew, too much work",
@@ -551,7 +605,11 @@ public static class WorldContentPack
                    "consequence":"Week 3 slips inside a fixed outage window; the utility's penalty clause finds you.",
                    "principle":"A plan that needs more resources than exist is a wish with a date."}]}],
              "profile_map":{"calculation":"Strategic Project Controller","decision":"Recovery Leader","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Quantified a crew overload inside a fixed outage window and levelled it with float, not overtime."}
+             "share_line":"Quantified a crew overload inside a fixed outage window and levelled it with float, not overtime.",
+             "hints":[
+               "Compare demand with capacity week by week; an overload exists only where demand exceeds what is available.",
+               "The worst single week is the largest demand-minus-capacity gap, and the overloaded count is how many weeks show any gap at all.",
+               "Peak demand and peak overload are different readings — the busiest week and the most overloaded week need not be the same one."]}
             """),
 
         new("WC-PRC-014", "The crane is late. Is the project?",
@@ -583,7 +641,11 @@ public static class WorldContentPack
                    "consequence":"The delay lands on the critical path at full force; the operator learns from the newspaper.",
                    "principle":"Only float absorbs delay; the rest lands on the completion date."}]}],
              "profile_map":{"calculation":"Schedule Detective","decision":"Commercial Negotiator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Separated real critical delay from float noise when a 30-day supplier slip hit a port project."}
+             "share_line":"Separated real critical delay from float noise when a 30-day supplier slip hit a port project.",
+             "hints":[
+               "Float absorbs delay before the completion date moves; only the slippage beyond the available float reaches the project.",
+               "Critical delay is the supplier slip minus the float held by the receiving works, never less than zero.",
+               "The new duration adds only the critical portion to the baseline — and the float consumed can never exceed the float that existed."]}
             """),
 
         new("WC-PTF-015", "Five projects, one envelope",
@@ -621,7 +683,11 @@ public static class WorldContentPack
                    "consequence":"Technically clean, politically deaf — the committee overrides the whole framework next cycle.",
                    "principle":"Frameworks survive by absorbing governance, not resisting it."}]}],
              "profile_map":{"calculation":"Finance Thinker","decision":"Strategic Project Controller","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Scored a five-project capital portfolio and defended the model when politics leaned on it."}
+             "share_line":"Scored a five-project capital portfolio and defended the model when politics leaned on it.",
+             "hints":[
+               "Score each candidate with the stated weights exactly as agreed — normalise where the method requires, then weight and sum.",
+               "The portfolio value asked for totals every candidate's appraised worth, not only the funded ones.",
+               "Rank by the weighted score; a plea for one criterion is an argument to change the weights before scoring, never to override the ranking after it."]}
             """),
 
         new("WC-DEC-016", "Three ways up the mountain",
@@ -657,7 +723,11 @@ public static class WorldContentPack
                    "consequence":"The recommendation is right and ignored — analysis without engagement changes nothing.",
                    "principle":"An unexplained model is an unused model."}]}],
              "profile_map":{"calculation":"Evidence-Based Decision Maker","decision":"Commercial Negotiator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Scored three haul-road options on cost, time and risk — and kept the trade-offs on the table."}
+             "share_line":"Scored three haul-road options on cost, time and risk — and kept the trade-offs on the table.",
+             "hints":[
+               "Apply the equal weights to each option's normalised cost, schedule and risk measures, then sum per option.",
+               "Keep the normalisation direction consistent — a better option must score better, whichever way the raw scales run.",
+               "Compute both named options before naming the winner; the model's defence is that anyone applying the same weights reaches the same answer."]}
             """),
 
         new("WC-DQA-017", "Garbage in, forecast out",
@@ -698,7 +768,11 @@ public static class WorldContentPack
                    "consequence":"Perfection never arrives; planning reverts to gut feel, which is dirtier than the data was.",
                    "principle":"Data quality is managed with flags and queries, not ultimatums."}]}],
              "profile_map":{"calculation":"AI Assurance Reviewer","decision":"AI Assurance Reviewer","balanced":"AI Assurance Reviewer"},
-             "share_line":"Audited a roll-out data feed before the AI forecast ran — and shipped it with stated confidence."}
+             "share_line":"Audited a roll-out data feed before the AI forecast ran — and shipped it with stated confidence.",
+             "hints":[
+               "Audit against the design quantities: a record is anomalous only when its deviation exceeds the agreed tolerance.",
+               "Completeness compares records received against records expected, expressed as a percentage.",
+               "Count expected records from the design, not from what arrived — a missing record is a completeness failure, not an anomaly."]}
             """),
 
         new("WC-EVM-018", "Turnaround truth at 3 a.m.",
@@ -733,7 +807,11 @@ public static class WorldContentPack
                    "consequence":"You did not inflate it, but you certified it — the audit will not see the difference.",
                    "principle":"Silence over a known misstatement is authorship."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Strategic Project Controller","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Reported a refinery turnaround's true earned-value position under pressure to soften it."}
+             "share_line":"Reported a refinery turnaround's true earned-value position under pressure to soften it.",
+             "hints":[
+               "All five readings come from the same three cumulative figures at the data date — earned, planned and actual — against the full budget.",
+               "Variances subtract from earned value; indices divide it by planned and by actual; percent complete divides earned by the budget.",
+               "If a proposed improvement changes earned value without work being done, every downstream number becomes fiction — compute from what was verifiably earned."]}
             """),
 
         new("WC-CSH-019", "The show opens in five months",
@@ -770,7 +848,11 @@ public static class WorldContentPack
                    "consequence":"Defensible, but a genuine negotiation opportunity with willing suppliers goes unexplored.",
                    "principle":"Terms are negotiable; surprises are not."}]}],
              "profile_map":{"calculation":"Finance Thinker","decision":"Commercial Negotiator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Sized the funding trough for a live-events season before the bridge facility was signed."}
+             "share_line":"Sized the funding trough for a live-events season before the bridge facility was signed.",
+             "hints":[
+               "Roll the months in sequence — each period's net movement joins the running cumulative position.",
+               "The peak funding need is the deepest cumulative shortfall across the run, wherever it falls.",
+               "Test any proposed deferral by rebuilding the cumulative line with the payment moved — the shortfall usually moves with it rather than shrinking."]}
             """),
 
         new("WC-RSK-020", "The spillway question",
@@ -805,7 +887,11 @@ public static class WorldContentPack
                    "consequence":"A pleasant meeting, an unprepared project.",
                    "principle":"Opportunities season a risk review; they must not headline it."}]}],
              "profile_map":{"calculation":"Risk Strategist","decision":"Risk Strategist","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Priced a dam-upgrade risk register and pointed the board at the tail, not the average."}
+             "share_line":"Priced a dam-upgrade risk register and pointed the board at the tail, not the average.",
+             "hints":[
+               "Value each line as probability times signed impact — threats carry a negative sign, incentives and opportunities a positive one.",
+               "The register value nets all lines; the individual lines asked for are read before any netting.",
+               "The lines worth watching are the ones whose single-occurrence impact dwarfs their expected value — expectation understates what one bad day can do."]}
             """),
 
         new("WC-PRT-021", "The integration window",
@@ -840,7 +926,11 @@ public static class WorldContentPack
                    "consequence":"The programme office finds a planner who will — with worse numbers.",
                    "principle":"Declining to quantify uncertainty does not remove it; it just removes you."}]}],
              "profile_map":{"calculation":"Risk Strategist","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Put a defensible confidence on a warship integration window — with the fallback pre-agreed."}
+             "share_line":"Put a defensible confidence on a warship integration window — with the fallback pre-agreed.",
+             "hints":[
+               "Weight each activity's most likely duration four times against the optimistic and pessimistic, divide by six, then sum the path.",
+               "The path variance sums each activity's squared sixth-span; leave it squared — this question asks for variance, not deviation.",
+               "For the window probability, take the square root to get the deviation, measure how far the window sits from the expected finish, and read the normal curve."]}
             """),
 
         new("WC-CPM-022", "The lab that opens in seventeen days — or doesn't",
@@ -876,7 +966,11 @@ public static class WorldContentPack
                    "consequence":"The date improves at twice the necessary cost; 'to be safe' becomes the budget's epitaph.",
                    "principle":"Targeted acceleration beats blanket acceleration everywhere it matters."}]}],
              "profile_map":{"calculation":"Schedule Detective","decision":"Recovery Leader","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Ran a cleanroom commissioning network and sent the acceleration where the path actually was."}
+             "share_line":"Ran a cleanroom commissioning network and sent the acceleration where the path actually was.",
+             "hints":[
+               "Forward pass for earliest dates, backward pass for latest — the sequence duration is the longest dependent chain.",
+               "Total float is latest start minus earliest start per activity; the critical path is where it vanishes.",
+               "Before adding reviewers anywhere, read the float on the activity in question — acceleration only moves the end date on the zero-float chain."]}
             """),
 
         new("WC-CHG-023", "The campus that grew in committee",
@@ -914,7 +1008,11 @@ public static class WorldContentPack
                    "consequence":"The dean asks the contractor directly next week; now it is everyone's problem.",
                    "principle":"An unanswered improper request finds a weaker door."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Strategic Project Controller","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Held a campus baseline together by keeping every change on the one road through the gate."}
+             "share_line":"Held a campus baseline together by keeping every change on the one road through the gate.",
+             "hints":[
+               "Approved items only: pending, rejected and folded-in-quietly items never touch the baseline.",
+               "The net approved delta sums the approved items' signed cost changes; the revised budget applies that delta to the original baseline.",
+               "A rejected item absorbed into another package is scope without approval — the register, not the corridor, is the bridge."]}
             """),
 
         new("WC-ESC-024", "Ten sprints, one deadline, and a curve that doesn't lie",
@@ -949,7 +1047,11 @@ public static class WorldContentPack
                    "consequence":"The two periods consume the exact options the board needed to choose between.",
                    "principle":"Certainty about a slip arrives after the last chance to fix it."}]}],
              "profile_map":{"calculation":"Schedule Detective","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Forecast a digital programme's real completion in time units — and brought options, not apologies."}
+             "share_line":"Forecast a digital programme's real completion in time units — and brought options, not apologies.",
+             "hints":[
+               "Find when the plan expected the current earned points — that period, plus the interpolated fraction, is the earned schedule.",
+               "The time-based index divides earned schedule by the periods elapsed.",
+               "The independent forecast divides the planned length by the time index — it assumes the pace to date continues, which is exactly the assumption to surface on Thursday."]}
             """),
 
         new("WC-TML-025", "Five months of drift",
@@ -990,7 +1092,11 @@ public static class WorldContentPack
                    "consequence":"A 6% drift gets a 100% response; credibility spends faster than money.",
                    "principle":"Calibrate the response to the measured trend, not to the adrenaline."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Turned five 'normal' months of data-centre variance into one undeniable trend."}
+             "share_line":"Turned five 'normal' months of data-centre variance into one undeniable trend.",
+             "hints":[
+               "Read the cumulative position at the latest month — the monthly rows exist to build the cumulative line.",
+               "Forecast at completion divides the budget by cumulative cost performance; the variance at completion is budget minus forecast.",
+               "Months individually within normal variation can still compound into a material drift — the cumulative indices are where the trend stops hiding."]}
             """),
 
         new("WC-WBS-026", "Every dollar needs an address",
@@ -1029,7 +1135,11 @@ public static class WorldContentPack
                    "consequence":"Procurement starts before the next update; the address arrives after the mail.",
                    "principle":"Structure precedes spend, or spend invents its own structure."}]}],
              "profile_map":{"calculation":"Strategic Project Controller","decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Rolled up a hangar WBS and gave a homeless scope item an address before it billed anyone."}
+             "share_line":"Rolled up a hangar WBS and gave a homeless scope item an address before it billed anyone.",
+             "hints":[
+               "Roll the leaves upward: every parent is the sum of its children, level by level, to the root.",
+               "The hundred-percent test asks whether every scope element lives in exactly one work package — orphaned scope fails it.",
+               "Scope covered only in spirit is scope with no budget address; if it appears in no package, the structure does not satisfy the rule."]}
             """),
 
         new("WC-CBS-027", "Where the depot money went",
@@ -1065,7 +1175,11 @@ public static class WorldContentPack
                    "consequence":"The baseline dissolves one transfer at a time until variance means nothing.",
                    "principle":"Budget transfers follow change control, not reporting convenience."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Strategic Project Controller","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Rolled up a depot cost structure and reported the net without hiding the gross."}
+             "share_line":"Rolled up a depot cost structure and reported the net without hiding the gross.",
+             "hints":[
+               "Roll budget and actuals separately to the root, then take the variance at the top.",
+               "Variance is budget minus actual at every level — the sign tells you which way the money moved.",
+               "Netting at the root is arithmetic, not absolution: the report carries the rolled figure and the account-level story that explains it."]}
             """),
 
         new("WC-PRG-028", "How finished is the ship?",
@@ -1101,7 +1215,11 @@ public static class WorldContentPack
                    "consequence":"The headline crashes in the systems phase, where every refit is actually won or lost.",
                    "principle":"The biggest block is not the whole ship."}]}],
              "profile_map":{"calculation":"Strategic Project Controller","decision":"Cost Guardian","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Certified a ship refit's real weighted progress against a more flattering impression."}
+             "share_line":"Certified a ship refit's real weighted progress against a more flattering impression.",
+             "hints":[
+               "Weight each block's completion by its budget; the hull's visual finish carries only its budget share.",
+               "Sum the weighted completions and divide by the total weight — and confirm the weights themselves sum to the declared total.",
+               "Where the weighted figure and the visual impression disagree, the certificate follows the measured figure — the difference belongs in the narrative, not in the number."]}
             """),
 
         new("WC-AIA-029", "The optimistic algorithm",
@@ -1146,7 +1264,11 @@ public static class WorldContentPack
                    "consequence":"The gap this month becomes a surprise next month, now with your fingerprints on the silence.",
                    "principle":"Assurance that hides its findings is complicity with better paperwork."}]}],
              "profile_map":{"calculation":"AI Assurance Reviewer","decision":"AI Assurance Reviewer","balanced":"AI Assurance Reviewer"},
-             "share_line":"Caught an AI 'recovery trend' that no time series supported — before it reached the board."}
+             "share_line":"Caught an AI 'recovery trend' that no time series supported — before it reached the board.",
+             "hints":[
+               "Re-derive both indices from the cumulative data before reading any narrative about them.",
+               "The composite forecast adds the remaining work — budget minus earned — divided by the product of both indices, onto actual cost.",
+               "A schedule index below one and a cost index below one compound in the composite method; a claim of recovery and stability must survive that product to be supportable."]}
             """),
 
         new("WC-CAP-030", "The wind farm at the crossroads",
@@ -1204,7 +1326,11 @@ public static class WorldContentPack
                    "consequence":"Silence is a number too — the market fills it with a worse one.",
                    "principle":"In the absence of your estimate, everyone uses their own."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Executive Communicator","balanced":"Strategic Project Controller"},
-             "share_line":"Took an offshore wind programme's eight-period trend to the investment committee with a funded recovery case."}
+             "share_line":"Took an offshore wind programme's eight-period trend to the investment committee with a funded recovery case.",
+             "hints":[
+               "Establish the measured position first: cumulative indices at the data date, the forecast on measured performance, and the variance it implies.",
+               "Divide the budget by cost performance for the forecast; the variance at completion is what the committee is actually deciding about.",
+               "The recommendation follows the arithmetic: a variance beyond held contingency is a decision for the committee, not a footnote under it."]}
             """),
 
         // ───────────────────────── Gate A additions (031–050) ─────────────────────────
@@ -1255,7 +1381,11 @@ public static class WorldContentPack
                    "consequence":"Scope leaves the project before anyone has established which scope the client can do without.",
                    "principle":"Cutting before diagnosing trades a cost problem for a capability problem."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Executive Communicator","balanced":"Strategic Project Controller"},
-             "share_line":"Told a hyperscale client the truth about a half-built data hall: what it will cost, and what a real recovery would have to look like."}
+             "share_line":"Told a hyperscale client the truth about a half-built data hall: what it will cost, and what a real recovery would have to look like.",
+             "hints":[
+               "Two efficiencies answer the director: the one achieved so far, and the one the remaining work must achieve to land on budget.",
+               "The to-complete index divides work remaining by funds remaining — budget minus earned, over budget minus actual.",
+               "Compare the two indices: when the required efficiency sits far above the achieved one, timing is not an explanation, it is the gap."]}
             """),
 
         new("WC-CPM-032", "Cold chain, hot deadline",
@@ -1307,7 +1437,11 @@ public static class WorldContentPack
                    "consequence":"A real saving is declined to protect a buffer nothing is threatening.",
                    "principle":"Protecting float unconditionally is hoarding, not control."}]}],
              "profile_map":{"calculation":"Schedule Analyst","decision":"Evidence-Based Decision Maker","balanced":"Strategic Project Controller"},
-             "share_line":"Found the real critical path on a national cold-chain rollout before anyone spent money accelerating the wrong activity."}
+             "share_line":"Found the real critical path on a national cold-chain rollout before anyone spent money accelerating the wrong activity.",
+             "hints":[
+               "Run both passes before touching the plan — the network, not seniority, names the driving chain.",
+               "The critical path is the zero-float chain; read the named activity's float directly from the passes.",
+               "Overtime on an activity with float shortens nothing; check where the offered acceleration sits before spending it."]}
             """),
 
         new("WC-RSK-033", "The tie-in nobody priced",
@@ -1353,7 +1487,11 @@ public static class WorldContentPack
                    "consequence":"A low-probability, high-impact event is precisely the kind you insure against.",
                    "principle":"Probability alone never decides; exposure does."}]}],
              "profile_map":{"calculation":"Risk Quantifier","decision":"Evidence-Based Decision Maker","balanced":"Strategic Project Controller"},
-             "share_line":"Put a defensible number on a subsea risk register and showed why the contingency behind it was set by habit."}
+             "share_line":"Put a defensible number on a subsea risk register and showed why the contingency behind it was set by habit.",
+             "hints":[
+               "Signed impacts: threats negative, opportunities positive — probability times impact per line.",
+               "Net the lines for the register value; read the single line asked for before netting.",
+               "Precedent is not analysis: compare the register's expected value with the held contingency and let the difference drive the recommendation."]}
             """),
 
         new("WC-CSH-034", "The month the money ran out",
@@ -1390,7 +1528,11 @@ public static class WorldContentPack
                    "consequence":"The shortfall is pushed onto subcontractors, who price it back in next time.",
                    "principle":"Deferring payment is borrowing from your supply chain at an undisclosed rate."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Commercial Realist","balanced":"Strategic Project Controller"},
-             "share_line":"Found the month a profitable development would have run out of cash, and sized the facility before it did."}
+             "share_line":"Found the month a profitable development would have run out of cash, and sized the facility before it did.",
+             "hints":[
+               "Build the cumulative line period by period from the net movements.",
+               "The peak funding requirement is the deepest cumulative shortfall — the worst point, not the last.",
+               "Life-of-project profit and mid-life cash are separate truths; the facility must cover the worst cumulative point regardless of the happy ending."]}
             """),
 
         new("WC-BOQ-035", "Twelve kilometres of earth",
@@ -1424,7 +1566,11 @@ public static class WorldContentPack
                    "consequence":"The work appears anyway, at a rate negotiated with no competitive tension.",
                    "principle":"Scope omitted from a bill is scope purchased at the contractor's price."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Commercial Realist","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Measured a rail earthworks bill and put the uncertain quantity into a mechanism instead of into the number."}
+             "share_line":"Measured a rail earthworks bill and put the uncertain quantity into a mechanism instead of into the number.",
+             "hints":[
+               "Extend each line — quantity times rate — and sum the extensions for the bill total.",
+               "Count only priced lines; a line without a rate is not yet part of the bill's arithmetic.",
+               "Where a quantity is expected to grow but cannot yet be stated, the discipline is a provisional quantity flagged as such — not a silent allowance inside another line."]}
             """),
 
         new("WC-PRD-036", "The lining crew that looked fast",
@@ -1456,7 +1602,11 @@ public static class WorldContentPack
                    "consequence":"Pressure applied to an unachievable rate produces optimistic reporting, not metres.",
                    "principle":"Targets that the process cannot deliver corrupt the data before they change the output."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Evidence-Based Decision Maker","balanced":"Strategic Project Controller"},
-             "share_line":"Showed a tunnelling team that a crew booking fewer hours than planned was still losing ground per metre."}
+             "share_line":"Showed a tunnelling team that a crew booking fewer hours than planned was still losing ground per metre.",
+             "hints":[
+               "Compute planned and actual productivity as output per hour before believing any impression of pace.",
+               "The factor divides actual productivity by planned; the hours variance subtracts planned hours from booked hours.",
+               "A crew can look fast and still run behind plan — mobilising a second crew on an unproven rate doubles the assumption, not the output."]}
             """),
 
         new("WC-RES-037", "The shutdown that needed two of everyone",
@@ -1493,7 +1643,11 @@ public static class WorldContentPack
                    "consequence":"Plausible for a small peak; at this size it buys fatigue and rework in a safety-critical environment.",
                    "principle":"Overtime is a buffer with a declining exchange rate."}]}],
              "profile_map":{"calculation":"Schedule Analyst","decision":"Delivery Realist","balanced":"Strategic Project Controller"},
-             "share_line":"Quantified the crew shortfall in a refinery turnaround before the shutdown window opened, not during it."}
+             "share_line":"Quantified the crew shortfall in a refinery turnaround before the shutdown window opened, not during it.",
+             "hints":[
+               "Overload is demand minus capacity per week, floored at zero — weeks with spare capacity contribute nothing.",
+               "The total unfulfilled demand sums the weekly overloads; the count is how many weeks are overloaded at all.",
+               "A plan that needs people who do not exist is a duration statement in disguise — quantify the gap first, then talk about dates."]}
             """),
 
         new("WC-CBS-038", "Where the ward money went",
@@ -1529,7 +1683,11 @@ public static class WorldContentPack
                    "consequence":"Legitimate if the transfer is approved and disclosed; corrosive if it is used to make variances disappear.",
                    "principle":"Moving budget is a decision that needs an owner, not a formatting step."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Rolled up a hospital wing's cost accounts and refused to let an underspend hide an overrun."}
+             "share_line":"Rolled up a hospital wing's cost accounts and refused to let an underspend hide an overrun.",
+             "hints":[
+               "Roll each account's budget and actual to the project root before stating any position.",
+               "The project variance is rolled budget minus rolled actual — signed, not absolute.",
+               "An underspend can lawfully absorb an overrun only in the roll-up; the pack still shows each account, because the offset is the story."]}
             """),
 
         new("WC-PRT-039", "The launch window will not wait",
@@ -1576,7 +1734,11 @@ public static class WorldContentPack
                    "consequence":"Three small reductions move the total spread very little.",
                    "principle":"Variance adds in squares; treating it evenly wastes most of the effort."}]}],
              "profile_map":{"calculation":"Risk Quantifier","decision":"Executive Communicator","balanced":"Strategic Project Controller"},
-             "share_line":"Turned three-point estimates into a launch-window probability, and named the activity whose uncertainty owned it."}
+             "share_line":"Turned three-point estimates into a launch-window probability, and named the activity whose uncertainty owned it.",
+             "hints":[
+               "Expected duration per activity weights the most likely four to one against each extreme, divided by six; sum along the path.",
+               "The path deviation is the square root of the summed squared sixth-spans.",
+               "Present the window as a probability read from the normal curve — a single date without its probability is the claim the board has been living on."]}
             """),
 
         new("WC-CHG-040", "Four changes and a baseline",
@@ -1615,7 +1777,11 @@ public static class WorldContentPack
                    "consequence":"Technically correct on the baseline, and it lets a known exposure surprise people.",
                    "principle":"Excluding something from the baseline is not a reason to exclude it from the report."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Rebuilt a utility's baseline from its change log and put pending changes where they belong — visible, but not in the baseline."}
+             "share_line":"Rebuilt a utility's baseline from its change log and put pending changes where they belong — visible, but not in the baseline.",
+             "hints":[
+               "The baseline moves on approval and at no other moment — forecast and baseline are different documents.",
+               "Net the approved items' signed deltas into the budget; count them as you go.",
+               "A change very likely to be approved belongs in the forecast narrative and the risk view this month — the baseline waits for the signature."]}
             """),
 
         new("WC-ESC-041", "The fab that was behind in time, not money",
@@ -1651,7 +1817,11 @@ public static class WorldContentPack
                    "consequence":"Consistency is maintained all the way to a completion date nobody forecast.",
                    "principle":"Consistent use of a measure that cannot answer the question is consistent failure."}]}],
              "profile_map":{"calculation":"Schedule Analyst","decision":"Executive Communicator","balanced":"Strategic Project Controller"},
-             "share_line":"Used earned schedule to show a fab programme that a recovering SPI was arithmetic, not progress."}
+             "share_line":"Used earned schedule to show a fab programme that a recovering SPI was arithmetic, not progress.",
+             "hints":[
+               "Map the earned value back onto the planned curve — the period where the plan expected it, plus the fraction, is the earned schedule.",
+               "The time-based index divides earned schedule by elapsed periods; unlike the classic index, it does not drift back toward one as the plan tails off.",
+               "The time estimate at completion scales the planned length by the inverse of the time index — present it beside the classic index and let the contrast do the talking."]}
             """),
 
         new("WC-TML-042", "Six periods, one bad month",
@@ -1693,7 +1863,11 @@ public static class WorldContentPack
                    "consequence":"The numbers are right and the reader has no idea whether things are improving.",
                    "principle":"A position without a trend cannot support a decision about the future."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Evidence-Based Decision Maker","balanced":"Strategic Project Controller"},
-             "share_line":"Replayed six periods of an automotive line install and found the month that set the outturn."}
+             "share_line":"Replayed six periods of an automotive line install and found the month that set the outturn.",
+             "hints":[
+               "The data-date indices come from the cumulative line; the worst period comes from reading each period's own performance.",
+               "Compute period cost performance period by period — cumulative smoothing is exactly what hides one bad month.",
+               "A closed issue with an open variance is not closed; tie the worst period to its cause and check whether the effect is still in the forecast."]}
             """),
 
         new("WC-PFO-043", "Three good projects, one budget",
@@ -1740,7 +1914,11 @@ public static class WorldContentPack
                    "consequence":"Deliverability stops being a criterion for choosing what to deliver.",
                    "principle":"Difficult to measure is not the same as safe to ignore."}]}],
              "profile_map":{"calculation":"Portfolio Strategist","decision":"Governance Steward","balanced":"Strategic Project Controller"},
-             "share_line":"Ranked a public portfolio on its agreed weights and defended turning down the biggest headline return."}
+             "share_line":"Ranked a public portfolio on its agreed weights and defended turning down the biggest headline return.",
+             "hints":[
+               "Normalise the appraised values before weighting — the weights apply to comparable scales, and risk enters as a penalty.",
+               "Score each programme with the agreed weights, and total the appraised value across all candidates for the portfolio figure.",
+               "The biggest return can lawfully rank second once risk and fit are priced in — the defence is the agreed weighting, applied before the ranking was known."]}
             """),
 
         new("WC-DEC-044", "Haul road, three ways",
@@ -1776,7 +1954,11 @@ public static class WorldContentPack
                    "consequence":"Equal weighting is itself a strong assumption — that a day and a dollar matter alike.",
                    "principle":"There is no neutral weighting, only an unexamined one."}]}],
              "profile_map":{"calculation":"Portfolio Strategist","decision":"Evidence-Based Decision Maker","balanced":"Strategic Project Controller"},
-             "share_line":"Scored three mine-access options and handed the value judgement back to the person who owned it."}
+             "share_line":"Scored three mine-access options and handed the value judgement back to the person who owned it.",
+             "hints":[
+               "This model scores impact: apply the agreed per-unit weights to each option's cost, schedule and risk, and sum.",
+               "Lower weighted impact is better here — the best option carries the smallest score, not the largest.",
+               "If a stakeholder wants a different winner, the honest lever is the weights, changed openly before rescoring — never the scores."]}
             """),
 
         new("WC-DQ-045", "The dashboard that was confidently wrong",
@@ -1829,7 +2011,11 @@ public static class WorldContentPack
                    "consequence":"The variance is designed into next quarter's targets before anyone notices it was never real.",
                    "principle":"Bad data does not stay in the report; it becomes a plan."}]}],
              "profile_map":{"calculation":"Data Investigator","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Caught a broken reporting feed before its numbers became next quarter's targets."}
+             "share_line":"Caught a broken reporting feed before its numbers became next quarter's targets.",
+             "hints":[
+               "An anomaly is a received record whose gap from plan exceeds the agreed threshold; missing records are a completeness matter, not anomalies.",
+               "Completeness compares received against expected as a percentage; the mean absolute error averages the absolute gaps across records actually received.",
+               "Publish-or-hold is a data-quality decision: state completeness and the suspect depots alongside any figure you release."]}
             """),
 
         new("WC-PRC-046", "The valve that was late enough to matter",
@@ -1860,7 +2046,11 @@ public static class WorldContentPack
                    "consequence":"The float is spent, no record exists, and the next delay starts from zero buffer with no history.",
                    "principle":"Undocumented absorption is a gift you cannot prove you gave."}]}],
              "profile_map":{"calculation":"Schedule Analyst","decision":"Commercial Realist","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Measured a shipyard delay against real float before anyone sent a letter about it."}
+             "share_line":"Measured a shipyard delay against real float before anyone sent a letter about it.",
+             "hints":[
+               "The schedule absorbs the slip up to the float held by the receiving works; only the excess reaches completion.",
+               "Critical delay is supplier slip minus available float, floored at zero; add only that to the baseline duration.",
+               "Escalation should follow the measured damage — a default notice sized to the harmless part of a delay reads as temper, not control."]}
             """),
 
         new("WC-PRG-047", "How much of the campus is finished?",
@@ -1893,7 +2083,11 @@ public static class WorldContentPack
                    "consequence":"Two progress figures with no guidance invites each reader to pick their preferred one.",
                    "principle":"Publishing alternatives without a recommendation moves the judgement to the least-informed reader."}]}],
              "profile_map":{"calculation":"Progress Measurer","decision":"Executive Communicator","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Gave a university steering group one honest progress number instead of three convenient ones."}
+             "share_line":"Gave a university steering group one honest progress number instead of three convenient ones.",
+             "hints":[
+               "Weight each package's completion by its declared share — a simple average treats unequal packages as equals.",
+               "Multiply, sum, and divide by the total weight; that single figure is the steering answer.",
+               "If the simple average and the weighted figure differ, the difference is the size of the distortion the suggestion would print."]}
             """),
 
         new("WC-WBS-048", "The parent that did not add up",
@@ -1930,7 +2124,11 @@ public static class WorldContentPack
                    "consequence":"The structure becomes consistent, and the reason for the difference is lost with it.",
                    "principle":"Reconciling by deletion removes the discrepancy and the information."}]}],
              "profile_map":{"calculation":"Strategic Project Controller","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
-             "share_line":"Found a fibre rollout's summary budget that no longer matched the work beneath it — before it became a variance."}
+             "share_line":"Found a fibre rollout's summary budget that no longer matched the work beneath it — before it became a variance.",
+             "hints":[
+               "Roll from the leaves; a parent's stated figure is a claim to be tested against the sum beneath it.",
+               "The structure holds only if every parent equals its children — one stale parent fails the whole test.",
+               "When parent and children disagree, the children's sum is the budget — the parent figure is history that was never revisited."]}
             """),
 
         new("WC-EVM-049", "Three forecasts, one reactor",
@@ -1975,7 +2173,11 @@ public static class WorldContentPack
                    "consequence":"The programme is now accountable for an outcome its own data does not support.",
                    "principle":"Do not convert a forecast you doubt into a commitment you must keep."}]}],
              "profile_map":{"calculation":"Cost Guardian","decision":"Governance Steward","balanced":"Strategic Project Controller"},
-             "share_line":"Put three EAC methods in front of a nuclear assurance panel and named the assumption behind each."}
+             "share_line":"Put three EAC methods in front of a nuclear assurance panel and named the assumption behind each.",
+             "hints":[
+               "Three forecasts, three assumptions: remaining work at the budgeted rate, at achieved cost performance, or at cost and schedule performance combined.",
+               "Each starts from actual cost plus the remaining work — the divisor is what changes: nothing, the cost index, or the product of both indices.",
+               "For an assurance submission, the honest answer states the chosen method's assumption and shows the spread — a single number without its assumption is advocacy."]}
             """),
 
         new("WC-CPM-050", "The terminal that had two ways to be late",
@@ -2031,7 +2233,119 @@ public static class WorldContentPack
                    "consequence":"Everything is critical, so nothing is, and the schedule stops informing any decision.",
                    "principle":"Criticality inflation destroys the only signal a schedule sends."}]}],
              "profile_map":{"calculation":"Schedule Analyst","decision":"Delivery Realist","balanced":"Strategic Project Controller"},
-             "share_line":"Found the near-critical path in an airport expansion before four weeks of acceleration made it the critical one."}
+             "share_line":"Found the near-critical path in an airport expansion before four weeks of acceleration made it the critical one.",
+             "hints":[
+               "Run the full passes — a network managed around one remembered path for a year usually has another chain closing in.",
+               "Read the named route's float from the backward pass; protection is float, not reputation.",
+               "Acceleration money belongs on the zero-float chain as it stands today — buying weeks on a protected route buys nothing at completion."]}
+            """),
+
+        // ── Traceability pair (051–052): the discipline of walking any reported number back to its
+        //    source — the baseline through the change register, and the cost pack through the ledger.
+        new("WC-TRC-051", "Walk me back to the signed number",
+            "An auditor, a baseline, and a change register that must explain the difference.",
+            "Museums & Culture", "Project Controls Engineer", "project_controls", "developing", 9,
+            """["change_control","baseline_traceability","audit_readiness"]""",
+            """
+            {"context":"A museum wing restoration signed at a baseline of 8,200,000 over 300 days. An external auditor has asked the question every baseline must survive: walk me from the signed number to the number in this month's report. The change register below is the only bridge. Build the revised position from approved changes only, then answer the auditor.",
+             "evidence":[
+               {"label":"Signed baseline","value":"8,200,000 · 300 days"},
+               {"label":"T1 — Structural steel reinforcement","value":"APPROVED · +240,000 · +10 days"},
+               {"label":"T2 — Climate-controlled archive store","value":"REJECTED · +410,000 · +15 days"},
+               {"label":"T3 — Reuse salvaged stone facings","value":"APPROVED · -60,000 · 0 days"},
+               {"label":"T4 — Accessibility lift upgrade","value":"PENDING · +180,000 · +8 days"},
+               {"label":"T5 — Fire-suppression rerouting","value":"APPROVED · +95,000 · +5 days"}],
+             "task":"change","given":{"baseline_bac":8200000,"baseline_duration":300,"changes":[
+               {"id":"T1","status":"approved","cost_delta":240000,"schedule_delta":10},
+               {"id":"T2","status":"rejected","cost_delta":410000,"schedule_delta":15},
+               {"id":"T3","status":"approved","cost_delta":-60000,"schedule_delta":0},
+               {"id":"T4","status":"pending","cost_delta":180000,"schedule_delta":8},
+               {"id":"T5","status":"approved","cost_delta":95000,"schedule_delta":5}]},
+             "ask":[
+               {"key":"revised_bac","label":"Revised budget (approved changes only)","type":"number"},
+               {"key":"approved_cost_delta","label":"Net approved cost delta","type":"number"},
+               {"key":"revised_duration","label":"Revised duration (days)","type":"number"},
+               {"key":"approved_count","label":"Approved change count","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"audit","prompt":"The auditor is in the room. How do you walk them from the signed baseline to this month's reported budget?",
+                "options":[
+                  {"key":"register","label":"Reconcile it live: signed baseline plus each approved change equals the current baseline, with the pending item shown separately as exposure — then hand over the register extract","quality":100,
+                   "consequence":"The walk takes four minutes, every step has a decision date and a signature, and the audit note records a clean trace.",
+                   "principle":"A baseline is only a control if every step from the signed number to today's number has a name, a date and a decision."},
+                  {"key":"forecast","label":"Present the current forecast as the baseline — it is the most realistic number in the room","quality":10,
+                   "consequence":"The gap between the contract and the report now has no explanation on paper, and the auditor writes that down instead.",
+                   "principle":"A number you cannot trace is an assertion, not a position."},
+                  {"key":"fold","label":"Fold the pending lift upgrade into the baseline first, so the report matches what the site is actually building","quality":0,
+                   "consequence":"The register and the baseline now disagree by exactly one unapproved change — which is the first thing a register is designed to catch.",
+                   "principle":"Pending means pending. The moment an unapproved change moves the baseline, the audit trail is fiction."}]}],
+             "profile_map":{"calculation":"Cost Guardian","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Walked an auditor from a museum restoration's signed baseline to the current report through a clean change register.",
+             "hints":[
+               "The bridge from signed baseline to reported budget is the approved-change ledger — every step is a signed item with a delta.",
+               "Apply approved cost and time deltas only; the count of approved items is part of the audit trail.",
+               "Walk the auditor item by item: baseline, plus each approved change in order, equals the reported figure — anything the walk cannot reach does not belong in the report."]}
+            """),
+
+        new("WC-TRC-052", "Every number in this pack has a source — prove it",
+            "A stage-gate cost pack, a finance ledger, and eight figures that must agree.",
+            "Medical Devices", "Cost Assurance Analyst", "cross_functional", "professional", 10,
+            """["data_quality","traceability","assurance","reporting_integrity"]""",
+            """
+            {"context":"A device-serialisation compliance programme reaches its stage gate. The month-end cost pack cites eight control accounts; gate rules say every reported figure must trace to the finance ledger, and a discrepancy above 1,000 breaks the trace. The reconciliation below is what came back. Establish how traceable the pack really is, then decide what goes to the gate.",
+             "evidence":[
+               {"label":"CA-01 — reported / ledger","value":"118,400 / 118,400"},
+               {"label":"CA-02 — reported / ledger","value":"76,250 / 74,830"},
+               {"label":"CA-03 — reported / ledger","value":"no ledger reference cited / 63,750"},
+               {"label":"CA-04 — reported / ledger","value":"205,000 / 205,380"},
+               {"label":"CA-05 — reported / ledger","value":"41,900 / 44,150"},
+               {"label":"CA-06 — reported / ledger","value":"9,800 / 9,800"},
+               {"label":"CA-07 — reported / ledger","value":"152,610 / 152,100"},
+               {"label":"CA-08 — reported / ledger","value":"no ledger reference cited / 88,000"},
+               {"label":"Traceability threshold","value":"a gap above 1,000 breaks the trace"}],
+             "task":"data_quality","given":{"threshold":1000,"rows":[
+               {"value":118400,"expected":118400},
+               {"value":76250,"expected":74830},
+               {"expected":63750},
+               {"value":205000,"expected":205380},
+               {"value":41900,"expected":44150},
+               {"value":9800,"expected":9800},
+               {"value":152610,"expected":152100},
+               {"expected":88000}]},
+             "ask":[
+               {"key":"anomaly_count","label":"Accounts whose reported figure breaks the trace","type":"number"},
+               {"key":"completeness_pct","label":"Accounts with a ledger citation (%)","type":"number"},
+               {"key":"mean_abs_error","label":"Mean absolute gap across the cited accounts","type":"number"}],
+             "tolerance":0.01,
+             "decisions":[
+               {"key":"gate","prompt":"The gate board meets tomorrow morning. Two accounts break the trace and two cite no ledger entry at all.",
+                "options":[
+                  {"key":"annex","label":"Submit the pack with a traceability annex: every figure keyed to its ledger entry, each exception named with an owner and a correction date","quality":100,
+                   "consequence":"The board passes the gate conditionally against the annex — and the two broken traces are fixed by people who were named in a document, not blamed in a meeting.",
+                   "principle":"A pack the reader can trace line by line survives scrutiny; a clean-looking pack survives only until someone checks."},
+                  {"key":"correct","label":"Correct the two figures to the ledger values yourself and submit a clean pack","quality":25,
+                   "consequence":"Tomorrow's numbers are right and nobody knows why last month's were wrong — so the same feed breaks the same way next month.",
+                   "principle":"A silent correction deletes the evidence that a correction was needed."},
+                  {"key":"asis","label":"Submit as reported — finance signed the ledger, the pack cites the report, and the gate is about progress anyway","quality":5,
+                   "consequence":"The board cross-checks one figure at random, it fails, and every other number in the pack is now suspect.",
+                   "principle":"One untraceable number costs the credibility of all the traceable ones."}]},
+               {"key":"root","prompt":"Both broken traces and both missing citations come from accounts that pass through the same monthly spreadsheet re-keying step.",
+                "options":[
+                  {"key":"handoff","label":"Fix the handoff: replace the re-keying step with a direct extract, and make the ledger reference a required field in the pack template","quality":100,
+                   "consequence":"Next month's reconciliation is boring — which is exactly what a reconciliation should be.",
+                   "principle":"When every failure shares a step, fix the step, not the failures."},
+                  {"key":"check","label":"Add a second person to check the re-keying each month","quality":40,
+                   "consequence":"The error rate drops and the cost of producing the pack rises, permanently, for a step that should not exist.",
+                   "principle":"A second pair of eyes on a broken process is a slower broken process."},
+                  {"key":"people","label":"Ask the two account owners to be more careful","quality":15,
+                   "consequence":"They are careful for two months; the fourth month looks exactly like this one.",
+                   "principle":"Blaming people for a process defect guarantees the defect a long career."}]}],
+             "profile_map":{"calculation":"Data Investigator","decision":"Governance Steward","balanced":"Evidence-Based Decision Maker"},
+             "share_line":"Proved a stage-gate cost pack against the ledger line by line, and put names and dates on every broken trace.",
+             "hints":[
+               "Traceability is testable: an account breaks the trace when its reported figure differs from the ledger beyond the stated threshold.",
+               "Completeness counts the accounts holding a ledger citation; the mean gap averages the absolute differences across cited accounts.",
+               "The gate answer is the measured state — how many trace, how many cite, how large the gaps — with the fixes named; certainty theatre is what the gate exists to catch."]}
             """),
     };
 }

@@ -42,6 +42,28 @@ public static class WorldPassport
             };
     }
 
+    /// <summary>
+    /// Apply a disclosure update. EVERY field is independent (journey repair P0-06): a null means
+    /// "the caller did not touch this" and the stored value survives — saving a visibility switch
+    /// can never silently clear the link expiry, and vice versa. expiresInDays: 0 or negative
+    /// deliberately clears the expiry; a positive value sets one (capped at five years).
+    /// </summary>
+    public static void ApplyDisclosure(Db db, long userId,
+        bool? showScores, bool? showProfiles, bool? showDates, double? expiresInDays)
+    {
+        foreach (var (v, col) in new (bool?, string)[] { (showScores, "passport_show_scores"),
+                                                         (showProfiles, "passport_show_profiles"),
+                                                         (showDates, "passport_show_dates") })
+            if (v is { } b)
+                db.Execute($"UPDATE pciworld_users SET {col}=? WHERE id=?", b ? 1 : 0, userId);
+        if (expiresInDays is { } days)
+        {
+            if (days <= 0) db.Execute("UPDATE pciworld_users SET passport_expires_at=NULL WHERE id=?", userId);
+            else db.Execute("UPDATE pciworld_users SET passport_expires_at=? WHERE id=?",
+                DateTime.UtcNow.AddDays(Math.Min(days, 1825)).ToString("yyyy-MM-dd HH:mm:ss"), userId);
+        }
+    }
+
     /// <summary>True when a published Passport link has passed its owner-set expiry.</summary>
     public static bool Expired(Dictionary<string, object?> user)
     {
@@ -97,7 +119,12 @@ public static class WorldPassport
         public string? IssuedOn;
         public string? ExpiresOn;
         public Disclosure Show = new(true, true, true);
-        public List<(string Title, string Industry, string Difficulty, string Score, string Profile, string Date)> Rows = new();
+        /// <summary>Whole-history count of published challenges (P1-06). When it exceeds what the
+        /// one-page layout can draw, the document SAYS so instead of silently stopping.</summary>
+        public long TotalRows;
+        /// <summary>Ref is the traceability citation — challenge code + pinned published version
+        /// (e.g. "WC-EVM-001 · v1") — so every row in the document names its immutable source.</summary>
+        public List<(string Title, string Ref, string Industry, string Difficulty, string Score, string Profile, string Date)> Rows = new();
     }
 
     const double W = 595, H2 = 842;   // A4 portrait, points
@@ -127,7 +154,8 @@ public static class WorldPassport
         // ── header band, in the brand's noir, with the gilt seal ──
         cs.Append($"{Noir} rg ").Append($"20 {H2 - 130:0.##} {W - 40:0.##} 110 re f ");
         cs.Append($"{Crimson} rg ").Append($"44 {H2 - 116:0.##} 62 4 re f ");           // crimson rule
-        cs.Append($"{Gilt} rg ").Append($"110 {H2 - 116:0.##} 30 1.2 re f ");           // gilt echo
+        // The endorsement follows the crimson rule, exactly as the web lockup draws it.
+        Text(cs, "FROM THE PROJECT CONTROLS INSTITUTE", 114, H2 - 115.5, 7.5, bold: false, 0.72, 0.78, 0.86, spacing: 1.6);
         Text(cs, "PCI WORLD", 44, H2 - 62, 26, bold: true, 1, 1, 1);
         Text(cs, "PASSPORT — VERIFIED PRACTICE EVIDENCE", 44, H2 - 84, 9.5, bold: false, 0.72, 0.78, 0.86, spacing: 2.2);
         Seal(cs, W - 88, H2 - 75, 33);
@@ -161,14 +189,16 @@ public static class WorldPassport
         if (d.Show.Dates) Text(cs, "COMPLETED", 462, y, 8.5, bold: true, 0.28, 0.33, 0.41, spacing: 1.4);
         y -= 8;
 
+        var shown = 0;
         foreach (var r in d.Rows)
         {
             // One page, by design — and the rows stop above the verification band, so the
             // evidence can never collide with the QR frame however much of it there is.
             if (y < 252) break;
+            shown++;
             y -= 22;
             Text(cs, Clip(r.Title, 52), 44, y, 10.5, bold: true, 0.06, 0.09, 0.16);
-            var sub = string.Join("  ·  ", new[] { r.Industry, r.Difficulty, d.Show.Profiles ? r.Profile : null }
+            var sub = string.Join("  ·  ", new[] { r.Ref, r.Industry, r.Difficulty, d.Show.Profiles ? r.Profile : null }
                 .Where(s => !string.IsNullOrWhiteSpace(s)));
             if (sub.Length > 0) { y -= 12; Text(cs, Clip(sub, 62), 44, y, 8.8, bold: false, 0.35, 0.40, 0.48); y += 12; }
             if (d.Show.Scores) Text(cs, r.Score, 400, y, 10.5, bold: true, 0.06, 0.09, 0.16);
@@ -184,8 +214,12 @@ public static class WorldPassport
         Text(cs, "Scan the code or open the link below. The live record is the authority —", 44, 196, 9.5, bold: false, 0.28, 0.33, 0.41);
         Text(cs, "this document is a copy and can be withdrawn by its owner at any time.", 44, 184, 9.5, bold: false, 0.28, 0.33, 0.41);
         Text(cs, Clip(d.VerifyUrl, 68), 44, 166, 9.5, bold: true, 0.11, 0.31, 0.85);
+        // Honesty about the window (P1-06): a one-page document holding fewer rows than the record
+        // says so in its own metadata line, and points at the live page for the rest.
+        var total = Math.Max(d.TotalRows, d.Rows.Count);
         var meta = string.Join("   ", new[]
         {
+            total > shown ? $"Showing {shown} of {total} published challenges — the live record lists all" : null,
             d.IssuedOn is null ? null : "Issued " + d.IssuedOn,
             d.ExpiresOn is null ? null : "Link expires " + d.ExpiresOn,
             "Shows: " + d.Show.Summary,

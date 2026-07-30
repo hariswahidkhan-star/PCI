@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type Review } from '../api'
 import { Card, Badge, StatusBadge, Stat, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 interface ReviewsResp {
@@ -23,8 +24,8 @@ export default function Reviews() {
   }
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <h1>Reviews</h1>
+    <div className="page">
+      <PageHeader title="Reviews" />
 
       {data && (
         <div className="grid cols-3">

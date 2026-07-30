@@ -29,10 +29,53 @@ public static class Account
         db.Execute("UPDATE student_profiles SET profile_completion_percentage=? WHERE user_id=?", Math.Min(100, score), uid);
     }
 
+    /// <summary>Redeem a one-time World→MyPCI portal handoff code EXACTLY once — the mirror of
+    /// WorldAccount.RedeemHandoff with the same consumption semantics: the row DELETE inside the
+    /// transaction is the lock, so a concurrent replay deletes 0 rows and learns nothing. The code
+    /// was minted by WorldAccount.CreatePortalHandoff into login_tokens (purpose='portal_handoff',
+    /// hashed, 90-second expiry). Malformed, unknown, expired, replayed and suspended all collapse
+    /// to the SAME generic invalid_code — an unauthenticated caller must not be able to tell them
+    /// apart. The user's status is re-validated AT REDEMPTION time, not trusted from mint time.
+    /// Returns the user row for the caller to mint a FRESH 30-day portal session (StartSession) —
+    /// the handoff never copies or extends any existing session on either product.</summary>
+    public static (string? Error, Dictionary<string, object?>? User) RedeemPortalHandoff(Db db, string? code)
+    {
+        if (string.IsNullOrWhiteSpace(code) || code.Length < 32) return ("invalid_code", null);
+        var sha = Security.Sha(code);
+        Dictionary<string, object?>? user = null;
+        var consumed = false;
+        db.Transaction(() =>
+        {
+            var row = db.QueryOne(@"SELECT id, user_id FROM login_tokens
+                WHERE token=? AND purpose='portal_handoff' AND expires_at>datetime('now')", sha);
+            if (row is null) return;
+            // One redemption ever: the DELETE is the lock — a concurrent duplicate deletes 0 rows.
+            consumed = db.Execute("DELETE FROM login_tokens WHERE id=? AND purpose='portal_handoff'", row["id"]) == 1;
+            if (consumed) user = db.QueryOne("SELECT * FROM users WHERE id=?", row["user_id"]);
+        });
+        if (!consumed || user is null) return ("invalid_code", null);
+        // A canonical account suspended between mint and redemption gets the same generic failure
+        // as garbage — never a distinguishable answer. (The consumed code stays dead either way.)
+        if (H.Str(user["status"]) != "active") return ("invalid_code", null);
+        return (null, user);
+    }
+
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log)
     {
         IResult J(object o) => Results.Json(o);
         var rx = new System.Text.RegularExpressions.Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+
+        // In-memory fixed-window rate limit for the anonymous handoff redemption below — the same
+        // Throttled pattern WorldAccount uses for its own redeem endpoint, keyed on the client IP.
+        var rl = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long start)>();
+        bool Throttled(string key, int limit, long windowMs = 600_000)
+        {
+            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (rl.Count > 20_000)
+                foreach (var kv in rl) if (now - kv.Value.start >= windowMs) rl.TryRemove(kv.Key, out _);
+            var e = rl.AddOrUpdate(key, (1, now), (_, c) => now - c.start >= windowMs ? (1, now) : (c.count + 1, c.start));
+            return e.count > limit;
+        }
 
         // Mint a 30-day session immediately after signup/Google sign-in — same shape as /api/login,
         // so both front-ends treat all three entry paths identically.
@@ -53,13 +96,22 @@ public static class Account
             return (session, new { id = u["id"], email = u["email"], firstName = u["first_name"], lastName = u["last_name"] });
         }
 
+        // One transaction: user, PCI Student Number and profile commit together or not at all. A
+        // signup that cannot issue an identity must not report success and leave a half-built
+        // account behind, so StudentNumbers.GetOrIssue throwing rolls the whole thing back.
         Dictionary<string, object?> CreateStudent(string email, string? first, string? last, string? passwordHash, string? country, string? mobile)
         {
-            var uid = db.ExecuteReturningId(
-                "INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES(?,?,?, 'student','active',?)",
-                email, first ?? "", last ?? "", passwordHash);
-            db.Execute("INSERT INTO student_profiles(user_id,country,mobile) VALUES(?,?,?)", uid, country ?? "", mobile ?? "");
-            return db.QueryOne("SELECT * FROM users WHERE id=?", uid)!;
+            Dictionary<string, object?>? created = null;
+            db.Transaction(() =>
+            {
+                var uid = db.ExecuteReturningId(
+                    "INSERT INTO users(email,first_name,last_name,role,status,password_hash) VALUES(?,?,?, 'student','active',?)",
+                    email, first ?? "", last ?? "", passwordHash);
+                StudentNumbers.GetOrIssue(db, uid, "self_signup");
+                db.Execute("INSERT INTO student_profiles(user_id,country,mobile) VALUES(?,?,?)", uid, country ?? "", mobile ?? "");
+                created = db.QueryOne("SELECT * FROM users WHERE id=?", uid)!;
+            });
+            return created!;
         }
 
         // ---- which optional sign-in providers are configured (safe to expose: a client id is public) ----
@@ -149,6 +201,27 @@ public static class Account
             }
             log(H.Ln(u["id"]), "login_google", email);
             var (token, user) = StartSession(u, req);
+            return J(new { ok = true, token, user });
+        });
+
+        // ---- World → MyPCI portal handoff redemption (anonymous; the mirror of
+        // /api/world/account/handoff). The one-time code arrives from the URL FRAGMENT the World
+        // switcher navigated to — it is only ever transmitted here, in this POST body, once.
+        // Success answers with the exact /api/login response shape so both front-ends treat all
+        // sign-in paths identically; every failure shape answers the same generic 401. ----
+        app.MapPost("/api/portal-handoff/redeem", async (HttpContext ctx) =>
+        {
+            if (Throttled("phredeem|" + Security.ClientIp(ctx), 20))
+                return Results.Json(new { error = "rate_limited" }, statusCode: 429);
+            var b = await H.Body(ctx.Request);
+            var (err, u) = RedeemPortalHandoff(db, H.GetS(b, "code"));
+            // Deliberately quiet: expired, replayed, never-existed and suspended all answer the
+            // same 401 — mirror of the World-side redeem.
+            if (err is not null) return Results.Json(new { error = "invalid_code",
+                message = "That sign-in link has expired or was already used — sign in with your email and password." },
+                statusCode: 401);
+            var (token, user) = StartSession(u!, ctx.Request);
+            log(H.Ln(u!["id"]), "portal_handoff_redeem", "world → portal");
             return J(new { ok = true, token, user });
         });
 

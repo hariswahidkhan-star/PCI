@@ -3,6 +3,7 @@ import { useQuery } from '../api/hooks'
 import { useMe } from '../data/MeContext'
 import { api, ApiError } from '../api/client'
 import { Card, Spinner, ErrorNote, Empty, StatusBadge } from '../components/ui'
+import { PageHeader } from '../components/premium'
 import { ViewDownloadActions } from '../components/documents/DocumentActions'
 import FileUploadField from '../components/documents/FileUploadField'
 import { fileToDataUri, studentToken } from '../files'
@@ -72,14 +73,12 @@ export default function Appeals() {
   const accoms = useQuery<{ rows: AccomRow[] }>('/api/me/accommodations')
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Appeals &amp; Accommodations</h1>
-        <p className="muted">
-          Formally contest an exam result or invalidated attempt, raise a complaint or ethics concern, or request
-          special exam arrangements. PCI reviews each submission and responds through your portal.
-        </p>
-      </div>
+    <div className="page">
+      <PageHeader
+        eyebrow="Appeals"
+        title="Appeals & Accommodations"
+        subtitle="Formally contest an exam result or invalidated attempt, raise a complaint or ethics concern, or request special exam arrangements. PCI reviews each submission and responds through your portal."
+      />
 
       <AppealForm attempts={me?.attempts ?? []} credentials={me?.credentials ?? []} onDone={appeals.refetch} />
       <AppealList q={appeals} />

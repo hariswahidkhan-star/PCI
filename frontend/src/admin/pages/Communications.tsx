@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime } from '../../format'
 
 /* Unified Communications Centre — a single tabbed module. All content (templates, sender profiles,
@@ -19,13 +20,11 @@ const STATUS_TONE: Record<string, 'ok' | 'err' | 'brand' | 'warn'> = {
 export default function Communications() {
   const [tab, setTab] = useState<Tab>('Dashboard')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread"><h1>Communications Centre</h1></div>
-      <p className="muted" style={{ margin: 0 }}>
-        One place for all student and stakeholder communications — email, WhatsApp and in-app — with a
-        reliable MySQL-backed outbox, templates, triggers, a unified inbox and delivery monitoring.
-        Provider credentials live only in Render environment variables and are never shown here.
-      </p>
+    <div className="page">
+      <PageHeader
+        title="Communications Centre"
+        subtitle="One place for all student and stakeholder communications — email, WhatsApp and in-app — with a reliable MySQL-backed outbox, templates, triggers, a unified inbox and delivery monitoring. Provider credentials live only in Render environment variables and are never shown here."
+      />
       <div className="tabs" style={{ display: 'flex', gap: '.3rem', flexWrap: 'wrap', borderBottom: '1px solid var(--line)', paddingBottom: '.4rem' }}>
         {TABS.map((t) => (
           <button key={t} className={'btn sm ' + (tab === t ? '' : 'ghost')} onClick={() => setTab(t)}>{t}</button>

@@ -58,6 +58,18 @@ public static class WorldContent
             foreach (var e in ev.EnumerateArray())
             { visible.Append(' ').Append(Str(e, "label")).Append(' ').Append(Str(e, "value")); }
 
+        // Progressive authored hints (Project Intelligence): optional, but when present there must
+        // be exactly three, each non-empty, and each is participant-visible BEFORE submission — so
+        // they join the leakage scan. A hint that hands over the reference value is not a hint.
+        if (root.TryGetProperty("hints", out var hintsEl))
+        {
+            if (hintsEl.ValueKind != JsonValueKind.Array || hintsEl.GetArrayLength() != 3 ||
+                hintsEl.EnumerateArray().Any(h => h.ValueKind != JsonValueKind.String || string.IsNullOrWhiteSpace(h.GetString())))
+                Err("hints", "`hints`, when present, must be exactly three non-empty progressive strings.");
+            else
+                foreach (var h in hintsEl.EnumerateArray()) visible.Append(' ').Append(h.GetString());
+        }
+
         var askCount = 0;
         if (root.TryGetProperty("task", out var taskEl) || root.TryGetProperty("ask", out _))
         {
@@ -150,8 +162,18 @@ public static class WorldContent
                 decisions.Add(new { key = Str(d, "key"), prompt = Str(d, "prompt"), options });
             }
 
-        return new { context = Str(root, "context"), evidence, ask = asks, decisions };
+        return new { context = Str(root, "context"), evidence, ask = asks, decisions, hints_available = Hints(root).Count };
     }
+
+    /// <summary>The authored progressive hints for a config (empty when none). Hint TEXT is only
+    /// ever released one at a time through the attempt hint endpoint — never in PublicView.</summary>
+    public static List<string> Hints(string configJson) => Hints(JsonDocument.Parse(configJson).RootElement);
+
+    static List<string> Hints(JsonElement root) =>
+        root.TryGetProperty("hints", out var h) && h.ValueKind == JsonValueKind.Array
+            ? h.EnumerateArray().Where(x => x.ValueKind == JsonValueKind.String)
+                .Select(x => x.GetString() ?? "").Where(s => s.Length > 0).ToList()
+            : new List<string>();
 
     static string? Str(JsonElement el, string key) =>
         el.ValueKind == JsonValueKind.Object && el.TryGetProperty(key, out var v) && v.ValueKind == JsonValueKind.String

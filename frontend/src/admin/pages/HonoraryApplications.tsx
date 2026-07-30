@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 // Row/record types are inline (matching Honorary.tsx) — this surface is owner-only and self-contained.
@@ -166,14 +167,11 @@ export default function HonoraryApplications() {
   const rows = data?.rows ?? []
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Honorary applications</h1>
-      </div>
-      <p className="muted" style={{ margin: 0 }}>
-        Public applications for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. Approving an
-        application confers a real, verifiable PCI-HON award — it never issues an examined certification credential.
-      </p>
+    <div className="page">
+      <PageHeader
+        title="Honorary applications"
+        subtitle={<>Public applications for the board-conferred <strong>Honorary Fellow (PCI)</strong> recognition. Approving an application confers a real, verifiable PCI-HON award — it never issues an examined certification credential.</>}
+      />
       {decisionMsg && (
         <div className="notice" role="status">
           <strong>{decisionMsg.text}</strong>

@@ -1,10 +1,12 @@
 import React from 'react'
+import { initDemoMode } from './demo/mode'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { AuthProvider } from './auth/AuthContext'
 import { I18nProvider } from './i18n'
 import './styles.css'
+import './premium.css'
 
 // Last-resort boundary: an uncaught render exception (e.g. an unexpected null API shape) would
 // otherwise unmount the whole tree to a blank page. Catch it and offer a recoverable reload.
@@ -35,6 +37,8 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 }
 
 // The app is mounted under /app/ by the backend; basename keeps router paths clean ("/", "/cpd", …).
+initDemoMode()
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary>

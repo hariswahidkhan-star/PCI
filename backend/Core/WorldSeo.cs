@@ -62,6 +62,34 @@ public static class WorldSeo
                     WHERE status='published' ORDER BY published_at DESC, id DESC"))
                 Url($"/world/{H.Str(r["kind"])}/{H.Str(r["slug"])}", H.Str(r["updated_at"]), "monthly", "0.6");
 
+            // Careers (CCP_PHASE4_DESIGN.md §7): published, OPEN postings of VERIFIED employers,
+            // and nothing else — no closed postings, no drafts, no employer pages. Liveness is
+            // computed here at render time, never from a state a background sweep maintains: the
+            // predicates live IN the query, a row carrying a deadline is additionally re-checked
+            // through the single honesty predicate (a lexical compare cannot fail closed on an
+            // unparsable closes_at; CareersState.IsLive can and does), and the cache signature
+            // below counts live postings so a deadline passing or a suspension landing invalidates
+            // the cached XML on its own.
+            if (Settings.Str(db, "pciworld_careers_enabled", "0") == "1")
+            {
+                var nowUtc = H.StampInMinutes(0);
+                foreach (var r in db.Query(@"SELECT p.slug AS pslug, p.state, p.closes_at, p.updated_at,
+                               e.slug AS eslug, e.state AS estate
+                        FROM pciworld_job_postings p
+                        JOIN pciworld_employers e ON e.id = p.employer_id
+                        WHERE p.state='published' AND e.state='verified'
+                          AND (p.closes_at IS NULL OR p.closes_at='' OR p.closes_at >= ?)
+                        ORDER BY p.published_at DESC, p.id DESC", nowUtc))
+                {
+                    var closes = H.Str(r["closes_at"]);
+                    if (!string.IsNullOrWhiteSpace(closes)
+                        && !CareersState.IsLive(H.Str(r["state"]) ?? "", H.Str(r["estate"]) ?? "",
+                                                closes, nowUtc)) continue;
+                    Url($"/world/careers/{Uri.EscapeDataString(H.Str(r["eslug"]) ?? "")}/{Uri.EscapeDataString(H.Str(r["pslug"]) ?? "")}",
+                        H.Str(r["updated_at"]), "daily", "0.6");
+                }
+            }
+
             sb.Append("</urlset>\n");
             _sig = sig;
             return _xml = sb.ToString();
@@ -166,7 +194,16 @@ public static class WorldSeo
             var art = db.Scalar<long>("SELECT COUNT(*) FROM pciworld_articles WHERE status='published'");
             var chMax = db.Scalar<string>("SELECT MAX(updated_at) FROM pciworld_challenges") ?? "";
             var artMax = db.Scalar<string>("SELECT MAX(updated_at) FROM pciworld_articles") ?? "";
-            return $"{ch}|{art}|{chMax}|{artMax}";
+            // Careers honesty (§7): the count of LIVE postings — same predicates as the entries
+            // themselves — so a deadline passing changes the signature even though no row changed,
+            // and a stale sitemap can never keep advertising a job past its close.
+            var careersOn = Settings.Str(db, "pciworld_careers_enabled", "0");
+            var jobs = db.Scalar<long>(@"SELECT COUNT(*) FROM pciworld_job_postings p
+                    JOIN pciworld_employers e ON e.id = p.employer_id
+                    WHERE p.state='published' AND e.state='verified'
+                      AND (p.closes_at IS NULL OR p.closes_at='' OR p.closes_at >= ?)", H.StampInMinutes(0));
+            var jobsMax = db.Scalar<string>("SELECT MAX(updated_at) FROM pciworld_job_postings") ?? "";
+            return $"{ch}|{art}|{chMax}|{artMax}|{careersOn}|{jobs}|{jobsMax}";
         }
         catch { return Guid.NewGuid().ToString(); }   // never cache on an error path
     }

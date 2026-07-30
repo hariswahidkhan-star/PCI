@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi, type Inquiry } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate, titleCase } from '../../format'
 
 export default function Enquiries() {
@@ -18,8 +19,8 @@ export default function Enquiries() {
     runMutation(async () => { await adminApi.post(`/api/admin/inquiries/${id}/status`, { status: s }); refetch(); setOpen(null) })
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <h1>Enquiries</h1>
+    <div className="page">
+      <PageHeader title="Enquiries" />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>

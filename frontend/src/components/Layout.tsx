@@ -1,28 +1,31 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { useMe } from '../data/MeContext'
 import { useT } from '../i18n'
 import LanguageSwitcher from './LanguageSwitcher'
+import NotificationBell from './NotificationBell'
+import DemoBanner from './DemoBanner'
 import { initials } from '../format'
+import { Icon, type IconName } from './icons'
 
-const NAV = [
-  { to: '/', tkey: 'nav.overview', end: true },
-  { to: '/certifications', tkey: 'nav.certifications' },
-  { to: '/credentials', tkey: 'nav.credentials' },
-  { to: '/cpd', tkey: 'nav.cpd' },
-  { to: '/certuvo', tkey: 'nav.certuvo' },
-  { to: '/lab', tkey: 'nav.lab' },
-  { to: '/billing', tkey: 'nav.billing' },
-  { to: '/resources', tkey: 'nav.resources' },
-  { to: '/templates', tkey: 'nav.templates' },
-  { to: '/events', tkey: 'nav.events' },
-  { to: '/documents', tkey: 'nav.documents' },
-  { to: '/messages', tkey: 'nav.messages', badgeKey: 'unread' as const },
-  { to: '/support', tkey: 'nav.support' },
-  { to: '/appeals', tkey: 'nav.appeals' },
-  { to: '/applications', tkey: 'nav.applications' },
-  { to: '/profile', tkey: 'nav.profile', badgeKey: 'profile' as const },
+const NAV: { to: string; tkey: string; icon: IconName; end?: boolean; badgeKey?: 'unread' | 'profile' }[] = [
+  { to: '/', tkey: 'nav.overview', icon: 'dashboard', end: true },
+  { to: '/certifications', tkey: 'nav.certifications', icon: 'award' },
+  { to: '/credentials', tkey: 'nav.credentials', icon: 'shield-check' },
+  { to: '/cpd', tkey: 'nav.cpd', icon: 'refresh' },
+  { to: '/certuvo', tkey: 'nav.certuvo', icon: 'sparkles' },
+  { to: '/lab', tkey: 'nav.lab', icon: 'flask' },
+  { to: '/billing', tkey: 'nav.billing', icon: 'credit-card' },
+  { to: '/resources', tkey: 'nav.resources', icon: 'book-open' },
+  { to: '/templates', tkey: 'nav.templates', icon: 'file-text' },
+  { to: '/events', tkey: 'nav.events', icon: 'calendar' },
+  { to: '/documents', tkey: 'nav.documents', icon: 'folder' },
+  { to: '/messages', tkey: 'nav.messages', icon: 'mail', badgeKey: 'unread' },
+  { to: '/support', tkey: 'nav.support', icon: 'life-buoy' },
+  { to: '/appeals', tkey: 'nav.appeals', icon: 'scale' },
+  { to: '/applications', tkey: 'nav.applications', icon: 'clipboard' },
+  { to: '/profile', tkey: 'nav.profile', icon: 'user', badgeKey: 'profile' },
 ]
 
 const TITLE_KEYS: Record<string, string> = {
@@ -70,11 +73,24 @@ export default function Layout() {
         <div className="nav-label">{t('shell.menu')}</div>
         <nav className="nav">
           {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
-              <span>{t(n.tkey)}</span>
-              {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
-              {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
-            </NavLink>
+            <Fragment key={n.to}>
+              <NavLink to={n.to} end={n.end} onClick={() => setMenuOpen(false)} className={({ isActive }) => (isActive ? 'active' : '')}>
+                <Icon name={n.icon} size={17} className="nav-ic" />
+                <span>{t(n.tkey)}</span>
+                {n.badgeKey === 'unread' && unread > 0 && <span className="pill">{unread}</span>}
+                {n.badgeKey === 'profile' && completion < 100 && <span className="pill dim">{completion}%</span>}
+              </NavLink>
+              {/* PCI World lives beside the Practice Lab in the "learn" run of the menu (journey
+                  repair P1-09): daily practice must be discoverable from primary navigation, not
+                  buried at the bottom of Profile. A plain anchor — it is a separate product
+                  surface, not a portal route. */}
+              {n.to === '/lab' && (
+                <a href="/world" onClick={() => setMenuOpen(false)}>
+                  <Icon name="globe" size={17} className="nav-ic" />
+                  <span>{t('nav.world')}</span>
+                </a>
+              )}
+            </Fragment>
           ))}
         </nav>
         <div className="sidebar-foot">
@@ -89,6 +105,7 @@ export default function Layout() {
       </aside>
 
       <div className="main-col">
+        <DemoBanner />
         {impersonated && (
           <div className="impersonation-banner" role="status">
             Support view — you are viewing this account as PCI staff. Actions that belong to the student are disabled.
@@ -107,6 +124,7 @@ export default function Layout() {
             </div>
             <div className="row">
               <LanguageSwitcher />
+              <NotificationBell />
               <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
               <div className="small" style={{ lineHeight: 1.2 }}>
                 <div style={{ fontWeight: 700 }}>{user ? `${user.firstName} ${user.lastName}`.trim() || user.email : ''}</div>

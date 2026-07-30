@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type MemberRow, type MemberDetail, type IdentityDocRow } from '../api'
 import { Card, StatusBadge, Badge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate, fmtDateTime, fmtMoney } from '../../format'
 import { ApiError } from '../../api/client'
 
@@ -213,7 +214,7 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
         ) : error ? (
           <ErrorNote>{error}</ErrorNote>
         ) : !data ? null : (
-          <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+          <div className="page">
             <Card className="entity" title={`${u.first_name ?? ''} ${u.last_name ?? ''}`.trim() || String(u.email ?? '')}
               action={<span className="row" style={{ gap: '.35rem' }}>{isTest && <Badge tone="warn">TEST ACCOUNT</Badge>}<StatusBadge status={String(u.status ?? '')} /></span>}>
               {isTest && <p className="muted small" style={{ marginTop: 0 }}>Test account — not a real candidate. Excluded from reports and the public register.</p>}
@@ -597,9 +598,12 @@ function WaiveCard({ id, onDone }: { id: number; onDone: () => void }) {
   const pct = parseFloat(percent) || 0
   async function go() {
     if (!reason.trim()) { setMsg({ ok: false, text: 'A reason is required — every waiver must record why.' }); return }
+    if (busy) return
     setBusy(true); setMsg(null)
+    // Durable client key so a retried/partial network submit cannot mint a second waiver or code.
+    const idempotencyKey = crypto.randomUUID()
     try {
-      const body: Record<string, unknown> = { product, percent: pct || 100, reason: reason.trim(), note: note || undefined }
+      const body: Record<string, unknown> = { product, percent: pct || 100, reason: reason.trim(), note: note || undefined, idempotency_key: idempotencyKey }
       if (pct < 100 && expires) body.expires = expires
       const r = await adminApi.post<{ kind: string; payment_id?: number; code?: string; percent?: number; payable?: number }>(`/api/admin/students/${id}/waive`, body)
       setMsg({
@@ -700,13 +704,13 @@ export default function Students() {
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Students</h1>
-        <div className="row" style={{ gap: '.5rem', alignItems: 'center' }}>
+      <PageHeader
+        title="Students"
+        actions={<div className="row" style={{ gap: '.5rem', alignItems: 'center' }}>
           {data && <span className="muted small">{data.total} total</span>}
           <TestUserButton onCreated={refetch} />
-        </div>
-      </div>
+        </div>}
+      />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>

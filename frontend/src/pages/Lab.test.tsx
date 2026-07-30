@@ -15,11 +15,38 @@ const h = vi.hoisted(() => ({
 
 vi.mock('../api/hooks', () => ({
   useQuery: (path: string | null) => {
-    const data = path === '/api/me/lab/access' ? h.access
-      : path === '/api/me/lab/catalogue' ? h.cat
-      : path === '/api/me/lab/mastery' ? h.mastery
-      : path === '/api/me/lab/attempts' ? h.attempts
-      : null
+    // The catalogue is filtered SERVER-side since the P3 capacity path: the component puts
+    // q/difficulty/kind/industry/competency in the query string and renders whatever comes
+    // back, alongside a full-set `total`/`summary`. The mock emulates that contract — it
+    // filters the fixture rows by the same params and reports full-set counts — so these
+    // tests exercise the page against the response shape the real endpoint serves.
+    let data: unknown = null
+    if (path === '/api/me/lab/access') data = h.access
+    else if (path === '/api/me/lab/mastery') data = h.mastery
+    else if (path === '/api/me/lab/attempts') data = h.attempts
+    else if (path !== null && path.startsWith('/api/me/lab/catalogue')) {
+      const c = h.cat as { rows?: Record<string, unknown>[] } & Record<string, unknown>
+      const all = c.rows ?? []
+      const p = new URLSearchParams(path.split('?')[1] ?? '')
+      const q = (p.get('q') ?? '').toLowerCase()
+      const rows = all.filter((r) =>
+        (!p.get('industry') || r.industry === p.get('industry')) &&
+        (!p.get('difficulty') || r.difficulty === p.get('difficulty')) &&
+        (!p.get('kind') || r.kind === p.get('kind')) &&
+        (!p.get('competency') || (r.competencies as string[] | undefined)?.includes(p.get('competency') ?? '')) &&
+        (!q || String(r.title ?? '').toLowerCase().includes(q)))
+      const inProgress = all.filter((r) => r.attempt_status === 'in_progress')
+      data = {
+        total: all.length, matched: rows.length,
+        summary: { published: all.length, completed: 0, in_progress: inProgress.length, avg_score: null },
+        // The server computes the resume strip over the FULL catalogue, so it survives filters.
+        resume: inProgress.map((r) => ({
+          scenario_code: r.scenario_code, title: r.title, kind: r.kind,
+          difficulty: r.difficulty, industry: r.industry, est_minutes: r.est_minutes,
+        })),
+        ...c, rows,
+      }
+    }
     return { data, loading: false, error: null, refetch: vi.fn() }
   },
 }))

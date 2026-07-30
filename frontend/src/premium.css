@@ -1,0 +1,532 @@
+/* ============================================================================
+   PCI portals — premium institutional layer
+   ----------------------------------------------------------------------------
+   Loaded AFTER styles.css by both app entries (student /app, admin /admin), so
+   equal-specificity rules here refine the base language rather than replacing
+   it. Nothing below removes an existing class: every selector either adds a new
+   primitive (page header, KPI tile, toolbar, premium table, empty state,
+   notification popover) or tightens an existing one (type scale, card depth,
+   table rhythm). Both portals therefore keep every DOM hook their pages and
+   tests already rely on.
+
+   The language is the same navy-plate authority chrome as the marketing site —
+   this layer adds the refinement: an optical type scale, a layered elevation
+   ramp, engineered rules, and consistent 4px-grid spacing.
+   ========================================================================== */
+
+:root {
+  /* ---- elevation ramp (layered, blue-tinted — never flat grey) ---- */
+  --e1: 0 1px 2px rgba(13, 32, 90, .05);
+  --e2: 0 1px 2px rgba(13, 32, 90, .05), 0 8px 20px -16px rgba(29, 78, 216, .28);
+  --e3: 0 2px 4px rgba(13, 32, 90, .06), 0 18px 40px -24px rgba(29, 78, 216, .34);
+  --e4: 0 4px 8px rgba(13, 32, 90, .07), 0 30px 60px -28px rgba(29, 78, 216, .42);
+
+  /* ---- spacing scale (4px grid) ---- */
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem;
+  --s5: 1.25rem; --s6: 1.5rem; --s7: 2rem; --s8: 2.5rem;
+
+  /* ---- radii ---- */
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px; --r-pill: 999px;
+
+  /* ---- surfaces ---- */
+  --surface-sunken: #eef2f9;
+  --surface-raised: #ffffff;
+  --hairline: rgba(15, 23, 42, .07);
+
+  /* ---- extra semantic tones ---- */
+  --info: #1d4ed8;
+  --info-bg: #eff4ff;
+  --neutral-bg: #f1f5f9;
+}
+
+/* ---------------------------------------------------------------------------
+   1. Typography — an optical scale with tabular figures for all data surfaces
+   -------------------------------------------------------------------------- */
+body { font-size: 15px; letter-spacing: -.003em; }
+h1 { font-size: clamp(1.45rem, 1.15rem + .9vw, 1.75rem); letter-spacing: -.025em; }
+h2 { letter-spacing: -.015em; }
+h3 { letter-spacing: -.01em; }
+.lede { font-size: 1rem; color: var(--slate); max-width: 68ch; }
+.small { font-size: .85rem; }
+.tiny { font-size: .75rem; }
+.num { font-variant-numeric: tabular-nums lining-nums; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+/* An eyebrow: the engineered micro-label used above headings and on section rules. */
+.eyebrow {
+  font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--mist); display: inline-flex; align-items: center; gap: .45em;
+}
+.eyebrow::before {
+  content: ""; width: 14px; height: 2px; background: var(--brand); opacity: .7; border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Page header — one consistent masthead for every portal screen
+   -------------------------------------------------------------------------- */
+.page-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: var(--s4) var(--s6); flex-wrap: wrap; margin-bottom: var(--s2);
+}
+.page-head-text { min-width: 0; display: grid; gap: .3rem; }
+.page-head h1 { margin: 0; }
+.page-head-sub { margin: 0; color: var(--mist); font-size: .92rem; max-width: 70ch; }
+.page-head-actions { display: flex; align-items: center; gap: var(--s2); flex-wrap: wrap; }
+
+/* ---------------------------------------------------------------------------
+   3. Cards — a calmer, deeper surface with an optional accent rail
+   -------------------------------------------------------------------------- */
+.card { border-radius: var(--r-lg); box-shadow: var(--e2); padding: var(--s5); }
+.card:hover { box-shadow: var(--e3); }
+/* Cards that are pure containers for a table or list shouldn't lift on hover — only
+   interactive/entity cards should feel liftable. */
+.card.flat, .card.flat:hover { box-shadow: var(--e1); transform: none; }
+.card.pad-lg { padding: var(--s6); }
+.card.pad-sm { padding: var(--s4); }
+/* .card.flush lets a table run edge-to-edge inside the card (header padding stays). */
+.card.flush { padding: 0; overflow: hidden; }
+.card.flush > .card-head { padding: var(--s4) var(--s5); border-bottom: 1px solid var(--line); margin: 0; }
+.card.flush > .card-body { padding: var(--s5); }
+.card.flush table.data { margin: 0; }
+/* Accent rail — a 3px gradient edge marking a card's tone. */
+.card.rail { border-left: 3px solid var(--brand); }
+.card.rail-ok { border-left: 3px solid var(--ok); }
+.card.rail-warn { border-left: 3px solid var(--warn); }
+.card.rail-err { border-left: 3px solid var(--err); }
+
+.card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s4);
+}
+.card-head h2, .card-head h3 { margin: 0; }
+
+/* ---------------------------------------------------------------------------
+   4. KPI tiles — the dashboard's primary unit (icon, value, label, context)
+   -------------------------------------------------------------------------- */
+.kpi-grid {
+  display: grid; gap: var(--s4);
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+.kpi {
+  position: relative; display: grid; gap: .55rem; overflow: hidden;
+  background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg);
+  box-shadow: var(--e2); padding: var(--s5) var(--s5) var(--s4);
+  transition: box-shadow .3s var(--ease), transform .3s var(--ease), border-color .3s var(--ease);
+}
+.kpi::after {
+  content: ""; position: absolute; inset: 0 0 auto; height: 3px;
+  background: var(--grad-brand); opacity: .85;
+}
+.kpi.tone-ok::after { background: linear-gradient(90deg, #15803d, #4ade80); }
+.kpi.tone-warn::after { background: linear-gradient(90deg, #b45309, #fbbf24); }
+.kpi.tone-err::after { background: linear-gradient(90deg, #c2410c, #fb923c); }
+.kpi.tone-neutral::after { background: linear-gradient(90deg, #64748b, #cbd5e1); }
+/* Tiles that navigate somewhere read as pressable. */
+a.kpi { color: inherit; text-decoration: none; }
+a.kpi:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--e3); border-color: #c7d6f5; }
+.kpi-top { display: flex; align-items: center; gap: .55rem; }
+/* Inside a tile the stat renders value-then-label with the icon above; drop the base
+   .stat .k dash rule so the label doesn't carry a second rule beside the icon. */
+.kpi .stat { gap: .1rem; }
+.kpi .stat .k::before { content: none; }
+.kpi-ic {
+  width: 34px; height: 34px; border-radius: 10px; flex: 0 0 auto; display: grid; place-items: center;
+  background: var(--brand-050); color: var(--brand-600); border: 1px solid rgba(29, 78, 216, .12);
+}
+.kpi.tone-ok .kpi-ic { background: var(--ok-bg); color: var(--ok); border-color: rgba(21, 128, 61, .16); }
+.kpi.tone-warn .kpi-ic { background: var(--warn-bg); color: var(--warn); border-color: rgba(180, 83, 9, .16); }
+.kpi.tone-err .kpi-ic { background: var(--err-bg); color: var(--err); border-color: rgba(194, 65, 12, .16); }
+.kpi.tone-neutral .kpi-ic { background: var(--neutral-bg); color: var(--slate); border-color: var(--line); }
+/* Selectors are two-class so they win against the base `.stat .n` / `.stat .k` rules. */
+.kpi .kpi-label {
+  font-size: .76rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--mist);
+}
+.kpi .kpi-value {
+  font-size: 1.85rem; font-weight: 800; letter-spacing: -.028em; line-height: 1.05;
+  font-variant-numeric: tabular-nums lining-nums;
+  background: linear-gradient(120deg, #1e3a8a, #1d4ed8 55%, #3b82f6);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.kpi.tone-ok .kpi-value { background: linear-gradient(120deg, #14532d, #15803d 60%, #22c55e); -webkit-background-clip: text; background-clip: text; }
+.kpi.tone-warn .kpi-value { background: linear-gradient(120deg, #7c2d12, #b45309 60%, #f59e0b); -webkit-background-clip: text; background-clip: text; }
+.kpi.tone-err .kpi-value { background: linear-gradient(120deg, #7f1d1d, #c2410c 60%, #f97316); -webkit-background-clip: text; background-clip: text; }
+.kpi.tone-neutral .kpi-value { background: linear-gradient(120deg, #1e293b, #475569 60%, #94a3b8); -webkit-background-clip: text; background-clip: text; }
+.kpi-hint { font-size: .8rem; color: var(--mist); margin: 0; }
+.kpi-hint strong { color: var(--slate); font-weight: 700; }
+.kpi-go { margin-left: auto; color: var(--mist); flex: 0 0 auto; opacity: .55; transition: opacity .2s var(--ease), transform .2s var(--ease); }
+a.kpi:hover .kpi-go { opacity: 1; transform: translate(2px, -2px); }
+
+/* ---------------------------------------------------------------------------
+   5. Toolbar — search + filters + result count above every list
+   -------------------------------------------------------------------------- */
+.toolbar {
+  display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap;
+  padding: var(--s3) var(--s4); background: var(--surface-sunken);
+  border: 1px solid var(--line); border-radius: var(--r-md);
+}
+.toolbar > .grow { flex: 1 1 220px; min-width: 0; }
+.toolbar-count { margin-left: auto; color: var(--mist); font-size: .82rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.search-field { position: relative; display: flex; align-items: center; min-width: 0; }
+.search-field > svg:first-child { position: absolute; left: .65rem; color: var(--mist); pointer-events: none; }
+.search-field input {
+  padding-left: 2.1em; padding-right: 2em; background: #fff; border-radius: var(--r-sm);
+}
+.search-field .clear {
+  position: absolute; right: .35rem; display: grid; place-items: center;
+  width: 22px; height: 22px; padding: 0; border: 0; border-radius: 6px;
+  background: transparent; color: var(--mist); cursor: pointer;
+}
+.search-field .clear:hover { background: var(--line); color: var(--ink); }
+.filter-field { display: flex; align-items: center; gap: .4rem; min-width: 0; }
+.filter-field > label { margin: 0; font-size: .78rem; white-space: nowrap; color: var(--mist); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.filter-field select { width: auto; min-width: 130px; background: #fff; border-radius: var(--r-sm); padding: .45em .6em; font-size: .88rem; }
+[dir="rtl"] .search-field > svg:first-child { left: auto; right: .65rem; }
+[dir="rtl"] .search-field input { padding-left: 2em; padding-right: 2.1em; }
+[dir="rtl"] .search-field .clear { right: auto; left: .35rem; }
+[dir="rtl"] .toolbar-count { margin-left: 0; margin-right: auto; }
+
+/* ---------------------------------------------------------------------------
+   6. Segmented control + chips — compact filters that don't cost a dropdown
+   -------------------------------------------------------------------------- */
+.segmented {
+  display: inline-flex; padding: 3px; gap: 2px; background: var(--surface-sunken);
+  border: 1px solid var(--line); border-radius: var(--r-sm); flex-wrap: wrap;
+}
+.segmented button {
+  font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+  padding: .35em .8em; border: 0; border-radius: 6px; background: transparent; color: var(--slate);
+  transition: background .15s, color .15s, box-shadow .15s;
+}
+.segmented button:hover { color: var(--ink); background: rgba(255, 255, 255, .7); }
+.segmented button[aria-pressed="true"] { background: var(--paper); color: var(--brand-600); box-shadow: var(--e1); }
+.segmented .seg-n {
+  margin-left: .4em; font-size: .72rem; font-weight: 800; color: var(--mist);
+  font-variant-numeric: tabular-nums;
+}
+.segmented button[aria-pressed="true"] .seg-n { color: var(--brand); }
+
+.chip {
+  display: inline-flex; align-items: center; gap: .35em; font-size: .76rem; font-weight: 700;
+  padding: .25em .7em; border-radius: var(--r-pill);
+  background: var(--neutral-bg); color: var(--slate); border: 1px solid var(--line);
+}
+.chip.brand { background: var(--brand-050); color: var(--brand-600); border-color: rgba(29, 78, 216, .16); }
+.chip.ok { background: var(--ok-bg); color: var(--ok); border-color: rgba(21, 128, 61, .18); }
+.chip.warn { background: var(--warn-bg); color: var(--warn); border-color: rgba(180, 83, 9, .18); }
+.chip.err { background: var(--err-bg); color: var(--err); border-color: rgba(194, 65, 12, .18); }
+
+/* Badges: a hairline lifts them off white cards without adding weight. */
+.badge { border: 1px solid var(--hairline); }
+.badge.ok { border-color: rgba(21, 128, 61, .18); }
+.badge.warn { border-color: rgba(180, 83, 9, .18); }
+.badge.err { border-color: rgba(194, 65, 12, .18); }
+.badge.brand { border-color: rgba(29, 78, 216, .16); }
+
+/* ---------------------------------------------------------------------------
+   7. Tables — sticky headers, sortable affordances, calmer rhythm
+   -------------------------------------------------------------------------- */
+table.data th {
+  border-bottom: 1px solid var(--ink); padding-top: .5em; padding-bottom: .5em;
+  background: var(--paper); position: sticky; top: 0; z-index: 1;
+}
+table.data td { padding-top: .65em; padding-bottom: .65em; border-bottom-color: var(--hairline); }
+table.data tbody tr:hover { background: var(--brand-050); }
+/* Sortable column headers: a button that carries its own direction caret. */
+th.sortable { padding: 0; }
+th.sortable > button {
+  display: inline-flex; align-items: center; gap: .35em; width: 100%;
+  font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit;
+  padding: .5em .5em; border: 0; background: transparent; cursor: pointer; text-align: inherit;
+}
+th.sortable > button:hover { color: var(--brand); }
+th.sortable .caret { opacity: 0; transition: opacity .15s, transform .15s; flex: 0 0 auto; }
+th.sortable .caret.up { transform: rotate(180deg); }
+th.sortable:hover .caret, th.sortable[aria-sort]:not([aria-sort="none"]) .caret { opacity: .85; }
+th.sortable[aria-sort]:not([aria-sort="none"]) > button { color: var(--brand); }
+/* A table that scrolls inside a bordered box (used by .card.flush). */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-scroll table.data { display: table; }
+/* Right-aligned numeric column. */
+table.data td.n, table.data th.n { text-align: right; font-variant-numeric: tabular-nums lining-nums; }
+[dir="rtl"] table.data td.n, [dir="rtl"] table.data th.n { text-align: left; }
+/* The last column of an action table hugs the right edge. */
+table.data td.actions { text-align: right; white-space: nowrap; }
+table.data td.actions .btn + .btn { margin-left: .25rem; }
+[dir="rtl"] table.data td.actions { text-align: left; }
+
+/* ---------------------------------------------------------------------------
+   8. Pagination
+   -------------------------------------------------------------------------- */
+.pager {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  flex-wrap: wrap; padding-top: var(--s3); margin-top: var(--s3); border-top: 1px solid var(--line);
+}
+.pager-info { color: var(--mist); font-size: .82rem; font-variant-numeric: tabular-nums; }
+.pager-controls { display: flex; align-items: center; gap: .3rem; }
+.pager-controls .page-n {
+  font-size: .82rem; font-weight: 700; color: var(--slate); padding: 0 .5rem;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   9. Empty states — an icon, a reason, and a way forward
+   -------------------------------------------------------------------------- */
+.empty-state {
+  display: grid; justify-items: center; gap: .55rem; text-align: center;
+  padding: var(--s7) var(--s4); color: var(--mist);
+}
+.empty-state .es-ic {
+  width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center;
+  background: var(--surface-sunken); color: var(--slate); border: 1px solid var(--line);
+}
+.empty-state .es-title { font-weight: 700; color: var(--ink); font-size: .98rem; }
+.empty-state .es-detail { margin: 0; font-size: .88rem; max-width: 46ch; }
+.empty-state .es-action { margin-top: .35rem; }
+
+/* ---------------------------------------------------------------------------
+   10. Skeletons — a shape-accurate loading state, not a spinner
+   -------------------------------------------------------------------------- */
+.sk-table { display: grid; gap: .55rem; }
+.sk-row { display: grid; gap: .6rem; grid-auto-flow: column; grid-auto-columns: 1fr; align-items: center; }
+.sk-row .skeleton { height: 1.05em; }
+.sk-row.head .skeleton { height: .7em; opacity: .6; }
+.sk-cards { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.sk-card { height: 108px; border-radius: var(--r-lg); }
+
+/* ---------------------------------------------------------------------------
+   11. Progress + meters
+   -------------------------------------------------------------------------- */
+.meter { height: 8px; border-radius: var(--r-pill); background: var(--surface-sunken); overflow: hidden; }
+.meter > i { display: block; height: 100%; border-radius: var(--r-pill); background: var(--grad-brand); transition: width .6s var(--ease); }
+.meter.ok > i { background: linear-gradient(90deg, #15803d, #4ade80); }
+.meter.warn > i { background: linear-gradient(90deg, #b45309, #fbbf24); }
+.meter.err > i { background: linear-gradient(90deg, #c2410c, #fb923c); }
+.meter-row { display: grid; gap: .35rem; }
+.meter-row .meter-label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); font-size: .85rem; }
+.meter-row .meter-label strong { font-variant-numeric: tabular-nums; }
+
+/* Horizontal bar series (funnel / product mix) */
+.bars { display: grid; gap: .7rem; margin: 0; padding: 0; list-style: none; }
+.bars li { display: grid; gap: .3rem; }
+.bars .bar-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); font-size: .87rem; }
+.bars .bar-head .bar-k { color: var(--slate); font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bars .bar-head .bar-v { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Sparkline / column trend */
+.spark { display: block; width: 100%; height: auto; overflow: visible; }
+.spark-area { fill: url(#pci-spark-grad); }
+.spark-line { fill: none; stroke: var(--brand); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.spark-dot { fill: var(--brand); }
+.trend-cols { display: flex; align-items: flex-end; gap: 3px; height: 68px; }
+.trend-cols > i {
+  flex: 1 1 0; min-width: 3px; border-radius: 3px 3px 0 0; background: var(--grad-brand);
+  opacity: .35; transition: opacity .2s var(--ease); min-height: 2px;
+}
+.trend-cols > i:last-child, .trend-cols > i:hover { opacity: 1; }
+.trend-foot { display: flex; justify-content: space-between; gap: var(--s3); margin-top: .35rem; font-size: .72rem; color: var(--mist); }
+
+/* ---------------------------------------------------------------------------
+   12. Notification bell + popover (student topbar)
+   -------------------------------------------------------------------------- */
+.notif-wrap { position: relative; flex: 0 0 auto; }
+.notif-btn {
+  position: relative; display: grid; place-items: center; width: 38px; height: 38px;
+  border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff;
+  color: var(--slate); cursor: pointer; transition: border-color .15s, color .15s, box-shadow .15s;
+}
+.notif-btn:hover { border-color: #c7d6f5; color: var(--ink); box-shadow: var(--e2); }
+.notif-btn[aria-expanded="true"] { border-color: var(--brand); color: var(--brand); }
+.notif-dot {
+  position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px;
+  border-radius: var(--r-pill); background: var(--err); color: #fff; border: 2px solid #fff;
+  font-size: .66rem; font-weight: 800; display: grid; place-items: center;
+  font-variant-numeric: tabular-nums;
+}
+[dir="rtl"] .notif-dot { right: auto; left: -6px; }
+.notif-pop {
+  position: absolute; top: calc(100% + .5rem); right: 0; width: min(360px, calc(100vw - 2rem));
+  background: var(--paper); border-radius: var(--r-md); z-index: 40;
+  box-shadow: var(--e4), 0 0 0 1px rgba(29, 78, 216, .1);
+  display: flex; flex-direction: column; max-height: min(70vh, 460px); overflow: hidden;
+  animation: routeIn .18s var(--ease) both;
+}
+[dir="rtl"] .notif-pop { right: auto; left: 0; }
+.notif-pop-head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  padding: .7rem .85rem; border-bottom: 1px solid var(--line);
+}
+.notif-pop-head strong { font-size: .92rem; }
+.notif-list { flex: 1; min-height: 0; overflow-y: auto; padding: .3rem; }
+.notif-item {
+  display: grid; gap: .2rem; width: 100%; text-align: left; font: inherit; color: inherit;
+  padding: .55rem .6rem; border: 0; border-radius: var(--r-sm); background: transparent;
+}
+.notif-item + .notif-item { border-top: 1px solid var(--hairline); border-radius: 0; }
+.notif-item.unread { background: var(--brand-050); border-radius: var(--r-sm); }
+.notif-item-top { display: flex; align-items: center; gap: .45rem; }
+.notif-item-title { font-weight: 700; font-size: .88rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.notif-item-when { margin-left: auto; font-size: .72rem; color: var(--mist); white-space: nowrap; flex: 0 0 auto; }
+[dir="rtl"] .notif-item { text-align: right; }
+[dir="rtl"] .notif-item-when { margin-left: 0; margin-right: auto; }
+.notif-item-body { font-size: .82rem; color: var(--slate); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.notif-pop-foot { padding: .5rem .85rem; border-top: 1px solid var(--line); text-align: center; }
+.notif-pop-foot a { font-size: .85rem; font-weight: 700; }
+
+/* ---------------------------------------------------------------------------
+   13. Notification / message rows (Messages page)
+   -------------------------------------------------------------------------- */
+.msg-row {
+  display: grid; gap: .45rem; padding: var(--s4); border-radius: var(--r-md);
+  border: 1px solid var(--line); background: var(--paper); box-shadow: var(--e1);
+  transition: box-shadow .25s var(--ease), border-color .25s var(--ease);
+}
+.msg-row:hover { box-shadow: var(--e2); border-color: #c7d6f5; }
+.msg-row.unread { border-left: 3px solid var(--brand); background: linear-gradient(90deg, var(--brand-050), var(--paper) 42%); }
+[dir="rtl"] .msg-row.unread { border-left: 1px solid var(--line); border-right: 3px solid var(--brand); background: linear-gradient(270deg, var(--brand-050), var(--paper) 42%); }
+.msg-row-top { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.msg-row-title { font-weight: 700; font-size: .98rem; margin: 0; }
+.msg-row-when { margin-left: auto; font-size: .78rem; color: var(--mist); white-space: nowrap; }
+[dir="rtl"] .msg-row-when { margin-left: 0; margin-right: auto; }
+.msg-row-body { margin: 0; color: var(--slate); font-size: .9rem; }
+.msg-row-actions { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-top: .2rem; }
+
+/* ---------------------------------------------------------------------------
+   14. Quick links — the student portal's "everything at a glance" grid
+   -------------------------------------------------------------------------- */
+/* 178px is the width at which the longest nav label ("Certifications") still fits beside its
+   icon and count badge without ellipsing. */
+.quick-grid { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); }
+.quick-tile {
+  display: flex; align-items: center; gap: .6rem; padding: .8rem .9rem;
+  border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper);
+  color: var(--ink); font-weight: 700; font-size: .9rem; box-shadow: var(--e1);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+}
+.quick-tile:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--e3); border-color: #c7d6f5; }
+.quick-tile .qt-ic {
+  width: 32px; height: 32px; border-radius: 9px; flex: 0 0 auto; display: grid; place-items: center;
+  background: var(--brand-050); color: var(--brand-600); border: 1px solid rgba(29, 78, 216, .12);
+}
+.quick-tile .qt-n {
+  margin-left: auto; font-size: .72rem; font-weight: 800; color: var(--brand);
+  background: var(--brand-050); border-radius: var(--r-pill); padding: .1em .55em;
+  font-variant-numeric: tabular-nums; flex: 0 0 auto;
+}
+[dir="rtl"] .quick-tile .qt-n { margin-left: 0; margin-right: auto; }
+
+/* ---------------------------------------------------------------------------
+   15. Work queue rows (admin dashboard approval/attention lists)
+   -------------------------------------------------------------------------- */
+.queue { display: grid; gap: .4rem; }
+.queue-row {
+  display: flex; align-items: center; gap: .7rem; padding: .65rem .75rem;
+  border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper);
+  color: var(--ink); transition: border-color .18s var(--ease), box-shadow .18s var(--ease), transform .18s var(--ease);
+}
+a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: var(--e2); transform: translateX(2px); }
+[dir="rtl"] a.queue-row:hover { transform: translateX(-2px); }
+.queue-ic {
+  width: 30px; height: 30px; border-radius: 9px; flex: 0 0 auto; display: grid; place-items: center;
+  background: var(--neutral-bg); color: var(--slate); border: 1px solid var(--line);
+}
+.queue-row.hot .queue-ic { background: var(--warn-bg); color: var(--warn); border-color: rgba(180, 83, 9, .18); }
+.queue-text { min-width: 0; display: grid; gap: .1rem; }
+.queue-text .qt-label { font-weight: 700; font-size: .89rem; }
+.queue-text .qt-detail { font-size: .78rem; color: var(--mist); }
+.queue-n {
+  margin-left: auto; flex: 0 0 auto; font-weight: 800; font-size: 1rem; color: var(--slate);
+  font-variant-numeric: tabular-nums;
+}
+.queue-row.hot .queue-n { color: var(--warn); }
+[dir="rtl"] .queue-n { margin-left: 0; margin-right: auto; }
+
+/* ---------------------------------------------------------------------------
+   16. Timeline / journey — a premium read of the candidate steps
+   -------------------------------------------------------------------------- */
+.steps .dot { width: 24px; height: 24px; flex-basis: 24px; border-radius: 8px; }
+.steps li:not(:last-child)::before { left: 11px; top: 32px; }
+.steps .label { font-size: .95rem; }
+.steps li.current .label { color: var(--brand-600); }
+.steps li.blocked .label { color: var(--err); }
+.step-cta { margin-top: .35rem; }
+
+/* ---------------------------------------------------------------------------
+   17. Definition list — label/value pairs in detail drawers
+   -------------------------------------------------------------------------- */
+.dl { display: grid; gap: .55rem; margin: 0; }
+.dl > div { display: grid; grid-template-columns: minmax(120px, 34%) 1fr; gap: var(--s3); align-items: baseline; }
+.dl dt { font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--mist); margin: 0; }
+.dl dd { margin: 0; font-size: .92rem; min-width: 0; overflow-wrap: break-word; }
+@media (max-width: 560px) { .dl > div { grid-template-columns: 1fr; gap: .1rem; } }
+
+/* ---------------------------------------------------------------------------
+   18. Shell refinements — topbar, sidebar, content rhythm
+   -------------------------------------------------------------------------- */
+.topbar { padding: .75rem 1.5rem; }
+.content { padding: var(--s6); }
+/* Vertical rhythm between top-level page blocks, so pages don't each invent their own gap. */
+.page { display: grid; gap: var(--s4); }
+.sidebar .brand { letter-spacing: -.01em; }
+.nav a { font-size: .92rem; }
+
+/* Drawers gain the deeper elevation ramp and a sticky header. */
+.drawer { padding: var(--s5); }
+.drawer-head {
+  position: sticky; top: calc(var(--s5) * -1); z-index: 2; margin: calc(var(--s5) * -1) calc(var(--s5) * -1) var(--s4);
+  padding: var(--s4) var(--s5); background: rgba(255, 255, 255, .94);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+}
+.drawer-head h2 { margin: 0; font-size: 1.05rem; }
+
+/* ---------------------------------------------------------------------------
+   19. Responsive — the portals must be genuinely usable on a phone
+   -------------------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .kpi { padding: var(--s4); }
+  .kpi-value { font-size: 1.5rem; }
+  .content { padding: var(--s4); }
+  .card { padding: var(--s4); }
+  .card.pad-lg { padding: var(--s5); }
+  .toolbar { padding: var(--s3); }
+  .toolbar-count { margin-left: 0; width: 100%; }
+  [dir="rtl"] .toolbar-count { margin-right: 0; }
+  .page-head-actions { width: 100%; }
+}
+@media (max-width: 560px) {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi-value { font-size: 1.35rem; }
+  .kpi-ic { width: 28px; height: 28px; }
+  .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pager { justify-content: center; }
+  .pager-info { width: 100%; text-align: center; }
+  /* Sticky table headers stop paying for themselves on a phone-width scroll box. */
+  table.data th { position: static; }
+}
+
+/* ---------------------------------------------------------------------------
+   20. Print — credentials, invoices and reports must print cleanly
+   -------------------------------------------------------------------------- */
+@media print {
+  .sidebar, .topbar, .notif-wrap, .menu-btn, .toolbar, .pager, .page-head-actions { display: none !important; }
+  .shell, .main, .main-col { display: block; height: auto; overflow: visible; }
+  .card, .kpi { box-shadow: none; border-color: #cbd5e1; break-inside: avoid; }
+  body::before { display: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   21. Demonstration-mode banner — placement
+   The banner's own appearance lives in src/demo/banner.css so the PCI World bundle, which does
+   not load this stylesheet, gets exactly the same notice. What stays here is where the PORTAL
+   and ADMIN screens put it.
+   -------------------------------------------------------------------------- */
+/* On the auth screens the app shell doesn't exist yet, so AuthShell wraps the split in a column
+   and the banner is simply the strip above it — same full-width treatment as inside the shells. */
+.auth-page { display: flex; flex-direction: column; min-height: 100vh; }
+.auth-page > .auth-split { flex: 1 1 auto; min-height: 0; }
+/* The admin sign-in is a single centred block, so there the banner reads as a card of its own. */
+.center-page > .demo-banner {
+  border-radius: var(--r-sm); border: 1px solid #fcd34d;
+  max-width: 720px; width: 100%; margin: 0 auto var(--s4);
+}

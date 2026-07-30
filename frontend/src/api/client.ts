@@ -5,6 +5,8 @@
 // `Authorization: Bearer <token>` on every call. The client is created per token key so the
 // student app (/api/login) and the admin app (/api/admin/auth/login) never share a session.
 
+import { demoAwareFetch } from '../demo/intercept'
+
 export class ApiError extends Error {
   status: number
   body: unknown
@@ -101,16 +103,21 @@ export function makeClient(tokenKey: string): ApiClient {
     const token = getToken()
     if (token) headers['Authorization'] = 'Bearer ' + token
 
-    let res: Response
+    // Demonstration mode short-circuits before the network. See src/demo/intercept.ts for the
+    // rule and src/demo/mode.ts for why it exists — in particular, it never pre-empts a working
+    // backend: a deployment that has answered once keeps getting the honest error.
+    let attempt
     try {
-      res = await fetch(path, {
+      attempt = await demoAwareFetch(path, {
         method: opts.method ?? 'GET',
         headers,
         body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
-      })
+      }, opts.body)
     } catch (e) {
       throw new ApiError(0, 'Network error — please check your connection and try again.', e)
     }
+    if (attempt.demo) return attempt.data as T
+    const res = attempt.res
 
     let data: unknown = null
     const text = await res.text()

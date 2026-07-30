@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDateTime } from '../../format'
 
 // Error-reference queue (gate 'inbox'): every captured student-facing error, searchable by the
@@ -61,11 +62,11 @@ export default function ErrorReports() {
 
   const rows = data?.rows ?? []
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Error reports</h1>
-        <p className="muted">When something fails, the student sees a reference like <span style={{ fontFamily: 'monospace' }}>PCI-2026-A1B2C3</span>. Search it here to see what happened without asking them for screenshots.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Error reports"
+        subtitle={<>When something fails, the student sees a reference like <span style={{ fontFamily: 'monospace' }}>PCI-2026-A1B2C3</span>. Search it here to see what happened without asking them for screenshots.</>}
+      />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>

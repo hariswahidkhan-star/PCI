@@ -51,7 +51,17 @@ public class WorldPassportTests
         var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
         Assert.Equal(2, rows.Count);
 
-        // Everything on by default — the behaviour every already-published Passport had.
+        // Privacy-safe defaults (P1-05): a NEW account publishes nothing beyond challenge titles
+        // until its owner deliberately switches fields on. (Pre-existing rows keep the schema
+        // default — visible — so already-published Passports are unchanged; proven below.)
+        var fresh = WorldPassport.Disclosure.From(db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", userId)!);
+        Assert.False(fresh.Scores || fresh.Profiles || fresh.Dates);
+        var legacy = db.ExecuteReturningId("INSERT INTO pciworld_users(email,password_hash) VALUES('legacy-disc@x.test','x')");
+        var kept = WorldPassport.Disclosure.From(db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", legacy)!);
+        Assert.True(kept.Scores && kept.Profiles && kept.Dates);
+
+        // The owner deliberately publishes every field.
+        db.Execute("UPDATE pciworld_users SET passport_show_scores=1, passport_show_profiles=1, passport_show_dates=1 WHERE id=?", userId);
         var all = WorldPassport.Disclosure.From(db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", userId)!);
         Assert.True(all.Scores && all.Profiles && all.Dates);
         var full = WorldPages.PublicPassport(db, "Sam Rivera", rows, all);
@@ -72,6 +82,33 @@ public class WorldPassportTests
         // Column headers track the disclosure, so the table never has an empty column.
         Assert.DoesNotContain("<th scope=\"col\">Score</th>", partial);
         Assert.Contains("<th scope=\"col\">Decision profile</th>", partial);
+    }
+
+    // ───────────────────────── traceability ─────────────────────────
+
+    [Fact]
+    public void Every_passport_row_is_traceable_to_the_exact_published_challenge_version()
+    {
+        var db = NewWorldDb();
+        var (userId, _) = Participant(db);
+        var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
+        Assert.NotEmpty(rows);
+
+        // The evidence rows carry the citation: challenge code + the pinned published version.
+        foreach (var r in rows)
+        {
+            Assert.False(string.IsNullOrWhiteSpace(H.Str(r["code"])));
+            Assert.True(H.L(r["version"]) >= 1);
+        }
+
+        // The public page prints the citation and links it back to the immutable challenge, so a
+        // reader can follow any claim to the exact brief the participant faced.
+        var page = WorldPages.PublicPassport(db, "Sam Rivera", rows, new WorldPassport.Disclosure(true, true, true));
+        var code = H.Str(rows[0]["code"])!;
+        Assert.Contains(code, page);
+        Assert.Contains($"/world/challenge/{code}", page);
+        Assert.Contains($"v{H.L(rows[0]["version"])}", page);
+        Assert.Contains("Traceability", page);
     }
 
     // ───────────────────────── expiry ─────────────────────────
@@ -128,7 +165,8 @@ public class WorldPassportTests
             Show = new WorldPassport.Disclosure(true, true, true),
         };
         foreach (var r in rows)
-            doc.Rows.Add((H.Str(r["title"]) ?? "", H.Str(r["industry"]) ?? "", "Professional", "88.5", "evidence led", "2026-05-04"));
+            doc.Rows.Add((H.Str(r["title"]) ?? "", $"{H.Str(r["code"])} · v{H.L(r["version"])}",
+                H.Str(r["industry"]) ?? "", "Professional", "88.5", "evidence led", "2026-05-04"));
 
         var pdf = WorldPassport.Pdf(doc);
         var text = Encoding.ASCII.GetString(pdf);
@@ -136,6 +174,9 @@ public class WorldPassportTests
         Assert.EndsWith("%%EOF", text);
         Assert.Contains("/Type /Catalog", text);
         Assert.Contains("startxref", text);
+
+        // The traceability citation reaches the document: each row names its challenge code.
+        Assert.Contains(H.Str(rows[0]["code"])!, text);
 
         // Deterministic for a given input: two renders of the same document are byte-identical, so
         // the artefact can be hashed and compared.
@@ -146,6 +187,103 @@ public class WorldPassportTests
         Assert.Contains("pciworld.example", text);
         Assert.DoesNotContain("p@example.com", text);   // never the email
         Assert.DoesNotContain("sv", text.Split("stream")[0]);
+    }
+
+    [Fact]
+    public void The_cover_endorsement_follows_the_crimson_rule()
+    {
+        var db = NewWorldDb();
+        var (userId, _) = Participant(db);
+        var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
+        var html = WorldPages.PublicPassport(db, "Sam Rivera", rows);
+
+        // The cover lockup is ordered: the PCI World wordmark, the crimson bar, then who the
+        // artefact is from — the same endorsement the site header carries. Anchor the search
+        // inside .ppt-top, because the page header contains its own copy of the words.
+        var top = html.IndexOf("class=\"ppt-top\"", StringComparison.Ordinal);
+        Assert.True(top >= 0);
+        var bar = html.IndexOf("class=\"bar\"", top, StringComparison.Ordinal);
+        var from = html.IndexOf("class=\"ppt-from\">From the Project<br>Controls Institute", top, StringComparison.Ordinal);
+        Assert.True(bar > top && from > bar);
+
+        // The PDF says the same thing after its crimson rule.
+        var pdf = Encoding.ASCII.GetString(WorldPassport.Pdf(new WorldPassport.PassportDoc
+        { Name = "Sam Rivera", VerifyUrl = "https://pciworld.example/world/p/x" }));
+        Assert.Contains("FROM THE PROJECT CONTROLS INSTITUTE", pdf);
+    }
+
+    [Fact]
+    public void The_photograph_appears_only_when_provided_and_is_erased_with_the_account()
+    {
+        var db = NewWorldDb();
+        var (userId, _) = Participant(db);
+        var rows = WorldAccount.EvidenceRows(db, userId, visibleOnly: true);
+
+        // No photo: no <img> reaches the page at all — absence, not display:none. (The stylesheet
+        // always carries the class, so the assertion targets the markup.)
+        Assert.DoesNotContain("<img class=\"ppt-photo\"", WorldPages.PublicPassport(db, "Sam Rivera", rows));
+
+        // Store one through the same validation path the endpoint uses: data URI → sniff → Put.
+        var png = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x70, 0x63, 0x69 };
+        var (bytes, mime, err) = Storage.DecodeDataUri("data:image/png;base64," + Convert.ToBase64String(png));
+        Assert.Null(err);
+        var obj = Storage.Put(bytes!, mime, "world-passport");
+        db.Execute("UPDATE pciworld_users SET passport_photo_ref=?, passport_photo_mime=? WHERE id=?",
+            obj.Reference, mime, userId);
+
+        var withPhoto = WorldPages.PublicPassport(db, "Sam Rivera", rows, photoUrl: "/world/p/tok/photo");
+        Assert.Contains("<img class=\"ppt-photo\"", withPhoto);
+        Assert.Contains("src=\"/world/p/tok/photo\"", withPhoto);
+        Assert.Contains("Photograph of Sam Rivera", withPhoto);   // the image carries an accessible name
+
+        // A PDF is a valid stored artefact elsewhere, but never a Passport photograph.
+        var (_, pdfMime, pdfErr) = Storage.DecodeDataUri("data:application/pdf;base64," +
+            Convert.ToBase64String(new byte[] { 0x25, 0x50, 0x44, 0x46, 0x2D }));
+        Assert.Null(pdfErr);
+        Assert.False(pdfMime.StartsWith("image/"));               // the endpoint's image-only gate
+
+        // Deleting the account erases the stored image itself, not just the row pointing to it.
+        Assert.NotNull(Storage.Get(obj.Reference));
+        WorldAccount.DeleteAccount(db, userId);
+        Assert.Null(Storage.Get(obj.Reference));
+    }
+
+    [Fact]
+    public void Student_login_reaches_the_passport_without_a_second_account()
+    {
+        var db = NewWorldDb();
+
+        // First use from the portal: a world account is created, linked and verified — the
+        // student's portal login is the login, so there is no usable world password to manage.
+        var (err, id) = WorldAccount.LinkStudent(db, 42, "Student@Example.com", "Alex Chen");
+        Assert.Null(err);
+        var u = db.QueryOne("SELECT * FROM pciworld_users WHERE id=?", id)!;
+        Assert.Equal("student@example.com", H.Str(u["email"]));
+        Assert.Equal(1L, H.L(u["email_verified"]));
+        Assert.Equal(42L, H.L(u["student_user_id"]));
+        Assert.Equal("Alex Chen", H.Str(u["display_name"]));
+
+        // Every later use resolves to the same account — never a duplicate.
+        var (err2, id2) = WorldAccount.LinkStudent(db, 42, "student@example.com", null);
+        Assert.Null(err2);
+        Assert.Equal(id, id2);
+
+        // Canonical-identity model (P0-00): a standalone World registration mints its own canonical
+        // identity and links to it immediately, so the SAME canonical user resolves the same World
+        // account through the bridge…
+        var (rerr, standaloneId, _) = WorldAccount.Register(db, "solo@example.com", "a-long-enough-password", "Solo", null);
+        Assert.Null(rerr);
+        var canonical = Core.WorldIdentity.CanonicalFor(db, standaloneId);
+        Assert.NotNull(canonical);
+        var (err3, id3) = WorldAccount.LinkStudent(db, canonical!.Value, "solo@example.com", null);
+        Assert.Null(err3);
+        Assert.Equal(standaloneId, id3);
+
+        // …and a DIFFERENT student can never adopt it by email match — that silent merge is exactly
+        // how one person's evidence would be handed to another.
+        Assert.Equal("email_in_use", WorldAccount.LinkStudent(db, 99, "solo@example.com", null).Error);
+        Assert.Equal(canonical.Value, H.L(db.QueryOne(
+            "SELECT student_user_id FROM pciworld_users WHERE id=?", standaloneId)!["student_user_id"]));
     }
 
     [Fact]

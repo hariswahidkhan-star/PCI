@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAdminAuth } from '../AdminAuth'
 import { ApiError } from '../../api/client'
 import { adminApi } from '../api'
+import DemoBanner from '../../components/DemoBanner'
 
 export default function AdminLogin() {
   const { login } = useAdminAuth()
@@ -82,6 +83,7 @@ export default function AdminLogin() {
 
   return (
     <div className="center-page">
+      <DemoBanner />
       <div className="card login-card">
         <div className="logo">
           <img src="/assets/logo.png" alt="Project Controls Institute" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />

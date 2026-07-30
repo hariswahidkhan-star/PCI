@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { api } from '../api/client'
 import { Card, Spinner, ErrorNote } from '../components/ui'
+import { PageHeader } from '../components/premium'
 import Ring from '../components/Ring'
 import RepeaterSection from '../components/RepeaterSection'
 import { EXPERIENCE_FIELDS, QUALIFICATION_FIELDS, HELD_CERT_FIELDS, monthsCovered } from '../data/wizardFields'
@@ -59,17 +60,13 @@ export default function Profile() {
   }
 
   return (
-    <div className="stack fade-stagger" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread" style={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
-        <div>
-          <h1>{t('prof.title')}</h1>
-          <p className="muted" style={{ marginBottom: 0 }}>
-            {t('prof.subtitle')}{' '}
-            <Link to="/onboarding">{t('prof.runGuidedSetup')}</Link>
-          </p>
-        </div>
-        <Ring value={completion} label={t('prof.complete')} />
-      </div>
+    <div className="page fade-stagger">
+      <PageHeader
+        eyebrow={t('nav.profile')}
+        title={t('prof.title')}
+        subtitle={<>{t('prof.subtitle')}{' '}<Link to="/onboarding">{t('prof.runGuidedSetup')}</Link></>}
+        actions={<Ring value={completion} label={t('prof.complete')} />}
+      />
 
       <Card title={t('prof.account')}>
         <div className="grid cols-2 small">
@@ -154,11 +151,48 @@ export default function Profile() {
         />
       </Card>
 
+      <PassportCard />
       <DirectorySettings />
       <TwoFactorCard />
       <AccountPrivacyCard />
       <CommPreferences />
     </div>
+  )
+}
+
+/** One login for everything: opens the student's PCI World Passport, creating or linking the
+ * world account on first use — no separate sign-in, password or registration. The Passport page
+ * itself manages the photograph, publication and field-level disclosure. */
+function PassportCard() {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  async function open() {
+    setBusy(true)
+    setErr(null)
+    try {
+      // Pass the browser's anonymous PCI World session so the bridge claims any challenges
+      // completed here before signing in — without it that work never reaches the Passport.
+      // The response carries a ONE-TIME handoff code in the URL fragment (never a reusable
+      // bearer token): the Passport page exchanges it for its own session on arrival.
+      const r = await api.post<{ url?: string }>('/api/me/world-passport/sso', {
+        world_session: localStorage.getItem('world_session') || undefined,
+      })
+      window.location.assign(r.url || '/world/account')
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Could not open your Passport.')
+      setBusy(false)
+    }
+  }
+  return (
+    <Card title="PCI World Passport">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Your Passport is verified practice evidence from PCI World challenges — with your photograph, if you
+        choose to add one. It opens with this login; no separate account or password is needed. Upload or
+        remove your photo, choose exactly what is published, and share one verifiable link from the Passport page.
+      </p>
+      {err && <ErrorNote>{err}</ErrorNote>}
+      <button className="btn" disabled={busy} onClick={open}>{busy ? 'Opening…' : 'Open my Passport'}</button>
+    </Card>
   )
 }
 

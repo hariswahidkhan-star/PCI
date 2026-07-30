@@ -148,8 +148,13 @@ public static class Settlement
         }
         if (isExam)
         {
-            var had = db.QueryOne("SELECT id FROM exam_entitlements WHERE payment_id=?", payId) is not null;
-            db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', COALESCE((SELECT certification_id FROM exam_entitlements WHERE payment_id=?),1), 'available', datetime('now','+1 year'))", userId, payId, payId);
+            // The prior-entitlement lookup is hoisted out of the INSERT: MySQL rejects selecting from the
+            // INSERT's own target table (error 1093), and SQLite merely tolerated it — the value only
+            // matters when no row exists, where it is the default certification anyway.
+            var hadRow = db.QueryOne("SELECT id,certification_id FROM exam_entitlements WHERE payment_id=?", payId);
+            var had = hadRow is not null;
+            db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', ?, 'available', datetime('now','+1 year'))",
+                userId, payId, hadRow is null ? 1L : H.L(hadRow["certification_id"]));
             if (!had && db.QueryOne("SELECT id FROM exam_entitlements WHERE payment_id=?", payId) is not null) did.Add("entitlement_created");
             if (p["exam_schedule_deadline"] is null)
             {

@@ -13,6 +13,11 @@ describe('checkoutErrorMessage', () => {
     expect(checkoutErrorMessage(e)).toBe('Code scoped to membership')
   })
 
+  it('asks the user to retry when the idempotency key is missing', () => {
+    const e = new ApiError(400, 'x', { error: 'idempotency_key_required' })
+    expect(checkoutErrorMessage(e)).toContain('try checkout again')
+  })
+
   it('gives membership-required guidance', () => {
     const e = new ApiError(400, 'x', { error: 'membership_required', message: '' })
     expect(checkoutErrorMessage(e)).toContain('membership')

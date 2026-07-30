@@ -76,6 +76,11 @@ public static class Storage
         catch { return (null, mime, "invalid_base64"); }
         if (bytes.LongLength > MaxBytes) return (null, mime, "file_too_large");
         if (!SniffMatches(bytes, mime)) return (null, mime, "content_mime_mismatch");
+        // RES-021 — one malware policy for every upload door. Evidence, identity documents and support
+        // attachments come through here; before this they were the only uploads with no content-safety
+        // check at all, while DocStore's path rejected executables.
+        if (UploadScan.Scan(bytes, mime) is { Clean: false } verdict)
+            return (null, mime, verdict.Reason ?? "malware_suspected");
         return (bytes, mime, null);
     }
 
@@ -252,8 +257,13 @@ public static class Storage
     // evidence_retention_days governs. public-docs holds PUBLISHED governance/legal PDFs served to
     // the anonymous public and cv holds job-applicant CVs under an open posting — neither is case
     // evidence, so neither may silently age out.
+    // pciworld-community-restricted holds material escalated for specialist legal/child-safety
+    // handling (§31). It is preserved BY DEFAULT — an escalation carries a legal hold — so it must
+    // never age out on a schedule. Deleting it is a deliberate, recorded act once a hold is lifted,
+    // never a side effect of a nightly sweep.
     static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase)
-        { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners", "public-docs", "cv" };
+        { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners", "public-docs", "cv",
+          "pciworld-community-restricted" };
 
     /// <summary>Delete a SINGLE stored object by reference (used for targeted, policy-driven deletion of
     /// sensitive artefacts such as honorary identity documents — not the blanket retention sweep). Returns

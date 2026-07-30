@@ -8,10 +8,23 @@ obj/
 # built React SPAs (produced from ../frontend by `npm run build`; assembled in the Docker image)
 wwwroot/app/
 wwwroot/admin/
+wwwroot/world-app/
 
 # integration test artifacts
 tests/_integration.db*
 tests/_integration_storage/
+tests/_community.db*
+tests/_community_storage/
+tests/_community_abuse.db*
+tests/_community_abuse_storage/
+tests/_community_images.db*
+tests/_community_images_storage/
+tests/_forum.db*
+tests/_forum_storage/
+tests/_careers.db*
+tests/_careers_storage/
+tests/_contrib.db*
+tests/_contrib_storage/
 tests/_impersonation.db*
 tests/_impersonation_storage/
 tests/_impersonation_boot.log
@@ -42,3 +55,18 @@ tests/load/cohort*.json
 load.db*
 load_storage/
 load_storage_mysql/
+tests/_payments_replay.db*
+tests/_payments_replay_storage/
+tests/_payments_replay_boot.log
+tests/_worker_lease.db*
+tests/_worker_lease_storage/
+tests/_worker_lease_boot.log
+tests/_waiver_idem.db*
+tests/_waiver_idem_storage/
+tests/_waiver_idem_boot.log
+tests/_drrest_boot.log
+tests/_smoke_ci.db*
+tests/_smoke_storage/
+tests/_waiver_stall.db*
+tests/_waiver_stall_storage/
+tests/_waiver_stall_boot.log

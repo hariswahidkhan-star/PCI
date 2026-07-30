@@ -49,21 +49,31 @@ services:
       - key: MYSQL_SSL           # "required" for managed providers; "false" only for a private-network DB
         value: required
       # ---- data-at-rest encryption (REQUIRED in production) ----
-      # A key used to AES-256-GCM encrypt stored identity documents and displayable credentials.
-      # Production REFUSES TO BOOT without it (exit 78), so it is generated at provision time rather
-      # than left blank: a missing value here fails every deploy until someone notices the log line.
-      # Render generates this once when the service is created and preserves it across deploys and
-      # blueprint syncs; an existing value (yours or a previous generation) is never overwritten.
-      # Treat it as a vault secret — rotating it requires re-encrypting existing artefacts, so copy
-      # it out of the dashboard and keep it. To supply your own instead, set it in the dashboard
-      # (openssl rand -base64 32) before the first deploy.
+      # A 32-byte key used to AES-256-GCM encrypt stored identity documents and displayable
+      # credentials. Production refuses to boot without it (exit 78).
+      #
+      # generateValue, not sync:false. A blank required secret guarantees that the FIRST deploy of a
+      # new service fails its health check, which is precisely how this key bricked deploys before:
+      # the preflight that requires it shipped in the same release as the key itself, so every
+      # subsequent commit re-reported a failure nobody had introduced. Render generates this once at
+      # service creation and then leaves it alone.
+      #
+      # It does NOT overwrite a value that already exists, so an existing service keeps the key its
+      # data was encrypted under. Rotating it still requires re-encrypting existing artefacts — to
+      # move to a vault-managed key, set the value explicitly on the dashboard and re-encrypt.
       - key: CREDENTIAL_ENCRYPTION_KEY
         generateValue: true
       # ---- fill these in on the Render dashboard (Settings → Environment) ----
-      - key: APP_BASE_URL          # your public URL, e.g. https://pci-platform.onrender.com or https://www.yourdomain.org
-        sync: false
+      # The service's own Render subdomain, derived from `name: pci-platform` above. Both are set
+      # here rather than left sync:false because they are NOT secrets and NOT deployment-specific
+      # guesses — they follow from the service name in this same file, and leaving them blank made
+      # the app exit 78 on every boot with nothing to show for it. Point them at a custom domain
+      # the day one is attached; ALLOWED_ORIGIN must stay exactly equal to APP_BASE_URL with no
+      # trailing slash, or the browser preflight fails in a way that looks like a broken API.
+      - key: APP_BASE_URL
+        value: https://pci-platform.onrender.com
       - key: ALLOWED_ORIGIN        # same value as APP_BASE_URL (no trailing slash)
-        sync: false
+        value: https://pci-platform.onrender.com
       - key: ADMIN_OWNER_EMAIL     # your real admin email (replaces owner@pci.local on first boot)
         sync: false
       - key: ADMIN_OWNER_PASSWORD  # strong bootstrap password (change it in Settings → Security after first login)

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type TeamResponse } from '../api'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty, Stat, rowActivate } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDate, fmtDateTime } from '../../format'
 import { ApiError } from '../../api/client'
@@ -305,7 +306,7 @@ function ConversationDrawer({ id, onClose, onChanged }: { id: number; onClose: (
           <button className="btn secondary sm" onClick={onClose}>Close</button>
         </div>
         {loading && !data ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data ? null : (
-          <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+          <div className="page">
             {err && <div className="notice err" role="alert">{err}</div>}
 
             <Card
@@ -461,10 +462,10 @@ export default function SupportInbox() {
 
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <h1>Support inbox</h1>
-        {data && <span className="muted small">{data.unassigned} unassigned</span>}
-      </div>
+      <PageHeader
+        title="Support inbox"
+        actions={data && <span className="muted small">{data.unassigned} unassigned</span>}
+      />
 
       <MetricsRow onSlaSaved={refetch} />
 

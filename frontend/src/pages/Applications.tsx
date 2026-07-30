@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PageHeader } from '../components/premium'
 import { useQuery } from '../api/hooks'
 import { api } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
@@ -40,11 +41,12 @@ export default function Applications() {
   if (error) return <ErrorNote>{error}</ErrorNote>
   const rows = data?.rows ?? []
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>My applications</h1>
-        <p className="muted">Roles you have applied for through the PCI careers board. <a href="/careers.html">Browse open positions →</a></p>
-      </div>
+    <div className="page">
+      <PageHeader
+        eyebrow="Careers"
+        title="My applications"
+        subtitle={<>Roles you have applied for through the PCI careers board. <a href="/careers.html">Browse open positions →</a></>}
+      />
       <Card>
         {rows.length === 0 ? (
           <Empty>You haven’t applied for any roles yet. <a href="/careers.html">See open positions →</a></Empty>

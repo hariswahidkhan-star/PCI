@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAdminQuery } from '../hooks'
 import { adminApi, type DiscountCode } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 interface CertOpt { id: number; code: string; acronym?: string | null }
@@ -455,8 +456,8 @@ const CODE_TABS = ['Codes', 'Approvals', 'Review queue'] as const
 export default function Codes() {
   const [tab, setTab] = useState<(typeof CODE_TABS)[number]>('Codes')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <h1>Discount &amp; founding codes</h1>
+    <div className="page">
+      <PageHeader title="Discount & founding codes" />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {CODE_TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
       </div>

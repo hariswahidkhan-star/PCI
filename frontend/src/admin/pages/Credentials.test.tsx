@@ -109,8 +109,34 @@ describe('Credentials admin console', () => {
     expect(h.post).not.toHaveBeenCalled()
   })
 
-  it('shows the empty state when nothing matches', () => {
+  // An empty registry and an over-narrow filter call for different responses from the operator,
+  // so they are different messages. The old copy said "No credentials match." in both cases,
+  // which read as a failed search even when nothing had ever been issued.
+  it('says the registry is empty when there are no credentials and no filter', () => {
     render(<Credentials />)
-    expect(screen.getByText('No credentials match.')).toBeInTheDocument()
+    expect(screen.getByText('No credentials issued yet')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Clear filters' })).toBeNull()
+  })
+
+  it('says nothing matches — and offers a way back — once a filter is applied', async () => {
+    const user = userEvent.setup()
+    render(<Credentials />)
+    await user.type(screen.getByLabelText('Search'), 'PCL-9999')
+    expect(await screen.findByText('No credentials match')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Clear filters' }))
+    expect(screen.getByText('No credentials issued yet')).toBeInTheDocument()
+  })
+
+  it('sorts the registry, newest issue first', () => {
+    h.creds = {
+      rows: [
+        active({ id: 1, credential_id: 'PCL-OLD', issued_at: '2020-01-01T00:00:00Z' }),
+        active({ id: 2, credential_id: 'PCL-NEW', issued_at: '2026-01-01T00:00:00Z' }),
+      ],
+    }
+    const { container } = render(<Credentials />)
+    const first = container.querySelectorAll('tbody tr')[0]
+    expect(within(first as HTMLElement).getByText('PCL-NEW')).toBeInTheDocument()
   })
 })

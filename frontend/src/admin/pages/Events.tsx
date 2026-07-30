@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 // Admin management of member events & webinars. Create/edit/publish events; view registrations; mark
@@ -27,14 +28,12 @@ export default function Events() {
   const [regsFor, setRegsFor] = useState<EventRow | null>(null)
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div className="spread">
-        <div>
-          <h1>Events &amp; webinars</h1>
-          <p className="muted small" style={{ margin: 0 }}>Publish member events; marking attendance auto-credits the attendee's CPD.</p>
-        </div>
-        <button className="btn sm" onClick={() => setEdit({ ...EMPTY })}>New event</button>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Events & webinars"
+        subtitle="Publish member events; marking attendance auto-credits the attendee's CPD."
+        actions={<button className="btn sm" onClick={() => setEdit({ ...EMPTY })}>New event</button>}
+      />
 
       <Card>
         {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data || data.rows.length === 0 ? (

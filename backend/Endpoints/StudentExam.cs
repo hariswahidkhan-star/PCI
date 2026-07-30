@@ -55,12 +55,27 @@ public static class StudentExam
                 status = H.Str(duesRow?["subscription_status"]),
                 cancel_at_period_end = H.B(duesRow?["cancel_at_period_end"]),
             };
-            // Ensure a stable registration number exists (lazy backfill for both new and pre-existing users).
-            var regNo = db.Scalar<string>("SELECT registration_no FROM users WHERE id=?", u.Id);
-            if (string.IsNullOrWhiteSpace(regNo))
+            // Compatibility backstop for accounts created before issuance moved into the creating
+            // transaction. It now goes through the one issuer, so the number is derived from the
+            // account's own created_at year (not the year of this read) and is reserved in the
+            // registry like any other. Phase 2 removes this entirely once the backfill has run —
+            // a read endpoint must not write identity data, and this is the last place that does.
+            // Fail-soft, and only here: issuance throws on a collision so a *registration* rolls back
+            // rather than reporting a wrong identity, but this is a dashboard read. A quarantined
+            // number must not take the whole portal down with it — Phase 2's reconciliation is what
+            // resolves the conflict, and until then the field is simply absent rather than wrong.
+            //
+            // The whole backstop sits behind a cutover flag (default ON, current behaviour). Once an
+            // operator has run the Phase 2 backfill and /api/admin/identity/student-numbers/health
+            // reports zero missing numbers, switching identity_lazy_backstop off makes this endpoint
+            // a pure read — the state the spec requires — without a deploy, and switching it back on
+            // is the rollback if a straggler account surfaces. The gate is the Health report, not a
+            // date, which is why this is a setting rather than deleted code.
+            string? regNo = StudentNumbers.Read(db, u.Id);
+            if (regNo is null && Settings.Bool(db, "identity_lazy_backstop", true))
             {
-                regNo = $"PCI-{DateTime.UtcNow:yyyy}-{u.Id:D6}";
-                db.Execute("UPDATE users SET registration_no=? WHERE id=? AND (registration_no IS NULL OR registration_no='')", regNo, u.Id);
+                try { regNo = StudentNumbers.GetOrIssue(db, u.Id, "legacy_lazy_backfill"); }
+                catch (Exception ex) { log(u.Id, "student_number_issue_failed", ex.Message); }
             }
             return J(new
             {

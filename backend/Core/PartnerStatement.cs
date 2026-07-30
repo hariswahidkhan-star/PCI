@@ -119,7 +119,9 @@ public static class PartnerStatement
             ORDER BY COALESCE(paid_at,created_at) ASC, id ASC", partnerId, periodStart, endInclusive);
         foreach (var s in st.Settlements) st.PaidMinor += H.L(s["amount_paid_minor"]);
 
-        st.RecoverableMinor = PartnerCommissionReversal.RecoverableMinor(db, partnerId);
+        // Scoped to the statement's own currency: the note below prints this figure labelled with
+        // st.Currency, and a recoverable denominated in another currency must not be relabelled into it.
+        st.RecoverableMinor = PartnerCommissionReversal.RecoverableMinor(db, partnerId, st.Currency);
         st.ClosingMinor = st.OpeningMinor + st.EarnedMinor + st.ReversedMinor - st.PaidMinor;
         return st;
     }

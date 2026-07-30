@@ -22,7 +22,31 @@ public static class WorldSchema
         Tables(db);
         Seed(db);
         WorldContentPack.Seed(db);
+        WorldIntelligencePack.Seed(db);
         WorldArticlePack.Seed(db);
+        // Project Intelligence taxonomy backfill — idempotent, house rows only, metadata only
+        // (never config_json, never a version snapshot). Runs after the pack so a fresh install
+        // classifies its whole bank on first boot.
+        Core.WorldIntelligence.Backfill(db);
+        // Canonical-identity bridge (journey repair P0-00): the participation aggregate keyed by
+        // canonical users.id, plus the reversible legacy pciworld_users → users mapping. Idempotent
+        // on every boot; conflicts are quarantined in the map, never silently merged.
+        Core.WorldIdentity.Ensure(db);
+        try { Core.WorldIdentity.Run(db); }
+        catch (Exception e) { Console.Error.WriteLine($"[pciworld identity] legacy mapping pass failed: {e.Message}"); }
+        // Community rooms (CCP Phase 1). Installing the tables is not launching the feature — it
+        // stays gated on the world_community_enabled setting, seeded false. Installed on every boot
+        // so the migration-parity gates cover it on both providers.
+        CommunitySchema.Ensure(db);
+        // Phase 3 forum. Installed alongside the community tables so both are covered by the same
+        // migration-parity gates; also off by default (pciworld_forum_enabled).
+        ForumSchema.Ensure(db);
+        // Phase 4 careers marketplace. Same posture: installed on every boot so the parity gates
+        // cover both providers; off by default (pciworld_careers_enabled).
+        CareersSchema.Ensure(db);
+        // After the article tables exist: ContributorSchema adds guarded columns to
+        // pciworld_articles and pciworld_admin_users, so it must run once those are installed.
+        ContributorSchema.Ensure(db);
     }
 
     static void Tables(Db db)
@@ -175,6 +199,7 @@ public static class WorldSchema
             result_token_sha VARCHAR(64),
             result_revoked INTEGER DEFAULT 0,
             invite_id INTEGER,
+            parent_attempt_id INTEGER,
             started_at TEXT DEFAULT (datetime('now')),
             completed_at VARCHAR(32),                      -- bounded: indexed with status, see the note there
             updated_at TEXT DEFAULT (datetime('now')))");
@@ -191,6 +216,28 @@ public static class WorldSchema
             inviter_name TEXT,                             -- NULL = anonymous invitation
             revoked INTEGER DEFAULT 0,
             created_at TEXT DEFAULT (datetime('now')))");
+
+        // ── Share-link referral attribution (share→challenge→claim journey) — privacy-safe BY
+        //    SCHEMA, not by discipline: the row can name a share link only by its opaque token
+        //    hash (the same sha the invite itself is stored under), a session only by its numeric
+        //    id, and a claimed account only in referred_user_id (stamped at claim, never carried
+        //    in any URL and never joined into analytics output). No name, no email, no free text.
+        //    The sharer only ever reads AGGREGATE COUNTS over these rows — never who. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_referrals(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            share_ref VARCHAR(64) NOT NULL,                -- sha-256 of the share/invite token (opaque)
+            anonymous_world_session_id INTEGER NOT NULL,   -- pciworld_sessions.id
+            referred_user_id INTEGER,                      -- NULL until the session is claimed
+            challenge_id INTEGER NOT NULL,
+            challenge_version INTEGER NOT NULL,            -- the immutable pinned version the link carried
+            started_at TEXT DEFAULT (datetime('now')),
+            completed_at VARCHAR(32),
+            conversion_state VARCHAR(16) NOT NULL DEFAULT 'started',  -- started|completed|claimed
+            created_at TEXT DEFAULT (datetime('now')))");
+        // One row per (link, session, challenge): a refresh or double-start is an ignored insert,
+        // never a second row inflating the sharer's counts.
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldref ON pciworld_referrals(share_ref, anonymous_world_session_id, challenge_id)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldref_session ON pciworld_referrals(anonymous_world_session_id)");
 
         // ── Participant accounts (Phase 1b). Wholly separate from the platform's `users` — a PCI
         //    World account is practice identity only and can never reach exam or credential data.
@@ -209,6 +256,9 @@ public static class WorldSchema
             passport_show_profiles INTEGER DEFAULT 1,
             passport_show_dates INTEGER DEFAULT 1,
             passport_expires_at TEXT,
+            passport_photo_ref VARCHAR(255),
+            passport_photo_mime VARCHAR(32),
+            student_user_id INTEGER,
             failed_logins INTEGER DEFAULT 0,
             lockout_until TEXT,
             last_login_at TEXT,
@@ -228,6 +278,48 @@ public static class WorldSchema
             expires_at TEXT NOT NULL,
             created_at TEXT DEFAULT (datetime('now')))");
 
+        // ── One-time cross-surface handoff codes (journey repair P0-02). The portal→World bridge
+        //    used to hand the browser a REUSABLE 30-day bearer token through the portal origin;
+        //    now it mints a hashed, two-minute, single-consumption code instead. The raw code
+        //    travels once in a URL fragment (never a query string the server logs) and dies at
+        //    first redemption — replay, expiry and "never existed" are indistinguishable. ──
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_handoff_codes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code_sha VARCHAR(64) UNIQUE NOT NULL,
+            world_user_id INTEGER NOT NULL,
+            return_to VARCHAR(128),
+            expires_at VARCHAR(32) NOT NULL,
+            consumed_at VARCHAR(32),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldhandoff_user ON pciworld_handoff_codes(world_user_id)");
+
+        // OAuth 2.1-shaped authorization layer (the dedicated-domain groundwork): a client
+        // registry with EXACT redirect URIs, and single-use PKCE-bound authorization codes.
+        // The registry is data, not code — a future pciworld.org app is one more row.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_oauth_clients(
+            client_id VARCHAR(64) PRIMARY KEY,
+            name VARCHAR(120) NOT NULL,
+            redirect_uris TEXT NOT NULL,
+            first_party INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT DEFAULT (datetime('now')))");
+        AddCol("pciworld_oauth_clients", "first_party", "first_party INTEGER NOT NULL DEFAULT 0");
+        db.Exec(@"CREATE TABLE IF NOT EXISTS pciworld_oauth_codes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code_sha VARCHAR(64) UNIQUE NOT NULL,
+            client_id VARCHAR(64) NOT NULL,
+            world_user_id INTEGER NOT NULL,
+            redirect_uri VARCHAR(400) NOT NULL,
+            code_challenge VARCHAR(128) NOT NULL,
+            minted_token_sha VARCHAR(64),
+            expires_at VARCHAR(32) NOT NULL,
+            consumed_at VARCHAR(32),
+            created_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("INSERT OR IGNORE INTO pciworld_oauth_clients(client_id,name,redirect_uris,first_party) VALUES('pciworld-app','PCI World participant app','/world/account,/world-app/auth',1)");
+        db.Exec("UPDATE pciworld_oauth_clients SET first_party=1 WHERE client_id='pciworld-app' AND first_party=0");
+        // Existing installs learn the React app's auth route — guarded so an owner-edited list is
+        // never clobbered.
+        db.Exec("UPDATE pciworld_oauth_clients SET redirect_uris='/world/account,/world-app/auth' WHERE client_id='pciworld-app' AND redirect_uris='/world/account'");
+
         // Additive upgrade columns for installs created before Phase 1b (fresh installs get them
         // from CREATE TABLE below/above; both providers share this code path).
         void AddCol(string table, string col, string ddl)
@@ -237,6 +329,35 @@ public static class WorldSchema
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
+        // Progressive hints (PI-US-051): how many authored hints this attempt has revealed.
+        // Transparent by design — hints carry NO hidden score penalty; the count is simply recorded.
+        AddCol("pciworld_attempts", "hints_used", "hints_used INTEGER DEFAULT 0");
+
+        // ── Project Intelligence taxonomy (Core/WorldIntelligence.cs). Catalogue metadata on the
+        //    WORKING COPY only — deliberately not on pciworld_challenge_versions, because facets
+        //    are how content is found and reported, never part of what an attempt replays. All
+        //    values come from the approved vocabularies; NULL means "not yet classified". ──
+        AddCol("pciworld_challenges", "pi_type", "pi_type VARCHAR(24)");
+        AddCol("pciworld_challenges", "pi_domain", "pi_domain VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_lifecycle", "pi_lifecycle VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_sector", "pi_sector VARCHAR(32)");
+        AddCol("pciworld_challenges", "pi_interaction", "pi_interaction VARCHAR(32)");
+        // Catalogue filters combine type+domain most often; sector/lifecycle piggyback on the scan.
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldch_pi ON pciworld_challenges(pi_type, pi_domain)");
+
+        // Retake lineage (journey repair P0-04): a fresh attempt after completion is an explicit
+        // retake linked to the attempt it retries — the original stays immutable evidence.
+        AddCol("pciworld_attempts", "parent_attempt_id", "parent_attempt_id INTEGER");
+        // Daily provenance (P1-07/PW-US-028): an attempt started as TODAY'S challenge records the
+        // rotation period it belonged to, so daily completion and the practice streak are derived
+        // from the ledger — archive plays and retakes can never inflate them. NULL = not a daily.
+        AddCol("pciworld_attempts", "rotation_period_id", "rotation_period_id INTEGER");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_period ON pciworld_attempts(rotation_period_id)");
+        // Namespace cutover step 1 (P0-00): canonical ownership stamped ALONGSIDE the legacy
+        // World-id ownership. New/claimed attempts carry both; the boot backfill converges old
+        // rows through the map; reads flip to this column only once parity is proven.
+        AddCol("pciworld_attempts", "canonical_user_id", "canonical_user_id INTEGER");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_canonical ON pciworld_attempts(canonical_user_id)");
 
         // Passport disclosure is per FIELD as well as per item: publishing evidence of what you
         // have practised should not force you to publish your scores. Defaults preserve the
@@ -247,6 +368,17 @@ public static class WorldSchema
         // A public link that never expires is a decision nobody consciously made. NULL = no expiry
         // (the existing behaviour); a date makes the link stop resolving on its own.
         AddCol("pciworld_users", "passport_expires_at", "passport_expires_at TEXT");
+        // The optional Passport photograph. The DB holds only a Core/Storage reference (never the
+        // bytes), and uploading is itself the consent: NULL simply means no photo, which is how
+        // every account created before these columns behaves.
+        AddCol("pciworld_users", "passport_photo_ref", "passport_photo_ref VARCHAR(255)");
+        AddCol("pciworld_users", "passport_photo_mime", "passport_photo_mime VARCHAR(32)");
+        // One-login bridge (owner decision): a platform student can open their Passport straight
+        // from the student portal. The link is IDENTITY-LEVEL ONLY — the world realm still never
+        // reads exam, entitlement or credential data; this column exists so the student-side SSO
+        // endpoint can find-or-create the matching world account. NULL = standalone world account.
+        AddCol("pciworld_users", "student_user_id", "student_user_id INTEGER");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_worldusers_student ON pciworld_users(student_user_id) WHERE student_user_id IS NOT NULL");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_worldatt_user ON pciworld_attempts(user_id)");
 
         // ── Separate PCI World admin realm (partner-portal precedent: wholly separate from

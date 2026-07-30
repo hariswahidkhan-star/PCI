@@ -92,6 +92,38 @@ public static class Payments
                 // A code with a configured floor cannot push the payable amount below it.
                 if (codeVal.Code is not null && Public.MinPayableViolation(codeVal.Code, pr.final) is { } floorMsg)
                     return Results.Json(new { error = "code_invalid", message = floorMsg }, statusCode: 400);
+
+                // RES-001 — durable client idempotency key required before any Stripe session or capacity hold.
+                var clientIdem = CheckoutReservation.ResolveKey(req, d);
+                if (clientIdem is null)
+                    return Results.Json(new { error = "idempotency_key_required", message = "Checkout requires an Idempotency-Key (header or body)." }, statusCode: 400);
+
+                CheckoutReservation.ReserveResult? reserve = null;
+                db.Transaction(() =>
+                {
+                    reserve = CheckoutReservation.TryReserve(db, clientIdem, email ?? "", product, certSelIn, codeVal.Code, amountMinor);
+                });
+                if (reserve is null || !reserve.Ok)
+                {
+                    var err = reserve?.Error ?? "reserve_failed";
+                    if (err is "code_exhausted" or "allocation_exhausted")
+                        return Results.Json(new { error = "code_invalid", message = "This discount code has reached its usage limit." }, statusCode: 400);
+                    return Results.Json(new { error = err }, statusCode: 400);
+                }
+                var reservation = reserve.Reservation!;
+                // Replay an in-flight reservation that already has a Stripe session URL.
+                if (reserve.Replayed && H.Str(reservation["stripe_session_id"]) is { Length: > 0 } existingSid
+                    && H.Str(reservation["status"]) == "reserved")
+                {
+                    try
+                    {
+                        var existing = await new SessionService().GetAsync(existingSid);
+                        if (!string.IsNullOrEmpty(existing?.Url) && existing.Status is "open" or null)
+                            return J(new { url = existing.Url, reservation_id = H.L(reservation["id"]), replayed = true });
+                    }
+                    catch { /* fall through and create a fresh session below */ }
+                }
+
                 db.Execute("UPDATE enrollment_sessions SET selected_product=?, pricing_snapshot=?, last_activity_at=datetime('now') WHERE email=? AND session_status='in_progress'",
                     product, JsonSerializer.Serialize(pr), (email ?? "").ToLowerInvariant());
 
@@ -115,7 +147,11 @@ public static class Payments
                         ["final_amount"] = Money.ToDecimal(amountMinor).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture),
                         ["code_amount"] = MoneyText(pr.codeAmount),
                         ["standard_amount"] = MoneyText(pr.standard),
-                        ["default_discount"] = MoneyText(pr.defaultDiscount) },
+                        ["default_discount"] = MoneyText(pr.defaultDiscount),
+                        ["checkout_idempotency_key"] = clientIdem,
+                        ["reservation_id"] = H.L(reservation["id"]).ToString(),
+                        ["partner_id"] = reservation["partner_id"] is null ? "" : H.L(reservation["partner_id"]).ToString(),
+                    },
                     // Purchases started inside the student portal return to the portal's Billing page,
                     // where the webhook-applied membership/entitlement shows up on reload.
                     SuccessUrl = (H.GetS(d, "portal") is "1" or "true")
@@ -125,12 +161,20 @@ public static class Payments
                         ? $"{Base}/app/billing?cancelled=1"
                         : $"{Base}/payment-failed.html"
                 };
-                // Deterministic Stripe idempotency key: a retried create (network blip, double-click) within
-                // the same minute returns the SAME Checkout Session instead of creating a duplicate; genuinely
-                // separate purchases (different product/cert/amount, or a later minute) get a fresh session.
-                var idemKey = "cs_" + Security.Sha($"{(email ?? "").ToLowerInvariant()}|{product}|{certSelIn}|{pr.final}|{DateTime.UtcNow:yyyyMMddHHmm}");
-                var session = await new SessionService().CreateAsync(options, new RequestOptions { IdempotencyKey = idemKey });
-                return J(new { url = session.Url });
+                // Stripe idempotency = durable client key (not a minute bucket) so retries share one session.
+                Session session;
+                try
+                {
+                    session = await new SessionService().CreateAsync(options, new RequestOptions { IdempotencyKey = "cs_" + clientIdem });
+                }
+                catch
+                {
+                    db.Transaction(() => CheckoutReservation.ReleaseHold(db, H.L(reservation["id"]),
+                        reservation["discount_code_id"] is null ? null : H.L(reservation["discount_code_id"]), "released"));
+                    throw;
+                }
+                db.Execute("UPDATE checkout_reservations SET stripe_session_id=?, updated_at=datetime('now') WHERE id=?", session.Id, reservation["id"]);
+                return J(new { url = session.Url, reservation_id = H.L(reservation["id"]), replayed = reserve.Replayed });
             }
             catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
         });
@@ -287,6 +331,9 @@ public static class Payments
                     if (existingId is null)
                     {
                         userId = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')", email, m.GetValueOrDefault("first_name"), m.GetValueOrDefault("last_name"));
+                        // Already inside the webhook's transaction — issue here so the number commits
+                        // with the account, and never open a nested one.
+                        StudentNumbers.GetOrIssue(db, userId, "payment_signup");
                         db.Execute("INSERT INTO student_profiles(user_id,country) VALUES(?,?)", userId, m.GetValueOrDefault("country"));
                         db.Execute("UPDATE payments SET user_id=? WHERE id=?", userId, payId); // backfill the FK now that the user exists
                     }
@@ -357,20 +404,61 @@ public static class Payments
                             }
                         }
                         var discountCode = m.GetValueOrDefault("discount_code");
+                        var reservation = CheckoutReservation.FindBySession(db, s.Id)
+                            ?? (m.GetValueOrDefault("checkout_idempotency_key") is { Length: > 0 } ik
+                                ? CheckoutReservation.FindByKey(db, ik) : null);
+                        // Stamp immutable partner/code attribution onto the payment before commission (RES-002).
+                        CheckoutReservation.StampPaymentAttribution(db, payId, reservation);
+                        if (reservation is null && !string.IsNullOrEmpty(discountCode)
+                            && db.QueryOne("SELECT id,partner_id FROM discount_codes WHERE code=?", discountCode) is { } legacyCode)
+                        {
+                            // Legacy session without a reservation — snapshot the live code attribution once.
+                            db.Execute("UPDATE payments SET discount_code_id=COALESCE(discount_code_id,?), partner_id=COALESCE(partner_id,?) WHERE id=?",
+                                legacyCode["id"], legacyCode["partner_id"], payId);
+                        }
                         if (!string.IsNullOrEmpty(discountCode))
                         {
                             var codeRow = db.QueryOne("SELECT id,max_uses,partner_id FROM discount_codes WHERE code=?", discountCode);
                             if (codeRow is not null)
                             {
-                                db.Execute("UPDATE discount_codes SET used_count=used_count+1 WHERE id=? AND (max_uses IS NULL OR used_count<max_uses)", codeRow["id"]);
-                                db.Execute(@"INSERT OR IGNORE INTO code_redemptions(code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount) VALUES(?,?,?,?,?,?,?,?)",
-                                    codeRow["id"], discountCode, userId, email, payId, product, MetaNum("standard_amount"), MetaNum("code_amount"));
-                                try { FraudChecks.OnRedemption(db, H.L(codeRow["id"]), discountCode!, email, codeRow["partner_id"] is null ? null : H.L(codeRow["partner_id"])); } catch { }
-                                // Partner commission (Phase 1): immutable, rate snapshotted now, recorded in
-                                // the same atomic transaction as the redemption it is derived from. Idempotent
-                                // via a UNIQUE dedupe_key, so a replayed webhook records nothing further.
-                                try { PCI.Backend.Core.PartnerCommission.EnsureForPayment(db, payId); } catch { }
+                                // Prefer converting a reservation hold; otherwise Founding-style atomic take.
+                                // If capacity is gone, skip redemption/commission rather than overselling.
+                                var capacityOk = reservation is not null
+                                    ? CheckoutReservation.TrySettle(db, reservation, payId)
+                                    : db.Execute("UPDATE discount_codes SET used_count=used_count+1 WHERE id=? AND (max_uses IS NULL OR used_count<max_uses)", codeRow["id"]) > 0;
+                                if (capacityOk)
+                                {
+                                    db.Execute(@"INSERT OR IGNORE INTO code_redemptions(code_id,code,user_id,email,payment_id,product_type,amount_before,discount_amount) VALUES(?,?,?,?,?,?,?,?)",
+                                        codeRow["id"], discountCode, userId, email, payId, product, MetaNum("standard_amount"), MetaNum("code_amount"));
+                                    var attributedPartner = db.QueryOne("SELECT partner_id FROM payments WHERE id=?", payId)?["partner_id"]
+                                        ?? codeRow["partner_id"];
+                                    try { FraudChecks.OnRedemption(db, H.L(codeRow["id"]), discountCode!, email, attributedPartner is null ? null : H.L(attributedPartner)); } catch { }
+                                    // Partner commission (Phase 1): immutable, rate snapshotted now, recorded in
+                                    // the same atomic transaction as the redemption it is derived from. Idempotent
+                                    // via a UNIQUE dedupe_key, so a replayed webhook records nothing further.
+                                    // A FAILED write must never be swallowed behind the 200: this transaction also
+                                    // claims the idempotency rows, so acking would mean Stripe never redelivers and
+                                    // the commission is lost for good. Aborting rolls the whole settlement back;
+                                    // the non-2xx response makes Stripe redeliver, and every write in this handler
+                                    // is idempotent for the re-run.
+                                    try { PCI.Backend.Core.PartnerCommission.EnsureForPayment(db, payId); }
+                                    catch (Exception ce)
+                                    {
+                                        Console.Error.WriteLine($"[finance] commission write failed for payment {payId}: {ce.Message} — refusing to ack; Stripe will redeliver");
+                                        throw;
+                                    }
+                                }
+                                else
+                                {
+                                    log(userId, "checkout_code_oversold_skipped", $"{discountCode} pay={payId}");
+                                    if (reservation is not null)
+                                        db.Execute("UPDATE checkout_reservations SET status='released', updated_at=datetime('now') WHERE id=? AND status='reserved'", reservation["id"]);
+                                }
                             }
+                        }
+                        else if (reservation is not null)
+                        {
+                            CheckoutReservation.TrySettle(db, reservation, payId);
                         }
                         if (sess is not null) db.Execute("UPDATE enrollment_sessions SET session_status='paid', last_activity_at=datetime('now') WHERE id=?", sess["id"]);
                         var token = Security.RandomHex(32);
@@ -451,16 +539,25 @@ public static class Payments
                     var refundedAmt = (ch.AmountRefunded) / 100.0;
                     if (!string.IsNullOrEmpty(pi))
                     {
-                        db.Execute("UPDATE payments SET amount_refunded=?, payment_status='partially_refunded', refunded_at=datetime('now') WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')",
-                            refundedAmt, pi);
-                        // Partner commission follows the money back: reverse the refunded proportion.
-                        // Idempotent on the cumulative refunded amount, so Stripe's retries are no-ops.
-                        try
+                        // One transaction: the financial state flip and its commission reversal commit
+                        // together or not at all. A swallowed reversal failure behind the 200 meant Stripe
+                        // never redelivered and the claw-back was lost; now the rollback + non-2xx makes
+                        // Stripe redeliver, and the reversal's cumulative dedupe key makes re-runs no-ops.
+                        db.Transaction(() =>
                         {
-                            var partial = db.QueryOne("SELECT id FROM payments WHERE provider_payment_id=?", pi);
-                            if (partial is not null) PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(partial["id"]), "refund");
-                        }
-                        catch { }
+                            db.Execute("UPDATE payments SET amount_refunded=?, payment_status='partially_refunded', refunded_at=datetime('now') WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')",
+                                refundedAmt, pi);
+                            try
+                            {
+                                var partial = db.QueryOne("SELECT id FROM payments WHERE provider_payment_id=?", pi);
+                                if (partial is not null) PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(partial["id"]), "refund");
+                            }
+                            catch (Exception ce)
+                            {
+                                Console.Error.WriteLine($"[finance] commission reversal failed for {pi}: {ce.Message} — refusing to ack; Stripe will redeliver");
+                                throw;
+                            }
+                        });
                     }
                     log(0, "partial_refund_recorded", $"{ev.Id} pi={pi} amount={refundedAmt}");
                     pi = null; // skip revocation path below
@@ -488,8 +585,15 @@ public static class Payments
                                 log(H.Ln(uid), "refund_membership_kept_other_payment", $"{ev.Id} other_pay={other["id"]}");
                         }
                         // Money returned in full (refund or chargeback) → reverse the whole commission,
-                        // inside the same transaction that revoked the access it bought.
-                        try { PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(payId), ev.Type == "charge.refunded" ? "refund" : "chargeback"); } catch { }
+                        // inside the same transaction that revoked the access it bought. A failure aborts
+                        // that transaction — never swallowed behind the 200, or Stripe would ack a lost
+                        // claw-back and no retry would ever run. Redelivery re-runs everything idempotently.
+                        try { PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(payId), ev.Type == "charge.refunded" ? "refund" : "chargeback"); }
+                        catch (Exception ce)
+                        {
+                            Console.Error.WriteLine($"[finance] commission reversal failed for payment {payId}: {ce.Message} — refusing to ack; Stripe will redeliver");
+                            throw;
+                        }
                         log(H.Ln(uid), "payment_" + reversed, $"{ev.Id} pi={pi}");
                     });
             }

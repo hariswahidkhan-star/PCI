@@ -48,13 +48,13 @@ public static class Partners
                 FROM code_redemptions r
                 JOIN discount_codes dc ON dc.id=r.code_id
                 JOIN payments p ON p.id=r.payment_id
-                WHERE dc.partner_id=? AND p.payment_status='paid'
+                WHERE COALESCE(p.partner_id, dc.partner_id)=? AND p.payment_status='paid'
                 ORDER BY p.payment_date DESC LIMIT 500", pid);
             var attributed = db.Scalar<double>(@"SELECT COALESCE(SUM(p.final_amount),0)
                 FROM code_redemptions r
                 JOIN discount_codes dc ON dc.id=r.code_id
                 JOIN payments p ON p.id=r.payment_id
-                WHERE dc.partner_id=? AND p.payment_status='paid'", pid);
+                WHERE COALESCE(p.partner_id, dc.partner_id)=? AND p.payment_status='paid'", pid);
             var accrued = Math.Round(attributed * pct / 100.0, 2);
             var paidOut = db.Scalar<double>("SELECT COALESCE(SUM(amount),0) FROM partner_payouts WHERE partner_id=?", pid);
             var payouts = db.Query("SELECT amount,currency,note,paid_at FROM partner_payouts WHERE partner_id=? ORDER BY id DESC", pid);
@@ -142,6 +142,7 @@ public static class Partners
                 if (user is null)
                 {
                     uid = db.ExecuteReturningId("INSERT INTO users(email,first_name,last_name,role,status) VALUES(?,?,?, 'student','active')", email, first, last);
+                    StudentNumbers.GetOrIssue(db, uid, "partner_created");
                     db.Execute("INSERT INTO student_profiles(user_id) VALUES(?)", uid);
                     var token = Security.RandomHex(32);
                     db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", uid, Security.Sha(token));
@@ -403,9 +404,12 @@ public static class Partners
 
         object SettlementSummary(long partnerId) => new
         {
+            // The scalar sums are exact only while the ledger holds a single currency; by_currency is the
+            // partitioned truth and what money displays should prefer.
             payable = Money.ToDecimal(PartnerSettlement.PayableMinor(db, partnerId)),
             recoverable = Money.ToDecimal(PartnerCommissionReversal.RecoverableMinor(db, partnerId)),
             recoverable_outstanding = Money.ToDecimal(PartnerSettlement.UnrecoveredMinor(db, partnerId)),
+            by_currency = PartnerSettlement.BalancesByCurrency(db, partnerId),
             settlements = db.Query(@"SELECT id, settlement_no, period_start, period_end, currency,
                     eligible_commission_minor, adjustments_minor, amount_approved_minor, amount_paid_minor,
                     closing_balance_minor, status, prepared_by, approved_by, paid_at, payment_method,
@@ -564,6 +568,7 @@ public static class Partners
             return J(new
             {
                 payable = Money.ToDecimal(PartnerSettlement.PayableMinor(db, p!.PartnerId)),
+                by_currency = PartnerSettlement.BalancesByCurrency(db, p.PartnerId),
                 settlements = db.Query(@"SELECT id, settlement_no, period_start, period_end, currency,
                         amount_approved_minor, amount_paid_minor, closing_balance_minor, status, paid_at,
                         payment_method, payment_reference, partner_note, created_at

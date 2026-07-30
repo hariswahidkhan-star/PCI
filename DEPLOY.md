@@ -38,24 +38,32 @@ website; everything students do appears in the dashboard. There is nothing separ
 
 ### Deploys suddenly failing with “production requires DB_PROVIDER=mysql”?
 
-The platform now **fails closed on MySQL in production**: a Production boot refuses to open a
-database unless `DB_PROVIDER=mysql` (with the `MYSQL_*` settings) is configured. An existing
-service that was deployed on the earlier SQLite-on-persistent-disk posture will therefore fail
-every new deploy at the health check (the container exits with code 78 before serving traffic),
-while the last successful deploy stays live.
+The platform **fails closed in production**: a Production boot refuses to open a database unless
+one of the three supported postures below applies. The refusal happens *before* the database is
+opened or seeded (the container exits with code 78 before serving traffic), while the last
+successful deploy stays live.
 
-Two ways forward:
+The three supported production postures:
 
-1. **Recommended — move to managed MySQL**: provision MySQL 8 / MariaDB (PlanetScale, Aiven, RDS,
+1. **Recommended — managed MySQL**: provision MySQL 8 / MariaDB (PlanetScale, Aiven, RDS,
    DigitalOcean…), set `DB_PROVIDER=mysql` + the `MYSQL_*` variables, and run the one-time data
    migration `backend/tools/migrate_sqlite_to_mysql.py` (see `docs/MYSQL_MIGRATION.md`).
-2. **Interim — keep SQLite on the persistent disk, explicitly**: set **one** environment variable
-   on the service (Settings → Environment): `ALLOW_SQLITE_IN_PRODUCTION=true`. This waives ONLY
-   the MySQL requirement, still requires the database to live under the mounted `/data` disk, and
-   keeps every other production check (HTTPS base URL, explicit CORS origin,
-   `CREDENTIAL_ENCRYPTION_KEY`, …) fully active. The boot log prints a warning on every start so
-   the posture stays visible. Do not confuse it with `ALLOW_INSECURE_PRODUCTION=true`, which
-   disables **all** checks and is not recommended.
+2. **Interim — SQLite on the persistent disk**: a SQLite database whose file lives under a
+   *writable mounted* `/data` keeps deploying **automatically, with no flag** — the boot log
+   prints a `[config:warn] production is running SQLite at … (supported interim posture)` warning
+   on every start so the posture stays visible. A legacy hand-created service with only the disk
+   and Render's own `RENDER_EXTERNAL_URL` boots with zero further config: the base URL is adopted
+   from `RENDER_EXTERNAL_URL`, CORS defaults to same-origin, and remaining gaps print as
+   `[config:warn]`. If auto-detection can't see your disk, `ALLOW_SQLITE_IN_PRODUCTION=true`
+   claims the posture explicitly — it still requires `DATABASE_FILE` under `/data`, and keeps
+   every other production check (HTTPS base URL, explicit CORS origin,
+   `CREDENTIAL_ENCRYPTION_KEY`, …) fully active. Do not confuse it with
+   `ALLOW_INSECURE_PRODUCTION=true`, which disables **all** checks and is not recommended.
+3. **PCI World-only** (`PCIWORLD_ONLY=true`): a deployment serving only the PCI World surfaces.
+   SQLite is allowed only with the explicit bridge `PCIWORLD_ALLOW_SQLITE=true` **and**
+   `DATABASE_FILE` under `/data`; the payment/exam/credential blockers this host doesn't serve
+   are downgraded to warnings. See `docs/pciworld/DEPLOY_RENDER.md` for the full hardening list
+   before a public launch.
 
 ### Already running WITHOUT the blueprint (service created by hand)?
 If the service was created manually — especially on the **free tier** — the database and every
@@ -130,38 +138,58 @@ docker run -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development pci-platform
 
 ## Boot-time guard rails (expected behaviour, not errors)
 
-In `Production` (and `Staging`) the app **refuses to start** rather than run unsafely. Every problem
-is named in the logs on the line that begins `[config] Refusing to open database:` or
-`[db] refusing to start:` — read that line first; it tells you exactly which variable to fix.
+### Exit codes — what a failed deploy is telling you
 
-**The complete set of hard blockers** — all five must be satisfied or the deploy fails:
+| Exit | Meaning | Typical causes | Fix |
+|---|---|---|---|
+| **78** | Configuration refused (`EX_CONFIG`) | Missing/invalid `APP_BASE_URL` or `ALLOWED_ORIGIN`, no `CREDENTIAL_ENCRYPTION_KEY`, SQLite off the persistent disk, MySQL selected but `MYSQL_HOST`/`MYSQL_PASSWORD` unset, `ENABLE_LEGACY_ADMIN_TOKEN=true`, `STORAGE_PROVIDER=s3` without `S3_BUCKET`, `STRIPE_SECRET_KEY` without `STRIPE_WEBHOOK_SECRET` | Set the variable the log names; redeploy |
+| **75** | Temporarily unavailable (`EX_TEMPFAIL`) | The configured database cannot be opened — wrong host/port, firewall, TLS, bad credentials, database not created yet, or MySQL still starting up. Also: an older binary meeting a newer schema (deploy a matching build) | Check `MYSQL_HOST`/`MYSQL_PORT` reachability, `MYSQL_USER`/`MYSQL_PASSWORD`, that `MYSQL_DATABASE` exists, and `MYSQL_SSL` (managed providers usually need `required`). Raise `MYSQL_CONNECT_RETRIES` if the DB is still provisioning |
+| **70** | Software/migration failure (`EX_SOFTWARE`) | A schema migration failed part-way | Read the `[migrate]` log lines; the service never serves on a half-migrated database |
 
-| Variable | Requirement |
+The app never reports healthy when the database or a migration failed — the health check only
+answers after a successful open + migration.
+
+### Blockers checked before the database opens (exit 78 unless a posture downgrades them)
+
+`APP_BASE_URL` must be an **absolute, non-loopback `https://` URL** (malformed and `http://`
+values are refused — the boot preflight and the admin System-check use the same rule);
+`ALLOWED_ORIGIN` must be explicit (no wildcard; keep it exactly equal to `APP_BASE_URL`, no
+trailing slash); `CREDENTIAL_ENCRYPTION_KEY` must be set; the database must satisfy one of the
+three postures above; `ENABLE_LEGACY_ADMIN_TOKEN` must be off; `STORAGE_PROVIDER=s3` requires
+`S3_BUCKET` (no silent local-disk fallback); `STRIPE_WEBHOOK_SECRET` is required once
+`STRIPE_SECRET_KEY` is set. On Render, an unset `APP_BASE_URL` is adopted from
+`RENDER_EXTERNAL_URL`, and an unset `ALLOWED_ORIGIN` defaults to the same origin. Fix the
+variable the log names and redeploy; do not use `ALLOW_INSECURE_PRODUCTION` outside an emergency.
+
+### Log prefixes to search for in a failed deploy
+
+| Prefix | Emitted when |
 |---|---|
-| `DB_PROVIDER` | must be `mysql` (or `mariadb`) — SQLite is not an approved production database |
-| `MYSQL_HOST` + `MYSQL_PASSWORD` | required (or a single `MYSQL_CONNECTION_STRING`) |
-| `APP_BASE_URL` | a public **https** URL, not loopback |
-| `ALLOWED_ORIGIN` | an explicit origin, never `*` |
-| `CREDENTIAL_ENCRYPTION_KEY` | required — encrypts identity documents and credentials at rest |
+| `[config]` | A hard refusal (`Refusing to open database:` / `Refusing to start:`) — exit 78 |
+| `[config:warn]` / `[config:error]` / `[config:info]` | The full configuration report (System-check shows the same items) |
+| `[db] refusing to start` | The database could not be opened — exit 75 |
+| `[migrate] refusing to start` | Schema compatibility (exit 75) or migration failure (exit 70) |
+| `[boot]` | Normal startup decisions (provider, adopted URLs, detected `/data` disk) |
 
-Conditional blockers: `STRIPE_WEBHOOK_SECRET` once `STRIPE_SECRET_KEY` is set; `S3_BUCKET` when
-`STORAGE_PROVIDER=s3`; `ENABLE_LEGACY_ADMIN_TOKEN` must not be `true`.
+### Encryption key — preserve it
 
-**Exit codes** (visible in the Render deploy log / `docker inspect`):
+`CREDENTIAL_ENCRYPTION_KEY` encrypts stored identity documents and displayable credentials at
+rest. `render.yaml` generates it once at service creation (`generateValue: true`) and never
+overwrites an existing value — an existing service keeps the key its data was encrypted under.
+**Losing or replacing the key orphans everything encrypted with it**; rotating to a
+vault-managed key means setting the new value explicitly *and* re-encrypting existing artefacts.
+On the legacy persistent-disk posture with no explicit key, a derived key is used and the gap is
+warned about — set a dedicated key when you can, but note the derived key keeps decrypting the
+artefacts it originally encrypted (a generated replacement would not).
 
-| Code | Meaning | What to do |
-|---|---|---|
-| **78** | `EX_CONFIG` — a required variable is missing or unsafe | set the named variable, redeploy |
-| **75** | `EX_TEMPFAIL` — the database could not be opened, or the schema is newer than this build | check MySQL reachability/credentials/TLS, or deploy the matching build |
-| **70** | `EX_SOFTWARE` — schema migration failed | read the `[migrate]` line; do not retry blindly |
+### Render first provision
 
-> On Render, the values above marked `sync: false` in `render.yaml` are **blank until you fill them
-> in** (Settings → Environment). A brand-new service therefore fails its first deploy by design
-> until they are set — that is the guard rail working, not a build error. `CREDENTIAL_ENCRYPTION_KEY`
-> is generated automatically at provision time; the rest are yours to supply.
-
-Fix the variable it names and redeploy; do not use `ALLOW_INSECURE_PRODUCTION` outside of an
-emergency (it downgrades every blocker above to a warning and boots anyway).
+The Blueprint (`render.yaml`) sets `DB_PROVIDER=mysql` and concrete
+`APP_BASE_URL`/`ALLOWED_ORIGIN` values derived from the service name, and generates
+`CREDENTIAL_ENCRYPTION_KEY`. The `sync: false` variables (`MYSQL_HOST`, `MYSQL_USER`,
+`MYSQL_PASSWORD`, `ADMIN_OWNER_*`, Stripe/email) are **blank until you fill them in** on
+Settings → Environment — until the MySQL ones are set, every deploy of a new service exits 75/78
+at the health check *by design*. Set them, then Manual Deploy.
 
 ## After first login — 3-minute checklist
 

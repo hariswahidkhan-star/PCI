@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 // Admin Console → SEO. One section, four tabs: Overview (health), Page SEO (per-page fields +
 // issue flags; saves through the existing pages PATCH), Redirects (managed 301s, single-hop
@@ -33,11 +34,11 @@ const TABS = ['Overview', 'Page SEO', 'Redirects', 'Search engines', 'Audit'] as
 export default function Seo() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Overview')
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>SEO</h1>
-        <p className="muted">Search visibility for the public website — metadata health, canonical URLs, managed redirects and a practical site audit. Content itself is edited under Pages &amp; content.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="SEO"
+        subtitle="Search visibility for the public website — metadata health, canonical URLs, managed redirects and a practical site audit. Content itself is edited under Pages & content."
+      />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => (
           <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>

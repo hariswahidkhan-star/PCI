@@ -10,11 +10,53 @@ CREATE TABLE IF NOT EXISTS users (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(500) UNIQUE NOT NULL,
   first_name TEXT, last_name TEXT,
-  registration_no TEXT,
+  registration_no VARCHAR(32),              -- the canonical public PCI Student Number; issued by Core/StudentNumbers.cs only
+  registration_no_issued_at TEXT,
   password_hash TEXT,                       -- set by user via secure link; never an emailed plain password
   role TEXT NOT NULL DEFAULT ('student'),
   status TEXT NOT NULL DEFAULT ('pending'),   -- pending | active | deactivated
   created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')), updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+
+-- The PCI Student Number reservation and audit ledger. NOT a second identity authority and NOT a
+-- profile: users.registration_no stays the compatibility projection every reader already uses. This
+-- table exists so a number is permanently reserved — after a merge, a retirement or an erasure the
+-- value is still here and can never be handed to a different person.
+CREATE TABLE IF NOT EXISTS pci_student_number_registry (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  student_number VARCHAR(32) NOT NULL,
+  format_version VARCHAR(16) NOT NULL DEFAULT 'legacy_v1',
+  original_user_id BIGINT NOT NULL,        -- the canonical user it was first issued to; never rewritten
+  resolves_to_user_id BIGINT,              -- current canonical owner after an approved merge
+  state VARCHAR(16) NOT NULL DEFAULT 'issued',   -- issued | merged | retired | quarantined
+  merged_into_student_number VARCHAR(32),
+  issued_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  changed_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  reason_code VARCHAR(48),
+  changed_by_admin_id BIGINT,
+  correlation_id VARCHAR(64),
+  row_version BIGINT NOT NULL DEFAULT 1
+);
+
+-- Maker-checker duplicate-account merges (spec §4.11). One admin holding id_merge_request CREATES
+-- a request; a DIFFERENT admin holding id_merge_approve decides it — the maker can never approve
+-- their own request. The row is also the immutable execution record: before/after JSON snapshots
+-- of both accounts' affected-row counts, so the merge can be audited without re-deriving anything.
+CREATE TABLE IF NOT EXISTS pci_identity_merges (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  source_user_id BIGINT NOT NULL,          -- the account absorbed (the loser)
+  target_user_id BIGINT NOT NULL,          -- the account that survives, keeping its Student Number
+  reason TEXT,
+  status VARCHAR(16) NOT NULL DEFAULT 'pending',   -- pending | approved | rejected
+  requested_by BIGINT NOT NULL,            -- admin who created the request (the maker)
+  requested_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  decided_by BIGINT,                       -- admin who approved/rejected (the checker; never the maker on approve)
+  decided_at TEXT,
+  decision_note TEXT,
+  before_json TEXT,                         -- pre-merge snapshot: key fields + per-table counts, both users
+  after_json TEXT,                          -- post-merge snapshot of the same shape
+  correlation_id VARCHAR(64),
+  row_version BIGINT NOT NULL DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS enrollment_sessions (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -818,9 +860,15 @@ CREATE TABLE IF NOT EXISTS cpd_entries (
   user_id BIGINT NOT NULL, activity_date TEXT, category TEXT,
   hours DOUBLE DEFAULT 0, description TEXT,
   evidence_name TEXT, evidence_data TEXT, admin_note TEXT, reviewed_by BIGINT, reviewed_at TEXT,
-  status TEXT DEFAULT ('recorded'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+  status TEXT DEFAULT ('recorded'), created_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s')),
+  -- The event that earned this credit. Carrying the source here is what makes CPD exactly-once:
+  -- the unique index below means a retry, a crash between the attendance flip and the credit, or a
+  -- double scan can only ever produce ONE credit per (event, attendee). Manual entries hold NULL
+  -- and are exempt — a member may legitimately record many unrelated activities.
+  source_event_id BIGINT
 );
 CREATE INDEX IF NOT EXISTS ix_cpd_user ON cpd_entries(user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_cpd_event_user ON cpd_entries(source_event_id, user_id);
 
 -- ===== panel: security, messages, enrollment resume =====
 CREATE TABLE IF NOT EXISTS login_events (

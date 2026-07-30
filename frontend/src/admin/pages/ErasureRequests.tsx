@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAdminQuery, runMutation } from '../hooks'
 import { adminApi } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 // GDPR right-to-erasure queue. A student's "delete my data" request lands here with a 30-day due date.
@@ -59,15 +60,11 @@ export default function ErasureRequests() {
             : <Badge tone="warn">Pending</Badge>
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Data erasure requests</h1>
-        <p className="muted small" style={{ margin: 0 }}>
-          GDPR right-to-erasure. Each request has a 30-day fulfilment window. Completing a request anonymises the
-          member's personal data; records the institute must retain (payments, issued credentials) are kept in
-          de-identified form.
-        </p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Data erasure requests"
+        subtitle="GDPR right-to-erasure. Each request has a 30-day fulfilment window. Completing a request anonymises the member's personal data; records the institute must retain (payments, issued credentials) are kept in de-identified form."
+      />
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap', marginBottom: '.6rem' }}>

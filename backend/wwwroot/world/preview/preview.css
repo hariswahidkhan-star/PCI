@@ -1,0 +1,199 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Tokens taken from the PCI World codebase, not invented:
+     frontend/src/world/world.css  → --ink --ivory --slate --gilt --crimson --line
+     backend/Core/WorldPages.cs    → navy #0A101C / #0E1525, gilt #C8A24B, red #C13329
+   The project's own body face is Georgia, so reading surfaces stay serif and only
+   the chrome, labels and figures switch to a grotesque. Semantic colour (held /
+   published / refused) is deliberately separate from the gilt accent.
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  --navy: #0a101c;
+  --navy-2: #0e1525;
+  --navy-3: #16203354;
+  --paper: #faf7f0;
+  --card: #ffffff;
+  --ink: #14181d;
+  --slate: #5a6472;
+  --line: #e5dfd2;
+  --gilt: #c8a24b;
+  --gilt-deep: #9e7833;
+  --crimson: #c13329;
+
+  --held-bg: #fdf3e3;      --held-ink: #6b3f00;
+  --live-bg: #eef5ea;      --live-ink: #24451c;
+  --stop-bg: #fdeaea;      --stop-ink: #8a1c1c;
+
+  --rail-w: 274px;
+  --serif: Iowan Old Style, Charter, Georgia, "Times New Roman", serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #10151d; --card: #171d27; --ink: #e9e5db; --slate: #9aa4b2;
+    --line: #2b3441; --gilt: #d7b467; --gilt-deep: #c8a24b; --crimson: #e05a4f;
+    --held-bg: #2e2312; --held-ink: #f0cf95;
+    --live-bg: #17281a; --live-ink: #a9d6ad;
+    --stop-bg: #2e1717; --stop-ink: #f0a9a3;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10151d; --card: #171d27; --ink: #e9e5db; --slate: #9aa4b2;
+  --line: #2b3441; --gilt: #d7b467; --gilt-deep: #c8a24b; --crimson: #e05a4f;
+  --held-bg: #2e2312; --held-ink: #f0cf95;
+  --live-bg: #17281a; --live-ink: #a9d6ad;
+  --stop-bg: #2e1717; --stop-ink: #f0a9a3;
+}
+:root[data-theme="light"] {
+  --paper: #faf7f0; --card: #ffffff; --ink: #14181d; --slate: #5a6472;
+  --line: #e5dfd2; --gilt: #c8a24b; --gilt-deep: #9e7833; --crimson: #c13329;
+  --held-bg: #fdf3e3; --held-ink: #6b3f00;
+  --live-bg: #eef5ea; --live-ink: #24451c;
+  --stop-bg: #fdeaea; --stop-ink: #8a1c1c;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink);
+       font: 16px/1.6 var(--serif); -webkit-font-smoothing: antialiased; }
+
+/* ── Shell ───────────────────────────────────────────────────────────────── */
+.wrap { display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr); min-height: 100vh; }
+
+.rail { background: var(--navy); color: #cbd5e1; padding: 22px 0 40px;
+        border-right: 1px solid #000; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.rail-brand { padding: 0 20px 16px; border-bottom: 1px solid #ffffff1a; }
+.rail-brand b { font: 600 20px/1.2 var(--sans); color: #fff; letter-spacing: .01em; display: block; }
+.rail-brand span { font: 12px/1.5 var(--sans); color: #7c8ca0; display: block; margin-top: 4px; }
+.rail-note { margin: 14px 14px 6px; padding: 10px 12px; border-left: 3px solid var(--gilt);
+             background: #ffffff0d; font: 12px/1.5 var(--sans); color: #cbd5e1; }
+.rail h3 { font: 600 11px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
+           color: #7c8ca0; margin: 20px 0 8px; padding: 0 20px; }
+.rail button { display: block; width: 100%; text-align: left; background: none; border: 0;
+               color: #cbd5e1; font: 14px/1.4 var(--sans); padding: 8px 20px; cursor: pointer;
+               border-left: 3px solid transparent; }
+.rail button:hover { color: #fff; background: #ffffff0d; }
+.rail button[aria-current="true"] { color: #fff; background: #ffffff14;
+                                    border-left-color: var(--crimson); font-weight: 600; }
+.rail button small { display: block; color: #7c8ca0; font-size: 11.5px; margin-top: 2px; }
+.rail button[aria-current="true"] small { color: #94a3b8; }
+
+.stage { padding: 0 0 80px; min-width: 0; }
+
+/* ── Surface header + gate strip ─────────────────────────────────────────── */
+.shead { padding: 26px 40px 18px; border-bottom: 1px solid var(--line); background: var(--card); }
+.shead .kicker { font: 600 11px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase;
+                 color: var(--crimson); margin: 0 0 8px; }
+.shead h1 { font: 400 28px/1.2 var(--serif); margin: 0 0 6px; text-wrap: balance; }
+.shead .path { font: 13px/1.4 var(--mono); color: var(--slate); }
+
+.gate { display: flex; flex-wrap: wrap; gap: 10px 26px; padding: 12px 40px;
+        background: var(--held-bg); color: var(--held-ink); border-bottom: 1px solid var(--line);
+        font: 13px/1.5 var(--sans); }
+.gate b { font-weight: 600; }
+.gate .g { display: flex; gap: 7px; align-items: baseline; }
+.gate .g::before { content: "•"; color: var(--gilt-deep); }
+
+.body { padding: 28px 40px; max-width: 1080px; }
+.lede { font: 17px/1.6 var(--serif); color: var(--ink); max-width: 62ch; margin: 0 0 22px; }
+
+/* ── Generic UI furniture ────────────────────────────────────────────────── */
+.card2 { background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+         padding: 18px 20px; margin: 0 0 14px; }
+.card2 h2 { font: 600 16px/1.3 var(--sans); margin: 0 0 10px; }
+.card2 h3 { font: 600 14px/1.3 var(--sans); margin: 0 0 6px; }
+.muted { color: var(--slate); font-size: 14px; }
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows > li { border-top: 1px solid var(--line); padding: 14px 0; }
+.rows > li:first-child { border-top: 0; }
+
+.pill { display: inline-block; font: 600 11.5px/1 var(--sans); letter-spacing: .06em;
+        text-transform: uppercase; padding: 5px 9px; border-radius: 3px; vertical-align: 2px; }
+.pill.live { background: var(--live-bg); color: var(--live-ink); }
+.pill.held { background: var(--held-bg); color: var(--held-ink); }
+.pill.stop { background: var(--stop-bg); color: var(--stop-ink); }
+.pill.gilt { background: #c8a24b26; color: var(--gilt-deep); }
+
+.btn { font: 500 14px/1 var(--sans); padding: 10px 16px; border-radius: 4px; cursor: pointer;
+       background: var(--ink); color: var(--paper); border: 1px solid var(--ink); }
+.btn:hover { opacity: .88; }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--slate); opacity: 1; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btnrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--crimson); outline-offset: 2px; }
+
+label { display: block; font: 500 13px/1.4 var(--sans); color: var(--slate); margin: 12px 0 4px; }
+input[type=text], input[type=email], input[type=password], textarea, select {
+  width: 100%; font: 15px/1.5 var(--serif); color: var(--ink); background: var(--card);
+  border: 1px solid var(--line); border-radius: 4px; padding: 9px 11px; }
+textarea { min-height: 108px; resize: vertical; }
+.help { font: 13px/1.5 var(--sans); color: var(--slate); margin: 5px 0 0; }
+
+.notice { padding: 11px 14px; border-radius: 5px; border-left: 4px solid; margin: 14px 0;
+          font: 14.5px/1.55 var(--sans); }
+.notice.held { background: var(--held-bg); color: var(--held-ink); border-color: var(--held-ink); }
+.notice.live { background: var(--live-bg); color: var(--live-ink); border-color: var(--live-ink); }
+.notice.stop { background: var(--stop-bg); color: var(--stop-ink); border-color: var(--stop-ink); }
+
+.num { font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; }
+
+/* ── Web-page mock chrome (for the server-rendered surfaces) ─────────────── */
+.mock { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card);
+        box-shadow: 0 1px 2px #14181d0f, 0 8px 24px #14181d0a; }
+.mock-bar { background: var(--navy-2); padding: 9px 14px; display: flex; gap: 10px; align-items: center; }
+.mock-bar i { width: 9px; height: 9px; border-radius: 50%; background: #ffffff2e; display: block; }
+.mock-url { flex: 1; font: 12px/1 var(--mono); color: #94a3b8; background: #ffffff0f;
+            padding: 6px 10px; border-radius: 3px; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap; }
+.mock-nav { background: var(--navy); color: #cbd5e1; padding: 13px 20px; display: flex;
+            gap: 18px; align-items: baseline; flex-wrap: wrap; font: 13.5px/1 var(--sans); }
+.mock-nav .wm { font: 600 16px/1 var(--sans); color: #fff; margin-right: 6px; }
+.mock-nav a { color: #cbd5e1; text-decoration: none; }
+.mock-nav a.on { color: #fff; font-weight: 600; border-bottom: 2px solid var(--crimson); padding-bottom: 3px; }
+.mock-nav a.new { color: var(--gilt); }
+.mock-body { padding: 26px 24px; }
+.mock-body h1 { font: 400 26px/1.25 var(--serif); margin: 0 0 12px; text-wrap: balance; }
+.mock-body h2 { font: 400 20px/1.3 var(--serif); margin: 0 0 8px; }
+.crumbs { font: 13px/1.4 var(--sans); color: var(--slate); margin: 0 0 14px; }
+.crumbs a { color: var(--slate); }
+
+/* ── Chat transcript ─────────────────────────────────────────────────────── */
+.chat { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.chat li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: baseline; }
+.chat .who { font: 600 13.5px/1.6 var(--sans); color: var(--gilt-deep); white-space: nowrap; }
+.chat .msg { margin: 0; }
+.chat li.pending .msg { opacity: .68; }
+
+/* ── Data table ──────────────────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; font: 14px/1.5 var(--sans); }
+th { text-align: left; font-weight: 600; font-size: 12px; letter-spacing: .06em;
+     text-transform: uppercase; color: var(--slate); padding: 0 12px 8px 0;
+     border-bottom: 1px solid var(--line); }
+td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+
+/* ── Footnote / honesty block ────────────────────────────────────────────── */
+.foot { margin: 26px 0 0; padding: 16px 18px; border: 1px dashed var(--line); border-radius: 6px;
+        background: var(--card); font: 14px/1.6 var(--sans); color: var(--slate); }
+.foot b { color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+@media (max-width: 900px) {
+  .wrap { grid-template-columns: 1fr; }
+  .rail { position: static; height: auto; }
+  .shead, .gate, .body { padding-left: 18px; padding-right: 18px; }
+}
+
+/* ── The endpoint table: what a developer needs from each screen ──────────────────────────── */
+.apis { margin: 26px 0 0; }
+.apis h2 { font: 600 13px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase;
+           color: var(--slate); margin: 0 0 10px; }
+.apis code { font: 12.5px/1.6 var(--mono); }
+.rail-foot { margin: 26px 20px 0; font: 13px/1.5 var(--sans); }
+.rail-foot a { color: var(--gilt); text-decoration: none; }
+.rail-foot a:hover { text-decoration: underline; }

@@ -116,7 +116,17 @@ public sealed class Db
         };
         // SSL: default Preferred; MYSQL_SSL=false disables (local/dev), MYSQL_SSL=required enforces (managed prod).
         var ssl = Environment.GetEnvironmentVariable("MYSQL_SSL")?.Trim().ToLowerInvariant();
-        if (ssl == "false") b.SslMode = MySqlSslMode.Disabled;
+        if (ssl == "false")
+        {
+            b.SslMode = MySqlSslMode.Disabled;
+            // MySQL 8's default caching_sha2_password auth needs either TLS or the server's RSA
+            // public key for the password exchange. With TLS explicitly off, the connector must be
+            // allowed to fetch that key or EVERY connection fails ("Authentication method
+            // 'caching_sha2_password' failed"), making the documented MYSQL_SSL=false path unusable
+            // against MySQL 8.x. Key retrieval happens over the same untrusted channel the operator
+            // already chose by disabling TLS — it does not weaken the MYSQL_SSL=required posture.
+            b.AllowPublicKeyRetrieval = true;
+        }
         else if (ssl is "required" or "true") b.SslMode = MySqlSslMode.Required;
         return b.ConnectionString;
     }

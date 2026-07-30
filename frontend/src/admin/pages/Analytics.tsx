@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { Card, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 import { adminApi } from '../api'
 
 // Admin Console → Analytics: first-party, privacy-first reporting (cookieless server-side events).
@@ -37,12 +38,12 @@ export default function Analytics() {
   )
 
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
+    <div className="page">
       <div className="spread" style={{ flexWrap: 'wrap', gap: '.6rem' }}>
-        <div>
-          <h1>Analytics</h1>
-          <p className="muted">First-party, privacy-first: server-side events, no cookies, no raw IP addresses. Conversions carry first-touch campaign attribution.</p>
-        </div>
+        <PageHeader
+          title="Analytics"
+          subtitle="First-party, privacy-first: server-side events, no cookies, no raw IP addresses. Conversions carry first-touch campaign attribution."
+        />
         <div className="row" style={{ gap: '.5rem' }}>
           <select value={days} onChange={(e) => setDays(Number(e.target.value))}>
             <option value={7}>Last 7 days</option><option value={30}>Last 30 days</option>

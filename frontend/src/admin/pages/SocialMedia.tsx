@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { ApiError } from '../../api/client'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
+import { PageHeader } from '../../components/premium'
 
 // Admin Console → Social media. The database-backed configuration surface for every public
 // social-media profile (rendered server-side into the footer) and every page-sharing button. Nothing
@@ -57,11 +58,11 @@ export default function SocialMedia() {
   if (error) return <ErrorNote>{error}</ErrorNote>
   if (!data) return null
   return (
-    <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-      <div>
-        <h1>Social media</h1>
-        <p className="muted">Configure the Institute's social-media profiles and the page-sharing buttons for public content. Profile links appear in the website footer; changes go live immediately. Nothing is hardcoded — the database is the single source of truth.</p>
-      </div>
+    <div className="page">
+      <PageHeader
+        title="Social media"
+        subtitle="Configure the Institute's social-media profiles and the page-sharing buttons for public content. Profile links appear in the website footer; changes go live immediately. Nothing is hardcoded — the database is the single source of truth."
+      />
       <MasterBar data={data} onSaved={refetch} />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
         {TABS.map((t) => (

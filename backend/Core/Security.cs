@@ -295,6 +295,15 @@ public static class Rbac
         // override, so "who can move money / act as a student / mint test accounts" is always an
         // explicit decision, never a side-effect of a job title.
         ["operations"] = new[]{ "finance","impersonate","test_users" },
+        // Canonical identity integrity: PCI Student Number health, backfill, and duplicate-account
+        // merges. Deliberately NOT in any named role bundle (owner excepted) for the same reason as
+        // 'operations' — who may reshape a person's identity is always an explicit grant, never a
+        // side-effect of a job title. Merge is split into request and approve so maker-checker is
+        // enforced by the permission model itself, not merely by a convention in the handler: an
+        // admin holding only id_merge_request cannot approve anything, including their own request.
+        // There is deliberately no "issue" permission — a number is issued by the creating
+        // transaction or by an audited backfill, and never typed in by hand.
+        ["identity"] = new[]{ "id_read","id_backfill","id_merge_request","id_merge_approve","id_audit" },
         // Customer-service portal: 'inbox' = work the unified queue (chats, tickets, enquiries,
         // error references); 'support_admin' = manage templates, SLA targets and assignment rules.
         ["support"] = new[]{ "inbox","support_admin","comms" },
@@ -315,6 +324,11 @@ public static class Rbac
         // to be a different PERSON from the preparer, so holding all three still cannot self-approve.
         // Like the operations bundle these are owner + explicit-grant only — never implied by a job title.
         ["partner_finance"] = new[]{ "pf_view","pf_agreements","pf_prepare","pf_approve","pf_pay","pf_dispute" },
+        // Member events & webinars (ID-11): granular per-action permissions so viewing the calendar,
+        // creating/editing events, working the door list and marking attendance (which credits CPD)
+        // can be split across operators. The events gate still accepts the legacy broad 'content'
+        // permission during migration, so no existing operator is locked out; new grants use these.
+        ["events"] = new[]{ "events_read","events_manage","events_checkin","events_attendance" },
     };
 
     public static string[] AllSections => Sections.Values.SelectMany(x => x).ToArray();
