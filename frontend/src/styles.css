@@ -414,6 +414,34 @@ body::before {
 .member-chip.on .mc-dot { background: #36d07f; box-shadow: 0 0 0 4px rgba(54, 208, 127, .18); animation: mc-pulse 2.6s ease-in-out infinite; }
 @keyframes mc-pulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(54, 208, 127, .14); } 50% { box-shadow: 0 0 0 6px rgba(54, 208, 127, .08); } }
 
+/* Bright sidebar (student portal): the classic panel's light chrome — white plate,
+   hairline border, brand-tint active state — instead of the navy plate the admin
+   console keeps. Same layout metrics; only the surface changes. */
+.sidebar--bright {
+  color: var(--slate);
+  background: #fff;
+  border-right: 1px solid var(--line);
+  scrollbar-color: #c4ccdc transparent;
+}
+.sidebar--bright::-webkit-scrollbar-thumb { background: #c4ccdc; }
+.sidebar--bright::before { background: repeating-radial-gradient(circle, transparent 0 38px, rgba(29, 78, 216, .06) 38px 39px, transparent 39px 77px); }
+.sidebar--bright .brand { color: var(--ink); }
+.sidebar--bright .nav a { color: var(--slate); font-weight: 600; }
+.sidebar--bright .nav a:hover { background: var(--canvas); color: var(--ink); }
+.sidebar--bright .nav a.active {
+  background: var(--brand-050); color: var(--brand-600);
+  box-shadow: inset 2.5px 0 0 var(--brand), 0 6px 18px -12px rgba(29, 78, 216, .28);
+}
+.sidebar--bright .nav-label { color: var(--mist); }
+.sidebar--bright .nav-label::before { background: var(--brand); }
+.sidebar--bright .btn.ghost { color: var(--mist); }
+.sidebar--bright .btn.ghost:hover { background: var(--canvas); color: var(--ink); }
+.sidebar--bright :focus-visible { outline-color: var(--brand); }
+.sidebar--bright .member-chip { border-color: var(--line); background: #f8fafd; }
+.sidebar--bright .member-chip strong { color: var(--ink); }
+.sidebar--bright .member-chip em { color: var(--mist); }
+.sidebar--bright .mc-dot { background: #94a3b8; }
+
 /* topbar: crumb + page title */
 .tb-crumb { font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
 .tb-title { font-size: 1.02rem; letter-spacing: -.01em; }
