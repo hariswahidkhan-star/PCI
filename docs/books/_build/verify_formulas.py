@@ -295,7 +295,7 @@ check("EX 4.4 saving", (D(3000000) + D(250000) * af(D("0.09"), 4)) / af(D("0.09"
       - (D(4200000) + D(150000) * af(D("0.09"), 6)) / af(D("0.09"), 6), D("89743"), tol=D("1"))
 check("EX 4.5 greedy set", D("2.6") + D("1.84") + D("1.4"), D("5.84"))
 check("EX 4.5 optimal set", D("2.6") + D("3.3"), D("5.9"))
-check("4.A.3 EAV invariant", ((D(8900000) * AF15 - 60000000) / AF15 * AF15), D(8900000) * AF15 - 60000000, tol=D("0.01"))
+check("4.A.5 EAV invariant", ((D(8900000) * AF15 - 60000000) / AF15 * AF15), D(8900000) * AF15 - 60000000, tol=D("0.01"))
 
 # ---------- PFL-AI Domain 1 — Foundations ----------
 section("PFL-AI", 1)
@@ -986,7 +986,9 @@ for _mod_path in _modules:
     # Attribute the module's assertions to ITS domain, not to whatever section ran last — otherwise
     # every module's checks land on the final domain of this file, which is how PML-AI Domain 4 came
     # to be credited with 6,595 of them.
-    _mm = re.match(r"(pml|pfl)_d(\d+)(_ext)?\.py$", _mod_path.name)
+    # Any `_suffix` is accepted, not just `_ext`, so two authors working the same domain each add
+    # their own file (`pfl_d05_mcq.py`, `pfl_d05_cases.py`) instead of contending for one.
+    _mm = re.match(r"(pml|pfl)_d(\d+)(_[a-z0-9_]+)?\.py$", _mod_path.name)
     section(("PML-AI" if _mm.group(1) == "pml" else "PFL-AI"), int(_mm.group(2))) if _mm \
         else section(None, None)
     _spec = importlib.util.spec_from_file_location(f"pci_checks_{_mod_path.stem}", _mod_path)
