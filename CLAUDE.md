@@ -394,5 +394,13 @@ reverse proxy forwarding `X-Forwarded-Proto`. Full instructions in `DEPLOY.md` a
 | React apps | `frontend/README.md`, `frontend/src/` |
 | Secure-exam client | `secureexam/README-SECUREEXAM.md`, `secureexam/build.ps1` |
 | CI | `.github/workflows/build.yml` |
+| Turning PCI World features on | Admin console → **PCI World → Launch** (owner only); `backend/Endpoints/WorldLaunch.cs` |
 | Deep background / history | `docs/PCI_DEVELOPER_GUIDE.md`, `docs/*Changelog*.md` (archive) |
+
+> **PCI World ships switched off.** Community rooms, the forum, careers, the contributor desk and
+> room images each sit behind a `site_settings` flag that seeds `'0'`, so a deployment is never a
+> launch. Their routes returning 404 on a fresh install is the design working, not a fault — switch
+> them on from the launch board above. Three of them refuse to move until a prerequisite is recorded
+> (a moderation provider, a candidate privacy notice, contributor terms), and that refusal is
+> enforced in the endpoint, not the UI.
 ```

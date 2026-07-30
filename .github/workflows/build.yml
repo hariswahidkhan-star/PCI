@@ -132,6 +132,15 @@ jobs:
         # control and does nothing. These tests fail if the cross-namespace check is removed.
         run: python3 tests/contributors_test.py
 
+      - name: PCI World launch board — owner-only, and the image flag will not move on a keystroke
+        # The one screen where a mistake is a launch. Two things it must never become: a way for a
+        # non-owner to switch a feature on, and a general owner-gated settings write (C09 pins that
+        # — it is owner-gated and takes a key/value pair, which is one careless line from writing
+        # any setting at all). C21/C22 are the load-bearing pair: the OWNER is refused the community
+        # image flag while the moderation prerequisite is unrecorded, and the DATABASE is checked,
+        # because the response is the endpoint's own account of what it did.
+        run: python3 tests/world_launch_test.py
+
       - name: Impersonation read-only regression (P0-1 — central fail-closed enforcement)
         run: python3 tests/impersonation_readonly_test.py
 
@@ -247,6 +256,7 @@ jobs:
           python3 tests/forum_test.py
           python3 tests/careers_test.py
           python3 tests/contributors_test.py
+          python3 tests/world_launch_test.py
           python3 tests/founding_test.py
           python3 tests/honorary_test.py
           python3 tests/honorary_application_test.py
