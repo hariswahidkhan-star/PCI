@@ -191,5 +191,27 @@ public static class ForumSchema
         // Off by default, INSERT OR IGNORE so a later boot never overwrites an operator's choice —
         // the same reasoning as every other flag in this increment.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('pciworld_forum_enabled','0')");
+
+        // A STARTING TAXONOMY, because a forum with no categories has no front door. ForumRender
+        // returns null for an empty category list, so /world/forum answered 404 with the flag ON —
+        // indistinguishable, from the operator's side, from the flag not working. Turning the
+        // feature on has to produce the feature.
+        //
+        // These mirror the classic forum's five, so a member moving between the two surfaces finds
+        // the same shelves. They are rows, not constants: rename them, reorder them, add to them or
+        // hide them from the admin console. INSERT OR IGNORE keys on the unique slug, so an edited
+        // title survives every subsequent boot and a category deleted on purpose stays deleted
+        // only until its slug is reused — which is why the slugs here are the ones the product
+        // already uses rather than freshly invented.
+        foreach (var (slug, title, desc, sort) in new[]
+        {
+            ("general",     "General discussion",        "Anything project controls that does not fit the other rooms.", 10),
+            ("exam-prep",   "Exam preparation",          "Study routes, practice questions and what the exams actually ask.", 20),
+            ("domains",     "Body of Knowledge domains", "Cost, schedule, risk, change — the practice areas themselves.", 30),
+            ("ai-controls", "AI in project controls",    "Where the tooling helps, where it misleads, and what to check.", 40),
+            ("careers",     "Careers",                   "Roles, routes into the profession, and what employers look for.", 50),
+        })
+            db.Execute("INSERT OR IGNORE INTO pciworld_forum_categories(slug,title,description,sort) VALUES(?,?,?,?)",
+                       slug, title, desc, sort);
     }
 }

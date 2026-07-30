@@ -19,7 +19,7 @@ WORKDIR /web
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 COPY frontend/ ./
-RUN npm run build && cp dist-admin/admin.html dist-admin/index.html && cp dist-world/world.html dist-world/index.html
+RUN npm run build && cp dist-admin/admin.html dist-admin/index.html && cp dist-world/world.html dist-world/index.html && cp dist-worldadmin/worldadmin.html dist-worldadmin/index.html
 
 # ---- Stage 2: build the .NET backend ----
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -39,6 +39,7 @@ COPY --from=build /app .
 COPY --from=webbuild /web/dist ./wwwroot/app
 COPY --from=webbuild /web/dist-admin ./wwwroot/admin
 COPY --from=webbuild /web/dist-world ./wwwroot/world-app
+COPY --from=webbuild /web/dist-worldadmin ./wwwroot/world-admin-app
 # /data is the persistent mount for evidence/attachment files (and optional local SQLite).
 # Production on Render uses MySQL (DB_PROVIDER=mysql in render.yaml) — DATABASE_FILE below is
 # only adopted when the provider is SQLite/local; it is NOT a production MySQL fail-open.

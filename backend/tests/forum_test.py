@@ -162,10 +162,21 @@ def main():
             " VALUES(?,'spi-recovery',?,1,'open')", (cat, "How do you model SPI recovery?"))
         thread = sql("SELECT id FROM pciworld_forum_threads WHERE slug='spi-recovery'")[0][0]
 
+        # A hidden category exists alongside the open one, so "the list is public" is checked
+        # against something that must NOT appear rather than only against a count. The suite used
+        # to assert exactly one category, which quietly encoded "nothing is seeded"; the forum now
+        # ships a starting taxonomy, and a count assertion would have said the endpoint broke when
+        # what changed was the fixture.
+        sql("INSERT INTO pciworld_forum_categories(slug,title,min_trust_to_post,state)"
+            " VALUES('backstage','Backstage','new','hidden')")
+
         code, cats = js("/api/world/forum/categories")
-        chk("F02 the category list is public", code == 200 and len(cats.get("categories", [])) == 1, str(cats))
+        listed = {c["slug"]: c for c in cats.get("categories", [])}
+        chk("F02 the category list is public and carries the open category",
+            code == 200 and "estimating" in listed, str(cats))
+        chk("F02b and a hidden category is not in it", "backstage" not in listed, str(sorted(listed)))
         chk("F03 and it carries min_trust so a composer can explain itself",
-            cats["categories"][0].get("min_trust") == "new", str(cats))
+            listed.get("estimating", {}).get("min_trust") == "new", str(cats))
 
         # ── Writing needs a Passport session ───────────────────────────────────────────────
         code, _ = js(f"/api/world/forum/threads/{thread}/posts", "POST", {"body": "anonymous attempt"})

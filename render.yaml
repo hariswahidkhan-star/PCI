@@ -61,6 +61,15 @@ services:
       # on one rather than quietly serving a database that is about to vanish.
       - key: DATABASE_FILE
         value: /data/pci.db
+      # Belt-and-braces. The preflight already accepts a SQLite file on a writable /data with no
+      # flag at all; this keeps the boot green if the disk is still attaching when the write probe
+      # runs. It waives the MySQL requirement and nothing else.
+      #
+      # NOTE, because the combination is a trap: this waiver does NOT rescue DB_PROVIDER=mysql with
+      # blank credentials. Program.cs refuses that on its own branch — "MySQL is selected but
+      # connection settings are incomplete" — and only ALLOW_INSECURE_PRODUCTION (which disables
+      # every check) bypasses it. Selecting MySQL and waiving SQLite still exits 78 on every deploy.
+      # The provider above must actually be sqlite for this posture to boot.
       - key: ALLOW_SQLITE_IN_PRODUCTION
         value: "true"
       # ---- data-at-rest encryption (REQUIRED in production) ----

@@ -57,10 +57,13 @@ import Team from './pages/Team'
 import Settings from './pages/Settings'
 import Notifications from './pages/Notifications'
 import SystemCheck from './pages/SystemCheck'
+import WorldLaunch from './pages/WorldLaunch'
 import IdentityMerges from './pages/IdentityMerges'
 import Exams from './pages/Exams'
 import Proctoring from './pages/Proctoring'
 import ExamExceptions from './pages/ExamExceptions'
+import Identity from './pages/Identity'
+import EventStaffApp from '../eventstaff/EventStaffApp'
 import CrudSection from './CrudSection'
 import { CRUD_SECTIONS } from './crudConfigs'
 import { ErrorNote } from '../components/ui'
@@ -148,6 +151,12 @@ export default function AdminApp() {
         <Route path="reports" element={<Perm section="reports"><Reports /></Perm>} />
         <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />
         <Route path="audit" element={<Perm section="audit"><Audit /></Perm>} />
+        <Route path="identity" element={<AnyPerm sections={['id_read', 'id_backfill', 'id_merge_request', 'id_merge_approve', 'id_audit']}><Identity /></AnyPerm>} />
+        {/* The staff scanner lives in the PCI Global operations realm per spec §7A.8 — an admin
+            surface, never a public page. Gated on the granular events permissions ('content' kept
+            as the same migration fallback the backend accepts). The admission backend is not
+            built yet; the app renders its designed not-enabled state until it exists. */}
+        <Route path="event-scanner" element={<AnyPerm sections={['events_checkin', 'events_read', 'content']}><EventStaffApp /></AnyPerm>} />
         <Route path="exams" element={<Perm section="exams"><Exams /></Perm>} />
         <Route path="proctoring" element={<Perm section="proctoring"><Proctoring /></Perm>} />
         <Route path="exam-exceptions" element={<Perm section="ex_view"><ExamExceptions /></Perm>} />
@@ -156,6 +165,7 @@ export default function AdminApp() {
         <Route path="notifications" element={<Perm section="content"><Notifications /></Perm>} />
         <Route path="readiness" element={<OwnerOnly><SystemCheck /></OwnerOnly>} />
         <Route path="team" element={<OwnerOnly><Team /></OwnerOnly>} />
+        <Route path="world-launch" element={<OwnerOnly><WorldLaunch /></OwnerOnly>} />
         {CRUD_SECTIONS.map((c) => (
           <Route key={c.path} path={c.path} element={<Perm section={c.perm}><CrudSection config={c} /></Perm>} />
         ))}

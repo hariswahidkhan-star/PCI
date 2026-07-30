@@ -216,9 +216,30 @@ Render env change (managed MySQL, or ALLOW_SQLITE_IN_PRODUCTION=true) that only 
 
 CI gates 17 logic suites.
 
+## 4g. Frontend wave (user-directed: UI first, backend/SQL wiring deferred)
+
+Three surfaces, one typed seam module each so the later backend wiring is one file per screen:
+
+- **Identity admin console** (`admin/pages/Identity.tsx`) — wired to the LIVE /api/admin/identity/*
+  endpoints: health counts, backfill preview (writes-nothing banner) and run behind a typed
+  "run backfill" confirmation, reconciliation, merge queue with maker-checker rendered honestly.
+  No input anywhere can set a Student Number — the page says so. 21 tests.
+- **Event passes wallet + staff scanner** (`pages/EventPasses.tsx`, `src/eventstaff/`) — §7A UI
+  against typed contracts; backend absent by design, every screen renders a designed
+  "not yet enabled" state on 404/501, fixtures mode for review. The real seam has NO client-side
+  admit path — decisions are rendered, never made. Scanner unmounted pending an operator-auth
+  decision (README records it). 35 tests.
+- **World share admin console + crop previews** (`src/worldadmin/`, ShareSheet Preview tab) —
+  §10.2 console unmounted (the World admin realm is server-rendered and separate — discovery
+  documented), template editor with bounded placeholder whitelist proven against a hostile name,
+  capability panel importing the participant sheet's honesty matrix. 22 tests.
+
+Combined verification: tsc exit 0, vitest 631/631 (83 files), all three bundles build.
+
 ## 5. Next, in order
 
-1. Acceptance sweep against spec §20 → `IDENTITY_ACCEPTANCE.md`: dry-run counts, quarantine duplicates, resumable batches,
+1. Backend/SQL wiring for the seams above (event admission endpoints, world-admin share endpoints)
+2. Acceptance sweep against spec §20 → `IDENTITY_ACCEPTANCE.md` (done for waves 1–4): dry-run counts, quarantine duplicates, resumable batches,
    reconcile registry against projection, narrow `registration_no` to bounded VARCHAR, add the
    explicit retire transition to `Erasure.cs`, then delete the `/api/me` backstop.
 3. **Phase 3+** — handoff symmetry, shared Passport, verification, events, sharing.

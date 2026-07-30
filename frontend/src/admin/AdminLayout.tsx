@@ -85,12 +85,16 @@ const NAV: NavItem[] = [
   { to: '/marketing', label: 'Marketing dashboard', anyPerm: ['subscribers', 'reports'], group: 'Marketing' },
   { to: '/marketing-ads', label: 'Marketing, Ads & Search Console', perm: 'mkt_view', group: 'Marketing' },
 
+  { to: '/world-launch', label: 'PCI World launch', owner: true, group: 'PCI World' },
+
   { to: '/enquiries', label: 'Enquiries', perm: 'inquiries', group: 'Community' },
   { to: '/submissions', label: 'Form submissions', perm: 'submissions', group: 'Community' },
   { to: '/subscribers', label: 'Newsletter', perm: 'subscribers', group: 'Community' },
 
   { to: '/emails', label: 'Email log', perm: 'emails', group: 'Operations' },
   { to: '/audit', label: 'Audit log', perm: 'audit', group: 'Operations' },
+  { to: '/identity', label: 'Identity & Student Numbers', anyPerm: ['id_read', 'id_backfill', 'id_merge_request', 'id_merge_approve', 'id_audit'], group: 'Operations' },
+  { to: '/event-scanner', label: 'Event check-in scanner', anyPerm: ['events_checkin', 'events_read', 'content'], group: 'Operations' },
   { to: '/notifications', label: 'Notifications', perm: 'content', group: 'Operations' },
   { to: '/readiness', label: 'Readiness', owner: true, group: 'Operations' },
   { to: '/settings', label: 'Settings', anyPerm: ['settings', 'set_web', 'set_sp', 'set_exam'], group: 'Operations' },
@@ -114,6 +118,7 @@ const GROUP_ICONS: Record<string, IconName> = {
   'Integrations': 'link',
   'Marketing': 'megaphone',
   'Community': 'message-circle',
+  'PCI World': 'globe',
   'Operations': 'sliders',
 }
 const groupIcon = (group: string): IconName => GROUP_ICONS[group] ?? 'folder'

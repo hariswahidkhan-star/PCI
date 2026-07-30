@@ -154,6 +154,8 @@ export default function Passport() {
           // server-rendered verification QR, so the sheet deep-links to that block.
           qrHref={`${publishedUrl}#verify`}
           getCaption={async () => (await api<{ caption: string }>('/api/world/me/shares')).caption}
+          // §8.6 crop previews — fed ONLY the public fields the OG metadata itself carries.
+          preview={{ displayName: d.display_name, completedCount: d.completed, industryCount: d.industries }}
         />
       )}
       <PassportCard

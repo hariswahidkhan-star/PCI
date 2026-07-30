@@ -1623,6 +1623,11 @@ PCI.Backend.Endpoints.ForumAdmin.Map(app, db, logFn);                 // PCI Wor
 PCI.Backend.Endpoints.WorldCareers.Map(app, db, logFn);               // PCI World careers: employer tenancy, postings, consented applications (gated on pciworld_careers_enabled, default off)
 PCI.Backend.Endpoints.CareersPublic.Map(app, db, logFn);              // PCI World careers: crawlable public reading — list, job pages, employer profiles (same flag)
 PCI.Backend.Endpoints.WorldContributorsApi.Map(app, db, logFn);       // PCI World contributor publishing: standing grants, manuscripts, editorial thread (gated on pciworld_contributors_enabled, default off)
+// The launch board for every flag above. Owner-only, and it writes ONLY the World flags it names —
+// it is deliberately not a general settings write, which is what an owner-gated key/value POST
+// would otherwise become. Enabling a feature that owes something to a third party (guest images,
+// candidate CVs, contributors' words) refuses until the prerequisite is recorded, server-side.
+PCI.Backend.Endpoints.WorldLaunch.Map(app, db, r => { var a = Auth.AdminFromReq(r, db); return a is not null && a.IsOwner ? a : null; }, logFn);
 app.MapHub<PCI.Backend.Core.CommunityHub>(PCI.Backend.Core.CommunityHub.Path);
 PCI.Backend.Endpoints.WorldAdmin.Map(app, db, logFn);                 // PCI World — SEPARATE admin realm (never linked from PCI admin)
 PCI.Backend.Endpoints.WorldAccount.Map(app, db, logFn);               // PCI World — participant accounts + Passport (practice identity only)

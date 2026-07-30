@@ -9,6 +9,7 @@ obj/
 wwwroot/app/
 wwwroot/admin/
 wwwroot/world-app/
+wwwroot/world-admin-app/
 
 # integration test artifacts
 tests/_integration.db*
@@ -25,6 +26,8 @@ tests/_careers.db*
 tests/_careers_storage/
 tests/_contrib.db*
 tests/_contrib_storage/
+tests/_worldlaunch.db*
+tests/_worldlaunch_storage/
 tests/_impersonation.db*
 tests/_impersonation_storage/
 tests/_impersonation_boot.log
