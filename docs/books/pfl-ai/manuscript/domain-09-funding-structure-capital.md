@@ -1084,24 +1084,27 @@ Shariah is a determination for the relevant supervisory board and is outside thi
 host currency is offered two ways to fund the same 15,000,000: a hard-currency export-credit tranche
 at a materially lower margin and longer tenor, or a local-currency commercial tranche at the market
 margin. The structuring team recommends the export-credit tranche on the strength of its all-in cost
-and tenor. The soundest position is:
+and tenor. The soundest recommendation is:
 - A. accept the recommendation: the all-in cost and the capacity effect both favour the
   export-credit tranche, and cost and capacity are the two tests this Knowledge Area sets
 - B. accept it and rely on the local cost base as a natural hedge, since local costs fall in
   hard-currency terms as the currency weakens
 - C. reject the export-credit tranche: a currency mismatch is unmanageable at any margin
-- D. the comparison is incomplete: the cheaper tranche creates a currency mismatch against
-  host-currency revenue, so the margin saving must be set against the cost of hedging or bearing
-  that exposure — the natural hedge is worth paying for, and its price is exactly the margin
-  forgone ✅
+- D. price the exposure before choosing, and on these facts take the local-currency tranche and pay
+  the margin — unless the tariff can be exchange-rate-indexed, in which case the export-credit
+  tranche is the better answer: borrowing in the currency of revenue is the natural hedge, and its
+  price is exactly the margin forgone ✅
 
 *Rationale:* The cheapest tranche is frequently the one that creates the exposure, and a margin
 saving bought with an unhedged devaluation risk is not a saving (9.3.4). A applies the right two
-tests to the wrong currency. C forgoes a tranche that is perfectly usable where the revenue can be
-indexed or the exposure hedged — Domain 11 (KA 11.3.2) prices both. B is the seductive error: local
-costs do provide a partial offset, and it is far too small, because debt service and hard-currency
-operating costs do not devalue at all — on Kestrel's numbers a **5.06 %** movement breaches the
-covenant even with the whole local cost base offsetting.
+tests to the wrong currency and recommends on cost and tenor alone. C reaches the same instruction
+as the key for the wrong reason and is the closest rival: it is defensible in a market where long
+tenors genuinely cannot be hedged, but it forecloses the indexation remedy — Domain 11 (KA 11.3.2)
+shows an exchange-rate-indexed tariff share lifting the tolerable devaluation from 5.06 % to
+37.17 %, which makes the tranche usable and makes the choice a priced one rather than a
+prohibition. B is the seductive error: local costs do provide a partial offset, and it is far too
+small, because debt service and hard-currency operating costs do not devalue at all — on Kestrel's
+numbers a **5.06 %** movement breaches the covenant even with the whole local cost base offsetting.
 
 **MCQ 9.3-H `[9.3.2 · Comprehension]`** An export credit agency's exposure premium is described as
 "capitalised into the loan". In cash-flow terms that means:
@@ -1455,7 +1458,8 @@ borrowing where 7.1 million exists — misstating both the leverage and the supp
 **MCQ 9.4-G `[9.4.1 · Evaluation]`** A grantor with a fixed fiscal envelope can direct its support at
 a project either as a capital grant reducing the amount to be financed or as a minimum revenue
 guarantee capping the downside on a demand-based revenue line. Its stated objective is to get an
-otherwise unfinanceable project financed at the least fiscal cost. The soundest advice is:
+otherwise unfinanceable project financed at the least fiscal cost. Restated in the terms 9.4.1
+uses, the two professional points that decide the advice are that:
 - A. give the guarantee: no cash leaves the budget, so the fiscal cost is nil
 - B. give whichever the sponsors prefer, since they are the party that must raise the financing
 - C. give the grant, because grants are always cheaper for a grantor than contingent commitments
