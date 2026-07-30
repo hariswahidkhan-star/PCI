@@ -1,21 +1,30 @@
 # Render Blueprint — deploys the whole PCI platform (website + student panel + admin dashboard)
-# as one Docker web service. The DATABASE is MySQL (required); the persistent disk holds only
+# as one Docker web service. The DATABASE is SQLite on the persistent disk; that same disk holds
 # uploaded files (evidence, ID documents, attachments).
 #
 # Use: push this repo to GitHub → Render dashboard → New → Blueprint → select the repo.
 # Render reads this file and provisions everything; you only fill in the env-var values
 # marked sync:false (they are secrets/deployment-specific, never committed).
 #
-# DATABASE (MySQL 8.x / MariaDB 10.11+, InnoDB, utf8mb4): Render does not offer managed MySQL,
-# so use an external managed MySQL (e.g. PlanetScale, Aiven, AWS RDS, DigitalOcean) and set the
-# MYSQL_* values below. SQLite is NOT used in production — the app refuses to boot in Production
-# unless DB_PROVIDER=mysql (there is no silent SQLite fallback). Run the one-time data migration
-# (backend/tools/migrate_sqlite_to_mysql.py) before first cutover; see docs/MYSQL_MIGRATION.md.
+# DATABASE — SQLite at /data/pci.db on the 5 GB persistent disk. This deploys with NO external
+# database service and no credentials to fill in, which is why it is the default here: Render has
+# no managed MySQL, so requiring MySQL meant every deploy failed its health check (exit 78) until
+# somebody provisioned and paid for a database elsewhere. The disk is durable across deploys and
+# restarts, so the database survives; it is NOT durable if the service is deleted, so take backups
+# (DEPLOY.md → “Backups”).
 #
-# EXISTING services deployed on the earlier SQLite-on-persistent-disk posture: set
-# ALLOW_SQLITE_IN_PRODUCTION=true (Settings → Environment) to keep deploying on that interim
-# posture — it waives ONLY the MySQL requirement (the database must live under /data) and keeps
-# every other production check active. See DEPLOY.md “Deploys suddenly failing…”.
+# The app's production preflight accepts this posture on its own terms — a SQLite file on a
+# WRITABLE /data mount is the platform's documented interim deployment and needs no override. The
+# explicit ALLOW_SQLITE_IN_PRODUCTION below is belt-and-braces: it keeps the boot green even if the
+# disk is still attaching when the preflight runs its write probe. Every other production check
+# (HTTPS base URL, explicit CORS origin, at-rest encryption key, legacy-token ban, Stripe webhook
+# secret) stays fully active — this waives the MySQL requirement and nothing else.
+#
+# MOVING TO MySQL later (recommended once traffic or a second instance justifies it): set
+# DB_PROVIDER=mysql plus MYSQL_HOST / MYSQL_USER / MYSQL_PASSWORD / MYSQL_DATABASE / MYSQL_SSL in
+# Settings → Environment, and run the one-time data migration first
+# (backend/tools/migrate_sqlite_to_mysql.py); see docs/MYSQL_MIGRATION.md. DB_PROVIDER=mysql takes
+# precedence over everything below, so the switch is a dashboard change with no edit to this file.
 
 services:
   - type: web
@@ -25,7 +34,7 @@ services:
     healthCheckPath: /api/health
     autoDeploy: true
     disk:
-      name: pci-data          # uploaded files only (the database lives in managed MySQL)
+      name: pci-data          # the SQLite database AND uploaded files — the one durable store
       mountPath: /data
       sizeGB: 5
     envVars:
@@ -41,21 +50,19 @@ services:
         value: "0"
       - key: DOTNET_gcServer
         value: "0"
-      # ---- database: external managed MySQL (required in production) ----
+      # ---- database: SQLite on the persistent disk (no external database needed) ----
+      # Set explicitly rather than omitted: this service may already carry DB_PROVIDER=mysql in its
+      # dashboard environment, and a blueprint only overwrites keys it actually declares.
       - key: DB_PROVIDER
-        value: mysql
-      - key: MYSQL_HOST          # managed MySQL hostname
-        sync: false
-      - key: MYSQL_PORT
-        value: "3306"
-      - key: MYSQL_DATABASE
-        value: pci
-      - key: MYSQL_USER
-        sync: false
-      - key: MYSQL_PASSWORD
-        sync: false
-      - key: MYSQL_SSL           # "required" for managed providers; "false" only for a private-network DB
-        value: required
+        value: sqlite
+      # Must live under the /data mount. The Dockerfile already defaults to this path; naming it
+      # here as well keeps the durable location visible in the dashboard instead of implicit in an
+      # image layer. Any path outside /data is wiped on every redeploy, and the app refuses to boot
+      # on one rather than quietly serving a database that is about to vanish.
+      - key: DATABASE_FILE
+        value: /data/pci.db
+      - key: ALLOW_SQLITE_IN_PRODUCTION
+        value: "true"
       # ---- data-at-rest encryption (REQUIRED in production) ----
       # A 32-byte key used to AES-256-GCM encrypt stored identity documents and displayable
       # credentials. Production refuses to boot without it (exit 78).

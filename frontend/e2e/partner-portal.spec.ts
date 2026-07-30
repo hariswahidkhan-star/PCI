@@ -245,7 +245,19 @@ test.describe('institution partner persona', () => {
     await expect(page.locator('#viewLogin')).toBeVisible()
     await page.getByLabel('Email', { exact: true }).fill(partnerEmail)
     await page.getByLabel('Password', { exact: true }).fill(newPassword)
+    // Wait on the response, exactly as the first sign-in above does. Without it this raced the
+    // request on a loaded server and failed as "#app is hidden" — which is the one thing the
+    // failure could not tell you apart from: a refused sign-in looks identical to a slow one.
+    // Asserting the response first splits them: a 401/429 now fails HERE, naming the refusal,
+    // and only a genuinely-succeeded login goes on to assert the view.
+    const finalLogin = page.waitForResponse((response) =>
+      response.url().endsWith('/api/partner/auth/login') && response.request().method() === 'POST')
     await page.getByRole('button', { name: 'Sign in', exact: true }).click()
+    const finalLoginResponse = await finalLogin
+    expect(finalLoginResponse.status(), 'signing in with the changed password must succeed').toBe(200)
+    // The password change must have cleared the forced-change flag, so this login goes straight
+    // to the portal rather than back to the "set a new password" screen.
+    expect((await finalLoginResponse.json()).must_change_pw).toBe(false)
     await expect(page.locator('#app')).toBeVisible()
     await expect(page.getByRole('heading', { name: 'Set a new password' })).toBeHidden()
   })

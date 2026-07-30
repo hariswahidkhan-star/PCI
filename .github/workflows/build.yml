@@ -24,7 +24,14 @@ jobs:
         run: dotnet build -c Release
 
       - name: Production and staging fail closed before database open
-        run: python3 tests/production_config_test.py
+        # PyYAML lets the same suite boot the app with render.yaml's OWN declared environment —
+        # without it those checks skip, and the blueprint goes back to being the one production
+        # configuration nothing verifies.
+        run: |
+          python3 -c 'import yaml' 2>/dev/null \
+            || pip install --quiet --break-system-packages PyYAML \
+            || pip install --quiet PyYAML
+          python3 tests/production_config_test.py
 
       - name: MySQL schema-generator parser tests (table scan + index key lengths)
         run: python3 tests/schema_generator_test.py
