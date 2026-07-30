@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import * as C from './api'
+import DemoBanner from '../../components/DemoBanner'
 
 // PCI World community rooms — the guest participant surface.
 //
@@ -84,6 +85,7 @@ export default function CommunityApp() {
 
   return (
     <div className="cw">
+      <DemoBanner />
       <header className="cw-head">
         <h1>PCI World community</h1>
         <p className="cw-sub">Professional rooms for people who control projects.</p>

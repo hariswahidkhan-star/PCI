@@ -151,7 +151,6 @@ export default function Profile() {
         />
       </Card>
 
-      <PassportCard />
       <DirectorySettings />
       <TwoFactorCard />
       <AccountPrivacyCard />
@@ -160,41 +159,6 @@ export default function Profile() {
   )
 }
 
-/** One login for everything: opens the student's PCI World Passport, creating or linking the
- * world account on first use — no separate sign-in, password or registration. The Passport page
- * itself manages the photograph, publication and field-level disclosure. */
-function PassportCard() {
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState<string | null>(null)
-  async function open() {
-    setBusy(true)
-    setErr(null)
-    try {
-      // Pass the browser's anonymous PCI World session so the bridge claims any challenges
-      // completed here before signing in — without it that work never reaches the Passport.
-      // The response carries a ONE-TIME handoff code in the URL fragment (never a reusable
-      // bearer token): the Passport page exchanges it for its own session on arrival.
-      const r = await api.post<{ url?: string }>('/api/me/world-passport/sso', {
-        world_session: localStorage.getItem('world_session') || undefined,
-      })
-      window.location.assign(r.url || '/world/account')
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : 'Could not open your Passport.')
-      setBusy(false)
-    }
-  }
-  return (
-    <Card title="PCI World Passport">
-      <p className="muted small" style={{ marginTop: 0 }}>
-        Your Passport is verified practice evidence from PCI World challenges — with your photograph, if you
-        choose to add one. It opens with this login; no separate account or password is needed. Upload or
-        remove your photo, choose exactly what is published, and share one verifiable link from the Passport page.
-      </p>
-      {err && <ErrorNote>{err}</ErrorNote>}
-      <button className="btn" disabled={busy} onClick={open}>{busy ? 'Opening…' : 'Open my Passport'}</button>
-    </Card>
-  )
-}
 
 // Opt-in public member directory — a certified member can list themselves in the public "find a professional"
 // registry and control exactly which fields are shown.

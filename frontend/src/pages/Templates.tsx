@@ -7,6 +7,8 @@ import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 // Student portal → Templates. The members-only project-controls templates library (WBS, EVM tracker, risk
 // register, cash-flow, RACI, …). Content is admin-managed and served only to logged-in students at
 // /api/me/templates; each file downloads through the authenticated endpoint (a plain <a href> would 401).
+// Downloads arrive as PCI-branded XLSX workbooks (emblem + title band + styled data grid) rendered
+// server-side from the admin-editable CSV body.
 
 interface Row {
   slug: string

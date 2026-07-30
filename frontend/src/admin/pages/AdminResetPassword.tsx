@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { adminApi } from '../api'
+import DemoBanner from '../../components/DemoBanner'
 import { ApiError } from '../../api/client'
 
 /** Consumes a one-time reset token from the emailed link (/admin/reset-password?token=…) and sets a
@@ -37,6 +38,7 @@ export default function AdminResetPassword() {
 
   return (
     <div className="center-page">
+      <DemoBanner />
       <div className="card login-card">
         <div className="logo">
           <img src="/assets/logo.png" alt="Project Controls Institute" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />

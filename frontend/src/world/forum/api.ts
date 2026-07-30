@@ -7,6 +7,7 @@
 // a sign-out to miss.
 
 import { getToken } from '../api'
+import { demoAwareFetch } from '../../demo/intercept'
 
 export class ForumError extends Error {
   status: number
@@ -28,12 +29,15 @@ async function call<T>(path: string, method: string, body?: unknown): Promise<T>
   if (token) headers['X-World-Account'] = token
   if (body !== undefined) headers['Content-Type'] = 'application/json'
 
-  const res = await fetch(path, {
+  // Demonstration mode short-circuits before the network; see src/demo/intercept.ts for the rule.
+  const attempt = await demoAwareFetch(path, {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
     credentials: 'same-origin',
-  })
+  }, body)
+  if (attempt.demo) return attempt.data as T
+  const res = attempt.res
 
   const text = await res.text()
   let data: Record<string, unknown> = {}

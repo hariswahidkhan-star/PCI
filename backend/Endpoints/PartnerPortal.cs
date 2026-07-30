@@ -112,7 +112,7 @@ public static class PartnerPortal
         app.MapGet("/api/partner/me", (HttpContext ctx) =>
         {
             if (Need(ctx, out var p) is { } deny) return deny;
-            var partner = db.QueryOne(@"SELECT id,name,tier,status,institution_type,agreement_start,agreement_end,
+            var partner = db.QueryOne(@"SELECT id,name,tier,status,institution_type,partner_type,agreement_start,agreement_end,
                 max_discount_percent,max_codes,max_uses_per_code,total_allocation,allow_full_sponsorship,auto_approve_codes
                 FROM training_partners WHERE id=?", p!.PartnerId);
             return J(new { user = new { p.Email, p.Name, p.Role, must_change_pw = p.MustChangePw }, institution = partner });

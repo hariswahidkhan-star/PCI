@@ -103,7 +103,7 @@ test.describe('institution partner persona', () => {
     // Naming the sections rather than counting them: a bare count fails opaquely the next time a tab is
     // added, and says nothing about which section went missing when one genuinely disappears.
     await expect(page.getByRole('navigation', { name: 'Portal sections' }).getByRole('button'))
-      .toHaveText(['Overview', 'Codes', 'Students', 'Sponsorships', 'Commissions', 'Payments', 'Documents'])
+      .toHaveText(['Overview', 'Codes', 'Links', 'Students', 'Sponsorships', 'Commissions', 'Payments', 'Documents'])
     const partnerToken = await page.evaluate(() => sessionStorage.getItem('pci.partner.token'))
     expect(partnerToken).toBeTruthy()
     const revokedDeviceProbe = await request.get('/api/partner/me', {
@@ -166,9 +166,12 @@ test.describe('institution partner persona', () => {
     await expect(page.locator('#sponsorTbl')).toContainText('PML-AI')
     await captureStoryEvidence(page, testInfo, 'H2', 'sponsored-candidate')
 
+    // The Commissions tab now renders the immutable per-transaction ledger (same source as the
+    // statement): bucket tiles rather than the legacy recalculated rate/balance view.
     await page.getByRole('button', { name: 'Commissions', exact: true }).click()
-    await expect(page.locator('#commTiles')).toContainText('7.5%')
-    await expect(page.locator('#commTiles')).toContainText('Balance due')
+    await expect(page.locator('#commTiles')).toContainText('Commission earned')
+    await expect(page.locator('#commTiles')).toContainText('Due + approved')
+    await expect(page.locator('#commLedTbl')).toContainText('No commission transactions yet.')
 
     const candidatesResponse = await request.get(`/api/admin/training-partners/${partner.id}/candidates`, { headers })
     expect(candidatesResponse.ok()).toBeTruthy()

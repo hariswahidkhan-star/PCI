@@ -33,6 +33,14 @@ services:
         value: Production
       - key: STORAGE_ROOT
         value: /data/storage
+      # ---- runtime stability on small hosts (also baked into the Dockerfile) ----
+      # W^X off: .NET 8's write-xor-execute JIT default segfaults on boot (exit 139) on hosts
+      # without the kernel memfd support it needs — the exact failure seen on Render deploys of
+      # images that boot green in CI. Workstation GC fits the 512 MB Starter instance.
+      - key: DOTNET_EnableWriteXorExecute
+        value: "0"
+      - key: DOTNET_gcServer
+        value: "0"
       # ---- database: external managed MySQL (required in production) ----
       - key: DB_PROVIDER
         value: mysql

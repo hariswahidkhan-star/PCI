@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ApiError, makeClient } from '../api/client'
+import DemoBanner from '../components/DemoBanner'
 
 // Phase 5 — public verification of a PCI World Passport by PCI Student Number.
 //
@@ -87,6 +88,7 @@ export default function VerifyNumber() {
 
   return (
     <div className="world-shell">
+      <DemoBanner />
       <header>
         <span className="brand">PCI <b>World</b></span>
         <span className="tag">passport verification</span>

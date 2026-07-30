@@ -7,7 +7,9 @@ import Sharing from './Sharing'
 import ForumApp from './forum/ForumApp'
 import EmployerPortal from './careers/EmployerPortal'
 import MyApplications from './careers/MyApplications'
+import ContributorDesk from './contributor/ContributorDesk'
 import PortalSwitcher from './PortalSwitcher'
+import DemoBanner from '../components/DemoBanner'
 
 // ── Dashboard aggregate (mirror of /api/world/me/dashboard) ──
 
@@ -109,6 +111,8 @@ export default function App() {
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="world-shell">
+      {/* Above the header, so it is the first thing read on every World state including sign-in. */}
+      <DemoBanner />
       <header>
         <span className="brand">PCI <b>World</b></span>
         <span className="tag">practice, not certification</span>
@@ -167,7 +171,7 @@ function SignIn({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
 }
 
 function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<void>; onSignOut: () => void }) {
-  const [view, setView] = useState<'home' | 'settings' | 'passport' | 'sharing' | 'forum' | 'employer' | 'applications'>('home')
+  const [view, setView] = useState<'home' | 'settings' | 'passport' | 'sharing' | 'forum' | 'employer' | 'applications' | 'writing'>('home')
   const name = d.display_name || d.email
   const onboarding = d.onboarding_state !== null && d.onboarding_state !== 'completed'
   const actionHref =
@@ -184,6 +188,7 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
           : view === 'forum' ? <ForumApp />
           : view === 'employer' ? <EmployerPortal />
           : view === 'applications' ? <MyApplications />
+          : view === 'writing' ? <ContributorDesk />
           : <Sharing />}
       </>
     )
@@ -253,6 +258,9 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
               acting for an employer tenant, and the applicant's own consented record. */}
           <button className="secondary" onClick={() => setView('employer')}>Employer portal</button>{' '}
           <button className="secondary" onClick={() => setView('applications')}>My job applications</button>{' '}
+          {/* Reachable whatever your standing: the desk's first job is to let someone APPLY to
+              contribute, so hiding it behind contributor status would hide the way in. */}
+          <button className="secondary" onClick={() => setView('writing')}>Write for PCI World</button>{' '}
           <button className="secondary" onClick={() => setView('sharing')}>Sharing</button>{' '}
           <button className="secondary" onClick={() => setView('settings')}>Settings &amp; sessions</button>{' '}
           <a className="btn secondary" href={classic.account}>Export &amp; account</a>

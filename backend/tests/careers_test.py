@@ -488,6 +488,16 @@ def main():
         code, r = js("/api/world-admin/community/settings", "PATCH", {"careers_enabled": "0"}, A)
         chk("C77 and can turn it off again", code == 200, str(r))
 
+        # The frontend preview is the one nav entry that is NOT flag-gated, and that is deliberate:
+        # with every flag off — which is every deployment today — the nav otherwise shows none of
+        # this and a visitor cannot tell the features exist. It is a static file with no API, no
+        # flag and no database behind it, so it cannot 404 and cannot be hidden.
+        code, raw = req("GET", "/world")
+        chk("C78 the frontend preview is linked regardless of any flag",
+            code == 200 and "/world/preview/" in raw.decode(errors="replace"), "preview link missing")
+        code, raw = req("GET", "/world/preview/")
+        chk("C79 and it serves as a plain static page", code == 200, f"got {code}")
+
         code, raw = req("GET", "/world")
         chk("C74 and the nav stops advertising it — a link to a 404 reads as a broken site",
             code == 200 and "/world/careers" not in raw.decode(errors="replace"),

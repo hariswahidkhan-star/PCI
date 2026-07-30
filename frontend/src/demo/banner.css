@@ -1,0 +1,35 @@
+/* The demonstration-mode banner's own appearance.
+ *
+ * Its own stylesheet, imported by the component, because THREE bundles show it and they do not
+ * share a stylesheet: the portal and admin load premium.css, PCI World loads world.css. A copy in
+ * each would be three places for the notice to drift — and the one thing this notice must never do
+ * is look less serious on one surface than another.
+ *
+ * Deliberately free of custom properties: world.css does not define the design-token variables, so
+ * a var() here would silently collapse to nothing on exactly the surface this file exists for. */
+
+.demo-banner {
+  flex: 0 0 auto; display: flex; align-items: center; gap: .6rem;
+  padding: .55rem 1rem; background: linear-gradient(90deg, #fef3c7, #fffbeb);
+  border-bottom: 1px solid #fcd34d; color: #78350f;
+  font-size: .84rem; line-height: 1.35;
+}
+.demo-banner > svg { flex: 0 0 auto; color: #b45309; }
+.demo-banner-text { min-width: 0; }
+.demo-banner-text strong { font-weight: 800; }
+.demo-banner-exit {
+  margin-left: auto; flex: 0 0 auto; font: inherit; font-weight: 700; font-size: .78rem;
+  cursor: pointer; padding: .25em .7em; border-radius: 8px;
+  border: 1px solid #d97706; background: rgba(255, 255, 255, .7); color: #78350f;
+}
+.demo-banner-exit:hover { background: #fff; }
+[dir="rtl"] .demo-banner-exit { margin-left: 0; margin-right: auto; }
+
+@media (max-width: 700px) {
+  .demo-banner { align-items: flex-start; font-size: .78rem; }
+  .demo-banner-exit { margin-left: 0; }
+}
+/* A printed page has no live context to explain itself, so the notice must be IN the print, not
+   hidden from it — a printed demo screenshot passed around is exactly how fabricated data gets
+   mistaken for real. */
+@media print { .demo-banner { border: 1px solid #d97706; } .demo-banner-exit { display: none; } }

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 
 // FE — Admin Console → Training Partners: the test-institution mechanism (mirrors the student
 // test-user pattern). Pins: the scenario picker + create call, the credentials drawer with the
@@ -28,7 +29,7 @@ describe('Admin Training Partners — test institutions', () => {
       ok: true, partner_id: 9, institution: 'Test Institution AB12',
       email: 'test.partner.ab12@pci.test', password: 'TestPass!ab12', token: 'tok123', scenario: 'active',
     })
-    render(<TrainingPartners />)
+    render(<MemoryRouter><TrainingPartners /></MemoryRouter>)
     fireEvent.change(screen.getByLabelText('Test-partner scenario'), { target: { value: 'fresh_login' } })
     fireEvent.click(screen.getByRole('button', { name: '+ Test partner' }))
     expect(api.post).toHaveBeenCalledWith('/api/admin/test-partners', { scenario: 'fresh_login' })
@@ -44,7 +45,7 @@ describe('Admin Training Partners — test institutions', () => {
       ok: true, partner_id: 9, institution: 'Test Institution CD34',
       email: 'test.partner.cd34@pci.test', password: 'TestPass!cd34', token: null, scenario: 'suspended',
     })
-    render(<TrainingPartners />)
+    render(<MemoryRouter><TrainingPartners /></MemoryRouter>)
     fireEvent.click(screen.getByRole('button', { name: '+ Test partner' }))
     expect(await screen.findByText(/No session for this scenario/)).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /Open partner dashboard/ })).toBeNull()
@@ -54,7 +55,7 @@ describe('Admin Training Partners — test institutions', () => {
     h.partners = { rows: [partner(), partner({ id: 2, name: 'Test Institution AB12', is_test: 1, listed: 0 })] }
     api.post.mockResolvedValue({ ok: true })
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true)
-    render(<TrainingPartners />)
+    render(<MemoryRouter><TrainingPartners /></MemoryRouter>)
     expect(screen.getByText('Test')).toBeInTheDocument()          // badge only on the test row
     const deleteButtons = screen.getAllByRole('button', { name: 'Delete' })
     fireEvent.click(deleteButtons[1])                              // the test institution's row

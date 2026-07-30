@@ -44,9 +44,17 @@ COPY --from=webbuild /web/dist-worldadmin ./wwwroot/world-admin-app
 # Production on Render uses MySQL (DB_PROVIDER=mysql in render.yaml) — DATABASE_FILE below is
 # only adopted when the provider is SQLite/local; it is NOT a production MySQL fail-open.
 # Both paths are overridable; one mount suits hosts that attach a single disk per service.
+#
+# DOTNET_EnableWriteXorExecute=0: .NET 8's W^X JIT default SIGSEGVs at startup (container exits
+# 139) on hosts whose kernel/seccomp lacks the memfd support it needs — seen on Render, where
+# this exact image boots green in CI but crashed on deploy. Costs a little JIT hardening only.
+# DOTNET_gcServer=0: workstation GC — per-core server heaps are the wrong shape for a small
+# single-instance container (Render Starter: 512 MB / 0.5 CPU).
 ENV DATABASE_FILE=/data/pci.db \
     STORAGE_ROOT=/data/storage \
-    PORT=8080
+    PORT=8080 \
+    DOTNET_EnableWriteXorExecute=0 \
+    DOTNET_gcServer=0
 VOLUME /data
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "PCI.Backend.dll"]

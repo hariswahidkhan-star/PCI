@@ -436,7 +436,17 @@ public static class Payments
                                     // Partner commission (Phase 1): immutable, rate snapshotted now, recorded in
                                     // the same atomic transaction as the redemption it is derived from. Idempotent
                                     // via a UNIQUE dedupe_key, so a replayed webhook records nothing further.
-                                    try { PCI.Backend.Core.PartnerCommission.EnsureForPayment(db, payId); } catch { }
+                                    // A FAILED write must never be swallowed behind the 200: this transaction also
+                                    // claims the idempotency rows, so acking would mean Stripe never redelivers and
+                                    // the commission is lost for good. Aborting rolls the whole settlement back;
+                                    // the non-2xx response makes Stripe redeliver, and every write in this handler
+                                    // is idempotent for the re-run.
+                                    try { PCI.Backend.Core.PartnerCommission.EnsureForPayment(db, payId); }
+                                    catch (Exception ce)
+                                    {
+                                        Console.Error.WriteLine($"[finance] commission write failed for payment {payId}: {ce.Message} — refusing to ack; Stripe will redeliver");
+                                        throw;
+                                    }
                                 }
                                 else
                                 {
@@ -529,16 +539,25 @@ public static class Payments
                     var refundedAmt = (ch.AmountRefunded) / 100.0;
                     if (!string.IsNullOrEmpty(pi))
                     {
-                        db.Execute("UPDATE payments SET amount_refunded=?, payment_status='partially_refunded', refunded_at=datetime('now') WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')",
-                            refundedAmt, pi);
-                        // Partner commission follows the money back: reverse the refunded proportion.
-                        // Idempotent on the cumulative refunded amount, so Stripe's retries are no-ops.
-                        try
+                        // One transaction: the financial state flip and its commission reversal commit
+                        // together or not at all. A swallowed reversal failure behind the 200 meant Stripe
+                        // never redelivered and the claw-back was lost; now the rollback + non-2xx makes
+                        // Stripe redeliver, and the reversal's cumulative dedupe key makes re-runs no-ops.
+                        db.Transaction(() =>
                         {
-                            var partial = db.QueryOne("SELECT id FROM payments WHERE provider_payment_id=?", pi);
-                            if (partial is not null) PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(partial["id"]), "refund");
-                        }
-                        catch { }
+                            db.Execute("UPDATE payments SET amount_refunded=?, payment_status='partially_refunded', refunded_at=datetime('now') WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')",
+                                refundedAmt, pi);
+                            try
+                            {
+                                var partial = db.QueryOne("SELECT id FROM payments WHERE provider_payment_id=?", pi);
+                                if (partial is not null) PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(partial["id"]), "refund");
+                            }
+                            catch (Exception ce)
+                            {
+                                Console.Error.WriteLine($"[finance] commission reversal failed for {pi}: {ce.Message} — refusing to ack; Stripe will redeliver");
+                                throw;
+                            }
+                        });
                     }
                     log(0, "partial_refund_recorded", $"{ev.Id} pi={pi} amount={refundedAmt}");
                     pi = null; // skip revocation path below
@@ -566,8 +585,15 @@ public static class Payments
                                 log(H.Ln(uid), "refund_membership_kept_other_payment", $"{ev.Id} other_pay={other["id"]}");
                         }
                         // Money returned in full (refund or chargeback) → reverse the whole commission,
-                        // inside the same transaction that revoked the access it bought.
-                        try { PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(payId), ev.Type == "charge.refunded" ? "refund" : "chargeback"); } catch { }
+                        // inside the same transaction that revoked the access it bought. A failure aborts
+                        // that transaction — never swallowed behind the 200, or Stripe would ack a lost
+                        // claw-back and no retry would ever run. Redelivery re-runs everything idempotently.
+                        try { PCI.Backend.Core.PartnerCommissionReversal.EnsureForPayment(db, H.L(payId), ev.Type == "charge.refunded" ? "refund" : "chargeback"); }
+                        catch (Exception ce)
+                        {
+                            Console.Error.WriteLine($"[finance] commission reversal failed for payment {payId}: {ce.Message} — refusing to ack; Stripe will redeliver");
+                            throw;
+                        }
                         log(H.Ln(uid), "payment_" + reversed, $"{ev.Id} pi={pi}");
                     });
             }

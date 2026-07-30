@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCI World — feature preview (frontend only)</title>
+<meta name="description" content="Every PCI World feature as a clickable frontend, with no backend, database or feature flags involved. A specification for the team building the server side.">
+<!-- A prototype must never be indexed as though it were the product. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="/world/preview/">
+<link rel="stylesheet" href="/world/preview/preview.css">
+</head>
+<body>
+
+<!--
+  PCI WORLD — FEATURE PREVIEW, FRONTEND ONLY.
+
+  WHY THIS FILE EXISTS. The real surfaces (rooms, forum, jobs, contributor publishing) each ship
+  behind a feature flag that seeds OFF, and several of them additionally refuse to run until legal
+  and moderation decisions land. That is deliberate and stays that way — but it also means a
+  visitor to the deployed site sees none of them, and a developer picking up the backend has
+  nothing to look at.
+
+  So this page is the whole product surface drawn out, served as PLAIN STATIC FILES:
+    • no API calls, so no endpoint can 404 it;
+    • no feature flag, so nothing can hide it;
+    • no database, so an empty deployment still shows every screen.
+
+  It lives under /world/preview/ because /world/* is inside WorldOnly.Allowed(), which means it
+  serves on a World-only deployment as well as the full platform. Everything is inline or
+  same-origin: the site's CSP is script-src 'self' 'unsafe-inline', with no external hosts here.
+
+  WHAT IT IS NOT: working software. Nothing is stored, sent or checked. Each screen carries a strip
+  naming the rules the real server enforces, precisely because this drawing of them cannot enforce
+  anything.
+-->
+
+<div class="wrap">
+  <nav class="rail" aria-label="Surfaces">
+    <div class="rail-brand">
+      <b>PCI World</b>
+      <span>Feature preview · frontend only</span>
+    </div>
+    <p class="rail-note">Static mock-up for the team building the backend. No server, no database.
+      Every name, job and message is invented for this page.</p>
+
+    <h3>Community</h3>
+    <button data-s="rooms" aria-current="true">Rooms<small>guest chat, pre-broadcast review</small></button>
+    <button data-s="room">Inside a room<small>what a guest actually sees</small></button>
+
+    <h3>Forum</h3>
+    <button data-s="forum">Discussions<small>public index</small></button>
+    <button data-s="thread">A thread<small>crawlable page</small></button>
+    <button data-s="composer">Composer<small>held-before-publication</small></button>
+
+    <h3>Jobs</h3>
+    <button data-s="jobs">Job board<small>verified employers only</small></button>
+    <button data-s="job">A job page<small>with apply</small></button>
+    <button data-s="employer">Employer portal<small>postings and applicants</small></button>
+    <button data-s="apps">My applications<small>consent, withdrawal</small></button>
+
+    <h3>Publishing</h3>
+    <button data-s="contrib">Contributor desk<small>write, declare, submit</small></button>
+    <button data-s="editor">Editor's queue<small>maker-checker refusal</small></button>
+
+    <h3>Operator</h3>
+    <button data-s="admin">World Admin<small>flags and queues</small></button>
+
+    <p class="rail-foot">
+      <a href="/world">&larr; Back to PCI World</a>
+    </p>
+  </nav>
+
+  <main class="stage" id="stage"></main>
+</div>
+
+<script src="/world/preview/preview.js"></script>
+</body>
+</html>

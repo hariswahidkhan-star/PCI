@@ -275,13 +275,16 @@ public static class TrainingPartners
             var name = Clip(H.GetS(b, "name"), 160);
             if (name.Length == 0) return Results.Json(new { error = "name_required" }, statusCode: 400);
             var slug = Slugify(db, name);
+            // partner_type is allow-listed; 'marketing' partners share the directory and portal
+            // machinery but get the marketing-facing portal surface (codes/links/commission).
+            var ptype = H.GetS(b, "partner_type") is { } pt0 && pt0 is "training" or "institution" or "sponsor" or "marketing" ? pt0 : "training";
             var id = db.ExecuteReturningId(@"INSERT INTO training_partners
-                (name,slug,tier,country,region,city,website,logo_url,summary,description,specialties,contact_email,listed,sort_order)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (name,slug,tier,country,region,city,website,logo_url,summary,description,specialties,contact_email,listed,sort_order,partner_type)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 name, slug, Tier(H.GetS(b, "tier")), Clip(H.GetS(b, "country"), 80), Clip(H.GetS(b, "region"), 80),
                 Clip(H.GetS(b, "city"), 80), Clip(H.GetS(b, "website"), 200), Clip(H.GetS(b, "logo_url"), 300),
                 Clip(H.GetS(b, "summary"), 300), Clip(H.GetS(b, "description"), 6000), Clip(H.GetS(b, "specialties"), 2000),
-                Clip(H.GetS(b, "contact_email"), 160), Flag(b, "listed") ? 1 : 0, (int)(H.GetNum(b, "sort_order") ?? 0));
+                Clip(H.GetS(b, "contact_email"), 160), Flag(b, "listed") ? 1 : 0, (int)(H.GetNum(b, "sort_order") ?? 0), ptype);
             ListSections.Bump();
             log(adm!.Id, "training_partner_create", $"{id} {name}");
             return J(new { ok = true, id, slug });
@@ -303,7 +306,7 @@ public static class TrainingPartners
             Str("description", "description", 6000); Str("specialties", "specialties", 2000); Str("contact_email", "contact_email", 160);
             // Partner-dashboard fields: portal role, sponsorship capability and commission rate.
             Str("contact_name", "contact_name", 160);
-            if (H.GetS(b, "partner_type") is { } pt && pt is "training" or "institution" or "sponsor") { sets.Add("partner_type=?"); args.Add(pt); }
+            if (H.GetS(b, "partner_type") is { } pt && pt is "training" or "institution" or "sponsor" or "marketing") { sets.Add("partner_type=?"); args.Add(pt); }
             if (H.GetEl(b, "commission_pct") is not null) { sets.Add("commission_pct=?"); args.Add(Math.Clamp(H.GetNum(b, "commission_pct") ?? 0, 0, 100)); }
             if (H.GetEl(b, "sponsor_enabled") is not null) { sets.Add("sponsor_enabled=?"); args.Add(Flag(b, "sponsor_enabled") ? 1 : 0); }
             if (H.GetEl(b, "listed") is not null) { sets.Add("listed=?"); args.Add(Flag(b, "listed") ? 1 : 0); }
