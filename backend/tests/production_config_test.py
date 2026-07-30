@@ -255,6 +255,21 @@ else:
     expect("blueprint declares DB_PROVIDER explicitly (a blueprint cannot clear a key it omits)",
            "DB_PROVIDER" in declared)
 
+    # BOTH providers are supported, so the blueprint has to keep the other one switchable. The
+    # non-secret MySQL settings must be declared with working values, or "switch to MySQL" quietly
+    # becomes "edit this file, open a PR and redeploy" — which is how a second provider decays into
+    # an unmaintained one. The three credentials stay sync:false: they are secrets.
+    mysql_keys = {e["key"] for e in service.get("envVars", [])}
+    for key in ("MYSQL_HOST", "MYSQL_USER", "MYSQL_PASSWORD", "MYSQL_PORT", "MYSQL_DATABASE", "MYSQL_SSL"):
+        expect(f"blueprint keeps {key} declared so the provider stays switchable from the dashboard",
+               key in mysql_keys)
+    for key in ("MYSQL_HOST", "MYSQL_USER", "MYSQL_PASSWORD"):
+        expect(f"{key} is a dashboard secret, never committed",
+               key not in declared)
+    expect("blueprint ships a working MySQL port/database/TLS default",
+           declared.get("MYSQL_PORT") == "3306" and bool(declared.get("MYSQL_DATABASE"))
+           and declared.get("MYSQL_SSL") in ("required", "true", "false"))
+
     if os.path.isdir(data_dir) and os.access(data_dir, os.W_OK):
         bp_db = os.path.join(data_dir, "blueprint-boot-test.db")
         if os.path.exists(bp_db): os.remove(bp_db)
@@ -263,8 +278,29 @@ else:
         check_boots("render.yaml as written boots a fresh service with NO dashboard values set",
                     env, bp_db)
         if os.path.exists(bp_db): os.remove(bp_db)
+
+        # The inert MySQL block must stay inert. Blank credentials sitting beside a SQLite provider
+        # are only safe because the MySQL preflight is gated on DB_PROVIDER; if that gate ever
+        # widened, every SQLite deploy would start failing on credentials it does not need.
+        bp_db2 = os.path.join(data_dir, "blueprint-inert-mysql-test.db")
+        if os.path.exists(bp_db2): os.remove(bp_db2)
+        env2 = dict(declared)
+        env2["DATABASE_FILE"] = bp_db2
+        env2["MYSQL_PORT"] = declared.get("MYSQL_PORT", "3306")
+        check_boots("declared-but-blank MySQL settings cannot fail a SQLite boot", env2, bp_db2)
+        if os.path.exists(bp_db2): os.remove(bp_db2)
     else:
         print("  SKIP  render.yaml boot-through (no writable /data in this environment)")
+
+    # And the other direction: selecting MySQL without credentials must still fail closed. This is
+    # the pairing that bricked the deploy — DB_PROVIDER=mysql with blank MYSQL_* — and the reason
+    # ALLOW_SQLITE_IN_PRODUCTION does not rescue it is easy to lose in a refactor of the preflight.
+    check("selecting MySQL with blank credentials still fails closed, waiver or not",
+          {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "mysql",
+           "ALLOW_SQLITE_IN_PRODUCTION": "true",
+           "APP_BASE_URL": declared.get("APP_BASE_URL", "https://example.org"),
+           "ALLOWED_ORIGIN": declared.get("ALLOWED_ORIGIN", "https://example.org")},
+          must_mention="MySQL is selected but connection settings are incomplete")
 
 print(f"\n  == {passed}/{passed + failed} PASSED ==")
 raise SystemExit(0 if failed == 0 else 1)

@@ -17,8 +17,11 @@ export default tseslint.config(
   {
     // Build output, deps, coverage, and Playwright report are never linted.
     // Every build output directory must be ignored — `npm run build` writes dist/ (student),
-    // dist-admin/ and dist-world/, and linting minified bundles produces hundreds of false errors.
-    ignores: ['dist', 'dist-admin', 'dist-world', 'node_modules', 'coverage', 'playwright-report', 'test-results'],
+    // dist-admin/, dist-world/ and dist-worldadmin/, and linting minified bundles produces
+    // hundreds of false errors. The glob covers any FUTURE bundle too: this list has now been
+    // out of date twice, each time on the next app added, and each time the symptom was ~700
+    // lint errors in generated code that nobody wrote.
+    ignores: ['dist', 'dist-*', 'node_modules', 'coverage', 'playwright-report', 'test-results'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

@@ -1,17 +1,29 @@
 # Render Blueprint — deploys the whole PCI platform (website + student panel + admin dashboard)
-# as one Docker web service. The DATABASE is SQLite on the persistent disk; that same disk holds
-# uploaded files (evidence, ID documents, attachments).
+# as one Docker web service. Two database providers are supported and maintained — SQLite on the
+# persistent disk (the default here) and MySQL/MariaDB — and that same disk holds uploaded files
+# (evidence, ID documents, attachments) under either one.
 #
 # Use: push this repo to GitHub → Render dashboard → New → Blueprint → select the repo.
 # Render reads this file and provisions everything; you only fill in the env-var values
 # marked sync:false (they are secrets/deployment-specific, never committed).
 #
-# DATABASE — SQLite at /data/pci.db on the 5 GB persistent disk. This deploys with NO external
-# database service and no credentials to fill in, which is why it is the default here: Render has
-# no managed MySQL, so requiring MySQL meant every deploy failed its health check (exit 78) until
-# somebody provisioned and paid for a database elsewhere. The disk is durable across deploys and
-# restarts, so the database survives; it is NOT durable if the service is deleted, so take backups
-# (DEPLOY.md → “Backups”).
+# DATABASE — two supported providers, both maintained, selected by DB_PROVIDER.
+#
+#   sqlite (default here)  SQLite at /data/pci.db on the 5 GB persistent disk. Deploys with NO
+#                          external database service and no credentials to fill in, which is why it
+#                          is the default: Render has no managed MySQL, so requiring MySQL meant
+#                          every deploy failed its health check (exit 78) until somebody had
+#                          provisioned and paid for a database elsewhere. The disk is durable
+#                          across deploys and restarts, so the database survives with it; it is NOT
+#                          durable if the service is deleted, so take backups (DEPLOY.md).
+#   mysql                  MySQL 8.x / MariaDB 10.11+. Everything is pre-declared below except the
+#                          three secrets, so switching is a dashboard change, not a code change.
+#
+# Neither is a second-class path. Application SQL is written once in SQLite dialect and translated
+# at runtime (backend/Data/Db.cs); schema.mysql.sql is generated from schema.sql with CI failing on
+# drift; and the full suite runs against MariaDB 10.11 and Oracle MySQL 8.4 on every push. Choose
+# on operational grounds: SQLite is a single-writer file — ideal for one instance, unusable for
+# two — so MySQL is the answer when you need a second instance or managed backups.
 #
 # The app's production preflight accepts this posture on its own terms — a SQLite file on a
 # WRITABLE /data mount is the platform's documented interim deployment and needs no override. The
@@ -20,11 +32,11 @@
 # (HTTPS base URL, explicit CORS origin, at-rest encryption key, legacy-token ban, Stripe webhook
 # secret) stays fully active — this waives the MySQL requirement and nothing else.
 #
-# MOVING TO MySQL later (recommended once traffic or a second instance justifies it): set
-# DB_PROVIDER=mysql plus MYSQL_HOST / MYSQL_USER / MYSQL_PASSWORD / MYSQL_DATABASE / MYSQL_SSL in
-# Settings → Environment, and run the one-time data migration first
-# (backend/tools/migrate_sqlite_to_mysql.py); see docs/MYSQL_MIGRATION.md. DB_PROVIDER=mysql takes
-# precedence over everything below, so the switch is a dashboard change with no edit to this file.
+# SWITCHING between them: run the one-time data migration first
+# (backend/tools/migrate_sqlite_to_mysql.py; see docs/MYSQL_MIGRATION.md), then set MYSQL_HOST /
+# MYSQL_USER / MYSQL_PASSWORD and flip DB_PROVIDER in Settings → Environment. DB_PROVIDER=mysql
+# takes precedence over every SQLite setting below, so nothing has to be removed to switch, and
+# setting it back to sqlite returns to the disk-backed database.
 
 services:
   - type: web
@@ -72,6 +84,33 @@ services:
       # The provider above must actually be sqlite for this posture to boot.
       - key: ALLOW_SQLITE_IN_PRODUCTION
         value: "true"
+
+      # ---- database: MySQL / MariaDB (supported equally; switch without editing this file) ----
+      # BOTH providers are first-class and stay that way: the SQL is written in SQLite dialect and
+      # translated at runtime (backend/Data/Db.cs), schema.mysql.sql is generated from schema.sql
+      # and CI fails if it drifts, and the whole suite runs against MariaDB 10.11 and Oracle MySQL
+      # 8.4 on every push. SQLite is the default here only because it needs nothing provisioned.
+      #
+      # The settings that are NOT secret are declared with working defaults so the switch is three
+      # dashboard values, not a code change. They sit inert while DB_PROVIDER=sqlite — the MySQL
+      # preflight is gated on the provider, so blank credentials here cannot fail a SQLite boot.
+      #
+      # TO SWITCH: run backend/tools/migrate_sqlite_to_mysql.py first (docs/MYSQL_MIGRATION.md),
+      # then in Settings → Environment set MYSQL_HOST / MYSQL_USER / MYSQL_PASSWORD and change
+      # DB_PROVIDER to mysql. DB_PROVIDER=mysql takes precedence over every SQLite setting above,
+      # so nothing needs removing. To switch back, set DB_PROVIDER=sqlite again.
+      - key: MYSQL_HOST          # managed MySQL/MariaDB hostname (PlanetScale, Aiven, RDS, DO…)
+        sync: false
+      - key: MYSQL_USER
+        sync: false
+      - key: MYSQL_PASSWORD
+        sync: false
+      - key: MYSQL_PORT
+        value: "3306"
+      - key: MYSQL_DATABASE
+        value: pci
+      - key: MYSQL_SSL           # "required" for managed providers; "false" only for a private-network DB
+        value: required
       # ---- data-at-rest encryption (REQUIRED in production) ----
       # A 32-byte key used to AES-256-GCM encrypt stored identity documents and displayable
       # credentials. Production refuses to boot without it (exit 78).
