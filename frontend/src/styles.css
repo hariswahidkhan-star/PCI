@@ -101,6 +101,7 @@ input:focus, select:focus, textarea:focus {
 .grid { display: grid; gap: 1rem; }
 .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
 .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
 .muted { color: var(--mist); }
 .small { font-size: .85rem; }
 .row { display: flex; align-items: center; gap: .75rem; }
@@ -247,7 +248,7 @@ table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch
 
 /* ---------- responsive ---------- */
 @media (max-width: 860px) {
-  .grid.cols-2, .grid.cols-3 { grid-template-columns: 1fr; }
+  .grid.cols-2, .grid.cols-3, .grid.cols-4 { grid-template-columns: 1fr; }
   .content { padding: 1rem; }
   .drawer { width: 100%; }
   /* Sidebar becomes an off-canvas overlay revealed by the topbar menu button (instead of vanishing). */

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../../components/ui'
@@ -223,6 +224,7 @@ function DirectoryTab({ kind = 'training' }: { kind?: PartnerKind }) {
                 <td className="small">{[p.city, p.region, p.country].filter(Boolean).join(', ') || '—'}</td>
                 <td>{p.listed ? <Badge tone="ok">published</Badge> : <Badge tone="warn">draft</Badge>}</td>
                 <td className="row" style={{ gap: '.3rem', justifyContent: 'flex-end' }}>
+                  <Link className="btn ghost sm" to={`/partner-finance?partner=${p.id}`}>Finance</Link>
                   <button className="btn ghost sm" onClick={() => setPortal(p)}>Commissions</button>
                   <button className="btn ghost sm" onClick={() => setUsageFor(p)}>Codes &amp; usage</button>
                   <button className="btn ghost sm" onClick={() => setLoginsFor(p)}>Portal logins</button>
