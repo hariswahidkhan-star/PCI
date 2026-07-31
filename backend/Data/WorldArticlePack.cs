@@ -37,11 +37,32 @@ public static class WorldArticlePack
         var existing = db.QueryOne("SELECT id,author_id,status,current_version,body_md FROM pciworld_articles WHERE slug=?", a.Slug);
         if (existing is null)
         {
-            var id = db.ExecuteReturningId(@"INSERT INTO pciworld_articles
+            // Check-then-act, raced by two callers of Seed() against one database — which is what a
+            // zero-downtime deploy does, and what xUnit does when World test classes run in parallel
+            // against a shared MySQL run database. Both read null here, both insert, and the loser
+            // died on `Duplicate entry 'why-your-spi-recovers-as-the-project-ends' for key 'slug'`
+            // (CCP-P2-008). `OR IGNORE` makes the losing write a no-op instead.
+            //
+            // The id is then re-read rather than taken from the insert. `changes` is the only
+            // reliable "did I write it" signal — last_insert_rowid() after an IGNORED insert returns
+            // whatever that connection last inserted, not zero and not this row — so using the
+            // returned id would key the version row off a value that has nothing to do with this
+            // slug. Today the unique index on (article_id, version) masks the consequence: the
+            // winner has already written version 1, so a wrong-id insert is ignored too, and the
+            // concurrency suite passes with or without this re-read. It is kept because the
+            // masking is incidental — it holds only while every seeded article is at version 1 —
+            // and because reading an id you were not given is unsound regardless of who catches it.
+            var (inserted, created) = db.ExecuteWithChanges(@"INSERT OR IGNORE INTO pciworld_articles
                     (slug,kind,title,dek,body_md,author_name,tags_json,seo_desc,status,current_version,published_at)
                 VALUES(?, 'blog', ?,?,?,?,?,?, 'published', 1, datetime('now'))",
                 a.Slug, a.Title, a.Dek, a.Body, WorldEditorial.EditorialByline, a.Tags, a.SeoDesc);
-            db.Execute(@"INSERT INTO pciworld_article_versions
+
+            var id = created > 0
+                ? inserted
+                : H.L(db.QueryOne("SELECT id FROM pciworld_articles WHERE slug=?", a.Slug)?["id"]);
+            if (id <= 0) return;   // lost the race AND the row is gone — nothing safe to attach to
+
+            db.Execute(@"INSERT OR IGNORE INTO pciworld_article_versions
                     (article_id,version,title,dek,body_md,author_name,seo_desc,tags_json)
                 VALUES(?,1,?,?,?,?,?,?)",
                 id, a.Title, a.Dek, a.Body, WorldEditorial.EditorialByline, a.SeoDesc, a.Tags);

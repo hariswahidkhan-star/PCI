@@ -205,14 +205,8 @@ public static class CommunityMediaSchema
         // ── Message linkage. Phase 1's message table gains a kind and a media reference rather
         //    than a parallel table, so ordering, idempotency and the sequence-is-publication rule
         //    are inherited unchanged. Guarded AddCol-style so existing databases converge.
-        var msgCols = db.Columns("pciworld_community_messages");
-        if (msgCols.Count > 0)
-        {
-            if (!msgCols.Contains("message_kind"))
-                db.Exec("ALTER TABLE pciworld_community_messages ADD COLUMN message_kind VARCHAR(16) DEFAULT 'text'");
-            if (!msgCols.Contains("media_id"))
-                db.Exec("ALTER TABLE pciworld_community_messages ADD COLUMN media_id INTEGER");
-        }
+        db.AddColumn("pciworld_community_messages", "message_kind", "message_kind VARCHAR(16) DEFAULT 'text'");
+        db.AddColumn("pciworld_community_messages", "media_id", "media_id INTEGER");
     }
 
     static void Seed(Db db)

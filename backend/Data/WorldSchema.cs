@@ -17,7 +17,23 @@ namespace PCI.Backend.Data;
 /// </summary>
 public static class WorldSchema
 {
-    public static void Ensure(Db db)
+    /// <summary>
+    /// Install and seed the whole World realm. Safe to call from several processes at once.
+    ///
+    /// Two different hazards, two different answers. Duplicate-key races are removed by making every
+    /// write idempotent — Db.AddColumn for upgrade columns, OR IGNORE for seeds. DEADLOCKS are not
+    /// touched by any of that: concurrent connections inserting into the same tables still take locks
+    /// in an order InnoDB can find a cycle in, and it rolls one of them back. Six concurrent Ensure()
+    /// calls on MariaDB produced exactly that. The database calls it retryable and it is: every step
+    /// below is idempotent, so running the block again is the documented remedy.
+    ///
+    /// On the boot path this is belt and braces — Program.cs holds the migration lock. It is load
+    /// bearing for every other caller, including the test harness, which installs this directly from
+    /// many threads with no lock at all. That is the CCP-P2-008 flake.
+    /// </summary>
+    public static void Ensure(Db db) => db.WithRetryOnLockFailure(() => Install(db));
+
+    static void Install(Db db)
     {
         Tables(db);
         Seed(db);
@@ -324,8 +340,7 @@ public static class WorldSchema
         // from CREATE TABLE below/above; both providers share this code path).
         void AddCol(string table, string col, string ddl)
         {
-            var have = db.Columns(table);
-            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            db.AddColumn(table, col, ddl);
         }
         AddCol("pciworld_attempts", "user_id", "user_id INTEGER");
         AddCol("pciworld_attempts", "passport_visible", "passport_visible INTEGER DEFAULT 0");
@@ -606,6 +621,19 @@ public static class WorldSchema
         // Bootstrap the PCI World owner admin on first boot — separate credentials from every other
         // realm. Override the initial password via PCIWORLD_OWNER_PASSWORD; change it after first
         // sign-in (Settings). Same bootstrap posture as the platform's owner admin.
+        //
+        // THE COUNT GUARD AND THE `OR IGNORE` DO DIFFERENT JOBS — both are needed (CCP-P2-008).
+        //
+        //   The COUNT guard is the POLICY: bootstrap only into an empty table. An operator who has
+        //   renamed or replaced the bootstrap owner must not have 'owner@pciworld.local' quietly
+        //   re-created underneath them on the next boot, with the published development password.
+        //   Keying idempotency on the email alone would do exactly that.
+        //
+        //   The `OR IGNORE` closes the RACE inside the guard. Ensure() is called per test class, and
+        //   xUnit runs distinct collections in parallel against one shared MySQL database, so two
+        //   callers both read COUNT = 0 and both insert — the second dies on
+        //   `Duplicate entry 'owner@pciworld.local' for key 'email'`. Serialising the suites would
+        //   hide that; making the write a no-op fixes it, and costs no test wall-clock.
         if (db.Scalar<long>("SELECT COUNT(*) FROM pciworld_admin_users") == 0)
         {
             var pw = Environment.GetEnvironmentVariable("PCIWORLD_OWNER_PASSWORD");
@@ -621,12 +649,21 @@ public static class WorldSchema
                 if (IsProductionPosture()) { pw = Core.Security.RandomHex(12); generated = true; }
                 else pw = "changeme-world-owner";
             }
-            db.Execute("INSERT INTO pciworld_admin_users(email,name,role,password_hash) VALUES(?,?,?,?)",
+            var (_, created) = db.ExecuteWithChanges(
+                "INSERT OR IGNORE INTO pciworld_admin_users(email,name,role,password_hash) VALUES(?,?,?,?)",
                 "owner@pciworld.local", "PCI World Owner", "owner", BCrypt.Net.BCrypt.HashPassword(pw));
-            Console.WriteLine(generated
-                ? $"[seed] PCI World owner admin created: owner@pciworld.local — ONE-TIME PASSWORD: {pw}\n" +
-                  "[seed] Sign in at /world-admin and change it now. This password is not shown again."
-                : "[seed] PCI World owner admin created: owner@pciworld.local — change the password after first sign-in");
+
+            // ANNOUNCE ONLY WHAT ACTUALLY HAPPENED. The generated password is printed once and never
+            // again, so an operator reads it out of the deploy log and signs in with it. If the
+            // insert was ignored — another process won the race — that password belongs to no
+            // account, and printing it would send the operator to a login screen that rejects a
+            // credential the log told them was correct. A seed that lies about a credential is worse
+            // than a seed that says nothing.
+            if (created > 0)
+                Console.WriteLine(generated
+                    ? $"[seed] PCI World owner admin created: owner@pciworld.local — ONE-TIME PASSWORD: {pw}\n" +
+                      "[seed] Sign in at /world-admin and change it now. This password is not shown again."
+                    : "[seed] PCI World owner admin created: owner@pciworld.local — change the password after first sign-in");
         }
     }
 

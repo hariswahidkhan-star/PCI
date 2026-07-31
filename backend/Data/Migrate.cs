@@ -77,8 +77,7 @@ public static class Migrate
         {
             try
             {
-                var have = db.Columns(table);
-                if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+                db.AddColumn(table, col, ddl);
             }
             catch
             {
