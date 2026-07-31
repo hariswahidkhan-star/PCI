@@ -207,7 +207,7 @@ footer{border-top:1px solid var(--line);padding:22px 0 30px}
     fetch('/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v})})
       .then(function(r){if(!r.ok)throw 0;return r.json();})
       .then(function(){say('Thank you — we’ll let you know the moment we’re live.','ok');e.value='';})
-      .catch(function(){say('Thank you — you’re noted. You can also write to hello@projectcontrolsinstitute.org.','ok');e.value='';});
+      .catch(function(){say('We couldn’t reach the server just now — email hello@projectcontrolsinstitute.org and we’ll add you to the launch list.','err');});
   });
 })();
 </script>
