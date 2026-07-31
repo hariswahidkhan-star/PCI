@@ -100,7 +100,7 @@ professional verifies, decides and remains accountable.*
 
 ## Appendix C — Verification record
 
-**7,838 golden-answer checks** stand behind this volume. Every number printed as a *result* —
+**7,891 golden-answer checks** stand behind this volume. Every number printed as a *result* —
 in worked examples, in-text calculations, multiple-choice options (all of them, not only the correct
 one), exercise solutions, case studies and figure specifications — is recomputed independently with
 decimal arithmetic at 28-digit precision and compared to the printed value. Each domain's module also
@@ -126,8 +126,8 @@ claim cannot silently stop being true.
 | 14 | Construction Monitoring and Drawdown | 353 |
 | 15 | Operations, Performance and Restructuring | 379 |
 | 16 | Data, Automation and Responsible AI in Finance | 554 |
-| 17 | Appendix G — integrated capstones | 112 |
-| | **Total** | **7,838** |
+| 17 | Appendix G — integrated capstones | 165 |
+| | **Total** | **7,891** |
 
 Reproduce it with `python3 _build/verify_formulas.py`, or check one domain with
 `python3 _build/run_checks.py checks/<module>.py`. Both loaders are fail-closed: a check module that

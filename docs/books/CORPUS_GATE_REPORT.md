@@ -15,9 +15,9 @@ be a fiction; this is the standard report, once, over the whole corpus.
 
 | | Domains | Knowledge Areas | Worked examples | Case studies | Toolkits | MCQs | Exercises |
 |---|---|---|---|---|---|---|---|
-| **PML-AI** | 16 | 63 | 96 | 32 | 48 | 289 | 74 |
-| **PFL-AI** | 16 | 61 | 129 | 32 | 48 | 241 | 76 |
-| **Total** | **32** | **124** | **225** | **64** | **96** | **530** | **150** |
+| **PML-AI** | 16 | 63 | 161 | 33 | 55 | 363 | 113 |
+| **PFL-AI** | 16 | 61 | 179 | 33 | 52 | 450 | 104 |
+| **Total** | **32** | **124** | **340** | **66** | **107** | **813** | **217** |
 
 Every domain carries the full family apparatus: opening blockquote, why-it-exists, learning
 objectives, master-thread paragraph, per-KA topics with bold-lead definitions, five-step worked
@@ -45,7 +45,7 @@ report, so it is stated in full.
 An earlier revision of this section said the ~700-page gap would be closed by "the consolidated
 question banks, the glossaries, the appendices, the capstone case programme, and the front and back
 matter." All of that has now been built: two question banks (813 items), two glossaries (1,027 terms),
-five derived appendices per volume, and three of the eight capstones (two in PFL-AI, one in PML-AI).
+five derived appendices per volume, and seven of the eight capstones (three in PFL-AI, four in PML-AI).
 The corpus grew from 997 to 1,432 pages — but **only about 100 of those 435 pages came from the companion content**. The rest came from
 writing the chapters deeper. Companion material is thin by nature; it indexes and consolidates, and
 this programme's own rules forbid it from repeating what the chapters say, which caps how many pages it
@@ -79,8 +79,8 @@ the programme owner can take, and there are three defensible answers:
 **What is not available is meeting 1,200 pages with the current syllabus.** Doing so would require
 either 66–69 % more words about the same material — which is padding by definition — or typographic
 inflation, which the charter forbids and which any reviewer would see immediately. This report will not
-record the target as met by either route, and the remaining capstones (six of the eight) are worth
-perhaps 60 to 80 pages between them, not 1,000.
+record the target as met by either route, and the last remaining capstone is worth perhaps
+15 pages, not 1,000.
 
 ## 3. Competencies covered
 
@@ -91,17 +91,17 @@ made so far.
 
 ## 4. Calculations validated
 
-**15,081 golden-answer checks, all passing**, across 55 modules:
+**15,570 golden-answer checks, all passing**, across 58 modules:
 
 | Source | Checks |
 |---|---|
 | PML-AI, 16 domains | 7,351 |
 | PFL-AI, 16 domains | 6,821 |
 | PFL-AI cross-domain modules (span several domains) | 743 |
-| PML-AI Appendix G capstones | 50 |
-| PFL-AI Appendix G capstones | 112 |
+| PML-AI Appendix G capstones | 324 |
+| PFL-AI Appendix G capstones | 165 |
 | loader self-test (pins the ctx contract itself) | 4 |
-| **Total** | **15,081** |
+| **Total** | **15,570** |
 
 Attribution is the suite's own runtime tally, not a source count: several sections assert inside loops,
 so counting occurrences understated the record by more than a thousand, and attributing modules by
@@ -236,13 +236,11 @@ Swept across all 32 manuscripts and separately audited per domain by a dedicated
    structure; the assessment weightings are not settled.
 3. **PFL-AI designation wording** (Phase 0, OD-1) — "AI Project Finance Leader" vs "Project Finance
    Leader – AI" is still inconsistent across platform artefacts.
-4. **The remaining five capstones.** Three of the eight are written: an assembly of each volume's
-   master thread — new content rather than a rework, since neither thread had ever been laid out in
-   one place — plus PFL-AI's Aurora Ridge, a new toll concession whose purpose is to show that one
-   change of revenue basis moves achievable gearing fourfold. The other five (two PFL-AI, three
-   PML-AI) require new projects with their own verified arithmetic on deliberately different risk and
-   failure shapes. They are in scope and unwritten; they are worth perhaps 50 to 70 pages between
-   them, which is relevant to decision 1 and does not resolve it.
+4. **The last capstone.** Seven of the eight are written — an assembly of each volume's master
+   thread, plus five new projects each chosen for a risk or failure shape the other capstones do not
+   exercise. Only PFL-AI's hyperscale data centre remains, on the one shape nothing else in either
+   volume covers: a short-lived asset whose case turns on re-contracting rather than on operations.
+   It is worth perhaps 15 pages, which is relevant to decision 1 and does not resolve it.
 5. **Islamic-finance treatment** in PFL-AI D9 is described in economic terms only, with no
    jurisdictional or religious ruling implied. A qualified reviewer should confirm the framing.
 
