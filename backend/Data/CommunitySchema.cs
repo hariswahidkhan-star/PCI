@@ -365,9 +365,7 @@ public static class CommunitySchema
         db.Exec("CREATE INDEX IF NOT EXISTS ix_wcoutbox_due ON pciworld_community_outbox(status,next_attempt_at)");
         // Additive upgrade: the table shipped once without updated_at, so an install created from
         // that revision needs the column added rather than only fresh installs getting it.
-        var outboxCols = db.Columns("pciworld_community_outbox");
-        if (outboxCols.Count > 0 && !outboxCols.Contains("updated_at"))
-            db.Exec("ALTER TABLE pciworld_community_outbox ADD COLUMN updated_at VARCHAR(32)");
+        db.AddColumn("pciworld_community_outbox", "updated_at", "updated_at VARCHAR(32)");
     }
 
     static void Seed(Db db)

@@ -34,12 +34,29 @@ public static class WorldContentPack
         var existing = db.QueryOne("SELECT id,author_id,status,current_version,config_json FROM pciworld_challenges WHERE code=?", p.Code);
         if (existing is null)
         {
-            var id = db.ExecuteReturningId(@"INSERT INTO pciworld_challenges
+            // Check-then-act, raced by two boots against one database (CCP-P2-008) — the loser died
+            // on `UNIQUE constraint failed: pciworld_challenges.code`. Same shape and same reasoning
+            // as WorldArticlePack.Upsert: `OR IGNORE` makes the losing write a no-op, and the id is
+            // re-read rather than taken from the insert, because last_insert_rowid() after an
+            // IGNORED insert is whatever that connection last inserted and not this row.
+            //
+            // It matters more here than for an article. A version snapshot is the SOLE replay
+            // authority for every attempt against a challenge, so a version row keyed off a
+            // borrowed id would be an attempt replaying somebody else's problem. The unique index
+            // on (challenge_id, version) happens to absorb it today; that is not a reason to write
+            // the wrong id.
+            var (inserted, created) = db.ExecuteWithChanges(@"INSERT OR IGNORE INTO pciworld_challenges
                     (code,title,hook,industry,role,track,difficulty,est_minutes,competencies_json,synthetic_declared,
                      config_json,status,current_version,published_at)
                 VALUES(?,?,?,?,?,?,?,?,?,1,?, 'published', 1, datetime('now'))",
                 p.Code, p.Title, p.Hook, p.Industry, p.Role, p.Track, p.Difficulty, p.Minutes, p.CompetenciesJson, p.ConfigJson);
-            db.Execute(@"INSERT INTO pciworld_challenge_versions
+
+            var id = created > 0
+                ? inserted
+                : H.L(db.QueryOne("SELECT id FROM pciworld_challenges WHERE code=?", p.Code)?["id"]);
+            if (id <= 0) return;
+
+            db.Execute(@"INSERT OR IGNORE INTO pciworld_challenge_versions
                     (challenge_id,version,title,hook,industry,role,track,difficulty,est_minutes,competencies_json,config_json)
                 VALUES(?,1,?,?,?,?,?,?,?,?,?)",
                 id, p.Title, p.Hook, p.Industry, p.Role, p.Track, p.Difficulty, p.Minutes, p.CompetenciesJson, p.ConfigJson);
