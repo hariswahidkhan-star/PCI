@@ -27,37 +27,39 @@ document first — the reasoning is usually load-bearing.
 2. [Deployment topologies](#2-deployment-topologies)
 3. [Repository layout](#3-repository-layout)
 4. [Request pipeline](#4-request-pipeline)
-5. [Data access — `Db.cs`](#5-data-access--dbcs)
+5. [Data access — `Db.cs`](#5-data-access-dbcs)
 6. [Schema, migrations and seeds](#6-schema-migrations-and-seeds)
 7. [Identity, authentication and sessions](#7-identity-authentication-and-sessions)
 8. [Authorisation (RBAC)](#8-authorisation-rbac)
-9. [PCI Global — the public website](#9-pci-global--the-public-website)
-10. [PCI Global — the student portal](#10-pci-global--the-student-portal)
-11. [PCI Global — the operator dashboard](#11-pci-global--the-operator-dashboard)
-12. [The examination pipeline](#12-the-examination-pipeline)
-13. [The secure-exam desktop client](#13-the-secure-exam-desktop-client)
-14. [Payments and finance](#14-payments-and-finance)
-15. [PCI World — concept and identity](#15-pci-world--concept-and-identity)
-16. [PCI World — the Passport](#16-pci-world--the-passport)
-17. [PCI World — challenges, rotation and scoring](#17-pci-world--challenges-rotation-and-scoring)
-18. [PCI World — community rooms and moderation](#18-pci-world--community-rooms-and-moderation)
-19. [PCI World — the forum and the trust ladder](#19-pci-world--the-forum-and-the-trust-ladder)
-20. [PCI World — careers](#20-pci-world--careers)
-21. [PCI World — contributors and editorial](#21-pci-world--contributors-and-editorial)
-22. [PCI World — Project Intelligence](#22-pci-world--project-intelligence)
-23. [PCI World — the World admin console](#23-pci-world--the-world-admin-console)
-24. [The launch board — how World is switched on](#24-the-launch-board--how-world-is-switched-on)
-25. [Cross-cutting services](#25-cross-cutting-services)
-26. [Background workers](#26-background-workers)
-27. [The API surface](#27-the-api-surface)
-28. [The front-end applications](#28-the-front-end-applications)
-29. [Local development](#29-local-development)
-30. [Testing and CI](#30-testing-and-ci)
-31. [Configuration reference](#31-configuration-reference)
-32. [Deployment](#32-deployment)
-33. [Go-live checklist](#33-go-live-checklist)
-34. [How to extend the platform](#34-how-to-extend-the-platform)
-35. [Where to look first](#35-where-to-look-first)
+9. [Logging in — every surface, URL and credential](#9-logging-in-every-surface-url-and-credential)
+10. [Dashboard reference](#10-dashboard-reference)
+11. [PCI Global — the public website](#11-pci-global-the-public-website)
+12. [PCI Global — the student portal](#12-pci-global-the-student-portal)
+13. [PCI Global — the operator dashboard](#13-pci-global-the-operator-dashboard)
+14. [The examination pipeline](#14-the-examination-pipeline)
+15. [The secure-exam desktop client](#15-the-secure-exam-desktop-client)
+16. [Payments and finance](#16-payments-and-finance)
+17. [PCI World — concept and identity](#17-pci-world-concept-and-identity)
+18. [PCI World — the Passport](#18-pci-world-the-passport)
+19. [PCI World — challenges, rotation and scoring](#19-pci-world-challenges-rotation-and-scoring)
+20. [PCI World — community rooms and moderation](#20-pci-world-community-rooms-and-moderation)
+21. [PCI World — the forum and the trust ladder](#21-pci-world-the-forum-and-the-trust-ladder)
+22. [PCI World — careers](#22-pci-world-careers)
+23. [PCI World — contributors and editorial](#23-pci-world-contributors-and-editorial)
+24. [PCI World — Project Intelligence](#24-pci-world-project-intelligence)
+25. [PCI World — the World admin console](#25-pci-world-the-world-admin-console)
+26. [The launch board — how World is switched on](#26-the-launch-board-how-world-is-switched-on)
+27. [Cross-cutting services](#27-cross-cutting-services)
+28. [Background workers](#28-background-workers)
+29. [The API surface](#29-the-api-surface)
+30. [The front-end applications](#30-the-front-end-applications)
+31. [Local development](#31-local-development)
+32. [Testing and CI](#32-testing-and-ci)
+33. [Configuration reference](#33-configuration-reference)
+34. [Deployment](#34-deployment)
+35. [Go-live checklist](#35-go-live-checklist)
+36. [How to extend the platform](#36-how-to-extend-the-platform)
+37. [Where to look first](#37-where-to-look-first)
 
 ---
 
@@ -116,7 +118,7 @@ distinction matters on day one. Verified on a fresh boot:
 
 So a fresh deployment gives you a working PCI World with **no social surface**. That is the
 intended posture, not a half-configured install. Three of the five refuse to switch on until a named
-prerequisite is recorded, and **that refusal is enforced in the endpoint, not the UI** — see §24.
+prerequisite is recorded, and **that refusal is enforced in the endpoint, not the UI** — see §26.
 
 ---
 
@@ -222,10 +224,10 @@ matters; changing it is a behavioural change.
    `/api/login`, `/api/admin/auth/login`, `/api/forgot-password`, `/api/validate-code`,
    `/api/set-password`, `/api/exam/authorize`. Keyed on the first `X-Forwarded-For` hop.
 4. **Boot-time config validation** — in `Production` the app logs every issue and **exits 78** on a
-   hard blocker (§31).
+   hard blocker (§33).
 5. **Host routing** — PCI World / portal-domain resolution (`PortalDomain`, `PCIWORLD_HOSTS`).
 6. **Maintenance mode** — a 503 holding page for public pages while `/api/*` and admin stay up.
-7. **Dynamic content injection (Stage 2)** — before static files (§9).
+7. **Dynamic content injection (Stage 2)** — before static files (§11).
 8. **Static files** — `UseDefaultFiles` + `UseStaticFiles` over `wwwroot/`.
 9. **SPA fallback (Stage 3)** — terminal middleware returning the `/app`, `/admin`, `/world-app` or
    `/world-admin` shell for extension-less client-side routes. Real assets and `/api/*` never reach
@@ -429,7 +431,316 @@ content centre (`cc_*` — `cc_author`, `cc_review`, `cc_publish`, `cc_seo`, `cc
 
 ---
 
-## 9. PCI Global — the public website
+## 9. Logging in — every surface, URL and credential
+
+This is the section to read first if you have just deployed and cannot get in.
+
+### 9.1 Every login surface
+
+| # | Surface | Login URL | Principal | Session table |
+|---|---|---|---|---|
+| 1 | **Operator dashboard** (React) | `/admin/` → login screen | Platform admin | `admin_sessions` |
+| 2 | Operator dashboard (classic) | `/admin.html` | Platform admin | `admin_sessions` |
+| 3 | **Student portal** (React) | `/app/login` | Student | `login_tokens` |
+| 4 | Student portal (classic) | `/student.html` | Student | `login_tokens` |
+| 5 | Student registration | `/app/register` | — | — |
+| 6 | **PCI World** (app) | `/world-app/` — sign in / create account | World user | `pciworld_user_sessions` |
+| 7 | PCI World (server-rendered) | `/world` → `/world/account` | World user | `pciworld_user_sessions` |
+| 8 | World password reset | `/world/reset-password` | World user | — |
+| 9 | World email verification | `/world/verify-email` | World user | — |
+| 10 | **World admin console** | `/world-admin` | World admin | `pciworld_sessions` |
+| 11 | **Partner portal** | partner portal route (`/api/partner/*`) | Partner | `partner_sessions` |
+| 12 | **Employer portal** (careers) | `/world-app/` → *Employer portal* | Verified employer | World session |
+| 13 | **Event check-in scanner** | `/admin/event-scanner` | Platform admin (event perms) | `admin_sessions` |
+| 14 | Exam preview | `/exam-ui.html` | — | — |
+| 15 | Secure-exam desktop client | `pciexam://` launch URI | Single-use launch code | — |
+
+The portal domain split (§2) moves #3–#5 onto their own hostname when `PORTAL_BASE_URL` is set; the
+World-only deployment (§2) serves only #6–#10.
+
+### 9.2 Seeded accounts and their default passwords
+
+These are **development defaults committed to this repository**. Anyone who can read the repo knows
+them, so treat every one as public until changed.
+
+| Account | Default email | Default password | Set by | Seeded when |
+|---|---|---|---|---|
+| **Platform owner admin** | `owner@pci.local` | `changeme-owner` | `ADMIN_OWNER_EMAIL` / `ADMIN_OWNER_PASSWORD` | First boot, if `admin_users` is empty |
+| **Demo student** | `student@pci.local` | `changeme-student` | `DEMO_STUDENT_EMAIL` / `DEMO_STUDENT_PASSWORD` | **Non-production only**, or when `DEMO_STUDENT_PASSWORD` is explicitly set |
+| **PCI World owner admin** | `owner@pciworld.local` | see below — **not a fixed default in production** | `PCIWORLD_OWNER_PASSWORD` | First boot, if `pciworld_admin_users` is empty |
+| Secure-exam demo | — | launch code `PCIDEMO12345` | — | Demo/reference server only |
+
+**The platform owner is forced to change its password at first login** (`must_change_pw`). Readiness
+reports whether that has happened:
+
+```
+GET /api/admin/system-check   →   owner_password_changed: true | false
+```
+
+Boot also warns while the default is still in place:
+
+```
+[config] ADMIN_OWNER_PASSWORD — bootstrap owner uses the default password until changed
+```
+
+### 9.3 The World admin password — the one that behaves differently
+
+Read this before you go looking for `changeme-world-owner` in a production log and fail to find it.
+
+> **A published default password is a published credential.** The World admin holds publication
+> rights over every challenge, so a production install must never boot with one an attacker can read
+> in this repository.
+
+So the behaviour is posture-dependent:
+
+| Posture | `PCIWORLD_OWNER_PASSWORD` set? | What happens |
+|---|---|---|
+| Development / E2E | no | Uses the well-known default `changeme-world-owner`, so the suites stay deterministic |
+| **Production** | no | **A random password is minted and printed ONCE** to the deploy log |
+| Any | yes | Uses your value |
+
+The one-time line to search your deploy log for:
+
+```
+[seed] PCI World owner admin created: owner@pciworld.local — ONE-TIME PASSWORD: <random hex>
+```
+
+When you supplied the password yourself, the line instead reads:
+
+```
+[seed] PCI World owner admin created: owner@pciworld.local — change the password after first sign-in
+```
+
+**The announcement fires only when the row was really inserted.** That precision is deliberate: it
+prints a credential an operator reads out of the log, and after a lost race that password would have
+belonged to no account — sending someone to a sign-in screen that rejects the credential the log told
+them was correct.
+
+**If you missed the line**, the password is not recoverable — it was never stored in plaintext. Set
+`PCIWORLD_OWNER_PASSWORD` and redeploy onto an empty `pciworld_admin_users` table, or reset through
+the platform's recovery path (`ADMIN_OWNER_RESET_PASSWORD`, `ADMIN_RECOVERY_CODE`).
+
+### 9.4 Why the bootstrap seed is guarded the way it is
+
+`WorldSchema` seeds the owner behind a `COUNT` guard **and** an `OR IGNORE`, and both are needed:
+
+- **The `COUNT` guard is the policy** — bootstrap only into an empty table. An operator who renamed
+  or replaced the bootstrap owner must not have `owner@pciworld.local` quietly re-created underneath
+  them on the next boot, **with the published development password**. Keying idempotency on the email
+  alone would do exactly that.
+- **The `OR IGNORE` closes the race** inside the guard, so two concurrent installers cannot both pass
+  `COUNT = 0` and have the second die on a duplicate key.
+
+### 9.5 Credential hygiene before go-live
+
+- [ ] Platform owner password changed (`owner_password_changed: true`)
+- [ ] `ADMIN_OWNER_EMAIL` set to a real address you control
+- [ ] World owner password changed at first sign-in
+- [ ] Demo student **not** seeded in production (leave `DEMO_STUDENT_PASSWORD` unset)
+- [ ] `ENABLE_LEGACY_ADMIN_TOKEN` unset — the app refuses to boot with it on in production
+- [ ] Every salt and secret in §33 set to a real random value
+- [ ] Additional admins created with least-privilege roles rather than sharing the owner account
+
+---
+
+## 10. Dashboard reference
+
+Four distinct operator/user consoles. They do not share sessions, permissions or storage keys.
+
+### 10.1 The operator dashboard — 61 sections
+
+`/admin/` (React) or `/admin.html` (classic). Every row is RBAC-gated by the permission shown; a
+blank permission means the section is **owner-only** or gated inside the page rather than by the nav.
+`owner` sees everything.
+
+**Overview**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/` | Dashboard | — |
+| `/reports` | Reports | `reports` |
+
+**Students**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/students` | Students | `members` |
+| `/enrollments` | Enrolments | `enrollments` |
+| `/payments` | Payments | `payments` |
+| `/tickets` | Support tickets | `tickets` |
+| `/casework` | Appeals & accommodations | `tickets` |
+| `/cpd-review` | CPD review | `members` |
+| `/documents` | Documents | `documents` |
+| `/books` | Books & materials | `resources` |
+| `/membership-grades` | Membership grades | `members` |
+| `/member-directory` | Member directory | `members` |
+| `/identity-merges` | Identity merges | `id_read` |
+| `/erasure-requests` | Data erasure requests | `members` |
+
+**Support**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/communications` | Communications Centre | `comms` |
+| `/support-inbox` | Support inbox | `inbox` |
+| `/errors` | Error reports | `inbox` |
+
+**Examinations**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/certifications` | Certifications | `exams` |
+| `/exams` | Exam registrations | `exams` |
+| `/proctoring` | Proctoring & sessions | `proctoring` |
+| `/exam-exceptions` | Exam Exceptions | `ex_view` |
+| `/exam-delivery` | Exam delivery vendors | `exam_delivery` |
+| `/credentials` | Credentials | `credentials` |
+| `/lab` | Simulation Lab | `sim_lab` |
+
+**Access & pricing**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/codes` | Discount codes | `codes` |
+| `/founding` | Founding stage | — |
+| `/honorary` | Honorary fellows | — |
+| `/honorary-applications` | Honorary applications | — |
+
+**Website**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/content-centre` | Content & Distribution | `cc_view` |
+| `/pages` | Pages & content | `pages` |
+| `/public-downloads` | Downloads Centre | `documents` |
+| `/templates` | Free templates | `content` |
+| `/content` | Site content | `content` |
+| `/announcement` | Announcement | `content` |
+| `/translations` | Translations | — |
+| `/reviews` | Reviews | `content` |
+
+**Community**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/forum-moderation` | Forum moderation | `content` |
+| `/events` | Events & webinars | `content` |
+| `/careers` | Careers / jobs | `content` |
+
+**Marketing, SEO, Analytics, AI**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/social` | Social media | `social` |
+| `/marketing` | Marketing dashboard | — |
+| `/marketing-ads` | Marketing, Ads & Search Console | `mkt_view` |
+| `/seo` | SEO | `pages` |
+| `/analytics` | Analytics | `reports` |
+| `/ai-visibility` | AI Visibility | `pages` |
+
+**Partners & integrations**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/training-partners` | Training Partners | `partners` |
+| `/marketing-partners` | Marketing Partners | `partners` |
+| `/partner-finance` | Partner Finance | `partners` |
+| `/integrations` | Integrations & ERP | `integrations` |
+
+**PCI World**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/world-launch` | PCI World launch | — (**owner only**, enforced server-side) |
+
+**Operations**
+
+| Route | Section | Permission |
+|---|---|---|
+| `/enquiries` | Enquiries | `inquiries` |
+| `/submissions` | Form submissions | `submissions` |
+| `/subscribers` | Newsletter | `subscribers` |
+| `/emails` | Email log | `emails` |
+| `/audit` | Audit log | `audit` |
+| `/identity` | Identity & Student Numbers | — |
+| `/event-scanner` | Event check-in scanner | — |
+| `/notifications` | Notifications | `content` |
+| `/readiness` | Readiness | — (owner) |
+| `/settings` | Settings | — (deny-by-default by key prefix) |
+| `/team` | Team & Access | — (**owner only**) |
+
+> **The nav is not the security boundary.** Hiding a section does not protect it — every one of these
+> is re-checked server-side by `GateFn` / `OwnerGate` on each API call. If you add a section, gate the
+> endpoint; the nav entry is a convenience.
+
+### 10.2 The World admin console
+
+`/world-admin` (operator-visited route; asset base `/world-admin-app/`). Separate identity
+(`pciworld_admin_users`), separate sessions (`pciworld_sessions`), separate audit trail
+(`pciworld_audit`). **80 routes** under `/api/world-admin`:
+
+| Group | What it manages |
+|---|---|
+| `overview` | Console landing metrics |
+| `participants` | `pciworld_participants` — World participation records |
+| `users` | World user accounts |
+| `challenges` | The challenge bank |
+| `rotation` | Rotation cycles, periods and scheduler runs |
+| `articles` | Manuscripts and versions |
+| `editorial` | Workflow, approvals, corrections, sources |
+| `community` | Rooms, moderation policy, cases |
+| `forum` | Threads, posts, trust levels |
+| `careers` | Employers, verification, postings, applications |
+| `intelligence` | Project Intelligence taxonomy and bank |
+| `calendar` | Scheduling |
+| `reports` | Reporting |
+| `audit` | Append-only World audit |
+| `auth` | World admin authentication |
+| `oauth-clients` | OAuth client registration |
+
+### 10.3 The PCI World user app
+
+`/world-app/` — a React shell that **always returns 200** and gates each section on the API. Views:
+
+| View | Requires | Notes |
+|---|---|---|
+| Practice Passport | — | Results, sharing, verification links |
+| Your account / Settings | — | Profile, preferences, sharing controls |
+| Sharing | — | Per-item **and per-field** publication consent |
+| Community | `world_community_enabled` | Rooms; API 404s while off |
+| Forum | `pciworld_forum_enabled` | Also server-rendered at `/world/forum` |
+| Employer portal | `pciworld_careers_enabled` | **Verified employers only** |
+| My job applications | `pciworld_careers_enabled` | Candidate side |
+| Write for PCI World | `pciworld_contributors_enabled` | Contributor desk |
+
+Public, crawlable World routes (no login): `/world`, `/world/about`, `/world/archive`,
+`/world/challenge/{code}`, `/world/blog[/{slug}]`, `/world/news[/{slug}]`, `/world/p/{token}`
+(Passport), `/world/p/{token}/photo`, `/world/verify`, `/world/r/{token}`, `/world/i/{token}`,
+`/world/preview`, and — when switched on — `/world/forum` and `/world/careers`.
+
+### 10.4 The student portal
+
+`/app/` — 20 routes, listed in §12. Token key `pci.session.token`, stored in `sessionStorage` and
+cleared on tab close (deliberate for shared machines).
+
+### 10.5 Storage keys — why sessions never bleed across consoles
+
+Each app has its own client from `makeClient(tokenKey)` and its own key:
+
+| App | Token key |
+|---|---|
+| Student portal | `pci.session.token` |
+| Operator dashboard | `pci.admin.token` |
+| PCI World | World client key |
+| World admin | World admin client key |
+
+Signing into the dashboard therefore does **not** sign you into World, and signing out of one leaves
+the others alone. A central 401 handler in each client clears its own token and redirects to that
+app's login.
+
+---
+
+## 11. PCI Global — the public website
 
 234 static pages, editable without a redeploy.
 
@@ -468,7 +779,7 @@ Supporting services: `SeoTags`, `Sitemap`, `SearchIndex`, `PageScan`, `Redirects
 
 ---
 
-## 10. PCI Global — the student portal
+## 12. PCI Global — the student portal
 
 React SPA at `/app/`; the classic `student.html` panel remains reachable.
 
@@ -517,7 +828,7 @@ Note `account-data` and `delete-request` — subject access and erasure are firs
 
 ---
 
-## 11. PCI Global — the operator dashboard
+## 13. PCI Global — the operator dashboard
 
 React SPA at `/admin/`. **61 sections in 16 groups**, every one RBAC-gated. 549 routes under
 `/api/admin`.
@@ -558,7 +869,7 @@ and reached at `/event-scanner`.
 
 ---
 
-## 12. The examination pipeline
+## 14. The examination pipeline
 
 The largest endpoint module is `Endpoints/StudentExam.cs`, supported by `AdminProctoring`,
 `ExamExceptions`, `AdminExamDelivery` and `ExamClient`.
@@ -592,7 +903,7 @@ Delivery to external vendors goes through `Core/ExamDelivery.cs`,
 
 ---
 
-## 13. The secure-exam desktop client
+## 15. The secure-exam desktop client
 
 `secureexam/` — a .NET 8 solution (SDK pinned `8.0.100` via `global.json`).
 
@@ -628,7 +939,7 @@ There is **no pre-built `.exe`** in the repo — publish on Windows.
 
 ---
 
-## 14. Payments and finance
+## 16. Payments and finance
 
 `Endpoints/Payments.cs` + Stripe.net.
 
@@ -645,7 +956,7 @@ There is **no pre-built `.exe`** in the repo — publish on Windows.
 
 ---
 
-## 15. PCI World — concept and identity
+## 17. PCI World — concept and identity
 
 PCI World is the **practice** product. Its governing honesty rule, stated in
 `Core/WorldPassport.cs` and enforced across every surface:
@@ -663,7 +974,7 @@ intelligence, audit, OAuth clients, admin users.
 
 ---
 
-## 16. PCI World — the Passport
+## 18. PCI World — the Passport
 
 `Core/WorldPassport.cs`. A Passport is practice evidence **its owner chose to publish**. Three
 properties, all implemented:
@@ -687,7 +998,7 @@ Retention and erasure: `Core/PassportDocuments.cs`, `Endpoints/PassportDocs.cs`,
 
 ---
 
-## 17. PCI World — challenges, rotation and scoring
+## 19. PCI World — challenges, rotation and scoring
 
 ### The rotation engine — `Core/WorldRotation.cs`
 
@@ -720,7 +1031,7 @@ Related: `Core/WorldAttempts.cs`, `Core/WorldContent.cs`, `Core/WorldLifecycle.c
 
 ---
 
-## 18. PCI World — community rooms and moderation
+## 20. PCI World — community rooms and moderation
 
 Flag: **`world_community_enabled`**. Surface: `/world-app/community`.
 
@@ -771,7 +1082,7 @@ it — nothing is broadcast on upload** (`CommunityMedia`, `CommunityMediaPipeli
 
 ---
 
-## 19. PCI World — the forum and the trust ladder
+## 21. PCI World — the forum and the trust ladder
 
 Flag: **`pciworld_forum_enabled`**. Surface: `/world/forum` (server-rendered, therefore crawlable and
 readable with JavaScript off).
@@ -796,7 +1107,7 @@ the platform admin's *Forum moderation* section.
 
 ---
 
-## 20. PCI World — careers
+## 22. PCI World — careers
 
 Flag: **`pciworld_careers_enabled`**. Prerequisite: **`pciworld_ack_careers_privacy`**.
 Surface: `/world/careers` (server-rendered) + employer portal.
@@ -820,7 +1131,7 @@ Front end: `frontend/src/world/careers/` (EmployerPortal, MyApplications).
 
 ---
 
-## 21. PCI World — contributors and editorial
+## 23. PCI World — contributors and editorial
 
 Flag: **`pciworld_contributors_enabled`**. Prerequisite: **`pciworld_ack_contributor_terms`**.
 
@@ -857,7 +1168,7 @@ Endpoints: `WorldContributorsApi.cs`, `Data/ContributorSchema.cs`.
 
 ---
 
-## 22. PCI World — Project Intelligence
+## 24. PCI World — Project Intelligence
 
 `Core/WorldIntelligence.cs` + `Data/WorldIntelligencePack*.cs` (a pack split across `Q2`, `Q3`, `Q4`,
 `R` files). Design: `docs/pciworld/PROJECT_INTELLIGENCE.md`.
@@ -870,7 +1181,7 @@ API: `/api/world-admin/intelligence`, `Endpoints/WorldIntelligence.cs`.
 
 ---
 
-## 23. PCI World — the World admin console
+## 25. PCI World — the World admin console
 
 A separate React bundle (`worldadmin.html` → `frontend/src/worldadmin/`), served at `/world-admin`,
 with its own admin identity (`pciworld_admin_users`, `pciworld_sessions`) and its own audit table
@@ -888,7 +1199,7 @@ oauth-clients
 
 ---
 
-## 24. The launch board — how World is switched on
+## 26. The launch board — how World is switched on
 
 `Endpoints/WorldLaunch.cs`, admin → **PCI World → Launch** (owner only).
 
@@ -956,7 +1267,7 @@ leaving them closed.
 
 ---
 
-## 25. Cross-cutting services
+## 27. Cross-cutting services
 
 | Area | Files |
 |---|---|
@@ -974,7 +1285,7 @@ leaving them closed.
 
 ---
 
-## 26. Background workers
+## 28. Background workers
 
 All claim work through **`Core/WorkerLease.cs`**.
 
@@ -990,7 +1301,7 @@ Leased workers: `OutboxDispatcher`, `CommunityOutbox`, `CommunityMediaPipeline`,
 
 ---
 
-## 27. The API surface
+## 29. The API surface
 
 **984 routes.** Every response is JSON via `Results.Json(...)`; errors are `{ error, … }` with the
 right status: 401 unauthorised, 403 forbidden / `owner_only`, 400 validation, 404 not found, 503
@@ -1015,7 +1326,7 @@ Privileged actions are logged to `audit_logs` via the `logFn` / `Log` helper (Wo
 
 ---
 
-## 28. The front-end applications
+## 30. The front-end applications
 
 React 18 + TypeScript + Vite. **Four independent bundles**, one project, shared components and typed
 API clients.
@@ -1053,7 +1364,7 @@ World keys). Reuse `makeClient(tokenKey)` — do not hand-roll fetches.
 
 ---
 
-## 29. Local development
+## 31. Local development
 
 ### Backend
 
@@ -1090,7 +1401,7 @@ DB_PROVIDER=mysql MYSQL_HOST=127.0.0.1 MYSQL_USER=pci MYSQL_PASSWORD=… MYSQL_D
 
 ---
 
-## 30. Testing and CI
+## 32. Testing and CI
 
 ### Test suites
 
@@ -1155,7 +1466,7 @@ container — do **not** run `playwright install`.
 
 ---
 
-## 31. Configuration reference
+## 33. Configuration reference
 
 **69 environment variables** are read. The ones that matter:
 
@@ -1250,7 +1561,7 @@ Owner-only readiness probe: `GET /api/admin/system-check` (admin → *Readiness*
 
 ---
 
-## 32. Deployment
+## 34. Deployment
 
 One Docker image serves every surface: build four React bundles → publish .NET → runtime image, with
 the bundles copied into `wwwroot/`.
@@ -1275,7 +1586,7 @@ Full instructions: `DEPLOY.md`, `backend/RUN.md` §8, `docs/pciworld/DEPLOY_REND
 
 ---
 
-## 33. Go-live checklist
+## 35. Go-live checklist
 
 **Infrastructure**
 
@@ -1318,7 +1629,7 @@ Full instructions: `DEPLOY.md`, `backend/RUN.md` §8, `docs/pciworld/DEPLOY_REND
 
 ---
 
-## 34. How to extend the platform
+## 36. How to extend the platform
 
 ### Add an endpoint
 
@@ -1359,7 +1670,7 @@ Claim work through `WorkerLease` with a single conditional `UPDATE`. Never `SELE
 
 ---
 
-## 35. Where to look first
+## 37. Where to look first
 
 | Need | File |
 |---|---|
