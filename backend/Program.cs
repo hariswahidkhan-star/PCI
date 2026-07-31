@@ -865,10 +865,26 @@ app.Use(async (ctx, next) =>
 });
 
 // ================= health =================
+// `build` and `started` exist because of a failure mode this deployment hit three times running: a
+// container that refuses to boot leaves the PREVIOUS build serving, so the site stays up, the URL
+// answers, every page looks fine — and none of the merged work is there. Health said "ok" the whole
+// time. Without a build identifier the only way to notice was for somebody to spot a missing
+// feature, which is how three deploys' worth of changes went unnoticed.
+//
+// Render exports RENDER_GIT_COMMIT on every deploy; other hosts can pass GIT_COMMIT. Short form
+// only — enough to compare against `git log`, not a disclosure of anything the operator did not
+// already publish. `started` distinguishes "deployed and restarted" from "still the old process".
+var buildCommit = (Environment.GetEnvironmentVariable("RENDER_GIT_COMMIT")
+                   ?? Environment.GetEnvironmentVariable("GIT_COMMIT") ?? "").Trim();
+var buildId = buildCommit.Length >= 7 ? buildCommit[..7]
+              : buildCommit.Length > 0 ? buildCommit : "unknown";
+var bootedAt = DateTime.UtcNow.ToString("o");
 app.MapGet("/api/health", () => Json(new {
     ok = true,
     service = "pci-backend",
     database_provider = db.Provider == Db.Kind.MySql ? (db.IsMariaDb ? "mariadb" : "mysql") : "sqlite",
+    build = buildId,
+    started = bootedAt,
     time = DateTime.UtcNow.ToString("o"),
     recovery_configured = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ADMIN_RECOVERY_CODE"))
 }));

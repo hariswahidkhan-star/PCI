@@ -496,8 +496,16 @@ function showView(name){
   $('#app').style.display=(name==='app')?'flex':'none';
   $('#viewLogin').style.display=(name==='login')?'block':'none';
   $('#viewPw').style.display=(name==='pw')?'block':'none';
-  if(name==='login'){$('#loginErr').hidden=true;setTimeout(function(){$('#inEmail').focus();},50);}
-  if(name==='pw'){$('#pwErr').hidden=true;$('#inPw1').value='';$('#inPw2').value='';setTimeout(function(){$('#inPw1').focus();},50);}
+  // Focus the first field SYNCHRONOUSLY. This used to run on a 50ms timer, which meant the
+  // caret was yanked back to field one about a twentieth of a second AFTER the form appeared —
+  // long enough for anyone already typing, or a password manager filling both boxes, to have
+  // moved on to the second field. Their keystrokes then landed in the first one: the password
+  // ended up appended to the email, or the confirmation appended to the new password, and the
+  // form refused itself with "the two passwords do not match" over an input the person had
+  // filled in correctly. The elements are displayed on the lines directly above, so there is
+  // nothing to wait for — the delay bought nothing and cost the first moments of typing.
+  if(name==='login'){$('#loginErr').hidden=true;$('#inEmail').focus();}
+  if(name==='pw'){$('#pwErr').hidden=true;$('#inPw1').value='';$('#inPw2').value='';$('#inPw1').focus();}
 }
 function signOut(callServer){
   if(callServer&&st.token){api('/api/partner/auth/logout',{method:'POST',body:'{}'}).catch(function(){});}
@@ -800,7 +808,10 @@ function openCodeForm(row){
   }
   card.hidden=false;
   card.scrollIntoView({behavior:'smooth',block:'nearest'});
-  setTimeout(function(){$('#cPercent').focus();},50);
+  // Synchronous, like every other focus in this file — see showView(). A deferred focus reaches
+  // back into the form after the person has already tabbed on, so their second value lands in the
+  // first box and the form rejects itself over a field they filled in correctly.
+  $('#cPercent').focus();
 }
 function loadCertOptions(){
   api('/api/partner/certifications').then(function(d){
@@ -1284,7 +1295,7 @@ $('#btnStPdf').addEventListener('click',function(){downloadStatement('pdf','pdf'
 $('#btnNewDispute').addEventListener('click',function(){
   var f=$('#dispForm');f.hidden=!f.hidden;
   $('#dispErr').hidden=true;$('#dispOk').hidden=true;
-  if(!f.hidden)setTimeout(function(){$('#dSubject').focus();},50);
+  if(!f.hidden)$('#dSubject').focus();
 });
 $('#btnDispCancel').addEventListener('click',function(){$('#dispForm').hidden=true;});
 $('#dispForm').addEventListener('submit',function(ev){
