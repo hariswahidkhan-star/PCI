@@ -324,6 +324,23 @@ def build(book: str, out: pathlib.Path) -> None:
         app_html = '<div class="backmatter appendices">' + inner + "</div>"
         print(f"appendix tables: {inner.count('<table>')}")
 
+    # Back matter — the standards and frameworks register (Appendix F). Derived, and the one appendix
+    # whose job is disclosure rather than reference: it states what the volume engages with, that
+    # nothing is reproduced, and that no editions are asserted.
+    std_file = book_dir / "STANDARDS.md"
+    std_html = ""
+    if std_file.exists():
+        stext = std_file.read_text(encoding="utf-8")
+        sbody = re.sub(r"\A# [^\n]*\n+(?:> [^\n]*\n)*\n?", "", stext)
+        inner = markdown.markdown(sbody, extensions=["tables"])
+        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h3>\1</h3>', inner)
+        std_html = ('<div class="backmatter appendices">'
+                    '<h2 class="apptitle">Appendix F — Standards and frameworks referenced</h2>'
+                    + inner + "</div>")
+        # Count body rows, not `<tr>` minus `<th>` — that counted the family tables (4 and 7) and
+        # reported them as entries, which is a log line that lies about coverage.
+        print(f"standards register: {len(re.findall(r'<td><strong>', inner))} entries")
+
     # Back matter — the integrated capstones (Appendix G). Authored rather than derived: a capstone's
     # content is the agreement between domains, which no generator can compute. It follows the
     # derived appendices so the volume's lettering runs in order.
@@ -342,7 +359,7 @@ def build(book: str, out: pathlib.Path) -> None:
     front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
     doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{front}{''.join(toc)}{html}{app_html}{cap_html}{gloss_html}"
+                f"</head><body>{front}{''.join(toc)}{html}{app_html}{std_html}{cap_html}{gloss_html}"
                 f"{''.join(ix)}</body></html>")
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
