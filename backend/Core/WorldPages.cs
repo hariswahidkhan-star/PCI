@@ -582,6 +582,93 @@ public static class WorldPages
         /* 340px is where the lockup genuinely stops fitting: wordmark 118 + rule 2 + gaps 22 + tagline
            132 = 274px against 320-44=276px of usable width. Above it the endorsement stays, including
            on 360 and 375px phones. Below it both halves go together. */
+        /* ── The challenge workspace on a phone ────────────────────────────────────────────────
+           A challenge is the one PCI World surface people genuinely use one-handed, standing up,
+           on the smallest screen they own. It was the surface least prepared for it: a single
+           evidence value forced the table wider than the viewport, and the browser's answer to a
+           layout it cannot fit is to scale the entire page down — the challenge arrived at 53%,
+           with a dead white gutter down one side and body text below legibility.
+
+           Fixed at the source (a prose value is no longer told it is a number), and then given the
+           treatment the rest of the surface already has. */
+
+        /* Long values wrap instead of widening the page — on every viewport, not just small ones.
+           A desktop window can be 500px too. */
+        .t-stack td, .t-stack th{overflow-wrap:anywhere}
+
+        @media (max-width:680px){
+          /* Two- and four-column tables become stacked records: the column heading travels with
+             each value as its label, so nothing depends on a header row that is now off-screen.
+             ARIA roles are asserted BECAUSE display:block strips a table's implicit semantics —
+             without them this reads to a screen reader as loose text, which would trade a visual
+             problem for an invisible one. */
+          .t-stack, .t-stack tbody, .t-stack tr, .t-stack td{display:block;width:100%}
+          .t-stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+          .t-stack tr{
+            border:1.5px solid var(--line);border-radius:12px;padding:4px 2px;margin:0 0 10px;
+            background:var(--paper)}
+          .t-stack tr:last-child{margin-bottom:0}
+          .t-stack tbody tr:hover{background:var(--paper)}   /* row hover is a pointer affordance */
+          .t-stack td{border-bottom:0;padding:9px 14px;display:flex;gap:12px;align-items:baseline}
+          .t-stack td + td{border-top:1px dashed var(--line)}
+          /* A fixed label column so the values line up down the card instead of each one landing
+             wherever its own label happened to end — the difference between a stack of records and
+             a stack of fragments. 104px fits the longest heading these tables use ("Your answer")
+             at this size, and still leaves 150px of value on a 320px screen. */
+          .t-stack td::before{
+            content:attr(data-l);flex:0 0 104px;font-family:var(--display);font-weight:800;
+            font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mist);
+            line-height:1.7}
+          .t-stack td:not([data-l])::before{content:none}
+          .t-stack td.num{font-variant-numeric:tabular-nums;font-weight:600}
+          /* Prose reads from the left. Right-aligning a wrapped sentence because the column beside
+             it holds numbers is how a table looks tidy and reads badly. */
+          .t-stack td:not(.num){text-align:left}
+          .t-stack td > *{min-width:0}
+
+          /* A TWO-column table is a label and its value, so "Item:" and "Value:" in front of each
+             one is chrome restating the obvious. It presents as a stat instead: the name quietly
+             above, the figure below at reading size. Tables with more columns keep their per-cell
+             labels — there the heading is the only thing telling you which number you are looking
+             at, and it has to travel with the value. */
+          .t-pair td{display:block;text-align:left;padding:0 14px}
+          .t-pair td::before{content:none}
+          .t-pair td + td{border-top:0}
+          .t-pair tr{padding:12px 2px}
+          .t-pair td:first-child{
+            font-family:var(--display);font-weight:800;font-size:11.5px;letter-spacing:.05em;
+            text-transform:uppercase;color:var(--mist);margin-bottom:3px}
+          .t-pair td:last-child{
+            font-size:17px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;
+            line-height:1.45}
+
+          /* Controls sized for a thumb. 16px input text is also what stops iOS zooming the page
+             the moment a field takes focus. */
+          input[type=text],input[type=number],input[type=email],input[type=password]{
+            max-width:100%;font-size:16px;padding:14px 15px}
+          select,textarea{width:100%;max-width:100%;font-size:16px;padding:13px 14px}
+          fieldset{padding:16px 14px 10px;margin:16px 0}
+          legend{font-size:15.5px}
+          /* 44px minimum target (WCAG 2.5.5), and the whole row is the target — not just the dot. */
+          .opt{padding:12px 10px;min-height:44px;align-items:center;gap:14px}
+          .opt label{line-height:1.45}
+          .opt input{width:20px;height:20px;margin-top:0}
+          label{margin:16px 0 7px}
+
+          /* The score band: three big numbers side by side become a readable row of their own. */
+          .dim{gap:18px 26px}
+          .dim b.score{font-size:34px}
+
+          /* The workspace cards carry more chrome than marketing cards; tighten a little further. */
+          #app .card{padding:18px 16px}
+          #app h2{font-size:19px}
+          table{font-size:15px}
+
+          /* The issue-report form is a details panel of full-width controls on a phone. */
+          details.card{padding:18px 16px}
+          details.card select{margin-top:2px}
+        }
+
         @media (max-width:339px){
           .brand small{display:none}
         }
@@ -930,8 +1017,11 @@ public static class WorldPages
               <form id="work" hidden tabindex="-1">
                 <div class="card">
                   <h2 style="margin-top:0">Evidence</h2>
-                  <table id="evidence"><caption class="visually-hidden">Project evidence</caption>
-                    <thead><tr><th scope="col">Item</th><th scope="col">Value</th></tr></thead><tbody></tbody></table>
+                  <!-- Explicit roles because .t-stack sets display:block below 680px, and that
+                       strips a table's implicit ARIA semantics. Redundant on desktop, load-bearing
+                       on a phone: without them the stacked layout reads as loose text. -->
+                  <table id="evidence" class="t-stack t-pair" role="table"><caption class="visually-hidden">Project evidence</caption>
+                    <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Item</th><th scope="col" role="columnheader">Value</th></tr></thead><tbody role="rowgroup"></tbody></table>
                 </div>
                 <div class="card" id="asks"></div>
                 <div class="card" id="decisions"></div>
@@ -1010,7 +1100,16 @@ public static class WorldPages
           var tb = $('evidence').querySelector('tbody');
           (WORLD.view.evidence || []).forEach(function(e){
             var tr = document.createElement('tr');
-            tr.innerHTML = '<td>' + esc(e.label) + '</td><td class="num">' + esc(e.value) + '</td>';
+            // .num means "this is a number": it right-aligns and sets white-space:nowrap. Every
+            // value was getting it, so prose got nowrap too — one AI-forecast sentence measured
+            // 576px and pushed this table to 688px, which is what a 390px phone was scaling the
+            // whole page down to fit. The stacked layout below is what actually fixes the phone;
+            // this is the same bug at its source, and it still matters in the band just above the
+            // breakpoint where the table is still a table and the margin is thin.
+            var isNum = /^[-+(]?[$£€]?[\d,]+(\.\d+)?[%)]?$/.test(String(e.value == null ? '' : e.value).trim());
+            tr.setAttribute('role', 'row');
+            tr.innerHTML = '<td role="cell" data-l="Item">' + esc(e.label) + '</td>' +
+              '<td role="cell" data-l="Value"' + (isNum ? ' class="num"' : '') + '>' + esc(e.value) + '</td>';
             tb.appendChild(tr);
           });
           var asks = $('asks');
@@ -1123,11 +1222,11 @@ public static class WorldPages
             '<p>' + esc(r.profile_reason) + '</p>' +
             '<p><b>Improve next:</b> ' + esc(r.improvement) + '</p></div>';
           if ((r.measures || []).length){
-            h += '<div class="card"><h2 style="margin-top:0">The numbers</h2><table>' +
-                 '<thead><tr><th scope="col">Measure</th><th scope="col">Your answer</th><th scope="col">Reference</th><th scope="col">Verdict</th></tr></thead><tbody>';
+            h += '<div class="card"><h2 style="margin-top:0">The numbers</h2><table class="t-stack" role="table">' +
+                 '<thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Measure</th><th scope="col" role="columnheader">Your answer</th><th scope="col" role="columnheader">Reference</th><th scope="col" role="columnheader">Verdict</th></tr></thead><tbody role="rowgroup">';
             r.measures.forEach(function(m){
-              h += '<tr><td>' + esc(m.label) + '</td><td class="num">' + esc(m.yours == null ? '—' : m.yours) +
-                   '</td><td class="num">' + esc(m.reference) + '</td><td class="' + (m.correct ? 'ok' : 'bad') + '">' +
+              h += '<tr role="row"><td role="cell" data-l="Measure">' + esc(m.label) + '</td><td role="cell" data-l="Your answer" class="num">' + esc(m.yours == null ? '—' : m.yours) +
+                   '</td><td role="cell" data-l="Reference" class="num">' + esc(m.reference) + '</td><td role="cell" data-l="Verdict" class="' + (m.correct ? 'ok' : 'bad') + '">' +
                    (m.correct ? 'Correct' : 'Check the method') + '</td></tr>';
             });
             h += '</tbody></table></div>';

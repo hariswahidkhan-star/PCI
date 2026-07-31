@@ -274,3 +274,69 @@ test.describe('PCI World — separate admin realm', () => {
     expect(html).not.toContain('PCI World')
   })
 })
+
+/* The challenge on a phone.
+ *
+ * Every scan above runs at the default desktop viewport, so the surface people most often meet a
+ * challenge on was the one surface nothing measured. It showed: a single evidence value — an AI
+ * forecast sentence carrying the `num` class, and with it white-space:nowrap — was 576px wide, the
+ * table went to 688px, and a 390px phone answered the way phones do, by scaling the entire page to
+ * 53%. The challenge was legible on no phone made, and every desktop check stayed green.
+ *
+ * These run at 390px (a current iPhone) and 320px (the narrowest width WCAG 1.4.10 asks about).
+ */
+test.describe('PCI World — the challenge on a phone', () => {
+  for (const [label, width] of [['390px', 390], ['320px', 320]] as const) {
+    test(`the workspace reflows at ${label} with no horizontal scrolling`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 })
+      await page.goto('/world/challenge/WC-EVM-001')
+
+      // Compare against the width we ASKED for, not innerWidth. A page that overflows makes the
+      // browser widen its own layout viewport to fit — innerWidth becomes 731 on a 390px phone and
+      // then dutifully reports "no overflow", which is exactly how this went unnoticed.
+      const brief = await page.evaluate(() => document.documentElement.scrollWidth)
+      expect(brief, 'the brief must fit the phone').toBeLessThanOrEqual(width)
+
+      await page.getByRole('button', { name: 'Start the challenge' }).click()
+      await expect(page.locator('#work')).toBeVisible()
+      const working = await page.evaluate(() => document.documentElement.scrollWidth)
+      expect(working, 'the evidence and answer form must fit the phone').toBeLessThanOrEqual(width)
+    })
+  }
+
+  test('the stacked evidence table keeps its table semantics', async ({ page }) => {
+    // The mobile layout sets display:block, which strips a table's implicit ARIA roles. Explicit
+    // roles put them back — without this assertion the visual fix could silently trade a layout
+    // problem for a screen-reader one, which is the worse of the two and the harder to notice.
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/world/challenge/WC-EVM-001')
+    await page.getByRole('button', { name: 'Start the challenge' }).click()
+    await expect(page.locator('#evidence')).toBeVisible()
+    await expect(page.locator('#evidence')).toHaveAttribute('role', 'table')
+    expect(await page.locator('#evidence tbody tr[role="row"]').count()).toBeGreaterThan(0)
+    expect(await page.locator('#evidence td[role="cell"]').count()).toBeGreaterThan(0)
+  })
+
+  test('the workspace passes a WCAG 2.x AA scan on a phone', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/world/challenge/WC-EVM-001')
+    await page.getByRole('button', { name: 'Start the challenge' }).click()
+    await expect(page.locator('#work')).toBeVisible()
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
+    expect(results.violations).toEqual([])
+  })
+
+  test('the graded result reflows at 320px', async ({ page }) => {
+    // The result carries a FOUR-column table (measure, answer, reference, verdict). Four columns
+    // do not fit a phone side by side at any readable size, so each row stacks with its column
+    // heading travelling alongside the value.
+    await page.setViewportSize({ width: 320, height: 700 })
+    await page.goto('/world/challenge/WC-WBS-026')
+    await page.getByRole('button', { name: 'Start the challenge' }).click()
+    await page.locator('#ask_root_total').fill('1200000')
+    await page.getByRole('radio', { name: 'Yes' }).check()
+    await page.getByRole('button', { name: 'Submit my answers' }).click()
+    await expect(page.locator('#result')).toContainText('Your result')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+  })
+})
