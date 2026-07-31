@@ -7,12 +7,15 @@ at each point in a project's life. A financing is not a sequence of sixteen corr
 is one asset whose appraisal, structure, contracts, diligence, drawdown and covenants must all be
 true at the same time, and the interesting failures are the ones that live in the joints.
 
-**Four capstones, and why the first is different.** Three of the four are new projects, deliberately
-chosen for different risk shapes: a **toll-road concession** where the revenue risk is demand and
-nothing hedges it, a **solar-plus-storage independent power project** where the contract is a price
-and the risk is resource, and a **hyperscale data centre** where the asset is short-lived, the
-counterparty is investment-grade and the whole case turns on re-contracting. Each is worked from its
-own arithmetic.
+**Four capstones, and why the first is different.** Three of the four are new projects, each chosen
+for a revenue basis the others do not share: **Aurora Ridge** (G.2), a toll-road concession where
+demand is unhedged and nothing guarantees the revenue; **Helios Flats** (G.3), a solar-plus-storage
+independent power project where the price is contracted for the asset's whole life and the *resource*
+is not; and **Northgate Point** (G.4), a hyperscale data centre whose contract is investment-grade and
+**expires five years before the debt does**. Each is worked from its own arithmetic, and none reuses
+another's figures. A closing section sets the four side by side, because the argument they make
+together — that no two of them bind in the same place — is not visible from any one of them. Every
+project, company and person in this appendix is fictitious.
 
 The first capstone is the **Kestrel Water desalination PPP** — the master thread this volume has
 carried since Domain 3. It is not reworked here, because reworking it would be the duplication this
@@ -489,15 +492,130 @@ it is worth tens of millions here.
 
 ---
 
-## Capstone Four
+## Capstone Four — Northgate Point: lending past the lease
 
-The last of the four — the **hyperscale data centre** — is **not yet written**, and is listed in this
-volume's plan and in `CORPUS_GATE_REPORT.md` as outstanding. Its risk shape is exercised by neither of
-the two new-project capstones above and by nothing in the sixteen domains: a **short-lived asset whose
-entire case turns on re-contracting**. Where Aurora Ridge's revenue was unguaranteed and Helios Flats'
-was contracted for the asset's whole life, a data centre's leases expire long before its debt does, so
-the binding question is not the coverage in any modelled year but the probability and price of the
-lease that has not been signed. It may not reuse the figures above.
+Kestrel's revenue was contracted for the concession's whole life. Aurora Ridge had no contract at all.
+Helios Flats had one for twenty-five years against an uncertain resource. **Northgate Point has an
+investment-grade counterparty on a contract that expires five years before the debt does**, and that
+single fact relocates the entire credit question: it is no longer the coverage in any modelled year,
+because every modelled year is fine. It is the probability and price of a lease nobody has signed.
 
-Saying so is the honest alternative to filling the space. A capstone that recycled another project's
-numbers under a new name would add pages and subtract credibility.
+**The asset.** A 60 MW hyperscale data centre. Capital expenditure **USD 720,000,000** —
+12,000,000 a MW. A **seven-year** anchor lease with an investment-grade tenant over 40 MW at **120 per
+kW-month**, and the remaining 20 MW let at **130** — annual revenue
+`40,000 × 120 × 12 + 20,000 × 130 × 12 =` **88,800,000**. Operating and property costs **22,800,000**,
+so net operating income is **66,000,000**. Senior debt at **6.0 %**; the market will offer a **12-year**
+tenor. Required `DSCR` **1.35×**. *(Fictitious project; tax excluded as in Capstones Two and Three.)*
+
+### G.4.1 Sizing on contracted cash produces a facility with zero tolerance
+
+Take the 1.35× at face value against the 66,000,000 and the arithmetic is unremarkable: service of
+**48,888,889** against `AF(0.06, 12) = 8.383844` supports **409,876,814.86**, or **56.93 %** of cost.
+Every year from one to twelve covers at exactly 1.35×, and a covenant-compliance table would be green
+in all twelve rows.
+
+Now ask the only question that matters. Years eight to twelve are paid by a lease that does not exist,
+and the outstanding balance entering year eight is `48,888,889 × AF(0.06, 5) =` **205,937,785.07** —
+**50.24 %** of the original facility, resting entirely on a re-letting. So: how far can the market fall
+before the covenant breaks?
+
+**By construction, not at all.** The facility was sized so that today's net operating income yields
+exactly 1.35×, which means the breakeven re-let is **100.0000 %** of today's revenue and the tolerance
+is **zero points**. That is not a coincidence to be worked around; it is what sizing a twelve-year
+facility on seven years of contracted cash *means*. The structure requires a market in year eight
+identical to the market today, and it requires it as a condition of not defaulting.
+
+Price a modest softening and the consequence is immediate. Operating leverage is `88,800,000 / 66,000,000 =`
+**1.3455×**, so a 15 % rent decline is a **20.1818 %** decline in net operating income:
+
+| Re-letting outcome | Net operating income | `DSCR` on the contracted-cash facility |
+|---|---|---|
+| flat | 66,000,000 | 1.3500 |
+| −5 % rent, 95 % occupancy | 57,342,000 | 1.1729 |
+| −10 % rent, 92 % occupancy | 50,726,400 | 1.0376 |
+| **−15 % rent, 90 % occupancy** | **45,132,000** | **0.9232** |
+
+The last row is a **payment default**, not a covenant breach — the third time in this appendix that a
+project reaches one, after Aurora Ridge's ramp and Helios Flats' degradation, and again from a
+condition documented before financial close.
+
+### G.4.2 The extra tenor buys 2.70 %, not 50 %
+
+Set the naive twelve-year facility beside the two structures a competent credit committee would
+actually consider, and the comparison inverts:
+
+| Structure | Facility | Loan to cost | Re-let tolerance |
+|---|---|---|---|
+| 1 — tenor matched to the lease (7 years) | **272,916,425.94** | 37.91 % | not exposed |
+| 2 — 12 years on contracted cash | 409,876,814.86 | 56.93 % | **0.0000 %** |
+| 3 — 12 years, sized on a stressed re-let | **280,281,218.31** | 38.93 % | **23.5000 points** |
+
+Structure 3 sizes the whole tenor on the −15 %/90 % case: service of **33,431,111.11** against a
+stressed net operating income of 45,132,000, which covers **1.9742×** on today's cash and holds 1.35×
+down to **76.5000 %** of today's revenue.
+
+**And structure 3 lands within 2.70 % of structure 1.** The twelve-year tenor, honestly stressed, buys
+**7,364,792.37** of additional facility — not the **136,960,388.93** that structure 2 appears to offer.
+That apparent 136.96 million is the entire content of the re-letting assumption, and it is an
+assumption with no tolerance at all.
+
+This is the finding to carry out of the appendix. **A tenor extension beyond the contracted period is
+not a financing improvement; it is a position on a market, taken by a lender and paid for by a
+sponsor.** The two structures that price it honestly converge, which is what one expects when the
+underlying cash is the same and only the pretence differs. A committee choosing structure 2 over
+structure 3 has not obtained cheaper capital — it has bought 129.6 million of debt against a
+re-letting forecast, and would be better served by saying so and pricing it.
+
+### G.4.3 What the re-letting question actually requires
+
+Three obligations follow, none of them a modelling exercise:
+
+**A refinancing plan, priced.** With 205,937,785.07 outstanding at year seven, the sponsor's real
+exposure is the loan-to-value at the refinancing date — and the value at that date is a function of the
+same re-let. The two move together, which is the definition of the wrong kind of correlation: the asset
+is worth least exactly when the balance must be refinanced. A tail sized on today's value has priced
+neither.
+
+**A leasing pipeline treated as a condition precedent to the *tail*, not to drawdown.** Kestrel's
+conditions precedent were tested once, before close (Capstone One, G.1.4). Northgate Point's decisive
+condition falls due in year seven and nobody tests it, because financial-close discipline does not
+reach that far. The instrument that does is a covenant requiring a stated share of capacity re-let by a
+stated date, with cash sweeps ahead of it — which converts an untested assumption into a monitored one.
+
+**Honesty about what the counterparty's rating covers.** An investment-grade tenant makes the
+*contracted* seven years very safe, and does nothing whatever for years eight to twelve. A credit paper
+leading on the tenant's rating has described the half of the exposure that is not at risk. The
+technology risk sits in the same place: 12,000,000 a MW buys a specification with a useful commercial
+life that may be shorter than the debt, and re-letting at today's rate assumes a facility that is still
+competitive when a hyperscale tenant next chooses.
+
+### G.4.4 The three questions Northgate Point adds
+
+1. **Does the contract outlive the debt?** If not, identify what share of the facility is paid by an
+   unsigned agreement — 50.24 % here — and treat that share as merchant, whatever the tenant's rating.
+2. **What is the re-let tolerance, in points of revenue?** A facility sized on contracted cash has
+   zero, by construction. If nobody has computed the number, the answer is zero and nobody knows it.
+3. **What does the longer tenor buy once the tail is honestly stressed?** Here, 2.70 % — and the
+   arithmetic that shows it takes one afternoon, against a 129.6 million position that would otherwise
+   be taken by default.
+
+---
+
+## The eight capstones, and what they establish together
+
+Four programmes in each volume, and in this one four financings whose only common feature is the
+discipline applied to them. Read in sequence they make one argument that no single capstone makes:
+
+| Capstone | Revenue basis | Where the binding constraint turned out to be |
+|---|---|---|
+| One — Kestrel Water | availability payment | the **distribution** test, at 1.9103 % of headroom, not the covenant at 5.8339 % |
+| Two — Aurora Ridge | unhedged demand | **year one**, at a `DSCR` of 0.5343 |
+| Three — Helios Flats | contracted price, uncertain resource | **year eighteen**, at 1.0595× if sized on year one |
+| Four — Northgate Point | contracted, but shorter than the debt | **year eight**, outside every modelled year |
+
+Not one of the four binds where a competent analyst would first look, and no two bind in the same
+place. That is the argument. **The ratio is never the finding; locating the year and the test that
+govern is the finding**, and it has to be done project by project because the answer moves with the
+revenue basis. Every one of these projects would have passed a compliance table built around its
+headline covenant, and three of the four reach a payment default rather than a breach — which is the
+distinction between a conversation with a lender and a default notice.

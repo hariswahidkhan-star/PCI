@@ -138,3 +138,94 @@ def run(ctx):
           DEBT / SOLAR * 100 - DEBT / CAPEX * 100, D("14.9452"), tol=D("0.00005"))
     check("G.3.4 INVARIANT the two gearing shares differ by exactly the battery's weight",
           DEBT / SOLAR - DEBT / CAPEX, DEBT * BATT / (SOLAR * CAPEX), tol=D("0.0000001"))
+
+    # ===================== Capstone Four — Northgate Point (re-contracting) =============
+    # The capstone's argument is that a tenor extension past the contracted period buys almost
+    # nothing once the tail is honestly stressed. That convergence is the claim, so it is pinned as
+    # an invariant rather than left as a sentence.
+    CAPEX_N, MW = D(720000000), D(60)
+    ANCHOR_MW, ANCHOR_RATE = D(40000), D(120)      # kW, per kW-month
+    REST_MW, REST_RATE = D(20000), D(130)
+    OPEX_N, RATE_N, REQ_N = D(22800000), D("0.06"), D("1.35")
+    LEASE, TENOR_N = 7, 12
+
+    REV_N = ANCHOR_MW * ANCHOR_RATE * 12 + REST_MW * REST_RATE * 12
+    check("G.4 annual revenue", REV_N, D(88800000))
+    check("G.4 capex per MW", CAPEX_N / MW, D(12000000))
+    NOI = REV_N - OPEX_N
+    check("G.4.1 net operating income", NOI, D(66000000))
+    AF12, AF7, AF5 = af(RATE_N, 12), af(RATE_N, 7), af(RATE_N, 5)
+    check("G.4.1 AF(0.06,12)", AF12, D("8.383844"), tol=D("0.0000005"))
+    check("G.4.1 AF(0.06,7)", AF7, D("5.582381"), tol=D("0.0000005"))
+    SVC_N = NOI / REQ_N
+    check("G.4.1 service on contracted cash", SVC_N, D("48888888.89"), tol=D("0.01"))
+    FAC2 = SVC_N * AF12
+    check("G.4.1 12-year facility on contracted cash", FAC2, D("409876814.86"), tol=D("0.05"))
+    check("G.4.1 loan to cost (%)", FAC2 / CAPEX_N * 100, D("56.93"), tol=D("0.005"))
+    BAL7 = SVC_N * AF5
+    check("G.4.1 balance entering year eight", BAL7, D("205937785.07"), tol=D("0.05"))
+    check("G.4.1 that balance as a share of the facility (%)", BAL7 / FAC2 * 100, D("50.24"),
+          tol=D("0.005"))
+    # zero tolerance is a CONSEQUENCE of the sizing, and is derived rather than asserted
+    BREAKEVEN_F = (SVC_N * REQ_N + OPEX_N) / REV_N
+    check("G.4.1 breakeven re-let factor on the contracted-cash facility", BREAKEVEN_F, D(1),
+          tol=D("0.0000001"))
+    check("G.4.1 INVARIANT the tolerance is exactly zero, by construction",
+          (1 - BREAKEVEN_F) * 100, D(0), tol=D("0.0000001"))
+    LEV_N = REV_N / NOI
+    check("G.4.1 operating leverage", LEV_N, D("1.3455"), tol=D("0.00005"))
+    check("G.4.1 a 15 % rent fall as an NOI fall (%)", D("0.15") * LEV_N * 100, D("20.1818"),
+          tol=D("0.00005"))
+    for rent, occ, noi_v, dscr in ((D(1), D(1), D(66000000), D("1.3500")),
+                                   (D("0.95"), D("0.95"), D(57342000), D("1.1729")),
+                                   (D("0.90"), D("0.92"), D(50726400), D("1.0376")),
+                                   (D("0.85"), D("0.90"), D(45132000), D("0.9232"))):
+        check(f"G.4.1 NOI at rent {rent} occupancy {occ}", REV_N * rent * occ - OPEX_N, noi_v)
+        check(f"G.4.1 DSCR at rent {rent} occupancy {occ}",
+              (REV_N * rent * occ - OPEX_N) / SVC_N, dscr, tol=D("0.00005"))
+    NOI_STRESS = REV_N * D("0.85") * D("0.90") - OPEX_N
+    check("G.4.1 INVARIANT the stressed case is a payment default, not a breach",
+          D(1) if NOI_STRESS / SVC_N < 1 else D(0), D(1))
+
+    # G.4.2 the three structures, and the convergence that is the finding
+    FAC1 = SVC_N * AF7
+    check("G.4.2 facility with tenor matched to the lease", FAC1, D("272916425.94"),
+          tol=D("0.05"))
+    check("G.4.2 its loan to cost (%)", FAC1 / CAPEX_N * 100, D("37.91"), tol=D("0.005"))
+    SVC3 = NOI_STRESS / REQ_N
+    check("G.4.2 service sized on the stressed re-let", SVC3, D("33431111.11"), tol=D("0.01"))
+    FAC3 = SVC3 * AF12
+    check("G.4.2 12-year facility sized on the stressed re-let", FAC3, D("280281218.31"),
+          tol=D("0.05"))
+    check("G.4.2 its loan to cost (%)", FAC3 / CAPEX_N * 100, D("38.93"), tol=D("0.005"))
+    check("G.4.2 its cover on today's cash", NOI / SVC3, D("1.9742"), tol=D("0.00005"))
+    BREAK3 = (SVC3 * REQ_N + OPEX_N) / REV_N
+    check("G.4.2 its breakeven re-let factor (%)", BREAK3 * 100, D("76.5000"), tol=D("0.00005"))
+    check("G.4.2 its tolerance in points of revenue", (1 - BREAK3) * 100, D("23.5000"),
+          tol=D("0.00005"))
+    check("G.4.2 what the extra tenor really buys", FAC3 - FAC1, D("7364792.37"), tol=D("0.05"))
+    check("G.4.2 as a share of the matched-tenor facility (%)", (FAC3 - FAC1) / FAC1 * 100,
+          D("2.70"), tol=D("0.005"))
+    check("G.4.2 what the naive facility appears to buy", FAC2 - FAC1, D("136960388.93"),
+          tol=D("0.05"))
+    check("G.4.2 INVARIANT the honest 12-year facility converges on the 7-year one",
+          D(1) if (FAC3 - FAC1) / FAC1 < D("0.05") else D(0), D(1))
+    check("G.4.2 INVARIANT and is far below what contracted-cash sizing claims",
+          D(1) if FAC3 < FAC2 else D(0), D(1))
+    check("G.4.2 the position taken by choosing structure 2 over structure 3",
+          FAC2 - FAC3, D("129595596.55"), tol=D("0.05"))
+
+    # ---- the closing synthesis: no two capstones bind in the same place -------------------
+    # Each figure is the binding value established in its own capstone above (or, for Kestrel, in
+    # pfl_d17_capstone.py). What is asserted here is the RELATION the closing table claims.
+    BINDING = {"Kestrel distribution test": D("1.9103"),      # % of headroom
+               "Aurora Ridge year one": D("0.5343"),           # DSCR
+               "Helios Flats year eighteen": D("1.0595"),      # DSCR if sized on year one
+               "Northgate Point year eight": D("0.9232")}      # DSCR on the stressed re-let
+    check("Synthesis: four distinct binding tests", D(len(BINDING)), D(4))
+    check("Synthesis: four distinct binding values", D(len(set(BINDING.values()))), D(4))
+    DEFAULTS = [D("0.5343"), D("1.0595"), D("0.9232")]
+    check("Synthesis INVARIANT three of the four reach a payment or coverage failure below 1.20",
+          D(1) if all(v < D("1.20") for v in DEFAULTS) else D(0), D(1))
+    check("Synthesis INVARIANT two of the three fall below 1.00 — payment default, not breach",
+          D(sum(1 for v in DEFAULTS if v < 1)), D(2))
