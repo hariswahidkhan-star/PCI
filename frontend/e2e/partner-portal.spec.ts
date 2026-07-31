@@ -94,6 +94,14 @@ test.describe('institution partner persona', () => {
 
     await page.getByLabel('New password', { exact: true }).fill(newPassword)
     await page.getByLabel('Confirm new password', { exact: true }).fill(newPassword)
+    // Both boxes hold what was typed into them. This looks tautological and is not: the form used
+    // to pull focus back to the first field on a timer just after it appeared, so the second value
+    // was appended to the first one and the confirm box stayed empty. The form then refused itself
+    // with "the two passwords do not match" and never sent a request — which surfaced only as a
+    // 30-second wait for a response that was never going to come. Assert the fields directly so a
+    // return of that bug names itself here instead of timing out somewhere downstream.
+    await expect(page.getByLabel('New password', { exact: true })).toHaveValue(newPassword)
+    await expect(page.getByLabel('Confirm new password', { exact: true })).toHaveValue(newPassword)
     const passwordResponse = page.waitForResponse((response) =>
       response.url().endsWith('/api/partner/auth/password') && response.request().method() === 'POST')
     await page.getByRole('button', { name: 'Save and continue' }).click()
