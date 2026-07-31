@@ -93,7 +93,7 @@ professional verifies, decides and remains accountable.*
 
 ## Appendix C — Verification record
 
-**7,351 golden-answer checks** stand behind this volume. Every number printed as a *result* —
+**7,675 golden-answer checks** stand behind this volume. Every number printed as a *result* —
 in worked examples, in-text calculations, multiple-choice options (all of them, not only the correct
 one), exercise solutions, case studies and figure specifications — is recomputed independently with
 decimal arithmetic at 28-digit precision and compared to the printed value. Each domain's module also
@@ -102,6 +102,7 @@ claim cannot silently stop being true.
 
 | Domain | | Checks |
 |---|---|---|
+| 0 | *Cross-domain check modules (span several domains)* | 0 |
 | 1 | The Project Leadership Profession | 405 |
 | 2 | Strategy, Selection and Business Alignment | 450 |
 | 3 | Governance, Organization and Decision Rights | 515 |
@@ -118,7 +119,8 @@ claim cannot silently stop being true.
 | 14 | Digital Delivery, Data and Responsible AI | 295 |
 | 15 | Programmes, Portfolios and Enterprise Delivery | 274 |
 | 16 | Transition, Closeout and Benefits Realization | 341 |
-| | **Total** | **7,351** |
+| 17 | Appendix G — integrated capstones | 324 |
+| | **Total** | **7,675** |
 
 Reproduce it with `python3 _build/verify_formulas.py`, or check one domain with
 `python3 _build/run_checks.py checks/<module>.py`. Both loaders are fail-closed: a check module that
@@ -130,3 +132,145 @@ that the method chosen was the right method for the situation, that the professi
 ones an experienced practitioner would endorse, that the emphasis across topics is well calibrated, or
 that nothing important is missing. Those are questions for editorial and technical review, and a
 reader should not read a large number in this appendix as an answer to them.
+
+## Appendix D — Figure index
+
+**51 figures**, all of them drawn as PCI-original artwork generated from source in
+`_build/figures_src/`. Each is also specified in words in the chapter, stating every plotted value,
+so that a figure can be read — and redrawn — without the artwork, and so that a reader using assistive
+technology loses nothing. No figure in either volume reproduces a diagram from another publisher, and
+every annotated value in a drawn figure is a literal verified by the golden-answer suite.
+
+| Figure | Subject | Artwork |
+|---|---|---|
+| 1.2.1 | The cost of a silent measure | drawn |
+| 1.3.1 | The value chain, and where it leaks | drawn |
+| 1.3.2 | Payback is hyperbolic in adoption, so the first points are worth the most | drawn |
+| 1.3.3 | The reinforcement trough and its crossover | drawn |
+| 1.4.1 | Proportionate verification: the breakeven error probability | drawn |
+| 2.1.1 | The strategy-portfolio alignment index | drawn |
+| 2.2.1 | Two Meridian business cases from identical facts | drawn |
+| 2.3.1 | Meridian's benefits map, with the enabling change restored | drawn |
+| 2.3.2 | Four breakevens from one programme | drawn |
+| 2.4.1 | Why a kill criterion on a weak signal destroys value | drawn |
+| 3.1.1 | Why unanimity is a power law | drawn |
+| 3.1.2 | What share of an iterative stream a periodic committee can serve | drawn |
+| 3.2.1 | Governance latency and its two levers | drawn |
+| 3.3.1 | The price of an escalation path | drawn |
+| 3.3.2 | The conditional pass: how closure rate decides a gate's value | drawn |
+| 4.2.1 | Interfaces grow combinatorially; components do not | drawn |
+| 4.3.1 | Pairwise integrity is the power of item integrity | drawn |
+| 4.3.2 | Reconcile gross, never net | drawn |
+| 4.4.1 | What a change actually costs | drawn |
+| 5.2.1 | What a requirement defect costs by the stage it is found | drawn |
+| 5.3.1 | Greedy ranking strands capacity; enumeration does not | drawn |
+| 6.1.1 | The schedule hierarchy: one logic, four honest views | drawn |
+| 6.2.1 | The Auriga network with both passes | drawn |
+| 6.2.2 | Auriga's three paths, their floats, and the near-critical band | drawn |
+| 6.3.1 | Auriga field-crew histogram, before and after smoothing | drawn |
+| 6.3.2 | The rolling-wave horizon | drawn |
+| 6.4.1 | The economics of crashing Auriga's procurement | drawn |
+| 6.4.2 | The compression menu and the least-cost duration | drawn |
+| 7.1.1 | What an accuracy class actually says | drawn |
+| 7.3.1 | Auriga's earned-value S-curves at week 13 | drawn |
+| 7.3.2 | The `EAC` fan and what `TCPI` demands | drawn |
+| 7.4.1 | Auriga at week 13: the cost report says 200,000; the bank account says 1,043,600 | drawn |
+| 8.2.1 | The survey decision tree | drawn |
+| 8.2.2 | Independence is worth 6 | drawn |
+| 8.2.3 | Expected value and variance rank the same register differently | drawn |
+| 9.1.1 | Auriga's cost of quality and its interior minimum | drawn |
+| 9.4.1 | Rolled throughput yield: six good steps, one coin flip | drawn |
+| 10.1.1 | Make-or-buy on total cost of ownership: the breakeven the unit price hides | drawn |
+| 10.2.1 | The weighting chooses the winner | drawn |
+| 11.1.1 | Two allocations of the same 480 hours | drawn |
+| 11.2.1 | The age of the number an executive decides on | drawn |
+| 12.2.1 | The coordination ceiling, and what structure buys | drawn |
+| 12.3.1 | Coaching minutes per report against span of control | drawn |
+| 13.2.1 | Little's Law and the cost of starting more work | drawn |
+| 13.3.1 | Governance latency as a flow parameter | drawn |
+| 14.1.1 | Defect rate against exposure: why a uniform data-quality target costs more | drawn |
+| 14.3.1 | The verification standard proportional to consequence | drawn |
+| 15.1.1 | Why a programme milestone becomes improbable | drawn |
+| 15.2.1 | Aggregate capacity feasible, period capacity not | drawn |
+| 16.1.1 | Readiness is a conjunction, not an average | drawn |
+| 16.4.1 | The closing account of Meridian Care Records | drawn |
+
+## Appendix E — Practitioner's toolkit library
+
+**55 adoption-ready artefacts**, indexed here and defined in the Knowledge Areas they belong
+to. They are indexed rather than reprinted deliberately: a template that exists twice is a template
+that will disagree with itself, and the version in the chapter is the one the surrounding text
+explains. Adapt the headings to your organisation, then keep them stable — a checklist whose wording
+changes every quarter records nothing over time.
+
+| Toolkit | Artefact | What it is for |
+|---|---|---|
+| 1.T.1 | Leader's accountability map (one page) | Per outcome: the outcome stated in outcome language (not output language) · the single |
+| 1.T.2 | Benefits-chain test (run on any benefits claim) |  |
+| 1.T.3 | AI-use and verification record | Per AI-assisted artefact: tool and approved environment · data classification cleared · |
+| 1.T.4 | Verification-depth card (one per artefact class, not per artefact) | Six fields, filled once for a class of artefact and reused: the class · what relies on it · the |
+| 2.T.1 | Business-case skeleton (the six questions) | do-nothing and one materially cheaper; why each was rejected) · Cost (range, accuracy class, |
+| 2.T.2 | Benefits map and register row | Per benefit: description · the outcome measure that produces it and its owner (outside the |
+| 2.T.3 | Gate decision pack rules | One page of forward-only economics (remaining cost, remaining benefit, forward NPV, and the |
+| 2.T.4 | Assumption register row, and the test-order rule | Per assumption: the statement, in one falsifiable sentence · why it is believed, with the evidence |
+| 3.T.1 | Governance design sheet | One page, completed before mobilisation and reviewed at every gate. Rows: each decision body, with |
+| 3.T.2 | Delegation schedule with a cumulative test | Columns: decision class · value threshold · estimated cost to undo and the reversal-cost ratio |
+| 3.T.3 | Decision record entry and its integrity checks | Per-decision fields: reference · date · decision-maker (named person and role) · decision (one |
+| 3.T.4 | Gate and conditional-pass checklist | Two halves, and the second is the one that is usually missing. Before the gate: criteria written and |
+| 4.T.1 | Charter on one page | Fields, in this order, and nothing else: purpose and measurable objectives · named sponsor · named |
+| 4.T.2 | Interface register | One row per required interface (built from need, not from n(n−1)/2): reference · the two |
+| 4.T.3 | Integrated change request and baseline reconciliation | (change / clarification / defect, with the ruling recorded) · then the assessment, one line each: |
+| 5.T.1 | Requirements traceability matrix | One row per requirement: reference · statement · class (functional / non-functional / constraint / |
+| 5.T.2 | Value attribution and constrained selection sheet | delivered, with its named owner (Domain 2's benefits register) · attributed annual value with its |
+| 5.T.3 | Scope reconciliation and acceptance-criteria pattern set | count · plus approved additions (with change references) · minus approved deletions · equals expected |
+| 6.T.1 | Schedule quality gate (run before trusting any network) |  |
+| 6.T.2 | Recovery plan (one page) | Slip statement (activity, cause, size, date detected) · re-run pass results (new duration, new |
+| 6.T.3 | Milestone register | Per milestone: computed date and current TF · owner · done-definition (acceptance reference) · |
+| 6.T.4 | Compression menu (priced at baseline, reviewed on the risk cycle) | Per candidate activity: current duration · which paths it lies on · cost slope per week · technical |
+| 7.T.1 | Cost-report integrity checklist (run before publishing the month) |  |
+| 7.T.2 | Estimate basis sheet (one per estimate) | Method (analogous/parametric/bottom-up) · definition maturity and accuracy class · range |
+| 7.T.3 | Commercial one-pager (per major package) | Model (FFP/FPIF/CPFF/CPIF/T&M) and why · who carries cost risk · target cost, fee, share ratio, |
+| 7.T.4 | Cash and commitment page (one per period, beside the cost report) | A single page, six lines, none of which appears in a conventional cost report and each of which has |
+| 8.T.1 | Risk register columns that earn their keep | ID · cause → event → consequence statement · affected objective · common driver (8.A.1) · |
+| 8.T.2 | Contingency derivation sheet (one per baseline) | Register version and date · objective the total belongs to, with the other objectives' |
+| 8.T.3 | Pre-mortem session guide | Before commitment, one hour: (1) state the plan and the commitment about to be made; (2) each |
+| 8.T.4 | Register-completeness check (one per gate) | A twenty-minute calculation that turns "the register is probably incomplete" into a funded position. |
+| 8.T.5 | Response option comparison (one per quantified risk) | One row per option — accept, avoid, reduce, transfer, and for opportunities exploit, enhance, share, |
+| 9.T.1 | Cost-of-quality and containment sheet | One page per deliverable class, completed at planning and revisited at each gate. Top block, the |
+| 9.T.2 | Acceptance and disposition record with the self-consistency test | Per deliverable: reference and version · acceptance criteria referenced to the requirements baseline · |
+| 9.T.3 | Improvement register: rework, yield and cause | Three linked sections, all numeric, reported at the same cadence as cost and schedule. Rework and |
+| 10.T.1 | Make-or-buy total-cost-of-ownership sheet | One page per decision, completed before any market engagement. Two columns, make and buy, and these |
+| 10.T.2 | Evaluation model lock sheet | One page, completed, dated, signed by the accountable authority and issued with the invitation. |
+| 10.T.3 | Supplier resilience and sub-tier register | One row per critical item, not per supplier, and criticality set by schedule effect rather than by |
+| 11.T.1 | Stakeholder register and engagement allocation sheet | One row per party: reference · party and named individual · what the project needs from them (decide / |
+| 11.T.2 | Communication architecture and report-age sheet | routing n · hours per channel per period, with the basis · hub overhead · computed load and utilisation |
+| 11.T.3 | Negotiation preparation sheet | internal effort · risk as an EMV, with its basis · total = our reservation value. What would improve |
+| 12.T.1 | Leader's attention and span sheet | One page per leader, completed from four weeks of observed data and reviewed quarterly. Top block: the |
+| 12.T.2 | Team structure and coordination sheet | One page per team or programme, completed at formation and whenever headcount changes by more than a |
+| 12.T.3 | Difficult-conversation preparation and record | Two sides of one page, used for every performance, conduct or expectation conversation. Before: the |
+| 13.T.1 | Flow sheet (one page, one team, weekly) | Rows, all counts or timestamps and none of them a judgement: throughput this week and its four-week |
+| 13.T.2 | Backlog ordering sheet with delay-cost density | Columns: item or epic · outcome statement · benefits-map line and owner (the numerator's provenance — |
+| 13.T.3 | Adaptive commercial and continuation control sheet | Part A, the model choice: expected count of material re-prioritisations · addition rate and omission |
+| 14.T.1 | AI use register with its verification standard | Two linked tables on two pages, owned by one named person and reviewed at every gate. The |
+| 14.T.2 | Data class schedule and quality exposure sheet | One row per data class: class · records nᵢ · owner (a named person) · written definition with units |
+| 14.T.3 | Quality-adjusted digital business case sheet | One page per automation, analytics product, dashboard or twin, and it refuses to be completed |
+| 15.T.1 | Programme dependency register with a computed milestone probability | One row per dependency: reference · milestone it feeds · what is needed · owner on the giving side |
+| 15.T.2 | Multi-period portfolio allocation sheet | A grid: candidates down the side; the binding capability's demand per period across the top, plus |
+| 15.T.3 | Portfolio benefits bridge | A single reconciliation, top to bottom, published with every investment paper: gross claimed benefit |
+| 16.T.1 | Transition readiness certificate | One page per receiving unit, signed by the receiving organisation. Rows: each readiness condition, its |
+| 16.T.2 | Closeout and final account pack | Four sections, each a table. Commercial: per contract — original sum, approved variations, claims |
+| 16.T.3 | Benefits closing account and retention schedule | Two linked artefacts, owned by the benefits owner and reported to the body that approved the case. |
+
+**On the appendices the volume plan lists and this volume does not carry.** The plan for this family
+also names a consolidated *self-check answers* appendix and a *standards and frameworks referenced*
+appendix. Neither is printed here, for two different reasons that are worth stating rather than
+leaving as apparent omissions. Each self-check in this volume already carries its own answer beside
+the question, so a consolidated set would be a verbatim second copy — precisely the duplication this
+programme's editorial rules forbid; the questions are indexed by their Knowledge Area instead. A
+standards register is a different matter: it is genuinely wanted, and it is not published until each
+entry has been checked against the current edition of the document it names, because a citation to a
+superseded standard is worse than no citation. It is listed in the corpus gate report as outstanding.
+
+The consolidated question bank the plan calls for is published separately as `QUESTION_BANK.md`,
+and the global glossary as `GLOSSARY.md`; both are generated from the chapters by the same principle
+as these appendices.

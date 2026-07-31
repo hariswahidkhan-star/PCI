@@ -425,6 +425,76 @@ conclusion is:
 *average* precision, which is the standing error in threshold decisions. C treats a ratio as an
 objective. D is false — the counts given already embed the base rate.
 
+**MCQ 16.1-E `[16.1.1 · Evaluation]`** The paper recommending the financial-data spine leads with a
+**+1,221,674** net present value from retiring 36 pairwise reconciliations, a 316,192 annual labour
+saving against a 900,000 build. What should a reviewer require before it goes to the board?
+- A. nothing further — a +1,221,674 net present value at the board's 8 % over ten years clears the hurdle on its own
+- B. the definitional case stated alongside it — one `CFADS` divergence is worth 600,000 a period and 4,026,049 in present value over the same appraisal, 3.2955 times the labour case — together with a commitment to retire the 36 reconciliations, without which the 316,192 saving becomes a 181,472 annual cost ✅
+- C. that the appraisal be re-run at the fifteen-system estate the group expects, where the mesh costs 1,451,520 a year against the spine's 69,120
+- D. that the 900,000 build be competitively tendered, since it is the largest single figure in the paper
+
+*Rationale:* B supplies both the reason the decision actually turns and the condition the quoted
+benefit depends on: a spine acquired *beside* an unretired mesh converts a saving into a cost, and
+that is a governance failure the paper must foreclose (16.1.1). C is a genuine improvement the topic
+recommends, but it strengthens a case that already passes and speaks to neither the real driver nor
+the realisation risk. D optimises a one-off number while leaving a recurring 600,000 exposure
+unaddressed. A accepts a business case whose stated benefit is conditional on a commitment nobody
+has made.
+
+**MCQ 16.1-F `[16.1.2 · Comprehension]`** Cost per reviewed item has two parts. Which restatement
+best captures why the second cannot be left out?
+- A. because the platform's committed fixed cost must be spread over the volume before any per-item figure means anything
+- B. because a process is only as cheap as the mistakes it leaves behind, so the residual undetected-error rate multiplied by the consequence of an undetected error belongs in the price of the process that produced it ✅
+- C. because errors that are found still cost money to put right
+- D. because the pipeline exists to improve forecast accuracy, and accuracy belongs in its cost
+
+*Rationale:* The second part monetises the errors that *survive* the process, which is what makes
+two processes with different accuracies comparable (16.1.2). A names a real and separate term, which
+the breakeven-volume calculation handles — the per-item figures of 19.36 and 9.36 are variable costs
+by construction. C describes detected errors, whose handling already sits inside the processing cost
+as adjudication minutes. D confuses a benefit with a cost.
+
+**MCQ 16.1-G `[16.1.2 · Evaluation]`** A finance director proposes automating the estate's
+highest-consequence review work first, because that is where an error costs most and a machine is more
+consistent than a person. On the measured figures — manual review **13.60** a record leaving **1.80 %** of
+records with an undetected error, the pipeline **1.04** a record leaving **2.60 %**, against a committed
+**148,000** a year — the soundest sequencing advice is to:
+- A. automate the highest-consequence work first, since that is where an error costs most and consistency is
+  worth most
+- B. automate the high-volume, low-consequence work and spend the freed capacity on the low-volume,
+  high-consequence work, because the breakeven **rises** with the consequence of an error — 14,800 records
+  at 320 an error, 50,000 at 1,200 — while the manual 1.80 % beats the pipeline's 2.60 % ✅
+- C. automate nothing until the pipeline's residual error rate falls below the manual rate, since automating
+  a less accurate process cannot be justified
+- D. automate everything at once, because the 148,000 is committed whatever the scope and the marginal record
+  then costs only 1.04 to process
+
+*Rationale:* The automated process carries the **higher** residual error rate, so a larger consequence per
+error erodes its advantage instead of enlarging it: repricing an undetected error from 320 to 1,200 moves
+the breakeven from 14,800 records to 50,000, at which the estate's 56,400 records leave the whole programme
+worth **18,944** a year — arithmetically positive and professionally indistinguishable from nil (16.1.2). A
+is the intuition the arithmetic reverses. C sets a defensible-sounding but wrong condition: at 56,400
+records and 320 an error the case tolerates an automated rate up to **4.9050 %**, nearly double the 2.60 %
+modelled, because volume and consequence decide the comparison and not the rate alone. D compares 1.04 with
+13.60 and so omits the error-cost term from both sides — the defect that makes automation look
+**20.3822 %** better than it is.
+
+**MCQ 16.1-H `[16.1.1 · Comprehension]`** A data spine has four properties: grain, golden source, lineage
+and a definitional layer. Which statement best explains what the **definitional layer** adds that the other
+three do not?
+- A. it stores the finance documents beside the data, so a defined term can be looked up whenever a figure is
+  questioned
+- B. it implements each defined term once, as code, with its clause reference, so a term means in the data
+  what it means in the document instead of being re-implemented — and drifting — wherever it is needed ✅
+- C. it lets every reported figure be traced back to the transactions beneath it without human reconstruction
+- D. it names the one system that is authoritative for each fact, so that all others are derived
+
+*Rationale:* C and D are the spine's other two properties — lineage and golden source — and neither prevents
+`CFADS` from being implemented differently in nine systems; the definitional layer is the finance-specific
+property, and it is why a divergence worth 600,000 of reported cash does not misreport once but every period
+until somebody finds it (16.1.1). A describes a document repository, which resolves nothing: a term that can
+be looked up is still implemented separately wherever it is used.
+
 ### Self-check — KA 16.1
 
 1. *Why does the automation breakeven rise as the consequence of an undetected error rises?* —
@@ -676,6 +746,60 @@ or 6 hours assisted with 26 hours of review. At USD 150 an hour, the saving from
 review is left at the hand-built 8 hours — the omission worth 2,700 of review against 1,137,623.20
 of expected defect cost. C compares build hours only (6 against 40). D ignores the 16-hour
 difference.
+
+**MCQ 16.2-E `[16.2.1 · Evaluation]`** A credit paper is being assembled. One analyst offers the
+**minimum `DSCR` across 500 generated scenarios** as the downside case; another offers the lenders'
+defined flat case. Which should carry the covenant test?
+- A. the generated minimum — a 1-in-500 outcome is a more conservative test than any case somebody chose
+- B. the defined case — the generated minimum is about the 0.1996th percentile of input tails nobody has validated, while a defined case is a chosen set of assumptions with an owner; the generated set belongs in the paper, labelled, describing shape ✅
+- C. the generated minimum, provided `k` is reported alongside it so the reader can judge coverage
+- D. neither — the mean `DSCR` across the 500 scenarios is the balanced figure to test
+
+*Rationale:* Conservatism located in an unvalidated tail is not conservatism, and a generated
+extreme is a percentile rather than a stress (16.2.1). A is the more seductive error precisely
+because it sounds prudent. C is the right discipline applied to the wrong sentence: reporting `k`
+repairs a coverage claim, but no value of `k` converts a percentile into a case with an owner. D
+reports the statistic covenants never test — Domain 10 tests the period, not the average.
+
+**MCQ 16.2-F `[16.2.3 · Evaluation]`** A modelling team reports a **70.8333 %** saving from machine-assisted
+construction of a sculpted debt module: 40 hours of build replaced by 6, with review left at the 8 hours the
+hand-built module carried. Reviewing a machine-built module properly takes **26** hours, because the reviewer
+must reconstruct construction logic nobody holds. The soundest response is to:
+- A. accept the 70.8333 % — the 8 hours were sized for this module, and an assisted module is no harder to
+  read than a hand-built one
+- B. book a third rather than two thirds: the honest comparison is 32 hours against 48, and the 18 omitted
+  review hours cost 2,700 against an expected defect cost of 1,137,623.20 — a certain cost converted into an
+  expected one, invisibly, because the omission leaves no artefact ✅
+- C. accept the 70.8333 %, but require the assistant to produce the audit trail, which removes the need for
+  the additional review
+- D. stop using assistance on financing models: a 0.35 probability of a material defect is not an acceptable
+  exposure on a debt module
+
+*Rationale:* Assistance moves the verification burden rather than removing it, and the governable quantity is
+the review ratio — here about **4.3333** review hours per assisted build hour, against one per five
+hand-built (16.2.3). A assumes the reviewer holds knowledge only the builder acquires. C is the seductive
+half-truth: requiring the assistant to state what each block does, the invariants it should satisfy and the
+check block itself is exactly how the 26 hours are made smaller *honestly*, but it shortens reconstruction
+rather than removing the review. D discards a real **33.3333 %** saving, and the 0.35 is the defect
+probability of an **unreviewed** module — the figure the review exists to remove.
+
+**MCQ 16.2-G `[16.2.2 · Comprehension]`** An extraction of a facility agreement's **340** defined terms is
+reported at 92 % per-item accuracy, and **26** of the terms are load-bearing. Which statement best explains
+the **superseded-draft** failure mode and why no accuracy statistic can see it?
+- A. it is the risk that a term is extracted correctly but recorded against the wrong clause number
+- B. it is extraction from the wrong version of the agreement: the register can be 100 per cent accurate
+  against the document it read, so the error lies in which document was read rather than in the reading, and
+  accuracy is measured against that same document ✅
+- C. it is the risk that a term the tool marked low-confidence is not checked
+- D. it is the risk that the load-bearing subset is chosen after the tool has run
+
+*Rationale:* Accuracy is measured against the source the tool was given, so an extraction from a data-room
+draft rather than the executed agreement scores perfectly while being wrong throughout — which is why the
+verification of the 26 load-bearing terms, about **3,120** of specialist time and **192.3077 times** cheaper
+than one 600,000 definitional error, must be against the **executed** document with its version identifier
+recorded (16.2.2). C and D are the topic's other two cautions, and both are real: a model is least confident
+where it can detect its own error, and a subset chosen after the run is chosen by the tool. A describes a
+mis-citation, which a reconciliation to the clause would catch.
 
 ### Self-check — KA 16.2
 
@@ -983,6 +1107,57 @@ loss between validations, the revalidation interval is:
 *Rationale:* `EMV = 4 × 0.885585 × 600,000 = 2,125,404`; `50,000 ÷ 2,125,404 = 0.023525`
 years. A and C tier by volume or convenience rather than by expected loss — the inversion the topic
 exists to correct. D is the interval for the payment detector (M2), whose `EMV` is 15,360.
+
+**MCQ 16.3-E `[16.3.1 · Comprehension]`** Which restatement best captures the distinction 16.3.1
+draws between an explanation and a justification?
+- A. an explanation is qualitative, while a justification is quantitative
+- B. an explanation accounts for the route by which a number was arrived at; whether the destination is the right one is a separate claim, resting on separate evidence, and supplying that evidence is validation's job ✅
+- C. an explanation is what a lender is shown, while a justification is what an auditor is shown
+- D. an explanation is a ranking of which inputs mattered most to the output
+
+*Rationale:* Faithfulness and correctness are separate properties, and conflating them is how a
+persuasive account of a wrong number survives review (16.3.1, 16.3.2). D describes an importance
+ranking, which the topic rejects for a different reason again — a ranking cannot be reconciled to the
+output and so cannot be audited. A and C invent a form and an audience the distinction does not turn
+on.
+
+**MCQ 16.3-F `[16.3.2 · Evaluation]`** A validation suite of **299** cases returns **one** failure.
+The team fixes the defect, re-runs the failing case so that all 299 now pass, and proposes to deploy.
+Assess the proposal.
+- A. acceptable — the defect is fixed and 299 passing cases meet the stated 1 % bound at 95 % confidence
+- B. not acceptable — permitting one observed failure at the same bound and confidence requires 473 cases, **58.19 %** more, so the suite must grow rather than be repaired; and even 299 clean passes admit about 564 errors a year at 56,400 uses ✅
+- C. not acceptable — one failure in 299 shows the defect rate exceeds 1 %, so the model should be withdrawn
+- D. acceptable, provided the failing case joins a regression set and the production error rate is monitored
+
+*Rationale:* The 299 figure is the size of a **zero-failure** sample; once a failure has been
+observed, the evidence the claim rests on is a different calculation, and repairing the case does not
+restore it (16.3.2). A is the standard move and the specific error the topic names. C over-reads: one
+failure in 299 does not establish a rate above 1 %, it enlarges the sample the claim needs. D
+prescribes exactly where the assurance should sit — monitoring reaches 16,895 observations in about
+four months, which no test programme will — but it does not license a validation claim the sample no
+longer supports, and the two are separate questions.
+
+**MCQ 16.3-G `[16.3.1 · Evaluation]`** An automated forecast publishes `CFADS` of **6,384,000** and
+attributes it across drivers summing to **6,190,000**. The modelling team proposes labelling the
+**194,000** residual "other — model complexity" and proceeding to a recommendation about which driver to
+manage. The soundest position is to:
+- A. accept it — at **3.0388 %** of the forecast the residual is within any reasonable reporting tolerance,
+  and no attribution reconciles perfectly
+- B. refuse the attribution until the residual is found: 194,000 is **52.0892 %** of the annual covenant
+  headroom of 372,438, so no conclusion about which driver to manage is safe, and an explanation whose
+  components do not reconcile to the output is a commentary rather than an explanation ✅
+- C. replace the currency attribution with ranked driver-importance scores, which convey the same management
+  message without needing to reconcile
+- D. accept it — explanation is not justification, so the completeness of the attribution is a separate
+  question from whether the forecast is right
+
+*Rationale:* The hundred-per-cent rule applies unchanged, and the residual has to be measured against the
+quantity the project is judged on rather than against the forecast's own size (16.3.1). A is the tolerance
+argument, and it fails on the denominator rather than on the principle. C is the commonest substitution and
+is worse than the defect: a ranking cannot be reconciled and therefore cannot be audited, which is why
+attribution must be in currency. D quotes a true statement of the topic — a faithful account of how a model
+reached a number says nothing about whether the number is right — and uses it to excuse the opposite
+failure, an account that is not faithful.
 
 ### Self-check — KA 16.3
 
@@ -1301,6 +1476,48 @@ to:
 delegated panel's 5.5-day wait. C prices the full 60-day meeting interval in place of `M/2 + L`,
 dropping both the expected-half rule and the paper lead time. D ignores that a delayed benefit is a
 forgone benefit.
+
+**MCQ 16.4-E `[16.4.2 · Evaluation]`** The finance director accepts the derived **14,118** threshold
+— worth **80,180** a year against the blanket rule's **400** — and proposes to remove dual approval
+from the 3,650 sub-threshold payments altogether and publish the threshold in the payments policy.
+Assess the proposal.
+- A. sound as it stands — the arithmetic is unambiguous and it removes 79,780 of destroyed value
+- B. sound in its main move but incomplete: a published threshold is an instruction to an adversary to stay below it, so the sub-threshold population needs a sampling control the arithmetic does not model, and the released 87,600 of approver time is better spent on the blind audit that returned 18.4471 times its cost ✅
+- C. unsound — the blanket rule nets a positive 400 a year and should be retained
+- D. unsound — the 85 % caught rate is an assessment rather than a measurement, so no threshold derived from it can be relied on
+
+*Rationale:* The calculation is right and is not a complete policy: it prices detection and is silent
+on deterrence, which is precisely what publishing a threshold changes (16.4.2). A treats a correct
+figure as a finished decision. C defends a control that is value-neutral to three significant figures
+by combining a strongly positive rule on large payments with a strongly negative one on small. D
+raises the input that most deserves defending — a second approver who signs without looking makes the
+whole 115,200 waste — but at any plausible caught rate the blanket rule remains the weaker policy, so
+uncertainty in that input is a reason to test it, not to abandon the derivation.
+
+**MCQ 16.4-F `[16.4.3 · Evaluation]`** Shown that the quarterly AI governance committee forgoes
+**45,589.04** of value per change against the delegated panel's **6,268.49** — a difference of
+**39,320.55** a change — the head of finance proposes abolishing the committee and routing every model
+change to the weekly panel. The soundest recommendation is to:
+- A. abolish the committee: at 39,320.55 a change its latency destroys more value than its scrutiny creates,
+  and the panel can escalate anything it finds
+- B. tier the approvals rather than remove them: changes to the models where one bad output consumes the
+  372,438 of annual covenant headroom keep the committee, threshold parameters go to the panel under a
+  written mandate, and anything that alters what is reported to a lender is the finance director's own
+  decision ✅
+- C. keep the committee for every change: latency is not a cost the finance function pays in cash, and a gate
+  that applies to some changes and not others is no gate at all
+- D. route everything to the panel for a year and measure the outcome before deciding, since the committee's
+  catch rate has never been measured
+
+*Rationale:* The latency cost is real and is an argument for putting the gate where the consequence sits, not
+for removing it — 45,589.04 is **12.24 %** of the headroom a top-tier model can consume in a year, so it is
+well spent there and wasted on a threshold change, which 16.1.3 showed to be a cost-ratio judgment a
+standing panel can take competently (16.4.3). A is the plausible cost-driven overcorrection and mistakes an
+escalation route for a control: a panel not told which changes are top-tier will not escalate them. C denies
+a cost that is being paid in forgone benefit. D names the right missing measurement — a gate whose catch rate
+is nil is pure cost, and what the committee actually changes should be measured — but proposes to obtain it by
+removing the control from precisely the changes whose consequence justifies it, when the measurement can be
+made with the tiering in place.
 
 ### Self-check — KA 16.4
 

@@ -340,6 +340,57 @@ the 1.20× covenant is breached?
 C omits the 0.80 cash-to-revenue gearing altogether (372,437.72 ÷ 76,842.11 = 4.8468 points);
 D applies the gearing twice (465,547.16 ÷ 0.80 = 581,933.95, giving 7.5731 points).
 
+**MCQ 15.1-E `[15.1.4 · Evaluation]`** At the year-one test date the sponsors' own honest
+re-forecast of **5,500,000** gave a forward `DSCR` of **1.0979** and stopped a dividend of
+774,364.77. Year two in fact delivered **5,963,894.11** — **463,894.11 above** the re-forecast. A
+director argues at the year-two board that the re-forecast should have been left unrevised. What is
+the sound response?
+- A. the director is right — the outturn shows the re-forecast was wrong, so the distribution was wrongly withheld
+- B. the withholding was correct on the information available and the outturn does not change that; the defence against a test that punishes candour is a documented re-forecast basis with a named owner and independent review, plus a forecast-to-outturn reconciliation in every pack ✅
+- C. the director is right in principle — a sponsor should not be required to produce the forecast that stops its own dividend, and forward tests should be resisted in negotiation
+- D. the re-forecast should be prepared on the lenders' model rather than the sponsors'
+
+*Rationale:* A decision is judged on the information available when it was taken, and the honest
+answer to the perverse incentive is process, not a worse forecast (15.1.4). A is outcome bias, and
+accepting it institutionalises optimism in a number that has contractual force. C is a defensible
+negotiating position in the abstract but answers a question that is already closed — the test is in
+the documents, and it is what closed the four-quarter lag a rolling backward test cannot avoid. D
+moves the same unowned judgment to a different party's spreadsheet.
+
+**MCQ 15.1-F `[15.1.2 · Comprehension]`** Which statement best restates why a deteriorating project
+reports a covenant ratio *better* than its trading, and a recovering one *worse*?
+- A. because depreciation does not move with revenue, so `EBIT` falls faster than `EBITDA`
+- B. because receivables and payables move with revenue, so a decline releases working capital into `CFADS` in the year it happens and a recovery reabsorbs it in the year of recovery ✅
+- C. because cash tax falls when revenue falls, so only eighty cents of each lost dollar reaches `CFADS`
+- D. because the covenant is measured on a rolling window, which smooths a decline across four quarters
+
+*Rationale:* The asymmetry is a working-capital effect and nothing else (15.1.2). C is true and is a
+different mechanism — the 0.80 cash-to-revenue gearing dampens movements in *both* directions
+symmetrically, so it cannot flatter one and penalise the other. D is a real lag (15.1.4) but
+describes when the test registers a change, not why the reported figure is flattered. A concerns an
+accrual measure, and the covenant is computed on cash.
+
+**MCQ 15.1-G `[15.1.3 · Evaluation]`** The operations director's monthly pack reports availability against
+the 95.0 % guarantee, and the finance director wants the covenant regime on it. Kestrel's thresholds bind
+at **1.9103 %** of `CFADS` (the 1.25× distribution condition) and **5.8339 %** (the 1.20× covenant), and
+translate into availability floors of **93.0161 %** and **88.9415 %**. What belongs on the operations
+dashboard?
+- A. the 1.20× covenant in ratio terms, because that is the test the facility agreement contains and the one
+  a default turns on
+- B. both thresholds as availability floors — 93.0161 % and 88.9415 % — led by the distribution condition,
+  because it binds first and availability is the quantity the operator actually controls ✅
+- C. the volume tolerance of **1,862,188.62 m³**, **18.6219 %** of output, because volume is the larger
+  revenue line
+- D. the covenant headroom of **372,437.72** in cash, because cash is the unit the waterfall works in
+
+*Rationale:* A trigger becomes a control only when it is expressed in the units of the person who can move
+it, and the translation runs ratio → cash → driver (15.1.3); leading with the distribution condition
+follows from its binding three times closer than the covenant. A hands an operations meeting a ratio it
+cannot act on. C is correctly computed and useless as a control: a 19 % volume loss is not a plausible
+consequence of membrane fouling whereas six availability points is, so ranking the drivers by revenue size
+ranks them by the wrong property. D is Domain 10's translation and stops one step short of the dashboard —
+it is the right figure for the finance pack and the wrong one for the operator.
+
 ### Self-check — KA 15.1
 
 1. *Why does a deteriorating project report a flattered covenant ratio?* — Falling revenue
@@ -624,6 +675,59 @@ reserve top-up ranks:
 architecture; B is the error that leaves a handback obligation unfunded (Case study B); D confuses
 a reserve with a period cost.
 
+**MCQ 15.2-E `[15.2.4 · Evaluation]`** Two draft board papers describe the same six operating years.
+Paper 1 writes the **3,182,311.16** off as lost equity value. Paper 2 calls it a timing matter of no
+consequence, since **2,963,877.46** of distributions were ultimately paid. Which position is sounder,
+and what should the paper say?
+- A. paper 1 — cash not received when it was due is value lost, and calling it timing is how distressed projects are misreported
+- B. neither: the present-value loss is 2,709,838.79 — **53.90 %** of the entire 25-year equity `NPV` of 5,027,733.03 — so deferral is expensive without being destruction, and the paper should split the 3,182,311.16 into 1,682,311.16 of trading shortfall and a 1,500,000 capital call with different owners ✅
+- C. paper 2 — the block account is pre-funding rather than a penalty, so on the facts nothing was lost
+- D. paper 1, provided the loss is measured at the 6 % loan rate rather than the 8 % equity rate
+
+*Rationale:* Both papers state a half-truth and the arithmetic disposes of each: 2,963,877.46 came
+back, so it is not a write-off, and 2,709,838.79 is more than half the project's whole equity value,
+so it is not immaterial (15.2.4). C quotes a correct description of the mechanism (15.2.2) to reach a
+false conclusion about value — pre-funding still costs the time value of money and, here, a
+1,500,000 injection. D changes the discount rate to change the answer, which is the least defensible
+move available; the rate belongs to the board, not to the conclusion it wants.
+
+**MCQ 15.2-F `[15.2.3 · Comprehension]`** A shareholder asks how a project appraised at a 12.19 %
+`IRR` can pay a cash yield of only **4.3020 %**. The clearest explanation is:
+- A. the appraisal was optimistic, and the cash yield is the figure to believe
+- B. while the loan runs, debt service consumes 78.47 % of `CFADS`, so equity is the residual claimant on a leveraged asset; the same `CFADS` yields 32.13 % once the loan retires ✅
+- C. the difference is the 600,000 maintenance-reserve charge, which the appraisal did not carry
+- D. an `IRR` and a cash yield measure the same quantity on different bases, so one of the two has been computed incorrectly
+
+*Rationale:* The gap is leverage and timing, not error or optimism (15.2.3). C names a real charge
+that is genuinely large against the dividend — 77.5 % of it — but cannot explain the shape: add it
+back and the yield is still only 7.6354 %. D is the misconception the topic exists to remove: a
+return over a whole life and a level annual yield are different measures, and both are correct. A
+treats a leveraged residual as evidence about the appraisal.
+
+**MCQ 15.2-G `[15.2.2 · Evaluation]`** A sponsor reviewing the term sheet argues for a distribution
+condition set at the **1.20×** covenant level rather than **1.25×**, on the ground that a test stricter
+than the covenant traps cash for no lender benefit. On Kestrel's outturn the base-case distributable amount
+is **774,364.77** a year, year one's was trapped in full, and year three's residual after debt service was
+**193,301.25** against a 600,000 maintenance-reserve charge — a shortfall of **406,698.75** drawn from the
+block account. Is the argument sound?
+- A. yes — cash in shareholders' hands is worth more than the same cash later, the block account earns
+  equity nothing, and the lenders already have a covenant
+- B. not on these facts: the year-one dividend the 1.25× test trapped is what funded the 406,698.75
+  shortfall — **52.52 %** of the 774,364.77 — so a weaker test would have paid that cash out and then
+  called it back as new equity; the block account is pre-funding rather than a penalty, and the real
+  question is whether the sponsor would rather hold the cash or avoid the call ✅
+- C. yes — a distribution condition and a covenant test the same ratio on the same cash, so the stricter of
+  the two adds nothing
+- D. no — 1.25× is a market standard for a contracted water project and is not negotiable
+
+*Rationale:* Cash trapped by a distribution test is not lost but pre-committed, and here it paid for a
+restoration that ranks above distributions and has no negotiating partner (15.2.1, 15.2.2). A is the
+strongest form of the sponsor's case and names a real cost — deferral is expensive — but it prices the
+timing benefit while ignoring the capital call the same cash would have funded. C is the misconception the
+domain opens by correcting: the distribution condition is a **permission**, tested forwards as well as
+backwards, and it binds at 1.9103 % of `CFADS` where the covenant binds at 5.8339 %. D substitutes an
+assertion about the market for an analysis; nothing in a facility is un-negotiable at a price.
+
 ### Self-check — KA 15.2
 
 1. *Why was Kestrel's debt service reserve never drawn across six deteriorating years?* — Worst-year
@@ -901,6 +1005,65 @@ equity 646,327.86 of present value. Equity should:
 C is false — accelerated prepayment reduces the present value of distributions even where the
 undiscounted total is similar; D judges materiality on the wrong measure, since 646,327.86 exceeds
 the whole gain.
+
+**MCQ 15.3-E `[15.3.2 · Evaluation]`** The 7-year option at 4.45 % all-in is worth **(206,835.69)**
+against a breakeven all-in rate of **4.2206 %** — the market's offer is 22.94 basis points short. The
+treasurer proposes going back to the banks to press for a further **25 basis points** of margin, and
+nothing else. Assess that course.
+- A. sound — 22.94 basis points is the entire gap and 25 basis points closes it, so the transaction becomes positive
+- B. sound in arithmetic and the weaker course: at 4.20 % all-in the 7-year option is worth only about +18,542, while the same 4.45 % over 10 years is worth +799,481.12, so the negotiation belongs on tenor rather than on the last basis points of price ✅
+- C. unsound — a refinancing with a negative net present value should be abandoned rather than renegotiated
+- D. unsound — the breakeven rate depends on the discount rate chosen, so it cannot support a negotiating position
+
+*Rationale:* A is arithmetically correct and is the trap: winning the price argument converts a small
+loss into a small gain and leaves 780,939 of tenor value on the table, because the margin saving is a
+thin flow on a rapidly amortising balance while the extension lends into the 1.9431 `PLCR` tail
+(15.3.1, 15.3.2). C generalises one priced structure into a rejection of the transaction. D is a real
+caution — the paper should state and test its rate — but the sign does not turn on it here, so it is
+a reason to disclose an assumption, not a reason to abandon a computable negotiating position.
+
+**MCQ 15.3-F `[15.3.3 · Evaluation]`** At the year-two test date the backward `DSCR` is **1.1905** against
+a 1.20× covenant, and the forward view at the next test date, nine months out, is **1.0386**. The lenders
+will grant an amendment, and the sponsors hold **two** equity cures over the loan's life, neither used. The
+sponsor's adviser proposes resetting the covenant to **1.10×**, which clears the current ratio with margin
+and prices below a deeper reset. The soundest recommendation is to:
+- A. reset to 1.10× and keep a cure for the next test, which against that reset costs **307,662.27** — one
+  of the two cures the sponsors hold, and cheaper in fee and margin uplift than a deeper reset
+- B. reset to **1.00×** for two test dates before stepping to 1.10× and then 1.20×, so that the reset itself
+  carries the deterioration and both cures survive it — a reset sized on the current ratio pays a fee for a
+  covenant the next test breaches, and then spends an irreplaceable option to hold it ✅
+- C. reset to 1.00× for the remaining life, since a covenant that has been breached has been shown to be set
+  too high
+- D. take a waiver at each test date instead: at **55,307.03** a waiver is far cheaper than the
+  **743,436.62** the amendment costs
+
+*Rationale:* An amendment must be sized against the **stressed** case rather than the current one, and the
+deterioration was already visible (15.3.3). **A** is genuinely arguable and is not arithmetically wrong:
+307,662.27 is **38.05 %** of the **808,625.80** the same test would cost as a cure against the unamended
+1.20×, and a sponsor expecting a recovery may rationally buy the shallower reset and bridge one date. It is
+the weaker course because a cure is an irreplaceable option whose value rises with the severity of the
+breach it meets — the 17.0× asymmetry of 15.3.3 — so spending one on a breach the amendment could have
+absorbed repeats the year-two error at a higher price, and the fee saved buys a covenant that fails at the
+very next test. **C** gives away the control permanently to solve a defined period of weakness, and no
+lender prices that kindly. **D** is right about a single date and wrong about a persistent profile: each
+waiver is a fresh consent sought from a worse position, and the amendment Kestrel took resets four test
+dates.
+
+**MCQ 15.3-G `[15.3.1 · Comprehension]`** Which statement best explains why a refinancing opportunity
+exists in an operating project financing at all?
+- A. market interest rates fall over time, so any long-dated facility eventually becomes expensive
+- B. the facility was priced for completion and technology risks that the completion tests retired, while a
+  term loan's price is fixed at signing; and the project life beyond the loan's maturity is lendable
+  capacity that no margin reduction can reach ✅
+- C. an operating project generates more cash than one under construction, so it can carry more debt
+- D. lenders are required to reprice a facility once the independent engineer certifies completion
+
+*Rationale:* The driver is a mismatch between a price fixed at signing and a risk profile that has changed,
+and the value has three sources — margin, tenor into the tail, and the covenant package — which is why a
+`PLCR` of 1.9431 against an `LLCR` of 1.2743 measures something a margin cut cannot deliver (15.3.1). A is
+sometimes true and is not the mechanism: a refinancing can pay in a rising market where the risk retired is
+large enough. C explains why the tail exists, not why the facility is mispriced. D invents an obligation —
+a refinancing is a new transaction, negotiated.
 
 ### Self-check — KA 15.3
 
@@ -1235,6 +1398,56 @@ year). At an 8 % equity discount rate, the earlier profile:
 undiscounted amounts across different decades; C would be true only if the reserve earned the 8 %
 discount rate — the indifference-rate invariant, at which every profile costs
 `8,000,000 × DF(0.08, 25) = 1,168,143.24`.
+
+**MCQ 15.4-E `[15.4.2 · Evaluation]`** A credit committee paper recommends the maturity extension on
+the ground that lender recovery is **100.0000 %** of the 34,073,997.28 outstanding, measured at the
+6.00 % contract rate. Is that recommendation supported by the evidence it cites?
+- A. yes — the present value of a longer annuity at the same rate returns the same principal, so recovery is par
+- B. no — par at the contract rate is an arithmetic identity that holds however far the credit has deteriorated, so it carries no information; at the 7.00 % the lenders now require the extension recovers **95.0779 %**, a real loss of 4.92 points the paper does not disclose ✅
+- C. no — the sponsor injection recovers 96.3549 % and should therefore be recommended instead
+- D. yes, provided the paper also shows the restored `DSCR` of 1.2043 clearing the 1.20 requirement
+
+*Rationale:* A states a true fact and mistakes it for evidence; because the identity is
+insensitive to the very deterioration the committee is being asked to approve, quoting it is what
+conceals the concession (15.4.2). C names the option lenders prefer but it is not theirs to grant —
+the sponsor rationally refuses, the injection costing 4,583,353.23 today for a saving worth
+825,718.65 less. D adds a necessary condition and treats it as a sufficient one: coverage restored
+says the loan can be serviced, not what the lenders gave up to get there.
+
+**MCQ 15.4-F `[15.4.4 · Evaluation]`** The sponsors sell at the end of operating year eight to a holder
+requiring **7.50 %**, and the board paper reports the realised `IRR` of **12.3059 %** as evidence of
+operating performance against a hold-to-maturity **9.8591 %**. The soundest assessment of that paper is:
+- A. it is sound — a realised `IRR` is the return the shareholders actually earned, and 12.3059 % is a fact
+- B. it misattributes: a sale at the sponsors' own 8.00 % would have lifted the reported `IRR` to
+  **11.7666 %** while creating exactly nothing, so the genuine gain from selling at 7.50 % is the
+  **828,232.87** of yield compression — a market view — and it belongs in the paper separately from the
+  **5,027,733.03** the asset itself created ✅
+- C. it understates performance: the present value at 8 % of the 7.50 % sale is **5,855,965.90** against
+  5,027,733.03 on a hold, so the paper should claim the larger figure
+- D. it is sound provided the buyer's required return is disclosed alongside the `IRR`
+
+*Rationale:* A sale at the seller's own discount rate is a swap of equal value at a different date, so
+**1.9075** points of the uplift is early crystallisation and none of it is performance (15.4.4). A states a
+true number and lets it carry a claim it cannot support. C makes the mirror error to the paper's: the
+828,232.87 is real value and it is a view about the capital market rather than about the asset, so claiming
+it as performance is the same misattribution in a larger figure. D is necessary and not sufficient —
+disclosing the rate does not separate the three things a board needs kept apart: the value the asset
+created, the compression, and the `IRR`, which explains neither.
+
+**MCQ 15.4-G `[15.4.1 · Comprehension]`** A covenant breach, financial distress and insolvency are three
+distinct conditions. Which statement distinguishes them correctly?
+- A. they are the same condition at three degrees of severity, so the response differs only in urgency
+- B. a breach is a test failure at a date, which is cured, waived or amended; insolvency is an inability to
+  pay; distress is a forecast that cannot sustain the contracted debt service for the remaining life, which
+  is a capital-structure problem and is restructured ✅
+- C. distress is a breach that has occurred at two or more consecutive test dates
+- D. distress is present once the debt service reserve has been drawn
+
+*Rationale:* The three are separated by what they are conditions *of* — a test, a profile and a payment —
+and the diagnostic between the second and third is whether scheduled service exceeds sustainable service
+for one period or for the remaining life (15.4.1). C counts breaches, which says nothing about the
+forecast. D describes a liquidity event reserves exist to absorb: Kestrel's debt service reserve was never
+drawn across six deteriorating years, while the distribution test bound throughout.
 
 ### Self-check — KA 15.4
 

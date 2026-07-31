@@ -6,7 +6,7 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**434 terms**, consolidated from 447 key-terms entries across 16 domains.
+**446 terms**, consolidated from 459 key-terms entries across 16 domains.
 
 ## A
 
@@ -110,6 +110,8 @@
 
 **Breakeven fee / error rate / detection rate** — The three points at which a review stops adding value. *(KA 6.4)*
 
+**Breakeven inflow** — `I₀ / AF(r, n)`; the revenue level at which NPV reaches zero. *(KA 4.3)*
+
 **Breakeven loading** — (transferor `EMV` ÷ transferee `EMV`) − 1; negative means no price works. *(KA 11.1)*
 
 **Breakeven margin** — The new all-in rate at which a refinancing's net present value is nil — 4.2206 % for Kestrel's 7-year option. *(KA 15.3)*
@@ -140,6 +142,8 @@
 **Capital employed** — Debt plus equity; the base a return on capital is measured against. *(KA 2.2)*
 
 **Capital rationing** — Budget binds before value runs out; pack by PI. *(KA 4.3)*
+
+**Capital-recovery annuity** — `I₀ / AF(r, n)`; the annual inflow at which NPV is exactly zero. *(KA 4.2)*
 
 **Capitalisation boundary** — Which costs and which dates form part of the asset. *(KA 2.4)*
 
@@ -193,6 +197,8 @@
 **Committed capital** — Base equity + support commitments; the real exposure (40.0 % of capex for Kestrel). *(KA 5.2)*
 
 **Committed vs contributed equity** — Enforceable obligation to subscribe, versus cash actually injected. *(KA 9.1)*
+
+**Common horizon (LCM)** — Comparing replacement chains over the lowest common multiple of the lives. *(KA 4.2)*
 
 **Common terms agreement** — One document carrying shared covenants and definitions across all tranches. *(KA 9.3)*
 
@@ -309,6 +315,8 @@
 **Deduction / abatement regime** — Contractual reductions in payment for unavailability or quality failure; an uncapped, annually recurring exposure. *(KA 12.2)*
 
 **Deduction multiplier** — The factor applied to the availability shortfall; converts one operational point into more than one point of cash. *(KA 7.1)*
+
+**Deferred annuity factor** — `AF(r, n) − AF(r, k)`; prices a level stream that starts after year `k`. *(KA 4.1)*
 
 **Definitional layer** — The facility's defined terms implemented once, as code, with clause references. *(KA 16.1)*
 
@@ -443,6 +451,8 @@
 
 **Forward-looking test** — A covenant or distribution condition measured on a projected window on an agreed basis. *(KA 15.1)*
 
+**Free cash flow (project)** — Operating cash after tax, capex and working capital, **before all financing flows** — the only stream the project rate may discount. *(KA 4.1)*
+
 **Funded cost of delay** — Cash the project must raise per period of slip: interest on drawn debt plus prolongation costs. Excludes forgone `CFADS`. *(KA 14.4)*
 
 **Funding order** — Pro rata, equity-first or debt-first; allocates capitalised interest, credit exposure and sponsor return. *(KA 14.1)*
@@ -468,6 +478,10 @@
 **Grain** — The level at which one row is one fact; most reconciliation failures are grain failures. *(KA 16.1)*
 
 **Grant element** — `1 − PV(debt service at a market rate) ÷ face value`; the subsidy content of concessional debt. *(KA 9.4)*
+
+**Greedy PI packing** — Descending-index selection; a heuristic that can leave value and budget unused. *(KA 4.3)*
+
+**Gross vs net PI** — `PV/I₀` (threshold 1.0) vs `NPV/I₀` (threshold 0.0); same ranking, different threshold. *(KA 4.2)*
 
 **Grounds for transfer** — Control (changes the distribution) and capacity (cheaper holder); bargaining power is neither. *(KA 11.1)*
 
@@ -510,6 +524,8 @@
 **Indifference stress s** — `1 − λ₂/λ₁`; the cash stress at which a lower coverage requirement stops being a concession. *(KA 10.1)*
 
 **Indirect method** — Deriving operating cash flow from profit by undoing accruals. *(KA 2.2)*
+
+**Indivisible project** — Funded whole or not at all; the reason enumeration replaces sorting. *(KA 4.3)*
 
 **Inflation π / escalation e** — General price drift / specific contractual price growth. *(KA 3.3)*
 
@@ -610,6 +626,8 @@
 **Mechanical completion / commissioning / performance test / commercial operations date / final acceptance** — The completion sequence; the financing attaches distinct consequences to each. *(KA 14.4)*
 
 **Mezzanine** — Capital between senior debt and ordinary equity; priced in the gap, never cheap. *(KA 9.2)*
+
+**Mid-period convention** — Discounting each year's flow from its mid-point; multiplies year-end PV by `(1 + r)^0.5`. *(KA 4.1)*
 
 **Milestone certification** — Value of milestones actually achieved; binary, lumpy, tied to contractual entitlement. *(KA 14.3)*
 
@@ -730,6 +748,8 @@
 
 **Ramp** — The period during which realised demand approaches its mature level after commercial operations. *(KA 7.2)*
 
+**Ramp profile** — A build-up to full output; costs value against a level profile even at identical totals. *(KA 4.1)*
+
 **Recall / precision / accuracy** — Real errors caught ÷ real errors · real alerts ÷ alerts · all correct ÷ all items. *(KA 16.1)*
 
 **Recognition** — Recording an item in the statements, subject to definition and measurement tests. *(KA 2.1)*
@@ -834,6 +854,8 @@
 
 **Subordination** — Junior claims paid only after senior tests pass. *(KA 10.3)*
 
+**Sunk cost** — Spend that no decision can avoid; excluded from every appraisal flow. *(KA 4.1)*
+
 **Superseded-draft error** — Extraction from the wrong version; 100 per cent accurate against the wrong document. *(KA 16.2)*
 
 **Sustainability-linked loan** — Margin ratchet tied to KPI performance; usually symmetric. *(KA 9.4)*
@@ -874,6 +896,8 @@
 **Trigger in driver units** — A ratio threshold restated in availability points, volume or unit cost. *(KA 15.1)*
 
 **Two-part tariff** — Capacity charge plus variable charge; separates fixed-cost recovery from output. *(KA 7.1)*
+
+**Two-way sensitivity** — NPV tabulated across the two dominating assumptions jointly, not separately. *(KA 4.3)*
 
 ## U
 

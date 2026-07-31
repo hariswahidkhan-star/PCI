@@ -251,6 +251,38 @@ correct conclusion is:
 probability — the design, not the review, is at fault. A ignores the option cost; C forfeits 810,000 of
 detection value; D is the omission the arithmetic exists to prevent.
 
+**MCQ 5.1-E `[5.1.2 · Comprehension]`** A colleague who has only worked on projects after financial
+close asks why the development budget is called a premium rather than a cost. The statement that best
+conveys the idea is:
+- A. it is money already spent, and therefore irrelevant to any forward-looking decision
+- B. each stage buys the right, but not the obligation, to commit the next and larger tranche, so it is judged across everything pursued rather than against the deal that closed ✅
+- C. it is part of the closed project's true capital cost and belongs in that project's capital expenditure
+- D. it is the fee paid to a landowner for an option over a site, held until the project proceeds
+
+*Rationale:* the word marks what the money buys — optionality across a portfolio in which the closes pay
+for the abandonments, which is why the honest unit is 7,400,000 per close and not 2,400,000. A states the
+sunk-cost rule, which governs whether to continue but says nothing about what the spend purchased; C is
+the separate and jurisdiction-sensitive question of capitalisation (5.1.1); D names one at-risk
+commitment inside the budget and mistakes the part for the whole.
+
+**MCQ 5.1-F `[5.1.2 · Evaluation]`** A development director defends next year's budget with the
+programme's own record: cost per closed project 7,400,000, an achieved close rate of 5.0 % against a
+breakeven close rate of 2.29 %, and therefore 2.19 times of margin. Value per close is the deal
+teams' appraisal `NPV` of 16,179,360. The soundest position to put to the board is that:
+- A. the budget is justified as presented, because 2.19 times of margin is comfortable
+- B. the ranking and the margin are the right instruments, but a breakeven computed on appraised
+  value is itself a forecast, so it must be restated against **realised** value per close before it
+  is relied on ✅
+- C. the budget cannot be defended, because most of the spend is written off
+- D. screening should be cut first, since it is the stage that funds the projects later abandoned
+
+*Rationale:* treating a modelled value per close as an observed one is the judgement failure, and
+5.1.2 requires the programme to be re-tested against realised value — a programme justified on
+optimistic deal `NPV`s has hidden its true breakeven. C mistakes the design of an option portfolio
+for waste: the closes are meant to pay for the abandonments. D attacks the 1,000,000 of screening,
+the smallest of the four stages and the one that buys the whole funnel, when the governance
+conclusion is to screen more widely and kill earlier.
+
 ### Self-check — KA 5.1
 
 1. *Why measure development spend per closed project?* — The spend buys options across a portfolio, so
@@ -460,6 +492,59 @@ subscription. The most accurate correction is:
 *Rationale:* committed capital, not subscribed equity, is the exposure (5.2.3), and consolidation and tax
 turn on control and framework. C describes full recourse, which limited-recourse structures exist to
 avoid; D confuses insolvency engineering with the scope of contractual support.
+
+**MCQ 5.2-E `[5.2.3 · Evaluation]`** Kestrel's lenders ask that the several cost-overrun support rise from
+10 % to 15 % of the 60,000,000 capital cost, taking group committed capital from 24,000,000 (40.0 % of
+capex) to 27,000,000 (45.0 %) and the industrial partner's commitment from 2,400,000 to 2,700,000 — an
+amount its own credit already requires to be backed by a letter of credit. The best recommendation to the
+sponsor board is:
+- A. accept the 15 %, since the liability basis is unchanged and each sponsor still funds only its own share
+- B. accept it only against a priced concession on coverage, tenor or margin, because the 3,000,000 is 600,000 a support point and is worth trading against the levers the lenders control ✅
+- C. offer joint and several liability over the existing 6,000,000 pool instead, holding group committed capital at 40.0 % of capital cost
+- D. refuse, since committed capital above 40 % of capital cost makes a limited-recourse structure uncommercial
+
+*Rationale:* the request is a transfer of construction risk to the sponsors whose price is exactly
+knowable — 600,000 a point (5.2.3) — which makes it tradeable against the coverage, tenor, margin and
+sizing levers of Domain 10; conceding 3,000,000 unpriced is the failure. A is true, and is why the request
+reads as modest, but treating an unpriced 3,000,000 as costless is the error. C is genuinely defensible and
+some lenders prefer it, but it holds the pool flat by moving the partner's worst case from 2,400,000 to
+7,800,000, a 3.25× rise on the least creditworthy member whose letter of credit is already a timetable
+risk, while the operator's rises only 20.5 % — and the liability basis it trades away is a term for
+qualified counsel in the governing jurisdiction, not a modelling choice (5.2.3). D invents a threshold:
+45.0 % is high and negotiable, not uncommercial.
+
+**MCQ 5.2-F `[5.2.4 · Evaluation]`** Kestrel's equity bridge at 5.5 % adds 1,512,225 of interest to
+project cost and lifts the sponsors' equity `IRR`, because their money goes in later. The finance
+lead is asked how to put it to the investment committee. The soundest presentation:
+- A. leads with the improved equity `IRR`, since equity is what the committee is being asked to
+  commit
+- B. reports the 1,480,688 of saving as a financing return earned at the sponsors' own required
+  return, states that the project return is unchanged, and discloses both the 1,512,225 added to
+  project cost and the firm commitments the bridge depends on ✅
+- C. omits the bridge from the return presentation altogether, because it creates no project value
+- D. adds the 1,480,688 to the project `NPV` as a financing benefit
+
+*Rationale:* the two funding profiles are identical in present value at the bridge rate — 17,530,806
+either way — so the bridge is an arbitrage between that rate and the sponsors' 12 % requirement, and
+it is reported as what it is (5.2.4). A presents a change in timing as project performance, the
+flattery Domain 4 (KA 4.1.2) warns of. C suppresses a real cost that consumes coverage if it is
+capitalised. D books a financing return inside a project measure, which is the same error with a
+decimal point.
+
+**MCQ 5.2-G `[5.2.2 · Comprehension]`** An `SPV` is said to deliver both **credit separation** and
+**bankruptcy remoteness**. The two differ in that:
+- A. they are one property, described from the lender's side and the sponsor's side
+- B. credit separation is an outcome of how the project is underwritten — on its own contracts rather
+  than on the weakest sponsor's rating — while bankruptcy remoteness has to be built into the
+  vehicle's constitution and its finance documents, and incorporating a single-purpose entity does
+  not deliver it ✅
+- C. credit separation is a legal state and bankruptcy remoteness is a rating outcome
+- D. credit separation applies during construction and bankruptcy remoteness during operations
+
+*Rationale:* 5.2.2 lists credit separation among the things the vehicle achieves and bankruptcy
+remoteness among the things it does **not** achieve by itself. A and C collapse a commercial
+assessment into a documentary construct, and it is the confusion behind the belief that a
+single-purpose entity is insolvency-proof; D invents a timing distinction the structure does not make.
 
 ### Self-check — KA 5.2
 
@@ -681,6 +766,58 @@ payment obligations are unsupported and whose credit lenders assess as weak. The
 
 *Rationale:* an offtake is worth the offtaker's ability to pay, so tenor and indexation do not cure
 credit (A, C). D overstates: credit support and resizing are the standard structural remedies.
+
+**MCQ 5.3-E `[5.3.1 · Evaluation]`** A gate paper reports: "The six conditions average 90.5 %, so the
+project is about ninety per cent likely to close. Expected value of continuing is +6,453,191 against a
+breakeven close probability of 14.83 %, and the remaining effort will be shared evenly across the six."
+Each of the four observations below is defensible. Which should the reviewer press first?
+- A. the 90.5 %, which overstates the 54.72 % joint probability by 35.78 points
+- B. the even effort split, since marginal gain ranks the financing condition 3.7255× above the land condition
+- C. the expected-value verdict, because a 14.83 % breakeven makes "continue" the answer on almost anything, so the decision actually turns on whether any of the six conditions is fatal and unresolvable ✅
+- D. the independence assumption, since these six conditions are positively correlated
+
+*Rationale:* A and B are both right and both must be corrected, but neither can change the decision the
+paper asks for — A changes what is reported and B changes the work plan, and on either the arithmetic still
+says continue. Only C reaches the commitment of the remaining 2,400,000, which expected value cannot govern
+in a conjunctive test and which the fatal-condition rule exists to decide (5.1.3, 5.3.1). D points the
+wrong way: positive correlation raises the true joint probability above the product, so it strengthens the
+case for continuing rather than weakening it.
+
+**MCQ 5.3-F `[5.3.4 · Comprehension]`** A supplier describes its new membrane arrangement as "fully
+proven — three pilot units have run for two years". A colleague asks what more the word bankable could
+require. The best restatement is:
+- A. bankable means technically demonstrated, so a two-year pilot record settles it
+- B. bankable is a financing category rather than a technical description: it is the state in which lenders will lend against the technology's performance without recourse to the sponsors ✅
+- C. bankable means the technology is the lowest lifecycle-cost option available
+- D. bankable means the supplier has issued a performance guarantee
+
+*Rationale:* the question the word answers is whose money is at risk if performance disappoints, which is
+why the test is operating references at comparable scale and duty, a supplier able to stand behind its
+guarantees, and an independent technical adviser's opinion the lenders accept (5.3.4). A is the supplier's
+sense of the word, and pilot scale is precisely what the financing definition excludes; C is the
+engineering question, and the domain's own caution is that bankable and good are not the same; D names one
+necessary component, and a guarantee is worth only the guarantor's balance sheet.
+
+**MCQ 5.3-G `[5.3.4 · Evaluation]`** The novel membrane variant would cut operating cost, but the
+credit committee requires 1.45 × rather than 1.30 × for want of operating references: debt capacity
+falls from 41,171,123 to 36,912,041, so 4,259,082 must be found as equity at an annual substitution
+cost of about 255,545. The engineering team argues the variant is the better plant. The soundest
+position is that:
+- A. the variant should be adopted, because a 25-year lifecycle decision must not be made on a
+  12-year lender's view
+- B. the variant should be rejected, because project finance is a poor place to innovate
+- C. the coverage premium is one of several priced levers — an extended supplier guarantee, a larger
+  maintenance reserve, output insurance or a first-loss contribution can each buy the ratio back
+  down — so the decision is whether the operating saving plus any mitigant beats 4,259,082 of
+  equity, not whether to defer to the committee ✅
+- D. the target ratio should be negotiated back to 1.30 ×, since the underlying cash flow is unchanged
+
+*Rationale:* 5.3.4 states both halves and neither settles it alone: bankable is not the same as
+good, so A's warning is real, and the arithmetic is real too. What makes C sounder is that it prices
+the choice and keeps the engineering decision with the engineers, which is exactly the negotiation
+Domain 9 (KA 9.3–9.4) supplies instruments for. A hands a financing constraint no answer; B is the
+maxim used as a substitute for the calculation; D misreads the ratio as an opinion rather than an
+output of the credit — the references are missing whatever the sponsors would prefer.
 
 ### Self-check — KA 5.3
 
@@ -931,6 +1068,81 @@ against debt of 42,000,000. The buy-down restoring the originally sized coverage
 *Rationale:* at constant coverage debt is proportional to `CFADS`, so the buy-down is `42,000,000 ×
 271,800/6,384,000`. A is the annual `CFADS` shortfall, not the debt adjustment; C is the COD-slip
 interest of 5.4.2; D is the technology premium of 5.3.4 — correct numbers in the wrong place.
+
+**MCQ 5.4-E `[5.4.2 · Evaluation]`** Kestrel's daily economic cost of delay is 24,733.33 against delay
+damages of 20,000 per day capped at 4,800,000, so damages recover 80.86 % of the daily cost and the cap
+binds on day 240. Lenders stress a 360-day slip, in which the SPV bears 4,104,000 — 1,704,000 of daily
+shortfall plus 2,400,000 for the 120 days beyond the cap. The contractor will concede either the rate or
+the cap, not both. The better recommendation is:
+- A. take the rate to 24,733.33, removing the 4,733.33 per day the calibration analysis identifies
+- B. take the cap, because with the cap held at 4,800,000 a full-cost daily rate merely brings the cap forward from day 240 to day 194.07 and recovers not one dollar more in the 360-day case the lenders test ✅
+- C. take neither and rely on the 6,000,000 of cost-overrun support, which covers the 4,104,000
+- D. take the rate, since a damages cap is a matter for counsel and cannot be priced
+
+*Rationale:* `4,800,000/24,733.33 = 194.07` days, so at 360 days recovery is the cap on either concession
+and the uncovered 4,104,000 does not move; the rate helps only for slips shorter than 194 days. A is the
+right calibration aimed at the wrong lever for the scenario the credit committee actually runs — a
+defensible answer that buys nothing in the case being tested. C is available and is part of what the support
+exists for, but it converts a contractor obligation into sponsor cash at par and consumes 68.4 % of a pool
+that must also absorb overruns (5.2.3). D is false as stated: the cap's *economic effect* is a number,
+and it has just been priced. Whether a given rate or cap is enforceable as drafted — as liquidated
+damages rather than as a penalty — is indeed a question for qualified counsel in the governing
+jurisdiction, and it is a question worth asking; but it is not a reason to leave the cap unpriced, and
+it is the cap rather than the rate that the 360-day case turns on.
+
+**MCQ 5.4-F `[5.4.4 · Evaluation]`** COD falls due in 30 days. The readiness gate reports the revenue
+meter not yet accepted by the offtaker and the permit to operate outstanding. The commercial team wants to
+declare COD on the contractual date to start the 17,733.33 per day of `CFADS` the delay is costing. Holding
+COD for 30 days costs 742,000 of economic cost, of which delay damages recover 600,000, leaving 142,000
+with the SPV. The better recommendation is:
+- A. declare COD, since 532,000 of forgone `CFADS` over 30 days outweighs a 142,000 net holding cost
+- B. hold COD until the readiness gate clears, because 142,000 is the entire price of holding while declaring transfers a contractor-owned, damages-covered problem to equity at the moment the covenant regime begins ✅
+- C. declare COD and agree with the contractor that delay damages continue to accrue until the readiness items close
+- D. hold COD and capitalise the 210,000 of construction interest into the facility, so equity funds nothing
+
+*Rationale:* `30 × 24,733.33 = 742,000` against `30 × 20,000 = 600,000` leaves 142,000, while an unaccepted
+meter and a missing permit to operate put the tariff and the first covenant test at risk on a plant that is
+otherwise performing (5.4.4). A compares the revenue with a cost the contractor is largely paying, which is
+the arithmetic that makes early declaration look attractive. C is the incoherent option: damages run to
+COD, so declaring it extinguishes the recovery being relied on. D is a real structural choice and the
+weaker one — capitalising 210,000 lifts the instalment to 5,034,683.41, takes `DSCR` from 1.2743 to
+1.2680 and cuts annual covenant headroom from 372,438 to 342,380, a loss of 30,058 a year for the whole
+twelve-year loan life, to avoid a one-off 142,000.
+
+**MCQ 5.4-G `[5.4.3 · Evaluation]`** Kestrel completes at 97 % of guaranteed output: `CFADS` falls
+from 6,384,000 to 6,112,200, `DSCR` to 1.2201, and a buy-down of 1,788,158 restores the originally
+sized 1.2743. The project director proposes reporting the position as restored. The soundest
+professional judgement is that:
+- A. it is restored: sized coverage is back to 1.2743, so the project is as underwritten
+- B. the buy-down restores the **lenders'** position only; equity has permanently lost 271,800 a year
+  and holds a smaller loan, and the output shortfall at which the performance-damages cap is
+  exhausted must be established and bankability tested there ✅
+- C. the buy-down over-compensates, because debt falls by 1,788,158 while annual cash falls by only
+  271,800
+- D. no buy-down is needed, because 1.2201 still clears the 1.20 × covenant
+
+*Rationale:* a buy-down is calibrated to the lenders' coverage, not to the sponsors' return (5.4.3).
+C compares a capital sum with an annual flow: at constant coverage debt is proportional to `CFADS`,
+so 42,000,000 × 271,800/6,384,000 is exactly the adjustment that restores the ratio. D is the
+dangerous answer because it is arithmetically true and leaves the project 100,638 of annual cash from
+a breach, 73.0 % of its headroom consumed, with the cap question unasked.
+
+**MCQ 5.4-H `[5.4.1 · Comprehension]`** A sponsor asks what an EPC wrap changes, given that the same
+works are being built either way. The best statement of what it achieves is that it:
+- A. reduces the cost of the works, because one contractor buys the packages more cheaply
+- B. makes completion risk bankable by placing fixed-price, date-certain responsibility for the whole
+  works with one contractor, so interface risk sits there rather than with the SPV — at the price of
+  a wrap premium for risk the contractor does not wholly control ✅
+- C. removes completion risk from the project entirely
+- D. transfers completion risk to the lenders, who price it in the margin
+
+*Rationale:* the wrap is read here only as what makes completion risk bankable — lenders face a
+single counterparty (5.4.1) — and it is not free: a contractor pricing interface and schedule risk
+charges for it, which is why a multi-package alternative must be compared on interface exposure and
+price together. A inverts the usual outcome, since splitting packages is what tends to price lower.
+C forgets that damages and guarantees are worth only the guarantor's balance sheet. D describes no
+part of a limited-recourse structure, in which lenders take completion risk only where support runs
+out.
 
 ### Self-check — KA 5.4
 

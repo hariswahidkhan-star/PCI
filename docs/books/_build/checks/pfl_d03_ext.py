@@ -971,4 +971,7 @@ def run(ctx):
           D("1.0605"))
     check("Summary: first-year coverage range, high", (CF / (DEBT * R)).quantize(D("0.0001")),
           D("2.5333"))
-    check("3.A.4 the invariant table has sixteen rows", 16, 16)
+    # A row count is a structural claim, not an arithmetic one, and it stood here as
+    # `check(..., 16, 16)` — a constant compared to itself, which can never fail. Structural
+    # audits belong to the document generators (make_glossary / make_question_bank /
+    # make_appendices), which do fail on defects; this suite checks arithmetic.

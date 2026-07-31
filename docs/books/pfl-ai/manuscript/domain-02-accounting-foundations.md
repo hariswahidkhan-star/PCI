@@ -266,6 +266,21 @@ both sides reports the downside first. A applies one threshold to both; B ignore
 counterclaim passes its tests; D offsets two items that arise from different events, which the
 recognition tests are applied to individually.
 
+**MCQ 2.1-F `[2.1.1 · Comprehension]`** Kestrel's first year reports accrual `EBITDA` of 7,500,000
+and cash-basis `EBITDA` of 6,900,000, and 2.1.1 concludes that cash accounting is "not the
+conservative choice — merely late". Which statement restates that claim correctly?
+- A. the cash basis reports a lower result in every period, which is why it is the prudent basis for a lender
+- B. the 600,000 the cash basis has not yet reported is the closing net working-capital balance, and it is reported in whichever later period the trading cycle stops growing or unwinds — over the project's life the two bases sum to the same figure ✅
+- C. the cash basis is late because customers pay in arrears, so the 600,000 difference is permanent
+- D. the two bases differ because accrual accounting charges depreciation, which a cash basis cannot recognise
+
+*Rationale:* the cumulative gap *is* a balance-sheet position — receivables 900,000 less payables
+300,000 — and balance-sheet positions unwind, so what separates the bases is timing rather than
+prudence (2.1.1). A is wrong in both directions: a project releasing working capital reports **more**
+on a cash basis, which is how a declining project flatters its cash result (Domain 15, KA 15.1.2).
+C treats a reversing balance as permanent. D names a real difference that is irrelevant here, because
+the comparison is struck at `EBITDA`, above any depreciation charge.
+
 ### Self-check — KA 2.1
 
 1. *Which basis governs debt service, and which governs covenants defined on profit?* — Cash for
@@ -650,6 +665,38 @@ soundest conclusion is:
 interest figure without changing any cash (2.2.3). A and C read a presentation choice as an economic
 difference — the specific error the `CFADS` identity is exposed to; D invents a cause the statements
 do not support.
+
+**MCQ 2.2-G `[2.2.1 · Evaluation]`** A management pack reports Kestrel's 1.20× `DSCR` covenant
+headroom correctly — a 3.8796 % revenue fall — and then adds that "the project breaks even at a
+21.50 % fall in revenue". Each statement below is true on Kestrel's first-year figures. Which is the
+more decisive objection to that second sentence?
+- A. the profit breakeven sits at revenue of 9,420,000 — a 21.50 % fall — which is the figure quoted
+- B. the cash breakeven, where `DSCR` reaches 1.00, sits at revenue of 10,282,044 — a 14.32 % fall — so it binds **7.18** revenue points earlier, and it, not the profit breakeven, is the point at which the facility stops being paid ✅
+- C. net income is 4.6512 times as revenue-elastic as revenue itself, so profit falls 4.6512 % for every 1 % of revenue lost
+- D. the sentence is harmless, because the reader has already been given the covenant test, which bites long before either breakeven
+
+*Rationale:* both breakevens are correctly computed, and only one of them is the point at which cash
+stops covering debt service, so the pack has quoted the slacker of the two and told the reader the
+project is 21.5 points from trouble when on its own chosen measure it is 14.3 (2.2.1). A restates the
+pack's own figure and objects to nothing. C is true and is a *sensitivity* rather than a threshold —
+it says how fast profit moves, not where anything breaks. D is the strongest of the wrong answers and
+is a good point aimed at the wrong target: the covenant does bite first, at 3.8796 % (KA 2.4.2), and a
+correctly stated covenant elsewhere in the pack does not license a misstated breakeven beside it —
+a breakeven is not invalidated by the existence of a tighter test above it, nor excused by one.
+
+**MCQ 2.2-H `[2.2.4 · Comprehension]`** Kestrel's cash conversion — operating cash flow ÷ net income
+— is 1.8721. Which statement shows the ratio has been understood?
+- A. collection is efficient: the project turns each unit of profit into 1.87 units of cash
+- B. a figure above 1.0 is close to guaranteed on a capital-intensive asset, because depreciation of 2,400,000 exceeds the working-capital absorption of 600,000; the diagnostic content is in those two components separately, not in the ratio ✅
+- C. the ratio exceeds 1.0 because the project is profitable, and would fall below 1.0 in a loss-making year
+- D. the ratio measures earnings quality, and 1.87 indicates a low risk of revenue being recognised early
+
+*Rationale:* the numerator adds back a charge fixed by a depreciation policy set years earlier and
+deducts this period's working-capital movement, so the ratio measures capital intensity and would stay
+above 1.0 through a year of collapsing collections (2.2.4). A and D read a structural arithmetic
+property as an operational or a quality signal — the specific misreading the passage exists to
+correct. C offers a mechanism the arithmetic does not have: the add-back does not depend on
+profitability at all.
 
 ### Self-check — KA 2.2
 
@@ -1083,6 +1130,43 @@ is:
 is the whole swing (2.3.2). A forgets the reversal; C is precisely what immediate recognition exists
 to prevent; D applies a cash-basis instinct to an accrual test.
 
+**MCQ 2.3-H `[2.3.1 · Evaluation]`** At financial close a sponsor presses for `CFADS` to be defined
+*before* working-capital movements, which on the first year's figures would report `DSCR` of 1.3941
+rather than 1.2743. Advising the sponsor, the soundest position is:
+- A. press for the exclusion: it buys 0.1198 of reported coverage on identical cash, and a further 18.25 days of collections of covenant headroom with it
+- B. press for the definition that is the more *stable* rather than the higher today — exclusion flatters a growing trading cycle and turns against the sponsor in the first year of decline, when a shrinking cycle releases cash the covenant would then ignore ✅
+- C. accept the lenders' inclusive definition, because cash-based tests are always the more conservative and conservatism protects the sponsor
+- D. leave `CFADS` undefined and rely on the financial model's treatment, which both parties have reviewed
+
+*Rationale:* the definitional choice is not neutral across the life of the facility — excluding
+working capital raises the ratio while the cycle grows and lowers it while the cycle unwinds — so a
+sponsor optimising the first test period is buying a definition that bites later (2.3.1), and
+stability is what a lender is actually paying for. A is the arithmetic correctly done against the
+wrong objective, treating one period as the covenant's life. C reaches a defensible destination by an
+argument that is not true, and an untrue argument will not survive the negotiation. D is the weakest
+of the four: an undefined term is settled later by whoever is enforcing it, and Domain 13's model
+audit tests the model against the *documented* definition, which must therefore exist. The finance
+leader's contribution here is the arithmetic across the facility's life; the drafting of the
+definition, and what it will mean on enforcement, are matters for the facility's counsel.
+
+**MCQ 2.3-I `[2.3.3 · Evaluation]`** Kestrel's 1,200,000 control-system overhaul restores existing
+performance rather than extending capability. The finance director observes that capitalising it would
+protect a profit-based covenant; the tax adviser observes that, in a regime where the deduction
+follows the accounting treatment, expensing is worth **78,958** of present value. The finance leader
+should recommend:
+- A. capitalise — the covenant is the larger financial exposure, and the classification is a judgment either way
+- B. expense — the 78,958 is a genuine cash benefit, and this book's own discipline puts cash ahead of profit
+- C. classify on the facts: the works restore performance, so expense them, and manage the covenant consequence separately and transparently with the lender ✅
+- D. capitalise, and disclose the judgment in the notes so that users can adjust for it
+
+*Rationale:* the classification follows the facts and the tax follows the classification, never the
+reverse (2.3.3). A and B both let a desired outcome choose the accounting, and B is the more seductive
+because its objective — cash — is the one this book otherwise privileges; the argument is still
+inverted. D bolts good disclosure practice onto an unsupportable treatment, and disclosure does not
+cure a classification the facts do not support. Where the capex/opex boundary falls for a particular
+project is a matter for the entity's finance function and auditors, and the deductibility a matter for
+qualified tax advisers in the relevant jurisdiction.
+
 ### Self-check — KA 2.3
 
 1. *Why can two projects with identical economics report different `DSCR`s?* — Because `CFADS` is
@@ -1458,6 +1542,24 @@ capitalised 34,003,326. The most likely explanation is:
 so the asset legitimately carries 57,923 more than the cost report shows (2.4.3). A applies an
 intuition the reconciliation disproves; C invents a transaction; D confuses a payment timing item
 with a cost.
+
+**MCQ 2.4-G `[2.4.2 · Evaluation]`** A sponsor has one amendment's worth of negotiating capital left
+on a facility carrying a 1.20× `DSCR` covenant and a 2.00× interest-cover covenant whose numerator is
+not defined. On Kestrel's figures the `DSCR` test tolerates a 3.8796 % revenue fall and the
+interest-cover test 0.5000 %. The amendment worth pursuing is:
+- A. reduce the `DSCR` covenant to 1.15×, the largest single ratio concession available
+- B. address the interest-cover test — delete it, or define its numerator as `EBITDA`, which is worth 0.9524 of coverage — because it is the binding covenant and tolerates under a seventh of the revenue miss the `DSCR` test does ✅
+- C. seek a longer cure period on both covenants, which protects the sponsor whichever test fails
+- D. leave both thresholds and negotiate the margin instead, since covenant levels are conventional while pricing is not
+
+*Rationale:* restated in revenue units the interest-cover test bites at 60,000 of headroom against
+`DSCR`'s 465,547 — a factor of **7.7591** — so the remaining capital belongs on the clause that will
+actually be breached, and an undefined numerator is the cheapest defect in the facility to fix
+(2.4.2). A concedes ground where none is needed: even at 1.15× the coverage test remains far slacker
+than the interest-cover test. C is genuinely useful and second-best — a cure period buys time after a
+breach rather than preventing one, and changes nothing about which test binds. D asserts a convention
+the arithmetic contradicts, and trades away protection on a covenant that can default the facility
+for basis points that cannot.
 
 ### Self-check — KA 2.4
 

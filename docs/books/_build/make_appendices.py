@@ -2,7 +2,7 @@
 """Build each volume's appendices from the registries and the verified check suite.
 
 Like the glossary, the appendices are **derived** rather than maintained, so they cannot drift from
-the chapters or from the golden-answer suite. Three appendices per volume:
+the chapters or from the golden-answer suite. Five appendices per volume:
 
   A. Formula and symbol sheet — from registries/FORMULAS.md, filtered to the symbols that volume
      actually uses, with the verification status carried through. A formula that is registered but
@@ -13,6 +13,16 @@ the chapters or from the golden-answer suite. Three appendices per volume:
      read live from _build/checks/ and verify_formulas.py. This is the appendix a professional
      reader will actually use to decide how much to trust the arithmetic, and it is generated so it
      cannot be overstated.
+  D. Figure index — every figure specification in the volume, with whether artwork has actually
+     been drawn for it. A figure without artwork prints as its own specification, so the reader
+     sees no gap; the distinction is still stated rather than glossed.
+  E. Practitioner's toolkit library — the toolkits indexed by reference, not reprinted. Two copies
+     of a template is how a template starts disagreeing with itself.
+
+  The appendix letters here are this volume's own. Where the family's volume plan names an
+  appendix that is deliberately not printed (consolidated self-check answers, which would be a
+  verbatim second copy) or not yet publishable (a standards register, pending an edition check on
+  every entry), Appendix E says so explicitly instead of leaving an apparent omission.
 
 Usage:  python3 make_appendices.py            # write both volumes
         python3 make_appendices.py --check    # report only
@@ -105,7 +115,60 @@ def domain_titles(book: str) -> dict:
         first = f.read_text(encoding="utf-8").split("\n", 1)[0]
         t = re.sub(r"^#\s*Domain\s*\d+\s*—\s*", "", first)
         out[dn] = re.sub(r"\s*\*\(.*?\)\*\s*$", "", t).strip()
+    # Check modules above the domain count belong to the back matter, not to a chapter. They are
+    # named here so Appendix C's table reconciles to its own total instead of quietly dropping them.
+    BACK_MATTER = {17: "Appendix G — integrated capstones"}
+    highest = max(out) if out else 0
+    for dn, label in BACK_MATTER.items():
+        if dn > highest:
+            out[dn] = label
+    # Domain 0 is the cross-domain bucket: check modules that span several domains and so cannot be
+    # attributed to one of them honestly. It is a row rather than a silent remainder.
+    out[0] = "*Cross-domain check modules (span several domains)*"
     return out
+
+
+def figure_rows(book: str) -> list:
+    """Every figure specification in the volume, with whether artwork exists for it.
+
+    The manuscripts describe each figure in a blockquote that `build_book.py` replaces with the
+    rendered SVG when one has been drawn. A figure with no artwork still prints — as its own
+    description — so the reader is never shown a gap, but the distinction matters to anyone
+    working on the volume and is therefore stated rather than hidden.
+    """
+    figdir = ROOT / book / "build" / "figures"
+    out = []
+    for f in sorted((ROOT / book / "manuscript").glob("domain-*.md")):
+        for line in f.read_text(encoding="utf-8").splitlines():
+            m = re.match(r"> \*\*Fig (\d+\.\d+\.\d+) — ([^.*]+)", line)
+            if m:
+                fid, title = m.group(1), m.group(2).strip()
+                drawn = (figdir / f"fig_{fid.replace('.', '_')}.svg").exists()
+                out.append((fid, title, drawn))
+    return sorted(out, key=lambda r: [int(p) for p in r[0].split(".")])
+
+
+def toolkit_rows(book: str) -> list:
+    """The practitioner's toolkits, in order, with the first line of what each one is for.
+
+    Consolidated by reference rather than copied: the appendix points at the toolkit in its
+    domain instead of reproducing it, because two copies of a template is how a template starts
+    disagreeing with itself.
+    """
+    out = []
+    for f in sorted((ROOT / book / "manuscript").glob("domain-*.md")):
+        lines = f.read_text(encoding="utf-8").splitlines()
+        for i, line in enumerate(lines):
+            m = re.match(r"### Toolkit (\d+\.T\.\d+) — (.+)$", line)
+            if m:
+                lead = ""
+                for nxt in lines[i + 1:i + 8]:
+                    s = nxt.strip()
+                    if s and not s.startswith(("#", ">", "|", "-", "*")):
+                        lead = re.sub(r"[*`]", "", s)
+                        break
+                out.append((m.group(1), m.group(2).strip().rstrip("."), lead))
+    return sorted(out, key=lambda r: [int(p) for p in r[0].replace(".T.", ".").split(".")])
 
 
 def build(book: str) -> str:
@@ -190,6 +253,50 @@ def build(book: str) -> str:
           "that nothing important is missing. Those are questions for editorial and technical review, and a",
           "reader should not read a large number in this appendix as an answer to them.", ""]
 
+    # ---- Appendix D ----
+    figs = figure_rows(book)
+    drawn = sum(1 for _, _, d in figs if d)
+    L += ["## Appendix D — Figure index", ""]
+    if drawn == len(figs):
+        L += [f"**{len(figs)} figures**, all of them drawn as PCI-original artwork generated from source in",
+              "`_build/figures_src/`. Each is also specified in words in the chapter, stating every plotted value,"]
+    else:
+        L += [f"**{len(figs)} figures**, of which **{drawn}** are drawn as PCI-original artwork generated from",
+              f"source in `_build/figures_src/`. The remaining {len(figs) - drawn} print as their own written",
+              "specifications, stating every plotted value,"]
+    L += ["so that a figure can be read — and redrawn — without the artwork, and so that a reader using assistive",
+          "technology loses nothing. No figure in either volume reproduces a diagram from another publisher, and",
+          "every annotated value in a drawn figure is a literal verified by the golden-answer suite.", "",
+          "| Figure | Subject | Artwork |", "|---|---|---|"]
+    for fid, title, d in figs:
+        L.append(f"| {fid} | {title} | {'drawn' if d else '*specification only*'} |")
+    L += [""]
+
+    # ---- Appendix E ----
+    tk = toolkit_rows(book)
+    L += ["## Appendix E — Practitioner's toolkit library", "",
+          f"**{len(tk)} adoption-ready artefacts**, indexed here and defined in the Knowledge Areas they belong",
+          "to. They are indexed rather than reprinted deliberately: a template that exists twice is a template",
+          "that will disagree with itself, and the version in the chapter is the one the surrounding text",
+          "explains. Adapt the headings to your organisation, then keep them stable — a checklist whose wording",
+          "changes every quarter records nothing over time.", "",
+          "| Toolkit | Artefact | What it is for |", "|---|---|---|"]
+    for tid, name, lead in tk:
+        L.append(f"| {tid} | {name} | {lead[:180]} |")
+    L += ["",
+          "**On the appendices the volume plan lists and this volume does not carry.** The plan for this family",
+          "also names a consolidated *self-check answers* appendix and a *standards and frameworks referenced*",
+          "appendix. Neither is printed here, for two different reasons that are worth stating rather than",
+          "leaving as apparent omissions. Each self-check in this volume already carries its own answer beside",
+          "the question, so a consolidated set would be a verbatim second copy — precisely the duplication this",
+          "programme's editorial rules forbid; the questions are indexed by their Knowledge Area instead. A",
+          "standards register is a different matter: it is genuinely wanted, and it is not published until each",
+          "entry has been checked against the current edition of the document it names, because a citation to a",
+          "superseded standard is worse than no citation. It is listed in the corpus gate report as outstanding.",
+          "", "The consolidated question bank the plan calls for is published separately as `QUESTION_BANK.md`,",
+          "and the global glossary as `GLOSSARY.md`; both are generated from the chapters by the same principle",
+          "as these appendices.", ""]
+
     return "\n".join(L).rstrip() + "\n"
 
 
@@ -201,7 +308,7 @@ def main() -> int:
         if not check_only:
             out.write_text(text, encoding="utf-8")
         syms = text.count("\n| `") + text.count("\n| **")
-        print(f"{book}: appendices A-C, {len(text.split())} words"
+        print(f"{book}: appendices A-E, {len(text.split())} words"
               f"{' (not written, --check)' if check_only else ' -> ' + str(out.relative_to(ROOT.parent))}")
     return 0
 

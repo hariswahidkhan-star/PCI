@@ -92,8 +92,15 @@ def audit(items: list) -> list:
             out.append(("NO_TAG", where, f"tag not parseable: '{it['topic']} · {it['level']}'"))
         elif it["level"] not in LEVELS:
             out.append(("BAD_LEVEL", where, f"level '{it['level']}' is outside the agreed set"))
-        if it["stem"] and not re.search(r"[?:]|\b(?:which|what|why|how|state|compute|identify)\b",
-                                        it["stem"], re.I):
+        # The imperative list is read off the corpus (the first word of each stem's closing
+        # sentence), not asserted. An earlier version omitted "assess" and condemned three sound
+        # Evaluation items — the same mistake as asserting a cognitive-level vocabulary instead of
+        # reading one. A stem still counts as asking something if it ends in a colon, since the
+        # options complete the sentence.
+        if it["stem"] and not re.search(
+                r"[?:]|\b(?:which|what|why|how|state|compute|identify|assess|evaluate|judge|"
+                r"recommend|rank|select|choose|determine|explain|justify|calculate|find)\b",
+                it["stem"], re.I):
             out.append(("STEM_ONLY", where, "stem asks nothing — possibly truncated"))
     return out
 

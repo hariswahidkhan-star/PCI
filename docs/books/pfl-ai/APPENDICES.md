@@ -100,7 +100,7 @@ professional verifies, decides and remains accountable.*
 
 ## Appendix C — Verification record
 
-**5,530 golden-answer checks** stand behind this volume. Every number printed as a *result* —
+**7,932 golden-answer checks** stand behind this volume. Every number printed as a *result* —
 in worked examples, in-text calculations, multiple-choice options (all of them, not only the correct
 one), exercise solutions, case studies and figure specifications — is recomputed independently with
 decimal arithmetic at 28-digit precision and compared to the printed value. Each domain's module also
@@ -109,23 +109,25 @@ claim cannot silently stop being true.
 
 | Domain | | Checks |
 |---|---|---|
-| 1 | Foundations of Project Finance Leadership | 254 |
-| 2 | Accounting and Financial-Statement Foundations | 468 |
-| 3 | Time Value of Money and Financial Mathematics | 460 |
-| 4 | Investment Appraisal and Capital Budgeting | 53 |
-| 5 | Project Development and Bankability | 397 |
-| 6 | Financial Modelling and Model Governance | 460 |
-| 7 | Revenue, Demand and Commercial Models | 340 |
-| 8 | Cost, Schedule and Contingency Integration | 469 |
-| 9 | Funding Structure and Sources of Capital | 314 |
-| 10 | Debt Sizing, Covenants and Credit Metrics | 356 |
-| 11 | Risk Identification and Allocation | 368 |
-| 12 | Contracts and Transaction Structure | 196 |
-| 13 | Due Diligence and Financial Close | 239 |
-| 14 | Construction Monitoring and Drawdown | 326 |
-| 15 | Operations, Performance and Restructuring | 322 |
-| 16 | Data, Automation and Responsible AI in Finance | 508 |
-| | **Total** | **5,530** |
+| 0 | *Cross-domain check modules (span several domains)* | 905 |
+| 1 | Foundations of Project Finance Leadership | 306 |
+| 2 | Accounting and Financial-Statement Foundations | 538 |
+| 3 | Time Value of Money and Financial Mathematics | 526 |
+| 4 | Investment Appraisal and Capital Budgeting | 475 |
+| 5 | Project Development and Bankability | 428 |
+| 6 | Financial Modelling and Model Governance | 490 |
+| 7 | Revenue, Demand and Commercial Models | 378 |
+| 8 | Cost, Schedule and Contingency Integration | 520 |
+| 9 | Funding Structure and Sources of Capital | 397 |
+| 10 | Debt Sizing, Covenants and Credit Metrics | 449 |
+| 11 | Risk Identification and Allocation | 460 |
+| 12 | Contracts and Transaction Structure | 294 |
+| 13 | Due Diligence and Financial Close | 274 |
+| 14 | Construction Monitoring and Drawdown | 353 |
+| 15 | Operations, Performance and Restructuring | 379 |
+| 16 | Data, Automation and Responsible AI in Finance | 554 |
+| 17 | Appendix G — integrated capstones | 206 |
+| | **Total** | **7,932** |
 
 Reproduce it with `python3 _build/verify_formulas.py`, or check one domain with
 `python3 _build/run_checks.py checks/<module>.py`. Both loaders are fail-closed: a check module that
@@ -137,3 +139,136 @@ that the method chosen was the right method for the situation, that the professi
 ones an experienced practitioner would endorse, that the emphasis across topics is well calibrated, or
 that nothing important is missing. Those are questions for editorial and technical review, and a
 reader should not read a large number in this appendix as an answer to them.
+
+## Appendix D — Figure index
+
+**45 figures**, all of them drawn as PCI-original artwork generated from source in
+`_build/figures_src/`. Each is also specified in words in the chapter, stating every plotted value,
+so that a figure can be read — and redrawn — without the artwork, and so that a reader using assistive
+technology loses nothing. No figure in either volume reproduces a diagram from another publisher, and
+every annotated value in a drawn figure is a literal verified by the golden-answer suite.
+
+| Figure | Subject | Artwork |
+|---|---|---|
+| 1.1.1 | The recourse spectrum | drawn |
+| 1.1.2 | The SPV at the centre of its contracts | drawn |
+| 1.1.3 | The recourse decision against facility size | drawn |
+| 1.2.1 | The bankability triangle | drawn |
+| 1.2.2 | Where leverage helps, and where the cliff is | drawn |
+| 2.2.1 | Kestrel's accrual-to-cash bridge | drawn |
+| 2.3.1 | The covenant as a collection period | drawn |
+| 2.4.1 | Kestrel's return ladder, year one | drawn |
+| 3.1.1 | Simple versus compound growth of USD 100,000 at 8 % | drawn |
+| 3.1.2 | Discount-factor curves at 6 %, 10 % and 14 % | drawn |
+| 3.2.1 | Anatomy of an annuity loan: Kestrel's USD 42,000,000, 12 years at 6 % | drawn |
+| 3.2.2 | Three shapes, one loan: annual debt service under annuity, level-principal and | drawn |
+| 3.2.3 | Outstanding principal, not debt service: Kestrel's USD 42,000,000 under four | drawn |
+| 3.3.1 | What 3 % inflation does to USD 1,000,000 of purchasing power | drawn |
+| 3.3.2 | Compound versus simple escalation of a USD 10,000,000 cost at 4 % | drawn |
+| 3.3.3 | One stream, four treatments: what mixing nominal and real costs | drawn |
+| 4.1.1 | Kestrel's NPV profile | drawn |
+| 4.2.1 | Two paybacks: cumulative cash versus cumulative present value | drawn |
+| 4.3.1 | Two NPV profiles and the crossover | drawn |
+| 4.4.1 | What flexibility is worth: the same mean, two spreads | drawn |
+| 5.1.1 | The development funnel as an option premium | drawn |
+| 5.3.1 | Bankability as a conjunction | drawn |
+| 6.2.1 | Construction funding and interest during construction | drawn |
+| 6.4.1 | The minimum coverage a level line hides | drawn |
+| 7.1.1 | Identical expected cash, different bankability | drawn |
+| 7.3.1 | Margin drift over the concession | drawn |
+| 8.3.1 | Six answers to one question: how much contingency? | drawn |
+| 8.4.1 | The cost of a month of slip rises through the build | drawn |
+| 9.1.4 | The leverage ladder: what gearing buys and what it costs | drawn |
+| 9.2.3 | Four capital structures, priced | drawn |
+| 10.1.1 | Debt capacity as a function of coverage and tenor | drawn |
+| 10.1.2 | Three ways to size the same project at 1 | drawn |
+| 10.2.2 | Which covenant binds first | drawn |
+| 11.1.1 | The allocation price test | drawn |
+| 11.3.1 | Coverage against the reference rate, at three hedge ratios | drawn |
+| 12.1.1 | The cap stack against the loss it was drafted for | drawn |
+| 12.2.1 | The contracted volume floor a covenant requires | drawn |
+| 13.1.1 | The breakeven detection rate of each diligence stream, in parallel and in series | drawn |
+| 13.3.1 | Kestrel's conditions-precedent conjunction | drawn |
+| 14.1.1 | Funding order: who is exposed, and what the interest costs | drawn |
+| 14.4.1 | Coverage at a calendar-fixed first repayment date | drawn |
+| 15.2.1 | Kestrel's operating waterfall and the block account it fills | drawn |
+| 15.4.1 | The restructuring frontier | drawn |
+| 16.1.2 | Where automation starts to pay, and what the error cost does to the answer | drawn |
+| 16.1.3 | The accuracy-maximising threshold is not the cost-minimising threshold | drawn |
+
+## Appendix E — Practitioner's toolkit library
+
+**52 adoption-ready artefacts**, indexed here and defined in the Knowledge Areas they belong
+to. They are indexed rather than reprinted deliberately: a template that exists twice is a template
+that will disagree with itself, and the version in the chapter is the one the surrounding text
+explains. Adapt the headings to your organisation, then keep them stable — a checklist whose wording
+changes every quarter records nothing over time.
+
+| Toolkit | Artefact | What it is for |
+|---|---|---|
+| 1.T.1 | Stakeholder map (one page per project) | Per party: name and role · what they optimise · contract binding them (Domain 12 reference) · |
+| 1.T.2 | Financing-route decision record | Options considered (corporate / limited recourse / non-recourse / hybrid) · recourse sentence |
+| 1.T.3 | Conflicts and AI-use register | Conflicts: relationship · parties affected · disclosure date · handling (barriers/consent/ |
+| 1.T.4 | Recourse-cost worksheet (one per financing route considered) | The arithmetic of WE 1.1.2, in the order a decision paper needs it, so that the incremental cost of |
+| 2.T.1 | Defined-terms sheet (one per financing) | For each term used in a covenant or report — CFADS, EBITDA, net debt, distributable cash, |
+| 2.T.2 | Accrual-to-cash bridge (standing monthly schedule) | Net income · + depreciation and amortisation · + other non-cash charges (provisions) · |
+| 2.T.3 | Statement-integrity checklist |  |
+| 3.T.1 | TVM assumption register (one row per modelled stream) |  |
+| 3.T.2 | Schedule QA checklist | frequency; the two frequencies confirmed separately against the facility agreement. |
+| 3.T.3 | Escalation register | For each escalating line: base amount and base date · index (publisher, series, definition) · |
+| 3.T.4 | Rate comparison worksheet (one column per offer) | Never compare quoted rates. Build one column per competing facility and require every row to be |
+| 4.T.1 | The appraisal one-pager (per decision) | Decision question (accept/reject · exclusive choice · rationing) · cash-flow source and world |
+| 4.T.2 | IRR pathology checklist |  |
+| 4.T.3 | Rationing worksheet | Columns: project · I₀ · NPV · PI · strategic notes/dependencies. Steps: rank by PI → |
+| 4.T.4 | Hurdle-rate reconciliation sheet | One page, completed before the appraisal is circulated rather than after it is challenged. |
+| 5.T.1 | The bankability condition register | One row per condition, decomposed to the level at which something must independently be true (Case study |
+| 5.T.2 | Sponsor commitment and support schedule | One row per sponsor. Columns: equity share · base equity commitment · each support commitment separately |
+| 5.T.3 | COD-slip and readiness pack | Two parts, maintained from twelve months before COD. The slip calculator: drawn debt × rate ÷ |
+| 6.T.1 | The model conventions sheet (one page, in the inputs block) | One line per convention, each with the value chosen, the alternative rejected, and the reason: |
+| 6.T.2 | The check block (built before the first answer) |  |
+| 6.T.3 | Model governance register (per model, per version) | Columns: version number (appearing on every printed page) · date · author · reviewer · reason for |
+| 7.T.1 | Revenue mechanism specification | One row per component of the payment mechanism, populated from the agreement and signed off |
+| 7.T.2 | Indexation mismatch map | Domain 3's escalation register (Toolkit 3.T.3) catalogues each line's index mechanics. This |
+| 7.T.3 | Revenue stress and counterparty pack | Section A, counterparty: each payer's share of revenue · rating or internal grade with source |
+| 8.T.1 | Contingency basis note (one page, per sanction and per recalculation) | One page that must exist before any contingency figure is quoted. Base estimate: amount, base |
+| 8.T.2 | Construction cost model check (before any envelope is fixed) |  |
+| 8.T.3 | Monthly construction pack, financing annexe | One annexe to the existing controls report — never a second set of numbers. Rows: certified progress |
+| 9.T.1 | Cost-of-capital derivation record (one per project, per structure) | One page, signed. Rows: r_f — instrument, tenor, currency, quotation date, source · ERP — |
+| 9.T.2 | Tranche comparison sheet (all-in, like-for-like) | One column per candidate tranche. Rows: amount · currency · base rate and margin, or profit rate · |
+| 9.T.3 | Capital-structure decision record | For each candidate structure, one row: tranche amounts and costs · re-levered k_e · WACC · |
+| 10.T.1 | `CFADS` definition reconciliation | Column 1: each line of the facility's CFADS definition, with its clause reference. Column 2: the |
+| 10.T.2 | Covenant dashboard (per facility, per test date) | Per covenant: test name and clause · test date and frequency · historic or forward-looking · |
+| 10.T.3 | Coverage model check (before any ratio is quoted) |  |
+| 10.T.4 | Sizing-basis statement (one page, agreed before any capacity number circulates) | Nine lines, each with a named owner and a document reference. 1 — CFADS definition and its |
+| 11.T.1 | Risk allocation price sheet (one row per register line) | Columns: ID · risk statement · phase · our p and impact, with the evidence reference · |
+| 11.T.2 | The breakeven page (one side of paper, per facility) | Every material exposure, expressed in the covenant's own units. Rows: covenant and lock-up cash |
+| 11.T.3 | Register aggregation and re-cut worksheet | Three panels. Sponsor case: items with p, impact, evidence reference, EMV, σᵢ; mean = ΣEMV |
+| 12.T.1 | The contract limits and calibration sheet (one per contract) | One page, filled before the contract is signed and re-filled at every amendment. Rows: contract |
+| 12.T.2 | Security package sufficiency register (one per transaction) | One row per instrument: instrument type · obligor, and which entity in the group is actually bound |
+| 12.T.3 | Claim assessment and settlement-zone worksheet (one per claim) | Header: claim reference, event, notice served and whether within the contractual time bar (fact, |
+| 13.T.1 | Diligence stream economics and interface sheet (one per transaction) | inside the envelope or on the critical path (and if the latter, the justification and its weekly |
+| 13.T.2 | Model-audit finding register (one per model version) | Per finding: number · date raised · raised by (auditor / sponsor review / machine scan) · scope |
+| 13.T.3 | Close register: conditions, costs and funds flow (one per transaction) | third-party / adviser / financial) · chain and predecessor · duration estimate · owner · evidence |
+| 14.T.1 | Draw request pack and certification control sheet | period, split into value of milestones achieved, value of assessed percentage completion, and value |
+| 14.T.2 | Restated sources and uses, the in-balance test, and the `EAC` bridge | total — against sources in the same three columns, with available commitment stated as undrawn debt |
+| 14.T.3 | Contingency coverage and change-control register | draw retires; remaining unallocated. Denominator, itemised: approved variations not yet |
+| 15.T.1 | The operating bridge (one per reporting period) | A single sheet running from physical performance to certified CFADS, in fixed rows: availability |
+| 15.T.2 | Operating covenant and distribution register (one per facility, per test date) | Per test: name and clause · test date and frequency · backward, rolling or forward-looking · window |
+| 15.T.3 | Transaction decision sheet (refinancing, amendment or restructuring) | break costs on the actual notional profile, and the sweep. |
+| 16.T.1 | The automation business case, on one page | Mandatory lines, in this order, with no line permitted to be blank: the task and the volume the |
+| 16.T.2 | Threshold and alert-queue sheet (per detector, per review) | Per candidate threshold: score cut · TP · FP · FN · TN · recall · precision · accuracy · |
+| 16.T.3 | Model inventory, tier and approval record | One row per model in production, reconciled quarterly to production access logs — an unreconciled |
+
+**On the appendices the volume plan lists and this volume does not carry.** The plan for this family
+also names a consolidated *self-check answers* appendix and a *standards and frameworks referenced*
+appendix. Neither is printed here, for two different reasons that are worth stating rather than
+leaving as apparent omissions. Each self-check in this volume already carries its own answer beside
+the question, so a consolidated set would be a verbatim second copy — precisely the duplication this
+programme's editorial rules forbid; the questions are indexed by their Knowledge Area instead. A
+standards register is a different matter: it is genuinely wanted, and it is not published until each
+entry has been checked against the current edition of the document it names, because a citation to a
+superseded standard is worse than no citation. It is listed in the corpus gate report as outstanding.
+
+The consolidated question bank the plan calls for is published separately as `QUESTION_BANK.md`,
+and the global glossary as `GLOSSARY.md`; both are generated from the chapters by the same principle
+as these appendices.

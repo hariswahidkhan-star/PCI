@@ -295,7 +295,7 @@ check("EX 4.4 saving", (D(3000000) + D(250000) * af(D("0.09"), 4)) / af(D("0.09"
       - (D(4200000) + D(150000) * af(D("0.09"), 6)) / af(D("0.09"), 6), D("89743"), tol=D("1"))
 check("EX 4.5 greedy set", D("2.6") + D("1.84") + D("1.4"), D("5.84"))
 check("EX 4.5 optimal set", D("2.6") + D("3.3"), D("5.9"))
-check("4.A.3 EAV invariant", ((D(8900000) * AF15 - 60000000) / AF15 * AF15), D(8900000) * AF15 - 60000000, tol=D("0.01"))
+check("4.A.5 EAV invariant", ((D(8900000) * AF15 - 60000000) / AF15 * AF15), D(8900000) * AF15 - 60000000, tol=D("0.01"))
 
 # ---------- PFL-AI Domain 1 — Foundations ----------
 section("PFL-AI", 1)
@@ -980,15 +980,56 @@ CTX = {
 }
 _checks_dir = pathlib.Path(__file__).resolve().parent / "checks"
 _modules = sorted(_checks_dir.glob("*.py")) if _checks_dir.is_dir() else []
+
+# A check that compares a literal to the identical literal can never fail. It is worse than no check,
+# because it reports coverage it does not provide: one such line sat where the manuscript claimed
+# twelve feasible subsets and enumeration finds sixteen, and it passed every run. Scan for the shape
+# before loading anything, and fail the suite on it — the guard has to be automatic, since the whole
+# point is that these lines look like coverage to a reader.
+#
+# It is a lint, not a proof, and the limit is worth stating because a reader will otherwise trust it
+# further than it deserves. It matches the `check("...", <literal>, <literal>)` shape the modules
+# actually use; it does NOT catch `ctx["check"](...)` spelled out longhand, a literal compared to a
+# variable that happens to hold the same literal, or a tautology assembled at runtime. Verified by
+# planting one of each: the standard form fails the suite with exit 1, the longhand form slips past.
+_TAUT = re.compile(r'check\(\s*"[^"]*"\s*,\s*(D\([^()]*\)|-?\d+(?:\.\d+)?)\s*,\s*'
+                   r'(D\([^()]*\)|-?\d+(?:\.\d+)?)\s*[,)]')
+_tauts = []
+for _mp in _modules:
+    if _mp.name.startswith("_"):
+        continue
+    _src = _mp.read_text(encoding="utf-8")
+    for _tm in _TAUT.finditer(_src):
+        # Skip matches inside a comment: the fix for one of these quotes the old line in prose.
+        _line_start = _src.rfind("\n", 0, _tm.start()) + 1
+        if _src[_line_start:_tm.start()].lstrip().startswith("#"):
+            continue
+        if _tm.group(1).strip() == _tm.group(2).strip():
+            _tauts.append(f"{_mp.name}:{_src[:_tm.start()].count(chr(10)) + 1}: "
+                          f"{_tm.group(0)[:80]}")
+if _tauts:
+    FAILURES.append(f"{len(_tauts)} tautological check(s): a literal compared to itself")
+    print(f"FAIL  tautological checks — these can never fail and must be derived or removed:",
+          *_tauts, sep="\n  ")
 for _mod_path in _modules:
     if _mod_path.name.startswith("_"):
         continue
     # Attribute the module's assertions to ITS domain, not to whatever section ran last — otherwise
     # every module's checks land on the final domain of this file, which is how PML-AI Domain 4 came
     # to be credited with 6,595 of them.
-    _mm = re.match(r"(pml|pfl)_d(\d+)(_ext)?\.py$", _mod_path.name)
-    section(("PML-AI" if _mm.group(1) == "pml" else "PFL-AI"), int(_mm.group(2))) if _mm \
-        else section(None, None)
+    # Any `_suffix` is accepted, not just `_ext`, so two authors working the same domain each add
+    # their own file (`pfl_d05_mcq.py`, `pfl_d05_cases.py`) instead of contending for one.
+    _mm = re.match(r"(pml|pfl)_d(\d+)(_[a-z0-9_]+)?\.py$", _mod_path.name)
+    if _mm:
+        section(("PML-AI" if _mm.group(1) == "pml" else "PFL-AI"), int(_mm.group(2)))
+    else:
+        # A module that genuinely spans domains (`pfl_mcq_d01_d03.py`) cannot be attributed to one
+        # of them without lying about it, so it goes to a labelled cross-domain bucket — domain 0 —
+        # which Appendix C reports as its own row. Anything with no book prefix at all (the loader
+        # self-test) stays unattributed, since it is harness content and not book content.
+        _bm = re.match(r"(pml|pfl)_", _mod_path.name)
+        section(("PML-AI" if _bm.group(1) == "pml" else "PFL-AI"), 0) if _bm \
+            else section(None, None)
     _spec = importlib.util.spec_from_file_location(f"pci_checks_{_mod_path.stem}", _mod_path)
     _mod = importlib.util.module_from_spec(_spec)
     try:

@@ -336,6 +336,72 @@ Against Kestrel's 1.20× covenant with annual headroom of 372,438, the consequen
 500,000 of `CFADS` annually against 372,438 of headroom (500,000/372,438 = 1.34). A and D put an
 operating error in a capital line; B confuses "not funded" with "no effect".
 
+**MCQ 8.1-E `[8.1.2 · Comprehension]`** A sponsor asks how two estimates of the same plant, both
+totalling 48,000,000, can carry defensible contingencies differing by a factor of 6.25. The best
+explanation is:
+- A. one estimator is more conservative than the other
+- B. contingency provides for the range that the estimate's own definitional maturity implies, and that range narrows — on this book's illustrative ladder — from −30 %/+50 % at screening to −5 %/+8 % once scope is contracted ✅
+- C. contingency is a policy percentage, so the difference reflects two companies' policies
+- D. the two estimates must be stated at different base dates
+
+*Rationale:* the class records how well scope was defined when the estimate was priced, and the
+provision to the upper bound on the same 48,000,000 base moves from 24,000,000 to 3,840,000 (8.1.2).
+A treats a structural property as a personal trait; C is the belief the whole KA exists to dislodge,
+since a percentage that names no class states nothing; D names a real and separate parameter (8.2.3)
+that governs escalation exposure rather than accuracy.
+
+**MCQ 8.1-F `[8.1.3 · Evaluation]`** Kestrel's year-seven membrane replacement costs 4,098,909 in
+nominal terms, and without a reserve the year-seven `DSCR` is 0.4561 — a payment default. The level
+annual charge equivalent to the whole lifecycle programme is 644,606. The sponsors accept that a
+reserve is required and ask what to deposit. The soundest recommendation is:
+- A. deposit the level annual charge of 644,606 from year one, since that is the economically equivalent annual cost
+- B. deposit 683,152 a year over the six years before the replacement, because the account must hold 4,098,909 before year seven and the level charge is an equivalence, not a deposit plan ✅
+- C. deposit nothing and fund the replacement from a standby facility drawn in year seven
+- D. defer the replacement to year eight, when the outstanding debt balance is lower
+
+*Rationale:* the whole 4,098,909 must be in the account before the money is spent, with no credit
+taken for interest on the balance — `4,098,909/6 = 683,151.50` a year, taken up to **683,152** so that
+six deposits are not themselves short; six deposits of 644,606 total 3,867,636 and leave the
+account **231,273** short in the one year it is needed (8.1.3). A is the right economic measure used
+as a funding plan — precisely the confusion the worked example warns against. C is genuinely
+available and is the weaker structure: it converts a funding certainty into a drawing risk in the
+year the project would otherwise be at 0.4561, which is the year a lender is least willing to be
+relied on. D subordinates a maintenance requirement to a credit calendar and does not remove the
+cliff — it moves it and escalates it to 4,246,470.
+
+**MCQ 8.1-G `[8.1.2 · Evaluation]`** A team declines the fixed-price wrap because six separate packages
+priced lower, and proposes retaining the funded contingency of 3,645,403 — 7.59 % of the 48,000,000
+base, which covers 94.93 % of a Stage E band and 25.32 % of a Stage C one. The soundest position is
+that:
+- A. the provision should stand: the packages priced lower, so the expected outturn is lower
+- B. the provision should stand, and any difference should fall to the sponsors' cost-overrun support
+  if it is needed
+- C. declining the wrap returns the base-estimate uncertainty to the owner, so the provision must be
+  resized on the range — 14,400,000 at the estimate's upper bound, 6,512,795 at P80 — and if the
+  envelope cannot fund that, the envelope is wrong rather than the table ✅
+- D. the provision should be raised to the 10 % rule, 4,800,000, as a policy compromise
+
+*Rationale:* the contracting strategy and the contingency line are one decision taken twice, usually
+by different people in different months (8.1.2); 7.59 % is a Stage E number and only a wrap earns it.
+A confuses the lowest tendered price with the lowest outturn — the interfaces the packages exclude are
+now the owner's. B converts funded provision into a contingent commitment worth less than cash (8.3.1)
+and does so without resizing anything. D swaps one unreasoned percentage for another, and 4,800,000 is
+still a third of the range-based upper bound.
+
+**MCQ 8.1-H `[8.1.1 · Comprehension]`** Operating cost never appears in the sources-and-uses statement.
+The reason is that it:
+- A. is not a cost of the project, being incurred by the operator rather than the SPV
+- B. is a recurring deduction inside `CFADS`, so it reduces coverage every period rather than creating
+  a funding requirement before revenue exists ✅
+- C. is met from the maintenance reserve, which is funded separately
+- D. is funded by equity, which is why it sits outside the facility
+
+*Rationale:* the sources-and-uses statement funds what must be paid before the asset earns, while
+operating cost is a coverage driver — which is why a 500,000 understatement is 1.34 times the entire
+annual headroom and recurs every year (8.1.1). A misstates who bears it: the SPV pays the operator's
+fee and the costs the contract leaves with it. C confuses routine operating cost with periodic major
+maintenance (8.1.3). D invents a funding route for a cost that is not funded at all.
+
 ### Self-check — KA 8.1
 
 1. *Why is "10 % contingency" not an answer?* — Because contingency is only meaningful against a
@@ -572,6 +638,60 @@ model's entire capitalised-interest line. The best choice is:
 *Rationale:* The area rule reproduces IDC from the profile, rate and gearing, so agreement
 validates all four inputs and disagreement localises the defect. A and C are necessary but pass
 with a wrong interest convention; D is benchmarking, not verification.
+
+**MCQ 8.2-E `[8.2.2 · Evaluation]`** A modeller proposes replacing Kestrel's S-curve (area 3.1900)
+with the back-loaded profile (area 2.6700) to cut capitalised interest by 262,080 on identical total
+spend over an identical duration, and asks the contractor to resequence accordingly. The soundest
+response is:
+- A. accept: 262,080 is a real saving produced by the area rule, on the same money over the same time
+- B. reject the proposal as framed: at 3.6 % escalation the back-loaded profile's escalation is 231,119 higher and its interest 267,744 lower, so the total funded construction costs differ by only 36,626 — 0.07 % of a 51.7 million spend — and the constraint that makes a sequence legitimate lives in the construction logic, not in the cost model ✅
+- C. reject: once escalation is counted, back-loading always costs more than front-loading
+- D. accept, and extend the programme by a further quarter to reduce the area again
+
+*Rationale:* escalation and interest run in opposite directions and nearly cancel near
+`e ≈ g × r = 4.20 %`, so at 3.6 % the whole prize is 36,626 — set against a steeper, riskier finish
+that no cost model prices (8.2.2, 8.2.3). A quotes the zero-escalation isolation as though it were the
+answer, which is the trap the isolation exists to expose. C overstates the correction: below the
+breakeven of about 4.17 % back-loading genuinely is cheaper, by exactly the 36,626 computed here.
+D compounds the error, because lowering the area by extending the duration defers commercial
+operations at 532,000 a month of `CFADS` (KA 8.4.2) — against a total interest saving of 262,080 for
+the entire build.
+
+**MCQ 8.2-F `[8.2.3 · Evaluation]`** Asked for "a reasonable construction escalation assumption", an
+assistant returns 3.6 % per annum with no source. The modeller notes that 3.6 % is within the range of
+published construction indices, and that the model already carries Domain 6's 2.967 % revenue
+escalation. The soundest position is that:
+- A. 3.6 % may be used, since it is within the range of published indices for this class of work
+- B. the revenue escalation of 2.967 % should be used for both, so that the model is internally
+  consistent
+- C. no escalation rate may be relied on until it names an index, a source, a base date and a human
+  owner in the assumption register, because the rate propagates into the funding envelope, the
+  depreciable base and the delay arithmetic ✅
+- D. one blended index should be used for all trades, since trade-level differences average out
+
+*Rationale:* an assistant must not select the escalation rate, which is a forecast of input prices for
+a specific build in a specific market (the AI boundary in KA 8.2), and construction and revenue
+escalation are distinct assumptions — labour, steel, cement and specialist plant move differently from
+consumer prices and from each other. A accepts plausibility as provenance. B imports a revenue
+assumption into a cost line, which is the silent error 8.2.3 names. D discards the trade mix that makes
+the rate mean anything. The related discipline is that escalation is applied period-by-period to the
+profile: escalating the 48,000,000 total by 1.036² gives 51,518,208 against the profile-correct
+50,093,393, an overstatement of 1,424,815.
+
+**MCQ 8.2-G `[8.2.2 · Comprehension]`** The area rule states that `IDC = r_q × g × S × Σ cum(t−1)`.
+What it tells a reader is that capitalised interest:
+- A. depends on total spend and duration, so the shape of the drawdown is a presentational matter
+- B. is proportional to the area under the cumulative drawdown curve, so two profiles spending the same
+  money over the same duration produce different interest bills ✅
+- C. is proportional to the peak debt balance reached during construction
+- D. equals the average of the opening and closing balances multiplied by the rate
+
+*Rationale:* the summation is the discrete area under the cumulative curve, which is precisely what
+"shape" measures — on Kestrel, 1,345,680 back-loaded against 2,000,880 front-loaded on identical spend
+and duration, a 655,200 spread and 40.75 % of the S-curve's own bill (8.2.2). A is the belief the rule
+refutes. C and D describe quantities the rule does not use: the same peak balance is reached on every
+profile that draws the full facility, and an average-of-two-balances calculation ignores the whole
+interior of the curve.
 
 ### Self-check — KA 8.2
 
@@ -841,6 +961,59 @@ worth less than 2,085,972 of funded contingency?
 support is a commitment whose value is the obligor's credit (8.3.1, and Domain 5 KA 5.2.3 on
 several versus joint-and-several liability). B describes funded contingency; A confuses timing with
 credit; D is false.
+
+**MCQ 8.3-E `[8.3.2 · Evaluation]`** Kestrel's retained register supports a P80 contingency of
+4,246,095 (8.85 % of base) while the Stage C accuracy range supports 6,512,795 (13.57 %); the funded
+balancing line is 3,645,403, a P69.7 provision on the register. The works are let under a fixed-price,
+date-certain wrap. The soundest recommendation is:
+- A. fund 6,512,795, following the convention of taking the higher of two defensible provisions
+- B. size the provision at 4,246,095 on the retained register, and settle in the funding documents whether the additional 600,692 comes from debt or from equity — the range-based 6,512,795 measures base-estimate uncertainty the wrap has transferred to the contractor ✅
+- C. leave the funded 3,645,403 unchanged and disclose it as a P69.7 provision
+- D. fund the 600,692 by capitalising it into senior debt, the coverage cost being only 23.1 % of headroom
+
+*Rationale:* "take the higher" is where the reconciliation starts, not where it ends: the next question
+is which of the two uncertainties the contracting structure has eliminated, and a full wrap transfers
+base-estimate uncertainty, leaving the owner the discrete retained register (8.3.2, 8.1.2). A applies
+half the rule and would fund 2,266,700 against a risk the owner no longer carries. C is honest and
+insufficient — a named P69.7 beats an unnamed percentage but is still 600,692 short of the confidence
+the register supports. D is a real funding route that pre-empts the decision it should present:
+capitalising 600,692 takes the instalment to 5,081,284, the `DSCR` to 1.2564 and annual headroom
+from 372,438 to 286,459 for the whole twelve-year loan life, which is a choice about where the money
+lands and belongs to the sponsors before close.
+
+**MCQ 8.3-F `[8.3.1 · Comprehension]`** A delivery manager asks where management reserve sits in a
+project financing. The best explanation is:
+- A. it is contingency under another name, relabelled for the lenders
+- B. lenders will not fund undefined scope, so its financing equivalent sits outside the base case as contingent support — a cost-overrun undertaking, standby equity or a standby tranche — called on a trigger rather than drawn on certification ✅
+- C. it is the contractor's own contingency inside the contract price
+- D. it is the unused balance of contingency remaining at the end of the build
+
+*Rationale:* contingency is funded provision for identified risks within agreed scope, drawn against
+certification; management reserve covers what the register does not contain, which a facility will not
+lend against (8.3.1). A collapses a distinction the funding structure depends on; C names a third and
+separate pot the owner cannot draw at all (8.1.2's pitfall); D describes a release rather than a
+reserve.
+
+**MCQ 8.3-G `[8.3.3 · Evaluation]`** Kestrel's ground-conditions risk retires with no impact: the
+register's P80 falls from 4,246,095 to 2,930,955 while the 10 % rule stays at 4,800,000, leaving
+1,869,045 of excess provision. The project director resists reducing it while construction is running,
+and the finance function does not press the point because the excess costs only the 11,214 a year of
+commitment fee. The soundest position is that:
+- A. the director is right: cover should not be reduced while construction continues, and 11,214 is
+  immaterial
+- B. the excess should be released, and the release relied on as a matter of judgement at each
+  quarterly review
+- C. a recalculation of the required provision at defined milestones should be written into the finance
+  documents, because the asymmetry is 11,214 a year undrawn against 187,265 of annual covenant
+  headroom — 50.3 % — permanently lost if the excess is drawn ✅
+- D. the excess should be drawn now and held as project cash, so that it is available if needed
+
+*Rationale:* released contingency is rarely given back because nobody is rewarded for handing money
+back, so the answer is mechanical rather than behavioural (8.3.3, 8.A.2): funded 70/30 the excess adds
+1,308,332 of senior debt and 156,054 to the annual instalment, taking the `DSCR` to 1.2358 and headroom
+to 185,173 for the whole twelve-year loan life. A prices the visible cost and ignores the permanent one.
+B is the arrangement that has just failed. D converts an option into the exposure the release exists to
+avoid, and does so at once.
 
 ### Self-check — KA 8.3
 
@@ -1119,6 +1292,57 @@ best negotiating response is:
 matches exposure and is cheaper for a contractor to accept than a flat rate set at the maximum. A
 ignores the tail; B over-recovers early and is resisted for that reason; D abandons the transfer
 altogether.
+
+**MCQ 8.4-E `[8.4.1 · Evaluation]`** At Auriga's week-13 data date the facility is in balance by
++100,000 on the budgeted-rate forecast, out of balance by 116,667 on `BAC/CPI` and by 308,056 on
+`CPI × SPI`; separately, remaining contingency of 120,000 stands against a remaining-register P80 of
+286,185. All four courses below have been proposed. Which should the finance leader take?
+- A. argue for the budgeted-rate `EAC` of 4,200,000, which leaves the facility in balance with 100,000 to spare
+- B. accept `BAC/CPI`, prepare the 116,667 cash call, and treat the contingency position as a consequence of it
+- C. take both tests to the sponsor now, leading with the 166,185 contingency shortfall, because that test rests on the register and the draw history alone and is therefore due whichever `EAC` is certified ✅
+- D. revise the remaining register down so that the 120,000 still available is adequate
+
+*Rationale:* the adequacy test needs no forecast at all and fails independently and earlier, so it is
+the finding that survives whatever the certifier accepts about the `EAC` — and it exposes the real
+defect, a project funded at sanction to a P53.5 provision nobody named (8.4.1). A is the sponsor's
+negotiating position and is defensible as a position, but a `CPI` of 0.906 sustained over thirteen
+weeks is evidence about the remaining work unless somebody can name what has changed, and it leaves
+the 166,185 untouched. B is the right answer to the second test first: it makes the cash call turn on
+a forecast method that is negotiable while the register shortfall is not. D is the corruption the
+adequacy test exists to prevent.
+
+**MCQ 8.4-F `[8.4.2 · Evaluation]`** A three-month slip is declared at construction quarter six.
+Capitalising its escalation and interest components — 488,032 — takes debt to 42,488,032, the instalment
+to 5,067,846.24, the `DSCR` from 1.2743 to 1.2597 and annual headroom from 372,438 to 302,585, a fall of
+18.8 % for the whole twelve-year loan life. The soundest position is that:
+- A. it should be capitalised: 488,032 is a rounding error against a 60,000,000 envelope
+- B. this is a choice about whether the slip lands on coverage for twelve years or on equity return now,
+  and it belongs to the sponsors before the event, in the funding documents ✅
+- C. it should be funded with equity in every case, because lenders do not permit delay costs to be
+  capitalised
+- D. the decision should be left to the project director in the month the slip is declared, when the
+  amount is known
+
+*Rationale:* a construction event becomes an operating constraint the moment it is capitalised (8.4.2,
+and Domain 5 KA 5.4.2). A prices the cash and ignores twelve years of coverage. C presents as universal
+a lender position that is a negotiated term of the funding documents. D leaves a structural choice to
+the person with the least room to negotiate it and the strongest reason to close it out quickly — which
+is how the answer gets made by default rather than chosen.
+
+**MCQ 8.4-G `[8.4.3 · Comprehension]`** A controls function already produces earned value, the `EAC`
+family, the register and the contingency draw history. What the financing adds to that monthly pack is:
+- A. a second set of numbers, prepared to the lenders' definitions
+- B. three transformations of the same data — cost to complete, the funds sufficiency position, and the
+  coverage consequence — plus the discipline of stating which confidence level each provision
+  represents ✅
+- C. an independent estimate of the cost to complete, prepared by the lenders' technical adviser
+- D. the same information recast onto a different cost breakdown structure
+
+*Rationale:* one data spine, two sets of questions: every line the financing annexe needs derives from
+data the controls function already holds (8.4.3). A is the failure the principle exists to prevent — two
+sets of numbers create a reconciliation burden that fails exactly when it matters. C describes a
+diligence activity, not what the pack adds. D is a coding exercise that answers neither question the
+financing asks.
 
 ### Self-check — KA 8.4
 
