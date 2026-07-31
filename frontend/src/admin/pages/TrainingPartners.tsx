@@ -104,19 +104,25 @@ export function MarketingPartners() {
 // Scenario-based test partner accounts (mirrors the student test-user mechanism): a flagged,
 // never-listed institution with a portal login and a ready session into /partner.html, so every
 // partner-dashboard journey can be exercised without touching a real institution.
+// Each admin section offers the scenarios that belong to it: institution journeys under Training
+// Partners, marketing-partner journeys (codes/links/commission/finance) under Marketing Partners.
 const TEST_PARTNER_SCENARIOS = [
-  { value: 'active', label: 'Active — sponsorship enabled' },
-  { value: 'marketing', label: 'Marketing — codes + seeded performance' },
-  { value: 'fresh_login', label: 'Fresh login — must change password' },
-  { value: 'no_sponsor', label: 'Sponsorship disabled' },
-  { value: 'suspended', label: 'Suspended institution' },
+  { value: 'active', label: 'Active — sponsorship enabled', kind: 'training' },
+  { value: 'fresh_login', label: 'Fresh login — must change password', kind: 'training' },
+  { value: 'no_sponsor', label: 'Sponsorship disabled', kind: 'training' },
+  { value: 'suspended', label: 'Suspended institution', kind: 'training' },
+  { value: 'marketing', label: 'Marketing — codes + seeded performance', kind: 'marketing' },
+  { value: 'marketing_links', label: 'Marketing — + tracked campaign link with clicks', kind: 'marketing' },
+  { value: 'marketing_finance', label: 'Marketing — + agreement, commission approved for payout', kind: 'marketing' },
+  { value: 'marketing_fresh', label: 'Marketing — fresh login, must change password', kind: 'marketing' },
 ]
 interface TestPartnerResult {
   institution: string; email: string; password: string
   token?: string | null; scenario: string
 }
-function TestPartnerButton({ onCreated }: { onCreated: () => void }) {
-  const [scenario, setScenario] = useState('active')
+function TestPartnerButton({ kind = 'training', onCreated }: { kind?: PartnerKind; onCreated: () => void }) {
+  const scenarios = TEST_PARTNER_SCENARIOS.filter((s) => s.kind === kind)
+  const [scenario, setScenario] = useState(scenarios[0].value)
   const [busy, setBusy] = useState(false)
   const [res, setRes] = useState<TestPartnerResult | null>(null)
   const [err, setErr] = useState<string | null>(null)
@@ -128,7 +134,7 @@ function TestPartnerButton({ onCreated }: { onCreated: () => void }) {
   return (
     <>
       <select value={scenario} onChange={(e) => setScenario(e.target.value)} aria-label="Test-partner scenario" style={{ width: 'auto', maxWidth: 240 }}>
-        {TEST_PARTNER_SCENARIOS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+        {scenarios.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
       </select>
       <button className="btn sm secondary" disabled={busy} onClick={create}>{busy ? 'Creating…' : '+ Test partner'}</button>
       {(res || err) && (
@@ -202,7 +208,7 @@ function DirectoryTab({ kind = 'training' }: { kind?: PartnerKind }) {
       title={marketing ? `Marketing partner directory (${rows.length})` : `Partner directory (${rows.length})`}
       action={
         <span className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
-          {!marketing && <TestPartnerButton onCreated={refetch} />}
+          <TestPartnerButton kind={kind} onCreated={refetch} />
           <button className="btn sm" onClick={() => setEdit('new')}>Add partner</button>
         </span>
       }
