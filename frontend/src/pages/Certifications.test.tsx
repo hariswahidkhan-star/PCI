@@ -98,8 +98,11 @@ describe('Certifications', () => {
   const pickDayAndSlot = async (user: ReturnType<typeof userEvent.setup>) => {
     await user.click(screen.getByRole('button', { name: 'Next month' }))
     const days = document.querySelectorAll<HTMLButtonElement>('.schedm-day:not([disabled])')
+    expect(days.length).toBeGreaterThan(0)
     await user.click(days[days.length - 1])
-    await user.click(screen.getByRole('button', { name: '14:00' }))
+    const slots = document.querySelectorAll<HTMLButtonElement>('.schedm-slot')
+    expect(slots.length).toBeGreaterThan(0)
+    await user.click(slots[slots.length - 1])
   }
 
   describe('booking form', () => {
@@ -116,7 +119,9 @@ describe('Certifications', () => {
       expect(days.length).toBeGreaterThan(27) // a whole future month: every day bookable
       await user.click(days[days.length - 1])
       expect(confirm).toBeDisabled() // a day alone is not enough
-      await user.click(screen.getByRole('button', { name: '14:00' }))
+      const slots = document.querySelectorAll<HTMLButtonElement>('.schedm-slot')
+      expect(slots.length).toBeGreaterThan(0)
+      await user.click(slots[slots.length - 1])
       expect(confirm).toBeEnabled()
 
       h.post.mockResolvedValueOnce(undefined)

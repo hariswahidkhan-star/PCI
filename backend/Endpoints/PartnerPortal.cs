@@ -687,19 +687,29 @@ public static class PartnerPortal
         //   marketing  — marketing-partner concept: codes auto-approved, plus a seeded live code with
         //                three test-student redemptions so code performance, the masked students list
         //                and the commission ledger all show real derived numbers immediately
-        var partnerScenarios = new[] { "active", "fresh_login", "no_sponsor", "suspended", "marketing" };
+        //   marketing_fresh   — a clean marketing partner with must_change_pw=1: the forced
+        //                       first-password journey in the Marketing Partner Portal, no seeded data
+        //   marketing_links   — marketing + a seeded tracked campaign link with recorded clicks, so
+        //                       the Links tab shows the click → redemption → commission funnel
+        //   marketing_finance — marketing + an active agreement with a 10% rule, and the seeded
+        //                       commissions matured (via the legal ledger transitions) to
+        //                       approved_for_payment, so the Partner Finance console can run the
+        //                       whole prepare → approve → pay settlement flow immediately
+        var partnerScenarios = new[] { "active", "fresh_login", "no_sponsor", "suspended",
+            "marketing", "marketing_fresh", "marketing_links", "marketing_finance" };
 
         void ApplyPartnerScenario(long partnerId, string scenario)
         {
+            var marketing = scenario.StartsWith("marketing", StringComparison.Ordinal);
             var status = scenario == "suspended" ? "suspended" : "active";
-            var sponsor = scenario is "no_sponsor" or "marketing" ? 0 : 1;
-            var ptype = scenario == "marketing" ? "marketing" : "training";
-            var autoApprove = scenario == "marketing" ? 1 : 0;
+            var sponsor = scenario == "no_sponsor" || marketing ? 0 : 1;
+            var ptype = marketing ? "marketing" : "training";
+            var autoApprove = marketing ? 1 : 0;
             db.Execute(@"UPDATE training_partners SET status=?, sponsor_enabled=?, partner_type=?, auto_approve_codes=?, listed=0,
                 max_discount_percent=25, max_codes=10, commission_pct=10, agreement_end=NULL,
                 updated_at=datetime('now') WHERE id=? AND is_test=1", status, sponsor, ptype, autoApprove, partnerId);
             db.Execute("UPDATE partner_users SET status='active', must_change_pw=? WHERE partner_id=?",
-                scenario == "fresh_login" ? 1 : 0, partnerId);
+                scenario is "fresh_login" or "marketing_fresh" ? 1 : 0, partnerId);
         }
 
         // Marketing scenario: one live campaign code + three flagged test students who redeemed it on
@@ -707,10 +717,10 @@ public static class PartnerPortal
         // rows by the existing dashboard/students/commissions endpoints — nothing is faked in the UI —
         // and it is all excluded from reports (users.is_test / training_partners.is_test) and removed
         // again by WipePartnerData.
-        void SeedMarketingActivity(long partnerId)
+        long SeedMarketingActivity(long partnerId)
         {
             var partner = db.QueryOne("SELECT name FROM training_partners WHERE id=? AND is_test=1", partnerId);
-            if (partner is null) return;
+            if (partner is null) return 0;
             var stamp = Security.RandomHex(3).ToUpperInvariant();
             var listPrice = Settlement.ListPrice(db, "exam");
             var discounted = Math.Round(listPrice * 0.85, 2);
@@ -736,6 +746,59 @@ public static class PartnerPortal
                 try { PartnerCommission.EnsureForPayment(db, payId); } catch { }
             }
             db.Execute("UPDATE discount_codes SET used_count=3 WHERE id=?", codeId);
+            return codeId;
+        }
+
+        // Marketing-links scenario: a live tracked /r/{token} link tied to the seeded code, with a
+        // handful of recorded clicks (some same-day duplicates so uniques < clicks). The Links tab's
+        // funnel then derives clicks, visitors, redemptions and conversion from real rows.
+        void SeedCampaignLink(long partnerId, long codeId)
+        {
+            if (codeId <= 0) return;
+            var token = PartnerCampaign.NewToken();
+            for (var i = 0; i < 5 && db.QueryOne("SELECT id FROM partner_campaign_links WHERE token=?", token) is not null; i++)
+                token = PartnerCampaign.NewToken();
+            var linkId = db.ExecuteReturningId(@"INSERT INTO partner_campaign_links
+                (token,partner_id,code_id,name,destination,utm_source,utm_medium,utm_campaign)
+                VALUES(?,?,?, 'Test campaign link','/certification.html','newsletter','email','test-campaign')",
+                token, partnerId, codeId);
+            var countries = new[] { "United Kingdom", "United Arab Emirates", "Pakistan", "United Kingdom" };
+            for (var i = 0; i < 8; i++)
+                PartnerCampaign.RecordClick(db, linkId, Security.RandomHex(8), countries[i % countries.Length],
+                    i % 3 == 0 ? "mobile" : "desktop", i % 2 == 0 ? "Chrome" : "Safari", i % 2 == 0 ? "https://newsletter.test/" : null);
+            // Two same-day duplicate visitors: uniques stay below raw clicks, as real traffic would.
+            var dup = Security.RandomHex(8);
+            PartnerCampaign.RecordClick(db, linkId, dup, "United Kingdom", "desktop", "Chrome", null);
+            PartnerCampaign.RecordClick(db, linkId, dup, "United Kingdom", "desktop", "Chrome", null);
+        }
+
+        // Marketing-finance scenario: the commercial layer on top of the seeded performance — an active
+        // agreement + 10% rule (so the Agreements tab has content), and the seeded ledger transactions
+        // matured through the LEGAL transitions (on_refund_hold → due → approved_for_payment), so the
+        // Partner Finance console can prepare/approve/pay a settlement immediately. Nothing skips the
+        // engine: Transition() writes the same append-only events a real maturing would.
+        void SeedFinanceMaturity(long partnerId, long adminId)
+        {
+            var stamp = Security.RandomHex(3).ToUpperInvariant();
+            var from = DateTime.UtcNow.AddDays(-30).ToString("yyyy-MM-dd");
+            var aid = db.ExecuteReturningId(@"INSERT INTO partner_agreements
+                (partner_id,agreement_number,effective_from,currency,payment_terms_days,minimum_payout_minor,
+                 refund_hold_days,status,note,created_by)
+                VALUES(?,?,?, 'USD',30,0,14,'active','Seeded by the test-partner mechanism',?)",
+                partnerId, "TEST-AGR-" + stamp, from, adminId);
+            db.Execute(@"INSERT INTO partner_commission_rules
+                (agreement_id,partner_id,commission_type,commission_rate_bp,commission_fixed_minor,commission_basis,
+                 effective_from,priority,active,created_by)
+                VALUES(?,?, 'percentage',1000,0,'net_after_discount',?,100,1,?)", aid, partnerId, from, adminId);
+            var past = DateTime.UtcNow.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss");
+            foreach (var t in db.Query("SELECT id FROM partner_commission_transactions WHERE partner_id=? AND status=?",
+                partnerId, PartnerCommission.StatusOnRefundHold))
+            {
+                var tid = H.L(t["id"]);
+                db.Execute("UPDATE partner_commission_transactions SET hold_until=? WHERE id=?", past, tid);
+                PartnerCommission.Transition(db, tid, PartnerCommission.StatusDue, "system", null, "test seed: refund hold elapsed");
+                PartnerCommission.Transition(db, tid, PartnerCommission.StatusApproved, "admin", adminId, "test seed: approved for payment");
+            }
         }
 
         void WipePartnerData(long partnerId, bool keepPartner)
@@ -748,7 +811,12 @@ public static class PartnerPortal
                 JOIN discount_codes dc ON dc.id=r.code_id
                 JOIN users u ON u.id=r.user_id
                 WHERE dc.partner_id=? AND u.is_test=1 AND u.email LIKE 'test.redeemer.%@pci.test'", partnerId);
-            // Partner-owned rows first: redemptions reference the payments deleted below.
+            // Partner-owned rows first: redemptions reference the payments deleted below. Campaign-link
+            // clicks hang off the links, which hang off the codes — clear them in that order so no
+            // orphan click/link rows outlive the code they were tracking.
+            try { db.Execute(@"DELETE FROM partner_link_clicks WHERE link_id IN
+                (SELECT id FROM partner_campaign_links WHERE partner_id=?)", partnerId); } catch { }
+            try { db.Execute("DELETE FROM partner_campaign_links WHERE partner_id=?", partnerId); } catch { }
             db.Execute("DELETE FROM code_redemptions WHERE code_id IN (SELECT id FROM discount_codes WHERE partner_id=?)", partnerId);
             db.Execute("DELETE FROM discount_codes WHERE partner_id=?", partnerId);
             foreach (var r in redeemers)
@@ -769,14 +837,26 @@ public static class PartnerPortal
                 (SELECT id FROM partner_commission_transactions WHERE partner_id=?)", partnerId); } catch { }
             try { db.Execute(@"DELETE FROM partner_settlement_items WHERE settlement_id IN
                 (SELECT id FROM partner_settlements WHERE partner_id=?)", partnerId); } catch { }
+            try { db.Execute(@"DELETE FROM partner_dispute_messages WHERE dispute_id IN
+                (SELECT id FROM partner_disputes WHERE partner_id=?)", partnerId); } catch { }
             foreach (var t in new[] { "partner_commission_transactions", "partner_commission_rules", "partner_agreements",
-                "partner_settlements", "partner_sponsorships", "partner_payouts", "partner_notices" })
+                "partner_settlements", "partner_disputes", "partner_sponsorships", "partner_payouts", "partner_notices" })
                 try { db.Execute($"DELETE FROM {t} WHERE partner_id=?", partnerId); } catch { }
             if (!keepPartner)
             {
                 db.Execute("DELETE FROM partner_users WHERE partner_id=?", partnerId);
                 db.Execute("DELETE FROM training_partners WHERE id=? AND is_test=1", partnerId);
             }
+        }
+
+        // One dispatcher for what each scenario seeds. marketing_fresh deliberately seeds nothing —
+        // its point is the clean forced-first-password journey in the marketing portal.
+        void SeedForScenario(long partnerId, string scenario, long adminId)
+        {
+            if (scenario is not ("marketing" or "marketing_links" or "marketing_finance")) return;
+            var codeId = SeedMarketingActivity(partnerId);
+            if (scenario == "marketing_links") SeedCampaignLink(partnerId, codeId);
+            if (scenario == "marketing_finance") SeedFinanceMaturity(partnerId, adminId);
         }
 
         string MintPartnerSession(long partnerUserId)
@@ -808,9 +888,9 @@ public static class PartnerPortal
             var puId = db.ExecuteReturningId(@"INSERT INTO partner_users
                 (partner_id,email,name,role,password_hash,status,must_change_pw,created_by)
                 VALUES(?,?, 'Test Partner','admin',?, 'active',?,?)",
-                partnerId, email, BCrypt.Net.BCrypt.HashPassword(password), scenario == "fresh_login" ? 1 : 0, adm.Id);
+                partnerId, email, BCrypt.Net.BCrypt.HashPassword(password), scenario is "fresh_login" or "marketing_fresh" ? 1 : 0, adm.Id);
             ApplyPartnerScenario(partnerId, scenario); // normalizes partner_type / auto-approve / limits per scenario
-            if (scenario == "marketing") SeedMarketingActivity(partnerId);
+            SeedForScenario(partnerId, scenario, adm.Id);
             // Ready hand-off session — pointless for the suspended scenario (validation rejects it).
             var token = scenario == "suspended" ? null : MintPartnerSession(puId);
             log(adm.Id, "admin_test_partner_create", $"{instName} ({email}) scenario {scenario} by {adm.Id} (partner {partnerId})");
@@ -833,7 +913,7 @@ public static class PartnerPortal
             if (!partnerScenarios.Contains(scenario)) return Err(400, "bad_scenario");
             WipePartnerData(id, keepPartner: true);
             ApplyPartnerScenario(id, scenario);
-            if (scenario == "marketing") SeedMarketingActivity(id);
+            SeedForScenario(id, scenario, adm.Id);
             var pu = db.QueryOne("SELECT id FROM partner_users WHERE partner_id=? ORDER BY id LIMIT 1", id);
             var token = pu is null || scenario == "suspended" ? null : MintPartnerSession(H.L(pu["id"]));
             log(adm.Id, "admin_test_partner_reset", $"scenario {scenario} by {adm.Id} (partner {id})");
