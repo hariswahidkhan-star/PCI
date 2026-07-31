@@ -60,8 +60,13 @@ document first — the reasoning is usually load-bearing.
 35. [Go-live checklist](#35-go-live-checklist)
 36. [How to extend the platform](#36-how-to-extend-the-platform)
 37. [Where to look first](#37-where-to-look-first)
-38. [End-to-end flowcharts](#38-end-to-end-flowcharts)
-39. [End-to-end checklists](#39-end-to-end-checklists)
+38. [Operations, observability and support tooling](#38-operations-observability-and-support-tooling)
+39. [Backup, restore and disaster recovery](#39-backup-restore-and-disaster-recovery)
+40. [Emergency runbooks, known issues and safety escalation](#40-emergency-runbooks-known-issues-and-safety-escalation)
+41. [Subsystems this guide summarises rather than details](#41-subsystems-this-guide-summarises-rather-than-details)
+42. [What this guide does not cover](#42-what-this-guide-does-not-cover)
+43. [End-to-end flowcharts](#43-end-to-end-flowcharts)
+44. [End-to-end checklists](#44-end-to-end-checklists)
 
 ---
 
@@ -1703,7 +1708,313 @@ Claim work through `WorkerLease` with a single conditional `UPDATE`. Never `SELE
 
 ---
 
-## 38. End-to-end flowcharts
+## 38. Operations, observability and support tooling
+
+What you actually have for diagnosing a live system. Read this before an incident, not during one.
+
+### 38.1 Health and readiness
+
+| Probe | Auth | Use |
+|---|---|---|
+| `GET /api/health` | none | Liveness. The only unauthenticated diagnostic. |
+| `GET /api/admin/system-check` | **owner** | Readiness. Config, storage, provider, `owner_password_changed`, secret presence — with secret/SMTP/result-policy keys **redacted**. |
+
+> There is **no `/metrics` endpoint and no Prometheus integration**. Observability is the structured
+> boot log, `audit_logs`, the email log and the error-reference table. If you need time-series
+> metrics, that is a genuine addition, not something to go looking for.
+
+### 38.2 Error references — how a user-visible failure becomes traceable
+
+`Core/ErrorRefs.cs`. Every important failure — a server exception or a client-reported one — becomes
+an `error_reports` row with a **quotable reference**:
+
+```
+PCI-YYYY-NNNNNN
+```
+
+The student sees the reference; support searches it and sees exactly what the student saw plus a
+technical summary. Admin → **Error reports**.
+
+> **The capture surface only accepts page, category, messages and user-agent.** It never stores
+> passwords, tokens or card data. If you extend it, keep that property — a diagnostic channel that
+> accepts arbitrary payloads becomes a credential sink the first time someone pastes one.
+
+### 38.3 The audit trails
+
+Two, deliberately separate:
+
+| Table | Written by | Via |
+|---|---|---|
+| `audit_logs` | Platform admin actions | `logFn` / `Log` helper |
+| `pciworld_audit` | World admin actions, launch-board changes, prerequisite acknowledgements | `Audit(...)` in the World modules |
+
+Launch-board writes are **append-only** and record who, when and what. Auditing is wrapped so that a
+failure to write the audit row can never break the action it records — an audit system that takes the
+feature down with it gets switched off.
+
+### 38.4 Support tooling — impersonation and journey diagnosis
+
+| Endpoint | Gate | Behaviour |
+|---|---|---|
+| `POST /api/admin/members/{id}/impersonate` | `impersonate` | Mints a **60-minute** view-as-student session. **A reason is required.** |
+| `POST /api/admin/members/{id}/impersonate/end` | `impersonate` | Revokes all impersonation sessions for that student |
+| `GET /api/admin/members/{id}/journey` | `members` | **The single best debugging tool in the platform**: every pipeline stage, where the student is stuck, and what to do about it |
+
+Impersonation sessions live in their own table (`impersonation_sessions`) so they can be revoked and
+audited independently of the student's real sessions. Treat the `impersonate` permission as
+privileged — it is the one that lets a staff member see another person's account.
+
+### 38.5 Other operator diagnostics
+
+- **Email log** — every message, including those printed to console when no SMTP is configured. First
+  place to look for "they say they never got it".
+- **Audit log** — admin → Audit.
+- **CSV export** — `GET /api/admin/export` (permission `reports`) for `members`, `payments`,
+  `enrollments`, `credentials`, `inquiries`, `redemptions`, `subscribers`. **This is a reporting
+  export, not a backup** — see §41.
+- **Readiness** — admin → Readiness, wrapping `system-check`.
+
+---
+
+## 39. Backup, restore and disaster recovery
+
+**Say the important part first: the platform does not back itself up.** There is no platform-wide
+backup endpoint and no scheduled dump built into the application. `GET /api/admin/export` produces
+CSV for seven datasets and is a reporting tool — it is not a restorable backup and does not include
+uploads.
+
+Backup is **infrastructure-level and yours to arrange**. Two things must be captured together, or a
+restore is inconsistent:
+
+| What | Where | Why it matters |
+|---|---|---|
+| **The database** | SQLite file under `/data`, or your MySQL server | Every row of state |
+| **The storage tree** | `/data/storage` (local) or the S3 bucket | Evidence, attachments, CVs, Passport photos, documents |
+
+A database restored without its storage leaves rows pointing at objects that no longer exist —
+credential PDFs, exam evidence and CVs among them.
+
+### 39.1 Per provider
+
+| Provider | Backup | Restore |
+|---|---|---|
+| **SQLite** | `VACUUM INTO` produces a real, independent copy while the service runs. Copying the file with `cp` under load can capture a torn database. | Stop, replace the file, start |
+| **MySQL / MariaDB** | Managed dump/restore, or your provider's snapshots | Standard restore |
+| **Storage — local** | Snapshot the `/data` disk | Restore alongside the database |
+| **Storage — S3** | Bucket versioning / lifecycle | Point-in-time |
+
+The `VACUUM INTO` mechanism is the one the repository actually exercises:
+`SimBackupRestoreTests` takes a real independent copy, **wipes the original**, and asserts the restore
+stands on its own — bringing back the catalogue, in-flight attempts, **and the version snapshots that
+make replay immutable**, so a restored attempt grades off its frozen config exactly as it did before.
+That is a Simulation Lab gate, but it is the pattern to copy.
+
+### 39.2 What a restore must preserve
+
+- **Version snapshots**, not just live rows. Anything that grades or verifies against a frozen
+  configuration is wrong if you restore the row and lose the snapshot.
+- **Rotation periods** (`pciworld_rotation_periods`) — written once, never updated. They are the
+  historical record of what was featured on each day; losing them makes past days unanswerable.
+- **Audit tables** — `audit_logs`, `pciworld_audit`.
+- **Issued credentials** and their verification tokens, or public verify links break.
+
+### 39.3 Disaster-recovery drill
+
+Because nothing here is exercised automatically outside the SimLab gate, drill it:
+
+1. Take a backup by your production mechanism.
+2. Restore into a scratch environment with `ASPNETCORE_ENVIRONMENT=Production`.
+3. Confirm boot reaches serving (exit 78 means config, not data).
+4. `GET /api/health` → 200; `system-check` clean.
+5. Open a credential verify link and a Passport share link taken **before** the backup — both must
+   still resolve.
+6. Confirm an uploaded document and an exam evidence object still download.
+
+> Step 5 is the one people skip and the one that fails. Tokens resolve against live rows; a partial
+> restore produces links that look right and 404.
+
+---
+
+## 40. Emergency runbooks, known issues and safety escalation
+
+### 40.1 The runbooks exist — use them
+
+`docs/pciworld/CCP_RUNBOOKS.md` is not background reading. It defines roles and six procedures:
+
+| Runbook | Situation |
+|---|---|
+| **RB-1** | A room is being abused **right now** |
+| **RB-2** | Legal hold |
+| **RB-3** | Suspected illegal material (CSAM or equivalent) |
+| **RB-4** | Reviewer welfare |
+| **RB-5** | Moderation provider outage |
+| **RB-6** | Rolling back a moderation policy change |
+
+> **If you switch on community rooms, somebody must have read RB-1 and RB-3 before the first message
+> is posted.** The launch board says as much in its advisory: rooms generate a moderation queue from
+> day one, and turning them on without somebody rostered to read it is worse than leaving them closed.
+> The runbooks close with a section on what they cannot cover — read that too.
+
+### 40.2 Known issues
+
+`docs/pciworld/CCP_ISSUE_REGISTER.md` tracks issues with `CCP-` identifiers. Check it before
+concluding you have found something new — and be aware the register's own classification can be
+wrong. `CCP-P2-008` was filed as a test-harness flake; writing the reproduction showed it was a
+production defect in the deploy path (§6), and the register is now amended.
+
+Companion records: `CCP_DECISION_LOG.md` (decisions and what was rejected) and `THREAT_MODEL.md`.
+
+### 40.3 Rollback posture
+
+- **Application** — redeploy the previous image. Migrations are additive and idempotent; there are no
+  down-migrations, so a rollback of code is safe while a rollback of *schema* is not.
+- **Moderation policy** — RB-6. Policy is versioned data, so restaging thresholds does not need a
+  deploy, and a decision records which policy row produced it.
+- **A World feature** — switch the flag off. The routes return to their off behaviour (§26).
+
+> **There are no down-migrations.** If a schema change is wrong, the fix is a forward change. Plan
+> accordingly: an additive column is cheap to correct, a destructive one is not.
+
+---
+
+## 41. Subsystems this guide summarises rather than details
+
+Each of these is a real subsystem with its own rules. This is enough to know it exists, what governs
+it, and where to look.
+
+### 41.1 The Simulation Lab
+
+~20 `Sim*` services. Access is computed **live** from the student's existing PCI state — no separate
+account, no parallel membership. Grading uses `SimCalc`'s relative-or-absolute tolerance
+(`threshold = max(0.01, tol·|ref|)`) — **the same convention as PCI World's scoring**, so the two
+products can never disagree about a number.
+
+Attempts grade against a **frozen version snapshot** (`SimVersion`), which is what makes replay
+immutable and what a restore must preserve (§39.2). Also: `SimGovernance`, `SimReview`, `SimVariant`,
+`SimManifest`, `SimTemplates`, `SimStep`, `SimContent`, `SimCoach`, `SimGrade`.
+Admin → *Simulation Lab* (`sim_lab`); student → `/app/lab`.
+
+### 41.2 The three access routes
+
+Deliberately separate, and mixing them is a correctness bug:
+
+| Route | What it is |
+|---|---|
+| **A — Standard** | The normal paid flow |
+| **B — Founding** | During the window, a valid code grants free membership + study access + a free exam entitlement **together, layered on the normal paid flow — never a parallel path**. A code may optionally be gated behind an application. |
+| **C — Honorary Fellow** | Board-conferred, **permanently separate** from the examined credential: no exam, no entitlement, no `issued_credentials` row, its own `PCI-HON` award number, owner-only conferral. **Nothing here may ever set an exam, result or credential field.** |
+
+### 41.3 Membership grades
+
+`Student → Associate (APCI) → Professional (MPCI) → Fellow (FPCI)`. The **grade** (professional
+standing, carrying the post-nominal) is separate from `membership_type` (the product). Associate is
+the default paid grade; Professional requires holding an active PCI certification and is self-service
+once earned; Fellow is by nomination and board review.
+
+### 41.4 Exam authorizations
+
+`Core/ExamAuthorization.cs`. An **authorization is one exam seat**, 1:1 with an entitlement/payment
+(enforced by a unique index), carrying its own scheduling window, deadlines, attempt policy and
+status. The student booking flow is unchanged; this layer computes the real window (no hardcoded one
+year), writes the deadline **through** to the payment, records every extension/reschedule/grant as
+preserved history, and grants extra sittings by materialising a fresh entitlement — so a granted
+attempt flows through the **exact same** book/launch/submit path.
+
+### 41.5 Certuvo
+
+PCI's study and practice engine in the student portal. Formative, **un-proctored** practice mirroring
+the exam format with immediate feedback, drawn from the **practice pool**
+(`sample_questions.is_practice = 1`) which is **deliberately separate from the secure examination
+bank**. Keep it that way: leaking secure items into practice destroys the exam.
+
+### 41.6 Digital badges
+
+Native **Open Badges 2.0** — PCI mints and hosts its own badges, so a credential is a shareable,
+machine-verifiable object with no vendor lock-in. `GET /api/badges/issuer` and friends. `CredlyConnector`
+exists for networks that want it, but the badge itself is not vendor-dependent.
+
+### 41.7 Training partners
+
+Third-party providers apply; board/admin reviews; on approval a directory entry is created. Once
+published (`listed = 1`) it renders on the public site through `ListSections` (the `PCI-PARTNERS`
+marker) — **server-side and SEO-visible**, not a client-side widget.
+
+### 41.8 Documents and access grants
+
+`DocAccess` resolves which students a document targets and **materialises concrete per-student grants**
+(`document_assignments`) as rows. That makes "My Documents" a fast lookup, and every grant
+individually revocable and auditable. Visibility = document `status` **and** an active assignment.
+
+### 41.9 The integration capability registry
+
+`Core/CapabilityRegistry.cs` classifies every publishing/distribution destination **honestly**, so the
+admin console never implies "everything is connected". The vocabulary is fixed: *Direct Publishing
+Available · Direct Publishing Requires Approval · Draft Export Available · RSS Distribution Available
+· Share Link Available · Manual Submission Required · Import Only · Read Only · Temporarily
+Unavailable · Unsupported · Integration Under Review*.
+
+> There is no single API that publishes to every website, and many platforms require an account type,
+> app review, audit, OAuth or a written agreement first. The registry records that reality per
+> destination rather than pretending otherwise.
+
+### 41.10 Internationalisation
+
+`Core/I18nContent.cs`. **Human-authored translations, not runtime machine translation**, stored per
+language in `content_i18n` for every captured text region (`PageScan`) and injected **server-side** —
+SEO-safe, works with JavaScript off, cached per version. English is the source and default: with
+`lang=en` nothing is injected and the page is served **byte-identical**. Admin → *Translations*.
+
+### 41.11 Accessibility
+
+Four dedicated a11y suites — `CommunityApp`, `ForumApp`, `CareersApp`, `ContributorDesk` — using
+`@axe-core/playwright`. The World social surfaces are the ones held to an automated accessibility
+standard. If you add a surface there, add its a11y suite; if you touch markup in one, run them.
+
+### 41.12 Caching and invalidation
+
+The pattern throughout the content system: each injector **caches per its own version** and calls
+`Bump()` when its settings change. If you add a cached injector, bump on every write path that can
+change its output — a cache that is only invalidated on the obvious path is a stale-content bug that
+appears days later.
+
+### 41.13 Indexes
+
+51 index statements in `schema.sql`, ~164 more created idempotently in `Migrate.cs`. There is a
+parity gate (`WorldMySqlParityTests`) asserting World indexes stay MySQL-legal — **no index over a
+`TEXT` column, and indexed datetime columns bounded**. MySQL will reject what SQLite accepts, so add
+indexes with both providers in mind and run the parity suite.
+
+---
+
+## 42. What this guide does not cover
+
+Stated plainly so nobody assumes coverage that is not here.
+
+**Genuinely absent from the platform** (additions, not lookups):
+
+- **Metrics/APM.** No `/metrics`, no Prometheus, no tracing. Boot log, audit tables, email log and
+  error references are what exist.
+- **Automated backup.** Nothing in the application backs up the database or storage (§39).
+- **Down-migrations.** Forward-only.
+- **A staging seed/anonymisation tool.** No built-in production→staging scrub.
+
+**Present in the code but only summarised here** — read the source or the phase doc:
+
+- Marketing centre internals (26 `mkt_*` tables), campaign attribution, ads/Search Console
+- Partner commission, reversal, settlement and statement arithmetic
+- Content Centre's `cc_*` workflow states and the full `cc_*` permission matrix
+- Exam delivery vendor connectors and dispatch
+- Social/syndication connector specifics per network
+- SEO internals: `SeoTags`, `Sitemap`, `IndexNowService`, `BacklinkMonitor`, `AiVisibility`
+- The `secureexam` client's P/Invoke lockdown internals
+- Project Intelligence taxonomy design → `docs/pciworld/PROJECT_INTELLIGENCE.md`
+
+**Deliberately not documented here:** production secrets, real credentials, and the World admin's
+one-time password — that one is printed once to your deploy log and is not recoverable (§9.3).
+
+---
+
+## 43. End-to-end flowcharts
 
 Every diagram below is the **complete** path for its flow — no "…and then it works" gaps. Endpoint
 names are the real ones. Where a step can refuse, the refusal is drawn, because the refusals are the
@@ -2155,7 +2466,7 @@ flowchart TB
 
 ---
 
-## 39. End-to-end checklists
+## 44. End-to-end checklists
 
 Two ordered walkthroughs. If you are taking this live for the first time, follow §39.1 top to bottom.
 
