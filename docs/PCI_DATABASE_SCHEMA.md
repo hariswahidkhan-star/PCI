@@ -531,7 +531,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `thread_id` | INTEGER | no |  |  |
+| `thread_id` | INTEGER | no |  | → `forum_threads` *(inferred)* |
 | `author_name` | TEXT | no |  |  |
 | `body` | TEXT | no |  |  |
 | `status` | VARCHAR(24) | yes | `'live'` |  |
@@ -1499,7 +1499,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `session_id` | INTEGER | no |  | → `pciworld_sessions` *(inferred)* |
+| `session_id` | INTEGER | no |  | → `impersonation_sessions` *(inferred)* |
 | `method` | VARCHAR(8) | yes |  |  |
 | `path` | TEXT | yes |  |  |
 | `at` | TEXT | yes | `datetime('now')` |  |
@@ -1910,14 +1910,14 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `authorization_id` | INTEGER | yes |  |  |
+| `authorization_id` | INTEGER | yes |  | → `exam_authorizations` *(inferred)* |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
 | `certification_id` | INTEGER | yes | `1` | → `certifications` *(inferred)* |
 | `grant_type` | TEXT | yes | `'additional'` |  |
 | `counts_as_attempt` | INTEGER | yes | `1` |  |
 | `reason` | TEXT | yes |  |  |
 | `note` | TEXT | yes |  |  |
-| `incident_id` | INTEGER | yes |  |  |
+| `incident_id` | INTEGER | yes |  | → `exam_incidents` *(inferred)* |
 | `payment_id` | INTEGER | yes |  | → `payments` *(inferred)* |
 | `fee_applies` | INTEGER | yes | `0` |  |
 | `fee_waived` | INTEGER | yes | `1` |  |
@@ -1934,7 +1934,7 @@ guide's data-access section.
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
-| `booking_id` | INTEGER | yes |  |  |
+| `booking_id` | INTEGER | yes |  | → `exam_bookings` *(inferred)* |
 | `certification_id` | INTEGER | yes | `1` | FK → `certifications.id` |
 | `kind` | TEXT | yes | `'exam'` |  |
 | `violations` | INTEGER | yes | `0` |  |
@@ -1955,7 +1955,7 @@ guide's data-access section.
 | `answer_key_version` | TEXT | yes |  |  |
 | `bank_version` | TEXT | yes |  |  |
 | `attempt_class` | TEXT | yes | `'normal'` |  |
-| `authorization_id` | INTEGER | yes |  |  |
+| `authorization_id` | INTEGER | yes |  | → `exam_authorizations` *(inferred)* |
 | `grant_id` | INTEGER | yes |  |  |
 | `replaces_attempt_id` | INTEGER | yes |  |  |
 | `counts_as_attempt` | INTEGER | yes | `1` |  |
@@ -1980,7 +1980,7 @@ guide's data-access section.
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
 | `certification_id` | INTEGER | yes | `1` | → `certifications` *(inferred)* |
 | `payment_id` | INTEGER | yes |  | → `payments` *(inferred)* |
-| `entitlement_id` | INTEGER | yes |  |  |
+| `entitlement_id` | INTEGER | yes |  | → `exam_entitlements` *(inferred)* |
 | `eligibility_start` | TEXT | yes |  |  |
 | `original_deadline` | TEXT | yes |  |  |
 | `current_deadline` | TEXT | yes |  |  |
@@ -2015,7 +2015,7 @@ guide's data-access section.
 | `reschedule_count` | INTEGER | yes | `0` |  |
 | `created_at` | TEXT | yes | `datetime('now')` |  |
 | `updated_at` | TEXT | yes | `datetime('now')` |  |
-| `authorization_id` | INTEGER | yes |  |  |
+| `authorization_id` | INTEGER | yes |  | → `exam_authorizations` *(inferred)* |
 | `delivery_status` | VARCHAR(32) | yes |  |  |
 
 **Indexes:** `ix_bookings_payment`, `ix_bookings_user`
@@ -2044,8 +2044,8 @@ guide's data-access section.
 | `provider_id` | INTEGER | no |  |  |
 | `provider` | TEXT | no |  |  |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
-| `booking_id` | INTEGER | yes |  |  |
-| `attempt_id` | INTEGER | yes |  | → `pciworld_attempts` *(inferred)* |
+| `booking_id` | INTEGER | yes |  | → `exam_bookings` *(inferred)* |
+| `attempt_id` | INTEGER | yes |  | → `exam_attempts` *(inferred)* |
 | `certification_id` | INTEGER | yes |  | → `certifications` *(inferred)* |
 | `vendor_exam_code` | TEXT | yes |  |  |
 | `delivery_type` | TEXT | yes | `'online'` |  |
@@ -2098,10 +2098,10 @@ guide's data-access section.
 | `certification_id` | INTEGER | yes | `1` | FK → `certifications.id` |
 | `status` | TEXT | yes | `'available'` |  |
 | `valid_until` | TEXT | yes |  |  |
-| `booking_id` | INTEGER | yes |  |  |
-| `attempt_id` | INTEGER | yes |  | → `pciworld_attempts` *(inferred)* |
+| `booking_id` | INTEGER | yes |  | → `exam_bookings` *(inferred)* |
+| `attempt_id` | INTEGER | yes |  | → `exam_attempts` *(inferred)* |
 | `created_at` | TEXT | yes | `datetime('now')` |  |
-| `authorization_id` | INTEGER | yes |  |  |
+| `authorization_id` | INTEGER | yes |  | → `exam_authorizations` *(inferred)* |
 | `route_key` | TEXT | yes |  |  |
 
 **Indexes:** `ix_entitlements_booking`, `ix_entitlements_user`, `ux_entitlement_payment` (unique)
@@ -2111,7 +2111,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `attempt_id` | INTEGER | no |  | → `pciworld_attempts` *(inferred)* |
+| `attempt_id` | INTEGER | no |  | → `exam_attempts` *(inferred)* |
 | `user_id` | INTEGER | yes |  | → `users` *(inferred)* |
 | `kind` | TEXT | yes |  |  |
 | `mime` | TEXT | yes | `'image/jpeg'` |  |
@@ -2129,7 +2129,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `authorization_id` | INTEGER | yes |  |  |
+| `authorization_id` | INTEGER | yes |  | → `exam_authorizations` *(inferred)* |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
 | `certification_id` | INTEGER | yes | `1` | → `certifications` *(inferred)* |
 | `previous_deadline` | TEXT | yes |  |  |
@@ -2154,9 +2154,9 @@ guide's data-access section.
 | `id` | INTEGER | yes |  | PK |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
 | `certification_id` | INTEGER | yes | `1` | → `certifications` *(inferred)* |
-| `attempt_id` | INTEGER | yes |  | → `pciworld_attempts` *(inferred)* |
-| `booking_id` | INTEGER | yes |  |  |
-| `authorization_id` | INTEGER | yes |  |  |
+| `attempt_id` | INTEGER | yes |  | → `exam_attempts` *(inferred)* |
+| `booking_id` | INTEGER | yes |  | → `exam_bookings` *(inferred)* |
+| `authorization_id` | INTEGER | yes |  | → `exam_authorizations` *(inferred)* |
 | `category` | TEXT | yes |  |  |
 | `occurred_at` | TEXT | yes |  |  |
 | `student_explanation` | TEXT | yes |  |  |
@@ -2185,8 +2185,8 @@ guide's data-access section.
 | `code` | TEXT | yes |  |  |
 | `code_hash` | TEXT | no |  |  |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
-| `booking_id` | INTEGER | yes |  |  |
-| `attempt_id` | INTEGER | yes |  | → `pciworld_attempts` *(inferred)* |
+| `booking_id` | INTEGER | yes |  | → `exam_bookings` *(inferred)* |
+| `attempt_id` | INTEGER | yes |  | → `exam_attempts` *(inferred)* |
 | `expires_at` | TEXT | yes |  |  |
 | `redeemed_at` | TEXT | yes |  |  |
 | `created_at` | TEXT | yes | `datetime('now')` |  |
@@ -2199,7 +2199,7 @@ guide's data-access section.
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
-| `booking_id` | INTEGER | yes |  |  |
+| `booking_id` | INTEGER | yes |  | → `exam_bookings` *(inferred)* |
 | `camera` | INTEGER | yes | `0` |  |
 | `microphone` | INTEGER | yes | `0` |  |
 | `network` | INTEGER | yes | `0` |  |
@@ -2217,8 +2217,8 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `booking_id` | INTEGER | yes |  |  |
-| `authorization_id` | INTEGER | yes |  |  |
+| `booking_id` | INTEGER | yes |  | → `exam_bookings` *(inferred)* |
+| `authorization_id` | INTEGER | yes |  | → `exam_authorizations` *(inferred)* |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
 | `certification_id` | INTEGER | yes | `1` | → `certifications` *(inferred)* |
 | `previous_scheduled_at` | TEXT | yes |  |  |
@@ -2586,7 +2586,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `agreement_id` | INTEGER | no |  |  |
+| `agreement_id` | INTEGER | no |  | → `partner_agreements` *(inferred)* |
 | `partner_id` | INTEGER | no |  |  |
 | `certification_id` | INTEGER | yes |  | → `certifications` *(inferred)* |
 | `route_key` | VARCHAR(40) | yes |  |  |
@@ -2613,8 +2613,8 @@ guide's data-access section.
 | `txn_ref` | VARCHAR(32) | yes |  |  |
 | `dedupe_key` | VARCHAR(120) | no |  |  |
 | `partner_id` | INTEGER | no |  |  |
-| `agreement_id` | INTEGER | yes |  |  |
-| `commission_rule_id` | INTEGER | yes |  |  |
+| `agreement_id` | INTEGER | yes |  | → `partner_agreements` *(inferred)* |
+| `commission_rule_id` | INTEGER | yes |  | → `partner_commission_rules` *(inferred)* |
 | `discount_code_id` | INTEGER | yes |  | → `discount_codes` *(inferred)* |
 | `code_redemption_id` | INTEGER | yes |  | → `code_redemptions` *(inferred)* |
 | `payment_id` | INTEGER | yes |  | → `payments` *(inferred)* |
@@ -2649,7 +2649,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `dispute_id` | INTEGER | no |  |  |
+| `dispute_id` | INTEGER | no |  | → `partner_disputes` *(inferred)* |
 | `author_type` | VARCHAR(12) | no |  |  |
 | `author_id` | INTEGER | yes |  | → `users` *(inferred)* |
 | `body` | TEXT | no |  |  |
@@ -2666,7 +2666,7 @@ guide's data-access section.
 | `dispute_no` | VARCHAR(32) | no |  |  |
 | `partner_id` | INTEGER | no |  |  |
 | `transaction_id` | INTEGER | yes |  |  |
-| `settlement_id` | INTEGER | yes |  |  |
+| `settlement_id` | INTEGER | yes |  | → `partner_settlements` *(inferred)* |
 | `category` | VARCHAR(32) | no | `'other'` |  |
 | `subject` | VARCHAR(200) | no |  |  |
 | `detail` | TEXT | yes |  |  |
@@ -2741,7 +2741,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `settlement_id` | INTEGER | no |  |  |
+| `settlement_id` | INTEGER | no |  | → `partner_settlements` *(inferred)* |
 | `transaction_id` | INTEGER | no |  |  |
 | `amount_allocated_minor` | INTEGER | no | `0` |  |
 | `created_at` | TEXT | yes | `datetime('now')` |  |
@@ -2910,7 +2910,7 @@ guide's data-access section.
 | `declaration` | INTEGER | yes | `0` |  |
 | `status` | TEXT | no | `'pending_review'` |  |
 | `proposed_tier` | TEXT | yes |  |  |
-| `partner_id` | INTEGER | yes |  |  |
+| `partner_id` | INTEGER | yes |  | → `training_partners` *(inferred)* |
 | `decided_by` | INTEGER | yes |  |  |
 | `decided_at` | TEXT | yes |  |  |
 | `admin_note` | TEXT | yes |  |  |
@@ -2984,7 +2984,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `attempt_id` | INTEGER | no |  | → `pciworld_attempts` *(inferred)* |
+| `attempt_id` | INTEGER | no |  | → `simulation_attempts` *(inferred)* |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
 | `event_type` | VARCHAR(32) | no |  |  |
 | `period` | INTEGER | yes | `0` |  |
@@ -2999,7 +2999,7 @@ guide's data-access section.
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
-| `scenario_id` | INTEGER | no |  |  |
+| `scenario_id` | INTEGER | no |  | → `simulation_scenarios` *(inferred)* |
 | `scenario_version` | INTEGER | yes | `1` |  |
 | `mode` | VARCHAR(16) | no | `'training'` |  |
 | `status` | VARCHAR(24) | no | `'in_progress'` |  |
@@ -3021,7 +3021,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `attempt_id` | INTEGER | no |  | → `pciworld_attempts` *(inferred)* |
+| `attempt_id` | INTEGER | no |  | → `simulation_attempts` *(inferred)* |
 | `user_id` | INTEGER | no |  | → `users` *(inferred)* |
 | `competency` | VARCHAR(48) | no |  |  |
 | `score` | REAL | yes |  |  |
@@ -3052,7 +3052,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `scenario_id` | INTEGER | no |  |  |
+| `scenario_id` | INTEGER | no |  | → `simulation_scenarios` *(inferred)* |
 | `version` | INTEGER | no |  |  |
 | `config_json` | TEXT | yes |  |  |
 | `created_at` | TEXT | yes | `datetime('now')` |  |
@@ -3193,8 +3193,8 @@ guide's data-access section.
 
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
-| `post_id` | INTEGER | no |  | PK |
-| `tag_id` | INTEGER | no |  | PK |
+| `post_id` | INTEGER | no |  | PK · → `blog_posts` *(inferred)* |
+| `tag_id` | INTEGER | no |  | PK · → `blog_tags` *(inferred)* |
 
 **Indexes:** `ix_blog_post_tags_tag`
 
@@ -3203,7 +3203,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `post_id` | INTEGER | no |  |  |
+| `post_id` | INTEGER | no |  | → `blog_posts` *(inferred)* |
 | `version` | INTEGER | no |  |  |
 | `status_at` | VARCHAR(24) | yes |  |  |
 | `snapshot_json` | TEXT | yes |  |  |
@@ -3229,7 +3229,7 @@ guide's data-access section.
 | `featured_image` | TEXT | yes |  |  |
 | `featured_image_alt` | TEXT | yes |  |  |
 | `social_image` | TEXT | yes |  |  |
-| `author_id` | INTEGER | yes |  | → `users` *(inferred)* |
+| `author_id` | INTEGER | yes |  | → `blog_authors` *(inferred)* |
 | `reviewer_id` | INTEGER | yes |  | → `users` *(inferred)* |
 | `editor_id` | INTEGER | yes |  |  |
 | `category_id` | INTEGER | yes |  |  |
@@ -3281,7 +3281,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `post_id` | INTEGER | no |  |  |
+| `post_id` | INTEGER | no |  | → `blog_posts` *(inferred)* |
 | `stage` | VARCHAR(24) | no |  |  |
 | `decision` | VARCHAR(16) | yes |  |  |
 | `reviewer_id` | INTEGER | yes |  | → `users` *(inferred)* |
@@ -3942,7 +3942,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `campaign_id` | INTEGER | yes |  |  |
+| `campaign_id` | INTEGER | yes |  | → `mkt_campaigns` *(inferred)* |
 | `requested_amount` | DECIMAL(12,2) | yes |  |  |
 | `currency` | VARCHAR(8) | yes |  |  |
 | `reason` | TEXT | yes |  |  |
@@ -3959,7 +3959,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `platform_campaign_id` | INTEGER | yes |  |  |
+| `platform_campaign_id` | INTEGER | yes |  | → `mkt_platform_campaigns` *(inferred)* |
 | `platform_code` | VARCHAR(40) | yes |  |  |
 | `day` | TEXT | yes |  |  |
 | `impressions` | INTEGER | yes | `0` |  |
@@ -3990,8 +3990,8 @@ guide's data-access section.
 | `audience_summary` | TEXT | yes |  |  |
 | `geography` | TEXT | yes |  |  |
 | `language` | VARCHAR(10) | yes |  |  |
-| `landing_page_id` | INTEGER | yes |  |  |
-| `promotion_id` | INTEGER | yes |  |  |
+| `landing_page_id` | INTEGER | yes |  | → `mkt_landing_pages` *(inferred)* |
+| `promotion_id` | INTEGER | yes |  | → `mkt_promotions` *(inferred)* |
 | `start_date` | TEXT | yes |  |  |
 | `end_date` | TEXT | yes |  |  |
 | `total_budget` | DECIMAL(12,2) | yes | `0` |  |
@@ -4019,7 +4019,7 @@ guide's data-access section.
 | `required_permission` | TEXT | yes |  |  |
 | `required_account_type` | TEXT | yes |  |  |
 | `status` | VARCHAR(40) | no | `'provider_approval_required'` |  |
-| `connection_id` | INTEGER | yes |  |  |
+| `connection_id` | INTEGER | yes |  | → `mkt_connections` *(inferred)* |
 | `limitation` | TEXT | yes |  |  |
 | `operator_action` | TEXT | yes |  |  |
 | `last_tested_at` | TEXT | yes |  |  |
@@ -4068,17 +4068,17 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `campaign_id` | INTEGER | yes |  |  |
-| `connection_id` | INTEGER | yes |  |  |
+| `campaign_id` | INTEGER | yes |  | → `mkt_campaigns` *(inferred)* |
+| `connection_id` | INTEGER | yes |  | → `mkt_connections` *(inferred)* |
 | `name` | TEXT | no |  |  |
 | `objective` | TEXT | yes |  |  |
 | `sender_identity` | TEXT | yes |  |  |
 | `intro_message` | TEXT | yes |  |  |
 | `steps_json` | TEXT | yes |  |  |
 | `buttons_json` | TEXT | yes |  |  |
-| `audience_id` | INTEGER | yes |  |  |
-| `landing_page_id` | INTEGER | yes |  |  |
-| `lead_form_id` | INTEGER | yes |  |  |
+| `audience_id` | INTEGER | yes |  | → `mkt_audiences` *(inferred)* |
+| `landing_page_id` | INTEGER | yes |  | → `mkt_landing_pages` *(inferred)* |
+| `lead_form_id` | INTEGER | yes |  | → `mkt_lead_forms` *(inferred)* |
 | `daily_budget` | DECIMAL(12,2) | yes |  |  |
 | `lifetime_budget` | DECIMAL(12,2) | yes |  |  |
 | `start_date` | TEXT | yes |  |  |
@@ -4097,8 +4097,8 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `conversion_id` | INTEGER | yes |  |  |
-| `campaign_id` | INTEGER | yes |  |  |
+| `conversion_id` | INTEGER | yes |  | → `mkt_conversions` *(inferred)* |
+| `campaign_id` | INTEGER | yes |  | → `mkt_campaigns` *(inferred)* |
 | `user_ref` | TEXT | yes |  |  |
 | `value` | DECIMAL(12,2) | yes |  |  |
 | `currency` | VARCHAR(8) | yes |  |  |
@@ -4144,7 +4144,7 @@ guide's data-access section.
 | `utm_json` | TEXT | yes |  |  |
 | `platform_scope` | TEXT | yes |  |  |
 | `certification_id` | INTEGER | yes |  | → `certifications` *(inferred)* |
-| `promotion_id` | INTEGER | yes |  |  |
+| `promotion_id` | INTEGER | yes |  | → `mkt_promotions` *(inferred)* |
 | `language` | VARCHAR(10) | yes |  |  |
 | `approval_status` | VARCHAR(30) | yes | `'draft'` |  |
 | `provider_review_status` | TEXT | yes |  |  |
@@ -4172,7 +4172,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `connection_id` | INTEGER | yes |  |  |
+| `connection_id` | INTEGER | yes |  | → `mkt_connections` *(inferred)* |
 | `property` | TEXT | no |  |  |
 | `verified` | INTEGER | yes | `0` |  |
 | `last_synced_at` | TEXT | yes |  |  |
@@ -4237,7 +4237,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `platform_campaign_id` | INTEGER | yes |  |  |
+| `platform_campaign_id` | INTEGER | yes |  | → `mkt_platform_campaigns` *(inferred)* |
 | `list_name` | TEXT | yes |  |  |
 | `keyword` | TEXT | no |  |  |
 | `match_type` | VARCHAR(16) | yes |  |  |
@@ -4255,14 +4255,14 @@ guide's data-access section.
 | `name` | TEXT | no |  |  |
 | `url` | TEXT | yes |  |  |
 | `certification_id` | INTEGER | yes |  | → `certifications` *(inferred)* |
-| `promotion_id` | INTEGER | yes |  |  |
+| `promotion_id` | INTEGER | yes |  | → `mkt_promotions` *(inferred)* |
 | `headline` | TEXT | yes |  |  |
 | `description` | TEXT | yes |  |  |
 | `cta` | TEXT | yes |  |  |
 | `application_link` | TEXT | yes |  |  |
 | `noindex` | INTEGER | yes | `0` |  |
 | `utm_json` | TEXT | yes |  |  |
-| `conversion_id` | INTEGER | yes |  |  |
+| `conversion_id` | INTEGER | yes |  | → `mkt_conversions` *(inferred)* |
 | `status` | VARCHAR(24) | yes | `'draft'` |  |
 | `valid_from` | TEXT | yes |  |  |
 | `valid_to` | TEXT | yes |  |  |
@@ -4276,7 +4276,7 @@ guide's data-access section.
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
 | `platform_code` | VARCHAR(40) | yes |  |  |
-| `connection_id` | INTEGER | yes |  |  |
+| `connection_id` | INTEGER | yes |  | → `mkt_connections` *(inferred)* |
 | `name` | TEXT | no |  |  |
 | `provider_form_id` | TEXT | yes |  |  |
 | `fields_json` | TEXT | yes |  |  |
@@ -4299,8 +4299,8 @@ guide's data-access section.
 | `company` | TEXT | yes |  |  |
 | `job_title` | TEXT | yes |  |  |
 | `source_platform` | VARCHAR(40) | yes |  |  |
-| `campaign_id` | INTEGER | yes |  |  |
-| `platform_campaign_id` | INTEGER | yes |  |  |
+| `campaign_id` | INTEGER | yes |  | → `mkt_campaigns` *(inferred)* |
+| `platform_campaign_id` | INTEGER | yes |  | → `mkt_platform_campaigns` *(inferred)* |
 | `ad_ref` | TEXT | yes |  |  |
 | `form_id` | INTEGER | yes |  |  |
 | `certification_interest` | TEXT | yes |  |  |
@@ -4331,7 +4331,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `lead_id` | INTEGER | yes |  |  |
+| `lead_id` | INTEGER | yes |  | → `mkt_leads` *(inferred)* |
 | `prospect_name` | TEXT | yes |  |  |
 | `profile_url` | TEXT | yes |  |  |
 | `suggested_message` | TEXT | yes |  |  |
@@ -4350,8 +4350,8 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `campaign_id` | INTEGER | yes |  |  |
-| `connection_id` | INTEGER | yes |  |  |
+| `campaign_id` | INTEGER | yes |  | → `mkt_campaigns` *(inferred)* |
+| `connection_id` | INTEGER | yes |  | → `mkt_connections` *(inferred)* |
 | `post_type` | VARCHAR(24) | yes | `'text'` |  |
 | `body` | TEXT | yes |  |  |
 | `article_title` | TEXT | yes |  |  |
@@ -4383,9 +4383,9 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `campaign_id` | INTEGER | no |  |  |
+| `campaign_id` | INTEGER | no |  | → `mkt_campaigns` *(inferred)* |
 | `platform_code` | VARCHAR(40) | no |  |  |
-| `connection_id` | INTEGER | yes |  |  |
+| `connection_id` | INTEGER | yes |  | → `mkt_connections` *(inferred)* |
 | `provider_campaign_id` | TEXT | yes |  |  |
 | `name` | TEXT | yes |  |  |
 | `objective` | TEXT | yes |  |  |
@@ -4394,9 +4394,9 @@ guide's data-access section.
 | `lifetime_budget` | DECIMAL(12,2) | yes |  |  |
 | `bid_strategy` | TEXT | yes |  |  |
 | `targeting_json` | TEXT | yes |  |  |
-| `landing_page_id` | INTEGER | yes |  |  |
-| `lead_form_id` | INTEGER | yes |  |  |
-| `conversion_id` | INTEGER | yes |  |  |
+| `landing_page_id` | INTEGER | yes |  | → `mkt_landing_pages` *(inferred)* |
+| `lead_form_id` | INTEGER | yes |  | → `mkt_lead_forms` *(inferred)* |
+| `conversion_id` | INTEGER | yes |  | → `mkt_conversions` *(inferred)* |
 | `status` | VARCHAR(30) | yes | `'draft'` |  |
 | `provider_status` | TEXT | yes |  |  |
 | `approval_status` | VARCHAR(30) | yes | `'draft'` |  |
@@ -4442,7 +4442,7 @@ guide's data-access section.
 | `languages` | TEXT | yes |  |  |
 | `usage_limit` | INTEGER | yes |  |  |
 | `per_user_limit` | INTEGER | yes |  |  |
-| `landing_page_id` | INTEGER | yes |  |  |
+| `landing_page_id` | INTEGER | yes |  | → `mkt_landing_pages` *(inferred)* |
 | `status` | VARCHAR(24) | yes | `'draft'` |  |
 | `approval_status` | VARCHAR(30) | yes | `'draft'` |  |
 | `created_by` | INTEGER | yes |  |  |
@@ -4489,7 +4489,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `account_id` | INTEGER | yes |  |  |
+| `account_id` | INTEGER | yes |  | → `social_accounts` *(inferred)* |
 | `actor_id` | INTEGER | yes |  | → `users` *(inferred)* |
 | `action` | VARCHAR(40) | no |  |  |
 | `detail` | TEXT | yes |  |  |
@@ -4504,7 +4504,7 @@ guide's data-access section.
 | `id` | INTEGER | yes |  | PK |
 | `post_id` | INTEGER | no |  |  |
 | `platform_key` | VARCHAR(48) | no |  |  |
-| `account_id` | INTEGER | yes |  |  |
+| `account_id` | INTEGER | yes |  | → `social_accounts` *(inferred)* |
 | `text` | TEXT | yes |  |  |
 | `link` | TEXT | yes |  |  |
 | `hashtags` | TEXT | yes |  |  |
@@ -4527,7 +4527,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `account_id` | INTEGER | no |  |  |
+| `account_id` | INTEGER | no |  | → `social_accounts` *(inferred)* |
 | `status` | VARCHAR(16) | yes |  |  |
 | `http_code` | INTEGER | yes |  |  |
 | `detail` | TEXT | yes |  |  |
@@ -4585,7 +4585,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `session_id` | INTEGER | no |  | → `pciworld_sessions` *(inferred)* |
+| `session_id` | INTEGER | no |  | → `chat_sessions` *(inferred)* |
 | `sender` | TEXT | no |  |  |
 | `body` | TEXT | no |  |  |
 | `created_at` | TEXT | yes | `datetime('now')` |  |
@@ -4673,7 +4673,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `outbox_id` | INTEGER | no |  |  |
+| `outbox_id` | INTEGER | no |  | → `comm_outbox` *(inferred)* |
 | `attempt` | INTEGER | yes |  |  |
 | `status` | VARCHAR(20) | yes |  |  |
 | `detail` | TEXT | yes |  |  |
@@ -4686,7 +4686,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `conversation_id` | INTEGER | no |  |  |
+| `conversation_id` | INTEGER | no |  | → `comm_conversations` *(inferred)* |
 | `direction` | VARCHAR(8) | yes | `'in'` |  |
 | `channel` | VARCHAR(16) | yes |  |  |
 | `from_addr` | TEXT | yes |  |  |
@@ -4710,8 +4710,8 @@ guide's data-access section.
 | `trigger_code` | VARCHAR(80) | yes |  |  |
 | `category` | VARCHAR(24) | yes | `'operational'` |  |
 | `user_id` | INTEGER | yes |  | → `users` *(inferred)* |
-| `conversation_id` | INTEGER | yes |  |  |
-| `campaign_id` | INTEGER | yes |  |  |
+| `conversation_id` | INTEGER | yes |  | → `comm_conversations` *(inferred)* |
+| `campaign_id` | INTEGER | yes |  | → `comm_campaigns` *(inferred)* |
 | `to_email` | TEXT | yes |  |  |
 | `to_phone` | TEXT | yes |  |  |
 | `sender_profile_key` | VARCHAR(60) | yes |  |  |
@@ -5448,7 +5448,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `application_id` | INTEGER | no |  | → `pciworld_applications` *(inferred)* |
+| `application_id` | INTEGER | no |  | → `honorary_applications` *(inferred)* |
 | `doc_kind` | TEXT | yes | `'supporting'` |  |
 | `filename` | TEXT | yes |  |  |
 | `mime` | TEXT | yes |  |  |
@@ -5535,7 +5535,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `application_id` | INTEGER | no |  | → `pciworld_applications` *(inferred)* |
+| `application_id` | INTEGER | no |  | → `honorary_applications` *(inferred)* |
 | `doc_kind` | VARCHAR(20) | yes |  |  |
 | `filename` | TEXT | yes |  |  |
 | `mime` | VARCHAR(80) | yes |  |  |
@@ -5600,7 +5600,7 @@ guide's data-access section.
 | Column | Type | Null | Default | Key |
 |---|---|---|---|---|
 | `id` | INTEGER | yes |  | PK |
-| `application_id` | INTEGER | no |  | → `pciworld_applications` *(inferred)* |
+| `application_id` | INTEGER | no |  | → `job_applications` *(inferred)* |
 | `kind` | VARCHAR(16) | yes | `'note'` |  |
 | `from_status` | VARCHAR(24) | yes |  |  |
 | `to_status` | VARCHAR(24) | yes |  |  |
