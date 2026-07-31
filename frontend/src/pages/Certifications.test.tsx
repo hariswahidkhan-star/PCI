@@ -90,11 +90,13 @@ describe('Certifications', () => {
     })
   })
 
-  // Drives the calendar + slot-grid scheduling window: pick the last bookable day of the
-  // displayed month (always fully in range against the 2027 deadline), then its LAST available
-  // slot — the last enabled day always offers at least one slot, while a named time would flake
-  // whenever the wall clock has already passed it on a day that still has later slots.
+  // Drives the calendar + slot-grid scheduling window. Always steps to the NEXT month first:
+  // in the opening month the 2-hour minimum can disable today's remaining slots — and, late on
+  // the last day of a month, every remaining day — so picking from the displayed month is
+  // time-of-day dependent. Every day of a following month is bookable (still far inside the
+  // 2027 deadline), which makes the pick deterministic whatever the wall clock says.
   const pickDayAndSlot = async (user: ReturnType<typeof userEvent.setup>) => {
+    await user.click(screen.getByRole('button', { name: 'Next month' }))
     const days = document.querySelectorAll<HTMLButtonElement>('.schedm-day:not([disabled])')
     expect(days.length).toBeGreaterThan(0)
     await user.click(days[days.length - 1])
@@ -112,8 +114,9 @@ describe('Certifications', () => {
 
       const confirm = await screen.findByRole('button', { name: 'Confirm slot' })
       expect(confirm).toBeDisabled()
+      await user.click(screen.getByRole('button', { name: 'Next month' }))
       const days = document.querySelectorAll<HTMLButtonElement>('.schedm-day:not([disabled])')
-      expect(days.length).toBeGreaterThan(0)
+      expect(days.length).toBeGreaterThan(27) // a whole future month: every day bookable
       await user.click(days[days.length - 1])
       expect(confirm).toBeDisabled() // a day alone is not enough
       const slots = document.querySelectorAll<HTMLButtonElement>('.schedm-slot')
