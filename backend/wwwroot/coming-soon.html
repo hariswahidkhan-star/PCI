@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="color-scheme" content="dark"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Project Controls Institute — Launching soon</title>
+<meta name="description" content="The Project Controls Institute is launching soon — one rigorous standard uniting project controls, cost engineering and project finance, with governed AI throughout."/>
+<meta name="theme-color" content="#0E1525"/>
+<link rel="icon" href="favicon.ico" sizes="any"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<style>
+/* Brand faces, self-hosted by the platform; system fallbacks keep the page whole if hosted alone. */
+@font-face{font-family:'Archivo';font-style:normal;font-weight:700 900;font-display:swap;src:url(/assets/fonts/archivo-latin.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;src:url(/assets/fonts/inter-latin.woff2) format('woff2')}
+
+:root{
+  --noir:#0E1525; --ink:#0F172A; --paper:#FFFFFF;
+  --blue:#1D4ED8; --sky:#3B82F6; --crimson:#C13329;
+  --mist:#8B96AB; --faint:rgba(255,255,255,.06); --line:rgba(255,255,255,.12);
+  --display:'Archivo',system-ui,sans-serif; --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:var(--sans); color:var(--paper); background:var(--noir);
+  -webkit-font-smoothing:antialiased; line-height:1.62; overflow-x:hidden;
+}
+a{color:inherit}
+:focus-visible{outline:2.5px solid var(--sky);outline-offset:3px;border-radius:4px}
+
+/* ---------- backdrop: layered blooms + a faint engineering grid ---------- */
+.bg{position:fixed;inset:0;z-index:0;background:
+  radial-gradient(52% 44% at 82% -6%, rgba(59,130,246,.34), transparent 68%),
+  radial-gradient(46% 42% at -10% 108%, rgba(29,78,216,.22), transparent 66%),
+  linear-gradient(160deg,#101A31 0%, #0E1525 46%, #0B111E 100%);}
+.bg::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(72% 62% at 50% 34%, #000 38%, transparent 100%);
+          mask-image:radial-gradient(72% 62% at 50% 34%, #000 38%, transparent 100%);}
+/* an S-curve, drawn quietly across the page — the discipline's own signature */
+.curve{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1160px,140vw);height:auto;opacity:.5;pointer-events:none}
+
+/* ---------- layout ---------- */
+.page{position:relative;z-index:1;min-height:100vh;min-height:100svh;display:flex;flex-direction:column}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 28px}
+
+header{padding:34px 0 0}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.brand svg.mk{width:44px;height:44px;border-radius:10px;box-shadow:0 10px 30px -12px rgba(29,78,216,.55)}
+.brand .bt{display:flex;align-items:center;gap:12px}
+.brand .lp{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em}
+.brand .lp b{color:#fff}.brand .lp span{color:var(--sky);font-weight:700}
+.brand .bar{width:1px;height:30px;background:var(--line)}
+.brand .nm{font-size:11.5px;line-height:1.35;color:var(--mist);letter-spacing:.02em}
+
+main{flex:1;display:flex;align-items:center;padding:64px 0 56px}
+.hero{max-width:720px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;color:#B9C5DB;
+  border:1px solid var(--line);background:var(--faint);border-radius:999px;padding:9px 16px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#5FD0A0;
+  box-shadow:0 0 0 0 rgba(95,208,160,.5);animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(95,208,160,.45)}70%{box-shadow:0 0 0 11px rgba(95,208,160,0)}100%{box-shadow:0 0 0 0 rgba(95,208,160,0)}}
+
+h1{font-family:var(--display);font-weight:800;letter-spacing:-.025em;line-height:1.04;
+  font-size:clamp(38px,6vw,66px);margin:26px 0 0}
+h1 .end{color:var(--sky)}
+.lead{margin:22px 0 0;max-width:58ch;color:#C7D0E0;font-size:clamp(16px,1.6vw,18.5px)}
+.lead b{color:#fff;font-weight:600}
+
+.creed{margin:26px 0 0;display:flex;align-items:center;gap:14px;color:var(--mist);font-size:15px}
+.creed .rule{width:34px;height:2px;background:var(--crimson);flex:none}
+.creed em{color:#DEE5F1;font-style:italic}
+
+/* ---------- notify form ---------- */
+.notify{margin-top:38px;max-width:520px}
+.nf{display:flex;gap:10px;padding:7px;border:1px solid var(--line);border-radius:14px;
+  background:rgba(15,23,42,.55);backdrop-filter:blur(8px);
+  box-shadow:0 1px 2px rgba(0,0,0,.25),0 24px 60px -30px rgba(29,78,216,.45)}
+.nf input{flex:1;min-width:0;border:0;background:transparent;color:#fff;font:inherit;
+  font-size:15.5px;padding:12px 14px;outline:none}
+.nf input::placeholder{color:#6B7689}
+.nf button{border:0;cursor:pointer;font:inherit;font-weight:600;font-size:15px;color:#fff;
+  background:linear-gradient(135deg,#2563EB,#1D4ED8);border-radius:9px;padding:12px 22px;
+  transition:transform .18s cubic-bezier(.22,.61,.36,1),box-shadow .18s;white-space:nowrap}
+.nf button:hover{transform:translateY(-1px);box-shadow:0 12px 28px -12px rgba(37,99,235,.7)}
+.nf button:active{transform:translateY(0)}
+.nmsg{margin-top:11px;font-size:13.5px;color:var(--mist);min-height:20px}
+.nmsg.ok{color:#5FD0A0}.nmsg.err{color:#F2B07A}
+.nhint{margin-top:4px;font-size:13px;color:#5D6A82}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:22px 0 30px}
+.ft{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;justify-content:space-between;
+  font-size:13px;color:var(--mist)}
+.ft a{color:#B9C5DB;text-decoration:none;border-bottom:1px solid rgba(185,197,219,.35)}
+.ft a:hover{color:#fff;border-bottom-color:#fff}
+.ft .iso{display:inline-flex;align-items:center;gap:7px;letter-spacing:.06em;font-size:11.5px;text-transform:uppercase}
+
+/* ---------- entrance ---------- */
+@media (prefers-reduced-motion: no-preference){
+  .rise{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.22,.61,.36,1) forwards}
+  .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.26s}.d4{animation-delay:.36s}.d5{animation-delay:.46s}
+  @keyframes rise{to{opacity:1;transform:none}}
+}
+@media (max-width:640px){
+  header{padding-top:26px}
+  .brand .nm,.brand .bar{display:none}
+  main{padding:48px 0 44px}
+  .nf{flex-direction:column}
+  .nf button{padding:13px 22px}
+  .ft{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <svg class="curve" viewBox="0 0 1160 560" fill="none" aria-hidden="true">
+    <path d="M40 520 C 300 505, 420 420, 560 280 C 700 140, 830 70, 1120 44"
+      stroke="url(#cg)" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="1120" cy="44" r="5" fill="#3B82F6" opacity=".8"/>
+    <defs>
+      <linearGradient id="cg" x1="0" y1="560" x2="1160" y2="0" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#1D4ED8" stop-opacity="0"/>
+        <stop offset=".45" stop-color="#3B82F6" stop-opacity=".5"/>
+        <stop offset="1" stop-color="#60A5FA" stop-opacity=".9"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<div class="page">
+  <header class="wrap rise">
+    <a class="brand" href="/" aria-label="Project Controls Institute Global">
+      <svg class="mk" viewBox="0 0 512 512" role="img" aria-hidden="true">
+        <defs>
+          <linearGradient id="plate" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1E3A8A"/><stop offset=".55" stop-color="#15234F"/><stop offset="1" stop-color="#0F172A"/>
+          </linearGradient>
+          <radialGradient id="bloom" cx=".82" cy=".08" r=".9">
+            <stop offset="0" stop-color="#3B82F6" stop-opacity=".5"/><stop offset=".55" stop-color="#3B82F6" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="512" height="512" rx="112" fill="url(#plate)"/>
+        <rect width="512" height="512" rx="112" fill="url(#bloom)"/>
+        <g fill="#FFFFFF"><path d="M76.4 306V157.6h87.6q14 0 24.7 6.3 10.7 6.4 16.7 17.6 6 11.2 6 26.1 0 15.3-6.1 26.6-6.1 11.3-16.8 17.6-10.7 6.3-24.5 6.3h-39.9V306Zm47.7-82.6h23.9q7.6 0 11.3-3.9 3.8-3.9 3.8-11.4 0-5.2-1.6-8.5-1.6-3.4-5-5.1-3.3-1.7-8.5-1.7h-23.9Z"/><path d="M296.9 308.6q-25.2 0-42.4-8.6-17.1-8.7-25.9-25.8-8.7-17.2-8.7-42.4 0-38 19.5-57.4 19.5-19.4 57.5-19.4 21.6 0 37.6 7.2 16.1 7.2 25 21.5 8.8 14.2 8.8 34.9h-45.5q0-8.6-3-14.9-3-6.2-8.8-9.7-5.7-3.4-14.3-3.4-10.2 0-16.3 4.3-6.1 4.3-9 12.1-2.8 7.7-2.8 17.9v13.8q0 10.2 2.9 17.9 2.9 7.8 9 12.1 6 4.3 15.7 4.3 9.5 0 15.7-3.2 6.1-3.3 9.3-9.4 3.1-6.2 3.1-14.6h44q0 20.3-8.4 34.3-8.4 14-24.4 21.3-16 7.2-38.6 7.2Z"/><path d="M387.9 306V157.6h47.7V306Z"/></g>
+        <rect x="76.1" y="352" width="359.9" height="20" rx="10" fill="#C13329"/>
+      </svg>
+      <span class="bt">
+        <span class="lp"><b>PCI</b> <span>Global</span></span>
+        <span class="bar" aria-hidden="true"></span>
+        <span class="nm">Project Controls<br/>Institute Global, Inc.</span>
+      </span>
+    </a>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="hero">
+        <span class="eyebrow rise d1"><span class="dot" aria-hidden="true"></span> Launching soon</span>
+        <h1 class="rise d2">A new standard for the people who control projects<span class="end">.</span></h1>
+        <p class="lead rise d3">The <b>Project Controls Institute</b> is putting the final touches on its platform — one rigorous credential uniting planning, scheduling, cost engineering, earned value, forecasting and project finance, with governed AI built into every part. The full site opens here shortly.</p>
+        <div class="creed rise d4" role="doc-epigraph">
+          <span class="rule" aria-hidden="true"></span>
+          <span>AI proposes. <em>The professional disposes.</em></span>
+        </div>
+
+        <div class="notify rise d5">
+          <form class="nf" id="nform" novalidate>
+            <input id="nemail" type="email" name="email" autocomplete="email" inputmode="email"
+                   placeholder="you@organisation.com" aria-label="Email address"/>
+            <button type="submit">Notify me</button>
+          </form>
+          <div class="nmsg" id="nmsg" role="status" aria-live="polite"></div>
+          <div class="nhint">One email when we go live. No noise, ever.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap ft rise d5">
+      <span>© 2026 Project Controls Institute Global, Inc. · A Delaware Non-Stock Corporation</span>
+      <span class="iso" aria-label="Developed with reference to ISO/IEC 17024">
+        <svg width="13" height="13" fill="none" stroke="#8B96AB" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
+        Developed with reference to ISO/IEC 17024
+      </span>
+      <span><a href="mailto:hello@projectcontrolsinstitute.org">hello@projectcontrolsinstitute.org</a></span>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var f=document.getElementById('nform'),e=document.getElementById('nemail'),m=document.getElementById('nmsg');
+  function say(t,cls){m.textContent=t;m.className='nmsg'+(cls?' '+cls:'');}
+  f.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var v=(e.value||'').trim();
+    if(!v||v.indexOf('@')<1||v.indexOf('.')<2){say('Please enter a valid email address.','err');e.focus();return;}
+    say('Adding you to the list…');
+    fetch('/api/newsletter',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:v})})
+      .then(function(r){if(!r.ok)throw 0;return r.json();})
+      .then(function(){say('Thank you — we’ll let you know the moment we’re live.','ok');e.value='';})
+      .catch(function(){say('Thank you — you’re noted. You can also write to hello@projectcontrolsinstitute.org.','ok');e.value='';});
+  });
+})();
+</script>
+</body>
+</html>
