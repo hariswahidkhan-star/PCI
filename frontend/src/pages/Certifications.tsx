@@ -78,7 +78,14 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
   }
   const daySlots = (day: Date) => SLOT_TIMES.filter((s) => { const ms = slotMs(day, s); return ms >= minMs && ms <= maxMs })
 
-  const firstBookable = new Date(minMs)
+  // Open on the month of the first day that still has a bookable slot — late on the last day of a
+  // month, "now + 2 h" sits past the final slot time, and the month it falls in would render with
+  // zero clickable days.
+  const firstBookable = (() => {
+    const d = new Date(minMs)
+    const sameDay = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+    return daySlots(sameDay).length > 0 ? sameDay : new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)
+  })()
   const [month, setMonth] = useState(() => new Date(firstBookable.getFullYear(), firstBookable.getMonth(), 1))
   const [selDay, setSelDay] = useState<Date | null>(null)
   const [selSlot, setSelSlot] = useState<string | null>(null)

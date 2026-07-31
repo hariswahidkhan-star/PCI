@@ -5,22 +5,18 @@ import { captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
 
 const tinyPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
-/** Drive the portal's scheduling window (month calendar + slot grid): navigate from the initially
- * shown month (the month of now + 2 h) to the month of `daysAhead`, click that day, then the slot.
- * A slot `daysAhead` days out at 09:00 is always ≥ (24·daysAhead − 15) h away, so daysAhead = 4
- * and 5 both clear the seeded 72 h reschedule cutoff whatever the wall-clock time. */
+/** Drive the portal's scheduling window (month calendar + slot grid): find the day `daysAhead`
+ * days out — advancing months until it appears ENABLED, so this needs no clone of the window's
+ * own initial-month rule — click it, then the slot. A past day with the same number is disabled
+ * and therefore never matched. A slot `daysAhead` days out at 09:00 is always ≥ (24·daysAhead −
+ * 15) h away, so daysAhead = 4 and 5 both clear the seeded 72 h reschedule cutoff whatever the
+ * wall-clock time. */
 async function pickCalendarSlot(page: import('@playwright/test').Page, daysAhead: number, slot: string): Promise<void> {
-  const target = await page.evaluate((days) => {
-    const shown = new Date(Date.now() + 2 * 3_600_000)
-    const t = new Date(Date.now() + days * 86_400_000)
-    return {
-      day: t.getDate(),
-      monthSteps: (t.getFullYear() - shown.getFullYear()) * 12 + (t.getMonth() - shown.getMonth()),
-    }
-  }, daysAhead)
-  for (let i = 0; i < target.monthSteps; i += 1)
+  const targetDay = await page.evaluate((days) => new Date(Date.now() + days * 86_400_000).getDate(), daysAhead)
+  const dayButton = page.locator('.schedm-day:not([disabled])').filter({ hasText: new RegExp(`^${targetDay}$`) })
+  for (let hops = 0; hops < 2 && (await dayButton.count()) === 0; hops += 1)
     await page.getByRole('button', { name: 'Next month', exact: true }).click()
-  await page.locator('.schedm-day:not([disabled])').filter({ hasText: new RegExp(`^${target.day}$`) }).click()
+  await dayButton.click()
   await page.getByRole('button', { name: slot, exact: true }).click()
 }
 
