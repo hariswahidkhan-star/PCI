@@ -62,8 +62,7 @@ public static class SimLabSchema
         //    answer key — that stays derived from `given` at grade time). ──
         void AddCol(string table, string col, string ddl)
         {
-            var have = db.Columns(table);
-            if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            db.AddColumn(table, col, ddl);
         }
         AddCol("simulation_scenarios", "review_state", "review_state VARCHAR(24) NOT NULL DEFAULT 'draft'");
         AddCol("simulation_scenarios", "synthetic_declared", "synthetic_declared INTEGER DEFAULT 0");

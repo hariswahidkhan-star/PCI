@@ -26,7 +26,7 @@ public static class MarketingSchema
     // Add a column only if the table exists and lacks it (mirrors Migrate.cs's AddCol; MySQL + SQLite safe).
     static void AddCol(Db db, string table, string col, string ddl)
     {
-        try { var have = db.Columns(table); if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}"); }
+        try { db.AddColumn(table, col, ddl); }
         catch { /* best-effort; a fresh CREATE already includes the column */ }
     }
 
@@ -251,8 +251,7 @@ public static class MarketingSchema
         {
             try
             {
-                var have = db.Columns(table);
-                if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+                db.AddColumn(table, col, ddl);
             }
             catch { }
         }

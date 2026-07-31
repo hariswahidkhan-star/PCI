@@ -136,7 +136,6 @@ public static class ContributorSchema
 
     static void AddCol(Db db, string table, string col, string ddl)
     {
-        var have = db.Columns(table);
-        if (have.Count > 0 && !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+        db.AddColumn(table, col, ddl);
     }
 }

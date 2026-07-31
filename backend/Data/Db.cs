@@ -494,4 +494,45 @@ public sealed class Db
         }
         return set;
     }
+
+    /// <summary>
+    /// Add an upgrade column if the table lacks it — the additive migration every schema installer
+    /// needs, in one place, and safe when two of them run at once.
+    ///
+    /// EVERY INSTALLER HAD ITS OWN COPY OF THIS, and every copy was check-then-act:
+    ///
+    ///     var have = db.Columns(table);
+    ///     if (have.Count > 0 &amp;&amp; !have.Contains(col)) db.Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+    ///
+    /// Two callers both read the column as missing and both ALTER; the loser dies on
+    /// `duplicate column name` (SQLite) / `Duplicate column name` (MySQL). That is not hypothetical:
+    /// the runtime installers run at every boot, so a rolling deploy — where the replacement
+    /// instance starts before the old one stops — has two processes doing this against one database.
+    /// Each installer is wrapped in a try/catch that logs and continues, so the loser does not crash;
+    /// it ABANDONS THE REST OF ITS UPGRADE and the app serves with a half-migrated schema, failing
+    /// later at a query far from the cause.
+    ///
+    /// Neither SQLite nor MySQL 8 has ADD COLUMN IF NOT EXISTS, so the only way to distinguish
+    /// "somebody beat me to it" from a genuinely malformed DDL is to look afterwards: the failure is
+    /// swallowed ONLY when the column is present on re-read. A bad type or a wrong table still
+    /// throws, which is what makes this different from wrapping the ALTER in a bare catch.
+    /// </summary>
+    /// <returns>True if this call added the column; false if it was already there or another caller added it.</returns>
+    public bool AddColumn(string table, string column, string ddl)
+    {
+        var have = Columns(table);
+        // Count == 0 means the table does not exist yet — its CREATE TABLE carries the column, so
+        // there is nothing to upgrade. Preserved from the copies this replaces.
+        if (have.Count == 0 || have.Contains(column)) return false;
+        try
+        {
+            Exec($"ALTER TABLE {table} ADD COLUMN {ddl}");
+            return true;
+        }
+        catch
+        {
+            if (!Columns(table).Contains(column)) throw;
+            return false;
+        }
+    }
 }

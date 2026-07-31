@@ -293,12 +293,31 @@ if (builder.Environment.IsDevelopment()
     && double.TryParse(Environment.GetEnvironmentVariable("E2E_EXAM_OPEN_BEFORE_MINUTES"), out var e2eOpenBefore)
     && e2eOpenBefore > 0)
     Settings.Put(db, "exam_open_before_minutes", e2eOpenBefore.ToString(System.Globalization.CultureInfo.InvariantCulture));
-try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
-try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
-try { PCI.Backend.Data.SimLabSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[simlab schema] {e.Message}"); }
-try { PCI.Backend.Data.TemplatesSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[templates schema] {e.Message}"); }
-try { PCI.Backend.Data.WorldSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[pciworld schema] {e.Message}"); }
-try { PCI.Backend.Data.FinanceSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[finance schema] {e.Message}"); }
+// THE RUNTIME INSTALLERS RUN UNDER THE SAME LOCK Migrate.Run USES.
+//
+// These six do exactly what Migrate.Run does — create tables, add upgrade columns, seed rows — but
+// they used to run outside its cross-instance lock. A zero-downtime deploy starts the replacement
+// instance before stopping the old one, so on any deploy two processes execute this block against
+// one database at the same time, and every check-then-act inside it can be lost: two callers read a
+// column as missing and both ALTER, or both read a seed table as empty and both insert.
+//
+// The loser does not crash — each line below catches and continues — which is what made this
+// dangerous rather than noisy. It abandons the REST of that installer, so the deployment comes up
+// with a half-migrated schema and fails later at some query far from the cause.
+//
+// The lock makes the block exclusive; the per-installer try/catch is kept inside it so one
+// installer failing still does not stop the others. Db.AddColumn and the idempotent seeds remain
+// the second line of defence, for callers that are not the boot path — the test harness installs
+// these directly, without a lock, from many threads.
+db.WithMigrationLock(() =>
+{
+    try { PCI.Backend.Data.CommsSeed.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[comms seed] {e.Message}"); }
+    try { PCI.Backend.Data.MarketingSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[marketing schema] {e.Message}"); }
+    try { PCI.Backend.Data.SimLabSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[simlab schema] {e.Message}"); }
+    try { PCI.Backend.Data.TemplatesSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[templates schema] {e.Message}"); }
+    try { PCI.Backend.Data.WorldSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[pciworld schema] {e.Message}"); }
+    try { PCI.Backend.Data.FinanceSchema.Ensure(db); } catch (Exception e) { Console.Error.WriteLine($"[finance schema] {e.Message}"); }
+});
 // Runtime installers run after Migrate.Run and own several financial tables. Validate/upgrade only
 // after all installers have run; a non-local deployment must not start with inexact money columns.
 Migrate.EnsureMoneyDecimals(db, failOnError: nonLocalPosture);
