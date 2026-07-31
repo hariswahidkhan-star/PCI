@@ -345,16 +345,159 @@ annual revenue decision the sponsor will always want to resolve one way.
 
 ---
 
-## Capstones Three and Four
+## Capstone Three — Helios Flats: the ratio that is not what it says
 
-The remaining two new-project capstones — the **solar-plus-storage independent power project** and the
-**hyperscale data centre** — are **not yet written**, and are listed in this volume's plan and in
-`CORPUS_GATE_REPORT.md` as outstanding. Each needs its own verified arithmetic on a risk shape neither
-Kestrel nor Aurora Ridge exercises: a contracted price against an uncertain *resource*, with dispatch
-and degradation, for the IPP; and a short-lived asset whose entire case turns on **re-contracting**
-rather than on operations, for the data centre. Neither may reuse the figures above, because the point
-of each is that a different risk shape puts a different quantity in control — which is exactly what
-G.2.3 demonstrates by producing a four-fold gearing difference from one change of revenue basis.
+Aurora Ridge's revenue risk was **demand**, and the lender priced it in the required ratio: 1.40×
+instead of 1.30×. Helios Flats has a **contracted price** — so on the face of it the credit is far
+better, and the market sizes it at **1.20×**. A leader who reads those two numbers side by side and
+concludes that a solar project is the more bankable proposition has made the most expensive mistake
+available in this volume, and this capstone exists to show why.
+
+**The asset.** A 25-year fixed-price power purchase agreement at **42.00 per MWh** for energy
+delivered from a 200 MW solar plant with a co-located 50 MW / 200 MWh battery. Capital expenditure
+**USD 180,000,000**, of which **140,000,000** is the solar plant and **40,000,000** the battery. P50
+first-year generation **460,000 MWh**, so P50 revenue is **19,320,000**. Operations and maintenance
+**4,320,000** a year and a reserve contribution of **1,000,000**, both essentially fixed, so P50
+first-year **`CFADS` = 14,000,000**. Senior debt at **6.5 %** over an **18-year** tenor. Interannual
+resource variability **σ = 7.0 %**; module and system degradation **0.5 % a year**. *(Fictitious
+project. Cash taxes excluded as in Capstone Two; the treatment is jurisdiction-specific.)*
+
+### G.3.1 The risk is priced in the quantity, not the ratio
+
+Nobody guarantees the weather. A lender therefore does not size on the P50 energy estimate — the
+central case — but on a **one-year exceedance probability**, conventionally P90: the level the resource
+beats nine years in ten. For a normally distributed annual yield that is `P50 × (1 − z₉₀σ)` with
+`z₉₀ = 1.2816`:
+
+```
+P90 factor = 1 - 1.2816 x 0.070 = 0.910288
+P90 energy = 460,000 x 0.910288 = 418,732.5 MWh
+P90 revenue = 418,732.5 x 42.00 = 17,586,764.16
+```
+
+The energy falls **8.9712 %**. `CFADS` falls **12.3803 %**, to **12,266,764.16**, because the
+4,320,000 of operations and the 1,000,000 reserve do not fall at all. That ratio — **1.3800× of cash
+sensitivity per unit of resource sensitivity** — is the project's operating leverage, and it is the
+first thing to compute on any asset whose revenue is a quantity times a fixed price. It is also why a
+"P90 sensitivity" run on revenue alone understates the coverage effect by nearly four points.
+
+### G.3.2 The binding year is the last one, and that is the mirror image of Aurora Ridge
+
+Solar output declines. At 0.5 % a year the cumulative factor by the final year of an 18-year facility
+is `0.995¹⁷ =` **0.918316**, so P90 energy in year 18 is 384,528.9 MWh and P90 `CFADS` is
+**10,830,215.15** — **11.7109 %** below the first year.
+
+| Year | P90 energy (MWh) | P90 `CFADS` |
+|---|---|---|
+| 1 | 418,732.5 | 12,266,764.16 |
+| 5 | 410,420.4 | 11,917,658.11 |
+| 10 | 400,262.0 | 11,491,004.58 |
+| **18** | **384,528.9** | **10,830,215.15** |
+
+Size at 1.20× on **year one** and the facility is **106,643,837.27**, on a service of
+10,222,303.47. Carry that service to year 18 and coverage is **1.0595×** — a covenant breach, and one
+that arrives not from any adverse event but from the degradation curve that was in the technical
+report at financial close. Sizing on the **binding year** instead gives **94,154,879.59**, at a cost
+of **12,488,957.68** of capacity.
+
+Set that beside Capstone Two and the pair becomes a single lesson. **Aurora Ridge's binding year is
+its first** — revenue ramps up while cost does not. **Helios Flats' binding year is its last** —
+revenue degrades while cost does not. Neither project's binding year is the one a mature-case or
+first-year model looks at, and the two fail in opposite directions from the same omission: *cost
+does not move with revenue.* The general rule the two cases establish together is that **the year to
+size on is the year of minimum coverage, and it must be found rather than assumed.**
+
+### G.3.3 What 1.20× actually means, restated
+
+Now the comparison that gives this capstone its title. Restate the sizing requirement onto a common
+basis — first-year P50 `CFADS`, which is the figure a sponsor's own model reports:
+
+The restatement has to be done on **cash**, not on energy, and the distinction is not pedantry — it is
+G.3.1's operating leverage doing its work a second time. Scaling the ratio by the two energy factors
+(`1.20 / 0.910288 / 0.918316 = 1.4355×`) is the intuitive move and it is **wrong**, because it assumes
+`CFADS` falls in proportion to generation. It does not: `C₅₀ × 0.910288 × 0.918316 = 11,703,054`
+against an actual year-18 P90 `CFADS` of **10,830,215**, the **872,839** difference being the
+operations and reserve that never fall. The correct equivalent ratio is the one that reproduces the
+same facility from first-year P50 cash — `1.20 × C₅₀ / C₁₈`:
+
+| | Aurora Ridge | Helios Flats |
+|---|---|---|
+| Quoted required `DSCR` | **1.40×** | **1.20×** |
+| Cash-flow basis it applies to | level, P50-equivalent | **P90, in the final year** |
+| Restated onto first-year P50 cash — resource only | 1.40× | `1.20 × 14,000,000 / 12,266,764 =` **1.3696×** |
+| Restated onto first-year P50 cash — resource **and** degradation | 1.40× | `1.20 × 14,000,000 / 10,830,215 =` **1.5512×** |
+
+**The 1.20× is a 1.5512×.** Twenty basis points of apparent advantage is in fact **fifteen and a
+tenth points of genuine disadvantage**, and the whole difference is in two words nobody reads: *which*
+cash flow the ratio multiplies. A term sheet quoting a ratio without its basis has quoted nothing, and
+a sponsor comparing offers across two projects on the ratio alone is comparing the conventions of two
+credit committees.
+
+Note carefully what the energy-scaled shortcut does and does not cost you, because it is not a
+disaster and that is what makes it dangerous. At 1.4355× it still lands **above** Aurora Ridge's
+1.40×, so it reaches the right *conclusion*: this project is the more demanding credit. What it loses
+is the size of the finding. It reports a margin of **0.0355** of a turn against a true **0.1512** —
+**23.49 %** of it — which turns a substantial difference into a rounding argument, and a rounding
+argument is one a committee will overrule. Getting the direction right and the magnitude wrong by
+three-quarters is how correct analysis loses to confident analysis.
+
+This is the single most transferable finding in the appendix. **A coverage ratio is a fraction, and
+both parts of it are negotiable.** Aurora Ridge's lenders took their protection in the numerator's
+multiplier; Helios Flats' lenders took the same protection in the denominator's definition, and took
+slightly more of it. Neither is wrong; only the comparison is.
+
+### G.3.4 The forty million that earns no contracted revenue
+
+The PPA pays for **energy delivered from the solar plant**. The battery does not generate energy — it
+shifts it — so under this contract it earns nothing contracted at all. Its economics are arbitrage,
+capacity payments or ancillary services: merchant revenue, on which no lender will advance senior debt
+sized at 1.20×.
+
+The consequence is arithmetic, not opinion. The **94,154,879.59** of capacity is supported by the
+solar plant's contracted cash and stands at **67.25 %** of the solar plant's 140,000,000 — a healthy
+contracted-asset gearing. Against the **180,000,000** actually being spent, it is **52.31 %**, and
+**85,845,120.41** — **47.69 %** — has to come from equity or from a separate merchant financing on
+different terms. The battery therefore dilutes blended gearing by nearly fifteen points, and it does
+so **without any change to the solar project's credit**.
+
+Three professional consequences, in the order they get missed:
+
+**The hybrid asset must be financed as two assets.** A single facility sized against blended capex
+either over-advances against the battery or under-advances against the solar. The disciplined
+structure is two tranches with two bases, and the merchant tranche priced for what it is.
+
+**The battery's business case is a separate paper.** Whether 40,000,000 of storage earns its keep is a
+merchant-revenue question — dispatch spreads, cycle life, degradation of the cells on a different
+curve from the modules — and it cannot be answered inside a contracted-project model. Presenting it
+inside one is how storage gets approved on the solar plant's credit.
+
+**The PPA's definition of the delivered product is a financing term.** If the offtake had been written
+for *dispatchable* energy at the point of interconnection rather than for energy from the plant, some
+of the battery's value would have become contracted, and some of that 47.69 % would have become
+bankable. That clause is negotiated by commercial teams, years before anyone computes a gearing, and
+it is worth tens of millions here.
+
+### G.3.5 The three questions Helios Flats adds
+
+1. **What basis does this ratio apply to?** P50 or P90, first year or minimum year, before or after
+   degradation. Until that is answered the ratio is a number without units.
+2. **Where is the year of minimum coverage?** Not the first, not the mature one — found. It is year one
+   on Aurora Ridge and year eighteen here, and both projects would have breached if sized on the other's
+   binding year.
+3. **Which part of the asset earns the contracted revenue?** Whatever does not is not collateral for
+   senior debt at the contracted ratio, however physically integrated it is.
+
+---
+
+## Capstone Four
+
+The last of the four — the **hyperscale data centre** — is **not yet written**, and is listed in this
+volume's plan and in `CORPUS_GATE_REPORT.md` as outstanding. Its risk shape is exercised by neither of
+the two new-project capstones above and by nothing in the sixteen domains: a **short-lived asset whose
+entire case turns on re-contracting**. Where Aurora Ridge's revenue was unguaranteed and Helios Flats'
+was contracted for the asset's whole life, a data centre's leases expire long before its debt does, so
+the binding question is not the coverage in any modelled year but the probability and price of the
+lease that has not been signed. It may not reuse the figures above.
 
 Saying so is the honest alternative to filling the space. A capstone that recycled another project's
 numbers under a new name would add pages and subtract credibility.
