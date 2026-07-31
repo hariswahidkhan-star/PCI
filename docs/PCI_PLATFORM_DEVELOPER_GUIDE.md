@@ -320,7 +320,7 @@ database rather than written by hand:
 | Document | Contents |
 |---|---|
 | [`PCI_DATABASE_SCHEMA.md`](PCI_DATABASE_SCHEMA.md) | **Every table, every column** — type, nullability, default, primary key, and declared or inferred relationship — plus every index, grouped into 16 domains |
-| [`PCI_DATABASE_ERD.md`](PCI_DATABASE_ERD.md) | **12 entity-relationship diagrams**, one per domain, distinguishing declared foreign keys from inferred ones |
+| [`PCI_DATABASE_ERD.md`](PCI_DATABASE_ERD.md) | **17 entity-relationship diagrams** — one per domain, with cross-domain anchor tables drawn in, distinguishing declared foreign keys from inferred ones |
 
 Regenerate both with `gen_schema.py` against a fresh database after any schema change.
 

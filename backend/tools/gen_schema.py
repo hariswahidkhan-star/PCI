@@ -86,9 +86,15 @@ def main() -> None:
         if not column.endswith("_id") or column == "id":
             return None
         stem = column[:-3]
-        for cand in (stem, stem + "s", stem + "es",
-                     re.sub(r"y$", "ies", stem),
-                     "pciworld_" + stem, "pciworld_" + stem + "s"):
+        # The table's own prefix matters: forum_posts.thread_id means forum_threads, not a
+        # non-existent `threads`. Without this, whole prefixed families (forum_, mkt_, comm_, cc_,
+        # exam_, sim_) come out with no relationships at all and their diagrams look empty.
+        prefix = table.split("_")[0] + "_" if "_" in table else ""
+        cands = [stem, stem + "s", stem + "es", re.sub(r"y$", "ies", stem)]
+        if prefix:
+            cands += [prefix + stem, prefix + stem + "s", prefix + stem + "es"]
+        cands += ["pciworld_" + stem, "pciworld_" + stem + "s"]
+        for cand in cands:
             if cand in tset and cand != table:
                 return cand
         # user-ish columns almost always mean the canonical users table
@@ -192,37 +198,57 @@ def main() -> None:
         "",
     ]
 
+    # A domain's tables often join OUTWARD (forum_posts.user_id -> users) and barely to each other.
+    # Drawing only intra-domain edges silently produced no diagram at all for five domains. So each
+    # diagram now carries its external anchors too, marked with the domain they belong to.
+    dom_of_table = {t: domain_of(t) for t in tables}
+    skipped = []
+
     for dom, _ in DOMAINS + [("Other", "")]:
         ts = sorted(by_domain.get(dom, []))
         if not ts:
             continue
         tsub = set(ts)
-        rels, drawn = [], set()
+        rels, seen = [], set()
+
+        def add(src, dst, kind, label):
+            k = (src, dst, label)
+            if k not in seen:
+                seen.add(k)
+                rels.append((src, dst, kind, label))
+
         for t in ts:
             for f in fks[t]:
-                tgt = f[2]
-                if tgt in tsub:
-                    rels.append((tgt, t, "||--o{", f[3]))
-                    drawn.add(t)
-                    drawn.add(tgt)
+                add(f[2], t, "||--o{", f[3])
             for _, name, *_ in cols[t]:
                 tgt = infer(t, name)
-                if tgt and tgt in tsub and tgt != t and not any(
-                        r[1] == t and r[3] == name for r in rels):
-                    rels.append((tgt, t, "}o..o{", name))
-                    drawn.add(t)
-                    drawn.add(tgt)
-        # Cap the drawing so one dense domain does not produce an unreadable hairball.
-        cap = 40
-        trimmed = len(rels) > cap
+                if tgt and tgt != t:
+                    add(tgt, t, "}o..o{", name)
+
+        # Keep every intra-domain edge; keep outward edges only to the busiest anchors, so a
+        # diagram does not turn into a star around `users`.
+        ext = defaultdict(int)
+        for a, b, _, _ in rels:
+            for e in (a, b):
+                if e not in tsub:
+                    ext[e] += 1
+        anchors = {e for e, n in sorted(ext.items(), key=lambda kv: -kv[1])[:4]}
+        rels = [r for r in rels if (r[0] in tsub or r[0] in anchors)
+                and (r[1] in tsub or r[1] in anchors)]
+
+        cap = 44
+        trimmed = max(0, len(rels) - cap)
         rels = rels[:cap]
         if not rels:
+            skipped.append(dom)
+            er += [f"## {dom}", "", f"*{len(ts)} tables — no join columns detected, so there is "
+                   f"nothing to draw. These are standalone or key/value tables.*", "",
+                   "**Tables in this domain:** " + ", ".join(f"`{t}`" for t in ts), "", "---", ""]
             continue
 
         er += [f"## {dom}", "", f"*{len(ts)} tables in this domain*", "", "```mermaid", "erDiagram"]
-        entities = sorted({r[0] for r in rels} | {r[1] for r in rels})
-        for e in entities:
-            key_cols = [c[1] for c in cols[e] if c[5] or c[1].endswith("_id") or c[1] in
+        for e in sorted({r[0] for r in rels} | {r[1] for r in rels}):
+            key_cols = [c[1] for c in cols.get(e, []) if c[5] or c[1].endswith("_id") or c[1] in
                         ("email", "slug", "code", "status", "state", "created_at")][:7]
             er.append(f"    {e} {{")
             for kc in key_cols:
@@ -232,12 +258,23 @@ def main() -> None:
         for a, b, kind, label in rels:
             er.append(f'    {a} {kind} {b} : "{label}"')
         er += ["```", ""]
+
+        outside = sorted({e for r in rels for e in (r[0], r[1])} - tsub)
+        if outside:
+            er.append("**Drawn from other domains as anchors:** " + ", ".join(
+                f"`{e}` *({dom_of_table.get(e, '?')})*" for e in outside))
+            er.append("")
         if trimmed:
-            er.append(f"> Diagram capped at {cap} relationships for legibility; the domain has more. "
-                      f"The full set is in the column reference.")
+            er.append(f"> {trimmed} further relationship(s) omitted for legibility. "
+                      f"The complete set is in the column reference.")
             er.append("")
         er.append("**Tables in this domain:** " + ", ".join(f"`{t}`" for t in ts))
         er += ["", "---", ""]
+
+    if skipped:
+        er += ["## Domains with nothing to draw", "",
+               "Recorded rather than silently omitted:", ""]
+        er += [f"- {d}" for d in skipped] + ["", "---", ""]
 
     Path("docs/PCI_DATABASE_ERD.md").write_text("\n".join(er), encoding="utf-8")
     print(f"ER diagrams: {len(er)} lines, {er.count('```mermaid')} diagrams")
