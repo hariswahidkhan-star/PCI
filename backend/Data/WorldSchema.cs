@@ -17,7 +17,23 @@ namespace PCI.Backend.Data;
 /// </summary>
 public static class WorldSchema
 {
-    public static void Ensure(Db db)
+    /// <summary>
+    /// Install and seed the whole World realm. Safe to call from several processes at once.
+    ///
+    /// Two different hazards, two different answers. Duplicate-key races are removed by making every
+    /// write idempotent — Db.AddColumn for upgrade columns, OR IGNORE for seeds. DEADLOCKS are not
+    /// touched by any of that: concurrent connections inserting into the same tables still take locks
+    /// in an order InnoDB can find a cycle in, and it rolls one of them back. Six concurrent Ensure()
+    /// calls on MariaDB produced exactly that. The database calls it retryable and it is: every step
+    /// below is idempotent, so running the block again is the documented remedy.
+    ///
+    /// On the boot path this is belt and braces — Program.cs holds the migration lock. It is load
+    /// bearing for every other caller, including the test harness, which installs this directly from
+    /// many threads with no lock at all. That is the CCP-P2-008 flake.
+    /// </summary>
+    public static void Ensure(Db db) => db.WithRetryOnLockFailure(() => Install(db));
+
+    static void Install(Db db)
     {
         Tables(db);
         Seed(db);

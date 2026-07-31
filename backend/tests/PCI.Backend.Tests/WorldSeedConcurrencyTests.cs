@@ -31,7 +31,13 @@ namespace PCI.Backend.Tests;
 ///
 /// The assertions are about STATE, not about the absence of an exception alone. A seed that silently
 /// wrote nothing would also throw nothing.
+/// SERIALISED WITH THE OTHER DB SUITES, and that is not a contradiction. DbCollection stops OTHER
+/// suites running while this one does; it does nothing to the six threads inside it, which are the
+/// subject. Without it this suite writes to the shared MySQL run database from six uncoordinated
+/// connections while another suite is mid-fixture — its own concurrency leaking into everybody
+/// else's data, which showed up as an unrelated suite failing on a full local MySQL run.
 /// </summary>
+[Collection(DbCollection.Name)]
 public class WorldSeedConcurrencyTests
 {
     const int Racers = 6;
@@ -80,7 +86,8 @@ public class WorldSeedConcurrencyTests
         return errors.ToList();
     }
 
-    [Fact]
+    [SqliteOnlyFact(
+        "the suite needs several INDEPENDENT connections to an ISOLATED database. On MySQL the only database a unit test can reach is the shared run database, and six uncoordinated connections seeding it leaves state that the between-test reset does not restore — verified: three WorldPassportTests fail alongside this suite and pass without it. The product behaviour is provider-agnostic; the MySQL half is covered by DbRetryOnLockFailureTests and by the retry in WorldSchema.Ensure that CI's deadlock prompted.")]
     public void ConcurrentEnsureDoesNotDuplicateTheBootstrapOwner()
     {
         var (db, another) = SharedDatabase();
@@ -95,7 +102,8 @@ public class WorldSeedConcurrencyTests
             "SELECT COUNT(*) FROM pciworld_admin_users WHERE email='owner@pciworld.local'"));
     }
 
-    [Fact]
+    [SqliteOnlyFact(
+        "the suite needs several INDEPENDENT connections to an ISOLATED database. On MySQL the only database a unit test can reach is the shared run database, and six uncoordinated connections seeding it leaves state that the between-test reset does not restore — verified: three WorldPassportTests fail alongside this suite and pass without it. The product behaviour is provider-agnostic; the MySQL half is covered by DbRetryOnLockFailureTests and by the retry in WorldSchema.Ensure that CI's deadlock prompted.")]
     public void ConcurrentEnsureDoesNotDuplicateSeededArticles()
     {
         var (db, another) = SharedDatabase();
@@ -125,7 +133,8 @@ public class WorldSeedConcurrencyTests
     /// house articles ever gain a second version at seed time, the index stops absorbing it and this
     /// test becomes the thing that catches it.
     /// </summary>
-    [Fact]
+    [SqliteOnlyFact(
+        "the suite needs several INDEPENDENT connections to an ISOLATED database. On MySQL the only database a unit test can reach is the shared run database, and six uncoordinated connections seeding it leaves state that the between-test reset does not restore — verified: three WorldPassportTests fail alongside this suite and pass without it. The product behaviour is provider-agnostic; the MySQL half is covered by DbRetryOnLockFailureTests and by the retry in WorldSchema.Ensure that CI's deadlock prompted.")]
     public void ConcurrentEnsureNeverAttachesAVersionToTheWrongArticle()
     {
         var (db, another) = SharedDatabase();

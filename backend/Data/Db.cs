@@ -517,6 +517,53 @@ public sealed class Db
     /// swallowed ONLY when the column is present on re-read. A bad type or a wrong table still
     /// throws, which is what makes this different from wrapping the ALTER in a bare catch.
     /// </summary>
+    /// <summary>
+    /// True for a lock failure the database itself describes as retryable.
+    ///
+    /// InnoDB's deadlock message ends "try restarting transaction" — that is not advice about
+    /// application design, it is the documented contract: the loser's work was rolled back and the
+    /// same statements run again will normally succeed. Lock-wait timeout (1205) and SQLite's
+    /// SQLITE_BUSY are the same shape.
+    ///
+    /// Matched on the provider's error NUMBER rather than on message text, because message text is
+    /// localised and reworded between server versions, and a matcher that silently stops matching
+    /// turns a retry into a crash on the day it is needed.
+    /// </summary>
+    static bool IsRetryableLockFailure(Exception e) => e switch
+    {
+        MySqlException m => m.Number is 1213 or 1205,                          // deadlock, lock wait timeout
+        SqliteException s => s.SqliteErrorCode is 5 or 6,                       // SQLITE_BUSY, SQLITE_LOCKED
+        _ => false,
+    };
+
+    /// <summary>
+    /// Run <paramref name="body"/>, retrying a deadlock or lock-wait timeout a few times.
+    ///
+    /// FOR IDEMPOTENT WORK ONLY — schema installers and seeds. Every caller of this must be safe to
+    /// run twice, because that is exactly what happens on a retry.
+    ///
+    /// Why it is needed even though the boot path now holds the migration lock: making writes
+    /// idempotent (OR IGNORE, AddColumn) removes DUPLICATE-KEY races, and does nothing at all about
+    /// deadlocks. Several connections inserting into the same tables in the same order still take row
+    /// and gap locks in an order InnoDB can find a cycle in, and one of them is chosen and rolled
+    /// back. That surfaced as `Deadlock found when trying to get lock` from six concurrent Ensure()
+    /// calls on MariaDB — not from a defect in what is written, but from when.
+    ///
+    /// The backoff is jittered by attempt number so two racers that collide do not immediately
+    /// collide again in lockstep.
+    /// </summary>
+    public void WithRetryOnLockFailure(Action body, int attempts = 5)
+    {
+        for (var attempt = 1; ; attempt++)
+        {
+            try { body(); return; }
+            catch (Exception e) when (attempt < attempts && IsRetryableLockFailure(e))
+            {
+                Thread.Sleep(40 * attempt);
+            }
+        }
+    }
+
     /// <returns>True if this call added the column; false if it was already there or another caller added it.</returns>
     public bool AddColumn(string table, string column, string ddl)
     {
