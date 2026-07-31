@@ -60,6 +60,8 @@ document first — the reasoning is usually load-bearing.
 35. [Go-live checklist](#35-go-live-checklist)
 36. [How to extend the platform](#36-how-to-extend-the-platform)
 37. [Where to look first](#37-where-to-look-first)
+38. [End-to-end flowcharts](#38-end-to-end-flowcharts)
+39. [End-to-end checklists](#39-end-to-end-checklists)
 
 ---
 
@@ -1698,6 +1700,513 @@ Claim work through `WorkerLease` with a single conditional `UPDATE`. Never `SELE
 | Decisions and what was rejected | `docs/pciworld/CCP_DECISION_LOG.md` |
 | Runbooks | `docs/pciworld/CCP_RUNBOOKS.md` |
 | Threat model | `docs/pciworld/THREAT_MODEL.md` |
+
+---
+
+## 38. End-to-end flowcharts
+
+Every diagram below is the **complete** path for its flow — no "…and then it works" gaps. Endpoint
+names are the real ones. Where a step can refuse, the refusal is drawn, because the refusals are the
+part people get wrong.
+
+### 38.1 System architecture — the whole estate
+
+```mermaid
+flowchart TB
+    subgraph clients["Clients"]
+        B1["Browser — public site"]
+        B2["Browser — student portal"]
+        B3["Browser — operator dashboard"]
+        B4["Browser — PCI World"]
+        B5["Browser — World admin"]
+        DC["Windows secure-exam client<br/>PCISecureExam.exe"]
+    end
+
+    subgraph edge["Edge"]
+        PX["TLS-terminating proxy<br/>sets X-Forwarded-Proto / For"]
+    end
+
+    subgraph app["ONE ASP.NET Core 8 service"]
+        MW["Middleware pipeline<br/>9 stages — see 38.2"]
+        SF["Static files — wwwroot<br/>234 pages + 4 React bundles"]
+        INJ["Content injection<br/>PageContent · CertCatalogue<br/>ListSections · PriceTags"]
+        API["984 routes<br/>71 endpoint modules"]
+        WRK["14 leased background workers"]
+    end
+
+    subgraph data["State"]
+        DB[("SQLite or MySQL/MariaDB<br/>291 tables")]
+        ST[("Storage — local /data or S3<br/>evidence · attachments · CVs")]
+    end
+
+    subgraph ext["External"]
+        STR["Stripe"]
+        SMTP["SMTP / Resend"]
+        ERP["Odoo · QuickBooks · Zoho · Credly"]
+        SOC["Social · syndication · ads"]
+        MOD["Moderation / upload scanner"]
+    end
+
+    B1 & B2 & B3 & B4 & B5 --> PX
+    DC -->|"pinned HTTPS allowlist only"| PX
+    PX --> MW
+    MW --> INJ --> SF
+    MW --> API
+    API --> DB
+    API --> ST
+    WRK --> DB
+    WRK --> STR & SMTP & ERP & SOC & MOD
+    API --> STR
+
+    classDef gate fill:#fff4e5,stroke:#d68910
+    class MW gate
+```
+
+**One deployment, two brands.** `projectcontrolsinstitute.org` and PCI World are the same process and
+the same database; hostname routing (`PCIWORLD_HOSTS`, `PORTAL_HOSTS`) and feature flags decide what
+each request sees. The World-only image simply bakes `PCIWORLD_ONLY=true`.
+
+### 38.2 Request lifecycle — every request, in order
+
+```mermaid
+flowchart TB
+    R(["Request"]) --> S1["1 · Security headers + CSP<br/>HSTS if X-Forwarded-Proto = https"]
+    S1 --> S2{"2 · CORS<br/>origin = ALLOWED_ORIGIN?"}
+    S2 -->|"preflight"| P204(["204"])
+    S2 -->|"ok"| S3{"3 · Rate limit<br/>10 req / 60 s on 6 auth paths"}
+    S3 -->|"exceeded"| E429(["429"])
+    S3 -->|"ok"| S4{"4 · Config valid?<br/>Production only"}
+    S4 -->|"hard blocker"| EXIT(["exit 78 — never serves"])
+    S4 -->|"ok"| S5{"5 · Host routing<br/>World / portal / institute"}
+    S5 --> S6{"6 · Maintenance mode?"}
+    S6 -->|"on, public page"| M503(["503 holding page<br/>/api/* and admin stay up"])
+    S6 -->|"off"| S7{"7 · Content injection<br/>slug has overrides?"}
+    S7 -->|"yes"| INJ["Render server-side<br/>SEO-safe, works with JS off"]
+    S7 -->|"no"| S8["8 · Static files"]
+    INJ --> OUT(["Response"])
+    S8 --> HIT{"file exists?"}
+    HIT -->|"yes"| OUT
+    HIT -->|"no"| S9{"9 · SPA fallback<br/>extension-less route?"}
+    S9 -->|"/app · /admin · /world-app · /world-admin"| SHELL(["React shell — 200"])
+    S9 -->|"/api/* or asset"| E404(["404"])
+
+    classDef stop fill:#fdecea,stroke:#c0392b
+    class EXIT,E429,E404,M503 stop
+```
+
+> Stage 4 is why a misconfigured production deployment **never serves a request**. That is deliberate:
+> a wrong `DATABASE_FILE` would otherwise surface as silent data loss on the first redeploy.
+
+### 38.3 Boot and deploy — including the overlap window
+
+```mermaid
+flowchart TB
+    D(["Deploy triggered"]) --> N["New instance starts<br/>OLD INSTANCE STILL SERVING"]
+    N --> V{"Config validator<br/>Production?"}
+    V -->|"hard blocker"| X(["exit 78 — old instance keeps serving"])
+    V -->|"ok"| L["Acquire CROSS-INSTANCE MIGRATION LOCK"]
+    L --> M["Migrate.Run<br/>schema.sql → CREATE IF NOT EXISTS → Db.AddColumn → indexes"]
+    M --> I["Runtime installers UNDER THE SAME LOCK<br/>Comms · Marketing · SimLab · Templates · World · Finance"]
+    I --> RT{"deadlock or<br/>lock-wait timeout?"}
+    RT -->|"yes"| RETRY["Db.WithRetryOnLockFailure<br/>retry — every step is idempotent"]
+    RETRY --> I
+    RT -->|"no"| SEED["First-run seeds<br/>owner admin · demo student · content packs"]
+    SEED --> WID["WorldIdentity mapping pass<br/>LINKED / CREATED — conflicts quarantined"]
+    WID --> W["Start 14 leased workers"]
+    W --> HC{"/api/health 200?"}
+    HC -->|"yes"| CUT["Traffic cuts over<br/>old instance stops"]
+    HC -->|"no"| X2(["rollback"])
+
+    classDef lock fill:#e8f4fd,stroke:#0b5cad
+    class L,M,I lock
+```
+
+> **The overlap window is the whole reason for the lock.** A zero-downtime deploy runs two processes
+> against one database. Installers catch-and-continue, so without the lock the loser does not crash —
+> it abandons the rest of its upgrade and the deployment serves a half-migrated schema that fails
+> later, far from the cause.
+
+### 38.4 Student end-to-end — enquiry to credential
+
+```mermaid
+flowchart TB
+    A(["Visitor on public site"]) --> B["Enquiry / newsletter / form<br/>→ admin Enquiries · Submissions"]
+    A --> C["POST /api/register"]
+    C --> D["Verify email"]
+    D --> E["POST /api/login → login_tokens (30 d)"]
+    E --> F["/app/onboarding<br/>profile · consents · goal"]
+    F --> G["Canonical PCI Student Number issued"]
+    G --> H["/app/certifications<br/>catalogue + eligibility"]
+    H --> I{"Eligible?"}
+    I -->|"no"| I2["Requirements shown<br/>CPD · membership grade · prerequisites"]
+    I2 --> H
+    I -->|"yes"| J["Enrol — CheckoutReservation holds the seat"]
+    J --> K{"Payment"}
+    K -->|"Stripe configured"| L["Stripe Checkout → webhook (38.6)"]
+    K -->|"discount code 100%"| L2["Code validated → entitlement granted"]
+    K -->|"no Stripe key"| L3(["503 — everything else still works"])
+    L --> M["Entitlement granted"]
+    L2 --> M
+    M --> N["POST /api/me/exam/book"]
+    N --> O["Exam pipeline — see 38.5"]
+    O --> P{"Result state"}
+    P -->|"auto_held"| Q["Integrity review<br/>NO score, NO pass/fail, NO credential shown"]
+    Q --> R{"Admin decision"}
+    R -->|"release"| S
+    R -->|"invalidate"| T(["Invalidated — appealable"])
+    P -->|"completed + pass"| S["Credential issued<br/>CertIssue → certificate PDF"]
+    S --> U["/app/credentials<br/>public verify link + QR"]
+    U --> V["Ongoing: CPD logging → admin CPD review"]
+    V --> W{"Expiry approaching?"}
+    W -->|"yes"| X["Renewal / recertification"]
+    T --> Y["/app/appeals → admin Casework"]
+
+    classDef hold fill:#fff4e5,stroke:#d68910
+    class Q,R hold
+```
+
+### 38.5 Examination end-to-end — booking to graded result
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant S as Student (/app)
+    participant API as Backend
+    participant DC as Secure client
+    participant AD as Admin
+
+    S->>API: POST /api/me/exam/book
+    API-->>S: scheduled (window recorded)
+    Note over S,API: at the window
+    S->>API: POST /api/me/exam/launch-code
+    API-->>S: SINGLE-USE launch code (not a bearer token)
+    S->>DC: pciexam://...?code=...&api=...
+    DC->>DC: ClientConfig.EnsureTrustedOrThrow
+    Note over DC: api= is IGNORED unless on the pinned<br/>dot-anchored HTTPS allowlist
+    DC->>API: POST /api/exam/authorize (code)
+    API-->>DC: session + canonical RemainingSeconds
+    DC->>API: POST /api/exam/identity (identity capture)
+    DC->>DC: Kiosk lockdown — degrades honestly
+    loop every heartbeat
+        DC->>API: POST /api/me/exam/heartbeat
+        API-->>DC: canonical RemainingSeconds (SERVER owns the clock)
+        DC->>API: POST /api/exam/evidence (proctoring)
+        DC->>API: POST /api/me/exam/incident (on signal)
+    end
+    alt time expires
+        API-->>DC: ForceSubmit (server-driven)
+    else candidate submits
+        DC->>API: POST /api/me/exam/submit
+    end
+    API->>API: Server-side scoring — NEVER client-side
+    API->>API: Lifecycle: auto-hold rules
+    alt auto_held
+        API-->>S: held — no score, no pass/fail, no credential
+        AD->>API: review evidence (audit-only for publication)
+        AD->>API: release / invalidate / reinstate
+    else clean
+        API-->>S: completed + result
+    end
+    API->>API: pass mark → CertIssue → credential + PDF
+```
+
+### 38.6 Payment and webhook — with the idempotency gate
+
+```mermaid
+flowchart TB
+    A(["Student confirms enrolment"]) --> B{"STRIPE_SECRET_KEY set?"}
+    B -->|"no"| Z(["503 — graceful degradation"])
+    B -->|"yes"| C["CheckoutReservation holds seat/entitlement"]
+    C --> D["Stripe Checkout session"]
+    D --> E["Student pays at Stripe"]
+    E --> F["Stripe → POST /api/webhooks/stripe"]
+    F --> G{"Signature valid?<br/>STRIPE_WEBHOOK_SECRET"}
+    G -->|"no"| H(["400 — rejected"])
+    G -->|"yes"| I["Db.ExecuteWithChanges<br/>ATOMIC id + changes"]
+    I --> J{"changes > 0?"}
+    J -->|"no — already processed"| K(["200 OK, no side effects<br/>replay is safe"])
+    J -->|"yes — first time"| L["Apply once:<br/>payment · entitlement · invoice · receipt email"]
+    L --> M["Partner commission if attributed"]
+    M --> N["ERP sync via IntegrationDispatcher"]
+    N --> O(["200 OK"])
+
+    classDef safe fill:#eaf7ee,stroke:#1e8449
+    class I,J,K safe
+```
+
+> `STRIPE_WEBHOOK_SECRET` is a **hard boot blocker** once `STRIPE_SECRET_KEY` is set — an unverified
+> webhook endpoint is an open door to granting entitlements.
+
+### 38.7 PCI World end-to-end — account to verified Passport
+
+```mermaid
+flowchart TB
+    A(["Visitor at /world"]) --> B["POST /api/world/account/register"]
+    B --> C["/world/verify-email"]
+    C --> D["POST /api/world/account/login → pciworld_user_sessions"]
+    D --> E["WorldIdentity bridge"]
+    E --> E1{"student_user_id valid?"}
+    E1 -->|"yes"| E2["Rule LINKED → existing users.id"]
+    E1 -->|"no, email unknown"| E3["Rule CREATED — canonical users + student_profiles<br/>bcrypt hash PRESERVED, Student Number issued"]
+    E1 -->|"conflict"| E4["QUARANTINED in the map — never silently merged"]
+    E2 & E3 --> F["pciworld_participants — participation only<br/>never a second credential"]
+    F --> G["GET /api/world/today"]
+    G --> H["Rotation engine picks from the PERIOD LEDGER<br/>written once per day, never updated"]
+    H --> I["GET /world/challenge/{code}"]
+    I --> J["POST /api/world/session → attempt"]
+    J --> K["POST /api/world/attempts — submit"]
+    K --> L["WorldScore — DETERMINISTIC<br/>numeric via SimCalc · decisions via authored rubric"]
+    L --> M["No model output grades anything"]
+    M --> N["Result on Practice Passport"]
+    N --> O{"Publish?"}
+    O -->|"no"| P(["Stays private — the default"])
+    O -->|"yes"| Q["POST /api/world/passport/publish<br/>consent PER ITEM and PER FIELD"]
+    Q --> R["Share token → /world/p/{token}"]
+    R --> S["Recruiter opens link or scans QR"]
+    S --> T{"Token live?"}
+    T -->|"revoked / expired"| U(["Stops resolving<br/>PDF says where to check"])
+    T -->|"live"| V(["Verified against the live record<br/>labelled PRACTICE, not certification"])
+    N --> W["Owner: /api/world/me/shares/revoke-all at any time"]
+
+    classDef consent fill:#e8f4fd,stroke:#0b5cad
+    class O,Q,W consent
+```
+
+### 38.8 Community message end-to-end — the safety path
+
+```mermaid
+flowchart TB
+    A(["Member or guest composes"]) --> B{"world_community_enabled?"}
+    B -->|"off"| Z(["Room API 404s<br/>page still loads — 200"])
+    B -->|"on"| C["POST /api/world/community/rooms/{slug}/messages"]
+    C --> D["Eligibility — min age, jurisdiction, version"]
+    D --> E["CommunityModeration.Resolve"]
+    E --> F["content type × category × severity ×<br/>confidence × context × repetition<br/>resolved against VERSIONED policy rows"]
+    F --> G{"Outcome"}
+    G -->|"no provider configured"| H["FAIL CLOSED"]
+    G -->|"provider error / timeout"| H
+    G -->|"no rule matched"| H
+    G -->|"deny"| H
+    H --> I(["NOT PUBLISHED — case raised"])
+    G -->|"allow"| J["ONE TRANSACTION"]
+    J --> K["message row + moderation decision<br/>+ room sequence via conditional UPDATE"]
+    K --> L{"Committed?"}
+    L -->|"no"| M(["Nothing exists — no half-state"])
+    L -->|"yes"| N["Broadcast in sequence order"]
+    N --> O["Reconnect recovery uses the sequence"]
+    I --> P["Case queue → moderator"]
+    A2(["Any member reports"]) --> P
+    P --> Q["Uphold / dismiss — recorded with the policy row that fired"]
+
+    classDef closed fill:#fdecea,stroke:#c0392b
+    class H,I closed
+    classDef atomic fill:#eaf7ee,stroke:#1e8449
+    class J,K atomic
+```
+
+> **Which policy row fired is recorded.** That is what makes "why was this blocked in March?"
+> answerable against the policy that was actually live then, and what lets a safety lead restage
+> thresholds without a deploy.
+
+**Images** (`pciworld_community_images_enabled`, depends on rooms) insert a hold-and-scan stage before
+any other person sees the file — nothing is broadcast on upload.
+
+### 38.9 Careers end-to-end — employer and candidate
+
+```mermaid
+flowchart TB
+    subgraph emp["Employer"]
+        A(["Employer registers"]) --> B["POST /api/world/careers/employers"]
+        B --> C{"CareersState: may publish?"}
+        C -->|"not verified"| D(["REFUSED — cannot post or read applications"])
+        C -->|"verified"| E["Create posting"]
+        E --> F{"IsLive?"}
+        F -->|"yes"| G["JobJsonLd emitted · in sitemap · apply open"]
+        F -->|"no"| H["JobJsonLd returns NULL — not a 'closed' blob<br/>out of sitemap · apply shut"]
+    end
+    subgraph cand["Candidate"]
+        I(["Candidate at /world/careers"]) --> J{"pciworld_careers_enabled?"}
+        J -->|"off"| K(["404 — server-rendered route"])
+        J -->|"on"| L["Browse live postings only"]
+        L --> M["Apply + CV upload → Storage<br/>MIME sniff · size cap · traversal guard"]
+        M --> N["GET /api/world/careers/my/applications"]
+    end
+    G --> L
+    M --> O["Verified employer reads application"]
+    O --> P["Retention window → RetentionService purge"]
+
+    classDef refuse fill:#fdecea,stroke:#c0392b
+    class D,K refuse
+```
+
+> **Verify-before-publish is not anti-spam.** A fake employer is a data-harvesting attack, and the
+> window between publish and takedown is exactly the window in which CVs arrive. The question is
+> re-asked at the transition **and at every read**.
+
+### 38.10 Contributor and editorial end-to-end — the two-person rule
+
+```mermaid
+flowchart TB
+    A(["Reader wants to contribute"]) --> B{"pciworld_contributors_enabled?"}
+    B -->|"off"| Z(["Desk absent from the app<br/>application form unreachable"])
+    B -->|"on"| C["POST /api/world/contributor/apply"]
+    C --> D["Staff review → standing grant"]
+    D --> E["POST /api/world/contributor/articles — draft"]
+    E --> F{"News item?"}
+    F -->|"yes"| G{"≥1 recorded source?"}
+    G -->|"no"| H(["Cannot reach approved"])
+    G -->|"yes"| I
+    F -->|"no"| I{"Mentions a registry entity?"}
+    I -->|"yes"| J{"Legal review recorded?"}
+    J -->|"no"| H
+    J -->|"yes"| K
+    I -->|"no"| K["Submit for approval"]
+    K --> L{"IsSelfReview?<br/>compare via pciworld_admin_users.world_user_id"}
+    L -->|"same person"| M(["REFUSED — cannot approve own article"])
+    L -->|"different"| N["Approve"]
+    N --> O["Publish as VERSION 1"]
+    O --> P{"Correction needed?"}
+    P -->|"yes"| Q["Append visible correction record<br/>+ NEW VERSION — never a silent edit"]
+    Q --> P
+    P -->|"no"| R(["Live · byline is a real author or<br/>'PCI World Editorial' — never invented"])
+
+    classDef refuse fill:#fdecea,stroke:#c0392b
+    class M,H refuse
+```
+
+> **Why the namespace matters.** A contributor is a `pciworld_users` row; a staff editor is a
+> `pciworld_admin_users` row. The id spaces are **disjoint**, so a naive `author_id == admin_id`
+> check could never fire for a contributor's manuscript — a staff editor who was also the contributor
+> would sail straight through. `IsSelfReview` compares in the namespace where it means something.
+>
+> Stated plainly rather than implied away: an admin whose `world_user_id` link is unset and who
+> quietly holds a second Passport account **defeats this**. Code cannot prove two accounts are one
+> person when nobody has said so. That residue belongs to conflict-of-interest policy.
+
+### 38.11 Launch gating — what a POST to the launch board actually does
+
+```mermaid
+flowchart TB
+    A(["Owner clicks Turn on"]) --> B["POST /api/admin/world-launch"]
+    B --> C{"Caller is owner?"}
+    C -->|"no"| D(["403 owner_only"])
+    C -->|"yes"| E{"'on' supplied?"}
+    E -->|"no"| F(["400 on_required"])
+    E -->|"yes"| G{"Feature has DependsOn?"}
+    G -->|"yes, prerequisite flag off"| H(["400 requires_flag<br/>e.g. images need rooms"])
+    G -->|"ok"| I{"Feature has an Ack?"}
+    I -->|"no"| L
+    I -->|"yes"| J{"Ack recorded?"}
+    J -->|"no"| K(["400 prerequisite_not_recorded<br/>+ requires_key"])
+    J -->|"yes"| L["Write site_settings flag"]
+    L --> M["Append to pciworld_audit<br/>who · when · what"]
+    M --> N(["Feature live"])
+
+    classDef refuse fill:#fdecea,stroke:#c0392b
+    class D,F,H,K refuse
+```
+
+> **The refusal lives in the server, on the POST.** Anyone can curl this API; a UI that merely greys
+> out a button is not a control.
+
+### 38.12 Authentication — four consoles, no bleed
+
+```mermaid
+flowchart LR
+    subgraph c1["Student"]
+        A1["/app/login"] --> A2["POST /api/login"] --> A3[("login_tokens<br/>30 days")]
+        A3 --> A4["sessionStorage<br/>pci.session.token"]
+    end
+    subgraph c2["Operator"]
+        B1["/admin/"] --> B2["POST /api/admin/auth/login"] --> B3[("admin_sessions<br/>12 hours")]
+        B3 --> B4["sessionStorage<br/>pci.admin.token"]
+    end
+    subgraph c3["PCI World user"]
+        C1["/world-app/"] --> C2["POST /api/world/account/login"] --> C3[("pciworld_user_sessions")]
+    end
+    subgraph c4["World admin"]
+        D1["/world-admin"] --> D2["POST /api/world-admin/auth/login"] --> D3[("pciworld_sessions")]
+    end
+    A2 & B2 & C2 & D2 -.->|"tokens stored HASHED — Security.Sha"| H[("never plaintext")]
+    A2 & B2 -.->|"rate limited 10/60s"| RL[("first X-Forwarded-For hop")]
+```
+
+Signing into one console does **not** sign you into another: separate endpoints, separate tables,
+separate storage keys, separate 401 handlers. Logout deletes the row rather than just dropping the
+client copy.
+
+### 38.13 Data lifecycle — subject access and erasure
+
+```mermaid
+flowchart TB
+    A(["Student requests their data"]) --> B["GET /api/me/account-data"]
+    B --> C(["Export produced"])
+    D(["Student requests deletion"]) --> E["POST /api/me/delete-request"]
+    E --> F["Admin → Data erasure requests"]
+    F --> G{"Retention obligations?"}
+    G -->|"credential / audit record"| H["Retained per policy, documented"]
+    G -->|"erasable"| I["Core.Erasure"]
+    I --> J["Profile · attempts · uploads · Passport photo"]
+    J --> K["Storage objects purged"]
+    K --> L["Share tokens stop resolving"]
+    L --> M(["Erasure recorded in audit"])
+    N["RetentionService — daily"] --> O["Purge past retention windows<br/>evidence · CVs · community media"]
+```
+
+---
+
+## 39. End-to-end checklists
+
+Two ordered walkthroughs. If you are taking this live for the first time, follow §39.1 top to bottom.
+
+### 39.1 Zero to live
+
+```mermaid
+flowchart TB
+    A(["1 · Provision"]) --> A1["Docker host or Render Starter+<br/>disk mounted at /data"]
+    A1 --> B(["2 · Database"])
+    B --> B1["MySQL 8 / MariaDB 10.11, or SQLite ON /data<br/>never /tmp — exit 78"]
+    B1 --> C(["3 · Core config"])
+    C --> C1["ASPNETCORE_ENVIRONMENT=Production<br/>APP_BASE_URL https · ALLOWED_ORIGIN exact"]
+    C1 --> D(["4 · Secrets"])
+    D --> D1["Stripe pair · SMTP · every salt<br/>CREDENTIAL_ENCRYPTION_KEY · DOC_LINK_SECRET"]
+    D1 --> E(["5 · First boot"])
+    E --> E1["Watch the log: no EPHEMERAL banner<br/>capture the World ONE-TIME PASSWORD"]
+    E1 --> F(["6 · Credentials"])
+    F --> F1["Change owner password (forced)<br/>change World owner password<br/>create least-privilege admins"]
+    F1 --> G(["7 · Verify"])
+    G --> G1["/api/health 200 · system-check clean<br/>/world 200 · /world/forum 404 = CORRECT"]
+    G1 --> H(["8 · Content"])
+    H --> H1["Pages · pricing · certifications · emails"]
+    H1 --> I(["9 · Money"])
+    I --> I1["Stripe webhook registered · test payment end to end"]
+    I1 --> J(["10 · World features"])
+    J --> J1["One at a time, with the queue staffed<br/>record prerequisites truthfully"]
+    J1 --> K(["Live"])
+
+    classDef done fill:#eaf7ee,stroke:#1e8449
+    class K done
+```
+
+### 39.2 Change → merged, the loop CI enforces
+
+```mermaid
+flowchart TB
+    A(["Change"]) --> B{"Touched what?"}
+    B -->|"schema"| C["schema.sql → Migrate.cs upgrade<br/>→ sqlite_to_mysql.py → BOTH providers"]
+    B -->|"backend"| D["Python suites + boot + smoke-test.sh"]
+    B -->|"frontend"| E["npm run typecheck && npm run build"]
+    B -->|"secureexam"| F["dotnet build && dotnet test"]
+    B -->|"World safety rule"| G["Read docs/pciworld/ phase doc FIRST"]
+    C & D & E & F & G --> H["dotnet test — 1662 unit tests"]
+    H --> I{"Green on BOTH providers?"}
+    I -->|"no"| J["Fix — a MySQL-only failure is a real failure"]
+    J --> H
+    I -->|"yes"| K["Push → 12 CI jobs"]
+    K --> L{"All green?"}
+    L -->|"no"| J
+    L -->|"yes"| M(["Merge"])
+```
 
 ---
 
