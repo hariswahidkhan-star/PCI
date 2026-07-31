@@ -306,9 +306,25 @@ not on message text, which is localised and reworded between server versions.
 | Base | `backend/schema.sql` (→ `schema.mysql.sql`) | 75 tables |
 | Runtime installers | `Data/*Schema.cs`, run at boot | remainder |
 
-**291 tables on a fresh boot** (verified by counting `sqlite_master` after a clean start; a static
-grep of the DDL yields ~295 because a few statements are provider- or feature-conditional). By
-family:
+**290 tables on a fresh boot**, carrying **3,701 columns**, **336 indexes** and — read this twice —
+only **19 declared foreign keys**.
+
+> **Referential integrity is maintained by application code, not enforced by the database.** Nineteen
+> constraints across two hundred and ninety tables means the relationships are real but unpoliced:
+> delete a `users` row directly with SQL and you will orphan rows across dozens of tables. This is
+> the single most important thing to know before writing a migration or a manual data fix.
+
+Two generated companion documents carry the full detail, both produced from a freshly migrated
+database rather than written by hand:
+
+| Document | Contents |
+|---|---|
+| [`PCI_DATABASE_SCHEMA.md`](PCI_DATABASE_SCHEMA.md) | **Every table, every column** — type, nullability, default, primary key, and declared or inferred relationship — plus every index, grouped into 16 domains |
+| [`PCI_DATABASE_ERD.md`](PCI_DATABASE_ERD.md) | **12 entity-relationship diagrams**, one per domain, distinguishing declared foreign keys from inferred ones |
+
+Regenerate both with `gen_schema.py` against a fresh database after any schema change.
+
+By family:
 
 | Prefix | Tables | Area |
 |---|---|---|
@@ -1684,6 +1700,8 @@ Claim work through `WorkerLease` with a single conditional `UPDATE`. Never `SELE
 | Boot, middleware, core endpoints | `backend/Program.cs` |
 | Data access / dialect translation | `backend/Data/Db.cs`, `backend/MYSQL.md` |
 | Schema / migrations | `backend/schema.sql`, `backend/Data/Migrate.cs` |
+| **Every table and column** | [`docs/PCI_DATABASE_SCHEMA.md`](PCI_DATABASE_SCHEMA.md) — generated |
+| **Entity-relationship diagrams** | [`docs/PCI_DATABASE_ERD.md`](PCI_DATABASE_ERD.md) — generated |
 | Auth / RBAC | `backend/Core/Auth.cs`, `backend/Core/Security.cs` |
 | Canonical identity | `backend/Core/WorldIdentity.cs` |
 | A feature's endpoints | `backend/Endpoints/*.cs` (named by area) |
