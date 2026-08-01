@@ -47,14 +47,10 @@ regression case, plus safer deadline `Date.parse` (avoid `…Z` + `Z` → `NaN`)
 - Branch-protection details are not readable with this token (403); operationally, recent merges
   succeeded once `frontend` went green.
 
-**Note:** #220 and #221 both add onboarding docs — review for duplication before merging both.
-
----
-
 ## How to merge when you still see a red X
 
 1. Open the PR → **Checks** → confirm you are looking at the **latest** run, not an older failure
-   from before #215.
+   from before #222.
 2. If the latest run is green and Mergeable = CLEAN, merge (or ask an agent with write access).
 3. If an older run is red only, **Re-run failed jobs** is optional — GitHub merge uses the latest
    commit’s checks.
