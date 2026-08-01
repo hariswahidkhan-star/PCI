@@ -149,15 +149,23 @@ catch { /* /data exists but is not ours to write — keep the configured default
         if (mysqlIncomplete && !allowInsecure)
         {
             var canUseDiskSqlite = dataDiskWritable
-                || (allowSqliteProd && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal));
-            if (canUseDiskSqlite)
+                || (allowSqliteProd && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal))
+                || (allowWorldSqlite && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal));
+            if (canUseDiskSqlite || (worldOnly && dataDiskWritable))
             {
                 Environment.SetEnvironmentVariable("DB_PROVIDER", "sqlite");
                 dbProvider = "sqlite";
+                if (worldOnly)
+                {
+                    // Keep the world-only SQLite bridge engaged so later gates match the image entrypoint.
+                    Environment.SetEnvironmentVariable("PCIWORLD_ALLOW_SQLITE", "true");
+                    allowWorldSqlite = true;
+                }
                 if (!effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal))
                 {
-                    Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pci.db");
-                    effectiveDbFile = "/data/pci.db";
+                    var fallbackDb = worldOnly ? "/data/pciworld.db" : "/data/pci.db";
+                    Environment.SetEnvironmentVariable("DATABASE_FILE", fallbackDb);
+                    effectiveDbFile = fallbackDb;
                 }
                 sqliteOnPersistentDisk = dataDiskWritable
                     && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal);
@@ -171,7 +179,7 @@ catch { /* /data exists but is not ours to write — keep the configured default
                 Console.WriteLine("[config] Refusing to open database: MySQL is selected but connection settings are incomplete " +
                     "(need MYSQL_HOST + MYSQL_PASSWORD, or MYSQL_CONNECTION_STRING). " +
                     "If you do not have an external database yet, set DB_PROVIDER=sqlite, attach a disk at /data, " +
-                    "and set DATABASE_FILE=/data/pci.db (ALLOW_SQLITE_IN_PRODUCTION=true if the disk probe fails).");
+                    "and set DATABASE_FILE=/data/pci.db (or /data/pciworld.db on a PCI World-only host).");
                 Environment.Exit(78);
             }
         }
