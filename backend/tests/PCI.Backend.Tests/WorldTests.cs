@@ -399,6 +399,9 @@ public class WorldTests
             "/world/r/abc", "/world/i/abc", "/world/p/abc", "/world/verify-email", "/world/reset-password",
             "/world-admin", "/api/world/session", "/api/world/attempts/5/submit",
             "/api/world-admin/challenges", "/api/health", "/robots.txt", "/favicon.ico",
+            // React SPAs — distinct path segments from /world and /world-admin.
+            "/world-app", "/world-app/auth", "/world-app/assets/world.js",
+            "/world-admin-app", "/world-admin-app/index.html",
             // The self-hosted brand fonts — without them a world-only deployment silently loses
             // its typography, because nothing else may serve them on this host.
             "/assets/fonts/archivo-latin.woff2", "/assets/fonts/inter-latin-ext.woff2",

@@ -691,12 +691,57 @@ jobs:
           docker logs pci-app-sqlite 2>&1 | tail -120 || true
           docker logs pci-app-sqlite2 2>&1 | tail -120 || true
 
+      # Dedicated PCI World image — the one operators pick when Dockerfile Path = PCIWorld/Dockerfile.
+      # Proves: (1) the image builds with World React SPAs, (2) leftover DB_PROVIDER=mysql with blank
+      # credentials still boots on SQLite, (3) /world-app is admitted on a world-only host.
+      - name: Build and boot the dedicated PCIWorld image (zero-config, no external DB)
+        run: |
+          set -e
+          docker build -f PCIWorld/Dockerfile -t pciworld-ci .
+          docker volume create pciworld-ci-data
+          docker run -d --name pciworld-app -p 8083:8080 \
+            -v pciworld-ci-data:/data \
+            -e DB_PROVIDER=mysql \
+            -e MYSQL_HOST= \
+            -e MYSQL_PASSWORD= \
+            -e RENDER_EXTERNAL_URL=https://pciworld-ci.example.onrender.com \
+            pciworld-ci
+          echo "waiting for PCI World /api/health…"
+          for i in $(seq 1 60); do
+            if [ "$(docker inspect -f '{{.State.Running}}' pciworld-app)" != "true" ]; then
+              echo "::error::PCIWorld container exited before becoming healthy"
+              docker logs pciworld-app 2>&1 | tail -100; exit 1
+            fi
+            if curl -fsS http://localhost:8083/api/health > /tmp/health-world.json 2>/dev/null; then
+              cat /tmp/health-world.json; echo; break
+            fi
+            sleep 5
+            if [ "$i" = 60 ]; then
+              echo "::error::PCIWorld /api/health never became ready"
+              docker logs pciworld-app 2>&1 | tail -100; exit 1
+            fi
+          done
+          grep -q '"database_provider":"sqlite"' /tmp/health-world.json
+          for path in / /world /world-app/ /world-admin-app/; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:8083$path")
+            echo "$path -> $code"
+            case "$code" in 200|301|302|308) ;; *) echo "::error::PCIWorld $path returned $code"; exit 1;; esac
+          done
+          # Institute portals must stay unreachable on a world-only host.
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8083/app/)
+          echo "/app/ -> $code (want 404)"
+          [ "$code" = "404" ]
+
+      - name: PCIWorld container logs (always)
+        if: always()
+        run: docker logs pciworld-app 2>&1 | tail -150 || true
+
       - name: Cleanup
         if: always()
         run: |
-          docker rm -f pci-app pci-db pci-app-sqlite pci-app-sqlite2 2>/dev/null || true
+          docker rm -f pci-app pci-db pci-app-sqlite pci-app-sqlite2 pciworld-app 2>/dev/null || true
           docker network rm pci-ci 2>/dev/null || true
-          docker volume rm pci-ci-data 2>/dev/null || true
+          docker volume rm pci-ci-data pciworld-ci-data 2>/dev/null || true
 
   static-quality:
     # Static-quality & supply-chain gates (Increment A). BLOCKING: the NuGet vulnerable-package

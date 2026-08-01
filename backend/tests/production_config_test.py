@@ -143,6 +143,17 @@ try:
                 world_db)
     if os.path.exists(world_db): os.remove(world_db)
 
+    # The Render brick for PCI World: leftover DB_PROVIDER=mysql + blank MYSQL_* on a world-only
+    # host. Must fall back to SQLite on /data and open the database (no external DB required).
+    world_mysql_fallback = os.path.join(data_dir, "pciworld-mysql-fallback-boot-test.db")
+    if os.path.exists(world_mysql_fallback): os.remove(world_mysql_fallback)
+    check_boots("PCI World incomplete MySQL falls back to SQLite on /data and boots",
+                {"ASPNETCORE_ENVIRONMENT": "Production", "PCIWORLD_ONLY": "true",
+                 "DB_PROVIDER": "mysql", "MYSQL_HOST": "", "MYSQL_PASSWORD": "",
+                 "RENDER_EXTERNAL_URL": "https://pciworld.example.onrender.com"},
+                world_mysql_fallback)
+    if os.path.exists(world_mysql_fallback): os.remove(world_mysql_fallback)
+
     # Whole-platform deploy recovery: ALLOW_SQLITE_IN_PRODUCTION + a /data database must get past
     # the fail-closed gate too — but unlike world-only, the base-URL/CORS/at-rest-key blockers stay
     # ACTIVE, so the overrides must satisfy them for boot to proceed.
