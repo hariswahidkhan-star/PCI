@@ -13,10 +13,6 @@ public static class WorldOnly
     public static bool Allowed(Microsoft.AspNetCore.Http.PathString p) =>
         p == "/" ||
         p.StartsWithSegments("/world") || p.StartsWithSegments("/world-admin") ||
-        // React SPAs for the participant app and World admin console. These are NOT covered by
-        // StartsWithSegments("/world") — "/world-app" is a different first segment — so a
-        // world-only host used to 404 every SPA route while /world (server-rendered) still worked.
-        p.StartsWithSegments("/world-app") || p.StartsWithSegments("/world-admin-app") ||
         p.StartsWithSegments("/api/world") || p.StartsWithSegments("/api/world-admin") ||
         p.StartsWithSegments("/api/health") ||
         // The self-hosted brand fonts the world pages reference. Only the fonts directory — the

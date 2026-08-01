@@ -149,23 +149,15 @@ catch { /* /data exists but is not ours to write — keep the configured default
         if (mysqlIncomplete && !allowInsecure)
         {
             var canUseDiskSqlite = dataDiskWritable
-                || (allowSqliteProd && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal))
-                || (allowWorldSqlite && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal));
-            if (canUseDiskSqlite || (worldOnly && dataDiskWritable))
+                || (allowSqliteProd && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal));
+            if (canUseDiskSqlite)
             {
                 Environment.SetEnvironmentVariable("DB_PROVIDER", "sqlite");
                 dbProvider = "sqlite";
-                if (worldOnly)
-                {
-                    // Keep the world-only SQLite bridge engaged so later gates match the image entrypoint.
-                    Environment.SetEnvironmentVariable("PCIWORLD_ALLOW_SQLITE", "true");
-                    allowWorldSqlite = true;
-                }
                 if (!effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal))
                 {
-                    var fallbackDb = worldOnly ? "/data/pciworld.db" : "/data/pci.db";
-                    Environment.SetEnvironmentVariable("DATABASE_FILE", fallbackDb);
-                    effectiveDbFile = fallbackDb;
+                    Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pci.db");
+                    effectiveDbFile = "/data/pci.db";
                 }
                 sqliteOnPersistentDisk = dataDiskWritable
                     && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal);
@@ -179,7 +171,7 @@ catch { /* /data exists but is not ours to write — keep the configured default
                 Console.WriteLine("[config] Refusing to open database: MySQL is selected but connection settings are incomplete " +
                     "(need MYSQL_HOST + MYSQL_PASSWORD, or MYSQL_CONNECTION_STRING). " +
                     "If you do not have an external database yet, set DB_PROVIDER=sqlite, attach a disk at /data, " +
-                    "and set DATABASE_FILE=/data/pci.db (or /data/pciworld.db on a PCI World-only host).");
+                    "and set DATABASE_FILE=/data/pci.db (ALLOW_SQLITE_IN_PRODUCTION=true if the disk probe fails).");
                 Environment.Exit(78);
             }
         }
@@ -189,30 +181,12 @@ catch { /* /data exists but is not ours to write — keep the configured default
                 "see docs/MYSQL_MIGRATION.md for the cutover.");
         if (allowWorldSqlite)
         {
-            var rawWorldDb = Environment.GetEnvironmentVariable("DATABASE_FILE");
-            var dbFile = Path.GetFullPath(string.IsNullOrWhiteSpace(rawWorldDb) ? "./pci.db" : rawWorldDb);
+            var dbFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? ".");
             if (!dbFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
             {
-                // Only auto-adopt the image/default path (unset or ./pci.db). An explicit
-                // ephemeral path like /tmp/... must still fail closed — that is the contract the
-                // production_config suite pins, and adopting it would silently move a mis-set
-                // database onto the disk.
-                var isImageDefault = string.IsNullOrWhiteSpace(rawWorldDb)
-                    || string.Equals(rawWorldDb.Trim(), "./pci.db", StringComparison.Ordinal)
-                    || string.Equals(rawWorldDb.Trim(), "pci.db", StringComparison.Ordinal);
-                if (dataDiskWritable && isImageDefault)
-                {
-                    Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pciworld.db");
-                    effectiveDbFile = "/data/pciworld.db";
-                    sqliteOnPersistentDisk = true;
-                    Console.WriteLine("[boot] PCIWORLD_ALLOW_SQLITE: DATABASE_FILE was the image default → /data/pciworld.db");
-                }
-                else
-                {
-                    Console.WriteLine("[config] Refusing to open database: PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE " +
-                        "under the explicit persistent mount /data (e.g. /data/pciworld.db).");
-                    Environment.Exit(78);
-                }
+                Console.WriteLine("[config] Refusing to open database: PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE " +
+                    "under the explicit persistent mount /data (e.g. /data/pciworld.db).");
+                Environment.Exit(78);
             }
         }
 
