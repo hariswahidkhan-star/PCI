@@ -71,7 +71,15 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
 
   // Earliest bookable instant is 2 h out (server enforces the same); latest is the entitlement deadline.
   const minMs = Date.now() + 2 * 3600_000
-  const maxMs = entry.deadline ? Date.parse(String(entry.deadline).replace(' ', 'T') + 'Z') : Number.POSITIVE_INFINITY
+  // Backend deadlines are 'yyyy-MM-dd HH:mm:ss' (no zone). Treat them as UTC. Do not append 'Z'
+  // when one is already present — '…Z' + 'Z' parses as NaN and disables every calendar day.
+  const maxMs = (() => {
+    if (!entry.deadline) return Number.POSITIVE_INFINITY
+    const raw = String(entry.deadline).trim()
+    const normalized = /Z$/i.test(raw) ? raw : raw.includes('T') ? `${raw}Z` : `${raw.replace(' ', 'T')}Z`
+    const parsed = Date.parse(normalized)
+    return Number.isFinite(parsed) ? parsed : Number.POSITIVE_INFINITY
+  })()
   const slotMs = (day: Date, hm: string) => {
     const [h, m] = hm.split(':').map(Number)
     return new Date(day.getFullYear(), day.getMonth(), day.getDate(), h, m).getTime()
