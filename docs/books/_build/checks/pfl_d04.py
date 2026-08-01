@@ -350,7 +350,11 @@ def run(ctx):
 
     # ---- KA 4.3.3 breakeven and the two-way table -----------------------------------
     check("4.3.3 breakeven inflow at 8%", I0 / AF15, D("7009772.70"))
-    check("4.3.3 breakeven equals the capital-recovery annuity", I0 / AF15, I0 / AF15)
+    # The two standard forms of capital recovery must agree: dividing by the annuity factor and
+    # multiplying by the capital-recovery factor r/(1-(1+r)^-n). Comparing I0/AF15 with itself
+    # asserted nothing; comparing the two FORMS is the identity the sentence claims.
+    check("4.3.3 breakeven equals the capital-recovery annuity",
+          I0 / AF15, I0 * (D("0.08") / (1 - D("1.08") ** -15)))
     check("4.3.3 revenue headroom (%)", (A - I0 / AF15) / A * 100, D("21.24"), tol=D("0.005"))
     check("4.3.3 rate headroom (points)", IRR * 100 - 8, D("4.19"), tol=D("0.005"))
     TABLE = {

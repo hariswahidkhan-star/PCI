@@ -43,9 +43,19 @@ def make(ctx):
         body += (f'<rect x="{x:.1f}" y="{y}" width="{w:.1f}" height="46" rx="5" fill="{BLUE}" '
                  f'opacity="{shade:.2f}"/>'
                  f'<text x="{x + w / 2:.1f}" y="{y + 21}" font-size="13" font-weight="800" '
-                 f'fill="white" text-anchor="middle">{n}</text>'
-                 f'<text x="{x + w / 2:.1f}" y="{y + 37}" font-size="9.4" fill="white" '
-                 f'text-anchor="middle">at {unit} each</text>'
+                 f'fill="white" text-anchor="middle">{n}</text>')
+        # The unit label is white, so anything overflowing the bar lands white-on-white and simply
+        # vanishes. The narrowest stage ("To financial close", 2 of 40) is exactly that case: "at
+        # 2,400,000 each" is wider than its bar and the reader saw "t 2,400,000 eac". When it does
+        # not fit inside, it goes underneath in ink instead.
+        unit_label = f"at {unit} each"
+        if len(unit_label) * 9.4 * 0.5 <= w - 8:
+            body += (f'<text x="{x + w / 2:.1f}" y="{y + 37}" font-size="9.4" fill="white" '
+                     f'text-anchor="middle">{unit_label}</text>')
+        else:
+            body += (f'<text x="{x + w / 2:.1f}" y="{y + 58}" font-size="9.4" fill="{SLATE}" '
+                     f'text-anchor="middle">{unit_label}</text>')
+        body += (
                  f'<text x="{L - 12}" y="{y + 21}" font-size="10.8" font-weight="600" fill="{INK}" '
                  f'text-anchor="end">{name}</text>'
                  f'<text x="{L - 12}" y="{y + 36}" font-size="9.4" fill="{SLATE}" '

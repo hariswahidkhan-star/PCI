@@ -246,7 +246,8 @@ def run(ctx):
     # 8.2.3 table: re-adding its own printed components gives a total one dollar from the printed
     # total, because the components are each rounded. A summary page that re-adds instead of
     # referencing produces exactly this class of disagreement.
-    check("MCQ 6.1-D the engine's back-loaded total, as published", D(51715720), 51715720)
+    check("MCQ 6.1-D the engine's back-loaded total, as published",
+          D("50324512.16") + D("1391208.31"), 51715720, D("0.5"))
     check("MCQ 6.1-D a summary page that re-adds the rounded components instead",
           D(50324512) + D(1391209), 51715721)
     check("MCQ 6.1-D invariant: the recomputed subtotal disagrees with the engine — the defect "
@@ -311,7 +312,10 @@ def run(ctx):
     check("MCQ 6.2-E comparator's balancing contingency as % of the EPC price",
           q(COMPARATOR_CONT / EPC * 100, 1), D("2.4"))
     check("MCQ 6.2-E the envelope both are solved inside", CAPEX, 60000000)
-    check("MCQ 6.2-E option D the 'cleaner figure' offered instead", D(1200000), 1200000)
+    check("MCQ 6.2-E option D INVARIANT the 'cleaner figure' is round to the nearest 100,000",
+          1 if D(1200000) % D(100000) == 0 else 0, 1)
+    check("MCQ 6.2-E INVARIANT the true balancing line is not round to the nearest 100,000",
+          1 if COMPARATOR_CONT % D(100000) != 0 else 0, 1)
     check("MCQ 6.2-E option D overstates the balancing line by", D(1200000) - COMPARATOR_CONT,
           48000)
     check("MCQ 6.2-E invariant: 1,200,000 is a round number and a balancing line is not — "

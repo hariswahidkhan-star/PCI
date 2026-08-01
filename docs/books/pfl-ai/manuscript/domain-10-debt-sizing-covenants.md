@@ -670,7 +670,7 @@ number, is what credit committees actually decide on.
 Where the capital structure has more than one debt tranche, the set has to be computed twice — on
 senior debt service alone and on total debt service — because project-level subordinated or
 mezzanine debt consumes the same `CFADS` the senior covenant measures. Domain 9 (KA 9.2.2 and
-Fig 9.2.1) works that arithmetic on Kestrel and is the reference; this domain's ratios are the
+Fig 9.2.3) works that arithmetic on Kestrel and is the reference; this domain's ratios are the
 senior-only case throughout.
 
 **Worked example 10.2.4 — four covenants, one stress: which one binds first?**

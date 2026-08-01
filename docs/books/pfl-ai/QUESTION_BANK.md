@@ -14,10 +14,10 @@ distractor cannot be arithmetically impossible without the gate failing.
 | Level | Items | Share |
 |---|---|---|
 | Recall | 13 | 2.9 % |
-| Comprehension | 63 | 14.0 % |
+| Comprehension | 64 | 14.2 % |
 | Application | 117 | 26.0 % |
 | Analysis | 137 | 30.4 % |
-| Evaluation | 120 | 26.7 % |
+| Evaluation | 119 | 26.4 % |
 
 A bank weighted heavily to recall tests memory rather than competence; one weighted
 heavily to Evaluation is unanswerable under time pressure. The distribution above is a fact
@@ -3902,7 +3902,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. USD 1,295,000
 - D. USD 2,012,123
 
-*Rationale:* `(240,000/1.274303) × 8.383844 = 1,578,947`, being 85.35 % of the cost. A is full debt funding, which yields a marginal `DSCR` of 1.0876. C is the 70 % pro-rata debt share — inside the limit but not the limit. D applies `AF` to the full `ΔCFADS` without the coverage divisor, the sizing error of Domain 10, Exercise 10.1.
+*Rationale:* `(240,000/1.274344) × 8.383844 = 1,578,947`, being 85.35 % of the cost. A is full debt funding, which yields a marginal `DSCR` of 1.0876. C is the 70 % pro-rata debt share — inside the limit but not the limit. D applies `AF` to the full `ΔCFADS` without the coverage divisor, the sizing error of Domain 10, Exercise 10.1.
 
 
 **14.3-D** `[14.3.3 · Analysis]` A variation has an `NPV` of +711,946 at the board's 8 % rate and a marginal `DSCR` of 1.0876 against a 1.20× covenant if fully debt-funded. The correct conclusion is:
@@ -3982,7 +3982,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. USD 4,800,000
 - D. nil, since 1.1777 exceeds 1.00
 
-*Rationale:* `42,000,000 − (5,900,000/1.274303) × 8.383844 = 3,184,211`. A restores only the 1.20× covenant, leaving zero headroom. C is the performance damages cap, not the calibrated amount. D confuses paying debt service with satisfying a covenant (Domain 10, KA 10.2.1).
+*Rationale:* `42,000,000 − (5,900,000/1.274344) × 8.383844 = 3,184,211`. A restores only the 1.20× covenant, leaving zero headroom. C is the performance damages cap, not the calibrated amount. D confuses paying debt service with satisfying a covenant (Domain 10, KA 10.2.1).
 
 
 **14.4-E** `[14.4.2 · Evaluation]` The term sheet provides a calendar-fixed first repayment date. On Kestrel's figures the 1.20× covenant fails beyond **0.7001 months** of slip, and the delivery team regards a slip of up to four months as a live risk. Four amendments are available and the sponsor can press for one. Which should be pressed first?

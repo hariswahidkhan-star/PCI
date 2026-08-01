@@ -378,7 +378,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. USD 2,092,898
 - D. USD 771,797
 
-*Rationale:* Avoided cost PV is `457,737 + 103,363 = 561,101`, added to the project's NPV (2.2.2b). A omits the counterfactual entirely; C adds the **undiscounted** 760,000; D subtracts the avoided cost instead of adding it, treating a cost the project removes as a cost it incurs.
+*Rationale:* Avoided cost PV is `457,737.13 + 103,363.49 = 561,100.62`, i.e. **561,101**, added to the project's NPV (2.2.2b). A omits the counterfactual entirely; C adds the **undiscounted** 760,000; D subtracts the avoided cost instead of adding it, treating a cost the project removes as a cost it incurs.
 
 
 **2.2-F** `[2.2.3 · Analysis]` Beta leads Meridian 4.05 to 3.95. Scores on strategic fit are Beta 5, Meridian 4; on benefit value Beta 3, Meridian 5. Shifting weight from strategic fit to benefit value flips the ranking at a shift of:

@@ -37,10 +37,14 @@ def make(ctx):
     def X(v):
         return L + v / xmax * plot_w
 
+    # Gridlines every 1.5m, labelled to one decimal. At zero decimals the 1.5m, 4.5m and 7.5m lines
+    # printed as "2m", "4m" and "8m" — a ruler misstating its own gridlines by up to half a million
+    # and reading 0/2/3/4/6/8/9, which implies uneven intervals on a chart whose entire subject is
+    # the spread between six contingency figures.
     grid = "".join(
         f'<line x1="{X(v):.1f}" y1="{T}" x2="{X(v):.1f}" y2="{H - B}" stroke="{GRID}"/>'
         f'<text x="{X(v):.1f}" y="{H - B + 16}" font-size="10" fill="{SLATE}" '
-        f'text-anchor="middle">{v / 1000000:.0f}m</text>'
+        f'text-anchor="middle">{v / 1000000:.1f}m</text>'
         for v in range(0, 9000001, 1500000))
     bars = ""
     for i, (lab, amt, pct, note, emph) in enumerate(methods):

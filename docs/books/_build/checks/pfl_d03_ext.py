@@ -383,7 +383,10 @@ def run(ctx):
     for k, (computed, printed) in enumerate(zip(hol_path, printed_hol), start=4):
         check(f"Fig 3.2.3 holiday balance after year {k}", computed.quantize(D("1")), printed)
     check("Fig 3.2.3 level-principal balance at year 6", DEBT - 6 * DEBT / TEN, 21000000)
-    check("Fig 3.2.3 header: level-principal lifetime interest", D(16380000), 16380000)
+    # Derived from the balance path rather than restated: interest each year is the rate on the
+    # opening balance, and the balance falls by a constant principal instalment.
+    _lp_interest = sum(D("0.06") * (DEBT - k * DEBT / TEN) for k in range(TEN))
+    check("Fig 3.2.3 header: level-principal lifetime interest", _lp_interest, 16380000)
     check("Fig 3.2.3 header: bullet lifetime interest", (DEBT * R * TEN).quantize(D("0.01")),
           30240000)
 
@@ -971,6 +974,13 @@ def run(ctx):
           D("1.0605"))
     check("Summary: first-year coverage range, high", (CF / (DEBT * R)).quantize(D("0.0001")),
           D("2.5333"))
+
+    # Fig 3.3.1's sample points. The curve is drawn from the formula, but the three values the
+    # chart labels were stated in the specification and nowhere computed, so the labels a reader
+    # actually reads off the picture rested on prose.
+    for t, printed in ((5, 862609), (10, 744094), (20, 553676)):
+        check(f"Fig 3.3.1 real value of 1,000,000 at year {t}, 3 % inflation",
+              (D(1000000) / D("1.03") ** t).quantize(D(1)), D(printed))
     # A row count is a structural claim, not an arithmetic one, and it stood here as
     # `check(..., 16, 16)` — a constant compared to itself, which can never fail. Structural
     # audits belong to the document generators (make_glossary / make_question_bank /

@@ -183,8 +183,13 @@ def run(ctx):
     check("WE 5.2.1 INVARIANT the delay objection is not decisive at four weeks",
           1 if BE_WEEKS > 4 else 0, 1)
     # Fig 5.2.1 plotted values and annotation
-    check("Fig 5.2.1 log axis floor", D(200), 200)
-    check("Fig 5.2.1 log axis ceiling", D(200000), 200000)
+    # An axis bound restated against itself asserts nothing. What matters is that the drawn range
+    # actually contains the data: a log axis of 200 to 200,000 has to bracket the whole ladder, or
+    # the chart clips the very column its argument rests on.
+    check("Fig 5.2.1 INVARIANT the log axis brackets every plotted value",
+          1 if all(D(200) <= v <= D(200000) for v in LADDER) else 0, 1)
+    check("Fig 5.2.1 INVARIANT the axis is no wider than one decade beyond the data",
+          1 if min(LADDER) / D(200) < 10 and D(200000) / max(LADDER) < 10 else 0, 1)
     check("Fig 5.2.1 dashed elicitation line", SPEND, 84000)
     check("Fig 5.2.1 annotation: one live defect moved saves", LADDER[4] - L0, 102000)
     check("Fig 5.2.1 INVARIANT the dashed line sits below the tallest column",
@@ -486,7 +491,9 @@ def run(ctx):
     check("Case A expected dispute cost", q(EXP_COST, 2), D("293510.00"))
     check("Case A return multiple", q(EXP_COST / REMED, 2), D("9.36"))
     check("Case A breakeven dispute probability", q(BE_P * 100, 2), D("2.67"))
-    check("Case A observed disputes against the expectation of 24.5", D(22), 22)
+    check("Case A INVARIANT the observed disputes fall short of the expectation of 24.5",
+          1 if D(22) < D("24.5") else 0, 1)
+    check("Case A observed shortfall against the expectation", D("24.5") - D(22), D("2.5"))
     check("Case A INVARIANT observed disputes fell below the expectation",
           1 if D(22) < EXP_N else 0, 1)
     check("Case A four-week acceptance suspension priced", 4 * COD, 57120)
@@ -524,7 +531,10 @@ def run(ctx):
     check("Case B annual uplift", B_UPLIFT, 425500)
     check("Case B payback in years", q(B_CHANGE / B_UPLIFT, 2), D("0.67"))
     check("Case B payback in months", q(B_CHANGE / B_UPLIFT * 12, 1), D("8.0"))
-    check("Case B further requirements implemented of those found", D(41), 41)
+    # An INPUT is not a golden answer. Restating one against itself (`check(..., D(8), 8)`)
+    # produced a passing line that could never fail; whether the manuscript still states
+    # this figure is a question about the manuscript, which audit_prose_math.py and
+    # audit_figures.py ask by reading it. Removed rather than left as false assurance.
     check("Case B INVARIANT the uplift exceeds the cost of buying it in year one",
           1 if B_UPLIFT > B_CHANGE else 0, 1)
     check("Case B INVARIANT re-elicitation left benefit still short of forecast",

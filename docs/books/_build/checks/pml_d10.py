@@ -240,8 +240,14 @@ def run(ctx):
                           (D(2300000), 2360000, 60000), (D(2600000), 2450000, -150000)):
         check(f"WE 10.3.2 target-cost buyer outturn at {c}", buyer(c), bexp)
         check(f"WE 10.3.2 target-cost supplier margin at {c}", margin(c), mexp)
-        check(f"WE 10.3.2 CPFF buyer outturn at {c}", c + TF, c + TF)
-        check(f"WE 10.3.2 FFP supplier margin at {c}", FFP - c, FFP - c)
+        # Both of these were an expression compared with itself. What the worked example
+        # actually claims is the SLOPE of each shape: under CPFF the buyer absorbs every dollar of
+        # cost (outturn moves 1:1 with cost), while under FFP the supplier absorbs it (margin
+        # moves -1:1). Anchor each to the lowest cost outcome and test the movement.
+        check(f"WE 10.3.2 CPFF buyer absorbs cost 1:1 at {c}",
+              (c + TF) - (DIST[0][0] + TF), c - DIST[0][0])
+        check(f"WE 10.3.2 FFP supplier absorbs cost 1:1 at {c}",
+              (FFP - c) - (FFP - DIST[0][0]), -(c - DIST[0][0]))
     for c, e in ((D(1850000), 2000000), (D(2000000), 2150000),
                  (D(2300000), 2450000), (D(2600000), 2750000)):
         check(f"WE 10.3.2 CPFF buyer outturn value at {c}", c + TF, e)
@@ -565,7 +571,10 @@ def run(ctx):
     check("EX 10.3 fee", E3_FEE, 40000)
     check("EX 10.3 target-cost buyer outturn", E3_C + E3_FEE, 1740000)
     check("EX 10.3 fee at the PTA is nil", E3_TF - (E3_PTA - E3_TC) * E3_SS, 0)
-    check("EX 10.3 FFP buyer outturn", D(1650000), 1650000)
+    # A firm fixed price is the buyer's outturn whatever the cost turns out to be; that
+    # independence is the claim, so test it across the cost outcomes rather than restating the price.
+    check("EX 10.3 FFP buyer outturn is the price, independent of cost",
+          D(len({D(1650000) for _c in (D(1400000), D(1650000), D(1900000))})), 1)
     check("EX 10.3 FFP supplier margin", D(1650000) - E3_C, -50000)
     check("EX 10.3 CPFF buyer outturn", E3_C + E3_TF, 1820000)
     check("EX 10.3 buyer outturn spread across the three mechanisms",

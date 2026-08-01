@@ -251,13 +251,30 @@ def run(ctx):
     TOL = MB * D("0.05")
     for r, v in [("M1", 36000), ("M2", 42000), ("M3", 30000), ("M4", 21000), ("M5", -10000)]:
         check(f"8.2.2b {r} EMV", memv[r], v)
+    # Fig 8.2.3 plots EMV against the per-risk sigma contribution and labels every bar. The EMVs
+    # were asserted above; the sigma labels were not, so five numbers a reader takes off the page
+    # rested on nothing. The chart's whole argument is that the ranking flips between the two
+    # measures — M3 third by EMV, first by variance — which is only true if these are right.
+    for r, v in [("M1", "44.1"), ("M2", "57.2"), ("M3", "60.0"),
+                 ("M4", "32.1"), ("M5", "17.3")]:
+        check(f"8.2.2b / Fig 8.2.3 {r} sigma contribution (thousands, as labelled)",
+              (msig[r] / 1000).quantize(D("0.1")), D(v))
+    check("Fig 8.2.3 INVARIANT M3 ranks third by EMV and first by sigma",
+          1 if (sorted(memv, key=lambda k: -memv[k]).index("M3") == 2
+                and sorted(msig, key=lambda k: -msig[k]).index("M3") == 0) else 0, 1)
     check("8.2.2b total expected cost exposure", MTOT, 119000)
     check("8.2.2b exposure as % of approved cost", MTOT / MB * 100, D("4.96"))
     check("8.2.2b the objective's 5 % tolerance", TOL, 120000)
     check("8.2.2b exposure as % of the tolerance", MTOT / TOL * 100, D("99.17"))
     check("8.2.2b every quantified threat clears the 60,000 screen floor",
           D(min(i for r, p, i in MER if i > 0)), 70000)
-    check("8.2.2b the one entry below the floor is the opportunity", D(40000), 40000)
+    # The claim is about WHICH entry falls below the screen floor, so test exactly that: one
+    # entry is under 60,000 and it is the negative-impact one.
+    _below = [r for r, p, i in MER if abs(i) < 60000]
+    check("8.2.2b exactly one register entry is below the 60,000 screen floor",
+          D(len(_below)), 1)
+    check("8.2.2b INVARIANT the entry below the floor is the opportunity",
+          1 if all(i < 0 for r, p, i in MER if r in _below) else 0, 1)
     check("8.2.2b Meridian's benefit rate ties Domain 1's annual figure",
           ctx["MERIDIAN_BENEFIT_70PCT"], 685440)
 
