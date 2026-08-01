@@ -6,7 +6,7 @@
 > **Reviewer** rather than scored, because a matrix that claimed conformance on narrative style
 > because a script looked at it would be worse than one that admits the judgement is human.
 
-**24 Conforms · 3 Partial · 0 Not met · 3 Reviewer**, over 30 pattern elements.
+**25 Conforms · 3 Partial · 0 Not met · 2 Reviewer**, over 30 pattern elements.
 
 This replaces the Phase 0 baseline, in which all thirty rows read *Planned* — a state that
 provided no evidence either way and had survived every gate since.
@@ -17,7 +17,7 @@ provided no evidence either way and had survived every gate since.
 | Title-page hierarchy | Designation, subtitle, rule, edition/publisher/principle | **Conforms** | title page carries all five elements including the responsible-AI principle |
 | Copyright & disclaimers | Injected notice block | *Partial* | draft status page carries the legal, jurisdictional and AI-drafting notices; the **full copyright and notice suite is deferred to the released edition** and the volume says so |
 | Foreword / how-to-use | "How to use this reference" page | **Conforms** | "How to use this book" front-matter section present |
-| Part opening format | Ghost number, kicker, title, description, bar | *Reviewer* | no part dividers found in built HTML |
+| Part opening format | Ghost number, kicker, title, description, bar | **Conforms** | 4 part dividers emitted |
 | Chapter opening format | Ghost number, kicker, rules, binding blockquote | **Conforms** | 16 domains, each opening with its binding blockquote |
 | Learning objectives | "After this domain a candidate can…" | **Conforms** | 16 of 16 domains |
 | Terminology & definitions | Key-terms boxes feeding a glossary | **Conforms** | 61 key-terms tables; glossary derived from them by `make_glossary.py`, 447 entries |
