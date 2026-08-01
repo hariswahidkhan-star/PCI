@@ -1187,6 +1187,52 @@ theatre, and the honest response is to fix the process rather than reformat the 
 risks (supplier confirmations slipping, defect discovery rate rising, permit queue lengthening)
 that fire before the event, which is what makes a response affordable (Domain 6's lead-time point).
 
+### AI in this KA
+
+This Knowledge Area contains one task a model does genuinely well, one it does badly while appearing
+to do it well, and one it cannot do at all. Keeping them apart is the whole of the discipline here.
+
+**Generating candidate responses: genuinely useful.** Asked for ways to avoid, transfer, mitigate or
+accept a stated risk, a model returns breadth — including options a team anchored on last project's
+playbook would not have raised. Breadth is exactly what response selection needs, because 8.3.1's
+arithmetic can only choose among the options put in front of it. A response never generated cannot be
+rejected on cost.
+
+**Costing those responses: badly, and convincingly.** A response's cost is contract-specific and
+counterparty-specific — it depends on what this supplier will charge this owner under this contract
+this year — and none of that is in the model. What comes back is a plausible figure with no
+provenance, and it enters the arithmetic of 8.3.1 with the same weight as a quoted price. The
+selection rule is comparative: expected cost of retention against loaded cost of transfer, and a
+fabricated number on either side inverts the answer without changing its appearance. **Every cost
+entering a response decision carries its source**, and "the assistant suggested it" is not one.
+
+**Reserve authority: not a model's business, at any capability level.** 8.3.2's point is that a
+reserve is defined by *who may release it and on what evidence*, not by its size. That is a
+governance fact — a delegation held by a named person under a scheme of authority — and it cannot be
+inferred, recommended or held by a system. A tool may report reserve position, drawdown history and
+the trend against consumption; the release decision is a human act and the record of it is the
+control.
+
+**The failure mode specific to registers.** 8.3.3 asks a register to earn its keep, and language
+models are extremely good at making a register *look* maintained. Re-summarise fifty entries and every
+one reads as freshly considered while nothing has been re-assessed: no probability revisited, no
+trigger re-tested, no owner re-confirmed. The register gains fluency and loses the only property that
+mattered. This is the sharpest instance in the volume of a general rule — **an artefact that is easy
+to regenerate is easy to leave unexamined** — and the defence is mechanical rather than editorial:
+a register entry's currency is the date of its last *assessment*, recorded separately from the date of
+its last edit, and a summary that changes prose without changing an assessment date advances neither.
+
+Domain 8's own completeness arithmetic is the honest frame for all three. Two independent
+identification methods and their overlap put the number of unidentified risks at **11.43** and
+coverage at **78.61 %** — so roughly a fifth of the population was never written down, by method
+rather than by carelessness. A model can widen identification and reduce that fraction, which is real
+value. It cannot tell you what remains outside it, and a register that reads as complete because a
+machine wrote it fluently is further from the truth than a rough one that states its own coverage.
+
+**AI proposes; the professional verifies, decides and remains accountable.** Propose responses
+freely; source every cost that enters a decision; keep release authority human and recorded; and date
+assessments separately from edits, so fluency can never be mistaken for maintenance.
+
 ### Key terms — KA 8.3
 
 | Term | Meaning |

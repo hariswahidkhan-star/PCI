@@ -581,6 +581,50 @@ transfers between control accounts are logged, not silent; and the baseline neve
 variance by moving budget to where the money went. A baseline edited to match reality has stopped
 measuring anything — the cost analogue of Domain 6's pinned milestone.
 
+### AI in this KA
+
+Cost actuals and forecasting are the two places in this domain where automation is already
+routine, and they fail in opposite directions.
+
+**Coding actuals is where automation earns its place — and corrupts silently when it is wrong.**
+Classifying thousands of ledger lines to control accounts is high-volume, rule-shaped work, and a
+model does it faster and more consistently than a person at month end. But a mis-coded line does not
+announce itself: it lands in the wrong control account, both accounts remain internally consistent,
+and every index computed from either is arithmetically correct and wrong. The accrual failure of
+Worked example 7.2.1 is the same defect arriving by a different route — 200,000 of incurred cost
+sitting outside `AC` produced a `CPI` of 1.0000 on a project genuinely at 0.9057, and nothing in the
+ledger looked amiss. The governed pattern therefore does not check the classifier's *accuracy*, which
+is unobservable at the line level; it checks the **invariants that a mis-coding must break**: control
+accounts sum to the baseline, `AC` covers the same work as `EV` in the same period, open commitments
+reconcile to the commitment register, and accruals are raised for work received and not invoiced.
+A classifier that cannot be audited line by line can still be audited in aggregate, and that is the
+control.
+
+**Forecasting is where automation must not be given the decision.** A model trained on completed
+projects will predict a final cost, and it will do so with a confidence interval that looks like
+rigour. Two objections stand regardless of how good the model is. First, an `EAC` is not a
+prediction, it is a **commitment** — a number the organisation will be held to and will act on — so
+its owner must be a person with the authority to be wrong in public. Second, a model trained on an
+organisation's history encodes that organisation's estimating bias as signal: if past projects
+systematically under-forecast recovery, the model learns to under-forecast recovery, and it will be
+most confident precisely where the bias is strongest. That is not a defect to be corrected with more
+data from the same source.
+
+The disciplined use is narrow and genuinely valuable: let the model produce the *range* and the
+professional produce the number. Where a machine forecast and a `BAC/CPI` forecast diverge
+materially, the divergence is the finding — it says the project is behaving unlike the population the
+model learned from, which is information no single point estimate carries. Auriga's own arithmetic
+shows how little room there is for vagueness here: an approved `BAC` of 4,000,000 sitting at the
+33.33rd percentile of its own declared range, against a range mean of 4,200,000 that week 13's
+performance then reproduced. A forecast that had been *owned* at week 13 was available; a forecast
+that was merely *computed* would have been available too, and nobody would have signed it.
+
+**AI proposes; the professional verifies, decides and remains accountable.** In this Knowledge Area
+that resolves to two rules. Automated coding is permitted and its output is checked by invariant, not
+by inspection. Automated forecasting is permitted as input to a forecast that a named person owns,
+and the baseline-integrity discipline of 7.2.3 applies to the model as it applies to any other change
+to the numbers: what changed, who authorised it, and against what.
+
 ### Key terms — KA 7.2
 
 | Term | Meaning |

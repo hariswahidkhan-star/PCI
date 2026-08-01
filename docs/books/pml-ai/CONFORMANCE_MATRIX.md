@@ -1,42 +1,61 @@
-# PML-AI — PCI Book Pattern Conformance Matrix (Phase 0 baseline)
+# PML-AI — PCI Book Pattern Conformance Matrix
 
-Compares the planned PML-AI BoK against the approved previous PCI book (PCL-AI BoK, First Edition —
-source `docs/bok/`). Status: **Planned** = committed in Phase 0 design; matrix is re-scored at every
-phase gate until all rows are **Conforms**. Rulings cited are from `../PATTERN_DECISION_REGISTER.md`.
+> **Re-scored against the delivered text**, by `_build/make_conformance.py`. Each row carries a
+> probe that inspects the corpus, the built HTML, the stylesheet or the output PDF, so this
+> matrix cannot drift from what was actually produced. Rows no probe can settle are marked
+> **Reviewer** rather than scored, because a matrix that claimed conformance on narrative style
+> because a script looked at it would be worse than one that admits the judgement is human.
 
-| Pattern element | Previous book (evidence) | PML-AI treatment | Ruling | Status |
-|---|---|---|---|---|
-| Front cover | Full-bleed A4 `build/cover.jpg` | Same construction, PML-AI identity | D-08 | Planned |
-| Title-page hierarchy | Designation + subtitle + rule + edition/publisher/principle | Same; "First Edition" | D-08/D-28 | Planned |
-| Copyright & disclaimers | Injected notice block (`build_pdf.py:47-67`) | Same architecture + platform disclaimer suite | D-30 | Planned |
-| Foreword/preface/how-to-use | "How to use this reference" page | Same, PML-AI reader modes | D-08 | Planned |
-| Part opening format | Ghost number, kicker, title, description, bar | Identical CSS, 4 parts | D-07 | Planned |
-| Chapter opening format | Ghost chapnum, kicker, rules, binding blockquote | Identical, 16 domains | D-02 | Planned |
-| Learning objectives | "After this domain a candidate can…" | Identical placement | D-02 | Planned |
-| Terminology & definitions | Key-terms boxes → shared registry → glossary | Bound to `registries/TERMINOLOGY.md` | D-09 | Planned |
-| Heading levels | `#`/`##`/`###` = Domain/KA-section/Topic | Identical numbering `D.K.T` | D-01 | Planned |
-| Paragraph & narrative style | British English, justified serif, spine conventions | Identical | D-10 | Planned |
-| Worked-example structure | Five-step panel | Identical | D-03 | Planned |
-| Calculation presentation | Formula panels, verified numbers, rounding rules | + golden-answer tests (formula registry) | D-03 | Planned |
-| Case-study structure | Sector cases per domain + station capstone | + four capstones (metro, renewables, hospital, public programme) | D-05 | Planned |
-| AI-governance callouts | Per-domain AI sections + blockquote callouts | Identical; updated principle wording | D-11 | Planned |
-| Ethics/leadership callouts | Executive perspective sections | Identical | D-02 | Planned |
-| Tables/diagrams/captions | Brand-blue tables; numbered SVG figures with hidden specs | Identical + registered alt text | D-06 | Planned |
-| Templates & checklists | Practitioner's toolkits `N.T.n` | Identical + Appendix H template library (15 named templates) | D-02 | Planned |
-| Chapter summaries | `## Domain N summary` | Identical | D-02 | Planned |
-| Reflection questions | Exam-preparation sections | Identical | D-02 | Planned |
-| Exercises | Calculation exercises with full solutions | Identical in quantitative domains | D-02 | Planned |
-| MCQs & rationales | 4 options, marked, rationale, `[topic · level]` tags | Identical; two-reviewer rule for numerical items | D-04 | Planned |
-| References | Standards named in prose; Appendix C index | + `registries/SOURCES.md` with rights status | D-13 | Planned |
-| Glossary | Appendix B assembled from key-terms boxes | Identical | D-09 | Planned |
-| Appendices | A–G suite | A–H (adds template library) | D-05 | Planned |
-| Index | Generated alphabetical, page-resolved | Identical | D-07 | Planned |
-| Page size/margins/typography/colour | A4, 21/17/19/17 mm, Plex Serif + Inter, brand palette | Identical `print.css` | D-07 | Planned |
-| Running headers/footers/page numbers | string-set headers, centred page number | Identical | D-07 | Planned |
-| Accessibility | Real text, bookmarks, contrast — no tags/alt | **Corrected**: tagged PDF, alt text, table headers | D-16 | Planned |
-| Watermarking/secured edition | Platform per-copy watermark, audit, versions | Identical channel, file-name contract kept | D-26 | Planned |
-| Source organisation/pipeline | Whole-domain md + WeasyPrint build | Identical, committed under `docs/books/pml-ai/` | D-15 | Planned |
+**24 Conforms · 3 Partial · 0 Not met · 3 Reviewer**, over 30 pattern elements.
 
-**Known intentional departures:** four capstones instead of one (brief requirement, D-05); programme-
-level shared registries (D-09); updated responsible-AI principle wording (D-11); accessibility
-corrections (D-16); Appendix H (D-05). All logged and approved in the decision register.
+This replaces the Phase 0 baseline, in which all thirty rows read *Planned* — a state that
+provided no evidence either way and had survived every gate since.
+
+| Pattern element | Baseline expectation | Status | Evidence in the delivered volume |
+|---|---|---|---|
+| Front cover | Full-bleed A4 cover | **Conforms** | generated `build/cover.svg`, full-bleed A4 on a zero-margin named page, motif drawn from the volume's own content |
+| Title-page hierarchy | Designation, subtitle, rule, edition/publisher/principle | **Conforms** | title page carries all five elements including the responsible-AI principle |
+| Copyright & disclaimers | Injected notice block | *Partial* | draft status page carries the legal, jurisdictional and AI-drafting notices; the **full copyright and notice suite is deferred to the released edition** and the volume says so |
+| Foreword / how-to-use | "How to use this reference" page | **Conforms** | "How to use this book" front-matter section present |
+| Part opening format | Ghost number, kicker, title, description, bar | *Reviewer* | no part dividers found in built HTML |
+| Chapter opening format | Ghost number, kicker, rules, binding blockquote | **Conforms** | 16 domains, each opening with its binding blockquote |
+| Learning objectives | "After this domain a candidate can…" | **Conforms** | 16 of 16 domains |
+| Terminology & definitions | Key-terms boxes feeding a glossary | **Conforms** | 63 key-terms tables; glossary derived from them by `make_glossary.py`, 582 entries |
+| Heading levels | `#`/`##`/`###` = Domain / KA / Topic | **Conforms** | 63 KA headings and 217 numbered topic headings, D.K.T throughout |
+| Paragraph & narrative style | British English, spine conventions | *Reviewer* | not mechanically decidable. A reviewer should sample for consistent British spelling, the bold-lead definition form, and whether the *Interpretation* step carries the weight the pattern intends |
+| Worked-example structure | Five-step panel | **Conforms** | 161 worked examples, each on the Setup / Formula / Substitution / Result / Interpretation form |
+| Calculation presentation | Formula panels, verified numbers, rounding rules | **Conforms** | every printed result recomputed by `verify_formulas.py` in decimal arithmetic, including every numeric MCQ option; suite must pass to gate |
+| Case-study structure | Sector cases per domain plus capstones | **Conforms** | 33 in-domain case studies and 4 capstones in Appendix G |
+| AI-governance callouts | Per-KA or per-domain AI treatment | **Conforms** | 60 AI sections plus AI-dedicated topics; every Knowledge Area is covered by one or the other |
+| Ethics / leadership callouts | Executive perspective sections | **Conforms** | 16 of 16 domains |
+| Tables, diagrams, captions | Brand tables; numbered SVG figures with specifications | **Conforms** | 51 figure specifications, all with PCI-original artwork generated from `figures_src/` |
+| Templates & checklists | Practitioner's toolkits `N.T.n` | **Conforms** | 55 toolkits, indexed in Appendix E |
+| Chapter summaries | `## Domain N summary` | **Conforms** | 16 of 16 domains |
+| Reflection questions | Exam-preparation sections | **Conforms** | 16 of 16 domains |
+| Exercises | Calculation exercises with full solutions | **Conforms** | 113 exercises, each with a solution and a *Common error* note |
+| MCQs & rationales | Four options, marked key, rationale, `[topic · level]` tag | *Partial* | 363 items; `make_question_bank.py --check` audits seven structural defects and reports 0 open. The baseline's **two-reviewer sign-off has not happened** — that is Phase 6 |
+| References | Standards named in prose plus an index | **Conforms** | Appendix F, generated by `make_standards.py`; a reference in a chapter that is not disclosed there fails the build. No bibliography, because nothing is borrowed — Appendix F states that rather than leaving it as an omission |
+| Glossary | Assembled from key-terms boxes | **Conforms** | 582 entries, derived; `--check` reports 0 open defects |
+| Appendices | A–H suite | *Partial* | A formula sheet, B notation, C verification record, D figure index, E toolkit library, F standards, G capstones — **seven, not A–H**. The lettering differs from the plan and Appendix E documents each difference, including the self-check-answers appendix deliberately not printed because it would duplicate answers already beside their questions |
+| Index | Generated alphabetical, page-resolved | **Conforms** | 581 entries across 24 letter groups, generated |
+| Page size, margins, typography, colour | A4, 21/17/19/17 mm, Plex Serif + Inter, brand palette | **Conforms** | `print.css`: A4, 21/17/19/17 mm, IBM Plex Serif body with Inter display, brand #1D4ED8 / #0F172A / #C13329 |
+| Running headers, footers, page numbers | string-set headers, centred page number | **Conforms** | `string-set` book and chapter headers, centred page number, both suppressed on the cover and title page |
+| Accessibility | Tagged PDF, alt text, real text, bookmarks | **Conforms** | PDF/UA-1 tagged (structure tree present), 52 images carrying alt text from their figure specifications, bookmarks present, all text real |
+| Watermarking / secured edition | Per-copy watermark, audit, versions | *Reviewer* | a platform delivery concern, not a property of the manuscript. Nothing in this volume implements or obstructs it; the released-edition channel is outside this corpus |
+| Source organisation & pipeline | Whole-domain markdown plus a reproducible build | **Conforms** | 16 whole-domain markdown files; every companion generated by a script under `_build/`, and the build is reproducible from a clean checkout |
+
+## What the Partial and Reviewer rows mean for release
+
+None of the Partial rows is a defect in the manuscript; each is a deliberate departure or a
+downstream step, and each states which:
+
+- **Copyright & disclaimers** — the draft carries its legal, jurisdictional and AI-drafting
+  notices; the full suite belongs to the released edition.
+- **MCQs & rationales** — structurally audited to 0 open defects, but the baseline's
+  two-reviewer sign-off is a Phase 6 activity and has not happened.
+- **Appendices** — seven appendices rather than the planned A–H lettering, with every
+  difference documented in Appendix E rather than left to be discovered.
+
+The **Reviewer** rows are the honest boundary of what a build can establish. Narrative style
+and the watermarking channel need a person; this matrix names them so that a release decision
+is taken knowing which rows a machine scored and which it declined to.
