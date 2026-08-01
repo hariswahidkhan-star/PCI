@@ -3194,10 +3194,15 @@ def run(proc):
     # SEC-3 — headers the Phase-2 header pass set but that were never asserted. Pin them so a future
     # refactor that drops one is caught here (defence-in-depth: clickjacking/opener isolation, powerful
     # -feature lock-down, and keeping authenticated surfaces out of search indexes).
-    chk("9b8 Cross-Origin-Opener-Policy same-origin", hdrs.get("cross-origin-opener-policy") == "same-origin", hdrs.get("cross-origin-opener-policy"))
+    # same-origin-allow-popups: the Google sign-in popup must keep its opener to postMessage the
+    # credential back; plain same-origin severs it and silently breaks Google login.
+    chk("9b8 Cross-Origin-Opener-Policy same-origin-allow-popups",
+        hdrs.get("cross-origin-opener-policy") == "same-origin-allow-popups", hdrs.get("cross-origin-opener-policy"))
     _pp = hdrs.get("permissions-policy") or ""
-    chk("9b9 Permissions-Policy locks camera/microphone/geolocation",
-        all(f"{k}=()" in _pp for k in ("camera", "microphone", "geolocation")), _pp)
+    # camera/microphone are (self) — the exam readiness check and event-staff scanner use them
+    # same-origin; (self) still denies every third-party iframe. geolocation stays fully locked.
+    chk("9b9 Permissions-Policy allows same-origin camera/microphone, locks geolocation",
+        "camera=(self)" in _pp and "microphone=(self)" in _pp and "geolocation=()" in _pp, _pp)
     # X-Robots-Tag: present (noindex) on private /api surfaces, absent on the public homepage.
     chk("9b10 X-Robots-Tag noindex on private /api path", "noindex" in (h2.get("x-robots-tag") or ""), h2.get("x-robots-tag"))
     chk("9b11 no X-Robots-Tag on public homepage", "x-robots-tag" not in hdrs, hdrs.get("x-robots-tag"))
@@ -5367,17 +5372,21 @@ def test_partner_commission_accrual(admin):
         c == 200 and round(comm1.get("attributed_revenue", 0), 2) == 119.0, comm1.get("attributed_revenue"))
     chk("41c commission accrues at the configured pct (119 × 20% = 23.80)", round(comm1.get("accrued", 0), 2) == 23.80, comm1.get("accrued"))
     chk("41d the redemption's payment appears in the ledger detail", any(p.get("code") == "PART41CODE" for p in comm1.get("payments", [])), comm1.get("payments"))
-    # An admin-recorded payout deducts from the outstanding balance; a zero payout is rejected.
-    jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 10, "note": "Q1 settlement"})
-    chk("41e a $0 payout is rejected (bad_amount, 400)",
-        jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 0})[0] == 400)
+    # The paid redemption wrote an immutable commission-ledger transaction, and once a partner has a
+    # ledger the free-form payout path REFUSES: money moves only through the settlement flow
+    # (prepare → approve → pay), so the same commission can never be paid through two doors.
+    c, deny = jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 10, "note": "Q1 settlement"})
+    chk("41e a free-form payout is refused once the partner has an immutable ledger (409 use_settlements)",
+        c == 409 and deny.get("error") == "use_settlements", (c, deny))
+    chk("41e2 a $0 payout is refused the same way (the ledger gate comes first)",
+        jget("POST", f"/api/admin/training-partners/{pid}/payouts", token=admin, body={"amount": 0})[0] == 409)
     c, comm2 = jget("GET", "/api/partner/commissions", token=ptok)
-    chk("41f a recorded payout deducts from the balance (23.80 − 10 = 13.80)",
-        round(comm2.get("paid_out", 0), 2) == 10.0 and round(comm2.get("balance", 0), 2) == 13.80, comm2)
+    chk("41f the refused payout deducted nothing (balance intact at 23.80)",
+        round(comm2.get("paid_out", 0), 2) == 0.0 and round(comm2.get("balance", 0), 2) == 23.80, comm2)
     # Admin sees the identical derived ledger; the admin route needs the 'partners' permission.
     c, admledger = jget("GET", f"/api/admin/training-partners/{pid}/commissions", token=admin)
     chk("41g admin sees the same derived ledger numbers as the partner",
-        c == 200 and round(admledger.get("accrued", 0), 2) == 23.80 and round(admledger.get("balance", 0), 2) == 13.80, admledger)
+        c == 200 and round(admledger.get("accrued", 0), 2) == 23.80 and round(admledger.get("balance", 0), 2) == 23.80, admledger)
     vtok = globals().get("_VIEWER_TOK")
     chk("41h the admin commission ledger needs the 'partners' permission (viewer 403)",
         bool(vtok) and jget("GET", f"/api/admin/training-partners/{pid}/commissions", token=vtok)[0] == 403)

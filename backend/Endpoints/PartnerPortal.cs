@@ -268,17 +268,25 @@ public static class PartnerPortal
             var draft = H.GetEl(b, "draft") is { ValueKind: JsonValueKind.True };
             var autoApprove = H.L(partner["auto_approve_codes"]) == 1;
             var status = draft ? "draft" : autoApprove ? "active" : "pending_approval";
-            var codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,active,code_type,org_name,partner_id,created_by_partner_user,campaign_name,notes,status,
-                    certification_id,per_user_limit,min_transaction,max_discount,eligible_countries)
-                VALUES(?, 'percentage', ?, ?, ?, ?, ?, ?, 'institution', ?, ?, ?, ?, ?, ?, ?,?,?,?,?)",
-                codeStr, percent, appliesTo, Nz(H.GetS(b, "start_date")), Nz(H.GetS(b, "end_date")), maxUses,
-                status == "active" ? 1 : 0, H.Str(partner["name"]), p.PartnerId, p.Id,
-                H.GetS(b, "campaign_name"), H.GetS(b, "notes"), status,
-                CertScope(b), PerUserLimit(b), H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"),
-                Countries(b));
+            long codeId;
+            try
+            {
+                codeId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,active,code_type,org_name,partner_id,created_by_partner_user,campaign_name,notes,status,
+                        certification_id,per_user_limit,min_transaction,max_discount,eligible_countries)
+                    VALUES(?, 'percentage', ?, ?, ?, ?, ?, ?, 'institution', ?, ?, ?, ?, ?, ?, ?,?,?,?,?)",
+                    codeStr, percent, appliesTo, Nz(H.GetS(b, "start_date")), Nz(H.GetS(b, "end_date")), maxUses,
+                    status == "active" ? 1 : 0, H.Str(partner["name"]), p.PartnerId, p.Id,
+                    H.GetS(b, "campaign_name"), H.GetS(b, "notes"), status,
+                    CertScope(b), PerUserLimit(b), H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"),
+                    Countries(b));
+            }
+            // A concurrent create can take the code string between the uniqueness SELECT above and this
+            // INSERT; the UNIQUE constraint then fires and must answer 409, not 500.
+            catch (Microsoft.Data.Sqlite.SqliteException ex) when (ex.SqliteErrorCode == 19) { return Err(409, "code_taken"); }
+            catch (MySqlConnector.MySqlException ex) when (ex.Number == 1062) { return Err(409, "code_taken"); }
             if (status == "pending_approval")
                 try { Notify.Alert(db, "partners", $"Institution code awaiting approval: {codeStr}",
-                    $"<p>{System.Net.WebUtility.HtmlEncode(H.Str(partner["name"]) ?? "")} submitted code <b>{codeStr}</b> ({percent:0.#}% × {maxUses}) for approval.</p>", "discount_code", codeId); } catch { }
+                    $"<p>{System.Net.WebUtility.HtmlEncode(H.Str(partner["name"]) ?? "")} submitted code <b>{System.Net.WebUtility.HtmlEncode(codeStr)}</b> ({percent:0.#}% × {maxUses}) for approval.</p>", "discount_code", codeId); } catch { }
             log(null, "partner_code_created", $"partner {p.PartnerId} code {codeStr} {percent:0.#}% x{maxUses} status {status}");
             return J(new { ok = true, id = codeId, code = codeStr, status,
                 note = status switch { "active" => "Code is live.", "pending_approval" => "Submitted for PCI approval — you will be notified.", _ => "Saved as a draft." } });
@@ -348,12 +356,25 @@ public static class PartnerPortal
             var appliesTo = (H.GetS(b, "applies_to") ?? H.Str(c["applies_to"]) ?? "all").Trim().ToLowerInvariant();
             if (PartnerCodeRules.AppliesToError(appliesTo) is { } ae) return Err(422, ae.Error, ae.Message);
 
+            // Uniform partial-update semantics: like percent/max_uses/applies_to above, every term keeps
+            // its stored value when the key is absent from the body. Writing body values straight through
+            // would silently NULL every omitted term — stripping the certification scope, per-user limit,
+            // discount cap, country restriction and end date the code was approved with.
+            var editStart = b.ContainsKey("start_date") ? Nz(H.GetS(b, "start_date")) : H.Str(c["start_date"]);
+            var editEnd = b.ContainsKey("end_date") ? Nz(H.GetS(b, "end_date")) : H.Str(c["end_date"]);
+            if (PartnerCodeRules.DateWindowError(editStart, editEnd) is { } editDateErr)
+                return Err(422, editDateErr.Error, editDateErr.Message);
             db.Execute(@"UPDATE discount_codes SET discount_value=?, applies_to=?, max_uses=?, start_date=?, end_date=?,
                     campaign_name=?, notes=?, certification_id=?, per_user_limit=?, min_transaction=?, max_discount=?, eligible_countries=?
                 WHERE id=?",
-                percent, appliesTo, maxUses, Nz(H.GetS(b, "start_date")), Nz(H.GetS(b, "end_date")),
-                H.GetS(b, "campaign_name"), H.GetS(b, "notes"), CertScope(b), PerUserLimit(b),
-                H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"), Countries(b), id);
+                percent, appliesTo, maxUses, editStart, editEnd,
+                b.ContainsKey("campaign_name") ? H.GetS(b, "campaign_name") : H.Str(c["campaign_name"]),
+                b.ContainsKey("notes") ? H.GetS(b, "notes") : H.Str(c["notes"]),
+                b.ContainsKey("certification_id") ? CertScope(b) : (c["certification_id"] is null ? null : (object)H.L(c["certification_id"])),
+                b.ContainsKey("per_user_limit") ? PerUserLimit(b) : (c["per_user_limit"] is null ? null : (object)H.L(c["per_user_limit"])),
+                b.ContainsKey("min_transaction") ? (object?)H.GetNum(b, "min_transaction") : c["min_transaction"],
+                b.ContainsKey("max_discount") ? (object?)H.GetNum(b, "max_discount") : c["max_discount"],
+                b.ContainsKey("eligible_countries") ? Countries(b) : H.Str(c["eligible_countries"]), id);
             log(null, "partner_code_edited", $"code {id} by partner_user {p.Id}");
             return J(new { ok = true, id, status });
         });
@@ -406,15 +427,31 @@ public static class PartnerPortal
             if (partner["max_codes"] is not null && codeCount >= H.L(partner["max_codes"]))
                 return Err(422, "over_code_limit", $"Your agreement allows {H.L(partner["max_codes"])} codes.");
 
-            var newId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,active,code_type,org_name,partner_id,created_by_partner_user,campaign_name,notes,status,
-                    certification_id,per_user_limit,min_transaction,max_discount,eligible_countries)
-                VALUES(?, 'percentage', ?, ?, ?, ?, ?, 0, 'institution', ?, ?, ?, ?, ?, 'draft', ?,?,?,?,?)",
-                codeStr, H.D(c["discount_value"]), H.Str(c["applies_to"]) ?? "all",
-                Nz(H.GetS(b, "start_date")) ?? H.Str(c["start_date"]), Nz(H.GetS(b, "end_date")) ?? H.Str(c["end_date"]),
-                c["max_uses"] is null ? null : (object)H.L(c["max_uses"]),
-                H.Str(partner["name"]), p.PartnerId, p.Id,
-                H.GetS(b, "campaign_name") ?? H.Str(c["campaign_name"]), H.Str(c["notes"]),
-                c["certification_id"], c["per_user_limit"], c["min_transaction"], c["max_discount"], c["eligible_countries"]);
+            // The date window is validated on the RESOLVED pair (body value ?? copied value): auto-approve
+            // partners submit a duplicate straight to 'active', so a malformed or inverted window must be
+            // refused here exactly as create and edit refuse it.
+            var dupStart = Nz(H.GetS(b, "start_date")) ?? H.Str(c["start_date"]);
+            var dupEnd = Nz(H.GetS(b, "end_date")) ?? H.Str(c["end_date"]);
+            if (PartnerCodeRules.DateWindowError(dupStart, dupEnd) is { } dupDateErr)
+                return Err(422, dupDateErr.Error, dupDateErr.Message);
+
+            long newId;
+            try
+            {
+                newId = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,start_date,end_date,max_uses,active,code_type,org_name,partner_id,created_by_partner_user,campaign_name,notes,status,
+                        certification_id,per_user_limit,min_transaction,max_discount,eligible_countries)
+                    VALUES(?, 'percentage', ?, ?, ?, ?, ?, 0, 'institution', ?, ?, ?, ?, ?, 'draft', ?,?,?,?,?)",
+                    codeStr, H.D(c["discount_value"]), H.Str(c["applies_to"]) ?? "all",
+                    dupStart, dupEnd,
+                    c["max_uses"] is null ? null : (object)H.L(c["max_uses"]),
+                    H.Str(partner["name"]), p.PartnerId, p.Id,
+                    H.GetS(b, "campaign_name") ?? H.Str(c["campaign_name"]), H.Str(c["notes"]),
+                    c["certification_id"], c["per_user_limit"], c["min_transaction"], c["max_discount"], c["eligible_countries"]);
+            }
+            // A concurrent create/duplicate can take the code string between the SELECT above and this
+            // INSERT; the UNIQUE constraint then fires and must answer 409, not 500.
+            catch (Microsoft.Data.Sqlite.SqliteException ex) when (ex.SqliteErrorCode == 19) { return Err(409, "code_taken"); }
+            catch (MySqlConnector.MySqlException ex) when (ex.Number == 1062) { return Err(409, "code_taken"); }
             log(null, "partner_code_duplicated", $"code {id} -> {newId} ({codeStr}) by partner_user {p.Id}");
             return J(new { ok = true, id = newId, code = codeStr, status = "draft" });
         });
@@ -455,8 +492,16 @@ public static class PartnerPortal
             var partner = db.QueryOne("SELECT status FROM training_partners WHERE id=?", H.L(link["partner_id"]));
             if (partner is null || (H.Str(partner["status"]) ?? "active") != "active") return Results.Redirect("/");
 
-            var code = link["code_id"] is null ? null
-                : H.Str(db.QueryOne("SELECT code,status,active FROM discount_codes WHERE id=?", H.L(link["code_id"]))?["code"]);
+            // Only a LIVE code rides on the redirect (same predicate as the dashboard's Live()): a
+            // suspended, cancelled, rejected or expired code would send the visitor to checkout with a
+            // code that is then refused.
+            var dcRow = link["code_id"] is null ? null
+                : db.QueryOne("SELECT code,status,active,end_date FROM discount_codes WHERE id=?", H.L(link["code_id"]));
+            string? code = dcRow is not null
+                && (H.Str(dcRow["status"]) is null or "active") && H.L(dcRow["active"]) == 1
+                && (H.Str(dcRow["end_date"]) is not { Length: > 0 } ced
+                    || string.CompareOrdinal(ced, DateTime.UtcNow.ToString("yyyy-MM-dd")) >= 0)
+                ? H.Str(dcRow["code"]) : null;
             var (visitor, country, device, browser) = Analytics.Fingerprint(ctx);
             // A null visitor means Analytics identified a bot; the click is not counted as a human one.
             if (visitor is not null)

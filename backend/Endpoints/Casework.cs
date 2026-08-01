@@ -21,7 +21,10 @@ public static class Casework
     {
         var cleanName = (name ?? "attachment").Trim();
         if (cleanName.Length > 120) cleanName = cleanName[..120];
-        cleanName = string.Concat(cleanName.Where(c => !"\\/:*?\"<>|".Contains(c)));
+        // Drop control characters too: CR/LF in a stored filename makes ASP.NET's Content-Disposition
+        // validation throw on every later download of the file (a stored denial of the review path).
+        cleanName = string.Concat(cleanName.Where(c => c >= 0x20 && !"\\/:*?\"<>|".Contains(c)));
+        if (string.IsNullOrWhiteSpace(cleanName)) cleanName = "attachment";
         var (bytes, mime, err) = Storage.DecodeDataUri(dataUri);
         if (err is not null) return (null, null, 0, null, cleanName, err);
         var obj = Storage.Put(bytes!, mime, category);
@@ -81,13 +84,7 @@ public static class Casework
                 if (owns is null) return Results.Json(new { error = "credential_not_found" }, statusCode: 404);
             }
 
-            // One open appeal per attempt keeps the queue coherent.
-            if (attemptId is not null)
-            {
-                var open = db.QueryOne("SELECT id FROM appeals WHERE user_id=? AND attempt_id=? AND status IN ('submitted','under_review')", u.Id, attemptId);
-                if (open is not null) return Results.Json(new { error = "appeal_already_open", id = open["id"] }, statusCode: 400);
-            }
-
+            // Storage I/O stays OUTSIDE the transaction so S3/disk writes never run under the DB lock.
             string? evName = null, evRef = null;
             var dataUri = H.GetS(b, "evidence_data");
             if (!string.IsNullOrEmpty(dataUri))
@@ -96,8 +93,20 @@ public static class Casework
                 if (err is not null) return Results.Json(new { error = err }, statusCode: 400);
                 evName = clean; evRef = reference; // DB stores the storage reference, not the bytes
             }
-            var id = db.ExecuteReturningId("INSERT INTO appeals(user_id,attempt_id,credential_id,type,reason,evidence_name,evidence_data) VALUES(?,?,?,?,?,?,?)",
-                u.Id, attemptId, credentialId, type, reason, evName, evRef);
+            // One open appeal per attempt keeps the queue coherent — checked and inserted atomically so
+            // two concurrent submissions can't both pass the check.
+            long id = 0; object? dupId = null;
+            db.Transaction(() =>
+            {
+                if (attemptId is not null)
+                {
+                    var open = db.QueryOne("SELECT id FROM appeals WHERE user_id=? AND attempt_id=? AND status IN ('submitted','under_review')", u.Id, attemptId);
+                    if (open is not null) { dupId = open["id"]; return; }
+                }
+                id = db.ExecuteReturningId("INSERT INTO appeals(user_id,attempt_id,credential_id,type,reason,evidence_name,evidence_data) VALUES(?,?,?,?,?,?,?)",
+                    u.Id, attemptId, credentialId, type, reason, evName, evRef);
+            });
+            if (dupId is not null) return Results.Json(new { error = "appeal_already_open", id = dupId }, statusCode: 400);
             log(u.Id, "appeal_submitted", $"{type} #{id}" + (attemptId is not null ? $" attempt {attemptId}" : ""));
             return J(new { ok = true, id, status = "submitted", message = "Your appeal has been submitted. PCI will review it and respond through your portal." });
         });
@@ -128,9 +137,7 @@ public static class Casework
             var desc = (H.GetS(b, "description") ?? "").Trim();
             if (desc.Length < 20) return Results.Json(new { error = "description_too_short", message = "Please describe the accommodation you need (at least 20 characters)." }, statusCode: 400);
             if (desc.Length > 5000) desc = desc[..5000];
-            var open = db.QueryOne("SELECT id FROM accommodation_requests WHERE user_id=? AND status IN ('submitted','under_review')", u.Id);
-            if (open is not null) return Results.Json(new { error = "request_already_open", id = open["id"] }, statusCode: 400);
-
+            // Storage I/O stays OUTSIDE the transaction so S3/disk writes never run under the DB lock.
             string? evName = null, evRef = null;
             var dataUri = H.GetS(b, "evidence_data");
             if (!string.IsNullOrEmpty(dataUri))
@@ -139,8 +146,16 @@ public static class Casework
                 if (err is not null) return Results.Json(new { error = err }, statusCode: 400);
                 evName = clean; evRef = reference;
             }
-            var id = db.ExecuteReturningId("INSERT INTO accommodation_requests(user_id,request_type,description,evidence_name,evidence_data) VALUES(?,?,?,?,?)",
-                u.Id, type, desc, evName, evRef);
+            // One open request per user — checked and inserted atomically to close the concurrent-submit race.
+            long id = 0; object? dupId = null;
+            db.Transaction(() =>
+            {
+                var open = db.QueryOne("SELECT id FROM accommodation_requests WHERE user_id=? AND status IN ('submitted','under_review')", u.Id);
+                if (open is not null) { dupId = open["id"]; return; }
+                id = db.ExecuteReturningId("INSERT INTO accommodation_requests(user_id,request_type,description,evidence_name,evidence_data) VALUES(?,?,?,?,?)",
+                    u.Id, type, desc, evName, evRef);
+            });
+            if (dupId is not null) return Results.Json(new { error = "request_already_open", id = dupId }, statusCode: 400);
             log(u.Id, "accommodation_requested", $"{type} #{id}");
             return J(new { ok = true, id, status = "submitted", message = "Your accommodation request has been submitted for review. Please allow time before booking your exam." });
         });
@@ -167,13 +182,20 @@ public static class Casework
             var t = db.QueryOne("SELECT id FROM tickets WHERE id=? AND user_id=?", id, u.Id);
             if (t is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = await H.Body(ctx.Request);
-            var count = db.Scalar<long>("SELECT COUNT(*) FROM support_attachments WHERE ticket_id=?", id);
-            if (count >= 10) return Results.Json(new { error = "too_many_attachments" }, statusCode: 400);
+            // Storage I/O first, outside the transaction; the cap check + INSERT run atomically so two
+            // concurrent uploads can't both pass the 10-attachment cap.
             var (reference, mime, size, sha, clean, err) = StoreUpload(H.GetS(b, "filename"), H.GetS(b, "data_uri"), "support");
             if (err is not null) return Results.Json(new { error = err }, statusCode: 400);
-            var aid = db.ExecuteReturningId("INSERT INTO support_attachments(ticket_id,user_id,filename,mime,size_bytes,storage_ref,sha256) VALUES(?,?,?,?,?,?,?)",
-                id, u.Id, clean, mime, size, reference, sha);
-            db.Execute("UPDATE tickets SET updated_at=datetime('now') WHERE id=?", id);
+            long aid = 0; var overCap = false;
+            db.Transaction(() =>
+            {
+                var count = db.Scalar<long>("SELECT COUNT(*) FROM support_attachments WHERE ticket_id=?", id);
+                if (count >= 10) { overCap = true; return; }
+                aid = db.ExecuteReturningId("INSERT INTO support_attachments(ticket_id,user_id,filename,mime,size_bytes,storage_ref,sha256) VALUES(?,?,?,?,?,?,?)",
+                    id, u.Id, clean, mime, size, reference, sha);
+                db.Execute("UPDATE tickets SET updated_at=datetime('now') WHERE id=?", id);
+            });
+            if (overCap) return Results.Json(new { error = "too_many_attachments" }, statusCode: 400);
             log(u.Id, "ticket_attachment", $"ticket {id} file '{clean}'");
             return J(new { ok = true, id = aid, filename = clean });
         });
@@ -277,10 +299,14 @@ public static class Casework
             if (status is not ("under_review" or "upheld" or "dismissed"))
                 return Results.Json(new { error = "bad_status" }, statusCode: 400);
             var decision = H.GetS(b, "decision");
+            long changes;
             if (status is "upheld" or "dismissed")
-                db.Execute("UPDATE appeals SET status=?, decision=?, decided_by=?, decided_at=datetime('now') WHERE id=?", status, decision, adm.Id, id);
+                (_, changes) = db.ExecuteWithChanges("UPDATE appeals SET status=?, decision=?, decided_by=?, decided_at=datetime('now') WHERE id=?", status, decision, adm.Id, id);
             else
-                db.Execute("UPDATE appeals SET status=? WHERE id=?", status, id);
+                // Returning to under_review clears the stale decision — GET /api/me/appeals surfaces
+                // decision/decided_at, and a candidate must not see a verdict for a reopened appeal.
+                (_, changes) = db.ExecuteWithChanges("UPDATE appeals SET status=?, decision=NULL, decided_by=NULL, decided_at=NULL WHERE id=?", status, id);
+            if (changes == 0) return Results.Json(new { error = "not_found" }, statusCode: 404);
             log(adm.Id, "appeal_" + status, "appeal " + id + (string.IsNullOrEmpty(decision) ? "" : " — " + decision![..Math.Min(decision.Length, 120)]));
             return J(new { ok = true });
         }));
@@ -306,11 +332,14 @@ public static class Casework
                 return Results.Json(new { error = "bad_status" }, statusCode: 400);
             var extra = (int)Math.Clamp(H.GetNum(b, "approved_extra_minutes") ?? 0, 0, 120);
             var note = H.GetS(b, "admin_note");
+            long changes;
             if (status == "approved")
-                db.Execute("UPDATE accommodation_requests SET status='approved', approved_extra_minutes=?, admin_note=?, decided_by=?, decided_at=datetime('now') WHERE id=?", extra, note, adm.Id, id);
+                (_, changes) = db.ExecuteWithChanges("UPDATE accommodation_requests SET status='approved', approved_extra_minutes=?, admin_note=?, decided_by=?, decided_at=datetime('now') WHERE id=?", extra, note, adm.Id, id);
             else if (status == "rejected")
-                db.Execute("UPDATE accommodation_requests SET status='rejected', approved_extra_minutes=0, admin_note=?, decided_by=?, decided_at=datetime('now') WHERE id=?", note, adm.Id, id);
-            else db.Execute("UPDATE accommodation_requests SET status='under_review' WHERE id=?", id);
+                (_, changes) = db.ExecuteWithChanges("UPDATE accommodation_requests SET status='rejected', approved_extra_minutes=0, admin_note=?, decided_by=?, decided_at=datetime('now') WHERE id=?", note, adm.Id, id);
+            else // returning to under_review clears the stale decision fields, mirroring appeals
+                (_, changes) = db.ExecuteWithChanges("UPDATE accommodation_requests SET status='under_review', approved_extra_minutes=NULL, admin_note=NULL, decided_by=NULL, decided_at=NULL WHERE id=?", id);
+            if (changes == 0) return Results.Json(new { error = "not_found" }, statusCode: 404);
             log(adm.Id, "accommodation_" + status, $"request {id}" + (status == "approved" ? $" (+{extra} min)" : ""));
             return J(new { ok = true });
         }));
@@ -341,7 +370,8 @@ public static class Casework
             var status = H.GetS(b, "status") ?? "";
             if (status is not ("approved" or "rejected" or "recorded"))
                 return Results.Json(new { error = "bad_status" }, statusCode: 400);
-            db.Execute("UPDATE cpd_entries SET status=?, admin_note=?, reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", status, H.GetS(b, "admin_note"), adm.Id, id);
+            var (_, changes) = db.ExecuteWithChanges("UPDATE cpd_entries SET status=?, admin_note=?, reviewed_by=?, reviewed_at=datetime('now') WHERE id=?", status, H.GetS(b, "admin_note"), adm.Id, id);
+            if (changes == 0) return Results.Json(new { error = "not_found" }, statusCode: 404);
             log(adm.Id, "cpd_" + status, "entry " + id);
             return J(new { ok = true });
         }));

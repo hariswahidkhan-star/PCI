@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { PageHeader } from '../components/premium'
 import { useQuery } from '../api/hooks'
 import { api, ApiError } from '../api/client'
-import { Card, Badge } from '../components/ui'
+import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
 import { fmtDate } from '../format'
 
 // Certuvo — the student's access page for PCI's external study & practice platform. This portal shares only
@@ -28,9 +28,21 @@ interface CertuvoAccess {
   expires?: string | null
 }
 function CertuvoAccessPanel() {
-  const { data } = useQuery<CertuvoAccess>('/api/me/certuvo/access')
+  const { data, loading, error, refetch } = useQuery<CertuvoAccess>('/api/me/certuvo/access')
   const [resending, setResending] = useState(false)
   const [resendNote, setResendNote] = useState<{ ok: boolean; text: string } | null>(null)
+  if (loading) return <Spinner />
+  // A load failure must not look like "feature switched off" — this panel is the page's only content.
+  if (error) {
+    return (
+      <Card title="Your Certuvo practice access">
+        <ErrorNote>
+          <span>We couldn't load your Certuvo access. {error}</span>{' '}
+          <button className="btn ghost sm" onClick={refetch}>Try again</button>
+        </ErrorNote>
+      </Card>
+    )
+  }
   if (!data || !data.enabled) return null
   const status = data.status ?? ''
   const active = status === 'active'

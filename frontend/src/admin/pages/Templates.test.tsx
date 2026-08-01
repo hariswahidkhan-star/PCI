@@ -32,7 +32,7 @@ describe('Admin Free Templates', () => {
       total: 2, published: 1,
     }
     render(<Templates />)
-    expect(screen.getByRole('heading', { name: 'Free Templates Library' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Templates Library' })).toBeInTheDocument()
     expect(screen.getByText('Work Breakdown Structure (WBS) template')).toBeInTheDocument()
     expect(screen.getByText('Hidden draft')).toBeInTheDocument()   // draft visible to admins
     expect(screen.getByText('Draft')).toBeInTheDocument()

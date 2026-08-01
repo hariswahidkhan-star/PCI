@@ -65,6 +65,8 @@ function humanize(code: string): string {
       return 'Password must be at least 8 characters.'
     case 'password_mismatch':
       return 'Passwords do not match. Please re-enter them.'
+    case 'email_exists':
+      return 'An admin with this email already exists.'
     case 'maker_checker':
       // Not a failure to retry: the scenario needs a different admin, and saying so stops an
       // operator hunting for a fault that isn't there.
@@ -130,7 +132,12 @@ export function makeClient(tokenKey: string): ApiClient {
     }
 
     if (!res.ok) {
-      const msg = humanize(errorCode(data, res.status))
+      const code = errorCode(data, res.status)
+      let msg = humanize(code)
+      // Unmapped slug: prefer the backend's human-readable message over the raw machine code.
+      if (msg === code && data && typeof data === 'object' && typeof (data as Record<string, unknown>).message === 'string') {
+        msg = (data as Record<string, unknown>).message as string
+      }
       if (res.status === 401 && !opts.allowUnauthorized) {
         // fire the central handler (clear token + redirect) for EVERY 401, mutations included
         try { unauthorizedHandler?.() } catch { /* ignore */ }

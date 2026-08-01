@@ -96,8 +96,21 @@ public static class Templates
                 return Results.File(xlsx, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     $"{H.Str(t["slug"])}.xlsx");
             }
-            var name = $"{H.Str(t["slug"])}.{(ext.Length == 0 ? "csv" : ext)}";
+            // The extension comes from admin input: only allowlisted values may name the saved file —
+            // a stored '.html'/'.bat'/'.vbs' would execute by extension once the student saves and opens it.
+            var safeExt = ext.Length == 0 ? "csv" : ext is "csv" or "txt" or "md" ? ext : "txt";
+            var name = $"{H.Str(t["slug"])}.{safeExt}";
             var mime = ext is "" or "csv" ? "text/csv" : "text/plain";
+            if (mime == "text/csv")
+            {
+                // SEC-2 / CWE-1236 — the raw CSV path takes the same formula-injection stance as the
+                // XLSX path: re-serialize per field through Csv.Field, which quotes and neutralises
+                // cells that would execute as formulas (= + - @, leading tab/CR) in Excel.
+                var safe = new StringBuilder();
+                foreach (var row in SimpleXlsx.ParseCsv(body))
+                    safe.Append(string.Join(",", row.Select(f => Csv.Field(f)))).Append('\n');
+                body = safe.ToString();
+            }
             return Results.File(Encoding.UTF8.GetBytes(body), mime, name);
         });
 
@@ -211,7 +224,7 @@ public static class Templates
                     (slug,title,category,certification_id,summary,format,body,published,sort_order,created_by)
                     VALUES(?,?,?,?,?,?,?,?,?,?)",
                     slug, title, (H.GetS(b, "category") ?? "general").Trim(), cert, H.GetS(b, "summary"),
-                    (H.GetS(b, "format") ?? "csv").Trim(), body, Truthy(H.GetEl(b, "published"), dflt: true) ? 1 : 0,
+                    SafeFormat(H.GetS(b, "format")), body, Truthy(H.GetEl(b, "published"), dflt: true) ? 1 : 0,
                     (int)(H.GetNum(b, "sort_order") ?? 0), adm.Id);
                 ListSections.Bump();
                 log(adm.Id, "template_create", $"{slug} · #{id}");
@@ -229,18 +242,28 @@ public static class Templates
                 if (t is null) return Results.NotFound(new { error = "not_found" });
 
                 var sets = new List<string>(); var vals = new List<object?>();
+                var badType = false;
                 void SetIf(string key, string col, Func<JsonElement, object?> map)
                 {
                     if (H.GetEl(b, key) is { } el) { sets.Add($"{col}=?"); vals.Add(map(el)); }
                 }
-                SetIf("title", "title", e => e.GetString());
-                SetIf("category", "category", e => e.GetString());
+                // GetString() on a non-string element throws — an unhandled 500 for a body like
+                // {"title": 123}. A wrong ValueKind is bad input and must answer 400.
+                object? Str(JsonElement e)
+                {
+                    if (e.ValueKind == JsonValueKind.Null) return null;
+                    if (e.ValueKind != JsonValueKind.String) { badType = true; return null; }
+                    return e.GetString();
+                }
+                SetIf("title", "title", Str);
+                SetIf("category", "category", Str);
                 SetIf("certification_id", "certification_id", e => e.ValueKind == JsonValueKind.Number ? (object?)e.GetInt64() : null);
-                SetIf("summary", "summary", e => e.GetString());
-                SetIf("format", "format", e => e.GetString());
-                SetIf("body", "body", e => e.GetString());
+                SetIf("summary", "summary", Str);
+                SetIf("format", "format", e => Str(e) is string f ? SafeFormat(f) : null);
+                SetIf("body", "body", Str);
                 SetIf("published", "published", e => Truthy(el: e) ? 1 : 0);
                 SetIf("sort_order", "sort_order", e => e.ValueKind == JsonValueKind.Number ? e.GetInt32() : 0);
+                if (badType) return Results.Json(new { error = "bad_input", message = "title, category, summary, format and body must be strings." }, statusCode: 400);
                 if (sets.Count == 0) return Results.Json(new { error = "no_fields" }, statusCode: 400);
 
                 vals.Add(id);
@@ -294,6 +317,14 @@ public static class Templates
             else if (ch is ' ' or '-' or '_' or '.') { if (sb.Length > 0 && sb[^1] != '-') sb.Append('-'); }
         }
         return sb.ToString().Trim('-');
+    }
+
+    // Allowlisted download formats. Anything else (html, bat, vbs, …) is coerced to csv on write and
+    // falls back to txt at serve time, so admin input can never choose an executable file extension.
+    static string SafeFormat(string? f)
+    {
+        var v = (f ?? "csv").Trim().ToLowerInvariant();
+        return v is "" or "csv" or "txt" or "md" ? (v.Length == 0 ? "csv" : v) : "csv";
     }
 
     static bool Truthy(JsonElement? el, bool dflt = false)

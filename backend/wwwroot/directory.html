@@ -8,6 +8,16 @@
 <meta name="keywords" content="find a project controls professional, certified planner directory, PCL-AI holders, project controls directory"/>
 <meta name="robots" content="index, follow"/>
 <link rel="canonical" href="https://projectcontrolsinstitute.org/directory.html"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Project Controls Institute"/>
+<meta property="og:title" content="Find a Certified Professional — Project Controls Institute"/>
+<meta property="og:description" content="Search the Project Controls Institute member directory — find certified project controls professionals by name, country and certification. Every listing is member-consented and verifiable."/>
+<meta property="og:url" content="https://projectcontrolsinstitute.org/directory.html"/>
+<meta property="og:image" content="https://projectcontrolsinstitute.org/assets/og-image.jpg"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Find a Certified Professional — Project Controls Institute"/>
+<meta name="twitter:description" content="Search the Project Controls Institute member directory — find certified project controls professionals by name, country and certification. Every listing is member-consented and verifiable."/>
+<meta name="twitter:image" content="https://projectcontrolsinstitute.org/assets/og-image.jpg"/>
 <link rel="icon" href="favicon.ico" sizes="any"/>
 <link rel="stylesheet" href="assets/styles.css"/>
 <style>
@@ -33,9 +43,9 @@
   <h1>Find a certified professional</h1>
   <p class="muted">Search project controls professionals who hold a current PCI credential and have chosen to appear in the public directory. Every listing is member-consented and independently verifiable.</p>
   <div class="d-filters">
-    <input id="f-q" placeholder="Search name, role, employer…"/>
-    <select id="f-country"><option value="">All countries</option></select>
-    <select id="f-cert"><option value="">All certifications</option></select>
+    <input id="f-q" aria-label="Search professionals" placeholder="Search name, role, employer…"/>
+    <select id="f-country" aria-label="Filter by country"><option value="">All countries</option></select>
+    <select id="f-cert" aria-label="Filter by certification"><option value="">All certifications</option></select>
   </div>
   <div id="grid" class="m-grid"></div>
   <div id="empty" class="d-empty" style="display:none">No professionals match your search yet.</div>
@@ -61,7 +71,7 @@
           +'<div class="m-creds">'+creds+'</div>'+(links?'<div class="m-links">'+links+'</div>':'');
         g.appendChild(el);
       });
-    });
+    }).catch(function(){var e=document.getElementById('empty');e.textContent='The directory is temporarily unavailable — please try again later.';e.style.display='block';});
   }
   ['f-q','f-country','f-cert'].forEach(function(idv){ var e=$(idv); e.addEventListener(idv==='f-q'?'input':'change',function(){ clearTimeout(window._dt); window._dt=setTimeout(load,idv==='f-q'?250:0); }); });
   load();

@@ -231,14 +231,16 @@ export default function Settings() {
             <div className="grid cols-2">
               {grouped[g.key].map((k) => {
                 const v = val(k)
-                const long = (v ?? '').length > 80
+                // Decide input vs textarea from the SERVER value so the element type (and focus)
+                // stays stable while the operator types past the threshold.
+                const long = (data?.[k] ?? '').length > 80
                 return (
                   <div className="field" key={k} style={long ? { gridColumn: '1 / -1' } : undefined}>
-                    <label title={k}>{labelFor(k)}</label>
+                    <label title={k} htmlFor={`set-${k}`}>{labelFor(k)}</label>
                     {long ? (
-                      <textarea rows={2} value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
+                      <textarea id={`set-${k}`} rows={2} value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
                     ) : (
-                      <input value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
+                      <input id={`set-${k}`} value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
                     )}
                   </div>
                 )

@@ -66,12 +66,14 @@ public static class Settings
         var v = db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey=?", key);
         return string.IsNullOrEmpty(v) ? def : v!;
     }
-    /// <summary>Upsert a setting, provider-safely (delete + insert — no ON CONFLICT dialect differences).</summary>
-    public static void Put(Db db, string key, string? value)
+    /// <summary>Upsert a setting, provider-safely (delete + insert — no ON CONFLICT dialect differences).
+    /// The pair runs in one transaction so concurrent writers can't interleave (duplicate rows / unique
+    /// violations) and a crash between the statements can't lose the setting.</summary>
+    public static void Put(Db db, string key, string? value) => db.Transaction(() =>
     {
         db.Execute("DELETE FROM site_settings WHERE skey=?", key);
         db.Execute("INSERT INTO site_settings(skey,svalue) VALUES(?,?)", key, value ?? "");
-    }
+    });
 }
 
 public static class Auth

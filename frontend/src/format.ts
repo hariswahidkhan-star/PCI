@@ -1,5 +1,9 @@
 // Display formatting helpers, kept framework-free so they're easy to unit-test.
 
+// The UI's selected language (I18nProvider keeps <html lang> in sync); falls back to the
+// browser locale where no provider set it (e.g. the admin SPA).
+const uiLocale = () => (typeof document !== 'undefined' && document.documentElement.lang) || undefined
+
 export function fmtDate(v: unknown): string {
   if (!v) return '—'
   const s = String(v)
@@ -9,7 +13,7 @@ export function fmtDate(v: unknown): string {
   const d = bare ? new Date(Number(bare[0].slice(0, 4)), Number(bare[0].slice(5, 7)) - 1, Number(bare[0].slice(8, 10)))
                  : new Date(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
   if (isNaN(d.getTime())) return s
-  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+  return d.toLocaleDateString(uiLocale(), { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
 export function fmtDateTime(v: unknown, tz?: unknown): string {
@@ -21,9 +25,9 @@ export function fmtDateTime(v: unknown, tz?: unknown): string {
   // displayed clock matches the "(America/New_York)" label instead of the viewer's local time.
   const zone = typeof tz === 'string' && tz ? tz : undefined
   try {
-    return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short', ...(zone ? { timeZone: zone } : {}) })
+    return d.toLocaleString(uiLocale(), { dateStyle: 'medium', timeStyle: 'short', ...(zone ? { timeZone: zone } : {}) })
   } catch {
-    return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+    return d.toLocaleString(uiLocale(), { dateStyle: 'medium', timeStyle: 'short' })
   }
 }
 
@@ -31,7 +35,7 @@ export function fmtMoney(amount: unknown, currency = 'USD'): string {
   const n = typeof amount === 'number' ? amount : parseFloat(String(amount ?? ''))
   if (isNaN(n)) return '—'
   try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency: (currency || 'USD').toUpperCase() }).format(n)
+    return new Intl.NumberFormat(uiLocale(), { style: 'currency', currency: (currency || 'USD').toUpperCase() }).format(n)
   } catch {
     return `${currency} ${n.toFixed(2)}`
   }

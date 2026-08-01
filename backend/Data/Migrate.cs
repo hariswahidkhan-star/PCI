@@ -79,9 +79,11 @@ public static class Migrate
             {
                 db.AddColumn(table, col, ddl);
             }
-            catch
+            catch (MySqlConnector.MySqlException e) when (e.Number == 1146)
             {
                 // Table may not exist yet on this provider (e.g. mkt_jobs is created later by MarketingSchema).
+                // Only that specific case is tolerated: any other ALTER failure propagates so boot refuses a
+                // half-migrated database, per the Db.AddColumn contract (a blanket catch defeated it).
             }
         }
         AddCol("users", "is_test", "is_test INTEGER DEFAULT 0");   // admin-created test accounts (excluded from real reporting)
@@ -983,8 +985,12 @@ public static class Migrate
         }) { try { db.Exec(ix); } catch { } }
         // De-duplicate any accidental duplicate student_profiles rows before enforcing one-per-user,
         // then add the UNIQUE(user_id) the fresh schema should have carried (idempotent).
-        try { db.Exec("DELETE FROM student_profiles WHERE id NOT IN (SELECT MIN(id) FROM student_profiles GROUP BY user_id)"); } catch { }
-        try { db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_student_profiles_user ON student_profiles(user_id)"); } catch { }
+        // Derived-table form: MySQL/MariaDB rejects a DELETE that selects from its own target (error 1093),
+        // so the plain subquery silently never de-duplicated there and the unique index then failed too.
+        try { db.Exec("DELETE FROM student_profiles WHERE id NOT IN (SELECT keep FROM (SELECT MIN(id) AS keep FROM student_profiles GROUP BY user_id) k)"); }
+        catch (Exception e) { Console.Error.WriteLine($"[migrate] student_profiles de-duplication failed: {e.Message}"); }
+        try { db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_student_profiles_user ON student_profiles(user_id)"); }
+        catch (Exception e) { Console.Error.WriteLine($"[migrate] ux_student_profiles_user could not be created — duplicate profile rows may persist: {e.Message}"); }
         // Older DBs whose exam_launch_codes predates the UNIQUE(code_hash) column-constraint: enforce it
         // as a unique index so a launch code can never resolve to two rows.
         try { db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_launch_code_hash ON exam_launch_codes(code_hash)"); } catch { }

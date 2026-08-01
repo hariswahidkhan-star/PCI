@@ -108,24 +108,24 @@ export default function Templates() {
           />
           <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="small muted" style={{ fontWeight: 700 }}>{t('tpl.topic')}</span>
-            <button className={'btn sm' + (cat === 'all' ? '' : ' secondary')} onClick={() => setCat('all')}>{t('tpl.all')}</button>
+            <button className={'btn sm' + (cat === 'all' ? '' : ' secondary')} aria-pressed={cat === 'all'} onClick={() => setCat('all')}>{t('tpl.all')}</button>
             {cats.map((c) => (
-              <button key={c} className={'btn sm' + (cat === c ? '' : ' secondary')} onClick={() => setCat(c)}>{catLabel(c)}</button>
+              <button key={c} className={'btn sm' + (cat === c ? '' : ' secondary')} aria-pressed={cat === c} onClick={() => setCat(c)}>{catLabel(c)}</button>
             ))}
             {tracks.length > 0 && (
               <>
                 <span className="small muted" style={{ fontWeight: 700, marginLeft: '.5rem' }}>{t('tpl.track')}</span>
-                <button className={'btn sm' + (track === 'all' ? '' : ' secondary')} onClick={() => setTrack('all')}>{t('tpl.all')}</button>
+                <button className={'btn sm' + (track === 'all' ? '' : ' secondary')} aria-pressed={track === 'all'} onClick={() => setTrack('all')}>{t('tpl.all')}</button>
                 {tracks.map((tk) => (
-                  <button key={tk} className={'btn sm' + (track === tk ? '' : ' secondary')} onClick={() => setTrack(tk)}>{CERTS[tk] || `Track ${tk}`}</button>
+                  <button key={tk} className={'btn sm' + (track === tk ? '' : ' secondary')} aria-pressed={track === tk} onClick={() => setTrack(tk)}>{CERTS[tk] || `Track ${tk}`}</button>
                 ))}
               </>
             )}
             {anyDownloaded && (
               <>
                 <span className="small muted" style={{ fontWeight: 700, marginLeft: '.5rem' }}>{t('tpl.show')}</span>
-                <button className={'btn sm' + (show === 'all' ? '' : ' secondary')} onClick={() => setShow('all')}>{t('tpl.all')}</button>
-                <button className={'btn sm' + (show === 'new' ? '' : ' secondary')} onClick={() => setShow('new')}>{t('tpl.new')}</button>
+                <button className={'btn sm' + (show === 'all' ? '' : ' secondary')} aria-pressed={show === 'all'} onClick={() => setShow('all')}>{t('tpl.all')}</button>
+                <button className={'btn sm' + (show === 'new' ? '' : ' secondary')} aria-pressed={show === 'new'} onClick={() => setShow('new')}>{t('tpl.new')}</button>
               </>
             )}
           </div>

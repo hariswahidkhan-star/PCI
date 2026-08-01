@@ -396,8 +396,24 @@ public static class PartnerSettlement
             foreach (var i in db.Query("SELECT transaction_id FROM partner_settlement_items WHERE settlement_id=?", settlementId))
             {
                 var txnId = H.L(i["transaction_id"]);
+                // A cap-limited Prepare can allocate only PART of a transaction. Marking such a
+                // transaction 'paid' because the SETTLEMENT was fully paid would strand its unallocated
+                // remainder: 'paid' rows leave both sides of PayableMinor, so the residual vanishes from
+                // the payable balance forever. Move to 'paid' only when the transaction itself is fully
+                // allocated (against its net worth, mirroring Prepare); otherwise 'partially_paid' keeps
+                // the residual payable and the next Prepare picks it up.
+                var tw = db.QueryOne(@"SELECT t.commission_minor, t.status,
+                        COALESCE((SELECT SUM(r.commission_minor) FROM partner_commission_transactions r
+                                  WHERE r.reversal_of_transaction_id=t.id),0) reversed,
+                        COALESCE((SELECT SUM(i2.amount_allocated_minor) FROM partner_settlement_items i2
+                                  JOIN partner_settlements s2 ON s2.id=i2.settlement_id
+                                  WHERE i2.transaction_id=t.id AND s2.status<>'cancelled'),0) allocated
+                    FROM partner_commission_transactions t WHERE t.id=?", txnId);
+                var netWorth = tw is null ? 0 : H.L(tw["commission_minor"])
+                    + (H.Str(tw?["status"]) == PartnerCommission.StatusPartiallyPaid ? 0 : H.L(tw?["reversed"]));
+                var fullyAllocated = tw is not null && H.L(tw["allocated"]) >= netWorth;
                 var moved = MoveOrAlreadyThere(db, txnId,
-                    full ? PartnerCommission.StatusPaid : PartnerCommission.StatusPartiallyPaid, paidBy,
+                    full && fullyAllocated ? PartnerCommission.StatusPaid : PartnerCommission.StatusPartiallyPaid, paidBy,
                     full ? "Settlement paid." : $"Settlement part-paid ({Money.Format(totalPaid)} of {Money.Format(approved)}).",
                     $"settlement:{settlementId}");
                 // A refused move means the transaction left the expected state (disputed, reversed) after it
@@ -435,8 +451,17 @@ public static class PartnerSettlement
             .Where(x => !string.IsNullOrWhiteSpace(x)));
 
         var stranded = new List<long>();
+        var conflict = false;
         db.Transaction(() =>
         {
+            // Guarded FIRST, mirroring Approve/Pay: if a concurrent Pay committed between the read above
+            // and this write, the settlement is no longer unpaid and cancelling it would delete the
+            // allocations of money that actually moved — the same commissions would become payable again.
+            var (_, changed) = db.ExecuteWithChanges(
+                @"UPDATE partner_settlements SET status='cancelled', internal_note=?, updated_at=?
+                  WHERE id=? AND amount_paid_minor=0 AND status IN ('pending_approval','approved','scheduled')",
+                note, Now(), settlementId);
+            if (changed == 0) { conflict = true; return; }
             foreach (var i in db.Query("SELECT transaction_id FROM partner_settlement_items WHERE settlement_id=?", settlementId))
             {
                 var txnId = H.L(i["transaction_id"]);
@@ -445,9 +470,9 @@ public static class PartnerSettlement
                     stranded.Add(txnId);
             }
             db.Execute("DELETE FROM partner_settlement_items WHERE settlement_id=?", settlementId);
-            db.Execute("UPDATE partner_settlements SET status='cancelled', internal_note=?, updated_at=? WHERE id=?",
-                note, Now(), settlementId);
         });
+        if (conflict)
+            return Result.Fail("concurrent_update", "The settlement changed while this cancellation was being recorded — re-check its state.");
         return new Result { Ok = true, Id = settlementId, Data = new { unmoved_transactions = stranded.ToArray() } };
     }
 }

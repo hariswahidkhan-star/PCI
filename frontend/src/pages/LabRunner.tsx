@@ -680,7 +680,7 @@ export default function LabRunner() {
       setSaveNote(silent ? null : 'Progress saved')
     } catch {
       setSaveState('error')
-      setSaveNote(silent ? null : 'Autosave unavailable — your answers stay in this browser until you submit.')
+      setSaveNote(silent ? null : "Autosave unavailable — don't close or reload this page; keep working and Submit (or retry Save progress) to avoid losing your answers.")
     }
   }, [start, grade, buildAnswersPayload])
 
@@ -710,9 +710,15 @@ export default function LabRunner() {
   // A mode switch opens a separate attempt: confirm first when visible work could leave the screen.
   const requestMode = (m: Mode) => {
     if (m === mode) return
-    const hasWork = !grade && Object.values(answersRef.current).some((v) => v.trim() !== '')
+    // Work can live in the single-step answers OR (for multistep scenarios) in the per-step answers
+    // and decision picks — all three must gate the confirm dialog.
+    const hasWork = !grade && (
+      Object.values(answersRef.current).some((v) => v.trim() !== '') ||
+      Object.values(stepAnswersRef.current).some((m2) => Object.values(m2).some((v) => v.trim() !== '')) ||
+      Object.keys(decisionsRef.current).length > 0
+    )
     if (hasWork) setPendingMode(m)
-    else setMode(m)
+    else { void autosave(true); setMode(m) }
   }
   const confirmMode = () => {
     if (!pendingMode) return
@@ -1160,7 +1166,7 @@ export default function LabRunner() {
                       </label>
                       <label className="small" style={{ margin: 0 }}>Hint level
                         <select value={hintLevel} onChange={(e) => setHintLevel(Number(e.target.value))} aria-label="Hint level">
-                          {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n}</option>)}
+                          {[1, 2, 3, 4, 5, 6].map((n) => <option key={n} value={n}>{n}</option>)}
                         </select>
                       </label>
                     </div>

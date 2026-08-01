@@ -164,7 +164,7 @@ public static class PageContent
 
         if (!string.IsNullOrEmpty(meta.title))
         {
-            html = RxTitle.Replace(html, "<title>" + Esc(meta.title!) + "</title>", 1);
+            html = RxTitle.Replace(html, _ => "<title>" + Esc(meta.title!) + "</title>", 1);   // evaluator: keep '$' in titles literal
             html = RxOgTitle.Replace(html, m => m.Groups[1].Value + EscAttr(meta.title!) + m.Groups[2].Value);
         }
         if (!string.IsNullOrEmpty(meta.meta))

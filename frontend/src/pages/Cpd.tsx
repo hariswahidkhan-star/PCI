@@ -112,8 +112,15 @@ export default function Cpd() {
     }
   }
 
-  const remove = (id: number) =>
-    runMutation(async () => { await api.del(`/api/me/cpd/${id}`); refetch(); refetchMe() })
+  const remove = (r: CpdRow) => {
+    // Deletion is permanent server-side (no status guard, no undo) — confirm first, and warn
+    // explicitly when the entry is admin-approved since its counted hours are forfeited.
+    const approved = (r.status || '') === 'approved'
+    if (!window.confirm(approved
+      ? 'Remove this approved activity? Its counted hours will be forfeited. This cannot be undone.'
+      : 'Remove this activity? This cannot be undone.')) return
+    runMutation(async () => { await api.del(`/api/me/cpd/${r.id}`); refetch(); refetchMe() })
+  }
 
   return (
     <div className="page">
@@ -184,7 +191,7 @@ export default function Cpd() {
                   <td>{r.hours}</td>
                   <td><StatusBadge status={r.status || 'pending'} /></td>
                   <td><CpdEvidenceCell row={r} onChanged={() => { refetch(); refetchMe() }} /></td>
-                  <td><button className="btn ghost sm" onClick={() => remove(r.id)} aria-label={t('cpd.deleteAria')}>{t('cpd.remove')}</button></td>
+                  <td><button className="btn ghost sm" onClick={() => remove(r)} aria-label={t('cpd.deleteAria')}>{t('cpd.remove')}</button></td>
                 </tr>
               ))}
             </tbody>

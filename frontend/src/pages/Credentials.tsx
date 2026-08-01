@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useMe } from '../data/MeContext'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 import { fmtDate, isPast, daysUntil } from '../format'
@@ -9,6 +10,7 @@ import type { Credential } from '../api/types'
 export default function Credentials() {
   const t = useT()
   const { me, loading, error } = useMe()
+  const [dlErr, setDlErr] = useState<string | null>(null)
   if (loading) return <Spinner />
   if (error) return <ErrorNote>{error}</ErrorNote>
   if (!me) return null
@@ -43,7 +45,9 @@ export default function Credentials() {
     const verifyUrl = `${me.site_base_url || location.origin}/verify.html?id=${encodeURIComponent(c.credential_id)}`
     const ym = (d?: string | null) => {
       if (!d) return {}
-      const dt = new Date(d)
+      // Backend datetimes are 'YYYY-MM-DD HH:MM:SS' (UTC) — normalise like src/format.ts so Safari
+      // parses them too instead of silently dropping the LinkedIn issue/expiry years.
+      const dt = new Date(d.includes('T') ? d : d.replace(' ', 'T') + 'Z')
       return isNaN(dt.getTime()) ? {} : { year: String(dt.getUTCFullYear()), month: String(dt.getUTCMonth() + 1) }
     }
     const iss = ym(c.issued_at), exp = ym(c.expires_at)
@@ -58,21 +62,24 @@ export default function Credentials() {
   const downloadPdf = async (id: string, honorary = false) => {
     const tok = sessionStorage.getItem('pci.session.token')
     const url = honorary ? '/api/me/honorary-certificate/pdf' : `/api/me/certificate/pdf?id=${encodeURIComponent(id)}`
+    setDlErr(null)
     try {
       const r = await fetch(url, { headers: tok ? { Authorization: 'Bearer ' + tok } : {} })
-      if (!r.ok) { alert('Could not download the certificate right now. Please try again shortly or contact support.'); return }
+      if (!r.ok) { setDlErr('Could not download the certificate right now. Please try again shortly or contact support.'); return }
       const blob = await r.blob()
       const a = document.createElement('a')
       a.href = URL.createObjectURL(blob)
       a.download = `${honorary ? 'honorary-certificate' : 'certificate'}-${id}.pdf`
       document.body.appendChild(a); a.click(); a.remove()
       setTimeout(() => URL.revokeObjectURL(a.href), 60_000)
-    } catch { alert('Could not download the certificate right now. Please try again shortly or contact support.') }
+    } catch { setDlErr('Could not download the certificate right now. Please try again shortly or contact support.') }
   }
 
   return (
     <div className="page">
       <PageHeader eyebrow={t('nav.credentials')} title={t('cred.title')} subtitle={t('cred.subtitle')} />
+
+      {dlErr && <div className="notice err" role="alert">{dlErr}</div>}
 
       {/* Honorary recognition is deliberately separate from exam-earned credentials: it is a
           board-conferred designation, not an examined certification credential. */}

@@ -442,6 +442,7 @@ body::before {
 .sidebar--bright .member-chip strong { color: var(--ink); }
 .sidebar--bright .member-chip em { color: var(--mist); }
 .sidebar--bright .mc-dot { background: #94a3b8; }
+.sidebar--bright .nav .pill.dim { background: var(--canvas); color: var(--slate); }
 
 /* topbar: crumb + page title */
 .tb-crumb { font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
@@ -584,16 +585,12 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 [dir="rtl"] .auth-lang{right:auto;left:18px;}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 
-/* Arabic right-to-left: the shell is flex, so the sidebar naturally moves to the right; these rules
-   fix the details physical properties would otherwise get wrong. */
-[dir="rtl"] .content,[dir="rtl"] .card,[dir="rtl"] .tb-title,[dir="rtl"] .tb-crumb{text-align:right;}
-[dir="rtl"] .member-chip{flex-direction:row-reverse;}
-[dir="rtl"] .pill{margin-left:0;margin-right:auto;}
-[dir="rtl"] .nav a{flex-direction:row-reverse;}
-/* Document rows/actions mirror correctly in RTL (icon on the right, actions on the left). */
-[dir="rtl"] .rep-item-main.row{flex-direction:row-reverse;text-align:right;}
+/* Arabic right-to-left: the shell is flex, and flex `row` already follows the writing
+   direction, so rows mirror automatically; these rules fix only the genuinely physical
+   properties (text-align, left/right offsets). */
+[dir="rtl"] .content,[dir="rtl"] .card,[dir="rtl"] .tb-title,[dir="rtl"] .tb-crumb,[dir="rtl"] .rep-item-main.row{text-align:right;}
+/* Document actions mirror correctly in RTL (actions on the left). */
 [dir="rtl"] .rep-item-actions{justify-items:start;}
-[dir="rtl"] .docviewer-head{flex-direction:row-reverse;}
 [dir="rtl"] .docviewer-title{text-align:right;}
 
 /* ===== universal document viewer (student + admin) ===== */
@@ -634,7 +631,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .docviewer-title{display:grid;gap:.1rem;min-width:0;}
 .docviewer-title strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:min(560px,70vw);}
 .docviewer-actions{display:flex;gap:.35rem;flex-wrap:wrap;}
-.docviewer-body{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--surface,#f6f8fb);}
+.docviewer-body{flex:1;min-height:0;display:flex;flex-direction:column;background:var(--surface-sunken,#f6f8fb);}
 .docviewer-frame{flex:1;width:100%;border:0;}
 .docviewer-scroll{flex:1;overflow:auto;}
 .docviewer-center{flex:1;display:grid;place-items:center;}
@@ -731,10 +728,10 @@ kbd {
 }
 
 /* ===== shared upload picker (drag & drop) ===== */
-.upload-drop{border:1.5px dashed var(--line,#cbd5e1);border-radius:10px;padding:.6rem .8rem;display:flex;flex-direction:column;gap:.3rem;background:var(--surface,#f8fafc);transition:border-color .15s ease,background .15s ease;}
+.upload-drop{border:1.5px dashed var(--line,#cbd5e1);border-radius:10px;padding:.6rem .8rem;display:flex;flex-direction:column;gap:.3rem;background:var(--surface-sunken,#f8fafc);transition:border-color .15s ease,background .15s ease;}
 .upload-drop.over{border-color:var(--brand-600,#2249c8);background:var(--brand-050,#eef3ff);}
 .upload-drop.disabled{opacity:.6;pointer-events:none;}
-@media (max-width:900px){
+@media (max-width: 860px){
   /* off-canvas sidebar slides in from the right in RTL */
   [dir="rtl"] .sidebar{left:auto;right:0;transform:translateX(100%);}
   [dir="rtl"] .sidebar.open{transform:translateX(0);}

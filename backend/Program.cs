@@ -380,12 +380,12 @@ var _csp = string.Join("; ", new[]
     "frame-ancestors 'none'",
     "frame-src 'self' blob: https://accounts.google.com/gsi/",   // blob: = admin evidence viewer; gsi = Google sign-in button iframe
     "form-action 'self'",
-    "img-src 'self' data: blob: https://www.googletagmanager.com",
+    "img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com",
     "media-src 'self' blob:",
     "font-src 'self' data: https://fonts.gstatic.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style",
     "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://plausible.io https://cdnjs.cloudflare.com https://accounts.google.com/gsi/client https://www.clarity.ms",
-    "connect-src 'self' https://plausible.io https://www.google-analytics.com https://accounts.google.com/gsi/ https://*.clarity.ms",
+    "connect-src 'self' https://plausible.io https://*.google-analytics.com https://*.analytics.google.com https://accounts.google.com/gsi/ https://*.clarity.ms",
 });
 var _cspHeader = string.Equals(Environment.GetEnvironmentVariable("CSP_REPORT_ONLY"), "true", StringComparison.OrdinalIgnoreCase)
     ? "Content-Security-Policy-Report-Only" : "Content-Security-Policy";
@@ -409,29 +409,19 @@ app.Use(async (ctx, next) =>
     }
 });
 
-// Canonical-domain + HTTPS enforcement (FIRST, before anything serves): 301 the www/pciglobal.ai
-// hosts to https://projectcontrolsinstitute.org, page-to-page. Unknown hosts pass through so the
-// service keeps working on the Render URL / localhost / staging during the DNS transition.
-app.Use(async (ctx, next) =>
-{
-    if (PCI.Backend.Core.Redirects.Target(ctx.Request) is { } target)
-    {
-        ctx.Response.StatusCode = StatusCodes.Status301MovedPermanently;
-        ctx.Response.Headers.Location = target;
-        return;
-    }
-    await next();
-});
-
 app.Use(async (ctx, next) =>
 {
     var h = ctx.Response.Headers;
     h["X-Content-Type-Options"] = "nosniff";
     h["Referrer-Policy"] = "strict-origin-when-cross-origin";
     h["X-Frame-Options"] = "DENY";                       // legacy ally of frame-ancestors 'none'
-    h["Cross-Origin-Opener-Policy"] = "same-origin";
-    // Deny powerful browser features site-wide except where actually used (payment on checkout is same-origin).
-    h["Permissions-Policy"] = "camera=(), microphone=(), geolocation=(), usb=(), payment=(self), interest-cohort=()";
+    // same-origin-allow-popups (not same-origin): the Google Identity Services sign-in popup on
+    // login/register must keep its opener relationship to postMessage the credential back.
+    h["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups";
+    // Deny powerful browser features site-wide except where actually used (payment on checkout is
+    // same-origin; camera/microphone are used same-origin by the student exam readiness check and
+    // the event-staff barcode scanner — (self) still blocks third-party iframes).
+    h["Permissions-Policy"] = "camera=(self), microphone=(self), geolocation=(), usb=(), payment=(self), interest-cohort=()";
     h[_cspHeader] = _csp;
     // Keep private/authenticated surfaces out of search indexes (defence in depth alongside
     // auth, the noindex meta tags and robots.txt).
@@ -465,6 +455,23 @@ app.Use(async (ctx, next) =>
     res.Headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization";
     res.Headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS";
     if (ctx.Request.Method == "OPTIONS") { res.StatusCode = 204; return; }
+    await next();
+});
+
+// Canonical-domain + HTTPS enforcement (before maintenance/injection/static serving): 301 the
+// www/pciglobal.ai hosts to https://projectcontrolsinstitute.org, page-to-page. Unknown hosts pass
+// through so the service keeps working on the Render URL / localhost / staging during the DNS
+// transition. ORDERING: like PortalDomain and the World mapping below, this runs AFTER the
+// security-headers and CORS middleware — it answers requests itself (the 301) without calling
+// next(), and those responses must still carry CSP/nosniff/CORS.
+app.Use(async (ctx, next) =>
+{
+    if (PCI.Backend.Core.Redirects.Target(ctx.Request) is { } target)
+    {
+        ctx.Response.StatusCode = StatusCodes.Status301MovedPermanently;
+        ctx.Response.Headers.Location = target;
+        return;
+    }
     await next();
 });
 
@@ -586,7 +593,7 @@ static string ClientIp(HttpContext ctx)
 // per client IP with a fixed-window in-memory counter. Applied by path prefix via middleware so it is
 // robust to route-handler shape (no per-endpoint chaining required).
 var _rlHits = new System.Collections.Concurrent.ConcurrentDictionary<string, (int count, long windowStart)>();
-string[] _rlPaths = { "/api/login", "/api/portal-handoff/redeem", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit",
+string[] _rlPaths = { "/api/login", "/api/portal-handoff/redeem", "/api/admin/auth/login", "/api/admin/auth/forgot", "/api/admin/auth/reset", "/api/admin/auth/recover", "/api/forgot-password", "/api/validate-code", "/api/set-password", "/api/exam/authorize", "/api/create-checkout-session", "/api/register", "/api/auth/google", "/api/founding/validate", "/api/founding/redeem", "/api/me/founding-application", "/api/honorary-application", "/api/training-partner-application", "/api/errors", "/api/partner/auth/login", "/api/inquiry", "/api/newsletter", "/api/form-submit",
     // PCI World credential endpoints. The world modules carry their own per-key throttles, but those
     // are session-scoped or coarse; brute-forceable credential paths belong on the platform's
     // IP-keyed limiter like every other realm's login — the world admin especially, since it had
@@ -1059,7 +1066,11 @@ app.MapGet("/api/content", () =>
     {
         var k = (string)r["skey"]!;
         if (k.StartsWith("auto_block_result", StringComparison.OrdinalIgnoreCase) || k == "critical_violation_threshold"
-            || k.Contains("secret", StringComparison.OrdinalIgnoreCase) || k.Contains("smtp", StringComparison.OrdinalIgnoreCase)) continue;
+            || k.Contains("secret", StringComparison.OrdinalIgnoreCase) || k.Contains("smtp", StringComparison.OrdinalIgnoreCase)
+            // Credential-shaped keys (psi_api_key, translate_api_key, certuvo_api_key, …) are backend-only
+            // and must never reach the anonymous /api/content payload — not even as ciphertext.
+            || k.Contains("api_key", StringComparison.OrdinalIgnoreCase) || k.EndsWith("_key", StringComparison.OrdinalIgnoreCase)
+            || k.Contains("token", StringComparison.OrdinalIgnoreCase)) continue;
         settings[k] = r["svalue"];
     }
     return Json(new
@@ -1089,7 +1100,6 @@ app.MapPost("/api/login", async (HttpRequest req) =>
               db.Execute("INSERT INTO login_events(user_id,ip,user_agent,device,outcome) VALUES(?,?,?,?,?)", u["id"], fip, "", "", "failed"); } catch { }
         return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
     }
-    LoginGuard.OnSuccess(db, "users", u["id"]);
     if ((u["status"] as string) != "active") return Results.Json(new { error = "inactive" }, statusCode: 403);
     // Second factor: if the candidate has enabled TOTP (secret present and not still 'pending:'), require a
     // valid 6-digit code or a one-time recovery code before a session is issued. Replay is blocked by
@@ -1100,22 +1110,31 @@ app.MapPost("/api/login", async (HttpRequest req) =>
         if (code.Length == 0) return Results.Json(new { error = "totp_required", two_factor = true, message = "Enter the 6-digit code from your authenticator app." }, statusCode: 401);
         var lastStep = u.TryGetValue("totp_last_step", out var ls) && ls is not null ? Convert.ToInt64(ls) : 0L;
         var step = Security.VerifyTotpStep(usecret, code);
-        var totpOk = step >= 0 && step > lastStep;
-        if (totpOk) db.Execute("UPDATE users SET totp_last_step=? WHERE id=?", step, u["id"]);
-        else
+        // Compare-and-swap on totp_last_step: the guarded UPDATE must claim the step (1 row changed),
+        // so of two concurrent logins replaying the same code exactly one wins — the loser falls
+        // through to the recovery-code path and fails there.
+        var totpOk = step >= 0 && step > lastStep
+            && db.Execute("UPDATE users SET totp_last_step=? WHERE id=? AND COALESCE(totp_last_step,0)<?", step, u["id"], step) == 1;
+        if (!totpOk)
         {
             // Fall back to a one-time recovery code (hashed compare; consumed on use).
             var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
             var stored = (u["totp_recovery"] as string) ?? "";
             var codes = string.IsNullOrEmpty(stored) ? new List<string>() : System.Text.Json.JsonSerializer.Deserialize<List<string>>(stored) ?? new();
-            if (!codes.Remove(recovHash))
+            // Guard the rewrite on the previously-read JSON so the same one-time code cannot be
+            // redeemed twice in parallel — the losing writer sees 0 rows changed and gets a 401.
+            if (!codes.Remove(recovHash)
+                || db.Execute("UPDATE users SET totp_recovery=? WHERE id=? AND COALESCE(totp_recovery,'')=?",
+                       System.Text.Json.JsonSerializer.Serialize(codes), u["id"], stored) == 0)
             {
                 LoginGuard.OnFail(db, "users", u["id"]);
                 return Results.Json(new { error = "totp_invalid", two_factor = true, message = "That code was not valid. Try again, or use a recovery code." }, statusCode: 401);
             }
-            db.Execute("UPDATE users SET totp_recovery=? WHERE id=?", System.Text.Json.JsonSerializer.Serialize(codes), u["id"]);
         }
     }
+    // Reset the lockout counter only after EVERY factor has passed — resetting on password success
+    // alone let an attacker with the password retry TOTP codes forever without ever locking out.
+    LoginGuard.OnSuccess(db, "users", u["id"]);
     var session = Security.RandomHex(32);
     db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'session', datetime('now','+30 day'))",
         u["id"], Security.Sha(session));
@@ -1155,7 +1174,6 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
         Log(a["id"] as long? ?? 0, "admin_login_failed", email);
         return Results.Json(new { error = "invalid_credentials" }, statusCode: 401);
     }
-    LoginGuard.OnSuccess(db, "admin_users", a["id"]);
     // Optional MFA for privileged accounts: once an admin has enrolled a TOTP secret, every login
     // requires the 6-digit code as a second factor. The matched timestep is recorded and must strictly
     // advance, so a captured code cannot be replayed within its ±1 validity window.
@@ -1165,25 +1183,32 @@ app.MapPost("/api/admin/auth/login", async (HttpRequest req) =>
         if (code.Length == 0) return Results.Json(new { error = "totp_required" }, statusCode: 401);
         var matchedStep = Security.VerifyTotpStep(totp, code);
         var lastStep = a.TryGetValue("totp_last_step", out var ls) && ls is not null ? Convert.ToInt64(ls) : 0L;
-        if (matchedStep >= 0 && matchedStep > lastStep)
-        {
-            db.Execute("UPDATE admin_users SET totp_last_step=? WHERE id=?", matchedStep, a["id"]);
-        }
-        else
+        // Compare-and-swap on totp_last_step: the guarded UPDATE must claim the step (1 row changed),
+        // so of two concurrent logins replaying the same code exactly one wins — the loser falls
+        // through to the recovery-code path and fails there.
+        var totpOk = matchedStep >= 0 && matchedStep > lastStep
+            && db.Execute("UPDATE admin_users SET totp_last_step=? WHERE id=? AND COALESCE(totp_last_step,0)<?", matchedStep, a["id"], matchedStep) == 1;
+        if (!totpOk)
         {
             // Fall back to a one-time recovery code (hashed compare; consumed on use) so a lost
             // authenticator is recoverable without operator intervention. Same scheme as the student login.
             var recovHash = Security.Sha(code.Replace(" ", "").Replace("-", "").ToLowerInvariant());
             var storedRec = (a.TryGetValue("totp_recovery", out var rv) ? rv as string : null) ?? "";
             var codes = string.IsNullOrEmpty(storedRec) ? new List<string>() : JsonSerializer.Deserialize<List<string>>(storedRec) ?? new();
-            if (!codes.Remove(recovHash))
+            // Guard the rewrite on the previously-read JSON so the same one-time code cannot be
+            // redeemed twice in parallel — the losing writer sees 0 rows changed and gets a 401.
+            if (!codes.Remove(recovHash)
+                || db.Execute("UPDATE admin_users SET totp_recovery=? WHERE id=? AND COALESCE(totp_recovery,'')=?",
+                       JsonSerializer.Serialize(codes), a["id"], storedRec) == 0)
             {
                 LoginGuard.OnFail(db, "admin_users", a["id"]);
                 return Results.Json(new { error = "totp_invalid" }, statusCode: 401);
             }
-            db.Execute("UPDATE admin_users SET totp_recovery=? WHERE id=?", JsonSerializer.Serialize(codes), a["id"]);
         }
     }
+    // Reset the lockout counter only after EVERY factor has passed — resetting on password success
+    // alone let an attacker with the password retry TOTP codes forever without ever locking out.
+    LoginGuard.OnSuccess(db, "admin_users", a["id"]);
     var tok = Security.RandomHex(24);
     db.Execute("INSERT INTO admin_sessions(admin_id,token,expires_at) VALUES(?,?,datetime('now','+12 hours'))", a["id"], Security.Sha(tok));
     db.Execute("UPDATE admin_users SET last_login_at=datetime('now') WHERE id=?", a["id"]);

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import type { EmailLog } from '../api'
 import { Card, StatusBadge, Spinner, ErrorNote, Empty } from '../../components/ui'
@@ -8,9 +8,15 @@ import { fmtDateTime, titleCase } from '../../format'
 export default function Emails() {
   const [status, setStatus] = useState('')
   const [q, setQ] = useState('')
+  const [dq, setDq] = useState('')
+  // Debounce the search so the list doesn't refetch (and flash a spinner) on every keystroke.
+  useEffect(() => {
+    const t = setTimeout(() => setDq(q), 300)
+    return () => clearTimeout(t)
+  }, [q])
   const params = new URLSearchParams()
   if (status) params.set('status', status)
-  if (q) params.set('q', q)
+  if (dq) params.set('q', dq)
   const qs = params.toString()
   const { data, loading, error } = useAdminQuery<{ rows: EmailLog[] }>(`/api/admin/emails${qs ? '?' + qs : ''}`)
 
@@ -27,7 +33,7 @@ export default function Emails() {
           <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All statuses</option>
             <option value="sent">Sent</option>
-            <option value="queued">Queued</option>
+            <option value="console">Console (not delivered)</option>
             <option value="failed">Failed</option>
           </select>
         </div>

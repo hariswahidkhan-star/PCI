@@ -14,10 +14,14 @@ public static class Payments
         ["membership"] = "Student Membership / Registration",
         ["exam"] = "PCL-AI Certification Exam",
         ["bundle"] = "Membership + Exam Bundle",
-        ["renewal"] = "Annual Membership Renewal",
+        ["renewal"] = "Membership Renewal (3-Year Term)",
         ["recert"] = "PCL-AI Recertification (3-year cycle)"
     };
     static string Base => Environment.GetEnvironmentVariable("APP_BASE_URL") ?? "";
+    // Datetimes persisted for SQL comparison MUST be "YYYY-MM-DD HH:MM:SS" (the platform invariant —
+    // see H.cs/CLAUDE.md §3.3): ISO 'T'-format strings compare wrongly against datetime('now') because
+    // ' ' (0x20) < 'T' (0x54), mis-evaluating expiry guards for the whole boundary day.
+    static string SqlFromMillis(long ms) => DateTimeOffset.FromUnixTimeMilliseconds(ms).UtcDateTime.ToString("yyyy-MM-dd HH:mm:ss");
     static string Fmt(double n) => "USD " + (n == Math.Floor(n) ? ((long)n).ToString() : n.ToString("0.00"));
 
     public static void Map(WebApplication app, Db db, Action<long?, string, string?> log, Func<bool> stripeReady)
@@ -111,6 +115,11 @@ public static class Payments
                     return Results.Json(new { error = err }, statusCode: 400);
                 }
                 var reservation = reserve.Reservation!;
+                // A replayed key whose reservation already SETTLED must never mint a new Stripe session —
+                // the purchase is fulfilled; a second session would charge the customer again and re-credit
+                // the code/commission via the webhook without consuming discount-code capacity.
+                if (reserve.Replayed && H.Str(reservation["status"]) == "settled")
+                    return Results.Json(new { error = "already_settled", reservation_id = H.L(reservation["id"]), payment_id = reservation["payment_id"] }, statusCode: 400);
                 // Replay an in-flight reservation that already has a Stripe session URL.
                 if (reserve.Replayed && H.Str(reservation["stripe_session_id"]) is { Length: > 0 } existingSid
                     && H.Str(reservation["status"]) == "reserved")
@@ -173,7 +182,9 @@ public static class Payments
                         reservation["discount_code_id"] is null ? null : H.L(reservation["discount_code_id"]), "released"));
                     throw;
                 }
-                db.Execute("UPDATE checkout_reservations SET stripe_session_id=?, updated_at=datetime('now') WHERE id=?", session.Id, reservation["id"]);
+                // status='reserved' guard: never overwrite the session id of a reservation that settled
+                // (or was released) while the Stripe call was in flight.
+                db.Execute("UPDATE checkout_reservations SET stripe_session_id=?, updated_at=datetime('now') WHERE id=? AND status='reserved'", session.Id, reservation["id"]);
                 return J(new { url = session.Url, reservation_id = H.L(reservation["id"]), replayed = reserve.Replayed });
             }
             catch (Exception e) { Console.Error.WriteLine(e); return Results.Json(new { error = "session_failed" }, statusCode: 500); }
@@ -205,7 +216,8 @@ public static class Payments
                     CancelUrl = $"{Base}/app/billing?cancelled=1",
                 };
                 if (!string.IsNullOrEmpty(existingCust)) opts.Customer = existingCust; else opts.CustomerEmail = u.Email;
-                // Deterministic idempotency key (see create-checkout-session): dedupes a retried subscribe.
+                // Minute-bucket dedupe only — unlike create-checkout-session's durable client key, a retry
+                // that crosses a minute boundary creates a second (harmless, unpaid) checkout session.
                 var idemKey = "sub_" + Security.Sha($"{u.Id}|{price}|{DateTime.UtcNow:yyyyMMddHHmm}");
                 var session = await new SessionService().CreateAsync(opts, new RequestOptions { IdempotencyKey = idemKey });
                 return J(new { url = session.Url });
@@ -248,10 +260,19 @@ public static class Payments
             if (ev.Type == "checkout.session.completed" && (ev.Data.Object as Session)?.Mode == "subscription")
             {
                 var s = ev.Data.Object as Session;
+                // EXT-P0-02 applies here too: activate the membership only once Stripe confirms the first
+                // invoice settled. A completed session whose payment is still unpaid (delayed-notification
+                // method / incomplete subscription) must not grant a year of paid membership.
+                if (s?.PaymentStatus is not ("paid" or "no_payment_required"))
+                {
+                    log(null, "dues_checkout_unpaid_deferred", $"{ev.Id} status={s?.PaymentStatus}");
+                    return Results.Ok();
+                }
                 var uid = long.TryParse(s?.ClientReferenceId, out var cid) ? cid
                     : long.TryParse(s?.Metadata?.GetValueOrDefault("user_id", ""), out var mid) ? mid : 0;
                 var email = (s?.CustomerDetails?.Email ?? s?.CustomerEmail ?? "").ToLowerInvariant();
                 if (uid == 0 && !string.IsNullOrEmpty(email)) uid = H.L(db.QueryOne("SELECT id FROM users WHERE email=?", email)?["id"]);
+                if (uid == 0) log(null, "dues_checkout_no_user", ev.Id);
                 if (uid != 0)
                 {
                     var m2 = db.QueryOne("SELECT id FROM memberships WHERE user_id=? ORDER BY id DESC", uid);
@@ -374,7 +395,7 @@ public static class Payments
                             var baseD = mrow is not null && H.Str(mrow["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso;
                             // Membership is a 3-YEAR term (matches the initial grant above and renewal_cycle
                             // = '3 years'); a renewal must extend by 3 years, not 1, or it silently under-grants.
-                            var newExp = H.IsoFromMillis(H.JsMillis(baseD) + 3L * 365L * 86400_000);
+                            var newExp = SqlFromMillis(H.JsMillis(baseD) + 3L * 365L * 86400_000);
                             if (mrow is not null) db.Execute("UPDATE memberships SET expiry_date=?, status='active' WHERE user_id=?", newExp, userId);
                             else db.Execute("INSERT INTO memberships(user_id,membership_type,status,start_date,expiry_date) VALUES(?, 'Student','active',datetime('now'),?)", userId, newExp);
                             log(userId, "membership_renewed", newExp);
@@ -398,7 +419,7 @@ public static class Payments
                                 // a 2-year credential must not silently gain a 3-year recert extension.
                                 var recertCert = Certs.ById(db, cred["certification_id"] is null ? Certs.DefaultId : H.L(cred["certification_id"]));
                                 var years = recertCert is null ? 3 : Certs.ExpiryYears(recertCert);
-                                var newExp = H.IsoFromMillis(H.JsMillis(baseD) + years * 365L * 86400_000);
+                                var newExp = SqlFromMillis(H.JsMillis(baseD) + years * 365L * 86400_000);
                                 db.Execute("UPDATE issued_credentials SET expires_at=?, status='active' WHERE id=?", newExp, cred["id"]);
                                 log(userId, "recertified", newExp);
                             }
@@ -568,7 +589,9 @@ public static class Payments
                         var pay = db.QueryOne("SELECT id,user_id,product_type FROM payments WHERE provider_payment_id=? AND payment_status IN ('paid','partially_refunded')", pi);
                         if (pay is null) return;
                         var payId = pay["id"]; var uid = pay["user_id"];
-                        var refundedAmt = ch is not null ? (ch.AmountRefunded) / 100.0 : 0;
+                        // For dispute events the payload is a Dispute, not a Charge — record the disputed
+                        // amount, or finance reports summing amount_refunded understate chargeback losses.
+                        var refundedAmt = ch is not null ? (ch.AmountRefunded) / 100.0 : ((ev.Data.Object as Dispute)?.Amount ?? 0) / 100.0;
                         db.Execute("UPDATE payments SET payment_status=?, amount_refunded=?, refunded_at=datetime('now') WHERE id=?", reversed, refundedAmt, payId);
                         db.Execute("UPDATE exam_entitlements SET status='revoked' WHERE payment_id=? AND status IN ('available','booked')", payId);
                         db.Execute("UPDATE exam_bookings SET status='cancelled', updated_at=datetime('now') WHERE payment_id=? AND status='scheduled'", payId);
@@ -613,10 +636,10 @@ public static class Payments
                         if (mem is null) return;
                         // Reconcile the term to Stripe's authoritative billing-period END when present.
                         var nowIso = H.IsoNow;
-                        var periodEnd = inv.PeriodEnd.Year > 2000 ? inv.PeriodEnd.ToUniversalTime().ToString("o") : null;
+                        var periodEnd = inv.PeriodEnd.Year > 2000 ? inv.PeriodEnd.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss") : null;
                         string newExp;
                         if (periodEnd is not null && H.After(periodEnd, nowIso)) newExp = periodEnd;
-                        else { var baseD = H.Str(mem["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso; newExp = H.IsoFromMillis(H.JsMillis(baseD) + 365L * 86400_000L); }
+                        else { var baseD = H.Str(mem["expiry_date"]) is { } ex && H.After(ex, nowIso) ? ex : nowIso; newExp = SqlFromMillis(H.JsMillis(baseD) + 365L * 86400_000L); }
                         db.Execute("UPDATE memberships SET status='active', subscription_status='active', expiry_date=? WHERE id=?", newExp, mem["id"]);
                         log(H.Ln(mem["user_id"]), "dues_renewed", inv.CustomerId);
                     });

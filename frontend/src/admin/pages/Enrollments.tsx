@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAdminQuery } from '../hooks'
-import { adminApi, type EnrollmentRow } from '../api'
+import { type EnrollmentRow } from '../api'
 import { Card, StatusBadge, ErrorNote } from '../../components/ui'
 import { PageHeader, Toolbar, SearchInput, FilterSelect, EmptyState, SkeletonTable } from '../../components/premium'
 import { fmtDateTime, titleCase } from '../../format'
@@ -8,22 +8,18 @@ import { fmtDateTime, titleCase } from '../../format'
 export default function Enrollments() {
   const [status, setStatus] = useState('')
   const [q, setQ] = useState('')
-  const [reminding, setReminding] = useState<number | null>(null)
+  const [dq, setDq] = useState('')
+  // Debounce the search term so the query path (and its skeleton) doesn't churn on every
+  // keystroke — the input stays instant while the list refetches once typing settles.
+  useEffect(() => {
+    const t = setTimeout(() => setDq(q), 300)
+    return () => clearTimeout(t)
+  }, [q])
   const params = new URLSearchParams()
   if (status) params.set('status', status)
-  if (q) params.set('q', q)
+  if (dq) params.set('q', dq)
   const qs = params.toString()
-  const { data, loading, error, refetch } = useAdminQuery<{ rows: EnrollmentRow[]; total: number }>(`/api/admin/enrollments${qs ? '?' + qs : ''}`)
-
-  async function remind(id: number) {
-    setReminding(id)
-    try {
-      await adminApi.post(`/api/admin/enrollments/${id}/remind`)
-      refetch()
-    } finally {
-      setReminding(null)
-    }
-  }
+  const { data, loading, error } = useAdminQuery<{ rows: EnrollmentRow[]; total: number }>(`/api/admin/enrollments${qs ? '?' + qs : ''}`)
 
   return (
     <div className="page">
@@ -73,7 +69,7 @@ export default function Enrollments() {
         ) : (
           <table className="data">
             <thead>
-              <tr><th>Email</th><th>Product</th><th>Step</th><th>Status</th><th>Reminders</th><th>Last activity</th><th></th></tr>
+              <tr><th>Email</th><th>Product</th><th>Step</th><th>Status</th><th>Reminders</th><th>Last activity</th></tr>
             </thead>
             <tbody>
               {data.rows.map((e) => (
@@ -84,11 +80,6 @@ export default function Enrollments() {
                   <td><StatusBadge status={e.session_status} /></td>
                   <td>{e.reminders_sent ?? 0}</td>
                   <td className="small muted">{fmtDateTime(e.last_activity_at)}</td>
-                  <td>
-                    {e.session_status === 'in_progress' && (
-                      <button className="btn ghost sm" disabled={reminding === e.id} onClick={() => remind(e.id)}>{reminding === e.id ? 'Sending…' : 'Remind'}</button>
-                    )}
-                  </td>
                 </tr>
               ))}
             </tbody>

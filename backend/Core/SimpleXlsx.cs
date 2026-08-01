@@ -69,7 +69,10 @@ public static class SimpleXlsx
             sb.Append("</row>");
         }
         sb.Append("</sheetData>");
-        sb.Append($"<mergeCells count=\"4\"><mergeCell ref=\"A1:{lastCol}1\"/><mergeCell ref=\"A2:{lastCol}2\"/><mergeCell ref=\"A3:{lastCol}3\"/><mergeCell ref=\"A4:{lastCol}4\"/></mergeCells>");
+        // A one-cell merge (A1:A1) is invalid OOXML and can trigger Excel's repair prompt, so the band
+        // merges are emitted only when there is more than one column to merge across.
+        if (colCount > 1)
+            sb.Append($"<mergeCells count=\"4\"><mergeCell ref=\"A1:{lastCol}1\"/><mergeCell ref=\"A2:{lastCol}2\"/><mergeCell ref=\"A3:{lastCol}3\"/><mergeCell ref=\"A4:{lastCol}4\"/></mergeCells>");
         if (logoPng is not null) sb.Append("<drawing r:id=\"rId1\"/>");
         sb.Append("</worksheet>");
         var sheetXml = sb.ToString();
@@ -215,24 +218,30 @@ public static class SimpleXlsx
     static string Esc(string s)
     {
         var sb = new StringBuilder(s.Length);
-        foreach (var ch in s)
+        for (var i = 0; i < s.Length; i++)
         {
+            var ch = s[i];
             switch (ch)
             {
                 case '&': sb.Append("&amp;"); break;
                 case '<': sb.Append("&lt;"); break;
                 case '>': sb.Append("&gt;"); break;
                 case '"': sb.Append("&quot;"); break;
-                // Strip control chars that are illegal in XML 1.0 (keeps tab/newline out of cells too —
-                // a template cell is a single line by construction).
+                // LF is legal in XML 1.0 and in OOXML inline strings, and ParseCsv preserves newlines
+                // inside quoted fields — a multi-line cell must not be silently flattened. CRLF and a
+                // lone CR both normalise to LF.
+                case '\n': sb.Append('\n'); break;
+                case '\r': if (i + 1 >= s.Length || s[i + 1] != '\n') sb.Append('\n'); break;
+                // Strip the remaining control chars that are illegal in XML 1.0.
                 default: if (ch >= 0x20 || ch == '\t') sb.Append(ch); break;
             }
         }
         return sb.ToString();
     }
 
-    /// <summary>Small RFC-4180-ish parser: quoted fields, doubled quotes, CRLF/LF rows.</summary>
-    static List<List<string>> ParseCsv(string text)
+    /// <summary>Small RFC-4180-ish parser: quoted fields, doubled quotes, CRLF/LF rows. Public so the
+    /// raw CSV download path can re-serialize per field through <see cref="Csv.Field"/> (SEC-2).</summary>
+    public static List<List<string>> ParseCsv(string text)
     {
         var rows = new List<List<string>>();
         var row = new List<string>();

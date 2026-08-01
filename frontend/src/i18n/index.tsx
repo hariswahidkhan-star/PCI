@@ -61,7 +61,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const t = (key: string, vars?: Record<string, string | number>) => {
     const entry = CATALOG[key]
     let out = (entry && (entry[lang] ?? entry.en)) ?? key
-    if (vars) for (const [k, v] of Object.entries(vars)) out = out.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v))
+    if (vars) for (const [k, v] of Object.entries(vars)) out = out.replace(new RegExp(`\\{${k}\\}`, 'g'), () => String(v))
     return out
   }
 
@@ -87,7 +87,7 @@ export function useTSafe() {
   if (ctx) return ctx.t
   return (key: string, vars?: Record<string, string | number>) => {
     let out = CATALOG[key]?.en ?? key
-    if (vars) for (const [k, v] of Object.entries(vars)) out = out.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v))
+    if (vars) for (const [k, v] of Object.entries(vars)) out = out.replace(new RegExp(`\\{${k}\\}`, 'g'), () => String(v))
     return out
   }
 }

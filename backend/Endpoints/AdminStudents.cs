@@ -59,6 +59,7 @@ public static class AdminStudents
             var status = H.GetS(b, "status");
             if (status is not ("pending" or "active" or "deactivated")) return Results.Json(new { error = "bad_status" }, statusCode: 400);
             var prev = db.Scalar<string>("SELECT status FROM users WHERE id=?", id);
+            if (prev is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             db.Execute("UPDATE users SET status=?, updated_at=datetime('now') WHERE id=?", status, id);
             if (prev == "deactivated" && status == "active")
                 try { db.Execute("INSERT INTO notifications(user_id,category,title,body) VALUES(?, 'Account', 'Your account has been unlocked', 'Your PCI account is active again — you can sign in as normal.')", id); } catch { }
@@ -115,12 +116,22 @@ public static class AdminStudents
         }));
 
         // Creating a referral discount code for a student is a member action; gate on 'members'.
-        app.MapPost("/api/admin/members/{id}/referral-code", (HttpContext ctx, long id) => gate(ctx.Request, "members", _ =>
+        app.MapPost("/api/admin/members/{id}/referral-code", (HttpContext ctx, long id) => gate(ctx.Request, "members", adm =>
         {
+            if (db.QueryOne("SELECT id FROM users WHERE id=?", id) is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var existing = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", id);
             if (existing is not null) return J(new { code = existing["code"], existing = true });
             var code = "REF-" + Security.RandomHex(4).ToUpperInvariant();
-            try { db.Execute("INSERT INTO discount_codes(code,code_type,owner_user_id,discount_type,discount_value,applies_to,active) VALUES(?, 'referral',?, 'percent',10,'all',1)", code, id); } catch { }
+            try { db.Execute("INSERT INTO discount_codes(code,code_type,owner_user_id,discount_type,discount_value,applies_to,active) VALUES(?, 'referral',?, 'percent',10,'all',1)", code, id); }
+            catch
+            {
+                // Never hand back a code that was not actually stored (e.g. a UNIQUE collision) — the
+                // student would just see 'invalid code' at checkout with no trace of why.
+                var again = db.QueryOne("SELECT code FROM discount_codes WHERE owner_user_id=? AND code_type='referral' AND active=1", id);
+                if (again is not null) return J(new { code = again["code"], existing = true });
+                return Results.Json(new { error = "code_create_failed" }, statusCode: 500);
+            }
+            log(adm.Id, "referral_code_created", $"user {id} code {code}");
             return J(new { code, existing = false });
         }));
 
@@ -152,7 +163,26 @@ public static class AdminStudents
             if (u is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var uf = new[]{ "first_name","last_name","email" }.Where(k => b.ContainsKey(k)).ToList();
-            if (uf.Count > 0) db.Execute($"UPDATE users SET {string.Join(", ", uf.Select(k => k + "=?"))} WHERE id=?", uf.Select(k => (object?)H.GetS(b, k)).Append(id).ToArray());
+            string? newEmail = null;
+            if (uf.Contains("email"))
+            {
+                // Normalise + validate + pre-check uniqueness: users.email is UNIQUE NOT NULL, and
+                // lookups elsewhere compare against lowercased email.
+                newEmail = (H.GetS(b, "email") ?? "").Trim().ToLowerInvariant();
+                if (!System.Text.RegularExpressions.Regex.IsMatch(newEmail, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                    return Results.Json(new { error = "invalid_email" }, statusCode: 400);
+                if (db.QueryOne("SELECT id FROM users WHERE email=? AND id<>?", newEmail, id) is not null)
+                    return Results.Json(new { error = "email_exists" }, statusCode: 409);
+            }
+            if (uf.Count > 0)
+            {
+                try
+                {
+                    db.Execute($"UPDATE users SET {string.Join(", ", uf.Select(k => k + "=?"))} WHERE id=?",
+                        uf.Select(k => k == "email" ? (object?)newEmail : (object?)H.GetS(b, k)).Append(id).ToArray());
+                }
+                catch { return Results.Json(new { error = "email_exists" }, statusCode: 409); }   // unique-constraint race → 409, not 500
+            }
             var pcols = db.Columns("student_profiles");
             var pf = b.Keys.Where(k => pcols.Contains(k) && k != "user_id" && k != "id").ToList();
             if (pf.Count > 0)
@@ -212,6 +242,12 @@ public static class AdminStudents
             var b = H.Body(ctx.Request).GetAwaiter().GetResult();
             var when = H.GetS(b, "scheduled_at");
             if (string.IsNullOrEmpty(when)) return Results.Json(new { error = "scheduled_at_required" }, statusCode: 400);
+            // Normalise to the platform's canonical 'YYYY-MM-DD HH:MM:SS' UTC form — the exam window
+            // gates compare these strings, and an ISO 'T' or free-text value silently breaks them.
+            if (!DateTime.TryParse(when, System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out var dtParsed))
+                return Results.Json(new { error = "bad_datetime" }, statusCode: 400);
+            when = dtParsed.ToString("yyyy-MM-dd HH:mm:ss");
             var tz = H.GetS(b, "timezone") ?? "UTC";
             var open = db.QueryOne("SELECT * FROM exam_bookings WHERE user_id=? AND status='scheduled' ORDER BY id DESC", id);
             if (open is not null) db.Execute("UPDATE exam_bookings SET scheduled_at=?, timezone=?, updated_at=datetime('now') WHERE id=?", when, tz, open["id"]);
@@ -268,20 +304,28 @@ public static class AdminStudents
             var certId = Certs.Resolve(db, H.GetS(b, "certification_id", "certification", "cert"));
             var cert = Certs.ById(db, certId);
             if (cert is null) return Results.Json(new { error = "bad_certification" }, statusCode: 400);
-            // One live entitlement per certification: refuse if an unconsumed paid one already exists.
-            var open = db.QueryOne(@"SELECT p.id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
-                WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle')
-                AND COALESCE(e.certification_id,1)=? AND COALESCE(e.status,'available') IN ('available','booked')", id, certId);
-            if (open is not null) return Results.Json(new { error = "already_entitled" }, statusCode: 409);
             var reference = "WAIVE-" + Security.RandomHex(5).ToUpperInvariant();
             var note = (H.GetS(b, "note") ?? "").Trim(); if (note.Length > 300) note = note[..300];
             // A waiver is recorded as payment_status='waived' — never a fabricated 'paid' transaction.
             var listPrice = Settlement.ListPrice(db, "exam");
-            var payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference,exam_schedule_deadline,waived_amount,note,recorded_by)
-                VALUES(?, 'exam', ?, 0, 'USD', 'admin_waiver', 'waived', datetime('now'), ?, datetime('now','+1 year'),?,?,?)", id, listPrice, reference, listPrice, note.Length > 0 ? note : null, adm.Id);
-            db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', ?, 'available', datetime('now','+1 year'))", id, payId, certId);
-            db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?, 'exam', ?, 'full', ?, ?, 0, 'exam_fee_waiver', ?, ?, ?)",
-                id, certId, listPrice, listPrice, note.Length > 0 ? note : null, adm.Id, payId);
+            long payId = 0; var alreadyEntitled = false;
+            // The duplicate check + the three money/entitlement INSERTs run atomically: two concurrent
+            // requests can no longer double-grant, and a partial failure can't leave a 'waived' payment
+            // with no entitlement or fee_waivers record.
+            db.Transaction(() =>
+            {
+                // One live entitlement per certification: refuse if an unconsumed paid one already exists.
+                var open = db.QueryOne(@"SELECT p.id FROM payments p LEFT JOIN exam_entitlements e ON e.payment_id=p.id
+                    WHERE p.user_id=? AND p.payment_status IN ('paid','waived') AND p.product_type IN ('exam','bundle')
+                    AND COALESCE(e.certification_id,1)=? AND COALESCE(e.status,'available') IN ('available','booked')", id, certId);
+                if (open is not null) { alreadyEntitled = true; return; }
+                payId = db.ExecuteReturningId(@"INSERT INTO payments(user_id,product_type,standard_amount,final_amount,currency,payment_provider,payment_status,payment_date,reference,exam_schedule_deadline,waived_amount,note,recorded_by)
+                    VALUES(?, 'exam', ?, 0, 'USD', 'admin_waiver', 'waived', datetime('now'), ?, datetime('now','+1 year'),?,?,?)", id, listPrice, reference, listPrice, note.Length > 0 ? note : null, adm.Id);
+                db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?, 'exam', ?, 'available', datetime('now','+1 year'))", id, payId, certId);
+                db.Execute("INSERT INTO fee_waivers(user_id,product_type,certification_id,kind,original_amount,waived_amount,final_amount,reason,note,approved_by,payment_id) VALUES(?, 'exam', ?, 'full', ?, ?, 0, 'exam_fee_waiver', ?, ?, ?)",
+                    id, certId, listPrice, listPrice, note.Length > 0 ? note : null, adm.Id, payId);
+            });
+            if (alreadyEntitled) return Results.Json(new { error = "already_entitled" }, statusCode: 409);
             db.Execute("INSERT INTO notifications(user_id,category,title,body,cta_label,cta_route) VALUES(?, 'Exams', 'Exam fee waived', ?, 'Schedule your exam', '/certifications')",
                 id, $"The institute has granted you exam access for {H.Str(cert["name"])} at no charge. You can schedule your sitting from the Certifications page once your eligibility items are complete.");
             log(adm.Id, "exam_fee_waived", $"subject {id} cert {certId} by admin {adm.Id} ref {reference}{(note.Length > 0 ? " note: " + note : "")}");

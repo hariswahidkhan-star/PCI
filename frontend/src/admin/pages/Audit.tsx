@@ -12,7 +12,12 @@ export default function Audit() {
   const rows = useMemo(() => {
     const all = data?.rows ?? []
     const needle = q.trim().toLowerCase()
-    return needle ? all.filter((r) => (r.action ?? '').toLowerCase().includes(needle) || (r.details ?? '').toLowerCase().includes(needle)) : all
+    if (!needle) return all
+    // Match the raw action, the displayed (underscore-normalised) action, the actor and the details.
+    return all.filter((r) => {
+      const hay = [(r.action ?? ''), (r.action ?? '').replace(/_/g, ' '), (r.actor ?? ''), (r.details ?? '')].join(' ').toLowerCase()
+      return hay.includes(needle)
+    })
   }, [data, q])
 
   return (

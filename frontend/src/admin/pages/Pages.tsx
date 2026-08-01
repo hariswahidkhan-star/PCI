@@ -108,7 +108,7 @@ function BlockEditor({ block, onSaved, onReset }: { block: PageBlock; onSaved: (
 
   // deleting the row reverts the region to the text shipped in the page file
   async function reset() {
-    if (!confirm('Restore this text to the original shipped with the website?')) return
+    if (!confirm('Restore this text to the original shipped with the website?\n\nNote: the page reverts immediately, but this block will disappear from the editor until the next server restart/deploy re-scans the page.')) return
     setBusy(true)
     try {
       await adminApi.del(`/api/admin/page-blocks/${block.id}`)

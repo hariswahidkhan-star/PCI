@@ -44,7 +44,9 @@ public static class CertCatalogue
     {
         if (string.IsNullOrEmpty(html) || !html.Contains(Marker)) return html;
         var cards = Cards(db);
-        return RxBlock.Replace(html, Marker + cards + "<!--/PCI-CERTS-->");
+        // MatchEvaluator keeps the replacement literal — a '$&'/'$$' in DB-authored card content must
+        // never be interpreted as a .NET substitution token.
+        return RxBlock.Replace(html, _ => Marker + cards + "<!--/PCI-CERTS-->");
     }
 
     static string Cards(Db db)

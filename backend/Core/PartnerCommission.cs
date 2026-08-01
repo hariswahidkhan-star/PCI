@@ -61,7 +61,12 @@ public static class PartnerCommission
         if (row is null) return false;
         var from = H.Str(row["status"]);
         if (!CanTransition(from, to)) return false;
-        db.Execute("UPDATE partner_commission_transactions SET status=?, updated_at=datetime('now') WHERE id=?", to, txnId);
+        // Guarded on the status the legality check ran against: a concurrent transition makes this a
+        // zero-row update and the move is refused, instead of last-write-wins executing a transition
+        // that was never legal (and logging a from_status that was already false).
+        var (_, changed) = db.ExecuteWithChanges(
+            "UPDATE partner_commission_transactions SET status=?, updated_at=datetime('now') WHERE id=? AND status=?", to, txnId, from);
+        if (changed == 0) return false;
         if (to == StatusApproved)
             db.Execute("UPDATE partner_commission_transactions SET approved_at=datetime('now'), approved_by=? WHERE id=?", actorId, txnId);
         LogEvent(db, txnId, from, to, actorType, actorId, reason, reference);
@@ -252,6 +257,14 @@ public static class PartnerCommission
 
         var rule = ResolveRule(db, partnerId, paidOn, certId, routeKey, productType, country);
 
+        // The transaction records the PAYMENT's currency — its gross/discount/net are the payment's
+        // amounts, and labelling them with the agreement's currency would feed mismatched minor units
+        // into every per-currency partition (payable balance, settlement batching). A mismatch against
+        // the agreement's currency is flagged for Finance rather than silently relabelled.
+        var payCurrency = (H.Str(pay["currency"]) ?? "USD").ToUpperInvariant();
+        var currencyMismatch = rule.AgreementId is not null
+            && !string.Equals(payCurrency, rule.Currency.ToUpperInvariant(), StringComparison.Ordinal);
+
         var netMinor = Money.ToMinor(pay["final_amount"]);
         var discountMinor = Money.ToMinor(discountAmount);
         var grossMinor = amountBefore is not null ? Money.ToMinor(amountBefore) : netMinor + discountMinor;
@@ -279,17 +292,20 @@ public static class PartnerCommission
              commission_type,commission_rate_bp,commission_basis,commission_minor,status,earned_at,hold_until,requires_finance_review)
             VALUES(?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?)",
             dedupe, partnerId, rule.AgreementId, rule.RuleId, codeId > 0 ? codeId : null, redemptionId > 0 ? redemptionId : null, paymentId, userId,
-            certId, routeKey, productType, rule.Currency, grossMinor, discountMinor, netMinor,
+            certId, routeKey, productType, payCurrency, grossMinor, discountMinor, netMinor,
             rule.CommissionType, rule.RateBp, rule.Basis, commissionMinor,
-            status, paidOn, holdUntil, rule.NeedsReview ? 1 : 0);
+            status, paidOn, holdUntil, rule.NeedsReview || currencyMismatch ? 1 : 0);
         if (changes == 0) return 0;   // already recorded — a replay, by design a no-op
 
         var row = db.QueryOne("SELECT id FROM partner_commission_transactions WHERE dedupe_key=?", dedupe);
         if (row is null) return 0;
         var txnId = H.L(row["id"]);
         db.Execute("UPDATE partner_commission_transactions SET txn_ref=? WHERE id=?", $"PCT-{txnId:D6}", txnId);
+        var reasons = new List<string>();
+        if (rule.NeedsReview) reasons.Add("No agreement rule matched; partner commission_pct snapshotted (needs Finance review).");
+        if (currencyMismatch) reasons.Add($"Payment currency {payCurrency} differs from agreement currency {rule.Currency}; rate/currency pairing needs Finance review.");
         LogEvent(db, txnId, null, status, "system", null,
-            rule.NeedsReview ? "No agreement rule matched; partner commission_pct snapshotted (needs Finance review)." : null,
+            reasons.Count > 0 ? string.Join(" ", reasons) : null,
             $"payment:{paymentId}");
         return txnId;
     }

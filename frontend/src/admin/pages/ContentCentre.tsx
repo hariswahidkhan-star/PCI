@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useAdminQuery } from '../hooks'
 import { adminApi } from '../api'
 import { useAdminAuth } from '../AdminAuth'
@@ -108,7 +108,8 @@ function PostsTab(perms: PostPerms) {
       {loading ? <Spinner /> : error ? <ErrorNote>{error}</ErrorNote> : !data || data.rows.length === 0 ? <Empty>No posts</Empty> : (
         <table className="tbl"><thead><tr><th>Title</th><th>Status</th><th>Author</th><th>Category</th><th>v</th></tr></thead>
           <tbody>{data.rows.map((p) => (
-            <tr key={p.id} style={{ cursor: 'pointer' }} onClick={() => setEditing(p.id)}>
+            <tr key={p.id} role="button" tabIndex={0} style={{ cursor: 'pointer' }} onClick={() => setEditing(p.id)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEditing(p.id) } }}>
               <td>{p.title}<div className="muted" style={{ fontSize: '.8rem' }}>/blog/{p.slug}</div></td>
               <td><StatusPill status={p.status} /></td><td>{p.author_name || '—'}</td><td>{p.category_name || '—'}</td><td className="muted">{p.version}</td>
             </tr>))}</tbody>
@@ -120,7 +121,7 @@ function PostsTab(perms: PostPerms) {
 
 function PostEditor({ id, perms, onClose }: { id: number | 'new'; perms: PostPerms; onClose: () => void }) {
   const isNew = id === 'new'
-  const { data, loading, refetch } = useAdminQuery<{ post: Record<string, string | number | null>; tags: string[]; versions: Array<Record<string, string | number | null>>; public_url: string; seo: Array<{ code: string; severity: string; message: string }> }>(isNew ? null : `/api/admin/content/posts/${id}`)
+  const { data, loading, error, refetch } = useAdminQuery<{ post: Record<string, string | number | null>; tags: string[]; versions: Array<Record<string, string | number | null>>; public_url: string; seo: Array<{ code: string; severity: string; message: string }> }>(isNew ? null : `/api/admin/content/posts/${id}`)
   const authors = useAdminQuery<{ rows: Author[] }>('/api/admin/content/authors')
   const cats = useAdminQuery<{ rows: Category[] }>('/api/admin/content/categories')
   const [f, setF] = useState<Record<string, string>>({})
@@ -153,6 +154,13 @@ function PostEditor({ id, perms, onClose }: { id: number | 'new'; perms: PostPer
   const inReview = ['author_review', 'editorial_review', 'technical_review', 'seo_review', 'legal_review', 'changes_requested'].includes(status)
 
   if (!isNew && loading) return <Spinner />
+  if (!isNew && error) {
+    return (
+      <Card title="Edit post" action={<button className="btn sm ghost" onClick={onClose}>← Back</button>}>
+        <ErrorNote>{error}</ErrorNote>
+      </Card>
+    )
+  }
   return (
     <Card title={isNew ? 'New post' : `Edit: ${post?.title || ''}`} action={<button className="btn sm ghost" onClick={onClose}>← Back</button>}>
       <div style={{ display: 'grid', gap: '.7rem', maxWidth: 780 }}>
@@ -243,8 +251,8 @@ function LinksPanel({ postId }: { postId: number }) {
             <tr key={l.id}>
               <td style={{ maxWidth: 260, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}><span title={l.url}>{l.url}</span>{l.anchor_text ? <div className="muted" style={{ fontSize: '.75rem' }}>{l.anchor_text}</div> : null}</td>
               <td><Badge tone={l.kind === 'internal' ? 'neutral' : 'ok' as never}>{l.kind}</Badge></td>
-              <td><select value={l.rel} onChange={(e) => patch(l.id, { rel: e.target.value })}>{['auto', 'dofollow', 'nofollow', 'sponsored', 'ugc'].map((r) => <option key={r} value={r}>{r}</option>)}</select></td>
-              <td><input type="checkbox" checked={l.is_citation === 1} onChange={(e) => patch(l.id, { is_citation: e.target.checked })} />{l.is_citation === 1 ? <span className="muted" style={{ fontSize: '.72rem' }}> {l.approved === 1 ? 'approved' : 'unapproved'}</span> : null}</td>
+              <td><select aria-label={`Link rel policy for ${l.url}`} value={l.rel} onChange={(e) => patch(l.id, { rel: e.target.value })}>{['auto', 'dofollow', 'nofollow', 'sponsored', 'ugc'].map((r) => <option key={r} value={r}>{r}</option>)}</select></td>
+              <td><input type="checkbox" aria-label={`Mark ${l.url} as citation`} checked={l.is_citation === 1} onChange={(e) => patch(l.id, { is_citation: e.target.checked })} />{l.is_citation === 1 ? <span className="muted" style={{ fontSize: '.72rem' }}> {l.approved === 1 ? 'approved' : 'unapproved'}</span> : null}</td>
               <td>{l.status === 'unchecked' ? <span className="muted">—</span> : <Badge tone={l.status === 'live' ? 'ok' : l.status === 'internal' ? 'neutral' : 'err' as never}>{l.status}{l.http_code ? ' ' + l.http_code : ''}</Badge>}</td>
               <td style={{ fontVariantNumeric: 'tabular-nums' }}>{l.clicks || 0}</td>
               <td className="row" style={{ gap: '.3rem' }}>{l.kind === 'external' ? <button className="btn sm ghost" disabled={busy} onClick={() => check(l.id)}>Check</button> : null}{l.is_citation === 1 ? <button className="btn sm ghost" disabled={busy} onClick={() => patch(l.id, { approved: l.approved !== 1 })}>{l.approved === 1 ? 'Unapprove' : 'Approve'}</button> : null}</td>
@@ -651,8 +659,8 @@ function BacklinksTab({ canManage }: { canManage: boolean }) {
         {prospects.loading ? <Spinner /> : !prospects.data?.rows.length ? <Empty>No prospects</Empty> : (
           <table className="tbl"><thead><tr><th>Prospect</th><th>Status</th><th>Contact</th><th></th></tr></thead>
             <tbody>{prospects.data.rows.map((pr) => (
-              <>
-                <tr key={pr.id}>
+              <Fragment key={pr.id}>
+                <tr>
                   <td>{pr.name}<div className="muted" style={{ fontSize: '.78rem' }}>{pr.domain}{pr.category ? ' · ' + pr.category : ''}</div></td>
                   <td>{canManage ? <select value={pr.status} onChange={(e) => setProspectStatus(pr.id, e.target.value)}>{PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}</select> : <StatusPill status={pr.status} />}</td>
                   <td className="muted" style={{ fontSize: '.8rem' }}>{pr.contact_email || pr.contact_name || '—'}{pr.next_action_at ? <div>next: {pr.next_action_at}</div> : null}</td>
@@ -673,7 +681,7 @@ function BacklinksTab({ canManage }: { canManage: boolean }) {
                     </div>
                   </td></tr>
                 )}
-              </>
+              </Fragment>
             ))}</tbody>
           </table>
         )}

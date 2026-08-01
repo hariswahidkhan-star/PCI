@@ -92,7 +92,19 @@ public static class CheckoutReservation
         {
             var st = H.Str(existing["status"]);
             if (st is "reserved" or "settled")
+            {
+                // A replay must be the SAME request. A reused key carrying a different product, code or
+                // amount would otherwise replay the old reservation while Stripe charges the new amount —
+                // misattributed commission and an amount_minor that no longer matches what was charged.
+                long? exCert = existing["certification_id"] is null or DBNull ? null : H.L(existing["certification_id"]);
+                long? exCode = existing["discount_code_id"] is null or DBNull ? null : H.L(existing["discount_code_id"]);
+                if (!string.Equals(H.Str(existing["product_type"]), productType, StringComparison.Ordinal)
+                    || exCert != certificationId
+                    || exCode != codeId
+                    || H.L(existing["amount_minor"]) != amountMinor)
+                    return new(false, "idempotency_key_conflict", null, false);
                 return new(true, null, existing, true);
+            }
             // released/expired — allow a fresh claim under the same key by deleting the dead row.
             db.Execute("DELETE FROM checkout_reservations WHERE id=? AND status IN ('released','expired')", existing["id"]);
         }

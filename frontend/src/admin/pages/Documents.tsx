@@ -378,9 +378,11 @@ function NewDocumentDrawer({ categories, onClose, onSaved }: { categories: Categ
       }
       if (description.trim()) body.description = description.trim()
       if (category.trim()) body.category = category.trim()
-      if (restrictedUntil) body.restricted_until = restrictedUntil
-      if (publishAt) body.publish_at = publishAt
-      if (expiresAt) body.expires_at = expiresAt
+      // datetime-local values are local wall-clock; the backend compares them as UTC, so convert.
+      const toUtc = (v: string) => new Date(v).toISOString().slice(0, 19).replace('T', ' ')
+      if (restrictedUntil) body.restricted_until = toUtc(restrictedUntil)
+      if (publishAt) body.publish_at = toUtc(publishAt)
+      if (expiresAt) body.expires_at = toUtc(expiresAt)
       if (publishNow) body.publish = true
       await adminApi.post('/api/admin/documents', body)
       onSaved()

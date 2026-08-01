@@ -166,6 +166,7 @@ function DirectorySettings() {
   const [d, setD] = useState<{ eligible: boolean; opt_in: boolean; headline?: string | null; show_country: boolean; show_org: boolean; show_linkedin: boolean } | null>(null)
   const [busy, setBusy] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
 
   useEffect(() => {
     let live = true
@@ -177,13 +178,15 @@ function DirectorySettings() {
   const set = <K extends keyof NonNullable<typeof d>>(k: K, v: NonNullable<typeof d>[K]) => { setD((p) => (p ? { ...p, [k]: v } : p)); setSaved(false) }
   async function save() {
     if (!d) return
-    setBusy(true); setSaved(false)
+    setBusy(true); setSaved(false); setErr(null)
     try { await api.post('/api/me/directory', { opt_in: d.opt_in, headline: d.headline ?? '', show_country: d.show_country, show_org: d.show_org, show_linkedin: d.show_linkedin }); setSaved(true) }
+    catch (e) { setErr(e instanceof Error ? e.message : 'Could not save your settings.') }
     finally { setBusy(false) }
   }
 
   return (
     <Card title="Public member directory">
+      {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
       <p className="muted small" style={{ marginTop: 0 }}>
         List yourself in PCI's public <a href="/directory.html" target="_blank" rel="noreferrer">find-a-professional</a> directory.
         You choose to appear and exactly what is shown — your email is never published. You appear only while you hold an active credential.
@@ -220,6 +223,8 @@ function TwoFactorCard() {
   const [recovery, setRecovery] = useState<string[] | null>(null)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const [disabling, setDisabling] = useState(false)
+  const [disableCode, setDisableCode] = useState('')
   const reload = () => api.get<{ enabled: boolean; pending: boolean; recovery_remaining: number }>('/api/me/2fa').then(setStatus).catch(() => setStatus({ enabled: false, pending: false, recovery_remaining: 0 }))
   useEffect(() => { reload() }, [])
   async function begin() {
@@ -233,10 +238,8 @@ function TwoFactorCard() {
     catch (e) { const c = e && typeof e === 'object' && 'body' in e ? (e as { body?: { message?: string } }).body?.message : undefined; setErr(c || 'That code was not valid.') } finally { setBusy(false) }
   }
   async function disable() {
-    const c = prompt('Enter a current authenticator code (or a recovery code) to turn off two-factor authentication:')
-    if (c === null) return
     setBusy(true); setErr(null)
-    try { await api.post('/api/me/2fa/disable', { code: c.trim() }); setRecovery(null); await reload() }
+    try { await api.post('/api/me/2fa/disable', { code: disableCode.trim() }); setRecovery(null); setDisabling(false); setDisableCode(''); await reload() }
     catch (e) { const m = e && typeof e === 'object' && 'body' in e ? (e as { body?: { message?: string } }).body?.message : undefined; setErr(m || 'Could not disable 2FA.') } finally { setBusy(false) }
   }
   if (!status) return <Card title="Two-factor authentication"><Spinner /></Card>
@@ -263,7 +266,18 @@ function TwoFactorCard() {
           {!recovery && (
             <p><span className="badge ok">Enabled</span> <span className="muted small">Recovery codes remaining: {status.recovery_remaining}</span></p>
           )}
-          <button className="btn secondary" disabled={busy} onClick={disable}>Turn off 2FA</button>
+          {disabling ? (
+            <div style={{ display: 'grid', gap: '.6rem' }}>
+              <p className="small" style={{ margin: 0 }}>Enter a current authenticator code (or a recovery code) to turn off two-factor authentication:</p>
+              <input inputMode="numeric" autoComplete="one-time-code" placeholder="Code" value={disableCode} onChange={(e) => setDisableCode(e.target.value)} style={{ maxWidth: 200 }} />
+              <div className="row" style={{ gap: '.5rem' }}>
+                <button className="btn secondary" disabled={busy || disableCode.trim().length === 0} onClick={disable}>{busy ? 'Turning off…' : 'Confirm — turn off 2FA'}</button>
+                <button className="btn ghost" disabled={busy} onClick={() => { setDisabling(false); setDisableCode(''); setErr(null) }}>Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <button className="btn secondary" disabled={busy} onClick={() => { setDisabling(true); setErr(null) }}>Turn off 2FA</button>
+          )}
         </div>
       )}
 
@@ -364,6 +378,7 @@ function CommPreferences() {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
   useEffect(() => {
     let live = true
     api.get<{ preferences: Record<string, number> }>('/api/me/preferences')
@@ -373,8 +388,10 @@ function CommPreferences() {
   const toggle = (k: string) => setPrefs((p) => ({ ...(p ?? {}), [k]: p?.[k] ? 0 : 1 }))
   async function save() {
     if (!prefs) return
-    setBusy(true); setSaved(false)
-    try { await api.post('/api/me/preferences', prefs); setSaved(true) } finally { setBusy(false) }
+    setBusy(true); setSaved(false); setErr(null)
+    try { await api.post('/api/me/preferences', prefs); setSaved(true) }
+    catch (e) { setErr(e instanceof Error ? e.message : 'Could not save your settings.') }
+    finally { setBusy(false) }
   }
   const OPTIONS: { key: string; label: string; hint: string }[] = [
     { key: 'email_marketing', label: 'Marketing email', hint: 'News about certifications, offers and events by email.' },
@@ -391,6 +408,7 @@ function CommPreferences() {
         application decisions, payment confirmations, exam scheduling and results, certificates and privacy
         requests — are always sent and cannot be switched off.
       </p>
+      {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
       {loading || !prefs ? <Spinner /> : (
         <>
           <div style={{ display: 'grid', gap: '.6rem' }}>

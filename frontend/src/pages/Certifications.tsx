@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
@@ -51,11 +51,12 @@ const HOLD_LABELS: Record<string, string> = {
   profile_incomplete: 'cert.hold.profileIncomplete',
   account_hold: 'cert.hold.accountHold',
   booking_closed: 'cert.hold.bookingClosed',
+  entitlement_expired: 'cert.bookErr.windowLapsed',
 }
 
 // Holds that are states with no student action to take. They read wrongly under the imperative
 // "To unlock scheduling:" frame, so they are shown under a "Scheduling is unavailable:" frame instead.
-const STATE_HOLDS = new Set(['account_hold', 'booking_closed'])
+const STATE_HOLDS = new Set(['account_hold', 'booking_closed', 'entitlement_expired'])
 
 // Fixed daily slot times, identical to the classic panel's scheduler — there is no
 // backend availability endpoint; the server validates the chosen instant on book.
@@ -71,7 +72,14 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
 
   // Earliest bookable instant is 2 h out (server enforces the same); latest is the entitlement deadline.
   const minMs = Date.now() + 2 * 3600_000
-  const maxMs = entry.deadline ? Date.parse(String(entry.deadline).replace(' ', 'T') + 'Z') : Number.POSITIVE_INFINITY
+  // Deadlines are normally 'YYYY-MM-DD HH:MM:SS' but admin extensions store an ISO '…T…Z' string —
+  // parse both tolerantly; an unparseable deadline must not disable the whole calendar.
+  const maxMs = (() => {
+    if (!entry.deadline) return Number.POSITIVE_INFINITY
+    const s = String(entry.deadline)
+    const parsed = Date.parse(s.includes('T') ? s : s.replace(' ', 'T') + 'Z')
+    return Number.isNaN(parsed) ? Number.POSITIVE_INFINITY : parsed
+  })()
   const slotMs = (day: Date, hm: string) => {
     const [h, m] = hm.split(':').map(Number)
     return new Date(day.getFullYear(), day.getMonth(), day.getDate(), h, m).getTime()
@@ -102,11 +110,40 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
       })
       onDone()
     } catch (e) {
-      const code = e instanceof ApiError && e.body && typeof e.body === 'object' && 'error' in e.body ? String((e.body as Record<string, unknown>).error) : ''
-      setError(BOOK_ERRORS[code] ? t(BOOK_ERRORS[code]) : (e instanceof Error ? e.message : t('cert.unableToSchedule')))
+      const body = e instanceof ApiError && e.body && typeof e.body === 'object' ? (e.body as Record<string, unknown>) : null
+      const code = body && 'error' in body ? String(body.error) : ''
+      // Prefer the mapped translation; otherwise the server's human message (e.g. delivery failures
+      // send recovery guidance in `message`) before the generic error text.
+      setError(
+        BOOK_ERRORS[code] ? t(BOOK_ERRORS[code])
+        : typeof body?.message === 'string' && body.message ? body.message
+        : (e instanceof Error ? e.message : t('cert.unableToSchedule')),
+      )
     } finally {
       setBusy(false)
     }
+  }
+
+  // Keyboard/screen-reader support for the modal: focus moves into the dialog on open (and back to
+  // the trigger on close), Escape closes, and Tab wraps between the dialog's focusable elements.
+  const dialogRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const prev = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    dialogRef.current?.focus()
+    return () => { prev?.focus() }
+  }, [])
+  const onDialogKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') { e.stopPropagation(); onClose(); return }
+    if (e.key !== 'Tab') return
+    const root = dialogRef.current
+    if (!root) return
+    const focusables = Array.from(root.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+      .filter((el) => !el.hasAttribute('disabled'))
+    if (focusables.length === 0) return
+    const first = focusables[0]
+    const last = focusables[focusables.length - 1]
+    if (e.shiftKey && (document.activeElement === first || document.activeElement === root)) { e.preventDefault(); last.focus() }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
   }
 
   // Calendar grid: Monday-first weeks, localised labels via Intl (2024-01-01 was a Monday).
@@ -125,7 +162,7 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
 
   return (
     <div className="schedm-backdrop" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
-      <div className="schedm" role="dialog" aria-modal="true" aria-label={mode === 'reschedule' ? t('cert.reschedule') : t('cert.scheduleExam')}>
+      <div className="schedm" role="dialog" aria-modal="true" aria-label={mode === 'reschedule' ? t('cert.reschedule') : t('cert.scheduleExam')} tabIndex={-1} ref={dialogRef} onKeyDown={onDialogKeyDown}>
         <div className="schedm-head">
           <div>
             <h3 style={{ margin: 0 }}>{mode === 'reschedule' ? t('cert.reschedule') : t('cert.scheduleExam')}</h3>
@@ -134,6 +171,7 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
           <button className="btn sm secondary" onClick={onClose}>{t('cert.close')}</button>
         </div>
         {error && <div className="notice err" role="alert">{error}</div>}
+        {maxMs < minMs && <div className="notice err" role="alert">{t('cert.bookErr.windowLapsed')}</div>}
         <div className="schedm-body">
           <div>
             <div className="schedm-cal-head">
@@ -141,8 +179,8 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
               <strong>{monthLabel}</strong>
               <button className="btn sm secondary" aria-label={t('cert.sched.nextMonth')} onClick={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}>›</button>
             </div>
-            <div className="schedm-cal" role="grid">
-              {weekdays.map((w) => <span key={w} className="schedm-wd">{w}</span>)}
+            <div className="schedm-cal">
+              {weekdays.map((w) => <span key={w} className="schedm-wd" aria-hidden="true">{w}</span>)}
               {cells.map((d, i) => d === null
                 ? <span key={`b${i}`} />
                 : (
@@ -150,6 +188,8 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
                     key={d.getDate()}
                     className={'schedm-day' + (sameDay(d, selDay) ? ' sel' : '')}
                     disabled={daySlots(d).length === 0}
+                    aria-pressed={sameDay(d, selDay)}
+                    aria-label={new Intl.DateTimeFormat(lang, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(d)}
                     onClick={() => { setSelDay(d); setSelSlot(null) }}
                   >
                     {d.getDate()}
@@ -163,7 +203,7 @@ function ScheduleForm({ entry, onDone, onClose, mode = 'book' }: { entry: ExamEn
               daySlots(selDay).length > 0 ? (
                 <div className="schedm-slots">
                   {daySlots(selDay).map((s) => (
-                    <button key={s} className={'schedm-slot' + (s === selSlot ? ' sel' : '')} onClick={() => setSelSlot(s)}>{s}</button>
+                    <button key={s} className={'schedm-slot' + (s === selSlot ? ' sel' : '')} aria-pressed={s === selSlot} onClick={() => setSelSlot(s)}>{s}</button>
                   ))}
                 </div>
               ) : <div className="muted small">{t('cert.sched.noSlots')}</div>
@@ -365,7 +405,7 @@ function IncidentReportForm({ certificationId, onClose }: { certificationId: num
         <textarea id={`inc-det-${certificationId}`} value={details} onChange={(e) => setDetails(e.target.value)} rows={3} placeholder={t('cert.issueDetailsPlaceholder')} />
       </div>
       <div className="row">
-        <button className="btn sm" disabled={busy || !details.trim()} onClick={submit}>{busy ? t('cert.submittingIssue') : t('cert.submitIssue')}</button>
+        <button className="btn sm" disabled={busy || details.trim().length < 5} onClick={submit}>{busy ? t('cert.submittingIssue') : t('cert.submitIssue')}</button>
         <button className="btn sm secondary" onClick={onClose}>{t('cert.close')}</button>
       </div>
     </div>

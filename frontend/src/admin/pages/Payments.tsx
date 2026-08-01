@@ -62,6 +62,7 @@ function PaymentsTab() {
             <option value="paid">Paid</option>
             <option value="refunded">Refunded</option>
             <option value="failed">Failed</option>
+            <option value="waived">Waived</option>
           </select>
           <select value={product} onChange={(e) => setProduct(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All products</option>

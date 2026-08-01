@@ -38,6 +38,8 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false)
   const [rows, setRows] = useState<Message[] | null>(null)
   const [busy, setBusy] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const [reloadCount, setReloadCount] = useState(0)
   const wrapRef = useRef<HTMLDivElement>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
 
@@ -46,13 +48,14 @@ export default function NotificationBell() {
     if (!open) return
     let cancelled = false
     setBusy(true)
+    setFailed(false)
     api
       .get<{ rows: Message[] }>('/api/me/messages')
       .then((r) => { if (!cancelled) setRows(r.rows ?? []) })
-      .catch(() => { if (!cancelled) setRows([]) })
+      .catch(() => { if (!cancelled) setFailed(true) })
       .finally(() => { if (!cancelled) setBusy(false) })
     return () => { cancelled = true }
-  }, [open])
+  }, [open, reloadCount])
 
   // Dismiss on an outside click or Escape, returning focus to the bell.
   useEffect(() => {
@@ -126,6 +129,11 @@ export default function NotificationBell() {
           <div className="notif-list">
             {busy && rows === null ? (
               <p className="muted small" style={{ padding: '.8rem', margin: 0 }}>{t('notif.loading')}</p>
+            ) : failed ? (
+              <p className="muted small" style={{ padding: '.8rem', margin: 0 }}>
+                Could not load notifications.{' '}
+                <button className="btn ghost sm" type="button" onClick={() => setReloadCount((n) => n + 1)}>Retry</button>
+              </p>
             ) : preview.length === 0 ? (
               <p className="muted small" style={{ padding: '.8rem', margin: 0 }}>{t('msg.empty')}</p>
             ) : (

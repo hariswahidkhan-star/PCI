@@ -125,7 +125,7 @@ export default function Support() {
                 <button
                   type="button"
                   className="spread ticket-head"
-                  onClick={() => setOpenId(openId === ticket.id ? null : ticket.id)}
+                  onClick={() => { setOpenId(openId === ticket.id ? null : ticket.id); setReply(''); setReplyErr(null) }}
                   aria-expanded={openId === ticket.id}
                 >
                   <span>

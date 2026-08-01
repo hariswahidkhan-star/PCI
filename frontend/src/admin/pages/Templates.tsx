@@ -138,7 +138,7 @@ export default function Templates() {
     setBusy(true); setErr(''); setMsg('')
     try {
       const payload = {
-        title: title.trim(), category, certification_id: cert ? Number(cert) : undefined,
+        title: title.trim(), category, certification_id: cert ? Number(cert) : null,
         summary: summary.trim() || undefined, body, published,
       }
       if (editId) {
@@ -162,7 +162,7 @@ export default function Templates() {
   }
 
   async function doDelete(r: Row) {
-    if (!window.confirm(`Delete the template “${r.title}”? This removes it from the public library.`)) return
+    if (!window.confirm(`Delete the template “${r.title}”? This removes it from the members’ library.`)) return
     setBusy(true); setErr(''); setMsg('')
     try {
       await adminApi.del(`/api/admin/templates/${r.id}`)
@@ -174,7 +174,7 @@ export default function Templates() {
   return (
     <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
       <div>
-        <h1 style={{ marginBottom: '.2rem' }}>Free Templates Library</h1>
+        <h1 style={{ marginBottom: '.2rem' }}>Templates Library</h1>
         <p className="muted" style={{ marginTop: 0 }}>
           Ready-to-use project-controls templates for members. Published templates appear in the student portal
           under <code>Templates</code> and download as CSV. Content is synthetic and freely reusable.
@@ -266,7 +266,7 @@ export default function Templates() {
             </label>
             <label className="row" style={{ gap: '.4rem', alignItems: 'center' }}>
               <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />
-              Published (live on the public library)
+              Published (visible in the student portal)
             </label>
             <div>
               <button className="btn primary" type="submit" disabled={busy}>{editId ? 'Save changes' : 'Create template'}</button>

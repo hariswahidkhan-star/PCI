@@ -3,7 +3,7 @@ import { PageHeader } from '../components/premium'
 import { useQuery } from '../api/hooks'
 import { api } from '../api/client'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
-import { fmtDate } from '../format'
+import { fmtDate, fmtDateTime } from '../format'
 
 // Member "My applications" — the roles this signed-in member has applied for through the public
 // careers board (applications are linked to the account at submit time). Backend: /api/me/applications.
@@ -98,7 +98,7 @@ function AppDetail({ id, status, onChanged }: { id: number; status: string; onCh
             <div key={i} className="small">
               <span className="muted">{fmtDate(e.created_at)} · </span>
               {e.kind === 'status' ? <>Status: <strong>{label(e.to_status ?? '')}</strong></>
-                : e.kind === 'interview' ? <><strong>Interview scheduled</strong> {e.scheduled_at}{e.body ? ` — ${e.body}` : ''}</>
+                : e.kind === 'interview' ? <><strong>Interview scheduled</strong> {fmtDateTime(e.scheduled_at)}{e.body ? ` — ${e.body}` : ''}</>
                 : <><strong>Message from PCI:</strong> {e.body}</>}
             </div>
           ))}

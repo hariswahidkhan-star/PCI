@@ -3,6 +3,7 @@ import { useAdminQuery } from '../hooks'
 import { adminApi, type MemberRow, type MemberDetail, type IdentityDocRow } from '../api'
 import { Card, StatusBadge, Badge, Spinner, ErrorNote, Empty, rowActivate } from '../../components/ui'
 import { PageHeader } from '../../components/premium'
+import { ViewDownloadActions } from '../../components/documents/DocumentActions'
 import { fmtDate, fmtDateTime, fmtMoney } from '../../format'
 import { ApiError } from '../../api/client'
 
@@ -71,21 +72,6 @@ function IdentityDocs({ id, docs, onChanged }: { id: number; docs: IdentityDocRo
     }
   }
 
-  async function view(docId: number) {
-    setErr(null)
-    try {
-      const res = await fetch(`/api/admin/students/${id}/identity-document/${docId}/file`, {
-        headers: { Authorization: 'Bearer ' + (adminApi.getToken() ?? '') },
-      })
-      if (!res.ok) throw new Error('Could not load the file.')
-      const url = URL.createObjectURL(await res.blob())
-      window.open(url, '_blank', 'noopener')
-      setTimeout(() => URL.revokeObjectURL(url), 60_000)
-    } catch (e) {
-      setErr(e instanceof Error ? e.message : 'Could not load the file.')
-    }
-  }
-
   return (
     <Card title={`Identity documents (${docs.length})`}>
       {docs.length === 0 ? (
@@ -107,7 +93,12 @@ function IdentityDocs({ id, docs, onChanged }: { id: number; docs: IdentityDocRo
                   </td>
                   <td>
                     <div className="row" style={{ flexWrap: 'wrap', gap: '.35rem' }}>
-                      <button className="btn sm secondary" onClick={() => view(d.id)}>View</button>
+                      <ViewDownloadActions
+                        info={{ title: (d.doc_kind ?? 'identity document').replace(/_/g, ' '), filename: d.filename }}
+                        inlineUrl={`/api/admin/students/${id}/identity-document/${d.id}/file`}
+                        token={adminApi.getToken()}
+                        canDownload={false}
+                      />
                       {d.status !== 'verified' && <button className="btn sm" disabled={busy} onClick={() => review(d.id, 'verified')}>Verify</button>}
                       {d.status !== 'rejected' && <button className="btn sm danger" disabled={busy} onClick={() => review(d.id, 'rejected')}>Reject</button>}
                     </div>
@@ -204,7 +195,8 @@ function MemberDrawer({ id, onClose, onChanged }: { id: number; onClose: () => v
   const isTest = Number(u.is_test ?? 0) === 1
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label="Student detail"
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>Student detail</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -598,12 +590,14 @@ function WaiveCard({ id, onDone }: { id: number; onDone: () => void }) {
   const pct = parseFloat(percent) || 0
   async function go() {
     if (!reason.trim()) { setMsg({ ok: false, text: 'A reason is required — every waiver must record why.' }); return }
+    // Never let 0/blank fall back to 100 — that would silently turn a partial discount into a full waiver.
+    if (!Number.isFinite(pct) || pct < 1 || pct > 100) { setMsg({ ok: false, text: 'Percent must be between 1 and 100.' }); return }
     if (busy) return
     setBusy(true); setMsg(null)
     // Durable client key so a retried/partial network submit cannot mint a second waiver or code.
     const idempotencyKey = crypto.randomUUID()
     try {
-      const body: Record<string, unknown> = { product, percent: pct || 100, reason: reason.trim(), note: note || undefined, idempotency_key: idempotencyKey }
+      const body: Record<string, unknown> = { product, percent: pct, reason: reason.trim(), note: note || undefined, idempotency_key: idempotencyKey }
       if (pct < 100 && expires) body.expires = expires
       const r = await adminApi.post<{ kind: string; payment_id?: number; code?: string; percent?: number; payable?: number }>(`/api/admin/students/${id}/waive`, body)
       setMsg({
@@ -662,8 +656,10 @@ function TestUserButton({ onCreated }: { onCreated: () => void }) {
       </select>
       <button className="btn sm" disabled={busy} onClick={create}>{busy ? 'Creating…' : '+ Test user'}</button>
       {(res || err) && (
-        <div className="drawer-backdrop" onClick={() => { setRes(null); setErr(null) }}>
-          <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+        // No backdrop-click dismissal: the one-time password below cannot be retrieved again,
+        // so only the explicit Close button discards it.
+        <div className="drawer-backdrop">
+          <div className="drawer" role="dialog" aria-modal="true" aria-label="Test user" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
             <div className="spread" style={{ marginBottom: '.8rem' }}><h2 style={{ margin: 0 }}>Test user</h2><button className="btn secondary sm" onClick={() => { setRes(null); setErr(null) }}>Close</button></div>
             {err ? <ErrorNote>{err}</ErrorNote> : res ? (
               <Card title="Test account created">

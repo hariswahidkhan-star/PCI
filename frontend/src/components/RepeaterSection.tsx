@@ -76,7 +76,13 @@ export default function RepeaterSection<T extends { id: number }>(p: Props<T>) {
 
   async function remove(id: number) {
     if (!confirm('Remove this entry?')) return
-    await api.del(`${p.route}/${id}`).catch(() => {})
+    setErr(null)
+    try {
+      await api.del(`${p.route}/${id}`)
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Could not remove this entry. Please try again.')
+      return
+    }
     refetch()
     refetchMe()
   }
@@ -92,6 +98,8 @@ export default function RepeaterSection<T extends { id: number }>(p: Props<T>) {
           <button className="btn secondary sm" type="button" onClick={openNew}>+ {p.addLabel}</button>
         )}
       </div>
+
+      {err && editing === null && <div className="notice err" role="alert" style={{ marginBottom: '.75rem' }}>{err}</div>}
 
       {loading ? (
         <Spinner />

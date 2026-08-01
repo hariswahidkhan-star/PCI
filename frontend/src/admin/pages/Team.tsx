@@ -68,6 +68,7 @@ function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null;
 
   async function resetPw() {
     if (!member) return
+    if (!confirm(`Reset the password for ${member.email}? Their current sessions will be signed out.`)) return
     try {
       const res = await adminApi.post<{ temp_password: string }>(`/api/admin/team/${member.id}/reset-password`)
       setTempPw(res.temp_password)
@@ -111,8 +112,8 @@ function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null;
           </select>
         </div>
         {!isNew && (
-          <div className="field"><label>Status</label>
-            <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <div className="field"><label htmlFor="team-status">Status</label>
+            <select id="team-status" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="active">Active</option>
               <option value="suspended">Suspended</option>
             </select>
@@ -141,7 +142,11 @@ function Editor({ member, meta, onClose, onSaved }: { member: TeamMember | null;
         )}
 
         <div className="row" style={{ marginTop: '.5rem', flexWrap: 'wrap' }}>
-          <button className="btn" disabled={busy || (isNew && !email)} onClick={save}>{busy ? 'Saving…' : isNew ? 'Create member' : 'Save changes'}</button>
+          {isNew && tempPw ? (
+            <button className="btn" onClick={onClose}>Done</button>
+          ) : (
+            <button className="btn" disabled={busy || (isNew && !email)} onClick={save}>{busy ? 'Saving…' : isNew ? 'Create member' : 'Save changes'}</button>
+          )}
           {!isNew && <button className="btn secondary sm" onClick={resetPw}>Reset password</button>}
           {!isNew && <button className="btn secondary sm" onClick={reset2fa}>Reset 2FA</button>}
         </div>

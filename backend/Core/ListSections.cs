@@ -81,7 +81,10 @@ public static class ListSections
             Console.Error.WriteLine($"[sections] {name} render skipped: {e.Message}");
             html = null;                                                   // keep the static fallback
         }
-        lock (_lock) { _cache[cacheKey] = html ?? ""; }
+        // Store only if the version we rendered against is still current: a Bump() during the render
+        // would otherwise let this stale HTML land in the NEW version's cache and be served until the
+        // next unrelated bump. (PageContent.Render and CertCatalogue.Cards self-heal the same way.)
+        lock (_lock) { if (_cacheVer == v) _cache[cacheKey] = html ?? ""; }
         return html;
     }
 

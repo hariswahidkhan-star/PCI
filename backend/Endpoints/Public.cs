@@ -215,14 +215,18 @@ public static class Public
             var code = H.GetS(b, "code"); var product = H.GetS(b, "product") ?? "membership"; var email = H.GetS(b, "email");
             // The selected certification scopes both the code validity and the exam price.
             var certSel = H.GetS(b, "cert");
-            var certResolved = string.IsNullOrWhiteSpace(certSel) ? null : Certs.TryResolve(db, certSel);
-            if (!string.IsNullOrWhiteSpace(certSel) && certResolved is null)
+            // Resolve the default certification when cert is omitted (TryResolve returns DefaultId for
+            // null/blank) so the preview enforces the same certification scope checkout does.
+            var certResolved = Certs.TryResolve(db, certSel);
+            if (certResolved is null)
                 return J(new { valid = false, message = "Unknown certification." });
-            var certRow = certResolved is null ? null : Certs.ById(db, certResolved.Value);
+            var certRow = Certs.ById(db, certResolved.Value);
             var certId = certRow is null ? (long?)null : H.L(certRow["id"]);
             var v = ValidateCode(db, code, product, email, certId);
             if (v.Error is not null) return J(new { valid = false, message = v.Error });
             var pr = Pricing(db, product, v.Code, certRow);
+            // Same floor rule Payments enforces at checkout — never preview a price checkout will reject.
+            if (MinPayableViolation(v.Code!, pr.final) is { } floorMsg) return J(new { valid = false, message = floorMsg });
             var scope = H.Str(v.Code!["applies_to"]) ?? "all";
             var scopeLabel = scope == "membership" ? "membership" : scope == "exam" ? "the exam fee" : "membership and exam fees";
             return J(new { valid = true, code = v.Code["code"], applies_to = scope, discount_type = v.Code["discount_type"], discount_value = v.Code["discount_value"], code_amount = pr.codeAmount, final_amount = pr.final, message = $"Code {v.Code["code"]} applies to {scopeLabel}." });
@@ -316,16 +320,27 @@ public static class Public
             var email = (H.GetS(b, "email") ?? "").ToLowerInvariant().Trim();
             if (rx.IsMatch(email))
             {
-                var u = db.QueryOne("SELECT * FROM users WHERE email=?", email);
-                if (u is not null)
+                var baseUrl = Mailer.BaseUrl(req);   // must be read from req before returning
+                // Do the lookup + token insert + SMTP send off the request path so the response returns
+                // in near-constant time whether or not the account exists — the uniform ok:true body is
+                // otherwise undermined by a measurable timing difference (account enumeration).
+                _ = Task.Run(() =>
                 {
-                    var token = Security.RandomHex(32);
-                    db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+2 day'))", u["id"], Security.Sha(token));
-                    var baseUrl = Mailer.BaseUrl(req);
-                    Mailer.Send(db, H.Ln(u["id"]), email, "password_reset", "Reset your PCI password",
-                        Mailer.Template("welcome", new() { ["FIRST_NAME"] = H.Str(u["first_name"]) ?? "there",
-                            ["LOGIN_URL"] = Mailer.SetupLink(baseUrl, token), ["DOWNLOADS_URL"] = baseUrl + "/downloads.html" }));
-                }
+                    try
+                    {
+                        var u = db.QueryOne("SELECT * FROM users WHERE email=?", email);
+                        if (u is not null)
+                        {
+                            var token = Security.RandomHex(32);
+                            // +7 day matches the "expires in 7 days" copy in the credentials template.
+                            db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", u["id"], Security.Sha(token));
+                            Mailer.Send(db, H.Ln(u["id"]), email, "password_reset", "Reset your PCI password",
+                                Mailer.Template("credentials", new() { ["FIRST_NAME"] = H.Str(u["first_name"]) ?? "there",
+                                    ["SETUP_URL"] = Mailer.SetupLink(baseUrl, token), ["LOGIN_URL"] = baseUrl + "/student.html" }));
+                        }
+                    }
+                    catch { }
+                });
             }
             return J(new { ok = true }); // never reveal whether an account exists
         });
@@ -337,7 +352,13 @@ public static class Public
             if (!rx.IsMatch(email)) return Results.Json(new { error = "invalid_email" }, statusCode: 400);
             var reference = "PCI-INQ-" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString("X");
             try { db.Execute("INSERT INTO inquiries(type,email,first_name,topic,seats,org,message,reference) VALUES(?,?,?,?,?,?,?,?)",
-                H.GetS(b, "type") ?? "general", email, H.GetS(b, "first_name"), H.GetS(b, "topic"), H.GetS(b, "seats"), H.GetS(b, "org"), H.GetS(b, "message"), reference); } catch { }
+                H.GetS(b, "type") ?? "general", email, H.GetS(b, "first_name"), H.GetS(b, "topic"), H.GetS(b, "seats"), H.GetS(b, "org"), H.GetS(b, "message"), reference); }
+            catch (Exception ex)
+            {
+                // Never hand the visitor a reference that resolves to nothing — surface the failure so they retry.
+                Console.Error.WriteLine($"[inquiry] insert failed for {reference}: {ex.Message}");
+                return Results.Json(new { error = "submit_failed" }, statusCode: 500);
+            }
             // Alert the notification recipients (owner + any assignees) about the new inquiry.
             var iType = System.Net.WebUtility.HtmlEncode(H.GetS(b, "type") ?? "general");
             var iMsg = System.Net.WebUtility.HtmlEncode(H.GetS(b, "message") ?? "");
@@ -371,7 +392,13 @@ public static class Public
             tok = tok.Length == 0 ? "GEN" : tok.Length > 4 ? tok[..4] : tok;
             var reff = "PCI-" + tok + "-" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString("X");
             try { db.Execute("INSERT INTO form_submissions(form_type,name,email,subject,message,reference) VALUES(?,?,?,?,?,?)",
-                ft, H.GetS(b, "name"), H.GetS(b, "email"), H.GetS(b, "subject"), H.GetS(b, "message"), reff); } catch { }
+                ft, H.GetS(b, "name"), H.GetS(b, "email"), H.GetS(b, "subject"), H.GetS(b, "message"), reff); }
+            catch (Exception ex)
+            {
+                // The submission would be silently lost (no notification backstop here) — fail loudly instead.
+                Console.Error.WriteLine($"[form-submit] insert failed for {reff}: {ex.Message}");
+                return Results.Json(new { error = "submit_failed" }, statusCode: 500);
+            }
             return J(new { ok = true, reference = reff });
         });
     }

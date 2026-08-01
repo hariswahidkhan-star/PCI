@@ -115,8 +115,12 @@ describe('NotificationBell', () => {
     h.get.mockRejectedValue(new Error('offline'))
     renderWithProviders(<NotificationBell />)
     await user.click(screen.getByRole('button', { name: /Notifications/ }))
-    // degrades to the empty state rather than throwing out of the shell
-    expect(await screen.findByText('No messages yet.')).toBeInTheDocument()
+    // an honest failure state with a retry — never the misleading "No messages yet." empty state
+    expect(await screen.findByText(/Could not load notifications/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'View all notifications' })).toBeInTheDocument()
+    // retry recovers once the network is back
+    h.get.mockResolvedValue({ rows: [] })
+    await user.click(screen.getByRole('button', { name: 'Retry' }))
+    expect(await screen.findByText('No messages yet.')).toBeInTheDocument()
   })
 })

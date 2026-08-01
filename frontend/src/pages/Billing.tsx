@@ -8,7 +8,7 @@ import { Card, StatusBadge, Spinner, ErrorNote, Empty, Badge } from '../componen
 import FoundingCard from '../components/FoundingCard'
 import { ViewDownloadActions } from '../components/documents/DocumentActions'
 import { studentToken } from '../files'
-import { fmtDate, fmtMoney, titleCase } from '../format'
+import { fmtDate, fmtMoney, titleCase, daysUntil } from '../format'
 import { openPrintable, escapeHtml as e } from '../print'
 import { useT } from '../i18n'
 import { PageHeader } from '../components/premium'
@@ -29,13 +29,6 @@ interface PricingResp {
   cert?: { code: string; name: string } | null
 }
 
-/** Whole days from now until an ISO date (negative once it's in the past); null if unparseable. */
-function daysUntil(iso?: string | null): number | null {
-  if (!iso) return null
-  const t = new Date(iso).getTime()
-  if (Number.isNaN(t)) return null
-  return Math.ceil((t - Date.now()) / 86_400_000)
-}
 // A membership/credential inside this many days of expiry (or already lapsed) surfaces a pay-to-extend row.
 const RENEW_WINDOW_DAYS = 120
 interface CatalogueCert {

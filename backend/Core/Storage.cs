@@ -121,7 +121,22 @@ public static class Storage
         // would serve file_missing for ever with no signal and no way to repair it short of deleting
         // files by hand. Verifying instead of assuming costs one read on the dedupe path — which was
         // skipping a write anyway — and makes the store self-healing.
-        if (!File.Exists(full) || !Readable(full)) File.WriteAllBytes(full, enc);
+        if (!File.Exists(full) || !Readable(full))
+        {
+            // Write to a temp file in the same shard directory, then atomically move into place —
+            // a direct WriteAllBytes to the final path can leave a torn ciphertext under concurrent
+            // writes/reads (which fails GCM auth and reads as a key mismatch).
+            var tmp = full + "." + Guid.NewGuid().ToString("N") + ".tmp";
+            File.WriteAllBytes(tmp, enc);
+            File.Move(tmp, full, overwrite: true);
+        }
+        else
+        {
+            // Dedupe hit: refresh the mtime the retention purge reads (S3 re-puts always refresh
+            // LastModified) — otherwise a fresh record can reference a file the sweep deletes
+            // relative to the ORIGINAL upload's timestamp.
+            try { File.SetLastWriteTimeUtc(full, DateTime.UtcNow); } catch { }
+        }
         return new StoredObject($"local:{rel}", mime, bytes.LongLength, sha);
     }
 
@@ -178,28 +193,7 @@ public static class Storage
     /// <summary>Delete a single stored object by its reference (provider:rel). Used for immediate erasure
     /// of a specific artefact (e.g. an identity document under a GDPR erasure request), independent of the
     /// age-based retention purge. Best-effort; returns true if the object was removed or already gone.</summary>
-    public static bool DeleteRef(string? reference)
-    {
-        if (string.IsNullOrEmpty(reference)) return false;
-        var colon = reference.IndexOf(':');
-        if (colon < 0) return false;
-        var provider = reference[..colon];
-        var rel = reference[(colon + 1)..];
-        if (rel.Contains("..") || rel.StartsWith('/') || rel.Contains('\\')) return false;   // path-traversal guard
-        try
-        {
-            if (provider == "s3")
-            {
-                if (string.IsNullOrEmpty(S3Bucket)) return false;
-                S3Client().DeleteObjectAsync(S3Bucket, rel).GetAwaiter().GetResult();
-                return true;
-            }
-            var full = Path.Combine(Root, rel);
-            if (File.Exists(full)) File.Delete(full);
-            return true;
-        }
-        catch { return false; }
-    }
+    public static bool DeleteRef(string? reference) => DeleteOne(reference);   // single deletion path — see DeleteOne
 
     /// <summary>Delete artefacts older than the retention window (days). Returns count removed.
     /// Covers whichever backend is active: local files by mtime, S3 objects by LastModified.</summary>
@@ -261,9 +255,13 @@ public static class Storage
     // handling (§31). It is preserved BY DEFAULT — an escalation carries a legal hold — so it must
     // never age out on a schedule. Deleting it is a deliberate, recorded act once a hold is lifted,
     // never a side effect of a nightly sweep.
+    // world-passport (PCI World profile/passport photos), world-cv (job-applicant CVs) and templates
+    // (the seeded templates library) are live non-evidence artefacts too — same rationale as cv/books.
+    // pciworld-community-original/-render back live community room images.
     static readonly HashSet<string> ProtectedCategories = new(StringComparer.OrdinalIgnoreCase)
         { "documents", "certificates", "books", "founding", "honorary", "honorary-idv", "partners", "public-docs", "cv",
-          "pciworld-community-restricted" };
+          "pciworld-community-restricted", "world-passport", "world-cv", "templates",
+          "pciworld-community-original", "pciworld-community-render" };
 
     /// <summary>Delete a SINGLE stored object by reference (used for targeted, policy-driven deletion of
     /// sensitive artefacts such as honorary identity documents — not the blanket retention sweep). Returns

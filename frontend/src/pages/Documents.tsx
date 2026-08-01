@@ -53,7 +53,12 @@ function BooksSection() {
   const { data, loading, error } = useQuery<{ rows: BookRow[] }>('/api/me/cert-documents')
 
   if (loading && !data) return null
-  if (error) return null
+  if (error) return (
+    <div>
+      <h2 style={{ margin: 0 }}>{t('doc.booksTitle')}</h2>
+      <ErrorNote>{error}</ErrorNote>
+    </div>
+  )
   const rows = data?.rows ?? []
   if (rows.length === 0) return null
 

@@ -485,7 +485,7 @@ a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: va
 @media (max-width: 860px) {
   .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
   .kpi { padding: var(--s4); }
-  .kpi-value { font-size: 1.5rem; }
+  .kpi .kpi-value { font-size: 1.5rem; }
   .content { padding: var(--s4); }
   .card { padding: var(--s4); }
   .card.pad-lg { padding: var(--s5); }
@@ -496,7 +496,7 @@ a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: va
 }
 @media (max-width: 560px) {
   .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .kpi-value { font-size: 1.35rem; }
+  .kpi .kpi-value { font-size: 1.35rem; }
   .kpi-ic { width: 28px; height: 28px; }
   .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .pager { justify-content: center; }

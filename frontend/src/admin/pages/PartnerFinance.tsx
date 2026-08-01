@@ -114,7 +114,7 @@ export default function PartnerFinance() {
             </label>
             {partner?.partner_type === 'marketing' && <Badge tone="brand">marketing</Badge>}
             {partner && TABS.map((t) => (
-              <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>
+              <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} aria-pressed={tab === t} onClick={() => setTab(t)}>{t}</button>
             ))}
           </div>
           {!partner ? (
@@ -258,7 +258,8 @@ function NewAgreementDrawer({ partnerId, onClose, onSaved }: { partnerId: number
   }
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 480 }}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label="New agreement"
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }} style={{ maxWidth: 480 }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>New agreement</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -310,7 +311,8 @@ function NewRuleDrawer({ agreement, onClose, onSaved }: { agreement: Agreement; 
   }
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 480 }}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={`Add rule to ${agreement.agreement_number}`}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }} style={{ maxWidth: 480 }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>Add rule to {agreement.agreement_number}</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -435,7 +437,8 @@ function PrepareDrawer({ partnerId, onClose, onSaved }: { partnerId: number; onC
   }
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label="Prepare settlement"
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }} style={{ maxWidth: 460 }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>Prepare settlement</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -476,7 +479,8 @@ function PayDrawer({ settlement, onClose, onSaved }: { settlement: Settlement; o
   }
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={`Record payment — ${settlement.settlement_no}`}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }} style={{ maxWidth: 460 }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>Record payment — {settlement.settlement_no}</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -515,7 +519,10 @@ function StatementTab({ partnerId }: { partnerId: number }) {
   const [err, setErr] = useState<string | null>(null)
   const { data, loading, error } = useAdminQuery<Record<string, unknown>>(
     month.length === 7 ? `/api/admin/partner-finance/${partnerId}/statement?month=${month}` : null)
-  const totals = (data?.totals ?? data?.summary ?? null) as Record<string, unknown> | null
+  // The statement endpoint returns a flat object — build the summary row from its top-level keys.
+  const totals = (data
+    ? { opening: data.opening, earned: data.earned, reversed: data.reversed, paid: data.paid, closing: data.closing, recoverable: data.recoverable }
+    : null) as Record<string, unknown> | null
   const lines = (data?.lines ?? data?.transactions ?? []) as Array<Record<string, unknown>>
   return (
     <Card
@@ -547,7 +554,7 @@ function StatementTab({ partnerId }: { partnerId: number }) {
                   <tr key={i}>
                     <td className="small">{day(String(l.earned_at ?? l.date ?? ''))}</td>
                     <td className="small" style={{ fontFamily: 'ui-monospace, monospace' }}>{String(l.reference ?? l.txn_ref ?? '—')}</td>
-                    <td className="small">{String(l.product_type ?? l.type ?? '—')}</td>
+                    <td className="small">{String(l.product ?? '—')}</td>
                     <td className="small" style={{ textAlign: 'right' }}>{money(l.eligible_net ?? l.net)}</td>
                     <td className="small" style={{ textAlign: 'right' }}>{money(l.commission)}</td>
                     <td><StatusChip s={String(l.status ?? '')} /></td>
@@ -627,7 +634,8 @@ function DisputeDrawer({ dispute, onClose, onChanged }: { dispute: Dispute; onCl
   }
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 560 }}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={`Dispute ${d.dispute_no}`}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }} style={{ maxWidth: 560 }}>
         <div className="spread" style={{ marginBottom: '.8rem' }}>
           <h2 style={{ margin: 0 }}>{d.dispute_no} — {d.subject}</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>

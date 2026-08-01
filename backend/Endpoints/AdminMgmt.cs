@@ -204,6 +204,11 @@ public static class AdminMgmt
             var set = allowed.Where(c => b.ContainsKey(c)).ToList();
             if (id == 1 && set.Contains("active") && !JsonFlag(b["active"]))
                 return Results.Json(new { error = "founding_cert_permanent", message = "The founding certification cannot be deactivated." }, statusCode: 400);
+            // Type guard: these keys carry validation/normalisation that only runs on strings — a
+            // numeric value would bypass the lifecycle/slug/prefix checks and be written raw via ToString().
+            foreach (var key in new[]{ "status", "slug", "credential_prefix" })
+                if (set.Contains(key) && b[key].ValueKind is not (JsonValueKind.String or JsonValueKind.Null))
+                    return Results.Json(new { error = "bad_type", message = key + " must be a string." }, statusCode: 400);
             // validate status against the defined lifecycle
             if (set.Contains("status") && b["status"].ValueKind == JsonValueKind.String && !Certs.ValidStatus(b["status"].GetString()))
                 return Results.Json(new { error = "bad_status", message = "Status must be one of: " + string.Join(", ", Certs.Statuses) + "." }, statusCode: 400);
@@ -316,7 +321,13 @@ public static class AdminMgmt
             if (sN is null) return Results.Json(new { error = "no_session" }, statusCode: 404);
             var token = Security.RandomHex(32);
             db.Execute("UPDATE enrollment_sessions SET resume_token_hash=?, resume_token_expiry=datetime('now','+7 day') WHERE id=?", Security.Sha(token), sN["id"]);
-            return J(new { ok = true });
+            // Deliver the link (previously the token was minted and then silently lost — a no-op that
+            // still flipped resume_link_issued), and return it so the admin can hand it over directly.
+            var resumeUrl = Mailer.BaseUrl(req) + "/enroll.html?resume_token=" + token;
+            Mailer.Send(db, H.Ln(sN["user_id"]), email, "enrollment_resume", "Continue your PCI enrolment",
+                Mailer.Template("reminder-1", new() { ["FIRST_NAME"] = "there", ["RESUME_URL"] = resumeUrl }));
+            log(adminFromReq(req)?.Id, "resend_resume", $"session {H.L(sN["id"])} ({email})");
+            return J(new { ok = true, resume_url = resumeUrl });
         });
         app.MapPost("/api/admin/resend-welcome", async (HttpRequest req) =>
         {
@@ -327,7 +338,13 @@ public static class AdminMgmt
             if (u is null) return Results.Json(new { error = "no_user" }, statusCode: 404);
             var token = Security.RandomHex(32);
             db.Execute("INSERT INTO login_tokens(user_id,token,purpose,expires_at) VALUES(?,?, 'set_password', datetime('now','+7 day'))", u["id"], Security.Sha(token));
-            return J(new { ok = true });
+            // Deliver the link (previously the token was minted and then silently lost), and return it
+            // to the authenticated admin so onboarding works even before SMTP is set up.
+            var baseUrl = Mailer.BaseUrl(req);
+            var setupUrl = Mailer.SetupLink(baseUrl, token);
+            Mailer.SendWelcome(db, H.L(u["id"]), email, H.Str(u["first_name"]), setupUrl, baseUrl);
+            log(adminFromReq(req)?.Id, "resend_welcome", $"user {H.L(u["id"])} ({email})");
+            return J(new { ok = true, setup_url = setupUrl });
         });
 
         // ---------- codes ----------
@@ -347,6 +364,20 @@ public static class AdminMgmt
             if (route is not (null or "" or "founding"))
                 return Results.Json(new { error = "bad_founding_route" }, statusCode: 400);
             bool founding = route == "founding";
+            // Validate the code itself ('' satisfies UNIQUE NOT NULL) and the discount maths — a
+            // negative value or a percent over 100 flows straight into checkout price arithmetic.
+            var codeV = (H.GetS(b, "code") ?? "").Trim().ToUpperInvariant();
+            if (!System.Text.RegularExpressions.Regex.IsMatch(codeV, "^[A-Z0-9-]{3,32}$"))
+                return Results.Json(new { error = "bad_code", message = "Code must be 3–32 characters: A–Z, 0–9, hyphens." }, statusCode: 400);
+            var dt = H.GetS(b, "discount_type");
+            var dv = H.GetNum(b, "discount_value") ?? 0;
+            if (!founding)   // a founding code is an access grant, not a discount — its value may be absent/0
+            {
+                if (dt is not ("percent" or "fixed"))
+                    return Results.Json(new { error = "bad_discount_type", message = "discount_type must be 'percent' or 'fixed'." }, statusCode: 400);
+                if (dv <= 0 || (dt == "percent" && dv > 100))
+                    return Results.Json(new { error = "bad_discount_value", message = "discount_value must be positive (and at most 100 for percent)." }, statusCode: 400);
+            }
             int B(string k, bool dflt = false) => (b.ContainsKey(k) ? H.B(b[k].GetRawText()) : dflt) ? 1 : 0;
             long id;
             try
@@ -354,7 +385,7 @@ public static class AdminMgmt
                 id = db.ExecuteReturningId(@"INSERT INTO discount_codes(code,discount_type,discount_value,applies_to,certification_id,route_key,min_transaction,max_discount,partner_id,start_date,end_date,max_uses,single_use_per_email,active,
                 founding_route,grants_membership,grants_exam,grants_study_access,requires_application,auto_approve,membership_months,criteria_json)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (H.GetS(b, "code") ?? "").ToUpperInvariant(), H.GetS(b, "discount_type"), H.GetNum(b, "discount_value"), NormScope(H.GetS(b, "applies_to")),
+                codeV, dt, dv, NormScope(H.GetS(b, "applies_to")),
                 H.GetNum(b, "certification_id"), H.GetS(b, "route_key"), H.GetNum(b, "min_transaction"), H.GetNum(b, "max_discount"), H.GetNum(b, "partner_id"),
                 H.GetS(b, "start_date"), H.GetS(b, "end_date"), H.GetNum(b, "max_uses"), B("single_use_per_email") , B("active"),
                 founding ? route : null,
@@ -369,7 +400,7 @@ public static class AdminMgmt
             // A duplicate `code` violates the UNIQUE constraint — return a clean 409 rather than a 500.
             catch { return Results.Json(new { error = "code_exists", message = "That code already exists." }, statusCode: 409); }
             var adm = adminFromReq(req);
-            log(adm?.Id, "code_created", $"{(H.GetS(b, "code") ?? "").ToUpperInvariant()}{(founding ? " founding:" + route : "")} by admin {adm?.Id}");
+            log(adm?.Id, "code_created", $"{codeV}{(founding ? " founding:" + route : "")} by admin {adm?.Id}");
             return J(new { id });
         });
         app.MapPatch("/api/admin/codes/{id}", async (HttpContext ctx, long id) =>
@@ -377,6 +408,16 @@ public static class AdminMgmt
             var req = ctx.Request;
             var g = Deny(req, "codes"); if (g is not null) return g;
             var b = await H.Body(req);
+            // Same discount sanity rules as creation — an edit must not smuggle in values the POST rejects.
+            if (b.ContainsKey("discount_type") && H.GetS(b, "discount_type") is not ("percent" or "fixed"))
+                return Results.Json(new { error = "bad_discount_type", message = "discount_type must be 'percent' or 'fixed'." }, statusCode: 400);
+            if (b.ContainsKey("discount_value"))
+            {
+                var dv = H.GetNum(b, "discount_value") ?? 0;
+                var dt = H.GetS(b, "discount_type") ?? db.Scalar<string>("SELECT discount_type FROM discount_codes WHERE id=?", id);
+                if (dv <= 0 || (dt == "percent" && dv > 100))
+                    return Results.Json(new { error = "bad_discount_value", message = "discount_value must be positive (and at most 100 for percent)." }, statusCode: 400);
+            }
             // Only a key PRESENT in the body is updated, so an explicit null CLEARS the column
             // (blanking "Max total uses" → unlimited, clearing an end_date → open-ended window,
             // clearing criteria_json → drop thresholds). A COALESCE-everything UPDATE silently
@@ -411,6 +452,11 @@ public static class AdminMgmt
             var g = Deny(req, "pricing"); if (g is not null) return g;
             var b = await H.Body(req);
             object? act = b.ContainsKey("active") ? (H.B(b["active"].GetRawText()) ? 1 : 0) : null;
+            // A negative price or an out-of-range discount percentage would flow into checkout arithmetic.
+            if (H.GetNum(b, "standard_price") is { } sp && sp < 0)
+                return Results.Json(new { error = "bad_price", message = "standard_price cannot be negative." }, statusCode: 400);
+            if (H.GetNum(b, "default_discount_percentage") is { } dp && (dp < 0 || dp > 100))
+                return Results.Json(new { error = "bad_discount", message = "default_discount_percentage must be between 0 and 100." }, statusCode: 400);
             db.Execute("UPDATE pricing_rules SET standard_price=COALESCE(?,standard_price), default_discount_percentage=COALESCE(?,default_discount_percentage), active=COALESCE(?,active), updated_at=datetime('now') WHERE id=?",
                 H.GetNum(b, "standard_price"), H.GetNum(b, "default_discount_percentage"), act, id);
             CertCatalogue.Bump();   // exam pricing feeds the public catalogue cards

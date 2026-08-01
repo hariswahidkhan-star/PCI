@@ -197,13 +197,34 @@ public static class Partners
         app.MapGet("/api/admin/training-partners/{id}/candidates", (HttpRequest req, long id) => gate(req, "partners", _ =>
             J(new { rows = CandidateRows(id) })));
 
-        app.MapPost("/api/admin/training-partners/{id}/payouts", (HttpRequest req, long id) => gate(req, "partners", adm =>
+        // Legacy payout recording. Once the partner has an immutable ledger, money moves ONLY through the
+        // prepare → approve → pay settlement flow — recording a free-form payout beside it would let the
+        // same commission be paid twice during the migration window. While the legacy view still governs,
+        // the endpoint requires the settlement-payment duty (pf_pay) and caps the payout at the legacy
+        // balance instead of accepting any amount.
+        app.MapPost("/api/admin/training-partners/{id}/payouts", (HttpRequest req, long id) => gate(req, "pf_pay", adm =>
         {
             var p = db.QueryOne("SELECT * FROM training_partners WHERE id=?", id);
             if (p is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
+            if (PartnerCommission.HasLedger(db, id))
+                return Results.Json(new { error = "use_settlements",
+                    message = "This partner has an immutable commission ledger. Record payment through the settlement flow (prepare → approve → pay), not a free-form payout." }, statusCode: 409);
             var b = H.Body(req).GetAwaiter().GetResult();
             var amount = Math.Round(H.GetNum(b, "amount") ?? 0, 2);
             if (amount <= 0) return Results.Json(new { error = "bad_amount" }, statusCode: 400);
+            // Legacy balance = accrued (attributed revenue × current pct) − payouts already recorded.
+            var pct = H.D(p["commission_pct"]);
+            var attributed = db.Scalar<double>(@"SELECT COALESCE(SUM(p.final_amount),0)
+                FROM code_redemptions r
+                JOIN discount_codes dc ON dc.id=r.code_id
+                JOIN payments p ON p.id=r.payment_id
+                WHERE COALESCE(p.partner_id, dc.partner_id)=? AND p.payment_status='paid'", id);
+            var accrued = Math.Round(attributed * pct / 100.0, 2);
+            var paidOut = db.Scalar<double>("SELECT COALESCE(SUM(amount),0) FROM partner_payouts WHERE partner_id=?", id);
+            var balance = Math.Round(accrued - paidOut, 2);
+            if (amount > balance)
+                return Results.Json(new { error = "over_balance", balance,
+                    message = $"That would pay {amount:0.00} against an accrued balance of {balance:0.00}." }, statusCode: 422);
             db.Execute("INSERT INTO partner_payouts(partner_id,amount,currency,note,paid_by) VALUES(?,?, 'USD', ?, ?)",
                 id, amount, H.GetS(b, "note"), adm.Id);
             log(adm.Id, "partner_payout_recorded", $"partner {id} USD {amount}");
@@ -337,6 +358,16 @@ public static class Partners
             var fixedMinor = Money.ToMinor(H.GetNum(b, "commission_fixed") ?? 0);
             if (type == "fixed" && fixedMinor <= 0)
                 return Results.Json(new { error = "bad_fixed_amount", message = "commission_fixed must be greater than zero." }, statusCode: 422);
+            // ResolveRule compares these ordinally against a YYYY-MM-DD day, so any other shape silently
+            // never matches (or matches the wrong window) and the engine falls back to the headline pct.
+            var effFrom = (H.GetS(b, "effective_from") ?? "").Trim();
+            var effTo = (H.GetS(b, "effective_to") ?? "").Trim();
+            foreach (var v in new[] { effFrom, effTo })
+                if (v.Length > 0 && (v.Length != 10 || !DateTime.TryParseExact(v, "yyyy-MM-dd",
+                        System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out _)))
+                    return Results.Json(new { error = "bad_effective_date", message = "effective_from/effective_to must be YYYY-MM-DD." }, statusCode: 400);
+            if (effFrom.Length > 0 && effTo.Length > 0 && string.CompareOrdinal(effTo, effFrom) < 0)
+                return Results.Json(new { error = "bad_window", message = "effective_to cannot precede effective_from." }, statusCode: 400);
             var rid = db.ExecuteReturningId(@"INSERT INTO partner_commission_rules
                 (agreement_id,partner_id,certification_id,route_key,product_type,country,commission_type,commission_rate_bp,commission_fixed_minor,commission_basis,effective_from,effective_to,priority,active,created_by)
                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,1,?)",
@@ -344,7 +375,7 @@ public static class Partners
                 H.GetNum(b, "certification_id") is { } c && c > 0 ? (long?)c : null,
                 H.GetS(b, "route_key"), H.GetS(b, "product_type"), H.GetS(b, "country"),
                 type, Money.PercentToBasisPoints(percent), fixedMinor, basis,
-                H.GetS(b, "effective_from"), H.GetS(b, "effective_to"),
+                effFrom.Length == 0 ? null : effFrom, effTo.Length == 0 ? null : effTo,
                 (long)Math.Clamp(H.GetNum(b, "priority") ?? 100, 1, 1000), adm.Id);
             log(adm.Id, "partner_commission_rule_created", $"agreement {agreementId} rule {rid} {type} by {adm.Id}");
             return J(new { ok = true, id = rid });
@@ -396,7 +427,7 @@ public static class Partners
             var code = r.Error switch
             {
                 "not_found" or "partner_not_found" => 404,
-                "bad_status" or "maker_checker" or "maker_unknown" or "already_paid" or "duplicate_reference" => 409,
+                "bad_status" or "maker_checker" or "maker_unknown" or "already_paid" or "duplicate_reference" or "concurrent_update" => 409,
                 _ => 422,
             };
             return Results.Json(new { error = r.Error, message = r.Message }, statusCode: code);

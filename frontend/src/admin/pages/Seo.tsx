@@ -173,7 +173,9 @@ function RedirectsTab() {
   }
   async function del(id: number) {
     if (!confirm('Remove this redirect?')) return
-    await adminApi.post(`/api/admin/seo/redirects/${id}/delete`); refetch()
+    setErr(null)
+    try { await adminApi.post(`/api/admin/seo/redirects/${id}/delete`); refetch() }
+    catch (e) { setErr((e as Error).message) }
   }
   if (loading && !data) return <Spinner />
   if (error) return <ErrorNote>{error}</ErrorNote>
@@ -242,6 +244,12 @@ function EnginesTab() {
   async function runPsi() {
     setBusy('psi'); setNote(null)
     try {
+      // A key pasted next to "Run check" would otherwise be silently ignored — persist it first.
+      if (form.psi_api_key?.trim()) {
+        await adminApi.post('/api/admin/seo/integrations', { psi_api_key: form.psi_api_key.trim() })
+        const { psi_api_key: _dropped, ...rest } = form
+        setForm(rest); refetch()
+      }
       const r = await adminApi.post<{ ok: boolean; url: string; performance: number; seo: number }>('/api/admin/seo/pagespeed', { url: form.psi_url || undefined })
       setNote(`PageSpeed (${r.url}): performance ${r.performance}, SEO ${r.seo}`)
     } catch (e) { setNote(`PageSpeed: ${(e as Error).message}`) } finally { setBusy(null) }

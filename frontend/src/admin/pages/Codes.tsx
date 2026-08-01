@@ -7,7 +7,7 @@ import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
 interface CertOpt { id: number; code: string; acronym?: string | null }
-interface PartnerOpt { id: number; name: string }
+interface PartnerOpt { id: number; name: string; is_test?: number | null }
 function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => void }) {
   const { data: certData } = useAdminQuery<{ rows: CertOpt[] }>('/api/admin/certifications')
   const { data: partnerData } = useAdminQuery<{ rows: PartnerOpt[] }>('/api/admin/training-partners')
@@ -67,7 +67,8 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label="New code"
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>New code</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -118,7 +119,7 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
             <div className="field"><label>Partner attribution</label>
               <select value={f.partner_id} onChange={(e) => setF({ ...f, partner_id: e.target.value })}>
                 <option value="">None</option>
-                {partnerData?.rows.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                {partnerData?.rows.map((p) => <option key={p.id} value={p.id}>{p.name}{p.is_test ? ' (test)' : ''}</option>)}
               </select>
               <span className="muted small">Paid redemptions of this code accrue commission for the chosen partner.</span>
             </div>
@@ -235,7 +236,8 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={`Edit ${code.code}`}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>Edit {code.code}</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -277,7 +279,7 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
             <div className="field"><label>Partner attribution</label>
               <select value={f.partner_id} onChange={(e) => setF({ ...f, partner_id: e.target.value })}>
                 <option value="">None</option>
-                {partnerData?.rows.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                {partnerData?.rows.map((p) => <option key={p.id} value={p.id}>{p.name}{p.is_test ? ' (test)' : ''}</option>)}
               </select>
             </div>
           )}
@@ -459,7 +461,7 @@ export default function Codes() {
     <div className="page">
       <PageHeader title="Discount & founding codes" />
       <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
-        {CODE_TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
+        {CODE_TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} aria-pressed={tab === t} onClick={() => setTab(t)}>{t}</button>)}
       </div>
       {tab === 'Codes' && <CodesTab />}
       {tab === 'Approvals' && <ApprovalsTab />}
@@ -472,10 +474,12 @@ function CodesTab() {
   const { data, loading, error, refetch } = useAdminQuery<DiscountCode[]>('/api/admin/codes')
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<DiscountCode | null>(null)
+  const [err, setErr] = useState<string | null>(null)
 
   async function toggle(c: DiscountCode) {
-    await adminApi.patch(`/api/admin/codes/${c.id}`, { active: c.active ? false : true })
-    refetch()
+    setErr(null)
+    try { await adminApi.patch(`/api/admin/codes/${c.id}`, { active: c.active ? false : true }); refetch() }
+    catch (e) { setErr(e instanceof Error ? e.message : 'Update failed.') }
   }
 
   return (
@@ -489,6 +493,7 @@ function CodesTab() {
       </div>
 
       <Card>
+        {err && <ErrorNote>{err}</ErrorNote>}
         {loading ? (
           <Spinner />
         ) : error ? (

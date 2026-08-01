@@ -82,12 +82,12 @@ export default function TrainingPartners({ kind = 'training' }: { kind?: Partner
       ) : (
         <PageHeader
           title="Training Partners"
-          subtitle={<>Recognised organisations that deliver examination preparation, plus institutions and sponsors. Certification stays independent of training — partners prepare or fund candidates; PCI owns the examination and the certification decision. Use <strong>Portal logins</strong> to manage institution access, and <strong>Commissions</strong> for sponsorship progress and commission payouts.</>}
+          subtitle={<>Recognised organisations that deliver examination preparation, plus institutions and sponsors. Certification stays independent of training — partners prepare or fund candidates; PCI owns the examination and the certification decision. Use <strong>Portal logins</strong> to manage institution access, and <strong>Commissions</strong> for sponsorship progress; record commission payouts through <strong>Partner Finance</strong> settlements.</>}
         />
       )}
       {!marketing && (
         <div className="row" style={{ gap: '.4rem', flexWrap: 'wrap' }}>
-          {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} onClick={() => setTab(t)}>{t}</button>)}
+          {TABS.map((t) => <button key={t} className={'btn sm' + (tab === t ? '' : ' ghost')} aria-pressed={tab === t} onClick={() => setTab(t)}>{t}</button>)}
         </div>
       )}
       {(marketing || tab === 'Directory') && <DirectoryTab kind={kind} />}
@@ -138,8 +138,10 @@ function TestPartnerButton({ kind = 'training', onCreated }: { kind?: PartnerKin
       </select>
       <button className="btn sm secondary" disabled={busy} onClick={create}>{busy ? 'Creating…' : '+ Test partner'}</button>
       {(res || err) && (
-        <div className="drawer-backdrop" onClick={() => { setRes(null); setErr(null) }}>
-          <div className="drawer" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+        // No backdrop-click dismissal: the one-time password below cannot be retrieved again,
+        // so only the explicit Close button discards it.
+        <div className="drawer-backdrop">
+          <div className="drawer" role="dialog" aria-modal="true" aria-label="Test partner" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
             <div className="spread" style={{ marginBottom: '.8rem' }}>
               <h2 style={{ margin: 0 }}>Test partner</h2>
               <button className="btn secondary sm" onClick={() => { setRes(null); setErr(null) }}>Close</button>
@@ -295,9 +297,13 @@ function PartnerLogins({ partner, onClose }: { partner: Partner; onClose: () => 
     } catch (e) { setErr((e as Error).message) } finally { setBusy(false) }
   }
 
+  // While a one-time temp password is on screen, a stray backdrop click / Escape must not
+  // discard it — only the explicit Close button dismisses then.
+  const safeClose = () => { if (!created) onClose() }
   return (
-    <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+    <div className="drawer-backdrop" onClick={safeClose}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={`${partner.name} — portal logins`}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') safeClose() }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>{partner.name} — portal logins</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -362,31 +368,17 @@ function PartnerLogins({ partner, onClose }: { partner: Partner; onClose: () => 
 function PortalDrawer({ partner, onClose }: { partner: Partner; onClose: () => void }) {
   const ledger = useAdminQuery<CommLedger>(`/api/admin/training-partners/${partner.id}/commissions`)
   const cands = useAdminQuery<{ rows: SponsoredRow[] }>(`/api/admin/training-partners/${partner.id}/candidates`)
-  const [payAmount, setPayAmount] = useState('')
-  const [payNote, setPayNote] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState<string | null>(null)
-
-  async function recordPayout() {
-    const amount = Number(payAmount)
-    if (!(amount > 0)) { setErr('Enter a payout amount greater than zero.'); return }
-    setBusy(true); setErr(null)
-    try {
-      await adminApi.post(`/api/admin/training-partners/${partner.id}/payouts`, { amount, note: payNote })
-      setPayAmount(''); setPayNote(''); ledger.refetch()
-    } catch (e) { setErr(e instanceof Error ? e.message : 'Could not record the payout.') } finally { setBusy(false) }
-  }
 
   const L = ledger.data
   const money = (v?: number) => `USD ${Number(v ?? 0).toFixed(2)}`
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={`Commissions and sponsorship — ${partner.name}`}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>Commissions &amp; sponsorship — {partner.name}</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
         </div>
-        {err && <div className="notice err" role="alert" style={{ marginBottom: '.6rem' }}>{err}</div>}
 
         <Section title="Commissions">
           {ledger.loading ? <Spinner /> : ledger.error ? <ErrorNote>{ledger.error}</ErrorNote> : L && (
@@ -397,15 +389,10 @@ function PortalDrawer({ partner, onClose }: { partner: Partner; onClose: () => v
                 <div><span className="muted">Paid out</span><div><strong>{money(L.paid_out)}</strong></div></div>
                 <div><span className="muted">Balance due</span><div><strong>{money(L.balance)}</strong></div></div>
               </div>
-              <div className="row" style={{ gap: '.4rem', marginTop: '.6rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
-                <label className="small" style={{ display: 'grid', gap: '.15rem' }}>Payout amount (USD)
-                  <input type="number" min="0" step="0.01" value={payAmount} onChange={(e) => setPayAmount(e.target.value)} style={{ maxWidth: 140 }} />
-                </label>
-                <label className="small" style={{ display: 'grid', gap: '.15rem', flex: 1, minWidth: 160 }}>Note
-                  <input value={payNote} onChange={(e) => setPayNote(e.target.value)} placeholder="e.g. Q3 settlement, wire ref…" />
-                </label>
-                <button className="btn sm" disabled={busy} onClick={recordPayout}>Record payout</button>
-              </div>
+              <p className="muted small" style={{ marginTop: '.6rem', marginBottom: 0 }}>
+                Record payouts via <Link to={`/partner-finance?partner=${partner.id}`}>Partner Finance</Link> settlements —
+                the maker-checker settlement ledger is the authoritative payout record; this view is read-only.
+              </p>
               {L.payments.length > 0 && (
                 <table className="data" style={{ marginTop: '.7rem' }}>
                   <thead><tr><th>Date</th><th>Reference</th><th>Code</th><th style={{ textAlign: 'right' }}>Amount</th></tr></thead>
@@ -460,7 +447,7 @@ function PartnerEditor({ partner, defaultType = 'training', busy, setBusy, onClo
   async function save() {
     if (!(f.name ?? '').trim()) { setErr('A name is required.'); return }
     setBusy(true); setErr(null)
-    // blank limit → null (no limit); the limits only apply on PATCH — the create POST ignores them
+    // blank limit → null (no limit)
     const num = (v: unknown) => (v === '' || v == null ? null : Number(v))
     const body = {
       name: f.name, tier: f.tier, country: f.country ?? '', region: f.region ?? '', city: f.city ?? '',
@@ -481,13 +468,19 @@ function PartnerEditor({ partner, defaultType = 'training', busy, setBusy, onClo
     }
     try {
       if (partner) await adminApi.patch(`/api/admin/training-partners/${partner.id}`, body)
-      else await adminApi.post('/api/admin/training-partners', body)
+      else {
+        // The create POST only persists the basic directory fields — PATCH the full body onto
+        // the new row so commission %, agreement, privacy and sponsorship limits stick on create.
+        const r = await adminApi.post<{ id?: number }>('/api/admin/training-partners', body)
+        if (r?.id) await adminApi.patch(`/api/admin/training-partners/${r.id}`, body)
+      }
       onSaved()
     } catch (e) { setErr(e instanceof Error ? e.message : 'Save failed.') } finally { setBusy(false) }
   }
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={partner ? 'Edit partner' : 'Add partner'}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>{partner ? 'Edit partner' : 'Add partner'}</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -642,7 +635,8 @@ function PartnerUsage({ partner, onClose }: { partner: Partner; onClose: () => v
 
   return (
     <div className="drawer-backdrop" onClick={onClose}>
-      <div className="drawer" onClick={(e) => e.stopPropagation()}>
+      <div className="drawer" role="dialog" aria-modal="true" aria-label={`${partner.name} — codes and usage`}
+        onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}>
         <div className="spread" style={{ marginBottom: '1rem' }}>
           <h2 style={{ margin: 0 }}>{partner.name} — codes &amp; usage</h2>
           <button className="btn secondary sm" onClick={onClose}>Close</button>
@@ -779,7 +773,8 @@ function ApplicationsTab() {
 
       {open && (
         <div className="drawer-backdrop" onClick={() => setOpen(null)}>
-          <div className="drawer" onClick={(e) => e.stopPropagation()}>
+          <div className="drawer" role="dialog" aria-modal="true" aria-label={`Application — ${open.application.org_name ?? open.application.reference}`}
+            onClick={(e) => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Escape') setOpen(null) }}>
             <div className="spread" style={{ marginBottom: '1rem' }}>
               <h2 style={{ margin: 0 }}>{open.application.org_name}</h2>
               <button className="btn secondary sm" onClick={() => setOpen(null)}>Close</button>
