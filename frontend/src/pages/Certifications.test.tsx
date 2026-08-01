@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '../test/utils'
@@ -67,6 +67,14 @@ describe('Certifications', () => {
     h.startCheckout.mockReset()
     h.certs = { rows: [] }
     h.me = baseMe()
+    // Pin wall-clock to mid-month midday UTC so the 2-hour booking floor and calendar month never
+    // depend on CI runner date/time (month-end and late-day slots previously failed this suite).
+    vi.useFakeTimers({ shouldAdvanceTime: true })
+    vi.setSystemTime(new Date('2026-06-15T12:00:00Z'))
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   describe('scheduling eligibility gate', () => {
@@ -90,11 +98,9 @@ describe('Certifications', () => {
     })
   })
 
-  // Drives the calendar + slot-grid scheduling window. Always steps to the NEXT month first:
-  // in the opening month the 2-hour minimum can disable today's remaining slots — and, late on
-  // the last day of a month, every remaining day — so picking from the displayed month is
-  // time-of-day dependent. Every day of a following month is bookable (still far inside the
-  // 2027 deadline), which makes the pick deterministic whatever the wall clock says.
+  // Drives the calendar + slot-grid scheduling window. With the clock pinned in beforeEach,
+  // the opening month still has bookable days; we also step to the next month so the suite
+  // stays green even if someone removes the fake timer later (month-end defence in depth).
   const pickDayAndSlot = async (user: ReturnType<typeof userEvent.setup>) => {
     await user.click(screen.getByRole('button', { name: 'Next month' }))
     const days = document.querySelectorAll<HTMLButtonElement>('.schedm-day:not([disabled])')
@@ -107,7 +113,7 @@ describe('Certifications', () => {
 
   describe('booking form', () => {
     it('opens the scheduling window, keeps Confirm disabled until a day and time are chosen, then POSTs the booking', async () => {
-      const user = userEvent.setup()
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
       h.me = baseMe({ exams: [notScheduledEntry()] })
       renderWithProviders(<Certifications />)
       await user.click(screen.getByRole('button', { name: 'Schedule exam' }))
@@ -133,7 +139,7 @@ describe('Certifications', () => {
     })
 
     it('maps a backend BOOK_ERRORS code to its friendly message', async () => {
-      const user = userEvent.setup()
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
       h.me = baseMe({ exams: [notScheduledEntry()] })
       renderWithProviders(<Certifications />)
       await user.click(screen.getByRole('button', { name: 'Schedule exam' }))
@@ -142,6 +148,19 @@ describe('Certifications', () => {
       h.post.mockRejectedValueOnce(new ApiError(400, 'bad', { error: 'bad_slot' }))
       await user.click(screen.getByRole('button', { name: 'Confirm slot' }))
       expect(await screen.findByRole('alert')).toHaveTextContent('Please choose a time at least 2 hours from now.')
+    })
+
+    it('still has bookable days when the wall clock is late on the last day of a month', async () => {
+      vi.setSystemTime(new Date('2026-07-31T22:30:00Z'))
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
+      h.me = baseMe({ exams: [notScheduledEntry()] })
+      renderWithProviders(<Certifications />)
+      await user.click(screen.getByRole('button', { name: 'Schedule exam' }))
+      await screen.findByRole('button', { name: 'Confirm slot' })
+      // Opening month may already be August; either way Next month must expose bookable days.
+      await user.click(screen.getByRole('button', { name: 'Next month' }))
+      const days = document.querySelectorAll<HTMLButtonElement>('.schedm-day:not([disabled])')
+      expect(days.length).toBeGreaterThan(0)
     })
   })
 
