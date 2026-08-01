@@ -3005,7 +3005,7 @@ $('#aDemo').onclick=()=>{S.mode='demo';store.set('sp2_mode','demo');if(!hydrateD
 function signOut(){['sp2_mode','sp2_api','sp2_tok'].forEach(store.del);S.mode=null;S.tok='';location.hash='';$('#app').style.display='none';$('#auth').style.display='flex';const pw=$('#aPass');if(pw)pw.value=''}
 window.addEventListener('hashchange',()=>{const id=location.hash.slice(1);if(id&&NAV.find(x=>x.id===id)&&id!==S.route)go(id)});
 (function(){try{const el=$('#aApi');if(el&&!el.value&&location.protocol.startsWith('http'))el.value=location.origin;}catch(_){}})();
-(function(){const mt=location.hash.match(/[#&]t=([a-f0-9]{64})/);const qa=location.hash.match(/[#&]api=([^&]+)/);if(mt){S.tok=mt[1];S.mode='live';S.api=qa?decodeURIComponent(qa[1]):location.origin;store.set('sp2_tok',S.tok);store.set('sp2_mode','live');store.set('sp2_api',S.api);history.replaceState(null,'',location.pathname)}})();
+(function(){const mt=location.hash.match(/[#&]t=([a-f0-9]{64})/);const qa=location.hash.match(/[#&]api=([^&]+)/);const gm=location.hash.match(/[#&]go=([a-z]+)/);if(mt){S.tok=mt[1];S.mode='live';S.api=qa?decodeURIComponent(qa[1]):location.origin;store.set('sp2_tok',S.tok);store.set('sp2_mode','live');store.set('sp2_api',S.api);const go=gm&&NAV.find(x=>x.id===gm[1])?'#'+gm[1]:'';history.replaceState(null,'',location.pathname+go)}})();
 if(S.mode==='demo'){if(!hydrateD())demoSeed();enter()}else if(S.mode==='live'&&S.tok){enter()}
 </script>
 </body></html>

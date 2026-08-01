@@ -459,7 +459,7 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
             </div>
           ) : (
             <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
-              <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}`}>{t('cert.examDayCheckIn')} ↗</a>
+              <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}&go=exam`}>{t('cert.examDayCheckIn')} ↗</a>
               <button className="btn sm secondary" onClick={() => setScheduling((v) => !v)}>
                 {scheduling ? t('cert.close') : t('cert.reschedule')}
               </button>
@@ -492,7 +492,7 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
                 </div>
               )}
               <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
-                <a className="btn sm secondary" href={`/student.html#t=${getToken() ?? ''}`}>{t('cert.viewFullResult')} ↗</a>
+                <a className="btn sm secondary" href={`/student.html#t=${getToken() ?? ''}&go=results`}>{t('cert.viewFullResult')} ↗</a>
                 {failed && <Link className="btn sm" to="/billing">{t('cert.buyRetake')} →</Link>}
               </div>
             </div>

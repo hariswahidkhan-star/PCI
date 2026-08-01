@@ -8,6 +8,7 @@ import { Icon, type IconName } from '../components/icons'
 import Ring from '../components/Ring'
 import CountUp from '../components/CountUp'
 import ConsentsNotice from '../components/ConsentsNotice'
+import WorldPassportSection from './WorldPassportSection'
 import { fmtDate, titleCase, isPast } from '../format'
 import type { Lifecycle, Me } from '../api/types'
 
@@ -281,6 +282,11 @@ export default function Overview() {
           )}
         </Card>
       </div>
+
+      {/* The first-class PCI World Passport module (Phase 4, spec §6): the same authoritative
+          Passport read model, with its own fetch and a quiet fallback — it can never take the
+          rest of the dashboard down. */}
+      <WorldPassportSection />
 
       {/* Every portal surface, one tap away — the "everything at a glance" band the
           request asks for, with live counts where the shell already knows them. */}
