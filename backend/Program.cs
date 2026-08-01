@@ -136,20 +136,49 @@ catch { /* /data exists but is not ours to write — keep the configured default
                 "under the persistent mount /data (e.g. /data/pci.db) — any other path is erased on every redeploy.");
             Environment.Exit(78);
         }
+        // Incomplete MySQL selection is the classic deploy brick: a leftover DB_PROVIDER=mysql in
+        // the dashboard with blank MYSQL_* (Render sync:false keys often materialise as empty
+        // strings). When the interim SQLite-on-/data posture is available, fall back instead of
+        // exit 78 — the operator said they have no external database; do not punish that with a
+        // permanently failing health check. Without a writable /data (or an explicit SQLite
+        // waiver that already demands /data), still fail closed.
+        var mysqlIncomplete = dbProvider is "mysql" or "mariadb"
+            && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING"))
+            && (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_HOST"))
+                || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_PASSWORD")));
+        if (mysqlIncomplete && !allowInsecure)
+        {
+            var canUseDiskSqlite = dataDiskWritable
+                || (allowSqliteProd && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal));
+            if (canUseDiskSqlite)
+            {
+                Environment.SetEnvironmentVariable("DB_PROVIDER", "sqlite");
+                dbProvider = "sqlite";
+                if (!effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal))
+                {
+                    Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pci.db");
+                    effectiveDbFile = "/data/pci.db";
+                }
+                sqliteOnPersistentDisk = dataDiskWritable
+                    && effectiveDbFile.StartsWith("/data/", StringComparison.Ordinal);
+                Console.WriteLine("[config:warn] DB_PROVIDER=mysql was selected but MYSQL_HOST/MYSQL_PASSWORD " +
+                    "(or MYSQL_CONNECTION_STRING) are missing — falling back to SQLite on the persistent disk at " +
+                    $"{effectiveDbFile}. Set the MySQL credentials when you have a database, or set DB_PROVIDER=sqlite " +
+                    "explicitly to silence this warning.");
+            }
+            else
+            {
+                Console.WriteLine("[config] Refusing to open database: MySQL is selected but connection settings are incomplete " +
+                    "(need MYSQL_HOST + MYSQL_PASSWORD, or MYSQL_CONNECTION_STRING). " +
+                    "If you do not have an external database yet, set DB_PROVIDER=sqlite, attach a disk at /data, " +
+                    "and set DATABASE_FILE=/data/pci.db (ALLOW_SQLITE_IN_PRODUCTION=true if the disk probe fails).");
+                Environment.Exit(78);
+            }
+        }
         if (dbProvider is not ("mysql" or "mariadb") && (sqliteOnPersistentDisk || allowSqliteProd))
             Console.WriteLine($"[config:warn] production is running SQLite at {effectiveDbFile} on the persistent disk " +
                 "(supported interim posture). MySQL (DB_PROVIDER=mysql) remains the approved production database; " +
                 "see docs/MYSQL_MIGRATION.md for the cutover.");
-        if (dbProvider is "mysql" or "mariadb"
-            && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_CONNECTION_STRING"))
-            && (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_HOST"))
-                || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("MYSQL_PASSWORD")))
-            && !allowInsecure)
-        {
-            Console.WriteLine("[config] Refusing to open database: MySQL is selected but connection settings are incomplete " +
-                "(need MYSQL_HOST + MYSQL_PASSWORD, or MYSQL_CONNECTION_STRING).");
-            Environment.Exit(78);
-        }
         if (allowWorldSqlite)
         {
             var dbFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? ".");
