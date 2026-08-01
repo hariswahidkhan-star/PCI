@@ -67,29 +67,44 @@ public static class WorldPages
     /// defect as a component with green tests that nothing imports — the tests pass either way,
     /// which is exactly why nobody notices.
     ///
-    /// Each link is conditional on its own flag, and that is not cosmetic. With a flag off the
-    /// routes return 404 by design, so an unconditional link would advertise a page that does not
-    /// exist — worse than no link, because a broken nav item reads as a broken site rather than as
-    /// a feature that has not launched.
+    /// Each flag still decides the DESTINATION, never the presence: with a flag off the real
+    /// route returns 404 by design, so the entry points at the feature's platform-tour page
+    /// (static, cannot 404) and says so; with the flag on it points at the live surface.
     /// </summary>
     static string NavExtras(Db db, string canonicalPath)
     {
+        // Rooms, Forum and Jobs are ALWAYS in the nav now. Launched, an entry points at the live
+        // surface; not launched, it points at the same feature on the platform tour, marked as
+        // such. This holds both invariants at once: a nav link must never dead-end on a 404 (with
+        // a flag off the real route answers 404 by design), and a built feature must never be
+        // undiscoverable — which is exactly what a flag-conditional link made it on every
+        // deployment with the flags off, i.e. every deployment today. The tour pages are static
+        // files with no API, no flag and no database behind them, so they cannot 404.
         var sb = new System.Text.StringBuilder();
-        if (Settings.Bool(db, "world_community_enabled", false))
-            sb.Append($"<a href=\"/world-app/community\"{Cur(canonicalPath, "/world-app/community")}>Rooms</a>");
-        if (Settings.Bool(db, "pciworld_forum_enabled", false))
-            sb.Append($"<a href=\"/world/forum\"{Cur(canonicalPath, "/world/forum")}>Forum</a>");
-        if (Settings.Bool(db, "pciworld_careers_enabled", false))
-            sb.Append($"<a href=\"/world/careers\"{Cur(canonicalPath, "/world/careers")}>Jobs</a>");
-        // The frontend preview is UNCONDITIONAL, and that is the point of it. Every link above
-        // depends on a flag, so on a deployment with the flags off — which is every deployment
-        // today — the nav shows none of this and a visitor cannot tell the features exist. The
-        // preview is a static file with no API, no flag and no database behind it, so it cannot
-        // 404 and cannot be hidden. It is how somebody sees the whole product surface, and how a
-        // developer picking up the server side sees what they are building toward.
-        sb.Append($"<a href=\"/world/preview/\"{Cur(canonicalPath, "/world/preview")}>Preview</a>");
+        sb.Append(Settings.Bool(db, "world_community_enabled", false)
+            ? $"<a href=\"/world-app/community\"{Cur(canonicalPath, "/world-app/community")}>Rooms</a>"
+            : TourLink("/world/preview/community/", "Rooms"));
+        sb.Append(Settings.Bool(db, "pciworld_forum_enabled", false)
+            ? $"<a href=\"/world/forum\"{Cur(canonicalPath, "/world/forum")}>Forum</a>"
+            : TourLink("/world/preview/forum/", "Forum"));
+        sb.Append(Settings.Bool(db, "pciworld_careers_enabled", false)
+            ? $"<a href=\"/world/careers\"{Cur(canonicalPath, "/world/careers")}>Jobs</a>"
+            : TourLink("/world/preview/careers/", "Jobs"));
+        // The tour overview stays UNCONDITIONAL — it is how somebody sees the whole product
+        // surface (including publishing and operations, which have no nav entry of their own),
+        // and how a developer picking up the server side sees what they are building toward.
+        // The path stays /world/preview/ — pinned by tests and by links already in circulation.
+        sb.Append($"<a href=\"/world/preview/\"{Cur(canonicalPath, "/world/preview")}>Explore</a>");
         return sb.ToString();
     }
+
+    /// <summary>A nav entry for a feature that has not launched, pointing at its tour page. The
+    /// gilt dot and the hidden "(platform tour)" say what the destination is — to eyes and to
+    /// screen readers respectively — so the item never masquerades as a live surface.</summary>
+    static string TourLink(string href, string label) =>
+        $"<a href=\"{href}\" title=\"{label} has not launched yet — opens the platform tour\">{label}" +
+        "<span class=\"visually-hidden\"> (platform tour)</span>" +
+        "<span class=\"tdot\" aria-hidden=\"true\"></span></a>";
 
     static string Cur(string canonicalPath, string href) =>
         canonicalPath == href || (href != "/world" && canonicalPath.StartsWith(href + "/", StringComparison.Ordinal))
@@ -235,6 +250,10 @@ public static class WorldPages
              background:var(--crimson);transform:scaleX(0);transform-origin:left;transition:transform .2s var(--ease)}
         header.world nav a:hover::after,header.world nav a[aria-current="page"]::after{transform:scaleX(1)}
         header.world nav a[aria-current="page"]{color:#fff;font-weight:600}
+        /* Marks a nav entry whose destination is the platform tour, not a live surface. The dot is
+           decorative reinforcement only — the accessible name carries "(platform tour)" in words. */
+        header.world nav a .tdot{display:inline-block;width:5px;height:5px;border-radius:50%;
+             background:var(--gilt);margin-left:7px;vertical-align:7px}
         main{padding:56px 0 80px}
         .kicker{display:block;font-family:var(--sans);font-weight:700;font-size:12.5px;letter-spacing:.16em;
              text-transform:uppercase;color:var(--crimson);margin-bottom:14px}

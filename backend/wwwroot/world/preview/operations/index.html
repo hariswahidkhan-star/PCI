@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#0E1525">
+<title>Operations — PCI World platform tour</title>
+<meta name="description" content="The operator's side of PCI World on the platform tour: feature switches, policy-text prerequisites and the review queues, drawn in full before launch.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="/world/preview/operations/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E1525%27/%3E%3Crect x=%2712%27 y=%2744%27 width=%2740%27 height=%274%27 rx=%272%27 fill=%27%23C13329%27/%3E%3Ctext x=%2732%27 y=%2738%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2722%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPW%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/world/preview/tour.css">
+</head>
+<body>
+<a class="visually-hidden" href="#main">Skip to content</a>
+<header class="world">
+  <div class="toprail">
+    <div class="shell">
+      <span class="rail-note">PCI World is a global learning and challenge platform operated by the Project Controls Institute.</span>
+      <a class="ext" href="https://projectcontrolsinstitute.org" target="_blank" rel="noopener noreferrer">Visit the Project Controls Institute <span aria-hidden="true">&#8599;</span><span class="visually-hidden">(opens the official Institute website in a new tab)</span></a>
+    </div>
+  </div>
+  <div class="shell">
+    <a class="brand" href="/world">
+      <span class="wordmark">PCI World</span>
+      <small>From the Project<br>Controls Institute</small>
+    </a>
+    <nav aria-label="Platform tour">
+      <a href="/world/preview/">Overview</a>
+      <a href="/world/preview/community/">Community</a>
+      <a href="/world/preview/forum/">Forum</a>
+      <a href="/world/preview/careers/">Careers</a>
+      <a href="/world/preview/publishing/">Publishing</a>
+      <a href="/world/preview/operations/" aria-current="page">Operations</a>
+      <a class="exit" href="/world">PCI World <span aria-hidden="true">&#8594;</span></a>
+    </nav>
+  </div>
+  <div class="tourbar">
+    <div class="shell">
+      <span class="tb-badge">Platform tour</span>
+      <span class="tb-note">A frontend-only walkthrough of surfaces that ship switched off. Nothing on these pages is stored, sent or checked.</span>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell" tabindex="-1">
+
+  <nav aria-label="Breadcrumb" class="crumbs"><a href="/world/preview/">Platform tour</a> / Operations</nav>
+  <span class="kicker">Operations</span>
+  <h1>The launch board, before anything launches.</h1>
+  <div class="uline"></div>
+  <p class="lede">What an operator sees. The switches matter as much as the features: a flag that
+    can only be moved by a database write is not a switch, and the direction that counts is
+    <em>off</em>, during an incident.</p>
+
+  <!-- ══════════════════════════ 01 · WORLD ADMIN ══════════════════════════ -->
+  <section class="surface" id="admin" aria-labelledby="admin-h">
+    <header class="s-head">
+      <span class="s-n" aria-hidden="true">01</span>
+      <div>
+        <p class="kicker" style="margin-bottom:6px">Operations</p>
+        <h2 id="admin-h">World Admin</h2>
+        <p class="pathchip"><code>/world-admin</code></p>
+      </div>
+    </header>
+    <p class="lede">Every feature ships off; each has a switch an operator can reach without
+      touching the database; and two of them refuse to move until real policy text is published —
+      the system will not record someone&rsquo;s agreement to nothing.</p>
+    <div class="gates" role="note">
+      <p class="g-title">Enforced by the real server</p>
+      <ul>
+        <li>Every feature below ships <b>off</b></li>
+        <li>Each can be switched without touching the database</li>
+        <li>Two of them refuse to run until real policy text is published</li>
+      </ul>
+    </div>
+
+    <div class="card tv-r">
+      <h3>Feature switches</h3>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th scope="col">Surface</th><th scope="col">State</th><th scope="col">Blocked on</th><th scope="col"><span class="visually-hidden">Action</span></th></tr></thead>
+        <tbody>
+          <tr><td>Community rooms</td><td><span class="pill stop">Off</span></td>
+            <td class="mut">A contracted moderation provider; counsel&rsquo;s minimum age and country list</td>
+            <td><button class="btn sm secondary" type="button">Turn on</button></td></tr>
+          <tr><td>Community images</td><td><span class="pill stop">Off</span></td>
+            <td class="mut">The same two decisions</td>
+            <td><button class="btn sm secondary" type="button">Turn on</button></td></tr>
+          <tr><td>Forum</td><td><span class="pill stop">Off</span></td>
+            <td class="mut">Nothing — ready when you are</td>
+            <td><button class="btn sm" type="button">Turn on</button></td></tr>
+          <tr><td>Careers</td><td><span class="pill stop">Off</span></td>
+            <td class="mut">What &ldquo;verified employer&rdquo; means, in writing</td>
+            <td><button class="btn sm secondary" type="button">Turn on</button></td></tr>
+          <tr><td>Contributor publishing</td><td><span class="pill stop">Off</span></td>
+            <td class="mut">Editorial policy and contributor terms</td>
+            <td><button class="btn sm secondary" type="button">Turn on</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card tv-r">
+      <h3>Policy text</h3>
+      <p class="mut" style="margin:0 0 6px">Both are empty. Until each holds real published
+        wording, the matching feature refuses rather than record someone&rsquo;s agreement to
+        nothing.</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th scope="col">Document</th><th scope="col">Version</th><th scope="col">Effect while empty</th></tr></thead>
+        <tbody>
+          <tr><td>Applicant privacy notice</td><td class="mut">&mdash; not set &mdash;</td>
+            <td>Applying to a job answers &ldquo;not open yet&rdquo;</td></tr>
+          <tr><td>Contributor terms</td><td class="mut">&mdash; not set &mdash;</td>
+            <td>Applying to contribute answers &ldquo;not open yet&rdquo;</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="card tv-r">
+      <h3>Queues</h3>
+      <div class="dim">
+        <div><span class="kicker">Forum posts held</span><b>3</b></div>
+        <div><span class="kicker">Employers awaiting verification</span><b>1</b></div>
+        <div><span class="kicker">Contributor applications</span><b>1</b></div>
+        <div><span class="kicker">Room reports</span><b>0</b></div>
+      </div>
+    </div>
+
+    <details class="apis">
+      <summary>What this screen calls</summary>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th scope="col">Endpoint</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><td><code>GET/PATCH /api/world-admin/community/settings</code></td><td><span class="pill live">Built</span></td></tr>
+          <tr><td><code>POST /api/world-admin/careers/employers/{id}/state</code></td><td><span class="pill live">Built</span></td></tr>
+          <tr><td><code>GET /api/world-admin/forum/queue</code></td><td><span class="pill live">Built</span></td></tr>
+        </tbody>
+      </table></div>
+    </details>
+  </section>
+
+  <div class="notice" style="margin-top:44px"><b>This page is a drawing, not the product.</b>
+    Nothing here is stored, sent or checked — the buttons show what the real screens say, not what
+    a server decided. The rules in each amber register are enforced by the actual system; this
+    drawing of them cannot enforce anything.</div>
+
+  <nav class="pager" aria-label="Tour pages">
+    <a href="/world/preview/publishing/"><span class="dir">&larr; Previous</span><span class="to">Publishing</span></a>
+    <a class="next" href="/world/preview/"><span class="dir">Finish &rarr;</span><span class="to">Back to the overview</span></a>
+  </nav>
+
+</main>
+
+<footer class="world">
+  <div class="shell">
+    <div class="ft-grid">
+      <div>
+        <div class="ft-brand"><span class="wordmark">PCI World</span><small>From the Project Controls Institute</small></div>
+        <p style="margin:0;max-width:38ch;line-height:1.65">PCI World is a global learning and challenge platform operated by the Project Controls Institute.</p>
+        <p style="margin:14px 0 0;max-width:38ch;line-height:1.65;color:#7C8CA0;font-size:13.5px">
+          This tour is a static drawing of the product surface. The features it shows ship switched
+          off, and each launches only when its moderation, legal or editorial prerequisite is met.</p>
+      </div>
+      <nav aria-label="The tour">
+        <p class="ft-h">The tour</p>
+        <ul>
+          <li><a href="/world/preview/">Overview</a></li>
+          <li><a href="/world/preview/community/">Community</a></li>
+          <li><a href="/world/preview/forum/">Forum</a></li>
+          <li><a href="/world/preview/careers/">Careers</a></li>
+          <li><a href="/world/preview/publishing/">Publishing</a></li>
+          <li><a href="/world/preview/operations/">Operations</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Live today">
+        <p class="ft-h">Live today</p>
+        <ul>
+          <li><a href="/world">Today&rsquo;s Challenge</a></li>
+          <li><a href="/world/archive">Challenge Library</a></li>
+          <li><a href="/world/blog">Writing</a></li>
+          <li><a href="/world/account">Your Passport</a></li>
+          <li><a href="/world/about">About PCI World</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="The Institute">
+        <p class="ft-h">The Institute</p>
+        <ul>
+          <li><a href="https://projectcontrolsinstitute.org" target="_blank" rel="noopener noreferrer">Visit the Project Controls Institute <span aria-hidden="true">&#8599;</span></a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="ft-base">
+      <div class="fine">PCI World challenges are educational practice and professional-development
+        evidence. They are not PCI certification examinations, and completing one does not grant or
+        affect any PCI certification, membership or credential. Every name, organisation, job and
+        message on this tour is invented for these pages.</div>
+    </div>
+  </div>
+</footer>
+
+<script src="/world/preview/tour.js"></script>
+</body>
+</html>
