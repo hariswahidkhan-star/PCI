@@ -240,9 +240,14 @@ Swept across all 32 manuscripts and separately audited per domain by a dedicated
    open decision and is recorded here only because earlier revisions listed it as one. Each volume has
    an assembly of its master thread plus three new projects, each chosen for a revenue basis or failure
    shape the others do not share, and each volume closes with a synthesis section setting its four side
-   by side. What remains outstanding in Phase 5 is the **standards and frameworks register**, which is
-   not published until every entry has been checked against the current edition of the document it
-   names.
+   by side. The **standards and frameworks register** is also now published, as Appendix F in each
+   volume, derived from the manuscripts so that a reference cannot enter the corpus without being
+   disclosed — proven by planting one, which fails the build. It states **no edition years**, for a
+   reason given in the appendix itself: confirming the current edition of each document against its
+   publisher's catalogue at the date of publication is a review task with access this build does not
+   have, and a citation to a superseded edition reads as authoritative while being wrong. That single
+   verification is the last outstanding Phase 5 item and belongs to decision 5 below rather than to
+   this one.
 5. **Islamic-finance treatment** in PFL-AI D9 is described in economic terms only, with no
    jurisdictional or religious ruling implied. A qualified reviewer should confirm the framing.
 

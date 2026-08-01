@@ -284,16 +284,16 @@ def build(book: str) -> str:
     for tid, name, lead in tk:
         L.append(f"| {tid} | {name} | {lead[:180]} |")
     L += ["",
-          "**On the appendices the volume plan lists and this volume does not carry.** The plan for this family",
-          "also names a consolidated *self-check answers* appendix and a *standards and frameworks referenced*",
-          "appendix. Neither is printed here, for two different reasons that are worth stating rather than",
-          "leaving as apparent omissions. Each self-check in this volume already carries its own answer beside",
-          "the question, so a consolidated set would be a verbatim second copy — precisely the duplication this",
-          "programme's editorial rules forbid; the questions are indexed by their Knowledge Area instead. A",
-          "standards register is a different matter: it is genuinely wanted, and it is not published until each",
-          "entry has been checked against the current edition of the document it names, because a citation to a",
-          "superseded standard is worse than no citation. It is listed in the corpus gate report as outstanding.",
-          "", "The consolidated question bank the plan calls for is published separately as `QUESTION_BANK.md`,",
+          "**On the one appendix the volume plan lists and this volume does not carry.** The plan for this",
+          "family also names a consolidated *self-check answers* appendix. It is not printed, and the reason is",
+          "worth stating rather than leaving as an apparent omission: each self-check in this volume already",
+          "carries its own answer beside the question, so a consolidated set would be a verbatim second copy —",
+          "precisely the duplication this programme's editorial rules forbid. The questions are indexed by their",
+          "Knowledge Area instead.", "",
+          "The *standards and frameworks referenced* register the plan calls for **is** published, as Appendix F.",
+          "It states no edition years, deliberately and for a stated reason, and that single outstanding",
+          "verification is recorded in `CORPUS_GATE_REPORT.md` rather than glossed over.", "",
+          "The consolidated question bank the plan calls for is published separately as `QUESTION_BANK.md`,",
           "and the global glossary as `GLOSSARY.md`; both are generated from the chapters by the same principle",
           "as these appendices.", ""]
 
