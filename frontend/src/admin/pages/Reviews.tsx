@@ -36,7 +36,7 @@ export default function Reviews() {
       )}
 
       <Card>
-        <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
+        <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
           <option value="">All statuses</option>
           <option value="pending">Pending</option>
           <option value="published">Published</option>

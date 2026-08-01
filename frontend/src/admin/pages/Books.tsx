@@ -121,7 +121,7 @@ export default function Books() {
       <Card title="Upload a book">
         <div className="row" style={{ gap: '.6rem', flexWrap: 'wrap', alignItems: 'end' }}>
           <div className="field"><label>Certification</label>
-            <select value={form.certification_id} onChange={(e) => setForm({ ...form, certification_id: e.target.value })}>
+            <select aria-label="Filter by certification" value={form.certification_id} onChange={(e) => setForm({ ...form, certification_id: e.target.value })}>
               <option value="">All certifications</option>
               {(certs?.rows ?? []).map((c) => <option key={c.id} value={c.id}>{c.acronym || c.code}</option>)}
             </select>

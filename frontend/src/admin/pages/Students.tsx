@@ -714,8 +714,8 @@ export default function Students() {
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search name or email…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
+          <input aria-label="Search name or email" placeholder="Search name or email…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
             <option value="">All statuses</option>
             <option value="active">Active</option>
             <option value="pending">Pending</option>

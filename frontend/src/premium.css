@@ -72,7 +72,7 @@ h3 { letter-spacing: -.01em; }
 .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 /* An eyebrow: the engineered micro-label used above headings and on section rules. */
 .eyebrow {
-  font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  font-size: var(--fs-xs); font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
   color: var(--mist); display: inline-flex; align-items: center; gap: .45em;
 }
 .eyebrow::before {
@@ -357,7 +357,7 @@ table.data td.actions .btn + .btn { margin-left: .25rem; }
 .notif-dot {
   position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px;
   border-radius: var(--r-pill); background: var(--err); color: var(--on-status); border: 2px solid var(--surface);
-  font-size: .66rem; font-weight: 800; display: grid; place-items: center;
+  font-size: var(--fs-xs); font-weight: 800; display: grid; place-items: center;
   font-variant-numeric: tabular-nums;
 }
 [dir="rtl"] .notif-dot { right: auto; left: -6px; }

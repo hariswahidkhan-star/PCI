@@ -235,7 +235,7 @@ function EditFields({ doc, certs, busy, onSave }: { doc: Doc; certs: Cert[]; bus
       <div className="field"><label>Description</label><textarea rows={2} value={f.description} onChange={(e) => set('description', e.target.value)} /></div>
       <div className="grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem' }}>
         <div className="field"><label>Category</label><select value={f.category} onChange={(e) => set('category', e.target.value)}>{CATEGORIES.map((c) => <option key={c[0]} value={c[0]}>{c[1]}</option>)}</select></div>
-        <div className="field"><label>Certification</label><select value={f.certification} onChange={(e) => set('certification', e.target.value)}><option value="">All / General</option>{certs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
+        <div className="field"><label>Certification</label><select aria-label="Filter by / General" value={f.certification} onChange={(e) => set('certification', e.target.value)}><option value="">All / General</option>{certs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
         <div className="field"><label>Route</label><select value={f.route_key} onChange={(e) => set('route_key', e.target.value)}>{ROUTES.map((r) => <option key={r} value={r}>{r || 'All routes'}</option>)}</select></div>
         <div className="field"><label>Language</label><input value={f.language} onChange={(e) => set('language', e.target.value)} /></div>
         <div className="field"><label>Version</label><input value={f.version} onChange={(e) => set('version', e.target.value)} /></div>
@@ -277,7 +277,7 @@ function CreateDrawer({ certs, onClose, onDone }: { certs: Cert[]; onClose: () =
           <div className="field"><label>Description</label><textarea rows={2} value={f.description} onChange={(e) => set('description', e.target.value)} /></div>
           <div className="grid2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.5rem' }}>
             <div className="field"><label>Category</label><select value={f.category} onChange={(e) => set('category', e.target.value)}>{CATEGORIES.map((c) => <option key={c[0]} value={c[0]}>{c[1]}</option>)}</select></div>
-            <div className="field"><label>Certification</label><select value={f.certification} onChange={(e) => set('certification', e.target.value)}><option value="">All / General</option>{certs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
+            <div className="field"><label>Certification</label><select aria-label="Filter by / General" value={f.certification} onChange={(e) => set('certification', e.target.value)}><option value="">All / General</option>{certs.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
             <div className="field"><label>Route</label><select value={f.route_key} onChange={(e) => set('route_key', e.target.value)}>{ROUTES.map((r) => <option key={r} value={r}>{r || 'All routes'}</option>)}</select></div>
             <div className="field"><label>Version</label><input value={f.version} onChange={(e) => set('version', e.target.value)} /></div>
             <div className="field"><label>Legal review status</label><select value={f.legal_review_status} onChange={(e) => set('legal_review_status', e.target.value)}>{LEGAL.map((s) => <option key={s} value={s}>{pretty(s)}</option>)}</select></div>

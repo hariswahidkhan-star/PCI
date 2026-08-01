@@ -100,7 +100,7 @@ function PostsTab(perms: PostPerms) {
   return (
     <Card title="Blog &amp; news posts" action={canEdit ? <button className="btn sm" onClick={() => setEditing('new')}>New post</button> : null}>
       <div className="row" style={{ gap: '.4rem', marginBottom: '.6rem' }}>
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+        <select aria-label="Filter by status" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="">All statuses</option>
           {['draft', 'editorial_review', 'approved', 'scheduled', 'published', 'unpublished', 'archived', 'deleted'].map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
         </select>
@@ -643,7 +643,7 @@ function BacklinksTab({ canManage }: { canManage: boolean }) {
       )}
 
       <Card title="Prospects" action={
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+        <select aria-label="Filter by status" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="">All statuses</option>
           {PROSPECT_STATUSES.map((s) => <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>)}
         </select>

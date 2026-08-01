@@ -44,7 +44,7 @@ export default function MembershipUpgrades() {
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap', marginBottom: '.6rem' }}>
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All statuses</option>
             <option value="pending">Pending</option>
             <option value="approved">Approved</option>

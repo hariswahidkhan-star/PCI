@@ -88,14 +88,14 @@ export default function Careers() {
       {tab === 'postings' && (
       <Card>
         <div className="row" style={{ flexWrap: 'wrap', marginBottom: '.6rem', gap: '.5rem' }}>
-          <input placeholder="Search title, employer, code, country…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
-          <select value={fStatus} onChange={(e) => setFStatus(e.target.value)} style={{ maxWidth: 150 }}>
+          <input aria-label="Search title, employer, code, country" placeholder="Search title, employer, code, country…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
+          <select aria-label="Filter by status" value={fStatus} onChange={(e) => setFStatus(e.target.value)} style={{ maxWidth: 150 }}>
             <option value="">All statuses</option><option value="published">Published</option><option value="draft">Draft</option><option value="closed">Closed</option>
           </select>
-          <select value={fCountry} onChange={(e) => setFCountry(e.target.value)} style={{ maxWidth: 170 }}>
+          <select aria-label="Filter by country" value={fCountry} onChange={(e) => setFCountry(e.target.value)} style={{ maxWidth: 170 }}>
             <option value="">All countries</option>{countries.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
-          <select value={fType} onChange={(e) => setFType(e.target.value)} style={{ maxWidth: 150 }}>
+          <select aria-label="Filter by type" value={fType} onChange={(e) => setFType(e.target.value)} style={{ maxWidth: 150 }}>
             <option value="">All types</option><option value="full_time">Full-time</option><option value="part_time">Part-time</option><option value="contract">Contract</option><option value="internship">Internship</option><option value="temporary">Temporary</option>
           </select>
           <span className="muted small" style={{ alignSelf: 'center' }}>{rows.length} of {all.length}</span>

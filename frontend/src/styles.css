@@ -112,6 +112,10 @@ input:focus, select:focus, textarea:focus {
               linear-gradient(180deg, var(--navy-1) 0%, var(--navy-2) 55%, var(--navy-3) 100%);
   border-right: 1px solid rgba(125, 168, 255, .2);
   padding: 1.25rem 1rem; height: 100%; overflow-y: auto;
+  /* `position: relative` makes the plate the containing block for its own decoration, and
+     `overflow-x: hidden` clips it. Without the first, the ::before ring below resolved against the
+     initial containing block — i.e. the viewport — and widened the document by its 130px offset. */
+  position: relative; overflow-x: hidden;
   scrollbar-color: rgba(125, 168, 255, .35) transparent;
 }
 .sidebar::-webkit-scrollbar-thumb { background: rgba(125, 168, 255, .35); border-color: transparent; }
@@ -124,7 +128,7 @@ input:focus, select:focus, textarea:focus {
 }
 .nav a:hover { background: rgba(255, 255, 255, .09); color: var(--on-dark); text-decoration: none; }
 .nav a.active { background: rgba(59, 130, 246, .28); color: var(--on-dark); box-shadow: inset 2.5px 0 0 #60a5fa; }
-.nav .pill { margin-left: auto; background: var(--brand); color: var(--accent-contrast); font-size: .7rem; border-radius: 999px; padding: 0 .5em; }
+.nav .pill { margin-left: auto; background: var(--brand); color: var(--accent-contrast); font-size: var(--fs-xs); border-radius: 999px; padding: 0 .5em; }
 .sidebar .btn.ghost { color: #9fb4e0; }
 .sidebar .btn.ghost:hover { background: rgba(255, 255, 255, .07); color: var(--on-dark); }
 .main { flex: 1; min-width: 0; height: 100%; overflow-y: auto; overflow-x: clip; }
@@ -174,7 +178,7 @@ table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch
 /* ---------- lifecycle steps ---------- */
 .steps { list-style: none; margin: 0; padding: 0; }
 .steps li { display: flex; gap: .75rem; padding: .55rem 0; align-items: flex-start; }
-.steps .dot { width: 22px; height: 22px; border-radius: 6px; flex: 0 0 22px; display: grid; place-items: center; font-size: .7rem; font-weight: 700; background: var(--surface); color: var(--mist); border: 1px solid var(--border-strong); border-bottom: 2px solid var(--border-strong); font-variant-numeric: tabular-nums; }
+.steps .dot { width: 22px; height: 22px; border-radius: 6px; flex: 0 0 22px; display: grid; place-items: center; font-size: var(--fs-xs); font-weight: 700; background: var(--surface); color: var(--mist); border: 1px solid var(--border-strong); border-bottom: 2px solid var(--border-strong); font-variant-numeric: tabular-nums; }
 .steps li.done .dot { background: var(--ok); color: var(--on-status); border-color: var(--ok); }
 .steps li.current .dot { background: var(--brand); color: var(--accent-contrast); border-color: var(--brand); }
 .steps li.blocked .dot { background: var(--err-bg); color: var(--err); border-color: var(--err); }
@@ -328,7 +332,7 @@ table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch
 .checklist-mini { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
 .checklist-mini li { display: flex; align-items: center; gap: .55rem; font-size: .92rem; }
 .checklist-mini .ck { width: 19px; height: 19px; border-radius: 6px; border: 1.5px solid var(--border-strong); flex: 0 0 auto;
-  display: grid; place-items: center; font-size: .7rem; font-weight: 800; color: var(--on-dark); }
+  display: grid; place-items: center; font-size: var(--fs-xs); font-weight: 800; color: var(--on-dark); }
 .checklist-mini li.done .ck { background: var(--ok); border-color: var(--ok); }
 .checklist-mini li.done span:last-child { color: var(--mist); text-decoration: line-through; }
 
@@ -341,7 +345,7 @@ table.data { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch
 
 /* google sign-in slot */
 .gsi-slot { display: flex; justify-content: center; margin-bottom: .35rem; }
-.auth-or-line { display: flex; align-items: center; gap: .8rem; margin: .8rem 0; text-transform: uppercase; letter-spacing: .1em; font-size: .7rem; }
+.auth-or-line { display: flex; align-items: center; gap: .8rem; margin: .8rem 0; text-transform: uppercase; letter-spacing: .1em; font-size: var(--fs-xs); }
 .auth-or-line::before, .auth-or-line::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 
 /* sidebar profile pill variant */
@@ -371,13 +375,18 @@ body::before {
 }
 
 /* sidebar: seal engraving + disciplined micro-label + footer chip */
+/* The sidebar's concentric-ring texture is deliberately hung off the top-right corner, 130px
+   outside the plate. Nothing was clipping it, so it pushed the DOCUMENT 130px wider than the
+   viewport and every page in both apps carried a phantom horizontal scrollbar — at every window
+   size, since the offset is fixed. `overflow: hidden` on the sidebar (declared with the plate
+   itself, below) contains the decoration and leaves the layout alone. */
 .sidebar::before {
   content: ""; position: absolute; top: -130px; right: -130px; width: 340px; height: 340px;
   border-radius: 50%; pointer-events: none;
   background: repeating-radial-gradient(circle, transparent 0 38px, rgba(147, 180, 255, .09) 38px 39px, transparent 39px 77px);
 }
 .sidebar > * { position: relative; }
-.nav-label { font-size: .7rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+.nav-label { font-size: var(--fs-xs); font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
   color: #d7e0f5; margin: 0 .7rem .45rem; }
 .nav .nav-label { margin-top: 1.2rem; }
 .nav > .nav-label:first-child, .nav > span:first-child .nav-label { margin-top: 0; }
@@ -392,7 +401,7 @@ body::before {
 .member-chip { display: flex; align-items: center; gap: .6rem; border: 1px solid rgba(125, 168, 255, .22);
   border-radius: 10px; padding: .55rem .7rem; background: rgba(255, 255, 255, .04); }
 .member-chip strong { display: block; color: var(--on-dark); font-size: .8rem; line-height: 1.2; }
-.member-chip em { font-style: normal; font-size: .68rem; color: var(--on-dark-muted); }
+.member-chip em { font-style: normal; font-size: var(--fs-xs); color: var(--on-dark-muted); }
 .mc-dot { width: 9px; height: 9px; border-radius: 50%; background: #64748b; flex: 0 0 auto; }
 .member-chip.on .mc-dot { background: #36d07f; box-shadow: 0 0 0 4px rgba(54, 208, 127, .18); animation: mc-pulse 2.6s ease-in-out infinite; }
 @keyframes mc-pulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(54, 208, 127, .14); } 50% { box-shadow: 0 0 0 6px rgba(54, 208, 127, .08); } }
@@ -426,7 +435,7 @@ body::before {
 .sidebar--bright .mc-dot { background: #94a3b8; }
 
 /* topbar: crumb + page title */
-.tb-crumb { font-size: .66rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
+.tb-crumb { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--mist); }
 .tb-title { font-size: 1.02rem; letter-spacing: -.01em; }
 
 /* route transitions — each page glides in */
@@ -549,7 +558,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 /* resources library */
 .res-grid { display: grid; gap: .6rem; }
 .res-ic { width: 42px; height: 42px; border-radius: 10px; background: var(--brand-050); color: var(--brand-600);
-  display: grid; place-items: center; flex: 0 0 auto; font-weight: 800; font-size: .66rem; letter-spacing: .04em; }
+  display: grid; place-items: center; flex: 0 0 auto; font-weight: 800; font-size: var(--fs-xs); letter-spacing: .04em; }
 
 /* ---------- safety ---------- */
 @media (prefers-reduced-motion: reduce) {
@@ -590,7 +599,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (max-width: 640px) { .schedm-body { grid-template-columns: 1fr; } }
 .schedm-cal-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .5rem; }
 .schedm-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.schedm-wd { text-align: center; font-size: .68rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--mist); padding: .2rem 0; }
+.schedm-wd { text-align: center; font-size: var(--fs-xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--mist); padding: .2rem 0; }
 .schedm-day {
   appearance: none; border: 1px solid transparent; background: none; border-radius: 9px;
   padding: .45em 0; font: inherit; font-size: .88rem; font-weight: 600; color: var(--ink);
@@ -663,7 +672,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 /* topbar "Go to…" affordance */
 kbd {
-  font: 700 .68rem/1 var(--font); color: var(--mist); letter-spacing: .04em;
+  font: 700 var(--fs-xs)/1 var(--font); color: var(--mist); letter-spacing: .04em;
   background: var(--canvas); border: 1px solid var(--line); border-bottom-width: 2px;
   border-radius: 5px; padding: .18em .45em; white-space: nowrap;
 }
@@ -699,7 +708,7 @@ kbd {
 .cmdk-item.active { background: var(--brand-050); color: var(--brand-600); }
 .cmdk-item.active .nav-ic { color: var(--brand); }
 .cmdk-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cmdk-group { margin-left: auto; flex: 0 0 auto; font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--mist); }
+.cmdk-group { margin-left: auto; flex: 0 0 auto; font-size: var(--fs-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--mist); }
 .cmdk-empty { color: var(--mist); font-size: .9rem; padding: .8rem; text-align: center; }
 .cmdk-foot {
   display: flex; gap: 1.1rem; padding: .55rem .9rem; border-top: 1px solid var(--line);
