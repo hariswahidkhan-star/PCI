@@ -9,8 +9,9 @@ public class CommunityBootstrapTests
 {
     static Db NewDb()
     {
-        var path = Path.Combine(Path.GetTempPath(), "pci-cboot-" + Guid.NewGuid().ToString("N") + ".db");
-        var db = new Db(path);
+        // Full migrate so site_settings (and the rest of the World stack) exist — CommunitySchema
+        // Seed writes the off-by-default flag into that table.
+        var db = TestEnv.NewMigratedDb();
         CommunitySchema.Ensure(db);
         ForumSchema.Ensure(db);
         return db;

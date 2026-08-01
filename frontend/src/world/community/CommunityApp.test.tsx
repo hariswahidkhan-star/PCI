@@ -90,7 +90,9 @@ describe('World community rooms', () => {
     await screen.findByText('Lobby')
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Date of birth')
-    expect(screen.getByText(/not stored/i)).toBeTruthy()
+    // Both the DOB and jurisdiction helps say "not stored"; pin the DOB sentence specifically.
+    const dobHelp = screen.getByText(/date of birth is used only/i)
+    expect(dobHelp.textContent).toMatch(/not stored/i)
   })
 
   // ── The safety rule, in the interface ──
