@@ -6,7 +6,9 @@
  * is look less serious on one surface than another.
  *
  * Deliberately free of custom properties: world.css does not define the design-token variables, so
- * a var() here would silently collapse to nothing on exactly the surface this file exists for. */
+ * a var() here would silently collapse to nothing on exactly the surface this file exists for.
+ * The dark-mode restatement below is literal for the same reason — theme.css is loaded by the
+ * portal and admin bundles only, and this notice must look equally serious without it. */
 
 .demo-banner {
   flex: 0 0 auto; display: flex; align-items: center; gap: .6rem;
@@ -25,6 +27,37 @@
 .demo-banner-exit:hover { background: #fff; }
 [dir="rtl"] .demo-banner-exit { margin-left: 0; margin-right: auto; }
 
+/* Dark mode, restated in literals.
+ *
+ * Gated on [data-theme-aware], which theme.ts stamps on <html> in the bundles that actually have a
+ * dark theme. PCI World has no dark treatment — its pages stay parchment whatever the device says —
+ * so an unguarded prefers-color-scheme rule would drop a dark strip onto a light page.
+ *
+ * The exit button needs its own restatement and not just an inherited colour: light amber text on
+ * the 70%-white plate above is unreadable once the surrounding banner goes dark. */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme-aware]:not([data-theme='light']) .demo-banner {
+    background: linear-gradient(90deg, #33260a, #2a1f08);
+    border-bottom-color: #7c5a12; color: #fde68a;
+  }
+  :root[data-theme-aware]:not([data-theme='light']) .demo-banner > svg { color: #fbbf24; }
+  :root[data-theme-aware]:not([data-theme='light']) .demo-banner-exit {
+    border-color: #a16207; background: rgba(255, 255, 255, .09); color: #fde68a;
+  }
+  :root[data-theme-aware]:not([data-theme='light']) .demo-banner-exit:hover {
+    background: rgba(255, 255, 255, .17);
+  }
+}
+:root[data-theme='dark'] .demo-banner {
+  background: linear-gradient(90deg, #33260a, #2a1f08);
+  border-bottom-color: #7c5a12; color: #fde68a;
+}
+:root[data-theme='dark'] .demo-banner > svg { color: #fbbf24; }
+:root[data-theme='dark'] .demo-banner-exit {
+  border-color: #a16207; background: rgba(255, 255, 255, .09); color: #fde68a;
+}
+:root[data-theme='dark'] .demo-banner-exit:hover { background: rgba(255, 255, 255, .17); }
+
 @media (max-width: 700px) {
   .demo-banner { align-items: flex-start; font-size: .78rem; }
   .demo-banner-exit { margin-left: 0; }
@@ -32,4 +65,8 @@
 /* A printed page has no live context to explain itself, so the notice must be IN the print, not
    hidden from it — a printed demo screenshot passed around is exactly how fabricated data gets
    mistaken for real. */
-@media print { .demo-banner { border: 1px solid #d97706; } .demo-banner-exit { display: none; } }
+@media print {
+  .demo-banner { border: 1px solid #d97706; background: #fffbeb; color: #78350f; }
+  .demo-banner > svg { color: #b45309; }
+  .demo-banner-exit { display: none; }
+}

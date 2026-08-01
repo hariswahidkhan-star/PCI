@@ -30,13 +30,32 @@
 
   /* ---- surfaces ---- */
   --surface-sunken: #eef2f9;
-  --surface-raised: #ffffff;
+  --surface-raised: var(--surface);
   --hairline: rgba(15, 23, 42, .07);
 
   /* ---- extra semantic tones ---- */
-  --info: #1d4ed8;
-  --info-bg: #eff4ff;
+  --info: var(--accent);
+  --info-bg: var(--accent-soft);
   --neutral-bg: #f1f5f9;
+}
+
+/* The three literal tokens above (--surface-sunken, --hairline, --neutral-bg) are light-only, and
+ * they are declared HERE rather than in theme.css because this file's :root comes later and would
+ * override anything theme.css said about them. Sunken wells and neutral chips are used on nearly
+ * every console screen, so left alone they punch bright plates through the dark theme. */
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --surface-sunken: #101728;
+    --hairline: rgba(232, 237, 247, .09);
+    --neutral-bg: #1c2540;
+  }
+}
+@media screen {
+  :root[data-theme='dark'] {
+    --surface-sunken: #101728;
+    --hairline: rgba(232, 237, 247, .09);
+    --neutral-bg: #1c2540;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -116,13 +135,13 @@ h3 { letter-spacing: -.01em; }
   content: ""; position: absolute; inset: 0 0 auto; height: 3px;
   background: var(--grad-brand); opacity: .85;
 }
-.kpi.tone-ok::after { background: linear-gradient(90deg, #15803d, #4ade80); }
-.kpi.tone-warn::after { background: linear-gradient(90deg, #b45309, #fbbf24); }
-.kpi.tone-err::after { background: linear-gradient(90deg, #c2410c, #fb923c); }
-.kpi.tone-neutral::after { background: linear-gradient(90deg, #64748b, #cbd5e1); }
+.kpi.tone-ok::after { background: linear-gradient(90deg, var(--status-ok), #4ade80); }
+.kpi.tone-warn::after { background: linear-gradient(90deg, var(--status-warn), #fbbf24); }
+.kpi.tone-err::after { background: linear-gradient(90deg, var(--status-err), #fb923c); }
+.kpi.tone-neutral::after { background: linear-gradient(90deg, #64748b, var(--border-strong)); }
 /* Tiles that navigate somewhere read as pressable. */
 a.kpi { color: inherit; text-decoration: none; }
-a.kpi:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--e3); border-color: #c7d6f5; }
+a.kpi:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--e3); border-color: var(--border-hover); }
 .kpi-top { display: flex; align-items: center; gap: .55rem; }
 /* Inside a tile the stat renders value-then-label with the icon above; drop the base
    .stat .k dash rule so the label doesn't carry a second rule beside the icon. */
@@ -143,13 +162,13 @@ a.kpi:hover { text-decoration: none; transform: translateY(-2px); box-shadow: va
 .kpi .kpi-value {
   font-size: 1.85rem; font-weight: 800; letter-spacing: -.028em; line-height: 1.05;
   font-variant-numeric: tabular-nums lining-nums;
-  background: linear-gradient(120deg, #1e3a8a, #1d4ed8 55%, #3b82f6);
+  background: var(--grad-kpi);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.kpi.tone-ok .kpi-value { background: linear-gradient(120deg, #14532d, #15803d 60%, #22c55e); -webkit-background-clip: text; background-clip: text; }
-.kpi.tone-warn .kpi-value { background: linear-gradient(120deg, #7c2d12, #b45309 60%, #f59e0b); -webkit-background-clip: text; background-clip: text; }
-.kpi.tone-err .kpi-value { background: linear-gradient(120deg, #7f1d1d, #c2410c 60%, #f97316); -webkit-background-clip: text; background-clip: text; }
-.kpi.tone-neutral .kpi-value { background: linear-gradient(120deg, #1e293b, #475569 60%, #94a3b8); -webkit-background-clip: text; background-clip: text; }
+.kpi.tone-ok .kpi-value { background: var(--grad-kpi-ok); -webkit-background-clip: text; background-clip: text; }
+.kpi.tone-warn .kpi-value { background: var(--grad-kpi-warn); -webkit-background-clip: text; background-clip: text; }
+.kpi.tone-err .kpi-value { background: var(--grad-kpi-err); -webkit-background-clip: text; background-clip: text; }
+.kpi.tone-neutral .kpi-value { background: var(--grad-kpi-neutral); -webkit-background-clip: text; background-clip: text; }
 .kpi-hint { font-size: .8rem; color: var(--mist); margin: 0; }
 .kpi-hint strong { color: var(--slate); font-weight: 700; }
 .kpi-go { margin-left: auto; color: var(--mist); flex: 0 0 auto; opacity: .55; transition: opacity .2s var(--ease), transform .2s var(--ease); }
@@ -168,7 +187,7 @@ a.kpi:hover .kpi-go { opacity: 1; transform: translate(2px, -2px); }
 .search-field { position: relative; display: flex; align-items: center; min-width: 0; }
 .search-field > svg:first-child { position: absolute; left: .65rem; color: var(--mist); pointer-events: none; }
 .search-field input {
-  padding-left: 2.1em; padding-right: 2em; background: #fff; border-radius: var(--r-sm);
+  padding-left: 2.1em; padding-right: 2em; background: var(--surface); border-radius: var(--r-sm);
 }
 .search-field .clear {
   position: absolute; right: .35rem; display: grid; place-items: center;
@@ -178,7 +197,7 @@ a.kpi:hover .kpi-go { opacity: 1; transform: translate(2px, -2px); }
 .search-field .clear:hover { background: var(--line); color: var(--ink); }
 .filter-field { display: flex; align-items: center; gap: .4rem; min-width: 0; }
 .filter-field > label { margin: 0; font-size: .78rem; white-space: nowrap; color: var(--mist); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-.filter-field select { width: auto; min-width: 130px; background: #fff; border-radius: var(--r-sm); padding: .45em .6em; font-size: .88rem; }
+.filter-field select { width: auto; min-width: 130px; background: var(--surface); border-radius: var(--r-sm); padding: .45em .6em; font-size: .88rem; }
 [dir="rtl"] .search-field > svg:first-child { left: auto; right: .65rem; }
 [dir="rtl"] .search-field input { padding-left: 2em; padding-right: 2.1em; }
 [dir="rtl"] .search-field .clear { right: auto; left: .35rem; }
@@ -196,7 +215,7 @@ a.kpi:hover .kpi-go { opacity: 1; transform: translate(2px, -2px); }
   padding: .35em .8em; border: 0; border-radius: 6px; background: transparent; color: var(--slate);
   transition: background .15s, color .15s, box-shadow .15s;
 }
-.segmented button:hover { color: var(--ink); background: rgba(255, 255, 255, .7); }
+.segmented button:hover { color: var(--ink); background: var(--surface); }
 .segmented button[aria-pressed="true"] { background: var(--paper); color: var(--brand-600); box-shadow: var(--e1); }
 .segmented .seg-n {
   margin-left: .4em; font-size: .72rem; font-weight: 800; color: var(--mist);
@@ -297,9 +316,9 @@ table.data td.actions .btn + .btn { margin-left: .25rem; }
    -------------------------------------------------------------------------- */
 .meter { height: 8px; border-radius: var(--r-pill); background: var(--surface-sunken); overflow: hidden; }
 .meter > i { display: block; height: 100%; border-radius: var(--r-pill); background: var(--grad-brand); transition: width .6s var(--ease); }
-.meter.ok > i { background: linear-gradient(90deg, #15803d, #4ade80); }
-.meter.warn > i { background: linear-gradient(90deg, #b45309, #fbbf24); }
-.meter.err > i { background: linear-gradient(90deg, #c2410c, #fb923c); }
+.meter.ok > i { background: linear-gradient(90deg, var(--status-ok), #4ade80); }
+.meter.warn > i { background: linear-gradient(90deg, var(--status-warn), #fbbf24); }
+.meter.err > i { background: linear-gradient(90deg, var(--status-err), #fb923c); }
 .meter-row { display: grid; gap: .35rem; }
 .meter-row .meter-label { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s3); font-size: .85rem; }
 .meter-row .meter-label strong { font-variant-numeric: tabular-nums; }
@@ -330,14 +349,14 @@ table.data td.actions .btn + .btn { margin-left: .25rem; }
 .notif-wrap { position: relative; flex: 0 0 auto; }
 .notif-btn {
   position: relative; display: grid; place-items: center; width: 38px; height: 38px;
-  border: 1px solid var(--line); border-radius: var(--r-sm); background: #fff;
+  border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface);
   color: var(--slate); cursor: pointer; transition: border-color .15s, color .15s, box-shadow .15s;
 }
-.notif-btn:hover { border-color: #c7d6f5; color: var(--ink); box-shadow: var(--e2); }
+.notif-btn:hover { border-color: var(--border-hover); color: var(--ink); box-shadow: var(--e2); }
 .notif-btn[aria-expanded="true"] { border-color: var(--brand); color: var(--brand); }
 .notif-dot {
   position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 4px;
-  border-radius: var(--r-pill); background: var(--err); color: #fff; border: 2px solid #fff;
+  border-radius: var(--r-pill); background: var(--err); color: var(--on-status); border: 2px solid var(--surface);
   font-size: .66rem; font-weight: 800; display: grid; place-items: center;
   font-variant-numeric: tabular-nums;
 }
@@ -379,7 +398,7 @@ table.data td.actions .btn + .btn { margin-left: .25rem; }
   border: 1px solid var(--line); background: var(--paper); box-shadow: var(--e1);
   transition: box-shadow .25s var(--ease), border-color .25s var(--ease);
 }
-.msg-row:hover { box-shadow: var(--e2); border-color: #c7d6f5; }
+.msg-row:hover { box-shadow: var(--e2); border-color: var(--border-hover); }
 .msg-row.unread { border-left: 3px solid var(--brand); background: linear-gradient(90deg, var(--brand-050), var(--paper) 42%); }
 [dir="rtl"] .msg-row.unread { border-left: 1px solid var(--line); border-right: 3px solid var(--brand); background: linear-gradient(270deg, var(--brand-050), var(--paper) 42%); }
 .msg-row-top { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
@@ -401,7 +420,7 @@ table.data td.actions .btn + .btn { margin-left: .25rem; }
   color: var(--ink); font-weight: 700; font-size: .9rem; box-shadow: var(--e1);
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
 }
-.quick-tile:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--e3); border-color: #c7d6f5; }
+.quick-tile:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--e3); border-color: var(--border-hover); }
 .quick-tile .qt-ic {
   width: 32px; height: 32px; border-radius: 9px; flex: 0 0 auto; display: grid; place-items: center;
   background: var(--brand-050); color: var(--brand-600); border: 1px solid rgba(29, 78, 216, .12);
@@ -422,7 +441,7 @@ table.data td.actions .btn + .btn { margin-left: .25rem; }
   border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper);
   color: var(--ink); transition: border-color .18s var(--ease), box-shadow .18s var(--ease), transform .18s var(--ease);
 }
-a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: var(--e2); transform: translateX(2px); }
+a.queue-row:hover { text-decoration: none; border-color: var(--border-hover); box-shadow: var(--e2); transform: translateX(2px); }
 [dir="rtl"] a.queue-row:hover { transform: translateX(-2px); }
 .queue-ic {
   width: 30px; height: 30px; border-radius: 9px; flex: 0 0 auto; display: grid; place-items: center;
@@ -472,7 +491,7 @@ a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: va
 .drawer { padding: var(--s5); }
 .drawer-head {
   position: sticky; top: calc(var(--s5) * -1); z-index: 2; margin: calc(var(--s5) * -1) calc(var(--s5) * -1) var(--s4);
-  padding: var(--s4) var(--s5); background: rgba(255, 255, 255, .94);
+  padding: var(--s4) var(--s5); background: var(--surface-glass);
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
   display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
@@ -511,7 +530,7 @@ a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: va
 @media print {
   .sidebar, .topbar, .notif-wrap, .menu-btn, .toolbar, .pager, .page-head-actions { display: none !important; }
   .shell, .main, .main-col { display: block; height: auto; overflow: visible; }
-  .card, .kpi { box-shadow: none; border-color: #cbd5e1; break-inside: avoid; }
+  .card, .kpi { box-shadow: none; border-color: var(--border-strong); break-inside: avoid; }
   body::before { display: none; }
 }
 
@@ -528,5 +547,6 @@ a.queue-row:hover { text-decoration: none; border-color: #c7d6f5; box-shadow: va
 /* The admin sign-in is a single centred block, so there the banner reads as a card of its own. */
 .center-page > .demo-banner {
   border-radius: var(--r-sm); border: 1px solid #fcd34d;
+  border-color: color-mix(in srgb, currentColor 45%, transparent);
   max-width: 720px; width: 100%; margin: 0 auto var(--s4);
 }

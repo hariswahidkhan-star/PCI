@@ -5,7 +5,9 @@ import { useMe } from '../data/MeContext'
 import { useT } from '../i18n'
 import LanguageSwitcher from './LanguageSwitcher'
 import NotificationBell from './NotificationBell'
+import ThemeToggle from './ThemeToggle'
 import DemoBanner from './DemoBanner'
+import SkipLink from './SkipLink'
 import { initials } from '../format'
 import { Icon, type IconName } from './icons'
 
@@ -66,6 +68,7 @@ export default function Layout() {
 
   return (
     <div className="shell">
+      <SkipLink />
       <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
       <aside className={'sidebar sidebar--bright' + (menuOpen ? ' open' : '')}>
         <div className="brand">
@@ -116,6 +119,7 @@ export default function Layout() {
             </div>
             <div className="row">
               <LanguageSwitcher />
+              <ThemeToggle />
               <NotificationBell />
               <div className="avatar" title={user?.email}>{initials(user?.firstName, user?.lastName)}</div>
               <div className="small" style={{ lineHeight: 1.2 }}>
@@ -125,7 +129,7 @@ export default function Layout() {
               <button className="btn secondary sm" onClick={logout}>{t('shell.signOut')}</button>
             </div>
           </header>
-          <main className="content route-fade" key={loc.pathname}>
+          <main id="main-content" tabIndex={-1} className="content route-fade" key={loc.pathname}>
             <Outlet />
           </main>
         </div>

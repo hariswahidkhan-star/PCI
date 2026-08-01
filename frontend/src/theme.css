@@ -1,0 +1,360 @@
+/* PCI platform — theme foundation.
+ *
+ * Imported BEFORE styles.css and premium.css by both entry points, and it works by a deliberate
+ * trick rather than by a rewrite: the palette tokens the existing 1,270 lines of CSS already use
+ * (--paper, --canvas, --ink, --line, --slate, --mist) are redefined here as *aliases* onto a
+ * semantic layer. So every rule written against them becomes themable without being touched, and a
+ * dark theme is a matter of remapping ~20 semantic tokens instead of editing hundreds of rules.
+ *
+ * What this file adds that did not exist:
+ *   - a semantic colour layer (surface / text / border / accent / status) over the raw palette
+ *   - spacing and type scales, where there were none at all and every value was ad hoc
+ *   - a full dark theme, honouring the OS preference and overridable by an explicit choice
+ *   - one consistent :focus-visible treatment, where six rules covered forty-three pages
+ *   - motion safety applied to every animation, not only the two files that had it
+ *   - minimum touch targets on interactive controls
+ */
+
+:root {
+  /* ---- raw palette. The source of truth for hue; not referenced directly by components. ---- */
+  --p-brand-700: #1e40af;
+  --p-brand-600: #1d4ed8;
+  --p-brand-500: #3b82f6;
+  --p-brand-050: #eff4ff;
+  --p-ink-900: #0f172a;
+  --p-ink-800: #152147;
+  --p-ink-700: #1b2a59;
+  --p-ink-600: #22366f;
+  --p-slate-600: #475569;
+  --p-slate-500: #5f6b80;
+  --p-slate-400: #8fa3c8;
+  --p-line-200: #e3e8ef;
+  --p-line-300: #cbd5e1;
+  --p-white: #ffffff;
+  --p-canvas: #f4f7fb;
+  --p-ok: #15803d;
+  --p-ok-bg: #ecfdf3;
+  --p-warn: #b45309;
+  --p-warn-bg: #fffbeb;
+  --p-err: #c2410c;
+  --p-err-bg: #fef2f2;
+
+  /* ---- semantic layer. Components and stylesheets speak only this. ---- */
+  color-scheme: light;
+  --surface: var(--p-white);           /* cards, panels, menus */
+  --surface-2: var(--p-canvas);        /* page background */
+  --surface-3: #e9eff8;                /* inset wells, table stripes */
+  --surface-inverse: var(--p-ink-900);
+  --text: var(--p-ink-900);
+  --text-muted: var(--p-slate-600);
+  --text-subtle: var(--p-slate-500);
+  --text-inverse: var(--p-white);
+  --border: var(--p-line-200);
+  --border-strong: var(--p-line-300);
+  --accent: var(--p-brand-600);
+  --accent-hover: var(--p-brand-700);
+  --accent-soft: var(--p-brand-050);
+  --accent-contrast: var(--p-white);
+  --status-ok: var(--p-ok);
+  --status-ok-bg: var(--p-ok-bg);
+  --status-warn: var(--p-warn);
+  --status-warn-bg: var(--p-warn-bg);
+  --status-err: var(--p-err);
+  --status-err-bg: var(--p-err-bg);
+
+  /* ---- aliases: what the existing stylesheets already reference. ---- */
+  --brand: var(--accent);
+  --brand-600: var(--accent-hover);
+  --brand-050: var(--accent-soft);
+  --ink: var(--text);
+  --slate: var(--text-muted);
+  --mist: var(--text-subtle);
+  --line: var(--border);
+  --paper: var(--surface);
+  --canvas: var(--surface-2);
+  --navy-1: var(--p-ink-600);
+  --navy-2: var(--p-ink-700);
+  --navy-3: var(--p-ink-800);
+  --ok: var(--status-ok);
+  --ok-bg: var(--status-ok-bg);
+  --warn: var(--status-warn);
+  --warn-bg: var(--status-warn-bg);
+  --err: var(--status-err);
+  --err-bg: var(--status-err-bg);
+
+  /* ---- spacing scale. There was none; every gap was a literal. ---- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+
+  /* ---- type scale, with line heights that pair with each step. ---- */
+  --fs-xs: 11.5px;
+  --fs-sm: 13px;
+  --fs-base: 14.5px;
+  --fs-md: 16px;
+  --fs-lg: 19px;
+  --fs-xl: 23px;
+  --fs-2xl: 28px;
+  --fs-3xl: 34px;
+  --lh-tight: 1.22;
+  --lh-snug: 1.38;
+  --lh-base: 1.55;
+
+  /* ---- elevation, shape, motion, focus ---- */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow: 0 1px 2px rgba(13, 32, 90, 0.05), 0 10px 28px -20px rgba(29, 78, 216, 0.14);
+  --shadow-lift: 0 2px 5px rgba(13, 32, 90, 0.06), 0 22px 48px -24px rgba(29, 78, 216, 0.24),
+                 0 0 0 1px rgba(29, 78, 216, 0.10);
+  --grad-brand: linear-gradient(90deg, var(--p-brand-600), var(--p-brand-500));
+  --border-hover: #c7d6f5;   /* the tinted hover ring on cards, tiles and rows — eight rules used
+                                this same literal, so it was a token in everything but name */
+  --scrollbar-thumb: #c4ccdc;
+  /* Frosted glass: the sticky topbar and drawer headers sit translucently over scrolling content,
+     so they need a see-through SURFACE rather than a see-through white. Left as white this is the
+     single most visible dark-mode defect there is — a bright band across the top of every screen. */
+  --surface-glass: rgba(255, 255, 255, .92);
+
+  /* ---- Gradient text on the dashboard's headline figures.
+   * Each runs dark -> tone -> bright across the numeral. That direction is the whole reason these
+   * are tokens: in dark mode the leading stop has to become the BRIGHT one, or the first third of
+   * every KPI number renders near-black on a near-black card. The tone in the middle carries the
+   * meaning and stays semantic in both themes. ---- */
+  --grad-kpi: linear-gradient(120deg, #1e3a8a, var(--accent) 55%, #3b82f6);
+  --grad-kpi-ok: linear-gradient(120deg, #14532d, var(--status-ok) 60%, #22c55e);
+  --grad-kpi-warn: linear-gradient(120deg, #7c2d12, var(--status-warn) 60%, #f59e0b);
+  --grad-kpi-err: linear-gradient(120deg, #7f1d1d, var(--status-err) 60%, #f97316);
+  --grad-kpi-neutral: linear-gradient(120deg, #1e293b, var(--text-muted) 60%, #94a3b8);
+  --ease: cubic-bezier(.22, .61, .36, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --focus-ring: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* ---- Text on FILLED backgrounds. Three tokens, because "white" meant three different things.
+   * A blanket `#fff -> var(--surface)` migration is wrong here: on a permanently navy sidebar white
+   * is white in both themes, but on an accent fill the contrast colour has to flip, because the
+   * dark theme's accent is a light blue that white text disappears into. Caught by screenshot, not
+   * by typecheck — the login hero rendered dark-on-dark. ---- */
+  --on-dark: #ffffff;        /* permanently dark chrome: sidebar, auth brand pane */
+  --on-dark-muted: #8fa3c8;  /* secondary text on that same chrome — named so a future sweep of
+                                literals cannot mistake it for light-theme muted text */
+  --on-status: #ffffff;      /* solid status fills, whose hue stays saturated in light */
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* ---- Dark theme.
+ * Two selectors, because both directions have to win: the OS preference applies unless the reader
+ * has explicitly chosen light, and an explicit dark choice applies regardless of the OS. Surfaces
+ * are not pure black — a certification portal is read for long stretches, and #000 with light text
+ * produces halation that makes body copy tiring.
+ *
+ * Both blocks are scoped to `screen` so that paper always gets the light set. Browsers drop
+ * background colours when printing but keep `color`, so an unscoped dark theme prints #a9b6cf body
+ * copy onto white — legible on the monitor it was designed for and near-invisible in the hand. This
+ * also lets @media print below stay simple: in print there is nothing dark to override.
+ */
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --on-status: #0d1320;
+    color-scheme: dark;
+    --surface: #131a2b;
+    --surface-2: #0d1320;
+    --surface-3: #1c2540;
+    --surface-inverse: #e8edf7;
+    --text: #e8edf7;
+    --text-muted: #a9b6cf;
+    --text-subtle: #8b98b4;
+    --text-inverse: #0d1320;
+    --border: #263250;
+    --border-strong: #35446b;
+    --accent: #6d9bff;
+    --accent-hover: #8db3ff;
+    --accent-soft: #17233f;
+    --accent-contrast: #0d1320;
+    --status-ok: #4ade80;
+    --status-ok-bg: #10261a;
+    --status-warn: #fbbf24;
+    --status-warn-bg: #2a1f08;
+    --status-err: #fb7185;
+    --status-err-bg: #2b1119;
+    --navy-1: #1c2540;
+    --navy-2: #172038;
+    --navy-3: #131a2b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px -20px rgba(0, 0, 0, 0.6);
+    --shadow-lift: 0 2px 5px rgba(0, 0, 0, 0.45), 0 22px 48px -24px rgba(0, 0, 0, 0.7),
+                   0 0 0 1px rgba(109, 155, 255, 0.16);
+    --grad-brand: linear-gradient(90deg, #3b6fd4, #6d9bff);
+    --border-hover: #3d517f;
+    --scrollbar-thumb: #33405f;
+    --surface-glass: rgba(19, 26, 43, .92);
+    /* Leading stop flips to the bright end — see the light definitions for why. */
+    --grad-kpi: linear-gradient(120deg, #a8c4ff, var(--accent) 55%, #8db3ff);
+    --grad-kpi-ok: linear-gradient(120deg, #a7f3c4, var(--status-ok) 60%, #86efac);
+    --grad-kpi-warn: linear-gradient(120deg, #fde68a, var(--status-warn) 60%, #fcd34d);
+    --grad-kpi-err: linear-gradient(120deg, #fecdd3, var(--status-err) 60%, #fda4af);
+    --grad-kpi-neutral: linear-gradient(120deg, #dbe3f2, var(--text-muted) 60%, #c3cee2);
+  }
+}
+
+@media screen {
+  :root[data-theme='dark'] {
+    --on-status: #0d1320;
+    color-scheme: dark;
+    --surface: #131a2b;
+    --surface-2: #0d1320;
+    --surface-3: #1c2540;
+    --surface-inverse: #e8edf7;
+    --text: #e8edf7;
+    --text-muted: #a9b6cf;
+    --text-subtle: #8b98b4;
+    --text-inverse: #0d1320;
+    --border: #263250;
+    --border-strong: #35446b;
+    --accent: #6d9bff;
+    --accent-hover: #8db3ff;
+    --accent-soft: #17233f;
+    --accent-contrast: #0d1320;
+    --status-ok: #4ade80;
+    --status-ok-bg: #10261a;
+    --status-warn: #fbbf24;
+    --status-warn-bg: #2a1f08;
+    --status-err: #fb7185;
+    --status-err-bg: #2b1119;
+    --navy-1: #1c2540;
+    --navy-2: #172038;
+    --navy-3: #131a2b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px -20px rgba(0, 0, 0, 0.6);
+    --shadow-lift: 0 2px 5px rgba(0, 0, 0, 0.45), 0 22px 48px -24px rgba(0, 0, 0, 0.7),
+                   0 0 0 1px rgba(109, 155, 255, 0.16);
+    --grad-brand: linear-gradient(90deg, #3b6fd4, #6d9bff);
+    --border-hover: #3d517f;
+    --scrollbar-thumb: #33405f;
+    --surface-glass: rgba(19, 26, 43, .92);
+    /* Leading stop flips to the bright end — see the light definitions for why. */
+    --grad-kpi: linear-gradient(120deg, #a8c4ff, var(--accent) 55%, #8db3ff);
+    --grad-kpi-ok: linear-gradient(120deg, #a7f3c4, var(--status-ok) 60%, #86efac);
+    --grad-kpi-warn: linear-gradient(120deg, #fde68a, var(--status-warn) 60%, #fcd34d);
+    --grad-kpi-err: linear-gradient(120deg, #fecdd3, var(--status-err) 60%, #fda4af);
+    --grad-kpi-neutral: linear-gradient(120deg, #dbe3f2, var(--text-muted) 60%, #c3cee2);
+  }
+}
+
+/* ---- Focus. One treatment, everywhere.
+ * Keyboard users had six focus rules across forty-three pages, so on most controls the only
+ * indicator was the browser default, which several rules removed. This is :focus-visible so it
+ * never appears on mouse clicks, and it is a two-part ring so it stays visible on any background.
+ */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible,
+[role='tab']:focus-visible,
+[role='menuitem']:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+/* A visible ring must never be clipped by an ancestor's overflow. */
+:focus-visible { scroll-margin: var(--s-6); }
+
+/* ---- Skip link: keyboard users should not have to tab the whole sidebar to reach content. ---- */
+.skip-link {
+  position: fixed;
+  left: var(--s-4);
+  top: calc(-1 * var(--s-16));
+  z-index: 9999;
+  padding: var(--s-2) var(--s-4);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: var(--radius-sm);
+  font: 600 var(--fs-sm) / 1 var(--font);
+  text-decoration: none;
+  transition: top var(--dur-fast) var(--ease);
+}
+.skip-link:focus { top: var(--s-4); }
+
+/* ---- Touch targets. Anything tappable gets a comfortable minimum. ---- */
+button, [role='button'], a.btn, .btn, input[type='checkbox'], input[type='radio'] {
+  min-height: 36px;
+}
+@media (pointer: coarse) {
+  button, [role='button'], a.btn, .btn, select, input[type='checkbox'], input[type='radio'] {
+    min-height: 44px;
+  }
+}
+
+/* ---- Native control theming, selection, and scrollbars follow the theme. ---- */
+::selection { background: var(--accent); color: var(--accent-contrast); }
+* { scrollbar-color: var(--scrollbar-thumb) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---- Motion safety, applied to everything rather than to two files. ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ---- Theme toggle control. ---- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+}
+.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.theme-toggle svg { width: 17px; height: 17px; display: block; }
+
+/* ---- Utility: a consistent inline status pill, used by several screens by hand today. ---- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: 2px var(--s-2);
+  border-radius: var(--radius-pill);
+  font: 600 var(--fs-xs) / 1.5 var(--font);
+  white-space: nowrap;
+}
+.pill-ok { background: var(--status-ok-bg); color: var(--status-ok); }
+.pill-warn { background: var(--status-warn-bg); color: var(--status-warn); }
+.pill-err { background: var(--status-err-bg); color: var(--status-err); }
+.pill-neutral { background: var(--surface-3); color: var(--text-muted); }

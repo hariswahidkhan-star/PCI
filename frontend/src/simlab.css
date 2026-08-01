@@ -10,33 +10,33 @@
 
 :root {
   /* surfaces + structure */
-  --sl-surface: #ffffff;
+  --sl-surface: var(--surface);
   --sl-surface-2: #f7f9fd;            /* elevated wash for panels-within-panels */
-  --sl-border: #e3e8ef;
+  --sl-border: var(--border);
   --sl-border-strong: #c9d5e8;
-  --sl-ink: #0f172a;
-  --sl-muted: #5f6b80;
-  --sl-focus: #1d4ed8;
+  --sl-ink: var(--text);
+  --sl-muted: var(--text-subtle);
+  --sl-focus: var(--accent);
 
   /* intent */
-  --sl-accent: #1d4ed8;
-  --sl-accent-wash: #eff4ff;
+  --sl-accent: var(--accent);
+  --sl-accent-wash: var(--accent-soft);
   --sl-info: #0e7490;                 /* cyan — active analysis */
   --sl-info-wash: #ecfeff;
-  --sl-success: #15803d;              /* emerald — verified positive */
+  --sl-success: var(--status-ok);              /* emerald — verified positive */
   --sl-success-wash: #ecfdf3;
-  --sl-warning: #b45309;              /* amber — attention / uncertainty */
-  --sl-warning-wash: #fffbeb;
-  --sl-danger: #b91c1c;               /* red — genuine risk only */
+  --sl-warning: var(--status-warn);              /* amber — attention / uncertainty */
+  --sl-warning-wash: var(--status-warn-bg);
+  --sl-danger: var(--status-err);               /* red — genuine risk only */
   --sl-danger-wash: #fef2f2;
 
   /* charts: baseline vs earned vs actual, critical path, float, grid */
   --sl-chart-baseline: #64748b;
-  --sl-chart-earned: #15803d;
-  --sl-chart-actual: #b45309;
+  --sl-chart-earned: var(--status-ok);
+  --sl-chart-actual: var(--status-warn);
   --sl-chart-forecast: #0e7490;
-  --sl-chart-critical: #b91c1c;
-  --sl-chart-float: #cbd5e1;
+  --sl-chart-critical: var(--status-err);
+  --sl-chart-float: var(--border-strong);
   --sl-chart-grid: #e5e7eb;
   --sl-chart-axis: #94a3b8;
 }
@@ -201,7 +201,7 @@
 .sl-coach-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
 .sl-coach-id {
   width: 30px; height: 30px; border-radius: 9px; flex: 0 0 auto;
-  background: linear-gradient(135deg, #0e7490, #1d4ed8 80%); color: #fff;
+  background: linear-gradient(135deg, #0e7490, var(--accent) 80%); color: var(--surface);
   display: grid; place-items: center; font-weight: 800; font-size: .72rem; letter-spacing: .02em;
 }
 .sl-coach-msg {
