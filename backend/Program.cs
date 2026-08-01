@@ -189,18 +189,23 @@ catch { /* /data exists but is not ours to write — keep the configured default
                 "see docs/MYSQL_MIGRATION.md for the cutover.");
         if (allowWorldSqlite)
         {
-            var dbFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? ".");
+            var rawWorldDb = Environment.GetEnvironmentVariable("DATABASE_FILE");
+            var dbFile = Path.GetFullPath(string.IsNullOrWhiteSpace(rawWorldDb) ? "./pci.db" : rawWorldDb);
             if (!dbFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
             {
-                // Writable /data is present but DATABASE_FILE was left at the image default
-                // (./pci.db) — pin it onto the mount instead of exiting 78. This is the same
-                // zero-config contract the PCIWorld entrypoint documents.
-                if (dataDiskWritable)
+                // Only auto-adopt the image/default path (unset or ./pci.db). An explicit
+                // ephemeral path like /tmp/... must still fail closed — that is the contract the
+                // production_config suite pins, and adopting it would silently move a mis-set
+                // database onto the disk.
+                var isImageDefault = string.IsNullOrWhiteSpace(rawWorldDb)
+                    || string.Equals(rawWorldDb.Trim(), "./pci.db", StringComparison.Ordinal)
+                    || string.Equals(rawWorldDb.Trim(), "pci.db", StringComparison.Ordinal);
+                if (dataDiskWritable && isImageDefault)
                 {
                     Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pciworld.db");
                     effectiveDbFile = "/data/pciworld.db";
                     sqliteOnPersistentDisk = true;
-                    Console.WriteLine("[boot] PCIWORLD_ALLOW_SQLITE: DATABASE_FILE was not under /data → /data/pciworld.db");
+                    Console.WriteLine("[boot] PCIWORLD_ALLOW_SQLITE: DATABASE_FILE was the image default → /data/pciworld.db");
                 }
                 else
                 {
