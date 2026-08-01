@@ -665,6 +665,38 @@ public static class WorldSchema
                       "[seed] Sign in at /world-admin and change it now. This password is not shown again."
                     : "[seed] PCI World owner admin created: owner@pciworld.local — change the password after first sign-in");
         }
+
+        // ── Break-glass owner recovery (runs every boot, operator-initiated) ─────────────────
+        // The production bootstrap prints a random owner password exactly once; an operator whose
+        // first-boot log has rotated away is locked out of /world-admin with no self-service
+        // reset. PCIWORLD_OWNER_RESET_PASSWORD is the recovery: set it in the environment,
+        // restart, sign in, change the password, REMOVE the variable. It cannot create an
+        // account (the bootstrap above owns that) and it targets only the bootstrap owner email,
+        // so a leaked staging value cannot quietly take over a renamed production owner.
+        var reset = Environment.GetEnvironmentVariable("PCIWORLD_OWNER_RESET_PASSWORD");
+        if (!string.IsNullOrWhiteSpace(reset))
+            Console.WriteLine(OwnerPasswordReset(db, reset)
+                ? "[seed] PCI World owner password RESET from PCIWORLD_OWNER_RESET_PASSWORD; existing " +
+                  "owner sessions revoked. Sign in at /world-admin, change the password in Settings, " +
+                  "then REMOVE this environment variable — it resets again on every boot until removed."
+                : "[seed] PCIWORLD_OWNER_RESET_PASSWORD ignored: it must be at least 12 characters " +
+                  "and an owner@pciworld.local account must already exist.");
+    }
+
+    /// <summary>Reset the bootstrap owner's password to <paramref name="pw"/>, clearing any
+    /// lockout and suspension and revoking every existing session for the account — a recovery
+    /// implies the old credential is lost or compromised, and a stolen bearer token must not
+    /// outlive the reset. Enforces the same 12-character minimum as the password-change endpoint.
+    /// Returns false (and changes nothing) on a short password or a missing owner account.</summary>
+    public static bool OwnerPasswordReset(Db db, string pw)
+    {
+        if (pw.Length < 12) return false;
+        var a = db.QueryOne("SELECT id FROM pciworld_admin_users WHERE email='owner@pciworld.local'");
+        if (a is null) return false;
+        db.Execute("UPDATE pciworld_admin_users SET password_hash=?, failed_logins=0, lockout_until=NULL, status='active' WHERE id=?",
+            BCrypt.Net.BCrypt.HashPassword(pw), a["id"]);
+        db.Execute("DELETE FROM pciworld_admin_sessions WHERE admin_id=?", a["id"]);
+        return true;
     }
 
     /// <summary>True when this process is configured as a real deployment rather than a developer
