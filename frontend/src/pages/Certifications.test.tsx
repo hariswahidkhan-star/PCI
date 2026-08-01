@@ -196,7 +196,8 @@ describe('Certifications', () => {
 
   describe('identity document upload', () => {
     it('rejects an over-size file client-side without calling the API', async () => {
-      const user = userEvent.setup()
+      // Fake timers are on for the suite — userEvent must advance them or async clicks can hang in CI.
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
       h.me = baseMe({ identity_document: null, exams: [] })
       renderWithProviders(<Certifications />)
       const big = new File([new ArrayBuffer(3_000_001)], 'big.pdf', { type: 'application/pdf' })
@@ -207,7 +208,7 @@ describe('Certifications', () => {
     })
 
     it('uploads a valid document as a data URI', async () => {
-      const user = userEvent.setup()
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
       h.me = baseMe({ identity_document: null, exams: [] })
       renderWithProviders(<Certifications />)
       const ok = new File(['hello'], 'passport.png', { type: 'image/png' })
