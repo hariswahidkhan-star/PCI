@@ -44,8 +44,8 @@ COPY --from=webbuild /web/dist-worldadmin ./wwwroot/world-admin-app
 # MySQL 8 is the production destination when MYSQL_HOST + MYSQL_PASSWORD (or
 # MYSQL_CONNECTION_STRING) are actually set. Without complete credentials the entrypoint
 # FORCES SQLite on /data — including when the dashboard still has DB_PROVIDER=mysql from an
-# earlier attempt (the classic exit-78 loop). $$ escapes so values expand at *runtime*, not
-# image-build time. DOTNET_* flags match the full-platform image (Render exit-139 / Starter GC).
+# earlier attempt (the classic exit-78 loop). \$ escapes so values expand at *runtime*.
+# DOTNET_* flags match the full-platform image (Render exit-139 / Starter GC).
 ENV PCIWORLD_ONLY=true \
     ASPNETCORE_ENVIRONMENT=Production \
     STORAGE_ROOT=/data/storage \
@@ -54,15 +54,16 @@ ENV PCIWORLD_ONLY=true \
     DOTNET_gcServer=0
 VOLUME /data
 EXPOSE 8080
-ENTRYPOINT ["/bin/sh","-c","mkdir -p /data /data/storage 2>/dev/null || true; \
+# Shell-form ENTRYPOINT: \$VAR expands at container start (not image build).
+ENTRYPOINT mkdir -p /data /data/storage 2>/dev/null || true; \
   mysql_ready=0; \
-  if [ -n \"$$MYSQL_CONNECTION_STRING\" ]; then mysql_ready=1; \
-  elif [ -n \"$$MYSQL_HOST\" ] && [ -n \"$$MYSQL_PASSWORD\" ]; then mysql_ready=1; fi; \
-  if [ \"$$mysql_ready\" = 1 ]; then \
-    export DB_PROVIDER=\"$${DB_PROVIDER:-mysql}\"; \
+  if [ -n "\$MYSQL_CONNECTION_STRING" ]; then mysql_ready=1; \
+  elif [ -n "\$MYSQL_HOST" ] && [ -n "\$MYSQL_PASSWORD" ]; then mysql_ready=1; fi; \
+  if [ "\$mysql_ready" = 1 ]; then \
+    export DB_PROVIDER="$${DB_PROVIDER:-mysql}"; \
   else \
-    export DB_PROVIDER=sqlite \
-           PCIWORLD_ALLOW_SQLITE=true \
-           DATABASE_FILE=\"$${DATABASE_FILE:-/data/pciworld.db}\"; \
+    export DB_PROVIDER=sqlite; \
+    export PCIWORLD_ALLOW_SQLITE=true; \
+    export DATABASE_FILE=/data/pciworld.db; \
   fi; \
-  exec dotnet PCI.Backend.dll"]
+  exec dotnet PCI.Backend.dll

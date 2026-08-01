@@ -192,9 +192,22 @@ catch { /* /data exists but is not ours to write — keep the configured default
             var dbFile = Path.GetFullPath(Environment.GetEnvironmentVariable("DATABASE_FILE") ?? ".");
             if (!dbFile.StartsWith("/data/", StringComparison.Ordinal) && !allowInsecure)
             {
-                Console.WriteLine("[config] Refusing to open database: PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE " +
-                    "under the explicit persistent mount /data (e.g. /data/pciworld.db).");
-                Environment.Exit(78);
+                // Writable /data is present but DATABASE_FILE was left at the image default
+                // (./pci.db) — pin it onto the mount instead of exiting 78. This is the same
+                // zero-config contract the PCIWorld entrypoint documents.
+                if (dataDiskWritable)
+                {
+                    Environment.SetEnvironmentVariable("DATABASE_FILE", "/data/pciworld.db");
+                    effectiveDbFile = "/data/pciworld.db";
+                    sqliteOnPersistentDisk = true;
+                    Console.WriteLine("[boot] PCIWORLD_ALLOW_SQLITE: DATABASE_FILE was not under /data → /data/pciworld.db");
+                }
+                else
+                {
+                    Console.WriteLine("[config] Refusing to open database: PCIWORLD_ALLOW_SQLITE=true requires DATABASE_FILE " +
+                        "under the explicit persistent mount /data (e.g. /data/pciworld.db).");
+                    Environment.Exit(78);
+                }
             }
         }
 
