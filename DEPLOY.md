@@ -147,7 +147,7 @@ docker run -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development pci-platform
 
 | Exit | Meaning | Typical causes | Fix |
 |---|---|---|---|
-| **78** | Configuration refused (`EX_CONFIG`) | Missing/invalid `APP_BASE_URL` or `ALLOWED_ORIGIN`, no `CREDENTIAL_ENCRYPTION_KEY`, SQLite off the persistent disk, MySQL selected but `MYSQL_HOST`/`MYSQL_PASSWORD` unset, `ENABLE_LEGACY_ADMIN_TOKEN=true`, `STORAGE_PROVIDER=s3` without `S3_BUCKET`, `STRIPE_SECRET_KEY` without `STRIPE_WEBHOOK_SECRET` | Set the variable the log names; redeploy |
+| **78** | Configuration refused (`EX_CONFIG`) | Missing/invalid `APP_BASE_URL` or `ALLOWED_ORIGIN`, no `CREDENTIAL_ENCRYPTION_KEY`, SQLite off the persistent disk, MySQL selected with no credentials **and** no writable `/data` disk, `ENABLE_LEGACY_ADMIN_TOKEN=true`, `STORAGE_PROVIDER=s3` without `S3_BUCKET`, `STRIPE_SECRET_KEY` without `STRIPE_WEBHOOK_SECRET` | Set the variable the log names; or attach a `/data` disk and leave MySQL blank (auto-falls back to SQLite); redeploy |
 | **75** | Temporarily unavailable (`EX_TEMPFAIL`) | The configured database cannot be opened — wrong host/port, firewall, TLS, bad credentials, database not created yet, or MySQL still starting up. Also: an older binary meeting a newer schema (deploy a matching build) | Check `MYSQL_HOST`/`MYSQL_PORT` reachability, `MYSQL_USER`/`MYSQL_PASSWORD`, that `MYSQL_DATABASE` exists, and `MYSQL_SSL` (managed providers usually need `required`). Raise `MYSQL_CONNECT_RETRIES` if the DB is still provisioning |
 | **70** | Software/migration failure (`EX_SOFTWARE`) | A schema migration failed part-way | Read the `[migrate]` log lines; the service never serves on a half-migrated database |
 
@@ -199,7 +199,9 @@ the seeded owner login, payments answering 503 and emails printing to the logs.
 
 `DB_PROVIDER` is declared with an explicit value rather than omitted on purpose: a blueprint only
 overwrites the keys it actually names, so a service that already carries `DB_PROVIDER=mysql` from
-an earlier configuration would otherwise keep it and keep failing.
+an earlier configuration would otherwise keep it. If MySQL is still selected but
+`MYSQL_HOST`/`MYSQL_PASSWORD` were never filled in, the app **falls back to SQLite on `/data`**
+with a `[config:warn]` instead of exit 78 — you do not need an external database to go live.
 
 ### Choosing a database
 

@@ -289,18 +289,39 @@ else:
         env2["MYSQL_PORT"] = declared.get("MYSQL_PORT", "3306")
         check_boots("declared-but-blank MySQL settings cannot fail a SQLite boot", env2, bp_db2)
         if os.path.exists(bp_db2): os.remove(bp_db2)
+
+        # The deploy brick operators hit when they have NO external DB: dashboard still says mysql,
+        # MYSQL_* are blank (or sync:false empties), and the health check loops on exit 78. With a
+        # writable /data the app must fall back to SQLite and open the database.
+        fallback_db = os.path.join(data_dir, "mysql-fallback-boot-test.db")
+        if os.path.exists(fallback_db): os.remove(fallback_db)
+        check_boots("incomplete MySQL + writable /data falls back to SQLite and boots",
+                    {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "mysql",
+                     "MYSQL_HOST": "", "MYSQL_PASSWORD": "",
+                     "APP_BASE_URL": declared.get("APP_BASE_URL", "https://example.org"),
+                     "ALLOWED_ORIGIN": declared.get("ALLOWED_ORIGIN", "https://example.org"),
+                     "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"},
+                    fallback_db)
+        if os.path.exists(fallback_db): os.remove(fallback_db)
+
+        waiver_fallback_db = os.path.join(data_dir, "mysql-waiver-fallback-boot-test.db")
+        if os.path.exists(waiver_fallback_db): os.remove(waiver_fallback_db)
+        check_boots("incomplete MySQL + ALLOW_SQLITE_IN_PRODUCTION falls back to SQLite and boots",
+                    {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "mysql",
+                     "ALLOW_SQLITE_IN_PRODUCTION": "true",
+                     "APP_BASE_URL": declared.get("APP_BASE_URL", "https://example.org"),
+                     "ALLOWED_ORIGIN": declared.get("ALLOWED_ORIGIN", "https://example.org"),
+                     "CREDENTIAL_ENCRYPTION_KEY": "preflight-test-key-0123456789abcdef0123456789abcdef"},
+                    waiver_fallback_db)
+        if os.path.exists(waiver_fallback_db): os.remove(waiver_fallback_db)
     else:
         print("  SKIP  render.yaml boot-through (no writable /data in this environment)")
-
-    # And the other direction: selecting MySQL without credentials must still fail closed. This is
-    # the pairing that bricked the deploy — DB_PROVIDER=mysql with blank MYSQL_* — and the reason
-    # ALLOW_SQLITE_IN_PRODUCTION does not rescue it is easy to lose in a refactor of the preflight.
-    check("selecting MySQL with blank credentials still fails closed, waiver or not",
-          {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "mysql",
-           "ALLOW_SQLITE_IN_PRODUCTION": "true",
-           "APP_BASE_URL": declared.get("APP_BASE_URL", "https://example.org"),
-           "ALLOWED_ORIGIN": declared.get("ALLOWED_ORIGIN", "https://example.org")},
-          must_mention="MySQL is selected but connection settings are incomplete")
+        # Incomplete MySQL without a disk still fails closed — do not invent an ephemeral SQLite file.
+        check("selecting MySQL with blank credentials fails closed when no /data posture exists",
+              {"ASPNETCORE_ENVIRONMENT": "Production", "DB_PROVIDER": "mysql",
+               "APP_BASE_URL": declared.get("APP_BASE_URL", "https://example.org"),
+               "ALLOWED_ORIGIN": declared.get("ALLOWED_ORIGIN", "https://example.org")},
+              must_mention="MySQL is selected but connection settings are incomplete")
 
 print(f"\n  == {passed}/{passed + failed} PASSED ==")
 raise SystemExit(0 if failed == 0 else 1)

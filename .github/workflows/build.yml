@@ -26,8 +26,10 @@ jobs:
       - name: Production and staging fail closed before database open
         # PyYAML lets the same suite boot the app with render.yaml's OWN declared environment —
         # without it those checks skip, and the blueprint goes back to being the one production
-        # configuration nothing verifies.
+        # configuration nothing verifies. A writable /data mirrors the Render disk mount so the
+        # SQLite interim posture and incomplete-MySQL→SQLite fallback are exercised, not skipped.
         run: |
+          sudo mkdir -p /data && sudo chmod 777 /data
           python3 -c 'import yaml' 2>/dev/null \
             || pip install --quiet --break-system-packages PyYAML \
             || pip install --quiet PyYAML
