@@ -201,10 +201,14 @@ public class CommunitySchemaTests
     public void EnsureIsIdempotent()
     {
         // It runs on every boot, so running it twice must be a no-op rather than an error.
+        // A single draft "general" room is seeded so enabling the feature has somewhere to land —
+        // the second Ensure must not create a second copy.
         var db = NewWorldDb();
         CommunitySchema.Ensure(db);
         CommunitySchema.Ensure(db);
-        Assert.Equal(0, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_community_rooms"));
+        Assert.Equal(1, db.Scalar<long>("SELECT COUNT(*) FROM pciworld_community_rooms"));
+        Assert.Equal(1, db.Scalar<long>(
+            "SELECT COUNT(*) FROM pciworld_community_rooms WHERE slug='general' AND state='draft'"));
     }
 
     [Fact]
