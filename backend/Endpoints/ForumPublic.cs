@@ -89,6 +89,16 @@ public static class ForumPublic
             return Results.Content(html, "text/html; charset=utf-8");
         });
 
+        // Category index — breadcrumb target from thread pages. Must be registered BEFORE the
+        // two-segment thread route so "/world/forum/general" is not swallowed as a missing thread.
+        app.MapGet("/world/forum/{category}", (HttpContext ctx, string category) =>
+        {
+            if (!Enabled()) return Disabled();
+            var html = ForumRender.Category(db, category, WorldUrl.Base(ctx.Request));
+            if (html is null) return Results.NotFound();
+            return Results.Content(html, "text/html; charset=utf-8");
+        });
+
         app.MapGet("/world/forum/{category}/{thread}", (HttpContext ctx, string category, string thread) =>
         {
             var html = ForumRender.Thread(db, category, thread, WorldUrl.Base(ctx.Request));

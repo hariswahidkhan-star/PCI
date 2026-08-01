@@ -475,6 +475,10 @@ public static class CommunityAdmin
             {
                 Settings.Put(db, "world_community_enabled", en);
                 changed.Add($"enabled={en}");
+                // Turning rooms ON with an empty catalogue / NullModerator / empty jurisdiction
+                // list is how "we shipped chat" still felt broken. Bootstrap fills those gaps once.
+                if (en == "1")
+                    CommunityBootstrap.OnFeatureEnabled(db, m => log(adm!.Id, "community.bootstrap", m));
             }
             if (H.GetS(b, "moderator") is { } mod)
             {
@@ -517,6 +521,10 @@ public static class CommunityAdmin
             {
                 Settings.Put(db, "pciworld_forum_enabled", fe);
                 changed.Add($"forum_enabled={fe}");
+                // Forum posts share the same moderator setting. Enabling the forum with
+                // NullModerator leaves every post pending forever with no release UI in the SPA.
+                if (fe == "1")
+                    CommunityBootstrap.OnFeatureEnabled(db, m => log(adm!.Id, "forum.bootstrap", m));
             }
 
             // Careers (Phase 4) and contributor publishing (Phase 6), for exactly the reason

@@ -125,6 +125,7 @@ public static class CommunityPublic
         app.MapGet("/api/world/community/rooms", () =>
         {
             if (!Enabled()) return Disabled();
+            CommunityBootstrap.EnsureCatalogueNotEmpty(db);
             var rooms = CommunityRooms.Discoverable(db).Select(r => new
             {
                 slug = H.Str(r["slug"]),
@@ -140,7 +141,17 @@ public static class CommunityPublic
                 slow_mode_seconds = H.L(r["slow_mode_seconds"]),
                 participants = CommunityRooms.Presence(db, H.L(r["id"])),
             });
-            return Results.Json(new { rooms });
+            // Eligibility metadata travels with the catalogue so the join form can offer a real
+            // country list instead of a blank two-letter box that always fails on an empty allowlist.
+            var jurisdictions = CommunityEligibility.Jurisdictions(db).OrderBy(c => c).ToArray();
+            var mod = Settings.Str(db, "world_community_moderator", "none") ?? "none";
+            return Results.Json(new
+            {
+                rooms,
+                served_jurisdictions = jurisdictions,
+                minimum_age = CommunityEligibility.MinAge(db),
+                publishes_messages = mod is not ("none" or ""),
+            });
         });
 
         app.MapGet("/api/world/community/rooms/{slug}", (string slug) =>
@@ -159,13 +170,16 @@ public static class CommunityPublic
                 state = H.Str(room["state"]),
                 accepting = CommunityRooms.AcceptsMessages(room),
                 guests_welcome = H.B(room["guest_allowed"]),
-                images_allowed = false,   // Phase 2 is not built; never advertise it as available
+                // Advertise images only when the global flag AND this room both allow them.
+                images_allowed = CommunityMediaPipeline.ImagesEnabled(db) && H.B(room["image_allowed"]),
                 slow_mode_seconds = H.L(room["slow_mode_seconds"]),
                 rules_version = H.Str(room["rules_version"]),
                 pinned_welcome = H.Str(room["pinned_welcome"]),
                 retention_class = H.Str(room["retention_class"]),
                 participants = CommunityRooms.Presence(db, H.L(room["id"])),
                 capacity = H.L(room["capacity"]),
+                served_jurisdictions = CommunityEligibility.Jurisdictions(db).OrderBy(c => c).ToArray(),
+                minimum_age = CommunityEligibility.MinAge(db),
             });
         });
 

@@ -887,6 +887,7 @@ public static class WorldAdmin
             <button role="tab" id="t-editorial" aria-controls="tab-editorial" data-tab="editorial" aria-selected="false" tabindex="-1">Editorial</button>
             <button role="tab" id="t-calendar" aria-controls="tab-calendar" data-tab="calendar" aria-selected="false" tabindex="-1">Calendar</button>
             <button role="tab" id="t-reports" aria-controls="tab-reports" data-tab="reports" aria-selected="false" tabindex="-1">Reports</button>
+            <button role="tab" id="t-community" aria-controls="tab-community" data-tab="community" aria-selected="false" tabindex="-1">Community</button>
             <button role="tab" id="t-users" aria-controls="tab-users" data-tab="users" aria-selected="false" tabindex="-1" hidden>Users</button>
             <button role="tab" id="t-audit" aria-controls="tab-audit" data-tab="audit" aria-selected="false" tabindex="-1">Audit</button>
           </nav>
@@ -921,6 +922,7 @@ public static class WorldAdmin
           <div id="tab-editorial" class="card" role="tabpanel" aria-labelledby="t-editorial" tabindex="0" hidden></div>
           <div id="tab-calendar" class="card" role="tabpanel" aria-labelledby="t-calendar" tabindex="0" hidden></div>
           <div id="tab-reports" class="card" role="tabpanel" aria-labelledby="t-reports" tabindex="0" hidden></div>
+          <div id="tab-community" class="card" role="tabpanel" aria-labelledby="t-community" tabindex="0" hidden></div>
           <div id="tab-users" class="card" role="tabpanel" aria-labelledby="t-users" tabindex="0" hidden></div>
           <div id="tab-audit" class="card" role="tabpanel" aria-labelledby="t-audit" tabindex="0" hidden></div>
         </div>
@@ -946,14 +948,23 @@ public static class WorldAdmin
           if(ROLE==='author')return action==='read'||action==='author';
           if(ROLE==='reviewer')return action==='read'||action==='review';
           if(ROLE==='publisher')return action==='read'||action==='publish';
-          if(ROLE==='viewer')return action==='read';
+          if(ROLE==='viewer')return action==='read'||action==='community.read';
+          if(ROLE==='live_moderator')return action==='read'||action==='community.read'||action==='community.moderate';
+          if(ROLE==='trust_safety')return action==='read'||action==='community.read'||action==='community.moderate'
+            ||action==='community.rooms';
+          if(ROLE==='appeals_reviewer')return action==='read'||action==='community.read'||action==='community.appeal';
+          if(ROLE==='safety_lead')return action==='read'||action==='community.read'||action==='community.moderate'
+            ||action==='community.rooms'||action==='community.appeal';
           return false;
         }
         function applyRole(){
           $('t-editor').hidden=!(can('author'));
           $('t-users').hidden=!(can('admin'));
+          // Community roles (and owner/viewer) see the rooms + forum queues. Hidden is comfort —
+          // every API call re-checks WorldRbac.
+          $('t-community').hidden=!(can('community.read'));
         }
-        var TABS=['overview','challenges','editor','rotation','editorial','calendar','reports','users','audit'];
+        var TABS=['overview','challenges','editor','rotation','editorial','calendar','reports','community','users','audit'];
         function tab(name,moveFocus){
           TABS.forEach(function(t){
             $('tab-'+t).hidden=t!==name;
@@ -968,6 +979,7 @@ public static class WorldAdmin
           if(name==='rotation')loadRotation();
           if(name==='editorial')loadEditorial();
           if(name==='calendar')loadCalendar(); if(name==='reports')loadReports(); if(name==='audit')loadAudit();
+          if(name==='community')loadCommunity();
           if(name==='users')loadUsers();
         }
         document.querySelectorAll('[data-tab]').forEach(function(b){
@@ -1435,6 +1447,140 @@ public static class WorldAdmin
                 });
               });
             }
+          });
+        }
+        function loadCommunity(){
+          // Thin operator console for the chat rooms + forum hold queue. Enabling the surfaces
+          // themselves is on the Launch board (owner); this tab is the day-to-day work once they
+          // are on. Both API calls are optional so a role without community.read does not brick
+          // the shell — the tab is already hidden for those roles via applyRole().
+          Promise.all([
+            api('/api/world-admin/community/settings').catch(function(){return null;}),
+            api('/api/world-admin/community/queue?status=open').catch(function(){return {cases:[]};}),
+            api('/api/world-admin/forum/queue').catch(function(){return {posts:[]};})
+          ]).then(function(res){
+            var s=res[0], q=res[1]||{cases:[]}, f=res[2]||{posts:[]};
+            var h='<h2>Community rooms &amp; forum</h2>';
+            if(!s){
+              h+='<p class="bad">Community settings are not readable with this role.</p>';
+            }else{
+              h+='<p>Rooms: <strong>'+(s.enabled?'on':'off')+'</strong>'
+                +' · Moderator: <strong>'+esc(s.moderator||'none')+'</strong>'
+                +' · Publishes messages: <strong>'+(s.publishes_messages?'yes':'no')+'</strong>'
+                +' · Forum: <strong>'+(s.forum_enabled?'on':'off')+'</strong></p>';
+              h+='<p>Minimum age: '+esc(String(s.min_age||''))
+                +' · Jurisdictions served: '+(s.jurisdictions&&s.jurisdictions.length?esc(s.jurisdictions.join(', ')):'<em>none configured — nobody can join</em>')
+                +'</p>';
+              if(!s.admits_anyone){
+                h+='<p class="bad" role="status">Eligibility is not configured. Enable Community rooms on the Launch board (or set jurisdictions in settings) before participants can join.</p>';
+              }
+              h+='<p><small>Turn rooms and the forum on from the owner Launch board. Enabling either surface seeds a default open room, a jurisdiction allowlist and a deterministic moderator so the first visitor is not met with an empty catalogue.</small></p>';
+            }
+            if(can('community.rooms')){
+              h+='<h3>Turn surfaces on</h3>'
+                +'<p><button id="cw_open_general">Enable rooms &amp; open “general”</button> '
+                +'<button id="cw_enable_forum" class="ghost">Enable forum</button> '
+                +'<button id="cw_close_general" class="ghost">Close “general”</button> '
+                +'<span id="cw_room_msg" role="status"></span></p>';
+            }
+            h+='<h3>Moderation cases (rooms)</h3>';
+            if(!q.cases||!q.cases.length)h+='<p>No open room cases — the queue is clear.</p>';
+            else{
+              h+='<table><thead><tr><th>Id</th><th>Severity</th><th>Reason</th><th>Reports</th><th>When (UTC)</th><th></th></tr></thead><tbody>';
+              q.cases.forEach(function(c){
+                h+='<tr><td>#'+c.id+'</td><td>'+esc(c.severity)+'</td><td>'+esc(c.reason_code||'')+'</td>'
+                  +'<td>'+c.report_count+'</td><td>'+esc(c.created_at||'')+'</td><td>';
+                if(can('community.moderate')){
+                  h+='<button data-cassign="'+c.id+'">Assign to me</button> '
+                    +'<button class="ghost" data-cclose="'+c.id+'" data-outcome="dismissed">Dismiss</button> '
+                    +'<button class="ghost" data-cclose="'+c.id+'" data-outcome="actioned">Close actioned</button>';
+                }
+                h+='</td></tr>';
+              });
+              h+='</tbody></table>';
+            }
+            h+='<h3>Forum hold queue</h3>';
+            if(!f.posts||!f.posts.length)h+='<p>No held forum posts — the queue is clear.</p>';
+            else{
+              h+='<table><thead><tr><th>Id</th><th>State</th><th>Thread</th><th>Body</th><th>Flags</th><th></th></tr></thead><tbody>';
+              f.posts.forEach(function(p){
+                h+='<tr><td>#'+p.id+'</td><td>'+esc(p.state)+'</td>'
+                  +'<td><a href="'+esc(p.url||'#')+'" target="_blank" rel="noopener">'+esc(p.thread||'')+'</a></td>'
+                  +'<td style="max-width:340px">'+esc((p.body||'').slice(0,240))+'</td>'
+                  +'<td>'+p.flag_weight+'</td><td>';
+                if(can('community.moderate')){
+                  h+='<button data-frelease="'+p.id+'">Release</button> '
+                    +'<button class="ghost" data-fwithhold="'+p.id+'">Withhold</button>';
+                }
+                h+='</td></tr>';
+              });
+              h+='</tbody></table>';
+            }
+            h+='<p style="margin-top:14px"><a href="/world-app/community">Open guest rooms</a> · '
+              +'<a href="/world/forum">Browse the forum</a></p>';
+            $('tab-community').innerHTML=h;
+            function sayRoom(t){if($('cw_room_msg'))$('cw_room_msg').textContent=t;}
+            if($('cw_open_general')){
+              $('cw_open_general').addEventListener('click',function(){
+                // Enabling first runs CommunityBootstrap (default room + jurisdictions + moderator)
+                // so "Open general" works even on a fresh database that never visited the Launch board.
+                api('/api/world-admin/community/settings','PATCH',{enabled:'1'})
+                  .then(function(){return api('/api/world-admin/community/rooms/general/state','POST',{state:'open'});})
+                  .then(function(){sayRoom('general is open.');loadCommunity();})
+                  .catch(function(e){sayRoom((e&&(e.message||e.error))||'Could not open the room.');});
+              });
+            }
+            if($('cw_enable_forum')){
+              $('cw_enable_forum').addEventListener('click',function(){
+                api('/api/world-admin/community/settings','PATCH',{forum_enabled:'1'})
+                  .then(function(){sayRoom('Forum is on.');loadCommunity();})
+                  .catch(function(e){sayRoom((e&&(e.message||e.error))||'Could not enable the forum.');});
+              });
+            }
+            if($('cw_close_general')){
+              $('cw_close_general').addEventListener('click',function(){
+                api('/api/world-admin/community/rooms/general/state','POST',{state:'closed'})
+                  .then(function(){sayRoom('general is closed.');loadCommunity();})
+                  .catch(function(e){sayRoom((e&&(e.message||e.error))||'Could not close the room.');});
+              });
+            }
+            $('tab-community').querySelectorAll('[data-cassign]').forEach(function(b){
+              b.addEventListener('click',function(){
+                b.disabled=true;
+                api('/api/world-admin/community/cases/'+b.dataset.cassign+'/assign','POST',{})
+                  .then(loadCommunity)
+                  .catch(function(e){b.disabled=false;alert((e&&(e.message||e.error))||'Assign failed');});
+              });
+            });
+            $('tab-community').querySelectorAll('[data-cclose]').forEach(function(b){
+              b.addEventListener('click',function(){
+                var reason=prompt('Reason (required — appears on the case trail):')||'';
+                if(reason.trim().length===0)return;
+                b.disabled=true;
+                api('/api/world-admin/community/cases/'+b.dataset.cclose+'/close','POST',
+                    {outcome:b.dataset.outcome,reason:reason})
+                  .then(loadCommunity)
+                  .catch(function(e){b.disabled=false;alert((e&&(e.message||e.error))||'Close failed');});
+              });
+            });
+            $('tab-community').querySelectorAll('[data-frelease]').forEach(function(b){
+              b.addEventListener('click',function(){
+                b.disabled=true;
+                api('/api/world-admin/forum/posts/'+b.dataset.frelease+'/release','POST',{})
+                  .then(loadCommunity)
+                  .catch(function(e){b.disabled=false;alert((e&&(e.message||e.error))||'Release failed');});
+              });
+            });
+            $('tab-community').querySelectorAll('[data-fwithhold]').forEach(function(b){
+              b.addEventListener('click',function(){
+                var reason=prompt('Reason for withholding (required):')||'';
+                if(reason.trim().length<3)return;
+                b.disabled=true;
+                api('/api/world-admin/forum/posts/'+b.dataset.fwithhold+'/withhold','POST',{reason:reason})
+                  .then(loadCommunity)
+                  .catch(function(e){b.disabled=false;alert((e&&(e.message||e.error))||'Withhold failed');});
+              });
+            });
           });
         }
         var auditOffset=0;

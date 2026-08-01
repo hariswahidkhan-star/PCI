@@ -148,6 +148,8 @@ export interface RoomSummary {
 export interface RoomDetail extends RoomSummary {
   accepting: boolean; images_allowed: boolean; rules_version: string
   pinned_welcome: string | null; retention_class: string
+  served_jurisdictions?: string[]
+  minimum_age?: number
 }
 
 export interface Message {
@@ -169,7 +171,14 @@ export interface SendResult {
   appeal: { reference: string; credential: string; restricted_until: string | null; how: string } | null
 }
 
-export const listRooms = () => get<{ rooms: RoomSummary[] }>('/api/world/community/rooms')
+export interface Catalogue {
+  rooms: RoomSummary[]
+  served_jurisdictions: string[]
+  minimum_age: number
+  publishes_messages: boolean
+}
+
+export const listRooms = () => get<Catalogue>('/api/world/community/rooms')
 export const getRoom = (slug: string) => get<RoomDetail>(`/api/world/community/rooms/${encodeURIComponent(slug)}`)
 export const since = (slug: string, afterSequence: number) =>
   get<{ messages: Message[] }>(`/api/world/community/rooms/${encodeURIComponent(slug)}/messages?afterSequence=${afterSequence}`)

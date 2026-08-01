@@ -26,6 +26,7 @@ const POLL_MS = 2500
 export default function CommunityApp() {
   const [view, setView] = useState<View>('rooms')
   const [rooms, setRooms] = useState<C.RoomSummary[]>([])
+  const [jurisdictions, setJurisdictions] = useState<string[]>([])
   const [room, setRoom] = useState<C.RoomDetail | null>(null)
   const [messages, setMessages] = useState<C.Message[]>([])
   const [pending, setPending] = useState<{ id: string; body: string } | null>(null)
@@ -42,7 +43,11 @@ export default function CommunityApp() {
     try {
       const r = await C.listRooms()
       setRooms(r.rooms)
-      setNotice(null)
+      setJurisdictions(r.served_jurisdictions ?? [])
+      // Only warn when the server explicitly says publishing is off — older mocks omit the field.
+      setNotice(r.publishes_messages === false
+        ? { tone: 'info', text: 'Rooms are open, but message publishing is not configured yet. An operator needs to set a moderator.' }
+        : null)
     } catch (e) {
       setNotice({ tone: 'error', text: e instanceof C.CommunityError ? e.message : 'Rooms are unavailable right now.' })
     } finally { setLoading(false) }
@@ -89,6 +94,11 @@ export default function CommunityApp() {
       <header className="cw-head">
         <h1>PCI World community</h1>
         <p className="cw-sub">Professional rooms for people who control projects.</p>
+        <p className="cw-sub">
+          <a href="/world/forum">Browse the forum</a>
+          {' · '}
+          <a href="/world-app/">Your dashboard</a>
+        </p>
       </header>
 
       {notice && (
@@ -104,6 +114,7 @@ export default function CommunityApp() {
       {view === 'entry' && room && (
         <EntryForm
           room={room}
+          jurisdictions={room.served_jurisdictions?.length ? room.served_jurisdictions : jurisdictions}
           onJoined={() => { lastSeq.current = 0; setMessages([]); setView('room') }}
           onCancel={() => setView('rooms')}
         />
@@ -173,15 +184,15 @@ function RoomList({ rooms, loading, onEnter, onRefresh }: {
 
 // ── Guest entry: one screen, per §7.1 ───────────────────────────────────────────────────────
 
-function EntryForm({ room, onJoined, onCancel }: {
-  room: C.RoomDetail; onJoined: () => void; onCancel: () => void
+function EntryForm({ room, jurisdictions, onJoined, onCancel }: {
+  room: C.RoomDetail; jurisdictions: string[]; onJoined: () => void; onCancel: () => void
 }) {
   const [name, setName] = useState('')
   // The eligibility declaration (CCP-P1-003). Collected here because the server refuses entry
   // without it — and asked as a plain date rather than an "I am over 18" tick box, because a tick
   // box records only that somebody clicked, while a date records what was actually declared.
   const [birthDate, setBirthDate] = useState('')
-  const [jurisdiction, setJurisdiction] = useState('')
+  const [jurisdiction, setJurisdiction] = useState(jurisdictions[0] ?? '')
   const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [suggestion, setSuggestion] = useState<string | null>(null)
@@ -244,14 +255,27 @@ function EntryForm({ room, onJoined, onCancel }: {
           </p>
 
           <label htmlFor="cw-country">Country or region</label>
-          <input
-            id="cw-country" type="text" value={jurisdiction} required maxLength={2}
-            onChange={e => setJurisdiction(e.target.value.toUpperCase())}
-            aria-describedby="cw-country-help" autoComplete="country"
-            placeholder="GB"
-          />
+          {jurisdictions.length > 0 ? (
+            <select
+              id="cw-country" value={jurisdiction} required
+              onChange={e => setJurisdiction(e.target.value)}
+              aria-describedby="cw-country-help"
+            >
+              {jurisdictions.map(code => (
+                <option key={code} value={code}>{code}</option>
+              ))}
+            </select>
+          ) : (
+            <input
+              id="cw-country" type="text" value={jurisdiction} required maxLength={2}
+              onChange={e => setJurisdiction(e.target.value.toUpperCase())}
+              aria-describedby="cw-country-help" autoComplete="country"
+              placeholder="GB"
+            />
+          )}
           <p id="cw-country-help" className="cw-help">
-            Two-letter country code. The rooms are not yet available everywhere.
+            Rooms are available in the countries listed here. Your selection is used only to check
+            eligibility and is <strong>not stored</strong> as a profile field.
           </p>
         </fieldset>
 
@@ -382,6 +406,7 @@ function Room({ room, messages, pending, setPending, onWithheld, onEjected, onLe
             {m.kind === 'image' && typeof m.media_id === 'number' && (
               <img className="cw-img" src={C.mediaUrl(m.media_id)} alt={m.body} loading="lazy" />
             )}
+            <ReportButton sequence={m.sequence} onNotice={onWithheld} />
           </li>
         ))}
         {pending && (
@@ -500,10 +525,73 @@ function ImageComposer({ room, onNotice }: { room: C.RoomDetail; onNotice: (text
   )
 }
 
+// ── Report a message ────────────────────────────────────────────────────────────────────────
+
+function ReportButton({ sequence, onNotice }: { sequence: number; onNotice: (t: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const [reason, setReason] = useState('abuse')
+  const [note, setNote] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    setBusy(true)
+    try {
+      await C.report(sequence, reason, note.trim() || undefined)
+      setOpen(false); setNote('')
+      onNotice('Thank you — a moderator will review that report.')
+    } catch (err) {
+      onNotice(err instanceof C.CommunityError ? err.message : 'Could not send that report.')
+    } finally { setBusy(false) }
+  }
+
+  if (!open) {
+    return (
+      <button type="button" className="cw-linkish" onClick={() => setOpen(true)} aria-label={`Report message ${sequence}`}>
+        Report
+      </button>
+    )
+  }
+  return (
+    <form onSubmit={submit} className="cw-report">
+      <label htmlFor={`cw-rep-${sequence}`}>Why are you reporting this?</label>
+      <select id={`cw-rep-${sequence}`} value={reason} onChange={e => setReason(e.target.value)}>
+        <option value="abuse">Abuse or harassment</option>
+        <option value="hate">Hate</option>
+        <option value="spam">Spam or advertising</option>
+        <option value="pii">Personal contact details</option>
+        <option value="other">Something else</option>
+      </select>
+      <label htmlFor={`cw-rep-note-${sequence}`}>Optional note</label>
+      <input id={`cw-rep-note-${sequence}`} value={note} maxLength={400} onChange={e => setNote(e.target.value)} />
+      <div className="cw-actions">
+        <button type="submit" disabled={busy}>{busy ? 'Sending…' : 'Submit report'}</button>
+        <button type="button" onClick={() => setOpen(false)}>Cancel</button>
+      </div>
+    </form>
+  )
+}
+
 // ── Ejection + appeal ───────────────────────────────────────────────────────────────────────
 
 function Ejected({ appeal, onBack }: { appeal: C.SendResult['appeal']; onBack: () => void }) {
   const [copied, setCopied] = useState(false)
+  const [submission, setSubmission] = useState('')
+  const [appealNotice, setAppealNotice] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  async function sendAppeal(e: React.FormEvent) {
+    e.preventDefault()
+    if (!appeal) return
+    setBusy(true); setAppealNotice(null)
+    try {
+      await C.submitAppeal(appeal.reference, appeal.credential, submission.trim())
+      setAppealNotice('Your appeal has been submitted. Keep your reference and appeal code.')
+    } catch (err) {
+      setAppealNotice(err instanceof C.CommunityError ? err.message : 'Could not submit that appeal.')
+    } finally { setBusy(false) }
+  }
+
   return (
     <section aria-labelledby="ej-h" className="cw-ejected">
       <h2 id="ej-h">Your session has ended</h2>
@@ -534,7 +622,18 @@ function Ejected({ appeal, onBack }: { appeal: C.SendResult['appeal']; onBack: (
             Copy appeal details
           </button>
           {copied && <span role="status"> Copied.</span>}
-          <p><a href={appeal.how}>How to appeal</a></p>
+
+          <form onSubmit={sendAppeal} className="cw-appeal-form">
+            <label htmlFor="cw-appeal-body">Explain why this should be reviewed</label>
+            <textarea
+              id="cw-appeal-body" rows={4} maxLength={2000} required
+              value={submission} onChange={e => setSubmission(e.target.value)}
+            />
+            <button type="submit" disabled={busy || submission.trim().length < 10}>
+              {busy ? 'Submitting…' : 'Submit appeal'}
+            </button>
+          </form>
+          {appealNotice && <p role="status" className="cw-notice cw-notice-info">{appealNotice}</p>}
         </>
       )}
 

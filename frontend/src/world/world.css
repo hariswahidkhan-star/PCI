@@ -55,6 +55,15 @@ select { padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; f
 .cw-err { color: #8a1c1c; font-weight: 600; }
 .cw-linkish { background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; font: inherit; color: inherit; }
 .cw-appeal code { user-select: all; word-break: break-all; }
+.cw-report { display: grid; gap: 0.35rem; margin: 0.35rem 0; padding: 0.5rem 0; width: 100%; }
+.cw-report select, .cw-report input, .cw-appeal-form textarea {
+  font: inherit; padding: 6px 8px; border: 1px solid #d8d8c8; border-radius: 4px; max-width: 100%;
+}
+.cw-appeal-form { margin: 1rem 0; display: grid; gap: 0.4rem; }
+.cw-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.cw-notice-info { background: #eef5ea; color: #24451c; }
+.cw-notice-withheld { background: #fdf3e3; color: #6b3f00; }
+.cw-notice-error { background: #fdeaea; color: #8a1c1c; }
 
 /* A published image sits inside the transcript, bounded so a wide picture cannot force the page to
    scroll sideways — WCAG 1.4.10 reflow applies to a room full of user-supplied images too, and a
