@@ -1,79 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PCI World — feature preview (frontend only)</title>
-<meta name="description" content="Every PCI World feature as a clickable frontend, with no backend, database or feature flags involved. A specification for the team building the server side.">
-<!-- A prototype must never be indexed as though it were the product. -->
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#0E1525">
+<title>Platform tour — PCI World</title>
+<meta name="description" content="A guided, frontend-only walkthrough of everything coming to PCI World: community rooms, the open forum, verified careers, contributor publishing and the operator's launch board.">
+<!-- A tour of unlaunched features must never be indexed as though it were the product. -->
 <meta name="robots" content="noindex, nofollow">
 <link rel="canonical" href="/world/preview/">
-<link rel="stylesheet" href="/world/preview/preview.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230E1525%27/%3E%3Crect x=%2712%27 y=%2744%27 width=%2740%27 height=%274%27 rx=%272%27 fill=%27%23C13329%27/%3E%3Ctext x=%2732%27 y=%2738%27 font-family=%27Archivo,Arial%27 font-weight=%27900%27 font-size=%2722%27 fill=%27white%27 text-anchor=%27middle%27 letter-spacing=%27-1%27%3EPW%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/world/preview/tour.css">
+<script>
+/* The tour used to be one hash-routed page; those deep links were sent around in messages and
+   documents, so every old address still lands on the screen it named. */
+(function () {
+  var map = {
+    rooms: 'community/#rooms', room: 'community/#room',
+    forum: 'forum/#discussions', thread: 'forum/#thread', composer: 'forum/#composer',
+    jobs: 'careers/#jobs', job: 'careers/#job', employer: 'careers/#employer', apps: 'careers/#applications',
+    contrib: 'publishing/#contributor', editor: 'publishing/#editor',
+    admin: 'operations/#admin'
+  };
+  var k = (location.hash || '').replace(/^#\/?/, '');
+  if (map[k]) location.replace(map[k]);
+})();
+</script>
 </head>
 <body>
-
-<!--
-  PCI WORLD — FEATURE PREVIEW, FRONTEND ONLY.
-
-  WHY THIS FILE EXISTS. The real surfaces (rooms, forum, jobs, contributor publishing) each ship
-  behind a feature flag that seeds OFF, and several of them additionally refuse to run until legal
-  and moderation decisions land. That is deliberate and stays that way — but it also means a
-  visitor to the deployed site sees none of them, and a developer picking up the backend has
-  nothing to look at.
-
-  So this page is the whole product surface drawn out, served as PLAIN STATIC FILES:
-    • no API calls, so no endpoint can 404 it;
-    • no feature flag, so nothing can hide it;
-    • no database, so an empty deployment still shows every screen.
-
-  It lives under /world/preview/ because /world/* is inside WorldOnly.Allowed(), which means it
-  serves on a World-only deployment as well as the full platform. Everything is inline or
-  same-origin: the site's CSP is script-src 'self' 'unsafe-inline', with no external hosts here.
-
-  WHAT IT IS NOT: working software. Nothing is stored, sent or checked. Each screen carries a strip
-  naming the rules the real server enforces, precisely because this drawing of them cannot enforce
-  anything.
--->
-
-<div class="wrap">
-  <nav class="rail" aria-label="Surfaces">
-    <div class="rail-brand">
-      <b>PCI World</b>
-      <span>Feature preview · frontend only</span>
+<a class="visually-hidden" href="#main">Skip to content</a>
+<header class="world">
+  <div class="toprail">
+    <div class="shell">
+      <span class="rail-note">PCI World is a global learning and challenge platform operated by the Project Controls Institute.</span>
+      <a class="ext" href="https://projectcontrolsinstitute.org" target="_blank" rel="noopener noreferrer">Visit the Project Controls Institute <span aria-hidden="true">&#8599;</span><span class="visually-hidden">(opens the official Institute website in a new tab)</span></a>
     </div>
-    <p class="rail-note">Static mock-up for the team building the backend. No server, no database.
-      Every name, job and message is invented for this page.</p>
+  </div>
+  <div class="shell">
+    <a class="brand" href="/world">
+      <span class="wordmark">PCI World</span>
+      <small>From the Project<br>Controls Institute</small>
+    </a>
+    <nav aria-label="Platform tour">
+      <a href="/world/preview/" aria-current="page">Overview</a>
+      <a href="/world/preview/community/">Community</a>
+      <a href="/world/preview/forum/">Forum</a>
+      <a href="/world/preview/careers/">Careers</a>
+      <a href="/world/preview/publishing/">Publishing</a>
+      <a href="/world/preview/operations/">Operations</a>
+      <a class="exit" href="/world">PCI World <span aria-hidden="true">&#8594;</span></a>
+    </nav>
+  </div>
+  <div class="tourbar">
+    <div class="shell">
+      <span class="tb-badge">Platform tour</span>
+      <span class="tb-note">A frontend-only walkthrough of surfaces that ship switched off. Nothing on these pages is stored, sent or checked.</span>
+    </div>
+  </div>
+</header>
 
-    <h3>Community</h3>
-    <button data-s="rooms" aria-current="true">Rooms<small>guest chat, pre-broadcast review</small></button>
-    <button data-s="room">Inside a room<small>what a guest actually sees</small></button>
+<main id="main" class="shell" tabindex="-1">
 
-    <h3>Forum</h3>
-    <button data-s="forum">Discussions<small>public index</small></button>
-    <button data-s="thread">A thread<small>crawlable page</small></button>
-    <button data-s="composer">Composer<small>held-before-publication</small></button>
+  <span class="kicker">Five areas &middot; twelve screens</span>
+  <h1>The whole of PCI World, drawn before launch.</h1>
+  <div class="uline"></div>
+  <p class="lede">Community rooms, an open forum, verified careers, contributor publishing and the
+    operator's launch board are built, tested and deliberately switched off until the moderation,
+    legal and editorial decisions land. These pages walk the entire surface anyway — every screen,
+    every rule, every refusal — so nobody has to imagine what launches.</p>
+  <div class="cta-row">
+    <a class="btn" href="/world/preview/community/">Start the tour
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a class="btn secondary" href="/world">Back to today&rsquo;s challenge</a>
+  </div>
+  <ul class="hero-facts">
+    <li>Five areas, twelve screens</li>
+    <li>Every rule quoted from the real server</li>
+    <li>Static pages — no flag can hide them, no API can 404 them</li>
+  </ul>
 
-    <h3>Jobs</h3>
-    <button data-s="jobs">Job board<small>verified employers only</small></button>
-    <button data-s="job">A job page<small>with apply</small></button>
-    <button data-s="employer">Employer portal<small>postings and applicants</small></button>
-    <button data-s="apps">My applications<small>consent, withdrawal</small></button>
+  <div class="grid-3" style="margin-top:56px">
+    <a class="tile tv-r" href="/world/preview/community/">
+      <span class="step-n">01</span>
+      <h3>Community</h3>
+      <p>Short-lived topical rooms, open to guests, where every message is reviewed before anyone
+        sees it.</p>
+      <ul class="contains">
+        <li>Rooms</li>
+        <li>Inside a room</li>
+      </ul>
+      <span class="go">Explore Community
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <a class="tile tv-r" href="/world/preview/forum/">
+      <span class="step-n">02</span>
+      <h3>Forum</h3>
+      <p>Project controls practice, discussed in the open — readable by anyone, crawlable by search
+        engines, held before publication.</p>
+      <ul class="contains">
+        <li>Discussions</li>
+        <li>A thread</li>
+        <li>The composer</li>
+      </ul>
+      <span class="go">Explore the Forum
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <a class="tile tv-r" href="/world/preview/careers/">
+      <span class="step-n">03</span>
+      <h3>Careers</h3>
+      <p>Roles from employers a person at PCI has verified, applied to with recorded consent that
+        the applicant can withdraw.</p>
+      <ul class="contains">
+        <li>Job board</li>
+        <li>A job page</li>
+        <li>Employer portal</li>
+        <li>My applications</li>
+      </ul>
+      <span class="go">Explore Careers
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <a class="tile tv-r" href="/world/preview/publishing/">
+      <span class="step-n">04</span>
+      <h3>Publishing</h3>
+      <p>A contributor desk with declared interests, and an editor&rsquo;s queue where nobody — however
+        senior — can approve their own work.</p>
+      <ul class="contains">
+        <li>Contributor desk</li>
+        <li>Editor&rsquo;s queue</li>
+      </ul>
+      <span class="go">Explore Publishing
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <a class="tile tv-r" href="/world/preview/operations/">
+      <span class="step-n">05</span>
+      <h3>Operations</h3>
+      <p>The operator&rsquo;s launch board: every feature ships off, each has a switch, and some refuse
+        to move until real policy text is published.</p>
+      <ul class="contains">
+        <li>World Admin</li>
+      </ul>
+      <span class="go">Explore Operations
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+    <a class="tile tv-r" href="/world">
+      <span class="step-n">Live today</span>
+      <h3>What already runs</h3>
+      <p>The daily challenge, the challenge library, Writing and the Passport are live now — the
+        tour covers only what comes next.</p>
+      <span class="go">Go to PCI World
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+  </div>
 
-    <h3>Publishing</h3>
-    <button data-s="contrib">Contributor desk<small>write, declare, submit</small></button>
-    <button data-s="editor">Editor's queue<small>maker-checker refusal</small></button>
+  <div class="card card--noir tv-r" style="margin-top:56px">
+    <span class="kicker">Why a tour, not the product</span>
+    <h2>Launch is a decision, not a deployment</h2>
+    <p style="max-width:72ch">Each of these surfaces sits behind a feature switch that ships off, and the ones that
+      touch people hardest refuse to run until a prerequisite is recorded: a contracted moderation
+      provider for the rooms, an applicant privacy notice for careers, contributor terms for
+      publishing. That refusal lives in the endpoint, not the interface — so these pages can show
+      you everything while the deployed routes honestly answer 404. When the decisions land, an
+      operator turns each surface on from the launch board. Nothing here requires a redeploy.</p>
+  </div>
 
-    <h3>Operator</h3>
-    <button data-s="admin">World Admin<small>flags and queues</small></button>
+  <h2 class="tv-r" style="margin-top:64px">How to read this tour</h2>
+  <div class="uline tv-r"></div>
+  <div class="grid-3">
+    <div class="tile tv-r">
+      <span class="step-n">A</span>
+      <h3>The amber registers are real</h3>
+      <p>Every screen opens with the rules the real server enforces. Those sentences are quoted
+        from the system, not invented for the page — the drawing cannot enforce them, the
+        endpoints do.</p>
+    </div>
+    <div class="tile tv-r">
+      <span class="step-n">B</span>
+      <h3>Nothing here is wired</h3>
+      <p>These are plain static pages: no API calls, no database, no feature flag. Buttons answer
+        with the words the product uses, and nothing you type is stored, sent or checked.</p>
+    </div>
+    <div class="tile tv-r">
+      <span class="step-n">C</span>
+      <h3>The endpoints already exist</h3>
+      <p>Each screen lists the API calls it needs under &ldquo;What this screen calls&rdquo;. Almost all of
+        them are built and tested today — the tour is the map for whoever wires the last mile.</p>
+    </div>
+  </div>
 
-    <p class="rail-foot">
-      <a href="/world">&larr; Back to PCI World</a>
-    </p>
-  </nav>
+</main>
 
-  <main class="stage" id="stage"></main>
-</div>
+<footer class="world">
+  <div class="shell">
+    <div class="ft-grid">
+      <div>
+        <div class="ft-brand"><span class="wordmark">PCI World</span><small>From the Project Controls Institute</small></div>
+        <p style="margin:0;max-width:38ch;line-height:1.65">PCI World is a global learning and challenge platform operated by the Project Controls Institute.</p>
+        <p style="margin:14px 0 0;max-width:38ch;line-height:1.65;color:#7C8CA0;font-size:13.5px">
+          This tour is a static drawing of the product surface. The features it shows ship switched
+          off, and each launches only when its moderation, legal or editorial prerequisite is met.</p>
+      </div>
+      <nav aria-label="The tour">
+        <p class="ft-h">The tour</p>
+        <ul>
+          <li><a href="/world/preview/">Overview</a></li>
+          <li><a href="/world/preview/community/">Community</a></li>
+          <li><a href="/world/preview/forum/">Forum</a></li>
+          <li><a href="/world/preview/careers/">Careers</a></li>
+          <li><a href="/world/preview/publishing/">Publishing</a></li>
+          <li><a href="/world/preview/operations/">Operations</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Live today">
+        <p class="ft-h">Live today</p>
+        <ul>
+          <li><a href="/world">Today&rsquo;s Challenge</a></li>
+          <li><a href="/world/archive">Challenge Library</a></li>
+          <li><a href="/world/blog">Writing</a></li>
+          <li><a href="/world/account">Your Passport</a></li>
+          <li><a href="/world/about">About PCI World</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="The Institute">
+        <p class="ft-h">The Institute</p>
+        <ul>
+          <li><a href="https://projectcontrolsinstitute.org" target="_blank" rel="noopener noreferrer">Visit the Project Controls Institute <span aria-hidden="true">&#8599;</span></a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="ft-base">
+      <div class="fine">PCI World challenges are educational practice and professional-development
+        evidence. They are not PCI certification examinations, and completing one does not grant or
+        affect any PCI certification, membership or credential. Every name, organisation, job and
+        message on this tour is invented for these pages.</div>
+    </div>
+  </div>
+</footer>
 
-<script src="/world/preview/preview.js"></script>
+<script src="/world/preview/tour.js"></script>
 </body>
 </html>

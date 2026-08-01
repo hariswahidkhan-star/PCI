@@ -81,13 +81,14 @@ public static class WorldPages
             sb.Append($"<a href=\"/world/forum\"{Cur(canonicalPath, "/world/forum")}>Forum</a>");
         if (Settings.Bool(db, "pciworld_careers_enabled", false))
             sb.Append($"<a href=\"/world/careers\"{Cur(canonicalPath, "/world/careers")}>Jobs</a>");
-        // The frontend preview is UNCONDITIONAL, and that is the point of it. Every link above
+        // The platform tour is UNCONDITIONAL, and that is the point of it. Every link above
         // depends on a flag, so on a deployment with the flags off — which is every deployment
         // today — the nav shows none of this and a visitor cannot tell the features exist. The
-        // preview is a static file with no API, no flag and no database behind it, so it cannot
+        // tour is static files with no API, no flag and no database behind them, so it cannot
         // 404 and cannot be hidden. It is how somebody sees the whole product surface, and how a
-        // developer picking up the server side sees what they are building toward.
-        sb.Append($"<a href=\"/world/preview/\"{Cur(canonicalPath, "/world/preview")}>Preview</a>");
+        // developer picking up the server side sees what they are building toward. The path stays
+        // /world/preview/ — it is pinned by tests and by links already in circulation.
+        sb.Append($"<a href=\"/world/preview/\"{Cur(canonicalPath, "/world/preview")}>Explore</a>");
         return sb.ToString();
     }
 
