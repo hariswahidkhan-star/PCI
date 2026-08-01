@@ -5,6 +5,7 @@ using Xunit;
 namespace PCI.Backend.Tests;
 
 /// <summary>Turning community/forum ON must leave a joinable room and a publishing moderator.</summary>
+[Collection(DbCollection.Name)]
 public class CommunityBootstrapTests
 {
     static Db NewDb()
