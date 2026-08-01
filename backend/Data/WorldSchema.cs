@@ -688,7 +688,7 @@ public static class WorldSchema
     /// implies the old credential is lost or compromised, and a stolen bearer token must not
     /// outlive the reset. Enforces the same 12-character minimum as the password-change endpoint.
     /// Returns false (and changes nothing) on a short password or a missing owner account.</summary>
-    internal static bool OwnerPasswordReset(Db db, string pw)
+    public static bool OwnerPasswordReset(Db db, string pw)
     {
         if (pw.Length < 12) return false;
         var a = db.QueryOne("SELECT id FROM pciworld_admin_users WHERE email='owner@pciworld.local'");
