@@ -2,17 +2,17 @@
 
 ## Verdict
 
-**Current open PRs are green and mergeable.** The wave of red `frontend` checks on 31 July
-was a single calendar-scheduling unit-test flake that #215 already mitigated. This follow-up
-pins the test clock and hardens deadline parsing so the failure cannot return at month-end.
+**Root cause fixed and merged.** The wave of red `frontend` checks on 31 July was a
+calendar-scheduling unit-test flake. #215 clicked Next month; #222 pinned fake timers and
+hardened deadline parsing. Follow-up softens coverage-artifact noise and wires `userEvent`
+to fake timers in the same suite.
 
-| Open PR | Title | CI | Mergeable |
-|--------:|-------|----|-----------|
-| #219 | Appendix F / books rebuild | Success | CLEAN |
-| #220 | PCIOnboarding.md (detailed) | Success | CLEAN |
-| #221 | PCIOnboarding.md (onboarding guide) | Success | CLEAN |
-
-Latest `main` CI (`30658074765`, after books merge) — **all 12 jobs success**.
+| PR | Title | Outcome |
+|---:|-------|---------|
+| #219 | Appendix F / books rebuild | Merged |
+| #220 | PCIOnboarding.md (detailed) | Merged |
+| #221 | PCIOnboarding.md (duplicate) | Closed |
+| #222 | Exam-scheduling test hardening | Merged |
 
 ---
 
@@ -47,14 +47,10 @@ regression case, plus safer deadline `Date.parse` (avoid `…Z` + `Z` → `NaN`)
 - Branch-protection details are not readable with this token (403); operationally, recent merges
   succeeded once `frontend` went green.
 
-**Note:** #220 and #221 both add onboarding docs — review for duplication before merging both.
-
----
-
 ## How to merge when you still see a red X
 
 1. Open the PR → **Checks** → confirm you are looking at the **latest** run, not an older failure
-   from before #215.
+   from before #222.
 2. If the latest run is green and Mergeable = CLEAN, merge (or ask an agent with write access).
 3. If an older run is red only, **Re-run failed jobs** is optional — GitHub merge uses the latest
    commit’s checks.
@@ -65,7 +61,8 @@ regression case, plus safer deadline `Date.parse` (avoid `…Z` + `Z` → `NaN`)
 
 | Risk | Severity | Status |
 |------|----------|--------|
-| Wall-clock / month-end scheduling unit tests | P1 → mitigated | Hardened this cycle |
-| Coverage upload `if-no-files-found: error` after a failed test | P2 | Noise only; consider `warn` |
+| Wall-clock / month-end scheduling unit tests | P1 → mitigated | Hardened in #222 |
+| Coverage upload `if-no-files-found: error` after a failed test | P2 | Softened to `warn` |
+| Fake timers + `userEvent` without `advanceTimers` | P2 | Identity upload tests wired |
 | Node 20 deprecation warnings on Actions | P3 | Informational |
-| Duplicate onboarding PRs #220 / #221 | Process | Choose one |
+| Duplicate onboarding PRs #220 / #221 | Process | #220 merged; #221 closed |

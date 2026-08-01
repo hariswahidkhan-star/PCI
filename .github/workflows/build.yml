@@ -426,7 +426,8 @@ jobs:
           name: frontend-coverage
           path: frontend/coverage
           retention-days: 30
-          if-no-files-found: error
+          # When unit tests fail early there is no coverage dir — warn instead of a second red X.
+          if-no-files-found: warn
       - name: Production build (student + admin + world + world-admin)
         run: npm run build
       - name: Fail if any app produced no assets
