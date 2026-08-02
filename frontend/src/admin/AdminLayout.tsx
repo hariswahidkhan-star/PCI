@@ -178,8 +178,8 @@ export default function AdminLayout() {
       <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
       <aside className={'sidebar' + (menuOpen ? ' open' : '')}>
         <div className="brand">
-          <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-          <span>PCI Global Admin</span>
+          <img src="/assets/logo.png" alt="PCI ai" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <span>PCI ai Admin</span>
         </div>
         <div className="nav-filter">
           <Icon name="search" size={15} />

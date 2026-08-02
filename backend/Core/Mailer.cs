@@ -23,7 +23,7 @@ public static class Mailer
 
     /// <summary>Resend's shared test sender. It delivers only to the account owner's own address, so a
     /// deployment silently left on it looks configured while no candidate ever receives mail.</summary>
-    public const string ResendTestSender = "PCI Global <onboarding@resend.dev>";
+    public const string ResendTestSender = "PCI ai <onboarding@resend.dev>";
 
     /// <summary>The configured sender, exactly as the send path resolves it — including the fallback
     /// each provider would use. Surfaced by system-check so an operator can see what recipients see.</summary>

@@ -140,8 +140,8 @@ public static class Account
                 H.GetS(b, "country"), H.GetS(b, "mobile"));
             log(H.Ln(u["id"]), "account_created", "self signup");
             var baseUrl = Mailer.BaseUrl(req);
-            Mailer.Send(db, H.Ln(u["id"]), email, "account_created", "Welcome to PCI Global — your student account is ready",
-                $"<p>Hi {System.Net.WebUtility.HtmlEncode(first)},</p><p>Your PCI Global student account is ready. " +
+            Mailer.Send(db, H.Ln(u["id"]), email, "account_created", "Welcome to PCI ai — your student account is ready",
+                $"<p>Hi {System.Net.WebUtility.HtmlEncode(first)},</p><p>Your PCI ai student account is ready. " +
                 $"Sign in any time at <a href=\"{baseUrl}/app/\">{baseUrl}/app/</a> to build your profile, explore certifications " +
                 "and activate your membership when you are ready — there is nothing to pay until you choose to enrol.</p>" +
                 "<p>— Project Controls Institute Global</p>");

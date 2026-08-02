@@ -6,7 +6,7 @@ export type Entry = Partial<Record<Lang, string>> & { en: string }
 
 export const CATALOG: Record<string, Entry> = {
   // ---- app shell / sidebar / topbar ----
-  'shell.portal': { en: 'PCI Global Portal', ko: 'PCI 글로벌 포털', ar: 'بوابة PCI العالمية', es: 'Portal PCI Global', fr: 'Portail PCI Global', zh: 'PCI 全球门户', ru: 'Портал PCI Global' },
+  'shell.portal': { en: 'PCI ai Portal', ko: 'PCI ai 포털', ar: 'بوابة PCI ai', es: 'Portal PCI ai', fr: 'Portail PCI ai', zh: 'PCI ai 门户', ru: 'Портал PCI ai' },
   'shell.menu': { en: 'Menu', ko: '메뉴', ar: 'القائمة', es: 'Menú', fr: 'Menu', zh: '菜单', ru: 'Меню' },
   'shell.studentPortal': { en: 'Student Portal', ko: '학생 포털', ar: 'بوابة الطالب', es: 'Portal del estudiante', fr: 'Portail étudiant', zh: '学生门户', ru: 'Портал студента' },
   'shell.signOut': { en: 'Sign out', ko: '로그아웃', ar: 'تسجيل الخروج', es: 'Cerrar sesión', fr: 'Se déconnecter', zh: '退出登录', ru: 'Выйти' },
@@ -512,7 +512,7 @@ export const CATALOG: Record<string, Entry> = {
 
   // ---- Support (sup.) ----
   'sup.title': { en: 'Support', ko: '지원', ar: 'الدعم', es: 'Soporte', fr: 'Assistance', zh: '支持', ru: 'Поддержка' },
-  'sup.subtitle': { en: 'Questions about exams, membership or billing — answered by the PCI Global team.', ko: '시험, 멤버십, 결제에 관한 문의 — PCI Global 팀이 답변해 드립니다.', ar: 'أسئلة حول الاختبارات أو العضوية أو الفوترة — يجيب عنها فريق PCI Global.', es: 'Preguntas sobre exámenes, membresía o facturación, respondidas por el equipo de PCI Global.', fr: 'Questions sur les examens, l\'adhésion ou la facturation — le service PCI Global vous répond.', zh: '有关考试、会员或账单的问题，由 PCI Global 团队解答。', ru: 'Вопросы об экзаменах, членстве или оплате — на них отвечает команда PCI Global.' },
+  'sup.subtitle': { en: 'Questions about exams, membership or billing — answered by the PCI ai team.', ko: '시험, 멤버십, 결제에 관한 문의 — PCI ai 팀이 답변해 드립니다.', ar: 'أسئلة حول الاختبارات أو العضوية أو الفوترة — يجيب عنها فريق PCI ai.', es: 'Preguntas sobre exámenes, membresía o facturación, respondidas por el equipo de PCI ai.', fr: 'Questions sur les examens, l\'adhésion ou la facturation — le service PCI ai vous répond.', zh: '有关考试、会员或账单的问题，由 PCI ai 团队解答。', ru: 'Вопросы об экзаменах, членстве или оплате — на них отвечает команда PCI ai.' },
   'sup.newRequest': { en: 'New request', ko: '새 요청', ar: 'طلب جديد', es: 'Nueva solicitud', fr: 'Nouvelle demande', zh: '新建请求', ru: 'Новый запрос' },
   'sup.subject': { en: 'Subject', ko: '제목', ar: 'الموضوع', es: 'Asunto', fr: 'Objet', zh: '主题', ru: 'Тема' },
   'sup.category': { en: 'Category', ko: '분류', ar: 'الفئة', es: 'Categoría', fr: 'Catégorie', zh: '类别', ru: 'Категория' },

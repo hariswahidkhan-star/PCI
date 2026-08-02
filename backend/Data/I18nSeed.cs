@@ -13,7 +13,7 @@ namespace PCI.Backend.Data;
 /// </summary>
 public static class I18nSeed
 {
-    const int Version = 3;   // v3: + honorary/announcement/IDV/downloads content added since v2
+    const int Version = 4;   // v4: "PCI Global" → "PCI ai" brand rename (rekeyed wordmark/congress regions)
 
     public static void Apply(Db db)
     {

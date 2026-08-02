@@ -69,7 +69,7 @@ export default function Layout() {
       <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
       <aside className={'sidebar sidebar--bright' + (menuOpen ? ' open' : '')}>
         <div className="brand">
-          <img src="/assets/logo.png" alt="PCI Global" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <img src="/assets/logo.png" alt="PCI ai" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <span>{t('shell.portal')}</span>
         </div>
         <div className="nav-label">{t('shell.menu')}</div>
