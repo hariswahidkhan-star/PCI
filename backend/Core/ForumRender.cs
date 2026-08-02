@@ -122,8 +122,75 @@ public static class ForumRender
             sb.Append("</li>");
         }
         sb.Append("</ol></article>");
+
+        // WRITE path lives in the React composer. The SSR page is the crawlable archive; a reply
+        // CTA deep-links into /world-app/forum with the thread id so the same ForumApp that the
+        // dashboard mounts can also reply here. Without this seam, people could read discussions
+        // and start new ones from the dashboard, but never reply on the page they were reading.
+        var tid = H.L(thread["id"]);
+        var locked = H.Str(thread["state"]) == "locked";
+        sb.Append("<aside class=\"wf-compose\" aria-label=\"Join the discussion\">");
+        if (locked)
+            sb.Append("<p role=\"status\">This discussion is closed — new replies are not accepted.</p>");
+        else
+        {
+            var href = $"/world-app/forum?thread={tid}&title={Uri.EscapeDataString(title)}";
+            sb.Append($"<p><a class=\"btn\" href=\"{Esc(href)}\">Reply to this discussion</a></p>");
+            sb.Append("<p class=\"wf-compose-help\">Reading needs no account. Replying uses your PCI World sign-in.</p>");
+        }
+        sb.Append($"<p><a href=\"/world/forum/{Esc(categorySlug)}\">More in {Esc(H.Str(thread["category_title"]) ?? categorySlug)}</a>"
+                  + " · <a href=\"/world/forum\">All discussions</a>"
+                  + " · <a href=\"/world-app/forum\">Start a new discussion</a></p>");
+        sb.Append("</aside>");
+
         sb.Append(JsonLd(title, canonical, thread, posts, solved));
         return Document(title, Summary(posts), canonical, sb.ToString());
+    }
+
+    /// <summary>Category listing — the breadcrumb target that previously 404'd.</summary>
+    public static string? Category(Db db, string categorySlug, string canonicalBase = "")
+    {
+        if (!ForumPosts.Enabled(db)) return null;
+        var cat = db.QueryOne(
+            @"SELECT slug,title,description,state FROM pciworld_forum_categories
+              WHERE slug=? AND state IN ('open','read_only')", categorySlug);
+        if (cat is null) return null;
+
+        var title = H.Str(cat["title"]) ?? categorySlug;
+        var canonical = $"{canonicalBase}/world/forum/{Uri.EscapeDataString(categorySlug)}";
+        var sb = new StringBuilder();
+        sb.Append("<nav class=\"wf-crumbs\" aria-label=\"Breadcrumb\"><ol>");
+        sb.Append("<li><a href=\"/world/forum\">Forum</a></li>");
+        sb.Append($"<li aria-current=\"page\">{Esc(title)}</li>");
+        sb.Append("</ol></nav>");
+        sb.Append($"<h1>{Esc(title)}</h1>");
+        if (!string.IsNullOrWhiteSpace(H.Str(cat["description"])))
+            sb.Append($"<p>{Esc(H.Str(cat["description"]))}</p>");
+
+        var threads = db.Query(
+            @"SELECT t.slug,t.title FROM pciworld_forum_threads t
+              JOIN pciworld_forum_categories c ON c.id = t.category_id
+              WHERE c.slug=? AND t.state='open'
+                AND EXISTS(SELECT 1 FROM pciworld_forum_posts p
+                            WHERE p.thread_id=t.id AND p.kind='opening' AND p.state='published')
+              ORDER BY t.id DESC LIMIT 50", categorySlug);
+
+        if (threads.Count == 0)
+            sb.Append("<p>No discussions here yet. "
+                      + "<a href=\"/world-app/forum\">Start the first one</a>.</p>");
+        else
+        {
+            sb.Append("<ul class=\"wf-posts\">");
+            foreach (var t in threads)
+            {
+                sb.Append("<li class=\"wf-post\">");
+                sb.Append($"<a href=\"/world/forum/{Esc(categorySlug)}/{Esc(H.Str(t["slug"]))}\">{Esc(H.Str(t["title"]))}</a>");
+                sb.Append("</li>");
+            }
+            sb.Append("</ul>");
+        }
+        sb.Append("<p><a href=\"/world-app/forum\">Start a discussion</a> · <a href=\"/world/forum\">All categories</a></p>");
+        return Document(title, H.Str(cat["description"]) ?? title, canonical, sb.ToString());
     }
 
     /// <summary>
@@ -163,12 +230,14 @@ public static class ForumRender
         var sb = new StringBuilder();
         sb.Append("<h1>PCI World forum</h1>");
         sb.Append("<p>Project controls practice, discussed in the open. Reading needs no account.</p>");
+        sb.Append("<p><a class=\"btn\" href=\"/world-app/forum\">Start a discussion</a> "
+                  + "· <a href=\"/world-app/community\">Community rooms</a></p>");
         sb.Append("<ul class=\"wf-posts\">");
         foreach (var c in cats)
         {
             var slug = H.Str(c["slug"]) ?? "";
             sb.Append("<li class=\"wf-post\">");
-            sb.Append($"<h2>{Esc(H.Str(c["title"]))}</h2>");
+            sb.Append($"<h2><a href=\"/world/forum/{Esc(slug)}\">{Esc(H.Str(c["title"]))}</a></h2>");
             if (!string.IsNullOrWhiteSpace(H.Str(c["description"])))
                 sb.Append($"<p>{Esc(H.Str(c["description"]))}</p>");
 

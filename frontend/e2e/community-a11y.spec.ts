@@ -21,6 +21,14 @@ const ROOM = 'a11y-lobby'
 let nameCounter = 0
 const uniqueName = (prefix: string) => `${prefix} ${Date.now() % 100000}${nameCounter++}`
 
+/** Jurisdiction may be a <select> (when the catalogue lists markets) or a free-text input. */
+async function setJurisdiction(page: import('@playwright/test').Page, code: string) {
+  const field = page.getByLabel('Country or region')
+  const tag = await field.evaluate(el => el.tagName)
+  if (tag === 'SELECT') await field.selectOption(code)
+  else await field.fill(code)
+}
+
 // Serious AND critical fail. The repo's house rule for the portal logs serious and fails only on
 // critical; this surface is stricter because a live transcript that a screen reader cannot follow
 // is not a degraded experience, it is an unusable one.
@@ -82,7 +90,7 @@ test.describe('PCI World community rooms accessibility', () => {
     if (await enter.count() === 0) test.skip(true, 'community rooms not enabled on this server')
     await enter.click()
     await page.getByLabel('Date of birth').fill('1990-05-04')
-    await page.getByLabel('Country or region').fill('GB')
+    await setJurisdiction(page, 'GB')
     await page.getByLabel('Display name').fill('admin')          // reserved — guaranteed refusal
     await page.getByRole('checkbox').check()
     await page.getByRole('button', { name: 'Join room' }).click()
@@ -96,7 +104,7 @@ test.describe('PCI World community rooms accessibility', () => {
     if (await enter.count() === 0) test.skip(true, 'community rooms not enabled on this server')
     await enter.click()
     await page.getByLabel('Date of birth').fill('1990-05-04')
-    await page.getByLabel('Country or region').fill('GB')
+    await setJurisdiction(page, 'GB')
     await page.getByLabel('Display name').fill(uniqueName('Axe Tester'))
     await page.getByRole('checkbox').check()
     await page.getByRole('button', { name: 'Join room' }).click()
@@ -116,7 +124,7 @@ test.describe('PCI World community rooms accessibility', () => {
     if (await enter.count() === 0) test.skip(true, 'community rooms not enabled on this server')
     await enter.click()
     await page.getByLabel('Date of birth').fill('1990-05-04')
-    await page.getByLabel('Country or region').fill('GB')
+    await setJurisdiction(page, 'GB')
     await page.getByLabel('Display name').fill(uniqueName('Semantics Tester'))
     await page.getByRole('checkbox').check()
     await page.getByRole('button', { name: 'Join room' }).click()

@@ -217,6 +217,12 @@ public static class WorldLaunch
 
             Settings.Put(db, f.Flag, on == true ? "1" : "0");
 
+            // Rooms / forum with an empty catalogue, empty jurisdiction list, or NullModerator are
+            // "on" in the launch board but unusable for every participant. Bootstrap fills those
+            // gaps the first time either surface is enabled.
+            if (on == true && f.Flag is "world_community_enabled" or "pciworld_forum_enabled")
+                CommunityBootstrap.OnFeatureEnabled(db, m => log(adm.Id, "world_launch_bootstrap", m));
+
             // Turning a feature OFF leaves anything that depends on it enabled-but-inert. Say so
             // rather than silently changing a flag the operator did not ask about: an image flag
             // that reads '1' while rooms are closed is a lie waiting to be believed on the day the

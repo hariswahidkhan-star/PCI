@@ -247,13 +247,20 @@ function Home({ d, reload, onSignOut }: { d: Dashboard; reload: () => Promise<vo
       )}
 
       <div className="card">
+        <h2>Talk with practitioners</h2>
+        <p><small>Chat rooms are open to guests. The forum is a crawlable archive — read without an account, write when signed in.</small></p>
+        <p>
+          <a className="btn" href="/world-app/community">Community rooms</a>{' '}
+          <a className="btn secondary" href="/world/forum">Browse the forum</a>{' '}
+          <button className="secondary" onClick={() => setView('forum')}>Start a discussion</button>
+        </p>
+      </div>
+
+      <div className="card">
         <h2>Your account</h2>
         <p><small>Signed in as <b>{d.email}</b>. Your sign-in email is managed by your PCI account{d.products.pci_ai.state === 'ready' ? ' — change it in the student portal settings.' : '.'}</small></p>
         <p>
           <button className="secondary" onClick={() => setView('passport')}>Practice Passport</button>{' '}
-          {/* Reading the forum needs no account and lives on the server-rendered pages; this is the
-              write path, so it belongs behind the signed-in dashboard rather than in public nav. */}
-          <button className="secondary" onClick={() => setView('forum')}>Start a discussion</button>{' '}
           {/* Careers' public job pages are server-rendered; these are the signed-in surfaces only —
               acting for an employer tenant, and the applicant's own consented record. */}
           <button className="secondary" onClick={() => setView('employer')}>Employer portal</button>{' '}

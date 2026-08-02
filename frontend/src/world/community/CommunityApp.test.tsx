@@ -90,7 +90,9 @@ describe('World community rooms', () => {
     await screen.findByText('Lobby')
     fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
     await screen.findByLabelText('Date of birth')
-    expect(screen.getByText(/not stored/i)).toBeTruthy()
+    // Both the DOB and jurisdiction helps say "not stored"; pin the DOB sentence specifically.
+    const dobHelp = screen.getByText(/date of birth is used only/i)
+    expect(dobHelp.textContent).toMatch(/not stored/i)
   })
 
   // ── The safety rule, in the interface ──
@@ -253,6 +255,25 @@ describe('World community rooms', () => {
     responder = () => ({ rooms: [] })
     render(<CommunityApp />)
     await screen.findByText('No rooms are open right now')
+  })
+
+  it('offers a country list when the catalogue names the served jurisdictions', async () => {
+    responder = url => {
+      if (url.includes('/community/rooms/lobby')) {
+        return { ...ROOM, served_jurisdictions: ['GB', 'AE'] }
+      }
+      if (url.includes('/community/rooms')) {
+        return { rooms: [ROOM], served_jurisdictions: ['GB', 'AE'], minimum_age: 18, publishes_messages: true }
+      }
+      return {}
+    }
+    render(<CommunityApp />)
+    await screen.findByText('Lobby')
+    fireEvent.click(screen.getByRole('button', { name: /Enter Lobby/ }))
+    const country = await screen.findByLabelText('Country or region')
+    expect(country.tagName).toBe('SELECT')
+    expect(screen.getByRole('option', { name: 'GB' })).toBeTruthy()
+    expect(screen.getByRole('option', { name: 'AE' })).toBeTruthy()
   })
 
   it('does not offer image sharing, which is not built', async () => {

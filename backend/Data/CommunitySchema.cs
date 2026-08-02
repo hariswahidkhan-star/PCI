@@ -375,5 +375,18 @@ public static class CommunitySchema
         // off, and someone who has not satisfied the legal prerequisites (CCP-P1-003) must not have
         // a deploy turn them on. Same skey/svalue shape and '0'/'1' convention as world_enabled.
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('world_community_enabled','0')");
+        // A default room row so turning the flag on is not an empty catalogue. Stays draft until
+        // CommunityBootstrap opens it (on enable or when the public catalogue would otherwise be empty).
+        db.Exec(
+            @"INSERT OR IGNORE INTO pciworld_community_rooms
+                (slug,title,description,topic,category,state,guest_allowed,pinned_welcome,discoverable,rules_version)
+              VALUES(
+                'general',
+                'General project controls',
+                'Open room for professional discussion of scheduling, cost, risk and controls practice.',
+                'Ask questions, share approaches, and help peers — no sales pitches.',
+                'practice','draft',1,
+                'Welcome. Be professional. No contact details, abuse or spam. Messages are checked before anyone else sees them.',
+                1,'v1')");
     }
 }

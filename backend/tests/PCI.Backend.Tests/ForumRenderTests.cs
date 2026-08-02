@@ -308,4 +308,57 @@ public class ForumRenderTests
         Assert.DoesNotContain("<script>alert(1)</script>", html);
         Assert.Contains("&lt;script&gt;", html);
     }
+
+    [Fact]
+    public void AThreadPageOffersAReplyDeepLinkIntoTheComposer()
+    {
+        var db = NewDb();
+        var (_, thread) = Thread(db, "t-reply");
+        PostInState(db, thread, "published", "opening body", "opening");
+
+        var html = ForumRender.Thread(db, "c-t-reply", "t-reply")!;
+        Assert.Contains("Reply to this discussion", html);
+        Assert.Contains($"/world-app/forum?thread={thread}", html);
+        Assert.Contains("wf-compose", html);
+    }
+
+    [Fact]
+    public void ALockedThreadSaysRepliesAreClosedRatherThanOfferingAComposer()
+    {
+        var db = NewDb();
+        var (_, thread) = Thread(db, "t-lockcta", threadState: "locked");
+        PostInState(db, thread, "published", "opening body", "opening");
+
+        var html = ForumRender.Thread(db, "c-t-lockcta", "t-lockcta")!;
+        Assert.Contains("closed", html, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("Reply to this discussion", html);
+    }
+
+    [Fact]
+    public void ACategoryPageListsOpenThreadsAndIsReachableBySlug()
+    {
+        var db = NewDb();
+        var (cat, thread) = Thread(db, "t-catpage");
+        // Re-title the category so the page heading is stable and assertable.
+        db.Execute("UPDATE pciworld_forum_categories SET title=?, description=? WHERE id=?",
+                   "Practice talks", "Open threads about practice.", cat);
+        PostInState(db, thread, "published", "hello", "opening");
+
+        var html = ForumRender.Category(db, "c-t-catpage")!;
+        Assert.Contains("Practice talks", html);
+        Assert.Contains("How do you model SPI recovery?", html);
+        Assert.Contains("/world/forum/c-t-catpage/t-catpage", html);
+        Assert.Contains("/world-app/forum", html);
+    }
+
+    [Fact]
+    public void AHiddenOrDisabledCategoryDoesNotRender()
+    {
+        var db = NewDb();
+        Thread(db, "t-hidcatpage", categoryState: "hidden");
+        Assert.Null(ForumRender.Category(db, "c-t-hidcatpage"));
+
+        Settings.Put(db, "pciworld_forum_enabled", "0");
+        Assert.Null(ForumRender.Category(db, "general"));
+    }
 }

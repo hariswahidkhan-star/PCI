@@ -119,6 +119,24 @@ h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 1rem; }
   color: var(--wf-muted);
 }
 
+/* Compose CTA on the crawlable thread page — deep-links into the signed-in React composer. */
+.wf-compose {
+  margin: 1.5rem 0 0;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--wf-line);
+}
+.wf-compose-help { color: var(--wf-muted); font-size: 0.9rem; margin: 0.35rem 0 0.75rem; }
+.wf-compose .btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--wf-link);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.wf-compose .btn:hover, .wf-compose .btn:focus-visible { text-decoration: underline; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
