@@ -204,22 +204,34 @@ knows this person or is this person.
   document post. **Week 2:** Post 3 (the recognition post) — and once the board makes
   its first real conferral, template 3b becomes the strongest post of all.
 
-## Paid boost — US$30/day × 10 days (US$300 total)
+## Paid boost — two campaigns, US$30/day × 7 days each (≈ US$420 total)
 
-Boost **Post 1** (the debate post) so paid engagement fuels the same comment thread:
+Both boosted posts use the same settings; only the post and the week differ.
 
-1. Publish Post 1, let it run organically 2–4 hours, then **Boost post**.
-2. **Objective:** Engagement.
-3. **Audience:** Saudi Arabia, UAE, Qatar, UK, US, India, Pakistan, Australia · job
+**Campaign A — Post 1, the debate post (days 1–7):**
+publish Post 1, let it run organically 2–4 hours, then **Boost post** on it.
+
+**Campaign B — Post 3, the recognition post (days 8–14):**
+publish Post 3 at the start of week 2 and boost it the same way. (Post 2 stays
+organic — its tag mechanic spreads on its own; swap it into Campaign B instead if it
+dramatically outperforms in week 1.)
+
+Shared settings for both campaigns:
+
+1. **Objective:** Engagement.
+2. **Audience:** Saudi Arabia, UAE, Qatar, UK, US, India, Pakistan, Australia · job
    titles: Planning Engineer, Senior Planner, Cost Engineer, Cost Controller, Project
    Controls Engineer/Manager, Quantity Surveyor, Estimator, Risk Manager, PMO Manager,
    Project Manager, Project Finance Analyst (100k–400k audience; else job function =
-   Engineering + Program & Project Management, Entry→Director).
-4. **Untick** LinkedIn Audience Network and audience expansion.
-5. **Budget:** US$30 daily · 10 days · ≈ US$300 total. Maximum delivery.
-6. **Days 2 / 5 / 8:** CTR > 0.6%, cost per engagement < US$1.50 = healthy. If one
-   region runs hot, clone the campaign for that region only and concentrate the rest
-   of the budget there.
+   Engineering + Program & Project Management, Entry→Director). For Campaign B, add
+   seniorities Senior→CXO weighting — the recognition post speaks to veterans and the
+   people who would nominate them.
+3. **Untick** LinkedIn Audience Network and audience expansion.
+4. **Budget per campaign:** US$30 daily · 7 days · ≈ US$210. Maximum delivery.
+   Two campaigns ≈ **US$420 total**.
+5. **Check days 2 and 5 of each:** CTR > 0.6%, cost per engagement < US$1.50 =
+   healthy. If one region runs hot, clone for that region only and concentrate the
+   remaining budget there.
 
 ## Legal guardrails (all already respected in the copy)
 
