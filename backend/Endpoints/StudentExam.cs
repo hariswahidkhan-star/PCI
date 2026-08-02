@@ -574,7 +574,7 @@ public static class StudentExam
                 return J(new { attempt_id = existing["id"], duration_minutes = existing["duration_minutes"], started_at = existing["started_at"], items, saved_answers = saved, violations = H.L(existing["violations"]), resumed = true, certification_id = certId, lang });
             }
             if (existing is not null) return Results.Json(new { error = "already_submitted" }, statusCode: 400);
-            var itemIds = JsonSerializer.Serialize(items.Select(i => i.id));
+            var itemIds = JsonSerializer.Serialize(items.Select(i => i["id"]));
             var durMin = ec.Duration + Lifecycle.ApprovedExtraMinutes(db, u.Id); // approved accommodations genuinely extend the sitting
             // status MUST be set explicitly to 'in_progress'; relying on a column default is fragile
             // (the schema default was historically mis-attached to bank_version, leaving status NULL,
