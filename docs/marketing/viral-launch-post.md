@@ -1,6 +1,7 @@
 # The viral launch post
 
-Asset: `pci-viral-post-image.png` (1080×1350 — attach as the post image).
+Assets: `pci-viral-post-image.png` (1080×1350 — attach to the organic post) and
+`pci-viral-post-square.png` (1080×1080 — used automatically by some ad placements).
 Post from a **personal profile** (founder/lead), tagging the company page — personal posts
 reach 3–10× further than company posts. Repost from the company page 2–4 hours later.
 
@@ -112,6 +113,35 @@ reach 3–10× further than company posts. Repost from the company page 2–4 ho
   to reshare with one personal sentence, not a bare repost.
 - **Follow-up:** 48 h later, post the 17-slide launch deck as a document post for the
   people the image post warmed up.
+
+## Paid boost — US$30/day × 30 days (US$900 total)
+
+**The one thing to know first:** LinkedIn cannot boost a *personal* post — only *company
+page* posts can be sponsored. So run both tracks: the personal post carries the organic/
+viral push, and the **company-page version is the one you put the $900 behind.**
+
+Exact click-path (10 minutes):
+
+1. Publish the company-page variant (above) from the PCI page with the hero image.
+2. On the published post, click **Boost post** (or go to **linkedin.com/campaignmanager**
+   → create account if first time → link the PCI page).
+3. **Objective:** Engagement (drives reactions/comments/shares — matches the viral goal).
+4. **Audience:** Location — Saudi Arabia, UAE, Qatar, UK, US, India, Pakistan, Australia
+   (the chapter priority markets). Attributes → Job title: Planning Engineer, Senior
+   Planner, Cost Engineer, Cost Controller, Project Controls Engineer/Manager, Quantity
+   Surveyor, Estimator, Risk Manager, PMO Manager, Project Manager, Project Finance
+   Analyst. (The Part 4 title list from the playbook.) Aim for an audience of 100k–400k;
+   if too small, switch titles to Job function = Engineering + Program & Project
+   Management with seniorities Entry→Director.
+5. **Untick** "LinkedIn Audience Network" (keep it on LinkedIn only) and untick audience
+   expansion — keeps every dollar on the exact audience.
+6. **Budget & schedule:** Daily budget **$30** · start 1 September 2026 (or today for
+   pre-launch warm-up) · end date 30 days later · total cap ≈ **$900**.
+7. **Bidding:** Maximum delivery (default). Save payment details and launch.
+8. **Measure:** check Campaign Manager every 2–3 days — CTR above ~0.6% and cost per
+   engagement under ~$1.50 is healthy; if a region massively outperforms, clone the
+   campaign and shift budget to it. All link clicks carry
+   `?utm_source=linkedin&utm_medium=paid&utm_campaign=launch-2026`.
 
 ## Legal guardrails (all already respected in the copy)
 
