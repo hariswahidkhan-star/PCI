@@ -894,7 +894,7 @@ export function socialMedia() {
   const accounts = [
     ['linkedin', 'LinkedIn', 'project-controls-institute'],
     ['youtube', 'YouTube', '@projectcontrolsinstitute'],
-    ['x', 'X', '@pci_global'],
+    ['x', 'X', '@pci_ai'],
   ]
   return {
     enabled: true, analytics: true,

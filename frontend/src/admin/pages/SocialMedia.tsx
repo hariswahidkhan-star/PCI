@@ -235,7 +235,7 @@ function EditDrawer({ account, data, onClose, onSaved }: { account: Account | nu
           <input value={f.display_name} onChange={(e) => set('display_name', e.target.value)} placeholder="Project Controls Institute" />
         </label>
         <label>Username / handle <span className="muted small">(optional)</span>
-          <input value={f.handle} onChange={(e) => set('handle', e.target.value)} placeholder="@pciglobal" />
+          <input value={f.handle} onChange={(e) => set('handle', e.target.value)} placeholder="@pciai" />
         </label>
         <label style={{ gridColumn: '1 / -1' }}>Profile URL
           <input value={f.url} onChange={(e) => set('url', e.target.value)} placeholder="https://www.linkedin.com/company/…" />

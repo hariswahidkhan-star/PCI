@@ -74,7 +74,7 @@ export default function Onboarding() {
     <div className="wizpage">
       <header className="wiz-head">
         <div className="row">
-          <img src="/assets/logo.png" alt="PCI Global" style={{ height: 30, borderRadius: 7 }} onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <img src="/assets/logo.png" alt="PCI ai" style={{ height: 30, borderRadius: 7 }} onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <strong>{t('onb.headerTitle')}</strong>
         </div>
         <Link className="small muted" to="/">{t('onb.skipForNow')}</Link>

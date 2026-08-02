@@ -53,6 +53,6 @@ Sample events/gates load, and the mock decision service makes every state reacha
 
 Mounted in the PCI admin app at `/event-scanner` (Operations group), gated on
 `events_checkin`/`events_read` with `content` as the same migration fallback the backend
-accepts — the spec places the scanner in the PCI Global operations realm (§7A.8). Staff
+accepts — the spec places the scanner in the PCI ai operations realm (§7A.8). Staff
 authentication is therefore the admin session; a dedicated device-enrollment flow remains
 future backend work.

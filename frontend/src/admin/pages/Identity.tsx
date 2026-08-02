@@ -15,7 +15,7 @@ import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty, Stat, rowActivate 
 import { PageHeader } from '../../components/premium'
 import { fmtDate } from '../../format'
 
-// PCI Global identity console (spec §10.1): the health of the Student Number estate, the audited
+// PCI ai identity console (spec §10.1): the health of the Student Number estate, the audited
 // backfill for accounts that predate transactional issuance, ledger-versus-projection
 // reconciliation, and the maker-checker duplicate-account merge queue.
 //
