@@ -5,9 +5,9 @@ const { chromium } = require('playwright-core');
 const path = require('path');
 
 const boards = [
-  { file: 'facebook.html',          w: 820,  h: 312, out: 'pci-facebook-cover-1640x624.png' },
-  { file: 'linkedin-company.html',  w: 1128, h: 191, out: 'pci-linkedin-company-cover-2256x382.png' },
-  { file: 'linkedin-personal.html', w: 1584, h: 396, out: 'pci-linkedin-personal-banner-3168x792.png' },
+  { file: 'facebook.html',          w: 820,  h: 312, out: 'pci-ai-facebook-cover-1640x624.png' },
+  { file: 'linkedin-company.html',  w: 1128, h: 191, out: 'pci-ai-linkedin-company-cover-2256x382.png' },
+  { file: 'linkedin-personal.html', w: 1584, h: 396, out: 'pci-ai-linkedin-personal-banner-3168x792.png' },
   { file: 'world-facebook.html',          w: 820,  h: 312, out: 'pci-world-facebook-cover-1640x624.png' },
   { file: 'world-linkedin-company.html',  w: 1128, h: 191, out: 'pci-world-linkedin-company-cover-2256x382.png' },
   { file: 'world-linkedin-personal.html', w: 1584, h: 396, out: 'pci-world-linkedin-personal-banner-3168x792.png' },
