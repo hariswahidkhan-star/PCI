@@ -906,13 +906,14 @@ public static class Migrate
         db.Exec(@"UPDATE pages SET title='Donate — Support the Project Controls Institute (pursuing 501(c)(3))'
                   WHERE slug='donate.html' AND title LIKE '%(501(c)(3))' AND title NOT LIKE '%pursuing%'");
 
-        // Brand rename: "PCI Global" → "PCI ai". The congress page title was seeded before the
-        // rename; INSERT OR IGNORE won't rewrite it, so converge it in place. Exact-match guard —
-        // an admin-edited title is never touched.
-        db.Exec(@"UPDATE pages SET title='PCI ai Congress — Project Controls Institute'
-                  WHERE slug='event-congress.html' AND title='PCI Global Congress — Project Controls Institute'");
-        db.Exec(@"UPDATE pages SET meta_description='PCI&#x27;s flagship gatherings — the PCI ai Congress, World Summit, AI in Project Controls Conference and regional conferences for the project-controls.'
-                  WHERE slug='events.html' AND meta_description='PCI&#x27;s flagship gatherings — the Global Congress, World Summit, AI in Project Controls Conference and regional conferences for the project-controls.'");
+        // Brand rename: "PCI Global" → "PCI AI". The congress page title was seeded before the
+        // rename; INSERT OR IGNORE won't rewrite it, so converge it in place — from the original
+        // name or the short-lived "PCI ai" casing a deploy in between may have written. Exact-match
+        // guard — an admin-edited title is never touched.
+        db.Exec(@"UPDATE pages SET title='PCI AI Congress — Project Controls Institute'
+                  WHERE slug='event-congress.html' AND title IN ('PCI Global Congress — Project Controls Institute','PCI ai Congress — Project Controls Institute')");
+        db.Exec(@"UPDATE pages SET meta_description='PCI&#x27;s flagship gatherings — the PCI AI Congress, World Summit, AI in Project Controls Conference and regional conferences for the project-controls.'
+                  WHERE slug='events.html' AND meta_description IN ('PCI&#x27;s flagship gatherings — the Global Congress, World Summit, AI in Project Controls Conference and regional conferences for the project-controls.','PCI&#x27;s flagship gatherings — the PCI ai Congress, World Summit, AI in Project Controls Conference and regional conferences for the project-controls.')");
 
         // ============ Student Documents & Resources module ============
         // Admin-uploaded documents made available to selected students/groups, with versioning,

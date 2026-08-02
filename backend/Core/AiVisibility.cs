@@ -151,7 +151,7 @@ public static class AiVisibility
             if (summary.Length == 0)
                 summary = db.Scalar<string>("SELECT meta_description FROM pages WHERE slug='index.html'") ?? "";
             if (summary.Length == 0)
-                summary = "The Project Controls Institute (PCI ai) is the global professional body and certification "
+                summary = "The Project Controls Institute (PCI AI) is the global professional body and certification "
                         + "authority for project controls — certifications, membership, standards and continuing "
                         + "professional development for cost, planning, scheduling and risk professionals worldwide.";
 
@@ -175,7 +175,7 @@ public static class AiVisibility
             }
 
             var sb = new StringBuilder(8192);
-            sb.Append("# Project Controls Institute (PCI ai)\n\n");
+            sb.Append("# Project Controls Institute (PCI AI)\n\n");
             sb.Append("> ").Append(OneLine(summary)).Append("\n\n");
             sb.Append("This file follows the llms.txt convention (https://llmstxt.org) to help language ")
               .Append("models find and cite authoritative PCI content. Canonical site: ").Append(host).Append("\n");

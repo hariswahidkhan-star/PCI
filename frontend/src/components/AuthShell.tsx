@@ -18,7 +18,7 @@ export default function AuthShell({ children }: { children: ReactNode }) {
           <div className="abp-inner">
             <div className="abp-brand">
               <img src="/assets/logo.png" alt="" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
-              <span>PCI ai</span>
+              <span>PCI AI</span>
             </div>
             <h1 className="abp-headline">{t('abp.headline')}</h1>
             <ul className="abp-points">
