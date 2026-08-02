@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useMe } from '../data/MeContext'
 import { useQuery } from '../api/hooks'
-import { api, ApiError, getToken } from '../api/client'
+import { api, ApiError } from '../api/client'
 import { startCheckout, checkoutErrorMessage } from '../api/checkout'
 import { Card, Badge, StatusBadge, Spinner, ErrorNote, Empty } from '../components/ui'
 import { ViewDownloadActions } from '../components/documents/DocumentActions'
@@ -459,7 +459,7 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
             </div>
           ) : (
             <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
-              <a className="btn sm" href={`/student.html#t=${getToken() ?? ''}&go=exam`}>{t('cert.examDayCheckIn')} ↗</a>
+              <Link className="btn sm" to={`/exam-day/${entry.certification_id}`}>{t('cert.examDayCheckIn')}</Link>
               <button className="btn sm secondary" onClick={() => setScheduling((v) => !v)}>
                 {scheduling ? t('cert.close') : t('cert.reschedule')}
               </button>
@@ -492,7 +492,7 @@ function EntryCard({ entry, onChanged, holds }: { entry: ExamEntry; onChanged: (
                 </div>
               )}
               <div className="row" style={{ marginTop: '.6rem', flexWrap: 'wrap' }}>
-                <a className="btn sm secondary" href={`/student.html#t=${getToken() ?? ''}&go=results`}>{t('cert.viewFullResult')} ↗</a>
+                <Link className="btn sm secondary" to="/results">{t('cert.viewFullResult')}</Link>
                 {failed && <Link className="btn sm" to="/billing">{t('cert.buyRetake')} →</Link>}
               </div>
             </div>

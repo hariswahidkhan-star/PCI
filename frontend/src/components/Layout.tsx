@@ -12,6 +12,7 @@ import { Icon, type IconName } from './icons'
 const NAV: { to: string; tkey: string; icon: IconName; end?: boolean; badgeKey?: 'unread' | 'profile' }[] = [
   { to: '/', tkey: 'nav.overview', icon: 'dashboard', end: true },
   { to: '/certifications', tkey: 'nav.certifications', icon: 'award' },
+  { to: '/results', tkey: 'nav.results', icon: 'activity' },
   { to: '/credentials', tkey: 'nav.credentials', icon: 'shield-check' },
   { to: '/cpd', tkey: 'nav.cpd', icon: 'refresh' },
   { to: '/certuvo', tkey: 'nav.certuvo', icon: 'sparkles' },
@@ -32,6 +33,8 @@ const NAV: { to: string; tkey: string; icon: IconName; end?: boolean; badgeKey?:
 const TITLE_KEYS: Record<string, string> = {
   '/': 'nav.overview',
   '/certifications': 'nav.certifications',
+  '/exam-day': 'nav.examDay',
+  '/results': 'nav.results',
   '/credentials': 'nav.credentials',
   '/cpd': 'nav.cpd',
   '/certuvo': 'nav.certuvo',

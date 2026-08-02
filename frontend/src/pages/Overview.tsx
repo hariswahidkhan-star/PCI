@@ -72,6 +72,7 @@ function buildNextSteps(t: TFn): Record<string, { title: string; detail: string;
 const len = (v: unknown): number => (Array.isArray(v) ? v.length : 0)
 const QUICK_LINKS: { to: string; tkey: string; icon: IconName; count?: (me: Me) => number }[] = [
   { to: '/certifications', tkey: 'nav.certifications', icon: 'award', count: (me) => len(me.exams) },
+  { to: '/results', tkey: 'nav.results', icon: 'activity', count: (me) => len(me.attempts) },
   { to: '/credentials', tkey: 'nav.credentials', icon: 'shield-check', count: (me) => len(me.credentials) },
   { to: '/applications', tkey: 'nav.applications', icon: 'clipboard' },
   { to: '/billing', tkey: 'nav.billing', icon: 'credit-card' },

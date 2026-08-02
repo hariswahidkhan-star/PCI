@@ -20,6 +20,8 @@ export const CATALOG: Record<string, Entry> = {
   // ---- primary navigation ----
   'nav.overview': { en: 'Overview', ko: '개요', ar: 'نظرة عامة', es: 'Resumen', fr: 'Aperçu', zh: '概览', ru: 'Обзор' },
   'nav.certifications': { en: 'Certifications', ko: '자격증', ar: 'الشهادات', es: 'Certificaciones', fr: 'Certifications', zh: '认证', ru: 'Сертификаты' },
+  'nav.results': { en: 'Results', ko: '성적', ar: 'النتائج', es: 'Resultados', fr: 'Résultats', zh: '成绩', ru: 'Результаты' },
+  'nav.examDay': { en: 'Exam day', ko: '시험 당일', ar: 'يوم الامتحان', es: 'Día del examen', fr: 'Jour de l’examen', zh: '考试日', ru: 'День экзамена' },
   'nav.credentials': { en: 'Credentials', ko: '자격 증명', ar: 'الاعتمادات', es: 'Credenciales', fr: 'Attestations', zh: '证书', ru: 'Удостоверения' },
   'nav.cpd': { en: 'CPD', ko: '보수교육(CPD)', ar: 'التطوير المهني', es: 'DPC', fr: 'DPC', zh: '继续专业发展', ru: 'НПР' },
   'nav.certuvo': { en: 'Certuvo', ko: 'Certuvo', ar: 'Certuvo', es: 'Certuvo', fr: 'Certuvo', zh: 'Certuvo', ru: 'Certuvo' },

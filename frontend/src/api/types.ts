@@ -68,6 +68,9 @@ export interface Attempt {
   hold_reason?: string | null
   released_at?: string | null
   duration_minutes?: number | null
+  /** JSON string of [{domain, pct, band}] — null while the result is held. */
+  domain_breakdown?: string | null
+  violations?: number | null
 }
 
 export interface Credential {

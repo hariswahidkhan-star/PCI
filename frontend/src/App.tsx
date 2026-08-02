@@ -7,6 +7,8 @@ import Register from './pages/Register'
 import Onboarding from './pages/Onboarding'
 import Overview from './pages/Overview'
 import Certifications from './pages/Certifications'
+import ExamDay from './pages/ExamDay'
+import Results from './pages/Results'
 import Credentials from './pages/Credentials'
 import Cpd from './pages/Cpd'
 import Certuvo from './pages/Certuvo'
@@ -43,6 +45,9 @@ export default function App() {
         <Route element={<Layout />}>
           <Route index element={<Overview />} />
           <Route path="certifications" element={<Certifications />} />
+          <Route path="exam-day" element={<ExamDay />} />
+          <Route path="exam-day/:certId" element={<ExamDay />} />
+          <Route path="results" element={<Results />} />
           <Route path="credentials" element={<Credentials />} />
           <Route path="cpd" element={<Cpd />} />
           <Route path="certuvo" element={<Certuvo />} />

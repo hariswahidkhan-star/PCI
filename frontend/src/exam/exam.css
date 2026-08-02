@@ -1,0 +1,177 @@
+/* In-app secure exam runner (exam/ExamRunner.tsx) — a full-viewport surface above the portal
+   shell. Scoped under .xr- so nothing leaks into the rest of the app. */
+
+.xr-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--canvas);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.xr-top {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .6rem 1rem;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  flex-wrap: wrap;
+}
+
+.xr-title { font-weight: 700; }
+
+.xr-chip {
+  font-size: .75rem;
+  font-weight: 600;
+  padding: .25em .7em;
+  border-radius: 999px;
+  background: var(--ok-bg);
+  color: var(--ok);
+  border: 1px solid rgba(21, 128, 61, .25);
+}
+.xr-chip.v {
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-color: rgba(180, 83, 9, .3);
+}
+
+.xr-timer {
+  margin-inline-start: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: .25em .7em;
+  border-radius: 8px;
+  background: var(--brand-050);
+  color: var(--brand);
+}
+.xr-timer.low { background: var(--err-bg); color: var(--err); }
+
+.xr-body {
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: start;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+@media (max-width: 860px) { .xr-body { grid-template-columns: 1fr; } }
+
+.xr-opt {
+  display: flex;
+  gap: .7rem;
+  align-items: flex-start;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: .7rem .8rem;
+  margin-top: .55rem;
+  cursor: pointer;
+  background: var(--paper);
+  transition: border-color .15s, background .15s;
+}
+.xr-opt:hover { border-color: #c7d6f5; }
+.xr-opt.sel { border-color: var(--brand); background: var(--brand-050); }
+.xr-opt .k {
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-content: center;
+  border-radius: 8px;
+  background: var(--canvas);
+  font-weight: 700;
+  font-size: .8rem;
+}
+.xr-opt.sel .k { background: var(--brand); color: #fff; }
+
+.xr-pal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.1rem, 1fr));
+  gap: .35rem;
+}
+.xr-pal button {
+  height: 2.1rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  font-weight: 600;
+  cursor: pointer;
+}
+.xr-pal button.a { background: var(--brand-050); border-color: #b9cdf3; color: var(--brand); }
+.xr-pal button.f { border-color: var(--warn); }
+.xr-pal button.c { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+.xr-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-content: center;
+  background: rgba(15, 23, 42, .45);
+  pointer-events: none;
+}
+.xr-flash .card { max-width: 420px; text-align: center; }
+
+.xr-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-content: center;
+  background: rgba(15, 23, 42, .45);
+  padding: 1rem;
+}
+
+/* pocket calculator */
+.xr-calc {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1150;
+  width: 240px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lift);
+  overflow: hidden;
+}
+.xr-calc .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .45rem .7rem;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  font-size: .85rem;
+}
+.xr-calc .scr {
+  padding: .5rem .7rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.xr-calc .scr .e { min-height: 1.1em; color: var(--mist); font-size: .8rem; word-break: break-all; }
+.xr-calc .scr .v { font-size: 1.25rem; font-weight: 700; }
+.xr-calc .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+}
+.xr-calc .grid button {
+  border: 0;
+  background: var(--paper);
+  padding: .6rem 0;
+  font-size: .95rem;
+  cursor: pointer;
+}
+.xr-calc .grid button:hover { background: var(--canvas); }
+.xr-calc .grid button.op { color: var(--brand); font-weight: 600; }
+.xr-calc .grid button.eq { grid-column: span 4; background: var(--brand); color: #fff; font-weight: 700; }
