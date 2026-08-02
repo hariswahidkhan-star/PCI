@@ -1,14 +1,82 @@
-# The viral launch post (company account)
+# The viral launch campaign (company account)
 
-Assets: `pci-viral-post-image.png` (1080×1350 — attach to the post) and
-`pci-viral-post-square.png` (1080×1080 — used automatically by some ad placements).
-Posting from the **PCI company page** — which is also what makes the paid boost possible
-(LinkedIn can only sponsor company-page posts). Organic engagement and the US$30/day boost
-land on the **same post**, so they compound.
+Two posts, in order. **Post 1** replicates the most reliably viral format in this niche —
+the contrarian certification-debate post — and is the one that gets the paid boost.
+**Post 2** (the gratitude post) follows 48 hours later to convert the warmed-up audience.
+
+## What the research says (and what we copied)
+
+The most viral repeatable posts in the PM / engineering / construction niche share one
+skeleton, confirmed across viral-post analyses (1,800+ posts studied) and the niche's
+best-known examples ("I've hired hundreds of engineers…"-style hiring-authority posts,
+salary-transparency debates):
+
+1. **Counter-intuitive hook inside the first 200 characters** — strong openings earn
+   3–5× the engagement; the champion format opens *against* the reader's assumption.
+2. **The certification-vs-experience debate** is this profession's 30-year comment war —
+   posts that reopen it reliably explode because both camps argue in the comments, and
+   comments are the algorithm's strongest reach signal.
+3. **Authority framing** ("I've hired hundreds…") — our twist: *the certification body
+   itself* says certifications are broken. A pattern interrupt nobody expects.
+4. **High-arousal emotion** (surprise/controversy) beats mild agreement.
+5. **~150–200 words**, short lines, one debate CTA.
+6. Best windows: Tue–Thu mornings (Gulf/UK) or Wednesday evening.
 
 ---
 
-## The post (company voice — this is the one)
+## POST 1 — the debate post (the replication — post this, then boost it)
+
+Image: `pci-viral-post-b-image.png` (4:5) · square variant `pci-viral-post-b-square.png`.
+
+> We're a certification body. And here's an uncomfortable truth about certifications:
+>
+> Most of them prove you can pass an exam. Not that you can save a project.
+>
+> Everyone in this industry has met both people:
+>
+> The one with letters after their name who froze when the schedule slipped.
+> The one with no letters at all who caught the overrun before it ate the contingency.
+>
+> For 30 years, this profession has argued "certification vs experience."
+>
+> We think the argument itself is broken. The real question is: what should a
+> certification actually TEST?
+>
+> Our answer, launching September 1: scenario-based exams where you face the slipping
+> schedule, the burning contingency, and the AI forecast that's confidently wrong —
+> and what's graded is what you decide.
+>
+> No trivia. No shortcuts. No exemptions.
+>
+> And in the spirit of uncomfortable truths: we're not yet accredited — it says so on
+> our own website. Trust is the product.
+>
+> So settle it in the comments: certification or experience — which one do YOU hire?
+> We'll be in the thread. 👇
+>
+> 📅 Launching September 1, 2026 — projectcontrolsinstitute.org
+>
+> #ProjectControls #ProjectManagement #CostEngineering #PlanningEngineer
+
+**Seed comment (from the page, immediately):**
+
+> Our own answer: neither, alone. Experience without a standard doesn't transfer;
+> a standard without judgment doesn't deliver. That's why the exam is scenarios, not
+> multiple-guess trivia — and why students can attempt it fee-waived in the founding
+> window, and the profession's veterans can be recognised through board-conferred
+> Honorary Fellowships (no exam, no fees — hello@projectcontrolsinstitute.org).
+
+**Why this one travels:** the hook is a self-own from an institution (surprise), it
+reopens the industry's favourite fight (guaranteed comments from both camps), the
+"which one do YOU hire?" CTA demands a one-word answer anyone can leave, and the page
+arguing back in the thread multiplies every comment. The honesty line converts the
+sceptics the debate attracts.
+
+---
+
+## POST 2 — the gratitude post (48 hours later, organic)
+
+Image: `pci-viral-post-image.png` (4:5). Full copy below — tag-CTA engine.
 
 > Nobody claps for the person who saved the project.
 >
@@ -37,7 +105,7 @@ land on the **same post**, so they compound.
 > non-profit US body for project controls professionals, project managers, cost
 > engineers and project finance professionals, worldwide:
 >
-> ✔ Three certifications with governed AI at the core — AI now drafts the schedule;
+> ✔ Three certifications with governed AI at the core — AI drafts the schedule now;
 >    someone has to judge it
 > ✔ Students: a founding window with membership + exam fees waived. The exam? Still
 >    real. Still earned.
@@ -45,10 +113,6 @@ land on the **same post**, so they compound.
 >    exam, no fees, ever
 > ✔ Any credential, verified by anyone, in seconds
 > ✔ 7 languages · 25 country chapters · day one
->
-> And one promise that might sound strange from a certification body: we will never
-> overclaim. We're not yet accredited — and we say so on our own website. Trust is
-> the product.
 >
 > AI proposes. The professional disposes.
 >
@@ -59,68 +123,41 @@ land on the **same post**, so they compound.
 >
 > #ProjectControls #CostEngineering #PlanningEngineer #ProjectManagement #Megaprojects
 
-**Seed comment (post it from the page immediately after publishing):**
-
-> For the students asking: the founding window means membership and the exam fee are
-> waived — the exam still has to be passed, that's the point. Start here:
-> projectcontrolsinstitute.org/candidate-journey.html
-> And for the profession's veterans: early Honorary Fellowship applications are open —
-> hello@projectcontrolsinstitute.org
-
 ---
-
-## Why this is built to travel
-
-1. **Gratitude hook** — "nobody claps for the person who saved the project" makes an
-   under-appreciated profession feel seen. People share and tag to *give credit* —
-   the strongest tagging motive that exists.
-2. **Open loop** — the first line demands the "see more" tap.
-3. **Tag CTA with a reason** — "Today they get it" turns tagging into a small act of
-   recognition, not a marketing chore. Every tag = a new network reached.
-4. **Sourced numbers** — 25M (PMI), US$94T (Oxford Economics): credible and quotable.
-5. **The honesty twist** — "we're not yet accredited and we say so" is disarming and
-   comment-bait for sceptics (and every comment fuels reach).
-6. **4:5 portrait image** — maximum feed height; readable at arm's length; the gold
-   "That changes now." pays off the headline.
 
 ## Launch playbook (the first 90 minutes decide everything)
 
-- **When:** Tuesday–Thursday, 07:30–09:00 Gulf/UK time.
-- **Company pages don't get free virality — people carry them.** Before posting, line
-  up 8–12 allies (team, founding students, honorary invitees, friendly chapter leads)
-  to comment something real within the first hour, and 3–4 to reshare with one
-  personal sentence. This substitutes for the personal-profile advantage.
-- **The page replies to every comment** within 2 hours — every reply doubles the
-  thread and re-triggers distribution.
-- Post the **seed comment** immediately (above).
-- **Don't edit the post in the first hour.** Keep the URL late in the post.
-- **48 hours later:** post the 17-slide launch deck as a document post to convert the
-  warmed-up audience.
+- **When:** Tuesday–Thursday, 07:30–09:00 Gulf/UK time (or Wednesday ~18:00).
+- **Company pages don't get free virality — people carry them.** Line up 8–12 allies
+  to comment within the first hour (on Post 1, have them *answer the debate question*,
+  ideally on both sides) and 3–4 to reshare with one personal sentence.
+- **The page replies to every comment** for the first 2 hours — on Post 1 the page
+  should argue back, thank, and ask follow-ups; the thread is the product.
+- Post the seed comment immediately. Don't edit the post in the first hour.
+- **Day 3:** Post 2 (gratitude/tag engine). **Day 5:** the 17-slide launch deck as a
+  document post for the warmed-up audience.
 
 ## Paid boost — US$30/day × 10 days (US$300 total)
 
-Boost the exact organic post so paid engagement lands on the same thread:
+Boost **Post 1** (the debate post) so paid engagement fuels the same comment thread:
 
-1. Publish the post above from the PCI page with the hero image.
-2. Let it run organically for **2–4 hours** (early organic velocity sets the tone),
-   then click **Boost post** on it (or go to linkedin.com/campaignmanager).
-3. **Objective:** Engagement.
-4. **Audience:** Locations — Saudi Arabia, UAE, Qatar, UK, US, India, Pakistan,
-   Australia. Job titles — Planning Engineer, Senior Planner, Cost Engineer, Cost
-   Controller, Project Controls Engineer/Manager, Quantity Surveyor, Estimator, Risk
-   Manager, PMO Manager, Project Manager, Project Finance Analyst. Target audience
-   size 100k–400k; if too narrow, switch to Job function = Engineering + Program &
-   Project Management, seniorities Entry→Director.
-5. **Untick** LinkedIn Audience Network and audience expansion.
-6. **Budget & schedule:** daily budget **US$30**, run **10 days** → total ≈ **US$300**.
-7. **Bidding:** Maximum delivery. Launch.
-8. **Check on days 2, 5 and 8:** healthy = CTR above ~0.6% and cost per engagement
-   under ~US$1.50. If one region clearly outperforms, end the campaign, clone it for
-   that region only, and put the remaining budget there. With US$300 the worst mistake
-   is spreading thin — concentrating beats covering.
+1. Publish Post 1, let it run organically 2–4 hours, then **Boost post**.
+2. **Objective:** Engagement.
+3. **Audience:** Saudi Arabia, UAE, Qatar, UK, US, India, Pakistan, Australia · job
+   titles: Planning Engineer, Senior Planner, Cost Engineer, Cost Controller, Project
+   Controls Engineer/Manager, Quantity Surveyor, Estimator, Risk Manager, PMO Manager,
+   Project Manager, Project Finance Analyst (100k–400k audience; else job function =
+   Engineering + Program & Project Management, Entry→Director).
+4. **Untick** LinkedIn Audience Network and audience expansion.
+5. **Budget:** US$30 daily · 10 days · ≈ US$300 total. Maximum delivery.
+6. **Days 2 / 5 / 8:** CTR > 0.6%, cost per engagement < US$1.50 = healthy. If one
+   region runs hot, clone the campaign for that region only and concentrate the rest
+   of the budget there.
 
 ## Legal guardrails (all already respected in the copy)
 
+- "Most certifications prove you can pass an exam" — an opinion about the market,
+  naming no body and no competitor; PCI's own exam is described factually.
 - PMI/Oxford figures cited by name; no outcome promises.
 - "Not yet accredited" stated plainly — matches the site's own wording.
 - Honorary = Fellowship/recognition, never "certification"; board-conferred; no fees.
