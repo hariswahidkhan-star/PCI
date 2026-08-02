@@ -1764,15 +1764,52 @@ PCI.Backend.Endpoints.AdminExamDelivery.Map(app, db, logFn, GateFn);   // Admin 
 PCI.Backend.Endpoints.AdminOps.Map(app, db, logFn, GateFn);            // operator toolkit: mark-paid, test users, student journey, Certuvo config
 PCI.Backend.Endpoints.Support.Map(app, db, logFn, GateFn);             // customer-service portal: error refs, unified inbox, SLA, templates, KB
 PCI.Backend.Endpoints.PartnerPortal.Map(app, db, logFn, GateFn);       // institution portal + code approvals + fraud review queue
-// one-time: capture each page's current headline as an editable block so every page is editable out of the box
-PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
-PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
-PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
-PCI.Backend.Data.BlogSeed.Ensure(db);  // Content Centre: default byline author + content-pillar categories (idempotent by slug)
-PCI.Backend.Data.BlogContentSeed.Ensure(db);  // Content Centre: 20 PCI blog articles as DRAFTS (idempotent by slug; never auto-published)
-PCI.Backend.Data.NewsContentSeed.Ensure(db);  // Content Centre: source-verified news items as DRAFTS (idempotent by slug; never auto-published)
-PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
-PCI.Backend.Data.SimLabContentSeed.Apply(db); // Simulation Lab scenario library (validated synthetic practice content, idempotent by scenario_code)
+// ---- Content seeding (all idempotent, none required for serving) ---------------------------
+// Pages fall through to their static files until blocks exist, and translations simply lag until
+// seeded — so these eight seeds are deliberately kept OFF the critical boot path in production.
+// They are the heaviest thing boot does (a full wwwroot rescan + an ~11 MB translation pack) and
+// exactly the window where small hosts have killed deploys with native crashes (exit 139) before
+// the health check ever passed, leaving the release dead-on-arrival. In production the server
+// starts listening first and the seeds run shortly after in the background, guarded by an
+// in-flight marker: a boot that dies mid-seed makes the NEXT boot skip seeding once (clearing
+// the marker so the boot after that retries) instead of crash-looping. Everywhere else (CI,
+// local dev) they stay synchronous so tests and first-run behaviour are deterministic.
+void RunContentSeeds()
+{
+    // one-time: capture each page's current headline as an editable block so every page is editable out of the box
+    PCI.Backend.Core.PageContent.SeedFromFiles(db, webRoot);
+    PCI.Backend.Data.I18nSeed.Apply(db);   // starter translations (nav + shared + homepage + top pages, 6 languages)
+    PCI.Backend.Data.CertuvoSeed.Apply(db); // Certuvo starter practice pack (scenario MCQs across BoK domains)
+    PCI.Backend.Data.BlogSeed.Ensure(db);  // Content Centre: default byline author + content-pillar categories (idempotent by slug)
+    PCI.Backend.Data.BlogContentSeed.Ensure(db);  // Content Centre: 20 PCI blog articles as DRAFTS (idempotent by slug; never auto-published)
+    PCI.Backend.Data.NewsContentSeed.Ensure(db);  // Content Centre: source-verified news items as DRAFTS (idempotent by slug; never auto-published)
+    PCI.Backend.Data.DemoExamSeed.Apply(db); // optional demo LIVE-exam bank — only when SEED_DEMO_EXAM=true (fresh-deploy testing)
+    PCI.Backend.Data.SimLabContentSeed.Apply(db); // Simulation Lab scenario library (validated synthetic practice content, idempotent by scenario_code)
+}
+void RunContentSeedsGuarded()
+{
+    try
+    {
+        if (db.Scalar<string>("SELECT svalue FROM site_settings WHERE skey='content_seed_inflight'") is not null)
+        {
+            db.Execute("DELETE FROM site_settings WHERE skey='content_seed_inflight'");
+            Console.Error.WriteLine("[seed] previous boot did not finish content seeding — skipping seeds this boot; the next restart retries");
+            return;
+        }
+        db.Execute("INSERT INTO site_settings(skey,svalue) VALUES('content_seed_inflight',datetime('now'))");
+        try { RunContentSeeds(); }
+        finally { db.Execute("DELETE FROM site_settings WHERE skey='content_seed_inflight'"); }
+    }
+    catch (Exception e) { Console.Error.WriteLine($"[seed] content seeding skipped: {e.Message}"); }
+}
+if (app.Environment.IsProduction())
+    app.Lifetime.ApplicationStarted.Register(() => _ = Task.Run(async () =>
+    {
+        await Task.Delay(TimeSpan.FromSeconds(20));   // let the platform's health check pass and the deploy flip live first
+        RunContentSeedsGuarded();
+    }));
+else
+    RunContentSeedsGuarded();
 app.Use(async (ctx, next) =>
 {
     if (ctx.Request.Method == "GET")

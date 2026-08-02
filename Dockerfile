@@ -50,11 +50,15 @@ COPY --from=webbuild /web/dist-worldadmin ./wwwroot/world-admin-app
 # this exact image boots green in CI but crashed on deploy. Costs a little JIT hardening only.
 # DOTNET_gcServer=0: workstation GC — per-core server heaps are the wrong shape for a small
 # single-instance container (Render Starter: 512 MB / 0.5 CPU).
+# DOTNET_EnableDiagnostics=0: the runtime's diagnostics IPC channel needs /tmp sockets and memfd
+# support some hardened container hosts refuse — the same class of host restriction behind the
+# W^X crash above. The channel only serves dotnet-trace/dotnet-counters attach, never the app.
 ENV DATABASE_FILE=/data/pci.db \
     STORAGE_ROOT=/data/storage \
     PORT=8080 \
     DOTNET_EnableWriteXorExecute=0 \
-    DOTNET_gcServer=0
+    DOTNET_gcServer=0 \
+    DOTNET_EnableDiagnostics=0
 VOLUME /data
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "PCI.Backend.dll"]
