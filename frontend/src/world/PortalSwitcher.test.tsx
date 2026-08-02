@@ -41,7 +41,7 @@ describe('PortalSwitcher', () => {
     stubFetch(() => new Response(JSON.stringify({ ok: true, code: 'c', return_to: '/app/' }), { status: 200 }))
     render(<PortalSwitcher navigate={vi.fn()} />)
     // The decorative slash separator is aria-hidden, so the accessible name reads cleanly.
-    const btn = screen.getByRole('button', { name: /PCI ai MyPCI/ })
+    const btn = screen.getByRole('button', { name: /PCI AI MyPCI/ })
     expect(btn).toHaveTextContent('Manage applications, membership, learning access and certifications.')
     expect(screen.getAllByRole('button')).toHaveLength(1)
   })

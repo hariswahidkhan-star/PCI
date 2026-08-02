@@ -152,7 +152,7 @@ export default function AdminApp() {
         <Route path="emails" element={<Perm section="emails"><Emails /></Perm>} />
         <Route path="audit" element={<Perm section="audit"><Audit /></Perm>} />
         <Route path="identity" element={<AnyPerm sections={['id_read', 'id_backfill', 'id_merge_request', 'id_merge_approve', 'id_audit']}><Identity /></AnyPerm>} />
-        {/* The staff scanner lives in the PCI ai operations realm per spec §7A.8 — an admin
+        {/* The staff scanner lives in the PCI AI operations realm per spec §7A.8 — an admin
             surface, never a public page. Gated on the granular events permissions ('content' kept
             as the same migration fallback the backend accepts). The admission backend is not
             built yet; the app renders its designed not-enabled state until it exists. */}

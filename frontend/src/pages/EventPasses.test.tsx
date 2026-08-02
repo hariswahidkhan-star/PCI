@@ -39,7 +39,7 @@ describe('EventPasses (My event passes wallet)', () => {
     setUrl('/event-passes?preview=1')
     renderWithProviders(<EventPasses />)
 
-    expect(await screen.findByText('PCI ai Project Controls Summit 2026')).toBeInTheDocument()
+    expect(await screen.findByText('PCI AI Project Controls Summit 2026')).toBeInTheDocument()
     expect(screen.getByText('Regional Workshop — Cost Engineering in Practice')).toBeInTheDocument()
 
     // No network call happened — fixtures are local.
@@ -74,7 +74,7 @@ describe('EventPasses (My event passes wallet)', () => {
     const user = userEvent.setup()
     setUrl('/event-passes?preview=1')
     renderWithProviders(<EventPasses />)
-    await screen.findByText('PCI ai Project Controls Summit 2026')
+    await screen.findByText('PCI AI Project Controls Summit 2026')
 
     await user.click(screen.getAllByRole('button', { name: 'Replace pass' })[0])
     // Confirm step, with a way out.

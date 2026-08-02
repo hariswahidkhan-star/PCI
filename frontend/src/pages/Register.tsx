@@ -82,7 +82,7 @@ export default function Register() {
     <AuthShell>
       <div className="card login-card fade-up">
         <div className="logo">
-          <img src="/assets/logo.png" alt="PCI ai" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
+          <img src="/assets/logo.png" alt="PCI AI" onError={(e) => ((e.target as HTMLImageElement).style.display = 'none')} />
           <h1 style={{ fontSize: '1.25rem', marginTop: '.5rem' }}>{t('reg.title')}</h1>
           <p className="muted small">{t('reg.subtitle')}</p>
         </div>

@@ -80,7 +80,7 @@ public static class CertPdf
 
         // signature line (right-of-centre)
         cs.Append("0.4 0.4 0.4 RG 0.8 w ").Append(Rect(430, fy - 8, 180, 0, stroke: true));
-        Text(cs, 430, fy - 24, "Registrar, PCI ai", 9, false, 0.45, 0.45, 0.45);
+        Text(cs, 430, fy - 24, "Registrar, PCI AI", 9, false, 0.45, 0.45, 0.45);
 
         // ── QR (bottom-right) ──
         DrawQr(cs, d.VerifyUrl, x: W - 70 - 96, y: 56, size: 96);

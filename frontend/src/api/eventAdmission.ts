@@ -85,7 +85,7 @@ const FIXTURE_PASSES: EventPass[] = [
     state: 'active',
     event: {
       id: 501,
-      title: 'PCI ai Project Controls Summit 2026',
+      title: 'PCI AI Project Controls Summit 2026',
       startsAt: '2026-09-14 09:00:00',
       endsAt: '2026-09-14 17:30:00',
       timezone: 'Europe/London',
@@ -147,7 +147,7 @@ const FIXTURE_PASSES: EventPass[] = [
 const FIXTURE_STAFF_EVENTS: StaffEvent[] = [
   {
     id: 501,
-    title: 'PCI ai Project Controls Summit 2026',
+    title: 'PCI AI Project Controls Summit 2026',
     startsAt: '2026-09-14 09:00:00',
     timezone: 'Europe/London',
     gates: [

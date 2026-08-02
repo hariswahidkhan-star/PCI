@@ -6,7 +6,7 @@ namespace PCI.Backend.Core;
 /// The one and only issuer of the canonical PCI Student Number.
 ///
 /// A person has exactly one number, for life, whether their account was first created through
-/// PCI ai/MyPCI, PCI World, an admin, a payment, an honorary conversion or a partner import.
+/// PCI AI/MyPCI, PCI World, an admin, a payment, an honorary conversion or a partner import.
 /// Every one of those paths must call <see cref="GetOrIssue"/> inside the transaction that creates
 /// the canonical <c>users</c> row — nothing else may write <c>users.registration_no</c>.
 ///

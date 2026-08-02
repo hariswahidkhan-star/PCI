@@ -87,7 +87,7 @@ inviting real users.
 ### Enabling email (two options)
 - **Easiest — Resend:** create a free account at https://resend.com, add an API key, and set one
   environment variable: `RESEND_API_KEY`. To send from your own address, verify your domain in
-  Resend and set `MAIL_FROM` (e.g. `PCI ai <no-reply@yourdomain.org>`); until then a built-in
+  Resend and set `MAIL_FROM` (e.g. `PCI AI <no-reply@yourdomain.org>`); until then a built-in
   test sender is used, which only delivers to the Resend account owner's inbox.
 - **Classic SMTP:** set `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`.
 

@@ -317,7 +317,7 @@ details.faq .faq-a a{color:var(--red);font-weight:600;}
   .burger{display:flex;}
   html.menu-open .nav{display:flex;}
 }
-/* the "PCI ai" wordmark carries the brand on its own in the top bar;
+/* the "PCI AI" wordmark carries the brand on its own in the top bar;
    the footer keeps the full institute-name lockup */
 .hdr .logo-name,.hdr .logo-bar{display:none;}
 

@@ -51,7 +51,7 @@ export default function PortalSwitcher({ navigate }: { navigate?: (url: string) 
         aria-busy={state === 'busy'}
         aria-describedby="ps-desc"
       >
-        <span className="ps-brand">PCI ai <span className="ps-sep" aria-hidden="true">/</span> MyPCI</span>
+        <span className="ps-brand">PCI AI <span className="ps-sep" aria-hidden="true">/</span> MyPCI</span>
         <span className="ps-sub" id="ps-desc">Manage applications, membership, learning access and certifications.</span>
         <span className="ps-action">
           {state === 'busy' ? 'Opening MyPCI…' : 'Switch to MyPCI'}

@@ -138,7 +138,7 @@ export default function Support() {
                   <div className="ticket-thread fade-up">
                     {ticket.messages.map((m, i) => (
                       <div key={i} className={'tmsg ' + (m.sender === 'user' ? 'mine' : 'theirs')}>
-                        <div className="small muted">{m.sender === 'user' ? t('sup.you') : 'PCI ai'} · {fmtDate(m.created_at)}</div>
+                        <div className="small muted">{m.sender === 'user' ? t('sup.you') : 'PCI AI'} · {fmtDate(m.created_at)}</div>
                         <div>{m.body}</div>
                       </div>
                     ))}
