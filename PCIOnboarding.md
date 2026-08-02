@@ -372,7 +372,7 @@ A .NET 8 solution (`secureexam/PCI.SecureExam.sln`, SDK pinned via `global.json`
 security model even if you never touch this code, because backend exam endpoints enforce it:
 
 - **Host pinning:** the client is pinned to a dot-anchored HTTPS allowlist
-  (`projectcontrolsinstitute.org`, `pci-global.org`, `localhost`). A malicious `api=` in the
+  (`projectcontrolsinstitute.org`, `localhost`). A malicious `api=` in the
   `pciexam://` launch URI is ignored; the client refuses to start against an untrusted host.
 - **Single-use launch codes**, not bearer tokens: the portal hands the client a short-lived
   code redeemed against the pinned host.

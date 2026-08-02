@@ -15,7 +15,6 @@ public sealed class ClientConfig
     public string[] AllowedApiHosts { get; set; } =
     {
         "projectcontrolsinstitute.org",
-        "pci-global.org",
         "localhost"
     };
 

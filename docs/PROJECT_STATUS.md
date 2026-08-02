@@ -75,7 +75,7 @@ Per the completion standard (§7), where an external credential is unavailable t
 complete and tested against a stand-in**, and only activation remains:
 
 - **Production MySQL cutover** — provision managed MySQL and run the migration (`docs/MYSQL_MIGRATION.md`).
-- **DNS** for the canonical + `www` + `pciglobal.ai` hosts.
+- **DNS** for the canonical + `www` hosts.
 - **SEO tokens** — paste GA4/GTM/Clarity IDs and GSC/Bing verification tokens; first IndexNow submit.
 - **QuickBooks** — supply an Intuit app (client id/secret) and complete the one-time OAuth grant for a
   refresh token; the connector, mapping and delivery are done and verified against a stand-in.

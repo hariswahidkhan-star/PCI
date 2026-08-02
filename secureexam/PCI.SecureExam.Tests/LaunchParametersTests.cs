@@ -49,7 +49,7 @@ public class LaunchParametersTests
     public void Launch_override_accepted_for_allowlisted_host()
     {
         var cfg = new ClientConfig { ApiBaseUrl = "https://exam.projectcontrolsinstitute.org" };
-        cfg.WithLaunch(LaunchParameters.Parse("pciexam://start?code=X&api=https%3A%2F%2Feu.pci-global.org"));
-        Assert.Equal("https://eu.pci-global.org", cfg.ApiBaseUrl);
+        cfg.WithLaunch(LaunchParameters.Parse("pciexam://start?code=X&api=https%3A%2F%2Feu.projectcontrolsinstitute.org"));
+        Assert.Equal("https://eu.projectcontrolsinstitute.org", cfg.ApiBaseUrl);
     }
 }
