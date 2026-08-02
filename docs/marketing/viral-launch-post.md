@@ -54,7 +54,7 @@ Image: `pci-viral-post-b-image.png` (4:5) · square variant `pci-viral-post-b-sq
 > So settle it in the comments: certification or experience — which one do YOU hire?
 > We'll be in the thread. 👇
 >
-> 📅 Launching September 1, 2026 — projectcontrolsinstitute.org
+> Launching September 1, 2026  ·  projectcontrolsinstitute.org
 >
 > #ProjectControls #ProjectManagement #CostEngineering #PlanningEngineer
 
@@ -93,7 +93,7 @@ Image: `pci-viral-post-image.png` (4:5). Full copy below — tag-CTA engine.
 > That's project controls — the most important job on every megaproject. And almost
 > nobody knows it exists.
 >
-> The numbers are wild:
+> The numbers are staggering:
 >
 > → 25 million new project professionals needed by 2030 (PMI)
 > → US$94 trillion of infrastructure to build by 2040 (Oxford Economics)
@@ -119,7 +119,7 @@ Image: `pci-viral-post-image.png` (4:5). Full copy below — tag-CTA engine.
 > 👇 Tag the planner, cost engineer or PM who saved a project and never got the
 > credit. Today they get it.
 >
-> 📅 Launching September 1, 2026 — projectcontrolsinstitute.org
+> Launching September 1, 2026  ·  projectcontrolsinstitute.org
 >
 > #ProjectControls #CostEngineering #PlanningEngineer #ProjectManagement #Megaprojects
 
@@ -163,7 +163,7 @@ authentic story version (3b) runs only after the first real conferral, with perm
 >
 > Tag them. Or send this to them quietly — they'll know why. 👇
 >
-> 📅 Launching September 1, 2026 — projectcontrolsinstitute.org
+> Launching September 1, 2026  ·  projectcontrolsinstitute.org
 >
 > #ProjectControls #CostEngineering #ProjectManagement #PlanningEngineer
 
