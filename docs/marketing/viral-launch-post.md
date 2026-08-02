@@ -12,21 +12,28 @@ land on the **same post**, so they compound.
 
 > Nobody claps for the person who saved the project.
 >
-> The ribbon gets cut. The photos get taken. The award goes on someone else's shelf.
+> The ribbon gets cut. The photos get taken. The award lands on someone else's shelf.
 >
-> But months earlier, in a quiet office, a planner spotted the slip. A cost engineer
-> caught the overrun. A risk analyst said the uncomfortable thing out loud.
+> But rewind six months.
+>
+> A planner spotted the slip before it became a headline.
+> A cost engineer caught the overrun before it ate the contingency.
+> A risk analyst said the uncomfortable thing out loud — in writing.
+>
+> No applause. No credit. Just a project that quietly didn't fail.
 >
 > That's project controls — the most important job on every megaproject. And almost
 > nobody knows it exists.
 >
-> Here's what the numbers say:
+> The numbers are wild:
 >
 > → 25 million new project professionals needed by 2030 (PMI)
 > → US$94 trillion of infrastructure to build by 2040 (Oxford Economics)
-> → And no professional home for the people who make it all add up. Until now.
+> → Professional homes for this discipline: zero.
 >
-> On 1 September 2026, the Project Controls Institute goes live — an independent,
+> Until September 1.
+>
+> On 01.09.2026, the Project Controls Institute goes live — an independent,
 > non-profit US body for project controls professionals, project managers, cost
 > engineers and project finance professionals, worldwide:
 >
@@ -48,7 +55,7 @@ land on the **same post**, so they compound.
 > 👇 Tag the planner, cost engineer or PM who saved a project and never got the
 > credit. Today they get it.
 >
-> projectcontrolsinstitute.org
+> 📅 Launching September 1, 2026 — projectcontrolsinstitute.org
 >
 > #ProjectControls #CostEngineering #PlanningEngineer #ProjectManagement #Megaprojects
 
