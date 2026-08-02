@@ -1,13 +1,16 @@
 # PCI Marketing Playbook — Channels, LinkedIn & Ready-to-Send Templates
 
 A practical working document for PCI marketing. Part 1 gives you the facts, Part 2 the market
-numbers, Part 3 everything the platform gives away free, Part 4 the student pitch, Part 5 the
-techniques per platform (LinkedIn is the priority), Part 6 the message templates — short to long,
-copy-paste ready — Part 7 the rebuttal library, and Part 8 the co-builder mission.
+numbers, Part 3 everything the platform gives away free, Part 4 the audience and the exact job
+titles to target, Part 5 the student pitch, Part 6 the techniques per platform (LinkedIn is the
+priority, including account tiers and Sales Navigator, plus Facebook, Instagram and print),
+Part 7 the message templates — short to long, copy-paste ready — Part 8 the rebuttal library,
+Part 9 the AI prompt library for executing all of it with a chat assistant, and Part 10 the
+co-builder mission.
 
 **Three golden rules (apply to every message and post):**
 1. **Stay honest.** Never claim accreditation, guaranteed jobs/salary, or 501(c)(3) status. PCI's
-   candour *is* the brand. (Quick do/don't list in Part 9.)
+   candour *is* the brand. (Quick do/don't list in Part 11.)
 2. **Personalise the first line.** One sentence showing you know who they are beats any template.
 3. **One message, one ask.** Visit the site, apply, reply, or book a call — never all four.
 
@@ -93,7 +96,75 @@ needs a 30-second check.
 
 ---
 
-## Part 4 — Convincing students
+## Part 4 — The audience: segments, job titles and where to find them
+
+Outreach lives or dies on targeting. Six segments, in priority order, with the exact titles to
+search, follow and connect with. Combine any title list with the sector and region lists at the
+end when building searches.
+
+### 4.1 Honorary prospects — senior, distinguished figures
+
+*Goal: honorary invitations (templates A2/A5/C3). Small volume, heavy personalisation.*
+
+**Titles:** Project Controls Director · Head of Project Controls · Programme Controls Director ·
+VP Project Controls · Director of Project Services · Head of PMO · Programme Director · Head of
+Cost Engineering · Head of Planning · Regional Director (EPC) — plus authors of books and papers
+in the discipline, university lecturers in project/construction management, standards-committee
+members, long-serving community and chapter leaders, and respected retired practitioners.
+
+### 4.2 Certification candidates — practising controls professionals (PCL-AI)
+
+*Goal: enrolment. The core volume audience for posts, connection requests and DMs.*
+
+**Titles:** Planning Engineer · Senior Planner · Planner / Scheduler · Project Planner · Cost
+Engineer · Cost Controller · Cost Manager · Project Controls Engineer · Project Controls
+Specialist · Project Controls Lead / Manager · Quantity Surveyor · Estimator / Cost Estimator ·
+Risk Analyst / Risk Manager (projects) · EVM Analyst · PMO Analyst / PMO Manager · Project
+Services Engineer / Manager · Contracts Engineer / Administrator · Commercial Analyst.
+
+### 4.3 Project finance professionals (PFL-AI)
+
+**Titles:** Project Finance Analyst / Associate / Manager · Infrastructure Finance Analyst ·
+Financial Modeller (project / infrastructure) · PPP Specialist · Investment Analyst
+(infrastructure) · Commercial Manager · Project Accountant · Cost & Commercial Analyst.
+
+### 4.4 Project managers moving up (PML-AI)
+
+**Titles:** Project Manager · Senior Project Manager · Project Engineer (transitioning to
+management) · Construction Manager · Programme Manager · Delivery Manager (infrastructure).
+
+### 4.5 Students and early career
+
+*Goal: founding-cohort enrolment (Part 5).* Civil / mechanical / industrial engineering students,
+construction management and quantity-surveying students, finance students interested in
+infrastructure, plus **Graduate Planner · Trainee Estimator · Junior Cost Engineer · Site
+Engineer** (first roles that feed into controls). Reach them through societies, careers services
+and graduate LinkedIn groups rather than one-by-one.
+
+### 4.6 Employers, academia and partners
+
+**Employer titles (decision makers):** PMO Director · Head of Projects · Engineering Director ·
+Programme Director · Capability / L&D Manager · Learning & Development Lead · HR Business Partner
+(engineering) · Technical Talent Acquisition Lead. **Academic/partner titles:** Professor /
+Lecturer in Construction or Project Management · Programme Director (MSc) · Head of Careers
+Service · Training company founder / BD Manager.
+
+### 4.7 Sectors, regions and who to follow
+
+- **Sectors (mirror the site's sector pages):** construction & infrastructure · oil & gas ·
+  energy & utilities · rail & transportation · aviation · aerospace & defence · manufacturing ·
+  data centres · smart cities · government programmes.
+- **Priority regions (mirror the 25 chapters):** Saudi Arabia, UAE, Qatar, Kuwait, Oman, Bahrain,
+  Egypt · UK, Ireland, Europe (Germany, Netherlands) · US, Canada, Mexico, Brazil · India,
+  Pakistan, Malaysia, Singapore · Australia, New Zealand · Nigeria, Kenya, South Africa.
+- **Follow daily:** the top voices posting under #ProjectControls, #EarnedValue,
+  #CostEngineering, #PlanningEngineer, #QuantitySurveying, #ProjectFinance — plus major EPC and
+  infrastructure employers' pages, and the professional bodies' feeds (engage respectfully; never
+  disparage other bodies).
+
+---
+
+## Part 5 — Convincing students
 
 Students are the highest-leverage audience: the founding window makes PCI free for them, they share
 everything, and today's student cohort is the profession's next decade. The pitch is genuinely
@@ -113,7 +184,7 @@ strong — deliver it in this order:
    Simulation Lab practice, video lectures as they release — no textbook bill attached.
 5. **Close with belonging.** Chapters in 25 countries, a community being built in the open, and
    founding members recognised permanently as early builders — students don't just join, they
-   co-found (Part 8).
+   co-found (Part 10).
 
 **Where to reach them:** university partnerships (`/university-partnerships.html`), student
 societies (engineering, construction, QS and finance), campus ambassador arrangements, graduate
@@ -123,9 +194,9 @@ magnet: give the formula sheet or study guide first, ask for nothing, and let th
 
 ---
 
-## Part 5 — Techniques per platform
+## Part 6 — Techniques per platform
 
-### 5.1 LinkedIn — the priority channel
+### 6.1 LinkedIn — the priority channel
 
 This is where project controls professionals, cost engineers, planners and their employers live.
 Put 70% of the effort here.
@@ -140,7 +211,8 @@ Put 70% of the effort here.
 
 **B. Post consistently (every week)**
 - **Cadence:** 3–4 posts a week from the company page. The ready-made pack in
-  `docs/marketing/linkedin-launch-20-posts.md` covers the first 5–6 weeks.
+  `docs/marketing/linkedin-launch-20-posts.md` covers the first 5–6 weeks; the prompts in Part 9
+  generate the calendars after that.
 - **Formats that work, in order:** short text post with one strong image → document/carousel
   (e.g. "5 signs your CPI is lying", certificate visuals) → poll (great early reach) → short video.
 - **Structure every post:** hook line first (the only line people see before "…see more"), teach
@@ -155,58 +227,93 @@ Put 70% of the effort here.
   profile, replies from the page. This is free distribution.
 - Reply to every comment on PCI posts within 24 hours.
 
-**D. Connect and DM (the outreach engine — templates in Part 6)**
-- 20–30 targeted connection requests per week: planners, cost engineers, project controls
-  managers/directors, PMO leads — prioritise the chapter countries (Gulf, UK, US, India, Pakistan,
-  Australia…).
+**D. Connect and DM (the outreach engine — templates in Part 7)**
+- 20–30 targeted connection requests per week, using the Part 4 title lists — prioritise the
+  chapter countries (Gulf, UK, US, India, Pakistan, Australia…).
 - Sequence: **connection note** (≤300 characters) → after acceptance, **thank-you + short intro
   DM** → if they engage, the **detailed DM** or an email. Never pitch in the connection note
   itself, never send the long message first, and stop after one polite follow-up — no spam.
 - For distinguished senior figures, use the **honorary invitation** track instead — it opens far
   more doors than a sales message, because you're offering recognition, not asking for money.
 
-**E. Use LinkedIn's free extras**
+**E. Account tiers — free vs Premium vs Sales Navigator**
+- **Free account** (start here): full posting, engagement and the connect-note sequence. LinkedIn
+  throttles connection volume — stay around 20–30 requests/week and keep acceptance above ~40% or
+  slow down. No InMail to strangers (except members with "Open Profile", which is free to
+  message). The free account plus good targeting covers 80% of the job.
+- **Premium Business** (adds ~15 InMail credits/month, who-viewed-profile, unlimited browsing):
+  worth it once outreach is systematic. Spend InMails only on high-value, hard-to-reach people:
+  honorary prospects and employer decision-makers. Never spend InMail on someone who would accept
+  a free connection request.
+- **Sales Navigator** (~50 InMails/month + the real prize: advanced search): filter leads by the
+  exact Part 4 titles, geography, seniority, industry and company size; save lead lists per
+  segment; get alerts when leads post (comment first, then connect — warm beats cold). Build one
+  list per campaign: "Honorary prospects — Gulf", "Planning engineers — UK", "PMO directors —
+  KSA". Templates A8/A9 are written to InMail length.
+- **InMail practice:** subject under eight words, body under 120, one ask. InMail replies are
+  highest in the first 24 hours — send Tuesday–Thursday, recipient's morning.
+
+**F. Use LinkedIn's free extras**
 - **LinkedIn Events** for every webinar (attendees get reminders; the event page markets itself).
 - **Company newsletter** once the page has some followers — monthly digest, same content as the
   email newsletter.
 - **Polls** monthly ("Which forecast formula does your project trust?") — cheap reach + content
   ideas from the results.
 
-**F. Measure weekly:** follower growth, engagement rate per post, DM reply rate, link clicks
-(use UTM tags: `?utm_source=linkedin&utm_medium=dm`), honorary applications started.
+**G. Measure weekly:** follower growth, engagement rate per post, connection acceptance rate, DM
+and InMail reply rates, link clicks (use UTM tags: `?utm_source=linkedin&utm_medium=dm`), honorary
+applications started.
 
-### 5.2 X / Twitter
+### 6.2 X / Twitter
 Repurpose every LinkedIn post as a short thread the same day. Follow and reply to construction,
 energy and mega-project commentary. Low effort, keeps the handle alive.
 
-### 5.3 YouTube
+### 6.3 YouTube
 Record every webinar → publish full version + 2–3 one-minute clips (Shorts) with a worked example
 each. As the domain video lectures release, publish a free sample lecture — it's the best proof of
 teaching quality. Video titles = search phrases ("What is Earned Value Management?", "Project
 controls career path").
 
-### 5.4 Instagram
-Visual-only repurposing: quote cards from posts, certificate/badge visuals, chapter photos,
-30-second explainer reels. Bio link to the site. Two posts a week is enough.
+### 6.4 Facebook
+Facebook matters most in several priority markets — Pakistan, India, Egypt, Nigeria, the
+Philippines diaspora of Gulf project staff — where professional life happens in groups.
+- **Page:** mirror the LinkedIn cadence (2–3 posts/week), but choose the more visual/community
+  pieces: conferral announcements, chapter photos, student posts, webinar invites.
+- **Groups:** join the planning engineer / QS / project management groups for each priority
+  country. Contribute real answers; share the short template (7.B1) only when someone asks about
+  certifications; disclose that you work with PCI. Group moderators can become chapter allies —
+  message them respectfully.
+- **Events:** create a Facebook Event for every webinar alongside the LinkedIn Event.
+- **Paid (when budget exists):** boost the student post (7.D4) and conferral announcements.
+  Target by job title + interests (project management, civil engineering, Primavera P6) + the
+  chapter countries; send traffic to the matching regional page with UTM tags, never the homepage.
 
-### 5.5 WhatsApp & Telegram
+### 6.5 Instagram
+Visual-only repurposing; two to three posts a week is enough.
+- **Pillars:** education carousels (one concept in 6–8 slides — the formula sheet is a goldmine) ·
+  awardee/credential spotlights (with permission) · quote cards from the blog · student reels
+  ("What does a planning engineer actually do?") · chapter/community photos.
+- **Stories:** webinar countdowns, "new lecture released", polls and question stickers.
+- **Reels:** 30-second scripts — hook (a surprising number from Part 2), one teaching beat, one
+  CTA ("full guide on the site — link in bio").
+- **Bio link:** point at `/candidate-journey.html` with UTM, or a single link page listing enrol /
+  honorary / downloads.
+- **Hashtag set:** #ProjectControls #CostEngineering #PlanningEngineer #QuantitySurveyor
+  #EngineeringStudent #ConstructionCareers + one city/country tag per post.
+
+### 6.6 WhatsApp & Telegram
 Project controls communities in the Gulf, India and Pakistan run on WhatsApp/Telegram groups.
-Join relevant professional groups, contribute genuinely, and share the short template (6.B1) when
+Join relevant professional groups, contribute genuinely, and share the short template (7.B1) when
 someone asks about certifications — never cold-blast a group. A PCI-run broadcast channel for exam
 windows and webinar dates works well once there's an audience.
 
-### 5.6 Facebook & Reddit
-Facebook groups for planning engineers and Reddit (r/projectmanagement, r/ConstructionManagers)
-allow discussion, not ads. Answer questions helpfully; mention PCI only where it genuinely answers
-the question, and disclose you work with PCI. One good answer outperforms ten promo posts.
-
-### 5.7 Email
+### 6.7 Email
 - **Newsletter** (signup is on every page of the site): monthly — one teaching piece, one platform
   update, exam windows, new conferrals.
-- **Direct outreach:** templates 6.C — short first, detail on reply. Always a real person's name,
+- **Direct outreach:** templates 7.C — short first, detail on reply. Always a real person's name,
   always an unsubscribe line for lists.
 
-### 5.8 The website itself
+### 6.8 The website itself
 - Point regional/paid traffic at the matching regional pages (e.g.
   `/project-controls-certification-saudi-arabia.html`), not the homepage.
 - Keep the site-wide **announcement banner** (edited from the admin console, no developer needed)
@@ -217,7 +324,24 @@ the question, and disclose you work with PCI. One good answer outperforms ten pr
 - **Before any campaign: switch on analytics** — the site has a prepared Plausible/GA4 hook that
   ships disabled. Without it you can't measure anything.
 
-### 5.9 Partners
+### 6.9 Print & offline
+Print still works where this profession gathers: campuses, conferences and chapter meetups.
+- **Assets to produce (copy prompts in Part 9):** a one-page A5 flyer (what PCI is + the free
+  stack + QR code) · a student variant (founding window, free exam) · an honorary one-pager for
+  handing to senior figures at events · a tri-fold brochure for employer meetings · A3 posters
+  for university notice boards · a roll-up banner for conference stands and chapter meetups.
+- **Every printed piece must carry:** the verify URL (`projectcontrolsinstitute.org/verify.html`),
+  one honest positioning line (use the site footer's wording), and a **QR code with a UTM-tagged
+  link** (e.g. `?utm_source=print&utm_campaign=uni-karachi-2026`) pointing at the most relevant
+  page — regional page, candidate journey or honorary application. Print is measurable only
+  through those QR links.
+- **Where:** university career fairs and society events (pair with the Part 5 pitch) · industry
+  conferences and exhibitions where planners and cost engineers gather · chapter meetups ·
+  partner training providers' classrooms.
+- **Languages:** the platform speaks seven — print the Gulf flyer in Arabic/English, the Latin
+  America one in Spanish, and say so on the flyer; it's a differentiator.
+
+### 6.10 Partners
 Employers (`/why-employers.html`), universities (`/university-partnerships.html`) and training
 providers (`/become-a-training-partner.html`) each have a landing page and a template below. One
 warm partner intro is worth a month of cold DMs — and an honorary conferral to a respected figure
@@ -225,12 +349,12 @@ inside a target organisation is the warmest intro there is.
 
 ---
 
-## Part 6 — The template library
+## Part 7 — The template library
 
 Everything below is copy-paste ready. Personalise `[brackets]`, keep the honesty language intact.
-Ordered short → long within each group. For answering objections, use the rebuttals in Part 7.
+Ordered short → long within each group. For answering objections, use the rebuttals in Part 8.
 
-### 6.A LinkedIn templates
+### 7.A LinkedIn templates
 
 **A1. Connection note — general (≤300 characters)**
 *Use when: connecting with any project controls professional.*
@@ -332,7 +456,40 @@ send it sparingly and personalise heavily.*
 > timing's wrong, all good. The short version: [one line — e.g. "free, board-conferred recognition
 > with a verifiable award — ten-minute application"]. Here if useful.
 
-### 6.B WhatsApp / short text templates
+**A8. InMail — professional / employer (Premium or Sales Navigator)**
+*Use when: messaging a non-connection worth an InMail credit. Subject under eight words.*
+
+> Subject: A verifiable standard for project controls
+>
+> Dear [Name],
+>
+> I'll keep this to four sentences. PCI is an independent non-profit building the certification
+> standard for project controls, cost engineering and project finance — with governed AI at the
+> core and every credential publicly verifiable in seconds. Given your role at [Company], the
+> two-minute overview at projectcontrolsinstitute.org/why-pci.html may be worth a look. If it
+> resonates, I'd welcome a short call — and if not, thanks for reading this far.
+>
+> [Your name], Project Controls Institute
+
+**A9. InMail — honorary prospect (Premium or Sales Navigator)**
+*Use when: a senior figure who won't see a connection request. Personalise the first line hard.*
+
+> Subject: An invitation regarding your contribution
+>
+> Dear [Name],
+>
+> Your [specific contribution — programme, book, standards work] is the reason for this message.
+> The board of the Project Controls Institute confers a small number of Honorary Fellow (PCI)
+> recognitions on practitioners of distinguished contribution — no examination, no fees at any
+> stage, and a registered award that is publicly verifiable. It is honorary recognition, separate
+> from our examined certifications, and conferral is at the board's discretion. If you'd consider
+> putting yourself forward, the ten-minute application is at
+> projectcontrolsinstitute.org/honorary-application.html — and I'm glad to answer questions first.
+>
+> With respect,
+> [Your name], Project Controls Institute
+
+### 7.B WhatsApp / short text templates
 
 **B1. Shortest version (any chat)**
 
@@ -354,7 +511,7 @@ send it sparingly and personalise heavily.*
 > founding window the exam fee is waived. Free body of knowledge + practice lab on the site →
 > projectcontrolsinstitute.org
 
-### 6.C Email templates
+### 7.C Email templates
 
 **C1. Cold email — short intro**
 *Use when: first contact. Subject: "A professional standard for project controls".*
@@ -534,7 +691,7 @@ project-controls standard".*
 > Best regards,
 > [Your name]
 
-### 6.D Post templates (LinkedIn / newsletter)
+### 7.D Post templates (LinkedIn / newsletter)
 
 **D1. Honorary conferral announcement**
 
@@ -600,7 +757,7 @@ project-controls standard".*
 
 ---
 
-## Part 7 — Objection handling: the rebuttal library
+## Part 8 — Objection handling: the rebuttal library
 
 The approved answer to every hard question. Learn the pattern: **agree with the concern, answer
 with a fact, point at proof.** Never get defensive — the honest answer *is* the sales pitch.
@@ -682,7 +839,191 @@ with a fact, point at proof.** Never get defensive — the honest answer *is* th
 
 ---
 
-## Part 8 — Building it together: students and honorary members as co-builders
+## Part 9 — The AI prompt library: run the playbook with a chat assistant
+
+Every task in this playbook can be executed faster with an AI chat assistant (Claude, ChatGPT or
+similar). The prompts below are copy-paste ready. **Workflow: start every session with the master
+prompt (P1) — attach this playbook PDF to the chat when you do — then use any task prompt.**
+Rule: the assistant drafts, **you** verify facts and send. Anything public still passes the
+Part 11 guardrails by human eyes.
+
+### 9.1 Setup
+
+**P1. Master context prompt (start every session with this + attach this playbook)**
+
+> You are the marketing assistant for the Project Controls Institute (PCI). I have attached our
+> marketing playbook — read it before answering. Follow it strictly, especially: British English;
+> teach-don't-hype voice; the honesty rules in Part 11 (never claim accreditation, 501(c)(3),
+> guaranteed jobs/salaries or guaranteed conferral; market figures only with named sources;
+> Honorary Fellow is never the examined certification). Use the facts in Part 1 and Part 3, the
+> audience titles in Part 4, and the templates in Part 7 as your base material. Every message you
+> draft has exactly one call to action. When you are not sure a claim is allowed, flag it instead
+> of writing it. Confirm you've read the playbook, then wait for my task.
+
+### 9.2 Content calendars & post scheduling
+
+**P2. One-week LinkedIn calendar**
+
+> Create a 7-day LinkedIn content calendar for the PCI company page, 4 posts (Mon/Tue/Thu/Fri).
+> Mix formats: one teaching post with worked arithmetic (style of the LinkedIn launch pack), one
+> document/carousel outline, one poll, one free-stack or honorary awareness post. For each post
+> give: day and suggested time (I'm posting for the [Gulf/UK/US] audience), hook line, full
+> post text ready to paste, 3–5 hashtags, CTA link with UTM tag `?utm_source=linkedin`, and a
+> one-line image/asset suggestion. Output as a table I can paste into my scheduler, then the full
+> post texts below it.
+
+**P3. One-month multi-platform calendar**
+
+> Build a 30-day content calendar across LinkedIn (4/week), X (1 repurposed thread per LinkedIn
+> post), Instagram (3/week) and Facebook (2/week). Weekly themes: week 1 "what is project
+> controls / why PCI", week 2 "the free stack" (Simulation Lab, body of knowledge, MCQs,
+> lectures), week 3 "students & founding window", week 4 "honorary route + community/chapters".
+> Never repeat a hook. For each item give: date, platform, format, hook, summary (or full text
+> for LinkedIn), hashtags, CTA link with UTM per platform. Output as a CSV-style table with one
+> row per item so I can import it into a scheduling tool. After the table, write out the full
+> text for the first week only; I'll ask for later weeks as I need them.
+
+**P4. Fill a specific calendar slot**
+
+> Write the full post for this calendar slot: [paste the row]. Follow the teaching-post pattern:
+> hook first, one concrete worked example or fact, one takeaway line, soft CTA, 3–5 hashtags.
+> Give me two variants — one for the company page voice, one for a personal profile voice.
+
+**P5. Batch variants of a pack post**
+
+> Here is post [N] from our LinkedIn launch pack: [paste post]. Produce three fresh variants that
+> teach the same concept with different hooks and different worked numbers (keep the arithmetic
+> correct and show it). Same voice, same honesty rules, different angles: one aimed at planners,
+> one at cost engineers, one at students.
+
+**P6. Conferral announcement kit**
+
+> We are announcing an honorary conferral. Details: name [—], citation [—], award number
+> [PCI-HON-YYYY-NNNN], their LinkedIn handle [—], permission to name them: yes. Using template D1
+> as the base, produce: (1) the LinkedIn post, (2) a 2-sentence newsletter item, (3) an X thread
+> of 3 tweets, (4) an Instagram caption. All must state it is honorary recognition, distinct from
+> the examined certifications, and include the verify link.
+
+### 9.3 Outreach: connections, DMs, InMails, email
+
+**P7. Batch-personalise connection notes**
+
+> Here is a list of people I want to connect with, as rows of: name | title | company | one
+> notable detail. [paste rows] For each, write a LinkedIn connection note under 300 characters
+> using template A1 (professionals) or A2 (senior/honorary prospects — choose based on title
+> seniority), personalised with their detail in the first sentence. No pitching, no links. Output
+> a table: name | chosen template | note | character count.
+
+**P8. Personalised InMail**
+
+> Write an InMail to this person: [paste their LinkedIn headline and About section]. Segment:
+> [employer decision-maker → use A8 / honorary prospect → use A9]. Keep the subject under eight
+> words and the body under 120 words, with exactly one ask. Personalise the opening line from
+> their profile. Flag anything you assumed rather than saw in their profile.
+
+**P9. Honorary invitation, deeply personalised**
+
+> Draft a personalised honorary invitation (template A5 for a DM, or C3 for a formal email — give
+> me both). Here is their background: [paste bio / LinkedIn About / achievements]. Reference their
+> specific contribution precisely in the first line. Do not promise conferral — invitation to
+> apply only. Mark any factual claim about them that I must verify before sending with [VERIFY].
+
+**P10. Email sequence for a segment**
+
+> Create a 3-touch email sequence for [segment from Part 4, e.g. "PMO directors in Saudi Arabia"]:
+> touch 1 = short intro (base: C1, or C4 for employers), touch 2 = value follow-up one week later
+> sharing one free resource relevant to them, touch 3 = polite close (base: C6). Personalisation
+> fields in [brackets]. Subject lines under 8 words. Include an unsubscribe line. Stop-rule: no
+> reply after touch 3 means no further contact.
+
+**P11. Reply to an objection**
+
+> Someone replied to my outreach with this: [paste their message]. Draft a reply using the
+> matching rebuttal from Part 8 — agree with the concern, answer with a fact, point at proof, one
+> link only. Keep it under 120 words and end with a light, no-pressure close.
+
+**P12. Sales Navigator search strings**
+
+> Using the job-title lists in Part 4, build LinkedIn Sales Navigator search plans for these three
+> campaigns: [e.g. "Honorary prospects — Gulf", "Planning engineers — UK", "PMO directors —
+> Pakistan"]. For each: the title keywords with OR/quotes boolean, seniority filter, geography,
+> industry filters, and one warm-up action to take before connecting (e.g. comment on their latest
+> post). Also give me the plain-LinkedIn boolean string version for use without Sales Navigator.
+
+### 9.4 Channel content: Facebook, Instagram, X, YouTube, print
+
+**P13. Instagram carousel**
+
+> Turn this concept into an 8-slide Instagram carousel: [e.g. "5 signs your CPI is lying" / a
+> formula from the master formula sheet]. Slide 1 = hook, slides 2–7 = one idea each in under 20
+> words, slide 8 = CTA (free downloads / candidate journey, link in bio). Then write the caption
+> (first line = hook, 3 short paragraphs) and the hashtag set from section 6.5. Add an image
+> direction note per slide for our designer.
+
+**P14. 30-second reel script**
+
+> Write a 30-second Instagram/TikTok reel script answering: [e.g. "What does a planning engineer
+> actually do?"]. Structure: 3-second hook with a big number from Part 2 (name the source on
+> screen), 20 seconds of teaching in plain words, 7-second CTA to the site. Give: spoken lines,
+> on-screen text per beat, and the caption with hashtags.
+
+**P15. Facebook group answer**
+
+> Someone in a [country] planning-engineers Facebook group asked: [paste question]. Write a
+> genuinely helpful answer that teaches first (2–3 short paragraphs), then mentions PCI only if it
+> truly answers their question, with a disclosure line that I work with PCI. No hard sell, at most
+> one link.
+
+**P16. X thread repurpose**
+
+> Convert this LinkedIn post into an X thread of 4–6 tweets: [paste post]. Tweet 1 must stand
+> alone as a hook. Keep the arithmetic, keep the source citations, end with one link. No hashtag
+> stuffing — two per thread maximum.
+
+**P17. Print flyer copy**
+
+> Write copy for a two-sided A5 flyer for [audience: university students at a careers fair /
+> professionals at a conference / honorary prospects at an industry event]. Front: headline, three
+> bullets, QR label. Back: the relevant free stack from Part 3, the honest positioning line from
+> the site footer, verify URL, and the QR link with `?utm_source=print&utm_campaign=[campaign]`.
+> Everything must fit A5 — mark word counts per block. Version it in English, and note which
+> blocks should be translated for an Arabic/Spanish print run.
+
+**P18. Webinar promotion kit**
+
+> We're running a webinar: title [—], speaker [—], date/time [—], registration link [—]. Produce
+> the full promo kit: LinkedIn Event description, one announcement post, one last-call post,
+> Facebook Event text, Instagram Story sequence (3 frames), a newsletter blurb, and a 48-hour
+> reminder email to registrants. One CTA everywhere: register.
+
+### 9.5 Analysis & operations
+
+**P19. Weekly metrics review**
+
+> Here are this week's numbers: [paste: follower growth, per-post impressions/engagement,
+> connection acceptance rate, DM/InMail reply rate, link clicks by UTM, honorary applications,
+> enrolment starts]. Tell me: the three things that worked (and why, judging from the content),
+> the one thing to stop, and next week's plan as a concrete list — which posts, which outreach
+> segment, what volume. Be blunt; don't flatter the numbers.
+
+**P20. Localise a post**
+
+> Translate and localise this post for [Arabic — Gulf audience / Spanish — Latin America]: [paste
+> post]. Keep the honesty rules and the one-CTA rule; adapt idioms, don't transliterate them; keep
+> technical terms (EVM, CPI) in English as the profession uses them. Flag anything a native
+> reviewer must check before publishing — we always have a native speaker approve before posting.
+
+**P21. Compliance check (run before anything ships)**
+
+> Check this draft against the playbook's Part 11 guardrails and list every violation with the
+> exact phrase and a compliant rewrite: [paste draft]. Specifically hunt for: accreditation or
+> recognition claims, outcome promises (jobs/salary), unsourced market figures, honorary presented
+> as certification, guaranteed conferral, more than one CTA, and hype adjectives that claim
+> rather than teach. If it's clean, say "clean" and nothing else.
+
+---
+
+## Part 10 — Building it together: students and honorary members as co-builders
 
 The mission behind every campaign: **PCI is not selling to students and honorary members — it is
 recruiting them to build a world-class professional platform.** The people the institute serves
@@ -722,7 +1063,7 @@ contribution recognised. Confirm a surface is live before promising it in copy.
 
 ---
 
-## Part 9 — Do / Don't (the guardrails)
+## Part 11 — Do / Don't (the guardrails)
 
 **Do say:** developed with reference to ISO/IEC 17024 · building toward accreditation ·
 independent non-profit institute · publicly verifiable · free, board-conferred honorary
@@ -736,5 +1077,6 @@ anything implying Honorary Fellow is a certification or a waived exam · guarant
 entitlement flag is on (Part 3).
 
 **Behaviour:** one follow-up maximum, then stop · never blast groups or buy lists · get
-permission before naming an awardee in a post · when unsure, use the site footer's own wording —
-it's the approved formulation.
+permission before naming an awardee in a post · respect connection-volume limits and InMail
+etiquette (Part 6.1E) · AI-drafted content is always human-checked before it ships (P21) · when
+unsure, use the site footer's own wording — it's the approved formulation.
