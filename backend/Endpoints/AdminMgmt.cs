@@ -262,7 +262,7 @@ public static class AdminMgmt
         }));
 
         // Per-certification documents, books & study materials (Phase 8).
-        Crud("cert_documents", new[]{ "certification_id","kind","title","description","url","route_key","watermark","published","sort_order" }, "certification_id, sort_order, id", "resources", certCol: "certification_id");
+        Crud("cert_documents", new[]{ "certification_id","kind","title","description","url","route_key","watermark","published","sort_order","lang" }, "certification_id, sort_order, id", "resources", certCol: "certification_id");
         Crud("governance_roles", new[]{ "role","holder","status","remit","sort_order" }, "sort_order, id", "governance");
         Crud("resources", new[]{ "title","category","doc_type","url","description","published","sort_order" }, "sort_order, id", "resources");
         Crud("news", new[]{ "title","body","published_date","url","published","sort_order" }, "published_date DESC, id DESC", "news");

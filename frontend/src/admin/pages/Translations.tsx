@@ -72,6 +72,8 @@ export default function Translations() {
         {!provider.configured && <p className="muted small">Auto-translate is disabled until a provider and API key are set above. You can still translate by hand in the editor below.</p>}
       </Card>
 
+      <ContentTranslations languages={languages} configured={provider.configured} />
+
       <PageEditor pages={pages} languages={languages} onChanged={refetch} />
     </div>
   )
@@ -100,6 +102,96 @@ export default function Translations() {
     try { await adminApi.post('/api/admin/i18n/clear', { lang }); setNote(`${name} translations cleared.`); refetch() }
     catch (e) { setNote((e as Error).message) } finally { setBusy(null) }
   }
+}
+
+// Learning-content translations (multilingual launch): exam & practice questions, Simulation Lab
+// scenarios and books/study materials, translated with the same provider into item_i18n and
+// overlaid when students are served the content. Answer keys and grading are never touched.
+interface ContentCoverage {
+  entities: { entity: string; label: string; total: number; translated: Record<string, number> }[]
+  languages: { code: string; name: string }[]
+}
+
+function ContentTranslations({ languages, configured }: { languages: { code: string; name: string }[]; configured: boolean }) {
+  const { data, loading, error, refetch } = useAdminQuery<ContentCoverage>('/api/admin/i18n/content-coverage')
+  const [busy, setBusy] = useState<string | null>(null)
+  const [note, setNote] = useState<string | null>(null)
+
+  async function translate(entity: string, lang: string, label: string, name: string) {
+    setBusy(`${entity}:${lang}`); setNote(null)
+    try {
+      let total = 0, guard = 0
+      for (;;) {
+        const r = await adminApi.post<{ translated: number; remaining: number }>(
+          '/api/admin/i18n/translate-content', { entity, lang, limit: 300 })
+        total += r.translated
+        setNote(`${label} → ${name}: translated ${total.toLocaleString()} — ${r.remaining.toLocaleString()} units remaining…`)
+        if (r.remaining <= 0 || ++guard > 200) break
+      }
+      setNote(`${label} → ${name}: complete (${total.toLocaleString()} translated units).`)
+      refetch()
+    } catch (e) {
+      setNote(`${label} → ${name}: ${(e as Error).message || 'translation failed'}`)
+    } finally { setBusy(null) }
+  }
+
+  async function clear(entity: string, lang: string, label: string, name: string) {
+    if (!confirm(`Remove all ${name} translations for ${label}? This cannot be undone.`)) return
+    setBusy(`cl:${entity}:${lang}`); setNote(null)
+    try { await adminApi.post('/api/admin/i18n/clear-content', { entity, lang }); setNote(`${label} → ${name}: cleared.`); refetch() }
+    catch (e) { setNote((e as Error).message) } finally { setBusy(null) }
+  }
+
+  if (loading && !data) return <Spinner />
+  if (error) return <ErrorNote>{error}</ErrorNote>
+  if (!data) return null
+
+  return (
+    <Card title="Learning content — exams, practice, Simulation Lab, books">
+      <p className="muted small" style={{ marginTop: 0 }}>
+        Translates what students read — questions, options, explanations, scenario titles and
+        summaries, book titles — never answer keys, scores or grading. Students are served their
+        portal language automatically, with English as the fallback for anything untranslated.
+        Book/handbook <em>files</em> stay as published; upload per-language editions in Website →
+        Books with their language set.
+      </p>
+      {note && <div className="notice" role="status">{note}</div>}
+      <table className="data">
+        <thead>
+          <tr><th>Content</th><th style={{ width: 70 }}>Items</th>{languages.map((l) => <th key={l.code}>{l.name}</th>)}</tr>
+        </thead>
+        <tbody>
+          {data.entities.map((e) => (
+            <tr key={e.entity}>
+              <td><strong>{e.label}</strong></td>
+              <td>{e.total.toLocaleString()}</td>
+              {languages.map((l) => {
+                const done = e.translated[l.code] ?? 0
+                const pct = e.total ? Math.round((done / e.total) * 100) : 0
+                return (
+                  <td key={l.code}>
+                    <div className="small">{pct}% <span className="muted">({done.toLocaleString()})</span></div>
+                    <div className="row" style={{ gap: '.3rem' }}>
+                      <button className="btn ghost sm" disabled={busy !== null || !configured || e.total === 0}
+                        title={configured ? `Machine-translate ${e.label} into ${l.name}` : 'Configure a provider first'}
+                        onClick={() => translate(e.entity, l.code, e.label, l.name)}>
+                        {busy === `${e.entity}:${l.code}` ? '…' : 'Translate'}
+                      </button>
+                      {done > 0 && (
+                        <button className="btn ghost sm" disabled={busy !== null}
+                          onClick={() => clear(e.entity, l.code, e.label, l.name)}>Clear</button>
+                      )}
+                    </div>
+                  </td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {!configured && <p className="muted small">Content auto-translate uses the same provider configured above.</p>}
+    </Card>
+  )
 }
 
 function ProviderCard({ provider, onSaved }: { provider: Coverage['provider']; onSaved: () => void }) {

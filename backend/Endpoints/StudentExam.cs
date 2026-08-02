@@ -227,11 +227,16 @@ public static class StudentExam
             var inList = mine.Count > 0 ? string.Join(",", mine) : "-1";
             var rows = db.Query($@"SELECT d.id,d.certification_id,d.kind,d.title,d.description,d.url,d.watermark,d.sort_order,
                     (CASE WHEN d.storage_ref IS NOT NULL AND d.storage_ref != '' THEN 1 ELSE 0 END) has_file,
-                    d.filename, d.size_bytes,
+                    d.filename, d.size_bytes, COALESCE(d.lang,'en') lang,
                     c.acronym cert_acronym, c.name cert_name
                 FROM cert_documents d LEFT JOIN certifications c ON c.id=d.certification_id
                 WHERE d.published=1 AND (d.certification_id IS NULL OR d.certification_id IN ({inList}))
                 ORDER BY (d.certification_id IS NULL), d.certification_id, d.sort_order, d.id");
+            // Localized listing: titles/descriptions of English materials read in the student's
+            // language (item_i18n overlay); rows that ARE a translated edition carry their own lang
+            // so the portal can group editions. The file behind each row is whatever was published.
+            ItemI18n.Overlay(db, "book", ItemI18n.Resolve(ctx, ctx.Request.Query["lang"].ToString()),
+                rows, "title", "description");
             return J(new { rows });
         });
 
@@ -555,24 +560,28 @@ public static class StudentExam
             var existing = db.QueryOne("SELECT * FROM exam_attempts WHERE user_id=? AND booking_id=? AND kind='exam'", u.Id, bk["id"]);
             // The live bank for THIS certification only — cross-certification leakage would both spoil
             // the sitting and break the item-set integrity check on submit.
-            var items = db.Query("SELECT id,question,options,option_a,option_b,option_c,option_d,domain FROM sample_questions WHERE published=1 AND is_practice=0 AND COALESCE(certification_id,1)=? ORDER BY sort_order,id", certId)
-                .Select(r => new { id = r["id"], question = r["question"], options = H.OptionsFor(r), domain = r["domain"] }).ToList();
+            // Multilingual sitting: display text (question/options/domain) is overlaid from item_i18n
+            // in the candidate's requested language; ids and the answer key are language-invariant, so
+            // scoring and the item-set integrity check are untouched by the sitting language.
+            var lang = ItemI18n.Resolve(ctx, H.GetS(b, "lang", "language"));
+            var items = ItemI18n.Questions(db, lang,
+                db.Query("SELECT id,question,options,option_a,option_b,option_c,option_d,domain FROM sample_questions WHERE published=1 AND is_practice=0 AND COALESCE(certification_id,1)=? ORDER BY sort_order,id", certId));
             if (items.Count == 0) return Results.Json(new { error = "no_items", message = "This certification's examination bank is not yet published." }, statusCode: 400);
             if (existing is not null && (existing["status"] as string) == "in_progress")
             {
                 var saved = new Dictionary<string, JsonElement>();
                 try { saved = H.ToMap(JsonDocument.Parse(H.Str(existing["answers"]) ?? "{}").RootElement); } catch { }
-                return J(new { attempt_id = existing["id"], duration_minutes = existing["duration_minutes"], started_at = existing["started_at"], items, saved_answers = saved, violations = H.L(existing["violations"]), resumed = true, certification_id = certId });
+                return J(new { attempt_id = existing["id"], duration_minutes = existing["duration_minutes"], started_at = existing["started_at"], items, saved_answers = saved, violations = H.L(existing["violations"]), resumed = true, certification_id = certId, lang });
             }
             if (existing is not null) return Results.Json(new { error = "already_submitted" }, statusCode: 400);
-            var itemIds = JsonSerializer.Serialize(items.Select(i => i.id));
+            var itemIds = JsonSerializer.Serialize(items.Select(i => i["id"]));
             var durMin = ec.Duration + Lifecycle.ApprovedExtraMinutes(db, u.Id); // approved accommodations genuinely extend the sitting
             // status MUST be set explicitly to 'in_progress'; relying on a column default is fragile
             // (the schema default was historically mis-attached to bank_version, leaving status NULL,
             // which made submit reject every attempt as already_submitted).
             var id = db.ExecuteReturningId("INSERT INTO exam_attempts(user_id,booking_id,certification_id,kind,duration_minutes,item_ids,status) VALUES(?,?,?,?,?,?, 'in_progress')", u.Id, bk["id"], certId, "exam", durMin, itemIds);
             log(u.Id, "exam_started", $"attempt {id} (cert {certId})");
-            return J(new { attempt_id = id, duration_minutes = durMin, started_at = H.IsoNow, items, certification_id = certId });
+            return J(new { attempt_id = id, duration_minutes = durMin, started_at = H.IsoNow, items, certification_id = certId, lang });
         });
 
         // ---------------- submit (scoring + credential) ----------------

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
+import { I18nProvider } from '../i18n'
 
 // FE — the Simulation Lab landing (Phase 1 foundation). Decisions pinned: the access gate (no access →
 // the friendly reason, no catalogue fetch), the published-lab grid (kind/difficulty/competency badges),
@@ -54,7 +55,7 @@ vi.mock('../api/hooks', () => ({
 import Lab from './Lab'
 
 const renderLab = (initialEntries: string[] = ['/lab']) =>
-  render(<MemoryRouter initialEntries={initialEntries}><Lab /></MemoryRouter>)
+  render(<I18nProvider><MemoryRouter initialEntries={initialEntries}><Lab /></MemoryRouter></I18nProvider>)
 
 const lab = (over: Record<string, unknown> = {}) => ({
   id: 1, scenario_code: 'GL-WBS-001', title: 'Structure a project WBS', kind: 'guided_lab',

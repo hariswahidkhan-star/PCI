@@ -123,7 +123,8 @@ public static class SimLab
                 ctx.Request.Query["difficulty"].ToString(),
                 ctx.Request.Query["kind"].ToString(),
                 ctx.Request.Query["industry"].ToString(),
-                ctx.Request.Query["competency"].ToString()));
+                ctx.Request.Query["competency"].ToString(),
+                Core.ItemI18n.Resolve(ctx, ctx.Request.Query["lang"].ToString())));
         });
 
         // ---- start (or resume) an attempt ----
@@ -142,6 +143,10 @@ public static class SimLab
                 FROM simulation_scenarios WHERE scenario_code=?", code);
             if (s is null || H.Str(s["status"]) != "published")
                 return Results.Json(new { error = "not_found" }, statusCode: 404);
+            // Display text in the student's language; the graded config and answer derivation stay
+            // language-invariant (the pinned config snapshot below is untouched).
+            Core.ItemI18n.Overlay(db, "scenario", Core.ItemI18n.Resolve(ctx, H.GetS(b, "lang", "language")),
+                new[] { s }, "title", "summary");
             var configRaw = H.Str(s["config_json"]);
             if (string.IsNullOrWhiteSpace(configRaw))
                 return Results.Json(new { error = "not_interactive", message = "This lab is not yet interactive." }, statusCode: 409);
@@ -218,15 +223,18 @@ public static class SimLab
         app.MapGet("/api/me/lab/attempts", (HttpContext ctx) =>
         {
             if (Gate(ctx, out var u) is { } blocked) return blocked;
-            var rows = db.Query(@"SELECT a.id,a.mode,a.status,a.score,a.started_at,a.completed_at,
-                s.scenario_code,s.title,s.kind FROM simulation_attempts a
+            var raw = db.Query(@"SELECT a.id,a.mode,a.status,a.score,a.started_at,a.completed_at,
+                s.id scenario_id, s.scenario_code,s.title,s.kind FROM simulation_attempts a
                 JOIN simulation_scenarios s ON s.id=a.scenario_id
-                WHERE a.user_id=? ORDER BY a.id DESC LIMIT 50", u!.Id)
-                .Select(r => new
+                WHERE a.user_id=? ORDER BY a.id DESC LIMIT 50", u!.Id);
+            var listLang = Core.ItemI18n.Resolve(ctx, ctx.Request.Query["lang"].ToString());
+            var titles = Core.ItemI18n.For(db, "scenario", listLang, raw.Select(r => H.L(r["scenario_id"])).ToList());
+            var rows = raw.Select(r => new
                 {
                     id = H.L(r["id"]), mode = H.Str(r["mode"]), status = H.Str(r["status"]),
                     score = r["score"], scenario_code = H.Str(r["scenario_code"]),
-                    title = H.Str(r["title"]), kind = H.Str(r["kind"]),
+                    title = titles.TryGetValue((H.L(r["scenario_id"]), "title"), out var t) ? t : H.Str(r["title"]),
+                    kind = H.Str(r["kind"]),
                     started_at = H.Str(r["started_at"]), completed_at = H.Str(r["completed_at"]),
                 });
             return J(new { rows });
@@ -240,6 +248,9 @@ public static class SimLab
             if (att is null) return Results.Json(new { error = "not_found" }, statusCode: 404);
             var s = db.QueryOne(@"SELECT id,scenario_code,title,kind,difficulty,summary,config_json,version
                 FROM simulation_scenarios WHERE id=?", H.L(att["scenario_id"]));
+            if (s is not null)
+                Core.ItemI18n.Overlay(db, "scenario", Core.ItemI18n.Resolve(ctx, ctx.Request.Query["lang"].ToString()),
+                    new[] { s }, "title", "summary");
             // Replay from the attempt's pinned snapshot, never the live row — a revision or content-pack
             // deploy after the attempt started must not change what it resumes or re-grades as.
             var pinned = s is null ? null

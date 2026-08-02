@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
+import { I18nProvider } from '../i18n'
 
 // FE — the Simulation Lab interactive runner (Phase 1). Decisions pinned: start renders the brief + the
 // answer inputs; submitting shows the deterministic grade; and Assessment Mode withholds the correct
@@ -28,9 +29,11 @@ const startResp = (assessment: boolean) => ({
 })
 
 const renderRunner = (entry = '/lab/GL-EVM-001') => render(
-  <MemoryRouter initialEntries={[entry]}>
-    <Routes><Route path="/lab/:code" element={<LabRunner />} /></Routes>
-  </MemoryRouter>,
+  <I18nProvider>
+    <MemoryRouter initialEntries={[entry]}>
+      <Routes><Route path="/lab/:code" element={<LabRunner />} /></Routes>
+    </MemoryRouter>
+  </I18nProvider>,
 )
 
 describe('LabRunner (Simulation Lab workspace)', () => {
