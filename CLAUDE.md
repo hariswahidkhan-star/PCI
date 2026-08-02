@@ -233,7 +233,7 @@ Four projects in the solution, plus one standalone check harness:
   offline anywhere.
 
 **Security model:** the client is **pinned** to a dot-anchored HTTPS allowlist
-(`projectcontrolsinstitute.org`, `pci-global.org`, `localhost`) — a malicious `api=` in the launch URI
+(`projectcontrolsinstitute.org`, `localhost`) — a malicious `api=` in the launch URI
 is ignored and the client refuses to start against an untrusted host. It registers the `pciexam://`
 scheme; the portal hands it a short-lived **single-use launch code** (not a bearer token), redeemed
 against the pinned host. The **server owns the clock and scoring** (the heartbeat returns canonical

@@ -3,8 +3,8 @@ namespace PCI.Backend.Core;
 /// <summary>
 /// Canonical-domain + HTTPS enforcement for the public website. The approved canonical is
 /// https://projectcontrolsinstitute.org (no www). Requests on a KNOWN alternate host — the www
-/// variant and the retired pciglobal.ai domains — are 301-redirected page-to-page to the canonical
-/// host; http is upgraded to https on the canonical/alternate hosts. Requests on any OTHER host
+/// variant — are 301-redirected page-to-page to the canonical host; http is upgraded to https on
+/// the canonical/alternate hosts. Requests on any OTHER host
 /// (the Render URL, localhost, a staging domain) pass through unchanged, so the single service keeps
 /// working everywhere during the DNS transition and there is never a redirect loop.
 ///
@@ -30,7 +30,6 @@ public static class Redirects
         var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "www." + CanonicalHost,
-            "pciglobal.ai", "www.pciglobal.ai",   // retired domain → canonical
         };
         if (Environment.GetEnvironmentVariable("REDIRECT_HOSTS") is { Length: > 0 } extra)
             foreach (var x in extra.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))

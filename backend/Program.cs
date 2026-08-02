@@ -464,8 +464,8 @@ app.Use(async (ctx, next) =>
     }
 });
 
-// Canonical-domain + HTTPS enforcement (FIRST, before anything serves): 301 the www/pciglobal.ai
-// hosts to https://projectcontrolsinstitute.org, page-to-page. Unknown hosts pass through so the
+// Canonical-domain + HTTPS enforcement (FIRST, before anything serves): 301 the www host to
+// https://projectcontrolsinstitute.org, page-to-page. Unknown hosts pass through so the
 // service keeps working on the Render URL / localhost / staging during the DNS transition.
 app.Use(async (ctx, next) =>
 {

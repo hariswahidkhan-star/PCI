@@ -13,7 +13,7 @@ public static class Run {
       Ck($"garbage '{g}' → invalid", !LaunchParameters.Parse(g).IsValid);
 
     // --- THE security requirement: API host pinning (Section 15) ---
-    var cfg = new ClientConfig(); // default allowlist: projectcontrolsinstitute.org, pci-global.org, localhost
+    var cfg = new ClientConfig(); // default allowlist: projectcontrolsinstitute.org, localhost
 
     // 1. legit PCI subdomain over https → trusted
     Ck("https://exam.projectcontrolsinstitute.org TRUSTED", cfg.IsTrustedApi("https://exam.projectcontrolsinstitute.org"));
@@ -33,8 +33,8 @@ public static class Run {
 
     // --- WithLaunch: a TRUSTED launch api override is accepted ---
     var c3 = new ClientConfig { ApiBaseUrl = "https://exam.projectcontrolsinstitute.org" };
-    c3.WithLaunch(LaunchParameters.Parse("pciexam://start?code=X&api=https://staging.pci-global.org"));
-    Ck("trusted launch override accepted", c3.ApiBaseUrl=="https://staging.pci-global.org");
+    c3.WithLaunch(LaunchParameters.Parse("pciexam://start?code=X&api=https://staging.projectcontrolsinstitute.org"));
+    Ck("trusted launch override accepted", c3.ApiBaseUrl=="https://staging.projectcontrolsinstitute.org");
 
     // --- EnsureTrustedOrThrow: refuses to start on untrusted endpoint ---
     bool threw=false;

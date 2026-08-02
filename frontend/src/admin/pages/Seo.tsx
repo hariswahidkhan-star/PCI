@@ -179,7 +179,7 @@ function RedirectsTab() {
   if (error) return <ErrorNote>{error}</ErrorNote>
   return (
     <Card title="Managed redirects">
-      <p className="muted small" style={{ marginTop: 0 }}>Permanent (301) redirects for renamed or retired pages, applied server-side. Chains and loops are rejected — always point at the final URL. Domain-level redirects (www / pciglobal.ai) are automatic and not listed here.</p>
+      <p className="muted small" style={{ marginTop: 0 }}>Permanent (301) redirects for renamed or retired pages, applied server-side. Chains and loops are rejected — always point at the final URL. Domain-level redirects (www) are automatic and not listed here.</p>
       <div className="row" style={{ gap: '.5rem', flexWrap: 'wrap', marginBottom: '.8rem' }}>
         <input placeholder="/old-page.html" value={from} onChange={(e) => setFrom(e.target.value)} style={{ maxWidth: 220 }} />
         <span className="muted">→</span>

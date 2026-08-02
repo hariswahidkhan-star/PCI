@@ -57,12 +57,12 @@ Full runbook: **`docs/MYSQL_MIGRATION.md`**.
 
 - Canonical public host: **`https://projectcontrolsinstitute.org`** (non-www). Set `CANONICAL_HOST`
   if different.
-- `www.*` and `pciglobal.ai` **301 page-to-page** to the canonical host automatically; `http→https`
+- `www.*` **301 page-to-page** to the canonical host automatically; `http→https`
   is enforced; unknown hosts pass through (so the Render URL keeps working during DNS transition).
 - Portal/admin live under the portal domain (`mypci.org`) and are `noindex` + `X-Robots-Tag: noindex`.
 - `robots.txt`, `sitemap.xml` and `llms.txt` are generated **dynamically** from published, indexable
   pages — no manual maintenance.
-- **DNS:** point the apex + `www` + `pciglobal.ai` at the host; the app does the rest.
+- **DNS:** point the apex + `www` at the host; the app does the rest.
 
 ---
 
@@ -216,7 +216,7 @@ Maps `member.registered → Customer` and `payment.recorded → SalesReceipt` vi
 ## 13. Post-deploy smoke checklist
 
 - [ ] `/admin/` loads; owner signs in; owner password changed (Settings → Security); demo student deactivated.
-- [ ] Public site loads on the canonical host; `www`/`pciglobal.ai` 301 to it.
+- [ ] Public site loads on the canonical host; `www` 301s to it.
 - [ ] `/robots.txt`, `/sitemap.xml`, `/llms.txt` all respond.
 - [ ] Language switcher appears; a non-English homepage renders.
 - [ ] A test enrolment → Stripe webhook settles once → receipt emailed.
