@@ -23,7 +23,7 @@ export function parseBreakdown(raw: unknown): DomainBand[] {
 }
 
 /** The circular score dial (percent 0–100, coloured by the 65% pass mark). */
-export function Dial({ pct }: { pct: number }) {
+export function Dial({ pct, label = 'score' }: { pct: number; label?: string }) {
   const r = 62
   const c = 2 * Math.PI * r
   const off = c * (1 - Math.min(pct, 100) / 100)
@@ -39,7 +39,7 @@ export function Dial({ pct }: { pct: number }) {
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'grid', placeContent: 'center', textAlign: 'center' }}>
         <b style={{ fontSize: '1.6rem' }}>{pct}%</b>
-        <span className="muted small">score</span>
+        <span className="muted small">{label}</span>
       </div>
     </div>
   )
@@ -48,8 +48,9 @@ export function Dial({ pct }: { pct: number }) {
 const BAND_LABEL: Record<string, string> = { above: 'Above target', at: 'At target', below: 'Below target' }
 const BAND_COLOR: Record<string, string> = { above: 'var(--ok)', at: 'var(--brand)', below: 'var(--err)' }
 
-/** Per-domain performance bands with a filled meter each. */
-export function DomainBands({ breakdown }: { breakdown: DomainBand[] }) {
+/** Per-domain performance bands with a filled meter each. `bandLabels` lets a localized surface
+ *  supply translated band names; missing entries fall back to the English defaults. */
+export function DomainBands({ breakdown, bandLabels }: { breakdown: DomainBand[]; bandLabels?: Record<string, string> }) {
   if (!breakdown.length) return null
   return (
     <div style={{ display: 'grid', gap: '.6rem' }}>
@@ -58,7 +59,7 @@ export function DomainBands({ breakdown }: { breakdown: DomainBand[] }) {
           <div className="row" style={{ justifyContent: 'space-between', marginBottom: '.25rem' }}>
             <b className="small">{b.domain}</b>
             <span className="small" style={{ color: BAND_COLOR[b.band] || 'var(--slate)' }}>
-              {BAND_LABEL[b.band] || b.band}
+              {bandLabels?.[b.band] || BAND_LABEL[b.band] || b.band}
             </span>
           </div>
           <div style={{ height: 8, borderRadius: 6, background: '#eef1f6', overflow: 'hidden' }}>

@@ -158,11 +158,14 @@ public static class Certuvo
                 "INSERT INTO practice_attempts(user_id,mode,domain,question_ids,status) VALUES(?,?,?,?,'in_progress')",
                 u!.Id, mode, domain, JsonSerializer.Serialize(qids));
 
-            var questions = picked.Select(r => new { id = H.L(r["id"]), question = H.Str(r["question"]), options = H.OptionsFor(r), domain = H.Str(r["domain"]) });
+            // Multilingual practice: the same item_i18n overlay the real sitting uses, so a candidate
+            // practising in Korean sees the identical translation they will sit with.
+            var lang = ItemI18n.Resolve(ctx, H.GetS(b, "lang", "language"));
+            var questions = ItemI18n.Questions(db, lang, picked);
             // Advisory timer for mocks (mirrors sitting under time); quizzes are untimed.
             int? durationMinutes = mode == "mock" ? Math.Max(30, qids.Count * 2) : null;
             log(u.Id, "certuvo_start", $"{mode} x{qids.Count}{(domain is null ? "" : " · " + domain)}");
-            return J(new { attempt_id = attemptId, mode, domain, count = qids.Count, duration_minutes = durationMinutes, questions });
+            return J(new { attempt_id = attemptId, mode, domain, count = qids.Count, duration_minutes = durationMinutes, questions, lang });
         });
 
         // ---------------- submit + grade ----------------
@@ -199,6 +202,11 @@ public static class Certuvo
             long score = 0; var total = qids.Count;
             var breakdown = new Dictionary<string, (long correct, long total)>();
             var results = new List<object>();
+            // The review is a display surface, so it carries the same item_i18n overlay as the paper;
+            // scoring above/below reads only the source rows, and the stored domain_breakdown keys
+            // stay English (they are grouping keys, not display text).
+            var lang = ItemI18n.Resolve(ctx, H.GetS(b, "lang", "language"));
+            var tr = ItemI18n.For(db, "question", lang, qids);
             foreach (var qid in qids)
             {
                 if (!byId.TryGetValue(qid, out var r)) continue;
@@ -209,10 +217,16 @@ public static class Certuvo
                 if (ok) score++;
                 var cur = breakdown.GetValueOrDefault(dom);
                 breakdown[dom] = (cur.correct + (ok ? 1 : 0), cur.total + 1);
+                var opts = H.OptionsFor(r);
+                if (tr.TryGetValue((qid, "options"), out var to) && ItemI18n.Options(to, opts.Count) is { } localized) opts = localized;
                 results.Add(new
                 {
-                    id = qid, question = H.Str(r["question"]), options = H.OptionsFor(r), domain = dom,
-                    chosen, correct_index = correctIdx, is_correct = ok, explanation = H.Str(r["explanation"]),
+                    id = qid,
+                    question = tr.TryGetValue((qid, "question"), out var tq) ? tq : H.Str(r["question"]),
+                    options = opts,
+                    domain = tr.TryGetValue((qid, "domain"), out var td) ? td : dom,
+                    chosen, correct_index = correctIdx, is_correct = ok,
+                    explanation = tr.TryGetValue((qid, "explanation"), out var te) ? te : H.Str(r["explanation"]),
                 });
             }
 

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '../api/hooks'
+import { useI18n } from '../i18n'
 import { fmtDateTime } from '../format'
 import { Card, Badge, Spinner, ErrorNote, Empty } from '../components/ui'
 import {
@@ -158,6 +159,7 @@ function metaLine(r: Pick<LabRow, 'difficulty' | 'industry' | 'est_minutes' | 'c
 }
 
 export default function Lab() {
+  const { lang } = useI18n()
   const { data: access, loading: aLoading, error: aError } = useQuery<Access>('/api/me/lab/access')
 
   // Filters live in the URL so a filtered view survives reload, back/forward and sharing.
@@ -199,16 +201,17 @@ export default function Lab() {
     if (kind) p.set('kind', kind)
     if (industry) p.set('industry', industry)
     if (competency) p.set('competency', competency)
+    if (lang !== 'en') p.set('lang', lang)   // scenario titles/summaries in the portal language
     const qs = p.toString()
     return qs ? `/api/me/lab/catalogue?${qs}` : '/api/me/lab/catalogue'
-  }, [access?.has_access, qDebounced, difficulty, kind, industry, competency])
+  }, [access?.has_access, qDebounced, difficulty, kind, industry, competency, lang])
 
   const { data: cat, loading: cLoading, error: cError, refetch: refetchCat } = useQuery<CatalogueResp>(catPath)
   const { data: mastery } = useQuery<MasteryResp>(
     access?.has_access ? '/api/me/lab/mastery' : null,
   )
   const { data: history } = useQuery<{ rows: AttemptRow[] }>(
-    access?.has_access ? '/api/me/lab/attempts' : null,
+    access?.has_access ? (lang !== 'en' ? `/api/me/lab/attempts?lang=${lang}` : '/api/me/lab/attempts') : null,
   )
 
   const [detail, setDetail] = useState<LabRow | null>(null)

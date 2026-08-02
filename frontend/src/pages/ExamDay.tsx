@@ -6,6 +6,7 @@ import { api, ApiError } from '../api/client'
 import { Card, Badge, Spinner } from '../components/ui'
 import { PageHeader, EmptyState } from '../components/premium'
 import { fmtDateTime } from '../format'
+import { useI18n } from '../i18n'
 import ExamRunner, { type StartPayload } from '../exam/ExamRunner'
 import type { ExamEntry } from '../api/types'
 
@@ -16,15 +17,23 @@ import type { ExamEntry } from '../api/types'
  * the in-app browser runner (exam/ExamRunner.tsx) or the PCI Secure Exam desktop app via a
  * single-use launch code. The server owns every gate (open window, readiness, eligibility); this
  * page mirrors them so the buttons tell the truth, but never decides on its own.
+ * Fully localized: UI strings come from the catalog, and the sitting itself is requested in the
+ * portal's active language (server-side item_i18n overlay, English fallback).
  */
 
-const CHECKLIST: { title: string; sub: string }[] = [
-  { title: 'Read the examination rules', sub: 'Identity, environment and permitted materials — no surprises.' },
-  { title: 'Run the system check', sub: 'Camera, microphone and connection verified below.' },
-  { title: 'Prepare your ID', sub: 'Government photo ID matching your enrolment name.' },
-  { title: 'Clear your workspace', sub: 'Quiet room, single screen, notes away.' },
+const CHECKLIST: { titleKey: string; subKey: string }[] = [
+  { titleKey: 'xd.ck0Title', subKey: 'xd.ck0Sub' },
+  { titleKey: 'xd.ck1Title', subKey: 'xd.ck1Sub' },
+  { titleKey: 'xd.ck2Title', subKey: 'xd.ck2Sub' },
+  { titleKey: 'xd.ck3Title', subKey: 'xd.ck3Sub' },
 ]
 const CHECK_KEY = 'pci.examday.check'
+
+/** Launch-refusal codes the server can answer with; each maps to catalog key xd.err.<code>. */
+const START_ERROR_CODES = new Set([
+  'no_booking', 'not_open', 'missed', 'readiness_required', 'not_eligible',
+  'no_items', 'already_submitted', 'external_delivery',
+])
 
 /** Backend datetimes are 'YYYY-MM-DD HH:MM:SS' (UTC) or ISO — normalise to epoch millis. */
 function utcMs(v: unknown): number | null {
@@ -54,20 +63,10 @@ interface ProbeRow {
   hint: string
 }
 
-const START_ERRORS: Record<string, string> = {
-  no_booking: 'There is no scheduled booking for this examination.',
-  not_open: 'The launch window has not opened yet — it opens shortly before your slot.',
-  missed: 'The launch window has closed and the booking is marked missed. Contact support — documented incidents are considered under the examination administration policy.',
-  readiness_required: 'Run and pass the system readiness check below before launching.',
-  not_eligible: 'Your exam access is on hold. Resolve the outstanding requirement (identity document, consents, or account status) before launching.',
-  no_items: 'This certification’s examination is not yet published. Contact support.',
-  already_submitted: 'This examination has already been submitted — see your result on the Results page.',
-  external_delivery: 'This examination is delivered by an external test provider — use the scheduling details they sent you.',
-}
-
 export default function ExamDay() {
   const { certId } = useParams()
   const navigate = useNavigate()
+  const { t, lang } = useI18n()
   const { me, loading, refetch } = useMe()
   const [now, setNow] = useState(() => Date.now())
   const [check, setCheck] = useState<boolean[]>(() => {
@@ -97,13 +96,13 @@ export default function ExamDay() {
   const vendor = delivery.data?.routed ? delivery.data : null
 
   useEffect(() => {
-    const t = window.setInterval(() => setNow(Date.now()), 1000)
-    return () => window.clearInterval(t)
+    const timer = window.setInterval(() => setNow(Date.now()), 1000)
+    return () => window.clearInterval(timer)
   }, [])
 
   if (loading || !me) return <Spinner />
 
-  const certLabel = entry?.certification_name || entry?.certification_code || 'PCI examination'
+  const certLabel = entry?.certification_name || entry?.certification_code || 'PCI'
 
   if (runner && entry) {
     return (
@@ -122,15 +121,11 @@ export default function ExamDay() {
   if (!entry) {
     return (
       <div className="page">
-        <PageHeader eyebrow="Exam day" title="Exam day check-in" />
+        <PageHeader eyebrow={t('xd.eyebrow')} title={t('xd.title')} />
         <Card>
-          <EmptyState
-            icon="calendar"
-            title="No scheduled examination"
-            detail="Schedule your examination from the Certifications page first — check-in opens once a booking is confirmed."
-          />
+          <EmptyState icon="calendar" title={t('xd.noScheduledTitle')} detail={t('xd.noScheduledDetail')} />
           <div style={{ textAlign: 'center', marginTop: '.5rem' }}>
-            <Link className="btn" to="/certifications">Go to Certifications</Link>
+            <Link className="btn" to="/certifications">{t('xd.goCerts')}</Link>
           </div>
         </Card>
       </div>
@@ -164,21 +159,21 @@ export default function ExamDay() {
     try {
       const cam = await navigator.mediaDevices.getUserMedia({ video: true })
       camera = true
-      cam.getTracks().forEach((t) => t.stop())
+      cam.getTracks().forEach((track) => track.stop())
     } catch { camera = false }
     try {
       const mic = await navigator.mediaDevices.getUserMedia({ audio: true })
       microphone = true
-      mic.getTracks().forEach((t) => t.stop())
+      mic.getTracks().forEach((track) => track.stop())
     } catch { microphone = false }
     const network = navigator.onLine !== false
     const screenOk = window.screen.width >= 1024
     const fullscreen = Boolean(document.documentElement.requestFullscreen)
-    rows.push({ label: 'Camera', ok: camera, hint: 'allow camera access' })
-    rows.push({ label: 'Microphone', ok: microphone, hint: 'allow microphone access' })
-    rows.push({ label: 'Connection', ok: network, hint: 'check your internet' })
-    rows.push({ label: 'Browser', ok: Boolean(window.fetch), hint: 'use a modern browser' })
-    rows.push({ label: 'Screen size', ok: screenOk, hint: 'minimum 1024px width' })
+    rows.push({ label: t('xd.probeCamera'), ok: camera, hint: t('xd.probeCameraHint') })
+    rows.push({ label: t('xd.probeMic'), ok: microphone, hint: t('xd.probeMicHint') })
+    rows.push({ label: t('xd.probeConn'), ok: network, hint: t('xd.probeConnHint') })
+    rows.push({ label: t('xd.probeBrowser'), ok: Boolean(window.fetch), hint: t('xd.probeBrowserHint') })
+    rows.push({ label: t('xd.probeScreen'), ok: screenOk, hint: t('xd.probeScreenHint') })
     setProbes(rows)
     let passed = camera && microphone && network
     try {
@@ -197,12 +192,14 @@ export default function ExamDay() {
     setLaunchErr(null)
     setLaunching(true)
     try {
-      const r = await api.post<StartPayload>('/api/me/exam/start', { certification_id: entry!.certification_id })
+      // The sitting is served in the portal's active language (translated items fall back to
+      // English server-side when no translation exists; scoring is language-invariant).
+      const r = await api.post<StartPayload>('/api/me/exam/start', { certification_id: entry!.certification_id, lang })
       setRunner(r)
     } catch (e) {
       const body = e instanceof ApiError && e.body && typeof e.body === 'object' ? (e.body as Record<string, unknown>) : {}
       const code = String(body.error ?? '')
-      setLaunchErr(START_ERRORS[code] || (e instanceof Error ? e.message : 'Could not start the examination.'))
+      setLaunchErr(START_ERROR_CODES.has(code) ? t(`xd.err.${code}`) : (e instanceof Error ? e.message : t('xd.startFailed')))
       if (code === 'missed') void refetch()
       if (code === 'already_submitted') navigate('/results')
     } finally {
@@ -217,9 +214,9 @@ export default function ExamDay() {
       const r = await api.post<{ code: string; uri?: string }>('/api/me/exam/launch-code', {})
       const uri = `${r.uri || `pciexam://start?code=${r.code}`}&api=${encodeURIComponent(window.location.origin)}`
       window.location.href = uri
-      setDesktopNote('Opening the PCI Secure Exam app… if nothing happens, install it from your account and try again.')
+      setDesktopNote(t('xd.openingApp'))
     } catch {
-      setLaunchErr('Could not create a launch code — please try again.')
+      setLaunchErr(t('xd.launchCodeFailed'))
     }
   }
 
@@ -228,14 +225,14 @@ export default function ExamDay() {
   return (
     <div className="page fade-stagger">
       <PageHeader
-        eyebrow="Exam day"
-        title="Exam day check-in"
+        eyebrow={t('xd.eyebrow')}
+        title={t('xd.title')}
         subtitle={`${certLabel} · ${fmtDateTime(booking.scheduled_at, booking.timezone)}${booking.timezone ? ` (${String(booking.timezone)})` : ''}`}
       />
 
       <div className="grid cols-2" style={{ alignItems: 'start' }}>
         <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-          <Card title="Your booking" action={<Badge tone="ok">Confirmed</Badge>}>
+          <Card title={t('xd.yourBooking')} action={<Badge tone="ok">{t('xd.confirmed')}</Badge>}>
             <div className="row" style={{ gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
               <div style={{ background: 'var(--brand)', color: '#fff', borderRadius: 14, padding: '.8rem 1.1rem', textAlign: 'center', minWidth: 88 }}>
                 <b style={{ fontSize: '1.6rem', display: 'block', lineHeight: 1 }}>{slotDate.getDate()}</b>
@@ -247,62 +244,52 @@ export default function ExamDay() {
                 <b>{fmtDateTime(booking.scheduled_at, booking.timezone)}</b>
                 <div className="muted small">{certLabel}{booking.timezone ? ` · ${String(booking.timezone)}` : ''}</div>
               </div>
-              <Link className="btn secondary sm" to="/certifications">Reschedule</Link>
+              <Link className="btn secondary sm" to="/certifications">{t('xd.reschedule')}</Link>
             </div>
           </Card>
 
-          <Card title="Launch">
+          <Card title={t('xd.launch')}>
             {vendor ? (
               <div className="notice">
-                Delivered by <strong>{vendor.provider_name || vendor.provider}</strong>
-                {vendor.confirmation ? <> · confirmation <strong>{vendor.confirmation}</strong></> : null}
-                <div className="muted small" style={{ marginTop: '.4rem' }}>
-                  This examination is sat with the external test provider — use the appointment
-                  details they emailed you. Your result posts back here automatically.
-                </div>
+                {t('xd.deliveredBy')} <strong>{vendor.provider_name || vendor.provider}</strong>
+                {vendor.confirmation ? <> · {t('xd.confirmationLabel')} <strong>{vendor.confirmation}</strong></> : null}
+                <div className="muted small" style={{ marginTop: '.4rem' }}>{t('xd.vendorInfo')}</div>
               </div>
             ) : phase === 'before' ? (
               <div style={{ textAlign: 'center', padding: '.6rem 0' }}>
                 <div style={{ fontSize: '1.8rem', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
                   {fmtCountdown(Math.floor((openMs - now) / 1000))}
                 </div>
-                <div className="muted small">until launch opens</div>
-                <p className="muted small" style={{ margin: '.7rem 0 0' }}>
-                  Launch activates {openBefore} minutes before your slot and stays open for a 30-minute grace period.
-                </p>
+                <div className="muted small">{t('xd.untilOpen')}</div>
+                <p className="muted small" style={{ margin: '.7rem 0 0' }}>{t('xd.opensInfo', { n: openBefore })}</p>
               </div>
             ) : phase === 'open' ? (
               <div style={{ textAlign: 'center', padding: '.4rem 0' }}>
-                <Badge tone="ok">Launch window open — closes {fmtDateTime(new Date(closeMs).toISOString())}</Badge>
+                <Badge tone="ok">{t('xd.windowOpen', { time: fmtDateTime(new Date(closeMs).toISOString()) })}</Badge>
                 <div style={{ marginTop: '.9rem' }}>
                   <button className="btn" disabled={!allChecked || launching} onClick={() => { void launchBrowser() }}>
-                    {launching ? 'Starting…' : 'Launch my examination'}
+                    {launching ? t('xd.starting') : t('xd.launchExam')}
                   </button>
                 </div>
                 {allChecked && (
                   <div style={{ marginTop: '.6rem' }}>
                     <button className="btn secondary sm" onClick={() => { void launchDesktop() }}>
-                      Open in the PCI Secure Exam app instead
+                      {t('xd.openDesktop')}
                     </button>
                   </div>
                 )}
                 {!allChecked && (
                   <p className="muted small" style={{ margin: '.7rem 0 0' }}>
-                    {readinessRequired && !readinessPassed
-                      ? 'Run and pass the system readiness check'
-                      : 'Complete the checklist'}{' '}
-                    to enable launch.
+                    {readinessRequired && !readinessPassed ? t('xd.needReadiness') : t('xd.needChecklist')}{' '}
+                    {t('xd.toEnable')}
                   </p>
                 )}
               </div>
             ) : (
               <div style={{ textAlign: 'center', padding: '.4rem 0' }}>
-                <h4 style={{ color: 'var(--err)' }}>Launch window closed</h4>
-                <p className="muted small" style={{ maxWidth: '46ch', margin: '.4rem auto 0' }}>
-                  The grace period passed and the booking is marked missed. Contact support —
-                  documented incidents are considered under the examination administration policy.
-                </p>
-                <Link className="btn secondary sm" to="/support" style={{ marginTop: '.8rem' }}>Open a ticket</Link>
+                <h4 style={{ color: 'var(--err)' }}>{t('xd.windowClosedTitle')}</h4>
+                <p className="muted small" style={{ maxWidth: '46ch', margin: '.4rem auto 0' }}>{t('xd.windowClosedBody')}</p>
+                <Link className="btn secondary sm" to="/support" style={{ marginTop: '.8rem' }}>{t('xd.openTicket')}</Link>
               </div>
             )}
             {launchErr && <div className="notice" style={{ marginTop: '.8rem', color: 'var(--err)' }} role="alert">{launchErr}</div>}
@@ -311,10 +298,10 @@ export default function ExamDay() {
         </div>
 
         <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-          <Card title="Before you launch">
+          <Card title={t('xd.beforeLaunch')}>
             <div style={{ display: 'grid', gap: '.6rem' }}>
               {CHECKLIST.map((c, i) => (
-                <label key={c.title} className="row" style={{ gap: '.6rem', alignItems: 'flex-start', cursor: 'pointer' }}>
+                <label key={c.titleKey} className="row" style={{ gap: '.6rem', alignItems: 'flex-start', cursor: 'pointer' }}>
                   {/* the global `input { width:100% }` rule would stretch a bare checkbox */}
                   <input
                     type="checkbox"
@@ -323,8 +310,8 @@ export default function ExamDay() {
                     style={{ marginTop: '.25rem', width: 'auto', flex: '0 0 auto' }}
                   />
                   <span>
-                    <b className="small">{c.title}</b>
-                    <span className="muted small" style={{ display: 'block' }}>{c.sub}</span>
+                    <b className="small">{t(c.titleKey)}</b>
+                    <span className="muted small" style={{ display: 'block' }}>{t(c.subKey)}</span>
                   </span>
                 </label>
               ))}
@@ -332,21 +319,19 @@ export default function ExamDay() {
           </Card>
 
           <Card
-            title="System readiness check"
+            title={t('xd.sysCheck')}
             action={
               <button className="btn sm" disabled={probing} onClick={() => { void runReadiness() }}>
-                {probing ? 'Checking…' : 'Run check'}
+                {probing ? t('xd.checking') : t('xd.runCheck')}
               </button>
             }
           >
             {probes === null ? (
               <p className="muted small" style={{ margin: 0 }}>
-                Checks your camera, microphone, connection and screen.
-                {readinessRequired && ' A passed check is required before you can launch.'}
+                {t('xd.sysCheckDesc')}
+                {readinessRequired && ` ${t('xd.sysCheckRequired')}`}
                 {!probes && readinessPassed && (
-                  <span style={{ display: 'block', marginTop: '.4rem', color: 'var(--ok)' }}>
-                    Your last readiness check passed.
-                  </span>
+                  <span style={{ display: 'block', marginTop: '.4rem', color: 'var(--ok)' }}>{t('xd.lastPassed')}</span>
                 )}
               </p>
             ) : (
@@ -355,17 +340,16 @@ export default function ExamDay() {
                   {probes.map((p) => (
                     <div key={p.label} className="row" style={{ justifyContent: 'space-between' }}>
                       <span className="small">{p.ok ? '✅' : '❌'} {p.label}</span>
-                      <span className="muted small">{p.ok ? 'OK' : p.hint}</span>
+                      <span className="muted small">{p.ok ? t('xd.probeOk') : p.hint}</span>
                     </div>
                   ))}
                 </div>
                 {readyOk !== null && (
                   <div className="notice" style={{ marginTop: '.7rem' }}>
                     {readyOk ? (
-                      <><strong>Ready.</strong> Your system meets the requirements for a proctored exam.</>
+                      <><strong>{t('xd.readyTitle')}</strong> {t('xd.readyBody')}</>
                     ) : (
-                      <><strong>Not ready.</strong> Camera, microphone and a working connection are all
-                        required. Fix the items above and run the check again.</>
+                      <><strong>{t('xd.notReadyTitle')}</strong> {t('xd.notReadyBody')}</>
                     )}
                   </div>
                 )}

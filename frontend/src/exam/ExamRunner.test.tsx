@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
+import { I18nProvider } from '../i18n'
 
 // FE — the in-app secure runner. What matters: answers persist locally and ride heartbeats, the
 // submit confirmation counts unanswered items, a held submission shows NO score or pass/fail, and
@@ -35,9 +36,11 @@ function mkStart(over: Partial<StartPayload> = {}): StartPayload {
 
 const renderRunner = (start = mkStart(), onExit = vi.fn()) => {
   render(
-    <MemoryRouter>
-      <ExamRunner start={start} certLabel="PCL-AI" onExit={onExit} />
-    </MemoryRouter>,
+    <I18nProvider>
+      <MemoryRouter>
+        <ExamRunner start={start} certLabel="PCL-AI" onExit={onExit} />
+      </MemoryRouter>
+    </I18nProvider>,
   )
   return onExit
 }

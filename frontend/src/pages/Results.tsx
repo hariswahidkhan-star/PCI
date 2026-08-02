@@ -5,6 +5,7 @@ import { api } from '../api/client'
 import { Card, Badge, Spinner, StatusBadge } from '../components/ui'
 import { PageHeader, EmptyState } from '../components/premium'
 import { fmtDateTime } from '../format'
+import { useI18n } from '../i18n'
 import { Dial, DomainBands, parseBreakdown } from '../components/results'
 import type { Attempt, Me } from '../api/types'
 
@@ -62,22 +63,24 @@ ${cred ? `<p style="margin-top:18px"><b>Credential:</b> ${esc(cred.credential_id
 }
 
 function HistoryRow({ a, me }: { a: Attempt; me: Me }) {
+  const { t } = useI18n()
   const held = a.result_status === 'auto_held'
   return (
     <div className="row" style={{ gap: '.6rem', alignItems: 'center', padding: '.45rem 0', borderBottom: '1px solid var(--line)' }}>
-      {held ? <Badge tone="warn">Held</Badge> : <Badge tone={a.result === 'pass' ? 'ok' : 'err'}>{a.result === 'pass' ? 'Pass' : 'Not passed'}</Badge>}
+      {held ? <Badge tone="warn">{t('rr.held')}</Badge> : <Badge tone={a.result === 'pass' ? 'ok' : 'err'}>{a.result === 'pass' ? t('rr.passShort') : t('rr.notPassedShort')}</Badge>}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <b className="small">{a.certification_code || 'EXAM'} · {held ? 'Under review' : `${a.percent}%`}</b>
+        <b className="small">{a.certification_code || 'EXAM'} · {held ? t('rr.underReview') : `${a.percent}%`}</b>
         <div className="muted small">{fmtDateTime(a.submitted_at)}</div>
       </div>
       {!held && a.result && (
-        <button className="btn ghost sm" onClick={() => { void downloadScore(a, me) }}>Report</button>
+        <button className="btn ghost sm" onClick={() => { void downloadScore(a, me) }}>{t('rr.report')}</button>
       )}
     </div>
   )
 }
 
 export default function Results() {
+  const { t } = useI18n()
   const { me, loading } = useMe()
 
   const attempts = useMemo(
@@ -90,15 +93,11 @@ export default function Results() {
   if (!attempts.length) {
     return (
       <div className="page">
-        <PageHeader eyebrow="Results" title="Examination results" />
+        <PageHeader eyebrow={t('rr.eyebrow')} title={t('rr.title')} />
         <Card>
-          <EmptyState
-            icon="activity"
-            title="No examination attempts yet"
-            detail="Your results, domain breakdown and printable score report appear here after you sit the exam."
-          />
+          <EmptyState icon="activity" title={t('rr.emptyTitle')} detail={t('rr.emptyDetail')} />
           <div style={{ textAlign: 'center', marginTop: '.5rem' }}>
-            <Link className="btn" to="/certifications">Go to Certifications</Link>
+            <Link className="btn" to="/certifications">{t('xd.goCerts')}</Link>
           </div>
         </Card>
       </div>
@@ -113,58 +112,51 @@ export default function Results() {
 
   return (
     <div className="page fade-stagger">
-      <PageHeader eyebrow="Results" title="Examination results" />
+      <PageHeader eyebrow={t('rr.eyebrow')} title={t('rr.title')} />
 
       <div className="grid cols-2" style={{ alignItems: 'start' }}>
         <Card
-          title={`Latest ${latest.certification_code || ''} result`.trim()}
+          title={t('rr.latest', { code: latest.certification_code || '' }).replace(/\s+/g, ' ').trim()}
           action={<span className="muted small">{fmtDateTime(latest.submitted_at)}</span>}
         >
           {held ? (
             <div style={{ textAlign: 'center', padding: '1.6rem 1rem' }}>
               <div style={{ fontSize: '2rem' }}>⏳</div>
-              <h3 style={{ color: 'var(--warn)', margin: '.5rem 0' }}>Result on hold</h3>
-              <p className="muted" style={{ maxWidth: '46ch', margin: '0 auto' }}>
-                Your result could not be published automatically because the submission did not pass
-                a technical validity check. PCI will look into it and notify you. This is not a
-                proctoring or manual-marking review.
-              </p>
-              <p className="muted small" style={{ marginTop: '.6rem' }}>
-                No pass/fail outcome is shown until the technical issue is resolved.
-              </p>
+              <h3 style={{ color: 'var(--warn)', margin: '.5rem 0' }}>{t('rr.holdTitle')}</h3>
+              <p className="muted" style={{ maxWidth: '46ch', margin: '0 auto' }}>{t('rr.holdBody')}</p>
+              <p className="muted small" style={{ marginTop: '.6rem' }}>{t('rr.holdNote')}</p>
             </div>
           ) : invalidated ? (
             <div style={{ textAlign: 'center', padding: '1.6rem 1rem' }}>
               <div style={{ fontSize: '2rem' }}>✕</div>
-              <h3 style={{ color: 'var(--err)', margin: '.5rem 0' }}>Result invalidated</h3>
+              <h3 style={{ color: 'var(--err)', margin: '.5rem 0' }}>{t('rr.invalidatedTitle')}</h3>
               <p className="muted" style={{ maxWidth: '48ch', margin: '0 auto' }}>
-                This attempt was invalidated following an examination integrity review
-                {latest.result_status === 'credential_revoked' ? ' and the associated credential has been revoked' : ''}.
-                You may appeal this decision.
+                {t('rr.invalidatedBody', { revoked: latest.result_status === 'credential_revoked' ? t('rr.revokedClause') : '' })}
               </p>
-              <Link className="btn" to="/appeals" style={{ marginTop: '1rem' }}>Appeal this decision</Link>
+              <Link className="btn" to="/appeals" style={{ marginTop: '1rem' }}>{t('rr.appeal')}</Link>
             </div>
           ) : (
             <div style={{ textAlign: 'center' }}>
-              <Dial pct={latest.percent ?? 0} />
+              <Dial pct={latest.percent ?? 0} label={t('rr.score')} />
               <h2 style={{ color: pass ? 'var(--ok)' : 'var(--err)', margin: '.7rem 0 .1rem' }}>
-                {pass ? 'PASS' : 'Not passed'}
+                {pass ? t('xr.pass') : t('xr.notPassed')}
               </h2>
               <p className="muted small">
-                Pass mark 65% · Above ≥80 · At 65–79 · Below &lt;65
-                {latest.violations ? ` · ${latest.violations} integrity event(s) recorded` : ''}
+                {t('rr.passMarkNote')}
+                {latest.violations ? ` · ${t('rr.integrityNote', { n: latest.violations })}` : ''}
               </p>
               <div style={{ textAlign: 'start', maxWidth: 520, margin: '1.1rem auto 0' }}>
-                <DomainBands breakdown={breakdown} />
+                <DomainBands breakdown={breakdown}
+                  bandLabels={{ above: t('rr.bandAbove'), at: t('rr.bandAt'), below: t('rr.bandBelow') }} />
               </div>
               <div className="row" style={{ justifyContent: 'center', gap: '.6rem', marginTop: '1.1rem', flexWrap: 'wrap' }}>
                 <button className="btn secondary sm" onClick={() => { void downloadScore(latest, me) }}>
-                  Download score report
+                  {t('rr.downloadReport')}
                 </button>
                 {pass ? (
-                  <Link className="btn sm" to="/credentials">View credential</Link>
+                  <Link className="btn sm" to="/credentials">{t('rr.viewCredential')}</Link>
                 ) : (
-                  <Link className="btn sm" to="/billing">Plan a retake</Link>
+                  <Link className="btn sm" to="/billing">{t('rr.planRetake')}</Link>
                 )}
               </div>
             </div>
@@ -172,22 +164,20 @@ export default function Results() {
         </Card>
 
         <div className="stack" style={{ display: 'grid', gap: '1rem' }}>
-          <Card title="Attempt history">
+          <Card title={t('rr.history')}>
             {attempts.map((a) => <HistoryRow key={a.id} a={a} me={me} />)}
           </Card>
           {!held && !invalidated && !pass && (
             <Card>
               <div className="notice">
-                <strong>Retake guidance.</strong> Focus on domains marked Below target. Retakes
-                follow the retake policy — the fee is published before launch and a short interval
-                applies.
+                <strong>{t('rr.retakeTitle')}</strong> {t('rr.retakeBody')}
               </div>
             </Card>
           )}
           {attempts.some((a) => a.status === 'submitted') && (
             <Card>
               <div className="muted small">
-                Latest attempt status: <StatusBadge status={latest.result_status || latest.status} />
+                {t('rr.latestStatus')} <StatusBadge status={latest.result_status || latest.status} />
               </div>
             </Card>
           )}

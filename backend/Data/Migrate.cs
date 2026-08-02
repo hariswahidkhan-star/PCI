@@ -862,6 +862,11 @@ public static class Migrate
         db.Exec(@"CREATE TABLE IF NOT EXISTS content_i18n(id INTEGER PRIMARY KEY AUTOINCREMENT,lang TEXT NOT NULL,scope TEXT NOT NULL,slug TEXT NOT NULL DEFAULT '',ckey TEXT NOT NULL,cvalue TEXT,updated_at TEXT DEFAULT (datetime('now')))");
         db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang, scope, slug, ckey)");
         db.Exec("CREATE INDEX IF NOT EXISTS ix_content_i18n_lang ON content_i18n(lang)");
+        // Learning-content translations (exam/practice items, sim-lab scenarios, books) — overlaid
+        // at serve time by Core/ItemI18n; English in the source table is always the fallback.
+        db.Exec(@"CREATE TABLE IF NOT EXISTS item_i18n(id INTEGER PRIMARY KEY AUTOINCREMENT,entity TEXT NOT NULL,entity_id INTEGER NOT NULL,lang TEXT NOT NULL,field TEXT NOT NULL,value TEXT NOT NULL,updated_at TEXT DEFAULT (datetime('now')))");
+        db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS ux_item_i18n ON item_i18n(entity, entity_id, lang, field)");
+        db.Exec("CREATE INDEX IF NOT EXISTS ix_item_i18n_lookup ON item_i18n(lang, entity)");
         // Backend-owned translation provider (owner-set in Admin → Translations; never hardcoded).
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('translate_provider','')");
         db.Exec("INSERT OR IGNORE INTO site_settings(skey,svalue) VALUES ('translate_api_key','')");
@@ -1053,6 +1058,10 @@ public static class Migrate
         // authenticated download endpoint (personalised watermark when flagged); `url` remains for
         // plain external links. The master file is never exposed directly.
         AddCol("cert_documents", "storage_ref", "storage_ref TEXT");
+        // Language of this edition (multilingual launch): each certification can publish per-language
+        // books/handbooks; existing rows are the English editions. Listing surfaces the language so
+        // the portal can group editions; translated files are uploaded (or linked) per language.
+        AddCol("cert_documents", "lang", "lang VARCHAR(5) DEFAULT 'en'");
         AddCol("cert_documents", "filename", "filename TEXT");
         AddCol("cert_documents", "mime", "mime VARCHAR(80)");
         AddCol("cert_documents", "size_bytes", "size_bytes INTEGER");

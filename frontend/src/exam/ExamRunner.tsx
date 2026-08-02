@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
+import { useI18n } from '../i18n'
 import { Dial, DomainBands, parseBreakdown, type DomainBand } from '../components/results'
 import './exam.css'
 
@@ -88,6 +89,7 @@ function calcEval(e: string): number | null {
 const CALC_KEYS = ['C', '(', ')', '⌫', '7', '8', '9', '÷', '4', '5', '6', '×', '1', '2', '3', '−', '0', '.', '√', '+']
 
 function Calculator({ onClose }: { onClose: () => void }) {
+  const { t } = useI18n()
   const [expr, setExpr] = useState('')
   const value = calcEval(expr)
   const press = (k: string) => {
@@ -102,10 +104,10 @@ function Calculator({ onClose }: { onClose: () => void }) {
     } else setExpr((e) => e + k)
   }
   return (
-    <div className="xr-calc" role="dialog" aria-label="Calculator">
+    <div className="xr-calc" role="dialog" aria-label={t('xr.calculator')}>
       <div className="head">
-        Calculator
-        <button className="btn ghost sm" onClick={onClose} aria-label="Close calculator">×</button>
+        {t('xr.calculator')}
+        <button className="btn ghost sm" onClick={onClose} aria-label={t('xr.closeCalc')}>×</button>
       </div>
       <div className="scr">
         <div className="e">{expr || ' '}</div>
@@ -127,6 +129,7 @@ export default function ExamRunner({ start, certLabel, onExit }: {
   /** Called when the candidate leaves the runner; finished=true when the attempt was submitted. */
   onExit: (finished: boolean) => void
 }) {
+  const { t } = useI18n()
   const storageKey = `pci.exam.answers.${start.attempt_id}`
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState<Record<string, number>>(() => {
@@ -214,7 +217,7 @@ export default function ExamRunner({ start, certLabel, onExit }: {
         // A transient failure must not strand the sitting: allow retrying the submit.
         doneRef.current = false
         setSubmitting(false)
-        setFlash(auto ? 'Time is up but the submission failed — retrying…' : 'Could not submit — please try again.')
+        setFlash(auto ? t('xr.timeUpRetry') : t('xr.submitFailed'))
         window.setTimeout(() => setFlash(null), 2600)
         if (auto) window.setTimeout(() => { void submit(true) }, 4000)
         return
@@ -248,14 +251,14 @@ export default function ExamRunner({ start, certLabel, onExit }: {
     const violate = (msg: string) => {
       if (doneRef.current) return
       setViolations((v) => v + 1)
-      setFlash(`${msg} — the event has been recorded and will be reviewed.`)
+      setFlash(t('xr.eventRecorded', { msg }))
       window.setTimeout(() => setFlash(null), 2600)
       window.setTimeout(() => { void beat() }, 50)
     }
-    const onVis = () => { if (document.hidden) violate('You left the exam tab') }
-    const onBlur = () => violate('The exam window lost focus')
+    const onVis = () => { if (document.hidden) violate(t('xr.leftTab')) }
+    const onBlur = () => violate(t('xr.lostFocus'))
     const block = (e: Event) => e.preventDefault()
-    const blockAndRecord = (e: Event) => { e.preventDefault(); violate('Copy/paste is not permitted') }
+    const blockAndRecord = (e: Event) => { e.preventDefault(); violate(t('xr.clipboardBlocked')) }
     document.addEventListener('visibilitychange', onVis)
     window.addEventListener('blur', onBlur)
     document.addEventListener('contextmenu', block)
@@ -303,14 +306,11 @@ export default function ExamRunner({ start, certLabel, onExit }: {
   if (finalizedElsewhere) {
     return portal(
       <div className="xr-overlay">
-        <div className="xr-top"><span className="xr-title">Examination submitted</span></div>
+        <div className="xr-top"><span className="xr-title">{t('xr.finalizedTitle')}</span></div>
         <div className="card" style={{ maxWidth: 560, margin: '2rem auto', textAlign: 'center', padding: '2rem' }}>
-          <h3>Your sitting has been finalised</h3>
-          <p className="muted">
-            Time expired and the examination was submitted automatically with the answers saved up
-            to the deadline. Your result is available on the Results page.
-          </p>
-          <button className="btn" style={{ marginTop: '1rem' }} onClick={() => onExit(true)}>View my result</button>
+          <h3>{t('xr.finalizedHead')}</h3>
+          <p className="muted">{t('xr.finalizedBody')}</p>
+          <button className="btn" style={{ marginTop: '1rem' }} onClick={() => onExit(true)}>{t('xr.viewResult')}</button>
         </div>
       </div>
     )
@@ -320,17 +320,15 @@ export default function ExamRunner({ start, certLabel, onExit }: {
     if (result.held) {
       return portal(
         <div className="xr-overlay">
-          <div className="xr-top"><span className="xr-title">Examination result</span></div>
+          <div className="xr-top"><span className="xr-title">{t('xr.resultTitle')}</span></div>
           <div className="card" style={{ maxWidth: 640, margin: '2rem auto', textAlign: 'center', padding: '2.2rem 1.8rem' }}>
             <div style={{ fontSize: '2rem' }}>⏳</div>
-            <h3 style={{ color: 'var(--warn)', margin: '.5rem 0' }}>Result on hold — under review</h3>
+            <h3 style={{ color: 'var(--warn)', margin: '.5rem 0' }}>{t('xr.holdTitle')}</h3>
             <p className="muted" style={{ maxWidth: '48ch', margin: '0 auto' }}>
-              {result.message || 'Your submission is being verified. PCI will notify you once the review is complete.'}
+              {result.message || t('xr.holdDefault')}
             </p>
-            <p className="muted small" style={{ marginTop: '.8rem' }}>
-              No pass/fail outcome is shown until the review is resolved. You do not need to do anything.
-            </p>
-            <button className="btn" style={{ marginTop: '1.2rem' }} onClick={() => onExit(true)}>Back to my dashboard</button>
+            <p className="muted small" style={{ marginTop: '.8rem' }}>{t('xr.holdNote')}</p>
+            <button className="btn" style={{ marginTop: '1.2rem' }} onClick={() => onExit(true)}>{t('xr.backDash')}</button>
           </div>
         </div>
       )
@@ -338,28 +336,29 @@ export default function ExamRunner({ start, certLabel, onExit }: {
     const pass = result.result === 'pass'
     return portal(
       <div className="xr-overlay">
-        <div className="xr-top"><span className="xr-title">Examination result</span></div>
+        <div className="xr-top"><span className="xr-title">{t('xr.resultTitle')}</span></div>
         <div className="card" style={{ maxWidth: 640, margin: '2rem auto', textAlign: 'center', padding: '2.2rem 1.8rem' }}>
           <div className="small" style={{ letterSpacing: 2, textTransform: 'uppercase', color: 'var(--brand)', fontWeight: 700, marginBottom: '1rem' }}>
-            Official result
+            {t('xr.official')}
           </div>
-          <Dial pct={result.pct ?? 0} />
+          <Dial pct={result.pct ?? 0} label={t('rr.score')} />
           <h2 style={{ color: pass ? 'var(--ok)' : 'var(--err)', margin: '.8rem 0 .2rem' }}>
-            {pass ? 'PASS' : 'Not passed'}
+            {pass ? t('xr.pass') : t('xr.notPassed')}
           </h2>
-          <p className="muted" style={{ margin: 0 }}>{result.score} of {result.max} scored items correct</p>
+          <p className="muted" style={{ margin: 0 }}>{t('xr.scoreLine', { score: result.score ?? 0, max: result.max ?? 0 })}</p>
           {pass && result.credential && (
             <div className="notice" style={{ marginTop: '.9rem' }}>
-              Credential issued: <strong>{result.credential}</strong>
+              {t('xr.credIssuedLabel')} <strong>{result.credential}</strong>
             </div>
           )}
           <div style={{ textAlign: 'start', maxWidth: 460, margin: '1.4rem auto 0' }}>
-            <DomainBands breakdown={parseBreakdown(result.breakdown)} />
+            <DomainBands breakdown={parseBreakdown(result.breakdown)}
+              bandLabels={{ above: t('rr.bandAbove'), at: t('rr.bandAt'), below: t('rr.bandBelow') }} />
           </div>
           <div className="row" style={{ justifyContent: 'center', gap: '.6rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
-            {pass && <Link className="btn" to="/credentials" onClick={() => onExit(true)}>View my credential</Link>}
+            {pass && <Link className="btn" to="/credentials" onClick={() => onExit(true)}>{t('xr.viewCredential')}</Link>}
             <button className={pass ? 'btn secondary' : 'btn'} onClick={() => onExit(true)}>
-              {pass ? 'Close' : 'View full result'}
+              {pass ? t('xr.close') : t('xr.viewFullResult')}
             </button>
           </div>
         </div>
@@ -371,23 +370,23 @@ export default function ExamRunner({ start, certLabel, onExit }: {
   return portal(
     <div className="xr-overlay">
       <div className="xr-top">
-        <span className="xr-title">{certLabel} — Examination</span>
-        <span className={`xr-chip${violations ? ' v' : ''}`} title="Focus, clipboard and tab changes are recorded">
-          {violations ? `⚠ ${violations} integrity event${violations > 1 ? 's' : ''} recorded` : 'Secure mode'}
+        <span className="xr-title">{t('xr.title', { cert: certLabel })}</span>
+        <span className={`xr-chip${violations ? ' v' : ''}`} title={t('xr.integrityHint')}>
+          {violations ? (violations > 1 ? t('xr.integrityMany', { n: violations }) : t('xr.integrityOne')) : t('xr.secureMode')}
         </span>
-        <button className="btn ghost sm" onClick={() => setShowCalc((v) => !v)}>Calculator</button>
+        <button className="btn ghost sm" onClick={() => setShowCalc((v) => !v)}>{t('xr.calculator')}</button>
         <span className={`xr-timer${remaining < 300 ? ' low' : ''}`} aria-live="off">{timeStr}</span>
       </div>
 
       {proctorMsg && (
         <div className="notice" style={{ margin: '0.6rem 1rem 0' }} role="status">
-          <strong>Proctor:</strong> {proctorMsg}
+          <strong>{t('xr.proctor')}</strong> {proctorMsg}
         </div>
       )}
 
       <div className="xr-body">
         <div className="card" style={{ padding: '1.2rem' }}>
-          <div className="muted small">Question {idx + 1} of {items.length}</div>
+          <div className="muted small">{t('xr.questionOf', { n: idx + 1, total: items.length })}</div>
           {item.domain && <div className="muted small" style={{ marginTop: '.15rem' }}>{item.domain}</div>}
           <h3 style={{ margin: '.6rem 0 .4rem' }}>{item.question}</h3>
           {item.options.map((o, i) => (
@@ -404,24 +403,24 @@ export default function ExamRunner({ start, certLabel, onExit }: {
             </div>
           ))}
           <div className="row" style={{ marginTop: '1rem', gap: '.5rem', flexWrap: 'wrap' }}>
-            <button className="btn secondary sm" disabled={idx === 0} onClick={() => setIdx((i) => i - 1)}>Previous</button>
+            <button className="btn secondary sm" disabled={idx === 0} onClick={() => setIdx((i) => i - 1)}>{t('xr.previous')}</button>
             <button
               className="btn secondary sm"
               onClick={() => setFlags((f) => ({ ...f, [String(item.id)]: !f[String(item.id)] }))}
             >
-              {flags[String(item.id)] ? 'Unflag' : 'Flag for review'}
+              {flags[String(item.id)] ? t('xr.unflag') : t('xr.flag')}
             </button>
             <div style={{ flex: 1 }} />
             {idx < items.length - 1 ? (
-              <button className="btn sm" onClick={() => setIdx((i) => i + 1)}>Next</button>
+              <button className="btn sm" onClick={() => setIdx((i) => i + 1)}>{t('xr.next')}</button>
             ) : (
-              <button className="btn sm" disabled={submitting} onClick={() => setConfirming(true)}>Submit examination</button>
+              <button className="btn sm" disabled={submitting} onClick={() => setConfirming(true)}>{t('xr.submitExam')}</button>
             )}
           </div>
         </div>
 
         <div className="card" style={{ padding: '1rem' }}>
-          <h4 style={{ marginBottom: '.6rem' }}>Questions</h4>
+          <h4 style={{ marginBottom: '.6rem' }}>{t('xr.questions')}</h4>
           <div className="xr-pal">
             {items.map((q, i) => (
               <button
@@ -438,11 +437,11 @@ export default function ExamRunner({ start, certLabel, onExit }: {
             ))}
           </div>
           <p className="muted small" style={{ marginTop: '.7rem', marginBottom: 0 }}>
-            {answered} of {items.length} answered
-            {Object.values(flags).filter(Boolean).length > 0 && <> · {Object.values(flags).filter(Boolean).length} flagged</>}
+            {t('xr.answeredCount', { n: answered, total: items.length })}
+            {Object.values(flags).filter(Boolean).length > 0 && <> · {t('xr.flaggedCount', { n: Object.values(flags).filter(Boolean).length })}</>}
           </p>
           <button className="btn block" style={{ marginTop: '.8rem' }} disabled={submitting} onClick={() => setConfirming(true)}>
-            Submit examination
+            {t('xr.submitExam')}
           </button>
         </div>
       </div>
@@ -450,26 +449,26 @@ export default function ExamRunner({ start, certLabel, onExit }: {
       {flash && (
         <div className="xr-flash">
           <div className="card" style={{ padding: '1.2rem 1.4rem' }}>
-            <b style={{ color: 'var(--err)' }}>Secure exam notice</b>
+            <b style={{ color: 'var(--err)' }}>{t('xr.secureNotice')}</b>
             <p className="small" style={{ margin: '.5rem 0 0' }}>{flash}</p>
           </div>
         </div>
       )}
 
       {confirming && (
-        <div className="xr-modal" role="dialog" aria-modal="true" aria-label="Confirm submission">
+        <div className="xr-modal" role="dialog" aria-modal="true" aria-label={t('xr.confirmTitle')}>
           <div className="card" style={{ maxWidth: 440, padding: '1.4rem' }}>
-            <h3>Submit your examination?</h3>
+            <h3>{t('xr.confirmTitle')}</h3>
             <p className="muted" style={{ margin: '.5rem 0' }}>
               {items.length - answered > 0
-                ? `${items.length - answered} question${items.length - answered > 1 ? 's are' : ' is'} unanswered and will be marked incorrect.`
-                : 'All questions are answered.'}
+                ? (items.length - answered > 1 ? t('xr.unansweredMany', { n: items.length - answered }) : t('xr.unansweredOne'))
+                : t('xr.allAnswered')}
             </p>
-            <p className="muted small">This is final — you cannot reopen the examination after submitting.</p>
+            <p className="muted small">{t('xr.finalNote')}</p>
             <div className="row" style={{ justifyContent: 'flex-end', gap: '.6rem', marginTop: '1rem' }}>
-              <button className="btn secondary sm" onClick={() => setConfirming(false)}>Keep working</button>
+              <button className="btn secondary sm" onClick={() => setConfirming(false)}>{t('xr.keepWorking')}</button>
               <button className="btn sm" disabled={submitting} onClick={() => { void submit(false) }}>
-                {submitting ? 'Submitting…' : 'Submit now'}
+                {submitting ? t('xr.submitting') : t('xr.submitNow')}
               </button>
             </div>
           </div>

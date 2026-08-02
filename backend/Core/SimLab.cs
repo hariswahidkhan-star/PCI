@@ -85,7 +85,8 @@ public static class SimLab
     /// GET /api/me/lab/catalogue returns verbatim (do not rename keys — the SPA and tests read them).
     /// </summary>
     public static object Catalogue(Db db, long userId,
-        string? q, string? difficulty, string? kind, string? industry, string? competency)
+        string? q, string? difficulty, string? kind, string? industry, string? competency,
+        string lang = "en")
     {
         var fQ = (q ?? "").Trim().ToLowerInvariant();
         var fDifficulty = (difficulty ?? "").Trim().ToLowerInvariant();
@@ -114,9 +115,14 @@ public static class SimLab
         var scoredCount = 0;
         var resume = new List<object>();
         var done = new HashSet<string>(StringComparer.Ordinal) { "passed", "completed" };
-        foreach (var s in db.Query(@"SELECT id,scenario_code,title,kind,industry,project_type,difficulty,
+        var scenarios = db.Query(@"SELECT id,scenario_code,title,kind,industry,project_type,difficulty,
             est_minutes,competencies_json,certification_id,summary,version,config_json FROM simulation_scenarios
-            WHERE status='published' ORDER BY sort_order ASC, id ASC"))
+            WHERE status='published' ORDER BY sort_order ASC, id ASC");
+        // Multilingual catalogue: overlay translated display text BEFORE the loop so the search
+        // predicate matches what the student actually sees. Codes, facets and grading config are
+        // language-invariant.
+        ItemI18n.Overlay(db, "scenario", lang, scenarios, "title", "summary");
+        foreach (var s in scenarios)
         {
             total++;
             var scenDifficulty = H.Str(s["difficulty"]) ?? "";

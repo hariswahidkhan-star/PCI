@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
 import { api, ApiError } from '../api/client'
+import { useI18n } from '../i18n'
 import { fmtDateTime } from '../format'
 import { openPrintable } from '../print'
 import { Card, Badge, Spinner, ErrorNote } from '../components/ui'
@@ -530,6 +531,7 @@ function CoachMessage({ coach }: { coach: CoachResp }) {
 
 export default function LabRunner() {
   const { code } = useParams<{ code: string }>()
+  const { lang } = useI18n()
   const [params, setParams] = useSearchParams()
   // /lab/:code?mode=assessment launches straight into Assessment Mode (from the details panel);
   // /lab/:code?attempt=ID opens a completed attempt read-only for review.
@@ -571,7 +573,7 @@ export default function LabRunner() {
     setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setStepAnswers({}); setDecisions({}); setCoach(null)
     setReview(null); setSaveState('idle'); setSaveNote(null); setReportNote(null)
     try {
-      const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m })
+      const s = await api.post<StartResp>('/api/me/lab/attempts', { scenario_code: code, mode: m, lang })
       skipAutosave.current = true
       setStart(s)
       let restoredCount = 0
@@ -597,7 +599,7 @@ export default function LabRunner() {
     } finally {
       setLoading(false)
     }
-  }, [code])
+  }, [code, lang])
 
   // Load a past attempt read-only. An in-progress attempt falls back to the normal
   // resume flow (the server resumes it when a new start is requested in its mode).
@@ -606,7 +608,7 @@ export default function LabRunner() {
     setLoading(true); setError(null); setGrade(null); setStart(null); setAnswers({}); setCoach(null)
     setReview(null); setSaveState('idle'); setSaveNote(null); setReportNote(null)
     try {
-      const a = await api.get<AttemptDetail>(`/api/me/lab/attempts/${id}`)
+      const a = await api.get<AttemptDetail>(`/api/me/lab/attempts/${id}${lang !== 'en' ? `?lang=${lang}` : ''}`)
       if (a.status === 'in_progress' || !a.grade) {
         if (a.mode === 'assessment') setMode('assessment')
         setParams((prev) => {
@@ -625,7 +627,7 @@ export default function LabRunner() {
     } finally {
       setLoading(false)
     }
-  }, [setParams])
+  }, [setParams, lang])
 
   useEffect(() => {
     if (reviewId) void loadReview(reviewId)

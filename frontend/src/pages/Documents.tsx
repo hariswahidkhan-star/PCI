@@ -5,7 +5,7 @@ import { Card, Spinner, ErrorNote, Empty, Badge } from '../components/ui'
 import { DocumentRow, ViewDownloadActions } from '../components/documents/DocumentActions'
 import { studentToken } from '../files'
 import { fmtDate, titleCase } from '../format'
-import { useT } from '../i18n'
+import { useT, useI18n, LANGS } from '../i18n'
 import { PageHeader } from '../components/premium'
 
 interface DocRow {
@@ -43,6 +43,8 @@ interface BookRow {
   size_bytes?: number | null
   cert_acronym?: string | null
   cert_name?: string | null
+  /** Language of this edition ('en' unless a translated edition was published). */
+  lang?: string | null
 }
 
 /** Books & study materials for the student's certifications (GET /api/me/cert-documents),
@@ -50,7 +52,11 @@ interface BookRow {
  * flagged, personally watermarked) endpoint; link rows open their external URL. */
 function BooksSection() {
   const t = useT()
-  const { data, loading, error } = useQuery<{ rows: BookRow[] }>('/api/me/cert-documents')
+  const { lang } = useI18n()
+  // Titles/descriptions arrive in the portal language (server overlay, English fallback), and rows
+  // that are a translated edition carry their own `lang` so we can label them.
+  const { data, loading, error } = useQuery<{ rows: BookRow[] }>(
+    lang !== 'en' ? `/api/me/cert-documents?lang=${lang}` : '/api/me/cert-documents')
 
   if (loading && !data) return null
   if (error) return null
@@ -81,7 +87,12 @@ function BooksSection() {
                   description: r.description,
                   filename: r.filename,
                   sizeBytes: r.size_bytes,
-                  meta: [titleCase((r.kind || 'book').replace('_', ' ')), r.watermark ? t('doc.personalisedCopy') : null],
+                  meta: [
+                    titleCase((r.kind || 'book').replace('_', ' ')),
+                    // Label translated editions with their language's native name.
+                    r.lang && r.lang !== 'en' ? (LANGS.find((l) => l.code === r.lang)?.native ?? r.lang) : null,
+                    r.watermark ? t('doc.personalisedCopy') : null,
+                  ],
                 }}
                 actions={
                   r.has_file ? (

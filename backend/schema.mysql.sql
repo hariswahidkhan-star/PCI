@@ -1204,6 +1204,22 @@ CREATE TABLE IF NOT EXISTS content_i18n (
 CREATE UNIQUE INDEX IF NOT EXISTS ux_content_i18n ON content_i18n(lang(191), scope(191), slug(191), ckey(191));
 CREATE INDEX IF NOT EXISTS ix_content_i18n_lang ON content_i18n(lang(191));
 
+-- ===== Learning-content translations (exam/practice items, sim-lab scenarios, books/study
+-- materials): one translated field per item per language, overlaid at serve time. English in the
+-- source table is always the fallback; answer keys/indices never move (only display text is
+-- translated, and an options translation must keep the exact option count to be applied). =====
+CREATE TABLE IF NOT EXISTS item_i18n (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  entity TEXT NOT NULL,                       -- question | scenario | book
+  entity_id BIGINT NOT NULL,
+  lang TEXT NOT NULL,                         -- ko | ar | es | fr | zh | ru
+  field TEXT NOT NULL,                        -- question | options | domain | title | summary | brief | description
+  value TEXT NOT NULL,
+  updated_at TEXT DEFAULT (DATE_FORMAT(UTC_TIMESTAMP(),'%Y-%m-%d %H:%i:%s'))
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_item_i18n ON item_i18n(entity(191), entity_id, lang(191), field(191));
+CREATE INDEX IF NOT EXISTS ix_item_i18n_lookup ON item_i18n(lang(191), entity(191));
+
 -- Configurable notification settings (owner-editable in Admin → Settings; never hardcoded).
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_honorary_enabled','1');
 INSERT IGNORE INTO site_settings(skey,svalue) VALUES ('notify_admin_email','');
