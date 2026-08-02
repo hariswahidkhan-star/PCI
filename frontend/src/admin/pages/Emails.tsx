@@ -23,8 +23,8 @@ export default function Emails() {
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search recipient…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
+          <input aria-label="Search recipient" placeholder="Search recipient…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All statuses</option>
             <option value="sent">Sent</option>
             <option value="queued">Queued</option>

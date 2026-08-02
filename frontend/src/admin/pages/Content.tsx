@@ -68,7 +68,7 @@ export default function Content() {
       />
 
       <Card>
-        <input placeholder="Search content…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />
+        <input aria-label="Search content" placeholder="Search content…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />
       </Card>
 
       {loading ? (

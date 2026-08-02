@@ -1,10 +1,12 @@
 import React from 'react'
 import { initDemoMode } from './demo/mode'
+import { initTheme } from './theme'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 import { AuthProvider } from './auth/AuthContext'
 import { I18nProvider } from './i18n'
+import './theme.css'
 import './styles.css'
 import './premium.css'
 
@@ -37,6 +39,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 }
 
 // The app is mounted under /app/ by the backend; basename keeps router paths clean ("/", "/cpd", …).
+initTheme()
 initDemoMode()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

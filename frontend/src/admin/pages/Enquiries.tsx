@@ -24,8 +24,8 @@ export default function Enquiries() {
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search email, org, topic…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 300 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
+          <input aria-label="Search email, org, topic" placeholder="Search email, org, topic…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 300 }} />
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All statuses</option>
             <option value="new">New</option>
             <option value="in_progress">In progress</option>

@@ -104,7 +104,7 @@ function CreateForm({ onClose, onSaved }: { onClose: () => void; onSaved: () => 
           )}
           {!founding && (
             <div className="field"><label>Certification</label>
-              <select value={f.certification_id} onChange={(e) => setF({ ...f, certification_id: e.target.value })}>
+              <select aria-label="Filter by certification" value={f.certification_id} onChange={(e) => setF({ ...f, certification_id: e.target.value })}>
                 <option value="">All certifications</option>
                 {certData?.rows.map((c) => <option key={c.id} value={c.id}>{c.acronym || c.code}</option>)}
               </select>
@@ -264,7 +264,7 @@ function EditForm({ code, onClose, onSaved }: { code: DiscountCode; onClose: () 
           )}
           {!founding && (
             <div className="field"><label>Certification</label>
-              <select value={f.certification_id} onChange={(e) => setF({ ...f, certification_id: e.target.value })}>
+              <select aria-label="Filter by certification" value={f.certification_id} onChange={(e) => setF({ ...f, certification_id: e.target.value })}>
                 <option value="">All certifications</option>
                 {certData?.rows.map((c) => <option key={c.id} value={c.id}>{c.acronym || c.code}</option>)}
               </select>

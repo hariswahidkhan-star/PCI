@@ -234,11 +234,14 @@ export default function Settings() {
                 const long = (v ?? '').length > 80
                 return (
                   <div className="field" key={k} style={long ? { gridColumn: '1 / -1' } : undefined}>
-                    <label title={k}>{labelFor(k)}</label>
+                    {/* htmlFor/id, not just adjacency: the label was visible but not associated,
+                        so a screen reader announced every settings field as an unnamed text box.
+                        The setting key is already unique, which makes it the natural id. */}
+                    <label htmlFor={`set-${k}`} title={k}>{labelFor(k)}</label>
                     {long ? (
-                      <textarea rows={2} value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
+                      <textarea id={`set-${k}`} rows={2} value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
                     ) : (
-                      <input value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
+                      <input id={`set-${k}`} value={v} onChange={(e) => setEdits({ ...edits, [k]: e.target.value })} />
                     )}
                   </div>
                 )

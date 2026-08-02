@@ -992,24 +992,53 @@ _modules = sorted(_checks_dir.glob("*.py")) if _checks_dir.is_dir() else []
 # actually use; it does NOT catch `ctx["check"](...)` spelled out longhand, a literal compared to a
 # variable that happens to hold the same literal, or a tautology assembled at runtime. Verified by
 # planting one of each: the standard form fails the suite with exit 1, the longhand form slips past.
-_TAUT = re.compile(r'check\(\s*"[^"]*"\s*,\s*(D\([^()]*\)|-?\d+(?:\.\d+)?)\s*,\s*'
-                   r'(D\([^()]*\)|-?\d+(?:\.\d+)?)\s*[,)]')
+# A check whose two sides are the same TEXT cannot fail. The first version of this guard matched
+# only `check("x", D(1), 1)` — a literal against a literal, written inline. It missed two shapes
+# that a sweep of the finished suite then found seventeen of: the `ctx["check"](...)` longhand the
+# per-domain modules use, and a repeated EXPRESSION (`check("x", c + TF, c + TF)`), which looks like
+# work and is not. This version normalises whitespace and the D(...) wrapper, joins continuation
+# lines so a multi-line call is seen whole, and compares the two arguments as strings.
+_ARGS = re.compile(r'check\(\s*f?"[^"]*"\s*,\s*(.+?)\s*,\s*(.+?)\s*(?:,\s*tol\s*=.*?)?\)\s*$')
+
+
+def _norm_arg(t: str) -> str:
+    return re.sub(r"\s+", "", t).replace("D(", "").replace(")", "")
+
+
+def _logical_lines(src: str):
+    """Source as logical lines: comments dropped, bracketed continuations joined."""
+    buf, start = "", 0
+    for no, raw in enumerate(src.splitlines(), 1):
+        stripped = raw.strip()
+        if stripped.startswith("#"):
+            continue
+        if not buf:
+            start = no
+        buf = (buf + " " + stripped).strip()
+        if buf.count("(") <= buf.count(")"):
+            yield start, buf
+            buf = ""
+
+
 _tauts = []
 for _mp in _modules:
     if _mp.name.startswith("_"):
         continue
     _src = _mp.read_text(encoding="utf-8")
-    for _tm in _TAUT.finditer(_src):
-        # Skip matches inside a comment: the fix for one of these quotes the old line in prose.
-        _line_start = _src.rfind("\n", 0, _tm.start()) + 1
-        if _src[_line_start:_tm.start()].lstrip().startswith("#"):
+    for _no, _raw_line in _logical_lines(_src):
+        # Normalise the longhand FIRST. Filtering on "check(" before rewriting `ctx["check"](` threw
+        # away every longhand call, because that text reads `check"](` — the pre-filter silently
+        # defeated the normalisation meant to catch it, and a planted longhand tautology sailed
+        # through. Caught by planting one; it would not have shown up any other way.
+        _line = _raw_line.replace('ctx["check"]', "check").replace("ctx['check']", "check")
+        if "check(" not in _line:
             continue
-        if _tm.group(1).strip() == _tm.group(2).strip():
-            _tauts.append(f"{_mp.name}:{_src[:_tm.start()].count(chr(10)) + 1}: "
-                          f"{_tm.group(0)[:80]}")
+        _m = _ARGS.search(_line)
+        if _m and _norm_arg(_m.group(1)) == _norm_arg(_m.group(2)):
+            _tauts.append(f"{_mp.name}:{_no}: {_line[:96]}")
 if _tauts:
-    FAILURES.append(f"{len(_tauts)} tautological check(s): a literal compared to itself")
-    print(f"FAIL  tautological checks — these can never fail and must be derived or removed:",
+    FAILURES.append(f"{len(_tauts)} tautological check(s): the two sides are the same expression")
+    print("FAIL  tautological checks — these can never fail and must be derived or removed:",
           *_tauts, sep="\n  ")
 for _mod_path in _modules:
     if _mod_path.name.startswith("_"):

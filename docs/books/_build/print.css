@@ -289,3 +289,10 @@ nav#TOC a::after {
   padding: 1.2mm 2mm; border-bottom: 0.15mm solid #E2E8F0; vertical-align: top; line-height: 1.45;
 }
 .appendices tr { break-inside: avoid; }
+
+/* ---- Full-bleed cover (Appendix-matrix row 1). A named page so margins can go to zero without
+   affecting the rest of the book; headers and footers are suppressed on it. ---- */
+@page cover { size: A4; margin: 0;
+  @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
+.coverpage { page: cover; break-after: page; margin: 0; padding: 0; line-height: 0; }
+.coverpage img { display: block; width: 210mm; height: 297mm; }

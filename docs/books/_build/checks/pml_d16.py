@@ -490,7 +490,10 @@ def run(ctx):
           gt(D("0.80"), BE_LEVEL), 1)
 
     # attribution (16.4.3)
-    check("16.4.3 comparison cohort size (the final wave)", D(8), 8)
+    # An INPUT is not a golden answer. Restating one against itself (`check(..., D(8), 8)`)
+    # produced a passing line that could never fail; whether the manuscript still states
+    # this figure is a question about the manuscript, which audit_prose_math.py and
+    # audit_figures.py ask by reading it. Removed rather than left as false assurance.
     ATTR = D("4.8")
     check("16.4.3 steady benefit at 4.8 attributable hours", D(27) * ATTR * RATE * 48,
           D(528768))

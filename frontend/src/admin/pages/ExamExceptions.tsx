@@ -601,8 +601,8 @@ function AuthorizationsTab() {
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search name or email…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 300 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
+          <input aria-label="Search name or email" placeholder="Search name or email…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 300 }} />
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All statuses</option>
             <option value="active">Active</option>
             <option value="scheduled">Scheduled</option>
@@ -611,7 +611,7 @@ function AuthorizationsTab() {
             <option value="closed">Closed</option>
             <option value="reopened">Reopened</option>
           </select>
-          <select value={certId} onChange={(e) => setCertId(e.target.value)} style={{ maxWidth: 240 }}>
+          <select aria-label="Filter by certification" value={certId} onChange={(e) => setCertId(e.target.value)} style={{ maxWidth: 240 }}>
             <option value="">All certifications</option>
             {certs.map((c) => <option key={c.id} value={c.id}>{c.code} — {c.name}</option>)}
           </select>
@@ -791,8 +791,8 @@ function IncidentsTab() {
     <>
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 240 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 160 }}>
+          <input aria-label="Search" placeholder="Search…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 240 }} />
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 160 }}>
             <option value="">All statuses</option>
             <option value="open">Open</option>
             <option value="under_review">Under review</option>
@@ -800,18 +800,18 @@ function IncidentsTab() {
             <option value="rejected">Rejected</option>
             <option value="escalated">Escalated</option>
           </select>
-          <select value={severity} onChange={(e) => setSeverity(e.target.value)} style={{ maxWidth: 150 }}>
+          <select aria-label="Filter by severity" value={severity} onChange={(e) => setSeverity(e.target.value)} style={{ maxWidth: 150 }}>
             <option value="">All severities</option>
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
             <option value="critical">Critical</option>
           </select>
-          <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ maxWidth: 200 }}>
+          <select aria-label="Filter by category" value={category} onChange={(e) => setCategory(e.target.value)} style={{ maxWidth: 200 }}>
             <option value="">All categories</option>
             {CATEGORIES.map((c) => <option key={c} value={c}>{titleCase(c)}</option>)}
           </select>
-          <select value={certId} onChange={(e) => setCertId(e.target.value)} style={{ maxWidth: 220 }}>
+          <select aria-label="Filter by certification" value={certId} onChange={(e) => setCertId(e.target.value)} style={{ maxWidth: 220 }}>
             <option value="">All certifications</option>
             {certs.map((c) => <option key={c.id} value={c.id}>{c.code} — {c.name}</option>)}
           </select>

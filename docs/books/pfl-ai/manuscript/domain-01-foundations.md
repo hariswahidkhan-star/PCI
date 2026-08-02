@@ -1529,7 +1529,7 @@ What a project finance director cannot delegate in this domain:
 **Exercise 1.2** The WE 1.2.3 project refinances to 80 % debt (80,000,000 interest-only at
 6.5 %). Rebuild the base-case levered return and the cash decline at which equity income
 reaches zero.
-*Solution.* Debt service `80 × 0.065 = 5,200,000`; equity 20,000,000; base equity cash
+*Solution.* Debt service `80,000,000 × 0.065 = 5,200,000`; equity 20,000,000; base equity cash
 `12.0 − 5.2 = 6.8` → **34.0 %**. Zero at project cash = 5,200,000 — a **56.6667 % decline**
 (from 12.0). Versus the 70/30 case: eight points more base return (34 vs 26 %, on a third
 less equity) bought a materially nearer cliff (−56.6667 % vs −65.0000 %). Common error: comparing

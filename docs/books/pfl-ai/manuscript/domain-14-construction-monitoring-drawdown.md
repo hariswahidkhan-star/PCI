@@ -197,7 +197,8 @@ relationship is actually conducted.
    in this quarter. Gearing 70/30. Compute the request and the resulting balances.
 2. **Formula.** Requirement = certified spend + accrued interest; debt draw = 0.70 × requirement;
    equity draw = 0.30 × requirement.
-3. **Substitution.** `9,391,718 + 245,707 + 287,138 = 9,924,564`; `× 0.70`; `× 0.30`.
+3. **Substitution.** `9,391,717.86 + 245,706.76 + 287,139.20 = 9,924,563.82`, i.e. **9,924,564**;
+   `× 0.70`; `× 0.30`.
 4. **Result.** Period funding requirement **USD 9,924,564**; senior debt draw **6,947,195**;
    equity draw **2,977,369**. Closing cumulative debt **26,089,746** (62.12 % of commitment) and
    equity **11,181,320** (62.12 % of commitment); undrawn commitment **22,728,934**.
@@ -1014,13 +1015,13 @@ Maximum coverage-neutral debt funding = (Δ CFADS ÷ target DSCR) × AF(r, n)
    `marginal DSCR = ΔCFADS ÷ Δ debt service`; maximum coverage-neutral debt funding as above.
 3. **Substitution.** `240,000 × 10.674776 = 2,561,946`; `− 1,850,000`;
    `1,850,000 / 8.383844 = 220,663`; `240,000 / 220,663`;
-   `(240,000 / 1.274303) × 8.383844`.
+   `(240,000 / 1.274344) × 8.383844`.
 4. **Result.** **`NPV` +USD 711,946** and **`PI` 1.3848** — comfortably value-accretive on
    Domain 4's tests. Funded **entirely by debt**, incremental debt service is **220,663** and the
    **marginal `DSCR` is 1.0876** — below the 1.20 covenant and far below the 1.2743 base. Funded
    **70/30** like every other use, the debt share is 1,295,000, incremental debt service
    **154,464** and the marginal `DSCR` **1.5538** — accretive. The maximum debt funding that holds
-   base coverage constant is `(240,000/1.274303) × 8.383844 =` **USD 1,578,947**, being **85.35 %**
+   base coverage constant is `(240,000/1.274344) × 8.383844 =` **USD 1,578,947**, being **85.35 %**
    of the cost; the residual **271,053** must come from equity or contingency. To be
    coverage-neutral at full debt funding the variation would need **281,200** per year of `CFADS`,
    **41,200** more than it delivers.
@@ -1123,7 +1124,7 @@ debt-funded amount that leaves base coverage unchanged is closest to:
 - C. USD 1,295,000
 - D. USD 2,012,123
 
-*Rationale:* `(240,000/1.274303) × 8.383844 = 1,578,947`, being 85.35 % of the cost. A is full debt
+*Rationale:* `(240,000/1.274344) × 8.383844 = 1,578,947`, being 85.35 % of the cost. A is full debt
 funding, which yields a marginal `DSCR` of 1.0876. C is the 70 % pro-rata debt share — inside the
 limit but not the limit. D applies `AF` to the full `ΔCFADS` without the coverage divisor, the
 sizing error of Domain 10, Exercise 10.1.
@@ -1424,7 +1425,7 @@ lump sum, usually applied to prepay debt, calibrated so that the financing survi
 2. **Formula.** `DSCR = CFADS ÷ (debt ÷ AF)`. Supportable debt at a target ratio =
    `(CFADS ÷ target) × AF`. Buy-down = 42,000,000 − supportable debt.
 3. **Substitution.** `5,900,000 / (42,000,000/8.383844)`; `(5,900,000/1.20) × 8.383844`;
-   `(5,900,000/1.274303) × 8.383844`.
+   `(5,900,000/1.274344) × 8.383844`.
 4. **Result.** As completed the `DSCR` is **1.1777** — the **covenant is breached from the first
    test**. Restoring the 1.20× covenant requires debt of **41,220,566**, a buy-down of
    **779,434**. Restoring the 1.2743 base coverage requires debt of **38,815,789**, a buy-down of
@@ -1539,7 +1540,7 @@ debt of 42,000,000, `AF(0.06, 12) = 8.383844`. The buy-down required to restore 
 - C. USD 4,800,000
 - D. nil, since 1.1777 exceeds 1.00
 
-*Rationale:* `42,000,000 − (5,900,000/1.274303) × 8.383844 = 3,184,211`. A restores only the 1.20×
+*Rationale:* `42,000,000 − (5,900,000/1.274344) × 8.383844 = 3,184,211`. A restores only the 1.20×
 covenant, leaving zero headroom. C is the performance damages cap, not the calibrated amount. D
 confuses paying debt service with satisfying a covenant (Domain 10, KA 10.2.1).
 

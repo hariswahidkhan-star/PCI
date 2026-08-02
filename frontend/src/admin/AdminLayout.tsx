@@ -6,6 +6,7 @@ import { initials } from '../format'
 import { Icon, type IconName } from '../components/icons'
 import CommandPalette from './CommandPalette'
 import DemoBanner from '../components/DemoBanner'
+import SkipLink from '../components/SkipLink'
 
 // Sections ported to the React admin so far. `perm` null = any authenticated admin;
 // `owner` = owner-only; `anyPerm` = visible if the admin holds any listed permission.
@@ -175,6 +176,7 @@ export default function AdminLayout() {
 
   return (
     <div className="shell">
+      <SkipLink />
       <div className={'nav-backdrop' + (menuOpen ? ' open' : '')} onClick={() => setMenuOpen(false)} />
       <aside className={'sidebar' + (menuOpen ? ' open' : '')}>
         <div className="brand">
@@ -244,7 +246,7 @@ export default function AdminLayout() {
             <button className="btn secondary sm" onClick={logout}>Sign out</button>
           </div>
         </header>
-        <main className="content route-fade" key={loc.pathname} style={{ maxWidth: 1180 }}>
+        <main id="main-content" tabIndex={-1} className="content route-fade" key={loc.pathname} style={{ maxWidth: 1180 }}>
           <Outlet />
         </main>
         </div>

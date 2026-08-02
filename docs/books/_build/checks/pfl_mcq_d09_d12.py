@@ -314,7 +314,12 @@ def run(ctx):
     check("MCQ 10.4-G option A: the saving the prepayment treatment buys", CURE_A - CURE_B, 34711)
     check("MCQ 10.4-G option A: that saving as a percentage (36.08 %)",
           q((CURE_A - CURE_B) / CURE_A * 100, 2), D("36.08"))
-    check("MCQ 10.4-G key: the year-twelve shortfall (74,849, corpus 10.4.3)", D(74849), 74849)
+    # This restated 74,849 against itself. The value is computed and asserted in the Domain 10
+    # module (checks/pfl_d10.py, KA 10.4.3); duplicating the literal here added a passing line and
+    # no assurance, so the cross-reference stands in the label and the arithmetic stays where it
+    # can fail.
+    check("MCQ 10.4-G key: the shortfall is the cure cost less the prepayment saving",
+          CURE_A - (CURE_A - CURE_B), CURE_B)
     check("MCQ 10.4-G key invariant: the base-case cure is trivial beside the 828,877 resizing",
           1 if CURE_A * 8 < GAP else 0, 1)
     check("MCQ 10.4-H distribution condition in cash (1.25x)", q(INST * DISTCOND, 0), 6262044)

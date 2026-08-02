@@ -309,8 +309,10 @@ def run(ctx):
     check("8.2.3 pitfall: overstatement against the profile-correct figure",
           S * (1 + ESCAL) ** 2 - esc_spend(A), 1424815, D("0.6"))
     check("MCQ 8.2-B error size", D(51518208) - D(50093393), 1424815)
-    check("8.2.3 revenue escalation must not be reused (Domain 6's 2.967%)",
-          D("2.967"), "2.967")
+    check("8.2.3 INVARIANT revenue escalation is not the cost escalation and must not be reused",
+          1 if D("2.967") != ESCAL * 100 else 0, 1)
+    check("8.2.3 gap between Domain 6's revenue escalation and this cost escalation, points",
+          (ESCAL * 100 - D("2.967")).quantize(D("0.001")), D("0.633"))
 
     # =================================================================================
     # KA 8.3.1 / 8.3.2 — register aggregation, the triangular range, and the two P80s

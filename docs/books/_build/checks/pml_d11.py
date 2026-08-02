@@ -419,7 +419,10 @@ def run(ctx):
     check("Ex 11.3 common error: P/2 omitted, priced", D(2) * CODE, 19000)
 
     # ---------------- Exercise 11.4 ----------------
-    RVb3, RVs3 = D(1200000), D(820000) + D(130000)
+    # The seller's reservation value is its avoidable cost floor plus the contribution it forgoes
+    # by taking this work; naming the parts lets the distractor be derived from them.
+    FLOOR3, FORGONE3 = D(820000), D(130000)
+    RVb3, RVs3 = D(1200000), FLOOR3 + FORGONE3
     check("Ex 11.4 seller reservation value", RVs3, 950000)
     z3 = RVb3 - RVs3
     mid3 = (RVb3 + RVs3) / 2
@@ -431,7 +434,10 @@ def run(ctx):
     check("Ex 11.4 buyer share, %", (RVb3 - set3) / z3 * 100, D("44.0"), D("0.005"))
     check("Ex 11.4 seller share, %", (set3 - RVs3) / z3 * 100, D("56.0"), D("0.005"))
     check("Ex 11.4 value transferred vs midpoint", set3 - mid3, 15000)
-    check("Ex 11.4 common error: ZOPA floor without forgone contribution", D(820000), 820000)
+    # The distractor is the seller's reservation value computed WITHOUT the forgone
+    # contribution. Restating 820,000 asserted nothing; deriving it from RVs3 shows the error.
+    check("Ex 11.4 common error: ZOPA floor without forgone contribution",
+          RVs3 - FORGONE3, 820000)
 
     # ---------------- Exercise 11.5 ----------------
     incurred = D(3) * COD + D(4) * D(5) * RATE

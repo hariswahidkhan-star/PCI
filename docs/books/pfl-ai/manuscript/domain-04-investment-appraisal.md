@@ -616,8 +616,10 @@ per year?*
 1. **Setup.** The master appraisal: NPV = +16,179,360 over 15 years at 8 %.
 2. **Formula.** `EAV = NPV / AF(r, n)`; the invariant is `EAV × AF(r, n) = NPV`.
 3. **Substitution.** `16,179,360 / 8.559479`; then multiply back.
-4. **Result.** **EAV = USD 1,890,227 per year**, and `1,890,227 × 8.559479 = 16,179,360` —
-   the invariant closes to the cent.
+4. **Result.** **EAV = USD 1,890,227.30 per year**, and multiplying back recovers the NPV:
+   `1,890,227.30 × 8.559479 = 16,179,360.88`. The invariant is exact by construction — EAV is
+   *defined* as NPV ÷ AF — so the 88 cents is the six-figure annuity factor printed here, not a
+   discrepancy. Carry the factor unrounded and it closes exactly.
 5. **Interpretation.** Two readings, both useful in a board room. First, the plant creates about
    1.89 million a year of value beyond the cost of the capital tied up in it — a figure that can
    be set against an annual operating budget, an annual availability payment or a management fee

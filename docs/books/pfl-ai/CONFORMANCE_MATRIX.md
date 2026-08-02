@@ -1,19 +1,61 @@
-# PFL-AI — PCI Book Pattern Conformance Matrix (Phase 0 baseline)
+# PFL-AI — PCI Book Pattern Conformance Matrix
 
-Compares the planned PFL-AI BoK against the approved previous PCI book (PCL-AI BoK, First Edition).
-Identical to the PML-AI matrix (`../pml-ai/CONFORMANCE_MATRIX.md`) for every family element — the
-pattern rows, rulings and statuses apply verbatim to PFL-AI — **except** the rows below, which are
-book-specific:
+> **Re-scored against the delivered text**, by `_build/make_conformance.py`. Each row carries a
+> probe that inspects the corpus, the built HTML, the stylesheet or the output PDF, so this
+> matrix cannot drift from what was actually produced. Rows no probe can settle are marked
+> **Reviewer** rather than scored, because a matrix that claimed conformance on narrative style
+> because a script looked at it would be worse than one that admits the judgement is human.
 
-| Pattern element | Previous book | PFL-AI treatment | Ruling | Status |
-|---|---|---|---|---|
-| Copyright & disclaimers | Educational disclaimer block | Same **plus** extended finance, accounting, tax, legal and investment disclaimers and jurisdiction caveats ("educational professional reference, not individualized advice") | D-14/D-30 | Planned |
-| Case-study structure | Sector cases + one station capstone | Four capstones: toll-road concession · solar-plus-storage IPP · desalination/water PPP · hyperscale data centre; plus a **master model thread** (one reference financing carried Domains 5–15) | D-05 | Planned |
-| Calculation presentation | Verified worked numbers | + decimal-arithmetic rule for all financial calculations; independent dual-computation for DCF, NPV/IRR/MIRR, debt service, DSCR/LLCR/PLCR, amortization, waterfalls, escalation, FX and PoC | D-03 | Planned |
-| Templates & checklists | Practitioner's toolkits | + formula-tested spreadsheet companions (screening model, sources-and-uses, construction cash flow, operating forecast, amortization, waterfall, coverage ratios, equity returns, sensitivities, covenant dashboard, drawdown, diligence tracker, cost-to-complete, close checklist, AI model-validation checklist) | D-02 | Planned |
-| Legal boundaries | Standards named, no advice | Contracts/tax/accounting chapters explain **commercial purpose only** and refer jurisdiction-specific decisions to qualified counsel/advisers | D-14 | Planned |
-| Book title | — | Platform catalogue name governs pending OD-1 ("PCI AI Project Finance Leader" vs the brief's "PCI Project Finance Leader – AI") | D-22 | **Open (OD-1)** |
+**25 Conforms · 3 Partial · 0 Not met · 2 Reviewer**, over 30 pattern elements.
 
-**Known intentional departures:** as PML-AI, plus the extended finance-disclaimer block (D-14) and the
-master model thread (an application of the family's master-worked-project device at whole-book scale —
-documented here as an approved adaptation, D-05).
+This replaces the Phase 0 baseline, in which all thirty rows read *Planned* — a state that
+provided no evidence either way and had survived every gate since.
+
+| Pattern element | Baseline expectation | Status | Evidence in the delivered volume |
+|---|---|---|---|
+| Front cover | Full-bleed A4 cover | **Conforms** | generated `build/cover.svg`, full-bleed A4 on a zero-margin named page, motif drawn from the volume's own content |
+| Title-page hierarchy | Designation, subtitle, rule, edition/publisher/principle | **Conforms** | title page carries all five elements including the responsible-AI principle |
+| Copyright & disclaimers | Injected notice block | *Partial* | draft status page carries the legal, jurisdictional and AI-drafting notices; the **full copyright and notice suite is deferred to the released edition** and the volume says so |
+| Foreword / how-to-use | "How to use this reference" page | **Conforms** | "How to use this book" front-matter section present |
+| Part opening format | Ghost number, kicker, title, description, bar | **Conforms** | 4 part dividers emitted |
+| Chapter opening format | Ghost number, kicker, rules, binding blockquote | **Conforms** | 16 domains, each opening with its binding blockquote |
+| Learning objectives | "After this domain a candidate can…" | **Conforms** | 16 of 16 domains |
+| Terminology & definitions | Key-terms boxes feeding a glossary | **Conforms** | 61 key-terms tables; glossary derived from them by `make_glossary.py`, 447 entries |
+| Heading levels | `#`/`##`/`###` = Domain / KA / Topic | **Conforms** | 61 KA headings and 219 numbered topic headings, D.K.T throughout |
+| Paragraph & narrative style | British English, spine conventions | *Reviewer* | not mechanically decidable. A reviewer should sample for consistent British spelling, the bold-lead definition form, and whether the *Interpretation* step carries the weight the pattern intends |
+| Worked-example structure | Five-step panel | **Conforms** | 179 worked examples, each on the Setup / Formula / Substitution / Result / Interpretation form |
+| Calculation presentation | Formula panels, verified numbers, rounding rules | **Conforms** | every printed result recomputed by `verify_formulas.py` in decimal arithmetic, including every numeric MCQ option; suite must pass to gate |
+| Case-study structure | Sector cases per domain plus capstones | **Conforms** | 33 in-domain case studies and 4 capstones in Appendix G |
+| AI-governance callouts | Per-KA or per-domain AI treatment | **Conforms** | 59 AI sections plus AI-dedicated topics; every Knowledge Area is covered by one or the other |
+| Ethics / leadership callouts | Executive perspective sections | **Conforms** | 16 of 16 domains |
+| Tables, diagrams, captions | Brand tables; numbered SVG figures with specifications | **Conforms** | 45 figure specifications, all with PCI-original artwork generated from `figures_src/` |
+| Templates & checklists | Practitioner's toolkits `N.T.n` | **Conforms** | 52 toolkits, indexed in Appendix E |
+| Chapter summaries | `## Domain N summary` | **Conforms** | 16 of 16 domains |
+| Reflection questions | Exam-preparation sections | **Conforms** | 16 of 16 domains |
+| Exercises | Calculation exercises with full solutions | **Conforms** | 104 exercises, each with a solution and a *Common error* note |
+| MCQs & rationales | Four options, marked key, rationale, `[topic · level]` tag | *Partial* | 450 items; `make_question_bank.py --check` audits seven structural defects and reports 0 open. The baseline's **two-reviewer sign-off has not happened** — that is Phase 6 |
+| References | Standards named in prose plus an index | **Conforms** | Appendix F, generated by `make_standards.py`; a reference in a chapter that is not disclosed there fails the build. No bibliography, because nothing is borrowed — Appendix F states that rather than leaving it as an omission |
+| Glossary | Assembled from key-terms boxes | **Conforms** | 447 entries, derived; `--check` reports 0 open defects |
+| Appendices | A–H suite | *Partial* | A formula sheet, B notation, C verification record, D figure index, E toolkit library, F standards, G capstones — **seven, not A–H**. The lettering differs from the plan and Appendix E documents each difference, including the self-check-answers appendix deliberately not printed because it would duplicate answers already beside their questions |
+| Index | Generated alphabetical, page-resolved | **Conforms** | 446 entries across 24 letter groups, generated |
+| Page size, margins, typography, colour | A4, 21/17/19/17 mm, Plex Serif + Inter, brand palette | **Conforms** | `print.css`: A4, 21/17/19/17 mm, IBM Plex Serif body with Inter display, brand #1D4ED8 / #0F172A / #C13329 |
+| Running headers, footers, page numbers | string-set headers, centred page number | **Conforms** | `string-set` book and chapter headers, centred page number, both suppressed on the cover and title page |
+| Accessibility | Tagged PDF, alt text, real text, bookmarks | **Conforms** | PDF/UA-1 tagged (structure tree present), 46 images carrying alt text from their figure specifications, bookmarks present, all text real |
+| Watermarking / secured edition | Per-copy watermark, audit, versions | *Reviewer* | a platform delivery concern, not a property of the manuscript. Nothing in this volume implements or obstructs it; the released-edition channel is outside this corpus |
+| Source organisation & pipeline | Whole-domain markdown plus a reproducible build | **Conforms** | 16 whole-domain markdown files; every companion generated by a script under `_build/`, and the build is reproducible from a clean checkout |
+
+## What the Partial and Reviewer rows mean for release
+
+None of the Partial rows is a defect in the manuscript; each is a deliberate departure or a
+downstream step, and each states which:
+
+- **Copyright & disclaimers** — the draft carries its legal, jurisdictional and AI-drafting
+  notices; the full suite belongs to the released edition.
+- **MCQs & rationales** — structurally audited to 0 open defects, but the baseline's
+  two-reviewer sign-off is a Phase 6 activity and has not happened.
+- **Appendices** — seven appendices rather than the planned A–H lettering, with every
+  difference documented in Appendix E rather than left to be discovered.
+
+The **Reviewer** rows are the honest boundary of what a build can establish. Narrative style
+and the watermarking channel need a person; this matrix names them so that a release decision
+is taken knowing which rows a machine scored and which it declined to.

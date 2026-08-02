@@ -158,7 +158,7 @@ export default function Pages() {
       />
 
       <Card>
-        <input placeholder="Search pages…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />
+        <input aria-label="Search pages" placeholder="Search pages…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 320 }} />
       </Card>
 
       <Card>

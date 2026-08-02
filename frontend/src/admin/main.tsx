@@ -1,9 +1,11 @@
 import React from 'react'
 import { initDemoMode } from '../demo/mode'
+import { initTheme } from '../theme'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import AdminApp from './AdminApp'
 import { AdminAuthProvider } from './AdminAuth'
+import '../theme.css'
 import '../styles.css'
 import '../premium.css'
 
@@ -36,6 +38,7 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 }
 
 // Served by the backend under /admin/ (see backend/Program.cs SPA fallback).
+initTheme()
 initDemoMode()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

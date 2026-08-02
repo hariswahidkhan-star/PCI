@@ -56,14 +56,14 @@ function PaymentsTab() {
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap' }}>
-          <input placeholder="Search ref or email…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
+          <input aria-label="Search ref or email" placeholder="Search ref or email…" value={q} onChange={(e) => setQ(e.target.value)} style={{ maxWidth: 280 }} />
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All statuses</option>
             <option value="paid">Paid</option>
             <option value="refunded">Refunded</option>
             <option value="failed">Failed</option>
           </select>
-          <select value={product} onChange={(e) => setProduct(e.target.value)} style={{ maxWidth: 180 }}>
+          <select aria-label="Filter by product" value={product} onChange={(e) => setProduct(e.target.value)} style={{ maxWidth: 180 }}>
             <option value="">All products</option>
             <option value="membership">Membership</option>
             <option value="exam">Exam</option>

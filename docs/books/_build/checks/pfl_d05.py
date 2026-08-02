@@ -202,7 +202,10 @@ def run(ctx):
     check("WE 5.1.3 INVARIANT at the breakeven miss probability the gate is worth exactly zero",
           GNET - BE_MISS * NPV, 0)
     check("WE 5.1.3 option cost as a multiple of the study fee", q(OPTCOST / GATE, 2), D("8.99"))
-    check("WE 5.1.3 the gate adds eight weeks", D(8), 8)
+    # An INPUT is not a golden answer. Restating one against itself (`check(..., D(8), 8)`)
+    # produced a passing line that could never fail; whether the manuscript still states
+    # this figure is a question about the manuscript, which audit_prose_math.py and
+    # audit_figures.py ask by reading it. Removed rather than left as false assurance.
     # MCQ 5.1-C/D distractors
     check("MCQ 5.1-C distractor A (expected waste without the gate)", W_OUT, 1320000)
     check("MCQ 5.1-C distractor C (gate's own cost omitted)", W_OUT - PFLAW * (1 - DET) * WASTE,
@@ -500,7 +503,6 @@ def run(ctx):
     A_CARRY = A_ATRISK * ((1 + KE) ** (D(3) / 4) - 1)
     check("Case A cost of carrying that spend nine months at 12 %", q(A_CARRY, 0), 319368)
     A_TOTAL = D(1400000) + A_LOSS + A_CARRY
-    check("Case A re-route capital cost", D(1400000), 1400000)
     check("Case A total defect cost", q(A_TOTAL, 0), 5669834)
     check("Case A defect cost as a share of Domain 4's NPV", q(A_TOTAL / NPV * 100, 1), D("35.0"))
     check("Case A defect cost as a multiple of the review that would have found it",
@@ -618,7 +620,6 @@ def run(ctx):
     for yr, printed in ((1, 1840000), (2, 2116000), (3, 2433400)):
         check(f"Case B shareholder loan at 15 % after {yr} year(s)",
               CALLS[2] * (1 + D("0.15")) ** yr, printed)
-    check("Case B eleven weeks to arrange the letter of credit", D(11), 11)
 
     # ================= calculation exercises ==========================================
     # Exercise 5.1 — a second funnel

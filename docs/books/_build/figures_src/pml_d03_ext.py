@@ -121,7 +121,11 @@ def make(ctx):
              f'<text x="{W-R+6}" y="{Yp(63.0769)-5:.1f}" font-size="9" fill="{CRIMSON}" '
              f'font-weight="600">minimum envelope</text>'
              f'<text x="{W-R+6}" y="{Yp(63.0769)+6:.1f}" font-size="9" fill="{CRIMSON}" '
-             f'font-weight="600">coverage 63.0769 %</text>')
+             # Two decimals, matching the caption and every other percentage in this chart. At
+             # four it printed "63.0769 %" for the crimson rule while the column beside it printed
+             # "63.08 %" for the same quantity — one picture stating one number two ways, and the
+             # comparison the reader is asked to make is exactly between those two marks.
+             f'font-weight="600">coverage 63.08 %</text>')
     panel = ("Need-by times of the 65 decisions",
              "&#8804; 2 weeks (same increment) &#8212; 41",
              "2&#8211;3 weeks &#8212; 9",

@@ -378,7 +378,7 @@ function Triggers() {
   const rows = (data?.rows ?? []).filter((r) => !group || r.event_group === group)
   async function toggle(id: number, field: string, val: number) { await adminApi.patch(`/api/admin/comms/triggers/${id}`, { [field]: val }); reload() }
   return (
-    <Card title="Automated Triggers" action={<select value={group} onChange={(e) => setGroup(e.target.value)}><option value="">All groups</option>{groups.map((g) => <option key={g} value={g}>{g}</option>)}</select>}>
+    <Card title="Automated Triggers" action={<select aria-label="Filter by group" value={group} onChange={(e) => setGroup(e.target.value)}><option value="">All groups</option>{groups.map((g) => <option key={g} value={g}>{g}</option>)}</select>}>
       <p className="muted small" style={{ marginTop: 0 }}>Toggle email / WhatsApp / in-app per event. Events marked “needs wiring” are catalogued but no backend event emits them yet.</p>
       {loading ? <Spinner /> : (
         <table className="data"><thead><tr><th>Event</th><th>Group</th><th>Email</th><th>WhatsApp</th><th>In-app</th><th>Backend</th></tr></thead>

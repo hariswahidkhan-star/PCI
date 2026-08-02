@@ -68,7 +68,7 @@ export default function ErasureRequests() {
 
       <Card>
         <div className="row" style={{ flexWrap: 'wrap', marginBottom: '.6rem' }}>
-          <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
+          <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
             <option value="">All statuses</option>
             <option value="pending">Pending</option>
             <option value="acknowledged">In review</option>

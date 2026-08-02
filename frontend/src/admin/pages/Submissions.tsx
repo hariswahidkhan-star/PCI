@@ -21,7 +21,7 @@ export default function Submissions() {
       <PageHeader title="Form submissions" />
 
       <Card>
-        <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
+        <select aria-label="Filter by status" value={status} onChange={(e) => setStatus(e.target.value)} style={{ maxWidth: 200 }}>
           <option value="">All statuses</option>
           <option value="new">New</option>
           <option value="in_progress">In progress</option>

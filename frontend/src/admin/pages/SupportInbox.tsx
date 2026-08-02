@@ -223,7 +223,7 @@ function KbPanel({ onError }: { onError: (m: string) => void }) {
   return (
     <Card title="Knowledge base">
       <div className="row" style={{ gap: '.4rem' }}>
-        <input placeholder="Search approved answers…" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') search() }} />
+        <input aria-label="Search approved answers" placeholder="Search approved answers…" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') search() }} />
         <button className="btn sm secondary" disabled={busy} onClick={search}>{busy ? 'Searching…' : 'Search'}</button>
       </div>
       {rows && (

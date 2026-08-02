@@ -380,6 +380,8 @@ def run(ctx):
     check("Fig 4.3.2 — bridge walks 2,400,000 + 516,700 = 2,916,700", MB + approved, 2916700)
     check("Fig 4.3.2 — bridge walks 2,916,700 + 77,100 - 44,900 = 2,948,900",
           expected + unreferenced - unposted, 2948900)
+    check("Fig 4.3.2 — bridge bar: approved changes with no baseline effect", unposted, 44900)
+    check("Fig 4.3.2 — bridge bar: baseline movements with no change reference", unreferenced, 77100)
     check("Fig 4.3.2 — header net residual", residual, 32200)
     check("Fig 4.3.2 — header gross error", gross, 122000)
     check("Fig 4.3.2 — header hidden amount", gross - residual, 89800)

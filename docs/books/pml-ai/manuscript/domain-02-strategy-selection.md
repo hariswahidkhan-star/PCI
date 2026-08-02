@@ -916,7 +916,8 @@ NPV is:
 - C. USD 2,092,898
 - D. USD 771,797
 
-*Rationale:* Avoided cost PV is `457,737 + 103,363 = 561,101`, added to the project's NPV (2.2.2b).
+*Rationale:* Avoided cost PV is `457,737.13 + 103,363.49 = 561,100.62`, i.e. **561,101**, added to
+the project's NPV (2.2.2b).
 A omits the counterfactual entirely; C adds the **undiscounted** 760,000; D subtracts the avoided
 cost instead of adding it, treating a cost the project removes as a cost it incurs.
 

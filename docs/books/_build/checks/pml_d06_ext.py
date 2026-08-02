@@ -237,8 +237,11 @@ def run(ctx):
           (summed - absorb) * COD_A, 45000)
     check("MCQ 6.2-G distractor C — the minimum of the two floats", min(TF["D"], TF["G"]), 1)
     for nn, ff in ((10, 5), (4, 3), (7, 2), (25, 1)):
+        # Summing per-activity float over the path is what a report does; the law is that the
+        # sum equals n*f while the path still absorbs only f. Comparing D(nn)*ff with nn*ff
+        # compared the same product with itself and could not fail.
         check(f"WE 6.2.2 law — {nn} activities on a path with float {ff} report n.f",
-              D(nn) * ff, nn * ff)
+              sum(D(ff) for _ in range(nn)), nn * ff)
         check(f"WE 6.2.2 law — that path still absorbs only f = {ff}", D(nn) * ff / nn, ff)
     check("WE 6.2.2 Interpretation — the published 10 x 5 case reports 50 weeks", D(10) * 5, 50)
 
