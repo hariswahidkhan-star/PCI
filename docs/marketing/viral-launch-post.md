@@ -1,151 +1,120 @@
-# The viral launch post
+# The viral launch post (company account)
 
-Assets: `pci-viral-post-image.png` (1080×1350 — attach to the organic post) and
+Assets: `pci-viral-post-image.png` (1080×1350 — attach to the post) and
 `pci-viral-post-square.png` (1080×1080 — used automatically by some ad placements).
-Post from a **personal profile** (founder/lead), tagging the company page — personal posts
-reach 3–10× further than company posts. Repost from the company page 2–4 hours later.
+Posting from the **PCI company page** — which is also what makes the paid boost possible
+(LinkedIn can only sponsor company-page posts). Organic engagement and the US$30/day boost
+land on the **same post**, so they compound.
 
 ---
 
-## The post (personal voice — primary)
+## The post (company voice — this is the one)
 
-> You've never heard of the most important job on every megaproject.
+> Nobody claps for the person who saved the project.
 >
-> The airport you flew from. The metro you rode this morning. The data centre this post
-> lives in.
+> The ribbon gets cut. The photos get taken. The award goes on someone else's shelf.
 >
-> Every one of them had a person who knew — weeks before anyone else — that the schedule
-> was slipping and the money was running out.
+> But months earlier, in a quiet office, a planner spotted the slip. A cost engineer
+> caught the overrun. A risk analyst said the uncomfortable thing out loud.
 >
-> They're called project controls professionals. Planners. Cost engineers. Risk analysts.
-> Project finance people.
+> That's project controls — the most important job on every megaproject. And almost
+> nobody knows it exists.
 >
-> They don't pour the concrete. They don't cut the ribbon.
-> They just quietly stop billion-dollar projects from failing — with a schedule, a cost
-> model, and the courage to tell the project director the truth.
+> Here's what the numbers say:
 >
-> And here's the strange part:
+> → 25 million new project professionals needed by 2030 (PMI)
+> → US$94 trillion of infrastructure to build by 2040 (Oxford Economics)
+> → And no professional home for the people who make it all add up. Until now.
 >
-> The world needs 25 million new project professionals by 2030 — PMI's number, not mine.
-> US$94 trillion of infrastructure needs building by 2040.
+> On 1 September 2026, the Project Controls Institute goes live — an independent,
+> non-profit US body for project controls professionals, project managers, cost
+> engineers and project finance professionals, worldwide:
 >
-> Yet this profession has never had a home of its own. No focused standard. No institute
-> that certifies the whole job — planning, cost, risk, finance. And nothing that covers
-> the AI now drafting half the work.
+> ✔ Three certifications with governed AI at the core — AI now drafts the schedule;
+>    someone has to judge it
+> ✔ Students: a founding window with membership + exam fees waived. The exam? Still
+>    real. Still earned.
+> ✔ For those who built this profession: board-conferred Honorary Fellowships — no
+>    exam, no fees, ever
+> ✔ Any credential, verified by anyone, in seconds
+> ✔ 7 languages · 25 country chapters · day one
 >
-> That changes on 1 September 2026.
+> And one promise that might sound strange from a certification body: we will never
+> overclaim. We're not yet accredited — and we say so on our own website. Trust is
+> the product.
 >
-> The Project Controls Institute (PCI) — an independent, non-profit body registered in
-> the United States — goes live for project controls professionals, project managers,
-> cost engineers and project finance professionals worldwide:
+> AI proposes. The professional disposes.
 >
-> → Three certifications for the whole discipline, with governed AI at the core
-> → A founding window for students: membership + exam fees waived (the exam is real —
->    you still have to pass it)
-> → Honorary Fellowships for those who built this profession — no exam, no fees,
->    board-conferred
-> → Every credential publicly verifiable by anyone, in seconds
-> → 7 languages. 25 country chapters. Day one.
->
-> One more thing I respect: they refuse to overclaim. Not yet accredited? They say so,
-> in writing, on their own site. In a world of certificate mills, that honesty is the
-> whole point.
->
-> "AI proposes. The professional disposes."
->
-> If you've ever worked with a planner or cost engineer who saved a project nobody knows
-> about — tag them below. Let's make the invisible profession visible. 👇
->
-> 🔗 projectcontrolsinstitute.org
->
-> #ProjectControls #CostEngineering #PlanningEngineer #ProjectManagement #Megaprojects
-
----
-
-## Company-page variant (shorter, repost 2–4 h later)
-
-> The most important job on every megaproject is one most people have never heard of.
->
-> Planners. Cost engineers. Risk analysts. The people who know the truth about the
-> schedule and the money before anyone else — and say it out loud.
->
-> On 1 September 2026, this profession finally gets a home.
->
-> The Project Controls Institute — an independent, non-profit US body — goes live:
-> three certifications with governed AI at the core, a fee-waived founding window for
-> students, board-conferred Honorary Fellowships, and credentials anyone can verify in
-> seconds. In 7 languages, across 25 country chapters.
->
-> Know a planner or cost engineer who deserves to be seen? Tag them. 👇
+> 👇 Tag the planner, cost engineer or PM who saved a project and never got the
+> credit. Today they get it.
 >
 > projectcontrolsinstitute.org
 >
-> #ProjectControls #CostEngineering #ProjectManagement
+> #ProjectControls #CostEngineering #PlanningEngineer #ProjectManagement #Megaprojects
+
+**Seed comment (post it from the page immediately after publishing):**
+
+> For the students asking: the founding window means membership and the exam fee are
+> waived — the exam still has to be passed, that's the point. Start here:
+> projectcontrolsinstitute.org/candidate-journey.html
+> And for the profession's veterans: early Honorary Fellowship applications are open —
+> hello@projectcontrolsinstitute.org
 
 ---
 
 ## Why this is built to travel
 
-1. **Open-loop hook** — the first line is a riddle; readers must tap "see more".
-2. **The profession feels seen** — project controls people are chronically invisible;
-   posts that honour an under-appreciated group get shared *by* that group.
-3. **Tag CTA** — every tag pushes the post into a new network. This is the engine.
-4. **Concrete, sourced numbers** — 25M (PMI), US$94T — credibility plus shareability.
-5. **The honesty twist** — "they admit they're not accredited yet" is contrarian and
-   disarming; it converts sceptics into commenters.
-6. **4:5 portrait image** — maximum feed real estate; five-word-per-line headline
-   readable on a phone at arm's length.
+1. **Gratitude hook** — "nobody claps for the person who saved the project" makes an
+   under-appreciated profession feel seen. People share and tag to *give credit* —
+   the strongest tagging motive that exists.
+2. **Open loop** — the first line demands the "see more" tap.
+3. **Tag CTA with a reason** — "Today they get it" turns tagging into a small act of
+   recognition, not a marketing chore. Every tag = a new network reached.
+4. **Sourced numbers** — 25M (PMI), US$94T (Oxford Economics): credible and quotable.
+5. **The honesty twist** — "we're not yet accredited and we say so" is disarming and
+   comment-bait for sceptics (and every comment fuels reach).
+6. **4:5 portrait image** — maximum feed height; readable at arm's length; the gold
+   "That changes now." pays off the headline.
 
 ## Launch playbook (the first 90 minutes decide everything)
 
-- **When:** Tuesday–Thursday, 07:30–09:00 in the Gulf or UK morning (biggest audience).
-- **Before posting:** line up 5–10 colleagues/awardees to comment (real comments, not
-  "great post") within the first hour. Early engagement velocity = LinkedIn reach.
-- **Author replies to every comment** within the first 2 hours — replies double the
-  comment count and re-trigger distribution.
-- **Seed comment (post it yourself immediately):** "If you're a student: the founding
-  window means membership and the exam fee are waived — the exam still has to be earned.
-  Details: projectcontrolsinstitute.org/candidate-journey.html"
-- **Do not edit the post in the first hour** (edits can suppress reach). No external
-  link in the first line — keep the URL near the end (links early can dampen reach;
-  some prefer link-in-first-comment: acceptable alternative).
-- **Repost rhythm:** company page 2–4 h later; ask chapter leads and honorary invitees
-  to reshare with one personal sentence, not a bare repost.
-- **Follow-up:** 48 h later, post the 17-slide launch deck as a document post for the
-  people the image post warmed up.
+- **When:** Tuesday–Thursday, 07:30–09:00 Gulf/UK time.
+- **Company pages don't get free virality — people carry them.** Before posting, line
+  up 8–12 allies (team, founding students, honorary invitees, friendly chapter leads)
+  to comment something real within the first hour, and 3–4 to reshare with one
+  personal sentence. This substitutes for the personal-profile advantage.
+- **The page replies to every comment** within 2 hours — every reply doubles the
+  thread and re-triggers distribution.
+- Post the **seed comment** immediately (above).
+- **Don't edit the post in the first hour.** Keep the URL late in the post.
+- **48 hours later:** post the 17-slide launch deck as a document post to convert the
+  warmed-up audience.
 
-## Paid boost — US$30/day × 30 days (US$900 total)
+## Paid boost — US$30/day × 10 days (US$300 total)
 
-**The one thing to know first:** LinkedIn cannot boost a *personal* post — only *company
-page* posts can be sponsored. So run both tracks: the personal post carries the organic/
-viral push, and the **company-page version is the one you put the $900 behind.**
+Boost the exact organic post so paid engagement lands on the same thread:
 
-Exact click-path (10 minutes):
-
-1. Publish the company-page variant (above) from the PCI page with the hero image.
-2. On the published post, click **Boost post** (or go to **linkedin.com/campaignmanager**
-   → create account if first time → link the PCI page).
-3. **Objective:** Engagement (drives reactions/comments/shares — matches the viral goal).
-4. **Audience:** Location — Saudi Arabia, UAE, Qatar, UK, US, India, Pakistan, Australia
-   (the chapter priority markets). Attributes → Job title: Planning Engineer, Senior
-   Planner, Cost Engineer, Cost Controller, Project Controls Engineer/Manager, Quantity
-   Surveyor, Estimator, Risk Manager, PMO Manager, Project Manager, Project Finance
-   Analyst. (The Part 4 title list from the playbook.) Aim for an audience of 100k–400k;
-   if too small, switch titles to Job function = Engineering + Program & Project
-   Management with seniorities Entry→Director.
-5. **Untick** "LinkedIn Audience Network" (keep it on LinkedIn only) and untick audience
-   expansion — keeps every dollar on the exact audience.
-6. **Budget & schedule:** Daily budget **$30** · start 1 September 2026 (or today for
-   pre-launch warm-up) · end date 30 days later · total cap ≈ **$900**.
-7. **Bidding:** Maximum delivery (default). Save payment details and launch.
-8. **Measure:** check Campaign Manager every 2–3 days — CTR above ~0.6% and cost per
-   engagement under ~$1.50 is healthy; if a region massively outperforms, clone the
-   campaign and shift budget to it. All link clicks carry
-   `?utm_source=linkedin&utm_medium=paid&utm_campaign=launch-2026`.
+1. Publish the post above from the PCI page with the hero image.
+2. Let it run organically for **2–4 hours** (early organic velocity sets the tone),
+   then click **Boost post** on it (or go to linkedin.com/campaignmanager).
+3. **Objective:** Engagement.
+4. **Audience:** Locations — Saudi Arabia, UAE, Qatar, UK, US, India, Pakistan,
+   Australia. Job titles — Planning Engineer, Senior Planner, Cost Engineer, Cost
+   Controller, Project Controls Engineer/Manager, Quantity Surveyor, Estimator, Risk
+   Manager, PMO Manager, Project Manager, Project Finance Analyst. Target audience
+   size 100k–400k; if too narrow, switch to Job function = Engineering + Program &
+   Project Management, seniorities Entry→Director.
+5. **Untick** LinkedIn Audience Network and audience expansion.
+6. **Budget & schedule:** daily budget **US$30**, run **10 days** → total ≈ **US$300**.
+7. **Bidding:** Maximum delivery. Launch.
+8. **Check on days 2, 5 and 8:** healthy = CTR above ~0.6% and cost per engagement
+   under ~US$1.50. If one region clearly outperforms, end the campaign, clone it for
+   that region only, and put the remaining budget there. With US$300 the worst mistake
+   is spreading thin — concentrating beats covering.
 
 ## Legal guardrails (all already respected in the copy)
 
 - PMI/Oxford figures cited by name; no outcome promises.
-- "Not yet accredited" stated as the honesty angle — matches the site.
-- Honorary = Fellowship/recognition, never "certification"; board-conferred.
+- "Not yet accredited" stated plainly — matches the site's own wording.
+- Honorary = Fellowship/recognition, never "certification"; board-conferred; no fees.
 - Founding window = fees waived, exam still required.
