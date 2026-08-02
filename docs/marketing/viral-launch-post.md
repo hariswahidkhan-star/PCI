@@ -125,6 +125,72 @@ Image: `pci-viral-post-image.png` (4:5). Full copy below — tag-CTA engine.
 
 ---
 
+## POST 3 — the recognition post (week 2, organic)
+
+Image: `pci-viral-post-c-image.png` (4:5) · square variant `pci-viral-post-c-square.png`.
+The global champion format is the empathetic-recognition story. **We have no conferrals
+yet, so this is written forward-looking — it names no one and invents nothing.** The
+authentic story version (3b) runs only after the first real conferral, with permission.
+
+> Somewhere on a megaproject right now, there's a planner with 30 years of experience
+> and zero letters after their name.
+>
+> They've rescued more schedules than most people have written.
+> Trained half the department.
+> Caught the overrun everyone else missed — twice.
+>
+> But on paper? Nothing to show for it.
+>
+> Not because they weren't good enough. Because no institute ever existed to recognise
+> what they actually do.
+>
+> On September 1, that changes.
+>
+> The Project Controls Institute opens with an Honorary Fellowship route:
+> board-conferred recognition for distinguished contribution to this profession. No
+> exam. No fees — not to apply, not if conferred, not ever. A registered award anyone
+> can verify online, conferred with a citation that names exactly what they gave this
+> industry.
+>
+> The criteria are simple and strict: sustained, distinguished contribution —
+> programme leadership, publications or standards work, teaching and mentoring, or
+> service to the community. Evidenced by a CV. Decided by the board, at its
+> discretion.
+>
+> Early applications are open now: hello@projectcontrolsinstitute.org
+>
+> You know this person. Maybe you were trained by them. Maybe you are them.
+>
+> Tag them. Or send this to them quietly — they'll know why. 👇
+>
+> 📅 Launching September 1, 2026 — projectcontrolsinstitute.org
+>
+> #ProjectControls #CostEngineering #ProjectManagement #PlanningEngineer
+
+**Why this travels:** the empathetic-recognition arc (the global all-time champion
+format — "the overlooked person finally seen") + a double CTA: public tagging *or*
+private sharing ("send this quietly — they'll know why"), and private DM shares are
+weighted heavily by the feed algorithm. Every senior practitioner reading it either
+knows this person or is this person.
+
+### 3b — after the first real conferral (template; permission required)
+
+> Last week, the board conferred Honorary Fellow (PCI) on [Name] — [X] years in
+> project controls, [one concrete contribution].
+>
+> No exam. No fees. Just recognition that was [X] years overdue.
+>
+> Award [PCI-HON-YYYY-NNNN] — verifiable by anyone, any time, at
+> projectcontrolsinstitute.org/verify.html
+>
+> Honorary Fellowship is recognition of distinguished contribution — distinct from
+> our examined certifications, always labelled honorary.
+>
+> Who trained you? Tell them thank you today. And if their contribution deserves the
+> board's consideration: hello@projectcontrolsinstitute.org 👇
+
+---
+
 ## Launch playbook (the first 90 minutes decide everything)
 
 - **When:** Tuesday–Thursday, 07:30–09:00 Gulf/UK time (or Wednesday ~18:00).
@@ -135,7 +201,8 @@ Image: `pci-viral-post-image.png` (4:5). Full copy below — tag-CTA engine.
   should argue back, thank, and ask follow-ups; the thread is the product.
 - Post the seed comment immediately. Don't edit the post in the first hour.
 - **Day 3:** Post 2 (gratitude/tag engine). **Day 5:** the 17-slide launch deck as a
-  document post for the warmed-up audience.
+  document post. **Week 2:** Post 3 (the recognition post) — and once the board makes
+  its first real conferral, template 3b becomes the strongest post of all.
 
 ## Paid boost — US$30/day × 10 days (US$300 total)
 
