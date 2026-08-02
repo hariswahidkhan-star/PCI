@@ -1,13 +1,14 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 import { demoAnswers, sourceDemoQuestion } from './demo-exam'
-import { captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
+import { blockThirdPartyCdns, captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
 
 const tinyPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
 test.describe('three-certification isolation', () => {
   test('one browser student keeps PCL-AI, PFL-AI and PML-AI enrolments separate', async ({ page, request }, testInfo) => {
     const email = uniqueEmail('suite-isolation')
+    await blockThirdPartyCdns(page)
     await page.goto('/app/register')
     await page.getByLabel('First name').fill('Browser')
     await page.getByLabel('Last name').fill('Isolation')

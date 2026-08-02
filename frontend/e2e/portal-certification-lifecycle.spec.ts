@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { test, expect } from '@playwright/test'
 import { demoAnswers } from './demo-exam'
-import { captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
+import { blockThirdPartyCdns, captureStoryEvidence, settleExamPurchase, uniqueEmail } from './util'
 
 const tinyPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
 
@@ -24,6 +24,7 @@ test.describe('complete certification lifecycle', () => {
   test('student registers, pays, schedules, sits, passes, verifies and downloads', async ({ page, request }, testInfo) => {
     test.slow()
     const email = uniqueEmail('lifecycle')
+    await blockThirdPartyCdns(page)
     await page.goto('/app/register')
     await page.getByLabel('First name').fill('Browser')
     await page.getByLabel('Last name').fill('Lifecycle')

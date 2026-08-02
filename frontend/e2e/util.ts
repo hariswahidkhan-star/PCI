@@ -42,6 +42,19 @@ export function uniqueEmail(prefix = 'e2e'): string {
   return `${prefix}-${process.pid}-${Date.now()}-${counter}@e2e.pci.local`
 }
 
+/**
+ * Make classic-shell navigations deterministic by cutting their third-party subresources.
+ *
+ * student.html (and verify.html) reference Google Fonts and a cdnjs pdf-lib script; `page.goto`
+ * waits for `load`, which waits for those CDNs. A slow CDN window stalls `load` past the test
+ * budget — the exact class of nondeterminism this gating suite forbids. The pages degrade
+ * gracefully without them (system font fallback; pdf-lib only powers the classic certificate
+ * download button, which no spec presses), so the journeys under test are unaffected.
+ */
+export async function blockThirdPartyCdns(page: Page): Promise<void> {
+  await page.route(/^https:\/\/(fonts\.googleapis\.com|fonts\.gstatic\.com|cdnjs\.cloudflare\.com)\//, (route) => route.abort())
+}
+
 /** Persist an explicit success-state screenshot in Playwright's per-test output and HTML report.
  * Failure screenshots remain automatic; these named captures provide the audit evidence requested
  * for successful user stories as well. */
