@@ -69,8 +69,8 @@ This is PCI's strongest marketing asset: a genuinely large free stack. Know it c
 
 | What | What it is | Who gets it free |
 |---|---|---|
-| **Simulation Lab** | Applied practice labs, drills and scenarios (planning, cost, EVM…) with deterministic grading, competency tracking and next-step recommendations — practice like the real work, not flashcards | Students and honorary members, per the entitlement settings |
-| **Free Templates Library** | Working planning/cost artefact templates inside the Simulation Lab, mapped to the engine each template serves | Same as the Lab |
+| **Simulation Lab** | Applied practice labs, drills and scenarios (planning, cost, EVM…) with deterministic grading, competency tracking and next-step recommendations — practice like the real work, not flashcards | **Members only** — student members and honorary members (per the entitlement settings) |
+| **Free Templates Library** | Working planning/cost artefact templates inside the Simulation Lab, mapped to the engine each template serves | Same as the Lab — **members only** (student and honorary) |
 | **Body of Knowledge & books** | The full 13-domain PCI Body of Knowledge (accounting & finance through scheduling, EVM, risk and AI-for-controls), published as a book — PFL-AI and PML-AI editions in production | Free to read for members; honorary members included |
 | **MCQs & sample questions** | Official sample questions and MCQ practice on **Certuvo**, PCI's study platform | Sample questions free to all; Certuvo practice per entitlement |
 | **Video lectures** | Recorded lectures, produced domain by domain (Domain 1 first), plus the webinar library | Members and honorary members as released |
@@ -180,8 +180,9 @@ strong — deliver it in this order:
 3. **Then the price: free.** During the founding window the membership and exam fees are waived. A
    professional credential attempt at zero cost is an unbeatable student offer — and it's honest:
    the exam is real and must be passed.
-4. **Then the study stack: also free.** Body of knowledge, sample questions, formula sheet,
-   Simulation Lab practice, video lectures as they release — no textbook bill attached.
+4. **Then the study stack: included.** Membership (fee-waived in the window) unlocks the body of
+   knowledge, Simulation Lab practice and video lectures as they release; the sample questions and
+   formula sheet are free downloads for everyone — no textbook bill attached.
 5. **Close with belonging.** Chapters in 25 countries, a community being built in the open, and
    founding members recognised permanently as early builders — students don't just join, they
    co-found (Part 10).
@@ -394,8 +395,9 @@ Honorary Fellow.*
 > • Three certifications — PCL-AI (project controls), PFL-AI (project finance), PML-AI (project
 > management) — scenario-based, properly proctored exams, framework developed with reference to
 > ISO/IEC 17024.
-> • A serious free study stack — the full body of knowledge, sample questions, a Simulation Lab
-> with real planning and cost scenarios, video lectures as they release.
+> • A serious study stack included with membership — the full body of knowledge, a Simulation Lab
+> with real planning and cost scenarios, video lectures as they release — plus free public
+> downloads (sample questions, formula sheet, study guide).
 > • Membership with CPD tracking, chapters in 25 countries, and a platform launching in seven
 > languages.
 > • Everything verifiable: any credential can be checked by anyone at
@@ -443,9 +445,10 @@ send it sparingly and personalise heavily.*
 > skills built into the standard.
 >
 > The student-relevant part: during the founding window, membership and the exam fee are waived —
-> and the study stack is free too: the full body of knowledge, sample questions, a Simulation Lab
-> to practise real scenarios, and video lectures as they release. The exam is real and has to be
-> passed — that's the point; it's a credential, not a participation certificate.
+> and that membership unlocks the study stack: the full body of knowledge, a Simulation Lab to
+> practise real scenarios, and video lectures as they release (sample questions and the study
+> guide are free downloads for anyone). The exam is real and has to be passed — that's the point;
+> it's a credential, not a participation certificate.
 >
 > Start here if you're curious: projectcontrolsinstitute.org/candidate-journey.html
 
@@ -508,8 +511,8 @@ send it sparingly and personalise heavily.*
 
 > If you're a student heading toward construction/energy/infrastructure: PCI (Project Controls
 > Institute) is certifying project controls — huge talent gap, AI-era skills — and during the
-> founding window the exam fee is waived. Free body of knowledge + practice lab on the site →
-> projectcontrolsinstitute.org
+> founding window membership + the exam fee are waived, which unlocks the body of knowledge and
+> practice lab too → projectcontrolsinstitute.org
 
 ### 7.C Email templates
 
@@ -562,8 +565,8 @@ Subject: "PCI in detail — as promised".*
 > management through scheduling, earned value, risk and AI-for-controls) available as a book, with
 > further editions in production; official sample questions; a master formula sheet, candidate
 > handbook and study guide free in the Downloads Centre; video lectures releasing domain by
-> domain; and a Simulation Lab where candidates practise real planning and cost scenarios with a
-> free templates library.
+> domain; and a Simulation Lab — a member benefit for student and honorary members — where
+> candidates practise real planning and cost scenarios with a built-in templates library.
 >
 > **Membership and community.** Membership grades run from Student through Professional to Fellow,
 > with CPD tracking, a professional directory and chapters in 25 countries. The platform launches
@@ -670,10 +673,10 @@ project-controls standard".*
 > We partner with [universities: projectcontrolsinstitute.org/university-partnerships.html /
 > training providers: projectcontrolsinstitute.org/become-a-training-partner.html] to connect
 > programmes like yours at [Institution] to a recognised professional pathway: students and
-> delegates study against the PCI body of knowledge — free to access, with sample questions, a
-> practice Simulation Lab and video lectures — and graduates leave with a route to a verifiable
-> professional credential. During the current founding window, that route is fee-waived for
-> students.
+> delegates study against the PCI body of knowledge — membership brings sample questions, a
+> practice Simulation Lab and video lectures with it — and graduates leave with a route to a
+> verifiable professional credential. During the current founding window, membership and the exam
+> are fee-waived for students.
 >
 > If a conversation would be useful, I'd be glad to set one up.
 >
@@ -748,8 +751,9 @@ project-controls standard".*
 >
 > The Project Controls Institute is building the professional standard for that career, with AI
 > skills at the core — and while the founding window is open, students can take the route to a
-> real, proctored, verifiable credential with the fees waived. The body of knowledge, sample
-> questions and practice lab are free.
+> real, proctored, verifiable credential with membership and exam fees waived. That membership
+> unlocks the body of knowledge and practice lab; the sample questions and study guide are free
+> downloads for everyone.
 >
 > Career path first, certificate second: projectcontrolsinstitute.org/candidate-journey.html
 >
@@ -817,10 +821,10 @@ with a fact, point at proof.** Never get defensive — the honest answer *is* th
 > professional disposes."
 
 **"I don't have time to study."**
-> The stack is built for working professionals: the body of knowledge is free to read, sample
-> questions and a formula sheet are downloadable, lectures release domain by domain, and the
-> Simulation Lab lets you practise in short, graded scenarios rather than marathon reading. Start
-> with one domain.
+> The stack is built for working professionals: the body of knowledge comes with membership,
+> sample questions and a formula sheet are free downloads, lectures release domain by domain, and
+> the Simulation Lab lets members practise in short, graded scenarios rather than marathon
+> reading. Start with one domain.
 
 **"The platform is brand new — what if it disappears?"**
 > A fair risk question. PCI is a registered non-profit corporation building in public — published
@@ -830,8 +834,9 @@ with a fact, point at proof.** Never get defensive — the honest answer *is* th
 
 **"I'm a student — I can't afford certification."**
 > During the founding window you may not need to: membership and exam fees are waived for the
-> founding cohort. The learning stack — body of knowledge, sample questions, study guide, practice
-> lab — is free regardless. The only thing you can't skip is passing the exam.
+> founding cohort — and that membership brings the body of knowledge and practice lab with it.
+> The public downloads (sample questions, study guide, formula sheet) are free to everyone
+> regardless. The only thing you can't skip is passing the exam.
 
 **"How do I check someone's PCI credential?"**
 > Anyone can, free, in seconds: projectcontrolsinstitute.org/verify.html — enter the credential or
