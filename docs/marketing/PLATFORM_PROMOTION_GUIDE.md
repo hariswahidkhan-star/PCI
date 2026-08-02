@@ -1,345 +1,493 @@
-# PCI Marketing Guide — the Platform, How to Promote It, and the Honorary Route
+# PCI Marketing Playbook — Channels, LinkedIn & Ready-to-Send Templates
 
-**Audience:** the PCI marketing team (and anyone writing public copy for PCI).
-**Purpose:** one precise reference that explains (1) what the platform actually is, (2) why PCI —
-the approved pitch, (3) what Honorary Fellows genuinely receive at **zero cost**, and (4) a
-step-by-step promotion playbook.
-**Voice rules:** British English. Teach, don't hype. **Never claim accreditation, recognition or
-outcomes PCI does not yet hold** — honesty is the brand strategy, not a legal footnote.
-Companion asset: `docs/marketing/linkedin-launch-20-posts.md` (20 ready-to-post LinkedIn pieces).
+A practical working document for PCI marketing. Part 1 gives you the facts to memorise, Part 2
+the techniques per platform (LinkedIn is the priority), Part 3 the message templates — short to
+long, copy-paste ready, just personalise the `[brackets]`.
+
+**Three golden rules (apply to every message and post):**
+1. **Stay honest.** Never claim accreditation, guaranteed jobs/salary, or 501(c)(3) status. PCI's
+   candour *is* the brand. (Quick do/don't list in Part 4.)
+2. **Personalise the first line.** One sentence showing you know who they are beats any template.
+3. **One message, one ask.** Visit the site, apply, reply, or book a call — never all four.
 
 ---
 
-## 1. What PCI is — in two paragraphs
+## Part 1 — The facts to memorise
 
-**Project Controls Institute Global, Inc. (PCI)** is an independent certifying body for the
-integrated discipline of project controls, cost engineering and project finance — with the governed
-use of AI treated as part of the discipline itself. Slogan: **"AI proposes. The professional
-disposes."** It awards the **PCI AI Project Leadership Certification Suite**:
-
-| Credential | Full name |
+| Question you'll get | Answer |
 |---|---|
-| **PCL-AI** | PCI AI Project Controls Leader |
-| **PFL-AI** | PCI AI Project Finance Leader |
-| **PML-AI** | PCI Project Management Leader – AI |
-
-**Honest-positioning facts (use these exactly; never improve on them):** PCI is a Delaware
-Non-Stock Corporation (founded 2025) that *intends to seek* 501(c)(3) recognition — **not yet
-granted**. Its certification framework is *developed with reference to* ISO/IEC 17024 — PCI is
-**not currently accredited** by ANAB, IAS or any ISO/IEC 17024 body. PCI never guarantees
-employment, promotion, salary, immigration or licensing outcomes. Every credential and honorary
-award is publicly verifiable at any time.
-
----
-
-## 2. The platform — what marketing actually has to work with
-
-One website, one login, one system. Everything below runs on the same platform at
-`https://projectcontrolsinstitute.org`:
-
-| Surface | What it does | Why marketing cares |
-|---|---|---|
-| **Public website (~216 pages)** | Certifications, membership, chapters (20+ countries), sectors (10 industries), regional certification pages, blog, FAQ, policies | Every page is SEO-built (structured data, canonical URLs) and **editable from the admin console without a developer** |
-| **Verify credential** (`/verify.html`) | Public lookup of any credential or honorary award number | The trust anchor. Every announcement should link to it |
-| **Digital badge registry** (`/digital-badge-registry.html`) | Public badge listing | Shareable proof for awardees |
-| **Student portal** (`/app/`) | Candidate journey: enrolment, exams, credentials, CPD | Where "Enrol now" traffic lands |
-| **Admin console** (`/admin/`) | Content editing, pricing, announcement banner, newsletter, news, reviews, honorary board review | Marketing's control room — copy, banners and campaigns ship from here, no deploy needed |
-| **Downloads Centre** (`/downloads`) | Guides, white papers, reports — access can be scoped to specific audiences (including honorary awardees) | Free-resource benefit lives here |
-| **Certuvo** (`/certuvo.html`) | PCI's official exam-preparation and study platform | The "how do I prepare?" answer |
-| **Community surfaces** (forum, careers board, community rooms) | Discussion, jobs, member community | **Launch in phases behind owner-controlled switches — confirm a surface is live before promising access to it** |
-| **Secure-exam client** | Locked-down desktop exam delivery with proctoring | The integrity story: exams are real, proctored and hard to fake |
-
-Two operational levers marketing owns directly in the admin console:
-
-- **Announcement banner** — the site-wide promo strip (currently used for "Student membership
-  enrolment is now open").
-- **Newsletter** — the "Stay in the loop" capture on every page; subscribers are stored in the
-  platform.
+| What is PCI? | The **Project Controls Institute** — an independent, non-profit certifying body for project controls, cost engineering and project finance, with governed AI built into the standard. Founded 2025. Slogan: *"AI proposes. The professional disposes."* |
+| What does it offer? | Three professional certifications — **PCL-AI** (AI Project Controls Leader), **PFL-AI** (AI Project Finance Leader), **PML-AI** (Project Management Leader – AI) — plus membership, a global chapter network (20+ countries), free resources, webinars and a community. |
+| Is it accredited? | Its framework is **developed with reference to ISO/IEC 17024**; PCI is building toward formal accreditation and says so plainly — it does **not** claim accreditation it doesn't hold. |
+| How are exams run? | Real, proctored, scenario-based exams delivered through a locked-down secure exam client. Preparation is on **Certuvo**, PCI's official study platform. |
+| Can credentials be checked? | Yes — every credential and honorary award is **publicly verifiable** at `projectcontrolsinstitute.org/verify.html`, any time, by anyone. |
+| Ways in? | **Standard** (paid, exam) · **Founding** (free during the founding window, exam still required) · **Honorary** (free, no exam — board-conferred **Honorary Fellow (PCI)** for distinguished contribution). |
+| What does honorary cost? | **Nothing. Ever.** No application fee, no conferral fee, no membership fee, no renewal fee. |
+| What do Honorary Fellows get? | A registered, verifiable **PCI-HON** award number + certificate PDF, free access to PCI resources (downloads, reports, body of knowledge), webinars and events, the chapter community, and careers/directory visibility as those surfaces roll out. It is recognition of contribution — always labelled honorary, never the examined certification. |
+| What does the standard route cost? | Current published pricing (check the live membership page before quoting): membership USD 99 per 3-year term, PCL-AI exam USD 500 — launch discounts currently applied (≈ USD 49.50 and USD 350). |
+| Key links | Site: `projectcontrolsinstitute.org` · Apply (honorary): `/honorary-application.html` · Enrol: `/enrol.html` · Verify: `/verify.html` · Contact: `hello@projectcontrolsinstitute.org` |
+| Social | LinkedIn: `linkedin.com/company/project-control-institute` · X: `@projectcontrolinstitute` |
 
 ---
 
-## 3. Why PCI — the approved pitch
+## Part 2 — Techniques per platform
 
-**The one-liner:** project controls deserves a focused professional standard for the AI era — and
-PCI is building it in the open.
+### 2.1 LinkedIn — the priority channel
 
-**The five reasons (use as pillars for all content):**
+This is where project controls professionals, cost engineers, planners and their employers live.
+Put 70% of the effort here.
 
-1. **A distinct professional capability.** Project controls is not just reporting — it integrates
-   planning, cost, risk, forecasting, contracts, finance and governance.
-2. **AI is changing the work.** AI accelerates analysis and creates false confidence in equal
-   measure. Professionals must know how to validate what the machine proposes.
-3. **Employers need consistency.** A shared, verifiable language for capability across teams,
-   projects and regions.
-4. **Professionals need clarity.** A visible pathway from practitioner to leader.
-5. **Better decision support.** Good controls means earlier, better, more transparent decisions.
+**A. Set the foundations (week 1)**
+1. Complete the company page: banner, about section (use the Part 1 facts), website link, and the
+   "Enrol" custom button.
+2. Optimise the personal profile of whoever does outreach: headline mentioning PCI, an About
+   section with the one-liner, the site in the Featured section. People reply to people, not logos.
+3. Follow and turn on notifications for the top 30 voices in project controls / cost engineering /
+   planning — their comment sections are your audience.
 
-**Per audience:**
+**B. Post consistently (every week)**
+- **Cadence:** 3–4 posts a week from the company page. The ready-made pack in
+  `docs/marketing/linkedin-launch-20-posts.md` covers the first 5–6 weeks.
+- **Formats that work, in order:** short text post with one strong image → document/carousel
+  (e.g. "5 signs your CPI is lying", certificate visuals) → poll (great early reach) → short video.
+- **Structure every post:** hook line first (the only line people see before "…see more"), teach
+  one concrete thing, one soft CTA, 3–5 hashtags (#ProjectControls #CostEngineering
+  #PlanningEngineer #EarnedValue #ProjectManagement).
+- **Announcements are your best content:** every honorary conferral and every newly earned
+  credential is a post — name (with permission), citation, award number, verify link, tag the
+  person. Tagged posts reach their whole network.
 
-- **Professionals** — a credential that recognises the whole discipline plus governed AI, and
-  travels across employers, sectors and borders.
-- **Employers** — an impartial, verifiable signal of competence; a way to build team capability
-  against one standard.
-- **The profession** — a shared standard and a professional home for a discipline that has long
-  lacked both.
+**C. Engage daily (15 minutes)**
+- Comment something substantive on 3–5 industry posts every day — comments from the personal
+  profile, replies from the page. This is free distribution.
+- Reply to every comment on PCI posts within 24 hours.
 
-**The differentiator that closes:** PCI's candour. It states plainly what is in place and what is
-still being established. For a body whose entire value is trust, refusing to overstate is the
-foundation — and it is a genuinely unusual position in the certification market. Lead with it.
+**D. Connect and DM (the outreach engine — templates in Part 3)**
+- 20–30 targeted connection requests per week: planners, cost engineers, project controls
+  managers/directors, PMO leads — prioritise the chapter countries (Gulf, UK, US, India, Pakistan,
+  Australia…).
+- Sequence: **connection note** (≤300 characters) → after acceptance, **thank-you + short intro
+  DM** → if they engage, the **detailed DM** or an email. Never pitch in the connection note
+  itself, never send the long message first, and stop after one polite follow-up — no spam.
+- For distinguished senior figures, use the **honorary invitation** track instead — it opens far
+  more doors than a sales message, because you're offering recognition, not asking for money.
 
----
+**E. Use LinkedIn's free extras**
+- **LinkedIn Events** for every webinar (attendees get reminders; the event page markets itself).
+- **Company newsletter** once the page has some followers — monthly digest, same content as the
+  email newsletter.
+- **Polls** monthly ("Which forecast formula does your project trust?") — cheap reach + content
+  ideas from the results.
 
-## 4. The three routes into PCI
+**F. Measure weekly:** follower growth, engagement rate per post, DM reply rate, link clicks
+(use UTM tags: `?utm_source=linkedin&utm_medium=dm`), honorary applications started.
 
-There are exactly three ways to be recognised by PCI. Marketing must keep them distinct:
+### 2.2 X / Twitter
+Repurpose every LinkedIn post as a short thread the same day. Follow and reply to construction,
+energy and mega-project commentary. Low effort, keeps the handle alive.
 
-| Route | Fee | Exam | Result | Who it's for |
-|---|---|---|---|---|
-| **Standard** (always on) | Paid | Yes | PCI credential (**earned**) | Everyone — enrol, activate membership, sit the exam |
-| **Founding** (time-boxed) | **Free** | Yes | PCI credential (**earned**) | Invited founding cohort while the window is open |
-| **Honorary** (board-conferred) | **Free** | **No** | **Honorary Fellow (PCI)** — always labelled honorary | Distinguished contribution to the profession |
+### 2.3 YouTube
+Record every webinar → publish full version + 2–3 one-minute clips (Shorts) with a worked example
+each. Video titles = search phrases ("What is Earned Value Management?", "Project controls career
+path").
 
-The iron rule behind all three: **an examined PCI credential (PCL-AI, PFL-AI, PML-AI) is only ever
-earned by passing the examination.** Honorary Fellow is a separate recognition and is never
-presented as, or upgraded into, the examined credential. This separation is enforced in the
-platform's code and tests — copy must never blur it.
+### 2.4 Instagram
+Visual-only repurposing: quote cards from posts, certificate/badge visuals, chapter photos,
+30-second explainer reels. Bio link to the site. Two posts a week is enough.
 
-For contrast in promotion, current published standard-route pricing (DB-driven — always check the
-live membership page before quoting): student membership USD 99 per 3-year term, PCL-AI examination
-USD 500, with launch discounts currently applied. **The honorary route costs nothing at any point.**
+### 2.5 WhatsApp & Telegram
+Project controls communities in the Gulf, India and Pakistan run on WhatsApp/Telegram groups.
+Join relevant professional groups, contribute genuinely, and share the short template (3.B) when
+someone asks about certifications — never cold-blast a group. A PCI-run broadcast channel for exam
+windows and webinar dates works well once there's an audience.
 
----
+### 2.6 Facebook & Reddit
+Facebook groups for planning engineers and Reddit (r/projectmanagement, r/ConstructionManagers)
+allow discussion, not ads. Answer questions helpfully; mention PCI only where it genuinely answers
+the question, and disclose you work with PCI. One good answer outperforms ten promo posts.
 
-## 5. Honorary Fellow (PCI) — the deep dive
+### 2.7 Email
+- **Newsletter** (signup is on every page of the site): monthly — one teaching piece, one platform
+  update, exam windows, new conferrals.
+- **Direct outreach:** templates 3.C — short first, detail on reply. Always a real person's name,
+  always an unsubscribe line for lists.
 
-### 5.1 What it is
+### 2.8 The website itself
+- Point regional/paid traffic at the matching regional pages (e.g.
+  `/project-controls-certification-saudi-arabia.html`), not the homepage.
+- Keep the site-wide **announcement banner** (edited from the admin console, no developer needed)
+  pointed at the current campaign.
+- Publish the best-performing LinkedIn posts as blog articles for SEO.
+- **Before any campaign: switch on analytics** — the site has a prepared Plausible/GA4 hook that
+  ships disabled. Without it you can't measure anything.
 
-A **board-conferred recognition of distinguished contribution** to the project-controls profession.
-No examination. No fee. Anyone may apply for the board's consideration; conferral is at the board's
-discretion. The recognition is real, registered and publicly verifiable — each award carries a
-unique **PCI-HON-YYYY-NNNN** number in its own number space, distinct from every certification.
-
-### 5.2 What Honorary Fellows receive — free, no fees, ever
-
-There is **no application fee, no conferral fee, no membership fee and no renewal fee** anywhere in
-the honorary route. What the platform actually delivers to an Honorary Fellow:
-
-**Recognition**
-- The designation **Honorary Fellow (PCI)**, conferred by the board with a citation.
-- A unique, registered award number (`PCI-HON-YYYY-NNNN`) — **publicly verifiable by anyone,
-  any time, at `/verify.html`**. Employers and peers can check it in seconds.
-- A **certificate (PDF)**, generated by the institute for the award.
-- A conferral notification in the awardee's portal account (when an account is linked), and a
-  personal decision email from the board.
-
-**Resources — free access**
-- The platform's document-access system can scope any resource to the **honorary audience group**,
-  so the Downloads Centre, guides, white papers, industry and salary reports, research and
-  body-of-knowledge material can be opened to Honorary Fellows at no charge.
-- Knowledge Hub, publications, career guides, blog and the webinar library on the public site.
-
-**Events**
-- Webinars and institute events, including member rates where events are priced.
-- A global chapter network (20+ country chapters, from the US and UK to Saudi Arabia, India,
-  Pakistan, Australia and beyond) — local community and events as chapters activate.
-
-**Jobs & career visibility**
-- The **careers board** and **professional directory** on the platform — visibility to employers
-  who use PCI as a capability signal. *(These community surfaces launch in phases; confirm they are
-  switched on before promising access in copy.)*
-- A verifiable award that awardees can cite on LinkedIn and CVs — with a live verification link,
-  which most "honorary" titles elsewhere cannot offer.
-
-**Community**
-- The community forum and chapter network as they launch — a professional home, not just a title.
-
-### 5.3 What it is *not* (copy must always respect this)
-
-- It is **not** PCL-AI, PFL-AI or PML-AI, and never becomes one without passing the exam.
-- It carries **no exam entitlement** and no certification claim.
-- It is always **labelled honorary** — on the certificate, in the registry, in the verify lookup.
-- It can be revoked by the board; it is a governance act, not a giveaway.
-
-Sell it honestly and it sells itself: *free, real, verifiable recognition — with resources, events,
-community and career visibility attached — for people who have already given the profession
-something worth recognising.*
+### 2.9 Partners
+Employers (`/why-employers.html`), universities (`/university-partnerships.html`) and training
+providers (`/become-a-training-partner.html`) each have a landing page and a template below. One
+warm partner intro is worth a month of cold DMs — and an honorary conferral to a respected figure
+inside a target organisation is the warmest intro there is.
 
 ---
 
-## 6. The honorary journey — step by step
+## Part 3 — The template library
 
-What an applicant experiences (marketing should know this cold, because every promotion points
-into step 1):
+Everything below is copy-paste ready. Personalise `[brackets]`, keep the honesty language intact.
+Ordered short → long within each group.
 
-1. **Discover & apply.** From `membership.html` → the honorary route page
-   (`route-honorary.html`) → the application form (`honorary-application.html`). The form takes
-   personal and professional details, qualifications, a **résumé/CV (required)** and optional
-   academic/certification/supporting documents (PDF/JPG/PNG/WebP, 3 MB each), plus a declaration.
-2. **Confirmation.** On submission the applicant instantly receives a unique reference
-   (`PCI-HONAPP-YYYY-NNNN`) on screen and by email, with an "under review" explanation.
-3. **Board review.** The board reviews the application and documents in the admin console
-   (owner-only — honorary review is deliberately restricted to the top permission level) and can
-   mark it under review, reject, or approve.
-4. **Decision.** Every decision triggers a personal email. **Approval confers the award on the
-   spot**: the `PCI-HON` number is minted, the certificate is generated, and the applicant's portal
-   account (if one exists) is linked and notified.
-5. **Verify & announce.** The award is immediately live in the public verify lookup — the moment
-   for the conferral announcement (see playbook, step 5 below).
+### 3.A LinkedIn templates
 
-Typical end-to-end effort for the applicant: one form, one CV upload, zero payment screens —
-because there is nothing to pay.
+**A1. Connection note — general (≤300 characters)**
+*Use when: connecting with any project controls professional.*
 
----
+> Hi [Name] — I work with the Project Controls Institute, a new non-profit body building a
+> certification standard for project controls in the AI era. Your work at [Company] caught my eye.
+> Would be glad to connect.
 
-## 7. Step-by-step promotion playbook
+**A2. Connection note — senior figure / honorary prospect (≤300 characters)**
+*Use when: connecting with a distinguished practitioner you may later invite to apply for
+Honorary Fellow.*
 
-### Step 0 — Foundations (before any campaign)
+> Hi [Name] — I'm with the Project Controls Institute. Your contribution to [specific thing —
+> book, standard, community, major programme] is exactly the kind of work our institute exists to
+> recognise. I'd be glad to connect.
 
-1. **Switch on analytics.** The site ships with a prepared analytics hook (Plausible or GA4) that
-   is currently commented out in the page templates — activate one, or you will be flying blind.
-2. **Agree UTM conventions** for every off-site link (`utm_source=linkedin`, `utm_campaign=honorary-2026`, …).
-3. **Confirm notification settings** in Admin → Settings: the board recipient email
-   (`notify_admin_email`) and honorary notifications (`notify_honorary_enabled`) — so no
-   application ever sits unseen.
-4. **Walk the funnel yourself**: homepage → membership → honorary route → application form →
-   submit a test → see the reference. Fix anything that snags before sending traffic.
+**A3. First DM after they accept — short intro**
+*Use when: they accepted; keep it light, no links yet unless natural.*
 
-### Step 1 — Nail the message
+> Thanks for connecting, [Name]. Quick intro so this isn't a mystery: PCI is an independent
+> non-profit institute certifying project controls, cost engineering and project finance — with
+> the governed use of AI treated as part of the discipline. We're building it in the open, honest
+> about status, everything publicly verifiable. If you're ever curious it's all at
+> projectcontrolsinstitute.org — and I'm happy to answer anything. Either way, glad to have you in
+> the network.
 
-Use §3 (Why PCI) and §5 (honorary benefits) verbatim as the source of truth. Every piece of content
-should teach one concrete thing and make one soft ask. The 20-post LinkedIn pack already does this
-for the certification story; the honorary story needs the same treatment (samples in §8).
+**A4. DM — the platform explained (medium)**
+*Use when: they replied, asked a question, or engaged with a post.*
 
-### Step 2 — Own the free channels first
+> Happy to give you the full picture, [Name].
+>
+> PCI (Project Controls Institute) is an independent, non-profit certifying body founded on a
+> simple observation: project controls has never had a focused professional standard of its own —
+> and AI is changing the work faster than any existing credential covers.
+>
+> What we offer:
+> • Three certifications — PCL-AI (project controls), PFL-AI (project finance), PML-AI (project
+> management) — scenario-based, properly proctored exams, framework developed with reference to
+> ISO/IEC 17024.
+> • Membership with CPD tracking, a global chapter network (20+ countries) and free resources —
+> guides, salary reports, a full body of knowledge.
+> • Everything verifiable: any credential can be checked by anyone at
+> projectcontrolsinstitute.org/verify.html.
+>
+> One honest note, because it's how we operate: we're building toward formal accreditation and say
+> so plainly — we never claim recognition we don't yet hold.
+>
+> If you'd like to look, start here: projectcontrolsinstitute.org/why-pci.html. Any questions,
+> just ask.
 
-| Channel | Action | Cadence |
-|---|---|---|
-| **LinkedIn** (company page) | Run the 20-post launch pack; add honorary-route posts | 3–4 posts/week |
-| **X** (@projectcontrolinstitute) | Repurpose LinkedIn posts as threads | Mirror LinkedIn |
-| **Site banner** | Point the announcement banner at the active campaign (admin console, no deploy) | Per campaign |
-| **Newsletter** | Monthly update: standard progress, exam windows, new chapters, conferrals | Monthly |
-| **Blog** (`/blog.html`) | Long-form versions of the best-performing posts | 2/month |
+**A5. DM — honorary invitation**
+*Use when: inviting a distinguished practitioner to apply. This is the highest-value message —
+send it sparingly and personalise heavily.*
 
-### Step 3 — The honorary outreach campaign (the engine)
+> [Name], I'll be direct about why I'm writing.
+>
+> The board of the Project Controls Institute confers a small number of Honorary Fellow (PCI)
+> recognitions on practitioners whose contribution to the profession genuinely merits it. Given
+> your [specific contribution — be precise], I'd like to invite you to put yourself forward for
+> the board's consideration.
+>
+> What it involves: a ten-minute application and a CV — that's it. There is no fee. Not to apply,
+> not if conferred, not ever.
+>
+> If the board confers it, you receive a registered award (publicly verifiable at any time), a
+> certificate, and free access to the institute's resources, events and professional community.
+>
+> One honest note: this is honorary recognition of contribution. It's separate from PCI's examined
+> certifications, which are only ever earned by examination — we keep that line absolute.
+>
+> The application is here: projectcontrolsinstitute.org/honorary-application.html — and I'm happy
+> to answer any questions first.
 
-This is the highest-leverage campaign the platform supports, because every conferral creates a
-public, verifiable story and a motivated sharer:
+**A6. Follow-up DM (one only, ~1 week later)**
+*Use when: no reply to A4 or A5. After this, stop.*
 
-1. **Build a list** of 50–100 genuinely distinguished practitioners — authors, standards
-   contributors, chapter-scale community leaders, veteran directors of controls — across the
-   priority regions (the chapter list is the map).
-2. **Invite personally.** One-to-one email or LinkedIn message (template in §8.2). Never blast;
-   the route's credibility depends on the board conferring sparingly.
-3. **Board cadence.** Agree a review rhythm (e.g. monthly) so applicants get decisions promptly —
-   the platform emails every decision automatically.
-4. **Confer and announce.** Each approval = one announcement: citation + award number + verify
-   link (template in §8.1). Ask (never require) the awardee to share it.
-5. **Compound.** Each awardee's share reaches exactly the professional audience PCI wants. Their
-   profile now carries a verifiable PCI award — permanent, passive promotion.
+> Hi [Name] — just floating this back up once in case it got buried. No pressure at all; if the
+> timing's wrong, all good. The short version: [one line — e.g. "free, board-conferred recognition
+> with a verifiable award — ten-minute application"]. Here if useful.
 
-### Step 4 — Regional and sector reach
+### 3.B WhatsApp / short text templates
 
-The site already has dedicated, SEO-built pages for 20+ country chapters, 10 industry sectors and
-regional certification searches (Saudi Arabia, UAE, USA, UK, India, Pakistan…). Point regional
-campaigns and any paid spend at these pages, not the homepage — they match the searcher's intent.
+**B1. Shortest version (any chat)**
 
-### Step 5 — Employers, universities, training partners
+> Have you seen the Project Controls Institute? New non-profit certification body for project
+> controls / cost engineering, with AI governance built into the standard. Free resources on the
+> site and every credential is publicly verifiable → projectcontrolsinstitute.org
 
-Use the dedicated funnels that already exist: `why-employers.html` and corporate programmes for
-employers; `university-partnerships.html` for academia; `become-a-training-partner.html` for
-training providers. Honorary conferrals to respected figures inside a target organisation or
-university are the warmest possible introduction.
+**B2. Honorary short version**
 
-### Step 6 — Measure and iterate (monthly)
+> Worth knowing about: PCI (Project Controls Institute) confers an Honorary Fellow recognition for
+> people with real contribution to the profession — no exam, no fees at all, and the award is
+> publicly verifiable. 10-minute application:
+> projectcontrolsinstitute.org/honorary-application.html
 
-| Metric | Where |
-|---|---|
-| Honorary applications (references minted) | Admin → Honorary applications |
-| Conferrals + announcement reach | Admin + social analytics |
-| Verify-lookup traffic | Analytics on `/verify.html` |
-| Newsletter subscribers | Platform |
-| Enrolment starts (standard route) | Portal analytics |
-| Top pages / regions | Site analytics (once enabled — Step 0) |
+### 3.C Email templates
 
-Kill what underperforms, double down on what converts, and keep the message honest.
+**C1. Cold email — short intro**
+*Use when: first contact. Subject: "A professional standard for project controls".*
 
----
+> Dear [Name],
+>
+> I'm [Your name] from the Project Controls Institute (PCI) — an independent, non-profit body
+> building a focused certification standard for project controls, cost engineering and project
+> finance in the AI era.
+>
+> Given your role at [Company], I thought it worth one short email. In brief: three scenario-based
+> certifications (PCL-AI, PFL-AI, PML-AI), a global chapter network, free professional resources,
+> and every credential publicly verifiable at any time.
+>
+> If that's of interest, the best two-minute overview is here:
+> projectcontrolsinstitute.org/why-pci.html
+>
+> Happy to answer any questions.
+>
+> Best regards,
+> [Your name] · Project Controls Institute · hello@projectcontrolsinstitute.org
 
-## 8. Copy library (approved starting points)
+**C2. Email — the platform in full detail (long)**
+*Use when: they replied with interest, or a warm contact asked "so what exactly is PCI?"
+Subject: "PCI in detail — as promised".*
 
-### 8.1 Conferral announcement (LinkedIn / newsletter)
+> Dear [Name],
+>
+> Thank you for the interest — here's the full picture, honestly told.
+>
+> **Who we are.** The Project Controls Institute (PCI) is an independent, non-profit certifying
+> body founded in 2025. Our position is simple: project controls — the integrated discipline of
+> planning, cost, risk, forecasting, contracts and project finance — has long lacked a focused
+> professional standard of its own, and AI is transforming the work. AI can draft the schedule and
+> the forecast; the professional must know whether to trust it. Our slogan says it in six words:
+> *"AI proposes. The professional disposes."*
+>
+> **The certifications.** PCI awards the AI Project Leadership Certification Suite:
+> • **PCL-AI** — PCI AI Project Controls Leader
+> • **PFL-AI** — PCI AI Project Finance Leader
+> • **PML-AI** — PCI Project Management Leader – AI
+> The examinations are scenario-based and delivered under proper proctoring through a secure exam
+> system; preparation runs on Certuvo, PCI's official study platform. The certification framework
+> is developed with reference to ISO/IEC 17024, the international standard for bodies certifying
+> persons.
+>
+> **Membership and community.** Membership grades run from Student through Professional to Fellow,
+> with CPD tracking, a professional directory and a chapter network across 20+ countries. The
+> resource library — study guides, white papers, salary reports, a full body of knowledge, and
+> regular webinars — is on the site, much of it free.
+>
+> **Three ways in.**
+> 1. **Standard** — enrol, study, sit the exam (membership currently USD [check live site],
+>    exam USD [check live site]).
+> 2. **Founding** — during the founding window, fees are waived for the founding cohort; the exam
+>    is unchanged and the credential is still earned by passing it.
+> 3. **Honorary** — for distinguished contribution to the profession, the board confers
+>    **Honorary Fellow (PCI)**: no exam, and no fees of any kind. It comes with a registered,
+>    verifiable award, a certificate, and free access to resources, events and the community. It
+>    is always labelled honorary — it is never the examined certification.
+>
+> **Verification.** Every credential and honorary award can be checked by anyone, at any time, at
+> projectcontrolsinstitute.org/verify.html. We think a claim you can't verify is worth very little.
+>
+> **Our honest position.** PCI is building toward formal accreditation and toward non-profit
+> tax-exempt recognition, and we state plainly that neither is held yet. We never guarantee jobs,
+> salaries or third-party recognition. For a certification body, trust is the entire product — so
+> we'd rather understate than oversell.
+>
+> If you'd like to go further: [choose one — enrolment: projectcontrolsinstitute.org/enrol.html /
+> honorary application: projectcontrolsinstitute.org/honorary-application.html / a call this week].
+>
+> With best regards,
+> [Your name] · Project Controls Institute · hello@projectcontrolsinstitute.org
+
+**C3. Email — honorary invitation (long)**
+*Use when: formally inviting a senior figure. Subject: "An invitation — Honorary Fellow of the
+Project Controls Institute".*
+
+> Dear [Name],
+>
+> I'm writing on behalf of the Project Controls Institute (PCI), an independent non-profit
+> certifying body for project controls, cost engineering and project finance.
+>
+> Each year the institute's board confers a small number of **Honorary Fellow (PCI)**
+> recognitions on individuals whose sustained contribution to the profession merits it. Your
+> [specific contribution — publications, standards work, programme leadership, mentoring at
+> scale], is precisely the kind of contribution this recognition exists for, and I would like to
+> invite you to put yourself forward for the board's consideration.
+>
+> **What it involves.** A short application (about ten minutes) with your CV at
+> projectcontrolsinstitute.org/honorary-application.html. You receive a reference immediately, and
+> the board reviews every application personally. **There is no fee at any stage — not to apply,
+> not if conferred, and nothing recurring afterwards.**
+>
+> **What conferral brings.**
+> • The designation Honorary Fellow (PCI), conferred with a citation
+> • A registered award number, publicly verifiable by anyone at any time
+> • A certificate issued by the institute
+> • Free access to PCI's professional resources, webinars and events
+> • Membership of a growing global community, with chapters in 20+ countries
+>
+> **In fairness, two honest notes.** Conferral is at the board's discretion — an invitation to
+> apply is not a promise of the outcome. And Honorary Fellow (PCI) is a recognition of
+> contribution: it is deliberately separate from PCI's examined certifications, which are only
+> ever earned by examination. We keep that distinction absolute, because it protects the value of
+> both.
+>
+> I would be delighted to answer any questions before you decide.
+>
+> With respect and best regards,
+> [Your name] · Project Controls Institute · hello@projectcontrolsinstitute.org
+
+**C4. Email — employer / corporate (medium)**
+*Use when: writing to HR, PMO or capability leads. Subject: "A consistent standard for
+project-controls capability".*
+
+> Dear [Name],
+>
+> When you hire a planner or cost engineer, how do you know what you're getting? Most
+> organisations answer with interviews and hope — because project controls has never had a single,
+> verifiable standard.
+>
+> The Project Controls Institute (PCI) is an independent non-profit building exactly that: a
+> certification suite covering project controls, cost engineering and project finance, with the
+> governed use of AI treated as part of the discipline. Scenario-based proctored examinations, a
+> published body of knowledge, and — importantly for employers — **every credential publicly
+> verifiable in seconds** at projectcontrolsinstitute.org/verify.html.
+>
+> For teams, that means a shared capability language across projects and regions, and a
+> development pathway your controls staff can see. Corporate programmes are here:
+> projectcontrolsinstitute.org/corporate-programs.html
+>
+> Would a 20-minute call be useful? I'm happy to walk through how other [sector] organisations are
+> approaching it.
+>
+> Best regards,
+> [Your name] · Project Controls Institute
+
+**C5. Email — university / training provider (medium)**
+*Use when: academic programme leads or training companies. Subject: "Partnering on the
+project-controls standard".*
+
+> Dear [Name],
+>
+> The Project Controls Institute (PCI) is an independent non-profit certifying body for project
+> controls, cost engineering and project finance — with a published body of knowledge and a
+> certification suite (PCL-AI, PFL-AI, PML-AI) developed with reference to ISO/IEC 17024.
+>
+> We partner with [universities: projectcontrolsinstitute.org/university-partnerships.html /
+> training providers: projectcontrolsinstitute.org/become-a-training-partner.html] to connect
+> programmes like yours at [Institution] to a recognised professional pathway: students and
+> delegates study against the PCI body of knowledge, and graduates leave with a route to a
+> verifiable professional credential.
+>
+> If a conversation would be useful, I'd be glad to set one up.
+>
+> Best regards,
+> [Your name] · Project Controls Institute
+
+**C6. Follow-up email (one only, ~1 week later)**
+
+> Dear [Name],
+>
+> A brief follow-up on my note below — I know inboxes are unforgiving. If it's not for you or not
+> for now, no reply needed and I won't chase again. If it is, the one link worth a look is:
+> [single most relevant link].
+>
+> Best regards,
+> [Your name]
+
+### 3.D Post templates (LinkedIn / newsletter)
+
+**D1. Honorary conferral announcement**
 
 > The board of the Project Controls Institute has conferred **Honorary Fellow (PCI)** on
 > **[Name]**, in recognition of [citation — one concrete sentence].
 >
 > Honorary Fellow (PCI) is a board-conferred recognition of distinguished contribution to the
-> profession. It involves no examination and is distinct from PCI's examined certifications.
+> profession — no examination, and distinct from PCI's examined certifications.
 >
-> Award [PCI-HON-YYYY-NNNN] — verifiable at projectcontrolsinstitute.org/verify.html
+> Award [PCI-HON-YYYY-NNNN] · verifiable any time at projectcontrolsinstitute.org/verify.html
+>
+> Congratulations, [Name]. [Tag them.]
 >
 > #ProjectControls #CostEngineering #ProjectManagement
 
-### 8.2 Personal invitation (email / LinkedIn message)
+**D2. "What is PCI" post (personal voice)**
 
-> Dear [Name],
+> People keep asking what the Project Controls Institute actually is, so — plainly:
 >
-> The Project Controls Institute confers a small number of **Honorary Fellow (PCI)** recognitions
-> on practitioners whose contribution to the profession merits it. Given your work on
-> [specific contribution], I'd like to invite you to put yourself forward for the board's
-> consideration.
+> An independent, non-profit certification body for project controls, cost engineering and
+> project finance. Three scenario-based certifications (PCL-AI, PFL-AI, PML-AI). A body of
+> knowledge you can read. Proctored exams you can't shortcut. Credentials anyone can verify
+> online, any time.
 >
-> The application takes about ten minutes and there is **no fee — not to apply, not if conferred,
-> not ever**. If the board confers the recognition, it comes with a registered, publicly
-> verifiable award, a certificate, and free access to PCI's resources, events and professional
-> community.
+> And one thing we don't do: overclaim. We're building toward accreditation and we say exactly
+> where we are. In a market full of certificate mills, we think honesty is the differentiator.
 >
-> One honest note: this is honorary recognition of contribution — it is separate from PCI's
-> examined certifications, which are only ever earned by examination.
+> Start here: projectcontrolsinstitute.org/why-pci.html
 >
-> Apply here: projectcontrolsinstitute.org/honorary-application.html
+> #ProjectControls #CostEngineering #PlanningEngineer
 
-### 8.3 Short-form (banner / bio / footer)
+**D3. Honorary route awareness post**
 
-> **Honorary Fellow (PCI)** — free, board-conferred, publicly verifiable recognition of
-> distinguished contribution to project controls. No exam. No fees. Apply for the board's
-> consideration.
+> Some people have already given this profession more than any exam could measure.
+>
+> That's what the honorary route is for. The Project Controls Institute board confers **Honorary
+> Fellow (PCI)** on practitioners of distinguished contribution — no examination, **no fees of any
+> kind**, and a registered award anyone can verify online.
+>
+> It's not our examined certification and it never pretends to be. It's recognition — real,
+> registered and free.
+>
+> Apply for the board's consideration: projectcontrolsinstitute.org/honorary-application.html
+>
+> #ProjectControls #CostEngineering #ProjectManagement
+
+### 3.E Quick replies to common questions
+
+**"Is PCI accredited?"**
+> Honest answer: not yet, and we won't pretend otherwise. The framework is developed with
+> reference to ISO/IEC 17024 and we're building toward formal accreditation — the site states our
+> exact status at projectcontrolsinstitute.org/accreditation-status.html.
+
+**"What does it cost?"**
+> The standard route: membership plus the exam fee (current prices are on
+> projectcontrolsinstitute.org/membership.html — there are launch discounts running). The
+> honorary route costs nothing at all — no application, conferral or renewal fees.
+
+**"What's the difference between Honorary Fellow and the certification?"**
+> Certifications (PCL-AI, PFL-AI, PML-AI) are earned only by passing a proctored exam. Honorary
+> Fellow (PCI) is the board recognising distinguished contribution — no exam, always labelled
+> honorary, never presented as the examined credential. Both are publicly verifiable.
+
+**"How is this different from PMP or AACE?"**
+> We don't claim equivalence with anyone. The difference in scope: PCI certifies the whole
+> controls discipline as one integrated capability — planning, cost, risk, finance — with governed
+> AI use treated as core, not an add-on. Comparison page:
+> projectcontrolsinstitute.org/pmp-vs-aace-vs-pcl-ai.html.
+
+**"How do I check someone's PCI credential?"**
+> Anyone can, free, in seconds: projectcontrolsinstitute.org/verify.html — enter the credential or
+> award number.
 
 ---
 
-## 9. Compliance guardrails — do say / never say
+## Part 4 — Do / Don't (the guardrails)
 
-**Always fine to say:**
-- "Developed with reference to ISO/IEC 17024" · "building toward formal accreditation"
-- "Free — no application, membership or renewal fees on the honorary route"
-- "Publicly verifiable at any time" · "board-conferred at the board's discretion"
-- "Distinct from PCI's examined certifications"
+**Do say:** developed with reference to ISO/IEC 17024 · building toward accreditation ·
+independent non-profit institute · publicly verifiable · free, board-conferred honorary
+recognition · no fees on the honorary route.
 
-**Never say (these will be treated as defects, not style choices):**
-- "Accredited", "ISO-certified", "government-recognised", or any equivalence claim with PMI/AACE.
-- "501(c)(3)" or "tax-deductible" (status intended, **not granted**).
-- Any promise of jobs, salary, promotion, immigration or licensing outcomes.
-- Anything presenting Honorary Fellow (PCI) as PCL-AI/PFL-AI/PML-AI, "certification", or a waived
-  exam. It is recognition of contribution, always labelled honorary.
-- Guaranteed conferral ("apply and receive…"). The board decides; some applications are declined.
+**Never say:** accredited / ISO-certified / government-recognised · 501(c)(3) or tax-deductible ·
+guaranteed jobs, salary or recognition by employers · anything implying Honorary Fellow is a
+certification or a waived exam · guaranteed conferral ("apply and you'll receive…").
 
-When in doubt, copy the site's own footer disclaimer language — it is the approved formulation.
-
----
-
-## 10. Quick reference
-
-| Need | Link |
-|---|---|
-| Honorary route explainer | `/route-honorary.html` |
-| Honorary application form | `/honorary-application.html` |
-| Compare all three routes | `/membership.html` |
-| Why PCI | `/why-pci.html` · `/how-pci-is-different.html` |
-| Public verification | `/verify.html` |
-| Badge registry | `/digital-badge-registry.html` |
-| Free resources | `/downloads` · `/knowledge.html` · `/white-papers.html` |
-| Employers | `/why-employers.html` · `/corporate-programs.html` |
-| Chapters (regional) | `/chapters.html` |
-| Recognition policy | `/fellowship-policy.html` |
-| LinkedIn post pack | `docs/marketing/linkedin-launch-20-posts.md` |
-| Contact | hello@projectcontrolsinstitute.org |
-| Social | LinkedIn: `linkedin.com/company/project-control-institute` · X: `@projectcontrolinstitute` |
+**Behaviour:** one follow-up maximum, then stop · never blast groups or buy lists · get
+permission before naming an awardee in a post · when unsure, use the site footer's own wording —
+it's the approved formulation.
