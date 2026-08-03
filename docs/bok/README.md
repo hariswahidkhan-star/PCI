@@ -13,9 +13,12 @@ words, never reproducing copyrighted text.
 ## How this reference is built
 
 A book of this size is authored **domain by domain**, each reviewed before it feeds the exam blueprint. The
-shared authoring standard lives in **[`00-style-spine.md`](00-style-spine.md)** — terminology, the master
+internal authoring standard lives in **[`00-style-spine.md`](00-style-spine.md)** — terminology, the master
 formula-symbol table, worked-example format, figure/MCQ formats, citation rules and conventions. Every
-domain binds to it, so notation and depth stay consistent across the whole volume.
+domain binds to it, so notation and depth stay consistent across the whole volume. That standard is **not**
+published: the reader-facing chapter distilled from it is **[`00-conventions.md`](00-conventions.md)**
+("Conventions of This Reference"), which is the first chapter of the built book and the only one of the two
+in the build order (`build/build_pdf.py`).
 
 > This BoK **is** the credential framework. The Institute's public site, examination blueprint and
 > practice materials are aligned to its thirteen domains and the 40/40/20 weighting; the domain numbering
@@ -25,7 +28,8 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 
 | # | Domain | File | Status |
 |---|---|---|---|
-| 0 | Style Spine (authoring standard) | [`00-style-spine.md`](00-style-spine.md) | ✅ Complete |
+| — | Style Spine (internal authoring standard, not published) | [`00-style-spine.md`](00-style-spine.md) | ✅ Complete |
+| 0 | Conventions of This Reference (opening chapter) | [`00-conventions.md`](00-conventions.md) | ✅ Complete |
 | 1 | Foundations of Accounting for Project Controls | [`domain-01-foundations-of-accounting.md`](domain-01-foundations-of-accounting.md) | ✅ Draft complete |
 | 2 | Financial Reporting & the Standards (IFRS 15 flagship) | [`domain-02-financial-reporting.md`](domain-02-financial-reporting.md) | ✅ Draft complete |
 | 3 | Budgeting & Forecasting | [`domain-03-budgeting-forecasting.md`](domain-03-budgeting-forecasting.md) | ✅ Draft complete |
@@ -39,7 +43,7 @@ domain binds to it, so notation and depth stay consistent across the whole volum
 | 11 | Business Process Cycles (O2C, P2P & control environment) | [`domain-11-process-cycles.md`](domain-11-process-cycles.md) | ✅ Draft complete |
 | 12 | Risk Management for Project Controls | [`domain-12-risk-management.md`](domain-12-risk-management.md) | ✅ Draft complete |
 | 13 | AI for Project Controls & PM: Concepts, Tools & Practice | [`domain-13-ai-for-project-controls.md`](domain-13-ai-for-project-controls.md) | ✅ Draft complete |
-| — | Appendices (glossary · formula sheet · self-check answers · standards & figure indexes · MCQ bank) | [`appendices.md`](appendices.md) | 🚧 Assembled from finished domains |
+| — | Appendices (glossary · formula sheet · self-check answers · standards & figure indexes · MCQ bank · capstone) | [`appendices.md`](appendices.md) | ✅ Complete — all 13 domains consolidated |
 
 Legend: ✅ complete · 🚧 in progress · ⏳ planned. Each domain is authored to the per-KA checklist in the
 Style Spine (§10) and is a **first authored draft** pending subject-matter-expert (SME) review before it is

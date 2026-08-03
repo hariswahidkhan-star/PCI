@@ -11,7 +11,7 @@ true at the same time, and the interesting failures are the ones that live in th
 for a revenue basis the others do not share: **Aurora Ridge** (G.2), a toll-road concession where
 demand is unhedged and nothing guarantees the revenue; **Helios Flats** (G.3), a solar-plus-storage
 independent power project where the price is contracted for the asset's whole life and the *resource*
-is not; and **Northgate Point** (G.4), a hyperscale data centre whose contract is investment-grade and
+is not; and **Harbourgate Point** (G.4), a hyperscale data centre whose contract is investment-grade and
 **expires five years before the debt does**. Each is worked from its own arithmetic, and none reuses
 another's figures. A closing section sets the four side by side, because the argument they make
 together — that no two of them bind in the same place — is not visible from any one of them. Every
@@ -123,12 +123,11 @@ spend across forty screened opportunities divided by the two that closed — is 
 
 Put the two together, which no chapter does:
 
-```
-expected value at the decision to develop = 16,179,360 × 0.5472 = 8,853,346
-honest origination cost                                        = 7,400,000
-                                                                 ---------
-                                              net              = 1,453,346
-```
+| Line | USD |
+|---|---|
+| Expected value at the decision to develop — `16,179,360 × 0.5472` | 8,853,346 |
+| Honest origination cost | 7,400,000 |
+| **Net** | **1,453,346** |
 
 The origination cost is **83.58 %** of the probability-weighted value. A project that looks like a
 sixteen-million-dollar success is, at the moment the development decision is actually taken, a
@@ -269,11 +268,10 @@ The instinctive correction is to size on year one instead. That produces a capac
 Neither extreme is the answer; the structure has to be **shaped to the ramp**. Take interest only for
 three years and amortise over the remaining seventeen, and two constraints now compete:
 
-```
-year-one interest cover at 1.40x :  0.07 x D  <=  3,892,800 / 1.40   ->  D <= 39,722,448.98
-steady-state amortisation at 1.40x:  D / AF(0.07,17) <= 10,200,000 / 1.40
-                                     with AF(0.07,17) = 9.763223     ->  D <= 71,132,053.24
-```
+| Constraint, both at 1.40× | Test | Debt capacity |
+|---|---|---|
+| Year-one interest cover | `0.07 × D ≤ 3,892,800 / 1.40` | `D ≤` **39,722,448.98** |
+| Steady-state amortisation | `D / AF(0.07,17) ≤ 10,200,000 / 1.40`, with `AF(0.07,17) = 9.763223` | `D ≤` **71,132,053.24** |
 
 **The binding constraint is year-one interest cover**, and it binds at **39,722,448.98** — 55.8 % of
 what the amortisation test would allow. Sculpting recovers **10,265,035.66** over sizing on year one
@@ -372,11 +370,11 @@ central case — but on a **one-year exceedance probability**, conventionally P9
 beats nine years in ten. For a normally distributed annual yield that is `P50 × (1 − z₉₀σ)` with
 `z₉₀ = 1.2816`:
 
-```
-P90 factor = 1 - 1.2816 x 0.070 = 0.910288
-P90 energy = 460,000 x 0.910288 = 418,732.5 MWh
-P90 revenue = 418,732.5 x 42.00 = 17,586,764.16
-```
+| Quantity | Calculation | Result |
+|---|---|---|
+| P90 factor | `1 − 1.2816 × 0.070` | **0.910288** |
+| P90 energy | `460,000 × 0.910288` | **418,732.5 MWh** |
+| P90 revenue | `418,732.5 × 42.00` | **17,586,764.16** |
 
 The energy falls **8.9712 %**. `CFADS` falls **12.3803 %**, to **12,266,764.16**, because the
 4,320,000 of operations and the 1,000,000 reserve do not fall at all. That ratio — **1.3800× of cash
@@ -492,10 +490,10 @@ it is worth tens of millions here.
 
 ---
 
-## Capstone Four — Northgate Point: lending past the lease
+## Capstone Four — Harbourgate Point: lending past the lease
 
 Kestrel's revenue was contracted for the concession's whole life. Aurora Ridge had no contract at all.
-Helios Flats had one for twenty-five years against an uncertain resource. **Northgate Point has an
+Helios Flats had one for twenty-five years against an uncertain resource. **Harbourgate Point has an
 investment-grade counterparty on a contract that expires five years before the debt does**, and that
 single fact relocates the entire credit question: it is no longer the coverage in any modelled year,
 because every modelled year is fine. It is the probability and price of a lease nobody has signed.
@@ -577,7 +575,7 @@ is worth least exactly when the balance must be refinanced. A tail sized on toda
 neither.
 
 **A leasing pipeline treated as a condition precedent to the *tail*, not to drawdown.** Kestrel's
-conditions precedent were tested once, before close (Capstone One, G.1.4). Northgate Point's decisive
+conditions precedent were tested once, before close (Capstone One, G.1.4). Harbourgate Point's decisive
 condition falls due in year seven and nobody tests it, because financial-close discipline does not
 reach that far. The instrument that does is a covenant requiring a stated share of capacity re-let by a
 stated date, with cash sweeps ahead of it — which converts an untested assumption into a monitored one.
@@ -589,7 +587,7 @@ technology risk sits in the same place: 12,000,000 a MW buys a specification wit
 life that may be shorter than the debt, and re-letting at today's rate assumes a facility that is still
 competitive when a hyperscale tenant next chooses.
 
-### G.4.4 The three questions Northgate Point adds
+### G.4.4 The three questions Harbourgate Point adds
 
 1. **Does the contract outlive the debt?** If not, identify what share of the facility is paid by an
    unsigned agreement — 50.24 % here — and treat that share as merchant, whatever the tenant's rating.
@@ -611,7 +609,7 @@ discipline applied to them. Read in sequence they make one argument that no sing
 | One — Kestrel Water | availability payment | the **distribution** test, at 1.9103 % of headroom, not the covenant at 5.8339 % |
 | Two — Aurora Ridge | unhedged demand | **year one**, at a `DSCR` of 0.5343 |
 | Three — Helios Flats | contracted price, uncertain resource | **year eighteen**, at 1.0595× if sized on year one |
-| Four — Northgate Point | contracted, but shorter than the debt | **year eight**, outside every modelled year |
+| Four — Harbourgate Point | contracted, but shorter than the debt | **year eight**, outside every modelled year |
 
 Not one of the four binds where a competent analyst would first look, and no two bind in the same
 place. That is the argument. **The ratio is never the finding; locating the year and the test that

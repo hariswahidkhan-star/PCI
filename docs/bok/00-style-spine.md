@@ -1,4 +1,9 @@
-# The Style Spine — Conventions of This Reference
+> **Internal document — not part of the published Body of Knowledge.** This is the production standard the
+> book is authored against; it is retained for editorial and production use only and is not in the build
+> order. The reader-facing chapter distilled from it is `00-conventions.md` ("Conventions of This
+> Reference"), which is what the published edition carries as its opening chapter.
+
+# The Style Spine — Internal Authoring Standard
 
 > **Status:** foundation document. Every domain of the PCL-AI Body of Knowledge (BoK) is authored against
 > this spine so that terminology, notation, worked-example format, figures and MCQs stay consistent across

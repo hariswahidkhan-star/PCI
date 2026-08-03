@@ -13,7 +13,7 @@ BUILD = BOK / "build"
 OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else BUILD / "pcl-ai-bok.pdf"
 
 ORDER = [
-    "00-style-spine.md",
+    "00-conventions.md",
     "domain-01-foundations-of-accounting.md",
     "domain-02-financial-reporting.md",
     "domain-03-budgeting-forecasting.md",
@@ -74,8 +74,8 @@ TITLE_HTML = f"""
   <p>The book is organised as <strong>13 domains</strong> in three groups — finance, accounting &amp; reporting
   (Domains 1–4, 40&nbsp;%), project management (Domains 5–12, 40&nbsp;%), and AI knowledge &amp; practical approach
   (Domain 13, 20&nbsp;%). Every page sits under a numbered <strong>Domain → Knowledge Area → Topic</strong> hierarchy
-  (e.g. 6.3.2), and cross-references use those numbers throughout. The <strong>Style Spine</strong> (the first
-  chapter) defines the shared symbols, formats and conventions every domain binds to.</p>
+  (e.g. 6.3.2), and cross-references use those numbers throughout. <strong>Conventions of This Reference</strong>
+  (the first chapter) sets out the shared symbols, formats and conventions used from the first page to the last.</p>
   <p>Each domain follows one shape. The <strong>knowledge areas</strong> build the discipline topic by topic, each with
   worked examples in a five-step format (Setup → Formula → Substitution → Result → Interpretation), key terms, sample
   MCQs with rationales, and self-checks. <strong>Advanced topics</strong> extend the domain for practitioners who lead
@@ -83,8 +83,10 @@ TITLE_HTML = f"""
   <strong>executive perspective</strong> distils what a director cannot delegate. <strong>Calculation exercises</strong>
   (quantitative domains) provide multi-step practice with full solutions. The <strong>practitioner's toolkit</strong>
   offers adoption-ready templates and checklists, and <strong>exam preparation</strong> closes each domain with its
-  known calculation traps and reflection questions. The appendices consolidate the master formula sheet, glossary,
-  standards index, figure index and the sample-MCQ bank.</p>
+  known calculation traps and reflection questions. The appendices carry the master formula sheet, the global
+  glossary, the standards and figure indexes, an answer key to every self-check question in the book, the full
+  bank of all 309 sample MCQs with their answers, and an integrated capstone that runs one project through all
+  thirteen domains.</p>
   <p>For study, work a domain end to end and attempt every worked example before reading its solution. For practice,
   go straight to the toolkits and case studies. For examination preparation, use the exam-preparation sections, the
   MCQ bank and the calculation exercises — and note that these are study materials, kept separate from any live

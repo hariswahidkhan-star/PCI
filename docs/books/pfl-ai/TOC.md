@@ -1,6 +1,6 @@
 # PFL-AI Body of Knowledge — Detailed Table of Contents (Phase 0)
 
-**Book:** PCI Project Finance Leader – AI Body of Knowledge
+**Book:** PCI AI Project Finance Leader Body of Knowledge
 **Structure:** 4 parts · 16 domains · 61 knowledge areas, numbered `Domain.KA.Topic` per the pattern
 spec; family chapter shape throughout (see `PCI_BOOK_PATTERN_SPEC.md` §4). Responsible AI appears in
 every domain, with Domain 16 carrying the systematic treatment. This is an educational professional

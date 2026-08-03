@@ -4,7 +4,7 @@
 PCL-AI BoK. New terms are added here (with the proposing book/domain) before first use in a chapter;
 silent redefinition in a chapter is a gate defect. British English throughout.
 
-## 1. Inherited from the PCL-AI Style Spine (unchanged meanings)
+## 1. Inherited from the PCL-AI conventions chapter (unchanged meanings)
 
 Accrual basis · Baseline · Control account (CA) · Cost breakdown structure (CBS) · Provision ·
 Recognition · Work breakdown structure (WBS) — as defined in `docs/bok/00-style-spine.md` §3, plus the
@@ -15,15 +15,15 @@ full PCL-AI global glossary (`docs/bok/appendices.md`, Appendix B) which governs
 | Term | Definition (as used in both books) | Proposed by |
 |---|---|---|
 | **PML-AI** | PCI Project Management Leader – AI: the certification; its BoK is this programme's Book One | Charter |
-| **PFL-AI** | PCI Project Finance Leader – AI: the certification; its BoK is Book Two | Charter |
-| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide restatement of PCL-AI's "AI proposes; the professional verifies, decides and remains accountable" | Charter (D-11) |
+| **PFL-AI** | PCI AI Project Finance Leader: the certification; its BoK is Book Two | Charter |
+| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide principle; it supersedes the retired formulation "AI proposes, the professional disposes" used in the first PCL-AI printing under its former PCP-AI designation | Charter (D-11) |
 | **Domain / Knowledge Area / Topic** | The three-level content hierarchy `D.K.T`, identical to PCL-AI | Pattern spec |
 | **Sponsor** | The accountable executive owner of the business case (PML-AI); in PFL-AI project-finance contexts, an equity investor promoting the project — the books flag the context at each use | PML-AI D3 / PFL-AI D1 |
 | **Special-purpose vehicle (SPV)** | The ring-fenced legal entity created to own, finance and operate a project | PFL-AI D5 |
 | **Bankability** | The degree to which a project's contracts, risks and cash flows support limited-recourse financing on acceptable terms | PFL-AI D5 |
 | **CFADS** | Cash flow available for debt service, as defined in the formula registry | PFL-AI D10 |
 | **Cash waterfall** | The contractually agreed priority order in which project cash is applied each period | PFL-AI D6/D15 |
-| **Benefits realization** | The identification, planning, measurement and sustainment of the outcomes a programme exists to deliver | PML-AI D2/D16 |
+| **Benefits realisation** | The identification, planning, measurement and sustainment of the outcomes a programme exists to deliver | PML-AI D2/D16 |
 | **Decision rights** | The explicit allocation of which role may take which decision at which threshold | PML-AI D3 |
 | **Psychological safety** | A shared belief that the team is safe for interpersonal risk-taking — candour without penalty | PML-AI D12 |
 | **Hybrid delivery** | A deliberate combination of predictive and adaptive methods under one governance frame | PML-AI D13 |
@@ -37,9 +37,10 @@ Appendix B glossary.
 
 - Certification names are written exactly as the live catalogue (`backend/Data/MultiCert.cs`) states
   them — the suite is the **PCI AI Project Leadership Certification Suite**:
-  **PCL-AI** — PCI AI Project Controls Leader (the previous book's credential, renamed from PCL-AI);
-  **PFL-AI** — PCI AI Project Finance Leader (brief uses "PCI Project Finance Leader – AI" — open
-  decision OD-1); **PML-AI** — PCI Project Management Leader – AI. Retired names (PCL-AI, PDL-AI,
+  **PCL-AI** — PCI AI Project Controls Leader (the previous book's credential, renamed from the retired PCP-AI designation);
+  **PFL-AI** — PCI AI Project Finance Leader (the approved public name; the programme brief's
+  "PCI Project Finance Leader – AI" is superseded, closing OD-1);
+  **PML-AI** — PCI Project Management Leader – AI. Retired names (PCP-AI, PDL-AI,
   CPMD, PFIP) never appear in new content.
 - **No trademark symbols (™/®) on PCI credential names** — platform policy, enforced at boot by
   `MultiCert.TrademarkStrip`. Third-party names appear unadorned in running text; marks are

@@ -1,7 +1,7 @@
 # PFL-AI Competency Map (Phase 0)
 
 **Certification:** PFL-AI — PCI AI Project Finance Leader (`backend/Data/MultiCert.cs`, id 2; the
-programme brief's "PCI Project Finance Leader – AI" naming variance is open decision OD-1)
+programme brief's "PCI Project Finance Leader – AI" is superseded, closing decision OD-1)
 **Blueprint status:** as with PML-AI, **no examination blueprint exists** — no weightings or item
 counts are published. The authoritative competency-adjacent content is the catalogue's **19-item
 competency list** (`MultiCert.cs:50-57`). This map proves each published competency has a home in the

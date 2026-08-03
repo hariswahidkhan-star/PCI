@@ -1316,7 +1316,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. 25 weeks
 - D. 21 weeks
 
-*Rationale:* After one week of crashing, path B–D–E (8+7+5+4 via D) becomes co-critical at 24; the second crashed week buys nothing — duration stays 24. A assumes both weeks convert to project weeks; C forgets the crash entirely; D subtracts from the wrong baseline. (The full economics: KA 6.4.)
+*Rationale:* After one week of crashing, path A–B–D–E–F (2+6+7+5+4) becomes co-critical at 24; the second crashed week buys nothing — duration stays 24. A assumes both weeks convert to project weeks; C forgets the crash entirely; D subtracts from the wrong baseline. (The full economics: KA 6.4.)
 
 
 **6.2-D** `[6.2.1 · Application]` Auriga's training activity G runs ES 15–EF 17 with `LF` = 25. Its total float is:

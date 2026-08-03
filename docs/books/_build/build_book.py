@@ -7,6 +7,7 @@ worked-example panels, figure injection, generated contents + index) → WeasyPr
 
 Usage:  python3 build_book.py pml-ai|pfl-ai [output.pdf]
 """
+import math
 import pathlib
 import re
 import sys
@@ -15,6 +16,7 @@ import markdown
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
+LAWS_DIR = ROOT / "laws"
 
 BOOKS = {
     "pml-ai": {
@@ -22,6 +24,16 @@ BOOKS = {
         "run_title": "PCI PML-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI Project Management Leader – AI<br/>"
                      "Leadership · delivery systems · governance · the governed use of AI"),
+        # Cover. The credential line is the approved public name of the credential — the same
+        # wording as the inner title page, which is the whole point of keeping them in one config.
+        "cover": {
+            "code": "PML-AI",
+            "credential": "The reference for the PCI Project Management Leader – AI",
+            "themes": "Leadership · delivery systems · governance · the governed use of AI",
+            "chart": "paths",
+        },
+        # Certification law set appended as back matter (skipped silently when not yet authored).
+        "laws_file": "PML_AI_LAWS.md",
         # (part number, title, description, domain range) — a divider is emitted only where the
         # part's lowest-numbered EXISTING domain is found, so parts appear as authorship reaches them.
         "parts": [
@@ -44,6 +56,13 @@ BOOKS = {
         "run_title": "PCI PFL-AI Body of Knowledge",
         "subtitle": ("The reference for the PCI AI Project Finance Leader<br/>"
                      "Project economics · structuring · financial mathematics · the governed use of AI"),
+        "cover": {
+            "code": "PFL-AI",
+            "credential": "The reference for the PCI AI Project Finance Leader",
+            "themes": "Structuring · modelling · coverage · the governed use of AI",
+            "chart": "coverage",
+        },
+        "laws_file": "PFL_AI_LAWS.md",
         "parts": [
             (1, "Part One", "Foundations",
              "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
@@ -172,6 +191,138 @@ FRONT = """
 """
 
 
+COVER = """
+<div class="cover">
+  <div class="coverhead">
+    <div class="coverkicker">Project Controls Institute Global</div>
+    <div class="covercode">{code}</div>
+    <div class="coverbook">Body of Knowledge</div>
+    <div class="coverrule"></div>
+    <div class="covercred">{credential}</div>
+    <div class="coverthemes">{themes}</div>
+  </div>
+  <div class="coverband">{chart}</div>
+  <div class="coverfoot">
+    <div class="coverprinciple">AI proposes; the professional verifies,<br/>decides and remains
+    accountable.</div>
+    <div class="coverbadge"><span class="cbmain">First edition — draft</span>
+    <span class="cbsub">For editorial and technical review · not for release or distribution</span></div>
+    <div class="covertag">Finance intelligently. Control predictively. Deliver successfully.</div>
+  </div>
+</div>
+"""
+
+# Cover artwork. Inline SVG rather than a bitmap so the cover stays vector at any size, and so the
+# label colours are readable here in the source: everything on the cover band is light ink on the
+# navy field, which is what the "debt service" label failed to be in the reviewed draft.
+COVER_INK = "#F1F5F9"        # primary label ink on navy — always light
+COVER_DIM = "#93A7C4"        # secondary label ink on navy
+COVER_BAR = "#2A4FC4"
+COVER_HOT = "#C13329"
+
+
+def _chart_coverage() -> str:
+    """PFL: cash available against a debt-service line — the gap above the line is the headroom."""
+    vals = [100, 97, 93, 90, 86, 83, 79, 76, 72, 69, 65, 58]
+    x0, base, bw, gap, scale = 54.0, 250.0, 34.0, 12.0, 1.86
+    line = base - 55 * scale                      # the debt-service line
+    bars = []
+    for i, v in enumerate(vals):
+        x = x0 + i * (bw + gap)
+        h = v * scale
+        fill = COVER_HOT if i == len(vals) - 1 else COVER_BAR
+        bars.append(f'<rect x="{x:.1f}" y="{base - h:.1f}" width="{bw}" height="{h:.1f}" fill="{fill}"/>')
+    # Headroom bracket on one bar, so the strapline has something to point at.
+    bx = x0 + 3 * (bw + gap) + bw / 2
+    top = base - vals[3] * scale
+    bars.append(f'<line x1="{bx:.1f}" y1="{top:.1f}" x2="{bx:.1f}" y2="{line:.1f}" '
+                f'stroke="{COVER_INK}" stroke-width="1.6"/>')
+    bars.append(f'<path d="M{bx - 4:.1f} {top + 5:.1f} L{bx:.1f} {top:.1f} L{bx + 4:.1f} {top + 5:.1f}" '
+                f'fill="none" stroke="{COVER_INK}" stroke-width="1.6"/>')
+    bars.append(f'<path d="M{bx - 4:.1f} {line - 5:.1f} L{bx:.1f} {line:.1f} L{bx + 4:.1f} {line - 5:.1f}" '
+                f'fill="none" stroke="{COVER_INK}" stroke-width="1.6"/>')
+    bars.append(f'<text x="{bx + 8:.1f}" y="{(top + line) / 2 + 4:.1f}" font-size="13" '
+                f'fill="{COVER_INK}" font-family="sans-serif">headroom</text>')
+    return (
+        '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
+        + "".join(bars)
+        + f'<line x1="40" y1="{line:.1f}" x2="612" y2="{line:.1f}" stroke="{COVER_INK}" '
+          f'stroke-width="2" stroke-dasharray="9 7"/>'
+        # The line's own label: light ink, set above the line and clear of the bars.
+        + f'<text x="612" y="{line - 9:.1f}" font-size="14" fill="{COVER_INK}" '
+          f'font-family="sans-serif" text-anchor="end" letter-spacing="1.4">debt service</text>'
+        + f'<text x="40" y="288" font-size="14" fill="{COVER_DIM}" font-family="sans-serif">'
+          'cash available · the gap is the headroom</text>'
+        "</svg>")
+
+
+def _chart_paths() -> str:
+    """PML: the communication-path count — eight people, twenty-eight channels."""
+    cx, cy, r, n = 320.0, 140.0, 104.0, 8
+    pts = [(cx + r * math.cos(2 * math.pi * i / n - math.pi / 2),
+            cy + r * math.sin(2 * math.pi * i / n - math.pi / 2)) for i in range(n)]
+    edges = "".join(
+        f'<line x1="{pts[i][0]:.1f}" y1="{pts[i][1]:.1f}" x2="{pts[j][0]:.1f}" y2="{pts[j][1]:.1f}" '
+        f'stroke="{COVER_BAR}" stroke-width="1.5"/>'
+        for i in range(n) for j in range(i + 1, n))
+    nodes = "".join(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="9" fill="{COVER_HOT}"/>' for x, y in pts)
+    return (
+        '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
+        + edges + nodes
+        + f'<text x="40" y="262" font-size="15" fill="{COVER_INK}" font-family="sans-serif">'
+          'n(n − 1)/2 = 28</text>'
+        + f'<text x="40" y="288" font-size="14" fill="{COVER_DIM}" font-family="sans-serif">'
+          'eight people · twenty-eight channels · every one of them a place to lose a decision</text>'
+        "</svg>")
+
+
+CHARTS = {"coverage": _chart_coverage, "paths": _chart_paths}
+
+
+def slug(text: str) -> str:
+    s = re.sub(r"<[^>]+>", " ", text)
+    s = re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+    return s or "section"
+
+
+def normalise_lists(text: str, announce: bool = True) -> str:
+    """Give every list block the blank line python-markdown needs to see it as a list.
+
+    Manuscripts write MCQ options directly under the stem line:
+
+        ... its present value is closest to:
+        - A. USD 370,370
+
+    Markdown (unlike CommonMark) will not let a list interrupt a paragraph, so the whole block was
+    typeset as one run-on sentence. Inserting the blank line here — not in the manuscripts, which
+    other agents own — makes the options a real list without touching a word of the source.
+    """
+    marker = re.compile(r"^(?:[-*+]\s+|\d+[.)]\s+)")
+    out, fence, prev, added = [], False, "", 0
+    for line in text.split("\n"):
+        stripped = line.lstrip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            fence = not fence
+        elif not fence and marker.match(line) and prev.strip():
+            p = prev
+            if not (marker.match(p) or p[0] in "#|>" or p[0] in " \t" or p.rstrip().endswith("|")
+                    or p.lstrip().startswith("<")):
+                out.append("")
+                added += 1
+        out.append(line)
+        prev = line
+    if announce:
+        print(f"list blocks unglued: {added}")
+    return "\n".join(out)
+
+
+# The manuscripts mark the correct MCQ option with ✅ (U+2705), which exists in no font on the build
+# host — it printed as blank space, so the answer key silently vanished from every MCQ. U+2713 is
+# present in DejaVu Sans (the sans fallback), and the marker carries the word "correct" and a rule
+# box as well, so it survives grayscale and never depends on colour.
+MCQ_KEY = '<span class="mcq-key">✓ correct</span>'
+
+
 def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
     out, injected = [], 0
     for line in corpus.split("\n"):
@@ -188,13 +339,126 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
     return "\n".join(out)
 
 
+# ---------------------------------------------------------------------------------------------
+# PCI Professional Laws — back-matter part assembled from the shared foundational set plus the
+# book's own certification law set. Both are authored elsewhere; either may be absent mid-run, and
+# an absent file is skipped rather than fatal.
+# ---------------------------------------------------------------------------------------------
+
+# Fields the law format carries that are call-outs in their own right (LAW_SYSTEM.md §6).
+LAW_FIELD_BOXES = (("External references.", "ext-ref"),
+                   ("Jurisdictional caution.", "pci-caution"))
+
+
+def _law_prose(md: str) -> str:
+    inner = markdown.markdown(md, extensions=["tables"])
+    inner = inner.replace("<hr />", "")
+    # The legal-status disclaimer is set as a blockquote in source; it is a caution, so it prints
+    # as one — labelled, bordered and readable without colour.
+    inner = inner.replace("<blockquote>", '<div class="pci-caution">').replace("</blockquote>", "</div>")
+    return inner
+
+
+def _law_box(law_id: str, title: str, body_md: str) -> str:
+    inner = markdown.markdown(body_md, extensions=["tables"])
+    inner = inner.replace("<hr />", "")
+    for label, cls in LAW_FIELD_BOXES:
+        inner = re.sub(r"<p><strong>" + re.escape(label) + r"</strong>\s*(.*?)</p>",
+                       lambda m, c=cls: f'<div class="{c}"><p>{m.group(1)}</p></div>',
+                       inner, flags=re.S)
+    return (f'<div class="pci-law" id="{slug("law-" + law_id)}">'
+            f'<div class="lawhead"><span class="lawid">{law_id}</span>'
+            f'<span class="lawname">{title}</span></div>{inner}</div>')
+
+
+def render_law_file(path: pathlib.Path) -> tuple:
+    """One law file → (set title, html, law count)."""
+    text = path.read_text(encoding="utf-8")
+    m = re.match(r"#\s+([^\n]+)\n", text)
+    set_title = m.group(1).strip() if m else path.stem.replace("_", " ")
+    body = normalise_lists(text[m.end():] if m else text, announce=False)
+
+    out, buf, law, guidance = [], [], None, False
+
+    def flush():
+        nonlocal buf, law
+        chunk = "\n".join(buf).strip()
+        buf = []
+        if not chunk:
+            law = None
+            return
+        if law:
+            out.append(_law_box(law[0], law[1], chunk))
+        elif guidance:
+            out.append('<div class="pci-guidance">' + _law_prose(chunk) + "</div>")
+        else:
+            out.append(_law_prose(chunk))
+        law = None
+
+    laws = 0
+    for line in body.split("\n"):
+        head3 = re.match(r"###\s+PCI LAW\s+(\S+)\s+—\s+(.+?)\s*$", line)
+        head2 = re.match(r"##\s+(.+?)\s*$", line)
+        if head3:
+            flush()
+            law = (head3.group(1), head3.group(2))
+            guidance = False
+            laws += 1
+        elif head2:
+            flush()
+            guidance = "how to read" in head2.group(1).lower()
+            out.append(f'<h3 class="lawgroup" id="{slug(set_title + "-" + head2.group(1))}" '
+                       f'data-toc="2">{head2.group(1)}</h3>')
+        else:
+            buf.append(line)
+    flush()
+    return set_title, "".join(out), laws
+
+
+def render_laws(book: str, cfg: dict) -> str:
+    """The whole 'PCI Professional Laws' part, or '' when no law file is present yet."""
+    wanted = [LAWS_DIR / "PCI_FOUNDATIONAL_LAWS.md", LAWS_DIR / cfg.get("laws_file", "_none_")]
+    files = [f for f in wanted if f.exists()]
+    missing = [f.name for f in wanted if not f.exists()]
+    if missing:
+        print(f"laws: skipped (not yet authored) — {', '.join(missing)}")
+    if not files:
+        return ""
+    sets, total = [], 0
+    for f in files:
+        try:
+            title, html, laws = render_law_file(f)
+        except Exception as exc:                      # a malformed law file must not lose the book
+            print(f"laws: FAILED to render {f} — {type(exc).__name__}: {exc}")
+            continue
+        total += laws
+        sets.append(f'<h2 class="lawset" id="{slug(title)}" data-toc="2">{title}</h2>' + html)
+    if not sets:
+        return ""
+    print(f"laws: {total} laws from {len(sets)} set(s)")
+    return ('<div class="backmatter lawspart">'
+            '<h1 class="lawstitle bmtitle" id="pci-professional-laws" data-toc="1">'
+            'PCI Professional Laws</h1>'
+            '<p class="bmnote">Mandatory professional rules established by PCI Global for work '
+            'within a PCI certification scope. They are not legislation and do not displace '
+            'applicable law, contract or authoritative standards, and each law is cited by its '
+            'stable identifier — never by page. The foundational set binds every PCI credential; '
+            'the certification set that follows it binds this one.</p>'
+            + "".join(sets) + "</div>")
+
+
 def build(book: str, out: pathlib.Path) -> None:
     cfg = BOOKS[book]
     book_dir = ROOT / book
     files = manuscript_order(book_dir)
     print(f"manuscripts: {len(files)} — " + ", ".join(f.name for f in files))
     corpus = "\n\n".join(f.read_text(encoding="utf-8") for f in files)
+    raw_corpus = corpus                       # pre-normalisation, for the key-terms index scrape
+    corpus = normalise_lists(corpus)
     corpus = inject_figures(book_dir, corpus)
+    keyed = corpus.count("✅")
+    corpus = corpus.replace("✅", MCQ_KEY)
+    print(f"MCQ answer keys marked: {keyed}")
 
     html = markdown.markdown(corpus, extensions=["tables", "fenced_code", "toc"],
                              extension_configs={"toc": {"anchorlink": False}})
@@ -203,14 +467,21 @@ def build(book: str, out: pathlib.Path) -> None:
     def chap(m):
         return (f'<div class="chapter"><div class="chapnum">{int(m.group(2)):02d}</div>'
                 f'<div class="chapkicker">Domain {m.group(2)}</div>'
-                f'<h1 id="{m.group(1)}">{m.group(3)}</h1>'
+                f'<h1 id="{m.group(1)}" data-toc="1">{m.group(3)}</h1>'
                 f'<div class="chaprule"></div><div class="chaprule2"></div></div>')
     html = re.sub(r'<h1 id="([^"]+)">Domain\s+(\d+)\s+—\s+(.+?)</h1>', chap, html, flags=re.S)
 
     # KA openers.
     html = re.sub(r'<h2 id="([^"]+)">Knowledge\s+Area\s+(\d+\.\d+)\s+—\s+(.+?)</h2>',
-                  r'<h2 class="ka" id="\1"><span class="kanum">Knowledge Area \2</span>'
+                  r'<h2 class="ka" id="\1" data-toc="2"><span class="kanum">Knowledge Area \2</span>'
                   r'<span class="katitle">\3</span></h2>', html, flags=re.S)
+
+    # MCQ option lists: mark the list that follows an MCQ stem so the options set as one option per
+    # line with their own A./B./C./D. labels rather than markdown bullets.
+    mcq_ul = re.compile(r"(<p><strong>MCQ (?:(?!</p>).)*</p>\s*)<ul>", re.S)
+    nopts = len(mcq_ul.findall(html))
+    html = mcq_ul.sub(r'\1<ul class="mcqopts">', html)
+    print(f"MCQ option lists: {nopts}")
 
     # Apparatus mini-heads.
     html = re.sub(r'<h3 id="([^"]+)">((?:Key terms|Sample MCQs|Self-check)[^<]*)</h3>',
@@ -247,30 +518,9 @@ def build(book: str, out: pathlib.Path) -> None:
                      f'<div class="partdesc">{desc}</div><div class="partbar"></div></div>')
         html = html[:kick_m.start()] + part_html + html[kick_m.start():]
 
-    # Contents (h1 + h2 headings, in order).
-    toc_items = []
-    for m in re.finditer(r'<h(1|2)(?: class="ka")? id="([^"]+)">(.*?)</h\1>', html, flags=re.S):
-        text = re.sub(r"<[^>]+>", " ", m.group(3))
-        text = re.sub(r"\s+", " ", text).strip()
-        toc_items.append((m.group(1), m.group(2), text))
-    toc = ['<nav id="TOC"><ul>']
-    open_sub = False
-    for lvl, hid, text in toc_items:
-        if lvl == "1":
-            if open_sub:
-                toc.append("</ul></li>")
-                open_sub = False
-            toc.append(f'<li><a href="#{hid}">{text}</a><ul>')
-            open_sub = True
-        else:
-            toc.append(f'<li><a href="#{hid}">{text}</a></li>')
-    if open_sub:
-        toc.append("</ul></li>")
-    toc.append("</ul></nav>")
-
     # Index from key-terms tables.
     terms = {}
-    for m in re.finditer(r'### Key terms — KA (\d+\.\d+)\n\n\| Term \| Meaning \|\n\|[-| ]+\|\n((?:\|.*\|\n)+)', corpus):
+    for m in re.finditer(r'### Key terms — KA (\d+\.\d+)\n\n\| Term \| Meaning \|\n\|[-| ]+\|\n((?:\|.*\|\n)+)', raw_corpus):
         ka, rows = m.group(1), m.group(2)
         for row in rows.strip().split("\n"):
             cells = [c.strip() for c in row.strip("|").split("|")]
@@ -279,14 +529,15 @@ def build(book: str, out: pathlib.Path) -> None:
                 if term and term.lower() not in terms:
                     terms[term.lower()] = (term, ka)
     ka_ids = {m.group(2): m.group(1) for m in re.finditer(
-        r'<h2 class="ka" id="([^"]+)"><span class="kanum">Knowledge Area (\d+\.\d+)</span>', html)}
+        r'<h2 class="ka" id="([^"]+)"[^>]*><span class="kanum">Knowledge Area (\d+\.\d+)</span>', html)}
     groups = {}
     for term, ka in sorted(terms.values(), key=lambda t: t[0].lower()):
         hid = ka_ids.get(ka)
         if hid:
             letter = term[0].upper() if term[0].isalpha() else "#"
             groups.setdefault(letter, []).append(f'<div class="ixe"><a href="#{hid}">{term}</a></div>')
-    ix = ['<div class="bookindex"><div class="ixtitle">Index</div><div class="ixcols">']
+    ix = ['<div class="bookindex">'
+          '<div class="ixtitle" id="book-index" data-toc="1">Index</div><div class="ixcols">']
     for letter in sorted(groups):
         ix.append(f'<div class="ixl">{letter}</div>' + "".join(groups[letter]))
     ix.append("</div></div>")
@@ -306,7 +557,7 @@ def build(book: str, out: pathlib.Path) -> None:
         inner = re.sub(r"<p><strong>", '<p class="glossentry"><strong>', inner)
         n_terms = inner.count('class="glossentry"')
         gloss_html = ('<div class="backmatter glossary">'
-                      '<h1 id="glossary" class="bmtitle">Glossary</h1>'
+                      '<h1 id="glossary" class="bmtitle" data-toc="1">Glossary</h1>'
                       '<p class="bmnote">Consolidated from every Knowledge Area\u2019s key-terms table. '
                       'The Knowledge Area reference after each entry is the authority \u2014 the gloss '
                       'points to the treatment and does not replace it.</p>'
@@ -320,7 +571,9 @@ def build(book: str, out: pathlib.Path) -> None:
         atext = app_file.read_text(encoding="utf-8")
         abody = re.sub(r"\A# [^\n]*\n+(?:> [^\n]*\n)*\n?", "", atext)
         inner = markdown.markdown(abody, extensions=["tables"])
-        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h2 class="apptitle">\1</h2>', inner)
+        inner = re.sub(r"<h2>([^<]+)</h2>",
+                       lambda m: f'<h2 class="apptitle" id="{slug(m.group(1))}" data-toc="1">'
+                                 f"{m.group(1)}</h2>", inner)
         app_html = '<div class="backmatter appendices">' + inner + "</div>"
         print(f"appendix tables: {inner.count('<table>')}")
 
@@ -335,7 +588,8 @@ def build(book: str, out: pathlib.Path) -> None:
         inner = markdown.markdown(sbody, extensions=["tables"])
         inner = re.sub(r"<h2>([^<]+)</h2>", r'<h3>\1</h3>', inner)
         std_html = ('<div class="backmatter appendices">'
-                    '<h2 class="apptitle">Appendix F — Standards and frameworks referenced</h2>'
+                    '<h2 class="apptitle" id="appendix-f" data-toc="1">'
+                    'Appendix F — Standards and frameworks referenced</h2>'
                     + inner + "</div>")
         # Count body rows, not `<tr>` minus `<th>` — that counted the family tables (4 and 7) and
         # reported them as entries, which is a log line that lies about coverage.
@@ -350,17 +604,56 @@ def build(book: str, out: pathlib.Path) -> None:
         ctext = cap_file.read_text(encoding="utf-8")
         cbody = re.sub(r"\A# [^\n]*\n+", "", ctext)
         inner = markdown.markdown(cbody, extensions=["tables"])
-        inner = re.sub(r"<h2>([^<]+)</h2>", r'<h2 class="apptitle">\1</h2>', inner)
+        inner = re.sub(r"<h2>([^<]+)</h2>",
+                       lambda m: f'<h2 class="apptitle" id="{slug(m.group(1))}" data-toc="1">'
+                                 f"{m.group(1)}</h2>", inner)
         cap_html = ('<div class="backmatter appendices">'
-                    '<h2 class="apptitle">Appendix G — Integrated capstones</h2>'
+                    '<h2 class="apptitle" id="appendix-g" data-toc="1">'
+                    'Appendix G — Integrated capstones</h2>'
                     + inner + "</div>")
         print(f"capstone sections: {inner.count('<h3>')}")
 
+    # Back matter — the PCI Professional Laws part: after the appendices, before the glossary.
+    laws_html = render_laws(book, cfg)
+
+    # Contents. Generated from the assembled body rather than the chapters alone, so every part of
+    # the volume that carries a running head also carries a contents line: domains and Knowledge
+    # Areas, then appendices, the law part, the glossary and the index.
+    body_html = f"{html}{app_html}{std_html}{cap_html}{laws_html}{gloss_html}{''.join(ix)}"
+    toc_items = []
+    for m in re.finditer(r'<(h1|h2|h3|div)\b([^>]*?)data-toc="([12])"([^>]*?)>(.*?)</\1>',
+                         body_html, flags=re.S):
+        attrs = m.group(2) + m.group(4)
+        hid = re.search(r'id="([^"]+)"', attrs)
+        if not hid:
+            continue
+        text = re.sub(r"<[^>]+>", " ", m.group(5))
+        text = re.sub(r"\s+", " ", text).strip()
+        toc_items.append((m.group(3), hid.group(1), text))
+    toc = ['<nav id="TOC"><ul>']
+    open_sub = False
+    for lvl, hid, text in toc_items:
+        if lvl == "1":
+            if open_sub:
+                toc.append("</ul></li>")
+                open_sub = False
+            toc.append(f'<li><a href="#{hid}">{text}</a><ul>')
+            open_sub = True
+        else:
+            toc.append(f'<li><a href="#{hid}">{text}</a></li>')
+    if open_sub:
+        toc.append("</ul></li>")
+    toc.append("</ul></nav>")
+    print(f"contents lines: {len(toc_items)} "
+          f"({sum(1 for t in toc_items if t[0] == '1')} top level)")
+
+    cv = cfg["cover"]
+    cover = COVER.format(code=cv["code"], credential=cv["credential"], themes=cv["themes"],
+                         chart=CHARTS[cv["chart"]]())
     front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
     doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{front}{''.join(toc)}{html}{app_html}{std_html}{cap_html}{gloss_html}"
-                f"{''.join(ix)}</body></html>")
+                f"</head><body>{cover}{front}{''.join(toc)}{body_html}</body></html>")
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
     html_file.write_text(doc_html, encoding="utf-8")

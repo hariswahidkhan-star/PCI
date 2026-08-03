@@ -243,6 +243,8 @@ def fig_3_5_1():
     ax.fill_between(m, cash, 0, where=[c < 0 for c in cash], color=RED, alpha=0.12)
     ax.annotate("peak funding requirement (280)", (2, -280), xytext=(3.1, -262),
                 fontsize=8, color=RED, arrowprops=dict(arrowstyle="->", color=RED))
+    ax.set_ylim(-320, 160)
+    ax.set_yticks([-300, -250, -200, -150, -100, -50, 0, 50, 100, 150])
     ax.set_xlabel("Month"); ax.set_ylabel("Cumulative cash (USD 000)")
     for s in ("top", "right"): ax.spines[s].set_visible(False)
     save(fig, "fig_3_5_1")
@@ -605,11 +607,19 @@ def fig_9_3_4():
 
 def fig_10_3_1():
     fig, ax = plt.subplots(figsize=(6.4, 3.2))
-    days = [14,13,12,11,10]; cost = [0,2000,4000,7500,12500]
+    days = [14,13,12,11]; cost = [0,5000,10000,18000]
     ax.plot(days, cost, color=BLUE, lw=2.2, marker="o", ms=4)
-    for d, c, t in [(13,2000,"crash A (2,000/d)"),(12,4000,"crash A again"),(11,7500,"crash B (3,500)"),(10,12500,"B + C: both paths\n(5,000/d)")]:
-        ax.annotate(t, xy=(d, c), xytext=(d-0.05, c+900), fontsize=7, color=SLATE)
+    for d, c, t in [(13, 5000, "crash B (5,000/d)"),
+                    (12, 10000, "crash B again"),
+                    (11, 18000, "crash D (8,000/d)")]:
+        ax.annotate(t, xy=(d, c), xytext=(-7, 7), textcoords="offset points",
+                    fontsize=7, color=SLATE, ha="right", va="bottom")
+    ax.text(0.53, 0.10, "parallel path A–C–E–F = 10 days — below day 11\n"
+                        "every further day must be bought on both paths at once",
+            transform=ax.transAxes, fontsize=6.8, color=SLATE, ha="left", va="bottom")
     ax.invert_xaxis()
+    ax.set_xticks(days)
+    ax.set_ylim(0, 21000)
     ax.set_xlabel("Project duration (days)"); ax.set_ylabel("Cumulative crash cost (USD)")
     save(fig, "fig_10_3_1")
 

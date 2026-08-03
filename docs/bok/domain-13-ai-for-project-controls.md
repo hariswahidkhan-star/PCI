@@ -1208,8 +1208,15 @@ boxes.
 1,180,000 for the master project (Domain 6). The professional's verification: recompute from `AC`/`EV`/`BAC`
 and `CPI`/`SPI`; confirm which method the model used and whether its assumption matches the variance cause
 (Domain 6, KA 6.3.3); run the `TCPI` reality check; and confirm the figure against the schedule's critical
-path. Only then is the `EAC` reported — with its method, assumption and the note that it is AI-assisted and
-verified (13.6). The AI saved the assembly; the professional owns the forecast.
+path. Here the recompute settles it. On the master project's Month-5 data (`BAC` 1,000,000, `EV` 480,000,
+`AC` 530,000, `CPI` 0.9057, `SPI` 0.9231) the recognised methods give **1,050,000** at the budgeted rate,
+**1,104,167** at the current `CPI` and **≈ 1,152,010** on `CPI × SPI`, and the bottom-up re-estimate gives
+**1,140,000** (6.3.2) — **none of them 1,180,000**, and the model cannot name the method behind its figure.
+So the proposal is returned, not footnoted, and what is reported is the defended forecast: `EAC` = USD
+**1,104,167** on the persisting-`CPI` basis (6.3.3), with its method, assumption and the note that it is
+AI-assisted and verified (13.6). The AI saved the assembly; the professional owns the forecast — and it is the
+verification, not the model, that made the reported number defensible. The record of this check is
+Toolkit 13.T.2.
 
 **Worked workflow 13.5.10b — a pre-publication consistency sweep.**
 
@@ -2364,18 +2371,24 @@ owner re-validates. Keep the columns stable so the register can be audited perio
 ### Toolkit 13.T.2 — AI-output verification record
 
 The 13.6.5 assurance checklist as a reusable form — one row per material AI-assisted output, filed as part of
-the audit trail (13.6.2). The example row is the AI-drafted `EAC` of worked example 13.5.10a.
+the audit trail (13.6.2). The two example rows are the AI-drafted `EAC` of worked example 13.5.10a and the
+forecast that was actually released after it: a checklist earns its place by recording the failures as
+faithfully as the passes.
 
 | Output | Source-checked | Method/assumption sound | Grounded (no hallucination) | Confidentiality | Cross-checked | Signed off by | Date |
 |---|---|---|---|---|---|---|---|
-| AI-drafted `EAC` USD 1,180,000, master project (13.5.10a) | ✔ recomputed from `AC`/`EV`/`BAC` and indices | ✔ method matches the variance cause; `TCPI` reality-checked | ✔ every claim traces to data; no fabricated figures | ✔ produced in a governed, registered tool | ✔ consistent with the critical path and prior period | Lead cost engineer (named) | 30 Jun 2026 |
+| AI-drafted `EAC` USD 1,180,000, master project (13.5.10a) | ✖ recomputed from `AC`/`EV`/`BAC` and indices: 1,050,000 / 1,104,167 / ≈1,152,010 / 1,140,000 — no method reproduces 1,180,000 | ✖ model cannot name its method, so no assumption can be matched to the variance cause | ✖ the figure traces to no recomputable working | ✔ produced in a governed, registered tool | — not reached; withheld at the first failure | **Not released** — returned to the tool owner (13.6.5) | 30 Jun 2026 |
+| Released `EAC` USD 1,104,167, master project (6.3.2 method (b)) | ✔ recomputed from `AC`/`EV`/`BAC` and indices | ✔ persisting-`CPI` basis matches the systemic variance cause (6.3.3); `TCPI` 1.11 reality-checked | ✔ every claim traces to data; no fabricated figures | ✔ produced in a governed, registered tool | ✔ consistent with the critical path and prior period | Lead cost engineer (named) | 30 Jun 2026 |
 
 **Usage note.** The form turns the verification checklist from a habit into a record: for each material
 output — forecasts, disclosures, commercial positions, board reporting — it captures what the AI produced,
 who verified it, and on what basis, which is exactly the audit trail the policy requires and the defence a
 challenged number needs (13.6.2, 13.6.5c §4). An output that fails any column is not released until the
 failure is fixed — footnoting a known inconsistency defeats the assurance the record exists to provide
-(MCQ 13.6-D). The columns flex slightly by output type (an extracted contract term adds a legal-review
+(MCQ 13.6-D). The paired rows show that rule working: the first row is the value of the form, because a
+plausible-looking forecast that no method reproduces is exactly what an unrecorded verification lets through,
+and the second row is what replaced it. Keep the failed row on file — it is the evidence that the check was
+run, and it is what tells the tool owner which model to re-examine. The columns flex slightly by output type (an extracted contract term adds a legal-review
 column, 13.6.5b) but the shape — propose, verify line by line, sign off by name — never does. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---

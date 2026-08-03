@@ -263,6 +263,14 @@ def run(ctx):
           (CUM_E / EQUITY * 100).quantize(D("0.01")), D("62.12"))
 
     Q5_REQ = ROWS[5][1] + EXTRA + ROWS[5][0]
+    # WE 14.1.2 prints the substitution unrounded, because the three whole-number displays sum to
+    # 9,924,563 while the requirement is 9,924,564: the addends are pinned here at the precision the
+    # book shows them, so the printed equation is true as written.
+    check("D14 Q5 planned certified spend, as substituted",
+          ROWS[5][1].quantize(D("0.01")), D("9391718.47"))
+    check("D14 Q5 extra certified contingency, as substituted",
+          EXTRA.quantize(D("0.01")), D("245707.08"))
+    check("D14 Q5 interest, as substituted", ROWS[5][0].quantize(D("0.01")), D("287138.27"))
     check("D14 quarter-five funding requirement", Q5_REQ.quantize(D("0.01")), D("9924563.82"))
     check("D14 quarter-five funding requirement, displayed", Q5_REQ.quantize(D("1")), D(9924564))
     check("D14 quarter-five debt draw", (Q5_REQ * D("0.7")).quantize(D("1")), D(6947195))

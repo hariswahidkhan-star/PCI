@@ -12,7 +12,7 @@ book-specific:
 | Calculation presentation | Verified worked numbers | + decimal-arithmetic rule for all financial calculations; independent dual-computation for DCF, NPV/IRR/MIRR, debt service, DSCR/LLCR/PLCR, amortization, waterfalls, escalation, FX and PoC | D-03 | Planned |
 | Templates & checklists | Practitioner's toolkits | + formula-tested spreadsheet companions (screening model, sources-and-uses, construction cash flow, operating forecast, amortization, waterfall, coverage ratios, equity returns, sensitivities, covenant dashboard, drawdown, diligence tracker, cost-to-complete, close checklist, AI model-validation checklist) | D-02 | Planned |
 | Legal boundaries | Standards named, no advice | Contracts/tax/accounting chapters explain **commercial purpose only** and refer jurisdiction-specific decisions to qualified counsel/advisers | D-14 | Planned |
-| Book title | — | Platform catalogue name governs pending OD-1 ("PCI AI Project Finance Leader" vs the brief's "PCI Project Finance Leader – AI") | D-22 | **Open (OD-1)** |
+| Book title | — | Platform catalogue name governs: **PCI AI Project Finance Leader** (the brief's "PCI Project Finance Leader – AI" is superseded) | D-22 | **Closed (OD-1)** |
 
 **Known intentional departures:** as PML-AI, plus the extended finance-disclaimer block (D-14) and the
 master model thread (an application of the family's master-worked-project device at whole-book scale —

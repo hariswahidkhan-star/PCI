@@ -710,14 +710,6 @@ scheduled three ways, and a project finance leader must read all three on sight:
    debt and total future debt service are different numbers and a covenant that names one must not be
    tested with the other (Domain 2, KA 2.1).
 
-> **Fig 3.2.2 — Three shapes, one loan: annual debt service under annuity, level-principal and
-> bullet.** Line/step chart, x-axis years 1–12, y-axis USD 0–45m (log-free, broken axis note for
-> the bullet's year-12 spike). Annuity: level at 5,009,635. Level-principal: 6,020,000 declining
-> to 3,710,000. Bullet: 2,520,000 flat, then 44,520,000 at year 12. Legend with lifetime interest
-> totals (16.38m / 18.12m / 30.24m). Source: PCI original. Alt text: comparison of level,
-> declining and balloon-shaped repayment profiles for the same loan, showing the bullet's large
-> final payment.
-
 > **Fig 3.2.1 — Anatomy of an annuity loan: Kestrel's USD 42,000,000, 12 years at 6 %.** Stacked
 > bar chart, x-axis years 1–12, y-axis USD; each bar totals 5,009,635, split into an interest
 > portion (2,520,000 in year 1, shrinking to ≈ 283,564 in year 12) and a principal portion
@@ -725,8 +717,16 @@ scheduled three ways, and a project finance leader must read all three on sight:
 > instalment. Source: PCI original. Alt text: stacked bars showing a constant annual loan payment
 > whose interest share shrinks and principal share grows across twelve years.
 
-> **Fig 3.2.3 — Outstanding principal, not debt service: Kestrel's USD 42,000,000 under four
-> shapes.** Line chart, x-axis years 0–12, y-axis principal outstanding USD 0–45m. Four series from
+> **Fig 3.2.2 — Three shapes, one loan: annual debt service under annuity, level-principal and bullet.**
+> Line/step chart, x-axis years 1–12, y-axis USD 0–45m (log-free, broken axis note for
+> the bullet's year-12 spike). Annuity: level at 5,009,635. Level-principal: 6,020,000 declining
+> to 3,710,000. Bullet: 2,520,000 flat, then 44,520,000 at year 12. Legend with lifetime interest
+> totals (16.38m / 18.12m / 30.24m). Source: PCI original. Alt text: comparison of level,
+> declining and balloon-shaped repayment profiles for the same loan, showing the bullet's large
+> final payment.
+
+> **Fig 3.2.3 — Outstanding principal, not debt service: Kestrel's USD 42,000,000 under four shapes.**
+> Line chart, x-axis years 0–12, y-axis principal outstanding USD 0–45m. Four series from
 > a common 42,000,000 at year 0. **Annuity** (brand blue): 39,510,365 · 36,871,351 · 34,073,997 ·
 > 31,108,802 · 27,965,695 · 24,634,001 · 21,102,406 · 17,358,915 · 13,390,815 · 9,184,628 ·
 > 4,726,071 · 0, with the year-7 balance of **21,102,406** marked. **Level principal** (slate,
@@ -1260,19 +1260,19 @@ must supply rather than name, because each is easy to concede without pricing:
    drafting is a matter for **qualified legal counsel in the governing jurisdiction** rather than for
    the model (Domain 12, KA 12.2).
 
-> **Fig 3.3.2 — Compound versus simple escalation of a USD 10,000,000 cost at 4 %.** Line chart,
-> x-axis years 0–25, y-axis USD 10m–27m. Compound curve `10m × 1.04^t` reaching 26.66m at year
-> 25; simple line `10m × (1 + 0.04t)` reaching 20.0m. Shaded gap between them, annotated
-> "+6.66m by year 25". Source: PCI original. Alt text: two rising lines showing compound
-> escalation pulling away from simple escalation, with the gap between them shaded and growing
-> to a third of the total by year twenty-five.
-
 > **Fig 3.3.1 — What 3 % inflation does to USD 1,000,000 of purchasing power.** Line chart,
 > x-axis years 0–20, y-axis USD (real purchasing power of a fixed nominal 1,000,000):
 > `1,000,000 / 1.03^t`. Sample points: year 5 — 862,609; year 10 — 744,094; year 20 — 553,676.
 > A dashed reference line at 1,000,000 marks the nominal illusion. Source: PCI original.
 > Alt text: declining curve showing a fixed million dollars losing nearly half its purchasing
 > power over twenty years at three per cent inflation.
+
+> **Fig 3.3.2 — Compound versus simple escalation of a USD 10,000,000 cost at 4 %.** Line chart,
+> x-axis years 0–25, y-axis USD 10m–27m. Compound curve `10m × 1.04^t` reaching 26.66m at year
+> 25; simple line `10m × (1 + 0.04t)` reaching 20.0m. Shaded gap between them, annotated
+> "+6.66m by year 25". Source: PCI original. Alt text: two rising lines showing compound
+> escalation pulling away from simple escalation, with the gap between them shaded and growing
+> to a third of the total by year twenty-five.
 
 ### 3.3.3 Currency effects
 

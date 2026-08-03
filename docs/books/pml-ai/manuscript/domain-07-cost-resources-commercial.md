@@ -864,9 +864,10 @@ ETC = the remaining work's forecast cost          EAC = AC + ETC
    exactly. Method (c) assumes **0.8360**, the product `CPI × SPI`. So the choice is not between
    three formulae but between three claims about productivity, and each is falsifiable. The gap
    between (b) and (c) — **USD 191,389** — is the price the forecast puts on schedule pressure
-   alone; asking "who is claiming that recovering the date will cost a further 16.4 % of efficiency
-   on top of the 9.4 % already lost, and through what mechanism?" is a better question than
-   comparing formula names.
+   alone; asking "who is claiming that recovering the date will cost a further **6.97 points** of
+   efficiency on top of the **9.43** already lost — **16.40 %** below the budgeted rate in total,
+   not on top of it — and through what mechanism?" is a better question than comparing formula
+   names.
 
    **Method (c) is not more conservative, it is a different hypothesis.** `CPI × SPI` compounds two
    indices that are not independent and were never designed to be multiplied, and it is defensible
@@ -1018,7 +1019,7 @@ TCPI = (BAC − EV) / (EAC − AC)           …to hit a revised EAC
    than the formula says, and the sequence for choosing candidates therefore starts from the
    accounts with the worst performance, not the ones easiest to argue for.
 
-> **Fig 7.3.2 — The `EAC` fan and what `TCPI` demands.** Two-panel figure. Left: Auriga's
+> **Fig 7.3.2 — The EAC fan and what TCPI demands.** Two-panel figure. Left: Auriga's
 > forecast fan from the week-13 data date — three dotted continuations to 4,200,000 (budgeted
 > rate), 4,416,667 (`BAC/CPI`) and 4,608,056 (`CPI×SPI`), with `BAC` 4,000,000 as a horizontal
 > reference. Right: a bar pair — demonstrated `CPI` 0.91 against required `TCPI` 1.11 to recover

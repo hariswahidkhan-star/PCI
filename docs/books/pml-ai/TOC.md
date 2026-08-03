@@ -44,7 +44,7 @@ originality) · How to use this reference · Contents
   escalation of commitment · 2.4.3 kill criteria and honest gates
 - Quantitative apparatus: scoring models, simple appraisal calculations · Capstone thread opens
 
-### Domain 3 — Governance, organization and decision rights
+### Domain 3 — Governance, organisation and decision rights
 - **KA 3.1 — Governance models:** 3.1.1 what governance is for · 3.1.2 structures across
   organisational forms · 3.1.3 governance in agile and hybrid environments
 - **KA 3.2 — Sponsorship and steering:** 3.2.1 the sponsor role · 3.2.2 steering committees that work ·
@@ -102,7 +102,7 @@ KAs: 11.1 stakeholder systems and engagement strategies → 11.2 executive commu
 11.3 negotiation and conflict → 11.4 public/community stakeholders, cross-cultural communication,
 misinformation and AI-generated communication risks.
 
-### Domain 12 — Leadership, teams and organizational behaviour
+### Domain 12 — Leadership, teams and organisational behaviour
 KAs: 12.1 leadership theories in practice, emotional intelligence → 12.2 motivation, team formation,
 psychological safety → 12.3 delegation, coaching, difficult conversations → 12.4 remote and
 multicultural teams, ethical leadership.
@@ -123,7 +123,7 @@ verification → 14.4 explainability, bias, human accountability, cybersecurity 
 KAs: 15.1 programme architecture and dependency management → 15.2 benefits and portfolio balancing →
 15.3 capacity and enterprise PMOs → 15.4 transformation governance and strategic reporting.
 
-### Domain 16 — Transition, closeout and benefits realization
+### Domain 16 — Transition, closeout and benefits realisation
 KAs: 16.1 handover, commissioning, readiness → 16.2 operational transition and contract closeout →
 16.3 knowledge transfer and post-project review → 16.4 benefits measurement; responsible archive and
 model/data retention.

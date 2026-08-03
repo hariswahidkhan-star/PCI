@@ -787,8 +787,14 @@ def run(ctx):
     check("8.A.2 merge-correct P80 buffer over week 16", T80m - 16, D("2.8093"))
     check("8.A.2 bisection landed on 80 %", merge(T80m) * 100, 80, tol=D("0.001"))
     check("8.A.2 buffer understated by ignoring the merge, weeks", T80m - T80dom, D("0.1233"))
+    UNDERSTATEMENT = (T80m - T80dom) * COD_A
     check("8.A.2 value of that understatement at Auriga's cost of delay",
-          (T80m - T80dom) * COD_A, D("5546.37"), tol=D("0.5"))
+          UNDERSTATEMENT, D("5546.37"), tol=D("0.5"))
+    # The manuscript prints this to the nearest fifty, not to the cent: it is the difference between
+    # two numerically integrated P80 dates on PERT sigma conventions, so cents would be false
+    # precision. The derived value is pinned above; what the book shows is pinned here.
+    check("8.A.2 that understatement as printed, to the nearest fifty",
+          (UNDERSTATEMENT / 50).quantize(D("1")) * 50, D(5550))
     check("8.A.2 D reaches E behind C on expectation, weeks", teABC - teABD, D("1.17"))
     check("Exercise 8.4 naive two-path product", D("0.80") * D("0.80"), D("0.64"))
 

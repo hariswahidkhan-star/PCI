@@ -1746,7 +1746,9 @@ on the real network.
    The date at which E's start is 80 % likely is **week 18.8093** — a buffer of **2.8093 weeks** over
    the deterministic 16 — against **week 18.6860** if only the dominant path is considered. So
    ignoring the merge understates the buffer by **0.1233 weeks**, which at Auriga's cost of delay of
-   USD 45,000 per week is **USD 5,546.37**.
+   USD 45,000 per week is **≈ USD 5,550** — quoted to the nearest fifty deliberately, because it is
+   the difference between two numerically integrated dates built on PERT's `σ = (p − o)/6`
+   convention, and a figure stated to the cent would claim a precision the method has not got.
 5. **Interpretation.** Four conclusions, and the last two are the ones that stop merge bias being
    misapplied.
 

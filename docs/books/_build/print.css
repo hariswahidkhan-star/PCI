@@ -22,6 +22,51 @@
 }
 @page :first { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
 @page plain { @top-left { content: none; } @top-right { content: none; } }
+/* The cover is full-bleed: no margin, no running heads, no folio. */
+@page cover {
+  margin: 0;
+  @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; }
+}
+@page title { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
+
+
+/* ---------- Cover ---------- */
+.cover {
+  page: cover; page-break-after: always;
+  width: 210mm; height: 297mm; background: #0B1220; color: #F1F5F9;
+  text-align: left; font-family: Inter, sans-serif;
+}
+.cover .coverhead { padding: 34mm 20mm 0 20mm; }
+.cover .coverkicker {
+  font-size: 9pt; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase;
+  color: #8FA6C8; margin-bottom: 14mm;
+}
+.cover .covercode {
+  font-size: 62pt; font-weight: 800; letter-spacing: -0.03em; line-height: 0.95; color: #FFFFFF;
+}
+.cover .coverbook {
+  font-size: 30pt; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; color: #4C7BF4;
+  margin-top: 2mm;
+}
+.cover .coverrule { width: 30mm; height: 1.6mm; background: #C13329; margin: 7mm 0 6mm 0; }
+.cover .covercred { font-size: 13pt; font-weight: 500; color: #F1F5F9; line-height: 1.35; }
+.cover .coverthemes { font-size: 10.5pt; font-weight: 400; color: #8FA6C8; margin-top: 2.5mm; }
+.cover .coverband {
+  margin: 12mm 0 0 0; padding: 6mm 20mm 4mm 20mm; background: #101B33;
+  border-top: 0.9mm solid #2A4FC4; border-bottom: 0.9mm solid #2A4FC4;
+}
+.cover .coverchart { width: 100%; height: 78mm; }
+.cover .coverfoot { padding: 14mm 20mm 0 20mm; }
+.cover .coverprinciple { font-size: 12pt; font-style: italic; color: #E2E8F0; line-height: 1.5; }
+.cover .coverbadge {
+  display: block; background: #C13329; color: #FFFFFF; padding: 3mm 5mm; margin: 12mm 0 0 0;
+  width: 118mm;
+}
+.cover .coverbadge .cbmain {
+  display: block; font-size: 12pt; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.cover .coverbadge .cbsub { display: block; font-size: 8.6pt; font-weight: 500; margin-top: 1mm; }
+.cover .covertag { font-size: 9pt; color: #6F86A8; margin-top: 16mm; }
 
 
 
@@ -33,7 +78,7 @@ body {
 }
 
 /* ---------- Title page ---------- */
-.titlepage { page: plain; page-break-after: always; text-align: left; padding-top: 52mm; }
+.titlepage { page: title; page-break-after: always; text-align: left; padding-top: 52mm; }
 .titlepage h1 {
   font-family: Inter, sans-serif; font-weight: 800; font-size: 34pt; letter-spacing: -0.025em;
   line-height: 1.08; color: #0F172A; border: none; margin: 0 0 6mm 0; page-break-before: avoid; padding: 0;
@@ -203,6 +248,26 @@ ul, ol { margin: 1.4mm 0 2.8mm 0; padding-left: 5.6mm; }
 li { margin-bottom: 0.9mm; }
 li p { margin-bottom: 1mm; }
 
+/* ---------- Multiple-choice questions ---------- */
+/* Options already carry their own A./B./C./D. labels, so no bullet — but they must set one option
+   per line, with wrapped lines hanging under the label. */
+ul.mcqopts {
+  list-style: none; padding-left: 5.6mm; margin: 1.6mm 0 2.6mm 0;
+}
+ul.mcqopts li {
+  padding-left: 6.4mm; text-indent: -6.4mm; margin-bottom: 1.1mm;
+  text-align: left; page-break-inside: avoid;
+}
+/* The correct-answer marker. Set in the sans fallback because U+2713 exists there and not in the
+   serif; carries the word "correct" and a rule box, so it reads in grayscale and never relies on
+   colour alone. */
+.mcq-key {
+  font-family: Inter, "DejaVu Sans", sans-serif; font-size: 6.6pt; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #0F172A;
+  background: #F1F5F9; border: 0.5pt solid #0F172A; border-radius: 0.8mm;
+  padding: 0.1mm 1.3mm 0.3mm 1.3mm; margin-left: 2mm; white-space: nowrap;
+}
+
 hr { border: none; border-top: 0.5pt solid #CBD5E1; margin: 6mm 0; }
 a { color: #1D4ED8; text-decoration: none; }
 
@@ -218,10 +283,18 @@ nav#TOC > ul > li {
   font-family: Inter, sans-serif; font-weight: 700; font-size: 9.6pt; color: #0F172A; margin-top: 3mm;
 }
 nav#TOC > ul > li li { font-weight: 400; font-size: 8.6pt; color: #334155; margin-top: 1mm; padding-left: 5mm; }
-nav#TOC a { color: inherit; display: block; }
+/* Contents lines have to survive a title longer than the measure. The entry wraps (hyphenated, and
+   breaking inside a long word if it must), the leader and folio stay together on the last line, and
+   the right-hand gutter is reserved so a three-digit page number is never pushed onto a line of its
+   own. An entry never splits across a page. */
+nav#TOC li { break-inside: avoid; page-break-inside: avoid; }
+nav#TOC a {
+  color: inherit; display: block; text-align: left;
+  padding-right: 11mm; hyphens: auto; overflow-wrap: break-word; word-wrap: break-word;
+}
 nav#TOC a::after {
   content: leader(".") " " target-counter(attr(href url), page);
-  font-weight: 400; color: #64748B; font-size: 8.2pt;
+  font-weight: 400; color: #64748B; font-size: 8.2pt; white-space: nowrap;
 }
 
 /* ---------- Alphabetical index ---------- */
@@ -244,6 +317,14 @@ nav#TOC a::after {
 
 /* ---- Back matter: derived glossary ------------------------------------------------ */
 .backmatter { page-break-before: always; }
+/* Back matter sets its OWN running head. Without this the appendices, the laws, the glossary and
+   the index all ran under the last domain's chapter title, which is a lie about where the reader
+   is. Every element that opens a back-matter section re-sets the string. */
+.backmatter .bmtitle,
+.backmatter .lawstitle,
+.appendices h2.apptitle,
+.lawspart h2.lawset,
+.bookindex .ixtitle { string-set: chaptertitle content(); }
 .backmatter .bmtitle {
   font-family: "IBM Plex Serif", Georgia, serif; font-size: 30pt; font-weight: 600;
   color: #0F172A; margin: 0 0 2mm 0; letter-spacing: -0.4pt;
@@ -289,3 +370,87 @@ nav#TOC a::after {
   padding: 1.2mm 2mm; border-bottom: 0.15mm solid #E2E8F0; vertical-align: top; line-height: 1.45;
 }
 .appendices tr { break-inside: avoid; }
+
+/* ---- Call-out boxes: the PCI Professional Law visual system (laws/LAW_SYSTEM.md §6) ----------
+   Colour is never the only distinction. Each box carries a written label and an icon, and each has
+   a DIFFERENT border style — solid (law), double (external reference), dashed (guidance), dotted
+   (caution) — so the four remain distinguishable in grayscale print and to a colour-blind reader.
+   Body copy stays near-black on the tint; the colour carries the label, the heading and the border
+   only, and no long passage is ever set in red. */
+.pci-law, .ext-ref, .pci-guidance, .pci-caution {
+  margin: 3.6mm 0; padding: 3mm 4mm 2.6mm 4mm; border-radius: 1.2mm;
+  page-break-inside: auto; text-align: left;
+}
+.pci-law > *:last-child, .ext-ref > *:last-child,
+.pci-guidance > *:last-child, .pci-caution > *:last-child { margin-bottom: 0; }
+.pci-law p, .ext-ref p, .pci-guidance p, .pci-caution p,
+.pci-law li, .ext-ref li, .pci-guidance li, .pci-caution li {
+  color: #0F172A;                       /* body copy is black on the tint, never coloured */
+}
+.pci-law::before, .ext-ref::before, .pci-guidance::before, .pci-caution::before {
+  display: block; font-family: Inter, "DejaVu Sans", sans-serif; font-size: 6.6pt; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 1.6mm;
+}
+
+.pci-law {
+  background: #FDECEC; border: 0.5pt solid #C62828; border-left: 3pt solid #9B1C1C;
+}
+.pci-law::before { content: "§ PCI LAW"; color: #9B1C1C; }
+
+.ext-ref {
+  background: #EEF4FF; border: 1.6pt double #1D4ED8; border-left: 3.4pt double #1D4ED8;
+  font-size: 8.6pt;
+}
+.ext-ref::before { content: "⬢ EXTERNAL REFERENCE"; color: #1D4ED8; }
+
+.pci-guidance {
+  background: #ECFDF5; border: 0.7pt dashed #0F766E; border-left: 3pt dashed #0F766E;
+}
+.pci-guidance::before { content: "✦ PCI PRACTICE GUIDANCE"; color: #0F766E; }
+
+.pci-caution {
+  background: #FEF3C7; border: 0.9pt dotted #B45309; border-left: 3pt dotted #B45309;
+  font-size: 8.6pt;
+}
+.pci-caution::before { content: "⚠ CAUTION"; color: #B45309; }
+
+/* Boxes nested inside a law box sit tighter and never re-tint the whole page. */
+.pci-law .ext-ref, .pci-law .pci-caution, .pci-law .pci-guidance {
+  margin: 2.4mm 0; padding: 2.2mm 3mm 1.8mm 3mm;
+}
+
+/* ---- Back matter: the PCI Professional Laws part ---------------------------------- */
+.lawspart h2.lawset {
+  font-family: "IBM Plex Serif", Georgia, serif; font-size: 21pt; font-weight: 600;
+  color: #0F172A; margin: 0 0 4mm 0; padding-bottom: 2.5mm;
+  border-bottom: 0.5mm solid #C62828; break-after: avoid; page-break-before: always;
+}
+.lawspart h2.lawset::before { content: none; }
+.lawspart h3.lawgroup {
+  font-family: Inter, sans-serif; font-size: 12pt; font-weight: 800; color: #9B1C1C;
+  letter-spacing: -0.005em; margin: 8mm 0 3mm 0; padding-bottom: 1.5mm;
+  border-bottom: 0.4pt solid #F1C7C7; break-after: avoid;
+}
+.lawspart p { font-family: Inter, sans-serif; font-size: 9pt; line-height: 1.58; color: #0F172A; }
+.lawspart .pci-law p { font-size: 8.6pt; line-height: 1.52; margin-bottom: 1.8mm; }
+.lawspart .pci-law .lawhead {
+  font-family: Inter, sans-serif; margin-bottom: 2.2mm; break-after: avoid;
+}
+.lawspart .pci-law .lawid {
+  display: block; font-size: 8.2pt; font-weight: 700; letter-spacing: 0.14em; color: #9B1C1C;
+  margin-bottom: 0.8mm;
+}
+.lawspart .pci-law .lawname {
+  display: block; font-size: 11.5pt; font-weight: 800; color: #0F172A; line-height: 1.25;
+}
+.lawspart table { font-size: 7.8pt; width: 100%; border-collapse: collapse; margin: 3mm 0 5mm 0; }
+.lawspart th {
+  font-family: Inter, sans-serif; font-size: 7.4pt; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.3pt; color: #FFFFFF; background: #9B1C1C; text-align: left;
+  border: none; padding: 1.4mm 2mm;
+}
+.lawspart td {
+  padding: 1.2mm 2mm; border-bottom: 0.15mm solid #E2E8F0; vertical-align: top; line-height: 1.42;
+}
+.lawspart tr { break-inside: avoid; }
+.lawspart code { color: #9B1C1C; }

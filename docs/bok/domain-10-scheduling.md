@@ -56,12 +56,12 @@ hidden lags are a common way schedules are quietly manipulated.
 
 **Worked example 10.1.3 — dates under an SS + lag.**
 
-1. **Setup.** activity **A** (duration **10 days**, starts day 0) drives activity **B** (duration **6 days**)
+1. **Setup.** Activity **A** (duration **10 days**, starts day 0) drives activity **B** (duration **6 days**)
    through a **Start-to-Start + 4** link — B may start 4 days after A starts, e.g. following A's first
    completed section.
-2. **Formula.** forward pass under an SS link: `B.ES = A.ES + lag`; `B.EF = B.ES + duration`.
+2. **Formula.** Forward pass under an SS link: `B.ES = A.ES + lag`; `B.EF = B.ES + duration`.
 3. **Substitution.** `B.ES = 0 + 4 = 4`; `B.EF = 4 + 6 = 10`. A finishes day 10 too.
-4. **Result.** the fragment completes on **day 10** — four days earlier than the FS sequence (A then B:
+4. **Result.** The fragment completes on **day 10** — four days earlier than the FS sequence (A then B:
    `10 + 6 = 16`).
 5. **Interpretation.** SS links model genuine overlap and buy time without crashing — but they also mean B
    depends on A's **rate** of progress, not just its start; if A's first section is late, B follows. An SS + lag
@@ -304,7 +304,7 @@ risk (PERT/Monte Carlo).*
 
 ### 10.3.1 Crashing
 
-> **Fig 10.3.1 — The crash time–cost curve.** *Caption:* cheapest day first; the curve steepens at day 11 where both paths must be bought at once (Exercise 10.6's data). *Data:* 14→10 days; cumulative 0/2,000/4,000/7,500/12,500.
+> **Fig 10.3.1 — The crash time–cost curve.** *Caption:* cheapest critical day first — B's two days at USD 5,000/day, then D's at USD 8,000/day; the curve steepens as the cheap days run out, and below day 11 the parallel path A–C–E–F (10 days) becomes critical too, so every further day must be bought on both paths at once (worked examples 10.3.1 and 10.3.1b). *Data:* 14→11 days; cumulative crash cost 0/5,000/10,000/18,000.
 
 **Definition & purpose.** **Crashing** shortens the schedule by adding resources to **critical** activities,
 choosing those with the **lowest cost per time saved**. It trades **cost for time** and only helps on the
@@ -320,32 +320,33 @@ critical.
 
 **Worked example 10.3.1b — choosing the cheapest crash sequence.**
 
-1. **Setup.** to shorten the 14-day project (critical path A–B–D–F; parallel path A–C–E–F = 10 days), crash
+1. **Setup.** To shorten the 14-day project (critical path A–B–D–F; parallel path A–C–E–F = 10 days), crash
    costs on the critical activities are: **B USD 5,000/day (max 2 days), D USD 8,000/day (max 3 days), F USD
    12,000/day (max 1 day)**. Target: shorten by **3 days** to 11 days.
-2. **Formula.** crash the **cheapest** critical day first, re-checking the parallel path does not become
+2. **Formula.** Crash the **cheapest** critical day first, re-checking the parallel path does not become
    critical.
-3. **Substitution.** crash **B by 2 days** at 5,000/day = **10,000** (14 → 12 days); then crash **D by 1 day**
+3. **Substitution.** Crash **B by 2 days** at 5,000/day = **10,000** (14 → 12 days); then crash **D by 1 day**
    at 8,000/day = **8,000** (12 → 11 days). Parallel path is still 10 days (< 11), so A–B–D–F stays critical.
 4. **Result.** 3 days saved for **USD 18,000** — the first 2 days at 5,000/day, the third at 8,000/day (rising
    marginal cost). Crashing F (12,000/day) is avoided as the most expensive.
-5. **Interpretation.** crashing follows the **marginal cost** of time, cheapest first, while watching for the
+5. **Interpretation.** Crashing follows the **marginal cost** of time, cheapest first, while watching for the
    critical path shifting to the parallel chain (here it would at 10 days). This is how a controls professional
    compresses a schedule at least cost (cross-ref 10.3.1).
 
-**Worked example 10.3.3 — resource levelling extends a duration.**
+**Worked example 10.3.1c — resource levelling extends a duration.**
 
-1. **Setup.** two 4-day activities, **X and Y**, were planned in **parallel** but both need the **same single
+1. **Setup.** Two 4-day activities, **X and Y**, were planned in **parallel** but both need the **same single
    specialist crew** (only one available).
-2. **Formula.** with one crew they must run **in sequence**; the added duration is the second activity's
+2. **Formula.** With one crew they must run **in sequence**; the added duration is the second activity's
    duration, constrained by available float.
 3. **Substitution.** X then Y in sequence adds up to **4 days** of work that cannot overlap; X has 4 days of
    total float, so if Y is the constrained one, part of the delay is absorbed by float, but
    any excess pushes the finish out.
-4. **Result.** resource levelling can **extend the project duration** and create a **resource-critical path**
+4. **Result.** Resource levelling can **extend the project duration** and create a **resource-critical path**
    distinct from the logical critical path when float is exhausted.
-5. **Interpretation.** a schedule that ignores resource limits is optimistic fiction; levelling (respecting
-   limits, may extend) and smoothing (within float, no extension) make it deliverable (cross-ref 10.3.3).
+5. **Interpretation.** A schedule that ignores resource limits is optimistic fiction; levelling (respecting
+   limits, may extend) and smoothing (within float, no extension) make it deliverable — the techniques set out
+   at topic 10.3.3 below.
 
 ### 10.3.2 Fast-tracking
 
@@ -462,14 +463,14 @@ the data-integrity issues in cost (Domain 5, KA 5.2.4).
 
 **Worked example 10.4.1 — out-of-sequence progress, two answers two days apart.**
 
-1. **Setup.** activity **C** is linked **FS after B**. At the data date, B's forecast finish is **day 12**, but
+1. **Setup.** Activity **C** is linked **FS after B**. At the data date, B's forecast finish is **day 12**, but
    C has *already* started (day 10) — out-of-sequence progress. C has **4 days** of work remaining.
-2. **Formula.** two scheduling conventions give different forecasts — **retained logic** holds C's remaining
+2. **Formula.** Two scheduling conventions give different forecasts — **retained logic** holds C's remaining
    work until B finishes; **progress override** lets C continue immediately.
-3. **Substitution.** retained logic: C finishes `12 + 4 = ` **day 16**; progress override: C finishes
+3. **Substitution.** Retained logic: C finishes `12 + 4 = ` **day 16**; progress override: C finishes
    `10 + 4 = ` **day 14**.
-4. **Result.** the two answers differ by **2 days** `(16 − 14)` — from a software setting, not from the work.
-5. **Interpretation.** neither convention is "true" — the question is physical: can C genuinely continue without
+4. **Result.** The two answers differ by **2 days** `(16 − 14)` — from a software setting, not from the work.
+5. **Interpretation.** Neither convention is "true" — the question is physical: can C genuinely continue without
    B? The planner resolves the logic (often by splitting C or correcting the link) rather than letting a software
    setting silently decide the forecast; unexplained out-of-sequence updates are a schedule health-check item
    (Advanced 10.A.1).

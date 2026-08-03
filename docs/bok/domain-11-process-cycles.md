@@ -923,70 +923,6 @@ duplicates, DSO — and every line on it traces to a named control that someone 
 
 ---
 
-## Practitioner's toolkit — Domain 11
-
-*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
-stable.*
-
-### Toolkit 11.T.1 — Segregation-of-duties matrix template
-
-The 11.3.2b matrix generalised across both cycles, including master-data maintenance (Advanced 11.A.3). A
-✔ marks a duty a role may perform; the design is compliant when no role holds two conflicting duties.
-
-| Duty | Buyer | Stores clerk | AP clerk | Master-data admin | Billing clerk | AR clerk | Finance manager |
-|---|---|---|---|---|---|---|---|
-| Raise PO | ✔ | | | | | | |
-| Approve PO | | | | | | | ✔ |
-| Confirm goods receipt | | ✔ | | | | | |
-| Approve invoice for payment | | | | | | | ✔ |
-| Run the payment / release payment | | | ✔ | | | | |
-| Amend vendor master (incl. bank details) | | | | ✔ | | | |
-| Bill customer | | | | | ✔ | | |
-| Receive and apply cash | | | | | | ✔ | |
-| Approve credit notes | | | | | | | ✔ |
-| Write off debt | | | | | | | ✔ |
-
-**Conflict pairs — never combined in one person or system role:** raise PO + approve PO; confirm receipt +
-release payment; release payment + amend vendor master (11.A.3); request + approve a master-data change;
-bill + apply cash; bill + approve credit notes or write off debt (MCQ 11.3-D).
-
-**Usage note.** This template is how SoD (11.3.2) is designed into **system roles**, not just the procedure
-manual — the control fails the moment the ERP lets one user hold a conflict pair, whatever the manual says
-(the case study's 14 breaching POs). Map every duty in both cycles to a role, mark the permissions, then test
-the conflict pairs against the ERP's *actual* role assignments, not the intended ones. Master-data
-maintenance belongs on the matrix because the vendor master is the control surface every downstream check
-validates against (11.A.3): whoever processes payments must never amend bank details. Keep the duty rows
-stable and re-test after every role or organisational change; a continuous monitor (11.A.4) then watches for
-conflicts re-emerging between tests.
-
-### Toolkit 11.T.2 — Month-end controls checklist
-
-Run before the period is closed and the numbers are relied on (Domains 1, 5).
-
-- [ ] Three-way match exceptions cleared or dispositioned — none carried into next month without a named
-      owner and a reason (11.2.2).
-- [ ] GRNI reviewed and accruals posted for goods received but not invoiced, on service dates (11.2.3).
-- [ ] Stale open POs reviewed and closed, so the commitment figure is honest (cross-ref Advanced 5.A.2).
-- [ ] Duplicate-payment candidates reviewed on reference, amount and date; recoveries raised (Advanced 11.A.2).
-- [ ] Unapplied cash investigated and applied, so the ageing report tells the truth (11.1.2).
-- [ ] Receivables ageing reviewed with dunning actions assigned per overdue band (11.1.3).
-- [ ] DSO computed and trended against prior months (Advanced 11.A.1).
-- [ ] Vendor and customer master-data changes audited — every bank-detail change verified back through a
-      contact already on file (Advanced 11.A.3).
-- [ ] Continuous-monitoring alerts dispositioned — each actioned or closed with a reason, and the
-      false-positive rate noted for threshold tuning (Advanced 11.A.4).
-- [ ] SoD exceptions (same-user raise-and-approve, receive-and-pay) reviewed and escalated (11.3.2).
-
-**Usage note.** The checklist strings this domain's controls into the month-end rhythm the rest of the book
-depends on: the GRNI and stale-PO lines make cost-to-date and commitments true (Domain 5, KA 5.2), the
-receivables lines keep the cash-inflow forecast honest (Domain 3, KA 3.5), and the master-data and alert
-lines keep the detective machinery of 11.A.3–11.A.4 from silently decaying. Every unticked line at close is
-an exception with an owner, not a task deferred — an alert stream nobody actions implies a coverage that does
-not exist. Keep the items stable month to month so the scorecard (the case study's closing table) trends
-honestly.
-
----
-
 ## Calculation exercises — Domain 11
 
 *Work each exercise before reading its solution; every step uses only this domain's methods.*
@@ -1053,6 +989,70 @@ threshold involve?
    queue drowns the team in noise — every threshold is a tolerance decision whose false-positive rate is
    measured and tuned (Advanced 11.A.4), exactly as a golden set evaluates a classifier's precision and
    recall (Domain 13, Advanced 13.A.7).
+
+---
+
+## Practitioner's toolkit — Domain 11
+
+*Adoption-ready artefacts; adapt the column headings and thresholds to your organisation, then keep them
+stable.*
+
+### Toolkit 11.T.1 — Segregation-of-duties matrix template
+
+The 11.3.2b matrix generalised across both cycles, including master-data maintenance (Advanced 11.A.3). A
+✔ marks a duty a role may perform; the design is compliant when no role holds two conflicting duties.
+
+| Duty | Buyer | Stores clerk | AP clerk | Master-data admin | Billing clerk | AR clerk | Finance manager |
+|---|---|---|---|---|---|---|---|
+| Raise PO | ✔ | | | | | | |
+| Approve PO | | | | | | | ✔ |
+| Confirm goods receipt | | ✔ | | | | | |
+| Approve invoice for payment | | | | | | | ✔ |
+| Run the payment / release payment | | | ✔ | | | | |
+| Amend vendor master (incl. bank details) | | | | ✔ | | | |
+| Bill customer | | | | | ✔ | | |
+| Receive and apply cash | | | | | | ✔ | |
+| Approve credit notes | | | | | | | ✔ |
+| Write off debt | | | | | | | ✔ |
+
+**Conflict pairs — never combined in one person or system role:** raise PO + approve PO; confirm receipt +
+release payment; release payment + amend vendor master (11.A.3); request + approve a master-data change;
+bill + apply cash; bill + approve credit notes or write off debt (MCQ 11.3-D).
+
+**Usage note.** This template is how SoD (11.3.2) is designed into **system roles**, not just the procedure
+manual — the control fails the moment the ERP lets one user hold a conflict pair, whatever the manual says
+(the case study's 14 breaching POs). Map every duty in both cycles to a role, mark the permissions, then test
+the conflict pairs against the ERP's *actual* role assignments, not the intended ones. Master-data
+maintenance belongs on the matrix because the vendor master is the control surface every downstream check
+validates against (11.A.3): whoever processes payments must never amend bank details. Keep the duty rows
+stable and re-test after every role or organisational change; a continuous monitor (11.A.4) then watches for
+conflicts re-emerging between tests.
+
+### Toolkit 11.T.2 — Month-end controls checklist
+
+Run before the period is closed and the numbers are relied on (Domains 1, 5).
+
+- [ ] Three-way match exceptions cleared or dispositioned — none carried into next month without a named
+      owner and a reason (11.2.2).
+- [ ] GRNI reviewed and accruals posted for goods received but not invoiced, on service dates (11.2.3).
+- [ ] Stale open POs reviewed and closed, so the commitment figure is honest (cross-ref Advanced 5.A.2).
+- [ ] Duplicate-payment candidates reviewed on reference, amount and date; recoveries raised (Advanced 11.A.2).
+- [ ] Unapplied cash investigated and applied, so the ageing report tells the truth (11.1.2).
+- [ ] Receivables ageing reviewed with dunning actions assigned per overdue band (11.1.3).
+- [ ] DSO computed and trended against prior months (Advanced 11.A.1).
+- [ ] Vendor and customer master-data changes audited — every bank-detail change verified back through a
+      contact already on file (Advanced 11.A.3).
+- [ ] Continuous-monitoring alerts dispositioned — each actioned or closed with a reason, and the
+      false-positive rate noted for threshold tuning (Advanced 11.A.4).
+- [ ] SoD exceptions (same-user raise-and-approve, receive-and-pay) reviewed and escalated (11.3.2).
+
+**Usage note.** The checklist strings this domain's controls into the month-end rhythm the rest of the book
+depends on: the GRNI and stale-PO lines make cost-to-date and commitments true (Domain 5, KA 5.2), the
+receivables lines keep the cash-inflow forecast honest (Domain 3, KA 3.5), and the master-data and alert
+lines keep the detective machinery of 11.A.3–11.A.4 from silently decaying. Every unticked line at close is
+an exception with an owner, not a task deferred — an alert stream nobody actions implies a coverage that does
+not exist. Keep the items stable month to month so the scorecard (the case study's closing table) trends
+honestly.
 
 ---
 

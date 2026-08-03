@@ -608,7 +608,7 @@ immediately (not B). D inverts the invariant — `FF ≤ TF` always.
 - C. 25 weeks
 - D. 21 weeks
 
-*Rationale:* After one week of crashing, path B–D–E (8+7+5+4 via D) becomes co-critical at 24;
+*Rationale:* After one week of crashing, path A–B–D–E–F (2+6+7+5+4) becomes co-critical at 24;
 the second crashed week buys nothing — duration stays 24. A assumes both weeks convert to project
 weeks; C forgets the crash entirely; D subtracts from the wrong baseline. (The full economics:
 KA 6.4.)

@@ -50,12 +50,11 @@ The programme verdict was taken separately, against benefit, and was also true. 
 was **40 %**, not 70 %: **391,680** a year against **685,440**, a shortfall of
 `979,200 × (0.70 − 0.40) =` **USD 293,760 a year**.
 
-```
-annual benefit shortfall  293,760
-capital underspend         72,000
-                          -------
-ratio                        4.08   in the FIRST YEAR ALONE
-```
+| Line | USD |
+|---|---|
+| Annual benefit shortfall | 293,760 |
+| Capital underspend | 72,000 |
+| **Ratio, in the first year alone** | **4.08** |
 
 Over Domain 2's eight-year appraisal life the shortfall is **2,350,080** undiscounted — **97.92 %**
 of what the entire programme cost to build — or **1,754,128.79** discounted at 7 % on an annuity
@@ -313,25 +312,22 @@ Deferred to what, though? After opening, the railway owns the night. Interface v
 happens in engineering possessions yielding **2.5** productive hours against a day shift's **10.0** — a
 productivity factor of **0.25**, so **4.0** possession nights replace one test-day.
 
-```
-26 interfaces x 10 test-days             =    260 test-day equivalents
-260 / 0.25                               =  1,040 possession nights
-1,040 / 200 nights available a year      =   5.20 YEARS of post-opening integration
-
-26 x 145,000 delivered in the programme  =  3,770,000
-26 x 145,000 / 0.25 in possessions       = 15,080,000
-                                            ----------
-extra cost of deferring                  = 11,310,000    (435,000 an interface)
-```
+| Step | Result |
+|---|---|
+| `26 interfaces × 10 test-days` | 260 test-day equivalents |
+| `260 / 0.25` | 1,040 possession nights |
+| `1,040 / 200 nights available a year` | **5.20 years** of post-opening integration |
+| `26 × 145,000` delivered in the programme | 3,770,000 |
+| `26 × 145,000 / 0.25` in possessions | 15,080,000 |
+| **Extra cost of deferring** | **11,310,000** — 435,000 an interface |
 
 Now put the two prices beside each other, per interface, because at that unit the count cancels:
 
-```
-cost of deferring ONE interface into possessions   =  435,000
-cost of the 0.10 month that same interface buys    =  315,000
-                                                      -------
-ratio                                                 1.3810
-```
+| Price, per interface | USD |
+|---|---|
+| Cost of deferring one interface into possessions | 435,000 |
+| Cost of the 0.10 month that same interface buys | 315,000 |
+| **Ratio** | **1.3810** |
 
 (The 435,000 here and the layered cost of the whole scope growth in G.2.1 are the same number for an
 arithmetical reason rather than a related one: each is three interface-units — one because the
@@ -394,12 +390,11 @@ are demonstrably outside the safety-authorisation boundary — depot connections
 utility corridor's non-safety functions. The remaining **8** are inside it, and no arithmetic entitles a
 railway to open with an unverified fire, evacuation or signalling interface.
 
-```
-18 interfaces x 0.10 months  =  1.80 months bought by descoping
-overrun                      =  2.60 months
-                                ----------
-residual                     =  0.80 months, or USD 2,520,000, with nowhere to go
-```
+| Step | Result |
+|---|---|
+| `18 interfaces × 0.10 months` | 1.80 months bought by descoping |
+| Overrun | 2.60 months |
+| **Residual** | **0.80 months**, or **USD 2,520,000**, with nowhere to go |
 
 G.2.3's exchange rate survives the narrowing, which is the test of whether it was a real finding or an
 artefact of the round 26: the 18 the programme may lawfully defer cost **7,830,000** in possessions to
@@ -489,15 +484,11 @@ downstream conjunction — 1.4706 prospects reach consent per build because `1 �
 must — and multiplying it by the stage costs gives the development cost the **portfolio** actually
 incurs for one built project:
 
-```
-5.7132 x 40,000 + 4.1135 x 120,000 + 2.6738 x 260,000
-      + 1.4706 x 640,000 + 1.1765 x 400,000        =  USD 2,829,105.53  per BUILT project
-
-the closing project's own path (40 + 120 + 260 + 640 + 400 thousand)
-                                                   =  USD 1,460,000     on its charge code
-                                                      -------------
-understatement                                        1.9377x
-```
+| Basis | USD per built project |
+|---|---|
+| The portfolio: `5.7132 × 40,000 + 4.1135 × 120,000 + 2.6738 × 260,000 + 1.4706 × 640,000 + 1.1765 × 400,000` | **2,829,105.53** |
+| The closing project's own path, on its charge code: `40,000 + 120,000 + 260,000 + 640,000 + 400,000` | **1,460,000** |
+| **Understatement** | **1.9377×** |
 
 The entrant counts are displayed to four decimal places and the sum is computed from the exact
 reciprocals, so re-adding the displayed line will land a few dollars away. **A built project's
@@ -590,10 +581,8 @@ manager.
 Development is slow and its slowness is computable. Each stage takes elapsed time whether the prospect
 passes or fails, so expected development duration per prospect originated is the survival-weighted sum:
 
-```
-1.000000 x 0.25 + 0.720000 x 0.50 + 0.468000 x 1.25
-        + 0.257400 x 1.75 + 0.205920 x 0.75   =  1.79989 years in the system
-```
+`1.000000 × 0.25 + 0.720000 × 0.50 + 0.468000 × 1.25 + 0.257400 × 1.75 + 0.205920 × 0.75 =`
+**1.79989 years in the system**.
 
 Little's Law again, now on the development pipeline: to originate 22.8530 prospects a year and hold each
 for 1.79989 years, the organisation must be carrying **41.1328 prospects in development at once**. It is
@@ -720,12 +709,11 @@ Every governance improvement programme in this situation attacks behaviour — b
 pre-briefing, better secretariat, a first-pass rate target. Price that lever at its ceiling. Suppose
 every one of the six bodies reaches **0.95**, the best first-pass rate any of them has ever achieved:
 
-```
-latency at present                                        43.7383 weeks
-latency with all six bodies at 0.95     35.0 + 44/19  =   37.3158 weeks
-                                                          -------------
-saved by every body at its best observed rate              6.4225 weeks = USD 9,408,929.92
-```
+| Path | Latency |
+|---|---|
+| At present | 43.7383 weeks |
+| With all six bodies at 0.95 — `35.0 + 44/19` | 37.3158 weeks |
+| **Saved by every body at its best observed rate** | **6.4225 weeks**, or **USD 9,408,929.92** |
 
 The `44/19` is exact: a 0.95 first-pass rate costs `1/0.95 − 1 = 1/19` of one meeting interval per body,
 and the six intervals sum to 44 weeks, so the whole return penalty falls to **2.3158 weeks**. That
@@ -736,11 +724,11 @@ keeping policy, money and data, and folding the standards assessment into the da
 accessibility sign-off into a once-for-the-service determination, and the regional council's voice into
 the ministry's board:
 
-```
-latency on a three-body path                              23.5159 weeks = USD 34,450,753.97
-saved                                                     20.2224 weeks = USD 29,625,807.53
-first-pass probability rises to                           50.4000 %
-```
+| Consolidated to three decision rights | Value |
+|---|---|
+| Latency on a three-body path | 23.5159 weeks, or USD 34,450,753.97 |
+| **Saved** | **20.2224 weeks**, or **USD 29,625,807.53** |
+| First-pass probability rises to | 50.4000 % |
 
 **Halving the number of decision rights is worth 3.1487 times the best observed improvement in every
 body's conduct.** And the result does not depend on where the behavioural ceiling is put: push conduct
@@ -794,13 +782,12 @@ probabilistic case, so it is the whole gap and not the surprise in it. Set that 
 national readiness programme — an operating-model workshop and two follow-ups in each region, **180
 hours** at a blended **USD 95** an hour, **USD 17,100** a region, **USD 239,400** nationally:
 
-```
-shortfall / national readiness programme     =  120.9206x
-breakeven share of national volume           =  239,400 / 76,180,000  =  0.3143 %
-                                             =  8,170.6 assessments of 2,600,000
-per region                                   =  17,100 / 29.30        =  583.62 assessments
-                                                of a regional average of 185,714.29
-```
+| Measure | Value |
+|---|---|
+| Shortfall ÷ national readiness programme | **120.9206×** |
+| Breakeven share of national volume — `239,400 / 76,180,000` | **0.3143 %** |
+| The same breakeven in volume | **8,170.6** assessments of 2,600,000 |
+| Per region — `17,100 / 29.30` | **583.62** assessments of a regional average of 185,714.29 |
 
 Domain 11's discipline is to lead with the breakeven and not the ratio, and here the two forms are
 so far apart that the choice decides the meeting. **121 times** invites a sponsor to argue about
