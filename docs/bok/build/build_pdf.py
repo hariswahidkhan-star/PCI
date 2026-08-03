@@ -91,6 +91,79 @@ TITLE_HTML = f"""
   go straight to the toolkits and case studies. For examination preparation, use the exam-preparation sections, the
   MCQ bank and the calculation exercises — and note that these are study materials, kept separate from any live
   examination bank.</p>
+
+  <h2 style="page-break-before: always;">How this volume was produced</h2>
+  <p><strong>Drafting and human review.</strong> This volume was drafted with substantial assistance from
+  artificial intelligence, working to the Institute's authoring standard. It is attributed to no named author or
+  expert, and no claim of individual human authorship is made for it. Independent editorial and technical review
+  by named subject-matter experts is a separate step, and the status of that review for this edition is recorded
+  in the release approval statement below. Nothing in this volume should be described to a candidate, an employer,
+  a regulator or an accreditation body as expert-reviewed unless that review is recorded. Where the text states a
+  professional judgement rather than a measured effect, it says so; readers should treat any unqualified
+  generalisation as a drafting defect and report it through the corrections process below.</p>
+  <p><strong>Calculation verification.</strong> Numbers printed as results in this volume — in worked examples,
+  in-text calculations, multiple-choice options, exercise solutions and case studies — have been recomputed from
+  their stated inputs and checked against the printed value. Verification of this kind establishes that the
+  arithmetic is right and that the numbers printed are the numbers the stated methods produce. It does not
+  establish that the method chosen is the one a competent practitioner would choose, that an assumption is
+  reasonable, or that the interpretation drawn from a correct number is sound. Those are matters for the human
+  review described above. The Institute publishes a calculation assurance statement recording the coverage,
+  method and any outstanding limits for each edition.</p>
+  <p><strong>Governing principle.</strong> The principle that governs both the production of this volume and the
+  practice it teaches is the same: <strong>AI proposes; the professional verifies, decides and remains
+  accountable.</strong></p>
+
+  <h2 style="page-break-before: always;">PCI Professional Laws, and how to read the call-out boxes</h2>
+  <p>A <strong>PCI Professional Law</strong> is a mandatory professional rule established by Project Controls
+  Institute Global for the ethical, competent, verifiable and accountable performance of work within a PCI
+  certification scope. Laws are numbered with a stable identifier (for example <code>PCL-LAW-06-03</code>) and are
+  cited by that identifier rather than by page number.</p>
+  <p><strong>PCI Professional Laws are professional certification rules and standards of conduct established by
+  PCI Global. They are not legislation, regulatory requirements or substitutes for applicable law, contractual
+  obligations or authoritative professional standards.</strong> Where any applicable law, regulation, contract or
+  authoritative professional standard imposes a stricter requirement, that requirement governs. Consequences of
+  breach are limited to matters within PCI's own authority: its examination, certification, quality and conduct
+  processes.</p>
+  <p>Four kinds of call-out appear in this volume. Each is identified by a written label, an icon and a border
+  style as well as by colour, so that nothing depends on colour alone — the distinctions survive greyscale
+  printing, screen reading and monochrome displays.</p>
+  <table>
+    <thead><tr><th>Call-out</th><th>Label and icon</th><th>Colour and border</th><th>What it means</th></tr></thead>
+    <tbody>
+      <tr><td>PCI Law</td><td><strong>PCI LAW</strong> · §</td><td>PCI Law Red, solid left border</td>
+          <td>Mandatory. A professional rule PCI holds credential holders and candidates to.</td></tr>
+      <tr><td>External reference</td><td><strong>EXTERNAL REFERENCE</strong> · ⬢</td><td>Standards Blue, double border</td>
+          <td>A named external standard or framework, described in this book's own words. The official publication governs.</td></tr>
+      <tr><td>Practice guidance</td><td><strong>PCI PRACTICE GUIDANCE</strong> · ✦</td><td>Guidance Teal, dashed border</td>
+          <td>Recommended, not mandatory. Departures need a recorded reason.</td></tr>
+      <tr><td>Caution</td><td><strong>CAUTION</strong> · ⚠</td><td>Amber, dotted border</td>
+          <td>A jurisdictional, legal, tax or accounting limitation, or a high-stakes limit on the use of AI.</td></tr>
+    </tbody>
+  </table>
+  <p>The distinction the labels carry is deliberate and load-bearing: a <em>mandatory PCI law</em>, a
+  <em>recommended PCI practice</em>, an <em>external requirement</em> and a <em>jurisdictional requirement</em>
+  are four different obligations, and this volume never presents one as another. In particular, a voluntary
+  framework is never described as legislation.</p>
+
+  <h2 style="page-break-before: always;">Corrections, editions and release approval</h2>
+  <p><strong>Corrections and errata.</strong> The Institute maintains an errata record for each edition. Readers
+  who identify a technical error, an unsupported generalisation, a mischaracterised standard or a calculation
+  that does not reproduce are asked to report it, quoting the stable identifier (domain, Knowledge Area and topic
+  number, or the law, figure or worked-example identifier) rather than the page number. Confirmed corrections are
+  published to the errata record and incorporated at the next printing.</p>
+  <p><strong>Contact for technical corrections.</strong> Reports should be sent to the Institute at the address
+  published on its website for Body of Knowledge corrections. The report should state what is printed, what the
+  reader believes is correct, and the basis for that belief.</p>
+  <p><strong>Edition control.</strong> Each edition carries an edition number and year. The current edition
+  supersedes all earlier printings. Where a correction changes a number, a method or a stated obligation, the
+  change is recorded in the errata record rather than made silently. Where an external standard cited in this
+  volume is superseded, the affected topics are reviewed at the next edition; readers should verify current
+  requirements with the issuing body in the meantime.</p>
+  <p><strong>Release approval.</strong> This edition is published under the Institute's editorial authority.
+  A public release approval statement, naming the human reviewers who approved the technical content, the
+  editorial content, the laws and the calculations, and recording any qualification on that approval, is
+  maintained with the edition record. Where that statement records outstanding review, this volume is study
+  material published in good faith and not a reviewed professional standard.</p>
 </div>
 """
 
