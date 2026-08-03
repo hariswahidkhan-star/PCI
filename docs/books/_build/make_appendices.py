@@ -70,7 +70,7 @@ def formula_rows(tag: str) -> list:
             if len(cells) >= 5:
                 out.append((sym, cells[1], cells[2], cells[3], cells[4]))
             elif len(cells) == 4:
-                out.append((sym, cells[1], cells[2], "inherited (PCP-AI master table)", cells[3]))
+                out.append((sym, cells[1], cells[2], "inherited (PCL-AI master table)", cells[3]))
     return out
 
 

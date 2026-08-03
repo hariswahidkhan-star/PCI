@@ -182,7 +182,8 @@ relationship is actually conducted.
    in this quarter. Gearing 70/30. Compute the request and the resulting balances.
 2. **Formula.** Requirement = certified spend + accrued interest; debt draw = 0.70 × requirement;
    equity draw = 0.30 × requirement.
-3. **Substitution.** `9,391,718 + 245,707 + 287,138 = 9,924,564`; `× 0.70`; `× 0.30`.
+3. **Substitution.** Carrying the three lines unrounded,
+   `9,391,718.47 + 245,707.08 + 287,138.27 = 9,924,563.82`; `× 0.70`; `× 0.30`.
 4. **Result.** Period funding requirement **USD 9,924,564**; senior debt draw **6,947,195**;
    equity draw **2,977,369**. Closing cumulative debt **26,089,746** (62.12 % of commitment) and
    equity **11,181,320** (62.12 % of commitment); undrawn commitment **22,728,934**.
@@ -1989,9 +1990,10 @@ that this domain's reporting cycle invites.
 ## Domain 14 summary
 Construction monitoring is the discipline of releasing other people's money against evidence, and it
 reduces to four tests. The **draw request** converts certified value into a funding requirement:
-Kestrel's quarter five was `9,391,718 + 245,707 + 287,138 =` **9,924,564**, split 70/30, of which
-the interest line — **0.83 %** of the requirement in quarter one and **8.44 %** in quarter eight — is
-money borrowed to pay interest on money already borrowed. The **funding order** that governs that
+Kestrel's quarter five was `9,391,718.47 + 245,707.08 + 287,138.27 = 9,924,563.82`, requested as
+**9,924,564** and split 70/30, of which the interest line — **0.83 %** of the requirement in quarter
+one and **8.44 %** in quarter eight — is money borrowed to pay interest on money already borrowed.
+The **funding order** that governs that
 split is a single sub-clause worth **1,466,064** of capitalised interest across three orders
 (equity-first **1,338,006**, pro rata **2,114,597**, debt-first **2,804,070**), **11,406,157** of
 mid-build lender exposure, **183,013** of present value to the sponsor, and — at a fixed envelope —
