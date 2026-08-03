@@ -222,10 +222,15 @@ COVER_HOT = "#C13329"
 
 
 def _chart_coverage() -> str:
-    """PFL: cash available against a debt-service line — the gap above the line is the headroom."""
-    vals = [100, 97, 93, 90, 86, 83, 79, 76, 72, 69, 65, 58]
-    x0, base, bw, gap, scale = 54.0, 250.0, 34.0, 12.0, 1.86
-    line = base - 55 * scale                      # the debt-service line
+    """PFL: cash available against a debt-service line — the gap above the line is the headroom.
+
+    The plot stops well short of the right edge so the debt-service line's label sits in clear
+    field, in light ink: on the reviewed draft that label was dark-on-dark and simply disappeared.
+    """
+    vals = [100, 96, 92, 88, 84, 80, 76, 72, 68, 52]
+    x0, base, bw, gap, scale = 34.0, 244.0, 30.0, 16.0, 1.78
+    line = base - 60 * scale                      # the debt-service line
+    plot_r = x0 + len(vals) * (bw + gap) - gap    # right edge of the bars
     bars = []
     for i, v in enumerate(vals):
         x = x0 + i * (bw + gap)
@@ -233,25 +238,24 @@ def _chart_coverage() -> str:
         fill = COVER_HOT if i == len(vals) - 1 else COVER_BAR
         bars.append(f'<rect x="{x:.1f}" y="{base - h:.1f}" width="{bw}" height="{h:.1f}" fill="{fill}"/>')
     # Headroom bracket on one bar, so the strapline has something to point at.
-    bx = x0 + 3 * (bw + gap) + bw / 2
-    top = base - vals[3] * scale
+    bx = x0 + 2 * (bw + gap) + bw / 2
+    top = base - vals[2] * scale
     bars.append(f'<line x1="{bx:.1f}" y1="{top:.1f}" x2="{bx:.1f}" y2="{line:.1f}" '
-                f'stroke="{COVER_INK}" stroke-width="1.6"/>')
-    bars.append(f'<path d="M{bx - 4:.1f} {top + 5:.1f} L{bx:.1f} {top:.1f} L{bx + 4:.1f} {top + 5:.1f}" '
-                f'fill="none" stroke="{COVER_INK}" stroke-width="1.6"/>')
-    bars.append(f'<path d="M{bx - 4:.1f} {line - 5:.1f} L{bx:.1f} {line:.1f} L{bx + 4:.1f} {line - 5:.1f}" '
-                f'fill="none" stroke="{COVER_INK}" stroke-width="1.6"/>')
-    bars.append(f'<text x="{bx + 8:.1f}" y="{(top + line) / 2 + 4:.1f}" font-size="13" '
-                f'fill="{COVER_INK}" font-family="sans-serif">headroom</text>')
+                f'stroke="{COVER_INK}" stroke-width="1.8"/>')
+    bars.append(f'<path d="M{bx - 4:.1f} {top + 6:.1f} L{bx:.1f} {top:.1f} L{bx + 4:.1f} {top + 6:.1f}" '
+                f'fill="none" stroke="{COVER_INK}" stroke-width="1.8"/>')
+    bars.append(f'<path d="M{bx - 4:.1f} {line - 6:.1f} L{bx:.1f} {line:.1f} L{bx + 4:.1f} {line - 6:.1f}" '
+                f'fill="none" stroke="{COVER_INK}" stroke-width="1.8"/>')
+    bars.append(f'<text x="{bx:.1f}" y="{top - 9:.1f}" font-size="15" fill="{COVER_INK}" '
+                f'font-family="sans-serif" text-anchor="middle">headroom</text>')
     return (
         '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
         + "".join(bars)
-        + f'<line x1="40" y1="{line:.1f}" x2="612" y2="{line:.1f}" stroke="{COVER_INK}" '
-          f'stroke-width="2" stroke-dasharray="9 7"/>'
-        # The line's own label: light ink, set above the line and clear of the bars.
-        + f'<text x="612" y="{line - 9:.1f}" font-size="14" fill="{COVER_INK}" '
-          f'font-family="sans-serif" text-anchor="end" letter-spacing="1.4">debt service</text>'
-        + f'<text x="40" y="288" font-size="14" fill="{COVER_DIM}" font-family="sans-serif">'
+        + f'<line x1="24" y1="{line:.1f}" x2="{plot_r + 10:.1f}" y2="{line:.1f}" stroke="{COVER_INK}" '
+          f'stroke-width="2.2" stroke-dasharray="10 7"/>'
+        + f'<text x="{plot_r + 18:.1f}" y="{line + 5:.1f}" font-size="15" fill="{COVER_INK}" '
+          f'font-family="sans-serif" letter-spacing="0.6">debt service</text>'
+        + f'<text x="24" y="284" font-size="15" fill="{COVER_DIM}" font-family="sans-serif">'
           'cash available · the gap is the headroom</text>'
         "</svg>")
 
@@ -269,10 +273,11 @@ def _chart_paths() -> str:
     return (
         '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
         + edges + nodes
-        + f'<text x="40" y="262" font-size="15" fill="{COVER_INK}" font-family="sans-serif">'
-          'n(n − 1)/2 = 28</text>'
-        + f'<text x="40" y="288" font-size="14" fill="{COVER_DIM}" font-family="sans-serif">'
-          'eight people · twenty-eight channels · every one of them a place to lose a decision</text>'
+        + f'<text x="{cx:.0f}" y="278" font-size="16" fill="{COVER_INK}" font-family="sans-serif" '
+          'text-anchor="middle">n(n − 1)/2 = 28</text>'
+        + f'<text x="{cx:.0f}" y="298" font-size="13" fill="{COVER_DIM}" font-family="sans-serif" '
+          'text-anchor="middle">eight people · twenty-eight channels · every one a place to lose a '
+          'decision</text>'
         "</svg>")
 
 

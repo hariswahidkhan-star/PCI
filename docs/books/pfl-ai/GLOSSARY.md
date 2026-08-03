@@ -367,7 +367,7 @@
 
 ## E
 
-**EAV / EAC** — NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. *(KA 4.2)*
+**EAV / EAV** — NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. *(KA 4.2)*
 
 **EBIT** — Operating profit after depreciation; performance including capital consumption. *(KA 2.2)*
 

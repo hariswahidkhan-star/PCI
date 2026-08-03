@@ -36,10 +36,10 @@
   width: 210mm; height: 297mm; background: #0B1220; color: #F1F5F9;
   text-align: left; font-family: Inter, sans-serif;
 }
-.cover .coverhead { padding: 34mm 20mm 0 20mm; }
+.cover .coverhead { padding: 28mm 20mm 0 20mm; }
 .cover .coverkicker {
   font-size: 9pt; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase;
-  color: #8FA6C8; margin-bottom: 14mm;
+  color: #8FA6C8; margin-bottom: 11mm;
 }
 .cover .covercode {
   font-size: 62pt; font-weight: 800; letter-spacing: -0.03em; line-height: 0.95; color: #FFFFFF;
@@ -52,21 +52,21 @@
 .cover .covercred { font-size: 13pt; font-weight: 500; color: #F1F5F9; line-height: 1.35; }
 .cover .coverthemes { font-size: 10.5pt; font-weight: 400; color: #8FA6C8; margin-top: 2.5mm; }
 .cover .coverband {
-  margin: 12mm 0 0 0; padding: 6mm 20mm 4mm 20mm; background: #101B33;
+  margin: 10mm 0 0 0; padding: 5mm 20mm 3mm 20mm; background: #101B33;
   border-top: 0.9mm solid #2A4FC4; border-bottom: 0.9mm solid #2A4FC4;
 }
-.cover .coverchart { width: 100%; height: 78mm; }
-.cover .coverfoot { padding: 14mm 20mm 0 20mm; }
+.cover .coverchart { width: 100%; height: 66mm; }
+.cover .coverfoot { padding: 11mm 20mm 0 20mm; }
 .cover .coverprinciple { font-size: 12pt; font-style: italic; color: #E2E8F0; line-height: 1.5; }
 .cover .coverbadge {
-  display: block; background: #C13329; color: #FFFFFF; padding: 3mm 5mm; margin: 12mm 0 0 0;
+  display: block; background: #C13329; color: #FFFFFF; padding: 3mm 5mm; margin: 9mm 0 0 0;
   width: 118mm;
 }
 .cover .coverbadge .cbmain {
   display: block; font-size: 12pt; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
 }
 .cover .coverbadge .cbsub { display: block; font-size: 8.6pt; font-weight: 500; margin-top: 1mm; }
-.cover .covertag { font-size: 9pt; color: #6F86A8; margin-top: 16mm; }
+.cover .covertag { font-size: 9pt; color: #6F86A8; margin-top: 11mm; }
 
 
 

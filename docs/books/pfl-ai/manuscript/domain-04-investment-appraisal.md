@@ -587,10 +587,10 @@ NPV smuggles in the assumption that the world ends when the shorter one does.
    3 years, operating cost 800,000 per year. **System B**: costs 7,600,000, runs 5 years,
    operating cost 500,000 per year. Same duty; `r` = 8 %. (Costs, so lower is better.)
 2. **Formula.** PV of cost = capex + opex × `AF(r, n)`; equivalent annual cost
-   `EAC = PV / AF(r, n)`.
+   `EAV = PV / AF(r, n)`.
 3. **Substitution.** A: `5,000,000 + 800,000 × 2.577097 = 7,061,678`;
-   `EAC = 7,061,678 / 2.577097`. B: `7,600,000 + 500,000 × 3.992710 = 9,596,355`;
-   `EAC = 9,596,355 / 3.992710`.
+   `EAV = 7,061,678 / 2.577097`. B: `7,600,000 + 500,000 × 3.992710 = 9,596,355`;
+   `EAV = 9,596,355 / 3.992710`.
 4. **Result.** A: **USD 2,740,168 per year**. B: **USD 2,403,469 per year** — B is cheaper by
    USD 336,699 every year, despite the 52 % higher purchase price.
 5. **Interpretation.** Raw PV comparison (7.06m vs 9.60m) points the wrong way because it
@@ -624,7 +624,7 @@ per year?*
 
 **Worked example 4.2.3c — the same pump choice, proved a second way.**
 
-EAC assumes like-for-like replacement in perpetuity. The assumption is testable: replace each
+EAV assumes like-for-like replacement in perpetuity. The assumption is testable: replace each
 system in kind over a **common horizon** — the lowest common multiple of the two lives — and
 compare present values directly, with no annualisation at all. If the two methods disagree, one
 of them has been mis-applied.
@@ -639,8 +639,8 @@ of them has been mis-applied.
    t = 0, 5, 10.
 4. **Result.** Chain A = **23,454,406**; chain B = **20,572,442**; B is cheaper by
    **2,881,964** over the common horizon. Cross-check through the annual route:
-   `EAC_A × AF(0.08, 15) = 2,740,168 × 8.559479 = 23,454,406` and
-   `EAC_B × AF(0.08, 15) = 2,403,469 × 8.559479 = 20,572,442` — **identical to the cent**.
+   `EAV_A × AF(0.08, 15) = 2,740,168 × 8.559479 = 23,454,406` and
+   `EAV_B × AF(0.08, 15) = 2,403,469 × 8.559479 = 20,572,442` — **identical to the cent**.
 5. **Interpretation.** The methods agree because they are the same statement: an equivalent annual
    cost multiplied by any horizon's annuity factor reconstructs the chain cost over that horizon.
    That exact agreement is worth more than the answer, because it is the family's verification
@@ -650,7 +650,7 @@ of them has been mis-applied.
    are explicit, and a reviewer can ask whether a fifth generation of the same pump will really be
    available and priced at 5,000,000 in year twelve. Where the honest answer is no — and for
    anything with a technology curve it usually is — neither method should be trusted past the
-   first replacement, and the comparison becomes a staged one (KA 4.A.4). EAC's convenience is
+   first replacement, and the comparison becomes a staged one (KA 4.A.4). EAV's convenience is
    that it hides the chain; its danger is exactly the same.
 
 ### AI in this KA
@@ -668,7 +668,7 @@ convention, silently, forever.
 |---|---|
 | **Payback / discounted payback** | Years for cumulative (discounted) inflows to repay `I₀`; exposure measures. |
 | **`PI`** | PV of inflows / `I₀`; value per scarce dollar, for rationing. |
-| **`EAV` / EAC** | NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. |
+| **`EAV`** | NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. |
 | **Unequal lives** | The comparison EAV exists to make honest. |
 | **Replacement chain** | The explicit alternative when like-for-like replacement fails. |
 | **Gross vs net `PI`** | `PV/I₀` (threshold 1.0) vs `NPV/I₀` (threshold 0.0); same ranking, different threshold. |
@@ -696,7 +696,7 @@ comparison and choice is:
 - C. equivalent annual cost: A 2,353,893 vs B 1,919,271 — choose B
 - D. purchase price: A is cheaper, choose A
 
-*Rationale:* Unequal lives require EAC: `7,061,678/2.577097 = 2,740,168` vs
+*Rationale:* Unequal lives require EAV: `7,061,678/2.577097 = 2,740,168` vs
 `9,596,355/3.992710 = 2,403,469`. A and D compare unlike horizons; C divides each PV by its
 raw life in years (÷3 and ÷5), annualising without discounting — the right instinct with the
 wrong arithmetic.
@@ -752,7 +752,7 @@ expected relationship — discounted payback is always the later of the two unle
 defect.
 
 **MCQ 4.2-G `[4.2.3 · Evaluation]`** An asset manager must choose between a 3-year and a 5-year
-dosing system. EAC favours the 5-year system by 336,699 a year; the 15-year replacement chain
+dosing system. EAV favours the 5-year system by 336,699 a year; the 15-year replacement chain
 favours it by 2,881,964 in present value; the two agree exactly. The plant, however, is on a
 concession with **seven years** left to run and no renewal right. The soundest position is that:
 - A. choose the 5-year system — both methods agree, and agreement is the strongest evidence
@@ -763,7 +763,7 @@ concession with **seven years** left to run and no renewal right. The soundest p
   concession end, including residual value or removal ✅
 - D. average the two methods and choose the cheaper
 
-*Rationale:* The exact agreement of EAC and the chain method is real but proves only internal
+*Rationale:* The exact agreement of EAV and the chain method is real but proves only internal
 consistency — they encode the *same* assumption, so agreeing cannot validate it (4.2.3c). A
 mistakes consistency for applicability. Over a seven-year duty the 3-year system implies two full
 cycles and one stranded year, the 5-year implies one cycle and two stranded years, and residual
@@ -1328,7 +1328,7 @@ The fuller list, in the order a reviewer should run it:
 - **PI at the IRR equals 1.000000**, which audits the IRR a second way without re-solving it.
 - **Capital recovery plus EAV reconstructs the annual inflow**: `I₀/AF + NPV/AF = A`
   (7,009,773 + 1,890,227 = 8,900,000).
-- **EAC × `AF(r, H)` reproduces the replacement-chain PV** over any horizon `H` (2,740,168 ×
+- **EAV × `AF(r, H)` reproduces the replacement-chain PV** over any horizon `H` (2,740,168 ×
   8.559479 = 23,454,406).
 - **Both NPVs are equal at a reported crossover rate** — exactly, since one factor value determines
   both (2,500,000 each for P and Q at 10.424845 %).
@@ -1582,8 +1582,8 @@ periods each (rather than to a common terminal date) inflates TV and the rate.
 
 **Exercise 4.4** Machine C1: 3,000,000 capex, 4-year life, 250,000/yr opex. Machine C2:
 4,200,000, 6-year life, 150,000/yr. Same duty; `r` = 9 %. Choose.
-*Solution.* C1: PV = 3,000,000 + 250,000 × 3.239720 = 3,809,930; EAC = **1,176,006**. C2:
-PV = 4,200,000 + 150,000 × 4.485919 = 4,872,888; EAC = **1,086,263**. **Choose C2** — cheaper
+*Solution.* C1: PV = 3,000,000 + 250,000 × 3.239720 = 3,809,930; EAV = **1,176,006**. C2:
+PV = 4,200,000 + 150,000 × 4.485919 = 4,872,888; EAV = **1,086,263**. **Choose C2** — cheaper
 by 89,743 per year. Common error: comparing PVs across unequal lives (which picks C1).
 
 **Exercise 4.5** Budget 25,000,000. Projects (I₀; NPV): A (10; 2.60) · B (15; 3.30) ·

@@ -1012,7 +1012,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. equivalent annual cost: A 2,353,893 vs B 1,919,271 — choose B
 - D. purchase price: A is cheaper, choose A
 
-*Rationale:* Unequal lives require EAC: `7,061,678/2.577097 = 2,740,168` vs `9,596,355/3.992710 = 2,403,469`. A and D compare unlike horizons; C divides each PV by its raw life in years (÷3 and ÷5), annualising without discounting — the right instinct with the wrong arithmetic.
+*Rationale:* Unequal lives require EAV: `7,061,678/2.577097 = 2,740,168` vs `9,596,355/3.992710 = 2,403,469`. A and D compare unlike horizons; C divides each PV by its raw life in years (÷3 and ÷5), annualising without discounting — the right instinct with the wrong arithmetic.
 
 
 **4.2-C** `[4.2.1 · Analysis]` A board adopts "payback under 5 years" as its sole investment criterion. The predictable portfolio distortion is:
@@ -1055,14 +1055,14 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* The same flows produce both numbers; the later crossing is what it costs to require recovery in present value rather than in nominal cash, and neither figure says anything about how much value the project creates (4.2.1). A confuses discounting a stream with shortening it. C reads a rate judgement out of an arithmetic consequence that holds at every positive rate. D treats an expected relationship — discounted payback is always the later of the two unless `r` = 0 — as a defect.
 
 
-**4.2-G** `[4.2.3 · Evaluation]` An asset manager must choose between a 3-year and a 5-year dosing system. EAC favours the 5-year system by 336,699 a year; the 15-year replacement chain favours it by 2,881,964 in present value; the two agree exactly. The plant, however, is on a concession with **seven years** left to run and no renewal right. The soundest position is that:
+**4.2-G** `[4.2.3 · Evaluation]` An asset manager must choose between a 3-year and a 5-year dosing system. EAV favours the 5-year system by 336,699 a year; the 15-year replacement chain favours it by 2,881,964 in present value; the two agree exactly. The plant, however, is on a concession with **seven years** left to run and no renewal right. The soundest position is that:
 
 - A. choose the 5-year system — both methods agree, and agreement is the strongest evidence available
 - B. choose the 3-year system, because it is cheaper to buy
 - C. neither number answers the question asked: both price perpetual like-for-like replacement, and over a seven-year duty the relevant comparison is the actual cost of each option to concession end, including residual value or removal ✅
 - D. average the two methods and choose the cheaper
 
-*Rationale:* The exact agreement of EAC and the chain method is real but proves only internal consistency — they encode the *same* assumption, so agreeing cannot validate it (4.2.3c). A mistakes consistency for applicability. Over a seven-year duty the 3-year system implies two full cycles and one stranded year, the 5-year implies one cycle and two stranded years, and residual value decides; that is a different calculation, not a correction to these. D averages two answers to a question nobody asked.
+*Rationale:* The exact agreement of EAV and the chain method is real but proves only internal consistency — they encode the *same* assumption, so agreeing cannot validate it (4.2.3c). A mistakes consistency for applicability. Over a seven-year duty the 3-year system implies two full cycles and one stranded year, the 5-year implies one cycle and two stranded years, and residual value decides; that is a different calculation, not a correction to these. D averages two answers to a question nobody asked.
 
 
 **4.2-H** `[4.2.1 · Evaluation]` A sponsor's board holds a standing rule: reject anything with discounted payback beyond nine years. The Kestrel appraisal shows NPV +16,179,360, IRR 12.19 % and discounted payback 10.07 years. The professionally sound recommendation is to:
