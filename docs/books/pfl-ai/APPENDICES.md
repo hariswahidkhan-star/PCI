@@ -59,7 +59,7 @@ Terms fixed at programme level, which the chapters use without redefining:
 |---|---|
 | **PML-AI** | PCI Project Management Leader – AI: the certification; its BoK is this programme's Book One |
 | **PFL-AI** | PCI AI Project Finance Leader: the certification; its BoK is Book Two |
-| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide restatement of PCL-AI's "AI proposes; the professional verifies, decides and remains accountable" |
+| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide principle; it supersedes the retired formulation "AI proposes, the professional disposes" used in the first PCL-AI printing under its former PCP-AI designation |
 | **Domain / Knowledge Area / Topic** | The three-level content hierarchy `D.K.T`, identical to PCL-AI |
 | **Sponsor** | The accountable executive owner of the business case (PML-AI); in PFL-AI project-finance contexts, an equity investor promoting the project — the books flag the context at each use |
 | **Special-purpose vehicle (SPV)** | The ring-fenced legal entity created to own, finance and operate a project |

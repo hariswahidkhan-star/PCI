@@ -361,27 +361,52 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 ## Appendix C — Standards & frameworks referenced
 
 Named at principle level; **never reproduced verbatim** (Conventions, §9). Real frameworks only; no fabricated
-citations.
+citations. Each entry is tagged with what kind of authority it is, because the distinction changes what a
+professional owes it: an accounting standard that governs a set of financial statements is not the same
+obligation as a voluntary framework a project chooses to adopt. **The official publication governs in every
+case**; the descriptions here are this book's own words.
 
-| Standard / framework | Used for | Domains |
-|---|---|---|
-| **IAS 1** | Presentation of financial statements | 1.2, 2.1 |
-| **IAS 2** | Inventories (lower of cost and NRV) | 2.4 |
-| **IAS 16** | Property, plant & equipment (capitalise/depreciate) | 1.3, 2.4 |
-| **IAS 23** | Borrowing costs (capitalise on qualifying assets) | 2.4 |
-| **IAS 37** | Provisions, contingent liabilities/assets; onerous contracts | 1.4, 2.2, 2.4 |
-| **IAS 11 (legacy)** | Construction contracts — superseded by IFRS 15 | 2.4 |
-| **IFRS 15** | Revenue from contracts with customers (five-step model) | 2.2, 2.3, 7.5, 9.5 |
-| **IFRS 16** | Leases (right-of-use asset & lease liability) | 2.4 |
-| **PMBOK Guide** | Project management process groups & practices | 8 |
-| **AACE TCM Framework / estimate classes** | Total cost management; estimate classification | 3.2 |
-| **ISO 31000** | Risk management principles & process | 12 |
-| **ISO/IEC 17024** | Personnel certification (credential design reference) | — |
-| **Agile Manifesto** | Agile values & principles (described, not reproduced) | 9.1 |
-| **Scrum Guide** | Scrum accountabilities, events, artefacts, commitments | 9.2 |
-| **Kanban / Lean** | Flow and waste-reduction principles | 9.4 |
-| **SAFe / LeSS / Scrum-of-Scrums** | Scaling frameworks (awareness level) | 9.4 |
-| **FIDIC (and jurisdictional forms)** | Standard contract forms (awareness level) | 7.2 |
+**Currency of these references.** Standards change. Editions, effective dates and titles stated anywhere in
+this volume were checked against the issuing bodies' catalogues when this edition was prepared, and a reader
+relying on any of them for a live decision should verify the current requirement with the issuing body.
+
+| Standard / framework | Category | Used for | Domains |
+|---|---|---|---|
+| **IAS 1** | Authoritative accounting standard | Presentation of financial statements | 1.2, 2.1 |
+| **IAS 2** | Authoritative accounting standard | Inventories (lower of cost and NRV) | 2.4 |
+| **IAS 16** | Authoritative accounting standard | Property, plant & equipment (capitalise/depreciate) | 1.3, 2.4 |
+| **IAS 23** | Authoritative accounting standard | Borrowing costs (capitalise on qualifying assets) | 2.4 |
+| **IAS 37** | Authoritative accounting standard | Provisions, contingent liabilities/assets; onerous contracts | 1.4, 2.2, 2.4 |
+| **IAS 11 (legacy)** | Superseded accounting standard | Construction contracts — superseded by IFRS 15 | 2.4 |
+| **IFRS 15** | Authoritative accounting standard | Revenue from contracts with customers (five-step model) | 2.2, 2.3, 7.5, 9.5 |
+| **IFRS 16** | Authoritative accounting standard | Leases (right-of-use asset & lease liability) | 2.4 |
+| **PMBOK Guide** | Professional guidance | Project management process groups & practices | 8 |
+| **AACE TCM Framework / estimate classes** | Professional guidance | Total cost management; estimate classification | 3.2 |
+| **ISO 31000** | International standard (guidance, not certifiable) | Risk management principles & process | 12 |
+| **ISO/IEC 17024** | International standard | Personnel certification (credential design reference) | — |
+| **Agile Manifesto** | Voluntary framework | Agile values & principles (described, not reproduced) | 9.1 |
+| **Scrum Guide** | Voluntary framework | Scrum accountabilities, events, artefacts, commitments | 9.2 |
+| **Kanban / Lean** | Industry practice | Flow and waste-reduction principles | 9.4 |
+| **SAFe / LeSS / Scrum-of-Scrums** | Voluntary framework | Scaling frameworks (awareness level) | 9.4 |
+| **FIDIC (and jurisdictional forms)** | Contract framework | Standard contract forms (awareness level) | 7.2 |
+
+> **Forthcoming change — IFRS 18.** IFRS 18 *Presentation and Disclosure in Financial Statements* replaces
+> IAS 1 for annual reporting periods beginning on or after 1 January 2027, and consequentially retitles
+> IAS 8. The presentation principles this book teaches at 1.2 and 2.1 — that a reader must be able to see
+> what an entity owns, owes, earned and spent, on a consistent basis between periods — are unaffected, but
+> the statement structure and the required disclosure of management-defined performance measures change.
+> Candidates and practitioners working to periods from 2027 onward should read those topics against IFRS 18.
+> This mirrors how §2.4 treats the IAS 11 → IFRS 15 transition.
+
+> **Category definitions.** *Authoritative accounting standard* — issued by a standard-setter and mandatory
+> for entities reporting under that framework. *International standard* — issued by ISO/IEC; some are
+> certifiable management-system standards, others are guidance that cannot be certified against.
+> *Contract framework* — a published family of contract forms adopted by agreement between parties.
+> *Professional guidance* — a professional body's recommended practice. *Voluntary framework* — adopted by
+> choice, imposing no legal obligation. *Industry practice* — a widely used approach with no single
+> authoritative publisher. No entry in this table is legislation, and none is described as such; where local
+> law or a contract imposes a stricter requirement, that requirement governs. The programme's full
+> cross-volume register, with verification dates, is maintained as the PCI External-Reference Register.
 
 ---
 
