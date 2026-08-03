@@ -136,7 +136,7 @@ within PCI's authority only.
 
 ---
 
-### PCI LAW PML-LAW-01-02 — Human Decision Authority
+### PCI LAW PML-LAW-01-02 — Human Decision Authority in Delivery
 
 **Rule.** Every delivery decision that commits money, time, scope, people, safety or reputation
 shall be taken by an identified, competent and authorised human being; a credential holder shall
@@ -2071,7 +2071,7 @@ within PCI's authority only.
 | ID | Official title | Anchor domain | Related external references |
 |---|---|---|---|
 | PML-LAW-01-01 | Leadership Accountability | Domain 1 — The Project Leadership Profession | ISO 21502; ISO 21505; ISO/IEC 42001; OECD AI Principles |
-| PML-LAW-01-02 | Human Decision Authority | Domain 1 — The Project Leadership Profession | OECD AI Principles; ISO/IEC 42001; ISO/IEC 38507; NIST AI RMF; EU AI Act |
+| PML-LAW-01-02 | Human Decision Authority in Delivery | Domain 1 — The Project Leadership Profession | OECD AI Principles; ISO/IEC 42001; ISO/IEC 38507; NIST AI RMF; EU AI Act |
 | PML-LAW-02-01 | Business-Case Integrity | Domain 2 — Strategy, Selection and Business Alignment | ISO 21502; ISO 21504; AACE TCM Framework |
 | PML-LAW-02-02 | Benefits Ownership | Domain 2 — Strategy, Selection and Business Alignment | ISO 21503; ISO 21504; ISO 21502 |
 | PML-LAW-03-01 | Governance Before Delivery | Domain 3 — Governance, Organisation and Decision Rights | ISO 21505; ISO 21502; ISO/IEC 38507 |

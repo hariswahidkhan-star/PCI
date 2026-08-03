@@ -112,14 +112,14 @@ FRONT = """
 <div class="frontmatter">
   <h2 style="page-break-before: always;">Status of this draft</h2>
   <p>This is a <strong>complete first draft</strong> of all {domains} domains of this volume, produced
-  under the phase-gated programme recorded in <code>docs/books/</code>. It is <strong>not a released
+  under the Institute's phase-gated authoring programme. It is <strong>not a released
   PCI publication</strong>: it carries no entitlement, syllabus or examination status, and the
   released edition will carry the full copyright, disclaimer and notices of the PCI book family.</p>
   <p><strong>What has been verified.</strong> Every number printed in this volume as a result — in
   worked examples, in-text calculations, multiple-choice options, exercise solutions and case studies
-  — is recomputed independently with decimal arithmetic by the golden-answer suite
-  (<code>_build/verify_formulas.py</code>), which must pass in full before any domain passes gate. All
-  figures are PCI-original artwork generated from source in <code>_build/figures_src/</code>. No text,
+  — is recomputed independently with decimal arithmetic by the Institute's golden-answer verification
+  suite, which must pass in full before any domain passes gate. All
+  figures are PCI-original artwork generated from source specifications maintained by the Institute. No text,
   table, diagram, question or distinctive structure from any other publisher or certification body is
   reproduced; public standards are discussed and cited by name without reproducing their content. All
   organisations, projects and cases are fictitious.</p>

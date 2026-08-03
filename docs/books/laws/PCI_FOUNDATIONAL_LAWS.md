@@ -1,7 +1,7 @@
 # PCI Foundational Laws
 
 **Status:** Foundational law set of the PCI Professional Law System. These laws apply to **all three
-PCI credentials** — PCL-AI (AI Project Controls Leader), PFL-AI (Project Finance Leader – AI) and
+PCI credentials** — PCL-AI (AI Project Controls Leader), PFL-AI (AI Project Finance Leader) and
 PML-AI (Project Management Leader – AI) — and to every candidate and credential holder within the
 scope of their PCI-certified work. Drafted under the binding specification in
 [`LAW_SYSTEM.md`](LAW_SYSTEM.md); IDs are stable (`PCI-LAW-F-NN`) and are cited by ID, never by page.

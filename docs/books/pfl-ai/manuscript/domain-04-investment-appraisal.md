@@ -658,7 +658,7 @@ of them has been mis-applied.
 Screening portfolios is high-volume, formulaic work — the natural first place an organisation
 automates appraisal, and the first place systematic error industrialises. Two governed habits:
 the screening tool's formulae are validated once against this domain's golden examples (the
-registry pattern, `_build/verify_formulas.py`), and every auto-screened rejection above a
+registry pattern, checked by the Institute's verification suite), and every auto-screened rejection above a
 materiality line gets a human review — a portfolio can lose its best project to one wrong sign
 convention, silently, forever.
 
