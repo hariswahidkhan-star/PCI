@@ -1,14 +1,14 @@
-# PCP-AI Examination — Content Outline (Blueprint)
+# PCL-AI Examination — Content Outline (Blueprint)
 
-**Certified Project Controls Professional — AI (PCP-AI)** · Project Controls Institute
+**PCI AI Project Controls Leader (PCL-AI)** · Project Controls Institute
 
-*Version 1 — published for candidates and training providers. This outline is the authoritative statement of what the PCP-AI examination assesses. It is drawn from, and maps one-to-one to, the PCP-AI Body of Knowledge. Weightings shown are indicative for exam-form assembly and are confirmed by the Institute for each published form.*
+*Version 1 — published for candidates and training providers. This outline is the authoritative statement of what the PCL-AI examination assesses. It is drawn from, and maps one-to-one to, the PCL-AI Body of Knowledge. Weightings shown are indicative for exam-form assembly and are confirmed by the Institute for each published form.*
 
 ---
 
 ## 1. Purpose
 
-The PCP-AI credential certifies that a project-controls professional can apply sound financial-reporting and accounting judgement, the full project-management and controls toolkit (budgeting, earned value, scheduling, contracts, risk and process controls), and the **governed use of artificial intelligence** in project controls. The governing principle across the AI content is simple and non-negotiable: **AI proposes; the professional disposes** — the human professional remains accountable for every estimate, forecast, commitment and decision.
+The PCL-AI credential certifies that a project-controls professional can apply sound financial-reporting and accounting judgement, the full project-management and controls toolkit (budgeting, earned value, scheduling, contracts, risk and process controls), and the **governed use of artificial intelligence** in project controls. The governing principle across the AI content is simple and non-negotiable: **AI proposes; the professional verifies, decides and remains accountable** — the human professional remains accountable for every estimate, forecast, commitment and decision.
 
 ## 2. Examination at a glance
 
@@ -165,7 +165,7 @@ Thirteen domains contain sixty-one Knowledge Areas. Indicative domain weightings
 | 13.3 | Prompting & working with GenAI | Effective prompting for professional tasks; structured prompts; giving context/examples; iterative refinement; verifying outputs; prompt patterns f… |
 | 13.4 | AI tool categories for project controls & PM | Practical, tool-aware, vendor-neutral. Cover each category with what it does, representative tools, typical inputs/outputs, and governance notes: g… |
 | 13.5 | AI applied across the project-controls lifecycle | The heart of the domain - cross-refs the finance & PM domains, going deeper than the per-chapter 'AI in this domain' boxes - hands-on workflows: es… |
-| 13.6 | Governance, ethics, risk & assurance of AI | 'AI proposes, the professional disposes' in depth: human accountability & sign-off; auditability (keeping the trail of what AI produced and who app… |
+| 13.6 | Governance, ethics, risk & assurance of AI | 'AI proposes; the professional verifies, decides and remains accountable' in depth: human accountability & sign-off; auditability (keeping the trail of what AI produced and who app… |
 | 13.7 | Building an AI-augmented project-controls capability | Maturity model (from ad-hoc to governed); integrating AI into the controls workflow and tooling; upskilling; measuring value; pitfalls and change m… |
 
 ## 5. Cognitive levels
@@ -174,7 +174,7 @@ Items are written across three cognitive levels: **recall** (definitions, princi
 
 ## 6. How to prepare
 
-Candidates study against the **PCP-AI Body of Knowledge**, which develops every Knowledge Area to full handbook depth with worked examples, figures, sample questions and self-check exercises. Sample questions published by the Institute are drawn from the same blueprint as, but kept separate from, the live examination bank, and are never reused verbatim as live items.
+Candidates study against the **PCL-AI Body of Knowledge**, which develops every Knowledge Area to full handbook depth with worked examples, figures, sample questions and self-check exercises. Sample questions published by the Institute are drawn from the same blueprint as, but kept separate from, the live examination bank, and are never reused verbatim as live items.
 
 ---
 

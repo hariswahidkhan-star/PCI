@@ -105,10 +105,22 @@ clause. Official titles are concise and memorable.
 - Never invent clause numbers, editions, or requirements. If the precise provision is not verified,
   cite the instrument by name only.
 - Tag each reference per the External-Reference Register categories (see
-  `../registries/` and each book's `STANDARDS.md`): authoritative accounting standard ·
-  international standard · contract framework · professional guidance · voluntary framework ·
-  industry practice · illustrative reference. A voluntary framework is never described as
-  legislation. Where currency matters, add "verify current requirements".
+  `../registries/EXTERNAL_AUTHORITIES.md` and each book's `STANDARDS.md`): authoritative accounting
+  standard · international standard · **national standard** · contract framework · professional
+  guidance · voluntary framework · industry practice · **supervisory guidance** · illustrative
+  reference. A voluntary framework is never described as legislation. Where currency matters, add
+  "verify current requirements".
+- Two categories exist because the earlier vocabulary forced awkward workarounds. A **national
+  standard** (e.g. an ANSI-accredited US standard) is a real published standard that binds only where
+  a contract or procurement regime imports it — it is not an international standard and not industry
+  practice. **Supervisory guidance** (e.g. a banking supervisor's model-risk expectations, or an
+  internationally agreed supervisory framework) has no legal force of its own and applies only as a
+  national authority transposes it or a supervised firm is subject to it; it must never be tagged as
+  regulation.
+- Some authoritative material is **not a standard even though its publisher issues standards**. The
+  IFRS *Conceptual Framework* is the case that matters here: the IASB states expressly that it is not
+  a Standard and that nothing in it overrides any Standard. Never source a requirement to it, and
+  never tag it as an authoritative accounting standard.
 
 ## 6. Visual system (applies at typesetting)
 

@@ -2,7 +2,7 @@
 
 **Programme:** PML-AI and PFL-AI Bodies of Knowledge
 **Derived from:** the previously approved PCI book — the **PCL-AI Body of Knowledge, First Edition**
-(authored and stored under its pre-rename designation **PCP-AI**; the credential was renamed in place
+(authored and stored under its pre-rename designation **PCL-AI**; the credential was renamed in place
 to PCL-AI, "PCI AI Project Controls Leader", by the Master Naming Update — `backend/Data/MultiCert.cs`)
 **Status:** Phase 0 deliverable — the binding publishing pattern for the two new books
 **Owner:** Chief editorial coordinator
@@ -17,7 +17,7 @@ published PDF:
 
 | Artefact | Location | Role |
 |---|---|---|
-| Published First Edition PDF (~950–970 pp, A4) | `docs/bok/PCP-AI-Body-of-Knowledge-v1.pdf` | The **published approved edition** (produced by the `_build/` Chromium pipeline; PDF producer `Skia/PDF`, HeadlessChrome) |
+| Published First Edition PDF (~950–970 pp, A4) | `docs/bok/PCL-AI-Body-of-Knowledge-v1.pdf` | The **published approved edition** (produced by the `_build/` Chromium pipeline; PDF producer `Skia/PDF`, HeadlessChrome) |
 | Per-KA source corpus (61 KA files in 13 folders) | `docs/bok/<NN-slug>/<D.K>.md` + `docs/bok/_build/` | **First-generation** source that produced the v1 PDF |
 | Whole-domain source corpus (13 domain files + appendices, ~207k words) | `docs/bok/domain-*.md`, `appendices.md` | **Second-generation (current) maintained source**, listed as the live corpus in `docs/bok/README.md` |
 | Style Spine (authoring standard) | `docs/bok/00-style-spine.md` | The book family's documented authoring standard — terminology, symbols, worked-example/figure/MCQ formats, citation rules |
@@ -76,7 +76,7 @@ register D-14).
 
 ## 4. The domain (chapter) shape
 
-Every domain follows one shape (evidenced across all 13 PCP-AI domains):
+Every domain follows one shape (evidenced across all 13 PCL-AI domains):
 
 1. `# Domain N — Title` + a **binding blockquote**: group, page target, "binds to the Style Spine",
    language/currency conventions.
@@ -129,7 +129,7 @@ is independently re-verified (see §14 of the programme charter and the formula 
   borders, `page-break-inside: avoid`.
 - Formula/code panels: light panel with blue left rule; inline code (`JetBrains Mono`) for symbols.
 - Blockquotes render as soft blue callout boxes — used for binding notes, principle statements,
-  governance/ethics/AI callouts ("AI proposes, the professional disposes"), and figure specs.
+  governance/ethics/AI callouts ("AI proposes; the professional verifies, decides and remains accountable"), and figure specs.
 
 ## 8. MCQ format
 
@@ -165,8 +165,7 @@ key-terms boxes, two columns, letter groups, page numbers resolved at layout.
   thousands commas; adverse amounts in parentheses in statements.
 - **Name real frameworks; never fabricate; never reproduce protected text.** Standards are described in
   the book's own words with the standard named inline. No invented citations, clause numbers or quotes.
-  Honesty about AI capabilities and limits; the governing principle **"AI proposes, the professional
-  disposes"** (carried into the new books as *AI proposes; the professional verifies, decides and
+  Honesty about AI capabilities and limits; the governing principle **"AI proposes; the professional verifies, decides and remains accountable"** (carried into the new books as *AI proposes; the professional verifies, decides and
   remains accountable* — see decision register D-11).
 
 ## 12. Secured student editions & distribution
@@ -205,7 +204,7 @@ register (D-16) — the new books must close them, not inherit them.
 ```
 docs/books/<designation>/          one folder per book (this programme's home)
   manuscript/00-style-spine.md     book-specific spine binding to the shared registries
-  manuscript/domain-NN-slug.md     one file per domain (the PCP-AI convention)
+  manuscript/domain-NN-slug.md     one file per domain (the PCL-AI convention)
   manuscript/appendices.md
   build/build_pdf.py + print.css   premium pipeline, adapted per book identity
   build/figures/fig_D_K_n.svg      rendered original figures

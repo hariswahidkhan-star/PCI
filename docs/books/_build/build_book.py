@@ -625,6 +625,11 @@ def build(book: str, out: pathlib.Path) -> None:
     # the volume that carries a running head also carries a contents line: domains and Knowledge
     # Areas, then appendices, the law part, the glossary and the index.
     body_html = f"{html}{app_html}{std_html}{cap_html}{laws_html}{gloss_html}{''.join(ix)}"
+    # A chapter's own heading is the title alone — the domain number lives in the opener's kicker.
+    # The contents line needs both, or "Cost, Schedule and Contingency Integration" gives the reader
+    # no way to tell which domain it is.
+    chap_kicker = {m.group(2): m.group(1) for m in re.finditer(
+        r'<div class="chapkicker">(Domain \d+)</div><h1 id="([^"]+)"', body_html)}
     toc_items = []
     for m in re.finditer(r'<(h1|h2|h3|div)\b([^>]*?)data-toc="([12])"([^>]*?)>(.*?)</\1>',
                          body_html, flags=re.S):
@@ -634,6 +639,8 @@ def build(book: str, out: pathlib.Path) -> None:
             continue
         text = re.sub(r"<[^>]+>", " ", m.group(5))
         text = re.sub(r"\s+", " ", text).strip()
+        if hid.group(1) in chap_kicker:
+            text = f"{chap_kicker[hid.group(1)]} — {text}"
         toc_items.append((m.group(3), hid.group(1), text))
     toc = ['<nav id="TOC"><ul>']
     open_sub = False

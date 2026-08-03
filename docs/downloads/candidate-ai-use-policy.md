@@ -1,12 +1,11 @@
 # Candidate AI-Use Policy
-> Where AI belongs in your PCP-AI journey — encouraged in preparation, prohibited in the examination, governed in practice
+> Where AI belongs in your PCL-AI journey — encouraged in preparation, prohibited in the examination, governed in practice
 
-**Who this is for.** Every candidate preparing for the Certified Project Controls Professional (PCP-AI)
+**Who this is for.** Every candidate preparing for the Certified Project Controls Professional (PCL-AI)
 examination of Project Controls Institute Global ("the Institute"), and every certificant carrying the
 credential into professional practice.
 
-**The short version.** The Institute's position on AI is the same everywhere: *AI proposes, the professional
-disposes.* What changes is the setting. In **preparation**, AI is a legitimate and often excellent study aid.
+**The short version.** The Institute's position on AI is the same everywhere: *AI proposes; the professional verifies, decides and remains accountable.* What changes is the setting. In **preparation**, AI is a legitimate and often excellent study aid.
 In the **examination**, any AI assistance is prohibited. In **professional practice**, AI is used under
 governance — verified, explainable and owned by you.
 
@@ -58,7 +57,7 @@ The examination will assess your own knowledge, skill and judgement. Accordingly
   and follow the rules of their sitting.
 
 The Institute does not claim that any invigilation technology catches everything. The rule does not rest on
-detection; it rests on the meaning of the credential. A PCP-AI obtained with AI's help in the sitting would
+detection; it rests on the meaning of the credential. A PCL-AI obtained with AI's help in the sitting would
 certify the tool, not the professional — and every honest candidate would be devalued by it.
 
 ## 3. AI in professional practice — governed
@@ -66,7 +65,7 @@ certify the tool, not the professional — and every honest candidate would be d
 From the day you are certified, the question is no longer *whether* you may use AI but *how*. The Institute's
 AI standard expects the governed pattern in all professional work:
 
-- **AI proposes, the professional disposes.** An AI tool may draft the forecast, flag the anomaly or write the
+- **AI proposes; the professional verifies, decides and remains accountable.** An AI tool may draft the forecast, flag the anomaly or write the
   variance narrative. It cannot be accountable for the result. You can — and you are.
 - **Verification.** Before relying on an AI-assisted output, test it against independent evidence — a
   conventional method, a benchmark, a prior period, your own reasoning. Match the depth of the check to the
@@ -80,7 +79,7 @@ AI standard expects the governed pattern in all professional work:
   AI-assisted work defensible months later.
 
 This is not an anti-AI posture. It is the discipline's normal standard of care, extended to a powerful new
-class of tools — and it is precisely the competency the PCP-AI examination will assess, systematically in
+class of tools — and it is precisely the competency the PCL-AI examination will assess, systematically in
 Domain 13 and embedded throughout the other domains.
 
 ## 4. Data privacy — one caution that applies everywhere
@@ -105,8 +104,7 @@ A useful test before pasting anything: would you be comfortable if the data owne
 | Examination | Prohibited — misconduct if breached | Examination rules · Code of Professional Conduct |
 | Professional practice | Governed — verified, explainable, owned | The AI standard · Code of Professional Conduct |
 
-One principle runs through all three settings, and through the credential itself: **AI proposes, the
-professional disposes.** Learn with AI, sit the examination as yourself, and practise with AI under governance
+One principle runs through all three settings, and through the credential itself: **AI proposes; the professional verifies, decides and remains accountable.** Learn with AI, sit the examination as yourself, and practise with AI under governance
 — and the designation will mean what it is supposed to mean.
 
 *Founding-stage document · Reviewed under the governance of Project Controls Institute Global.*

@@ -1,4 +1,4 @@
-# Master Formula Sheet — PCP-AI
+# Master Formula Sheet — PCL-AI
 > Every formula in the Body of Knowledge, defined once — a study aid for candidates
 
 **How to use this sheet.** Formulas are grouped by discipline and cite the Knowledge Area where they are

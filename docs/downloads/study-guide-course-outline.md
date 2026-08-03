@@ -1,8 +1,8 @@
-# Course Outline & Study Guide — PCP-AI
+# Course Outline & Study Guide — PCL-AI
 > The complete study outline — thirteen domains, sixty-one Knowledge Areas, weighted 40/40/20, with the method behind them and a suggested path through
 
-**What this document is.** The complete outline of the Certified Project Controls Professional (PCP-AI) course
-of study, in document form. It follows the published PCP-AI Body of Knowledge, First Edition, of Project
+**What this document is.** The complete outline of the Certified Project Controls Professional (PCL-AI) course
+of study, in document form. It follows the published PCL-AI Body of Knowledge, First Edition, of Project
 Controls Institute Global ("the Institute"): thirteen domains and sixty-one Knowledge Areas across project
 accounting & finance, project management principles, and AI knowledge & practical approach. The examination
 will sample the same thirteen domains at the published group weighting — the framework you study is the
@@ -20,7 +20,7 @@ and as the basis of the self-audit described at the end.
 | Project management principles | Domains 5–12 | **40 %** |
 | AI knowledge & practical approach | Domain 13 | **20 %** |
 
-The domain groups and their 40/40/20 weighting are those of the published PCP-AI Body of Knowledge, First
+The domain groups and their 40/40/20 weighting are those of the published PCL-AI Body of Knowledge, First
 Edition. Three Knowledge Areas are flagged as **flagships** — KA 2.2 (IFRS 15), KA 6.3 (the EAC family) and KA
 13.5 (AI applied across the lifecycle) — the deepest treatments in their groups and the hinges the rest of the
 framework turns on.
@@ -298,7 +298,7 @@ applied workflows, governance and capability building.
   scheduling · agile delivery · contracts & commercial · reporting & performance · risk · financial reporting
   & standards.
 
-- **KA 13.6 — Governance, ethics, risk & assurance of AI.** *Topics:* "AI proposes, the professional disposes"
+- **KA 13.6 — Governance, ethics, risk & assurance of AI.** *Topics:* "AI proposes; the professional verifies, decides and remains accountable"
   · accountability, sign-off and auditability · hallucination, bias and confidentiality · when not to use AI ·
   an AI-use policy and verification checklist.
 
@@ -354,8 +354,7 @@ dependencies is far more efficient than reading front to back.
 3. **Weave Domain 13 throughout.** Do not leave AI to the end. Its applied coverage (KA 13.5) revisits every
    earlier domain, so pairing each finance or delivery domain with its AI workflows reinforces both at once.
 
-However you sequence the material, the governing principle holds across every Knowledge Area: *AI proposes;
-the professional disposes.*
+However you sequence the material, the governing principle holds across every Knowledge Area: *AI proposes; the professional verifies, decides and remains accountable.*
 
 ## Before you plan: the self-audit
 
@@ -377,5 +376,5 @@ materials are kept separate from any live examination bank — no preparation re
 The examination will sample the framework at the published 40/40/20 weighting; the outline above is the whole
 of what it will sample from.
 
-*This outline follows the published PCP-AI Body of Knowledge, First Edition · Reviewed under the governance of
+*This outline follows the published PCL-AI Body of Knowledge, First Edition · Reviewed under the governance of
 Project Controls Institute Global.*

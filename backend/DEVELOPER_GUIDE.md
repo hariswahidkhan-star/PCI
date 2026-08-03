@@ -45,8 +45,7 @@ as a lookup reference.
 ## 1. What the platform is
 
 Project Controls Institute Global, Inc. is a certification body for project-controls professionals. Its
-flagship credential is **PCP-AI** ("Project Controls Professional — AI"), built around the motto *"AI proposes,
-the professional disposes."* The platform is the software that runs the whole operation:
+flagship credential is **PCL-AI** ("Project Controls Professional — AI"), built around the motto *"AI proposes; the professional verifies, decides and remains accountable."* The platform is the software that runs the whole operation:
 
 - a **public website** that markets the credential and the body of knowledge;
 - an **enrolment + payment** flow that sells membership, the exam, or a bundle;
@@ -362,7 +361,7 @@ use an integer primary key `id` unless noted. Times are ISO-8601 / SQLite `datet
 - **`proctor_messages`** — two-way proctor⇄candidate chat (`attempt_id, sender ('proctor'|'candidate'), body, created_at, delivered_at`).
 - **`exam_evidence`** — captured frames/snapshots (`attempt_id, kind, mime, data_uri, note`).
 - **`identity_checks`** — AI identity-verification results (`attempt_id, result, confidence, note, face_ref, id_ref`).
-- **`issued_credentials`** — awarded credentials (`credential_id (e.g. PCP-AI-2026-12345), user_id, holder_name, credential ('PCP-AI'), status ('active'|'revoked'|'expired'), issued_at, expires_at`).
+- **`issued_credentials`** — awarded credentials (`credential_id (e.g. PCL-AI-2026-12345), user_id, holder_name, credential ('PCL-AI'), status ('active'|'revoked'|'expired'), issued_at, expires_at`).
 
 ### 10.4 Support & engagement
 - **`tickets`** / **`ticket_messages`** — support tickets and their thread (`reference, subject, category, status ('open'|'awaiting_student'|'resolved'|'closed'), priority`).
@@ -525,7 +524,7 @@ once the deadline passes. Evidence frames and identity results arrive via `/api/
 **5 — Submit & score.** `POST /api/me/exam/submit` scores the saved answers against `sample_questions`
 (`answer_index`), computes a percentage and a per-domain breakdown (band: `above` ≥80%, `at` ≥ pass mark, else
 `below`), marks the attempt `submitted` and the booking `completed`. **On a pass**, a credential
-`PCP-AI-<year>-<5 digits>` is minted into `issued_credentials` (active, +3 years). Response is dual-case.
+`PCL-AI-<year>-<5 digits>` is minted into `issued_credentials` (active, +3 years). Response is dual-case.
 
 **6 — Proctor review.** From the console, an attempt can be **invalidated** (result → `invalidated`, any issued
 credential revoked) or **reinstated** (result recomputed from the percentage, credential restored if it was a

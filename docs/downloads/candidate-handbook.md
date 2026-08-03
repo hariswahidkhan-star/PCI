@@ -1,5 +1,5 @@
-# Candidate Handbook — PCP-AI Certification
-> Everything you need to qualify for, sit and maintain the PCP-AI — in one place
+# Candidate Handbook — PCL-AI Certification
+> Everything you need to qualify for, sit and maintain the PCL-AI — in one place
 
 **How to use this handbook.** Read it end to end once, several weeks before you intend to sit; then use it
 as a reference at each stage — applying, preparing, booking, sitting and maintaining the credential. It
@@ -8,9 +8,9 @@ policy differ, the published policy prevails (see §10).
 
 ## 1. About the credential
 
-### 1.1 What the PCP-AI is
+### 1.1 What the PCL-AI is
 
-The **Certified Project Controls Professional — AI (PCP-AI)** is the flagship credential of Project
+The **PCI AI Project Controls Leader (PCL-AI)** is the flagship credential of Project
 Controls Institute Global (PCI). It certifies a professional who can plan, measure, forecast, control and
 finance a project — and apply AI to that work responsibly. It unites project controls, cost engineering and
 project finance into a single standard, built on extensive project-management foundations, with AI embedded
@@ -21,7 +21,7 @@ project-controls credential: one examination, one standard, covering the whole d
 
 ### 1.2 Who it serves
 
-The PCP-AI is made for the people who hold projects to account:
+The PCL-AI is made for the people who hold projects to account:
 
 - Planning engineers and schedulers
 - Cost engineers and cost controllers
@@ -35,7 +35,7 @@ not a particular degree or job title (§3).
 
 ### 1.3 The governing principle
 
-Everything in the framework rests on one principle: **AI proposes, the professional disposes.** AI may
+Everything in the framework rests on one principle: **AI proposes; the professional verifies, decides and remains accountable.** AI may
 draft, calculate, summarise and suggest — but a competent human validates, explains and owns every
 conclusion that carries a professional's name. The examination assesses that governed judgement directly,
 and the professional-conduct expectations that follow certification enforce it: "the model said so" is
@@ -53,7 +53,7 @@ as the scheme matures.
 
 ### 2.1 One framework from study to exam
 
-The PCP-AI assesses the thirteen domains and **61 Knowledge Areas** of the published PCP-AI Body of
+The PCL-AI assesses the thirteen domains and **61 Knowledge Areas** of the published PCL-AI Body of
 Knowledge, First Edition. The framework you study is the framework you will be assessed against — the Body
 of Knowledge, the course outline, the sample questions and the examination blueprint all describe the same
 thirteen domains, organised in three published groups with a **40/40/20** examination weighting.
@@ -284,7 +284,7 @@ are all met. The decision is independent of any training you did or did not take
 ### 7.3 Using the credential and the mark
 
 On certification you receive a **verifiable digital badge** and a **print-ready certificate**, and you may
-use the **PCP-AI post-nominal** in line with the certification policies. Anyone can confirm a
+use the **PCL-AI post-nominal** in line with the certification policies. Anyone can confirm a
 professional's status through PCI's public credential verification. Use the credential accurately: it
 belongs to the named individual, describes competence at the point of assessment and thereafter under
 maintenance, and may not be transferred, altered or used in a misleading way. Certified professionals are
@@ -293,7 +293,7 @@ AI-assisted work.
 
 ### 7.4 Recertification and CPD
 
-The PCP-AI is maintained on a **three-year CPD cycle with a mandatory AI-currency component** — the
+The PCL-AI is maintained on a **three-year CPD cycle with a mandatory AI-currency component** — the
 discipline's AI practice moves quickly, and the credential is designed to stay current with it. CPD is
 tracked through membership. This handbook gives only the overview; the published recertification policy
 governs the detail, including the requirements of each cycle and what happens if a cycle lapses.
@@ -361,6 +361,6 @@ policy. This handbook is reviewed under PCI governance and reissued as the under
 
 Project Controls Institute Global is a founding-stage certification body. Its certification framework is
 being developed with reference to ISO/IEC 17024 personnel-certification principles; PCI holds no
-accreditation and claims no governmental recognition for the PCP-AI. Examination operations described in
+accreditation and claims no governmental recognition for the PCL-AI. Examination operations described in
 the future tense will be confirmed before the first sitting. PCI makes no representation about pass rates,
 salaries or employment outcomes: the credential attests assessed competence, nothing more and nothing less.

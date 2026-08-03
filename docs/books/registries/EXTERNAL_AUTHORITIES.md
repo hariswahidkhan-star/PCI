@@ -99,7 +99,7 @@ findings in §11, where there is no edition to verify; each says so in its own r
 | EXT-008 | IFRS Foundation / IASB | **IAS 2** *Inventories* | not independently verified — verify current requirements | authoritative accounting standard | PCL-AI D2 §2.4.1 | — | Title as printed in the book matches the standard as commonly cited; not checked at ifrs.org. |
 | EXT-009 | IFRS Foundation / IASB | **IAS 23** *Borrowing Costs* | not independently verified — verify current requirements | authoritative accounting standard | PCL-AI D2 §2.4.4 | — | — |
 | EXT-010 | IFRS Foundation / IASB | **IAS 11** *Construction Contracts* | **Withdrawn** — superseded by IFRS 15 | authoritative accounting standard (superseded) | PCL-AI D2 §2.4.6 (14 references), appendices | 2026-08-03 | **Correctly handled.** The book teaches it expressly as legacy context and states it is withdrawn (D2 line 992). No correction needed — recorded here so the withdrawal is on the register. |
-| EXT-011 | IFRS Foundation | **Conceptual Framework for Financial Reporting** | not independently verified — verify current requirements | authoritative accounting standard | Laws PCL-LAW-01-01, PCL-LAW-01-02, PCL-LAW-04-01 | — | Cited by name only in the laws, for the accrual basis and faithful representation. No clause numbers asserted — correct practice. |
+| EXT-011 | IFRS Foundation | **Conceptual Framework for Financial Reporting** | 2018 (current) | authoritative accounting material — **not itself an accounting standard** | Laws PCL-LAW-01-01, PCL-LAW-01-02, PCL-LAW-04-01; PFL-LAW-01-01 | 2026-08-03 | The IASB states expressly that the Conceptual Framework is **not a Standard** and that nothing in it overrides any Standard or its requirements. It must never be tagged as an authoritative accounting standard, and a requirement must never be sourced to it. Cited by name only in the laws, for the accrual basis and faithful representation. No clause numbers asserted — correct practice. |
 | EXT-012 | IASB (body) | **International Accounting Standards Board** | not independently verified — verify current requirements | authoritative accounting standard (issuing body) | PCL-AI D2 | — | Named as the standard-setter, not relied on for a requirement. |
 | EXT-013 | Various national standard-setters | **Local GAAP** (generic) | n/a — generic reference | authoritative accounting standard (generic class) | PCL-AI D2; Laws PCL-LAW-01-01, PCL-LAW-01-02 | — | Never a specific instrument. Always paired with the jurisdictional caution, correctly. |
 
@@ -189,6 +189,7 @@ the corpus names them only to illustrate a regulatory shape, never as a source o
 | EXT-101 | European Union | **General Data Protection Regulation** (Regulation (EU) 2016/679) | not independently verified — verify current requirements | illustrative reference *(actual status: **binding legislation** within the EU)* | PML-AI D14; Laws PCI-LAW-F-09 (jurisdictional caution) | — | Named as an example of a rights-based data-protection approach. Never relied on for a requirement. |
 | EXT-102 | US Federal Reserve / OCC | **SR 11-7 / OCC 2011-12** *Supervisory Guidance on Model Risk Management* | not independently verified — verify current requirements | illustrative reference *(actual status: **supervisory guidance**, jurisdiction-specific)* | Laws PCI-LAW-F-02 | — | The law calls it "public supervisory guidance … jurisdiction-specific, cited as guidance only". Accurate. |
 | EXT-103 | Various | **US GAAP** (generic) | n/a — generic reference | illustrative reference | PCL-AI D2, appendices; Laws PCL-LAW-01-01 | — | Named only to contrast with IFRS. |
+| EXT-110 | Basel Committee on Banking Supervision (BCBS) | **The Basel Framework** (consolidated BCBS standards) | consolidated framework, as maintained by the BCBS | illustrative reference — internationally agreed supervisory standards with **no legal force of their own** | Laws PFL-LAW-09-01, PFL-LAW-10-01, PFL-LAW-10-02 | 2026-08-03 | Corrects an earlier negative finding in this register, which recorded that "Basel" appeared in no law file; it is cited six times in `PFL_AI_LAWS.md`. The Committee has no supranational authority: its standards bind banks only as national authorities transpose them, and they must never be described as regulation applying directly to a project or its sponsors. |
 
 ## 11. Registered but not used
 
@@ -198,7 +199,6 @@ on these bodies. **Verified by search across all manuscripts and law files on 20
 
 | Ref ID | Authority | `SOURCES.md` row | Actual corpus usage | Notes |
 |---|---|---|---|---|
-| EXT-110 | Basel Committee / IOSCO | S-06, "Proposed (PFL-AI D6/D16)" | **None.** The string "Basel" appears in no manuscript and no law file — only in `SOURCES.md` itself | An earlier count suggesting otherwise was an artefact of "Basel" matching inside "**basel**ine". Only SR 11-7 (EXT-102) from that row is used. |
 | EXT-111 | World Bank Group | S-07, "Proposed (PFL-AI D5–D15)" | **None** as "World Bank". IFC Performance Standards (EXT-083) are used and are covered by S-08 | — |
 | EXT-112 | IPMA, ACCA, CIMA, CFA Institute | `SOURCES.md` §2 prohibited-use register | **None** — correctly, that is the point of the row | Listed only as bodies whose material must never be reproduced. |
 | EXT-113 | PRINCE2 (PeopleCert) · APM | Not registered | **None** | Recorded so a future reviewer does not expect them. Neither appears anywhere in the corpus. |
@@ -223,6 +223,27 @@ operational.
 | EXT-060 | PMBOK Guide | **Eighth Edition** now current | Already effective; corpus cites no edition, so unaffected |
 
 ---
+
+## 13. Cited in the law files, registered here
+
+The law sets in `docs/books/laws/` cite eleven instruments that neither book's `STANDARDS.md`
+registers, because the laws reach subject matter the chapters do not. Each was verified directly with
+its publisher during the law red-team audit on 2026-08-03. They are registered here so that this file
+remains the single disclosure point it claims to be.
+
+| Ref ID | Authority | Full title | Edition/year checked | Category | Book locations | Verification date | Notes |
+|---|---|---|---|---|---|---|---|
+| EXT-120 | IFRS Foundation | **IAS 7** *Statement of Cash Flows* | current | authoritative accounting standard | Laws PFL-LAW-01-01, PFL-LAW-10-01 | 2026-08-03 | Mandatory only for entities applying IFRS Accounting Standards in a jurisdiction that has adopted them. It defines no coverage ratio — those are creatures of the finance documents. |
+| EXT-121 | IFRS Foundation | **IAS 12** *Income Taxes* | current | authoritative accounting standard | Law PFL-LAW-12-01 | 2026-08-03 | Governs financial reporting of tax only, never the tax position itself. Any tax position needs qualified local advice. |
+| EXT-122 | IFRS Foundation | **IAS 36** *Impairment of Assets* | current | authoritative accounting standard | Law PFL-LAW-15-01 | 2026-08-03 | Cited for the impairment-indicator discipline; entities applying IFRS only. |
+| EXT-123 | ISO | **ISO 45001:2018** *Occupational health and safety management systems — Requirements with guidance for use* | 2018 | international standard | Laws PML-LAW-09-01, PML-LAW-12-02 | 2026-08-03 | Certifiable management-system standard. Adoption is voluntary unless a contract or regulator requires it. |
+| EXT-124 | ISO | **ISO 45003:2021** *Occupational health and safety management — Psychological health and safety at work — Guidelines* | 2021 | international standard (guidance, not certifiable) | Law PML-LAW-12-02 | 2026-08-03 | Guidance, not a requirements standard; nothing can be certified against it. |
+| EXT-125 | ICAEW | **Financial Modelling Code** | current | professional guidance | Laws PFL-LAW-06-01, PFL-LAW-06-02 | 2026-08-03 | Principles-based guidance published by a professional body. Not a compliance standard and not certifiable. |
+| EXT-126 | FAST Standard Organisation | **The FAST Standard** | current | voluntary framework | Law PFL-LAW-06-02 | 2026-08-03 | Adopted voluntarily by modellers and firms; imposes no obligation of its own. |
+| EXT-127 | IESBA / IFAC | **International Code of Ethics for Professional Accountants (including International Independence Standards)** | current | professional guidance | Law PFL-LAW-13-01 | 2026-08-03 | Binding **only** where a professional body, regulator or engagement has adopted it. A PCI credential holder who is not subject to it is not made subject to it by a PCI law. |
+| EXT-128 | OECD (G20/OECD) | **G20/OECD Principles of Corporate Governance** | 2023 revision (OECD/LEGAL/0413) | voluntary framework | Laws PFL-LAW-01-02, PFL-LAW-10-02, PFL-LAW-15-01 | 2026-08-03 | An OECD Council Recommendation. Non-binding; not legislation. The current title carries the G20/OECD attribution. |
+| EXT-129 | OECD | **Model Tax Convention on Income and on Capital** | current | illustrative reference | Law PFL-LAW-12-01 | 2026-08-03 | A model instrument. **It is not law in any jurisdiction**; only the executed treaty and domestic law bind. |
+| EXT-130 | SAE International (ANSI-accredited) | **ANSI/EIA-748** *Earned Value Management Systems* | edition deliberately not asserted | national standard | Laws PCL-LAW-03-02, PCL-LAW-06-01 | 2026-08-03 | A published US national standard, binding only where a contract or procurement regime imports it. The law files deliberately assert no guideline count or edition, because the guideline count changed at EIA-748-E. |
 
 ## Corrections needed in the books
 
@@ -317,9 +338,9 @@ appendix that this file is checked against.
 **File:** `docs/books/registries/SOURCES.md`, **lines 23–24** (rows S-06, S-07)
 
 S-06 registers "Basel/IOSCO & central-bank model-risk guidance" and S-07 "World Bank/IFC PPP
-reference material". Neither Basel, nor IOSCO, nor the World Bank is named anywhere in any
-manuscript or law file. Only SR 11-7 (from S-06) and the IFC Performance Standards (covered by S-08)
-are actually used.
+reference material". Of these, the Basel framework **is** cited — six times in `PFL_AI_LAWS.md`
+(see EXT-110) — alongside SR 11-7 (from S-06) and the IFC Performance Standards (covered by S-08).
+IOSCO and the World Bank are named nowhere in any manuscript or law file.
 
 Both rows are marked "Proposed", so this is register hygiene rather than a false claim.
 

@@ -22,6 +22,10 @@ anchored to the thirteen-domain PCL-AI Body of Knowledge (`../../bok/`).
   Body-of-Knowledge domain of primary anchorage and `NN` a sequence within that domain. Cite laws by
   ID, never by page number. A law that spans domains anchors to the domain that teaches it and lists
   the others under *Related book content*.
+- **These laws sit under the Foundational Laws.** `PCI-LAW-F-01` to `PCI-LAW-F-14`
+  ([`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md)) bind every PCI credential holder,
+  including every PCL-AI holder. The laws below add what project controls specifically requires;
+  they never reduce a foundational obligation.
 - **Normative language is deliberate.** `must` / `must not` / `shall` / `shall not` state mandatory
   professional rules; `should` states recommended practice from which departure needs a recorded
   reason; `may` is discretionary. Text is labelled, every time, as **Mandatory PCI Law**,
@@ -87,16 +91,17 @@ period-end adjustment, or certify a cut-off as complete.
 entries against source documents before posting, and must reconcile the closed period to the ledger.
 
 **External references.** *Conceptual Framework for Financial Reporting*, IFRS Foundation
-(authoritative accounting standard) — establishes the accrual basis and faithful representation on
-which period cost recognition rests. AACE International *Total Cost Management Framework*
-(professional guidance) — describes the cost control cycle within which period cut-off operates.
-The official publications govern; verify current requirements.
+(authoritative accounting material — **not itself an accounting standard**; the IASB states that
+nothing in it overrides any standard or any requirement in a standard) — describes the accrual basis
+and faithful representation on which period cost recognition rests. AACE International *Total Cost
+Management Framework* (professional guidance) — describes the cost control cycle within which period
+cut-off operates. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Statutory recognition, capitalisation and tax deductibility of project
 cost follow local GAAP and tax law; obtain local accounting and tax advice before treating the
 controls position as the statutory position.
 
-**Related PCI laws.** PCL-LAW-01-02; PCL-LAW-04-01; PCL-LAW-11-02.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-01-02; PCL-LAW-04-01; PCL-LAW-11-02.
 
 **Related book content.** Domain 1, KA 1.3 — Accrual accounting and the matching concept; KA 1.5 —
 Chart of accounts and cost coding for projects; Domain 5, KA 5.2 — The cost control cycle.
@@ -156,17 +161,19 @@ subcontractor progress and receipt evidence, confirm completeness by reconciliat
 period position.
 
 **External references.** IAS 37 *Provisions, Contingent Liabilities and Contingent Assets*, IFRS
-Foundation (authoritative accounting standard) — governs the boundary between accruals, provisions
-and contingent liabilities that this law's records must respect. *Conceptual Framework for
-Financial Reporting*, IFRS Foundation (authoritative accounting standard) — the accrual basis and
-completeness as a component of faithful representation. The official publications govern; verify
-current requirements.
+Foundation (authoritative accounting standard) — for entities applying IFRS Accounting Standards it
+sets the financial-reporting boundary between accruals, provisions and contingent liabilities, which
+this law's records must be capable of supporting. *Conceptual Framework for Financial Reporting*,
+IFRS Foundation (authoritative accounting material — **not itself an accounting standard**; the IASB
+states that nothing in it overrides any standard or any requirement in a standard) — the accrual
+basis and completeness as a component of faithful representation. The official publications govern;
+verify current requirements.
 
 **Jurisdictional caution.** Whether an item is an accrual, a provision or a contingent liability in
 the statutory accounts is a local-GAAP determination; obtain local accounting advice for the books
 of account.
 
-**Related PCI laws.** PCL-LAW-01-01; PCL-LAW-03-03; PCL-LAW-04-02.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-01-01; PCL-LAW-03-03; PCL-LAW-04-02.
 
 **Related book content.** Domain 1, KA 1.3 — Accrual accounting and the matching concept; KA 1.4 —
 Cost provisions and cost accruals (IAS 37); Domain 6, KA 6.1 — EVM fundamentals (actual cost).
@@ -234,7 +241,7 @@ management process. The official publications govern; verify current requirement
 decisions may face statutory documentation requirements; obtain local legal advice where estimates
 enter regulatory processes.
 
-**Related PCI laws.** PCL-LAW-03-02; PCL-LAW-12-01; PCL-LAW-13-02.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-03-02; PCL-LAW-12-01; PCL-LAW-13-02.
 
 **Related book content.** Domain 3, KA 3.2 — Cost estimation; KA 3.1 — Budgeting fundamentals;
 Domain 12, KA 12.3 — Contingency and management reserve.
@@ -292,8 +299,10 @@ re-baselining is warranted.
 prior period plus authorised changes, and verify AI-detected discrepancies against the change log
 before reporting.
 
-**External references.** ANSI/EIA-748 *Earned Value Management Systems* (industry practice) — the
-widely adopted guideline set for establishing and controlling performance measurement baselines.
+**External references.** ANSI/EIA-748 *Earned Value Management Systems* (industry practice; a
+published ANSI-accredited US national standard issued by SAE International, binding only where a
+contract or procurement regime imports it) — the widely adopted guideline set for establishing and
+controlling performance measurement baselines; no guideline count or edition is asserted here.
 ISO 21508 *Earned value management in project and programme management* (international standard) —
 international guidance on baseline establishment and maintenance. PMI *The Standard for Earned
 Value Management* (professional guidance) — describes baseline discipline within EVM practice. The
@@ -302,7 +311,7 @@ official publications govern; verify current requirements.
 **Jurisdictional caution.** Government contracting regimes may impose formal EVMS baseline-control
 requirements with legal effect; obtain local contracting advice on any mandated system criteria.
 
-**Related PCI laws.** PCL-LAW-05-01; PCL-LAW-06-01; PCL-LAW-10-01.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-05-01; PCL-LAW-06-01; PCL-LAW-10-01.
 
 **Related book content.** Domain 3, KA 3.3 — The time-phased budget / cost baseline (Planned
 Value); Domain 6, KA 6.1 — EVM fundamentals; Domain 5, KA 5.4 — Change control and cost impact.
@@ -372,7 +381,8 @@ govern; verify current requirements.
 regulated reporting may carry legal disclosure duties; obtain local legal and accounting advice
 before external use.
 
-**Related PCI laws.** PCL-LAW-01-02; PCL-LAW-04-01; PCL-LAW-06-01; PCL-LAW-12-01.
+**Related PCI laws.** PCI-LAW-F-07; PCI-LAW-F-11; PCL-LAW-01-02; PCL-LAW-04-01; PCL-LAW-06-01;
+PCL-LAW-12-01.
 
 **Related book content.** Domain 3, KA 3.4 — Forecasting; KA 3.5 — Cash-flow forecasting; Domain 6,
 KA 6.3 — Forecasting with EVM: the EAC family.
@@ -431,15 +441,18 @@ omitted, or certify that figures reconcile.
 reconciled figures, check visualisations for honest presentation, and sign the report before issue.
 
 **External references.** *Conceptual Framework for Financial Reporting*, IFRS Foundation
-(authoritative accounting standard) — faithful representation and neutrality as qualities of useful
-information, applied here by analogy to management reporting. COSO *Internal Control — Integrated
+(authoritative accounting material — **not itself an accounting standard**; the IASB states that
+nothing in it overrides any standard or any requirement in a standard) — faithful representation and
+neutrality as qualities of useful information, applied here by analogy to management reporting and
+carrying no financial-reporting obligation of its own. COSO *Internal Control — Integrated
 Framework* (voluntary framework) — reporting objectives and information quality within internal
-control. The official publications govern; verify current requirements.
+control; adoption is voluntary and it is not legislation. The official publications govern; verify
+current requirements.
 
 **Jurisdictional caution.** Reports feeding statutory, market or lender disclosures may attract
 legal liability for misstatement; obtain local legal advice before external release.
 
-**Related PCI laws.** PCL-LAW-03-03; PCL-LAW-04-02; PCL-LAW-13-03.
+**Related PCI laws.** PCI-LAW-F-04; PCI-LAW-F-07; PCL-LAW-03-03; PCL-LAW-04-02; PCL-LAW-13-03.
 
 **Related book content.** Domain 4, KA 4.2 — Variance analysis; KA 4.3 — Management reporting; KA
 4.4 — Data visualisation and storytelling for controls.
@@ -505,7 +518,7 @@ current requirements.
 **Jurisdictional caution.** Whistleblowing, employment and confidentiality law vary by
 jurisdiction; obtain local legal advice before escalating outside the organisation.
 
-**Related PCI laws.** PCL-LAW-04-01; PCL-LAW-12-01; PCL-LAW-13-04.
+**Related PCI laws.** PCI-LAW-F-07; PCI-LAW-F-11; PCL-LAW-04-01; PCL-LAW-12-01; PCL-LAW-13-04.
 
 **Related book content.** Domain 4, KA 4.1 — Performance management principles; KA 4.3 — Management
 reporting; Domain 11, KA 11.3 — Internal control and segregation of duties.
@@ -564,18 +577,21 @@ change need not be raised.
 against the estimate basis and schedule model, and confirm register completeness against project
 records each period.
 
-**External references.** FIDIC suite of standard forms of contract (contract framework) — provides
-formal variation and claims mechanisms that project change control must mirror. NEC4 suite of
-contracts (contract framework) — provides prospective assessment of change through its
-compensation-event mechanism, illustrating disciplined forward pricing of change. PMI *A Guide to
-the Project Management Body of Knowledge (PMBOK Guide)* (professional guidance) — integrated change
-control practice. The official publications govern; verify current requirements.
+**External references.** FIDIC suite of standard forms of contract (contract framework — binding
+only on parties who adopt it, through the contract they sign) — provides formal variation and claims
+mechanisms that project change control must mirror where such a contract governs; characterised
+generically, no clause numbers cited. NEC4 suite of contracts (contract framework — binding only by
+signature) — provides prospective assessment of change through its compensation-event mechanism,
+illustrating disciplined forward pricing of change; characterised generically, no clause numbers
+cited. PMI *A Guide to the Project Management Body of Knowledge (PMBOK Guide)* (professional
+guidance) — integrated change control practice. The official publications govern; verify current
+requirements.
 
 **Jurisdictional caution.** Contractual notice periods and condition-precedent clauses can bar
 entitlement if missed; obtain contract-law advice on time-bar effects in the governing
 jurisdiction.
 
-**Related PCI laws.** PCL-LAW-03-02; PCL-LAW-07-01; PCL-LAW-12-01.
+**Related PCI laws.** PCI-LAW-F-03; PCI-LAW-F-05; PCL-LAW-03-02; PCL-LAW-07-01; PCL-LAW-12-01.
 
 **Related book content.** Domain 5, KA 5.4 — Change control and cost impact; KA 5.3 — Cost breakdown
 and control accounts; Domain 7, KA 7.2 — Contract management.
@@ -638,15 +654,17 @@ and cut-off.
 
 **External references.** ISO 21508 *Earned value management in project and programme management*
 (international standard) — international EVM practice guidance. ANSI/EIA-748 *Earned Value
-Management Systems* (industry practice) — the widely adopted EVMS guideline set including data
-integrity expectations. PMI *The Standard for Earned Value Management* (professional guidance) —
+Management Systems* (industry practice; a published ANSI-accredited US national standard issued by
+SAE International, binding only where a contract or procurement regime imports it) — the widely
+adopted EVMS guideline set including data integrity expectations; no guideline count or edition is
+asserted here. PMI *The Standard for Earned Value Management* (professional guidance) —
 EVM measurement technique practice. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Where EVMS compliance is a contract or government-procurement condition,
 formal surveillance and reporting rules may apply with legal effect; obtain local contracting
 advice.
 
-**Related PCI laws.** PCL-LAW-03-02; PCL-LAW-03-03; PCL-LAW-10-03.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-03-02; PCL-LAW-03-03; PCL-LAW-10-03.
 
 **Related book content.** Domain 6, KA 6.1 — EVM fundamentals; KA 6.2 — Variances and performance
 indices; KA 6.4 — Integrating cost & schedule; limitations; earned schedule; Domain 9, KA 9.5 —
@@ -707,18 +725,21 @@ application for payment.
 against the executed contract, test matched quantities against source measurement, and sign the
 traceability of every submitted position.
 
-**External references.** FIDIC suite of standard forms of contract (contract framework) —
-measurement, variation and claims machinery that submissions must follow. NEC4 suite of contracts
-(contract framework) — programme- and event-based assessment of commercial change. IFRS 15
-*Revenue from Contracts with Customers*, IFRS Foundation (authoritative accounting standard) —
-governs how contract revenue is recognised from the commercial facts this law keeps traceable. The
-official publications govern; verify current requirements.
+**External references.** FIDIC suite of standard forms of contract (contract framework — binding
+only on parties who adopt it, through the contract they sign) — measurement, variation and claims
+machinery that submissions must follow where such a contract governs; characterised generically, no
+clause numbers cited. NEC4 suite of contracts (contract framework — binding only by signature) —
+programme- and event-based assessment of commercial change; characterised generically, no clause
+numbers cited. IFRS 15 *Revenue from Contracts with Customers*, IFRS Foundation (authoritative
+accounting standard) — for entities applying IFRS Accounting Standards it governs how contract
+revenue is recognised from the commercial facts this law keeps traceable; the executed contract, not
+this law, determines entitlement. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Payment-security legislation, statutory adjudication regimes and
 invoicing/tax formalities vary by jurisdiction; obtain local legal and tax advice for submissions
 and certifications.
 
-**Related PCI laws.** PCL-LAW-05-01; PCL-LAW-11-01; PCL-LAW-11-02.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-05-01; PCL-LAW-11-01; PCL-LAW-11-02.
 
 **Related book content.** Domain 7, KA 7.2 — Contract management; KA 7.3 — Bills of Quantities
 (BoQ); KA 7.4 — Invoicing and applications for payment; KA 7.5 — Revenue recognition in the
@@ -788,7 +809,7 @@ The official publications govern; verify current requirements.
 **Jurisdictional caution.** Some contracts give the accepted programme contractual status with
 formal update and acceptance procedures; obtain contract advice on the governing regime.
 
-**Related PCI laws.** PCL-LAW-10-02; PCL-LAW-10-03; PCL-LAW-03-02.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-10-02; PCL-LAW-10-03; PCL-LAW-03-02.
 
 **Related book content.** Domain 10, KA 10.1 — Schedule development; KA 10.2 — Network analysis and
 the Critical Path Method; KA 10.3 — Schedule compression and resourcing.
@@ -856,7 +877,7 @@ credible critical path. The official publications govern; verify current require
 **Jurisdictional caution.** Delay-analysis method acceptability differs across legal forums; obtain
 local legal advice before deploying critical-path analysis in formal disputes.
 
-**Related PCI laws.** PCL-LAW-10-01; PCL-LAW-13-02.
+**Related PCI laws.** PCI-LAW-F-02; PCI-LAW-F-07; PCL-LAW-10-01; PCL-LAW-13-02.
 
 **Related book content.** Domain 10, KA 10.2 — Network analysis and the Critical Path Method; KA
 10.4 — Progress measurement and schedule control; Domain 7, KA 7.2 — Contract management.
@@ -924,7 +945,7 @@ performed for EVM. The official publications govern; verify current requirements
 **Jurisdictional caution.** Where progress certifies payment under security-of-payment legislation,
 statutory timing and certification rules may apply; obtain local legal advice.
 
-**Related PCI laws.** PCL-LAW-06-01; PCL-LAW-10-01; PCL-LAW-13-01.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-07; PCL-LAW-06-01; PCL-LAW-10-01; PCL-LAW-13-01.
 
 **Related book content.** Domain 10, KA 10.4 — Progress measurement and schedule control; Domain 6,
 KA 6.1 — EVM fundamentals; Domain 5, KA 5.2 — The cost control cycle.
@@ -997,7 +1018,7 @@ govern; verify current requirements.
 jurisdictions imposes specific internal-control duties on companies; obtain local legal advice on
 statutory control requirements.
 
-**Related PCI laws.** PCL-LAW-07-01; PCL-LAW-11-02; PCL-LAW-13-03.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-10; PCL-LAW-07-01; PCL-LAW-11-02; PCL-LAW-13-03.
 
 **Related book content.** Domain 11, KA 11.3 — Internal control and segregation of duties; KA 11.1
 — Order-to-Cash (O2C); KA 11.2 — Procure-to-Pay (P2P); Domain 13, KA 13.6 — Governance, ethics,
@@ -1067,7 +1088,7 @@ requirements.
 **Jurisdictional caution.** Statutory retention periods, data-protection law and litigation-hold
 obligations vary by jurisdiction; obtain local legal advice on retention and disposal.
 
-**Related PCI laws.** PCL-LAW-11-01; PCL-LAW-13-01; PCL-LAW-13-03.
+**Related PCI laws.** PCI-LAW-F-05; PCI-LAW-F-12; PCL-LAW-11-01; PCL-LAW-13-01; PCL-LAW-13-03.
 
 **Related book content.** Domain 11, KA 11.3 — Internal control and segregation of duties; Domain
 13, KA 13.6 — Governance, ethics, risk & assurance of AI; Domain 4, KA 4.3 — Management reporting.
@@ -1138,7 +1159,7 @@ verify current requirements.
 and reserve treatment in funding submissions; obtain local advice on mandated methods and
 disclosures.
 
-**Related PCI laws.** PCL-LAW-03-03; PCL-LAW-04-02; PCL-LAW-05-01.
+**Related PCI laws.** PCI-LAW-F-07; PCI-LAW-F-11; PCL-LAW-03-03; PCL-LAW-04-02; PCL-LAW-05-01.
 
 **Related book content.** Domain 12, KA 12.1 — The risk framework; KA 12.2 — The risk process; KA
 12.3 — Contingency and management reserve; Domain 3, KA 3.2 — Cost estimation.
@@ -1207,7 +1228,7 @@ governance and lineage practice. The official publications govern; verify curren
 constrain what data may be processed and where; obtain local legal advice before moving project
 data into external tools.
 
-**Related PCI laws.** PCL-LAW-10-03; PCL-LAW-11-02; PCL-LAW-13-02.
+**Related PCI laws.** PCI-LAW-F-02; PCI-LAW-F-06; PCL-LAW-10-03; PCL-LAW-11-02; PCL-LAW-13-02.
 
 **Related book content.** Domain 13, KA 13.2 — Data: the fuel; KA 13.6 — Governance, ethics, risk &
 assurance of AI; Domain 1, KA 1.5 — Chart of accounts and cost coding for projects.
@@ -1280,7 +1301,7 @@ trustworthy AI; not legislation. The official publications govern; verify curren
 **Jurisdictional caution.** AI-specific regulation is emerging and uneven across jurisdictions;
 obtain local legal advice on obligations attaching to AI use in professional and regulated work.
 
-**Related PCI laws.** PCL-LAW-13-01; PCL-LAW-13-03; PCL-LAW-13-04.
+**Related PCI laws.** PCI-LAW-F-02; PCI-LAW-F-03; PCL-LAW-13-01; PCL-LAW-13-03; PCL-LAW-13-04.
 
 **Related book content.** Domain 13, KA 13.3 — Prompting and working with generative AI; KA 13.5 —
 AI applied across the project-controls lifecycle; KA 13.6 — Governance, ethics, risk & assurance of
@@ -1352,7 +1373,7 @@ The official publications govern; verify current requirements.
 individuals and require human review by law; obtain local legal advice for workflows touching
 personal data or statutory decisions.
 
-**Related PCI laws.** PCL-LAW-11-01; PCL-LAW-13-02; PCL-LAW-13-04.
+**Related PCI laws.** PCI-LAW-F-01; PCI-LAW-F-03; PCL-LAW-11-01; PCL-LAW-13-02; PCL-LAW-13-04.
 
 **Related book content.** Domain 13, KA 13.6 — Governance, ethics, risk & assurance of AI; KA 13.7
 — Building an AI-augmented project-controls capability; Domain 11, KA 11.3 — Internal control and
@@ -1425,7 +1446,8 @@ The official publications govern; verify current requirements.
 determine legal responsibility independently of this professional rule; obtain local legal advice
 on liability for AI-assisted work.
 
-**Related PCI laws.** PCL-LAW-04-02; PCL-LAW-13-02; PCL-LAW-13-03.
+**Related PCI laws.** PCI-LAW-F-01; PCI-LAW-F-04; PCI-LAW-F-08; PCL-LAW-04-02; PCL-LAW-13-02;
+PCL-LAW-13-03.
 
 **Related book content.** Domain 13, KA 13.6 — Governance, ethics, risk & assurance of AI; KA 13.7
 — Building an AI-augmented project-controls capability; Domain 8, KA 8.4 — Monitoring &

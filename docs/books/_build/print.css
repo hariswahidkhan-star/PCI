@@ -298,7 +298,9 @@ nav#TOC a::after {
 }
 
 /* ---------- Alphabetical index ---------- */
-.bookindex { page: plain; page-break-before: always; }
+/* Not `page: plain` — the index is back matter and carries its own running head like every other
+   part of the volume. */
+.bookindex { page-break-before: always; }
 .bookindex .ixtitle {
   font-family: Inter, sans-serif; font-size: 19pt; font-weight: 800; color: #0F172A;
   border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin-bottom: 6mm;

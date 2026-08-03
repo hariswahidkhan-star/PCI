@@ -1,8 +1,8 @@
-# PCP-AI Candidate Handbook
+# PCL-AI Candidate Handbook
 
-**Certified Project Controls Professional — AI (PCP-AI)** · Project Controls Institute
+**PCI AI Project Controls Leader (PCL-AI)** · Project Controls Institute
 
-*Version 1 — published for candidates. This handbook explains what the PCP-AI credential is, how the
+*Version 1 — published for candidates. This handbook explains what the PCL-AI credential is, how the
 examination works, and the policies that govern it. Figures such as fees and continuing-professional-
 development requirements are the Institute's current settings and are confirmed on the official PCI
 website at the time of registration.*
@@ -11,13 +11,13 @@ website at the time of registration.*
 
 ## 1. About the credential
 
-The **PCP-AI** certifies that a project-controls professional can combine three things that modern
+The **PCL-AI** certifies that a project-controls professional can combine three things that modern
 projects demand together: sound **financial-reporting and accounting** judgement, the full **project-
 management and controls** toolkit (budgeting, earned value, scheduling, contracts, risk and process
 controls), and the **governed use of artificial intelligence** in project controls.
 
 The AI dimension is what sets the credential apart, and it is taught and examined honestly. The
-governing principle is **"AI proposes; the professional disposes"**: AI can draft, summarise, detect and
+governing principle is **"AI proposes; the professional verifies, decides and remains accountable"**: AI can draft, summarise, detect and
 forecast, but the certified professional remains accountable for every estimate, commitment, forecast
 and decision, and is expected to know where AI helps, where it fails, and how to govern it.
 
@@ -95,12 +95,12 @@ During the examination:
   itself, delay your result. A result is only held back for a genuine **technical-validity** issue (for
   example, a late or invalid submission), and you are told plainly that no pass/fail outcome is shown
   until it is resolved.
-- **The credential.** A pass issues a **PCP-AI credential** with a unique credential ID, verifiable
+- **The credential.** A pass issues a **PCL-AI credential** with a unique credential ID, verifiable
   online by anyone with the ID. Certificates and score reports are downloadable from your account.
 
 ## 8. Keeping the credential — recertification and CPD
 
-The PCP-AI credential is valid for a **three-year cycle**. To keep it current you record **continuing
+The PCL-AI credential is valid for a **three-year cycle**. To keep it current you record **continuing
 professional development (CPD)** and recertify within the cycle. The current CPD target is set by the
 Institute (presently **30 hours per cycle**) and is shown, with your running total, in your account.
 Letting a credential lapse suspends its "active" status until recertification requirements are met.

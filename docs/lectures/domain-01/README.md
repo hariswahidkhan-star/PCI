@@ -1,6 +1,6 @@
 # Domain 1 — Foundations of Accounting · Lecture
 
-A premium, animated lecture for Domain 1 of the PCP-AI programme, built the way the evidence says people
+A premium, animated lecture for Domain 1 of the PCL-AI programme, built the way the evidence says people
 learn best from lecture video: short learner-paced segments, every concept dual-coded with a visual,
 signalling on the key idea, worked examples, and a knowledge check per Knowledge Area (Mayer's multimedia
 principles / cognitive-load theory; Guo et al., *How Video Production Affects Student Engagement*, 2014).

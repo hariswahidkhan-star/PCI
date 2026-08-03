@@ -1,4 +1,4 @@
-# Glossary of Terms — PCP-AI
+# Glossary of Terms — PCL-AI
 > The Body of Knowledge's global glossary — every key term, defined once
 
 **How to use this glossary.** Each term is defined once, attributed to the Knowledge Area where it is first

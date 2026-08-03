@@ -3,7 +3,7 @@
 **Status:** Certification Laws for the **PML-AI** credential (Project Management Leader – AI),
 drafted under and subordinate to the binding specification in [`LAW_SYSTEM.md`](LAW_SYSTEM.md).
 Twenty-four laws, anchored to the sixteen-domain PML-AI Body of Knowledge
-(`docs/books/pml-ai/`).
+(`../pml-ai/`).
 
 > PCI Professional Laws are professional certification rules and standards of conduct established by
 > PCI Global. They are not legislation, regulatory requirements or substitutes for applicable law,
@@ -35,6 +35,12 @@ Twenty-four laws, anchored to the sixteen-domain PML-AI Body of Knowledge
 - **External references are characterised, never reproduced.** Real instruments are named and
   described in PCI's own words; the official publication always governs. No clause numbers or
   editions are asserted unless verified.
+- **No endorsement, affiliation or accreditation is claimed or implied.** Naming an external
+  instrument means only that it exists and is relevant. No standards body, professional institute or
+  government has reviewed, approved, endorsed or accredited these laws, the PML-AI credential or PCI
+  Global, and nothing here is a claim of conformity with, certification to, or accreditation under
+  any instrument named. Where an instrument's status is known to be changing, that is noted at the
+  point of use.
 - **The suite principle** applies to every law in this set, in its one approved formulation:
 
 > **AI proposes; the professional verifies, decides and remains accountable.**
@@ -1665,9 +1671,11 @@ decision of record, declare an increment done, or set the delivery envelope.
 actual throughput and known constraints, and must confirm that reported flow metrics correspond to
 accepted, working outcomes rather than counted activity.
 
-**External references.** *The Scrum Guide*, Schwaber and Sutherland (industry practice) — defines
-one widely used iterative framework, including a single accountable product decision role and the
-notion of a done increment. PMI *A Guide to the Project Management Body of Knowledge (PMBOK Guide)*
+**External references.** *The Scrum Guide*, Schwaber and Sutherland (voluntary framework — adopted
+by choice; adoption is the whole of its force) — defines one widely used iterative framework,
+including a single accountable product decision role and the notion of a done increment; described
+from the current Scrum Guide's concepts, in PCI's own words. PMI *A Guide to the Project Management
+Body of Knowledge (PMBOK Guide)*
 (professional guidance) — established practice on tailoring delivery approaches and on hybrid
 governance. ISO 21502 (international standard) — guidance on project management, which applies
 across predictive, adaptive and hybrid delivery. The official publications govern; verify current
@@ -1755,8 +1763,10 @@ classification outputs against sampled records, and must confirm before any exte
 human-approved basis exists for the specific data and the specific recipient.
 
 **External references.** ISO/IEC 27001 (international standard) — information-security management
-systems. ISO/IEC 27701 (international standard) — privacy information management extending an
-information-security management system. ISO 8000 (international standard) — data quality. ISO/IEC
+systems. ISO/IEC 27701 (international standard) — privacy information management systems, **now a
+standalone requirements standard in its own right; the earlier characterisation of it as an
+extension to ISO/IEC 27001 and ISO/IEC 27002 described a superseded edition**. ISO 8000
+(international standard) — data quality. ISO/IEC
 25012 (international standard) — a data-quality model for software and systems. ISO 19650
 (international standard) — organisation and digitisation of information about buildings and civil
 engineering works, including the common data environment concept. The European Union General Data

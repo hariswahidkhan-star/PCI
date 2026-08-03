@@ -22,6 +22,10 @@ laws, anchored to the sixteen-domain PFL-AI Body of Knowledge (`../pfl-ai/`).
   Body-of-Knowledge domain of primary anchorage and `NN` a sequence within that domain. Cite laws by
   ID, never by page number. A law that spans domains anchors to the domain that teaches it and lists
   the others under *Related book content*.
+- **These laws sit under the Foundational Laws.** `PCI-LAW-F-01` to `PCI-LAW-F-14`
+  ([`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md)) bind every PCI credential holder,
+  including every PFL-AI holder. The laws below add what project finance specifically requires;
+  they never reduce a foundational obligation.
 - **Normative language is deliberate.** `must` / `must not` / `shall` / `shall not` state mandatory
   professional rules; `should` states recommended practice from which departure needs a recorded
   reason; `may` is discretionary. Text is labelled, every time, as **Mandatory PCI Law**,
@@ -30,6 +34,12 @@ laws, anchored to the sixteen-domain PFL-AI Body of Knowledge (`../pfl-ai/`).
 - **External references are characterised, never reproduced.** Real instruments are named and
   described in PCI's own words; the official publication always governs. No clause numbers or
   editions are asserted unless verified.
+- **No endorsement, affiliation or accreditation is claimed or implied.** Naming an external
+  instrument means only that it exists and is relevant. No standards body, professional institute,
+  government, supervisory authority, export credit agency or financial institution has reviewed,
+  approved, endorsed or accredited these laws, the PFL-AI credential or PCI Global, and nothing here
+  is a claim of conformity with, certification to, or accreditation under any instrument named.
+  Where an instrument's status is known to be changing, that is noted at the point of use.
 - **Nothing here is legal, tax, accounting or investment advice.** These laws set professional
   conduct within PCI's certification scope. Every treatment, contractual position and structure they
   touch is jurisdiction-specific and requires advice from a qualified adviser for the specific
@@ -94,10 +104,12 @@ underlying document, and confirm that AI-produced reconciliations tie to the rel
 the financial statements.
 
 **External references.** IFRS Foundation *Conceptual Framework for Financial Reporting*
-(authoritative accounting standard) — establishes the accrual basis and faithful representation,
-which is precisely what makes an accounting result a different statement from a cash fact. IAS 7
-*Statement of Cash Flows*, IFRS Foundation (authoritative accounting standard) — the presentation
-and classification of cash movements against which a modelled cash line is reconciled. The official
+(authoritative accounting material — **not itself an accounting standard**; the IASB states that
+nothing in it overrides any standard or any requirement in a standard) — describes the accrual basis
+and faithful representation, which is precisely what makes an accounting result a different
+statement from a cash fact. IAS 7 *Statement of Cash Flows*, IFRS Foundation (authoritative
+accounting standard) — for entities applying IFRS Accounting Standards, the presentation and
+classification of cash movements against which a modelled cash line is reconciled. The official
 publications govern; verify current requirements.
 
 **Jurisdictional caution.** Solvency, distributable-reserve and insolvency tests are matters of
@@ -173,12 +185,14 @@ against the register and against their own knowledge of relationships, and must 
 evidence; a negative machine screen is not a finding of no conflict.
 
 **External references.** ISO/IEC 17024 *Conformity assessment — General requirements for bodies
-operating certification of persons* (international standard) — sets requirements including
-impartiality and the management of conflicts, within which PCI's own certification processes
-operate. OECD *Principles of Corporate Governance* (voluntary framework) — intergovernmental,
-non-binding principles addressing disclosure, related-party transactions and the management of
-conflicts in governance; not legislation. The official publications govern; verify current
-requirements.
+operating certification of persons* (international standard) — addresses impartiality and the
+management of conflicts in the certification of persons, which PCI characterises as the reference
+discipline for conflict management in assessment roles; adoption is voluntary unless a law or
+contract imports it, and **no accreditation to, or certification against, this standard is claimed
+by PCI through this reference**. G20/OECD *Principles of Corporate Governance* (voluntary framework)
+— intergovernmental, non-binding principles adopted as an OECD Council Recommendation, addressing
+disclosure, related-party transactions and the management of conflicts in governance; not
+legislation. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Fiduciary duty, agency law, anti-bribery and financial-promotion rules
 determine the legal consequences of an undisclosed interest and differ by jurisdiction; obtain local
@@ -415,14 +429,18 @@ period and one operating period by independent means for every released version,
 each machine-listed finding individually before it is reported.
 
 **External references.** ICAEW *Financial Modelling Code* (professional guidance) — principles for
-structuring, documenting and reviewing spreadsheet-based financial models. The FAST Standard
-(industry practice) — a published set of spreadsheet-modelling conventions whose name stands for
-flexible, appropriate, structured and transparent. The official publications govern; verify current
-requirements.
+structuring, documenting and reviewing spreadsheet-based financial models; principles-based
+guidance published by a professional body, not a compliance standard and not certifiable. The FAST
+Standard (industry practice) — a published set of spreadsheet-modelling conventions, adopted
+voluntarily, whose name stands for flexible, appropriate, structured and transparent. The official
+publications govern; verify current requirements.
 
 **Jurisdictional caution.** Model structure is a professional discipline rather than a legal
 requirement; the treatments the model implements — tax, accounting, covenant definitions — are
-jurisdiction- and document-specific and are governed by PFL-LAW-10-02 and PFL-LAW-12-01.
+jurisdiction- and document-specific, must be confirmed by qualified local advisers, and are governed
+by PFL-LAW-10-02 and PFL-LAW-12-01. Where applicable law, regulation, the finance documents or an
+authoritative professional standard imposes a stricter requirement on how a model is built,
+documented or reviewed, that requirement governs.
 
 **Related PCI laws.** PCI-LAW-F-01; PCI-LAW-F-05; PFL-LAW-06-02; PFL-LAW-06-05; PFL-LAW-16-02.
 
@@ -487,12 +505,17 @@ individually, record the sample size used for any machine-produced finding list,
 model's headline figures cell by cell back to declared inputs.
 
 **External references.** The FAST Standard (industry practice) — spreadsheet-modelling conventions
-directed at transparency and consistent structure. ICAEW *Financial Modelling Code* (professional
-guidance) — build, documentation and review principles for financial models. The official
-publications govern; verify current requirements.
+directed at transparency and consistent structure, adopted voluntarily. ICAEW *Financial Modelling
+Code* (professional guidance) — build, documentation and review principles for financial models;
+principles-based guidance published by a professional body, not a compliance standard and not
+certifiable. The official publications govern; verify current requirements.
 
-**Jurisdictional caution.** None as to transparency itself, which is a modelling discipline; the
-treatments the formulae implement remain jurisdiction-specific and are covered by PFL-LAW-12-01.
+**Jurisdictional caution.** Transparency of construction is a modelling discipline and is not itself
+set by any law; but the treatments the formulae implement — tax, accounting, tariff, indexation and
+covenant mechanics — are jurisdiction- and document-specific, must be confirmed by qualified local
+advisers, and are covered by PFL-LAW-10-02 and PFL-LAW-12-01. Where applicable law, regulation,
+contract or an authoritative professional standard imposes a stricter requirement on model
+construction or disclosure, that requirement governs.
 
 **Related PCI laws.** PCI-LAW-F-05; PFL-LAW-06-01; PFL-LAW-06-04; PFL-LAW-16-02.
 
@@ -874,14 +897,18 @@ policy, or determine that a refinancing assumption is reasonable.
 structure from the model's cash line, confirm each source's terms against the offer or executed
 document, and confirm that all fees and costs are captured in the stated blended cost.
 
-**External references.** Basel framework, Basel Committee on Banking Supervision (international
-framework implemented through national regulation) — internationally agreed standards for bank
-capital, leverage and liquidity that shape lenders' appetite, pricing and tenor; it takes effect
-only as national authorities implement it. OECD *Arrangement on Officially Supported Export Credits*
-(voluntary framework among participating authorities) — agreed terms and disciplines for officially
-supported export credit. Equator Principles (voluntary framework) — environmental and social risk
-management adopted by participating financial institutions, which conditions the availability of
-some funding. The official publications govern; verify current requirements.
+**External references.** Basel framework, Basel Committee on Banking Supervision (illustrative
+reference — internationally agreed supervisory standards **with no legal force of their own**; the
+Committee has no supranational authority, and the standards apply to banks only as national
+authorities transpose them into domestic law or regulation) — named for the supervisory context in
+which bank capital, leverage and liquidity shape lenders' appetite, pricing and tenor; not relied on
+here for any requirement. OECD *Arrangement on Officially Supported Export Credits* (voluntary
+framework — an inter-governmental understanding among participating authorities, not a treaty and
+not legislation) — agreed terms and disciplines for officially supported export credit; its terms
+are revised periodically and vary by sector, so they must be checked as at the transaction date.
+Equator Principles (voluntary framework) — environmental and social risk management adopted
+voluntarily by participating financial institutions, which conditions the availability of some
+funding; not legislation. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Thin-capitalisation rules, interest deductibility, withholding tax,
 exchange control and the perfection of security differ by jurisdiction and can change both the
@@ -958,11 +985,13 @@ period and at least one other period from source lines, confirm the definition a
 document, and reconcile the cash line to the statements before certifying or submitting.
 
 **External references.** IAS 7 *Statement of Cash Flows*, IFRS Foundation (authoritative accounting
-standard) — the presentation and classification of cash flows against which a modelled cash line is
-reconciled. Basel framework, Basel Committee on Banking Supervision (international framework
-implemented through national regulation) — the supervisory context for lenders' credit assessment
-and monitoring, within which coverage measurement sits. The official publications govern; verify
-current requirements.
+standard) — for entities applying IFRS Accounting Standards, the presentation and classification of
+cash flows against which a modelled cash line is reconciled; it does not define any coverage ratio,
+which is a matter for the finance documents. Basel framework, Basel Committee on Banking Supervision
+(illustrative reference — internationally agreed supervisory standards **with no legal force of
+their own**, applying to banks only as national authorities transpose them) — named for the
+supervisory context of lenders' credit assessment and monitoring; not relied on here for any
+requirement. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Coverage definitions are contractual rather than statutory; their
 construction and the consequences of a breach are matters for the governing law of the finance
@@ -1037,11 +1066,17 @@ against the executed document, re-confirm the register after every amendment, an
 resolve any question of legal meaning.
 
 **External references.** IAS 1 *Presentation of Financial Statements*, IFRS Foundation
-(authoritative accounting standard) — the presentation of financial statements, including the basis
-on which liabilities are classified as current or non-current, which is where a covenant position
-meets the reported position. Basel framework, Basel Committee on Banking Supervision (international
-framework implemented through national regulation) — the supervisory context for lenders' covenant
-monitoring. The official publications govern; verify current requirements.
+(authoritative accounting standard) — for entities applying IFRS Accounting Standards, the
+presentation of financial statements, including the basis on which liabilities are classified as
+current or non-current, which is where a covenant position meets the reported position; **IFRS 18
+*Presentation and Disclosure in Financial Statements* replaces IAS 1 for annual reporting periods
+beginning on or after 1 January 2027 (earlier application permitted), so confirm which instrument
+applies to the period being reported**. Reporting classification is not covenant compliance: only
+the finance documents determine that. Basel framework, Basel Committee on Banking Supervision
+(illustrative reference — internationally agreed supervisory standards **with no legal force of
+their own**, applying to banks only as national authorities transpose them) — named for the
+supervisory context of lenders' covenant monitoring; not relied on here for any requirement. The
+official publications govern; verify current requirements.
 
 **Jurisdictional caution.** The construction of covenant language, the effect of a breach, notice
 requirements and the enforceability of cure rights are determined by the governing law of the
@@ -1200,12 +1235,15 @@ against the source instrument by a competent professional and must never be used
 treatment relied upon must be traceable to written advice from a qualified adviser.
 
 **External references.** IAS 12 *Income Taxes*, IFRS Foundation (authoritative accounting standard)
-— accounting for current and deferred tax; it governs financial reporting, not the tax position in
-any jurisdiction. OECD *Model Tax Convention on Income and on Capital* (model instrument) — the
-model text on which many bilateral tax treaties are negotiated; it is not itself law anywhere.
-ISO/IEC 17024 (international standard) — competence-based certification of persons, within which a
-certification's scope is defined and bounded. The official publications govern; verify current
-requirements.
+— for entities applying IFRS Accounting Standards, the accounting for current and deferred tax; it
+governs financial reporting only, never the tax position in any jurisdiction. OECD *Model Tax
+Convention on Income and on Capital* (illustrative reference — a model text, updated periodically,
+on which many bilateral tax treaties are negotiated; **it is not law in any jurisdiction** and only
+the executed treaty and domestic law bind). ISO/IEC 17024 (international standard) —
+competence-based certification of persons, named for the discipline of defining and bounding a
+certification's scope; adoption is voluntary unless a law or contract imports it, and **no
+accreditation to, or certification against, this standard is claimed by PCI through this
+reference**. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Every matter named in this law is jurisdiction-specific: tax residence,
 withholding, deductibility, indirect taxes, stamp duties, licensing, security perfection, insurance
@@ -1285,11 +1323,15 @@ re-perform a defined portion of testing manually.
 
 **External references.** IESBA *International Code of Ethics for Professional Accountants (including
 International Independence Standards)* (professional guidance) — an international ethics code
-addressing objectivity, independence and the threats to them, binding on those subject to it.
-ISO/IEC 17024 (international standard) — impartiality requirements in the certification of persons.
-Equator Principles (voluntary framework) — review processes for environmental and social risk
-adopted by participating financial institutions. The official publications govern; verify current
-requirements.
+addressing objectivity, independence and the threats to them, issued by the International Ethics
+Standards Board for Accountants; it is **binding only where a professional body, regulator or
+engagement has adopted it**, and PCI credential holders who are not subject to it are not made
+subject to it by this reference. ISO/IEC 17024 (international standard) — impartiality in the
+certification of persons; adoption is voluntary unless a law or contract imports it, and **no
+accreditation to, or certification against, this standard is claimed by PCI through this
+reference**. Equator Principles (voluntary framework) — review processes for environmental and
+social risk adopted voluntarily by participating financial institutions; not legislation. The
+official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Statutory audit, licensing and professional-body independence rules
 differ by jurisdiction and may impose stricter requirements than this law; where a review is a
@@ -1675,11 +1717,15 @@ distribution test from the source cash line for the test period, confirm the def
 executed documents, and confirm the no-default position before certifying.
 
 **External references.** IAS 1 *Presentation of Financial Statements*, IFRS Foundation
-(authoritative accounting standard) — presentation of financial statements including amounts
-recognised as distributions to owners; it does not determine what an entity may lawfully distribute.
-OECD *Principles of Corporate Governance* (voluntary framework) — board responsibilities and
-shareholder rights within which a distribution decision is taken; not legislation. The official
-publications govern; verify current requirements.
+(authoritative accounting standard) — for entities applying IFRS Accounting Standards, presentation
+of financial statements including amounts recognised as distributions to owners; it does not
+determine what an entity may lawfully distribute, which is a question of company and insolvency law.
+**IFRS 18 *Presentation and Disclosure in Financial Statements* replaces IAS 1 for annual reporting
+periods beginning on or after 1 January 2027 (earlier application permitted), so confirm which
+instrument applies to the period being reported.** G20/OECD *Principles of Corporate Governance*
+(voluntary framework) — non-binding intergovernmental principles, adopted as an OECD Council
+Recommendation, on board responsibilities and shareholder rights within which a distribution
+decision is taken; not legislation. The official publications govern; verify current requirements.
 
 **Jurisdictional caution.** Lawful distribution depends on company-law tests of distributable
 profits or reserves and on solvency, and is affected by withholding tax and exchange control;
@@ -1951,8 +1997,8 @@ within PCI's authority only.
 
 | ID | Official title | Anchor domain | Related external references |
 |---|---|---|---|
-| PFL-LAW-01-01 | Cash Before Appearance | Domain 1 — Foundations of project finance leadership | IFRS Conceptual Framework; IAS 7 |
-| PFL-LAW-01-02 | Conflict Disclosure and the Two-Hat Rule | Domain 1 — Foundations of project finance leadership | ISO/IEC 17024; OECD Principles of Corporate Governance |
+| PFL-LAW-01-01 | Cash Before Appearance | Domain 1 — Foundations of project finance leadership | IFRS Conceptual Framework (not a standard); IAS 7 |
+| PFL-LAW-01-02 | Conflict Disclosure and the Two-Hat Rule | Domain 1 — Foundations of project finance leadership | ISO/IEC 17024; G20/OECD Principles of Corporate Governance |
 | PFL-LAW-04-01 | Appraisal Discipline | Domain 4 — Investment appraisal and capital budgeting | IAS 36; ISO 31000 |
 | PFL-LAW-05-01 | The Bankability Test | Domain 5 — Project development and bankability | Equator Principles; IFC Performance Standards; ISO 31000 |
 | PFL-LAW-06-01 | Model Integrity | Domain 6 — Financial modelling | ICAEW Financial Modelling Code; FAST Standard |
@@ -1961,9 +2007,9 @@ within PCI's authority only.
 | PFL-LAW-06-04 | The Source Line | Domain 6 — Financial modelling | ISO 8000 series; ISO 15489 |
 | PFL-LAW-06-05 | Model Change Governance | Domain 6 — Financial modelling | SR 11-7 (public supervisory guidance); ISO/IEC 42001; ICAEW Financial Modelling Code |
 | PFL-LAW-07-01 | Revenue Assumption Discipline | Domain 7 — Revenue, demand and commercial models | IFRS 15; ISO 31000 |
-| PFL-LAW-09-01 | Capital-Structure Justification | Domain 9 — Funding structure and sources of capital | Basel framework; OECD Arrangement on Officially Supported Export Credits; Equator Principles |
-| PFL-LAW-10-01 | Debt-Service Coverage Truth | Domain 10 — Debt sizing, covenants and credit metrics | IAS 7; Basel framework |
-| PFL-LAW-10-02 | Covenant Interpretation | Domain 10 — Debt sizing, covenants and credit metrics | IAS 1; Basel framework |
+| PFL-LAW-09-01 | Capital-Structure Justification | Domain 9 — Funding structure and sources of capital | Basel framework (illustrative); OECD Arrangement on Officially Supported Export Credits; Equator Principles |
+| PFL-LAW-10-01 | Debt-Service Coverage Truth | Domain 10 — Debt sizing, covenants and credit metrics | IAS 7; Basel framework (illustrative) |
+| PFL-LAW-10-02 | Covenant Interpretation | Domain 10 — Debt sizing, covenants and credit metrics | IAS 1 (replaced by IFRS 18 from 1 Jan 2027); Basel framework (illustrative) |
 | PFL-LAW-11-01 | Risk Allocation Honesty | Domain 11 — Risk identification and allocation | ISO 31000; FIDIC suite; IFC Performance Standards; Equator Principles |
 | PFL-LAW-12-01 | The Advice Boundary | Domain 12 — Contracts and transaction structure | IAS 12; OECD Model Tax Convention; ISO/IEC 17024 |
 | PFL-LAW-13-01 | Independence of Review | Domain 13 — Due diligence and financial close | IESBA Code of Ethics (incl. Independence Standards); ISO/IEC 17024; Equator Principles |
@@ -1971,7 +2017,7 @@ within PCI's authority only.
 | PFL-LAW-13-03 | Financial-Close Evidence | Domain 13 — Due diligence and financial close | ISO 15489; ISO/IEC 27001 |
 | PFL-LAW-14-01 | Drawdown Integrity | Domain 14 — Construction monitoring and drawdown | FIDIC suite; ISO 15489 |
 | PFL-LAW-14-02 | Funds-Flow Control | Domain 14 — Construction monitoring and drawdown | ISO/IEC 27001; COSO Internal Control |
-| PFL-LAW-15-01 | Distribution Restriction | Domain 15 — Operations, performance and restructuring | IAS 1; OECD Principles of Corporate Governance |
+| PFL-LAW-15-01 | Distribution Restriction | Domain 15 — Operations, performance and restructuring | IAS 1 (replaced by IFRS 18 from 1 Jan 2027); G20/OECD Principles of Corporate Governance |
 | PFL-LAW-16-01 | Transaction Confidentiality | Domain 16 — Data, automation and responsible AI in finance | ISO/IEC 27001; ISO/IEC 42001 |
 | PFL-LAW-16-02 | AI-Assisted Model Verification | Domain 16 — Data, automation and responsible AI in finance | ISO/IEC 42001; ISO/IEC 23894; NIST AI RMF; SR 11-7 |
 | PFL-LAW-16-03 | Human Approval | Domain 16 — Data, automation and responsible AI in finance | ISO/IEC 42001; OECD AI Principles; EU AI Act; COSO Internal Control |

@@ -1,6 +1,6 @@
-# The PCP-AI Credential — Overview
+# The PCL-AI Credential — Overview
 
-**Certified Project Controls Professional — AI** · Project Controls Institute
+**PCI AI Project Controls Leader** · Project Controls Institute
 
 *A concise overview for prospective candidates, employers and training partners.*
 
@@ -14,13 +14,13 @@ every controls professional's desk: **artificial intelligence**. Used well, it d
 anomalies in a cost ledger, and sharpens a forecast. Used carelessly, it invents numbers with total
 confidence.
 
-The **Certified Project Controls Professional — AI (PCP-AI)** is built for exactly this moment. It
+The **PCI AI Project Controls Leader (PCL-AI)** is built for exactly this moment. It
 certifies the classical discipline of project controls **and** the judgement to use AI responsibly — under
-one clear principle: **AI proposes; the professional disposes.** The human stays accountable.
+one clear principle: **AI proposes; the professional verifies, decides and remains accountable.** The human stays accountable.
 
 ## What it certifies
 
-A PCP-AI holder can demonstrate capability across three areas:
+A PCL-AI holder can demonstrate capability across three areas:
 
 - **Financial reporting & accounting (40%)** — the accounting model, IFRS/IAS-based reporting, revenue
   recognition on contracts, cost management and the commercial cycle. Controls professionals who
@@ -32,7 +32,7 @@ A PCP-AI holder can demonstrate capability across three areas:
   generative AI, the tool landscape, AI applied across the controls lifecycle, and — critically — the
   **governance, ethics and assurance** that keep a human accountable for every output.
 
-Underneath sits the **PCP-AI Body of Knowledge**: thirteen domains, sixty-one Knowledge Areas, developed
+Underneath sits the **PCL-AI Body of Knowledge**: thirteen domains, sixty-one Knowledge Areas, developed
 to full professional-handbook depth with worked examples, figures and practice questions.
 
 ## Why it is different
@@ -55,19 +55,19 @@ reflects both the discipline and its AI-augmented future.
 1. **Study** the Body of Knowledge and the published Content Outline.
 2. **Register and pay** the examination fee — this opens a 12-month scheduling window.
 3. **Sit** the 90-minute proctored examination, in the browser or the PCI Secure Exam application.
-4. **Earn** a verifiable PCP-AI credential, and keep it current with continuing professional development
+4. **Earn** a verifiable PCL-AI credential, and keep it current with continuing professional development
    on a three-year cycle.
 
 ## At a glance
 
 | | |
 |---|---|
-| Credential | Certified Project Controls Professional — AI (PCP-AI) |
+| Credential | PCI AI Project Controls Leader (PCL-AI) |
 | Structure | 13 domains · 61 Knowledge Areas · 3 competency areas (40% / 40% / 20%) |
 | Examination | 90 minutes · multiple choice · 65% to pass · remotely proctored |
 | Languages | English, Arabic, Spanish, French, Korean, Chinese, Russian |
 | Validity | Three-year cycle, maintained with CPD |
-| Study resource | The PCP-AI Body of Knowledge |
+| Study resource | The PCL-AI Body of Knowledge |
 
 ---
 

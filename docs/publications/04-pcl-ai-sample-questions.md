@@ -1,8 +1,8 @@
-# PCP-AI Sample Questions
+# PCL-AI Sample Questions
 
-**Certified Project Controls Professional — AI (PCP-AI)** · Project Controls Institute
+**PCI AI Project Controls Leader (PCL-AI)** · Project Controls Institute
 
-*Twelve sample questions illustrating the style, coverage and difficulty of the PCP-AI examination. These
+*Twelve sample questions illustrating the style, coverage and difficulty of the PCL-AI examination. These
 are **study items** drawn from the same blueprint as, but kept separate from, the live examination bank;
 they are never used as live questions. The correct answer and a short rationale follow each item.*
 
@@ -68,7 +68,7 @@ A. 24 points/sprint · **B. 8 points/sprint** · C. 72 points/sprint · D. 3 poi
 
 ## Area C — AI for Project Controls
 
-**11. [recall]** In project controls, the governing principle "AI proposes; the professional disposes"
+**11. [recall]** In project controls, the governing principle "AI proposes; the professional verifies, decides and remains accountable"
 means that:
 **A. the professional remains accountable for the final decision** · B. AI outputs can be accepted as
 always correct · C. AI replaces the cost engineer · D. forecasts are issued automatically without review
@@ -89,4 +89,4 @@ output — which is exactly why the professional must verify the inputs and the 
 1-B · 2-A · 3-C · 4-B · 5-A · 6-B · 7-B · 8-D · 9-D · 10-B · 11-A · 12-C
 
 *Project Controls Institute. For the full treatment of every topic — with worked examples, figures and
-further practice — study the PCP-AI Body of Knowledge.*
+further practice — study the PCL-AI Body of Knowledge.*
