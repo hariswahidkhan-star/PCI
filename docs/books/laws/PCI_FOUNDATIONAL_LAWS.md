@@ -28,6 +28,15 @@ shared source registry (`../registries/SOURCES.md`); their official publications
 text is reproduced. Certification-specific laws (`PCL-LAW-DD-NN`, `PFL-LAW-DD-NN`, `PML-LAW-DD-NN`)
 are subordinate elaborations of this foundational set and must not conflict with it.
 
+**No endorsement, affiliation or accreditation is claimed or implied.** Naming an external
+instrument means only that the instrument exists and is relevant to the topic under discussion. No
+standards body, professional institute, government, supervisory authority or financial institution
+has reviewed, approved, endorsed or accredited these laws, the credentials they support or PCI
+Global, and nothing in this set is a claim of conformity with, certification to, or accreditation
+under any instrument named. Editions, clause numbers and effective dates are not asserted; where an
+instrument's status is known to be changing, that is noted at the point of use and the reader must
+confirm the current position with the publisher.
+
 ---
 
 ## Part I — Accountability and the governed use of AI
@@ -383,7 +392,7 @@ reconstructed from the record alone; treat failure as a defect in the control en
 formality.
 
 **External references.** AACE International Total Cost Management framework (AACE International) —
-industry professional guidance whose documentation discipline PCI characterises as the reference
+professional guidance whose documentation discipline PCI characterises as the reference
 for auditable cost-engineering records. PMBOK Guide and PMI standards (Project Management Institute)
 — professional guidance on decision, change and issue records. FIDIC conditions of contract (FIDIC)
 — contract framework in which contemporaneous records underpin claims and determinations;
@@ -463,7 +472,7 @@ or synthetic values as such.
 data-quality management; cited by name; PCI characterises them as the reference discipline for data
 quality. NIST AI Risk Management Framework (NIST) — public voluntary framework addressing data
 provenance and integrity in AI systems. AACE International Total Cost Management framework (AACE
-International) — industry professional guidance on basis documentation for estimates and forecasts.
+International) — professional guidance on basis documentation for estimates and forecasts.
 The official publications govern.
 
 **Jurisdictional caution.** Data-localisation, privacy and financial record-keeping laws constrain
@@ -535,14 +544,20 @@ every material statement.
 method and bias, and confirm the narrative fairly represents the underlying data — including what it
 leaves out.
 
-**External references.** IFRS Accounting Standards, including IAS 1 *Presentation of Financial
-Statements* (IFRS Foundation) — authoritative accounting standards whose fair-presentation
-discipline PCI characterises as the benchmark for honest financial reporting. IFRS 15 *Revenue from
-Contracts with Customers* (IFRS Foundation) — authoritative accounting standard governing revenue
-recognition on contracts. AACE International Total Cost Management framework (AACE International) —
-industry professional guidance on forecasting and performance-measurement practice. PMBOK Guide and
-PMI standards (Project Management Institute) — professional guidance on performance reporting. The
-official publications govern.
+**External references.** IFRS Accounting Standards (IFRS Foundation) — authoritative accounting
+standards, mandatory only for entities that apply them in a jurisdiction that has adopted them,
+whose fair-presentation discipline PCI characterises as the benchmark for honest financial
+reporting. IAS 1 *Presentation of Financial Statements* (IFRS Foundation) — authoritative accounting
+standard on presentation; **note that IFRS 18 *Presentation and Disclosure in Financial Statements*
+replaces IAS 1 for annual reporting periods beginning on or after 1 January 2027 (earlier
+application permitted), and that IAS 8 is retitled *Basis of Preparation of Financial Statements*
+from the same date — verify which instrument applies to the reporting period in question**. IFRS 15
+*Revenue from Contracts with Customers* (IFRS Foundation) — authoritative accounting standard
+governing revenue recognition on contracts for entities applying IFRS Accounting Standards. AACE
+International Total Cost Management framework (AACE International) — professional guidance on
+forecasting and performance-measurement practice. PMBOK Guide and PMI standards (Project Management
+Institute) — professional guidance on performance reporting. The official publications govern;
+verify current requirements.
 
 **Jurisdictional caution.** Securities, public-procurement and financial-reporting laws attach
 specific liability to misstatements in some jurisdictions; obtain local legal and accounting advice
@@ -1095,7 +1110,7 @@ register, and permanent exclusion for fraudulent credential claims.
 | PCI-LAW-F-04 | Disclosure of Material AI Assistance | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | OECD AI Principles; NIST AI RMF; EU AI Act |
 | PCI-LAW-F-05 | Evidence and the Audit Trail | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | AACE TCM; PMBOK Guide/PMI standards; FIDIC; ISO 21500-family |
 | PCI-LAW-F-06 | Data Lineage and Integrity | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | ISO 8000; NIST AI RMF; AACE TCM |
-| PCI-LAW-F-07 | Honesty in Reporting and Forecasting | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | IAS 1; IFRS 15; AACE TCM; PMBOK Guide/PMI standards |
+| PCI-LAW-F-07 | Honesty in Reporting and Forecasting | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | IFRS Accounting Standards; IAS 1 (replaced by IFRS 18 from 1 Jan 2027); IFRS 15; AACE TCM; PMBOK Guide/PMI standards |
 | PCI-LAW-F-08 | Competence Boundaries and Referral | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | ISO/IEC 17024; PMI Code of Ethics and Professional Conduct |
 | PCI-LAW-F-09 | Confidentiality and Information Protection | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | ISO/IEC 27001; NIST AI RMF |
 | PCI-LAW-F-10 | Conflict-of-Interest Disclosure | Foundational — suite-wide (PCL-AI D13 · PML-AI KA 1.4/D14 · PFL-AI D16) | ISO/IEC 17024; PMI Code of Ethics and Professional Conduct |

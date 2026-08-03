@@ -2,7 +2,7 @@
 
 **Status:** Certification Laws for the **PCL-AI** credential (AI Project Controls Leader), drafted
 under and subordinate to the binding specification in [`LAW_SYSTEM.md`](LAW_SYSTEM.md). Twenty laws,
-anchored to the thirteen-domain PCL-AI Body of Knowledge (`docs/bok/`).
+anchored to the thirteen-domain PCL-AI Body of Knowledge (`../../bok/`).
 
 > PCI Professional Laws are professional certification rules and standards of conduct established by
 > PCI Global. They are not legislation, regulatory requirements or substitutes for applicable law,
@@ -30,6 +30,12 @@ anchored to the thirteen-domain PCL-AI Body of Knowledge (`docs/bok/`).
 - **External references are characterised, never reproduced.** Real instruments are named and
   described in PCI's own words; the official publication always governs. No clause numbers or
   editions are asserted unless verified.
+- **No endorsement, affiliation or accreditation is claimed or implied.** Naming an external
+  instrument means only that it exists and is relevant. No standards body, professional institute,
+  government, supervisory authority or financial institution has reviewed, approved, endorsed or
+  accredited these laws, the PCL-AI credential or PCI Global, and nothing here is a claim of
+  conformity with, certification to, or accreditation under any instrument named. Where an
+  instrument's status is known to be changing, that is noted at the point of use.
 - **The suite principle** applies to every law in this set, in its one approved formulation:
 
 > **AI proposes; the professional verifies, decides and remains accountable.**

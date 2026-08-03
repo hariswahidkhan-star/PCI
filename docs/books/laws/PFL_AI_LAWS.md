@@ -367,8 +367,8 @@ within PCI's authority only.
 
 **Rule.** Every financial model a credential holder builds, relies upon or presents for decision
 must separate inputs, calculations and outputs, must carry a check block that computes its
-arithmetic invariants as differences that should be nil, and must not be quoted, circulated or
-relied upon while any check is failing.
+arithmetic invariants as differences that must resolve to nil, and must not be quoted, circulated
+or relied upon while any check is failing.
 
 **Purpose.** The model is the transaction's shared instrument of belief: debt is sized on it,
 covenants are set from it and a board sanctions against it. Structure is what makes it reviewable by
@@ -661,11 +661,11 @@ within PCI's authority only.
 
 ### PCI LAW PFL-LAW-06-05 — Model Change Governance
 
-**Rule.** A model that has been used for a decision may be changed only under version control: each
-change recorded in a change log with author, date, reason and effect; the check block and the
-regression suite rerun; every movement explained before acceptance; and one authoritative version
-identified. No change may reach the authoritative file without appearing in the change log under a
-named human author.
+**Rule.** A model that has been used for a decision must not be changed except under version
+control: each change shall be recorded in a change log with author, date, reason and effect; the
+check block and the regression suite shall be rerun; every movement shall be explained before
+acceptance; and one authoritative version shall be identified. No change shall reach the
+authoritative file without appearing in the change log under a named human author.
 
 **Purpose.** A transaction model is edited continuously, by several hands, under time pressure.
 Without version control the parties stop looking at the same project, and nobody can say when a

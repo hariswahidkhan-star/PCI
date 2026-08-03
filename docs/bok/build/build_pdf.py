@@ -6,7 +6,7 @@ styles with print.css (A4), renders with WeasyPrint, and reports the page count.
 
 Usage:  python3 build_pdf.py [output.pdf]
 """
-import subprocess, sys, datetime, pathlib
+import subprocess, sys, datetime, pathlib, re
 
 BOK = pathlib.Path(__file__).resolve().parent.parent
 BUILD = BOK / "build"
@@ -189,10 +189,42 @@ def inject_figures(corpus: str) -> str:
     return "\n".join(out)
 
 
+def laws_back_matter() -> str:
+    """Append the PCI Professional Laws that bind this credential, as back matter.
+
+    The foundational laws bind all three credentials; the PCL-AI set binds this one.
+    Both files live in the programme's shared law directory. A missing file is skipped
+    rather than failing the build, so the book still builds before the laws are approved.
+    """
+    laws_dir = BOK.parent / "books" / "laws"
+    parts = []
+    for name, heading in (("PCI_FOUNDATIONAL_LAWS.md", "PCI Foundational Laws"),
+                          ("PCL_AI_LAWS.md", "PCL-AI Professional Laws")):
+        path = laws_dir / name
+        if not path.exists():
+            print(f"laws: {name} not found — skipped")
+            continue
+        body = path.read_text(encoding="utf-8")
+        # The book supplies its own part heading, so demote the file's H1 to avoid two.
+        body = re.sub(r"^# ", "## ", body, count=1, flags=re.M)
+        parts.append(body)
+        print(f"laws: {name} included ({len(body):,} chars)")
+    if not parts:
+        return ""
+    return ("\n\n# PCI Professional Laws\n\n"
+            "The laws in this part are mandatory professional rules established by Project Controls "
+            "Institute Global. They are **not legislation, regulatory requirements or substitutes for "
+            "applicable law, contractual obligations or authoritative professional standards** — where any "
+            "of those imposes a stricter requirement, that requirement governs. Each law is cited by its "
+            "stable identifier, never by page number. The front matter explains how to read them.\n\n"
+            + "\n\n".join(parts))
+
+
 def main() -> None:
     # 1. Concatenate the corpus in reading order; inject rendered figures.
     corpus = "\n\n".join((BOK / name).read_text(encoding="utf-8") for name in ORDER)
     corpus = inject_figures(corpus)
+    corpus += laws_back_matter()
     combined = BUILD / "_combined.md"
     combined.write_text(corpus, encoding="utf-8")
 
