@@ -1,14 +1,5 @@
 # Domain 2 — Strategy, Selection and Business Alignment
 
-> **Group:** Leading projects (Domain 2 of 4 in Part One). **Target:** ~78 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain continues the **Meridian Care Records** programme from
-> Domain 1 into its business case and benefits map, and bridges to the appraisal machinery the
-> finance book builds in detail (PFL-AI, Domain 4). It uses Domain 3's governance-latency formula
-> and Domain 8's expected-value machinery rather than restating them, and supplies the breakeven
-> and assumption-exposure arithmetic that Domain 15 applies at portfolio scale and Domain 16 tests
-> at realisation. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domain 1 established that a project is judged on outcomes and benefits, not delivered outputs, and

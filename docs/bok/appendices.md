@@ -1,4 +1,4 @@
-# Appendices — PCP-AI Body of Knowledge
+# Appendices — PCL-AI Body of Knowledge
 
 > Back-matter assembled from the finished domains, per the Style Spine (§4, §9) and the consolidation plan.
 > As further domains are revised through SME review, these indexes are regenerated from the source chapters.
@@ -120,7 +120,7 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Agile mindset / Manifesto** | Valuing working outcomes, collaboration, value and responsiveness to change. | 9.1 |
 | **AgileEVM** | Earned value applied to variable-scope adaptive delivery (Domain 9). | 6.4 |
 | **AI / ML / GenAI** | The field / learning-from-data subset / content-generating subset (nested). | 13.1 |
-| **AI proposes, professional disposes** | AI drafts/predicts; a qualified professional decides and is accountable. | 13.6 |
+| **AI proposes; the professional verifies, decides and remains accountable** | AI drafts/predicts; a qualified professional decides and is accountable. | 13.6 |
 | **AI-assisted disclosure/forecast** | AI-drafted output the professional verifies and signs off. | 13.5 |
 | **AI-maturity model** | Ad-hoc → piloting → standardised → integrated → governed/optimised. | 13.7 |
 | **AI-use policy / verification checklist** | The governance document and the operational assurance step. | 13.6 |
@@ -618,8 +618,7 @@ AI step, and at each one a named professional disposed of what the AI proposed (
 | 7 | Drafted exception narratives and dashboard assembly (13.5.8) | Accuracy, framing and the final sign-off |
 
 Every step ran inside the guardrails: verified against source before use (13.6.5's checklist), with the audit
-trail of what the AI produced, who approved it and what changed (13.6.2). **AI proposes, the professional
-disposes** — at every station, without exception.
+trail of what the AI produced, who approved it and what changed (13.6.2). **AI proposes; the professional verifies, decides and remains accountable** — at every station, without exception.
 
 ### The PCI control cycle
 

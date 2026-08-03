@@ -1,17 +1,4 @@
-# Domain 6 — Financial Modelling and Model Governance *(quantitative)*
-
-> **Group:** Structuring and modelling (Domain 2 of 5 in Part Two). **Target:** ~78 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of the *model* — the artefact on which
-> Domains 3, 4, 5 and 10 all silently depended. It consumes Domain 3's discounting and
-> amortisation machinery (`AF(r, n)`, `DF(t)`), Domain 4's appraisal measures (`NPV`, `IRR`,
-> `MIRR`, `PI`), Domain 2's three statements and `CFADS` definition, and Domain 10's coverage
-> ratios (`DSCR`, `LLCR`, `PLCR`), and it takes responsibility for whether any of them is
-> computed correctly. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-> Tax and accounting treatments are described in principle and are jurisdiction-specific: the
-> arithmetic here is transferable, the treatments are not, and neither is a substitute for
-> professional tax or accounting advice.
-
+# Domain 6 — Financial Modelling and Model Governance
 ## Why this domain exists
 
 Every number in Domains 3 to 5 and 10 came out of a model, and not one of those domains examined

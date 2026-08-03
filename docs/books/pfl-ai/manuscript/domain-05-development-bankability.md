@@ -1,18 +1,5 @@
 # Domain 5 — Project Development and Bankability
 
-> **Group:** Structuring and modelling (Domain 5 of 5 in Part Two). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of **bankability**, the **special-purpose
-> vehicle** and the development option premium. It consumes Domain 4's appraisal verdict and hands
-> Domain 6 a structure to model. Coverage machinery (`DSCR`, `LLCR`, max debt capacity) is **cited
-> from Domain 10, never re-derived here.** British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`).
-> Tax, accounting and legal treatments described here are **illustrative and
-> jurisdiction-specific**; none is presented as universal. In particular, whether a
-> liquidated-damages rate or cap, a dilution or conversion mechanic, or a stated liability basis is
-> enforceable as drafted is a matter for qualified counsel in the governing jurisdiction, and
-> nothing in this domain is legal advice.
-
 ## Why this domain exists
 
 Domain 4 established that Kestrel Water SPC is **valuable** — `NPV` +USD 16,179,360 at 8 %, `IRR`

@@ -1,9 +1,5 @@
 # Domain 4 — Performance Management, Variance Analysis & Management Reporting
 
-> **Group:** Finance, accounting & reporting (Domain 4 of 4). **Target:** ~115 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful); five-line
-> worked examples; adverse amounts in parentheses.
-
 ## Why this domain exists
 
 Measuring cost and revenue correctly (Domains 1–2) and planning them (Domain 3) is only worth doing if the
@@ -247,8 +243,7 @@ reads variances **with their causes and consequences**, not by sign alone — an
 automatically across hundreds of control accounts, cluster them by likely cause, and **draft the narrative**
 ("the adverse material variance is driven ~70 % by rate, ~30 % by usage"). The professional owns the
 attribution and the judgement — an AI narrative that labels a deliberate acceleration cost an "overrun", or
-misses that a favourable variance hides skipped scope, misleads a board. **AI proposes, the professional
-disposes.**
+misses that a favourable variance hides skipped scope, misleads a board. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### 4.2.6 Margin fade
 
@@ -411,7 +406,7 @@ which control accounts breach tolerance, **drafting the exception narratives**, 
 natural-language questions over controls data ("why did project 1420's `EAC` move this month?"). The
 professional owns accuracy and framing: a drafted narrative can misattribute cause or bury a caveat, and a
 natural-language answer can be confidently wrong on a definition. Reports drive decisions and sometimes
-external disclosure — so the human signs off. **AI proposes, the professional disposes.**
+external disclosure — so the human signs off. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### 4.3.6 Worked example — an exception report from a RAG dashboard
 
@@ -547,7 +542,7 @@ the measurement finally moves an outcome.
 **AI in this KA.** AI can propose the right chart for a dataset, generate visuals, and draft the narrative arc.
 It can also *introduce* distortions (a default truncated axis, a misleading dual axis) if unsupervised, and
 can write persuasive narrative that overstates certainty. The professional curates the visual and owns the
-story's integrity. **AI proposes, the professional disposes.**
+story's integrity. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 4.4
 
@@ -1065,7 +1060,7 @@ entry** that lets a board govern five projects in thirty minutes, each tier of t
 at its own level (4.3.5; Advanced 4.A.4). On AI: anomaly detection can rank the portfolio's variances,
 draft the decomposition and even flag distorted charts in a submitted pack — but tolerance-setting, cause
 attribution and the decision to keep P2 amber are professional judgements, owned and signed (13.5.6):
-**AI proposes, the professional disposes.**
+**AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1258,8 +1253,7 @@ Run against every recurring report before it is issued — and again whenever th
 **Usage note.** This is the KA 4.3 discipline as a pre-issue gate: a report that passes all ten lets its
 reader see where they are, where they are heading, what is off-track and what is being done about it — in
 the time they have (4.3.1). The narrative and exception items (4, 6) are where AI-drafted commentary needs
-the closest check, since a fluent draft can misattribute cause or bury a caveat — **AI proposes, the
-professional disposes**. The honesty items (9, 10) hold the 4.4 standard that the picture must tell the same
+the closest check, since a fluent draft can misattribute cause or bury a caveat — **AI proposes; the professional verifies, decides and remains accountable**. The honesty items (9, 10) hold the 4.4 standard that the picture must tell the same
 truth as the numbers. Keep the checklist stable so failures are comparable across cycles; a recurring failure
 on the same item is a design problem, not a drafting one.
 

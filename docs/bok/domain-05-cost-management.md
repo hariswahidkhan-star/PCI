@@ -1,9 +1,5 @@
 # Domain 5 — Cost Management & Cost Control
 
-> **Group:** Project management (Domain 5 of 8 in the PM group). **Target:** ~90 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful); five-line
-> worked examples.
-
 ## Why this domain exists
 
 The finance group (Domains 1–4) established how cost is *recorded, reported and forecast*. This domain is
@@ -270,7 +266,7 @@ applications in project controls (Domain 1, KA 1.5; Domain 13, KA 13.5): models 
 invoice/PO narratives, match extracted cost to the ledger and flag exceptions, detect duplicate or anomalous
 postings, and propose month-end accruals from goods-received-not-invoiced data. The professional owns the
 mapping rules, the exceptions and the accrual judgements — an auto-accrual from a document date rather than a
-service date reproduces a real cut-off error at scale. **AI proposes, the professional disposes.**
+service date reproduces a real cut-off error at scale. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 5.2
 
@@ -523,7 +519,7 @@ estimate (3.2.3) or a provision (1.4.6).
 trends early** (a leading-indicator engine for change), estimating the likely cost impact of a proposed change
 from historical analogues, and keeping the change log reconciled. The professional owns the impact assessment
 and the approval — a model can flag a possible change but cannot weigh its full disruption/acceleration cost or
-authorise it. **AI proposes, the professional disposes.**
+authorise it. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 5.4
 
@@ -897,7 +893,7 @@ scope, budget, cost states and schedule meet — the data layer on which trustwo
 falls. Finally, the AI dimension: auto-coding, commitment-tracking and accrual-proposal tools reading the
 procurement register and goods-received data would have surfaced this position months earlier and kept it
 current every month since — with the professional owning the accrual judgements, the trend assessments and
-the funding decision (Domain 13, KA 13.5.4). **AI proposes, the professional disposes.**
+the funding decision (Domain 13, KA 13.5.4). **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1041,7 +1037,7 @@ change number reconciling both in the log, so the `BAC`'s movement from 58.00m t
 authorised explanation. AI could keep the commitment ledger current from the procurement register, propose
 the CQV accruals from timesheet feeds and meter the utilities allocation automatically — with the
 professional owning the accrual cut-off, the driver choice and the funding split (Domain 13, KA 13.5.4).
-**AI proposes, the professional disposes.**
+**AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

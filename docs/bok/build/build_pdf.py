@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the PCP-AI Body of Knowledge PDF from the markdown corpus.
+"""Build the PCL-AI Body of Knowledge PDF from the markdown corpus.
 
 Concatenates the book files in reading order, converts to HTML via pandoc,
 styles with print.css (A4), renders with WeasyPrint, and reports the page count.
@@ -10,7 +10,7 @@ import subprocess, sys, datetime, pathlib
 
 BOK = pathlib.Path(__file__).resolve().parent.parent
 BUILD = BOK / "build"
-OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else BUILD / "pcp-ai-bok.pdf"
+OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else BUILD / "pcl-ai-bok.pdf"
 
 ORDER = [
     "00-style-spine.md",
@@ -32,14 +32,14 @@ ORDER = [
 
 TITLE_HTML = f"""
 <div class="titlepage">
-  <h1>PCP-AI<br/>Body of Knowledge</h1>
-  <div class="subtitle">The reference for the Certified Project Controls Professional — AI<br/>
+  <h1>PCL-AI<br/>Body of Knowledge</h1>
+  <div class="subtitle">The reference for the PCI AI Project Controls Leader<br/>
   Project controls · project finance · the governed use of AI</div>
   <div class="rule"></div>
   <div class="meta">FIRST EDITION<br/>
   {datetime.date.today().year}<br/><br/>
   PROJECT CONTROLS INSTITUTE GLOBAL<br/>
-  <em>AI proposes. The professional disposes.</em></div>
+  <em>AI proposes; the professional verifies, decides and remains accountable.</em></div>
 </div>
 
 <div class="frontmatter">
@@ -50,6 +50,10 @@ TITLE_HTML = f"""
   <p><strong>First Edition.</strong> The Body of Knowledge is maintained under a continuous review programme;
   corrections and refinements identified through technical and editorial review are incorporated in subsequent
   printings, and the current edition supersedes all earlier printings.</p>
+  <p><strong>Former name.</strong> This credential and its Body of Knowledge were previously designated
+  PCP-AI (Certified Project Controls Professional — AI). The designation was retired and replaced by
+  PCL-AI (PCI AI Project Controls Leader); the former name is recorded here for credential history only
+  and is not an active credential.</p>
   <p><strong>Disclaimer.</strong> This reference is an educational publication. It does not constitute accounting, tax, legal,
   financial or other professional advice, and it should not be relied upon as a substitute for advice from qualified
   professionals on specific matters. Tax rates, contract-law rules and regulatory requirements vary by jurisdiction and
@@ -59,12 +63,12 @@ TITLE_HTML = f"""
   respective owners — including PMBOK, PMI and PMP (Project Management Institute, Inc.), IFRS and IAS (IFRS
   Foundation), AACE (AACE International), FIDIC (Fédération Internationale des Ingénieurs-Conseils), the
   Scrum Guide (its authors), and SAFe (Scaled Agile, Inc.). References to such frameworks do not imply endorsement by, or affiliation with, their
-  publishers. No governmental approval or third-party accreditation of the PCP-AI credential is implied.</p>
+  publishers. No governmental approval or third-party accreditation of the PCL-AI credential is implied.</p>
   <p><strong>Original content.</strong> All examples, case studies, figures, templates and examination-style questions in
   this volume are original. Organisations, projects and figures appearing in examples and case studies are fictional
   and illustrative; any resemblance to actual organisations or projects is coincidental. Sample questions are study
   material and are maintained separately from any live examination bank.</p>
-  <p><em>The governing principle of this Body of Knowledge: <strong>AI proposes, the professional disposes.</strong></em></p>
+  <p><em>The governing principle of this Body of Knowledge: <strong>AI proposes; the professional verifies, decides and remains accountable.</strong></em></p>
 
   <h2 style="page-break-before: always;">How to use this reference</h2>
   <p>The book is organised as <strong>13 domains</strong> in three groups — finance, accounting &amp; reporting
@@ -120,7 +124,7 @@ def main() -> None:
     # 2. Markdown -> HTML body via pandoc (with a generated table of contents).
     html_body = subprocess.run(
         ["pandoc", str(combined), "-f", "gfm", "-t", "html", "--toc", "--toc-depth=2", "-s",
-         "--metadata", "title=PCP-AI Body of Knowledge"],
+         "--metadata", "title=PCL-AI Body of Knowledge"],
         capture_output=True, text=True, check=True).stdout
     # Inject the title page right after <body> and drop pandoc's default header block.
     html_body = html_body.replace("<body>", "<body>" + TITLE_HTML, 1)
@@ -177,7 +181,7 @@ def main() -> None:
         (13, "Part Three", "AI Knowledge & Practical Approach",
          "Domain 13 — concepts, data, prompting, tools, applied workflows, governance and capability: the "
          "governed use of artificial intelligence across the whole controls lifecycle. Twenty per cent of the "
-         "Body of Knowledge, under one principle: AI proposes, the professional disposes."),
+         "Body of Knowledge, under one principle: AI proposes; the professional verifies, decides and remains accountable."),
     ]
     for i, (dom, num, title, desc) in enumerate(PARTS, start=1):
         kick = f'<div class="chapter"><div class="chapnum">{dom:02d}</div>'

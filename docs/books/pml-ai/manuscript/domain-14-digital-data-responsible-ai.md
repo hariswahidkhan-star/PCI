@@ -1,31 +1,5 @@
 # Domain 14 — Digital Delivery, Data and Responsible AI
 
-> **Group:** Enterprise delivery and the digital future (Domain 14 of 3 in Part Four). **Target:**
-> ~76 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This is the volume's **systematic** treatment of digital delivery, data
-> and artificial intelligence. Domains 1 to 13 each carried an *AI in this KA* section covering the
-> use and misuse of AI inside their own subject matter; this domain **consolidates** those positions
-> into one governable system and supplies the arithmetic the earlier domains asserted but did not
-> derive. It runs **Meridian Care Records** at programme scale and **Project Auriga** at
-> single-project scale. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
->
-> **Registry note.** This domain uses the registered **cost of delay** (PML-AI D1/D3) and the
-> registered **governance latency** identity `E[wait] = M/2 + L` (PML-AI D3, KA 3.2.3) unchanged,
-> applying the second to *information* rather than to decisions — the same two operations on a
-> reporting period and a production lag, cited rather than re-derived. It cites Domain 9's sampling
-> arithmetic (`p* = c/u` and the clean-sample bound, KA 9.3.2 and 9.4.4) and Domain 9's composite
-> data fitness (KA 9.4.3) rather than restating them. It submits four candidate registry rows:
-> **consequence-weighted defect exposure** `Σ nᵢdᵢuᵢ` with the per-record exposure `dᵢuᵢ` that ranks
-> remediation; **quality-adjusted automation breakeven volume**
-> `n* = F / [(m + eₘu) − (a + eₐu)]`; the **verification tier threshold**
-> `u*ₖ = Δvₖ / (p · Δqₖ)` — the derived form of the *verification standard proportional to
-> consequence* that Domain 3, KA 3.A.2 asserted; and the **escape-cost asymmetry**
-> `(1 − q_p)u_p ÷ (1 − q_o)u_o`. Each carries a verified golden example below. Every error rate,
-> detection rate, defect rate and unit cost in them is a **locally calibrated planning or measured
-> figure, not a constant** — the domain says so at each use, and says what must be measured to
-> replace it.
-
 ## Why this domain exists
 
 Thirteen domains have now used AI in the way a professional actually uses it: as an assistant to a

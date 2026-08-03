@@ -1,12 +1,5 @@
 # Domain 13 — Due Diligence and Financial Close
 
-> **Group:** Executing the transaction (Domain 13 of 4 in Part Three). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain closes Part Three. It consumes Domain 5's condition
-> register, Domain 6's model and model-audit economics, Domain 9's tranche structures, Domain 10's
-> coverage machinery and Domain 12's contract set, and converts them into a dated event: money in
-> an account. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domains 10 to 12 sized the debt, allocated the risk and drafted the contracts — all on the

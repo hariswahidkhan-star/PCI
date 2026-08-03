@@ -1,16 +1,5 @@
 # Domain 12 — Contracts and Transaction Structure
 
-> **Group:** Executing the transaction (Domain 3 of 4 in Part Three). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain documents the allocations Domain 11 priced and reads
-> their consequences in the coverage machinery Domain 10 built (`CFADS`, `DSCR`, covenant and
-> lock-up triggers) — neither is re-derived here. **Commercial purpose only.** Contract law,
-> enforceability, penalty doctrines, limitation of liability, security perfection, insolvency
-> priority and dispute procedure differ fundamentally between jurisdictions and change over time;
-> every jurisdiction-specific matter in this domain must be referred to qualified counsel in the
-> relevant jurisdiction, and nothing here is legal advice. British English; USD (+SAR where
-> useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domain 11 established that risk allocation is a price and computed what Kestrel's transfers were

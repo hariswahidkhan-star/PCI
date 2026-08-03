@@ -1,9 +1,5 @@
 # Domain 12 — Risk Management for Project Controls
 
-> **Group:** Project management. **Target:** ~50 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful). Closes the
-> loop to contingency (Domain 3, KA 3.1.4) and schedule risk (Domain 10, KA 10.3.4).
-
 ## Why this domain exists
 
 Every estimate, schedule and forecast in this book is made under **uncertainty**, and risk management is the
@@ -399,7 +395,7 @@ project data and analogous histories, scoring probability/impact, running and in
 simulations, and tracking leading indicators of emerging risk. The judgements — whether a risk is real, whether
 a response is adequate, what contingency the organisation's appetite requires — remain the professional's,
 auditable and owned. A model that under-scores a tail risk, or a contingency set by an unexamined algorithm,
-can leave a project dangerously exposed. **AI proposes, the professional disposes.**
+can leave a project dangerously exposed. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 12.3
 
@@ -572,7 +568,7 @@ the funding? None of these yields a contingency line; they inform the **manageme
 **AI, honestly (Domain 13, KA 13.5.9).** AI genuinely helps with the scanning — reading regulatory feeds,
 mining analogous histories, surfacing weak signals at a scale no analyst matches. But a model trained on
 history systematically under-weights what history does not contain: the novel event has no base rate to
-learn. AI widens the scan; humans judge the novelty. **AI proposes, the professional disposes.**
+learn. AI widens the scan; humans judge the novelty. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Advanced 12.A.4 — Risk culture and incentives
 
@@ -880,7 +876,7 @@ especially then. And the **management reserve** (12.3.2) works only because it w
 kept distinct: the escalation was a documented re-baselining with evidence, not a quiet top-up. A
 simulation engine ran the correlated model three times this year in minutes (Domain 13, KA 13.5.9); the
 probability judgements, the correlation call, the exploit decision and the escalation conversation were the
-professional's. **AI proposes, the professional disposes.**
+professional's. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

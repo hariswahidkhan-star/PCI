@@ -1,14 +1,9 @@
 # Domain 13 — AI for Project Controls & Project Management: Concepts, Tools & Practice
 
-> **Group:** AI knowledge & practical approach (the 20 % AI domain). **Target:** ~300 pages — a major,
-> practical domain, not an appendix. **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English;
-> USD (+SAR where useful). Tools are named as **categories and representative examples**, vendor-neutrally,
-> with **no fabricated features**; where a capability is evolving it is flagged as such (Spine §9).
-
 ## Why this domain exists
 
 Artificial intelligence is changing how project controls and project management are done — but the credential's
-governing principle never changes: **"AI proposes, the professional disposes."** AI can draft, extract,
+governing principle never changes: **"AI proposes; the professional verifies, decides and remains accountable."** AI can draft, extract,
 forecast, detect and summarise; it cannot be *accountable*. This domain teaches both the **concepts** (what AI
 is, how it works, where it fails) and the **hands-on practice** (which tool categories, which workflows, how to
 apply AI to real controls tasks) so a certified professional can use AI **competently and responsibly**. It
@@ -23,8 +18,7 @@ real limits — hallucination, data quality, bias, confidentiality, auditability
 and classify a task as rules vs ML vs GenAI; assess and prepare project-controls data for AI; prompt
 generative AI effectively and verify its output; select the right AI tool category for a task; apply AI to
 estimating, forecasting/EVM, cost control, scheduling, agile, contracts, reporting, risk and financial
-reporting, with the professional's verification shown; govern and assure AI use ("AI proposes, the professional
-disposes"); and build and mature an AI-augmented controls capability.
+reporting, with the professional's verification shown; govern and assure AI use ("AI proposes; the professional verifies, decides and remains accountable"); and build and mature an AI-augmented controls capability.
 
 ---
 
@@ -509,8 +503,7 @@ falsifying evidence | alternative method. Close by listing any data you would ha
 ```
 
 *What to verify before use:* every challenge is a question to investigate, not a finding — test each against
-the actual cost data, and the `EAC` that survives is selected and owned by the professional (KA 6.3.3): AI
-proposes, the professional disposes.
+the actual cost data, and the `EAC` that survives is selected and owned by the professional (KA 6.3.3): AI proposes; the professional verifies, decides and remains accountable.
 
 **Schema-bound extraction — contract clauses into a fixed schema.** Used when the destination is a governed
 artefact with fixed columns — a contract register or obligations tracker — where the freeform extraction
@@ -608,8 +601,7 @@ before use (13.3.3).
 **The principle.** GenAI is used **iteratively**: prompt, review, refine. And — the non-negotiable step — every
 output is **verified** before use. For a controls professional this means: check figures against source
 (a model can miscalculate or fabricate), check extracted data against the document, check a narrative's causal
-claims against the actual variance analysis. The verification step is where "AI proposes, the professional
-disposes" becomes concrete.
+claims against the actual variance analysis. The verification step is where "AI proposes; the professional verifies, decides and remains accountable" becomes concrete.
 
 **Worked workflow 13.3.3 — raw cost data → verified variance commentary.**
 
@@ -640,7 +632,7 @@ disposes" becomes concrete.
    (Domain 7).
 
 This is why grounding (RAG) and citation-to-source matter — an ungrounded extraction invites hallucinated
-clauses. **AI proposes, the professional disposes.**
+clauses. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### 13.3.4 Guardrails
 
@@ -668,7 +660,7 @@ narrative is to:
 - C. Verify the figures and causal claims against source before use. ✅
 - D. Delete the source data.
 
-*Rationale:* Verification is the step that makes "AI proposes, the professional disposes" real — a model can
+*Rationale:* Verification is the step that makes "AI proposes; the professional verifies, decides and remains accountable" real — a model can
 miscalculate or over-claim. Publishing unverified output, changing temperature, or deleting source all fail the
 principle.
 
@@ -882,7 +874,7 @@ professional owns what the automation does.
 Across all ten, capabilities evolve quickly: the professional validates a tool's **current** features rather
 than assuming vendor claims or last year's experience. The category-to-task fit (13.4.4) and the verification
 discipline (13.3.3, 13.6) apply unchanged across every category — whatever the tool proposes, the professional
-disposes.
+verifies, decides and remains accountable.
 
 ### 13.4.3 Domain and platform AI
 
@@ -1006,8 +998,7 @@ reporting & performance · 13.5.9 risk · 13.5.10 financial reporting & standard
 
 ### 13.5.1 The pattern
 
-**The workflow shape.** Every application below follows one shape — the operational form of "AI proposes, the
-professional disposes":
+**The workflow shape.** Every application below follows one shape — the operational form of "AI proposes; the professional verifies, decides and remains accountable":
 
 ```
 Input (governed data) → AI step (draft/extract/forecast/detect) → Professional verification/decision → Output (owned)
@@ -1037,7 +1028,7 @@ boxes.
    (sector, spec level, year basis), checks the location adjustment, and reconciles the parametric figure
    against the bottom-up estimate before presenting both with their class and range (Domain 3, KA 3.2).
 4. **Output.** A check estimate the estimator owns — used to **challenge**, not replace, the bottom-up figure.
-   **AI proposes, the professional disposes.**
+   **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### 13.5.3 Forecasting & EVM/EAC (Domains 3, 6)
 
@@ -1096,7 +1087,7 @@ boxes.
 4. **Result.** Adopt, with the human review step retained.
 5. **Interpretation.** The honest evaluation names all three numbers — precision at the threshold (97.5 %),
    the residual **20 miscodes** a month that the review step and the reconciliation discipline of KA 1.5.2
-   must catch, and the measured (not vendor-claimed) time saving; "AI proposes, the professional disposes"
+   must catch, and the measured (not vendor-claimed) time saving; "AI proposes; the professional verifies, decides and remains accountable"
    is operationalised here as a threshold, a review step and an audit sample, not a slogan.
 
 ### 13.5.5 Scheduling (Domain 10)
@@ -1344,14 +1335,14 @@ recalculate. The AI found the defects; the planner decided what each meant.
 
 ## Knowledge Area 13.6 — Governance, ethics, risk & assurance of AI
 
-*Topics: 13.6.1 "AI proposes, the professional disposes" · 13.6.2 accountability, sign-off and auditability ·
+*Topics: 13.6.1 "AI proposes; the professional verifies, decides and remains accountable" · 13.6.2 accountability, sign-off and auditability ·
 13.6.3 hallucination, bias and confidentiality · 13.6.4 when not to use AI · 13.6.5 an AI-use policy and
 verification checklist.*
 
-### 13.6.1 "AI proposes, the professional disposes"
+### 13.6.1 "AI proposes; the professional verifies, decides and remains accountable"
 
 **The governing principle.** The credential's principle is not a slogan — it is a governance rule: AI may
-**propose** (draft, extract, forecast, detect), but a **qualified professional disposes** (decides, verifies,
+**propose** (draft, extract, forecast, detect), but a **qualified professional decides** (verifies,
 signs off, and is **accountable**). No output is correct because a model produced it; it is correct because a
 professional has verified it against source, policy and judgement, and put their name to it. This principle
 runs through every workflow in 13.5 and every governance control below.
@@ -1474,13 +1465,13 @@ training at least annually.
 
 *A template to adapt — the policy's force comes from the sign-off discipline it encodes, not the paper.*
 
-**AI proposes, the professional disposes.**
+**AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 13.6
 
 | Term | Meaning |
 |---|---|
-| **AI proposes, professional disposes** | AI drafts/predicts; a qualified professional decides and is accountable. |
+| **AI proposes; the professional verifies, decides and remains accountable** | AI drafts/predicts; a qualified professional decides and is accountable. |
 | **Auditability / sign-off** | Keeping the trail of what AI produced, who approved it, what changed and why. |
 | **Hallucination / bias / confidentiality** | The three principal AI risks and their mitigations. |
 | **AI-use policy / verification checklist** | The governance document and the operational assurance step. |
@@ -1579,8 +1570,7 @@ breach (13.2.5) to the wrong call.
 
 ### Self-check — KA 13.6
 
-1. State the governing principle and why a model cannot satisfy accountability. *(AI proposes, the professional
-   disposes; a model cannot be accountable — a named person is.)*
+1. State the governing principle and why a model cannot satisfy accountability. *(AI proposes; the professional verifies, decides and remains accountable; a model cannot be accountable — a named person is.)*
 2. Give three lines of an AI-output assurance checklist. *(Source-checked; method/assumption sound; no
    hallucination; confidentiality; cross-checked; signed off.)*
 
@@ -1675,8 +1665,7 @@ AI-assisted work — which is exactly what this credential certifies. Where a ca
 a professional says so rather than overstating it.
 
 **AI in this domain.** This domain *is* the AI domain — its own governing note is that every claim in it is kept
-accurate, every workflow reproducible, and the professional's judgement central throughout. **AI proposes, the
-professional disposes.**
+accurate, every workflow reproducible, and the professional's judgement central throughout. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 13.7
 
@@ -1887,11 +1876,11 @@ Three mitigations are within any function's reach.
 
 The optimistic reading of KA 13.7.2 — that the professional's role rises to directing and assuring — is true
 only while the judgement it presumes is maintained. The daily workflow no longer produces that judgement as a
-by-product, so the profession must now produce it on purpose. **AI proposes, the professional disposes.**
+by-product, so the profession must now produce it on purpose. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Advanced 13.A.5 — Pricing the error: expected-value thinking for AI controls
 
-"AI proposes, the professional disposes" (KA 13.6.1) states *who* decides; this topic prices *when* the
+"AI proposes; the professional verifies, decides and remains accountable" (KA 13.6.1) states *who* decides; this topic prices *when* the
 disposing step earns its cost. Every AI-in-the-loop design carries two costs: the cost of **checking** an
 output, and the expected cost of an **uncaught error** — the error's downstream cost weighted by its
 probability. Per-item review is worth mandating while `error rate × error cost > review cost`; below that
@@ -1960,7 +1949,7 @@ credibility than either earns. Access control matters doubly once AI agents cons
 
 AI can draft the integration mappings, flag anomalies at the boundary and even narrate the dashboard (KA
 13.5.8) — but the data contract, the validation thresholds and the single-source decision are governance
-choices a named professional owns. AI proposes, the professional disposes.
+choices a named professional owns. AI proposes; the professional verifies, decides and remains accountable.
 
 ### Advanced 13.A.7 — Evaluating AI outputs: golden sets, precision and recall, and drift
 
@@ -2011,7 +2000,7 @@ the unglamorous data work, two pilots with honest numbers, one instructive failu
 turned a near-miss into the strongest adoption argument the function ever had. The public-sector context
 sharpens everything: the agency's numbers feed ministerial reporting and audit, its contracts carry public
 money, and "the model said so" is not a defence anyone in the chain can offer (13.6.2). Every stage below is
-the operational form of the credential's governing principle: **AI proposes, the professional disposes.**
+the operational form of the credential's governing principle: **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Where they started (13.7.1)
 
@@ -2143,8 +2132,7 @@ rung is not claimed, because parts of the workflow remain manual and the value e
 
 The outlook is stated the way 13.7.5 demands — honestly. AI capability keeps evolving, so the agency
 re-validates its approved tools **quarterly** and expects the workflow map to change. What does not change is
-the centre of the design: the professional's sign-off on every AI-influenced number. **AI proposes, the
-professional disposes.**
+the centre of the design: the professional's sign-off on every AI-influenced number. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### What the credential expects
 
@@ -2158,7 +2146,7 @@ EAC, with the false positive caught by the verification step working as designed
 turned a hallucinated clause into a logged incident, a mandatory grounding rule and an audit trail — assurance
 functioning, not failing. **Honest value measurement** (13.7.3) netted USD 115,200 of measured saving against
 USD 70,000 of full cost and reported 2-of-3 precision without varnish. And through all of it runs the enduring
-principle the credential certifies: **AI proposes, the professional disposes.**
+principle the credential certifies: **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -2300,8 +2288,7 @@ governed-workflow pattern** (13.5.1, 13.5.4) carried the winning pilot: data cle
 inside tolerances, an owned exception queue, sampling wherever the output touches a client invoice
 (13.6.2). And **maturity claimed on evidence** (13.7.1) with **judgement deliberately maintained** (13.7.4)
 closes the loop: the ladder is climbed rung by rung, and the humans stay skilled enough to check the
-machine. Through both pilots, the failure and the scaling, one line governed every sign-off: **AI proposes,
-the professional disposes.**
+machine. Through both pilots, the failure and the scaling, one line governed every sign-off: **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -2345,8 +2332,7 @@ capabilities change; verification checklists are embedded in the month-end, repo
 rather than bolted on; and every material AI-assisted output carries a named sign-off with its audit trail.
 Value is measured quarterly and reported without varnish — two useful flags in three is stated as exactly that
 — and near-misses are logged, shared and turned into policy rather than buried. The professionals have moved
-up, not out: directing and assuring AI-assisted production, pairing domain mastery with AI fluency. **AI
-proposes, the professional disposes.**
+up, not out: directing and assuring AI-assisted production, pairing domain mastery with AI fluency. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -2390,8 +2376,7 @@ who verified it, and on what basis, which is exactly the audit trail the policy 
 challenged number needs (13.6.2, 13.6.5c §4). An output that fails any column is not released until the
 failure is fixed — footnoting a known inconsistency defeats the assurance the record exists to provide
 (MCQ 13.6-D). The columns flex slightly by output type (an extracted contract term adds a legal-review
-column, 13.6.5b) but the shape — propose, verify line by line, sign off by name — never does. **AI proposes,
-the professional disposes.**
+column, 13.6.5b) but the shape — propose, verify line by line, sign off by name — never does. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -2438,14 +2423,13 @@ themselves.
 4. When you last accepted an AI-drafted figure, extraction or narrative, what did you actually recompute or
    open to source — and would your own verification discipline survive the scrutiny you apply to others'?
 
-**AI proposes, the professional disposes.**
+**AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
 ## Domain 13 summary
 
-AI is a major, practical part of modern project controls — and the governing principle, **"AI proposes, the
-professional disposes,"** never bends. The domain builds from **foundations** (AI ⊃ ML ⊃ GenAI; supervised/
+AI is a major, practical part of modern project controls — and the governing principle, **"AI proposes; the professional verifies, decides and remains accountable,"** never bends. The domain builds from **foundations** (AI ⊃ ML ⊃ GenAI; supervised/
 unsupervised/reinforcement learning; LLM concepts — tokens, context, temperature; training/inference/fine-
 tuning/RAG; honest strengths and hard limits; rules vs ML vs GenAI) through **data** (garbage in, garbage out;
 quality dimensions; governance and lineage; controls data sources; confidentiality) and **prompting**
@@ -2457,7 +2441,7 @@ domain. It closes with **governance, ethics and assurance** (accountability, sig
 hallucination/bias/confidentiality; when not to use AI; an AI-use policy and verification checklist) and
 **building the capability** (maturity model, integration, upskilling, value measurement, pitfalls, and an
 honest outlook). The durable professional skill is the judgement to **direct, verify and own** AI-assisted work
-— exactly what the PCP-AI certifies.
+— exactly what the PCL-AI certifies.
 
 **Cross-references.** This domain draws on all others: estimating → 3.2; forecasting/EVM → 3.4, 6.3;
 cost coding/control → 1.5, 5.2; scheduling → 10; agile/AgileEVM → 9.5; contracts → 7; reporting → 4;

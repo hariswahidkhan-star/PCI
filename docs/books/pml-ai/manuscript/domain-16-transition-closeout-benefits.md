@@ -1,15 +1,4 @@
-# Domain 16 — Transition, Closeout and Benefits Realization
-
-> **Group:** Enterprise delivery and the digital future (Domain 3 of 3 in Part Four). **Target:**
-> ~74 pages. **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain closes the book and closes the **Meridian Care Records**
-> account opened in Domain 1 and appraised in Domain 2, and takes **Project Auriga** through
-> commissioning and final account. It consumes the cost of delay from Domain 1, the benefits map and
-> baseline discipline from Domain 2, the decision record from Domain 3, the change and configuration
-> baseline from Domain 4, the acceptance machinery from Domain 9, the contract mechanisms from
-> Domain 10 and the AI-use register from Domain 14. British English; USD (+SAR where useful,
-> indicative `USD 1 ≈ SAR 3.75`). Percentages are given to two decimals where a threshold turns on
-> them; money to whole units unless cents are material.
+# Domain 16 — Transition, Closeout and Benefits Realisation
 
 ## Why this domain exists
 

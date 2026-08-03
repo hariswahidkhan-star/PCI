@@ -1,21 +1,5 @@
 # Domain 10 — Procurement, Contracts and Supply Networks
 
-> **Group:** Delivering the work (Domain 10, the closing domain of Part Two). **Target:** ~74 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain completes the commercial thread Domain 7 opened: Domain 7
-> supplied the contract-model taxonomy and the **point of total assumption** (`PTA`, KA 7.4.3), and
-> this domain takes them into the decisions that precede a contract and the behaviour that follows
-> one. It continues **Project Auriga** — the 25-week control-systems upgrade for a regional utility,
-> `BAC` **USD 4,000,000**, cost of delay **USD 45,000 per week** — from Domains 6, 7 and 8. British
-> English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
->
-> **Registry note.** This domain uses the registered *cost of delay*, `E[wait]`, `EMV` and `PTA`
-> constructs unchanged, and submits five candidate rows to the shared formula registry: total cost of
-> ownership and its breakeven volume `Q*`; the weighted evaluation score `S(w)` and its crossover
-> weighting `w*`; the marginal-dollar allocation identity; expected cost of disruption with its
-> breakeven disruption probability `p*`; and notice-bar exposure. Each carries a verified golden
-> example below.
-
 ## Why this domain exists
 
 Domains 5 to 9 assumed that the organisation would have the capability to do the work. On most real

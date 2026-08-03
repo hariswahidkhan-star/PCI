@@ -1,21 +1,4 @@
-# Domain 12 — Leadership, Teams and Organizational Behaviour
-
-> **Group:** Leading people and organisations (Domain 12 of 3 in Part Three). **Target:** ~72 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). Domain 3 established who may decide and at what price, Domain 4 how the
-> parts connect; this domain establishes what it takes for a group of humans to work as one team inside
-> those structures. It runs **Meridian Care Records** at programme scale and **Project Auriga** at
-> single-project scale. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
->
-> **Registry note.** This domain uses the registered *cost of delay* and the registered **interface
-> count** `n(n − 1)/2` (PML-AI D4, KA 4.2.3) unchanged, applying the second to human communication
-> paths, and cites Domain 3's `E[wait]` rather than re-deriving it. It submits four candidate registry
-> rows: **coordination overhead share** `c·n(n − 1)/(2h)`; **net team capacity** `hn − c·n(n − 1)/2`
-> with its maximising size; **coaching time per report** `(R − e(n − b))/n` with its sufficiency
-> threshold; and the **three-component turnover cost**. Each carries a verified golden example below.
-> Every parameter in them — the cost of a communication link, the shape of a ramp-up curve, the minutes
-> a person needs — is a **locally calibrated planning figure, not a measured constant**, and the domain
-> says so at each use.
+# Domain 12 — Leadership, Teams and Organisational Behaviour
 
 ## Why this domain exists
 

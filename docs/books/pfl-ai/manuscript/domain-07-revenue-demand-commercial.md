@@ -1,14 +1,5 @@
 # Domain 7 — Revenue, Demand and Commercial Models
 
-> **Group:** Structuring and modelling (Domain 3 of 5 in Part Two). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain owns the revenue side of every ratio the book
-> computes: it supplies the `CFADS` numerator that Domain 10 divides, the revenue line that
-> Domain 6 models, and the third bankability component Domain 5 (KA 5.3.2) diligenced first and
-> deferred to here. It adds no new coverage symbol; it explains why the same expected `CFADS`
-> supports very different debt. British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domains 5 and 6 left one question open. Domain 5 established that a bankable project needs a

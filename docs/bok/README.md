@@ -1,7 +1,7 @@
-# PCP-AI Body of Knowledge (BoK) — v1
+# PCL-AI Body of Knowledge (BoK) — v1
 
-The authoritative study reference underpinning the **Certified Project Controls Professional (AI)** —
-`PCP-AI`. This is the deep reference from which examination items are written and against which candidates
+The authoritative study reference underpinning the **PCI AI Project Controls Leader** —
+`PCL-AI`. This is the deep reference from which examination items are written and against which candidates
 study: a thirteen-domain treatment of project controls, project finance and the governed
 use of AI, weighted **40 % finance / 40 % project management / 20 % AI**.
 

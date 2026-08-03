@@ -1,13 +1,5 @@
 # Domain 13 — Agile, Adaptive and Hybrid Delivery
 
-> **Group:** Leading people and organisations (Domain 3 of 3 in Part Three — the part's closing
-> domain). **Target:** ~70 pages. **Binds to:** the PCI Book Pattern Specification and the shared
-> registries (`docs/books/registries/`). This domain closes Part Three by making adaptive delivery
-> **arithmetic** rather than allegiance: it consumes Domain 3's governance latency formula, Domain 5's
-> scope controls, Domain 6's flow-across-modes translation, Domain 10's risk-allocation frame and
-> Domain 12's coordination overhead, and supplies the flow measures that Domains 14–16 report on.
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Part Three has been about people: who is engaged (Domain 11), who leads and how a team is built

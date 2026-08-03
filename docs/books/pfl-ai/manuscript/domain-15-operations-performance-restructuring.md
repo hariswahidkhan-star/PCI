@@ -1,13 +1,5 @@
 # Domain 15 — Operations, Performance and Restructuring
 
-> **Group:** Operating and the future (Part Four). **Target:** ~78 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain operates the machinery the rest of the book built:
-> Domain 2's accrual-to-cash bridge, Domain 3's amortisation schedule, Domain 10's `CFADS`,
-> `DSCR`, `LLCR`, `PLCR`, reserves and covenants, Domain 13's model audit and Domain 14's
-> completion tests all arrive here as monthly obligations rather than closing conditions.
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Every preceding domain answered a question that can be closed. Is the project worth building

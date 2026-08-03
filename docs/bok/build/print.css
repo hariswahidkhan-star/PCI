@@ -1,4 +1,4 @@
-/* PCP-AI Body of Knowledge — premium print stylesheet (A4 certification handbook)
+/* PCL-AI Body of Knowledge — premium print stylesheet (A4 certification handbook)
    Typography: IBM Plex Serif (body) + Inter (display/labels). Brand: #1D4ED8 / #0F172A / #C13329. */
 
 @page {
@@ -23,7 +23,7 @@
 @page :first { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
 @page plain { @top-left { content: none; } @top-right { content: none; } }
 
-html { string-set: booktitle "PCP-AI Body of Knowledge"; }
+html { string-set: booktitle "PCL-AI Body of Knowledge"; }
 
 body {
   font-family: "IBM Plex Serif", Georgia, serif;

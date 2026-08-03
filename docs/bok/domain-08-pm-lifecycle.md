@@ -1,9 +1,5 @@
 # Domain 8 — Project Management Lifecycle
 
-> **Group:** Project management (Domain 8 of 8 in the PM group). **Target:** ~120 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful). Standards
-> named (PMBOK, AACE TCM) at principle level, never reproduced.
-
 ## Why this domain exists
 
 Project controls does not operate in a vacuum: it sits inside the wider discipline of **managing a project
@@ -654,7 +650,7 @@ Choosing the approach to fit the delivery rather than dogmatically is the profes
 and plans, generating WBS candidates, analysing stakeholder and communications data, supporting change-impact
 assessment, and mining lessons-learned archives. The governance boundary holds throughout: AI proposes plans,
 estimates and analyses; the professional decides, and remains accountable for the baseline, the change
-decision and the report. **AI proposes, the professional disposes.**
+decision and the report. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 8.6
 
@@ -899,8 +895,7 @@ diaries, not engagement. The honest measures are behavioural: decision latency a
 (Domain 4, KA 4.1.2) that the channel is trusted, because people escalate into channels they believe will
 act. Drafting stakeholder-tailored versions of one controls truth — a board summary, a client letter and a
 site briefing from the same variance data — is among the stronger and safer AI tasks (Domain 13, KA 13.5.8),
-provided the numbers are locked before the words are drafted and the professional signs what goes out: AI
-proposes, the professional disposes.
+provided the numbers are locked before the words are drafted and the professional signs what goes out: AI proposes; the professional verifies, decides and remains accountable.
 
 ---
 
@@ -1080,7 +1075,7 @@ whole is **hybrid delivery under stage-gate governance** (8.6.3): predictive and
 rivals but tailored fits to their scope, measured each in its own register and governed together.
 Throughout, AI assists — assembling the gate pack, reconciling the two measurement systems, flagging
 the velocity trend early — but the gate decision is human and accountable (Domain 13, KA 13.5):
-**AI proposes, the professional disposes.**
+**AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1197,7 +1192,7 @@ scope, schedule, cost *and benefit* — the fourth dimension being the one that 
 honesty. And from **KA 8.5**, closure set up years early, because handover of a hospital is a project inside
 the project. AI can assemble the pack, reconcile the log and flag the benefit drift from the design data long
 before a human reviewer would (Domain 13, KA 13.5) — but the gate decision, and the accountability for it,
-stay human. **AI proposes, the professional disposes.**
+stay human. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

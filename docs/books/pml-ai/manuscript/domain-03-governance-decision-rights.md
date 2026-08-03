@@ -1,13 +1,4 @@
-# Domain 3 — Governance, Organization and Decision Rights
-
-> **Group:** Leading projects (Domain 3 of 4 in Part One). **Target:** ~84 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain continues the **Meridian Care Records** programme from
-> Domains 1 and 2 into the structures that decide things, takes its first reading of **Project
-> Auriga** at the point where governance must act on a forecast, and supplies the governance latency
-> formula — with the multi-party, assurance-exposure and action-window extensions of it — used later by
-> Domain 6 (schedule), Domain 7 (change control) and Domain 8 (risk escalation). British English;
-> USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
+# Domain 3 — Governance, Organisation and Decision Rights
 
 ## Why this domain exists
 

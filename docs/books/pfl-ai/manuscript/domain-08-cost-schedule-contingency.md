@@ -1,24 +1,4 @@
-# Domain 8 — Cost, Schedule and Contingency Integration *(quantitative — the project-controls bridge)*
-
-> **Group:** Structuring and modelling (Domain 4 of 5 in Part Two). **Target:** ~76 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This is the **bridge domain between the two books**: it consumes
-> PML-AI Domain 7's earned-value machinery (`BAC`, `CPI`, `SPI`, the `EAC` family) and PML-AI
-> Domain 8's `EMV` and confidence-level arithmetic, and converts both into the two questions a
-> financing asks that a project control account never does — *is the remaining funding
-> sufficient, and what does the coverage ratio do?* It uses Domain 3's compounding and
-> `AF(r, n)`, Domain 4's `EAV`, Domain 5's completion-risk and delay-damages structure, Domain
-> 6's sources-and-uses and capitalised-interest arithmetic, and Domain 10's `DSCR` machinery.
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-> Tax, accounting and legal treatments described here are **illustrative and
-> jurisdiction-specific**; none is presented as universal. In particular, whether a
-> delay-damages rate, cap or stepped structure, a contingency-recalculation clause or a handback
-> obligation is enforceable as drafted is a matter for qualified counsel in the governing
-> jurisdiction, and whether a cost is capitalised into the depreciable base is a matter for the
-> sponsor's own auditors under the applicable framework. Nothing in this domain is legal,
-> tax or accounting advice. Kestrel Water SPC, Project Auriga and both case studies are
-> illustrative constructs, not accounts of identifiable projects or organisations.
-
+# Domain 8 — Cost, Schedule and Contingency Integration
 ## Why this domain exists
 
 Domain 6 built a model in which the balancing line was contingency, and reported it: **USD

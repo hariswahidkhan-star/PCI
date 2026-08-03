@@ -7,7 +7,7 @@ The financing of projects and infrastructure sits at the point where capital mee
 
 The Project Controls Institute (PCI) publishes this Body of Knowledge as the authoritative reference for the PCI AI Project Finance Leader (PFL-AI) credential. It reflects the Institute's conviction that project finance leadership now demands two literacies at once: mastery of the enduring disciplines — modelling, appraisal, structuring, bankability and close — and a governed command of artificial intelligence, which is changing how financial analysis is produced, tested and reviewed.
 
-On AI, the Institute's doctrine is deliberately plain: **AI proposes; the professional disposes.** Machine-generated analysis may accelerate the work, but every output relied upon must be explainable, validated and owned by a competent human. This volume teaches both the acceleration and the governance, because a leader who cannot interrogate an AI-produced model has no business signing it.
+On AI, the Institute's doctrine is deliberately plain: **AI proposes; the professional verifies, decides and remains accountable.** Machine-generated analysis may accelerate the work, but every output relied upon must be explainable, validated and owned by a competent human. This volume teaches both the acceleration and the governance, because a leader who cannot interrogate an AI-produced model has no business signing it.
 
 This Body of Knowledge is issued in the Institute's name and represents the collective work of its standards and examination functions. We commend it to candidates, to employers and to the profession.
 
@@ -19,7 +19,7 @@ The PCI AI Project Finance Leader (PFL-AI) is an examination-based professional 
 
 The credential's scope is project and infrastructure finance leadership. Its core disciplines are financial modelling, investment appraisal, capital structure and leverage, debt and equity instruments, project bankability, coverage ratios (DSCR, LLCR and PLCR), public–private partnerships and concession structures, the contractual matrix, financial close, and commercial and financial risk management, together with sustainable and Islamic project finance. To these the credential adds a governed AI dimension: AI-enabled financial modelling, predictive cash-flow analysis, digital due diligence, responsible AI and the human validation of AI outputs.
 
-Throughout, the Institute's doctrine applies: AI proposes; the professional disposes. Candidates are examined not only on what AI can do in project finance, but on how its outputs are explained, validated and owned. This Body of Knowledge is written generically — it teaches methods and governance, not the products of any vendor, and it endorses none.
+Throughout, the Institute's doctrine applies: AI proposes; the professional verifies, decides and remains accountable. Candidates are examined not only on what AI can do in project finance, but on how its outputs are explained, validated and owned. This Body of Knowledge is written generically — it teaches methods and governance, not the products of any vendor, and it endorses none.
 
 ## How to Use This Book
 
@@ -79,7 +79,7 @@ The examinable skill in this chapter is not the recitation of definitions but th
 
 **Step 4 — Test debt capacity against both constraints.** Debt in a project financing is sized as the *lower* of (a) the maximum permitted gearing and (b) the debt that forecast cash flow available for debt service (CFADS) can support at the required minimum debt service cover ratio (DSCR). Both tests must be run; either may bind.
 
-**Step 5 — Document, validate and own the analysis.** Record assumptions, sources and sensitivities. Where AI tools have been used to extract contract terms or draft the risk matrix, the outputs must be traced back to the underlying documents and confirmed by a competent professional before they enter the credit analysis. AI proposes; the professional disposes.
+**Step 5 — Document, validate and own the analysis.** Record assumptions, sources and sensitivities. Where AI tools have been used to extract contract terms or draft the risk matrix, the outputs must be traced back to the underlying documents and confirmed by a competent professional before they enter the credit analysis. AI proposes; the professional verifies, decides and remains accountable.
 
 ### Worked example: sizing debt for a contracted solar project
 
@@ -118,7 +118,7 @@ Project finance is a small-sample discipline. Each transaction is bespoke; prece
 
 Accountability in a project financing is contractual and personal: named parties sign, warrant and certify. Nothing in this Body of Knowledge permits that accountability to be delegated to a system. The professional who submits a model, a recourse analysis or a bankability assessment owns it entirely, must be able to explain how any AI-assisted element was produced and verified, and must keep an audit trail sufficient for a reviewer to reperform the check. The examination tests this directly: candidates are expected to state not only what a tool can do at each life-cycle stage, but what evidence they would require before relying on it.
 
-> **AI proposes; the professional disposes.** A system may draft the transaction summary, flag the covenant, score the risk or check the model — but the characterisation of recourse, the adequacy of the security package and every number placed before a credit committee are decided, explained and owned by a competent professional. In project finance the signature on the certificate is human, and so is the accountability behind it.
+> **AI proposes; the professional verifies, decides and remains accountable.** A system may draft the transaction summary, flag the covenant, score the risk or check the model — but the characterisation of recourse, the adequacy of the security package and every number placed before a credit committee are decided, explained and owned by a competent professional. In project finance the signature on the certificate is human, and so is the accountability behind it.
 
 ### Key points
 
@@ -157,7 +157,7 @@ B. The output is fluent, internally consistent and complete in appearance
 C. The extraction has been verified against the executed agreement and the analyst can explain and evidence that check
 D. The tool's vendor certifies its accuracy for legal documents
 
-**Answer: C.** AI proposes; the professional disposes — reliance must rest on validation against the source documents, with the accountable professional able to explain the output and evidence the check, not on market adoption, fluency or vendor claims.
+**Answer: C.** AI proposes; the professional verifies, decides and remains accountable — reliance must rest on validation against the source documents, with the accountable professional able to explain the output and evidence the check, not on market adoption, fluency or vendor claims.
 
 ## 2. Infrastructure Finance: Markets, Assets and Investors
 
@@ -222,7 +222,7 @@ Artificial intelligence and predictive tooling are changing how infrastructure m
 
 **Human accountability.** Accountability for classification, risk assessment and capital-sourcing recommendations cannot be delegated to a model. Every AI-generated output that informs an investment committee, credit committee or client recommendation must be explainable by the professional presenting it, validated against primary sources, and owned by a named, competent individual. This is an examination requirement as well as a professional one: the PFL-AI examination tests the candidate's own ability to classify assets, compare capital sources and evaluate greenfield and brownfield risk — competences that AI assistance presupposes rather than replaces.
 
-> **AI proposes; the professional disposes.** An AI system may propose that an asset is availability-based, that a demand forecast is achievable, or that an institutional investor is the natural buyer of a brownfield stake. The project finance leader disposes: verifying the payment mechanism in the contract, stress-testing the forecast against the documented history of optimism bias, and confirming the investor's true mandate — and signs the recommendation in their own name.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI system may propose that an asset is availability-based, that a demand forecast is achievable, or that an institutional investor is the natural buyer of a brownfield stake. The project finance leader verifies and decides: checking the payment mechanism in the contract, stress-testing the forecast against the documented history of optimism bias, and confirming the investor's true mandate — and signs the recommendation in their own name.
 
 ### 2.8 Common pitfalls
 
@@ -241,7 +241,7 @@ Artificial intelligence and predictive tooling are changing how infrastructure m
 - Capital migrates with the life cycle: banks and multilaterals in construction; institutional debt, bonds and core equity in operations.
 - Availability-based structures typically support around 80–90 per cent gearing at DSCRs of 1.15x–1.20x; demand-risk assets are capped nearer 65–75 per cent at 1.35x or higher, requiring materially more equity at a higher hurdle rate.
 - Required revenue is derived mechanically: annual debt service × target DSCR = required CFADS, plus operating and lifecycle costs.
-- AI accelerates classification, benchmarking and forecasting, but infrastructure data is sparse and biased; every AI output must be explainable, validated and owned — AI proposes; the professional disposes.
+- AI accelerates classification, benchmarking and forecasting, but infrastructure data is sparse and biased; every AI output must be explainable, validated and owned — AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -270,7 +270,7 @@ B. Verify the actual payment mechanism in the concession agreement and validate 
 C. Increase the gearing to the top of the benchmarked range
 D. Disclose the name of the software vendor to the investment committee
 
-**Answer: B** — AI proposes and the professional disposes: classification must be verified against the contract and every benchmark validated and owned before it informs a recommendation.
+**Answer: B** — AI proposes and the professional verifies, decides and remains accountable: classification must be verified against the contract and every benchmark validated and owned before it informs a recommendation.
 
 ## Chapter 3: Financial Modelling for Project Finance
 
@@ -333,7 +333,7 @@ Two caveats govern the data. Generative systems produce plausible output, not ve
 
 Accountability for the model is indivisible and personal. The professional who releases the model owns every cell, whatever produced it. Model-integrity controls therefore extend to AI use: the version log should record where AI assistance was applied, the audit trail must make AI-derived inputs and formulae traceable to their source and their reviewer, and no output should be presented to a credit committee or lender that the responsible modeller cannot explain unaided. Under the Institute's doctrine, an unexplainable result is an unusable result — however impressive the tool that generated it.
 
-> **AI proposes; the professional disposes.** In financial modelling for project finance, AI may draft the formula, scan the workbook, run the sensitivities and forecast the revenue line — but the waterfall logic, the banking case and the model released at financial close are decided, verified and owned by a competent professional. Every AI contribution to the model must be explainable, validated and signed for by the human whose judgement the lenders are actually financing.
+> **AI proposes; the professional verifies, decides and remains accountable.** In financial modelling for project finance, AI may draft the formula, scan the workbook, run the sensitivities and forecast the revenue line — but the waterfall logic, the banking case and the model released at financial close are decided, verified and owned by a competent professional. Every AI contribution to the model must be explainable, validated and signed for by the human whose judgement the lenders are actually financing.
 
 ### 3.9 Common pitfalls
 
@@ -353,7 +353,7 @@ Accountability for the model is indivisible and personal. The professional who r
 - Debt is sized and serviced from CFADS, not EBITDA, and CFADS is distributed through a cash-flow waterfall that mirrors the accounts agreement line by line.
 - Under a DSCR constraint, debt capacity = (CFADS ÷ target DSCR) × the annuity factor, as the wind-farm worked example demonstrates.
 - Sensitivities, scenarios, in-built checks, version control and independent model audit are the integrity controls that make results reproducible and defensible.
-- AI proposes; the professional disposes: AI may draft, scan, reconcile and forecast, but every AI output must be explainable, validated and owned by the competent professional who signs the model.
+- AI proposes; the professional verifies, decides and remains accountable: AI may draft, scan, reconcile and forecast, but every AI output must be explainable, validated and owned by the competent professional who signs the model.
 
 ### Practice questions
 
@@ -382,7 +382,7 @@ B) the syntax has been checked and the model still balances
 C) a competent professional has re-derived, validated and taken ownership of the logic
 D) the output is labelled as machine-generated in the version log
 
-**Correct answer: C.** Labelling and balance checks are necessary controls, but the doctrine — AI proposes; the professional disposes — requires that every AI output be explainable, validated and owned by the responsible professional.
+**Correct answer: C.** Labelling and balance checks are necessary controls, but the doctrine — AI proposes; the professional verifies, decides and remains accountable — requires that every AI output be explainable, validated and owned by the responsible professional.
 
 ## 4. Investment Appraisal and Decision Analysis
 
@@ -456,7 +456,7 @@ This sits comfortably above the 7.0 per cent WACC, consistent with the positive 
 - **Sunk-cost contamination and omitted flows.** Including development spend already incurred, or omitting working capital, tax and residual values.
 - **Double-counting country risk.** Loading a country premium into the discount rate while also probability-weighting the same risks in the cash flows.
 - **Spurious precision.** An NPV quoted to the last dollar from a single-point forecast conveys false comfort; ranges and sensitivities are part of the answer.
-- **Unvalidated AI output.** Adopting machine-generated forecasts or rate suggestions without independent validation and named ownership breaches the doctrine that AI proposes and the professional disposes.
+- **Unvalidated AI output.** Adopting machine-generated forecasts or rate suggestions without independent validation and named ownership breaches the doctrine that AI proposes and the professional verifies, decides and remains accountable.
 
 ### 4.8 How AI changes investment appraisal
 
@@ -470,7 +470,7 @@ Predictive appraisal tools inherit the defects of their data. Historical infrast
 
 Accountability for an investment recommendation cannot be delegated to software. The professional who presents an appraisal to an investment committee, a lender or a public authority owns every number in it, however produced. That requires three things: the ability to explain each AI-assisted output in plain terms to a non-specialist; evidence that it was validated against independent reasoning or data; and a clear record of where machine analysis ended and human judgement began. An AI-derived assumption that cannot be explained or validated must not enter the appraisal. The PFL-AI examination tests this competency directly: candidates are assessed on their ability to detect flawed machine-generated appraisals, not merely to operate the tools that generate them.
 
-> **AI proposes; the professional disposes.** An AI system may propose the forecast, the discount rate and the ranking; only a competent professional may dispose — accepting, amending or rejecting each output on the strength of explainable reasoning. The signature on an investment recommendation is human, and with it rests the entire accountability for the decision.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI system may propose the forecast, the discount rate and the ranking; only a competent professional may dispose — accepting, amending or rejecting each output on the strength of explainable reasoning. The signature on an investment recommendation is human, and with it rests the entire accountability for the decision.
 
 ### Key points
 
@@ -480,7 +480,7 @@ Accountability for an investment recommendation cannot be delegated to software.
 - Project IRR (unlevered flows, judged against WACC) measures asset quality; equity IRR (post-debt-service flows, judged against the cost of equity) reflects leverage, which amplifies returns and losses alike.
 - Payback and BCR are supplementary lenses — capital exposure and capital efficiency respectively — with BCR the standard metric of public-sector economic appraisal.
 - IRR fails predictably: non-conventional cash flows can produce multiple or no IRRs, and its reinvestment assumption and percentage form can invert rankings; fall back on NPV or a modified IRR.
-- AI accelerates forecasting, simulation and metric computation, but every machine output must be explainable, validated and owned by a named professional: AI proposes; the professional disposes.
+- AI accelerates forecasting, simulation and metric computation, but every machine output must be explainable, validated and owned by a named professional: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -575,7 +575,7 @@ Leverage amplifies model error. A 5 per cent overstatement in forecast cash flow
 
 Accountability at financial close is personal and non-transferable. The professional who signs off the model, recommends the gearing or presents the refinancing case owns those positions in full — including every AI-generated component within them. "The model suggested it" is not a defence available to a certified professional. The examination therefore tests not only whether a candidate can sculpt debt, but whether they can identify what an AI-assisted analysis has assumed, what it cannot know, and where its output must be overridden.
 
-> **AI proposes; the professional disposes.** An optimiser can propose the maximum debt a cash-flow forecast will bear; only a competent professional can decide whether that forecast — and the leverage built upon it — deserves to be believed. Every sculpting solve, demand forecast and refinancing signal is a proposal to be explained, validated and owned. The gearing decision, with its trade-off between equity return and default risk, is made and signed by a named human being.
+> **AI proposes; the professional verifies, decides and remains accountable.** An optimiser can propose the maximum debt a cash-flow forecast will bear; only a competent professional can decide whether that forecast — and the leverage built upon it — deserves to be believed. Every sculpting solve, demand forecast and refinancing signal is a proposal to be explained, validated and owned. The gearing decision, with its trade-off between equity return and default risk, is made and signed by a named human being.
 
 ### Common pitfalls
 
@@ -596,7 +596,7 @@ Accountability at financial close is personal and non-transferable. The professi
 - Sculpting sets each period's debt service to CFADS ÷ target DSCR; LLCR and PLCR test the sizing over loan life and project life, and the tail is deliberate residual protection.
 - The waterfall prices the layers — senior cheapest, mezzanine between, equity last and dearest — so blended cost falls as gearing rises until default risk erodes the gain.
 - Refinancing and recapitalisation re-optimise the structure as risk declines, disciplined by covenants, lock-ups, cash sweeps, reserves and intercreditor terms agreed at close — and often shared with the public authority in PPPs.
-- AI proposes; the professional disposes: optimisers, forecasts and refinancing signals are proposals that must be explainable, validated and owned by a named, competent individual.
+- AI proposes; the professional verifies, decides and remains accountable: optimisers, forecasts and refinancing signals are proposals that must be explainable, validated and owned by a named, competent individual.
 
 ### Practice questions
 
@@ -622,7 +622,7 @@ B. Validate the CFADS forecast and downside cases behind the solve, replicate th
 C. Reject the structure, since AI outputs may not be used in credit submissions
 D. Reduce the debt by a standard margin to offset model risk
 
-**Correct answer: B.** AI proposes; the professional disposes — a converged solve is only as sound as its assumptions, so the output must be explained, validated and owned before it reaches a credit committee.
+**Correct answer: B.** AI proposes; the professional verifies, decides and remains accountable — a converged solve is only as sound as its assumptions, so the output must be explained, validated and owned before it reaches a credit committee.
 
 ## Chapter 6: Debt and Equity Instruments
 
@@ -662,7 +662,7 @@ Instrument selection, tranche sizing and intercreditor design are iterative: the
 
 **Step 5 — Test the covenant and distribution regime.** Confirm that lock-up and default DSCR thresholds leave sensible headroom, and that the intercreditor waterfall pays senior service, then mezzanine service, before any distribution.
 
-Where AI tools generate sizing iterations or sensitivity sweeps, the doctrine of this Body of Knowledge applies without exception: **AI proposes; the professional disposes**. Every machine-generated capacity figure must be re-derived, explained and owned by the responsible analyst before it enters a term sheet.
+Where AI tools generate sizing iterations or sensitivity sweeps, the doctrine of this Body of Knowledge applies without exception: **AI proposes; the professional verifies, decides and remains accountable**. Every machine-generated capacity figure must be re-derived, explained and owned by the responsible analyst before it enters a term sheet.
 
 ### 6.7 Worked example: a EUR 320 million contracted power project
 
@@ -698,7 +698,7 @@ Project finance data is sparse, bespoke and confidential. Training sets skew tow
 
 The Institute's doctrine is therefore unambiguous: every AI output relied upon in structuring must be explainable, validated and owned by a named, competent professional. The professional — not the model — signs the credit paper, recommends the instrument and answers to the credit committee, the sponsors and the lenders. An output that no one can explain is an output no one may use. The examination tests this directly: candidates must be able to state what a given tool automated, how its output was validated, and where its failure modes lie.
 
-> **AI proposes; the professional disposes.** A model may draft the term-loan-versus-bond comparison, extract the covenant grid and stress the waterfall a thousand times — but the choice of instrument, the concession of an intercreditor point and the signature beneath the capital structure belong to a professional who can explain, defend and stand behind every number the machine proposed.
+> **AI proposes; the professional verifies, decides and remains accountable.** A model may draft the term-loan-versus-bond comparison, extract the covenant grid and stress the waterfall a thousand times — but the choice of instrument, the concession of an intercreditor point and the signature beneath the capital structure belong to a professional who can explain, defend and stand behind every number the machine proposed.
 
 ### Key points
 
@@ -708,7 +708,7 @@ The Institute's doctrine is therefore unambiguous: every AI output relied upon i
 - Sponsors commonly inject equity as deeply subordinated shareholder loans for repatriation and tax efficiency; properly subordinated, these count as equity for gearing purposes.
 - Ranking, the security package and the covenant regime operate as one interlocking system of defensive control, coordinated through the intercreditor agreement.
 - Sizing proceeds from CFADS: senior debt at the lower of DSCR capacity and the gearing cap, mezzanine from residual headroom at the total DSCR floor, equity as the residual.
-- AI accelerates screening, extraction and stress testing, but every output relied upon must be explainable, validated and owned by a named professional: AI proposes; the professional disposes.
+- AI accelerates screening, extraction and stress testing, but every output relied upon must be explainable, validated and owned by a named professional: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -737,7 +737,7 @@ B. Trace each extracted clause to the executed drafting and take ownership of th
 C. Re-run the extraction on a second tool and compare the results
 D. Obtain the counterparty's confirmation that the grid is accurate
 
-**Correct answer: B.** Under the doctrine "AI proposes; the professional disposes", enforcement rights turn on exact words, so the extraction must be validated against the executed documents and owned by a named professional.
+**Correct answer: B.** Under the doctrine "AI proposes; the professional verifies, decides and remains accountable", enforcement rights turn on exact words, so the extraction must be validated against the executed documents and owned by a named professional.
 
 ## 7. Project Bankability
 
@@ -814,7 +814,7 @@ Three caveats govern model risk. First, project finance is a small-sample discip
 
 A lender will not accept "the model said so", and neither will this Institute. Every AI output relied upon in a bankability assessment must be explainable to a credit committee in plain terms, validated against primary documents and the financial model, and owned by a named, competent professional. Responsibility for the bankable package — its accuracy, its completeness and its omissions — cannot be delegated to a tool, and candidates are examined on their ability to identify precisely where in the workflow human judgement must intervene.
 
-> **AI proposes; the professional disposes.** An AI system may extract the risk matrix, stress the coverage ratios and draft the memorandum — but it cannot warrant that a project is bankable. That warranty is given, implicitly, every time a finance leader presents a package to lenders; it is given by a person, and it must rest on validation that person has actually performed.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI system may extract the risk matrix, stress the coverage ratios and draft the memorandum — but it cannot warrant that a project is bankable. That warranty is given, implicitly, every time a finance leader presents a package to lenders; it is given by a person, and it must rest on validation that person has actually performed.
 
 ### Key points
 
@@ -945,7 +945,7 @@ Forward-looking ratios can launder forecast optimism into apparent headroom; a p
 
 Above all, a compliance certificate is a representation to lenders, signed by a person. The ratios reported to an agent, a credit committee or a board are owned by a named professional who can explain the calculation, defend the definition applied and account for any divergence between the banking case and the sponsor case. Where an AI-derived ratio, forecast or threshold cannot be explained and validated, it must not be relied upon. The PFL-AI examination tests this competency directly: candidates are assessed on their ability to detect a machine-calculated ratio that departs from its documentary definition, not merely to operate the tools that produce it.
 
-> **AI proposes; the professional disposes.** A machine may sculpt the repayment profile to a target DSCR, recalculate the LLCR under a thousand scenarios and flag the approaching lock-up — but the definition of CFADS, the acceptance of the forecast and the signature on the compliance certificate belong to a competent professional who can explain, defend and stand behind every ratio the machine proposed.
+> **AI proposes; the professional verifies, decides and remains accountable.** A machine may sculpt the repayment profile to a target DSCR, recalculate the LLCR under a thousand scenarios and flag the approaching lock-up — but the definition of CFADS, the acceptance of the forecast and the signature on the compliance certificate belong to a competent professional who can explain, defend and stand behind every ratio the machine proposed.
 
 ### 8.10 Common pitfalls
 
@@ -966,7 +966,7 @@ Above all, a compliance certificate is a representation to lenders, signed by a 
 - PLCR extends the CFADS horizon to the end of project life; the excess of PLCR over LLCR is the value of the tail, which represents restructuring capacity.
 - The ratios drive structuring prospectively (debt sizing and sculpting to a target DSCR) and operate the lock-up, sweep and default machinery contractually.
 - Market convention, Basel supervisory slotting and rating agency criteria — not statute — frame expected ratio levels, which vary by sector risk from roughly 1.15x for availability-based PPPs to materially higher for merchant exposure.
-- AI accelerates calculation, extraction, sculpting and monitoring, but every machine-produced ratio must be reconciled to the documentary definition and owned by a professional: AI proposes; the professional disposes.
+- AI accelerates calculation, extraction, sculpting and monitoring, but every machine-produced ratio must be reconciled to the documentary definition and owned by a professional: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -995,7 +995,7 @@ B. Adjust the figure downward by a standard prudence margin
 C. Recalculate the ratio using the contractual CFADS definition and trace the extracted threshold to the executed clause
 D. Rerun the AI tool with a lower discount rate to confirm the result
 
-**Correct answer: C.** EBITDA is not CFADS — tax, working capital and maintenance items may change the ratio — and both the numerator definition and the extracted threshold must be verified against the executed documentation before a signed representation is made: AI proposes; the professional disposes.
+**Correct answer: C.** EBITDA is not CFADS — tax, working capital and maintenance items may change the ratio — and both the numerator definition and the extracted threshold must be verified against the executed documentation before a signed representation is made: AI proposes; the professional verifies, decides and remains accountable.
 
 ## 9. PPPs and Concession Structures
 
@@ -1072,7 +1072,7 @@ The certified professional draws a deliberate line between mechanical production
 
 PPP analytics carry distinctive model-risk features. Concession datasets are small, heterogeneous and jurisdiction-specific; a model trained on European availability-payment roads has limited authority over an emerging-market water concession. Demand forecasting has a long and well-documented history of systematic optimism, and an AI model trained on historical forecasts can inherit — and lend false precision to — exactly that bias. Renegotiation and termination events are rare, politically driven and poorly represented in structured data, so predictive scores for these risks should be treated as screening prompts, not probabilities. Language-model extraction of contract terms can misread definitions, cross-references and carve-outs, and its errors are often fluent and therefore invisible. The professional therefore documents the provenance and limitations of any model used, records the human review applied to its outputs, and ensures that every figure presented to a grantor, lender or investment committee can be explained and defended by a named, competent individual. Accountability for a VfM opinion, a risk-allocation recommendation or a termination-compensation analysis cannot be delegated to a tool, and the examination expects candidates to demonstrate this discipline explicitly.
 
-> **AI proposes; the professional disposes.** AI may draft the concession summary, compute the deductions and score the renegotiation risk — but the allocation of risk between public and private parties is a matter of judgement, negotiation and public accountability. The certified professional validates every extracted term against the executed agreement, interrogates every forecast for inherited optimism, and signs the value-for-money conclusion in their own name. The concession binds parties for decades; the accountability for advising on it rests with a human, not a model.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may draft the concession summary, compute the deductions and score the renegotiation risk — but the allocation of risk between public and private parties is a matter of judgement, negotiation and public accountability. The certified professional validates every extracted term against the executed agreement, interrogates every forecast for inherited optimism, and signs the value-for-money conclusion in their own name. The concession binds parties for decades; the accountability for advising on it rests with a human, not a model.
 
 ### Key points
 
@@ -1082,7 +1082,7 @@ PPP analytics carry distinctive model-risk features. Concession datasets are sma
 - The concession agreement governs everything lenders rely on: term, performance and deduction regime, and termination compensation, reinforced by direct agreements and step-in rights.
 - Bankability is quantitative: size the unitary charge from debt service grossed to the cover ratio, then compute deduction headroom against lock-up and default thresholds and test termination compensation against debt outstanding.
 - Government support creates firm and contingent fiscal liabilities that must be quantified, and renegotiation risk over multi-decade terms must be priced, not ignored.
-- AI accelerates extraction, deduction computation and risk screening, but every output must be validated against the executed agreement and owned by a named professional: AI proposes; the professional disposes.
+- AI accelerates extraction, deduction computation and risk screening, but every output must be validated against the executed agreement and owned by a named professional: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -1192,7 +1192,7 @@ Contract analytics carries specific model-risk exposures. Language models can ha
 
 Under the Institute's doctrine, AI-assisted contract review is decision support, not legal advice: it substitutes for neither counsel's opinion nor the finance leader's bankability judgement. Every AI-derived entry in the matrix presented to a credit committee must be traceable to the executed text, validated by a named professional and owned by that professional when challenged. The PFL-AI examination tests this directly: candidates must interrogate an AI-generated risk-allocation summary, identify what it has missed or mis-stated, and defend the corrected position.
 
-> **AI proposes; the professional disposes.** A model may assemble the contractual matrix, extract the clauses and flag the mismatches — but only a competent professional, advised by counsel, may conclude that a risk has truly passed to a creditworthy counterparty. The signature beneath the risk-allocation summary is human, and it carries the accountability no machine can bear.
+> **AI proposes; the professional verifies, decides and remains accountable.** A model may assemble the contractual matrix, extract the clauses and flag the mismatches — but only a competent professional, advised by counsel, may conclude that a risk has truly passed to a creditworthy counterparty. The signature beneath the risk-allocation summary is human, and it carries the accountability no machine can bear.
 
 ### Key points
 
@@ -1202,7 +1202,7 @@ Under the Institute's doctrine, AI-assisted contract review is decision support,
 - Offtake structures (take-or-pay, take-and-pay, tolling, availability payments) determine who bears market and volume risk; supply agreements must mirror the offtake to avoid basis risk.
 - Delay LD adequacy is a two-dimensional test: the daily rate must cover the cost of delay, and the aggregate cap must outlast the exposure period, including the offtake termination longstop.
 - Paper protection without credit substance allocates nothing; direct agreements preserve the matrix for lenders through notice, cure and step-in rights.
-- AI accelerates clause extraction, consistency checking and benchmarking, but every extracted term must be verified against the executed contract and owned by a named professional — AI proposes; the professional disposes.
+- AI accelerates clause extraction, consistency checking and benchmarking, but every extracted term must be verified against the executed contract and owned by a named professional — AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -1321,7 +1321,7 @@ Three caveats govern deployment. First, model risk: language models can hallucin
 
 The legal effect of a financing is fixed by the executed documents, not by any machine summary of them. Opinions come from counsel; the technical, insurance and model-audit sign-offs come from the appointed advisers; CP satisfaction is confirmed by the agent on the lenders' behalf; and the leader owns the decision to close and the accuracy of everything reported to credit committee and board. Because at financial close responsibility is never delegable to a tool, the professional who signs the checklist, confirms satisfaction or authorises the utilisation request must be able to explain, validate and own every conclusion relied upon. The examination tests exactly this discipline: candidates must show they can direct AI-enabled close management while demonstrating that each output was explainable, validated and owned by a competent professional.
 
-> **AI proposes; the professional disposes.** AI may read the data room, draft the CP tracker, compare the facility agreement to the term sheet and flag the slipping condition. It may not decide that a condition is satisfied, that a deviation is acceptable, or that the facility may be drawn. Those decisions carry legal and fiduciary consequence, and they belong — explainably, verifiably and accountably — to the professional who signs.
+> **AI proposes; the professional verifies, decides and remains accountable.** AI may read the data room, draft the CP tracker, compare the facility agreement to the term sheet and flag the slipping condition. It may not decide that a condition is satisfied, that a deviation is acceptable, or that the facility may be drawn. Those decisions carry legal and fiduciary consequence, and they belong — explainably, verifiably and accountably — to the professional who signs.
 
 ### Key points
 
@@ -1330,7 +1330,7 @@ The legal effect of a financing is fixed by the executed documents, not by any m
 - The term sheet is a specification, not a summary: every provision must be traceable into a clause, a condition precedent or an explained omission, and long-form drafting should record, not reopen, the deal.
 - The CP checklist is the control document of close: each item extracted with its clause reference, classified by status, assigned an owner and dependencies, sequenced, tracked weekly and evidenced by the agent's written confirmation.
 - First utilisation must reconcile exactly to the financial model's funding cash flow, and delay has a measurable price in commitment fees, adviser costs and lost revenue days.
-- AI properly automates extraction, comparison and tracking at close, subject to source-traceability, version control and confidentiality; decisions with legal effect — CP satisfaction, term-sheet deviations, funds-flow release — remain with the accountable professional: AI proposes; the professional disposes.
+- AI properly automates extraction, comparison and tracking at close, subject to source-traceability, version control and confidentiality; decisions with legal effect — CP satisfaction, term-sheet deviations, funds-flow release — remain with the accountable professional: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -1437,7 +1437,7 @@ The competent leader automates the mechanical layer — data assembly, clause ex
 
 Every predictive input to the register is itself a risk item. Project-finance datasets are small, survivorship-biased and regime-dependent: a model calibrated in a decade of low rates will understate refinancing exposure in a tightening cycle, and correlation assumptions that hold in calm markets routinely break in the stressed states that matter most to lenders. Extracted clause summaries can be subtly wrong in ways that only a lawyer's reading reveals. The disciplined response is to record model provenance, training-data limits and validation status alongside each AI-derived probability or impact figure, to require independent validation of any model that influences hedging or contingency decisions, and to run the classical deterministic sensitivities in parallel as a sanity check. Every line of the register carries a named human owner, and AI does not change that: outputs that inform credit committees, lenders' advisers or rating agencies must be explainable by the professional presenting them. "The model said so" is not an answer an intercreditor group will accept, and it is not an answer this Institute's examination accepts.
 
-> **AI proposes; the professional disposes.** An AI system may draft the register, score the probabilities, simulate the rate paths and propose the hedge. The professional decides whether the allocation is bankable, whether the hedge protects the coverage ratios when it matters, and whether the tail the model cannot see is the one that sinks the deal. Accountability for every risk accepted, transferred or hedged rests with a competent, named human — always.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI system may draft the register, score the probabilities, simulate the rate paths and propose the hedge. The professional decides whether the allocation is bankable, whether the hedge protects the coverage ratios when it matters, and whether the tail the model cannot see is the one that sinks the deal. Accountability for every risk accepted, transferred or hedged rests with a competent, named human — always.
 
 ### Key points
 
@@ -1447,7 +1447,7 @@ Every predictive input to the register is itself a risk item. Project-finance da
 - The allocation principle is central: each risk should rest with the party best able to manage, control or absorb it at the lowest cost; violating it reprices the risk and seeds disputes.
 - The risk register applies the ISO 31000 cycle to a live transaction: identify, quantify (probability × impact, plus the downside case), allocate, mitigate the residual and monitor to final maturity.
 - Hedging trades a small base-case coverage cost for large downside protection — in the worked example, 0.05× of base-case DSCR buys a stressed deterioration of 0.03× instead of 0.29×.
-- AI proposes; the professional disposes: every machine-generated probability, extraction or hedge proposal must be explainable, validated and owned by a named, competent human.
+- AI proposes; the professional verifies, decides and remains accountable: every machine-generated probability, extraction or hedge proposal must be explainable, validated and owned by a named, competent human.
 
 ### Practice questions
 
@@ -1476,7 +1476,7 @@ B. Reject all AI-generated entries and rebuild the register manually.
 C. Validate each entry for accuracy and completeness, ensure it is explainable, and take named ownership of the final register.
 D. Disclose the tool's vendor to the credit committee in place of individual accountability.
 
-**Answer: C.** AI proposes; the professional disposes — every AI output must be explainable, validated and owned by a competent, named human who signs the register.
+**Answer: C.** AI proposes; the professional verifies, decides and remains accountable — every AI output must be explainable, validated and owned by a competent, named human who signs the register.
 
 ## Chapter 13. Sustainable Finance for Projects and Infrastructure
 
@@ -1538,7 +1538,7 @@ Three model-risk caveats dominate. First, ESG data is heterogeneous and often un
 
 Accountability does not transfer to the tooling. The sustainability designation of a debt instrument is owned by the issuer and its arrangers; the second-party opinion by the qualified reviewer who signs it; climate-related disclosures by the directors who approve them; and the credit decision by the committee that takes it. The examination therefore expects candidates not merely to operate these tools but to explain their outputs — the scenario chosen, the data lineage, the criteria applied — to a credit committee, verifier or regulator, and to say where the model's confidence ends and professional judgement begins.
 
-> **AI proposes; the professional disposes.** An AI system may screen a project against green criteria, price a climate scenario or draft a sustainability report — but the eligibility opinion, the risk categorisation and every published disclosure must be explainable, validated against evidence and owned by an accountable professional. A sustainability label rests on that signature, not on a model score.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI system may screen a project against green criteria, price a climate scenario or draft a sustainability report — but the eligibility opinion, the risk categorisation and every published disclosure must be explainable, validated against evidence and owned by an accountable professional. A sustainability label rests on that signature, not on a model score.
 
 ### Common pitfalls
 
@@ -1558,7 +1558,7 @@ Accountability does not transfer to the tooling. The sustainability designation 
 - Climate risk splits into physical and transition risk; both are quantified by scenario analysis over the full tenor and read against cover ratios, lock-up and default thresholds.
 - Disclosure follows the TCFD/IFRS S2 four-pillar architecture — governance, strategy, risk management, metrics and targets — plus label-specific allocation, impact and verification reporting and any jurisdictional regime such as the CSRD.
 - The label moves the price; the climate scenario moves the structure: in the worked example the ±10 bp ratchet is an equity incentive of about USD 0.3m a year, while the 6 per cent yield stress cuts the DSCR from 1.30x to 1.22x and triggers the lock-up.
-- AI accelerates screening, scenario analysis and monitoring, but eligibility opinions, categorisations, SPT calibration and every published disclosure remain the accountable professional's: AI proposes; the professional disposes.
+- AI accelerates screening, scenario analysis and monitoring, but eligibility opinions, categorisations, SPT calibration and every published disclosure remain the accountable professional's: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -1587,7 +1587,7 @@ B. The output may be relied upon if the tool is on the model inventory
 C. A named, competent professional must validate the eligibility opinion against evidence and take ownership of the claim
 D. The classification must be re-run on a second AI model for consistency
 
-**Answer: C.** AI proposes; the professional disposes — eligibility opinions and published sustainability claims must be explainable, validated and owned by an accountable human; inventory listing, confidence scores and model cross-checks do not transfer accountability.
+**Answer: C.** AI proposes; the professional verifies, decides and remains accountable — eligibility opinions and published sustainability claims must be explainable, validated and owned by an accountable human; inventory listing, confidence scores and model cross-checks do not transfer accountability.
 
 ## 14. Islamic Project Finance
 
@@ -1667,7 +1667,7 @@ Model risk in this domain has a distinctive shape. Training corpora are dominate
 
 Accountability is layered and non-delegable. The Shariah board owns the compliance determination; counsel owns legal effectiveness, including intercreditor enforceability; the modeller and the project finance leader own the numbers, whatever tooling produced them. Where AI has informed a structuring recommendation, the professional must be able to explain its basis to a credit committee, a Shariah board and, if required, a court — without recourse to "the model said so".
 
-> **AI proposes; the professional disposes.** In Islamic project finance, AI may draft, screen, reconcile and estimate — across istisna, ijara, sukuk and intercreditor terms alike — but Shariah compliance is pronounced by qualified scholars, legal effect is confirmed by counsel, and every figure and structure presented to investors is owned, explained and defended by the accountable professional.
+> **AI proposes; the professional verifies, decides and remains accountable.** In Islamic project finance, AI may draft, screen, reconcile and estimate — across istisna, ijara, sukuk and intercreditor terms alike — but Shariah compliance is pronounced by qualified scholars, legal effect is confirmed by counsel, and every figure and structure presented to investors is owned, explained and defended by the accountable professional.
 
 ### Key points
 
@@ -1677,7 +1677,7 @@ Accountability is layered and non-delegable. The Shariah board owns the complian
 - Lessor ownership risks — major maintenance, insurance, total loss — are managed through a service agency and supplementary rental, keeping financier economics DSCR-neutral.
 - Multi-tranche financings demand equivalence without contamination: matched pricing, amortisation and termination amounts across Islamic and conventional tranches, engineered through a common terms agreement, an intercreditor agreement and shared security.
 - Sukuk tradability depends on form: tangible-asset and usufruct certificates may trade at market value, whereas pure receivables trade only at par on many interpretations — monitor tangibility throughout the instrument's life.
-- AI accelerates document comparison, replication testing and sukuk analytics, but Shariah compliance, legal effectiveness and the numbers remain owned by scholars, counsel and the accountable professional: AI proposes; the professional disposes.
+- AI accelerates document comparison, replication testing and sukuk analytics, but Shariah compliance, legal effectiveness and the numbers remain owned by scholars, counsel and the accountable professional: AI proposes; the professional verifies, decides and remains accountable.
 
 ### Practice questions
 
@@ -1706,7 +1706,7 @@ B. Confirming the legal enforceability of the intercreditor agreement
 C. First-pass extraction and comparison of defined terms and payment mechanics across the parallel document suites, subject to professional validation
 D. Final ownership of the coverage ratios presented to the credit committee
 
-**Answer: C.** Mechanical extraction and cross-document comparison are appropriate to automate as triage; compliance determinations, legal effectiveness and ownership of the numbers are non-delegable — AI proposes; the professional disposes.
+**Answer: C.** Mechanical extraction and cross-document comparison are appropriate to automate as triage; compliance determinations, legal effectiveness and ownership of the numbers are non-delegable — AI proposes; the professional verifies, decides and remains accountable.
 
 ## 15. AI-Enabled Financial Modelling
 
@@ -1720,7 +1720,7 @@ Because the model carries contractual and decision-making weight, the workflow t
 
 Within this chapter, *artificial intelligence* (AI) denotes computational systems that perform tasks ordinarily requiring human analytical effort. Two families matter for modelling. *Machine learning* (ML) refers to algorithms that infer patterns from historical data — for example, relationships between project characteristics and out-turn capital cost — rather than following rules programmed explicitly. *Generative AI*, including large language models, produces new content — draft formula logic, code, documentation, review commentary — in response to natural-language instructions. *AI-assisted modelling* is any use of either family within the workflow above.
 
-Three further definitions govern everything that follows. An output is *explainable* when a competent professional can articulate, in terms a reviewer or lender would accept, why it takes the value or form it does. An output is *validated* when it has been independently confirmed as fit for its intended purpose, by testing, reconciliation or challenge that does not rely on the system that produced it. An output is *owned* when an identified, competent professional accepts accountability for it as if it were their own work. These three conditions operationalise the Institute's doctrine — **AI proposes; the professional disposes** — which holds that AI may generate candidates for inclusion in a model, but only a human professional may decide what the model asserts.
+Three further definitions govern everything that follows. An output is *explainable* when a competent professional can articulate, in terms a reviewer or lender would accept, why it takes the value or form it does. An output is *validated* when it has been independently confirmed as fit for its intended purpose, by testing, reconciliation or challenge that does not rely on the system that produced it. An output is *owned* when an identified, competent professional accepts accountability for it as if it were their own work. These three conditions operationalise the Institute's doctrine — **AI proposes; the professional verifies, decides and remains accountable** — which holds that AI may generate candidates for inclusion in a model, but only a human professional may decide what the model asserts.
 
 ### The four modes of assistance: acceleration, not abdication
 
@@ -1768,7 +1768,7 @@ Within that architecture, an AI-assisted model must satisfy the same governance 
 
 The four elements of this chapter therefore interlock: the workflow defines *where* AI may act; the four modes define *how* it acts; the modelling standards and audit regime define the *quality bar* every output must meet; and the doctrine defines *accountability*. The examination tests all four connections, and expects candidates to reason from them, not merely to recite them.
 
-> **AI proposes; the professional disposes.** An AI tool may draft the cash flow cascade, flag the inconsistent formula or estimate the demand curve. The professional who signs the model decides what enters it, can explain every material output, and carries accountability for its integrity through to financial close. No degree of AI assistance transfers that responsibility.
+> **AI proposes; the professional verifies, decides and remains accountable.** An AI tool may draft the cash flow cascade, flag the inconsistent formula or estimate the demand curve. The professional who signs the model decides what enters it, can explain every material output, and carries accountability for its integrity through to financial close. No degree of AI assistance transfers that responsibility.
 
 ### Common pitfalls
 
@@ -1784,7 +1784,7 @@ The four elements of this chapter therefore interlock: the workflow defines *whe
 
 - The project finance model carries contractual weight — debt sizing, covenant ratios and the designated base case — so AI is assessed against each stage of a disciplined workflow, not against the model as a whole.
 - AI assists in four modes: construction, review and error detection, ML input estimation, and documentation support. The legitimate role is acceleration; abdication of judgement is professional failure.
-- Every AI output entering a model must be explainable, validated and owned by a named, competent professional: AI proposes; the professional disposes.
+- Every AI output entering a model must be explainable, validated and owned by a named, competent professional: AI proposes; the professional verifies, decides and remains accountable.
 - AI review findings are prompts for investigation, and a clean structural scan is not evidence of correctness — mechanical consistency is not commercial sense. AI-assisted review never replaces independent model audit.
 - Machine-learned assumptions enter the banking case only after provenance checks, independent benchmarking, range-based testing (for example P50/P90) and a documented adoption decision.
 - The disciplined review sequence — freeze, map, scan, triage, recompute, correct, document — keeps materiality judgements, corrections and sign-off in human hands.
@@ -1799,7 +1799,7 @@ B. Accept the correction only if the model then passes a re-run of the full scan
 C. Require the modeller to recompute the affected output from source documents, make any correction manually, and record the disposition under a named sign-off
 D. Reject the flag, because AI tools cannot identify formula errors reliably
 
-**Correct answer: C.** AI proposes; the professional disposes — flags are validated by independent recomputation and corrections are made and owned by the modeller, never auto-applied.
+**Correct answer: C.** AI proposes; the professional verifies, decides and remains accountable — flags are validated by independent recomputation and corrections are made and owned by the modeller, never auto-applied.
 
 **2.** In forecast year 6, CFADS is USD 9,000,000, scheduled principal is USD 4,800,000 and interest is USD 2,400,000. The model reports a DSCR of 1.88x. The correctly computed DSCR is:
 
@@ -1879,7 +1879,7 @@ Project finance is a hostile environment for prediction: assets are one-off, his
 
 A distribution does not diffuse accountability; it concentrates it. The professional who presents probabilistic coverage analysis to a credit committee owns the P50 and the P90 alike — including the prior choice of method, since a simulation is not automatically superior to an honest deterministic sensitivity when the decision requires only a bounded answer. Every AI-assisted forecast entering a bankability discussion must be explainable to a non-specialist decision-maker, validated against independent reasoning or data before use, and traceable to a named, competent owner. The PFL-AI examination tests the critique competency directly: candidates are assessed on their ability to identify when a predictive forecast fails, not merely on their ability to run one.
 
-> **AI proposes; the professional disposes.** The machine may propose the forecast, the distribution and the breach probability; only a competent professional may dispose — accepting, amending or rejecting each output on explainable grounds. When a lender asks why the model says the project holds at P90, the answer must come from a person, not a process.
+> **AI proposes; the professional verifies, decides and remains accountable.** The machine may propose the forecast, the distribution and the breach probability; only a competent professional may dispose — accepting, amending or rejecting each output on explainable grounds. When a lender asks why the model says the project holds at P90, the answer must come from a person, not a process.
 
 ### Common pitfalls
 
@@ -1901,7 +1901,7 @@ A distribution does not diffuse accountability; it concentrates it. The professi
 - The working method is sequential: validate the base case, select drivers, specify distributions and correlations, simulate reproducibly, read the tails, then validate and own the result.
 - Correlation assumptions dominate tail risk: treating linked drivers as independent understates exactly the downside scenarios that drive covenant, reserve and debt-sizing decisions.
 - Predictive models drift; back-testing, drift monitoring and defined revalidation triggers are maintenance obligations, and declaring that a model should no longer be relied upon is a professional competence.
-- AI proposes; the professional disposes: every AI-assisted forecast must be explainable to its audience, validated against independent evidence, and owned by a named, competent professional.
+- AI proposes; the professional verifies, decides and remains accountable: every AI-assisted forecast must be explainable to its audience, validated against independent evidence, and owned by a named, competent professional.
 
 ### Practice questions
 
@@ -2017,7 +2017,7 @@ The method below turns a raw data room into a verified findings register. The wo
 
 Accountability for due diligence findings cannot be delegated to a system. The professional who signs the diligence report, issues the red-flag summary or confirms satisfaction of conditions precedent owns every statement in it, however it was generated. A defensible verification protocol therefore records which tool produced each extraction, against which document version, who reviewed it, what was corrected, and the evidence trail from finding to source clause. A finding that cannot be explained and traced is not a finding but a conjecture, and it does not enter the report.
 
-> **AI proposes; the professional disposes.** In digital due diligence, AI may read every page, extract every obligation and flag every inconsistency — but it certifies nothing. Every extracted clause, red flag and completeness conclusion is a proposal awaiting professional judgement. The reviewer who validates it, and the leader who signs the report, carry the accountability; no due diligence finding is relied upon until a competent human has traced it to source and made it their own.
+> **AI proposes; the professional verifies, decides and remains accountable.** In digital due diligence, AI may read every page, extract every obligation and flag every inconsistency — but it certifies nothing. Every extracted clause, red flag and completeness conclusion is a proposal awaiting professional judgement. The reviewer who validates it, and the leader who signs the report, carry the accountability; no due diligence finding is relied upon until a competent human has traced it to source and made it their own.
 
 ### Key Points
 
@@ -2027,7 +2027,7 @@ Accountability for due diligence findings cannot be delegated to a system. The p
 - Automation suits classification, extraction, cross-referencing and completeness sweeps; interpretation of meaning, materiality judgement and bankability assessment remain professional acts.
 - Model risks — hallucinated citations, omitted qualifying language, weak performance on scans, manuscript amendments and side letters — plus confidentiality and version-control constraints define the limits of reliance on machine output.
 - Every extraction must carry a source citation, be reconciled to the current lender base case, be triaged by quantified impact on DSCR, LLCR and equity IRR, and be verified by a named reviewer before it enters the report.
-- AI proposes; the professional disposes: no machine output enters the reliance chain until a competent human has traced it to source, validated it and taken ownership of it.
+- AI proposes; the professional verifies, decides and remains accountable: no machine output enters the reliance chain until a competent human has traced it to source, validated it and taken ownership of it.
 
 ### Practice Questions
 
@@ -2060,9 +2060,9 @@ D. 1.06
 
 ## 18. Responsible AI in Project Finance
 
-### The doctrine: AI proposes; the professional disposes
+### The doctrine: AI proposes; the professional verifies, decides and remains accountable
 
-The responsible use of artificial intelligence in project finance rests on a single governing doctrine: **AI proposes; the professional disposes**. An AI system may draft, calculate, screen, summarise or recommend, but it never decides: it holds no professional judgement, no fiduciary duty and no accountability. Those remain with the certified professional. Every output that informs a financing decision — a sensitivity run, a covenant summary, a draft term-sheet comparison, a screening of precedent transactions — must be **explainable**, **validated** and **owned** by a competent human professional before it is relied upon. Ownership is not a formality: it means a named individual has examined the output, understands how it was produced, has tested it against independent judgement, and accepts professional accountability for it exactly as if they had produced it unaided.
+The responsible use of artificial intelligence in project finance rests on a single governing doctrine: **AI proposes; the professional verifies, decides and remains accountable**. An AI system may draft, calculate, screen, summarise or recommend, but it never decides: it holds no professional judgement, no fiduciary duty and no accountability. Those remain with the certified professional. Every output that informs a financing decision — a sensitivity run, a covenant summary, a draft term-sheet comparison, a screening of precedent transactions — must be **explainable**, **validated** and **owned** by a competent human professional before it is relied upon. Ownership is not a formality: it means a named individual has examined the output, understands how it was produced, has tested it against independent judgement, and accepts professional accountability for it exactly as if they had produced it unaided.
 
 Three definitions anchor the doctrine. **Explainability** is the ability of the responsible professional to articulate, in terms a counterparty, credit committee or regulator would accept, why an AI-supported output says what it says. **Validation** is the act of confirming an output against independent sources, recomputation or professional judgement before use. **Accountability** is the allocation of responsibility for an output to an identified person with the competence to hold it. An output failing any one of the three cannot be relied upon in a transaction, whatever its apparent quality.
 
@@ -2126,7 +2126,7 @@ The doctrine becomes operational only when it is expressed as a repeatable proce
 - **One-off bias review.** Reviewing a tool for bias at procurement and never per transaction, when bias risk depends on how well the underlying data matches this deal's market, tenor and technology.
 - **Outsourced assurance.** Treating a vendor's own accuracy or explainability claims as a substitute for the institution's controls. The professional's duty of validation cannot be delegated to the tool being validated.
 
-> **AI proposes; the professional disposes.** In responsible AI itself, the principle is the control: AI may propose analysis, drafts and forecasts across a transaction, but only a competent, named professional — having tested explainability, bias, data quality and confidentiality — may dispose of them by adopting, amending or rejecting each output. Accountability never transfers to the tool.
+> **AI proposes; the professional verifies, decides and remains accountable.** In responsible AI itself, the principle is the control: AI may propose analysis, drafts and forecasts across a transaction, but only a competent, named professional — having tested explainability, bias, data quality and confidentiality — may dispose of them by adopting, amending or rejecting each output. Accountability never transfers to the tool.
 
 ### Key points
 
@@ -2140,7 +2140,7 @@ The doctrine becomes operational only when it is expressed as a repeatable proce
 
 ### Practice questions
 
-**1. Under the doctrine "AI proposes; the professional disposes", an AI-generated covenant summary may be relied upon in a transaction only when:**
+**1. Under the doctrine "AI proposes; the professional verifies, decides and remains accountable", an AI-generated covenant summary may be relied upon in a transaction only when:**
 
 A. The tool vendor has certified the accuracy of the underlying model
 B. The output is plausible and consistent with the deal team's expectations
@@ -2179,7 +2179,7 @@ Validation must be distinguished from two neighbouring ideas. *Verification* ask
 
 ### The doctrine: non-delegable responsibility
 
-The governing doctrine of this credential is that **AI proposes; the professional disposes**. Its corollary here is the principle of *non-delegable responsibility*: accountability for analysis cannot be transferred to a tool, because a tool cannot be examined by a lender, cross-questioned by an investment committee, sanctioned by an employer or held to a professional standard. Responsibility can be *delegated to* a competent human who accepts it; it can only be *abandoned to* a machine. Lenders, investment committees, auditors and regulators do not accept "the model said so" as the basis for a financing decision, and nor does the Institute: accountability rests with the professional who adopts the output, at the moment of adoption. That professional stands where a director stands when signing accounts prepared by staff: assistance is legitimate and often essential, but the signature attests to the signer's own satisfaction, obtained through validation, not to the assistant's diligence.
+The governing doctrine of this credential is that **AI proposes; the professional verifies, decides and remains accountable**. Its corollary here is the principle of *non-delegable responsibility*: accountability for analysis cannot be transferred to a tool, because a tool cannot be examined by a lender, cross-questioned by an investment committee, sanctioned by an employer or held to a professional standard. Responsibility can be *delegated to* a competent human who accepts it; it can only be *abandoned to* a machine. Lenders, investment committees, auditors and regulators do not accept "the model said so" as the basis for a financing decision, and nor does the Institute: accountability rests with the professional who adopts the output, at the moment of adoption. That professional stands where a director stands when signing accounts prepared by staff: assistance is legitimate and often essential, but the signature attests to the signer's own satisfaction, obtained through validation, not to the assistant's diligence.
 
 ### The competency that governs all others
 
@@ -2253,7 +2253,7 @@ The named signatory must be competent in both the finance and the tooling, suffi
 - **Diffused ownership** — "the team reviewed it" names no one; accountability requires a named professional.
 - **Waiving validation for routine outputs** — time pressure and familiarity are precisely the conditions under which unvalidated errors reach decisions.
 
-> **AI proposes; the professional disposes.** Applied to validation, the doctrine is at its most literal: the tool may draft the analysis, and may even assist the checking of it, but no chain of automated assurance discharges the professional's duty. Every AI output that informs a project finance decision must be reperformed, benchmarked or reasonableness-tested by a competent human who signs their name to the conclusion — because when the credit committee asks who validated the numbers, the answer must never be "the software".
+> **AI proposes; the professional verifies, decides and remains accountable.** Applied to validation, the doctrine is at its most literal: the tool may draft the analysis, and may even assist the checking of it, but no chain of automated assurance discharges the professional's duty. Every AI output that informs a project finance decision must be reperformed, benchmarked or reasonableness-tested by a competent human who signs their name to the conclusion — because when the credit committee asks who validated the numbers, the answer must never be "the software".
 
 ### Key points
 
@@ -2300,7 +2300,7 @@ D. "The financial model passed an independent model audit at financial close"
 
 ### Purpose of this capstone
 
-This closing chapter draws the strands of the PCI PFL-AI Body of Knowledge together into a single, realistic transaction. It introduces no new syllabus content; its purpose is integrative — to show how investment appraisal, financial modelling, capital structure, debt and equity, coverage ratios, bankability, contract structuring and PPP mechanics interlock on a live deal, and how artificial intelligence is applied at each stage under the Institute's governing doctrine: **AI proposes; the professional disposes.** Every AI output here is explainable, validated and owned by a competent, accountable human. Candidates should pause at each decision point to form their own view before reading on: the examination routinely tests this kind of cross-domain synthesis, and while the figures are illustrative, the reasoning is the examinable substance.
+This closing chapter draws the strands of the PCI PFL-AI Body of Knowledge together into a single, realistic transaction. It introduces no new syllabus content; its purpose is integrative — to show how investment appraisal, financial modelling, capital structure, debt and equity, coverage ratios, bankability, contract structuring and PPP mechanics interlock on a live deal, and how artificial intelligence is applied at each stage under the Institute's governing doctrine: **AI proposes; the professional verifies, decides and remains accountable.** Every AI output here is explainable, validated and owned by a competent, accountable human. Candidates should pause at each decision point to form their own view before reading on: the examination routinely tests this kind of cross-domain synthesis, and while the figures are illustrative, the reasoning is the examinable substance.
 
 ### The scenario
 
@@ -2366,7 +2366,7 @@ At every stage, AI widened the field of vision — screening data, reading contr
 2. Trace how the two contract misalignments found in Stage two would have propagated into the financial model, the coverage ratios and the lenders' termination analysis had they gone uncorrected.
 3. The WPA is availability-based. Rework the risk matrix for a volume-based tariff and explain, ratio by ratio, why lenders would demand lower gearing, higher cover, or both.
 4. In Stage five, the DSCR fell to 1.11x while the LLCR remained comfortably above 1.30x. What does this divergence tell a lender, and why are period and life-cover ratios jointly, not alternatively, necessary?
-5. For each of the five AI applications in this case, identify the specific human validation step, the professional who owned the output, and the harm that could have followed had "AI proposes; the professional disposes" been ignored.
+5. For each of the five AI applications in this case, identify the specific human validation step, the professional who owned the output, and the harm that could have followed had "AI proposes; the professional verifies, decides and remains accountable" been ignored.
 
 ### Closing note
 
@@ -2379,11 +2379,11 @@ A candidate who can navigate Meridian Water — appraising it, structuring it, m
 
 # Glossary
 
-Terms are defined here as they are used throughout the PCI PFL-AI Body of Knowledge and in the Institute's examination materials for the credential. Where a term recurs across chapters, the definition below governs. Terms relating to artificial intelligence are defined in accordance with the Institute's doctrine that AI proposes and the professional disposes: every AI output must be explainable, validated and owned by a competent human before it informs a professional decision.
+Terms are defined here as they are used throughout the PCI PFL-AI Body of Knowledge and in the Institute's examination materials for the credential. Where a term recurs across chapters, the definition below governs. Terms relating to artificial intelligence are defined in accordance with the Institute's doctrine that AI proposes and the professional verifies, decides and remains accountable: every AI output must be explainable, validated and owned by a competent human before it informs a professional decision.
 
 **AI-enabled financial modelling** — The application of artificial intelligence techniques to the construction, review and interrogation of project finance models, including automated formula checking, assumption testing and natural-language querying of model outputs. Such tools accelerate the modeller's work; they never displace the modeller's judgement or accountability.
 
-**AI proposes; the professional disposes** — The Institute's governing doctrine for the use of artificial intelligence in professional practice: AI may draft, calculate, flag or predict, but every output must be explainable, validated and owned by a competent human professional before it is relied upon.
+**AI proposes; the professional verifies, decides and remains accountable** — The Institute's governing doctrine for the use of artificial intelligence in professional practice: AI may draft, calculate, flag or predict, but every output must be explainable, validated and owned by a competent human professional before it is relied upon.
 
 **Anomaly detection** — The use of statistical or machine-learning methods to identify data points, transactions or model outputs that depart from expected patterns. In due diligence and model review, flagged anomalies are leads for professional investigation, not conclusions.
 
@@ -2455,7 +2455,7 @@ Terms are defined here as they are used throughout the PCI PFL-AI Body of Knowle
 
 **Hedging** — The use of derivative or contractual mechanisms to reduce exposure to market variables such as interest rates, exchange rates, inflation or commodity prices, typically required by lenders for a defined portion of exposure.
 
-**Human-in-the-loop validation** — The structured review of AI output by a competent professional before it is used: checking provenance, testing reasonableness, reconciling to source data and recording sign-off. It is the operational expression of the doctrine that AI proposes and the professional disposes.
+**Human-in-the-loop validation** — The structured review of AI output by a competent professional before it is used: checking provenance, testing reasonableness, reconciling to source data and recording sign-off. It is the operational expression of the doctrine that AI proposes and the professional verifies, decides and remains accountable.
 
 **Hurdle rate** — The minimum acceptable rate of return an investor requires before committing capital to a project, against which appraisal measures such as IRR are judged.
 

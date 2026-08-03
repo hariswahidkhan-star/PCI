@@ -14,16 +14,16 @@ hardest to see in a finished sentence.
 
 | Symbol | Meaning | Unit | First home | Verified |
 |---|---|---|---|---|
-| `PV` (BCWS) | Planned Value (EVM context) | currency | inherited (PCP-AI master table) | yes |
-| `EV` (BCWP) | Earned Value | currency | inherited (PCP-AI master table) | yes |
-| `AC` (ACWP) | Actual Cost | currency | inherited (PCP-AI master table) | yes |
-| `BAC` / `EAC` / `ETC` / `VAC` | Budget / Estimate at Completion, Estimate to Complete, Variance at Completion | currency | inherited (PCP-AI master table) | yes |
-| `CV` = `EV − AC` · `SV` = `EV − PV` | Cost / Schedule Variance | currency | inherited (PCP-AI master table) | yes |
-| `CPI` = `EV/AC` · `SPI` = `EV/PV` | Performance indices | ratio | inherited (PCP-AI master table) | yes |
-| `TCPI` | To-Complete Performance Index | ratio | inherited (PCP-AI master table) | yes |
-| `PoC` | Percentage of completion | % | inherited (PCP-AI master table) | yes |
-| `r`, `n` | Discount rate per period; number of periods | ratio; count | inherited (PCP-AI master table) | yes |
-| `PV(x)` | Present value of amount `x` | currency | inherited (PCP-AI master table) | yes |
+| `PV` (BCWS) | Planned Value (EVM context) | currency | inherited (PCL-AI master table) | yes |
+| `EV` (BCWP) | Earned Value | currency | inherited (PCL-AI master table) | yes |
+| `AC` (ACWP) | Actual Cost | currency | inherited (PCL-AI master table) | yes |
+| `BAC` / `EAC` / `ETC` / `VAC` | Budget / Estimate at Completion, Estimate to Complete, Variance at Completion | currency | inherited (PCL-AI master table) | yes |
+| `CV` = `EV − AC` · `SV` = `EV − PV` | Cost / Schedule Variance | currency | inherited (PCL-AI master table) | yes |
+| `CPI` = `EV/AC` · `SPI` = `EV/PV` | Performance indices | ratio | inherited (PCL-AI master table) | yes |
+| `TCPI` | To-Complete Performance Index | ratio | inherited (PCL-AI master table) | yes |
+| `PoC` | Percentage of completion | % | inherited (PCL-AI master table) | yes |
+| `r`, `n` | Discount rate per period; number of periods | ratio; count | inherited (PCL-AI master table) | yes |
+| `PV(x)` | Present value of amount `x` | currency | inherited (PCL-AI master table) | yes |
 | `FV(x)` | Future value of amount `x` | currency | PFL-AI D3 | yes |
 | `NPV` | Net present value = Σ CFₜ/(1+r)ᵗ − I₀ | currency | PFL-AI D4 | yes |
 | `IRR` / `MIRR` | Internal / modified internal rate of return | %/period | PFL-AI D4 | yes |
@@ -43,7 +43,7 @@ hardest to see in a finished sentence.
 | `D/E` | Gearing (debt : equity) | ratio | PFL-AI D9/D10 | yes |
 | `i_nom`, `i_real`, `π` | Nominal rate, real rate, inflation (Fisher: `1+i_nom = (1+i_real)(1+π)`) | %/period | PFL-AI D3 | yes |
 | `DF(t)` | Discount factor at period `t` = 1/(1+r)ᵗ | ratio | PFL-AI D3 | yes |
-| `A` | Annuity payment (context-flagged; PCP-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | yes |
+| `A` | Annuity payment (context-flagged; PCL-AI uses `A` = Assets in accounting chapters — write "annuity payment `A`" at first use) | currency/period | PFL-AI D3 | yes |
 
 **Conventions that apply to every formula above.** Financial arithmetic is decimal, never binary
 floating point. Intermediate values carry full precision; rounding happens only at display, which is
@@ -59,8 +59,8 @@ Terms fixed at programme level, which the chapters use without redefining:
 |---|---|
 | **PML-AI** | PCI Project Management Leader – AI: the certification; its BoK is this programme's Book One |
 | **PFL-AI** | PCI Project Finance Leader – AI: the certification; its BoK is Book Two |
-| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide restatement of PCP-AI's "AI proposes, the professional disposes" |
-| **Domain / Knowledge Area / Topic** | The three-level content hierarchy `D.K.T`, identical to PCP-AI |
+| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide restatement of PCL-AI's "AI proposes; the professional verifies, decides and remains accountable" |
+| **Domain / Knowledge Area / Topic** | The three-level content hierarchy `D.K.T`, identical to PCL-AI |
 | **Sponsor** | The accountable executive owner of the business case (PML-AI); in PFL-AI project-finance contexts, an equity investor promoting the project — the books flag the context at each use |
 | **Special-purpose vehicle (SPV)** | The ring-fenced legal entity created to own, finance and operate a project |
 | **Bankability** | The degree to which a project's contracts, risks and cash flows support limited-recourse financing on acceptable terms |

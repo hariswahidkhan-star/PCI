@@ -1,9 +1,5 @@
 # Domain 11 — Business Process Cycles (O2C, P2P & the control environment)
 
-> **Group:** Project management. **Target:** ~45 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful). Connects
-> the commercial/cost cycles (Domains 5, 7) to the accounting cycles (Domains 1–2).
-
 ## Why this domain exists
 
 Behind every project number is a **business process**: money comes in through the **order-to-cash (O2C)**
@@ -356,8 +352,7 @@ techniques in this area.
 to find control breaches and bottlenecks; **invoice/PO matching** and exception classification to automate the
 three-way match; **anomaly and duplicate detection** across postings; and continuous-controls monitoring. The
 professional owns the control design and the response to exceptions — an automated match that "auto-approves"
-within too-wide a tolerance re-creates the very risk the control exists to prevent. **AI proposes, the
-professional disposes.**
+within too-wide a tolerance re-creates the very risk the control exists to prevent. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 11.3
 
@@ -555,7 +550,7 @@ tolerance. The design rules follow from management by exception: every alert has
 defined response path; false-positive rates are measured and thresholds tuned against them; and the
 monitor is itself monitored — an alert stream nobody actions is worse than none, because it implies a
 coverage that does not exist. The machine watches at a scale no clerk can; the professional owns what the
-thresholds are and what happens when one trips (13.5.4). **AI proposes, the professional disposes.**
+thresholds are and what happens when one trips (13.5.4). **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Advanced 11.A.5 — The cost of the control itself
 
@@ -749,7 +744,7 @@ the tolerances were set by a professional who understood what the match protects
 exception lands with a human who owns the response. Set the tolerances wide to make the exception count look
 good, and the 92 % becomes a vanity metric hiding unauthorised cost. The machine matches, mines and flags at a
 scale no clerk can; the professional decides what tolerable means, what an exception costs, and what happens
-next. **AI proposes, the professional disposes.**
+next. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -867,7 +862,7 @@ controls admit no threshold; and every monitor gets a named owner and a 48-hour 
    noise fell.
 5. **Interpretation.** The machine watches all 1,600 invoices at forty sites in a way no clerk can; the
    professional owns the thresholds, measures the false-positive rate, and monitors the monitor — an alert
-   stream nobody actions implies a coverage that does not exist. **AI proposes, the professional disposes.**
+   stream nobody actions implies a coverage that does not exist. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### What the credential expects
 

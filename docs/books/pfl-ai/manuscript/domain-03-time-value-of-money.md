@@ -1,13 +1,4 @@
-# Domain 3 — Time Value of Money and Financial Mathematics *(quantitative flagship)*
-
-> **Group:** Foundations (Domain 3 of 4 in Part One). **Target:** ~72 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the definitive home of the discounting symbols —
-> `PV(x)`, `FV(x)`, `DF(t)`, `r`, `n`, `i_nom`, `i_real`, `π`, annuity payment `A` — every later
-> domain restates them from here. Because this book is discounting-heavy, `PV` written bare is
-> reserved for Earned Value contexts only; present value is always written `PV(x)` or in words.
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
+# Domain 3 — Time Value of Money and Financial Mathematics
 ## Why this domain exists
 
 Every judgment a project finance leader makes — whether an investment is worth making (Domain 4),

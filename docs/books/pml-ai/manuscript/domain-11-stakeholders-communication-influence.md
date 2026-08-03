@@ -1,14 +1,5 @@
 # Domain 11 — Stakeholders, Communication and Influence
 
-> **Group:** Leading people and organisations (the first of the three domains in Part Three,
-> Domains 11–13). **Target:** ~70 pages. **Binds to:** the PCI Book Pattern Specification and the shared
-> registries (`docs/books/registries/`). This domain returns to the **Meridian Care Records**
-> programme at programme scale, applies Domain 4's interface arithmetic to people, prices Domain 3's
-> governance latency as information latency, and supplies the engagement-allocation and negotiation
-> arithmetic used by Domains 12, 13, 15 and 16. British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`). Internal effort in this domain is valued at a stated blended rate of
-> **USD 110 per hour**; a neutral facilitator at **USD 150 per hour**.
-
 ## Why this domain exists
 
 Part Two built the delivery machinery: scope, schedule, cost, risk, quality, supply. Every one of

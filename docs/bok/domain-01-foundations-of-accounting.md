@@ -1,9 +1,5 @@
 # Domain 1 — Foundations of Accounting for Project Controls
 
-> **Group:** Finance, accounting & reporting (Domain 1 of 4). **Target:** ~110 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md) — restate any symbol on use; British English; USD
-> (+SAR where useful); worked examples in the five-line format (Spine §5).
-
 ## Why this domain exists
 
 A project controls professional does not keep the books, but reads, reconciles and reports against them
@@ -251,7 +247,7 @@ for a described transaction, draft narrations, and flag entries whose debits and
 whose account looks atypical (an expense coded to a balance-sheet account). They are genuinely useful for
 speed and first-pass anomaly spotting. Their limits are real: an LLM can produce a *plausible* but wrong
 entry (e.g. capitalising a cost that should be expensed), and it cannot know your entity's policies unless
-told. **AI proposes, the professional disposes** — the entry is not correct because the model produced it;
+told. **AI proposes; the professional verifies, decides and remains accountable** — the entry is not correct because the model produced it;
 it is correct because a professional has checked it against the equation, the policy and the evidence.
 
 ### Key terms — KA 1.1
@@ -511,7 +507,7 @@ it is why forecasting must model *both* (Domain 3).
 cash-flow statement from a trial balance and prior period, draft note disclosures, and run consistency checks
 (does the closing cash tie to the SOFP? does the SOCE reconcile?). The professional retains accountability:
 AI classification of a cash flow as operating vs financing can be wrong, and disclosures drafted by a model
-must be checked against the actual policy and the standard — **AI proposes, the professional disposes.**
+must be checked against the actual policy and the standard — **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 1.2
 
@@ -729,8 +725,7 @@ A cost incurred on 29 March but invoiced 5 April belongs to **March**.
 and timesheets to *propose* month-end accruals, and flag costs whose service date and invoice date straddle a
 period boundary. This is high-value — cut-off errors are laborious to find manually. But the accrual *amount*
 often needs professional estimation (how much of a part-delivered service was performed?), and a model that
-accrues from a document date rather than a service date will reproduce the very pitfall above. **AI proposes,
-the professional disposes.**
+accrues from a document date rather than a service date will reproduce the very pitfall above. **AI proposes; the professional verifies, decides and remains accountable.**
 
 **Worked example 1.3.5 — a missed accrual distorts CPI.**
 
@@ -991,7 +986,7 @@ where forecast cost approaches price, and checking that disclosures are internal
 *make the judgement* — whether an obligation is "probable", whether costs are "unavoidable", whether a
 constructive obligation exists — which is a matter for professional and often legal judgement, auditable and
 signed off by a person. Over-reliance risks both under-provisioning (missing a probable outflow) and
-over-provisioning (booking a loss the standard would not permit). **AI proposes, the professional disposes.**
+over-provisioning (booking a loss the standard would not permit). **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 1.4
 
@@ -1191,8 +1186,7 @@ supplier invoice narrative to project/WBS/cost element), **detect anomalies** (a
 element, an outlier against the work package's run-rate, a probable duplicate), and **accelerate
 reconciliation** by matching extracted cost to ledger balances and flagging the exceptions. The governance
 line still holds: an auto-coded cost must be reviewable and correctable, mis-coding propagates into every
-report downstream, and the professional owns the mapping rules and the exceptions. **AI proposes, the
-professional disposes.**
+report downstream, and the professional owns the mapping rules and the exceptions. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### 1.5.6 Sector mini-case — a contractor's month-end accrual pack
 
@@ -1593,7 +1587,7 @@ the accruals create is exactly what the cash-flow statement will explain.
 One sentence on AI completes the picture: accrual-proposal tools scanning goods-received-not-invoiced
 reports and auto-coding assistants mapping invoice narratives to cost codes would accelerate every step of
 this close, with the professional owning the service dates, the coding rules and the sign-off (13.5.4) —
-**AI proposes, the professional disposes.**
+**AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1747,7 +1741,7 @@ double entry through the coding structure of KA 1.5, and the quarter's 182,500 c
 components exactly. On AI: invoice-classification assistants can propose the capitalise-vs-expense split
 from purchase-order text and flag spares whose parent asset has been end-of-lifed — genuinely useful — but
 the directly-attributable judgement, the revised life and the NRV estimate are professional calls to be
-evidenced and signed (13.5.4): **AI proposes, the professional disposes.**
+evidenced and signed (13.5.4): **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -2004,6 +1998,5 @@ and reconciliation controls → Domain 11.
 
 **AI across Domain 1 (recap).** AI is most valuable, and lowest-risk, in *coding and reconciliation* (KA 1.5)
 and *accrual/cut-off proposal* (KA 1.3); it is genuinely useful but higher-judgement in *provisioning* (KA
-1.4) and *disclosure drafting* (KA 1.2). In every case the same principle governs: **AI proposes, the
-professional disposes** — the professional remains accountable for the entry, the estimate and the sign-off.
+1.4) and *disclosure drafting* (KA 1.2). In every case the same principle governs: **AI proposes; the professional verifies, decides and remains accountable** — the professional remains accountable for the entry, the estimate and the sign-off.
 

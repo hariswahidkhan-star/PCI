@@ -479,7 +479,7 @@ public static class Payments
                         {
                             db.Execute("UPDATE payments SET exam_schedule_deadline=datetime('now','+1 year') WHERE reference=?", reference);
                             // Formal one-attempt entitlement tied to this payment (idempotent via unique
-                            // index) and to the PURCHASED certification (metadata code; PCP-AI default).
+                            // index) and to the PURCHASED certification (metadata code; PCL-AI default).
                             var entCertId = Certs.Resolve(db, m.GetValueOrDefault("certification"));
                             db.Execute("INSERT OR IGNORE INTO exam_entitlements(user_id,payment_id,product_type,certification_id,status,valid_until) VALUES(?,?,?,?, 'available', datetime('now','+1 year'))", userId, payId, product, entCertId);
                             // Create the Exam Authorization (configurable window + attempt policy). Recomputes

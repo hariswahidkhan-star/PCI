@@ -1,13 +1,5 @@
 # Domain 15 — Programmes, Portfolios and Enterprise Delivery
 
-> **Group:** Enterprise delivery and the digital future (Domain 15 of 3 in Part Four).
-> **Target:** ~72 pages. **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain lifts the **Meridian Care Records** programme of Domains 1
-> to 4 to the tier above it — the portfolio that funds it and the enterprise that governs it — and
-> supplies the dependency-product, multi-period allocation, benefits-bridge and enterprise-latency
-> arithmetic that Domain 16 consumes when it measures whether any of it landed. British English;
-> USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Every domain before this one has, quite deliberately, held one thing constant: the boundary of the

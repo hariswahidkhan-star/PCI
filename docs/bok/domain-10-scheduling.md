@@ -1,9 +1,5 @@
 # Domain 10 — Project Scheduling (in depth)
 
-> **Group:** Project management. **Target:** ~65 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful). Complements
-> the schedule side of earned value (Domain 6, especially the critical-path limitation, KA 6.4.2).
-
 ## Why this domain exists
 
 A schedule is the model of *how the work will happen in time* — and it is the half of project controls that
@@ -500,7 +496,7 @@ milestones** so the programme has one time picture.
 logic-checking (finding missing links, dangling activities, excessive constraints/lags), delay prediction from
 progress trends and external data, and accelerating Monte Carlo risk analysis. The professional owns the logic
 and the forecast — an AI-proposed schedule can embed hidden constraints or unrealistic durations, and a delay
-prediction is an input to judgement, not a decision. **AI proposes, the professional disposes.**
+prediction is an input to judgement, not a decision. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### 10.4.4 Look-ahead planning
 
@@ -953,8 +949,7 @@ this story: an aggregate `SPI` near 1.0 can coexist with a critical-path slip on
 the **EVM blind spot** this domain exists to cover (Domain 6, KA 6.4.2). And AI-assisted scheduling (KA
 13.5.5) would have earned its keep at three points — logic-checking the network for missing links and hidden
 constraints, accelerating the Monte Carlo run, and predicting the day-10 delay from progress trends — but at
-each one the logic, the P-level commitment and the recovery decision remain the professional's: **AI proposes,
-the professional disposes.**
+each one the logic, the P-level commitment and the recovery decision remain the professional's: **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1098,8 +1093,7 @@ deadline. And the standing lesson generalises well beyond rail: wherever hand-ba
 re-opening, a plant restart, a retail trading date — schedule control is margin management in small units,
 re-computed every few hours, with the de-scope option priced **before** it is needed. An AI scheduling
 assistant (KA 13.5.5) could have re-run the network and the simulation in seconds at hour 20; the decision to
-give up scope to protect the railway belonged, as always, to the professional. **AI proposes, the professional
-disposes.**
+give up scope to protect the railway belonged, as always, to the professional. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

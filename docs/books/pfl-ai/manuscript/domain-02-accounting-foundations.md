@@ -1,13 +1,5 @@
 # Domain 2 — Accounting and Financial-Statement Foundations
 
-> **Group:** Foundations (Domain 2 of 4 in Part One). **Target:** ~70 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain builds the accrual-to-cash bridge Domain 1 promised and
-> supplies the statement vocabulary every later domain assumes — including the `CFADS` that
-> Domain 10 turns into coverage ratios. Standards are named and described in this book's own words;
-> no standard's text is reproduced, and nothing here is accounting advice for a specific entity
-> or jurisdiction. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domain 1 established that **cash, not profit, is the binding constraint** — and then left an

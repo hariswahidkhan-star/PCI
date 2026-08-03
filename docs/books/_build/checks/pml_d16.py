@@ -1,4 +1,4 @@
-"""PML-AI Domain 16 — Transition, Closeout and Benefits Realization: golden checks.
+"""PML-AI Domain 16 — Transition, Closeout and Benefits Realisation: golden checks.
 
 Every number printed as a result in `domain-16-transition-closeout-benefits.md` is recomputed here
 from its definition rather than from its printed output, and every teaching invariant the domain

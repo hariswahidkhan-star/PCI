@@ -1,11 +1,4 @@
-# Domain 6 — Planning, Scheduling and Delivery Flow *(quantitative flagship)*
-
-> **Group:** Delivering the work (Domain 6 of 6 in Part Two). **Target:** ~76 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of the schedule symbols — `ES`, `EF`, `LS`,
-> `LF`, `TF` (total float), `FF` (free float) — restated by every domain that touches time.
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
+# Domain 6 — Planning, Scheduling and Delivery Flow
 ## Why this domain exists
 
 A project leader's authority rests on one repeated act: making a credible statement about the

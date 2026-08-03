@@ -1,14 +1,4 @@
-# Domain 7 — Cost, Resources and Commercial Awareness *(quantitative flagship)*
-
-> **Group:** Delivering the work (Domain 7 of 6 in Part Two — the cost counterpart to Domain 6's
-> schedule). **Target:** ~78 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is this book's home of the earned-value symbols —
-> `PV`, `EV`, `AC`, `BAC`, `CV`, `SV`, `CPI`, `SPI`, `EAC`, `ETC`, `VAC`, `TCPI` — carried
-> unchanged from the PCI family master table. Note the family notation-clash rule: `PV` here is
-> **Planned Value**; present value is written `PV(x)` or in words (PFL-AI, Domain 3).
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
+# Domain 7 — Cost, Resources and Commercial Awareness
 ## Why this domain exists
 
 A leader who can defend a date but not a number is half-equipped. Domain 6 built the schedule;

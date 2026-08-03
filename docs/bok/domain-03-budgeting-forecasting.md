@@ -1,9 +1,5 @@
 # Domain 3 — Budgeting & Forecasting
 
-> **Group:** Finance, accounting & reporting (Domain 3 of 4). **Target:** ~125 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). Uses the master formula symbols (`PV`, `BAC`,
-> `EV`, `AC`, `CPI`, `SPI`, `EAC`, `ETC`, `VAC`) — restated on use. British English; USD (+SAR where useful).
-
 ## Why this domain exists
 
 A budget is the financial expression of a plan, and a forecast is the financial expression of reality
@@ -561,7 +557,7 @@ can project `EAC` from performance trends and leading indicators, generate scena
 early-warning signals a monthly review would miss (a productivity driver turning before it shows in `CPI`).
 The limits are equally real: models trained on unrepresentative history mislead; they can be confidently
 wrong; and a forecast is an input to a professional's judgement, not a substitute for it — the person remains
-accountable for the number defended to the board. **AI proposes, the professional disposes.** (Predictive EAC
+accountable for the number defended to the board. **AI proposes; the professional verifies, decides and remains accountable.** (Predictive EAC
 and driver analysis are developed in Domain 6 and Domain 13, KA 13.5.)
 
 **The EAC movement bridge (the forecast change log).** The first question any review board asks is "why did
@@ -744,8 +740,7 @@ trap. This KA feeds directly into the commercial cycle (Domain 7) and the O2C/P2
 **AI in this KA.** AI supports cash forecasting by learning payment-behaviour patterns (which clients pay
 late, seasonal effects), generating scenario ranges for the funding trough, and flagging when actual
 collections drift from forecast. As ever, the professional owns the assumptions (a model that assumes
-historic payment behaviour continues can badly misjudge a distressed client) and the decision. **AI proposes,
-the professional disposes.**
+historic payment behaviour continues can badly misjudge a distressed client) and the decision. **AI proposes; the professional verifies, decides and remains accountable.**
 
 **Indirect taxes and withholding in the cash forecast.** The cash forecast runs on *invoice* values, not
 contract values — and invoices carry **VAT/GST**. At an illustrative 15 %, a certified 500,000 bills as `500,000 × 1.15 =
@@ -977,8 +972,7 @@ cultural: optimism that under-forecasts, or sandbagging that over-forecasts.
 **The discipline.** A ratchet is diagnosed across the `EAC` series (3.4.2) and challenged in the rolling
 forecast cycle (3.4.3) — the point at which the honest-forecast culture of the executive perspective is made
 or broken. An AI model can flag ratchet patterns across a portfolio faster than a review board can — but
-deciding whether the cause is optimism or sandbagging is a human judgement: **AI proposes, the professional
-disposes.**
+deciding whether the cause is optimism or sandbagging is a human judgement: **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1124,7 +1118,7 @@ response — draw contingency against the register, escalate the excess as a vis
 (3.1.4, 12.3). On the AI dimension: predictive `EAC` models and cash-collection models (Domain 13,
 KA 13.5.3) would likely have flagged both the `CPI` drift and the deepening trough a month or two earlier —
 but the professional still owns the persisting-variance assumption, the reserve arithmetic and the sponsor
-conversation. **AI proposes, the professional disposes.**
+conversation. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1245,7 +1239,7 @@ derive the **overlap funding trough**, explaining why a programme can be unfunda
 covers every one of its sites (3.5.3). On AI: rate-library assistants can propose location factors from
 market data and cash-curve models can flag the trough months earlier than a spreadsheet pass — but the
 factor evidence, the escalation assumption and the conversation with treasury are owned by the professional
-(13.5.3): **AI proposes, the professional disposes.**
+(13.5.3): **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

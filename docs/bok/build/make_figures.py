@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render the PCP-AI BoK figure specifications as SVG diagrams.
+"""Render the PCL-AI BoK figure specifications as SVG diagrams.
 
 Each figure is drawn from the exact underlying data in its spec block in the text.
 Style: brand blue #1D4ED8, clean professional diagrams, DejaVu Sans labels.

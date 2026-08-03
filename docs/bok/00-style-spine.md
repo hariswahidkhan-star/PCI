@@ -1,6 +1,6 @@
 # The Style Spine — Conventions of This Reference
 
-> **Status:** foundation document. Every domain of the PCP-AI Body of Knowledge (BoK) is authored against
+> **Status:** foundation document. Every domain of the PCL-AI Body of Knowledge (BoK) is authored against
 > this spine so that terminology, notation, worked-example format, figures and MCQs stay consistent across
 > the whole volume. Author nothing before reading this; restate any symbol you use.
 
@@ -165,7 +165,7 @@ Each KA ends with **3–8 sample MCQs** to certification standard:
   verbatim. Examples, tables, diagrams and MCQs must be **original**.
 - **Honesty about AI.** Describe real, current AI capabilities *and their limits and risks* (hallucination,
   data quality, bias, confidentiality, auditability) — never hype. Mark evolving capabilities as such. The
-  governing principle throughout: **"AI proposes, the professional disposes."**
+  governing principle throughout: **"AI proposes; the professional verifies, decides and remains accountable."**
 
 ---
 
@@ -180,8 +180,7 @@ Author each KA to this checklist; a KA is complete only when every applicable li
 - [ ] **A second example or mini-case** for any non-trivial topic.
 - [ ] **≥ 1 numbered figure spec** (§6) and, where motion helps, a digital-only animation storyboard.
 - [ ] **Common pitfalls / misconceptions.**
-- [ ] **"AI in this KA or domain"** — how AI assists and its governance limits ("AI proposes, the
-      professional disposes"): at least one substantive AI section per domain, plus per-KA boxes wherever
+- [ ] **"AI in this KA or domain"** — how AI assists and its governance limits ("AI proposes; the professional verifies, decides and remains accountable"): at least one substantive AI section per domain, plus per-KA boxes wherever
       the AI use is distinct (Domain 13, KA 13.5 carries the systematic per-domain coverage).
 - [ ] **Key-terms box.**
 - [ ] **3–6 sample MCQs** (§8) with answers, rationales and topic/level tags.

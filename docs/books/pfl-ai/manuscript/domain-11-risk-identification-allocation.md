@@ -1,12 +1,5 @@
 # Domain 11 — Risk Identification and Allocation
 
-> **Group:** Executing the transaction (Domain 2 of 4 in Part Three). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain prices the allocation decisions that Domain 12 then
-> documents. It uses `EMV` on the PML-AI Domain 8 definition, and it reads its consequences in the
-> coverage machinery Domain 10 built (`CFADS`, `DSCR`, covenant and lock-up triggers) — neither is
-> re-derived here. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domain 10 established what a project's cash flow can carry and on what conditions. It stress-tested

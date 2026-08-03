@@ -14,16 +14,16 @@ hardest to see in a finished sentence.
 
 | Symbol | Meaning | Unit | First home | Verified |
 |---|---|---|---|---|
-| `PV` (BCWS) | Planned Value (EVM context) | currency | inherited (PCP-AI master table) | yes |
-| `EV` (BCWP) | Earned Value | currency | inherited (PCP-AI master table) | yes |
-| `AC` (ACWP) | Actual Cost | currency | inherited (PCP-AI master table) | yes |
-| `BAC` / `EAC` / `ETC` / `VAC` | Budget / Estimate at Completion, Estimate to Complete, Variance at Completion | currency | inherited (PCP-AI master table) | yes |
-| `CV` = `EV − AC` · `SV` = `EV − PV` | Cost / Schedule Variance | currency | inherited (PCP-AI master table) | yes |
-| `CPI` = `EV/AC` · `SPI` = `EV/PV` | Performance indices | ratio | inherited (PCP-AI master table) | yes |
-| `TCPI` | To-Complete Performance Index | ratio | inherited (PCP-AI master table) | yes |
-| `PoC` | Percentage of completion | % | inherited (PCP-AI master table) | yes |
-| `r`, `n` | Discount rate per period; number of periods | ratio; count | inherited (PCP-AI master table) | yes |
-| `PV(x)` | Present value of amount `x` | currency | inherited (PCP-AI master table) | yes |
+| `PV` (BCWS) | Planned Value (EVM context) | currency | inherited (PCL-AI master table) | yes |
+| `EV` (BCWP) | Earned Value | currency | inherited (PCL-AI master table) | yes |
+| `AC` (ACWP) | Actual Cost | currency | inherited (PCL-AI master table) | yes |
+| `BAC` / `EAC` / `ETC` / `VAC` | Budget / Estimate at Completion, Estimate to Complete, Variance at Completion | currency | inherited (PCL-AI master table) | yes |
+| `CV` = `EV − AC` · `SV` = `EV − PV` | Cost / Schedule Variance | currency | inherited (PCL-AI master table) | yes |
+| `CPI` = `EV/AC` · `SPI` = `EV/PV` | Performance indices | ratio | inherited (PCL-AI master table) | yes |
+| `TCPI` | To-Complete Performance Index | ratio | inherited (PCL-AI master table) | yes |
+| `PoC` | Percentage of completion | % | inherited (PCL-AI master table) | yes |
+| `r`, `n` | Discount rate per period; number of periods | ratio; count | inherited (PCL-AI master table) | yes |
+| `PV(x)` | Present value of amount `x` | currency | inherited (PCL-AI master table) | yes |
 | `ES` | Earned Schedule (time-based schedule measure) | time | PML-AI D6 | yes |
 | `SPI(t)` | Schedule Performance Index (time) = `ES/AT` | ratio | PML-AI D6 | yes |
 | `TF`, `FF` | Total float, free float | time | PML-AI D6 | yes |
@@ -52,8 +52,8 @@ Terms fixed at programme level, which the chapters use without redefining:
 |---|---|
 | **PML-AI** | PCI Project Management Leader – AI: the certification; its BoK is this programme's Book One |
 | **PFL-AI** | PCI Project Finance Leader – AI: the certification; its BoK is Book Two |
-| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide restatement of PCP-AI's "AI proposes, the professional disposes" |
-| **Domain / Knowledge Area / Topic** | The three-level content hierarchy `D.K.T`, identical to PCP-AI |
+| **Responsible AI principle** | "AI proposes; the professional verifies, decides and remains accountable" — the suite-wide restatement of PCL-AI's "AI proposes; the professional verifies, decides and remains accountable" |
+| **Domain / Knowledge Area / Topic** | The three-level content hierarchy `D.K.T`, identical to PCL-AI |
 | **Sponsor** | The accountable executive owner of the business case (PML-AI); in PFL-AI project-finance contexts, an equity investor promoting the project — the books flag the context at each use |
 | **Special-purpose vehicle (SPV)** | The ring-fenced legal entity created to own, finance and operate a project |
 | **Bankability** | The degree to which a project's contracts, risks and cash flows support limited-recourse financing on acceptable terms |
@@ -105,7 +105,7 @@ claim cannot silently stop being true.
 | 0 | *Cross-domain check modules (span several domains)* | 0 |
 | 1 | The Project Leadership Profession | 405 |
 | 2 | Strategy, Selection and Business Alignment | 450 |
-| 3 | Governance, Organization and Decision Rights | 515 |
+| 3 | Governance, Organisation and Decision Rights | 515 |
 | 4 | Integration and Delivery Architecture | 1,947 |
 | 5 | Scope, Requirements and Value Definition | 326 |
 | 6 | Planning, Scheduling and Delivery Flow | 545 |
@@ -114,11 +114,11 @@ claim cannot silently stop being true.
 | 9 | Quality, Assurance and Continuous Improvement | 302 |
 | 10 | Procurement, Contracts and Supply Networks | 299 |
 | 11 | Stakeholders, Communication and Influence | 236 |
-| 12 | Leadership, Teams and Organizational Behaviour | 263 |
+| 12 | Leadership, Teams and Organisational Behaviour | 263 |
 | 13 | Agile, Adaptive and Hybrid Delivery | 236 |
 | 14 | Digital Delivery, Data and Responsible AI | 295 |
 | 15 | Programmes, Portfolios and Enterprise Delivery | 274 |
-| 16 | Transition, Closeout and Benefits Realization | 341 |
+| 16 | Transition, Closeout and Benefits Realisation | 341 |
 | 17 | Appendix G — integrated capstones | 324 |
 | | **Total** | **7,675** |
 

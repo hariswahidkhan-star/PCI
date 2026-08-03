@@ -1,12 +1,4 @@
-# Domain 10 — Debt Sizing, Covenants and Credit Metrics *(quantitative flagship)*
-
-> **Group:** Executing the transaction (Part Three). **Target:** ~80 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of `CFADS`, `DSCR`, `LLCR`, `PLCR` and `ICR`,
-> and it is where Domains 2, 3 and 4 converge: Domain 2 defined `CFADS` and warned that it is a
-> *defined term*, Domain 3 built the discounting and the amortisation schedule, Domain 4 built the
-> appraisal. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
+# Domain 10 — Debt Sizing, Covenants and Credit Metrics
 ## Why this domain exists
 
 Everything before this point valued a project. This domain decides **how much debt it can carry,

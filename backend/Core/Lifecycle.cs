@@ -191,7 +191,7 @@ public static class Lifecycle
 
     /// <summary>Issue a credential for a passed attempt, retrying credential-id collisions. The id
     /// format is &lt;prefix&gt;-&lt;year&gt;-&lt;5 digits&gt; where prefix and expiry come from the attempt's
-    /// CERTIFICATION (PCP-AI is simply certification 1). The partial unique index on attempt_id
+    /// CERTIFICATION (PCL-AI is simply certification 1). The partial unique index on attempt_id
     /// guarantees at most one credential per attempt — if one is already linked, its id is returned
     /// rather than issuing a duplicate. Returns null only if generation failed (astronomically
     /// unlikely) — callers should log that case.</summary>

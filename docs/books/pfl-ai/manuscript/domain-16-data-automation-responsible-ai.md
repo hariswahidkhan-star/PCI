@@ -1,25 +1,4 @@
-# Domain 16 — Data, Automation and Responsible AI in Finance *(systematic AI treatment)*
-
-> **Group:** Operating and the future (Domain 16 of 16, closing Part Four). **Target:** ~78 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). Every earlier domain carried an **AI in this KA** treatment; this
-> domain is where the treatment becomes **arithmetic**. It composes registered symbols —
-> `CFADS`, `DSCR`, `NPV`, `AF(r, n)`, `EMV`, the hundred-per-cent rule, the mesh-versus-layer
-> interface count `n(n−1)/2`, and PML-AI's governance latency `E[wait] = M/2 + L` — and it
-> proposes for the registry the six automation and assurance measures it derives: **cost per
-> reviewed item**, **automation breakeven volume**, **total misclassification cost**,
-> **break-even posterior**, **zero-failure validation sample size** and **revalidation
-> interval**. Where a figure was derived earlier it is **cited, not re-derived**: `CFADS`
-> **6,384,000**, debt service **5,009,635.23**, `DSCR` **1.2743**, the 1.20× covenant biting at
-> `CFADS` **6,011,562** and the annual headroom of **372,438** come from Domain 10 (KA 10.1–10.2);
-> the 3,250,352 debt-capacity consequence of a one-cell tax error and the year-twelve minimum
-> `DSCR` of 1.1851 come from Domain 6 (KA 6.4.1); the working-capital treatment worth
-> **600,000** of `CFADS` comes from Domain 2 (KA 2.3.1); model risk as a priced register line
-> comes from Domain 11 (KA 11.4.3). British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`). Rates used throughout, stated once: a loaded analyst hour **USD 96.00**
-> (**USD 1.60** a minute), a senior modeller or reviewer hour **USD 150.00**, a legal-and-finance
-> specialist hour **USD 240.00**.
-
+# Domain 16 — Data, Automation and Responsible AI in Finance
 ## Why this domain exists
 
 Fifteen domains have each ended with a paragraph on where machine assistance earns its place and

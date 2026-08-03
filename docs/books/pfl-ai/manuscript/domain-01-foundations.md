@@ -1,12 +1,5 @@
 # Domain 1 — Foundations of Project Finance Leadership
 
-> **Group:** Foundations (Domain 1 of 4 in Part One). **Target:** ~66 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain fixes the book's core vocabulary — recourse, SPV,
-> sponsor, bankability, CFADS (introduced by name, built fully in Domain 10) — and the
-> stakeholder map every later domain assumes. British English; USD (+SAR where useful,
-> indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Project finance is a distinctive answer to a distinctive problem: how to fund a large,

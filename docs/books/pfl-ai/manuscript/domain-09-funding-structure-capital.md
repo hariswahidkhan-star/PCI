@@ -1,15 +1,5 @@
 # Domain 9 — Funding Structure and Sources of Capital
 
-> **Group:** Structuring and modelling (Part Two, Domain 5 of 5). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of `WACC` and of the cost-of-capital
-> components beneath it — after-tax cost of debt, cost of equity, blended cost of a multi-tranche
-> stack — and it is where the 8.0 % that Domain 4 took as **given** is finally derived. It uses
-> Domain 3's `AF(r, n)` machinery and Domain 10's `DSCR`/`LLCR` machinery without re-deriving
-> either. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-> Tax, accounting and legal treatments described here are **illustrative and
-> jurisdiction-specific**; none is presented as universal.
-
 ## Why this domain exists
 
 Domain 4 discounted Kestrel's cash flows at 8.0 % because the board said 8.0 %. Domain 5 asked

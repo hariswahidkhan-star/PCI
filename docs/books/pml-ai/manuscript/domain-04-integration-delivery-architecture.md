@@ -1,12 +1,5 @@
 # Domain 4 — Integration and Delivery Architecture
 
-> **Group:** Leading projects (Domain 4 of 4 in Part One — the part's closing domain).
-> **Target:** ~70 pages. **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain completes Part One by assembling Domains 1–3 into a single
-> delivery architecture, and hands over to Part Two, where **Project Auriga** works the same
-> disciplines at single-project scale. British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domain 1 established what a project leader is answerable for. Domain 2 established how work is

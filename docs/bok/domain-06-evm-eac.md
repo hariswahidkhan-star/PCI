@@ -1,10 +1,4 @@
-# Domain 6 — Earned Value Management & Forecasting (EVM / EAC) *(flagship)*
-
-> **Group:** Project management (Domain 6 of 8 in the PM group). **Target:** ~90 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). This domain is the definitive home of the master
-> formula symbols (`PV`, `EV`, `AC`, `BAC`, `CV`, `SV`, `CPI`, `SPI`, `EAC`, `ETC`, `VAC`, `TCPI`) — every
-> other domain restates them from here. British English; USD (+SAR where useful).
-
+# Domain 6 — Earned Value Management & Forecasting (EVM / EAC)
 ## Why this domain exists
 
 Earned value management (EVM) is the technique that answers, at any moment, the three questions a project
@@ -628,8 +622,7 @@ cause, an owner, a date) rather than hoping the average improves.
 early-warning systems that fuse `CPI`/`SPI` trends with leading indicators, and driver analysis that explains
 *why* performance is moving. AI can also help detect inflated `EV` (progress claims inconsistent with cost or
 physical data). Its limits are the domain's limits: a model cannot see the critical path unless given the
-schedule, can be confidently wrong, and forecasts a number the professional must still own and defend. **AI
-proposes, the professional disposes.**
+schedule, can be confidently wrong, and forecasts a number the professional must still own and defend. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 6.4
 
@@ -1153,7 +1146,7 @@ spike, left in `AC` but not projected) and part persisting (the outfitting produ
 behind it, **Domain 4's** variance decomposition, without which the blend has no defensible split. An
 anomaly-detection model watching in-period `CPI` by zone would have flagged the outfitting drift months
 before the cumulative index moved (Domain 13, KA 13.5.3) — but the blend, and the conversation with the yard
-director, are the professional's to own. **AI proposes, the professional disposes.**
+director, are the professional's to own. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

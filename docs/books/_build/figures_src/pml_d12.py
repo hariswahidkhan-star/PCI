@@ -1,4 +1,4 @@
-"""PML-AI Domain 12 — Leadership, Teams and Organizational Behaviour. PCI original artwork.
+"""PML-AI Domain 12 — Leadership, Teams and Organisational Behaviour. PCI original artwork.
 
 Fig 12.2.1  coordination overhead as a share of team capacity: the fully connected identity
             (n &minus; 1)/160 rising to 50 % at 81 people, against a pods-of-eight structured

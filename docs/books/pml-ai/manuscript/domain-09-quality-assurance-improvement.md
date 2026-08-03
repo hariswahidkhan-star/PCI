@@ -1,14 +1,5 @@
 # Domain 9 — Quality, Assurance and Continuous Improvement
 
-> **Group:** Delivering the work (Domain 9 of 6 in Part Two). **Target:** ~76 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain works **Project Auriga** — the 25-week control-systems
-> upgrade carried through Domains 6, 7 and 8 — and supplies the cost-of-quality, containment,
-> rework-capacity, acceptance-sampling and rolled-yield arithmetic that Domain 10 uses for supplier
-> acceptance, Domain 14 for AI-output verification and Domain 16 for handover readiness. It builds
-> on Domain 3's gate economics and Domain 5's requirement-defect ladder and does not repeat either.
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Domain 5 defined what the project must produce and how acceptance would be tested. Domain 6 built

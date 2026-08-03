@@ -1,12 +1,4 @@
-# Domain 4 — Investment Appraisal and Capital Budgeting *(quantitative)*
-
-> **Group:** Foundations (Domain 4 of 4 in Part One). **Target:** ~70 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of the appraisal symbols — `NPV`, `IRR`,
-> `MIRR`, `PI`, `EAV` — and builds directly on Domain 3's machinery (`PV(x)`, `DF(t)`,
-> `AF(r, n)`): every formula here is a disciplined arrangement of those parts.
-> British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
+# Domain 4 — Investment Appraisal and Capital Budgeting
 ## Why this domain exists
 
 Domain 3 taught how to move money across time; this domain teaches how to *decide* with it.

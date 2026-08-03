@@ -1,14 +1,4 @@
-# Domain 8 — Risk, Uncertainty and Resilience *(quantitative)*
-
-> **Group:** Delivering the work (Part Two). **Target:** ~74 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain is the home of `EMV` and supplies the quantification
-> behind the contingency that Domain 7 (KA 7.1.3) reserves and the schedule ranges Domain 6
-> (KA 6.4.3) forecasts with. It supplies Domain 9 with the tolerance-and-confidence language its
-> acceptance decisions use, Domain 10 with the counterparty arithmetic behind risk transfer, and
-> Domain 15 with the programme-level aggregation its portfolios depend on. British English;
-> USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
+# Domain 8 — Risk, Uncertainty and Resilience
 ## Why this domain exists
 
 Domains 6 and 7 built plans and budgets; both left an obligation outstanding. Domain 6 forecast

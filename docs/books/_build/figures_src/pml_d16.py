@@ -1,4 +1,4 @@
-"""PML-AI Domain 16 — Transition, Closeout and Benefits Realization. PCI original artwork.
+"""PML-AI Domain 16 — Transition, Closeout and Benefits Realisation. PCI original artwork.
 
 Fig 16.1.1  Readiness is a conjunction, not an average (KA 16.1.3). Seven go-live readiness
             conditions for a Meridian clinic, each with its assessed probability of being met,

@@ -1,9 +1,5 @@
 # Domain 7 — Contracts, Commercial Management, BoQ, Invoicing & Revenue
 
-> **Group:** Project management (Domain 7 of 8 in the PM group). **Target:** ~135 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). British English; USD (+SAR where useful); five-line
-> worked examples. Closes the loop to IFRS 15 (Domain 2).
-
 ## Why this domain exists
 
 The contract is where risk is allocated, where money is defined, and where a project's commercial outcome is
@@ -761,7 +757,7 @@ integrated commercial-to-accounting judgement the credential certifies.
 analysing claims/variations, checking valuations and flagging billing anomalies, and reconciling billing to
 `EV` and IFRS 15 revenue. The recognition and entitlement judgements — whether a variation is valid, whether a
 claim is substantiated, whether revenue may be recognised — remain the professional's, auditable and signed
-off. **AI proposes, the professional disposes.**
+off. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 7.5
 
@@ -1153,7 +1149,7 @@ payments, and the certified-versus-applied gap watched as a signal. And from **K
 billing, earned value and IFRS 15 revenue reconciled monthly, with the contract asset/liability explaining
 the gap. AI accelerates the paperwork throughout — contract-analytics tools that extract terms and variation
 clauses, and billing-anomaly checks that flag a mispriced application in seconds (KA 13.5.7) — but the
-entitlement judgements and the pain/gain conversation stay human: **AI proposes, the professional disposes.**
+entitlement judgements and the pain/gain conversation stay human: **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1300,7 +1296,7 @@ up, concurrency on the way down, time-but-no-money applied, and the whole thing 
 existed — the strongest possible advertisement for the daily diary. From **KA 7.2.4**, securities as live
 cash items with dates, priced monthly. AI earns its keep on the paperwork — extracting CE clauses, digitising
 and totalling daywork sheets, flagging rate misapplications (Domain 13, KA 13.5.7) — but entitlement,
-concurrency and the pain/gain conversation are judgements. **AI proposes, the professional disposes.**
+concurrency and the pain/gain conversation are judgements. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

@@ -1,11 +1,5 @@
 # Domain 1 — The Project Leadership Profession
 
-> **Group:** Leading projects (Domain 1 of 4 in Part One). **Target:** ~68 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain fixes the book's core vocabulary — accountability,
-> outputs/outcomes/benefits, systems thinking, the responsible-AI principle — that every later
-> domain assumes. British English; USD (+SAR where useful, indicative `USD 1 ≈ SAR 3.75`).
-
 ## Why this domain exists
 
 Every technique in this book — the networks of Domain 6, the earned value of Domain 7, the risk

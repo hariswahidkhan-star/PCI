@@ -1,11 +1,5 @@
 # Domain 9 — Agile, Scrum & Adaptive Delivery for Project Controls
 
-> **Group:** Project management. **Target:** ~90 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). Authored **after** Domain 6 so KA 9.5 reuses the
-> EVM symbols (`EV`, `AC`, `PV`, `BAC`, `CPI`, `SPI`, `EAC`) unchanged. British English; USD (+SAR where
-> useful). The Agile Manifesto and Scrum Guide are described in this reference's **own words**, never
-> reproduced (Spine §9).
-
 ## Why this domain exists
 
 Modern project controls must measure, forecast and report on **adaptive and hybrid** delivery, not only
@@ -618,8 +612,7 @@ professional must reconcile and explain (and which becomes a contract asset/liab
 **AI in this KA.** AI is strong here (Domain 13, KA 13.5): forecasting velocity and release completion from
 Sprint history, generating three-point ranges, detecting flow anomalies, and projecting AgileEVM `EAC`. It can
 also *mislead* if it treats story points as absolute or ignores scope rebaselining. The professional owns the
-forecast, the scope-change transparency and the revenue reconciliation. **AI proposes, the professional
-disposes.**
+forecast, the scope-change transparency and the revenue reconciliation. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 9.5
 
@@ -731,7 +724,7 @@ adaptive delivery is *more* transparent than a predictive plan that is updated q
 
 **AI in this KA.** AI helps hybrid governance by reconciling predictive and adaptive status into one report,
 mapping Sprints to milestones, and drafting gate submissions from Sprint data. The professional owns the
-integrity of the combined picture and the scope-change narrative. **AI proposes, the professional disposes.**
+integrity of the combined picture and the scope-change narrative. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 9.6
 
@@ -1164,7 +1157,7 @@ assumptions**, Domain 6's method discipline transplanted whole. And from **KA 9.
 to work: quarterly gates fed by Sprint-level evidence, the inverted triangle flexing only the scope that is
 legally flexible. AI-assisted forecasting can produce the range, and evidence-pack tooling can flag the
 missing compliance artefacts before audit does (Domain 13, KA 13.5.6) — but the DoD, the drawdown call and
-the re-baselining conversation belong to the professional. **AI proposes, the professional disposes.**
+the re-baselining conversation belong to the professional. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 

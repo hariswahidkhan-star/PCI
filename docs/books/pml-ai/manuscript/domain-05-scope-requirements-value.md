@@ -1,19 +1,5 @@
 # Domain 5 — Scope, Requirements and Value Definition
 
-> **Group:** Delivering the work (Domain 1 of 6 in Part Two — the part's opening domain).
-> **Target:** ~70 pages. **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain opens Part Two by settling *what* is to be delivered and
-> *which parts of it are worth delivering first*, before Domain 6 begins to schedule anything. It
-> closes the **Meridian Care Records** thread's definition work; **Project Auriga** takes over as the
-> single-project illustration from Domain 6. British English; USD (+SAR where useful, indicative
-> `USD 1 ≈ SAR 3.75`).
->
-> **Registry note.** This domain uses the registered *cost of delay* and *baseline drift* constructs
-> and the annuity factor `AF(r, n)`, and submits four candidate rows to the shared formula registry
-> with the draft (traceability defect rate by class; the requirement-defect correction ladder and its
-> breakeven elicitation spend; value per unit of constrained effort; requirement-count
-> reconciliation), per Editorial Charter §6.
-
 ## Why this domain exists
 
 Part One produced a project. Domain 1 established what the leader is answerable for, Domain 2 whether

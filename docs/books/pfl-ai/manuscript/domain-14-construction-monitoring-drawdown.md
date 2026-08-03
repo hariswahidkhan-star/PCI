@@ -1,19 +1,4 @@
-# Domain 14 — Construction Monitoring and Drawdown *(quantitative)*
-
-> **Group:** Operating and the future (Domain 14 of 16, opening Part Four). **Target:** ~75 pages.
-> **Binds to:** the PCI Book Pattern Specification and the shared registries
-> (`docs/books/registries/`). This domain owns no new symbol. It composes registered ones —
-> `CFADS`, `DSCR`, `AF(r, n)`, `NPV`, `PI`, `EAC`, `ETC`, `PoC`, `EMV`, `DSRA`, `D/E` — into the
-> four tests a construction lender actually runs: the **draw request**, the **funds sufficiency
-> (in-balance) test**, the **contingency coverage test on the remainder**, and the **coverage test
-> at the first repayment date**. Where a figure was derived in an earlier domain it is **cited, not
-> re-derived**: the construction funding profile and the pro-rata capitalised interest of
-> **USD 2,114,597** come from Domain 6 (KA 6.2.1); the capitalised-interest area rule and the
-> economic cost of a month of slip come from Domain 8 (KA 8.2, 8.4); the daily cost of a slip at
-> the commercial operations date comes from Domain 5 (KA 5.4.2); the contract limits come from
-> Domain 12 (KA 12.1); the coverage machinery comes from Domain 10. British English; USD (+SAR
-> where useful, indicative `USD 1 ≈ SAR 3.75`).
-
+# Domain 14 — Construction Monitoring and Drawdown
 ## Why this domain exists
 
 Domain 13 closed the transaction. Every domain before it answered a question about a project that

@@ -1,10 +1,5 @@
 # Domain 2 — Financial Reporting & the Standards
 
-> **Group:** Finance, accounting & reporting (Domain 2 of 4). **Target:** ~150 pages.
-> **Binds to:** [`00-style-spine.md`](00-style-spine.md). Builds directly on Domain 1 (the accounting model,
-> the statements, accrual/matching, IAS 37). British English; USD (+SAR where useful); five-line worked
-> examples.
-
 ## Why this domain exists
 
 Domain 1 built the *mechanics* — how transactions are recorded and how the statements articulate. This
@@ -175,8 +170,7 @@ neutrality; C misapplies IAS 37 to an exchange arrangement.
 
 ---
 
-## Knowledge Area 2.2 — IFRS 15 Revenue from Contracts with Customers *(flagship — target ~35 pp)*
-
+## Knowledge Area 2.2 — IFRS 15 Revenue from Contracts with Customers
 *Topics: 2.2.1 the five-step model · 2.2.2 step 1, the contract · 2.2.3 step 2, performance obligations ·
 2.2.4 step 3, the transaction price (variable consideration, constraint, financing) · 2.2.5 step 4,
 allocation · 2.2.6 step 5, recognition — over time vs point in time, input vs output methods · 2.2.7 contract
@@ -535,7 +529,7 @@ disclosures; and flagging contracts whose forecast cost is approaching price (an
 It does **not** make the recognition *judgements* — whether promises are distinct, whether recognition is
 over time or at a point, whether variable consideration passes the constraint. Those are accounting
 judgements, auditable and signed off by a person, and a plausible-but-wrong machine reading of a clause can
-move reported profit by millions. **AI proposes, the professional disposes.**
+move reported profit by millions. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 2.2
 
@@ -1076,7 +1070,7 @@ the business steers by are consistent with what it will eventually report extern
 statutory balances, flagging unexplained differences, and drafting variance narratives for management packs
 (cross-ref Domain 4, KA 4.3–4.4). The professional owns the explanation and the sign-off — a drafted
 narrative that misattributes a difference (calling a timing accrual a "cost overrun") can mislead a board.
-**AI proposes, the professional disposes.**
+**AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 2.5
 
@@ -1448,7 +1442,7 @@ cost coding feeding the PoC numerator; IAS 37 behind the onerous trigger) and fo
 extraction of the contract's obligations, payment terms and milestone schedule, and the routine maintenance
 of the PoC schedule as costs and estimates update, are exactly the mechanical work AI now assists — but the
 distinct-or-not call at step 2 and the over-time judgements at step 5 remain human, auditable and signed
-for (13.5.10): **AI proposes, the professional disposes.**
+for (13.5.10): **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
@@ -1594,7 +1588,7 @@ runs through the other domains: the PoC numerator is Domain 1's accrual and codi
 cash-flow forecast. On AI: extraction of milestone schedules and termination clauses, and the quarterly
 re-computation of PoC and contract positions, are exactly what contract-analytics and close-automation
 tools now draft — but the criterion 3 judgement, the constraint call and the catch-up's justification are
-human, evidenced and signed (13.5.10): **AI proposes, the professional disposes.**
+human, evidenced and signed (13.5.10): **AI proposes; the professional verifies, decides and remains accountable.**
 
 ---
 
