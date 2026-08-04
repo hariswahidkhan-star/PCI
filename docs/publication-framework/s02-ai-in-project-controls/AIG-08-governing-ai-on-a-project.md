@@ -172,7 +172,7 @@ project changed, and the behaviour did. Four controls follow.
 
 **Version identification.** The verification record captures the tool, and the model or version identifier
 where the vendor exposes one. Where it exposes nothing — common for embedded platform features — record
-that: "version unknown" is a finding, and it caps how far a number can be reconstructed later.
+that: "version unknown" is a finding, and caps how far a number can later be reconstructed.
 
 **Re-validation triggers.** Re-validate on any of: a vendor-notified model or feature change; a change to
 the retrieval corpus's scope or permissions; a change to an upstream data structure such as the cost
