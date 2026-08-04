@@ -153,7 +153,8 @@ file**, and the register reference is given so a reader can see both.
 
 ### No endorsement
 
-Naming an external instrument means only that the instrument exists and bears on the topic under discussion. No standards
+Naming an external instrument means only that the instrument exists and bears on the topic under
+discussion. No standards
 body, professional institute, government, supervisory authority or employer has reviewed, approved,
 endorsed or accredited these laws, the PML-AI credential or PCI Global.
 
@@ -486,8 +487,8 @@ roles, employment law and the law of professional negligence determine **legal**
 independently of this professional requirement, and can place it on a person other than the credential
 holder. Obtain local legal advice on the statutory roles attaching to a specific project and entity.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-02`; `PCI-FND-LAW-04`; `PCI-FND-LAW-12`; `PCI-FND-LAW-15`;
-`PCI-PML-LAW-01.02`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-03.04`.
+**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-02`; `PCI-FND-LAW-04`; `PCI-FND-LAW-12`;
+`PCI-FND-LAW-15`; `PCI-PML-LAW-01.02`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-03.04`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 1 · KA 1.2 The project leader's
 accountability · topics 1.2.1 accountability and responsibility, 1.2.2 the obligation set, 1.2.3 the
@@ -651,8 +652,8 @@ a transparency, human-review or impact-assessment duty, and what disclosure is o
 person are jurisdiction-specific questions. Obtain local legal advice before deploying automation that
 affects people's work allocation, pay, assessment or employment.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-04`; `PCI-FND-LAW-03`; `PCI-FND-LAW-14`; `PCI-FND-LAW-13`; `PCI-PML-LAW-01.01`;
-`PCI-PML-LAW-03.02`; `PCI-PML-LAW-13.02`; `PCI-PML-LAW-14.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-04`; `PCI-FND-LAW-03`; `PCI-FND-LAW-14`; `PCI-FND-LAW-13`;
+`PCI-PML-LAW-01.01`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-13.02`; `PCI-PML-LAW-14.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 1 · KA 1.4 Ethics and the responsible use of
 AI · topics 1.4.2 the PCI responsible-AI principle, 1.4.3 the leader's AI accountability. Also Domain 14
@@ -833,9 +834,11 @@ they differ by jurisdiction and by the nature of the buying entity. Compliance w
 compliance with any of them. Obtain local legal advice before designing a declaration or evaluation
 process for a publicly funded procurement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08` (the parent disclosure obligation); `PCI-FND-LAW-01`; `PCI-FND-LAW-10`;
-`PCI-PML-LAW-03.03`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-10.01`; `PCI-PML-LAW-12.02`.
-**What this law adds to `PCI-FND-LAW-08`:** the foundational law requires disclosure of a conflict. This law requires
+**19. Related PCI Laws.** `PCI-FND-LAW-08` (the parent disclosure obligation); `PCI-FND-LAW-01`;
+`PCI-FND-LAW-10`; `PCI-PML-LAW-03.03`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-10.01`;
+`PCI-PML-LAW-12.02`.
+**What this law adds to `PCI-FND-LAW-08`:** the foundational law requires disclosure of a conflict.
+This law requires
 **abstention with a named substitute decider**, requires a **nil return** so silence becomes evidence,
 requires a **role change** for structural interests, and applies a **name-matching test to assurance
 independence** — none of which the foundational law states.
@@ -1014,9 +1017,11 @@ listed-company disclosure duties and grant conditions impose their own appraisal
 disclosure requirements, and misstating a case to obtain public funds can engage criminal law. Obtain
 local legal advice where a case supports a regulated funding application or a market disclosure.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-PML-LAW-02.02`; `PCI-PML-LAW-03.03`;
-`PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.03`.
-**What this law adds to `PCI-FND-LAW-05`:** the foundational law requires assumptions to be transparent. This law requires **symmetric treatment across options**, an **owned and dated assumption
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-PML-LAW-02.02`;
+`PCI-PML-LAW-03.03`; `PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.03`.
+**What this law adds to `PCI-FND-LAW-05`:** the foundational law requires assumptions to be
+transparent. This law requires **symmetric treatment across options**, an **owned and dated
+assumption
 register**, an **honestly drawn do-minimum**, **restatement at every gate**, and **kill criteria fixed
 before approval** — the specific mechanics by which a delivery business case goes wrong.
 
@@ -1165,8 +1170,8 @@ against both components' registers.
 tax authority, the accuracy of the claim can engage funding-condition, disclosure or fraud law. Obtain
 local legal advice before a benefits statement is made outside the organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-01`; `PCI-FND-LAW-12`; `PCI-PML-LAW-02.01`; `PCI-PML-LAW-15.02`;
-`PCI-PML-LAW-16.02`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-01`; `PCI-FND-LAW-12`; `PCI-PML-LAW-02.01`;
+`PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.02`; `PCI-PML-LAW-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 2 · KA 2.3 Benefits, value and sustainability
 · topics 2.3.1 benefits mapping, 2.3.2 measures and baselines. Also Domain 15 KA 15.2 benefits and
@@ -1317,8 +1322,8 @@ authority under statute and grant conditions determine who may lawfully bind an 
 professionally correct delegation schedule can still be legally ineffective. Obtain local legal advice
 on authority to contract for the specific entity and funding route.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-12`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-03.03`; `PCI-PML-LAW-03.04`;
-`PCI-PML-LAW-13.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-12`; `PCI-PML-LAW-03.02`;
+`PCI-PML-LAW-03.03`; `PCI-PML-LAW-03.04`; `PCI-PML-LAW-13.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.1 Governance models · topics 3.1.1
 what governance is for, 3.1.2 structures across organisational forms, 3.1.3 governance in agile and
@@ -1475,8 +1480,8 @@ company law, delegated statutory authority, procurement regulation and the entit
 not by a delegation schedule. A decision within delegated professional authority can still be legally
 ineffective. Obtain local legal advice on binding authority.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-04`; `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`; `PCI-PML-LAW-01.01`;
-`PCI-PML-LAW-03.01`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-08.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-04`; `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`;
+`PCI-PML-LAW-01.01`; `PCI-PML-LAW-03.01`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-08.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.2 Sponsorship and steering · topic
 3.2.3 decision authorities and thresholds; KA 3.3 · topics 3.3.3 escalation design, 3.3.4 auditability
@@ -1634,8 +1639,8 @@ consent or a statutory notification, the effective decision belongs to the body 
 a professional gate decision does not substitute for it. Obtain local legal advice on which approvals a
 specific project requires and who may grant them.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.03`; `PCI-PML-LAW-03.01`;
-`PCI-PML-LAW-09.01`; `PCI-PML-LAW-16.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.03`;
+`PCI-PML-LAW-03.01`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-16.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.3 Assurance, gates and escalation ·
 topics 3.3.1 stage gates, 3.3.2 assurance lines, 3.3.4 auditability and the decision record. Also
@@ -1779,8 +1784,8 @@ carries statutory or regulatory duties — for safety, for public funds, for dat
 distinct from this professional requirement and cannot be delegated. Obtain local legal advice on the
 statutory roles attaching to the specific project and entity.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-11`; `PCI-PML-LAW-01.01`; `PCI-PML-LAW-02.01`; `PCI-PML-LAW-02.02`;
-`PCI-PML-LAW-03.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-11`; `PCI-PML-LAW-01.01`;
+`PCI-PML-LAW-02.01`; `PCI-PML-LAW-02.02`; `PCI-PML-LAW-03.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.2 Sponsorship and steering · topics
 3.2.1 the sponsor role, 3.2.2 steering committees that work, 3.2.3 decision authorities and thresholds.
@@ -1934,8 +1939,8 @@ condition-precedent provisions and time bars whose effect is determined by the g
 contract, and a change correctly processed internally can still be barred contractually. Obtain legal
 advice on the applicable contract's notice requirements before relying on an internal change record.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-05.01`;
-`PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-10.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`; `PCI-PML-LAW-03.02`;
+`PCI-PML-LAW-05.01`; `PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-10.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 4 · KA 4.3 Integrated baselines · topics
 4.3.1 scope-schedule-cost integration, 4.3.2 configuration management, 4.3.3 baseline maintenance;
@@ -2077,8 +2082,8 @@ exist and pre-date production.
 was validly instructed, are contractual questions determined by the governing law and the contract's own
 mechanisms. Obtain legal advice before relying on an internal scope record in a commercial claim.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-05.02`;
-`PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`; `PCI-PML-LAW-04.01`;
+`PCI-PML-LAW-05.02`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 5 · KA 5.1 Scope definition and the scope
 baseline; KA 5.4 Scope change, creep and verification/acceptance. Also Domain 4 KA 4.2 breakdown
@@ -2222,8 +2227,8 @@ safety regulation, accessibility law or data-protection law are determined by th
 the regulator, not by the project's register. Obtain local legal and regulatory advice on which
 requirements are non-removable for the specific project.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-07`; `PCI-FND-LAW-12`; `PCI-PML-LAW-05.01`; `PCI-PML-LAW-09.01`;
-`PCI-PML-LAW-13.02`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-07`; `PCI-FND-LAW-12`; `PCI-PML-LAW-05.01`;
+`PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.02`; `PCI-PML-LAW-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 5 · KA 5.2 Requirements elicitation, analysis
 and traceability; KA 5.3 value definition and prioritisation. Also Domain 9 KA 9.3 acceptance and
@@ -2380,8 +2385,8 @@ a liquidated-damages position, the acceptable method and the evidential standard
 contract and by the forum, and they differ between jurisdictions and between tribunals. Obtain legal
 advice before a schedule is relied on in a claim.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-02`; `PCI-FND-LAW-13`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-07.01`;
-`PCI-PML-LAW-08.01`; `PCI-PML-LAW-15.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-02`; `PCI-FND-LAW-13`; `PCI-PML-LAW-04.01`;
+`PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.01`; `PCI-PML-LAW-15.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 6 · KA 6.1 Planning levels and logic networks;
 KA 6.2 The critical path and float; KA 6.3 Resources, constraints, milestones and rolling wave; KA 6.4
@@ -2539,8 +2544,8 @@ assets and provisions are measured and what must be disclosed are determined by 
 framework the entity applies and by its auditors, not by a project cost report. **This law states no
 accounting treatment.** Obtain qualified accounting advice for the specific entity and framework.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-07`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-06.01`;
-`PCI-PML-LAW-07.02`; `PCI-PML-LAW-08.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-07`; `PCI-PML-LAW-04.01`;
+`PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.02`; `PCI-PML-LAW-08.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 7 · KA 7.1 Estimating and budgeting; KA 7.2
 The cost baseline, actuals and forecasting; KA 7.3 Earned value: measurement, variances and forecasting.
@@ -2692,8 +2697,8 @@ rights, secondment and agency-worker rules, and health-and-safety duties determi
 required of people, and they differ sharply by jurisdiction. Obtain local legal and human-resources
 advice before planning on extended hours, cross-border deployment or supplier staff substitution.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-11`; `PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-12.01`;
-`PCI-PML-LAW-15.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-11`; `PCI-PML-LAW-06.01`;
+`PCI-PML-LAW-07.01`; `PCI-PML-LAW-12.01`; `PCI-PML-LAW-15.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 7 · KA 7.4 Resource economics, procurement
 strategy and cash. Also Domain 6 KA 6.3 resources, constraints, milestones and rolling wave; Domain 12
@@ -2848,10 +2853,11 @@ auditor or a market are set by law and by licence conditions and carry their own
 shorter than any internal threshold. Obtain local legal advice on mandatory reporting duties attaching to
 the specific project and sector.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent duty to escalate); `PCI-FND-LAW-05`; `PCI-FND-LAW-02`;
-`PCI-PML-LAW-03.02`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.02`; `PCI-PML-LAW-12.02`;
-`PCI-PML-LAW-15.01`.
-**What this law adds to `PCI-FND-LAW-11`:** the foundational law creates the duty to escalate a material misstatement. This law
+**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent duty to escalate); `PCI-FND-LAW-05`;
+`PCI-FND-LAW-02`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.02`;
+`PCI-PML-LAW-12.02`; `PCI-PML-LAW-15.01`.
+**What this law adds to `PCI-FND-LAW-11`:** the foundational law creates the duty to escalate a
+material misstatement. This law
 requires **one named risk owner**, escalation **on threshold rather than on expectation of resolution**,
 an **option set with closing dates**, an explicit **action-window test**, and **contingency drawn only
 against a pre-registered risk**.
@@ -3001,8 +3007,8 @@ breaches, environmental events, regulatory breaches — with their own recipient
 override any internal register. Obtain local legal advice on mandatory incident reporting for the sector
 and jurisdiction.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-FND-LAW-15`; `PCI-PML-LAW-08.01`; `PCI-PML-LAW-09.01`;
-`PCI-PML-LAW-09.02`; `PCI-PML-LAW-12.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-FND-LAW-15`; `PCI-PML-LAW-08.01`;
+`PCI-PML-LAW-09.01`; `PCI-PML-LAW-09.02`; `PCI-PML-LAW-12.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 8 · KA 8.1 topic on issues as occurred risks;
 KA 8.4 crisis leadership. Also Domain 9 KA 9.3 nonconformance and root-cause analysis; Domain 4 KA 4.4
@@ -3156,8 +3162,8 @@ survive it are contractual and statutory questions determined by the governing l
 acceptance is regulated separately by a safety, health or licensing authority. Obtain legal advice before
 relying on an internal acceptance record in a commercial or regulatory position.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.03`; `PCI-PML-LAW-05.01`; `PCI-PML-LAW-05.02`;
-`PCI-PML-LAW-16.01`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.03`;
+`PCI-PML-LAW-05.01`; `PCI-PML-LAW-05.02`; `PCI-PML-LAW-16.01`; `PCI-PML-LAW-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 9 · KA 9.1 Quality planning; KA 9.2 Assurance
 and control; KA 9.3 Acceptance, nonconformance and root-cause analysis. Also Domain 5 KA 5.4
@@ -3305,8 +3311,8 @@ investigation or a public inquiry, and privilege rules differ by jurisdiction. O
 conducting a review into an event with legal or regulatory exposure, and never let that advice become a
 reason to hold no review.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-12`; `PCI-FND-LAW-02`; `PCI-PML-LAW-08.02`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-12.02`;
-`PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-12`; `PCI-FND-LAW-02`; `PCI-PML-LAW-08.02`;
+`PCI-PML-LAW-09.01`; `PCI-PML-LAW-12.02`; `PCI-PML-LAW-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 9 · KA 9.4 Lessons learned, continuous
 improvement, data quality and AI-output quality · topic 9.4.1 lessons that change behaviour. Also
@@ -3472,8 +3478,8 @@ standstill periods, debriefs, remedies and record-keeping, and breach can void a
 liability. **This law does not state any of those rules and compliance with it is not compliance with
 them.** Obtain local legal advice before running a regulated procurement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08`; `PCI-FND-LAW-09`; `PCI-FND-LAW-01`; `PCI-PML-LAW-01.03`; `PCI-PML-LAW-03.02`;
-`PCI-PML-LAW-04.01`; `PCI-PML-LAW-09.01`.
+**19. Related PCI Laws.** `PCI-FND-LAW-08`; `PCI-FND-LAW-09`; `PCI-FND-LAW-01`; `PCI-PML-LAW-01.03`;
+`PCI-PML-LAW-03.02`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-09.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 10 · KA 10.1 Make-or-buy and the procurement
 lifecycle; KA 10.2 Tendering and evaluation; KA 10.3 Contract strategy and supplier governance; KA 10.4
@@ -3509,7 +3515,8 @@ been approached about a role with a bidder.
 `PML-LAW-10-01` v1.0. Amendment note: renumbered and restructured; legislative drafting removed;
 individual-scores-before-moderation, reasoned moderation changes, information symmetry and panel-interest
 clearance separated into process requirements; the link to `PCI-PML-LAW-01.03` made explicit, which is the
-change that gives this law an enforceable rule about who is barred from scoring; consequence field corrected to
+change that gives this law an enforceable rule about who is barred from scoring; consequence field
+corrected to
 state expressly what PCI cannot do.
 
 ---
@@ -3532,7 +3539,8 @@ dashboard, board paper, briefing or external communication about a project, prog
 every credential holder who becomes aware that an issued report is materially misleading.
 
 **4. Defined terms.** *material* · *evidence* · *decision owner* · *sponsor* · *escalation threshold* ·
-*baseline* (control sense). Additionally, **materially misleading** means capable of causing a recipient reading
+*baseline* (control sense). Additionally, **materially misleading** means capable of causing a
+recipient reading
 it in the ordinary course of their role to form a view of status, risk or forecast that the known facts
 do not support; **status
 report** means any recurring or ad hoc statement of delivery position issued to a decision-maker.
@@ -3630,10 +3638,12 @@ prospectus and market-abuse rules, grant-condition reporting, public-inquiry dut
 threshold for a legally material statement is not the same as the professional one used here. Obtain legal
 advice before any statement about delivery status is made outside the organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent escalation obligation); `PCI-FND-LAW-02`; `PCI-FND-LAW-15`;
-`PCI-FND-LAW-14`; `PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent escalation obligation); `PCI-FND-LAW-02`;
+`PCI-FND-LAW-15`; `PCI-FND-LAW-14`; `PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.01`;
 `PCI-PML-LAW-12.01`.
-**What this law adds to `PCI-FND-LAW-11`:** the foundational law requires a material misstatement to be escalated. This law adds the delivery-specific mechanics by which honest figures produce a dishonest
+**What this law adds to `PCI-FND-LAW-11`:** the foundational law requires a material misstatement to
+be escalated. This law adds the delivery-specific mechanics by which honest figures produce a
+dishonest
 picture — **same-document disclosure**, a **documented rating derivation with recorded overrides**, **one
 version of status across audiences**, a **correction duty to the original distribution**, and a **recorded
 refusal**.
@@ -3798,8 +3808,8 @@ regulated professions, statutory duties govern what may be required of a profess
 they have when they refuse. Obtain local legal and human-resources advice before acting on an override
 dispute involving an employee, a contractor or a regulated professional.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-13`; `PCI-FND-LAW-01`; `PCI-FND-LAW-10`; `PCI-FND-LAW-11`; `PCI-PML-LAW-11.01`;
-`PCI-PML-LAW-12.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-13`; `PCI-FND-LAW-01`; `PCI-FND-LAW-10`; `PCI-FND-LAW-11`;
+`PCI-PML-LAW-11.01`; `PCI-PML-LAW-12.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 12 · KA 12.1 Leadership theories in practice and
 emotional intelligence; KA 12.3 Delegation, coaching and difficult conversations; KA 12.4 Remote and
@@ -3999,9 +4009,12 @@ who may receive a report, how it must be handled, what records may be kept and f
 local legal advice before establishing a concern route, an anonymous channel, a register or any monitoring
 arrangement**, and where the applicable regime imposes a higher obligation, that regime governs.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent duty to escalate); `PCI-FND-LAW-01`; `PCI-FND-LAW-09`;
-`PCI-PML-LAW-08.02`; `PCI-PML-LAW-09.02`; `PCI-PML-LAW-12.01`; `PCI-PML-LAW-14.01`.
-**What this law adds to `PCI-FND-LAW-11`:** the foundational law creates a duty to escalate, which binds the person who holds the information. This law creates the **conditions under which they can discharge it** —
+**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent duty to escalate); `PCI-FND-LAW-01`;
+`PCI-FND-LAW-09`; `PCI-PML-LAW-08.02`; `PCI-PML-LAW-09.02`; `PCI-PML-LAW-12.01`;
+`PCI-PML-LAW-14.01`.
+**What this law adds to `PCI-FND-LAW-11`:** the foundational law creates a duty to escalate, which
+binds the person who holds the information. This law creates the **conditions under which they can
+discharge it** —
 a named recipient outside the line of the person concerned, protection from detriment tested by an
 independent review, and a record that the concern was answered.
 
@@ -4181,8 +4194,8 @@ who records which they did.
 agreed, when payment is due and what has been accepted that are determined by the governing law of the
 contract. Obtain legal advice before adopting an outcome-based or capacity-based contract structure.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-04`; `PCI-PML-LAW-03.01`; `PCI-PML-LAW-03.02`;
-`PCI-PML-LAW-05.01`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-04`; `PCI-PML-LAW-03.01`;
+`PCI-PML-LAW-03.02`; `PCI-PML-LAW-05.01`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 13 · KA 13.1 Agile principles and product
 ownership; KA 13.2 Backlogs, iteration planning, flow and Kanban; KA 13.3 Scaling considerations and hybrid
@@ -4332,8 +4345,8 @@ them and that they stood.
 allocation of liability, intellectual property and data controllership is a contractual and regulatory
 question. Obtain legal advice before placing an ordering right outside the owning organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-04`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.01`; `PCI-PML-LAW-01.02`;
-`PCI-PML-LAW-13.01`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-04`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.01`;
+`PCI-PML-LAW-01.02`; `PCI-PML-LAW-13.01`; `PCI-PML-LAW-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 13 · KA 13.1 topic 13.1.2 product ownership as a
 decision right; KA 13.4 metrics and anti-patterns, including the proxy product owner. Also Domain 1 KA 1.2
@@ -4505,8 +4518,8 @@ cross-border transfer restrictions are jurisdiction-specific and change frequent
 law is not compliance with any of them.** Obtain local legal advice before collecting, sharing, exporting
 or retaining personal or confidential project data.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-09`; `PCI-FND-LAW-12`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-12.02`;
-`PCI-PML-LAW-14.02`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-09`; `PCI-FND-LAW-12`; `PCI-PML-LAW-11.01`;
+`PCI-PML-LAW-12.02`; `PCI-PML-LAW-14.02`; `PCI-PML-LAW-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 14 · KA 14.1 Digital project environments, data
 governance and the common data environment; KA 14.4 Explainability, bias, human accountability,
@@ -4683,9 +4696,11 @@ automated decision-making, intellectual property in generated output and liabili
 are jurisdiction-specific and are changing quickly. Obtain local legal advice before deploying AI in a
 process affecting people's rights, employment, safety, or access to a service.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (the parent verification obligation); `PCI-FND-LAW-14`; `PCI-FND-LAW-04`;
-`PCI-FND-LAW-01`; `PCI-PML-LAW-01.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-14.01`.
-**What this law adds to `PCI-FND-LAW-03`:** the foundational law requires independent verification before reliance. This law requires an **AI use record covering embedded features**, a **named method per output class
+**19. Related PCI Laws.** `PCI-FND-LAW-03` (the parent verification obligation); `PCI-FND-LAW-14`;
+`PCI-FND-LAW-04`; `PCI-FND-LAW-01`; `PCI-PML-LAW-01.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-14.01`.
+**What this law adds to `PCI-FND-LAW-03`:** the foundational law requires independent verification
+before reliance. This law requires an **AI use record covering embedded features**, a **named method
+per output class
 recorded before use**, **depth matched to consequence with the basis recorded**, and a **failure log routed
 into the organisation's standing artefacts**.
 
@@ -4840,8 +4855,8 @@ the named giver before it enters the register as a commitment.
 enforceable, what notice is required and what remedy exists are contractual questions determined by the
 governing law. Obtain legal advice before relying on a dependency register in a commercial position.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-PML-LAW-06.01`; `PCI-PML-LAW-08.01`;
-`PCI-PML-LAW-08.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-15.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-PML-LAW-06.01`;
+`PCI-PML-LAW-08.01`; `PCI-PML-LAW-08.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-15.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 15 · KA 15.1 Programme architecture and
 dependency management, including dependency arithmetic at programme scale and decoupling as the primary
@@ -4988,8 +5003,8 @@ a plan.
 regulated service can engage employment consultation, regulatory notification and public-law duties. Obtain
 local legal advice before a portfolio decision that stops work with those consequences.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PML-LAW-02.01`; `PCI-PML-LAW-02.02`;
-`PCI-PML-LAW-07.02`; `PCI-PML-LAW-15.01`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PML-LAW-02.01`;
+`PCI-PML-LAW-02.02`; `PCI-PML-LAW-07.02`; `PCI-PML-LAW-15.01`; `PCI-PML-LAW-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 15 · KA 15.2 Benefits and portfolio balancing;
 KA 15.3 Capacity and enterprise PMOs; KA 15.4 Transformation governance and strategic reporting. Also
@@ -5167,8 +5182,8 @@ statute, licence conditions, sector regulation and contract, and they differ by 
 list from the examples given.** Obtain local legal and regulatory advice to establish the gate block for the
 specific transition.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-FND-LAW-13`; `PCI-PML-LAW-03.03`; `PCI-PML-LAW-09.01`;
-`PCI-PML-LAW-15.01`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-FND-LAW-13`; `PCI-PML-LAW-03.03`;
+`PCI-PML-LAW-09.01`; `PCI-PML-LAW-15.01`; `PCI-PML-LAW-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.1 Handover, commissioning and
 readiness — the two-block readiness model, the gate block of mandatory preconditions, the conjunction across
@@ -5331,8 +5346,8 @@ duties, data controllership and warranties transfer — and when — is determin
 not by a handover record. Obtain legal advice on what transfers and what remains, particularly for regulated
 assets and for personal data.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.02`; `PCI-PML-LAW-14.01`;
-`PCI-PML-LAW-16.01`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PML-LAW-09.01`;
+`PCI-PML-LAW-13.02`; `PCI-PML-LAW-14.01`; `PCI-PML-LAW-16.01`; `PCI-PML-LAW-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.2 Operational transition and contract
 closeout; KA 16.3 Knowledge transfer and post-project review, including the cost of reconstructing as-built
@@ -5479,8 +5494,8 @@ engage grant-condition, disclosure, procurement and fraud law, and the legal sta
 not the professional one used here. Obtain legal advice before a benefits claim is made outside the
 organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PML-LAW-02.01`; `PCI-PML-LAW-02.02`;
-`PCI-PML-LAW-11.01`; `PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PML-LAW-02.01`;
+`PCI-PML-LAW-02.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.4 Benefits measurement, responsible
 archive and model/data retention. Also Domain 2 KA 2.3 topics 2.3.1 benefits mapping and 2.3.2 measures and

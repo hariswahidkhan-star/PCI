@@ -20,10 +20,18 @@ ISO-style `shall` drafting, and the two systems are never mixed.
 | **may** | Permission | Something the professional is allowed to do |
 | **can** | Capability or possibility — never permission | Describing what a person, tool or method is able to do |
 
-**`shall` is not used anywhere in a PCI Law**, in any field, including quotations of PCI's own
-earlier drafts. Legislative `shall` is ambiguous — it has been read as both obligation and futurity —
-and modern drafting practice in the UK and elsewhere has moved to `must` for precisely that reason.
-A draft containing `shall` fails gate.
+**`shall` is not used as a normative form anywhere in a PCI Law**, in any field, including quotations
+of PCI's own earlier drafts. Legislative `shall` is ambiguous — it has been read as both obligation
+and futurity — and modern drafting practice in the UK and elsewhere has moved to `must` for precisely
+that reason. A draft that uses `shall` to impose, permit or recommend anything fails gate.
+
+**The ban is on the form, not on the word.** Explanatory material *about* the convention — the ISO
+mapping in §1.0, this paragraph, a supersession note recording that an earlier draft used the word —
+may name `shall` in order to say that PCI does not use it. Refusing to print the word while trying to
+explain the mapping produces a circumlocution the reader cannot follow, which defeats the purpose of
+stating the mapping at all. The gate check is therefore: zero occurrences inside any law's twenty-five
+elements or any process requirement; occurrences permitted only in front matter that explains the
+convention, and only in that explanatory sense.
 
 ### 1.0 The `must` inversion — read this before drafting anything
 
