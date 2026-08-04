@@ -108,6 +108,9 @@ table {
   border-collapse: collapse; width: 100%; margin: 3mm 0 4.2mm 0;
   font-family: Inter, "DejaVu Sans", sans-serif; font-size: 8.1pt; line-height: 1.42;
   page-break-inside: avoid;
+  /* Cells are short and often single words; automatic hyphenation turns "Median" into
+     "Medi-an" and a level name into "Practi-tioner", which reads as a typesetting fault. */
+  hyphens: none; text-align: left;
 }
 th {
   background: #1D4ED8; color: #FFFFFF; font-weight: 600;

@@ -51,6 +51,8 @@ Full per-document register with IDs, titles, status and LinkedIn mapping:
 | [`00-framework/GOVERNANCE-AND-REVIEW.md`](00-framework/GOVERNANCE-AND-REVIEW.md) | Review gates, versioning, corrections, legal risk, retirement |
 | [`00-framework/PLATFORM-INTEGRATION.md`](00-framework/PLATFORM-INTEGRATION.md) | How the 100 documents reach readers through `public_documents`, and how they sit alongside the libraries the platform already ships |
 | [`00-framework/validate.sh`](00-framework/validate.sh) | The executable publication gate — run it before any batch is marked published |
+| [`00-framework/build_pdfs.py`](00-framework/build_pdfs.py) + [`print.css`](00-framework/print.css) | Renders every document to an A4 PDF in the Institute's house style |
+| [`00-framework/REVIEW-NOTES.md`](00-framework/REVIEW-NOTES.md) | Items the authors flagged that need a subject-matter expert or an operator, not an editor |
 
 ---
 
@@ -99,6 +101,31 @@ Illustrative figures used to teach a method are permitted everywhere, and are al
 *illustrative* so no reader mistakes a worked example for market data.
 
 ---
+
+## 4a. Building the PDFs
+
+Every document renders to an A4 PDF in the Institute's house style — title page, a notice page carrying
+the founding-stage disclaimers, a contents page with real page numbers, then the body.
+
+```bash
+pip install markdown weasyprint pypdf                       # once
+
+python3 docs/publication-framework/00-framework/build_pdfs.py              # all 100
+python3 .../build_pdfs.py --framework                                      # + the framework documents
+python3 .../build_pdfs.py --series s09-best-practice-guides                # one series
+python3 .../build_pdfs.py --id BPG-08                                      # one document
+python3 .../build_pdfs.py --packs                                          # + a combined PDF per series
+```
+
+Output lands in `_pdf/`, mirroring the series folders.
+
+**Why WeasyPrint and not headless Chromium.** The house style depends on CSS paged media that Chromium's
+print path does not implement: running headers via `string-set`, and contents entries whose page numbers
+come from `target-counter`. Chromium renders the page and silently drops both.
+
+**Unresolved `[CONFIRM: …]` placeholders render highlighted, not hidden**, and every PDF states its
+placeholder count in the front matter. A document that is not ready to publish should look unready on the
+page — including after someone has printed it and carried it into a room.
 
 ## 5. Reading order for a new contributor
 
