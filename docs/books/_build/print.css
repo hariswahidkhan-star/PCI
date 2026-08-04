@@ -309,6 +309,10 @@ th:last-child,  td:last-child  { padding-right: 0; }
 tbody tr:last-child td { border-bottom: 0.8pt solid var(--green); }
 /* Columns of numbers align on the digit and hang to the right; the builders tag them. */
 th.num, td.num { text-align: right; font-feature-settings: var(--feat-lining); }
+/* A short identifier is one word however many hyphens it contains: PCI-FND-STD-01 broken after
+   the second hyphen costs the reader a line and a double-take. The builders only tag cells short
+   enough that holding them whole cannot widen the table past the measure. */
+td.id, td.id code, th.id, th.id code { white-space: nowrap; }
 table tr { break-inside: avoid; }
 table p { margin: 0 0 1.4mm 0; text-align: left; }
 table code { font-size: 0.94em; }
@@ -577,10 +581,11 @@ nav#TOC a::after {
   break-after: avoid;
 }
 .stdspart .pci-standard .stdhead { margin-bottom: 2.6mm; break-after: avoid; }
-.stdspart .pci-standard .stdid {
+.stdspart .pci-standard .stdid,
+.pci-standard .stdid {
   display: block; font-family: var(--mono); font-size: 8.6pt; letter-spacing: 0.05em;
   font-feature-settings: var(--feat-lining); color: var(--green-mid); margin-bottom: 1mm;
-  overflow-wrap: break-word;
+  white-space: nowrap; overflow-wrap: break-word;
 }
 .stdspart .pci-standard .stdname {
   display: block; font-family: var(--display); font-weight: normal; font-size: 14pt;

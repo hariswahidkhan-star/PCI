@@ -146,6 +146,11 @@ def tag_table_columns(html: str, label: str = "") -> str:
                 classes = []
                 if col in numeric:
                     classes.append("num")
+                # An identifier cell stays whole. Bounded to short strings, so a long path in a
+                # cell still wraps and can never push a table past the measure.
+                txt_c = _cell_text(inner)
+                if "<code>" in inner and 2 < len(txt_c) <= 22 and " " not in txt_c:
+                    classes.append("id")
                 if tag == "th":
                     txt = _cell_text(inner)
                     if len(txt) > 3 and txt == txt.upper() and any(c.isalpha() for c in txt):
@@ -664,7 +669,10 @@ def render_standards_file(path: pathlib.Path) -> tuple:
     set_title = m.group(1).strip() if m else path.stem.replace("_", " ")
     body = normalise_lists(text[m.end():] if m else text, announce=False)
 
-    out, buf, law, guidance = [], [], None, False
+    # The "How to read these standards" section is explanatory prose, not a recommendation.
+    # Wrapping it in the guidance call-out drew a dashed rule down the outer edge of six
+    # consecutive pages, which is what a call-out looks like when it is asked to hold a chapter.
+    out, buf, law = [], [], None
 
     def flush():
         nonlocal buf, law
@@ -675,8 +683,6 @@ def render_standards_file(path: pathlib.Path) -> tuple:
             return
         if law:
             out.append(_std_box(law[0], law[1], chunk))
-        elif guidance:
-            out.append('<div class="pci-guidance">' + _std_prose(chunk) + "</div>")
         else:
             out.append(_std_prose(chunk))
         law = None
@@ -690,11 +696,9 @@ def render_standards_file(path: pathlib.Path) -> tuple:
         if head3:
             flush()
             law = (head3.group(1), head3.group(2))
-            guidance = False
             laws += 1
         elif head2:
             flush()
-            guidance = "how to read" in head2.group(1).lower()
             out.append(f'<h3 class="stdgroup" id="{slug(set_title + "-" + head2.group(1))}" '
                        f'data-toc="2">{head2.group(1)}</h3>')
         else:
