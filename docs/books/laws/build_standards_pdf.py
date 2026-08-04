@@ -1,123 +1,137 @@
 #!/usr/bin/env python3
 """Build the PCI Standards as a single A4 publication.
 
-Assembles the Charter, the Drafting Manual, the four standard sets and the
-concordance, converts to HTML via pandoc, and renders with WeasyPrint.
+Assembles the Charter, the Drafting Manual, the four standard sets, the concordance and the
+definitions register, and renders with WeasyPrint.
+
+The volume is set in the same design as the three Bodies of Knowledge — the same page geometry,
+type, tables, openers, running heads and folios, from the same stylesheet — and differs from them
+only in its cover. A standard looks the same here as it does quoted in a Body of Knowledge,
+because it is rendered by the same code.
 
 Usage:  python3 build_standards_pdf.py [output.pdf]
 """
 import datetime
+import importlib.util
 import pathlib
+import re
 import subprocess
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "PCI-Standards.pdf"
 
+# The family pipeline: one stylesheet, one cover design, one standards renderer.
+_FAMILY = HERE.parent / "_build" / "build_book.py"
+_spec = importlib.util.spec_from_file_location("pci_book_family", _FAMILY)
+family = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(family)
+
+RUN_TITLE = "PCI Standards"
+
+# Prose parts, rendered as documents; standard sets, rendered as standards. The order is the
+# reading order of the volume.
 ORDER = [
-    "PCI_STANDARDS_CHARTER.md",
-    "PCI_STANDARDS_DRAFTING_MANUAL.md",
-    "PCI_FOUNDATIONAL_STANDARDS.md",
-    "PCL_AI_STANDARDS.md",
-    "PFL_AI_STANDARDS.md",
-    "PML_AI_STANDARDS.md",
-    "STANDARDS_CONCORDANCE.md",
-    "PCI_STANDARDS_DEFINITIONS_REGISTER.md",
+    ("prose", "PCI_STANDARDS_CHARTER.md"),
+    ("prose", "PCI_STANDARDS_DRAFTING_MANUAL.md"),
+    ("standards", "PCI_FOUNDATIONAL_STANDARDS.md"),
+    ("standards", "PCL_AI_STANDARDS.md"),
+    ("standards", "PFL_AI_STANDARDS.md"),
+    ("standards", "PML_AI_STANDARDS.md"),
+    ("prose", "STANDARDS_CONCORDANCE.md"),
+    ("prose", "PCI_STANDARDS_DEFINITIONS_REGISTER.md"),
 ]
+
+COVER = family.cover_html(
+    code="PCI",
+    book="Standards",
+    credential="The mandatory professional requirements of the PCI AI certification suite",
+    themes="PCL-AI · PFL-AI · PML-AI",
+    chart="",
+    principle="Mandatory professional requirements. Not legislation,<br/>"
+              "and never a substitute for applicable law.",
+    badge="Version 1.0 — draft for approval",
+    badgesub="Charter §5 due process not complete · no named human has approved any standard",
+    tag="Advancing standards. Elevating professionals.")
 
 TITLE = f"""
 <div class="titlepage">
   <div class="kicker">Project Controls Institute Global</div>
   <h1>PCI Standards</h1>
-  <div class="subtitle">The mandatory professional requirements of the<br/>
+  <div class="subtitle">The mandatory professional requirements of the
   PCI AI certification suite</div>
   <div class="rule"></div>
   <div class="meta">PCL-AI &middot; PFL-AI &middot; PML-AI<br/>
-  VERSION 1.0 &mdash; DRAFT FOR APPROVAL<br/>
+  Version 1.0 &mdash; draft for approval<br/>
   {datetime.date.today().isoformat()}</div>
-  <div class="warn">
-    <strong>Not legislation.</strong> PCI Standards are private professional certification
+  <div class="pci-caution">
+    <p><strong>Not legislation.</strong> PCI Standards are private professional certification
     requirements established by Project Controls Institute Global. They are not legislation,
     government regulation, legal advice or substitutes for applicable laws, contractual obligations,
     regulatory requirements or authoritative professional standards. Where an applicable legal,
     regulatory, contractual or authoritative requirement imposes a higher or different obligation,
-    that requirement prevails.
-  </div>
-  <div class="warn2">
-    <strong>Not yet approved.</strong> This edition has not completed the due process in Charter
+    that requirement prevails.</p>
+    <p><strong>Not yet approved.</strong> This edition has not completed the due process in Charter
     &sect;5. Practitioner consultation, approval by a named PCI body and post-implementation review
-    have not been performed, and no named human has approved any standard in it.
+    have not been performed, and no named human has approved any standard in it.</p>
   </div>
 </div>
 """
 
-CSS = """
-@page { size: A4; margin: 20mm 18mm 18mm 18mm;
-  @bottom-center { content: counter(page); font: 8pt Georgia, serif; color: #64748B; } }
-@page :first { @bottom-center { content: none; } }
-body { font: 9.4pt/1.5 Georgia, "DejaVu Serif", serif; color: #0F172A; }
-.titlepage { box-sizing: border-box; width: 100%; min-height: 255mm;
-  padding: 28mm 16mm 16mm 16mm; page-break-after: always;
-  background: #7F1D1D; color: #fff; }
-.titlepage .kicker { font: 8pt/1 "DejaVu Sans", sans-serif; letter-spacing: .28em;
-  text-transform: uppercase; color: #FCA5A5; margin-bottom: 12mm; }
-.titlepage h1 { font-size: 32pt; line-height: 1.1; margin: 0 0 6mm 0; color: #fff;
-  border: none; padding: 0; page-break-before: avoid; }
-.titlepage .subtitle { font-size: 12pt; color: #FECACA; line-height: 1.45; }
-.titlepage .rule { width: 32mm; border-top: 2pt solid #FCA5A5; margin: 9mm 0; }
-.titlepage .meta { font: 8.5pt/1.7 "DejaVu Sans", sans-serif; letter-spacing: .16em;
-  text-transform: uppercase; color: #FECACA; }
-.titlepage .warn, .titlepage .warn2 { margin-top: 9mm; padding: 4.5mm 6mm;
-  border-left: 2.5pt solid #FCA5A5; background: rgba(255,255,255,.08);
-  font-size: 8.4pt; line-height: 1.55; color: #FFF1F2; }
-.titlepage .warn strong, .titlepage .warn2 strong { color: #fff; }
-h1 { font-size: 17pt; margin: 0 0 5mm 0; padding-bottom: 2.5mm;
-  border-bottom: 1.5pt solid #7F1D1D; page-break-before: always; page-break-after: avoid; }
-h2 { font-size: 12pt; margin: 7mm 0 3mm 0; page-break-after: avoid; }
-h3 { font-size: 10.2pt; margin: 6mm 0 2mm 0; color: #9B1C1C; page-break-after: avoid; }
-p { margin: 0 0 2.4mm 0; }
-table { border-collapse: collapse; width: 100%; font-size: 7.4pt; margin: 3mm 0 5mm 0; }
-th { background: #7F1D1D; color: #fff; text-align: left; padding: 1.5mm 2mm;
-  font-family: "DejaVu Sans", sans-serif; font-size: 6.9pt; }
-td { border-bottom: .4pt solid #CBD5E1; padding: 1.5mm 2mm; vertical-align: top; }
-tr { page-break-inside: avoid; }
-tbody tr:nth-child(even) { background: #FEF7F7; }
-code { font-family: "DejaVu Sans Mono", monospace; font-size: 7.6pt; background: #FDECEC;
-  padding: 0 .8mm; color: #7F1D1D; }
-blockquote { margin: 3mm 0; padding: 2.5mm 4mm; border-left: 2pt solid #9B1C1C;
-  background: #FDECEC; font-size: 8.8pt; }
-ul, ol { margin: 0 0 3mm 5mm; padding: 0; }
-li { margin-bottom: 1mm; }
-hr { border: none; border-top: .5pt solid #CBD5E1; margin: 5mm 0; }
-a { color: #1D4ED8; text-decoration: none; }
+# The one place this volume differs from a Body of Knowledge: its cover carries no device, and the
+# title page's two notices are set as the system's caution call-out rather than as reversed panels.
+COVER_CSS = """
+.cover .coverband { display: none; }
+.cover .coverhead { padding-top: 56mm; }
+.cover .covercode { font-size: 46pt; }
+.cover .coverfoot { padding-top: 40mm; }
+.titlepage { padding-top: 42mm; }
+.titlepage .pci-caution { margin-top: 14mm; max-width: 128mm; font-size: 9.6pt; }
+.titlepage .pci-caution p { text-align: left; }
 """
 
 
+def render_prose(path: pathlib.Path) -> str:
+    """One prose document → HTML, with its headings marked for the contents."""
+    html = subprocess.run(["pandoc", str(path), "-f", "gfm", "-t", "html"],
+                          capture_output=True, text=True, check=True).stdout
+    html = re.sub(r'<h1 id="([^"]+)"[^>]*>', r'<h1 id="\1" data-toc="1">', html)
+    html = re.sub(r'<h2 id="([^"]+)"[^>]*>', r'<h2 id="\1" data-toc="2">', html)
+    return f'<div class="stdsdoc">{html}</div>'
+
+
 def main() -> None:
-    parts = []
-    for name in ORDER:
+    body, sets, standards = [], 0, 0
+    for kind, name in ORDER:
         path = HERE / name
         if not path.exists():
             print(f"skipped (missing): {name}")
             continue
-        parts.append(path.read_text(encoding="utf-8"))
+        if kind == "prose":
+            body.append(render_prose(path))
+        else:
+            title, html, laws = family.render_standards_file(path)
+            standards += laws
+            sets += 1
+            body.append('<div class="backmatter stdspart">'
+                        f'<h1 class="stdstitle bmtitle" id="{family.slug(title)}" data-toc="1">'
+                        f'{title}</h1>' + html + "</div>")
         print(f"included: {name}")
-    combined = HERE / "_combined_standards.md"
-    combined.write_text("\n\n".join(parts), encoding="utf-8")
+    print(f"standards: {standards} from {sets} set(s)")
 
-    html = subprocess.run(
-        ["pandoc", str(combined), "-f", "gfm", "-t", "html", "-s", "--toc", "--toc-depth=2",
-         "--metadata", "title=PCI Standards"],
-        capture_output=True, text=True, check=True).stdout
-    html = html.replace("<body>", "<body>" + TITLE, 1)
-    html = html.replace('<header id="title-block-header">',
-                        '<header id="title-block-header" style="display:none">', 1)
+    body_html = "".join(body)
+    toc = family.build_toc(body_html)
+    doc = (f"<!doctype html><html lang='{family.LANG}'><head><meta charset='utf-8'>"
+           f"<style>html {{ string-set: booktitle \"{RUN_TITLE}\"; }}</style></head>"
+           f"<body>{COVER}{TITLE}{toc}{body_html}</body></html>")
+    doc = family.house_style(doc, "standards")
+    (HERE / "_combined_standards.html").write_text(doc, encoding="utf-8")
 
     from weasyprint import HTML, CSS as WCSS
-    doc = HTML(string=html, base_url=str(HERE)).render(stylesheets=[WCSS(string=CSS)])
-    doc.write_pdf(str(OUT))
-    combined.unlink(missing_ok=True)
-    print(f"OK {OUT}  pages={len(doc.pages)}")
+    sheets = [WCSS(filename=str(family.HOUSE_CSS)), WCSS(string=COVER_CSS)]
+    rendered = HTML(string=doc, base_url=str(HERE)).render(stylesheets=sheets)
+    rendered.write_pdf(str(OUT))
+    print(f"OK {OUT}  pages={len(rendered.pages)}")
 
 
 if __name__ == "__main__":

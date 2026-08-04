@@ -53,13 +53,13 @@ All symbols are defined once and used identically across the book (Conventions, 
 | `CPI = EV / AC` | Cost performance index | 6.2.2 |
 | `SPI = EV / PV` | Schedule performance index | 6.2.2 |
 | `TCPI (to BAC) = (BAC − EV) / (BAC − AC)` | To-complete performance index | 6.2.3 |
-| `TCPI (to EAC) = (BAC − EV) / (EAC − AC)` | To-complete performance index — to meet a revised EAC | 6.2.3 |
+| `TCPI (to EAC) = (BAC − EV) / (EAC − AC)` | To-complete performance index, to meet a revised EAC | 6.2.3 |
 | `EAC = AC + ETC` | Estimate at completion (identity) | 6.3.1 |
-| `EAC = AC + (BAC − EV)` | EAC — remaining work at budgeted rate | 6.3.2 |
-| `EAC = BAC / CPI` | EAC — remaining work at current CPI | 6.3.2 |
-| `EAC = AC + (BAC − EV) / (CPI × SPI)` | EAC — cost & schedule compound | 6.3.2 |
+| `EAC = AC + (BAC − EV)` | EAC, remaining work at budgeted rate | 6.3.2 |
+| `EAC = BAC / CPI` | EAC, remaining work at current CPI | 6.3.2 |
+| `EAC = AC + (BAC − EV) / (CPI × SPI)` | EAC: cost & schedule compound | 6.3.2 |
 | `VAC = BAC − EAC` | Variance at completion | 6.3.4 |
-| `ES = M + (EV − PV_M) / (PV_M+1 − PV_M)` | Earned schedule — interpolate between the months bracketing EV (cumulative PV_M ≤ EV ≤ PV_M+1) | 6.4.3 |
+| `ES = M + (EV − PV_M) / (PV_M+1 − PV_M)` | Earned schedule: interpolate between the months bracketing EV (cumulative PV_M ≤ EV ≤ PV_M+1) | 6.4.3 |
 | `SV(t) = ES − AT`; `SPI(t) = ES / AT` | Earned schedule (time-based) | 6.4.3 |
 | `% complete = points completed / total planned points`; `EV = % complete × BAC` | AgileEVM | 9.5.3 |
 
@@ -96,7 +96,8 @@ All symbols are defined once and used identically across the book (Conventions, 
 
 ## Appendix B — Global glossary
 
-Consolidated from every domain's key-terms box — **280 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Conventions, §3).
+Consolidated from every domain's key-terms box: **280 terms**, each shown with the KA where it is first
+defined. Where a term recurs across domains, the first definition governs (Conventions, §3).
 
 | Term | Definition | First defined |
 |---|---|---|
@@ -105,7 +106,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **`CV` / `SV`** | Cost variance (`EV − AC`) / schedule variance (`EV − PV`). | 6.2 |
 | **`EAC` / `ETC`** | Estimate at completion / to complete; `EAC = AC + ETC`. | 3.4 |
 | **`SPI` convergence** | The tendency of `SPI` → 1 at completion regardless of lateness. | 6.4 |
-| **`TCPI`** | To-complete performance index — the efficiency remaining work must achieve for a target. | 6.2 |
+| **`TCPI`** | To-complete performance index: the efficiency remaining work must achieve for a target. | 6.2 |
 | **`VAC`** | Variance at completion (`BAC − EAC`). | 3.4 |
 | **Accounting equation** | `Assets = Liabilities + Equity`; holds after every transaction. | 1.1 |
 | **Accrual** | Liability for goods/services received, amount/timing reasonably certain. | 1.4 |
@@ -117,7 +118,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Actual Cost (`AC`)** | Cost actually incurred (incl. accruals) for the work performed. | 6.1 |
 | **Agent** | Arranges for another to provide; recognises net fee/commission. | 2.3 |
 | **Agile audit trail** | Backlog/Sprint/Increment records providing contemporaneous evidence. | 9.6 |
-| **Agile contracting** | T&M, capped T&M, target cost — forms that fit variable scope. | 9.6 |
+| **Agile contracting** | T&M, capped T&M, target cost: forms that fit variable scope. | 9.6 |
 | **Agile mindset / Manifesto** | Valuing working outcomes, collaboration, value and responsiveness to change. | 9.1 |
 | **AgileEVM** | Earned value applied to variable-scope adaptive delivery (Domain 9). | 6.4 |
 | **AI / ML / GenAI** | The field / learning-from-data subset / content-generating subset (nested). | 13.1 |
@@ -125,7 +126,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **AI-assisted disclosure/forecast** | AI-drafted output the professional verifies and signs off. | 13.5 |
 | **AI-maturity model** | Ad-hoc → piloting → standardised → integrated → governed/optimised. | 13.7 |
 | **AI-use policy / verification checklist** | The governance document and the operational assurance step. | 13.6 |
-| **Allowable (defined) cost** | The subset of incurred cost a contract makes reimbursable — the base for fee, share and pain/gain arithmetic. | 7.1 |
+| **Allowable (defined) cost** | The subset of incurred cost a contract makes reimbursable: the base for fee, share and pain/gain arithmetic. | 7.1 |
 | **Amount due** | Net certified value less previous payments. | 7.4 |
 | **Analogous / parametric / bottom-up** | Top-down scaling / rate × parameter / work-package build-up. | 3.2 |
 | **Articulation** | The way the statements interlock through shared figures (profit, cash, working capital). | 1.2 |
@@ -147,23 +148,23 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Cash-flow forecast** | A time-phased projection of cash in and out, separate from profit. | 3.5 |
 | **Category-to-task fit** | Matching the task and governance need to the right category. | 13.4 |
 | **Certification** | The client's agreement of the amount payable. | 7.4 |
-| **Change authority** | The person or body holding the delegated power to approve a change of a stated value and type — never the person who assessed it. | 5.4 |
+| **Change authority** | The person or body holding the delegated power to approve a change of a stated value and type, never the person who assessed it. | 5.4 |
 | **Change control** | The process to identify, assess, approve/reject and baseline change. | 5.4 |
-| **Change control board (CCB)** | The standing body — or named individual — holding authority to approve change within stated bands. | 8.4 |
+| **Change control board (CCB)** | The standing body, or named individual, holding authority to approve change within stated bands. | 8.4 |
 | **Change log** | The record reconciling current baseline to original, by change. | 5.4 |
 | **Change management** | Bringing people with you; honest about limits, resistant to hype. | 13.7 |
 | **Change request** | The controlling artefact for a change: identifier, cause, cross-constraint assessment, options, funding source and approval record. | 8.4 |
 | **Chart of accounts (CoA)** | The structured list of all ledger accounts, coded by class. | 1.5 |
 | **Chart-to-question fit** | Choosing the chart type that answers the actual question. | 4.4 |
 | **Claim** | A notified, substantiated assertion of entitlement to time/money. | 7.2 |
-| **Closing** | Formal completion — acceptance, contract closure, demobilisation, archiving. | 8.5 |
+| **Closing** | Formal completion: acceptance, contract closure, demobilisation, archiving. | 8.5 |
 | **Commercial-to-accounting loop** | Scope → cost → EV → billing → revenue → statements → reporting. | 7.5 |
 | **Commitment** | Cost the organisation is bound to once a PO/subcontract is raised. | 5.2 |
-| **Condition precedent (to a claim)** | A contractual requirement — commonly a notice within a stated window — drafted so that the entitlement does not survive if it is not met. | 7.2 |
+| **Condition precedent (to a claim)** | A contractual requirement (commonly a notice within a stated window) drafted so that the entitlement does not survive if it is not met. | 7.2 |
 | **Constraint trade-offs** | Scope/schedule/cost/quality/risk balanced against each other. | 8.4 |
 | **Contingency reserve** | For identified risks; inside the baseline; PM-controlled. | 3.1 |
-| **Contingent liability / asset** | A possible obligation/inflow — disclosed, not recognised (subject to probability). | 1.4 |
-| **Contract asset / liability** | Revenue recognised vs amounts billed — under-billing (asset) vs over-billing (liability). | 2.2 |
+| **Contingent liability / asset** | A possible obligation/inflow: disclosed, not recognised (subject to probability). | 1.4 |
+| **Contract asset / liability** | Revenue recognised vs amounts billed: under-billing (asset) vs over-billing (liability). | 2.2 |
 | **Control account (CA)** | The WBS×OBS intersection where scope, budget, cost and schedule integrate. | 1.5 |
 | **Controls dashboard** | An integrated cost/schedule/forecast/risk view with RAG status and trend. | 4.3 |
 | **COSO Internal Control — Integrated Framework** | The most widely used articulation of internal-control objectives and components; a voluntary framework published by a private-sector body, adopted rather than imposed. | 11.3 |
@@ -174,7 +175,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Cost extraction / reconciliation** | Pulling cost from source systems and tying it back to the ledger. | 1.5 |
 | **Cost-plus (CPFF/CPIF/CPAF)** | Reimburse cost plus a fixed/incentive/award fee; client bears cost risk. | 7.1 |
 | **Cost-schedule integration** | Measuring both from one `EV` so they cannot contradict. | 6.4 |
-| **Cost-to-date (control)** | Actuals + accruals — the figure `AC` should reflect. | 5.2 |
+| **Cost-to-date (control)** | Actuals + accruals; the figure `AC` should reflect. | 5.2 |
 | **Crashing** | Add resources to critical activities (cost for time). | 10.3 |
 | **Credit control** | Assessing/limiting customer credit before committing. | 11.1 |
 | **Critical path** | The longest, zero-float chain; sets the project duration. | 10.2 |
@@ -186,7 +187,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Data quality dimensions** | Accuracy, completeness, consistency, timeliness, validity, uniqueness. | 13.2 |
 | **Data-protection impact assessment** | A formal assessment of a higher-risk processing activity, undertaken before it begins, on the data-protection function's determination. | 13.2 |
 | **Debit / Credit** | Left/right sides of an account; effect depends on account type. | 1.1 |
-| **Delegated draw limit** | The recorded value within which the project manager may approve a contingency draw; above it, the sponsor approves — and the requester is never the approver. | 12.3 |
+| **Delegated draw limit** | The recorded value within which the project manager may approve a contingency draw; above it, the sponsor approves, and the requester is never the approver. | 12.3 |
 | **Delegated limit** | The recorded value band within which a named role may approve a change; above it, the change escalates. | 5.4 |
 | **Dependency (FS/SS/FF/SF)** | The four logical relationships between activities. | 10.1 |
 | **Depreciation** | Systematic spreading of a long-lived asset's cost over its useful life. | 1.3 |
@@ -200,7 +201,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Duty to escalate** | The professional obligation to raise, in writing and before issue, a figure or narrative that cannot be defended on the evidence. | 4.3 |
 | **EAC (a)–(d)** | Budgeted-rate / current-CPI / CPI×SPI / bottom-up methods, each an assumption. | 6.3 |
 | **Earned schedule (`ES`)** | Earned value expressed as a point on the time axis; gives `SV(t)`, `SPI(t)`. | 6.4 |
-| **Earned Value (`EV`)** | Budgeted cost of work performed — progress valued at budget. | 6.1 |
+| **Earned Value (`EV`)** | Budgeted cost of work performed: progress valued at budget. | 6.1 |
 | **Earning rule / measurement method** | The rule converting physical progress to `EV` (0/100, 50/50, % complete, units, milestones). | 6.1 |
 | **Embedded AI** | AI features within the platforms controls already uses. | 13.4 |
 | **Emergency change** | A change authorised out of sequence for genuine urgency, recorded as such at the time and ratified by the proper authority afterwards. | 8.4 |
@@ -236,7 +237,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **IAS 23 / qualifying asset** | Capitalise borrowing costs directly attributable to a qualifying asset. | 2.4 |
 | **IFRS / local GAAP** | The global standards / national frameworks. | 2.1 |
 | **IFRS 16 / right-of-use** | Most leases on balance sheet as a right-of-use asset and lease liability. | 2.4 |
-| **Incremental** | Building the product in usable slices — adding parts to the whole. | 8.6 |
+| **Incremental** | Building the product in usable slices, adding parts to the whole. | 8.6 |
 | **Input (cost-to-cost) / output method** | Ways of measuring progress toward complete satisfaction. | 2.2 |
 | **Integrated change control** | Assessing every change across all constraints before approval. | 8.4 |
 | **Integration / upskilling** | Embedding AI in the workflow / building data, prompting, verification, governance skills. | 13.7 |
@@ -264,13 +265,13 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Management reporting** | Internal, flexible, timely, forward-looking reporting. | 2.5 |
 | **Management reserve** | For unforeseen scope/risk; outside the baseline; management-controlled. | 3.1 |
 | **Matching principle** | Recognise expenses in the same period as the income they help earn. | 1.3 |
-| **Measure of progress (recognition)** | The basis on which progress towards satisfying a performance obligation is measured — an accounting-policy judgement owned by finance, not by project controls. | 9.5 |
+| **Measure of progress (recognition)** | The basis on which progress towards satisfying a performance obligation is measured: an accounting-policy judgement owned by finance, not by project controls. | 9.5 |
 | **Measurement** | Deriving quantities from design under a standard method. | 7.3 |
 | **Milestone-to-Sprint mapping** | Translating Sprints/releases into gate milestones. | 9.6 |
-| **Monitoring & controlling** | Measuring against baselines and acting to correct — parallel to executing. | 8.4 |
+| **Monitoring & controlling** | Measuring against baselines and acting to correct: parallel to executing. | 8.4 |
 | **Normal balance** | The side on which an account type increases. | 1.1 |
 | **Notice register** | The commercial record of every notice due and served, with its trigger, window, owner, date and acknowledgement. | 7.2 |
-| **Offsetting** | Netting assets/liabilities or income/expenses — generally prohibited. | 2.1 |
+| **Offsetting** | Netting assets/liabilities or income/expenses: generally prohibited. | 2.1 |
 | **Onerous contract** | Unavoidable costs exceed expected benefits; the loss is provided immediately. | 1.4 |
 | **Open book / audit rights** | A client's contractual right to inspect and audit the records evidencing a reimbursable claim, for a stated period. | 7.2 |
 | **Open PO / GRNI** | Commitment / goods-received-not-invoiced (accrual driver). | 11.2 |
@@ -281,12 +282,12 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Overview-first, detail-on-demand** | Summary on one view, drill-down to the detail behind any red. | 4.3 |
 | **P80 contingency** | Contingency set at an 80 %-confidence outcome from a risk model. | 12.3 |
 | **Payment terms** | The lag between billing and collection (and between receipt and paying suppliers). | 3.5 |
-| **Peak funding requirement** | The deepest point of cumulative cash — the finance to arrange. | 3.5 |
+| **Peak funding requirement** | The deepest point of cumulative cash: the finance to arrange. | 3.5 |
 | **Performance / advance-payment / retention bond** | Third-party security instruments. | 7.2 |
 | **Performance obligation** | A promise to transfer a distinct good or service. | 2.2 |
-| **Personal data** | Information about identified or identifiable people — a separate test from confidentiality, carrying obligations that vary by jurisdiction. | 13.2 |
+| **Personal data** | Information about identified or identifiable people; a separate test from confidentiality, carrying obligations that vary by jurisdiction. | 13.2 |
 | **PERT (three-point)** | `tE = (O + 4M + P)/6`; `σ = (P − O)/6`. | 10.1 |
-| **Planned Value (`PV`/BCWS)** | Cumulative planned spend to date — the cost-baseline curve; the budgeted cost of work scheduled by the data date. | 3.3 |
+| **Planned Value (`PV`/BCWS)** | Cumulative planned spend to date: the cost-baseline curve; the budgeted cost of work scheduled by the data date. | 3.3 |
 | **Planning package** | Future work within a CA not yet detailed into work packages. | 5.3 |
 | **Power/interest grid** | A tool to classify stakeholders and tailor engagement. | 8.1 |
 | **Predictive / adaptive** | Plan-driven (fixed scope) / change-driven (evolving scope). | 8.6 |
@@ -316,7 +317,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Quantity/efficiency variance** | `(Actual quantity − Standard quantity) × Standard price`. | 4.2 |
 | **Rate** | Price per unit (labour, materials, plant, overhead, profit). | 7.3 |
 | **Rebaselining** | Transparently resetting scope/`BAC` when scope is deliberately flexed. | 9.5 |
-| **Receivables ageing** | The overdue profile of amounts owed — a cash/revenue leading indicator. | 11.1 |
+| **Receivables ageing** | The overdue profile of amounts owed: a cash/revenue leading indicator. | 11.1 |
 | **Reconciliation** | Explaining the tie between the two views from one ledger. | 2.5 |
 | **Records custodian** | The named holder of a project archive in the permanent organisation once the project team disbands. | 8.5 |
 | **Relevance / materiality** | Capable of influencing decisions; material if its omission/misstatement would. | 2.1 |
@@ -325,8 +326,8 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Resource levelling / smoothing** | Respect resource limits (may extend) / even peaks within float (no extension). | 10.3 |
 | **Response strategies** | Avoid/transfer/mitigate/accept (threats); exploit/share/enhance/accept (opportunities). | 12.2 |
 | **Retention** | Cash withheld from payments until completion/defects periods pass. | 3.5 |
-| **Retention period (records)** | The stated period for which project records are kept — the longest of the contract, claim-limitation, accounting/tax and funder requirements, confirmed rather than assumed. | 8.5 |
-| **Risk** | An uncertain event/condition affecting objectives — threat or opportunity. | 12.1 |
+| **Retention period (records)** | The stated period for which project records are kept: the longest of the contract, claim-limitation, accounting/tax and funder requirements, confirmed rather than assumed. | 8.5 |
+| **Risk** | An uncertain event/condition affecting objectives: threat or opportunity. | 12.1 |
 | **Risk appetite / tolerance** | Risk willingly accepted / acceptable variation around it. | 12.1 |
 | **Risk register** | The living record: cause-event-effect, owner, assessment, response. | 12.2 |
 | **Rolling forecast** | A forecast re-produced each period over a fixed forward horizon. | 3.4 |
@@ -340,9 +341,9 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Scope creep** | Uncontrolled accumulation of unmanaged change. | 5.4 |
 | **Segregation of duties (SoD)** | No single person controls a whole transaction. | 11.3 |
 | **Small multiples** | Repeated small charts — must share consistent scales. | 4.4 |
-| **SOCE** | Statement of changes in equity — reconciles opening to closing equity. | 1.2 |
-| **SOFP** | Statement of financial position — assets, liabilities, equity at a point in time. | 1.2 |
-| **SOPL & OCI** | Statement of profit or loss and other comprehensive income — performance over a period. | 1.2 |
+| **SOCE** | Statement of changes in equity: reconciles opening to closing equity. | 1.2 |
+| **SOFP** | Statement of financial position: assets, liabilities, equity at a point in time. | 1.2 |
+| **SOPL & OCI** | Statement of profit or loss and other comprehensive income: performance over a period. | 1.2 |
 | **Sprint** | The fixed short cycle containing all other events; produces a usable Increment. | 9.2 |
 | **Stakeholder** | Anyone who affects or is affected by the project. | 8.1 |
 | **Standalone selling price (SSP)** | The price of a good/service sold separately; the basis for allocation. | 2.2 |
@@ -352,7 +353,7 @@ Consolidated from every domain's key-terms box — **280 terms**, each shown wit
 | **Storytelling** | Ordering true facts (status → cause → forecast → action) to drive a decision. | 4.4 |
 | **Structured / unstructured** | Tabular (ML) vs free-form (GenAI/RAG) data. | 13.2 |
 | **Subsidiary plans** | Quality, resource, risk, procurement, communications, integration. | 8.2 |
-| **Success criteria** | The definition of doing well — beyond scope/time/cost to benefit and quality. | 8.1 |
+| **Success criteria** | The definition of doing well, beyond scope/time/cost to benefit and quality. | 8.1 |
 | **Supervised / unsupervised / reinforcement** | Learn from labels / structure / trial-and-reward. | 13.1 |
 | **Tailoring** | Adapting the approach to the specific project. | 8.6 |
 | **Target / threshold / tolerance** | The aim / the attention boundary / the allowable deviation. | 4.1 |
@@ -398,7 +399,7 @@ this volume were checked against the issuing bodies' catalogues when this editio
 relying on any of them for a live decision should verify the current requirement with the issuing body.
 
 **Not in this table: PCI's own instrument.** The identifiers `PCI-FND-STD-NN` and `PCI-PCL-STD-DD.NN` that
-appear at the close of each domain are **PCI Standards** — the Institute's own companion instrument
+appear at the close of each domain are **PCI Standards**: the Institute's own companion instrument
 (Conventions, §11), not external references. They are private professional requirements binding within PCI's
 certification scope; they are not legislation, and they neither derive from nor stand behind any instrument
 listed below. The two are indexed separately on purpose, so that a PCI requirement is never mistaken for an
@@ -411,13 +412,13 @@ external one, or the reverse.
 | **IAS 16** | Authoritative accounting standard | Property, plant & equipment (capitalise/depreciate) | 1.3, 2.4 |
 | **IAS 23** | Authoritative accounting standard | Borrowing costs (capitalise on qualifying assets) | 2.4 |
 | **IAS 37** | Authoritative accounting standard | Provisions, contingent liabilities/assets; onerous contracts | 1.4, 2.2, 2.4 |
-| **IAS 11 (legacy)** | Superseded accounting standard | Construction contracts — superseded by IFRS 15 | 2.4 |
+| **IAS 11 (legacy)** | Superseded accounting standard | Construction contracts: superseded by IFRS 15 | 2.4 |
 | **IFRS 15** | Authoritative accounting standard | Revenue from contracts with customers (five-step model) | 2.2, 2.3, 7.5, 9.5 |
 | **IFRS 16** | Authoritative accounting standard | Leases (right-of-use asset & lease liability) | 2.4 |
 | **ASC 606 (US GAAP)** | Authoritative accounting standard | The revenue model applied by US-GAAP preparers; named as the equivalent framework to IFRS 15, developed jointly with it | 9.5 |
 | **PMBOK Guide** | Professional guidance | Project management process groups & practices | 8 |
 | **AACE TCM Framework / estimate classes** | Professional guidance | Total cost management; estimate classification | 3.2 |
-| **ANSI/EIA-748** | National standard *(voluntary in itself; reaches a project only where a contract or procurement regime imports it)* | The characteristics an earned-value management system is expected to exhibit — the source of the guideline-based "EVMS compliance" vocabulary and of the formal reprogramming practice (over-target baseline) | 6.A.1, 6.A.2 |
+| **ANSI/EIA-748** | National standard *(voluntary in itself; reaches a project only where a contract or procurement regime imports it)* | The characteristics an earned-value management system is expected to exhibit: the source of the guideline-based "EVMS compliance" vocabulary and of the formal reprogramming practice (over-target baseline) | 6.A.1, 6.A.2 |
 | **ISO 21508** | International standard (guidance, not certifiable) | Earned value management in project and programme management | 6.A.2 |
 | **PMI practice guidance on earned value management** | Professional guidance | Recommended practice on earned value for practitioners | 6.A.2 |
 | **SCL Delay and Disruption Protocol** | Professional guidance *(voluntary; binds nobody unless a contract imports it)* | A taxonomy of delay-analysis methods and the vocabulary practitioners use for them | 10.A.6 |
@@ -430,7 +431,7 @@ external one, or the reverse.
 | **Kanban / Lean** | Industry practice | Flow and waste-reduction principles | 9.4 |
 | **SAFe / LeSS / Scrum-of-Scrums** | Voluntary framework | Scaling frameworks (awareness level) | 9.4 |
 | **FIDIC (and jurisdictional forms)** | Contract framework | Standard contract forms (awareness level) | 7.2 |
-| **ISO/IEC 42001** | International standard (certifiable management-system standard) | An AI management system — governance, roles, controls and improvement around AI use | 13.6 |
+| **ISO/IEC 42001** | International standard (certifiable management-system standard) | An AI management system: governance, roles, controls and improvement around AI use | 13.6 |
 | **ISO/IEC 23894** | International standard (guidance, not certifiable) | Guidance on managing risk in the context of AI | 13.6 |
 | **NIST AI Risk Management Framework** | Voluntary framework | AI risk management by four functions (govern, map, measure, manage); not a standard and not a regulation | 13.6 |
 | **OECD AI Principles** | Voluntary framework (an OECD Council Recommendation) | Intergovernmental principles for trustworthy AI; a statement of principle rather than legislation | 13.6 |
@@ -439,32 +440,30 @@ external one, or the reverse.
 | **US banking supervisors' guidance on model risk management** | Illustrative reference *(understood to be supervisory guidance, jurisdiction-specific)* | Model risk management as an established discipline; addressed to the firms those supervisors supervise | 13.A.2 |
 
 > **Forthcoming change — IFRS 18.** A further standard, IFRS 18 *Presentation and Disclosure in Financial
-> Statements*, has been issued and is expected to change how financial statements are presented, including
-> the treatment of management-defined performance measures. The presentation principles this book teaches at
-> 1.2 and 2.1 — that a reader must be able to see
-> what an entity owns, owes, earned and spent, on a consistent basis between periods — are unaffected. Its
-> scope, its effective date and what it means for any particular entity are matters to confirm with the
-> issuing body and with the entity's auditors; nothing is stated here.
+> Statements*, has been issued and is expected to change how financial statements are presented, including the
+> treatment of management-defined performance measures. The presentation principles this book teaches at 1.2
+> and 2.1 (that a reader must be able to see what an entity owns, owes, earned and spent, on a consistent
+> basis between periods) are unaffected. Its scope, its effective date and what it means for any particular
+> entity are matters to confirm with the issuing body and with the entity's auditors; nothing is stated here.
 > This mirrors how §2.4 treats the IAS 11 → IFRS 15 transition.
 
-> **Category definitions.** *Authoritative accounting standard* — issued by a standard-setter and applied
-> by entities reporting under that framework. *International standard* — issued by ISO/IEC; some are
-> certifiable management-system standards, others are guidance that cannot be certified against.
-> *National standard* — a published standard issued through a single country's standards process; it is not
-> an international standard and not merely industry practice, and it reaches a project only where a contract
-> or a procurement regime imports it.
-> *Contract framework* — a published family of contract forms adopted by agreement between parties.
-> *Professional guidance* — a professional body's recommended practice. *Voluntary framework* — adopted by
-> choice, imposing no legal obligation. *Industry practice* — a widely used approach with no single
-> authoritative publisher. *Illustrative reference* — named to show the shape of an instrument or of a
+> **Category definitions.** *Authoritative accounting standard*: issued by a standard-setter and applied by
+> entities reporting under that framework. *International standard*: issued by ISO/IEC; some are certifiable
+> management-system standards, others are guidance that cannot be certified against. *National standard*: a
+> published standard issued through a single country's standards process; it is not an international standard
+> and not merely industry practice, and it reaches a project only where a contract or a procurement regime
+> imports it. *Contract framework*, a published family of contract forms adopted by agreement between parties.
+> *Professional guidance*, a professional body's recommended practice. *Voluntary framework*: adopted by
+> choice, imposing no legal obligation. *Industry practice*, a widely used approach with no single
+> authoritative publisher. *Illustrative reference*: named to show the shape of an instrument or of a
 > regulatory pattern, and relied on for no requirement in this book; where such an entry is understood to be
-> legislation or supervisory guidance, that understanding is noted in its Category cell. Two entries — the EU
-> AI Act and the EU General Data Protection Regulation — are understood to be legislation; both are
-> named here as reference points, not as sources of obligation on any reader, and their reach is a question
-> for qualified advice. No other entry in this table
-> is legislation, and none is described as such. Applicability is jurisdiction-specific throughout, and where
-> local law or a contract imposes a stricter requirement, that requirement governs. The programme's full
-> cross-volume register, with verification dates, is maintained as the PCI External-Reference Register.
+> legislation or supervisory guidance, that understanding is noted in its Category cell. Two entries (the EU
+> AI Act and the EU General Data Protection Regulation) are understood to be legislation; both are named here
+> as reference points, not as sources of obligation on any reader, and their reach is a question for qualified
+> advice. No other entry in this table is legislation, and none is described as such. Applicability is
+> jurisdiction-specific throughout, and where local law or a contract imposes a stricter requirement, that
+> requirement governs. The programme's full cross-volume register, with verification dates, is maintained as
+> the PCI External-Reference Register.
 
 ---
 
@@ -516,47 +515,47 @@ same spec.
 
 ## Appendix E — Self-check answers
 
-Each Knowledge Area closes with two or three **self-check questions**, and each carries its answer alongside so
-a reader can self-mark on the spot. This appendix gathers all **146** of those answers into one key — by
-domain, then by Knowledge Area and question number — for revision, for marking a study group, or for reading
-a domain's questions cold and checking afterwards. The questions themselves stay where they are learned, at
-the end of each Knowledge Area.
+Each Knowledge Area closes with two or three **self-check questions**, and each carries its answer alongside
+so a reader can self-mark on the spot. This appendix gathers all **146** of those answers into one key (by
+domain, then by Knowledge Area and question number) for revision, for marking a study group, or for reading a
+domain's questions cold and checking afterwards. The questions themselves stay where they are learned, at the
+end of each Knowledge Area.
 
 ### Domain 1 — Foundations of Accounting for Project Controls
 
 | KA | # | Answer |
 |---|---:|---|
-| 1.1 | 1 | `A = L + E`; under the entity concept the injection is a claim by owners on the business — financing, not earned performance. |
+| 1.1 | 1 | `A = L + E`; under the entity concept the injection is a claim by owners on the business, financing, not earned performance. |
 | 1.1 | 2 | Credit; normal balance credit. |
 | 1.1 | 3 | A wholly omitted transaction; a transaction posted to the wrong account of the same type; a duplicated entry. |
-| 1.2 | 1 | SOFP — position at a point; SOPL & OCI — performance over a period; cash flows — change in cash by activity; SOCE — movement in equity. |
+| 1.2 | 1 | SOFP: position at a point; SOPL & OCI: performance over a period; cash flows: change in cash by activity; SOCE, movement in equity. |
 | 1.2 | 2 | E.g. profit → retained earnings → equity; or closing cash ties SOFP to the cash-flow statement. |
-| 1.2 | 3 | Working capital — growth in receivables/inventory exceeding payables — and investing/financing outflows consume cash the accrual profit does not reflect. |
+| 1.2 | 3 | Working capital (growth in receivables/inventory exceeding payables) and investing/financing outflows consume cash the accrual profit does not reflect. |
 | 1.3 | 1 | Recognise expense with the income it earns; e.g. only USD 3,500 of supplies consumed is expensed, the rest stays an asset. |
 | 1.3 | 2 | Prepayment/asset; accrued expense/liability; deferred income/liability. |
-| 1.3 | 3 | Omitting it understates actual cost `AC`, inflating `CPI` and corrupting the forecast — cross-ref Domain 6. |
+| 1.3 | 3 | Omitting it understates actual cost `AC`, inflating `CPI` and corrupting the forecast: cross-ref Domain 6. |
 | 1.4 | 1 | Present obligation from a past event; probable outflow; reliable estimate. |
 | 1.4 | 2 | Expected value for a large population of similar items; most-likely for a single obligation, adjusted for other outcomes. |
 | 1.4 | 3 | Recognise the full USD 80,000 expected loss immediately as an onerous-contract provision. |
 | 1.5 | 1 | WBS: spend by deliverable/work package, e.g. Foundations; CBS: spend by cost type, e.g. total subcontract, across the project. |
 | 1.5 | 2 | Mis-coding propagates into every downstream report and distorts project cost/CPI before it is caught; source discipline prevents it. |
-| 1.5 | 3 | It is the WBS×OBS point where budget, cost and schedule integrate — the level at which EV is measured in Domain 6. |
+| 1.5 | 3 | It is the WBS×OBS point where budget, cost and schedule integrate: the level at which EV is measured in Domain 6. |
 
 ### Domain 2 — Financial Reporting & the Standards
 
 | KA | # | Answer |
 |---|---:|---|
 | 2.1 | 1 | Fundamental: relevance, faithful representation. Enhancing: comparability, verifiability, timeliness, understandability. |
-| 2.1 | 2 | Account for economic reality not legal label — e.g. a lease dressed as a service contract is accounted for as a lease. |
+| 2.1 | 2 | Account for economic reality not legal label: e.g. a lease dressed as a service contract is accounted for as a lease. |
 | 2.2 | 1 | Identify contract; identify performance obligations; determine transaction price; allocate; recognise as/when satisfied. |
-| 2.2 | 2 | Prospectively — as a change in estimate; PoC is re-struck on the new total cost, with a catch-up in the current period; prior periods are not restated. If total cost now exceeds price, recognise the whole loss immediately per IAS 37. |
-| 2.2 | 3 | A contract asset is a conditional right to consideration for work performed but not yet billed; a receivable is an unconditional right — only time stands between it and payment. |
+| 2.2 | 2 | Prospectively, as a change in estimate; PoC is re-struck on the new total cost, with a catch-up in the current period; prior periods are not restated. If total cost now exceeds price, recognise the whole loss immediately per IAS 37. |
+| 2.2 | 3 | A contract asset is a conditional right to consideration for work performed but not yet billed; a receivable is an unconditional right, only time stands between it and payment. |
 | 2.3 | 1 | It changes reported revenue and every margin/KPI derived from it, even though profit is identical. |
 | 2.3 | 2 | The contract asset or contract liability. |
 | 2.4 | 1 | Lower of cost and net realisable value. |
 | 2.4 | 2 | Capitalise directly attributable borrowing costs into the asset's cost. |
 | 2.4 | 3 | To bring construction into a single control-based revenue model applied consistently across industries, replacing the percentage-of-completion-by-default rule. |
-| 2.5 | 1 | Audience; framework/audit; orientation — historical vs forecast; cadence; structure. |
+| 2.5 | 1 | Audience; framework/audit; orientation: historical vs forecast; cadence; structure. |
 | 2.5 | 2 | The contract asset/liability and timing/accrual differences. |
 
 ### Domain 3 — Budgeting & Forecasting
@@ -566,7 +565,7 @@ the end of each Knowledge Area.
 | 3.1 | 1 | Identified vs unidentified risk; inside vs outside the baseline; PM vs management. |
 | 3.1 | 2 | So variance measured against it is meaningful; it changes only through approved change control. |
 | 3.2 | 1 | It narrows, as scope definition matures. |
-| 3.2 | 2 | Analogous — early/sanity; parametric — planning with good rates; bottom-up — definitive, needs a WBS. |
+| 3.2 | 2 | Analogous: early/sanity; parametric, planning with good rates; bottom-up: definitive, needs a WBS. |
 | 3.3 | 1 | Planned Value, `PV`/BCWS. |
 | 3.3 | 2 | Otherwise early schedule variance is an artefact of the phasing, not of performance. |
 | 3.4 | 1 | `EAC = AC + ETC`; remaining work at budgeted rate; at current `CPI`; at `CPI × SPI`. |
@@ -579,30 +578,30 @@ the end of each Knowledge Area.
 | KA | # | Answer |
 |---|---:|---|
 | 4.1 | 1 | Leading to intervene in time; lagging to confirm the intervention worked. |
-| 4.1 | 2 | Too tight — everything is an exception; too loose — real problems hide within tolerance. |
+| 4.1 | 2 | Too tight: everything is an exception; too loose: real problems hide within tolerance. |
 | 4.2 | 1 | Price/rate: `(AP−SP)×AQ`; quantity/efficiency: `(AQ−SQ)×SP`. |
 | 4.2 | 2 | It attributes the gap to named causes and magnitudes, showing what to act on. |
 | 4.3 | 1 | Where are we; where are we heading; what is off-track; what is being done about it. |
 | 4.3 | 2 | The same data must aggregate automatically to each level; without source coding it becomes manual re-keying. |
-| 4.3 | 3 | Disagreement is about judgement on shared evidence; the duty engages when the professional would be asserting — or silently permitting — something the evidence does not support. |
+| 4.3 | 3 | Disagreement is about judgement on shared evidence; the duty engages when the professional would be asserting, or silently permitting, something the evidence does not support. |
 | 4.3 | 4 | Do not sign what you cannot defend; do not let a changed analysis be attributed to you; do not participate in suppression; do not go silent. |
-| 4.4 | 1 | S-curve — how are we tracking over time; waterfall/variance bridge — what moved the number. |
+| 4.4 | 1 | S-curve: how are we tracking over time; waterfall/variance bridge: what moved the number. |
 | 4.4 | 2 | Truncated axis; dual axes; 3-D/decoration; cherry-picked baseline; inconsistent small-multiple scales. |
 
 ### Domain 5 — Cost Management & Cost Control
 
 | KA | # | Answer |
 |---|---:|---|
-| 5.1 | 1 | Direct/indirect — what must be allocated; fixed/variable — how cost scales with volume / flexing the budget. |
+| 5.1 | 1 | Direct/indirect: what must be allocated; fixed/variable: how cost scales with volume / flexing the budget. |
 | 5.1 | 2 | An OAR on a base that does not drive the cost mis-allocates it into every unit cost. |
 | 5.2 | 1 | Commitment, accrual, actual; cost-to-date = actuals + accruals. |
 | 5.2 | 2 | `AC` understated → `CPI` flattered → forecast corrupted. |
 | 5.3 | 1 | By cost type / by scope. |
 | 5.3 | 2 | It integrates scope, budget, cost and schedule at a manageable, meaningful level. |
-| 5.4 | 1 | Trend — early warning of a possible change; variation — a formal, priced, agreed change. |
-| 5.4 | 2 | No — contingency is already inside the baseline; drawing it consumes reserve, it does not add scope. |
-| 5.4 | 3 | The controls professional assesses and recommends; a change authority holding the relevant delegated band approves — never the same person on the same change. |
-| 5.4 | 4 | An assessed cost exceeding the remaining reserve of its proposed funding source — also a breach of a baseline tolerance, or a change altering a contractual obligation. |
+| 5.4 | 1 | Trend: early warning of a possible change; variation: a formal, priced, agreed change. |
+| 5.4 | 2 | No: contingency is already inside the baseline; drawing it consumes reserve, it does not add scope. |
+| 5.4 | 3 | The controls professional assesses and recommends; a change authority holding the relevant delegated band approves, never the same person on the same change. |
+| 5.4 | 4 | An assessed cost exceeding the remaining reserve of its proposed funding source: also a breach of a baseline tolerance, or a change altering a contractual obligation. |
 
 ### Domain 6 — Earned Value Management & Forecasting (EVM / EAC)
 
@@ -611,7 +610,7 @@ the end of each Knowledge Area.
 | 6.1 | 1 | So it is comparable to `PV` for schedule and to `AC` for cost; measuring at actual collapses the method. |
 | 6.1 | 2 | The same physical state gives different `EV` by rule; fixing it prevents optimistic, inconsistent progress claims. |
 | 6.2 | 1 | `CV=EV−AC`, `SV=EV−PV`; `CPI=EV/AC`, `SPI=EV/PV`; <0 or <1 adverse. |
-| 6.2 | 2 | The target — usually `BAC` — is likely no longer credible. |
+| 6.2 | 2 | The target, usually `BAC`, is likely no longer credible. |
 | 6.3 | 1 | Budgeted rate; current `CPI`; `CPI × SPI`; bottom-up. |
 | 6.3 | 2 | Persisting → `BAC/CPI`; one-off → `AC + (BAC − EV)`. |
 | 6.4 | 1 | Schedule indices time-blind/converge → earned schedule; no critical-path view → read with CPM; optimistic `EV` → objective earning rules; data quality → Domain 5 discipline. |
@@ -623,17 +622,17 @@ the end of each Knowledge Area.
 |---|---:|---|
 | 7.1 | 1 | Lump sum → contractor; target cost → shared; cost-plus → client. |
 | 7.1 | 2 | An `EAC` above target quantifies the contractor's pain-share now. |
-| 7.1 | 3 | Audited allowable cost as the contract defines it — not the contractor's total recorded cost. |
+| 7.1 | 3 | Audited allowable cost as the contract defines it, not the contractor's total recorded cost. |
 | 7.1 | 4 | Code and segregate allowable from non-allowable cost at source; keep the supporting records audit-ready for as long as the client's inspection and audit rights run. |
-| 7.2 | 1 | Cause, effect and quantum — notified and substantiated. |
+| 7.2 | 1 | Cause, effect and quantum: notified and substantiated. |
 | 7.2 | 2 | It withholds cash until completion/defects release, deepening and lengthening the funding trough. |
-| 7.2 | 3 | A requirement — often notice within a window — drafted so the entitlement does not survive without it; so the notice is served before the substantiation is built, not with it. |
-| 7.2 | 4 | The governing law, and local legal advice — payment and dispute mechanics are understood to be set by legislation in some jurisdictions, and the position varies. |
+| 7.2 | 3 | A requirement (often notice within a window) drafted so the entitlement does not survive without it; so the notice is served before the substantiation is built, not with it. |
+| 7.2 | 4 | The governing law, and local legal advice: payment and dispute mechanics are understood to be set by legislation in some jurisdictions, and the position varies. |
 | 7.3 | 1 | Common tender basis; valuing work done; remeasurement/variation pricing. |
-| 7.3 | 2 | They are time-related — a delay extends them, creating prolongation cost. |
+| 7.3 | 2 | They are time-related: a delay extends them, creating prolongation cost. |
 | 7.4 | 1 | Gross value → less retention → net certified → less previous payments → amount due. |
-| 7.4 | 2 | `EV` — budget; BoQ valuation — contract rates/billing; IFRS 15 — recognised revenue. |
-| 7.5 | 1 | Under-billing — performing ahead of collections; cash tied up in unbilled work. |
+| 7.4 | 2 | `EV`: budget; BoQ valuation, contract rates/billing; IFRS 15: recognised revenue. |
+| 7.5 | 1 | Under-billing, performing ahead of collections; cash tied up in unbilled work. |
 | 7.5 | 2 | Scope → cost → EV → billing → revenue → statements → reporting. |
 
 ### Domain 8 — Project Management Lifecycle
@@ -644,46 +643,46 @@ the end of each Knowledge Area.
 | 8.1 | 2 | A project can hit time/cost/scope yet fail to deliver the benefit or meet quality/stakeholder outcomes. |
 | 8.2 | 1 | Schedule, cost coding, control accounts and earned value are all built on it. |
 | 8.2 | 2 | Scope/schedule/cost; e.g. risk plan → contingency. |
-| 8.3 | 1 | Keep true measurement flowing — progress against earning rules, cost committed/accrued — so controlling can act. |
-| 8.3 | 2 | It returns as rework — a favourable variance hiding a quality liability. |
+| 8.3 | 1 | Keep true measurement flowing (progress against earning rules, cost committed/accrued) so controlling can act. |
+| 8.3 | 2 | It returns as rework: a favourable variance hiding a quality liability. |
 | 8.4 | 1 | Every change is assessed across all constraints and updates all affected baselines coherently. |
-| 8.4 | 2 | Earned value — 6; variance/reporting — 4; forecasting — 3/6; risk — 12. |
-| 8.4 | 3 | The controls professional assesses and recommends; a change control board or other named authority approves within a recorded band — never the same person on the same change. |
+| 8.4 | 2 | Earned value: 6; variance/reporting: 4; forecasting: 3/6; risk — 12. |
+| 8.4 | 3 | The controls professional assesses and recommends; a change control board or other named authority approves within a recorded band, never the same person on the same change. |
 | 8.4 | 4 | A breached baseline tolerance; cost exceeding the remaining balance of its funding source; an altered contractual obligation; a change to the benefit case or the success criteria. |
-| 8.5 | 1 | The definitive commercial position — final remeasurement, agreed variations/claims, retention release. |
+| 8.5 | 1 | The definitive commercial position: final remeasurement, agreed variations/claims, retention release. |
 | 8.5 | 2 | Actual performance data improves future estimates and trains forecasting models. |
 | 8.5 | 3 | A stated period, a named custodian in the permanent organisation, a hold rule for live or foreseeable disputes, and retrieval tested in a readable format. |
-| 8.5 | 4 | The longest of the contract's records/audit provisions, the claim-limitation and defects-liability periods under the governing law, accounting and tax retention, and any funder or regulator condition — confirmed with commercial, finance and legal, because the periods vary by jurisdiction and contract form. |
-| 8.6 | 1 | Incremental — add new working parts to the whole; iterative — refine the same product over passes. |
-| 8.6 | 2 | It determines how progress and cost are measured — fixed baseline vs velocity vs both. |
+| 8.5 | 4 | The longest of the contract's records/audit provisions, the claim-limitation and defects-liability periods under the governing law, accounting and tax retention, and any funder or regulator condition: confirmed with commercial, finance and legal, because the periods vary by jurisdiction and contract form. |
+| 8.6 | 1 | Incremental: add new working parts to the whole; iterative, refine the same product over passes. |
+| 8.6 | 2 | It determines how progress and cost are measured: fixed baseline vs velocity vs both. |
 
 ### Domain 9 — Agile, Scrum & Adaptive Delivery for Project Controls
 
 | KA | # | Answer |
 |---|---:|---|
 | 9.1 | 1 | Agile expects scope to change; treating change as variance against a fixed baseline misreads healthy adaptation as failure. |
-| 9.1 | 2 | Fix time and cost; flex scope — the inverted triangle. |
-| 9.2 | 1 | PO — value/backlog order; SM — effectiveness/impediments; Developers — the Increment/plan/quality. |
+| 9.1 | 2 | Fix time and cost; flex scope: the inverted triangle. |
+| 9.2 | 1 | PO: value/backlog order; SM, effectiveness/impediments; Developers: the Increment/plan/quality. |
 | 9.2 | 2 | Product Backlog→Product Goal; Sprint Backlog→Sprint Goal; Increment→Definition of Done. |
 | 9.3 | 1 | Velocity varies; a range (e.g. optimistic/pessimistic velocity) is more honest than false-precise single number. |
-| 9.3 | 2 | Scope change — the moving total-scope line. |
+| 9.3 | 2 | Scope change: the moving total-scope line. |
 | 9.4 | 1 | Cycle time ≈ WIP ÷ throughput; cutting WIP cuts cycle time. |
 | 9.4 | 2 | SAFe, LeSS, Scrum-of-Scrums. |
 | 9.5 | 1 | `EV = %complete × BAC`; `CPI = EV/AC`; valid only against a defined release scope/`BAC`, rebaselined transparently on scope change. |
-| 9.5 | 2 | Points measure relative effort/scope, not cost; costs may lead or lag points — reconcile and explain. |
+| 9.5 | 2 | Points measure relative effort/scope, not cost; costs may lead or lag points; reconcile and explain. |
 | 9.5 | 3 | Finance, as the entity's accounting-policy owner, applied consistently and tested by the external auditor; the controls professional supplies and evidences the inputs and reconciles the progress views, and does not select or change the basis. |
 | 9.6 | 1 | Map Sprints/releases to milestones; report value delivered, run-rate, forecast and AgileEVM status. |
-| 9.6 | 2 | Capped T&M and target cost — they fund capacity/share risk over a flexible scope. |
+| 9.6 | 2 | Capped T&M and target cost: they fund capacity/share risk over a flexible scope. |
 
 ### Domain 10 — Project Scheduling (in depth)
 
 | KA | # | Answer |
 |---|---:|---|
 | 10.1 | 1 | FS, SS, FF, SF; FS. |
-| 10.1 | 2 | Logic makes the schedule dynamic — it recalculates when a duration changes; constraints freeze dates and hide slippage. |
+| 10.1 | 2 | Logic makes the schedule dynamic: it recalculates when a duration changes; constraints freeze dates and hide slippage. |
 | 10.2 | 1 | `TF = LS − ES` (project); `FF = min successor ES − EF` (successor). |
 | 10.2 | 2 | The longest, zero-float chain; any slip on it delays the whole project. |
-| 10.3 | 1 | Crashing — cost for time; fast-tracking — time for risk. |
+| 10.3 | 1 | Crashing: cost for time; fast-tracking: time for risk. |
 | 10.3 | 2 | It ignores duration uncertainty and near-critical paths; Monte Carlo gives a completion distribution/probability. |
 | 10.4 | 1 | Actual progress can move the critical path to a different chain. |
 | 10.4 | 2 | As schedule increments mapped to milestones and reconciled with the CPM view. |
@@ -697,38 +696,38 @@ the end of each Knowledge Area.
 | 11.2 | 1 | PO, goods-receipt note, invoice; paying for goods not ordered, not received, or mispriced. |
 | 11.2 | 2 | PO → commitment; receipt → accrual; matched invoice → actual. |
 | 11.3 | 1 | No one person controls a whole transaction; e.g. separate raise/approve/receive/pay. |
-| 11.3 | 2 | How transactions actually flowed — control breaches, skipped matches, bypassed approvals, bottlenecks. |
+| 11.3 | 2 | How transactions actually flowed; control breaches, skipped matches, bypassed approvals, bottlenecks. |
 
 ### Domain 12 — Risk Management for Project Controls
 
 | KA | # | Answer |
 |---|---:|---|
-| 12.1 | 1 | Risk — uncertain event affecting objectives; uncertainty — lack of knowledge; issue — a risk that has occurred. |
+| 12.1 | 1 | Risk: uncertain event affecting objectives; uncertainty: lack of knowledge; issue: a risk that has occurred. |
 | 12.1 | 2 | The level of contingency and the thresholds for escalation/treatment. |
 | 12.2 | 1 | "Because X, risk that Y, leading to Z"; `EMV = probability × impact`. |
 | 12.2 | 2 | Avoid, transfer, mitigate/reduce, accept. |
-| 12.3 | 1 | From quantified risk — an EMV sum or, better, a Monte Carlo P-level — documented against the register, not a flat percentage. |
+| 12.3 | 1 | From quantified risk (an EMV sum or, better, a Monte Carlo P-level) documented against the register, not a flat percentage. |
 | 12.3 | 2 | Contingency draw-down is normal for register risks; needing management reserve is a re-baselining event for unforeseen scope/risk. |
-| 12.3 | 3 | Date, requester, register ID, evidence of materialisation, amount with its substantiation, and revised remaining exposure; approved by the project manager within a recorded delegated limit and by the sponsor above it — never by the requester. |
+| 12.3 | 3 | Date, requester, register ID, evidence of materialisation, amount with its substantiation, and revised remaining exposure; approved by the project manager within a recorded delegated limit and by the sponsor above it, never by the requester. |
 | 12.3 | 4 | It is closed and an issue is opened for the consequence, in the same transaction, so exposure is not counted twice. |
 
 ### Domain 13 — AI for Project Controls & Project Management
 
 | KA | # | Answer |
 |---|---:|---|
-| 13.1 | 1 | Text unit the model reads/writes; how much text it considers at once; a randomness setting — low for factual work. |
-| 13.1 | 2 | Rules — deterministic check; ML — pattern from data; GenAI — generate/transform language, verified. |
+| 13.1 | 1 | Text unit the model reads/writes; how much text it considers at once; a randomness setting: low for factual work. |
+| 13.1 | 2 | Rules: deterministic check; ML: pattern from data; GenAI: generate/transform language, verified. |
 | 13.2 | 1 | Accuracy, completeness, consistency, timeliness, validity, uniqueness. |
-| 13.2 | 2 | Auditability — an AI-influenced number must be traceable to source when challenged. |
-| 13.2 | 3 | Confidentiality and personal data are separate tests: information about identified people carries its own obligations — basis, purpose, minimisation, notice, impact assessment, transfer — which vary by jurisdiction and are settled with the data-protection function before the data moves. |
+| 13.2 | 2 | Auditability; an AI-influenced number must be traceable to source when challenged. |
+| 13.2 | 3 | Confidentiality and personal data are separate tests: information about identified people carries its own obligations (basis, purpose, minimisation, notice, impact assessment, transfer) which vary by jurisdiction and are settled with the data-protection function before the data moves. |
 | 13.2 | 4 | Data collected for one stated purpose is not automatically available for another; a new purpose is a new decision, and the privacy notice given to the people concerned has to cover it. |
 | 13.3 | 1 | Role/context, task, data, format, constraints. |
 | 13.3 | 2 | No confidential data in ungoverned tools; always verify figures/citations; disclose; keep the audit trail. |
 | 13.4 | 1 | General LLM assistants; document/RAG; spreadsheet/data-analysis AI. |
-| 13.4 | 2 | Over-reaching — e.g. an LLM for precise arithmetic or an ungrounded document question — invites hallucination. |
+| 13.4 | 2 | Over-reaching (e.g. an LLM for precise arithmetic or an ungrounded document question) invites hallucination. |
 | 13.5 | 1 | Input → AI step (accelerate) → verification (assure) → owned output. |
 | 13.5 | 2 | Lower-risk: cost coding/reconciliation; higher-judgement: provisioning/revenue recognition, contingency. |
-| 13.6 | 1 | AI proposes; the professional verifies, decides and remains accountable; a model cannot be accountable — a named person is. |
+| 13.6 | 1 | AI proposes; the professional verifies, decides and remains accountable; a model cannot be accountable; a named person is. |
 | 13.6 | 2 | Source-checked; method/assumption sound; no hallucination; confidentiality; cross-checked; signed off. |
 | 13.7 | 1 | Ad-hoc → piloting → standardised → integrated → governed/optimised. |
 | 13.7 | 2 | A more capable model that is wrong is more convincingly wrong; the stakes of verification rise. |
@@ -739,7 +738,7 @@ the end of each Knowledge Area.
 
 Every sample multiple-choice question in the book, collected in one bank: **321 items** across the thirteen
 domains, in book order, each with its four options, its correct answer, and its topic-and-level tag
-(Conventions, §8). Items are numbered **`PCL-MCQ-DD-NN`** — domain, then position within the domain — and the
+(Conventions, §8). Items are numbered **`PCL-MCQ-DD-NN`** (domain, then position within the domain) and the
 numbering is stable, so an item can be cited in study notes and found again. Each entry also names the
 Knowledge Area item it comes from, where the **rationale** explaining the right answer and each distractor is
 set out in full.
@@ -747,7 +746,7 @@ set out in full.
 **On order and stability.** Items added after an edition was first numbered are **appended at the end of their
 domain's block** rather than inserted at their chapter position, because a bank number that moves is worse
 than a block that is not in strict chapter order: a citation in someone's study notes must still resolve. The
-topic tag on each item — `[4.3.7 · Analysis]` — always shows where in the book it belongs.
+topic tag on each item, `[4.3.7 · Analysis]`, always shows where in the book it belongs.
 
 | Domain | KAs | Sample MCQs | Bank numbers |
 |---|---:|---:|---|
@@ -827,7 +826,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-01-07** `[1.2.6 · Analysis]` A company reports profit of USD 17,000 but net operating cash of USD 3,000 in the same period. The most likely explanation is:
 - A. An accounting error, since profit should equal operating cash.
-- B. Growth in working capital — receivables and inventory rose faster than payables.
+- B. Growth in working capital: receivables and inventory rose faster than payables.
 - C. The company paid a dividend of USD 14,000.
 - D. Depreciation of USD 14,000 was charged.
 
@@ -939,7 +938,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-01-21** `[1.4.5 · Application]` A fixed-price contract has a price of USD 500,000, cost to date USD 300,000 and estimated cost to complete USD 280,000. The loss to recognise now is:
 - A. USD 80,000
-- B. USD 0 — recognise it as costs are incurred.
+- B. USD 0: recognise it as costs are incurred.
 - C. USD 280,000
 - D. USD 200,000
 
@@ -988,7 +987,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-01-27** `[1.5.2 · Analysis]` A labour cost is correctly coded to account 6100 (labour) but to the wrong project. The consequence is:
 - A. The trial balance will not balance.
 - B. Statutory totals are wrong but project cost is right.
-- C. Statutory totals are right but project cost — and any CPI derived from it — is wrong.
+- C. Statutory totals are right but project cost: and any CPI derived from it — is wrong.
 - D. No consequence; account classification is what matters.
 
 **Answer: C.** *(Rationale at MCQ 1.5-B, KA 1.5.)*
@@ -1028,9 +1027,9 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: B.** *(Rationale at MCQ 2.1-A, KA 2.1.)*
 
 **PCL-MCQ-02-02** `[2.1.4 · Application]` A contractor shows one project's contract asset of USD 400,000 netted against another project's contract liability of USD 250,000, presenting USD 150,000. Under IAS 1 this is:
-- A. Correct — both are contract balances.
+- A. Correct: both are contract balances.
 - B. Correct if the same customer.
-- C. Incorrect — offsetting is generally prohibited; each contract is presented separately.
+- C. Incorrect: offsetting is generally prohibited; each contract is presented separately.
 - D. Incorrect only if the projects are in different segments.
 
 **Answer: C.** *(Rationale at MCQ 2.1-B, KA 2.1.)*
@@ -1127,7 +1126,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. USD 2,000,000
 - B. USD 500,000
 - C. USD 3,500,000
-- D. Nil — the loss is spread over the remaining work.
+- D. Nil: the loss is spread over the remaining work.
 
 **Answer: C.** *(Rationale at MCQ 2.2-J, KA 2.2.)*
 
@@ -1165,7 +1164,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-02-19** `[2.4.4 · Application]` Weighted-average qualifying expenditure on a project under construction all year is USD 4,000,000, funded at 8 %. Borrowing costs to capitalise are:
 - A. USD 320,000
-- B. USD 0 — all interest is expensed.
+- B. USD 0: all interest is expensed.
 - C. USD 4,000,000
 - D. USD 32,000
 
@@ -1223,7 +1222,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. The management view and its reconciliation to the statutory view.
 - B. The audit opinion on the statutory accounts.
 - C. Only the statutory disclosures.
-- D. Neither — both belong exclusively to the finance function.
+- D. Neither: both belong exclusively to the finance function.
 
 **Answer: A.** *(Rationale at MCQ 2.5-C, KA 2.5.)*
 
@@ -1278,7 +1277,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: C.** *(Rationale at MCQ 3.2-A, KA 3.2.)*
 
 **PCL-MCQ-03-06** `[3.2.1 · Analysis]` A concept-stage (Class 5) estimate is quoted to a board as a firm budget with no range. The main risk is:
-- A. False precision — a wide-range early figure is treated as a commitment, so later refinement reads as an "overrun."
+- A. False precision: a wide-range early figure is treated as a commitment, so later refinement reads as an
+  "overrun."
 - B. The estimate is too conservative.
 - C. It violates IFRS 15.
 - D. Nothing, provided it was bottom-up.
@@ -1415,7 +1415,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-03-23** `[3.5.3 · Recall]` The peak funding requirement of a project is:
 - A. Its total cost at completion.
-- B. The deepest negative point of the cumulative cash curve — the finance that must be arranged.
+- B. The deepest negative point of the cumulative cash curve: the finance that must be arranged.
 - C. The profit expected in cash at the end of the job.
 - D. The retention withheld by the client over the job.
 
@@ -1432,10 +1432,10 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: C.** *(Rationale at MCQ 4.1-A, KA 4.1.)*
 
 **PCL-MCQ-04-02** `[4.1.1 · Application]` A KPI reads `CPI` = 0.97 against a target of 1.00, amber threshold 0.95, tolerance ±0.05. The correct status is:
-- A. Red — below target.
+- A. Red: below target.
 - B. Cannot be assessed without the schedule.
-- C. Green — exactly on target.
-- D. Within tolerance (green/watch) — 0.97 is above the 0.95 amber threshold.
+- C. Green: exactly on target.
+- D. Within tolerance (green/watch): 0.97 is above the 0.95 amber threshold.
 
 **Answer: D.** *(Rationale at MCQ 4.1-B, KA 4.1.)*
 
@@ -1448,7 +1448,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: A.** *(Rationale at MCQ 4.1-C, KA 4.1.)*
 
 **PCL-MCQ-04-04** `[4.1.1 · Analysis]` A team's reported KPI improves steadily while the underlying performance it is meant to reflect does not. The most likely KPI design failure is:
-- A. The indicator is gameable — it can improve on paper without reality improving.
+- A. The indicator is gameable: it can improve on paper without reality improving.
 - B. Too few indicators are being reported.
 - C. The tolerance is set too tight.
 - D. The indicator is leading rather than lagging.
@@ -1483,7 +1483,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. Report it as a saving and move on.
 - B. Increase the budget.
 - C. Treat it as an error.
-- D. Investigate the cause — a favourable variance can hide skipped scope, deferred cost or quality risk.
+- D. Investigate the cause: a favourable variance can hide skipped scope, deferred cost or quality risk.
 
 **Answer: D.** *(Rationale at MCQ 4.2-D, KA 4.2.)*
 
@@ -1498,7 +1498,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-04-10** `[4.2.1 · Recall]` A variance is classified as **favourable** when:
 - A. Actual differs from budget by any amount.
 - B. The quantity variance is larger than the price variance.
-- C. It improves profit — actual cost below plan, or actual revenue above plan.
+- C. It improves profit: actual cost below plan, or actual revenue above plan.
 - D. It falls within the reporting tolerance.
 
 **Answer: C.** *(Rationale at MCQ 4.2-F, KA 4.2.)*
@@ -1610,7 +1610,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: A.** *(Rationale at MCQ 5.1-C, KA 5.1.)*
 
 **PCL-MCQ-05-04** `[5.1.2 · Analysis]` Site overhead is driven mainly by project *duration*, but is allocated to work packages by *headcount*. The likely consequence is:
-- A. None — the total overhead is unchanged, so the allocation does not matter.
+- A. None: the total overhead is unchanged, so the allocation does not matter.
 - B. The trial balance will no longer balance.
 - C. Labour-heavy packages carry overhead they do not cause, distorting every downstream unit cost.
 - D. The overhead becomes a direct cost.
@@ -1626,7 +1626,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: B.** *(Rationale at MCQ 5.2-A, KA 5.2.)*
 
 **PCL-MCQ-05-06** `[5.2.1 · Analysis]` Why does watching *commitments* improve cost control over watching actuals alone?
-- A. Commitments give lead time — they signal future spend before it is received or paid.
+- A. Commitments give lead time: they signal future spend before it is received or paid.
 - B. Commitments are always smaller.
 - C. Actuals are not recorded in the ledger.
 - D. Commitments replace the need for a forecast.
@@ -1653,7 +1653,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. An approved variation baselined through change control.
 - B. A month-end accrual raised from goods-received records.
 - C. A cost ledger reconciled to the general ledger each period.
-- D. Open commitments left stale — purchase orders never closed after delivery.
+- D. Open commitments left stale: purchase orders never closed after delivery.
 
 **Answer: D.** *(Rationale at MCQ 5.2-E, KA 5.2.)*
 
@@ -1675,7 +1675,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-05-12** `[5.3.1 · Recall]` The cost breakdown structure (CBS) decomposes a project's cost by:
 - A. Scope deliverable and work package.
-- B. Cost element/type — labour, materials, plant, subcontract, overhead.
+- B. Cost element/type: labour, materials, plant, subcontract, overhead.
 - C. Accountable organisational unit.
 - D. Reporting period.
 
@@ -1725,11 +1725,13 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. Normal variance, to be managed by exception.
 - B. An accrual cut-off error.
 - C. Overhead under-absorption.
-- D. Scope creep — uncontrolled change accumulating until variance against the baseline is meaningless.
+- D. Scope creep: uncontrolled change accumulating until variance against the baseline is meaningless.
 
 **Answer: D.** *(Rationale at MCQ 5.4-E, KA 5.4.)*
 
-**PCL-MCQ-05-19** `[5.4.3 · Analysis]` A cost engineer assesses a client-instructed change, prices it, and — being the delegated holder of a value band that covers it — signs the approval themselves. The change is correctly priced and correctly baselined. The principal control weakness is:
+**PCL-MCQ-05-19** `[5.4.3 · Analysis]` A cost engineer assesses a client-instructed change, prices it, and
+(being the delegated holder of a value band that covers it) signs the approval themselves. The change is
+correctly priced and correctly baselined. The principal control weakness is:
 - A. None; the pricing and the baseline update are both correct.
 - B. The assessor and the approver are the same person, so no independent mind ever tested the assessment.
 - C. The change should have been logged as a trend before it was assessed.
@@ -1814,7 +1816,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-06-09** `[6.2.4 · Analysis]` A project reports `CPI` = 0.88 and `SPI` = 1.06. The most likely reading is:
 - A. The project is efficient but under-resourced.
 - B. The project is over cost and behind schedule.
-- C. The project is buying schedule with cost — accelerating at a cost premium.
+- C. The project is buying schedule with cost: accelerating at a cost premium.
 - D. The `EV` must be inflated.
 
 **Answer: C.** *(Rationale at MCQ 6.2-E, KA 6.2.)*
@@ -1893,7 +1895,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-06-19** `[6.4.5 · Analysis]` A programme's `CPI` moves from 0.96 at Month 3 to 0.91 at Month 6, with neither value catastrophic in isolation. The strongest warning signal is:
 - A. The Month 6 `CPI` level of 0.91 on its own.
-- B. Nothing — both values round to about 1.
+- B. Nothing: both values round to about 1.
 - C. The Month 3 `CPI`, because earlier data is always more reliable.
 - D. The deteriorating period-on-period trend, which warrants escalation before a single bad month arrives.
 
@@ -1974,7 +1976,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 7.2-D, KA 7.2.)*
 
 **PCL-MCQ-07-10** `[7.2.4 · Analysis]` A contractor substitutes a **retention bond** for 5 % cash retention. The main commercial effect is:
-- A. The contractor's cash position improves — payments are received in full — at the cost of the bond fee.
+- A. The contractor's cash position improves: payments are received in full, at the cost of the bond fee.
 - B. The client loses all security for defects.
 - C. The contractor's cash position worsens.
 - D. Liquidated damages no longer apply.
@@ -2025,7 +2027,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. An error to be corrected.
 - B. Impossible.
 - C. A breach of IFRS 15.
-- D. Expected — they value the same progress at different values under different rules; the differences are reconciled and meaningful.
+- D. Expected: they value the same progress at different values under different rules; the differences are
+  reconciled and meaningful.
 
 **Answer: D.** *(Rationale at MCQ 7.4-B, KA 7.4.)*
 
@@ -2077,7 +2080,9 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: A.** *(Rationale at MCQ 7.5-D, KA 7.5.)*
 
-**PCL-MCQ-07-23** `[7.1.3 · Analysis]` On a target-cost contract, the site ledger includes the cost of rectifying defective welding — a category the contract excludes from defined cost. The controls professional computes the pain-share from the ledger total. The consequence is that:
+**PCL-MCQ-07-23** `[7.1.3 · Analysis]` On a target-cost contract, the site ledger includes the cost of
+rectifying defective welding: a category the contract excludes from defined cost. The controls professional
+computes the pain-share from the ledger total. The consequence is that:
 - A. Nothing; the arithmetic is correct and the share ratio has been applied properly.
 - B. The pain-share is computed on a base the contract does not recognise, so the client is charged a share of cost the contractor bears alone.
 - C. The contractor's fee floor is breached.
@@ -2096,7 +2101,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-07-25** `[7.2.6 · Analysis]` A client-caused disruption is fully evidenced: contemporaneous records, a critical-path analysis showing the effect, and a quantum built from contract preliminaries rates. The contract makes notice within a stated window a condition precedent, and the notice was given only when the claim was submitted, well after the window closed. The most likely outcome, and the lesson, are:
 - A. The claim succeeds; the strength of the evidence cures the late notice.
 - B. The claim is reduced in proportion to the delay in notifying.
-- C. The entitlement may not survive the window at all, so the claim is never assessed on its merits — notice is served first, substantiation is built afterwards.
+- C. The entitlement may not survive the window at all, so the claim is never assessed on its merits: notice
+  is served first, substantiation is built afterwards.
 - D. The claim converts automatically into a variation.
 
 **Answer: C.** *(Rationale at MCQ 7.2-F, KA 7.2.)*
@@ -2128,16 +2134,16 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: A.** *(Rationale at MCQ 8.1-B, KA 8.1.)*
 
 **PCL-MCQ-08-03** `[8.1.4 · Analysis]` A project is delivered on time and within budget, but the benefit promised in the business case never materialises. The most accurate assessment is:
-- A. Total success — the iron triangle was met.
+- A. Total success: the iron triangle was met.
 - B. A failure of the charter to authorise the project.
 - C. Proof that success criteria are irrelevant once delivery starts.
-- D. Project success without benefit success — the two are distinct registers.
+- D. Project success without benefit success: the two are distinct registers.
 
 **Answer: D.** *(Rationale at MCQ 8.1-C, KA 8.1.)*
 
 **PCL-MCQ-08-04** `[8.1.3 · Application]` A RACI chart for the monthly cost report shows two "A"s against the activity "Approve the report". The correction required is:
 - A. Add a third "A" so approval is shared.
-- B. Reduce it to exactly one Accountable — a single point of accountability per activity.
+- B. Reduce it to exactly one Accountable: a single point of accountability per activity.
 - C. Replace both with "R"s.
 - D. Delete the activity from the chart.
 
@@ -2147,7 +2153,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. Must be 100 % complete before work starts.
 - B. Guarantees 100 % on-time delivery.
 - C. Requires 100 % resource loading.
-- D. Captures 100 % of the scope — no more, no less.
+- D. Captures 100 % of the scope: no more, no less.
 
 **Answer: D.** *(Rationale at MCQ 8.2-A, KA 8.2.)*
 
@@ -2184,7 +2190,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: C.** *(Rationale at MCQ 8.3-A, KA 8.3.)*
 
 **PCL-MCQ-08-10** `[8.3.3 · Analysis]` A package shows a favourable cost variance achieved by cutting quality assurance activities. The controls professional should treat this as:
-- A. A false economy likely to return as rework — keep the quality liability visible.
+- A. A false economy likely to return as rework: keep the quality liability visible.
 - B. A genuine saving to be banked in the forecast.
 - C. Evidence that quality assurance was over-scoped.
 - D. Grounds to raise the profit forecast immediately.
@@ -2193,7 +2199,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-08-11** `[8.3.2 · Application]` During executing, a shortfall in skilled resources will typically show up first in:
 - A. The reported `CPI`.
-- B. Productivity — a leading indicator that precedes the cost indices.
+- B. Productivity: a leading indicator that precedes the cost indices.
 - C. The final account.
 - D. The project charter.
 
@@ -2216,8 +2222,9 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 8.4-B, KA 8.4.)*
 
 **PCL-MCQ-08-14** `[8.4.3 · Application]` A project manager proposes accelerating the works to recover schedule slippage. Before approval, the controls professional should:
-- A. Assess only the schedule benefit — schedule is the priority.
-- B. Assess the acceleration's cost, quality and risk impacts alongside the schedule gain — the constraints trade off.
+- A. Assess only the schedule benefit: schedule is the priority.
+- B. Assess the acceleration's cost, quality and risk impacts alongside the schedule gain: the constraints
+  trade off.
 - C. Decline any assessment, since acceleration is an executing matter.
 - D. Reduce scope automatically to fund the acceleration.
 
@@ -2274,7 +2281,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-08-21** `[8.6.4 · Application]` A programme with well-defined, regulated civils and uncertain, change-prone software is best delivered:
 - A. Fully predictive.
 - B. Fully adaptive.
-- C. Hybrid — predictive governance over the civils, adaptive execution of the software.
+- C. Hybrid: predictive governance over the civils, adaptive execution of the software.
 - D. Without any baseline.
 
 **Answer: C.** *(Rationale at MCQ 8.6-C, KA 8.6.)*
@@ -2297,7 +2304,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-08-24** `[8.4.2 · Analysis]` Work on a client-instructed change begins immediately because the site team judges the delay of waiting to be more costly than the change itself. The change is later approved by the CCB at the assessed value. The correct treatment is:
 - A. None needed; the approval regularised the position.
-- B. Record it as an emergency change at the time, with the reason and the person who authorised it, and have it ratified by the CCB as an emergency — not folded into the ordinary sequence.
+- B. Record it as an emergency change at the time, with the reason and the person who authorised it, and have
+  it ratified by the CCB as an emergency: not folded into the ordinary sequence.
 - C. Approve it retrospectively at the project manager's delegated level, since the CCB agreed the value.
 - D. Treat the early start as scope creep and reverse the work.
 
@@ -2428,7 +2436,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-09-13** `[9.3.4 · Analysis]` On a cumulative flow diagram, the "in progress" band is steadily widening while the "done" band's slope is flat. The best reading is:
 - A. Throughput is rising healthily.
 - B. Scope has been removed from the release.
-- C. Work is being started faster than it is finished — WIP is growing at a bottleneck.
+- C. Work is being started faster than it is finished: WIP is growing at a bottleneck.
 - D. Cycle time is falling.
 
 **Answer: C.** *(Rationale at MCQ 9.3-E, KA 9.3.)*
@@ -2514,8 +2522,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: C.** *(Rationale at MCQ 9.6-A, KA 9.6.)*
 
 **PCL-MCQ-09-24** `[9.6.4 · Analysis]` The claim that "agile has no audit trail" is:
-- A. True — agile avoids documentation.
-- B. False — backlog, Sprint records, Increments and Definition of Done form a contemporaneous trail.
+- A. True: agile avoids documentation.
+- B. False: backlog, Sprint records, Increments and Definition of Done form a contemporaneous trail.
 - C. True for Scrum only.
 - D. Irrelevant to controls.
 
@@ -2532,7 +2540,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-09-26** `[9.6.2 · Recall]` To make agile work legible at a predictive phase gate, the controls professional reports:
 - A. Raw Sprint Backlogs for the board to interpret.
 - B. Only the original fixed baseline.
-- C. Nothing — agile work is exempt from gates.
+- C. Nothing: agile work is exempt from gates.
 - D. Value delivered, run-rate and forecast completion, mapped from Sprints/releases to the gate's milestones.
 
 **Answer: D.** *(Rationale at MCQ 9.6-D, KA 9.6.)*
@@ -2567,7 +2575,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. A mandatory dependency (e.g. concrete curing before loading).
 - B. A discretionary dependency reflecting preferred sequencing.
 - C. An external dependency (e.g. a permit).
-- D. None — all dependencies are equally fixed.
+- D. None: all dependencies are equally fixed.
 
 **Answer: B.** *(Rationale at MCQ 10.1-D, KA 10.1.)*
 
@@ -2581,7 +2589,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-10-06** `[10.2.4 · Analysis]` Activity C has total float 4 but free float 0. This means delaying C:
 - A. Delays the project by 4 days.
-- B. Delays its successor E (uses shared float), but not the project — up to the limit.
+- B. Delays its successor E (uses shared float), but not the project: up to the limit.
 - C. Has no effect at all.
 - D. Is impossible.
 
@@ -2647,14 +2655,15 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. Commit externally at 33 days, manage internally to 30, and hold the 3-day gap as explicit schedule contingency.
 - B. Commit externally at 30 days, since that is the deterministic answer.
 - C. Commit externally at 27 days to motivate the team.
-- D. Ignore the simulation — the critical path is already known.
+- D. Ignore the simulation: the critical path is already known.
 
 **Answer: A.** *(Rationale at MCQ 10.3-E, KA 10.3.)*
 
 **PCL-MCQ-10-15** `[10.4.2 · Analysis]` Why read both the network view and the earned-value view of schedule?
 - A. They always agree.
 - B. Only one is ever correct.
-- C. Each covers the other's blind spot — EVM misses the critical path; the network does not aggregate cost/performance.
+- C. Each covers the other's blind spot: EVM misses the critical path; the network does not aggregate
+  cost/performance.
 - D. To duplicate effort.
 
 **Answer: C.** *(Rationale at MCQ 10.4-A, KA 10.4.)*
@@ -2678,7 +2687,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-10-18** `[10.4.1 · Analysis]` A schedule is updated with several actual finish dates missing and key milestones held on fixed date constraints. The main consequence is:
 - A. The forecast is more reliable because the milestone dates are protected.
 - B. Total float increases across the network.
-- C. The network can no longer recalculate honestly — the forecast completion and current critical path are corrupted.
+- C. The network can no longer recalculate honestly: the forecast completion and current critical path are
+  corrupted.
 - D. The baseline is automatically re-approved.
 
 **Answer: C.** *(Rationale at MCQ 10.4-D, KA 10.4.)*
@@ -2710,7 +2720,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: B.** *(Rationale at MCQ 11.1-C, KA 11.1.)*
 
 **PCL-MCQ-11-04** `[11.1.2 · Recall]` Which O2C control also gates step 1 of the IFRS 15 revenue model?
-- A. Credit control — the collectability assessment.
+- A. Credit control: the collectability assessment.
 - B. Cash application.
 - C. The dunning cadence.
 - D. The three-way match.
@@ -2726,9 +2736,9 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: B.** *(Rationale at MCQ 11.1-E, KA 11.1.)*
 
 **PCL-MCQ-11-06** `[11.2.2 · Application]` A PO is 100 units at USD 50; goods receipt 100 units; invoice 100 units at USD 55. The three-way match:
-- A. Passes — quantities agree.
+- A. Passes: quantities agree.
 - B. Fails on quantity.
-- C. Fails on price — a USD 500 exception is held for investigation before payment.
+- C. Fails on price: a USD 500 exception is held for investigation before payment.
 - D. Is unnecessary.
 
 **Answer: C.** *(Rationale at MCQ 11.2-A, KA 11.2.)*
@@ -2745,7 +2755,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. USD 6,000
 - B. USD 5,700
 - C. USD 300
-- D. Nil — the whole invoice is rejected permanently.
+- D. Nil: the whole invoice is rejected permanently.
 
 **Answer: B.** *(Rationale at MCQ 11.2-C, KA 11.2.)*
 
@@ -2766,7 +2776,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 11.2-E, KA 11.2.)*
 
 **PCL-MCQ-11-11** `[11.2.3 · Application]` GRNI of **USD 180,000** was accrued at month-end. Next month, matched invoices arrive covering **USD 150,000** of it. The correct treatment of the remaining USD 30,000 is to:
-- A. Investigate it — reverse it if it is an over-accrual, let it stand if the supplier is simply slow to invoice.
+- A. Investigate it: reverse it if it is an over-accrual, let it stand if the supplier is simply slow to
+  invoice.
 - B. Release the full USD 180,000 accrual, since invoices have started arriving.
 - C. Reclassify it as a commitment.
 - D. Write it off to a cost variance.
@@ -2806,7 +2817,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: A.** *(Rationale at MCQ 11.3-D, KA 11.3.)*
 
 **PCL-MCQ-11-16** `[11.A.4 · Analysis]` A duplicate-payment monitor fires 800 alerts a month, of which 16 are confirmed duplicates (2 % precision), and the team has begun skimming the queue. The best response is to:
-- A. Switch the monitor off — 2 % precision proves the risk is not real.
+- A. Switch the monitor off: 2 % precision proves the risk is not real.
 - B. Widen the matching criteria so no duplicate can possibly be missed.
 - C. Treat each threshold as a tolerance decision: measure the false-positive rate, retune the detection logic, and give every monitor a named owner and response path.
 - D. Instruct the team to work all 800 alerts harder each month.
@@ -2840,18 +2851,19 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 12.1-C, KA 12.1.)*
 
 **PCL-MCQ-12-04** `[12.1.2 · Application]` A team updates its risk register once a quarter as a standalone exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 principle this practice most clearly departs from is:
-- A. Integration — risk management belongs inside decision-making, feeding the estimate, schedule and forecast.
-- B. Proportionality — the effort exceeds the stakes.
-- C. None — a quarterly cadence is a matter of judgement, not of principle.
-- D. Appetite — the tolerance thresholds are set too low.
+- A. Integration: risk management belongs inside decision-making, feeding the estimate, schedule and forecast.
+- B. Proportionality: the effort exceeds the stakes.
+- C. None: a quarterly cadence is a matter of judgement, not of principle.
+- D. Appetite: the tolerance thresholds are set too low.
 
 **Answer: A.** *(Rationale at MCQ 12.1-D, KA 12.1.)*
 
 **PCL-MCQ-12-05** `[12.1.3 · Application]` The board's appetite statement caps any single project's P80 risk exposure at **1.5 %** of group profit of **USD 60,000,000**. A tender's quantified exposure comes out at **P80 = USD 1,020,000**. The correct conclusion is:
-- A. Within appetite — USD 1,020,000 is far below the USD 60,000,000 profit.
-- B. Above appetite — the ceiling is `1.5 % × 60,000,000 = USD 900,000`, so risks must be treated or transferred to bring the re-run P80 inside it before the bid proceeds.
-- C. Within appetite — the register's EMV sum, not the P80, is tested against the ceiling.
-- D. Indeterminate — appetite statements are qualitative and cannot be tested numerically.
+- A. Within appetite: USD 1,020,000 is far below the USD 60,000,000 profit.
+- B. Above appetite: the ceiling is `1.5 % × 60,000,000 = USD 900,000`, so risks must be treated or
+  transferred to bring the re-run P80 inside it before the bid proceeds.
+- C. Within appetite: the register's EMV sum, not the P80, is tested against the ceiling.
+- D. Indeterminate: appetite statements are qualitative and cannot be tested numerically.
 
 **Answer: B.** *(Rationale at MCQ 12.1-E, KA 12.1.)*
 
@@ -2880,14 +2892,15 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 12.2-C, KA 12.2.)*
 
 **PCL-MCQ-12-09** `[12.2.4 · Application]` A risk has a 40 % probability and a USD 250,000 impact. A proposed mitigation costs USD 35,000 and would cut the probability to 20 %. On EMV grounds the mitigation is:
-- A. Worthwhile — the mitigate path costs USD 85,000 against USD 100,000 for accepting.
-- B. Not worthwhile — it costs USD 35,000 with no return.
-- C. Not worthwhile — the mitigate path costs USD 135,000.
+- A. Worthwhile: the mitigate path costs USD 85,000 against USD 100,000 for accepting.
+- B. Not worthwhile: it costs USD 35,000 with no return.
+- C. Not worthwhile: the mitigate path costs USD 135,000.
 - D. Worthwhile only if the probability falls to zero.
 
 **Answer: A.** *(Rationale at MCQ 12.2-D, KA 12.2.)*
 
-**PCL-MCQ-12-10** `[12.2.3 · Analysis]` A register holds two threats — 30 % × USD 200,000 and 20 % × USD 150,000 — and one opportunity: a 40 % chance of a USD 50,000 saving. The net EMV basis for contingency is:
+**PCL-MCQ-12-10** `[12.2.3 · Analysis]` A register holds two threats (30 % × USD 200,000 and 20 % × USD
+150,000) and one opportunity: a 40 % chance of a USD 50,000 saving. The net EMV basis for contingency is:
 - A. USD 90,000
 - B. USD 110,000
 - C. USD 400,000
@@ -2895,11 +2908,13 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: D.** *(Rationale at MCQ 12.2-E, KA 12.2.)*
 
-**PCL-MCQ-12-11** `[12.2.3 · Analysis]` Two register risks — an earthworks delay and a paving-window loss — share one driver: the same wet season. When the Monte Carlo model correlates them instead of treating them as independent, the effect on the results is:
+**PCL-MCQ-12-11** `[12.2.3 · Analysis]` Two register risks (an earthworks delay and a paving-window loss)
+share one driver: the same wet season. When the Monte Carlo model correlates them instead of treating them as
+independent, the effect on the results is:
 - A. The EMV sum rises and the P80 falls.
 - B. Both the EMV sum and the P80 are unchanged.
 - C. The EMV sum falls, because one risk now absorbs the other.
-- D. The EMV sum is unchanged, but the P80 rises — coinciding risks fatten the upper tail.
+- D. The EMV sum is unchanged, but the P80 rises: coinciding risks fatten the upper tail.
 
 **Answer: D.** *(Rationale at MCQ 12.2-F, KA 12.2.)*
 
@@ -2920,10 +2935,10 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: C.** *(Rationale at MCQ 12.3-B, KA 12.3.)*
 
 **PCL-MCQ-12-14** `[12.3.3 · Application]` Contingency was set at a Monte Carlo P80 of USD 300,000. Materialised risks have drawn USD 80,000 and then USD 60,000, and a re-run of the register puts the remaining exposure at a P80 of USD 175,000. The position to report is:
-- A. Remaining contingency USD 160,000 — a USD 15,000 shortfall against remaining exposure, to escalate.
-- B. Remaining contingency USD 160,000 — adequate, since the original USD 300,000 exceeded USD 175,000.
-- C. Remaining contingency USD 220,000 — comfortable headroom.
-- D. No reporting needed — drawing down contingency is normal.
+- A. Remaining contingency USD 160,000: a USD 15,000 shortfall against remaining exposure, to escalate.
+- B. Remaining contingency USD 160,000: adequate, since the original USD 300,000 exceeded USD 175,000.
+- C. Remaining contingency USD 220,000: comfortable headroom.
+- D. No reporting needed: drawing down contingency is normal.
 
 **Answer: A.** *(Rationale at MCQ 12.3-C, KA 12.3.)*
 
@@ -2936,18 +2951,19 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 12.3-D, KA 12.3.)*
 
 **PCL-MCQ-12-16** `[12.3.1 · Application]` A quantified register has an EMV sum of **USD 220,000**; a Monte Carlo run of the same register returns a **P80 of USD 310,000**. The organisation's appetite requires contingency at the P80. The contingency to set is:
-- A. USD 310,000 — the P80, funding an 80 %-confidence outcome rather than the average.
-- B. USD 220,000 — the EMV sum is the analysed figure.
-- C. USD 90,000 — the difference between the two.
-- D. USD 530,000 — the EMV sum plus the P80.
+- A. USD 310,000: the P80, funding an 80 %-confidence outcome rather than the average.
+- B. USD 220,000: the EMV sum is the analysed figure.
+- C. USD 90,000: the difference between the two.
+- D. USD 530,000: the EMV sum plus the P80.
 
 **Answer: A.** *(Rationale at MCQ 12.3-E, KA 12.3.)*
 
 **PCL-MCQ-12-17** `[12.3.3 · Application]` Contingency was set at a Monte Carlo **P80 of USD 400,000**. Materialised risks have drawn **USD 120,000** and then **USD 90,000**; a re-run of the register puts the remaining exposure at a **P80 of USD 240,000**. The correct governance action is to:
-- A. Report adequate cover — the original USD 400,000 exceeds the USD 240,000 exposure.
+- A. Report adequate cover: the original USD 400,000 exceeds the USD 240,000 exposure.
 - B. Report remaining contingency of USD 280,000 and comfortable headroom.
-- C. Report remaining contingency of USD 190,000 against USD 240,000 of remaining exposure — a USD 50,000 shortfall — and escalate towards the management reserve as a re-baselining event.
-- D. Say nothing — drawing down contingency is normal and needs no report.
+- C. Report remaining contingency of USD 190,000 against USD 240,000 of remaining exposure: a USD 50,000
+  shortfall, and escalate towards the management reserve as a re-baselining event.
+- D. Say nothing: drawing down contingency is normal and needs no report.
 
 **Answer: C.** *(Rationale at MCQ 12.3-F, KA 12.3.)*
 
@@ -2980,13 +2996,14 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-13-04** `[13.1.3 · Recall]` For a factual controls task such as extracting figures from a document, the temperature setting should be:
 - A. High, to maximise creativity.
 - B. Set equal to the context-window size.
-- C. Irrelevant — temperature only affects cost.
+- C. Irrelevant: temperature only affects cost.
 - D. Low, to reduce randomness in the output.
 
 **Answer: D.** *(Rationale at MCQ 13.1-D, KA 13.1.)*
 
 **PCL-MCQ-13-05** `[13.1.5 · Analysis]` An LLM returns a fluent, confident multi-step cost calculation. The professional must still recompute it because:
-- A. An LLM generates plausible text, not verified text — plausible ≠ correct, especially in multi-step calculation.
+- A. An LLM generates plausible text, not verified text: plausible ≠ correct, especially in multi-step
+  calculation.
 - B. LLMs always round figures incorrectly.
 - C. Recomputation is only needed when temperature is high.
 - D. The context window truncates all calculations.
@@ -2996,21 +3013,23 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-13-06** `[13.1.2 · Application]` A controls team wants to group thousands of anomalous cost postings into families of similar cases, with no predefined categories or labelled examples. The best-fit approach is:
 - A. Rules/automation.
 - B. Supervised ML.
-- C. Unsupervised ML — finding structure in unlabelled data.
+- C. Unsupervised ML: finding structure in unlabelled data.
 - D. Reinforcement learning.
 
 **Answer: C.** *(Rationale at MCQ 13.1-F, KA 13.1.)*
 
 **PCL-MCQ-13-07** `[13.1.4 · Application]` A commercial team wants an assistant that answers questions from a contract set that changes weekly, with each answer citing its source clause. Between fine-tuning and RAG, the better fit is:
 - A. Fine-tuning, because it permanently teaches the model the contracts.
-- B. RAG — the current documents are retrieved and supplied at inference, so answers are grounded in this week's contract set and cited to source.
+- B. RAG: the current documents are retrieved and supplied at inference, so answers are grounded in this
+  week's contract set and cited to source.
 - C. Fine-tuning, because it removes hallucination.
-- D. Neither — LLMs cannot work over documents.
+- D. Neither: LLMs cannot work over documents.
 
 **Answer: B.** *(Rationale at MCQ 13.1-G, KA 13.1.)*
 
 **PCL-MCQ-13-08** `[13.1.3 · Recall]` The context window of an LLM is:
-- A. The amount of text (in tokens) the model can consider at once — everything it "knows" for a task must fit in it or be retrieved into it.
+- A. The amount of text (in tokens) the model can consider at once: everything it "knows" for a task must fit
+  in it or be retrieved into it.
 - B. The setting that controls randomness in the output.
 - C. The period after which a model's training data goes stale.
 - D. The screen area of the assistant's interface.
@@ -3020,14 +3039,14 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **PCL-MCQ-13-09** `[13.2.1 · Analysis]` An ML cost-forecast model is trained on historically mis-coded project cost. The most likely outcome is:
 - A. The model corrects the mis-coding.
 - B. Better accuracy.
-- C. No effect — models are robust to bad data.
+- C. No effect: models are robust to bad data.
 - D. The model learns and reproduces the mis-coding, giving misleading forecasts.
 
 **Answer: D.** *(Rationale at MCQ 13.2-A, KA 13.2.)*
 
 **PCL-MCQ-13-10** `[13.2.5 · Recall]` Before using an external AI tool on project data, the professional must ensure the data is:
 - A. As large as possible.
-- B. Fit (quality) and safe (confidentiality — no sensitive data in ungoverned tools).
+- B. Fit (quality) and safe (confidentiality: no sensitive data in ungoverned tools).
 - C. Unstructured.
 - D. Public.
 
@@ -3041,7 +3060,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: C.** *(Rationale at MCQ 13.2-C, KA 13.2.)*
 
-**PCL-MCQ-13-12** `[13.2.3 · Recall]` Contracts, correspondence and free-form reports — unstructured data — are primarily the domain of:
+**PCL-MCQ-13-12** `[13.2.3 · Recall]` Contracts, correspondence and free-form reports, unstructured data, are
+primarily the domain of:
 - A. GenAI / RAG.
 - B. Supervised ML over tabular features.
 - C. Rules-based validation only.
@@ -3101,12 +3121,13 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. Iterative refinement.
 - B. Desired-format specification.
 - C. Temperature control.
-- D. Confidentiality — sensitive data must never enter ungoverned tools.
+- D. Confidentiality: sensitive data must never enter ungoverned tools.
 
 **Answer: D.** *(Rationale at MCQ 13.3-D, KA 13.3.)*
 
 **PCL-MCQ-13-20** `[13.3.1 · Application]` A commercial manager must extract retention % and the LD rate from a subcontract for the contract register. Which prompt best follows the domain's prompt discipline?
-- A. "Acting as a commercial manager, extract from the attached subcontract the retention % and LD rate as a two-row table with the clause reference for each; if a term is absent, return 'not found' — do not infer."
+- A. "Acting as a commercial manager, extract from the attached subcontract the retention % and LD rate as a
+  two-row table with the clause reference for each; if a term is absent, return 'not found': do not infer."
 - B. "Tell me everything important about this contract."
 - C. "Extract the retention % and LD rate; if either is missing, estimate a typical market value."
 - D. "Be as creative as possible and summarise the contract's vibe."
@@ -3122,7 +3143,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 13.3-F, KA 13.3.)*
 
 **PCL-MCQ-13-22** `[13.3.3 · Application]` A minutes-to-actions extraction returns an action table in which one action carries an owner's name that appears nowhere in the minutes. The correct handling is to:
-- A. Keep the name — the model probably knows the team.
+- A. Keep the name: the model probably knows the team.
 - B. Circulate the list immediately to save time.
 - C. Replace it with 'not stated' and resolve the owner with the meeting chair before circulating.
 - D. Delete the action from the list.
@@ -3146,7 +3167,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: D.** *(Rationale at MCQ 13.4-B, KA 13.4.)*
 
 **PCL-MCQ-13-25** `[13.4.4 · Analysis]` Asking a general LLM assistant to perform precise multi-step arithmetic over a large cost table, rather than using spreadsheet/data-analysis AI, is best described as:
-- A. Good practice — one tool for everything.
+- A. Good practice: one tool for everything.
 - B. Over-reaching: a category-to-task mismatch that invites plausible but wrong computation.
 - C. A governance requirement.
 - D. RAG grounding.
@@ -3170,7 +3191,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: B.** *(Rationale at MCQ 13.4-E, KA 13.4.)*
 
 **PCL-MCQ-13-28** `[13.4.2b · Application]` A director's natural-language query to the BI assistant returns a "% complete" figure that differs from the controlled monthly report. The category-specific failure most likely at work is:
-- A. Metric-definition drift — the query was answered from a subtly different definition than the report's.
+- A. Metric-definition drift: the query was answered from a subtly different definition than the report's.
 - B. A missing goods-receipt note.
 - C. Too low a temperature setting.
 - D. An expired tool licence.
@@ -3178,10 +3199,10 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: A.** *(Rationale at MCQ 13.4-F, KA 13.4.)*
 
 **PCL-MCQ-13-29** `[13.A.6 · Application]` A controls team assembles a **monthly** cost pack for the board. Of the three integration patterns, the proportionate choice is:
-- A. Manual export/import — spreadsheets and email are simplest.
-- B. API integration — the freshest data is always best.
-- C. No integration — retype the figures each month.
-- D. Batch ETL/file transfer — a scheduled, auditable extract matches the monthly decision cadence.
+- A. Manual export/import: spreadsheets and email are simplest.
+- B. API integration: the freshest data is always best.
+- C. No integration: retype the figures each month.
+- D. Batch ETL/file transfer: a scheduled, auditable extract matches the monthly decision cadence.
 
 **Answer: D.** *(Rationale at MCQ 13.4-G, KA 13.4.)*
 
@@ -3211,7 +3232,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-13-33** `[13.5.7 · Analysis]` In an AI claims-exposure sweep across 60 subcontracts, the model's distinctive contribution is:
 - A. Deciding entitlement on each claim.
-- B. Coverage — it reads everything, surfacing candidates for the professional's judgement.
+- B. Coverage: it reads everything, surfacing candidates for the professional's judgement.
 - C. Replacing legal review of material exposures.
 - D. Setting the portfolio contingency.
 
@@ -3242,7 +3263,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: B.** *(Rationale at MCQ 13.5-G, KA 13.5.)*
 
 **PCL-MCQ-13-37** `[13.5.5 · Application]` An AI logic-check on a contractor schedule flags dangling activities and a hard constraint. After the planner re-logics the dangles and removes the constraint, the recalculated finish slips 6 days. The best reading is:
-- A. The constraint had been hiding a genuine slip — the repaired schedule is the honest one to take forward.
+- A. The constraint had been hiding a genuine slip: the repaired schedule is the honest one to take forward.
 - B. The repair introduced the slip, so the constrained version should be restored to protect the date.
 - C. The AI fabricated the defects, since the original schedule showed the earlier date.
 - D. Dangling activities are cosmetic and the exercise was unnecessary.
@@ -3273,7 +3294,8 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: A.** *(Rationale at MCQ 13.6-C, KA 13.6.)*
 
-**PCL-MCQ-13-41** `[13.6.5 · Application]` An AI-drafted forecast passes every line of the assurance checklist except "cross-checked" — it is inconsistent with the schedule's critical path. The correct action is to:
+**PCL-MCQ-13-41** `[13.6.5 · Application]` An AI-drafted forecast passes every line of the assurance checklist
+except "cross-checked". It is inconsistent with the schedule's critical path. The correct action is to:
 - A. Release it with a footnote noting the inconsistency.
 - B. Withhold it until the failure is fixed.
 - C. Release it because most lines passed.
@@ -3290,24 +3312,27 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 **Answer: C.** *(Rationale at MCQ 13.6-E, KA 13.6.)*
 
 **PCL-MCQ-13-43** `[13.6.5 · Application]` An AI extraction reports an LD rate citing clause 14.3. The reviewer opens clause 14.3: the clause exists, but states a different rate. Applying the assurance checklist, the correct conclusion is:
-- A. The output passes — the citation is real, so the grounding line is satisfied.
+- A. The output passes: the citation is real, so the grounding line is satisfied.
 - B. Release it with a footnote recording the difference.
-- C. Skip the checklist — legal review will catch it later.
-- D. The source-check line fails — the value does not match the cited clause — so the output is withheld until fixed.
+- C. Skip the checklist: legal review will catch it later.
+- D. The source-check line fails: the value does not match the cited clause, so the output is withheld until
+  fixed.
 
 **Answer: D.** *(Rationale at MCQ 13.6-F, KA 13.6.)*
 
 **PCL-MCQ-13-44** `[13.A.1 · Application]` A controls function deploys an agentic system that retrieves the month-end extract, computes the variances, drafts commentary and assembles the exception pack. The verification discipline should:
-- A. Move from per-output to per-workflow — assure the chain's design and insert checkpoints where consequential intermediate outputs are inspected before the chain proceeds.
+- A. Move from per-output to per-workflow: assure the chain's design and insert checkpoints where
+  consequential intermediate outputs are inspected before the chain proceeds.
 - B. Apply only to the final pack, since that is all anyone reads.
-- C. Be dropped — an agent that checks its own work needs no reviewer.
+- C. Be dropped: an agent that checks its own work needs no reviewer.
 - D. Be replaced by an annual audit of the vendor.
 
 **Answer: A.** *(Rationale at MCQ 13.6-G, KA 13.6.)*
 
 **PCL-MCQ-13-45** `[13.6.4 · Application]` A one-off, high-stakes external disclosure would take longer to verify line-by-line than to draft manually, and the drafting data is highly confidential. Under the "when not to use AI" tests, the professional should:
-- A. Use AI anyway — it is the modern approach.
-- B. Not use AI for this task — the verification burden negates the time saving and the stakes demand certainty the model cannot give.
+- A. Use AI anyway: it is the modern approach.
+- B. Not use AI for this task: the verification burden negates the time saving and the stakes demand certainty
+  the model cannot give.
 - C. Use AI and skip verification to preserve the saving.
 - D. Use a public tool, since the task is a one-off.
 
@@ -3323,7 +3348,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **PCL-MCQ-13-47** `[13.7.5 · Analysis]` As AI capability advances, the need for verification and governance:
 - A. Disappears.
-- B. Increases — a more capable model that is wrong is more convincingly wrong.
+- B. Increases: a more capable model that is wrong is more convincingly wrong.
 - C. Stays irrelevant.
 - D. Is replaced by the model.
 
@@ -3341,14 +3366,15 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - A. Being replaced by the model.
 - B. Needing less domain knowledge.
 - C. Producing every number manually to be safe.
-- D. Directing and assuring AI-assisted production — a higher-judgement role.
+- D. Directing and assuring AI-assisted production: a higher-judgement role.
 
 **Answer: D.** *(Rationale at MCQ 13.7-D, KA 13.7.)*
 
 **PCL-MCQ-13-50** `[13.A.5 · Application]` Reviewing one auto-coded line costs **USD 2**; an uncaught miscode costs **USD 400** downstream. Measured precision is **99.0 %**. Pricing the review step:
-- A. Per-item review still pays — expected uncaught-error cost is `1 % × 400 = USD 4` per line, above the USD 2 review cost; break-even sits at a precision of 99.5 %.
-- B. Per-item review no longer pays — a 1 % error rate is negligible.
-- C. Per-item review no longer pays — 99.0 % precision exceeds the USD 2 review cost.
+- A. Per-item review still pays: expected uncaught-error cost is `1 % × 400 = USD 4` per line, above the USD 2
+  review cost; break-even sits at a precision of 99.5 %.
+- B. Per-item review no longer pays: a 1 % error rate is negligible.
+- C. Per-item review no longer pays: 99.0 % precision exceeds the USD 2 review cost.
 - D. Per-item review always pays, whatever the precision.
 
 **Answer: A.** *(Rationale at MCQ 13.7-E, KA 13.7.)*
@@ -3374,19 +3400,19 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 ## Appendix G — The integrated capstone: one project, thirteen domains
 
 The domains teach the machinery one discipline at a time; a real month-end exercises all of it at once. This
-capstone follows a single project — the **master project** of Domain 6, with its baseline first phased in
-Domain 3 (KA 3.3.3): `BAC` **USD 1,000,000** over **ten months** — through one full reporting cycle at the
-end of **Month 5**, extended here with the commercial, revenue, risk and AI facts the other domains supply.
-Every figure either comes from a domain worked example or is derived by that domain's method, and every step
-is cross-referenced by topic number; nothing is introduced that the domains have not already taught. Work the
-eight stations in order — each is what the professional actually does, in the order a close actually runs.
+capstone follows a single project: the **master project** of Domain 6, with its baseline first phased in
+Domain 3 (KA 3.3.3): `BAC` **USD 1,000,000** over **ten months**, through one full reporting cycle at the end
+of **Month 5**, extended here with the commercial, revenue, risk and AI facts the other domains supply. Every
+figure either comes from a domain worked example or is derived by that domain's method, and every step is
+cross-referenced by topic number; nothing is introduced that the domains have not already taught. Work the
+eight stations in order. Each is what the professional actually does, in the order a close actually runs.
 
 ### Station 1 — Budget and baseline (Domain 3)
 
 **What the professional does.** Assemble the budget bottom-up and make it a control. The control-account
-budgets are summed; the **contingency reserve** — funding the identified risks of Station 6 — sits **inside**
-the baseline; the **management reserve** sits **outside** it, management-controlled (3.1.4; 12.3.2). The
-`BAC` is then phased across the ten-month schedule to the S-curve of 3.3.3, which *is* the Planned Value.
+budgets are summed; the **contingency reserve** (funding the identified risks of Station 6) sits **inside**
+the baseline; the **management reserve** sits **outside** it, management-controlled (3.1.4; 12.3.2). The `BAC`
+is then phased across the ten-month schedule to the S-curve of 3.3.3, which *is* the Planned Value.
 
 ```
 BAC           = Σ control-account budgets + contingency = 915,000 + 85,000 = 1,000,000     (3.1.4)
@@ -3394,8 +3420,8 @@ Total budget  = BAC + management reserve = 1,000,000 + 50,000 = 1,050,000       
 PV at Month 5 = 40 + 70 + 110 + 140 + 160 = 520 (USD 000) → PV = 520,000                   (3.3.3)
 ```
 
-The Month-5 `PV` of USD 520,000 is read straight off the 3.3.3 phasing table — the same S-curve on which
-Domain 6 later draws `EV` and `AC` (6.1.3), and whose cash consequences Domain 3 forecasts separately (3.5).
+The Month-5 `PV` of USD 520,000 is read straight off the 3.3.3 phasing table: the same S-curve on which Domain
+6 later draws `EV` and `AC` (6.1.3), and whose cash consequences Domain 3 forecasts separately (3.5).
 
 ### Station 2 — The cost states (Domain 5)
 
@@ -3412,14 +3438,14 @@ Open commitment    = commitments − actuals − accruals
 Forecast committed = 530,000 + 110,000 + estimate for uncommitted scope          (5.2.1)
 ```
 
-This is the `AC` = 530,000 that Domain 6 uses (6.1.1) — the accrual discipline is what makes it true. An
+This is the `AC` = 530,000 that Domain 6 uses (6.1.1). The accrual discipline is what makes it true. An
 invoice-only view would report 410,000 and flatter the cost index to `480,000 / 410,000 = 1.17`; the
 disciplined figure tells the real story at Station 3.
 
 ### Station 3 — Earned value and the forecast (Domain 6)
 
-**What the professional does.** Measure `EV` from physical progress under the fixed earning rules (6.1.2) —
-at Month 5, `EV` = **480,000** — then compute, exactly as Domain 6 publishes them:
+**What the professional does.** Measure `EV` from physical progress under the fixed earning rules (6.1.2) (at
+Month 5, `EV` = **480,000**) then compute, exactly as Domain 6 publishes them:
 
 ```
 CV  = EV − AC = 480,000 − 530,000 = (50,000)   over cost                          (6.2.1)
@@ -3433,14 +3459,14 @@ TCPI (to BAC) = 520,000 / 470,000 = 1.11;  VAC = 1,000,000 − 1,104,167 = (104,
 
 The cost inefficiency is systemic (a stable, sliding `CPI` trend), so method (b) is the defended forecast
 (6.3.3): **`EAC` = USD 1,104,167**. The `TCPI` of 1.11 against a delivered 0.91 says the `BAC` is no longer
-credible (6.2.3) — the number Stations 5 and 7 must now carry, not hide.
+credible (6.2.3): the number Stations 5 and 7 must now carry, not hide.
 
 ### Station 4 — The commercial position (Domain 7)
 
 **What the professional does.** Run the payment cycle. The client contract is **remeasured** (7.1.2) at a
 contract price of **USD 1,250,000**, with **5 % retention** and a **10 % mobilisation advance** recovered
 pro-rata on each certificate (7.4.3). At Month 5 the client's QS certifies gross work done of **USD 460,000**
-(7.4.2 — the certified measure, not the application, drives cash).
+(7.4.2: the certified measure, not the application, drives cash).
 
 ```
 Retention        = 5 % × 460,000 = 23,000                                        (7.4.3)
@@ -3449,7 +3475,7 @@ Net certified    = 460,000 − 23,000 − 46,000 = 391,000                      
 EV − certified gross = 480,000 − 460,000 = 20,000                                (7.4.4)
 ```
 
-The USD 20,000 by which `EV` runs ahead of certification is work performed but not yet certified — unbilled
+The USD 20,000 by which `EV` runs ahead of certification is work performed but not yet certified: unbilled
 performance pointing to a **contract asset** (7.5.2), measured at accounting values in Station 5. `EV` (at
 budget) and the valuation (at contract rates) are different measures of the same progress, so the gap is read
 through the three-way reconciliation of 7.4.4, never forced to zero.
@@ -3457,7 +3483,7 @@ through the three-way reconciliation of 7.4.4, never forced to zero.
 ### Station 5 — Revenue recognised (Domain 2)
 
 **What the professional does.** Hand finance a defensible input-method ratio. Revenue is recognised over time
-by **cost-to-cost** (2.2.6), and the denominator is the controls forecast — the Station 3 `EAC` — so the
+by **cost-to-cost** (2.2.6), and the denominator is the controls forecast, the Station 3 `EAC`, so the
 professional's forecast flows straight into reported revenue.
 
 ```
@@ -3468,19 +3494,18 @@ Margin to date = 600,000 − 530,000 = 70,000 (11.7 %)
 Margin at completion = 1,250,000 − 1,104,167 = 145,833 (11.7 %)
 ```
 
-The margin check ties: cost-to-cost makes the to-date margin equal the forecast completion margin — if they
+The margin check ties: cost-to-cost makes the to-date margin equal the forecast completion margin, if they
 diverge, the ratio and the `EAC` have come apart. The contract remains profitable, so no onerous-contract
-provision arises (2.2.6 loss rule; 1.4.5); but the USD 140,000 contract asset — performance ahead of billing —
+provision arises (2.2.6 loss rule; 1.4.5); but the USD 140,000 contract asset, performance ahead of billing,
 is aged and explained, not just reported (7.5.2).
 
 ### Station 6 — Risk and the contingency test (Domain 12)
 
-**What the professional does.** Re-run the register, not the opening story. Contingency was set at sanction
-at the Monte Carlo **P80 of USD 85,000** (12.3.1) — the Station 1 figure inside the `BAC` — and materialised
-risks have drawn **USD 25,000** through change control (5.4). The Month-5 re-run prices the remaining
-register at an **EMV of USD 45,000** (12.2.3) and a **P80 of USD 70,000** — the P80 sits above the EMV
-because the register's risks share drivers, and correlation moves the tail, not the mean (12.3.1;
-Exercise 12.5).
+**What the professional does.** Re-run the register, not the opening story. Contingency was set at sanction at
+the Monte Carlo **P80 of USD 85,000** (12.3.1) (the Station 1 figure inside the `BAC`) and materialised risks
+have drawn **USD 25,000** through change control (5.4). The Month-5 re-run prices the remaining register at an
+**EMV of USD 45,000** (12.2.3) and a **P80 of USD 70,000**: the P80 sits above the EMV because the register's
+risks share drivers, and correlation moves the tail, not the mean (12.3.1; Exercise 12.5).
 
 ```
 Remaining contingency = 85,000 − 25,000 = 60,000                                 (12.3.3)
@@ -3505,14 +3530,14 @@ Contingency line: remaining 60,000 vs remaining exposure 70,000 — escalation f
 ```
 
 The narrative is decision-ready, not merely descriptive (4.3.3): status, cause, forecast, action. The gate
-implication (8.4; Advanced 8.A.3) follows: the next gate cannot proceed on the `BAC` — the pack presents the
-`EAC` with its method and assumption, the `TCPI` reality-check on any recovery claim, and the choice the
-board actually owns: fund a specific recovery, or re-baseline through the management reserve.
+implication (8.4; Advanced 8.A.3) follows: the next gate cannot proceed on the `BAC`; the pack presents the
+`EAC` with its method and assumption, the `TCPI` reality-check on any recovery claim, and the choice the board
+actually owns: fund a specific recovery, or re-baseline through the management reserve.
 
 ### Station 8 — The AI-assisted close (Domain 13)
 
-**What the professional does.** Run the same cycle faster — and sign it. Each station above used a governed
-AI step, and at each one a named professional disposed of what the AI proposed (13.6.1):
+**What the professional does.** Run the same cycle faster, and sign it. Each station above used a governed AI
+step, and at each one a named professional disposed of what the AI proposed (13.6.1):
 
 | Station | Governed AI step | The professional signed |
 |---|---|---|
@@ -3524,7 +3549,8 @@ AI step, and at each one a named professional disposed of what the AI proposed (
 | 7 | Drafted exception narratives and dashboard assembly (13.5.8) | Accuracy, framing and the final sign-off |
 
 Every step ran inside the guardrails: verified against source before use (13.6.5's checklist), with the audit
-trail of what the AI produced, who approved it and what changed (13.6.2). **AI proposes; the professional verifies, decides and remains accountable** — at every station, without exception.
+trail of what the AI produced, who approved it and what changed (13.6.2). **AI proposes; the professional
+verifies, decides and remains accountable**, at every station, without exception.
 
 ### The PCI control cycle
 
@@ -3534,23 +3560,23 @@ shelf of techniques. A single month of one project generated every number above,
 commitments and accruals (Domains 1, 5, 11), earned value measured it at budget (Domain 6) against a schedule
 that sequenced it (Domains 8, 10), the valuation billed it at contract rates (Domain 7), IFRS 15 recognised it
 as revenue (Domain 2), the register funded its uncertainty (Domain 12), the report turned it into a decision
-(Domain 4), and AI accelerated every step under governance (Domain 13). The figures differ by design — `EV`
-480,000, certified 460,000, revenue 600,000 — and the professional's craft is the reconciliation between them
+(Domain 4), and AI accelerated every step under governance (Domain 13). The figures differ by design (`EV`
+480,000, certified 460,000, revenue 600,000) and the professional's craft is the reconciliation between them
 (7.4.4; 7.5.3's commercial-to-accounting loop), not the pretence that they should agree. Notice, too, how the
 forecast is the hinge: the `EAC` chosen in Station 3 set the revenue ratio in Station 5, sized the gate
 conversation in Station 7, and framed the contingency question in Station 6. One defensible forecast,
 consistently applied, is what makes the whole cycle honest; a flattered one corrupts every station downstream.
-That interlock — cost, schedule, commercial, accounting, risk, reporting and AI governance meeting in one
-data date — is precisely the integrated judgement the credential certifies.
+That interlock (cost, schedule, commercial, accounting, risk, reporting and AI governance meeting in one data
+date) is precisely the integrated judgement the credential certifies.
 
 ### Reflection questions
 
 1. The invoice-only ledger showed `AC` = 410,000 (a `CPI` of 1.17); the accrued figure showed 530,000 (0.91).
-   Trace every later station that would have been corrupted by the flattering figure — forecast, revenue,
-   margin, gate — and name the domain discipline that prevented it. *(5.2; then 6.3, 2.2.6, 4.3.5, 8.4.)*
+   Trace every later station that would have been corrupted by the flattering figure (forecast, revenue,
+   margin, gate) and name the domain discipline that prevented it. *(5.2; then 6.3, 2.2.6, 4.3.5, 8.4.)*
 2. `EV` (480,000), certified billing (460,000) and recognised revenue (600,000) all measure Month 5's
-   progress. State what each values, why none is "wrong", and which balance-sheet line carries the gap
-   between the last two. *(7.4.4; 2.2.7 / 7.5.2 — a USD 140,000 contract asset.)*
+   progress. State what each values, why none is "wrong", and which balance-sheet line carries the gap between
+   the last two. *(7.4.4; 2.2.7 / 7.5.2: a USD 140,000 contract asset.)*
 3. Remaining contingency (60,000) fails the test against remaining exposure (P80 70,000) even though it
    comfortably exceeds the register's EMV (45,000). Explain, using Exercise 12.5's logic, why the P80 — not
    the EMV — is the right comparator, and what governance route the shortfall takes. *(12.3.1, 12.3.3, 12.3.2.)*

@@ -18,6 +18,215 @@ HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
 STANDARDS_DIR = ROOT / "laws"
 
+# The one stylesheet for the whole publication family (docs/books/_build/DESIGN_SYSTEM.md).
+# The Standards volume and the programme reports read it and append only their own cover, and
+# docs/bok/build/print.css imports it, so the four volumes cannot drift apart again.
+HOUSE_CSS = HERE / "print.css"
+
+# Every page is set in British English: hyphenation is off without a language, and a justified
+# measure without hyphenation is a page full of rivers.
+LANG = "en-GB"
+
+
+# =================================================================================================
+# Shared house-style transforms. Imported by the other builders in the family — keep them
+# side-effect free.
+# =================================================================================================
+
+# Pictographic markers are forbidden in a published page (DESIGN_SYSTEM.md §5, §7). A tick, a
+# hexagon or a warning triangle is a glyph-availability liability — it renders as a blank box in
+# whichever environment lacks it, which is worse than no marker — and none of them says anything
+# the written label beside it does not. Swept at render time because the corpus is owned elsewhere.
+# Arrows, mathematical operators and box-drawing characters are NOT pictographs: they carry
+# meaning in formulas, process chains and ASCII diagrams, and they stay.
+_ICONS = (
+    "✅❌✔✖✘✓✗☑☒☐"   # ticks, crosses, ballot boxes
+    "⬛⬜⬢⬣✦✧⚠⛔⭐"          # blocks, hexagons, warning, star
+    "■▪●○▶◆❖"                      # geometric markers
+    "️︎"                                                    # emoji variation selectors
+)
+_ICON_RE = re.compile("[" + _ICONS + "]|[\U0001F000-\U0001FAFF]")
+# A section sign in front of an identifier that is already displayed adds nothing; the ones that
+# remain are genuine prose cross-references ("Charter §5") and are left alone.
+_MARKER_SECTION_RE = re.compile(r"[·|]?\s*§(?=\s*(?:<|$))|§\s*(?=(?:PCI\s+STANDARD|EXTERNAL|CAUTION)\b)")
+
+
+_PRE_RE = re.compile(r"<pre\b.*?</pre>", re.S)
+
+
+def sweep_icons(html: str, label: str = "") -> str:
+    """Strip pictographic markers and orphaned call-out section signs from rendered HTML.
+
+    Preformatted blocks are swept for glyphs but never re-spaced: their whitespace is the
+    diagram.
+    """
+    n = len(_ICON_RE.findall(html)) + len(_MARKER_SECTION_RE.findall(html))
+
+    def tidy(chunk: str) -> str:
+        chunk = _MARKER_SECTION_RE.sub("", chunk)
+        chunk = _ICON_RE.sub("", chunk)
+        # Tidy what the removal leaves behind: doubled spaces, a space before punctuation, and a
+        # separator dot left dangling at the end of a cell or a sentence.
+        chunk = re.sub(r"[ \t]{2,}", " ", chunk)
+        chunk = re.sub(r" +([.,;:)\]])", r"\1", chunk)
+        chunk = re.sub(r"\s*[·|]\s*(?=</)", "", chunk)
+        chunk = re.sub(r"\(\s*\)", "", chunk)
+        chunk = re.sub(r"[ \t]+(</(?:p|td|th|li|div|span|strong|em|h[1-6])>)", r"\1", chunk)
+        chunk = re.sub(r"(<(?:p|td|th|li)(?:\s[^>]*)?>)[ \t]+", r"\1", chunk)
+        return chunk
+
+    out, at = [], 0
+    for m in _PRE_RE.finditer(html):
+        out.append(tidy(html[at:m.start()]))
+        out.append(_ICON_RE.sub("", m.group(0)))
+        at = m.end()
+    out.append(tidy(html[at:]))
+    if label:
+        print(f"pictographic markers removed [{label}]: {n}")
+    return "".join(out)
+
+
+_TAG_RE = re.compile(r"<[^>]+>")
+_CELL_RE = re.compile(r"<(t[dh])(\s[^>]*)?>(.*?)</\1>", re.S)
+_ROW_RE = re.compile(r"<tr(?:\s[^>]*)?>(.*?)</tr>", re.S)
+
+
+def _cell_text(html: str) -> str:
+    t = _TAG_RE.sub("", html)
+    return re.sub(r"&[a-z]+;|&#\d+;", " ", t).strip()
+
+
+def _is_numeric(text: str) -> bool:
+    """A cell reads as a number when digits carry it and at most a unit or two rides along."""
+    if not text:
+        return False
+    digits = sum(c.isdigit() for c in text)
+    letters = sum(c.isalpha() for c in text)
+    return digits > 0 and letters <= 3 and digits >= letters
+
+
+def tag_table_columns(html: str, label: str = "") -> str:
+    """Right-align numeric columns on tabular figures, and spare all-caps headers small caps.
+
+    Real small caps need lowercase input: a header already set in capitals would be rendered by
+    the `smcp` feature as full capitals at header size, which is not what the design asks for.
+    Those headers are tagged `nosc` and set in lining figures instead.
+    """
+    numeric_cols = 0
+
+    def do_table(tm):
+        nonlocal numeric_cols
+        table = tm.group(0)
+        rows = _ROW_RE.findall(table)
+        if len(rows) < 2:
+            return table
+        body = []
+        for r in rows:
+            cells = _CELL_RE.findall(r)
+            if cells and all(c[0] == "td" for c in cells):
+                body.append([_cell_text(c[2]) for c in cells])
+        if len(body) < 2:
+            return table
+        width = max(len(r) for r in body)
+        numeric = set()
+        for col in range(width):
+            vals = [r[col] for r in body if col < len(r) and r[col]]
+            if len(vals) >= 2 and sum(_is_numeric(v) for v in vals) >= 0.7 * len(vals):
+                numeric.add(col)
+        if numeric:
+            numeric_cols += len(numeric)
+
+        def do_row(rm):
+            i = [0]
+
+            def do_cell(cm):
+                tag, attrs, inner = cm.group(1), cm.group(2) or "", cm.group(3)
+                col = i[0]
+                i[0] += 1
+                classes = []
+                if col in numeric:
+                    classes.append("num")
+                if tag == "th":
+                    txt = _cell_text(inner)
+                    if len(txt) > 3 and txt == txt.upper() and any(c.isalpha() for c in txt):
+                        classes.append("nosc")
+                if not classes:
+                    return cm.group(0)
+                if 'class="' in attrs:
+                    attrs = attrs.replace('class="', 'class="' + " ".join(classes) + " ", 1)
+                else:
+                    attrs += f' class="{" ".join(classes)}"'
+                return f"<{tag}{attrs}>{inner}</{tag}>"
+
+            return "<tr" + (rm.group(0)[3:rm.group(0).index(">")]) + ">" + \
+                _CELL_RE.sub(do_cell, rm.group(1)) + "</tr>"
+
+        return _ROW_RE.sub(do_row, table)
+
+    out = re.sub(r"<table(?:\s[^>]*)?>.*?</table>", do_table, html, flags=re.S)
+    if label:
+        print(f"numeric table columns aligned [{label}]: {numeric_cols}")
+    return out
+
+
+def strip_pandoc_default_css(html: str) -> str:
+    """Remove the stylesheet pandoc's standalone template injects into <head>.
+
+    It sets `body { max-width: 36em; padding: 50px }`, a print-media `font-size: 12pt`, its own
+    paragraph margins and its own table rules. Because it lives in the document it wins over the
+    stylesheet passed to WeasyPrint for every property that stylesheet does not explicitly set,
+    which is how a designed page ends up as a 36-em column adrift on A4.
+    """
+    out = re.sub(r"<style>(?:(?!</style>).)*?max-width:\s*36em(?:(?!</style>).)*?</style>",
+                 "", html, flags=re.S)
+    if out != html:
+        print("pandoc default stylesheet removed")
+    return out
+
+
+_TOC_RE = re.compile(r'<(h1|h2|h3|div)\b([^>]*?)data-toc="([12])"([^>]*?)>(.*?)</\1>', re.S)
+
+
+def build_toc(body_html: str, relabel: dict | None = None) -> str:
+    """The family's table of contents, generated from the assembled body.
+
+    Anything that carries `data-toc="1"` or `"2"` earns a contents line, so every part of a volume
+    that carries a running head is also findable from the front: domains and Knowledge Areas, the
+    standards, the appendices, the glossary and the index. `relabel` maps an element id to the text
+    that should be used instead — a chapter's own heading is its title alone, and a contents line
+    reading "Cost, Schedule and Contingency Integration" tells the reader nothing about which
+    domain it is.
+    """
+    relabel = relabel or {}
+    items = []
+    for m in _TOC_RE.finditer(body_html):
+        hid = re.search(r'id="([^"]+)"', m.group(2) + m.group(4))
+        if not hid:
+            continue
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(5))).strip()
+        if hid.group(1) in relabel:
+            text = f"{relabel[hid.group(1)]} — {text}"
+        items.append((m.group(3), hid.group(1), text))
+    out, open_sub = ['<nav id="TOC"><ul>'], False
+    for lvl, hid, text in items:
+        if lvl == "1":
+            if open_sub:
+                out.append("</ul></li>")
+            out.append(f'<li><a href="#{hid}">{text}</a><ul>')
+            open_sub = True
+        else:
+            out.append(f'<li><a href="#{hid}">{text}</a></li>')
+    if open_sub:
+        out.append("</ul></li>")
+    out.append("</ul></nav>")
+    print(f"contents lines: {len(items)} ({sum(1 for i in items if i[0] == '1')} top level)")
+    return "".join(out)
+
+
+def house_style(html: str, label: str = "") -> str:
+    """The passes every PCI volume gets, whatever built it."""
+    return tag_table_columns(sweep_icons(strip_pandoc_default_css(html), label), label)
+
 BOOKS = {
     "pml-ai": {
         "title": "PML-AI<br/>Body of Knowledge",
@@ -191,34 +400,50 @@ FRONT = """
 """
 
 
+# The one cover design in the family. Every volume fills the same five slots; nothing else about a
+# cover is a decision anyone makes twice.
 COVER = """
 <div class="cover">
   <div class="coverhead">
     <div class="coverkicker">Project Controls Institute Global</div>
     <div class="covercode">{code}</div>
-    <div class="coverbook">Body of Knowledge</div>
+    <div class="coverbook">{book}</div>
     <div class="coverrule"></div>
     <div class="covercred">{credential}</div>
     <div class="coverthemes">{themes}</div>
   </div>
   <div class="coverband">{chart}</div>
   <div class="coverfoot">
-    <div class="coverprinciple">AI proposes; the professional verifies,<br/>decides and remains
-    accountable.</div>
-    <div class="coverbadge"><span class="cbmain">First edition — draft</span>
-    <span class="cbsub">For editorial and technical review · not for release or distribution</span></div>
-    <div class="covertag">Finance intelligently. Control predictively. Deliver successfully.</div>
+    <div class="coverprinciple">{principle}</div>
+    <div class="coverbadge"><span class="cbmain">{badge}</span>
+    <span class="cbsub">{badgesub}</span></div>
+    <div class="covertag">{tag}</div>
   </div>
 </div>
 """
 
+COVER_DEFAULTS = {
+    "book": "Body of Knowledge",
+    "principle": "AI proposes; the professional verifies,<br/>decides and remains accountable.",
+    "badge": "First edition — draft",
+    "badgesub": "For editorial and technical review · not for release or distribution",
+    "tag": "Finance intelligently. Control predictively. Deliver successfully.",
+}
+
+
+def cover_html(**fields) -> str:
+    """Fill the family cover. Unstated slots take the family default."""
+    return COVER.format(**{**COVER_DEFAULTS, **fields})
+
 # Cover artwork. Inline SVG rather than a bitmap so the cover stays vector at any size, and so the
 # label colours are readable here in the source: everything on the cover band is light ink on the
-# navy field, which is what the "debt service" label failed to be in the reviewed draft.
-COVER_INK = "#F1F5F9"        # primary label ink on navy — always light
-COVER_DIM = "#93A7C4"        # secondary label ink on navy
-COVER_BAR = "#2A4FC4"
-COVER_HOT = "#C13329"
+# forest field, which is what the "debt service" label failed to be in the reviewed draft.
+# The device is drawn in the two inks the cover type already uses — the cover of a professional
+# body's reference is a title, not a poster, and one accent means one accent.
+COVER_INK = "#F2EFE7"        # primary label ink on the forest field — always light
+COVER_DIM = "#9DB3A5"        # secondary label ink
+COVER_BAR = "#5C8A72"        # the mark itself
+COVER_HOT = "#F2EFE7"        # the one emphasised element, in the primary ink
 
 
 def _chart_coverage() -> str:
@@ -247,15 +472,15 @@ def _chart_coverage() -> str:
     bars.append(f'<path d="M{bx - 4:.1f} {line - 6:.1f} L{bx:.1f} {line:.1f} L{bx + 4:.1f} {line - 6:.1f}" '
                 f'fill="none" stroke="{COVER_INK}" stroke-width="1.8"/>')
     bars.append(f'<text x="{bx:.1f}" y="{top - 9:.1f}" font-size="15" fill="{COVER_INK}" '
-                f'font-family="sans-serif" text-anchor="middle">headroom</text>')
+                f'font-family="Linux Biolinum O" text-anchor="middle">headroom</text>')
     return (
         '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
         + "".join(bars)
         + f'<line x1="24" y1="{line:.1f}" x2="{plot_r + 10:.1f}" y2="{line:.1f}" stroke="{COVER_INK}" '
           f'stroke-width="2.2" stroke-dasharray="10 7"/>'
         + f'<text x="{plot_r + 18:.1f}" y="{line + 5:.1f}" font-size="15" fill="{COVER_INK}" '
-          f'font-family="sans-serif" letter-spacing="0.6">debt service</text>'
-        + f'<text x="24" y="284" font-size="15" fill="{COVER_DIM}" font-family="sans-serif">'
+          f'font-family="Linux Biolinum O" letter-spacing="0.6">debt service</text>'
+        + f'<text x="24" y="284" font-size="15" fill="{COVER_DIM}" font-family="Linux Biolinum O">'
           'cash available · the gap is the headroom</text>'
         "</svg>")
 
@@ -273,15 +498,71 @@ def _chart_paths() -> str:
     return (
         '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
         + edges + nodes
-        + f'<text x="{cx:.0f}" y="278" font-size="16" fill="{COVER_INK}" font-family="sans-serif" '
+        + f'<text x="{cx:.0f}" y="278" font-size="16" fill="{COVER_INK}" font-family="Linux Biolinum O" '
           'text-anchor="middle">n(n − 1)/2 = 28</text>'
-        + f'<text x="{cx:.0f}" y="298" font-size="13" fill="{COVER_DIM}" font-family="sans-serif" '
+        + f'<text x="{cx:.0f}" y="298" font-size="13" fill="{COVER_DIM}" font-family="Linux Biolinum O" '
           'text-anchor="middle">eight people · twenty-eight channels · every one a place to lose a '
           'decision</text>'
         "</svg>")
 
 
-CHARTS = {"coverage": _chart_coverage, "paths": _chart_paths}
+def _chart_variance() -> str:
+    """PCL: the three curves of earned value — planned, earned and actual, and the two gaps.
+
+    Drawn in the cover's own two inks: the plan and the spend as quiet lines, the earned curve as
+    the emphasised one, because the whole discipline is the distance between them.
+    """
+    x0, y0, w, h = 40.0, 250.0, 560.0, 190.0
+
+    def path(fs, upto=1.0, ink=COVER_BAR, width=2.0, dash=""):
+        pts = []
+        n = 60
+        for i in range(int(n * upto) + 1):
+            t = i / n
+            pts.append(f"{x0 + t * w:.1f},{y0 - fs(t) * h:.1f}")
+        d = f' stroke-dasharray="{dash}"' if dash else ""
+        return (f'<polyline points="{" ".join(pts)}" fill="none" stroke="{ink}" '
+                f'stroke-width="{width}"{d}/>')
+
+    def s(t):                      # the S-curve: slow, fast, slow
+        return t * t * (3 - 2 * t)
+
+    cut = 0.62                     # the data date
+    xd = x0 + cut * w
+    planned = path(s, 1.0, COVER_BAR, 1.8, "8 6")
+    actual = path(lambda t: s(t) * 1.14, cut, COVER_BAR, 1.8)
+    earned = path(lambda t: s(t) * 0.78, cut, COVER_HOT, 2.6)
+    pv = y0 - s(cut) * h
+    ac = y0 - s(cut) * 1.14 * h
+    ev = y0 - s(cut) * 0.78 * h
+    # The two gaps are measured where they occur and labelled clear of each other: the cost gap is
+    # bracketed above the schedule gap, and each label steps away from its bracket on a leader so
+    # the two never collide however the curves are tuned.
+    def bracket(x, ya, yb):
+        return (f'<line x1="{x:.1f}" y1="{ya:.1f}" x2="{x:.1f}" y2="{yb:.1f}" '
+                f'stroke="{COVER_INK}" stroke-width="1.8"/>'
+                f'<line x1="{x - 4:.1f}" y1="{ya:.1f}" x2="{x + 4:.1f}" y2="{ya:.1f}" '
+                f'stroke="{COVER_INK}" stroke-width="1.8"/>'
+                f'<line x1="{x - 4:.1f}" y1="{yb:.1f}" x2="{x + 4:.1f}" y2="{yb:.1f}" '
+                f'stroke="{COVER_INK}" stroke-width="1.8"/>')
+    return (
+        '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
+        + f'<line x1="{x0}" y1="{y0}" x2="{x0 + w}" y2="{y0}" stroke="{COVER_DIM}" stroke-width="1"/>'
+        + planned + actual + earned
+        + f'<line x1="{xd:.1f}" y1="{y0}" x2="{xd:.1f}" y2="{ac - 10:.1f}" stroke="{COVER_DIM}" '
+          'stroke-width="1" stroke-dasharray="3 5"/>'
+        + bracket(xd + 26, ev, ac)
+        + bracket(xd + 10, ev, pv)
+        + f'<text x="{xd + 34:.1f}" y="{ac - 6:.1f}" font-size="15" fill="{COVER_INK}" '
+          'font-family="Linux Biolinum O">cost variance</text>'
+        + f'<text x="{xd + 34:.1f}" y="{ev + 18:.1f}" font-size="15" fill="{COVER_INK}" '
+          'font-family="Linux Biolinum O">schedule variance</text>'
+        + f'<text x="{x0}" y="284" font-size="15" fill="{COVER_DIM}" font-family="Linux Biolinum O">'
+          'planned · earned · actual — the distance between them is the discipline</text>'
+        "</svg>")
+
+
+CHARTS = {"coverage": _chart_coverage, "paths": _chart_paths, "variance": _chart_variance}
 
 
 def slug(text: str) -> str:
@@ -321,11 +602,11 @@ def normalise_lists(text: str, announce: bool = True) -> str:
     return "\n".join(out)
 
 
-# The manuscripts mark the correct MCQ option with ✅ (U+2705), which exists in no font on the build
-# host — it printed as blank space, so the answer key silently vanished from every MCQ. U+2713 is
-# present in DejaVu Sans (the sans fallback), and the marker carries the word "correct" and a rule
-# box as well, so it survives grayscale and never depends on colour.
-MCQ_KEY = '<span class="mcq-key">✓ correct</span>'
+# The manuscripts mark the correct MCQ option with ✅ (U+2705), which exists in no book font — it
+# printed as blank space, so the answer key silently vanished from every MCQ. The replacement is a
+# written word in real small caps inside a hairline rule: no glyph to go missing in any
+# environment, legible in greyscale, and never dependent on colour.
+MCQ_KEY = '<span class="mcq-key">correct</span>'
 
 
 def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
@@ -470,12 +751,13 @@ def build(book: str, out: pathlib.Path) -> None:
     html = markdown.markdown(corpus, extensions=["tables", "fenced_code", "toc"],
                              extension_configs={"toc": {"anchorlink": False}})
 
-    # Chapter openers.
+    # Chapter openers. Label, then the number large in the display cut, then the title, then one
+    # hairline to close the block — the opener takes the page and fills its top third with nothing.
     def chap(m):
-        return (f'<div class="chapter"><div class="chapnum">{int(m.group(2)):02d}</div>'
-                f'<div class="chapkicker">Domain {m.group(2)}</div>'
+        return (f'<div class="chapter"><div class="chapkicker">Domain</div>'
+                f'<div class="chapnum">{int(m.group(2))}</div>'
                 f'<h1 id="{m.group(1)}" data-toc="1">{m.group(3)}</h1>'
-                f'<div class="chaprule"></div><div class="chaprule2"></div></div>')
+                f'<div class="chaprule"></div></div>')
     html = re.sub(r'<h1 id="([^"]+)">Domain\s+(\d+)\s+—\s+(.+?)</h1>', chap, html, flags=re.S)
 
     # KA openers.
@@ -515,14 +797,13 @@ def build(book: str, out: pathlib.Path) -> None:
         in_part = [d for d in present if lo <= d <= hi]
         if not in_part:
             continue                      # part not yet reached by authorship
-        kicker = f"Domain {in_part[0]}"
-        kick_m = re.search(r'<div class="chapter"><div class="chapnum">\d+</div>'
-                           r'<div class="chapkicker">' + re.escape(kicker) + r'</div>', html)
+        kick_m = re.search(r'<div class="chapter"><div class="chapkicker">Domain</div>'
+                           r'<div class="chapnum">' + str(in_part[0]) + r'</div>', html)
         if not kick_m:
             continue
-        part_html = (f'<div class="partpage"><div class="partghost">{pnum:02d}</div>'
+        part_html = (f'<div class="partpage">'
                      f'<div class="partnum">{num}</div><div class="parttitle">{title}</div>'
-                     f'<div class="partdesc">{desc}</div><div class="partbar"></div></div>')
+                     f'<div class="partdesc">{desc}</div></div>')
         html = html[:kick_m.start()] + part_html + html[kick_m.start():]
 
     # Index from key-terms tables.
@@ -630,50 +911,25 @@ def build(book: str, out: pathlib.Path) -> None:
     # A chapter's own heading is the title alone — the domain number lives in the opener's kicker.
     # The contents line needs both, or "Cost, Schedule and Contingency Integration" gives the reader
     # no way to tell which domain it is.
-    chap_kicker = {m.group(2): m.group(1) for m in re.finditer(
-        r'<div class="chapkicker">(Domain \d+)</div><h1 id="([^"]+)"', body_html)}
-    toc_items = []
-    for m in re.finditer(r'<(h1|h2|h3|div)\b([^>]*?)data-toc="([12])"([^>]*?)>(.*?)</\1>',
-                         body_html, flags=re.S):
-        attrs = m.group(2) + m.group(4)
-        hid = re.search(r'id="([^"]+)"', attrs)
-        if not hid:
-            continue
-        text = re.sub(r"<[^>]+>", " ", m.group(5))
-        text = re.sub(r"\s+", " ", text).strip()
-        if hid.group(1) in chap_kicker:
-            text = f"{chap_kicker[hid.group(1)]} — {text}"
-        toc_items.append((m.group(3), hid.group(1), text))
-    toc = ['<nav id="TOC"><ul>']
-    open_sub = False
-    for lvl, hid, text in toc_items:
-        if lvl == "1":
-            if open_sub:
-                toc.append("</ul></li>")
-                open_sub = False
-            toc.append(f'<li><a href="#{hid}">{text}</a><ul>')
-            open_sub = True
-        else:
-            toc.append(f'<li><a href="#{hid}">{text}</a></li>')
-    if open_sub:
-        toc.append("</ul></li>")
-    toc.append("</ul></nav>")
-    print(f"contents lines: {len(toc_items)} "
-          f"({sum(1 for t in toc_items if t[0] == '1')} top level)")
+    chap_kicker = {m.group(2): f"Domain {m.group(1)}" for m in re.finditer(
+        r'<div class="chapkicker">Domain</div><div class="chapnum">(\d+)</div><h1 id="([^"]+)"',
+        body_html)}
+    toc = build_toc(body_html, chap_kicker)
 
     cv = cfg["cover"]
-    cover = COVER.format(code=cv["code"], credential=cv["credential"], themes=cv["themes"],
-                         chart=CHARTS[cv["chart"]]())
+    cover = cover_html(code=cv["code"], credential=cv["credential"], themes=cv["themes"],
+                       chart=CHARTS[cv["chart"]]())
     front = FRONT.format(title=cfg["title"], subtitle=cfg["subtitle"], domains=len(files))
-    doc_html = ("<!doctype html><html><head><meta charset='utf-8'>"
+    doc_html = (f"<!doctype html><html lang='{LANG}'><head><meta charset='utf-8'>"
                 f"<style>html {{ string-set: booktitle \"{cfg['run_title']}\"; }}</style>"
-                f"</head><body>{cover}{front}{''.join(toc)}{body_html}</body></html>")
+                f"</head><body>{cover}{front}{toc}{body_html}</body></html>")
+    doc_html = house_style(doc_html, book)
     html_file = book_dir / "build" / "_combined.html"
     html_file.parent.mkdir(parents=True, exist_ok=True)
     html_file.write_text(doc_html, encoding="utf-8")
 
     from weasyprint import CSS, HTML
-    doc = HTML(filename=str(html_file)).render(stylesheets=[CSS(filename=str(HERE / "print.css"))])
+    doc = HTML(filename=str(html_file)).render(stylesheets=[CSS(filename=str(HOUSE_CSS))])
     doc.write_pdf(str(out))
     print(f"OK {out}  pages={len(doc.pages)}")
 

@@ -1,16 +1,39 @@
 #!/usr/bin/env python3
 """Build the PCL-AI Body of Knowledge PDF from the markdown corpus.
 
-Concatenates the book files in reading order, converts to HTML via pandoc,
-styles with print.css (A4), renders with WeasyPrint, and reports the page count.
+Concatenates the book files in reading order, converts to HTML via pandoc, applies the family's
+house-style transforms, styles with print.css (which imports the shared publication stylesheet),
+renders with WeasyPrint, and reports the page count.
+
+PCL-AI is built by this script and PML-AI/PFL-AI by ../../books/_build/build_book.py, but the two
+pipelines now emit the SAME markup and load the SAME stylesheet — the cover, the openers, the
+tables, the call-outs, the running heads and the folios are one design, not two that resemble
+each other.
 
 Usage:  python3 build_pdf.py [output.pdf]
 """
+import importlib.util
 import subprocess, sys, datetime, pathlib, re
 
 BOK = pathlib.Path(__file__).resolve().parent.parent
 BUILD = BOK / "build"
 OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else BUILD / "pcl-ai-bok.pdf"
+
+# The family pipeline. Imported by path rather than duplicated, so the cover artwork, the icon
+# sweep, the numeric-column tagging and the PCI Standards rendering are literally the same code
+# the other two Bodies of Knowledge run.
+_FAMILY = BOK.parent / "books" / "_build" / "build_book.py"
+_spec = importlib.util.spec_from_file_location("pci_book_family", _FAMILY)
+family = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(family)
+
+RUN_TITLE = "PCI PCL-AI Body of Knowledge"
+
+COVER_HTML = family.cover_html(
+    code="PCL-AI",
+    credential="The reference for the PCI AI Project Controls Leader",
+    themes="Project controls · project finance · the governed use of AI",
+    chart=family.CHARTS["variance"]())
 
 ORDER = [
     "00-conventions.md",
@@ -124,19 +147,24 @@ TITLE_HTML = f"""
   authoritative professional standard imposes a stricter requirement, that requirement governs. Consequences of
   breach are limited to matters within PCI's own authority: its examination, certification, quality and conduct
   processes.</p>
-  <p>Four kinds of call-out appear in this volume. Each is identified by a written label, an icon and a border
-  style as well as by colour, so that nothing depends on colour alone — the distinctions survive greyscale
-  printing, screen reading and monochrome displays.</p>
+  <p>Four kinds of call-out appear in this volume. Each is identified by a written label and a border
+  treatment as well as by colour, so that nothing depends on colour alone — the distinctions survive
+  greyscale printing, screen reading and monochrome displays. There are no icons and no section signs:
+  a marker that renders as a blank box in one reader is worse than no marker, and the written label
+  beside the identifier already says everything such a glyph could.</p>
   <table>
-    <thead><tr><th>Call-out</th><th>Label and icon</th><th>Colour and border</th><th>What it means</th></tr></thead>
+    <thead><tr><th>Call-out</th><th>Label</th><th>Rule and ground</th><th>What it means</th></tr></thead>
     <tbody>
-      <tr><td>PCI Law</td><td><strong>PCI STANDARD</strong> · §</td><td>PCI Law Red, solid left border</td>
+      <tr><td>PCI Standard</td><td><strong>PCI Standard</strong>, then the identifier</td>
+          <td>Solid green left rule, green tint</td>
           <td>Mandatory. A professional rule PCI holds credential holders and candidates to.</td></tr>
-      <tr><td>External reference</td><td><strong>EXTERNAL REFERENCE</strong> · ⬢</td><td>Standards Blue, double border</td>
+      <tr><td>External reference</td><td><strong>External standard or framework</strong></td>
+          <td>Double green left rule, no ground</td>
           <td>A named external standard or framework, described in this book's own words. The official publication governs.</td></tr>
-      <tr><td>Practice guidance</td><td><strong>PCI PRACTICE GUIDANCE</strong> · ✦</td><td>Guidance Teal, dashed border</td>
+      <tr><td>Practice guidance</td><td><strong>PCI recommended practice</strong></td>
+          <td>Dashed green left rule, no ground</td>
           <td>Recommended, not mandatory. Departures need a recorded reason.</td></tr>
-      <tr><td>Caution</td><td><strong>CAUTION</strong> · ⚠</td><td>Amber, dotted border</td>
+      <tr><td>Caution</td><td><strong>Caution</strong></td><td>Dotted amber left rule, amber tint</td>
           <td>A jurisdictional, legal, tax or accounting limitation, or a high-stakes limit on the use of AI.</td></tr>
     </tbody>
   </table>
@@ -190,41 +218,34 @@ def inject_figures(corpus: str) -> str:
 
 
 def laws_back_matter() -> str:
-    """Append the PCI Standards that bind this credential, as back matter.
+    """The PCI Standards part, rendered exactly as PML-AI and PFL-AI render it.
 
-    The foundational laws bind all three credentials; the PCL-AI set binds this one.
-    Both files live in the programme's shared law directory. A missing file is skipped
-    rather than failing the build, so the book still builds before the laws are approved.
+    The foundational set binds all three credentials; the PCL-AI set binds this one. Both live in
+    the programme's shared standards directory, and both are rendered by the family pipeline into
+    labelled call-out boxes with their identifiers — not, as before, into undifferentiated pandoc
+    headings that made the same standard look like a different thing in each volume. A missing
+    file is skipped rather than fatal, so the book still builds before the set is approved.
     """
-    laws_dir = BOK.parent / "books" / "laws"
-    parts = []
-    for name, heading in (("PCI_FOUNDATIONAL_STANDARDS.md", "PCI Foundational Standards"),
-                          ("PCL_AI_STANDARDS.md", "PCL-AI Professional Laws")):
-        path = laws_dir / name
-        if not path.exists():
-            print(f"laws: {name} not found — skipped")
-            continue
-        body = path.read_text(encoding="utf-8")
-        # The book supplies its own part heading, so demote the file's H1 to avoid two.
-        body = re.sub(r"^# ", "## ", body, count=1, flags=re.M)
-        parts.append(body)
-        print(f"laws: {name} included ({len(body):,} chars)")
-    if not parts:
+    return family.render_laws("pcl-ai", {"laws_file": "PCL_AI_STANDARDS.md"})
+
+
+def standards_toc(laws_html: str) -> str:
+    """Contents lines for the standards part, in pandoc's own TOC markup."""
+    if not laws_html:
         return ""
-    return ("\n\n# PCI Standards\n\n"
-            "The laws in this part are mandatory professional rules established by Project Controls "
-            "Institute Global. They are **not legislation, regulatory requirements or substitutes for "
-            "applicable law, contractual obligations or authoritative professional standards** — where any "
-            "of those imposes a stricter requirement, that requirement governs. Each law is cited by its "
-            "stable identifier, never by page number. The front matter explains how to read them.\n\n"
-            + "\n\n".join(parts))
+    items = ['<li><a href="#pci-professional-laws">PCI Standards</a><ul>']
+    for m in re.finditer(r'<h[23] class="(stdset|stdgroup)" id="([^"]+)"[^>]*>(.*?)</h[23]>',
+                         laws_html, re.S):
+        text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", m.group(3))).strip()
+        items.append(f'<li><a href="#{m.group(2)}">{text}</a></li>')
+    items.append("</ul></li>")
+    return "".join(items)
 
 
 def main() -> None:
     # 1. Concatenate the corpus in reading order; inject rendered figures.
     corpus = "\n\n".join((BOK / name).read_text(encoding="utf-8") for name in ORDER)
     corpus = inject_figures(corpus)
-    corpus += laws_back_matter()
     combined = BUILD / "_combined.md"
     combined.write_text(corpus, encoding="utf-8")
 
@@ -234,16 +255,22 @@ def main() -> None:
          "--metadata", "title=PCL-AI Body of Knowledge"],
         capture_output=True, text=True, check=True).stdout
     # Inject the title page right after <body> and drop pandoc's default header block.
-    html_body = html_body.replace("<body>", "<body>" + TITLE_HTML, 1)
+    # pandoc emits lang="" — with no language WeasyPrint cannot hyphenate, and an unhyphenated
+    # justified measure is a page of rivers.
+    html_body = html_body.replace('lang="" xml:lang=""', f'lang="{family.LANG}" xml:lang="{family.LANG}"', 1)
+    html_body = html_body.replace(
+        "</head>",
+        f'<style>html {{ string-set: booktitle "{RUN_TITLE}"; }}</style></head>', 1)
+    html_body = html_body.replace("<body>", "<body>" + COVER_HTML + TITLE_HTML, 1)
     html_body = html_body.replace('<header id="title-block-header">', '<header id="title-block-header" style="display:none">', 1)
 
     # Premium chapter openers: rewrite each "Domain N — Title" h1 into a styled opener (id kept for TOC links).
     import re as _re
     def chap(m):
-        return (f'<div class="chapter"><div class="chapnum">{int(m.group(2)):02d}</div>'
-                f'<div class="chapkicker">Domain {m.group(2)}</div>'
+        return (f'<div class="chapter"><div class="chapkicker">Domain</div>'
+                f'<div class="chapnum">{int(m.group(2))}</div>'
                 f'<h1 id="{m.group(1)}">{m.group(3)}</h1>'
-                f'<div class="chaprule"></div><div class="chaprule2"></div></div>')
+                f'<div class="chaprule"></div></div>')
     html_body = _re.sub(r'<h1\s+id="([^"]+)">Domain\s+(\d+)\s+—\s+(.+?)</h1>', chap, html_body, flags=_re.S)
 
     # Mark figure-spec blockquotes so only they carry the FIGURE SPECIFICATION label.
@@ -291,12 +318,23 @@ def main() -> None:
          "Body of Knowledge, under one principle: AI proposes; the professional verifies, decides and remains accountable."),
     ]
     for i, (dom, num, title, desc) in enumerate(PARTS, start=1):
-        kick = f'<div class="chapter"><div class="chapnum">{dom:02d}</div>'
-        part_html = (f'<div class="partpage"><div class="partghost">{i:02d}</div>'
+        kick = (f'<div class="chapter"><div class="chapkicker">Domain</div>'
+                f'<div class="chapnum">{dom}</div>')
+        part_html = (f'<div class="partpage">'
                      f'<div class="partnum">{num}</div>'
-                     f'<div class="parttitle">{title}</div><div class="partdesc">{desc}</div>'
-                     f'<div class="partbar"></div></div>')
+                     f'<div class="parttitle">{title}</div><div class="partdesc">{desc}</div></div>')
         html_body = html_body.replace(kick, part_html + kick, 1)
+
+    # The PCI Standards part, in the family's call-out boxes, with its own contents lines.
+    laws_html = laws_back_matter()
+    if laws_html:
+        html_body = html_body.replace("</body>", laws_html + "</body>", 1)
+        toc_close = html_body.rfind("</ul>\n</nav>")
+        if toc_close == -1:
+            toc_close = html_body.rfind("</ul></nav>")
+        if toc_close != -1:
+            html_body = (html_body[:toc_close] + standards_toc(laws_html)
+                         + html_body[toc_close:])
     html_file = BUILD / "_combined.html"
     html_file.write_text(html_body, encoding="utf-8")
 
@@ -312,7 +350,8 @@ def main() -> None:
                     if term and term.lower() not in terms:
                         terms[term.lower()] = (term, ka)
         ka_ids = {m.group(2): m.group(1) for m in _re.finditer(
-            r'<h2 class="ka" id="([^"]+)"><span class="kanum">Knowledge Area (\d+\.\d+)</span>', html)}
+            r'<h2 class="ka" id="([^"]+)"[^>]*><span class="kanum">Knowledge Area (\d+\.\d+)</span>',
+            html)}
         groups: dict[str, list] = {}
         for term, ka in sorted(terms.values(), key=lambda t: t[0].lower()):
             hid = ka_ids.get(ka)
@@ -328,26 +367,18 @@ def main() -> None:
         return ''.join(parts)
 
     html_body = html_body.replace('</body>', build_index(html_body, corpus) + '</body>', 1)
+
+    # The house passes: pictographic markers out, numeric columns right-aligned on tabular figures.
+    html_body = family.house_style(html_body, "pcl-ai")
     html_file.write_text(html_body, encoding="utf-8")
 
-    # 3. HTML -> PDF via WeasyPrint.
+    # 3. HTML -> PDF via WeasyPrint. The cover is set in the document itself, in the family's
+    # typographic design — not prepended as a bitmap. A stock-photograph jacket carrying icons and
+    # the retired PCP-AI designation is not this book's cover.
     from weasyprint import HTML, CSS  # imported late so --help stays fast
     doc = HTML(filename=str(html_file)).render(stylesheets=[CSS(filename=str(BUILD / "print.css"))])
     doc.write_pdf(str(OUT))
-
-    # 4. Prepend the full-bleed book cover as a native PDF page (exact A4, no margins).
-    cover = next((p for p in (BUILD / "cover.jpg", BUILD / "cover.png") if p.exists()), BUILD / "cover.png")
-    pages = len(doc.pages)
-    if cover.exists():
-        import fitz  # PyMuPDF
-        pdf = fitz.open(str(OUT))
-        page = pdf.new_page(pno=0, width=595.276, height=841.890)  # A4 in points
-        page.insert_image(page.rect, filename=str(cover))
-        tmp = OUT.with_suffix(".tmp.pdf")
-        pdf.save(str(tmp)); pdf.close()
-        tmp.replace(OUT)
-        pages += 1
-    print(f"OK {OUT}  pages={pages}")
+    print(f"OK {OUT}  pages={len(doc.pages)}")
 
 if __name__ == "__main__":
     main()

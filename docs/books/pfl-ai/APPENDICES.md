@@ -212,7 +212,7 @@ changes every quarter records nothing over time.
 | 1.T.3 | Conflicts and AI-use register | Conflicts: relationship · parties affected · disclosure date · handling (barriers/consent/ |
 | 1.T.4 | Recourse-cost worksheet (one per financing route considered) | The arithmetic of WE 1.1.2, in the order a decision paper needs it, so that the incremental cost of |
 | 1.T.5 | Intermediary engagement and financial-crime evidence file (one per intermediary) | The file that must exist before an agent, adviser or introducer is engaged, and be kept current |
-| 2.T.1 | Defined-terms sheet (one per financing) | For each term used in a covenant or report — CFADS, EBITDA, net debt, distributable cash, |
+| 2.T.1 | Defined-terms sheet (one per financing) | For each term used in a covenant or report (CFADS, EBITDA, net debt, distributable cash, |
 | 2.T.2 | Accrual-to-cash bridge (standing monthly schedule) | Net income · + depreciation and amortisation · + other non-cash charges (provisions) · |
 | 2.T.3 | Statement-integrity checklist |  |
 | 3.T.1 | TVM assumption register (one row per modelled stream) |  |
@@ -223,43 +223,43 @@ changes every quarter records nothing over time.
 | 4.T.2 | IRR pathology checklist |  |
 | 4.T.3 | Rationing worksheet | Columns: project · I₀ · NPV · PI · strategic notes/dependencies. Steps: rank by PI → |
 | 4.T.4 | Hurdle-rate reconciliation sheet | One page, completed before the appraisal is circulated rather than after it is challenged. |
-| 5.T.1 | The bankability condition register | One row per condition, decomposed to the level at which something must independently be true (Case study |
+| 5.T.1 | The bankability condition register | One row per condition, decomposed to the level at which something must independently be true |
 | 5.T.2 | Sponsor commitment and support schedule | One row per sponsor. Columns: equity share · base equity commitment · each support commitment separately |
-| 5.T.3 | COD-slip and readiness pack | Two parts, maintained from twelve months before COD. The slip calculator: drawn debt × rate ÷ |
+| 5.T.3 | COD-slip and readiness pack | Two parts, maintained from twelve months before COD. The slip calculator: drawn debt × rate |
 | 6.T.1 | The model conventions sheet (one page, in the inputs block) | One line per convention, each with the value chosen, the alternative rejected, and the reason: |
 | 6.T.2 | The check block (built before the first answer) |  |
 | 6.T.3 | Model governance register (per model, per version) | Columns: version number (appearing on every printed page) · date · author · reviewer · reason for |
 | 7.T.1 | Revenue mechanism specification | One row per component of the payment mechanism, populated from the agreement and signed off |
 | 7.T.2 | Indexation mismatch map | Domain 3's escalation register (Toolkit 3.T.3) catalogues each line's index mechanics. This |
 | 7.T.3 | Revenue stress and counterparty pack | Section A, counterparty: each payer's share of revenue · rating or internal grade with source |
-| 8.T.1 | Contingency basis note (one page, per sanction and per recalculation) | One page that must exist before any contingency figure is quoted. Base estimate: amount, base |
+| 8.T.1 | Contingency basis note (one page, per sanction and per recalculation) | One page that must exist before any contingency figure is quoted. Base estimate: amount, |
 | 8.T.2 | Construction cost model check (before any envelope is fixed) |  |
 | 8.T.3 | Monthly construction pack, financing annexe | One annexe to the existing controls report — never a second set of numbers. Rows: certified progress |
 | 9.T.1 | Cost-of-capital derivation record (one per project, per structure) | One page, signed. Rows: r_f — instrument, tenor, currency, quotation date, source · ERP — |
 | 9.T.2 | Tranche comparison sheet (all-in, like-for-like) | One column per candidate tranche. Rows: amount · currency · base rate and margin, or profit rate · |
 | 9.T.3 | Capital-structure decision record | For each candidate structure, one row: tranche amounts and costs · re-levered k_e · WACC · |
-| 10.T.1 | `CFADS` definition reconciliation | Column 1: each line of the facility's CFADS definition, with its clause reference. Column 2: the |
+| 10.T.1 | `CFADS` definition reconciliation | Column 1: each line of the facility's CFADS definition, with its clause reference. Column 2: |
 | 10.T.2 | Covenant dashboard (per facility, per test date) | Per covenant: test name and clause · test date and frequency · historic or forward-looking · |
 | 10.T.3 | Coverage model check (before any ratio is quoted) |  |
-| 10.T.4 | Sizing-basis statement (one page, agreed before any capacity number circulates) | Nine lines, each with a named owner and a document reference. 1 — CFADS definition and its |
-| 11.T.1 | Risk allocation price sheet (one row per register line) | Columns: ID · risk statement · phase · our p and impact, with the evidence reference · |
-| 11.T.2 | The breakeven page (one side of paper, per facility) | Every material exposure, expressed in the covenant's own units. Rows: covenant and lock-up cash |
-| 11.T.3 | Register aggregation and re-cut worksheet | Three panels. Sponsor case: items with p, impact, evidence reference, EMV, σᵢ; mean = ΣEMV |
+| 10.T.4 | Sizing-basis statement (one page, agreed before any capacity number circulates) | Nine lines, each with a named owner and a document reference. 1 (CFADS definition and its |
+| 11.T.1 | Risk allocation price sheet (one row per register line) | Columns: ID · risk statement · phase · our p and impact, with the evidence reference · our |
+| 11.T.2 | The breakeven page (one side of paper, per facility) | Every material exposure, expressed in the covenant's own units. Rows: covenant and lock-up |
+| 11.T.3 | Register aggregation and re-cut worksheet | Three panels. Sponsor case: items with p, impact, evidence reference, EMV, σᵢ; mean = |
 | 12.T.1 | The contract limits and calibration sheet (one per contract) | One page, filled before the contract is signed and re-filled at every amendment. Rows: contract |
-| 12.T.2 | Security package sufficiency register (one per transaction) | One row per instrument: instrument type · obligor, and which entity in the group is actually bound |
+| 12.T.2 | Security package sufficiency register (one per transaction) | One row per instrument: instrument type · obligor, and which entity in the group is actually |
 | 12.T.3 | Claim assessment and settlement-zone worksheet (one per claim) | Header: claim reference, event, notice served and whether within the contractual time bar (fact, |
 | 13.T.1 | Diligence stream economics and interface sheet (one per transaction) | inside the envelope or on the critical path (and if the latter, the justification and its weekly |
 | 13.T.2 | Model-audit finding register (one per model version) | Per finding: number · date raised · raised by (auditor / sponsor review / machine scan) · scope |
 | 13.T.3 | Close register: conditions, costs and funds flow (one per transaction) | third-party / adviser / financial) · chain and predecessor · duration estimate · owner · evidence |
-| 14.T.1 | Draw request pack and certification control sheet | period, split into value of milestones achieved, value of assessed percentage completion, and value |
-| 14.T.2 | Restated sources and uses, the in-balance test, and the `EAC` bridge | total — against sources in the same three columns, with available commitment stated as undrawn debt |
-| 14.T.3 | Contingency coverage and change-control register | draw retires; remaining unallocated. Denominator, itemised: approved variations not yet |
+| 14.T.1 | Draw request pack and certification control sheet | period, split into value of milestones achieved, value of assessed percentage completion, and |
+| 14.T.2 | Restated sources and uses, the in-balance test, and the `EAC` bridge | funded, total) against sources in the same three columns, with available commitment stated as |
+| 14.T.3 | Contingency coverage and change-control register | each draw retires; remaining unallocated. Denominator, itemised: approved variations not yet |
 | 15.T.1 | The operating bridge (one per reporting period) | A single sheet running from physical performance to certified CFADS, in fixed rows: availability |
 | 15.T.2 | Operating covenant and distribution register (one per facility, per test date) | Per test: name and clause · test date and frequency · backward, rolling or forward-looking · window |
 | 15.T.3 | Transaction decision sheet (refinancing, amendment or restructuring) | break costs on the actual notional profile, and the sweep. |
-| 16.T.1 | The automation business case, on one page | Mandatory lines, in this order, with no line permitted to be blank: the task and the volume the |
+| 16.T.1 | The automation business case, on one page | Mandatory lines, in this order, with no line permitted to be blank: the task and the volume |
 | 16.T.2 | Threshold and alert-queue sheet (per detector, per review) | Per candidate threshold: score cut · TP · FP · FN · TN · recall · precision · accuracy · |
-| 16.T.3 | Model inventory, tier and approval record | One row per model in production, reconciled quarterly to production access logs — an unreconciled |
+| 16.T.3 | Model inventory, tier and approval record | One row per model in production, reconciled quarterly to production access logs. An unreconciled |
 
 **On the one appendix the volume plan lists and this volume does not carry.** The plan for this
 family also names a consolidated *self-check answers* appendix. It is not printed, and the reason is

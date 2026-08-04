@@ -2,10 +2,10 @@
 
 This reference is one book, not thirteen. The same symbols, the same worked-example shape, the same rounding
 rules and the same citation practice run from the first page to the last, so that a formula first met in
-Domain 3 means exactly the same thing when it reappears in Domain 9. This opening chapter sets out those shared
-conventions — how the book is numbered, how its worked examples are laid out, what its symbols mean, how its
-figures and sample questions are built, and how it treats standards, numbers and language. Read it once; it
-makes every later chapter faster to read.
+Domain 3 means exactly the same thing when it reappears in Domain 9. This opening chapter sets out those
+shared conventions: how the book is numbered, how its worked examples are laid out, what its symbols mean, how
+its figures and sample questions are built, and how it treats standards, numbers and language. Read it once;
+it makes every later chapter faster to read.
 
 ---
 
@@ -17,13 +17,13 @@ it is weighted **40 % finance / 40 % project management / 20 % AI**.
 | Domain group | Share |
 |---|---|
 | Finance, accounting & reporting (Domains 1–4) | 40 % |
-| Project management — lifecycle, agile, scheduling, cost/EVM, contracts, risk, process cycles (Domains 5–12) | 40 % |
+| Project management: lifecycle, agile, scheduling, cost/EVM, contracts, risk, process cycles (Domains 5–12) | 40 % |
 | AI knowledge & practical approach (Domain 13) | 20 % |
 
 The AI weighting is carried by Domain 13 together with the "AI in this domain/KA" sections embedded in every
-non-AI chapter, and by KA 13.5's systematic pass across all thirteen domains — the 20 % is measured across
-that whole surface, not by Domain 13's page count alone. Depth follows the material rather than a page quota:
-where a topic genuinely demands more, it gets more.
+non-AI chapter, and by KA 13.5's systematic pass across all thirteen domains. The 20 % is measured across that
+whole surface, not by Domain 13's page count alone. Depth follows the material rather than a page quota: where
+a topic genuinely demands more, it gets more.
 
 This Body of Knowledge *is* the credential framework. The Institute's examination blueprint and practice
 materials are aligned to these thirteen domains and to the 40/40/20 weighting; practice environments may
@@ -36,9 +36,9 @@ throughout.
 
 Everything in this reference sits in a three-level hierarchy:
 
-- **Domain** — the major pillar (for example, *Foundations of Accounting for Project Controls*).
-- **Knowledge Area (KA)** — a coherent body of practice within a domain (for example, *The accounting model*).
-- **Topic** — the atomic, teachable and testable unit (for example, *Debit and credit rules by account type*).
+- **Domain**: the major pillar (for example, *Foundations of Accounting for Project Controls*).
+- **Knowledge Area (KA)**: a coherent body of practice within a domain (for example, *The accounting model*).
+- **Topic**: the atomic, teachable and testable unit (for example, *Debit and credit rules by account type*).
 
 Each level carries a number, written `Domain.KA.Topic`. So **1.1.2** is Domain 1, Knowledge Area 1.1,
 Topic 2. Knowledge Areas are cited as **6.3**, topics as **6.3.2**.
@@ -48,10 +48,10 @@ than repeating its content, so the explanation lives in one place and stays cons
 is how the disciplines are meant to be read together: the accrual discipline of 5.2 is what makes the `AC` in
 6.2 true, and the forecast chosen in 6.3 is what sets the revenue ratio in 2.2.6.
 
-Two further numbering conventions appear inside chapters. Advanced material is lettered — **10.A.5** is
-Domain 10's fifth advanced topic — and appears in the *Advanced topics* section after the Knowledge Areas.
-Worked examples take the number of the topic they illustrate, with a letter suffix where a topic carries more
-than one (**10.3.1**, then **10.3.1b**, **10.3.1c**).
+Two further numbering conventions appear inside chapters. Advanced material is lettered (**10.A.5** is Domain
+10's fifth advanced topic) and appears in the *Advanced topics* section after the Knowledge Areas. Worked
+examples take the number of the topic they illustrate, with a letter suffix where a topic carries more than
+one (**10.3.1**, then **10.3.1b**, **10.3.1c**).
 
 Each domain follows one shape: Knowledge Areas, advanced topics, two sector case studies, an executive
 perspective, calculation exercises with full solutions (in the quantitative domains), a practitioner's
@@ -73,7 +73,7 @@ A small core of terms recurs so often that it is worth fixing before Domain 1 be
 |---|---|
 | **Accrual basis** | Recognising the effects of transactions when they occur, not when cash moves. |
 | **Baseline** | The approved, version-controlled plan (scope, schedule or cost) against which performance is measured. |
-| **Control account (CA)** | A management-control point where scope, budget, actual cost and schedule integrate — the intersection of a WBS element and an organisational (OBS) element. |
+| **Control account (CA)** | A management-control point where scope, budget, actual cost and schedule integrate: the intersection of a WBS element and an organisational (OBS) element. |
 | **Cost breakdown structure (CBS)** | The hierarchical decomposition of a project's cost by cost element/type. |
 | **Provision** | A liability of uncertain timing or amount, recognised under IAS 37 when the recognition tests are met. |
 | **Recognition** | Recording an item in the financial statements (as an asset, liability, income or expense). |
@@ -116,16 +116,16 @@ are first used in depth in Domains 3–6, because the classical treatment (Domai
 Worked examples are the spine of the book, and they all follow the same five steps, so that once the format is
 familiar any calculation in any domain can be followed at speed:
 
-1. **Setup** — the scenario in a sentence or two, with the given data listed.
-2. **Formula** — the formula stated, each variable named with its unit.
-3. **Substitution** — the numbers substituted in, shown explicitly.
-4. **Result** — the computed answer, rounded per §7 and stated with its unit.
-5. **Interpretation** — what the number *means* for the decision in front of the professional.
+1. **Setup**: the scenario in a sentence or two, with the given data listed.
+2. **Formula**: the formula stated, each variable named with its unit.
+3. **Substitution**: the numbers substituted in, shown explicitly.
+4. **Result**: the computed answer, rounded per §7 and stated with its unit.
+5. **Interpretation**: what the number *means* for the decision in front of the professional.
 
 The interpretation step is never decorative: a figure that has not been interpreted has not yet been used.
-Where a calculation is inherently tabular — a network forward and backward pass, a multi-scenario comparison —
-the five steps give way to a labelled table, but the interpretation still follows it. Where an example rests on
-an assumption, the assumption is stated rather than glossed over, because in practice it is the assumption
+Where a calculation is inherently tabular (a network forward and backward pass, a multi-scenario comparison)
+the five steps give way to a labelled table, but the interpretation still follows it. Where an example rests
+on an assumption, the assumption is stated rather than glossed over, because in practice it is the assumption
 that gets challenged.
 
 **How to work them.** Attempt each example before reading its solution: cover the substitution, work it, then
@@ -138,12 +138,12 @@ calculations most often attract.
 ## 6. Figures
 
 Figures are numbered on the same scheme as everything else: **Fig 1.2.1** is the first figure in Domain 1,
-Knowledge Area 2. Each figure carries a caption, the underlying data it is drawn from — so the reader can
-reproduce or re-scale it — and a description of what is plotted. Figures are drawn in a single house style:
+Knowledge Area 2. Each figure carries a caption, the underlying data it is drawn from (so the reader can
+reproduce or re-scale it) and a description of what is plotted. Figures are drawn in a single house style:
 clean, professional, brand blue `#1D4ED8`. **Appendix D** indexes every figure in the book.
 
 Some figures also carry an **animation storyboard**, marked *digital-only*. These describe how the figure
-moves in the digital and LMS editions — an S-curve building period by period, a critical-path pass sweeping
+moves in the digital and LMS editions: an S-curve building period by period, a critical-path pass sweeping
 forward then backward, a sprint looping. The printed and PDF editions use the static figure rendered from the
 same data; nothing needed to understand the point is confined to the animation.
 
@@ -158,8 +158,8 @@ same data; nothing needed to understand the point is confined to the animation.
 - **Rounding:** money to the nearest whole currency unit unless the topic needs cents; ratios and indices to
   **two decimal places**; percentages to **one decimal place** unless the precision matters. Where rounding
   changes the answer, the book says so and carries the unrounded figure through the working.
-- **Thousands separators:** comma (`1,250,000`). Negative and adverse amounts appear in parentheses —
-  `(80,000)` — in statements and variance tables, and with a leading minus elsewhere.
+- **Thousands separators:** comma (`1,250,000`). Negative and adverse amounts appear in parentheses,
+  `(80,000)`, in statements and variance tables, and with a leading minus elsewhere.
 - **Code style:** symbols, formulae and account entries are set in `monospace` so they stand apart from the
   prose that explains them.
 
@@ -169,17 +169,17 @@ same data; nothing needed to understand the point is confined to the animation.
 
 Each Knowledge Area closes with **sample multiple-choice questions** written to certification standard. Every
 item has exactly **four options (A–D)** with **one correct answer**, followed by a short **rationale** that
-explains why the right answer is right *and* why each plausible distractor is wrong — the distractors are the
+explains why the right answer is right *and* why each plausible distractor is wrong. The distractors are the
 results of the errors candidates actually make, not filler. Each item is tagged with the **topic number it
-tests and its cognitive level** — *Recall*, *Application* or *Analysis* — written `[1.4.2 · Application]`, so
+tests and its cognitive level** (*Recall*, *Application* or *Analysis*) written `[1.4.2 · Application]`, so
 weak areas can be traced straight back to the topic that fixes them. Where a topic is quantitative, the item
 is quantitative: the candidate computes first, then selects.
 
 **Appendix F** collects every sample item in the book into one bank, grouped by domain and numbered
 `PCL-MCQ-DD-NN`, with the answer to each and a pointer back to the Knowledge Area holding its rationale.
-Self-check questions — two or three at the close of each Knowledge Area, with their answers alongside for
-immediate self-marking — are a lighter, faster check on the same material; **Appendix E** gathers their
-answers into a single key.
+Self-check questions (two or three at the close of each Knowledge Area, with their answers alongside for
+immediate self-marking) are a lighter, faster check on the same material; **Appendix E** gathers their answers
+into a single key.
 
 These are **study items**. They are written from the same blueprint as the examination but are maintained
 separately from any live examination bank, and they are not reused as live questions.
@@ -193,14 +193,13 @@ Real frameworks are named and their principles explained; nothing is invented an
 - **Named at principle level.** IFRS 15, IAS 1, IAS 2, IAS 16, IAS 23, IAS 37 and IFRS 16; the PMBOK Guide and
   the AACE Total Cost Management framework; ISO 31000 and ISO/IEC 17024; the Agile Manifesto, the Scrum Guide,
   Kanban and Lean; and, for AI governance (13.6.6), ISO/IEC 42001, ISO/IEC 23894, the NIST AI RMF, the OECD AI
-  Principles and the EU AI Act — of which only the last is understood to be legislation, and then only within
-  its own jurisdiction and on its own terms.
-  **Appendix C** indexes every framework this book refers to and where it is used.
-- **In this book's own words.** No standard's text is reproduced. A principle is summarised — "the principle
-  IAS 37 addresses is that a provision is recognised when…" — and every example, table, figure and question is
-  original. Clause numbers,
-  page references and quotations are never manufactured to look authoritative, and no clause, article,
-  paragraph or edition is cited as authority anywhere in this book.
+  Principles and the EU AI Act, of which only the last is understood to be legislation, and then only within
+  its own jurisdiction and on its own terms. **Appendix C** indexes every framework this book refers to and
+  where it is used.
+- **In this book's own words.** No standard's text is reproduced. A principle is summarised ("the principle
+  IAS 37 addresses is that a provision is recognised when…") and every example, table, figure and question is
+  original. Clause numbers, page references and quotations are never manufactured to look authoritative, and
+  no clause, article, paragraph or edition is cited as authority anywhere in this book.
 - **Named, never relied upon.** Naming a framework is identification, not a statement of what it requires.
   Nothing in this book states the requirements of any standard, framework, regulation or law; the official
   publication of each instrument governs, and a professional who needs to know what one requires reads it or
@@ -213,8 +212,8 @@ Real frameworks are named and their principles explained; nothing is invented an
   any jurisdiction. Those positions vary, they change, and they are for qualified counsel and advisers
   engaged on the specific facts. Every such passage carries that referral, and the referral is part of the
   teaching rather than a formality attached to it.
-- **Honest about AI.** Domain 13 describes real, current capabilities together with their limits and risks —
-  hallucination, data quality, bias, confidentiality, auditability — and marks fast-moving capabilities as
+- **Honest about AI.** Domain 13 describes real, current capabilities together with their limits and risks
+  (hallucination, data quality, bias, confidentiality, auditability) and marks fast-moving capabilities as
   such. One principle governs the whole treatment: **AI proposes; the professional verifies, decides and
   remains accountable.**
 
@@ -229,7 +228,7 @@ Real frameworks are named and their principles explained; nothing is invented an
 | 3 | Budgeting & Forecasting | Finance |
 | 4 | Performance Management, Variance Analysis & Management Reporting | Finance |
 | 5 | Cost Management & Cost Control | PM |
-| 6 | Earned Value Management & Forecasting (EVM/EAC) — flagship | PM |
+| 6 | Earned Value Management & Forecasting (EVM/EAC): flagship | PM |
 | 7 | Contracts, Commercial Management, BoQ, Invoicing & Revenue | PM |
 | 8 | Project Management Lifecycle | PM |
 | 9 | Agile, Scrum & Adaptive Delivery for Project Controls | PM |
@@ -237,7 +236,7 @@ Real frameworks are named and their principles explained; nothing is invented an
 | 11 | Business Process Cycles (O2C, P2P & the control environment) | PM |
 | 12 | Risk Management for Project Controls | PM |
 | 13 | AI for Project Controls & Project Management: Concepts, Tools & Practice | AI |
-| — | Appendices — formula sheet · glossary · standards index · figure index · self-check answers · sample-MCQ bank · integrated capstone | — |
+| — | Appendices: formula sheet · glossary · standards index · figure index · self-check answers · sample-MCQ bank · integrated capstone | — |
 
 The order is cumulative rather than arbitrary. Domains 1–4 build the financial grammar the rest of the book
 speaks; Domains 5–12 apply it to delivery, with Domain 9 deliberately placed after Domain 6 because adaptive
@@ -250,13 +249,13 @@ month-end close, which is the closest this reference comes to showing the job as
 ## 11. The PCI Standards — the companion instrument
 
 This reference teaches the discipline. A **companion instrument, the PCI Standards, states the conduct
-required of credential holders** — what must be done, who owns the decision, what evidence must exist, when a
+required of credential holders**: what must be done, who owns the decision, what evidence must exist, when a
 matter must be escalated, what practice is prohibited, what AI may and may not be used for, and how work must
 be verified. The two are designed to be read together: a domain here explains *how* earned value is measured,
 and the Standards state *what a credential holder must never do* to it.
 
 **What the Standards are.** They are **private professional requirements** established by Project Controls
-Institute Global and binding within PCI's own authority — examination scope, certification conditions, and
+Institute Global and binding within PCI's own authority: examination scope, certification conditions, and
 PCI's quality and conduct processes. They are **not legislation, government regulation or legal advice**, and
 they do not displace anything. Where an applicable legal, regulatory, contractual or authoritative
 professional requirement imposes a higher or different obligation, **that requirement governs**. Nothing in
@@ -266,8 +265,8 @@ this book, and nothing in the Standards, states the position under the law of an
 
 | Form | What it is | Example |
 |---|---|---|
-| `PCI-FND-STD-NN` | A **Foundational Standard**, binding on holders of every PCI credential | `PCI-FND-STD-11` — escalation of material misstatement |
-| `PCI-PCL-STD-DD.NN` | A **PCL-AI Certification Standard**, where `DD` is the two-digit domain of primary anchorage and `NN` its sequence within that domain | `PCI-PCL-STD-06.03` — coherence of the three earned-value data points |
+| `PCI-FND-STD-NN` | A **Foundational Standard**, binding on holders of every PCI credential | `PCI-FND-STD-11`: escalation of material misstatement |
+| `PCI-PCL-STD-DD.NN` | A **PCL-AI Certification Standard**, where `DD` is the two-digit domain of primary anchorage and `NN` its sequence within that domain | `PCI-PCL-STD-06.03`: coherence of the three earned-value data points |
 
 Citation is always by identifier, never by page number. Where a passage in this book names a standard, it is
 pointing at the obligation, not reproducing it: the published Standards govern their own wording, and a

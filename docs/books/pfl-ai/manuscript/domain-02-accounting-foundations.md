@@ -2,43 +2,44 @@
 
 ## Why this domain exists
 
-Domain 1 established that **cash, not profit, is the binding constraint** — and then left an
-obligation outstanding: if profit is not the thing that pays debt service, why does anyone compute
-it, and how do you get from one to the other? This domain discharges that obligation. It builds
-the accrual model and what recognition actually means (KA 2.1); assembles the three statements and
-the articulation that binds them into one system (KA 2.2); works the treatments that decide a
-project's reported numbers — working capital, revenue and cost recognition, capital versus
-operating expenditure, provisions (KA 2.3); and closes with ratio interpretation and the
-interfaces between project reporting and corporate accounts (KA 2.4). A project finance leader is
-not an accountant, and this domain does not try to make one. It makes something more specific: a
-leader who can read a set of statements, find the cash inside them, and tell when an accounting
-choice has changed the picture without changing the economics.
+Domain 1 established that **cash, not profit, is the binding constraint**, and then left an
+obligation outstanding: if profit is not the thing that pays debt service, why does anyone
+compute it, and how do you get from one to the other? This domain discharges that obligation. It
+builds the accrual model and what recognition actually means (KA 2.1); assembles the three
+statements and the articulation that binds them into one system (KA 2.2); works the treatments
+that decide a project's reported numbers: working capital, revenue and cost recognition, capital
+versus operating expenditure, provisions (KA 2.3); and closes with ratio interpretation and the
+interfaces between project reporting and corporate accounts (KA 2.4). A project finance leader
+is not an accountant, and this domain does not try to make one. It makes something more
+specific: a leader who can read a set of statements, find the cash inside them, and tell when an
+accounting choice has changed the picture without changing the economics.
 
 **Learning objectives.** After this domain a candidate can: explain accrual accounting and the
-recognition tests that drive it, and quantify the divergence between the two bases on one period's
-trading; describe each of the three statements and what question it answers; **articulate** a
-statement set — complete a balance sheet from the movements, prove it balances, and derive the
-cash-flow statement by both the indirect and the direct method to the same figure; explain how
-working capital consumes cash, compute its effect on `CFADS` and therefore on a coverage ratio, and
-restate a coverage covenant as a collection-period threshold; measure progress on an over-time
-contract by an input and an output method and compute the recognition consequence, including the
-immediate charge on an onerous contract; distinguish capital from operating expenditure, quantify
-the profit effect while showing pre-tax cash is unaffected, and identify the one circumstance in
-which cash is *not* unaffected; measure a decommissioning provision at present value and compute
-its first-year accretion and depreciation; interpret a full ratio set, including the leverage
-identity that links return on capital to return on equity and the comparison against Domain 9's
-`WACC`; quantify the five meanings of "spend" and reconcile them to one identity; explain deferred
-tax and compute a deferred tax liability; and govern AI-assisted analysis of financial statements.
+recognition tests that drive it, and quantify the divergence between the two bases on one
+period's trading; describe each of the three statements and what question it answers;
+**articulate** a statement set, complete a balance sheet from the movements, prove it balances,
+and derive the cash-flow statement by both the indirect and the direct method to the same
+figure; explain how working capital consumes cash, compute its effect on `CFADS` and therefore
+on a coverage ratio, and restate a coverage covenant as a collection-period threshold; measure
+progress on an over-time contract by an input and an output method and compute the recognition
+consequence, including the immediate charge on an onerous contract; distinguish capital from
+operating expenditure, quantify the profit effect while showing pre-tax cash is unaffected, and
+identify the one circumstance in which cash is *not* unaffected; measure a decommissioning
+provision at present value and compute its first-year accretion and depreciation; interpret a
+full ratio set, including the leverage identity that links return on capital to return on equity
+and the comparison against Domain 9's `WACC`; quantify the five meanings of "spend" and
+reconcile them to one identity; explain deferred tax and compute a deferred tax liability; and
+govern AI-assisted analysis of financial statements.
 
-**The master statements.** Kestrel Water SPC — whose loan, appraisal and financing decision
-Domains 1, 3 and 4 built — now reports its **first full operating year**. The plant cost
-**USD 60,000,000** (Domain 4's `I₀`), depreciated straight-line over **25 years**. The senior loan
-is Domain 3's **USD 42,000,000 at 6.0 % over 12 years**, so year-one interest is
-**USD 2,520,000** and the annual instalment is **USD 5,009,635.23**, of which **2,489,635.23** is
-principal. Revenue is **USD 12,000,000**, cash operating costs **USD 4,500,000**, and tax is charged
-at **20 %**. The opening balance sheet at the commercial operations date is plant **60,000,000**,
-cash **nil**, senior debt **42,000,000** and equity **18,000,000**, with no receivables or payables.
-Every figure in KA 2.1–2.4 derives from these.
+**The master statements.** Kestrel Water SPC (whose loan, appraisal and financing decision
+Domains 1, 3 and 4 built) now reports its **first full operating year**. The plant cost **USD
+60,000,000** (Domain 4's `I₀`), depreciated straight-line over **25 years**. The senior loan is
+Domain 3's **USD 42,000,000 at 6.0 % over 12 years**, so year-one interest is **USD 2,520,000**
+and the annual instalment is **USD 5,009,635.23**, of which **2,489,635.23** is principal.
+Revenue is **USD 12,000,000**, cash operating costs **USD 4,500,000**, and tax is charged at
+**20 %**. The opening balance sheet at the commercial operations date is plant **60,000,000**,
+cash **nil**, senior debt **42,000,000** and equity **18,000,000**, with no receivables or
+payables. Every figure in KA 2.1–2.4 derives from these.
 
 ---
 
@@ -51,10 +52,10 @@ system.*
 
 **Definitions.** **Cash accounting** records a transaction when money moves. **Accrual
 accounting** records the *effects* of transactions when they occur, regardless of when money
-moves — revenue when it is earned, expenses when they are incurred. Accrual is the basis of
-general-purpose financial reporting because cash timing is a poor guide to performance: a project
-that invoices in December and collects in February did the work in December, and a cash-basis
-account would report a loss followed by a windfall.
+moves: revenue when it is earned, expenses when they are incurred. Accrual is the basis of
+general-purpose financial reporting because cash timing is a poor guide to performance: a
+project that invoices in December and collects in February did the work in December, and a
+cash-basis account would report a loss followed by a windfall.
 
 The two bases answer different questions, and a finance leader needs both:
 
@@ -64,9 +65,9 @@ The two bases answer different questions, and a finance leader needs both:
 | **Cash** | Can we pay what falls due? | Debt service, drawdowns, liquidity, `CFADS` (Domain 10) |
 
 **The professional consequence.** Accrual and cash diverge, and the divergence is *information*,
-not noise. A project reporting healthy profit while operating cash falls is telling you something
-precise — usually that working capital is absorbing the difference (KA 2.3.1). Domain 1's
-worked example was exactly this case; this domain now shows the machinery that produces it.
+not noise. A project reporting healthy profit while operating cash falls is telling you
+something precise: usually that working capital is absorbing the difference (KA 2.3.1). Domain
+1's worked example was exactly this case; this domain now shows the machinery that produces it.
 
 **Worked example 2.1.1 — the same year on both bases, quarter by quarter.**
 
@@ -93,26 +94,27 @@ worked example was exactly this case; this domain now shows the machinery that p
    | Q4 | 1,875,000 | 3,050,000 | 1,175,000 | 1,875,000 | **nil** |
    | **Year** | **7,500,000** | **11,100,000** | **4,200,000** | **6,900,000** | **(600,000)** |
 
-5. **Interpretation.** The two bases disagree by **600,000** over the year, and the disagreement is
-   not an opinion about performance — it is the closing net working-capital position, receivables
-   900,000 less payables 300,000, to the dollar. That is the invariant worth carrying out of this
-   Knowledge Area: **cumulative accrual result minus cumulative cash result equals the net
-   working-capital balance on the balance sheet**, which is why an unexplained divergence is always
-   findable and always sits in a named account. Three further readings. First, the *pattern* of the
-   quarters is the information, not the annual total: quarter one diverges by 750,000 because the
-   trading cycle is being built from nothing, and quarters two to four converge as it stabilises —
-   a start-up profile, not a deterioration, and a reader who saw only quarter one would draw the
-   opposite conclusion. Second, **quarter four is the quarter in which the two bases agree, and it
-   agrees for a reason that has nothing to do with performance**: receivables and payables each fell
-   by 50,000, so the net movement was nil. Agreement between profit and cash is evidence that
-   working capital did not move, and nothing more. Third, cash accounting is not the conservative
-   choice it is often taken to be — it is merely **late**. It reported 600,000 less than accrual
-   this year, and it will report 600,000 more in the year the trading cycle stops growing or
-   unwinds, because over the life of the project the two bases must sum to the same number. The
-   professional caution is the mirror image: a project whose cash result flatters its accrual
-   result is often a project in decline, releasing working capital as volumes fall — the effect
-   Domain 15 (KA 15.1.2) tracks through the operating phase, where it makes a deteriorating project
-   report an improving covenant ratio.
+5. **Interpretation.** The two bases disagree by **600,000** over the year, and the disagreement
+   is not an opinion about performance. It is the closing net working-capital position,
+   receivables 900,000 less payables 300,000, to the dollar. That is the invariant worth
+   carrying out of this Knowledge Area: **cumulative accrual result minus cumulative cash result
+   equals the net working-capital balance on the balance sheet**, which is why an unexplained
+   divergence is always findable and always sits in a named account. Three further readings.
+   First, the *pattern* of the quarters is the information, not the annual total: quarter one
+   diverges by 750,000 because the trading cycle is being built from nothing, and quarters two
+   to four converge as it stabilises — a start-up profile, not a deterioration, and a reader who
+   saw only quarter one would draw the opposite conclusion. Second, **quarter four is the
+   quarter in which the two bases agree, and it agrees for a reason that has nothing to do with
+   performance**: receivables and payables each fell by 50,000, so the net movement was nil.
+   Agreement between profit and cash is evidence that working capital did not move, and nothing
+   more. Third, cash accounting is merely **late**, not the conservative choice it is often
+   taken to be. It reported 600,000 less than accrual this year, and it will report 600,000 more
+   in the year the trading cycle stops growing or unwinds, because over the life of the project
+   the two bases must sum to the same number. The professional caution is the mirror image: a
+   project whose cash result flatters its accrual result is often a project in decline,
+   releasing working capital as volumes fall — the effect Domain 15 (KA 15.1.2) tracks through
+   the operating phase, where it makes a deteriorating project report an improving covenant
+   ratio.
 
 ### 2.1.2 Recognition
 
@@ -121,24 +123,24 @@ income or expense. It is governed by tests, not by preference, and the tests are
 what accounting standards do. Described in principle (IFRS is the framework referenced throughout
 this book by name):
 
-- An **asset** is a present economic resource controlled by the entity as a result of past events —
-  recognised when it exists and can be measured reliably. Control, not legal title, is the
-  operative idea.
+- An **asset** is a present economic resource controlled by the entity as a result of past
+  events: recognised when it exists and can be measured reliably. Control, not legal title, is
+  the operative idea.
 - A **liability** is a present obligation to transfer an economic resource as a result of past
   events. A *future* intention is not a liability, however certain it feels.
 - **Income and expenses** are recognised as the underlying changes in assets and liabilities
   occur, which is why revenue recognition follows performance (KA 2.3.2) rather than invoicing.
 
-**Measurement** then asks *at what amount* — historical cost, amortised cost, fair value — and the
-choice materially changes reported figures without changing any cash flow. That sentence is the
-whole reason a finance leader reads statements sceptically: **recognition and measurement policies
-are part of the answer, so they must be part of the question.**
+**Measurement** then asks *at what amount* (historical cost, amortised cost, fair value), and
+the choice materially changes reported figures without changing any cash flow. That sentence is
+the whole reason a finance leader reads statements sceptically: **recognition and measurement
+policies are part of the answer, so they must be part of the question.**
 
 **Applying the tests.** The tests are worth more as a procedure than as prose, because the same
-four questions dispose of almost every item a project throws up. Take them in order — *is there a
-present obligation or resource? did a past event create it? is settlement or inflow probable? can
-it be measured reliably?* — and stop at the first "no". Six items from Kestrel's own first year,
-each disposed of by a different failed test:
+four questions dispose of almost every item a project throws up. Take them in order (*is there a
+present obligation or resource? did a past event create it? is settlement or inflow probable?
+can it be measured reliably?*), and stop at the first "no". Six items from Kestrel's own first
+year, each disposed of by a different failed test:
 
 | Item | Present obligation / resource? | From a past event? | Probable? | Reliably measurable? | Treatment |
 |---|---|---|---|---|---|
@@ -152,12 +154,12 @@ each disposed of by a different failed test:
 Two points the table makes better than a paragraph can. The **asymmetry is deliberate**: the
 contingent liability is disclosed on *probable* while the contingent asset is recognised only on
 *virtually certain*, so an entity in an identical factual position on both sides of a dispute
-reports the downside earlier than the upside. And **the failing test names the argument**: when two
-professionals disagree about an item, they are almost never disagreeing about all four questions,
-and identifying which one is contested — usually probability, occasionally measurement — converts
-an impasse into a specific evidential question. Which framework applies, and how these tests are
-expressed within it, is a matter for the entity's finance function and auditors; the *procedure* is
-transferable, the conclusion is not.
+reports the downside earlier than the upside. And **the failing test names the argument**: when
+two professionals disagree about an item, they are almost never disagreeing about all four
+questions, and identifying which one is contested (usually probability, occasionally
+measurement) converts an impasse into a specific evidential question. Which framework applies,
+and how these tests are expressed within it, is a matter for the entity's finance function and
+auditors; the *procedure* is transferable, the conclusion is not.
 
 ### 2.1.3 The statements as one system
 
@@ -170,21 +172,21 @@ Closing equity = Opening equity + Profit − Distributions   (+ capital contribu
 Closing cash   = Opening cash + Operating + Investing + Financing cash flows
 ```
 
-Because they share one underlying record, a change in one propagates to all three — the property
-called **articulation**, demonstrated arithmetically in KA 2.2.4. Articulation is the reader's
+Because they share one underlying record, a change in one propagates to all three (the property
+called **articulation**, demonstrated arithmetically in KA 2.2.4). Articulation is the reader's
 single most powerful tool: a statement set that does not articulate contains an error or an
 omission, and finding where it fails localises the problem immediately.
 
 ### AI in this KA
 
-Statement analysis is a genuine AI strength — extracting line items, restating across periods,
-flagging unusual movements — and it has a specific, dangerous blind spot: a model reads the
+Statement analysis is a genuine AI strength (extracting line items, restating across periods,
+flagging unusual movements), and it has a specific, dangerous blind spot: a model reads the
 *numbers* fluently and the *policies* not at all. Two projects with identical economics and
 different capitalisation or revenue-recognition policies produce different statements, and an
-assistant comparing them will report a difference in performance that does not exist. The governed
-habit: ask what policy produced each figure before comparing any two entities or periods, and
-verify extracted line items against the source statement. **AI proposes; the professional
-verifies, decides and remains accountable.**
+assistant comparing them will report a difference in performance that does not exist. The
+governed habit: ask what policy produced each figure before comparing any two entities or
+periods, and verify extracted line items against the source statement. **AI proposes; the
+professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 2.1
 
@@ -201,7 +203,8 @@ verifies, decides and remains accountable.**
 **MCQ 2.1-A `[2.1.1 · Analysis]`** A project reports rising profit and falling operating cash
 flow over three quarters, with no change in accounting policy. The most likely explanation is:
 - A. the profit figures must be erroneous
-- B. working capital is absorbing cash — receivables and/or inventory are growing faster than payables ✅
+- B. working capital is absorbing cash: receivables and/or inventory are growing faster than
+  payables ✅
 - C. depreciation has increased
 - D. the two measures are unrelated, so no explanation is needed
 
@@ -212,7 +215,8 @@ back), and D denies the articulation the statements are built on.
 **MCQ 2.1-B `[2.1.2 · Application]`** A sponsor board has firmly resolved to fund a plant upgrade
 next year. At this year end this is:
 - A. a liability, because the decision is certain
-- B. not a liability — there is no present obligation from a past event; an intention is not an obligation ✅
+- B. not a liability; there is no present obligation from a past event; an intention is not an
+  obligation ✅
 - C. a provision, because the amount is estimable
 - D. a contingent asset
 
@@ -223,26 +227,27 @@ and D inverts the direction entirely.
 **MCQ 2.1-C `[2.1.3 · Recall]`** A statement set where the cash-flow statement's closing cash does
 not equal the balance sheet's cash indicates:
 - A. a normal difference in presentation
-- B. an error or omission — the statements articulate to one record, so they must reconcile ✅
+- B. an error or omission: the statements articulate to one record, so they must reconcile ✅
 - C. the use of accrual rather than cash accounting
 - D. a foreign-currency effect that requires no action
 
 *Rationale:* Articulation is an identity (2.1.3). FX and presentation differences are disclosed
-and reconciled, not left unbalanced — an unreconciled set is a defect, and locating the break is
+and reconciled, not left unbalanced. An unreconciled set is a defect, and locating the break is
 the reader's fastest diagnostic.
 
 **MCQ 2.1-D `[2.1.1 · Analysis]`** Over its first year a project reports accrual `EBITDA` of
 7,500,000 and cash-basis `EBITDA` of 6,900,000. Receivables closed at 900,000 and payables at
 300,000, both having opened at nil. The 600,000 difference is best described as:
 - A. an error, since the two measures should agree over a full year
-- B. the closing net working-capital balance — the divergence is the balance sheet, and it reverses when the trading cycle stops growing ✅
+- B. the closing net working-capital balance; the divergence is the balance sheet, and it
+  reverses when the trading cycle stops growing ✅
 - C. evidence that the accrual figures are optimistic
 - D. a timing difference that will never reverse
 
 *Rationale:* Cumulative accrual result less cumulative cash result equals net working capital
 (2.1.1), so the divergence is locatable in named accounts and is a growth profile rather than a
 quality-of-earnings verdict. A denies the identity; C reads a timing effect as a judgment; D is
-wrong because the balances unwind — cash accounting is late, not conservative.
+wrong because the balances unwind. Cash accounting is late, not conservative.
 
 **MCQ 2.1-E `[2.1.2 · Evaluation]`** An insurer has indicated it will probably meet a claim, and
 the amount is reliably estimable. The entity also faces a counterclaim it assesses as probable and
@@ -258,32 +263,34 @@ both sides reports the downside first. A applies one threshold to both; B ignore
 counterclaim passes its tests; D offsets two items that arise from different events, which the
 recognition tests are applied to individually.
 
-**MCQ 2.1-F `[2.1.1 · Comprehension]`** Kestrel's first year reports accrual `EBITDA` of 7,500,000
-and cash-basis `EBITDA` of 6,900,000, and 2.1.1 concludes that cash accounting is "not the
-conservative choice — merely late". Which statement restates that claim correctly?
+**MCQ 2.1-F `[2.1.1 · Comprehension]`** Kestrel's first year reports accrual `EBITDA` of
+7,500,000 and cash-basis `EBITDA` of 6,900,000, and 2.1.1 concludes that cash accounting is "not
+the conservative choice, merely late". Which statement restates that claim correctly?
 - A. the cash basis reports a lower result in every period, which is why it is the prudent basis for a lender
-- B. the 600,000 the cash basis has not yet reported is the closing net working-capital balance, and it is reported in whichever later period the trading cycle stops growing or unwinds — over the project's life the two bases sum to the same figure ✅
+- B. the 600,000 the cash basis has not yet reported is the closing net working-capital balance,
+  and it is reported in whichever later period the trading cycle stops growing or unwinds (over
+  the project's life the two bases sum to the same figure ✅)
 - C. the cash basis is late because customers pay in arrears, so the 600,000 difference is permanent
 - D. the two bases differ because accrual accounting charges depreciation, which a cash basis cannot recognise
 
-*Rationale:* the cumulative gap *is* a balance-sheet position — receivables 900,000 less payables
-300,000 — and balance-sheet positions unwind, so what separates the bases is timing rather than
-prudence (2.1.1). A is wrong in both directions: a project releasing working capital reports **more**
-on a cash basis, which is how a declining project flatters its cash result (Domain 15, KA 15.1.2).
-C treats a reversing balance as permanent. D names a real difference that is irrelevant here, because
-the comparison is struck at `EBITDA`, above any depreciation charge.
+*Rationale:* the cumulative gap *is* a balance-sheet position (receivables 900,000 less payables
+300,000), and balance-sheet positions unwind, so what separates the bases is timing rather than
+prudence (2.1.1). A is wrong in both directions: a project releasing working capital reports
+**more** on a cash basis, which is how a declining project flatters its cash result (Domain 15,
+KA 15.1.2). C treats a reversing balance as permanent. D names a real difference that is
+irrelevant here, because the comparison is struck at `EBITDA`, above any depreciation charge.
 
 ### Self-check — KA 2.1
 
-1. *Which basis governs debt service, and which governs covenants defined on profit?* — Cash for
+1. *Which basis governs debt service, and which governs covenants defined on profit?* Cash for
    debt service; accrual for profit-defined covenants. A leader needs both.
-2. *Why is an intention never a liability?* — Recognition requires a present obligation arising
+2. *Why is an intention never a liability?* Recognition requires a present obligation arising
    from a past event.
-3. *What does a failure to articulate tell you?* — That there is an error or omission, and where
+3. *What does a failure to articulate tell you?* That there is an error or omission, and where
    the break occurs localises it.
-4. *What does the cumulative gap between accrual and cash results equal?* — The net
+4. *What does the cumulative gap between accrual and cash results equal?* The net
    working-capital balance: 900,000 receivables less 300,000 payables = 600,000.
-5. *When profit and cash agree in a period, what has that told you?* — That working capital did
+5. *When profit and cash agree in a period, what has that told you?* That working capital did
    not move. It is not evidence of quality either way.
 
 ---
@@ -323,49 +330,52 @@ structure runs down from revenue through the layers a lender reads:
    | **Net income** | **2,064,000** |
 
 5. **Interpretation.** Four layers, four different questions. **`EBITDA`** approximates the cash
-   the operation generates before financing, tax and the accounting for past capital spend — which
-   is why lenders start there (Domain 10). **`EBIT`** charges the asset's consumption, so it
-   measures operating performance including capital intensity. **PBT** is after the cost of the
-   capital structure. **Net income** is the shareholders' accounting return — and note it is
-   USD 2,064,000 while `EBITDA` is USD 7,500,000: on a capital-intensive, levered project the gap
-   between the two is mostly depreciation and interest, and confusing them is the commonest error
-   in project financial conversation. The margins make the shape explicit: **62.50 % `EBITDA`
-   margin, 17.20 % net margin** — the 45.30 points between them are the price of the asset and the
-   loan, and they are almost entirely fixed, which is what makes the statement so revenue-sensitive.
+   the operation generates before financing, tax and the accounting for past capital spend,
+   which is why lenders start there (Domain 10). **`EBIT`** charges the asset's consumption, so
+   it measures operating performance including capital intensity. **PBT** is after the cost of
+   the capital structure. **Net income** is the shareholders' accounting return, and note it is
+   USD 2,064,000 while `EBITDA` is USD 7,500,000: on a capital-intensive, levered project the
+   gap between the two is mostly depreciation and interest, and confusing them is the commonest
+   error in project financial conversation. The margins make the shape explicit: **62.50 %
+   `EBITDA` margin, 17.20 % net margin** — the 45.30 points between them are the price of the
+   asset and the loan, and they are almost entirely fixed, which is what makes the statement so
+   revenue-sensitive.
 
    That sensitivity is computable and it is the most useful thing this statement will tell a
-   leader. Because every line below revenue except tax is fixed in the short run, a **1 % revenue
-   fall (120,000) costs 96,000 of net income after tax relief — 4.6512 % of it.** Net income is
-   therefore **4.6512 times** as revenue-elastic as revenue itself, and any conversation that treats
-   a "small" revenue miss as a small profit miss is out by that factor. Push the same arithmetic to
-   its two breakevens and the domain's central claim falls out as a comparison:
+   leader. Because every line below revenue except tax is fixed in the short run, a **1 %
+   revenue fall (120,000) costs 96,000 of net income after tax relief: 4.6512 % of it.** Net
+   income is therefore **4.6512 times** as revenue-elastic as revenue itself, and any
+   conversation that treats a "small" revenue miss as a small profit miss is out by that factor.
+   Push the same arithmetic to its two breakevens and the domain's central claim falls out as a
+   comparison:
 
-   - **Profit breakeven.** Net income reaches nil when `EBITDA` covers depreciation and interest:
-     `2,400,000 + 2,520,000 = 4,920,000`, so revenue of **USD 9,420,000** — a **21.50 %** fall.
+   - **Profit breakeven.** Net income reaches nil when `EBITDA` covers depreciation and
+     interest: `2,400,000 + 2,520,000 = 4,920,000`, so revenue of **USD 9,420,000**, a **21.50
+     %** fall.
    - **Cash breakeven.** `DSCR` reaches 1.00 when `CFADS` equals debt service. With `CFADS` =
-     `0.8 × EBITDA + 984,000 − 600,000`, that needs `EBITDA` of **USD 5,782,044.04** and revenue of
-     **USD 10,282,044.04** — a **14.32 %** fall.
+     `0.8 × EBITDA + 984,000 − 600,000`, that needs `EBITDA` of **USD 5,782,044.04** and revenue
+     of **USD 10,282,044.04**, a **14.32 %** fall.
 
    **The cash constraint binds first, and by a wide margin: 14.32 % against 21.50 %.** A project
    can be comfortably profitable and unable to pay, which is Domain 1's thesis restated as two
-   numbers on one income statement, and it is the reason every covenant that matters in Domain 10 is
-   struck on cash. Two cautions before the figures are used. The cash breakeven above holds
-   depreciation, interest, tax rate and the working-capital movement constant while revenue moves,
-   which is a first-order approximation and not a forecast: in practice receivables fall with
-   revenue, so the true cash breakeven sits a little further out (Domain 15, KA 15.1.2 measures that
-   feedback). And the 20 % tax charge is a charge on *positive* profit — below the profit breakeven
-   the relationship bends, because relief for losses is jurisdiction-specific and may be deferred,
-   capped or unavailable (KA 2.A.1; Domain 6, KA 6.2.3). A reviewer should check which of the two
-   breakevens a management pack is quoting, because they are seven revenue points apart and only one
-   of them causes a default.
+   numbers on one income statement, and it is the reason every covenant that matters in Domain
+   10 is struck on cash. Two cautions before the figures are used. The cash breakeven above
+   holds depreciation, interest, tax rate and the working-capital movement constant while
+   revenue moves, which is a first-order approximation and not a forecast: in practice
+   receivables fall with revenue, so the true cash breakeven sits a little further out (Domain
+   15, KA 15.1.2 measures that feedback). And the 20 % tax charge is a charge on *positive*
+   profit: below the profit breakeven the relationship bends, because relief for losses is
+   jurisdiction-specific and may be deferred, capped or unavailable (KA 2.A.1; Domain 6, KA
+   6.2.3). A reviewer should check which of the two breakevens a management pack is quoting,
+   because they are seven revenue points apart and only one of them causes a default.
 
 ### 2.2.2 The balance sheet
 
-**What it answers:** what does the entity own and owe at a point in time? For an SPV the structure
-is unusually clean — one asset of consequence and one financing structure — which makes it the ideal
-place to see that **a balance sheet is not assembled, it is derived**: given the opening position
-and the period's movements, every closing line including cash is determined, and the balance is a
-proof rather than a presentation.
+**What it answers:** what does the entity own and owe at a point in time? For an SPV the
+structure is unusually clean, one asset of consequence and one financing structure, which makes
+it the ideal place to see that **a balance sheet is not assembled, it is derived**: given the
+opening position and the period's movements, every closing line including cash is determined,
+and the balance is a proof rather than a presentation.
 
 **Worked example 2.2.2 — completing Kestrel's balance sheet, and proving it.**
 
@@ -401,44 +411,44 @@ proof rather than a presentation.
    CFADS − total debt service              =  6,384,000.00 − 5,009,635.23  =  1,374,364.77
    ```
 
-   The two are equal because `CFADS` exceeds operating cash flow by exactly the interest paid, and
-   debt service exceeds principal by exactly the same interest — so the interest cancels. That is
-   the arithmetic bridge between the accountant's statement and the lender's ratio, and it is why
-   Domain 9 records **1,374,364.77** as Kestrel's annual distributable cash at 70 % gearing
-   (KA 9.1.4) while this domain records it as the closing cash balance: they are one number seen
-   from two disciplines. Three consequences follow, and each is a reviewer's check.
+   The two are equal because `CFADS` exceeds operating cash flow by exactly the interest paid,
+   and debt service exceeds principal by exactly the same interest, so the interest cancels.
+   That is the arithmetic bridge between the accountant's statement and the lender's ratio, and
+   it is why Domain 9 records **1,374,364.77** as Kestrel's annual distributable cash at 70 %
+   gearing (KA 9.1.4) while this domain records it as the closing cash balance: they are one
+   number seen from two disciplines. Three consequences follow, and each is a reviewer's check.
 
    **The cash balance is a claim already spoken for.** Domain 6 (KA 6.2.2) takes the same year
    forward with the facility's reserve requirement in place and splits this exact balance into a
-   **1,252,408.81** debt-service-reserve instalment and a **121,955.96** distribution — and
-   `1,252,408.81 + 121,955.96 = 1,374,364.77`, to the cent. A leader reading this balance sheet as
-   free liquidity would be reading 1,374,364.77 of cash of which **91.1264 %** is contractually
-   restricted before anyone decides anything, leaving **8.8736 %** genuinely at the sponsors'
-   disposal.
+   **1,252,408.81** debt-service-reserve instalment and a **121,955.96** distribution, and
+   `1,252,408.81 + 121,955.96 = 1,374,364.77`, to the cent. A leader reading this balance sheet
+   as free liquidity would be reading 1,374,364.77 of cash of which **91.1264 %** is
+   contractually restricted before anyone decides anything, leaving **8.8736 %** genuinely at
+   the sponsors' disposal.
 
    **The asset is consumed on paper while it produces cash.** Depreciation reduced the carrying
-   amount by 2,400,000 with no payment, so the balance sheet reports the asset getting smaller in
-   the year the project first performed. Over the 12-year loan the plant's carrying amount falls to
-   **31,200,000** while the debt falls to nil — the two lines converge for unrelated reasons, and
-   any covenant expressed as a ratio of debt to book asset value moves every year without a
-   transaction. In a regulated utility a second asset value runs beside this one on its own profile
-   (see the industry variations at the end of this domain).
+   amount by 2,400,000 with no payment, so the balance sheet reports the asset getting smaller
+   in the year the project first performed. Over the 12-year loan the plant's carrying amount
+   falls to **31,200,000** while the debt falls to nil: the two lines converge for unrelated
+   reasons, and any covenant expressed as a ratio of debt to book asset value moves every year
+   without a transaction. In a regulated utility a second asset value runs beside this one on
+   its own profile (see the industry variations at the end of this domain).
 
    **The debt balance falls by principal only.** Of the 5,009,635.23 instalment, 2,520,000 is
    interest (an expense) and **2,489,635.23** is principal (a balance-sheet movement, not an
-   expense) — exactly Domain 3's schedule. That split is why debt service never appears as a single
-   line in the income statement, and why a reader who looks only at profit cannot see whether the
-   loan is being repaid. It also explains a figure that surprises boards: equity rose by 2,064,000
-   while capital employed **fell** by 425,635.23, because the principal repaid exceeded the retained
-   profit. Growth in equity and growth in the business are different things, and on an amortising
-   project financing they routinely point in opposite directions.
+   expense) (exactly Domain 3's schedule). That split is why debt service never appears as a
+   single line in the income statement, and why a reader who looks only at profit cannot see
+   whether the loan is being repaid. It also explains a figure that surprises boards: equity
+   rose by 2,064,000 while capital employed **fell** by 425,635.23, because the principal repaid
+   exceeded the retained profit. Growth in equity and growth in the business are different
+   things, and on an amortising project financing they routinely point in opposite directions.
 
 ### 2.2.3 The cash-flow statement
 
 **What it answers:** where did cash come from and go? Three sections: **operating** (the trading
 cycle), **investing** (asset purchases and disposals), **financing** (debt drawn and repaid,
-equity contributed, distributions paid). The indirect method — the one a project leader will
-usually meet — starts from profit and undoes the accruals:
+equity contributed, distributions paid). The indirect method, the one a project leader will
+usually meet, starts from profit and undoes the accruals:
 
 ```
 Net income
@@ -448,10 +458,10 @@ Net income
   = operating cash flow
 ```
 
-The **direct method** instead reports the gross cash flows themselves — collected from customers,
-paid to suppliers, paid in interest, paid in tax. It is rarer in published accounts and far more
-useful in a project, because a lender's questions are about the gross flows and the indirect method
-conceals every one of them behind a net movement.
+The **direct method** instead reports the gross cash flows themselves (collected from customers,
+paid to suppliers, paid in interest, paid in tax). It is rarer in published accounts and far
+more useful in a project, because a lender's questions are about the gross flows and the
+indirect method conceals every one of them behind a net movement.
 
 **Worked example 2.2.3 — the same operating cash flow, built the other way.**
 
@@ -477,29 +487,30 @@ conceals every one of them behind a net movement.
    Identical to the indirect method's **3,864,000** (KA 2.2.4). Two methods, one number, no
    depreciation anywhere in sight.
 
-5. **Interpretation.** The two methods cannot disagree — they are the same account read from
-   opposite ends — so the value of building both is diagnostic, and it is considerable. **The direct
-   method surfaces a collection ratio the indirect method hides:** Kestrel collected
-   **92.50 %** of the revenue it recognised (11,100,000 of 12,000,000). That single percentage is
-   the operational question behind the whole of KA 2.3.1, and it is invisible in a statement whose
-   only working-capital line is a net 600,000. It also gives the days figures directly —
-   **27.3750 days** of sales outstanding and **24.3333 days** of payables on cash costs, at a
-   365-day convention — which is what makes a covenant translatable into an instruction to a
+5. **Interpretation.** The two methods cannot disagree (they are the same account read from
+   opposite ends), so the value of building both is diagnostic, and it is considerable. **The
+   direct method surfaces a collection ratio the indirect method hides:** Kestrel collected
+   **92.50 %** of the revenue it recognised (11,100,000 of 12,000,000). That single percentage
+   is the operational question behind the whole of KA 2.3.1, and it is invisible in a statement
+   whose only working-capital line is a net 600,000. It also gives the days figures directly
+   (**27.3750 days** of sales outstanding and **24.3333 days** of payables on cash costs, at a
+   365-day convention), which is what makes a covenant translatable into an instruction to a
    collections team (KA 2.3.1B).
 
-   The more consequential point is about the **interest line**, and it is where careless comparison
-   does real damage. Kestrel's presentation classifies interest paid within operating activities. Had
-   it been classified within financing — a presentation choice permitted in some framework
-   applications and mandatory in none universally — operating cash flow would have been
+   The more consequential point is about the **interest line**, and it is where careless
+   comparison does real damage. Kestrel's presentation classifies interest paid within operating
+   activities. Had it been classified within financing (a presentation choice permitted in some
+   framework applications and mandatory in none universally) operating cash flow would have been
    `3,864,000 + 2,520,000 =` **6,384,000**, which is *precisely* the documented `CFADS` figure.
-   Nothing about the project changed; a single classification decision moved reported operating cash
-   flow by **65.2174 %** of itself. Two professional consequences. **Never compare operating cash
-   flow across two entities without checking where each puts interest** — on these figures the
-   classification alone is worth 65.2174 % of the reported number, so it can exceed the difference
-   being analysed without any difference in trading existing at all. And **the identity `CFADS` =
-   operating cash flow + interest paid holds only on the operating-classification presentation**;
-   Domain 6 (KA 6.2.2) uses it as a model check, and a reviewer applying it to a financing-classified
-   statement would double-count the interest and overstate `CFADS` by 2,520,000.
+   Nothing about the project changed; a single classification decision moved reported operating
+   cash flow by **65.2174 %** of itself. Two professional consequences. **Never compare
+   operating cash flow across two entities without checking where each puts interest**: on these
+   figures the classification alone is worth 65.2174 % of the reported number, so it can exceed
+   the difference being analysed without any difference in trading existing at all. And **the
+   identity `CFADS` = operating cash flow + interest paid holds only on the
+   operating-classification presentation**; Domain 6 (KA 6.2.2) uses it as a model check, and a
+   reviewer applying it to a financing-classified statement would double-count the interest and
+   overstate `CFADS` by 2,520,000.
 
 ### 2.2.4 Articulation demonstrated
 
@@ -509,26 +520,27 @@ conceals every one of them behind a net movement.
    **USD 900,000**, payables rose **USD 300,000**. Derive operating cash flow.
 2. **Formula.** Operating cash = net income + depreciation − Δreceivables + Δpayables.
 3. **Substitution.** `2,064,000 + 2,400,000 − 900,000 + 300,000`.
-4. **Result.** **Operating cash flow USD 3,864,000** — against net income of USD 2,064,000. The
+4. **Result.** **Operating cash flow USD 3,864,000** (against net income of USD 2,064,000). The
    reconciliation: depreciation adds back **+2,400,000** (a charge that moved no cash), working
    capital absorbs **−600,000** net.
-5. **Interpretation.** Read the bridge in both directions. Profit *understates* the period's cash
-   by the depreciation of an asset paid for years ago; working capital *takes back* 600,000 of it
-   to fund growth in the trading cycle. Both facts are invisible in the income statement and
-   decisive for a lender. Note also what operating cash flow is **not**: it is before debt
-   principal (a financing flow) and before capex — so a project can show positive operating cash
+5. **Interpretation.** Read the bridge in both directions. Profit *understates* the period's
+   cash by the depreciation of an asset paid for years ago; working capital *takes back* 600,000
+   of it to fund growth in the trading cycle. Both facts are invisible in the income statement
+   and decisive for a lender. Note also what operating cash flow is **not**: it is before debt
+   principal (a financing flow) and before capex, so a project can show positive operating cash
    and still fail to cover its obligations. Domain 10's coverage ratios exist precisely to test
    the thing this statement does not.
 
    The ratio between the two ends of the bridge is worth naming and worth distrusting. Kestrel's
-   **cash conversion — operating cash flow ÷ net income — is 1.8721**, and a reader trained to
-   regard a figure above 1.0 as healthy would file that as reassuring. It is not a quality signal at
-   all: it is arithmetically guaranteed to exceed 1.0 on any capital-intensive project whose
-   depreciation charge (2,400,000) exceeds its working-capital absorption (600,000), and it would
-   stay above 1.0 in a year of collapsing collections. **A high cash conversion on an
-   infrastructure asset measures capital intensity, not performance.** The diagnostic content is in
-   the two components separately — the non-cash add-back, which is fixed by an accounting policy set
-   years ago, and the working-capital movement, which is this period's operational news.
+   **cash conversion, operating cash flow ÷ net income, is 1.8721**, and a reader trained to
+   regard a figure above 1.0 as healthy would file that as reassuring. It is not a quality
+   signal at all: it is arithmetically guaranteed to exceed 1.0 on any capital-intensive project
+   whose depreciation charge (2,400,000) exceeds its working-capital absorption (600,000), and
+   it would stay above 1.0 in a year of collapsing collections. **A high cash conversion on an
+   infrastructure asset measures capital intensity, not performance.** The diagnostic content is
+   in the two components separately: the non-cash add-back, which is fixed by an accounting
+   policy set years ago, and the working-capital movement, which is this period's operational
+   news.
 
    Three checks a reviewer should run on any such bridge before relying on it. **Tie the add-back to
    the income statement**: depreciation in the cash-flow statement must equal the income-statement
@@ -559,21 +571,22 @@ conceals every one of them behind a net movement.
 
 ### AI in this KA
 
-**Where it earns its place.** The articulation checks of this Knowledge Area are ideal machine work,
-because each is a stated identity with a numeric answer — the eight invariants listed in 2.A.3 and
-checklisted in Toolkit 2.T.3. An assistant can run all of them across every period of a
-statement set in seconds and report where the first break occurs, which is precisely the diagnostic
-KA 2.1.3 says localises a problem — and it is tedious enough that humans skip it.
+**Where it earns its place.** The articulation checks of this Knowledge Area are ideal machine
+work, because each is a stated identity with a numeric answer (the eight invariants listed in
+2.A.3 and checklisted in Toolkit 2.T.3). An assistant can run all of them across every period of
+a statement set in seconds and report where the first break occurs, which is precisely the
+diagnostic KA 2.1.3 says localises a problem — and it is tedious enough that humans skip it.
 
 **Where it fails, specifically.** It cannot tell you whether the *right* number balanced. Two
-failures recur. A model will happily reconcile a statement set in which interest paid is classified
-in financing and then apply the `CFADS` = operating cash flow + interest identity anyway,
-overstating `CFADS` by the whole interest charge (2.2.3) — the identity is presentation-dependent and
-the presentation is not detectable from the arithmetic. And where a working-capital movement is
-presented as a single net line, an assistant asked to reconcile it will often accept the net figure as
-evidence rather than reporting that the decomposition is missing, which is where a plug hides
-(Domain 6, KA 6.4.1). Require the check to name its inputs, and check the classification yourself.
-**AI proposes; the professional verifies, decides and remains accountable.**
+failures recur. A model will happily reconcile a statement set in which interest paid is
+classified in financing and then apply the `CFADS` = operating cash flow + interest identity
+anyway, overstating `CFADS` by the whole interest charge (2.2.3); the identity is
+presentation-dependent and the presentation is not detectable from the arithmetic. And where a
+working-capital movement is presented as a single net line, an assistant asked to reconcile it
+will often accept the net figure as evidence rather than reporting that the decomposition is
+missing, which is where a plug hides (Domain 6, KA 6.4.1). Require the check to name its inputs,
+and check the classification yourself. **AI proposes; the professional verifies, decides and
+remains accountable.**
 
 ### Key terms — KA 2.2
 
@@ -654,57 +667,61 @@ soundest conclusion is:
 - D. the first project has a working-capital problem
 
 *Rationale:* The classification of interest paid moves reported operating cash flow by the whole
-interest figure without changing any cash (2.2.3). A and C read a presentation choice as an economic
-difference — the specific error the `CFADS` identity is exposed to; D invents a cause the statements
-do not support.
+interest figure without changing any cash (2.2.3). A and C read a presentation choice as an
+economic difference: the specific error the `CFADS` identity is exposed to; D invents a cause
+the statements do not support.
 
 **MCQ 2.2-G `[2.2.1 · Evaluation]`** A management pack reports Kestrel's 1.20× `DSCR` covenant
-headroom correctly — a 3.8796 % revenue fall — and then adds that "the project breaks even at a
-21.50 % fall in revenue". Each statement below is true on Kestrel's first-year figures. Which is the
-more decisive objection to that second sentence?
-- A. the profit breakeven sits at revenue of 9,420,000 — a 21.50 % fall — which is the figure quoted
-- B. the cash breakeven, where `DSCR` reaches 1.00, sits at revenue of 10,282,044 — a 14.32 % fall — so it binds **7.18** revenue points earlier, and it, not the profit breakeven, is the point at which the facility stops being paid ✅
+headroom correctly (a 3.8796 % revenue fall), and then adds that "the project breaks even at a
+21.50 % fall in revenue". Each statement below is true on Kestrel's first-year figures. Which is
+the more decisive objection to that second sentence?
+- A. the profit breakeven sits at revenue of 9,420,000 (a 21.50 % fall), which is the figure
+  quoted
+- B. the cash breakeven, where `DSCR` reaches 1.00, sits at revenue of 10,282,044 (a 14.32 %
+  fall), so it binds **7.18** revenue points earlier, and it, not the profit breakeven, is the
+  point at which the facility stops being paid ✅
 - C. net income is 4.6512 times as revenue-elastic as revenue itself, so profit falls 4.6512 % for every 1 % of revenue lost
 - D. the sentence is harmless, because the reader has already been given the covenant test, which bites long before either breakeven
 
-*Rationale:* both breakevens are correctly computed, and only one of them is the point at which cash
-stops covering debt service, so the pack has quoted the slacker of the two and told the reader the
-project is 21.5 points from trouble when on its own chosen measure it is 14.3 (2.2.1). A restates the
-pack's own figure and objects to nothing. C is true and is a *sensitivity* rather than a threshold —
-it says how fast profit moves, not where anything breaks. D is the strongest of the wrong answers and
-is a good point aimed at the wrong target: the covenant does bite first, at 3.8796 % (KA 2.4.2), and a
-correctly stated covenant elsewhere in the pack does not license a misstated breakeven beside it —
-a breakeven is not invalidated by the existence of a tighter test above it, nor excused by one.
+*Rationale:* both breakevens are correctly computed, and only one of them is the point at which
+cash stops covering debt service, so the pack has quoted the slacker of the two and told the
+reader the project is 21.5 points from trouble when on its own chosen measure it is 14.3
+(2.2.1). A restates the pack's own figure and objects to nothing. C is true and is a
+*sensitivity* rather than a threshold: it says how fast profit moves, not where anything breaks.
+D is the strongest of the wrong answers and is a good point aimed at the wrong target: the
+covenant does bite first, at 3.8796 % (KA 2.4.2), and a correctly stated covenant elsewhere in
+the pack does not license a misstated breakeven beside it. A breakeven is not invalidated by the
+existence of a tighter test above it, nor excused by one.
 
-**MCQ 2.2-H `[2.2.4 · Comprehension]`** Kestrel's cash conversion — operating cash flow ÷ net income
-— is 1.8721. Which statement shows the ratio has been understood?
+**MCQ 2.2-H `[2.2.4 · Comprehension]`** Kestrel's cash conversion, operating cash flow ÷ net
+income, is 1.8721. Which statement shows the ratio has been understood?
 - A. collection is efficient: the project turns each unit of profit into 1.87 units of cash
 - B. a figure above 1.0 is close to guaranteed on a capital-intensive asset, because depreciation of 2,400,000 exceeds the working-capital absorption of 600,000; the diagnostic content is in those two components separately, not in the ratio ✅
 - C. the ratio exceeds 1.0 because the project is profitable, and would fall below 1.0 in a loss-making year
 - D. the ratio measures earnings quality, and 1.87 indicates a low risk of revenue being recognised early
 
-*Rationale:* the numerator adds back a charge fixed by a depreciation policy set years earlier and
-deducts this period's working-capital movement, so the ratio measures capital intensity and would stay
-above 1.0 through a year of collapsing collections (2.2.4). A and D read a structural arithmetic
-property as an operational or a quality signal — the specific misreading the passage exists to
-correct. C offers a mechanism the arithmetic does not have: the add-back does not depend on
-profitability at all.
+*Rationale:* the numerator adds back a charge fixed by a depreciation policy set years earlier
+and deducts this period's working-capital movement, so the ratio measures capital intensity and
+would stay above 1.0 through a year of collapsing collections (2.2.4). A and D read a structural
+arithmetic property as an operational or a quality signal: the specific misreading the passage
+exists to correct. C offers a mechanism the arithmetic does not have: the add-back does not
+depend on profitability at all.
 
 ### Self-check — KA 2.2
 
-1. *Why is `EBITDA` USD 7,500,000 while net income is USD 2,064,000?* — Depreciation, interest and
+1. *Why is `EBITDA` USD 7,500,000 while net income is USD 2,064,000?* Depreciation, interest and
    tax lie between them; on a capital-intensive levered project that gap is structural.
-2. *State the accrual-to-cash bridge for Kestrel.* — 2,064,000 + 2,400,000 depreciation
-   − 900,000 receivables + 300,000 payables = 3,864,000.
-3. *What obligations does operating cash flow not cover?* — Debt principal and capex; hence
-   Domain 10's coverage ratios.
-4. *Derive Kestrel's closing cash two ways.* — Operating cash flow 3,864,000 less principal
+2. *State the accrual-to-cash bridge for Kestrel.* 2,064,000 + 2,400,000 depreciation − 900,000
+   receivables + 300,000 payables = 3,864,000.
+3. *What obligations does operating cash flow not cover?* Debt principal and capex; hence Domain
+   10's coverage ratios.
+4. *Derive Kestrel's closing cash two ways.* Operating cash flow 3,864,000 less principal
    2,489,635.23, or `CFADS` 6,384,000 less debt service 5,009,635.23; both give 1,374,364.77
    because the interest cancels.
-5. *Which two revenue breakevens does the income statement carry, and which binds?* — Profit
-   breakeven at revenue 9,420,000 (−21.50 %) and cash breakeven at 10,282,044.04 (−14.32 %); cash
-   binds first.
-6. *Why is a cash conversion ratio above 1.0 not reassuring on its own?* — Because depreciation
+5. *Which two revenue breakevens does the income statement carry, and which binds?* Profit
+   breakeven at revenue 9,420,000 (−21.50 %) and cash breakeven at 10,282,044.04 (−14.32 %);
+   cash binds first.
+6. *Why is a cash conversion ratio above 1.0 not reassuring on its own?* Because depreciation
    exceeding the working-capital movement guarantees it on a capital-intensive asset.
 
 ---
@@ -716,20 +733,20 @@ operating expenditure · 2.3.4 provisions and contingencies.*
 
 ### 2.3.1 Working capital and why lenders care
 
-**Definition.** Working capital is the cash tied up in the trading cycle — receivables plus
-inventory less payables. Growth in it **consumes** cash; reduction **releases** it. For a project,
-the dominant driver is the gap between doing work and being paid for it, which is why payment
-terms are a financing decision (Domain 1's cash discipline; Domain 14's drawdowns).
+**Definition.** Working capital is the cash tied up in the trading cycle (receivables plus
+inventory less payables). Growth in it **consumes** cash; reduction **releases** it. For a
+project, the dominant driver is the gap between doing work and being paid for it, which is why
+payment terms are a financing decision (Domain 1's cash discipline; Domain 14's drawdowns).
 
 **Worked example 2.3.1 — what working capital does to a coverage ratio.**
 
-1. **Setup.** Kestrel's `EBITDA` USD 7,500,000; tax USD 516,000; the net working-capital increase
-   of USD 600,000 from KA 2.2.4. Annual debt service USD 5,009,635 (Domain 3). Compute the
-   `DSCR` — Domain 10's central ratio — first ignoring working capital, then including it.
+1. **Setup.** Kestrel's `EBITDA` USD 7,500,000; tax USD 516,000; the net working-capital
+   increase of USD 600,000 from KA 2.2.4. Annual debt service USD 5,009,635 (Domain 3). Compute
+   the `DSCR` (Domain 10's central ratio) first ignoring working capital, then including it.
 2. **Formula.** `CFADS` = `EBITDA` − tax − Δworking capital; `DSCR` = `CFADS` ÷ debt service.
 3. **Substitution.** Ignoring WC: `7,500,000 − 516,000 = 6,984,000`; `÷ 5,009,635`.
    Including WC: `6,984,000 − 600,000 = 6,384,000`; `÷ 5,009,635`.
-4. **Result.** `DSCR` **1.39** ignoring working capital; **1.27** including it — a fall of
+4. **Result.** `DSCR` **1.39** ignoring working capital; **1.27** including it, a fall of
    **0.12** from one balance-sheet movement.
 5. **Interpretation.** A fall of **0.12 in the coverage ratio** may decide whether a covenant holds
    (typical senior covenants sit at 1.20–1.30, so this project is comfortable at 1.39 and much
@@ -739,15 +756,15 @@ terms are a financing decision (Domain 1's cash discipline; Domain 14's drawdown
    knowing its `CFADS` definition is quoting an opinion. Domain 10 builds the full machinery;
    Domain 13's model audit checks that the model implements the *documented* definition.
 
-   Two refinements make the point operational rather than merely cautionary. First, the sensitivity
-   is linear and easy to carry: because debt service is fixed at 5,009,635.23, **every 50,096.35 of
-   working-capital absorption costs 0.01 of `DSCR`** — so the ratio can be managed in the same units
-   as a collections target. Second, the direction of the definitional choice is not neutral between
-   the parties. Excluding working capital produces the *higher* ratio in a growing project and the
-   *lower* ratio in a shrinking one, which means a sponsor arguing for exclusion at financial close
-   is arguing for a definition that will turn against it in the first year of decline. The
-   definitional fight is therefore not "which number is bigger" but **which number is stable**, and
-   stability is what a lender is buying.
+   Two refinements make the point operational rather than merely cautionary. First, the
+   sensitivity is linear and easy to carry: because debt service is fixed at 5,009,635.23,
+   **every 50,096.35 of working-capital absorption costs 0.01 of `DSCR`**, so the ratio can be
+   managed in the same units as a collections target. Second, the direction of the definitional
+   choice is not neutral between the parties. Excluding working capital produces the *higher*
+   ratio in a growing project and the *lower* ratio in a shrinking one, which means a sponsor
+   arguing for exclusion at financial close is arguing for a definition that will turn against
+   it in the first year of decline. The definitional fight is therefore not "which number is
+   bigger" but **which number is stable**, and stability is what a lender is buying.
 
 **Worked example 2.3.1B — the covenant restated as a collection period.**
 
@@ -772,33 +789,33 @@ terms are a financing decision (Domain 1's cash discipline; Domain 14's drawdown
    | Distribution lock-up | 1.15× | 5,761,080.51 | 1,522,919.49 | **46.3221 days** | **18.9471** |
 
    Actual `DSO` is **27.3750 days**. At a 45-day collection period receivables would be
-   **1,479,452.05**, absorption **1,179,452.05**, `CFADS` **5,804,547.95** and `DSCR` **1.1587** —
-   below the covenant and inside the lock-up.
+   **1,479,452.05**, absorption **1,179,452.05**, `CFADS` **5,804,547.95** and `DSCR` **1.1587**
+   (below the covenant and inside the lock-up).
 
 5. **Interpretation.** This is the translation that makes an accounting statement usable by the
    people whose behaviour determines it. **The distribution condition is a 31-day collection
-   covenant.** Nothing in the finance documents says so, no operations dashboard reports it, and the
-   entire margin between a dividend and no dividend is **3.7095 days** of collection — less than one
-   invoice cycle. Whether that is inside the observed variability of a given offtaker's payment run is
-   an empirical question for that project's own collection history, and answering it is the point:
-   3.7095 days, not the 1.25 in the term sheet, is the number a finance director should put in front
-   of the collections team.
+   covenant.** Nothing in the finance documents says so, no operations dashboard reports it, and
+   the entire margin between a dividend and no dividend is **3.7095 days** of collection (less
+   than one invoice cycle). Whether that is inside the observed variability of a given
+   offtaker's payment run is an empirical question for that project's own collection history,
+   and answering it is the point: 3.7095 days, not the 1.25 in the term sheet, is the number a
+   finance director should put in front of the collections team.
 
-   Read the sensitivity as a unit rate and it becomes a management metric: at 12,000,000 of revenue
-   **one day of `DSO` is 32,876.71 of cash and 0.006563 of `DSCR`**, so a one-week slip in payment
-   behaviour costs **0.0459** of coverage. Three cautions on over-applying the result. It assumes
-   payables stay at 300,000; a project that funds a receivables slip by stretching its own suppliers
-   converts a covenant problem into a supply-chain problem and a possible default under the operating
-   contracts, which is a worse trade than it looks. It assumes revenue is unchanged, so it isolates
-   *collection* risk from *demand* risk — the two are separated in Domain 7 for exactly this reason,
-   and a fall in revenue reduces receivables and flatters the ratio at the same time as it destroys
-   the cash. And the 365-day convention matters: the finance documents may compute on 360 days,
-   which tightens every threshold in the table by **1.3889 %** — the 1.25× test becomes
-   **30.6587 days** rather than 31.0845 — so the convention belongs on the defined-terms sheet
-   (Toolkit 2.T.1) rather than in a modeller's habit. The remedy Case study A
-   reaches — a working-capital facility sized against the slip, and collections given a named owner
-   — is the operational answer to an accounting problem, which is the whole reason this Knowledge
-   Area exists.
+   Read the sensitivity as a unit rate and it becomes a management metric: at 12,000,000 of
+   revenue **one day of `DSO` is 32,876.71 of cash and 0.006563 of `DSCR`**, so a one-week slip
+   in payment behaviour costs **0.0459** of coverage. Three cautions on over-applying the
+   result. It assumes payables stay at 300,000; a project that funds a receivables slip by
+   stretching its own suppliers converts a covenant problem into a supply-chain problem and a
+   possible default under the operating contracts, which is a worse trade than it looks. It
+   assumes revenue is unchanged, so it isolates *collection* risk from *demand* risk. The two
+   are separated in Domain 7 for exactly this reason, and a fall in revenue reduces receivables
+   and flatters the ratio at the same time as it destroys the cash. And the 365-day convention
+   matters: the finance documents may compute on 360 days, which tightens every threshold in the
+   table by **1.3889 %** (the 1.25× test becomes **30.6587 days** rather than 31.0845), so the
+   convention belongs on the defined-terms sheet (Toolkit 2.T.1) rather than in a modeller's
+   habit. The remedy Case study A reaches (a working-capital facility sized against the slip,
+   and collections given a named owner) is the operational answer to an accounting problem,
+   which is the whole reason this Knowledge Area exists.
 
 > **Fig 2.3.1 — The covenant as a collection period.** Line chart, x-axis days sales outstanding
 > 20–50, y-axis `DSCR` 1.10–1.35. One descending line for `DSCR` = (6,984,000 − (12,000,000 ×
@@ -813,18 +830,18 @@ terms are a financing decision (Domain 1's cash discipline; Domain 14's drawdown
 
 ### 2.3.2 Revenue and cost recognition
 
-**The principle.** Revenue is recognised as performance occurs — when control of the promised
-goods or services transfers to the customer — not when the invoice is raised or the cash arrives.
-For long-duration work this means recognising **over time** as the obligation is satisfied, which
-requires a defensible measure of progress. IFRS 15 is the reference framework, described here in
-principle only.
+**The principle.** Revenue is recognised as performance occurs (when control of the promised
+goods or services transfers to the customer), not when the invoice is raised or the cash
+arrives. For long-duration work this means recognising **over time** as the obligation is
+satisfied, which requires a defensible measure of progress. IFRS 15 is the reference framework,
+described here in principle only.
 
 **Measuring progress** uses either **input** methods (costs incurred relative to total expected
 costs — the familiar percentage-of-completion approach) or **output** methods (units delivered,
 milestones surveyed). The choice matters and is not free: an input measure can be distorted by
 inefficiency (spending more "earns" more revenue) and an output measure by lumpy deliverables.
 This is the same measurement-integrity problem the delivery book handles as earned value
-(PML-AI, Domain 7, KA 7.3.1) — and the two disciplines should use the *same* progress evidence,
+(PML-AI, Domain 7, KA 7.3.1), and the two disciplines should use the *same* progress evidence,
 because a project claiming 60 % complete for revenue and 48 % for earned value has a story to
 explain.
 
@@ -857,20 +874,20 @@ asymmetry that stops a known loss being spread quietly across future periods.
    | Milestone output | **61.0000 %** | 29,280,000.00 | 27,000,000 | **2,280,000.00** |
    | **Difference** | **3.2857 points** | **1,577,142.86** | — | **1,577,142.86** |
 
-   On the re-forecast, expected total cost of **49,500,000** against a price of 48,000,000 makes the
-   contract **onerous** by **1,500,000**. The cumulative position must move from +3,857,142.86 to
-   −1,500,000, so the charge in the period is **USD 5,357,142.86** — **3.5714 times** the loss
-   itself.
+   On the re-forecast, expected total cost of **49,500,000** against a price of 48,000,000 makes
+   the contract **onerous** by **1,500,000**. The cumulative position must move from
+   +3,857,142.86 to −1,500,000, so the charge in the period is **USD 5,357,142.86** (**3.5714
+   times** the loss itself).
 
 5. **Interpretation.** Three results, each with a professional edge. **The two progress measures
-   differ by 1,577,142.86 of profit on an identical set of facts**, which is **26.2857 %** of the
-   contract's whole expected margin of 6,000,000 — so the choice of measure is not a presentational
-   detail, it is a quarter of the job's reported profitability. And the direction is diagnostic
-   rather than arbitrary: the input measure is *ahead* because costs have run faster than
-   certifications, which is precisely the pathology KA 2.3.2 warns about — under a cost-input
-   measure, **inefficiency earns revenue**. The gap between 64.2857 % and 61 % is the contractor
-   spending 3.2857 points of the job without producing 3.2857 points of it, and reporting the
-   difference as performance.
+   differ by 1,577,142.86 of profit on an identical set of facts**, which is **26.2857 %** of
+   the contract's whole expected margin of 6,000,000, so the choice of measure is not a
+   presentational detail, it is a quarter of the job's reported profitability. And the direction
+   is diagnostic rather than arbitrary: the input measure is *ahead* because costs have run
+   faster than certifications, which is precisely the pathology KA 2.3.2 warns about, under a
+   cost-input measure, **inefficiency earns revenue**. The gap between 64.2857 % and 61 % is the
+   contractor spending 3.2857 points of the job without producing 3.2857 points of it, and
+   reporting the difference as performance.
 
    **The onerous-contract swing is the number that surprises boards.** A 1,500,000 loss produced a
    5,357,142.86 charge, because recognising a loss also requires *unwinding the profit already
@@ -881,17 +898,17 @@ asymmetry that stops a known loss being spread quietly across future periods.
    the reversal and then abrupt, which is why a lender to a contractor reads the contract portfolio's
    cost-to-complete forecasts and not its profit history.
 
-   **The two disciplines must reconcile.** The SPV's earned value on this scope shows `CPI` = 1.0000
-   by construction, because on a fixed-price milestone certification the amount certified *is* the
-   amount budgeted (Domain 14, KA 14.2.1) — so the cost overrun that is plainly visible in the
-   contractor's books is structurally invisible in the SPV's. Neither party is wrong and neither
-   number is useless; what is dangerous is a monitoring regime that reads only one of them. The
-   discipline is to require the *same progress evidence* to support both, and to treat a divergence
-   between the certified percentage and the contractor's cost-based percentage as the leading
-   indicator it is (the delivery-side treatment is PML-AI, Domain 7, KA 7.3.1). Whether an input or
-   an output measure is permitted, and how a loss-making contract must be presented, is a matter for
-   the entity's framework, finance function and auditors; the arithmetic above is transferable, the
-   conclusion is not.
+   **The two disciplines must reconcile.** The SPV's earned value on this scope shows `CPI` =
+   1.0000 by construction, because on a fixed-price milestone certification the amount certified
+   *is* the amount budgeted (Domain 14, KA 14.2.1), so the cost overrun that is plainly visible
+   in the contractor's books is structurally invisible in the SPV's. Neither party is wrong and
+   neither number is useless; what is dangerous is a monitoring regime that reads only one of
+   them. The discipline is to require the *same progress evidence* to support both, and to treat
+   a divergence between the certified percentage and the contractor's cost-based percentage as
+   the leading indicator it is (the delivery-side treatment is PML-AI, Domain 7, KA 7.3.1).
+   Whether an input or an output measure is permitted, and how a loss-making contract must be
+   presented, is a matter for the entity's framework, finance function and auditors; the
+   arithmetic above is transferable, the conclusion is not.
 
 ### 2.3.3 Capital versus operating expenditure
 
@@ -908,12 +925,12 @@ same cash outflow, classified differently, produces very different profit.
 2. **Formula.** Capex year-one charge = spend ÷ useful life. Opex year-one charge = full spend.
 3. **Substitution.** Capex: `1,200,000/10 = 120,000`. Opex: `1,200,000`.
 4. **Result.** Year-one profit is **USD 1,080,000 lower** under the opex treatment. **Cash is
-   identical in both cases** — USD 1,200,000 leaves the account either way.
+   identical in both cases**, USD 1,200,000 leaves the account either way.
 5. **Interpretation.** This is the clearest demonstration in the domain that accounting choice
    moves reported performance without moving economics, and it cuts both ways. Capitalising
    flatters current profit and burdens future periods with depreciation; it also inflates the
    asset base against which returns are measured. Because the classification is judgment applied
-   to facts — does this enhance or merely restore? — it is a standing area of audit attention, and
+   to facts, does this enhance or merely restore?, it is a standing area of audit attention, and
    a leader should expect to justify it rather than assert it. Note the covenant consequence:
    profit-based covenants respond to the choice while cash-based ones (`DSCR`) do not, which is
    part of why lenders prefer cash-based tests (Domain 10).
@@ -925,39 +942,40 @@ same cash outflow, classified differently, produces very different profit.
    capitalisation as an improvement in performance is presenting a nine-year loan against the future,
    and the interest on it is paid in depreciation.
 
-   **And the claim that "cash is identical" holds only where the accounting choice does not drive the
-   tax deduction.** Kestrel's illustration assumes tax depreciation follows accounting depreciation —
-   a simplification stated as one (KA 2.A.1; Domain 6, KA 6.2.3). Where instead the deduction follows
-   the accounting treatment, at a 20 % tax rate and an 8 % discount rate the two paths give:
-   relief of **240,000 in year one** if expensed, against **120,000 × 20 % = 24,000** a year for ten
-   years if capitalised, whose present value at `AF(8 %, 10) = 6.710081` is **161,041.95**. The
-   expensing route is worth **USD 78,958.05** of present value — **6.5798 %** of the spend — and that
-   *is* a cash difference, arising purely from a classification argument. The professional position is
-   therefore precise rather than slogan-like: **the capex/opex choice does not change the pre-tax cash
-   flow, and may well change the after-tax cash flow.** Whether it does is jurisdiction-specific,
-   because in many regimes the tax base is computed independently of the accounts, and the answer for
-   a particular entity is a matter for qualified tax advice rather than for this book. What a leader
-   should never do is argue the classification *because of* the tax outcome; the classification
-   follows the facts, and the tax follows the classification.
+   **And the claim that "cash is identical" holds only where the accounting choice does not
+   drive the tax deduction.** Kestrel's illustration assumes tax depreciation follows accounting
+   depreciation — a simplification stated as one (KA 2.A.1; Domain 6, KA 6.2.3). Where instead
+   the deduction follows the accounting treatment, at a 20 % tax rate and an 8 % discount rate
+   the two paths give: relief of **240,000 in year one** if expensed, against **120,000 × 20 % =
+   24,000** a year for ten years if capitalised, whose present value at `AF(8 %, 10) = 6.710081`
+   is **161,041.95**. The expensing route is worth **USD 78,958.05** of present value (**6.5798
+   %** of the spend), and that *is* a cash difference, arising purely from a classification
+   argument. The professional position is therefore precise rather than slogan-like: **the
+   capex/opex choice does not change the pre-tax cash flow, and may well change the after-tax
+   cash flow.** Whether it does is jurisdiction-specific, because in many regimes the tax base
+   is computed independently of the accounts, and the answer for a particular entity is a matter
+   for qualified tax advice rather than for this book. What a leader should never do is argue
+   the classification *because of* the tax outcome; the classification follows the facts, and
+   the tax follows the classification.
 
 ### 2.3.4 Provisions and contingencies
 
 **Definitions.** A **provision** is a liability of uncertain timing or amount, recognised when a
 present obligation exists from a past event, settlement is probable, and a reliable estimate can
-be made (IAS 37 is the reference framework, in principle). A **contingent liability** fails one of
-those tests — typically because settlement is only possible rather than probable — and is
-**disclosed, not recognised**. A **contingent asset** is treated still more cautiously: disclosed
-when probable, recognised only when virtually certain, an asymmetry that deliberately resists
-optimism.
+be made (IAS 37 is the reference framework, in principle). A **contingent liability** fails one
+of those tests (typically because settlement is only possible rather than probable), and is
+**disclosed, not recognised**. A **contingent asset** is treated still more cautiously:
+disclosed when probable, recognised only when virtually certain, an asymmetry that deliberately
+resists optimism.
 
 Project-relevant instances: **decommissioning and site-restoration obligations** (recognised at
-the present value of the expected cost when the obligation arises — often at construction, decades
-before the spend, and a major balance-sheet item for energy and resources projects); **warranty and
-defect obligations**; **onerous contracts** (the loss recognised in full, per 2.3.2); and
-**disputed claims**, where the provision/disclosure boundary is genuinely contested and legal
-advice governs. The leader's discipline here is narrow and important: **a provision is not a
-reserve to be created in good years and released in bad ones** — that is earnings management, and
-the recognition tests exist to prevent it.
+the present value of the expected cost when the obligation arises — often at construction,
+decades before the spend, and a major balance-sheet item for energy and resources projects);
+**warranty and defect obligations**; **onerous contracts** (the loss recognised in full, per
+2.3.2); and **disputed claims**, where the provision/disclosure boundary is genuinely contested
+and legal advice governs. The leader's discipline here is narrow and important: **a provision is
+not a reserve to be created in good years and released in bad ones**. That is earnings
+management, and the recognition tests exist to prevent it.
 
 **Worked example 2.3.4 — measuring and unwinding a restoration obligation.**
 
@@ -993,28 +1011,29 @@ the recognition tests exist to prevent it.
 
    The professional content is in three places. **The charge is real and the cash is nil**, so a
    profit-based covenant is exposed to this obligation from the first year of operation while
-   `DSCR` is untouched for twenty-five years: 119,597.62 is **5.7945 %** of Kestrel's net income,
-   enough to matter in a tight profit test and invisible in every coverage ratio the lender computes.
-   Domain 8 (KA 8.4) makes the complementary point on the cash side — the spend falls *after* the loan
-   matures, so it reduces the tail that Domain 10's `PLCR` of **1.9431** measures without appearing in
-   any ratio the lender tests.
+   `DSCR` is untouched for twenty-five years: 119,597.62 is **5.7945 %** of Kestrel's net
+   income, enough to matter in a tight profit test and invisible in every coverage ratio the
+   lender computes. Domain 8 (KA 8.4) makes the complementary point on the cash side: the spend
+   falls *after* the loan matures, so it reduces the tail that Domain 10's `PLCR` of **1.9431**
+   measures without appearing in any ratio the lender tests.
 
-   **The balance sheet then moves with interest rates rather than with the obligation.** Re-measure at
-   **4.0 %** and the provision becomes **1,688,025.61** — **27.0279 %** higher; at **6.0 %** it becomes
-   **1,048,493.84**, **21.0984 %** lower. Nothing about the works, the cost or the concession has
-   changed. A reader comparing two projects' balance sheets, or one project across two years, must
-   establish the discount rate before treating the movement as news; where the rate is re-measured
-   annually the provision line is one of the noisiest on an infrastructure balance sheet.
+   **The balance sheet then moves with interest rates rather than with the obligation.**
+   Re-measure at **4.0 %** and the provision becomes **1,688,025.61**, **27.0279 %** higher; at
+   **6.0 %** it becomes **1,048,493.84**, **21.0984 %** lower. Nothing about the works, the cost
+   or the concession has changed. A reader comparing two projects' balance sheets, or one
+   project across two years, must establish the discount rate before treating the movement as
+   news; where the rate is re-measured annually the provision line is one of the noisiest on an
+   infrastructure balance sheet.
 
-   **And the tax treatment is where the arithmetic stops being transferable.** Many regimes deny a
-   deduction until the expenditure is actually incurred, which would make this charge non-deductible
-   for twenty-five years and create a deferred tax asset whose recoverability depends on there being
-   taxable profit in the year of settlement — by which time the project may have none. The
-   recognition trigger, the discount rate basis, the treatment of subsequent changes in estimate and
-   the deductibility are all framework- and jurisdiction-specific and are matters for the entity's
-   auditors and qualified tax advisers; and because the *existence* of the obligation usually turns on
-   the concession or permit wording, its scope is a question for counsel before it is a question for
-   accountants.
+   **And the tax treatment is where the arithmetic stops being transferable.** Many regimes deny
+   a deduction until the expenditure is actually incurred, which would make this charge
+   non-deductible for twenty-five years and create a deferred tax asset whose recoverability
+   depends on there being taxable profit in the year of settlement: by which time the project
+   may have none. The recognition trigger, the discount rate basis, the treatment of subsequent
+   changes in estimate and the deductibility are all framework- and jurisdiction-specific and
+   are matters for the entity's auditors and qualified tax advisers; and because the *existence*
+   of the obligation usually turns on the concession or permit wording, its scope is a question
+   for counsel before it is a question for accountants.
 
 ### AI in this KA
 
@@ -1024,7 +1043,7 @@ control transfer over time. A model will produce a confident answer that reads l
 and is actually a summary of how similar questions are usually answered. The governed position:
 use AI to marshal the facts, locate the relevant framework and draft the argument on both sides;
 never to reach the conclusion. Conclusions on recognition and measurement belong to the entity's
-finance function and auditors, and jurisdiction-specific treatment to qualified advisers — the
+finance function and auditors, and jurisdiction-specific treatment to qualified advisers: the
 boundary this book applies to itself (Domain 1, KA 1.3.1).
 
 ### Key terms — KA 2.3
@@ -1060,9 +1079,9 @@ D is a typical covenant threshold, not this calculation.
 - C. profit identical; cash lower by 1,080,000 if expensed
 - D. profit lower by 120,000 if expensed; cash identical
 
-*Rationale:* Expensing charges 1,200,000 against capitalising's 120,000 — a 1,080,000 difference —
-and the cash outflow is the same either way. A inverts which treatment charges more; C confuses
-which statement is affected; D states the capitalised charge as the difference.
+*Rationale:* Expensing charges 1,200,000 against capitalising's 120,000 (a 1,080,000
+difference), and the cash outflow is the same either way. A inverts which treatment charges
+more; C confuses which statement is affected; D states the capitalised charge as the difference.
 
 **MCQ 2.3-C `[2.3.4 · Analysis]`** A contractor faces a claim it considers *possible* but not
 probable, with a reliably estimable amount. The treatment is:
@@ -1071,19 +1090,19 @@ probable, with a reliably estimable amount. The treatment is:
 - C. no disclosure, since settlement is not probable
 - D. recognise a contingent asset
 
-*Rationale:* Estimability alone is insufficient — probability of settlement is the failed test, so
-disclosure rather than recognition (2.3.4). C hides information users need; D reverses the
+*Rationale:* Estimability alone is insufficient; probability of settlement is the failed test,
+so disclosure rather than recognition (2.3.4). C hides information users need; D reverses the
 direction.
 
 **MCQ 2.3-D `[2.3.2 · Analysis]`** A contractor recognises revenue on 60 % completion using a
 cost-input measure while its earned-value system reports 48 % complete. The soundest reading is:
-- A. no issue — the two systems serve different purposes
+- A. no issue (the two systems serve different purposes)
 - B. the divergence needs explaining: an input measure inflated by inefficiency can recognise revenue ahead of performance ✅
 - C. the earned-value figure must be wrong
 - D. revenue should be restated to 48 % automatically
 
 *Rationale:* Cost-input measures reward spending, so inefficiency can raise apparent progress
-(2.3.2) — the gap is a signal to investigate, not to dismiss (A) or resolve by assumption (C, D).
+(2.3.2); the gap is a signal to investigate, not to dismiss (A) or resolve by assumption (C, D).
 
 **MCQ 2.3-E `[2.3.1 · Application]`** `CFADS` before working capital 6,984,000; payables held at
 300,000; revenue 12,000,000; receivables opened at nil; debt service 5,009,635.23. The maximum days
@@ -1094,9 +1113,9 @@ sales outstanding consistent with a 1.20× covenant, at a 365-day convention, is
 - D. 45.0000 days
 
 *Rationale:* The 1.20× trigger is `CFADS` 6,011,562.28, allowing 972,437.72 of absorption and
-therefore receivables of 1,272,437.72 — `1,272,437.72/12,000,000 × 365`. A is the actual position,
-not the limit; B is the 1.25× *distribution* threshold, the commonest confusion because both appear
-in the same clause; D is the scenario that breaches, at `DSCR` 1.1587.
+therefore receivables of 1,272,437.72, `1,272,437.72/12,000,000 × 365`. A is the actual
+position, not the limit; B is the 1.25× *distribution* threshold, the commonest confusion
+because both appear in the same clause; D is the scenario that breaches, at `DSCR` 1.1587.
 
 **MCQ 2.3-F `[2.3.4 · Application]`** A restoration obligation of 4,500,000 falls due in 25 years and
 is discounted at 5.0 %. The amount recognised and the first-year charge against profit are:
@@ -1113,8 +1132,8 @@ cash effect with a nil charge.
 **MCQ 2.3-G `[2.3.2 · Analysis]`** A contractor has recognised 3,857,142.86 of cumulative profit on a
 48,000,000 contract when a re-forecast makes expected total costs 49,500,000. The charge in the period
 is:
-- A. 1,500,000 — the expected loss
-- B. 5,357,142.86 — the expected loss plus the reversal of profit already recognised ✅
+- A. 1,500,000, the expected loss
+- B. 5,357,142.86 (the expected loss plus the reversal of profit already recognised ✅)
 - C. 1,500,000 spread over the remaining life of the contract
 - D. nil until the loss is actually incurred
 
@@ -1126,53 +1145,59 @@ to prevent; D applies a cash-basis instinct to an accrual test.
 *before* working-capital movements, which on the first year's figures would report `DSCR` of 1.3941
 rather than 1.2743. Advising the sponsor, the soundest position is:
 - A. press for the exclusion: it buys 0.1198 of reported coverage on identical cash, and a further 18.25 days of collections of covenant headroom with it
-- B. press for the definition that is the more *stable* rather than the higher today — exclusion flatters a growing trading cycle and turns against the sponsor in the first year of decline, when a shrinking cycle releases cash the covenant would then ignore ✅
+- B. press for the definition that is the more *stable* rather than the higher today: exclusion
+  flatters a growing trading cycle and turns against the sponsor in the first year of decline,
+  when a shrinking cycle releases cash the covenant would then ignore ✅
 - C. accept the lenders' inclusive definition, because cash-based tests are always the more conservative and conservatism protects the sponsor
 - D. leave `CFADS` undefined and rely on the financial model's treatment, which both parties have reviewed
 
-*Rationale:* the definitional choice is not neutral across the life of the facility — excluding
-working capital raises the ratio while the cycle grows and lowers it while the cycle unwinds — so a
-sponsor optimising the first test period is buying a definition that bites later (2.3.1), and
-stability is what a lender is actually paying for. A is the arithmetic correctly done against the
-wrong objective, treating one period as the covenant's life. C reaches a defensible destination by an
-argument that is not true, and an untrue argument will not survive the negotiation. D is the weakest
-of the four: an undefined term is settled later by whoever is enforcing it, and Domain 13's model
-audit tests the model against the *documented* definition, which must therefore exist. The finance
-leader's contribution here is the arithmetic across the facility's life; the drafting of the
-definition, and what it will mean on enforcement, are matters for the facility's counsel.
+*Rationale:* the definitional choice is not neutral across the life of the facility (excluding
+working capital raises the ratio while the cycle grows and lowers it while the cycle unwinds),
+so a sponsor optimising the first test period is buying a definition that bites later (2.3.1),
+and stability is what a lender is actually paying for. A is the arithmetic correctly done
+against the wrong objective, treating one period as the covenant's life. C reaches a defensible
+destination by an argument that is not true, and an untrue argument will not survive the
+negotiation. D is the weakest of the four: an undefined term is settled later by whoever is
+enforcing it, and Domain 13's model audit tests the model against the *documented* definition,
+which must therefore exist. The finance leader's contribution here is the arithmetic across the
+facility's life; the drafting of the definition, and what it will mean on enforcement, are
+matters for the facility's counsel.
 
 **MCQ 2.3-I `[2.3.3 · Evaluation]`** Kestrel's 1,200,000 control-system overhaul restores existing
 performance rather than extending capability. The finance director observes that capitalising it would
 protect a profit-based covenant; the tax adviser observes that, in a regime where the deduction
 follows the accounting treatment, expensing is worth **78,958** of present value. The finance leader
 should recommend:
-- A. capitalise — the covenant is the larger financial exposure, and the classification is a judgment either way
-- B. expense — the 78,958 is a genuine cash benefit, and this book's own discipline puts cash ahead of profit
+- A. capitalise; the covenant is the larger financial exposure, and the classification is a
+  judgment either way
+- B. expense; the 78,958 is a genuine cash benefit, and this book's own discipline puts cash
+  ahead of profit
 - C. classify on the facts: the works restore performance, so expense them, and manage the covenant consequence separately and transparently with the lender ✅
 - D. capitalise, and disclose the judgment in the notes so that users can adjust for it
 
-*Rationale:* the classification follows the facts and the tax follows the classification, never the
-reverse (2.3.3). A and B both let a desired outcome choose the accounting, and B is the more seductive
-because its objective — cash — is the one this book otherwise privileges; the argument is still
-inverted. D bolts good disclosure practice onto an unsupportable treatment, and disclosure does not
-cure a classification the facts do not support. Where the capex/opex boundary falls for a particular
-project is a matter for the entity's finance function and auditors, and the deductibility a matter for
-qualified tax advisers in the relevant jurisdiction.
+*Rationale:* the classification follows the facts and the tax follows the classification, never
+the reverse (2.3.3). A and B both let a desired outcome choose the accounting, and B is the more
+seductive because its objective, cash, is the one this book otherwise privileges; the argument
+is still inverted. D bolts good disclosure practice onto an unsupportable treatment, and
+disclosure does not cure a classification the facts do not support. Where the capex/opex
+boundary falls for a particular project is a matter for the entity's finance function and
+auditors, and the deductibility a matter for qualified tax advisers in the relevant
+jurisdiction.
 
 ### Self-check — KA 2.3
 
-1. *Why can two projects with identical economics report different `DSCR`s?* — Because `CFADS` is
+1. *Why can two projects with identical economics report different `DSCR`s?* Because `CFADS` is
    a defined term; its definition (e.g. before or after working capital) changes the ratio.
-2. *What does the capex/opex choice change, and what does it not?* — Reported profit and the asset
+2. *What does the capex/opex choice change, and what does it not?* Reported profit and the asset
    base; pre-tax cash is unchanged, and after-tax cash may not be.
-3. *When is a provision recognised rather than disclosed?* — Present obligation from a past event,
+3. *When is a provision recognised rather than disclosed?* Present obligation from a past event,
    probable settlement, reliable estimate.
-4. *State Kestrel's 1.25× distribution condition as a collection period.* — A maximum `DSO` of
-   31.0845 days against an actual 27.3750 — headroom of 3.7095 days.
-5. *Why does an onerous-contract charge exceed the loss?* — Because the profit already recognised
+4. *State Kestrel's 1.25× distribution condition as a collection period.* (A maximum `DSO` of
+   31.0845 days against an actual 27.3750) headroom of 3.7095 days.
+5. *Why does an onerous-contract charge exceed the loss?* Because the profit already recognised
    must be reversed as well: `1 + profit recognised ÷ loss`, here 3.5714 times.
-6. *What does a provision's accretion plus its depreciation sum to over the life?* — The settlement
-   amount, 4,500,000; accrual accounting allocates timing, not totals.
+6. *What does a provision's accretion plus its depreciation sum to over the life?* The
+   settlement amount, 4,500,000; accrual accounting allocates timing, not totals.
 
 ---
 
@@ -1183,7 +1208,7 @@ systems and corporate reporting.*
 
 ### 2.4.1 The ratio families
 
-Ratios are comparisons, and their only value is in what they are compared *against* — the same
+Ratios are comparisons, and their only value is in what they are compared *against*, the same
 entity over time, or a genuine peer on the same policies (KA 2.1.2's warning). Four families:
 
 | Family | Asks | Examples |
@@ -1231,28 +1256,29 @@ the whole set and then test it against something external — the cost of capita
 
 5. **Interpretation.** Four readings, in ascending order of usefulness.
 
-   **The leverage identity holds exactly — but only on one basis.** On opening balances,
-   `6.8000 % + 2.3333 × (6.8000 % − 4.8000 %) = 11.4667 %`, which is the return on opening equity to
-   the digit. That is the whole of what gearing does: it earns the spread between the return on
-   capital and the after-tax cost of debt, 2.0000 points here, and multiplies it by the debt-to-equity
-   ratio. Two corollaries follow immediately. Leverage is accretive only while `ROCE` exceeds the
-   after-tax cost of debt, and it becomes *destructive* below it at the same multiple — the reason
-   Domain 9 treats gearing as a risk transfer rather than a value creator. And **the identity breaks
-   the moment the bases are mixed**: computed on closing equity the same year's `ROE` is 10.2871 %, on
-   average equity 10.8449 %, on opening equity 11.4667 % — a spread of **1.1796 points on identical
-   performance**, purely from a choice of denominator. A reviewer's first question about any return
-   ratio is which balance it uses, and the answer is right in a footnote or it is nowhere.
+   **The leverage identity holds exactly, but only on one basis.** On opening balances, `6.8000
+   % + 2.3333 × (6.8000 % − 4.8000 %) = 11.4667 %`, which is the return on opening equity to the
+   digit. That is the whole of what gearing does: it earns the spread between the return on
+   capital and the after-tax cost of debt, 2.0000 points here, and multiplies it by the
+   debt-to-equity ratio. Two corollaries follow immediately. Leverage is accretive only while
+   `ROCE` exceeds the after-tax cost of debt, and it becomes *destructive* below it at the same
+   multiple: the reason Domain 9 treats gearing as a risk transfer rather than a value creator.
+   And **the identity breaks the moment the bases are mixed**: computed on closing equity the
+   same year's `ROE` is 10.2871 %, on average equity 10.8449 %, on opening equity 11.4667 % (a
+   spread of **1.1796 points on identical performance**, purely from a choice of denominator). A
+   reviewer's first question about any return ratio is which balance it uses, and the answer is
+   right in a footnote or it is nowhere.
 
    **The accounting return is below the cost of capital, and the project is still worth doing.**
-   After-tax `ROCE` of 6.8000 % against a `WACC` of 7.9860 % is a shortfall of **1.1860 points**, and
-   yet Domain 4 computed an `NPV` of **+16,179,360** at 8 % and an `IRR` of **12.19 %** on the same
-   project. Both are correct. A first-year accounting return is a single-period ratio on a
-   fully-depreciating asset at its maximum carrying amount, and it rises mechanically as the asset
-   depreciates and the debt amortises: with `EBIT` unchanged, year two's after-tax `ROCE` is already
-   **6.8486 %**, because capital employed fell 425,635.23 without anything happening. **Accounting
-   returns are the wrong instrument for judging project economics** — that is what Domains 3 and 4
-   exist for — and a board comparing a project's first-year `ROCE` with a corporate hurdle rate will
-   reject investments it should make.
+   After-tax `ROCE` of 6.8000 % against a `WACC` of 7.9860 % is a shortfall of **1.1860
+   points**, and yet Domain 4 computed an `NPV` of **+16,179,360** at 8 % and an `IRR` of
+   **12.19 %** on the same project. Both are correct. A first-year accounting return is a
+   single-period ratio on a fully-depreciating asset at its maximum carrying amount, and it
+   rises mechanically as the asset depreciates and the debt amortises: with `EBIT` unchanged,
+   year two's after-tax `ROCE` is already **6.8486 %**, because capital employed fell 425,635.23
+   without anything happening. **Accounting returns are the wrong instrument for judging project
+   economics** (that is what Domains 3 and 4 exist for), and a board comparing a project's
+   first-year `ROCE` with a corporate hurdle rate will reject investments it should make.
 
    **`ROE` is not the equity return either.** The 10.2871 % here sits **5.1329 points below** the
    15.42 % Domain 9 identifies as the cost of equity at this gearing, and **2.2440 points below** the
@@ -1260,13 +1286,13 @@ the whole set and then test it against something external — the cost of capita
    on one early year of a long-dated asset is not comparable with either, and quoting it against a
    required return is a category error, not a conservative estimate.
 
-   **The liquidity ratios are the least informative in the set and the most often quoted.** A current
-   ratio of 7.5812 looks extraordinary and means very little: 60.4285 % of those current assets is a
-   cash balance of which **91.1264 % is contractually restricted** (KA 2.2.2), and the payables it is
-   measured against are a single month of chemicals and power. On a ring-fenced SPV with a reserve
-   account and a defined waterfall, liquidity is governed by the finance documents, not by a ratio —
-   which is precisely why lenders covenant coverage and leave the current ratio to general-purpose
-   analysis.
+   **The liquidity ratios are the least informative in the set and the most often quoted.** A
+   current ratio of 7.5812 looks extraordinary and means very little: 60.4285 % of those current
+   assets is a cash balance of which **91.1264 % is contractually restricted** (KA 2.2.2), and
+   the payables it is measured against are a single month of chemicals and power. On a
+   ring-fenced SPV with a reserve account and a defined waterfall, liquidity is governed by the
+   finance documents, not by a ratio, which is precisely why lenders covenant coverage and leave
+   the current ratio to general-purpose analysis.
 
 > **Fig 2.4.1 — Kestrel's return ladder, year one.** Horizontal bar chart, x-axis per cent 0–16,
 > six bars in ascending order with the brand palette: after-tax cost of debt **4.8000** (slate),
@@ -1289,43 +1315,44 @@ the whole set and then test it against something external — the cost of capita
 2. **Formula.** Interest cover = `EBIT` ÷ interest. Debt/`EBITDA` = debt ÷ `EBITDA`.
 3. **Substitution.** `5,100,000 / 2,520,000`; `39,510,365 / 7,500,000`.
 4. **Result.** Interest cover **2.02×**; debt/`EBITDA` **5.27×**.
-5. **Interpretation.** Both are true and they point in different directions, which is the point of
-   reading a *set*. Cover of 2.02× says earnings comfortably absorb the interest charge; debt of
-   5.27× `EBITDA` says the balance sheet is heavily geared — normal for contracted infrastructure
-   and alarming for a merchant business, because what makes high leverage tolerable is **revenue
-   certainty**, not the ratio itself (Domain 7's revenue models; Domain 11's risk allocation). Note
-   too that interest cover is an *accrual* measure and ignores principal entirely: Kestrel must
-   also find USD 2,489,635 of principal, which is why `DSCR` (1.27 including working capital,
-   2.3.1) is the ratio a lender actually covenants.
+5. **Interpretation.** Both are true and they point in different directions, which is the point
+   of reading a *set*. Cover of 2.02× says earnings comfortably absorb the interest charge; debt
+   of 5.27× `EBITDA` says the balance sheet is heavily geared: normal for contracted
+   infrastructure and alarming for a merchant business, because what makes high leverage
+   tolerable is **revenue certainty**, not the ratio itself (Domain 7's revenue models; Domain
+   11's risk allocation). Note too that interest cover is an *accrual* measure and ignores
+   principal entirely: Kestrel must also find USD 2,489,635 of principal, which is why `DSCR`
+   (1.27 including working capital, 2.3.1) is the ratio a lender actually covenants.
 
    Three refinements turn this from a pair of numbers into a judgment. **There are two interest
-   covers and they differ materially.** On `EBIT` the ratio is **2.0238×**; on `EBITDA` — the
-   variant often called cash interest cover — it is **2.9762×**, because depreciation of 2,400,000 is
-   added back. Neither is wrong and the gap between them is 0.9524 of coverage, so a covenant
-   defined on "interest cover" without specifying the numerator has left almost a full turn of
-   coverage to interpretation. That is the same definitional exposure as `CFADS` (KA 2.3.1), on a
-   ratio nobody thinks of as contestable.
+   covers and they differ materially.** On `EBIT` the ratio is **2.0238×**; on `EBITDA`, the
+   variant often called cash interest cover, it is **2.9762×**, because depreciation of
+   2,400,000 is added back. Neither is wrong and the gap between them is 0.9524 of coverage, so
+   a covenant defined on "interest cover" without specifying the numerator has left almost a
+   full turn of coverage to interpretation. That is the same definitional exposure as `CFADS`
+   (KA 2.3.1), on a ratio nobody thinks of as contestable.
 
-   **The tighter covenant is not the one that looks tighter.** Suppose the facility carried both a
-   1.20× `DSCR` covenant and a 2.00× interest-cover covenant — an entirely ordinary pairing. The
-   `DSCR` test bites at `CFADS` of 6,011,562.28, a headroom of **372,437.72**, which at Kestrel's
-   0.80 cash-to-revenue gearing is **465,547.16** of revenue, or **3.8796 %**. The interest-cover
-   test bites at `EBIT` of `2.00 × 2,520,000 =` **5,040,000**, a headroom of only **60,000** of
-   `EBIT` and therefore of revenue — **0.5000 %**. The `DSCR` covenant tolerates **7.7591 times**
-   as large a revenue miss as the interest-cover covenant does. A lender adding an interest-cover
-   test "for comfort" beside a coverage test has, on these numbers, created the binding covenant and
-   quite possibly not noticed; a sponsor negotiating hard on the `DSCR` threshold while conceding the
-   interest-cover threshold has negotiated the wrong clause. **Which covenant binds is an arithmetic
-   question to be answered at close, not a matter of convention** — and the answer belongs on the
-   covenant dashboard (Domain 10, Toolkit 10.T.2) in revenue units, not ratio units.
+   **The tighter covenant is not the one that looks tighter.** Suppose the facility carried both
+   a 1.20× `DSCR` covenant and a 2.00× interest-cover covenant (an entirely ordinary pairing).
+   The `DSCR` test bites at `CFADS` of 6,011,562.28, a headroom of **372,437.72**, which at
+   Kestrel's 0.80 cash-to-revenue gearing is **465,547.16** of revenue, or **3.8796 %**. The
+   interest-cover test bites at `EBIT` of `2.00 × 2,520,000 =` **5,040,000**, a headroom of only
+   **60,000** of `EBIT` and therefore of revenue, **0.5000 %**. The `DSCR` covenant tolerates
+   **7.7591 times** as large a revenue miss as the interest-cover covenant does. A lender adding
+   an interest-cover test "for comfort" beside a coverage test has, on these numbers, created
+   the binding covenant and quite possibly not noticed; a sponsor negotiating hard on the `DSCR`
+   threshold while conceding the interest-cover threshold has negotiated the wrong clause.
+   **Which covenant binds is an arithmetic question to be answered at close, not a matter of
+   convention**, and the answer belongs on the covenant dashboard (Domain 10, Toolkit 10.T.2) in
+   revenue units, not ratio units.
 
-   **Finally, leverage measured on book values decays without any transaction.** Debt/`EBITDA` of
-   5.2680× falls every year as principal amortises, even if the project never improves: it is a
-   statement about an amortisation schedule as much as about the business. Net debt/`EBITDA` of
-   **5.0848×** is lower again, and the 0.1832 difference is entirely the cash balance — **91.1264 %
-   of which is a restricted reserve** (KA 2.2.2). Whether a covenant is struck on gross or net debt,
-   and whether restricted cash counts, is worth more than most of the basis-point negotiation that
-   surrounds it.
+   **Finally, leverage measured on book values decays without any transaction.** Debt/`EBITDA`
+   of 5.2680× falls every year as principal amortises, even if the project never improves: it is
+   a statement about an amortisation schedule as much as about the business. Net debt/`EBITDA`
+   of **5.0848×** is lower again, and the 0.1832 difference is entirely the cash balance,
+   **91.1264 % of which is a restricted reserve** (KA 2.2.2). Whether a covenant is struck on
+   gross or net debt, and whether restricted cash counts, is worth more than most of the
+   basis-point negotiation that surrounds it.
 
 ### 2.4.3 Project systems and corporate reporting
 
@@ -1336,19 +1363,19 @@ and the interfaces are where reconciliation errors and disputes live. The four t
   delivery or performance. Project systems track both; the ledger recognises one (PML-AI,
   Domain 7, KA 7.2.1).
 - **Accruals at period end.** Work received but not invoiced must reach the ledger, or cost
-  performance flatters and then lurches — the same defect PML-AI diagnoses as a stepped `CPI`.
+  performance flatters and then lurches (the same defect PML-AI diagnoses as a stepped `CPI`).
 - **Capitalisation boundaries.** Which project costs form part of the asset (and from what date
   capitalisation begins and ends) determines both the depreciation base and reported profit
-  (2.3.3). Borrowing costs during construction are a specific instance — capitalised into the
+  (2.3.3). Borrowing costs during construction are a specific instance: capitalised into the
   asset while it is being built, expensed thereafter.
 - **Cut-off and period discipline.** A cost is in one period only. Projects run continuously and
   ledgers close monthly; every reconciliation dispute is ultimately a cut-off question.
 
 **The leader's obligation** is not to run these reconciliations but to insist they exist and to
 know which number is being quoted. "The project has spent USD 40 million" can mean committed,
-incurred, invoiced, paid or capitalised — five different figures, all defensible, differing by
-material amounts. How material is worth computing once, because the answer changes how the question
-is asked ever afterwards.
+incurred, invoiced, paid or capitalised (five different figures, all defensible, differing by
+material amounts). How material is worth computing once, because the answer changes how the
+question is asked ever afterwards.
 
 **Worked example 2.4.3 — five answers to "how much has the project spent?".**
 
@@ -1393,34 +1420,34 @@ is asked ever afterwards.
    = committed                              53,505,403   ✓
    ```
 
-5. **Interpretation.** The headline is the **spread of 20,451,403** between the largest and smallest
-   answer — **34.0857 %** of the whole 60,000,000 envelope — on a single date, from one ledger, with
-   every figure defensible and auditable. That is the arithmetic behind the discipline: a question
-   answered with a number rather than with a measure is not an answer.
+5. **Interpretation.** The headline is the **spread of 20,451,403** between the largest and
+   smallest answer (**34.0857 %** of the whole 60,000,000 envelope) on a single date, from one
+   ledger, with every figure defensible and auditable. That is the arithmetic behind the
+   discipline: a question answered with a number rather than with a measure is not an answer.
 
    Three specific traps sit inside the reconciliation, and each has cost projects money.
 
    **Capitalised exceeds incurred.** By **57,923** here, which offends the intuition that the
    balance-sheet figure must be a subset of what has been spent. It exceeds because capitalised
-   interest of 677,923 enters the asset without any supplier ever invoicing for it, while 620,000 of
-   owner's costs leave through the income statement. A reviewer reconciling a fixed-asset note to a
-   cost report and expecting the asset to be the smaller number will look for an error that is not
-   there — and, worse, may not look for the 620,000 that genuinely did fail the capitalisation test
-   (KA 2.3.3), which is the item with a covenant consequence.
+   interest of 677,923 enters the asset without any supplier ever invoicing for it, while
+   620,000 of owner's costs leave through the income statement. A reviewer reconciling a
+   fixed-asset note to a cost report and expecting the asset to be the smaller number will look
+   for an error that is not there; and, worse, may not look for the 620,000 that genuinely did
+   fail the capitalisation test (KA 2.3.3), which is the item with a covenant consequence.
 
    **The two figures that look closest are the least related.** Incurred (33,945,403) and paid
-   (33,054,000) differ by only **891,403**, which reads as near-agreement and is nothing of the kind:
-   it is the net of four unrelated items — retention, unpaid invoices, uninvoiced value and an
-   unrecovered advance — totalling **4,635,403** gross, or **5.2001 times** the apparent gap. Two of
-   those items push one way and two the other, and a change in any of them moves cash without moving
-   cost. A cash forecast built by adjusting the cost report for "the usual lag" is built on the
-   coincidence that the four currently offset.
+   (33,054,000) differ by only **891,403**, which reads as near-agreement and is nothing of the
+   kind: it is the net of four unrelated items (retention, unpaid invoices, uninvoiced value and
+   an unrecovered advance) totalling **4,635,403** gross, or **5.2001 times** the apparent gap.
+   Two of those items push one way and two the other, and a change in any of them moves cash
+   without moving cost. A cash forecast built by adjusting the cost report for "the usual lag"
+   is built on the coincidence that the four currently offset.
 
-   **The advance payment carries the opposite sign to everything else.** The unrecovered 1,872,000 is
-   cash gone and value not yet received — a prepayment asset, not a cost — so it *reduces* committed
-   spend when reconciling from cash. It is the single most common sign error in a construction cash
-   reconciliation, and the reason Domain 14 (KA 14.3.2) treats the advance and its recovery as a named
-   line rather than a netting adjustment.
+   **The advance payment carries the opposite sign to everything else.** The unrecovered
+   1,872,000 is cash gone and value not yet received (a prepayment asset, not a cost), so it
+   *reduces* committed spend when reconciling from cash. It is the single most common sign error
+   in a construction cash reconciliation, and the reason Domain 14 (KA 14.3.2) treats the
+   advance and its recovery as a named line rather than a netting adjustment.
 
    The leader's habit that follows is small and non-negotiable: **name the measure in the sentence**.
    "The project has incurred 33.9 million, paid 33.1 million and committed 53.5 million" takes nine
@@ -1434,23 +1461,24 @@ is asked ever afterwards.
 
 ### AI in this KA
 
-**Where it earns its place.** Ratio computation across many periods and entities, restatement onto a
-common basis, and — most valuably — the translation this Knowledge Area is built on: taking a covenant
-threshold and expressing it in revenue, days or driver units so that the binding test can be
-identified rather than assumed. That is mechanical arithmetic on stated definitions, it is the work
-practitioners most often leave undone, and it is verifiable line by line.
+**Where it earns its place.** Ratio computation across many periods and entities, restatement
+onto a common basis, and, most valuably, the translation this Knowledge Area is built on: taking
+a covenant threshold and expressing it in revenue, days or driver units so that the binding test
+can be identified rather than assumed. That is mechanical arithmetic on stated definitions, it
+is the work practitioners most often leave undone, and it is verifiable line by line.
 
-**Where it fails, specifically.** Three failures, each of which produces a confident wrong answer
-rather than an error message. An assistant asked for "return on equity" will pick a denominator
-without saying which, and opening, average and closing bases differ by **1.1796 points** on Kestrel's
-single year (2.4.1) — the leverage identity then appears to fail and the model will rationalise the
-discrepancy rather than report the inconsistency. An assistant comparing two entities' ratios will not
-ask what policies produced the inputs, so a capitalisation difference (2.3.3) reads as a performance
-difference. And asked how much a project has spent, it will return whichever of the five measures the
-source document happened to contain, with no indication that four others exist (2.4.3). The governed
-habit is to require every ratio to arrive with its numerator, denominator, basis and defining document
-named — and to treat a ratio that cannot state them as unreported. **AI proposes; the professional
-verifies, decides and remains accountable.**
+**Where it fails, specifically.** Three failures, each of which produces a confident wrong
+answer rather than an error message. An assistant asked for "return on equity" will pick a
+denominator without saying which, and opening, average and closing bases differ by **1.1796
+points** on Kestrel's single year (2.4.1): the leverage identity then appears to fail and the
+model will rationalise the discrepancy rather than report the inconsistency. An assistant
+comparing two entities' ratios will not ask what policies produced the inputs, so a
+capitalisation difference (2.3.3) reads as a performance difference. And asked how much a
+project has spent, it will return whichever of the five measures the source document happened to
+contain, with no indication that four others exist (2.4.3). The governed habit is to require
+every ratio to arrive with its numerator, denominator, basis and defining document named; and to
+treat a ratio that cannot state them as unreported. **AI proposes; the professional verifies,
+decides and remains accountable.**
 
 ### Key terms — KA 2.4
 
@@ -1480,7 +1508,8 @@ numerator; D inverts the ratio.
 **MCQ 2.4-B `[2.4.2 · Analysis]`** A project shows interest cover 2.02× and debt/`EBITDA` 5.27×.
 The soundest interpretation is:
 - A. the ratios contradict each other, so one must be wrong
-- B. earnings service the interest comfortably while leverage is high — tolerable given contracted revenue, but dependent on that certainty ✅
+- B. earnings service the interest comfortably while leverage is high (tolerable given
+  contracted revenue, but dependent on that certainty ✅)
 - C. the project is over-leveraged regardless of revenue structure
 - D. interest cover is the only relevant measure for a lender
 
@@ -1490,7 +1519,8 @@ acceptable is revenue certainty. D ignores principal, which is why `DSCR` is cov
 **MCQ 2.4-C `[2.4.3 · Analysis]`** A sponsor asks "how much has the project spent?". The
 professional response is:
 - A. quote the paid figure, as it is the most conservative
-- B. ask which measure is meant — committed, incurred, invoiced, paid or capitalised — since they differ materially and all are defensible ✅
+- B. ask which measure is meant (committed, incurred, invoiced, paid or capitalised) since they
+  differ materially and all are defensible ✅
 - C. quote the committed figure, as it is the most complete
 - D. quote the capitalised figure, since it appears in the accounts
 
@@ -1505,17 +1535,17 @@ capital employed of 6.8000 % against a `WACC` of 7.9860 %, while the appraisal r
 - C. the project is destroying value and should be restructured
 - D. the `WACC` must be wrong, since the project was approved
 
-*Rationale:* Accounting `ROCE` in year one is measured on the asset at its maximum carrying amount
-and rises mechanically as it depreciates (2.4.1) — year two is already 6.8486 % on unchanged `EBIT`.
-A and C treat a single-period ratio as a verdict on lifetime economics, the error Domains 3 and 4
-exist to prevent; D reverses the logic of appraisal.
+*Rationale:* Accounting `ROCE` in year one is measured on the asset at its maximum carrying
+amount and rises mechanically as it depreciates (2.4.1). Year two is already 6.8486 % on
+unchanged `EBIT`. A and C treat a single-period ratio as a verdict on lifetime economics, the
+error Domains 3 and 4 exist to prevent; D reverses the logic of appraisal.
 
 **MCQ 2.4-E `[2.4.2 · Analysis]`** A facility carries both a 1.20× `DSCR` covenant and a 2.00×
 interest-cover covenant. `CFADS` is 6,384,000, debt service 5,009,635.23, `EBIT` 5,100,000, interest
 2,520,000, revenue 12,000,000 and the cash-to-revenue gearing 0.80. The binding covenant is:
 - A. the `DSCR` covenant, because coverage tests are stricter in project finance
 - B. the interest-cover covenant: it tolerates a 0.5000 % revenue fall against the `DSCR` covenant's 3.8796 % ✅
-- C. neither — they bite at the same point by construction
+- C. neither (they bite at the same point by construction)
 - D. it cannot be determined without the lock-up threshold
 
 *Rationale:* Restating both in revenue units gives 60,000 of headroom on interest cover against
@@ -1540,32 +1570,34 @@ on a facility carrying a 1.20× `DSCR` covenant and a 2.00× interest-cover cove
 not defined. On Kestrel's figures the `DSCR` test tolerates a 3.8796 % revenue fall and the
 interest-cover test 0.5000 %. The amendment worth pursuing is:
 - A. reduce the `DSCR` covenant to 1.15×, the largest single ratio concession available
-- B. address the interest-cover test — delete it, or define its numerator as `EBITDA`, which is worth 0.9524 of coverage — because it is the binding covenant and tolerates under a seventh of the revenue miss the `DSCR` test does ✅
+- B. address the interest-cover test (delete it, or define its numerator as `EBITDA`, which is
+  worth 0.9524 of coverage), because it is the binding covenant and tolerates under a seventh of
+  the revenue miss the `DSCR` test does ✅
 - C. seek a longer cure period on both covenants, which protects the sponsor whichever test fails
 - D. leave both thresholds and negotiate the margin instead, since covenant levels are conventional while pricing is not
 
-*Rationale:* restated in revenue units the interest-cover test bites at 60,000 of headroom against
-`DSCR`'s 465,547 — a factor of **7.7591** — so the remaining capital belongs on the clause that will
-actually be breached, and an undefined numerator is the cheapest defect in the facility to fix
-(2.4.2). A concedes ground where none is needed: even at 1.15× the coverage test remains far slacker
-than the interest-cover test. C is genuinely useful and second-best — a cure period buys time after a
-breach rather than preventing one, and changes nothing about which test binds. D asserts a convention
-the arithmetic contradicts, and trades away protection on a covenant that can default the facility
-for basis points that cannot.
+*Rationale:* restated in revenue units the interest-cover test bites at 60,000 of headroom
+against `DSCR`'s 465,547 (a factor of **7.7591**), so the remaining capital belongs on the
+clause that will actually be breached, and an undefined numerator is the cheapest defect in the
+facility to fix (2.4.2). A concedes ground where none is needed: even at 1.15× the coverage test
+remains far slacker than the interest-cover test. C is genuinely useful and second-best: a cure
+period buys time after a breach rather than preventing one, and changes nothing about which test
+binds. D asserts a convention the arithmetic contradicts, and trades away protection on a
+covenant that can default the facility for basis points that cannot.
 
 ### Self-check — KA 2.4
 
-1. *Why does project finance emphasise coverage over return ratios?* — A ring-fenced SPV's credit
+1. *Why does project finance emphasise coverage over return ratios?* A ring-fenced SPV's credit
    case is whether its cash services its debt.
-2. *What does interest cover ignore?* — Principal repayment; hence `DSCR`.
-3. *Name the five meanings of "spend".* — Committed, incurred, invoiced, paid, capitalised.
+2. *What does interest cover ignore?* Principal repayment; hence `DSCR`.
+3. *Name the five meanings of "spend".* Committed, incurred, invoiced, paid, capitalised.
 4. *State the leverage identity and where it fails.* —
    `ROE = ROCE_at + (D/E)(ROCE_at − k_d,at)`; exact on consistent (opening) bases, and broken by
    mixing opening, average and closing denominators — worth 1.1796 points of `ROE` here.
-5. *Which of Kestrel's two possible covenants binds, and by how much?* — The 2.00× interest-cover
+5. *Which of Kestrel's two possible covenants binds, and by how much?* The 2.00× interest-cover
    test, tolerating a 0.5000 % revenue fall against the `DSCR` covenant's 3.8796 %.
-6. *Why can capitalised cost exceed cost incurred?* — Capitalised interest enters the asset without
-   an invoice, while non-capitalisable costs leave through the income statement.
+6. *Why can capitalised cost exceed cost incurred?* Capitalised interest enters the asset
+   without an invoice, while non-capitalisable costs leave through the income statement.
 
 ---
 
@@ -1573,25 +1605,26 @@ for basis points that cannot.
 
 ### 2.A.1 Deferred tax, in principle
 
-Accounting profit and taxable profit differ — most commonly because tax depreciation (capital
+Accounting profit and taxable profit differ: most commonly because tax depreciation (capital
 allowances) runs on a different profile from accounting depreciation. Where the difference is
 **temporary**, deferred tax recognises the future consequence: accelerated tax depreciation
-reduces tax now and creates a **deferred tax liability** that unwinds as the difference reverses.
-For project models the practical significance is that **cash tax and accounting tax are different
-lines with different timing**, and it is cash tax that enters `CFADS` (Domain 6's model, Domain 10's
-ratios). Modelling accounting tax as if it were cash tax is a standard model-audit finding.
+reduces tax now and creates a **deferred tax liability** that unwinds as the difference
+reverses. For project models the practical significance is that **cash tax and accounting tax
+are different lines with different timing**, and it is cash tax that enters `CFADS` (Domain 6's
+model, Domain 10's ratios). Modelling accounting tax as if it were cash tax is a standard
+model-audit finding.
 
 **Worked example 2.A.1 — the deferred tax liability Kestrel's first year creates.**
 
-1. **Setup.** The master statements assume tax depreciation equals accounting depreciation, so no
-   temporary difference arises and tax of 516,000 is both charged and paid. Suppose instead the
-   jurisdiction grants **declining-balance capital allowances at 15 %** on the 60,000,000 base, with
-   losses carried forward — the assumption Domain 6 (KA 6.2.3) prices on the cash side. Accounting
-   depreciation stays at 2,400,000 and the tax rate at 20 %. To isolate the fixed-asset difference,
-   assume no deferred tax asset is recognised on the carried-forward loss — an assumption stated
-   because it is itself a recognition judgment, and one returned to below. Compute the temporary
-   difference, the deferred tax liability, the accounting tax charge and the resulting net income, and
-   identify when the difference begins to reverse.
+1. **Setup.** The master statements assume tax depreciation equals accounting depreciation, so
+   no temporary difference arises and tax of 516,000 is both charged and paid. Suppose instead
+   the jurisdiction grants **declining-balance capital allowances at 15 %** on the 60,000,000
+   base, with losses carried forward: the assumption Domain 6 (KA 6.2.3) prices on the cash
+   side. Accounting depreciation stays at 2,400,000 and the tax rate at 20 %. To isolate the
+   fixed-asset difference, assume no deferred tax asset is recognised on the carried-forward
+   loss: an assumption stated because it is itself a recognition judgment, and one returned to
+   below. Compute the temporary difference, the deferred tax liability, the accounting tax
+   charge and the resulting net income, and identify when the difference begins to reverse.
 2. **Formula.** Temporary difference = carrying amount − tax written-down value. Deferred tax
    liability = temporary difference × tax rate. Total tax charge = current (cash) tax + movement in
    the deferred tax liability. The difference begins to reverse in the first year the capital
@@ -1622,23 +1655,24 @@ ratios). Modelling accounting tax as if it were cash tax is a standard model-aud
    sponsor presenting the profit column to a board and the coverage column to lenders is presenting
    two true statements and one misleading impression.
 
-   Three disciplines follow. **The liability is not a debt and must not be treated as one.** It is
-   not owed to anyone on any date, carries no interest and is not enforceable; leverage covenants
-   defined on "total liabilities" rather than on financial indebtedness can capture it, and a
-   covenant that tightens because a tax authority granted an allowance is a drafting accident worth
-   finding before signature. **The reversal is datable, and the date matters.** With a 15 % declining
-   balance the allowance falls below 2,400,000 for the first time in **year 10** (2,084,552.52
-   against 2,400,000), the temporary difference peaks in **year 9** at **24,502,983.22** — a deferred
-   tax liability of **4,900,596.64** — and unwinds thereafter. So the profile is a decade of profit
-   suppressed by deferred tax followed by years of profit flattered by its release, on a project whose
-   trading may be perfectly flat: any trend read off the profit line across that turning point is an
-   artefact. **And the deferred tax asset side is where optimism hides.** Where the allowance creates
-   a tax loss, recognising a deferred tax asset on it requires convincing evidence of future taxable
-   profit against which to use it, which is a forecast, not a fact. Whether such an allowance regime
-   exists, whether losses carry forward and for how long, whether a deferred tax asset may be
-   recognised, and at what rate the balances are measured are all jurisdiction-specific and subject to
-   legislative change over a twelve-year loan; the arithmetic above is transferable, the treatment is a
-   matter for qualified tax advice, and Domain 11's risk register — not the model's base case — is
+   Three disciplines follow. **The liability is not a debt and must not be treated as one.** It
+   is not owed to anyone on any date, carries no interest and is not enforceable; leverage
+   covenants defined on "total liabilities" rather than on financial indebtedness can capture
+   it, and a covenant that tightens because a tax authority granted an allowance is a drafting
+   accident worth finding before signature. **The reversal is datable, and the date matters.**
+   With a 15 % declining balance the allowance falls below 2,400,000 for the first time in
+   **year 10** (2,084,552.52 against 2,400,000), the temporary difference peaks in **year 9** at
+   **24,502,983.22** (a deferred tax liability of **4,900,596.64**), and unwinds thereafter. So
+   the profile is a decade of profit suppressed by deferred tax followed by years of profit
+   flattered by its release, on a project whose trading may be perfectly flat: any trend read
+   off the profit line across that turning point is an artefact. **And the deferred tax asset
+   side is where optimism hides.** Where the allowance creates a tax loss, recognising a
+   deferred tax asset on it requires convincing evidence of future taxable profit against which
+   to use it, which is a forecast, not a fact. Whether such an allowance regime exists, whether
+   losses carry forward and for how long, whether a deferred tax asset may be recognised, and at
+   what rate the balances are measured are all jurisdiction-specific and subject to legislative
+   change over a twelve-year loan; the arithmetic above is transferable, the treatment is a
+   matter for qualified tax advice, and Domain 11's risk register, not the model's base case, is
    where a legislative assumption belongs.
 
 ### 2.A.2 Leases and off-balance-sheet intuitions
@@ -1650,12 +1684,12 @@ leverage ratios computed across periods spanning the change are not comparable, 
 definitions written before it may capture or exclude lease liabilities in ways nobody intended —
 a live reason to read the *definitions* in finance documents rather than assume them.
 
-The size of the effect is worth computing, because the intuition is usually wrong in an instructive
-way. Suppose Kestrel leases its intake corridor and site access for **USD 500,000** a year over ten
-years, discounted at **6.0 %**. At `AF(6 %, 10) = 7.360087` the liability recognised is
-**USD 3,680,043.53** — **9.3141 %** of the senior debt, a substantial-looking addition. Yet the
-leverage ratio barely moves, because the same change removes 500,000 from operating costs and
-replaces it with depreciation and interest:
+The size of the effect is worth computing, because the intuition is usually wrong in an
+instructive way. Suppose Kestrel leases its intake corridor and site access for **USD 500,000**
+a year over ten years, discounted at **6.0 %**. At `AF(6 %, 10) = 7.360087` the liability
+recognised is **USD 3,680,043.53** (**9.3141 %** of the senior debt, a substantial-looking
+addition). Yet the leverage ratio barely moves, because the same change removes 500,000 from
+operating costs and replaces it with depreciation and interest:
 
 | Measure | Before | After |
 |---|---|---|
@@ -1663,45 +1697,46 @@ replaces it with depreciation and interest:
 | `EBITDA` | 7,500,000 | **8,000,000** |
 | Debt/`EBITDA` | **5.2680×** | **5.3988×** |
 
-A liability of 3,680,043.53 moved the ratio by **0.1308** — because the numerator and the denominator
-both rose. Compute it the way an unwary analyst would, adding the liability while leaving `EBITDA`
-untouched, and the answer is **5.7587×**, an apparent deterioration of 0.4907 that is **3.75 times**
-the real one. Two conclusions, and neither is about leases. **A ratio is only comparable when every
-line in it is restated consistently**, which is the same discipline as KA 2.4.1's return bases. And
-**the covenant definition decides the outcome, not the accounting framework**: where the test is
-struck on "financial indebtedness" as defined in the facility agreement, a lease liability recognised
-under a reporting framework may not enter the covenant at all, and the ratio the lender enforces does
-not move by 0.1308 or by anything else. Which of those applies to a given facility is a question for
-the finance documents and for counsel, and is exactly the sort of matter Toolkit 2.T.1 exists to
-record.
+A liability of 3,680,043.53 moved the ratio by **0.1308**, because the numerator and the
+denominator both rose. Compute it the way an unwary analyst would, adding the liability while
+leaving `EBITDA` untouched, and the answer is **5.7587×**, an apparent deterioration of 0.4907
+that is **3.75 times** the real one. Two conclusions, and neither is about leases. **A ratio is
+only comparable when every line in it is restated consistently**, which is the same discipline
+as KA 2.4.1's return bases. And **the covenant definition decides the outcome, not the
+accounting framework**: where the test is struck on "financial indebtedness" as defined in the
+facility agreement, a lease liability recognised under a reporting framework may not enter the
+covenant at all, and the ratio the lender enforces does not move by 0.1308 or by anything else.
+Which of those applies to a given facility is a question for the finance documents and for
+counsel, and is exactly the sort of matter Toolkit 2.T.1 exists to record.
 
 ### 2.A.3 The reviewer's statement eye
 
-Invariants to test on any statement set before relying on it: the balance sheet balances; closing
-cash on the cash-flow statement equals balance-sheet cash; closing equity equals opening plus
-profit less distributions plus contributions; depreciation in the cash-flow statement equals the
-income-statement charge; the movement in debt equals drawings less principal repaid; principal
-appears in financing and interest in operating (or as disclosed); working-capital movements
-reconcile to balance-sheet deltas; and any ratio quoted can be recomputed from the face of the
-statements. A set that fails any of these has an error, an omission, or a policy that needs
-explaining — and the failure point localises it.
+Invariants to test on any statement set before relying on it: the balance sheet balances;
+closing cash on the cash-flow statement equals balance-sheet cash; closing equity equals opening
+plus profit less distributions plus contributions; depreciation in the cash-flow statement
+equals the income-statement charge; the movement in debt equals drawings less principal repaid;
+principal appears in financing and interest in operating (or as disclosed); working-capital
+movements reconcile to balance-sheet deltas; and any ratio quoted can be recomputed from the
+face of the statements. A set that fails any of these has an error, an omission, or a policy
+that needs explaining, and the failure point localises it.
 
 ### 2.A.4 Distributable reserves — the constraint that is not in the waterfall
 
-A cash waterfall says what money is *available* to distribute (Domain 15, KA 15.2.3). It does not say
-what an entity is *permitted* to distribute, and in most company-law systems those are different
-questions with different answers. The permission side typically turns on **accumulated realised
-profits** — a balance-sheet test on retained earnings, not a cash test — so an SPV can hold cash the
-finance documents release and still be unable lawfully to pay it out.
+A cash waterfall says what money is *available* to distribute (Domain 15, KA 15.2.3). It does
+not say what an entity is *permitted* to distribute, and in most company-law systems those are
+different questions with different answers. The permission side typically turns on **accumulated
+realised profits** (a balance-sheet test on retained earnings, not a cash test), so an SPV can
+hold cash the finance documents release and still be unable lawfully to pay it out.
 
-The point is easiest to see at the end of construction, where it bites hardest. The master statements
-in KA 2.2 capitalise the whole 60,000,000 envelope into the plant, for exposition; take instead Worked
-example 2.4.3's illustration, in which **620,000** of owner's general and administrative costs fail the
-capitalisation test and are expensed, so that plant is carried at **59,380,000** and retained earnings
-open at **−620,000**. Kestrel then reaches its commercial operations date with no distributable reserve
-whatever, while holding cash and having satisfied every condition to a drawdown. Year one's net income of 2,064,000 restores the balance to **1,444,000**, and
-Domain 6's first-year distribution of **121,955.96** is **8.4457 %** of it — comfortable, but only
-because the year was profitable. Three consequences a leader should hold.
+The point is easiest to see at the end of construction, where it bites hardest. The master
+statements in KA 2.2 capitalise the whole 60,000,000 envelope into the plant, for exposition;
+take instead Worked example 2.4.3's illustration, in which **620,000** of owner's general and
+administrative costs fail the capitalisation test and are expensed, so that plant is carried at
+**59,380,000** and retained earnings open at **−620,000**. Kestrel then reaches its commercial
+operations date with no distributable reserve whatever, while holding cash and having satisfied
+every condition to a drawdown. Year one's net income of 2,064,000 restores the balance to
+**1,444,000**, and Domain 6's first-year distribution of **121,955.96** is **8.4457 %** of it:
+comfortable, but only because the year was profitable. Three consequences a leader should hold.
 
 **The binding test can switch between cash and reserves without warning.** In year one the
 constraint is cash and the waterfall: 121,955.96 of distributable cash against 1,444,000 of reserves.
@@ -1745,36 +1780,37 @@ confirm the legal test with counsel once per financing rather than once per divi
 ## Case study — Domain 2: the profitable year that nearly broke a covenant (water)
 
 **Situation.** Kestrel Water SPC's first operating year closes on the figures above: net income
-USD 2,064,000, `EBITDA` USD 7,500,000 — a good year by any account. The finance director's draft
-lender report quotes `DSCR` **1.39** and describes headroom as comfortable against the facility's
-**1.25** distribution condition.
+USD 2,064,000, `EBITDA` USD 7,500,000 (a good year by any account). The finance director's draft
+lender report quotes `DSCR` **1.39** and describes headroom as comfortable against the
+facility's **1.25** distribution condition.
 
-**Which threshold, and why it matters that the report picked one.** Kestrel's facility tests coverage
-at the three levels tabulated in KA 2.3.1B — a 1.25× distribution condition, a 1.20× financial
-covenant and a 1.15× lock-up trigger, whose consequences Domain 10 (KA 10.4) builds. The draft report
-compared its figure against the distribution condition alone, which is the least severe of the three
-and the only one whose failure costs a dividend rather than triggering an event of default.
+**Which threshold, and why it matters that the report picked one.** Kestrel's facility tests
+coverage at the three levels tabulated in KA 2.3.1B, a 1.25× distribution condition, a 1.20×
+financial covenant and a 1.15× lock-up trigger, whose consequences Domain 10 (KA 10.4) builds.
+The draft report compared its figure against the distribution condition alone, which is the
+least severe of the three and the only one whose failure costs a dividend rather than triggering
+an event of default.
 
 **The problem.** The facility's definition of `CFADS` is struck **after** movements in working
 capital. Kestrel's receivables had grown USD 900,000 as the offtaker's payment process settled
-into a slower rhythm than modelled, against a USD 300,000 rise in payables — a net USD 600,000
-absorbed. On the documented definition, `CFADS` is USD 6,384,000 and `DSCR` is **1.27**, not 1.39.
-Headroom against the 1.25 distribution condition is USD 0.02 of ratio — **USD 121,956 of cash** —
-not the comfortable margin reported. Against the 1.20 covenant the headroom is **USD 372,438**, or
-**5.8 %** of `CFADS`, which is the figure Domain 10 (WE 10.2.1) computes and the one a board paper
-should carry. And note what the definitional choice cost: on the pre-working-capital figure the
-covenant headroom would have looked like **USD 972,438**, so **USD 600,000 — 61.7 % of the apparent
-margin — was never there.**
+into a slower rhythm than modelled, against a USD 300,000 rise in payables (a net USD 600,000
+absorbed). On the documented definition, `CFADS` is USD 6,384,000 and `DSCR` is **1.27**, not
+1.39. Headroom against the 1.25 distribution condition is USD 0.02 of ratio (**USD 121,956 of
+cash**), not the comfortable margin reported. Against the 1.20 covenant the headroom is **USD
+372,438**, or **5.8 %** of `CFADS`, which is the figure Domain 10 (WE 10.2.1) computes and the
+one a board paper should carry. And note what the definitional choice cost: on the
+pre-working-capital figure the covenant headroom would have looked like **USD 972,438**, so
+**USD 600,000 (61.7 % of the apparent margin) was never there.**
 
-**The margin, restated in the units that caused it.** The board's question — how close was this? —
-has a better answer than 0.02 of ratio. Kestrel's `DSCR` of 1.2743 corresponds to a collection period
-of **27.3750 days**; the 1.25 distribution condition is reached at **31.0845 days** and the 1.20
-covenant at **38.7033 days** (KA 2.3.1B). The comfortable margin the draft report described was
-therefore **3.7095 days of collection** before the dividend stopped, and 11.3283 days before the
-covenant failed. At **32,876.71 of cash and 0.006563 of `DSCR` per day**, the offtaker's payment run
-slipping by a single week would have cost 0.0459 of coverage on its own. Expressed that way the
-finding was actionable inside a fortnight; expressed as two decimal places of a ratio it had sat in
-three consecutive board packs.
+**The margin, restated in the units that caused it.** The board's question (how close was this?)
+has a better answer than 0.02 of ratio. Kestrel's `DSCR` of 1.2743 corresponds to a collection
+period of **27.3750 days**; the 1.25 distribution condition is reached at **31.0845 days** and
+the 1.20 covenant at **38.7033 days** (KA 2.3.1B). The comfortable margin the draft report
+described was therefore **3.7095 days of collection** before the dividend stopped, and 11.3283
+days before the covenant failed. At **32,876.71 of cash and 0.006563 of `DSCR` per day**, the
+offtaker's payment run slipping by a single week would have cost 0.0459 of coverage on its own.
+Expressed that way the finding was actionable inside a fortnight; expressed as two decimal
+places of a ratio it had sat in three consecutive board packs.
 
 **What was done.** The report was corrected before issue. More consequentially, the near-miss
 changed three things: collections became a monitored operational metric with a named owner (not a
@@ -1786,26 +1822,27 @@ buffer, calibrated on the observed distribution of the offtaker's payment dates 
 in at 1.41 on the documented definition.
 
 **What the domain teaches here.** The professional content is definitional, and then it is
-translational. A ratio is only as good as the defined term inside it, and the definition lives in
-the finance documents, not in convention — that is the first lesson and the one that corrected the
-report. The second is the one that changed the company: **a covenant that is not expressed in a unit
-someone owns is not being managed.** "Maintain `DSCR` above 1.25" is owned by nobody; "keep `DSO`
-below 31 days" is owned by a named person with a weekly number. It also shows the accrual/cash
-divergence of KA 2.1.1 doing real damage — a genuinely profitable year came within USD 100,000 of a
-covenant breach because of a balance-sheet movement no one was watching, and the movement was 3.7
-days long.
+translational. A ratio is only as good as the defined term inside it, and the definition lives
+in the finance documents, not in convention. That is the first lesson and the one that corrected
+the report. The second is the one that changed the company: **a covenant that is not expressed
+in a unit someone owns is not being managed.** "Maintain `DSCR` above 1.25" is owned by nobody;
+"keep `DSO` below 31 days" is owned by a named person with a weekly number. It also shows the
+accrual/cash divergence of KA 2.1.1 doing real damage: a genuinely profitable year came within
+USD 100,000 of a covenant breach because of a balance-sheet movement no one was watching, and
+the movement was 3.7 days long.
 
 ## Case study B — Domain 2: capitalised into a better-looking year (digital infrastructure)
 
 **Situation.** A data-centre operator overhauled cooling across three sites for USD 9,000,000,
-capitalised as an enhancement and depreciated over 12 years — a year-one charge of USD 750,000
+capitalised as an enhancement and depreciated over 12 years, a year-one charge of USD 750,000
 rather than USD 9,000,000, lifting reported profit by USD 8,250,000 relative to expensing it.
 
 **What happened.** The auditors challenged the classification: on inspection, roughly two-thirds
-of the spend restored the original design capacity rather than extending it, which is maintenance.
-The restatement moved USD 6,000,000 into operating expense, turned a reported profit into a loss,
-and breached a profit-based covenant in a holding-company facility. No cash flow changed at any
-point, and the project's `DSCR` — a cash-based test — was unaffected throughout.
+of the spend restored the original design capacity rather than extending it, which is
+maintenance. The restatement moved USD 6,000,000 into operating expense, turned a reported
+profit into a loss, and breached a profit-based covenant in a holding-company facility. No cash
+flow changed at any point, and the project's `DSCR`, a cash-based test, was unaffected
+throughout.
 
 **What the domain teaches here.** Accounting classification is judgment applied to facts, and it
 is auditable. The wider lesson is why lenders to projects prefer cash-based covenants: the
@@ -1817,41 +1854,42 @@ judgment and which are not.
 
 **Situation.** The contractor building Kestrel's plant reports quarterly on a **USD 48,000,000**
 lump-sum contract. At the quarter-five data date it had incurred **USD 27,000,000** and forecast
-**USD 15,000,000** to complete, so on its cost-input measure the job was **64.2857 %** done and it
-recognised revenue of **30,857,142.86** and cumulative profit of **3,857,142.86**. The SPV, on the
-same date, had certified **61 %** of the milestone schedule — output revenue of 29,280,000 and
-cumulative profit of 2,280,000 on the same costs. Two systems, one job, **1,577,142.86** apart, which
-is **26.2857 %** of the contract's whole expected margin.
+**USD 15,000,000** to complete, so on its cost-input measure the job was **64.2857 %** done and
+it recognised revenue of **30,857,142.86** and cumulative profit of **3,857,142.86**. The SPV,
+on the same date, had certified **61 %** of the milestone schedule: output revenue of 29,280,000
+and cumulative profit of 2,280,000 on the same costs. Two systems, one job, **1,577,142.86**
+apart, which is **26.2857 %** of the contract's whole expected margin.
 
 **How the gap was read, and misread.** The contractor's commercial team treated the 3.2857-point
-difference as a certification lag: the works were in place and the SPV's engineer had not yet signed.
-The SPV's technical adviser read the same gap the other way — costs were running ahead of physical
-progress on the marine works, where a seabed condition had required additional grouting that was not a
-variation. Both explanations fit the numbers, and the systems could not adjudicate between them,
-because on a fixed-price milestone certification the SPV's own earned value shows `CPI` = 1.0000 by
-construction (Domain 14, KA 14.2.1) and can therefore never see a contractor cost overrun at all.
-What settled it was neither system but the evidence underneath: grouting quantities against the
-design, which supported the adviser.
+difference as a certification lag: the works were in place and the SPV's engineer had not yet
+signed. The SPV's technical adviser read the same gap the other way. Costs were running ahead of
+physical progress on the marine works, where a seabed condition had required additional grouting
+that was not a variation. Both explanations fit the numbers, and the systems could not
+adjudicate between them, because on a fixed-price milestone certification the SPV's own earned
+value shows `CPI` = 1.0000 by construction (Domain 14, KA 14.2.1) and can therefore never see a
+contractor cost overrun at all. What settled it was neither system but the evidence underneath:
+grouting quantities against the design, which supported the adviser.
 
-**What followed.** The re-forecast raised the cost to complete to **USD 22,500,000**, taking expected
-total costs to **49,500,000** against the 48,000,000 price. The contract was **onerous by
-1,500,000**, and because 3,857,142.86 of profit had already been recognised, the charge in the quarter
-was **USD 5,357,142.86** — **3.5714 times** the loss it reported. The contractor's quarterly result
-moved from a modest profit to a substantial loss on a job whose physical progress had not changed at
-all that quarter. Nothing in the SPV's accounts moved: the price was fixed, so the SPV's cost, asset
-and `DSCR` were untouched, and its exposure was entirely to the contractor's solvency and to the
-delay that the additional works implied — which is where a lender's monitoring should have been
-looking, and was not.
+**What followed.** The re-forecast raised the cost to complete to **USD 22,500,000**, taking
+expected total costs to **49,500,000** against the 48,000,000 price. The contract was **onerous
+by 1,500,000**, and because 3,857,142.86 of profit had already been recognised, the charge in
+the quarter was **USD 5,357,142.86** (**3.5714 times** the loss it reported). The contractor's
+quarterly result moved from a modest profit to a substantial loss on a job whose physical
+progress had not changed at all that quarter. Nothing in the SPV's accounts moved: the price was
+fixed, so the SPV's cost, asset and `DSCR` were untouched, and its exposure was entirely to the
+contractor's solvency and to the delay that the additional works implied, which is where a
+lender's monitoring should have been looking, and was not.
 
-**What the domain teaches here.** KA 2.3.2 supplies the mechanics — that neither an accounting
-percentage nor a certified percentage can settle a progress dispute on its own (PML-AI, Domain 7,
-KA 7.3.1), and that the onerous charge is dominated by the reversal rather than by the loss. What the
-quarter adds is the consequence for the party whose accounts do not move: **a fixed price protects the
-SPV's statements and not the SPV**. The counterparty risk a loss-making contract creates appears
-nowhere in the SPV's accounts, so it has to be monitored through the contractor's — a diligence and
-covenant-design question (Domain 12, KA 12.1; Domain 14, KA 14.2.1) rather than an accounting one.
-It is also why what settled this dispute was grouting quantities and not a percentage: where two
-measurement systems disagree, the adjudicating evidence is always underneath both of them.
+**What the domain teaches here.** KA 2.3.2 supplies the mechanics: that neither an accounting
+percentage nor a certified percentage can settle a progress dispute on its own (PML-AI, Domain
+7, KA 7.3.1), and that the onerous charge is dominated by the reversal rather than by the loss.
+What the quarter adds is the consequence for the party whose accounts do not move: **a fixed
+price protects the SPV's statements and not the SPV**. The counterparty risk a loss-making
+contract creates appears nowhere in the SPV's accounts, so it has to be monitored through the
+contractor's, a diligence and covenant-design question (Domain 12, KA 12.1; Domain 14, KA
+14.2.1) rather than an accounting one. It is also why what settled this dispute was grouting
+quantities and not a percentage: where two measurement systems disagree, the adjudicating
+evidence is always underneath both of them.
 
 ---
 
@@ -1859,15 +1897,15 @@ measurement systems disagree, the adjudicating evidence is always underneath bot
 
 What a project finance director cannot delegate in this domain:
 
-- **The definitions.** `CFADS`, `EBITDA`, "net debt", "spend" — the director asks what the defined
-  term is *in the documents* before quoting any ratio built on it (Case study A).
-- **The accrual/cash bridge.** Being able to explain, unprompted, why profit and cash differ this
-  period — and what is absorbing the difference.
+- **The definitions.** `CFADS`, `EBITDA`, "net debt", "spend": the director asks what the
+  defined term is *in the documents* before quoting any ratio built on it (Case study A).
+- **The accrual/cash bridge.** Being able to explain, unprompted, why profit and cash differ
+  this period, and what is absorbing the difference.
 - **The policy exposures.** Which covenants can be moved by an accounting judgment (capex/opex,
   revenue timing, provisions) and which cannot.
 - **Working capital as an operational matter.** Collections and payment terms are cash decisions
-  with covenant consequences, owned by named people, not finance hygiene — expressed as a
-  days target (31 days, not 1.25×) so that somebody can act on it.
+  with covenant consequences, owned by named people, not finance hygiene: expressed as a days
+  target (31 days, not 1.25×) so that somebody can act on it.
 - **The interface discipline.** Insisting project and ledger reconcile, and never letting the five
   meanings of "spend" circulate interchangeably.
 - **Knowing which covenant binds.** Not which covenant sounds strictest: the director can state, in
@@ -1889,9 +1927,9 @@ over 30 years; interest 2,100,000; tax 20 %. Build the income statement to net i
 `EBIT` rather than PBT (giving 1,340,000 and overstating tax by 420,000).
 
 **Exercise 2.2** From Exercise 2.1, receivables rose 1,100,000, inventory rose 200,000 and
-payables rose 450,000. Compute operating cash flow.
-*Solution.* `3,680,000 + 2,500,000 − 1,100,000 − 200,000 + 450,000 =` **USD 5,330,000**. Common
-error: signing payables negative — supplier credit is a cash source.
+payables rose 450,000. Compute operating cash flow. *Solution.* `3,680,000 + 2,500,000 −
+1,100,000 − 200,000 + 450,000 =` **USD 5,330,000**. Common error: signing payables negative;
+supplier credit is a cash source.
 
 **Exercise 2.3** Using Exercise 2.1–2.2 and annual debt service of 4,400,000, compute `DSCR` both
 before and after working-capital movements (`CFADS` = `EBITDA` − tax [− ΔWC]).
@@ -1901,12 +1939,11 @@ using net income instead of `EBITDA` in `CFADS` (double-counting interest, which
 already includes).
 
 **Exercise 2.4** USD 2,400,000 is spent on plant modification, capitalised over 8 years versus
-expensed. State the year-one profit difference and the cash difference.
-*Solution.* Capitalised charge `2,400,000/8 =` **300,000**; expensed **2,400,000**; profit
-difference **USD 2,100,000**; cash difference **nil** before tax. Common error: assuming a cash
-difference because the profit effect is large — and the opposite error of asserting there can never
-be one, since where the tax deduction follows the accounting treatment the timing of relief differs
-(2.3.3).
+expensed. State the year-one profit difference and the cash difference. *Solution.* Capitalised
+charge `2,400,000/8 =` **300,000**; expensed **2,400,000**; profit difference **USD 2,100,000**;
+cash difference **nil** before tax. Common error: assuming a cash difference because the profit
+effect is large, and the opposite error of asserting there can never be one, since where the tax
+deduction follows the accounting treatment the timing of relief differs (2.3.3).
 
 **Exercise 2.5** Continue Exercises 2.1–2.3. The project opened the year with plant 75,000,000, cash
 nil, senior debt 52,500,000 and equity 22,500,000, and no receivables, inventory or payables. Debt
@@ -1923,23 +1960,23 @@ it and understates cash by 2,100,000.
 
 **Exercise 2.6** The same project's facility carries a **1.60×** `DSCR` covenant, with `CFADS`
 struck after working capital. Inventory stays at 200,000 and payables at 450,000. Revenue is
-15,000,000 and receivables opened at nil. Express the covenant as a maximum days-sales-outstanding
-figure at a 365-day convention, and state the headroom in days.
-*Solution.* `CFADS` before working capital `9,200,000 − 920,000 =` **8,280,000**; trigger
-`1.60 × 4,400,000 =` **7,040,000**; allowable absorption **1,240,000**; allowable receivables
-`1,240,000 − 200,000 + 450,000 =` **1,490,000**; maximum `DSO`
-`1,490,000/15,000,000 × 365 =` **36.2567 days** against an actual
-`1,100,000/15,000,000 × 365 =` **26.7667 days** — headroom **9.4900 days**. Actual `DSCR` after
-working capital is **1.6886**. Common error: forgetting that inventory consumes and payables release,
-so the allowable *receivables* figure is not the allowable *absorption* figure.
+15,000,000 and receivables opened at nil. Express the covenant as a maximum
+days-sales-outstanding figure at a 365-day convention, and state the headroom in days.
+*Solution.* `CFADS` before working capital `9,200,000 − 920,000 =` **8,280,000**; trigger `1.60
+× 4,400,000 =` **7,040,000**; allowable absorption **1,240,000**; allowable receivables
+`1,240,000 − 200,000 + 450,000 =` **1,490,000**; maximum `DSO` `1,490,000/15,000,000 × 365 =`
+**36.2567 days** against an actual `1,100,000/15,000,000 × 365 =` **26.7667 days**, headroom
+**9.4900 days**. Actual `DSCR` after working capital is **1.6886**. Common error: forgetting
+that inventory consumes and payables release, so the allowable *receivables* figure is not the
+allowable *absorption* figure.
 
-**Exercise 2.7** A concession requires site restoration costing USD 6,000,000 in 20 years, discounted
-at 6.0 %. Compute the provision recognised, the year-one accretion, the year-one depreciation of the
-restoration asset, the total year-one charge and the year-one cash effect.
-*Solution.* Provision `6,000,000/1.06²⁰ =` **1,870,828.36**; accretion
-`1,870,828.36 × 0.06 =` **112,249.70**; depreciation `1,870,828.36/20 =` **93,541.42**; total charge
-**205,791.12**; cash effect **nil**. The provision closes year one at **1,983,078.06** and the total
-charged over the 20 years is **6,000,000** — the settlement amount. Common error: charging accretion
+**Exercise 2.7** A concession requires site restoration costing USD 6,000,000 in 20 years,
+discounted at 6.0 %. Compute the provision recognised, the year-one accretion, the year-one
+depreciation of the restoration asset, the total year-one charge and the year-one cash effect.
+*Solution.* Provision `6,000,000/1.06²⁰ =` **1,870,828.36**; accretion `1,870,828.36 × 0.06 =`
+**112,249.70**; depreciation `1,870,828.36/20 =` **93,541.42**; total charge **205,791.12**;
+cash effect **nil**. The provision closes year one at **1,983,078.06** and the total charged
+over the 20 years is **6,000,000**, the settlement amount. Common error: charging accretion
 alone and forgetting that recognising the provision also created a depreciable asset.
 
 **Exercise 2.8** From Exercises 2.1 and 2.5, compute the current ratio, debt/equity, net debt,
@@ -1956,15 +1993,13 @@ to the digit. Common error: testing the identity with `ROCE` on closing capital 
 equity, which breaks it and produces a "discrepancy" that is only a change of denominator.
 
 **Exercise 2.9** At a construction data date a project reports committed 24,000,000, cash paid
-14,600,000, retention withheld 700,000, approved unpaid invoices 260,000, certified value not yet
-invoiced 540,000 and an unrecovered advance payment of 900,000. Compute open commitments, incurred
-and invoiced.
-*Solution.* Open commitments
-`24,000,000 − 14,600,000 − 700,000 − 260,000 − 540,000 + 900,000 =` **8,800,000**; incurred
-`14,600,000 + 700,000 + 260,000 + 540,000 − 900,000 =` **15,200,000**; invoiced
-`15,200,000 − 540,000 =` **14,660,000**. Common error: adding the unrecovered advance rather than
-deducting it — it is cash paid for value not yet received, so it reconciles with the opposite sign to
-every other item.
+14,600,000, retention withheld 700,000, approved unpaid invoices 260,000, certified value not
+yet invoiced 540,000 and an unrecovered advance payment of 900,000. Compute open commitments,
+incurred and invoiced. *Solution.* Open commitments `24,000,000 − 14,600,000 − 700,000 − 260,000
+− 540,000 + 900,000 =` **8,800,000**; incurred `14,600,000 + 700,000 + 260,000 + 540,000 −
+900,000 =` **15,200,000**; invoiced `15,200,000 − 540,000 =` **14,660,000**. Common error:
+adding the unrecovered advance rather than deducting it; it is cash paid for value not yet
+received, so it reconciles with the opposite sign to every other item.
 
 **Exercise 2.10** An asset costs 75,000,000, is depreciated straight-line over 30 years and attracts
 capital allowances at 20 % on a declining balance. The tax rate is 20 %. Compute the deferred tax
@@ -1979,32 +2014,32 @@ carrying amount and tax written-down value — the two coincide in year one and 
 after, so the error is invisible exactly once.
 
 **Exercise 2.11** A contractor on a 30,000,000 fixed-price contract has incurred 12,000,000 and
-forecasts 13,000,000 to complete. Compute progress, revenue and cumulative profit on a cost-input
-measure. Then the forecast to complete rises to 20,000,000: state the expected loss and the charge in
-that period.
-*Solution.* Expected total cost **25,000,000**; progress `12,000,000/25,000,000 =` **48.0000 %**;
-revenue `30,000,000 × 0.48 =` **14,400,000**; profit to date **2,400,000**. Revised total cost
-**32,000,000**, so the contract is onerous by **2,000,000**; the cumulative position must move from
-+2,400,000 to −2,000,000, giving a period charge of **4,400,000** — **2.2000 times** the loss. Common
-error: recognising the 2,000,000 loss and leaving the 2,400,000 of recognised profit in place, which
-overstates the cumulative result by 2,400,000 and spreads a known loss into the future.
+forecasts 13,000,000 to complete. Compute progress, revenue and cumulative profit on a
+cost-input measure. Then the forecast to complete rises to 20,000,000: state the expected loss
+and the charge in that period. *Solution.* Expected total cost **25,000,000**; progress
+`12,000,000/25,000,000 =` **48.0000 %**; revenue `30,000,000 × 0.48 =` **14,400,000**; profit to
+date **2,400,000**. Revised total cost **32,000,000**, so the contract is onerous by
+**2,000,000**; the cumulative position must move from +2,400,000 to −2,000,000, giving a period
+charge of **4,400,000**, **2.2000 times** the loss. Common error: recognising the 2,000,000 loss
+and leaving the 2,400,000 of recognised profit in place, which overstates the cumulative result
+by 2,400,000 and spreads a known loss into the future.
 
 ## Practitioner's toolkit — Domain 2
 
-*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable — and
-set a retention period against each. These registers are the evidence that a decision was taken
-properly, so each is retained at least as long as the obligation it supports, in a form that opens
-without the tool that created it, with a named custodian who holds it once the engagement ends.
-The applicable minimum periods are set by the organisation's own policy and by jurisdiction-specific
-statutory, tax and limitation requirements, which this book does not state. Where a register holds
-information about identified individuals, the retention period and any minimisation or deletion
-obligation that cuts across it are settled with the organisation's data-protection adviser before
-the register is adopted.*
+*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable, and set a
+retention period against each. These registers are the evidence that a decision was taken
+properly, so each is retained at least as long as the obligation it supports, in a form that
+opens without the tool that created it, with a named custodian who holds it once the engagement
+ends. The applicable minimum periods are set by the organisation's own policy and by
+jurisdiction-specific statutory, tax and limitation requirements, which this book does not
+state. Where a register holds information about identified individuals, the retention period and
+any minimisation or deletion obligation that cuts across it are settled with the organisation's
+data-protection adviser before the register is adopted.*
 
 ### Toolkit 2.T.1 — Defined-terms sheet (one per financing)
 
-For each term used in a covenant or report — `CFADS`, `EBITDA`, net debt, distributable cash,
-project costs — record: the **document and clause** defining it, the definition in plain words,
+For each term used in a covenant or report (`CFADS`, `EBITDA`, net debt, distributable cash,
+project costs) record: the **document and clause** defining it, the definition in plain words,
 what is included and excluded (working capital? cash tax or accrued? maintenance capex?), the
 model line implementing it, and the person who confirmed the match. A ratio quoted without a row
 here is not reportable (Case study A).
@@ -2025,8 +2060,8 @@ good months, because its purpose is to make divergence visible before it is mate
 - [ ] Working-capital movements reconcile to balance-sheet deltas.
 - [ ] Every quoted ratio recomputable from the face of the statements, on its defined terms.
 - [ ] Capitalisation boundary and any policy change disclosed and explained.
-- [ ] Return ratios state their basis (opening, average or closing) — the leverage identity holds on
-      one basis only, and mixing them moved Kestrel's `ROE` by 1.1796 points.
+- [ ] Return ratios state their basis (opening, average or closing): the leverage identity holds
+      on one basis only, and mixing them moved Kestrel's `ROE` by 1.1796 points.
 - [ ] Interest paid identified as operating or financing, and the `CFADS` identity applied only to
       the operating presentation.
 - [ ] Cash split into unrestricted and reserve balances; 91.1264 % of Kestrel's was restricted.
@@ -2056,57 +2091,60 @@ numerator (2.A.2) · treating distributable cash as permission to distribute (2.
 **Reflection questions.**
 1. For your current financing: what exactly does `CFADS` include, and where is that written down?
 2. Which of your covenants could be moved by an accounting judgment rather than a change in
-   economics — and who reviews those judgments?
-3. When someone last told you what a project had "spent", which of the five measures was it — and
+   economics, and who reviews those judgments?
+3. When someone last told you what a project had "spent", which of the five measures was it, and
    did you ask?
-4. Restate your tightest covenant in a unit somebody owns — days of collection, points of
+4. Restate your tightest covenant in a unit somebody owns: days of collection, points of
    availability, a unit cost. Who is that person, and do they know?
 5. If your project were to report an accounting loss in a year of unchanged cash flow, could it
-   still lawfully distribute — and who has confirmed that?
+   still lawfully distribute, and who has confirmed that?
 
 ## Domain 2 summary
 
 Accrual accounting records effects when they occur and cash accounting records money when it
 moves; both matter, because covenants are written on each and they diverge in ways that are
-information rather than noise. Recognition and measurement are governed by tests, and the policies
-chosen shape reported figures without touching economics — which is why statements are read
-sceptically and why the three of them, locked together by articulation, are stronger evidence than
-any one alone. Kestrel's first year demonstrates the machinery end to end: `EBITDA` 7,500,000
-descending through depreciation, interest and tax to net income 2,064,000, then bridged back to
-operating cash flow of 3,864,000 by adding non-cash depreciation and deducting the 600,000 that
-working capital absorbed — the same 600,000 that separates the year's accrual and cash results and
-sits, findable, as the closing net working-capital balance. The same bridge built by the direct
-method gives the identical 3,864,000 out of gross flows that are far more useful: 11,100,000
-collected, **92.50 %** of revenue recognised. From there the statements close themselves. Deducting
-the 2,489,635.23 of principal — a balance-sheet movement, not an expense — leaves cash of
-**1,374,364.77**, which is also `CFADS` less debt service, which is also Domain 9's annual
-distributable cash, which Domain 6 then splits exactly into a 1,252,408.81 reserve instalment and a
-121,955.96 distribution; and the balance sheet totals **59,874,364.77** on both sides with nothing
-plugged. Two breakevens sit inside the same income statement and they settle the book's opening
-claim: profit reaches nil at a 21.50 % revenue fall and coverage reaches 1.00 at 14.32 %, so **the
-cash constraint binds first, by seven revenue points**.
+information rather than noise. Recognition and measurement are governed by tests, and the
+policies chosen shape reported figures without touching economics, which is why statements are
+read sceptically and why the three of them, locked together by articulation, are stronger
+evidence than any one alone. Kestrel's first year demonstrates the machinery end to end:
+`EBITDA` 7,500,000 descending through depreciation, interest and tax to net income 2,064,000,
+then bridged back to operating cash flow of 3,864,000 by adding non-cash depreciation and
+deducting the 600,000 that working capital absorbed — the same 600,000 that separates the year's
+accrual and cash results and sits, findable, as the closing net working-capital balance. The
+same bridge built by the direct method gives the identical 3,864,000 out of gross flows that are
+far more useful: 11,100,000 collected, **92.50 %** of revenue recognised. From there the
+statements close themselves. Deducting the 2,489,635.23 of principal (a balance-sheet movement,
+not an expense) leaves cash of **1,374,364.77**, which is also `CFADS` less debt service, which
+is also Domain 9's annual distributable cash, which Domain 6 then splits exactly into a
+1,252,408.81 reserve instalment and a 121,955.96 distribution; and the balance sheet totals
+**59,874,364.77** on both sides with nothing plugged. Two breakevens sit inside the same income
+statement and they settle the book's opening claim: profit reaches nil at a 21.50 % revenue fall
+and coverage reaches 1.00 at 14.32 %, so **the cash constraint binds first, by seven revenue
+points**.
 
 The project-relevant treatments each carry a professional edge. Working capital moved Kestrel's
-`DSCR` from 1.39 to 1.27 on the documented `CFADS` definition, within USD 100,000 of a covenant —
-and restated in the unit that caused it, the whole dividend rested on **3.7095 days** of collection,
-against a covenant reached at 38.7033 days. The capex/opex choice moved a year's profit by 1,080,000
-on 1,200,000 of spend while pre-tax cash was unchanged, though where the deduction follows the
-accounting the after-tax difference is a real **78,958.05** of present value. Revenue recognition
-follows performance, and an input measure running 3.2857 points ahead of certification was worth
-1,577,142.86 of profit before a re-forecast turned it into a 5,357,142.86 charge — **3.5714 times**
-the 1,500,000 loss it reported, because the profit already taken must be reversed. Provisions are
-measured, not chosen: a 4,500,000 restoration obligation is recognised at **1,328,862.47**, charges
-**119,597.62** in its first year with no cash effect, moves 27.0279 % on a 100-basis-point change of
-rate, and accretes to exactly the amount eventually paid.
+`DSCR` from 1.39 to 1.27 on the documented `CFADS` definition, within USD 100,000 of a covenant,
+and restated in the unit that caused it, the whole dividend rested on **3.7095 days** of
+collection, against a covenant reached at 38.7033 days. The capex/opex choice moved a year's
+profit by 1,080,000 on 1,200,000 of spend while pre-tax cash was unchanged, though where the
+deduction follows the accounting the after-tax difference is a real **78,958.05** of present
+value. Revenue recognition follows performance, and an input measure running 3.2857 points ahead
+of certification was worth 1,577,142.86 of profit before a re-forecast turned it into a
+5,357,142.86 charge: **3.5714 times** the 1,500,000 loss it reported, because the profit already
+taken must be reversed. Provisions are measured, not chosen: a 4,500,000 restoration obligation
+is recognised at **1,328,862.47**, charges **119,597.62** in its first year with no cash effect,
+moves 27.0279 % on a 100-basis-point change of rate, and accretes to exactly the amount
+eventually paid.
 
-Ratios are comparisons whose value lies in what they are compared against. Read as a set they yield
-the leverage identity — `6.8000 % + 2.3333 × (6.8000 % − 4.8000 %) = 11.4667 %`, exact on opening
-bases and broken by mixing them — a first-year after-tax `ROCE` **1.1860 points below** Domain 9's
-`WACC` on a project with a +16,179,360 `NPV`, and the discovery that a 2.00× interest-cover covenant
-would bind **7.7591 times** sooner than the 1.20× `DSCR` covenant beside it. And the five meanings of
-"spend" differ by **20,451,403** — 34.0857 % of the envelope — on one date, reconciling to a single
-identity in which the unrecovered advance carries the opposite sign and the capitalised figure
-legitimately exceeds the incurred one. Domain 3 supplies the discounting these statements are valued
-with; Domain 6 turns them into a model and adds the reserve account that spends the closing cash
-balance; Domain 10 turns `CFADS` into the covenants a lender actually enforces; and Domain 15 watches
-the working-capital line move against the project in both directions.
+Ratios are comparisons whose value lies in what they are compared against. Read as a set they
+yield the leverage identity — `6.8000 % + 2.3333 × (6.8000 % − 4.8000 %) = 11.4667 %`, exact on
+opening bases and broken by mixing them — a first-year after-tax `ROCE` **1.1860 points below**
+Domain 9's `WACC` on a project with a +16,179,360 `NPV`, and the discovery that a 2.00×
+interest-cover covenant would bind **7.7591 times** sooner than the 1.20× `DSCR` covenant beside
+it. And the five meanings of "spend" differ by **20,451,403** (34.0857 % of the envelope) on one
+date, reconciling to a single identity in which the unrecovered advance carries the opposite
+sign and the capitalised figure legitimately exceeds the incurred one. Domain 3 supplies the
+discounting these statements are valued with; Domain 6 turns them into a model and adds the
+reserve account that spends the closing cash balance; Domain 10 turns `CFADS` into the covenants
+a lender actually enforces; and Domain 15 watches the working-capital line move against the
+project in both directions.

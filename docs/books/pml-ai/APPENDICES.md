@@ -235,30 +235,30 @@ changes every quarter records nothing over time.
 | 8.T.2 | Contingency derivation sheet (one per baseline) | Register version and date · objective the total belongs to, with the other objectives' |
 | 8.T.3 | Pre-mortem session guide | Before commitment, one hour: (1) state the plan and the commitment about to be made; (2) each |
 | 8.T.4 | Register-completeness check (one per gate) | A twenty-minute calculation that turns "the register is probably incomplete" into a funded position. |
-| 8.T.5 | Response option comparison (one per quantified risk) | One row per option — accept, avoid, reduce, transfer, and for opportunities exploit, enhance, share, |
+| 8.T.5 | Response option comparison (one per quantified risk) | One row per option (accept, avoid, reduce, transfer, and for opportunities exploit, enhance, share, |
 | 9.T.1 | Cost-of-quality and containment sheet | One page per deliverable class, completed at planning and revisited at each gate. Top block, the |
-| 9.T.2 | Acceptance and disposition record with the self-consistency test | Per deliverable: reference and version · acceptance criteria referenced to the requirements baseline · |
+| 9.T.2 | Acceptance and disposition record with the self-consistency test | Per deliverable: reference and version · acceptance criteria referenced to the requirements baseline |
 | 9.T.3 | Improvement register: rework, yield and cause | Three linked sections, all numeric, reported at the same cadence as cost and schedule. Rework and |
 | 10.T.1 | Make-or-buy total-cost-of-ownership sheet | One page per decision, completed before any market engagement. Two columns, make and buy, and these |
 | 10.T.2 | Evaluation model lock sheet | One page, completed, dated, signed by the accountable authority and issued with the invitation. |
 | 10.T.3 | Supplier resilience and sub-tier register | One row per critical item, not per supplier, and criticality set by schedule effect rather than by |
-| 11.T.1 | Stakeholder register and engagement allocation sheet | One row per party: reference · party and named individual · what the project needs from them (decide / |
+| 11.T.1 | Stakeholder register and engagement allocation sheet | One row per party: reference · party and named individual · what the project needs from them |
 | 11.T.2 | Communication architecture and report-age sheet | routing n · hours per channel per period, with the basis · hub overhead · computed load and utilisation |
-| 11.T.3 | Negotiation preparation sheet | internal effort · risk as an EMV, with its basis · total = our reservation value. What would improve |
-| 12.T.1 | Leader's attention and span sheet | One page per leader, completed from four weeks of observed data and reviewed quarterly. Top block: the |
+| 11.T.3 | Negotiation preparation sheet | delay · internal effort · risk as an EMV, with its basis · total = our reservation value. What |
+| 12.T.1 | Leader's attention and span sheet | One page per leader, completed from four weeks of observed data and reviewed quarterly. Top |
 | 12.T.2 | Team structure and coordination sheet | One page per team or programme, completed at formation and whenever headcount changes by more than a |
-| 12.T.3 | Difficult-conversation preparation and record | Two sides of one page, used for every performance, conduct or expectation conversation. Before: the |
-| 13.T.1 | Flow sheet (one page, one team, weekly) | Rows, all counts or timestamps and none of them a judgement: throughput this week and its four-week |
-| 13.T.2 | Backlog ordering sheet with delay-cost density | Columns: item or epic · outcome statement · benefits-map line and owner (the numerator's provenance — |
-| 13.T.3 | Adaptive commercial and continuation control sheet | Part A, the model choice: expected count of material re-prioritisations · addition rate and omission |
+| 12.T.3 | Difficult-conversation preparation and record | Two sides of one page, used for every performance, conduct or expectation conversation. Before: |
+| 13.T.1 | Flow sheet (one page, one team, weekly) | Rows, all counts or timestamps and none of them a judgement: throughput this week and its |
+| 13.T.2 | Backlog ordering sheet with delay-cost density | Columns: item or epic · outcome statement · benefits-map line and owner (the numerator's |
+| 13.T.3 | Adaptive commercial and continuation control sheet | Part A, the model choice: expected count of material re-prioritisations · addition rate and |
 | 14.T.1 | AI use register with its verification standard | Two linked tables on two pages, owned by one named person and reviewed at every gate. The |
 | 14.T.2 | Data class schedule and quality exposure sheet | One row per data class: class · records nᵢ · owner (a named person) · written definition with units |
 | 14.T.3 | Quality-adjusted digital business case sheet | One page per automation, analytics product, dashboard or twin, and it refuses to be completed |
-| 15.T.1 | Programme dependency register with a computed milestone probability | One row per dependency: reference · milestone it feeds · what is needed · owner on the giving side |
-| 15.T.2 | Multi-period portfolio allocation sheet | A grid: candidates down the side; the binding capability's demand per period across the top, plus |
+| 15.T.1 | Programme dependency register with a computed milestone probability | One row per dependency: reference · milestone it feeds · what is needed · owner on the giving |
+| 15.T.2 | Multi-period portfolio allocation sheet | A grid: candidates down the side; the binding capability's demand per period across the top, |
 | 15.T.3 | Portfolio benefits bridge | A single reconciliation, top to bottom, published with every investment paper: gross claimed benefit |
 | 16.T.1 | Transition readiness certificate | One page per receiving unit, signed by the receiving organisation, in two blocks that never share a |
-| 16.T.2 | Closeout and final account pack | Four sections, each a table. Commercial: per contract — original sum, approved variations, claims |
+| 16.T.2 | Closeout and final account pack | Four sections, each a table. Commercial: per contract, original sum, approved variations, claims |
 | 16.T.3 | Benefits closing account and retention schedule | Two linked artefacts, owned by the benefits owner and reported to the body that approved the case. |
 
 **On the one appendix the volume plan lists and this volume does not carry.** The plan for this

@@ -6,21 +6,21 @@ Domain 1 established what a project leader is answerable for. Domain 2 establish
 chosen and whether the promise was honest. Domain 3 established who may decide, how quickly, and at
 what price. Each produced something real, and none of them produced a **project**.
 
-That is what this domain does, and the word that names the gap is **integration**. A project is not a
-collection of well-run parts; it is a set of parts that must fit, arrive in an order, share
+That is what this domain does, and the word that names the gap is **integration**. A project is not
+a collection of well-run parts; it is a set of parts that must fit, arrive in an order, share
 interfaces, and change together. Every one of those relationships is a place where a project fails
-without any single part having failed — which is why integration failure is the hardest kind to
+without any single part having failed, which is why integration failure is the hardest kind to
 attribute and the most expensive to repair. The specific and recurring form it takes: **the parts
 are managed and the joins are not.** Scope is controlled, the schedule is controlled, cost is
 controlled, and nobody owns the fact that a change to one moves all three.
 
-The domain's second claim is that integration is **architectural** — a design choice with a price,
+The domain's second claim is that integration is **architectural**: a design choice with a price,
 made once and paid for continuously. Interfaces do not multiply linearly with components; they
 multiply combinatorially, and KA 4.2 computes the difference and what buying an integration layer
 saves. Baselines are not three documents but one three-dimensional statement, and KA 4.3 shows what
 the arithmetic of the hundred-per-cent rule catches that reading the documents does not. Changes do
 not cost what a change form says they cost, and KA 4.4 shows that the quoted figure is typically the
-smallest component of the true one — which is why a delegation threshold applied to a quoted cost is
+smallest component of the true one, which is why a delegation threshold applied to a quoted cost is
 not a control at all.
 
 The through-line: **integration is where the parts become a project, and the joins are where the
@@ -50,17 +50,17 @@ rejection**; and govern AI-assisted impact assessment without letting it decide.
 clinical-records rollout to **40 clinics**, approved cost **USD 2,400,000** (Domain 2's business
 case), benefits **USD 685,440** a year at 70 % adoption, cost of delay **USD 14,280 per week**
 (Domain 1), and the governance design priced in Domain 3. This domain architects it. Part Two then
-picks up **Project Auriga** — the 25-week control-systems upgrade — to work planning, cost and risk
-at the scale of a single project, because the two scales need different illustrations and a book that
+picks up **Project Auriga** (the 25-week control-systems upgrade) to work planning, cost and risk at
+the scale of a single project, because the two scales need different illustrations and a book that
 uses only one has taught only half the discipline.
 
 **Reference points.** The international document most often named in connection with integration and
 the management of a project as a whole is **ISO 21502**, which addresses guidance on project
-management. It is voluntary guidance describing practice — not legislation, and not a certifiable
-requirement — and it obliges nobody of itself unless an organisation, a contract or a regulator adopts
-it. It is named here and not reproduced: no clause, table or checklist from it appears in this volume,
-the treatment below is this book's own, and a reader who wants the document should obtain the current
-edition from its publisher. Naming it implies no endorsement in either direction.
+management. It is voluntary guidance describing practice (not legislation, and not a certifiable
+requirement), and it obliges nobody of itself unless an organisation, a contract or a regulator
+adopts it. It is named here and not reproduced: no clause, table or checklist from it appears in
+this volume, the treatment below is this book's own, and a reader who wants the document should
+obtain the current edition from its publisher. Naming it implies no endorsement in either direction.
 
 ---
 
@@ -81,7 +81,7 @@ cannot proceed without, and the test of a charter is whether its absence would b
 | Element | Why it must be there |
 |---|---|
 | Purpose and objectives | The measurable statement of what success is (Domain 2's benefits, not activity). |
-| Named sponsor | The accountable owner of the outcome (Domain 3, KA 3.2.1) — a role, and a person. |
+| Named sponsor | The accountable owner of the outcome (Domain 3, KA 3.2.1), a role, and a person. |
 | Named project leader and their authority | The **bounds** within which they decide without asking: spend, scope, resource, commitment (Domain 3's delegation schedule). |
 | Scope boundary, including exclusions | Exclusions are the half most often omitted, and the half that prevents the argument. |
 | Key deliverables and success criteria | What will be handed over, and how acceptance is judged. |
@@ -91,12 +91,12 @@ cannot proceed without, and the test of a charter is whether its absence would b
 | Governance and decision rights | Bodies, thresholds and escalation, by reference to the design of Domain 3. |
 | Approval | Signature of the authority entitled to confer it. |
 
-**The two charter failures.** *The charter that authorises nothing*: a document of aspiration with no
-stated authority, so every decision is an ask, and the leader discovers their authority
-incident by incident — which is the functional-organisation weakness of Domain 3, KA 3.1.2, arriving
-through the front door. *The charter that is a plan*: dozens of pages of approach and schedule,
-signed once, immediately stale, and thereafter neither read nor updated; its length conceals the
-absence of the one paragraph that mattered.
+**The two charter failures.** *The charter that authorises nothing*: a document of aspiration with
+no stated authority, so every decision is an ask, and the leader discovers their authority incident
+by incident, which is the functional-organisation weakness of Domain 3, KA 3.1.2, arriving through
+the front door. *The charter that is a plan*: dozens of pages of approach and schedule, signed once,
+immediately stale, and thereafter neither read nor updated; its length conceals the absence of the
+one paragraph that mattered.
 
 **The test.** A usable charter answers, on one or two pages: *what is this for, who owns the outcome,
 who leads it, what may they decide alone, what is in and out, and what is fixed?* A leader who cannot
@@ -105,25 +105,25 @@ answer the fourth of those from the charter does not have a charter; they have a
 ### 4.1.2 The plan of plans
 
 **The concept.** The project management plan is not a single narrative but an **integrated set** of
-subsidiary plans — scope, schedule, cost, quality, resource, communication, risk, procurement,
-stakeholder, change and configuration — plus the baselines they produce. Its integration is the whole
+subsidiary plans (scope, schedule, cost, quality, resource, communication, risk, procurement,
+stakeholder, change and configuration) plus the baselines they produce. Its integration is the whole
 point: the subsidiary plans are individually easy and collectively contradictory unless someone owns
 the consistency.
 
 **The consistency checks that make it a plan rather than a folder**, and each is a specific,
 answerable question:
 
-- Does the **schedule** contain the activities the **scope** requires — every deliverable traceable
+- Does the **schedule** contain the activities the **scope** requires: every deliverable traceable
   to work, and every work package to a deliverable?
 - Does the **cost** baseline sum to the resourced schedule, at the resource rates the **resource**
   plan assumes (Domain 7's rate arithmetic)?
 - Do the **quality** plan's verification activities appear in the schedule with duration and
-  resource — or are they assumed to happen in gaps?
+  resource, or are they assumed to happen in gaps?
 - Do the **risk** responses have owners, dates, and budget in the cost baseline (Domain 8's
   contingency)?
 - Do the **procurement** lead times appear as schedule activities rather than as assumptions?
-- Does the **change** plan's authority match the governance design's delegation schedule, on the same
-  thresholds (Domain 3) — and does it read on assessed impact rather than quoted cost (KA 4.4)?
+- Does the **change** plan's authority match the governance design's delegation schedule, on the
+  same thresholds (Domain 3), and does it read on assessed impact rather than quoted cost (KA 4.4)?
 - Does the **communication** plan's reporting cadence fit the governance bodies' paper lead times
   (Domain 3's `L`), so that reports exist when papers close?
 
@@ -138,43 +138,43 @@ a price attached.
 **Worked example 4.1.2 — auditing Meridian's plan set against itself, and pricing what it finds.**
 
 1. **Setup.** Before baseline approval, Meridian's **eleven** subsidiary plans are read against one
-   another using the checks above — two reviewers over three days, **6 person-days** at a blended
+   another using the checks above: two reviewers over three days, **6 person-days** at a blended
    **USD 880** per person-day (the USD 110 an hour of Domain 14, KA 14.2.1, over an eight-hour day).
    The plan set covers **172** work packages, **24** quality-verification activities, **19** risk
    responses with named owners and **7** procured items. Cost of delay **USD 14,280 per week**
    (Domain 1).
-2. **Formula.** Run each check; convert each finding into money — unfunded work at the person-day
+2. **Formula.** Run each check; convert each finding into money: unfunded work at the person-day
    rate or at its own stated cost, unscheduled elapsed time at the cost of delay, counting only what
    lands on the critical path. Total, then compare with the cost of the audit.
 3. **Substitution.** Check by check. *Scope against schedule:* **4** deliverables with no scheduled
-   activity — flagged, deliberately **not** priced. *Cost against the resourced schedule:* the cost
-   baseline sums to the resourced schedule at the resource plan's rates — **this check passes**.
+   activity, flagged, deliberately **not** priced. *Cost against the resourced schedule:* the cost
+   baseline sums to the resourced schedule at the resource plan's rates, **this check passes**.
    *Quality:* of 24 verification activities, **9** appear nowhere in the schedule, carrying **46
    person-days** of resource → `46 × 880`; **4** of those nine sit on the critical path with **12**
    working days between them → `(12/5) × 14,280`. *Risk:* of 19 responses, **6** have no line in the
    cost baseline, together planned at **118,000**. *Procurement:* **3** items have lead times stated
    only in the procurement plan; the longest is **14 weeks** against **6** allowed in the schedule →
-   `(14 − 6) × 14,280`. *Change:* the change plan's threshold reads on quoted direct cost — the
+   `(14 − 6) × 14,280`. *Change:* the change plan's threshold reads on quoted direct cost, the
    defect KA 4.4.2 prices. *Communication:* the report is produced after papers close; the staleness
    arithmetic belongs to Domain 14, KA 14.2.1 and is not repeated here.
 4. **Result.** Unfunded verification labour **USD 40,480**; unfunded risk responses **USD 118,000**;
    procurement lead-time exposure `8 weeks =` **USD 114,240**; critical-path verification exposure
-   `2.4 weeks =` **USD 34,272**. Quantified total **USD 306,992** — **12.79 %** of the approved
-   2,400,000 — found by an audit costing **USD 5,280**, a ratio of **58.14** to one. Three classes of
-   finding are recorded unpriced — the four unscheduled deliverables, the threshold basis and the
-   reporting cadence — and one check passes clean.
+   `2.4 weeks =` **USD 34,272**. Quantified total **USD 306,992** (**12.79 %** of the approved
+   2,400,000) found by an audit costing **USD 5,280**, a ratio of **58.14** to one. Three classes of
+   finding are recorded unpriced (the four unscheduled deliverables, the threshold basis and the
+   reporting cadence), and one check passes clean.
 5. **Interpretation.** The first thing to be honest about is what the 306,992 is not. It is **not a
-   saving**. Most of it is money that will be spent whatever anyone decides — the verification
+   saving**. Most of it is money that will be spent whatever anyone decides. The verification
    activities are needed, the risk responses were chosen deliberately, the lead times are what the
-   market quotes. What the audit changes is whether that money is spent inside an authorised baseline
-   or outside it as an unexplained overrun, and an assurance function that reports the figure as a
-   saving will be correctly disbelieved and will lose the argument it was right about. The defensible
-   sentence is: *306,992 of committed but unauthorised cost and schedule moved from invisible to
-   visible, for 5,280.*
+   market quotes. What the audit changes is whether that money is spent inside an authorised
+   baseline or outside it as an unexplained overrun, and an assurance function that reports the
+   figure as a saving will be correctly disbelieved and will lose the argument it was right about.
+   The defensible sentence is: *306,992 of committed but unauthorised cost and schedule moved from
+   invisible to visible, for 5,280.*
 
    Set that against WE 4.3.3. Meridian's baseline drifts **291,176** over a year, through 34
    individually authorised approvals, and everybody involved works hard for it. The plan-set audit
-   finds **more** — 306,992, a ratio of **1.0543** — in three days, before any of the work has
+   finds **more** (306,992, a ratio of **1.0543**) in three days, before any of the work has
    started, without a single change request being raised. **The cheapest change control is the one
    applied to the plan set before it is baselined**, because at that point a correction is a
    re-estimate rather than a change: no board, no assessment cost, no traceability obligation, no
@@ -191,7 +191,7 @@ a price attached.
 
    The sensitivity is concentrated in one component. The 114,240 of procurement exposure assumes the
    eight-week lead-time gap lands on work that gates the rollout. If the affected item has eight
-   weeks of float the component is **zero** and the total falls to **USD 192,752** — still **8.03 %**
+   weeks of float the component is **zero** and the total falls to **USD 192,752**: still **8.03 %**
    of the baseline, so the conclusion survives, but the headline drops by **37.21 %**. Every
    schedule-priced finding must therefore carry its float position (KA 4.4.2's third assessment
    rule), and an audit that prices delay without stating float has quoted an upper bound as a point
@@ -206,26 +206,27 @@ a price attached.
 **Progressive elaboration and rolling wave.** Detail is added as it becomes knowable rather than
 invented early: the near horizon is planned to work-package level, the far horizon to a coarser
 level, and the boundary moves forward at a stated cadence. Two disciplines make this honest rather
-than an excuse. The **horizon must be stated** — "detailed to work-package level for 12 weeks,
-planning-package level beyond" — so that nobody mistakes a coarse plan for an absent one. And the
+than an excuse. The **horizon must be stated** ("detailed to work-package level for 12 weeks,
+planning-package level beyond"), so that nobody mistakes a coarse plan for an absent one. And the
 **far-horizon estimate must carry its uncertainty explicitly**, because a rolling-wave plan whose
-outer years are stated as point numbers has hidden its uncertainty in exactly the place it is largest
-(Domain 8's ranges).
+outer years are stated as point numbers has hidden its uncertainty in exactly the place it is
+largest (Domain 8's ranges).
 
 **Setting the horizon rather than asserting it.** The horizon itself is usually chosen for
-administrative tidiness — a quarter, a phase, twelve weeks — and it has a derivable lower bound:
+administrative tidiness (a quarter, a phase, twelve weeks), and it has a derivable lower bound:
 **the horizon must be at least as long as the longest commitment lead time falling inside it**,
-because a plan that does not yet exist at work-package level cannot support a commitment that must be
-placed before it does. Meridian illustrates the failure exactly. Its stated horizon is **12 weeks**;
-the longest procurement lead time WE 4.1.2 found is **14 weeks**. The horizon is **two weeks shorter
-than its own supply chain**, and no amount of diligence inside the wave can close that gap, because
-the order must be placed before the work package that specifies it has been written. Two responses
-are legitimate: lengthen the horizon to at least 14 weeks on the affected path, or plan that one
-procurement to work-package level ahead of the wave and label it a **partial horizon**. What is not
-legitimate is to leave a 12-week horizon and a 14-week lead time in the same plan set and describe
-the consequence as a supplier problem. The test generalises to every commitment class in the plan —
-procurement, recruitment, regulatory submission, facility access, decommissioning permission —
-compare each lead time with the horizon, and set the horizon requirement from the longest.
+because a plan that does not yet exist at work-package level cannot support a commitment that must
+be placed before it does. Meridian illustrates the failure exactly. Its stated horizon is **12
+weeks**; the longest procurement lead time WE 4.1.2 found is **14 weeks**. The horizon is **two
+weeks shorter than its own supply chain**, and no amount of diligence inside the wave can close that
+gap, because the order must be placed before the work package that specifies it has been written.
+Two responses are legitimate: lengthen the horizon to at least 14 weeks on the affected path, or
+plan that one procurement to work-package level ahead of the wave and label it a **partial
+horizon**. What is not legitimate is to leave a 12-week horizon and a 14-week lead time in the same
+plan set and describe the consequence as a supplier problem. The test generalises to every
+commitment class in the plan (procurement, recruitment, regulatory submission, facility access,
+decommissioning permission) compare each lead time with the horizon, and set the horizon requirement
+from the longest.
 
 ### 4.1.3 Tailoring
 
@@ -248,13 +249,13 @@ with convenience. Everything else is a judgement, and every judgement is recorde
 
 ### AI in this KA
 
-**Where it earns its place.** Reading a plan set against itself and listing the inconsistencies above
-— deliverables with no work packages, quality activities absent from the schedule, risk responses
-without budget, reporting cadences that miss governance paper deadlines. This is precisely the work
-integration requires, humans do it badly because it spans documents, and the answers are checkable.
-Drafting a charter or a subsidiary plan from an approved template plus stated inputs, for human
-completion. Proposing a tailoring set from project characteristics, as a starting position to be
-argued with.
+**Where it earns its place.** Reading a plan set against itself and listing the inconsistencies
+above: deliverables with no work packages, quality activities absent from the schedule, risk
+responses without budget, reporting cadences that miss governance paper deadlines. This is precisely
+the work integration requires, humans do it badly because it spans documents, and the answers are
+checkable. Drafting a charter or a subsidiary plan from an approved template plus stated inputs, for
+human completion. Proposing a tailoring set from project characteristics, as a starting position to
+be argued with.
 
 **Where it must not go.** Approving a tailoring decision, which requires an accountable authority.
 Producing a charter's authority statement, which is a conferral of power and must be authored by the
@@ -279,7 +280,7 @@ obligation rather than a disclaimer.
 | **Planning package** | A far-horizon element planned above work-package level, with its uncertainty stated. |
 | **Commitment lead-time rule** | The rolling-wave horizon must be at least as long as the longest commitment lead time inside it. |
 | **Partial horizon** | One element planned to work-package level ahead of the wave because its lead time demands it, labelled as such. |
-| **Tailoring** | A recorded, owned decision to adapt method — never a silent omission. |
+| **Tailoring** | A recorded, owned decision to adapt method, never a silent omission. |
 
 ### Sample MCQs — KA 4.1
 
@@ -362,11 +363,11 @@ commonest way this finding is disposed of without being fixed.
 
 **Definition.** A WBS is a **deliverable-oriented hierarchical decomposition** of the total scope of
 work. Two words carry the weight. *Deliverable-oriented*: it decomposes what will be produced, not
-who will produce it or when — an organisational chart and a schedule are different artefacts, and a
+who will produce it or when, an organisational chart and a schedule are different artefacts, and a
 WBS built by team or by phase loses the property that makes it useful. *Total*: the decomposition
 covers the whole scope and nothing outside it.
 
-**The hundred-per-cent rule.** The children of any element sum to exactly that element — no more, no
+**The hundred-per-cent rule.** The children of any element sum to exactly that element: no more, no
 less. More means duplication or scope not authorised; less means work that will be done and is not
 budgeted. The rule is not a style guideline; it is an arithmetic invariant, and because it is
 arithmetic it can be **checked**, which is the point of the next worked example.
@@ -374,7 +375,7 @@ arithmetic it can be **checked**, which is the point of the next worked example.
 **Work packages.** The lowest level, and the unit that is estimated, scheduled, assigned and
 measured. A work package should have a single accountable owner, a deliverable or verifiable
 outcome, an estimate the owner endorses, and a duration that permits progress to be assessed
-meaningfully — sized so that the answer to "is it done?" is not routinely "about half". Above the
+meaningfully: sized so that the answer to "is it done?" is not routinely "about half". Above the
 work packages, **control accounts** are the level at which performance is measured and reported,
 which is where Domain 7's earned value attaches.
 
@@ -390,26 +391,26 @@ which is where Domain 7's earned value attaches.
    `2,400,000`.
 4. **Result.** The children sum to **2,332,000**, leaving **68,000** (**2.83 %**) of the parent
    unallocated. The review then identifies the omitted element: **clinician training and enabling
-   change**, estimated at **214,000** — the same column Domain 2's benefits map omitted. Restoring it
-   gives an honest baseline of **2,546,000**, which is **146,000** — **6.1 %** — *above* the approved
+   change**, estimated at **214,000**, the same column Domain 2's benefits map omitted. Restoring it
+   gives an honest baseline of **2,546,000**, which is **146,000**: **6.1 %**: *above* the approved
    figure.
-5. **Interpretation.** Both halves of that result matter and they are usually confused. The 68,000 of
-   apparently spare budget is not spare; it is the residue of an incomplete decomposition, and in
+5. **Interpretation.** Both halves of that result matter and they are usually confused. The 68,000
+   of apparently spare budget is not spare; it is the residue of an incomplete decomposition, and in
    practice it will be consumed early by whatever arrives first, after which the omission becomes
    visible with no budget left to absorb it. And the omission is not random: it is the **enabling
-   change** — the work that converts an output into an outcome — which Domain 2 identified as the
+   change** (the work that converts an output into an outcome), which Domain 2 identified as the
    column most benefits maps leave out, and which reappears here as the element most WBSs leave out,
    for the same reason. It belongs to somebody else, so nobody decomposes it. Note finally what the
-   arithmetic does *not* say: at 2,546,000 the programme's NPV falls from Domain 2's **+1,332,898** to
-   **+1,186,898**, a reduction of **11.0 %** — still comfortably positive. The omission bought
-   nothing. It was not a decision to descope training in order to make the case work; it was a failure
-   to look, and the honest baseline would have been approved.
+   arithmetic does *not* say: at 2,546,000 the programme's NPV falls from Domain 2's **+1,332,898**
+   to **+1,186,898**, a reduction of **11.0 %**, still comfortably positive. The omission bought
+   nothing. It was not a decision to descope training in order to make the case work; it was a
+   failure to look, and the honest baseline would have been approved.
 
 ### 4.2.2 Product and deliverable breakdown
 
 **The distinction.** A **product breakdown structure** decomposes the *thing being delivered* into
-its constituent products and components; a WBS decomposes the *work*. They answer different questions
-and both are useful — but only one of them is a good starting point.
+its constituent products and components; a WBS decomposes the *work*. They answer different
+questions and both are useful, but only one of them is a good starting point.
 
 **Why to start with the product.** Building the product breakdown first and deriving the work from it
 prevents the commonest scope defect: **work that produces nothing**, and its mirror, **a product with
@@ -426,23 +427,24 @@ worked example go missing.
 
 **Worked example 4.2.2 — cross-matching Meridian's product breakdown against its WBS.**
 
-1. **Setup.** Meridian's product breakdown identifies **148** products; its WBS contains **172** work
-   packages. A traceability matrix relates the two — `148 × 172 =` **25,456** cells. The test is that
-   every product traces to at least one work package and every work package to at least one product.
+1. **Setup.** Meridian's product breakdown identifies **148** products; its WBS contains **172**
+   work packages. A traceability matrix relates the two, `148 × 172 =` **25,456** cells. The test is
+   that every product traces to at least one work package and every work package to at least one
+   product.
 2. **Formula.** Product coverage = products with at least one work package ÷ products. Work-package
    coverage = work packages with at least one product ÷ work packages. Then **classify every
    exception**, because the raw counts are not the finding.
 3. **Substitution.** Raw exceptions: **12** products with no work package and **9** work packages
-   with no product — **21** in all. Classification, item by item, by the owner of each item. Of the
-   12: **5** are the clinician-training and enabling-change product set — WE 4.2.1's omitted
-   **214,000** — and **7** are produced inside work packages named for their parent product, so they
+   with no product, **21** in all. Classification, item by item, by the owner of each item. Of the
+   12: **5** are the clinician-training and enabling-change product set (WE 4.2.1's omitted
+   **214,000**), and **7** are produced inside work packages named for their parent product, so they
    are matrix granularity rather than omission. Of the 9: **7** are legitimately product-free
-   (integration testing, data migration, training delivery, commissioning, interface verification) and
-   **2** are genuine orphans, budgeted at **26,000**, producing nothing anyone has asked for.
-4. **Result.** Product coverage `136/148 =` **91.89 %**; work-package coverage `163/172 =`
-   **94.77 %**. Of 21 raw exceptions, **14** are legitimate and **7** are real findings — a
-   false-positive rate of **66.67 %**. The real findings are worth **214,000** of omitted work and
-   **26,000** of unnecessary work: **USD 240,000**, exactly **10.00 %** of the approved baseline.
+   (integration testing, data migration, training delivery, commissioning, interface verification)
+   and **2** are genuine orphans, budgeted at **26,000**, producing nothing anyone has asked for.
+4. **Result.** Product coverage `136/148 =` **91.89 %**; work-package coverage `163/172 =` **94.77
+   %**. Of 21 raw exceptions, **14** are legitimate and **7** are real findings, a false-positive
+   rate of **66.67 %**. The real findings are worth **214,000** of omitted work and **26,000** of
+   unnecessary work: **USD 240,000**, exactly **10.00 %** of the approved baseline.
 5. **Interpretation.** The classification, not the matrix, is the professional work. Two thirds of the
    raw exceptions are artefacts, so a leader who takes raw counts to a steering committee will be
    corrected in the room on the seven granularity artefacts and will lose the five that mattered along
@@ -453,30 +455,31 @@ worked example go missing.
 
    The two real classes are not symmetric, and only one of them is visible later. **214,000 of
    products with no work is an omission**: it arrives as an overrun, at the end, in the
-   enabling-change column that Domain 2's benefits map dropped and that WE 4.2.1's WBS dropped again —
-   the third time the same column has gone missing in this programme, which is what a systematic
-   defect looks like as opposed to an accident. **26,000 of work with no product is waste**: it will
-   be executed diligently, reported as complete, and never questioned, because a work package that
-   produces nothing still reports 100 %. Earned value will confirm it. That is the uncomfortable
-   corollary of Domain 7's machinery — performance measurement measures conformance to the plan, so
-   work that should not be in the plan is measured as success.
+   enabling-change column that Domain 2's benefits map dropped and that WE 4.2.1's WBS dropped
+   again, the third time the same column has gone missing in this programme, which is what a
+   systematic defect looks like as opposed to an accident. **26,000 of work with no product is
+   waste**: it will be executed diligently, reported as complete, and never questioned, because a
+   work package that produces nothing still reports 100 %. Earned value will confirm it. That is the
+   uncomfortable corollary of Domain 7's machinery: performance measurement measures conformance to
+   the plan, so work that should not be in the plan is measured as success.
 
    Note what removing the orphans does to WE 4.2.1's arithmetic, because the direction surprises
-   people. Allocated cost falls from 2,332,000 to **2,306,000**, so the unallocated residue **rises**
-   from 68,000 to **94,000** — **3.92 %** of the parent. Cleaning a WBS usually widens the
-   hundred-per-cent gap rather than closing it, because part of the gap was being filled by work that
-   should not have been there. A leader who expects the 214,000 omission and the 26,000 of waste to
-   offset each other has misread both: one is outside the baseline and one is inside it, and they land
-   on different sides of the sum.
+   people. Allocated cost falls from 2,332,000 to **2,306,000**, so the unallocated residue
+   **rises** from 68,000 to **94,000**: **3.92 %** of the parent. Cleaning a WBS usually widens the
+   hundred-per-cent gap rather than closing it, because part of the gap was being filled by work
+   that should not have been there. A leader who expects the 214,000 omission and the 26,000 of
+   waste to offset each other has misread both: one is outside the baseline and one is inside it,
+   and they land on different sides of the sum.
 
    A caution on the legitimate no-product class, which is where this check is most often
-   misunderstood. It is the same class the paragraph above identified as the one a product-derived WBS
-   omits by construction — so it has to be *added* rather than found, and the honest sequence is
+   misunderstood. It is the same class the paragraph above identified as the one a product-derived
+   WBS omits by construction, so it has to be *added* rather than found, and the honest sequence is
    therefore: product breakdown first, for completeness of *what is delivered*; then the deliberate
-   addition of the product-free work, as a decision; then the cross-match. On that sequence the seven
-   legitimate exceptions are the **register of that addition**, not a defect list — and if that class
-   comes back empty, the WBS is a product breakdown with different headings and the integration work
-   has not been planned at all. An empty legitimate class is a worse finding than a large one.
+   addition of the product-free work, as a decision; then the cross-match. On that sequence the
+   seven legitimate exceptions are the **register of that addition**, not a defect list, and if that
+   class comes back empty, the WBS is a product breakdown with different headings and the
+   integration work has not been planned at all. An empty legitimate class is a worse finding than a
+   large one.
 
    What a reviewer should test is not the coverage percentages but whether each of the 21 exceptions
    carries a recorded ruling with a named ruler. An unruled exception list is the commonest outcome of
@@ -484,9 +487,9 @@ worked example go missing.
 
 ### 4.2.3 Interfaces — and why they are the expensive part
 
-**The definition and the problem.** An interface is a defined relationship across a boundary —
-between components, teams, contracts, organisations or phases — at which something must be agreed and
-verified. Interfaces are where integration effort actually lives, and they are systematically
+**The definition and the problem.** An interface is a defined relationship across a boundary
+(between components, teams, contracts, organisations or phases) at which something must be agreed
+and verified. Interfaces are where integration effort actually lives, and they are systematically
 under-planned for one arithmetic reason: **components grow linearly and interfaces grow
 combinatorially.** A programme that has doubled its component count has quadrupled its interface
 count, and the plan that was written for the first count is still in use.
@@ -510,15 +513,15 @@ Layered interfaces   = n                    — every component to one integrati
 3. **Substitution.** Mesh `12 × 11/2 = 66`; layered `12`. Mesh cost `66 × 18,000`; layered
    `12 × 18,000 + 320,000`.
 4. **Result.** **66** point-to-point interfaces costing **USD 1,188,000**, against **12** interfaces
-   plus the layer costing **USD 536,000** — the layer saves **USD 652,000**, or **54.9 %**. It
+   plus the layer costing **USD 536,000**: the layer saves **USD 652,000**, or **54.9 %**. It
    remains worth building while its cost is below `1,188,000 − 216,000 =` **USD 972,000**.
 5. **Interpretation.** The saving is large and it is not the most important part of the result. The
-   decisive number is **marginal**: adding a thirteenth component costs `12 × 18,000 =`
-   **USD 216,000** on a mesh architecture and **USD 18,000** on a layered one — a factor of **12**,
-   which grows with every component added. Since programmes acquire components (a new department, an
-   acquired system, a regulatory feed), the architecture is a bet on the *future* component count, and
-   a mesh is a bet that the count will not grow. Three professional cautions, however, because this
-   arithmetic is easy to over-apply. Real architectures are **partial meshes** — not every pair
+   decisive number is **marginal**: adding a thirteenth component costs `12 × 18,000 =` **USD
+   216,000** on a mesh architecture and **USD 18,000** on a layered one, a factor of **12**, which
+   grows with every component added. Since programmes acquire components (a new department, an
+   acquired system, a regulatory feed), the architecture is a bet on the *future* component count,
+   and a mesh is a bet that the count will not grow. Three professional cautions, however, because
+   this arithmetic is easy to over-apply. Real architectures are **partial meshes**: not every pair
    genuinely needs to connect, and the honest count is of *required* interfaces, which is why the
    interface register (Toolkit 4.T.2) is built from need rather than from the formula. The layer
    introduces a **single point of failure and a throughput constraint** that the point-to-point
@@ -535,34 +538,34 @@ Layered interfaces   = n                    — every component to one integrati
 > straight line, showing interface count exploding with component count under a mesh architecture.
 
 **Managing interfaces once counted.** The count is the beginning. Each required interface needs an
-**interface agreement**: the two parties, the thing exchanged, its format and content, the direction,
-the timing, the error and exception behaviour, who verifies it and when, and the version it is agreed
-at. Two disciplines matter more than the document. An interface has **exactly one owner on each
-side**, named — Domain 3's decidability test applied to a boundary, and the reason unowned interfaces
-are resolved late and by whoever notices. And interface verification is a **scheduled activity with
-duration and resource** (KA 4.1.2's consistency check), because the alternative is that verification
-happens at integration testing, which is where interface defects are most expensive to find and where
-they consume the schedule float that Domain 6 shows was never there.
+**interface agreement**: the two parties, the thing exchanged, its format and content, the
+direction, the timing, the error and exception behaviour, who verifies it and when, and the version
+it is agreed at. Two disciplines matter more than the document. An interface has **exactly one owner
+on each side**, named: Domain 3's decidability test applied to a boundary, and the reason unowned
+interfaces are resolved late and by whoever notices. And interface verification is a **scheduled
+activity with duration and resource** (KA 4.1.2's consistency check), because the alternative is
+that verification happens at integration testing, which is where interface defects are most
+expensive to find and where they consume the schedule float that Domain 6 shows was never there.
 
 ### AI in this KA
 
 **Where it earns its place.** Checking the hundred-per-cent rule across a large WBS and reporting
-every element whose children do not sum — mechanical, exhaustive, and exactly the check humans skip.
+every element whose children do not sum: mechanical, exhaustive, and exactly the check humans skip.
 Cross-matching a product breakdown against a WBS and listing products with no work and work with no
-product — 25,456 matrix cells in Meridian's case, which is not human work at any level of diligence.
+product: 25,456 matrix cells in Meridian's case, which is not human work at any level of diligence.
 Extracting an interface register from architecture and design documents, which is tedious and
-error-prone by hand. Flagging interfaces with no named owner on one or both sides, or no verification
-activity in the schedule.
+error-prone by hand. Flagging interfaces with no named owner on one or both sides, or no
+verification activity in the schedule.
 
 **Where it must not go.** Ruling on a cross-match exception. WE 4.2.2's arithmetic exists precisely
 because two thirds of the raw exceptions were legitimate, and telling a granularity artefact from an
-omission requires knowing what the work actually produces — the ruling belongs to the owner of the
+omission requires knowing what the work actually produces. The ruling belongs to the owner of the
 item and must be recorded with their name. Deciding the architecture. The mesh-versus-layer choice
 depends on availability requirements, throughput, organisational boundaries, contractual structure
-and the expected growth in components — several of which are judgements about the future that no model has
-grounds for, and all of which belong to an accountable architect and the governance body.
+and the expected growth in components: several of which are judgements about the future that no
+model has grounds for, and all of which belong to an accountable architect and the governance body.
 
-**Verification, concretely.** Reproduce the interface arithmetic by hand — it is one formula — and
+**Verification, concretely.** Reproduce the interface arithmetic by hand (it is one formula) and
 state the assumed unit cost with its basis. Confirm each AI-derived interface against the source
 design before it enters the register. And when a model reports a WBS as compliant, spot-check at
 least the largest elements, because a hundred-per-cent check is only as good as the estimate values
@@ -573,15 +576,15 @@ it was given.
 | Term | Meaning |
 |---|---|
 | **WBS** | Deliverable-oriented hierarchical decomposition of the total scope of work. |
-| **Hundred-per-cent rule** | The children of any element sum to exactly that element — an arithmetic invariant, and checkable. |
+| **Hundred-per-cent rule** | The children of any element sum to exactly that element: an arithmetic invariant, and checkable. |
 | **Work package** | The lowest WBS level: one owner, a verifiable outcome, an endorsed estimate, an assessable duration. |
 | **Control account** | The level at which performance is measured and reported (Domain 7's earned value attaches here). |
 | **Product breakdown structure** | Decomposition of the thing delivered; drives configuration management and acceptance. |
-| **Product-to-work cross-match** | The traceability test that every product has work and every work package a product — a candidate list, not a finding. |
-| **Orphan work package** | Budgeted work producing no product anyone asked for — waste that still reports 100 % complete. |
+| **Product-to-work cross-match** | The traceability test that every product has work and every work package a product: a candidate list, not a finding. |
+| **Orphan work package** | Budgeted work producing no product anyone asked for: waste that still reports 100 % complete. |
 | **Legitimately product-free work** | Integration, testing, migration, training delivery, commissioning: real work with no product, and the class a product-derived WBS omits by construction. |
 | **Interface** | A defined relationship across a boundary at which something must be agreed and verified. |
-| **Mesh vs layered** | `n(n−1)/2` possible interfaces against `n` — the architecture choice priced in WE 4.2.3. |
+| **Mesh vs layered** | `n(n−1)/2` possible interfaces against `n`, the architecture choice priced in WE 4.2.3. |
 | **Interface agreement** | The parties, content, format, direction, timing, exceptions, verifier and version of one interface. |
 
 ### Sample MCQs — KA 4.2
@@ -674,13 +677,13 @@ the authorised scope, arranged in time, with cost attached. It is recorded in th
 convenience, and treating those documents as three baselines is the origin of most integration
 failure.
 
-**The integration invariants** — each testable, and each a real defect when it fails:
+**The integration invariants.** Each testable, and each a real defect when it fails:
 
 - Every scope element appears in the schedule; every schedule activity traces to a scope element.
 - The cost baseline sums to the resourced schedule at the resource plan's rates (Domain 7).
-- The **time-phased** cost baseline (`PV`, Domain 7's planned value) follows the schedule's dates — so
-  a schedule change is a `PV` change, always, and a baseline whose `PV` curve did not move when the
-  schedule did is not integrated.
+- The **time-phased** cost baseline (`PV`, Domain 7's planned value) follows the schedule's dates,
+  so a schedule change is a `PV` change, always, and a baseline whose `PV` curve did not move when
+  the schedule did is not integrated.
 - Contingency and management reserve are held explicitly, at a stated level, and are not distributed
   invisibly into estimates (Domain 8).
 - Every deliverable has acceptance criteria; every acceptance activity has duration and resource.
@@ -690,7 +693,7 @@ connected, or a person to maintain the connection, and it is the first thing aba
 pressure. The consequence is precise and severe: **earned value becomes meaningless.** Domain 7's
 `SPI` and `CPI` compare achievement against a baseline; if the baseline's time-phasing no longer
 matches the schedule the project is executing, the indices measure the gap between two documents
-rather than the state of the work — and they will keep producing confident numbers while doing it.
+rather than the state of the work, and they will keep producing confident numbers while doing it.
 
 By how much, and in which direction, is computable from the same three figures the report already
 prints.
@@ -712,7 +715,7 @@ leaves exactly alone.**
    `1,920,000/2,320,000`. `CPI = 1,920,000/2,120,000` in all three columns.
 4. **Result.**
 
-   | Measure | Reported (stale PV) | (a) deferral — true PV 1,840,000 | (b) acceleration — true PV 2,320,000 |
+| Measure | Reported (stale PV) | (a) deferral (true PV 1,840,000) | (b) acceleration (true PV 2,320,000) |
    |---|---|---|---|
    | `SPI` | 0.9231 | **1.0435** | **0.8276** |
    | `SV` (USD) | (160,000) | **80,000** | **(400,000)** |
@@ -721,43 +724,43 @@ leaves exactly alone.**
    | `EAC = BAC/CPI` | 4,416,667 | 4,416,667 | 4,416,667 |
    | composite `EAC` | 4,608,056 | **4,320,972** | **4,895,139** |
 
-   The same EV, the same AC and the same authorised scope produce an `SPI` anywhere between **0.8276**
-   and **1.0435** — a spread of **0.2159** — according only to whether the PV curve was maintained.
-   `CPI` and both CPI-only forecasts are **identical in all three columns**.
+   The same EV, the same AC and the same authorised scope produce an `SPI` anywhere between
+   **0.8276** and **1.0435** (a spread of **0.2159**), according only to whether the PV curve was
+   maintained. `CPI` and both CPI-only forecasts are **identical in all three columns**.
 5. **Interpretation.** The identity that falls out of the table is the reason this defect is so
    durable: **a stale PV curve corrupts every schedule measure and leaves every cost-only measure
    exactly correct.** So the cost report reconciles to the ledger, the CPI-based forecast is
-   defensible line by line, the finance function signs it — and the schedule indices printed on the
-   facing page are wrong by up to a fifth of an index point. A reviewer who tests only the arithmetic
-   *inside* the report will find nothing wrong with it, because nothing inside it is wrong. The defect
-   is in the relationship between the report and the schedule, which is the one thing the report
-   cannot show.
+   defensible line by line, the finance function signs it; and the schedule indices printed on the
+   facing page are wrong by up to a fifth of an index point. A reviewer who tests only the
+   arithmetic *inside* the report will find nothing wrong with it, because nothing inside it is
+   wrong. The defect is in the relationship between the report and the schedule, which is the one
+   thing the report cannot show.
 
-   The composite `EAC` is where the two halves meet, and it behaves in a way worth remembering because
-   it makes the exposure quantifiable. Written as `AC + (BAC − EV) × PV/(CPI × EV)`, the composite is
-   **linear in PV**, so its sensitivity is constant: `(BAC − EV)/(CPI × EV) =` **1.1962** here, meaning
-   **each USD 1 of mis-phased planned value moves the forecast by USD 1.20**. The 240,000 of
-   mis-phasing therefore moves the composite forecast by **USD 287,083** — **7.18 %** of BAC — and,
-   because the relationship is linear, by *exactly* that amount in either direction. The error cannot
-   be defended as conservative, which is the usual defence offered.
+   The composite `EAC` is where the two halves meet, and it behaves in a way worth remembering
+   because it makes the exposure quantifiable. Written as `AC + (BAC − EV) × PV/(CPI × EV)`, the
+   composite is **linear in PV**, so its sensitivity is constant: `(BAC − EV)/(CPI × EV) =`
+   **1.1962** here, meaning **each USD 1 of mis-phased planned value moves the forecast by USD
+   1.20**. The 240,000 of mis-phasing therefore moves the composite forecast by **USD 287,083**
+   (**7.18 %** of BAC), and, because the relationship is linear, by *exactly* that amount in either
+   direction. The error cannot be defended as conservative, which is the usual defence offered.
 
-   The two directions have opposite management consequences, and the flattering one is the more common
-   because deferral is the more common change. Variant (a) reports 0.92 on a project actually running
-   at **1.0435** against the authorised schedule: a recovery plan will be launched, overtime
-   authorised and float consumed to fix a problem the project does not have — real cost incurred to
+   The two directions have opposite management consequences, and the flattering one is the more
+   common because deferral is the more common change. Variant (a) reports 0.92 on a project actually
+   running at **1.0435** against the authorised schedule: a recovery plan will be launched, overtime
+   authorised and float consumed to fix a problem the project does not have, real cost incurred to
    correct a reporting defect, and the composite forecast overstated by 287,083 into the bargain.
    Variant (b) reports the same 0.92 on a project running at **0.8276**: true schedule variance is
    (400,000) rather than (160,000), the composite forecast is understated by 287,083, and both facts
    surface at the next milestone rather than in the report designed to surface them. Neither variant
    contains a false statement and neither is detectable from the indices themselves.
 
-   What makes it detectable is one subtraction, and it is the check KA 4.3.3 formalises: does the sum
-   of the approved changes' schedule effects equal the movement in the PV curve? Here it plainly does
-   not — the curve did not move at all — and the finding is available in minutes to anyone who asks
-   the question. That is why the invariant is better stated as a **sequence obligation** than as good
-   practice: **the PV curve is re-phased in the same transaction that approves the change, or it will
-   not be re-phased at all.** Anything deferred to a later housekeeping pass competes with delivery
-   and loses, for the same structural reason KA 4.4.2 gives for impact assessment.
+   What makes it detectable is one subtraction, and it is the check KA 4.3.3 formalises: does the
+   sum of the approved changes' schedule effects equal the movement in the PV curve? Here it plainly
+   does not, the curve did not move at all, and the finding is available in minutes to anyone who
+   asks the question. That is why the invariant is better stated as a **sequence obligation** than
+   as good practice: **the PV curve is re-phased in the same transaction that approves the change,
+   or it will not be re-phased at all.** Anything deferred to a later housekeeping pass competes
+   with delivery and loses, for the same structural reason KA 4.4.2 gives for impact assessment.
 
    One caution against over-reading the 0.2159 spread. It is the consequence of a *single* 240,000
    re-sequencing on a project whose phasing is otherwise sound. A programme with a year of
@@ -770,8 +773,8 @@ leaves exactly alone.**
 
 **The two-dimensional trap.** The commonest expression of a non-integrated baseline is a change
 approved on cost alone. A change is assessed for its cost, approved, and the schedule is not
-re-baselined — so the project is delivered late against a baseline that never acknowledged the time,
-and the lateness is attributed to execution. KA 4.4 prices the general case.
+re-baselined. So so the project is delivered late against a baseline that never acknowledged the
+time, and the lateness is attributed to execution. KA 4.4 prices the general case.
 
 ### 4.3.2 Configuration management
 
@@ -783,7 +786,7 @@ whose authority), *status accounting* (what the current version of everything is
 
 **Why it belongs in this domain rather than in quality.** Integration depends on it absolutely. When
 two components are integrated, the question is not whether each works but whether **these versions**
-work together — and an interface verified against version 3 of a specification tells you nothing
+work together, and an interface verified against version 3 of a specification tells you nothing
 about version 5. Every interface agreement is therefore version-bound (KA 4.2.3), and configuration
 management is what makes the binding meaningful.
 
@@ -795,17 +798,17 @@ management is what makes the binding meaningful.
    does not match the version actually deployed.
 2. **Formula.** Defect rate = non-conforming items ÷ total. Classify by consequence.
 3. **Substitution.** `(28 + 11 + 5)/340`.
-4. **Result.** **44** non-conforming items — a **12.94 %** defect rate — of which 28 are
-   unidentified, 11 ambiguous and **5 actively wrong**.
-5. **Interpretation.** The three classes are not equally serious, and totalling them is the mistake a
-   status report usually makes. The **28 unidentified** items cannot be integrated with confidence
+4. **Result.** **44** non-conforming items (a **12.94 %** defect rate) of which 28 are unidentified,
+   11 ambiguous and **5 actively wrong**.
+5. **Interpretation.** The three classes are not equally serious, and totalling them is the mistake
+   a status report usually makes. The **28 unidentified** items cannot be integrated with confidence
    because no interface agreement can bind to them; the cost is rework at integration testing. The
    **11 ambiguous** items will each cause a decision by whoever picks first, and the wrong pick is
    discovered downstream. The **5 wrong** items are the serious finding: the register says something
-   untrue, so verification performed against the register has verified nothing — and this is the class
-   that produces the failure in which every component passed its own tests and the system did not
-   work. A 12.94 % headline rate understates the position, because those five items alone can fail an
-   integration.
+   untrue, so verification performed against the register has verified nothing, and this is the
+   class that produces the failure in which every component passed its own tests and the system did
+   not work. A 12.94 % headline rate understates the position, because those five items alone can
+   fail an integration.
 
 **The pairwise consequence, which is where the register is actually used.** An item-level defect rate
 answers a question nobody asks. What integration needs to know is whether **an interface** can be
@@ -816,11 +819,11 @@ where the surprises are.
 **Worked example 4.3.2b — why an 87 % register gives a 76 % integration, and what the audit tolerance
 therefore has to be.**
 
-1. **Setup.** WE 4.3.2's audit found **296** of **340** controlled items conforming — **87.06 %**.
-   Meridian has **31** genuinely required interfaces (Case study A's count), each side of each interface
-   bound to a controlled item at a stated version. Treat all 31 as two-sided, which is the optimistic
-   case; the three-party form — programme, national reporting gateway and identity provider — is computed
-   alongside for comparison.
+1. **Setup.** WE 4.3.2's audit found **296** of **340** controlled items conforming, **87.06 %**.
+   Meridian has **31** genuinely required interfaces (Case study A's count), each side of each
+   interface bound to a controlled item at a stated version. Treat all 31 as two-sided, which is the
+   optimistic case; the three-party form (programme, national reporting gateway and identity
+   provider) is computed alongside for comparison.
 2. **Formula.** For a relationship spanning `k` controlled items whose individual conformance is `p`,
    and whose defects are independent, the probability that the whole relationship is verifiable is
    `p^k`. Expected at-risk relationships = `count × (1 − p^k)`. Inverting for design: the item
@@ -830,38 +833,38 @@ therefore has to be.**
    `31 × (1 − p²)`. For an expected at-risk count of one interface in 31: `p = (30/31)^(1/2)`.
 4. **Result.** Item conformance **87.06 %** yields two-sided interface conformance **75.79 %** and
    three-party conformance **65.98 %**. Of 31 required interfaces treated as two-sided, **7.50** are
-   expected to be at risk — more where any of them is three-party, since `1 − p³ =` **34.02 %** against
-   `1 − p² =` 24.21 %. Interface-level failure (**24.21 %**) is **1.87 times** item-level failure
-   (12.94 %). To hold the expected at-risk count at **one** interface, item conformance must reach
-   **98.37 %** — at most **5** non-conforming items out of 340. The audit found **44**.
+   expected to be at risk: more where any of them is three-party, since `1 − p³ =` **34.02 %**
+   against `1 − p² =` 24.21 %. Interface-level failure (**24.21 %**) is **1.87 times** item-level
+   failure (12.94 %). To hold the expected at-risk count at **one** interface, item conformance must
+   reach **98.37 %**: at most **5** non-conforming items out of 340. The audit found **44**.
 5. **Interpretation.** The exponent is the whole lesson and it is routinely missed: **integration
-   quality is item quality raised to the number of parties**, so a register that looks tolerable where
-   it is measured is materially worse where it is used. 87 % is the kind of number that earns a green
-   status. 75.79 % is not, and 65.98 % on a three-party interface is a different conversation with a
-   different audience. The direction never reverses — the assembled relationship is always worse than
-   its parts — which is why an item-level dashboard over-reports integration readiness systematically
-   rather than occasionally.
+   quality is item quality raised to the number of parties**, so a register that looks tolerable
+   where it is measured is materially worse where it is used. 87 % is the kind of number that earns
+   a green status. 75.79 % is not, and 65.98 % on a three-party interface is a different
+   conversation with a different audience. The direction never reverses (the assembled relationship
+   is always worse than its parts), which is why an item-level dashboard over-reports integration
+   readiness systematically rather than occasionally.
 
    The inversion is the practically useful half, because it converts an integration target into an
    audit tolerance instead of leaving the tolerance to be chosen by whoever writes the procedure.
-   Meridian's audit had **no stated tolerance at all**; had it wanted 95 % of interfaces verifiable it
-   needed `0.95^(1/2) =` **97.47 %** item conformance, which is at most **8** non-conforming items.
-   State the rule in that direction: **the tolerance on the register is derived from the target on the
-   interfaces, and the derivation runs backwards through the exponent.** A configuration tolerance set
-   directly at item level — "under 10 % non-conforming is acceptable" — is a number with no argument
-   behind it, and on a two-sided architecture a 10 % item tolerance silently permits a **19 %**
-   interface failure rate that nobody has agreed to.
+   Meridian's audit had **no stated tolerance at all**; had it wanted 95 % of interfaces verifiable
+   it needed `0.95^(1/2) =` **97.47 %** item conformance, which is at most **8** non-conforming
+   items. State the rule in that direction: **the tolerance on the register is derived from the
+   target on the interfaces, and the derivation runs backwards through the exponent.** A
+   configuration tolerance set directly at item level ("under 10 % non-conforming is acceptable") is
+   a number with no argument behind it, and on a two-sided architecture a 10 % item tolerance
+   silently permits a **19 %** interface failure rate that nobody has agreed to.
 
-   The audit *interval* falls out of the same arithmetic, and the answer is instructive because it is
-   impossible. WE 4.3.2's 44 non-conforming items accumulated over the **6 months** since the previous
-   audit — **7.33** items a month. To stay inside even the loose 5-item tolerance the audit would have
-   to run every `5/7.33 =` **0.68 months**, about **3 weeks**, which no manual configuration audit
-   sustains. That is not an argument for a heroic audit schedule; it is the diagnostic. **When the
-   derived audit interval is shorter than the audit can feasibly run, the finding is about
-   identification discipline, not about audit frequency.** The register is being written badly and has
-   to be fixed at the point of writing — which is the automation case in the AI note below, and the
-   reason software delivery largely solved this problem through version control while manual registers
-   largely have not (see Industry variations).
+   The audit *interval* falls out of the same arithmetic, and the answer is instructive because it
+   is impossible. WE 4.3.2's 44 non-conforming items accumulated over the **6 months** since the
+   previous audit, **7.33** items a month. To stay inside even the loose 5-item tolerance the audit
+   would have to run every `5/7.33 =` **0.68 months**, about **3 weeks**, which no manual
+   configuration audit sustains. That is not an argument for a heroic audit schedule; it is the
+   diagnostic. **When the derived audit interval is shorter than the audit can feasibly run, the
+   finding is about identification discipline, not about audit frequency.** The register is being
+   written badly and has to be fixed at the point of writing, which is the automation case in the AI
+   note below, and the reason software delivery largely solved this problem through version control
+   while manual registers largely have not (see Industry variations).
 
    Two cautions on the model, because it is a bound rather than a measurement. **Independence is a
    generous assumption**: register defects cluster by team, by system and by the week a migration
@@ -875,14 +878,15 @@ therefore has to be.**
 
 > **Fig 4.3.1 — Pairwise integrity is the power of item integrity.** Line chart, x-axis item-level
 > configuration conformance `p` from **80 %** to **100 %**, y-axis conformance of the assembled
-> relationship from 50 % to 100 %. Three curves: the reference line `p` (dashed grey, one item), `p²`
-> (brand blue, a two-sided interface) and `p³` (crimson dashed, a three-party interface). Meridian is
-> marked on the `p²` curve at **87.06 % → 75.79 %**, annotated **"296/340 = 87.06 % of items, so only
-> 75.79 % of two-sided interfaces"**. A second marker at **97.47 %** on the `p²` curve, annotated
-> **"a 95 % interface target needs 97.47 % item conformance"**. Footnote: an interface is verified only
-> if both sides are on their recorded version, so the curve — not the item rate — sets the audit
-> tolerance. Source: PCI original. Alt text: three downward-bowing curves converging at 100 %, with the
-> two- and three-party curves falling increasingly far below the item-level line as conformance drops.
+> relationship from 50 % to 100 %. Three curves: the reference line `p` (dashed grey, one item),
+> `p²` (brand blue, a two-sided interface) and `p³` (crimson dashed, a three-party interface).
+> Meridian is marked on the `p²` curve at **87.06 % → 75.79 %**, annotated **"296/340 = 87.06 % of
+> items, so only 75.79 % of two-sided interfaces"**. A second marker at **97.47 %** on the `p²`
+> curve, annotated **"a 95 % interface target needs 97.47 % item conformance"**. Footnote: an
+> interface is verified only if both sides are on their recorded version, so the curve (not the item
+> rate) sets the audit tolerance. Source: PCI original. Alt text: three downward-bowing curves
+> converging at 100 %, with the two- and three-party curves falling increasingly far below the
+> item-level line as conformance drops.
 
 ### 4.3.3 Baseline maintenance
 
@@ -891,10 +895,10 @@ the project, and maintaining it means that every change is applied **with tracea
 authority that approved it**, while the original remains reconstructable.
 
 **What must be preserved.** The original baseline, unaltered; every approved change with its
-reference, date, authority and effect on scope, schedule and cost; the current baseline as the sum of
-the original and the approved changes; and the ability to reproduce any intermediate state. That last
-requirement is what makes variance analysis honest a year later — and it is the reason a baseline is
-maintained by accumulation rather than by replacement.
+reference, date, authority and effect on scope, schedule and cost; the current baseline as the sum
+of the original and the approved changes; and the ability to reproduce any intermediate state. That
+last requirement is what makes variance analysis honest a year later. And and it is the reason a
+baseline is maintained by accumulation rather than by replacement.
 
 **Re-baselining.** Occasionally a baseline becomes so distant from reality that variance against it
 conveys nothing, and re-baselining is legitimate. It is also the most abused instrument in project
@@ -916,27 +920,27 @@ has lost the ability to answer the only question that matters to the organisatio
 2. **Formula.** Direct drift = count × average cost. Schedule drift = affected count × average weeks
    × cost of delay. Express as a share of baseline, and per change.
 3. **Substitution.** `34 × 6,800`; `14 × 0.3 × 14,280`.
-4. **Result.** Direct **USD 231,200**; schedule impact `4.2 weeks =` **USD 59,976**; total
-   **USD 291,176** — **12.1 %** of the baseline. Each individual change was **0.28 %** of it.
+4. **Result.** Direct **USD 231,200**; schedule impact `4.2 weeks =` **USD 59,976**; total **USD
+   291,176**: **12.1 %** of the baseline. Each individual change was **0.28 %** of it.
 5. **Interpretation.** There was no point at which anyone decided to spend 291,176 or to accept 4.2
    weeks of delay, and no individual approval was wrong on its own terms. This is Domain 3's Case
-   study B mechanism with a number attached, and it is why a delegation schedule needs a **cumulative
-   test**. But the test's parameters have to be derived rather than chosen, and here the arithmetic is
-   unforgiving: a rule of "related changes aggregating above 100,000 in a rolling 90 days requires
-   steering authority" would **not** have caught this, because 34 changes a year is about `34/4 = 8.5`
-   per quarter, or **57,800** — comfortably under 100,000. Catching it needs either a threshold below
-   **57,800** on a 90-day window or the same 100,000 threshold on a **180-day** window
-   (`17 × 6,800 =` **115,600**, which trips it). The professional point generalises past this example:
-   **a cumulative test set at a round number without reference to the observed change rate provides
-   the appearance of a control and none of the function** — and the observed change rate is available
-   from the change log of any project that has run for a quarter.
+   study B mechanism with a number attached, and it is why a delegation schedule needs a
+   **cumulative test**. But the test's parameters have to be derived rather than chosen, and here
+   the arithmetic is unforgiving: a rule of "related changes aggregating above 100,000 in a rolling
+   90 days requires steering authority" would **not** have caught this, because 34 changes a year is
+   about `34/4 = 8.5` per quarter, or **57,800**: comfortably under 100,000. Catching it needs
+   either a threshold below **57,800** on a 90-day window or the same 100,000 threshold on a
+   **180-day** window (`17 × 6,800 =` **115,600**, which trips it). The professional point
+   generalises past this example: **a cumulative test set at a round number without reference to the
+   observed change rate provides the appearance of a control and none of the function**, and the
+   observed change rate is available from the change log of any project that has run for a quarter.
 
 **The check that finds what the cumulative test cannot.** Drift of the kind above is entirely inside
-the change log, so summing the log detects it. The complementary failure — baseline movement that
-never reached the log — is invisible to any cumulative test, because cumulative tests read the log. It
-is caught instead by the reconciliation that maintenance by accumulation makes possible: *original
-plus the sum of approved changes equals the current baseline, exactly.* It is one addition and one
-subtraction, and it is habitually performed wrongly in the same way.
+the change log, so summing the log detects it. The complementary failure, baseline movement that
+never reached the log, is invisible to any cumulative test, because cumulative tests read the log.
+It is caught instead by the reconciliation that maintenance by accumulation makes possible:
+*original plus the sum of approved changes equals the current baseline, exactly.* It is one addition
+and one subtraction, and it is habitually performed wrongly in the same way.
 
 **Worked example 4.3.3b — Meridian's reconciliation, and the residual that netting hid.**
 
@@ -957,47 +961,48 @@ subtraction, and it is habitually performed wrongly in the same way.
    **gross** error is **USD 122,000**: **23.61 %** of the approved changes and **5.08 %** of the
    original baseline. Netting concealed **USD 89,800** of it.
 5. **Interpretation.** The arithmetic that matters is that **the two classes have opposite signs, so
-   netting them destroys the finding.** A residual of 32,200 on a 2.4 m baseline is 1.34 % and will be
-   written off as timing or rounding by any reviewer working at that resolution, while the actual defect
-   is **3.79 times** larger. Hence the single most useful sentence in this KA: **reconcile gross, never
-   net.** A reconciliation that balances to zero is not evidence of integrity; it is evidence that the
-   errors happened to be of similar size. The concealment is not random either — it is exactly twice the
-   smaller class, `2 × 44,900 = 89,800`, which is a useful thing to be able to say out loud when someone
-   proposes to report the net.
+   netting them destroys the finding.** A residual of 32,200 on a 2.4 m baseline is 1.34 % and will
+   be written off as timing or rounding by any reviewer working at that resolution, while the actual
+   defect is **3.79 times** larger. Hence the single most useful sentence in this KA: **reconcile
+   gross, never net.** A reconciliation that balances to zero is not evidence of integrity; it is
+   evidence that the errors happened to be of similar size. The concealment is not random either; it
+   is exactly twice the smaller class, `2 × 44,900 = 89,800`, which is a useful thing to be able to
+   say out loud when someone proposes to report the net.
 
    The two classes are not equally serious and they have different remedies. **44,900 of
-   approved-but-unrecorded changes** means work has authority and no budget line: it will be delivered
-   and charged, and the variance will surface as an overrun against a baseline that never received the
-   change. The remedy is bookkeeping — post the effects; the authority is already on file. **77,100 of
-   movement with no change reference** is the governance finding: budget exists that no recorded
-   decision created. Its remedy is not a posting but an investigation, because there are two possible
-   answers and they are very different. Either a decision was taken and not recorded — a Domain 3, KA
-   3.3.4 failure, and one of the three things KA 4.1.3 places outside tailoring — or no decision was
-   taken at all, and someone has moved a baseline without authority. A reconciliation report that states
-   the residual and not its classes has withheld precisely the information that distinguishes those two.
+   approved-but-unrecorded changes** means work has authority and no budget line: it will be
+   delivered and charged, and the variance will surface as an overrun against a baseline that never
+   received the change. The remedy is bookkeeping, post the effects; the authority is already on
+   file. **77,100 of movement with no change reference** is the governance finding: budget exists
+   that no recorded decision created. Its remedy is not a posting but an investigation, because
+   there are two possible answers and they are very different. Either a decision was taken and not
+   recorded (a Domain 3, KA 3.3.4 failure, and one of the three things KA 4.1.3 places outside
+   tailoring), or no decision was taken at all, and someone has moved a baseline without authority.
+   A reconciliation report that states the residual and not its classes has withheld precisely the
+   information that distinguishes those two.
 
-   Note the relationship to drift, because the two controls are complementary rather than overlapping.
-   The 291,176 of drift above was **entirely inside the change log** — every dollar authorised,
-   recorded and traceable, invisible only because nobody summed the column. The 77,100 here is
-   **outside the log altogether**, so no cumulative test at any threshold or window would ever see it.
-   **Drift controls and reconciliation controls catch disjoint failures**, and a programme with an
-   excellently derived cumulative test and no reconciliation has covered one of the two and will
-   believe it has covered both.
+   Note the relationship to drift, because the two controls are complementary rather than
+   overlapping. The 291,176 of drift above was **entirely inside the change log**: every dollar
+   authorised, recorded and traceable, invisible only because nobody summed the column. The 77,100
+   here is **outside the log altogether**, so no cumulative test at any threshold or window would
+   ever see it. **Drift controls and reconciliation controls catch disjoint failures**, and a
+   programme with an excellently derived cumulative test and no reconciliation has covered one of
+   the two and will believe it has covered both.
 
-   Cost and cadence are worth stating because they are the usual objection. The reconciliation is one
-   addition and one subtraction over three figures a programme already holds — call it an hour a month,
-   **USD 1,320** a year at the blended rate, against 122,000 of error found in year one. Run it monthly
-   rather than at gates, and for an arithmetic reason rather than a diligence one: the *check* does not
-   get harder with delay, but the *decomposition* does. Finding which movements are unreferenced is a
-   search over one month's transactions if run monthly and over a year's if run annually, and it is the
-   decomposition that carries all the value.
+   Cost and cadence are worth stating because they are the usual objection. The reconciliation is
+   one addition and one subtraction over three figures a programme already holds: call it an hour a
+   month, **USD 1,320** a year at the blended rate, against 122,000 of error found in year one. Run
+   it monthly rather than at gates, and for an arithmetic reason rather than a diligence one: the
+   *check* does not get harder with delay, but the *decomposition* does. Finding which movements are
+   unreferenced is a search over one month's transactions if run monthly and over a year's if run
+   annually, and it is the decomposition that carries all the value.
 
-   What a reviewer should test, in order: that the three figures are quoted from three systems of record
-   rather than from one report that derives two of them; that the residual is decomposed before it is
-   characterised; and that a **zero** residual has been tested rather than assumed — because the
-   commonest way to produce one is to derive the current baseline *from* the change log, which makes the
-   identity true by construction and the control worthless. A reconciliation that has never produced a
-   non-zero residual is not a clean programme; it is an unexamined formula.
+   What a reviewer should test, in order: that the three figures are quoted from three systems of
+   record rather than from one report that derives two of them; that the residual is decomposed
+   before it is characterised; and that a **zero** residual has been tested rather than assumed,
+   because the commonest way to produce one is to derive the current baseline *from* the change log,
+   which makes the identity true by construction and the control worthless. A reconciliation that
+   has never produced a non-zero residual is an unexamined formula, not a clean programme.
 
 > **Fig 4.3.2 — Reconcile gross, never net.** Bridge (waterfall) chart, left to right: original
 > baseline **2,400,000**; plus approved changes **+516,700**; equals expected current baseline
@@ -1016,18 +1021,18 @@ subtraction, and it is habitually performed wrongly in the same way.
 baseline still match the schedule's dates; do the change log's entries sum to the difference between
 the original and current baselines; are there approved changes with no baseline effect recorded, or
 baseline movements with no change reference? All four are reconciliations with definite answers, and
-the fourth in particular is how drift is detected early, and the second is the reconciliation of
-WE 4.3.3b, which must be decomposed by class rather than netted. Configuration status accounting —
-comparing the register against a deployed inventory and reporting the discrepancy classes of WE 4.3.2.
-Joining the configuration register to the interface register to compute the pairwise exposure of
-WE 4.3.2b, which is the only way to know which *interfaces* the item defects actually threaten. Trend
-analysis on the change log to derive the observed change rate a cumulative test should be set from, and
-the register's defect accumulation rate an audit interval should be set from.
+the fourth in particular is how drift is detected early, and the second is the reconciliation of WE
+4.3.3b, which must be decomposed by class rather than netted. Configuration status accounting,
+comparing the register against a deployed inventory and reporting the discrepancy classes of WE
+4.3.2. Joining the configuration register to the interface register to compute the pairwise exposure
+of WE 4.3.2b, which is the only way to know which *interfaces* the item defects actually threaten.
+Trend analysis on the change log to derive the observed change rate a cumulative test should be set
+from, and the register's defect accumulation rate an audit interval should be set from.
 
 **Where it must not go.** Authorising a baseline change or a re-baseline. Reconciling a discrepancy
-by adjusting the register to match reality, which destroys the evidence that the discrepancy existed
-— the correction must be a recorded, authorised change, and this is a real and tempting automation
-failure rather than a hypothetical one.
+by adjusting the register to match reality, which destroys the evidence that the discrepancy
+existed. The correction must be a recorded, authorised change, and this is a real and tempting
+automation failure rather than a hypothetical one.
 
 **Verification, concretely.** Every reported discrepancy is confirmed against both sources before it
 is treated as a finding; the change-log-sums-to-baseline-delta reconciliation is reproduced by hand
@@ -1038,17 +1043,17 @@ this KA; and no register is amended by a tool without an authorised change refer
 
 | Term | Meaning |
 |---|---|
-| **Performance measurement baseline** | The authorised scope, arranged in time, with cost attached — one statement in three documents. |
+| **Performance measurement baseline** | The authorised scope, arranged in time, with cost attached, one statement in three documents. |
 | **Time-phased cost baseline** | The `PV` curve; it must move whenever the schedule does. |
 | **Configuration management** | Knowing which version of every controlled item is approved, and how it came to be. |
 | **Status accounting** | The record of the current version of every controlled item. |
 | **Configuration audit** | Verification that the actual state matches the recorded state. |
-| **Pairwise configuration integrity** | `p^k` — the conformance of a relationship spanning `k` controlled items, always worse than the item rate `p`. |
+| **Pairwise configuration integrity** | `p^k`, the conformance of a relationship spanning `k` controlled items, always worse than the item rate `p`. |
 | **Derived audit tolerance** | The item-level tolerance obtained by inverting `p^k` from an interface-level target: `p = q^(1/k)`. |
 | **Original-to-current reconciliation** | Original baseline + Σ approved changes = current baseline, exactly, every reporting period. |
-| **Gross residual** | The sum of the reconciliation's error classes before netting — the figure that carries the finding. |
+| **Gross residual** | The sum of the reconciliation's error classes before netting. The figure that carries the finding. |
 | **Baseline maintenance** | Applying changes by accumulation, with traceability to authority, preserving the original. |
-| **Re-baselining** | Replacing a baseline that no longer conveys information — legitimate, and the most abused instrument in project control. |
+| **Re-baselining** | Replacing a baseline that no longer conveys information, legitimate, and the most abused instrument in project control. |
 | **Baseline drift** | Cumulative movement through individually authorised small changes, with no decision on the total. |
 | **Cumulative test** | A threshold on aggregated related changes over a stated period, set from the observed change rate. |
 
@@ -1095,7 +1100,7 @@ to all 34 changes rather than the 14 that carried it.
 - C. have caught it only if the threshold were raised
 - D. be inapplicable to changes below the delegation threshold
 
-*Rationale:* The 90-day aggregate is `(34/4) × 6,800 ≈ 57,800`, below the threshold (4.3.3) — a
+*Rationale:* The 90-day aggregate is `(34/4) × 6,800 ≈ 57,800`, below the threshold (4.3.3), a
 cumulative test set at a round number without reference to the observed change rate has the
 appearance of a control and none of the function.
 
@@ -1131,9 +1136,9 @@ effect. The correct reading is that:
 - D. netting is appropriate because the classes offset within the same baseline
 
 *Rationale:* Opposite-signed classes make the net understate the gross by twice the smaller class
-(4.3.3b), so 89,800 of the 122,000 is concealed. A and D both read the net as the finding — A by
-applying a materiality test to it, D by asserting the offset is legitimate. C prejudges which record is
-wrong when the two classes have opposite remedies.
+(4.3.3b), so 89,800 of the 122,000 is concealed. A and D both read the net as the finding: A by
+applying a materiality test to it, D by asserting the offset is legitimate. C prejudges which record
+is wrong when the two classes have opposite remedies.
 
 **MCQ 4.3-H `[4.3.1 · Analysis]`** A schedule change is approved and the `PV` curve is never re-phased.
 Which reported measure remains exactly correct?
@@ -1175,51 +1180,51 @@ PV and moves by USD 1.20 per USD 1 mis-phased on Auriga's figures.
 cost, and a control process that assesses one dimension has not controlled the change. The flow that
 does:
 
-1. **Raise** — anyone may raise; the request states the change and its reason, and is logged on
+1. **Raise**: anyone may raise; the request states the change and its reason, and is logged on
    receipt with a reference, so that a rejected or withdrawn request still leaves a trace.
-2. **Screen** — is it a change at all? Three outcomes are commonly confused and should be separated
+2. **Screen**: is it a change at all? Three outcomes are commonly confused and should be separated
    explicitly: a **change** (the baseline moves), a **clarification** (the baseline already covered
    it and someone misread it), and a **defect** (the work does not meet the baseline and must be
    corrected at no baseline movement). Misclassifying a defect as a change is how a supplier is paid
    twice; misclassifying a change as a clarification is how scope grows silently.
-3. **Assess impact** — across all dimensions, per KA 4.4.2. This is the step that is
-   under-resourced, and the reason is that assessment costs money before any decision has been taken
-   to spend money.
-4. **Decide** — at the authority the *assessed* impact requires, not the quoted cost (4.4.2's central
+3. **Assess impact**: across all dimensions, per KA 4.4.2. This is the step that is under-resourced,
+   and the reason is that assessment costs money before any decision has been taken to spend money.
+4. **Decide**: at the authority the *assessed* impact requires, not the quoted cost (4.4.2's central
    point), with the decision recorded per Domain 3, KA 3.3.4.
-5. **Implement and baseline** — update scope, schedule and cost together, with the change reference
+5. **Implement and baseline**: update scope, schedule and cost together, with the change reference
    recorded against each, so that KA 4.3's reconciliation works.
-6. **Verify and close** — confirm the change was implemented as approved, including its interface and
+6. **Verify and close**: confirm the change was implemented as approved, including its interface and
    documentation consequences.
 
-Of the six steps, screening is the only one whose output is a **classification** rather than a number
-or a decision, and classifications are the cheapest thing in the flow to get right and the most
-expensive to reverse, because by the time a misclassification is discovered money has moved — in one
-direction or the other, and the two directions do not cost the same.
+Of the six steps, screening is the only one whose output is a **classification** rather than a
+number or a decision, and classifications are the cheapest thing in the flow to get right and the
+most expensive to reverse, because by the time a misclassification is discovered money has moved: in
+one direction or the other, and the two directions do not cost the same.
 
 **Worked example 4.4.1 — what Meridian's screening errors cost, in both directions.**
 
 1. **Setup.** Meridian logged **76** requests in year one. Screening ruled **51** changes, **16**
-   clarifications and **9** defects; of the 51 changes, **37** were subsequently approved — the 34 below
-   the leader's threshold plus the 3 taken to steering — and **14** were rejected or withdrawn. An
-   assurance re-screen against the baseline found **8** misclassifications: **5** of the approved
-   "changes" were **defects** — work already owed under the baseline, at the change log's average
-   approved value of **6,800** — and **3** of the 16 "clarifications" were **changes**, carrying direct
-   work of **9,200**, **14,600** and **5,400**, one of them with **0.5 weeks** of critical-path impact
-   (cost of delay **14,280** per week).
+   clarifications and **9** defects; of the 51 changes, **37** were subsequently approved (the 34
+   below the leader's threshold plus the 3 taken to steering), and **14** were rejected or
+   withdrawn. An assurance re-screen against the baseline found **8** misclassifications: **5** of
+   the approved "changes" were **defects** (work already owed under the baseline, at the change
+   log's average approved value of **6,800**), and **3** of the 16 "clarifications" were
+   **changes**, carrying direct work of **9,200**, **14,600** and **5,400**, one of them with **0.5
+   weeks** of critical-path impact (cost of delay **14,280** per week).
 2. **Formula.** Error rate = misclassifications ÷ requests. Defect-as-change cost = count × average
    approved value (the sum paid a second time for an existing obligation). Change-as-clarification cost
    = Σ direct + schedule impact (unbudgeted, unlogged, and outside the baseline). Then compare the
    **net** effect on the recorded change total with the **gross** error.
 3. **Substitution.** `8/76`. `5 × 6,800`. `9,200 + 14,600 + 5,400 + 0.5 × 14,280`.
-4. **Result.** Screening error rate **10.53 %**. Defects paid as changes **USD 34,000** — which is
-   **14.71 %** of the 231,200 of direct drift computed in WE 4.3.3, so that figure includes that much
-   work which was never a change at all. Changes taken as clarifications **USD 36,340**, none of it in
-   any baseline or log. Total misclassification cost **USD 70,340**, or **USD 8,792.50** per error. The
-   **net** effect on the recorded change total is `36,340 − 34,000 =` **USD 2,340** — **0.10 %** of the
-   baseline — giving a corrected drift of **293,516**, or **12.23 %**, against WE 4.3.3's 291,176.
-5. **Interpretation.** The two errors point in opposite directions and — for the second time in this
-   domain, from wholly independent data — **netting them hides both.** A corrected drift figure that
+4. **Result.** Screening error rate **10.53 %**. Defects paid as changes **USD 34,000**, which is
+   **14.71 %** of the 231,200 of direct drift computed in WE 4.3.3, so that figure includes that
+   much work which was never a change at all. Changes taken as clarifications **USD 36,340**, none
+   of it in any baseline or log. Total misclassification cost **USD 70,340**, or **USD 8,792.50**
+   per error. The **net** effect on the recorded change total is `36,340 − 34,000 =` **USD 2,340**
+   (**0.10 %** of the baseline), giving a corrected drift of **293,516**, or **12.23 %**, against WE
+   4.3.3's 291,176.
+5. **Interpretation.** The two errors point in opposite directions and (for the second time in this
+   domain, from wholly independent data), **netting them hides both.** A corrected drift figure that
    moves by 2,340 is inside anyone's materiality threshold while concealing 70,340 of gross
    misclassification, and the concealment is again exactly twice the smaller class: `2 × 34,000 =`
    **68,000** of the 70,340, where WE 4.3.3b concealed `2 × 44,900 =` 89,800 of 122,000. That
@@ -1228,13 +1233,13 @@ direction or the other, and the two directions do not cost the same.
    gross by twice the smaller class.** Report both figures or report neither.
 
    The two errors also differ in **how they are discovered**, and that asymmetry decides where the
-   control belongs. Paying twice for an existing obligation shows up in the cost report: money leaves,
-   a variance appears, someone asks. Silent scope growth shows up nowhere — no change record, no
-   baseline movement, no variance until the work is executed, at which point it is indistinguishable
-   from ordinary productivity. So the direction that costs slightly *more* on this year's arithmetic
-   (36,340 against 34,000) is also the direction with no downstream detector, and it is the one that
-   needs the tighter control. A screening process designed only to stop overpayment has been designed
-   against the visible half.
+   control belongs. Paying twice for an existing obligation shows up in the cost report: money
+   leaves, a variance appears, someone asks. Silent scope growth shows up nowhere, no change record,
+   no baseline movement, no variance until the work is executed, at which point it is
+   indistinguishable from ordinary productivity. So the direction that costs slightly *more* on this
+   year's arithmetic (36,340 against 34,000) is also the direction with no downstream detector, and
+   it is the one that needs the tighter control. A screening process designed only to stop
+   overpayment has been designed against the visible half.
 
    Whether the 34,000 can actually be recovered is a contractual question, not a project one. It turns
    on the terms, on any notice or claim period, on whether the work was accepted and paid without
@@ -1243,24 +1248,24 @@ direction or the other, and the two directions do not cost the same.
    transferred, not that it can be reclaimed, and a leader who reports the second when they have only
    established the first will be corrected expensively.
 
-   The remedy is cheap and specific, and it is a change of form rather than of effort. Screening becomes
-   a **recorded ruling** instead of an administrative sort: the baseline clause or requirement relied on
-   is cited, a named technical authority signs, and the three outcomes are separate fields rather than a
-   checkbox. Costed at half an hour of a technical authority and half an hour of the change manager per
-   request — **USD 110** at the blended rate, **USD 8,360** across 76 requests — against 70,340 of
-   error, a ratio of **8.41**. The ratio is not the point and will vary; the point is that the ruling is
-   the only artefact in the flow that makes a classification **contestable later**, and an
-   uncontestable classification is one nobody will revisit.
+   The remedy is cheap and specific, and it is a change of form rather than of effort. Screening
+   becomes a **recorded ruling** instead of an administrative sort: the baseline clause or
+   requirement relied on is cited, a named technical authority signs, and the three outcomes are
+   separate fields rather than a checkbox. Costed at half an hour of a technical authority and half
+   an hour of the change manager per request (**USD 110** at the blended rate, **USD 8,360** across
+   76 requests) against 70,340 of error, a ratio of **8.41**. The ratio is not the point and will
+   vary; the point is that the ruling is the only artefact in the flow that makes a classification
+   **contestable later**, and an uncontestable classification is one nobody will revisit.
 
-   One caution about the base rate, because a 10.53 % error rate invites the wrong conclusion. It is not
-   in itself evidence of poor screening: some proportion of requests genuinely sits on the change/defect
-   boundary and will be ruled differently by two competent reviewers, and the honest comparison is
-   against that irreducible rate rather than against zero. What a reviewer should test is whether the
-   disputed rulings were disputed **on the record**. A screening process that has reversed no ruling in a
-   year is not accurate; it is unexamined.
+   One caution about the base rate, because a 10.53 % error rate invites the wrong conclusion. It is
+   not in itself evidence of poor screening: some proportion of requests genuinely sits on the
+   change/defect boundary and will be ruled differently by two competent reviewers, and the honest
+   comparison is against that irreducible rate rather than against zero. What a reviewer should test
+   is whether the disputed rulings were disputed **on the record**. A screening process that has
+   reversed no ruling in a year is unexamined, not accurate.
 
 **The discipline that holds it together.** No work begins on an unapproved change. That is easy to
-write and hard to hold, because the pressure is always to start — and the specific damage is not the
+write and hard to hold, because the pressure is always to start, and the specific damage is not the
 work itself but that it removes the option to say no, converting a decision into a ratification.
 Where genuine urgency exists, the answer is an **emergency change route** with a named authority, a
 short deadline and mandatory retrospective ratification, which is the same instrument as Domain 3's
@@ -1268,19 +1273,20 @@ out-of-cycle mechanism. An emergency route that exists is used and recorded; one
 is used and not recorded.
 
 **And the route's usage rate is a diagnostic, not a discipline problem.** Meridian's 76 requests
-included **5** routed as emergencies — **6.58 %**. A rising share is almost never indiscipline; it is
+included **5** routed as emergencies, **6.58 %**. A rising share is almost never indiscipline; it is
 the normal route's latency being priced by the people who have to live with it, and the correct
-response is to reduce that latency — the paper deadline before the meeting interval, per Domain 3's
-lever asymmetry — rather than to tighten the emergency criteria, which merely moves the same work into
-unrecorded starts and removes the only trace it was leaving. So set a **review trigger** on the share
-rather than a target for it: when the share rises, examine the normal route, not the requesters.
+response is to reduce that latency (the paper deadline before the meeting interval, per Domain 3's
+lever asymmetry) rather than to tighten the emergency criteria, which merely moves the same work
+into unrecorded starts and removes the only trace it was leaving. So set a **review trigger** on the
+share rather than a target for it: when the share rises, examine the normal route, not the
+requesters.
 
 ### 4.4.2 Impact assessment — what a change actually costs
 
-**The central claim of this KA.** The figure on a change request is the *direct* cost of doing the new
-work, and it is usually the smallest component of the change's true cost. Everything else — schedule
-consequence, rework of completed work, interface re-verification, regression testing, documentation
-and training — is real, incurred, and absent from the form.
+**The central claim of this KA.** The figure on a change request is the *direct* cost of doing the
+new work, and it is usually the smallest component of the change's true cost. Everything else
+(schedule consequence, rework of completed work, interface re-verification, regression testing,
+documentation and training) is real, incurred, and absent from the form.
 
 A complete assessment covers: **direct cost** of the new work; **schedule** impact, on the critical
 path or on float, priced at the cost of delay; **rework** of work already completed to the old
@@ -1299,22 +1305,22 @@ cost that appears nowhere in a cost assessment (Domain 2).
 2. **Formula.** True cost = direct + (schedule weeks × cost of delay) + rework + (interfaces ×
    re-verification) + regression + documentation.
 3. **Substitution.** `40,000 + 2 × 14,280 + 22,000 + 3 × 6,000 + 14,000 + 9,000`.
-4. **Result.** `40,000 + 28,560 + 22,000 + 18,000 + 14,000 + 9,000 =` **USD 131,560** — **3.29
+4. **Result.** `40,000 + 28,560 + 22,000 + 18,000 + 14,000 + 9,000 =` **USD 131,560**: **3.29
    times** the quoted figure. The quoted cost is **30.4 %** of the true cost.
 5. **Interpretation.** Two consequences follow, and the second is the more important because it is
    structural. First, a change board deciding on the quoted 40,000 is deciding on 30 % of the
-   information, and it will approve changes it would have refused — not through any failure of
+   information, and it will approve changes it would have refused, not through any failure of
    judgement but because the number in front of it was the wrong number. Second, and this connects
    directly to Domain 3: **a delegation threshold applied to quoted direct cost is not a control.**
    Meridian's threshold is 25,000, so this change escalates. But a change quoted at **22,000** with
-   the same two weeks of critical-path impact carries a true cost of at least
-   `22,000 + 28,560 =` **USD 50,560** — twice the threshold — and is decided by the project leader
-   alone, because the form asked for the direct cost. The remedy is a single sentence in the
-   delegation schedule — *the threshold reads on assessed total impact, not on quoted direct cost* —
-   and it is worth more than most process improvements a programme will make. Note, finally, what
-   this arithmetic is not: it is not an argument against change. Changes are frequently worth
-   3.29 times their quoted cost, and Domain 2's business-case logic still decides. It is an argument
-   for **assessing before deciding**.
+   the same two weeks of critical-path impact carries a true cost of at least `22,000 + 28,560 =`
+   **USD 50,560**, twice the threshold, and is decided by the project leader alone, because the form
+   asked for the direct cost. The remedy is a single sentence in the delegation schedule (*the
+   threshold reads on assessed total impact, not on quoted direct cost*), and it is worth more than
+   most process improvements a programme will make. Note, finally, what this arithmetic is not: it
+   is not an argument against change. Changes are frequently worth 3.29 times their quoted cost, and
+   Domain 2's business-case logic still decides. It is an argument for **assessing before
+   deciding**.
 
 > **Fig 4.4.1 — What a change actually costs.** Waterfall chart, left to right: quoted direct build
 > **40,000**, then additive segments — schedule (2 weeks at 14,280) **+28,560**, rework **+22,000**,
@@ -1327,42 +1333,42 @@ cost that appears nowhere in a cost assessment (Domain 2).
 
 **Assessment discipline.** Three rules make assessment reliable rather than performative. The
 assessment is done by the people who will do the work, not by the change board estimating on their
-behalf. It is **timeboxed and resourced** — an assessment budget exists, because otherwise assessment
-competes with delivery and loses, which is the actual reason changes are decided on quoted costs. And
-its **assumptions are stated**, particularly the schedule assumption, since whether two weeks lands
-on the critical path or on float is the difference between 28,560 and nothing, and it is a fact about
-the schedule rather than a matter of opinion (Domain 6's float).
+behalf. It is **timeboxed and resourced**: an assessment budget exists, because otherwise assessment
+competes with delivery and loses, which is the actual reason changes are decided on quoted costs.
+And its **assumptions are stated**, particularly the schedule assumption, since whether two weeks
+lands on the critical path or on float is the difference between 28,560 and nothing, and it is a
+fact about the schedule rather than a matter of opinion (Domain 6's float).
 
 ### 4.4.3 The change board and the decision log
 
 **The change board.** A body with authority to approve baseline changes within stated limits and to
 escalate beyond them. Its membership must include the authority to commit cost, the authority to
-commit schedule, and the technical authority to judge feasibility — and the last of those is the one
-usually missing, which is how changes are approved that cannot be implemented as described.
+commit schedule, and the technical authority to judge feasibility. And and the last of those is the
+one usually missing, which is how changes are approved that cannot be implemented as described.
 
 **Cadence and latency.** Domain 3's arithmetic applies unchanged: a change board meeting fortnightly
 with a one-week paper deadline imposes `E[wait] = 2/2 + 1 =` **2 weeks** on every escalated change.
-Where change volume is high, that latency is a delivery cost and is reduced the same way — a shorter
+Where change volume is high, that latency is a delivery cost and is reduced the same way: a shorter
 paper deadline first, then a written-resolution route for changes below a stated impact.
 
-**The decision log, and the entry that must exist.** Every change decision — approved, rejected,
-deferred or withdrawn — generates an entry: reference, date, decision-maker by name, the decision,
-the assessed impact across all dimensions, the basis, and the baseline effect. **Rejections matter as
-much as approvals**, and are the entries most often missing: a rejected change that leaves no trace
-returns in three months as a new request, is assessed again at full cost, and may be approved by a
-different body in ignorance of the first decision. The log is what prevents that, and it is the same
-log as Domain 3's, not a second one — one register of record for every decision that moves the
+**The decision log, and the entry that must exist.** Every change decision (approved, rejected,
+deferred or withdrawn) generates an entry: reference, date, decision-maker by name, the decision,
+the assessed impact across all dimensions, the basis, and the baseline effect. **Rejections matter
+as much as approvals**, and are the entries most often missing: a rejected change that leaves no
+trace returns in three months as a new request, is assessed again at full cost, and may be approved
+by a different body in ignorance of the first decision. The log is what prevents that, and it is the
+same log as Domain 3's, not a second one: one register of record for every decision that moves the
 baseline, whoever took it and at whatever value, which was Case study B's correction.
 
 **Worked example 4.4.3 — pricing the rejection entries Meridian did not write.**
 
-1. **Setup.** Of the **51** requests WE 4.4.1 ruled as changes, **14** were rejected or withdrawn. The
-   decision log records **5** of them with a rationale; **9** left no trace. Within the same year, **4**
-   of those 9 returned as fresh requests. A full impact assessment consumes **5 person-days** at the blended
-   **USD 880** — **USD 4,400**. One of the four returning requests was approved by the programme board
-   in ignorance of the earlier refusal, at an assessed impact of **USD 63,000**. Writing a rejection
-   entry — reference, date, decision-maker, reason, and the assessment already performed — takes about a
-   quarter of an hour, **USD 27.50** at the same rate.
+1. **Setup.** Of the **51** requests WE 4.4.1 ruled as changes, **14** were rejected or withdrawn.
+   The decision log records **5** of them with a rationale; **9** left no trace. Within the same
+   year, **4** of those 9 returned as fresh requests. A full impact assessment consumes **5
+   person-days** at the blended **USD 880**: **USD 4,400**. One of the four returning requests was
+   approved by the programme board in ignorance of the earlier refusal, at an assessed impact of
+   **USD 63,000**. Writing a rejection entry (reference, date, decision-maker, reason, and the
+   assessment already performed) takes about a quarter of an hour, **USD 27.50** at the same rate.
 2. **Formula.** Duplicated assessment = recurrences × assessment cost. Total loss = duplicated
    assessment + the assessed impact of any decision reversed in ignorance. Compare with the cost of
    recording every rejection, and compare the **mean** loss per recurrence with the **modal** one.
@@ -1370,57 +1376,59 @@ baseline, whoever took it and at whatever value, which was Case study B's correc
 4. **Result.** Rejections recorded **35.71 %**; recurrence among the untraced **44.44 %**. Duplicated
    assessment **USD 17,600**; one decision reversed in ignorance **USD 63,000**; total **USD 80,600**,
    or **USD 20,150** per recurrence. Recording all 14 rejections would have cost **USD 385**.
-5. **Interpretation.** The distribution matters more than the total, and a leader should present both
-   figures or neither. Three of the four recurrences cost only the wasted re-assessment — **USD 4,400**
-   each, irritating and survivable. The fourth cost **63,000**, so the mean of 20,150 is **4.58 times**
-   the modal case. Strip the reversed decision and the year's loss is 17,600 against 385 of recording
-   cost, a ratio of **45.71**; include it and the ratio is **209.35**. Quote only the second and a
-   competent reviewer will discount the whole argument as anecdote; quote only the first and you have
-   understated the exposure by the one case that mattered. **The honest statement is that the modal cost
-   of an untraced rejection is a wasted assessment and its tail cost is a reversed decision, and the
-   control is bought for the tail.**
+5. **Interpretation.** The distribution matters more than the total, and a leader should present
+   both figures or neither. Three of the four recurrences cost only the wasted re-assessment: **USD
+   4,400** each, irritating and survivable. The fourth cost **63,000**, so the mean of 20,150 is
+   **4.58 times** the modal case. Strip the reversed decision and the year's loss is 17,600 against
+   385 of recording cost, a ratio of **45.71**; include it and the ratio is **209.35**. Quote only
+   the second and a competent reviewer will discount the whole argument as anecdote; quote only the
+   first and you have understated the exposure by the one case that mattered. **The honest statement
+   is that the modal cost of an untraced rejection is a wasted assessment and its tail cost is a
+   reversed decision, and the control is bought for the tail.**
 
    The tail case is also the only part the log uniquely prevents, and the mechanism is worth being
-   precise about. Re-assessment waste can be attacked other ways — duplicate detection on request text,
-   the third item in the AI note below, catches much of it. A **decision reversed in ignorance** cannot
-   be caught that way: the second body was not careless, it simply had no record that the question had
-   been asked and answered. That makes the rejection entry not an administrative courtesy but the
-   instrument that makes a "no" **durable** — and a governance structure in which "no" does not persist
-   is one where any sufficiently persistent requester eventually obtains a yes, from whichever authority
-   happens to be sitting, at no point through anyone's misconduct.
+   precise about. Re-assessment waste can be attacked other ways: duplicate detection on request
+   text, the third item in the AI note below, catches much of it. A **decision reversed in
+   ignorance** cannot be caught that way: the second body was not careless, it simply had no record
+   that the question had been asked and answered. That makes the rejection entry not an
+   administrative courtesy but the instrument that makes a "no" **durable**, and a governance
+   structure in which "no" does not persist is one where any sufficiently persistent requester
+   eventually obtains a yes, from whichever authority happens to be sitting, at no point through
+   anyone's misconduct.
 
-   Note the interaction with KA 4.4.2's assessment budget, because it converts this into an argument the
-   budget holder cares about. Assessment is chronically under-resourced precisely because it precedes the
-   decision to spend, and **17,600 of the year's assessment budget was spent twice on questions already
-   answered** — four assessments of capacity that the same money could have applied to new requests. The
-   rejection entry is therefore the cheapest available increase in assessment capacity, and it is worth
-   putting to the budget holder in exactly those terms rather than as a compliance point.
+   Note the interaction with KA 4.4.2's assessment budget, because it converts this into an argument
+   the budget holder cares about. Assessment is chronically under-resourced precisely because it
+   precedes the decision to spend, and **17,600 of the year's assessment budget was spent twice on
+   questions already answered**: four assessments of capacity that the same money could have applied
+   to new requests. The rejection entry is therefore the cheapest available increase in assessment
+   capacity, and it is worth putting to the budget holder in exactly those terms rather than as a
+   compliance point.
 
-   The caution is about what the entry must contain. A rejection entry must carry the **assessment**, not
-   merely the outcome: an entry reading "rejected — not affordable" saves nothing, because a returning
-   request still has to be assessed from scratch to establish what it now costs. The entry that saves the
-   4,400 records the assessed impact, its basis and its date, so that a recurrence becomes a question
-   about *what has changed since* — usually answerable in an hour, and occasionally answerable with a
-   legitimate "the circumstances have changed and the answer is now yes", which is the outcome the log
-   exists to make possible rather than to prevent.
+   The caution is about what the entry must contain. A rejection entry must carry the
+   **assessment**, not merely the outcome: an entry reading "rejected — not affordable" saves
+   nothing, because a returning request still has to be assessed from scratch to establish what it
+   now costs. The entry that saves the 4,400 records the assessed impact, its basis and its date, so
+   that a recurrence becomes a question about *what has changed since*: usually answerable in an
+   hour, and occasionally answerable with a legitimate "the circumstances have changed and the
+   answer is now yes", which is the outcome the log exists to make possible rather than to prevent.
 
 ### AI in this KA
 
-**Where it earns its place.** Assembling the *components* of an impact assessment — identifying which
-interfaces an affected component touches (from the interface register), which completed work packages
-are implicated, which test suites regress, which documents and training materials cite the changed
-behaviour. This is traversal of structured relationships, it is where human assessment is
+**Where it earns its place.** Assembling the *components* of an impact assessment: identifying which
+interfaces an affected component touches (from the interface register), which completed work
+packages are implicated, which test suites regress, which documents and training materials cite the
+changed behaviour. This is traversal of structured relationships, it is where human assessment is
 systematically incomplete, and it is checkable. Screening a request against the baseline to propose
-whether it is a change, a clarification or a defect — a proposal, for human ruling. Detecting
+whether it is a change, a clarification or a defect, a proposal, for human ruling. Detecting
 duplicate or previously rejected requests in the log, which is exactly the failure the previous
 paragraph describes. Computing the assessed total against the delegation schedule and flagging where
 quoted and assessed costs fall on opposite sides of a threshold.
 
-**Where it must not go.** Approving or rejecting a change. Estimating the direct cost or the schedule
-impact, which belongs to the people who will do the work and to the schedule respectively — a model
-asked for a schedule impact will produce a plausible number with no critical-path basis, and that
-number is worth 28,560 in the example above. And no classification of a defect as a change without
-human ruling, since that determination has commercial consequences.
+**Where it must not go.** Approving or rejecting a change. Estimating the direct cost or the
+schedule impact, which belongs to the people who will do the work and to the schedule respectively:
+a model asked for a schedule impact will produce a plausible number with no critical-path basis, and
+that number is worth 28,560 in the example above. And no classification of a defect as a change
+without human ruling, since that determination has commercial consequences.
 
 **Verification, concretely.** Every AI-identified affected interface, work package and test suite is
 confirmed by the accountable owner before it enters the assessment; the schedule impact is taken from
@@ -1434,13 +1442,13 @@ contribution recorded as assessment input rather than as authorship.
 |---|---|
 | **Integrated change control** | Assessing and authorising a change across scope, schedule and cost together. |
 | **Change vs clarification vs defect** | Baseline moves · baseline already covered it · work fails to meet the baseline. |
-| **Screening ruling** | The recorded classification: the baseline clause relied on, the outcome, and a named technical authority — the only artefact that makes a classification contestable later. |
-| **Emergency-route share** | Emergency changes ÷ total requests — a latency diagnostic, so set a review trigger on it rather than a target. |
+| **Screening ruling** | The recorded classification: the baseline clause relied on, the outcome, and a named technical authority; the only artefact that makes a classification contestable later. |
+| **Emergency-route share** | Emergency changes ÷ total requests, a latency diagnostic, so set a review trigger on it rather than a target. |
 | **Assessed total impact** | Direct + schedule + rework + interface re-verification + regression + documentation + risk + benefit. |
-| **Quoted direct cost** | The figure on the form — typically a minority of the true cost, and the wrong basis for a threshold. |
+| **Quoted direct cost** | The figure on the form: typically a minority of the true cost, and the wrong basis for a threshold. |
 | **Emergency change route** | A named authority, a short deadline and mandatory retrospective ratification. |
 | **Change board** | The body authorised to approve baseline changes within limits, including a technical authority. |
-| **Rejection entry** | The log record of a change not approved — the entry most often missing and the reason requests recur. |
+| **Rejection entry** | The log record of a change not approved: the entry most often missing and the reason requests recur. |
 
 ### Sample MCQs — KA 4.4
 
@@ -1474,7 +1482,7 @@ on assessed total impact.
 - D. an unnecessary escalation
 
 *Rationale:* A defect is work already owed under the baseline; treating it as a change adds budget
-for it (4.4.1). The mirror error — a change classified as a clarification — grows scope silently.
+for it (4.4.1). The mirror error (a change classified as a clarification) grows scope silently.
 
 **MCQ 4.4-D `[4.4.3 · Comprehension]`** The change-log entry type most often missing and most
 consequential is:
@@ -1517,7 +1525,7 @@ way to present the case for recording rejections is to:
   decision ✅
 - D. quote the mean loss of 20,150 per recurrence as typical
 
-*Rationale:* The mean is 4.58 times the modal case, so either ratio alone misleads — one as anecdote,
+*Rationale:* The mean is 4.58 times the modal case, so either ratio alone misleads, one as anecdote,
 the other by omitting the case that mattered (4.4.3). D presents a tail-dominated mean as typical.
 
 ### Self-check — KA 4.4
@@ -1541,37 +1549,37 @@ the other by omitting the case that mattered (4.4.3). D presents a tail-dominate
 
 ### 4.A.1 Integration across organisational boundaries
 
-Where delivery spans organisations — client and supplier, joint venture partners, a programme and its
-constituent projects — integration acquires a failure mode that no internal design has: **each party
+Where delivery spans organisations (client and supplier, joint venture partners, a programme and its
+constituent projects) integration acquires a failure mode that no internal design has: **each party
 integrates to its own baseline.** Version 4 of an interface specification on one side and version 5
 on the other is not an argument about competence; it is the predictable consequence of two
 configuration registers with no reconciliation, and it is discovered at integration testing where it
 is most expensive.
 
 Four provisions address it, and they belong in the contract rather than a plan (Domain 7; PFL-AI
-Domain 11): a **single interface register** identified as the register of record, with named owners on
-both sides of every interface; a **joint change process** for anything crossing the boundary, with
-one decision log rather than two reconciled ones; **matched configuration identification**, so that
-both parties refer to the same item by the same identifier at the same version; and **joint
+Domain 11): a **single interface register** identified as the register of record, with named owners
+on both sides of every interface; a **joint change process** for anything crossing the boundary,
+with one decision log rather than two reconciled ones; **matched configuration identification**, so
+that both parties refer to the same item by the same identifier at the same version; and **joint
 verification** of interfaces at a scheduled point, with resource committed on both sides. The
 recurring commercial mistake is to treat integration as each party's own responsibility up to its
-own boundary, which leaves the join itself unowned — and the join is where the failure happens.
+own boundary, which leaves the join itself unowned, and the join is where the failure happens.
 
 ### 4.A.2 Architectural decisions as governance decisions
 
 Some integration choices are irreversible in practice long before they are irreversible in
-principle: the integration pattern of KA 4.2.3, the data model, the identity provider, a
-platform dependency. They share three properties that make them governance matters rather than
-technical ones — the cost of reversal rises steeply with time, the consequences fall outside the
-project's boundary and often outside its life, and they are typically taken by people whose
-delegated authority is defined in money, of which these decisions frequently involve very little.
+principle: the integration pattern of KA 4.2.3, the data model, the identity provider, a platform
+dependency. They share three properties that make them governance matters rather than technical
+ones. The cost of reversal rises steeply with time, the consequences fall outside the project's
+boundary and often outside its life, and they are typically taken by people whose delegated
+authority is defined in money, of which these decisions frequently involve very little.
 
 That last point is the whole issue, and it is Domain 3's delegation schedule read on the wrong
-dimension: a decision costing 40,000 to take and 2,000,000 to reverse is not a 40,000 decision, and a
-schedule reading only on value cannot see it. The countermeasures are specific: an **architectural
+dimension: a decision costing 40,000 to take and 2,000,000 to reverse is not a 40,000 decision, and
+a schedule reading only on value cannot see it. The countermeasures are specific: an **architectural
 decision record** for each such choice, with its alternatives, rationale and reversal cost stated;
-those records reviewed by the governance body on the **reversibility** dimension rather than the value
-one; and a standing question in gate criteria — *which decisions taken since the last gate are
+those records reviewed by the governance body on the **reversibility** dimension rather than the
+value one; and a standing question in gate criteria, *which decisions taken since the last gate are
 expensive to reverse, and who took them?* Case study B of Domain 3 is exactly this failure with a
 control attached rather than an architecture attached.
 
@@ -1579,28 +1587,29 @@ control attached rather than an architecture attached.
 
 Invariants to test on any delivery architecture, each cheap and each diagnostic:
 
-The plan set has been **read against itself before baseline approval**, with the findings priced, and
-the checks that failed are the ones spanning two owners. The **rolling-wave horizon is at least as long
-as the longest commitment lead time** inside it, or the exception is labelled a partial horizon. The
-WBS satisfies the **hundred-per-cent rule at every level**, and the value most likely to be missing is
-enabling change. Every product traces to work and every work package to a product — and each
-cross-match exception carries a **recorded ruling with a named ruler**, since two thirds of them will
-be legitimate and an unruled exception list is indistinguishable from an unrun check. The **interface
-register is built from need**, has a named owner on each side of every entry, and every entry has a
-**scheduled** verification activity with resource. The **time-phased cost baseline matches the
-schedule's current dates** — the single most informative check in the domain, the first thing abandoned
-under pressure, and the one whose failure leaves every cost measure correct. The change log's approved
-changes **sum to the difference** between the original and current baselines, and any residual is
-**decomposed before it is netted**; there are no baseline movements without a change reference and no
-approved changes without a baseline effect. Screening outcomes are **recorded rulings** citing the
-baseline provision relied on. Rejections appear in the log, carrying their assessment rather than only
-their outcome. The delegation threshold reads on **assessed total impact**. A **cumulative test** exists
-and its threshold and period are derived from the observed change rate — and it is present *as well as*
-the reconciliation above, the two being disjoint controls (4.3.3b). Configuration status accounting
-has been audited against deployment within a stated period, and the item-level tolerance is **derived
-from an interface-level target** rather than chosen. Re-baselines carry the original's authority, a
-substantive reason, and the original still visible in reporting. And every architectural decision with a
-reversal cost materially above its decision cost has a record and a named decision-maker.
+The plan set has been **read against itself before baseline approval**, with the findings priced,
+and the checks that failed are the ones spanning two owners. The **rolling-wave horizon is at least
+as long as the longest commitment lead time** inside it, or the exception is labelled a partial
+horizon. The WBS satisfies the **hundred-per-cent rule at every level**, and the value most likely
+to be missing is enabling change. Every product traces to work and every work package to a product.
+And and each cross-match exception carries a **recorded ruling with a named ruler**, since two
+thirds of them will be legitimate and an unruled exception list is indistinguishable from an unrun
+check. The **interface register is built from need**, has a named owner on each side of every entry,
+and every entry has a **scheduled** verification activity with resource. The **time-phased cost
+baseline matches the schedule's current dates**: the single most informative check in the domain,
+the first thing abandoned under pressure, and the one whose failure leaves every cost measure
+correct. The change log's approved changes **sum to the difference** between the original and
+current baselines, and any residual is **decomposed before it is netted**; there are no baseline
+movements without a change reference and no approved changes without a baseline effect. Screening
+outcomes are **recorded rulings** citing the baseline provision relied on. Rejections appear in the
+log, carrying their assessment rather than only their outcome. The delegation threshold reads on
+**assessed total impact**. A **cumulative test** exists and its threshold and period are derived
+from the observed change rate, and it is present *as well as* the reconciliation above, the two
+being disjoint controls (4.3.3b). Configuration status accounting has been audited against
+deployment within a stated period, and the item-level tolerance is **derived from an interface-level
+target** rather than chosen. Re-baselines carry the original's authority, a substantive reason, and
+the original still visible in reporting. And every architectural decision with a reversal cost
+materially above its decision cost has a record and a named decision-maker.
 
 ---
 
@@ -1610,27 +1619,27 @@ reversal cost materially above its decision cost has a record and a named decisi
   interface management is a named discipline with its own register and manager; configuration
   management extends to as-built records, whose divergence from design is the standard handover
   dispute (Domain 16).
-- **Software and digital.** Configuration management is largely automated through version control and
-  build pipelines, which solves identification and control while leaving the *interface agreement*
-  and its ownership as human work — and integration failure migrates there accordingly. The pairwise
-  arithmetic of WE 4.3.2b explains why the automation is worth so much: it lifts item conformance to
-  where the exponent stops biting, so the interface-level rate follows without anyone having to
-  compute it.
+- **Software and digital.** Configuration management is largely automated through version control
+  and build pipelines, which solves identification and control while leaving the *interface
+  agreement* and its ownership as human work, and integration failure migrates there accordingly.
+  The pairwise arithmetic of WE 4.3.2b explains why the automation is worth so much: it lifts item
+  conformance to where the exponent stops biting, so the interface-level rate follows without anyone
+  having to compute it.
 - **Regulated manufacturing (pharmaceutical, medical devices, aerospace).** Configuration and change
   control are regulatory obligations with validated processes; change assessment must include
   re-validation cost, which frequently exceeds every other component and reverses the ranking of
   WE 4.4.2.
 - **Public-sector programmes.** Baselines are published commitments, so re-baselining is externally
-  visible and politically costly, which makes drift the preferred failure mode — and therefore makes
+  visible and politically costly, which makes drift the preferred failure mode; and therefore makes
   the cumulative test of KA 4.3.3 the highest-value control available.
-- **Multi-party ventures.** The reconciliation provisions of 4.A.1 are the domain's principal content;
-  a single interface register named in the agreement is worth more than any internal process either
-  party runs. And the exponent `k` in `p^k` is the number of parties, so a three-party interface is
-  materially harder to keep verifiable than a two-party one at the same register quality — 65.98 %
-  against 75.79 % on Meridian's figures — which is a reason to reduce the number of parties to a join
-  before it is a reason to audit harder.
+- **Multi-party ventures.** The reconciliation provisions of 4.A.1 are the domain's principal
+  content; a single interface register named in the agreement is worth more than any internal
+  process either party runs. And the exponent `k` in `p^k` is the number of parties, so a
+  three-party interface is materially harder to keep verifiable than a two-party one at the same
+  register quality (65.98 % against 75.79 % on Meridian's figures), which is a reason to reduce the
+  number of parties to a join before it is a reason to audit harder.
 - **Healthcare.** Clinical safety cases are configuration-controlled artefacts bound to specific
-  system versions, so a version change is a safety-case change — which makes Meridian's 5
+  system versions, so a version change is a safety-case change, which makes Meridian's 5
   mis-recorded configuration items a clinical-governance finding, not merely an administrative one.
 
 ---
@@ -1642,7 +1651,7 @@ planned five. The programme reported "integration complexity" and requested a sc
 assurance review that followed found something more specific.
 
 **What the review found.** Of the **66** possible interfaces among the 12 components, **31** were
-genuinely required and had been specified. Of those 31, **9** had no named owner on one side — in
+genuinely required and had been specified. Of those 31, **9** had no named owner on one side, in
 every case the side outside the programme's own team: the national reporting gateway, the identity
 provider, the legacy records supplier. Those nine accounted for **all** of the four-week start delay
 and **four of the six weeks** of overrun, because each had to be renegotiated at the point of
@@ -1650,62 +1659,63 @@ verification with someone who had never agreed to it. Separately, **5** configur
 verified against register entries that did not match what was deployed (WE 4.3.2's most serious
 class), which produced two defects that each passed component testing.
 
-**What the arithmetic had already said.** The programme had planned interface work at 12 interfaces —
-the layered count — while operating a partial mesh of 31. The plan was not optimistic; it was
+**What the arithmetic had already said.** The programme had planned interface work at 12 interfaces,
+the layered count, while operating a partial mesh of 31. The plan was not optimistic; it was
 counting the wrong thing. At 18,000 an interface, 31 interfaces is **558,000** against a planned
 **216,000**, and the 342,000 difference had been absorbed as unplanned effort and schedule.
 
-**What the unowned interfaces cost, per interface.** Eight of the elapsed weeks lost — the four-week
-late start and four of the six weeks of overrun — were attributed to the nine unowned interfaces, which
-were **29.03 %** of the 31 required. At the programme's cost of delay that is `8 × 14,280 =`
+**What the unowned interfaces cost, per interface.** Eight of the elapsed weeks lost (the four-week
+late start and four of the six weeks of overrun) were attributed to the nine unowned interfaces,
+which were **29.03 %** of the 31 required. At the programme's cost of delay that is `8 × 14,280 =`
 **USD 114,240**, or **USD 12,693** per unowned interface, and none of it bought anything: the nine
-agreements had to be negotiated either way, and their negotiation effort already sat inside the 18,000
-unit cost. What the programme paid for was negotiating them at the moment of *verification* rather than
-at the moment of *specification*. The register field that would have prevented it — *owner on side B,
-named* — costs nothing to add and nothing to maintain, which makes this the cheapest control in the
-domain and the one most often absent. The five mis-recorded configuration items compound it in exactly
-the way WE 4.3.2b predicts: with item conformance at 87.06 %, roughly **7.50** of the 31 interfaces were
-expected to be unverifiable on register grounds alone, and the two defects that passed component testing
-came out of that population rather than out of bad luck.
+agreements had to be negotiated either way, and their negotiation effort already sat inside the
+18,000 unit cost. What the programme paid for was negotiating them at the moment of *verification*
+rather than at the moment of *specification*. The register field that would have prevented it
+(*owner on side B, named*) costs nothing to add and nothing to maintain, which makes this the
+cheapest control in the domain and the one most often absent. The five mis-recorded configuration
+items compound it in exactly the way WE 4.3.2b predicts: with item conformance at 87.06 %, roughly
+**7.50** of the 31 interfaces were expected to be unverifiable on register grounds alone, and the
+two defects that passed component testing came out of that population rather than out of bad luck.
 
 **What changed.** An interface register built from **need** rather than from either formula, with a
-named owner on **each** side of every entry and a scheduled verification activity for each — which
+named owner on **each** side of every entry and a scheduled verification activity for each, which
 made the nine unowned interfaces visible as nine missing agreements rather than as future
 complexity. Verification activities entered the schedule with duration and resource, which is what
 Domain 6 needed in order to show the float they consumed. And the configuration register was audited
 against deployment before integration rather than after.
 
-**What the domain teaches here.** An unowned interface is not a risk; it is a scheduled failure with
-an unknown date. And the interface arithmetic is only useful applied to the *required* count: 12 was
-the architecture's promise, 66 was the theoretical maximum, and 31 was the number that had to be
+**What the domain teaches here.** An unowned interface is a scheduled failure with an unknown date,
+not a risk. And the interface arithmetic is only useful applied to the *required* count: 12 was the
+architecture's promise, 66 was the theoretical maximum, and 31 was the number that had to be
 managed. Planning to the promise is the error.
 
 ## Case study B — Domain 4: the baseline that could no longer answer the question (financial services)
 
 **Situation.** A payments programme (the same organisation as Domain 3's Case study B, two years
-later) reached its third baseline. Reported performance was `CPI` 0.99 and `SPI` 1.00 — on baseline
+later) reached its third baseline. Reported performance was `CPI` 0.99 and `SPI` 1.00, on baseline
 three. An audit asked a simpler question: what is performance against the **original approved
 commitment**? Nobody could produce the answer within a fortnight.
 
 **Why not.** Each re-baseline had been implemented by **replacement** rather than accumulation. The
 new baseline was loaded, the old one archived as a file, and the change log referenced changes to
 "the baseline" without stating which. Intermediate states were not reconstructable, so the
-original-to-current reconciliation — approved changes summing to the difference between original and
-current — could not be performed at all. Two of the three re-baselines had also been approved by the
+original-to-current reconciliation (approved changes summing to the difference between original and
+current) could not be performed at all. Two of the three re-baselines had also been approved by the
 programme board rather than by the investment committee that approved the original, and neither
 recorded a substantive change in circumstance; both cited accumulated variance, which is the reason
 that does not qualify.
 
-**How it resolved.** The reconstruction took six weeks of a two-person effort against the change log,
-the archived files and the finance ledger, and established performance against the original as `CPI`
-**0.87** — a **14.9 %** cost overrun that three successive baselines had made invisible without ever
-stating an untruth. Corrections: baselines thereafter maintained by **accumulation** with every change
-referenced to its authority; the original baseline reported alongside the current one permanently;
-re-baselining reserved to the authority that approved the original, with a recorded substantive
-reason; and the original-to-current reconciliation performed and published every reporting period.
+**How it resolved.** The reconstruction took six weeks of a two-person effort against the change
+log, the archived files and the finance ledger, and established performance against the original as
+`CPI` **0.87**, a **14.9 %** cost overrun that three successive baselines had made invisible without
+ever stating an untruth. Corrections: baselines thereafter maintained by **accumulation** with every
+change referenced to its authority; the original baseline reported alongside the current one
+permanently; re-baselining reserved to the authority that approved the original, with a recorded
+substantive reason; and the original-to-current reconciliation performed and published every
+reporting period.
 
-**What the domain teaches here.** A baseline exists to answer one question — how is this project
-performing against what was approved? — and a baseline maintained by replacement cannot answer it.
+**What the domain teaches here.** A baseline exists to answer one question (how is this project
+performing against what was approved?), and a baseline maintained by replacement cannot answer it.
 Neither `CPI` 0.99 nor `CPI` 0.87 was a false statement; the first was true of a document and the
 second of the commitment, and only one of them was what the organisation had asked.
 
@@ -1718,21 +1728,21 @@ What a programme director cannot delegate in this domain:
 - **The authority statement in your own charter.** If you cannot state what you may decide alone
   without reading the document, you do not have it (4.1.1).
 - **The interface count and its ownership.** Not the theoretical count and not the architecture's
-  promise — the *required* count, with a named owner on each side and a scheduled verification for
+  promise: the *required* count, with a named owner on each side and a scheduled verification for
   every entry. Unowned interfaces are scheduled failures with unknown dates (4.2.3, Case study A).
 - **That the plan set has been read against itself before you sign the baseline.** Meridian's audit
-  found 306,992 of unauthorised cost and schedule in three days for 5,280 — more than a year of
+  found 306,992 of unauthorised cost and schedule in three days for 5,280: more than a year of
   authorised drift, before any work had started (4.1.2).
 - **That the time-phased cost baseline still matches the schedule.** This is one check, it is the
   first thing abandoned under pressure, and without it earned value measures nothing (4.3.1). Be aware
   that its failure leaves `CPI` and the CPI-only forecasts exactly correct, so a clean cost review is
   not evidence that it has been done.
 - **Reconciling gross, never net.** A residual of 32,200 concealed a gross error of 122,000, and the
-  two classes had opposite remedies — one a posting, one an investigation (4.3.3b).
+  two classes had opposite remedies: one a posting, one an investigation (4.3.3b).
 - **The tolerance on your configuration register, derived rather than chosen.** 87 % of items conforming
   is 76 % of two-sided interfaces verifiable; a 95 % interface target requires 97.47 % of items
   (4.3.2b).
-- **The basis of your change threshold.** Assessed total impact, never quoted direct cost — a
+- **The basis of your change threshold.** Assessed total impact, never quoted direct cost, a
   one-sentence change worth more than most process improvements (4.4.2).
 - **A cumulative test derived from your own change log.** Meridian's baseline moved 12.1 % with no
   decision, and a 100,000/90-day rule would not have caught it (4.3.3).
@@ -1756,85 +1766,85 @@ it costs below `864,000 − 216,000 =` **USD 648,000**. A tenth component adds `
 counts each pair.
 
 **Exercise 4.2** A parent WBS element is approved at 6,500,000. Its five children are estimated at
-1,900,000, 1,250,000, 880,000, 1,640,000 and 410,000. A review then identifies an omitted element —
-commissioning and handover — estimated at 690,000. Compute the unallocated amount and its share of
-the parent, then the shortfall once the omission is restored.
-*Solution.* Children sum to **6,080,000**, leaving **420,000** unallocated — **6.46 %** of the
-parent. Restoring the omitted 690,000 gives an honest total of **6,770,000**, which exceeds the
-approved figure by **270,000**, or **4.15 %**. Common error: reading the 420,000 as contingency, which
-locks in the omission and leaves nothing to absorb it.
+1,900,000, 1,250,000, 880,000, 1,640,000 and 410,000. A review then identifies an omitted element
+(commissioning and handover) estimated at 690,000. Compute the unallocated amount and its share of
+the parent, then the shortfall once the omission is restored. *Solution.* Children sum to
+**6,080,000**, leaving **420,000** unallocated, **6.46 %** of the parent. Restoring the omitted
+690,000 gives an honest total of **6,770,000**, which exceeds the approved figure by **270,000**, or
+**4.15 %**. Common error: reading the 420,000 as contingency, which locks in the omission and leaves
+nothing to absorb it.
 
 **Exercise 4.3** A change is quoted at 75,000 direct. Assessment finds 3 weeks of critical-path
 impact at a cost of delay of 9,500 per week, 34,000 of rework, 4 affected interfaces at 7,500 each,
 19,000 of regression testing and 11,000 of documentation. Compute the assessed total, the ratio to
-the quoted figure, and the quoted figure as a share of the true cost.
-*Solution.* `75,000 + 28,500 + 34,000 + 30,000 + 19,000 + 11,000 =` **USD 197,500** — **2.633
-times** the quoted figure, of which the quote is **38.0 %**. Common error: omitting the schedule
-impact, which requires the float position from the schedule and is therefore the component most often
-left out on the grounds that it is "not yet known".
+the quoted figure, and the quoted figure as a share of the true cost. *Solution.* `75,000 + 28,500 +
+34,000 + 30,000 + 19,000 + 11,000 =` **USD 197,500**: **2.633 times** the quoted figure, of which
+the quote is **38.0 %**. Common error: omitting the schedule impact, which requires the float
+position from the schedule and is therefore the component most often left out on the grounds that it
+is "not yet known".
 
 **Exercise 4.4** Over a year a project approved 48 changes averaging 5,200 direct cost, 18 of which
 carried 0.25 weeks of critical-path impact each. Cost of delay is 9,500 per week; the baseline is
 3,200,000. Compute total drift, its share of the baseline, each change's individual share, and the
-90-day cumulative threshold that would have caught it.
-*Solution.* Direct `48 × 5,200 =` **249,600**; schedule `18 × 0.25 = 4.5` weeks at 9,500 =
-**42,750**; total **USD 292,350** — **9.14 %** of the baseline, while each change was **0.16 %** of
-it. A 90-day window holds about `48/4 = 12` changes, aggregating to **62,400**, so a cumulative
-threshold at or below **62,400** on a 90-day window would trip; a 100,000 threshold would not.
-Common error: setting the cumulative threshold at a round number without reference to the observed
-change rate, which produces a control with the appearance of function and none of it.
+90-day cumulative threshold that would have caught it. *Solution.* Direct `48 × 5,200 =`
+**249,600**; schedule `18 × 0.25 = 4.5` weeks at 9,500 = **42,750**; total **USD 292,350**: **9.14
+%** of the baseline, while each change was **0.16 %** of it. A 90-day window holds about `48/4 = 12`
+changes, aggregating to **62,400**, so a cumulative threshold at or below **62,400** on a 90-day
+window would trip; a 100,000 threshold would not. Common error: setting the cumulative threshold at
+a round number without reference to the observed change rate, which produces a control with the
+appearance of function and none of it.
 
 **Exercise 4.5** A configuration register holds 500 controlled items, of which 468 conform. The
 programme has 44 required interfaces, 6 of them three-party and the remainder two-sided. Assuming
-independent defects, compute item conformance, two-party and three-party relationship conformance, the
-expected number of at-risk interfaces, and the item conformance that a 98 % two-party target would
-require.
-*Solution.* Item conformance `468/500 =` **93.60 %**. Two-party `0.936² =` **87.6096 %**; three-party
-`0.936³ =` **82.0026 %**. Expected at-risk: two-party `38 × (1 − 0.876096) =` **4.7084**, three-party
-`6 × (1 − 0.820026) =` **1.0798**, total **5.7882** interfaces. For a 98 % two-party target,
-`p = 0.98^(1/2) =` **98.99 %**, i.e. at most **5** non-conforming items against the 32 currently
-non-conforming. Common error: applying the item failure rate straight to interfaces — `44 × 0.064 =`
-**2.8160** — which understates the exposure by **51.35 %** because it ignores the exponent.
+independent defects, compute item conformance, two-party and three-party relationship conformance,
+the expected number of at-risk interfaces, and the item conformance that a 98 % two-party target
+would require. *Solution.* Item conformance `468/500 =` **93.60 %**. Two-party `0.936² =` **87.6096
+%**; three-party `0.936³ =` **82.0026 %**. Expected at-risk: two-party `38 × (1 − 0.876096) =`
+**4.7084**, three-party `6 × (1 − 0.820026) =` **1.0798**, total **5.7882** interfaces. For a 98 %
+two-party target, `p = 0.98^(1/2) =` **98.99 %**, i.e. at most **5** non-conforming items against
+the 32 currently non-conforming. Common error: applying the item failure rate straight to
+interfaces, `44 × 0.064 =` **2.8160**, which understates the exposure by **51.35 %** because it
+ignores the exponent.
 
-**Exercise 4.6** A programme's original approved baseline is 8,600,000. Its change log holds 27 approved
-changes totalling 742,300. The cost tool reports a current baseline of 9,318,600. Investigation finds
-61,400 of approved changes with no recorded baseline effect and 37,700 of baseline movement with no
-change reference. Compute the expected current baseline, the net residual, the gross error, and the ratio
-between them.
-*Solution.* Expected current `8,600,000 + 742,300 =` **9,342,300**. Net residual
-`9,318,600 − 9,342,300 =` **(23,700)** — only **0.2756 %** of the original. Check:
-`37,700 − 61,400 = (23,700)` ✓. Gross error `61,400 + 37,700 =` **99,100** — **13.35 %** of the approved
-changes and **4.18 times** the net. Common error: treating a residual of a quarter of one per cent as
-rounding and closing the reconciliation, which discards a finding four times its size; note also that the
-residual here is *negative*, which does not make it benign — it means the log is ahead of the tool rather
-than behind it, and the two classes still require different remedies.
+**Exercise 4.6** A programme's original approved baseline is 8,600,000. Its change log holds 27
+approved changes totalling 742,300. The cost tool reports a current baseline of 9,318,600.
+Investigation finds 61,400 of approved changes with no recorded baseline effect and 37,700 of
+baseline movement with no change reference. Compute the expected current baseline, the net residual,
+the gross error, and the ratio between them. *Solution.* Expected current `8,600,000 + 742,300 =`
+**9,342,300**. Net residual `9,318,600 − 9,342,300 =` **(23,700)**: only **0.2756 %** of the
+original. Check: `37,700 − 61,400 = (23,700)` ✓. Gross error `61,400 + 37,700 =` **99,100**, **13.35
+%** of the approved changes and **4.18 times** the net. Common error: treating a residual of a
+quarter of one per cent as rounding and closing the reconciliation, which discards a finding four
+times its size; note also that the residual here is *negative*, which does not make it benign. It
+means the log is ahead of the tool rather than behind it, and the two classes still require
+different remedies.
 
-**Exercise 4.7** Of 84 change requests, screening ruled 46 changes, 24 clarifications and 14 defects. A
-re-screen finds that 7 of the "changes" were defects, at an average approved value of 9,400, and that 4
-of the "clarifications" were changes, with direct work of 12,000, 8,500, 6,200 and 15,300, one carrying
-0.75 weeks of critical-path impact at a cost of delay of 9,500 per week. Compute the error rate, both
-error classes, the gross total, the cost per error, and the net effect on the recorded change total.
-*Solution.* Errors **11** of 84 — **13.10 %**. Defects paid as changes `7 × 9,400 =` **65,800**. Changes
-taken as clarifications `42,000 + 0.75 × 9,500 =` **49,125**. Gross total **USD 114,925**, or
-**USD 10,447.73** per error. Net effect on the recorded change total `49,125 − 65,800 =` **(16,675)** —
-**6.8921 times** smaller than the gross, and understating it by twice the smaller class
-(`2 × 49,125 = 98,250`). Common error: reporting the net, which here even has the wrong sign for the
-narrative — the log overstates the change total while scope has silently grown.
+**Exercise 4.7** Of 84 change requests, screening ruled 46 changes, 24 clarifications and 14
+defects. A re-screen finds that 7 of the "changes" were defects, at an average approved value of
+9,400, and that 4 of the "clarifications" were changes, with direct work of 12,000, 8,500, 6,200 and
+15,300, one carrying 0.75 weeks of critical-path impact at a cost of delay of 9,500 per week.
+Compute the error rate, both error classes, the gross total, the cost per error, and the net effect
+on the recorded change total. *Solution.* Errors **11** of 84, **13.10 %**. Defects paid as changes
+`7 × 9,400 =` **65,800**. Changes taken as clarifications `42,000 + 0.75 × 9,500 =` **49,125**.
+Gross total **USD 114,925**, or **USD 10,447.73** per error. Net effect on the recorded change total
+`49,125 − 65,800 =` **(16,675)**: **6.8921 times** smaller than the gross, and understating it by
+twice the smaller class (`2 × 49,125 = 98,250`). Common error: reporting the net, which here even
+has the wrong sign for the narrative. The log overstates the change total while scope has silently
+grown.
 
-**Exercise 4.8** At a status date a project reports PV 6,300,000, EV 5,900,000 and AC 6,150,000 against
-a BAC of 12,000,000. A change approved two months earlier deferred 450,000 of planned value beyond the
-status date and the `PV` curve was never re-phased. Compute reported and true `SPI` and `SV`, `CPI`, and
-the composite `EAC` on each basis.
-*Solution.* Reported `SPI = 5,900,000/6,300,000 =` **0.9365**, `SV =` **(400,000)**. True PV
-`6,300,000 − 450,000 = 5,850,000`, so true `SPI =` **1.0085** and `SV =` **50,000** — the project is
-marginally *ahead* of the authorised schedule while reporting 0.94. `CPI = 5,900,000/6,150,000 =`
-**0.9593** on both bases, and the CPI-only forecasts are unchanged at `BAC + AC − EV =` **12,250,000** and
-`BAC/CPI =` **12,508,475**. Composite `EAC = AC + (BAC − EV)/(CPI × SPI)`: reported
-**USD 12,939,558**, true **USD 12,454,589** — an overstatement of **USD 484,968**, which is exactly the
-sensitivity `(BAC − EV)/(CPI × EV) =` **1.0777** multiplied by the 450,000 of mis-phasing. Common error:
-concluding that a stale baseline always flatters. Deferral makes performance look *worse* than it is, and
-the response — a recovery plan on a project that does not need one — costs real money to correct a
-reporting defect.
+**Exercise 4.8** At a status date a project reports PV 6,300,000, EV 5,900,000 and AC 6,150,000
+against a BAC of 12,000,000. A change approved two months earlier deferred 450,000 of planned value
+beyond the status date and the `PV` curve was never re-phased. Compute reported and true `SPI` and
+`SV`, `CPI`, and the composite `EAC` on each basis. *Solution.* Reported `SPI = 5,900,000/6,300,000
+=` **0.9365**, `SV =` **(400,000)**. True PV `6,300,000 − 450,000 = 5,850,000`, so true `SPI =`
+**1.0085** and `SV =` **50,000**. The project is marginally *ahead* of the authorised schedule while
+reporting 0.94. `CPI = 5,900,000/6,150,000 =` **0.9593** on both bases, and the CPI-only forecasts
+are unchanged at `BAC + AC − EV =` **12,250,000** and `BAC/CPI =` **12,508,475**. Composite `EAC =
+AC + (BAC − EV)/(CPI × SPI)`: reported **USD 12,939,558**, true **USD 12,454,589**, an overstatement
+of **USD 484,968**, which is exactly the sensitivity `(BAC − EV)/(CPI × EV) =` **1.0777** multiplied
+by the 450,000 of mis-phasing. Common error: concluding that a stale baseline always flatters.
+Deferral makes performance look *worse* than it is, and the response (a recovery plan on a project
+that does not need one) costs real money to correct a reporting defect.
 
 ---
 
@@ -1899,16 +1909,17 @@ including rejections.
 **The calculations to be able to do under time pressure.** Mesh and layered interface counts
 (`n(n−1)/2` and `n`), their costs, the breakeven layer cost, and the marginal cost of one more
 component under each. The hundred-per-cent test and the shortfall once an omission is restored.
-Product and work-package coverage from a cross-match, and the classified residue after ruling. Plan-set
-audit exposure, converting unfunded work at a person-day rate and unscheduled elapsed time at the cost
-of delay, counting only the critical-path share. `SPI`, `SV`, `CPI` and the three `EAC` forms on both a
-stale and a re-phased `PV`, plus the composite forecast's sensitivity `(BAC − EV)/(CPI × EV)` per unit of
-mis-phased planned value. Pairwise configuration integrity `p^k`, expected at-risk relationships, and the
-inversion `p = q^(1/k)` that turns an interface target into an item tolerance. The original-to-current
-reconciliation, its residual, and the decomposition of that residual into its two opposite-signed
-classes. Assessed total impact from its components, the ratio to the quoted figure, and the quoted share.
-Baseline drift from a change count, average cost, affected count, weeks and cost of delay — and the
-cumulative-window threshold that would catch it. Configuration defect rates by class.
+Product and work-package coverage from a cross-match, and the classified residue after ruling.
+Plan-set audit exposure, converting unfunded work at a person-day rate and unscheduled elapsed time
+at the cost of delay, counting only the critical-path share. `SPI`, `SV`, `CPI` and the three `EAC`
+forms on both a stale and a re-phased `PV`, plus the composite forecast's sensitivity `(BAC −
+EV)/(CPI × EV)` per unit of mis-phased planned value. Pairwise configuration integrity `p^k`,
+expected at-risk relationships, and the inversion `p = q^(1/k)` that turns an interface target into
+an item tolerance. The original-to-current reconciliation, its residual, and the decomposition of
+that residual into its two opposite-signed classes. Assessed total impact from its components, the
+ratio to the quoted figure, and the quoted share. Baseline drift from a change count, average cost,
+affected count, weeks and cost of delay; and the cumulative-window threshold that would catch it.
+Configuration defect rates by class.
 
 **The traps.** Counting `n²` or `n(n−1)` for interfaces · planning interface work at the architecture's
 promised count rather than the required count (Case study A) · reading unallocated budget as
@@ -1939,90 +1950,91 @@ of cross-boundary integration.
 ---
 
 ## Domain 4 summary
-Domains 1 to 3 produced accountability, a justified choice and a working decision structure, and none
-of them produced a project. Integration does — and integration fails in a characteristic way: the
-parts are managed and the joins are not.
+Domains 1 to 3 produced accountability, a justified choice and a working decision structure, and
+none of them produced a project. Integration does; and integration fails in a characteristic way:
+the parts are managed and the joins are not.
 
 The charter authorises and bounds; its irreplaceable content is the statement of what the leader may
 decide alone, and a charter that has become a plan has lost it. The plan of plans is integrated by a
-short list of consistency checks that only appear when the plans are read against one another —
-including the one that makes a programme report last month's position every month for its whole life.
-Those checks are arithmetic, and running them on Meridian's eleven subsidiary plans found
-**USD 306,992** of unfunded cost and unscheduled time — **12.79 %** of the baseline, more than a full
-year of authorised drift — for an audit costing **USD 5,280**, three days before any work began. The
-checks that failed all spanned two owners; the one that passed had a single owner on both sides, which is
-the general shape of the finding. And the same audit exposed a horizon two weeks shorter than the
-programme's longest procurement lead time — a plan that could not support its own commitments, which no
-diligence inside the wave could have fixed.
+short list of consistency checks that only appear when the plans are read against one another,
+including the one that makes a programme report last month's position every month for its whole
+life. Those checks are arithmetic, and running them on Meridian's eleven subsidiary plans found
+**USD 306,992** of unfunded cost and unscheduled time (**12.79 %** of the baseline, more than a full
+year of authorised drift) for an audit costing **USD 5,280**, three days before any work began. The
+checks that failed all spanned two owners; the one that passed had a single owner on both sides,
+which is the general shape of the finding. And the same audit exposed a horizon two weeks shorter
+than the programme's longest procurement lead time: a plan that could not support its own
+commitments, which no diligence inside the wave could have fixed.
 
-The WBS obeys the hundred-per-cent rule, which is arithmetic and therefore auditable: Meridian's five
-level-2 elements sum to **2,332,000** against an approved **2,400,000**, and the missing element is
-**clinician training and enabling change** at **214,000** — the same column Domain 2's benefits map
-omitted, leaving an honest baseline **6.1 %** above the approved figure and an NPV of **+1,186,898**
-that would still have been approved. The omission bought nothing.
+The WBS obeys the hundred-per-cent rule, which is arithmetic and therefore auditable: Meridian's
+five level-2 elements sum to **2,332,000** against an approved **2,400,000**, and the missing
+element is **clinician training and enabling change** at **214,000**: the same column Domain 2's
+benefits map omitted, leaving an honest baseline **6.1 %** above the approved figure and an NPV of
+**+1,186,898** that would still have been approved. The omission bought nothing.
 
 Interfaces are where integration effort lives, and they grow combinatorially while components grow
 linearly: Meridian's 12 components admit **66** point-to-point interfaces costing **USD 1,188,000**,
-against **12** plus a layer at **USD 536,000** — a **54.9 %** saving, worth building while the layer
+against **12** plus a layer at **USD 536,000**, a **54.9 %** saving, worth building while the layer
 costs below **972,000**, and decisive on the margin, where a thirteenth component costs **216,000**
 meshed and **18,000** layered. Case study A supplies the professional correction: the number to plan
-against is neither 66 nor 12 but the **31** genuinely required, of which **9** had no owner on the far
-side and accounted for the entire integration overrun.
+against is neither 66 nor 12 but the **31** genuinely required, of which **9** had no owner on the
+far side and accounted for the entire integration overrun.
 
-Products and work verify each other, and the verification is arithmetic too — but only after each
+Products and work verify each other, and the verification is arithmetic too, but only after each
 exception has been ruled on. Meridian's 148 products against 172 work packages produced **21** raw
-exceptions of which **14** were legitimate, a **66.67 %** false-positive rate, leaving **214,000** of
-omitted enabling change and **26,000** of work producing nothing: **USD 240,000**, exactly **10.00 %** of
-the baseline. Removing the orphans widened the unallocated gap from 68,000 to **94,000**, which is the
-counter-intuitive and correct direction.
+exceptions of which **14** were legitimate, a **66.67 %** false-positive rate, leaving **214,000**
+of omitted enabling change and **26,000** of work producing nothing: **USD 240,000**, exactly
+**10.00 %** of the baseline. Removing the orphans widened the unallocated gap from 68,000 to
+**94,000**, which is the counter-intuitive and correct direction.
 
-The baseline is one three-dimensional statement, and its most informative invariant — that the
-time-phased cost baseline still matches the schedule — is the first abandoned under pressure, after
-which earned value measures the distance between two documents. How wrong is computable, and the shape
-of the answer explains the defect's durability: on Auriga's week-13 position, 240,000 of unre-phased
-planned value puts `SPI` anywhere between **0.8276** and **1.0435** against a reported **0.9231**, moves
-the composite `EAC` by **USD 287,083** in either direction at **USD 1.20** per USD of mis-phasing — and
-leaves `CPI` at **0.9057** and both CPI-only forecasts exactly correct. **A stale `PV` curve corrupts
-every schedule measure and leaves every cost-only measure right**, so the cost review passes and the
-defect survives.
+The baseline is one three-dimensional statement, and its most informative invariant (that the
+time-phased cost baseline still matches the schedule) is the first abandoned under pressure, after
+which earned value measures the distance between two documents. How wrong is computable, and the
+shape of the answer explains the defect's durability: on Auriga's week-13 position, 240,000 of
+unre-phased planned value puts `SPI` anywhere between **0.8276** and **1.0435** against a reported
+**0.9231**, moves the composite `EAC` by **USD 287,083** in either direction at **USD 1.20** per USD
+of mis-phasing; and leaves `CPI` at **0.9057** and both CPI-only forecasts exactly correct. **A
+stale `PV` curve corrupts every schedule measure and leaves every cost-only measure right**, so the
+cost review passes and the defect survives.
 
-Configuration management makes version-bound interface verification meaningful, and its audit classes are
-not equally serious: five items whose recorded version differs from what is deployed will fail an
-integration that a 12.94 % headline rate does not predict. Nor is the item rate the rate that matters.
-Integration quality is item quality raised to the number of parties, so Meridian's **87.06 %** of items
-gives **75.79 %** of two-sided interfaces and **65.98 %** of three-party ones — **7.50** of 31 interfaces
-expected to be unverifiable — and a 95 % interface target therefore requires **97.47 %** item conformance,
-at most **8** non-conforming items rather than the 44 found. **The tolerance on the register is derived
-from the target on the interfaces, backwards through the exponent**, and where the derived audit interval
-comes out at three weeks the finding is about how the register is written, not about how often it is
-audited.
+Configuration management makes version-bound interface verification meaningful, and its audit
+classes are not equally serious: five items whose recorded version differs from what is deployed
+will fail an integration that a 12.94 % headline rate does not predict. Nor is the item rate the
+rate that matters. Integration quality is item quality raised to the number of parties, so
+Meridian's **87.06 %** of items gives **75.79 %** of two-sided interfaces and **65.98 %** of
+three-party ones, **7.50** of 31 interfaces expected to be unverifiable, and a 95 % interface target
+therefore requires **97.47 %** item conformance, at most **8** non-conforming items rather than the
+44 found. **The tolerance on the register is derived from the target on the interfaces, backwards
+through the exponent**, and where the derived audit interval comes out at three weeks the finding is
+about how the register is written, not about how often it is audited.
 
 Baselines are maintained by accumulation, never replacement, because the only question the funding
-organisation asked is performance against the original — the question Case study B's third baseline could
-not answer, and to which the answer turned out to be `CPI` **0.87** rather than 0.99. Accumulation is what
-makes the domain's cheapest control possible: original plus approved changes equals current, exactly.
-Meridian's reconciliation showed a residual of **32,200** — 1.34 %, dismissible — concealing a gross error
-of **USD 122,000**, since **77,100** of unreferenced movement and **44,900** of unposted approvals have
-opposite signs and hid **89,800** between them. **Reconcile gross, never net.** And the two controls are
-disjoint: summing the log catches drift inside it, the reconciliation catches what never entered it.
+organisation asked is performance against the original: the question Case study B's third baseline
+could not answer, and to which the answer turned out to be `CPI` **0.87** rather than 0.99.
+Accumulation is what makes the domain's cheapest control possible: original plus approved changes
+equals current, exactly. Meridian's reconciliation showed a residual of **32,200** (1.34 %,
+dismissible), concealing a gross error of **USD 122,000**, since **77,100** of unreferenced movement
+and **44,900** of unposted approvals have opposite signs and hid **89,800** between them.
+**Reconcile gross, never net.** And the two controls are disjoint: summing the log catches drift
+inside it, the reconciliation catches what never entered it.
 
 And change is integrated or it is not controlled. It begins with a classification, and Meridian got
-**10.53 %** of them wrong in both directions at once: **USD 34,000** of defects paid as changes — 14.71 %
-of the year's direct drift, work that was never a change at all — and **USD 36,340** of changes ruled as
-clarifications, unbudgeted and unlogged. Gross **USD 70,340**; net **USD 2,340**. The same identity as the
-reconciliation, from unrelated data: **the net understates the gross by twice the smaller class.** The two
-errors also differ in detectability, and the one with no downstream detector is silent scope growth, which
-is where the tighter control belongs. Rejections are the other cheap entry nobody writes: **9** of
-Meridian's 14 left no trace, **4** returned, three costing a duplicated **USD 4,400** assessment and one
-costing **USD 63,000** because a different body approved what had already been refused — a total of
-**USD 80,600** against **USD 385** of writing, with a mean **4.58 times** the modal case, which is why the
-control is bought for the tail and both figures must be quoted.
+**10.53 %** of them wrong in both directions at once: **USD 34,000** of defects paid as changes
+(14.71 % of the year's direct drift, work that was never a change at all), and **USD 36,340** of
+changes ruled as clarifications, unbudgeted and unlogged. Gross **USD 70,340**; net **USD 2,340**.
+The same identity as the reconciliation, from unrelated data: **the net understates the gross by
+twice the smaller class.** The two errors also differ in detectability, and the one with no
+downstream detector is silent scope growth, which is where the tighter control belongs. Rejections
+are the other cheap entry nobody writes: **9** of Meridian's 14 left no trace, **4** returned, three
+costing a duplicated **USD 4,400** assessment and one costing **USD 63,000** because a different
+body approved what had already been refused, a total of **USD 80,600** against **USD 385** of
+writing, with a mean **4.58 times** the modal case, which is why the control is bought for the tail
+and both figures must be quoted.
 
-Meridian's baseline moved **12.1 %** through 34 individually authorised changes averaging
-**0.28 %** each, with no decision anywhere on the total, and
-a 100,000-in-90-days cumulative rule would not have caught it because a quarter's changes aggregate to
-**57,800** — so a cumulative test must be derived from the observed change rate, not chosen for
-roundness. A change quoted at **40,000** truly cost **131,560**, **3.29 times** the quoted figure, of
-which the quote was **30.4 %**; and therefore the domain's single most valuable sentence, worth more
-than most process improvements a programme will make: **the delegation threshold reads on assessed
-total impact, not on quoted direct cost.**
+Meridian's baseline moved **12.1 %** through 34 individually authorised changes averaging **0.28 %**
+each, with no decision anywhere on the total, and a 100,000-in-90-days cumulative rule would not
+have caught it because a quarter's changes aggregate to **57,800**, so a cumulative test must be
+derived from the observed change rate, not chosen for roundness. A change quoted at **40,000** truly
+cost **131,560**, **3.29 times** the quoted figure, of which the quote was **30.4 %**; and therefore
+the domain's single most valuable sentence, worth more than most process improvements a programme
+will make: **the delegation threshold reads on assessed total impact, not on quoted direct cost.**

@@ -10,13 +10,13 @@ people the project leader cannot instruct, on terms someone else negotiated, aga
 written before the design was finished.
 
 That is the gap this domain closes, and the reason it sits last in Part Two rather than first. Every
-technique in the preceding five domains — the requirement, the critical path, the earned-value
-forecast, the risk response — becomes something the leader can only *ask for* once the boundary of the
-contract is crossed. The instrument that converts an intention into an obligation is the contract, and
-the instrument that decides who is obliged is the procurement process. Both are usually treated as
-functions belonging to somebody else, and both are among the least reversible decisions a project
-makes. A poorly chosen supplier can be managed; a poorly chosen contract structure cannot, because it
-is the thing you would have to use to manage it.
+technique in the preceding five domains (the requirement, the critical path, the earned-value
+forecast, the risk response) becomes something the leader can only *ask for* once the boundary of
+the contract is crossed. The instrument that converts an intention into an obligation is the
+contract, and the instrument that decides who is obliged is the procurement process. Both are
+usually treated as functions belonging to somebody else, and both are among the least reversible
+decisions a project makes. A poorly chosen supplier can be managed; a poorly chosen contract
+structure cannot, because it is the thing you would have to use to manage it.
 
 The domain's central claim is that **procurement decisions are delivery decisions with a computable
 price, and almost all of them are decided on the wrong number.** Make-or-buy is decided on unit price
@@ -72,61 +72,63 @@ supplier relationship that rests only on goodwill has no mechanism for the week 
 **The lifecycle, and what each stage decides.** Six stages, and the value of naming them is that each
 one closes options the next cannot reopen.
 
-1. **Define the need** — the specification, and the choice between specifying an *output* (what it must
-   achieve) and an *input* (how it must be built). This choice, not the contract type, determines who
-   is answerable for fitness for purpose, and it is made before anyone in procurement is involved.
-2. **Decide make-or-buy** — treated in 10.1.2, and the only stage at which the answer "we should not
+1. **Define the need**: the specification, and the choice between specifying an *output* (what it
+   must achieve) and an *input* (how it must be built). This choice, not the contract type,
+   determines who is answerable for fitness for purpose, and it is made before anyone in procurement
+   is involved.
+2. **Decide make-or-buy**: treated in 10.1.2, and the only stage at which the answer "we should not
    buy this at all" is still available.
-3. **Choose the route to market and the contract structure** — 10.2.1 and 10.3.1.
-4. **Tender, evaluate and award** — KA 10.2. The stage with the most process and the least remaining
+3. **Choose the route to market and the contract structure**: 10.2.1 and 10.3.1.
+4. **Tender, evaluate and award**: KA 10.2. The stage with the most process and the least remaining
    freedom, which is why it absorbs attention disproportionate to its leverage.
-5. **Administer the contract** — KA 10.3. Where nearly all of the value is won or lost, and where
+5. **Administer the contract**: KA 10.3. Where nearly all of the value is won or lost, and where
    staffing is nearly always thinnest.
-6. **Close out** — final account, retention release, warranties, knowledge and data transfer, and the
-   lessons that inform the next specification. Routinely under-resourced because the project is over,
-   which is precisely why final accounts settle badly.
+6. **Close out**: final account, retention release, warranties, knowledge and data transfer, and the
+   lessons that inform the next specification. Routinely under-resourced because the project is
+   over, which is precisely why final accounts settle badly.
 
 **The three questions a leader must answer before procurement starts**, none of which a procurement
 function can answer for them. *What must this supplier be accountable for, in words that will still
-mean the same thing in a dispute?* *What will I do if they fail — and is that response available under
-the structure I am about to sign?* *What information am I entitled to, on what cadence, and is it
-enough to run Domain 7's earned-value system across the boundary?* A project that reaches award without
-those three answers has bought a supplier rather than a capability.
+mean the same thing in a dispute?* *What will I do if they fail, and is that response available
+under the structure I am about to sign?* *What information am I entitled to, on what cadence, and is
+it enough to run Domain 7's earned-value system across the boundary?* A project that reaches award
+without those three answers has bought a supplier rather than a capability.
 
-**The boundary problem.** Domain 3 established that governance must span the contract boundary and that
-decision rights are most often left undefined exactly there (KA 3.1.2). The specific asymmetry to watch
-is **threshold mismatch**: the client's change-approval threshold and the supplier's are set
-independently, by different organisations, and are almost never equal. Where the supplier may commit to
-a change at 25,000 and the client's project leader may approve one only at 10,000, every change between
-those figures arrives already committed on one side and unapproved on the other — a design failure at
-the moment the contract was signed, not a governance failure at the moment it appears.
+**The boundary problem.** Domain 3 established that governance must span the contract boundary and
+that decision rights are most often left undefined exactly there (KA 3.1.2). The specific asymmetry
+to watch is **threshold mismatch**: the client's change-approval threshold and the supplier's are
+set independently, by different organisations, and are almost never equal. Where the supplier may
+commit to a change at 25,000 and the client's project leader may approve one only at 10,000, every
+change between those figures arrives already committed on one side and unapproved on the other: a
+design failure at the moment the contract was signed, not a governance failure at the moment it
+appears.
 
 ### 10.1.2 Make-or-buy on total cost of ownership
 
-**The principle.** A make-or-buy decision compares **total cost of ownership over the whole period the
-capability is needed, including the cost of getting into the arrangement and the cost of getting out of
-it.** Almost every make-or-buy decision that is later regretted was made on unit price, and unit price
-is the one component that systematically favours the option with the higher fixed cost — because it
-hides that cost.
+**The principle.** A make-or-buy decision compares **total cost of ownership over the whole period
+the capability is needed, including the cost of getting into the arrangement and the cost of getting
+out of it.** Almost every make-or-buy decision that is later regretted was made on unit price, and
+unit price is the one component that systematically favours the option with the higher fixed cost,
+because it hides that cost.
 
 ```
 TCO(option) = transition-in + (unit cost × volume) + transition-out
 Breakeven volume  Q* = (F_make − F_buy) / (v_buy − v_make)
 ```
 where `F` is the option's total fixed cost (transition-in plus exit) and `v` is its cost per unit of
-output. `Q*` exists only where the option with the higher fixed cost also has the lower unit cost —
+output. `Q*` exists only where the option with the higher fixed cost also has the lower unit cost,
 which is the normal case, and the reason the decision is a genuine choice rather than an arithmetic
 one.
 
-**The four costs the unit price hides.** *Transition-in* — recruitment, training, tooling, test
-environments, licences, and the management attention consumed while none of it works yet. *Exit* — and
-this is the one most often scored at zero: redeployment or severance, decommissioning, data extraction
-in a usable form, knowledge transfer, re-qualification of whoever takes over, and the cost of running
-both arrangements in parallel during handover. *Stand-up elapsed time*, priced at the project's cost of
-delay wherever the capability is on the critical path. And *residual management cost*, which does not
-vanish when work is outsourced — it changes shape, from supervising people to administering a contract,
-and a buy case that assumes it falls to zero is understating by the cost of the contract manager it
-will need.
+**The four costs the unit price hides.** *Transition-in*: recruitment, training, tooling, test
+environments, licences, and the management attention consumed while none of it works yet. *Exit*;
+and this is the one most often scored at zero: redeployment or severance, decommissioning, data
+extraction in a usable form, knowledge transfer, re-qualification of whoever takes over, and the
+cost of running both arrangements in parallel during handover. *Stand-up elapsed time*, priced at
+the project's cost of delay wherever the capability is on the critical path. And *residual
+management cost*, which does not vanish when work is outsourced. It changes shape, from supervising
+people to administering a contract, and a buy case that assumes it falls to zero is understating by
+the cost of the contract manager it will need.
 
 **Worked example 10.1.2 — Auriga's remote-terminal-unit configuration: make or buy?**
 
@@ -145,42 +147,42 @@ will need.
    `Q* = (480,000 − 240,000)/(5,400 − 3,600) = 240,000/1,800`. At `Q` = 84:
    make `480,000 + 3,600 × 84`; buy `240,000 + 5,400 × 84`. Delay term
    `(14 − 5) × 45,000 = 9 × 45,000`.
-4. **Result.** Breakeven volume **`Q*` = 133.33 units**. At the required 84 units, make costs
-   **USD 782,400** and buy costs **USD 693,600** — **buy is USD 88,800 cheaper**, 11.35 % of the make
-   case. With the 9-week stand-up delay priced at **USD 405,000**, the make case rises to
-   **USD 1,187,400** and the breakeven volume moves to **358.33 units**.
-5. **Interpretation.** On unit price alone, making looks decisively cheaper: 3,600 against 5,400 is a
-   **33.33 %** saving per unit, and that is the number a make-or-buy paper usually leads with. It is
-   the wrong test, and the arithmetic shows exactly why: the unit-price advantage of 1,800 has to
+4. **Result.** Breakeven volume **`Q*` = 133.33 units**. At the required 84 units, make costs **USD
+   782,400** and buy costs **USD 693,600**: **buy is USD 88,800 cheaper**, 11.35 % of the make case.
+   With the 9-week stand-up delay priced at **USD 405,000**, the make case rises to **USD
+   1,187,400** and the breakeven volume moves to **358.33 units**.
+5. **Interpretation.** On unit price alone, making looks decisively cheaper: 3,600 against 5,400 is
+   a **33.33 %** saving per unit, and that is the number a make-or-buy paper usually leads with. It
+   is the wrong test, and the arithmetic shows exactly why: the unit-price advantage of 1,800 has to
    recover a fixed-cost disadvantage of 240,000, which needs 133.33 units, and Auriga has 84. The
    decision is therefore **a bet on volume, and the honest question is not "is making cheaper?" but
    "do we believe the volume will exceed 134 units?"** That reframing is the deliverable. It also
-   yields the sensitivity that matters: a second phase of 60 further units takes the total to 144 and
-   *reverses* the answer — make USD 998,400 against buy USD 1,017,600, a **USD 19,200** advantage to
-   making — so a decision to buy at 84 units should be written so that it can be revisited if the
+   yields the sensitivity that matters: a second phase of 60 further units takes the total to 144
+   and *reverses* the answer (make USD 998,400 against buy USD 1,017,600, a **USD 19,200** advantage
+   to making), so a decision to buy at 84 units should be written so that it can be revisited if the
    second phase is authorised, with the exit cost of 145,000 understood as the price of that
    reversibility rather than as an overhead. Two further cautions belong in the paper, and both are
    about what the number cannot carry. First, **the schedule term dominates everything else here**:
    pricing the 9-week difference at Auriga's cost of delay adds 405,000 and moves the breakeven from
-   133.33 to 358.33 units, a factor of **2.69** — so on a project with a critical-path constraint the
+   133.33 to 358.33 units, a factor of **2.69**, so on a project with a critical-path constraint the
    make case is not marginal, it is unavailable, and no volume Auriga will ever see makes it
-   competitive. Second, the calculation is silent on **capability strategy**. A utility that intends to
-   own its control systems for twenty years may rationally build a capability that loses money on this
-   project, and that is a legitimate decision — but it must be taken as a deliberate investment with
-   the 88,800 (or 493,800 with delay) named as its price, not smuggled in behind a unit-price
-   comparison. The failure mode is not choosing to make; it is choosing to make while believing it is
-   cheaper.
+   competitive. Second, the calculation is silent on **capability strategy**. A utility that intends
+   to own its control systems for twenty years may rationally build a capability that loses money on
+   this project, and that is a legitimate decision, but it must be taken as a deliberate investment
+   with the 88,800 (or 493,800 with delay) named as its price, not smuggled in behind a unit-price
+   comparison. The failure mode is not choosing to make; it is choosing to make while believing it
+   is cheaper.
 
 > **Fig 10.1.1 — Make-or-buy on total cost of ownership: the breakeven the unit price hides.** Line
 > chart, x-axis volume `Q` from 0 to 400 units, y-axis total cost of ownership USD 0 to 2,500,000.
 > Three lines: buy `240,000 + 5,400Q` in brand blue; make `480,000 + 3,600Q` in ink; make plus the
 > 9-week stand-up delay `885,000 + 3,600Q` as a crimson dashed line. Breakeven points marked at
 > **133.33 units** (make vs buy) and **358.33 units** (make-with-delay vs buy). A vertical rule at
-> Auriga's required **84 units** with the two outturns labelled — make **782,400**, buy **693,600**,
-> buy cheaper by **88,800** — and a side note that the unit price favours making by **33.33 %** and is
-> the wrong test. Source: PCI original. Alt text: three rising straight lines on a cost-versus-volume
-> chart, the steeper buy line crossing the flatter make lines at 133 and 358 units, with the project's
-> required volume of 84 units far to the left of both crossings.
+> Auriga's required **84 units** with the two outturns labelled (make **782,400**, buy **693,600**,
+> buy cheaper by **88,800**), and a side note that the unit price favours making by **33.33 %** and
+> is the wrong test. Source: PCI original. Alt text: three rising straight lines on a
+> cost-versus-volume chart, the steeper buy line crossing the flatter make lines at 133 and 358
+> units, with the project's required volume of 84 units far to the left of both crossings.
 
 ### 10.1.3 The procurement lead time as a delivery constraint
 
@@ -195,61 +197,64 @@ Practitioners assume the physical time dominates. It usually does not.
 
 **Worked example 10.1.3 — the controller procurement chain against a 25-week project.**
 
-1. **Setup.** Auriga's 84 substation controllers are a long-lead item. The chain: write and internally
-   review the specification **3 weeks**; obtain authority to go to market — a decision for a body
-   meeting every 4 weeks with a 1-week paper deadline; tender period **4 weeks**; evaluation and
-   clarification **3 weeks**; award approval — the same body again; contract execution and mobilisation
-   **2 weeks**; manufacture **11 weeks**; delivery, site acceptance and functional test **2 weeks**.
+1. **Setup.** Auriga's 84 substation controllers are a long-lead item. The chain: write and
+   internally review the specification **3 weeks**; obtain authority to go to market (a decision for
+   a body meeting every 4 weeks with a 1-week paper deadline; tender period **4 weeks**; evaluation
+   and clarification **3 weeks**; award approval) the same body again; contract execution and
+   mobilisation **2 weeks**; manufacture **11 weeks**; delivery, site acceptance and functional test
+   **2 weeks**.
 2. **Formula.** Total lead time = Σ process legs + Σ governance latency + Σ physical legs, with
    governance latency `E[wait] = M/2 + L` per approval (Domain 3, KA 3.2.3).
 3. **Substitution.** Each approval: `E[wait] = 4/2 + 1 = 3.0` weeks, twice. Total
    `3 + 3 + 4 + 3 + 3 + 2 + 11 + 2`.
-4. **Result.** **31 weeks** of total procurement lead time, against a **25-week** project — an excess
+4. **Result.** **31 weeks** of total procurement lead time, against a **25-week** project, an excess
    of **6 weeks**. Governance latency accounts for **6 weeks**, **19.35 %** of the chain, worth
    **USD 270,000** at Auriga's cost of delay. Process time totals **18 weeks** and physical time
    **13 weeks**, so **58.06 %** of the chain is administration.
-5. **Interpretation.** The headline is uncomfortable and completely ordinary: **the procurement chain
-   for a critical component is longer than the project that needs it.** Three consequences follow, and
-   a leader who has done this arithmetic behaves differently at three specific moments. First, long-lead
-   items must be committed **before the baseline is approved**, which means committing on an incomplete
-   specification and accepting the variation exposure that follows — an explicit, priced trade, not an
-   oversight, and the origin of Domain 8's R1 (controller lead-time slip, `p` 0.35, impact 240,000).
-   Second, the largest single compressible block is not the manufacture but the **process**: 18 of 31
-   weeks, of which 6 are pure governance latency. Domain 3's result applies unchanged and is worth more
-   here than anywhere — cutting the paper deadline from 1 week to nothing saves a full week per
-   approval, so two approvals give back **2 weeks and USD 90,000** for the price of an administrative
-   decision, while collapsing the two approvals into one delegated award authority gives back
-   **3 weeks and USD 135,000**. Third, and least popular: the honest schedule shows procurement on the
-   critical path from day one. A plan that starts at "contract awarded" is not optimistic, it is
-   incomplete by 18 weeks, and the difference will be discovered at the worst possible moment — when
-   the site team is standing ready and the controllers are in manufacture. The professional caution:
-   the 11-week manufacture figure is a *supplier's* number, and it is the one figure in the chain that
-   a supplier has an incentive to state optimistically at bid stage and revise after award. It should
-   be tested against the supplier's actual recent performance, not against its quotation.
+5. **Interpretation.** The headline is uncomfortable and completely ordinary: **the procurement
+   chain for a critical component is longer than the project that needs it.** Three consequences
+   follow, and a leader who has done this arithmetic behaves differently at three specific moments.
+   First, long-lead items must be committed **before the baseline is approved**, which means
+   committing on an incomplete specification and accepting the variation exposure that follows, an
+   explicit, priced trade, not an oversight, and the origin of Domain 8's R1 (controller lead-time
+   slip, `p` 0.35, impact 240,000). Second, the largest single compressible block is not the
+   manufacture but the **process**: 18 of 31 weeks, of which 6 are pure governance latency. Domain
+   3's result applies unchanged and is worth more here than anywhere, cutting the paper deadline
+   from 1 week to nothing saves a full week per approval, so two approvals give back **2 weeks and
+   USD 90,000** for the price of an administrative decision, while collapsing the two approvals into
+   one delegated award authority gives back **3 weeks and USD 135,000**. Third, and least popular:
+   the honest schedule shows procurement on the critical path from day one. A plan that starts at
+   "contract awarded" is not optimistic, it is incomplete by 18 weeks, and the difference will be
+   discovered at the worst possible moment; when the site team is standing ready and the controllers
+   are in manufacture. The professional caution: the 11-week manufacture figure is a *supplier's*
+   number, and it is the one figure in the chain that a supplier has an incentive to state
+   optimistically at bid stage and revise after award. It should be tested against the supplier's
+   actual recent performance, not against its quotation.
 
 ### AI in this KA
 
-**Where it earns its place.** Assembling total-cost-of-ownership comparisons from disparate sources —
-payroll, licence schedules, historical supplier invoices, exit provisions buried in incumbent
-contracts — is a data-collation task with a clear right answer, and the exit column is precisely the
+**Where it earns its place.** Assembling total-cost-of-ownership comparisons from disparate sources
+(payroll, licence schedules, historical supplier invoices, exit provisions buried in incumbent
+contracts) is a data-collation task with a clear right answer, and the exit column is precisely the
 one humans leave blank because the evidence is scattered. Extracting stated lead times from a set of
 bids and comparing them with the same suppliers' delivery history. Modelling the breakeven volume
 across ranges of unit cost, transition cost and delay, which is deterministic and cheap to sweep.
-Reading an incumbent contract for its termination, transition-out, data-return and intellectual-property
-clauses and listing the exit obligations, which is where the exit cost actually comes from.
+Reading an incumbent contract for its termination, transition-out, data-return and
+intellectual-property clauses and listing the exit obligations, which is where the exit cost
+actually comes from.
 
-**Where it must not go.** It must not supply the *estimates* it is asked to compare. A model asked "what
-does it cost to stand up an RTU configuration team?" will produce a confident figure with no provenance,
-and that figure will then anchor a real decision — the same defect Domain 3 identified for critical-path
-shares. It must not decide capability strategy, which is a decision about what the organisation intends
-to be able to do, and belongs to an accountable executive. And its reading of an exit clause is a
-summary, not the clause: the obligation is what the contract says.
+**Where it must not go.** It must not supply the *estimates* it is asked to compare. A model asked
+"what does it cost to stand up an RTU configuration team?" will produce a confident figure with no
+provenance, and that figure will then anchor a real decision: the same defect Domain 3 identified
+for critical-path shares. It must not decide capability strategy, which is a decision about what the
+organisation intends to be able to do, and belongs to an accountable executive. And its reading of
+an exit clause is a summary, not the clause: the obligation is what the contract says.
 
 **Verification, concretely.** Every input to a make-or-buy paper carries a named source and a date.
-The breakeven volume is recomputed by hand — it is one subtraction and one division — and stated in the
-paper alongside the point estimate, because the breakeven is what tells the decision-maker whether the
-recommendation is robust. Where an AI tool has listed exit obligations, each one is confirmed against
-the clause before it enters the cost.
+The breakeven volume is recomputed by hand (it is one subtraction and one division), and stated in
+the paper alongside the point estimate, because the breakeven is what tells the decision-maker
+whether the recommendation is robust. Where an AI tool has listed exit obligations, each one is
+confirmed against the clause before it enters the cost.
 
 ### Key terms — KA 10.1
 
@@ -287,7 +292,7 @@ exit cost to the other option (`410,000/1,800 = 227.78`).
 - D. the two options are equivalent because the difference is under 15 %
 
 *Rationale:* The unit-price advantage must recover a fixed-cost disadvantage, and 84 units does not
-(10.1.2). C inverts the principle — excluding the one-off items is the error. D substitutes a
+(10.1.2). C inverts the principle, excluding the one-off items is the error. D substitutes a
 tolerance for an answer.
 
 **MCQ 10.1-C `[10.1.2 · Evaluation]`** Standing the in-house capability up takes 9 weeks longer than
@@ -323,7 +328,7 @@ which the option "we should not buy this at all" remains available?
 - D. tender and evaluate
 
 *Rationale:* After the make-or-buy decision, subsequent stages choose *how* to buy, not *whether*
-(10.1.1). The stage with the most process — tender and evaluate — has the least remaining freedom.
+(10.1.1). The stage with the most process (tender and evaluate) has the least remaining freedom.
 
 ### Self-check — KA 10.1
 
@@ -331,8 +336,8 @@ which the option "we should not buy this at all" remains available?
    transition-in and exit costs, which are exactly the costs the low-unit-cost option carries.
 2. *What single figure converts a make-or-buy recommendation into a testable proposition?* — The
    breakeven volume: the decision becomes "do we believe volume will exceed `Q*`?"
-3. *Which part of a procurement chain is usually most compressible, and why is that surprising?* — The
-   process and governance legs — 18 of Auriga's 31 weeks — not the manufacture, which is where
+3. *Which part of a procurement chain is usually most compressible, and why is that surprising?* —
+   The process and governance legs, 18 of Auriga's 31 weeks, not the manufacture, which is where
    attention goes.
 
 ---
@@ -352,20 +357,21 @@ suppliers who lose repeatedly. The main routes, with what each actually purchase
 |---|---|---|---|
 | **Open competition** | The widest price discovery and the strongest probity record | The longest chain (10.1.3), high evaluation effort, high aggregate bid cost | Novel requirements, unknown market, regulated buyers |
 | **Selective (pre-qualified) competition** | Price discovery among capable bidders only | Pre-qualification effort; the risk of excluding a capable newcomer | Most substantial project packages |
-| **Framework call-off** | Speed — the tender is already done | The framework's rates, which may have drifted from the market; and the aggregation illusion below | Repeat purchases of definable scope |
+| **Framework call-off** | Speed: the tender is already done | The framework's rates, which may have drifted from the market; and the aggregation illusion below | Repeat purchases of definable scope |
 | **Single-source negotiation** | Speed and continuity of a known capability | The absence of price discovery; a documented justification is mandatory | Genuine sole source, proprietary interfaces, emergency |
 | **Two-stage** | Early supplier involvement on buildability while price is settled later | Weak price tension at stage two, when the supplier is embedded | Complex or undefined scope needing supplier design input |
 
-**Three cautions worth stating.** *Competition is not price tension.* Three bidders who all believe one
-of them is favoured produce three prices and no competition; price tension requires that each bidder
-believes it can win, which is a function of how the model is published (10.2.3), not of the number of
-bidders. *The aggregation illusion in frameworks*: a call-off placed without any comparison inside the
-framework buys the framework's rate, not the market's, so framework rates need periodic benchmarking
-against a live test — a framework that has never been benchmarked is a single-source arrangement with
-paperwork. *Two-stage arrangements* fail predictably at stage two, when the supplier is the only party
-who understands the design it helped produce and the buyer's walk-away option has quietly disappeared;
-the countermeasure is to fix the stage-two commercial terms — fee percentage, overhead recovery, basis of
-preliminaries — at stage *one*, while that option still exists.
+**Three cautions worth stating.** *Competition is not price tension.* Three bidders who all believe
+one of them is favoured produce three prices and no competition; price tension requires that each
+bidder believes it can win, which is a function of how the model is published (10.2.3), not of the
+number of bidders. *The aggregation illusion in frameworks*: a call-off placed without any
+comparison inside the framework buys the framework's rate, not the market's, so framework rates need
+periodic benchmarking against a live test: a framework that has never been benchmarked is a
+single-source arrangement with paperwork. *Two-stage arrangements* fail predictably at stage two,
+when the supplier is the only party who understands the design it helped produce and the buyer's
+walk-away option has quietly disappeared; the countermeasure is to fix the stage-two commercial
+terms (fee percentage, overhead recovery, basis of preliminaries) at stage *one*, while that option
+still exists.
 
 ### 10.2.2 The evaluation model, and the weighting that chooses the winner
 
@@ -387,10 +393,10 @@ w* = (Q_b − Q_a) / [(P_a − Q_a) − (P_b − Q_b)]
 
 **Worked example 10.2.2 — three bids, three winners.**
 
-1. **Setup.** Auriga's installation package attracts three compliant bids. Alpha USD 2,000,000, quality
-   **62**/100; Beta USD 2,200,000, quality **78**; Gamma USD 2,480,000, quality **92**. Price is
-   normalised on the ratio convention — the lowest price scores 100, others score
-   `lowest ÷ own × 100`. The evaluation panel has not yet fixed the weighting.
+1. **Setup.** Auriga's installation package attracts three compliant bids. Alpha USD 2,000,000,
+   quality **62**/100; Beta USD 2,200,000, quality **78**; Gamma USD 2,480,000, quality **92**.
+   Price is normalised on the ratio convention: the lowest price scores 100, others score `lowest ÷
+   own × 100`. The evaluation panel has not yet fixed the weighting.
 2. **Formula.** `S_i(w) = w P_i + (1 − w) Q_i`; crossover
    `w* = (Q_b − Q_a)/[(P_a − Q_a) − (P_b − Q_b)]`.
 3. **Substitution.** Price scores: Alpha `2,000,000/2,000,000 × 100 = 100.000000`; Beta
@@ -408,87 +414,92 @@ w* = (Q_b − Q_a) / [(P_a − Q_a) − (P_b − Q_b)]
    **Three different winners from one bid set.** The crossovers are Beta/Gamma at a price weight of
    **57.70 %** and Alpha/Beta at **63.77 %**: Gamma wins below 57.70 %, Beta in the band between, and
    Alpha above 63.77 %.
-5. **Interpretation.** The first and most important reading is procedural, not commercial: **with the
-   bids in hand, a panel could choose a weighting to produce any of the three outcomes it liked.** That
-   is why the weighting must be published before bids are opened (10.2.3), and it is not a formality —
-   it is the only thing standing between an evaluation and a rationalisation. The second reading is
-   about the model's fragility. Beta wins in a band **6.07 percentage points** wide, which is narrower
-   than the uncertainty in the quality scores themselves; a panel whose consensus moved Beta's quality
-   score by two points would relocate the boundary. A model whose output is knife-edge is telling the
-   buyer something useful — that the three bids are, on this model, close to indistinguishable, and the
-   decision should turn on something the model does not capture rather than on the third decimal place.
-   The third reading is the commercial one, and it is the test that should discipline any quality
-   weighting. Gamma's premium over Alpha is **USD 480,000** — **24.00 %**, or USD 16,000 per quality
-   point. What does that buy? Suppose the panel's own risk assessment maps the quality scores to the
-   probability of the integration rework that Domain 8 carries as R3 (impact USD 320,000): Alpha 0.30,
-   Beta 0.18, Gamma 0.10, giving expected rework of **96,000**, **57,600** and **32,000**. Risk-adjusted
-   cost is then Alpha **2,096,000**, Beta **2,257,600**, Gamma **2,512,000** — and Alpha is still
-   cheapest by a wide margin, because Gamma's 480,000 premium buys only `96,000 − 32,000 =` **64,000**
-   of avoided expected cost. The premium is **7.5 times** the risk it removes. Add a generous allowance
-   for schedule as well — say Gamma's quality also avoids three weeks of integration delay at 45,000 a
-   week, worth 135,000 — and the total avoided is 199,000, still **281,000** short. Expressed as a
-   breakeven: Gamma's premium is worth paying only if its quality avoids more than 480,000 of expected
-   cost, which at Auriga's cost of delay is **10.67 weeks** of delay. That is the professional obligation
-   in a sentence: **a quality weighting is a statement about how much money quality is worth, and if
-   the number it implies cannot be defended against the risks it is supposed to remove, the weighting
-   is not a judgement, it is a preference.** Two cautions. Quality may buy things that are genuinely
-   outside this arithmetic — safety performance, regulatory standing, workforce capability retention,
-   the ability to be relied on in a crisis — and where it does, those must be **named and, so far as
+5. **Interpretation.** The first and most important reading is procedural, not commercial: **with
+   the bids in hand, a panel could choose a weighting to produce any of the three outcomes it
+   liked.** That is why the weighting must be published before bids are opened (10.2.3), and it is
+   not a formality. It is the only thing standing between an evaluation and a rationalisation. The
+   second reading is about the model's fragility. Beta wins in a band **6.07 percentage points**
+   wide, which is narrower than the uncertainty in the quality scores themselves; a panel whose
+   consensus moved Beta's quality score by two points would relocate the boundary. A model whose
+   output is knife-edge is telling the buyer something useful: that the three bids are, on this
+   model, close to indistinguishable, and the decision should turn on something the model does not
+   capture rather than on the third decimal place. The third reading is the commercial one, and it
+   is the test that should discipline any quality weighting. Gamma's premium over Alpha is **USD
+   480,000**: **24.00 %**, or USD 16,000 per quality point. What does that buy? Suppose the panel's
+   own risk assessment maps the quality scores to the probability of the integration rework that
+   Domain 8 carries as R3 (impact USD 320,000): Alpha 0.30, Beta 0.18, Gamma 0.10, giving expected
+   rework of **96,000**, **57,600** and **32,000**. Risk-adjusted cost is then Alpha **2,096,000**,
+   Beta **2,257,600**, Gamma **2,512,000**; and Alpha is still cheapest by a wide margin, because
+   Gamma's 480,000 premium buys only `96,000 − 32,000 =` **64,000** of avoided expected cost. The
+   premium is **7.5 times** the risk it removes. Add a generous allowance for schedule as well (say
+   Gamma's quality also avoids three weeks of integration delay at 45,000 a week, worth 135,000),
+   and the total avoided is 199,000, still **281,000** short. Expressed as a breakeven: Gamma's
+   premium is worth paying only if its quality avoids more than 480,000 of expected cost, which at
+   Auriga's cost of delay is **10.67 weeks** of delay. That is the professional obligation in a
+   sentence: **a quality weighting is a statement about how much money quality is worth, and if the
+   number it implies cannot be defended against the risks it is supposed to remove, the weighting is
+   a preference, not a judgement.** Two cautions. Quality may buy things that are genuinely outside
+   this arithmetic (safety performance, regulatory standing, workforce capability retention, the
+   ability to be relied on in a crisis), and where it does, those must be **named and, so far as
    possible, priced**, not asserted as a reason the arithmetic does not apply. And the risk mapping
    above is the panel's own assessment; it must be recorded as an assumption with its basis, because
    the whole conclusion is proportional to it.
 
-> **Fig 10.2.1 — The weighting chooses the winner.** Line chart, x-axis the weight given to price from
-> 0 % to 100 % (quality takes the remainder), y-axis weighted evaluation score 60 to 102 points. Three
-> straight lines: Alpha (2,000,000) rising from 62 to 100.00; Beta (2,200,000) rising from 78 to 90.91;
-> Gamma (2,480,000) falling from 92 to 80.65. Three shaded winning bands — Gamma below **57.70 %**,
-> Beta between 57.70 % and **63.77 %**, Alpha above 63.77 % — with the two crossover weightings marked.
-> Two points labelled: **40/60 → Gamma 87.46** and **70/30 → Alpha 88.60**. Side note: same three bids,
-> three winners; fix the weighting before opening. Source: PCI original. Alt text: three straight lines
-> crossing on a score-versus-price-weight chart, dividing the horizontal axis into three shaded regions
-> in which a different bidder achieves the highest score.
+> **Fig 10.2.1 — The weighting chooses the winner.** Line chart, x-axis the weight given to price
+> from 0 % to 100 % (quality takes the remainder), y-axis weighted evaluation score 60 to 102
+> points. Three straight lines: Alpha (2,000,000) rising from 62 to 100.00; Beta (2,200,000) rising
+> from 78 to 90.91; Gamma (2,480,000) falling from 92 to 80.65. Three shaded winning bands (Gamma
+> below **57.70 %**, Beta between 57.70 % and **63.77 %**, Alpha above 63.77 %) with the two
+> crossover weightings marked. Two points labelled: **40/60 → Gamma 87.46** and **70/30 → Alpha
+> 88.60**. Side note: same three bids, three winners; fix the weighting before opening. Source: PCI
+> original. Alt text: three straight lines crossing on a score-versus-price-weight chart, dividing
+> the horizontal axis into three shaded regions in which a different bidder achieves the highest
+> score.
 
-**Normalisation is part of the model, and it moves the answer too.** The ratio convention above is one
-of several. A linear convention — `100 × (1 − (bid − lowest)/lowest)` — gives Alpha 100, Beta **90.00**
-and Gamma **76.00**, because it penalises price differences more steeply. Under it the winner still
-changes with the weighting, but the boundaries move: Beta/Gamma crosses at **50.00 %** and Alpha/Beta at
-**61.54 %**. The Beta/Gamma boundary has shifted by **7.70 percentage points** purely because of a
-choice about arithmetic that most invitation documents do not state. The obligation is therefore wider
-than publishing the weights: **publish the normalisation formula, the scoring scale, the moderation
-process and the treatment of non-compliance**, because each of them is a lever on the outcome.
+**Normalisation is part of the model, and it moves the answer too.** The ratio convention above is
+one of several. A linear convention, `100 × (1 − (bid − lowest)/lowest)`, gives Alpha 100, Beta
+**90.00** and Gamma **76.00**, because it penalises price differences more steeply. Under it the
+winner still changes with the weighting, but the boundaries move: Beta/Gamma crosses at **50.00 %**
+and Alpha/Beta at **61.54 %**. The Beta/Gamma boundary has shifted by **7.70 percentage points**
+purely because of a choice about arithmetic that most invitation documents do not state. The
+obligation is therefore wider than publishing the weights: **publish the normalisation formula, the
+scoring scale, the moderation process and the treatment of non-compliance**, because each of them is
+a lever on the outcome.
 
 **Testing a bid for abnormal pricing.** A price far below the others may be an efficiency the buyer
-should welcome, or a bid that cannot be delivered and will return as claims (Domain 7, KA 7.4.2). The
-test is quantitative and must specify its benchmark, because the benchmark changes the answer. Against
-the *bid spread*, the mean of the three bids is **USD 2,226,666.67** and Alpha is **10.18 %** below it —
-enough to trigger a clarification duty under most published thresholds. Against the *buyer's own
-estimate*, Alpha at 2,000,000 sits exactly on Auriga's target cost, and is not low at all. Both
-readings are true, and the professional response is neither to disqualify nor to ignore: it is to seek a
-structured explanation of the price build-up, satisfy the panel that the scope and the risk are
-actually covered, and record the answer — because if the bid is genuinely under-priced, the buyer will
-meet the difference again as variations, and the record is what makes that argument winnable.
+should welcome, or a bid that cannot be delivered and will return as claims (Domain 7, KA 7.4.2).
+The test is quantitative and must specify its benchmark, because the benchmark changes the answer.
+Against the *bid spread*, the mean of the three bids is **USD 2,226,666.67** and Alpha is **10.18
+%** below it, enough to trigger a clarification duty under most published thresholds. Against the
+*buyer's own estimate*, Alpha at 2,000,000 sits exactly on Auriga's target cost, and is not low at
+all. Both readings are true, and the professional response is neither to disqualify nor to ignore:
+it is to seek a structured explanation of the price build-up, satisfy the panel that the scope and
+the risk are actually covered, and record the answer; because if the bid is genuinely under-priced,
+the buyer will meet the difference again as variations, and the record is what makes that argument
+winnable.
 
 ### 10.2.3 Probity, and fixing the model before the bids are opened
 
-**The obligation.** The evaluation model — weights, normalisation, scoring scale, sub-criteria and their
-weights, the treatment of non-compliant bids — must be **fixed, documented and disclosed to bidders
-before bids are opened**, and not changed afterwards. This is a professional obligation independent of
-whatever a particular jurisdiction's procurement law requires, and 10.2.2 is the reason: the model
-selects the winner, so a model chosen after the prices are known is not an evaluation method but a
-means of choosing a supplier while appearing not to.
+**The obligation.** The evaluation model (weights, normalisation, scoring scale, sub-criteria and
+their weights, the treatment of non-compliant bids) must be **fixed, documented and disclosed to
+bidders before bids are opened**, and not changed afterwards. This is a professional obligation
+independent of whatever a particular jurisdiction's procurement law requires, and 10.2.2 is the
+reason: the model selects the winner, so a model chosen after the prices are known is not an
+evaluation method but a means of choosing a supplier while appearing not to.
 
-**The mechanics that make it real**, in the order they occur. Publish the model in the invitation, with
-sub-criteria weights, not merely the top-level split. Receive bids to a single controlled point with a
-recorded receipt time, and hold them unopened. **Separate the price and quality submissions** and score
-quality *before* any price is seen — this is the single most effective anchoring control available, and
-its absence is the commonest defect in otherwise diligent processes. Have each panel member score
-independently and record those scores before moderation, so that the moderation is a documented
-convergence rather than a consensus with no history. Record the reason for every score, especially the
-low ones, since that is what a debrief and any challenge will test. Manage conflicts of interest by
-declaration and exclusion, before the panel is constituted. And where a change to the model becomes
-genuinely unavoidable — a criterion turns out to be unassessable — **re-run the evaluation under the
-original model as well**, disclose both results, and have the decision taken by an authority senior to
-the panel, because the only defence against a post-hoc change is transparency about what it altered.
+**The mechanics that make it real**, in the order they occur. Publish the model in the invitation,
+with sub-criteria weights, not merely the top-level split. Receive bids to a single controlled point
+with a recorded receipt time, and hold them unopened. **Separate the price and quality submissions**
+and score quality *before* any price is seen. This is the single most effective anchoring control
+available, and its absence is the commonest defect in otherwise diligent processes. Have each panel
+member score independently and record those scores before moderation, so that the moderation is a
+documented convergence rather than a consensus with no history. Record the reason for every score,
+especially the low ones, since that is what a debrief and any challenge will test. Manage conflicts
+of interest by declaration and exclusion, before the panel is constituted. And where a change to the
+model becomes genuinely unavoidable, a criterion turns out to be unassessable, **re-run the
+evaluation under the original model as well**, disclose both results, and have the decision taken by
+an authority senior to the panel, because the only defence against a post-hoc change is transparency
+about what it altered.
 
 **Debriefing, and why it is a commercial instrument.** A specific, evidence-based debrief to unsuccessful
 bidders costs a few hours and buys three things: better bids next time, a market that continues to bid,
@@ -497,25 +508,27 @@ it. A vague debrief buys a challenge.
 
 ### AI in this KA
 
-**Where it earns its place.** Compliance checking a bid against a long requirements schedule and listing
-omissions and qualifications — high-volume, low-judgement, and exactly where human panels tire and miss
-things. Extracting a comparable price build-up from bids submitted in different formats, so that like is
-compared with like. Sweeping the evaluation model across weightings and normalisation conventions to
-reveal how sensitive the outcome is — the arithmetic of 10.2.2 run over hundreds of combinations, which
-is deterministic, verifiable and genuinely informative *if it is done before bids are opened, as model
-design*. Drafting the clarification questions that a price build-up implies.
+**Where it earns its place.** Compliance checking a bid against a long requirements schedule and
+listing omissions and qualifications: high-volume, low-judgement, and exactly where human panels
+tire and miss things. Extracting a comparable price build-up from bids submitted in different
+formats, so that like is compared with like. Sweeping the evaluation model across weightings and
+normalisation conventions to reveal how sensitive the outcome is: the arithmetic of 10.2.2 run over
+hundreds of combinations, which is deterministic, verifiable and genuinely informative *if it is
+done before bids are opened, as model design*. Drafting the clarification questions that a price
+build-up implies.
 
-**Where it must not go.** It must not score quality. A quality score is an expert judgement for which a
-named human must be answerable, and an AI-generated score cannot be defended in a debrief or a
-challenge because no one can explain it in the terms the criterion was written in. It must not be used
-to sweep weightings **after** bids are opened — the same computation that is good model design before
-opening is the mechanism of a rigged evaluation after it, and the difference is entirely one of timing.
-And it must not decide non-compliance, which is a contractual judgement with legal consequences.
+**Where it must not go.** It must not score quality. A quality score is an expert judgement for
+which a named human must be answerable, and an AI-generated score cannot be defended in a debrief or
+a challenge because no one can explain it in the terms the criterion was written in. It must not be
+used to sweep weightings **after** bids are opened. The same computation that is good model design
+before opening is the mechanism of a rigged evaluation after it, and the difference is entirely one
+of timing. And it must not decide non-compliance, which is a contractual judgement with legal
+consequences.
 
-**Verification, concretely.** Any AI-produced compliance list is confirmed against the bid text before
-it affects a score, with the confirmation recorded against the bidder. Any AI-assembled price
-comparison is reconciled to the bidders' own totals to the cent. The evaluation arithmetic itself —
-weighted scores and crossovers — is reproduced by hand for the top two bidders, because it is four
+**Verification, concretely.** Any AI-produced compliance list is confirmed against the bid text
+before it affects a score, with the confirmation recorded against the bidder. Any AI-assembled price
+comparison is reconciled to the bidders' own totals to the cent. The evaluation arithmetic itself
+(weighted scores and crossovers) is reproduced by hand for the top two bidders, because it is four
 multiplications and the whole award rests on it. And the audit trail must show that any weighting
 sensitivity analysis was performed and locked **before** the receipt deadline, with its date.
 
@@ -567,7 +580,7 @@ strongest statement a leader can make about the premium is that it is:
 - D. justified, because 480,000 is only 24 % of Alpha's price
 
 *Rationale:* `480,000/(96,000 − 32,000) = 7.5` (10.2.2). A and D restate inputs as conclusions. C
-overreaches: quality may buy safety, regulatory standing or capability the mapping omits — but those
+overreaches: quality may buy safety, regulatory standing or capability the mapping omits, but those
 must be named, not assumed.
 
 **MCQ 10.2-D `[10.2.3 · Analysis]`** A panel opens the priced envelopes, then confirms the price/quality
@@ -609,31 +622,31 @@ outturn · 10.3.3 supplier governance and performance regimes.*
 
 ### 10.3.1 Contract strategy as risk allocation
 
-**The starting point, cited not re-derived.** Domain 7 KA 7.4.2 sets out the contract models — firm
-fixed price, fixed-price incentive, cost plus fixed fee, cost plus incentive fee, time and materials —
-ordered by who carries cost risk, together with the discipline that **risk transferred is risk priced**.
-That taxonomy is assumed here. What this KA adds is the arithmetic of what each model does to the two
-parties' money at the same actual cost, and what that predicts about behaviour.
+**The starting point, cited not re-derived.** Domain 7 KA 7.4.2 sets out the contract models (firm
+fixed price, fixed-price incentive, cost plus fixed fee, cost plus incentive fee, time and
+materials) ordered by who carries cost risk, together with the discipline that **risk transferred is
+risk priced**. That taxonomy is assumed here. What this KA adds is the arithmetic of what each model
+does to the two parties' money at the same actual cost, and what that predicts about behaviour.
 
-**The four questions a contract strategy must answer.** *Who carries which risk* — and the test of a
-sound allocation is whether the party carrying a risk can actually **influence** it; a risk allocated to
-a party with no control over it is not managed, it is priced, and priced badly. *What the payment
-mechanism rewards* — the marginal-dollar question of 10.3.2. *What happens when things go wrong* — the
-change, notice, suspension, step-in and termination machinery of KA 10.4, which must exist before it is
-needed. *What the buyer is entitled to know* — access, records, audit and progress data granular enough
-to run Domain 7's earned-value system across the boundary, because a supplier reporting percentage
-complete on its own definition supplies comfort, not control.
+**The four questions a contract strategy must answer.** *Who carries which risk*, and the test of a
+sound allocation is whether the party carrying a risk can actually **influence** it; a risk
+allocated to a party with no control over it is not managed, it is priced, and priced badly. *What
+the payment mechanism rewards*: the marginal-dollar question of 10.3.2. *What happens when things go
+wrong*: the change, notice, suspension, step-in and termination machinery of KA 10.4, which must
+exist before it is needed. *What the buyer is entitled to know*: access, records, audit and progress
+data granular enough to run Domain 7's earned-value system across the boundary, because a supplier
+reporting percentage complete on its own definition supplies comfort, not control.
 
 **Reference points, characterised strictly.** A candidate should be able to name where the practice
 of contract form lives, and the naming has to be exact, because this is an area where a familiar
 acronym is routinely mistaken for an authority.
 
-Several families of **standard-form contract** are published and widely used — **NEC**, **FIDIC** and
-**JCT** in the English-language tradition, with established equivalents in civil-law systems. Each is
-a set of **privately published model forms**. None of them is legislation, a regulation or a
+Several families of **standard-form contract** are published and widely used: **NEC**, **FIDIC** and
+**JCT** in the English-language tradition, with established equivalents in civil-law systems. Each
+is a set of **privately published model forms**. None of them is legislation, a regulation or a
 standard in the sense KA 9.1.1 uses the word; none has any standing of its own. A standard form
 matters to a project because **the parties chose it and wrote it into their agreement**, and what it
-then means between them is a question of that contract and of the applicable law — which is a
+then means between them is a question of that contract and of the applicable law, which is a
 question for qualified counsel and not one this book answers. The professional value of knowing the
 families is that each embeds a *default risk allocation and a default administration rhythm*, so
 choosing one is choosing a starting position on the four questions above; the professional error is
@@ -642,8 +655,8 @@ fact amended. None of the publishers has reviewed or endorsed this volume, no fo
 paraphrased here, and no clause is cited anywhere in it.
 
 On the collaboration side, **ISO 44001** is the document usually named as addressing the management
-of collaborative business relationships. It is voluntary guidance — it obliges nobody of itself
-unless an organisation or a contract adopts it — it is named here and not reproduced, and the
+of collaborative business relationships. It is voluntary guidance (it obliges nobody of itself
+unless an organisation or a contract adopts it) it is named here and not reproduced, and the
 alliance and collaborative-contracting material in this KA is written in this book's own words. A
 reader who wants it should obtain the current edition from its publisher.
 
@@ -674,9 +687,9 @@ therefore a claim about allocation, and the allocation can be read off the mecha
 
 | Mechanism | Buyer's share of the marginal dollar | Supplier's share | What the supplier is rewarded for |
 |---|---|---|---|
-| Firm fixed price | 0.00 | 1.00 | Efficiency — and, unless specification and inspection are tight, for reducing quality and scope |
+| Firm fixed price | 0.00 | 1.00 | Efficiency, and, unless specification and inspection are tight, for reducing quality and scope |
 | Cost plus fixed fee | 1.00 | 0.00 | Nothing; cost recovery is certain and effort is not rewarded |
-| Target cost, 70/30 share, **below** the `PTA` | 0.70 | 0.30 | Efficiency, at 30 cents in the dollar — both parties lose on overrun |
+| Target cost, 70/30 share, **below** the `PTA` | 0.70 | 0.30 | Efficiency, at 30 cents in the dollar: both parties lose on overrun |
 | Target cost, **above** the `PTA` | 0.00 | 1.00 | Entitlement, not efficiency: the marginal incentive is a fixed price the supplier never priced |
 
 The last row is Domain 7's point of total assumption read as a behavioural statement rather than a
@@ -713,52 +726,54 @@ becomes an adversarial one for reasons that have nothing to do with the people i
    | 2,600,000 | 2,270,000 / **(330,000)** | 2,750,000 / 150,000 | 2,450,000 / (150,000) |
    | **Expected** | **2,270,000 / 150,000** | **2,270,000 / 150,000** | **2,222,000 / 102,000** |
 
-   The two expected buyer outturns for fixed price and cost-plus are **identical at USD 2,270,000**. The
-   target-cost structure gives the buyer **USD 2,222,000** and the supplier **USD 102,000** — the
+   The two expected buyer outturns for fixed price and cost-plus are **identical at USD 2,270,000**.
+   The target-cost structure gives the buyer **USD 2,222,000** and the supplier **USD 102,000**: the
    buyer's **48,000** saving is exactly the supplier's **48,000** shortfall.
 5. **Interpretation.** Three results, each of which changes how a leader argues about contract type.
 
-   **First: at risk-neutral pricing, transferring risk is free in expectation and buys only variance.**
-   The fixed price and the cost-plus arrangement cost the buyer the same 2,270,000 on average, because
-   the fixed-price premium of `2,120,000 − 2,000,000 =` 120,000 over the efficient cost *is* the expected
-   cost of the risk. What the buyer gains is certainty: the standard deviation of its outturn falls from
-   **USD 230,434** under cost-plus to **zero** under fixed price. That is the honest case for fixed price
-   — not that it is cheaper, but that it converts a distribution into a number — and it is worth paying a
-   real premium for where the buyer's own funding or covenants cannot absorb the variance. A risk-averse
-   supplier will charge one: a 25 % loading on the 120,000 risk element takes the price to
-   **USD 2,300,000**, and that 30,000 is the visible, arguable price of certainty. The corollary is the
-   part buyers forget: the transfer is only as good as the supplier's balance sheet. At the 2,600,000
-   outcome the fixed-price supplier loses **330,000**, and a supplier that cannot absorb that does not
-   deliver a fixed price — it delivers an insolvency and a re-procurement, at which point the risk
-   returns to the buyer with the delay added (KA 10.4.4).
+   **First: at risk-neutral pricing, transferring risk is free in expectation and buys only
+   variance.** The fixed price and the cost-plus arrangement cost the buyer the same 2,270,000 on
+   average, because the fixed-price premium of `2,120,000 − 2,000,000 =` 120,000 over the efficient
+   cost *is* the expected cost of the risk. What the buyer gains is certainty: the standard
+   deviation of its outturn falls from **USD 230,434** under cost-plus to **zero** under fixed
+   price. That is the honest case for fixed price (not that it is cheaper, but that it converts a
+   distribution into a number), and it is worth paying a real premium for where the buyer's own
+   funding or covenants cannot absorb the variance. A risk-averse supplier will charge one: a 25 %
+   loading on the 120,000 risk element takes the price to **USD 2,300,000**, and that 30,000 is the
+   visible, arguable price of certainty. The corollary is the part buyers forget: the transfer is
+   only as good as the supplier's balance sheet. At the 2,600,000 outcome the fixed-price supplier
+   loses **330,000**, and a supplier that cannot absorb that does not deliver a fixed price: it
+   delivers an insolvency and a re-procurement, at which point the risk returns to the buyer with
+   the delay added (KA 10.4.4).
 
-   **Second: an incentive structure does not create value, it reallocates it — unless behaviour
-   changes.** As specified, the target-cost arrangement is simply 48,000 transferred from supplier to
-   buyer, and a supplier that can do this arithmetic will respond by raising the target cost, raising the
-   target fee, or declining. The reason is structural and worth stating precisely: **the target fee is
-   the fee at the target, not the expected fee.** Any real probability of overrun makes the expected fee
-   less than the target fee, so a supplier facing the distribution above expects 102,000 against a
-   requirement of 150,000. Negotiations that stall over "the fee" are usually stalling over this,
-   unnamed.
+   **Second: an incentive structure does not create value, it reallocates it; unless behaviour
+   changes.** As specified, the target-cost arrangement is simply 48,000 transferred from supplier
+   to buyer, and a supplier that can do this arithmetic will respond by raising the target cost,
+   raising the target fee, or declining. The reason is structural and worth stating precisely: **the
+   target fee is the fee at the target, not the expected fee.** Any real probability of overrun
+   makes the expected fee less than the target fee, so a supplier facing the distribution above
+   expects 102,000 against a requirement of 150,000. Negotiations that stall over "the fee" are
+   usually stalling over this, unnamed.
 
    **Third: the behaviour change required can be computed, and it is the number the negotiation is
-   actually about.** Suppose the incentive causes the supplier to shift probability towards the underrun
-   outcome, the remaining mass staying in its original 3:1 ratio between the 2,300,000 and 2,600,000
-   branches. The supplier's expected margin is then `187,500q + 64,500` where `q` is the probability of
-   the 1,850,000 outcome, so it reaches 150,000 at **`q` = 0.456** — the underrun probability must rise
-   from 0.20 to 0.456, a factor of **2.28**. At that point expected cost falls from 2,120,000 to
-   **USD 1,985,600**, so the incentive has created **USD 134,400** of genuine value; the buyer's expected
-   outturn is **USD 2,135,600**, which is 134,400 below the fixed price; and the supplier is exactly
-   indifferent. In other words, **at the point where the supplier will just accept the structure, the
-   buyer captures the entire value created.** That is the real subject of the negotiation: not the fee in
-   the abstract, but how the 134,400 is split, and a buyer who understands this can concede part of it
-   knowing precisely what it is buying — a supplier with an actual reason to be efficient. The
-   professional cautions are three. The distribution is the *supplier's* assessment and it has every
-   incentive to shade it pessimistically, so it must be tested against comparable outturns rather than
-   accepted. The behaviour shift is a hypothesis, not a fact; the structure should therefore carry
-   measurable efficiency commitments rather than resting on the incentive alone. And none of this
-   arithmetic survives contact with a badly defined scope: on undefined scope every mechanism converges
-   on cost-plus with a dispute attached, whatever the contract says (Domain 7, KA 7.4.2).
+   actually about.** Suppose the incentive causes the supplier to shift probability towards the
+   underrun outcome, the remaining mass staying in its original 3:1 ratio between the 2,300,000 and
+   2,600,000 branches. The supplier's expected margin is then `187,500q + 64,500` where `q` is the
+   probability of the 1,850,000 outcome, so it reaches 150,000 at **`q` = 0.456**: the underrun
+   probability must rise from 0.20 to 0.456, a factor of **2.28**. At that point expected cost falls
+   from 2,120,000 to **USD 1,985,600**, so the incentive has created **USD 134,400** of genuine
+   value; the buyer's expected outturn is **USD 2,135,600**, which is 134,400 below the fixed price;
+   and the supplier is exactly indifferent. In other words, **at the point where the supplier will
+   just accept the structure, the buyer captures the entire value created.** That is the real
+   subject of the negotiation: not the fee in the abstract, but how the 134,400 is split, and a
+   buyer who understands this can concede part of it knowing precisely what it is buying, a supplier
+   with an actual reason to be efficient. The professional cautions are three. The distribution is
+   the *supplier's* assessment and it has every incentive to shade it pessimistically, so it must be
+   tested against comparable outturns rather than accepted. The behaviour shift is a hypothesis, not
+   a fact; the structure should therefore carry measurable efficiency commitments rather than
+   resting on the incentive alone. And none of this arithmetic survives contact with a badly defined
+   scope: on undefined scope every mechanism converges on cost-plus with a dispute attached,
+   whatever the contract says (Domain 7, KA 7.4.2).
 
 ### 10.3.3 Supplier governance and performance regimes
 
@@ -770,11 +785,11 @@ decisions it must take, and its sanctions are too small to change anyone's behav
 **Governing across the boundary.** Domain 3's structures apply, with three additions specific to a
 contract. Decision rights must be **mapped on both sides**, with the threshold mismatch of 10.1.1
 resolved explicitly. The governance cadence must be set against the decision rate, not the reporting
-rhythm: a supplier review every eight weeks with a two-week paper deadline imposes
-`E[wait] = 8/2 + 2 =` **6 weeks** on every decision it owns (Domain 3, KA 3.2.3), which is longer than
-most delivery problems will politely wait, so an out-of-cycle route with a named decision-maker on each
-side is not a refinement but a requirement. And the buyer must specify the **data** it receives — cost
-and progress at a granularity that lets its own earned-value system run across the boundary — because a
+rhythm: a supplier review every eight weeks with a two-week paper deadline imposes `E[wait] = 8/2 +
+2 =` **6 weeks** on every decision it owns (Domain 3, KA 3.2.3), which is longer than most delivery
+problems will politely wait, so an out-of-cycle route with a named decision-maker on each side is
+not a refinement but a requirement. And the buyer must specify the **data** it receives (cost and
+progress at a granularity that lets its own earned-value system run across the boundary), because a
 governance body reading the supplier's own summary is governing the summary.
 
 **Performance regimes: what a cap actually does.** Service credits, liquidated sums for late delivery
@@ -782,44 +797,44 @@ and KPI-linked fee adjustments all work by making failure expensive. Whether the
 a comparison almost nobody makes: **the cap against the supplier's cost of compliance.**
 
 Auriga's five-year support contract runs at **USD 2,200,000** a year with service credits capped at
-**5 %** — **USD 110,000**. Meeting the availability target requires the supplier to hold a standby crew
-costing **USD 180,000** a year. The supplier's arithmetic is immediate: fail, pay the cap, and save
-**USD 70,000**. The regime has not deterred non-performance; it has **priced** it, and at a discount.
-Two different caps follow from two different purposes, and confusing them is the design error. For the
-credits to *deter*, the cap must exceed the cost of compliance — at least `180,000/2,200,000 =`
-**8.18 %** of contract value. For the credits to *compensate*, they must cover the buyer's own loss from
-unavailability, assessed at **USD 320,000** a year, which needs `320,000/2,200,000 =` **14.55 %**. At the
-5 % cap actually agreed, the credits recover **34.38 %** of the buyer's loss and deter nothing. The
-professional discipline is to state which purpose the regime serves, compute the cap that purpose
-requires, and — where the required cap is unobtainable in negotiation — record that the residual
-exposure is the buyer's, so that it appears in the risk register at its real size rather than being
-assumed away because "there are service credits".
+**5 %**: **USD 110,000**. Meeting the availability target requires the supplier to hold a standby
+crew costing **USD 180,000** a year. The supplier's arithmetic is immediate: fail, pay the cap, and
+save **USD 70,000**. The regime has not deterred non-performance; it has **priced** it, and at a
+discount. Two different caps follow from two different purposes, and confusing them is the design
+error. For the credits to *deter*, the cap must exceed the cost of compliance, at least
+`180,000/2,200,000 =` **8.18 %** of contract value. For the credits to *compensate*, they must cover
+the buyer's own loss from unavailability, assessed at **USD 320,000** a year, which needs
+`320,000/2,200,000 =` **14.55 %**. At the 5 % cap actually agreed, the credits recover **34.38 %**
+of the buyer's loss and deter nothing. The professional discipline is to state which purpose the
+regime serves, compute the cap that purpose requires, and (where the required cap is unobtainable in
+negotiation), record that the residual exposure is the buyer's, so that it appears in the risk
+register at its real size rather than being assumed away because "there are service credits".
 
 **Relationship management, and why it is not softness.** Suppliers allocate their best people by
-judgement, not by contract, and they allocate them away from clients who are slow to pay, slow to decide,
-late with access and inclined to treat every issue as a breach. The behaviours that keep a supplier's
-A-team on a project are concrete and cheap: decide inside the contractual period, pay to terms, give
-access and information when promised, escalate issues before they become entitlements, and keep the
-commercial conversation separate from the delivery one so that neither poisons the other. **A buyer who
-is difficult to work with pays for it in the next tender and in every discretionary decision the supplier
-takes in between** — a real cost that appears in no report.
+judgement, not by contract, and they allocate them away from clients who are slow to pay, slow to
+decide, late with access and inclined to treat every issue as a breach. The behaviours that keep a
+supplier's A-team on a project are concrete and cheap: decide inside the contractual period, pay to
+terms, give access and information when promised, escalate issues before they become entitlements,
+and keep the commercial conversation separate from the delivery one so that neither poisons the
+other. **A buyer who is difficult to work with pays for it in the next tender and in every
+discretionary decision the supplier takes in between**: a real cost that appears in no report.
 
 ### AI in this KA
 
 **Where it earns its place.** Contract analytics at scale: extracting obligations, notice periods,
 liability caps, change mechanisms and termination rights from a portfolio of agreements into a
 structured obligations register, and flagging inconsistencies between the main agreement and its
-schedules. Modelling the payment mechanism across cost outcomes — the whole of 10.3.2, swept over
-share ratios, ceilings and distributions — which is deterministic and tedious. Monitoring supplier
+schedules. Modelling the payment mechanism across cost outcomes (the whole of 10.3.2, swept over
+share ratios, ceilings and distributions), which is deterministic and tedious. Monitoring supplier
 performance data for trend breaks. Comparing a supplier's reported progress with its own historical
 reporting patterns to flag optimistic drift.
 
-**Where it must not go.** It must not give legal or commercial advice, and it must not draft a clause
-that is signed without qualified review; the boundary Domain 7 states holds here in full. It must not
-set a liability cap, a share ratio or a target cost — those are risk-appetite decisions belonging to
-accountable people. It must not generate the supplier's cost distribution: a model asked for
-probabilities will supply them, and they will look exactly like data. And an AI reading of a clause is a
-summary; the obligation is the clause.
+**Where it must not go.** It must not give legal or commercial advice, and it must not draft a
+clause that is signed without qualified review; the boundary Domain 7 states holds here in full. It
+must not set a liability cap, a share ratio or a target cost. Those are risk-appetite decisions
+belonging to accountable people. It must not generate the supplier's cost distribution: a model
+asked for probabilities will supply them, and they will look exactly like data. And an AI reading of
+a clause is a summary; the obligation is the clause.
 
 **Verification, concretely.** Every extracted obligation is cited to a clause number and spot-checked at
 a stated sample rate before the register is relied on. Fee, share and `PTA` arithmetic is reproduced by
@@ -850,9 +865,10 @@ risk-neutral firm fixed price is:
 - C. USD 2,120,000
 - D. USD 2,450,000
 
-*Rationale:* `E[cost] = 2,120,000`, so the price is `2,120,000 + 150,000 = 2,270,000` (10.3.2). A adds
-the margin to the *target* cost rather than the expected cost — the commonest error, and it understates
-by 120,000. C is the expected cost with no margin. D is the ceiling of the target-cost alternative.
+*Rationale:* `E[cost] = 2,120,000`, so the price is `2,120,000 + 150,000 = 2,270,000` (10.3.2). A
+adds the margin to the *target* cost rather than the expected cost, the commonest error, and it
+understates by 120,000. C is the expected cost with no margin. D is the ceiling of the target-cost
+alternative.
 
 **MCQ 10.3-B `[10.3.2 · Analysis]`** Under a target-cost contract with a 70/30 share, above the point of
 total assumption the buyer's and supplier's shares of the next dollar of cost are:
@@ -874,7 +890,7 @@ under fixed price. The correct conclusion is that at risk-neutral pricing, fixed
 - D. eliminates the cost risk from the project
 
 *Rationale:* The premium equals the expected cost of the risk, so nothing is gained in expectation
-except certainty (10.3.2). D contradicts the marginal-dollar identity — the risk is allocated, not
+except certainty (10.3.2). D contradicts the marginal-dollar identity. The risk is allocated, not
 removed, and returns if the supplier fails.
 
 **MCQ 10.3-D `[10.3.2 · Analysis]`** As specified, the target-cost structure gives the buyer an expected
@@ -920,28 +936,28 @@ dual-split and dual-qualified sourcing.*
 
 ### 10.4.1 Claims awareness and the anatomy of an entitlement
 
-**The professional position.** A project leader is not a lawyer and should not act as one. What a leader
-must be able to do is recognise a claim situation as it forms, preserve the record that will decide it,
-and quantify the exposure well enough to escalate it accurately. **Claims are decided on
-contemporaneous records, and the records are made — or not made — long before anyone uses the word
+**The professional position.** A project leader is not a lawyer and should not act as one. What a
+leader must be able to do is recognise a claim situation as it forms, preserve the record that will
+decide it, and quantify the exposure well enough to escalate it accurately. **Claims are decided on
+contemporaneous records, and the records are made (or not made) long before anyone uses the word
 claim.**
 
-**The four elements of a claim**, all of which must be present. **Entitlement** — an identified
-contractual basis: an instruction, a variation, a relevant event, a breach. Without it the merits do not
-matter. **Causation** — a demonstrated link from that basis to the effect claimed, which is where most
-claims are actually won or lost, because concurrent causes and the claimant's own delays are pleaded
-against it. **Quantum** — the money, built up by head of cost and evidenced. **Notice** — given in the
-form and within the period the contract requires, which in many contracts is a precondition rather than
-a courtesy.
+**The four elements of a claim**, all of which must be present. **Entitlement**, an identified
+contractual basis: an instruction, a variation, a relevant event, a breach. Without it the merits do
+not matter. **Causation.** A demonstrated link from that basis to the effect claimed, which is where
+most claims are actually won or lost, because concurrent causes and the claimant's own delays are
+pleaded against it. **Quantum.** The money, built up by head of cost and evidenced. **Notice.**
+Given in the form and within the period the contract requires, which in many contracts is a
+precondition rather than a courtesy.
 
-**The heads of cost, and what each requires.** *Direct cost* — additional labour, plant and materials,
-evidenced by records at the time. *Prolongation* — time-related site and management costs for the period
-of extended duration; requires a demonstrated critical-path effect (Domain 6), not merely a late
-finish. *Disruption* — lost productivity on work that was not itself changed, the hardest head to prove
-and usually established by a **measured mile**: comparing productivity in an unimpacted period with the
-impacted one. *Finance cost* on the funded difference, where the contract or the governing law allows it.
-*Overhead and profit*, at the contractual percentage. Acceleration and mitigation costs, where
-instructed or reasonably incurred.
+**The heads of cost, and what each requires.** *Direct cost*: additional labour, plant and
+materials, evidenced by records at the time. *Prolongation*: time-related site and management costs
+for the period of extended duration; requires a demonstrated critical-path effect (Domain 6), not
+merely a late finish. *Disruption*, lost productivity on work that was not itself changed, the
+hardest head to prove and usually established by a **measured mile**: comparing productivity in an
+unimpacted period with the impacted one. *Finance cost* on the funded difference, where the contract
+or the governing law allows it. *Overhead and profit*, at the contractual percentage. Acceleration
+and mitigation costs, where instructed or reasonably incurred.
 
 **Worked example 10.4.1 — a variation claim, and what a notice provision puts at risk.**
 
@@ -959,28 +975,29 @@ instructed or reasonably incurred.
 3. **Substitution.** Labour `240 × 130.625`; disruption hours `1,204/0.86 = 1,400`, so extra
    `1,400 − 1,204 = 196` hours at 130.625; prolongation `1.5 × 14,000`. Subtotal then `× 1.12`.
 4. **Result.** Labour **USD 31,350.00**; materials 18,400; prolongation **USD 21,000**; disruption
-   **USD 25,602.50**. Subtotal **USD 96,352.50**; overhead and profit **USD 11,562.30**; **total claim
-   USD 107,914.80** (≈ SAR 404,681 indicatively). The heads exposed to the notice bar total
-   **USD 52,194.80** — **48.37 %** of the claim — leaving **USD 55,720.00** unaffected.
-5. **Interpretation.** Nearly half of a properly constructed claim is at risk from a diary entry nobody
-   made, and that is the single most useful thing a delivery leader can know about claims: **notice
-   provisions destroy more value than negotiation does, and they do it silently.** The lesson runs in
-   both directions, which is what makes it a professional rather than a tactical point. As a *seller*,
-   the discipline is a notice register — every instruction, every relevant event, logged on the day with
-   its notice deadline computed, because the 28 days runs from the event and not from the moment the
-   cost becomes obvious. As a *buyer*, resisting a genuine entitlement purely on a time bar buys a
-   number and sells a relationship: the supplier's response is predictable and expensive — its A-team
-   moves, its pricing of every subsequent variation stiffens, and its own notices thereafter arrive on
-   day one for everything, generating administrative load out of all proportion to the 52,194.80. Three
-   further cautions. **Whether a notice provision of this kind operates as a condition precedent varies
-   by jurisdiction and by the law of the contract**; in some legal systems such bars are enforced
-   strictly, in others they may be read down or fall foul of statutory controls, and nothing here is
-   legal advice or a statement of any particular jurisdiction's law. The measured-mile figure is only as
-   good as the comparison period — an unimpacted baseline drawn from a different crew, season or work
-   type is not a measured mile, and this is the head most often successfully challenged. And the
-   productivity arithmetic must be done the right way round: dividing by 0.86 (giving 196 extra hours)
-   is correct, whereas multiplying by 0.14 gives 168.56 hours and understates the claim by 27.44 hours,
-   or **USD 3,584.35** before overhead and profit.
+   **USD 25,602.50**. Subtotal **USD 96,352.50**; overhead and profit **USD 11,562.30**; **total
+   claim USD 107,914.80** (≈ SAR 404,681 indicatively). The heads exposed to the notice bar total
+   **USD 52,194.80**, **48.37 %** of the claim, leaving **USD 55,720.00** unaffected.
+5. **Interpretation.** Nearly half of a properly constructed claim is at risk from a diary entry
+   nobody made, and that is the single most useful thing a delivery leader can know about claims:
+   **notice provisions destroy more value than negotiation does, and they do it silently.** The
+   lesson runs in both directions, which is what makes it a professional rather than a tactical
+   point. As a *seller*, the discipline is a notice register: every instruction, every relevant
+   event, logged on the day with its notice deadline computed, because the 28 days runs from the
+   event and not from the moment the cost becomes obvious. As a *buyer*, resisting a genuine
+   entitlement purely on a time bar buys a number and sells a relationship: the supplier's response
+   is predictable and expensive, its A-team moves, its pricing of every subsequent variation
+   stiffens, and its own notices thereafter arrive on day one for everything, generating
+   administrative load out of all proportion to the 52,194.80. Three further cautions. **Whether a
+   notice provision of this kind operates as a condition precedent varies by jurisdiction and by the
+   law of the contract**; in some legal systems such bars are enforced strictly, in others they may
+   be read down or fall foul of statutory controls, and nothing here is legal advice or a statement
+   of any particular jurisdiction's law. The measured-mile figure is only as good as the comparison
+   period, an unimpacted baseline drawn from a different crew, season or work type is not a measured
+   mile, and this is the head most often successfully challenged. And the productivity arithmetic
+   must be done the right way round: dividing by 0.86 (giving 196 extra hours) is correct, whereas
+   multiplying by 0.14 gives 168.56 hours and understates the claim by 27.44 hours, or **USD
+   3,584.35** before overhead and profit.
 
 ### 10.4.2 Dispute avoidance and the escalation ladder
 
@@ -989,64 +1006,66 @@ irrecoverable cost of resolving one is compared with the amount in issue only af
 fight has already been taken.
 
 **The ladder, and what each rung costs.** Direct negotiation between the people accountable for
-delivery; then structured negotiation between executives outside the project; then a neutral evaluation
-or mediation; then a determinative but interim process — adjudication, expert determination or a dispute
-board, depending on the contract and the jurisdiction; then arbitration or litigation. Cost and elapsed
-time rise by roughly an order of magnitude across the ladder, and **the relationship's usable life ends
-somewhere around the fourth rung**, which matters when the supplier still has work to do.
+delivery; then structured negotiation between executives outside the project; then a neutral
+evaluation or mediation; then a determinative but interim process: adjudication, expert
+determination or a dispute board, depending on the contract and the jurisdiction; then arbitration
+or litigation. Cost and elapsed time rise by roughly an order of magnitude across the ladder, and
+**the relationship's usable life ends somewhere around the fourth rung**, which matters when the
+supplier still has work to do.
 
 **Worked example 10.4.2 — the arithmetic of settling.**
 
-1. **Setup.** A **USD 400,000** claim is in dispute at week 30 of Auriga. Settlement now at **55 %** —
-   USD 220,000 — is achievable, with **USD 15,000** of internal and advisory cost and **3 weeks** to
+1. **Setup.** A **USD 400,000** claim is in dispute at week 30 of Auriga. Settlement now at **55 %**
+   (USD 220,000) is achievable, with **USD 15,000** of internal and advisory cost and **3 weeks** to
    conclude. The alternative is arbitration: the buyer's advisers assess the outcomes as the claim
    largely upheld (400,000) with probability **0.55**, partly upheld (180,000) with **0.30**, and
-   dismissed (nil) with **0.15**; the buyer's own **irrecoverable** costs are **USD 340,000** whatever
-   the result, and the process takes **78 weeks**.
+   dismissed (nil) with **0.15**; the buyer's own **irrecoverable** costs are **USD 340,000**
+   whatever the result, and the process takes **78 weeks**.
 2. **Formula.** Expected award `= Σ p × award`. Expected total `=` expected award `+` irrecoverable
    cost. Compare with the negotiated total.
 3. **Substitution.** `0.55 × 400,000 + 0.30 × 180,000 + 0.15 × 0 = 220,000 + 54,000 + 0`. Expected total
    `= 274,000 + 340,000`. Negotiated total `= 220,000 + 15,000`.
-4. **Result.** Expected award **USD 274,000** — **68.50 %** of the claim, above the 55 % on offer.
-   Expected total cost of arbitrating **USD 614,000** against **USD 235,000** for settling: a saving of
-   **USD 379,000**, or **61.73 %**, and 75 weeks of elapsed time.
-5. **Interpretation.** The decisive figure is not the 379,000 but the structural one behind it: **the
-   irrecoverable cost of the formal route, USD 340,000, exceeds the entire negotiated settlement of
-   235,000.** On these numbers the buyer cannot come out ahead by arbitrating *even if it wins
-   outright*, because a total victory saves the 235,000 it would have paid and spends 340,000 to do it —
-   a net loss of 105,000 in the best case. That is the arithmetic that should be on the table before
-   anyone instructs anybody, and it is very often not, because the comparison usually made is between
-   the settlement and the *expected award* (274,000 against 220,000), which favours fighting and omits
-   the cost of doing so. Three cautions keep this honest. Costs recovery, interest and the availability
-   of interim determinative processes **vary substantially by jurisdiction and by forum**, and the
-   340,000 irrecoverable assumption must be replaced with advice specific to the contract's governing
-   law — this is illustrative arithmetic, not a rule. Some disputes should be fought despite the
-   arithmetic: where a point of principle will otherwise be conceded across a portfolio of contracts,
-   where a regulator or auditor requires the matter tested, or where settling would create a precedent
-   worth more than 379,000 to the other side. And the 78 weeks carries its own cost beyond money — the
-   management attention consumed, and the supplier's behaviour on the remaining work while the matter is
-   live.
+4. **Result.** Expected award **USD 274,000**: **68.50 %** of the claim, above the 55 % on offer.
+   Expected total cost of arbitrating **USD 614,000** against **USD 235,000** for settling: a saving
+   of **USD 379,000**, or **61.73 %**, and 75 weeks of elapsed time.
+5. **Interpretation.** The decisive figure is not the 379,000 but the structural one behind it:
+   **the irrecoverable cost of the formal route, USD 340,000, exceeds the entire negotiated
+   settlement of 235,000.** On these numbers the buyer cannot come out ahead by arbitrating *even if
+   it wins outright*, because a total victory saves the 235,000 it would have paid and spends
+   340,000 to do it, a net loss of 105,000 in the best case. That is the arithmetic that should be
+   on the table before anyone instructs anybody, and it is very often not, because the comparison
+   usually made is between the settlement and the *expected award* (274,000 against 220,000), which
+   favours fighting and omits the cost of doing so. Three cautions keep this honest. Costs recovery,
+   interest and the availability of interim determinative processes **vary substantially by
+   jurisdiction and by forum**, and the 340,000 irrecoverable assumption must be replaced with
+   advice specific to the contract's governing law. This is illustrative arithmetic, not a rule.
+   Some disputes should be fought despite the arithmetic: where a point of principle will otherwise
+   be conceded across a portfolio of contracts, where a regulator or auditor requires the matter
+   tested, or where settling would create a precedent worth more than 379,000 to the other side. And
+   the 78 weeks carries its own cost beyond money: the management attention consumed, and the
+   supplier's behaviour on the remaining work while the matter is live.
 
 **The avoidance machinery, which is cheaper than any rung of the ladder.** A single agreed set of
-records, maintained jointly, so that the facts are not themselves in dispute. Early-warning obligations
-running both ways with short periods, so that problems arrive as information rather than as
-entitlements. A change mechanism fast enough to be used — Domain 4's integrated change control across
-the boundary, with the threshold mismatch of 10.1.1 resolved. A named commercial lead on each side
-with authority to settle at a stated value, and an out-of-cycle route above it (Domain 3, KA 3.3.3).
-And a scheduled joint review of open commercial items, so that they are closed at fifty rather than
-argued at five hundred.
+records, maintained jointly, so that the facts are not themselves in dispute. Early-warning
+obligations running both ways with short periods, so that problems arrive as information rather than
+as entitlements. A change mechanism fast enough to be used: Domain 4's integrated change control
+across the boundary, with the threshold mismatch of 10.1.1 resolved. A named commercial lead on each
+side with authority to settle at a stated value, and an out-of-cycle route above it (Domain 3, KA
+3.3.3). And a scheduled joint review of open commercial items, so that they are closed at fifty
+rather than argued at five hundred.
 
 ### 10.4.3 Ethical and sustainable sourcing
 
-**The obligation, stated carefully.** Buyers increasingly carry duties in respect of conditions in their
-supply chains — labour standards and forced labour, health and safety, environmental impact, anti-bribery
-and sanctions compliance, and the accuracy of what they publish about all of it. Several jurisdictions
-have enacted human-rights, modern-slavery or supply-chain due-diligence legislation, and their scope,
-thresholds and reporting requirements **differ materially**; the applicable regime depends on where the
-buyer is established, where it sells, and the contract's governing law. Nothing in this section states
-the requirements of any particular jurisdiction, and none of it is legal advice. What is portable is the
-*method*: risk-tier the supply base, apply proportionate diligence, contract for the standard and for
-the right to verify it, and act on what verification finds.
+**The obligation, stated carefully.** Buyers increasingly carry duties in respect of conditions in
+their supply chains: labour standards and forced labour, health and safety, environmental impact,
+anti-bribery and sanctions compliance, and the accuracy of what they publish about all of it.
+Several jurisdictions have enacted human-rights, modern-slavery or supply-chain due-diligence
+legislation, and their scope, thresholds and reporting requirements **differ materially**; the
+applicable regime depends on where the buyer is established, where it sells, and the contract's
+governing law. Nothing in this section states the requirements of any particular jurisdiction, and
+none of it is legal advice. What is portable is the *method*: risk-tier the supply base, apply
+proportionate diligence, contract for the standard and for the right to verify it, and act on what
+verification finds.
 
 **Reference points, and the distinction that must not be blurred.** The *method* named above is not
 this book's invention, and a candidate should be able to say where it comes from. Two international
@@ -1054,22 +1073,22 @@ instruments are the usual reference points: the **UN Guiding Principles on Busin
 Rights** and the **OECD Guidelines for Multinational Enterprises**, together with the OECD's
 associated due-diligence guidance. Both are **non-binding international instruments**: they are
 addressed to states and, through them, to enterprises as expectations of conduct, and they impose no
-obligation of themselves on any project company. What they supply is the shape of the method — a
-risk-tiered rather than uniform diligence, diligence proportionate to severity and likelihood of harm
-rather than to contract value, a **remediation-first** response, and attention to the people affected
-rather than only to the buyer's exposure — and that shape is why the paragraph above is written as it
-is.
+obligation of themselves on any project company. What they supply is the shape of the method: a
+risk-tiered rather than uniform diligence, diligence proportionate to severity and likelihood of
+harm rather than to contract value, a **remediation-first** response, and attention to the people
+affected rather than only to the buyer's exposure. And and that shape is why the paragraph above is
+written as it is.
 
 **They are a different kind of thing from the national due-diligence legislation this section has
 already mentioned, and conflating the two is the error to avoid.** Legislation applies on its own
 terms within its own jurisdiction; a non-binding instrument does not, however widely it is cited or
 however often a contract refers to it. Which regimes reach a given buyer, on what thresholds, with
-what reporting, remains a question for qualified counsel — nothing here states the position anywhere,
+what reporting, remains a question for qualified counsel: nothing here states the position anywhere,
 and adopting the method described below is a professional and commercial choice rather than a
 compliance conclusion.
 
 On the procurement side, **ISO 20400** is the document usually named as addressing sustainable
-procurement. It is **voluntary guidance and not a certifiable requirements standard** — there is no
+procurement. It is **voluntary guidance and not a certifiable requirements standard**. There is no
 conformity to be claimed against it in the way there is against a requirements standard, and an
 organisation stating that it "follows" it has described an intention rather than evidenced an
 outcome. All three documents are named here and not reproduced; none of their publishers has
@@ -1077,8 +1096,8 @@ reviewed or endorsed this volume; and a reader who wants any of them should obta
 version from its publisher.
 
 **What "contracting for it" means concretely.** A stated standard the supplier must meet, not an
-aspiration. A right of audit — including of sub-tiers — with a duty to disclose them, which is also the
-control that makes 10.4.4's resilience analysis possible. A duty to notify adverse findings. A
+aspiration. A right of audit (including of sub-tiers) with a duty to disclose them, which is also
+the control that makes 10.4.4's resilience analysis possible. A duty to notify adverse findings. A
 remediation-first response, because terminating a supplier where a labour abuse is found removes the
 buyer's leverage and frequently harms the workers concerned; termination belongs at the end of an
 escalation, not the start. And flow-down obligations, since the risk concentrates where the buyer's
@@ -1086,34 +1105,34 @@ visibility ends.
 
 **The arithmetic, and its honest limits.** Consider a proportionate programme across Auriga's supply
 base: **34** first-tier suppliers desktop-screened at **USD 1,200** each, and the **6** assessed as
-highest risk audited on site at **USD 14,000** each — a programme cost of **USD 124,800**. Against it:
-the assessed probability of a material breach in the supply chain over a three-year window is **0.08**,
-with a consequence — remediation, re-procurement, contractual and reputational cost — assessed at
-**USD 1,900,000**, giving an expected exposure of **USD 152,000** (`EMV`, Domain 8 KA 8.2.2). If the
-programme is **70 %** effective at detecting and preventing, it avoids `0.70 × 152,000 =`
-**USD 106,400** — which is **USD 18,400 less** than it costs.
+highest risk audited on site at **USD 14,000** each, a programme cost of **USD 124,800**. Against
+it: the assessed probability of a material breach in the supply chain over a three-year window is
+**0.08**, with a consequence (remediation, re-procurement, contractual and reputational cost)
+assessed at **USD 1,900,000**, giving an expected exposure of **USD 152,000** (`EMV`, Domain 8 KA
+8.2.2). If the programme is **70 %** effective at detecting and preventing, it avoids `0.70 ×
+152,000 =` **USD 106,400**, which is **USD 18,400 less** than it costs.
 
-That result is uncomfortable and it is stated deliberately, because pretending otherwise is worse. Three
-things follow. First, the breakevens are useful and should be in the paper: the programme pays at a
-detection effectiveness above **82.11 %**, or at a breach probability above **9.38 %** — both entirely
-plausible in higher-risk categories and geographies, which is precisely why the programme should be
-**risk-tiered rather than uniform**, concentrating spend where the probability is highest instead of
-screening everyone equally. Second, `EMV` is a poor instrument here for the reason Domain 8 gives: it is
-an average of outcomes that will not individually occur, and the consequence distribution for a serious
-supply-chain finding is heavily skewed — the 1,900,000 is a mean whose upper tail includes losing a
-licence, a listing or a market. A decision taken on the mean of a fat-tailed distribution is a decision
-taken on the wrong statistic. Third, and decisively: **where legal duties apply, this is not an
-expected-value decision at all.** Compliance is not optional because the arithmetic is marginal, and
-where the obligation is one of values rather than law, the organisation should say so plainly rather
-than construct a business case it does not believe. The arithmetic's proper job is to allocate the
-programme's effort, not to decide whether to have one.
+That result is uncomfortable and it is stated deliberately, because pretending otherwise is worse.
+Three things follow. First, the breakevens are useful and should be in the paper: the programme pays
+at a detection effectiveness above **82.11 %**, or at a breach probability above **9.38 %**, both
+entirely plausible in higher-risk categories and geographies, which is precisely why the programme
+should be **risk-tiered rather than uniform**, concentrating spend where the probability is highest
+instead of screening everyone equally. Second, `EMV` is a poor instrument here for the reason Domain
+8 gives: it is an average of outcomes that will not individually occur, and the consequence
+distribution for a serious supply-chain finding is heavily skewed, the 1,900,000 is a mean whose
+upper tail includes losing a licence, a listing or a market. A decision taken on the mean of a
+fat-tailed distribution is a decision taken on the wrong statistic. Third, and decisively: **where
+legal duties apply, this is not an expected-value decision at all.** Compliance is not optional
+because the arithmetic is marginal, and where the obligation is one of values rather than law, the
+organisation should say so plainly rather than construct a business case it does not believe. The
+arithmetic's proper job is to allocate the programme's effort, not to decide whether to have one.
 
 ### 10.4.4 Supply resilience: single, dual-split and dual-qualified sourcing
 
-**The principle.** Resilience is bought, and the thing being bought is the ability to keep going when a
-supplier cannot deliver. The mistake made almost universally is to treat "two suppliers" as the product
-being purchased, when what actually reduces exposure is **a qualified, exercisable alternative** — and
-those are not the same purchase.
+**The principle.** Resilience is bought, and the thing being bought is the ability to keep going
+when a supplier cannot deliver. The mistake made almost universally is to treat "two suppliers" as
+the product being purchased, when what actually reduces exposure is **a qualified, exercisable
+alternative**; and those are not the same purchase.
 
 ```
 Expected cost of disruption = Σ P(state) × consequence(state)
@@ -1125,17 +1144,17 @@ Breakeven disruption probability  p* = extra certain cost ÷ reduction in conseq
 
 1. **Setup.** Domain 8 carries controller lead-time slip as R1. Three structures are on the table.
    **Option 1, single source:** supplier A at **USD 9,600** per unit, one supplier qualified at
-   **USD 40,000**. **Option 2, dual source with a 60/40 volume split:** A at 9,600 and B at
-   **USD 10,600**, both qualified (**USD 80,000**), plus **USD 20,000** to hold two build
-   configurations to a common specification. **Option 3, single award with a qualified alternate:** full
-   volume to A at 9,600, both suppliers qualified (80,000), and **USD 25,000** a year to keep the
-   alternate exercisable — specification maintenance and an annual sample build. Each supplier has an
+   **USD 40,000**. **Option 2, dual source with a 60/40 volume split:** A at 9,600 and B at **USD
+   10,600**, both qualified (**USD 80,000**), plus **USD 20,000** to hold two build configurations
+   to a common specification. **Option 3, single award with a qualified alternate:** full volume to
+   A at 9,600, both suppliers qualified (80,000), and **USD 25,000** a year to keep the alternate
+   exercisable, specification maintenance and an annual sample build. Each supplier has an
    independent **0.18** probability of a disruption in the delivery window. Consequences: a single
-   supplier disrupted with no qualified alternate requires a 14-week re-source —
-   `14 × 45,000 = 630,000` of delay plus 120,000 of re-qualification and rework plus a 150,000
-   contractual step — **USD 900,000**; under the dual split, one supplier disrupted means a 3-week
-   surge ramp on the other, `3 × 45,000 = 135,000` plus a 60,000 surge premium — **USD 195,000**; with
-   a qualified alternate, activation takes 5 weeks — `5 × 45,000 = 225,000` plus 70,000 of switching and
+   supplier disrupted with no qualified alternate requires a 14-week re-source (`14 × 45,000 =
+   630,000` of delay plus 120,000 of re-qualification and rework plus a 150,000 contractual step)
+   **USD 900,000**; under the dual split, one supplier disrupted means a 3-week surge ramp on the
+   other, `3 × 45,000 = 135,000` plus a 60,000 surge premium (**USD 195,000**; with a qualified
+   alternate, activation takes 5 weeks) `5 × 45,000 = 225,000` plus 70,000 of switching and
    re-qualification — **USD 295,000**.
 2. **Formula.** Certain cost `= units × unit price + qualification + holding cost`. Expected disruption
    `= Σ P(state) × consequence`, with `P(exactly one of two) = 2p(1 − p)` and `P(both) = p²` under
@@ -1148,74 +1167,76 @@ Breakeven disruption probability  p* = extra certain cost ÷ reduction in conseq
 
    | | Certain cost (USD) | Expected disruption (USD) | Total expected (USD) |
    |---|---|---|---|
-   | Option 1 — single source | 846,400 | 162,000 | **1,008,400** |
-   | Option 2 — dual source, 60/40 split | 940,000 | 86,724 | **1,026,724** |
-   | Option 3 — qualified alternate | 911,400 | 53,100 | **964,500** |
+| Option 1 (single source) | 846,400 | 162,000 | **1,008,400** |
+| Option 2 (dual source, 60/40 split) | 940,000 | 86,724 | **1,026,724** |
+| Option 3 (qualified alternate) | 911,400 | 53,100 | **964,500** |
 
-   Option 3 is best: **USD 43,900** better than single sourcing and **USD 62,224** better than the dual
-   split. Its breakeven disruption probability against Option 1 is
-   `65,000/(900,000 − 295,000) =` **10.74 %**; the dual split's, from
-   `510,000p² − 510,000p + 93,600 = 0`, is **24.22 %**. The maximum premium worth paying for Option 3's
-   resilience — the whole reduction in expected disruption cost — is
-   `162,000 − 53,100 =` **USD 108,900**, or **12.87 %** of the single-source cost.
-5. **Interpretation.** The result that carries the teaching is the ranking: **the resilience is in the
-   qualified alternate, not in the split volume.** Splitting the order does two things the buyer rarely
-   accounts for. It pays a price premium — the blended unit cost rises from 9,600 to 10,000, worth
-   33,600 on this volume — and, under independence, it **doubles the exposure surface**: the probability
-   that *something* goes wrong rises from 0.18 to `1 − 0.82² =` 0.3276, and although each individual
-   event is now far cheaper, the arithmetic has to earn back the premium before it helps. Dual
-   qualification, by contrast, retains the full volume with the single supplier (and its discount) and
-   buys only the option, at 65,000 of extra certain spend against a 108,900 reduction in expected
-   exposure. That leads to the general design rule: **qualify two, award one, and keep the second
-   exercisable** — with the emphasis on *exercisable*, because a second supplier that has not built the
-   part for three years is a name on a list, not an alternative, and the 25,000 a year is what
-   distinguishes them. The breakevens are the negotiating numbers: Option 3 pays whenever the disruption
-   probability exceeds **10.74 %**, while the dual split needs more than **24.22 %** — so a colleague
-   arguing for split sourcing on resilience grounds is implicitly asserting a disruption probability
-   more than twice as high as the one that justifies the cheaper structure, and should be asked for it.
+   Option 3 is best: **USD 43,900** better than single sourcing and **USD 62,224** better than the
+   dual split. Its breakeven disruption probability against Option 1 is `65,000/(900,000 − 295,000)
+   =` **10.74 %**; the dual split's, from `510,000p² − 510,000p + 93,600 = 0`, is **24.22 %**. The
+   maximum premium worth paying for Option 3's resilience (the whole reduction in expected
+   disruption cost) is `162,000 − 53,100 =` **USD 108,900**, or **12.87 %** of the single-source
+   cost.
+5. **Interpretation.** The result that carries the teaching is the ranking: **the resilience is in
+   the qualified alternate, not in the split volume.** Splitting the order does two things the buyer
+   rarely accounts for. It pays a price premium (the blended unit cost rises from 9,600 to 10,000,
+   worth 33,600 on this volume), and, under independence, it **doubles the exposure surface**: the
+   probability that *something* goes wrong rises from 0.18 to `1 − 0.82² =` 0.3276, and although
+   each individual event is now far cheaper, the arithmetic has to earn back the premium before it
+   helps. Dual qualification, by contrast, retains the full volume with the single supplier (and its
+   discount) and buys only the option, at 65,000 of extra certain spend against a 108,900 reduction
+   in expected exposure. That leads to the general design rule: **qualify two, award one, and keep
+   the second exercisable**, with the emphasis on *exercisable*, because a second supplier that has
+   not built the part for three years is a name on a list, not an alternative, and the 25,000 a year
+   is what distinguishes them. The breakevens are the negotiating numbers: Option 3 pays whenever
+   the disruption probability exceeds **10.74 %**, while the dual split needs more than **24.22 %**,
+   so a colleague arguing for split sourcing on resilience grounds is implicitly asserting a
+   disruption probability more than twice as high as the one that justifies the cheaper structure,
+   and should be asked for it.
 
-   **The caution that overturns everything above: correlation.** All three calculations assume the two
-   suppliers fail independently. Suppose instead that both draw a critical module from a single
+   **The caution that overturns everything above: correlation.** All three calculations assume the
+   two suppliers fail independently. Suppose instead that both draw a critical module from a single
    sub-tier source, so that the joint probability of disruption is **0.12** rather than 0.0324 (each
-   supplier's marginal probability still 0.18, leaving `0.18 − 0.12 =` 0.06 of idiosyncratic risk each).
-   Then `P(exactly one) = 2 × 0.06 =` 0.12, and the expected disruption costs become
-   `0.12 × 195,000 + 0.12 × 900,000 =` **USD 131,400** for Option 2, total **1,071,400**, and
-   `0.06 × 295,000 + 0.12 × 900,000 =` **USD 125,700** for Option 3, total **1,037,100**. Both are now
-   **worse than single sourcing's 1,008,400**: the buyer has paid for resilience and bought exposure.
-   The rule to take away is blunt — **two suppliers with one sub-tier is one supplier with two
-   invoices** — and the correct response is not to choose between the options but to attack the
-   sub-tier: require disclosure of the critical sub-tier sources as a contractual obligation (10.4.3),
-   qualify a second module design, or hold buffer stock sized to the re-source interval. This is
-   Domain 8's correlation result (KA 8.A.1) in a commercial setting, and it is the reason a supply
-   network must be mapped rather than assumed.
+   supplier's marginal probability still 0.18, leaving `0.18 − 0.12 =` 0.06 of idiosyncratic risk
+   each). Then `P(exactly one) = 2 × 0.06 =` 0.12, and the expected disruption costs become `0.12 ×
+   195,000 + 0.12 × 900,000 =` **USD 131,400** for Option 2, total **1,071,400**, and `0.06 ×
+   295,000 + 0.12 × 900,000 =` **USD 125,700** for Option 3, total **1,037,100**. Both are now
+   **worse than single sourcing's 1,008,400**: the buyer has paid for resilience and bought
+   exposure. The rule to take away is blunt (**two suppliers with one sub-tier is one supplier with
+   two invoices**), and the correct response is not to choose between the options but to attack the
+   sub-tier: require disclosure of the critical sub-tier sources as a contractual obligation
+   (10.4.3), qualify a second module design, or hold buffer stock sized to the re-source interval.
+   This is Domain 8's correlation result (KA 8.A.1) in a commercial setting, and it is the reason a
+   supply network must be mapped rather than assumed.
 
 ### AI in this KA
 
-**Where it earns its place.** Building the notice register of 10.4.1 — extracting every instruction,
-relevant event and correspondence item from a project's document set, computing each notice deadline and
-flagging what is approaching or missed — is high-volume, deterministic work with an unambiguous right
-answer, and it is exactly the work that goes undone. Assembling a chronology from thousands of documents
-for a delay analysis, for expert verification. Screening a supply base against sanctions, adverse-media
-and insolvency signals, and flagging changes. Reading a set of supplier disclosures to build a sub-tier
-map and identify shared dependencies — the concentration that 10.4.4 shows destroys a resilience case.
-Modelling sourcing options and their breakevens, as computed above.
+**Where it earns its place.** Building the notice register of 10.4.1 (extracting every instruction,
+relevant event and correspondence item from a project's document set, computing each notice deadline
+and flagging what is approaching or missed) is high-volume, deterministic work with an unambiguous
+right answer, and it is exactly the work that goes undone. Assembling a chronology from thousands of
+documents for a delay analysis, for expert verification. Screening a supply base against sanctions,
+adverse-media and insolvency signals, and flagging changes. Reading a set of supplier disclosures to
+build a sub-tier map and identify shared dependencies: the concentration that 10.4.4 shows destroys
+a resilience case. Modelling sourcing options and their breakevens, as computed above.
 
-**Where it must not go.** It must not assess entitlement, causation or the strength of a claim; those are
-legal judgements on which qualified advice is required and on which a confident, unattributable opinion
-is actively dangerous. It must not generate a delay analysis presented as evidence — a chronology is an
-input to an expert's opinion, not the opinion. It must not decide a supplier's ethical standing from
-inference: a screening or adverse-media hit is a prompt to investigate, and treating it as a finding is
-both unfair and, in some jurisdictions, restricted — take advice before any such inference is acted
-on. And it must not supply the probabilities in 10.4.4;
-those come from delivery history and market intelligence, and a model asked for them will produce
-numbers indistinguishable from data.
+**Where it must not go.** It must not assess entitlement, causation or the strength of a claim;
+those are legal judgements on which qualified advice is required and on which a confident,
+unattributable opinion is actively dangerous. It must not generate a delay analysis presented as
+evidence: a chronology is an input to an expert's opinion, not the opinion. It must not decide a
+supplier's ethical standing from inference: a screening or adverse-media hit is a prompt to
+investigate, and treating it as a finding is both unfair and, in some jurisdictions, restricted,
+take advice before any such inference is acted on. And it must not supply the probabilities in
+10.4.4; those come from delivery history and market intelligence, and a model asked for them will
+produce numbers indistinguishable from data.
 
-**Verification, concretely.** Every notice deadline the tool computes is checked against the clause and
-the event date before anyone relies on it, and the notice register is reconciled to the correspondence
-log at a stated sample rate. Every chronology entry cited in a claim is verified against the source
-document. Every screening hit is human-reviewed before any action, with the review recorded. And the
-sourcing arithmetic is reproduced by hand at two probabilities — the point estimate and the breakeven —
-because the breakeven is the number that decides whether the recommendation survives an argument.
+**Verification, concretely.** Every notice deadline the tool computes is checked against the clause
+and the event date before anyone relies on it, and the notice register is reconciled to the
+correspondence log at a stated sample rate. Every chronology entry cited in a claim is verified
+against the source document. Every screening hit is human-reviewed before any action, with the
+review recorded. And the sourcing arithmetic is reproduced by hand at two probabilities, the point
+estimate and the breakeven, because the breakeven is the number that decides whether the
+recommendation survives an argument.
 
 ### Key terms — KA 10.4
 
@@ -1243,11 +1264,10 @@ fell to 0.86 of the measured-mile baseline, at USD 130.625 per hour. The disrupt
 - C. USD 29,770.35
 - D. USD 157,272.50
 
-*Rationale:* Hours required `= 1,204/0.86 = 1,400`, so extra hours `= 196` and cost
-`= 196 × 130.625 = 25,602.50` (10.4.1). A multiplies the planned hours by `(1 − 0.86)` instead of
-dividing by 0.86 — 168.56 hours rather than 196, understating by USD 3,584.35. C applies the correct
-division to 1,400 hours instead of 1,204 (227.91 extra hours). D prices all 1,204 hours rather than the
-extra ones.
+*Rationale:* Hours required `= 1,204/0.86 = 1,400`, so extra hours `= 196` and cost `= 196 × 130.625
+= 25,602.50` (10.4.1). A multiplies the planned hours by `(1 − 0.86)` instead of dividing by 0.86:
+168.56 hours rather than 196, understating by USD 3,584.35. C applies the correct division to 1,400
+hours instead of 1,204 (227.91 extra hours). D prices all 1,204 hours rather than the extra ones.
 
 **MCQ 10.4-B `[10.4.1 · Analysis]`** A USD 107,914.80 claim comprises labour and materials of 49,750
 and prolongation and disruption of 46,602.50, each grossed up by 12 % overhead and profit. Notice was
@@ -1332,23 +1352,24 @@ optimism: exposure is assessed on the first tier, where it is diversified, and m
 lower tiers, where it is concentrated.
 
 Mapping is therefore a deliberate exercise with a defined scope, and the scope should be set by
-criticality rather than by spend — the cheapest component on a critical path can stop a project that a
-major package cannot. For each critical item, the questions are: which sub-tier sources does each of my
-suppliers depend on; do any of my suppliers share one; what is the single-source geography,
+criticality rather than by spend: the cheapest component on a critical path can stop a project that
+a major package cannot. For each critical item, the questions are: which sub-tier sources does each
+of my suppliers depend on; do any of my suppliers share one; what is the single-source geography,
 qualification or intellectual-property constraint that makes substitution slow; and what is the
-**re-source interval** — the elapsed time from a failure to an alternative in production, which is the
-figure that converts a supply risk into a schedule risk at the project's cost of delay. The
+**re-source interval**: the elapsed time from a failure to an alternative in production, which is
+the figure that converts a supply risk into a schedule risk at the project's cost of delay. The
 contractual enabler is a disclosure obligation with an audit right (10.4.3), because a supplier will
 not volunteer a dependency that is also a commercial vulnerability.
 
-Two structural insights are worth carrying. Domain 4's interface arithmetic applies to supply networks:
-`n` suppliers who must interoperate create up to `n(n−1)/2` pairwise relationships, and a buyer who
-splits packages to gain price tension acquires all of them (Domain 4, KA 4.2.3). And Domain 8's
-correlation result governs the aggregate: a register with many supplier risks and few underlying
-drivers is concentrated, however it is presented (Domain 8, KA 8.A.1). Restructuring a supplier risk
-register **by shared driver** rather than by supplier is a half-day exercise that regularly reveals a
-single point of failure behind a dozen entries — and, as 10.4.4 computes, a single shared sub-tier is
-enough to make a paid-for dual-sourcing arrangement worse than the single source it replaced.
+Two structural insights are worth carrying. Domain 4's interface arithmetic applies to supply
+networks: `n` suppliers who must interoperate create up to `n(n−1)/2` pairwise relationships, and a
+buyer who splits packages to gain price tension acquires all of them (Domain 4, KA 4.2.3). And
+Domain 8's correlation result governs the aggregate: a register with many supplier risks and few
+underlying drivers is concentrated, however it is presented (Domain 8, KA 8.A.1). Restructuring a
+supplier risk register **by shared driver** rather than by supplier is a half-day exercise that
+regularly reveals a single point of failure behind a dozen entries, and, as 10.4.4 computes, a
+single shared sub-tier is enough to make a paid-for dual-sourcing arrangement worse than the single
+source it replaced.
 
 ### 10.A.2 Contracting for AI-delivered and outcome-based services
 
@@ -1357,23 +1378,24 @@ contractual assumptions that normally go unexamined stop holding, and the gaps m
 deliberately rather than left to a standard schedule.
 
 **The deliverable can change without a variation.** A model updated by the supplier can alter output
-quality, latency and behaviour while the contract's description of the service remains satisfied. Insist
-on a defined baseline of behaviour with measurable acceptance criteria, notice of material model or
-version changes, and a right to re-test against the baseline after one — otherwise the buyer has bought a
-moving target and has no mechanism to notice it moving.
+quality, latency and behaviour while the contract's description of the service remains satisfied.
+Insist on a defined baseline of behaviour with measurable acceptance criteria, notice of material
+model or version changes, and a right to re-test against the baseline after one: otherwise the buyer
+has bought a moving target and has no mechanism to notice it moving.
 
 **Data rights need four separate answers, not one.** Who owns the input data; what the supplier may do
 with it, specifically including whether it may train models serving other customers; what happens to
 derived data, embeddings and model improvements at termination; and which sub-processors and jurisdictions
 are involved. "Confidentiality" answers none of these.
 
-**Performance obligations must be honest about probabilistic output.** A service whose output is correct
-with some probability cannot be warranted as correct, and a supplier accepting such a warranty has either
-mispriced it or will resist it in practice. The workable structure specifies accuracy against a defined
-test set, a human-verification obligation on the buyer's side for consequential uses, and an allocation of
-responsibility for errors that reflects who was required to verify — the contractual expression of the
-family principle that **AI proposes; the professional verifies, decides and remains accountable**. If the
-contract does not say who the professional is, no one is.
+**Performance obligations must be honest about probabilistic output.** A service whose output is
+correct with some probability cannot be warranted as correct, and a supplier accepting such a
+warranty has either mispriced it or will resist it in practice. The workable structure specifies
+accuracy against a defined test set, a human-verification obligation on the buyer's side for
+consequential uses, and an allocation of responsibility for errors that reflects who was required to
+verify: the contractual expression of the family principle that **AI proposes; the professional
+verifies, decides and remains accountable**. If the contract does not say who the professional is,
+no one is.
 
 **Outcome-based structures inherit the same problem commercially.** Paying for an outcome shifts the
 burden onto a definition that must now bear weight: what is measured, who measures it, what happens when
@@ -1386,41 +1408,43 @@ will be priced as one.
 Invariants to test on any procurement or contract arrangement, each cheap and each diagnostic.
 
 Every make-or-buy decision states a **total cost of ownership including a non-zero exit cost** and a
-**breakeven volume**, and where the capability is on the critical path, the stand-up delay is priced at
-the cost of delay. The procurement chain for every long-lead item has a **computed total lead time**
-including governance latency, and is a predecessor in the schedule rather than an assumption behind it.
-The evaluation model — weights, sub-weights, normalisation formula, scoring scale, moderation and
-non-compliance treatment — was **fixed and disclosed before the receipt deadline**, with a dated record,
-and quality was scored before price was seen. Any quality premium has been tested against the expected
-cost it avoids, and the ratio is stated. Every bid materially below its benchmark has a recorded
-explanation, with the benchmark named. Every payment mechanism has its **marginal-dollar allocation**
-written down, and every target-cost contract has its `PTA` computed and known to the delivery team
-before mobilisation, not after. Every performance regime states whether its cap is set to deter or to
-compensate, and shows the arithmetic for whichever it claims. Every contract's notice periods are in a
-live **notice register** with computed deadlines. Every critical item has a mapped sub-tier and a stated
-**re-source interval**. And the resilience claim for every dual-sourced item is tested for
-**correlation**, because a resilience arrangement that has not been tested for a shared sub-tier is an
-assertion, and 10.4.4 shows what the assertion costs when it is wrong.
+**breakeven volume**, and where the capability is on the critical path, the stand-up delay is priced
+at the cost of delay. The procurement chain for every long-lead item has a **computed total lead
+time** including governance latency, and is a predecessor in the schedule rather than an assumption
+behind it. The evaluation model (weights, sub-weights, normalisation formula, scoring scale,
+moderation and non-compliance treatment) was **fixed and disclosed before the receipt deadline**,
+with a dated record, and quality was scored before price was seen. Any quality premium has been
+tested against the expected cost it avoids, and the ratio is stated. Every bid materially below its
+benchmark has a recorded explanation, with the benchmark named. Every payment mechanism has its
+**marginal-dollar allocation** written down, and every target-cost contract has its `PTA` computed
+and known to the delivery team before mobilisation, not after. Every performance regime states
+whether its cap is set to deter or to compensate, and shows the arithmetic for whichever it claims.
+Every contract's notice periods are in a live **notice register** with computed deadlines. Every
+critical item has a mapped sub-tier and a stated **re-source interval**. And the resilience claim
+for every dual-sourced item is tested for **correlation**, because a resilience arrangement that has
+not been tested for a shared sub-tier is an assertion, and 10.4.4 shows what the assertion costs
+when it is wrong.
 
 ---
 
 ## Industry variations — Domain 10
 
 - **Public sector and regulated buyers.** Procurement route, timescales, publication, evaluation
-  disclosure, standstill and challenge rights may be prescribed by law, and those rules — which differ
-  by jurisdiction — override commercial preference. The practical effects are that the chain of 10.1.3 is
-  longer and largely incompressible, that the model-fixing discipline of 10.2.3 is a legal requirement
-  rather than good practice, and that the leader's remaining levers are the paper deadline, the
-  delegation of award authority, and early market engagement before the formal process begins.
+  disclosure, standstill and challenge rights may be prescribed by law, and those rules (which
+  differ by jurisdiction) override commercial preference. The practical effects are that the chain
+  of 10.1.3 is longer and largely incompressible, that the model-fixing discipline of 10.2.3 is a
+  legal requirement rather than good practice, and that the leader's remaining levers are the paper
+  deadline, the delegation of award authority, and early market engagement before the formal process
+  begins.
 - **Construction and infrastructure.** Standard-form contracts dominate, with well-developed variation,
   extension-of-time, notice and dispute machinery, and interim determinative processes available in some
   jurisdictions. Notice discipline (10.4.1) carries more value here than anywhere else, retention and
   payment cycles drive cash (Domain 7, KA 7.4.4), and multi-party governance follows the contract
   structure rather than the organisation chart (Domain 3, KA 3.1.2).
 - **Technology and software services.** Scope is defined late by nature, so fixed price on undefined
-  scope is the characteristic error and the AI-service gaps of 10.A.2 are the characteristic gap. Exit
-  cost is systematically understated because data extraction, re-implementation and licence
-  discontinuity are discovered only at termination — which is exactly why the make-or-buy exit column
+  scope is the characteristic error and the AI-service gaps of 10.A.2 are the characteristic gap.
+  Exit cost is systematically understated because data extraction, re-implementation and licence
+  discontinuity are discovered only at termination, which is exactly why the make-or-buy exit column
   matters most in this sector.
 - **Energy, utilities and process industries.** Long-lead, engineered-to-order equipment with limited
   qualified sources; the re-source interval of 10.A.1 is measured in quarters, so 10.4.4's qualified
@@ -1431,7 +1455,7 @@ assertion, and 10.4.4 shows what the assertion costs when it is wrong.
   the alternate expensive to keep exercisable and the switching consequence far larger than a
   commercial calculation suggests. Dual qualification must be planned at development, not at supply.
 - **Consumer manufacturing and retail.** High volumes make the unit-price term dominant, so the
-  make-or-buy breakeven of 10.1.2 is often comfortably passed — but the ethical-sourcing exposure of
+  make-or-buy breakeven of 10.1.2 is often comfortably passed, but the ethical-sourcing exposure of
   10.4.3 is at its most acute, sub-tiers are numerous and opaque, and reputational consequence
   distributions are the most heavily skewed of any sector.
 
@@ -1439,85 +1463,87 @@ assertion, and 10.4.4 shows what the assertion costs when it is wrong.
 
 ## Case study — Domain 10: the weighting confirmed after the envelopes (utilities, Auriga)
 
-**Situation.** Auriga's installation package attracted three compliant bids: Alpha USD 2,000,000, Beta
-2,200,000, Gamma 2,480,000. The invitation stated a price/quality weighting of **70/30**. The panel,
-under time pressure and conscious that the previous installation contractor had performed poorly,
-opened the priced envelopes alongside the technical submissions, scored quality at 62, 78 and 92, and
-then — recording it as a "confirmation" — applied a **40/60** weighting on the grounds that quality
-mattered more on this scope than the invitation had implied. Gamma won with **87.46** against Alpha's
-**77.20**, and the award recommendation went to the utility's procurement board.
+**Situation.** Auriga's installation package attracted three compliant bids: Alpha USD 2,000,000,
+Beta 2,200,000, Gamma 2,480,000. The invitation stated a price/quality weighting of **70/30**. The
+panel, under time pressure and conscious that the previous installation contractor had performed
+poorly, opened the priced envelopes alongside the technical submissions, scored quality at 62, 78
+and 92, and then, recording it as a "confirmation", applied a **40/60** weighting on the grounds
+that quality mattered more on this scope than the invitation had implied. Gamma won with **87.46**
+against Alpha's **77.20**, and the award recommendation went to the utility's procurement board.
 
 **What happened.** Alpha requested a debrief, was told that quality had been weighted at 60 %, and
 challenged the award. The utility's internal audit function reconstructed the evaluation and reached
-three findings the panel had not anticipated. Under the **published** 70/30 model the same scores gave
-Alpha **88.60**, Beta 87.04 and Gamma 84.05 — **Alpha won**. The bid set had **three** possible winners
-across the weighting range, with boundaries at **57.70 %** and **63.77 %** price weight, so the choice
-of weighting had selected the supplier. And the panel's own risk mapping — integration rework
-probabilities of 0.30, 0.18 and 0.10 against a 320,000 impact — made Gamma's **USD 480,000** premium
-worth only `96,000 − 32,000 =` **USD 64,000** of avoided expected cost, a ratio of **7.5 to 1**, so the
-quality case the re-weighting was meant to express did not survive its own numbers.
+three findings the panel had not anticipated. Under the **published** 70/30 model the same scores
+gave Alpha **88.60**, Beta 87.04 and Gamma 84.05, **Alpha won**. The bid set had **three** possible
+winners across the weighting range, with boundaries at **57.70 %** and **63.77 %** price weight, so
+the choice of weighting had selected the supplier. And the panel's own risk mapping (integration
+rework probabilities of 0.30, 0.18 and 0.10 against a 320,000 impact) made Gamma's **USD 480,000**
+premium worth only `96,000 − 32,000 =` **USD 64,000** of avoided expected cost, a ratio of **7.5 to
+1**, so the quality case the re-weighting was meant to express did not survive its own numbers.
 
-**How it resolved.** The award was withdrawn and re-made under the published model. Alpha was appointed
-at 2,000,000 with two additions the audit finding made possible: a supplier-development condition
-funding 90,000 of integration-team secondment against the identified rework risk, and a target-cost
-structure with the `PTA` computed and shared with the delivery team before mobilisation (Domain 7,
-KA 7.4.3). The process cost **11 weeks** — 3 weeks of probity review, 3 weeks of re-evaluation, 3 weeks
-of re-approval latency at `E[wait] = 4/2 + 1`, and 2 weeks to execute — worth **USD 495,000** at
-Auriga's cost of delay, plus **USD 62,000** of external review: **USD 557,000** in total.
+**How it resolved.** The award was withdrawn and re-made under the published model. Alpha was
+appointed at 2,000,000 with two additions the audit finding made possible: a supplier-development
+condition funding 90,000 of integration-team secondment against the identified rework risk, and a
+target-cost structure with the `PTA` computed and shared with the delivery team before mobilisation
+(Domain 7, KA 7.4.3). The process cost **11 weeks** (3 weeks of probity review, 3 weeks of
+re-evaluation, 3 weeks of re-approval latency at `E[wait] = 4/2 + 1`, and 2 weeks to execute) worth
+**USD 495,000** at Auriga's cost of delay, plus **USD 62,000** of external review: **USD 557,000**
+in total.
 
 **What the domain teaches here.** The arithmetic is brutal and simple: **the probity failure cost
-USD 557,000 — more than the entire USD 480,000 price gap the re-weighting was arguing about, and
-1.16 times it.** The panel was not corrupt and was not even wrong about quality mattering; it was wrong
-about *when* that judgement may be made. Had the same conviction been expressed in the invitation as a
-40/60 weighting, published before bids were received, the award to Gamma would have been unimpeachable —
-and the bidders would have priced and pitched differently, which is the point of publishing it. Two
-further lessons. Scoring quality **after** seeing price is not a procedural nicety: the panel's quality
-scores were never tested for the anchoring the sequence introduced, and could not be defended in the
-debrief. And the 7.5-to-1 ratio is the discipline a quality weighting needs before it is set, not after
-it is challenged — a panel that had computed it during model design would have chosen 70/30 with
-conviction rather than 40/60 with hindsight.
+USD 557,000, more than the entire USD 480,000 price gap the re-weighting was arguing about, and 1.16
+times it.** The panel was not corrupt and was not even wrong about quality mattering; it was wrong
+about *when* that judgement may be made. Had the same conviction been expressed in the invitation as
+a 40/60 weighting, published before bids were received, the award to Gamma would have been
+unimpeachable; and the bidders would have priced and pitched differently, which is the point of
+publishing it. Two further lessons. Scoring quality **after** seeing price is not a procedural
+nicety: the panel's quality scores were never tested for the anchoring the sequence introduced, and
+could not be defended in the debrief. And the 7.5-to-1 ratio is the discipline a quality weighting
+needs before it is set, not after it is challenged: a panel that had computed it during model design
+would have chosen 70/30 with conviction rather than 40/60 with hindsight.
 
 ## Case study B — Domain 10: two suppliers, one foundry (rail rolling stock)
 
 **Situation.** A rolling-stock refurbishment programme needed **1,200** traction converters. Wary of
-single-source exposure after an earlier disruption, the sourcing team dual-sourced on a **55/45** split:
-supplier V at **USD 14,800** per unit and supplier W at **USD 15,600**, a blended **USD 15,160** and a
-contract value of **USD 18,192,000**. Awarding the full volume to V would have secured a **3 %** volume
-discount — **USD 14,356** a unit, **USD 17,227,200** — so the programme paid **USD 964,800** for
-resilience. The board minute recorded the arrangement as "dual-sourced, exposure mitigated". Each
-supplier was assessed at a **0.15** probability of disruption in the delivery window, treated as
-independent, giving an assumed expected disruption cost of `0.2550 × 294,000 + 0.0225 × 1,297,000 =`
-**USD 104,152.50** — with a one-supplier disruption costing 2 weeks of fleet unavailability at
-USD 128,000 a week plus a 38,000 surge premium (**294,000**), and both suppliers disrupted costing
-9 weeks plus 145,000 of re-engineering (**1,297,000**).
+single-source exposure after an earlier disruption, the sourcing team dual-sourced on a **55/45**
+split: supplier V at **USD 14,800** per unit and supplier W at **USD 15,600**, a blended **USD
+15,160** and a contract value of **USD 18,192,000**. Awarding the full volume to V would have
+secured a **3 %** volume discount (**USD 14,356** a unit, **USD 17,227,200**), so the programme paid
+**USD 964,800** for resilience. The board minute recorded the arrangement as "dual-sourced, exposure
+mitigated". Each supplier was assessed at a **0.15** probability of disruption in the delivery
+window, treated as independent, giving an assumed expected disruption cost of `0.2550 × 294,000 +
+0.0225 × 1,297,000 =` **USD 104,152.50**: with a one-supplier disruption costing 2 weeks of fleet
+unavailability at USD 128,000 a week plus a 38,000 surge premium (**294,000**), and both suppliers
+disrupted costing 9 weeks plus 145,000 of re-engineering (**1,297,000**).
 
 **What happened.** Both suppliers slipped in the same quarter. Their converters used the same power
-module, and that module had a single qualified foundry, which reallocated capacity. Neither supplier had
-disclosed the dependency and neither had been asked. Reconstructed with the true joint probability of
-**0.11**, the arrangement's expected disruption cost was `0.12 × 294,000 + 0.11 × 1,297,000 =`
-**USD 166,190**, not 104,152.50 — the independence assumption had understated exposure by
-**USD 62,037.50**, or **59.56 %** — and the realised outcome was the 9-week case.
+module, and that module had a single qualified foundry, which reallocated capacity. Neither supplier
+had disclosed the dependency and neither had been asked. Reconstructed with the true joint
+probability of **0.11**, the arrangement's expected disruption cost was `0.12 × 294,000 + 0.11 ×
+1,297,000 =` **USD 166,190**, not 104,152.50 (the independence assumption had understated exposure
+by **USD 62,037.50**, or **59.56 %**), and the realised outcome was the 9-week case.
 
 **How it resolved.** A sub-tier mapping exercise to tier three found the single foundry behind both
-suppliers and two further shared dependencies. The programme then did the arithmetic it had never done:
-qualifying a **second power-module design** would cost **USD 380,000** — against the **USD 964,800**
-already spent on a volume split that had bought nothing, a ratio of **2.54 to 1**. The arrangement was
-restructured to a single award to V at the discounted 14,356, plus the 380,000 second module design,
-plus a contractual sub-tier disclosure and audit obligation. With the module risk reduced (joint
-probability 0.02, leaving V's idiosyncratic 0.04, so 0.06 in total) and the recovery shortened to
-4 weeks plus 90,000, expected disruption fell to **USD 36,120** and the total position to
-**USD 17,643,320** against the dual-split arrangement's **USD 18,358,190** — better by
+suppliers and two further shared dependencies. The programme then did the arithmetic it had never
+done: qualifying a **second power-module design** would cost **USD 380,000**, against the **USD
+964,800** already spent on a volume split that had bought nothing, a ratio of **2.54 to 1**. The
+arrangement was restructured to a single award to V at the discounted 14,356, plus the 380,000
+second module design, plus a contractual sub-tier disclosure and audit obligation. With the module
+risk reduced (joint probability 0.02, leaving V's idiosyncratic 0.04, so 0.06 in total) and the
+recovery shortened to 4 weeks plus 90,000, expected disruption fell to **USD 36,120** and the total
+position to **USD 17,643,320** against the dual-split arrangement's **USD 18,358,190**: better by
 **USD 714,870**, with the actual exposure reduced rather than relabelled.
 
-**What the domain teaches here.** **Two suppliers with one sub-tier is one supplier with two invoices**,
-and the money spent on the split is not resilience, it is a price premium with a resilience narrative
-attached. Three transferable points. The independence assumption is the one most likely to be both
-convenient and wrong, and it understated this programme's exposure by nearly 60 % — Domain 8's
-correlation lesson (KA 8.A.1) arriving through a purchase order. Resilience spending must be directed at
-the **actual single point of failure**, which requires knowing where it is: 380,000 spent on the module
-would have delivered what 964,800 spent on the split did not. And a sub-tier disclosure obligation is
-not administrative box-ticking — it is the contractual instrument that makes the analysis possible at
-all, and it costs nothing to include at tender and cannot be obtained afterwards.
+**What the domain teaches here.** **Two suppliers with one sub-tier is one supplier with two
+invoices**, and the money spent on the split is not resilience, it is a price premium with a
+resilience narrative attached. Three transferable points. The independence assumption is the one
+most likely to be both convenient and wrong, and it understated this programme's exposure by nearly
+60 %: Domain 8's correlation lesson (KA 8.A.1) arriving through a purchase order. Resilience
+spending must be directed at the **actual single point of failure**, which requires knowing where it
+is: 380,000 spent on the module would have delivered what 964,800 spent on the split did not. And a
+sub-tier disclosure obligation is not administrative box-ticking; it is the contractual instrument
+that makes the analysis possible at all, and it costs nothing to include at tender and cannot be
+obtained afterwards.
 
 ---
 
@@ -1541,54 +1567,53 @@ What a programme director cannot delegate in this domain:
   is a discount voucher for failure (10.3.3).
 - **The notice register.** Your suppliers keep one, or their advisers do. Nearly half of a properly
   constructed claim can turn on a diary entry, in both directions (10.4.1).
-- **The correlation test on every resilience claim.** Ask, of every dual-sourced critical item, which
-  sub-tier sources the two suppliers share — and treat "we don't know" as the answer that it is. Two
-  suppliers with one sub-tier is one supplier (10.4.4, Case study B).
+- **The correlation test on every resilience claim.** Ask, of every dual-sourced critical item,
+  which sub-tier sources the two suppliers share; and treat "we don't know" as the answer that it
+  is. Two suppliers with one sub-tier is one supplier (10.4.4, Case study B).
 
 ---
 
 ## Calculation exercises — Domain 10
 
-**Exercise 10.1** In-house provision of a support capability costs 260,000 to stand up, 1,450 per unit
-and 40,000 to exit. Outsourcing costs 55,000 to transition in, 1,900 per unit and 85,000 to transition
-out. The requirement is 520 units. Compute the breakeven volume and the better option; then recompute
-with a 7-week capability stand-up delay on the critical path at a cost of delay of 18,000 per week.
-*Solution.* `F_make = 300,000`, `F_buy = 140,000`, so
-`Q* = 160,000/(1,900 − 1,450) = 160,000/450 =` **355.56 units**. At 520 units: make
-`300,000 + 754,000 =` **1,054,000**; buy `140,000 + 988,000 =` **1,128,000** — **make is 74,000
-cheaper**, because 520 exceeds the breakeven. Adding the delay: `7 × 18,000 =` **126,000**, so make
-becomes **1,180,000** and **buy is now 52,000 cheaper**; the breakeven moves to
-`(300,000 + 126,000 − 140,000)/450 =` **635.56 units**. Common error: omitting the exit costs from both
-sides, which gives a breakeven of `205,000/450 =` **455.56 units** — it happens to reach the right
-answer at 520 units, for the wrong reason, and would reach the wrong one at any volume between 356 and
-456.
+**Exercise 10.1** In-house provision of a support capability costs 260,000 to stand up, 1,450 per
+unit and 40,000 to exit. Outsourcing costs 55,000 to transition in, 1,900 per unit and 85,000 to
+transition out. The requirement is 520 units. Compute the breakeven volume and the better option;
+then recompute with a 7-week capability stand-up delay on the critical path at a cost of delay of
+18,000 per week. *Solution.* `F_make = 300,000`, `F_buy = 140,000`, so `Q* = 160,000/(1,900 − 1,450)
+= 160,000/450 =` **355.56 units**. At 520 units: make `300,000 + 754,000 =` **1,054,000**; buy
+`140,000 + 988,000 =` **1,128,000** — **make is 74,000 cheaper**, because 520 exceeds the breakeven.
+Adding the delay: `7 × 18,000 =` **126,000**, so make becomes **1,180,000** and **buy is now 52,000
+cheaper**; the breakeven moves to `(300,000 + 126,000 − 140,000)/450 =` **635.56 units**. Common
+error: omitting the exit costs from both sides, which gives a breakeven of `205,000/450 =` **455.56
+units**. It happens to reach the right answer at 520 units, for the wrong reason, and would reach
+the wrong one at any volume between 356 and 456.
 
-**Exercise 10.2** Two bids: P at 1,600,000 with quality 70, and Q at 1,840,000 with quality 88. Price
-is scored `lowest ÷ own × 100`. Determine the winner at a 70/30 and a 50/50 price/quality weighting,
-compute the crossover weighting, and state the implied price per quality point.
-*Solution.* Price scores: P **100.00**, Q `1,600,000/1,840,000 × 100 =` **86.96**. At 70/30: P
-`70 + 21 =` **91.00**, Q `60.87 + 26.4 =` **87.27** — **P wins**. At 50/50: P `50 + 35 =` **85.00**, Q
-`43.48 + 44 =` **87.48** — **Q wins**. Crossover
-`w* = (88 − 70)/[(100 − 70) − (86.956522 − 88)] = 18/31.043478 =` **57.98 %**. Q's premium is
-`240,000` — **15.00 %** — for 18 quality points, **13,333.33 per point**, which must be tested against
-the expected cost those points avoid. Common error: scoring price as a share of the *highest* bid or on
-a linear scale without saying so; the normalisation convention is part of the model and moves the
-crossover, as 10.2.2 shows by 7.70 percentage points on a three-bid set.
+**Exercise 10.2** Two bids: P at 1,600,000 with quality 70, and Q at 1,840,000 with quality 88.
+Price is scored `lowest ÷ own × 100`. Determine the winner at a 70/30 and a 50/50 price/quality
+weighting, compute the crossover weighting, and state the implied price per quality point.
+*Solution.* Price scores: P **100.00**, Q `1,600,000/1,840,000 × 100 =` **86.96**. At 70/30: P `70 +
+21 =` **91.00**, Q `60.87 + 26.4 =` **87.27**, **P wins**. At 50/50: P `50 + 35 =` **85.00**, Q
+`43.48 + 44 =` **87.48**, **Q wins**. Crossover `w* = (88 − 70)/[(100 − 70) − (86.956522 − 88)] =
+18/31.043478 =` **57.98 %**. Q's premium is `240,000`: **15.00 %**: for 18 quality points,
+**13,333.33 per point**, which must be tested against the expected cost those points avoid. Common
+error: scoring price as a share of the *highest* bid or on a linear scale without saying so; the
+normalisation convention is part of the model and moves the crossover, as 10.2.2 shows by 7.70
+percentage points on a three-bid set.
 
-**Exercise 10.3** A target-cost subcontract has a target cost of 1,500,000, a target fee of 120,000, a
-60/40 share (buyer 60 %) and a ceiling of 1,800,000. The actual cost is 1,700,000. Compute the fee,
-buyer outturn and supplier margin, the `PTA`, and compare with a firm fixed price of 1,650,000 and with
-cost plus a fixed fee of 120,000.
-*Solution.* Overrun `1,700,000 − 1,500,000 = 200,000`; fee `120,000 − 200,000 × 0.40 =` **40,000**;
-buyer pays **1,740,000** (below the ceiling); supplier margin **40,000**. Target price
-`1,620,000`, so `PTA = 1,500,000 + (1,800,000 − 1,620,000)/0.60 = 1,500,000 + 300,000 =` **1,800,000**
-— here the `PTA` coincides with the ceiling, and at a cost of 1,800,000 the fee is exactly nil. Firm
-fixed price: buyer pays **1,650,000**, supplier margin **(50,000)**. Cost plus fixed fee: buyer pays
-**1,820,000**, margin **120,000**. The buyer's outturn spans **170,000** across the three mechanisms on
-the *same* actual cost, and the marginal-dollar allocation is 0/1.00 under fixed price, 1.00/0 under
-cost-plus, and 0.60/0.40 under the target cost below the `PTA`. Common error: computing the fee as
-`target fee − overrun × buyer share` (120,000 − 120,000 = 0), which reverses the share ratio; the
-supplier bears its own share of the overrun, not the buyer's.
+**Exercise 10.3** A target-cost subcontract has a target cost of 1,500,000, a target fee of 120,000,
+a 60/40 share (buyer 60 %) and a ceiling of 1,800,000. The actual cost is 1,700,000. Compute the
+fee, buyer outturn and supplier margin, the `PTA`, and compare with a firm fixed price of 1,650,000
+and with cost plus a fixed fee of 120,000. *Solution.* Overrun `1,700,000 − 1,500,000 = 200,000`;
+fee `120,000 − 200,000 × 0.40 =` **40,000**; buyer pays **1,740,000** (below the ceiling); supplier
+margin **40,000**. Target price `1,620,000`, so `PTA = 1,500,000 + (1,800,000 − 1,620,000)/0.60 =
+1,500,000 + 300,000 =` **1,800,000**: here the `PTA` coincides with the ceiling, and at a cost of
+1,800,000 the fee is exactly nil. Firm fixed price: buyer pays **1,650,000**, supplier margin
+**(50,000)**. Cost plus fixed fee: buyer pays **1,820,000**, margin **120,000**. The buyer's outturn
+spans **170,000** across the three mechanisms on the *same* actual cost, and the marginal-dollar
+allocation is 0/1.00 under fixed price, 1.00/0 under cost-plus, and 0.60/0.40 under the target cost
+below the `PTA`. Common error: computing the fee as `target fee − overrun × buyer share` (120,000 −
+120,000 = 0), which reverses the share ratio; the supplier bears its own share of the overrun, not
+the buyer's.
 
 **Exercise 10.4** A single-source arrangement has a certain cost of 1,240,000 and a 0.22 probability of
 a disruption costing 640,000. Qualifying an alternate adds 58,000 of certain cost and cuts the
@@ -1629,42 +1654,43 @@ the productivity factor and understates the head by 1,185 before overhead and pr
 One page per decision, completed before any market engagement. Two columns, make and buy, and these
 rows: transition-in cost, itemised (recruitment, training, tooling, environments, licences,
 specification and tender effort, mobilisation); unit cost with the volume basis stated; residual
-management cost — **never zero on either side**; **exit cost**, itemised (redeployment or severance,
-decommissioning, data extraction in a supportable format, knowledge transfer, re-qualification, parallel
-running); stand-up elapsed time in weeks and whether the capability is on the critical path; and the
-delay term, priced at the project's cost of delay. Below the columns, three computed figures: the
-**breakeven volume `Q*`**, the outturn at the required volume, and the outturn at the plausible upper
-volume. The sheet's purpose is to make the decision a proposition about volume rather than a preference
-about sourcing; a paper that cannot fill in the exit row has not done the analysis, and a paper with a
-zero in it is asserting something the incumbent's contract will disprove.
+management cost, **never zero on either side**; **exit cost**, itemised (redeployment or severance,
+decommissioning, data extraction in a supportable format, knowledge transfer, re-qualification,
+parallel running); stand-up elapsed time in weeks and whether the capability is on the critical
+path; and the delay term, priced at the project's cost of delay. Below the columns, three computed
+figures: the **breakeven volume `Q*`**, the outturn at the required volume, and the outturn at the
+plausible upper volume. The sheet's purpose is to make the decision a proposition about volume
+rather than a preference about sourcing; a paper that cannot fill in the exit row has not done the
+analysis, and a paper with a zero in it is asserting something the incumbent's contract will
+disprove.
 
 ### Toolkit 10.T.2 — Evaluation model lock sheet
 
 One page, completed, dated, signed by the accountable authority and **issued with the invitation**.
-Contents: the criteria and their weights; the sub-criteria and their weights; the **price normalisation
-formula written out in full**; the quality scoring scale with what each score means in words; the
-sequence of evaluation, stating explicitly that quality is scored before price is disclosed; the
-moderation process and how individual scores are recorded before it; the treatment of non-compliant,
-qualified and abnormally low bids, with the benchmark and threshold for the last of these named; the
-panel members and their conflict declarations; and — the row that turns the sheet into a control — the
-**pre-award sensitivity analysis**: the winner at three weightings and the crossover weightings between
-the leading bidders, computed before the receipt deadline and dated. Any change after issue is recorded
-on the sheet with its author, its reason and the result under **both** the original and the amended
-model.
+Contents: the criteria and their weights; the sub-criteria and their weights; the **price
+normalisation formula written out in full**; the quality scoring scale with what each score means in
+words; the sequence of evaluation, stating explicitly that quality is scored before price is
+disclosed; the moderation process and how individual scores are recorded before it; the treatment of
+non-compliant, qualified and abnormally low bids, with the benchmark and threshold for the last of
+these named; the panel members and their conflict declarations; and (the row that turns the sheet
+into a control) the **pre-award sensitivity analysis**: the winner at three weightings and the
+crossover weightings between the leading bidders, computed before the receipt deadline and dated.
+Any change after issue is recorded on the sheet with its author, its reason and the result under
+**both** the original and the amended model.
 
 ### Toolkit 10.T.3 — Supplier resilience and sub-tier register
 
 One row per critical item, not per supplier, and criticality set by schedule effect rather than by
 spend. Columns: item; why it is critical (which path, which milestone); first-tier supplier(s) and
 volume allocation; **disclosed sub-tier sources for the critical component**, to the depth the
-disclosure obligation reaches; **shared dependencies flagged across rows** — this is the column the
-register exists for; qualification status of any alternate (qualified / qualified and exercised in the
-last 12 months / named only); **re-source interval** in weeks; consequence of disruption, priced at the
-cost of delay plus switching cost; assessed disruption probability with its source; expected cost of
-disruption; the annual cost of keeping the alternate exercisable; and the **breakeven disruption
-probability** at which that cost is justified. Reviewed quarterly, with two standing questions: has any
-shared dependency appeared since the last review, and has any alternate lapsed from *exercisable* to
-*named only*?
+disclosure obligation reaches; **shared dependencies flagged across rows**. This is the column the
+register exists for; qualification status of any alternate (qualified / qualified and exercised in
+the last 12 months / named only); **re-source interval** in weeks; consequence of disruption, priced
+at the cost of delay plus switching cost; assessed disruption probability with its source; expected
+cost of disruption; the annual cost of keeping the alternate exercisable; and the **breakeven
+disruption probability** at which that cost is justified. Reviewed quarterly, with two standing
+questions: has any shared dependency appeared since the last review, and has any alternate lapsed
+from *exercisable* to *named only*?
 
 ---
 
@@ -1708,19 +1734,20 @@ omitting irrecoverable cost (10.4.2) · dividing an extra certain cost by the fu
 than by the consequence *reduction* when computing a breakeven probability (Exercise 10.4) · and
 assuming supplier independence, which understated Case study B's exposure by 59.56 %.
 
-**How the domain connects.** Domain 3 supplies the governance latency that makes the procurement chain
-31 weeks long and the escalation design that a dispute ladder rests on. Domain 4 supplies the interface
-arithmetic that prices a packaging decision and the change control that must run across the contract
-boundary. Domain 5's specification determines whether any contract mechanism can work — on undefined
-scope they all converge on cost-plus with a dispute attached. Domain 6 supplies the critical path that
-makes a stand-up delay or a re-source interval expensive, and the cost of delay of USD 45,000 a week at
-which everything here is priced. Domain 7 supplies the contract-model taxonomy, the blended rate, the
-cash-flow consequence of payment terms and the `PTA` — all cited here, none re-derived. Domain 8 supplies
-`EMV`, the correlation result that Case study B demonstrates commercially, and the R1 and R3 risks these
-sourcing and evaluation decisions act on. Domain 11 handles the negotiation behaviour that determines
-where inside a bargaining range these arithmetic results actually land, and Domain 13 the contracting
-problem for adaptive delivery, where scope is deliberately not fixed. PFL-AI Domain 11 treats the
-risk-allocation face of the same problem from the lender's side.
+**How the domain connects.** Domain 3 supplies the governance latency that makes the procurement
+chain 31 weeks long and the escalation design that a dispute ladder rests on. Domain 4 supplies the
+interface arithmetic that prices a packaging decision and the change control that must run across
+the contract boundary. Domain 5's specification determines whether any contract mechanism can work,
+on undefined scope they all converge on cost-plus with a dispute attached. Domain 6 supplies the
+critical path that makes a stand-up delay or a re-source interval expensive, and the cost of delay
+of USD 45,000 a week at which everything here is priced. Domain 7 supplies the contract-model
+taxonomy, the blended rate, the cash-flow consequence of payment terms and the `PTA` — all cited
+here, none re-derived. Domain 8 supplies `EMV`, the correlation result that Case study B
+demonstrates commercially, and the R1 and R3 risks these sourcing and evaluation decisions act on.
+Domain 11 handles the negotiation behaviour that determines where inside a bargaining range these
+arithmetic results actually land, and Domain 13 the contracting problem for adaptive delivery, where
+scope is deliberately not fixed. PFL-AI Domain 11 treats the risk-allocation face of the same
+problem from the lender's side.
 
 ---
 
@@ -1729,55 +1756,58 @@ Procurement decisions are delivery decisions, and almost all of them are taken o
 
 **Make-or-buy** is a proposition about volume, not about unit price. Auriga's remote-terminal-unit
 capability looks 33.33 % cheaper to build per unit and is USD 88,800 more expensive to own at the 84
-units required, because the unit-price advantage of 1,800 has to recover a fixed-cost disadvantage of
-240,000 — a breakeven of **133.33 units**. Price the 9-week capability stand-up at the project's cost of
-delay and the breakeven moves to **358.33 units**, which is not a marginal case but an unavailable one.
-The exit column is where make-or-buy papers fail, and it is never zero. The procurement chain that
-delivers the controllers runs to **31 weeks against a 25-week project**, of which 18 weeks are process
-and 6 are pure governance latency worth **USD 270,000** — which is why long-lead items are committed
-before the baseline and why the compressible time is administrative, not industrial.
+units required, because the unit-price advantage of 1,800 has to recover a fixed-cost disadvantage
+of 240,000, a breakeven of **133.33 units**. Price the 9-week capability stand-up at the project's
+cost of delay and the breakeven moves to **358.33 units**, which is not a marginal case but an
+unavailable one. The exit column is where make-or-buy papers fail, and it is never zero. The
+procurement chain that delivers the controllers runs to **31 weeks against a 25-week project**, of
+which 18 weeks are process and 6 are pure governance latency worth **USD 270,000**, which is why
+long-lead items are committed before the baseline and why the compressible time is administrative,
+not industrial.
 
-**Tender evaluation** is arithmetic that selects a supplier. One bid set — Alpha 2,000,000/62, Beta
-2,200,000/78, Gamma 2,480,000/92 — produces **three different winners**: Gamma below a 57.70 % price
-weight, Beta between 57.70 % and 63.77 %, Alpha above. Changing only the normalisation convention moves
-the Beta/Gamma boundary by **7.70 percentage points**. That is the whole case for fixing and publishing
-the model, in full, before bids are opened, and for scoring quality before price is seen; Case study A
-paid **USD 557,000** to learn it, against the **USD 480,000** price gap the re-weighting was arguing
-about. The discipline that should precede any quality weighting is the premium test: Gamma's 480,000
-premium bought **USD 64,000** of avoided expected rework, a ratio of **7.5 to 1**.
+**Tender evaluation** is arithmetic that selects a supplier. One bid set (Alpha 2,000,000/62, Beta
+2,200,000/78, Gamma 2,480,000/92) produces **three different winners**: Gamma below a 57.70 % price
+weight, Beta between 57.70 % and 63.77 %, Alpha above. Changing only the normalisation convention
+moves the Beta/Gamma boundary by **7.70 percentage points**. That is the whole case for fixing and
+publishing the model, in full, before bids are opened, and for scoring quality before price is seen;
+Case study A paid **USD 557,000** to learn it, against the **USD 480,000** price gap the
+re-weighting was arguing about. The discipline that should precede any quality weighting is the
+premium test: Gamma's 480,000 premium bought **USD 64,000** of avoided expected rework, a ratio of
+**7.5 to 1**.
 
-**Contract strategy** is the allocation of the marginal dollar, and the allocation always sums to one — a
-contract cannot make cost disappear. On the same cost distribution (expected cost USD 2,120,000), a
-risk-neutral firm fixed price of **USD 2,270,000** and cost plus a 150,000 fee cost the buyer *the same in
-expectation*; what fixed price buys is the collapse of a **USD 230,434** standard deviation to zero, and
-it is only as good as the supplier's balance sheet — at the 2,600,000 outcome that supplier loses 330,000.
-The target-cost structure as specified moves **USD 48,000** from supplier to buyer and creates nothing:
-the supplier's expected margin is 102,000 against a 150,000 requirement, because the target fee is the fee
-at the target and not the expected fee. Value appears only when behaviour changes — the underrun
-probability must rise from 0.20 to **0.456** for the supplier to accept the structure, at which point
-expected cost falls by **USD 134,400**, all of it accruing to the buyer, which is what the negotiation is
-really about. Above Auriga's `PTA` of **USD 2,428,571.43** (Domain 7, KA 7.4.3) the supplier's marginal
-share jumps from 0.30 to 1.00 and cooperation turns to entitlement for structural reasons. And a
-performance regime capped at 5 % of a 2,200,000 contract against a 180,000 compliance cost prices failure
-at a **USD 70,000 discount**: deterrence needs **8.18 %**, compensation **14.55 %**, and confusing the two
-is the design error.
+**Contract strategy** is the allocation of the marginal dollar, and the allocation always sums to
+one: a contract cannot make cost disappear. On the same cost distribution (expected cost USD
+2,120,000), a risk-neutral firm fixed price of **USD 2,270,000** and cost plus a 150,000 fee cost
+the buyer *the same in expectation*; what fixed price buys is the collapse of a **USD 230,434**
+standard deviation to zero, and it is only as good as the supplier's balance sheet, at the 2,600,000
+outcome that supplier loses 330,000. The target-cost structure as specified moves **USD 48,000**
+from supplier to buyer and creates nothing: the supplier's expected margin is 102,000 against a
+150,000 requirement, because the target fee is the fee at the target and not the expected fee. Value
+appears only when behaviour changes; the underrun probability must rise from 0.20 to **0.456** for
+the supplier to accept the structure, at which point expected cost falls by **USD 134,400**, all of
+it accruing to the buyer, which is what the negotiation is really about. Above Auriga's `PTA` of
+**USD 2,428,571.43** (Domain 7, KA 7.4.3) the supplier's marginal share jumps from 0.30 to 1.00 and
+cooperation turns to entitlement for structural reasons. And a performance regime capped at 5 % of a
+2,200,000 contract against a 180,000 compliance cost prices failure at a **USD 70,000 discount**:
+deterrence needs **8.18 %**, compensation **14.55 %**, and confusing the two is the design error.
 
-**Claims, disputes and resilience** are where records earn their keep. A properly built USD 107,914.80
-variation claim had **48.37 %** of its value — USD 52,194.80 — exposed to a notice provision, which is why
-a notice register is worth more than any negotiating skill, in both directions. In a 400,000 dispute
-settling at 235,000 against an expected arbitration cost of 614,000, the decisive figure is that the
-**USD 340,000 of irrecoverable cost exceeds the entire settlement**, so fighting cannot pay even on a
-total win. An ethical-sourcing programme costing 124,800 against 106,400 of avoided expected exposure
-fails an expected-value test at 70 % effectiveness — and the honest response is to risk-tier it, state the
-breakevens (**82.11 %** effectiveness, **9.38 %** probability), recognise the mean of a fat-tailed
-consequence as the wrong statistic, and meet any legal duty regardless. Resilience, finally, is bought in
-the wrong form almost universally: for Auriga's 84 controllers, single sourcing costs **1,008,400** in
-expectation, a 60/40 dual split **1,026,724**, and a **qualified alternate 964,500** — so qualify two,
-award one, keep the second exercisable, at a breakeven disruption probability of **10.74 %** against the
+**Claims, disputes and resilience** are where records earn their keep. A properly built USD
+107,914.80 variation claim had **48.37 %** of its value (USD 52,194.80) exposed to a notice
+provision, which is why a notice register is worth more than any negotiating skill, in both
+directions. In a 400,000 dispute settling at 235,000 against an expected arbitration cost of
+614,000, the decisive figure is that the **USD 340,000 of irrecoverable cost exceeds the entire
+settlement**, so fighting cannot pay even on a total win. An ethical-sourcing programme costing
+124,800 against 106,400 of avoided expected exposure fails an expected-value test at 70 %
+effectiveness; and the honest response is to risk-tier it, state the breakevens (**82.11 %**
+effectiveness, **9.38 %** probability), recognise the mean of a fat-tailed consequence as the wrong
+statistic, and meet any legal duty regardless. Resilience, finally, is bought in the wrong form
+almost universally: for Auriga's 84 controllers, single sourcing costs **1,008,400** in expectation,
+a 60/40 dual split **1,026,724**, and a **qualified alternate 964,500**, so qualify two, award one,
+keep the second exercisable, at a breakeven disruption probability of **10.74 %** against the
 split's **24.22 %**. Then test the assumption that matters: introduce a shared sub-tier at a joint
-probability of 0.12 and both resilience options become **worse than single sourcing** — which Case study B
-lived, at a cost of 964,800 spent on a split that bought nothing while 380,000 spent on the actual single
-point of failure would have.
+probability of 0.12 and both resilience options become **worse than single sourcing**, which Case
+study B lived, at a cost of 964,800 spent on a split that bought nothing while 380,000 spent on the
+actual single point of failure would have.
 
 The through-line: **every procurement decision has a number that decides it, the number is usually not
 the one on the front of the paper, and the breakeven is more useful than the point estimate.** Compute

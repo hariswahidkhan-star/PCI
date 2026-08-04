@@ -5,8 +5,8 @@
 Domains 5 and 6 left one question open. Domain 5 established that a bankable project needs a
 creditworthy payer under a contract of adequate tenor (KA 5.3.2); Domain 6 built the model that
 turns a revenue forecast into coverage; Domain 10 sized debt from `CFADS` and a target coverage
-ratio and treated both as given. None of them addressed how the **shape** of the revenue promise —
-its architecture, not its expectation — determines how much debt exists to be sized. This domain
+ratio and treated both as given. None of them addressed how the **shape** of the revenue promise
+(its architecture, not its expectation) determines how much debt exists to be sized. This domain
 shows where `CFADS` and the target ratio come from, and the answer changes the negotiation.
 
 The central claim is a single sentence with expensive consequences: **debt is sized on the worst
@@ -16,9 +16,9 @@ of the facility.** Everything in the domain is a corollary. The contracted-to-me
 (KA 7.1) is a spectrum of *dispersion*, priced by lenders in required coverage before it is
 priced in a tariff. Demand-based and concession structures (KA 7.2) put the dispersion inside a
 payment mechanism whose banded, floored and shared forms are risk-transfer instruments in tariff
-clothing. Escalation and volume risk (KA 7.3) are the two ways a structure that looked adequate at
-close stops being adequate later — one slowly and arithmetically, the other quickly and
-non-linearly. And counterparty credit and stress testing (KA 7.4) make the rest conditional: a
+clothing. Escalation and volume risk (KA 7.3) are the two ways a structure that looked adequate
+at close stops being adequate later (one slowly and arithmetically, the other quickly and
+non-linearly). And counterparty credit and stress testing (KA 7.4) make the rest conditional: a
 contracted stream is worth the payer's ability to pay, and concentration is invisible to the
 expected-loss calculation a credit committee will nevertheless be shown.
 
@@ -52,11 +52,11 @@ in the domain is built from those five inputs, and one closed form recurs throug
 CFADS = 0.75 × revenue − 0.03 × volume(m³) − 1,896,000
 ```
 
-— the `CFADS` bridge of KA 6.2.2 written as a function of the two commercial variables, absorbing
-the fixed cost, the 20 % tax rate applied to `EBITDA` less depreciation and interest, and the
-working-capital absorption of 5 % of revenue. Substituting revenue 12,000,000 and volume 24,000,000
-returns **6,384,000** exactly. It is the domain's arithmetic engine, and every result below is
-reproducible from it.
+: the `CFADS` bridge of KA 6.2.2 written as a function of the two commercial variables,
+absorbing the fixed cost, the 20 % tax rate applied to `EBITDA` less depreciation and interest,
+and the working-capital absorption of 5 % of revenue. Substituting revenue 12,000,000 and volume
+24,000,000 returns **6,384,000** exactly. It is the domain's arithmetic engine, and every result
+below is reproducible from it.
 
 ---
 
@@ -68,10 +68,10 @@ payments and the deduction mechanism.*
 ### 7.1.1 The revenue-risk spectrum
 
 **Definition.** A project's revenue structure sits on a spectrum defined by **who bears the risk
-that the asset earns less than forecast**. At the contracted end a creditworthy payer is obliged to
-pay a defined amount whether or not it takes the output, provided the asset is available; at the
-merchant end the project sells into a market at prices and volumes nobody has promised.
-Intermediate forms — take-or-pay, capacity plus energy, minimum revenue guarantees, volume bands —
+that the asset earns less than forecast**. At the contracted end a creditworthy payer is obliged
+to pay a defined amount whether or not it takes the output, provided the asset is available; at
+the merchant end the project sells into a market at prices and volumes nobody has promised.
+Intermediate forms (take-or-pay, capacity plus energy, minimum revenue guarantees, volume bands)
 allocate the risk in specified proportions.
 
 **Why the spectrum, not the mean, governs debt.** Domain 10 sized debt as `CFADS` divided by the
@@ -107,8 +107,8 @@ domain's first quantitative result.
    (Domain 10's figure, unchanged). Structure B, underwritten on the low case at the same
    1.30 ×, supports debt service of 3,636,923 and debt of **30,491,396**; underwritten on
    expected `CFADS` at a merchant-appropriate 1.50 × it supports **35,681,640**.
-4. **Interpretation.** The expected `CFADS` is **identical to the dollar** — 6,384,000 in both
-   structures — and so is the expected `DSCR`, at 1.2743, because `DSCR` is linear in `CFADS`
+4. **Interpretation.** The expected `CFADS` is **identical to the dollar** (6,384,000 in both
+   structures), and so is the expected `DSCR`, at 1.2743, because `DSCR` is linear in `CFADS`
    when debt service is fixed. An adviser who reports expected values has reported that the two
    structures are the same. They differ by **10,679,727 of debt capacity**, **25.94 %** of the
    contracted structure's, and by **11,508,604** against the sponsors' 42,000,000 request. Every
@@ -116,17 +116,17 @@ domain's first quantitative result.
    sponsors' return.
 
    Three readings deserve to leave this example. **First, the mean is not a coverage ratio.**
-   Coverage is tested in a period, and lenders underwrite the period they are prepared to be wrong
-   about — commonly a P90 or an explicitly stressed case, never the mean. In the low outcome
-   Structure B's `DSCR` is **0.9438**: debt service is not merely uncovered by covenant, it is
-   unpaid from operating cash. A structure with a one-in-four chance of failing to pay is not a
-   1.2743 × project with a caveat; it is a different credit. **Second, the case moves as well as
-   the ratio**, and a leader who negotiates only the ratio while letting the case be chosen
-   unopposed has conceded the larger of the two variables. **Third, the risk has a computable
-   price.** Structure A transfers volume risk to the offtaker, who will charge for it in tariff,
-   tenor or termination terms. The question is never "which structure is better" but "is the
-   offtaker's price for taking volume risk less than 10,679,727 of equity plus the return on it?"
-   Asking that question is the professional act.
+   Coverage is tested in a period, and lenders underwrite the period they are prepared to be
+   wrong about: commonly a P90 or an explicitly stressed case, never the mean. In the low
+   outcome Structure B's `DSCR` is **0.9438**: debt service is not merely uncovered by covenant,
+   it is unpaid from operating cash. A structure with a one-in-four chance of failing to pay is
+   not a 1.2743 × project with a caveat; it is a different credit. **Second, the case moves as
+   well as the ratio**, and a leader who negotiates only the ratio while letting the case be
+   chosen unopposed has conceded the larger of the two variables. **Third, the risk has a
+   computable price.** Structure A transfers volume risk to the offtaker, who will charge for it
+   in tariff, tenor or termination terms. The question is never "which structure is better" but
+   "is the offtaker's price for taking volume risk less than 10,679,727 of equity plus the
+   return on it?" Asking that question is the professional act.
 
 > **Fig 7.1.1 — Identical expected cash, different bankability.** Bar chart of the volume
 > tariff's three `DSCR` outcomes (0.9438, 1.2743, 1.6049) against the availability payment's
@@ -151,18 +151,18 @@ recur across sectors under different names.
 | **Take-or-pay minimum** | A floor volume, paid whether taken or not | Volume above the floor only |
 | **Merchant tail** | Output sold outside the contract | Price and volume, entirely |
 
-The **two-part tariff** — capacity plus variable — is the most common bankable form because it
+The **two-part tariff**, capacity plus variable, is the most common bankable form because it
 separates the recovery of fixed costs and debt service (which cannot flex) from the recovery of
-variable costs (which can). Its discipline is a matching test: **the capacity charge should recover
-fixed cash costs, debt service and the return on capital; the variable charge should recover
-variable costs at contracted efficiency, no more.** A tariff that recovers fixed costs through a
-volume-linked charge has converted a fixed obligation into a variable receipt, which is the
-structural error behind much demand-risk distress. Kestrel's Structure B is that error in pure
-form: 3,600,000 of fixed cost and 5,009,635 of debt service, recovered per cubic metre.
+variable costs (which can). Its discipline is a matching test: **the capacity charge should
+recover fixed cash costs, debt service and the return on capital; the variable charge should
+recover variable costs at contracted efficiency, no more.** A tariff that recovers fixed costs
+through a volume-linked charge has converted a fixed obligation into a variable receipt, which
+is the structural error behind much demand-risk distress. Kestrel's Structure B is that error in
+pure form: 3,600,000 of fixed cost and 5,009,635 of debt service, recovered per cubic metre.
 
-**Take-or-pay and its limits.** A floor is worth what the party writing it is good for —
-Domain 5's creditworthiness condition, with a number attached. Two cautions. Take-or-pay volumes
-are frequently **make-up** rights rather than pure obligations: the payer pays for volume not taken
+**Take-or-pay and its limits.** A floor is worth what the party writing it is good for (Domain
+5's creditworthiness condition, with a number attached). Two cautions. Take-or-pay volumes are
+frequently **make-up** rights rather than pure obligations: the payer pays for volume not taken
 but may take it later at no further charge, which protects cash timing far less than a summary
 suggests. And **the floor's tenor must reach the loan's**; an eight-year take-or-pay against a
 twelve-year loan is a merchant tail with a delay (KA 7.A.2).
@@ -208,36 +208,36 @@ were one.
    as a 4.14 % revenue fall, expressed in the unit the people who control it actually manage.
 
    The mechanism is where the arithmetic surprises people. A single point of availability costs
-   **127,800 of `CFADS`** — the slope of the linear form — of which 180,000 is lost revenue and
+   **127,800 of `CFADS`**, the slope of the linear form, of which 180,000 is lost revenue and
    52,200 is recovered through lower variable cost, tax and working-capital absorption. **The
-   1.5 × multiplier is doing most of the damage.** The general slope is
-   `9,000,000 × multiplier − 720,000`, so at a multiplier of 1.0 it falls to 8,280,000 and the
-   covenant does not break until **90.502 %** — the negotiated multiplier costs **1.584 percentage
-   points** of operating tolerance. (At a multiplier of 1.0 that slope is exactly the volume term
-   of KA 7.3.2, because a pro-rata deduction is economically identical to losing the output.)
-   Multipliers, caps on cumulative deductions, cure periods, planned-outage allowances and the
-   treatment of force majeure and offtaker-caused unavailability are therefore first-order
-   commercial terms, not schedules for the technical adviser. The caution is blunt: **an
-   availability structure is not a risk-free structure, it is one whose risk has been converted
-   from demand into operations.** Kestrel's revenue is now a function of its own reliability — a
-   risk it controls but must then actually control, with Domain 10's maintenance reserve funded and
-   the outage plan built around the deduction formula rather than engineering convenience.
+   1.5 × multiplier is doing most of the damage.** The general slope is `9,000,000 × multiplier
+   − 720,000`, so at a multiplier of 1.0 it falls to 8,280,000 and the covenant does not break
+   until **90.502 %** — the negotiated multiplier costs **1.584 percentage points** of operating
+   tolerance. (At a multiplier of 1.0 that slope is exactly the volume term of KA 7.3.2, because
+   a pro-rata deduction is economically identical to losing the output.) Multipliers, caps on
+   cumulative deductions, cure periods, planned-outage allowances and the treatment of force
+   majeure and offtaker-caused unavailability are therefore first-order commercial terms, not
+   schedules for the technical adviser. The caution is blunt: **an availability structure is not
+   a risk-free structure, it is one whose risk has been converted from demand into operations.**
+   Kestrel's revenue is now a function of its own reliability — a risk it controls but must then
+   actually control, with Domain 10's maintenance reserve funded and the outage plan built
+   around the deduction formula rather than engineering convenience.
 
-**Who measures, who certifies, and what happens while it is disputed.** The arithmetic above assumes
-a number — availability — arrives each month and is agreed. It does not arrive; it is *produced*, by
-somebody, from something, and it can be contested. The governance layer around the formula decides
-whether a deduction is ever actually applied, and it is a bankability question of the same order as
-the multiplier.
+**Who measures, who certifies, and what happens while it is disputed.** The arithmetic above
+assumes a number, availability, arrives each month and is agreed. It does not arrive; it is
+*produced*, by somebody, from something, and it can be contested. The governance layer around
+the formula decides whether a deduction is ever actually applied, and it is a bankability
+question of the same order as the multiplier.
 
 *The measurement source.* A deduction formula is only as good as the metering behind it. What
-physically measures availability — the plant control system, a revenue meter, an offtaker's own
-instrumentation, a manual log — and how is it calibrated, by whom, on what cycle, and to what
-tolerance? Who may recalibrate, and does a recalibration reopen prior periods? What happens during a
-metering outage: is availability deemed, estimated from a preceding period, or treated as nil? A
-structure in which the offtaker owns the meters and the deemed-availability rule on meter failure is
-"nil" has transferred more risk than the multiplier suggests. **Metering, calibration and the
-failure rule are bankability conditions** and belong in the condition register of Domain 5, not in a
-technical annexe.
+physically measures availability (the plant control system, a revenue meter, an offtaker's own
+instrumentation, a manual log), and how is it calibrated, by whom, on what cycle, and to what
+tolerance? Who may recalibrate, and does a recalibration reopen prior periods? What happens
+during a metering outage: is availability deemed, estimated from a preceding period, or treated
+as nil? A structure in which the offtaker owns the meters and the deemed-availability rule on
+meter failure is "nil" has transferred more risk than the multiplier suggests. **Metering,
+calibration and the failure rule are bankability conditions** and belong in the condition
+register of Domain 5, not in a technical annexe.
 
 *The certification chain.* Somebody produces the primary availability record and somebody certifies
 it. The three common architectures — SPV self-reports and the offtaker may challenge; the offtaker
@@ -248,35 +248,35 @@ is, and **what happens to a period nobody challenges in time**, because an uncha
 usually final.
 
 *The evidence, and how long it must survive.* Whoever bears the burden must be able to prove the
-month years later. The underlying availability data — meter records, control-system logs, outage
-records with their causes and permits, maintenance records, correspondence notifying outages — is
-retained through the contractual challenge window **and** the period in which a dispute about it can
-still be brought, which is longer and is jurisdiction-specific. The standing retention rule in the
-toolkit preamble applies: period, form, named custodian, in a form that opens without the system
-that created it, since control-system data is exactly the kind that becomes unreadable when the
-plant's software is upgraded.
+month years later. The underlying availability data (meter records, control-system logs, outage
+records with their causes and permits, maintenance records, correspondence notifying outages) is
+retained through the contractual challenge window **and** the period in which a dispute about it
+can still be brought, which is longer and is jurisdiction-specific. The standing retention rule
+in the toolkit preamble applies: period, form, named custodian, in a form that opens without the
+system that created it, since control-system data is exactly the kind that becomes unreadable
+when the plant's software is upgraded.
 
-*Escalation, and who may settle.* The escalation route is typically a stated sequence — operational
-meeting, senior representatives, then expert determination or arbitration — and its cost allocation
-matters, because a mechanism in which each party bears its own costs is one the larger party can
-afford to use for its own sake. Two internal locks belong on the SPV side. First, **name who may
-settle a deduction claim on the SPV's behalf**, with a threshold above which it goes to the board.
-Second, and more easily missed: **a settlement that changes a covenant ratio is not an operational
-decision.** Agreeing a disputed deduction that moves the coverage ratio, or conceding a run of
-months to close a commercial argument, reaches into the finance documents; whether it needs anything
-of the lenders is a document question, and the answer is established before the concession is
-offered, not after.
+*Escalation, and who may settle.* The escalation route is typically a stated sequence
+(operational meeting, senior representatives, then expert determination or arbitration), and its
+cost allocation matters, because a mechanism in which each party bears its own costs is one the
+larger party can afford to use for its own sake. Two internal locks belong on the SPV side.
+First, **name who may settle a deduction claim on the SPV's behalf**, with a threshold above
+which it goes to the board. Second, and more easily missed: **a settlement that changes a
+covenant ratio is not an operational decision.** Agreeing a disputed deduction that moves the
+coverage ratio, or conceding a run of months to close a commercial argument, reaches into the
+finance documents; whether it needs anything of the lenders is a document question, and the
+answer is established before the concession is offered, not after.
 
-*The cash-timing consequence, which is the one with a number attached.* Ask whether deductions are
-**applied pending resolution**. If they are — a pay-then-argue mechanism — a disputed operational
-judgment becomes an immediate cash reduction and therefore an immediate coverage event, **before
-anyone has ruled on it**. On the table above, a contested run of deductions equivalent to three
-points of availability moves reported coverage by roughly the slope already computed, and it does so
-in the quarter the dispute starts rather than the quarter it ends. If instead the disputed amount is
-withheld or escrowed pending determination, the exposure is to the counterparty's credit and to the
-delay, which is a different risk and a smaller one. This single question — pay first or argue first
-— changes the reserve the structure needs, and it is the question most often left to the operations
-team to discover.
+*The cash-timing consequence, which is the one with a number attached.* Ask whether deductions
+are **applied pending resolution**. If they are, a pay-then-argue mechanism, a disputed
+operational judgment becomes an immediate cash reduction and therefore an immediate coverage
+event, **before anyone has ruled on it**. On the table above, a contested run of deductions
+equivalent to three points of availability moves reported coverage by roughly the slope already
+computed, and it does so in the quarter the dispute starts rather than the quarter it ends. If
+instead the disputed amount is withheld or escrowed pending determination, the exposure is to
+the counterparty's credit and to the delay, which is a different risk and a smaller one. This
+single question, pay first or argue first, changes the reserve the structure needs, and it is
+the question most often left to the operations team to discover.
 
 *The standing caution.* Whether deductions may be applied pending resolution, what remedy attaches
 to a deduction later found to be wrongly applied, whether an unchallenged period is conclusive, and
@@ -288,23 +288,24 @@ Toolkit 7.T.1, and make sure the operations team that will live with them has re
 
 ### AI in this KA
 
-Machine assistance earns its place in three tasks. **Extracting the payment mechanism** — charge
+Machine assistance earns its place in three tasks. **Extracting the payment mechanism** (charge
 formulae, deduction multipliers, caps, outage allowances, indexation clauses and their
-cross-references — is high-volume reading that models do well and humans do inconsistently, and the
-output is a specification a modeller can implement (Toolkit 7.T.1). **Reconciling the modelled
-tariff to the contractual tariff** by recomputing a historical invoice from the extracted formula
-is a genuine test with a right answer. And **monitoring deductions** against availability data as
-it accrues turns a quarterly surprise into a weekly signal.
+cross-references) is high-volume reading that models do well and humans do inconsistently, and
+the output is a specification a modeller can implement (Toolkit 7.T.1). **Reconciling the
+modelled tariff to the contractual tariff** by recomputing a historical invoice from the
+extracted formula is a genuine test with a right answer. And **monitoring deductions** against
+availability data as it accrues turns a quarterly surprise into a weekly signal.
 
-Before any of it, the data question, which comes first: an offtake or concession contract — and above
-all an **unsigned draft** of one — is the highest-classification material in the transaction, because
-it carries the counterparty's position as well as the project's. It is processed **only in an
-environment approved for that data classification and permitted by the confidentiality undertakings
-that cover it**, and establishing that permission is a precondition of the extraction rather than a
-review of it. It is usually a permitted-recipient question rather than a tool-quality one: an
-approved tool used outside the disclosure the undertaking permits is still a disclosure, and a
-grantor's tender rules frequently restrict where bid material may be processed at all. Domain 1,
-KA 1.3.4 states the rule; Domain 16 builds the machinery.
+Before any of it, the data question, which comes first: an offtake or concession contract, and
+above all an **unsigned draft** of one, is the highest-classification material in the
+transaction, because it carries the counterparty's position as well as the project's. It is
+processed **only in an environment approved for that data classification and permitted by the
+confidentiality undertakings that cover it**, and establishing that permission is a precondition
+of the extraction rather than a review of it. It is usually a permitted-recipient question
+rather than a tool-quality one: an approved tool used outside the disclosure the undertaking
+permits is still a disclosure, and a grantor's tender rules frequently restrict where bid
+material may be processed at all. Domain 1, KA 1.3.4 states the rule; Domain 16 builds the
+machinery.
 
 Where it must not go: **the deduction formula must never be paraphrased into the model.** A summary
 rendering "1.5 times the availability shortfall applied to the capacity charge" as a pro-rata
@@ -380,37 +381,39 @@ breakpoint to 90.502 %. The correct reading is:
 - D. the breakpoint depends on the tariff level, not the multiplier
 
 *Rationale:* The multiplier scales the slope of the `CFADS` line against availability, so it
-scales headroom directly (7.1.3). C inverts the logic — the multiplier is what brings the
+scales headroom directly (7.1.3). C inverts the logic; the multiplier is what brings the
 breakpoint *closer*; D ignores that the deduction is computed on the charge and the multiplier
 together.
 
-**MCQ 7.1-E `[7.1.1 · Evaluation]`** Kestrel's offtaker will take volume risk under Structure A, but
-only for a capacity charge of **11,600,000** instead of 12,000,000. `CFADS` becomes 6,084,000, `DSCR`
-1.2145, and debt capacity at 1.30 × becomes **39,236,390** — against 41,171,123 at the full charge
-and 30,491,396 under the volume tariff sized on its low case. The 400,000 a year has a present value
-of 4,269,910 over the 25-year concession at 8 %. The soundest recommendation is:
+**MCQ 7.1-E `[7.1.1 · Evaluation]`** Kestrel's offtaker will take volume risk under Structure A,
+but only for a capacity charge of **11,600,000** instead of 12,000,000. `CFADS` becomes
+6,084,000, `DSCR` 1.2145, and debt capacity at 1.30 × becomes **39,236,390**, against 41,171,123
+at the full charge and 30,491,396 under the volume tariff sized on its low case. The 400,000 a
+year has a present value of 4,269,910 over the 25-year concession at 8 %. The soundest
+recommendation is:
 - A. reject the reduction: 4,269,910 of present value is surrendered permanently for a one-off financing benefit
 - B. accept it: the offtaker's price for taking volume risk is 4,269,910 of concession-life value against 8,744,994 of debt capacity released, so it is well below what the risk transfer is worth ✅
 - C. accept it, because an availability structure is always more bankable than a volume tariff
 - D. reject it and negotiate the 1.30 × target down instead, since the ratio is the variable that matters
 
-*Rationale:* this is the question KA 7.1.1 says is the professional act — is the offtaker's price for
-volume risk less than the equity the transfer releases? — and here it is, by a factor of more than
-two, with 1.2145 still clear of the covenant. A performs half the calculation: the capacity it buys
-is not a one-off benefit but equity permanently not subscribed. C is the unsupported generality, and
-7.1.3 shows what the structure actually does — converts demand risk into operational risk, with the
-covenant breaking at 92.09 % availability. D inverts the domain's central finding: the case moves as
-well as the ratio, and the case is the larger of the two variables.
+*Rationale:* this is the question KA 7.1.1 says is the professional act (is the offtaker's price
+for volume risk less than the equity the transfer releases?), and here it is, by a factor of
+more than two, with 1.2145 still clear of the covenant. A performs half the calculation: the
+capacity it buys is not a one-off benefit but equity permanently not subscribed. C is the
+unsupported generality, and 7.1.3 shows what the structure actually does (converts demand risk
+into operational risk, with the covenant breaking at 92.09 % availability). D inverts the
+domain's central finding: the case moves as well as the ratio, and the case is the larger of the
+two variables.
 
-**MCQ 7.1-F `[7.1.3 · Evaluation]`** A contract summary renders the deduction clause — the capacity
-charge multiplied by the availability shortfall and by a 1.5 × liquidated-damage multiplier — as a
-pro-rata reduction of the charge, and the modeller builds it that way. The model balances and every
-check in it passes. The soundest professional position is that:
+**MCQ 7.1-F `[7.1.3 · Evaluation]`** A contract summary renders the deduction clause (the
+capacity charge multiplied by the availability shortfall and by a 1.5 × liquidated-damage
+multiplier) as a pro-rata reduction of the charge, and the modeller builds it that way. The
+model balances and every check in it passes. The soundest professional position is that:
 - A. the difference is immaterial while the model is internally consistent and its checks pass
-- B. one period's revenue must be recomputed from the clause text by hand, at full and at reduced
-  availability, before any coverage ratio derived from it is quoted: the paraphrase cuts the slope of
-  `CFADS` against availability from 12,780,000 to 8,280,000 — 35.21 % — and moves the covenant
-  breakpoint from 92.086 % to 90.502 % ✅
+- B. one period's revenue must be recomputed from the clause text by hand, at full and at
+  reduced availability, before any coverage ratio derived from it is quoted: the paraphrase cuts
+  the slope of `CFADS` against availability from 12,780,000 to 8,280,000 (35.21 %), and moves
+  the covenant breakpoint from 92.086 % to 90.502 % ✅
 - C. the deduction schedule belongs to the technical adviser, so the commercial team should work from
   the summary it was given
 - D. the target `DSCR` should be raised to restore the coverage the paraphrase removed
@@ -424,9 +427,9 @@ error as though it were a risk, which buries it inside a ratio instead of correc
 **MCQ 7.1-G `[7.1.2 · Comprehension]`** A take-or-pay minimum and an availability payment differ in
 what each leaves with the project:
 - A. they are equivalent, both being contracted revenue from a creditworthy payer
-- B. a take-or-pay floor covers volume below a contracted minimum — and is frequently a make-up right,
-  so the payer may take the volume later at no further charge — while an availability payment removes
-  volume risk altogether and substitutes an obligation to be available ✅
+- B. a take-or-pay floor covers volume below a contracted minimum (and is frequently a make-up
+  right, so the payer may take the volume later at no further charge), while an availability
+  payment removes volume risk altogether and substitutes an obligation to be available ✅
 - C. take-or-pay transfers operating risk to the payer, while an availability payment retains it
 - D. take-or-pay protects against price and an availability payment against cost
 
@@ -447,35 +450,35 @@ escrowed until determination. The correct assessment is:
 - C. sheet B is worse, because escrow exposes the project to the offtaker's credit for the escrowed amounts
 - D. the difference is a technical-adviser matter and does not belong in a commercial comparison
 
-*Rationale:* the formula is only the last step; who measures, what is deemed when measurement fails,
-and whether cash moves before determination decide whether a deduction is ever actually applied and
-when (7.1.3). A stops at the arithmetic the domain has already priced. C identifies a real but
-smaller exposure — credit and delay on the escrowed sum — and weighs it against an immediate
-coverage event. D is the misclassification the section exists to correct: these are first-order
-commercial terms.
+*Rationale:* the formula is only the last step; who measures, what is deemed when measurement
+fails, and whether cash moves before determination decide whether a deduction is ever actually
+applied and when (7.1.3). A stops at the arithmetic the domain has already priced. C identifies
+a real but smaller exposure (credit and delay on the escrowed sum), and weighs it against an
+immediate coverage event. D is the misclassification the section exists to correct: these are
+first-order commercial terms.
 
 ### Self-check — KA 7.1
 
-1. *Why does an expected `DSCR` convey nothing about bankability?* — Coverage is tested in a
+1. *Why does an expected `DSCR` convey nothing about bankability?* Coverage is tested in a
    period; lenders underwrite a low or stressed case, and dispersion also raises the required
    ratio, so the mean moves neither variable.
-2. *State Kestrel's covenant breakpoint in availability terms and in cash terms.* — 92.086 %
+2. *State Kestrel's covenant breakpoint in availability terms and in cash terms.* 92.086 %
    availability; `CFADS` of 6,011,562, which is 372,438 of annual cash below base (Domain 10).
-3. *What has an availability structure actually done to a project's risk?* — Converted demand
-   risk into operational risk, which the project controls but must then genuinely manage.
-4. *Who produces the availability number the deduction formula operates on?* — Somebody, from
-   something: the certification chain — primary record, certifier, challenge window, and what
-   happens to a month nobody challenges — decides where the burden of proof sits, and that is worth
-   more than a percentage point of multiplier.
-5. *What is the deemed-availability rule, and why does it matter?* — What availability is taken to
-   be when it cannot be measured. A structure in which the offtaker owns the meters and failure is
-   deemed nil has transferred more risk than the multiplier suggests.
-6. *Why is "are deductions applied pending resolution?" the question with a number attached?* —
-   Because a pay-then-argue mechanism turns a contested operational judgment into an immediate cash
-   reduction and therefore an immediate coverage event, in the quarter the dispute starts rather
-   than the quarter it ends. Withholding or escrow converts the same exposure into counterparty
-   credit and delay, which is smaller.
-7. *Who may settle a disputed deduction?* — A named person, below a stated threshold — and never
+3. *What has an availability structure actually done to a project's risk?* Converted demand risk
+   into operational risk, which the project controls but must then genuinely manage.
+4. *Who produces the availability number the deduction formula operates on?* (Somebody, from
+   something: the certification chain) primary record, certifier, challenge window, and what
+   happens to a month nobody challenges — decides where the burden of proof sits, and that is
+   worth more than a percentage point of multiplier.
+5. *What is the deemed-availability rule, and why does it matter?* What availability is taken to
+   be when it cannot be measured. A structure in which the offtaker owns the meters and failure
+   is deemed nil has transferred more risk than the multiplier suggests.
+6. *Why is "are deductions applied pending resolution?" the question with a number attached?*
+   Because a pay-then-argue mechanism turns a contested operational judgment into an immediate
+   cash reduction and therefore an immediate coverage event, in the quarter the dispute starts
+   rather than the quarter it ends. Withholding or escrow converts the same exposure into
+   counterparty credit and delay, which is smaller.
+7. *Who may settle a disputed deduction?* (A named person, below a stated threshold), and never
    where the settlement moves a covenant ratio, which reaches into the finance documents and is
    checked against them before anything is offered.
 
@@ -490,22 +493,22 @@ subscription and service revenue.*
 
 **Definitions.** A **demand model** forecasts the quantity of output the market will take at a
 given price over the asset's life. The **ramp** is the period after commercial operations during
-which realised demand approaches its mature level as users discover and reorganise around the asset.
-**Optimism bias** is the tendency of forecasts prepared by parties interested in the project
-proceeding to exceed outturn — a documented pattern in demand-risk infrastructure, and the reason
-lenders commission their own market adviser rather than reviewing the sponsors'.
+which realised demand approaches its mature level as users discover and reorganise around the
+asset. **Optimism bias** is the tendency of forecasts prepared by parties interested in the
+project proceeding to exceed outturn: a documented pattern in demand-risk infrastructure, and
+the reason lenders commission their own market adviser rather than reviewing the sponsors'.
 
 The professional content here is not forecasting technique, which belongs to market specialists,
 but the **discipline of using a forecast in a financing**. Three practices carry almost all the
 value.
 
 **Separate the cases and name their owners.** The **sponsor case** is the sponsors' central
-expectation; the **bank case** is what lenders will lend against, typically the sponsor case with
-specified haircuts, a slower ramp, no unindexed growth and a conservative price deck; the
+expectation; the **bank case** is what lenders will lend against, typically the sponsor case
+with specified haircuts, a slower ramp, no unindexed growth and a conservative price deck; the
 **downside case** is the stress the structure must survive. Domain 6 (KA 6.1.3) made this a
-modelling rule; here it is a commercial one, because the gap between the cases is the gap between
-the sponsors' return and the lenders' credit — Domain 6 priced it on Kestrel at **17,107,567 of
-`NPV`** from the escalation assumption alone.
+modelling rule; here it is a commercial one, because the gap between the cases is the gap
+between the sponsors' return and the lenders' credit (Domain 6 priced it on Kestrel at
+**17,107,567 of `NPV`** from the escalation assumption alone).
 
 **Model the ramp explicitly and let the debt schedule respond.** Level debt service against a
 rising cash profile wastes coverage late and breaches early, which is the case for sculpting
@@ -513,11 +516,11 @@ rising cash profile wastes coverage late and breaches early, which is the case f
 level debt on the mature year: the ratio computed on year five is met, and the covenant tested in
 year two is not.
 
-**State the forecast's elasticity, not only its level.** A demand forecast at a given tariff is an
-implicit price-elasticity assumption. Where the project sets price — a toll road, a car park, a
-data-centre re-let — a shortfall can be met by raising price only if elasticity permits; where
-price is contractual it cannot be met at all. A demand model presented without its elasticity has
-withheld the one property that determines whether management has a lever.
+**State the forecast's elasticity, not only its level.** A demand forecast at a given tariff is
+an implicit price-elasticity assumption. Where the project sets price (a toll road, a car park,
+a data-centre re-let) a shortfall can be met by raising price only if elasticity permits; where
+price is contractual it cannot be met at all. A demand model presented without its elasticity
+has withheld the one property that determines whether management has a lever.
 
 ### 7.2.2 Concession payment mechanisms
 
@@ -552,8 +555,8 @@ standard family is worth naming because the names travel badly between jurisdict
    | Low (p 0.25) | 19,200,000 | 10,320,000 | 9,600,000 | 5,268,000 | **1.0516** | 0.9438 |
    | **Expected** | 24,000,000 | **11,700,000** | 12,000,000 | **6,159,000** | 1.2294 | 1.2743 |
 
-   Debt capacity on the low case at 1.30 ×: **33,973,915** banded against 30,491,396 flat — a
-   gain of **3,482,520**. The expected revenue given up is **300,000 a year**, 2.50 % of base
+   Debt capacity on the low case at 1.30 ×: **33,973,915** banded against 30,491,396 flat (a
+   gain of **3,482,520**). The expected revenue given up is **300,000 a year**, 2.50 % of base
    revenue, whose present value over the twelve loan years at 6 % is **2,515,153**.
 4. **Interpretation.** The band is a risk-transfer instrument dressed as a price list, and its
    economics are explicit once computed: the sponsors surrender 2,515,153 of present value and
@@ -562,16 +565,16 @@ standard family is worth naming because the names travel badly between jurisdict
    (Domain 9), but the method matters more than the answer: a negotiating team that has not computed
    it is arguing about band rates without knowing which way it wants them to move.
 
-   Two further readings matter more than the headline. **The band compresses the distribution from
-   both ends, and the lender pays for only one end.** `DSCR` dispersion narrows from 0.9438–1.6049
-   to 1.0516–1.3175: the low tail improves by 0.1078 of coverage and the high tail is surrendered
-   entirely. Since lenders price the low tail and equity owns the high one, a band transfers value
-   **from equity's upside to debt capacity** — which is why sponsors confident in demand resist
-   bands and sponsors who need leverage accept them, and why the same band is a good deal for one
-   shareholder and a poor one for another in the same consortium. **And the low case still
-   breaches.** At 1.0516 the banded structure pays its debt service but fails both the 1.20 ×
-   covenant and the 1.15 × lock-up, so the band has bought bankability, not compliance. A band
-   should be sized against the lock-up, not against zero.
+   Two further readings matter more than the headline. **The band compresses the distribution
+   from both ends, and the lender pays for only one end.** `DSCR` dispersion narrows from
+   0.9438–1.6049 to 1.0516–1.3175: the low tail improves by 0.1078 of coverage and the high tail
+   is surrendered entirely. Since lenders price the low tail and equity owns the high one, a
+   band transfers value **from equity's upside to debt capacity**, which is why sponsors
+   confident in demand resist bands and sponsors who need leverage accept them, and why the same
+   band is a good deal for one shareholder and a poor one for another in the same consortium.
+   **And the low case still breaches.** At 1.0516 the banded structure pays its debt service but
+   fails both the 1.20 × covenant and the 1.15 × lock-up, so the band has bought bankability,
+   not compliance. A band should be sized against the lock-up, not against zero.
 
 ### 7.2.3 Subscription and service revenue
 
@@ -594,11 +597,11 @@ tenors. Digital infrastructure, managed services and waste all finance on this s
    seek **40,000,000** of senior debt at **7 % over seven years**. Compute the lenders' run-off
    case, the coverage it delivers against level debt service, the `WARCT`, and the debt the
    run-off case actually supports at a 1.30 × target.
-2. **Formula.** Run-off revenue in year `t` = `ARR × 0.93^(t−1)` — contracted revenue only, with
-   no credit for unsigned new sales. `CFADS` = revenue − 13,200,000 − 1,800,000. Level instalment
-   = 40,000,000 ÷ `AF(0.07, 7)`, with `AF(0.07, 7) = 5.389289`. Sculpted capacity
-   = Σ (`CFADS(t)` ÷ 1.30) × `DF(0.07, t)` (Domain 10, KA 10.1.3).
-   `WARCT` = Σ(share × remaining term).
+2. **Formula.** Run-off revenue in year `t` = `ARR × 0.93^(t−1)` (contracted revenue only, with
+   no credit for unsigned new sales). `CFADS` = revenue − 13,200,000 − 1,800,000. Level
+   instalment = 40,000,000 ÷ `AF(0.07, 7)`, with `AF(0.07, 7) = 5.389289`. Sculpted capacity = Σ
+   (`CFADS(t)` ÷ 1.30) × `DF(0.07, t)` (Domain 10, KA 10.1.3). `WARCT` = Σ(share × remaining
+   term).
 3. **Result.**
 
    | Year | Run-off revenue | `EBITDA` | `CFADS` | `DSCR` on level service |
@@ -611,50 +614,51 @@ tenors. Digital infrastructure, managed services and waste all finance on this s
    | 6 | 16,696,521 | 3,496,521 | 1,696,521 | 0.2286 |
    | 7 | 15,527,764 | 2,327,764 | 527,764 | 0.0711 |
 
-   Level instalment **7,422,128.79**. `WARCT` **3.30 years** — **47.14 %** of the seven-year
-   tenor. Sculpted debt capacity on the run-off case at 1.30 × is **20,271,839**, **50.68 %** of
-   the 40,000,000 sought.
+   Level instalment **7,422,128.79**. `WARCT` **3.30 years** (**47.14 %** of the seven-year
+   tenor). Sculpted debt capacity on the run-off case at 1.30 × is **20,271,839**, **50.68 %**
+   of the 40,000,000 sought.
 4. **Interpretation.** The structure fails in **year two**, and the mechanism is worth stating
-   precisely because it is the characteristic failure of service-revenue financings. A 7 % annual
-   revenue decline against a wholly fixed cost base takes `EBITDA` down **15.56 %** in the first
-   year of run-off and **17.13 %** in the second, and `CFADS` down **18.67 %** and then **21.34 %** —
-   the operating-leverage amplification of KA 7.3.2 applied to attrition rather than to demand, and
-   accelerating, because the fixed cost base is a growing share of a shrinking revenue. Net revenue
-   retention of 93 % is in many service markets a perfectly respectable number; against a wholly
-   fixed cost base and a seven-year loan it is a sixth of `EBITDA` in the first year and more
-   thereafter.
+   precisely because it is the characteristic failure of service-revenue financings. A 7 %
+   annual revenue decline against a wholly fixed cost base takes `EBITDA` down **15.56 %** in
+   the first year of run-off and **17.13 %** in the second, and `CFADS` down **18.67 %** and
+   then **21.34 %**: the operating-leverage amplification of KA 7.3.2 applied to attrition
+   rather than to demand, and accelerating, because the fixed cost base is a growing share of a
+   shrinking revenue. Net revenue retention of 93 % is in many service markets a perfectly
+   respectable number; against a wholly fixed cost base and a seven-year loan it is a sixth of
+   `EBITDA` in the first year and more thereafter.
 
    The professional consequences are three. **The lender's case is the run-off case, and arguing
-   otherwise is arguing to be lent against unsigned revenue.** Sponsors routinely present a forecast
-   including new sales; the honest response is to present both, with debt sized on the contracted
-   book and the new-sales case shown as the equity story. **The binding metric is `WARCT` against
-   tenor, not `ARR`.** At 3.30 years against a seven-year loan, less than half the loan's life is
-   contracted, and the disciplined responses are a shorter tenor, a re-contracting reserve, a cash
-   sweep that retires debt while the contracted book still exists, or anchor extensions as a
-   condition precedent. **And 20,271,839 is the honest answer, so the negotiation is about the other
-   19.7 million** — a shorter tenor, a lower amount, extensions before close, or more equity. The
-   sponsors are better served by a leader who computes 50.68 % early than by one who discovers it in
-   credit committee.
+   otherwise is arguing to be lent against unsigned revenue.** Sponsors routinely present a
+   forecast including new sales; the honest response is to present both, with debt sized on the
+   contracted book and the new-sales case shown as the equity story. **The binding metric is
+   `WARCT` against tenor, not `ARR`.** At 3.30 years against a seven-year loan, less than half
+   the loan's life is contracted, and the disciplined responses are a shorter tenor, a
+   re-contracting reserve, a cash sweep that retires debt while the contracted book still
+   exists, or anchor extensions as a condition precedent. **And 20,271,839 is the honest answer,
+   so the negotiation is about the other 19.7 million**: a shorter tenor, a lower amount,
+   extensions before close, or more equity. The sponsors are better served by a leader who
+   computes 50.68 % early than by one who discovers it in credit committee.
 
 ### AI in this KA
 
-Demand forecasting is the most attractive and most dangerous machine application in this domain. It
-earns its place in **pattern extraction from usage data** — seasonality, elasticity estimation from
-observed price and volume, cohort-level churn and expansion behaviour no spreadsheet summary
-reveals — in **churn and re-contracting prediction** for service models, and in **scenario
-generation**, producing the coherent bundles a stress matrix needs faster and more consistently
-than a workshop.
+Demand forecasting is the most attractive and most dangerous machine application in this domain.
+It earns its place in **pattern extraction from usage data** (seasonality, elasticity estimation
+from observed price and volume, cohort-level churn and expansion behaviour no spreadsheet
+summary reveals) in **churn and re-contracting prediction** for service models, and in
+**scenario generation**, producing the coherent bundles a stress matrix needs faster and more
+consistently than a workshop.
 
-Where it must not go. **A model trained on comparable assets' ramps inherits their optimism bias**,
-because the training data is forecasts and outturns from projects that were *financed* — a selected
-population — and the assistant will not say so. The output must be tested against the base rate
-that matters: outturn against forecast for comparable assets including those that underperformed,
-which is precisely the data least likely to be available. **A forecast must never be presented
-without its case label and its owner**, and a machine-generated forecast has no owner until a named
-professional adopts it. **And no assistant should select the bank case**, which is a negotiating
-position rather than an estimate. Verification: reconstruct the forecast's implied elasticity and
-load factor by hand, check them against the asset's physical and contractual capacity, and require
-that any forecast used in a financing carry the market adviser's name.
+Where it must not go. **A model trained on comparable assets' ramps inherits their optimism
+bias**, because the training data is forecasts and outturns from projects that were *financed*
+(a selected population), and the assistant will not say so. The output must be tested against
+the base rate that matters: outturn against forecast for comparable assets including those that
+underperformed, which is precisely the data least likely to be available. **A forecast must
+never be presented without its case label and its owner**, and a machine-generated forecast has
+no owner until a named professional adopts it. **And no assistant should select the bank case**,
+which is a negotiating position rather than an estimate. Verification: reconstruct the
+forecast's implied elasticity and load factor by hand, check them against the asset's physical
+and contractual capacity, and require that any forecast used in a financing carry the market
+adviser's name.
 
 ### Key terms — KA 7.2
 
@@ -716,7 +720,7 @@ applies a mechanism from a different revenue architecture.
 
 *Rationale:* Lenders price the low tail and equity owns the high one, so compressing both is a
 transfer, not a loss (7.2.2). A ignores the capacity gain; C treats expected cash as the sizing
-basis; D is false — the low case at 1.0516 still breaches the 1.20 × covenant.
+basis; D is false (the low case at 1.0516 still breaches the 1.20 × covenant).
 
 **MCQ 7.2-E `[7.2.3 · Comprehension]`** A sponsor complains that its lenders "refuse to count our
 sales pipeline". The statement that best conveys what a run-off case is:
@@ -738,8 +742,9 @@ that:
 - A. the approach is acceptable, since a 10 % haircut is a conservative adjustment in the sponsors'
   own favour to concede
 - B. the bank case is a negotiating position built from specified haircuts, a slower ramp, no
-  unindexed growth and a conservative price deck, and a haircut with no stated composition cannot be
-  defended line by line — conceding the case unopposed concedes more than the coverage ratio does ✅
+  unindexed growth and a conservative price deck, and a haircut with no stated composition
+  cannot be defended line by line: conceding the case unopposed concedes more than the coverage
+  ratio does ✅
 - C. the work is unnecessary, because the lenders' market adviser will produce the bank case
 - D. only the sponsor case should be presented, leaving the lenders to make their own adjustments
 
@@ -751,14 +756,14 @@ how sponsors arrive in credit committee with no position of their own.
 
 ### Self-check — KA 7.2
 
-1. *What distinguishes a bank case from a downside case?* — The bank case is what lenders will
+1. *What distinguishes a bank case from a downside case?* The bank case is what lenders will
    lend against; the downside case is the stress the structure must survive. They have different
    purposes and different owners, and conflating them hides both.
-2. *Why is `WARCT` more informative than `ARR` for a service-revenue financing?* — `ARR`
-   measures the size of the contracted book; `WARCT` measures how much of the loan's life it
-   covers, which is the risk being financed.
-3. *Which tail does a volume band buy, and who pays for it?* — It buys the low tail, which
-   lenders price; equity pays for it by surrendering the high tail.
+2. *Why is `WARCT` more informative than `ARR` for a service-revenue financing?* `ARR` measures
+   the size of the contracted book; `WARCT` measures how much of the loan's life it covers,
+   which is the risk being financed.
+3. *Which tail does a volume band buy, and who pays for it?* It buys the low tail, which lenders
+   price; equity pays for it by surrendering the high tail.
 
 ---
 
@@ -769,26 +774,26 @@ leverage · 7.3.3 turning revenue risk into a tolerance.*
 
 ### 7.3.1 Indexation architecture and margin drift
 
-**Definition.** **Indexation** is the contractual escalation of a price by reference to a published
-index. Domain 3 (KA 3.3.2) established the compounding arithmetic and the register of index
-mechanics — publisher, series, definition, lag, cap, floor, compounding basis. This topic addresses
-the commercial structure those mechanics sit inside: the **indexation architecture**, meaning which
-*proportion* of each revenue and cost line escalates, on which index, and what the mismatch is
-worth.
+**Definition.** **Indexation** is the contractual escalation of a price by reference to a
+published index. Domain 3 (KA 3.3.2) established the compounding arithmetic and the register of
+index mechanics (publisher, series, definition, lag, cap, floor, compounding basis). This topic
+addresses the commercial structure those mechanics sit inside: the **indexation architecture**,
+meaning which *proportion* of each revenue and cost line escalates, on which index, and what the
+mismatch is worth.
 
-Each line has three parameters and only the first two are usually negotiated with care: the index,
-the rate it is expected to run at, and the **indexed share**. A tariff described as "CPI-indexed"
-may escalate 60 %, 80 % or 100 % of its value; the unindexed remainder is a fixed nominal amount
-eroding in real terms for the whole concession. Because revenue-side and cost-side shares are set in
-different negotiations, by different people, at different times, they are almost never matched — and
-the mismatch compounds.
+Each line has three parameters and only the first two are usually negotiated with care: the
+index, the rate it is expected to run at, and the **indexed share**. A tariff described as
+"CPI-indexed" may escalate 60 %, 80 % or 100 % of its value; the unindexed remainder is a fixed
+nominal amount eroding in real terms for the whole concession. Because revenue-side and
+cost-side shares are set in different negotiations, by different people, at different times,
+they are almost never matched, and the mismatch compounds.
 
 **Worked example 7.3.1 — the 36 basis points that cost 3.27 margin points.**
 
 1. **Setup.** Kestrel's water-purchase agreement indexes **80 %** of the tariff to a consumer
    price index assumed to run at **2.5 %** a year; the remaining 20 % is fixed for the 25-year
-   concession. On the cost side, **70 %** of the 4,500,000 cash operating cost — labour,
-   chemicals and power — escalates at **3.2 %** under a separate index in the O&M contract; the
+   concession. On the cost side, **70 %** of the 4,500,000 cash operating cost (labour,
+   chemicals and power) escalates at **3.2 %** under a separate index in the O&M contract; the
    remaining 30 % is fixed under long-term agreements. Compute revenue, cost, `EBITDA` and the
    `EBITDA` margin in years 1, 12 (loan maturity) and 25, the effective compound rates, and the
    value of the unindexed tariff slice.
@@ -804,12 +809,12 @@ the mismatch compounds.
    | 12 | 14,996,032 | 5,804,380 | 9,191,652 | **61.29 %** |
    | 25 | 19,763,769 | 8,058,467 | 11,705,302 | **59.23 %** |
 
-   Effective compound rates: revenue **2.101 %**, cost **2.457 %** — a gap of **35.7 basis
-   points**. Under full tariff indexation at the same 2.5 % the year-25 margin would be
-   **62.87 %** and `EBITDA` **13,646,244**; the present value at 8 % of the `EBITDA` forgone
-   across 25 years by indexing only 80 % is **6,204,143**, of which **2,619,217** falls inside
-   the twelve loan years discounted at 6 %. Under a fully indexed cost base at 3.2 % the year-25
-   margin would be **51.51 %**.
+   Effective compound rates: revenue **2.101 %**, cost **2.457 %** (a gap of **35.7 basis
+   points**). Under full tariff indexation at the same 2.5 % the year-25 margin would be **62.87
+   %** and `EBITDA` **13,646,244**; the present value at 8 % of the `EBITDA` forgone across 25
+   years by indexing only 80 % is **6,204,143**, of which **2,619,217** falls inside the twelve
+   loan years discounted at 6 %. Under a fully indexed cost base at 3.2 % the year-25 margin
+   would be **51.51 %**.
 4. **Interpretation.** **Neither contractual index is the rate that matters.** The headline gap
    between a 2.5 % tariff index and a 3.2 % cost index is 70 basis points; the *effective* rates
    that partial indexation actually produces are 2.101 % and 2.457 %, a gap of **35.7 basis
@@ -827,15 +832,15 @@ the mismatch compounds.
    costs — an insight invisible unless the architecture is decomposed.
 
    **The drift is slow, which is why it is dangerous.** Nothing breaks: year-12 coverage is a
-   comfortable **1.4253**, because the interest deduction has fallen and the tariff has risen faster
-   than the covenant needs. The damage lands after the loan matures — in refinancing, handback
-   economics and the equity return — so the party most exposed to indexation drift is the party
-   least present in the financing negotiation. Price the whole concession, not the loan life: the
-   tariff index a lender is indifferent to is the one shareholders live with for thirteen years
-   after the lender has gone. **And an index the model assumes is not an index the contract
-   grants.** CPI at 2.5 % is a forecast; entitlement to 80 % of CPI is a term. The first belongs in
-   the sensitivity table, the second in the contract review, and confusing them is how projects end
-   up with an escalation forecast where they needed an escalation right.
+   comfortable **1.4253**, because the interest deduction has fallen and the tariff has risen
+   faster than the covenant needs. The damage lands after the loan matures (in refinancing,
+   handback economics and the equity return), so the party most exposed to indexation drift is
+   the party least present in the financing negotiation. Price the whole concession, not the
+   loan life: the tariff index a lender is indifferent to is the one shareholders live with for
+   thirteen years after the lender has gone. **And an index the model assumes is not an index
+   the contract grants.** CPI at 2.5 % is a forecast; entitlement to 80 % of CPI is a term. The
+   first belongs in the sensitivity table, the second in the contract review, and confusing them
+   is how projects end up with an escalation forecast where they needed an escalation right.
 
 > **Fig 7.3.1 — Margin drift over the concession.** Line chart, x-axis concession years 1–25,
 > y-axis `EBITDA` margin 50–64 %. Three lines from a common 62.50 % start: the contracted
@@ -901,15 +906,15 @@ topic supplies the mechanism and one distinction Domain 6 did not need.
    | 40 % | 2.5000 | **3.08 %** |
    | 20 % | 5.0000 | **1.54 %** |
 
-   Reaching a 1.20 × covenant from a 1.30 × base requires a `CFADS` fall of **7.6923 %** in every
-   row; the demand tolerance that produces it ranges from **6.15 % to 1.54 %** purely on cost
-   structure. **Two projects with the same coverage ratio and the same covenant can have demand
-   tolerances that differ fourfold, and the ratio does not show it.** That is the most important
-   thing this domain has to say to a credit committee, and it is why cost structure belongs in a
-   revenue-risk discussion. High operating leverage is not a defect — it is what makes
-   infrastructure profitable when demand holds — but it must be *known*, *disclosed* and *matched*
-   by a structure that tolerates it: lower gearing, a larger reserve, a floor mechanism (KA 7.A.1)
-   or sculpting.
+   Reaching a 1.20 × covenant from a 1.30 × base requires a `CFADS` fall of **7.6923 %** in
+   every row; the demand tolerance that produces it ranges from **6.15 % to 1.54 %** purely on
+   cost structure. **Two projects with the same coverage ratio and the same covenant can have
+   demand tolerances that differ fourfold, and the ratio does not show it.** That is the most
+   important thing this domain has to say to a credit committee, and it is why cost structure
+   belongs in a revenue-risk discussion. High operating leverage is not a defect (it is what
+   makes infrastructure profitable when demand holds), but it must be *known*, *disclosed* and
+   *matched* by a structure that tolerates it: lower gearing, a larger reserve, a floor
+   mechanism (KA 7.A.1) or sculpting.
 
 ### 7.3.3 Turning revenue risk into a tolerance
 
@@ -920,7 +925,7 @@ it in **each driver the business actually manages**, because different teams con
 drivers.
 
 **Kestrel's tolerance set, in four units.** From a base `DSCR` of 1.2743, the 1.20 × covenant
-requires `CFADS` of 6,011,562 — a fall of 372,438, or **5.8339 %** (Domain 10). Dividing that
+requires `CFADS` of 6,011,562, a fall of 372,438, or **5.8339 %** (Domain 10). Dividing that
 `CFADS` tolerance by each elasticity gives:
 
 | Driver | Elasticity | Tolerance | Level at which the covenant fails |
@@ -931,21 +936,21 @@ requires `CFADS` of 6,011,562 — a fall of 372,438, or **5.8339 %** (Domain 10)
 | **`CFADS`** | 1.0000 | **5.83 %** | 6,011,562 |
 
 Four numbers, one covenant, each right for a different conversation: the commercial team hears
-4.14 % on tariff, operations hears 4.50 % on despatch or 2.91 points on availability, finance hears
-5.83 % on `CFADS`, and the board hears whichever is smallest. **Quoting the `CFADS` tolerance to a
-team that manages volume overstates their room by 30 %** — the same error Domain 6 identified when
-it observed that a `CFADS` percentage overstates revenue room by 41 %. The lock-up bites earlier
-still, at **22,194,436 m³**, a **7.52 %** volume fall; since lock-up is what a sponsor actually
-feels, that is the threshold for the shareholder dashboard.
+4.14 % on tariff, operations hears 4.50 % on despatch or 2.91 points on availability, finance
+hears 5.83 % on `CFADS`, and the board hears whichever is smallest. **Quoting the `CFADS`
+tolerance to a team that manages volume overstates their room by 30 %**, the same error Domain 6
+identified when it observed that a `CFADS` percentage overstates revenue room by 41 %. The
+lock-up bites earlier still, at **22,194,436 m³**, a **7.52 %** volume fall; since lock-up is
+what a sponsor actually feels, that is the threshold for the shareholder dashboard.
 
 ### AI in this KA
 
-Escalation and elasticity work is arithmetically simple and definitionally treacherous — the
-profile in which machine output is most confidently wrong. The legitimate applications are narrow:
-**reconciling every escalating line to its index clause** (publisher, series, lag, cap, floor,
-indexed share), which is Domain 3's escalation register populated by extraction rather than
-transcription; **recomputing effective compound rates** across a whole revenue and cost base; and
-**producing the tolerance table** for every covenant and driver combination on demand.
+Escalation and elasticity work is arithmetically simple and definitionally treacherous: the
+profile in which machine output is most confidently wrong. The legitimate applications are
+narrow: **reconciling every escalating line to its index clause** (publisher, series, lag, cap,
+floor, indexed share), which is Domain 3's escalation register populated by extraction rather
+than transcription; **recomputing effective compound rates** across a whole revenue and cost
+base; and **producing the tolerance table** for every covenant and driver combination on demand.
 
 Two failure modes. **An assistant asked for "the escalation rate" returns the headline index, not
 the effective rate**, because the headline is what the document says while the effective rate
@@ -999,13 +1004,13 @@ computed after tax and working capital; D inverts the ratio.
 1.20 × covenant. Project M's `CFADS` is 80 % of revenue; Project N's is 40 %. Their demand
 tolerances are:
 - A. identical, since the coverage ratio and covenant are identical
-- B. M 6.15 %, N 3.08 % — cost structure halves the tolerance at identical coverage ✅
+- B. M 6.15 %, N 3.08 %: cost structure halves the tolerance at identical coverage ✅
 - C. M 3.08 %, N 6.15 %
 - D. indeterminate without the debt amount
 
 *Rationale:* Both need a 7.6923 % `CFADS` fall; dividing by elasticities of 1.25 and 2.50 gives
 6.15 % and 3.08 % (7.3.2). A is the error the table exists to correct; C reverses the
-relationship — a thinner `CFADS` margin means higher elasticity and less tolerance; D is wrong
+relationship: a thinner `CFADS` margin means higher elasticity and less tolerance; D is wrong
 because the tolerance is a ratio property, independent of scale.
 
 **MCQ 7.3-D `[7.3.3 · Analysis]`** Kestrel's `CFADS` tolerance to its covenant is 5.83 %. The
@@ -1027,17 +1032,17 @@ why it is recorded separately from the index. The best explanation is:
 - C. it is the share of the tariff denominated in the indexed currency
 - D. it is the ceiling on annual escalation the contract permits
 
-*Rationale:* Kestrel indexes 80 % of its tariff to an index assumed at 2.5 %, which compounds to an
-**effective** 2.101 % over 24 years rather than 2.5 % (7.3.1). A describes the index rate itself;
-C invents a currency mechanic; D names a different negotiated parameter — a cap limits the index in a
-period, while the indexed share limits the base the index applies to.
+*Rationale:* Kestrel indexes 80 % of its tariff to an index assumed at 2.5 %, which compounds to
+an **effective** 2.101 % over 24 years rather than 2.5 % (7.3.1). A describes the index rate
+itself; C invents a currency mechanic; D names a different negotiated parameter: a cap limits
+the index in a period, while the indexed share limits the base the index applies to.
 
 **MCQ 7.3-F `[7.3.1 · Evaluation]`** Kestrel's O&M contractor offers a swap: it will index the
 currently fixed 30 % of the cost base at the same 3.2 %, and in exchange the offtaker will index
-100 % of the tariff at 2.5 % rather than 80 %. On the assumed rates the year-25 `EBITDA` margin moves
-from 59.23 % to **55.85 %** — a loss of 3.38 points — while the present value of `EBITDA` over the
-25-year concession at 8 % **rises by 1,516,002**, full tariff indexation adding 6,204,143 and full
-cost indexation removing 4,688,141. The soundest recommendation is:
+100 % of the tariff at 2.5 % rather than 80 %. On the assumed rates the year-25 `EBITDA` margin
+moves from 59.23 % to **55.85 %** (a loss of 3.38 points), while the present value of `EBITDA`
+over the 25-year concession at 8 % **rises by 1,516,002**, full tariff indexation adding
+6,204,143 and full cost indexation removing 4,688,141. The soundest recommendation is:
 - A. reject: the fixed 30 % of the cost base saves 7.7164 margin points by year 25, more than twice the 3.6462 that full tariff indexation adds
 - B. accept: 1,516,002 of present value at 8 % over the concession is a real gain, and margin points at a single year are not the decision metric
 - C. accept, but only against a cap on the O&M index, because the 1,516,002 holds only at the assumed 3.2 % and the swap exchanges a fixed obligation for an unbounded indexed one ✅
@@ -1058,25 +1063,26 @@ Project N's is 40 %, so the same 7.6923 % `CFADS` fall is reached by a 6.15 % de
 3.08 % fall in N. The soundest position is that:
 - A. they are equivalent for credit purposes, since coverage and covenant are identical
 - B. cost structure must be reported beside the ratio, and high operating leverage matched by
-  structure — lower gearing, a larger reserve, a floor mechanism or sculpting — rather than treated as
-  a defect ✅
+  structure (lower gearing, a larger reserve, a floor mechanism or sculpting), rather than
+  treated as a defect ✅
 - C. Project N is simply the weaker credit and should be declined
 - D. Project N's covenant should be raised to 1.30 × so that the two tolerances are equalised
 
-*Rationale:* two projects with the same ratio can have demand tolerances differing fourfold, and the
-ratio does not show it (7.3.2) — which is why cost structure belongs in a revenue-risk discussion. A
-is the error the generalised table exists to correct. C treats leverage as a fault, when it is what
-makes infrastructure profitable while demand holds; the requirement is that it be known, disclosed and
-matched. D moves the wrong lever: raising the covenant reduces N's tolerance further, since it shortens
-the distance from base coverage to the trigger.
+*Rationale:* two projects with the same ratio can have demand tolerances differing fourfold, and
+the ratio does not show it (7.3.2), which is why cost structure belongs in a revenue-risk
+discussion. A is the error the generalised table exists to correct. C treats leverage as a
+fault, when it is what makes infrastructure profitable while demand holds; the requirement is
+that it be known, disclosed and matched. D moves the wrong lever: raising the covenant reduces
+N's tolerance further, since it shortens the distance from base coverage to the trigger.
 
 ### Self-check — KA 7.3
 
-1. *Why is the headline index not the rate that matters?* — Because the indexed share determines
-   the effective rate; Kestrel's 70-basis-point headline gap is a 35.7-basis-point effective gap.
-2. *Why does a price miss cost more `CFADS` than a volume miss of equal revenue?* — Lost volume
+1. *Why is the headline index not the rate that matters?* Because the indexed share determines
+   the effective rate; Kestrel's 70-basis-point headline gap is a 35.7-basis-point effective
+   gap.
+2. *Why does a price miss cost more `CFADS` than a volume miss of equal revenue?* Lost volume
    brings relief on variable cost, cash tax and working capital; a price cut brings none.
-3. *State the one sentence that converts a covenant into an operational instruction.* — "Coverage
+3. *State the one sentence that converts a covenant into an operational instruction.* "Coverage
    breaks at a 4.50 % fall in despatch, or 1,079,530 m³ of the 24,000,000 forecast."
 
 ---
@@ -1106,10 +1112,10 @@ non-payment of an invoice.
 **Worked example 7.4.1 — what Kestrel's single offtaker is worth as a credit.**
 
 1. **Setup.** Kestrel's water-purchase agreement runs 25 years with a single regional water
-   authority. Mapping its published rating to an internal grade gives an **annual `PD` of
-   0.60 %**. If the offtaker fails, Kestrel can re-sell water into a regional merchant market at
-   a discount and expects to recover 55 % of the contracted value, so `LGD` is **45 %**. Exposure
-   is taken as the present value of `CFADS` over the loan life at the loan rate — the amount the
+   authority. Mapping its published rating to an internal grade gives an **annual `PD` of 0.60
+   %**. If the offtaker fails, Kestrel can re-sell water into a regional merchant market at a
+   discount and expects to recover 55 % of the contracted value, so `LGD` is **45 %**. Exposure
+   is taken as the present value of `CFADS` over the loan life at the loan rate, the amount the
    lenders are relying on. Compute the twelve-year cumulative `PD`, the exposure, the expected
    loss, and the coverage ratio net of an annualised credit charge. (Rating mappings, recovery
    assumptions and regulatory capital treatments are institution- and jurisdiction-specific; the
@@ -1122,27 +1128,27 @@ non-payment of an invoice.
    **USD 1,678,031**, which is **3.135 %** of exposure; annualised credit charge **200,151**,
    reducing `CFADS` to 6,183,849 and the `DSCR` to **1.2344**.
 5. **Interpretation.** The last line is the one worth carrying: **charging the counterparty's
-   expected loss against coverage costs Kestrel 0.0400 of `DSCR`** — **53.7 %** of its total
-   covenant headroom of 0.0743 — and the project is still compliant. That is a defensible position,
-   and stating it that way converts an opinion ("the offtaker is investment grade") into a
-   quantified one ("the credit is worth four hundredths of a coverage ratio, against 0.0743 of
-   headroom").
+   expected loss against coverage costs Kestrel 0.0400 of `DSCR`** (**53.7 %** of its total
+   covenant headroom of 0.0743), and the project is still compliant. That is a defensible
+   position, and stating it that way converts an opinion ("the offtaker is investment grade")
+   into a quantified one ("the credit is worth four hundredths of a coverage ratio, against
+   0.0743 of headroom").
 
    Three cautions belong with the arithmetic, each a way the calculation is routinely abused.
-   **`PD` is not a fact.** It is a mapping from a rating or a model to a number, on a horizon, in a
-   state of the economy; a public-sector offtaker's `PD` in particular is often taken from sovereign
-   or sub-sovereign proxies that assume a support relationship the documents may not create. Present
-   it with its source and horizon, and move it in the sensitivity table like any other assumption.
-   **`EAD` depends on what the loss event is**, and choosing it is a judgment: the receivable
-   (2,958,904 on 90-day terms — trivial), the present value of contracted `CFADS` over the loan life
-   (53,522,460 — the lenders' exposure, used above), or the present value over the whole concession
-   (much larger — the shareholders'). Three exposures, three expected losses, one correct answer per
-   decision, and quoting the wrong one is how a concentration problem gets presented as a
-   working-capital matter. **And `LGD` embeds a market and a legal outcome.** Kestrel's 45 % assumes
-   a merchant market exists to re-sell into and that termination compensation, step-in rights and
-   the security package work as drafted — matters for Domain 12 and, in a real transaction, for
-   qualified counsel in the relevant jurisdiction. An `LGD` not traced to those documents is a guess
-   wearing a decimal point.
+   **`PD` is not a fact.** It is a mapping from a rating or a model to a number, on a horizon,
+   in a state of the economy; a public-sector offtaker's `PD` in particular is often taken from
+   sovereign or sub-sovereign proxies that assume a support relationship the documents may not
+   create. Present it with its source and horizon, and move it in the sensitivity table like any
+   other assumption. **`EAD` depends on what the loss event is**, and choosing it is a judgment:
+   the receivable (2,958,904 on 90-day terms — trivial), the present value of contracted `CFADS`
+   over the loan life (53,522,460 — the lenders' exposure, used above), or the present value
+   over the whole concession (much larger — the shareholders'). Three exposures, three expected
+   losses, one correct answer per decision, and quoting the wrong one is how a concentration
+   problem gets presented as a working-capital matter. **And `LGD` embeds a market and a legal
+   outcome.** Kestrel's 45 % assumes a merchant market exists to re-sell into and that
+   termination compensation, step-in rights and the security package work as drafted: matters
+   for Domain 12 and, in a real transaction, for qualified counsel in the relevant jurisdiction.
+   An `LGD` not traced to those documents is a guess wearing a decimal point.
 
 ### 7.4.2 Concentration and credit enhancement
 
@@ -1157,11 +1163,11 @@ committee exists to control.
 1. **Setup.** Compare Kestrel's single offtaker (annual `PD` 0.60 %, twelve-year cumulative
    6.9671 %, exposure 53,522,460, `LGD` 45 %) with a hypothetical structure in which four
    offtakers each take 25 % of the output on identical terms, with independent defaults. Compute
-   expected loss in each, and the probability of losing at least half of the revenue and of losing
-   all of it. Then price a sovereign guarantee that reduces the effective annual `PD` to
+   expected loss in each, and the probability of losing at least half of the revenue and of
+   losing all of it. Then price a sovereign guarantee that reduces the effective annual `PD` to
    **0.20 %** for a fee of **0.35 % a year on the outstanding debt balance**, against both its
-   expected-loss benefit and its effect on required coverage — the lenders having indicated that a
-   guaranteed structure would be sized at **1.20 ×** rather than **1.30 ×**.
+   expected-loss benefit and its effect on required coverage: the lenders having indicated that
+   a guaranteed structure would be sized at **1.20 ×** rather than **1.30 ×**.
 2. **Formula.** Four-counterparty default counts follow the binomial distribution with `n = 4`
    and `p = 0.069671`; losing at least half the revenue requires at least two defaults. Guarantee
    fee present value = Σ (0.35 % × opening balance in year `t`) × `DF(0.06, t)` over the
@@ -1183,37 +1189,38 @@ committee exists to control.
    6 % is **805,901** — an expected-loss gain of only **300,403**. But the coverage step from
    1.30 × to 1.20 × raises debt capacity from 41,171,123 to **44,602,050**, a gain of
    **3,430,927**, or **2,625,026** net of the fee's present value.
-4. **Interpretation.** **Two structures with identical expected loss are not equally creditworthy,
-   and that difference is the whole subject of concentration risk.** The four-way structure is far
-   more likely to suffer a *small* loss — a 22.4 % chance of one default against a 6.97 % chance of
-   any default at all in the single-offtaker case — and far less likely to suffer a *fatal* one.
-   Since a project can absorb a quarter of its revenue disappearing for a period but not all of it,
-   the four-way structure is materially better credit while reporting the same expected loss.
-   **Report the loss distribution, or at minimum the probability of crossing the thresholds the
-   structure cannot survive, and never let expected loss stand alone.** Kestrel's largest revenue
-   risk is not the offtaker's credit quality — 0.60 % a year is respectable — it is that the
-   offtaker is one entity, and diversification is unavailable because a single regional authority is
-   the only buyer of the water. Where concentration cannot be diversified away it must be
-   **structured** against: guarantees, letters of credit, escrow, step-in rights, termination
-   compensation that repays debt, or lower gearing.
+4. **Interpretation.** **Two structures with identical expected loss are not equally
+   creditworthy, and that difference is the whole subject of concentration risk.** The four-way
+   structure is far more likely to suffer a *small* loss (a 22.4 % chance of one default against
+   a 6.97 % chance of any default at all in the single-offtaker case), and far less likely to
+   suffer a *fatal* one. Since a project can absorb a quarter of its revenue disappearing for a
+   period but not all of it, the four-way structure is materially better credit while reporting
+   the same expected loss. **Report the loss distribution, or at minimum the probability of
+   crossing the thresholds the structure cannot survive, and never let expected loss stand
+   alone.** Kestrel's largest revenue risk is not the offtaker's credit quality (0.60 % a year
+   is respectable) it is that the offtaker is one entity, and diversification is unavailable
+   because a single regional authority is the only buyer of the water. Where concentration
+   cannot be diversified away it must be **structured** against: guarantees, letters of credit,
+   escrow, step-in rights, termination compensation that repays debt, or lower gearing.
 
    **And credit enhancement is bought for the coverage it unlocks, not the expected loss it
-   removes.** On expected-loss grounds the guarantee barely earns its fee — 300,403 of net benefit is
-   inside the noise of the `PD` assumption. On coverage grounds it releases **2,625,026** of equity
-   net of cost, because it changes the *case the lender underwrites* and therefore the divisor in
-   Domain 10's sizing arithmetic. That is how experienced sponsors evaluate every mitigant: a letter
-   of credit, a parent guarantee, an escrow account and a termination-compensation regime are all
-   priced by asking what they do to the required ratio and the underwritten case, then comparing
-   that with the cost of the equity they release. Expected loss is the wrong metric for the
-   decision, though it remains the right metric for the provision.
+   removes.** On expected-loss grounds the guarantee barely earns its fee: 300,403 of net
+   benefit is inside the noise of the `PD` assumption. On coverage grounds it releases
+   **2,625,026** of equity net of cost, because it changes the *case the lender underwrites* and
+   therefore the divisor in Domain 10's sizing arithmetic. That is how experienced sponsors
+   evaluate every mitigant: a letter of credit, a parent guarantee, an escrow account and a
+   termination-compensation regime are all priced by asking what they do to the required ratio
+   and the underwritten case, then comparing that with the cost of the equity they release.
+   Expected loss is the wrong metric for the decision, though it remains the right metric for
+   the provision.
 
 ### 7.4.3 Revenue stress testing and the bank case
 
 **Definition.** **Revenue stress testing** moves the commercial drivers to levels the structure
 must survive and reports the outputs the decision turns on — for a financing, coverage and
-liquidity, not value. **Reverse stress testing** inverts the question, asking **what combination of
-driver movements reaches a defined failure point** — the form that produces an answer management can
-monitor.
+liquidity, not value. **Reverse stress testing** inverts the question, asking **what combination
+of driver movements reaches a defined failure point**: the form that produces an answer
+management can monitor.
 
 **Worked example 7.4.3 — Kestrel's stress matrix and its reverse.**
 
@@ -1232,65 +1239,68 @@ monitor.
    | **−5 %** | 0.8719 | 1.0282 | 1.1845 | 1.3408 |
    | **−10 %** | 0.8001 | 0.9474 | 1.0947 | 1.2420 |
 
-   At a 5 % tariff cut, despatch must **rise 0.9906 %** — to 24,237,739 m³ — to hold 1.20 ×.
-4. **Interpretation.** Read the matrix by its boundaries, not its cells. **Six of the sixteen cells
-   clear the 1.20 × covenant, and not one of them at despatch below forecast**: the whole +10 %
-   despatch column clears, base despatch clears only at base tariff and above, and every cell at
-   −10 % despatch or worse fails. The covenant contour therefore runs down the right-hand edge and
-   steps left only in the top two tariff rows — the visual statement that Kestrel has almost no joint
-   tolerance, and none at all once volume falls. **Four cells fall below 1.00 ×**, three of them in
-   the −20 % despatch column, where debt service cannot be paid from operating
-   cash at all and the debt-service reserve (2,504,818, Domain 10 KA 10.3.2) is the difference
-   between a difficult year and a payment default. Two cells tie the matrix to the rest of the book:
-   the base-despatch, −10 % tariff cell is **1.0947**, exactly Domain 6's revenue-down-10 % figure,
-   and extending the tariff row to +10 % reproduces Domain 6's **1.4540**.
+   At a 5 % tariff cut, despatch must **rise 0.9906 %** (to 24,237,739 m³) to hold 1.20 ×.
+4. **Interpretation.** Read the matrix by its boundaries, not its cells. **Six of the sixteen
+   cells clear the 1.20 × covenant, and not one of them at despatch below forecast**: the whole
+   +10 % despatch column clears, base despatch clears only at base tariff and above, and every
+   cell at −10 % despatch or worse fails. The covenant contour therefore runs down the
+   right-hand edge and steps left only in the top two tariff rows: the visual statement that
+   Kestrel has almost no joint tolerance, and none at all once volume falls. **Four cells fall
+   below 1.00 ×**, three of them in the −20 % despatch column, where debt service cannot be paid
+   from operating cash at all and the debt-service reserve (2,504,818, Domain 10 KA 10.3.2) is
+   the difference between a difficult year and a payment default. Two cells tie the matrix to
+   the rest of the book: the base-despatch, −10 % tariff cell is **1.0947**, exactly Domain 6's
+   revenue-down-10 % figure, and extending the tariff row to +10 % reproduces Domain 6's
+   **1.4540**.
 
-   **The reverse stress is the more useful instrument, and the one usually missing.** A 5 % tariff
-   reduction cannot be recovered by any volume response: 0.99 % more despatch is attainable in
-   principle, but Kestrel has no *right* to more despatch, because volume is the offtaker's choice —
-   so the recovery lever does not exist. That is what a reverse stress test is for. It identifies not
-   just the failure point but **whether the project holds the lever that would avoid it**, and a
-   breakeven reported without asking who controls the driver is arithmetic without decision content.
+   **The reverse stress is the more useful instrument, and the one usually missing.** A 5 %
+   tariff reduction cannot be recovered by any volume response: 0.99 % more despatch is
+   attainable in principle, but Kestrel has no *right* to more despatch, because volume is the
+   offtaker's choice, so the recovery lever does not exist. That is what a reverse stress test
+   is for. It identifies not just the failure point but **whether the project holds the lever
+   that would avoid it**, and a breakeven reported without asking who controls the driver is
+   arithmetic without decision content.
 
-   Three disciplines complete the practice. **Stress drivers, not outputs** — "revenue −10 %" is two
-   different stresses with different elasticities (KA 7.3.2). **Stress in correlated bundles**,
-   because a demand recession arrives with a price response and a delayed indexation catch-up, and
-   Domain 6 (KA 6.4.2) showed that one-at-a-time analysis is additive on this model and therefore
-   says nothing about joint probability. **And report the minimum over the loan life** — this matrix
-   is a year-one snapshot, and Domain 6's Fig 6.4.1 showed the bank-case minimum falling to 1.1851
-   in year 12 with no revenue stress at all, so every cell here is optimistic as a statement about
-   the loan's worst year.
+   Three disciplines complete the practice. **Stress drivers, not outputs**; "revenue −10 %" is
+   two different stresses with different elasticities (KA 7.3.2). **Stress in correlated
+   bundles**, because a demand recession arrives with a price response and a delayed indexation
+   catch-up, and Domain 6 (KA 6.4.2) showed that one-at-a-time analysis is additive on this
+   model and therefore says nothing about joint probability. **And report the minimum over the
+   loan life**. This matrix is a year-one snapshot, and Domain 6's Fig 6.4.1 showed the
+   bank-case minimum falling to 1.1851 in year 12 with no revenue stress at all, so every cell
+   here is optimistic as a statement about the loan's worst year.
 
 ### AI in this KA
 
 Counterparty and stress work divides cleanly. **Machines should**: monitor counterparty credit
-signals continuously — rating actions, payment behaviour, filings, published statements — and raise
-exceptions, which is surveillance no human team performs consistently across a portfolio; generate
-and run large stress grids including the correlated bundles a workshop would never enumerate; and
-extract guarantee, letter-of-credit and termination-compensation terms into the structured form
-Toolkit 7.T.3 requires.
+signals continuously (rating actions, payment behaviour, filings, published statements), and
+raise exceptions, which is surveillance no human team performs consistently across a portfolio;
+generate and run large stress grids including the correlated bundles a workshop would never
+enumerate; and extract guarantee, letter-of-credit and termination-compensation terms into the
+structured form Toolkit 7.T.3 requires.
 
 **Before any of it, the data question, which comes first.** A counterparty credit assessment is
 material about an identified third party, assembled from sources with their own terms of use and
 often held under a confidentiality undertaking given to that counterparty; the guarantee and
 termination-compensation terms being extracted are frequently unsigned. All of it is processed
-**only in an environment approved for that data classification and permitted by the confidentiality
-undertakings that cover it**, and establishing that permission is a precondition of the task rather
-than a review of it. Where the assessment records information about identified individuals — a
-counterparty's directors, owners or politically exposed persons in its control chain — the
-data-protection basis for holding and processing it is settled with the organisation's
-data-protection adviser before the file is built, and the retention position is set at the same time
-(Toolkit 7.T.3). Domain 1, KA 1.3.4 states the rule; Domain 16 builds the machinery.
+**only in an environment approved for that data classification and permitted by the
+confidentiality undertakings that cover it**, and establishing that permission is a precondition
+of the task rather than a review of it. Where the assessment records information about
+identified individuals (a counterparty's directors, owners or politically exposed persons in its
+control chain) the data-protection basis for holding and processing it is settled with the
+organisation's data-protection adviser before the file is built, and the retention position is
+set at the same time (Toolkit 7.T.3). Domain 1, KA 1.3.4 states the rule; Domain 16 builds the
+machinery.
 
-**They must not**: assign a `PD`, `LGD` or recovery assumption that becomes an input to a financing
-decision without a named professional adopting it, because each embeds a legal and market judgment
-a model states with unwarranted confidence; conclude whether facts constitute a counterparty default
-or trigger termination compensation, which is a matter for qualified counsel; or select the bank
-case. One failure mode deserves naming: asked to assess a concentrated revenue structure, a model
-readily computes expected loss — that is the formula in its training data — and does not volunteer
-that expected loss is blind to concentration, which is the entire question. **Ask for the
-distribution, not the expectation**, and check that the threshold used is one the structure cannot
-survive rather than an arbitrary confidence level.
+**They must not**: assign a `PD`, `LGD` or recovery assumption that becomes an input to a
+financing decision without a named professional adopting it, because each embeds a legal and
+market judgment a model states with unwarranted confidence; conclude whether facts constitute a
+counterparty default or trigger termination compensation, which is a matter for qualified
+counsel; or select the bank case. One failure mode deserves naming: asked to assess a
+concentrated revenue structure, a model readily computes expected loss (that is the formula in
+its training data), and does not volunteer that expected loss is blind to concentration, which
+is the entire question. **Ask for the distribution, not the expectation**, and check that the
+threshold used is one the structure cannot survive rather than an arbitrary confidence level.
 
 ### Key terms — KA 7.4
 
@@ -1326,7 +1336,7 @@ independent offtakers taking 25 % each, with identical `PD` and `LGD`. Expected 
 
 *Rationale:* Expected loss is linear in exposure, so splitting it changes nothing; the loss
 *distribution* changes profoundly (7.4.2). A and C confuse per-counterparty exposure with total
-expected loss; D confuses the probability of *some* default — which does rise, to 25.09 % — with
+expected loss; D confuses the probability of *some* default (which does rise, to 25.09 %) with
 expected loss.
 
 **MCQ 7.4-C `[7.4.2 · Analysis]`** A sovereign guarantee reduces expected loss by 1,106,304 at a
@@ -1343,19 +1353,20 @@ reduces (7.4.2). A applies the wrong metric to the decision, though it is the ri
 the provision; C is an unsupported generality; D is false — both effects are in present-value
 terms.
 
-**MCQ 7.4-D `[7.4.3 · Analysis]`** A stress matrix shows that six of sixteen tariff and
-despatch combinations clear the 1.20 × covenant — none of them at despatch below forecast — and that
-a 5 % tariff cut requires despatch 0.99 % above forecast to remain compliant. The most valuable
+**MCQ 7.4-D `[7.4.3 · Analysis]`** A stress matrix shows that six of sixteen tariff and despatch
+combinations clear the 1.20 × covenant (none of them at despatch below forecast), and that a 5 %
+tariff cut requires despatch 0.99 % above forecast to remain compliant. The most valuable
 observation for management is:
 - A. the matrix should be widened until more cells comply
-- B. the project has almost no joint tolerance, and it does not hold the lever — despatch is the offtaker's choice — that would recover a tariff cut ✅
+- B. the project has almost no joint tolerance, and it does not hold the lever (despatch is the
+  offtaker's choice) that would recover a tariff cut ✅
 - C. the year-one figures understate the risk, so the matrix should be discarded
 - D. the covenant should be renegotiated to 1.00 ×
 
 *Rationale:* A reverse stress test must identify both the failure point and whether the project
-controls the driver that would avoid it (7.4.3). A is presentational dishonesty; C is half right —
-year-one figures are optimistic, so the matrix should be *extended* to the minimum year, not
-discarded; D mistakes a covenant for the problem.
+controls the driver that would avoid it (7.4.3). A is presentational dishonesty; C is half
+right. Year-one figures are optimistic, so the matrix should be *extended* to the minimum year,
+not discarded; D mistakes a covenant for the problem.
 
 **MCQ 7.4-E `[7.4.1 · Analysis]`** Kestrel's offtaker exposure can be measured three defensible
 ways: the receivable of **2,958,904** on 90-day terms, the present value of contracted `CFADS` over
@@ -1368,12 +1379,12 @@ should be shown is:
 - D. all three, averaged, so that the committee neither over- nor understates
 
 *Rationale:* `EAD` follows from what the loss event is, and choosing it is a judgment tied to a
-decision (7.4.1). A is the working-capital exposure, trivial by comparison, and quoting it is exactly
-how a concentration problem gets presented as a working-capital matter. C is genuinely defensible and
-is the right number for a *different* decision — the sponsors' own exposure across the concession —
-but selecting it here because it is the largest substitutes an instinct for prudence for the question
-asked, and it overstates what the lenders are relying on. D is arithmetic without meaning: three
-exposures answer three questions and their mean answers none.
+decision (7.4.1). A is the working-capital exposure, trivial by comparison, and quoting it is
+exactly how a concentration problem gets presented as a working-capital matter. C is genuinely
+defensible and is the right number for a *different* decision (the sponsors' own exposure across
+the concession), but selecting it here because it is the largest substitutes an instinct for
+prudence for the question asked, and it overstates what the lenders are relying on. D is
+arithmetic without meaning: three exposures answer three questions and their mean answers none.
 
 **MCQ 7.4-F `[7.4.3 · Evaluation]`** The stress matrix clears the 1.20 × covenant in six of
 sixteen cells and falls below 1.00 × in four, and the unstressed bank case already reaches a
@@ -1384,14 +1395,15 @@ committee impose first?
 - C. attach a probability to each cell so that the committee can weigh the outcomes
 - D. increase the debt-service reserve from six months to twelve, because four cells cannot pay debt service from operating cash
 
-*Rationale:* the matrix understates the problem before any stress is applied: coverage already falls
-to 1.1851 by year twelve on the unstressed bank case, so ten failing cells is a floor rather than
-a finding (7.4.3). D is a real mitigant applied in the wrong order — a reserve sized against a
-mis-stated worst year is sized against the wrong number, and the right sequence is measure, then
-mitigate. C is what committees usually ask for and is the more dangerous request: joint probabilities
-here would have to be invented, and a probability-weighted matrix built on assumed correlations
-implies knowledge nobody has (Domain 6, KA 6.A.1). B changes nothing, since the ranges are already
-the adviser's credible bounds and extending them past that only adds cells nobody will underwrite.
+*Rationale:* the matrix understates the problem before any stress is applied: coverage already
+falls to 1.1851 by year twelve on the unstressed bank case, so ten failing cells is a floor
+rather than a finding (7.4.3). D is a real mitigant applied in the wrong order: a reserve sized
+against a mis-stated worst year is sized against the wrong number, and the right sequence is
+measure, then mitigate. C is what committees usually ask for and is the more dangerous request:
+joint probabilities here would have to be invented, and a probability-weighted matrix built on
+assumed correlations implies knowledge nobody has (Domain 6, KA 6.A.1). B changes nothing, since
+the ranges are already the adviser's credible bounds and extending them past that only adds
+cells nobody will underwrite.
 
 **MCQ 7.4-G `[7.4.2 · Evaluation]`** A credit paper records that the sole offtaker is investment grade,
 with an annual `PD` of 0.60 %, a twelve-year cumulative `PD` of 6.9671 % and an expected loss of
@@ -1404,37 +1416,37 @@ soundest assessment of the paper is that it:
   survive and what has been structured against it ✅
 - D. is inadequate, and the remedy is to split the offtake among four independent payers
 
-*Rationale:* expected loss is linear in exposure and therefore blind to concentration — four payers
-would show the same 1,678,031 while the probability of losing half or more of the revenue falls from
-6.9671 % to 2.6489 % and of losing all of it to 0.0024 % (7.4.2). A lets the expectation stand alone
-on a concentrated base. B attacks the one parameter the paper at least sources, and misses the
-omission. D prescribes a remedy this market does not offer: where concentration cannot be diversified
-away it must be structured against — guarantees, letters of credit, escrow, step-in rights,
-termination compensation that repays debt, or lower gearing.
+*Rationale:* expected loss is linear in exposure and therefore blind to concentration; four
+payers would show the same 1,678,031 while the probability of losing half or more of the revenue
+falls from 6.9671 % to 2.6489 % and of losing all of it to 0.0024 % (7.4.2). A lets the
+expectation stand alone on a concentrated base. B attacks the one parameter the paper at least
+sources, and misses the omission. D prescribes a remedy this market does not offer: where
+concentration cannot be diversified away it must be structured against, guarantees, letters of
+credit, escrow, step-in rights, termination compensation that repays debt, or lower gearing.
 
 **MCQ 7.4-H `[7.4.1 · Comprehension]`** Kestrel's `LGD` of 45 % rests on an expectation of recovering
 55 % of contracted value. What that figure embeds is:
 - A. the proportion of an unpaid invoice that is written off
-- B. a market judgment — that a merchant market exists to re-sell into — together with a legal one,
-  that termination compensation, step-in rights and the security package work as drafted ✅
+- B. a market judgment, that a merchant market exists to re-sell into, together with a legal
+  one, that termination compensation, step-in rights and the security package work as drafted ✅
 - C. a figure fixed for each counterparty class by regulation, and therefore not an assumption at all
 - D. the probability that recovery efforts fail
 
-*Rationale:* `LGD` is the proportion of exposure not recovered, and on a project the recovery depends
-on both a market and a set of documents, so an `LGD` not traced to them is a guess wearing a decimal
-point (7.4.1). A describes a receivable write-off, not the loss of a contracted stream. C states as
-universal a treatment that is institution- and jurisdiction-specific. D is `PD`'s territory —
-likelihood — not the severity `LGD` measures.
+*Rationale:* `LGD` is the proportion of exposure not recovered, and on a project the recovery
+depends on both a market and a set of documents, so an `LGD` not traced to them is a guess
+wearing a decimal point (7.4.1). A describes a receivable write-off, not the loss of a
+contracted stream. C states as universal a treatment that is institution- and
+jurisdiction-specific. D is `PD`'s territory, likelihood, not the severity `LGD` measures.
 
 ### Self-check — KA 7.4
 
-1. *Why does expected loss understate a concentrated exposure?* — It is linear in exposure, so it
-   is identical whether one counterparty or four carry the same total; only the loss distribution
-   shows the difference.
-2. *On what basis is credit enhancement priced?* — On the coverage and underwritten case it
-   unlocks, and therefore the equity it releases — 2,625,026 net for Kestrel's guarantee — not on
+1. *Why does expected loss understate a concentrated exposure?* It is linear in exposure, so it
+   is identical whether one counterparty or four carry the same total; only the loss
+   distribution shows the difference.
+2. *On what basis is credit enhancement priced?* (On the coverage and underwritten case it
+   unlocks, and therefore the equity it releases) 2,625,026 net for Kestrel's guarantee — not on
    the expected loss it removes.
-3. *What must a reverse stress test establish beyond the breakeven?* — Whether the project
+3. *What must a reverse stress test establish beyond the breakeven?* Whether the project
    controls the driver that would avoid the failure.
 
 ---
@@ -1444,9 +1456,9 @@ likelihood — not the severity `LGD` measures.
 ### 7.A.1 The collar: a minimum revenue guarantee with revenue sharing
 
 A **minimum revenue guarantee** (`MRG`) is a floor the grantor writes; **revenue sharing** is a
-ceiling it buys back. Together they form a **collar**, which can be structured to cost the grantor
-nothing in expectation while transforming bankability — making it the most efficient instrument in
-this domain.
+ceiling it buys back. Together they form a **collar**, which can be structured to cost the
+grantor nothing in expectation while transforming bankability (making it the most efficient
+instrument in this domain).
 
 Take Kestrel's Structure B distribution and add an `MRG` at **10,800,000** (90 % of base revenue)
 with **100 % revenue sharing above 13,200,000** (110 %). In the low outcome the grantor tops up by
@@ -1457,39 +1469,39 @@ changes is the distribution: `CFADS` outcomes narrow from 4,728,000–8,040,000 
 sized on the low case at 1.30 × rises from 30,491,396 to **36,295,595** — a gain of **5,804,200 for
 nothing in expectation.**
 
-Three professional points. The collar is **not free to the grantor**, whose exposure has moved from
-an expectation to a contingency: a 25 % chance of paying 1,200,000 is a real budgetary and
-accounting matter in its own jurisdiction and framework, and it is why guarantees of this kind are
-increasingly recognised as contingent liabilities rather than treated as costless policy. It is
-**not free to equity** either: the shared upside is the shareholders', and 5,804,200 of extra debt
-is 5,804,200 of leverage risk. And **it does not fix compliance** — the collared low case at 1.1234
-still breaches both the 1.20 × covenant and the 1.15 × lock-up, so a floor set at the lock-up level
-is worth far more than a floor at a round percentage of base revenue, and costs the grantor only
-slightly more.
+Three professional points. The collar is **not free to the grantor**, whose exposure has moved
+from an expectation to a contingency: a 25 % chance of paying 1,200,000 is a real budgetary and
+accounting matter in its own jurisdiction and framework, and it is why guarantees of this kind
+are increasingly recognised as contingent liabilities rather than treated as costless policy. It
+is **not free to equity** either: the shared upside is the shareholders', and 5,804,200 of extra
+debt is 5,804,200 of leverage risk. And **it does not fix compliance**: the collared low case at
+1.1234 still breaches both the 1.20 × covenant and the 1.15 × lock-up, so a floor set at the
+lock-up level is worth far more than a floor at a round percentage of base revenue, and costs
+the grantor only slightly more.
 
 ### 7.A.2 The merchant tail and the contracted horizon
 
-The tenor a project can support is set by its **contracted horizon**, not its asset life. Suppose
-Kestrel's offtake ran eight years rather than twenty-five, with output thereafter sold merchant at
-70 % of the contracted tariff: merchant-year revenue is 8,400,000, `CFADS` **3,684,000** and `DSCR`
-on the existing instalment **0.7354** — the loan cannot be paid in those years. Three structural
-responses, each with a computed price:
+The tenor a project can support is set by its **contracted horizon**, not its asset life.
+Suppose Kestrel's offtake ran eight years rather than twenty-five, with output thereafter sold
+merchant at 70 % of the contracted tariff: merchant-year revenue is 8,400,000, `CFADS`
+**3,684,000** and `DSCR` on the existing instalment **0.7354** (the loan cannot be paid in those
+years). Three structural responses, each with a computed price:
 
 - **Shorten the tenor to the contracted horizon.** Eight years at 1.30 × on contracted `CFADS`,
-  with `AF(0.06, 8) = 6.209794`, supports **30,494,864** — 10,676,259 less than the twelve-year
-  contracted structure, and it creates refinancing risk at year eight.
+  with `AF(0.06, 8) = 6.209794`, supports **30,494,864** (10,676,259 less than the twelve-year
+  contracted structure, and it creates refinancing risk at year eight).
 - **Keep twelve years with level service.** The weakest period governs: 3,684,000 ÷ 1.30 =
   2,833,846 of service, supporting only **23,758,524**. Level service against a cliff is the
   worst of the three.
 - **Sculpt, with a higher target in the merchant years.** At 1.30 × through the contracted years
-  and 1.80 × through the merchant years, sculpted capacity is **34,944,420** — the best answer, and
-  the reason sculpting (Domain 10, KA 10.1.3) is close to mandatory where a contract cliff sits
-  inside the tenor.
+  and 1.80 × through the merchant years, sculpted capacity is **34,944,420**: the best answer,
+  and the reason sculpting (Domain 10, KA 10.1.3) is close to mandatory where a contract cliff
+  sits inside the tenor.
 
 The leadership point is that the second option, which looks like the conservative one, destroys
 **11,185,896** of capacity by pricing every year at the worst year's rate. And all three answers
-depend on a merchant price forecast for years nine to twelve — a market forecast embedded in a debt
-structure, which is Domain 10's discipline on refinancing assumptions applied to revenue.
+depend on a merchant price forecast for years nine to twelve: a market forecast embedded in a
+debt structure, which is Domain 10's discipline on refinancing assumptions applied to revenue.
 
 ### 7.A.3 The reviewer's revenue eye
 
@@ -1523,7 +1535,7 @@ Invariants to test on any revenue model or commercial structure:
 ## Industry variations — Domain 7
 
 - **Contracted power and renewables.** Two-part tariffs and capacity payments dominate; the
-  specific difference is **curtailment and deemed generation** — whether the offtaker pays for
+  specific difference is **curtailment and deemed generation**, whether the offtaker pays for
   output it instructs the plant not to produce, a drafting question worth several points of
   availability. Under a contract-for-differences the project sells merchant and settles the
   difference against a strike: economically contracted, operationally merchant, and modelled
@@ -1535,9 +1547,9 @@ Invariants to test on any revenue model or commercial structure:
   to the revenue.
 - **Transport concessions.** Patronage risk with a ramp; the specific difference is that **the
   project often controls price but faces elasticity**, so a toll increase to recover volume may
-  reduce revenue. Operating leverage is extreme — Domain 10's Case study B implies an elasticity of
-  1.4931 — so tolerance is thin at any coverage ratio, and ramp reserves and sculpting are standard
-  rather than optional.
+  reduce revenue. Operating leverage is extreme (Domain 10's Case study B implies an elasticity
+  of 1.4931), so tolerance is thin at any coverage ratio, and ramp reserves and sculpting are
+  standard rather than optional.
 - **Water and regulated utilities.** Availability or take-or-pay with a public counterparty; the
   specific difference is the **regulatory reset**, a scheduled discontinuity no escalation formula
   describes. Covenant testing and reserve sizing must straddle resets, and the indexation
@@ -1547,53 +1559,54 @@ Invariants to test on any revenue model or commercial structure:
   tenor is the binding metric (7.2.3), tenant concentration is usually severe, and required coverage
   is driven by re-letting assumptions and tenant credit rather than demand forecasts.
 - **Social infrastructure PPP.** Pure availability payments from a public budget; the specific
-  difference is that **the deduction and performance regime is the entire revenue risk**. With no
-  demand exposure at all, diligence and management attention belong on the performance-measurement
-  system, the multiplier, the cumulative-deduction cap and the cure regime — which KA 7.1.3 showed
-  can move a covenant breakpoint by 1.584 points of availability.
+  difference is that **the deduction and performance regime is the entire revenue risk**. With
+  no demand exposure at all, diligence and management attention belong on the
+  performance-measurement system, the multiplier, the cumulative-deduction cap and the cure
+  regime, which KA 7.1.3 showed can move a covenant breakpoint by 1.584 points of availability.
 
 ---
 
 ## Case study — Domain 7: the concession that was worth less than it looked (water)
 
 **Situation.** Kestrel's tariff negotiation reached indexation last, as it usually does. The
-offtaker's position was **80 % of the tariff indexed to CPI**, assumed at 2.5 %, with 20 % fixed for
-the 25-year concession. The sponsors' commercial director, uncomfortable with an unindexed slice,
-asked for **full indexation**; the offtaker agreed — at **CPI less 50 basis points**, presented as a
-fair exchange. The finance director asked for the calculation before the term sheet was initialled.
+offtaker's position was **80 % of the tariff indexed to CPI**, assumed at 2.5 %, with 20 % fixed
+for the 25-year concession. The sponsors' commercial director, uncomfortable with an unindexed
+slice, asked for **full indexation**; the offtaker agreed (at **CPI less 50 basis points**,
+presented as a fair exchange). The finance director asked for the calculation before the term
+sheet was initialled.
 
-**What happened.** The exchange was value-destroying. Present value of revenue over 25 years at 8 %:
-80 % at 2.5 % gives **152,913,886**; 100 % at 2.0 % gives **152,088,430** — the "full indexation"
-offer was worth **825,456 less**, and 166,192 less over the twelve loan years at 6 %. The mechanism
-is not obvious, and that is the point: the unindexed 20 % compounds at nothing, but the indexed 80 %
-compounds at the higher rate, so by year 25 the partly indexed tariff reaches 19,763,769 against the
-fully indexed one's 19,301,247. Minimum `DSCR` over the loan life was 1.2743 in year one under both
-and year-12 coverage was 1.4253 against 1.4140, so **no coverage test would have detected the
-loss** — a covenant-compliant structure can be materially worse than the alternative and nothing in
-the coverage model will say so.
+**What happened.** The exchange was value-destroying. Present value of revenue over 25 years at
+8 %: 80 % at 2.5 % gives **152,913,886**; 100 % at 2.0 % gives **152,088,430** — the "full
+indexation" offer was worth **825,456 less**, and 166,192 less over the twelve loan years at 6
+%. The mechanism is not obvious, and that is the point: the unindexed 20 % compounds at nothing,
+but the indexed 80 % compounds at the higher rate, so by year 25 the partly indexed tariff
+reaches 19,763,769 against the fully indexed one's 19,301,247. Minimum `DSCR` over the loan life
+was 1.2743 in year one under both and year-12 coverage was 1.4253 against 1.4140, so **no
+coverage test would have detected the loss**. A covenant-compliant structure can be materially
+worse than the alternative and nothing in the coverage model will say so.
 
 The second finding was larger. Decomposing the architecture (Worked example 7.3.1) showed the
 year-25 margin falling from 62.50 % to **59.23 %**, and the **effective** rate gap at 35.7 basis
-points rather than the headline 70 — half the apparent mismatch already neutralised by the 30 % fixed
-portion of the O&M contract. The lever nobody had pulled was on the cost side: the O&M escalation
-index, negotiated separately by the technical team, ran at 3.2 % against the tariff's 2.5 % for no
-reason beyond the contractor having proposed it.
+points rather than the headline 70, half the apparent mismatch already neutralised by the 30 %
+fixed portion of the O&M contract. The lever nobody had pulled was on the cost side: the O&M
+escalation index, negotiated separately by the technical team, ran at 3.2 % against the tariff's
+2.5 % for no reason beyond the contractor having proposed it.
 
-**How it resolved.** Two changes, negotiated together. The tariff moved to **90 % indexed at full
-CPI**, and the O&M contract was re-tendered with its escalating 70 % **matched to the tariff's
-index**. Present value of `EBITDA` over 25 years at 8 % rose from **93,938,399** to **99,836,527** —
-a gain of **5,898,128**, of which **3,102,071** came from the extra ten points of tariff indexation
-and **2,796,057** from index matching, the two effects being exactly additive. The year-25 margin
-rose to **66.01 %**, above the year-1 62.50 %, because matched indices against a partly fixed cost
-base produce margin *expansion*. The offtaker took a tighter availability regime in exchange, which
-KA 7.1.3 priced separately.
+**How it resolved.** Two changes, negotiated together. The tariff moved to **90 % indexed at
+full CPI**, and the O&M contract was re-tendered with its escalating 70 % **matched to the
+tariff's index**. Present value of `EBITDA` over 25 years at 8 % rose from **93,938,399** to
+**99,836,527**, a gain of **5,898,128**, of which **3,102,071** came from the extra ten points
+of tariff indexation and **2,796,057** from index matching, the two effects being exactly
+additive. The year-25 margin rose to **66.01 %**, above the year-1 62.50 %, because matched
+indices against a partly fixed cost base produce margin *expansion*. The offtaker took a tighter
+availability regime in exchange, which KA 7.1.3 priced separately.
 
 **What the domain teaches here.** Indexation is an **architecture**, not a rate, and it must be
-valued rather than preferred. The sponsors' instinct — more indexation is better — was wrong by
+valued rather than preferred. The sponsors' instinct (more indexation is better) was wrong by
 825,456 as offered, and the valuable change was on a line nobody had connected to the revenue
-negotiation. Two disciplines follow: compute the present value of every indexation proposal before
-responding to it, and negotiate revenue and cost indices **in the same room**, because the exposure
-is the gap between them and neither team can see it alone.
+negotiation. Two disciplines follow: compute the present value of every indexation proposal
+before responding to it, and negotiate revenue and cost indices **in the same room**, because
+the exposure is the gap between them and neither team can see it alone.
 
 ## Case study B — Domain 7: the tenant they gave a discount to (digital infrastructure)
 
@@ -1607,30 +1620,30 @@ facility at **6.5 %** (`AF(0.065, 10) = 7.188830`), required **1.60 ×** coverag
 service, supporting **92,106,887** and leaving equity of **107,893,113**, **53.95 %** of capital,
 against a business plan built on 40 %.
 
-**What happened.** The sponsors first argued the ratio, which failed for the reason Domain 10's Case
-study A established — a coverage requirement is an output of the credit, not a negotiating variable
-in isolation. Their second response worked. They asked the anchor, whose own growth forecast had
-softened, to release **25 % of the capacity**, and re-let it to three independent tenants at an
-average **6 % below** the anchor rate. Revenue fell to **33,490,000**, down 510,000 or **1.50 %**;
-operating costs rose 400,000 on the additional billing and service load; `CFADS` fell to
-**19,590,000**, down **910,000**.
+**What happened.** The sponsors first argued the ratio, which failed for the reason Domain 10's
+Case study A established. A coverage requirement is an output of the credit, not a negotiating
+variable in isolation. Their second response worked. They asked the anchor, whose own growth
+forecast had softened, to release **25 % of the capacity**, and re-let it to three independent
+tenants at an average **6 % below** the anchor rate. Revenue fell to **33,490,000**, down
+510,000 or **1.50 %**; operating costs rose 400,000 on the additional billing and service load;
+`CFADS` fell to **19,590,000**, down **910,000**.
 
 **How it resolved.** With four tenants and none above 75 % of revenue, the arranger reduced the
-requirement to **1.35 ×**: debt service of 14,511,111 supporting **104,317,914** — **12,211,027**
-more debt on **910,000 less `CFADS`**. Equity fell to **95,682,086**, from 53.95 % to **47.84 %** of
-capital. The arranger then imposed a condition the sponsors had not anticipated and that was entirely
-correct: because the three new leases ran three years against the anchor's ten, `WARCT` fell from
-**10.00 to 8.25 years** against a ten-year loan, so a **2,000,000 re-letting reserve** was required,
-reducing the net capacity gain to **10,211,027**.
+requirement to **1.35 ×**: debt service of 14,511,111 supporting **104,317,914** (**12,211,027**
+more debt on **910,000 less `CFADS`**). Equity fell to **95,682,086**, from 53.95 % to **47.84
+%** of capital. The arranger then imposed a condition the sponsors had not anticipated and that
+was entirely correct: because the three new leases ran three years against the anchor's ten,
+`WARCT` fell from **10.00 to 8.25 years** against a ten-year loan, so a **2,000,000 re-letting
+reserve** was required, reducing the net capacity gain to **10,211,027**.
 
 **What the domain teaches here.** **Concentration, not expected value, priced the debt.** The
-sponsors gave up 910,000 a year of `CFADS` — **4.44 %** — and received twelve million of debt,
-because what the arranger charged 0.25 × of coverage for was not the level of the cash flow but the
-fact that all of it came from one signature (KA 7.4.2). The second lesson is the reserve: reducing
-concentration by adding shorter leases traded counterparty risk for **re-contracting risk**, and a
-lender who accepts the first while ignoring the second has not improved its position. Every
-diversification must be assessed on both dimensions — how many payers, and for how long — which is
-the `WARCT`-against-tenor test of KA 7.2.3.
+sponsors gave up 910,000 a year of `CFADS` (**4.44 %**), and received twelve million of debt,
+because what the arranger charged 0.25 × of coverage for was not the level of the cash flow but
+the fact that all of it came from one signature (KA 7.4.2). The second lesson is the reserve:
+reducing concentration by adding shorter leases traded counterparty risk for **re-contracting
+risk**, and a lender who accepts the first while ignoring the second has not improved its
+position. Every diversification must be assessed on both dimensions (how many payers, and for
+how long), which is the `WARCT`-against-tenor test of KA 7.2.3.
 
 ---
 
@@ -1642,9 +1655,10 @@ What a project finance director cannot delegate in this domain:
   volume tariff is worth 10,679,727 of debt capacity on Kestrel's numbers (7.1.1). It is a
   capital-structure decision wearing commercial clothes, and it cannot be settled by the
   commercial team alone.
-- **The deduction and performance regime.** Multipliers, caps, cure periods and outage allowances
-  set the operational tolerance the whole project then lives inside — 2.91 availability points for
-  Kestrel, of which a point and a half is the negotiated multiplier (7.1.3).
+- **The deduction and performance regime.** Multipliers, caps, cure periods and outage
+  allowances set the operational tolerance the whole project then lives inside: 2.91
+  availability points for Kestrel, of which a point and a half is the negotiated multiplier
+  (7.1.3).
 - **The indexation architecture, on both sides.** Indexed shares and indices for revenue *and*
   cost, negotiated together, with effective rates computed. Case study A's 5,898,128 of present
   value came from two terms nobody had connected.
@@ -1659,77 +1673,73 @@ What a project finance director cannot delegate in this domain:
 
 ## Calculation exercises — Domain 7
 
-**Exercise 7.1** A capacity charge of 20,000,000 a year carries a 97 % availability guarantee and
-a deduction equal to the charge multiplied by the availability shortfall and by a 1.25 ×
+**Exercise 7.1** A capacity charge of 20,000,000 a year carries a 97 % availability guarantee
+and a deduction equal to the charge multiplied by the availability shortfall and by a 1.25 ×
 multiplier. Availability outturns at 94 %. Compute the deduction and the revenue received.
 *Solution.* Shortfall `0.97 − 0.94 = 0.03`; deduction `20,000,000 × 1.25 × 0.03 =` **750,000**,
 which is **3.75 %** of the charge; revenue **19,250,000**. Common error: omitting the multiplier
 (600,000), or applying the multiplier to total unavailability of 6 % rather than to the 3 %
-shortfall against the guarantee (1,500,000) — the first understates exposure by a fifth, the
-second doubles it.
+shortfall against the guarantee (1,500,000) (the first understates exposure by a fifth, the
+second doubles it).
 
 **Exercise 7.2** A project earns 0.80 per unit with variable cost 0.10 per unit and fixed cash
 cost 4,000,000; there is no tax or working-capital movement. Volume is 18,000,000 units with
 probability 0.60 and 10,500,000 with probability 0.40. Debt service is 6,000,000 a year and the
 loan runs ten years at 7 % (`AF(0.07, 10) = 7.023582`). Compute `CFADS` and `DSCR` in each
 outcome, the expected values, and debt capacity at a 1.25 × target sized (a) on expected `CFADS`
-and (b) on the low case.
-*Solution.* High: revenue 14,400,000, `CFADS` `14,400,000 − 4,000,000 − 1,800,000 =`
-**8,600,000**, `DSCR` **1.4333**. Low: revenue 8,400,000, `CFADS` **3,350,000**, `DSCR`
-**0.5583**. Expected volume 15,000,000; expected `CFADS` **6,500,000**; expected `DSCR`
-**1.0833**. Capacity on expected `CFADS`: `6,500,000/1.25 × 7.023582 =` **36,522,624**; on the low
-case: `3,350,000/1.25 × 7.023582 =` **18,823,199** — a difference of **17,699,425**. Common error:
-sizing on the expected case and reporting the expected `DSCR` of 1.0833 as the project's coverage;
-the low outcome does not pay debt service at all, and a 40 % probability of that is not a
-rounding matter.
+and (b) on the low case. *Solution.* High: revenue 14,400,000, `CFADS` `14,400,000 − 4,000,000 −
+1,800,000 =` **8,600,000**, `DSCR` **1.4333**. Low: revenue 8,400,000, `CFADS` **3,350,000**,
+`DSCR` **0.5583**. Expected volume 15,000,000; expected `CFADS` **6,500,000**; expected `DSCR`
+**1.0833**. Capacity on expected `CFADS`: `6,500,000/1.25 × 7.023582 =` **36,522,624**; on the
+low case: `3,350,000/1.25 × 7.023582 =` **18,823,199** (a difference of **17,699,425**). Common
+error: sizing on the expected case and reporting the expected `DSCR` of 1.0833 as the project's
+coverage; the low outcome does not pay debt service at all, and a 40 % probability of that is
+not a rounding matter.
 
 **Exercise 7.3** A concession's revenue is 30,000,000 with 90 % indexed at 2.2 %; its operating
-cost is 18,000,000 with 60 % indexed at 3.5 %. Compute the `EBITDA` margin in year 1 and year 20,
-and the effective compound rates.
-*Solution.* Year 1: `EBITDA` **12,000,000**, margin **40.00 %**. Year 20: revenue
-`30,000,000 × (0.90 × 1.022¹⁹ + 0.10) =` **43,825,432**; cost
+cost is 18,000,000 with 60 % indexed at 3.5 %. Compute the `EBITDA` margin in year 1 and year
+20, and the effective compound rates. *Solution.* Year 1: `EBITDA` **12,000,000**, margin
+**40.00 %**. Year 20: revenue `30,000,000 × (0.90 × 1.022¹⁹ + 0.10) =` **43,825,432**; cost
 `18,000,000 × 0.60 × 1.035¹⁹ + 7,200,000 =` **27,963,014**; `EBITDA` **15,862,417**, margin
-**36.19 %** — a drift of **3.81 points**. Effective rates: revenue **2.015 %**, cost **2.346 %**.
-Common error: comparing the headline 2.2 % and 3.5 % and concluding a 130-basis-point exposure;
-the effective gap is 33.1 basis points, because both sides are only partly indexed.
+**36.19 %** (a drift of **3.81 points**). Effective rates: revenue **2.015 %**, cost **2.346
+%**. Common error: comparing the headline 2.2 % and 3.5 % and concluding a 130-basis-point
+exposure; the effective gap is 33.1 basis points, because both sides are only partly indexed.
 
 **Exercise 7.4** Revenue 50,000,000; variable costs are 30 % of revenue; fixed cash costs
 18,000,000. Compute the degree of operating leverage, and the volume fall that takes a 1.40 ×
-base coverage ratio to a 1.25 × covenant.
-*Solution.* Contribution `50,000,000 × 0.70 =` **35,000,000**; `EBITDA` **17,000,000**; `DOL`
-`35,000,000/17,000,000 =` **2.0588**. Required earnings fall `1 − 1.25/1.40 =` **10.7143 %**;
-volume fall `10.7143 % ÷ 2.0588 =` **5.2041 %**. Verification: volume down 5.2041 % gives
-`EBITDA` of **15,178,571**, which is **89.29 %** of base — and `1.40 × 0.8929 = 1.25`. Common
-error: reading the coverage gap as the volume tolerance (a 10.71 % volume fall would take
-coverage to 1.09 ×, well below the covenant); operating leverage means the tolerance is always
-smaller than the earnings tolerance.
+base coverage ratio to a 1.25 × covenant. *Solution.* Contribution `50,000,000 × 0.70 =`
+**35,000,000**; `EBITDA` **17,000,000**; `DOL` `35,000,000/17,000,000 =` **2.0588**. Required
+earnings fall `1 − 1.25/1.40 =` **10.7143 %**; volume fall `10.7143 % ÷ 2.0588 =` **5.2041 %**.
+Verification: volume down 5.2041 % gives `EBITDA` of **15,178,571**, which is **89.29 %** of
+base, and `1.40 × 0.8929 = 1.25`. Common error: reading the coverage gap as the volume tolerance
+(a 10.71 % volume fall would take coverage to 1.09 ×, well below the covenant); operating
+leverage means the tolerance is always smaller than the earnings tolerance.
 
 **Exercise 7.5** A single offtaker has an annual `PD` of 1.0 %. Exposure over a ten-year loan is
-80,000,000 and `LGD` is 50 %. Compute the expected loss, then compute the probability of losing at
-least half the revenue if the same output were sold instead to **two** independent offtakers of
-50 % each on identical terms. Comment.
-*Solution.* Ten-year cumulative `PD` `1 − 0.99¹⁰ =` **9.5618 %**; expected loss
-`0.095618 × 80,000,000 × 0.50 =` **3,824,717**. With two offtakers, losing at least half the
-revenue requires **at least one** default: `1 − (1 − 0.095618)² =` **18.2093 %**, against
-**9.5618 %** with a single offtaker — the probability has almost **doubled**, while the
-probability of total loss falls from 9.5618 % to `0.095618² =` **0.9143 %**. Comment: splitting a
-revenue base into parcels at or above the survival threshold does not reduce the risk of crossing
-it; diversification only helps when each parcel is **strictly smaller** than the loss the
-structure can absorb. Common error: assuming that any diversification reduces concentration
-risk — the four-way split of Worked example 7.4.2 reduces the probability of a ≥ 50 % loss to
-2.6489 %, but a two-way split increases it.
+80,000,000 and `LGD` is 50 %. Compute the expected loss, then compute the probability of losing
+at least half the revenue if the same output were sold instead to **two** independent offtakers
+of 50 % each on identical terms. Comment. *Solution.* Ten-year cumulative `PD` `1 − 0.99¹⁰ =`
+**9.5618 %**; expected loss `0.095618 × 80,000,000 × 0.50 =` **3,824,717**. With two offtakers,
+losing at least half the revenue requires **at least one** default: `1 − (1 − 0.095618)² =`
+**18.2093 %**, against **9.5618 %** with a single offtaker. The probability has almost
+**doubled**, while the probability of total loss falls from 9.5618 % to `0.095618² =` **0.9143
+%**. Comment: splitting a revenue base into parcels at or above the survival threshold does not
+reduce the risk of crossing it; diversification only helps when each parcel is **strictly
+smaller** than the loss the structure can absorb. Common error: assuming that any
+diversification reduces concentration risk, the four-way split of Worked example 7.4.2 reduces
+the probability of a ≥ 50 % loss to 2.6489 %, but a two-way split increases it.
 
 ## Practitioner's toolkit — Domain 7
 
-*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable — and
-set a retention period against each. These registers are the evidence that a decision was taken
-properly, so each is retained at least as long as the obligation it supports, in a form that opens
-without the tool that created it, with a named custodian who holds it once the engagement ends.
-The applicable minimum periods are set by the organisation's own policy and by jurisdiction-specific
-statutory, tax and limitation requirements, which this book does not state. Where a register holds
-information about identified individuals, the retention period and any minimisation or deletion
-obligation that cuts across it are settled with the organisation's data-protection adviser before
-the register is adopted.*
+*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable, and set a
+retention period against each. These registers are the evidence that a decision was taken
+properly, so each is retained at least as long as the obligation it supports, in a form that
+opens without the tool that created it, with a named custodian who holds it once the engagement
+ends. The applicable minimum periods are set by the organisation's own policy and by
+jurisdiction-specific statutory, tax and limitation requirements, which this book does not
+state. Where a register holds information about identified individuals, the retention period and
+any minimisation or deletion obligation that cuts across it are settled with the organisation's
+data-protection adviser before the register is adopted.*
 
 ### Toolkit 7.T.1 — Revenue mechanism specification
 
@@ -1744,23 +1754,24 @@ hand and agreed with the model** (7.1.3). The deduction row carries its multipli
 its cure regime explicitly, because a summary that omits them understates exposure by a third.
 
 *Section B — the governance of the measurement, one block per measured quantity (KA 7.1.3).*
-**Measurement:** the instrument or system of record · who owns and maintains it · the calibration
-regime, its cycle and its tolerance · who may recalibrate and whether a recalibration reopens prior
-periods · the **deemed-availability rule on metering failure**, quoted from the clause.
-**Certification:** who produces the primary record · who certifies it · the challenge window and what
-happens to a period nobody challenges in time. **Evidence:** the underlying data to be retained
-(meter records, control-system logs, outage records with causes, maintenance records, outage
-notifications), the retention period against the longer of the challenge window and the period in
-which a dispute may still be brought, the form (must open without the system that created it) and
-the named custodian. **Dispute:** the escalation sequence with its time limits · the determination
-forum · who bears the cost · **who may settle on the SPV's behalf, and the threshold above which the
-board decides** · the standing lock that a settlement changing a covenant ratio is not an operational
-decision and is checked against the finance documents first. **Cash timing:** whether deductions are
-applied pending resolution, or withheld or escrowed — stated as a yes/no on the face of the sheet,
-with the reserve consequence noted. Rule: the periods, the conclusiveness of an unchallenged month
-and the remedy for a deduction later found to be wrongly applied are established from the executed
-documents with qualified counsel in the governing jurisdiction, and recorded here as answers rather
-than assumptions.
+**Measurement:** the instrument or system of record · who owns and maintains it · the
+calibration regime, its cycle and its tolerance · who may recalibrate and whether a
+recalibration reopens prior periods · the **deemed-availability rule on metering failure**,
+quoted from the clause. **Certification:** who produces the primary record · who certifies it ·
+the challenge window and what happens to a period nobody challenges in time. **Evidence:** the
+underlying data to be retained (meter records, control-system logs, outage records with causes,
+maintenance records, outage notifications), the retention period against the longer of the
+challenge window and the period in which a dispute may still be brought, the form (must open
+without the system that created it) and the named custodian. **Dispute:** the escalation
+sequence with its time limits · the determination forum · who bears the cost · **who may settle
+on the SPV's behalf, and the threshold above which the board decides** · the standing lock that
+a settlement changing a covenant ratio is not an operational decision and is checked against the
+finance documents first. **Cash timing:** whether deductions are applied pending resolution, or
+withheld or escrowed, stated as a yes/no on the face of the sheet, with the reserve consequence
+noted. Rule: the periods, the conclusiveness of an unchallenged month and the remedy for a
+deduction later found to be wrongly applied are established from the executed documents with
+qualified counsel in the governing jurisdiction, and recorded here as answers rather than
+assumptions.
 
 ### Toolkit 7.T.2 — Indexation mismatch map
 
@@ -1817,12 +1828,12 @@ factors.
 
 **The traps.**
 - Treating expected `CFADS` or expected `DSCR` as a sizing basis (Worked example 7.1.1; Exercise
-  7.2) — the single most consequential error in the domain.
+  7.2) (the single most consequential error in the domain).
 - Omitting the deduction multiplier, or applying it to total unavailability rather than to the
   shortfall against the guarantee (MCQ 7.1-B; Exercise 7.1).
 - Recovering fixed costs and debt service through a purely volume-linked charge (7.1.2).
 - Using the headline index instead of the effective rate on a partly indexed line (MCQ 7.3-A;
-  Exercise 7.3) — and its mirror, comparing headline indices across revenue and cost and
+  Exercise 7.3), and its mirror, comparing headline indices across revenue and cost and
   overstating the gap twofold (Case study A).
 - Assuming more indexation is better without computing the present value (Case study A).
 - Treating "revenue −10 %" as one stress when price and volume have different elasticities
@@ -1846,13 +1857,13 @@ KA 7.3.3 computed.
 
 ## Domain 7 summary
 Revenue structure, not revenue level, decides how much debt a project can carry. Kestrel's two
-offers — a 12,000,000 availability payment and a 0.50 per m³ volume tariff — have **identical
+offers (a 12,000,000 availability payment and a 0.50 per m³ volume tariff) have **identical
 expected `CFADS` of 6,384,000** and identical expected `DSCR` of **1.2743**, and differ by
 **10,679,727 of debt capacity**, 25.94 %, because a lender underwrites the low case (`CFADS`
 4,728,000, `DSCR` **0.9438** — debt service unpaid) and raises the required ratio for dispersion
 as well. An availability structure does not remove volatility, it converts demand risk into
-operational risk: Kestrel breaches its 1.20 × covenant at **92.086 %** availability against a 95 %
-guarantee, **2.91 points** of headroom, of which about a point and a half is the negotiated
+operational risk: Kestrel breaches its 1.20 × covenant at **92.086 %** availability against a 95
+% guarantee, **2.91 points** of headroom, of which about a point and a half is the negotiated
 1.5 × deduction multiplier. Banded, floored and shared mechanisms are risk-transfer instruments
 priced in tariff form — a volume band costing 2,515,153 of present value bought 3,482,520 of
 capacity, and a value-neutral collar with an `MRG` at 90 % and full sharing above 110 % bought
@@ -1861,20 +1872,20 @@ re-contracting rather than volume: at 93 % net revenue retention against a fixed
 Halyard Connect's run-off case supports **20,271,839**, half the 40,000,000 sought, and its
 `WARCT` of 3.30 years covers 47 % of the tenor. Escalation is an architecture: 80 % of Kestrel's
 tariff at 2.5 % against 70 % of its cost at 3.2 % produces effective rates of **2.101 %** and
-**2.457 %** — a 35.7-basis-point gap, half the headline — and **3.27 margin points** of drift by
-year 25, all of it landing after the lender has gone; the unindexed tariff slice costs 3.65 points
-and the fixed cost slice saves 7.72, which is why Case study A's most valuable term was in the
-O&M contract. Operating leverage explains why a 12 % patronage miss became Domain 10's 17.9 %
-cash miss — an elasticity of **1.4931** — and generalises: at identical 1.30 × coverage and an
-identical 1.20 × covenant, demand tolerance ranges from **6.15 % to 1.54 %** on cost structure
-alone. Kestrel's own tolerance is **4.14 %** on tariff, **4.50 %** on despatch (1,079,530 m³) and
-**5.83 %** on `CFADS`, and quoting the last to a team that manages the second overstates their
-room by 30 %. Counterparty quality bounds all of it: an annual `PD` of 0.60 % over twelve years is
-**6.9671 %** cumulative, giving an expected loss of **1,678,031** on exposure of **53,522,460**
-and a credit charge worth **0.0400** of `DSCR` — but expected loss is identical whether one
-offtaker or four carry the revenue, while the probability of losing half of it falls from
-**6.9671 % to 2.6489 %**, so concentration must be reported as a distribution and never as an
-expectation. And credit enhancement is bought for the coverage it unlocks: Kestrel's guarantee
-saves 300,403 of net expected loss and releases **2,625,026** of equity. Domain 8 escalates the
-cost side, Domain 9 prices the equity a weak revenue structure demands, and Domain 10 divides
-this domain's `CFADS` by the coverage this domain's structure has earned.
+**2.457 %** (a 35.7-basis-point gap, half the headline), and **3.27 margin points** of drift by
+year 25, all of it landing after the lender has gone; the unindexed tariff slice costs 3.65
+points and the fixed cost slice saves 7.72, which is why Case study A's most valuable term was
+in the O&M contract. Operating leverage explains why a 12 % patronage miss became Domain 10's
+17.9 % cash miss (an elasticity of **1.4931**), and generalises: at identical 1.30 × coverage
+and an identical 1.20 × covenant, demand tolerance ranges from **6.15 % to 1.54 %** on cost
+structure alone. Kestrel's own tolerance is **4.14 %** on tariff, **4.50 %** on despatch
+(1,079,530 m³) and **5.83 %** on `CFADS`, and quoting the last to a team that manages the second
+overstates their room by 30 %. Counterparty quality bounds all of it: an annual `PD` of 0.60 %
+over twelve years is **6.9671 %** cumulative, giving an expected loss of **1,678,031** on
+exposure of **53,522,460** and a credit charge worth **0.0400** of `DSCR`; but expected loss is
+identical whether one offtaker or four carry the revenue, while the probability of losing half
+of it falls from **6.9671 % to 2.6489 %**, so concentration must be reported as a distribution
+and never as an expectation. And credit enhancement is bought for the coverage it unlocks:
+Kestrel's guarantee saves 300,403 of net expected loss and releases **2,625,026** of equity.
+Domain 8 escalates the cost side, Domain 9 prices the equity a weak revenue structure demands,
+and Domain 10 divides this domain's `CFADS` by the coverage this domain's structure has earned.
