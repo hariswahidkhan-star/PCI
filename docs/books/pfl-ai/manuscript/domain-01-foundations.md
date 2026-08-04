@@ -31,7 +31,10 @@ risk through the capital structure the lenders will impose; price sponsor suppor
 contingent claim; state the risk-return-bankability logic; recognise the prohibited acts in
 bribery, sanctions and money laundering, triage the red flags that stop the work, name the
 escalation route and the evidence that must exist, and characterise the principal external
-instruments for what they are rather than as law; and apply the profession's ethical
+instruments for what they are rather than as law; state the duty to correct a number already relied
+on — its trigger, who owns the correction, who decides on external notification, the route it
+travels and the record it leaves — and explain why superseding a figure internally does not
+discharge it; and apply the profession's ethical
 and responsible-AI obligations to realistic situations — including in explicit expected-value
 terms, while explaining why the duty does not depend on the arithmetic.
 
@@ -965,6 +968,48 @@ misrepresentation, whatever the spreadsheet says. *Candour about limits*: this b
 rule — educational reference, not individualized advice; jurisdiction-specific matters go to
 qualified counsel and advisers — is the same professional humility applied to oneself.
 
+**The duty to correct.** Candour about numbers has a forward limb — how a forecast is presented
+when it is first presented — and a backward limb, which is the one that arrives without warning.
+A professional who learns that a number already relied on is **materially wrong, or was wrong when
+it was issued, is obliged to correct it**. The obligation is not discharged by the number having
+been superseded internally: a figure withdrawn from the working model but still sitting in a
+lender's credit paper, a board pack, a grantor's evaluation or a submitted bid has not been
+corrected, it has been abandoned, and abandonment leaves the recipient exactly where the error put
+them. Four elements make the obligation operable, and they are the four this book's governance uses
+everywhere.
+
+- **The trigger.** Materiality is judged against the decision the recipient took or is about to
+  take, not against the size of the arithmetic. An error of a few thousand that moves a coverage
+  ratio across a covenant threshold is material; a larger one that changes nothing anyone relied on
+  is not. Where the answer is genuinely unclear the error is treated as material until someone
+  senior decides otherwise in writing, because the alternative rule — treat it as immaterial until
+  proved otherwise — is the one that produces Case study B in Domain 6.
+- **The decision rights.** The correction is owned by **the person who signed the original output**,
+  not by whoever happened to find it and not by the team that would prefer it stayed internal. The
+  decision to notify externally sits with the accountable principal — the sponsor's CFO, or the
+  engagement partner on a mandated adviser's side. **No commercial party may veto a correction that
+  is owed.** A request to hold one back until a milestone passes is not a commercial negotiation;
+  it is itself an escalation event, and it is recorded as one.
+- **The timing and the route.** The correction reaches the recipient **before the next decision that
+  would rely on the wrong figure**. Where the recipient is a lender or an agent, it travels through
+  the channel the finance documents provide for notices and information, not through a call to the
+  relationship banker — an informal warning that leaves no record has protected the individual
+  rather than the recipient, and the two are not the same thing.
+- **The record.** What was wrong; when it was known and by whom; what the corrected figure is and
+  how it was derived; who was told, through what route, on what date; and which decisions taken on
+  the old figure are being revisited. This is the entry the conflicts and AI-use register of
+  Toolkit 1.T.3 is built to hold, and it is retained on the same basis (see the toolkit preamble).
+
+*Counsel pointer:* whether a particular failure to correct engages a representation, an information
+undertaking, a warranty or an event of default under a specific set of finance documents is a
+question for qualified counsel on those documents, and the answer turns on the drafting and the
+governing law. Nothing here states the position under any of them, and nothing here characterises
+any act or omission as lawful or unlawful. The professional obligation above does not wait for that
+answer: it is discharged first, and the legal analysis runs alongside it. Domain 6 Case study B
+follows a superseded forecast that survived into a financing model and was found by the *lenders'*
+auditor rather than by the team that owned it; Domain 6, KA 6.4.3 carries the same duty into the
+model after close, and Domain 13 places it on the closing-set and condition-precedent trail.
+
 ### 1.3.2 Financial crime: bribery, sanctions and the money-laundering perimeter
 
 **Why this belongs in the foundations.** Of the duties listed in 1.3.1, this is the one the profession
@@ -1339,6 +1384,8 @@ what was found. Anything shorter is an assertion that checking happened.
 | Term | Meaning |
 |---|---|
 | **Fiduciary awareness** | Acting in the principal's interest with loyalty, care and confidentiality. |
+| **Duty to correct** | The obligation to correct a number already relied on that is materially wrong, or was wrong when issued; not discharged by the figure having been superseded internally. |
+| **Materiality (for correction)** | Judged against the decision the recipient took or is about to take, not against the size of the arithmetic; treated as material until someone senior decides otherwise in writing. |
 | **Facilitation payment** | A small payment to secure a routine act the project is already entitled to; treated as a bribe by this book's professional standard, whatever it is called locally. |
 | **Failure to prevent** | The pattern, understood to exist in several jurisdictions, under which an organisation answers for bribery by an associated person; a leader should not assume that not knowing what the intermediary did will protect the organisation. Local application is a question for counsel. |
 | **Associated person** | Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its exposure runs. |
@@ -1512,6 +1559,24 @@ counsel. C overcorrects — the certification is relevant evidence about the cou
 just not the evidence being claimed. D asserts a reach the diligence must establish for itself,
 contract by contract.
 
+**MCQ 1.3-L `[1.3.1 · Analysis]`** Six weeks after a credit paper went to the lenders, an analyst
+finds that the demand forecast underneath it was superseded before the paper was issued. The working
+model was updated at the time; the lenders' copy was not, and the corrected figure moves the
+first-test coverage ratio below the covenant. The team lead says the point is moot because the model
+is already right. The correct professional response is:
+- A. no action is owed — the internal file is current, so the record has been corrected
+- B. raise it with the signing professional and the accountable principal, correct the figure to the lenders through the channel the finance documents provide before the next decision that would rely on it, and record what was wrong, when it was known, who was told and when ✅
+- C. wait for the lenders' model auditor to find it, since an independent finding is more credible than a self-report
+- D. correct it informally on the next relationship call, so that nothing goes on the file until counsel has advised whether a representation is engaged
+
+*Rationale:* the duty to correct is not discharged by a figure having been superseded internally
+(1.3.1) — the lenders still hold the wrong number, and materiality here is decided by the covenant
+the corrected figure crosses. A confuses abandoning a figure with correcting it. C is the Domain 6
+Case study B failure stated as a strategy, and it leaves the recipient relying on a known error in
+the interval. D inverts the sequence twice: the informal route leaves no record, and the professional
+obligation is discharged first while the question of what the finance documents engage runs alongside
+it as a matter for counsel.
+
 ### Self-check — KA 1.3
 
 1. *State the daylight test.* — Would every party, seeing the full relationship and fee map,
@@ -1520,21 +1585,30 @@ contract by contract.
    (golden checks), traced sources, document-against-summary verification — by a named human.
 3. *Why does confidentiality bind AI use?* — Data entering a tool is a disclosure; it must
    stay within approved, contracted environments.
-4. *Why does the concealment calculation have no upside term?* — What concealment buys is bounded
+4. *A forecast in a lender's credit paper has been superseded internally. Is the duty discharged?*
+   — No. Superseding a figure inside the team abandons it; correcting it means telling the party who
+   relied on it, through the route the finance documents provide for notices, before the next
+   decision that would use it — and recording what was wrong, when it was known, who was told and
+   when. Whether the omission also engages a representation or an undertaking is a question for
+   counsel on those documents, and the professional obligation does not wait for the answer.
+5. *Who owns a correction, and who may stop one?* — The person who signed the original output owns
+   it; the accountable principal decides on external notification; no commercial party may veto a
+   correction that is owed, and a request to defer one is itself an escalation event.
+6. *Why does the concealment calculation have no upside term?* — What concealment buys is bounded
    by the fee at risk on the hidden engagement; what it risks is the franchise, the value of every
    future fee.
-5. *What must accompany a benchmark before it enters a negotiating position?* — A source line: the
+7. *What must accompany a benchmark before it enters a negotiating position?* — A source line: the
    transaction, the document and the date — because a number without a source is an assertion made
    in the presenter's own name.
-6. *Is a facilitation payment a bribe?* — In most regimes, yes, whatever it is called locally; the
+8. *Is a facilitation payment a bribe?* — In most regimes, yes, whatever it is called locally; the
    few narrow exceptions are a matter for written advice from counsel before the payment, not after.
-7. *An unresolved red flag has appeared on an intermediary. Who is told, and what happens meanwhile?*
+9. *An unresolved red flag has appeared on an intermediary. Who is told, and what happens meanwhile?*
    — Compliance or counsel, never the commercial line and never the intermediary; and nothing
    proceeds — no payment, no signature, no certification — until the flag is cleared in writing.
-8. *Why is "we did not know what the agent did" not an answer?* — Where a failure-to-prevent regime
+10. *Why is "we did not know what the agent did" not an answer?* — Where a failure-to-prevent regime
    applies the organisation answers for an associated person's conduct regardless of knowledge; the
    protection, where any exists, is the procedures actually performed and evidenced at engagement.
-9. *What must the file contain on any intermediary?* — Beneficial ownership to natural persons,
+11. *What must the file contain on any intermediary?* — Beneficial ownership to natural persons,
    sanctions screening refreshed on change of control, the written justification of service and fee
    with its approver, the payment-route record, and the escalation record.
 
@@ -1890,7 +1964,15 @@ error: computing headroom against the *reported* ratio rather than the covenant 
 
 ## Practitioner's toolkit — Domain 1
 
-*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable.*
+*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable — and
+set a retention period against each. These registers are the evidence that a decision was taken
+properly, so each is retained at least as long as the obligation it supports, in a form that opens
+without the tool that created it, with a named custodian who holds it once the engagement ends.
+The applicable minimum periods are set by the organisation's own policy and by jurisdiction-specific
+statutory, tax and limitation requirements, which this book does not state. Where a register holds
+information about identified individuals, the retention period and any minimisation or deletion
+obligation that cuts across it are settled with the organisation's data-protection adviser before
+the register is adopted.*
 
 ### Toolkit 1.T.1 — Stakeholder map (one page per project)
 
@@ -1909,8 +1991,22 @@ option) · decision, rationale, decision-maker, date.
 
 Conflicts: relationship · parties affected · disclosure date · handling (barriers/consent/
 declined) · review date. AI use: tool and environment · data classification cleared ·
-verification steps and named verifier · disclosure status. One register, one owner, standing
+verification steps and named verifier · disclosure status. Corrections: figure corrected · what was
+wrong and when it was known · who signed the original · who decided on external notification ·
+recipient, route and date · decisions being revisited (KA 1.3.1). One register, one owner, standing
 agenda item.
+
+*Retention and custody.* This is the register most often needed after the people involved have
+moved on — it is the evidence that a conflict was disclosed at the time, that an AI-assisted figure
+was verified before it entered a negotiating position, and that a correction was made when it was
+owed. Record against each entry: the **retention period** and its basis (organisation policy, the
+life of the obligation the entry supports, or a statutory or limitation requirement the organisation
+has established); the **form** in which it is held, which must open without the tool that created
+it; and the **named custodian** who holds the register after the engagement closes, with the
+handover recorded on any change of personnel. Entries naming individuals — the conflicted parties,
+the verifier, the approver — are personal information: the period and any deletion obligation
+running against it are confirmed with the organisation's data-protection adviser, and the periods
+themselves are jurisdiction-specific and not stated here.
 
 ### Toolkit 1.T.4 — Recourse-cost worksheet (one per financing route considered)
 
@@ -2028,7 +2124,9 @@ tolerates a 65.00 % cash decline interest-only and **30.42 %** amortising, with 
 at **16.51 %**. Timing has its own arithmetic and its own trap: a 15-year availability stream has a
 Macaulay duration of **6.5945 years**, and no level stream at 8 % can exceed **13.5** at any tenor,
 so matching an asset's life is not matching its duration. Around the technique stands the profession:
-fiduciary-grade candour about numbers and limits; the financial-crime duties, the only ones
+fiduciary-grade candour about numbers and limits — forward, in how a forecast is presented, and
+backward, in the duty to correct a number already relied on, which a figure's internal supersession
+does not discharge and which no commercial party may veto; the financial-crime duties, the only ones
 in the lattice the profession treats as admitting no commercial justification, where a facilitation
 payment is treated as a bribe, an intermediary's
 conduct is assumed to be the organisation's exposure whether or not it knew, and an unresolved red flag stops the

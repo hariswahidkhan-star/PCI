@@ -748,10 +748,29 @@ contract values — and invoices carry **VAT/GST**. At an illustrative 15 %, a c
 but one that can be material at the trough. Cross-border payments to suppliers may also suffer **withholding
 tax**: at, say, 5 % on a 200,000 invoice, the project pays `200,000 − 10,000 = 190,000` to the supplier and remits
 `10,000` to the tax authority — the same total cash, but different counterparties and possibly different
-dates. Neither changes project *cost* (both wash through balance-sheet accounts, Domain 1, KA 1.1) — but both
-change *when* cash moves, and therefore the funding requirement (3.5.3). The discipline: model gross-of-VAT
-flows with their remittance dates, model net-plus-remit for WHT — and never let a VAT-inclusive invoice value
-contaminate the cost ledger (Domain 5, KA 5.2.4).
+dates. Both change *when* cash moves, and therefore the funding requirement (3.5.3).
+
+**Whether either also changes project *cost* is conditional, and the condition matters.** Where input VAT/GST
+is **recoverable** by the entity, it washes through balance-sheet accounts (Domain 1, KA 1.1) and is a timing
+effect only. Where it is **irrecoverable** — and there are common and identifiable situations in which some or
+all of it is, including entities or activities outside the recovery regime, categories of spend on which
+recovery is blocked, unregistered branches and certain cross-border supplies — the unrecovered amount is a
+real cost of the project. It belongs in the estimate and the budget as cost, not in the timing model. The
+same split runs through withholding. Where the amount withheld is **creditable** against the recipient's own
+tax, or the contract entitles the recipient to be **grossed up** so that it receives the invoiced amount net
+of the withholding, the effect is timing. Where it is neither creditable nor grossed up, the party that bears
+it bears a cost, and a forecast that treats it as timing understates the funding requirement and the margin
+at once. The discipline: model gross-of-VAT flows with their remittance dates, model net-plus-remit for
+withholding, budget any irrecoverable or non-creditable element as cost — and never let a VAT-inclusive
+invoice value contaminate the cost ledger (Domain 5, KA 5.2.4).
+
+**Confirm the position, then record it.** Recoverability, rates, the base they apply to, remittance timing and
+any gross-up entitlement are jurisdiction-specific and contract-specific, and they change. Confirm the
+position with the entity's tax function — and, where the answer turns on the contract or on a cross-border
+structure, with qualified tax advisers — **before the forecast is issued**, and record the assumption actually
+used (recoverable or not, creditable or not, grossed up or not, and on whose advice) in the basis of estimate
+(Toolkit 3.T.1). A funding requirement whose tax assumption is not written down cannot be reviewed, and the
+assumption is the first thing a reviewer challenges.
 
 > **Tax caution.** The rates above are illustrative and chosen to make the arithmetic legible; they are not
 > any jurisdiction's rates. Which indirect taxes apply, at what rate, on what base, with what registration,
@@ -781,6 +800,8 @@ which typically makes the trough deeper than a corporate-funded equivalent.
 | **Peak funding requirement** | The deepest point of cumulative cash — the finance to arrange. |
 | **Retention** | Cash withheld from payments until completion/defects periods pass. |
 | **Payment terms** | The lag between billing and collection (and between receipt and paying suppliers). |
+| **Irrecoverable input tax** | Value-added or goods-and-services tax an entity cannot recover, and which is therefore a cost of the project rather than a timing effect. |
+| **Gross-up** | A contractual entitlement to be paid an increased amount so that, after a withholding, the recipient still receives the invoiced sum. |
 
 ### Sample MCQs — KA 3.5
 

@@ -474,8 +474,10 @@ impact and protecting the baseline.*
 Uncontrolled change — **scope creep** — is the most common way a baseline is quietly lost: a dozen small,
 unmanaged additions accumulate until actual no longer relates to plan and variance becomes meaningless.
 Change control is the disciplined process by which every proposed change is **identified, assessed
-(cost/schedule/risk impact), approved or rejected, and — if approved — baselined**. Its purpose is not to
-prevent change but to ensure change is *visible, costed and authorised*.
+(cost/schedule/risk impact), approved or rejected by a named change authority, and — if approved —
+baselined**. Its purpose is not to prevent change but to ensure change is *visible, costed and authorised*.
+Note the separation built into that sentence and developed in 5.4.3: the controls professional identifies and
+assesses; someone else decides.
 
 ### 5.4.2 Trends, variations and change orders
 
@@ -515,11 +517,55 @@ estimate (3.2.3) or a provision (1.4.6).
    10,000,000 + remaining management reserve 200,000 = 10,200,000` — unchanged, because the variation moved
    money *from* reserve *into* the baseline rather than adding new funding. ✓
 
+**Who approves — the change-authority ladder.** The controls professional owns the impact assessment and the
+**recommendation**; a **change authority** approves. Those two roles are never held by the same person on the
+same change: an assessor who also approves has put no second mind between a cost and the budget, which is the
+whole purpose of the process. Authority is delegated by **value and by type**, and a project records its
+ladder — the bands and the named holder of each — *before* the first change arrives, rather than when a
+contentious one is already on the table. A workable default shape:
+
+| Change | Where approval sits |
+|---|---|
+| A draw on **contingency** for a risk already carried on the register, within the project manager's recorded delegated limit | Project manager, within delegation |
+| A **baseline-changing variation**, or any release from **management reserve** | Project board, or the body named as change authority |
+| A change that alters a **contractual** obligation, price or completion date | Sponsor and the client's authorised representative, in whatever form the contract requires (Domain 7, KA 7.2) |
+
+Two rules keep the ladder honest. Changes arising from one instruction or one cause are **aggregated** to
+decide which band applies, so a change cannot be split into approvable pieces. And a change is **not executed
+before it is authorised**; where genuine urgency forces work to start, that is an exception recorded as such
+at the time and ratified at the next meeting of the authority that should have approved it — never a
+retrospective approval presented as a routine one.
+
+**What a change record carries before it can be approved.** A change authority can only approve what it can
+see, so the minimum content of a change record is fixed rather than left to the assessor's discretion:
+
+- a **unique reference** and the **originating instruction, trend or event** that gave rise to it;
+- the **full impact assessment** — direct cost, knock-on cost (disruption, acceleration, time-related
+  preliminaries), the schedule effect assessed *through the network* rather than estimated in isolation
+  (Domain 10, KA 10.3), the risk and interface effect, and any effect stated as nil rather than omitted;
+- the **funding source** proposed — contingency, management reserve, or client funding — and the balance
+  remaining on that source before and after;
+- the **options considered**, including doing nothing, and why the recommended one is recommended;
+- the **approver's identity, authority band and date**, and any condition attached to the approval.
+
+**The escalation trigger.** A change whose assessed cost exceeds the **remaining reserve of its intended
+funding source** escalates to the next level of authority *before* it is approved, not after the reserve is
+exhausted. A project that approves its way through the bottom of contingency and reports the fact afterwards
+has converted a governance decision into an accounting one. The same trigger applies where a change would
+take cumulative movement past a baseline tolerance, and where it alters an obligation under the contract.
+These disciplines are the substance of `PCI-PCL-STD-05.03` (completeness of change impact assessment) and
+`PCI-PCL-STD-05.04` (change authority and segregation of preparation from approval); the decision-owner
+principle beneath them is `PCI-FND-STD-04`.
+
 **AI in this KA.** AI can support change control by scanning correspondence, RFIs and site data to **surface
 trends early** (a leading-indicator engine for change), estimating the likely cost impact of a proposed change
 from historical analogues, and keeping the change log reconciled. The professional owns the impact assessment
-and the approval — a model can flag a possible change but cannot weigh its full disruption/acceleration cost or
-authorise it. **AI proposes; the professional verifies, decides and remains accountable.**
+and the recommendation; the change authority approves. A model can flag a possible change but cannot weigh its
+full disruption/acceleration cost, cannot hold a delegated authority, and cannot authorise anything.
+Supplier correspondence, subcontract rates and cost-ledger extracts are confidential and often commercially
+sensitive, so this work belongs in a **governed tool** only — never in an ungoverned or public one (Domain 13,
+KAs 13.2.5 and 13.3.4; `PCI-FND-STD-09`). **AI proposes; the professional verifies, decides and remains
+accountable.**
 
 ### Key terms — KA 5.4
 
@@ -530,6 +576,8 @@ authorise it. **AI proposes; the professional verifies, decides and remains acco
 | **Trend** | An early warning of a potential change. |
 | **Variation / change order** | A formal, priced, agreed change to contract scope/price. |
 | **Change log** | The record reconciling current baseline to original, by change. |
+| **Change authority** | The person or body holding the delegated power to approve a change of a stated value and type — never the person who assessed it. |
+| **Delegated limit** | The recorded value band within which a named role may approve; above it, the change escalates. |
 
 ### Sample MCQs — KA 5.4
 

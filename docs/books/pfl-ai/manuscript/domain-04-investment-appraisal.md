@@ -1653,7 +1653,15 @@ to that — it ignores the delay cost of postponing a positive-NPV project by a 
 
 ## Practitioner's toolkit — Domain 4
 
-*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable.*
+*Adoption-ready artefacts; adapt headings to your organisation, then keep them stable — and
+set a retention period against each. These registers are the evidence that a decision was taken
+properly, so each is retained at least as long as the obligation it supports, in a form that opens
+without the tool that created it, with a named custodian who holds it once the engagement ends.
+The applicable minimum periods are set by the organisation's own policy and by jurisdiction-specific
+statutory, tax and limitation requirements, which this book does not state. Where a register holds
+information about identified individuals, the retention period and any minimisation or deletion
+obligation that cuts across it are settled with the organisation's data-protection adviser before
+the register is adopted.*
 
 ### Toolkit 4.T.1 — The appraisal one-pager (per decision)
 
