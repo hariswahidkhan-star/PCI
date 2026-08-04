@@ -25,7 +25,7 @@ the appendices, two stub appendices promising content that did not exist, and â€
 volumes â€” an answer-key marker that silently vanished in print, deleting the correct answer from all
 813 sample MCQs.
 
-All of that is now fixed. The volumes rebuild clean, carry a coherent PCI Professional Law framework,
+All of that is now fixed. The volumes rebuild clean, carry a coherent PCI Standard framework,
 and the retired PCP-AI identity is gone from published content. **What remains outstanding is the one
 thing no amount of further automated work can supply: named human subject-matter review.**
 

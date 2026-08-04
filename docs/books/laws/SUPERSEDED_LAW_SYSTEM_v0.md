@@ -1,13 +1,13 @@
-# The PCI Professional Law System
+# The PCI Standards System
 
 **Status: SUPERSEDED — retained for history only. Do not draft to this document.**
 
-This was the first drafting specification for the PCI Professional Laws. It has been replaced by two
+This was the first drafting specification for the PCI Standards. It has been replaced by two
 documents, and where this file and either of those disagree, **those govern**:
 
-- [`PCI_PROFESSIONAL_LAWS_CHARTER.md`](PCI_PROFESSIONAL_LAWS_CHARTER.md) — status, hierarchy,
+- [`PCI_STANDARDS_CHARTER.md`](PCI_STANDARDS_CHARTER.md) — status, hierarchy,
   priority, due process, interpretation, amendment, exceptions, consequences.
-- [`PCI_LAW_DRAFTING_MANUAL.md`](PCI_LAW_DRAFTING_MANUAL.md) — normative language, the
+- [`PCI_STANDARDS_DRAFTING_MANUAL.md`](PCI_STANDARDS_DRAFTING_MANUAL.md) — normative language, the
   twenty-five-element law structure, identifiers, external-reference classification, prohibited
   patterns, the visual system, and the twenty-five audit questions.
 
@@ -24,15 +24,15 @@ threshold and exception elements that this version lacked.
 
 ---
 
-## 1. What a PCI Professional Law is — and is not
+## 1. What a PCI Standard is — and is not
 
-> **PCI Professional Law** means a mandatory professional rule established by Project Controls
+> **PCI Standard** means a mandatory professional rule established by Project Controls
 > Institute Global for the ethical, competent, verifiable and accountable performance of work within
 > a PCI certification scope.
 
 **Legal-status disclaimer (must appear wherever laws are published):**
 
-> PCI Professional Laws are professional certification rules and standards of conduct established by
+> PCI Standards are professional certification rules and standards of conduct established by
 > PCI Global. They are not legislation, regulatory requirements or substitutes for applicable law,
 > contractual obligations or authoritative professional standards. Where any applicable law,
 > regulation, contract or authoritative professional standard imposes a stricter requirement, that
@@ -44,11 +44,11 @@ conduct processes.
 
 ## 2. Hierarchy
 
-1. **PCI Foundational Laws** — apply to all three credentials. IDs `PCI-FND-LAW-NN` (`PCI-FND-LAW-01`
-   to `PCI-FND-LAW-15`). The superseded form `PCI-LAW-F-NN` is withdrawn and is recorded only in
-   [`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md).
-2. **Certification Laws** — apply to one credential. IDs `PCI-PCL-LAW-DD.NN`, `PCI-PFL-LAW-DD.NN`,
-   `PCI-PML-LAW-DD.NN`, where `DD` is the two-digit domain of primary anchorage and `NN` a two-digit
+1. **PCI Foundational Standards** — apply to all three credentials. IDs `PCI-FND-STD-NN` (`PCI-FND-STD-01`
+   to `PCI-FND-STD-15`). The superseded form `PCI-LAW-F-NN` is withdrawn and is recorded only in
+   [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md).
+2. **Certification Standards** — apply to one credential. IDs `PCI-PCL-STD-DD.NN`, `PCI-PFL-STD-DD.NN`,
+   `PCI-PML-STD-DD.NN`, where `DD` is the two-digit domain of primary anchorage and `NN` a two-digit
    sequence within that domain. A certification law that spans domains anchors to the domain that
    teaches it and lists the others under *Related book content*.
 3. **Process Rules** — operational requirements subordinate to a law (numbered `…-R1`, `…-R2` under
@@ -73,7 +73,7 @@ Practice** · **External requirement** · **Illustrative example** · **Jurisdic
 Every law uses exactly this structure, in this order:
 
 ```
-### PCI LAW <ID> — <Official title>
+### PCI STANDARD <ID> — <Official title>
 
 **Rule.** <direct mandatory statement>
 
@@ -150,7 +150,7 @@ number, and must survive grayscale print and screen reading.
 
 | Box | Label | Colour (heading/border) | Tint | Icon |
 |---|---|---|---|---|
-| PCI Law | `PCI LAW <ID>` | PCI Law Red `#C62828` (dark variant `#9B1C1C`) | `#FDECEC` | § |
+| PCI Law | `PCI STANDARD <ID>` | PCI Law Red `#C62828` (dark variant `#9B1C1C`) | `#FDECEC` | § |
 | External standards reference | `EXTERNAL REFERENCE` | Standards Blue `#1D4ED8` | `#EEF4FF` | ⬢ |
 | Guidance (non-mandatory) | `PCI PRACTICE GUIDANCE` | Guidance Teal `#0F766E` | `#ECFDF5` | ✦ |
 | Jurisdictional / legal / tax caution, high-stakes AI limitation | `CAUTION` | Amber `#B45309` | `#FEF3C7` | ⚠ |

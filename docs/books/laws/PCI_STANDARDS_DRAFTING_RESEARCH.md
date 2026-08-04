@@ -1,17 +1,17 @@
-# PCI Law Drafting Research Report
+# PCI Standards Drafting Research Report
 
-**Programme:** Reconstruction of the PCI Professional Laws (PCL-AI, PFL-AI, PML-AI)
+**Programme:** Reconstruction of the PCI Standards (PCL-AI, PFL-AI, PML-AI)
 **Stage:** 2 — establishing how high-quality normative requirements are actually written
 **Verification date:** 2026-08-04
 **Status:** Research input. This document is not itself a law, a rule or a drafting standard. It
-informs the revision of `LAW_SYSTEM.md` and the drafting of the law sets.
+informs the revision of `SUPERSEDED_LAW_SYSTEM_v0.md` and the drafting of the law sets.
 **Language:** British English.
 
 ---
 
 ## 1. Why this report exists
 
-PCI Professional Laws are intended to become testable, enforceable, evidence-based professional
+PCI Standards are intended to become testable, enforceable, evidence-based professional
 requirements. Before drafting any law, the programme needs a defensible answer to a prior question:
 *how do the bodies that write normative requirements well actually do it?*
 
@@ -109,7 +109,7 @@ A single rule covers all of them and should be carried into PCI's drafting conve
 > **PCI reproduces no protected text. PCI names the instrument, states in its own words why the
 > instrument matters, and directs the reader to the official publication, which governs.**
 
-This is already PCI's stated position in `LAW_SYSTEM.md` §5. This report confirms it is the right
+This is already PCI's stated position in `SUPERSEDED_LAW_SYSTEM_v0.md` §5. This report confirms it is the right
 one and adds that it must apply to *method* documents (the Directives, the Handbook, the Drafting
 Guidance) exactly as it applies to *subject-matter* standards (IFRS 15, ISO 21500 and the like).
 
@@ -199,7 +199,7 @@ so that a reader can identify what must be satisfied in order to claim complianc
 further and marks the legal character of every provision with a status letter carried in the margin
 or heading, so status is never inferred from tone (S). *PCI implication:* vocabulary alone is not
 enough; PCI should carry both a controlled vocabulary and a visible status label, which its existing
-box system (`PCI LAW` / `PCI PRACTICE GUIDANCE` / `EXTERNAL REFERENCE` / `CAUTION`) already
+box system (`PCI STANDARD` / `PCI PRACTICE GUIDANCE` / `EXTERNAL REFERENCE` / `CAUTION`) already
 half-implements.
 
 **2. How is scope defined?**
@@ -407,7 +407,7 @@ identified" column reproduces protected text; each is a restatement in PCI's own
 | 13 | Substitution principle | ISO/IEC Directives Part 2 (S) | A definition must be written so that it can replace the term in context | PCI adds a mechanical substitution test to the law gate: substitute every defined term into every Rule that uses it and confirm the sentence still reads correctly | Restatable |
 | 14 | Definitions carry no requirements | ISO/IEC Directives Part 2 (S) | A definition must not take the form of, or contain, a requirement | PCI gate check: no `must` in the glossary. Obligations belong in laws, not in definitions | Restatable |
 | 15 | Definition construction | ISO/IEC Directives Part 2 (S) | Definitions must not repeat the term being defined, and follow fixed formal conventions of construction | PCI gate check: automated detection of the defined term appearing inside its own definition and of two-term definitional loops; PCI publishes its own house rules for definition form | Restatable. Do not copy ISO's specific formatting rules as PCI rules |
-| 16 | Consistency across a suite | ISO/IEC Directives Part 2 (S) | Identical provisions are expressed in identical words, with one terminology and no synonyms; related documents share structure and numbering so a reader can navigate one from knowledge of another | Across PCL-AI, PFL-AI and PML-AI an identical obligation must be worded identically; the common domain-numbered ID scheme and common field order in `LAW_SYSTEM.md` are validated | Restatable |
+| 16 | Consistency across a suite | ISO/IEC Directives Part 2 (S) | Identical provisions are expressed in identical words, with one terminology and no synonyms; related documents share structure and numbering so a reader can navigate one from knowledge of another | Across PCL-AI, PFL-AI and PML-AI an identical obligation must be worded identically; the common domain-numbered ID scheme and common field order in `SUPERSEDED_LAW_SYSTEM_v0.md` are validated | Restatable |
 | 17 | Normative references | ISO/IEC Directives Part 2 (S) | Only documents whose content constitutes requirements of the document are listed as normative references | PCI separates *references that create obligation* from *references cited for orientation*. The current `External references` field conflates them | Restatable |
 | 18 | Dated vs undated references | ISO/IEC Directives Part 2 (S) | For a dated reference only the cited edition applies; for an undated reference the latest edition including amendments applies; normative reference to draft documents is strongly discouraged because the text can still change | Given PCI's ban on inventing editions and clause numbers, PCI references undated by instrument name with "verify current requirements", and never anchors a law to an exposure or consultation draft | Restatable. This is a rule about referencing, not reproducible text |
 | 19 | Instructions vs requirements | ISO/IEC Directives Part 2 (S) | Direct procedural steps are expressed in the imperative mood; requirements use the mandatory auxiliary; the two forms are not interchangeable | PCI's `Minimum professional requirement` field is procedural and may use imperative steps; the `Rule` field must always use the mandatory auxiliary | Restatable |
@@ -427,14 +427,14 @@ identified" column reproduces protected text; each is a restatement in PCI's own
 | 33 | Interpretation route | IFRS Foundation (S) | Application questions are routed to a standing body that may publish explanatory material after public consultation, or conclude that amendment is required instead | PCI creates a named interpretation route with two possible outcomes: published clarification, or an amendment proposal | Restatable |
 | 34 | Authority of explanatory material | IFRS Foundation (S) | Explanatory material derives its authority from the requirements it explains; it does not create new requirements | PCI clarifications may explain a law but must never extend it. A clarification that adds obligation is an amendment and follows the amendment process | Restatable |
 | 35 | Independent process oversight | IFRS Foundation (S) | Compliance with the process is monitored by a body separate from the one that writes the requirements, which also handles complaints about the process | PCI must either create a genuinely separate reviewer of its law process, or state plainly that it has not. See §7(b) | Restatable |
-| 36 | Avoiding the legislative "shall" | UK OPC *Drafting Guidance* (S) | Office policy is to avoid the legislative "shall"; obligations are imposed using "must". Limited exceptions exist, principally where text is inserted into an existing instrument that already uses the older form | PCI bans `shall` outright. PCI has no legacy instrument to amend, so the OPC exception does not arise. `LAW_SYSTEM.md` §3 currently permits `shall` and must be corrected | Restatable. Do not reproduce OPC passages until the licence position is confirmed (**UNVERIFIED**) |
+| 36 | Avoiding the legislative "shall" | UK OPC *Drafting Guidance* (S) | Office policy is to avoid the legislative "shall"; obligations are imposed using "must". Limited exceptions exist, principally where text is inserted into an existing instrument that already uses the older form | PCI bans `shall` outright. PCI has no legacy instrument to amend, so the OPC exception does not arise. `SUPERSEDED_LAW_SYSTEM_v0.md` §3 currently permits `shall` and must be corrected | Restatable. Do not reproduce OPC passages until the licence position is confirmed (**UNVERIFIED**) |
 | 37 | Modern standard English | UK OPC *Drafting Guidance* (S) | Draft in modern, standard English using vocabulary reflecting ordinary general usage; avoid archaisms and expressions likely to cause difficulty | PCI bans hereinafter, aforesaid, notwithstanding, thereto, pursuant to, save that, in the event that | Restatable |
 | 38 | Conditional structure | UK OPC *Drafting Guidance* (S) | Conditions are set out before the obligation they qualify, in a structured conditional form, rather than trailed after it in provisos | PCI's `Rule` is a single sentence; conditions precede the obligation or move to `Scope` | Restatable |
 | 39 | Definitions discipline | UK OPC *Drafting Guidance*; UK tax-definitions review (S) | Definitions should be used sparingly, should not surprise the reader, and negative definitions should be rare | PCI defines only terms it actually uses normatively; no term may be defined contrary to its ordinary professional meaning without a visible flag | Restatable |
 | 40 | Good law criteria | UK Good Law initiative (S) | Good law is necessary, effective, clear, coherent and accessible — and this covers content, architecture, language and accessibility together | PCI adopts these five as the acceptance criteria for its law gate, in its own formulation | The five-word formulation is short and attributable; attribute it to the Good Law initiative rather than presenting it as PCI's invention |
 | 41 | Complexity has a cost | UK OPC, *When Laws Become Too Complex* (S) | Volume, piecemeal structure, excessive detail and frequent amendment make rules hard to understand and hard to comply with | PCI caps law count per domain and prefers one clear law to three overlapping ones. Every added law must justify its marginal complexity | Restatable |
 | 42 | Status marking on the face of the text | FCA Handbook (S) | Every provision carries a status marker identifying its legal character — rule, guidance, evidential provision, direction and others — and defined expressions are typographically distinguished wherever they appear | PCI marks every block with a status label (**LAW**, **RULE**, **GUIDANCE**, **EXTERNAL**, **EXAMPLE**) and flags defined terms in law text, linking them to the glossary. Colour must never be the only carrier — consistent with PCI's existing accessibility rule | Restatable. Do not copy the FCA's letters or their published meanings verbatim |
-| 43 | Guidance is not binding | FCA Handbook (S) | Guidance does not bind, and there is no presumption that departing from it indicates a breach of the underlying rule | PCI's `should` provisions must be expressly non-binding. `LAW_SYSTEM.md` currently requires a recorded reason for departure — that makes `should` quasi-evidential and must be stated as such | Restatable |
+| 43 | Guidance is not binding | FCA Handbook (S) | Guidance does not bind, and there is no presumption that departing from it indicates a breach of the underlying rule | PCI's `should` provisions must be expressly non-binding. `SUPERSEDED_LAW_SYSTEM_v0.md` currently requires a recorded reason for departure — that makes `should` quasi-evidential and must be stated as such | Restatable |
 | 44 | Evidential provisions | FCA Handbook (S) | A middle category exists: provisions not binding in their own right, contravention of which may be relied on as tending to establish contravention of the binding rule | Directly useful to PCI. It gives a principled home for "recommended, but departure is evidentially relevant" without pretending such provisions are laws | Restatable. Do not reproduce the FCA's formulation or statutory references |
 | 45 | Safe-harbour effect | FCA Handbook (S) | Where a firm follows guidance indicating a way to comply, the regulator proceeds on the basis that the rule has been complied with | PCI can offer a safe harbour: following the stated method is accepted as compliance, without making that method the only route | Restatable |
 | 46 | Application and purpose sections | FCA Handbook (S) | Modules open with an explicit statement of who they apply to and what they are for, before any substantive provision | Validates PCI's `Scope` + `Purpose` fields; confirms they must come before, and be readable independently of, the Rule | Restatable |
@@ -495,7 +495,7 @@ own readership. With it, the decision is safe.
 **Consequence 2 — the `should` mapping is compatible, but PCI's version is stronger than it looks.**
 ISO, the OPC and the FCA all treat the recommendatory form as non-binding, and the FCA goes further:
 guidance does not bind, and departure from it raises no presumption of breach (S). PCI's current
-`LAW_SYSTEM.md` says departures from `should` "need a recorded reason". That is not plain
+`SUPERSEDED_LAW_SYSTEM_v0.md` says departures from `should` "need a recorded reason". That is not plain
 recommendation; it is closer to the FCA's *evidential provision* — not binding in itself, but
 capable of being relied on as tending to establish a breach of the binding rule (S). PCI must
 choose, and say which:
@@ -509,11 +509,11 @@ choose, and say which:
 What PCI must not do is keep the current position, in which `should` is described as a
 recommendation but carries an unstated obligation to justify departure.
 
-**Consequence 3 — `shall` must disappear, and it currently has not.** `LAW_SYSTEM.md` §3 presently
+**Consequence 3 — `shall` must disappear, and it currently has not.** `SUPERSEDED_LAW_SYSTEM_v0.md` §3 presently
 permits `must / must not / shall / shall not` interchangeably for mandatory rules. That directly
 contradicts the programme decision and must be corrected before drafting begins. Concretely:
 
-- amend `LAW_SYSTEM.md` §3 to remove `shall` and `shall not`;
+- amend `SUPERSEDED_LAW_SYSTEM_v0.md` §3 to remove `shall` and `shall not`;
 - add a mechanical gate check that fails any law set containing `shall` in any field;
 - extend the check to the whole corpus, since imported or adapted text is the usual route by which
   `shall` re-enters a document — the OPC itself notes that the main reason to use the old form is
@@ -594,7 +594,7 @@ PCI has chosen the word "law" for its rules. That is a defensible branding choic
 body, but it carries a permanent obligation to prevent misunderstanding. The following are
 recommended as binding editorial constraints.
 
-**1. The status disclaimer travels with the text, not just the volume.** `LAW_SYSTEM.md` already
+**1. The status disclaimer travels with the text, not just the volume.** `SUPERSEDED_LAW_SYSTEM_v0.md` already
 mandates a legal-status disclaimer. Extend it: the disclaimer, or a short form of it, must appear in
 the running footer of every printed page of a law volume, in the header of every law web page, and
 in any exported extract or single-law PDF. Front matter is not read; footers are.
@@ -725,7 +725,7 @@ use `must not` or "is not required to" as intended.
 
 | # | Action | Owner | Depends on |
 |---|---|---|---|
-| 1 | Amend `LAW_SYSTEM.md` §3 to remove `shall`/`shall not` and adopt the closed verbal-form set in §7(a) | Law programme | — |
+| 1 | Amend `SUPERSEDED_LAW_SYSTEM_v0.md` §3 to remove `shall`/`shall not` and adopt the closed verbal-form set in §7(a) | Law programme | — |
 | 2 | Add a Conventions clause covering verbal forms, the express disclaimer of ISO conventions, and field status | Law programme | 1 |
 | 3 | Classify every template field as normative or informative and print the classification | Law programme | 2 |
 | 4 | Decide `should` as Option A or Option B (§7(a), Consequence 2) and state it | Law programme | 2 |

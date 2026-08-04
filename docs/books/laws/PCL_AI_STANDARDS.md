@@ -1,14 +1,14 @@
 # PCL-AI Professional Laws — PCI AI Project Controls Leader
 
-**Status:** Certification Law set for the **PCL-AI** credential (PCI AI Project Controls Leader).
-Version 2.0 — reconstructed under the [PCI Professional Laws Charter](PCI_PROFESSIONAL_LAWS_CHARTER.md)
-and the [PCI Law Drafting Manual](PCI_LAW_DRAFTING_MANUAL.md). **Thirty-three laws** carrying
+**Status:** Certification Standard set for the **PCL-AI** credential (PCI AI Project Controls Leader).
+Version 2.0 — reconstructed under the [PCI Standards Charter](PCI_STANDARDS_CHARTER.md)
+and the [PCI Standards Drafting Manual](PCI_STANDARDS_DRAFTING_MANUAL.md). **Thirty-three laws** carrying
 **one hundred and forty-five process requirements**, anchored to the thirteen-domain PCL-AI Body of
 Knowledge (`../../bok/`). This edition supersedes the twenty-law set drafted on the earlier
 eighteen-field structure; the superseded identifiers are recorded law by law in element 25 and are
 never reused.
 
-> **PCI Professional Laws are private professional certification requirements established by Project
+> **PCI Standards are private professional certification requirements established by Project
 > Controls Institute Global. They are not legislation, government regulation, legal advice or
 > substitutes for applicable laws, contractual obligations, regulatory requirements or authoritative
 > professional standards. Where an applicable legal, regulatory, contractual or authoritative
@@ -43,32 +43,32 @@ the ISO/IEC mandatory verb carries in an ISO/IEC document. PCI does not use that
 of any law, and a draft containing it fails gate. This edition was drafted to that rule and checked
 against it.
 
-**Identifiers.** Each law is cited as `PCI-PCL-LAW-DD.NN`, where `DD` is the two-digit PCL-AI Body of
+**Identifiers.** Each law is cited as `PCI-PCL-STD-DD.NN`, where `DD` is the two-digit PCL-AI Body of
 Knowledge domain of primary anchorage and `NN` a sequence within that domain. Process requirements
-are cited as `PCI-PCL-LAW-DD.NN-PR-NN`. **Process requirements are mandatory** — Charter §3, Level 4 —
+are cited as `PCI-PCL-STD-DD.NN-PR-NN`. **Process requirements are mandatory** — Charter §3, Level 4 —
 and a breach of one is a breach. Citation is by identifier and never by page number, because pagination
 changes. Where a law reaches beyond its anchor domain, the anchor is the domain that *teaches* it and
 the reach is stated in element 3.
 
-**These laws sit under the Foundational Laws.** The foundational set binds every PCI credential
-holder, PCL-AI included. It is cited here in the Charter §3 identifier form `PCI-FND-LAW-NN`; the
+**These laws sit under the Foundational Standards.** The foundational set binds every PCI credential
+holder, PCL-AI included. It is cited here in the Charter §3 identifier form `PCI-FND-STD-NN`; the
 subjects are:
 
 | ID | Subject | ID | Subject |
 |---|---|---|---|
-| `PCI-FND-LAW-01` | Professional accountability | `PCI-FND-LAW-09` | Confidentiality and approved technology |
-| `PCI-FND-LAW-02` | Evidence before assertion | `PCI-FND-LAW-10` | Competence and limitation |
-| `PCI-FND-LAW-03` | Independent verification | `PCI-FND-LAW-11` | Escalation of material misstatement |
-| `PCI-FND-LAW-04` | Human decision authority | `PCI-FND-LAW-12` | Record integrity |
-| `PCI-FND-LAW-05` | Transparent assumptions | `PCI-FND-LAW-13` | No silent override |
-| `PCI-FND-LAW-06` | Source and version integrity | `PCI-FND-LAW-14` | Responsible AI |
-| `PCI-FND-LAW-07` | Data lineage | `PCI-FND-LAW-15` | Correction duty |
-| `PCI-FND-LAW-08` | Conflict disclosure | | |
+| `PCI-FND-STD-01` | Professional accountability | `PCI-FND-STD-09` | Confidentiality and approved technology |
+| `PCI-FND-STD-02` | Evidence before assertion | `PCI-FND-STD-10` | Competence and limitation |
+| `PCI-FND-STD-03` | Independent verification | `PCI-FND-STD-11` | Escalation of material misstatement |
+| `PCI-FND-STD-04` | Human decision authority | `PCI-FND-STD-12` | Record integrity |
+| `PCI-FND-STD-05` | Transparent assumptions | `PCI-FND-STD-13` | No silent override |
+| `PCI-FND-STD-06` | Source and version integrity | `PCI-FND-STD-14` | Responsible AI |
+| `PCI-FND-STD-07` | Data lineage | `PCI-FND-STD-15` | Correction duty |
+| `PCI-FND-STD-08` | Conflict disclosure | | |
 
-The published foundational file [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md) carries these
+The published foundational file [`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md) carries these
 fifteen laws under these identifiers, so every citation below resolves against it directly. The
 superseded `PCI-LAW-F-NN` identifiers are recorded, for historical traceability only, in
-[`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md); no live citation uses them.
+[`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md); no live citation uses them.
 **No law below reduces a foundational obligation.** Each names the foundational law it serves in
 element 19 and adds what project controls specifically requires — a certification law that only
 restated its foundational parent was either sharpened or dropped during the audit recorded at the end
@@ -114,12 +114,12 @@ These definitions decide compliance. They are interpretive, not obligations — 
 created here; every requirement lives in an identified law or process requirement (Charter §3). A
 term is used below only in the sense given here.
 
-**Where a term is also defined in the Foundational Laws.** Several terms below — *material*,
+**Where a term is also defined in the Foundational Standards.** Several terms below — *material*,
 *independent*, *verified*, *evidence*, *competent reviewer*, *decision owner*, *escalation threshold*,
 *approved*, *current* — are also defined, at `D-01` to `D-30`, in
-[`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). **They now carry the same wording in both
+[`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md). **They now carry the same wording in both
 places.** Each was reconciled to the canonical definition recorded in
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), which also records what this
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md), which also records what this
 volume previously said and why the change was made. Where a credential legitimately measures a limb
 differently — the metric in which materiality is quantified, for instance — the canonical definition
 states that as an application rule rather than as a rival definition.
@@ -179,7 +179,7 @@ project, an internal audit function, a parent entity or an external party.
 **evidence**, at least one of the eight admissible methods, and has recorded the method used, the
 source or population tested and, where a sample was used, its selection basis, the inputs used, the
 scope tested, the date, the result, and every difference found together with its resolution. **The
-eight admissible methods** — the list at `PCI-FND-LAW-03-PR-01` — are: independent recomputation,
+eight admissible methods** — the list at `PCI-FND-STD-03-PR-01` — are: independent recomputation,
 source tracing, clause-to-summary comparison, sampling on a stated basis, reconciliation, boundary
 testing, sensitivity analysis, and named expert judgement recorded with its reasoning. Reading an
 output and finding it plausible is not verification, and an item on which no such record exists is not
@@ -264,7 +264,7 @@ the adopting organisation or recorded in the delegation schedule are met. On rea
 professional must raise the matter in writing to the **decision owner** and, where the law says so,
 above the decision owner. **Any event stated in element 13 of a law below is additional to those six
 triggers and never in place of them**; a matter that reaches the threshold requires escalation under
-`PCI-FND-LAW-11` whether or not it appears in any element 13. **The threshold names a destination and a
+`PCI-FND-STD-11` whether or not it appears in any element 13. **The threshold names a destination and a
 time, and the absence of either does not remove the duty:** where no destination is documented the
 matter goes to the next authority above the decision owner for it, and where no time is documented the
 time is the foundational period at `D-20` — one working day where the matter creates a risk to the
@@ -320,7 +320,7 @@ a feature embedded in a controls, scheduling, commercial or accounting applicati
 **AI assistance.** Any use of an AI tool in producing a project controls deliverable.
 
 **material AI assistance.** *(Canonical — carried to the whole corpus by
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
 output is *material* where removing the AI-generated contribution would change a figure in the output
 by more than the applicable materiality measurement, or would change a recommendation, a classification
 that affects entitlement, coding, ranking or eligibility, or a stated conclusion. *Material AI
@@ -353,7 +353,7 @@ is then met from outside the project under the definition of **independent**.
 ---
 ## Domain 1 — Foundations of Accounting for Project Controls
 
-### PCI LAW PCI-PCL-LAW-01.01 — Cost Cut-Off Integrity
+### PCI STANDARD PCI-PCL-STD-01.01 — Cost Cut-Off Integrity
 
 **1. Normative requirement.** A credential holder must record each project cost in the reporting
 period in which the underlying work was performed or the goods or services were received, determined
@@ -377,18 +377,18 @@ accounting treatment, which is the responsibility of the entity's finance functi
 **5. Required actions.** The professional must apply a written cut-off rule to every reporting
 period, and must be able to show for any transaction which side of that rule it fell and why.
 
-- **PCI-PCL-LAW-01.01-PR-01 — Written cut-off rule.** The cut-off rule in force must state the date
+- **PCI-PCL-STD-01.01-PR-01 — Written cut-off rule.** The cut-off rule in force must state the date
   and time at which each source system is frozen, the treatment of goods received but not invoiced,
   the treatment of invoices received after the freeze, and the person who may authorise a departure;
   and it must be retained with the period's cost position.
-- **PCI-PCL-LAW-01.01-PR-02 — Boundary review.** Before the period's cost position is issued, the
+- **PCI-PCL-STD-01.01-PR-02 — Boundary review.** Before the period's cost position is issued, the
   professional must review the transactions recorded either side of the cut-off within a window
   stated in the cut-off rule, and must trace each one to a dated receipt, service record or work
   record that places it on the side where it was recorded.
-- **PCI-PCL-LAW-01.01-PR-03 — Late-transaction register.** Every transaction recorded, moved,
+- **PCI-PCL-STD-01.01-PR-03 — Late-transaction register.** Every transaction recorded, moved,
   reversed or re-dated after the cut-off has been applied must be entered in a late-transaction
   register giving the amount, the underlying date relied on, the reason and the approver.
-- **PCI-PCL-LAW-01.01-PR-04 — Judgemental allocation log.** Where cost is allocated between periods,
+- **PCI-PCL-STD-01.01-PR-04 — Judgemental allocation log.** Where cost is allocated between periods,
   work packages or control accounts by judgement rather than by a source record, the basis of the
   allocation, the person who set it and the person who approved it must be recorded.
 
@@ -465,10 +465,10 @@ project cost follow local GAAP and local tax law. The controls position produced
 not the statutory position, and must not be presented as one without advice from a qualified local
 accounting and tax adviser.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) and `PCI-FND-LAW-06` (source
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) and `PCI-FND-STD-06` (source
 and version integrity) govern. This law adds the period-assignment obligation those foundational laws
-do not reach. See also `PCI-PCL-LAW-01.02`, `PCI-PCL-LAW-01.03`, `PCI-PCL-LAW-05.01`,
-`PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-11.01`.
+do not reach. See also `PCI-PCL-STD-01.02`, `PCI-PCL-STD-01.03`, `PCI-PCL-STD-05.01`,
+`PCI-PCL-STD-06.03`, `PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 1 Foundations of Accounting for Project
 Controls · KA 1.3 Accrual accounting and the matching concept — period cut-off and matching; KA 1.5
@@ -509,7 +509,7 @@ retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-01.02 — Accrual Completeness and Basis
+### PCI STANDARD PCI-PCL-STD-01.02 — Accrual Completeness and Basis
 
 **1. Normative requirement.** At each reporting **cut-off** a credential holder must include in the
 cost position an **accrual** for every quantity of work performed or goods and services received and
@@ -531,17 +531,17 @@ of progress*, *source record*, *competent reviewer*.
 **5. Required actions.** The professional must build the accrual from evidence of what was received
 or performed, and must be able to show the derivation of every accrual line.
 
-- **PCI-PCL-LAW-01.02-PR-01 — Accrual register with basis.** Every accrual must be recorded as a line
+- **PCI-PCL-STD-01.02-PR-01 — Accrual register with basis.** Every accrual must be recorded as a line
   carrying its value, the work or goods it represents, the **source record** it was derived from, the
   method of derivation and the preparer's name.
-- **PCI-PCL-LAW-01.02-PR-02 — Completeness sweep against commitments.** Before issue, the accrual
+- **PCI-PCL-STD-01.02-PR-02 — Completeness sweep against commitments.** Before issue, the accrual
   position must be tested against the open **commitment** population and the period's goods-receipt
   and progress records, and every commitment with receipted or performed value and no invoice and no
   accrual must be either accrued or explained in the register.
-- **PCI-PCL-LAW-01.02-PR-03 — True-up of the prior period.** Each prior-period accrual must be
+- **PCI-PCL-STD-01.02-PR-03 — True-up of the prior period.** Each prior-period accrual must be
   compared with the invoice or record that superseded it, and the difference recorded; a pattern of
   differences in one direction must be stated in the register with its cause.
-- **PCI-PCL-LAW-01.02-PR-04 — Separation of accrual from provision and contingency.** An accrual must
+- **PCI-PCL-STD-01.02-PR-04 — Separation of accrual from provision and contingency.** An accrual must
   not be used to carry an amount that is a provision, a contingency, a risk allowance or a management
   reserve; each must be recorded and reported separately.
 
@@ -611,10 +611,10 @@ absence.
 in the statutory accounts is a local-GAAP determination made by the reporting entity. Obtain local
 accounting advice before treating the controls accrual position as the statutory position.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs; this law adds the
 completeness obligation and the prohibition on unsupported accrual, which the foundational law does
-not reach. See also `PCI-PCL-LAW-01.01`, `PCI-PCL-LAW-05.01`, `PCI-PCL-LAW-06.03`,
-`PCI-PCL-LAW-12.02`.
+not reach. See also `PCI-PCL-STD-01.01`, `PCI-PCL-STD-05.01`, `PCI-PCL-STD-06.03`,
+`PCI-PCL-STD-12.02`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 1 · KA 1.3 Accrual accounting and the
 matching concept; KA 1.4 Cost provisions and cost accruals. Also Domain 6 · KA 6.1 EVM fundamentals —
@@ -651,7 +651,7 @@ is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-01.03 — Cost Classification and Cost-Code Integrity
+### PCI STANDARD PCI-PCL-STD-01.03 — Cost Classification and Cost-Code Integrity
 
 **1. Normative requirement.** A credential holder must code each project cost to the cost code and
 **control account** that represents the work the cost was incurred on.
@@ -672,15 +672,15 @@ and applies to reclassification after original posting as strictly as to origina
 **5. Required actions.** The professional must code cost by reference to the work performed, evidenced
 by the source record, and must record every reclassification with its reason.
 
-- **PCI-PCL-LAW-01.03-PR-01 — Coding structure mapped and published.** The cost breakdown structure
+- **PCI-PCL-STD-01.03-PR-01 — Coding structure mapped and published.** The cost breakdown structure
   in use must be mapped to the work breakdown structure and to the control account structure, the
   mapping must be published to those who code cost, and each code must carry a written definition of
   what belongs in it.
-- **PCI-PCL-LAW-01.03-PR-02 — Reclassification record.** Every movement of recorded cost between cost
+- **PCI-PCL-STD-01.03-PR-02 — Reclassification record.** Every movement of recorded cost between cost
   codes or control accounts after original posting must be recorded with the amount, the origin, the
   destination, the reason, the preparer and the approver, and must be visible in the period in which
   it is made.
-- **PCI-PCL-LAW-01.03-PR-03 — Suspense and holding codes.** Cost held in a suspense, holding,
+- **PCI-PCL-STD-01.03-PR-03 — Suspense and holding codes.** Cost held in a suspense, holding,
   unallocated or interface code must be reported separately from coded cost, must carry the date it
   entered suspense, and must be cleared to a definitive code within the period stated by the adopting
   organisation's governance.
@@ -757,9 +757,9 @@ revenue expenditure and the tax classification of project cost are matters of lo
 accounting policy. A controls cost code is not a statutory account, and mapping between them requires
 advice from the entity's accounting function.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07` (data lineage) governs; this law adds the domain-specific
+**19. Related PCI Laws.** `PCI-FND-STD-07` (data lineage) governs; this law adds the domain-specific
 obligation that lineage runs to the *work*, not merely to the *system of origin*. See also
-`PCI-PCL-LAW-01.01`, `PCI-PCL-LAW-03.01`, `PCI-PCL-LAW-05.01`, `PCI-PCL-LAW-13.02`.
+`PCI-PCL-STD-01.01`, `PCI-PCL-STD-03.01`, `PCI-PCL-STD-05.01`, `PCI-PCL-STD-13.02`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 1 · KA 1.5 Chart of accounts and cost
 coding for projects. Also Domain 5 · KA 5.3 Cost breakdown and control accounts.
@@ -796,7 +796,7 @@ addressed cost coding only inside PCL-LAW-01-01.
 ---
 ## Domain 3 — Budgeting & Forecasting
 
-### PCI LAW PCI-PCL-LAW-03.01 — Scope Completeness of the Performance Measurement Baseline
+### PCI STANDARD PCI-PCL-STD-03.01 — Scope Completeness of the Performance Measurement Baseline
 
 **1. Normative requirement.** A credential holder must ensure that the **performance measurement
 baseline** contains all of the authorised scope and none of the unauthorised scope.
@@ -818,23 +818,23 @@ incorporation of any approved change.
 **5. Required actions.** The professional must trace the authorised scope into the baseline and
 demonstrate that the trace is complete in both directions.
 
-- **PCI-PCL-LAW-03.01-PR-01 — Two-way scope trace.** Every element of authorised scope must be traced
+- **PCI-PCL-STD-03.01-PR-01 — Two-way scope trace.** Every element of authorised scope must be traced
   to at least one baseline element, and every baseline element must be traced back to authorised
   scope; both directions must be recorded, and every unmatched item on either side must carry a
   written disposition.
-- **PCI-PCL-LAW-03.01-PR-02 — Work and cost breakdown alignment.** The work breakdown structure and
+- **PCI-PCL-STD-03.01-PR-02 — Work and cost breakdown alignment.** The work breakdown structure and
   the cost breakdown structure must be mapped to one another so that each control account has a
   single defined scope, a single budget and no scope shared with another control account; overlaps
   and gaps found in the mapping must be resolved before approval, not annotated.
-- **PCI-PCL-LAW-03.01-PR-03 — Named control account ownership.** Every control account must carry the
+- **PCI-PCL-STD-03.01-PR-03 — Named control account ownership.** Every control account must carry the
   name of one individual accountable for its scope, budget, schedule and cost before the baseline is
   approved; a control account with no named owner, or with a team, function or role title in place of
   a name, must not be included in an approved baseline.
-- **PCI-PCL-LAW-03.01-PR-04 — Time-phasing to the schedule.** Each control account budget must be
+- **PCI-PCL-STD-03.01-PR-04 — Time-phasing to the schedule.** Each control account budget must be
   distributed across time using the approved schedule dates for the work it funds, and the
   distribution method for each control account must be recorded; budget must not be time-phased by
   spreading evenly, by matching a funding profile, or by any method not stated in the record.
-- **PCI-PCL-LAW-03.01-PR-05 — Excluded scope stated.** Scope that is known, expected or foreseen but
+- **PCI-PCL-STD-03.01-PR-05 — Excluded scope stated.** Scope that is known, expected or foreseen but
   deliberately excluded from the baseline must be listed in an exclusions register issued with the
   baseline, with the reason for exclusion and the party expected to carry it.
 
@@ -902,10 +902,10 @@ tested by an independent manual trace of a sample stratified by value and by sco
 question determined by the governing contract and the entity's delegation of authority. Where the
 answer is contested, it requires advice from qualified counsel and is not settled by this law.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs. This law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs. This law adds the
 two-way completeness obligation and named control-account ownership, neither of which is a
-foundational requirement. See also `PCI-PCL-LAW-03.02`, `PCI-PCL-LAW-03.03`, `PCI-PCL-LAW-01.03`,
-`PCI-PCL-LAW-05.03`, `PCI-PCL-LAW-06.01`.
+foundational requirement. See also `PCI-PCL-STD-03.02`, `PCI-PCL-STD-03.03`, `PCI-PCL-STD-01.03`,
+`PCI-PCL-STD-05.03`, `PCI-PCL-STD-06.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 3 · KA 3.1 Budgeting fundamentals; KA 3.3
 The time-phased budget / cost baseline (Planned Value). Also Domain 5 · KA 5.3 Cost breakdown and
@@ -943,11 +943,11 @@ retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-03.02 — Baseline Approval, Version Control and the Change Prohibition
+### PCI STANDARD PCI-PCL-STD-03.02 — Baseline Approval, Version Control and the Change Prohibition
 
 **1. Normative requirement.** A credential holder must not alter an approved **performance measurement
 baseline** except by incorporating an **approved change** or by an authorised **re-baseline** under
-`PCI-PCL-LAW-03.03`.
+`PCI-PCL-STD-03.03`.
 
 **2. Purpose.** Controls the quiet failure in which the target moves to meet the result. A baseline
 that can be edited between reports makes variance meaningless, makes earned value arithmetic
@@ -965,17 +965,17 @@ project. It applies to the baseline files themselves and to every derived artefa
 **5. Required actions.** The professional must hold the approved baseline under version control and
 must be able to show what changed between any two versions and why.
 
-- **PCI-PCL-LAW-03.02-PR-01 — Version identity.** Every issued baseline must carry a unique version
+- **PCI-PCL-STD-03.02-PR-01 — Version identity.** Every issued baseline must carry a unique version
   identifier, its approval date, the approver's name and the identifier of the version it supersedes;
   and every deliverable that reports variance must state the baseline version it was measured against.
-- **PCI-PCL-LAW-03.02-PR-02 — Immutable retained copy.** The approved copy of each baseline version
+- **PCI-PCL-STD-03.02-PR-02 — Immutable retained copy.** The approved copy of each baseline version
   must be retained in a form that cannot be edited in place, so that any later version can be compared
   with it line by line.
-- **PCI-PCL-LAW-03.02-PR-03 — Change-to-baseline register.** Each movement between two baseline
+- **PCI-PCL-STD-03.02-PR-03 — Change-to-baseline register.** Each movement between two baseline
   versions must be reconciled, line by line, to the approved changes or the authorised re-baseline
   that caused it, and any movement that reconciles to neither must be reversed before the new version
   is issued.
-- **PCI-PCL-LAW-03.02-PR-04 — Schedule baseline held to the same rule.** The approved schedule
+- **PCI-PCL-STD-03.02-PR-04 — Schedule baseline held to the same rule.** The approved schedule
   baseline dates must not be altered by a progress update, a re-scheduling run, a calendar change or a
   logic change; only an approved change or an authorised re-baseline may alter them.
 
@@ -1051,10 +1051,10 @@ management-system standard, its requirements are contractual or regulatory oblig
 project and may exceed this law. Their interpretation is a matter for qualified counsel and the
 contract administrator.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06` (source and version integrity) and `PCI-FND-LAW-13` (no
+**19. Related PCI Laws.** `PCI-FND-STD-06` (source and version integrity) and `PCI-FND-STD-13` (no
 silent override) govern. This law adds the specific prohibition on baseline alteration and the
-line-by-line reconciliation obligation. See also `PCI-PCL-LAW-03.01`, `PCI-PCL-LAW-03.03`,
-`PCI-PCL-LAW-05.04`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-10.03`, `PCI-PCL-LAW-11.01`.
+line-by-line reconciliation obligation. See also `PCI-PCL-STD-03.01`, `PCI-PCL-STD-03.03`,
+`PCI-PCL-STD-05.04`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-10.03`, `PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 3 · KA 3.3 The time-phased budget / cost
 baseline (Planned Value). Also Domain 5 · KA 5.4 Change control and cost impact; Domain 6 · KA 6.1
@@ -1088,7 +1088,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-03.03 — Authority to Re-baseline
+### PCI STANDARD PCI-PCL-STD-03.03 — Authority to Re-baseline
 
 **1. Normative requirement.** A credential holder must not use a **re-baseline** for performance
 measurement until the **baseline approval authority** has approved it in writing.
@@ -1109,20 +1109,20 @@ control account or one phase.
 **5. Required actions.** The professional must present a re-baseline as a decision with its cost
 recorded, not as an administrative refresh.
 
-- **PCI-PCL-LAW-03.03-PR-01 — Statement of accumulated variance.** The re-baseline submission must
+- **PCI-PCL-STD-03.03-PR-01 — Statement of accumulated variance.** The re-baseline submission must
   state the cost and schedule variance accumulated against the outgoing baseline at the effective
   date, by control account, and must state that these variances will no longer be visible in
   subsequent reporting.
-- **PCI-PCL-LAW-03.03-PR-02 — Reason and alternatives.** The submission must state the reason for
+- **PCI-PCL-STD-03.03-PR-02 — Reason and alternatives.** The submission must state the reason for
   re-baselining, why the outgoing baseline can no longer serve as a measurement basis, and what
   alternative to re-baselining was considered.
-- **PCI-PCL-LAW-03.03-PR-03 — Effective date and no retrospection.** The re-baseline must carry an
+- **PCI-PCL-STD-03.03-PR-03 — Effective date and no retrospection.** The re-baseline must carry an
   effective date, and performance for periods before that date must continue to be reported against
   the outgoing baseline; historical variance must not be restated onto the new baseline.
-- **PCI-PCL-LAW-03.03-PR-04 — Retention of the outgoing baseline.** The outgoing baseline and its
+- **PCI-PCL-STD-03.03-PR-04 — Retention of the outgoing baseline.** The outgoing baseline and its
   final variance position must be retained for the retention period of the project record and must
   remain retrievable for comparison.
-- **PCI-PCL-LAW-03.03-PR-05 — Aggregation of partial and successive re-baselines.** Partial
+- **PCI-PCL-STD-03.03-PR-05 — Aggregation of partial and successive re-baselines.** Partial
   re-baselines of separate control accounts or phases, and successive re-baselines within the period
   the adopting organisation's delegation states, must be aggregated for the purpose of determining
   which authority approves, and the aggregation applied must be recorded with each submission. Where
@@ -1189,10 +1189,10 @@ produced it, and must reconcile the two results before the submission is issued.
 regime governs re-baselining, those requirements prevail over this law and their interpretation
 belongs to qualified counsel and the contract administrator.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-13` (no silent override) governs; this law adds the specific
+**19. Related PCI Laws.** `PCI-FND-STD-13` (no silent override) governs; this law adds the specific
 approval, disclosure and retention obligations for the act that most often constitutes a silent
-override in project controls. See also `PCI-PCL-LAW-03.01`, `PCI-PCL-LAW-03.02`, `PCI-PCL-LAW-04.03`,
-`PCI-PCL-LAW-12.03`.
+override in project controls. See also `PCI-PCL-STD-03.01`, `PCI-PCL-STD-03.02`, `PCI-PCL-STD-04.03`,
+`PCI-PCL-STD-12.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 3 · KA 3.3 The time-phased budget / cost
 baseline. Also Domain 12 · KA 12.3 Contingency and management reserve — drawing down and
@@ -1234,7 +1234,7 @@ route by aggregating partial and successive re-baselines for banding.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-03.04 — Completeness of the Estimate at Completion
+### PCI STANDARD PCI-PCL-STD-03.04 — Completeness of the Estimate at Completion
 
 **1. Normative requirement.** A credential holder must construct the estimate at completion so that it
 includes every known cost effect on the remaining work at the **cut-off**.
@@ -1255,27 +1255,27 @@ funding request, on any project and under any contract type.
 **5. Required actions.** The professional must assemble the estimate at completion from stated
 components and must show that each component was considered, whether or not it produced a value.
 
-- **PCI-PCL-LAW-03.04-PR-01 — Written basis of the forecast.** Every issued forecast must be
+- **PCI-PCL-STD-03.04-PR-01 — Written basis of the forecast.** Every issued forecast must be
   accompanied by a written basis stating the method used, the assumptions relied on, the items
   deliberately excluded, the known uncertainties, and the name of the preparer; a forecast issued
   without that basis must not be relied on for a decision.
-- **PCI-PCL-LAW-03.04-PR-02 — Estimate to complete built from remaining work.** The estimate to
+- **PCI-PCL-STD-03.04-PR-02 — Estimate to complete built from remaining work.** The estimate to
   complete must be built from the remaining quantities, resources, durations and rates required to
   finish the work; deriving it only by subtracting actual cost from a target is prohibited, and where
   a formula-based estimate to complete is used it must be reconciled to the bottom-up figure with the
   difference explained.
-- **PCI-PCL-LAW-03.04-PR-03 — Trend inclusion.** Every entry in the trend register that is not yet an
+- **PCI-PCL-STD-03.04-PR-03 — Trend inclusion.** Every entry in the trend register that is not yet an
   approved change and not yet an actual cost must be either included in the forecast at a stated value
   or listed as excluded with the reason; a trend register that exists but does not reconcile to the
   forecast is a breach of this process requirement.
-- **PCI-PCL-LAW-03.04-PR-04 — Approved-change inclusion.** Every approved change with a cost effect
+- **PCI-PCL-STD-03.04-PR-04 — Approved-change inclusion.** Every approved change with a cost effect
   must be reflected in the forecast in the period in which it was approved, and the forecast must
   reconcile to the approved-change register in total.
-- **PCI-PCL-LAW-03.04-PR-05 — Risk and contingency treatment stated.** The forecast must state
+- **PCI-PCL-STD-03.04-PR-05 — Risk and contingency treatment stated.** The forecast must state
   whether risk exposure and contingency are included, and if included, at what basis; risk-adjusted
   and unadjusted figures must not be presented as though they were the same number, and contingency
   must be shown as a separate line rather than distributed into control account forecasts.
-- **PCI-PCL-LAW-03.04-PR-06 — Schedule alignment.** The forecast must use the same schedule status,
+- **PCI-PCL-STD-03.04-PR-06 — Schedule alignment.** The forecast must use the same schedule status,
   completion dates and duration assumptions as the current approved schedule status report; where the
   forecast assumes dates different from the schedule, the difference and its cost effect must be
   stated in the basis.
@@ -1295,10 +1295,10 @@ account owner** confirms the remaining work assumptions; the **project controls 
 issues the project forecast.
 
 **9. Approval authority.** The **decision owner** for the cost position approves the issued forecast,
-after the challenge required by `PCI-PCL-LAW-03.05`.
+after the challenge required by `PCI-PCL-STD-03.05`.
 
 **10. Independence requirement.** Preparation may be performed by the cost engineer who owns the
-control account. The challenge under `PCI-PCL-LAW-03.05` must be **independent**; this law does not
+control account. The challenge under `PCI-PCL-STD-03.05` must be **independent**; this law does not
 require independent preparation, because a forecast prepared by someone without knowledge of the
 remaining work is worse, not better.
 
@@ -1349,10 +1349,10 @@ example in measuring progress towards satisfaction of a performance obligation, 
 onerous contract — the accounting determination belongs to the reporting entity under its applicable
 framework and requires qualified accounting advice. This law governs the controls forecast only.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05` (transparent assumptions) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-05` (transparent assumptions) governs; this law adds the
 enumerated completeness components, which the foundational duty of transparency does not supply. See
-also `PCI-PCL-LAW-03.05`, `PCI-PCL-LAW-05.01`, `PCI-PCL-LAW-06.04`, `PCI-PCL-LAW-12.02`,
-`PCI-PCL-LAW-13.02`.
+also `PCI-PCL-STD-03.05`, `PCI-PCL-STD-05.01`, `PCI-PCL-STD-06.04`, `PCI-PCL-STD-12.02`,
+`PCI-PCL-STD-13.02`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 3 · KA 3.4 Forecasting; KA 3.5 Cash-flow
 forecasting. Also Domain 6 · KA 6.3 Forecasting with EVM: the EAC family; Domain 12 · KA 12.3
@@ -1388,13 +1388,13 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-03.05 — Independent Challenge and Approval of the Forecast
+### PCI STANDARD PCI-PCL-STD-03.05 — Independent Challenge and Approval of the Forecast
 
 **1. Normative requirement.** A credential holder must not issue a forecast for a decision until a
 person **independent** of its preparation has challenged it and the challenge has been recorded.
 
 **2. Purpose.** Controls optimism that survives every completeness check. A forecast can include every
-component required by `PCI-PCL-LAW-03.04` and still be wrong in the same direction every period,
+component required by `PCI-PCL-STD-03.04` and still be wrong in the same direction every period,
 because the person who prepared it is the person whose performance it describes. Independent challenge
 is the only control that reaches that failure, and it works only if it is recorded and its outcome is
 visible.
@@ -1410,14 +1410,14 @@ project.
 **5. Required actions.** The professional must subject the forecast to a challenge that tests named
 things, and must record what the challenge found.
 
-- **PCI-PCL-LAW-03.05-PR-01 — Scope of the challenge.** The challenge must test, at minimum: the
+- **PCI-PCL-STD-03.05-PR-01 — Scope of the challenge.** The challenge must test, at minimum: the
   basis document against the forecast; the estimate to complete against remaining work; the treatment
   of trends and approved changes; the contingency position; the schedule assumptions; and the
   direction and size of the previous three periods' forecast movements.
-- **PCI-PCL-LAW-03.05-PR-02 — Challenge record.** The challenge must be recorded with the challenger's
+- **PCI-PCL-STD-03.05-PR-02 — Challenge record.** The challenge must be recorded with the challenger's
   name, the date, each question raised, the response, and whether the forecast changed as a result;
   and the record must be retained with the forecast.
-- **PCI-PCL-LAW-03.05-PR-03 — Unresolved challenge disclosed.** Where a challenge point is not
+- **PCI-PCL-STD-03.05-PR-03 — Unresolved challenge disclosed.** Where a challenge point is not
   resolved before issue, it must be stated in the forecast's basis document, with the challenger's
   position and the preparer's position, so that the **decision owner** sees the disagreement rather
   than its average.
@@ -1459,7 +1459,7 @@ request. The forecast must then be marked as unchallenged on its face, the chall
 within the period the decision owner records at the time of approval and in any event before the next
 issue of the forecast, and any change it produces must be reported to every recipient of the
 unchallenged version. An unchallenged forecast that is not marked as such is a breach, not an
-exception. **This exception does not displace `PCI-FND-LAW-03`**, whose element 12 makes no waiver of
+exception. **This exception does not displace `PCI-FND-STD-03`**, whose element 12 makes no waiver of
 independent verification available where the item supports an irreversible commitment, a payment to a
 third party, an external regulatory or financial report, or a decision bearing on the safety of a
 person: an unchallenged forecast must not be used for any of those, and an emergency funding request
@@ -1492,10 +1492,10 @@ reporting, or a lender submission, additional review, approval and independence 
 under securities law, listing rules or finance documents; those are legal questions for qualified
 advisers and are not satisfied by compliance with this law.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (independent verification) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-03` (independent verification) governs; this law adds the
 enumerated challenge scope, the record, and the disclosure of unresolved disagreement — none of which
-the foundational law specifies. See also `PCI-PCL-LAW-03.04`, `PCI-PCL-LAW-04.02`,
-`PCI-PCL-LAW-06.04`, `PCI-PCL-LAW-12.02`.
+the foundational law specifies. See also `PCI-PCL-STD-03.04`, `PCI-PCL-STD-04.02`,
+`PCI-PCL-STD-06.04`, `PCI-PCL-STD-12.02`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 3 · KA 3.4 Forecasting. Also Domain 4 ·
 KA 4.1 Performance management principles; Domain 6 · KA 6.3 Forecasting with EVM: the EAC family.
@@ -1525,13 +1525,13 @@ point the preparer refuses to record.
 approved · Effective: on approval · New law — the eighteen-field set required independent review only
 as a field within other laws and never defined its scope or record. **Stage 9 amendment:** element 12
 gave the unchallenged-forecast exception an open-ended clock and offered an emergency funding request
-as its example, which is precisely the case in which `PCI-FND-LAW-03` element 12 makes no waiver
+as its example, which is precisely the case in which `PCI-FND-STD-03` element 12 makes no waiver
 available; the period is now fixed and the foundational carve-out is stated.
 
 ---
 ## Domain 4 — Performance Management, Variance Analysis & Reporting
 
-### PCI LAW PCI-PCL-LAW-04.01 — Reconciliation of the Performance Report to Source Records
+### PCI STANDARD PCI-PCL-STD-04.01 — Reconciliation of the Performance Report to Source Records
 
 **1. Normative requirement.** A credential holder must not issue a performance report unless every
 figure in it reconciles to the **source record** it derives from at the report's stated **cut-off**.
@@ -1552,16 +1552,16 @@ report containing cost, schedule, earned value, change, risk or commercial figur
 **5. Required actions.** The professional must reconcile before issue, and must retain the
 reconciliation as part of the report record.
 
-- **PCI-PCL-LAW-04.01-PR-01 — Stated cut-off and extract identity.** Every report must state its
+- **PCI-PCL-STD-04.01-PR-01 — Stated cut-off and extract identity.** Every report must state its
   cut-off date and time, and must record for each source system the extract identifier or timestamp
   used; figures drawn from different cut-offs must be labelled with the cut-off that applies to each.
-- **PCI-PCL-LAW-04.01-PR-02 — Reconciliation record.** A reconciliation from each reported total to
+- **PCI-PCL-STD-04.01-PR-02 — Reconciliation record.** A reconciliation from each reported total to
   its source system total must be retained with the report, itemising and explaining every difference,
   including timing differences, exclusions and manual adjustments.
-- **PCI-PCL-LAW-04.01-PR-03 — Manual adjustment register.** Every manual adjustment made between the
+- **PCI-PCL-STD-04.01-PR-03 — Manual adjustment register.** Every manual adjustment made between the
   source extract and the reported figure must be recorded with its value, its reason, its preparer and
   its approver, and must be visible to the reviewer as an adjustment rather than absorbed into a total.
-- **PCI-PCL-LAW-04.01-PR-04 — Named report approval before issue.** Each report must carry the name of
+- **PCI-PCL-STD-04.01-PR-04 — Named report approval before issue.** Each report must carry the name of
   the individual who approved its issue and the date of that approval; a report issued without that
   name must not be relied on for a decision.
 
@@ -1632,10 +1632,10 @@ disclosure or a listed entity's controls certification, the applicable legal and
 requirements govern that use and may impose materially stricter obligations; they are matters for
 qualified local advisers.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) and `PCI-FND-LAW-06` (source
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) and `PCI-FND-STD-06` (source
 and version integrity) govern. This law adds the specific reconciliation and manual-adjustment
-obligations for periodic performance reporting. See also `PCI-PCL-LAW-04.02`, `PCI-PCL-LAW-04.03`,
-`PCI-PCL-LAW-05.01`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-11.01`.
+obligations for periodic performance reporting. See also `PCI-PCL-STD-04.02`, `PCI-PCL-STD-04.03`,
+`PCI-PCL-STD-05.01`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 4 · KA 4.3 Management reporting; KA 4.4
 Data visualisation and storytelling for controls. Also Domain 2 · KA 2.5 Management reporting versus
@@ -1669,7 +1669,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-04.02 — Explanation of Material Variance
+### PCI STANDARD PCI-PCL-STD-04.02 — Explanation of Material Variance
 
 **1. Normative requirement.** A credential holder must explain each **material** variance by stating
 its cause, evidenced from the **source record**.
@@ -1690,16 +1690,16 @@ threshold*, *objective evidence of progress*, *approved*.
 **5. Required actions.** The professional must give each material variance a cause, a consequence and
 a response, each attributable.
 
-- **PCI-PCL-LAW-04.02-PR-01 — Cause stated to a source.** Each material variance explanation must name
+- **PCI-PCL-STD-04.02-PR-01 — Cause stated to a source.** Each material variance explanation must name
   the specific cause and the record that evidences it — the change, the productivity record, the rate,
   the quantity, the event or the schedule delay — and must not restate the variance in words.
-- **PCI-PCL-LAW-04.02-PR-02 — Decision content.** Each material variance explanation must state the
+- **PCI-PCL-STD-04.02-PR-02 — Decision content.** Each material variance explanation must state the
   expected effect on the forecast completion cost and date, the action proposed or taken, the named
   individual accountable for that action, and the date by which the effect will be known.
-- **PCI-PCL-LAW-04.02-PR-03 — Separation of fact from assessment.** Statements of fact, statements of
+- **PCI-PCL-STD-04.02-PR-03 — Separation of fact from assessment.** Statements of fact, statements of
   assumption and statements of opinion within performance commentary must be distinguishable, so that
   a reader can tell what is recorded from what is expected.
-- **PCI-PCL-LAW-04.02-PR-04 — Consistency with the forecast.** A variance explanation must not assert
+- **PCI-PCL-STD-04.02-PR-04 — Consistency with the forecast.** A variance explanation must not assert
   a recovery, a mitigation or an offsetting benefit that is not reflected in the issued forecast; where
   the assertion is not yet in the forecast, that fact must be stated.
 
@@ -1771,12 +1771,12 @@ not evidence, and an AI narrative that reads well is the most likely to be issue
 **18. Jurisdictional caution.** A variance explanation that attributes cause to a contracting party
 can affect contractual position, notice obligations and later dispute. Whether such a statement is
 prudent, and how it should be worded, is a matter for the contract administrator and qualified
-counsel — see `PCI-PCL-LAW-07.01`.
+counsel — see `PCI-PCL-STD-07.01`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs; this law adds the
 required content of an explanation, which the foundational law does not enumerate. See also
-`PCI-PCL-LAW-04.01`, `PCI-PCL-LAW-04.03`, `PCI-PCL-LAW-03.04`, `PCI-PCL-LAW-06.03`,
-`PCI-PCL-LAW-13.03`.
+`PCI-PCL-STD-04.01`, `PCI-PCL-STD-04.03`, `PCI-PCL-STD-03.04`, `PCI-PCL-STD-06.03`,
+`PCI-PCL-STD-13.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 4 · KA 4.2 Variance analysis; KA 4.3
 Management reporting. Also Domain 6 · KA 6.2 Variances and performance indices.
@@ -1809,7 +1809,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-04.03 — Correction and Restatement of a Reported Error
+### PCI STANDARD PCI-PCL-STD-04.03 — Correction and Restatement of a Reported Error
 
 **1. Normative requirement.** A credential holder who becomes aware that a figure already reported was
 **material** and wrong must correct it in a **restatement** issued to every recipient of the original.
@@ -1829,17 +1829,17 @@ threshold*, *source record*.
 **5. Required actions.** The professional must assess, correct and disclose, in that order, and must
 not let the sequence stop at the first step.
 
-- **PCI-PCL-LAW-04.03-PR-01 — Assessment on discovery.** On discovering a possible error the
+- **PCI-PCL-STD-04.03-PR-01 — Assessment on discovery.** On discovering a possible error the
   professional must, within the current reporting cycle, quantify its effect on the figures reported,
   determine whether it meets the materiality rule, and record that assessment with its date, whatever
   the conclusion.
-- **PCI-PCL-LAW-04.03-PR-02 — Restatement content.** A restatement must show the figure as originally
+- **PCI-PCL-STD-04.03-PR-02 — Restatement content.** A restatement must show the figure as originally
   reported, the corrected figure, the difference, the cause of the error, the periods affected and the
   decisions known to have relied on the original figure.
-- **PCI-PCL-LAW-04.03-PR-03 — Distribution to original recipients.** The restatement must be issued to
+- **PCI-PCL-STD-04.03-PR-03 — Distribution to original recipients.** The restatement must be issued to
   every recipient of the original figure, and where a recipient is outside the professional's control,
   the issue must be requested in writing of the person who can make it and that request recorded.
-- **PCI-PCL-LAW-04.03-PR-04 — Cause recorded and control addressed.** Each restatement must record the
+- **PCI-PCL-STD-04.03-PR-04 — Cause recorded and control addressed.** Each restatement must record the
   control weakness that allowed the error, and the corrective action taken, so that a repeated error
   is visible as a repeat.
 
@@ -1905,10 +1905,10 @@ the entity's applicable accounting framework and, where the entity is regulated 
 disclosure obligations that may be immediate. Those determinations require qualified accounting and
 legal advice, and they are not satisfied by a controls restatement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-15` (correction duty) governs; this law adds the restatement
+**19. Related PCI Laws.** `PCI-FND-STD-15` (correction duty) governs; this law adds the restatement
 content, the distribution obligation and the control-cause record, none of which the foundational duty
-specifies. See also `PCI-PCL-LAW-04.01`, `PCI-PCL-LAW-04.02`, `PCI-PCL-LAW-03.03`,
-`PCI-PCL-LAW-11.01`.
+specifies. See also `PCI-PCL-STD-04.01`, `PCI-PCL-STD-04.02`, `PCI-PCL-STD-03.03`,
+`PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 4 · KA 4.3 Management reporting. Also
 Domain 2 · KA 2.5 Management reporting versus statutory reporting; Domain 11 · KA 11.3 Internal
@@ -1943,7 +1943,7 @@ restatement requirement.
 ---
 ## Domain 5 — Cost Management, Cost Control & Change Control
 
-### PCI LAW PCI-PCL-LAW-05.01 — Completeness and Reconciliation of the Recorded Cost Position
+### PCI STANDARD PCI-PCL-STD-05.01 — Completeness and Reconciliation of the Recorded Cost Position
 
 **1. Normative requirement.** A credential holder must reconcile the reported actual cost position to
 the books of account and to the **commitment** and **accrual** records at every reporting **cut-off**.
@@ -1965,18 +1965,18 @@ approval and assurance.
 **5. Required actions.** The professional must reconcile in total and by control account, and must
 demonstrate that the cost position is complete as well as agreed.
 
-- **PCI-PCL-LAW-05.01-PR-01 — Commitment completeness.** The commitment register must include every
+- **PCI-PCL-STD-05.01-PR-01 — Commitment completeness.** The commitment register must include every
   executed contract, purchase order, subcontract, call-off and other instrument with financial effect
   that is open at the cut-off, must be reconciled to the procurement or contract system, and must show
   for each instrument its total value, the value received or performed to date and the value remaining.
-- **PCI-PCL-LAW-05.01-PR-02 — Duplicate-cost detection.** Before issue, the cost position must be
+- **PCI-PCL-STD-05.01-PR-02 — Duplicate-cost detection.** Before issue, the cost position must be
   tested for **duplicate cost** — at minimum by matching invoices to the accruals and commitments they
   discharge, by testing for repeated supplier, value and date combinations, and by testing for one cost
   event coded to two cost codes — and the test, its method and its findings must be recorded.
-- **PCI-PCL-LAW-05.01-PR-03 — Remaining-cost evidence.** The remaining value of each open commitment
+- **PCI-PCL-STD-05.01-PR-03 — Remaining-cost evidence.** The remaining value of each open commitment
   must be supported by the contract or order value less the value received or performed, evidenced
   from the source record, and not by a residual derived from a budget or a forecast.
-- **PCI-PCL-LAW-05.01-PR-04 — Reconciliation to the books of account.** The reported actual cost must
+- **PCI-PCL-STD-05.01-PR-04 — Reconciliation to the books of account.** The reported actual cost must
   be reconciled to the ledger for the same period, with every difference itemised by type — timing,
   scope of the project cost object, accrual treatment, intercompany allocation, currency — and
   explained.
@@ -2050,10 +2050,10 @@ intercompany cost are determined by the entity's accounting policies and local l
 differences arising from those determinations require the finance function's and, where relevant, a
 qualified adviser's input.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07` (data lineage) governs; this law adds the specific
+**19. Related PCI Laws.** `PCI-FND-STD-07` (data lineage) governs; this law adds the specific
 reconciliation to the books of account and the duplicate-cost obligation. See also
-`PCI-PCL-LAW-01.01`, `PCI-PCL-LAW-01.02`, `PCI-PCL-LAW-01.03`, `PCI-PCL-LAW-03.04`,
-`PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-07.03`.
+`PCI-PCL-STD-01.01`, `PCI-PCL-STD-01.02`, `PCI-PCL-STD-01.03`, `PCI-PCL-STD-03.04`,
+`PCI-PCL-STD-06.03`, `PCI-PCL-STD-07.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 5 · KA 5.2 The cost control cycle; KA 5.1
 The cost management framework. Also Domain 11 · KA 11.2 Procure-to-Pay; Domain 1 · KA 1.3 Accrual
@@ -2088,7 +2088,7 @@ or commitment-completeness requirement.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-05.02 — Identification and Registration of Change
+### PCI STANDARD PCI-PCL-STD-05.02 — Identification and Registration of Change
 
 **1. Normative requirement.** A credential holder must enter every potential **change** in the change
 register in the reporting cycle in which it becomes known.
@@ -2110,20 +2110,20 @@ threshold*, *source record*.
 **5. Required actions.** The professional must register first and assess afterwards, and must never
 allow the assessment to become a condition of registration.
 
-- **PCI-PCL-LAW-05.02-PR-01 — Registration regardless of merit.** A potential change must be
+- **PCI-PCL-STD-05.02-PR-01 — Registration regardless of merit.** A potential change must be
   registered even where its entitlement is disputed, its value is unknown, its approval is unlikely or
   its originator is the professional's own organisation; a register entry is a record of an event, not
   an admission about it.
-- **PCI-PCL-LAW-05.02-PR-02 — Minimum register content.** Each entry must carry a unique identifier,
+- **PCI-PCL-STD-05.02-PR-02 — Minimum register content.** Each entry must carry a unique identifier,
   the date the change became known, the source or instructing document, a description of the work
   affected, the originator, the current status and the individual accountable for progressing it.
-- **PCI-PCL-LAW-05.02-PR-03 — Cumulative and related-change view.** The register must show, at each
+- **PCI-PCL-STD-05.02-PR-03 — Cumulative and related-change view.** The register must show, at each
   cut-off, the cumulative value and cumulative schedule effect of all approved changes and of all
   pending changes, and must group changes that share a cause so that their combined effect is visible
   rather than only their individual effects.
-- **PCI-PCL-LAW-05.02-PR-04 — Reconciliation to the trend register and the forecast.** Every open
+- **PCI-PCL-STD-05.02-PR-04 — Reconciliation to the trend register and the forecast.** Every open
   register entry must be reflected in the trend position and in the forecast under
-  `PCI-PCL-LAW-03.04`, or be listed with the reason it is excluded.
+  `PCI-PCL-STD-03.04`, or be listed with the reason it is excluded.
 
 **6. Prohibited actions.** Performing changed work before the change is registered; leaving a change
 unregistered because entitlement is doubtful; splitting one change into several to keep each below an
@@ -2140,16 +2140,16 @@ the **project controls lead** is accountable for the register's completeness; th
 is accountable for the contractual characterisation of an entry.
 
 **9. Approval authority.** No approval is required to *register* a change, and no person may refuse
-registration. Approval of the change itself is governed by `PCI-PCL-LAW-05.04`.
+registration. Approval of the change itself is governed by `PCI-PCL-STD-05.04`.
 
 **10. Independence requirement.** Not applicable to registration — requiring an independent person to
 register a change would delay the record and defeat the law's purpose. Independence attaches to
-approval, under `PCI-PCL-LAW-05.04`.
+approval, under `PCI-PCL-STD-05.04`.
 
 **11. Materiality or threshold.** Every potential change is registered, with no value threshold,
 because the value is often unknown at the moment of identification and because splitting is the
 standard method of evading a threshold. The **materiality rule** governs only the depth of assessment
-under `PCI-PCL-LAW-05.03` and the level of approval under `PCI-PCL-LAW-05.04`. *Scaling:* on a USD 2
+under `PCI-PCL-STD-05.03` and the level of approval under `PCI-PCL-STD-05.04`. *Scaling:* on a USD 2
 million refurbishment a single register with tens of entries serves; on a USD 5 billion programme
 registers are held per contract or per package with a consolidated cumulative view, and the
 consolidation rule must be recorded. Neither may operate a de minimis for registration.
@@ -2193,10 +2193,10 @@ of these, and what notice it requires and by when, are questions of the governin
 governing law. A register entry is a controls record and neither creates nor waives entitlement; the
 contractual position requires the contract administrator and, where contested, qualified counsel.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs. This law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs. This law adds the
 obligation to record the event before its merit is settled — a domain-specific requirement the
-foundational law does not contain. See also `PCI-PCL-LAW-05.03`, `PCI-PCL-LAW-05.04`,
-`PCI-PCL-LAW-03.04`, `PCI-PCL-LAW-07.02`, `PCI-PCL-LAW-10.03`.
+foundational law does not contain. See also `PCI-PCL-STD-05.03`, `PCI-PCL-STD-05.04`,
+`PCI-PCL-STD-03.04`, `PCI-PCL-STD-07.02`, `PCI-PCL-STD-10.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 5 · KA 5.4 Change control and cost impact.
 Also Domain 7 · KA 7.2 Contract management; Domain 8 · KA 8.4 Monitoring & Controlling.
@@ -2227,7 +2227,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-05.03 — Completeness of Change Impact Assessment
+### PCI STANDARD PCI-PCL-STD-05.03 — Completeness of Change Impact Assessment
 
 **1. Normative requirement.** A credential holder must assess the full effect of a proposed **change**
 on cost, schedule, risk and interfacing work before it is submitted for approval.
@@ -2248,22 +2248,22 @@ originated by any party, including omissions and de-scopes, where the same analy
 **5. Required actions.** The professional must assess named categories of effect and must state the
 result of each, including where the effect is nil.
 
-- **PCI-PCL-LAW-05.03-PR-01 — Direct and indirect cost.** The assessment must state the direct cost,
+- **PCI-PCL-STD-05.03-PR-01 — Direct and indirect cost.** The assessment must state the direct cost,
   the effect on preliminaries, time-related cost, supervision and plant, and the disruption or
   productivity effect on unchanged work; each stated with its basis, and a nil effect stated as nil
   rather than omitted.
-- **PCI-PCL-LAW-05.03-PR-02 — Schedule effect through the network.** The schedule effect must be
+- **PCI-PCL-STD-05.03-PR-02 — Schedule effect through the network.** The schedule effect must be
   assessed by inserting or amending the affected activities in a copy of the current schedule and
   running the network, not by estimating a duration in isolation; the resulting effect on the critical
   path and on completion must be stated.
-- **PCI-PCL-LAW-05.03-PR-03 — Risk and interface effect.** The assessment must state the change's
+- **PCI-PCL-STD-05.03-PR-03 — Risk and interface effect.** The assessment must state the change's
   effect on the risk register — risks created, removed or altered — and on interfacing packages,
   contracts, permits, approvals and third parties.
-- **PCI-PCL-LAW-05.03-PR-04 — Cumulative effect.** The assessment must state the cumulative effect of
+- **PCI-PCL-STD-05.03-PR-04 — Cumulative effect.** The assessment must state the cumulative effect of
   this change together with all approved and pending changes on the completion cost, the completion
   date and the remaining contingency, so that the decision is taken on the position after the change
   rather than on the change alone.
-- **PCI-PCL-LAW-05.03-PR-05 — Basis and exclusions.** The assessment must state its assumptions, its
+- **PCI-PCL-STD-05.03-PR-05 — Basis and exclusions.** The assessment must state its assumptions, its
   exclusions, the period for which its pricing is valid, and what will change if approval is delayed
   beyond that period.
 
@@ -2282,11 +2282,11 @@ schedule assessment; the **risk lead** for the risk effect; the **commercial lea
 contractual characterisation; the **project controls lead** for the assembled assessment.
 
 **9. Approval authority.** The assessment is not itself approved; it is submitted to the **change
-authority** under `PCI-PCL-LAW-05.04`. The **project controls lead** confirms the assessment is
+authority** under `PCI-PCL-STD-05.04`. The **project controls lead** confirms the assessment is
 complete before submission and records that confirmation.
 
 **10. Independence requirement.** The person who prepares the assessment must not also hold the
-**change authority** for that change — that separation is required by `PCI-PCL-LAW-05.04`. Where the
+**change authority** for that change — that separation is required by `PCI-PCL-STD-05.04`. Where the
 change arises from an error or omission by the assessor's own organisation, the cost and schedule
 assessment must be reviewed by a person **independent** of that work before submission.
 
@@ -2342,10 +2342,10 @@ time-related cost, and the effect of delay in instructing or approving are gover
 and the governing law. This law requires the analysis; it does not determine entitlement, which
 requires the contract administrator and, where contested, qualified counsel.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) and `PCI-FND-LAW-05`
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) and `PCI-FND-STD-05`
 (transparent assumptions) govern. This law adds the enumerated categories of effect and the cumulative
-obligation. See also `PCI-PCL-LAW-05.02`, `PCI-PCL-LAW-05.04`, `PCI-PCL-LAW-03.04`,
-`PCI-PCL-LAW-10.02`, `PCI-PCL-LAW-12.01`.
+obligation. See also `PCI-PCL-STD-05.02`, `PCI-PCL-STD-05.04`, `PCI-PCL-STD-03.04`,
+`PCI-PCL-STD-10.02`, `PCI-PCL-STD-12.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 5 · KA 5.4 Change control and cost impact.
 Also Domain 10 · KA 10.2 Network analysis and the Critical Path Method; Domain 12 · KA 12.2 The risk
@@ -2379,7 +2379,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-05.04 — Change Authority and Segregation of Preparation from Approval
+### PCI STANDARD PCI-PCL-STD-05.04 — Change Authority and Segregation of Preparation from Approval
 
 **1. Normative requirement.** A credential holder must not approve a **change** they prepared,
 assessed or priced.
@@ -2399,19 +2399,19 @@ owner*, *evidence*, *escalation threshold*.
 **5. Required actions.** The professional must ensure that authority, preparation and approval are held
 by different named people, and that the approval record shows it.
 
-- **PCI-PCL-LAW-05.04-PR-01 — Recorded delegation of authority.** The value bands and the named holders
+- **PCI-PCL-STD-05.04-PR-01 — Recorded delegation of authority.** The value bands and the named holders
   of change authority must be recorded before they are used, and each approval must cite the band and
   the authority it was given under.
-- **PCI-PCL-LAW-05.04-PR-02 — Approval record content.** Each approval must record the change
+- **PCI-PCL-STD-05.04-PR-02 — Approval record content.** Each approval must record the change
   identifier, the version of the assessment approved, the value approved, the schedule effect approved,
   the approver's name, the date, and any condition attached.
-- **PCI-PCL-LAW-05.04-PR-03 — Baseline update only after approval.** The baseline must be updated to
+- **PCI-PCL-STD-05.04-PR-03 — Baseline update only after approval.** The baseline must be updated to
   incorporate a change only after that change is approved, only for the value and schedule effect
-  approved, and only through the version control required by `PCI-PCL-LAW-03.02`.
-- **PCI-PCL-LAW-05.04-PR-04 — Audit trail from instruction to baseline.** For each approved change,
+  approved, and only through the version control required by `PCI-PCL-STD-03.02`.
+- **PCI-PCL-STD-05.04-PR-04 — Audit trail from instruction to baseline.** For each approved change,
   the trail from the instructing document to the assessment, the approval and the baseline movement
   must be retained and traversable in both directions.
-- **PCI-PCL-LAW-05.04-PR-05 — Aggregation rule against splitting.** Changes arising from one cause,
+- **PCI-PCL-STD-05.04-PR-05 — Aggregation rule against splitting.** Changes arising from one cause,
   one instruction or one scope item must be aggregated for the purpose of determining the approval
   band, and the aggregation applied must be recorded.
 
@@ -2485,10 +2485,10 @@ constitution, its delegation of authority and applicable company law; contractua
 a variation is determined by the contract. A PCI change authority is a controls role and confers no
 corporate or contractual authority.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-04` (human decision authority) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-04` (human decision authority) governs; this law adds the
 specific segregation rule, the delegation record and the anti-splitting aggregation obligation. See
-also `PCI-PCL-LAW-05.02`, `PCI-PCL-LAW-05.03`, `PCI-PCL-LAW-03.02`, `PCI-PCL-LAW-11.01`,
-`PCI-PCL-LAW-12.03`.
+also `PCI-PCL-STD-05.02`, `PCI-PCL-STD-05.03`, `PCI-PCL-STD-03.02`, `PCI-PCL-STD-11.01`,
+`PCI-PCL-STD-12.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 5 · KA 5.4 Change control and cost impact.
 Also Domain 11 · KA 11.3 Internal control and segregation of duties; Domain 8 · KA 8.4 Monitoring &
@@ -2523,7 +2523,7 @@ PCL-LAW-11-01 *Segregation of Duties*; both identifiers are retired and are not 
 ---
 ## Domain 6 — Earned Value Management & Forecasting
 
-### PCI LAW PCI-PCL-LAW-06.01 — Earned Value Measurement Rules Fixed Before Performance
+### PCI STANDARD PCI-PCL-STD-06.01 — Earned Value Measurement Rules Fixed Before Performance
 
 **1. Normative requirement.** A credential holder must fix and record the earned value measurement
 method for each work package before performance of that work package begins.
@@ -2544,19 +2544,19 @@ evidence of progress*, *material*, *evidence*, *change*, *escalation threshold*.
 **5. Required actions.** The professional must record a method per work package, apply it consistently,
 and change it only through change control.
 
-- **PCI-PCL-LAW-06.01-PR-01 — Method recorded per work package.** Each work package must carry a
+- **PCI-PCL-STD-06.01-PR-01 — Method recorded per work package.** Each work package must carry a
   recorded measurement method — for example units complete, milestone weighting, fixed-formula start
   and finish proportions, level of effort, or apportioned effort — together with the reason the method
   suits the work and, where the method uses milestones or units, the specific milestones or units and
   their weights.
-- **PCI-PCL-LAW-06.01-PR-02 — Limits on level of effort.** Work packages measured as level of effort
+- **PCI-PCL-STD-06.01-PR-02 — Limits on level of effort.** Work packages measured as level of effort
   must be identified separately, their total budget stated as a proportion of the baseline, and level
   of effort must not be applied to work with a discrete, measurable output.
-- **PCI-PCL-LAW-06.01-PR-03 — Change of method through change control.** A measurement method may be
+- **PCI-PCL-STD-06.01-PR-03 — Change of method through change control.** A measurement method may be
   changed only before the work package starts, or through an approved change that records the reason,
   the effect on reported earned value to date and the treatment of the transition; a method must never
   be changed to alter a reported index.
-- **PCI-PCL-LAW-06.01-PR-04 — Method consistent with the schedule.** The measurement method for each
+- **PCI-PCL-STD-06.01-PR-04 — Method consistent with the schedule.** The measurement method for each
   work package must be consistent with how progress is statused in the schedule, so that cost and
   schedule progress describe the same work.
 
@@ -2575,7 +2575,7 @@ schedule.
 
 **9. Approval authority.** The **baseline approval authority** approves the measurement method set as
 part of the baseline. A change of method is approved by the **change authority** under
-`PCI-PCL-LAW-05.04`.
+`PCI-PCL-STD-05.04`.
 
 **10. Independence requirement.** Not required for selection — the method is best chosen by those who
 know the work. Approval of a *change* of method must be **independent** of the person whose reported
@@ -2629,10 +2629,10 @@ management-system standard, compliance with that standard is a contractual or re
 that may exceed this law, and its interpretation belongs to the contract administrator and qualified
 counsel.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-13` (no silent override) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-13` (no silent override) governs; this law adds the
 fix-in-advance obligation, which is the domain-specific form of preventing a silent override of the
-measurement basis. See also `PCI-PCL-LAW-06.02`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-03.01`,
-`PCI-PCL-LAW-10.03`.
+measurement basis. See also `PCI-PCL-STD-06.02`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-03.01`,
+`PCI-PCL-STD-10.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 6 · KA 6.1 EVM fundamentals. Also Domain 3 ·
 KA 3.3 The time-phased budget / cost baseline; Domain 9 · KA 9.5 Agile cost control, forecasting &
@@ -2666,7 +2666,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-06.02 — Objective Evidence of Progress
+### PCI STANDARD PCI-PCL-STD-06.02 — Objective Evidence of Progress
 
 **1. Normative requirement.** A credential holder must not report progress or earned value that is not
 supported by **objective evidence of progress** at the reporting **cut-off**.
@@ -2688,19 +2688,19 @@ as accepted.
 **5. Required actions.** The professional must hold, for every progress claim, a record produced or
 verifiable outside the claimant, and must be able to produce it on request.
 
-- **PCI-PCL-LAW-06.02-PR-01 — Evidence identified per claim.** Each progress claim must identify the
+- **PCI-PCL-STD-06.02-PR-01 — Evidence identified per claim.** Each progress claim must identify the
   record that evidences it, by reference, so that the record can be retrieved without asking the
   claimant which one it was.
-- **PCI-PCL-LAW-06.02-PR-02 — Verification of claims on a stated basis.** Progress claims must be
+- **PCI-PCL-STD-06.02-PR-02 — Verification of claims on a stated basis.** Progress claims must be
   verified before the earned value is reported, by physical or documentary verification of a population
   or a sample selected on a recorded basis that includes the highest-value claims and the claims that
   moved most since the previous period.
-- **PCI-PCL-LAW-06.02-PR-03 — Prohibition on progress exceeding evidence.** Where the evidence supports
+- **PCI-PCL-STD-06.02-PR-03 — Prohibition on progress exceeding evidence.** Where the evidence supports
   less progress than claimed, the reported figure must be the evidenced figure, and the difference must
   be recorded and reported to the **control account owner**.
-- **PCI-PCL-LAW-06.02-PR-04 — No negative or reversing progress without explanation.** Where reported
+- **PCI-PCL-STD-06.02-PR-04 — No negative or reversing progress without explanation.** Where reported
   progress falls between periods, the cause must be stated and the earlier over-report identified — a
-  silent correction of prior over-claim is a breach of `PCI-PCL-LAW-04.03` as well as of this law.
+  silent correction of prior over-claim is a breach of `PCI-PCL-STD-04.03` as well as of this law.
 
 **6. Prohibited actions.** Reporting progress supported only by the assertion of the person performing
 or supervising the work; reporting progress against work not yet started; claiming a milestone whose
@@ -2775,10 +2775,10 @@ measurement, certification and payment provisions and any applicable constructio
 govern that entitlement. Certification under a contract is a contractual act, not a controls act, and
 requires the certifier appointed under the contract.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs; this law adds the
 definition of what counts as objective evidence of progress and the prohibition on reporting beyond it.
-See also `PCI-PCL-LAW-06.01`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-10.03`, `PCI-PCL-LAW-07.03`,
-`PCI-PCL-LAW-04.03`.
+See also `PCI-PCL-STD-06.01`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-10.03`, `PCI-PCL-STD-07.03`,
+`PCI-PCL-STD-04.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 6 · KA 6.1 EVM fundamentals. Also Domain 10
 · KA 10.4 Progress measurement and schedule control; Domain 7 · KA 7.4 Invoicing and applications for
@@ -2813,7 +2813,7 @@ PCL-LAW-10-03 *Progress Measurement*; both identifiers are retired and are not r
 
 ---
 
-### PCI LAW PCI-PCL-LAW-06.03 — Coherence of the Three Earned Value Data Points
+### PCI STANDARD PCI-PCL-STD-06.03 — Coherence of the Three Earned Value Data Points
 
 **1. Normative requirement.** A credential holder must ensure that planned value, earned value and
 actual cost are measured over the same scope, the same period and the same **cut-off** before any index
@@ -2834,20 +2834,20 @@ project applying earned value.
 **5. Required actions.** The professional must confirm the three data points are commensurable, and must
 record that confirmation, before publishing any index.
 
-- **PCI-PCL-LAW-06.03-PR-01 — Actual cost completeness for the period.** The actual cost used must
+- **PCI-PCL-STD-06.03-PR-01 — Actual cost completeness for the period.** The actual cost used must
   include the **accrual** for work performed and not invoiced, must exclude amounts relating to work
-  not yet performed, and must be reconciled to the cost position issued under `PCI-PCL-LAW-05.01`.
-- **PCI-PCL-LAW-06.03-PR-02 — Planned value from the approved baseline only.** The planned value used
+  not yet performed, and must be reconciled to the cost position issued under `PCI-PCL-STD-05.01`.
+- **PCI-PCL-STD-06.03-PR-02 — Planned value from the approved baseline only.** The planned value used
   must be taken from the current approved baseline version at the correct time phase, and the version
   used must be recorded with the calculation.
-- **PCI-PCL-LAW-06.03-PR-03 — Index verification before publication.** Each published index and variance
+- **PCI-PCL-STD-06.03-PR-03 — Index verification before publication.** Each published index and variance
   must be recomputed from its three inputs and agreed, and the inputs, the formula applied and the
   result must be retained so the figure is **reproducible**.
-- **PCI-PCL-LAW-06.03-PR-04 — Scope coverage stated.** Where any part of the project is excluded from
+- **PCI-PCL-STD-06.03-PR-04 — Scope coverage stated.** Where any part of the project is excluded from
   earned value measurement — a package not yet baselined, a level-of-effort element, a contract
   measured differently — the exclusion and its value must be stated with the index, so that the index's
   coverage is visible.
-- **PCI-PCL-LAW-06.03-PR-05 — Cost and schedule statused to the same date.** The schedule status used
+- **PCI-PCL-STD-06.03-PR-05 — Cost and schedule statused to the same date.** The schedule status used
   for schedule performance measurement must carry the same status date as the cost cut-off, or the
   difference must be stated and its effect quantified.
 
@@ -2911,10 +2911,10 @@ publication rather than explained afterwards.
 regulated report, the contract or the applicable regulation governs how they must be computed and
 verified, and those requirements may exceed this law.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06` (source and version integrity) governs; this law adds the
-commensurability obligation specific to earned value arithmetic. See also `PCI-PCL-LAW-06.01`,
-`PCI-PCL-LAW-06.02`, `PCI-PCL-LAW-06.04`, `PCI-PCL-LAW-05.01`, `PCI-PCL-LAW-03.02`,
-`PCI-PCL-LAW-04.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-06` (source and version integrity) governs; this law adds the
+commensurability obligation specific to earned value arithmetic. See also `PCI-PCL-STD-06.01`,
+`PCI-PCL-STD-06.02`, `PCI-PCL-STD-06.04`, `PCI-PCL-STD-05.01`, `PCI-PCL-STD-03.02`,
+`PCI-PCL-STD-04.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 6 · KA 6.2 Variances and performance
 indices; KA 6.4 Integrating cost & schedule; limitations; earned schedule. Also Domain 4 · KA 4.2
@@ -2948,7 +2948,7 @@ requiring it.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-06.04 — Selection and Disclosure of the Estimate-at-Completion Method
+### PCI STANDARD PCI-PCL-STD-06.04 — Selection and Disclosure of the Estimate-at-Completion Method
 
 **1. Normative requirement.** A credential holder must disclose, with every earned-value-derived
 estimate at completion, the method used to derive it and the reason that method suits the remaining
@@ -2969,21 +2969,21 @@ any other earned-value-derived forecast measure, on any project applying earned 
 **5. Required actions.** The professional must state the method, justify it against the remaining work,
 and reconcile it to the bottom-up forecast.
 
-- **PCI-PCL-LAW-06.04-PR-01 — Method disclosure and range.** Each earned-value-derived estimate at
+- **PCI-PCL-STD-06.04-PR-01 — Method disclosure and range.** Each earned-value-derived estimate at
   completion must state the formula applied, its inputs, and — where more than one recognised formula is
   applicable — the range the alternatives produce, so that the decision owner sees the spread rather
   than one point.
-- **PCI-PCL-LAW-06.04-PR-02 — To-complete performance index interpreted, not merely reported.** Where a
+- **PCI-PCL-STD-06.04-PR-02 — To-complete performance index interpreted, not merely reported.** Where a
   to-complete performance index is reported, it must be accompanied by a statement of what performance
   level it implies for the remaining work, and by a comparison with the performance achieved to date;
   a to-complete index materially above achieved performance must be identified as a target that the
   project has not yet demonstrated it can meet.
-- **PCI-PCL-LAW-06.04-PR-03 — Reconciliation to the bottom-up forecast.** The earned-value-derived
+- **PCI-PCL-STD-06.04-PR-03 — Reconciliation to the bottom-up forecast.** The earned-value-derived
   estimate at completion must be reconciled to the bottom-up estimate at completion prepared under
-  `PCI-PCL-LAW-03.04`, and every material difference explained; where the two diverge materially and
+  `PCI-PCL-STD-03.04`, and every material difference explained; where the two diverge materially and
   persistently, the divergence must be reported to the **decision owner** rather than resolved by
   choosing the preferred figure.
-- **PCI-PCL-LAW-06.04-PR-04 — Method consistency between periods.** The method must not be changed
+- **PCI-PCL-STD-06.04-PR-04 — Method consistency between periods.** The method must not be changed
   between periods without stating the change, its reason and the effect on the reported estimate at
   completion.
 
@@ -3053,9 +3053,9 @@ example in assessing progress towards satisfying a performance obligation or the
 contract — the applicable accounting framework governs that use and requires qualified accounting
 advice.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05` (transparent assumptions) governs; this law adds the specific
-disclosure of method, range and to-complete interpretation. See also `PCI-PCL-LAW-03.04`,
-`PCI-PCL-LAW-03.05`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-13.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-05` (transparent assumptions) governs; this law adds the specific
+disclosure of method, range and to-complete interpretation. See also `PCI-PCL-STD-03.04`,
+`PCI-PCL-STD-03.05`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-13.02`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 6 · KA 6.3 Forecasting with EVM: the EAC
 family. Also Domain 3 · KA 3.4 Forecasting; Domain 4 · KA 4.2 Variance analysis.
@@ -3089,7 +3089,7 @@ not address method selection or disclosure.
 ---
 ## Domain 7 — Contracts, Commercial Management, BoQ, Invoicing & Revenue
 
-### PCI LAW PCI-PCL-LAW-07.01 — Contract Source Verification
+### PCI STANDARD PCI-PCL-STD-07.01 — Contract Source Verification
 
 **1. Normative requirement.** A credential holder must verify every contractual term they rely on
 against the executed contract and its executed amendments.
@@ -3111,17 +3111,17 @@ reviewer*, *escalation threshold*, *approved*.
 **5. Required actions.** The professional must go to the executed document, record which document they
 went to, and stay inside their competence when interpreting it.
 
-- **PCI-PCL-LAW-07.01-PR-01 — Contract register with executed status.** A register of the project's
+- **PCI-PCL-STD-07.01-PR-01 — Contract register with executed status.** A register of the project's
   contracts and amendments must record for each the parties, the date of execution, the document
   reference of the executed version, its location, and whether any amendment remains unexecuted.
-- **PCI-PCL-LAW-07.01-PR-02 — Citation of the relied-on provision.** Any commercial analysis, claim
+- **PCI-PCL-STD-07.01-PR-02 — Citation of the relied-on provision.** Any commercial analysis, claim
   assessment, payment assessment or report that turns on a contractual term must cite the document and
   the provision relied on, so that a reviewer can read the same words.
-- **PCI-PCL-LAW-07.01-PR-03 — Boundary of interpretation.** Where the meaning or effect of a provision
+- **PCI-PCL-STD-07.01-PR-03 — Boundary of interpretation.** Where the meaning or effect of a provision
   is uncertain, disputed, or determines legal entitlement, the professional must refer the question to
   the person authorised to obtain legal advice, must record the referral, and must not state a legal
   conclusion as though it were settled.
-- **PCI-PCL-LAW-07.01-PR-04 — Unexecuted documents identified.** Where work proceeds under a letter of
+- **PCI-PCL-STD-07.01-PR-04 — Unexecuted documents identified.** Where work proceeds under a letter of
   intent, an unexecuted amendment or an instruction outside the executed contract, that fact and the
   value exposed must be recorded and reported in the period in which it arises.
 
@@ -3195,12 +3195,12 @@ least likely to be opened.
 existence of an entitlement and the consequences of a breach are questions of the governing law and of
 the contract as executed and amended. They require qualified legal advice in the governing
 jurisdiction. Nothing produced under this law is legal advice, and a controls professional stating a
-legal conclusion is outside their competence — see `PCI-FND-LAW-10`.
+legal conclusion is outside their competence — see `PCI-FND-STD-10`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06` (source and version integrity) and `PCI-FND-LAW-10`
+**19. Related PCI Laws.** `PCI-FND-STD-06` (source and version integrity) and `PCI-FND-STD-10`
 (competence and limitation) govern. This law adds the executed-document rule and the interpretation
-boundary specific to commercial project controls. See also `PCI-PCL-LAW-07.02`, `PCI-PCL-LAW-07.03`,
-`PCI-PCL-LAW-05.02`, `PCI-PCL-LAW-13.03`.
+boundary specific to commercial project controls. See also `PCI-PCL-STD-07.02`, `PCI-PCL-STD-07.03`,
+`PCI-PCL-STD-05.02`, `PCI-PCL-STD-13.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 7 · KA 7.1 Types of contract; KA 7.2 Contract
 management. Also Domain 5 · KA 5.4 Change control and cost impact.
@@ -3233,7 +3233,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-07.02 — Traceability of Variations and Claims
+### PCI STANDARD PCI-PCL-STD-07.02 — Traceability of Variations and Claims
 
 **1. Normative requirement.** A credential holder must maintain, for each variation and each claim, a
 traceable record from the originating event to the current commercial position.
@@ -3253,22 +3253,22 @@ counterclaims or contra charges, on any project and in either direction — as c
 
 **5. Required actions.** The professional must keep the chain complete and the status honest.
 
-- **PCI-PCL-LAW-07.02-PR-01 — Event-to-position chain.** Each variation and claim must carry a record
+- **PCI-PCL-STD-07.02-PR-01 — Event-to-position chain.** Each variation and claim must carry a record
   linking the originating event, the instructing or notifying document, the assessment, the submission,
   the response, the agreement or determination, and the value recorded in the cost position.
-- **PCI-PCL-LAW-07.02-PR-02 — Status stated to a defined vocabulary.** Each entry must carry a status
+- **PCI-PCL-STD-07.02-PR-02 — Status stated to a defined vocabulary.** Each entry must carry a status
   from a defined status list — for example notified, submitted, under assessment, agreed in principle,
   agreed in value, rejected, in dispute, settled — each status defined in writing, and the date it was
   reached; "in progress" and "ongoing" are not statuses.
-- **PCI-PCL-LAW-07.02-PR-03 — Notice-date integrity.** The date on which an event occurred, the date it
+- **PCI-PCL-STD-07.02-PR-03 — Notice-date integrity.** The date on which an event occurred, the date it
   became known, and the date any notice was given or received must each be recorded from the source
   document as they actually are, and must not be adjusted, back-dated or estimated to fit a
   contractual period.
-- **PCI-PCL-LAW-07.02-PR-04 — Valuation basis and reasonableness stated.** The value recorded against
+- **PCI-PCL-STD-07.02-PR-04 — Valuation basis and reasonableness stated.** The value recorded against
   each variation or claim must state the basis on which it was assessed and whether it represents the
   submitted value, the assessed value or the agreed value; a submitted value must never be reported as
   though it were agreed.
-- **PCI-PCL-LAW-07.02-PR-05 — Reconciliation to the cost position and the forecast.** The register's
+- **PCI-PCL-STD-07.02-PR-05 — Reconciliation to the cost position and the forecast.** The register's
   totals by status must reconcile at each cut-off to the amounts included in the cost position and the
   forecast, with any difference explained.
 
@@ -3344,9 +3344,9 @@ and the existence of an entitlement are questions of the governing law and the e
 Missing a contractual time bar can extinguish a valid claim. These are matters for qualified counsel and
 the contract administrator, and this law neither preserves nor defeats any entitlement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07` (data lineage) governs; this law adds the commercial chain,
-the status vocabulary and the notice-date rule. See also `PCI-PCL-LAW-07.01`, `PCI-PCL-LAW-07.03`,
-`PCI-PCL-LAW-05.02`, `PCI-PCL-LAW-10.02`, `PCI-PCL-LAW-11.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-07` (data lineage) governs; this law adds the commercial chain,
+the status vocabulary and the notice-date rule. See also `PCI-PCL-STD-07.01`, `PCI-PCL-STD-07.03`,
+`PCI-PCL-STD-05.02`, `PCI-PCL-STD-10.02`, `PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 7 · KA 7.2 Contract management; KA 7.3 Bills
 of Quantities. Also Domain 5 · KA 5.4 Change control and cost impact; Domain 10 · KA 10.4 Progress
@@ -3380,7 +3380,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-07.03 — Support and Reconciliation of Applications for Payment
+### PCI STANDARD PCI-PCL-STD-07.03 — Support and Reconciliation of Applications for Payment
 
 **1. Normative requirement.** A credential holder must not submit, certify or support an application for
 payment for work that is not evidenced as performed or delivered at the application date.
@@ -3402,16 +3402,16 @@ direction.
 **5. Required actions.** The professional must tie every application line to evidenced performance and
 must reconcile the billing position to the records that describe the same work.
 
-- **PCI-PCL-LAW-07.03-PR-01 — Line-level support.** Each line of an application must be supported by
+- **PCI-PCL-STD-07.03-PR-01 — Line-level support.** Each line of an application must be supported by
   the measurement, milestone certificate, delivery record, timesheet or other **objective evidence of
   progress** that establishes the quantity or the entitlement claimed, referenced from the application.
-- **PCI-PCL-LAW-07.03-PR-02 — Reconciliation of billing to progress and to the cost position.** The
+- **PCI-PCL-STD-07.03-PR-02 — Reconciliation of billing to progress and to the cost position.** The
   cumulative applied and certified position must be reconciled at each cut-off to the reported physical
   progress and to the cost position, with every difference identified and explained.
-- **PCI-PCL-LAW-07.03-PR-03 — Materials and unfixed goods identified.** Amounts claimed for materials on
+- **PCI-PCL-STD-07.03-PR-03 — Materials and unfixed goods identified.** Amounts claimed for materials on
   or off site, unfixed goods, advance payments and mobilisation must be identified separately from
   amounts for work performed, with the contractual basis stated.
-- **PCI-PCL-LAW-07.03-PR-04 — Retention, set-off and contra charges recorded.** Retention held or
+- **PCI-PCL-STD-07.03-PR-04 — Retention, set-off and contra charges recorded.** Retention held or
   released, set-offs, contra charges and liquidated damages applied must each be recorded with their
   basis and reconciled between the application, the certificate and the cost position.
 
@@ -3435,7 +3435,7 @@ submission of an application; certification is performed only by the person appo
 
 **10. Independence requirement.** Assessment of a counterparty's application must be performed by a
 person **independent** of that counterparty. Verification of progress supporting an application must
-satisfy the independence requirement in `PCI-PCL-LAW-06.02` — the application is a claim, and a claim
+satisfy the independence requirement in `PCI-PCL-STD-06.02` — the application is a claim, and a claim
 cannot verify itself.
 
 **11. Materiality or threshold.** Every line requires support, without threshold; the **materiality
@@ -3448,7 +3448,7 @@ record the sampling basis. In both, an application line that cannot name its sup
 **12. Exception and waiver.** No exception is permitted to element 1. Where the contract permits payment
 in advance of performance — an advance payment, a mobilisation payment, materials off site — that is not
 an exception to this law but a contractual entitlement, and it must be identified under PR-03 with the
-provision relied on cited under `PCI-PCL-LAW-07.01`.
+provision relied on cited under `PCI-PCL-STD-07.01`.
 
 **13. Escalation trigger.** An instruction to apply for or certify payment for work not evidenced as
 performed; a material and unexplained difference between the cumulative certified position and reported
@@ -3465,7 +3465,7 @@ payment, assess a set-off, or generate supporting narrative for a line that has 
 professional must recompute the application total and the cumulative position without the tool; must
 trace every line above the materiality rule, and a stated random selection below it, to its supporting
 record; and must confirm rates against the executed contract's schedule of prices under
-`PCI-PCL-LAW-07.01`.
+`PCI-PCL-STD-07.01`.
 
 **17. External reference.**
 
@@ -3486,10 +3486,10 @@ legislation with strict statutory timescales whose breach has immediate financia
 recognition is an accounting determination for the reporting entity. Both require qualified local advice
 and neither is decided by this law.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs; this law adds the
 line-level support and billing-to-progress reconciliation obligations specific to payment. See also
-`PCI-PCL-LAW-06.02`, `PCI-PCL-LAW-07.01`, `PCI-PCL-LAW-07.02`, `PCI-PCL-LAW-05.01`,
-`PCI-PCL-LAW-11.01`.
+`PCI-PCL-STD-06.02`, `PCI-PCL-STD-07.01`, `PCI-PCL-STD-07.02`, `PCI-PCL-STD-05.01`,
+`PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 7 · KA 7.4 Invoicing and applications for
 payment; KA 7.5 Revenue recognition in the commercial cycle. Also Domain 11 · KA 11.1 Order-to-Cash;
@@ -3525,7 +3525,7 @@ but contained no payment-application requirement.
 ---
 ## Domain 10 — Project Scheduling
 
-### PCI LAW PCI-PCL-LAW-10.01 — Schedule Network Integrity
+### PCI STANDARD PCI-PCL-STD-10.01 — Schedule Network Integrity
 
 **1. Normative requirement.** A credential holder must not issue a schedule for planning, reporting or
 decision-making that contains an **open end**.
@@ -3546,22 +3546,22 @@ assessment or delay analysis, on any project of any size using a network-based s
 **5. Required actions.** The professional must build the network so that logic, constraints and
 calendars each represent something real, and must record the tests that show it.
 
-- **PCI-PCL-LAW-10.01-PR-01 — Logic completeness test before issue.** Before issue, the schedule must be
+- **PCI-PCL-STD-10.01-PR-01 — Logic completeness test before issue.** Before issue, the schedule must be
   tested for open ends, and every open end found must be closed by logic that represents a real
   dependency or explained in an exceptions record naming the activity and the reason.
-- **PCI-PCL-LAW-10.01-PR-02 — Constraint register.** Every date constraint in the schedule must be
+- **PCI-PCL-STD-10.01-PR-02 — Constraint register.** Every date constraint in the schedule must be
   recorded in a constraint register with the activity, the constraint type, the reason it exists, the
   authority for it and the date it will next be reviewed; constraints that remove float or override
   logic must be identified separately.
-- **PCI-PCL-LAW-10.01-PR-03 — Calendar governance.** Every calendar in the schedule must be recorded
+- **PCI-PCL-STD-10.01-PR-03 — Calendar governance.** Every calendar in the schedule must be recorded
   with its working pattern, its non-working periods and the activities assigned to it; a calendar must
   not be altered to change a completion date in place of a logic or duration change, and any calendar
   change between issues must be recorded with its effect on the completion date.
-- **PCI-PCL-LAW-10.01-PR-04 — Logic that represents real dependency.** Relationships must represent a
+- **PCI-PCL-STD-10.01-PR-04 — Logic that represents real dependency.** Relationships must represent a
   genuine physical, contractual or resource dependency; logic added solely to satisfy a metric, to
   remove an open end without reflecting a real dependency, or to change a computed date is prohibited,
   and lags and leads must each carry a recorded reason.
-- **PCI-PCL-LAW-10.01-PR-05 — Test record retained.** The output of the tests under PR-01 to PR-03 must
+- **PCI-PCL-STD-10.01-PR-05 — Test record retained.** The output of the tests under PR-01 to PR-03 must
   be retained with the issued schedule, with the date it was run and the person who ran it.
 
 **6. Prohibited actions.** Issuing a schedule with unexplained open ends; using a date constraint in
@@ -3641,9 +3641,9 @@ constraint types, maximum lag, required submission and acceptance procedures —
 contractual obligation that may exceed this law, and its interpretation belongs to the contract
 administrator.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs; this law adds the network
-integrity obligations, which no foundational law reaches. See also `PCI-PCL-LAW-10.02`,
-`PCI-PCL-LAW-10.03`, `PCI-PCL-LAW-03.01`, `PCI-PCL-LAW-05.03`.
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs; this law adds the network
+integrity obligations, which no foundational law reaches. See also `PCI-PCL-STD-10.02`,
+`PCI-PCL-STD-10.03`, `PCI-PCL-STD-03.01`, `PCI-PCL-STD-05.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 10 · KA 10.1 Schedule development; KA 10.2
 Network analysis and the Critical Path Method. Also Domain 8 · KA 8.2 Planning.
@@ -3679,7 +3679,7 @@ retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-10.02 — Critical-Path Verification Before Reliance
+### PCI STANDARD PCI-PCL-STD-10.02 — Critical-Path Verification Before Reliance
 
 **1. Normative requirement.** A credential holder must verify that the reported critical path is the
 network's true longest path before relying on it for a decision, a report or a delay assessment.
@@ -3700,17 +3700,17 @@ mitigation plan, on any project using a network schedule.
 **5. Required actions.** The professional must test the reported path rather than accept it, and must
 record the test.
 
-- **PCI-PCL-LAW-10.02-PR-01 — Longest-path confirmation.** The reported critical path must be confirmed
+- **PCI-PCL-STD-10.02-PR-01 — Longest-path confirmation.** The reported critical path must be confirmed
   as the longest path through the network to the completion milestone, and where the software's
   float-based critical path and the longest path differ, both must be reported with the difference
   explained.
-- **PCI-PCL-LAW-10.02-PR-02 — Distorting features identified.** Before reliance, the professional must
+- **PCI-PCL-STD-10.02-PR-02 — Distorting features identified.** Before reliance, the professional must
   identify the constraints, calendars, resource levelling and out-of-sequence progress present in the
   schedule and state their effect on float and on the reported path.
-- **PCI-PCL-LAW-10.02-PR-03 — Near-critical paths reported.** Paths within a float range stated by the
+- **PCI-PCL-STD-10.02-PR-03 — Near-critical paths reported.** Paths within a float range stated by the
   adopting organisation's governance must be reported alongside the critical path, so that a decision is
   not taken on a single path that a small change would displace.
-- **PCI-PCL-LAW-10.02-PR-04 — Delay analysis method stated.** Where the schedule is used to assess
+- **PCI-PCL-STD-10.02-PR-04 — Delay analysis method stated.** Where the schedule is used to assess
   delay, the analysis method used must be named, its data sources stated, and its limitations disclosed;
   a method must not be selected because it produces a preferred result.
 
@@ -3718,7 +3718,7 @@ record the test.
 relying on float values without stating the constraints and calendars that shape them; presenting a
 single critical path where near-critical paths would displace it; selecting a delay-analysis method for
 its outcome; asserting a critical path from a schedule that has failed the integrity tests in
-`PCI-PCL-LAW-10.01`.
+`PCI-PCL-STD-10.01`.
 
 **7. Required evidence.** The verification record naming the longest path and the method used to confirm
 it; the list of distorting features and their effect; the near-critical path report with the float range
@@ -3787,9 +3787,9 @@ will accept differs between forums and jurisdictions, and the entitlement that f
 question of the contract and the governing law. Both require qualified counsel, and neither is settled by
 this law.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (independent verification) governs; this law adds the
-longest-path verification method and the distorting-feature disclosure. See also `PCI-PCL-LAW-10.01`,
-`PCI-PCL-LAW-10.03`, `PCI-PCL-LAW-05.03`, `PCI-PCL-LAW-07.02`, `PCI-PCL-LAW-13.03`.
+**19. Related PCI Laws.** `PCI-FND-STD-03` (independent verification) governs; this law adds the
+longest-path verification method and the distorting-feature disclosure. See also `PCI-PCL-STD-10.01`,
+`PCI-PCL-STD-10.03`, `PCI-PCL-STD-05.03`, `PCI-PCL-STD-07.02`, `PCI-PCL-STD-13.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 10 · KA 10.2 Network analysis and the Critical
 Path Method; KA 10.3 Schedule compression and resourcing. Also Domain 7 · KA 7.2 Contract management.
@@ -3822,7 +3822,7 @@ identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-10.03 — Status Date and Actual-Date Integrity
+### PCI STANDARD PCI-PCL-STD-10.03 — Status Date and Actual-Date Integrity
 
 **1. Normative requirement.** A credential holder must status a schedule to a single stated status date
 using actual dates taken from the record of when the work actually started and finished.
@@ -3842,21 +3842,21 @@ for reporting or decision-making.
 **5. Required actions.** The professional must record what happened, when it happened, and what remains —
 each from a record, and each visible in the issued file.
 
-- **PCI-PCL-LAW-10.03-PR-01 — Actual dates from records.** Every actual start and actual finish entered
+- **PCI-PCL-STD-10.03-PR-01 — Actual dates from records.** Every actual start and actual finish entered
   must be taken from a dated record of the event, and no actual date may fall after the status date;
   where an actual date is estimated because no record exists, it must be marked as estimated with the
   basis and the person who estimated it.
-- **PCI-PCL-LAW-10.03-PR-02 — Remaining duration re-assessed, not defaulted.** The remaining duration of
+- **PCI-PCL-STD-10.03-PR-02 — Remaining duration re-assessed, not defaulted.** The remaining duration of
   every in-progress activity must be re-assessed against the work remaining at the status date and must
   not be left at its original value or derived only by subtracting elapsed time; forecast dates must be
   those the network computes from the statused position, and any manually entered forecast date must be
   identified with its reason.
-- **PCI-PCL-LAW-10.03-PR-03 — Status date stated and single.** Each issued schedule must state one status
+- **PCI-PCL-STD-10.03-PR-03 — Status date stated and single.** Each issued schedule must state one status
   date; where any data within it is as at a different date, that data and its date must be identified.
-- **PCI-PCL-LAW-10.03-PR-04 — Baseline dates untouched by the update.** A progress update must not alter
+- **PCI-PCL-STD-10.03-PR-04 — Baseline dates untouched by the update.** A progress update must not alter
   baseline dates, baseline durations or the baseline logic; any such alteration is a change to the
-  baseline and is governed by `PCI-PCL-LAW-03.02`.
-- **PCI-PCL-LAW-10.03-PR-05 — Out-of-sequence progress resolved.** Where progress has occurred out of the
+  baseline and is governed by `PCI-PCL-STD-03.02`.
+- **PCI-PCL-STD-10.03-PR-05 — Out-of-sequence progress resolved.** Where progress has occurred out of the
   planned sequence, the professional must record it, state how the schedule has been adjusted to
   represent the actual sequence, and state the effect on the computed dates.
 
@@ -3878,7 +3878,7 @@ issued position.
 
 **10. Independence requirement.** Not required for statusing, which depends on knowledge of the work.
 Verification of actual dates supporting a claim, a delay analysis or a payment must be performed by a
-person **independent** of the party the outcome favours, consistent with `PCI-PCL-LAW-06.02`.
+person **independent** of the party the outcome favours, consistent with `PCI-PCL-STD-06.02`.
 
 **11. Materiality or threshold.** Every actual date must come from a record, without threshold, because a
 single wrong actual date on a driving activity moves the completion date. Sampling is permitted for
@@ -3929,9 +3929,9 @@ updates and their submission and acceptance, those requirements are contractual 
 exceed this law. Actual dates recorded in a schedule may later be relied on as evidence in a dispute;
 their treatment is a matter for the contract administrator and qualified counsel.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion) governs; this law adds the
-status-date, actual-date and remaining-duration obligations. See also `PCI-PCL-LAW-10.01`,
-`PCI-PCL-LAW-10.02`, `PCI-PCL-LAW-06.02`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-03.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion) governs; this law adds the
+status-date, actual-date and remaining-duration obligations. See also `PCI-PCL-STD-10.01`,
+`PCI-PCL-STD-10.02`, `PCI-PCL-STD-06.02`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-03.02`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 10 · KA 10.4 Progress measurement and schedule
 control. Also Domain 6 · KA 6.4 Integrating cost & schedule; Domain 8 · KA 8.4 Monitoring & Controlling.
@@ -3965,7 +3965,7 @@ identifier is retired and is not reused.
 ---
 ## Domain 11 — Business Process Cycles & the Control Environment
 
-### PCI LAW PCI-PCL-LAW-11.01 — Reproducibility of the Reported Controls Position
+### PCI STANDARD PCI-PCL-STD-11.01 — Reproducibility of the Reported Controls Position
 
 **1. Normative requirement.** A credential holder must retain, with each issued **project controls
 deliverable**, the records that make every figure in it **reproducible** by a **competent reviewer**.
@@ -3986,18 +3986,18 @@ organisation's governance, by the contract, or by applicable law — whichever i
 **5. Required actions.** The professional must retain what a later reviewer needs, in a form that has not
 changed since issue.
 
-- **PCI-PCL-LAW-11.01-PR-01 — Issue set retained.** For each deliverable, the retained set must include
+- **PCI-PCL-STD-11.01-PR-01 — Issue set retained.** For each deliverable, the retained set must include
   the deliverable as issued, the source extracts used with their timestamps, the working calculation, the
   version identifiers of any baseline or schedule relied on, and the approval record.
-- **PCI-PCL-LAW-11.01-PR-02 — Method recorded, not only result.** Where a figure is derived by a method
+- **PCI-PCL-STD-11.01-PR-02 — Method recorded, not only result.** Where a figure is derived by a method
   that is not evident from the retained data — an allocation, an apportionment, a weighting, a
   statistical or simulation model — the method and its parameters must be recorded with the figure.
-- **PCI-PCL-LAW-11.01-PR-03 — Tool and configuration recorded.** Where an AI tool contributed to a
+- **PCI-PCL-STD-11.01-PR-03 — Tool and configuration recorded.** Where an AI tool contributed to a
   figure or an analysis, the **tool configuration record** must be retained with the deliverable.
-- **PCI-PCL-LAW-11.01-PR-04 — Retained records not alterable in place.** Retained records must be held so
+- **PCI-PCL-STD-11.01-PR-04 — Retained records not alterable in place.** Retained records must be held so
   that a later edit is either impossible or detectable, and the retention location must be known to
   someone other than the preparer.
-- **PCI-PCL-LAW-11.01-PR-05 — Retention through handover.** On handover, project closure or the
+- **PCI-PCL-STD-11.01-PR-05 — Retention through handover.** On handover, project closure or the
   preparer's departure, the retained set must be transferred with a record of what was transferred and
   to whom, and must not be left in personal storage.
 
@@ -4069,10 +4069,10 @@ records may be stored are matters of local law that vary widely and can conflict
 Qualified local advice is required, and this law's retention obligation never overrides a legal
 requirement to delete personal data.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-12` (record integrity) governs; this law adds the specific
+**19. Related PCI Laws.** `PCI-FND-STD-12` (record integrity) governs; this law adds the specific
 reproducibility test and the retained-issue-set content for controls deliverables. See also
-`PCI-PCL-LAW-04.01`, `PCI-PCL-LAW-05.04`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-07.02`,
-`PCI-PCL-LAW-13.01`.
+`PCI-PCL-STD-04.01`, `PCI-PCL-STD-05.04`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-07.02`,
+`PCI-PCL-STD-13.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 11 · KA 11.3 Internal control and segregation
 of duties. Also Domain 4 · KA 4.3 Management reporting; Domain 13 · KA 13.2 Data: the fuel.
@@ -4106,7 +4106,7 @@ retired and is not reused.
 
 ## Domain 12 — Risk Management for Project Controls
 
-### PCI LAW PCI-PCL-LAW-12.01 — Risk Statement Quality and Named Ownership
+### PCI STANDARD PCI-PCL-STD-12.01 — Risk Statement Quality and Named Ownership
 
 **1. Normative requirement.** A credential holder must record each risk as a cause, an uncertain event
 and an effect on a stated project objective, with one named individual accountable for managing it.
@@ -4125,18 +4125,18 @@ assurance over project risks and opportunities, on any project of any size and a
 **5. Required actions.** The professional must write each risk so that it can be tested, and must attach
 it to a person.
 
-- **PCI-PCL-LAW-12.01-PR-01 — Three-part statement.** Each register entry must state the cause (a fact
+- **PCI-PCL-STD-12.01-PR-01 — Three-part statement.** Each register entry must state the cause (a fact
   that exists), the event (an uncertainty that may occur) and the effect (a consequence for cost,
   schedule, scope, quality, safety or another stated objective); an entry that states only one or two of
   the three must not be assessed or quantified until it is completed.
-- **PCI-PCL-LAW-12.01-PR-02 — One named owner.** Each risk must name one individual accountable for its
+- **PCI-PCL-STD-12.01-PR-02 — One named owner.** Each risk must name one individual accountable for its
   management, with the authority and the budget to act; a function, a team or a role title is not an
   owner, and a risk with no owner must not be recorded as managed.
-- **PCI-PCL-LAW-12.01-PR-03 — Separation of risk from issue and from change.** An event that has already
+- **PCI-PCL-STD-12.01-PR-03 — Separation of risk from issue and from change.** An event that has already
   occurred must be recorded as an issue, not a risk; an event whose cost consequence has become certain
-  must be moved to the forecast or the change register under `PCI-PCL-LAW-03.04` and removed from the
+  must be moved to the forecast or the change register under `PCI-PCL-STD-03.04` and removed from the
   risk exposure, so that it is not counted twice.
-- **PCI-PCL-LAW-12.01-PR-04 — Response with an owner and a date.** Each response must state the action,
+- **PCI-PCL-STD-12.01-PR-04 — Response with an owner and a date.** Each response must state the action,
   the individual accountable for it, the date by which it will be done, and the effect it is expected to
   have on likelihood or impact; a response recorded as "monitor" must state what will be monitored, by
   whom and against what trigger.
@@ -4164,7 +4164,7 @@ the risk owners, because an owner is the least likely person to record their own
 **11. Materiality or threshold.** Every recorded risk must satisfy PR-01 and PR-02, without threshold — a
 poorly written low-value risk is as useless as a poorly written high-value one and costs the same to
 write properly. The **materiality rule** decides which risks require quantification under
-`PCI-PCL-LAW-12.02` and which reach the escalation threshold. *Scaling:* on a USD 2 million refurbishment
+`PCI-PCL-STD-12.02` and which reach the escalation threshold. *Scaling:* on a USD 2 million refurbishment
 a register of fifteen well-formed risks is a complete risk position; on a USD 5 billion programme risks
 are held at multiple tiers with escalation criteria between them, and the professional must record the
 tier at which each risk is managed. The three-part statement rule is identical at every tier.
@@ -4208,9 +4208,9 @@ may carry legal duties of assessment, notification and control under local law t
 and stricter than, this law. Those duties require qualified local advice and are not discharged by a
 register entry.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (professional accountability) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-01` (professional accountability) governs; this law adds the
 statement-quality and single-owner obligations specific to a project risk register. See also
-`PCI-PCL-LAW-12.02`, `PCI-PCL-LAW-12.03`, `PCI-PCL-LAW-03.04`, `PCI-PCL-LAW-05.03`.
+`PCI-PCL-STD-12.02`, `PCI-PCL-STD-12.03`, `PCI-PCL-STD-03.04`, `PCI-PCL-STD-05.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 12 · KA 12.1 The risk framework; KA 12.2 The
 risk process. Also Domain 5 · KA 5.4 Change control and cost impact.
@@ -4243,7 +4243,7 @@ that identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-12.02 — Basis and Confidence Level of Quantified Contingency
+### PCI STANDARD PCI-PCL-STD-12.02 — Basis and Confidence Level of Quantified Contingency
 
 **1. Normative requirement.** A credential holder must state, with every contingency figure, the method
 by which it was derived, the risks it covers and the confidence level it represents.
@@ -4262,24 +4262,24 @@ contingency, risk allowance, management reserve or a risk-adjusted estimate, on 
 **5. Required actions.** The professional must derive contingency from the assessed exposure, and must
 disclose enough for a reader to test it.
 
-- **PCI-PCL-LAW-12.02-PR-01 — Confidence level stated.** Where contingency is derived from a probabilistic
+- **PCI-PCL-STD-12.02-PR-01 — Confidence level stated.** Where contingency is derived from a probabilistic
   analysis, the confidence level adopted must be stated, together with the figures at the levels either
   side of it, so that the choice is visible as a choice; where it is derived by another method, the method
   and its basis must be stated instead.
-- **PCI-PCL-LAW-12.02-PR-02 — Correlation and dependency treated.** A probabilistic analysis must state
+- **PCI-PCL-STD-12.02-PR-02 — Correlation and dependency treated.** A probabilistic analysis must state
   the correlation assumptions applied between risks and between cost elements, and must state the effect
   on the result of assuming independence; treating correlated risks as independent without saying so is
   prohibited, because it understates the tail that contingency exists to cover.
-- **PCI-PCL-LAW-12.02-PR-03 — Coverage stated.** The contingency statement must identify which risks the
+- **PCI-PCL-STD-12.02-PR-03 — Coverage stated.** The contingency statement must identify which risks the
   contingency covers and which it does not — in particular whether it covers scope growth, escalation,
   currency movement, force majeure, and risks retained by another party — so that a gap between the
   exposure and the cover is visible rather than assumed away.
-- **PCI-PCL-LAW-12.02-PR-04 — Contingency separate from estimate.** Contingency must be held and reported
+- **PCI-PCL-STD-12.02-PR-04 — Contingency separate from estimate.** Contingency must be held and reported
   as a separate line, must not be distributed into control account budgets or forecasts, and must not be
-  used to fund approved scope changes, which are funded through `PCI-PCL-LAW-05.04`.
-- **PCI-PCL-LAW-12.02-PR-05 — Reproducible analysis.** The model, its inputs, its distributions, its
+  used to fund approved scope changes, which are funded through `PCI-PCL-STD-05.04`.
+- **PCI-PCL-STD-12.02-PR-05 — Reproducible analysis.** The model, its inputs, its distributions, its
   correlation matrix and its random seed or equivalent must be retained so that the analysis is
-  **reproducible** under `PCI-PCL-LAW-11.01`.
+  **reproducible** under `PCI-PCL-STD-11.01`.
 
 **6. Prohibited actions.** Stating a contingency without its method; adopting a confidence level without
 stating it; assuming independence between plainly correlated risks without disclosure; setting
@@ -4354,9 +4354,9 @@ statements — as a provision, an onerous-contract charge or otherwise — the a
 framework governs that treatment and requires qualified accounting advice. A controls contingency is not
 a provision.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05` (transparent assumptions) governs; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-05` (transparent assumptions) governs; this law adds the
 confidence-level, correlation and coverage disclosures specific to quantified contingency. See also
-`PCI-PCL-LAW-12.01`, `PCI-PCL-LAW-12.03`, `PCI-PCL-LAW-03.04`, `PCI-PCL-LAW-11.01`.
+`PCI-PCL-STD-12.01`, `PCI-PCL-STD-12.03`, `PCI-PCL-STD-03.04`, `PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 12 · KA 12.2 The risk process — quantitative
 analysis; KA 12.3 Contingency and management reserve. Also Domain 3 · KA 3.2 Cost estimation.
@@ -4388,7 +4388,7 @@ that identifier is retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-12.03 — Contingency Drawdown Authority and Re-assessment of Remaining Exposure
+### PCI STANDARD PCI-PCL-STD-12.03 — Contingency Drawdown Authority and Re-assessment of Remaining Exposure
 
 **1. Normative requirement.** A credential holder must not apply contingency to a cost without the
 recorded approval of the authority holding it.
@@ -4408,18 +4408,18 @@ project.
 **5. Required actions.** The professional must make each drawdown a decision with a reason, and must
 re-test what remains against what is left to happen.
 
-- **PCI-PCL-LAW-12.03-PR-01 — Drawdown request tied to a risk.** Each drawdown request must identify the
+- **PCI-PCL-STD-12.03-PR-01 — Drawdown request tied to a risk.** Each drawdown request must identify the
   risk or risks from the register whose materialisation it funds, the amount, the evidence that the event
   has occurred, and the residual exposure for those risks after the drawdown.
-- **PCI-PCL-LAW-12.03-PR-02 — Remaining-exposure re-assessment.** At each reporting cut-off the remaining
+- **PCI-PCL-STD-12.03-PR-02 — Remaining-exposure re-assessment.** At each reporting cut-off the remaining
   contingency must be compared with the assessed exposure of the risks still open, on the basis stated
-  under `PCI-PCL-LAW-12.02`, and the comparison reported; a shortfall must be reported in the period in
+  under `PCI-PCL-STD-12.02`, and the comparison reported; a shortfall must be reported in the period in
   which it is identified.
-- **PCI-PCL-LAW-12.03-PR-03 — Separation of contingency from management reserve.** Contingency held for
+- **PCI-PCL-STD-12.03-PR-03 — Separation of contingency from management reserve.** Contingency held for
   identified risks within the baseline and management reserve held outside it must be recorded, drawn and
   reported separately, each with its own approval authority, and a transfer between them must be approved
   as a decision rather than performed as an adjustment.
-- **PCI-PCL-LAW-12.03-PR-04 — Release recorded.** Where a risk closes without materialising, the
+- **PCI-PCL-STD-12.03-PR-04 — Release recorded.** Where a risk closes without materialising, the
   contingency held for it must be identified and either released with a recorded decision or retained
   against a stated exposure; silent retention of contingency for closed risks is prohibited, as is silent
   release into performance.
@@ -4488,10 +4488,10 @@ register entry and the evidence that the event occurred.
 funding regime or a contract, the conditions on its use are contractual or regulatory obligations that may
 exceed this law. Their interpretation requires the contract administrator and qualified counsel.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-04` (human decision authority) governs; this law adds the drawdown
+**19. Related PCI Laws.** `PCI-FND-STD-04` (human decision authority) governs; this law adds the drawdown
 approval, the exposure re-assessment and the reserve separation obligations. See also
-`PCI-PCL-LAW-12.01`, `PCI-PCL-LAW-12.02`, `PCI-PCL-LAW-05.04`, `PCI-PCL-LAW-03.03`,
-`PCI-PCL-LAW-03.04`.
+`PCI-PCL-STD-12.01`, `PCI-PCL-STD-12.02`, `PCI-PCL-STD-05.04`, `PCI-PCL-STD-03.03`,
+`PCI-PCL-STD-03.04`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 12 · KA 12.3 Contingency and management reserve
 — drawing down and re-baselining. Also Domain 5 · KA 5.4 Change control and cost impact.
@@ -4525,7 +4525,7 @@ that identifier is retired and is not reused.
 ---
 ## Domain 13 — AI for Project Controls & Project Management
 
-### PCI LAW PCI-PCL-LAW-13.01 — Approved Tools, Recorded Configuration and Protected Project Data
+### PCI STANDARD PCI-PCL-STD-13.01 — Approved Tools, Recorded Configuration and Protected Project Data
 
 **1. Normative requirement.** A credential holder must not use an **AI tool** on project data outside the
 tool-and-data boundary approved for that class of work by the adopting organisation.
@@ -4548,21 +4548,21 @@ accounting applications alike — an embedded feature is not exempt because it a
 **5. Required actions.** The professional must know what the tool does with the data before it sees it,
 and must record what produced each output.
 
-- **PCI-PCL-LAW-13.01-PR-01 — Approved-use record per class of work.** Before first use, the classes of
+- **PCI-PCL-STD-13.01-PR-01 — Approved-use record per class of work.** Before first use, the classes of
   project-controls work for which a tool is approved, and the classes for which it is not, must be
   recorded by the authority named in element 9; use outside the recorded classes is prohibited.
-- **PCI-PCL-LAW-13.01-PR-02 — Data-handling determination before first use.** Before project data is
+- **PCI-PCL-STD-13.01-PR-02 — Data-handling determination before first use.** Before project data is
   placed in a tool, it must be determined and recorded whether the tool retains the data, uses it for
   training, discloses it to a third party, or processes it outside an agreed jurisdiction; where the
   answer cannot be established, the tool must be treated as retaining and disclosing.
-- **PCI-PCL-LAW-13.01-PR-03 — Data classes barred by default.** Contract terms and prices, unit rates,
+- **PCI-PCL-STD-13.01-PR-03 — Data classes barred by default.** Contract terms and prices, unit rates,
   claim and dispute positions, contingency and risk quantification, counterparty performance data,
   personal data and anything the project holds under a confidentiality obligation must not be placed in a
   tool that has not been approved for that data class under PR-01 and PR-02.
-- **PCI-PCL-LAW-13.01-PR-04 — Configuration recorded with the output.** Every AI-assisted output relied
+- **PCI-PCL-STD-13.01-PR-04 — Configuration recorded with the output.** Every AI-assisted output relied
   on must carry a **tool configuration record** — the tool, the model or version, and the material
-  settings, prompts or data sources — retained under `PCI-PCL-LAW-11.01`.
-- **PCI-PCL-LAW-13.01-PR-05 — Change of tool or model reported.** A change of tool, model or material
+  settings, prompts or data sources — retained under `PCI-PCL-STD-11.01`.
+- **PCI-PCL-STD-13.01-PR-05 — Change of tool or model reported.** A change of tool, model or material
   configuration that could alter the output of a recurring analysis must be recorded and reported with the
   first deliverable produced after it, so that a movement in results is not read as a movement in the
   project.
@@ -4587,7 +4587,7 @@ organisation names none, the **decision owner** for the affected deliverable app
 and escalates the absence of a governance position.
 
 **10. Independence requirement.** The person who selects or configures a tool must not be the person who
-performs the independent verification of its output under `PCI-PCL-LAW-13.02` or `PCI-PCL-LAW-13.03` —
+performs the independent verification of its output under `PCI-PCL-STD-13.02` or `PCI-PCL-STD-13.03` —
 this is the fourth fact in the definition of **independent**, and it exists because a configurer verifies
 their own configuration, not the output.
 
@@ -4649,11 +4649,11 @@ addresses, and the General Data Protection Regulation governs personal data; oth
 Whether and how any of these applies to a given use is a legal question for qualified local counsel, and
 it is not answered by this law.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-09` (confidentiality and approved technology) and `PCI-FND-LAW-14`
+**19. Related PCI Laws.** `PCI-FND-STD-09` (confidentiality and approved technology) and `PCI-FND-STD-14`
 (responsible AI) govern. This law adds the per-class approval, the data-handling determination, the barred
 data classes and the configuration record — none of which the foundational duties specify. See also
-`PCI-PCL-LAW-13.02`, `PCI-PCL-LAW-13.03`, `PCI-PCL-LAW-13.04`, `PCI-PCL-LAW-11.01`,
-`PCI-PCL-LAW-07.01`.
+`PCI-PCL-STD-13.02`, `PCI-PCL-STD-13.03`, `PCI-PCL-STD-13.04`, `PCI-PCL-STD-11.01`,
+`PCI-PCL-STD-07.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 13 · KA 13.2 Data: the fuel — privacy,
 confidentiality and preparing data; KA 13.4 AI tool categories for project controls & PM; KA 13.6
@@ -4688,7 +4688,7 @@ retired and is not reused.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-13.02 — Verification of AI-Generated Quantitative Controls Output
+### PCI STANDARD PCI-PCL-STD-13.02 — Verification of AI-Generated Quantitative Controls Output
 
 **1. Normative requirement.** A credential holder must independently recompute an AI-generated
 quantitative controls figure before it is used in a **project controls deliverable**.
@@ -4710,24 +4710,24 @@ reviewer*, *reproducible*, *evidence*, *tool configuration record*, *decision ow
 **5. Required actions.** The professional must reproduce the number by a route that does not pass through
 the tool, and must record the reproduction.
 
-- **PCI-PCL-LAW-13.02-PR-01 — Recomputation of forecast output.** An AI-generated estimate at completion,
+- **PCI-PCL-STD-13.02-PR-01 — Recomputation of forecast output.** An AI-generated estimate at completion,
   estimate to complete or cash-flow profile must be recomputed from its components by the professional —
   actual cost, commitments, accruals, remaining work, approved changes, trends and stated contingency —
   and the two results reconciled before issue, with any difference resolved rather than averaged.
-- **PCI-PCL-LAW-13.02-PR-02 — Recomputation of indices and derived measures.** AI-generated earned value
+- **PCI-PCL-STD-13.02-PR-02 — Recomputation of indices and derived measures.** AI-generated earned value
   figures, indices and variances must be recomputed from their retained inputs under
-  `PCI-PCL-LAW-06.03` before publication.
-- **PCI-PCL-LAW-13.02-PR-03 — Sampling for classification and reconciliation output.** Where AI has
+  `PCI-PCL-STD-06.03` before publication.
+- **PCI-PCL-STD-13.02-PR-03 — Sampling for classification and reconciliation output.** Where AI has
   classified transactions, assigned cost codes, matched invoices to commitments or proposed accruals, the
   professional must test a sample selected on a recorded basis that includes the highest values, the
   lowest-confidence assignments and a random selection of the remainder; must record the sample, the
   method and the error rate; and must re-process the whole affected population where an error of principle
   is found.
-- **PCI-PCL-LAW-13.02-PR-04 — Named human approval before release.** Every AI-assisted quantitative
+- **PCI-PCL-STD-13.02-PR-04 — Named human approval before release.** Every AI-assisted quantitative
   deliverable must carry the name of the individual who performed the verification and the name of the
   individual who approved its release, with the date; a deliverable naming only a tool must not be
   released.
-- **PCI-PCL-LAW-13.02-PR-05 — Verification record.** The verification must record the method used, what
+- **PCI-PCL-STD-13.02-PR-05 — Verification record.** The verification must record the method used, what
   was tested, what was found and how each difference was resolved; a record stating only that the output
   was reviewed does not satisfy this process requirement.
 
@@ -4751,11 +4751,11 @@ its use.
 under the fourth fact in the definition. Where the AI-generated figure is material to an external
 submission or an incentive, the recomputation must also be independent of the party the figure favours.
 **The recomputation this law requires is additional to, and does not displace, the verification
-`PCI-FND-LAW-03` requires**: a material figure must also be verified by a person independent of its
+`PCI-FND-STD-03` requires**: a material figure must also be verified by a person independent of its
 preparation before any person relies on it, and a recomputation performed by the professional who
 produced or issued the figure satisfies this law's element 1 but does not satisfy that one. Where the
 same individual performs both, the working record must say so, and the foundational verification
-remains outstanding until an independent person performs it or a waiver under `PCI-FND-LAW-03`
+remains outstanding until an independent person performs it or a waiver under `PCI-FND-STD-03`
 element 12 is recorded.
 
 **11. Materiality or threshold.** Recomputation is required for every AI-generated figure that is
@@ -4810,10 +4810,10 @@ high-risk, or where a regulator imposes model-governance expectations on the ent
 apply in addition to this law and are matters for qualified local counsel and the entity's compliance
 function.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (independent verification) and `PCI-FND-LAW-14` (responsible AI)
+**19. Related PCI Laws.** `PCI-FND-STD-03` (independent verification) and `PCI-FND-STD-14` (responsible AI)
 govern. This law adds the recomputation method, the sampling rule and the named-approval requirement for
-quantitative controls output. See also `PCI-PCL-LAW-13.01`, `PCI-PCL-LAW-13.03`, `PCI-PCL-LAW-13.04`,
-`PCI-PCL-LAW-03.04`, `PCI-PCL-LAW-06.03`, `PCI-PCL-LAW-01.03`.
+quantitative controls output. See also `PCI-PCL-STD-13.01`, `PCI-PCL-STD-13.03`, `PCI-PCL-STD-13.04`,
+`PCI-PCL-STD-03.04`, `PCI-PCL-STD-06.03`, `PCI-PCL-STD-01.03`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 13 · KA 13.5 AI applied across the
 project-controls lifecycle — forecasting & EVM/EAC, cost control & extraction; KA 13.3 Prompting and
@@ -4848,11 +4848,11 @@ PCL-LAW-13-03 *Human Sign-Off*; both identifiers are retired and are not reused.
 element 10 required the verifier to be independent only of the tool's configuration, which permitted the
 professional who produced an AI-generated figure to recompute it and record the recomputation as its
 verification; element 10 now states that this law's recomputation is additional to, and does not
-displace, the independent-person verification `PCI-FND-LAW-03` requires before reliance.
+displace, the independent-person verification `PCI-FND-STD-03` requires before reliance.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-13.03 — Verification of AI-Generated Schedule, Risk and Extraction Output
+### PCI STANDARD PCI-PCL-STD-13.03 — Verification of AI-Generated Schedule, Risk and Extraction Output
 
 **1. Normative requirement.** A credential holder must verify an AI-generated schedule, risk or
 document-extraction output by tracing it to the underlying network, register or source document before it
@@ -4875,22 +4875,22 @@ on any project.
 **5. Required actions.** The professional must go to the underlying artefact — the network, the register,
 the document — and confirm the output against it.
 
-- **PCI-PCL-LAW-13.03-PR-01 — Schedule output traced through the network.** An AI-identified critical or
+- **PCI-PCL-STD-13.03-PR-01 — Schedule output traced through the network.** An AI-identified critical or
   longest path must be traced activity by activity through the retained schedule file, and the network
   re-run, before the path is reported; an AI-proposed logic change must be accepted only where the
-  **planner** records that the dependency is real, under `PCI-PCL-LAW-10.01`.
-- **PCI-PCL-LAW-13.03-PR-02 — Risk output traced to cause and register.** An AI-proposed risk, likelihood,
+  **planner** records that the dependency is real, under `PCI-PCL-STD-10.01`.
+- **PCI-PCL-STD-13.03-PR-02 — Risk output traced to cause and register.** An AI-proposed risk, likelihood,
   impact or response must be confirmed by the named risk owner against the document or record the tool
-  relied on, and must satisfy the three-part statement requirement of `PCI-PCL-LAW-12.01` before it is
+  relied on, and must satisfy the three-part statement requirement of `PCI-PCL-STD-12.01` before it is
   quantified.
-- **PCI-PCL-LAW-13.03-PR-03 — Extraction confirmed against the source document.** Every AI-extracted term,
+- **PCI-PCL-STD-13.03-PR-03 — Extraction confirmed against the source document.** Every AI-extracted term,
   date, quantity or obligation relied on must be confirmed by reading the provision in the source
   document, and the document and provision recorded; extraction from contracts and notices must be
   confirmed in full for material items rather than sampled.
-- **PCI-PCL-LAW-13.03-PR-04 — Narrative supported or removed.** Every assertion in AI-generated commentary
+- **PCI-PCL-STD-13.03-PR-04 — Narrative supported or removed.** Every assertion in AI-generated commentary
   must be supported by a record the professional can produce, or be removed before issue; a generated
   sentence retained because it reads well and offends nobody is a breach of this process requirement.
-- **PCI-PCL-LAW-13.03-PR-05 — Absence claims tested separately.** Where a tool reports that nothing was
+- **PCI-PCL-STD-13.03-PR-05 — Absence claims tested separately.** Where a tool reports that nothing was
   found — no open ends, no missing risks, no unmatched clauses — the professional must test that
   conclusion by an independent query or manual check, because a tool cannot evidence an absence.
 
@@ -4910,13 +4910,13 @@ narrative issued in a controls deliverable.
 
 **9. Approval authority.** The **project controls lead** approves release of the deliverable containing the
 output; the **commercial lead** approves any commercial position derived from AI extraction, under
-`PCI-PCL-LAW-07.01`.
+`PCI-PCL-STD-07.01`.
 
 **10. Independence requirement.** The verifier must be **independent** of the tool's configuration. Where
 the output supports a claim, a defence or an entitlement, the verification must additionally be performed
-by a person **independent** of the party the outcome favours, consistent with `PCI-PCL-LAW-10.02`.
+by a person **independent** of the party the outcome favours, consistent with `PCI-PCL-STD-10.02`.
 **The tracing this law requires is additional to, and does not displace, the verification
-`PCI-FND-LAW-03` requires** of a material output before any person relies on it; tracing performed by
+`PCI-FND-STD-03` requires** of a material output before any person relies on it; tracing performed by
 the professional who produced the output satisfies this law's element 1 but does not satisfy that one.
 
 **11. Materiality or threshold.** Tracing is required in full for every material output and for every
@@ -4971,10 +4971,10 @@ is not legal advice and carries no professional privilege. Where the output touc
 validity or liability, qualified counsel in the governing jurisdiction is required, and local rules may
 also govern the use of AI-generated material in proceedings.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (independent verification) and `PCI-FND-LAW-14` (responsible AI)
+**19. Related PCI Laws.** `PCI-FND-STD-03` (independent verification) and `PCI-FND-STD-14` (responsible AI)
 govern. This law adds the tracing method matched to non-quantitative output and the rule on absence claims.
-See also `PCI-PCL-LAW-13.01`, `PCI-PCL-LAW-13.02`, `PCI-PCL-LAW-10.01`, `PCI-PCL-LAW-10.02`,
-`PCI-PCL-LAW-12.01`, `PCI-PCL-LAW-07.01`, `PCI-PCL-LAW-04.02`.
+See also `PCI-PCL-STD-13.01`, `PCI-PCL-STD-13.02`, `PCI-PCL-STD-10.01`, `PCI-PCL-STD-10.02`,
+`PCI-PCL-STD-12.01`, `PCI-PCL-STD-07.01`, `PCI-PCL-STD-04.02`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 13 · KA 13.5 AI applied across the
 project-controls lifecycle — scheduling, contracts & commercial, reporting & performance; KA 13.1
@@ -5008,11 +5008,11 @@ be produced.
 approved · Effective: on approval · Partially supersedes PCL-LAW-13-02 *AI Verification*; that identifier
 is retired and is not reused. **Stage 9 amendment:** element 10 now states that the tracing this law
 requires is additional to, and does not displace, the independent-person verification
-`PCI-FND-LAW-03` requires before reliance.
+`PCI-FND-STD-03` requires before reliance.
 
 ---
 
-### PCI LAW PCI-PCL-LAW-13.04 — Disclosure of AI Assistance in a Controls Deliverable
+### PCI STANDARD PCI-PCL-STD-13.04 — Disclosure of AI Assistance in a Controls Deliverable
 
 **1. Normative requirement.** A credential holder must disclose **material AI assistance** within the
 deliverable it affected, identifying what the AI contributed.
@@ -5032,17 +5032,17 @@ deliverable*, *approved*, *decision owner*, *evidence*, *material*.
 
 **5. Required actions.** The professional must say what the AI did, where, and what was done to check it.
 
-- **PCI-PCL-LAW-13.04-PR-01 — Disclosure located in the deliverable.** The disclosure must appear in the
+- **PCI-PCL-STD-13.04-PR-01 — Disclosure located in the deliverable.** The disclosure must appear in the
   deliverable itself — in its basis, assumptions or notes section — and not only in a policy, a footer or a
   separate register.
-- **PCI-PCL-LAW-13.04-PR-02 — Content of the disclosure.** The disclosure must state which figures,
+- **PCI-PCL-STD-13.04-PR-02 — Content of the disclosure.** The disclosure must state which figures,
   analyses or sections the AI contributed to, the class of tool used, and the verification performed under
-  `PCI-PCL-LAW-13.02` or `PCI-PCL-LAW-13.03`; naming the tool's vendor is optional, naming what it touched
+  `PCI-PCL-STD-13.02` or `PCI-PCL-STD-13.03`; naming the tool's vendor is optional, naming what it touched
   is not.
-- **PCI-PCL-LAW-13.04-PR-03 — Accountability unaffected.** The disclosure must not qualify, share or
+- **PCI-PCL-STD-13.04-PR-03 — Accountability unaffected.** The disclosure must not qualify, share or
   transfer the professional's accountability for the deliverable, and must not be worded so as to suggest
   the reader should direct any question about the output to the tool or its supplier.
-- **PCI-PCL-LAW-13.04-PR-04 — Disclosure to PCI in assessment.** Where AI assistance is used in work
+- **PCI-PCL-STD-13.04-PR-04 — Disclosure to PCI in assessment.** Where AI assistance is used in work
   submitted to PCI for assessment, certification or continuing professional development, it must be
   disclosed to PCI on the terms PCI publishes for that assessment.
 
@@ -5064,7 +5064,7 @@ it satisfies PR-02.
 
 **10. Independence requirement.** Not applicable — disclosure is a statement of fact by the issuer about
 their own deliverable, and there is nothing for an independent party to verify beyond the underlying
-verification records, which are governed by `PCI-PCL-LAW-13.02` and `PCI-PCL-LAW-13.03`.
+verification records, which are governed by `PCI-PCL-STD-13.02` and `PCI-PCL-STD-13.03`.
 
 **11. Materiality or threshold.** Disclosure is required where the assistance is **material** as defined —
 where removing the AI contribution would change a figure by more than the materiality rule applied, or
@@ -5113,10 +5113,10 @@ jurisdiction and by sector; in the European Union the AI Act imposes transparenc
 actors and uses. Whether a legal disclosure obligation applies to a given deliverable is a question for
 qualified local counsel, and satisfying this law does not satisfy such an obligation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-14` (responsible AI) and `PCI-FND-LAW-01` (professional
+**19. Related PCI Laws.** `PCI-FND-STD-14` (responsible AI) and `PCI-FND-STD-01` (professional
 accountability) govern. This law adds the requirement that disclosure attach to the artefact and name what
 the AI touched — the foundational duty requires disclosure, not its location or its specificity. See also
-`PCI-PCL-LAW-13.01`, `PCI-PCL-LAW-13.02`, `PCI-PCL-LAW-13.03`, `PCI-PCL-LAW-11.01`.
+`PCI-PCL-STD-13.01`, `PCI-PCL-STD-13.02`, `PCI-PCL-STD-13.03`, `PCI-PCL-STD-11.01`.
 
 **20. Related Body of Knowledge content.** PCL-AI · Domain 13 · KA 13.6 Governance, ethics, risk &
 assurance of AI. Also KA 13.7 Building an AI-augmented project-controls capability; Domain 4 · KA 4.3
@@ -5160,12 +5160,12 @@ produced no change say so, and say why.
 |---|---|---|---|
 | 1 | What exact failure does this law prevent? | All 33 | Element 2 was rewritten in every law to name an observed professional failure and its mechanism, replacing the virtue statements of the superseded set ("to ensure integrity"). Three drafts that could not name a failure — a general "data quality" law, a general "professional judgement" law and a general "governance" law — were dropped rather than published. |
 | 2 | Mandatory or only recommended? | All 33 | Every obligation is `must` or `must not`. No `should` carries an obligation anywhere in the set, and no Recommended Practices are issued in this edition, so nothing mandatory can hide at Charter Level 5. |
-| 3 | Can a professional know whether it applies? | All 33 | Element 3 now names the *acts* governed (prepare · review · approve · give assurance) and the artefacts, rather than a job family. `PCI-PCL-LAW-13.01` was amended to state expressly that an embedded AI feature is in scope, after a reviewer read the draft as covering standalone tools only. |
+| 3 | Can a professional know whether it applies? | All 33 | Element 3 now names the *acts* governed (prepare · review · approve · give assurance) and the artefacts, rather than a job family. `PCI-PCL-STD-13.01` was amended to state expressly that an embedded AI feature is in scope, after a reviewer read the draft as covering standalone tools only. |
 | 4 | Is the responsible person identifiable? | All 33 | A defined role vocabulary was added to the Definitions, each role defined by function rather than title, with the rule that a person holding two roles on a small project never removes an independence requirement. Every element 8 names a role from that list; "the team" and "management" appear nowhere. |
-| 5 | Is the required action observable? | All 33 | 145 process requirements were created, each stating an act that leaves a record. Bundled obligations in the superseded set (for example one clause requiring identification, assessment, approval and baseline update of change) were split across `PCI-PCL-LAW-05.02`, `05.03` and `05.04`. |
+| 5 | Is the required action observable? | All 33 | 145 process requirements were created, each stating an act that leaves a record. Bundled obligations in the superseded set (for example one clause requiring identification, assessment, approval and baseline update of change) were split across `PCI-PCL-STD-05.02`, `05.03` and `05.04`. |
 | 6 | Is compliance provable? | All 33 | Element 21 was written as a performable test in every law — the element the superseded eighteen-field set lacked entirely. Each test states the population, the method and what constitutes a failure, and closes with the condition that two reviewers applying it reach the same answer. **Stage 9 correction:** twenty-eight of those tests originally closed by saying that the defective condition "is an exception", in the audit sense of a finding. In this corpus *exception* is a Charter §8 term meaning an **approved departure**, and Charter §8 states expressly that an undocumented departure is a breach and not an exception. Every one of the twenty-eight now reads "is a failure of this test". |
 | 7 | Is the required evidence proportionate? | 01.01 · 01.02 · 05.01 · 06.02 · 10.03 · 13.02 | Evidence was limited to records the process already produces. Four drafting proposals were removed as disproportionate: a standing log of every cost-code decision, a signed certificate per progress claim, a full re-performance of every AI output, and a separate schedule-quality report per issue. Sampling on a recorded basis replaced them, with full testing retained only where a single item carries the consequence — dates, contract terms, longest-path activities. |
-| 8 | Can the law be audited? | All 33 | Every element 21 names what the auditor examines and where it is retained, and `PCI-PCL-LAW-11.01` was added to make retention itself an obligation, because the other 32 tests assume the records still exist. |
+| 8 | Can the law be audited? | All 33 | Every element 21 names what the auditor examines and where it is retained, and `PCI-PCL-STD-11.01` was added to make retention itself an obligation, because the other 32 tests assume the records still exist. |
 | 9 | Can the law be examined through a scenario? | All 33 | Element 24 names the item type — scenario judgement, evidence selection, calculation review, escalation decision, ethical dilemma or AI-verification case. No law is examinable only by recalling its number. |
 | 10 | Can a professional technically comply while defeating its purpose? | 03.02 · 05.02 · 05.04 · 06.02 · 10.01 · 10.03 · 12.02 · 13.02 · 13.03 | **The most productive question in the audit.** Eight specific defeats were identified and closed by adding prohibitions or process requirements: adding meaningless logic to clear an open-end count (`10.01-PR-04`); splitting a change to stay below an approval band (`05.02` element 6; `05.04-PR-05`); assembling a material baseline edit from immaterial ones (`03.02` element 11 removes any threshold); claiming progress within a verification sample's blind spot (`06.02-PR-02` requires the highest-value and most-moved claims to be in the sample); leaving remaining durations to fall by elapsed time (`10.03-PR-02`); choosing a confidence level after seeing the answer (`12.02-PR-01` requires the levels either side to be shown); drawing the verification sample only from items the tool flagged (`13.02-PR-03`); and accepting "no issues found" from a tool as assurance (`13.03-PR-05`). |
 | 11 | Does it conflict with another PCI law? | 03.02 ↔ 10.03 · 04.01 ↔ 11.01 · 05.04 ↔ 12.03 · 03.04 ↔ 06.04 | Four overlaps were found and scoped rather than left to interpretation. Schedule baseline protection sits in `03.02-PR-04` and is cross-referred from `10.03-PR-04` rather than restated. `04.01` governs reconciliation at issue; `11.01` governs reproduction afterwards. Change funding sits in `05.04`; contingency drawdown in `12.03`, with an express prohibition on using one to do the other. Forecast completeness sits in `03.04`; method disclosure in `06.04`, reconciled by `06.04-PR-03`. |
@@ -5195,19 +5195,19 @@ where a stage was performed with AI assistance rather than by a named human. For
 - **Stage 9** (red-team challenge) was performed in part, as the audit table above records — the question
   10 findings are its principal product. A **second red-team pass** was subsequently run across the whole
   four-file corpus; its findings and their disposition are recorded in
-  [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md), and the amendments it produced in this file are
+  [`STANDARDS_RED_TEAM_REPORT.md`](STANDARDS_RED_TEAM_REPORT.md), and the amendments it produced in this file are
   noted in the element 25 of each law changed and in the question 6 row above.
 - **Definitions reconciliation.** The red team's structural finding **P-1** — that no PCI Law
   Definitions Register existed, so each volume built its own and seven compliance-deciding terms
   diverged — has since been closed. The register is published at
-  [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), and §A above was reconciled to
+  [`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md), and §A above was reconciled to
   it. In this file that changed the wording of *material*, *independent*, *verified*, *current*,
   *competent reviewer*, *decision owner*, *evidence*, *approved*, *escalation threshold* and *material
   AI assistance*; **no obligation changed**, because each now states in one place the reading the
   wider-obligation rule at the head of these Definitions already produced. Two substantive corrections
   are worth naming. First, *competent reviewer* no longer folds independence into competence — where a
   law requires an independent reviewer, its element 10 says so and is tested separately, which is what
-  makes `PCI-FND-LAW-10` element 12's supervised-acquisition exception usable again. Second, a
+  makes `PCI-FND-STD-10` element 12's supervised-acquisition exception usable again. Second, a
   **circular definition** was removed: *evidence* was defined by reference to a *competent reviewer*,
   *competent reviewer* by the ability to perform *the verification method*, and *verified* by
   application of a method to *evidence* — a closed loop in which none of the three could be applied
@@ -5229,39 +5229,39 @@ in the law and in audit finding 13. "—" means the law cites no external author
 
 | ID | Official title | Anchor domain | Principal obligation | Ext. ref. categories |
 |---|---|---|---|---|
-| `PCI-PCL-LAW-01.01` | Cost Cut-Off Integrity | 01 — Foundations of Accounting for Project Controls | Record each cost in the period its underlying work or receipt falls in, by a written cut-off rule. | 2, 5 |
-| `PCI-PCL-LAW-01.02` | Accrual Completeness and Basis | 01 — Foundations of Accounting | Accrue everything received or performed and not invoiced at the cut-off, from evidence. | 2 |
-| `PCI-PCL-LAW-01.03` | Cost Classification and Cost-Code Integrity | 01 — Foundations of Accounting | Code each cost to the work it was incurred on, never to where budget remains. | 5, 7 |
-| `PCI-PCL-LAW-03.01` | Scope Completeness of the Performance Measurement Baseline | 03 — Budgeting & Forecasting | Put all authorised scope, and only authorised scope, in the baseline. | 5 |
-| `PCI-PCL-LAW-03.02` | Baseline Approval, Version Control and the Change Prohibition | 03 — Budgeting & Forecasting | Do not alter an approved baseline except by approved change or authorised re-baseline. | 3 |
-| `PCI-PCL-LAW-03.03` | Authority to Re-baseline | 03 — Budgeting & Forecasting | Do not measure against a re-baseline until the approval authority has approved it in writing. | 3 |
-| `PCI-PCL-LAW-03.04` | Completeness of the Estimate at Completion | 03 — Budgeting & Forecasting | Include every known cost effect on the remaining work in the forecast. | 5 |
-| `PCI-PCL-LAW-03.05` | Independent Challenge and Approval of the Forecast | 03 — Budgeting & Forecasting | Do not issue a forecast for a decision until an independent person has challenged it on the record. | — |
-| `PCI-PCL-LAW-04.01` | Reconciliation of the Performance Report to Source Records | 04 — Performance, Variance & Reporting | Do not issue a report whose figures do not reconcile to their source records at a stated cut-off. | 5 |
-| `PCI-PCL-LAW-04.02` | Explanation of Material Variance | 04 — Performance, Variance & Reporting | Explain each material variance by a cause evidenced from a source record. | 5 |
-| `PCI-PCL-LAW-04.03` | Correction and Restatement of a Reported Error | 04 — Performance, Variance & Reporting | Restate a material reported error to every recipient of the original. | — |
-| `PCI-PCL-LAW-05.01` | Completeness and Reconciliation of the Recorded Cost Position | 05 — Cost Management & Control | Reconcile actual cost to the books of account and to commitments and accruals every period. | 5 |
-| `PCI-PCL-LAW-05.02` | Identification and Registration of Change | 05 — Cost Management & Control | Register every potential change in the cycle it becomes known, whatever its merit. | 4 |
-| `PCI-PCL-LAW-05.03` | Completeness of Change Impact Assessment | 05 — Cost Management & Control | Assess a change's full cost, schedule, risk and interface effect before it goes for approval. | 4, 5 |
-| `PCI-PCL-LAW-05.04` | Change Authority and Segregation of Preparation from Approval | 05 — Cost Management & Control | Do not approve a change you prepared, assessed or priced. | 3, 5 |
-| `PCI-PCL-LAW-06.01` | Earned Value Measurement Rules Fixed Before Performance | 06 — EVM & Forecasting | Fix and record each work package's measurement method before its work begins. | 3, 5 |
-| `PCI-PCL-LAW-06.02` | Objective Evidence of Progress | 06 — EVM & Forecasting | Do not report progress that objective evidence does not support at the cut-off. | 3 |
-| `PCI-PCL-LAW-06.03` | Coherence of the Three Earned Value Data Points | 06 — EVM & Forecasting | Measure planned value, earned value and actual cost over the same scope, period and cut-off. | 3 |
-| `PCI-PCL-LAW-06.04` | Selection and Disclosure of the Estimate-at-Completion Method | 06 — EVM & Forecasting | Disclose the method behind every earned-value-derived estimate at completion and why it suits the work. | 5 |
-| `PCI-PCL-LAW-07.01` | Contract Source Verification | 07 — Contracts & Commercial | Verify every contractual term relied on against the executed contract and its executed amendments. | 4 |
-| `PCI-PCL-LAW-07.02` | Traceability of Variations and Claims | 07 — Contracts & Commercial | Keep a traceable record from originating event to current commercial position for every variation and claim. | 4, 5 |
-| `PCI-PCL-LAW-07.03` | Support and Reconciliation of Applications for Payment | 07 — Contracts & Commercial | Do not submit, certify or support payment for work not evidenced as performed or delivered. | 2, 4 |
-| `PCI-PCL-LAW-10.01` | Schedule Network Integrity | 10 — Project Scheduling | Do not issue a schedule containing an open end. | 5, 7 |
-| `PCI-PCL-LAW-10.02` | Critical-Path Verification Before Reliance | 10 — Project Scheduling | Verify that the reported critical path is the network's true longest path before relying on it. | 5 |
-| `PCI-PCL-LAW-10.03` | Status Date and Actual-Date Integrity | 10 — Project Scheduling | Status to one stated date, using actual dates taken from records of what happened. | 3, 5 |
-| `PCI-PCL-LAW-11.01` | Reproducibility of the Reported Controls Position | 11 — Process Cycles & Control Environment | Retain, with each deliverable, the records that let an independent competent reviewer reproduce every figure. | 3, 5 |
-| `PCI-PCL-LAW-12.01` | Risk Statement Quality and Named Ownership | 12 — Risk Management | Record each risk as cause, uncertain event and effect, with one named individual accountable. | 3, 5 |
-| `PCI-PCL-LAW-12.02` | Basis and Confidence Level of Quantified Contingency | 12 — Risk Management | State the method, the coverage and the confidence level behind every contingency figure. | 3, 5 |
-| `PCI-PCL-LAW-12.03` | Contingency Drawdown Authority and Re-assessment of Remaining Exposure | 12 — Risk Management | Do not apply contingency without the recorded approval of the authority holding it. | 3, 5 |
-| `PCI-PCL-LAW-13.01` | Approved Tools, Recorded Configuration and Protected Project Data | 13 — AI for Project Controls | Do not use an AI tool on project data outside the approved tool-and-data boundary. | 3, 7 |
-| `PCI-PCL-LAW-13.02` | Verification of AI-Generated Quantitative Controls Output | 13 — AI for Project Controls | Independently recompute an AI-generated quantitative figure before it is used. | 3, 7 |
-| `PCI-PCL-LAW-13.03` | Verification of AI-Generated Schedule, Risk and Extraction Output | 13 — AI for Project Controls | Trace AI-generated schedule, risk and extraction output to the network, register or source document before use. | 3, 5 |
-| `PCI-PCL-LAW-13.04` | Disclosure of AI Assistance in a Controls Deliverable | 13 — AI for Project Controls | Disclose material AI assistance inside the deliverable it affected, naming what the AI contributed. | 3, 7 |
+| `PCI-PCL-STD-01.01` | Cost Cut-Off Integrity | 01 — Foundations of Accounting for Project Controls | Record each cost in the period its underlying work or receipt falls in, by a written cut-off rule. | 2, 5 |
+| `PCI-PCL-STD-01.02` | Accrual Completeness and Basis | 01 — Foundations of Accounting | Accrue everything received or performed and not invoiced at the cut-off, from evidence. | 2 |
+| `PCI-PCL-STD-01.03` | Cost Classification and Cost-Code Integrity | 01 — Foundations of Accounting | Code each cost to the work it was incurred on, never to where budget remains. | 5, 7 |
+| `PCI-PCL-STD-03.01` | Scope Completeness of the Performance Measurement Baseline | 03 — Budgeting & Forecasting | Put all authorised scope, and only authorised scope, in the baseline. | 5 |
+| `PCI-PCL-STD-03.02` | Baseline Approval, Version Control and the Change Prohibition | 03 — Budgeting & Forecasting | Do not alter an approved baseline except by approved change or authorised re-baseline. | 3 |
+| `PCI-PCL-STD-03.03` | Authority to Re-baseline | 03 — Budgeting & Forecasting | Do not measure against a re-baseline until the approval authority has approved it in writing. | 3 |
+| `PCI-PCL-STD-03.04` | Completeness of the Estimate at Completion | 03 — Budgeting & Forecasting | Include every known cost effect on the remaining work in the forecast. | 5 |
+| `PCI-PCL-STD-03.05` | Independent Challenge and Approval of the Forecast | 03 — Budgeting & Forecasting | Do not issue a forecast for a decision until an independent person has challenged it on the record. | — |
+| `PCI-PCL-STD-04.01` | Reconciliation of the Performance Report to Source Records | 04 — Performance, Variance & Reporting | Do not issue a report whose figures do not reconcile to their source records at a stated cut-off. | 5 |
+| `PCI-PCL-STD-04.02` | Explanation of Material Variance | 04 — Performance, Variance & Reporting | Explain each material variance by a cause evidenced from a source record. | 5 |
+| `PCI-PCL-STD-04.03` | Correction and Restatement of a Reported Error | 04 — Performance, Variance & Reporting | Restate a material reported error to every recipient of the original. | — |
+| `PCI-PCL-STD-05.01` | Completeness and Reconciliation of the Recorded Cost Position | 05 — Cost Management & Control | Reconcile actual cost to the books of account and to commitments and accruals every period. | 5 |
+| `PCI-PCL-STD-05.02` | Identification and Registration of Change | 05 — Cost Management & Control | Register every potential change in the cycle it becomes known, whatever its merit. | 4 |
+| `PCI-PCL-STD-05.03` | Completeness of Change Impact Assessment | 05 — Cost Management & Control | Assess a change's full cost, schedule, risk and interface effect before it goes for approval. | 4, 5 |
+| `PCI-PCL-STD-05.04` | Change Authority and Segregation of Preparation from Approval | 05 — Cost Management & Control | Do not approve a change you prepared, assessed or priced. | 3, 5 |
+| `PCI-PCL-STD-06.01` | Earned Value Measurement Rules Fixed Before Performance | 06 — EVM & Forecasting | Fix and record each work package's measurement method before its work begins. | 3, 5 |
+| `PCI-PCL-STD-06.02` | Objective Evidence of Progress | 06 — EVM & Forecasting | Do not report progress that objective evidence does not support at the cut-off. | 3 |
+| `PCI-PCL-STD-06.03` | Coherence of the Three Earned Value Data Points | 06 — EVM & Forecasting | Measure planned value, earned value and actual cost over the same scope, period and cut-off. | 3 |
+| `PCI-PCL-STD-06.04` | Selection and Disclosure of the Estimate-at-Completion Method | 06 — EVM & Forecasting | Disclose the method behind every earned-value-derived estimate at completion and why it suits the work. | 5 |
+| `PCI-PCL-STD-07.01` | Contract Source Verification | 07 — Contracts & Commercial | Verify every contractual term relied on against the executed contract and its executed amendments. | 4 |
+| `PCI-PCL-STD-07.02` | Traceability of Variations and Claims | 07 — Contracts & Commercial | Keep a traceable record from originating event to current commercial position for every variation and claim. | 4, 5 |
+| `PCI-PCL-STD-07.03` | Support and Reconciliation of Applications for Payment | 07 — Contracts & Commercial | Do not submit, certify or support payment for work not evidenced as performed or delivered. | 2, 4 |
+| `PCI-PCL-STD-10.01` | Schedule Network Integrity | 10 — Project Scheduling | Do not issue a schedule containing an open end. | 5, 7 |
+| `PCI-PCL-STD-10.02` | Critical-Path Verification Before Reliance | 10 — Project Scheduling | Verify that the reported critical path is the network's true longest path before relying on it. | 5 |
+| `PCI-PCL-STD-10.03` | Status Date and Actual-Date Integrity | 10 — Project Scheduling | Status to one stated date, using actual dates taken from records of what happened. | 3, 5 |
+| `PCI-PCL-STD-11.01` | Reproducibility of the Reported Controls Position | 11 — Process Cycles & Control Environment | Retain, with each deliverable, the records that let an independent competent reviewer reproduce every figure. | 3, 5 |
+| `PCI-PCL-STD-12.01` | Risk Statement Quality and Named Ownership | 12 — Risk Management | Record each risk as cause, uncertain event and effect, with one named individual accountable. | 3, 5 |
+| `PCI-PCL-STD-12.02` | Basis and Confidence Level of Quantified Contingency | 12 — Risk Management | State the method, the coverage and the confidence level behind every contingency figure. | 3, 5 |
+| `PCI-PCL-STD-12.03` | Contingency Drawdown Authority and Re-assessment of Remaining Exposure | 12 — Risk Management | Do not apply contingency without the recorded approval of the authority holding it. | 3, 5 |
+| `PCI-PCL-STD-13.01` | Approved Tools, Recorded Configuration and Protected Project Data | 13 — AI for Project Controls | Do not use an AI tool on project data outside the approved tool-and-data boundary. | 3, 7 |
+| `PCI-PCL-STD-13.02` | Verification of AI-Generated Quantitative Controls Output | 13 — AI for Project Controls | Independently recompute an AI-generated quantitative figure before it is used. | 3, 7 |
+| `PCI-PCL-STD-13.03` | Verification of AI-Generated Schedule, Risk and Extraction Output | 13 — AI for Project Controls | Trace AI-generated schedule, risk and extraction output to the network, register or source document before use. | 3, 5 |
+| `PCI-PCL-STD-13.04` | Disclosure of AI Assistance in a Controls Deliverable | 13 — AI for Project Controls | Disclose material AI assistance inside the deliverable it affected, naming what the AI contributed. | 3, 7 |
 
 **Thirty-three laws · one hundred and forty-five process requirements · ten of the thirteen PCL-AI
 domains carrying an anchored law.** Domains 2, 8 and 9 carry no law of their own in this

@@ -1,8 +1,8 @@
 # Suite External-Reference Register — PCL-AI · PML-AI · PFL-AI
 
 **Status:** Binding register for every external authority named anywhere in the PCI Body of Knowledge
-programme — the three books and the PCI Professional Law set. Referenced by
-`../laws/LAW_SYSTEM.md` §5, which requires every external reference inside a law to be tagged with
+programme — the three books and the PCI Standard set. Referenced by
+`../laws/SUPERSEDED_LAW_SYSTEM_v0.md` §5, which requires every external reference inside a law to be tagged with
 one of this register's categories.
 
 ---
@@ -49,7 +49,7 @@ and it is the reason the register exists. Exactly one of the following applies t
 | **industry practice** | A widely used method, guideline set or body of knowledge that has no standard-setter's authority behind it, or whose authority is sectoral | Is it followed because it works, rather than because anyone issued it? |
 | **illustrative reference** | Named to illustrate a shape, a concept or a regulatory pattern — not relied on for any requirement | Does the corpus rely on it for anything at all? |
 
-**Legislation is deliberately not a category.** The programme's rule is that PCI Professional Laws
+**Legislation is deliberately not a category.** The programme's rule is that PCI Standards
 are not legislation and that no voluntary framework may be dressed as one. Real legislation named
 in the corpus (the EU AI Act, the GDPR) is therefore listed in §8 as an **illustrative reference** —
 because that is genuinely how the books use it, as an example of a regulatory shape — with its
@@ -193,7 +193,7 @@ the corpus names them only to illustrate a regulatory shape, never as a source o
 | EXT-101 | European Union | **General Data Protection Regulation** (Regulation (EU) 2016/679) | not independently verified — verify current requirements | illustrative reference *(actual status: **binding legislation** within the EU)* | PML-AI D14; Laws PCI-LAW-F-09 (jurisdictional caution) | — | Named as an example of a rights-based data-protection approach. Never relied on for a requirement. |
 | EXT-102 | US Federal Reserve / OCC | **SR 11-7 / OCC 2011-12** *Supervisory Guidance on Model Risk Management* | not independently verified — verify current requirements | illustrative reference *(actual status: **supervisory guidance**, jurisdiction-specific)* | Laws PCI-LAW-F-02 | — | The law calls it "public supervisory guidance … jurisdiction-specific, cited as guidance only". Accurate. |
 | EXT-103 | Various | **US GAAP** (generic) | n/a — generic reference | illustrative reference | PCL-AI D2, appendices; Laws PCL-LAW-01-01 | — | Named only to contrast with IFRS. |
-| EXT-110 | Basel Committee on Banking Supervision (BCBS) | **The Basel Framework** (consolidated BCBS standards) | consolidated framework, as maintained by the BCBS | illustrative reference — internationally agreed supervisory standards with **no legal force of their own** | Laws PFL-LAW-09-01, PFL-LAW-10-01, PFL-LAW-10-02 | 2026-08-03 | Corrects an earlier negative finding in this register, which recorded that "Basel" appeared in no law file; it is cited six times in `PFL_AI_LAWS.md`. The Committee has no supranational authority: its standards bind banks only as national authorities transpose them, and they must never be described as regulation applying directly to a project or its sponsors. |
+| EXT-110 | Basel Committee on Banking Supervision (BCBS) | **The Basel Framework** (consolidated BCBS standards) | consolidated framework, as maintained by the BCBS | illustrative reference — internationally agreed supervisory standards with **no legal force of their own** | Laws PFL-LAW-09-01, PFL-LAW-10-01, PFL-LAW-10-02 | 2026-08-03 | Corrects an earlier negative finding in this register, which recorded that "Basel" appeared in no law file; it is cited six times in `PFL_AI_STANDARDS.md`. The Committee has no supranational authority: its standards bind banks only as national authorities transpose them, and they must never be described as regulation applying directly to a project or its sponsors. |
 
 ## 11. Registered but not used
 
@@ -322,7 +322,7 @@ more robust.
 
 ### C-04 — ANSI/EIA-748 tagged "industry practice" where it is a published standard
 
-**File:** `docs/books/laws/PCL_AI_LAWS.md`, **lines 289 and 634**
+**File:** `docs/books/laws/PCL_AI_STANDARDS.md`, **lines 289 and 634**
 
 > "ANSI/EIA-748 *Earned Value Management Systems* (industry practice)"
 
@@ -335,11 +335,11 @@ standard" value, and "industry practice" is the honest choice among those availa
 decision is deliberate rather than accidental.
 
 **Proposed:** keep "industry practice" and add six words — "(industry practice; a published SAE/ANSI
-standard)" — or extend the category vocabulary in `LAW_SYSTEM.md` §5. No change to substance.
+standard)" — or extend the category vocabulary in `SUPERSEDED_LAW_SYSTEM_v0.md` §5. No change to substance.
 
 ### C-05 — the law set's authorities sit outside every build gate
 
-**Files:** `docs/books/laws/PCI_FOUNDATIONAL_LAWS.md`, `docs/books/laws/PCL_AI_LAWS.md`
+**Files:** `docs/books/laws/PCI_FOUNDATIONAL_STANDARDS.md`, `docs/books/laws/PCL_AI_STANDARDS.md`
 
 Both books' `STANDARDS.md` open with: "A standard referenced in a chapter and missing from this
 register fails the build, so a reference cannot enter the corpus without being disclosed here."
@@ -361,7 +361,7 @@ appendix that this file is checked against.
 **File:** `docs/books/registries/SOURCES.md`, **lines 23–24** (rows S-06, S-07)
 
 S-06 registers "Basel/IOSCO & central-bank model-risk guidance" and S-07 "World Bank/IFC PPP
-reference material". Of these, the Basel framework **is** cited — six times in `PFL_AI_LAWS.md`
+reference material". Of these, the Basel framework **is** cited — six times in `PFL_AI_STANDARDS.md`
 (see EXT-110) — alongside SR 11-7 (from S-06) and the IFC Performance Standards (covered by S-08).
 IOSCO and the World Bank are named nowhere in any manuscript or law file.
 

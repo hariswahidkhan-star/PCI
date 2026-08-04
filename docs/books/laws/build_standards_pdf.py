@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Build the PCI Professional Laws as a single A4 publication.
+"""Build the PCI Standards as a single A4 publication.
 
 Assembles the Charter, the Drafting Manual, the four law sets and the
 concordance, converts to HTML via pandoc, and renders with WeasyPrint.
 
-Usage:  python3 build_laws_pdf.py [output.pdf]
+Usage:  python3 build_standards_pdf.py [output.pdf]
 """
 import datetime
 import pathlib
@@ -12,23 +12,23 @@ import subprocess
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
-OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "PCI-Professional-Laws.pdf"
+OUT = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "PCI-Standards.pdf"
 
 ORDER = [
-    "PCI_PROFESSIONAL_LAWS_CHARTER.md",
-    "PCI_LAW_DRAFTING_MANUAL.md",
-    "PCI_FOUNDATIONAL_LAWS.md",
-    "PCL_AI_LAWS.md",
-    "PFL_AI_LAWS.md",
-    "PML_AI_LAWS.md",
-    "LAW_CONCORDANCE.md",
-    "PCI_LAW_DEFINITIONS_REGISTER.md",
+    "PCI_STANDARDS_CHARTER.md",
+    "PCI_STANDARDS_DRAFTING_MANUAL.md",
+    "PCI_FOUNDATIONAL_STANDARDS.md",
+    "PCL_AI_STANDARDS.md",
+    "PFL_AI_STANDARDS.md",
+    "PML_AI_STANDARDS.md",
+    "STANDARDS_CONCORDANCE.md",
+    "PCI_STANDARDS_DEFINITIONS_REGISTER.md",
 ]
 
 TITLE = f"""
 <div class="titlepage">
   <div class="kicker">Project Controls Institute Global</div>
-  <h1>PCI Professional Laws</h1>
+  <h1>PCI Standards</h1>
   <div class="subtitle">The mandatory professional requirements of the<br/>
   PCI AI certification suite</div>
   <div class="rule"></div>
@@ -36,7 +36,7 @@ TITLE = f"""
   VERSION 1.0 &mdash; DRAFT FOR APPROVAL<br/>
   {datetime.date.today().isoformat()}</div>
   <div class="warn">
-    <strong>Not legislation.</strong> PCI Professional Laws are private professional certification
+    <strong>Not legislation.</strong> PCI Standards are private professional certification
     requirements established by Project Controls Institute Global. They are not legislation,
     government regulation, legal advice or substitutes for applicable laws, contractual obligations,
     regulatory requirements or authoritative professional standards. Where an applicable legal,
@@ -107,7 +107,7 @@ def main() -> None:
 
     html = subprocess.run(
         ["pandoc", str(combined), "-f", "gfm", "-t", "html", "-s", "--toc", "--toc-depth=2",
-         "--metadata", "title=PCI Professional Laws"],
+         "--metadata", "title=PCI Standards"],
         capture_output=True, text=True, check=True).stdout
     html = html.replace("<body>", "<body>" + TITLE, 1)
     html = html.replace('<header id="title-block-header">',

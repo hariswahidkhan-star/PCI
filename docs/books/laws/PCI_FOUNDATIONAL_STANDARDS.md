@@ -1,14 +1,14 @@
 # PCI Foundational Professional Laws
 
-**Status:** The Foundational Law set of the PCI Professional Law system — Level 1 of the hierarchy in
-the *PCI Professional Laws Charter* §3. Fifteen laws, identifiers `PCI-FND-LAW-01` to
-`PCI-FND-LAW-15`, binding on every candidate for and holder of **PCL-AI** (PCI AI Project Controls
+**Status:** The Foundational Standard set of the PCI Standard system — Level 1 of the hierarchy in
+the *PCI Standards Charter* §3. Fifteen laws, identifiers `PCI-FND-STD-01` to
+`PCI-FND-STD-15`, binding on every candidate for and holder of **PCL-AI** (PCI AI Project Controls
 Leader), **PFL-AI** (PCI AI Project Finance Leader) and **PML-AI** (PCI Project Management Leader –
 AI) within the scope of their PCI-certified work. Version 1.0, prepared 4 August 2026; **draft for
-approval** — see *Due-process record* below. Drafted under the *PCI Professional Laws Charter* and
-the *PCI Law Drafting Manual*, both of which govern. British English throughout.
+approval** — see *Due-process record* below. Drafted under the *PCI Standards Charter* and
+the *PCI Standards Drafting Manual*, both of which govern. British English throughout.
 
-> **PCI Professional Laws are private professional certification requirements established by Project
+> **PCI Standards are private professional certification requirements established by Project
 > Controls Institute Global. They are not legislation, government regulation, legal advice or
 > substitutes for applicable laws, contractual obligations, regulatory requirements or authoritative
 > professional standards. Where an applicable legal, regulatory, contractual or authoritative
@@ -19,10 +19,10 @@ the *PCI Law Drafting Manual*, both of which govern. British English throughout.
 ## How to read these laws
 
 **Two documents govern, and this one conforms to both.** The
-[`PCI Professional Laws Charter`](PCI_PROFESSIONAL_LAWS_CHARTER.md) settles what a PCI Law *is* — its
+[`PCI Standards Charter`](PCI_STANDARDS_CHARTER.md) settles what a PCI Law *is* — its
 status, the six-level hierarchy, the priority order when requirements conflict, due process,
 interpretation, amendment, exceptions and the consequences available to PCI. The
-[`PCI Law Drafting Manual`](PCI_LAW_DRAFTING_MANUAL.md) settles how a law is *written* — the
+[`PCI Standards Drafting Manual`](PCI_STANDARDS_DRAFTING_MANUAL.md) settles how a law is *written* — the
 normative language system, the twenty-five-element structure, defined terms, external-reference
 classification, prohibited drafting patterns and the twenty-five audit questions. Where anything
 below is unclear, those documents prevail over it.
@@ -38,7 +38,7 @@ and it carries the meaning an ISO document conveys with its own mandatory verb. 
 PCI requirement, never an external constraint.
 
 **What is mandatory, and what is not.** Every numbered law below is a **Mandatory PCI Law** (Charter
-§3, Level 1). Every **Process Requirement** (`PCI-FND-LAW-NN-PR-NN`) beneath a law is a **Mandatory
+§3, Level 1). Every **Process Requirement** (`PCI-FND-STD-NN-PR-NN`) beneath a law is a **Mandatory
 PCI Process Requirement** (Level 4) and is as binding as its parent. Nothing else in this file creates
 an obligation: purposes, notes, examples and the tables at the end are commentary, and a requirement
 appearing in one of them would be a drafting defect.
@@ -105,23 +105,23 @@ forward. The mapping is:
 
 | Superseded | Carried forward into |
 |---|---|
-| `PCI-LAW-F-01` Professional Accountability and the Suite Principle | `PCI-FND-LAW-01` |
-| `PCI-LAW-F-02` Verification of AI Output Before Professional Use | `PCI-FND-LAW-03` and `PCI-FND-LAW-14` |
-| `PCI-LAW-F-03` Human Decision Authority | `PCI-FND-LAW-04` |
-| `PCI-LAW-F-04` Disclosure of Material AI Assistance | `PCI-FND-LAW-14-PR-01` to `-PR-03` |
-| `PCI-LAW-F-05` Evidence and the Audit Trail | `PCI-FND-LAW-02`, `PCI-FND-LAW-07`, `PCI-FND-LAW-12` |
-| `PCI-LAW-F-06` Data Lineage and Integrity | `PCI-FND-LAW-07` |
-| `PCI-LAW-F-07` Honesty in Reporting and Forecasting | `PCI-FND-LAW-05`, `PCI-FND-LAW-11` |
-| `PCI-LAW-F-08` Competence Boundaries and Referral | `PCI-FND-LAW-10` |
-| `PCI-LAW-F-09` Confidentiality and Information Protection | `PCI-FND-LAW-09` |
-| `PCI-LAW-F-10` Conflict-of-Interest Disclosure | `PCI-FND-LAW-08` |
-| `PCI-LAW-F-11` Duty to Escalate | `PCI-FND-LAW-11` |
-| `PCI-LAW-F-12` Record Retention | `PCI-FND-LAW-12` |
-| `PCI-LAW-F-13` Ethical Conduct Toward Candidates, Employers and the Public | **Not carried forward at Level 1.** General conduct is a certification-conditions matter rather than a testable Foundational Law; the specific duties it carried are in `PCI-FND-LAW-08`, `PCI-FND-LAW-11-PR-05` and `PCI-FND-LAW-14`. |
+| `PCI-LAW-F-01` Professional Accountability and the Suite Principle | `PCI-FND-STD-01` |
+| `PCI-LAW-F-02` Verification of AI Output Before Professional Use | `PCI-FND-STD-03` and `PCI-FND-STD-14` |
+| `PCI-LAW-F-03` Human Decision Authority | `PCI-FND-STD-04` |
+| `PCI-LAW-F-04` Disclosure of Material AI Assistance | `PCI-FND-STD-14-PR-01` to `-PR-03` |
+| `PCI-LAW-F-05` Evidence and the Audit Trail | `PCI-FND-STD-02`, `PCI-FND-STD-07`, `PCI-FND-STD-12` |
+| `PCI-LAW-F-06` Data Lineage and Integrity | `PCI-FND-STD-07` |
+| `PCI-LAW-F-07` Honesty in Reporting and Forecasting | `PCI-FND-STD-05`, `PCI-FND-STD-11` |
+| `PCI-LAW-F-08` Competence Boundaries and Referral | `PCI-FND-STD-10` |
+| `PCI-LAW-F-09` Confidentiality and Information Protection | `PCI-FND-STD-09` |
+| `PCI-LAW-F-10` Conflict-of-Interest Disclosure | `PCI-FND-STD-08` |
+| `PCI-LAW-F-11` Duty to Escalate | `PCI-FND-STD-11` |
+| `PCI-LAW-F-12` Record Retention | `PCI-FND-STD-12` |
+| `PCI-LAW-F-13` Ethical Conduct Toward Candidates, Employers and the Public | **Not carried forward at Level 1.** General conduct is a certification-conditions matter rather than a testable Foundational Standard; the specific duties it carried are in `PCI-FND-STD-08`, `PCI-FND-STD-11-PR-05` and `PCI-FND-STD-14`. |
 | `PCI-LAW-F-14` No Misrepresentation of PCI Credentials or Accreditation Status | **Not carried forward at Level 1.** Credential-claim rules govern the relationship between PCI and the holder rather than the conduct of professional work, and belong in PCI's certification conditions. |
 
 The two omissions are deliberate and are recorded here so the decision is visible rather than
-accidental. Neither obligation is abolished; each is relocated outside the Foundational Law set. Until
+accidental. Neither obligation is abolished; each is relocated outside the Foundational Standard set. Until
 that relocation is published, the superseded text of `PCI-LAW-F-13` and `PCI-LAW-F-14` remains on the
 record and is not deleted.
 
@@ -160,8 +160,8 @@ identically in every law below. None is defined by reference to itself. Where a 
 a term, the definition below is the one that applies.
 
 **These definitions are the canonical ones for the whole corpus.** Drafting Manual §4 permits a term
-to be defined in the law that uses it **or** in the *PCI Law Definitions Register*, and that register
-now exists at [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md). Every term below
+to be defined in the law that uses it **or** in the *PCI Standards Definitions Register*, and that register
+now exists at [`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md). Every term below
 that is also used in a certification volume carries the same wording there and in that volume; where
 a term legitimately carries different professional senses in different credentials, the register
 states each sense with the context it belongs to rather than forcing one. The register records what
@@ -197,7 +197,7 @@ the preparer or reliance on the preparer's explanation of it. No limb alone is s
 title, seniority and availability establish none of them. The adopting organisation may quantify the
 experience required in (a); PCI does not. **Independence is not a limb of competence.** Where a law
 requires the reviewer to be independent (D-12), that requirement is imposed by that law's element 10
-and is tested separately — a separation this set depends on, because `PCI-FND-LAW-10` element 12's
+and is tested separately — a separation this set depends on, because `PCI-FND-STD-10` element 12's
 supervised-acquisition exception needs a reviewer who is competent and is precisely *not* independent.
 For a review conclusion recorded on a PFL-AI engagement, the reviewer must additionally hold written
 authorisation from the engaging organisation to record a review conclusion on that subject.
@@ -218,7 +218,7 @@ listed relationships. **The appearance is part of the definition, not a softenin
 conflict is a structural fact about a role rather than a lapse of character. The list is closed for
 the purposes of the disclosure duty: every conflict within it must be disclosed and there is no
 threshold. A judgement standard stated in a law — such as the reasonable-party test at
-`PCI-PFL-LAW-01.02` — widens this list and never narrows it.
+`PCI-PFL-STD-01.02` — widens this list and never narrows it.
 
 **D-06 · Contemporaneous.** Created at the time of the act it evidences, or as soon afterwards as
 establishing the facts permits, and never after the outcome the record bears on became known.
@@ -249,7 +249,7 @@ the adopting organisation, stated in the finance documents, or recorded in the d
 met. **Any event a law's element 13 states, any condition recorded before the work begins, and any
 documented value in a delegation schedule or in finance documents are additional to those six triggers
 and never in place of them** — a matter that reaches this threshold requires escalation under
-`PCI-FND-LAW-11` whether or not it appears in any element 13. **The threshold names a destination and
+`PCI-FND-STD-11` whether or not it appears in any element 13. **The threshold names a destination and
 a time, and the absence of either does not remove the duty:** where no destination is documented the
 matter goes to the next authority above the decision owner (D-08) for it, and where no time is
 documented the time is the period defined in D-20. Reaching the threshold starts that period. The
@@ -377,7 +377,7 @@ from which a professional takes a fact, a figure, a rule or an interpretation us
 
 **D-26 · Verified.** An item, figure, statement, extraction or machine output is verified when a named
 person who is a competent reviewer (D-04) for that item has applied to it, against evidence (D-11), at
-least one of the eight methods listed in `PCI-FND-LAW-03-PR-01` — independent recomputation, source
+least one of the eight methods listed in `PCI-FND-STD-03-PR-01` — independent recomputation, source
 tracing, clause-to-summary comparison, sampling on a stated basis, reconciliation, boundary testing,
 sensitivity analysis, or named expert judgement recorded with its reasoning — and has recorded the
 method used, the source or population tested and, where a sample was used, its selection basis, the
@@ -412,7 +412,7 @@ not current, whatever its age.
 
 **A note on the two terms added at D-29 and D-30.** Drafting Manual §4 names *approved* and *current*
 among the terms that always require definition when they appear in an obligation. Both were used
-throughout this set and defined nowhere in it; only `PCL_AI_LAWS.md` carried a definition of either.
+throughout this set and defined nowhere in it; only `PCL_AI_STANDARDS.md` carried a definition of either.
 The wording above is PCL-AI's, generalised so that it operates where a deliverable states no cut-off.
 Adding them states a test readers were already expected to apply; it imposes nothing new.
 
@@ -424,7 +424,7 @@ create it, and the exception process in that law's element 12 is the route.
 
 ---
 
-## PCI LAW PCI-FND-LAW-01 — Professional Accountability
+## PCI STANDARD PCI-FND-STD-01 — Professional Accountability
 
 **1. Normative requirement.** Before a material output is issued, the issuing professional must record
 their own acceptance of personal accountability for it, whether it was prepared by that professional,
@@ -447,7 +447,7 @@ is redefined in this law.
 
 **5. Required actions.** Record, in the working record and dated on or before the issue date, an
 acceptance of accountability naming one individual. Ensure that individual is able to state the basis
-of the output and to identify the verification record required by `PCI-FND-LAW-03`. Identify, where
+of the output and to identify the verification record required by `PCI-FND-STD-03`. Identify, where
 parts of the output were prepared by others or by an AI system, which parts, and on whose verification
 the issuing professional relies.
 
@@ -458,7 +458,7 @@ process. Issuing a material output the professional is not willing to be held ac
 
 **7. Required evidence.** An acceptance record for each material output, attributable to the accepting
 individual, dated on or before issue; where issue is delegated, the prior authorisation required by
-`PCI-FND-LAW-01-PR-04`; the working record showing what the accepting individual relied on others for.
+`PCI-FND-STD-01-PR-04`; the working record showing what the accepting individual relied on others for.
 
 **8. Responsible role.** The issuing professional (D-14). Where several professionals contribute, each
 is accountable for their own contribution and one named individual is accountable for the output as
@@ -466,11 +466,11 @@ issued.
 
 **9. Approval authority.** The issuing professional approves the issue of the output. Only the decision
 owner (D-08) for the matter may direct that an output be issued over the issuing professional's refusal,
-and that direction must be recorded and is itself a matter for escalation under `PCI-FND-LAW-11`.
+and that direction must be recorded and is itself a matter for escalation under `PCI-FND-STD-11`.
 
 **10. Independence requirement.** None for the acceptance itself — accountability is personal, and
 independence is not a component of it. Independence attaches to the verification the acceptance relies
-upon, and is required by `PCI-FND-LAW-03` element 10.
+upon, and is required by `PCI-FND-STD-03` element 10.
 
 **11. Materiality or threshold.** The obligation attaches to material outputs (D-16) as tested by D-15.
 Working papers, internal drafts marked as drafts, and exploratory analysis not offered for reliance are
@@ -479,7 +479,7 @@ outside it. The adopting organisation (D-01) may set a lower threshold; it must 
 **12. Exception and waiver.** **No exception is permitted.** Accountability for a material output
 cannot be waived, delegated away, disclaimed or transferred to a system or a supplier. A professional
 who is unwilling to accept accountability must not issue the output, and must escalate under
-`PCI-FND-LAW-11`.
+`PCI-FND-STD-11`.
 
 **13. Escalation trigger.** The professional is unable to accept accountability honestly — because the
 output cannot be verified, exceeds their competence, or is being issued under instruction they do not
@@ -495,7 +495,7 @@ as the author of a professional judgement.
 **16. AI verification.** Before accepting accountability for an output to which an AI system materially
 contributed, the accepting professional must confirm by **source tracing** that every material factual
 claim in the output is supported by evidence (D-11) identified in the working record, and by **named
-approval** that the verification required by `PCI-FND-LAW-03` was performed and recorded.
+approval** that the verification required by `PCI-FND-STD-03` was performed and recorded.
 
 **17. External reference.**
 - **ISO/IEC 17024** — *Conformity assessment — General requirements for bodies operating certification
@@ -526,9 +526,9 @@ some reserve certain sign-offs to licence holders. Obtain local legal advice bef
 delegation, limitation or exclusion of personal responsibility, and before signing anything a local
 regime treats as a reserved act.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (the verification the acceptance relies on) ·
-`PCI-FND-LAW-04` (who decides) · `PCI-FND-LAW-10` (competence to accept) · `PCI-FND-LAW-11` (what to do
-when acceptance is impossible) · `PCI-FND-LAW-14` (what an AI system must never be permitted to do).
+**19. Related PCI Laws.** `PCI-FND-STD-03` (the verification the acceptance relies on) ·
+`PCI-FND-STD-04` (who decides) · `PCI-FND-STD-10` (competence to accept) · `PCI-FND-STD-11` (what to do
+when acceptance is impossible) · `PCI-FND-STD-14` (what an AI system must never be permitted to do).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 13 — AI for Project Controls and PM: Concepts,
 Tools and Practice. PML-AI KA 1.2 — the project leader's accountability; KA 1.4 — ethics and the
@@ -541,7 +541,7 @@ the reviewer and not by the professional**, every one of the following holds for
 individual, and that individual is a natural person, not a team, system, vendor or role held by nobody;
 (c) the record is attributable to that individual rather than entered by a third party on their behalf;
 (d) asked without prior notice, that individual identifies the verification record required by
-`PCI-FND-LAW-03` for the output and states which parts of it were prepared by others or by an AI system;
+`PCI-FND-STD-03` for the output and states which parts of it were prepared by others or by an AI system;
 and (e) where issue was delegated, a prior authorisation exists that names the output or class of
 output, the scope and the period, and is dated before issue. A sampled item fails if any one of (a) to
 (e) is absent. The law is complied with for the period under review only if no sampled item fails.
@@ -566,29 +566,29 @@ numbers.
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-01`, withdrawn. See
 *Due-process record*.
 
-### Process requirements under PCI-FND-LAW-01
+### Process requirements under PCI-FND-STD-01
 
-**`PCI-FND-LAW-01-PR-01`.** Each material output must have exactly one individual recorded as
+**`PCI-FND-STD-01-PR-01`.** Each material output must have exactly one individual recorded as
 accountable for the output as issued, and that individual must be a natural person.
 
-**`PCI-FND-LAW-01-PR-02`.** A professional must not attribute accountability for a material output to an
+**`PCI-FND-STD-01-PR-02`.** A professional must not attribute accountability for a material output to an
 AI system, a software supplier, a model, a tool configuration, a template, a team or an unnamed process,
 whether in the output, in correspondence, in a review, in an investigation or in evidence.
 
-**`PCI-FND-LAW-01-PR-03`.** A professional who is unable to accept accountability for a material output
-must not issue it, and must escalate the reason under `PCI-FND-LAW-11`.
+**`PCI-FND-STD-01-PR-03`.** A professional who is unable to accept accountability for a material output
+must not issue it, and must escalate the reason under `PCI-FND-STD-11`.
 
-**`PCI-FND-LAW-01-PR-04`.** Where a material output is to be issued in a professional's name by another
+**`PCI-FND-STD-01-PR-04`.** Where a material output is to be issued in a professional's name by another
 person or by an automated process, the professional must record their authorisation before the first
 such issue, naming the output or class of output, the scope, the period and the conditions on which the
 authorisation depends.
 
-**`PCI-FND-LAW-01-PR-05`.** Where an output is issued jointly, each contributing professional must
+**`PCI-FND-STD-01-PR-05`.** Where an output is issued jointly, each contributing professional must
 record accountability for their own contribution, identified by section, figure or workstream.
 
 ---
 
-## PCI LAW PCI-FND-LAW-02 — Evidence Before Assertion
+## PCI STANDARD PCI-FND-STD-02 — Evidence Before Assertion
 
 **1. Normative requirement.** A professional must not present a material factual claim, benchmark,
 calculation, contractual interpretation or reference to an external instrument unless evidence (D-11)
@@ -614,7 +614,7 @@ D-25 source · D-28 working record. No term is redefined in this law.
 supporting it, identified by document, system, extraction date and location within the source. Check
 quotations, clause references, figures and attributions against the instrument itself before presenting
 them. Where no evidence exists, either remove the claim or present it as an assumption under
-`PCI-FND-LAW-05`.
+`PCI-FND-STD-05`.
 
 **6. Prohibited actions.** Presenting an assumption as a fact. Citing a document, clause, figure or
 authority the professional has not read in the source. Attaching a document that does not support the
@@ -622,7 +622,7 @@ claim as though it did. Presenting a benchmark without its source, population, d
 comparability. Presenting an AI system's output as the evidence for the claim it makes.
 
 **7. Required evidence.** The working record showing, for each material claim, the evidence relied on
-and where it sits; the dated check record required by `PCI-FND-LAW-02-PR-02` for each external reference;
+and where it sits; the dated check record required by `PCI-FND-STD-02-PR-02` for each external reference;
 retrievable copies of, or resolvable references to, the evidence itself.
 
 **8. Responsible role.** The issuing professional (D-14) for claims in outputs they issue. The competent
@@ -633,7 +633,7 @@ assumption where evidence does not exist; nobody may approve presenting an unevi
 
 **10. Independence requirement.** None for the evidencing itself, which the preparer performs. Where the
 claim is a material calculation or an automated conclusion, the independent verification in
-`PCI-FND-LAW-03` applies in addition.
+`PCI-FND-STD-03` applies in addition.
 
 **11. Materiality or threshold.** Attaches to material claims (D-15). A claim is material where its
 falsity would or could change a decision, a reported figure beyond the adopting organisation's published
@@ -685,9 +685,9 @@ in a dispute, an audit or a regulatory inquiry are questions of the governing la
 they differ sharply between jurisdictions. Obtain local legal advice before withholding, redacting or
 restructuring the evidence behind a material claim, and before asserting privilege over it.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (verification of calculations) · `PCI-FND-LAW-05` (what to do
-when there is no evidence — state it as an assumption) · `PCI-FND-LAW-06` (whether the source is the
-right version) · `PCI-FND-LAW-07` (tracing the figure back through its data) · `PCI-FND-LAW-14`
+**19. Related PCI Laws.** `PCI-FND-STD-03` (verification of calculations) · `PCI-FND-STD-05` (what to do
+when there is no evidence — state it as an assumption) · `PCI-FND-STD-06` (whether the source is the
+right version) · `PCI-FND-STD-07` (tracing the figure back through its data) · `PCI-FND-STD-14`
 (AI-produced citations).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 4 — performance management, variance analysis
@@ -724,29 +724,29 @@ by AI-verification case (a fluent paragraph containing a fabricated citation).
 Stage 11 · effective date: on approval · amendment note: new law; carries forward part of the withdrawn
 `PCI-LAW-F-05`.
 
-### Process requirements under PCI-FND-LAW-02
+### Process requirements under PCI-FND-STD-02
 
-**`PCI-FND-LAW-02-PR-01`.** Each material claim must be linked in the working record to the specific
+**`PCI-FND-STD-02-PR-01`.** Each material claim must be linked in the working record to the specific
 evidence supporting it, identified by document or system, extraction date, and location within that
 source.
 
-**`PCI-FND-LAW-02-PR-02`.** A quotation, clause reference, figure, edition, effective date or attribution
+**`PCI-FND-STD-02-PR-02`.** A quotation, clause reference, figure, edition, effective date or attribution
 to an external instrument must be checked against that instrument itself before presentation, and the
 check recorded with its date.
 
-**`PCI-FND-LAW-02-PR-03`.** Where evidence for a material claim does not exist, the professional must
-either remove the claim from the output or present it expressly as an assumption under `PCI-FND-LAW-05`.
+**`PCI-FND-STD-02-PR-03`.** Where evidence for a material claim does not exist, the professional must
+either remove the claim from the output or present it expressly as an assumption under `PCI-FND-STD-05`.
 
-**`PCI-FND-LAW-02-PR-04`.** A benchmark must be presented with its source, the population it was drawn
+**`PCI-FND-STD-02-PR-04`.** A benchmark must be presented with its source, the population it was drawn
 from, its date and the basis on which the professional considers it comparable, or must not be presented.
 
-**`PCI-FND-LAW-02-PR-05`.** A contractual interpretation presented as a material claim must identify the
+**`PCI-FND-STD-02-PR-05`.** A contractual interpretation presented as a material claim must identify the
 executed contract and the provision relied on, and must state whether it is the professional's own
-reading or advice obtained under `PCI-FND-LAW-10-PR-02`.
+reading or advice obtained under `PCI-FND-STD-10-PR-02`.
 
 ---
 
-## PCI LAW PCI-FND-LAW-03 — Independent Verification
+## PCI STANDARD PCI-FND-STD-03 — Independent Verification
 
 **1. Normative requirement.** A material calculation, model output or automated conclusion must be
 verified (D-26) by a person independent (D-12) of its preparation before any person relies on it.
@@ -767,7 +767,7 @@ exploratory analysis that nobody relies on.
 reliance · D-08 decision owner · D-01 adopting organisation. No term is redefined in this law.
 
 **5. Required actions.** Obtain verification before reliance. Record the verifier's name, the method used
-from the list in `PCI-FND-LAW-03-PR-01`, the scope tested, the inputs used, the date and the result.
+from the list in `PCI-FND-STD-03-PR-01`, the scope tested, the inputs used, the date and the result.
 Where verification fails, record the failure and withhold the item from reliance until a later
 verification succeeds.
 
@@ -819,14 +819,14 @@ available and acting on it is unavoidable to protect the safety of a person, the
 on it **to the extent necessary to protect that person**, and must then do all of the following: record
 the reliance, the necessity, and what was attempted to obtain verification, within one working day;
 state the limitation to every recipient of the item; obtain and record the verification as soon as it
-can be obtained; and communicate any resulting difference under `PCI-FND-LAW-15`. The decision owner
+can be obtained; and communicate any resulting difference under `PCI-FND-STD-15`. The decision owner
 must record their position on the reliance within five working days. The item must not be relied upon
 for any purpose beyond protecting that person until the verification is recorded. **This allowance does
 not extend to commercial urgency, a deadline, a reporting cycle or a funding date**, and the obligation
 to obtain the verification is not discharged by the emergency, only deferred by it.
 
 **13. Escalation trigger.** A material item is discovered to have been relied upon without verification;
-a verification failure is overruled without a decision under `PCI-FND-LAW-13`; a verifier reports
+a verification failure is overruled without a decision under `PCI-FND-STD-13`; a verifier reports
 pressure to record a verification they did not perform; or waivers under element 12 recur for the same
 class of item, which indicates a governance defect rather than a one-off constraint.
 
@@ -873,11 +873,11 @@ obligations, and some reserve validation of certain models to licensed or approv
 regulatory advice where a verified output feeds a regulated activity, and treat any such obligation as
 prevailing over this law under Charter §4.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (accountability the verification supports) · `PCI-FND-LAW-02`
-(evidence for the inputs) · `PCI-FND-LAW-04` (the decision that follows verification) · `PCI-FND-LAW-07`
-(the lineage the verifier traces) · `PCI-FND-LAW-13` (a verification failure must not be overridden
-silently) · `PCI-FND-LAW-14` (the boundary of what an AI system may do). **Boundary with
-`PCI-FND-LAW-14`:** this law governs *whether an item has been checked*; `PCI-FND-LAW-14` governs *what an
+**19. Related PCI Laws.** `PCI-FND-STD-01` (accountability the verification supports) · `PCI-FND-STD-02`
+(evidence for the inputs) · `PCI-FND-STD-04` (the decision that follows verification) · `PCI-FND-STD-07`
+(the lineage the verifier traces) · `PCI-FND-STD-13` (a verification failure must not be overridden
+silently) · `PCI-FND-STD-14` (the boundary of what an AI system may do). **Boundary with
+`PCI-FND-STD-14`:** this law governs *whether an item has been checked*; `PCI-FND-STD-14` governs *what an
 AI system must never be permitted or represented to do*. They do not overlap.
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 6 — earned value management and forecasting;
@@ -921,30 +921,30 @@ for the rest; element 12 now carries a bounded allowance with recording, disclos
 verification and the decision owner's after-the-fact position, and states why the four no-waiver cases
 are what they are.
 
-### Process requirements under PCI-FND-LAW-03
+### Process requirements under PCI-FND-STD-03
 
-**`PCI-FND-LAW-03-PR-01`.** The verification record must name the method used, and the method must be one
+**`PCI-FND-STD-03-PR-01`.** The verification record must name the method used, and the method must be one
 of: **independent recomputation · source tracing · reconciliation · clause-to-summary comparison ·
 sampling on a stated basis · boundary testing · sensitivity analysis · named expert judgement.** The
 record must state the scope tested, the inputs used, the date and the result.
 
-**`PCI-FND-LAW-03-PR-02`.** The verifier must not be the preparer of the item, and must not have selected,
+**`PCI-FND-STD-03-PR-02`.** The verifier must not be the preparer of the item, and must not have selected,
 built or configured the tool, model or AI system that produced it.
 
-**`PCI-FND-LAW-03-PR-03`.** Re-running the same tool, model or AI system on the same inputs must not be
+**`PCI-FND-STD-03-PR-03`.** Re-running the same tool, model or AI system on the same inputs must not be
 recorded as verification, and asking any AI system to confirm its own or another AI system's output must
 not be recorded as verification.
 
-**`PCI-FND-LAW-03-PR-04`.** A verification that fails must be recorded together with its failure, and the
+**`PCI-FND-STD-03-PR-04`.** A verification that fails must be recorded together with its failure, and the
 item must not be relied upon until a later verification is recorded as successful.
 
-**`PCI-FND-LAW-03-PR-05`.** Where the item changes after verification — through a revised input, a
+**`PCI-FND-STD-03-PR-05`.** Where the item changes after verification — through a revised input, a
 changed assumption, a new model version or a corrected formula — the verification must be repeated in the
 scope affected before further reliance, and the repetition recorded.
 
 ---
 
-## PCI LAW PCI-FND-LAW-04 — Human Decision Authority
+## PCI STANDARD PCI-FND-STD-04 — Human Decision Authority
 
 **1. Normative requirement.** A material professional decision must be recorded as taken by a named human
 decision owner (D-08) who holds authority for it under the applicable governance arrangement and is a
@@ -978,7 +978,7 @@ competent reviewer for its subject matter. Removing or bypassing a human decisio
 **7. Required evidence.** Decision records naming the human decision owner, dated, stating the decision,
 the material inputs considered and any AI contribution; workflow documentation identifying each human
 decision point in any automated chain; the record of the periodic workflow test required by
-`PCI-FND-LAW-04-PR-05`.
+`PCI-FND-STD-04-PR-05`.
 
 **8. Responsible role.** The decision owner (D-08) for the decision. The engagement lead (D-09) for
 ensuring that each material decision in the engagement has an identified decision owner. The professional
@@ -990,7 +990,7 @@ the escalation is recorded.
 
 **10. Independence requirement.** The decision owner need not be independent of preparation — deciding on
 one's own team's work is ordinary governance. The decision owner must hold no conflict (D-05) in the
-outcome; where they do, `PCI-FND-LAW-08-PR-01` applies and the decision passes to an independent decision
+outcome; where they do, `PCI-FND-STD-08-PR-01` applies and the decision passes to an independent decision
 owner.
 
 **11. Materiality or threshold.** Attaches to material decisions (D-15). The adopting organisation's
@@ -1023,7 +1023,7 @@ human act in between.
 
 **16. AI verification.** Before adopting an AI-generated recommendation on a material matter, the decision
 owner must record at least one **named-approval** entry identifying the verification performed under
-`PCI-FND-LAW-03`, and must record one factor they considered that is not stated in the recommendation
+`PCI-FND-STD-03`, and must record one factor they considered that is not stated in the recommendation
 itself — a **boundary test** of the recommendation against a constraint, a stakeholder position, a
 contractual term or a risk the recommendation does not address. This is the check that distinguishes a
 decision from a countersignature.
@@ -1057,12 +1057,12 @@ individuals, including rights to human intervention, explanation or review, and 
 trading, credit and safety decisions specifically. Obtain local legal advice before deploying any automated
 decision flow that affects people, and before relying on an automated decision in a regulated activity.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (accountability for the output the decision releases) ·
-`PCI-FND-LAW-03` (the verification the decision relies on) · `PCI-FND-LAW-08` (a conflicted decision owner
-must not decide) · `PCI-FND-LAW-10` (competence to decide) · `PCI-FND-LAW-13` (a decision to override a
-control) · `PCI-FND-LAW-14` (what an AI system must never be permitted to do). **Boundary with
-`PCI-FND-LAW-14`:** this law requires that a named, authorised, competent human owns each material
-decision; `PCI-FND-LAW-14` prohibits an AI system being permitted or represented to hold a role reserved
+**19. Related PCI Laws.** `PCI-FND-STD-01` (accountability for the output the decision releases) ·
+`PCI-FND-STD-03` (the verification the decision relies on) · `PCI-FND-STD-08` (a conflicted decision owner
+must not decide) · `PCI-FND-STD-10` (competence to decide) · `PCI-FND-STD-13` (a decision to override a
+control) · `PCI-FND-STD-14` (what an AI system must never be permitted to do). **Boundary with
+`PCI-FND-STD-14`:** this law requires that a named, authorised, competent human owns each material
+decision; `PCI-FND-STD-14` prohibits an AI system being permitted or represented to hold a role reserved
 to a person. A workflow can satisfy one and breach the other.
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 13. PML-AI KA 3.2 — decision authorities and
@@ -1100,28 +1100,28 @@ auto-approval) and by ethical dilemma (pressure to remove a decision point for t
 **25. Version and status.** Version 1.0 · approval date: not approved — draft submitted under Charter §5
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-03`, withdrawn.
 
-### Process requirements under PCI-FND-LAW-04
+### Process requirements under PCI-FND-STD-04
 
-**`PCI-FND-LAW-04-PR-01`.** An automated or AI-generated recommendation must not take effect on a material
+**`PCI-FND-STD-04-PR-01`.** An automated or AI-generated recommendation must not take effect on a material
 matter until the decision owner has recorded their adoption of it.
 
-**`PCI-FND-LAW-04-PR-02`.** Before an automated workflow that could give effect to a material recommendation
+**`PCI-FND-STD-04-PR-02`.** Before an automated workflow that could give effect to a material recommendation
 enters use, an explicit human decision point must be inserted ahead of the step that gives effect, and the
 workflow documentation must identify it.
 
-**`PCI-FND-LAW-04-PR-03`.** The workflow must permit the decision owner to reject, amend and defer, and must
+**`PCI-FND-STD-04-PR-03`.** The workflow must permit the decision owner to reject, amend and defer, and must
 record each of those outcomes; a workflow offering only approval must not be used for material matters.
 
-**`PCI-FND-LAW-04-PR-04`.** The decision record must state the decision, its date, the decision owner, the
+**`PCI-FND-STD-04-PR-04`.** The decision record must state the decision, its date, the decision owner, the
 material inputs considered and, where an AI system contributed, that fact and what it contributed.
 
-**`PCI-FND-LAW-04-PR-05`.** Each automated workflow carrying material recommendations must be tested at an
+**`PCI-FND-STD-04-PR-05`.** Each automated workflow carrying material recommendations must be tested at an
 interval the adopting organisation states, and at least once before it enters use, to confirm that
 rejection and deferral are exercisable and recorded; the test and its result must be retained.
 
 ---
 
-## PCI LAW PCI-FND-LAW-05 — Transparent Assumptions
+## PCI STANDARD PCI-FND-STD-05 — Transparent Assumptions
 
 **1. Normative requirement.** A professional must not issue a forecast, model, appraisal or recommendation
 unless the document that states its conclusion also states, with equal prominence, the material assumptions
@@ -1154,7 +1154,7 @@ stating it would weaken the case. Restating an assumption as a fact in a later d
 
 **7. Required evidence.** The issued document itself, showing the assumptions alongside the conclusion; the
 assumption log recording each material assumption, its basis, its owner and its review date; the
-sensitivity analysis supporting the statement required by `PCI-FND-LAW-05-PR-02`; the dependency list.
+sensitivity analysis supporting the statement required by `PCI-FND-STD-05-PR-02`; the dependency list.
 
 **8. Responsible role.** The issuing professional (D-14) for the document. The decision owner (D-08) for
 the matter is responsible for not relying on a conclusion whose assumptions are not stated.
@@ -1166,7 +1166,7 @@ document that carries the conclusion.
 **10. Independence requirement.** None for stating the assumptions, which the preparer does. Independence
 is required for the sensitivity analysis where the conclusion supports an irreversible commitment, a
 payment, an external report or a decision bearing on the safety of a person, in which case
-`PCI-FND-LAW-03` applies to the sensitivity computation as it does to any other material calculation.
+`PCI-FND-STD-03` applies to the sensitivity computation as it does to any other material calculation.
 
 **11. Materiality or threshold.** An assumption is material where a change in it, within the range the
 professional considers credible and records, would change the conclusion, its direction or its
@@ -1185,7 +1185,7 @@ themselves.
 
 **13. Escalation trigger.** Instruction to remove, soften or relocate a material assumption; discovery that
 a conclusion already relied upon rested on an assumption that was never stated; discovery that an
-assumption has failed and the conclusion has not been revisited under `PCI-FND-LAW-15`.
+assumption has failed and the conclusion has not been revisited under `PCI-FND-STD-15`.
 
 **14. AI application.** An AI system may extract candidate assumptions from a model, generate scenarios and
 stress cases, compute sensitivities, draft the assumption register and flag conclusions whose stated
@@ -1223,9 +1223,9 @@ attach specific liability to forward-looking statements and to the adequacy of t
 them, and some require prescribed cautionary wording. Obtain local legal advice before issuing a forecast
 into a regulated market, a public tender or an investor communication.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (an unevidenced claim becomes a stated assumption, not a fact) ·
-`PCI-FND-LAW-03` (verification of the sensitivity computation) · `PCI-FND-LAW-06` (assumptions drawn from
-sources) · `PCI-FND-LAW-11` (escalating a misleading presentation) · `PCI-FND-LAW-15` (a failed assumption
+**19. Related PCI Laws.** `PCI-FND-STD-02` (an unevidenced claim becomes a stated assumption, not a fact) ·
+`PCI-FND-STD-03` (verification of the sensitivity computation) · `PCI-FND-STD-06` (assumptions drawn from
+sources) · `PCI-FND-STD-11` (escalating a misleading presentation) · `PCI-FND-STD-15` (a failed assumption
 that invalidates issued work).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 6 — earned value management and forecasting;
@@ -1264,30 +1264,30 @@ by calculation review (a sensitivity statement that the model does not produce) 
 Stage 11 · effective date: on approval · amendment note: carries forward part of the withdrawn
 `PCI-LAW-F-07`.
 
-### Process requirements under PCI-FND-LAW-05
+### Process requirements under PCI-FND-STD-05
 
-**`PCI-FND-LAW-05-PR-01`.** The document stating the conclusion must state each material limitation of the
+**`PCI-FND-STD-05-PR-01`.** The document stating the conclusion must state each material limitation of the
 method, the data and the scope on which the conclusion rests.
 
-**`PCI-FND-LAW-05-PR-02`.** The document must state, for each material assumption, the effect on the
+**`PCI-FND-STD-05-PR-02`.** The document must state, for each material assumption, the effect on the
 conclusion of a stated change in that assumption, expressed in the units of the conclusion.
 
-**`PCI-FND-LAW-05-PR-03`.** The document must state each material dependency — the external event, decision,
+**`PCI-FND-STD-05-PR-03`.** The document must state each material dependency — the external event, decision,
 approval or third-party act that the conclusion assumes will occur — and by when it is assumed to occur.
 
-**`PCI-FND-LAW-05-PR-04`.** A single-point figure must not be presented as a forecast unless the document
+**`PCI-FND-STD-05-PR-04`.** A single-point figure must not be presented as a forecast unless the document
 also states the range or the confidence basis on which that point was selected.
 
-**`PCI-FND-LAW-05-PR-05`.** Material assumptions must be identified as material within the assumption
+**`PCI-FND-STD-05-PR-05`.** Material assumptions must be identified as material within the assumption
 statement, and must not be presented in a manner that prevents a reader from distinguishing them from
 immaterial ones.
 
-**`PCI-FND-LAW-05-PR-06`.** Where a conclusion is repeated, summarised or carried into a later document, the
+**`PCI-FND-STD-05-PR-06`.** Where a conclusion is repeated, summarised or carried into a later document, the
 material assumptions must be carried with it.
 
 ---
 
-## PCI LAW PCI-FND-LAW-06 — Source and Version Integrity
+## PCI STANDARD PCI-FND-STD-06 — Source and Version Integrity
 
 **1. Normative requirement.** A professional must not rely on a source (D-25) for a material purpose unless
 the working record contains a check, dated on or before the date of reliance, confirming that the source is
@@ -1332,7 +1332,7 @@ provision nobody has read.
 
 **10. Independence requirement.** Not applicable — a currency check is a factual comparison against the
 publisher's or issuer's own record, and its result does not depend on who performs it. Where the check
-result is disputed, `PCI-FND-LAW-03` applies to the disputed conclusion.
+result is disputed, `PCI-FND-STD-03` applies to the disputed conclusion.
 
 **11. Materiality or threshold.** Attaches to sources relied on for a material purpose (D-15). It does not
 attach to background reading, orientation or context that no conclusion rests on. A source is always
@@ -1344,8 +1344,8 @@ established within the time available — for example where a contract amendment
 circulated. The decision owner approves it; the justification records what was attempted and from whom the
 version was sought; it lasts until the version is obtained or thirty days, whichever is shorter; the
 compensating controls are that the output states the uncertainty where the conclusion is stated and
-identifies the version actually used, and that the conclusion is revisited under `PCI-FND-LAW-15` once the
-correct version is obtained. **No exception is permitted** to `PCI-FND-LAW-06-PR-04`: an unread provision
+identifies the version actually used, and that the conclusion is revisited under `PCI-FND-STD-15` once the
+correct version is obtained. **No exception is permitted** to `PCI-FND-STD-06-PR-04`: an unread provision
 must never be cited.
 
 **13. Escalation trigger.** Discovery that a material output relied on a superseded, unexecuted or
@@ -1396,9 +1396,9 @@ frequently fixed by local law, by the building or permitting regime, or by the c
 clause, and transitional provisions differ. Obtain local legal advice where the applicable version affects
 an entitlement, a permit, a certification or a liability.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence for the claim the source supports) · `PCI-FND-LAW-07`
-(the data drawn from the source) · `PCI-FND-LAW-12` (retaining the version relied on) · `PCI-FND-LAW-14`
-(AI-produced citations) · `PCI-FND-LAW-15` (what to do when the wrong version was used).
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence for the claim the source supports) · `PCI-FND-STD-07`
+(the data drawn from the source) · `PCI-FND-STD-12` (retaining the version relied on) · `PCI-FND-STD-14`
+(AI-produced citations) · `PCI-FND-STD-15` (what to do when the wrong version was used).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 2 — financial reporting for project controls;
 Domain 7 — contract and commercial management; Domain 13. PML-AI Domain 14, especially KA 14.1 — data
@@ -1434,28 +1434,28 @@ version), by scenario judgement (a contract amendment executed mid-assessment) a
 Stage 11 · effective date: on approval · amendment note: new law; no direct predecessor in the withdrawn
 set.
 
-### Process requirements under PCI-FND-LAW-06
+### Process requirements under PCI-FND-STD-06
 
-**`PCI-FND-LAW-06-PR-01`.** The check must confirm that the source is authentic — obtained from the
+**`PCI-FND-STD-06-PR-01`.** The check must confirm that the source is authentic — obtained from the
 publisher or issuer, or from a channel the adopting organisation has recorded as authoritative — and must
 record where it was obtained.
 
-**`PCI-FND-LAW-06-PR-02`.** The check must confirm that the source applies to the entity, jurisdiction,
+**`PCI-FND-STD-06-PR-02`.** The check must confirm that the source applies to the entity, jurisdiction,
 period, contract or asset to which it is being applied.
 
-**`PCI-FND-LAW-06-PR-03`.** Where an instrument's status is known to be changing, the professional must
+**`PCI-FND-STD-06-PR-03`.** Where an instrument's status is known to be changing, the professional must
 record the date the currency was checked and must re-check before each subsequent issue that relies on it.
 
-**`PCI-FND-LAW-06-PR-04`.** A professional must not cite a clause, article, edition, effective date,
+**`PCI-FND-STD-06-PR-04`.** A professional must not cite a clause, article, edition, effective date,
 judicial decision or requirement that they have not read in the source itself.
 
-**`PCI-FND-LAW-06-PR-05`.** Where the applicable version cannot be established, the professional must state
+**`PCI-FND-STD-06-PR-05`.** Where the applicable version cannot be established, the professional must state
 that limitation wherever the conclusion is used, must identify the version actually applied, and must not
 present the source as current.
 
 ---
 
-## PCI LAW PCI-FND-LAW-07 — Data Lineage
+## PCI STANDARD PCI-FND-STD-07 — Data Lineage
 
 **1. Normative requirement.** A material output must be traceable in the working record from each source
 dataset, through every transformation and calculation, to the figure that was reviewed and approved, such
@@ -1561,11 +1561,11 @@ record-keeping regimes constrain where data may be stored, processed and transfe
 transfer may require a specific legal basis. Obtain local legal advice before moving project or personal
 data across a border or into a third-party service, including an AI service.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence for the claim the figure supports) · `PCI-FND-LAW-03`
-(verification of the calculation the lineage feeds) · `PCI-FND-LAW-06` (whether the source is the right
-version) · `PCI-FND-LAW-09` (what may be put into which system) · `PCI-FND-LAW-12` (keeping the lineage
-record intact). **Boundary with `PCI-FND-LAW-12`:** this law governs whether a figure can be retraced;
-`PCI-FND-LAW-12` governs whether the records survive, unaltered and attributable.
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence for the claim the figure supports) · `PCI-FND-STD-03`
+(verification of the calculation the lineage feeds) · `PCI-FND-STD-06` (whether the source is the right
+version) · `PCI-FND-STD-09` (what may be put into which system) · `PCI-FND-STD-12` (keeping the lineage
+record intact). **Boundary with `PCI-FND-STD-12`:** this law governs whether a figure can be retraced;
+`PCI-FND-STD-12` governs whether the records survive, unaltered and attributable.
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 13. PML-AI KA 9.4 — data quality and AI-output
 quality; Domain 14, especially KA 14.1 — data governance and common data environments. PFL-AI KA 16.1 —
@@ -1599,30 +1599,30 @@ third-party feed arriving with no provenance mid-period).
 **25. Version and status.** Version 1.0 · approval date: not approved — draft submitted under Charter §5
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-06`, withdrawn.
 
-### Process requirements under PCI-FND-LAW-07
+### Process requirements under PCI-FND-STD-07
 
-**`PCI-FND-LAW-07-PR-01`.** The lineage record must state, for each source dataset, its system or document
+**`PCI-FND-STD-07-PR-01`.** The lineage record must state, for each source dataset, its system or document
 of origin, its owner, the extraction date and time, and the extract's identifier or query.
 
-**`PCI-FND-LAW-07-PR-02`.** Each transformation must be recorded so that it can be re-performed — the rule
+**`PCI-FND-STD-07-PR-02`.** Each transformation must be recorded so that it can be re-performed — the rule
 applied, its parameters, the person or process that applied it, and the date.
 
-**`PCI-FND-LAW-07-PR-03`.** Each derived figure presented in a material output must be reconciled to its
+**`PCI-FND-STD-07-PR-03`.** Each derived figure presented in a material output must be reconciled to its
 sources, and the reconciliation retained with the output.
 
-**`PCI-FND-LAW-07-PR-04`.** Estimated, imputed, modelled and synthetic values must be labelled as such
+**`PCI-FND-STD-07-PR-04`.** Estimated, imputed, modelled and synthetic values must be labelled as such
 wherever they appear, and must not be presented as observed data.
 
-**`PCI-FND-LAW-07-PR-05`.** Where lineage cannot be established for data underpinning a material conclusion,
+**`PCI-FND-STD-07-PR-05`.** Where lineage cannot be established for data underpinning a material conclusion,
 the professional must state that limitation wherever the conclusion is used, and must carry it into every
 later document that repeats the conclusion.
 
-**`PCI-FND-LAW-07-PR-06`.** The exclusion of data from a population, and any manual adjustment to extracted
+**`PCI-FND-STD-07-PR-06`.** The exclusion of data from a population, and any manual adjustment to extracted
 data, must be recorded with its basis and its author before the affected output is issued.
 
 ---
 
-## PCI LAW PCI-FND-LAW-08 — Conflict Disclosure
+## PCI STANDARD PCI-FND-STD-08 — Conflict Disclosure
 
 **1. Normative requirement.** A professional must disclose every conflict (D-05) capable of affecting their
 independent judgement, in writing, to the person or body to whom the professional duty is owed, before
@@ -1641,7 +1641,7 @@ disqualifying as a preparer's.
 
 **4. Defined terms.** D-05 conflict · D-12 independent · D-08 decision owner · D-04 competent reviewer ·
 D-09 engagement lead · D-01 adopting organisation. **The word "appropriately" is deliberately not used in
-this law.** What counts as managing a conflict is fixed by `PCI-FND-LAW-08-PR-01`, which lists the four
+this law.** What counts as managing a conflict is fixed by `PCI-FND-STD-08-PR-01`, which lists the four
 safeguards that satisfy it and states that no other arrangement does.
 
 **5. Required actions.** Maintain a current written declaration of interests. Disclose a conflict in writing
@@ -1738,9 +1738,9 @@ public-official conduct regimes impose specific and sometimes criminal conflict,
 and their reach can be extraterritorial. Obtain local legal advice in public-sector, regulated-finance and
 cross-border contexts before relying on any safeguard short of withdrawal.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (a conflicted person is not independent and cannot verify) ·
-`PCI-FND-LAW-04` (a conflicted decision owner must not decide) · `PCI-FND-LAW-09` (information barriers) ·
-`PCI-FND-LAW-11` (escalating an undisclosed conflict) · `PCI-FND-LAW-12` (the disclosure record).
+**19. Related PCI Laws.** `PCI-FND-STD-03` (a conflicted person is not independent and cannot verify) ·
+`PCI-FND-STD-04` (a conflicted decision owner must not decide) · `PCI-FND-STD-09` (information barriers) ·
+`PCI-FND-STD-11` (escalating an undisclosed conflict) · `PCI-FND-STD-12` (the disclosure record).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 13. PML-AI KA 12.4 — ethical leadership; KA 1.4.
 PFL-AI KA 1.3 — conflicts, independence, fiduciary awareness and responsible AI; Domain 16.
@@ -1781,9 +1781,9 @@ act to stand aside; element 12 now carries a bounded allowance to act to the ext
 that person, with the disclosure duty untouched and the choice of safeguard still belonging to the person
 or body to whom the duty is owed.
 
-### Process requirements under PCI-FND-LAW-08
+### Process requirements under PCI-FND-STD-08
 
-**`PCI-FND-LAW-08-PR-01`.** A conflict must be managed by one of the following four safeguards, recorded
+**`PCI-FND-STD-08-PR-01`.** A conflict must be managed by one of the following four safeguards, recorded
 in writing and operating, and by no other arrangement: **(a)** the professional withdraws from the matter; **(b)** the
 professional is recused from the specific decision and it is taken by a decision owner independent (D-12)
 of the interest; **(c)** an information barrier prevents the professional's access to the information that
@@ -1791,22 +1791,22 @@ creates the conflict, and its operation is recorded; or **(d)** the professional
 reviewed by a competent reviewer independent of the interest, and that review is recorded. **No other
 arrangement satisfies this law.**
 
-**`PCI-FND-LAW-08-PR-02`.** The choice of safeguard must be made by the person or body to whom the duty is
+**`PCI-FND-STD-08-PR-02`.** The choice of safeguard must be made by the person or body to whom the duty is
 owed, and never by the conflicted professional.
 
-**`PCI-FND-LAW-08-PR-03`.** The professional must take no act in the matter between the moment the conflict
+**`PCI-FND-STD-08-PR-03`.** The professional must take no act in the matter between the moment the conflict
 arises and the moment a `-PR-01` safeguard is recorded as operating.
 
-**`PCI-FND-LAW-08-PR-04`.** The declaration of interests must be refreshed when the professional's interests
+**`PCI-FND-STD-08-PR-04`.** The declaration of interests must be refreshed when the professional's interests
 or duties change, and before each material decision in a matter where a safeguard is operating.
 
-**`PCI-FND-LAW-08-PR-05`.** Where the conflict is held by the most senior available decision owner, the
+**`PCI-FND-STD-08-PR-05`.** Where the conflict is held by the most senior available decision owner, the
 disclosure must be made to the next independent level of the governance arrangement, or to the party to whom
 the duty is owed.
 
 ---
 
-## PCI LAW PCI-FND-LAW-09 — Confidentiality and Approved Technology
+## PCI STANDARD PCI-FND-STD-09 — Confidentiality and Approved Technology
 
 **1. Normative requirement.** A professional must not enter protected information (D-21) into a system that
 is not an authorised system (D-03) for information of that classification and for that purpose, including
@@ -1867,7 +1867,7 @@ transfer thresholds within it; PCI sets none.
 
 **12. Exception and waiver.** **PCI grants no waiver.** The only route by which protected information may
 enter a system that is not on the register is the information owner's written authorisation recorded in
-advance under `PCI-FND-LAW-09-PR-01`, which is not an exception to this law but the mechanism the law
+advance under `PCI-FND-STD-09-PR-01`, which is not an exception to this law but the mechanism the law
 provides. Where an emergency makes advance authorisation impossible and delay would create a risk to the
 safety of a person, the professional may act to protect that person and must notify the information owner
 promptly (D-20) and record the act, the necessity and the information involved; that notification is not
@@ -1920,9 +1920,9 @@ cross-border transfer and require a documented legal basis. Obtain local legal a
 processing, on cross-border transfer, and before entering any protected information into a service hosted
 outside the jurisdiction in which it was entrusted. Verify current requirements.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07` (data supplied to a system) · `PCI-FND-LAW-08` (information
-barriers as a conflict safeguard) · `PCI-FND-LAW-11` (escalating a disclosure) · `PCI-FND-LAW-12` (retention
-and protection of the records) · `PCI-FND-LAW-14` (AI use generally).
+**19. Related PCI Laws.** `PCI-FND-STD-07` (data supplied to a system) · `PCI-FND-STD-08` (information
+barriers as a conflict safeguard) · `PCI-FND-STD-11` (escalating a disclosure) · `PCI-FND-STD-12` (retention
+and protection of the records) · `PCI-FND-STD-14` (AI use generally).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 13. PML-AI Domain 14, especially KA 14.4 —
 cybersecurity and privacy; KA 1.4. PFL-AI Domain 16, especially KA 16.4 — privacy, cybersecurity, human
@@ -1958,29 +1958,29 @@ and by ethical dilemma (a client's data would resolve another client's problem).
 **25. Version and status.** Version 1.0 · approval date: not approved — draft submitted under Charter §5
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-09`, withdrawn.
 
-### Process requirements under PCI-FND-LAW-09
+### Process requirements under PCI-FND-STD-09
 
-**`PCI-FND-LAW-09-PR-01`.** Where the adopting organisation maintains no register of authorised systems, the
+**`PCI-FND-STD-09-PR-01`.** Where the adopting organisation maintains no register of authorised systems, the
 professional must obtain and record the information owner's written authorisation before entering protected
 information into any system that is not under the information owner's own control.
 
-**`PCI-FND-LAW-09-PR-02`.** Before protected information is entered into an AI system, the professional must
+**`PCI-FND-STD-09-PR-02`.** Before protected information is entered into an AI system, the professional must
 record a comparison of that system's published retention, human-review, training-use, sub-processing and
 geography terms against the information owner's requirements.
 
-**`PCI-FND-LAW-09-PR-03`.** Information whose classification the professional does not know must be treated
+**`PCI-FND-STD-09-PR-03`.** Information whose classification the professional does not know must be treated
 as protected information until the information owner states otherwise.
 
-**`PCI-FND-LAW-09-PR-04`.** A professional must not use protected information obtained in one engagement for
+**`PCI-FND-STD-09-PR-04`.** A professional must not use protected information obtained in one engagement for
 the benefit of another, and must not retain it after the authorisation under which it was held ends.
 
-**`PCI-FND-LAW-09-PR-05`.** A professional who becomes aware that protected information has entered an
+**`PCI-FND-STD-09-PR-05`.** A professional who becomes aware that protected information has entered an
 unauthorised system must notify the information owner promptly (D-20) and must escalate under
-`PCI-FND-LAW-11`.
+`PCI-FND-STD-11`.
 
 ---
 
-## PCI LAW PCI-FND-LAW-10 — Competence and Limitation
+## PCI STANDARD PCI-FND-STD-10 — Competence and Limitation
 
 **1. Normative requirement.** A professional must not accept, continue or issue work that requires competence
 they do not hold.
@@ -2019,7 +2019,7 @@ records maintained under PCI's certification requirements.
 
 **8. Responsible role.** The professional accepting or performing the work. The engagement lead (D-09) for
 matching work to competence within the engagement, and for the assessment required by
-`PCI-FND-LAW-10-PR-01`.
+`PCI-FND-STD-10-PR-01`.
 
 **9. Approval authority.** The engagement lead approves acceptance of an engagement against the recorded
 competence assessment. No role may approve the issue of an output requiring competence nobody on the
@@ -2028,7 +2028,7 @@ engagement holds; the route is referral under `-PR-02` or declining the work.
 **10. Independence requirement.** The adviser to whom a specialist matter is referred must be independent
 (D-12) of the outcome — in particular, must not be remunerated on the conclusion reached. Where work proceeds
 near the edge of the professional's competence with no specialist involved, the review required by
-`PCI-FND-LAW-03` must be performed by a competent reviewer (D-04) in that subject matter, not by a colleague
+`PCI-FND-STD-03` must be performed by a competent reviewer (D-04) in that subject matter, not by a colleague
 of equal unfamiliarity.
 
 **11. Materiality or threshold.** The recorded assessment in `-PR-01` attaches to material engagements and
@@ -2058,7 +2058,7 @@ is required, must not be presented as the source of specialist advice, and acces
 as evidence of competence.
 
 **16. AI verification.** Where an AI system assisted work at or beyond the edge of the professional's
-competence, the verification required by `PCI-FND-LAW-03` must be performed by **named expert judgement** —
+competence, the verification required by `PCI-FND-STD-03` must be performed by **named expert judgement** —
 a named competent reviewer in that subject matter — and the record must name that individual and the
 competence evidence relied on. Verification by the AI system's user does not satisfy this element, because
 the user is by definition unable to detect the errors the specialism exists to detect.
@@ -2089,9 +2089,9 @@ reserved activity without the licence can be an offence irrespective of actual c
 on what only licensed persons may do before offering any adjacent service, and before signing anything a local
 regime treats as a reserved certificate.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (accountability for what is issued) · `PCI-FND-LAW-03` (who is
-competent to verify) · `PCI-FND-LAW-04` (competence of the decision owner) · `PCI-FND-LAW-11` (escalating a
-competence gap) · `PCI-FND-LAW-14` (AI fluency is not competence).
+**19. Related PCI Laws.** `PCI-FND-STD-01` (accountability for what is issued) · `PCI-FND-STD-03` (who is
+competent to verify) · `PCI-FND-STD-04` (competence of the decision owner) · `PCI-FND-STD-11` (escalating a
+competence gap) · `PCI-FND-STD-14` (AI fluency is not competence).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 13. PML-AI KA 1.2 — professional standards of care;
 KA 1.4. PFL-AI KA 1.3 — fiduciary and professional obligations; Domain 12's standing referral of
@@ -2127,30 +2127,30 @@ jurisdictional tax question), by escalation decision (a gap found after issue) a
 **25. Version and status.** Version 1.0 · approval date: not approved — draft submitted under Charter §5
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-08`, withdrawn.
 
-### Process requirements under PCI-FND-LAW-10
+### Process requirements under PCI-FND-STD-10
 
-**`PCI-FND-LAW-10-PR-01`.** Before accepting a material engagement or role, the professional must record an
+**`PCI-FND-STD-10-PR-01`.** Before accepting a material engagement or role, the professional must record an
 assessment naming the competences the work requires and, for each, the named individual who holds it and the
 evidence that they do.
 
-**`PCI-FND-LAW-10-PR-02`.** A matter requiring legal, tax, accounting, actuarial, engineering, insurance,
+**`PCI-FND-STD-10-PR-02`.** A matter requiring legal, tax, accounting, actuarial, engineering, insurance,
 regulatory or other specialist judgement outside the professional's competence must be referred in writing to
 a suitably qualified adviser, and the referral and its answer must be recorded.
 
-**`PCI-FND-LAW-10-PR-03`.** A professional must not present the output of an AI system, a template or a
+**`PCI-FND-STD-10-PR-03`.** A professional must not present the output of an AI system, a template or a
 reference work as specialist advice, and access to such tools must not be recorded as evidence of competence
 under `-PR-01`.
 
-**`PCI-FND-LAW-10-PR-04`.** Where a competence gap is discovered after work has begun, the professional must
+**`PCI-FND-STD-10-PR-04`.** Where a competence gap is discovered after work has begun, the professional must
 disclose it promptly (D-20) to the engagement lead and to the client or employer, and must not issue the
 affected output until `-PR-02` is satisfied or a competent individual takes the work over.
 
-**`PCI-FND-LAW-10-PR-05`.** The professional must state the limits of their competence in writing wherever a
+**`PCI-FND-STD-10-PR-05`.** The professional must state the limits of their competence in writing wherever a
 recipient could otherwise rely on them for a matter outside it.
 
 ---
 
-## PCI LAW PCI-FND-LAW-11 — Escalation of Material Misstatement
+## PCI STANDARD PCI-FND-STD-11 — Escalation of Material Misstatement
 
 **1. Normative requirement.** A professional who knows or suspects that a material error, a material omission,
 an unsupported assumption or a misleading presentation exists in work that has been issued or is about to be
@@ -2181,7 +2181,7 @@ suppression of another person's escalation. Retaliating against, or assisting re
 good-faith escalator.
 
 **7. Required evidence.** The escalation record — what, to whom, when, with what evidence, and the response;
-the underlying evidence preserved under `PCI-FND-LAW-12`; the onward escalation record where the first
+the underlying evidence preserved under `PCI-FND-STD-12`; the onward escalation record where the first
 response did not remedy the matter; the governance arrangement identifying the route.
 
 **8. Responsible role.** The professional who knows or suspects. The decision owner (D-08) at the level
@@ -2250,10 +2250,10 @@ consequences of external disclosure differ sharply between jurisdictions, and so
 a regulator or authority within a fixed period. Obtain local legal advice before any disclosure outside the
 organisation, and before relying on any protection from detriment.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (an unevidenced claim) · `PCI-FND-LAW-05` (a misleading
-presentation) · `PCI-FND-LAW-12` (preserving the evidence) · `PCI-FND-LAW-13` (an override that was not
-authorised) · `PCI-FND-LAW-15` (correcting what was escalated). **Boundary with `PCI-FND-LAW-15`:** this law
-governs raising the matter internally; `PCI-FND-LAW-15` governs telling the people relying on the work and
+**19. Related PCI Laws.** `PCI-FND-STD-02` (an unevidenced claim) · `PCI-FND-STD-05` (a misleading
+presentation) · `PCI-FND-STD-12` (preserving the evidence) · `PCI-FND-STD-13` (an override that was not
+authorised) · `PCI-FND-STD-15` (correcting what was escalated). **Boundary with `PCI-FND-STD-15`:** this law
+governs raising the matter internally; `PCI-FND-STD-15` governs telling the people relying on the work and
 putting it right. Both can be engaged by one discovery, and satisfying one does not satisfy the other.
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 4 — performance management, variance analysis and
@@ -2291,32 +2291,32 @@ scenario judgement (an escalation route that includes the person responsible).
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-11`, withdrawn, and carries
 forward part of `PCI-LAW-F-07`.
 
-### Process requirements under PCI-FND-LAW-11
+### Process requirements under PCI-FND-STD-11
 
-**`PCI-FND-LAW-11-PR-01`.** The escalation must be recorded, stating what was raised, to whom, when, with what
+**`PCI-FND-STD-11-PR-01`.** The escalation must be recorded, stating what was raised, to whom, when, with what
 evidence and with what response.
 
-**`PCI-FND-LAW-11-PR-02`.** Where the response does not remedy the matter within the period the adopting
+**`PCI-FND-STD-11-PR-02`.** Where the response does not remedy the matter within the period the adopting
 organisation's procedure states, or within **ten working days** where it states none, the professional must
 escalate to the next independent level of the governance arrangement.
 
-**`PCI-FND-LAW-11-PR-03`.** A professional must not participate in suppressing, delaying, downgrading,
+**`PCI-FND-STD-11-PR-03`.** A professional must not participate in suppressing, delaying, downgrading,
 splitting, re-timing or reclassifying an escalation in order to keep a matter below a governance threshold.
 
-**`PCI-FND-LAW-11-PR-04`.** Where the escalation route is itself implicated in the matter, the professional
+**`PCI-FND-STD-11-PR-04`.** Where the escalation route is itself implicated in the matter, the professional
 must escalate to a function independent of it — internal audit, an audit or risk committee, the client, or
 PCI's conduct process where a PCI rule is engaged.
 
-**`PCI-FND-LAW-11-PR-05`.** A professional must not retaliate against, or assist retaliation against, a person
+**`PCI-FND-STD-11-PR-05`.** A professional must not retaliate against, or assist retaliation against, a person
 who escalates in good faith.
 
-**`PCI-FND-LAW-11-PR-06`.** A professional must escalate on knowledge or suspicion, and must not wait until
+**`PCI-FND-STD-11-PR-06`.** A professional must escalate on knowledge or suspicion, and must not wait until
 the matter is confirmed; where the facts are incomplete at the D-20 deadline, the professional must escalate
 what is known and complete the account afterwards.
 
 ---
 
-## PCI LAW PCI-FND-LAW-12 — Record Integrity
+## PCI STANDARD PCI-FND-STD-12 — Record Integrity
 
 **1. Normative requirement.** A professional must keep the records (D-22) evidencing their material outputs
 and decisions in a manner that makes every record attributable to its author, fixes the time it was created,
@@ -2350,7 +2350,7 @@ reliance.
 **7. Required evidence.** The records themselves, retrievable in a readable form; the version or change
 history showing author, time and alteration; the applicable retention schedule and evidence of its
 application; disposal authorisations and logs; hold notices and evidence they were honoured; the periodic
-retrieval test required by `PCI-FND-LAW-12-PR-07`.
+retrieval test required by `PCI-FND-STD-12-PR-07`.
 
 **8. Responsible role.** The professional for the records they control. The records owner (D-23) for a system
 of record. Where no records owner is designated, the issuing professional is the records owner for their own
@@ -2389,7 +2389,7 @@ record overwrites history silently; in-period records found to be irretrievable.
 maintain a disposal log, and identify records that appear to be missing from a set.
 
 **15. AI prohibition.** An AI system must not dispose of, alter or destroy a record without a recorded human
-decision under `PCI-FND-LAW-04`, must not generate a record purporting to be contemporaneous, and must not be
+decision under `PCI-FND-STD-04`, must not generate a record purporting to be contemporaneous, and must not be
 recorded as the author of a record a person authored.
 
 **16. AI verification.** Where an AI system classifies records for retention or disposal, the professional must
@@ -2423,9 +2423,9 @@ disclosure obligations attach at different moments in different legal systems. O
 before setting, shortening or applying a retention period, and before destroying, redacting or restructuring
 anything connected to a live or foreseeable dispute.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (the evidence that must survive) · `PCI-FND-LAW-07` (the lineage
-record) · `PCI-FND-LAW-09` (protecting the records' contents) · `PCI-FND-LAW-11` (preserving what was
-escalated) · `PCI-FND-LAW-13` (the override record) · `PCI-FND-LAW-15` (retaining the superseded version).
+**19. Related PCI Laws.** `PCI-FND-STD-02` (the evidence that must survive) · `PCI-FND-STD-07` (the lineage
+record) · `PCI-FND-STD-09` (protecting the records' contents) · `PCI-FND-STD-11` (preserving what was
+escalated) · `PCI-FND-STD-13` (the override record) · `PCI-FND-STD-15` (retaining the superseded version).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 13. PML-AI KA 3.3 — auditability and the decision
 record; KA 4.4 — the change board and the decision log; KA 16.4 — responsible archive and model or data
@@ -2461,34 +2461,34 @@ found to overwrite history).
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-12`, withdrawn, and carries
 forward part of `PCI-LAW-F-05`.
 
-### Process requirements under PCI-FND-LAW-12
+### Process requirements under PCI-FND-STD-12
 
-**`PCI-FND-LAW-12-PR-01`.** A record must be created at the time of the act it evidences, or as soon
+**`PCI-FND-STD-12-PR-01`.** A record must be created at the time of the act it evidences, or as soon
 afterwards as establishing the facts permits; a record created later must state both the date of creation and
 the date of the act.
 
-**`PCI-FND-LAW-12-PR-02`.** A record must not be presented as contemporaneous (D-06) when it is not.
+**`PCI-FND-STD-12-PR-02`.** A record must not be presented as contemporaneous (D-06) when it is not.
 
-**`PCI-FND-LAW-12-PR-03`.** A record must remain retrievable in a readable form for the longest of the periods
+**`PCI-FND-STD-12-PR-03`.** A record must remain retrievable in a readable form for the longest of the periods
 required by applicable law, the contract, the adopting organisation's retention schedule and PCI's
 certification rules.
 
-**`PCI-FND-LAW-12-PR-04`.** A record must not be altered or deleted except through an authorised process that
+**`PCI-FND-STD-12-PR-04`.** A record must not be altered or deleted except through an authorised process that
 retains the prior version and the identity of the person who made the change.
 
-**`PCI-FND-LAW-12-PR-05`.** Disposal must follow the authorised retention schedule, must be logged, and must
+**`PCI-FND-STD-12-PR-05`.** Disposal must follow the authorised retention schedule, must be logged, and must
 be suspended immediately when a dispute, audit, investigation or PCI conduct process is under way or
 foreseeable.
 
-**`PCI-FND-LAW-12-PR-06`.** Professional work on material matters must not be conducted through channels that
+**`PCI-FND-STD-12-PR-06`.** Professional work on material matters must not be conducted through channels that
 create no retained record for the purpose of avoiding one.
 
-**`PCI-FND-LAW-12-PR-07`.** The retrievability of in-period records must be tested at an interval the adopting
+**`PCI-FND-STD-12-PR-07`.** The retrievability of in-period records must be tested at an interval the adopting
 organisation states, and at least once in each engagement, and the test and its result retained.
 
 ---
 
-## PCI LAW PCI-FND-LAW-13 — No Silent Override
+## PCI STANDARD PCI-FND-STD-13 — No Silent Override
 
 **1. Normative requirement.** A control result (D-07) bearing on a material matter must not be overridden
 (D-17) unless a decision owner (D-08) authorised to do so has recorded the decision before the overridden
@@ -2527,7 +2527,7 @@ it.
 
 **8. Responsible role.** The decision owner (D-08) authorised for that control under the governance
 arrangement. The professional who configures a control is responsible for the change record required by
-`PCI-FND-LAW-13-PR-02`.
+`PCI-FND-STD-13-PR-02`.
 
 **9. Approval authority.** Only a decision owner authorised for that control may approve an override, and
 never the person whose work the control rejected. Where the authorised decision owner is the person whose
@@ -2597,9 +2597,9 @@ specific and sometimes personal liability to the disabling or overriding of a re
 require an override to be notified to a regulator. Obtain local legal and regulatory advice before overriding
 any control that a permit, licence, safety case or regulatory regime requires.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (a failed verification is a control result) · `PCI-FND-LAW-04`
-(the decision that an override requires) · `PCI-FND-LAW-11` (escalating an unauthorised override) ·
-`PCI-FND-LAW-12` (the override record's integrity) · `PCI-FND-LAW-14` (an AI system must not clear an
+**19. Related PCI Laws.** `PCI-FND-STD-03` (a failed verification is a control result) · `PCI-FND-STD-04`
+(the decision that an override requires) · `PCI-FND-STD-11` (escalating an unauthorised override) ·
+`PCI-FND-STD-12` (the override record's integrity) · `PCI-FND-STD-14` (an AI system must not clear an
 exception).
 
 **20. Related Body of Knowledge content.** PCL-AI Domain 4 — performance management, variance analysis and
@@ -2635,31 +2635,31 @@ dilemma (an instruction to widen a tolerance rather than record an override).
 **25. Version and status.** Version 1.0 · approval date: not approved — draft submitted under Charter §5
 Stage 11 · effective date: on approval · amendment note: new law; no direct predecessor in the withdrawn set.
 
-### Process requirements under PCI-FND-LAW-13
+### Process requirements under PCI-FND-STD-13
 
-**`PCI-FND-LAW-13-PR-01`.** The override record must state the control overridden, the reason, the evidence
+**`PCI-FND-STD-13-PR-01`.** The override record must state the control overridden, the reason, the evidence
 considered, the compensating action taken, the decision owner and the date.
 
-**`PCI-FND-LAW-13-PR-02`.** A control must not be disabled, re-parameterised, re-scoped or re-timed in order
+**`PCI-FND-STD-13-PR-02`.** A control must not be disabled, re-parameterised, re-scoped or re-timed in order
 to prevent it producing the result that would otherwise require an override; every change to a material
 control's configuration must be recorded with its author, its reason and its date.
 
-**`PCI-FND-LAW-13-PR-03`.** An override must be time-limited and its expiry recorded; a standing override
+**`PCI-FND-STD-13-PR-03`.** An override must be time-limited and its expiry recorded; a standing override
 must be reviewed by the decision owner at an interval the adopting organisation states.
 
-**`PCI-FND-LAW-13-PR-04`.** Overrides must be reviewed in aggregate at an interval the adopting organisation
-states, and a control whose results are repeatedly overridden must be escalated under `PCI-FND-LAW-11` as
+**`PCI-FND-STD-13-PR-04`.** Overrides must be reviewed in aggregate at an interval the adopting organisation
+states, and a control whose results are repeatedly overridden must be escalated under `PCI-FND-STD-11` as
 either a defective control or a defective process.
 
-**`PCI-FND-LAW-13-PR-05`.** An automated process must not clear, close or suppress a control exception on a
-material matter without a recorded human decision under `PCI-FND-LAW-04`.
+**`PCI-FND-STD-13-PR-05`.** An automated process must not clear, close or suppress a control exception on a
+material matter without a recorded human decision under `PCI-FND-STD-04`.
 
-**`PCI-FND-LAW-13-PR-06`.** A check must not be re-run until it passes with only the passing run retained;
+**`PCI-FND-STD-13-PR-06`.** A check must not be re-run until it passes with only the passing run retained;
 every run of a material control must remain in the control's log.
 
 ---
 
-## PCI LAW PCI-FND-LAW-14 — Responsible AI
+## PCI STANDARD PCI-FND-STD-14 — Responsible AI
 
 **1. Normative requirement.** A professional must not permit an AI system (D-02) to decide, approve, certify,
 sign, waive or authorise a material matter, and must not permit it to be represented to any person as having
@@ -2692,14 +2692,14 @@ another.
 
 **7. Required evidence.** The AI-contribution record for each material output — the system, its version or
 model identifier where available, the date, and what it contributed; the disclosure made where `-PR-03`
-applies; the citation checks required by `-PR-04`; the verification record required by `PCI-FND-LAW-03`.
+applies; the citation checks required by `-PR-04`; the verification record required by `PCI-FND-STD-03`.
 
 **8. Responsible role.** The issuing professional (D-14) for the output. The decision owner (D-08) for the
 matter. The professional who configures an AI-assisted workflow is responsible for the boundaries within it.
 
 **9. Approval authority.** The decision owner approves the matter; the AI system approves nothing. Adoption of
 an AI system for material work at organisational scale is approved by the decision owner for technology under
-the governance arrangement, on the assessment required by `PCI-FND-LAW-09` element 10 where protected
+the governance arrangement, on the assessment required by `PCI-FND-STD-09` element 10 where protected
 information is involved.
 
 **10. Independence requirement.** An AI system is never independent (D-12) for the purposes of these laws,
@@ -2729,14 +2729,14 @@ do, and it is a great deal.**
 
 **15. AI prohibition.** As element 1, and in addition: an AI system must not determine that verification is
 unnecessary, must not be the sole verifier of another AI system's output, must not be named as the
-accountable party under `PCI-FND-LAW-01`, must not be recorded as a decision owner under `PCI-FND-LAW-04`,
-must not authorise an override under `PCI-FND-LAW-13`, and must not decide whether a matter is material,
+accountable party under `PCI-FND-STD-01`, must not be recorded as a decision owner under `PCI-FND-STD-04`,
+must not authorise an override under `PCI-FND-STD-13`, and must not decide whether a matter is material,
 protected, conflicted or escalation-worthy.
 
-**16. AI verification.** Every material AI contribution must be verified under `PCI-FND-LAW-03` by a named
+**16. AI verification.** Every material AI contribution must be verified under `PCI-FND-STD-03` by a named
 person applying a named method, and in addition: every citation, quotation, figure, clause reference and
 attribution the AI system produced must be checked by **source tracing** against the cited source itself
-under `PCI-FND-LAW-06-PR-04`; and where the output classifies, ranks or scores, the professional must apply
+under `PCI-FND-STD-06-PR-04`; and where the output classifies, ranks or scores, the professional must apply
 **sampling on a stated basis** to the items the system did *not* flag, because a classifier's silence is the
 part no one inspects. Both checks must be recorded.
 
@@ -2779,10 +2779,10 @@ impose their own duties on automated processing, explanation and human oversight
 before deploying an AI system into a regulated activity or into any process affecting individuals, and treat
 any such requirement as prevailing over this law under Charter §4. Verify current requirements.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (who remains accountable) · `PCI-FND-LAW-03` (how the contribution
-is verified) · `PCI-FND-LAW-04` (who decides) · `PCI-FND-LAW-06` (checking AI-produced citations) ·
-`PCI-FND-LAW-09` (what may be entered into an AI system) · `PCI-FND-LAW-13` (an AI system must not clear an
-exception). **Boundaries:** `PCI-FND-LAW-03` governs *whether an item was checked*; `PCI-FND-LAW-04` governs
+**19. Related PCI Laws.** `PCI-FND-STD-01` (who remains accountable) · `PCI-FND-STD-03` (how the contribution
+is verified) · `PCI-FND-STD-04` (who decides) · `PCI-FND-STD-06` (checking AI-produced citations) ·
+`PCI-FND-STD-09` (what may be entered into an AI system) · `PCI-FND-STD-13` (an AI system must not clear an
+exception). **Boundaries:** `PCI-FND-STD-03` governs *whether an item was checked*; `PCI-FND-STD-04` governs
 *who owns the decision*; this law governs *what an AI system must never be permitted to do or be represented
 as having done*. A workflow can satisfy any two and breach the third.
 
@@ -2794,7 +2794,7 @@ explainability, validation, bias and model risk.
 
 **21. Compliance test.** For a sample of material outputs and workflows selected by the reviewer:
 (a) **Configuration test** — in each AI-assisted workflow, the reviewer identifies every step that gives
-effect to an output and confirms from the configuration that a human decision under `PCI-FND-LAW-04` precedes
+effect to an output and confirms from the configuration that a human decision under `PCI-FND-STD-04` precedes
 it; a workflow in which any effecting step can execute without one fails. (b) **Representation test** — the
 reviewer reads the issued output and its covering communications and finds no statement, label, badge or
 implication that an AI system verified, approved, certified or signed anything. (c) **Record test** — where an
@@ -2823,30 +2823,30 @@ dilemma (a client who asks whether the report was written by a person).
 Stage 11 · effective date: on approval · amendment note: carries forward the boundary substance of the
 withdrawn `PCI-LAW-F-02` and the disclosure substance of the withdrawn `PCI-LAW-F-04`.
 
-### Process requirements under PCI-FND-LAW-14
+### Process requirements under PCI-FND-STD-14
 
-**`PCI-FND-LAW-14-PR-01`.** Where an AI system materially contributed to a material output, the working record
+**`PCI-FND-STD-14-PR-01`.** Where an AI system materially contributed to a material output, the working record
 must state the system used, its version or model identifier where available, the date, and what it contributed.
 
-**`PCI-FND-LAW-14-PR-02`.** A professional must answer truthfully any question from a recipient about whether
+**`PCI-FND-STD-14-PR-02`.** A professional must answer truthfully any question from a recipient about whether
 and how an AI system contributed to an output, and must not deny a contribution that occurred.
 
-**`PCI-FND-LAW-14-PR-03`.** Where a recipient's decision to rely on an output could turn on how it was
+**`PCI-FND-STD-14-PR-03`.** Where a recipient's decision to rely on an output could turn on how it was
 produced, the AI contribution must be disclosed to that recipient before reliance; where a contract, client
 rule, employer policy or PCI examination condition imposes a stricter disclosure duty, that duty governs.
 
-**`PCI-FND-LAW-14-PR-04`.** A citation, quotation, figure, clause reference or attribution produced by an AI
-system must be checked against the cited source itself before presentation, under `PCI-FND-LAW-06-PR-04`.
+**`PCI-FND-STD-14-PR-04`.** A citation, quotation, figure, clause reference or attribution produced by an AI
+system must be checked against the cited source itself before presentation, under `PCI-FND-STD-06-PR-04`.
 
-**`PCI-FND-LAW-14-PR-05`.** An AI system must not be used as the sole check on another AI system's output, and
+**`PCI-FND-STD-14-PR-05`.** An AI system must not be used as the sole check on another AI system's output, and
 must not determine that verification is unnecessary.
 
-**`PCI-FND-LAW-14-PR-06`.** A professional must not present or treat an AI system's fluency, confidence score,
+**`PCI-FND-STD-14-PR-06`.** A professional must not present or treat an AI system's fluency, confidence score,
 formatting or apparent authority as evidence that its output is correct.
 
 ---
 
-## PCI LAW PCI-FND-LAW-15 — Correction Duty
+## PCI STANDARD PCI-FND-STD-15 — Correction Duty
 
 **1. Normative requirement.** A professional who discovers a material error in work they have issued must
 communicate it promptly (D-20) to every person known to be relying on that work.
@@ -2889,7 +2889,7 @@ and none may be imposed. The decision owner (D-08) for each affected decision de
 decision. The engagement lead approves the form of the corrected issue.
 
 **10. Independence requirement.** Where the error concerns a material calculation, model output or automated
-conclusion, the corrected version must be verified under `PCI-FND-LAW-03` by a competent reviewer independent
+conclusion, the corrected version must be verified under `PCI-FND-STD-03` by a competent reviewer independent
 (D-12) of the correction — the same discipline that applied to the original, applied again, because a
 correction made in haste is where the second error enters.
 
@@ -2902,7 +2902,7 @@ every other material error the five-working-day period.
 **12. Exception and waiver.** **No exception is permitted** to communicating a material error to those relying
 on the work. Where a legal obligation, a regulator's direction or a court order restricts what may be
 communicated or to whom, the professional must obtain legal advice, must communicate to the fullest extent the
-restriction permits, must record the restriction and the advice, and must escalate under `PCI-FND-LAW-11`. A
+restriction permits, must record the restriction and the advice, and must escalate under `PCI-FND-STD-11`. A
 confidentiality undertaking, a commercial concern, an employer's preference or the professional's own exposure
 is not such a restriction.
 
@@ -2921,7 +2921,7 @@ of an identified correction.
 **16. AI verification.** Where an AI system identified the downstream uses of the erroneous figure, the
 professional must apply **source tracing** to at least the uses the system did *not* identify — searching the
 engagement's issued outputs for the figure and its derivatives — and must record the search basis and the
-result. Where an AI system computed the corrected figure, `PCI-FND-LAW-03` applies to it in full.
+result. Where an AI system computed the corrected figure, `PCI-FND-STD-03` applies to it in full.
 
 **17. External reference.**
 - **IAS 8**. Issuing organisation: IFRS Foundation / IASB. Subject: accounting for and disclosure of
@@ -2950,9 +2950,9 @@ some regimes the timing and form of the correction are prescribed. Obtain local 
 before correcting anything that has been published, filed, certified or relied upon by a lender, an investor
 or an authority.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (accountability for the work being corrected) · `PCI-FND-LAW-03`
-(verifying the correction) · `PCI-FND-LAW-05` (a failed assumption) · `PCI-FND-LAW-11` (escalating the error
-internally) · `PCI-FND-LAW-12` (retaining the superseded version). **Boundary with `PCI-FND-LAW-11`:** that
+**19. Related PCI Laws.** `PCI-FND-STD-01` (accountability for the work being corrected) · `PCI-FND-STD-03`
+(verifying the correction) · `PCI-FND-STD-05` (a failed assumption) · `PCI-FND-STD-11` (escalating the error
+internally) · `PCI-FND-STD-12` (retaining the superseded version). **Boundary with `PCI-FND-STD-11`:** that
 law is discharged by raising the matter internally; this one is discharged only by telling the people relying
 on the work and putting it right. One discovery ordinarily engages both.
 
@@ -2991,28 +2991,28 @@ calculation review (assessing whether a corrected figure would have changed the 
 Stage 11 · effective date: on approval · amendment note: new law; carries forward the correction substance of
 the withdrawn `PCI-LAW-F-07`.
 
-### Process requirements under PCI-FND-LAW-15
+### Process requirements under PCI-FND-STD-15
 
-**`PCI-FND-LAW-15-PR-01`.** On discovery, the professional must record the error, its date of discovery, its
+**`PCI-FND-STD-15-PR-01`.** On discovery, the professional must record the error, its date of discovery, its
 cause where known, and its effect on each conclusion the work supports.
 
-**`PCI-FND-LAW-15-PR-02`.** The professional must assess and record whether any decision already taken in
+**`PCI-FND-STD-15-PR-02`.** The professional must assess and record whether any decision already taken in
 reliance on the work would have differed, and must communicate that assessment to the decision owner of each
 such decision.
 
-**`PCI-FND-LAW-15-PR-03`.** A corrected version must be issued, identified as a correction, stating what
+**`PCI-FND-STD-15-PR-03`.** A corrected version must be issued, identified as a correction, stating what
 changed, why, and which earlier version it replaces; the superseded version must be retained in the record and
 must not be deleted.
 
-**`PCI-FND-LAW-15-PR-04`.** Where the professional no longer controls the issued work, they must notify the
+**`PCI-FND-STD-15-PR-04`.** Where the professional no longer controls the issued work, they must notify the
 party who does, in writing, and must record the notification.
 
-**`PCI-FND-LAW-15-PR-05`.** A professional must not correct a material error silently — by replacing a figure,
+**`PCI-FND-STD-15-PR-05`.** A professional must not correct a material error silently — by replacing a figure,
 file or document without a record identifying the change.
 
-**`PCI-FND-LAW-15-PR-06`.** Where the professional is prevented from communicating the error by an instruction
+**`PCI-FND-STD-15-PR-06`.** Where the professional is prevented from communicating the error by an instruction
 from an employer, a client or any other person, they must record the instruction and escalate it under
-`PCI-FND-LAW-11`.
+`PCI-FND-STD-11`.
 
 ---
 
@@ -3026,30 +3026,30 @@ without a defect being identified, not that it was skipped.
 
 | # | Question | Laws affected | Finding, and what was changed |
 |---|---|---|---|
-| 1 | What exact failure does this law prevent? | All 15 | **Changed.** Element 2 of every law was rewritten to name one professional failure in concrete terms rather than to restate the obligation as an aspiration. Two drafts failed: an early `PCI-FND-LAW-14` purpose said "to ensure responsible AI use", which names no failure, and an early `PCI-FND-LAW-12` purpose restated its own rule. Both were replaced with the specific failure mode. |
+| 1 | What exact failure does this law prevent? | All 15 | **Changed.** Element 2 of every law was rewritten to name one professional failure in concrete terms rather than to restate the obligation as an aspiration. Two drafts failed: an early `PCI-FND-STD-14` purpose said "to ensure responsible AI use", which names no failure, and an early `PCI-FND-STD-12` purpose restated its own rule. Both were replaced with the specific failure mode. |
 | 2 | Is the requirement mandatory or only recommended? | All 15 | **Changed.** `should` was removed from every normative position; it appears nowhere in any element 1 or Process Requirement. The ISO requirement verb appears nowhere in the file, in any field, per Manual §1 — the superseded set used it in eleven Rule fields and this edition removes all of them. No Recommended Practice (Level 5) is created by this set. |
-| 3 | Can a professional know whether it applies to them? | All 15 | **Changed.** Element 3 was standardised to answer four questions explicitly — who is governed, which decisions, which projects or transactions, and whether it bites at preparation, review, recommendation, approval or assurance. `PCI-FND-LAW-14` gained the clause "in which an AI system is used, at any stage, by anyone on the engagement", because a professional who did not personally use the tool was otherwise able to read themselves out of it. |
-| 4 | Is the responsible person identifiable? | 01, 02, 04, 07, 08, 10, 11, 12, 13, 15 | **Changed.** Element 8 never reads "the team", "management" or "the organisation". Six role terms were defined instead (D-08, D-09, D-13, D-14, D-23, plus D-04) and element 8 names one of them in every law. `PCI-FND-LAW-15` gained a split responsibility, because the issuing professional may have left the engagement while the duty to communicate remains personal. |
+| 3 | Can a professional know whether it applies to them? | All 15 | **Changed.** Element 3 was standardised to answer four questions explicitly — who is governed, which decisions, which projects or transactions, and whether it bites at preparation, review, recommendation, approval or assurance. `PCI-FND-STD-14` gained the clause "in which an AI system is used, at any stage, by anyone on the engagement", because a professional who did not personally use the tool was otherwise able to read themselves out of it. |
+| 4 | Is the responsible person identifiable? | 01, 02, 04, 07, 08, 10, 11, 12, 13, 15 | **Changed.** Element 8 never reads "the team", "management" or "the organisation". Six role terms were defined instead (D-08, D-09, D-13, D-14, D-23, plus D-04) and element 8 names one of them in every law. `PCI-FND-STD-15` gained a split responsibility, because the issuing professional may have left the engagement while the duty to communicate remains personal. |
 | 5 | Is the required action observable? | 01, 04, 05, 08, 11, 14 | **Changed.** Unobservable formulations were removed: "accept accountability" became **record** an acceptance (01); "manage the conflict" became one of four recorded safeguards (08); "consider the recommendation" became a recorded factor not stated in the recommendation itself (04); "disclose material AI assistance" became a record naming system, version, date and contribution (14). |
-| 6 | Is compliance provable? | All 15 | **Changed.** Element 7 in every law names records that exist independently of the professional's own account. Where an element 1 obligation had no possible proof, it was reworded: `PCI-FND-LAW-05`'s original "must consider sensitivities" became "must state the effect on the conclusion of a stated change", which leaves a document behind. |
-| 7 | Is the required evidence proportionate? | 02, 05, 07, 12 | **Changed.** `PCI-FND-LAW-07` element 11 now states that lineage is required for the **figures presented in the material output**, not field-level lineage for every value in a system. `PCI-FND-LAW-12` element 11 was made technology-neutral. `PCI-FND-LAW-05-PR-02` bounds the sensitivity work to material assumptions only. `PCI-FND-LAW-02` element 11 permits a single referenced worksheet as the working record on a small engagement. |
+| 6 | Is compliance provable? | All 15 | **Changed.** Element 7 in every law names records that exist independently of the professional's own account. Where an element 1 obligation had no possible proof, it was reworded: `PCI-FND-STD-05`'s original "must consider sensitivities" became "must state the effect on the conclusion of a stated change", which leaves a document behind. |
+| 7 | Is the required evidence proportionate? | 02, 05, 07, 12 | **Changed.** `PCI-FND-STD-07` element 11 now states that lineage is required for the **figures presented in the material output**, not field-level lineage for every value in a system. `PCI-FND-STD-12` element 11 was made technology-neutral. `PCI-FND-STD-05-PR-02` bounds the sensitivity work to material assumptions only. `PCI-FND-STD-02` element 11 permits a single referenced worksheet as the working record on a small engagement. |
 | 8 | Can the law be audited? | All 15 | **Changed.** Element 21 was rewritten in all fifteen laws to a sampling test with pass and fail conditions stated. See question 6 of this table and §5.1 of the Manual: five element-21 drafts were rejected as unauditable and replaced — see the Q21 row below for the pattern. |
 | 9 | Can the law be examined through a scenario? | All 15 | **No change required.** Element 24 in each law names which of the Manual's six assessment modes applies and gives the scenario shape. No law is assessable only by recalling its number. |
 | 10 | **Can a professional technically comply while defeating its purpose?** | 01, 03, 04, 05, 07, 08, 09, 11, 12, 13, 14, 15 | **Changed — the heaviest single source of revision in this edition.** Twelve gaming routes were found and closed: (i) naming an accountable person who never saw the work — closed by requiring the acceptance to be attributable to that individual and by the no-notice question in `01` element 21; (ii) "verifying" by re-running the same tool — closed by `03-PR-03`; (iii) rubber-stamping — closed by the walk-through and substance limbs of `04` element 21; (iv) burying material assumptions among a hundred boilerplate ones — closed by the two-way matching test in `05` element 21(b) and by `05-PR-05`; (v) narrative lineage that only the preparer can follow — closed by requiring reproduction **without assistance from the preparer** in `07` element 21; (vi) self-certifying that a conflict is harmless — closed by the closed list in `08-PR-01` and by `08-PR-02`; (vii) redacting names and pasting the rest into an unauthorised tool — closed by the reconstruction clause in D-21; (viii) escalating into a captive channel or with no record — closed by `11-PR-01` and `11-PR-04`, and by starting `11` element 21 from the population of **matters** rather than of escalations; (ix) working in ephemeral channels to avoid creating records — closed by `12-PR-06`; (x) widening a tolerance instead of recording an override — closed by `13-PR-02` and by limb (e) of `13` element 21, which reads the configuration change history against the override log; (xi) re-running a check until it passes — closed by `13-PR-06`; (xii) correcting silently and letting the next routine report carry it — closed by `15-PR-05` and by the prohibition in `15` element 6. |
 | 11 | Does it conflict with another PCI law? | 03, 04, 07, 11, 12, 14, 15 | **Changed.** Four boundary statements were added to element 19 where two laws could be read as covering the same act: `03` against `14` (whether an item was checked, versus what an AI system may be permitted to do); `04` against `14` (who owns the decision, versus what an AI system may be represented as doing); `07` against `12` (retraceability versus survival of records); `11` against `15` (raising it internally versus telling those relying and putting it right). Each states that satisfying one does not satisfy the other. |
-| 12 | Does it duplicate an external standard unnecessarily? | 02, 05, 07, 12, 13, 15 | **Changed.** Every element 17 entry now carries the sentence that PCI sources no requirement to the instrument, except where the instrument is genuinely the applicable authority. Three references present in early drafts were deleted as decorative: ISO 21500 and ISO 21502 under `PCI-FND-LAW-01`, and ANSI/EIA-748 under `PCI-FND-LAW-07`, none of which added an obligation or a limitation the law needed. |
+| 12 | Does it duplicate an external standard unnecessarily? | 02, 05, 07, 12, 13, 15 | **Changed.** Every element 17 entry now carries the sentence that PCI sources no requirement to the instrument, except where the instrument is genuinely the applicable authority. Three references present in early drafts were deleted as decorative: ISO 21500 and ISO 21502 under `PCI-FND-STD-01`, and ANSI/EIA-748 under `PCI-FND-STD-07`, none of which added an obligation or a limitation the law needed. |
 | 13 | Does it misrepresent external authority? | 01, 04, 06, 08, 09, 13, 14, 15 | **Changed, and this produced four corrections.** (i) The **IFRS Conceptual Framework is excluded from the whole set** — the IASB states it is not a Standard, and Manual §6 forbids sourcing a requirement to it. (ii) Only **Regulation (EU) 2024/1689** is described as legislation, and only within the EU; the **GDPR** is recorded as category 10 illustrative practice in `09` and relied on for nothing. (iii) **SR 11-7** is recorded as supervisory guidance with no legal force of its own, addressed to US-supervised institutions. (iv) **ISO/IEC 17024** is stated to address certification bodies, not individual credential holders — the superseded set cited it four times without that limitation. In addition, ISO 31000 and ISO/IEC 23894 are marked as guidance that nothing can be certified against, ISO/IEC 27701 is described as a standalone requirements standard rather than an extension, and ISO 37001 carries the note that certification is not a legal defence. |
-| 14 | Does it require legal or jurisdiction-specific advice? | All 15 | **No change required.** Element 18 in each law names the specific regimes that displace or supplement it, and Charter §4 governs the priority. `PCI-FND-LAW-10` element 12 additionally makes reserved activities a no-exception case. |
-| 15 | Does it define the relevant materiality threshold? | All 15 | **Changed.** No percentage is invented anywhere in this set, per Manual §5.3. *Material* is defined once at D-15 by a six-limb test, with the adopting organisation's published tolerance as one limb and a recorded decision-owner determination as the fallback. Two laws state expressly that **no** threshold applies — `PCI-FND-LAW-09` (a single record can identify a person) and `PCI-FND-LAW-08` (every conflict within D-05 is declarable) — because a threshold there would have been a loophole. |
+| 14 | Does it require legal or jurisdiction-specific advice? | All 15 | **No change required.** Element 18 in each law names the specific regimes that displace or supplement it, and Charter §4 governs the priority. `PCI-FND-STD-10` element 12 additionally makes reserved activities a no-exception case. |
+| 15 | Does it define the relevant materiality threshold? | All 15 | **Changed.** No percentage is invented anywhere in this set, per Manual §5.3. *Material* is defined once at D-15 by a six-limb test, with the adopting organisation's published tolerance as one limb and a recorded decision-owner determination as the fallback. Two laws state expressly that **no** threshold applies — `PCI-FND-STD-09` (a single record can identify a person) and `PCI-FND-STD-08` (every conflict within D-05 is declarable) — because a threshold there would have been a loophole. |
 | 16 | Does it cover AI use? | All 15 | **No change required.** Elements 14, 15 and 16 are present in all fifteen laws, and element 16 names a specific method in every case rather than saying "review the AI output". |
-| 17 | Does it preserve human accountability? | 01, 03, 04, 13, 14 | **Changed.** `PCI-FND-LAW-14` element 10 was added to state that an AI system is **never** independent for the purposes of these laws, because it does not hold the accountability that independence exists to protect. Without it, a reader could have argued that a second model satisfied `PCI-FND-LAW-03`. |
-| 18 | Does it contain an exception process? | All 15 | **Changed.** Element 12 in every law states either the exception process in full — approver, justification, duration, compensating controls, reporting — or that no exception is permitted. Six laws permit none: `01`, `08` (to disclosure), `11`, `14`, `15` (to communication), and `13` in substance, since an override is itself the recorded exception mechanism. `PCI-FND-LAW-03` element 12 gained the carve-out that **no waiver is available** where the item supports an irreversible commitment, a payment, an external report or a safety decision. **Stage 9 addition:** the second red-team pass tested every element 12 against a genuine emergency and found two laws with no compliant route in the case that will certainly arise. `PCI-FND-LAW-03` and `PCI-FND-LAW-08` each gained a **narrow allowance, not a waiver** — act only to the extent necessary to protect the safety of a person, record it, disclose it within one working day, obtain the deferred verification or the substitute safeguard, and have the accountable person record their position within five working days. Neither allowance reaches commercial urgency. |
+| 17 | Does it preserve human accountability? | 01, 03, 04, 13, 14 | **Changed.** `PCI-FND-STD-14` element 10 was added to state that an AI system is **never** independent for the purposes of these laws, because it does not hold the accountability that independence exists to protect. Without it, a reader could have argued that a second model satisfied `PCI-FND-STD-03`. |
+| 18 | Does it contain an exception process? | All 15 | **Changed.** Element 12 in every law states either the exception process in full — approver, justification, duration, compensating controls, reporting — or that no exception is permitted. Six laws permit none: `01`, `08` (to disclosure), `11`, `14`, `15` (to communication), and `13` in substance, since an override is itself the recorded exception mechanism. `PCI-FND-STD-03` element 12 gained the carve-out that **no waiver is available** where the item supports an irreversible commitment, a payment, an external report or a safety decision. **Stage 9 addition:** the second red-team pass tested every element 12 against a genuine emergency and found two laws with no compliant route in the case that will certainly arise. `PCI-FND-STD-03` and `PCI-FND-STD-08` each gained a **narrow allowance, not a waiver** — act only to the extent necessary to protect the safety of a person, record it, disclose it within one working day, obtain the deferred verification or the substitute safeguard, and have the accountable person record their position within five working days. Neither allowance reaches commercial urgency. |
 | 19 | Does it define escalation? | All 15 | **Changed.** *Escalation threshold* is defined once at D-10 by six triggers, one of which is the adopting organisation's own criteria, so the law functions with or without a threshold framework. Element 13 in every law names the events that require escalation rather than saying "where appropriate". |
-| 20 | Is every important term defined? | All 15 | **Changed — the second-heaviest source of revision.** Twenty-eight terms are defined at D-01 to D-28 and used identically throughout. Undefined judgement words were removed from every obligation: **"appropriately"** is gone from `PCI-FND-LAW-08` and replaced by the closed list at `08-PR-01`, as the drafting brief required; **"reasonable"** was removed from an early `08` element 21 and replaced with a comparison against the D-05 relationship list; **"adequate", "relevant", "timely" and "sufficient"** appear in no obligation. **"Promptly"** is defined at D-20 with a one-working-day and five-working-day default, and a stated start point at knowledge or suspicion rather than confirmation. No definition is circular: *material*, *independent*, *verified* and *evidence* are each defined by a test the reader applies, not by a synonym. |
+| 20 | Is every important term defined? | All 15 | **Changed — the second-heaviest source of revision.** Twenty-eight terms are defined at D-01 to D-28 and used identically throughout. Undefined judgement words were removed from every obligation: **"appropriately"** is gone from `PCI-FND-STD-08` and replaced by the closed list at `08-PR-01`, as the drafting brief required; **"reasonable"** was removed from an early `08` element 21 and replaced with a comparison against the D-05 relationship list; **"adequate", "relevant", "timely" and "sufficient"** appear in no obligation. **"Promptly"** is defined at D-20 with a one-working-day and five-working-day default, and a stated start point at knowledge or suspicion rather than confirmation. No definition is circular: *material*, *independent*, *verified* and *evidence* are each defined by a test the reader applies, not by a synonym. |
 | 21 | Is the language concrete and modern? | All 15 | **Changed.** Modern must-drafting only; the ISO requirement verb appears nowhere. Five element-21 compliance tests were rejected as too weak to produce agreement between two reviewers and rewritten: `01` (now a no-notice question to the named individual), `05` (now a two-way match between the assumption statement and the sensitivity statement), `07` (now a reproduction the reviewer performs unaided), `11` (now sampled from the population of matters, not of escalations) and `13` (now read from the control logs and the configuration change history, not from the override log). |
-| 22 | **Does it impose an impossible or excessive burden?** | 03, 05, 07, 09, 10, 12, 14 | **Changed.** Six burdens were cut. (i) `PCI-FND-LAW-03` originally required independent verification of every calculation; it now attaches to **material** items only and permits a bounded waiver where no independent person exists. (ii) `PCI-FND-LAW-07` no longer implies field-level lineage. (iii) `PCI-FND-LAW-12` no longer implies a records-management system; it requires only that alteration be detectable and attributable. (iv) `PCI-FND-LAW-05` bounds sensitivity work to material assumptions. (v) `PCI-FND-LAW-14` element 11 states expressly that non-material AI use — internal notes, exploration, learning — is not burdened by this law at all. (vi) `PCI-FND-LAW-10-PR-01` requires a competence assessment for **material** engagements and roles, not for every task. |
-| 23 | **Can it operate on both small projects and megaprojects?** | 01, 03, 04, 07, 09, 12, 13 | **Changed.** Each law was tested against a two-person consultancy and a multi-billion programme, and seven failed on the small case before revision. (i) D-01 makes a sole practitioner their own adopting organisation and requires them to record, once, the criteria these laws leave to it. (ii) The note on roles states that one individual may hold several capacities. (iii) `PCI-FND-LAW-03` element 12 provides the independence waiver with cumulative compensating controls, and forbids it on irreversible, payment, external-report and safety matters. (iv) `PCI-FND-LAW-09-PR-01` supplies the information-owner authorisation route where no register of authorised systems exists. (v) `PCI-FND-LAW-12` element 11 makes the requirement technology-neutral and states that versioned files with dated issues comply. (vi) `PCI-FND-LAW-04` element 11 states that a single recorded line may be the whole delegated-authority schedule. (vii) `PCI-FND-LAW-13` element 11 permits the control classification to be one recorded list. On the megaproject side, no law needed relaxing; `PCI-FND-LAW-05` element 11 notes that the same test simply identifies more assumptions. |
-| 24 | Can it operate internationally? | All 15 | **Changed.** No law assumes a jurisdiction, a currency, a professional body, a regulator or a legal system. Element 18 in each law identifies what needs local advice, and Charter §4 places applicable legislation and regulation above every PCI Law. The single monetary illustration in the set (`PCI-FND-LAW-03` element 11) is expressly an illustration of why PCI sets no figure, not a threshold. |
+| 22 | **Does it impose an impossible or excessive burden?** | 03, 05, 07, 09, 10, 12, 14 | **Changed.** Six burdens were cut. (i) `PCI-FND-STD-03` originally required independent verification of every calculation; it now attaches to **material** items only and permits a bounded waiver where no independent person exists. (ii) `PCI-FND-STD-07` no longer implies field-level lineage. (iii) `PCI-FND-STD-12` no longer implies a records-management system; it requires only that alteration be detectable and attributable. (iv) `PCI-FND-STD-05` bounds sensitivity work to material assumptions. (v) `PCI-FND-STD-14` element 11 states expressly that non-material AI use — internal notes, exploration, learning — is not burdened by this law at all. (vi) `PCI-FND-STD-10-PR-01` requires a competence assessment for **material** engagements and roles, not for every task. |
+| 23 | **Can it operate on both small projects and megaprojects?** | 01, 03, 04, 07, 09, 12, 13 | **Changed.** Each law was tested against a two-person consultancy and a multi-billion programme, and seven failed on the small case before revision. (i) D-01 makes a sole practitioner their own adopting organisation and requires them to record, once, the criteria these laws leave to it. (ii) The note on roles states that one individual may hold several capacities. (iii) `PCI-FND-STD-03` element 12 provides the independence waiver with cumulative compensating controls, and forbids it on irreversible, payment, external-report and safety matters. (iv) `PCI-FND-STD-09-PR-01` supplies the information-owner authorisation route where no register of authorised systems exists. (v) `PCI-FND-STD-12` element 11 makes the requirement technology-neutral and states that versioned files with dated issues comply. (vi) `PCI-FND-STD-04` element 11 states that a single recorded line may be the whole delegated-authority schedule. (vii) `PCI-FND-STD-13` element 11 permits the control classification to be one recorded list. On the megaproject side, no law needed relaxing; `PCI-FND-STD-05` element 11 notes that the same test simply identifies more assumptions. |
+| 24 | Can it operate internationally? | All 15 | **Changed.** No law assumes a jurisdiction, a currency, a professional body, a regulator or a legal system. Element 18 in each law identifies what needs local advice, and Charter §4 places applicable legislation and regulation above every PCI Law. The single monetary illustration in the set (`PCI-FND-STD-03` element 11) is expressly an illustration of why PCI sets no figure, not a threshold. |
 | 25 | Is there a clear consequence within PCI's authority? | All 15 | **Changed.** Element 23 in every law is drawn **only** from the Charter §9 list. The superseded set used the word "revocation" throughout; Charter §9 says **withdrawal**, and every occurrence was corrected. No law claims a fine, a criminal consequence, a damages liability or any governmental enforcement power, and every consequence is stated as subject to due process and a right of appeal. |
 
 **Two findings this audit could not resolve, recorded rather than hidden.**
@@ -3057,8 +3057,8 @@ without a defect being identified, not that it was skipped.
 First, **stages 4, 6, 7, 8, 11, 12 and 13 of Charter §5 have not been performed** for this edition. The
 audit questions are a red-team exercise (stage 9); they are not a substitute for technical review by a subject
 specialist, for practitioner consultation, or for approval. Several element-11 thresholds and element-12
-durations — the ten-working-day onward-escalation period in `PCI-FND-LAW-11-PR-02`, the five-working-day
-default in D-20, the three-month waiver ceiling in `PCI-FND-LAW-03` — are defensible drafting choices that
+durations — the ten-working-day onward-escalation period in `PCI-FND-STD-11-PR-02`, the five-working-day
+default in D-20, the three-month waiver ceiling in `PCI-FND-STD-03` — are defensible drafting choices that
 have not been tested with practitioners and may prove wrong in use. They are configurable by the adopting
 organisation wherever that was possible, precisely because they are unvalidated.
 
@@ -3069,17 +3069,17 @@ Both are recorded here under category 10 or omitted, and the register's own cate
 honest fix is a Manual amendment adding those two values, which is outside this file's authority to make.
 
 **A second red-team pass, run later across the whole four-file corpus**, is recorded in
-[`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md). It produced two amendments to this file — the
-emergency allowances in `PCI-FND-LAW-03` and `PCI-FND-LAW-08` element 12, noted in their element 25 — and
+[`STANDARDS_RED_TEAM_REPORT.md`](STANDARDS_RED_TEAM_REPORT.md). It produced two amendments to this file — the
+emergency allowances in `PCI-FND-STD-03` and `PCI-FND-STD-08` element 12, noted in their element 25 — and
 a body of findings against the three certification sets, including a set of definitional collisions
 between this file's `D-01` to `D-28` and the per-credential definitions.
 
 **Those collisions are now closed.** The durable fix the red team recommended as its finding **P-1** —
-a single **PCI Law Definitions Register**, which Drafting Manual §4 already contemplates — has been
-built at [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), and the definitions above
+a single **PCI Standards Definitions Register**, which Drafting Manual §4 already contemplates — has been
+built at [`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md), and the definitions above
 were reconciled to it. What changed in this file, and nothing else changed:
 
-- `D-04` **competent reviewer** — gains a recorded-before-the-review limb and a no-assistance-from-the-preparer limb, and states expressly that **independence is not part of competence**, so that `PCI-FND-LAW-10` element 12's supervised-acquisition exception remains usable (red-team **X-6** / **R-5**).
+- `D-04` **competent reviewer** — gains a recorded-before-the-review limb and a no-assistance-from-the-preparer limb, and states expressly that **independence is not part of competence**, so that `PCI-FND-STD-10` element 12's supervised-acquisition exception remains usable (red-team **X-6** / **R-5**).
 - `D-05` **conflict** — gains the appearance limb and the future-role limb the PML-AI volume carried, and states that a judgement standard in a law widens the closed list and never narrows it.
 - `D-08` **decision owner** · `D-11` **evidence** · `D-12` **independent** · `D-26` **verified** — restated in the canonical wording, taking the union of the limbs and exclusions the four volumes carried between them. `D-12` keeps its line-reporting carve-out and names the stricter PFL-AI limb as such; `D-26` names the eight admissible methods in the definition itself and states PFL-AI's deliberate narrowing for a figure in a financial model.
 - `D-10` **escalation threshold** — states that a law's element 13 events are additional to the six triggers, and supplies the destination-and-time fallback so the duty survives an organisation that documents neither.
@@ -3094,25 +3094,25 @@ Interpretation Panel.
 
 ---
 
-## Index of Foundational Laws
+## Index of Foundational Standards
 
 | ID | Official title | Principal obligation, in one line | External-reference categories used |
 |---|---|---|---|
-| `PCI-FND-LAW-01` | Professional Accountability | Record your own acceptance of personal accountability for a material output before it is issued, whoever or whatever prepared it. | 3 (international voluntary standard) · 6 (ethical code) · 10 (illustrative practice) |
-| `PCI-FND-LAW-02` | Evidence Before Assertion | Do not present a material claim unless retrievable evidence for it is identified in the working record. | 5 (professional framework) |
-| `PCI-FND-LAW-03` | Independent Verification | Have a material calculation, model output or automated conclusion verified by an independent competent reviewer before anyone relies on it. | 5 (professional framework) · 7 (industry guidance) · 10 (illustrative practice) |
-| `PCI-FND-LAW-04` | Human Decision Authority | Record every material decision as taken by a named, authorised, competent human decision owner. | 1 (legislation — EU only) · 3 (international voluntary standard) |
-| `PCI-FND-LAW-05` | Transparent Assumptions | Do not issue a forecast, model, appraisal or recommendation unless the document carrying the conclusion also carries its material assumptions. | 3 (international voluntary standard) · 5 (professional framework) |
-| `PCI-FND-LAW-06` | Source and Version Integrity | Do not rely on a source without a dated check that it is the version in force for the matter. | 2 (financial-reporting standard) · 4 (contract framework) · 9 (PCI internal instrument) |
-| `PCI-FND-LAW-07` | Data Lineage | Make every material output reproducible from its sources by a competent reviewer without the preparer's help. | 3 (international voluntary standard) · 7 (industry guidance) |
-| `PCI-FND-LAW-08` | Conflict Disclosure | Disclose every conflict capable of affecting your independent judgement, in writing, before acting in the matter. | 3 (international voluntary standard) · 6 (ethical code) |
-| `PCI-FND-LAW-09` | Confidentiality and Approved Technology | Do not enter protected information into a system that is not authorised for it, including any AI system. | 3 (international voluntary standard) · 10 (illustrative practice) |
-| `PCI-FND-LAW-10` | Competence and Limitation | Do not accept, continue or issue work requiring competence you do not hold. | 3 (international voluntary standard) · 6 (ethical code) |
-| `PCI-FND-LAW-11` | Escalation of Material Misstatement | Escalate a known or suspected material error, omission, unsupported assumption or misleading presentation promptly to the level accountable for remedying it. | 3 (international voluntary standard) · 4 (contract framework) · 5 (professional framework) |
-| `PCI-FND-LAW-12` | Record Integrity | Keep records so that authorship and creation time are fixed and any later alteration is detectable and attributable. | 3 (international voluntary standard) |
-| `PCI-FND-LAW-13` | No Silent Override | Do not override a control result on a material matter without an authorised decision owner's recorded decision, made before reliance. | 3 (international voluntary standard) · 5 (professional framework) · 10 (illustrative practice) |
-| `PCI-FND-LAW-14` | Responsible AI | Never permit an AI system to decide, approve, certify, sign, waive or authorise a material matter, or to be represented as having independently verified one. | 1 (legislation — EU only) · 3 (international voluntary standard) · 10 (illustrative practice) |
-| `PCI-FND-LAW-15` | Correction Duty | Communicate a material error in work you issued promptly to everyone known to be relying on it. | 2 (financial-reporting standard) · 3 (international voluntary standard) · 6 (ethical code) |
+| `PCI-FND-STD-01` | Professional Accountability | Record your own acceptance of personal accountability for a material output before it is issued, whoever or whatever prepared it. | 3 (international voluntary standard) · 6 (ethical code) · 10 (illustrative practice) |
+| `PCI-FND-STD-02` | Evidence Before Assertion | Do not present a material claim unless retrievable evidence for it is identified in the working record. | 5 (professional framework) |
+| `PCI-FND-STD-03` | Independent Verification | Have a material calculation, model output or automated conclusion verified by an independent competent reviewer before anyone relies on it. | 5 (professional framework) · 7 (industry guidance) · 10 (illustrative practice) |
+| `PCI-FND-STD-04` | Human Decision Authority | Record every material decision as taken by a named, authorised, competent human decision owner. | 1 (legislation — EU only) · 3 (international voluntary standard) |
+| `PCI-FND-STD-05` | Transparent Assumptions | Do not issue a forecast, model, appraisal or recommendation unless the document carrying the conclusion also carries its material assumptions. | 3 (international voluntary standard) · 5 (professional framework) |
+| `PCI-FND-STD-06` | Source and Version Integrity | Do not rely on a source without a dated check that it is the version in force for the matter. | 2 (financial-reporting standard) · 4 (contract framework) · 9 (PCI internal instrument) |
+| `PCI-FND-STD-07` | Data Lineage | Make every material output reproducible from its sources by a competent reviewer without the preparer's help. | 3 (international voluntary standard) · 7 (industry guidance) |
+| `PCI-FND-STD-08` | Conflict Disclosure | Disclose every conflict capable of affecting your independent judgement, in writing, before acting in the matter. | 3 (international voluntary standard) · 6 (ethical code) |
+| `PCI-FND-STD-09` | Confidentiality and Approved Technology | Do not enter protected information into a system that is not authorised for it, including any AI system. | 3 (international voluntary standard) · 10 (illustrative practice) |
+| `PCI-FND-STD-10` | Competence and Limitation | Do not accept, continue or issue work requiring competence you do not hold. | 3 (international voluntary standard) · 6 (ethical code) |
+| `PCI-FND-STD-11` | Escalation of Material Misstatement | Escalate a known or suspected material error, omission, unsupported assumption or misleading presentation promptly to the level accountable for remedying it. | 3 (international voluntary standard) · 4 (contract framework) · 5 (professional framework) |
+| `PCI-FND-STD-12` | Record Integrity | Keep records so that authorship and creation time are fixed and any later alteration is detectable and attributable. | 3 (international voluntary standard) |
+| `PCI-FND-STD-13` | No Silent Override | Do not override a control result on a material matter without an authorised decision owner's recorded decision, made before reliance. | 3 (international voluntary standard) · 5 (professional framework) · 10 (illustrative practice) |
+| `PCI-FND-STD-14` | Responsible AI | Never permit an AI system to decide, approve, certify, sign, waive or authorise a material matter, or to be represented as having independently verified one. | 1 (legislation — EU only) · 3 (international voluntary standard) · 10 (illustrative practice) |
+| `PCI-FND-STD-15` | Correction Duty | Communicate a material error in work you issued promptly to everyone known to be relying on it. | 2 (financial-reporting standard) · 3 (international voluntary standard) · 6 (ethical code) |
 
 **Set composition.** Fifteen laws · eighty-three Process Requirements · twenty-eight defined terms · twenty-five
 elements in every law, in the Manual's order, none omitted.

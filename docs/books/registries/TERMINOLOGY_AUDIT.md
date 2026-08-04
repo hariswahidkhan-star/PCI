@@ -232,7 +232,7 @@ also removes the implication that any one role is universally correct.
 ### Issue 6 — the suite principle appears in three wordings *(defect)*
 
 **Files:**
-- `docs/books/laws/LAW_SYSTEM.md` **§8**: "One approved formulation, everywhere, in all three books
+- `docs/books/laws/SUPERSEDED_LAW_SYSTEM_v0.md` **§8**: "One approved formulation, everywhere, in all three books
   and every law publication."
 - `docs/books/pfl-ai/manuscript/domain-01-foundations.md` **line 1106**: "AI proposes; the
   professional verifies, decides**,** remains accountable." — the "and" is missing

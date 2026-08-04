@@ -1,13 +1,13 @@
 # PFL-AI Professional Laws — PCI AI Project Finance Leader
 
-**Status:** Certification Laws for the **PCI AI Project Finance Leader** credential (PFL-AI).
+**Status:** Certification Standards for the **PCI AI Project Finance Leader** credential (PFL-AI).
 Version 2.0 — a complete reconstruction of the twenty-four-law v1.0 set onto the twenty-five-element
-structure required by the **PCI Law Drafting Manual** §5. **Thirty-three laws** and **one hundred and
+structure required by the **PCI Standards Drafting Manual** §5. **Thirty-three laws** and **one hundred and
 fifty-six process requirements**, anchored to eleven of the sixteen domains of the PFL-AI Body of
 Knowledge (`../pfl-ai/`).
 
-**Governing instruments:** the [`PCI Professional Laws Charter`](PCI_PROFESSIONAL_LAWS_CHARTER.md)
-(what a law is) and the [`PCI Law Drafting Manual`](PCI_LAW_DRAFTING_MANUAL.md) (how a law is
+**Governing instruments:** the [`PCI Standards Charter`](PCI_STANDARDS_CHARTER.md)
+(what a law is) and the [`PCI Standards Drafting Manual`](PCI_STANDARDS_DRAFTING_MANUAL.md) (how a law is
 written). A law that does not conform to both does not pass gate. Where this volume and either
 instrument differ, the instrument prevails and the difference is a defect in this volume.
 
@@ -18,7 +18,7 @@ instrument differ, the instrument prevails and the difference is a defect in thi
 The following statement is required by Charter §2 in every publication that contains or cites a PCI
 Law, and is reproduced here in full:
 
-> **PCI Professional Laws are private professional certification requirements established by Project
+> **PCI Standards are private professional certification requirements established by Project
 > Controls Institute Global. They are not legislation, government regulation, legal advice or
 > substitutes for applicable laws, contractual obligations, regulatory requirements or authoritative
 > professional standards. Where an applicable legal, regulatory, contractual or authoritative
@@ -28,7 +28,7 @@ PCI's authority is confined to its own processes: examination, certification, qu
 No law in this volume asserts or implies that PCI can impose a fine, create criminal or civil
 liability, or exercise any governmental enforcement power. **Nothing in this volume is legal, tax,
 accounting, insurance or investment advice**, and no law here determines any question of religious
-law (see `PCI-PFL-LAW-09.02`).
+law (see `PCI-PFL-STD-09.02`).
 
 ---
 
@@ -60,15 +60,15 @@ anywhere in this volume**, including in this paragraph, which is why the mapping
 by description rather than by example. Version 1.0 of this set used it in twenty-two of its
 twenty-four laws, and one law — `PFL-LAW-06-05`, Model Change Governance — carried four of its five
 sub-obligations on it after a red-team revision. Every one of those obligations is re-expressed on
-`must` in `PCI-PFL-LAW-06.05` below.
+`must` in `PCI-PFL-STD-06.05` below.
 
 ### Identifiers
 
 | Instrument | Form | Example |
 |---|---|---|
-| Certification / Domain Law | `PCI-PFL-LAW-DD.NN` | `PCI-PFL-LAW-10.03` |
-| Process Requirement (mandatory, Charter Level 4) | `<parent>-PR-NN` | `PCI-PFL-LAW-10.03-PR-02` |
-| Recommended Practice (not mandatory, Charter Level 5) | `<parent>-RP-NN` | `PCI-PFL-LAW-15.02-RP-01` |
+| Certification / Domain Standard | `PCI-PFL-STD-DD.NN` | `PCI-PFL-STD-10.03` |
+| Process Requirement (mandatory, Charter Level 4) | `<parent>-PR-NN` | `PCI-PFL-STD-10.03-PR-02` |
+| Recommended Practice (not mandatory, Charter Level 5) | `<parent>-RP-NN` | `PCI-PFL-STD-15.02-RP-01` |
 
 `DD` is the two-digit PFL-AI Body of Knowledge domain of primary anchorage; `NN` is a two-digit
 sequence within that domain. Cite by identifier, never by page. **Every identifier in this volume is
@@ -81,27 +81,27 @@ their parent law, and are assessed independently. They exist so that each law's 
 **one** principal obligation and every remaining obligation still has an identifier, a subject, an
 action, an object and a test of its own (Manual §2).
 
-### These laws sit under the Foundational Laws
+### These laws sit under the Foundational Standards
 
 The foundational set binds every PCI credential holder, including every holder of the PCI AI Project
 Finance Leader credential. **The foundational set is published in full at
-[`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md) as fifteen laws in the identifier form
-`PCI-FND-LAW-01` to `PCI-FND-LAW-15`, and every `PCI-FND-LAW-NN` citation in this volume cites that
+[`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md) as fifteen laws in the identifier form
+`PCI-FND-STD-01` to `PCI-FND-STD-15`, and every `PCI-FND-STD-NN` citation in this volume cites that
 file directly.** No mapping table is published here: a citation resolves by opening the foundational
 file at the identifier cited, and the subject it carries there is the subject intended here. The
 suite-wide concordance of which certification law cites which foundational law is maintained at
-[`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md), which also records the superseded `PCI-LAW-F-NN`
+[`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md), which also records the superseded `PCI-LAW-F-NN`
 identifiers for historical traceability.
 
 **Three subjects cited by v2.0 no longer exist as foundational laws**, because the foundational set
 was rebuilt to fifteen new subjects. Every citation that named one of them has been re-pointed to the
-closest live subject, and the substitution is recorded in `LAW_CONCORDANCE.md`:
+closest live subject, and the substitution is recorded in `STANDARDS_CONCORDANCE.md`:
 
 | Subject cited by v2.0 | Status | Where citations now point |
 |---|---|---|
-| *Honesty in reporting and forecasting* | Withdrawn as a separate law; its substance is split | `PCI-FND-LAW-05` (transparent assumptions) for presentation honesty, `PCI-FND-LAW-02` (evidence before assertion) where the sentence turns on evidence for a claim, `PCI-FND-LAW-11` (escalation of material misstatement) where it turns on raising a known problem |
-| *Ethical conduct toward candidates, employers and the public* | Not carried forward at Level 1 — a certification-conditions matter | `PCI-FND-LAW-08` or `PCI-FND-LAW-11` where the specific duty survives there; otherwise the citation is dropped rather than pointed at a law that does not carry the subject |
-| *No misrepresentation of PCI credentials or accreditation status* | Not carried forward at Level 1 — governs the PCI-to-holder relationship, not professional work | `PCI-FND-LAW-02` or `PCI-FND-LAW-14` where a live misrepresentation duty covers the point; otherwise dropped |
+| *Honesty in reporting and forecasting* | Withdrawn as a separate law; its substance is split | `PCI-FND-STD-05` (transparent assumptions) for presentation honesty, `PCI-FND-STD-02` (evidence before assertion) where the sentence turns on evidence for a claim, `PCI-FND-STD-11` (escalation of material misstatement) where it turns on raising a known problem |
+| *Ethical conduct toward candidates, employers and the public* | Not carried forward at Level 1 — a certification-conditions matter | `PCI-FND-STD-08` or `PCI-FND-STD-11` where the specific duty survives there; otherwise the citation is dropped rather than pointed at a law that does not carry the subject |
+| *No misrepresentation of PCI credentials or accreditation status* | Not carried forward at Level 1 — governs the PCI-to-holder relationship, not professional work | `PCI-FND-STD-02` or `PCI-FND-STD-14` where a live misrepresentation duty covers the point; otherwise dropped |
 
 **A certification law must add.** Every law below carries, in element 19, an explicit statement of
 what it requires that its foundational parent does not. A certification law that merely restates a
@@ -160,11 +160,11 @@ reader can apply — what makes it so, measured against what, decided by whom (M
 definition below is circular.** Terms are used in these senses throughout, and a law that needs a
 narrower sense defines it in its own element 4.
 
-**Where a term is also defined in the Foundational Laws.** *material*, *independent*, *verified*,
+**Where a term is also defined in the Foundational Standards.** *material*, *independent*, *verified*,
 *evidence*, *competent reviewer*, *decision owner* and *escalation threshold* are also defined, at
-`D-01` to `D-30`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). **They now carry the same
+`D-01` to `D-30`, in [`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md). **They now carry the same
 wording in both places.** Each was reconciled to the canonical definition recorded in
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), which also records what this
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md), which also records what this
 volume previously said and why the change was made. Two things this volume does differently survive
 the reconciliation because they are deliberate and narrower, and both are stated inside the canonical
 definitions below: the metric in which materiality is quantified, and the method list admissible when
@@ -223,7 +223,7 @@ method**, and has recorded the method, the source or population tested and, wher
 its selection basis, the inputs, the scope tested, the result, the date, and every difference found
 together with its resolution. Reading an output and finding it plausible is not verification, and an
 item on which no such record exists is not verified however carefully it was produced. **The eight
-admissible methods** — the list at `PCI-FND-LAW-03-PR-01` — are independent recomputation, source
+admissible methods** — the list at `PCI-FND-STD-03-PR-01` — are independent recomputation, source
 tracing, clause-to-summary comparison, sampling on a stated basis, reconciliation, boundary testing,
 sensitivity analysis, and named expert judgement recorded with its reasoning. (*Collision flag:* the
 suite uses *verify* in this AI-assurance sense throughout, not in the engineering
@@ -268,7 +268,7 @@ matter, without assistance from the preparer or reliance on the preparer's expla
 subject**. Seniority alone does not make a competent reviewer, and neither does availability.
 **Independence is not a limb of competence:** where a law requires the reviewer to be *independent*,
 that requirement is imposed by that law's element 10 and is tested separately. The two were previously
-folded together here, which made `PCI-FND-LAW-10` element 12's supervised-acquisition exception
+folded together here, which made `PCI-FND-STD-10` element 12's supervised-acquisition exception
 unusable, because that exception needs a reviewer who is competent and is precisely not independent.
 
 **escalation threshold** — *(Canonical — `D-10`.)* The escalation threshold for a matter is reached at
@@ -279,7 +279,7 @@ a contractual, regulatory, tax or financial-reporting position; or the escalatio
 the *finance documents*, published by the adopting organisation, or recorded in the delegation schedule
 are met. **Any condition recorded before the work begins, and any documented value in the finance
 documents, is additional to those six triggers and never in place of them**; a matter that reaches the
-threshold requires escalation under `PCI-FND-LAW-11` whether or not the engagement enumerated it.
+threshold requires escalation under `PCI-FND-STD-11` whether or not the engagement enumerated it.
 Thresholds are set by the finance documents where those documents state them, and otherwise by the
 adopting organisation's governance; PCI does not set them, and PCI requires that they exist, are
 written down, name the authority, and are applied. **The threshold names a destination and a time, and
@@ -306,13 +306,13 @@ identified is not current, whatever its age. See also *authoritative version*, w
 transaction sense for a model or document set.
 
 **material AI assistance** — *(Canonical — carried to the whole corpus by
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
 output is *material* where removing the AI-generated contribution would change a figure in the output
 by more than the applicable materiality measurement, or would change a recommendation, a classification
 that affects entitlement, coding, ranking or eligibility, or a stated conclusion. *Material AI
 contribution* means the same thing. Volume of use, licence cost and whether a human edited the output
 afterwards are irrelevant to the test. This volume made compliance turn on the term at
-`PCI-PFL-LAW-16.01` element 21 and `PCI-PFL-LAW-16.03` element 21 without defining it; the definition
+`PCI-PFL-STD-16.01` element 21 and `PCI-PFL-STD-16.03` element 21 without defining it; the definition
 is supplied here so the test can be applied.
 
 ### Transaction terms
@@ -436,7 +436,7 @@ voluntary framework it resembles into law anywhere.
 ---
 ## Domain 1 — Foundations of project finance leadership
 
-### PCI LAW PCI-PFL-LAW-01.01 — Cash-Flow Integrity in Financial Judgement
+### PCI STANDARD PCI-PFL-STD-01.01 — Cash-Flow Integrity in Financial Judgement
 
 **1. Normative requirement.** A credential holder must not present an accounting result, an earnings
 measure, an averaged ratio or a period-aggregated figure as evidence that a project can meet an
@@ -458,19 +458,19 @@ ratio*, *decision-grade*, *verified*.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-01.01-PR-01 — Dated obligation schedule.** The preparer must produce, for every
+- **PCI-PFL-STD-01.01-PR-01 — Dated obligation schedule.** The preparer must produce, for every
   decision-grade output that speaks to ability to pay, a schedule of each obligation against the date
   it falls due, sourced to the document that creates it.
-- **PCI-PFL-LAW-01.01-PR-02 — Accrual-to-cash reconciliation.** The preparer must reconcile the
+- **PCI-PFL-STD-01.01-PR-02 — Accrual-to-cash reconciliation.** The preparer must reconcile the
   accounting result to the cash line used, and must present the non-cash adjustments as a separate,
   itemised schedule rather than as a net figure.
-- **PCI-PFL-LAW-01.01-PR-03 — Payment-date liquidity test.** The preparer must test liquidity at each
+- **PCI-PFL-STD-01.01-PR-03 — Payment-date liquidity test.** The preparer must test liquidity at each
   payment date in the tested horizon, and must identify the binding date — the earliest date at which
   available cash is least in excess of the obligation then due.
-- **PCI-PFL-LAW-01.01-PR-04 — Presentation-dependency disclosure.** The preparer must disclose, on
+- **PCI-PFL-STD-01.01-PR-04 — Presentation-dependency disclosure.** The preparer must disclose, on
   the face of the output, every respect in which a favourable presentation depends on a non-cash
   item, a timing convention, a horizon choice or an averaging basis.
-- **PCI-PFL-LAW-01.01-PR-05 — Stated and internally consistent appraisal basis.** The preparer must
+- **PCI-PFL-STD-01.01-PR-05 — Stated and internally consistent appraisal basis.** The preparer must
   state, for every appraisal or return measure presented, the inflation basis and the currency basis of
   the cash flows **and** of the discount rate, the horizon and the perspective from which the measure is
   taken; must keep the cash flows and the discount rate on the same inflation and currency basis; and
@@ -555,9 +555,9 @@ cash forecast. The consequences for directors and officers of continuing to trad
 payment, differ by jurisdiction and can be personal. Obtain local legal and accounting advice before
 any statement about an entity's ability to continue or to pay.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05` (transparent assumptions); `PCI-FND-LAW-02`;
-`PCI-PFL-LAW-10.01`; `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-05` requires a conclusion to carry the material assumptions
+**19. Related PCI Laws.** `PCI-FND-STD-05` (transparent assumptions); `PCI-FND-STD-02`;
+`PCI-PFL-STD-10.01`; `PCI-PFL-STD-10.03`; `PCI-PFL-STD-14.02`; `PCI-PFL-STD-15.01`. **Increment over
+the foundational parent:** `PCI-FND-STD-05` requires a conclusion to carry the material assumptions
 it depends on; this law fixes *what honesty means in a financing* — the obligation is dated, the
 test is at the payment date, the reconciliation is itemised, and the averaging convention is
 disclosed on the face of the output.
@@ -606,7 +606,7 @@ test rather than a judgement phrase.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-01.02 — Conflict Disclosure and the Two-Hat Rule
+### PCI STANDARD PCI-PFL-STD-01.02 — Conflict Disclosure and the Two-Hat Rule
 
 **1. Normative requirement.** A credential holder must disclose in writing, before advising,
 modelling, negotiating, reviewing or approving on a financing, every interest of theirs or of a
@@ -636,17 +636,17 @@ its group.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-01.02-PR-01 — Standing conflicts register.** The credential holder must maintain a
+- **PCI-PFL-STD-01.02-PR-01 — Standing conflicts register.** The credential holder must maintain a
   standing register of their interests and those of connected persons, dated, and must update it
   whenever an interest arises, changes or ends.
-- **PCI-PFL-LAW-01.02-PR-02 — Screening before acceptance.** The credential holder must screen every
+- **PCI-PFL-STD-01.02-PR-02 — Screening before acceptance.** The credential holder must screen every
   new instruction against the register and against the parties to the transaction before accepting it,
   and must record the screen and its outcome.
-- **PCI-PFL-LAW-01.02-PR-03 — Written consent or declinature.** Where an interest is disclosed, the
+- **PCI-PFL-STD-01.02-PR-03 — Written consent or declinature.** Where an interest is disclosed, the
   credential holder must obtain the informed written consent of every affected party before beginning
   or continuing the work, or must decline the engagement; consent obtained on an incomplete
   disclosure is not consent.
-- **PCI-PFL-LAW-01.02-PR-04 — Information-barrier testing.** Where a conflict is managed by an
+- **PCI-PFL-STD-01.02-PR-04 — Information-barrier testing.** Where a conflict is managed by an
   information barrier rather than by declining, the credential holder must record the barrier's terms
   and must have its operation tested at a stated interval by a person *independent* of both sides,
   with the test result recorded.
@@ -732,8 +732,8 @@ determine the *legal* consequences of an undisclosed interest, and they differ b
 role. Consent is not a universal cure. Obtain local legal advice before relying on consent, and note
 that anti-bribery obligations can be extraterritorial.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08` (conflict disclosure); `PCI-PFL-LAW-13.02`;
-`PCI-PFL-LAW-16.03`. **Increment over the foundational parent:** `PCI-FND-LAW-08` requires
+**19. Related PCI Laws.** `PCI-FND-STD-08` (conflict disclosure); `PCI-PFL-STD-13.02`;
+`PCI-PFL-STD-16.03`. **Increment over the foundational parent:** `PCI-FND-STD-08` requires
 disclosure of conflicts; this law adds the multi-party structure specific to a financing — screening
 against the full party list at each accession and transfer, the two-hat prohibition on advising both
 sides of one question, tested information barriers, and the rule that consent obtained on incomplete
@@ -753,7 +753,7 @@ locates a test result within the stated interval, performed by a person independ
 (e) **Works from the transaction rather than from the register:** compares the register against the
 transaction's party, counterparty, adviser, contractor and offtaker lists, the fee and engagement
 terms, and the credential holder's recent engagement history, and finds no relationship of a kind
-listed in `PCI-FND-LAW-08` that the register omits. Compliance is demonstrated when all five steps
+listed in `PCI-FND-STD-08` that the register omits. Compliance is demonstrated when all five steps
 complete for every interest; an interest on the register with no disclosure, or a consent pre-dating
 its disclosure, is a breach, and so is a relationship that step (e) finds and the register does not
 carry — **a clean register is a pass only when step (e) confirms it is complete**.
@@ -782,13 +782,13 @@ compliance test made performable; the ISO/IEC 17024 reference updated to record 
 **Stage 9 amendment:** the compliance test began from the conflicts register, so an interest never
 entered on the register was never tested and the whole law could be satisfied by omission; step (e) now
 works from the transaction's own party, adviser and fee records against the relationship list in
-`PCI-FND-LAW-08`.
+`PCI-FND-STD-08`.
 
 ---
 
 ## Domain 5 — Project development and bankability
 
-### PCI LAW PCI-PFL-LAW-05.01 — The Bankability Statement
+### PCI STANDARD PCI-PFL-STD-05.01 — The Bankability Statement
 
 **1. Normative requirement.** A credential holder must not describe a project as bankable, or as
 capable of being financed on limited recourse, unless every condition on which that conclusion depends
@@ -809,21 +809,21 @@ from screening to financial close, and again on any material restructuring.
 would prevent a lender from advancing on limited recourse: the revenue mechanism, the payment
 counterparty's covenant, each permit and consent, land and access rights, technology and its track
 record, construction and operational readiness, and the risk allocation position under
-`PCI-PFL-LAW-11.01`.
+`PCI-PFL-STD-11.01`.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-05.01-PR-01 — The conditions schedule.** The preparer must produce a schedule listing
+- **PCI-PFL-STD-05.01-PR-01 — The conditions schedule.** The preparer must produce a schedule listing
   every *bankability condition*, its status at a stated date, the named party who owns it, the step
   required to resolve it, and the expected date of resolution.
-- **PCI-PFL-LAW-05.01-PR-02 — Status honesty.** The preparer must record each condition's status as
+- **PCI-PFL-STD-05.01-PR-02 — Status honesty.** The preparer must record each condition's status as
   one of *satisfied*, *in progress*, *not started* or *at risk*, evidenced, and must not record a
   condition as satisfied on the strength of an expectation, an indication or a draft.
-- **PCI-PFL-LAW-05.01-PR-03 — Conjunction statement.** Wherever the word *bankable* or an equivalent
+- **PCI-PFL-STD-05.01-PR-03 — Conjunction statement.** Wherever the word *bankable* or an equivalent
   appears in a decision-grade output, the preparer must state on the same page that the conclusion
   holds only while every condition in the schedule holds, and must identify the unresolved conditions
   by name.
-- **PCI-PFL-LAW-05.01-PR-04 — Re-testing on change.** The preparer must re-run the schedule and
+- **PCI-PFL-STD-05.01-PR-04 — Re-testing on change.** The preparer must re-run the schedule and
   re-issue the conclusion whenever a condition's status changes materially, and must notify every
   party known to be relying on the earlier conclusion.
 
@@ -910,9 +910,9 @@ change of administration. A condition satisfied under one jurisdiction's regime 
 another's. Obtain local legal advice on each permit, each land right and the grantor's capacity to
 contract.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-09.01`;
-`PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-13.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` requires a conclusion to carry the material assumptions it depends on;
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-PFL-STD-09.01`;
+`PCI-PFL-STD-11.01`; `PCI-PFL-STD-12.01`; `PCI-PFL-STD-13.03`. **Increment over the foundational
+parent:** `PCI-FND-STD-05` requires a conclusion to carry the material assumptions it depends on;
 this law converts a single summary adjective into an evidenced conjunction with a named owner and a
 resolution path for each limb, and forbids the aggregation that hides a failing limb.
 
@@ -952,7 +952,7 @@ as PR-04; threshold rewritten to state expressly that a conjunction admits no co
 ---
 ## Domain 6 — Financial modelling
 
-### PCI LAW PCI-PFL-LAW-06.01 — Financial-Model Architecture
+### PCI STANDARD PCI-PFL-STD-06.01 — Financial-Model Architecture
 
 **1. Normative requirement.** A *financial model* used for a *decision-grade* output must separate
 inputs, calculations and outputs into distinct, identifiable regions, so that no cell serves two of
@@ -976,20 +976,20 @@ totals, cash-flow articulation, and the closure of every debt and reserve schedu
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-06.01-PR-01 — Region separation.** The *model owner* must place every input in an
+- **PCI-PFL-STD-06.01-PR-01 — Region separation.** The *model owner* must place every input in an
   input region, every calculation in a calculation region and every reported figure in an output
   region, and must not permit a cell to hold both a typed value and a formula.
-- **PCI-PFL-LAW-06.01-PR-02 — One timeline.** The model owner must build the model on one declared
+- **PCI-PFL-STD-06.01-PR-02 — One timeline.** The model owner must build the model on one declared
   timeline with a single stated periodicity, date convention and first-period definition, and must
   drive every schedule from it.
-- **PCI-PFL-LAW-06.01-PR-03 — The check block.** The model owner must maintain a *check block*
+- **PCI-PFL-STD-06.01-PR-03 — The check block.** The model owner must maintain a *check block*
   covering, as a minimum, balance-sheet balance, *sources and uses* equality, cash-flow articulation,
   the closure of each debt schedule and each *reserve account*, and the non-negativity of every account
   balance the *finance documents* require to be non-negative.
-- **PCI-PFL-LAW-06.01-PR-04 — Failing checks stop circulation.** No person may quote, circulate,
+- **PCI-PFL-STD-06.01-PR-04 — Failing checks stop circulation.** No person may quote, circulate,
   submit or rely upon a model output while any check in the check block is failing; the model owner
   must record each failure, its cause and its resolution.
-- **PCI-PFL-LAW-06.01-PR-05 — Scenario switch integrity.** The model owner must implement every case
+- **PCI-PFL-STD-06.01-PR-05 — Scenario switch integrity.** The model owner must implement every case
   as a switch over the input region alone, and must not implement a case by editing a calculation.
 
 **6. Prohibited actions.** Placing a typed value inside a calculation region; running more than one
@@ -1011,7 +1011,7 @@ failing check, its cause and its effect stated on the face of the output — see
 
 **10. Independence requirement.** Independence is not required to build the model. It is required for
 the review that supports financial close, a *distribution*, a covenant certificate or a lender
-submission, which is governed by `PCI-PFL-LAW-13.01`.
+submission, which is governed by `PCI-PFL-STD-13.01`.
 
 **11. Materiality or threshold.** A check either resolves to nil or it does not; the *model owner*
 records a nil tolerance for each check in the model's own units, set to the rounding precision of the
@@ -1069,9 +1069,9 @@ governs, what representations attach to it and what liability follows from an er
 positions differ by jurisdiction and by engagement. Obtain qualified legal advice on the contractual
 status of the model before releasing it outside the preparing organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-07`; `PCI-PFL-LAW-06.02`;
-`PCI-PFL-LAW-06.03`; `PCI-PFL-LAW-06.05`; `PCI-PFL-LAW-13.01`; `PCI-PFL-LAW-16.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-07` requires data lineage; this law adds the structural
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-07`; `PCI-PFL-STD-06.02`;
+`PCI-PFL-STD-06.03`; `PCI-PFL-STD-06.05`; `PCI-PFL-STD-13.01`; `PCI-PFL-STD-16.01`. **Increment over
+the foundational parent:** `PCI-FND-STD-07` requires data lineage; this law adds the structural
 preconditions that make lineage checkable in a financing model — role separation per cell, one
 declared timeline, a visible check block of named invariants, and a circulation stop while any check
 fails.
@@ -1113,7 +1113,7 @@ testing of the check block added to element 16.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-06.02 — Formula Consistency
+### PCI STANDARD PCI-PFL-STD-06.02 — Formula Consistency
 
 **1. Normative requirement.** A credential holder must not present as calculated any figure that was
 typed, pasted or overridden.
@@ -1134,16 +1134,16 @@ variation, computes every period of a calculation row.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-06.02-PR-01 — Declared inputs only.** The *model owner* must express every
+- **PCI-PFL-STD-06.02-PR-01 — Declared inputs only.** The *model owner* must express every
   calculation as a formula referencing a declared input or another calculation, and must not embed a
   numeric constant in a calculation other than a dimensionless mathematical constant.
-- **PCI-PFL-LAW-06.02-PR-02 — Row consistency.** The model owner must maintain *row consistency*
+- **PCI-PFL-STD-06.02-PR-02 — Row consistency.** The model owner must maintain *row consistency*
   across every calculation row, and where a period genuinely requires a different formula must place
   the difference in a declared switch or flag driven from the input region.
-- **PCI-PFL-LAW-06.02-PR-03 — Override register.** Where an *override* is unavoidable, the model owner
+- **PCI-PFL-STD-06.02-PR-03 — Override register.** Where an *override* is unavoidable, the model owner
   must record it in an override register stating the cell, the value, the reason, the author, the date
   and the date by which it will be removed, and must make the override visible in the model.
-- **PCI-PFL-LAW-06.02-PR-04 — Override clearance before release.** The model owner must clear every
+- **PCI-PFL-STD-06.02-PR-04 — Override clearance before release.** The model owner must clear every
   override from the *authoritative version* before release, or must report each remaining override on
   the face of every output produced from that version.
 
@@ -1166,7 +1166,7 @@ required by PR-04.
 **10. Independence requirement.** Not required for compliance with this law by the preparer, because
 the test is mechanical and repeatable. The row-consistency scan supporting a model audit conclusion
 must be performed or reperformed by a person *independent* of preparation, under
-`PCI-PFL-LAW-13.01`.
+`PCI-PFL-STD-13.01`.
 
 **11. Materiality or threshold.** No materiality threshold applies to the existence of a hard-coded
 constant: any constant embedded in a calculation is a defect and is registered or removed. Materiality
@@ -1219,9 +1219,9 @@ liability regime for a misstatement is jurisdiction-specific and can extend pers
 who prepared or signed it. Obtain qualified legal advice before a model figure is quoted in any such
 document.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-05`; `PCI-PFL-LAW-06.01`;
-`PCI-PFL-LAW-06.03`; `PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-16.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` requires that data can be traced to its origin; this law adds the
+**19. Related PCI Laws.** `PCI-FND-STD-07`; `PCI-FND-STD-05`; `PCI-PFL-STD-06.01`;
+`PCI-PFL-STD-06.03`; `PCI-PFL-STD-06.04`; `PCI-PFL-STD-16.01`. **Increment over the foundational
+parent:** `PCI-FND-STD-07` requires that data can be traced to its origin; this law adds the
 calculation-level discipline that makes tracing possible at all — no constant inside a formula, one
 formula per row, and every unavoidable override registered, visible, dated and owned.
 
@@ -1260,7 +1260,7 @@ procedure.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-06.03 — Input and Assumption Traceability
+### PCI STANDARD PCI-PFL-STD-06.03 — Input and Assumption Traceability
 
 **1. Normative requirement.** Every assumption used in a *decision-grade* model must be entered once,
 in the input region, and recorded in an assumption register that travels with the model.
@@ -1281,17 +1281,17 @@ in enough detail that a *competent reviewer* could reach the same value from the
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-06.03-PR-01 — Single entry.** The *model owner* must ensure each assumption is entered
+- **PCI-PFL-STD-06.03-PR-01 — Single entry.** The *model owner* must ensure each assumption is entered
   once and referenced everywhere else, and must not permit the same quantity to be typed in two places.
-- **PCI-PFL-LAW-06.03-PR-02 — Register completeness.** The model owner must record every assumption in
+- **PCI-PFL-STD-06.03-PR-02 — Register completeness.** The model owner must record every assumption in
   the *assumption register* with all six fields — value, unit, *basis*, *source line*, date, named
   owner — and must not use in a decision-grade case any assumption whose owner or basis is absent.
-- **PCI-PFL-LAW-06.03-PR-03 — Register travels with the model.** The model owner must release the
+- **PCI-PFL-STD-06.03-PR-03 — Register travels with the model.** The model owner must release the
   register with every release of the model, bearing the same *authoritative version* identifier.
-- **PCI-PFL-LAW-06.03-PR-04 — Currency of assumptions.** The model owner must record a review date for
+- **PCI-PFL-STD-06.03-PR-04 — Currency of assumptions.** The model owner must record a review date for
   each assumption and must re-confirm or replace any assumption whose review date has passed before the
   model is used for a further decision.
-- **PCI-PFL-LAW-06.03-PR-05 — Revenue characterised by its actual basis.** The model owner must record,
+- **PCI-PFL-STD-06.03-PR-05 — Revenue characterised by its actual basis.** The model owner must record,
   for every revenue assumption, whether the amount is contracted, regulated, availability-based or
   forecast, whether it is indexed or fixed, and the credit standing of the party that pays — and must
   not present a forecast or merchant revenue as though it were contracted.
@@ -1314,7 +1314,7 @@ basis. The *decision owner* approves the assumption set as a whole for a decisio
 
 **10. Independence requirement.** Not required for entry or maintenance. Independent challenge of the
 assumption set is required where the model supports financial close, a lender submission, a
-*distribution* or a restructuring proposal, and is discharged under `PCI-PFL-LAW-13.01`.
+*distribution* or a restructuring proposal, and is discharged under `PCI-PFL-STD-13.01`.
 
 **11. Materiality or threshold.** Every assumption is registered regardless of size; materiality
 governs the *depth of basis* required and the review interval, both set by the *decision owner* in the
@@ -1366,11 +1366,11 @@ indexation, tariff regulation and permitted return are jurisdiction-specific and
 legislation and with regulatory determinations. An assumption *basis* that cites another jurisdiction's
 regime, or an out-of-date determination, is a defect that a reviewer cannot detect from the model
 alone. Obtain qualified local tax and regulatory advice on each such assumption — see
-`PCI-PFL-LAW-12.02`.
+`PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-02`; `PCI-PFL-LAW-06.01`;
-`PCI-PFL-LAW-06.02`; `PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-16.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` requires lineage from a figure to its origin; this law adds the register
+**19. Related PCI Laws.** `PCI-FND-STD-07`; `PCI-FND-STD-02`; `PCI-PFL-STD-06.01`;
+`PCI-PFL-STD-06.02`; `PCI-PFL-STD-06.04`; `PCI-PFL-STD-16.01`. **Increment over the foundational
+parent:** `PCI-FND-STD-07` requires lineage from a figure to its origin; this law adds the register
 that makes lineage survive a change of personnel — six mandatory fields, a named human owner per
 assumption, single entry, and a review date that expires the assumption rather than letting it
 drift.
@@ -1387,7 +1387,7 @@ by the party named. (c) Searches the input region for duplicate entry of any reg
 finds none. (d) Confirms every assumption's review date is later than the output date, or that a
 re-confirmation record exists. (e) For each revenue assumption, confirms the register records its actual
 basis — contracted, regulated, availability-based or forecast — and that any amount shown as contracted
-is traced to an executed agreement under `PCI-PFL-LAW-12.01`. Compliance is demonstrated when all five
+is traced to an executed agreement under `PCI-PFL-STD-12.01`. Compliance is demonstrated when all five
 complete; an unowned or unsourced *material* assumption is a breach, and so is a forecast revenue
 presented as contracted.
 
@@ -1415,7 +1415,7 @@ recorded materiality figure rather than to reviewer taste.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-06.04 — The Source Line
+### PCI STANDARD PCI-PFL-STD-06.04 — The Source Line
 
 **1. Normative requirement.** A credential holder must withdraw from a *decision-grade* document any
 figure whose *source line* cannot be produced on request.
@@ -1437,15 +1437,15 @@ than the figure's author.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-06.04-PR-01 — Source line on every input.** The preparer must attach to every model
+- **PCI-PFL-STD-06.04-PR-01 — Source line on every input.** The preparer must attach to every model
   input a *source line* naming the document, its version or date and the issuing party.
-- **PCI-PFL-LAW-06.04-PR-02 — Source line on every quoted figure.** The preparer must be able to
+- **PCI-PFL-STD-06.04-PR-02 — Source line on every quoted figure.** The preparer must be able to
   produce, for every figure quoted in a decision-grade document, the source line and the underlying
   record.
-- **PCI-PFL-LAW-06.04-PR-03 — Retention with the output.** The preparer must retain the underlying
+- **PCI-PFL-STD-06.04-PR-03 — Retention with the output.** The preparer must retain the underlying
   record with the output for the retention period the engaging organisation's governance states, and
   not merely a reference to a location that may change.
-- **PCI-PFL-LAW-06.04-PR-04 — Withdrawal on failure.** Where a source line cannot be produced, the
+- **PCI-PFL-STD-06.04-PR-04 — Withdrawal on failure.** Where a source line cannot be produced, the
   preparer must withdraw the figure from the document, notify every recipient of the document, and
   record the withdrawal.
 
@@ -1466,7 +1466,7 @@ may approve the quotation of a figure whose source line does not exist.
 
 **10. Independence requirement.** Not required for attachment. A sample of source lines must be
 re-traced by a person *independent* of preparation as part of any model audit or diligence review under
-`PCI-PFL-LAW-13.01`.
+`PCI-PFL-STD-13.01`.
 
 **11. Materiality or threshold.** Every input carries a source line regardless of size. Materiality
 governs the *sampling density* of the independent re-trace and the *urgency* of a withdrawal: the
@@ -1481,7 +1481,7 @@ specific record with an immutable identifier rather than a data-room link that e
 and cannot be delivered to a particular recipient, the figure may still be quoted if the source line is
 recorded in full internally and the recipient is told that the source exists and is withheld, and only
 with the written approval of the *decision owner* — the figure is never presented as unsourced. Any
-confidentiality restriction is applied under `PCI-FND-LAW-09`.
+confidentiality restriction is applied under `PCI-FND-STD-09`.
 
 **13. Escalation trigger.** A challenged figure whose source cannot be produced within the stated
 response time; a source line pointing to a document that does not exist at the version stated; a figure
@@ -1521,9 +1521,9 @@ jurisdiction-specific and can conflict with one another in a cross-border financ
 policy lawful in one jurisdiction can breach another's. Obtain local legal advice on retention and on
 cross-border transfer before designing the retention arrangement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PFL-LAW-06.03`;
-`PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-16.02`. **Increment over the foundational parent:**
-`PCI-FND-LAW-02` requires the evidence behind a claim to be identified in the working record and
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-PFL-STD-06.03`;
+`PCI-PFL-STD-13.04`; `PCI-PFL-STD-16.02`. **Increment over the foundational parent:**
+`PCI-FND-STD-02` requires the evidence behind a claim to be identified in the working record and
 retrievable; this law states what the trail must contain for a financing figure — document, version,
 issuing party — makes production on request the test, retains the record rather than a link, and
 imposes a positive duty to withdraw and notify when production fails.
@@ -1563,7 +1563,7 @@ the AI-citation prohibition made explicit.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-06.05 — Model Version Control
+### PCI STANDARD PCI-PFL-STD-06.05 — Model Version Control
 
 **1. Normative requirement.** A *financial model* that has been used for a decision must not be
 changed except under version control, so that exactly one *authoritative version* exists at any time
@@ -1587,19 +1587,19 @@ recomputed after every edit, whose movements must each be explained before the v
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-06.05-PR-01 — One authoritative version.** The *model owner* must identify one
+- **PCI-PFL-STD-06.05-PR-01 — One authoritative version.** The *model owner* must identify one
   *authoritative version* at any time, must give it a version identifier, and must distribute
   controlled copies rather than permitting uncontrolled local copies to circulate.
-- **PCI-PFL-LAW-06.05-PR-02 — Every change logged under a named human author.** The model owner must
+- **PCI-PFL-STD-06.05-PR-02 — Every change logged under a named human author.** The model owner must
   record every change in the *change log* with author, date, reason and effect, and must not permit any
   change to reach the authoritative version without a change-log entry naming a human author.
-- **PCI-PFL-LAW-06.05-PR-03 — Check block and regression re-run.** The model owner must re-run the
-  *check block* required by `PCI-PFL-LAW-06.01-PR-03` and the *regression suite* after every edit,
+- **PCI-PFL-STD-06.05-PR-03 — Check block and regression re-run.** The model owner must re-run the
+  *check block* required by `PCI-PFL-STD-06.01-PR-03` and the *regression suite* after every edit,
   whether made by a human or by an AI system.
-- **PCI-PFL-LAW-06.05-PR-04 — Every movement explained before acceptance.** The model owner must
+- **PCI-PFL-STD-06.05-PR-04 — Every movement explained before acceptance.** The model owner must
   explain every movement in the regression suite, in writing, before accepting the version, and must
   not accept a version carrying an unexplained movement.
-- **PCI-PFL-LAW-06.05-PR-05 — Locking the agreed case.** The model owner must lock the agreed
+- **PCI-PFL-STD-06.05-PR-05 — Locking the agreed case.** The model owner must lock the agreed
   *base case* at financial close with an integrity control, and must treat every later change as a new
   version rather than as an edit to the locked case.
 
@@ -1689,10 +1689,10 @@ control constitutes evidence of a document's state, and whether an electronic si
 effective, are also jurisdiction-specific. Obtain qualified legal advice on the contractual status of
 the model before amending an agreed version.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-14`; `PCI-PFL-LAW-06.01`;
-`PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-16.01`. **Increment over the foundational parent:**
-`PCI-FND-LAW-02` requires the evidence behind a figure to be identified and retrievable and
-`PCI-FND-LAW-12` requires every record to be attributable, time-fixed and any later alteration
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-FND-STD-14`; `PCI-PFL-STD-06.01`;
+`PCI-PFL-STD-13.04`; `PCI-PFL-STD-16.01`. **Increment over the foundational parent:**
+`PCI-FND-STD-02` requires the evidence behind a figure to be identified and retrievable and
+`PCI-FND-STD-12` requires every record to be attributable, time-fixed and any later alteration
 detectable; this law adds what a *transaction* model needs on top — a single authoritative version
 among many circulating copies, a regression suite whose every movement is explained *before*
 acceptance, a human author on every change including AI-made ones, and a locked close case that
@@ -1739,7 +1739,7 @@ unaddressed and which practitioners resolved by ignoring the rule.
 ---
 ## Domain 9 — Funding structure and sources of capital
 
-### PCI LAW PCI-PFL-LAW-09.01 — The Capital-Structure Decision Basis
+### PCI STANDARD PCI-PFL-STD-09.01 — The Capital-Structure Decision Basis
 
 **1. Normative requirement.** A credential holder must not propose, recommend or accept a capital
 structure whose feasibility depends on a future refinancing, a further contribution or a market
@@ -1764,18 +1764,18 @@ not yet committed, a rate or price level not hedged or contracted, or an approva
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-09.01-PR-01 — Dependency schedule.** The preparer must schedule every *structural
+- **PCI-PFL-STD-09.01-PR-01 — Dependency schedule.** The preparer must schedule every *structural
   dependency*, stating the event, the date by which it must occur, the party who owns it, and the
   consequence for the structure if it does not occur.
-- **PCI-PFL-LAW-09.01-PR-02 — Structure tested against cash, risk and coverage.** The preparer must
+- **PCI-PFL-STD-09.01-PR-02 — Structure tested against cash, risk and coverage.** The preparer must
   demonstrate that the proposed structure is supported by the project's *CFADS* profile, by the risk
-  allocation recorded under `PCI-PFL-LAW-11.01`, and by the *coverage ratios* the *finance documents*
+  allocation recorded under `PCI-PFL-STD-11.01`, and by the *coverage ratios* the *finance documents*
   require, each shown separately.
-- **PCI-PFL-LAW-09.01-PR-03 — Instrument-by-instrument cost on a comparable basis.** The preparer must
+- **PCI-PFL-STD-09.01-PR-03 — Instrument-by-instrument cost on a comparable basis.** The preparer must
   state the all-in effective cost of each instrument, solved from that instrument's own cash-flow
   stream against its net proceeds, and must not compare instruments by headline rate or by adding fees
   to a rate.
-- **PCI-PFL-LAW-09.01-PR-04 — Failure case.** The preparer must model and present the case in which
+- **PCI-PFL-STD-09.01-PR-04 — Failure case.** The preparer must model and present the case in which
   each *material* structural dependency does not occur, and must state who bears the consequence.
 
 **6. Prohibited actions.** Presenting a structure as feasible while a dependency is unstated; comparing
@@ -1860,11 +1860,11 @@ the enforceability of subordination and intercreditor arrangements, and the inso
 each instrument are all jurisdiction-specific and can determine which structure is available at all.
 Sanctions and financial-crime obligations may also restrict which capital providers may participate.
 Obtain qualified local tax and legal advice on each instrument and each jurisdiction in the structure
-before the structure is recommended — see `PCI-PFL-LAW-12.02`.
+before the structure is recommended — see `PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-10`; `PCI-PFL-LAW-05.01`;
-`PCI-PFL-LAW-10.02`; `PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-15.02`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` forbids issuing a forecast or recommendation without the material
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-10`; `PCI-PFL-STD-05.01`;
+`PCI-PFL-STD-10.02`; `PCI-PFL-STD-11.01`; `PCI-PFL-STD-15.02`. **Increment over the foundational
+parent:** `PCI-FND-STD-05` forbids issuing a forecast or recommendation without the material
 assumptions it rests on; this law addresses the specific way a funding plan misleads — by resting on
 an event nobody has committed to — and requires the dependency to be scheduled, owned, dated, and
 modelled in failure.
@@ -1907,7 +1907,7 @@ Basel characterisation tightened so that no requirement is sourced to it.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-09.02 — Accuracy in Describing Islamic-Finance Structures
+### PCI STANDARD PCI-PFL-STD-09.02 — Accuracy in Describing Islamic-Finance Structures
 
 **1. Normative requirement.** A credential holder must not state, imply, record or repeat that a
 structure, instrument or transaction is Shariah-compliant unless a *Shariah compliance determination*
@@ -1936,21 +1936,21 @@ and its all-in effective cost, containing no assertion about religious-law confo
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-09.02-PR-01 — Economic description first.** The credential holder must describe every
+- **PCI-PFL-STD-09.02-PR-01 — Economic description first.** The credential holder must describe every
   such structure by its *economic description*, and must make that description sufficient to price,
   model and compare the structure without reference to any compliance assertion.
-- **PCI-PFL-LAW-09.02-PR-02 — Determination record.** Where a *Shariah compliance determination* is
+- **PCI-PFL-STD-09.02-PR-02 — Determination record.** Where a *Shariah compliance determination* is
   relied upon, the credential holder must record its issuing *competent body*, its date, the exact
   structure and documents it covers, any conditions attached to it, and its stated limitations, and
   must attach that record as the figure's *source line*.
-- **PCI-PFL-LAW-09.02-PR-03 — No extrapolation.** The credential holder must treat a determination as
+- **PCI-PFL-STD-09.02-PR-03 — No extrapolation.** The credential holder must treat a determination as
   covering only the structure and documents it names, and must not extend it to a different structure,
   a different transaction, an amended document set or a later version without a further determination.
-- **PCI-PFL-LAW-09.02-PR-04 — Pending status stated.** Where a determination has been sought and not
+- **PCI-PFL-STD-09.02-PR-04 — Pending status stated.** Where a determination has been sought and not
   yet issued, the credential holder must record the status as *pending* wherever the structure is
   described, must name the body from which it is sought, and must not describe the structure as
   compliant, expected to be compliant or market-standard.
-- **PCI-PFL-LAW-09.02-PR-05 — Ownership and intercreditor consequences modelled.** The credential
+- **PCI-PFL-STD-09.02-PR-05 — Ownership and intercreditor consequences modelled.** The credential
   holder must model and disclose the economic consequences that follow from the structure's ownership
   arrangements — including any residual obligation retained by the lessor or issuer, the effect of a
   service-agency pass-back, and the ranking and enforcement arrangements between Islamic and
@@ -1984,7 +1984,7 @@ determination is made by an external authority whose composition, independence a
 governed by the recognising institution, market or jurisdiction, not by PCI**. Independence *is*
 required for the review of the credential holder's *economic description* and model treatment where
 those support a lender submission or an offering document, and is discharged under
-`PCI-PFL-LAW-13.01`.
+`PCI-PFL-STD-13.01`.
 
 **11. Materiality or threshold.** No materiality threshold applies to element 1: a compliance assertion
 is either supported by a producible determination or it is not, and there is no size below which an
@@ -2054,9 +2054,9 @@ institution's own board. Obtain qualified local legal, tax and Shariah advice fo
 structure, the specific documents and the specific jurisdiction, and do not carry an answer across a
 border.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-10` (competence and limitation); `PCI-FND-LAW-02`;
-`PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-12.02`. **Increment over the foundational
-parent:** `PCI-FND-LAW-10` requires a professional to work within the competence they hold and not
+**19. Related PCI Laws.** `PCI-FND-STD-10` (competence and limitation); `PCI-FND-STD-02`;
+`PCI-PFL-STD-06.04`; `PCI-PFL-STD-09.01`; `PCI-PFL-STD-12.02`. **Increment over the foundational
+parent:** `PCI-FND-STD-10` requires a professional to work within the competence they hold and not
 to issue work beyond it; this law identifies one specific boundary that a finance professional
 crosses easily and almost always inadvertently — a label — and converts the referral duty into a
 producible determination, a no-extrapolation rule, a pending-status rule and a standing statement
@@ -2108,7 +2108,7 @@ and breached.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-09.03 — Sustainable-Finance Claims
+### PCI STANDARD PCI-PFL-STD-09.03 — Sustainable-Finance Claims
 
 **1. Normative requirement.** A credential holder must not make, model, certify, publish or repeat a
 *sustainability claim* at a strength that the identified supporting *evidence* does not support.
@@ -2135,27 +2135,27 @@ or an instrument, whose scope, method and limitations are stated in the opinion 
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-09.03-PR-01 — Claim register.** The preparer must record every *sustainability claim*
+- **PCI-PFL-STD-09.03-PR-01 — Claim register.** The preparer must record every *sustainability claim*
   made in a decision-grade output, with its exact wording, its *claim strength*, the framework, label,
   taxonomy or metric relied on, the *evidence* relied on, the verifier where one exists, and the date.
-- **PCI-PFL-LAW-09.03-PR-02 — Strength matched to evidence.** The preparer must state each claim at the
+- **PCI-PFL-STD-09.03-PR-02 — Strength matched to evidence.** The preparer must state each claim at the
   strength the evidence supports, and must not use a certification word where the evidence is an
   assessment, or an assessment word where the evidence is an intention.
-- **PCI-PFL-LAW-09.03-PR-03 — Voluntary status stated.** The preparer must identify each framework,
+- **PCI-PFL-STD-09.03-PR-03 — Voluntary status stated.** The preparer must identify each framework,
   label or principle set relied on as voluntary where it is voluntary, and **must not present any
   voluntary framework as legislation, regulation or law**; where a jurisdiction's enacted taxonomy,
   labelling or disclosure regime is relied on, the preparer must name the jurisdiction, must state that
   the regime is legislation in that jurisdiction only, and must not extend it to another.
-- **PCI-PFL-LAW-09.03-PR-04 — Metric definition and measurement.** The preparer must record, for every
+- **PCI-PFL-STD-09.03-PR-04 — Metric definition and measurement.** The preparer must record, for every
   performance metric or key performance indicator relied on, its definition, its measurement method,
   its measurement boundary, its reference point, its assurance arrangement and who performs it — and
   must not quote a metric outside the model, report or measurement system that produced it without
   those particulars.
-- **PCI-PFL-LAW-09.03-PR-05 — Economics of the label disclosed.** Where a claim attaches to a
+- **PCI-PFL-STD-09.03-PR-05 — Economics of the label disclosed.** Where a claim attaches to a
   sustainability-linked instrument, the preparer must present the margin effect and the cost of the
   measurement, assurance and reporting apparatus over the life of the facility on the same basis, and
   must state whether the ratchet is symmetric.
-- **PCI-PFL-LAW-09.03-PR-06 — Withdrawal on lapse.** The preparer must withdraw or restate a claim
+- **PCI-PFL-STD-09.03-PR-06 — Withdrawal on lapse.** The preparer must withdraw or restate a claim
   where its evidence lapses, is superseded, is withdrawn by its verifier, or ceases to support the
   strength stated, and must notify every party known to be relying on it.
 
@@ -2168,7 +2168,7 @@ change and presenting it as a target; presenting a label as the reason for a pri
 evidence attributes elsewhere; carrying a claim forward after its evidence has lapsed.
 
 **7. Required evidence.** The claim register with all seven fields; the underlying evidence for each
-claim, retained under `PCI-PFL-LAW-06.04-PR-03`; each *second-party opinion*, external review,
+claim, retained under `PCI-PFL-STD-06.04-PR-03`; each *second-party opinion*, external review,
 assurance report or certificate, with its stated scope and limitations; the metric definitions and
 measurement records; the PR-05 economics; the withdrawal and notification records.
 
@@ -2270,9 +2270,9 @@ and the answer differs by jurisdiction, by instrument and by investor type. Obta
 legal advice before any sustainability claim is published, and re-take that advice before the same
 claim is repeated in another jurisdiction.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion); `PCI-FND-LAW-11`;
-`PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-10.04`. **Increment over the foundational
-parent:** `PCI-FND-LAW-02` forbids a claim that the identified evidence does not support; this law
+**19. Related PCI Laws.** `PCI-FND-STD-02` (evidence before assertion); `PCI-FND-STD-11`;
+`PCI-PFL-STD-06.04`; `PCI-PFL-STD-09.01`; `PCI-PFL-STD-10.04`. **Increment over the foundational
+parent:** `PCI-FND-STD-02` forbids a claim that the identified evidence does not support; this law
 addresses the specific mechanism by which a sustainability statement becomes dishonest without
 anyone lying — strength drift between *intended*, *assessed*, *aligned* and *certified* — and adds
 the register, the voluntary-status rule, the metric particulars, the ratchet economics and a
@@ -2324,7 +2324,7 @@ that no publisher, edition or clause is asserted without verification.
 ---
 ## Domain 10 — Debt sizing, covenants and credit metrics
 
-### PCI LAW PCI-PFL-LAW-10.01 — The CFADS Definition
+### PCI STANDARD PCI-PFL-STD-10.01 — The CFADS Definition
 
 **1. Normative requirement.** A credential holder must compute *CFADS* on the definition the *finance
 documents* state, item by item, and must not substitute a market convention, a textbook formulation or
@@ -2347,19 +2347,19 @@ it there.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-10.01-PR-01 — Definition schedule.** The preparer must maintain a *definition schedule*
+- **PCI-PFL-STD-10.01-PR-01 — Definition schedule.** The preparer must maintain a *definition schedule*
   for *CFADS* and for *debt service*, each item sourced to the defined term in the *finance documents*
   that establishes it.
-- **PCI-PFL-LAW-10.01-PR-02 — Model line matches schedule.** The preparer must build the model's
+- **PCI-PFL-STD-10.01-PR-02 — Model line matches schedule.** The preparer must build the model's
   *CFADS* line to the definition schedule, item for item, and must reconcile the model line to the
   schedule at each release.
-- **PCI-PFL-LAW-10.01-PR-03 — Reconciliation to the statements.** The preparer must reconcile the
+- **PCI-PFL-STD-10.01-PR-03 — Reconciliation to the statements.** The preparer must reconcile the
   *CFADS* line to the financial statements for every period in which both exist, and must explain each
   reconciling item.
-- **PCI-PFL-LAW-10.01-PR-04 — Pre-document definitions labelled.** Where no finance documents yet
+- **PCI-PFL-STD-10.01-PR-04 — Pre-document definitions labelled.** Where no finance documents yet
   exist, the preparer must write out the modelled definition in full and label it as the modeller's
   definition, and must not describe it as the transaction's definition.
-- **PCI-PFL-LAW-10.01-PR-05 — Re-derivation on amendment.** The preparer must re-derive the definition
+- **PCI-PFL-STD-10.01-PR-05 — Re-derivation on amendment.** The preparer must re-derive the definition
   schedule and re-reconcile the model line whenever a defined term is amended or waived.
 
 **6. Prohibited actions.** Including in *CFADS* an item the definition excludes, or excluding one it
@@ -2395,7 +2395,7 @@ wrong for at least one of them.
 
 **12. Exception and waiver.** No exception is permitted. Where the documents are genuinely ambiguous,
 the preparer must record the ambiguity, compute on each reading, present both, and refer the
-construction question to qualified counsel under `PCI-PFL-LAW-12.02` — the preparer must not resolve it
+construction question to qualified counsel under `PCI-PFL-STD-12.02` — the preparer must not resolve it
 by choosing.
 
 **13. Escalation trigger.** A definitional difference between the model and the documents; an amendment
@@ -2432,9 +2432,9 @@ definitions — are jurisdiction-specific and change with legislation. Obtain qu
 construction and qualified local tax advice on the tax components, and never resolve a construction
 question inside the model.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-05`; `PCI-PFL-LAW-01.01`;
-`PCI-PFL-LAW-10.02`; `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-15.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-07` requires a figure to be traceable from its sources to
+**19. Related PCI Laws.** `PCI-FND-STD-07`; `PCI-FND-STD-05`; `PCI-PFL-STD-01.01`;
+`PCI-PFL-STD-10.02`; `PCI-PFL-STD-10.03`; `PCI-PFL-STD-10.04`; `PCI-PFL-STD-15.01`. **Increment over
+the foundational parent:** `PCI-FND-STD-07` requires a figure to be traceable from its sources to
 the output that was approved; this law names the one quantity in a financing whose *definition* —
 not its data — is the usual point of failure, and requires an item-by-item schedule sourced to the
 defining clause, reconciled to the model and to the statements, and re-derived on every amendment.
@@ -2476,7 +2476,7 @@ the pre-document labelling rule and the re-derivation-on-amendment rule added.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-10.02 — Debt Sizing
+### PCI STANDARD PCI-PFL-STD-10.02 — Debt Sizing
 
 **1. Normative requirement.** A credential holder must size debt to the coverage level, the tenor and
 the amortisation profile that the *finance documents* or the credit approval state, and must not size
@@ -2499,16 +2499,16 @@ the amortisation or sculpting convention, the assumed rate and hedging, the tax 
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-10.02-PR-01 — Record the sizing basis.** The preparer must record the *sizing basis*
+- **PCI-PFL-STD-10.02-PR-01 — Record the sizing basis.** The preparer must record the *sizing basis*
   in full before the quantum is quoted, and must attach the *source line* of the document or approval
   that establishes the target coverage level.
-- **PCI-PFL-LAW-10.02-PR-02 — Size from the documented case.** The preparer must take the *CFADS*
+- **PCI-PFL-STD-10.02-PR-02 — Size from the documented case.** The preparer must take the *CFADS*
   profile from the case the *finance documents* or credit approval identify, and must not size from a
   more favourable case.
-- **PCI-PFL-LAW-10.02-PR-03 — Sensitivity of the quantum.** The preparer must present the movement in
+- **PCI-PFL-STD-10.02-PR-03 — Sensitivity of the quantum.** The preparer must present the movement in
   the debt quantum produced by a stated change in each of the target coverage level, the rate, the
   tenor and the principal *CFADS* drivers, so that the quantum's fragility is visible.
-- **PCI-PFL-LAW-10.02-PR-04 — Sculpting disclosed.** Where the profile is sculpted, the preparer must
+- **PCI-PFL-STD-10.02-PR-04 — Sculpting disclosed.** Where the profile is sculpted, the preparer must
   state the sculpting convention, the coverage level held, the treatment of the interest tax shield in
   the feedback loop, and the resulting profile's sensitivity to the rate.
 
@@ -2536,7 +2536,7 @@ support a credit decision or a funding plan.
 **11. Materiality or threshold.** **The coverage level used is the one the finance documents or the
 credit approval state — PCI does not set it, does not recommend one, and does not publish a range.**
 Where no document yet states a level, the preparer records the credit approver's stated target and
-labels it as an assumption under `PCI-PFL-LAW-09.01-PR-01`. Materiality governs escalation: the
+labels it as an assumption under `PCI-PFL-STD-09.01-PR-01`. Materiality governs escalation: the
 *decision owner* records the movement in quantum, in the transaction's own units, at which a change of
 basis must be escalated. *Scale test:* on a small municipal project a single target level, one tranche
 and a level-repayment profile make the sizing basis a short paragraph; on a multi-billion cross-border
@@ -2584,11 +2584,11 @@ the target coverage level to the document or approval that states it. Recorded w
 interest and of hedging costs, withholding tax on interest, and regulatory limits on lending to a
 project or a sector can each cap the quantum independently of the coverage arithmetic, and all are
 jurisdiction-specific. Obtain qualified local tax and regulatory advice before a quantum is relied
-upon — see `PCI-PFL-LAW-12.02`.
+upon — see `PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-10.01`;
-`PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-10.05`; `PCI-PFL-LAW-06.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` forbids a forecast issued without the assumptions it depends on; this law
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-PFL-STD-09.01`; `PCI-PFL-STD-10.01`;
+`PCI-PFL-STD-10.03`; `PCI-PFL-STD-10.05`; `PCI-PFL-STD-06.03`. **Increment over the foundational
+parent:** `PCI-FND-STD-05` forbids a forecast issued without the assumptions it depends on; this law
 names the specific reverse-engineering that produces a misleading quantum — choosing the coverage
 level to fit the answer — and requires the basis to be recorded, sourced and stress-tested before
 the quantum is quoted.
@@ -2628,7 +2628,7 @@ no coverage level.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-10.03 — Coverage-Ratio Calculation and Reporting
+### PCI STANDARD PCI-PFL-STD-10.03 — Coverage-Ratio Calculation and Reporting
 
 **1. Normative requirement.** A credential holder must report a *coverage ratio* with its definition,
 its period basis and its minimum over the tested horizon, and must not present an average, a
@@ -2651,18 +2651,18 @@ the finance documents state.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-10.03-PR-01 — Report the minimum and identify the binding period.** The preparer must
+- **PCI-PFL-STD-10.03-PR-01 — Report the minimum and identify the binding period.** The preparer must
   report the minimum ratio over the tested horizon and identify the *binding period*, alongside any
   average presented.
-- **PCI-PFL-LAW-10.03-PR-02 — State the definition and period basis.** The preparer must state, with
-  every reported ratio, the definition applied under `PCI-PFL-LAW-10.01`, the *period basis*, and whose
+- **PCI-PFL-STD-10.03-PR-02 — State the definition and period basis.** The preparer must state, with
+  every reported ratio, the definition applied under `PCI-PFL-STD-10.01`, the *period basis*, and whose
   projection the forward-looking element uses.
-- **PCI-PFL-LAW-10.03-PR-03 — Publish the series.** The preparer must make the period-by-period ratio
+- **PCI-PFL-STD-10.03-PR-03 — Publish the series.** The preparer must make the period-by-period ratio
   series available with any summary figure, so that a reader can see the shape rather than a point.
-- **PCI-PFL-LAW-10.03-PR-04 — Disclose every adjustment.** The preparer must disclose every adjustment
+- **PCI-PFL-STD-10.03-PR-04 — Disclose every adjustment.** The preparer must disclose every adjustment
   made in arriving at the reported ratio, and must state whether that adjustment has been applied in
   previous periods.
-- **PCI-PFL-LAW-10.03-PR-05 — Compare against the documented level.** The preparer must present the
+- **PCI-PFL-STD-10.03-PR-05 — Compare against the documented level.** The preparer must present the
   reported ratio against the level the *finance documents* state for the test in question — sizing,
   *distribution*, *lock-up* or default — and must not compare it against a level from another test or
   another transaction.
@@ -2702,7 +2702,7 @@ per test and per facility, because the binding period is rarely the same for all
 require a specific certificate form that omits the minimum, the preparer must complete that form as
 required **and** provide the minimum and the series alongside it; the documents' form governs the
 certificate, and this law governs the professional's own reporting. A *waiver* of a covenant by the
-finance parties is governed by `PCI-PFL-LAW-15.03` and does not waive this reporting obligation.
+finance parties is governed by `PCI-PFL-STD-15.03` and does not waive this reporting obligation.
 
 **13. Escalation trigger.** A computed ratio at or below any documented level in any period of the
 tested horizon; a definitional difference between the model and the documents; an adjustment that
@@ -2737,13 +2737,13 @@ statements before certifying or submitting. Each recorded with the reviewer's na
 **18. Jurisdictional caution.** Coverage definitions and levels are contractual, not statutory. Their
 construction, the effect of a breach, notice requirements and the enforceability of cure rights are
 matters for the governing law of the *finance documents* and for qualified counsel — see
-`PCI-PFL-LAW-10.04` and `PCI-PFL-LAW-12.02`. Where a ratio is also disclosed in financial statements,
+`PCI-PFL-STD-10.04` and `PCI-PFL-STD-12.02`. Where a ratio is also disclosed in financial statements,
 the classification consequences of a breach are a reporting question in the entity's own framework and
 jurisdiction.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-PFL-LAW-01.01`; `PCI-PFL-LAW-10.01`;
-`PCI-PFL-LAW-10.02`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-15.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` requires a conclusion to travel with the assumptions and the basis it
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-PFL-STD-01.01`; `PCI-PFL-STD-10.01`;
+`PCI-PFL-STD-10.02`; `PCI-PFL-STD-10.04`; `PCI-PFL-STD-15.01`. **Increment over the foundational
+parent:** `PCI-FND-STD-05` requires a conclusion to travel with the assumptions and the basis it
 depends on; this law specifies the three things a coverage number needs before it is honest — its
 definition, its period basis and its minimum — and requires the series and every adjustment to
 travel with it.
@@ -2778,14 +2778,14 @@ exposed.
 
 **25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
 approval · supersedes the reporting limb of `PFL-LAW-10-01` *Debt-Service Coverage Truth* (v1.0).
-Amendment note: the v1.0 rule is split across `PCI-PFL-LAW-10.01` (definition),
-`PCI-PFL-LAW-10.02` (sizing) and this law (calculation and reporting); *binding period* and *period
+Amendment note: the v1.0 rule is split across `PCI-PFL-STD-10.01` (definition),
+`PCI-PFL-STD-10.02` (sizing) and this law (calculation and reporting); *binding period* and *period
 basis* defined; the comparison-against-the-documented-level rule added as PR-05; the element 12 conflict
 between a prescribed certificate form and this law resolved expressly.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-10.04 — Covenant Interpretation
+### PCI STANDARD PCI-PFL-STD-10.04 — Covenant Interpretation
 
 **1. Normative requirement.** A credential holder must not state a legal conclusion on the meaning, the
 breach or the consequence of a covenant; that construction belongs to qualified counsel.
@@ -2808,18 +2808,18 @@ on arithmetic.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-10.04-PR-01 — Maintain the covenant register.** The credential holder must maintain a
+- **PCI-PFL-STD-10.04-PR-01 — Maintain the covenant register.** The credential holder must maintain a
   *covenant register* with all six fields per covenant, sourced to the executed documents.
-- **PCI-PFL-LAW-10.04-PR-02 — Test on the defined dates with the defined inputs.** The credential
+- **PCI-PFL-STD-10.04-PR-02 — Test on the defined dates with the defined inputs.** The credential
   holder must test each covenant on its defined dates using its defined inputs, and must not substitute
   a market convention, a textbook definition or another transaction's terms.
-- **PCI-PFL-LAW-10.04-PR-03 — Refer, do not resolve.** The credential holder must record every
+- **PCI-PFL-STD-10.04-PR-03 — Refer, do not resolve.** The credential holder must record every
   *interpretive question* and refer it to qualified counsel, and must not resolve it inside the model or
   the certificate.
-- **PCI-PFL-LAW-10.04-PR-04 — Register maintained through waivers and amendments.** The credential
+- **PCI-PFL-STD-10.04-PR-04 — Register maintained through waivers and amendments.** The credential
   holder must record every *waiver* and *amendment* as a change to both the register and the model, and
   must re-confirm the register after each.
-- **PCI-PFL-LAW-10.04-PR-05 — Report a lock-up as a lock-up.** The credential holder must report a
+- **PCI-PFL-STD-10.04-PR-05 — Report a lock-up as a lock-up.** The credential holder must report a
   *lock-up* as a trap on cash and a default as a default, and must not describe either as the other.
 
 **6. Prohibited actions.** Computing a covenant on a definition other than the documented one; giving
@@ -2855,7 +2855,7 @@ that exists in no document.
 
 **12. Exception and waiver.** No exception is permitted to element 1 or to PR-03. A *waiver* of a
 covenant itself is a matter for the finance parties under the documents and is governed by
-`PCI-PFL-LAW-15.03`; it does not permit the credential holder to state a legal conclusion.
+`PCI-PFL-STD-15.03`; it does not permit the credential holder to state a legal conclusion.
 
 **13. Escalation trigger.** A position at or approaching a *lock-up* or default level; a definitional
 ambiguity that changes the result; a proposed *amendment* whose effect on the register has not been
@@ -2898,9 +2898,9 @@ injunctive relief, and the interaction with insolvency law are all determined by
 the *finance documents* and by the law of the place of enforcement, which need not be the same. Obtain
 qualified legal advice, and **never act on a modelled interpretation**.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-10` (competence and limitation); `PCI-FND-LAW-11`;
-`PCI-PFL-LAW-10.01`; `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-12.02`; `PCI-PFL-LAW-15.01`;
-`PCI-PFL-LAW-15.03`. **Increment over the foundational parent:** `PCI-FND-LAW-10` forbids issuing
+**19. Related PCI Laws.** `PCI-FND-STD-10` (competence and limitation); `PCI-FND-STD-11`;
+`PCI-PFL-STD-10.01`; `PCI-PFL-STD-10.03`; `PCI-PFL-STD-12.02`; `PCI-PFL-STD-15.01`;
+`PCI-PFL-STD-15.03`. **Increment over the foundational parent:** `PCI-FND-STD-10` forbids issuing
 work that requires competence not held; this law draws the boundary precisely for a financing —
 arithmetic on defined inputs is the professional's; the construction of the words is counsel's — and
 adds the register, the referral log and the rule that a lock-up and a default are reported as
@@ -2944,7 +2944,7 @@ reporting distinction added as PR-05; the IAS 1 reference carries the IFRS 18 su
 
 ---
 
-### PCI LAW PCI-PFL-LAW-10.05 — Reserve-Account Governance
+### PCI STANDARD PCI-PFL-STD-10.05 — Reserve-Account Governance
 
 **1. Normative requirement.** A credential holder must fund, apply and release a *reserve account* only
 in the amounts, for the purposes and in the order the *finance documents* specify.
@@ -2967,19 +2967,19 @@ that the finance documents expressly allow, in the order they specify.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-10.05-PR-01 — Required-balance schedule.** The preparer must maintain a schedule of
+- **PCI-PFL-STD-10.05-PR-01 — Required-balance schedule.** The preparer must maintain a schedule of
   each reserve's *required balance* by date, computed on the documented basis and sourced to the clause
   that establishes it.
-- **PCI-PFL-LAW-10.05-PR-02 — Funding on time and in form.** The preparer must confirm that each
+- **PCI-PFL-STD-10.05-PR-02 — Funding on time and in form.** The preparer must confirm that each
   reserve is funded to its required balance on the required date and in the permitted form — cash or an
   acceptable instrument — and must report a shortfall as a shortfall.
-- **PCI-PFL-LAW-10.05-PR-03 — Application only as permitted.** The preparer must confirm before each
+- **PCI-PFL-STD-10.05-PR-03 — Application only as permitted.** The preparer must confirm before each
   application that it is a *permitted application* and that the order of application is as specified,
   and must not apply a reserve to a purpose the documents do not allow.
-- **PCI-PFL-LAW-10.05-PR-04 — Replenishment tracked.** The preparer must track the replenishment
+- **PCI-PFL-STD-10.05-PR-04 — Replenishment tracked.** The preparer must track the replenishment
   obligation following any application, and must report the position until the required balance is
   restored.
-- **PCI-PFL-LAW-10.05-PR-05 — Release only on the documented condition.** The preparer must confirm
+- **PCI-PFL-STD-10.05-PR-05 — Release only on the documented condition.** The preparer must confirm
   that every release condition is satisfied before a release, and must not release a balance in order
   to permit a *distribution*.
 
@@ -3018,7 +3018,7 @@ to another.
 
 **12. Exception and waiver.** No exception is permitted. A shortfall, a late funding, a non-permitted
 application or an early release can be cured only by a *waiver* from the party entitled to give one,
-under `PCI-PFL-LAW-15.03`; until that waiver is given in the form the documents require, the position
+under `PCI-PFL-STD-15.03`; until that waiver is given in the form the documents require, the position
 is reported as non-compliant.
 
 **13. Escalation trigger.** A reserve that will not be funded to its required balance on its required
@@ -3055,9 +3055,9 @@ offshore reserve are all jurisdiction-specific — and in a cross-border financi
 jurisdiction, the borrower's and the governing law's may differ. Obtain qualified local legal advice on
 each account before relying on a reserve as security or as available cash.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.01`;
-`PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-14.04`; `PCI-PFL-LAW-15.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-02` requires an evidenced trail behind a claim; this law states what the
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-PFL-STD-10.01`;
+`PCI-PFL-STD-10.03`; `PCI-PFL-STD-14.04`; `PCI-PFL-STD-15.01`. **Increment over the foundational
+parent:** `PCI-FND-STD-02` requires an evidenced trail behind a claim; this law states what the
 trail must prove for a reserve — the required balance sourced to its clause, funding on the date and
 in the permitted form, each application checked against the permitted list before it is made,
 replenishment tracked to restoration, and independent confirmation of the balance itself.
@@ -3099,7 +3099,7 @@ process requirement.
 ---
 ## Domain 11 — Risk identification and allocation
 
-### PCI LAW PCI-PFL-LAW-11.01 — Risk-Allocation Honesty
+### PCI STANDARD PCI-PFL-STD-11.01 — Risk-Allocation Honesty
 
 **1. Normative requirement.** A credential holder must record where each *material* risk actually
 lands once the contracts, caps, exclusions, deductibles, insurance and counterparty credit are read
@@ -3125,16 +3125,16 @@ mechanism is read at its limits.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-11.01-PR-01 — Allocation matrix with limits.** The preparer must maintain an
+- **PCI-PFL-STD-11.01-PR-01 — Allocation matrix with limits.** The preparer must maintain an
   *allocation matrix* containing all five fields for every *material* risk, sourced to the clauses that
   create the allocation.
-- **PCI-PFL-LAW-11.01-PR-02 — Read the transfer at its limit.** The preparer must state, for each
+- **PCI-PFL-STD-11.01-PR-02 — Read the transfer at its limit.** The preparer must state, for each
   transferred risk, the cap, exclusion, deductible, time bar and condition on which the transfer
   depends, and must compute the *residual position* on the basis that each of those operates.
-- **PCI-PFL-LAW-11.01-PR-03 — Counterparty capacity.** The preparer must record the credit standing of
+- **PCI-PFL-STD-11.01-PR-03 — Counterparty capacity.** The preparer must record the credit standing of
   each party bearing a *material* risk and the instrument supporting it, and must treat a risk
   transferred to a party that cannot meet it as retained to the extent of the shortfall.
-- **PCI-PFL-LAW-11.01-PR-04 — Orphan and double-cover identification.** The preparer must identify
+- **PCI-PFL-STD-11.01-PR-04 — Orphan and double-cover identification.** The preparer must identify
   every risk that no party bears and every risk two mechanisms purport to cover, and must report both.
 
 **6. Prohibited actions.** Presenting a risk as transferred without stating the cap or the exclusion;
@@ -3215,9 +3215,9 @@ jurisdiction- and insurer-specific; and sanctions may make a counterparty unusab
 credit. Obtain qualified local legal advice on the enforceability of each transfer mechanism before
 relying on it — a cap that is void does not cap.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-05.01`;
-`PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-12.02`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` requires the conditions a conclusion rests on to be stated with equal
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-PFL-STD-05.01`;
+`PCI-PFL-STD-09.01`; `PCI-PFL-STD-12.01`; `PCI-PFL-STD-12.02`. **Increment over the foundational
+parent:** `PCI-FND-STD-05` requires the conditions a conclusion rests on to be stated with equal
 prominence; this law names the mechanism by which a risk matrix becomes dishonest without a false
 statement in it — reading a transfer at its headline rather than at its limit — and requires caps,
 exclusions, counterparty capacity, orphans and double cover all to be on the face of the record.
@@ -3260,7 +3260,7 @@ tightened to record that clause numbering moved between editions and that none i
 
 ## Domain 12 — Contracts and transaction structure
 
-### PCI LAW PCI-PFL-LAW-12.01 — Contract-Source Verification
+### PCI STANDARD PCI-PFL-STD-12.01 — Contract-Source Verification
 
 **1. Normative requirement.** A credential holder must take every contractual term used in a model,
 register, certificate or report from the executed document itself, read at the clause.
@@ -3284,15 +3284,15 @@ cross-references and any schedule it invokes.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-12.01-PR-01 — Read at the clause.** The preparer must perform a *clause-level reading*
+- **PCI-PFL-STD-12.01-PR-01 — Read at the clause.** The preparer must perform a *clause-level reading*
   of the *executed document* for every *material* term before using it, and must not rely on a summary,
   a term sheet or a précis as the source.
-- **PCI-PFL-LAW-12.01-PR-02 — Cite the clause.** The preparer must record, as the term's *source line*,
+- **PCI-PFL-STD-12.01-PR-02 — Cite the clause.** The preparer must record, as the term's *source line*,
   the document, its date and execution status, and the clause and defined terms relied on.
-- **PCI-PFL-LAW-12.01-PR-03 — Amendment currency.** The preparer must confirm that the version read is
+- **PCI-PFL-STD-12.01-PR-03 — Amendment currency.** The preparer must confirm that the version read is
   the version in effect at the date used, including all amendments and side letters, and must re-read
   the term after any amendment.
-- **PCI-PFL-LAW-12.01-PR-04 — Discrepancy reporting.** The preparer must report any discrepancy between
+- **PCI-PFL-STD-12.01-PR-04 — Discrepancy reporting.** The preparer must report any discrepancy between
   the executed document and a summary, diligence report or previous model, to the *decision owner* and
   to the party that produced the summary.
 
@@ -3310,11 +3310,11 @@ owner* for the output that relies on it.
 
 **9. Approval authority.** The decision owner approves the output. No one may approve the use of a term
 that has not been read at the clause. Where the clause's *meaning* is in question, that is an
-interpretive question for counsel under `PCI-PFL-LAW-10.04-PR-03` and `PCI-PFL-LAW-12.02`.
+interpretive question for counsel under `PCI-PFL-STD-10.04-PR-03` and `PCI-PFL-STD-12.02`.
 
 **10. Independence requirement.** A *competent reviewer* independent of preparation must re-read a
 sample of *material* terms at the clause as part of any model audit or diligence review under
-`PCI-PFL-LAW-13.01`; the sampling basis is stated before the sample is drawn.
+`PCI-PFL-STD-13.01`; the sampling basis is stated before the sample is drawn.
 
 **11. Materiality or threshold.** A term is *material* where a difference between the summary and the
 clause would change a modelled output by more than the figure recorded in the engagement's materiality
@@ -3369,11 +3369,11 @@ Recorded per term with the reader's name and the date.
 electronic execution is valid, whether a side letter varies the main agreement, the effect of an
 entire-agreement clause, and the admissibility of pre-contractual material in construing a term are all
 questions of the governing law and can differ between the contracts in a single financing. Obtain
-qualified legal advice on the effective document set before relying on it — see `PCI-PFL-LAW-12.02`.
+qualified legal advice on the effective document set before relying on it — see `PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-PFL-LAW-06.04`;
-`PCI-PFL-LAW-10.01`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-16.02`. **Increment over
-the foundational parent:** `PCI-FND-LAW-06` requires a dated check that a source is the version in
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-PFL-STD-06.04`;
+`PCI-PFL-STD-10.01`; `PCI-PFL-STD-10.04`; `PCI-PFL-STD-11.01`; `PCI-PFL-STD-16.02`. **Increment over
+the foundational parent:** `PCI-FND-STD-06` requires a dated check that a source is the version in
 force for the matter; this law fixes what counts as the source for a contractual term — the executed
 clause with its definitions and provisos, at the version in effect — and adds a positive duty to
 report a discrepancy back to whoever produced the summary that was wrong.
@@ -3413,7 +3413,7 @@ discrepancy reporting made a process requirement.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-12.02 — The Tax and Legal Advice Boundary
+### PCI STANDARD PCI-PFL-STD-12.02 — The Tax and Legal Advice Boundary
 
 **1. Normative requirement.** A credential holder must not give legal, tax, accounting, regulatory or
 insurance advice, and must obtain written advice from an adviser qualified in the relevant jurisdiction
@@ -3438,17 +3438,17 @@ or a decision.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-12.02-PR-01 — Identify the boundary question.** The credential holder must identify
+- **PCI-PFL-STD-12.02-PR-01 — Identify the boundary question.** The credential holder must identify
   every question in their work whose answer depends on law, tax, accounting treatment, regulation or
   insurance coverage, and must record it as a boundary question rather than answering it.
-- **PCI-PFL-LAW-12.02-PR-02 — Obtain written advice before adoption.** The credential holder must
+- **PCI-PFL-STD-12.02-PR-02 — Obtain written advice before adoption.** The credential holder must
   obtain written advice from a *qualified adviser* in the relevant jurisdiction before a *treatment* is
   adopted in a decision-grade output or represented as correct.
-- **PCI-PFL-LAW-12.02-PR-03 — Model to the advice, and to its limits.** The credential holder must
+- **PCI-PFL-STD-12.02-PR-03 — Model to the advice, and to its limits.** The credential holder must
   model the treatment as the advice states it, must record the advice's stated assumptions,
   qualifications, scope and date as part of the assumption's *basis*, and must not extend the treatment
   beyond the entity, structure, period or jurisdiction the advice covers.
-- **PCI-PFL-LAW-12.02-PR-04 — Re-take advice on change.** The credential holder must obtain fresh
+- **PCI-PFL-STD-12.02-PR-04 — Re-take advice on change.** The credential holder must obtain fresh
   advice where the structure, the entity, the jurisdiction, the period or the law changes, and must not
   carry an earlier opinion across the change.
 
@@ -3544,9 +3544,9 @@ specific, frequently amended, and often interact across the several jurisdiction
 financing. An answer obtained for one entity, one structure, one period or one jurisdiction says nothing
 about another.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-10` (competence and limitation); `PCI-FND-LAW-11`;
-`PCI-PFL-LAW-06.03`; `PCI-PFL-LAW-09.02`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-12.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-10` forbids accepting or continuing work that requires
+**19. Related PCI Laws.** `PCI-FND-STD-10` (competence and limitation); `PCI-FND-STD-11`;
+`PCI-PFL-STD-06.03`; `PCI-PFL-STD-09.02`; `PCI-PFL-STD-10.04`; `PCI-PFL-STD-12.01`. **Increment over
+the foundational parent:** `PCI-FND-STD-10` forbids accepting or continuing work that requires
 competence not held; this law makes the referral operational in a financing — a logged boundary
 question, written advice before adoption, modelling to the advice's stated limits, and fresh advice
 on any change of entity, structure, period or jurisdiction, which is the failure mode a general
@@ -3591,7 +3591,7 @@ OECD Model Tax Convention characterisation tightened to state that it is not law
 ---
 ## Domain 13 — Due diligence and financial close
 
-### PCI LAW PCI-PFL-LAW-13.01 — Independent Model Review
+### PCI STANDARD PCI-PFL-STD-13.01 — Independent Model Review
 
 **1. Normative requirement.** A model audit, diligence review or adviser's report relied upon by any
 party other than the reviewer's own team must be performed by a person *independent* of the work
@@ -3616,22 +3616,22 @@ quantified effect where it can be quantified.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-13.01-PR-01 — Independence recorded before engagement.** The reviewer must record, and
+- **PCI-PFL-STD-13.01-PR-01 — Independence recorded before engagement.** The reviewer must record, and
   the engaging party must obtain, a statement addressing each of the four limbs of *independent* before
   the engagement begins, and must update it if circumstances change.
-- **PCI-PFL-LAW-13.01-PR-02 — Scope statement issued first.** The reviewer must issue the *review scope
+- **PCI-PFL-STD-13.01-PR-02 — Scope statement issued first.** The reviewer must issue the *review scope
   statement* before the review begins, and must not extend, narrow or re-date it after the findings are
   known without recording the change and its reason.
-- **PCI-PFL-LAW-13.01-PR-03 — Findings reported with quantified effect.** The reviewer must report
+- **PCI-PFL-STD-13.01-PR-03 — Findings reported with quantified effect.** The reviewer must report
   every *finding*, with its quantified effect where it can be quantified and with a statement that it
   cannot where it cannot, and must not suppress, aggregate or reclassify a finding to reach a cleaner
   conclusion.
-- **PCI-PFL-LAW-13.01-PR-04 — Version identified.** The reviewer must identify the *authoritative
+- **PCI-PFL-STD-13.01-PR-04 — Version identified.** The reviewer must identify the *authoritative
   version* reviewed and must state expressly that the report does not extend to any later version.
-- **PCI-PFL-LAW-13.01-PR-05 — No self-review.** A credential holder must not review their own work, and
+- **PCI-PFL-STD-13.01-PR-05 — No self-review.** A credential holder must not review their own work, and
   must not accept a review engagement whose fee, continuing mandate or other benefit varies with the
   conclusion reached.
-- **PCI-PFL-LAW-13.01-PR-06 — Exclusions named on the face of the report.** The reviewer must record,
+- **PCI-PFL-STD-13.01-PR-06 — Exclusions named on the face of the report.** The reviewer must record,
   in the *review scope statement* and on the face of the report, each excluded area that the reviewer
   considers capable of a *material* effect on the conclusion, must state that the exclusion was set by
   the engaging party, and must not describe the conclusion as unqualified while such an exclusion
@@ -3695,7 +3695,7 @@ described as independent, because independence is a property of a relationship a
 
 **16. AI verification.** Independent recomputation by the named reviewer of every *material* AI-derived
 finding; clause-to-output comparison of AI-extracted contractual terms against the executed clause under
-`PCI-PFL-LAW-12.01`; boundary testing of any AI-run check suite by seeding a known error; and the
+`PCI-PFL-STD-12.01`; boundary testing of any AI-run check suite by seeding a known error; and the
 reviewer's personal sign-off on each finding. **The reviewer's name on the report attests to the
 reviewer's own work, not to the tool's.**
 
@@ -3728,9 +3728,9 @@ engagement letter, and any statutory or professional restriction on providing bo
 assurance services to the same client, are jurisdiction- and profession-specific. Obtain qualified
 legal advice on reliance and liability before a report is provided to a party outside the engagement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08`; `PCI-FND-LAW-10`; `PCI-PFL-LAW-01.02`;
-`PCI-PFL-LAW-06.05`; `PCI-PFL-LAW-13.02`; `PCI-PFL-LAW-16.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-08` requires conflicts to be disclosed; this law goes further for a review by
+**19. Related PCI Laws.** `PCI-FND-STD-08`; `PCI-FND-STD-10`; `PCI-PFL-STD-01.02`;
+`PCI-PFL-STD-06.05`; `PCI-PFL-STD-13.02`; `PCI-PFL-STD-16.03`. **Increment over the foundational
+parent:** `PCI-FND-STD-08` requires conflicts to be disclosed; this law goes further for a review by
 making independence a four-limb factual test recorded *before* engagement, forbidding self-review
 outright, fixing the scope and materiality before findings are known, and requiring a
 non-independent review to be labelled as one rather than merely disclosed.
@@ -3778,7 +3778,7 @@ material effect to be named on the face of the report.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-13.02 — Adviser Independence
+### PCI STANDARD PCI-PFL-STD-13.02 — Adviser Independence
 
 **1. Normative requirement.** A credential holder must not describe themselves, their firm, their
 advice or their output as *independent* while any limb of the definition of *independent* fails.
@@ -3801,17 +3801,17 @@ on a matter is not the individual reviewing or approving it.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-13.02-PR-01 — Four-limb test recorded.** The credential holder must record, against
+- **PCI-PFL-STD-13.02-PR-01 — Four-limb test recorded.** The credential holder must record, against
   each of the four limbs of *independent*, whether it is satisfied, before using the word in relation
   to themselves or their output.
-- **PCI-PFL-LAW-13.02-PR-02 — Contingent benefits disclosed.** The credential holder must disclose in
+- **PCI-PFL-STD-13.02-PR-02 — Contingent benefits disclosed.** The credential holder must disclose in
   writing every *contingent benefit* to every party relying on the output, before the output is relied
   upon.
-- **PCI-PFL-LAW-13.02-PR-03 — Role separation within a firm.** Where one firm both advises and reviews,
+- **PCI-PFL-STD-13.02-PR-03 — Role separation within a firm.** Where one firm both advises and reviews,
   the firm must record the *role separation*, name the individuals on each side, and must not describe
   the review as independent of the firm — only, where the four limbs hold at individual level, as
   independent of the advising team.
-- **PCI-PFL-LAW-13.02-PR-04 — Correction of description.** The credential holder must correct, in
+- **PCI-PFL-STD-13.02-PR-04 — Correction of description.** The credential holder must correct, in
   writing and to every recipient, any description of themselves or their output as independent that has
   become inaccurate.
 
@@ -3888,9 +3888,9 @@ certain services, and the legal effect of describing an output as independent di
 by profession — and a description lawful in one place can be a regulated statement in another. Obtain
 qualified legal and professional-body advice before using the word in a regulated context.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08`; `PCI-FND-LAW-02`; `PCI-PFL-LAW-01.02`;
-`PCI-PFL-LAW-13.01`; `PCI-PFL-LAW-09.03`. **Increment over the foundational parent:**
-`PCI-FND-LAW-08` requires conflicts to be disclosed and `PCI-FND-LAW-02` forbids a claim that the
+**19. Related PCI Laws.** `PCI-FND-STD-08`; `PCI-FND-STD-02`; `PCI-PFL-STD-01.02`;
+`PCI-PFL-STD-13.01`; `PCI-PFL-STD-09.03`. **Increment over the foundational parent:**
+`PCI-FND-STD-08` requires conflicts to be disclosed and `PCI-FND-STD-02` forbids a claim that the
 identified evidence does not support; this law addresses one such claim — the word *independent*
 applied to an adviser or an output — and converts it from a self-description into a recorded
 four-limb factual test assessed at both individual and firm level.
@@ -3931,7 +3931,7 @@ useful non-independent work is not driven into misdescription.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-13.03 — Conditions Precedent
+### PCI STANDARD PCI-PFL-STD-13.03 — Conditions Precedent
 
 **1. Normative requirement.** A credential holder must treat a *condition precedent* as satisfied only
 when the *evidence* the *finance documents* require has been delivered and accepted by the party
@@ -3956,18 +3956,18 @@ deliverable satisfies the condition.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-13.03-PR-01 — CP register maintained.** The credential holder must maintain a *CP
+- **PCI-PFL-STD-13.03-PR-01 — CP register maintained.** The credential holder must maintain a *CP
   register* with all seven fields per condition, sourced to the clause requiring it.
-- **PCI-PFL-LAW-13.03-PR-02 — Status recorded truthfully.** The credential holder must record each
+- **PCI-PFL-STD-13.03-PR-02 — Status recorded truthfully.** The credential holder must record each
   condition as *satisfied*, *outstanding*, *waived* or *deferred*, and must not record a waived or
   deferred condition as satisfied.
-- **PCI-PFL-LAW-13.03-PR-03 — Acceptance evidenced.** The credential holder must hold, for each
+- **PCI-PFL-STD-13.03-PR-03 — Acceptance evidenced.** The credential holder must hold, for each
   satisfied condition, the deliverable and the *acceptance* by the party entitled to accept it, in the
   form the documents require.
-- **PCI-PFL-LAW-13.03-PR-04 — Waiver and deferral terms carried.** The credential holder must record,
+- **PCI-PFL-STD-13.03-PR-04 — Waiver and deferral terms carried.** The credential holder must record,
   for each waived or deferred condition, who waived or deferred it, on what terms, until when, and what
   must then happen — and must track it to closure.
-- **PCI-PFL-LAW-13.03-PR-05 — No certification while any condition is outstanding.** The credential
+- **PCI-PFL-STD-13.03-PR-05 — No certification while any condition is outstanding.** The credential
   holder must not certify or report that conditions are met while any remains outstanding, and must
   identify the outstanding conditions by name in any status report.
 
@@ -4046,9 +4046,9 @@ are all jurisdiction-specific — and in a multi-jurisdictional financing each c
 by a different law. Obtain qualified local legal advice on each condition's satisfaction in its own
 jurisdiction; a condition satisfied under one law is not thereby satisfied under another.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-12.01`;
-`PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-02` requires an evidenced trail behind a claim; this law states what the
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-PFL-STD-12.01`;
+`PCI-PFL-STD-13.04`; `PCI-PFL-STD-14.02`; `PCI-PFL-STD-15.03`. **Increment over the foundational
+parent:** `PCI-FND-STD-02` requires an evidenced trail behind a claim; this law states what the
 trail must contain for a condition — the deliverable *and* the acceptance by the entitled party in
 the required form — and forbids the specific substitution that a close under time pressure invites,
 namely recording a waiver or a deferral as satisfaction.
@@ -4089,7 +4089,7 @@ by separating deliverable from acceptance.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-13.04 — Financial-Close Readiness
+### PCI STANDARD PCI-PFL-STD-13.04 — Financial-Close Readiness
 
 **1. Normative requirement.** A credential holder must not treat a transaction as closed until the
 complete closing record — the executed document set, the locked *base case*, the final *sources and
@@ -4115,19 +4115,19 @@ which the finance documents have become effective in accordance with their terms
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-13.04-PR-01 — Assemble the closing record.** The credential holder must assemble the
+- **PCI-PFL-STD-13.04-PR-01 — Assemble the closing record.** The credential holder must assemble the
   *closing record* in full, with an index identifying each component and its version.
-- **PCI-PFL-LAW-13.04-PR-02 — Lock and control the base case.** The credential holder must ensure the
-  *base case* is locked at close under `PCI-PFL-LAW-06.05-PR-05`, with an integrity control recorded in
+- **PCI-PFL-STD-13.04-PR-02 — Lock and control the base case.** The credential holder must ensure the
+  *base case* is locked at close under `PCI-PFL-STD-06.05-PR-05`, with an integrity control recorded in
   the index.
-- **PCI-PFL-LAW-13.04-PR-03 — Reconcile the closing numbers.** The credential holder must reconcile the
+- **PCI-PFL-STD-13.04-PR-03 — Reconcile the closing numbers.** The credential holder must reconcile the
   final *sources and uses* to the *funds flow* as executed and to the *base case*, and must explain
   every difference.
-- **PCI-PFL-LAW-13.04-PR-04 — Carry the open items forward.** The credential holder must produce, as
+- **PCI-PFL-STD-13.04-PR-04 — Carry the open items forward.** The credential holder must produce, as
   part of the record, a schedule of every condition waived or deferred at close and every post-close
   obligation, with its owner and its long-stop date, and must hand it to the party who will administer
   it.
-- **PCI-PFL-LAW-13.04-PR-05 — Retain and make retrievable.** The credential holder must retain the
+- **PCI-PFL-STD-13.04-PR-05 — Retain and make retrievable.** The credential holder must retain the
   closing record for the period the *finance documents*, applicable law and the engaging organisation's
   governance require, and must ensure it is retrievable by a person who was not present at close.
 
@@ -4209,9 +4209,9 @@ conflict across the jurisdictions in one financing. A missed post-close registra
 invalidate security. Obtain qualified local legal advice on execution formalities, post-close filings
 and retention before the record is designed.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PFL-LAW-06.05`;
-`PCI-PFL-LAW-13.03`; `PCI-PFL-LAW-14.01`; `PCI-PFL-LAW-14.04`. **Increment over the foundational
-parent:** `PCI-FND-LAW-12` requires records to be attributable, time-fixed and any later alteration
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-PFL-STD-06.05`;
+`PCI-PFL-STD-13.03`; `PCI-PFL-STD-14.01`; `PCI-PFL-STD-14.04`. **Increment over the foundational
+parent:** `PCI-FND-STD-12` requires records to be attributable, time-fixed and any later alteration
 detectable; this law names the components a *financing* record must contain, requires them to be one
 identified set with an index and a version per component, requires the closing numbers to reconcile,
 and requires the open items to be handed to the person who will administer them.
@@ -4253,7 +4253,7 @@ replacing an unverifiable "retained" obligation.
 ---
 ## Domain 14 — Construction monitoring and drawdown
 
-### PCI LAW PCI-PFL-LAW-14.01 — Sources-and-Uses Integrity
+### PCI STANDARD PCI-PFL-STD-14.01 — Sources-and-Uses Integrity
 
 **1. Normative requirement.** A credential holder must present a *sources and uses* statement whose two
 totals are equal, and must not close the gap with an uncommitted source, an unallocated balancing item
@@ -4277,17 +4277,17 @@ totals rather than from its own evidence.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-14.01-PR-01 — Every source classified.** The preparer must classify each source as
+- **PCI-PFL-STD-14.01-PR-01 — Every source classified.** The preparer must classify each source as
   *committed* or *uncommitted*, with the *source line* of the document that commits it, and must show
   the two classes separately.
-- **PCI-PFL-LAW-14.01-PR-02 — No balancing item.** The preparer must derive every line from its own
+- **PCI-PFL-STD-14.01-PR-02 — No balancing item.** The preparer must derive every line from its own
   evidence, and must not include a *balancing item*; where the totals do not agree, the difference is
   reported as an unfunded amount or an unallocated surplus, named as such.
-- **PCI-PFL-LAW-14.01-PR-03 — Uses reconciled to the cost base.** The preparer must reconcile the uses
+- **PCI-PFL-STD-14.01-PR-03 — Uses reconciled to the cost base.** The preparer must reconcile the uses
   to the capital-cost estimate, the financing costs, the interest during construction, the fees, the
   working capital and the reserves, and must reconcile the total to the *cost-to-complete* at each
   update.
-- **PCI-PFL-LAW-14.01-PR-04 — Contingency shown, not absorbed.** The preparer must show contingency and
+- **PCI-PFL-STD-14.01-PR-04 — Contingency shown, not absorbed.** The preparer must show contingency and
   any management reserve as separate uses with their release authority, and must not absorb a cost
   overrun into contingency without recording the draw.
 
@@ -4362,11 +4362,11 @@ treatment of grants and of capitalised interest and fees, indirect tax on constr
 recoverability and timing, exchange controls affecting a source in another currency, and the insolvency
 treatment of an undrawn commitment are all jurisdiction-specific and can change the statement. Obtain
 qualified local legal and tax advice on each source and on the treatment of financing costs — see
-`PCI-PFL-LAW-12.02`.
+`PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-02`; `PCI-PFL-LAW-09.01`;
-`PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-14.03`; `PCI-PFL-LAW-14.04`; `PCI-PFL-LAW-13.04`. **Increment over
-the foundational parent:** `PCI-FND-LAW-02` forbids presenting a figure that the identified evidence
+**19. Related PCI Laws.** `PCI-FND-STD-06`; `PCI-FND-STD-02`; `PCI-PFL-STD-09.01`;
+`PCI-PFL-STD-14.02`; `PCI-PFL-STD-14.03`; `PCI-PFL-STD-14.04`; `PCI-PFL-STD-13.04`. **Increment over
+the foundational parent:** `PCI-FND-STD-02` forbids presenting a figure that the identified evidence
 does not support; this law names the mechanism specific to a funding plan — a plug that makes an
 out-of-balance project look funded — and requires each source to be classified against an executed
 document and each line to stand on its own evidence.
@@ -4406,7 +4406,7 @@ route made explicit so that honesty is available without an exception.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-14.02 — Drawdown Control
+### PCI STANDARD PCI-PFL-STD-14.02 — Drawdown Control
 
 **1. Normative requirement.** A credential holder must not request, certify or approve a drawing for
 work not performed, for costs not incurred or not evidenced, or while the project is out of balance
@@ -4435,17 +4435,17 @@ the person the construction contract entitles to certify it.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-14.02-PR-01 — Evidence of value.** The preparer must support each draw request with the
+- **PCI-PFL-STD-14.02-PR-01 — Evidence of value.** The preparer must support each draw request with the
   *certified value* of work performed, or with evidence of cost incurred, for every amount requested.
-- **PCI-PFL-LAW-14.02-PR-02 — Current cost-to-complete.** The preparer must support each draw request
-  with a *cost-to-complete* current at the request date, prepared under `PCI-PFL-LAW-14.03`.
-- **PCI-PFL-LAW-14.02-PR-03 — In-balance test on the documented basis.** The preparer must test whether
+- **PCI-PFL-STD-14.02-PR-02 — Current cost-to-complete.** The preparer must support each draw request
+  with a *cost-to-complete* current at the request date, prepared under `PCI-PFL-STD-14.03`.
+- **PCI-PFL-STD-14.02-PR-03 — In-balance test on the documented basis.** The preparer must test whether
   the project is *in balance* on the basis the *finance documents* state, and must disclose the result
   in the request, including where it is negative.
-- **PCI-PFL-LAW-14.02-PR-04 — Conditions to the drawing confirmed.** The preparer must confirm that
-  every condition to that drawing is satisfied under `PCI-PFL-LAW-13.03`, and must identify any waived
+- **PCI-PFL-STD-14.02-PR-04 — Conditions to the drawing confirmed.** The preparer must confirm that
+  every condition to that drawing is satisfied under `PCI-PFL-STD-13.03`, and must identify any waived
   or deferred condition in the request.
-- **PCI-PFL-LAW-14.02-PR-05 — Advance and retention treatment.** The preparer must show advance
+- **PCI-PFL-STD-14.02-PR-05 — Advance and retention treatment.** The preparer must show advance
   payments, retention and their recovery separately, and must not present an advance payment as value
   earned.
 
@@ -4463,7 +4463,7 @@ lenders' technical adviser or agent for the lenders' confirmation, where the doc
 
 **9. Approval authority.** The party the *finance documents* name approves the drawing. The *decision
 owner* approves the borrower's request. A negative in-balance result can be cured only by additional
-committed funding or by a *waiver* under `PCI-PFL-LAW-15.03` — never by a re-presentation.
+committed funding or by a *waiver* under `PCI-PFL-STD-15.03` — never by a re-presentation.
 
 **10. Independence requirement.** The *certified value* must come from the person the construction
 contract entitles to certify it, who is *independent* of the party requesting payment; where the
@@ -4511,7 +4511,7 @@ invoice and a request line is not evidence that the work was performed.
   Nature: Manual §6 category 4 — contract framework. Applicability limitation: binds only the parties
   who adopt it, through the contract they sign; project contracts commonly amend it, so the standard
   form is not a safe source for the mechanism actually in force — read the executed contract under
-  `PCI-PFL-LAW-12.01`.
+  `PCI-PFL-STD-12.01`.
 - **ISO 15489-1 *Records management — Part 1*.** Issuing organisation: ISO. Subject: the reliability of
   the certification and payment record. Checked: ISO 15489-1:2016 (register `EXT-025`, verified
   2026-08-03). Nature: Manual §6 category 3 — international voluntary standard. Applicability
@@ -4523,9 +4523,9 @@ certified value and on advance payments, and the treatment of an advance-payment
 all jurisdiction-specific and can override the contract's own mechanics. Obtain qualified local legal
 advice on the payment regime and on lien risk before a drawdown structure is relied upon.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-PFL-LAW-13.03`;
-`PCI-PFL-LAW-14.01`; `PCI-PFL-LAW-14.03`; `PCI-PFL-LAW-14.04`. **Increment over the foundational
-parent:** `PCI-FND-LAW-02` requires evidence behind a claim; this law states what evidence a
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-PFL-STD-13.03`;
+`PCI-PFL-STD-14.01`; `PCI-PFL-STD-14.03`; `PCI-PFL-STD-14.04`. **Increment over the foundational
+parent:** `PCI-FND-STD-02` requires evidence behind a claim; this law states what evidence a
 *drawing* needs — certified value or evidenced cost, a current cost-to-complete, and the documented
 in-balance test — and makes disclosure of a negative result unwaivable even where the drawing itself
 is waived.
@@ -4536,7 +4536,7 @@ control, including advance payments and bonds. Also Domain 8 KA 8.2 (schedule-dr
 
 **21. Compliance test.** A reviewer takes a draw request pack and performs five steps. (a) Traces every
 requested amount to a *certified value* or an evidenced incurred cost. (b) Confirms the *cost-to-complete*
-used is dated on or after the request date's cut-off and was prepared under `PCI-PFL-LAW-14.03`. (c)
+used is dated on or after the request date's cut-off and was prepared under `PCI-PFL-STD-14.03`. (c)
 Recomputes the in-balance test on the documented basis and obtains the disclosed result, **tracing every
 amount counted as funding to the executed instrument that commits it** and excluding any amount that is
 not *committed and available funding*. (d) Confirms each condition to the drawing is confirmed
@@ -4571,7 +4571,7 @@ step (c) of element 21 traces every amount counted as funding to the instrument 
 
 ---
 
-### PCI LAW PCI-PFL-LAW-14.03 — Cost-to-Complete
+### PCI STANDARD PCI-PFL-STD-14.03 — Cost-to-Complete
 
 **1. Normative requirement.** A credential holder must prepare the *cost-to-complete* from certified
 progress, committed and uncommitted remaining scope, assessed claim exposure, escalation and the
@@ -4594,19 +4594,19 @@ committed under contract and scope not yet committed.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-14.03-PR-01 — Build up from components.** The preparer must build the cost-to-complete
+- **PCI-PFL-STD-14.03-PR-01 — Build up from components.** The preparer must build the cost-to-complete
   from *remaining scope* separated into committed and uncommitted, *assessed claim exposure*, escalation
   on uncommitted scope, and the cost of the remaining programme, each stated separately.
-- **PCI-PFL-LAW-14.03-PR-02 — Claims assessed, not ignored.** The preparer must include an *assessed
+- **PCI-PFL-STD-14.03-PR-02 — Claims assessed, not ignored.** The preparer must include an *assessed
   claim exposure* for every notified but unagreed claim, with its basis, and must not record it as nil
   merely because it is disputed.
-- **PCI-PFL-LAW-14.03-PR-03 — Programme linkage.** The preparer must state the programme on which the
+- **PCI-PFL-STD-14.03-PR-03 — Programme linkage.** The preparer must state the programme on which the
   cost-to-complete is based, must include the time-related cost of the remaining programme, and must
   re-prepare the cost-to-complete when the programme changes *materially*.
-- **PCI-PFL-LAW-14.03-PR-04 — Contingency adequacy stated.** The preparer must state the remaining
+- **PCI-PFL-STD-14.03-PR-04 — Contingency adequacy stated.** The preparer must state the remaining
   contingency against the remaining risk, and must not present contingency as available funding for a
   known cost.
-- **PCI-PFL-LAW-14.03-PR-05 — Movements explained.** The preparer must reconcile each cost-to-complete
+- **PCI-PFL-STD-14.03-PR-05 — Movements explained.** The preparer must reconcile each cost-to-complete
   to the previous one and explain every movement by component.
 
 **6. Prohibited actions.** Deriving the cost-to-complete as budget less costs incurred; recording a
@@ -4686,9 +4686,9 @@ disputed amounts on insolvency are jurisdiction-specific and materially affect a
 time bar that is enforceable in one jurisdiction might not be enforceable in another. Obtain qualified local legal
 advice on claim validity and time bars before an exposure is assessed as low.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-14.01`;
-`PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-06.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` requires a forecast to be issued with the assumptions it depends on; this
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-PFL-STD-14.01`;
+`PCI-PFL-STD-14.02`; `PCI-PFL-STD-11.01`; `PCI-PFL-STD-06.03`. **Increment over the foundational
+parent:** `PCI-FND-STD-05` requires a forecast to be issued with the assumptions it depends on; this
 law fixes the construction-phase method — a build-up from components rather than a deduction from
 budget, an assessed exposure for every notified claim, a named programme, and a movement explanation
 by component — which is what makes the forecast capable of rising.
@@ -4731,7 +4731,7 @@ and movement explanation each made a process requirement.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-14.04 — Funds-Flow Approval
+### PCI STANDARD PCI-PFL-STD-14.04 — Funds-Flow Approval
 
 **1. Normative requirement.** Project funds must move only through the accounts, in the order and for
 the purposes the *finance documents* specify, on instructions authorised by named signatories under
@@ -4755,19 +4755,19 @@ account bank, within the limits that mandate states.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-14.04-PR-01 — Payments follow the documented order.** The preparer must apply each
+- **PCI-PFL-STD-14.04-PR-01 — Payments follow the documented order.** The preparer must apply each
   payment to the account, purpose and waterfall position the *finance documents* specify, and must not
   net, reorder or combine payments across tiers.
-- **PCI-PFL-LAW-14.04-PR-02 — Segregation of duties.** The organisation must operate *segregation of
+- **PCI-PFL-STD-14.04-PR-02 — Segregation of duties.** The organisation must operate *segregation of
   duties* on every payment instruction, with the three roles held by three named individuals, and must
   record who performed each.
-- **PCI-PFL-LAW-14.04-PR-03 — Instruction authorised within mandate.** The preparer must confirm that
+- **PCI-PFL-STD-14.04-PR-03 — Instruction authorised within mandate.** The preparer must confirm that
   every instruction is authorised by an *authorised signatory* within the mandate's limits, and must not
   execute an instruction outside them.
-- **PCI-PFL-LAW-14.04-PR-04 — Payee and account verification.** The preparer must verify each payee's
+- **PCI-PFL-STD-14.04-PR-04 — Payee and account verification.** The preparer must verify each payee's
   account details against a source independent of the payment request itself before first payment and
   after any change of details, and must record the verification.
-- **PCI-PFL-LAW-14.04-PR-05 — Reconciliation after execution.** The organisation must reconcile executed
+- **PCI-PFL-STD-14.04-PR-05 — Reconciliation after execution.** The organisation must reconcile executed
   payments to the approved *funds flow* and to the account statements, by a person who neither prepared
   nor authorised them, and must report every difference.
 
@@ -4809,7 +4809,7 @@ be operated through many accounts.
 **12. Exception and waiver.** **No exception to PR-02 or PR-03 is permitted**, including in an emergency:
 an urgent payment is made by using an alternative named authoriser within the mandate, never by
 collapsing the roles. A payment outside the documented order requires a *waiver* from the party entitled
-to give one, obtained before the payment, under `PCI-PFL-LAW-15.03`.
+to give one, obtained before the payment, under `PCI-PFL-STD-15.03`.
 
 **13. Escalation trigger.** A payment made outside the documented funds flow; an instruction presented
 outside a signatory's mandate; a change of payee details; a reconciliation difference; a request to
@@ -4853,9 +4853,9 @@ individual authoriser personally. **A payment that is contractually correct can 
 Obtain qualified local legal advice on the payment perimeter, and treat sanctions and financial-crime
 screening as a separate obligation owed to the institution's own compliance function.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-04`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.05`;
-`PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.01`; `PCI-PFL-LAW-16.03`. **Increment over
-the foundational parent:** `PCI-FND-LAW-04` reserves decision authority to a named human decision
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-04`; `PCI-FND-STD-11`; `PCI-PFL-STD-10.05`;
+`PCI-PFL-STD-13.04`; `PCI-PFL-STD-14.02`; `PCI-PFL-STD-15.01`; `PCI-PFL-STD-16.03`. **Increment over
+the foundational parent:** `PCI-FND-STD-04` reserves decision authority to a named human decision
 owner; this law applies that to the one place in a financing where an automated pipeline can move
 money — three named humans in three segregated roles, authorisation within a lodged mandate, payee
 verification through an independent channel, and an express prohibition on an automated identity
@@ -4902,7 +4902,7 @@ failure mode.
 ---
 ## Domain 15 — Operations, performance and restructuring
 
-### PCI LAW PCI-PFL-LAW-15.01 — Distribution Testing
+### PCI STANDARD PCI-PFL-STD-15.01 — Distribution Testing
 
 **1. Normative requirement.** A credential holder must not permit, certify or make a *distribution*
 unless every distribution condition in the *finance documents* is satisfied at the test date on the
@@ -4926,19 +4926,19 @@ the finance documents specify for testing, which is not necessarily the payment 
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-15.01-PR-01 — Test every condition, at the test date.** The preparer must test every
+- **PCI-PFL-STD-15.01-PR-01 — Test every condition, at the test date.** The preparer must test every
   *distribution condition* at the documented *test date* on the documented basis, and must not test a
   subset or test at a more convenient date.
-- **PCI-PFL-LAW-15.01-PR-02 — Waterfall position confirmed.** The preparer must confirm that every
+- **PCI-PFL-STD-15.01-PR-02 — Waterfall position confirmed.** The preparer must confirm that every
   prior claim in the waterfall for that period has been paid or provided for before any cash is released
   to shareholders.
-- **PCI-PFL-LAW-15.01-PR-03 — Forward-looking test on the documented projection.** Where a
+- **PCI-PFL-STD-15.01-PR-03 — Forward-looking test on the documented projection.** Where a
   forward-looking condition applies, the preparer must use the projection the documents specify, must
   state whose projection it is and its approval status, and must not substitute a more favourable case.
-- **PCI-PFL-LAW-15.01-PR-04 — Lock-up applied and reported.** Where a condition fails, the preparer must
+- **PCI-PFL-STD-15.01-PR-04 — Lock-up applied and reported.** Where a condition fails, the preparer must
   apply the *lock-up* the documents provide, must place the trapped cash where the documents require,
   and must report the lock-up as a lock-up.
-- **PCI-PFL-LAW-15.01-PR-05 — Certificate evidenced.** The preparer must retain, with the distribution
+- **PCI-PFL-STD-15.01-PR-05 — Certificate evidenced.** The preparer must retain, with the distribution
   certificate, the calculation for each condition, the *reserve account* confirmations and the
   no-default confirmation.
 
@@ -4959,7 +4959,7 @@ certificate. The board of the distributing entity for the distribution decision 
 **9. Approval authority.** The signatory the *finance documents* name for the certificate; the agent or
 security trustee where the documents require confirmation; the board for the corporate act. **A
 distribution that fails a condition can be permitted only by a *waiver* from the party entitled to give
-one**, under `PCI-PFL-LAW-15.03`.
+one**, under `PCI-PFL-STD-15.03`.
 
 **10. Independence requirement.** *Reserve account* balances and the no-default confirmation must be
 evidenced from sources *independent* of the distributing entity. A *competent reviewer* independent of
@@ -5021,11 +5021,11 @@ the eve of insolvency, clawback and transactions-at-undervalue rules, withholdin
 on shareholder-loan interest, thin-capitalisation limits and exchange controls are all
 jurisdiction-specific, and a distribution permitted by the finance documents may still be unlawful or
 recoverable. Personal liability for directors is possible. Obtain qualified local legal, accounting and
-tax advice before every distribution — see `PCI-PFL-LAW-12.02`.
+tax advice before every distribution — see `PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-01.01`;
-`PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-10.05`; `PCI-PFL-LAW-14.04`;
-`PCI-PFL-LAW-15.03`. **Increment over the foundational parent:** `PCI-FND-LAW-11` requires
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-PFL-STD-01.01`;
+`PCI-PFL-STD-10.03`; `PCI-PFL-STD-10.04`; `PCI-PFL-STD-10.05`; `PCI-PFL-STD-14.04`;
+`PCI-PFL-STD-15.03`. **Increment over the foundational parent:** `PCI-FND-STD-11` requires
 escalation of a defined exception; this law defines the exception precisely for the one irreversible
 act in a financing, requires every condition to be tested at the documented date on the documented
 basis, forbids releasing a reserve to pass the test, and separates the contractual question from the
@@ -5069,7 +5069,7 @@ to separate the contractual question from the company-law question, which v1.0 a
 
 ---
 
-### PCI LAW PCI-PFL-LAW-15.02 — Refinancing Assessment
+### PCI STANDARD PCI-PFL-STD-15.02 — Refinancing Assessment
 
 **1. Normative requirement.** A credential holder must assess a proposed refinancing on the present
 value of the change in terms net of every cost of achieving it, and must not present a headline margin
@@ -5093,21 +5093,21 @@ security re-taking and registration costs, tax consequences, and the value of an
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-15.02-PR-01 — Net present-value assessment.** The preparer must compute the *refinancing
+- **PCI-PFL-STD-15.02-PR-01 — Net present-value assessment.** The preparer must compute the *refinancing
   gain* on one stated discount basis, showing the improvement and the *all-in cost of achievement*
   separately.
-- **PCI-PFL-LAW-15.02-PR-02 — Decompose the gain.** The preparer must decompose the gain into its
+- **PCI-PFL-STD-15.02-PR-02 — Decompose the gain.** The preparer must decompose the gain into its
   margin, tenor, structural and covenant components, so that the source of the value is visible.
-- **PCI-PFL-LAW-15.02-PR-03 — Protections given up stated.** The preparer must state every protection,
+- **PCI-PFL-STD-15.02-PR-03 — Protections given up stated.** The preparer must state every protection,
   flexibility or entitlement surrendered in the new terms — covenant headroom, cure rights, reserve
   releases, *distribution* conditions, security, hedging arrangements — and must value it where it can
   be valued.
-- **PCI-PFL-LAW-15.02-PR-04 — Execution risk and the do-nothing case.** The preparer must present the
+- **PCI-PFL-STD-15.02-PR-04 — Execution risk and the do-nothing case.** The preparer must present the
   case in which the refinancing does not complete, including the position at the existing maturity, and
   must state who bears the cost of a failed process.
-- **PCI-PFL-LAW-15.02-PR-05 — Adviser interest disclosed.** The preparer must disclose every fee or
+- **PCI-PFL-STD-15.02-PR-05 — Adviser interest disclosed.** The preparer must disclose every fee or
   benefit accruing to any adviser, arranger or connected person that depends on the refinancing
-  proceeding, under `PCI-PFL-LAW-01.02` and `PCI-PFL-LAW-13.02`.
+  proceeding, under `PCI-PFL-STD-01.02` and `PCI-PFL-STD-13.02`.
 
 **6. Prohibited actions.** Presenting a margin reduction as the gain; omitting break, hedge-unwind or
 prepayment costs; discounting on a basis chosen to flatter; presenting a tenor extension without its
@@ -5128,7 +5128,7 @@ lenders' consents and any prepayment mechanics are governed by the existing *fin
 **10. Independence requirement.** A *competent reviewer* independent of the arranging benefit and of any
 fee contingent on completion must review the gain computation and the surrendered-protection schedule
 before the recommendation is put to a decision owner. Where the preparer holds a contingent benefit,
-element 10 of `PCI-PFL-LAW-13.02` governs how their work may be described.
+element 10 of `PCI-PFL-STD-13.02` governs how their work may be described.
 
 **11. Materiality or threshold.** The discount basis, the horizon and the treatment of tax are stated
 before the computation and are not changed afterwards; **PCI prescribes no discount rate, no minimum
@@ -5161,7 +5161,7 @@ immaterial, conclude that the market will accept a structure, or approve a trans
 **16. AI verification.** Independent recomputation by a named human of the gain on the stated basis;
 sensitivity analysis over the discount basis and the break-cost assumption to confirm the conclusion's
 robustness; and clause-to-output comparison of the AI covenant comparison against both document sets
-under `PCI-PFL-LAW-12.01`.
+under `PCI-PFL-STD-12.01`.
 
 **17. External reference.**
 
@@ -5183,12 +5183,12 @@ new facility, the tax treatment of break costs and of hedge terminations, stamp 
 re-taken security, the priority consequences of releasing and re-granting security, and any
 change-of-control or refinancing-gain-sharing obligation to a public grantor are all
 jurisdiction-specific and can reverse a refinancing case. Obtain qualified local legal and tax advice
-before a refinancing is recommended — see `PCI-PFL-LAW-12.02`.
+before a refinancing is recommended — see `PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-08`; `PCI-PFL-LAW-09.01`;
-`PCI-PFL-LAW-13.02`; `PCI-PFL-LAW-15.03`; `PCI-PFL-LAW-10.04`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` requires a recommendation to carry the assumptions it rests on and
-`PCI-FND-LAW-08` requires conflicts to be disclosed; this law joins them at the point where they
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-08`; `PCI-PFL-STD-09.01`;
+`PCI-PFL-STD-13.02`; `PCI-PFL-STD-15.03`; `PCI-PFL-STD-10.04`. **Increment over the foundational
+parent:** `PCI-FND-STD-05` requires a recommendation to carry the assumptions it rests on and
+`PCI-FND-STD-08` requires conflicts to be disclosed; this law joins them at the point where they
 interact worst — a transaction recommended by someone paid for it happening — and requires a net
 present-value computation, a decomposition, a surrendered-protection schedule and a do-nothing case
 before the recommendation is made.
@@ -5228,7 +5228,7 @@ disclosure each made a process requirement.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-15.03 — Waivers and Amendments
+### PCI STANDARD PCI-PFL-STD-15.03 — Waivers and Amendments
 
 **1. Normative requirement.** A credential holder must treat a *waiver* or an *amendment* as effective
 only when it has been granted by the party entitled to grant it, in the form the *finance documents*
@@ -5252,19 +5252,19 @@ certificate that uses it.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-15.03-PR-01 — Entitlement confirmed.** The credential holder must confirm that the
+- **PCI-PFL-STD-15.03-PR-01 — Entitlement confirmed.** The credential holder must confirm that the
   consent obtained is from the *entitled party* at the required threshold, and must not treat a lender's
   individual indication as the group's consent.
-- **PCI-PFL-LAW-15.03-PR-02 — Form confirmed.** The credential holder must confirm the waiver or
+- **PCI-PFL-STD-15.03-PR-02 — Form confirmed.** The credential holder must confirm the waiver or
   amendment is in the form the documents require, executed as required, and must not rely on an
   agreement in principle.
-- **PCI-PFL-LAW-15.03-PR-03 — Conditions and duration recorded.** The credential holder must record
+- **PCI-PFL-STD-15.03-PR-03 — Conditions and duration recorded.** The credential holder must record
   every condition attached to the waiver, its duration or long-stop, any fee, and what happens on
   expiry, and must track it to closure.
-- **PCI-PFL-LAW-15.03-PR-04 — Knock-on effects traced.** The credential holder must trace the *knock-on
+- **PCI-PFL-STD-15.03-PR-04 — Knock-on effects traced.** The credential holder must trace the *knock-on
   effect* of every amendment through the *covenant register*, the model, the reserve schedules and the
   certificates, and must re-confirm each before the next test date.
-- **PCI-PFL-LAW-15.03-PR-05 — Waived is not satisfied.** The credential holder must record a waived
+- **PCI-PFL-STD-15.03-PR-05 — Waived is not satisfied.** The credential holder must record a waived
   condition or covenant as waived, never as satisfied, and must report the underlying position alongside
   the waiver.
 
@@ -5342,9 +5342,9 @@ insolvency are all questions of the governing law of the *finance documents*. **
 waivers can change the parties' rights in ways the documents do not describe.** Obtain qualified legal
 advice on form, authority and the effect of past conduct.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-12`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.04`;
-`PCI-PFL-LAW-13.03`; `PCI-PFL-LAW-15.01`; `PCI-PFL-LAW-15.02`; `PCI-PFL-LAW-12.02`. **Increment over
-the foundational parent:** `PCI-FND-LAW-12` requires the record to show what happened, attributably
+**19. Related PCI Laws.** `PCI-FND-STD-12`; `PCI-FND-STD-11`; `PCI-PFL-STD-10.04`;
+`PCI-PFL-STD-13.03`; `PCI-PFL-STD-15.01`; `PCI-PFL-STD-15.02`; `PCI-PFL-STD-12.02`. **Increment over
+the foundational parent:** `PCI-FND-STD-12` requires the record to show what happened, attributably
 and with any later alteration detectable; this law states what a *financing's* waiver record must
 show — entitlement at the right threshold, execution in the required form, conditions and expiry
 tracked to closure, knock-on effects traced through every dependent term, and the underlying
@@ -5387,7 +5387,7 @@ process requirement so that it can be breached and assessed independently.
 ---
 ## Domain 16 — Data, automation and responsible AI in finance
 
-### PCI LAW PCI-PFL-LAW-16.01 — AI-Assisted Financial Modelling
+### PCI STANDARD PCI-PFL-STD-16.01 — AI-Assisted Financial Modelling
 
 **1. Normative requirement.** Where an AI system builds, edits, checks, extracts for or interprets any
 part of a *financial model* or its outputs, the professional relying on that work must *verify* it
@@ -5413,20 +5413,20 @@ governance.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-16.01-PR-01 — Record the contribution.** The relying professional must maintain an *AI
+- **PCI-PFL-STD-16.01-PR-01 — Record the contribution.** The relying professional must maintain an *AI
   contribution record* for every *material* AI contribution to a decision-grade model or output.
-- **PCI-PFL-LAW-16.01-PR-02 — Verify by a named method.** The relying professional must verify every
+- **PCI-PFL-STD-16.01-PR-02 — Verify by a named method.** The relying professional must verify every
   material AI contribution by recomputation, by regression against independently *verified* figures, or
   by tracing to source, and must record which method was used.
-- **PCI-PFL-LAW-16.01-PR-03 — Machine checks do not replace human review.** The relying professional
+- **PCI-PFL-STD-16.01-PR-03 — Machine checks do not replace human review.** The relying professional
   must treat an AI-run check, reconciliation or anomaly scan as additional to the review required by
-  `PCI-PFL-LAW-06.01` and `PCI-PFL-LAW-13.01`, and must not reduce human review because a machine check
+  `PCI-PFL-STD-06.01` and `PCI-PFL-STD-13.01`, and must not reduce human review because a machine check
   passed.
-- **PCI-PFL-LAW-16.01-PR-04 — Authorised tools and information classification.** The credential holder
+- **PCI-PFL-STD-16.01-PR-04 — Authorised tools and information classification.** The credential holder
   must place transaction, counterparty and personal information only into an *authorised tool* for that
   classification of information, and must not place such information into an AI system, external service
   or storage location that has not been authorised for it.
-- **PCI-PFL-LAW-16.01-PR-05 — Seeded-error testing of AI checks.** Where an AI system designs or
+- **PCI-PFL-STD-16.01-PR-05 — Seeded-error testing of AI checks.** Where an AI system designs or
   operates a check, the *model owner* must confirm the check detects a seeded known error before relying
   on it, and must record the test.
 
@@ -5439,7 +5439,7 @@ AI-produced figure that carries no *source line*.
 **7. Required evidence.** The AI contribution records; the verification records with methods and dates;
 the seeded-error test results for AI-operated checks; the record of tool authorisation for each
 classification of information; the review records showing human review was not reduced; the change-log
-entries under `PCI-PFL-LAW-06.05-PR-02` naming human authors.
+entries under `PCI-PFL-STD-06.05-PR-02` naming human authors.
 
 **8. Responsible role.** The professional relying on the AI contribution, personally, for its
 verification. The *model owner* for the model as a whole. The engaging organisation's named officer for
@@ -5451,13 +5451,13 @@ authority of any kind under this law**, and none can be delegated to one.
 **10. Independence requirement.** Verification under PR-02 may be performed by the relying professional;
 it does not require independence, because it is a check of substance rather than an assurance opinion.
 Independence is required where the verification is relied upon by another party, in which case
-`PCI-PFL-LAW-13.01` governs. **An AI system is never *independent*: independence is a property of a
-relationship, and a tool has none.** **What PR-02 does not do is displace `PCI-FND-LAW-03`**, which
+`PCI-PFL-STD-13.01` governs. **An AI system is never *independent*: independence is a property of a
+relationship, and a tool has none.** **What PR-02 does not do is displace `PCI-FND-STD-03`**, which
 requires a *material* calculation, model output or automated conclusion to be verified by a person
 independent of its preparation before **any** person relies on it — including a person inside the
 relying professional's own organisation. A PR-02 check by the relying professional is the substance
 check; where the contribution is material, the foundational independent verification is additional and
-remains outstanding until it is recorded or a waiver under `PCI-FND-LAW-03` element 12 is approved.
+remains outstanding until it is recorded or a waiver under `PCI-FND-STD-03` element 12 is approved.
 
 **11. Materiality or threshold.** An AI contribution is *material* where the figures, terms or
 conclusions it affects are material on the recorded test in the transaction's own metric; the *decision
@@ -5489,9 +5489,9 @@ determine materiality; and must not be represented as having independently verif
 
 **16. AI verification.** The method is named per contribution and is one or more of: **independent
 recomputation** of the affected figures from source; **regression** against a suite of independently
-verified figures under `PCI-PFL-LAW-06.05-PR-03`; **source tracing** to the document, version and issuing
-party under `PCI-PFL-LAW-06.04`; **clause-to-output comparison** for any extraction from a contract under
-`PCI-PFL-LAW-12.01`; **boundary testing** by seeding a known error under PR-05; and **sensitivity
+verified figures under `PCI-PFL-STD-06.05-PR-03`; **source tracing** to the document, version and issuing
+party under `PCI-PFL-STD-06.04`; **clause-to-output comparison** for any extraction from a contract under
+`PCI-PFL-STD-12.01`; **boundary testing** by seeding a known error under PR-05; and **sensitivity
 analysis** where the contribution affects a conclusion rather than a figure. "Reviewed the AI output" is
 not a method and does not satisfy this element.
 
@@ -5535,12 +5535,12 @@ governing the information placed into a tool, professional-privilege risks in su
 to an external service, and any contractual restriction in the *finance documents* or a non-disclosure
 agreement on processing transaction information are all jurisdiction- and engagement-specific and are
 changing quickly. Obtain qualified legal advice before deploying an AI tool on transaction information —
-see `PCI-FND-LAW-09` and `PCI-PFL-LAW-12.02`.
+see `PCI-FND-STD-09` and `PCI-PFL-STD-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (independent verification); `PCI-FND-LAW-01`;
-`PCI-FND-LAW-14`; `PCI-FND-LAW-07`; `PCI-FND-LAW-09`; `PCI-PFL-LAW-06.01`; `PCI-PFL-LAW-06.05`;
-`PCI-PFL-LAW-13.01`; `PCI-PFL-LAW-16.03`. **Increment over the foundational parent:**
-`PCI-FND-LAW-03` requires a material calculation, model output or automated conclusion to be
+**19. Related PCI Laws.** `PCI-FND-STD-03` (independent verification); `PCI-FND-STD-01`;
+`PCI-FND-STD-14`; `PCI-FND-STD-07`; `PCI-FND-STD-09`; `PCI-PFL-STD-06.01`; `PCI-PFL-STD-06.05`;
+`PCI-PFL-STD-13.01`; `PCI-PFL-STD-16.03`. **Increment over the foundational parent:**
+`PCI-FND-STD-03` requires a material calculation, model output or automated conclusion to be
 verified by an independent person before anyone relies on it; this law names the verification
 methods that count in *financial modelling*, requires the method to be recorded per contribution,
 requires an AI-operated check to be proved against a seeded error before it is relied upon, forbids
@@ -5580,18 +5580,18 @@ examination content is exposed.
 **25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
 approval · supersedes `PFL-LAW-16-02` *AI-Assisted Model Verification* (v1.0), and absorbs the
 transaction-information limb of `PFL-LAW-16-01` *Transaction Confidentiality* (v1.0) as PR-04, the
-general confidentiality obligation remaining with `PCI-FND-LAW-09`. Amendment note: *AI contribution
+general confidentiality obligation remaining with `PCI-FND-STD-09`. Amendment note: *AI contribution
 record* and *authorised tool* defined; seeded-error testing of AI-operated checks added as PR-05; the
 prohibition on reducing human review made a process requirement in its own right; the EU AI Act
 characterised as legislation binding only within its own jurisdiction and only on systems in scope.
 **Stage 9 amendment:** element 10 stated that verification under PR-02 requires no independence, which
-read against `PCI-FND-LAW-03` lowered a foundational obligation on the same act; element 10 now states
+read against `PCI-FND-STD-03` lowered a foundational obligation on the same act; element 10 now states
 that PR-02 is the substance check and that the foundational independent verification of a material
 contribution is additional and remains outstanding until recorded or waived.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-16.02 — AI Precedent and Market-Term Research
+### PCI STANDARD PCI-PFL-STD-16.02 — AI Precedent and Market-Term Research
 
 **1. Normative requirement.** A credential holder must not use, cite or repeat an AI-produced statement
 about a precedent transaction, a market term, a legal position, a standard or a published authority
@@ -5617,22 +5617,22 @@ a model instrument, and on whom it is binding.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-16.02-PR-01 — Trace to the primary source.** The credential holder must obtain the
+- **PCI-PFL-STD-16.02-PR-01 — Trace to the primary source.** The credential holder must obtain the
   *primary source* for every AI-produced factual statement before using it, and must attach it as the
   statement's *source line*.
-- **PCI-PFL-LAW-16.02-PR-02 — Confirm currency.** The credential holder must confirm the source is
+- **PCI-PFL-STD-16.02-PR-02 — Confirm currency.** The credential holder must confirm the source is
   current at the date of use — the edition, version or amendment in force — and must record the date the
   currency was checked.
-- **PCI-PFL-LAW-16.02-PR-03 — Characterise correctly.** The credential holder must state the
+- **PCI-PFL-STD-16.02-PR-03 — Characterise correctly.** The credential holder must state the
   *characterisation* of every external instrument named in an output, must not describe a *voluntary
   framework*, a model instrument, an intergovernmental understanding or supervisory guidance as
   legislation or regulation, and must not describe a standard as mandatory except where a law, regulator
   or contract makes it so for the entity in question.
-- **PCI-PFL-LAW-16.02-PR-04 — Assert no unverified particulars.** The credential holder must not state a
+- **PCI-PFL-STD-16.02-PR-04 — Assert no unverified particulars.** The credential holder must not state a
   clause number, an article, an edition, an effective date, a judicial decision or a numeric market range
   that has not been verified against the primary source; where the particular is unverified, the
   instrument or comparable is cited by name only.
-- **PCI-PFL-LAW-16.02-PR-05 — Precedent comparability stated.** Where a precedent transaction or market
+- **PCI-PFL-STD-16.02-PR-05 — Precedent comparability stated.** Where a precedent transaction or market
   comparable is relied upon, the credential holder must state its date, jurisdiction, sector, structure
   and the respects in which it differs from the transaction at hand, and must not present a comparable
   as a market standard.
@@ -5717,9 +5717,9 @@ market data restricts reproduction and redistribution, and those restrictions ar
 Obtain qualified local legal advice before asserting that an instrument applies, and before reproducing
 any part of a copyright work.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03`; `PCI-FND-LAW-06`; `PCI-FND-LAW-14`; `PCI-PFL-LAW-06.04`;
-`PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-12.02`; `PCI-PFL-LAW-09.03`; `PCI-PFL-LAW-16.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-03` requires an automated conclusion to be verified before
+**19. Related PCI Laws.** `PCI-FND-STD-03`; `PCI-FND-STD-06`; `PCI-FND-STD-14`; `PCI-PFL-STD-06.04`;
+`PCI-PFL-STD-12.01`; `PCI-PFL-STD-12.02`; `PCI-PFL-STD-09.03`; `PCI-PFL-STD-16.01`. **Increment over
+the foundational parent:** `PCI-FND-STD-03` requires an automated conclusion to be verified before
 reliance; this law addresses the class of output that verification most often skips — a statement
 about the outside world — and adds primary-source tracing, a currency check, a correct
 characterisation of legal status, an absolute bar on asserting an unverified particular, and a
@@ -5765,7 +5765,7 @@ citation cannot survive into a later draft.
 
 ---
 
-### PCI LAW PCI-PFL-LAW-16.03 — Human Sign-Off
+### PCI STANDARD PCI-PFL-STD-16.03 — Human Sign-Off
 
 **1. Normative requirement.** Every financial decision, certification, representation and external report
 within a credential holder's scope must be approved by a named, competent and authorised human being
@@ -5782,7 +5782,7 @@ published figure within a credential holder's scope, and the design and operatio
 automation that produces one.
 
 **4. Defined terms.** *decision owner*, *competent reviewer*, *evidence*, *verified*, *AI-assisted
-work*, *material*, *authorised tool* (defined at `PCI-PFL-LAW-16.01` element 4), *escalation threshold*.
+work*, *material*, *authorised tool* (defined at `PCI-PFL-STD-16.01` element 4), *escalation threshold*.
 **Sign-off** — a named individual's
 recorded approval, given before the output takes effect, identifying what was approved, at which version,
 on what date, and on what basis. **Automated pipeline** — any sequence in which an output is produced and
@@ -5790,19 +5790,19 @@ acted upon without an intervening human approval.
 
 **5. Required actions.**
 
-- **PCI-PFL-LAW-16.03-PR-01 — Named sign-off before effect.** The *decision owner* must record a
+- **PCI-PFL-STD-16.03-PR-01 — Named sign-off before effect.** The *decision owner* must record a
   *sign-off* before the output takes effect, identifying the output, its version, the date and the basis
   of approval.
-- **PCI-PFL-LAW-16.03-PR-02 — Competence and authority.** The engaging organisation must confirm that
+- **PCI-PFL-STD-16.03-PR-02 — Competence and authority.** The engaging organisation must confirm that
   the person signing holds the competence for the subject matter and the authority for the value or
   consequence involved, and must record both.
-- **PCI-PFL-LAW-16.03-PR-03 — No unbroken automation.** No credential holder may design, operate or
+- **PCI-PFL-STD-16.03-PR-03 — No unbroken automation.** No credential holder may design, operate or
   approve an *automated pipeline* in which an AI output becomes a payment, a certificate, a
   representation to a lender or a published figure without a human *sign-off*.
-- **PCI-PFL-LAW-16.03-PR-04 — Disclosure of material AI assistance.** The signatory must disclose
-  *material* AI assistance in the production of the output, in the manner `PCI-FND-LAW-14` requires, and
+- **PCI-PFL-STD-16.03-PR-04 — Disclosure of material AI assistance.** The signatory must disclose
+  *material* AI assistance in the production of the output, in the manner `PCI-FND-STD-14` requires, and
   must not present AI-assisted work as unassisted.
-- **PCI-PFL-LAW-16.03-PR-05 — The signatory answers.** The signatory must be able to explain the output's
+- **PCI-PFL-STD-16.03-PR-05 — The signatory answers.** The signatory must be able to explain the output's
   basis, its principal assumptions and its limitations without reference to the tool that produced it,
   and must not sign an output they cannot explain.
 
@@ -5826,7 +5826,7 @@ inbox**, and it cannot be delegated to any of them.
 
 **10. Independence requirement.** Independence is not required of the signatory, who is ordinarily
 accountable rather than independent — that is the point of the sign-off. Where the output is an assurance
-opinion or a review relied on by another party, `PCI-PFL-LAW-13.01` and `PCI-PFL-LAW-13.02` apply in
+opinion or a review relied on by another party, `PCI-PFL-STD-13.01` and `PCI-PFL-STD-13.02` apply in
 addition, and the independence they require is not satisfied by this law.
 
 **11. Materiality or threshold.** Every output within scope requires a sign-off; materiality governs
@@ -5896,10 +5896,10 @@ produces legal effects on a person are all jurisdiction-specific. A sign-off arr
 jurisdiction might not satisfy another's requirements for the same document. Obtain qualified local legal
 advice on signing authority and on automated decision-making before designing a release process.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (professional accountability); `PCI-FND-LAW-04` (human
-decision authority); `PCI-FND-LAW-14`; `PCI-FND-LAW-03`; `PCI-PFL-LAW-14.04`; `PCI-PFL-LAW-16.01`;
-`PCI-PFL-LAW-16.02`; `PCI-PFL-LAW-13.01`. **Increment over the foundational parent:**
-`PCI-FND-LAW-04` reserves decision authority to a named human decision owner; this law makes that
+**19. Related PCI Laws.** `PCI-FND-STD-01` (professional accountability); `PCI-FND-STD-04` (human
+decision authority); `PCI-FND-STD-14`; `PCI-FND-STD-03`; `PCI-PFL-STD-14.04`; `PCI-PFL-STD-16.01`;
+`PCI-PFL-STD-16.02`; `PCI-PFL-STD-13.01`. **Increment over the foundational parent:**
+`PCI-FND-STD-04` reserves decision authority to a named human decision owner; this law makes that
 enforceable in a financing by naming the outputs that require a sign-off before effect, requiring
 competence and authority to be recorded for each signatory, prohibiting the unbroken pipeline as an
 architecture rather than as a decision, and requiring the signatory to be able to explain the output
@@ -5953,14 +5953,14 @@ discipline.
 
 | Withdrawn v1.0 law | Reason for withdrawal | Where the obligation now lives |
 |---|---|---|
-| `PFL-LAW-04-01` — Appraisal Discipline (D4) | Its rule bundled four obligations — a stated basis, internal consistency between cash flows and discount rate, one horizon and one perspective, and a prohibition on re-cutting a measure — into a single unenforceable sentence, and its subject is a *presentation* discipline rather than a distinct professional duty. It is not a certification law's worth of independent obligation once `PCI-PFL-LAW-01.01` governs how a financial judgement may be presented. | **`PCI-PFL-LAW-01.01-PR-05`**, whose parent law's scope already reaches appraisals. The basis must be stated in full, the cash flows and the discount rate must share one inflation and one currency basis, and re-basing a measure after a result is known is prohibited. Element 21 gained a fifth step that recomputes the measure on the stated basis. Domain 4 therefore anchors no law in this edition — recorded here so that its absence is deliberate. |
-| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Its substance is an assumption-register requirement — record what a revenue actually is — and it duplicated `PCI-PFL-LAW-06.03` and `PCI-PFL-LAW-12.01` in every respect but one: the prohibition on presenting a forecast revenue as contracted. Manual §9 Q12 treats a law that adds nothing to its neighbours as a defect. | **`PCI-PFL-LAW-06.03-PR-05`**: every revenue assumption must record whether it is contracted, regulated, availability-based or forecast, whether it is indexed or fixed, and the payer's credit standing; and a forecast or merchant revenue must not be presented as contracted. Element 21 gained a fifth step tracing any contracted amount to an executed agreement. Domain 7 therefore anchors no law in this edition. |
+| `PFL-LAW-04-01` — Appraisal Discipline (D4) | Its rule bundled four obligations — a stated basis, internal consistency between cash flows and discount rate, one horizon and one perspective, and a prohibition on re-cutting a measure — into a single unenforceable sentence, and its subject is a *presentation* discipline rather than a distinct professional duty. It is not a certification law's worth of independent obligation once `PCI-PFL-STD-01.01` governs how a financial judgement may be presented. | **`PCI-PFL-STD-01.01-PR-05`**, whose parent law's scope already reaches appraisals. The basis must be stated in full, the cash flows and the discount rate must share one inflation and one currency basis, and re-basing a measure after a result is known is prohibited. Element 21 gained a fifth step that recomputes the measure on the stated basis. Domain 4 therefore anchors no law in this edition — recorded here so that its absence is deliberate. |
+| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Its substance is an assumption-register requirement — record what a revenue actually is — and it duplicated `PCI-PFL-STD-06.03` and `PCI-PFL-STD-12.01` in every respect but one: the prohibition on presenting a forecast revenue as contracted. Manual §9 Q12 treats a law that adds nothing to its neighbours as a defect. | **`PCI-PFL-STD-06.03-PR-05`**: every revenue assumption must record whether it is contracted, regulated, availability-based or forecast, whether it is indexed or fixed, and the payer's credit standing; and a forecast or merchant revenue must not be presented as contracted. Element 21 gained a fifth step tracing any contracted amount to an executed agreement. Domain 7 therefore anchors no law in this edition. |
 
 **Five of the sixteen domains anchor no law**: Domain 2 (accounting foundations), Domain 3 (time value of
 money), Domain 4 (investment appraisal), Domain 7 (revenue and commercial models) and Domain 8 (cost,
 schedule and contingency). Domains 2 and 3 are taught rather than governed — an arithmetic or
 presentation error there is caught by the laws that use the result. Domain 8's obligations sit in
-`PCI-PFL-LAW-14.03`, which is where a cost forecast becomes a funding statement. **This distribution is a
+`PCI-PFL-STD-14.03`, which is where a cost forecast becomes a funding statement. **This distribution is a
 deliberate scoping decision, not an oversight**, and it is recorded so that a later reviewer can
 challenge it rather than assume it.
 
@@ -5974,7 +5974,7 @@ challenge) and Stage 10 (revision) over the whole set. **A finding is recorded w
 produced a change**, because a question answered and found satisfactory is part of the record.
 
 A **second red-team pass** was subsequently run across the whole four-file corpus. Its findings and their
-disposition are recorded in [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md); the amendments it produced
+disposition are recorded in [`STANDARDS_RED_TEAM_REPORT.md`](STANDARDS_RED_TEAM_REPORT.md); the amendments it produced
 in this volume are noted in the element 25 of each law changed, and the definitional reading rules it
 added sit at the head of the Definitions above.
 
@@ -5983,15 +5983,15 @@ added sit at the head of the Definitions above.
 | 1 | What exact failure does this law prevent? | All 33 | Element 2 rewritten in every law to name a specific observed failure rather than a general risk. Three laws whose v1.0 purpose was a restatement of the rule (`PFL-LAW-06-04`, `PFL-LAW-13-03`, `PFL-LAW-16-03`) now name the failure: an unproduceable figure, a closing record nobody can retrieve, an unbroken automated pipeline. |
 | 2 | Mandatory or only recommended? | All 33 | `should` removed from every normative position. All obligations carry `must` / `must not`; sub-obligations became numbered process requirements at Charter Level 4, which are mandatory. No Recommended Practice (`-RP-NN`) is published in this edition, so nothing in the set is optional. |
 | 3 | Can a professional know whether it applies to them? | All 33 | Element 3 now names the roles, the decisions, the transaction stages **and** whether the law reaches preparation, review, recommendation, approval or assurance — the last of which v1.0 omitted throughout. |
-| 4 | Is the responsible person identifiable? | All 33 | Element 8 names a role, never "the team" or "the organisation". *Model owner*, *decision owner* and *authorised signatory* are defined as single named individuals; `PCI-PFL-LAW-16.03-PR-03` and `PCI-PFL-LAW-14.04` expressly exclude a service account, a shared mailbox or an automated identity. |
-| 5 | Is the required action observable? | All 33 | Element 5 recast as numbered process requirements, each with a subject, an action and an object. Unobservable formulations such as "maintain integrity" or "ensure adequacy" were replaced — for example `PCI-PFL-LAW-14.03-PR-01`, which specifies the five components a *cost-to-complete* is built from. |
-| 6 | Is compliance provable? | All 33 | Element 7 lists retained artefacts only. `PCI-PFL-LAW-13.04-PR-05` replaces "retained" with retrievability **by a person who was not present at close**, because retention without retrievability cannot be proved. |
+| 4 | Is the responsible person identifiable? | All 33 | Element 8 names a role, never "the team" or "the organisation". *Model owner*, *decision owner* and *authorised signatory* are defined as single named individuals; `PCI-PFL-STD-16.03-PR-03` and `PCI-PFL-STD-14.04` expressly exclude a service account, a shared mailbox or an automated identity. |
+| 5 | Is the required action observable? | All 33 | Element 5 recast as numbered process requirements, each with a subject, an action and an object. Unobservable formulations such as "maintain integrity" or "ensure adequacy" were replaced — for example `PCI-PFL-STD-14.03-PR-01`, which specifies the five components a *cost-to-complete* is built from. |
+| 6 | Is compliance provable? | All 33 | Element 7 lists retained artefacts only. `PCI-PFL-STD-13.04-PR-05` replaces "retained" with retrievability **by a person who was not present at close**, because retention without retrievability cannot be proved. |
 | 7 | Is the required evidence proportionate? | 06.03 · 06.04 · 12.01 · 16.01 · 16.02 | Full treatment reserved for *material* items; stated-basis sampling introduced for the remainder, with the basis recorded before the sample is drawn so that "sampling" cannot become "skipping". |
 | 8 | Can the law be audited? | All 33 | **This was v1.0's principal defect.** Every element 21 is now a numbered procedure a reviewer performs — recompute, trace, reconcile, seed an error, retrieve, interview — with a stated pass condition and a stated failure. Four tests require the reviewer to *do* something to the model rather than read it (`06.01`, `06.05`, `16.01`, `16.03`). |
 | 9 | Can it be examined through a scenario? | All 33 | Element 24 now names the item type — scenario judgement, evidence selection, escalation decision, calculation review, ethical dilemma or AI-verification case — and describes a concrete situation. No law is examinable by recalling its number. |
 | 10 | **Can a professional technically comply while defeating its purpose?** | 06.01 · 06.02 · 06.05 · 10.01 · 10.03 · 13.01 · 14.01 · 14.03 · 15.03 · 16.01 | **The highest-yield question in the set.** Ten circumventions were found and closed: a check block whose tolerance is wide enough never to fail (now seeded-error tested, `06.01-PR-03` + element 21(d)); an override register kept but never cleared (`06.02-PR-04`); a regression suite run *after* acceptance (`06.05-PR-04`, with a bounded 48-hour element 12 route so the rule is not simply ignored at a live close); a *CFADS* definition applied correctly but re-derived nowhere after an amendment (`10.01-PR-05`); a compliant minimum ratio reported against the wrong test's level (`10.03-PR-05`); a review whose scope was narrowed after findings were known (`13.01-PR-02`); a sources-and-uses statement balanced by a plug (`14.01-PR-02`); a cost-to-complete that arithmetically cannot rise (`14.03` element 1); a waiver recorded but its knock-on effects never traced (`15.03-PR-04`); and human review reduced because a machine check passed (`16.01-PR-03`). |
 | 11 | Does it conflict with another PCI law? | 06.01 ↔ 06.05 · 10.01 ↔ 10.03 · 13.01 ↔ 13.02 · 16.01 ↔ 16.03 | Four overlaps resolved by allocation rather than by cross-reference: the check block is defined once in `06.01-PR-03` and re-run under `06.05-PR-03`; the *CFADS* definition sits in `10.01` and its reporting in `10.03`; review independence sits in `13.01` and adviser self-description in `13.02`; AI verification method sits in `16.01` and the sign-off in `16.03`, with `16.03` element 10 stating expressly that it does not satisfy `13.01`. |
-| 12 | Does it duplicate an external standard — or another PCI law — unnecessarily? | 06.01 · 06.02 · 16.01 · plus two v1.0 withdrawals | The ICAEW Code and the FAST Standard are named as context, and both laws now state expressly that **conformity with either does not satisfy the PCI obligation** and that the PCI obligation does not require conformity with them. ISO/IEC 42001 is characterised as addressing an organisation's management system, not a project's model, so the laws add rather than restate. Applied internally, the same question withdrew two v1.0 laws that added nothing to their neighbours — `PFL-LAW-04-01` and `PFL-LAW-07-01` — whose surviving obligations are now `PCI-PFL-LAW-01.01-PR-05` and `PCI-PFL-LAW-06.03-PR-05`. See the withdrawal record above. |
+| 12 | Does it duplicate an external standard — or another PCI law — unnecessarily? | 06.01 · 06.02 · 16.01 · plus two v1.0 withdrawals | The ICAEW Code and the FAST Standard are named as context, and both laws now state expressly that **conformity with either does not satisfy the PCI obligation** and that the PCI obligation does not require conformity with them. ISO/IEC 42001 is characterised as addressing an organisation's management system, not a project's model, so the laws add rather than restate. Applied internally, the same question withdrew two v1.0 laws that added nothing to their neighbours — `PFL-LAW-04-01` and `PFL-LAW-07-01` — whose surviving obligations are now `PCI-PFL-STD-01.01-PR-05` and `PCI-PFL-STD-06.03-PR-05`. See the withdrawal record above. |
 | 13 | **Does it misrepresent external authority?** | 09.01 · 09.02 · 09.03 · 10.02 · 10.03 · 10.04 · 12.02 · 15.02 · 16.01 · 16.03 | **The highest risk in this volume, and the question most work went into.** Findings: (a) the **Basel Framework** appears in four laws and each now states it is an internationally agreed supervisory standard with **no legal force of its own**, reaching a bank only as a national authority transposes it, never applying to a project or sponsor, and **not the source of any requirement**; (b) the **IFRS Conceptual Framework** is cited once, in `01.01`, expressly as **not a standard**, and no requirement is sourced to it; (c) the **OECD Model Tax Convention** is stated to be **not law in any jurisdiction**; (d) the **Equator Principles**, **IFC Performance Standards** and the market principles behind green and sustainability-linked instruments are all tagged voluntary at every use, and `09.03-PR-03` makes describing a voluntary framework as legislation a breach; (e) the **FAST Standard** and the **ICAEW Code** are stated to impose no obligation of their own; (f) **IESBA** is stated to bind **only where a body, regulator or engagement has adopted it**, and expressly not to be imported by a PCI law; (g) the **OECD Arrangement on Officially Supported Export Credits** is characterised as an inter-governmental understanding, not a treaty and not legislation; (h) the **EU AI Act** is the only instrument called legislation, and is stated to bind only within its jurisdiction and only on systems in scope; (i) **SR 11-7** is characterised as supervisory guidance addressed to supervised institutions, not to advisers. **No clause number, article, edition or effective date is asserted anywhere in this volume except three that were verified**: the IAS 1 → IFRS 18 replacement date of 1 January 2027, ISO/IEC 27001:2022 + Amd 1:2024, and the EU AI Act's phased application dates. `16.02` exists because this failure mode is now largely machine-generated. **Two open items are recorded below the table.** |
 | 14 | **Does it require legal or jurisdiction-specific advice?** | All 33 | **No law in this set records "Not applicable" at element 18**, which was a deliberate target: tax, security interests, insolvency, distributions, sanctions and financial-crime obligations are jurisdiction-specific and this is the volume where a generic caution does most damage. Each element 18 names the specific exposures — for example enforceability of a liability cap (`11.01`), lien priority over lenders' security (`14.02`), distributable-reserve and clawback rules with possible personal liability for directors (`15.01`), estoppel arising from repeated informal waivers (`15.03`), and recognition of a competent body and the tax and insolvency characterisation of an Islamic structure (`09.02`). `12.02` is a jurisdictional caution in its entirety. |
 | 15 | Does it define the relevant materiality threshold? | All 33 | Element 11 in every law states who sets the threshold, in what metric, and where it is recorded. **PCI publishes no percentage anywhere in this volume.** Where a threshold belongs to the transaction — every coverage level, every reserve balance, every consent threshold, every in-balance test — the law requires **the documented figure to be used and tested**, and says expressly that PCI sets none. |
@@ -6008,9 +6008,9 @@ added sit at the head of the Definitions above.
 
 ### Definitions reconciliation
 
-The red team's structural finding **P-1** — that no PCI Law Definitions Register existed, so each volume
+The red team's structural finding **P-1** — that no PCI Standards Definitions Register existed, so each volume
 built its own and seven compliance-deciding terms diverged across four files — has since been closed.
-The register is published at [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md) and
+The register is published at [`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md) and
 the *Core compliance-deciding terms* above were reconciled to it. In this volume that changed the
 wording of *material*, *independent*, *verified*, *evidence*, *decision owner*, *competent reviewer* and
 *escalation threshold*, and added *approved*, *current* and *material AI assistance*. **No obligation
@@ -6029,7 +6029,7 @@ changed by the reconciliation**; three things are worth naming.
    remain referred — **R-4** and **R-6**.
 3. ***Competent reviewer* no longer folds independence into competence.** Independence is imposed by
    each law's element 10 and tested separately; the written-authorisation limb this volume adds is
-   retained. The change is what makes `PCI-FND-LAW-10` element 12's supervised-acquisition exception
+   retained. The change is what makes `PCI-FND-STD-10` element 12's supervised-acquisition exception
    usable, and it removes no independence requirement from any law.
 
 ### Open items recorded against Q13
@@ -6037,7 +6037,7 @@ changed by the reconciliation**; three things are worth naming.
 Two matters were found during the external-reference pass that this volume cannot close on its own, and
 they are recorded rather than resolved, per Charter §5 Stage 5:
 
-1. **AAOIFI is not registered.** `PCI-PFL-LAW-09.02` names the Accounting and Auditing Organisation for
+1. **AAOIFI is not registered.** `PCI-PFL-STD-09.02` names the Accounting and Auditing Organisation for
    Islamic Financial Institutions, following the PFL-AI manuscript at KA 9.3.1. It has **no entry in
    `../registries/EXTERNAL_AUTHORITIES.md`**. It is cited by name only, with no standard, number,
    edition or date asserted, and no requirement is sourced to it. **Action required:** register it, with
@@ -6064,39 +6064,39 @@ reference categories are the Manual §6 numbers, given in full at the foot of th
 
 | ID | Official title | Anchor domain | Principal obligation (element 1, in brief) | External reference categories |
 |---|---|---|---|---|
-| PCI-PFL-LAW-01.01 | Cash-Flow Integrity in Financial Judgement | D1 — Foundations of project finance leadership | Must not present an accounting, earnings or averaged figure as evidence of ability to pay on a date | 2 (and IFRS *Conceptual Framework*, expressly not a standard) |
-| PCI-PFL-LAW-01.02 | Conflict Disclosure and the Two-Hat Rule | D1 — Foundations of project finance leadership | Must disclose in writing, before acting, every interest a reasonable party would want to know | 3 · 5 |
-| PCI-PFL-LAW-05.01 | The Bankability Statement | D5 — Project development and bankability | Must not call a project bankable unless every condition is stated with status, owner and resolution path | 3 · 8 |
-| PCI-PFL-LAW-06.01 | Financial-Model Architecture | D6 — Financial modelling | A decision-grade model must separate inputs, calculations and outputs, no cell serving two roles | 5 |
-| PCI-PFL-LAW-06.02 | Formula Consistency | D6 — Financial modelling | Must not present as calculated any figure that was typed, pasted or overridden | 5 |
-| PCI-PFL-LAW-06.03 | Input and Assumption Traceability | D6 — Financial modelling | Every assumption entered once, in the input region, and recorded in a register that travels with the model | 3 · 5 |
-| PCI-PFL-LAW-06.04 | The Source Line | D6 — Financial modelling | Must withdraw any figure whose source line cannot be produced on request | 3 |
-| PCI-PFL-LAW-06.05 | Model Version Control | D6 — Financial modelling | A model used for a decision must not change except under version control, one authoritative version at a time | 3 · 5 · 10 |
-| PCI-PFL-LAW-09.01 | The Capital-Structure Decision Basis | D9 — Funding structure and sources of capital | Must not propose a structure resting on an uncommitted event unless it is stated as an assumption | 10 |
-| PCI-PFL-LAW-09.02 | Accuracy in Describing Islamic-Finance Structures | D9 — Funding structure and sources of capital | Must not assert Shariah compliance without a producible determination from the competent body | 3 · 5 |
-| PCI-PFL-LAW-09.03 | Sustainable-Finance Claims | D9 — Funding structure and sources of capital | Must not state a sustainability claim at a strength the identified evidence does not support | 1 · 8 |
-| PCI-PFL-LAW-10.01 | The CFADS Definition | D10 — Debt sizing, covenants and credit metrics | Must compute CFADS on the finance documents' definition, item by item | 2 |
-| PCI-PFL-LAW-10.02 | Debt Sizing | D10 — Debt sizing, covenants and credit metrics | Must size to the documented coverage level, tenor and profile, never to a preferred quantum | 2 · 10 |
-| PCI-PFL-LAW-10.03 | Coverage-Ratio Calculation and Reporting | D10 — Debt sizing, covenants and credit metrics | Must report a coverage ratio with its definition, its period basis and its minimum | 2 · 10 |
-| PCI-PFL-LAW-10.04 | Covenant Interpretation | D10 — Debt sizing, covenants and credit metrics | Must not state a legal conclusion on the meaning, breach or consequence of a covenant | 2 · 10 |
-| PCI-PFL-LAW-10.05 | Reserve-Account Governance | D10 — Debt sizing, covenants and credit metrics | Must fund, apply and release a reserve only as the finance documents specify | 2 |
-| PCI-PFL-LAW-11.01 | Risk-Allocation Honesty | D11 — Risk identification and allocation | Must record where each material risk lands once caps, exclusions, insurance and credit are read together | 3 · 4 · 8 |
-| PCI-PFL-LAW-12.01 | Contract-Source Verification | D12 — Contracts and transaction structure | Must take every contractual term from the executed document, read at the clause | 3 · 4 |
-| PCI-PFL-LAW-12.02 | The Tax and Legal Advice Boundary | D12 — Contracts and transaction structure | Must not give legal, tax, accounting, regulatory or insurance advice, and must obtain written advice before adoption | 2 · 3 · 10 |
-| PCI-PFL-LAW-13.01 | Independent Model Review | D13 — Due diligence and financial close | A review relied on outside the reviewer's own team must be performed by a person independent of the work | 3 · 6 · 8 |
-| PCI-PFL-LAW-13.02 | Adviser Independence | D13 — Due diligence and financial close | Must not describe self, firm, advice or output as independent while any limb of the definition fails | 5 · 6 |
-| PCI-PFL-LAW-13.03 | Conditions Precedent | D13 — Due diligence and financial close | A condition is satisfied only when the required evidence is delivered **and** accepted by the entitled party | 3 · 8 |
-| PCI-PFL-LAW-13.04 | Financial-Close Readiness | D13 — Due diligence and financial close | Must not treat a transaction as closed until the complete closing record is captured and retained as one record | 3 |
-| PCI-PFL-LAW-14.01 | Sources-and-Uses Integrity | D14 — Construction monitoring and drawdown | Totals must be equal, and the gap must not be closed with a balancing item or an uncommitted source | 3 · 4 |
-| PCI-PFL-LAW-14.02 | Drawdown Control | D14 — Construction monitoring and drawdown | Must not draw for work not performed, cost not evidenced, or while out of balance undisclosed | 3 · 4 |
-| PCI-PFL-LAW-14.03 | Cost-to-Complete | D14 — Construction monitoring and drawdown | Must build the cost-to-complete from components, never as budget less costs incurred | 2 · 4 |
-| PCI-PFL-LAW-14.04 | Funds-Flow Approval | D14 — Construction monitoring and drawdown | Funds must move only through the documented accounts and order, on instructions under segregation of duties | 3 · 5 |
-| PCI-PFL-LAW-15.01 | Distribution Testing | D15 — Operations, performance and restructuring | Must not permit or make a distribution unless every documented condition is satisfied at the test date | 2 · 5 |
-| PCI-PFL-LAW-15.02 | Refinancing Assessment | D15 — Operations, performance and restructuring | Must assess a refinancing on present value net of every cost of achieving it, not on a headline improvement | 2 · 10 |
-| PCI-PFL-LAW-15.03 | Waivers and Amendments | D15 — Operations, performance and restructuring | A waiver or amendment is effective only from the entitled party, in the required form, with its full effect recorded | 2 · 3 |
-| PCI-PFL-LAW-16.01 | AI-Assisted Financial Modelling | D16 — Data, automation and responsible AI in finance | AI work touching a model or its outputs must be verified by a named method before use | 1 · 3 · 7 · 10 |
-| PCI-PFL-LAW-16.02 | AI Precedent and Market-Term Research | D16 — Data, automation and responsible AI in finance | Must not use an AI statement about the outside world until traced to the primary source and confirmed | 3 · 7 · 9 |
-| PCI-PFL-LAW-16.03 | Human Sign-Off | D16 — Data, automation and responsible AI in finance | Every decision, certification, representation and external report must be approved by a named human before effect | 1 · 3 · 5 |
+| PCI-PFL-STD-01.01 | Cash-Flow Integrity in Financial Judgement | D1 — Foundations of project finance leadership | Must not present an accounting, earnings or averaged figure as evidence of ability to pay on a date | 2 (and IFRS *Conceptual Framework*, expressly not a standard) |
+| PCI-PFL-STD-01.02 | Conflict Disclosure and the Two-Hat Rule | D1 — Foundations of project finance leadership | Must disclose in writing, before acting, every interest a reasonable party would want to know | 3 · 5 |
+| PCI-PFL-STD-05.01 | The Bankability Statement | D5 — Project development and bankability | Must not call a project bankable unless every condition is stated with status, owner and resolution path | 3 · 8 |
+| PCI-PFL-STD-06.01 | Financial-Model Architecture | D6 — Financial modelling | A decision-grade model must separate inputs, calculations and outputs, no cell serving two roles | 5 |
+| PCI-PFL-STD-06.02 | Formula Consistency | D6 — Financial modelling | Must not present as calculated any figure that was typed, pasted or overridden | 5 |
+| PCI-PFL-STD-06.03 | Input and Assumption Traceability | D6 — Financial modelling | Every assumption entered once, in the input region, and recorded in a register that travels with the model | 3 · 5 |
+| PCI-PFL-STD-06.04 | The Source Line | D6 — Financial modelling | Must withdraw any figure whose source line cannot be produced on request | 3 |
+| PCI-PFL-STD-06.05 | Model Version Control | D6 — Financial modelling | A model used for a decision must not change except under version control, one authoritative version at a time | 3 · 5 · 10 |
+| PCI-PFL-STD-09.01 | The Capital-Structure Decision Basis | D9 — Funding structure and sources of capital | Must not propose a structure resting on an uncommitted event unless it is stated as an assumption | 10 |
+| PCI-PFL-STD-09.02 | Accuracy in Describing Islamic-Finance Structures | D9 — Funding structure and sources of capital | Must not assert Shariah compliance without a producible determination from the competent body | 3 · 5 |
+| PCI-PFL-STD-09.03 | Sustainable-Finance Claims | D9 — Funding structure and sources of capital | Must not state a sustainability claim at a strength the identified evidence does not support | 1 · 8 |
+| PCI-PFL-STD-10.01 | The CFADS Definition | D10 — Debt sizing, covenants and credit metrics | Must compute CFADS on the finance documents' definition, item by item | 2 |
+| PCI-PFL-STD-10.02 | Debt Sizing | D10 — Debt sizing, covenants and credit metrics | Must size to the documented coverage level, tenor and profile, never to a preferred quantum | 2 · 10 |
+| PCI-PFL-STD-10.03 | Coverage-Ratio Calculation and Reporting | D10 — Debt sizing, covenants and credit metrics | Must report a coverage ratio with its definition, its period basis and its minimum | 2 · 10 |
+| PCI-PFL-STD-10.04 | Covenant Interpretation | D10 — Debt sizing, covenants and credit metrics | Must not state a legal conclusion on the meaning, breach or consequence of a covenant | 2 · 10 |
+| PCI-PFL-STD-10.05 | Reserve-Account Governance | D10 — Debt sizing, covenants and credit metrics | Must fund, apply and release a reserve only as the finance documents specify | 2 |
+| PCI-PFL-STD-11.01 | Risk-Allocation Honesty | D11 — Risk identification and allocation | Must record where each material risk lands once caps, exclusions, insurance and credit are read together | 3 · 4 · 8 |
+| PCI-PFL-STD-12.01 | Contract-Source Verification | D12 — Contracts and transaction structure | Must take every contractual term from the executed document, read at the clause | 3 · 4 |
+| PCI-PFL-STD-12.02 | The Tax and Legal Advice Boundary | D12 — Contracts and transaction structure | Must not give legal, tax, accounting, regulatory or insurance advice, and must obtain written advice before adoption | 2 · 3 · 10 |
+| PCI-PFL-STD-13.01 | Independent Model Review | D13 — Due diligence and financial close | A review relied on outside the reviewer's own team must be performed by a person independent of the work | 3 · 6 · 8 |
+| PCI-PFL-STD-13.02 | Adviser Independence | D13 — Due diligence and financial close | Must not describe self, firm, advice or output as independent while any limb of the definition fails | 5 · 6 |
+| PCI-PFL-STD-13.03 | Conditions Precedent | D13 — Due diligence and financial close | A condition is satisfied only when the required evidence is delivered **and** accepted by the entitled party | 3 · 8 |
+| PCI-PFL-STD-13.04 | Financial-Close Readiness | D13 — Due diligence and financial close | Must not treat a transaction as closed until the complete closing record is captured and retained as one record | 3 |
+| PCI-PFL-STD-14.01 | Sources-and-Uses Integrity | D14 — Construction monitoring and drawdown | Totals must be equal, and the gap must not be closed with a balancing item or an uncommitted source | 3 · 4 |
+| PCI-PFL-STD-14.02 | Drawdown Control | D14 — Construction monitoring and drawdown | Must not draw for work not performed, cost not evidenced, or while out of balance undisclosed | 3 · 4 |
+| PCI-PFL-STD-14.03 | Cost-to-Complete | D14 — Construction monitoring and drawdown | Must build the cost-to-complete from components, never as budget less costs incurred | 2 · 4 |
+| PCI-PFL-STD-14.04 | Funds-Flow Approval | D14 — Construction monitoring and drawdown | Funds must move only through the documented accounts and order, on instructions under segregation of duties | 3 · 5 |
+| PCI-PFL-STD-15.01 | Distribution Testing | D15 — Operations, performance and restructuring | Must not permit or make a distribution unless every documented condition is satisfied at the test date | 2 · 5 |
+| PCI-PFL-STD-15.02 | Refinancing Assessment | D15 — Operations, performance and restructuring | Must assess a refinancing on present value net of every cost of achieving it, not on a headline improvement | 2 · 10 |
+| PCI-PFL-STD-15.03 | Waivers and Amendments | D15 — Operations, performance and restructuring | A waiver or amendment is effective only from the entitled party, in the required form, with its full effect recorded | 2 · 3 |
+| PCI-PFL-STD-16.01 | AI-Assisted Financial Modelling | D16 — Data, automation and responsible AI in finance | AI work touching a model or its outputs must be verified by a named method before use | 1 · 3 · 7 · 10 |
+| PCI-PFL-STD-16.02 | AI Precedent and Market-Term Research | D16 — Data, automation and responsible AI in finance | Must not use an AI statement about the outside world until traced to the primary source and confirmed | 3 · 7 · 9 |
+| PCI-PFL-STD-16.03 | Human Sign-Off | D16 — Data, automation and responsible AI in finance | Every decision, certification, representation and external report must be approved by a named human before effect | 1 · 3 · 5 |
 
 **Manual §6 external-reference categories used above:** 1 applicable legislation or regulation · 2
 authoritative financial-reporting standard · 3 international voluntary standard · 4 contract framework ·

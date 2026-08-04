@@ -1,19 +1,19 @@
-# PCI Professional Laws Charter
+# PCI Standards Charter
 
-**Status:** Governing charter for the PCI Professional Law system. Version 1.0 (draft for approval).  
+**Status:** Governing charter for the PCI Standard system. Version 1.0 (draft for approval).  
 **Applies to:** PCL-AI (PCI AI Project Controls Leader) · PFL-AI (PCI AI Project Finance Leader) ·
 PML-AI (PCI Project Management Leader – AI).
 
-This Charter establishes what a PCI Professional Law is, what authority it carries, how it is made,
+This Charter establishes what a PCI Standard is, what authority it carries, how it is made,
 how it is interpreted, how it is amended, and how it ranks against everything else a professional is
-subject to. The companion **PCI Law Drafting Manual** governs how a law is written. A law that does
+subject to. The companion **PCI Standards Drafting Manual** governs how a law is written. A law that does
 not conform to both does not pass gate.
 
 ---
 
 ## 1. Definition
 
-> **PCI Professional Law** means a mandatory professional requirement established by Project Controls
+> **PCI Standard** means a mandatory professional requirement established by Project Controls
 > Institute Global for candidates, credential holders, assessors and authorised practitioners
 > operating within the defined scope of a PCI certification.
 
@@ -21,7 +21,7 @@ not conform to both does not pass gate.
 
 This statement must appear prominently in every publication that contains or cites a PCI Law:
 
-> **PCI Professional Laws are private professional certification requirements established by Project
+> **PCI Standards are private professional certification requirements established by Project
 > Controls Institute Global. They are not legislation, government regulation, legal advice or
 > substitutes for applicable laws, contractual obligations, regulatory requirements or authoritative
 > professional standards. Where an applicable legal, regulatory, contractual or authoritative
@@ -39,9 +39,9 @@ governmental enforcement power.
 
 | Level | Instrument | Mandatory? | Identifier form |
 |---|---|---|---|
-| 1 | **PCI Foundational Law** — applies across all three credentials | Yes | `PCI-FND-LAW-NN` |
-| 2 | **Certification Law** — applies to one credential | Yes | `PCI-PCL-LAW-DD.NN` · `PCI-PFL-LAW-DD.NN` · `PCI-PML-LAW-DD.NN` |
-| 3 | **Domain Law** — applies to a specific Body of Knowledge domain | Yes | as Level 2, anchored by domain `DD` |
+| 1 | **PCI Foundational Standard** — applies across all three credentials | Yes | `PCI-FND-STD-NN` |
+| 2 | **Certification Standard** — applies to one credential | Yes | `PCI-PCL-STD-DD.NN` · `PCI-PFL-STD-DD.NN` · `PCI-PML-STD-DD.NN` |
+| 3 | **Domain Standard** — applies to a specific Body of Knowledge domain | Yes | as Level 2, anchored by domain `DD` |
 | 4 | **Process Requirement** — how a recurring process must operate | Yes | `…-PR-NN` under its parent law |
 | 5 | **Recommended Practice** | No | `…-RP-NN` |
 | 6 | **Commentary and examples** | No | unnumbered, within the law |
@@ -62,7 +62,7 @@ Where two requirements bearing on the same act conflict, the following order app
 2. A binding court, regulator or governmental requirement
 3. An applicable authoritative professional standard, where law or regulation gives it force
 4. Contractual obligation
-5. PCI Foundational Law
+5. PCI Foundational Standard
 6. Certification-specific PCI Law
 7. Domain-specific PCI Law
 8. PCI Process Requirement
@@ -117,7 +117,7 @@ named human.
 
 ## 6. Interpretation
 
-A **PCI Law Interpretation Panel** is authorised to:
+A **PCI Standards Interpretation Panel** is authorised to:
 
 - issue interpretations of an existing law;
 - resolve apparent contradictions between laws;
@@ -167,4 +167,4 @@ and its reason are published; the law is not deleted from the record.
 > **AI proposes; the professional verifies, decides and remains accountable.**
 
 This applies to the making of these laws as much as to the practice they govern. No agent — human or
-machine — may approve a PCI Professional Law merely because it appears professionally written.
+machine — may approve a PCI Standard merely because it appears professionally written.

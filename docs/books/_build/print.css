@@ -373,7 +373,7 @@ nav#TOC a::after {
 }
 .appendices tr { break-inside: avoid; }
 
-/* ---- Call-out boxes: the PCI Professional Law visual system (laws/LAW_SYSTEM.md §6) ----------
+/* ---- Call-out boxes: the PCI Standard visual system (laws/SUPERSEDED_LAW_SYSTEM_v0.md §6) ----------
    Colour is never the only distinction. Each box carries a written label and an icon, and each has
    a DIFFERENT border style — solid (law), double (external reference), dashed (guidance), dotted
    (caution) — so the four remain distinguishable in grayscale print and to a colour-blind reader.
@@ -397,7 +397,7 @@ nav#TOC a::after {
 .pci-law {
   background: #FDECEC; border: 0.5pt solid #C62828; border-left: 3pt solid #9B1C1C;
 }
-.pci-law::before { content: "§ PCI LAW"; color: #9B1C1C; }
+.pci-law::before { content: "§ PCI STANDARD"; color: #9B1C1C; }
 
 .ext-ref {
   background: #EEF4FF; border: 1.6pt double #1D4ED8; border-left: 3.4pt double #1D4ED8;
@@ -421,7 +421,7 @@ nav#TOC a::after {
   margin: 2.4mm 0; padding: 2.2mm 3mm 1.8mm 3mm;
 }
 
-/* ---- Back matter: the PCI Professional Laws part ---------------------------------- */
+/* ---- Back matter: the PCI Standards part ---------------------------------- */
 .lawspart h2.lawset {
   font-family: "IBM Plex Serif", Georgia, serif; font-size: 21pt; font-weight: 600;
   color: #0F172A; margin: 0 0 4mm 0; padding-bottom: 2.5mm;

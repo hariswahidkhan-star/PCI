@@ -1,12 +1,12 @@
 # PML-AI Professional Laws — PCI Project Management Leader – AI
 
-**Status:** Certification Law set for the **PML-AI** credential (PCI Project Management Leader – AI).
-Version 2.0, drafted under the **PCI Professional Laws Charter** (what a law is) and the **PCI Law
+**Status:** Certification Standard set for the **PML-AI** credential (PCI Project Management Leader – AI).
+Version 2.0, drafted under the **PCI Standards Charter** (what a law is) and the **PCI Law
 Drafting Manual** (how a law is written). A law that does not conform to both does not pass gate.
 **Thirty-two laws and one hundred and forty-eight process requirements**, anchored across all sixteen
 domains of the PML-AI Body of Knowledge (`../pml-ai/`).
 
-> **PCI Professional Laws are private professional certification requirements established by Project
+> **PCI Standards are private professional certification requirements established by Project
 > Controls Institute Global. They are not legislation, government regulation, legal advice or
 > substitutes for applicable laws, contractual obligations, regulatory requirements or authoritative
 > professional standards. Where an applicable legal, regulatory, contractual or authoritative
@@ -26,16 +26,16 @@ two documents prevail over anything below.
 
 ### Identifiers
 
-Each law is cited as **`PCI-PML-LAW-DD.NN`**, where `DD` is the two-digit Body-of-Knowledge domain of
+Each law is cited as **`PCI-PML-STD-DD.NN`**, where `DD` is the two-digit Body-of-Knowledge domain of
 primary anchorage and `NN` a two-digit sequence within that domain. Each process requirement is cited
-as **`PCI-PML-LAW-DD.NN-PR-NN`**. Identifiers are stable and are the only citation form; page numbers
+as **`PCI-PML-STD-DD.NN-PR-NN`**. Identifiers are stable and are the only citation form; page numbers
 are never used, because pagination changes. A withdrawn identifier is never reused.
 
 **This edition renumbers the whole set.** The previous edition used `PML-LAW-DD-NN`. Element 25 of
 each law records the identifier it supersedes, so a citation made under the old scheme can be
 resolved. The old `PML-LAW-01-02` carried the title *Human Decision Authority in Delivery*, which
 collided with the foundational law **Human Decision Authority**; it is republished here as
-`PCI-PML-LAW-01.02` under the distinguishing title **Reserved Delivery Decisions and the Named
+`PCI-PML-STD-01.02` under the distinguishing title **Reserved Delivery Decisions and the Named
 Human Decider**, and its obligation is narrowed to what a delivery leader must do that the
 foundational law does not already require.
 
@@ -75,30 +75,30 @@ and they are cited independently. Nothing in a note, a rationale, a bracket or a
 in this file creates an obligation; if such a sentence reads as one, that is a drafting defect and
 the Interpretation Panel corrects it.
 
-### The relationship to the Foundational Laws
+### The relationship to the Foundational Standards
 
-Every law below sits under the **PCI Foundational Laws**, which bind every credential holder in all
-three credentials. This file cites them in the Charter §3 identifier form `PCI-FND-LAW-NN`. The
+Every law below sits under the **PCI Foundational Standards**, which bind every credential holder in all
+three credentials. This file cites them in the Charter §3 identifier form `PCI-FND-STD-NN`. The
 foundational set is a **fifteen-law** set, and its subjects are listed below. This is the same
-concordance the rebuilt PCL-AI Certification Law set uses, so that `PCI-FND-LAW-NN` denotes the same
+concordance the rebuilt PCL-AI Certification Standard set uses, so that `PCI-FND-STD-NN` denotes the same
 law in every credential's law file:
 
 | ID | Subject | ID | Subject |
 |---|---|---|---|
-| `PCI-FND-LAW-01` | Professional accountability | `PCI-FND-LAW-09` | Confidentiality and approved technology |
-| `PCI-FND-LAW-02` | Evidence before assertion | `PCI-FND-LAW-10` | Competence and limitation |
-| `PCI-FND-LAW-03` | Independent verification | `PCI-FND-LAW-11` | Escalation of material misstatement |
-| `PCI-FND-LAW-04` | Human decision authority | `PCI-FND-LAW-12` | Record integrity |
-| `PCI-FND-LAW-05` | Transparent assumptions | `PCI-FND-LAW-13` | No silent override |
-| `PCI-FND-LAW-06` | Source and version integrity | `PCI-FND-LAW-14` | Responsible AI |
-| `PCI-FND-LAW-07` | Data lineage | `PCI-FND-LAW-15` | Correction duty |
-| `PCI-FND-LAW-08` | Conflict disclosure | | |
+| `PCI-FND-STD-01` | Professional accountability | `PCI-FND-STD-09` | Confidentiality and approved technology |
+| `PCI-FND-STD-02` | Evidence before assertion | `PCI-FND-STD-10` | Competence and limitation |
+| `PCI-FND-STD-03` | Independent verification | `PCI-FND-STD-11` | Escalation of material misstatement |
+| `PCI-FND-STD-04` | Human decision authority | `PCI-FND-STD-12` | Record integrity |
+| `PCI-FND-STD-05` | Transparent assumptions | `PCI-FND-STD-13` | No silent override |
+| `PCI-FND-STD-06` | Source and version integrity | `PCI-FND-STD-14` | Responsible AI |
+| `PCI-FND-STD-07` | Data lineage | `PCI-FND-STD-15` | Correction duty |
+| `PCI-FND-STD-08` | Conflict disclosure | | |
 
 **The published foundational file carries these fifteen laws under these identifiers.** Every
-`PCI-FND-LAW-NN` citation below therefore resolves directly against
-[`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md), and the subject it carries there is the
+`PCI-FND-STD-NN` citation below therefore resolves directly against
+[`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md), and the subject it carries there is the
 subject intended here. The superseded `PCI-LAW-F-NN` identifiers are recorded, for historical
-traceability only, in [`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md); no live citation uses them.
+traceability only, in [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md); no live citation uses them.
 
 **A certification law must add.** Where a law below governs the same subject as a foundational law, it
 states what leading projects, programmes and portfolios specifically requires that the foundational
@@ -120,7 +120,7 @@ categories are never combined:
 | 6 | Ethical code | PMI Code of Ethics and Professional Conduct |
 | 7 | Industry guidance | *(not used)* |
 | 8 | Voluntary environmental or social framework | *(not used)* |
-| 9 | PCI internal professional law | the Foundational Laws and this set |
+| 9 | PCI internal professional law | the Foundational Standards and this set |
 | 10 | Illustrative practice | the EU AI Act, the GDPR, the NIST AI RMF, the OECD AI Principles, the G20/OECD Principles of Corporate Governance |
 
 Four rules govern every entry, and each of them has been breached once somewhere in this corpus:
@@ -130,7 +130,7 @@ Four rules govern every entry, and each of them has been breached once somewhere
   any of them. **ISO 9001, ISO/IEC 42001, ISO/IEC 27001 and ISO 45001 are certifiable requirements
   standards**, and are described as such where they appear. **ISO 45003 is guidance, not a
   requirements standard**, and nothing can be certified against it — a point that matters in
-  `PCI-PML-LAW-12.02`, where the temptation to dress guidance as a compliance obligation is greatest.
+  `PCI-PML-STD-12.02`, where the temptation to dress guidance as a compliance obligation is greatest.
 - **The Scrum Guide is a voluntary framework. Adoption is the whole of its force.** It binds a team
   that has adopted it and nobody else, and it is not a standard.
 - **The PMBOK Guide and AACE material are professional frameworks, never regulatory authority.**
@@ -196,11 +196,11 @@ Where the suite terminology audit (`../registries/TERMINOLOGY_AUDIT.md`) records
 genuinely different professional meanings across the three books, **both senses survive here and are
 flagged**; collapsing them would make the laws wrong.
 
-**Where a term is also defined in the Foundational Laws.** *material*, *independent*, *evidence*,
+**Where a term is also defined in the Foundational Standards.** *material*, *independent*, *evidence*,
 *competent reviewer*, *decision owner* and *escalation threshold* are also defined, at `D-01` to
-`D-30`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). **They now carry the same wording in
+`D-30`, in [`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md). **They now carry the same wording in
 both places.** Each was reconciled to the canonical definition recorded in
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), which also records what this
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md), which also records what this
 volume previously said and why the change was made. The terms this set flags as carrying two genuine
 professional senses — *baseline*, *sponsor*, *verification*, *governance* — are **not** collapsed by
 that reconciliation; the register carries both senses of each, with the context each belongs to,
@@ -251,7 +251,7 @@ relying on the preparer's explanation of it**. Competence is recorded against th
 against seniority, job title or availability. **Independence is not a limb of competence:** the
 requirement that the reviewer did not prepare, direct, specify or approve the thing being reviewed is
 *independence*, defined below, and it is imposed by each law's element 10 rather than by this
-definition. The two were previously folded together here, which made `PCI-FND-LAW-10` element 12's
+definition. The two were previously folded together here, which made `PCI-FND-STD-10` element 12's
 supervised-acquisition exception unusable, because that exception needs a reviewer who is competent and
 is precisely not independent — a supervisor. No law loses an independence requirement by the change:
 every element 10 that required one still states it.
@@ -295,7 +295,7 @@ a contractual, regulatory, tax or financial-reporting position; or a documented 
 event stated in the organisation's delegation schedule is met. On reaching it the matter must be passed
 to a named higher authority within the time the threshold states. **Any documented value in the
 delegation schedule is additional to those six triggers and never in place of them**; a matter that
-reaches the threshold requires escalation under `PCI-FND-LAW-11` whether or not the delegation schedule
+reaches the threshold requires escalation under `PCI-FND-STD-11` whether or not the delegation schedule
 enumerated it. A threshold with no stated destination, or with no stated time, is an incomplete
 threshold and it is an aspiration until it is completed — but **the absence of a documented threshold
 does not remove an escalation duty**: where the delegation schedule names no destination, the matter
@@ -364,13 +364,13 @@ its extraction date and time are recorded on or with the artefact. A record whos
 identified is not current, whatever its age.
 
 **material AI assistance** — *(Canonical — carried to the whole corpus by
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
 artefact is *material* where removing the AI-generated contribution would change a figure in the
 artefact by more than the applicable materiality measurement, or would change a recommendation, a
 classification that affects entitlement, coding, ranking or eligibility, or a stated conclusion.
 *Material AI contribution* means the same thing. Volume of use, licence cost and whether a human edited
 the artefact afterwards are irrelevant to the test. This set made compliance turn on the term at
-`PCI-PML-LAW-14.02` element 21 without defining it; the definition is supplied here so the test can be
+`PCI-PML-STD-14.02` element 21 without defining it; the definition is supplied here so the test can be
 applied.
 
 ### Supporting terms used in obligations
@@ -467,13 +467,13 @@ others without asking the author.
 Where a sentence could carry either sense, this set writes the qualified form. **The two senses are a
 declared collision, not a defect**: collapsing V&V verification into AI verification would make this
 set's delivery-assurance laws wrong. Both are recorded at
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md) §4 with the context each belongs
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md) §4 with the context each belongs
 to, and at `../registries/TERMINOLOGY_AUDIT.md` Issue 9.
 
 ---
 ## Domain 1 — The Project Leadership Profession
 
-### PCI LAW PCI-PML-LAW-01.01 — Leadership Accountability for Delivery Decisions
+### PCI STANDARD PCI-PML-STD-01.01 — Leadership Accountability for Delivery Decisions
 
 **1. Normative requirement.** A credential holder who leads a project, programme or portfolio must
 remain personally accountable for every delivery decision taken under their authority, including a
@@ -497,17 +497,17 @@ represented to a decision-maker about any of those.
 
 **5. Required actions — process requirements.** Each is mandatory and is breached independently.
 
-- **`PCI-PML-LAW-01.01-PR-01` — Named acceptance.** The credential holder must accept the leadership
+- **`PCI-PML-STD-01.01-PR-01` — Named acceptance.** The credential holder must accept the leadership
   accountability in a written instrument — charter, appointment letter or terms of reference — that
   names the individual, and must not begin exercising leadership authority before that instrument
   exists.
-- **`PCI-PML-LAW-01.01-PR-02` — Known reservation boundary.** The credential holder must hold a
+- **`PCI-PML-STD-01.01-PR-02` — Known reservation boundary.** The credential holder must hold a
   current, dated statement of which decisions are personally reserved to them and which sit above
   them, drawn from the delegation schedule, and must re-read it at each gate.
-- **`PCI-PML-LAW-01.01-PR-03` — Decision recording.** The credential holder must ensure that every
+- **`PCI-PML-STD-01.01-PR-03` — Decision recording.** The credential holder must ensure that every
   material delivery decision taken under their authority produces a decision record carrying all of
   its defined fields, including the versioned reference to the information relied on.
-- **`PCI-PML-LAW-01.01-PR-04` — Correction on discovery.** On discovering that a decision issued under
+- **`PCI-PML-STD-01.01-PR-04` — Correction on discovery.** On discovering that a decision issued under
   their authority rested on a material error, the credential holder must record the error, notify
   every person who relied on the decision, and state what the corrected position is, within the
   notification time the delegation schedule sets for that decision class.
@@ -532,7 +532,7 @@ approved by the leader.
 
 **10. Independence requirement.** Not applicable to the decision itself, because leadership
 accountability is by definition non-independent of delivery; independence attaches instead to the
-assurance of these records, which `PCI-PML-LAW-01.03-PR-06` governs.
+assurance of these records, which `PCI-PML-STD-01.03-PR-06` governs.
 
 **11. Materiality or threshold.** This law sets no number. The materiality of a delivery decision is
 decided by the definition of *material* above, applied against the organisation's documented
@@ -596,8 +596,8 @@ roles, employment law and the law of professional negligence determine **legal**
 independently of this professional requirement, and can place it on a person other than the credential
 holder. Obtain local legal advice on the statutory roles attaching to a specific project and entity.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-02`; `PCI-FND-LAW-04`; `PCI-FND-LAW-12`;
-`PCI-FND-LAW-15`; `PCI-PML-LAW-01.02`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-03.04`.
+**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-02`; `PCI-FND-STD-04`; `PCI-FND-STD-12`;
+`PCI-FND-STD-15`; `PCI-PML-STD-01.02`; `PCI-PML-STD-03.02`; `PCI-PML-STD-03.04`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 1 · KA 1.2 The project leader's
 accountability · topics 1.2.1 accountability and responsibility, 1.2.2 the obligation set, 1.2.3 the
@@ -636,14 +636,14 @@ five-part test.
 
 ---
 
-### PCI LAW PCI-PML-LAW-01.02 — Reserved Delivery Decisions and the Named Human Decider
+### PCI STANDARD PCI-PML-STD-01.02 — Reserved Delivery Decisions and the Named Human Decider
 
 **1. Normative requirement.** A credential holder must ensure that every delivery decision in a class
 the organisation has reserved to a human decider is taken by the named individual holding that
 authority, on evidence that individual has examined, and must not permit such a decision to be
 executed on the output of an automated or AI system without that examination.
 
-**2. Purpose.** `PCI-FND-LAW-04` establishes that a human decides. This law addresses what is specific
+**2. Purpose.** `PCI-FND-STD-04` establishes that a human decides. This law addresses what is specific
 to delivery: automation in delivery does not usually announce itself as a decision. A prioritisation
 engine reorders a backlog, a scheduling tool re-sequences a network, a resource optimiser reassigns
 people, a risk model closes a risk — and each of those is a decision that has already taken effect by
@@ -663,19 +663,19 @@ means taking effect in a system of record without a named human having recorded 
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-01.02-PR-01` — The reserved-class list exists.** The credential holder must maintain a
+- **`PCI-PML-STD-01.02-PR-01` — The reserved-class list exists.** The credential holder must maintain a
   dated list of the decision classes reserved to a human decider on their project, approved by the
   sponsor, covering at minimum: baseline change, scope acceptance, risk acceptance, contingency
   release, supplier selection and award, release or go-live, and any decision affecting safety, a
   licence, a permission or a statutory duty.
-- **`PCI-PML-LAW-01.02-PR-02` — Automation inventory against the list.** The credential holder must
+- **`PCI-PML-STD-01.02-PR-02` — Automation inventory against the list.** The credential holder must
   maintain a dated inventory of the automated and AI systems in use on the project that are capable of
   changing anything in a reserved class, and must record for each whether its output takes effect
   automatically or on a named human's recorded action.
-- **`PCI-PML-LAW-01.02-PR-03` — No automatic effect in a reserved class.** Where the inventory shows a
+- **`PCI-PML-STD-01.02-PR-03` — No automatic effect in a reserved class.** Where the inventory shows a
   system capable of taking effect automatically in a reserved class, the credential holder must have
   that capability disabled or gated, and must record the date it was disabled or gated and by whom.
-- **`PCI-PML-LAW-01.02-PR-04` — Examination before decision.** For each reserved decision taken on
+- **`PCI-PML-STD-01.02-PR-04` — Examination before decision.** For each reserved decision taken on
   AI-assisted material, the named decider must record what they examined, which version of it, and
   what they changed or confirmed — a record distinct from the approval itself.
 
@@ -699,7 +699,7 @@ any addition to, or removal from, that list. A supplier or tool vendor must not 
 **10. Independence requirement.** The named decider must be independent of the configuration of the AI
 or automation system whose output they are examining, in the sense that they did not set its
 parameters, weights or thresholds for the decision in question. Where the same person unavoidably does
-both on a small project, `PCI-PML-LAW-01.03-PR-05` applies and the arrangement is recorded and reported
+both on a small project, `PCI-PML-STD-01.03-PR-05` applies and the arrangement is recorded and reported
 to the sponsor.
 
 **11. Materiality or threshold.** This law sets no number. The reserved-class list *is* the threshold
@@ -761,8 +761,8 @@ a transparency, human-review or impact-assessment duty, and what disclosure is o
 person are jurisdiction-specific questions. Obtain local legal advice before deploying automation that
 affects people's work allocation, pay, assessment or employment.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-04`; `PCI-FND-LAW-03`; `PCI-FND-LAW-14`; `PCI-FND-LAW-13`;
-`PCI-PML-LAW-01.01`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-13.02`; `PCI-PML-LAW-14.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-04`; `PCI-FND-STD-03`; `PCI-FND-STD-14`; `PCI-FND-STD-13`;
+`PCI-PML-STD-01.01`; `PCI-PML-STD-03.02`; `PCI-PML-STD-13.02`; `PCI-PML-STD-14.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 1 · KA 1.4 Ethics and the responsible use of
 AI · topics 1.4.2 the PCI responsible-AI principle, 1.4.3 the leader's AI accountability. Also Domain 14
@@ -800,7 +800,7 @@ law adds rather than restates; renumbered and restructured; legislative drafting
 
 ---
 
-### PCI LAW PCI-PML-LAW-01.03 — Interests, Abstention and Assurance Independence
+### PCI STANDARD PCI-PML-STD-01.03 — Interests, Abstention and Assurance Independence
 
 **1. Normative requirement.** A credential holder must not take, or participate in taking, a decision,
 recommendation, evaluation or assurance opinion on a matter in which they hold a conflict of interest.
@@ -827,31 +827,31 @@ alike.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-01.03-PR-01` — Identify at appointment and at each convening.** The credential holder
+- **`PCI-PML-STD-01.03-PR-01` — Identify at appointment and at each convening.** The credential holder
   must ask themselves, in writing, at appointment to any role and again as each gate, steering meeting,
   evaluation panel, change board or assurance review is convened, whether they hold an interest in what
   is about to be decided. A single question at induction does not satisfy this requirement, because
   interests are acquired after induction.
-- **`PCI-PML-LAW-01.03-PR-02` — Declare in writing before the item is taken.** A declaration must reach
+- **`PCI-PML-STD-01.03-PR-02` — Declare in writing before the item is taken.** A declaration must reach
   the chair in writing **before** the item is opened. A declaration made during or after the discussion
   does not satisfy this requirement; it is an explanation.
-- **`PCI-PML-LAW-01.03-PR-03` — Record, including nil returns.** The decision record for every gate,
+- **`PCI-PML-STD-01.03-PR-03` — Record, including nil returns.** The decision record for every gate,
   steering, change-board, evaluation-panel and assurance decision must carry an interests field, and
   that field must carry either the declarations made or a positive **nil return** for each participant.
   A blank field does not satisfy this requirement.
-- **`PCI-PML-LAW-01.03-PR-04` — Abstain, and name who decided instead.** The interested party must take
+- **`PCI-PML-STD-01.03-PR-04` — Abstain, and name who decided instead.** The interested party must take
   no part in the discussion or the decision, and the minute must name the individual who decided in
   their place. An abstention that is not minuted does not satisfy this requirement.
-- **`PCI-PML-LAW-01.03-PR-05` — Structural interests change the role.** Where an interest touches the
+- **`PCI-PML-STD-01.03-PR-05` — Structural interests change the role.** Where an interest touches the
   substance of a role rather than a single item, the credential holder must move the person or move the
   work, and must record in the governance file that this was done and by whom. Managing a structural
   interest by declaration followed by the decision being taken anyway does not satisfy this requirement.
-- **`PCI-PML-LAW-01.03-PR-06` — Assurance independence, tested by name.** A person or function must not
+- **`PCI-PML-STD-01.03-PR-06` — Assurance independence, tested by name.** A person or function must not
   provide an assurance opinion on a plan, control, estimate, schedule, business case or deliverable
   that the same person or function prepared, directed, specified or approved. The assurance record must
   name the assurer and must state, positively, that the assurer's name does not appear in the
   authorship or approval record of the artefact assured.
-- **`PCI-PML-LAW-01.03-PR-07` — Evaluation-panel exclusion.** A credential holder who holds an interest
+- **`PCI-PML-STD-01.03-PR-07` — Evaluation-panel exclusion.** A credential holder who holds an interest
   in any bidder, tenderer or candidate must not be a member of the evaluation panel for that
   procurement or appointment, must not see other evaluators' scores or comments, and must not
   moderate, chair or ratify the evaluation.
@@ -943,10 +943,10 @@ they differ by jurisdiction and by the nature of the buying entity. Compliance w
 compliance with any of them. Obtain local legal advice before designing a declaration or evaluation
 process for a publicly funded procurement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08` (the parent disclosure obligation); `PCI-FND-LAW-01`;
-`PCI-FND-LAW-10`; `PCI-PML-LAW-03.03`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-10.01`;
-`PCI-PML-LAW-12.02`.
-**What this law adds to `PCI-FND-LAW-08`:** the foundational law requires disclosure of a conflict.
+**19. Related PCI Laws.** `PCI-FND-STD-08` (the parent disclosure obligation); `PCI-FND-STD-01`;
+`PCI-FND-STD-10`; `PCI-PML-STD-03.03`; `PCI-PML-STD-09.01`; `PCI-PML-STD-10.01`;
+`PCI-PML-STD-12.02`.
+**What this law adds to `PCI-FND-STD-08`:** the foundational law requires disclosure of a conflict.
 This law requires
 **abstention with a named substitute decider**, requires a **nil return** so silence becomes evidence,
 requires a **role change** for structural interests, and applies a **name-matching test to assurance
@@ -995,7 +995,7 @@ Amendment note: none.
 
 ## Domain 2 — Strategy, Selection and Business Alignment
 
-### PCI LAW PCI-PML-LAW-02.01 — Business-Case Integrity
+### PCI STANDARD PCI-PML-STD-02.01 — Business-Case Integrity
 
 **1. Normative requirement.** A credential holder must not present, endorse or rely on a business case
 whose stated benefits, costs, assumptions, dependencies or option comparison they know, or on the
@@ -1021,22 +1021,22 @@ than to another.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-02.01-PR-01` — Symmetric treatment.** The credential holder must apply the same
+- **`PCI-PML-STD-02.01-PR-01` — Symmetric treatment.** The credential holder must apply the same
   estimating basis, the same contingency approach, the same optimism adjustment and the same evidence
   standard to every option and to both sides of the case, and must state in the case that this was done
   and where it was not.
-- **`PCI-PML-LAW-02.01-PR-02` — Assumptions carry owner, source and date.** Every assumption on which a
+- **`PCI-PML-STD-02.01-PR-02` — Assumptions carry owner, source and date.** Every assumption on which a
   benefit or a cost materially depends must be recorded with a named owner, a source reference and the
   date it was last tested. An assumption with no owner is recorded as an open risk, not as an
   assumption.
-- **`PCI-PML-LAW-02.01-PR-03` — The do-minimum option is drawn honestly.** The do-minimum or
+- **`PCI-PML-STD-02.01-PR-03` — The do-minimum option is drawn honestly.** The do-minimum or
   do-nothing option must be appraised on the same basis as the preferred option, and its stated
   consequences must be sourced, not asserted.
-- **`PCI-PML-LAW-02.01-PR-04` — Restatement at each gate.** At each gate, the credential holder must
+- **`PCI-PML-STD-02.01-PR-04` — Restatement at each gate.** At each gate, the credential holder must
   restate the case against actual costs incurred, actual benefits evidence available and the current
   assumption set, and must state whether the case still holds. A case carried forward unchanged from a
   previous gate, with no restatement, does not satisfy this requirement.
-- **`PCI-PML-LAW-02.01-PR-05` — Kill criteria are stated before approval.** The case must state, before
+- **`PCI-PML-STD-02.01-PR-05` — Kill criteria are stated before approval.** The case must state, before
   approval, the conditions under which the project would be stopped, and each such condition must be
   measurable against something the project will actually measure.
 
@@ -1126,9 +1126,9 @@ listed-company disclosure duties and grant conditions impose their own appraisal
 disclosure requirements, and misstating a case to obtain public funds can engage criminal law. Obtain
 local legal advice where a case supports a regulated funding application or a market disclosure.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-PML-LAW-02.02`;
-`PCI-PML-LAW-03.03`; `PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.03`.
-**What this law adds to `PCI-FND-LAW-05`:** the foundational law requires assumptions to be
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-PML-STD-02.02`;
+`PCI-PML-STD-03.03`; `PCI-PML-STD-15.02`; `PCI-PML-STD-16.03`.
+**What this law adds to `PCI-FND-STD-05`:** the foundational law requires assumptions to be
 transparent. This law requires **symmetric treatment across options**, an **owned and dated
 assumption
 register**, an **honestly drawn do-minimum**, **restatement at every gate**, and **kill criteria fixed
@@ -1169,7 +1169,7 @@ obligations; compliance test replaced with a reconciliation test.
 
 ---
 
-### PCI LAW PCI-PML-LAW-02.02 — Benefits Ownership
+### PCI STANDARD PCI-PML-STD-02.02 — Benefits Ownership
 
 **1. Normative requirement.** A credential holder must not allow a benefit to be claimed in a business
 case, a plan or a report unless a named individual outside the delivery team has accepted, in writing,
@@ -1192,16 +1192,16 @@ of accountability.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-02.02-PR-01` — Named written acceptance.** Every benefit in the register must carry
+- **`PCI-PML-STD-02.02-PR-01` — Named written acceptance.** Every benefit in the register must carry
   the name and role of its benefits owner and a dated written acceptance by that individual. A name
   entered by the project on the owner's behalf does not satisfy this requirement.
-- **`PCI-PML-LAW-02.02-PR-02` — A measurable definition before approval.** Every benefit must carry,
+- **`PCI-PML-STD-02.02-PR-02` — A measurable definition before approval.** Every benefit must carry,
   before the case is approved, the measure that will evidence it, the source system or method that will
   produce the measure, the benefits baseline value, and the date the baseline was measured.
-- **`PCI-PML-LAW-02.02-PR-03` — Baseline measured before the change.** The benefits baseline must be
+- **`PCI-PML-STD-02.02-PR-03` — Baseline measured before the change.** The benefits baseline must be
   measured before the change is made. A baseline reconstructed after go-live must be labelled as
   reconstructed, with the method stated, and must not be presented as a measurement.
-- **`PCI-PML-LAW-02.02-PR-04` — Refusal is recorded, not absorbed.** Where a proposed benefits owner
+- **`PCI-PML-STD-02.02-PR-04` — Refusal is recorded, not absorbed.** Where a proposed benefits owner
   declines to accept a benefit, the credential holder must record the refusal and its stated reason and
   escalate it, and must not transfer the benefit to the delivery team, to the sponsor by default, or to
   an unnamed function.
@@ -1229,7 +1229,7 @@ their behalf.
 **10. Independence requirement.** The benefits owner must be **independent of the delivery team** in the
 sense defined above: not accountable for delivering the output, and answering in the receiving or
 operating organisation. Measurement of realised benefits must be produced by, or verified by, a party
-independent of the delivery team — see `PCI-PML-LAW-16.03`.
+independent of the delivery team — see `PCI-PML-STD-16.03`.
 
 **11. Materiality or threshold.** This law sets no threshold, because ownership is binary: a benefit is
 owned or it is not. The organisation's governance sets which benefits are individually tracked and
@@ -1279,8 +1279,8 @@ against both components' registers.
 tax authority, the accuracy of the claim can engage funding-condition, disclosure or fraud law. Obtain
 local legal advice before a benefits statement is made outside the organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-01`; `PCI-FND-LAW-12`; `PCI-PML-LAW-02.01`;
-`PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.02`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-01`; `PCI-FND-STD-12`; `PCI-PML-STD-02.01`;
+`PCI-PML-STD-15.02`; `PCI-PML-STD-16.02`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 2 · KA 2.3 Benefits, value and sustainability
 · topics 2.3.1 benefits mapping, 2.3.2 measures and baselines. Also Domain 15 KA 15.2 benefits and
@@ -1318,7 +1318,7 @@ law provable rather than documentary.
 
 ## Domain 3 — Governance, Organisation and Decision Rights
 
-### PCI LAW PCI-PML-LAW-03.01 — Governance Authority Before Commitment
+### PCI STANDARD PCI-PML-STD-03.01 — Governance Authority Before Commitment
 
 **1. Normative requirement.** A credential holder must not commit an organisation's funds, contractual
 obligations or people to delivery before the governance arrangements for that delivery — the named
@@ -1340,19 +1340,19 @@ or employment obligation the organisation cannot withdraw from without cost.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-03.01-PR-01` — The four artefacts exist and are dated.** Before commitment, the
+- **`PCI-PML-STD-03.01-PR-01` — The four artefacts exist and are dated.** Before commitment, the
   credential holder must hold: a named sponsor with a written appointment; the decision bodies with
   their named members and their terms of reference; the delegation schedule; and the gate points with
   their criteria. Each artefact must carry a date and an approver.
-- **`PCI-PML-LAW-03.01-PR-02` — The gate can stop the work.** The credential holder must confirm, in
+- **`PCI-PML-STD-03.01-PR-02` — The gate can stop the work.** The credential holder must confirm, in
   writing, that each defined gate carries the power to stop, hold or redirect, and must record any gate
   that does not, because a review that cannot stop the work is not a gate and must not be described as
   one.
-- **`PCI-PML-LAW-03.01-PR-03` — Governance proportionate and recorded as such.** The credential holder
+- **`PCI-PML-STD-03.01-PR-03` — Governance proportionate and recorded as such.** The credential holder
   must record the tailoring decision — which governance elements apply at what depth for this project's
   size and exposure — with the sponsor's approval, so that light governance is a decision rather than an
   omission.
-- **`PCI-PML-LAW-03.01-PR-04` — Re-approval on structural change.** Where the delivery structure changes
+- **`PCI-PML-STD-03.01-PR-04` — Re-approval on structural change.** Where the delivery structure changes
   materially — a partner is added, a component is transferred, the sponsor changes, or the funding route
   changes — the credential holder must obtain re-approval of the four artefacts before further
   commitment.
@@ -1376,7 +1376,7 @@ approves nothing in this law.
 **10. Independence requirement.** The approval of the governance arrangements must be taken by a body
 independent of the delivery organisation in the sense defined above. Where a delivery partner sits on
 the approving body, that partner's members must abstain from the approval of the delegation schedule
-under `PCI-PML-LAW-01.03-PR-04`.
+under `PCI-PML-STD-01.03-PR-04`.
 
 **11. Materiality or threshold.** This law sets no financial trigger for "commitment", because
 organisations define commitment differently — order, contract signature, purchase requisition, hire.
@@ -1431,8 +1431,8 @@ authority under statute and grant conditions determine who may lawfully bind an 
 professionally correct delegation schedule can still be legally ineffective. Obtain local legal advice
 on authority to contract for the specific entity and funding route.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-12`; `PCI-PML-LAW-03.02`;
-`PCI-PML-LAW-03.03`; `PCI-PML-LAW-03.04`; `PCI-PML-LAW-13.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-12`; `PCI-PML-STD-03.02`;
+`PCI-PML-STD-03.03`; `PCI-PML-STD-03.04`; `PCI-PML-STD-13.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.1 Governance models · topics 3.1.1
 what governance is for, 3.1.2 structures across organisational forms, 3.1.3 governance in agile and
@@ -1466,7 +1466,7 @@ perform from two systems.
 
 ---
 
-### PCI LAW PCI-PML-LAW-03.02 — Decision Rights and Delegated Authority
+### PCI STANDARD PCI-PML-STD-03.02 — Decision Rights and Delegated Authority
 
 **1. Normative requirement.** A credential holder must take every decision at the authority level the
 organisation's documented delegation schedule assigns to it, and must not take, split, defer or
@@ -1490,20 +1490,20 @@ to the aggregate; **relatedness class** means the set over which that rule sums.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-03.02-PR-01` — Single accountable role per class.** The credential holder must confirm,
+- **`PCI-PML-STD-03.02-PR-01` — Single accountable role per class.** The credential holder must confirm,
   before relying on the delegation schedule, that each decision class in it carries exactly one
   accountable role, and must escalate any class carrying two or none.
-- **`PCI-PML-LAW-03.02-PR-02` — Universal registration.** Every decision in a class covered by the
+- **`PCI-PML-STD-03.02-PR-02` — Universal registration.** Every decision in a class covered by the
   schedule must generate a decision-record entry **regardless of its value**, so that the aggregation
   rule has inputs. A rule that sums decisions it cannot see is not a control.
-- **`PCI-PML-LAW-03.02-PR-03` — Aggregation applied by what the change touches.** The credential holder
+- **`PCI-PML-STD-03.02-PR-03` — Aggregation applied by what the change touches.** The credential holder
   must apply the schedule's aggregation rule using its documented relatedness class, and where the
   organisation defines relatedness by what the changes touch — the same deliverable, the same assured
   control, the same interface — must not substitute a broader class such as requester or budget line.
-- **`PCI-PML-LAW-03.02-PR-04` — Urgency provisions are time-boxed and reported.** A decision taken under
+- **`PCI-PML-STD-03.02-PR-04` — Urgency provisions are time-boxed and reported.** A decision taken under
   an urgency or out-of-cycle provision must be recorded as such, with the reason, and must be reported
   to the authority that would ordinarily have taken it within the time the schedule states.
-- **`PCI-PML-LAW-03.02-PR-05` — Escalation carries a destination and a time.** The credential holder
+- **`PCI-PML-STD-03.02-PR-05` — Escalation carries a destination and a time.** The credential holder
   must not rely on an escalation threshold that states no named destination and no time; where one is
   encountered, they must escalate the defect itself.
 
@@ -1589,8 +1589,8 @@ company law, delegated statutory authority, procurement regulation and the entit
 not by a delegation schedule. A decision within delegated professional authority can still be legally
 ineffective. Obtain local legal advice on binding authority.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-04`; `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`;
-`PCI-PML-LAW-01.01`; `PCI-PML-LAW-03.01`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-08.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-04`; `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-FND-STD-13`;
+`PCI-PML-STD-01.01`; `PCI-PML-STD-03.01`; `PCI-PML-STD-04.01`; `PCI-PML-STD-08.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.2 Sponsorship and steering · topic
 3.2.3 decision authorities and thresholds; KA 3.3 · topics 3.3.3 escalation design, 3.3.4 auditability
@@ -1630,7 +1630,7 @@ state any.
 
 ---
 
-### PCI LAW PCI-PML-LAW-03.03 — Gate Evidence and the Gate Decision
+### PCI STANDARD PCI-PML-STD-03.03 — Gate Evidence and the Gate Decision
 
 **1. Normative requirement.** A credential holder must not recommend or take a gate decision except on
 evidence that is dated, attributable, version-identified and assessed against criteria published before
@@ -1651,23 +1651,23 @@ subject to stated conditions; **condition-closure** means the verified completio
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-03.03-PR-01` — Criteria published first.** The gate criteria must be published, dated
+- **`PCI-PML-STD-03.03-PR-01` — Criteria published first.** The gate criteria must be published, dated
   and version-identified before the evidence supporting the gate is assembled, and the credential holder
   must not amend them after assembly without the approving authority's recorded decision and a statement
   of what changed and why.
-- **`PCI-PML-LAW-03.03-PR-02` — Criteria are assessable.** Each criterion must be expressed so that two
+- **`PCI-PML-STD-03.03-PR-02` — Criteria are assessable.** Each criterion must be expressed so that two
   competent reviewers assessing the same evidence reach the same answer. The credential holder must
   identify any criterion that cannot be assessed and must have it replaced or removed before the gate.
-- **`PCI-PML-LAW-03.03-PR-03` — Evidence carries its provenance.** Every item in the gate pack must
+- **`PCI-PML-STD-03.03-PR-03` — Evidence carries its provenance.** Every item in the gate pack must
   carry its date, its author or source system, and its version. An undated extract, an unversioned
   model output and a dashboard state that cannot be reproduced must not be admitted as evidence.
-- **`PCI-PML-LAW-03.03-PR-04` — Conditions carry owner, date and consequence.** Every condition attached
+- **`PCI-PML-STD-03.03-PR-04` — Conditions carry owner, date and consequence.** Every condition attached
   to a conditional pass must carry a named owner, a due date and the stated consequence of non-closure,
   and the credential holder must report condition-closure status at the following gate.
-- **`PCI-PML-LAW-03.03-PR-05` — Dissent is recorded.** Where any member of the deciding body disagrees
+- **`PCI-PML-STD-03.03-PR-05` — Dissent is recorded.** Where any member of the deciding body disagrees
   with the decision, the disagreement and its reason must be recorded in the decision record. A decision
   recorded as unanimous when it was not is a false record.
-- **`PCI-PML-LAW-03.03-PR-06` — The criteria are set by the authority, not by the project.** The gate
+- **`PCI-PML-STD-03.03-PR-06` — The criteria are set by the authority, not by the project.** The gate
   criteria must be approved, before publication, by the authority that holds the gate decision or by the
   authority the delegation schedule assigns to set them, and the approval must name that authority and
   its date. **The project being gated must not be the approver of its own gate criteria.** Where the
@@ -1696,7 +1696,7 @@ elsewhere.
 
 **10. Independence requirement.** Where the delegation schedule requires assurance at the gate, the
 assurance opinion must be given by a competent reviewer independent of the pack's preparation, tested by
-the name-matching rule in `PCI-PML-LAW-01.03-PR-06`. **An assurance function must not opine on a plan it
+the name-matching rule in `PCI-PML-STD-01.03-PR-06`. **An assurance function must not opine on a plan it
 helped produce**, and the opinion must state positively that it did not.
 
 **11. Materiality or threshold.** This law sets no number. Which gates require independent assurance,
@@ -1755,8 +1755,8 @@ consent or a statutory notification, the effective decision belongs to the body 
 a professional gate decision does not substitute for it. Obtain local legal advice on which approvals a
 specific project requires and who may grant them.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.03`;
-`PCI-PML-LAW-03.01`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-16.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-PML-STD-01.03`;
+`PCI-PML-STD-03.01`; `PCI-PML-STD-09.01`; `PCI-PML-STD-16.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.3 Assurance, gates and escalation ·
 topics 3.3.1 stage gates, 3.3.2 assurance lines, 3.3.4 auditability and the decision record. Also
@@ -1801,7 +1801,7 @@ approved by the authority that holds the gate decision.
 
 ---
 
-### PCI LAW PCI-PML-LAW-03.04 — Sponsor Accountability
+### PCI STANDARD PCI-PML-STD-03.04 — Sponsor Accountability
 
 **1. Normative requirement.** A credential holder must not lead delivery on a project, programme or
 portfolio that has no named individual sponsor who has accepted the sponsorship accountability in
@@ -1823,17 +1823,17 @@ delegation schedule assigns to the sponsor and to nobody below them.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-03.04-PR-01` — Written acceptance held.** The credential holder must hold the sponsor's
+- **`PCI-PML-STD-03.04-PR-01` — Written acceptance held.** The credential holder must hold the sponsor's
   dated written acceptance of the sponsorship accountability, naming the individual, before delivery
   commitment, and must escalate where it does not exist.
-- **`PCI-PML-LAW-03.04-PR-02` — The reserved-decision list is agreed and used.** The credential holder
+- **`PCI-PML-STD-03.04-PR-02` — The reserved-decision list is agreed and used.** The credential holder
   must agree with the sponsor, in writing, the list of reserved sponsor decisions drawn from the
   delegation schedule, and must route each such decision to the sponsor rather than deciding it.
-- **`PCI-PML-LAW-03.04-PR-03` — A stated decision service level.** The credential holder must record the
+- **`PCI-PML-STD-03.04-PR-03` — A stated decision service level.** The credential holder must record the
   time within which the sponsor undertakes to decide a reserved matter, and must escalate to the
   governing body where a reserved decision exceeds that time by the margin the escalation threshold
   states.
-- **`PCI-PML-LAW-03.04-PR-04` — Sponsor change is a governance event.** On a change of sponsor, the
+- **`PCI-PML-STD-03.04-PR-04` — Sponsor change is a governance event.** On a change of sponsor, the
   credential holder must obtain the incoming sponsor's written acceptance, record a handover of the open
   reserved decisions and the current case position, and must not treat the vacancy period as a period in
   which reserved decisions may be taken below the sponsor.
@@ -1908,8 +1908,8 @@ carries statutory or regulatory duties — for safety, for public funds, for dat
 distinct from this professional requirement and cannot be delegated. Obtain local legal advice on the
 statutory roles attaching to the specific project and entity.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-11`; `PCI-PML-LAW-01.01`;
-`PCI-PML-LAW-02.01`; `PCI-PML-LAW-02.02`; `PCI-PML-LAW-03.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-11`; `PCI-PML-STD-01.01`;
+`PCI-PML-STD-02.01`; `PCI-PML-STD-02.02`; `PCI-PML-STD-03.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.2 Sponsorship and steering · topics
 3.2.1 the sponsor role, 3.2.2 steering committees that work, 3.2.3 decision authorities and thresholds.
@@ -1944,7 +1944,7 @@ created no obligation. Amendment note: none.
 ---
 ## Domain 4 — Integration and Delivery Architecture
 
-### PCI LAW PCI-PML-LAW-04.01 — Change Authority and Integrated Change Control
+### PCI STANDARD PCI-PML-STD-04.01 — Change Authority and Integrated Change Control
 
 **1. Normative requirement.** A credential holder must not permit a change to an approved control
 baseline to take effect before the change has been assessed for its integrated effect on scope,
@@ -1968,18 +1968,18 @@ change across all seven dimensions listed in element 1, assessed together rather
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-04.01-PR-01` — One flow, no side doors.** Every change to an approved control baseline
+- **`PCI-PML-STD-04.01-PR-01` — One flow, no side doors.** Every change to an approved control baseline
   must enter through the defined change flow, whatever its origin, and the credential holder must not
   accept a change instructed directly into a delivery system, a supplier instruction or a meeting minute.
-- **`PCI-PML-LAW-04.01-PR-02` — Seven-dimension assessment.** Each change must carry a written
+- **`PCI-PML-STD-04.01-PR-02` — Seven-dimension assessment.** Each change must carry a written
   assessment of its effect on scope, schedule, cost, risk, quality, benefits and dependencies, with
   "none" stated positively where a dimension is unaffected. A blank dimension does not satisfy this
   requirement.
-- **`PCI-PML-LAW-04.01-PR-03` — Baseline version integrity.** On approval, the credential holder must
+- **`PCI-PML-STD-04.01-PR-03` — Baseline version integrity.** On approval, the credential holder must
   re-issue the affected baseline with a new version identifier and a change reference, and must retain
   the superseded version. Performance reported after the change must state which baseline version it is
   measured against.
-- **`PCI-PML-LAW-04.01-PR-04` — Rejected and withdrawn changes retained.** Rejected, withdrawn and
+- **`PCI-PML-STD-04.01-PR-04` — Rejected and withdrawn changes retained.** Rejected, withdrawn and
   deferred changes must be retained in the register with their reasons, because the pattern of what was
   refused is evidence at the next dispute and at the next gate.
 
@@ -1999,7 +1999,7 @@ the completeness of each assessment. The named change authority in the delegatio
 decision.
 
 **9. Approval authority.** The change authority the delegation schedule assigns, by value and by class.
-Changes crossing the aggregation rule go to the aggregate authority under `PCI-PML-LAW-03.02-PR-03`.
+Changes crossing the aggregation rule go to the aggregate authority under `PCI-PML-STD-03.02-PR-03`.
 A supplier may never approve a change to the client's baseline.
 
 **10. Independence requirement.** The assessment of a change proposed by a supplier must be reviewed by
@@ -2063,8 +2063,8 @@ condition-precedent provisions and time bars whose effect is determined by the g
 contract, and a change correctly processed internally can still be barred contractually. Obtain legal
 advice on the applicable contract's notice requirements before relying on an internal change record.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`; `PCI-PML-LAW-03.02`;
-`PCI-PML-LAW-05.01`; `PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-10.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-FND-STD-13`; `PCI-PML-STD-03.02`;
+`PCI-PML-STD-05.01`; `PCI-PML-STD-06.01`; `PCI-PML-STD-07.01`; `PCI-PML-STD-10.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 4 · KA 4.3 Integrated baselines · topics
 4.3.1 scope-schedule-cost integration, 4.3.2 configuration management, 4.3.3 baseline maintenance;
@@ -2100,7 +2100,7 @@ process requirements; compliance test replaced with a four-way reconciliation.
 
 ## Domain 5 — Scope, Requirements and Value Definition
 
-### PCI LAW PCI-PML-LAW-05.01 — Scope Integrity
+### PCI STANDARD PCI-PML-STD-05.01 — Scope Integrity
 
 **1. Normative requirement.** A credential holder must not allow work to be performed, or a deliverable
 to be produced, outside the approved scope baseline without an approved change.
@@ -2111,7 +2111,7 @@ later than it promised, and cannot show which of the two facts caused the other.
 
 **3. Scope.** Every credential holder defining, approving, delivering, verifying or accepting scope, in
 predictive, adaptive and hybrid delivery. In adaptive delivery it applies to the scope envelope and the
-value envelope rather than to a fixed feature list — see `PCI-PML-LAW-13.01`.
+value envelope rather than to a fixed feature list — see `PCI-PML-STD-13.01`.
 
 **4. Defined terms.** *baseline* (control sense) · *acceptance* · *material* · *decision owner* ·
 *evidence* · *traceability*. Additionally, **scope envelope** means the bounded set of outcomes within
@@ -2120,17 +2120,17 @@ performed that no approved scope item or scope envelope covers.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-05.01-PR-01` — Exclusions stated, not implied.** The approved scope baseline must state
+- **`PCI-PML-STD-05.01-PR-01` — Exclusions stated, not implied.** The approved scope baseline must state
   what is excluded as well as what is included, because a dispute about scope is almost always about
   something nobody wrote down either way.
-- **`PCI-PML-LAW-05.01-PR-02` — Acceptance criteria before production.** Every scope item must carry
+- **`PCI-PML-STD-05.01-PR-02` — Acceptance criteria before production.** Every scope item must carry
   acceptance criteria, version-identified, agreed before the item is produced. An item whose criteria
   are written after it is built does not satisfy this requirement.
-- **`PCI-PML-LAW-05.01-PR-03` — Out-of-scope work is refused or changed.** On identifying work outside
+- **`PCI-PML-STD-05.01-PR-03` — Out-of-scope work is refused or changed.** On identifying work outside
   the approved scope, the credential holder must either stop it or route it through the change flow, and
   must record which was done. Continuing it while "keeping an eye on it" does not satisfy this
   requirement.
-- **`PCI-PML-LAW-05.01-PR-04` — Periodic scope reconciliation.** At an interval the governance sets and
+- **`PCI-PML-STD-05.01-PR-04` — Periodic scope reconciliation.** At an interval the governance sets and
   at every gate, the credential holder must reconcile work in progress and completed deliverables
   against the approved scope baseline and report any item with no approved scope reference.
 
@@ -2150,14 +2150,14 @@ change beyond the credential holder's delegated authority.
 named acceptance authority for acceptance criteria. A supplier must not approve either.
 
 **10. Independence requirement.** Acceptance of a deliverable must be recorded by a person independent
-of its production, applying `PCI-PML-LAW-09.01`. The scope reconciliation itself may be prepared by the
+of its production, applying `PCI-PML-STD-09.01`. The scope reconciliation itself may be prepared by the
 project and must be reviewed at gates by a competent reviewer independent of the delivery organisation
 where the delegation schedule requires assurance at that gate.
 
 **11. Materiality or threshold.** This law sets no percentage of scope. The organisation's governance
 sets the change-authority thresholds and the reconciliation interval, and this law requires that both are
 documented and applied. Every item of out-of-scope work is registered regardless of size, because the
-aggregation rule in `PCI-PML-LAW-03.02` cannot operate on unregistered items.
+aggregation rule in `PCI-PML-STD-03.02` cannot operate on unregistered items.
 *Six-person internal project:* the baseline is a one-page inclusion and exclusion list, the criteria are
 two lines per deliverable, and the reconciliation is a fortnightly ten-minute check of the task board
 against that page.
@@ -2206,8 +2206,8 @@ exist and pre-date production.
 was validly instructed, are contractual questions determined by the governing law and the contract's own
 mechanisms. Obtain legal advice before relying on an internal scope record in a commercial claim.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-13`; `PCI-PML-LAW-04.01`;
-`PCI-PML-LAW-05.02`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-FND-STD-13`; `PCI-PML-STD-04.01`;
+`PCI-PML-STD-05.02`; `PCI-PML-STD-09.01`; `PCI-PML-STD-13.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 5 · KA 5.1 Scope definition and the scope
 baseline; KA 5.4 Scope change, creep and verification/acceptance. Also Domain 4 KA 4.2 breakdown
@@ -2240,7 +2240,7 @@ separated into process requirements; compliance test replaced with a no-residue 
 
 ---
 
-### PCI LAW PCI-PML-LAW-05.02 — Requirements Traceability
+### PCI STANDARD PCI-PML-STD-05.02 — Requirements Traceability
 
 **1. Normative requirement.** A credential holder must maintain traceability from every approved
 requirement to its source, to the work that satisfies it and to the test or acceptance criterion that
@@ -2262,17 +2262,17 @@ item satisfying it; **orphan deliverable** means delivered work satisfying no ap
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-05.02-PR-01` — Every requirement carries a source.** Each approved requirement must
+- **`PCI-PML-STD-05.02-PR-01` — Every requirement carries a source.** Each approved requirement must
   record who raised it, the document or decision it derives from, and its date, so that its continued
   relevance can be tested rather than assumed.
-- **`PCI-PML-LAW-05.02-PR-02` — Bidirectional links maintained.** The credential holder must maintain
+- **`PCI-PML-STD-05.02-PR-02` — Bidirectional links maintained.** The credential holder must maintain
   links in both directions — requirement to work item to test, and back — and must update them when a
   change is approved rather than at the end.
-- **`PCI-PML-LAW-05.02-PR-03` — Orphans reported, not tidied.** At each reporting cycle and at each gate,
+- **`PCI-PML-STD-05.02-PR-03` — Orphans reported, not tidied.** At each reporting cycle and at each gate,
   the credential holder must report the count and identity of orphan requirements and orphan
   deliverables. Resolving an orphan by deleting the requirement, without a change record, does not
   satisfy this requirement.
-- **`PCI-PML-LAW-05.02-PR-04` — Regulatory and safety requirements marked and never silently dropped.**
+- **`PCI-PML-STD-05.02-PR-04` — Regulatory and safety requirements marked and never silently dropped.**
   Requirements deriving from a statutory duty, a licence condition, a safety analysis or a consent must
   be marked as such in the register, and may be removed only by an approved change that names the
   authority permitting the removal.
@@ -2296,7 +2296,7 @@ approved requirement. Only the authority that owns a regulatory, licence or safe
 permit its removal, and never the project.
 
 **10. Independence requirement.** The confirmation that a requirement is proven must be given by a person
-independent of the work that satisfies it, under `PCI-PML-LAW-09.01`. The traceability record itself is
+independent of the work that satisfies it, under `PCI-PML-STD-09.01`. The traceability record itself is
 maintained by the project and reviewed at gates by a competent reviewer independent of the delivery
 organisation where the delegation schedule requires assurance.
 
@@ -2351,8 +2351,8 @@ safety regulation, accessibility law or data-protection law are determined by th
 the regulator, not by the project's register. Obtain local legal and regulatory advice on which
 requirements are non-removable for the specific project.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-07`; `PCI-FND-LAW-12`; `PCI-PML-LAW-05.01`;
-`PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.02`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-06`; `PCI-FND-STD-07`; `PCI-FND-STD-12`; `PCI-PML-STD-05.01`;
+`PCI-PML-STD-09.01`; `PCI-PML-STD-13.02`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 5 · KA 5.2 Requirements elicitation, analysis
 and traceability; KA 5.3 value definition and prioritisation. Also Domain 9 KA 9.3 acceptance and
@@ -2387,7 +2387,7 @@ compliance test replaced with a bidirectional traverse a reviewer performs unaid
 
 ## Domain 6 — Planning, Scheduling and Delivery Flow
 
-### PCI LAW PCI-PML-LAW-06.01 — Schedule Credibility
+### PCI STANDARD PCI-PML-STD-06.01 — Schedule Credibility
 
 **1. Normative requirement.** A credential holder must not issue, endorse or rely on a schedule whose
 logic, durations, constraints or status they know, or ought to know, to misrepresent the achievable
@@ -2410,22 +2410,22 @@ means the condition in which the logic cannot achieve an imposed date.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-06.01-PR-01` — Logic, not constraint, carries the dates.** Completion dates must be
+- **`PCI-PML-STD-06.01-PR-01` — Logic, not constraint, carries the dates.** Completion dates must be
   derived from activity logic and durations. Every hard constraint must be listed with the reason it
   exists and the authority that imposed it, and the credential holder must state the completion date the
   logic produces without it.
-- **`PCI-PML-LAW-06.01-PR-02` — Compression states its mechanism.** Where a duration has been reduced,
+- **`PCI-PML-STD-06.01-PR-02` — Compression states its mechanism.** Where a duration has been reduced,
   the credential holder must state the mechanism — added resource, changed method, changed scope,
   increased overlap — and its cost and risk consequence. A duration reduced with no stated mechanism is
   a target, not a duration, and must be labelled as one.
-- **`PCI-PML-LAW-06.01-PR-03` — Progress is evidenced, not asserted.** Physical or output-based progress
+- **`PCI-PML-STD-06.01-PR-03` — Progress is evidenced, not asserted.** Physical or output-based progress
   must be supported by evidence of the work performed. Progress recorded against an activity with no
   evidence of commencement does not satisfy this requirement.
-- **`PCI-PML-LAW-06.01-PR-04` — Negative float is reported, never absorbed.** Negative float must be
+- **`PCI-PML-STD-06.01-PR-04` — Negative float is reported, never absorbed.** Negative float must be
   reported to the authority the escalation threshold names, with its cause and the options, and must not
   be removed by re-imposing constraints, deleting logic, or extending the imposed date without an
   approved change.
-- **`PCI-PML-LAW-06.01-PR-05` — Status date and baseline version stated on issue.** Every issued schedule
+- **`PCI-PML-STD-06.01-PR-05` — Status date and baseline version stated on issue.** Every issued schedule
   must carry its status date and the control baseline version it is measured against.
 
 **6. Prohibited actions.** Imposing a constraint to produce a required date and presenting the result as
@@ -2509,8 +2509,8 @@ a liquidated-damages position, the acceptable method and the evidential standard
 contract and by the forum, and they differ between jurisdictions and between tribunals. Obtain legal
 advice before a schedule is relied on in a claim.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-02`; `PCI-FND-LAW-13`; `PCI-PML-LAW-04.01`;
-`PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.01`; `PCI-PML-LAW-15.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-02`; `PCI-FND-STD-13`; `PCI-PML-STD-04.01`;
+`PCI-PML-STD-07.01`; `PCI-PML-STD-08.01`; `PCI-PML-STD-15.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 6 · KA 6.1 Planning levels and logic networks;
 KA 6.2 The critical path and float; KA 6.3 Resources, constraints, milestones and rolling wave; KA 6.4
@@ -2550,7 +2550,7 @@ remove-the-constraints reproduction test.
 
 ## Domain 7 — Cost, Resources and Commercial Awareness
 
-### PCI LAW PCI-PML-LAW-07.01 — Cost Stewardship
+### PCI STANDARD PCI-PML-STD-07.01 — Cost Stewardship
 
 **1. Normative requirement.** A credential holder must report the project's cost position — committed,
 incurred, accrued and forecast — on a basis that is complete, current and reconcilable to the
@@ -2574,19 +2574,19 @@ authority the governance plan names.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-07.01-PR-01` — Four elements always present.** Every issued cost position must state
+- **`PCI-PML-STD-07.01-PR-01` — Four elements always present.** Every issued cost position must state
   committed, incurred, accrued and forecast values, and must not omit an element because it is
   incomplete; where an element is estimated, the basis is stated.
-- **`PCI-PML-LAW-07.01-PR-02` — Reconciliation to the ledger.** At the interval the governance sets, the
+- **`PCI-PML-STD-07.01-PR-02` — Reconciliation to the ledger.** At the interval the governance sets, the
   credential holder must reconcile the project cost position to the organisation's financial ledger and
   account for every difference, retaining the reconciliation.
-- **`PCI-PML-LAW-07.01-PR-03` — Forecast method stated and consistent.** Each forecast must state the
+- **`PCI-PML-STD-07.01-PR-03` — Forecast method stated and consistent.** Each forecast must state the
   method used and the assumptions it rests on, and the method must not be changed between periods without
   recording the change, its reason and its effect on the reported figure.
-- **`PCI-PML-LAW-07.01-PR-04` — Contingency and reserve reported separately.** Contingency and management
+- **`PCI-PML-STD-07.01-PR-04` — Contingency and reserve reported separately.** Contingency and management
   reserve must be reported separately from the base cost and from each other, with drawdown recorded
   against the specific risk or change that justified it and the authority that released it.
-- **`PCI-PML-LAW-07.01-PR-05` — Adverse movement reported in the period it is known.** A material adverse
+- **`PCI-PML-STD-07.01-PR-05` — Adverse movement reported in the period it is known.** A material adverse
   movement must be reported in the reporting cycle in which it becomes known, and must not be held for a
   later cycle, netted against an unrealised saving, or absorbed into contingency without a release
   decision.
@@ -2668,8 +2668,8 @@ assets and provisions are measured and what must be disclosed are determined by 
 framework the entity applies and by its auditors, not by a project cost report. **This law states no
 accounting treatment.** Obtain qualified accounting advice for the specific entity and framework.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-07`; `PCI-PML-LAW-04.01`;
-`PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.02`; `PCI-PML-LAW-08.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-FND-STD-07`; `PCI-PML-STD-04.01`;
+`PCI-PML-STD-06.01`; `PCI-PML-STD-07.02`; `PCI-PML-STD-08.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 7 · KA 7.1 Estimating and budgeting; KA 7.2
 The cost baseline, actuals and forecasting; KA 7.3 Earned value: measurement, variances and forecasting.
@@ -2699,7 +2699,7 @@ contingency is proposed to cover a base-cost overrun four weeks before a gate. E
 artefacts establish the completeness of a reported position.
 
 **25. Version and status.** Version 2.0 · **not yet approved** · effective on approval · supersedes
-`PML-LAW-07-01` v1.0, whose subject matter is split between this law and `PCI-PML-LAW-07.02`. Amendment
+`PML-LAW-07-01` v1.0, whose subject matter is split between this law and `PCI-PML-STD-07.02`. Amendment
 note: renumbered and restructured; legislative drafting removed; resource obligations moved out to their
 own law so that one law carries one principal obligation; the four-element completeness rule, ledger
 reconciliation, method consistency, separate reserve reporting and same-cycle adverse reporting separated
@@ -2707,7 +2707,7 @@ into five process requirements.
 
 ---
 
-### PCI LAW PCI-PML-LAW-07.02 — Resource Decisions and the Commitment of People
+### PCI STANDARD PCI-PML-STD-07.02 — Resource Decisions and the Commitment of People
 
 **1. Normative requirement.** A credential holder must not commit a person, a team or a shared resource to
 a project plan without the agreement of the named individual who controls that resource's availability.
@@ -2729,17 +2729,17 @@ period.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-07.02-PR-01` — Named agreement before the plan is issued.** Each resource assumption
+- **`PCI-PML-STD-07.02-PR-01` — Named agreement before the plan is issued.** Each resource assumption
   material to the plan must carry the resource owner's name and a dated agreement to the committed
   availability, obtained before the plan is issued.
-- **`PCI-PML-LAW-07.02-PR-02` — Aggregate demand tested against capacity.** The credential holder must
+- **`PCI-PML-STD-07.02-PR-02` — Aggregate demand tested against capacity.** The credential holder must
   test the plan's total demand on each shared resource against that resource's total committed
   availability across all claims on it, and must report any over-commitment rather than assuming
   resolution.
-- **`PCI-PML-LAW-07.02-PR-03` — Withdrawal is a change, not an adjustment.** Where a committed resource
+- **`PCI-PML-STD-07.02-PR-03` — Withdrawal is a change, not an adjustment.** Where a committed resource
   is withdrawn or reduced, the credential holder must record it, assess the effect through
-  `PCI-PML-LAW-04.01`, and report the consequence, rather than re-planning silently around it.
-- **`PCI-PML-LAW-07.02-PR-04` — Sustained overload is reported.** Where delivery depends on individuals
+  `PCI-PML-STD-04.01`, and report the consequence, rather than re-planning silently around it.
+- **`PCI-PML-STD-07.02-PR-04` — Sustained overload is reported.** Where delivery depends on individuals
   working beyond the hours or duration the organisation's own policy permits, the credential holder must
   report that dependency to the sponsor as a delivery risk with its cause, and must not present the plan
   as achievable without stating it.
@@ -2764,7 +2764,7 @@ The project leader must not resolve a competing claim on another owner's resourc
 
 **10. Independence requirement.** Not applicable to the agreement itself, because the resource owner's
 consent is by definition an interested party's consent to their own resource; independence attaches to
-the portfolio-level capacity test in `PCI-PML-LAW-15.02`, which must be performed by a function
+the portfolio-level capacity test in `PCI-PML-STD-15.02`, which must be performed by a function
 independent of any single competing project.
 
 **11. Materiality or threshold.** This law sets no percentage of a person's time. The organisation's
@@ -2775,7 +2775,7 @@ in the plan requires a recorded agreement.
 *Six-person internal project:* six agreements, one line each, in an email thread the leader retains — and
 the aggregate test is a single check that no one appears on two plans at once.
 *Multi-partner national programme:* resource owners sit in several organisations, the aggregate test runs
-at portfolio level under `PCI-PML-LAW-15.02`, and supplier key personnel are secured contractually rather
+at portfolio level under `PCI-PML-STD-15.02`, and supplier key personnel are secured contractually rather
 than assumed, because a name in a tender is not committed availability.
 
 **12. Exception and waiver.** An exception permitting a plan to be issued with an unagreed material
@@ -2794,7 +2794,7 @@ whose aggregate allocation exceeds their committed availability.
 
 **15. AI prohibition.** An AI system must not commit a person to a plan, agree availability, resolve a
 competing claim, or reallocate people between projects. Where an optimiser produces an allocation, it has
-produced a recommendation, and the decision is a reserved class under `PCI-PML-LAW-01.02-PR-01`.
+produced a recommendation, and the decision is a reserved class under `PCI-PML-STD-01.02-PR-01`.
 
 **16. AI verification.** **Reconciliation plus named approval.** Every AI-produced allocation must be
 reconciled against the recorded owner agreements before it is issued, and each affected resource owner
@@ -2821,8 +2821,8 @@ rights, secondment and agency-worker rules, and health-and-safety duties determi
 required of people, and they differ sharply by jurisdiction. Obtain local legal and human-resources
 advice before planning on extended hours, cross-border deployment or supplier staff substitution.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-11`; `PCI-PML-LAW-06.01`;
-`PCI-PML-LAW-07.01`; `PCI-PML-LAW-12.01`; `PCI-PML-LAW-15.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-11`; `PCI-PML-STD-06.01`;
+`PCI-PML-STD-07.01`; `PCI-PML-STD-12.01`; `PCI-PML-STD-15.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 7 · KA 7.4 Resource economics, procurement
 strategy and cash. Also Domain 6 KA 6.3 resources, constraints, milestones and rolling wave; Domain 12
@@ -2859,7 +2859,7 @@ note: separated so that each law carries one principal obligation.
 
 ## Domain 8 — Risk, Uncertainty and Resilience
 
-### PCI LAW PCI-PML-LAW-08.01 — Risk Escalation
+### PCI STANDARD PCI-PML-STD-08.01 — Risk Escalation
 
 **1. Normative requirement.** A credential holder must escalate a risk whose exposure exceeds the
 escalation threshold the delegation schedule sets, to the named authority that threshold identifies,
@@ -2875,26 +2875,26 @@ risk on a project, programme or portfolio, in every delivery model, including ri
 supplier's scope and risks transferred by contract.
 
 **4. Defined terms.** *escalation threshold* · *material* · *decision owner* · *evidence* · *dependency* ·
-*contingency* (as defined in `PCI-PML-LAW-07.01`). Additionally, **exposure** means the assessed
+*contingency* (as defined in `PCI-PML-STD-07.01`). Additionally, **exposure** means the assessed
 consequence of a risk combined with its assessed likelihood, on the basis the organisation's risk
 framework states; **decision action window** means the remaining duration less the escalation latency,
 expressed as a proportion of the remaining duration.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-08.01-PR-01` — Every risk has one named owner.** Each risk must carry exactly one named
+- **`PCI-PML-STD-08.01-PR-01` — Every risk has one named owner.** Each risk must carry exactly one named
   owner with the authority to act on it; a risk owned by a team, a function or a supplier organisation
   rather than a person does not satisfy this requirement.
-- **`PCI-PML-LAW-08.01-PR-02` — Escalate on threshold, not on comfort.** The credential holder must
+- **`PCI-PML-STD-08.01-PR-02` — Escalate on threshold, not on comfort.** The credential holder must
   escalate when the documented threshold is met, whether or not they expect to resolve the risk, and must
   record the date the threshold was met alongside the date of escalation.
-- **`PCI-PML-LAW-08.01-PR-03` — Escalate with options.** Every escalation must carry the options open to
+- **`PCI-PML-STD-08.01-PR-03` — Escalate with options.** Every escalation must carry the options open to
   the receiving authority, their consequences, and the date after which each option closes. An escalation
   that reports a problem with no option set does not satisfy this requirement.
-- **`PCI-PML-LAW-08.01-PR-04` — Test the action window.** Before escalating, the credential holder must
+- **`PCI-PML-STD-08.01-PR-04` — Test the action window.** Before escalating, the credential holder must
   state whether the receiving authority can still act in time, and where the window is negative must say
   so on the face of the escalation and route it out of cycle.
-- **`PCI-PML-LAW-08.01-PR-05` — Contingency is drawn against a registered risk.** Contingency must be
+- **`PCI-PML-STD-08.01-PR-05` — Contingency is drawn against a registered risk.** Contingency must be
   drawn only against a risk recorded in the register before the drawdown, with the releasing authority
   named.
 
@@ -2977,10 +2977,10 @@ auditor or a market are set by law and by licence conditions and carry their own
 shorter than any internal threshold. Obtain local legal advice on mandatory reporting duties attaching to
 the specific project and sector.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent duty to escalate); `PCI-FND-LAW-05`;
-`PCI-FND-LAW-02`; `PCI-PML-LAW-03.02`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.02`;
-`PCI-PML-LAW-12.02`; `PCI-PML-LAW-15.01`.
-**What this law adds to `PCI-FND-LAW-11`:** the foundational law creates the duty to escalate a
+**19. Related PCI Laws.** `PCI-FND-STD-11` (the parent duty to escalate); `PCI-FND-STD-05`;
+`PCI-FND-STD-02`; `PCI-PML-STD-03.02`; `PCI-PML-STD-07.01`; `PCI-PML-STD-08.02`;
+`PCI-PML-STD-12.02`; `PCI-PML-STD-15.01`.
+**What this law adds to `PCI-FND-STD-11`:** the foundational law creates the duty to escalate a
 material misstatement. This law
 requires **one named risk owner**, escalation **on threshold rather than on expectation of resolution**,
 an **option set with closing dates**, an explicit **action-window test**, and **contingency drawn only
@@ -3023,7 +3023,7 @@ against two recorded dates.
 
 ---
 
-### PCI LAW PCI-PML-LAW-08.02 — Issue Management
+### PCI STANDARD PCI-PML-STD-08.02 — Issue Management
 
 **1. Normative requirement.** A credential holder must record every issue affecting delivery with a single
 named owner, a required resolution date and a stated consequence of non-resolution, and must not close an
@@ -3036,7 +3036,7 @@ discovers its issues through their consequences.
 
 **3. Scope.** Every credential holder identifying, owning, resolving, reporting or assuring issues on a
 project, programme or portfolio, including issues raised by suppliers, by users and by assurance, and
-including issues escalated from a concern under `PCI-PML-LAW-12.02`.
+including issues escalated from a concern under `PCI-PML-STD-12.02`.
 
 **4. Defined terms.** *material* · *decision owner* · *escalation threshold* · *evidence* · *dependency* ·
 *acceptance*. Additionally, **issue** means a risk that has occurred, or a present condition adversely
@@ -3045,18 +3045,18 @@ accepted, the recorded acceptance of its consequence by the authority entitled t
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-08.02-PR-01` — Owner, date and consequence on entry.** Every issue must carry, at the
+- **`PCI-PML-STD-08.02-PR-01` — Owner, date and consequence on entry.** Every issue must carry, at the
   point of recording, one named owner, a required resolution date and the stated consequence if it is not
   resolved by that date.
-- **`PCI-PML-LAW-08.02-PR-02` — Ageing drives escalation.** Issues must be aged against their required
+- **`PCI-PML-STD-08.02-PR-02` — Ageing drives escalation.** Issues must be aged against their required
   resolution dates, and an issue past its date by the margin the escalation threshold states must be
   escalated to the named authority.
-- **`PCI-PML-LAW-08.02-PR-03` — Closure states the resolution.** An issue may be closed only with a
+- **`PCI-PML-STD-08.02-PR-03` — Closure states the resolution.** An issue may be closed only with a
   recorded statement of how it was resolved or, where the consequence was accepted, by whom and on what
   basis. Closure with no resolution statement does not satisfy this requirement.
-- **`PCI-PML-LAW-08.02-PR-04` — Recurrence is analysed, not re-logged.** Where the same issue recurs
+- **`PCI-PML-STD-08.02-PR-04` — Recurrence is analysed, not re-logged.** Where the same issue recurs
   within the period the governance sets, the credential holder must record it as a recurrence and route
-  it to root-cause analysis under `PCI-PML-LAW-09.02`, rather than opening an unconnected entry.
+  it to root-cause analysis under `PCI-PML-STD-09.02`, rather than opening an unconnected entry.
 
 **6. Prohibited actions.** Closing an issue because it went quiet. Recording an issue with no owner or no
 date "pending assignment" beyond the period the governance allows. Re-logging a recurring issue as new.
@@ -3098,7 +3098,7 @@ exception permits closure by silence.
 **13. Escalation trigger.** An issue past its required date by the documented margin. An issue whose owner
 declines ownership. A recurring issue at its second recurrence within the documented window. An issue
 whose consequence falls on a party that has not accepted it. An issue arising from a concern raised under
-`PCI-PML-LAW-12.02` that has not been actioned.
+`PCI-PML-STD-12.02` that has not been actioned.
 
 **14. AI application.** AI may cluster issue text to detect recurrence, age the register and flag overdue
 items, propose owners from the routing history for human confirmation, detect issues with no
@@ -3131,8 +3131,8 @@ breaches, environmental events, regulatory breaches — with their own recipient
 override any internal register. Obtain local legal advice on mandatory incident reporting for the sector
 and jurisdiction.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-FND-LAW-15`; `PCI-PML-LAW-08.01`;
-`PCI-PML-LAW-09.01`; `PCI-PML-LAW-09.02`; `PCI-PML-LAW-12.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-FND-STD-15`; `PCI-PML-STD-08.01`;
+`PCI-PML-STD-09.01`; `PCI-PML-STD-09.02`; `PCI-PML-STD-12.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 8 · KA 8.1 topic on issues as occurred risks;
 KA 8.4 crisis leadership. Also Domain 9 KA 9.3 nonconformance and root-cause analysis; Domain 4 KA 4.4
@@ -3168,7 +3168,7 @@ ungoverned. Amendment note: none.
 ---
 ## Domain 9 — Quality, Assurance and Continuous Improvement
 
-### PCI LAW PCI-PML-LAW-09.01 — Quality Acceptance
+### PCI STANDARD PCI-PML-STD-09.01 — Quality Acceptance
 
 **1. Normative requirement.** A credential holder must not record a deliverable as accepted unless a
 named acceptance authority has decided, against the version-identified acceptance criteria set before
@@ -3190,19 +3190,19 @@ a date.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-09.01-PR-01` — Criteria version-identified and pre-dated.** The acceptance criteria
+- **`PCI-PML-STD-09.01-PR-01` — Criteria version-identified and pre-dated.** The acceptance criteria
   applied must carry a version identifier and an agreement date earlier than the deliverable's production
   start, and the acceptance record must cite that version.
-- **`PCI-PML-LAW-09.01-PR-02` — Acceptance is a positive act.** Acceptance must be recorded as a dated
+- **`PCI-PML-STD-09.01-PR-02` — Acceptance is a positive act.** Acceptance must be recorded as a dated
   decision by the named acceptance authority. Use of the deliverable, payment against it, and the expiry
   of a review period must not be recorded as acceptance.
-- **`PCI-PML-LAW-09.01-PR-03` — Nonconformities carried, not lost.** Every nonconformity known at
+- **`PCI-PML-STD-09.01-PR-03` — Nonconformities carried, not lost.** Every nonconformity known at
   acceptance must be recorded with a named owner, a due date and the consequence of non-closure, and must
   be reported until closed.
-- **`PCI-PML-LAW-09.01-PR-04` — The receiving party is in the decision.** Where a deliverable will be
+- **`PCI-PML-STD-09.01-PR-04` — The receiving party is in the decision.** Where a deliverable will be
   operated, maintained or used by an organisation other than the project, a named representative of that
   organisation must be recorded in the acceptance decision.
-- **`PCI-PML-LAW-09.01-PR-05` — Acceptance evidence retrievable.** The test, inspection or review
+- **`PCI-PML-STD-09.01-PR-05` — Acceptance evidence retrievable.** The test, inspection or review
   evidence cited in an acceptance record must be retained and retrievable for the retention period the
   organisation sets, and the acceptance record must reference it specifically enough to retrieve it.
 
@@ -3234,7 +3234,7 @@ independence that a small structure cannot.
 governance sets the acceptance authority by deliverable class, the classes requiring independent test,
 the retention period and the tolerance for carried nonconformities; this law requires that these exist
 and are applied. A nonconformity bearing on safety, a licence condition or a statutory duty is not
-carried under any tolerance — it is a mandatory precondition under `PCI-PML-LAW-16.01`.
+carried under any tolerance — it is a mandatory precondition under `PCI-PML-STD-16.01`.
 *Six-person internal project:* the criteria are five lines per deliverable agreed at kick-off, acceptance
 is a dated line in the log signed by the receiving manager, and the evidence is the test output the team
 produced anyway.
@@ -3286,8 +3286,8 @@ survive it are contractual and statutory questions determined by the governing l
 acceptance is regulated separately by a safety, health or licensing authority. Obtain legal advice before
 relying on an internal acceptance record in a commercial or regulatory position.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.03`;
-`PCI-PML-LAW-05.01`; `PCI-PML-LAW-05.02`; `PCI-PML-LAW-16.01`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-PML-STD-01.03`;
+`PCI-PML-STD-05.01`; `PCI-PML-STD-05.02`; `PCI-PML-STD-16.01`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 9 · KA 9.1 Quality planning; KA 9.2 Assurance
 and control; KA 9.3 Acceptance, nonconformance and root-cause analysis. Also Domain 5 KA 5.4
@@ -3323,7 +3323,7 @@ requirements; compliance test replaced with a five-part retrieval test.
 
 ---
 
-### PCI LAW PCI-PML-LAW-09.02 — Lessons Learned and Organisational Retention
+### PCI STANDARD PCI-PML-STD-09.02 — Lessons Learned and Organisational Retention
 
 **1. Normative requirement.** A credential holder must convert each lesson accepted from a review into a
 change to a named standing artefact — a process, a checklist, a template, an estimating basis, a
@@ -3345,17 +3345,17 @@ accepted as valid.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-09.02-PR-01` — Each accepted lesson names its artefact.** Every accepted lesson must
+- **`PCI-PML-STD-09.02-PR-01` — Each accepted lesson names its artefact.** Every accepted lesson must
   name the standing artefact it changes, the owner of that artefact and the date by which the change is
   made. A lesson recorded with no target artefact does not satisfy this requirement.
-- **`PCI-PML-LAW-09.02-PR-02` — Review separated from assessment.** A post-project or post-implementation
+- **`PCI-PML-STD-09.02-PR-02` — Review separated from assessment.** A post-project or post-implementation
   review must be conducted separately from any individual performance assessment, and its record must not
   be used as evidence in one. Where the two are combined, the review's output is not evidence of
   compliance with this law.
-- **`PCI-PML-LAW-09.02-PR-03` — Root cause where a defect recurs.** Where a defect, issue or
+- **`PCI-PML-STD-09.02-PR-03` — Root cause where a defect recurs.** Where a defect, issue or
   nonconformity recurs within the window the governance sets, the credential holder must commission a
   root-cause analysis and must record its conclusion and the artefact change it produces.
-- **`PCI-PML-LAW-09.02-PR-04` — Retrieval at the point of decision.** The credential holder must record
+- **`PCI-PML-STD-09.02-PR-04` — Retrieval at the point of decision.** The credential holder must record
   where each changed artefact is held and how a future project reaches it at the moment it makes the
   corresponding decision. A lesson retrievable only by searching a repository does not satisfy this
   requirement.
@@ -3435,8 +3435,8 @@ investigation or a public inquiry, and privilege rules differ by jurisdiction. O
 conducting a review into an event with legal or regulatory exposure, and never let that advice become a
 reason to hold no review.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-12`; `PCI-FND-LAW-02`; `PCI-PML-LAW-08.02`;
-`PCI-PML-LAW-09.01`; `PCI-PML-LAW-12.02`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-12`; `PCI-FND-STD-02`; `PCI-PML-STD-08.02`;
+`PCI-PML-STD-09.01`; `PCI-PML-STD-12.02`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 9 · KA 9.4 Lessons learned, continuous
 improvement, data quality and AI-output quality · topic 9.4.1 lessons that change behaviour. Also
@@ -3473,7 +3473,7 @@ point of decision added as an express process requirement.
 
 ## Domain 10 — Procurement, Contracts and Supply Networks
 
-### PCI LAW PCI-PML-LAW-10.01 — Procurement Fairness
+### PCI STANDARD PCI-PML-STD-10.01 — Procurement Fairness
 
 **1. Normative requirement.** A credential holder must evaluate every tender, bid or proposal against the
 evaluation criteria and weightings published to bidders before submissions were received, and must not
@@ -3496,21 +3496,21 @@ individual scores into a panel position.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-10.01-PR-01` — Criteria and weightings published before submission.** The evaluation
+- **`PCI-PML-STD-10.01-PR-01` — Criteria and weightings published before submission.** The evaluation
   criteria and their weightings must be published to all bidders before the submission deadline, and must
   not be changed after it except by an addendum issued to all bidders with an extended deadline.
-- **`PCI-PML-LAW-10.01-PR-02` — Individual scores recorded before moderation.** Each evaluator must
+- **`PCI-PML-STD-10.01-PR-02` — Individual scores recorded before moderation.** Each evaluator must
   record their own score and its written rationale against each published criterion before seeing any
   other evaluator's score, and those individual records must be retained.
-- **`PCI-PML-LAW-10.01-PR-03` — Moderation changes are reasoned and retained.** Where moderation changes
+- **`PCI-PML-STD-10.01-PR-03` — Moderation changes are reasoned and retained.** Where moderation changes
   a score, the change and its reason must be recorded against the individual score it replaced. A
   moderated score with no recorded reason does not satisfy this requirement.
-- **`PCI-PML-LAW-10.01-PR-04` — Information symmetry.** Any clarification, correction or additional
+- **`PCI-PML-STD-10.01-PR-04` — Information symmetry.** Any clarification, correction or additional
   information given to one bidder that could affect a submission must be given to all bidders, and the
   record must show what was issued, to whom and when.
-- **`PCI-PML-LAW-10.01-PR-05` — Panel interests cleared before evaluation.** Every panel member must have
-  a declaration or a nil return recorded under `PCI-PML-LAW-01.03-PR-03` before evaluation begins, and a
-  member with an interest in a bidder must be excluded under `PCI-PML-LAW-01.03-PR-07`.
+- **`PCI-PML-STD-10.01-PR-05` — Panel interests cleared before evaluation.** Every panel member must have
+  a declaration or a nil return recorded under `PCI-PML-STD-01.03-PR-03` before evaluation begins, and a
+  member with an interest in a bidder must be excluded under `PCI-PML-STD-01.03-PR-07`.
 
 **6. Prohibited actions.** Introducing an unpublished criterion, including "fit", "confidence" or
 "deliverability", unless it was published. Adjusting weightings after submissions. Moderating to a
@@ -3536,7 +3536,7 @@ project alone.
 above. The moderation chair must be independent of the requesting project where the delegation schedule
 requires it. Assurance of the procurement must be provided by a competent reviewer independent of the
 panel and of the requesting project, and must satisfy the name-matching test in
-`PCI-PML-LAW-01.03-PR-06`.
+`PCI-PML-STD-01.03-PR-06`.
 
 **11. Materiality or threshold.** This law states no value threshold and no minimum bidder count. The
 organisation's governance — and, in the public sector, the applicable procurement regime — sets the
@@ -3571,7 +3571,7 @@ issue.
 **15. AI prohibition.** An AI system must not score a submission on a qualitative criterion in place of a
 named evaluator, decide an award, moderate scores, or determine that a bidder is non-compliant. Where AI
 produces a ranking, it has produced a recommendation, and the award is a reserved decision class under
-`PCI-PML-LAW-01.02-PR-01`.
+`PCI-PML-STD-01.02-PR-01`.
 
 **16. AI verification.** **Independent recomputation plus source tracing.** Every weighted score computed
 with AI assistance must be recomputed by hand before the recommendation is issued. Every extracted
@@ -3602,8 +3602,8 @@ standstill periods, debriefs, remedies and record-keeping, and breach can void a
 liability. **This law does not state any of those rules and compliance with it is not compliance with
 them.** Obtain local legal advice before running a regulated procurement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08`; `PCI-FND-LAW-09`; `PCI-FND-LAW-01`; `PCI-PML-LAW-01.03`;
-`PCI-PML-LAW-03.02`; `PCI-PML-LAW-04.01`; `PCI-PML-LAW-09.01`.
+**19. Related PCI Laws.** `PCI-FND-STD-08`; `PCI-FND-STD-09`; `PCI-FND-STD-01`; `PCI-PML-STD-01.03`;
+`PCI-PML-STD-03.02`; `PCI-PML-STD-04.01`; `PCI-PML-STD-09.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 10 · KA 10.1 Make-or-buy and the procurement
 lifecycle; KA 10.2 Tendering and evaluation; KA 10.3 Contract strategy and supplier governance; KA 10.4
@@ -3638,7 +3638,7 @@ been approached about a role with a bidder.
 **25. Version and status.** Version 2.0 · **not yet approved** · effective on approval · supersedes
 `PML-LAW-10-01` v1.0. Amendment note: renumbered and restructured; legislative drafting removed;
 individual-scores-before-moderation, reasoned moderation changes, information symmetry and panel-interest
-clearance separated into process requirements; the link to `PCI-PML-LAW-01.03` made explicit, which is the
+clearance separated into process requirements; the link to `PCI-PML-STD-01.03` made explicit, which is the
 change that gives this law an enforceable rule about who is barred from scoring; consequence field
 corrected to
 state expressly what PCI cannot do.
@@ -3647,7 +3647,7 @@ state expressly what PCI cannot do.
 
 ## Domain 11 — Stakeholders, Communication and Influence
 
-### PCI LAW PCI-PML-LAW-11.01 — Stakeholder Transparency
+### PCI STANDARD PCI-PML-STD-11.01 — Stakeholder Transparency
 
 **1. Normative requirement.** A credential holder must not issue, endorse or allow to stand a report or
 communication about delivery status that omits a material adverse fact known to them at the time of
@@ -3671,21 +3671,21 @@ report** means any recurring or ad hoc statement of delivery position issued to 
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-11.01-PR-01` — Adverse facts appear in the same document as the good ones.** A material
+- **`PCI-PML-STD-11.01-PR-01` — Adverse facts appear in the same document as the good ones.** A material
   adverse fact must appear in the report itself, not only in an appendix, a footnote, a verbal briefing or
   a separate document sent to a narrower list.
-- **`PCI-PML-LAW-11.01-PR-02` — Status colours are defined and derived.** Where a report uses a rating,
+- **`PCI-PML-STD-11.01-PR-02` — Status colours are defined and derived.** Where a report uses a rating,
   colour or index, its derivation rule must be documented and the reported value must follow it. A rating
   set by judgement against a documented rule must record the override, its reason and its author.
-- **`PCI-PML-LAW-11.01-PR-03` — One version of status.** The credential holder must not issue different
+- **`PCI-PML-STD-11.01-PR-03` — One version of status.** The credential holder must not issue different
   status positions to different audiences for the same period; where audiences require different depth,
   the underlying position must be identical and the difference must be one of detail only.
-- **`PCI-PML-LAW-11.01-PR-04` — Correction of an issued report.** On discovering that an issued report was
+- **`PCI-PML-STD-11.01-PR-04` — Correction of an issued report.** On discovering that an issued report was
   materially misleading, the credential holder must issue a correction to every recipient of the original,
   within the time the escalation threshold states.
-- **`PCI-PML-LAW-11.01-PR-05` — Refusal is recorded.** Where the credential holder is instructed to issue
+- **`PCI-PML-STD-11.01-PR-05` — Refusal is recorded.** Where the credential holder is instructed to issue
   a report they consider materially misleading, they must record the instruction, record their objection
-  in writing, and escalate under `PCI-FND-LAW-11`; they must not issue it in their own name.
+  in writing, and escalate under `PCI-FND-STD-11`; they must not issue it in their own name.
 
 **6. Prohibited actions.** Removing an adverse item because a decision on it is expected shortly. Reporting
 a rating that the documented rule does not produce, without recording the override. Briefing the sponsor
@@ -3762,10 +3762,10 @@ prospectus and market-abuse rules, grant-condition reporting, public-inquiry dut
 threshold for a legally material statement is not the same as the professional one used here. Obtain legal
 advice before any statement about delivery status is made outside the organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent escalation obligation); `PCI-FND-LAW-02`;
-`PCI-FND-LAW-15`; `PCI-FND-LAW-14`; `PCI-PML-LAW-06.01`; `PCI-PML-LAW-07.01`; `PCI-PML-LAW-08.01`;
-`PCI-PML-LAW-12.01`.
-**What this law adds to `PCI-FND-LAW-11`:** the foundational law requires a material misstatement to
+**19. Related PCI Laws.** `PCI-FND-STD-11` (the parent escalation obligation); `PCI-FND-STD-02`;
+`PCI-FND-STD-15`; `PCI-FND-STD-14`; `PCI-PML-STD-06.01`; `PCI-PML-STD-07.01`; `PCI-PML-STD-08.01`;
+`PCI-PML-STD-12.01`.
+**What this law adds to `PCI-FND-STD-11`:** the foundational law requires a material misstatement to
 be escalated. This law adds the delivery-specific mechanics by which honest figures produce a
 dishonest
 picture — **same-document disclosure**, a **documented rating derivation with recorded overrides**, **one
@@ -3809,7 +3809,7 @@ performed from source records.
 
 ## Domain 12 — Leadership, Teams and Organisational Behaviour
 
-### PCI LAW PCI-PML-LAW-12.01 — Leadership Conduct
+### PCI STANDARD PCI-PML-STD-12.01 — Leadership Conduct
 
 **1. Normative requirement.** A credential holder must not use their authority to cause another person to
 prepare, sign, present or withhold a professional statement that the person has told them, or has
@@ -3834,21 +3834,21 @@ holds.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-12.01-PR-01` — Overrides are recorded in writing.** Where a credential holder issues a
+- **`PCI-PML-STD-12.01-PR-01` — Overrides are recorded in writing.** Where a credential holder issues a
   professional statement different from the preparer's position, they must record the change, their
   reason and their own name, and must not present the result as the preparer's position.
-- **`PCI-PML-LAW-12.01-PR-02` — The preparer's position travels with the output.** The preparer must be
+- **`PCI-PML-STD-12.01-PR-02` — The preparer's position travels with the output.** The preparer must be
   able to record their own position, and that record must accompany the output to the decision-maker.
   Removing, summarising away or declining to transmit a preparer's recorded position does not satisfy
   this requirement.
-- **`PCI-PML-LAW-12.01-PR-03` — Attribution is accurate.** Analysis, drafting and professional
+- **`PCI-PML-STD-12.01-PR-03` — Attribution is accurate.** Analysis, drafting and professional
   conclusions must be attributed to the person who produced them, and a credential holder must not sign as
   preparer, author or reviewer of work they did not perform.
-- **`PCI-PML-LAW-12.01-PR-04` — Assessment against criteria set in advance.** Where a credential holder
+- **`PCI-PML-STD-12.01-PR-04` — Assessment against criteria set in advance.** Where a credential holder
   contributes to a performance assessment of a team member, the assessment must be recorded against
   criteria set before the period assessed. An assessment altered after the person raised a concern is
-  subject to `PCI-PML-LAW-12.02-PR-04`.
-- **`PCI-PML-LAW-12.01-PR-05` — First adverse report acknowledged in writing.** A material adverse fact
+  subject to `PCI-PML-STD-12.02-PR-04`.
+- **`PCI-PML-STD-12.01-PR-05` — First adverse report acknowledged in writing.** A material adverse fact
   reported to the credential holder by a team member must be acknowledged in writing within the time the
   governance sets, with a recorded statement of what will be done about it and by whom.
 
@@ -3865,7 +3865,7 @@ reports with their response statements and dates.
 
 **8. Responsible role.** The named credential holder exercising the authority. Where the instruction comes
 from above the credential holder, the credential holder's obligation is to record it and escalate under
-`PCI-FND-LAW-11`, not to transmit it.
+`PCI-FND-STD-11`, not to transmit it.
 
 **9. Approval authority.** A credential holder may override a professional statement within their own
 authority and must record it. They must not approve the removal of the preparer's recorded position; only
@@ -3932,8 +3932,8 @@ regulated professions, statutory duties govern what may be required of a profess
 they have when they refuse. Obtain local legal and human-resources advice before acting on an override
 dispute involving an employee, a contractor or a regulated professional.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-13`; `PCI-FND-LAW-01`; `PCI-FND-LAW-10`; `PCI-FND-LAW-11`;
-`PCI-PML-LAW-11.01`; `PCI-PML-LAW-12.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-13`; `PCI-FND-STD-01`; `PCI-FND-STD-10`; `PCI-FND-STD-11`;
+`PCI-PML-STD-11.01`; `PCI-PML-STD-12.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 12 · KA 12.1 Leadership theories in practice and
 emotional intelligence; KA 12.3 Delegation, coaching and difficult conversations; KA 12.4 Remote and
@@ -3974,7 +3974,7 @@ person's professional statement, supported by five process requirements each of 
 
 ---
 
-### PCI LAW PCI-PML-LAW-12.02 — Route to Raise a Concern and Freedom from Detriment
+### PCI STANDARD PCI-PML-STD-12.02 — Route to Raise a Concern and Freedom from Detriment
 
 **1. Normative requirement.** A credential holder leading delivery must establish, publish and operate a
 route by which any person working on or for the project may raise a concern to a named recipient who is
@@ -4005,34 +4005,34 @@ review in `PR-04`.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-12.02-PR-01` — A published route with named recipients.** The credential holder must
+- **`PCI-PML-STD-12.02-PR-01` — A published route with named recipients.** The credential holder must
   publish, to everyone working on or for the project, a route naming **at least two** recipients, the
   method of reaching each, what happens after a concern is raised, and the time within which a response is
   given. A route that names a role with no person, or that exists only in a policy nobody on the project
   has been given, does not satisfy this requirement.
-- **`PCI-PML-LAW-12.02-PR-02` — The bypass property.** For every person working on the project, at least
+- **`PCI-PML-STD-12.02-PR-02` — The bypass property.** For every person working on the project, at least
   one published recipient must be a person who is neither their line manager, nor in their reporting line,
   nor — where the concern is about the project leader — the project leader. The credential holder must be
   able to demonstrate this property person by person, and must add a recipient where it fails.
-- **`PCI-PML-LAW-12.02-PR-03` — A concern register with mandatory fields.** Every concern raised through
+- **`PCI-PML-STD-12.02-PR-03` — A concern register with mandatory fields.** Every concern raised through
   the route must be recorded with: the date raised; the route used; whether the subject of the concern was
   a recipient of it (which must be recorded, and must be "no"); the substantive response given; the
   decision taken; the date closed; and the name of the person who responded. An entry missing any field is
   not a compliant record.
-- **`PCI-PML-LAW-12.02-PR-04` — No detriment, and any act resembling one is justified and reviewed.** The
+- **`PCI-PML-STD-12.02-PR-04` — No detriment, and any act resembling one is justified and reviewed.** The
   credential holder must not subject a person to detriment for raising a concern. Where an act meeting the
   definition of *detriment* falls on a person who raised a concern within the documented lookback window,
   the act must not take effect until: a written justification exists stating the grounds and the evidence;
   the decision is taken by a person who is **not** the subject of the concern; and a competent reviewer
   independent of both parties has reviewed the justification and recorded their conclusion.
-- **`PCI-PML-LAW-12.02-PR-05` — Anonymity is not defeated.** The credential holder must not attempt, and
+- **`PCI-PML-STD-12.02-PR-05` — Anonymity is not defeated.** The credential holder must not attempt, and
   must not permit any person or system to attempt, to identify the author of an anonymous concern, and
   must not use monitoring, communications analysis or people analytics to identify or profile people who
   raise concerns.
-- **`PCI-PML-LAW-12.02-PR-06` — The countable indicator is reported.** Each reporting period the credential
+- **`PCI-PML-STD-12.02-PR-06` — The countable indicator is reported.** Each reporting period the credential
   holder must report the proportion of issues in the period that were **discovered by assurance, testing or
   audit** rather than **reported by the team**, and must treat a sustained rise in that proportion as an
-  issue under `PCI-PML-LAW-08.02` with a named owner. This is a count drawn from records the project
+  issue under `PCI-PML-STD-08.02` with a named owner. This is a count drawn from records the project
   already produces, and it is the one indicator of reporting health that does not depend on anybody's
   self-report.
 
@@ -4136,10 +4136,10 @@ who may receive a report, how it must be handled, what records may be kept and f
 local legal advice before establishing a concern route, an anonymous channel, a register or any monitoring
 arrangement**, and where the applicable regime imposes a higher obligation, that regime governs.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-11` (the parent duty to escalate); `PCI-FND-LAW-01`;
-`PCI-FND-LAW-09`; `PCI-PML-LAW-08.02`; `PCI-PML-LAW-09.02`; `PCI-PML-LAW-12.01`;
-`PCI-PML-LAW-14.01`.
-**What this law adds to `PCI-FND-LAW-11`:** the foundational law creates a duty to escalate, which
+**19. Related PCI Laws.** `PCI-FND-STD-11` (the parent duty to escalate); `PCI-FND-STD-01`;
+`PCI-FND-STD-09`; `PCI-PML-STD-08.02`; `PCI-PML-STD-09.02`; `PCI-PML-STD-12.01`;
+`PCI-PML-STD-14.01`.
+**What this law adds to `PCI-FND-STD-11`:** the foundational law creates a duty to escalate, which
 binds the person who holds the information. This law creates the **conditions under which they can
 discharge it** —
 a named recipient outside the line of the person concerned, protection from detriment tested by an
@@ -4202,7 +4202,7 @@ by documenting a fortnight; element 11 now makes the law's own default the floor
 
 ## Domain 13 — Agile, Adaptive and Hybrid Delivery
 
-### PCI LAW PCI-PML-LAW-13.01 — Governance of Adaptive Delivery
+### PCI STANDARD PCI-PML-STD-13.01 — Governance of Adaptive Delivery
 
 **1. Normative requirement.** A credential holder using an adaptive or hybrid delivery approach must
 operate governance that produces the same decision rights, evidence and accountability as a predictive
@@ -4224,21 +4224,21 @@ decision to make an increment available to users.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-13.01-PR-01` — Decision rights mapped to adaptive artefacts.** The credential holder must
+- **`PCI-PML-STD-13.01-PR-01` — Decision rights mapped to adaptive artefacts.** The credential holder must
   record which adaptive artefact or event carries each decision class in the delegation schedule, so that
   every class has a location. A class with no location is governed by the predictive route until one is
   recorded.
-- **`PCI-PML-LAW-13.01-PR-02` — The value envelope is stated.** The product owner's value envelope must be
+- **`PCI-PML-STD-13.01-PR-02` — The value envelope is stated.** The product owner's value envelope must be
   documented and approved by the sponsor, and decisions exceeding it must escalate within the latency the
   delegation schedule states.
-- **`PCI-PML-LAW-13.01-PR-03` — Release decisions carry acceptance and evidence.** A release decision must
-  satisfy `PCI-PML-LAW-09.01`, and the increment's acceptance evidence must be retained. Iterative
+- **`PCI-PML-STD-13.01-PR-03` — Release decisions carry acceptance and evidence.** A release decision must
+  satisfy `PCI-PML-STD-09.01`, and the increment's acceptance evidence must be retained. Iterative
   delivery does not reduce the evidence requirement; it changes its cadence.
-- **`PCI-PML-LAW-13.01-PR-04` — Adaptive metrics are defined and not gamed.** Where flow, throughput,
+- **`PCI-PML-STD-13.01-PR-04` — Adaptive metrics are defined and not gamed.** Where flow, throughput,
   cycle-time or velocity measures are reported to governance, their definition must be documented, applied
   consistently, and reported with the work-in-progress position, so that a rising throughput achieved by
   starting more work is visible as such.
-- **`PCI-PML-LAW-13.01-PR-05` — Framework adoption is a recorded choice.** Where a published adaptive
+- **`PCI-PML-STD-13.01-PR-05` — Framework adoption is a recorded choice.** Where a published adaptive
   framework is adopted, the credential holder must record which framework, which parts of it are adopted,
   and which are not — because adoption is the whole of such a framework's force and an unrecorded partial
   adoption is unauditable.
@@ -4263,8 +4263,8 @@ recorded as the product owner; where a committee holds the ordering right in fac
 and the product owner is named as a proxy.
 
 **10. Independence requirement.** Acceptance of an increment must be recorded by a person independent of
-its production under `PCI-PML-LAW-09.01`. Assurance of an adaptive delivery must be provided by a competent
-reviewer independent of the team, and must satisfy `PCI-PML-LAW-01.03-PR-06` where that reviewer has
+its production under `PCI-PML-STD-09.01`. Assurance of an adaptive delivery must be provided by a competent
+reviewer independent of the team, and must satisfy `PCI-PML-STD-01.03-PR-06` where that reviewer has
 contributed to the team's ways of working.
 
 **11. Materiality or threshold.** This law states no envelope value, no iteration length and no
@@ -4283,7 +4283,7 @@ together as though they were comparable — which they are not.
 approved only by the release authority, only where the missing evidence is identified item by item with
 owners and dates, and only where the release is reversible or the residual risk is accepted by the party
 bearing it. No exception permits a decision class to have no recorded location. **This exception does not
-reach a mandatory precondition.** Where the release is a release into operational use, `PCI-PML-LAW-16.01`
+reach a mandatory precondition.** Where the release is a release into operational use, `PCI-PML-STD-16.01`
 applies to it, and its element 12 permits no exception, waiver, dispensation or deferral in respect of a
 gate-block item — an iterative delivery model changes the cadence of the release, not the status of a
 safety case, a licence or a statutory notification.
@@ -4327,8 +4327,8 @@ who records which they did.
 agreed, when payment is due and what has been accepted that are determined by the governing law of the
 contract. Obtain legal advice before adopting an outcome-based or capacity-based contract structure.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-04`; `PCI-PML-LAW-03.01`;
-`PCI-PML-LAW-03.02`; `PCI-PML-LAW-05.01`; `PCI-PML-LAW-09.01`; `PCI-PML-LAW-13.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-FND-STD-04`; `PCI-PML-STD-03.01`;
+`PCI-PML-STD-03.02`; `PCI-PML-STD-05.01`; `PCI-PML-STD-09.01`; `PCI-PML-STD-13.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 13 · KA 13.1 Agile principles and product
 ownership; KA 13.2 Backlogs, iteration planning, flow and Kanban; KA 13.3 Scaling considerations and hybrid
@@ -4364,12 +4364,12 @@ delivery is governed.
 decision-rights mapping, value envelope, release evidence, metric integrity and framework-adoption record
 separated into five process requirements; the Scrum Guide's characterisation corrected to state expressly
 that adoption is the whole of its force. **Stage 9 amendment:** element 12's release exception overlapped
-`PCI-PML-LAW-16.01`, whose element 12 admits no exception at all in respect of a mandatory precondition;
+`PCI-PML-STD-16.01`, whose element 12 admits no exception at all in respect of a mandatory precondition;
 element 12 now states that the exception does not reach one.
 
 ---
 
-### PCI LAW PCI-PML-LAW-13.02 — Product and Project Accountability
+### PCI STANDARD PCI-PML-STD-13.02 — Product and Project Accountability
 
 **1. Normative requirement.** A credential holder must ensure that, for every product or service being
 delivered, exactly one named individual holds the ordering right and exactly one named individual holds
@@ -4392,20 +4392,20 @@ fact exercised elsewhere.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-13.02-PR-01` — Both roles named, and distinguished.** The record must name the individual
+- **`PCI-PML-STD-13.02-PR-01` — Both roles named, and distinguished.** The record must name the individual
   holding the ordering right and the individual holding delivery accountability, and must state what each
   decides. Naming one person for both is permitted only where the record says so expressly and the sponsor
   has approved it.
-- **`PCI-PML-LAW-13.02-PR-02` — Proxy arrangements are disclosed.** Where the ordering right is in fact
+- **`PCI-PML-STD-13.02-PR-02` — Proxy arrangements are disclosed.** Where the ordering right is in fact
   exercised by a committee or by a person other than the named product owner, the credential holder must
   record that the named holder is a proxy and identify where the authority actually sits.
-- **`PCI-PML-LAW-13.02-PR-03` — Refusals are recorded.** The product owner's decisions not to do work must
+- **`PCI-PML-STD-13.02-PR-03` — Refusals are recorded.** The product owner's decisions not to do work must
   be recorded, because a backlog from which nothing is ever removed is evidence that the ordering right is
   not being exercised.
-- **`PCI-PML-LAW-13.02-PR-04` — Continuity across the project boundary.** Where a product continues beyond
+- **`PCI-PML-STD-13.02-PR-04` — Continuity across the project boundary.** Where a product continues beyond
   the project, the credential holder must record the transfer of the ordering right and of delivery
   accountability to named individuals in the receiving organisation before closure, under
-  `PCI-PML-LAW-16.02`.
+  `PCI-PML-STD-16.02`.
 
 **6. Prohibited actions.** Recording a committee as product owner. Naming a product owner who must obtain
 approval for every ordering decision without recording them as a proxy. Allowing a supplier to hold the
@@ -4426,10 +4426,10 @@ product. The credential holder approves neither.
 
 **10. Independence requirement.** Not applicable to the ordering right itself, which is a delivery decision
 right and is not intended to be independent; independence attaches to the acceptance of increments under
-`PCI-PML-LAW-09.01` and to the assurance of the arrangement under `PCI-PML-LAW-01.03-PR-06`.
+`PCI-PML-STD-09.01` and to the assurance of the arrangement under `PCI-PML-STD-01.03-PR-06`.
 
 **11. Materiality or threshold.** This law states no number. The value envelope and the escalation latency
-are set by the organisation's governance under `PCI-PML-LAW-13.01-PR-02`; this law requires that the roles
+are set by the organisation's governance under `PCI-PML-STD-13.01-PR-02`; this law requires that the roles
 are named and that the record is true. The test of nominality is not a percentage but the observable one:
 whether decisions within the stated envelope are taken and stand.
 *Six-person internal project:* one person may hold both roles, and that is entirely proper — the obligation
@@ -4480,8 +4480,8 @@ them and that they stood.
 allocation of liability, intellectual property and data controllership is a contractual and regulatory
 question. Obtain legal advice before placing an ordering right outside the owning organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01`; `PCI-FND-LAW-04`; `PCI-FND-LAW-12`; `PCI-PML-LAW-01.01`;
-`PCI-PML-LAW-01.02`; `PCI-PML-LAW-13.01`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-04`; `PCI-FND-STD-12`; `PCI-PML-STD-01.01`;
+`PCI-PML-STD-01.02`; `PCI-PML-STD-13.01`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 13 · KA 13.1 topic 13.1.2 product ownership as a
 decision right; KA 13.4 metrics and anti-patterns, including the proxy product owner. Also Domain 1 KA 1.2
@@ -4517,7 +4517,7 @@ unstated, which is the boundary most often blurred in practice. Amendment note: 
 ---
 ## Domain 14 — Digital Delivery, Data and Responsible AI
 
-### PCI LAW PCI-PML-LAW-14.01 — Responsible Data Use in Delivery
+### PCI STANDARD PCI-PML-STD-14.01 — Responsible Data Use in Delivery
 
 **1. Normative requirement.** A credential holder must not collect, use, share, retain or expose data on a
 project beyond the purpose, the recipients and the retention period recorded for it.
@@ -4539,20 +4539,20 @@ including data about people working on the project.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-14.01-PR-01` — A purpose record per data set.** Every project data set must carry a
+- **`PCI-PML-STD-14.01-PR-01` — A purpose record per data set.** Every project data set must carry a
   recorded purpose, a named owner, the classes of recipient permitted, and a retention period. A data set
   with no purpose record must not be created or, where inherited, must be recorded and escalated.
-- **`PCI-PML-LAW-14.01-PR-02` — Access matches the record.** Access rights in each system must be
+- **`PCI-PML-STD-14.01-PR-02` — Access matches the record.** Access rights in each system must be
   reconciled against the purpose record at the interval the governance sets, and every access not
   supported by the record must be removed and the removal recorded.
-- **`PCI-PML-LAW-14.01-PR-03` — Personal data is identified and minimised.** Data about identifiable people
+- **`PCI-PML-STD-14.01-PR-03` — Personal data is identified and minimised.** Data about identifiable people
   must be identified as such in the record, must be limited to what the recorded purpose requires, and must
   not be used to assess, rank or profile individuals except where the purpose record states that use and
   the applicable legal basis has been confirmed by the organisation's competent function.
-- **`PCI-PML-LAW-14.01-PR-04` — Lineage for figures that carry decisions.** Any figure reported to a
+- **`PCI-PML-STD-14.01-PR-04` — Lineage for figures that carry decisions.** Any figure reported to a
   decision-maker must be traceable to its source system, its extract date and its transformation, and the
   credential holder must not report a figure whose lineage cannot be stated.
-- **`PCI-PML-LAW-14.01-PR-05` — Closure disposes or transfers deliberately.** At project closure, every
+- **`PCI-PML-STD-14.01-PR-05` — Closure disposes or transfers deliberately.** At project closure, every
   data set must be transferred to a named receiving owner, archived under the recorded retention period,
   or securely disposed of, with the decision recorded per data set.
 
@@ -4653,8 +4653,8 @@ cross-border transfer restrictions are jurisdiction-specific and change frequent
 law is not compliance with any of them.** Obtain local legal advice before collecting, sharing, exporting
 or retaining personal or confidential project data.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-09`; `PCI-FND-LAW-12`; `PCI-PML-LAW-11.01`;
-`PCI-PML-LAW-12.02`; `PCI-PML-LAW-14.02`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-STD-07`; `PCI-FND-STD-09`; `PCI-FND-STD-12`; `PCI-PML-STD-11.01`;
+`PCI-PML-STD-12.02`; `PCI-PML-STD-14.02`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 14 · KA 14.1 Digital project environments, data
 governance and the common data environment; KA 14.4 Explainability, bias, human accountability,
@@ -4693,13 +4693,13 @@ legislation within its own jurisdiction and is relied on here for nothing.
 
 ---
 
-### PCI LAW PCI-PML-LAW-14.02 — Responsible AI in Delivery
+### PCI STANDARD PCI-PML-STD-14.02 — Responsible AI in Delivery
 
 **1. Normative requirement.** A credential holder must not rely on an AI system's output for a delivery
 decision, a report or a deliverable until a named human has verified it by a method recorded for that class
 of output.
 
-**2. Purpose.** `PCI-FND-LAW-03` requires verification before professional use. What delivery adds is that
+**2. Purpose.** `PCI-FND-STD-03` requires verification before professional use. What delivery adds is that
 AI output arrives inside artefacts other people then rely on without knowing its origin: a risk register
 populated by a model, a schedule narrative generated from data, a supplier evaluation summary, a lessons
 theme. The failure this prevents is **unattributed reliance** — an output nobody checked because everybody
@@ -4716,24 +4716,24 @@ the record of where AI is used on the project, for what, by whom, and with which
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-14.02-PR-01` — An AI use record exists.** The credential holder must maintain a dated
+- **`PCI-PML-STD-14.02-PR-01` — An AI use record exists.** The credential holder must maintain a dated
   record of every AI use on the project: the system, the output class, the person accountable for it, and
   the verification method applied. Embedded features in delivery tools must be included; an unlisted
   embedded feature is the most common gap.
-- **`PCI-PML-LAW-14.02-PR-02` — A named method per output class, recorded before use.** Each output class
+- **`PCI-PML-STD-14.02-PR-02` — A named method per output class, recorded before use.** Each output class
   must have a verification method recorded before the output is relied on, chosen from: independent
   recomputation, source tracing, clause-to-summary comparison, sampling with a stated basis,
   reconciliation, boundary testing, sensitivity analysis, expert judgement, or named approval. **"Review
   the AI output" is not a method** and does not satisfy this requirement.
-- **`PCI-PML-LAW-14.02-PR-03` — Material AI assistance is disclosed.** Where AI assistance is material to
+- **`PCI-PML-STD-14.02-PR-03` — Material AI assistance is disclosed.** Where AI assistance is material to
   a deliverable or a report, the credential holder must disclose it in the artefact, under
-  `PCI-FND-LAW-14`, in the form the organisation's governance sets.
-- **`PCI-PML-LAW-14.02-PR-04` — Verification proportionate to reliance.** The depth of verification must
+  `PCI-FND-STD-14`, in the form the organisation's governance sets.
+- **`PCI-PML-STD-14.02-PR-04` — Verification proportionate to reliance.** The depth of verification must
   be matched to the consequence of the output being wrong, and the credential holder must record the basis
   on which the depth was chosen for each output class.
-- **`PCI-PML-LAW-14.02-PR-05` — Failures are recorded and fed back.** Where verification finds a material
+- **`PCI-PML-STD-14.02-PR-05` — Failures are recorded and fed back.** Where verification finds a material
   error in an AI output, the credential holder must record it, correct anything already issued in reliance
-  on it under `PCI-PML-LAW-11.01-PR-04`, and route the pattern to `PCI-PML-LAW-09.02`.
+  on it under `PCI-PML-STD-11.01-PR-04`, and route the pattern to `PCI-PML-STD-09.02`.
 
 **6. Prohibited actions.** Relying on an output because it is plausible and well-formed. Recording "AI
 reviewed" as a verification. Presenting AI-generated analysis as a named person's professional judgement.
@@ -4752,14 +4752,14 @@ verification. Neither may be a supplier by default; where a supplier verifies, t
 records who in the supplier is accountable and retains the verification evidence.
 
 **9. Approval authority.** The sponsor approves the AI use record and the verification methods. The
-governing body approves any use of AI in a reserved decision class under `PCI-PML-LAW-01.02`. A tool vendor
+governing body approves any use of AI in a reserved decision class under `PCI-PML-STD-01.02`. A tool vendor
 approves nothing.
 
 **10. Independence requirement.** The person verifying an AI output must be independent of the configuration
 of the system that produced it, in the sense that they did not set the parameters, prompts, weights or
 thresholds for that output. Where that is impossible on a small project, the arrangement must be recorded
 and a second named person must perform the verification for the highest-consequence output class.
-**Independence of configuration is the minimum this law adds; it does not displace `PCI-FND-LAW-03`**,
+**Independence of configuration is the minimum this law adds; it does not displace `PCI-FND-STD-03`**,
 which requires a *material* calculation, model output or automated conclusion to be verified by a person
 independent of its preparation before any person relies on it. Where the verifier under this law is also
 the preparer of the output, this law is satisfied and the foundational verification is not.
@@ -4835,9 +4835,9 @@ automated decision-making, intellectual property in generated output and liabili
 are jurisdiction-specific and are changing quickly. Obtain local legal advice before deploying AI in a
 process affecting people's rights, employment, safety, or access to a service.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-03` (the parent verification obligation); `PCI-FND-LAW-14`;
-`PCI-FND-LAW-04`; `PCI-FND-LAW-01`; `PCI-PML-LAW-01.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-14.01`.
-**What this law adds to `PCI-FND-LAW-03`:** the foundational law requires independent verification
+**19. Related PCI Laws.** `PCI-FND-STD-03` (the parent verification obligation); `PCI-FND-STD-14`;
+`PCI-FND-STD-04`; `PCI-FND-STD-01`; `PCI-PML-STD-01.02`; `PCI-PML-STD-11.01`; `PCI-PML-STD-14.01`.
+**What this law adds to `PCI-FND-STD-03`:** the foundational law requires independent verification
 before reliance. This law requires an **AI use record covering embedded features**, a **named method
 per output class
 recorded before use**, **depth matched to consequence with the basis recorded**, and a **failure log routed
@@ -4879,13 +4879,13 @@ requirements; element 16 rewritten to name the permitted methods explicitly, bec
 was the defect the previous edition shared with most of the corpus. **Stage 9 amendment:** element 10
 required independence only of the system's configuration, which allowed the preparer of a material
 output to be its verifier; element 10 now states that this is the minimum this law adds and does not
-displace the independent-person verification `PCI-FND-LAW-03` requires before reliance.
+displace the independent-person verification `PCI-FND-STD-03` requires before reliance.
 
 ---
 
 ## Domain 15 — Programmes, Portfolios and Enterprise Delivery
 
-### PCI LAW PCI-PML-LAW-15.01 — Programme Integration and Dependency Ownership
+### PCI STANDARD PCI-PML-STD-15.01 — Programme Integration and Dependency Ownership
 
 **1. Normative requirement.** A credential holder leading or governing a programme must ensure that every
 dependency between components is recorded with a named giver, a named receiver, the thing to be given, the
@@ -4908,19 +4908,19 @@ component's contribution.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-15.01-PR-01` — Named on both sides.** Every dependency must name an individual on the
+- **`PCI-PML-STD-15.01-PR-01` — Named on both sides.** Every dependency must name an individual on the
   giving side and an individual on the receiving side, and the giver must have confirmed the commitment.
   A dependency naming organisations rather than people does not satisfy this requirement.
-- **`PCI-PML-LAW-15.01-PR-02` — Integrated milestone confidence is computed as a conjunction.** Where an
+- **`PCI-PML-STD-15.01-PR-02` — Integrated milestone confidence is computed as a conjunction.** Where an
   integrated milestone depends on several dependencies, its confidence must be reported as the joint
   probability of the dependencies holding, not as an average, a weighted average or a proportion of green
   items — and the correlation assumption used must be stated.
-- **`PCI-PML-LAW-15.01-PR-03` — Decoupling is considered before improvement.** Where an integrated
+- **`PCI-PML-STD-15.01-PR-03` — Decoupling is considered before improvement.** Where an integrated
   milestone's confidence is below the tolerance the governance sets, the credential holder must record
   whether a dependency can be removed or deferred, because removing one dependency changes the arithmetic
   by more than improving any of them.
-- **`PCI-PML-LAW-15.01-PR-04` — Breach of a dependency is an issue on the day it is known.** A dependency
-  that will not be met must be raised as an issue under `PCI-PML-LAW-08.02` on the day the giver knows,
+- **`PCI-PML-STD-15.01-PR-04` — Breach of a dependency is an issue on the day it is known.** A dependency
+  that will not be met must be raised as an issue under `PCI-PML-STD-08.02` on the day the giver knows,
   not on the date it was due.
 
 **6. Prohibited actions.** Recording a dependency with an organisation as giver. Reporting an integrated
@@ -4997,8 +4997,8 @@ the named giver before it enters the register as a commitment.
 enforceable, what notice is required and what remedy exists are contractual questions determined by the
 governing law. Obtain legal advice before relying on a dependency register in a commercial position.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-FND-LAW-12`; `PCI-PML-LAW-06.01`;
-`PCI-PML-LAW-08.01`; `PCI-PML-LAW-08.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-15.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-PML-STD-06.01`;
+`PCI-PML-STD-08.01`; `PCI-PML-STD-08.02`; `PCI-PML-STD-11.01`; `PCI-PML-STD-15.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 15 · KA 15.1 Programme architecture and
 dependency management, including dependency arithmetic at programme scale and decoupling as the primary
@@ -5034,7 +5034,7 @@ programme-level obligation. Amendment note: none.
 
 ---
 
-### PCI LAW PCI-PML-LAW-15.02 — Portfolio Prioritisation and Capacity Truth
+### PCI STANDARD PCI-PML-STD-15.02 — Portfolio Prioritisation and Capacity Truth
 
 **1. Normative requirement.** A credential holder advising or deciding a portfolio's composition must not
 allow the portfolio to hold more concurrent work than the organisation's assessed delivery capacity
@@ -5056,16 +5056,16 @@ the portfolio.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-15.02-PR-01` — Capacity is assessed and recorded per constrained pool.** The credential
+- **`PCI-PML-STD-15.02-PR-01` — Capacity is assessed and recorded per constrained pool.** The credential
   holder must hold a dated assessment of capacity for each constrained resource pool the portfolio depends
   on, with the basis of the assessment stated.
-- **`PCI-PML-LAW-15.02-PR-02` — Intake is tested against capacity before approval.** No component may be
+- **`PCI-PML-STD-15.02-PR-02` — Intake is tested against capacity before approval.** No component may be
   approved into the portfolio without a recorded test of its demand against assessed capacity, and the
   result of that test must be presented to the approving authority.
-- **`PCI-PML-LAW-15.02-PR-03` — Over-commitment is reported, not distributed.** Where demand exceeds
+- **`PCI-PML-STD-15.02-PR-03` — Over-commitment is reported, not distributed.** Where demand exceeds
   assessed capacity, the credential holder must report the over-commitment and the components affected,
   and must not resolve it by reducing every component's assumption proportionally.
-- **`PCI-PML-LAW-15.02-PR-04` — Prioritisation criteria are published and applied.** The criteria by which
+- **`PCI-PML-STD-15.02-PR-04` — Prioritisation criteria are published and applied.** The criteria by which
   components are ranked must be documented and published to the sponsors whose components are ranked, and
   the ranking must follow them; any departure must be recorded with its reason and its author.
 
@@ -5090,7 +5090,7 @@ published criteria may be approved only by the governing body, with the reason r
 **10. Independence requirement.** The capacity assessment and the intake test must be prepared by a function
 independent of any single competing component, and the credential holder performing them must not be the
 sponsor or leader of a component being ranked. Where the same person unavoidably holds both roles, they
-must abstain from the ranking of their own component under `PCI-PML-LAW-01.03-PR-04`.
+must abstain from the ranking of their own component under `PCI-PML-STD-01.03-PR-04`.
 
 **11. Materiality or threshold.** This law states no utilisation figure and no work-in-progress limit,
 because both are organisation-specific and a borrowed number is worse than none. The organisation's
@@ -5121,7 +5121,7 @@ criteria and flag departures, and detect work in delivery systems that has no po
 
 **15. AI prohibition.** An AI system must not decide portfolio composition, rank components as the operative
 decision, approve intake, or set the capacity assessment. An optimiser's allocation is a recommendation, and
-composition is a reserved decision class under `PCI-PML-LAW-01.02-PR-01`.
+composition is a reserved decision class under `PCI-PML-STD-01.02-PR-01`.
 
 **16. AI verification.** **Independent recomputation plus sensitivity analysis.** Any AI-produced portfolio
 allocation must be recomputed against the recorded capacity assessment by a competent reviewer, and the
@@ -5145,8 +5145,8 @@ a plan.
 regulated service can engage employment consultation, regulatory notification and public-law duties. Obtain
 local legal advice before a portfolio decision that stops work with those consequences.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PML-LAW-02.01`;
-`PCI-PML-LAW-02.02`; `PCI-PML-LAW-07.02`; `PCI-PML-LAW-15.01`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-PML-STD-02.01`;
+`PCI-PML-STD-02.02`; `PCI-PML-STD-07.02`; `PCI-PML-STD-15.01`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 15 · KA 15.2 Benefits and portfolio balancing;
 KA 15.3 Capacity and enterprise PMOs; KA 15.4 Transformation governance and strategic reporting. Also
@@ -5183,7 +5183,7 @@ v1.0 set contained no portfolio obligation. Amendment note: none.
 
 ## Domain 16 — Transition, Closeout and Benefits Realisation
 
-### PCI LAW PCI-PML-LAW-16.01 — Transition Readiness and the Gate Block
+### PCI STANDARD PCI-PML-STD-16.01 — Transition Readiness and the Gate Block
 
 **1. Normative requirement.** A credential holder must not permit a transition, go-live or release into
 operational use to proceed while any mandatory precondition for it is recorded as not met.
@@ -5207,22 +5207,22 @@ the cost of proceeding against the cost of waiting.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-16.01-PR-01` — Two blocks, separated before assessment.** The readiness assessment must
+- **`PCI-PML-STD-16.01-PR-01` — Two blocks, separated before assessment.** The readiness assessment must
   separate a gate block of mandatory preconditions from a block of discretionary conditions, and the
   separation must be made and approved **before** the assessment is populated. A single undifferentiated
   condition list does not satisfy this requirement.
-- **`PCI-PML-LAW-16.01-PR-02` — Gate-block items are binary, authority-named and dated.** Each mandatory
+- **`PCI-PML-STD-16.01-PR-02` — Gate-block items are binary, authority-named and dated.** Each mandatory
   precondition must be recorded met or not met, with the approving authority named and the date given, and
   must be closed by the authority that owns it rather than by the project.
-- **`PCI-PML-LAW-16.01-PR-03` — No probability, no weight, no score on a gate-block item.** A mandatory
+- **`PCI-PML-STD-16.01-PR-03` — No probability, no weight, no score on a gate-block item.** A mandatory
   precondition must not be expressed as a probability, a percentage, a confidence, a weighting, a
   red-amber-green rating or any other quantity admitting degree, and must not appear among the
   discretionary conditions' probabilities or in any aggregate computed from them.
-- **`PCI-PML-LAW-16.01-PR-04` — No gate-block item in the go/hold economics.** A mandatory precondition must
+- **`PCI-PML-STD-16.01-PR-04` — No gate-block item in the go/hold economics.** A mandatory precondition must
   not be entered into the go/hold economics, priced against the cost of delay, or traded against any other
   condition. **Expressing it as a cost concedes that some cost of delay would be large enough to buy it,
   and that is precisely what the item exists to forbid.**
-- **`PCI-PML-LAW-16.01-PR-05` — Discretionary readiness is a conjunction, and its assumption is stated.**
+- **`PCI-PML-STD-16.01-PR-05` — Discretionary readiness is a conjunction, and its assumption is stated.**
   The probability of a clean transition across the discretionary conditions must be reported as their joint
   probability, not as an average, a weighted average or the proportion of conditions rated green, and the
   correlation assumption used must be stated on the face of the assessment.
@@ -5252,7 +5252,7 @@ authority, the notifying authority, the certifying party — and **by nobody els
 the project in the sense defined above: not the preparer of the thing being approved, not accountable for
 the delivery date, and holding no interest in the transition proceeding. The readiness assessment itself
 must be reviewed at the transition gate by a competent reviewer independent of the delivery organisation,
-who must satisfy `PCI-PML-LAW-01.03-PR-06`.
+who must satisfy `PCI-PML-STD-01.03-PR-06`.
 
 **11. Materiality or threshold.** **This law states no readiness percentage, and any such figure would be
 the defect it exists to prevent.** The gate block is binary and admits no threshold at all. For the
@@ -5287,7 +5287,7 @@ instrument, its scope and its expiry, and reported at the next governance meetin
 holder must not do is seek such an instrument from anyone other than the owning authority, treat its
 absence as a probability, or permit the transition while the item stands not met. Where the owning
 authority declines or cannot be reached, the decision remains **hold**, and the consequences of holding
-are escalated under `PCI-FND-LAW-11` rather than resolved at the gate.
+are escalated under `PCI-FND-STD-11` rather than resolved at the gate.
 
 **13. Escalation trigger.** Any gate-block item not met as the transition date approaches. Any proposal to
 express a mandatory precondition as a probability, a rating or a cost. Any request for a dispensation
@@ -5336,8 +5336,8 @@ statute, licence conditions, sector regulation and contract, and they differ by 
 list from the examples given.** Obtain local legal and regulatory advice to establish the gate block for the
 specific transition.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-FND-LAW-13`; `PCI-PML-LAW-03.03`;
-`PCI-PML-LAW-09.01`; `PCI-PML-LAW-15.01`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-FND-STD-13`; `PCI-PML-STD-03.03`;
+`PCI-PML-STD-09.01`; `PCI-PML-STD-15.01`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.1 Handover, commissioning and
 readiness — the two-block readiness model, the gate block of mandatory preconditions, the conjunction across
@@ -5392,7 +5392,7 @@ cannot be reached.
 
 ---
 
-### PCI LAW PCI-PML-LAW-16.02 — Operational Acceptance and Handover
+### PCI STANDARD PCI-PML-STD-16.02 — Operational Acceptance and Handover
 
 **1. Normative requirement.** A credential holder must not close a project until the receiving organisation
 has recorded, by a named individual, that it accepts operational responsibility for what has been
@@ -5415,25 +5415,25 @@ running it, including for its faults.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-16.02-PR-01` — A named acceptance from the receiver.** Operational acceptance must be
+- **`PCI-PML-STD-16.02-PR-01` — A named acceptance from the receiver.** Operational acceptance must be
   recorded by a named individual in the receiving organisation, with the date, and must state what is
   accepted. Acceptance by the project on the receiver's behalf does not satisfy this requirement.
-- **`PCI-PML-LAW-16.02-PR-02` — The handover set is defined and delivered.** The credential holder must
+- **`PCI-PML-STD-16.02-PR-02` — The handover set is defined and delivered.** The credential holder must
   agree with the receiving organisation, before closure, what must be handed over — as-built
   documentation, configuration baselines, runbooks, licences, credentials, contracts, open defects, known
   workarounds, contacts — and must record delivery of each item.
-- **`PCI-PML-LAW-16.02-PR-03` — Open items transfer with owners and dates.** Every open defect,
+- **`PCI-PML-STD-16.02-PR-03` — Open items transfer with owners and dates.** Every open defect,
   nonconformity, warranty item, contractual obligation and carried risk must transfer with a named owner in
   the receiving organisation and a date, and must not be closed at project closure for the reason that the
   project is closing.
-- **`PCI-PML-LAW-16.02-PR-04` — Capability is transferred, not just documents.** The credential holder must
+- **`PCI-PML-STD-16.02-PR-04` — Capability is transferred, not just documents.** The credential holder must
   record how the receiving organisation was made able to operate what it receives — training delivered,
   procedures rehearsed, a period of supported operation — and the receiving organisation's confirmation
   that it was.
 
 **6. Prohibited actions.** Closing a project with an unaccepted transfer. Recording acceptance signed by the
 project. Closing open defects at closure to clear the register. Handing over documentation in place of
-capability. Transferring a live product with no named ordering right under `PCI-PML-LAW-13.02-PR-04`.
+capability. Transferring a live product with no named ordering right under `PCI-PML-STD-13.02-PR-04`.
 Retaining credentials, licences or contracts the receiver needs. Treating the disbanding of the team as the
 closure event.
 
@@ -5459,7 +5459,7 @@ be recorded.
 **11. Materiality or threshold.** This law states no number. The organisation's governance sets the closure
 criteria, the handover set for each class of transfer, the supported-operation period and the tolerance for
 open items transferred; this law requires that they exist and are applied. An open item that is a mandatory
-precondition under `PCI-PML-LAW-16.01` does not transfer — it is closed before transition or the transition
+precondition under `PCI-PML-STD-16.01` does not transfer — it is closed before transition or the transition
 does not happen.
 *Six-person internal project:* the handover set is six items, acceptance is a dated line signed by the
 receiving manager, and capability transfer is a two-hour walkthrough recorded as delivered.
@@ -5506,8 +5506,8 @@ duties, data controllership and warranties transfer — and when — is determin
 not by a handover record. Obtain legal advice on what transfers and what remains, particularly for regulated
 assets and for personal data.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PML-LAW-09.01`;
-`PCI-PML-LAW-13.02`; `PCI-PML-LAW-14.01`; `PCI-PML-LAW-16.01`; `PCI-PML-LAW-16.03`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-PML-STD-09.01`;
+`PCI-PML-STD-13.02`; `PCI-PML-STD-14.01`; `PCI-PML-STD-16.01`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.2 Operational transition and contract
 closeout; KA 16.3 Knowledge transfer and post-project review, including the cost of reconstructing as-built
@@ -5519,7 +5519,7 @@ closure date; (b) take the agreed handover set and confirm a delivery record for
 project's open defect, risk, nonconformity and warranty registers at closure and find every open item in the
 receiving organisation's registers with a named owner and a date, with no item closed on the closure date
 for that reason; (d) find the capability-transfer record and the receiver's confirmation; and (e) confirm no
-mandatory precondition under `PCI-PML-LAW-16.01` transferred open. Closure with no receiver acceptance and
+mandatory precondition under `PCI-PML-STD-16.01` transferred open. Closure with no receiver acceptance and
 no governing-body exception fails the test.
 
 **22. Breach indicators.** Acceptance records signed by project staff. Registers that empty on the closure
@@ -5542,7 +5542,7 @@ responsibility between them unstated. Amendment note: none.
 
 ---
 
-### PCI LAW PCI-PML-LAW-16.03 — Benefits Measurement
+### PCI STANDARD PCI-PML-STD-16.03 — Benefits Measurement
 
 **1. Normative requirement.** A credential holder must not state that a benefit has been realised except on
 a measurement taken by the method, from the source and against the benefits baseline recorded for that
@@ -5564,17 +5564,17 @@ benefit is measured.
 
 **5. Required actions — process requirements.**
 
-- **`PCI-PML-LAW-16.03-PR-01` — Measure by the recorded method and source.** Each realisation statement must
+- **`PCI-PML-STD-16.03-PR-01` — Measure by the recorded method and source.** Each realisation statement must
   use the measure, the source system and the calculation recorded for that benefit under
-  `PCI-PML-LAW-02.02-PR-02`, and any change to any of them must be recorded with its reason and its effect
+  `PCI-PML-STD-02.02-PR-02`, and any change to any of them must be recorded with its reason and its effect
   on the reported figure.
-- **`PCI-PML-LAW-16.03-PR-02` — Compare against the pre-change baseline.** The comparison must be against
+- **`PCI-PML-STD-16.03-PR-02` — Compare against the pre-change baseline.** The comparison must be against
   the benefits baseline measured before the change. Where a baseline was reconstructed, the statement must
   say so and state the reconstruction method.
-- **`PCI-PML-LAW-16.03-PR-03` — Attribution is stated, not assumed.** The statement must record what else
+- **`PCI-PML-STD-16.03-PR-03` — Attribution is stated, not assumed.** The statement must record what else
   changed in the measurement period that could have produced the movement, and must not attribute the whole
   movement to the project where other causes are known.
-- **`PCI-PML-LAW-16.03-PR-04` — Shortfalls are reported with the same prominence as achievements.** A
+- **`PCI-PML-STD-16.03-PR-04` — Shortfalls are reported with the same prominence as achievements.** A
   benefit measured below its target must be reported to the same audiences, in the same document, and in the
   same period as the benefits that met theirs.
 
@@ -5608,7 +5608,7 @@ inside tolerance is still reported.
 *Six-person internal project:* one benefit, measured from a report the operating team already produces,
 compared with a baseline captured before go-live, reported once at three months and once at twelve.
 *Multi-partner national programme:* benefits are measured by the operating organisations rather than by any
-partner, the double-count check from `PCI-PML-LAW-02.02` runs again at measurement, and the attribution
+partner, the double-count check from `PCI-PML-STD-02.02` runs again at measurement, and the attribution
 statement is required per benefit because a national programme's measurement period contains many other
 causes.
 
@@ -5654,8 +5654,8 @@ engage grant-condition, disclosure, procurement and fraud law, and the legal sta
 not the professional one used here. Obtain legal advice before a benefits claim is made outside the
 organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PML-LAW-02.01`;
-`PCI-PML-LAW-02.02`; `PCI-PML-LAW-11.01`; `PCI-PML-LAW-15.02`; `PCI-PML-LAW-16.02`.
+**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-PML-STD-02.01`;
+`PCI-PML-STD-02.02`; `PCI-PML-STD-11.01`; `PCI-PML-STD-15.02`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.4 Benefits measurement, responsible
 archive and model/data retention. Also Domain 2 KA 2.3 topics 2.3.1 benefits mapping and 2.3.2 measures and
@@ -5702,7 +5702,7 @@ finding are marked and carried into the outstanding due-process stages.
 
 The front-matter stage record above notes that the Stage 9 red-team was only partly worked for this
 edition. It has since been completed across the whole four-file corpus, and its findings and their
-disposition are recorded in [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md). The amendments that pass
+disposition are recorded in [`STANDARDS_RED_TEAM_REPORT.md`](STANDARDS_RED_TEAM_REPORT.md). The amendments that pass
 produced in this volume are noted in the element 25 of each law changed, and the definitional reading
 rules it added sit at the head of the Definitions above.
 
@@ -5718,7 +5718,7 @@ rules it added sit at the head of the Definitions above.
 | 8 | Can the law be audited? | Yes for all 32. Each element 21 names the artefacts to obtain and the comparison to make. | None needed. |
 | 9 | Can the law be examined through a scenario? | Element 24 of every law gives at least two examination modes drawn from the Manual's list. No law is examinable only by recalling its number. | None needed. |
 | 10 | **Can a professional technically comply while defeating its purpose?** | **Six laws were vulnerable and were changed.** `03.02` — register only decisions above the limit, so the aggregation rule sees nothing. `05.02` — resolve orphans by deleting requirements. `08.01` — reassess exposure downward instead of escalating. `13.01` — raise throughput by starting more work. `16.01` — enter a mandatory precondition as a high probability so the readiness figure stays true-looking. `12.02` — publish a route whose only recipient is the person concerns are about. | `03.02-PR-02` universal registration; `05.02-PR-03` orphans reported, not tidied; `08.01-PR-02` escalate on threshold rather than on expectation of resolution, with **the date the threshold was met** recorded beside the date escalated; `13.01-PR-04` metrics reported with the work-in-progress position; `16.01-PR-03` and `-PR-04` prohibit probability and prohibit economic trade, and element 16 adds a **boundary test of the assessment's structure**; `12.02-PR-02` the bypass property, demonstrated person by person. |
-| 11 | Does it conflict with another PCI law? | No conflict found. Two overlaps were resolved by narrowing: `01.02` against `PCI-FND-LAW-04`, and `05.01` against `04.01` where a scope change is also a baseline change. | `01.02` retitled and narrowed to the reserved-class list, the automation inventory and the examination record. `05.01-PR-03` routes scope additions **into** `04.01` rather than duplicating its assessment. |
+| 11 | Does it conflict with another PCI law? | No conflict found. Two overlaps were resolved by narrowing: `01.02` against `PCI-FND-STD-04`, and `05.01` against `04.01` where a scope change is also a baseline change. | `01.02` retitled and narrowed to the reserved-class list, the automation inventory and the examination record. `05.01-PR-03` routes scope additions **into** `04.01` rather than duplicating its assessment. |
 | 12 | Does it duplicate an external standard unnecessarily? | No law imports a requirement from an external instrument. Every element 17 entry states what the instrument is relied on **for** — usually the existence of a concept — and states that the obligation is PCI's own. | The phrase "it is not the source of this law's obligation" or its equivalent appears in the limitation column throughout. |
 | 13 | Does it misrepresent external authority? | Four risks were identified and closed. ISO 21500 is **context and concepts** since its current edition, not project-management guidance. ISO 45003 is **guidance and nothing can be certified against it**. The Scrum Guide is a **voluntary framework whose adoption is the whole of its force**, not a standard. The EU AI Act and the GDPR are **binding legislation in their own jurisdictions**, named here to illustrate a shape and relied on for nothing. | All four stated expressly at the point of use. No clause number, article, edition or effective date is asserted anywhere; editions are held in the suite register with their verification status, and rows recorded there as **not independently verified** are marked as such in the law that cites them. |
 | 14 | Does it require legal or jurisdiction-specific advice? | Element 18 of all 32 states what needs local advice. The heaviest are `10.01` (procurement regimes), `12.02` (whistleblowing, monitoring, works councils), `14.01` (data protection) and `16.01` (which approvals are legally required, and who may grant them). | `16.01` element 18 states expressly that **the professional must not infer the gate-block list from the examples given** — the examples are the manuscript's, and the list is the owning authorities'. |
@@ -5736,9 +5736,9 @@ rules it added sit at the head of the Definitions above.
 
 ### Definitions reconciliation
 
-The red team's structural finding **P-1** — no PCI Law Definitions Register, so each volume built its
+The red team's structural finding **P-1** — no PCI Standards Definitions Register, so each volume built its
 own and seven compliance-deciding terms diverged — has since been closed. The register is published at
-[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md) and *Terms that decide compliance*
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md) and *Terms that decide compliance*
 above were reconciled to it: *material*, *independent*, *evidence*, *competent reviewer*, *decision
 owner*, *escalation threshold* and *conflict of interest* now carry the canonical wording, and
 *approved*, *current* and *material AI assistance* were added. **No obligation changed.** Three notes:
@@ -5750,9 +5750,9 @@ owner*, *escalation threshold* and *conflict of interest* now carry the canonica
   than the divergence.
 - ***Competent reviewer* no longer folds independence into competence.** The limb requiring that the
   reviewer did not prepare, direct, specify or approve the thing reviewed is *independence*, imposed by
-  each law's element 10 and tested separately. That separation is what makes `PCI-FND-LAW-10` element
+  each law's element 10 and tested separately. That separation is what makes `PCI-FND-STD-10` element
   12's supervised-acquisition exception usable, and no element 10 loses an independence requirement.
-- ***Material AI assistance* was undefined here** while `PCI-PML-LAW-14.02` element 21(d) made
+- ***Material AI assistance* was undefined here** while `PCI-PML-STD-14.02` element 21(d) made
   compliance turn on it. The canonical definition is supplied so the test can be applied; the
   Interpretation Panel should confirm it, because it decides which artefacts must carry the disclosure.
 
@@ -5761,7 +5761,7 @@ owner*, *escalation threshold* and *conflict of interest* now carry the canonica
 | Finding | Why it is open | Where it goes |
 |---|---|---|
 | **Six external-reference rows are recorded as "not independently verified" in the suite register** — ISO 21503, ISO 21504, ISO 21505, ISO 9000, the PMBOK Guide's companion *Code of Ethics and Professional Conduct*, and the AACE TCM Framework. | Charter §5 Stage 5 was performed against the register, not against the publishers. | Verification before publication; each citing law states the open status in element 17. |
-| ~~**The published foundational file lags the concordance.**~~ **Closed.** | `PCI_FOUNDATIONAL_LAWS.md` now carries fifteen laws under the Charter §3 form `PCI-FND-LAW-01` to `PCI-FND-LAW-15`, with the subjects listed in *How to read these laws* above. Every citation in this set resolves against the published file itself. | Closed on the foundational rebuild. The superseded `PCI-LAW-F-NN` identifiers survive only as history, in [`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md). |
+| ~~**The published foundational file lags the concordance.**~~ **Closed.** | `PCI_FOUNDATIONAL_STANDARDS.md` now carries fifteen laws under the Charter §3 form `PCI-FND-STD-01` to `PCI-FND-STD-15`, with the subjects listed in *How to read these laws* above. Every citation in this set resolves against the published file itself. | Closed on the foundational rebuild. The superseded `PCI-LAW-F-NN` identifiers survive only as history, in [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md). |
 | **Charter §5 Stages 4, 6, 7, 11, 12 and 13 have not been performed.** | Technical review, practitioner consultation, impact assessment, approval, publication and post-implementation review are outstanding. | Element 25 of every law records the set as **not yet approved**, with the effective date on approval. |
 | **The ISO-mapping statement resolves a tension between two Manual provisions.** | Manual §1 both prohibits the legislative auxiliary everywhere and requires the ISO mapping to be stated. This file states the mapping by describing the auxiliary rather than printing it. | Interpretation Panel confirmation under Charter §6. |
 
@@ -5777,38 +5777,38 @@ category is not repeated in the table.
 
 | ID | Official title | Anchor domain | Principal obligation | External reference categories |
 |---|---|---|---|---|
-| `PCI-PML-LAW-01.01` | Leadership Accountability for Delivery Decisions | D1 — The project leadership profession | Remain personally accountable for every delivery decision taken under one's authority, including AI-informed ones | 3, 10 |
-| `PCI-PML-LAW-01.02` | Reserved Delivery Decisions and the Named Human Decider | D1 | Ensure a decision in a reserved class is taken by the named human on evidence they examined | 3, 10 |
-| `PCI-PML-LAW-01.03` | Interests, Abstention and Assurance Independence | D1 | Do not decide, advise on, evaluate or assure a matter in which one holds a conflict of interest | 3, 6, 10 |
-| `PCI-PML-LAW-02.01` | Business-Case Integrity | D2 — Strategy, selection and business alignment | Do not present, endorse or rely on a materially misstated business case | 3, 5 |
-| `PCI-PML-LAW-02.02` | Benefits Ownership | D2 | Do not allow a benefit to be claimed unless a named individual outside delivery has accepted it in writing | 3 |
-| `PCI-PML-LAW-03.01` | Governance Authority Before Commitment | D3 — Governance, organisation and decision rights | Do not commit funds, contracts or people before governance is documented and approved | 3, 10 |
-| `PCI-PML-LAW-03.02` | Decision Rights and Delegated Authority | D3 | Take every decision at the authority the delegation schedule assigns; do not split, defer or aggregate to avoid it | 3, 5, 10 |
-| `PCI-PML-LAW-03.03` | Gate Evidence and the Gate Decision | D3 | Do not take a gate decision except on dated, attributable, versioned evidence against criteria published first | 3 |
-| `PCI-PML-LAW-03.04` | Sponsor Accountability | D3 | Do not lead delivery with no named individual sponsor who has accepted the accountability in writing | 3, 10 |
-| `PCI-PML-LAW-04.01` | Change Authority and Integrated Change Control | D4 — Integration and delivery architecture | Do not let a baseline change take effect before integrated assessment and approval at the assigned authority | 3, 4, 5 |
-| `PCI-PML-LAW-05.01` | Scope Integrity | D5 — Scope, requirements and value definition | Do not allow work outside the approved scope baseline without an approved change | 3, 5 |
-| `PCI-PML-LAW-05.02` | Requirements Traceability | D5 | Maintain traceability from every approved requirement to source, to satisfying work, and to proving test | 3, 5 |
-| `PCI-PML-LAW-06.01` | Schedule Credibility | D6 — Planning, scheduling and delivery flow | Do not issue or rely on a schedule that misrepresents achievable completion | 3, 5 |
-| `PCI-PML-LAW-07.01` | Cost Stewardship | D7 — Cost, resources and commercial awareness | Report the cost position — committed, incurred, accrued, forecast — completely, currently and reconcilably | 3, 5 |
-| `PCI-PML-LAW-07.02` | Resource Decisions and the Commitment of People | D7 | Do not commit a person or shared resource to a plan without the named resource owner's agreement | 3, 5 |
-| `PCI-PML-LAW-08.01` | Risk Escalation | D8 — Risk, uncertainty and resilience | Escalate a risk meeting the documented threshold, to the named authority, within the stated time | 3 |
-| `PCI-PML-LAW-08.02` | Issue Management | D8 | Record every issue with one named owner, a required date and a stated consequence; close only with a resolution | 3 |
-| `PCI-PML-LAW-09.01` | Quality Acceptance | D9 — Quality, assurance and continuous improvement | Do not record acceptance unless a named authority decided conformity against pre-dated criteria | 3 |
-| `PCI-PML-LAW-09.02` | Lessons Learned and Organisational Retention | D9 | Convert each accepted lesson into a change to a named standing artefact, with an owner and a date | 3 |
-| `PCI-PML-LAW-10.01` | Procurement Fairness | D10 — Procurement, contracts and supply networks | Evaluate only against criteria and weightings published to bidders before submission | 3, 4, 6 |
-| `PCI-PML-LAW-11.01` | Stakeholder Transparency | D11 — Stakeholders, communication and influence | Do not issue or let stand a delivery report that omits a material adverse fact known at issue | 3, 5 |
-| `PCI-PML-LAW-12.01` | Leadership Conduct | D12 — Leadership, teams and organisational behaviour | Do not use authority to cause another person to state, or withhold, what they have recorded as inaccurate | 3, 6 |
-| `PCI-PML-LAW-12.02` | Route to Raise a Concern and Freedom from Detriment | D12 | Establish, publish and operate a concern route to a named recipient outside the subject's line | 3 |
-| `PCI-PML-LAW-13.01` | Governance of Adaptive Delivery | D13 — Agile, adaptive and hybrid delivery | Operate governance producing the same decision rights, evidence and accountability through adaptive artefacts | 3, 5 |
-| `PCI-PML-LAW-13.02` | Product and Project Accountability | D13 | Ensure exactly one named holder of the ordering right and one of delivery accountability, both recorded | 3, 5 |
-| `PCI-PML-LAW-14.01` | Responsible Data Use in Delivery | D14 — Digital delivery, data and responsible AI | Do not collect, use, share, retain or expose data beyond its recorded purpose, recipients and retention | 3, 10 |
-| `PCI-PML-LAW-14.02` | Responsible AI in Delivery | D14 | Do not rely on an AI output until a named human has verified it by a method recorded for that output class | 3, 10 |
-| `PCI-PML-LAW-15.01` | Programme Integration and Dependency Ownership | D15 — Programmes, portfolios and enterprise delivery | Record every inter-component dependency with a named giver, receiver, thing, date and breach consequence | 3 |
-| `PCI-PML-LAW-15.02` | Portfolio Prioritisation and Capacity Truth | D15 | Do not let the portfolio hold more concurrent work than assessed delivery capacity supports | 3 |
-| `PCI-PML-LAW-16.01` | Transition Readiness and the Gate Block | D16 — Transition, closeout and benefits realisation | Do not permit transition while any mandatory precondition is recorded not met | 3 |
-| `PCI-PML-LAW-16.02` | Operational Acceptance and Handover | D16 | Do not close a project until a named individual in the receiving organisation has accepted operational responsibility | 3 |
-| `PCI-PML-LAW-16.03` | Benefits Measurement | D16 | Do not state a benefit is realised except on the recorded method, source and pre-change benefits baseline | 3 |
+| `PCI-PML-STD-01.01` | Leadership Accountability for Delivery Decisions | D1 — The project leadership profession | Remain personally accountable for every delivery decision taken under one's authority, including AI-informed ones | 3, 10 |
+| `PCI-PML-STD-01.02` | Reserved Delivery Decisions and the Named Human Decider | D1 | Ensure a decision in a reserved class is taken by the named human on evidence they examined | 3, 10 |
+| `PCI-PML-STD-01.03` | Interests, Abstention and Assurance Independence | D1 | Do not decide, advise on, evaluate or assure a matter in which one holds a conflict of interest | 3, 6, 10 |
+| `PCI-PML-STD-02.01` | Business-Case Integrity | D2 — Strategy, selection and business alignment | Do not present, endorse or rely on a materially misstated business case | 3, 5 |
+| `PCI-PML-STD-02.02` | Benefits Ownership | D2 | Do not allow a benefit to be claimed unless a named individual outside delivery has accepted it in writing | 3 |
+| `PCI-PML-STD-03.01` | Governance Authority Before Commitment | D3 — Governance, organisation and decision rights | Do not commit funds, contracts or people before governance is documented and approved | 3, 10 |
+| `PCI-PML-STD-03.02` | Decision Rights and Delegated Authority | D3 | Take every decision at the authority the delegation schedule assigns; do not split, defer or aggregate to avoid it | 3, 5, 10 |
+| `PCI-PML-STD-03.03` | Gate Evidence and the Gate Decision | D3 | Do not take a gate decision except on dated, attributable, versioned evidence against criteria published first | 3 |
+| `PCI-PML-STD-03.04` | Sponsor Accountability | D3 | Do not lead delivery with no named individual sponsor who has accepted the accountability in writing | 3, 10 |
+| `PCI-PML-STD-04.01` | Change Authority and Integrated Change Control | D4 — Integration and delivery architecture | Do not let a baseline change take effect before integrated assessment and approval at the assigned authority | 3, 4, 5 |
+| `PCI-PML-STD-05.01` | Scope Integrity | D5 — Scope, requirements and value definition | Do not allow work outside the approved scope baseline without an approved change | 3, 5 |
+| `PCI-PML-STD-05.02` | Requirements Traceability | D5 | Maintain traceability from every approved requirement to source, to satisfying work, and to proving test | 3, 5 |
+| `PCI-PML-STD-06.01` | Schedule Credibility | D6 — Planning, scheduling and delivery flow | Do not issue or rely on a schedule that misrepresents achievable completion | 3, 5 |
+| `PCI-PML-STD-07.01` | Cost Stewardship | D7 — Cost, resources and commercial awareness | Report the cost position — committed, incurred, accrued, forecast — completely, currently and reconcilably | 3, 5 |
+| `PCI-PML-STD-07.02` | Resource Decisions and the Commitment of People | D7 | Do not commit a person or shared resource to a plan without the named resource owner's agreement | 3, 5 |
+| `PCI-PML-STD-08.01` | Risk Escalation | D8 — Risk, uncertainty and resilience | Escalate a risk meeting the documented threshold, to the named authority, within the stated time | 3 |
+| `PCI-PML-STD-08.02` | Issue Management | D8 | Record every issue with one named owner, a required date and a stated consequence; close only with a resolution | 3 |
+| `PCI-PML-STD-09.01` | Quality Acceptance | D9 — Quality, assurance and continuous improvement | Do not record acceptance unless a named authority decided conformity against pre-dated criteria | 3 |
+| `PCI-PML-STD-09.02` | Lessons Learned and Organisational Retention | D9 | Convert each accepted lesson into a change to a named standing artefact, with an owner and a date | 3 |
+| `PCI-PML-STD-10.01` | Procurement Fairness | D10 — Procurement, contracts and supply networks | Evaluate only against criteria and weightings published to bidders before submission | 3, 4, 6 |
+| `PCI-PML-STD-11.01` | Stakeholder Transparency | D11 — Stakeholders, communication and influence | Do not issue or let stand a delivery report that omits a material adverse fact known at issue | 3, 5 |
+| `PCI-PML-STD-12.01` | Leadership Conduct | D12 — Leadership, teams and organisational behaviour | Do not use authority to cause another person to state, or withhold, what they have recorded as inaccurate | 3, 6 |
+| `PCI-PML-STD-12.02` | Route to Raise a Concern and Freedom from Detriment | D12 | Establish, publish and operate a concern route to a named recipient outside the subject's line | 3 |
+| `PCI-PML-STD-13.01` | Governance of Adaptive Delivery | D13 — Agile, adaptive and hybrid delivery | Operate governance producing the same decision rights, evidence and accountability through adaptive artefacts | 3, 5 |
+| `PCI-PML-STD-13.02` | Product and Project Accountability | D13 | Ensure exactly one named holder of the ordering right and one of delivery accountability, both recorded | 3, 5 |
+| `PCI-PML-STD-14.01` | Responsible Data Use in Delivery | D14 — Digital delivery, data and responsible AI | Do not collect, use, share, retain or expose data beyond its recorded purpose, recipients and retention | 3, 10 |
+| `PCI-PML-STD-14.02` | Responsible AI in Delivery | D14 | Do not rely on an AI output until a named human has verified it by a method recorded for that output class | 3, 10 |
+| `PCI-PML-STD-15.01` | Programme Integration and Dependency Ownership | D15 — Programmes, portfolios and enterprise delivery | Record every inter-component dependency with a named giver, receiver, thing, date and breach consequence | 3 |
+| `PCI-PML-STD-15.02` | Portfolio Prioritisation and Capacity Truth | D15 | Do not let the portfolio hold more concurrent work than assessed delivery capacity supports | 3 |
+| `PCI-PML-STD-16.01` | Transition Readiness and the Gate Block | D16 — Transition, closeout and benefits realisation | Do not permit transition while any mandatory precondition is recorded not met | 3 |
+| `PCI-PML-STD-16.02` | Operational Acceptance and Handover | D16 | Do not close a project until a named individual in the receiving organisation has accepted operational responsibility | 3 |
+| `PCI-PML-STD-16.03` | Benefits Measurement | D16 | Do not state a benefit is realised except on the recorded method, source and pre-change benefits baseline | 3 |
 
 ### Distribution
 
@@ -5826,7 +5826,7 @@ twenty-five-element form,
 re-drafted in must-form, split into one principal obligation plus process requirements, and given a
 compliance test that can actually be performed.
 
-Every law in this set operates under the Foundational Laws `PCI-FND-LAW-01` to `PCI-FND-LAW-15`, under
-the **PCI Professional Laws Charter** and the **PCI Law Drafting Manual**, and under one principle:
+Every law in this set operates under the Foundational Standards `PCI-FND-STD-01` to `PCI-FND-STD-15`, under
+the **PCI Standards Charter** and the **PCI Standards Drafting Manual**, and under one principle:
 
 > **AI proposes; the professional verifies, decides and remains accountable.**

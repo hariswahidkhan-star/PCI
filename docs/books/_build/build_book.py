@@ -33,7 +33,7 @@ BOOKS = {
             "chart": "paths",
         },
         # Certification law set appended as back matter (skipped silently when not yet authored).
-        "laws_file": "PML_AI_LAWS.md",
+        "laws_file": "PML_AI_STANDARDS.md",
         # (part number, title, description, domain range) — a divider is emitted only where the
         # part's lowest-numbered EXISTING domain is found, so parts appear as authorship reaches them.
         "parts": [
@@ -62,7 +62,7 @@ BOOKS = {
             "themes": "Structuring · modelling · coverage · the governed use of AI",
             "chart": "coverage",
         },
-        "laws_file": "PFL_AI_LAWS.md",
+        "laws_file": "PFL_AI_STANDARDS.md",
         "parts": [
             (1, "Part One", "Foundations",
              "Domains 1–4 — the profession, accounting foundations, financial mathematics and "
@@ -345,12 +345,12 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
 
 
 # ---------------------------------------------------------------------------------------------
-# PCI Professional Laws — back-matter part assembled from the shared foundational set plus the
+# PCI Standards — back-matter part assembled from the shared foundational set plus the
 # book's own certification law set. Both are authored elsewhere; either may be absent mid-run, and
 # an absent file is skipped rather than fatal.
 # ---------------------------------------------------------------------------------------------
 
-# Fields the law format carries that are call-outs in their own right (LAW_SYSTEM.md §6).
+# Fields the law format carries that are call-outs in their own right (SUPERSEDED_LAW_SYSTEM_v0.md §6).
 LAW_FIELD_BOXES = (("External references.", "ext-ref"),
                    ("Jurisdictional caution.", "pci-caution"))
 
@@ -404,7 +404,7 @@ def render_law_file(path: pathlib.Path) -> tuple:
     for line in body.split("\n"):
         # Law headings are matched at H2 or H3: the rebuilt sets do not agree on level,
         # and a level mismatch would silently drop the law out of its call-out box.
-        head3 = re.match(r"#{2,3}\s+PCI LAW\s+(\S+)\s+—\s+(.+?)\s*$", line)
+        head3 = re.match(r"#{2,3}\s+PCI STANDARD\s+(\S+)\s+—\s+(.+?)\s*$", line)
         head2 = re.match(r"##\s+(.+?)\s*$", line) if not head3 else None
         if head3:
             flush()
@@ -423,8 +423,8 @@ def render_law_file(path: pathlib.Path) -> tuple:
 
 
 def render_laws(book: str, cfg: dict) -> str:
-    """The whole 'PCI Professional Laws' part, or '' when no law file is present yet."""
-    wanted = [LAWS_DIR / "PCI_FOUNDATIONAL_LAWS.md", LAWS_DIR / cfg.get("laws_file", "_none_")]
+    """The whole 'PCI Standards' part, or '' when no law file is present yet."""
+    wanted = [LAWS_DIR / "PCI_FOUNDATIONAL_STANDARDS.md", LAWS_DIR / cfg.get("laws_file", "_none_")]
     files = [f for f in wanted if f.exists()]
     missing = [f.name for f in wanted if not f.exists()]
     if missing:
@@ -445,7 +445,7 @@ def render_laws(book: str, cfg: dict) -> str:
     print(f"laws: {total} laws from {len(sets)} set(s)")
     return ('<div class="backmatter lawspart">'
             '<h1 class="lawstitle bmtitle" id="pci-professional-laws" data-toc="1">'
-            'PCI Professional Laws</h1>'
+            'PCI Standards</h1>'
             '<p class="bmnote">Mandatory professional rules established by PCI Global for work '
             'within a PCI certification scope. They are not legislation and do not displace '
             'applicable law, contract or authoritative standards, and each law is cited by its '
@@ -620,7 +620,7 @@ def build(book: str, out: pathlib.Path) -> None:
                     + inner + "</div>")
         print(f"capstone sections: {inner.count('<h3>')}")
 
-    # Back matter — the PCI Professional Laws part: after the appendices, before the glossary.
+    # Back matter — the PCI Standards part: after the appendices, before the glossary.
     laws_html = render_laws(book, cfg)
 
     # Contents. Generated from the assembled body rather than the chapters alone, so every part of

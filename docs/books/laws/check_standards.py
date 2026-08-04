@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""check_laws.py — reference-integrity and drafting-conformance gate for the PCI Professional Laws.
+"""check_standards.py — reference-integrity and drafting-conformance gate for the PCI Standards.
 
 Plain Python 3, no third-party imports. Run from anywhere:
 
-    python3 docs/books/laws/check_laws.py
+    python3 docs/books/laws/check_standards.py
 
 Exits 0 when every check passes, 1 otherwise. Checks, in the order reported:
 
   1. Duplicate law identifiers.
   2. Manual §5 structure — all twenty-five elements present, in order, correctly named.
-  3. Foundational citations — every `PCI-FND-LAW-NN` resolves to a published foundational law.
+  3. Foundational citations — every `PCI-FND-STD-NN` resolves to a published foundational law.
   4. Certification citations — every `PCI-<CRED>-LAW-DD.NN` resolves, in either direction.
   5. Process-requirement citations — every `<parent>-PR-NN` resolves to a defined requirement.
   6. Manual §1 normative language — no `shall` inside a law element or a process requirement.
      Front matter that names the word in order to explain the convention is permitted (Manual §1).
   7. Anchor domains — within each credential's Body of Knowledge range.
-  8. Concordance currency — LAW_CONCORDANCE.md §1 and §2 match the published law files.
+  8. Concordance currency — STANDARDS_CONCORDANCE.md §1 and §2 match the published law files.
 
 What this cannot check is the defect it was written after: a citation whose number resolves but whose
 subject is not the one the citing sentence describes. Only reading the sentence catches that. The
@@ -28,9 +28,9 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-FOUNDATIONAL = 'PCI_FOUNDATIONAL_LAWS.md'
-CERT_FILES = {'PCL': 'PCL_AI_LAWS.md', 'PFL': 'PFL_AI_LAWS.md', 'PML': 'PML_AI_LAWS.md'}
-CONCORDANCE = 'LAW_CONCORDANCE.md'
+FOUNDATIONAL = 'PCI_FOUNDATIONAL_STANDARDS.md'
+CERT_FILES = {'PCL': 'PCL_AI_STANDARDS.md', 'PFL': 'PFL_AI_STANDARDS.md', 'PML': 'PML_AI_STANDARDS.md'}
+CONCORDANCE = 'STANDARDS_CONCORDANCE.md'
 LAW_FILES = [FOUNDATIONAL] + [CERT_FILES[c] for c in ('PCL', 'PFL', 'PML')]
 
 # Manual §5 — the twenty-five elements, in the order they must appear.
@@ -47,12 +47,12 @@ ELEMENTS = [
 # Body of Knowledge domain count per credential — an anchor domain outside it cannot exist.
 DOMAIN_LIMIT = {'PCL': 13, 'PFL': 16, 'PML': 16}
 
-FND_ID = re.compile(r'PCI-FND-LAW-(\d{2})(?![\d])')
+FND_ID = re.compile(r'PCI-FND-STD-(\d{2})(?![\d])')
 CERT_ID = re.compile(r'PCI-(PCL|PFL|PML)-LAW-(\d{2})\.(\d{2})(?![\d])')
 PR_ID = re.compile(r'PCI-[A-Z]{3}-LAW-[\d.]+-PR-\d{2}')
 PR_DEF = re.compile(r'^(?:-\s+)?\*\*`?(PCI-[A-Z]{3}-LAW-[\d.]+-PR-\d{2})`?\s*(?:—|\.)', re.M)
 HEADING = re.compile(r'^(#{2,6})\s+(.*)$', re.M)
-LAW_HEADING = re.compile(r'^(#{2,6})\s+PCI LAW\s+(\S+)\s+—\s+(.*)$', re.M)
+LAW_HEADING = re.compile(r'^(#{2,6})\s+PCI STANDARD\s+(\S+)\s+—\s+(.*)$', re.M)
 ELEMENT_MARK = re.compile(r'^\*\*(\d{1,2})\.\s+([^*]+?)\.\*\*', re.M)
 SHALL = re.compile(r'\bshall\b', re.I)
 
@@ -130,7 +130,7 @@ def main():
         laws.extend(got)
         fronts[f] = front_end
 
-    print('PCI Professional Laws — reference-integrity check')
+    print('PCI Standards — reference-integrity check')
     print('=' * 78)
     print('Files: %s' % ', '.join(LAW_FILES))
     print('Laws parsed: %d (%s)' % (
@@ -184,7 +184,7 @@ def main():
               'all %d laws carry every element in order' % len(laws))
 
     # ---------------------------------------------------------------- 3. foundational citations
-    fnd_ids = {l['id'][-2:] for l in laws if l['id'].startswith('PCI-FND-LAW-')}
+    fnd_ids = {l['id'][-2:] for l in laws if l['id'].startswith('PCI-FND-STD-')}
     bad_fnd = []
     n_fnd = 0
     for f in LAW_FILES + [CONCORDANCE]:
@@ -192,14 +192,14 @@ def main():
         for m in FND_ID.finditer(text):
             n_fnd += 1
             if m.group(1) not in fnd_ids:
-                bad_fnd.append('%s:%d cites `PCI-FND-LAW-%s`, which does not exist'
+                bad_fnd.append('%s:%d cites `PCI-FND-STD-%s`, which does not exist'
                                % (f, line_of(text, m.start()), m.group(1)))
     rep.check('foundational citations resolve', bad_fnd,
-              '%d citations, all within `PCI-FND-LAW-01`–`PCI-FND-LAW-%s`'
+              '%d citations, all within `PCI-FND-STD-01`–`PCI-FND-STD-%s`'
               % (n_fnd, max(fnd_ids)))
 
     # ---------------------------------------------------------------- 4. certification citations
-    cert_ids = {l['id'] for l in laws if not l['id'].startswith('PCI-FND-LAW-')}
+    cert_ids = {l['id'] for l in laws if not l['id'].startswith('PCI-FND-STD-')}
     bad_cert = []
     n_cert = 0
     for f in LAW_FILES + [CONCORDANCE]:
@@ -273,11 +273,11 @@ def main():
 
     if conc:
         # §1 — subjects must match the foundational titles.
-        titles = {l['id'][-2:]: l['title'] for l in laws if l['id'].startswith('PCI-FND-LAW-')}
-        for n, subject in re.findall(r'^\| `PCI-FND-LAW-(\d\d)` \| ([^|]+?) \|', conc, re.M):
+        titles = {l['id'][-2:]: l['title'] for l in laws if l['id'].startswith('PCI-FND-STD-')}
+        for n, subject in re.findall(r'^\| `PCI-FND-STD-(\d\d)` \| ([^|]+?) \|', conc, re.M):
             want = titles.get(n)
             if want and subject.strip() != want:
-                conc_problems.append('§1 gives `PCI-FND-LAW-%s` the subject "%s"; the law is titled '
+                conc_problems.append('§1 gives `PCI-FND-STD-%s` the subject "%s"; the law is titled '
                                      '"%s"' % (n, subject.strip(), want))
         # §2 — the citation map must match what the law files actually say.
         actual = {n: {c: [] for c in CERT_FILES} for n in titles}
@@ -289,7 +289,7 @@ def main():
         body = conc.split('## 2. Which certification laws cite which foundational law', 1)
         published = {}
         if len(body) == 2:
-            for row in re.findall(r'^\| `PCI-FND-LAW-(\d\d)` \|([^\n]*)$', body[1], re.M):
+            for row in re.findall(r'^\| `PCI-FND-STD-(\d\d)` \|([^\n]*)$', body[1], re.M):
                 n, rest = row
                 cells = [c.strip() for c in rest.split('|')]
                 cells = cells[1:4] if len(cells) >= 4 else []
@@ -300,7 +300,7 @@ def main():
             conc_problems.append('§2 heading not found')
         for n in sorted(titles):
             if n not in published:
-                conc_problems.append('§2 has no row for `PCI-FND-LAW-%s`' % n)
+                conc_problems.append('§2 has no row for `PCI-FND-STD-%s`' % n)
                 continue
             for cred in ('PCL', 'PFL', 'PML'):
                 pub = published[n].get(cred, [])
@@ -309,12 +309,12 @@ def main():
                     missing = [x for x in act if x not in pub]
                     extra = [x for x in pub if x not in act]
                     conc_problems.append(
-                        '§2 row `PCI-FND-LAW-%s` / %s-AI is out of date%s%s'
+                        '§2 row `PCI-FND-STD-%s` / %s-AI is out of date%s%s'
                         % (n, cred,
                            ' — missing ' + ', '.join('`%s`' % x for x in missing) if missing else '',
                            ' — lists ' + ', '.join('`%s`' % x for x in extra) +
                            ' which no longer cites it' if extra else ''))
-    rep.check('LAW_CONCORDANCE.md matches the law files', conc_problems,
+    rep.check('STANDARDS_CONCORDANCE.md matches the law files', conc_problems,
               'subjects and citation map current')
 
     # ---------------------------------------------------------------- report

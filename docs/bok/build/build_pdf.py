@@ -113,12 +113,12 @@ TITLE_HTML = f"""
   practice it teaches is the same: <strong>AI proposes; the professional verifies, decides and remains
   accountable.</strong></p>
 
-  <h2 style="page-break-before: always;">PCI Professional Laws, and how to read the call-out boxes</h2>
-  <p>A <strong>PCI Professional Law</strong> is a mandatory professional rule established by Project Controls
+  <h2 style="page-break-before: always;">PCI Standards, and how to read the call-out boxes</h2>
+  <p>A <strong>PCI Standard</strong> is a mandatory professional rule established by Project Controls
   Institute Global for the ethical, competent, verifiable and accountable performance of work within a PCI
   certification scope. Laws are numbered with a stable identifier (for example <code>PCL-LAW-06-03</code>) and are
   cited by that identifier rather than by page number.</p>
-  <p><strong>PCI Professional Laws are professional certification rules and standards of conduct established by
+  <p><strong>PCI Standards are professional certification rules and standards of conduct established by
   PCI Global. They are not legislation, regulatory requirements or substitutes for applicable law, contractual
   obligations or authoritative professional standards.</strong> Where any applicable law, regulation, contract or
   authoritative professional standard imposes a stricter requirement, that requirement governs. Consequences of
@@ -130,7 +130,7 @@ TITLE_HTML = f"""
   <table>
     <thead><tr><th>Call-out</th><th>Label and icon</th><th>Colour and border</th><th>What it means</th></tr></thead>
     <tbody>
-      <tr><td>PCI Law</td><td><strong>PCI LAW</strong> · §</td><td>PCI Law Red, solid left border</td>
+      <tr><td>PCI Law</td><td><strong>PCI STANDARD</strong> · §</td><td>PCI Law Red, solid left border</td>
           <td>Mandatory. A professional rule PCI holds credential holders and candidates to.</td></tr>
       <tr><td>External reference</td><td><strong>EXTERNAL REFERENCE</strong> · ⬢</td><td>Standards Blue, double border</td>
           <td>A named external standard or framework, described in this book's own words. The official publication governs.</td></tr>
@@ -190,7 +190,7 @@ def inject_figures(corpus: str) -> str:
 
 
 def laws_back_matter() -> str:
-    """Append the PCI Professional Laws that bind this credential, as back matter.
+    """Append the PCI Standards that bind this credential, as back matter.
 
     The foundational laws bind all three credentials; the PCL-AI set binds this one.
     Both files live in the programme's shared law directory. A missing file is skipped
@@ -198,8 +198,8 @@ def laws_back_matter() -> str:
     """
     laws_dir = BOK.parent / "books" / "laws"
     parts = []
-    for name, heading in (("PCI_FOUNDATIONAL_LAWS.md", "PCI Foundational Laws"),
-                          ("PCL_AI_LAWS.md", "PCL-AI Professional Laws")):
+    for name, heading in (("PCI_FOUNDATIONAL_STANDARDS.md", "PCI Foundational Standards"),
+                          ("PCL_AI_STANDARDS.md", "PCL-AI Professional Laws")):
         path = laws_dir / name
         if not path.exists():
             print(f"laws: {name} not found — skipped")
@@ -211,7 +211,7 @@ def laws_back_matter() -> str:
         print(f"laws: {name} included ({len(body):,} chars)")
     if not parts:
         return ""
-    return ("\n\n# PCI Professional Laws\n\n"
+    return ("\n\n# PCI Standards\n\n"
             "The laws in this part are mandatory professional rules established by Project Controls "
             "Institute Global. They are **not legislation, regulatory requirements or substitutes for "
             "applicable law, contractual obligations or authoritative professional standards** — where any "

@@ -1,7 +1,7 @@
-# PCI Law Drafting Manual
+# PCI Standards Drafting Manual
 
-**Status:** Binding drafting specification for every PCI Professional Law. Version 1.0.  
-**Companion:** the **PCI Professional Laws Charter** (status, hierarchy, priority, due process,
+**Status:** Binding drafting specification for every PCI Standard. Version 1.0.  
+**Companion:** the **PCI Standards Charter** (status, hierarchy, priority, due process,
 interpretation, amendment). This manual governs how a law is *written*; the Charter governs what a
 law *is*. A law must conform to both.
 
@@ -49,7 +49,7 @@ Three consequences follow, and none is optional:
 1. **Every PCI law publication must carry an explicit disclaimer of ISO verbal-form conventions**, in
    the "How to read these laws" note, in this form or wording to the same effect:
 
-   > These laws do not follow ISO/IEC verbal-form conventions. In a PCI Professional Law, **`must`
+   > These laws do not follow ISO/IEC verbal-form conventions. In a PCI Standard, **`must`
    > states PCI's own mandatory requirement** — the role that an ISO document gives to `shall`. PCI
    > does not use `shall` at all, and does not use `must` for external constraints.
 
@@ -130,10 +130,10 @@ a requirement — it is an aspiration, and it belongs in Recommended Practice or
 
 | Instrument | Form | Example |
 |---|---|---|
-| Foundational Law | `PCI-FND-LAW-NN` | `PCI-FND-LAW-04` |
-| Certification / Domain Law | `PCI-<CRED>-LAW-DD.NN` | `PCI-PCL-LAW-06.03` |
-| Process Requirement | `<parent>-PR-NN` | `PCI-PCL-LAW-06.03-PR-01` |
-| Recommended Practice | `<parent>-RP-NN` | `PCI-PFL-LAW-10.01-RP-02` |
+| Foundational Standard | `PCI-FND-STD-NN` | `PCI-FND-STD-04` |
+| Certification / Domain Standard | `PCI-<CRED>-LAW-DD.NN` | `PCI-PCL-STD-06.03` |
+| Process Requirement | `<parent>-PR-NN` | `PCI-PCL-STD-06.03-PR-01` |
+| Recommended Practice | `<parent>-RP-NN` | `PCI-PFL-STD-10.01-RP-02` |
 
 `<CRED>` is `PCL`, `PFL` or `PML`. `DD` is the two-digit Body of Knowledge domain of primary
 anchorage. `NN` is a two-digit sequence within that domain.
@@ -144,7 +144,7 @@ pagination changes. A withdrawn law's identifier is never reused.
 ## 4. Defined terms
 
 Any term that could alter whether a professional has complied must be defined in the law that uses
-it, or in the **PCI Law Definitions Register**, and used consistently.
+it, or in the **PCI Standards Definitions Register**, and used consistently.
 
 Terms that always need definition when they appear in an obligation: *material*, *independent*,
 *approved*, *verified*, *current*, *competent reviewer*, *evidence*, *decision owner*, *exception*,
@@ -163,7 +163,7 @@ an element is genuinely inapplicable, it states "Not applicable" **and gives the
 clause** — a bare "None." is a defect.
 
 ```
-## PCI LAW <identifier> — <official title>
+## PCI STANDARD <identifier> — <official title>
 
 **1. Normative requirement.**   One precise mandatory statement. One principal obligation.
 
