@@ -162,17 +162,20 @@ narrower sense defines it in its own element 4.
 
 **Where a term is also defined in the Foundational Laws.** *material*, *independent*, *verified*,
 *evidence*, *competent reviewer*, *decision owner* and *escalation threshold* are also defined, at
-`D-01` to `D-28`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). The two sets are not
-identical, and three reading rules resolve the difference. First, **where a foundational law states
-its own defined term by its `D-NN` number, that definition governs that foundational obligation**, and
-nothing here narrows it. Second, **where a definition here and a foundational definition both bear on
-the same act, the one producing the wider obligation governs** — Charter §4 states that a PCI Law
-never lowers an obligation. Third, a term defined here and not there is a PFL-AI term and carries only
-the sense given here. The practical effect of the second rule is that the foundational six-limb test of
-*material* at `D-15` — which makes an item material where it bears on safety, on a contractual,
-regulatory, tax or financial-reporting position, or on a party's reliance — applies **in addition to**
-the engagement's materiality statement, and the materiality statement never removes an item that
-`D-15` catches.
+`D-01` to `D-30`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). **They now carry the same
+wording in both places.** Each was reconciled to the canonical definition recorded in
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), which also records what this
+volume previously said and why the change was made. Two things this volume does differently survive
+the reconciliation because they are deliberate and narrower, and both are stated inside the canonical
+definitions below: the metric in which materiality is quantified, and the method list admissible when
+a figure in a *financial model* is verified.
+
+Three reading rules remain, and they still matter for any term this reconciliation did not reach.
+First, **where a foundational law states its own defined term by its `D-NN` number, that definition
+governs that foundational obligation**, and nothing here narrows it. Second, **where a definition here
+and a foundational definition both bear on the same act, the one producing the wider obligation
+governs** — Charter §4 states that a PCI Law never lowers an obligation. Third, a term defined here
+and not there is a PFL-AI term and carries only the sense given here.
 
 **How element 21 samples are drawn.** Where a law's element 21 tests a sample, the sample is selected
 by the reviewer performing the test, not by the professional whose work is under review, and the
@@ -180,58 +183,137 @@ reviewer records the basis of selection.
 
 ### Core compliance-deciding terms
 
-**material** — A difference, item, omission or fact is *material* when, applied to the output in
-question, it would change a decision that a reader of that output is entitled to make on it. The
-test is stated **before** the work begins, in the transaction's own metric, and is recorded in the
-engagement's materiality statement: for a coverage-ratio output, a stated movement in the ratio; for
-a funding output, a stated cash amount against the funding requirement; for a claim, whether the
-supporting evidence would still support it. **PCI sets no percentage.** The *decision owner* sets the
-figure, the finance documents override it wherever they state their own, and a materiality statement
-that names no figure and no metric is not a materiality statement.
+**material** — *(Canonical — `D-15`.)* A difference, item, error, omission, variance or fact is
+*material* if any of the following is true: (a) were it wrong, omitted or reversed, a decision within
+the scope of the work would or could have been taken differently — including its timing, its
+conditions, or the authority at which it had to be taken; (b) it changes a reported figure by more
+than the quantified tolerance published for that figure; (c) it affects a contractual, regulatory, tax
+or financial-reporting position; (d) it affects the safety of a person; (e) it affects a party's
+reliance; or (f) it meets the adopting organisation's published materiality criteria. **A matter
+bearing on safety, legality, a licence or permission, a statutory duty, or the truth of a statement
+made to a decision-maker is material irrespective of size**, and no documented threshold reduces it.
+Materiality is determined on the position as known at the time of the act, and is judged twice: on the
+item alone, and on the accumulation of items of the same kind since the test was last applied. **In
+PFL-AI work, limb (b) is measured by the engagement's materiality statement.** That test is stated
+**before** the work begins, in the transaction's own metric: for a coverage-ratio output, a stated
+movement in the ratio; for a funding output, a stated cash amount against the funding requirement; for
+a claim, whether the supporting evidence would still support it. **PCI sets no percentage.** The
+*decision owner* sets the figure, the finance documents override it wherever they state their own, and
+a materiality statement that names no figure and no metric is not a materiality statement.
 
-**independent** — Of a person, in relation to a defined piece of work: that person (a) did not
-prepare the work or any part of it, (b) is not in the preparer's reporting line and does not report
-to a person whose performance is measured by the work's conclusion, (c) receives no fee, bonus,
-continuing mandate, success payment or other benefit that varies with the conclusion reached, and
-(d) holds no financial interest in the transaction or in a party to it. All four limbs are required.
-Independence is a fact about a relationship, not a state of mind, and asserting objectivity does not
-establish it.
+**independent** — *(Canonical — `D-12`, with this volume's stricter reporting-line limb.)* Of a person,
+in relation to a specified matter: that person (a) did not perform the act, prepare the work or any
+part of it, or direct, specify or approve it; (b) did not select, build or configure the tool, model or
+AI system that produced it; (c) holds no conflict in its outcome and no financial interest in the
+transaction or in a party to it; (d) receives no fee, bonus, continuing mandate, success payment or
+other benefit that varies with the conclusion reached; (e) is not accountable for the outcome the work
+reports on; and (f) **is not in the preparer's reporting line at all, and does not report to a person
+whose performance is measured by the work's conclusion.** All six limbs are required. **Limb (f) is
+deliberately stricter than the foundational limb**, which defeats independence only where the reporting
+relationship covers the work under review; on a PFL-AI engagement the stricter form governs, and where
+two tests bear on the same act the one producing the wider obligation governs. Independence is a fact
+about a relationship to a specified matter, not a state of mind, and asserting objectivity does not
+establish it. (*Referred:* whether *independent* is one test or two is red-team finding **R-4**, open
+before the Interpretation Panel.)
 
-**verified** — Of a figure, statement, extraction or machine output: a named human has checked it
-against the source that determines it, by a **named method** — independent recomputation, source
-tracing, clause-to-output comparison, reconciliation, sampling on a stated basis, boundary testing,
-or sensitivity analysis — and has recorded the method, the source, the result and the date. Reading
-an output and finding it plausible is not verification. (*Collision flag:* the suite uses *verify* in
-this AI-assurance sense throughout, not in the engineering verification-and-validation sense recorded
-in `../registries/TERMINOLOGY_AUDIT.md` §2.2.) (*Collision flag, methods:* this list is the list of
-admissible methods at `PCI-FND-LAW-03-PR-01`, with two deliberate differences stated here rather than
-left to be discovered. *Clause-to-output comparison* is that list's *clause-to-summary comparison*
-applied to a model output rather than to a summary. *Named expert judgement* is deliberately absent:
-a figure produced by a financial model is reproducible, and an expert's opinion that it looks right is
-not a check on it. Where a foundational obligation is being discharged, the foundational list governs;
-where a figure in a *financial model* is being verified under this volume, this narrower list does.)
+**verified** — *(Canonical — `D-26`, with this volume's deliberate narrowing for a model figure.)* Of
+an item, figure, statement, extraction or machine output: a named human who is a *competent reviewer*
+for that item has checked it against **evidence** — the source that determines it — by a **named
+method**, and has recorded the method, the source or population tested and, where a sample was used,
+its selection basis, the inputs, the scope tested, the result, the date, and every difference found
+together with its resolution. Reading an output and finding it plausible is not verification, and an
+item on which no such record exists is not verified however carefully it was produced. **The eight
+admissible methods** — the list at `PCI-FND-LAW-03-PR-01` — are independent recomputation, source
+tracing, clause-to-summary comparison, sampling on a stated basis, reconciliation, boundary testing,
+sensitivity analysis, and named expert judgement recorded with its reasoning. (*Collision flag:* the
+suite uses *verify* in this AI-assurance sense throughout, not in the engineering
+verification-and-validation sense recorded in `../registries/TERMINOLOGY_AUDIT.md` §2.2.)
+(*Deliberate narrowing, methods:* **where a figure in a *financial model* is being verified under this
+volume**, two differences apply and both narrow the term. *Clause-to-output comparison* replaces
+*clause-to-summary comparison*, applied to a model output rather than to a summary. *Named expert
+judgement* is not admissible: a figure produced by a financial model is reproducible, and an expert's
+opinion that it looks right is not a check on it. Where a foundational obligation is being discharged,
+the eight-method list governs. *Referred:* red-team **R-6** — a modelling subject specialist should
+confirm the reason, and the Panel should decide whether renaming a Manual §5.2 method is acceptable.)
 
-**evidence** — A dated, retrievable record, attributable to an identified author or issuing party,
-which a person other than its author can retrieve and use to reach the same conclusion. An
-unattributed file, an undated extract, a recollection and a screenshot with no source are not
-evidence for the purposes of these laws.
+**evidence** — *(Canonical — `D-11`.)* A dated record that exists independently of the assertion it
+supports, that identifies its source, its version where it has one, and its author or issuing party,
+and which a person other than the author of the assertion can retrieve, examine and use to reach the
+same conclusion **without asking that author**. The following are not evidence for the purposes of
+these laws: an output of an AI system that does not identify the source of what it asserts; an
+AI-generated summary of a record, as evidence of the underlying fact — the underlying record is; a
+statement that a system, model or tool produced a figure, unaccompanied by the inputs and the method; a
+restatement of the assertion in a second document by the same author; a preparer's own statement
+offered in support of their own assertion; an unattributed file; an undated extract; an unversioned
+working copy; a recollection; a screenshot with no source; and a dashboard or screen state that cannot
+be reproduced.
 
-**decision owner** — The single named individual accountable for the decision that an output
-supports. Accountability is held by one person, is not delegable, and is recorded before the output
-is relied upon. "The team", "management", "the sponsor", "the lenders" and "the organisation" do not
-name a decision owner.
+**decision owner** — *(Canonical — `D-08`.)* The single named individual holding authority, under the
+applicable governance arrangement or documented delegation schedule, to approve, reject, amend, defer
+or withhold the decision that an output supports; who bears its consequence; and who answers for it
+afterwards. Accountability is held by one person, is not delegable, and is recorded before the output
+is relied upon. A committee is not a decision owner; where a body decides collectively, its named chair
+— or the named authority the delegation schedule assigns — is the decision owner, and the record names
+that person. "The team", "management", "the business", "the sponsor", "the lenders" and "the
+organisation" do not name a decision owner.
 
-**competent reviewer** — A named individual who satisfies all three of: demonstrated experience in
-the specific subject matter under review, recorded before the review; *independence* as defined
-above in relation to the work reviewed; and written authorisation from the engaging organisation to
-record a review conclusion on that subject. Seniority alone does not make a competent reviewer, and
-neither does availability.
+**competent reviewer** — *(Canonical — `D-04`, with this volume's additional authorisation limb.)* A
+named individual who, in relation to a particular item, satisfies all of: (a) demonstrated experience
+in the specific subject matter under review, evidenced by a qualification, an assessed competence
+record or documented comparable work, and recorded for that class of review before the review begins;
+(b) the ability to state what would make the item wrong and which method would detect that error;
+(c) the ability to perform the verification method the law requires, and to reach a conclusion on the
+matter, without assistance from the preparer or reliance on the preparer's explanation of it; and
+(d) **written authorisation from the engaging organisation to record a review conclusion on that
+subject**. Seniority alone does not make a competent reviewer, and neither does availability.
+**Independence is not a limb of competence:** where a law requires the reviewer to be *independent*,
+that requirement is imposed by that law's element 10 and is tested separately. The two were previously
+folded together here, which made `PCI-FND-LAW-10` element 12's supervised-acquisition exception
+unusable, because that exception needs a reviewer who is competent and is precisely not independent.
 
-**escalation threshold** — The stated condition, recorded before the work begins, on whose
-occurrence a matter must be passed to a named higher authority. Thresholds are set by the finance
-documents where those documents state them, and otherwise by the adopting organisation's governance.
-PCI does not set them; PCI requires that they exist, are written down, name the authority, and are
-applied.
+**escalation threshold** — *(Canonical — `D-10`.)* The escalation threshold for a matter is reached at
+the earliest moment any of the following becomes true: the matter is *material*; it creates a risk to
+the safety of a person; it would change, or would have changed, a decision already taken or about to be
+taken; it affects an output already issued outside the credential holder's own organisation; it affects
+a contractual, regulatory, tax or financial-reporting position; or the escalation criteria stated in
+the *finance documents*, published by the adopting organisation, or recorded in the delegation schedule
+are met. **Any condition recorded before the work begins, and any documented value in the finance
+documents, is additional to those six triggers and never in place of them**; a matter that reaches the
+threshold requires escalation under `PCI-FND-LAW-11` whether or not the engagement enumerated it.
+Thresholds are set by the finance documents where those documents state them, and otherwise by the
+adopting organisation's governance; PCI does not set them, and PCI requires that they exist, are
+written down, name the authority, and are applied. **The threshold names a destination and a time, and
+the absence of either does not remove the duty:** where no destination is documented the matter goes to
+the next authority above the *decision owner* for it, and where no time is documented the time is the
+foundational period at `D-20` — one working day where the matter creates a risk to the safety of a
+person or an ongoing financial loss, five working days otherwise, running from the moment the
+credential holder first knows or suspects the matter rather than from the moment they confirm it.
+Reaching the threshold starts that period.
+
+**approved** — *(Canonical — `D-29`.)* A decision, document, figure or version is *approved* where the
+person holding authority for that decision under the applicable governance arrangement or recorded
+delegation of authority has given assent identifiably, recording the date, the version assented to and
+the scope of the assent. Silence, absence of objection, unrecorded verbal assent, assent by a person
+outside their recorded authority, and assent recorded after the item was used are not approval. (A
+*waiver* under the **finance documents** is a different instrument and is defined separately below; so
+is a Charter §8 waiver of a PCI Law.)
+
+**current** — *(Canonical — `D-30`.)* A record, figure, extract, document or version is *current*
+where it is the latest version issued by the system or authority that owns it as at the output's stated
+cut-off or, where the output states none, as at its issue date — and where its version identifier and
+its extraction date and time are recorded on or with the output. A record whose version cannot be
+identified is not current, whatever its age. See also *authoritative version*, which is the narrower
+transaction sense for a model or document set.
+
+**material AI assistance** — *(Canonical — carried to the whole corpus by
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
+output is *material* where removing the AI-generated contribution would change a figure in the output
+by more than the applicable materiality measurement, or would change a recommendation, a classification
+that affects entitlement, coding, ranking or eligibility, or a stated conclusion. *Material AI
+contribution* means the same thing. Volume of use, licence cost and whether a human edited the output
+afterwards are irrelevant to the test. This volume made compliance turn on the term at
+`PCI-PFL-LAW-16.01` element 21 and `PCI-PFL-LAW-16.03` element 21 without defining it; the definition
+is supplied here so the test can be applied.
 
 ### Transaction terms
 
@@ -5923,6 +6005,32 @@ added sit at the head of the Definitions above.
 | 23 | **Can it operate on small projects and megaprojects?** | All 33 | Every element 11 carries a *Scale test* naming both a small municipal project and a multi-billion cross-border financing. The test changed six laws: `06.01`, `10.01`, `10.03`, `13.03`, `14.01` and `15.01` now require the relevant record or test **per facility, per tranche or per currency** at scale, because a consolidated position can be true of no facility in the transaction; `14.04` gained the small-organisation segregation route; `13.01` gained per-workstream materiality. |
 | 24 | Can it operate internationally? | All 33 | No law depends on a single jurisdiction's institutions, forms or terminology. Every obligation that could be jurisdiction-bound is expressed as a duty to apply the **finance documents'** own terms and to obtain local advice. British English throughout; the transliteration *Shariah* is used with *Sharia* noted as the same word. |
 | 25 | Is there a clear consequence within PCI authority? | All 33 | Element 23 draws only on the Charter §9 list and states in every law that PCI claims no other consequence. `09.02` adds that PCI claims no authority to rule on any question of religious law; `14.04` and `15.01` add that criminal, regulatory and corporate consequences belong to the relevant authorities and not to PCI. |
+
+### Definitions reconciliation
+
+The red team's structural finding **P-1** — that no PCI Law Definitions Register existed, so each volume
+built its own and seven compliance-deciding terms diverged across four files — has since been closed.
+The register is published at [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md) and
+the *Core compliance-deciding terms* above were reconciled to it. In this volume that changed the
+wording of *material*, *independent*, *verified*, *evidence*, *decision owner*, *competent reviewer* and
+*escalation threshold*, and added *approved*, *current* and *material AI assistance*. **No obligation
+changed by the reconciliation**; three things are worth naming.
+
+1. **This volume's escalation threshold had no clock.** It named a condition and an authority and no
+   time at all. The red team fixed exactly that defect in the PCL-AI and PML-AI volumes (**C-13**,
+   **C-14**) and did not reach this one, so a PFL-AI escalation duty had no period within which it had
+   to be discharged. The canonical definition supplies the `D-20` default — one working day where a
+   person's safety or an ongoing financial loss is in issue, five working days otherwise — and the
+   destination fallback where the finance documents and the delegation schedule name neither.
+2. **Two deliberate narrowings survive and are now stated inside the definitions rather than beside
+   them**: this volume's *independent* keeps its stricter reporting-line limb (the person is not in the
+   preparer's reporting line at all), and its *verified* keeps the narrower method list for a figure in
+   a *financial model*, excluding named expert judgement and applying clause-to-output comparison. Both
+   remain referred — **R-4** and **R-6**.
+3. ***Competent reviewer* no longer folds independence into competence.** Independence is imposed by
+   each law's element 10 and tested separately; the written-authorisation limb this volume adds is
+   retained. The change is what makes `PCI-FND-LAW-10` element 12's supervised-acquisition exception
+   usable, and it removes no independence requirement from any law.
 
 ### Open items recorded against Q13
 

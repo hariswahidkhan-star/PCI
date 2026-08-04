@@ -198,13 +198,20 @@ flagged**; collapsing them would make the laws wrong.
 
 **Where a term is also defined in the Foundational Laws.** *material*, *independent*, *evidence*,
 *competent reviewer*, *decision owner* and *escalation threshold* are also defined, at `D-01` to
-`D-28`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). The two sets are not identical, and
-three reading rules resolve the difference. First, **where a foundational law states its own defined
-term by its `D-NN` number, that definition governs that foundational obligation**, and nothing here
-narrows it. Second, **where a definition here and a foundational definition both bear on the same act,
-the one producing the wider obligation governs** — Charter §4 states that a PCI Law never lowers an
-obligation. Third, a term defined here and not there is a PML-AI term and carries only the sense given
-here.
+`D-30`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). **They now carry the same wording in
+both places.** Each was reconciled to the canonical definition recorded in
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), which also records what this
+volume previously said and why the change was made. The terms this set flags as carrying two genuine
+professional senses — *baseline*, *sponsor*, *verification*, *governance* — are **not** collapsed by
+that reconciliation; the register carries both senses of each, with the context each belongs to,
+because collapsing a real collision would make this volume wrong.
+
+Three reading rules remain, and they still matter for any term this reconciliation did not reach.
+First, **where a foundational law states its own defined term by its `D-NN` number, that definition
+governs that foundational obligation**, and nothing here narrows it. Second, **where a definition here
+and a foundational definition both bear on the same act, the one producing the wider obligation
+governs** — Charter §4 states that a PCI Law never lowers an obligation. Third, a term defined here and
+not there is a PML-AI term and carries only the sense given here.
 
 **How element 21 samples are drawn.** Where a law's element 21 tests "a stated sample", the sample is
 selected by the reviewer performing the test, not by the credential holder whose work is under review,
@@ -234,16 +241,30 @@ the delivery team, measured against a benefits baseline. A benefit is what the o
 *value* is the worth it attaches to that. **Neither is the Earned Value of a work package**, which is
 a budgeted money amount and a measure of work performed, not of worth delivered.
 
-**competent reviewer** — An individual who (a) holds the technical knowledge and delivery experience
-to reach a conclusion on the matter reviewed without relying on the preparer's explanation of it,
-(b) has that competence recorded for that class of review before the review begins, and (c) did not
-prepare, direct, specify or approve the thing being reviewed. Competence is recorded against the class
-of work, not against seniority or job title.
+**competent reviewer** — *(Canonical — `D-04`.)* A named individual who, in relation to a particular
+item, satisfies all of: (a) their competence in the subject matter is evidenced by a qualification, an
+assessed competence record or documented experience of comparable work, **recorded for that class of
+review before the review begins**; (b) they are able to state what would make the item wrong and which
+method would detect that error; and (c) they hold the technical knowledge and delivery experience to
+perform the verification method the law requires and to reach a conclusion on the matter **without
+relying on the preparer's explanation of it**. Competence is recorded against the class of work, not
+against seniority, job title or availability. **Independence is not a limb of competence:** the
+requirement that the reviewer did not prepare, direct, specify or approve the thing being reviewed is
+*independence*, defined below, and it is imposed by each law's element 10 rather than by this
+definition. The two were previously folded together here, which made `PCI-FND-LAW-10` element 12's
+supervised-acquisition exception unusable, because that exception needs a reviewer who is competent and
+is precisely not independent — a supervisor. No law loses an independence requirement by the change:
+every element 10 that required one still states it.
 
-**decision owner** — The single named individual holding authority to take a specified decision under
-the organisation's documented delegation schedule, and who answers for it afterwards. **A committee is
-not a decision owner.** Where a body decides collectively, the decision owner is the named chair or
-the named authority the delegation schedule assigns, and the record names that person.
+**decision owner** — *(Canonical — `D-08`.)* The single named individual holding authority, under the
+applicable governance arrangement or the organisation's documented delegation schedule, to approve,
+reject, amend, defer or withhold a specified decision; who bears its consequence; and who answers for
+it afterwards. The accountability is held by one person, is not delegable, and is recorded before the
+output is relied upon. **A committee is not a decision owner.** Where a body decides collectively, the
+decision owner is the named chair or the named authority the delegation schedule assigns, and the
+record names that person. A decision owner is always a natural person: "the team", "management", "the
+business", "the sponsor", "the lenders", "the organisation", a role held by no named individual, a
+system, a model and a vendor are never decision owners.
 
 **detriment** — Any of the following acts occurring to a person after they raised a concern: removal
 from, or reduction of, a role, scope, responsibility, grade or pay; an adverse change to a performance
@@ -253,52 +274,104 @@ assignment, secondment or contract; or a disciplinary step. **Detriment is defin
 acts, and not by how the person felt about them** — which is what makes an allegation of detriment
 capable of being investigated and either upheld or dismissed on evidence.
 
-**evidence** — A dated, attributable, version-identified record of a fact, retained so that a person
-who was not present can determine what was known, by whom, and when. A recollection, an undated
-summary, an unversioned extract, a screenshot with no source reference and a dashboard state that
-cannot be reproduced are **not** evidence for the purposes of this set.
+**evidence** — *(Canonical — `D-11`.)* A dated record that exists independently of the assertion it
+supports, attributable to an identified author or issuing system, version-identified where it has a
+version, and retained so that a person other than the author of the assertion — a person who was not
+present — can retrieve it, examine it and reach the same conclusion **without asking that author**,
+determining what was known, by whom, and when. The following are **not** evidence for the purposes of
+this set: an output of an AI system that does not identify the source of what it asserts; an
+AI-generated summary of a record, as evidence of the underlying fact — the underlying record is; a
+statement that a system, model or tool produced a figure, unaccompanied by the inputs and the method; a
+restatement of the assertion in a second document by the same author; a preparer's own statement
+offered in support of their own assertion; a recollection; an undated summary or extract; an
+unattributed file; an unversioned extract or working copy; a screenshot with no source reference; and a
+dashboard state that cannot be reproduced.
 
-**escalation threshold** — The documented value, condition or event stated in the organisation's
-delegation schedule at which a matter must be passed to a named higher authority, together with the
-time within which it must arrive there. A threshold with no stated destination, or with no stated
-time, is not an escalation threshold; it is an aspiration. **The absence of a documented threshold
+**escalation threshold** — *(Canonical — `D-10`.)* The escalation threshold for a matter is reached at
+the earliest moment any of the following becomes true: the matter is *material*; it creates a risk to
+the safety of a person; it would change, or would have changed, a decision already taken or about to be
+taken; it affects an output already issued outside the credential holder's own organisation; it affects
+a contractual, regulatory, tax or financial-reporting position; or a documented value, condition or
+event stated in the organisation's delegation schedule is met. On reaching it the matter must be passed
+to a named higher authority within the time the threshold states. **Any documented value in the
+delegation schedule is additional to those six triggers and never in place of them**; a matter that
+reaches the threshold requires escalation under `PCI-FND-LAW-11` whether or not the delegation schedule
+enumerated it. A threshold with no stated destination, or with no stated time, is an incomplete
+threshold and it is an aspiration until it is completed — but **the absence of a documented threshold
 does not remove an escalation duty**: where the delegation schedule names no destination, the matter
-goes to the next authority above the decision owner for it, and where it states no time, the
+goes to the next authority above the *decision owner* for it, and where it states no time, the
 foundational period at `D-20` applies — one working day where the matter creates a risk to the safety
 of a person or an ongoing financial loss, five working days otherwise, running from the moment the
-credential holder first knows or suspects the matter.
+credential holder first knows or suspects the matter. Reaching the threshold starts that period.
 
 **gate** — A continuation decision taken by a named authority at a defined point in the delivery
 lifecycle, against criteria published before the evidence supporting the decision was assembled, and
 carrying the power to stop, hold, redirect or authorise the next commitment. A review that cannot stop
 the work is not a gate.
 
-**independent** — Of a person or function, **in relation to a specified matter**: not the preparer of
-it; not the director, specifier or approver of it; not accountable for the outcome it reports on; not
-in the reporting line of the person accountable for it *for the purpose of that matter*; and holding
-no interest in its outcome. **Independence is a property of a relationship to a specific matter, not a
-job title** — which is why a permanently titled "independent assurance" function loses independence
-over any artefact it helped produce.
+**independent** — *(Canonical — `D-12`.)* Of a person or function, **in relation to a specified
+matter**, where all of the following are true: (a) they did not perform the act, prepare the item or
+any part of it, or direct, specify or approve it; (b) they did not select, build or configure the
+tool, model or AI system that produced it; (c) they hold no conflict of interest in its outcome and no
+financial interest in the matter or in a party to it; (d) they receive no fee, bonus, continuing
+mandate, success payment or other benefit that varies with the conclusion reached, and their
+remuneration, appraisal or continuation is not determined by the outcome the item supports; (e) they
+are not accountable for the outcome it reports on; and (f) they are not in the reporting line of the
+person accountable for it *for the purpose of that matter*, and do not report to the preparer in
+respect of the work under review. Reporting to the preparer's line manager on unrelated work does not
+by itself defeat independence; being appraised on the outcome does. **Independence is a property of a
+relationship to a specific matter, not a job title** — which is why a permanently titled "independent
+assurance" function loses independence over any artefact it helped produce.
 
 **mandatory precondition** — A transition, gate or release condition recorded **met or not met**, with
 its approving authority named and dated, closed by the authority that owns it rather than by the
 project. A mandatory precondition carries no probability, no weighting, no score and no admission to
 economic trade against the cost of delay.
 
-**material** — A matter is material to a decision if, had the decision-maker known it at the time,
-it could reasonably have changed the decision, its timing, its conditions, or the authority at which
-it had to be taken. Materiality is assessed **against the decision**, not against a fixed sum. Where
-the organisation's governance sets a documented financial, schedule or exposure threshold for a class
-of decision, that documented threshold applies to matters that are purely financial, schedule or
-exposure in character. **A matter bearing on safety, legality, a licence or permission, a statutory
-duty, or the truth of a statement made to a decision-maker is material irrespective of size**, and no
-documented threshold reduces it.
+**material** — *(Canonical — `D-15`.)* A matter, item, error, omission, variance or difference is
+*material* if any of the following is true: (a) had the decision-maker known it at the time, it could
+have changed a decision within the scope of the work — its substance, its timing, its conditions, or
+the authority at which it had to be taken; (b) it changes a reported figure by more than the quantified
+tolerance published for that figure; (c) it affects a contractual, regulatory, tax or
+financial-reporting position; (d) it affects the safety of a person; (e) it affects a party's reliance;
+or (f) it meets the organisation's published materiality criteria. Materiality is assessed **against
+the decision**, not against a fixed sum, and it is judged twice: on the item alone, and on the
+accumulation of items of the same kind since the test was last applied. **In PML-AI work, limb (b) is
+measured by the documented threshold**: where the organisation's governance sets a documented
+financial, schedule or exposure threshold for a class of decision, that threshold applies to matters
+that are purely financial, schedule or exposure in character. **A matter bearing on safety, legality, a
+licence or permission, a statutory duty, or the truth of a statement made to a decision-maker is
+material irrespective of size**, and no documented threshold reduces it. **PCI sets no percentage.**
 
 **sponsor** — *Context flag: the delivery and governance sense.* The single named individual
 accountable for the project's business outcome and mandate, who owns the business case, holds the
 authority reserved above the project leader, and answers for the benefits the project exists to
 enable. **The project-finance sense of "sponsor" — an equity investor promoting a project — belongs to
 the PFL-AI volume and is not used anywhere in this set.**
+
+**approved** — *(Canonical — `D-29`.)* A decision, document, figure or version is *approved* where the
+person holding authority for that decision under the applicable governance arrangement or the
+documented delegation schedule has given assent identifiably, recording the date, the version assented
+to and the scope of the assent. Silence, absence of objection, unrecorded verbal assent, assent by a
+person outside their recorded authority, and assent recorded after the item was used are not approval.
+Distinguish from *acceptance* above, which is a named authority's recorded decision that a deliverable
+meets version-identified criteria.
+
+**current** — *(Canonical — `D-30`.)* A record, figure, extract, document or version is *current*
+where it is the latest version issued by the system or authority that owns it as at the artefact's
+stated cut-off or, where it states none, as at its issue date — and where its version identifier and
+its extraction date and time are recorded on or with the artefact. A record whose version cannot be
+identified is not current, whatever its age.
+
+**material AI assistance** — *(Canonical — carried to the whole corpus by
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
+artefact is *material* where removing the AI-generated contribution would change a figure in the
+artefact by more than the applicable materiality measurement, or would change a recommendation, a
+classification that affects entitlement, coding, ranking or eligibility, or a stated conclusion.
+*Material AI contribution* means the same thing. Volume of use, licence cost and whether a human edited
+the artefact afterwards are irrelevant to the test. This set made compliance turn on the term at
+`PCI-PML-LAW-14.02` element 21 without defining it; the definition is supplied here so the test can be
+applied.
 
 ### Supporting terms used in obligations
 
@@ -322,12 +395,19 @@ determines.
 route is a **bypass route** in relation to a person if that person is neither its recipient, nor able
 to see the concern before the recipient does, nor able to determine what happens to it.
 
-**conflict of interest** — An interest that bears on a matter the person is being asked to decide,
-advise on or assure, where an **interest** is anything capable of affecting, or of appearing to
-affect, that person's judgement on the matter: a financial stake, an employment or commercial
-relationship, a personal or family connection, authorship of the thing being assured, or a future role
-that depends on the outcome. **The appearance is part of the definition, not a softening of it.** A
-conflict of interest is a structural fact about a role, not a lapse of character.
+**conflict of interest** — *(Canonical — `D-05`, where the term is written* conflict *and means the
+same thing.)* A relationship, interest or duty of any of the kinds `D-05` lists, held by the person or
+by a member of their household or a connected person, which bears on a matter they are being asked to
+decide, advise on or assure — a financial stake or interest in a party or in the outcome; employment,
+office, directorship or partnership with a party; a personal, family or household connection; a gift,
+hospitality or benefit above the recorded threshold; a past or prospective engagement with a party;
+authorship of, or a personal interest in, the thing being assured; a future role that depends on the
+outcome; and an interest in a tool, model, vendor or AI system being selected, priced, assessed or
+relied upon. An **interest** is anything capable of affecting, or of appearing to affect, that person's
+judgement on the matter. **The appearance is part of the definition, not a softening of it.** A
+conflict of interest is a structural fact about a role, not a lapse of character. The list is closed
+for the purposes of the disclosure duty: every conflict within it must be disclosed and there is no
+threshold.
 
 **decision record** — The versioned, attributable log entry that converts a decision into an
 institutional fact. Its fields are the decision, the named decision owner, the date, the options
@@ -375,9 +455,20 @@ others without asking the author.
 - **V&V verification** — the check that what was built is what was specified. (Its partner,
   *validation*, asks whether what was built produces the outcome that was needed.)
 - **AI verification** — a named human's check of machine output against source before reliance on it.
-  This is the sense carried by the suite principle and by element 16 of every law below.
+  This is the sense carried by the suite principle and by element 16 of every law below. **The test is
+  the canonical *verified* at `D-26`**: a named *competent reviewer* applies one of the eight
+  admissible methods — independent recomputation, source tracing, clause-to-summary comparison,
+  sampling on a stated basis, reconciliation, boundary testing, sensitivity analysis, or named expert
+  judgement recorded with its reasoning — against *evidence*, and records the method, the source or
+  population tested and its selection basis where a sample was used, the inputs, the scope, the date,
+  the result, and every difference found with its resolution. Reading an output and finding it
+  plausible is not verification.
 
-Where a sentence could carry either sense, this set writes the qualified form.
+Where a sentence could carry either sense, this set writes the qualified form. **The two senses are a
+declared collision, not a defect**: collapsing V&V verification into AI verification would make this
+set's delivery-assurance laws wrong. Both are recorded at
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md) §4 with the context each belongs
+to, and at `../registries/TERMINOLOGY_AUDIT.md` Issue 9.
 
 ---
 ## Domain 1 — The Project Leadership Profession
@@ -660,8 +751,8 @@ such number by an independent method and record the comparison.
   standard and not a regulation**.
 - **European Union** · *Regulation (EU) 2024/1689 (the AI Act)* · relied on for: illustrating a
   risk-tiered regulatory shape that treats human oversight as a design question · **EXT-100** ·
-  **Manual §6 category 10 — illustrative practice** · currency checked 2026-08-03 · limitation: **this
-  is binding legislation within the European Union**, named here only to illustrate the shape; it is
+  **Manual §6 category 1 — applicable legislation or regulation** · currency checked 2026-08-03 · limitation: **binding
+  legislation within the European Union only**, named here only to illustrate the shape; it is
   relied on for no requirement in this law, and whether it applies to a given project is a question for
   qualified local counsel.
 
@@ -4734,8 +4825,8 @@ which a difference becomes a failure. Verification is performed **before** relia
   · **EXT-081** · **Manual §6 category 10 — illustrative practice** · currency checked 2026-08-03 ·
   limitation: a Council Recommendation; **never legislation**; non-binding even on adherents.
 - **European Union** · *Regulation (EU) 2024/1689 (the AI Act)* · relied on for: illustrating a risk-tiered
-  regulatory approach · **EXT-100** · **Manual §6 category 10 — illustrative practice** · currency checked
-  2026-08-03 · limitation: **binding legislation within the European Union**, named here to illustrate the
+  regulatory approach · **EXT-100** · **Manual §6 category 1 — applicable legislation or regulation** · currency checked
+  2026-08-03 · limitation: **binding legislation within the European Union only**, named here to illustrate the
   shape only; relied on for no requirement; applicability to any given project is a question for qualified
   local counsel.
 
@@ -5642,6 +5733,28 @@ rules it added sit at the head of the Definitions above.
 | 23 | Can it operate on both small projects and megaprojects? | Yes — element 11 of every law states both cases explicitly, and this is where the set was most often rewritten. | Recorded in element 11 throughout. |
 | 24 | Can it operate internationally? | No law depends on a single jurisdiction's legal concepts. Element 18 of every law states what is jurisdiction-specific, and no law states a legal position. | `12.02` element 18 states expressly that where a national whistleblowing or monitoring regime imposes a higher or more specific obligation, **that regime governs**. |
 | 25 | Is there a clear consequence within PCI's authority? | Element 23 of all 32 draws only from Charter §9. Three laws state expressly what PCI **cannot** do, because those are the three where a reader might otherwise assume a wider power: `10.01` (PCI cannot set aside an award or impose a fine), `12.02` (PCI cannot compensate, order reinstatement or penalise an employer) and `16.01` (PCI cannot authorise a transition or override a regulator). | Added to those three; the remainder rely on the Charter §9 list, which is stated in full in each. |
+
+### Definitions reconciliation
+
+The red team's structural finding **P-1** — no PCI Law Definitions Register, so each volume built its
+own and seven compliance-deciding terms diverged — has since been closed. The register is published at
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md) and *Terms that decide compliance*
+above were reconciled to it: *material*, *independent*, *evidence*, *competent reviewer*, *decision
+owner*, *escalation threshold* and *conflict of interest* now carry the canonical wording, and
+*approved*, *current* and *material AI assistance* were added. **No obligation changed.** Three notes:
+
+- **The four collisions this set flags are preserved, not collapsed** — *baseline* (control versus
+  benefits), *sponsor* (delivery versus project-finance), *verification* (V&V versus AI) and
+  *governance* (project versus data). Each is carried in the register with both senses and the context
+  each belongs to. Forcing one definition on any of them would make this volume wrong, which is worse
+  than the divergence.
+- ***Competent reviewer* no longer folds independence into competence.** The limb requiring that the
+  reviewer did not prepare, direct, specify or approve the thing reviewed is *independence*, imposed by
+  each law's element 10 and tested separately. That separation is what makes `PCI-FND-LAW-10` element
+  12's supervised-acquisition exception usable, and no element 10 loses an independence requirement.
+- ***Material AI assistance* was undefined here** while `PCI-PML-LAW-14.02` element 21(d) made
+  compliance turn on it. The canonical definition is supplied so the test can be applied; the
+  Interpretation Panel should confirm it, because it decides which artefacts must carry the disclosure.
 
 ### Open findings carried forward
 

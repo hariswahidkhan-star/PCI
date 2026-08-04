@@ -159,6 +159,15 @@ These terms decide whether a professional has complied. Each is defined once, he
 identically in every law below. None is defined by reference to itself. Where a law's element 4 lists
 a term, the definition below is the one that applies.
 
+**These definitions are the canonical ones for the whole corpus.** Drafting Manual §4 permits a term
+to be defined in the law that uses it **or** in the *PCI Law Definitions Register*, and that register
+now exists at [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md). Every term below
+that is also used in a certification volume carries the same wording there and in that volume; where
+a term legitimately carries different professional senses in different credentials, the register
+states each sense with the context it belongs to rather than forcing one. The register records what
+each file previously said, so every reconciliation is visible and reversible. It is a derived
+register and creates no obligation: **the definitions below govern.**
+
 **D-01 · Adopting organisation.** The employer, client or engaging entity whose governance arrangement
 applies to the work in question. Where a professional works as a sole practitioner with no engaging
 entity's governance arrangement in force, the professional is their own adopting organisation and must
@@ -178,12 +187,20 @@ purpose in question. A system is not authorised because it is widely used, becau
 because a colleague uses it, or because no rule expressly forbids it.
 
 **D-04 · Competent reviewer.** A named individual who, in relation to a particular item, satisfies
-both of the following: (a) their competence in the subject matter of that item is evidenced by a
+all of the following: (a) their competence in the subject matter of that item is evidenced by a
 qualification in that subject matter, an assessed competence record held by the adopting organisation,
-or documented experience of comparable work recorded by the adopting organisation; and (b) they are
-able to state what would make the item wrong and which method would detect that error. Neither limb
-alone is sufficient. The adopting organisation may quantify the experience required in (a); PCI does
-not.
+or documented experience of comparable work recorded by the adopting organisation, and that competence
+is recorded for that class of work before the review begins; (b) they are able to state what would
+make the item wrong and which method would detect that error; and (c) they are able to perform the
+verification method the law requires, and to reach a conclusion on the matter, without assistance from
+the preparer or reliance on the preparer's explanation of it. No limb alone is sufficient, and job
+title, seniority and availability establish none of them. The adopting organisation may quantify the
+experience required in (a); PCI does not. **Independence is not a limb of competence.** Where a law
+requires the reviewer to be independent (D-12), that requirement is imposed by that law's element 10
+and is tested separately — a separation this set depends on, because `PCI-FND-LAW-10` element 12's
+supervised-acquisition exception needs a reviewer who is competent and is precisely *not* independent.
+For a review conclusion recorded on a PFL-AI engagement, the reviewer must additionally hold written
+authorisation from the engaging organisation to record a review conclusion on that subject.
 
 **D-05 · Conflict.** A relationship, interest or duty of any of the following kinds, held by the
 professional or by a member of their household, which bears on a matter in which the professional
@@ -192,11 +209,16 @@ or partnership with a party to the matter; a family or household relationship wi
 is a party to, or decides, the matter; a gift, hospitality or benefit received from a party to the
 matter above the threshold the adopting organisation records; a past or prospective engagement with a
 party to the matter; a personal interest in a particular outcome, including an interest in the
-performance of work the professional themselves performed; and an interest in a tool, model, vendor or
-AI system that is being selected, priced, assessed or relied upon in the matter. A conflict is
-**actual** where it bears on a decision the professional is currently taking, **potential** where it
-would do so if a foreseeable event occurred, and **perceived** where a person outside the matter, on
-the facts recorded, would identify one of the listed relationships.
+performance of work the professional themselves performed; a future role that depends on the outcome;
+and an interest in a tool, model, vendor or AI system that is being selected, priced, assessed or
+relied upon in the matter. A conflict is **actual** where it bears on a decision the professional is
+currently taking, **potential** where it would do so if a foreseeable event occurred, and
+**perceived** where a person outside the matter, on the facts recorded, would identify one of the
+listed relationships. **The appearance is part of the definition, not a softening of it**, and a
+conflict is a structural fact about a role rather than a lapse of character. The list is closed for
+the purposes of the disclosure duty: every conflict within it must be disclosed and there is no
+threshold. A judgement standard stated in a law — such as the reasonable-party test at
+`PCI-PFL-LAW-01.02` — widens this list and never narrows it.
 
 **D-06 · Contemporaneous.** Created at the time of the act it evidences, or as soon afterwards as
 establishing the facts permits, and never after the outcome the record bears on became known.
@@ -206,10 +228,14 @@ alert or approval gate that is designed to prevent, detect or flag an error, an 
 unauthorised act — whether the check is automated, systemic or performed by a person.
 
 **D-08 · Decision owner.** The single named individual who holds the authority, under the applicable
-governance arrangement, to approve, reject, amend or defer the matter in question, and who bears the
-consequence of that decision. Where a body decides collectively, its named chair is the decision owner
-for the purposes of these laws. A decision owner is always a person; it is never a role held by no
-named individual, a committee without a named chair, a system, a model or a vendor.
+governance arrangement or documented delegation schedule, to approve, reject, amend, defer or withhold
+the matter in question; who bears the consequence of that decision; and who answers for it afterwards.
+The accountability is held by one person, is not delegable, and is recorded before the output is relied
+upon. Where a body decides collectively, its named chair — or the named authority the delegation
+schedule assigns — is the decision owner for the purposes of these laws, and the record names that
+person. A decision owner is always a natural person: "the team", "management", "the business", "the
+sponsor", "the lenders", "the organisation", a role held by no named individual, a committee without a
+named chair, a system, a model and a vendor are never decision owners.
 
 **D-09 · Engagement lead.** The professional accountable for accepting an engagement or role and for
 allocating work within it. Where the professional works alone, the professional is the engagement lead.
@@ -218,27 +244,52 @@ allocating work within it. Where the professional works alone, the professional 
 moment any of the following becomes true: the matter is material (D-15); it creates a risk to the
 safety of a person; it would change, or would have changed, a decision already taken or about to be
 taken; it affects an output already issued outside the professional's own organisation; it affects a
-contractual, regulatory, tax or financial-reporting position; or the adopting organisation's published
-escalation criteria are met. Reaching the threshold starts the period defined in D-20.
+contractual, regulatory, tax or financial-reporting position; or the escalation criteria published by
+the adopting organisation, stated in the finance documents, or recorded in the delegation schedule are
+met. **Any event a law's element 13 states, any condition recorded before the work begins, and any
+documented value in a delegation schedule or in finance documents are additional to those six triggers
+and never in place of them** — a matter that reaches this threshold requires escalation under
+`PCI-FND-LAW-11` whether or not it appears in any element 13. **The threshold names a destination and
+a time, and the absence of either does not remove the duty:** where no destination is documented the
+matter goes to the next authority above the decision owner (D-08) for it, and where no time is
+documented the time is the period defined in D-20. Reaching the threshold starts that period. The
+obligation does not depend on the professional's expectation of how the recipient will react, or on
+the matter being resolved afterwards.
 
-**D-11 · Evidence.** A record that exists independently of the assertion it supports, that identifies
-its source, its date and its author or issuing system, and that a person other than the author of the
-assertion is able to retrieve and examine. Primary source documents, executed contracts, system
+**D-11 · Evidence.** A dated record that exists independently of the assertion it supports, that
+identifies its source, its version where it has one, and its author or issuing system, and that a
+person other than the author of the assertion is able to retrieve, examine and use to reach the same
+conclusion **without asking that author**. Primary source documents, executed contracts, system
 extracts identified by query and extraction time, measurement and inspection records, third-party
 confirmations, and recorded calculations showing their inputs and method are evidence. The following
 are **not** evidence for the purposes of these laws: an output of an AI system that does not identify
-the source of what it asserts; a statement that a system, model or tool produced a figure, unaccompanied
-by the inputs and the method; a restatement of the assertion in a second document by the same author;
-and an unrecorded recollection.
+the source of what it asserts; an AI-generated summary of a record, as evidence of the underlying fact
+— the underlying record is the evidence; a statement that a system, model or tool produced a figure,
+unaccompanied by the inputs and the method; a restatement of the assertion in a second document by the
+same author; a preparer's own statement offered in support of their own assertion; an unrecorded
+recollection; an unattributed file; an undated extract; an unversioned working copy; a screenshot with
+no source reference; and a dashboard or screen state that cannot be reproduced.
 
-**D-12 · Independent.** A person is independent of an act if all of the following are true: they did
-not perform it; they did not prepare the item it produced; they did not select, build or configure the
-tool, model or AI system that produced it; they hold no conflict (D-05) in its outcome; and their
-remuneration, appraisal or continuation in the engagement is not determined by the outcome the item
-supports. Reporting to the preparer's line manager does not by itself defeat independence; being
-appraised on the outcome does. Where the adopting organisation contains no person meeting this
-definition, independence may be satisfied by a named reviewer engaged from outside it, and where that
-too is impossible the exception process in the relevant law applies.
+**D-12 · Independent.** A person is independent in relation to a specified matter if all of the
+following are true: (a) they did not perform the act, prepare the item or any part of it, or direct,
+specify or approve it; (b) they did not select, build or configure the tool, model or AI system that
+produced it; (c) they hold no conflict (D-05) in its outcome and no financial interest in the matter or
+in a party to it; (d) they receive no fee, bonus, continuing mandate, success payment or other benefit
+that varies with the conclusion reached, and their remuneration, appraisal or continuation in the
+engagement is not determined by the outcome the item supports; (e) they are not accountable for the
+outcome the item reports on; and (f) they satisfy the reporting-line limb. **The reporting-line limb:**
+they do not report to the preparer in respect of the work under review, and are not in the reporting
+line of the person accountable for the outcome for the purpose of that matter. Reporting to the
+preparer's line manager on unrelated work does not by itself defeat independence; being appraised on
+the outcome does. **On a PFL-AI engagement a stricter limb operates** — the person is not in the
+preparer's reporting line at all, and does not report to a person whose performance is measured by the
+work's conclusion. Where two of these tests bear on the same act, the one producing the wider
+obligation governs. Independence is a fact about a relationship to a specified matter, never a state
+of mind, a job title or a permanent designation — which is why a permanently titled "independent
+assurance" function is not independent of an artefact it helped produce. Where the adopting
+organisation contains no person meeting this definition, independence may be satisfied by a named
+reviewer engaged from outside it, and where that too is impossible the exception process in the
+relevant law applies.
 
 **D-13 · Information owner.** The party entitled to decide how a given item of protected information
 may be used, disclosed, stored and processed — ordinarily the client, employer, counterparty or
@@ -252,12 +303,21 @@ or reversed, a decision within the scope of the work would or could have been ta
 (b) it changes a reported figure by more than the quantified tolerance the adopting organisation has
 published for that figure; (c) it affects a contractual, regulatory, tax or financial-reporting
 position; (d) it affects the safety of a person; (e) it affects a party's reliance (D-24); or (f) it
-meets the adopting organisation's published materiality criteria. Where the adopting organisation has
-published no criteria, the decision owner records which of (a) to (e) applies, and why, before the
-output is issued. Materiality is determined on the position as known at the time of the act; a
-determination made after an error is discovered does not displace the determination required at the
-time. The adjective *material* qualifies every noun it precedes in these laws — a
-material assumption, a material error, a material claim — by this same test.
+meets the adopting organisation's published materiality criteria. **A matter bearing on safety,
+legality, a licence or permission, a statutory duty, or the truth of a statement made to a
+decision-maker is material irrespective of size**, and no documented threshold reduces it. Where the
+adopting organisation has published no criteria, the decision owner records which of (a) to (e)
+applies, and why, before the output is issued. Materiality is determined on the position as known at
+the time of the act; a determination made after an error is discovered does not displace the
+determination required at the time. Materiality is judged twice: on the item alone, and on the
+accumulation of items of the same kind since the test was last applied. **Where limb (b) is measured**
+is an application rule and not a second test — for PCL-AI work, the recorded materiality rule stating
+the quantum, the basis and the person who set it, applied consistently between periods; for PFL-AI
+work, the engagement's materiality statement, stated before the work begins in the transaction's own
+metric, with the finance documents overriding it where they state their own; for PML-AI work, the
+organisation's documented financial, schedule or exposure threshold, which reaches only matters purely
+of that character. **PCI sets no percentage.** The adjective *material* qualifies every noun it
+precedes in these laws — a material assumption, a material error, a material claim — by this same test.
 
 **D-16 · Material output.** A deliverable, report, figure, estimate, forecast, model, schedule,
 certificate, valuation, opinion, recommendation or item of advice that is issued outside the
@@ -315,10 +375,21 @@ Reliance begins at the earliest of those acts, not at the moment the output is r
 **D-25 · Source.** A document, dataset, system, instrument, standard, contract, publication or person
 from which a professional takes a fact, a figure, a rule or an interpretation used in a material output.
 
-**D-26 · Verified.** An item is verified when a named person who is a competent reviewer (D-04) for
-that item has applied to it at least one of the eight methods listed in `PCI-FND-LAW-03-PR-01`, and has
-recorded the method used, the scope tested, the inputs used, the date and the result. An item on which
-no such record exists is not verified, however carefully it was produced.
+**D-26 · Verified.** An item, figure, statement, extraction or machine output is verified when a named
+person who is a competent reviewer (D-04) for that item has applied to it, against evidence (D-11), at
+least one of the eight methods listed in `PCI-FND-LAW-03-PR-01` — independent recomputation, source
+tracing, clause-to-summary comparison, sampling on a stated basis, reconciliation, boundary testing,
+sensitivity analysis, or named expert judgement recorded with its reasoning — and has recorded the
+method used, the source or population tested and, where a sample was used, its selection basis, the
+inputs used, the scope tested, the date, the result, and every difference found together with its
+resolution. Reading an output and finding it plausible is not verification. An item on which no such
+record exists is not verified, however carefully it was produced. **One deliberate credential-specific
+narrowing:** where the item is a figure produced by a financial model under PFL-AI, *named expert
+judgement* is not admissible — a modelled figure is reproducible, and an expert's opinion that it looks
+right is not a check on it — and *clause-to-summary comparison* is applied as *clause-to-output
+comparison*, to a model output rather than to a summary. Where a foundational obligation is being
+discharged, the eight-method list governs. PML-AI additionally uses *verification* in the engineering
+verification-and-validation sense; that is a different concept and is not this term.
 
 **D-27 · Working day.** A day on which the adopting organisation ordinarily operates, in the location
 where the work is performed.
@@ -326,6 +397,24 @@ where the work is performed.
 **D-28 · Working record.** The set of records that evidences how a material output was produced — its
 sources, data, assumptions, calculations, transformations, verifications, reviews, approvals and
 issue.
+
+**D-29 · Approved.** A decision, document, figure or version is approved where the person holding
+authority for that decision under the applicable governance arrangement or recorded delegation of
+authority has given assent identifiably, recording the date, the version assented to, and the scope of
+the assent. Silence, absence of objection, unrecorded verbal assent, assent by a person outside their
+recorded authority, and assent recorded after the item was used are **not** approval.
+
+**D-30 · Current.** A record, figure, extract, document or version is current where it is the latest
+version issued by the system or authority that owns it as at the deliverable's stated cut-off or, where
+the deliverable states none, as at its issue date — and where its version identifier and its extraction
+date and time are recorded on or with the deliverable. A record whose version cannot be identified is
+not current, whatever its age.
+
+**A note on the two terms added at D-29 and D-30.** Drafting Manual §4 names *approved* and *current*
+among the terms that always require definition when they appear in an obligation. Both were used
+throughout this set and defined nowhere in it; only `PCL_AI_LAWS.md` carried a definition of either.
+The wording above is PCL-AI's, generalised so that it operates where a deliverable states no cut-off.
+Adding them states a test readers were already expected to apply; it imposes nothing new.
 
 **A note on roles.** *Issuing professional*, *decision owner*, *competent reviewer*, *engagement lead*,
 *information owner* and *records owner* denote capacities, not necessarily different people. On a small
@@ -2983,10 +3072,25 @@ honest fix is a Manual amendment adding those two values, which is outside this 
 [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md). It produced two amendments to this file — the
 emergency allowances in `PCI-FND-LAW-03` and `PCI-FND-LAW-08` element 12, noted in their element 25 — and
 a body of findings against the three certification sets, including a set of definitional collisions
-between this file's `D-01` to `D-28` and the per-credential definitions. Those collisions are resolved
-for now by a reading rule published at the head of each certification volume's Definitions; the durable
-fix is a single **PCI Law Definitions Register**, which the Drafting Manual §4 already contemplates and
-which no file in this set has authority to create.
+between this file's `D-01` to `D-28` and the per-credential definitions.
+
+**Those collisions are now closed.** The durable fix the red team recommended as its finding **P-1** —
+a single **PCI Law Definitions Register**, which Drafting Manual §4 already contemplates — has been
+built at [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), and the definitions above
+were reconciled to it. What changed in this file, and nothing else changed:
+
+- `D-04` **competent reviewer** — gains a recorded-before-the-review limb and a no-assistance-from-the-preparer limb, and states expressly that **independence is not part of competence**, so that `PCI-FND-LAW-10` element 12's supervised-acquisition exception remains usable (red-team **X-6** / **R-5**).
+- `D-05` **conflict** — gains the appearance limb and the future-role limb the PML-AI volume carried, and states that a judgement standard in a law widens the closed list and never narrows it.
+- `D-08` **decision owner** · `D-11` **evidence** · `D-12` **independent** · `D-26` **verified** — restated in the canonical wording, taking the union of the limbs and exclusions the four volumes carried between them. `D-12` keeps its line-reporting carve-out and names the stricter PFL-AI limb as such; `D-26` names the eight admissible methods in the definition itself and states PFL-AI's deliberate narrowing for a figure in a financial model.
+- `D-10` **escalation threshold** — states that a law's element 13 events are additional to the six triggers, and supplies the destination-and-time fallback so the duty survives an organisation that documents neither.
+- `D-15` **material** — gains the *irrespective of size* sentence for safety, legality, a licence, a statutory duty and the truth of a statement, and records how limb (b) is measured in each credential.
+- `D-29` **approved** and `D-30` **current** — added. Manual §4 names both as terms that always require definition, and neither was defined anywhere in this set.
+
+No obligation was widened or narrowed by any of these edits: each states, in one place, the reading that
+the wider-obligation rule at the head of every certification volume already produced. The register
+records what each file previously said, so every change is visible and reversible. Four questions the
+reconciliation could not settle — **R-1**, **R-3**, **R-4** and **R-5** — remain with the
+Interpretation Panel.
 
 ---
 

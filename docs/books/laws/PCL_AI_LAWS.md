@@ -83,13 +83,13 @@ unless it was verified, and the register at
 [`../registries/EXTERNAL_AUTHORITIES.md`](../registries/EXTERNAL_AUTHORITIES.md) is the single
 disclosure point behind these entries.
 
-**A recorded gap in the Manual's category vocabulary.** Manual §6 offers ten categories, none of
-which is *national standard*. Two instruments cited below are neither international standards nor
-publisher-less industry guidance: **ANSI/EIA-748** (a US national standard published by SAE
-International under ANSI accreditation) and the **NIST AI Risk Management Framework** (a voluntary
-framework issued by a national standards institute). Each is classified below by closest fit, with
-the mismatch stated at the point of use so no reader infers more authority than the instrument has.
-The gap is referred to the Interpretation Panel under Charter §6 and is recorded as finding Q13 in
+**Two instruments needing the Manual's later categories.** **ANSI/EIA-748** (a US national standard
+published by SAE International under ANSI accreditation) is classified under Manual §6 **category 11,
+national standard** — it binds only where a contract or procurement regime imports it. The **NIST AI
+Risk Management Framework** is a voluntary framework issued by a national standards institute and is
+classified by its subject with its voluntary status and origin stated at the point of use. Both were
+originally recorded here as a gap in a ten-category vocabulary; the Manual has since added categories
+11 and 12 for exactly these cases, so the gap is closed. The original finding is recorded as Q13 in
 the audit table.
 
 **No endorsement, affiliation or accreditation is claimed or implied.** Naming an external instrument
@@ -115,19 +115,22 @@ created here; every requirement lives in an identified law or process requiremen
 term is used below only in the sense given here.
 
 **Where a term is also defined in the Foundational Laws.** Several terms below — *material*,
-*independent*, *verified*, *evidence*, *competent reviewer*, *decision owner*, *escalation threshold*
-— are also defined, at `D-01` to `D-28`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md).
-The two sets are not identical, and three reading rules resolve the difference. First, **where a
-foundational law states its own defined term by its `D-NN` number, that definition governs that
-foundational obligation**, and nothing here narrows it. Second, **where a definition here and a
-foundational definition both bear on the same act, the one producing the wider obligation governs** —
-Charter §4 states that a PCI Law never lowers an obligation, and this volume's own rule is that no law
-below reduces a foundational one. Third, a term defined here and not there is a PCL-AI term and carries
-only the sense given here. The practical effect of the second rule is that the foundational six-limb
-test of *material* at `D-15` — which makes an item material where it bears on safety, on a
-contractual, regulatory, tax or financial-reporting position, or on a party's reliance — applies to a
-project controls deliverable **in addition to** the materiality rule below, and the materiality rule
-never removes an item that `D-15` catches.
+*independent*, *verified*, *evidence*, *competent reviewer*, *decision owner*, *escalation threshold*,
+*approved*, *current* — are also defined, at `D-01` to `D-30`, in
+[`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). **They now carry the same wording in both
+places.** Each was reconciled to the canonical definition recorded in
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), which also records what this
+volume previously said and why the change was made. Where a credential legitimately measures a limb
+differently — the metric in which materiality is quantified, for instance — the canonical definition
+states that as an application rule rather than as a rival definition.
+
+Three reading rules remain, and they still matter for any term this reconciliation did not reach.
+First, **where a foundational law states its own defined term by its `D-NN` number, that definition
+governs that foundational obligation**, and nothing here narrows it. Second, **where a definition here
+and a foundational definition both bear on the same act, the one producing the wider obligation
+governs** — Charter §4 states that a PCI Law never lowers an obligation, and this volume's own rule is
+that no law below reduces a foundational one. Third, a term defined here and not there is a PCL-AI
+term and carries only the sense given here.
 
 **How element 21 samples are drawn.** Where a law's element 21 tests "a sample selected on a stated
 basis", the sample is selected by the reviewer performing the test, not by the professional whose work
@@ -136,54 +139,95 @@ subject of the test chose is not the test element 21 describes.
 
 ### A. Terms that decide compliance
 
-**material.** An item, error, omission, variance or difference is *material* where it could change a
-decision that a recipient of the deliverable would take on the basis of it. Materiality is decided by
-applying the **materiality rule** — the quantum, the basis on which the quantum is measured, and the
-person who set it. Where the adopting organisation's governance publishes a materiality rule for
-project reporting, that rule applies. Where it does not, the applicable rule is the one the
-professional has recorded with the deliverable — stating the quantum, the basis and their own name —
-applied consistently between periods; the obligation to record and apply it sits in element 11 of each
-law, not here. Materiality is judged twice: on the item alone, and on the accumulation of items of the
-same kind since the rule was last applied.
+**material.** *(Canonical — `D-15`.)* An item, error, omission, variance, difference or fact is
+*material* if any of the following is true: (a) were it wrong, omitted or reversed, a decision within
+the scope of the work would or could have been taken differently, including its timing, its conditions
+or the authority at which it had to be taken; (b) it changes a reported figure by more than the
+quantified tolerance published for that figure; (c) it affects a contractual, regulatory, tax or
+financial-reporting position; (d) it affects the safety of a person; (e) it affects a party's reliance;
+or (f) it meets the adopting organisation's published materiality criteria. **A matter bearing on
+safety, legality, a licence or permission, a statutory duty, or the truth of a statement made to a
+decision-maker is material irrespective of size**, and no documented threshold reduces it. Where no
+criteria are published, the *decision owner* records which of (a) to (e) applies, and why, before the
+output is issued. Materiality is determined on the position as known at the time of the act, and is
+judged twice: on the item alone, and on the accumulation of items of the same kind since the test was
+last applied. **In PCL-AI work, limb (b) is measured by the materiality rule** — the quantum, the basis
+on which the quantum is measured, and the person who set it. Where the adopting organisation's
+governance publishes a materiality rule for project reporting, that rule applies; where it does not,
+the applicable rule is the one the professional has recorded with the deliverable, stating the quantum,
+the basis and their own name, applied consistently between periods. The obligation to record and apply
+it sits in element 11 of each law, not here. **PCI sets no percentage.**
 
-**independent.** A person is *independent* of an activity where four facts hold: they did not prepare
-the work under review; they do not report to the preparer in respect of that work; they hold no
-personal, commercial or performance benefit that turns on the outcome of the review; and they neither
-selected nor configured the AI tool that produced any output under review. Independence is
-constituted by those four facts and not by intent or seniority. Where no person inside the project
-organisation meets them, independence is obtained from outside it — a functional line, another
+**independent.** *(Canonical — `D-12`.)* A person is *independent* in relation to a specified matter
+where all of the following are true: (a) they did not perform the act, prepare the item or any part of
+it, or direct, specify or approve it; (b) they did not select, build or configure the tool, model or AI
+system that produced it; (c) they hold no conflict in its outcome and no financial interest in the
+matter or in a party to it; (d) they receive no fee, bonus, continuing mandate, success payment or
+other benefit that varies with the conclusion reached, and their remuneration, appraisal or
+continuation in the engagement is not determined by the outcome the item supports; (e) they are not
+accountable for the outcome the item reports on; and (f) they satisfy the reporting-line limb. **The
+reporting-line limb:** they do not report to the preparer in respect of the work under review, and are
+not in the reporting line of the person accountable for the outcome for the purpose of that matter;
+reporting to the preparer's line manager on unrelated work does not by itself defeat independence, but
+being appraised on the outcome does. Independence is a fact about a relationship to a specified matter,
+never a state of mind, a job title or a permanent designation. Where no person inside the project
+organisation meets these tests, independence is obtained from outside it — a functional line, another
 project, an internal audit function, a parent entity or an external party.
 
-**verified.** An assertion is *verified* where a named person has performed a stated verification
-method against **evidence**, and has recorded the method, the date, the population or the sample and
-its selection basis, the result, and every difference found together with its resolution. The
-admissible methods are: independent recomputation, source tracing, reconciliation, sampling on a
-stated basis, boundary testing, sensitivity analysis, clause-to-summary comparison, and named expert
-judgement recorded with its reasoning. Reading an output and finding it plausible is not verification.
+**verified.** *(Canonical — `D-26`.)* An item, figure, statement, extraction or machine output is
+*verified* where a named person who is a *competent reviewer* for that item has applied to it, against
+**evidence**, at least one of the eight admissible methods, and has recorded the method used, the
+source or population tested and, where a sample was used, its selection basis, the inputs used, the
+scope tested, the date, the result, and every difference found together with its resolution. **The
+eight admissible methods** — the list at `PCI-FND-LAW-03-PR-01` — are: independent recomputation,
+source tracing, clause-to-summary comparison, sampling on a stated basis, reconciliation, boundary
+testing, sensitivity analysis, and named expert judgement recorded with its reasoning. Reading an
+output and finding it plausible is not verification, and an item on which no such record exists is not
+verified however carefully it was produced.
 
-**current.** A record, figure, extract or document is *current* where it is the latest version issued
-by the system or authority that owns it as at the deliverable's **cut-off**, and its version
-identifier and extraction date and time are recorded on or with the deliverable.
+**current.** *(Canonical — `D-30`.)* A record, figure, extract, document or version is *current* where
+it is the latest version issued by the system or authority that owns it as at the deliverable's
+**cut-off** or, where the deliverable states none, as at its issue date — and where its version
+identifier and its extraction date and time are recorded on or with the deliverable. A record whose
+version cannot be identified is not current, whatever its age.
 
-**competent reviewer.** A person who can perform the verification method a law requires without
-assistance from the preparer, who holds the subject knowledge at the level of the relevant PCL-AI
-Body of Knowledge domain, and who is **independent** as defined. Competence is evidenced by the
-demonstrated ability to reproduce the calculation or trace the record — never by job title alone.
+**competent reviewer.** *(Canonical — `D-04`.)* A named individual who, in relation to a particular
+item, satisfies all of: (a) their competence in the subject matter is evidenced by a qualification, an
+assessed competence record held by the adopting organisation, or documented experience of comparable
+work, recorded for that class of work before the review begins; (b) they are able to state what would
+make the item wrong and which method would detect that error; and (c) they are able to perform the
+verification method the law requires, and to reach a conclusion on the matter, without assistance from
+the preparer or reliance on the preparer's explanation of it. Competence is evidenced by the
+demonstrated ability to reproduce the calculation or trace the record — never by job title, seniority
+or availability. **Independence is not a limb of competence:** where a law requires the reviewer to be
+*independent*, that requirement is imposed by that law's element 10 and is tested separately.
 
-**decision owner.** The single named individual holding delegated authority to take, or to withhold,
-the decision that the deliverable supports, and accountable for it. A committee is not a decision
-owner; where a body approves collectively, its named chair is the decision owner for the purposes of
-these laws. "The team", "management", "the business" and "the organisation" are never decision owners.
+**decision owner.** *(Canonical — `D-08`.)* The single named individual holding authority, under the
+applicable governance arrangement or documented delegation schedule, to take, withhold, approve,
+reject, amend or defer the decision that the deliverable supports; who bears its consequence; and who
+answers for it afterwards. The accountability is held by one person, is not delegable, and is recorded
+before the output is relied upon. A committee is not a decision owner; where a body approves
+collectively, its named chair — or the named authority the delegation schedule assigns — is the
+decision owner, and the record names that person. "The team", "management", "the business", "the
+sponsor", "the lenders" and "the organisation" are never decision owners.
 
-**evidence.** A retained, dated record that originates outside the assertion it supports and is
-sufficient for a **competent reviewer** to reach the same conclusion without asking the preparer. A
-preparer's own statement, an unretained screen view, an unversioned working copy, and an AI-generated
-summary of a record are not evidence of the underlying fact — the underlying record is.
+**evidence.** *(Canonical — `D-11`.)* A dated record that exists independently of the assertion it
+supports, that identifies its source, its version where it has one, and its author or issuing system,
+and that a person other than the author of the assertion can retrieve, examine and use to reach the
+same conclusion **without asking that author**. The following are not evidence: an output of an AI
+system that does not identify the source of what it asserts; an AI-generated summary of a record, as
+evidence of the underlying fact — the underlying record is; a statement that a system, model or tool
+produced a figure, unaccompanied by the inputs and the method; a restatement of the assertion in a
+second document by the same author; a preparer's own statement offered in support of their own
+assertion; an unrecorded recollection; an unattributed file; an undated extract; an unversioned working
+copy; an unretained screen view or a screenshot with no source reference; and a dashboard or screen
+state that cannot be reproduced.
 
-**approved.** A decision is *approved* where the person holding authority for that decision under the
-project's recorded delegation of authority has given assent identifiably, recording the date, the
-version assented to and the scope of the assent. Silence, absence of objection, unrecorded verbal
-assent, and assent recorded after the figure was used are not approval.
+**approved.** *(Canonical — `D-29`.)* A decision, document, figure or version is *approved* where the
+person holding authority for that decision under the applicable governance arrangement or recorded
+delegation of authority has given assent identifiably, recording the date, the version assented to and
+the scope of the assent. Silence, absence of objection, unrecorded verbal assent, assent by a person
+outside their recorded authority, and assent recorded after the item was used are not approval.
 
 **commitment.** A financial obligation the project has entered into for goods, services or works not
 yet fully received or performed, evidenced by an executed contract, purchase order, subcontract, work
@@ -211,19 +255,23 @@ whose finish drives no successor relationship — including an activity whose on
 start-to-start relationship, so that its finish drives nothing, and an activity whose only successor
 is a finish-to-finish relationship, so that its start is driven by nothing.
 
-**escalation threshold.** The event stated in element 13 of a law at which the professional must
-raise the matter in writing to the **decision owner** and, where the law says so, above the decision
-owner. Reaching the threshold obliges escalation; the obligation does not depend on the
-professional's expectation of how the recipient will react, or on the matter being resolved
-afterwards. **The events listed in element 13 of a law are additional to, and never in place of, the
-foundational escalation threshold at `D-10`**, which is reached at the earliest of six triggers
-including materiality, a risk to the safety of a person, and an effect on a decision already taken; a
-matter that meets `D-10` requires escalation under `PCI-FND-LAW-11` whether or not it appears in any
-element 13 below. **The time within which the matter must be raised** is the period the adopting
-organisation's published procedure states and, where it publishes none, the foundational period at
-`D-20` — one working day where the matter creates a risk to the safety of a person or an ongoing
-financial loss, five working days otherwise, running from the moment the professional first knows or
-suspects the matter rather than from the moment they confirm it.
+**escalation threshold.** *(Canonical — `D-10`.)* The escalation threshold for a matter is reached at
+the earliest moment any of the following becomes true: the matter is *material*; it creates a risk to
+the safety of a person; it would change, or would have changed, a decision already taken or about to be
+taken; it affects an output already issued outside the professional's own organisation; it affects a
+contractual, regulatory, tax or financial-reporting position; or the escalation criteria published by
+the adopting organisation or recorded in the delegation schedule are met. On reaching it the
+professional must raise the matter in writing to the **decision owner** and, where the law says so,
+above the decision owner. **Any event stated in element 13 of a law below is additional to those six
+triggers and never in place of them**; a matter that reaches the threshold requires escalation under
+`PCI-FND-LAW-11` whether or not it appears in any element 13. **The threshold names a destination and a
+time, and the absence of either does not remove the duty:** where no destination is documented the
+matter goes to the next authority above the decision owner for it, and where no time is documented the
+time is the foundational period at `D-20` — one working day where the matter creates a risk to the
+safety of a person or an ongoing financial loss, five working days otherwise, running from the moment
+the professional first knows or suspects the matter rather than from the moment they confirm it.
+Reaching the threshold obliges escalation; the obligation does not depend on the professional's
+expectation of how the recipient will react, or on the matter being resolved afterwards.
 
 ### B. Subject-matter terms
 
@@ -271,9 +319,13 @@ a feature embedded in a controls, scheduling, commercial or accounting applicati
 
 **AI assistance.** Any use of an AI tool in producing a project controls deliverable.
 
-**material AI assistance.** AI assistance is *material* where removing the AI-generated contribution
-would change a figure in the deliverable by more than the materiality rule applied, or would change a
-recommendation, a classification that affects entitlement or coding, or a stated conclusion.
+**material AI assistance.** *(Canonical — carried to the whole corpus by
+[`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md).)* AI assistance in producing an
+output is *material* where removing the AI-generated contribution would change a figure in the output
+by more than the applicable materiality measurement, or would change a recommendation, a classification
+that affects entitlement, coding, ranking or eligibility, or a stated conclusion. *Material AI
+contribution* means the same thing. Volume of use, licence cost and whether a human edited the output
+afterwards are irrelevant to the test.
 
 **tool configuration record.** The record of which AI tool, which model or version, and which
 material settings, prompts or data sources produced a given output, retained so that the output is
@@ -984,9 +1036,8 @@ personally examine every difference the tool could not match.
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of a recognised set of management-system expectations under which baseline control
   operates. **Edition and guideline count deliberately not asserted**, because the guideline count
-  changed at the most recent revision. Nature: a **national standard**; Manual §6 has no such
-  category, so it is classified here at closest fit as category 3, voluntary consensus standard, with
-  the mismatch stated — it is national, not international. Currency checked 2026-08-03 (register
+  changed at the most recent revision. Nature: a **national standard** — Manual §6
+  **category 11**, which binds only where a contract or procurement regime imports it. Currency checked 2026-08-03 (register
   EXT-130 / EXT-090). Applicability: binding only where a contract or a procurement regime imports it;
   it imposes nothing through this law.
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
@@ -2565,8 +2616,7 @@ is approved.
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of recognised management-system expectations covering the definition of work and its
   measurement. **Edition and guideline count deliberately not asserted.** Nature: a **national
-  standard**; Manual §6 offers no such category, so it is classified at closest fit as category 3,
-  voluntary consensus standard, with the mismatch stated — it is national, not international. Checked
+  standard**; Manual §6 **category 11, national standard**. Checked
   2026-08-03 (registers EXT-130 / EXT-090). Applicability: binding only where a contract or procurement
   regime imports it.
 - **Project Management Institute — *The Standard for Earned Value Management*.** Cited for the
@@ -2713,7 +2763,7 @@ against something outside the tool.
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of recognised expectations that performance measurement rest on the work actually
   accomplished. Edition and guideline count deliberately not asserted. Nature: national standard,
-  classified at closest fit as Manual §6 category 3 with the mismatch stated. Checked 2026-08-03
+  classified as Manual §6 **category 11, national standard**. Checked 2026-08-03
   (EXT-130 / EXT-090). Binding only where a contract or procurement regime imports it.
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
   international treatment of performance measurement. Edition: 2018 per register; second edition in
@@ -2850,8 +2900,7 @@ publication rather than explained afterwards.
 
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of recognised expectations that performance data be internally consistent. Edition and
-  guideline count deliberately not asserted. Nature: national standard, classified at closest fit as
-  Manual §6 category 3 with the mismatch stated. Checked 2026-08-03 (EXT-130 / EXT-090). Binding only
+  guideline count deliberately not asserted. Nature: **national standard** — Manual §6 category 11. Checked 2026-08-03 (EXT-130 / EXT-090). Binding only
   where imported by contract or procurement regime.
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
   international treatment of earned value data. Edition 2018 per register; no clause asserted. Nature:
@@ -4589,8 +4638,7 @@ itself, which is generated text and not evidence of the provider's obligations.
 - **NIST (US Department of Commerce) — *Artificial Intelligence Risk Management Framework (AI RMF 1.0)*.**
   Cited for the existence of a voluntary framework organising AI risk into govern, map, measure and
   manage functions. Edition: AI RMF 1.0, January 2023, per the register. Nature: a voluntary framework
-  from a national standards institute; Manual §6 offers no matching category, so it is classified at
-  closest fit as category 7, industry guidance, with the mismatch stated — it has a single authoritative
+  from a national standards institute; Classified as Manual §6 category 7, industry guidance: it has a single authoritative
   publisher but no standard-setter's binding force. Checked 2026-08-03 (register EXT-080). Applicability:
   expressly voluntary and non-regulatory.
 
@@ -4754,8 +4802,7 @@ first, that is a cross-check and not a verification, and it must be recorded as 
   Voluntary unless adopted.
 - **NIST — *AI Risk Management Framework (AI RMF 1.0)*.** Cited for the existence of a voluntary framework
   addressing measurement and management of AI risk. Edition: 1.0, January 2023. Nature: voluntary
-  framework from a national standards institute; classified at closest fit as Manual §6 category 7,
-  industry guidance, with the mismatch stated. Checked 2026-08-03 (EXT-080). Expressly voluntary and
+  framework from a national standards institute; classified as Manual §6 category 7, industry guidance. Checked 2026-08-03 (EXT-080). Expressly voluntary and
   non-regulatory.
 
 **18. Jurisdictional caution.** Where AI is used in a context that applicable legislation classifies as
@@ -5123,7 +5170,7 @@ produced no change say so, and say why.
 | 10 | Can a professional technically comply while defeating its purpose? | 03.02 · 05.02 · 05.04 · 06.02 · 10.01 · 10.03 · 12.02 · 13.02 · 13.03 | **The most productive question in the audit.** Eight specific defeats were identified and closed by adding prohibitions or process requirements: adding meaningless logic to clear an open-end count (`10.01-PR-04`); splitting a change to stay below an approval band (`05.02` element 6; `05.04-PR-05`); assembling a material baseline edit from immaterial ones (`03.02` element 11 removes any threshold); claiming progress within a verification sample's blind spot (`06.02-PR-02` requires the highest-value and most-moved claims to be in the sample); leaving remaining durations to fall by elapsed time (`10.03-PR-02`); choosing a confidence level after seeing the answer (`12.02-PR-01` requires the levels either side to be shown); drawing the verification sample only from items the tool flagged (`13.02-PR-03`); and accepting "no issues found" from a tool as assurance (`13.03-PR-05`). |
 | 11 | Does it conflict with another PCI law? | 03.02 ↔ 10.03 · 04.01 ↔ 11.01 · 05.04 ↔ 12.03 · 03.04 ↔ 06.04 | Four overlaps were found and scoped rather than left to interpretation. Schedule baseline protection sits in `03.02-PR-04` and is cross-referred from `10.03-PR-04` rather than restated. `04.01` governs reconciliation at issue; `11.01` governs reproduction afterwards. Change funding sits in `05.04`; contingency drawdown in `12.03`, with an express prohibition on using one to do the other. Forecast completeness sits in `03.04`; method disclosure in `06.04`, reconciled by `06.04-PR-03`. |
 | 12 | Does it duplicate an external standard unnecessarily? | 12.01 · 12.02 · 03.02 · 06.01 · 06.02 · 06.03 | ISO 31000's risk process is **not** restated: the two risk laws impose statement quality, ownership and disclosure obligations the standard does not contain, and say expressly that they do not require conformity with it. The earned value laws cite ANSI/EIA-748 for the existence of management-system expectations only and impose PCI's own tests. All citations of the IFRS *Conceptual Framework* carried by the superseded set were **removed**: Manual §6 forbids sourcing a requirement to it, and it was doing no work. |
-| 13 | Does it misrepresent external authority? | 03.02 · 06.01 · 06.02 · 06.03 · 13.01 · 13.02 · 13.04 · 10.01 | ANSI/EIA-748 is now described as a **national standard binding only where a contract or procurement regime imports it**, with its **edition and guideline count deliberately not asserted** — the count changed at the most recent revision, and the superseded set's silence on it was correct and is preserved. Manual §6 has no *national standard* category, so it and the NIST AI RMF are classified at closest fit with the mismatch stated at each use and referred to the Interpretation Panel under Charter §6. The EU AI Act and the GDPR were moved out of element 17 into element 18, because the corpus uses them as jurisdictional cautions and not as authority. The OECD AI Principles are marked expressly as a Council Recommendation and not legislation. No clause number, article or judicial decision is asserted anywhere in the set. |
+| 13 | Does it misrepresent external authority? | 03.02 · 06.01 · 06.02 · 06.03 · 13.01 · 13.02 · 13.04 · 10.01 | ANSI/EIA-748 is now described as a **national standard binding only where a contract or procurement regime imports it**, with its **edition and guideline count deliberately not asserted** — the count changed at the most recent revision, and the superseded set's silence on it was correct and is preserved. Manual §6 has since added a *national standard* category (11) and a *supervisory guidance* category (12); ANSI/EIA-748 is now classified under category 11, and the NIST AI RMF under category 7 with its voluntary status and national origin stated at each use. The EU AI Act and the GDPR were moved out of element 17 into element 18, because the corpus uses them as jurisdictional cautions and not as authority. The OECD AI Principles are marked expressly as a Council Recommendation and not legislation. No clause number, article or judicial decision is asserted anywhere in the set. |
 | 14 | Does it require legal or jurisdiction-specific advice? | All 33, materially 01.01 · 01.02 · 05.02 · 07.01 · 07.02 · 07.03 · 10.02 · 11.01 · 12.02 · 13.01 | Element 18 in every law. `07.01-PR-03` was added to make the competence boundary an obligation rather than a caution: a controls professional must refer questions of contractual meaning and entitlement and must not state a legal conclusion. `11.01` element 18 records that a retention obligation never overrides a legal duty to delete personal data. |
 | 15 | Does it define the relevant materiality threshold? | All 33 | Element 11 in every law, and a single defined **materiality rule** in the Definitions that is configurable by the adopting organisation's governance and, failing that, recorded by the professional. **No percentage is invented anywhere in the set.** Where a number would have been arbitrary — the contingency confidence level, the near-critical float range, the variance reporting basis — the law requires the basis and the decision-maker to be recorded instead. |
 | 16 | Does it cover AI use? | All 33 | Elements 14, 15 and 16 appear in every law, not only in Domain 13, and element 16 names a method in each — recomputation, source tracing, reconciliation, sampling on a stated basis, boundary testing, sensitivity analysis, clause-to-summary comparison or named human judgement recorded with reasoning. "Review the AI output" appears nowhere. |
@@ -5150,6 +5197,21 @@ where a stage was performed with AI assistance rather than by a named human. For
   four-file corpus; its findings and their disposition are recorded in
   [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md), and the amendments it produced in this file are
   noted in the element 25 of each law changed and in the question 6 row above.
+- **Definitions reconciliation.** The red team's structural finding **P-1** — that no PCI Law
+  Definitions Register existed, so each volume built its own and seven compliance-deciding terms
+  diverged — has since been closed. The register is published at
+  [`PCI_LAW_DEFINITIONS_REGISTER.md`](PCI_LAW_DEFINITIONS_REGISTER.md), and §A above was reconciled to
+  it. In this file that changed the wording of *material*, *independent*, *verified*, *current*,
+  *competent reviewer*, *decision owner*, *evidence*, *approved*, *escalation threshold* and *material
+  AI assistance*; **no obligation changed**, because each now states in one place the reading the
+  wider-obligation rule at the head of these Definitions already produced. Two substantive corrections
+  are worth naming. First, *competent reviewer* no longer folds independence into competence — where a
+  law requires an independent reviewer, its element 10 says so and is tested separately, which is what
+  makes `PCI-FND-LAW-10` element 12's supervised-acquisition exception usable again. Second, a
+  **circular definition** was removed: *evidence* was defined by reference to a *competent reviewer*,
+  *competent reviewer* by the ability to perform *the verification method*, and *verified* by
+  application of a method to *evidence* — a closed loop in which none of the three could be applied
+  without one of the others. *Evidence* is now defined by properties of the record itself.
 - **Stages 4 to 8 and 10 to 13** — technical review, standards and legal-characterisation review,
   practitioner consultation, impact assessment, scenario testing, revision, approval, publication and
   post-implementation review — **have not been performed.** This set is therefore a draft for approval and
@@ -5162,7 +5224,7 @@ where a stage was performed with AI assistance rather than by a named human. For
 
 External-reference categories are Manual §6 numbers: **2** authoritative financial-reporting standard ·
 **3** international voluntary standard · **4** contract framework · **5** professional framework ·
-**7** industry guidance. Where a national instrument is classified at closest fit, the mismatch is stated
+**7** industry guidance. A national standard is classified under category **11**, added to the Manual for exactly this case
 in the law and in audit finding 13. "—" means the law cites no external authority and says why.
 
 | ID | Official title | Anchor domain | Principal obligation | Ext. ref. categories |

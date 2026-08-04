@@ -323,6 +323,15 @@ Every external reference is classified as exactly one of these, and the categori
   supervisory framework) have no legal force of their own and apply only as a national authority
   transposes them or a supervised firm is subject to them.
 
+**The category describes the instrument, not the use PCI makes of it.** An instrument has one
+category everywhere it appears; how a particular law relies on it is a separate statement. Writing
+"category 10 — illustrative practice" for the EU AI Act because *this* law only cites it to
+illustrate a shape gives the same instrument two categories across the corpus, which is the
+inconsistency the classification exists to prevent. Legislation cited illustratively is still
+legislation: give it category 1 and say in the same bullet that it is relied on for no requirement in
+this law. The pattern to follow is: **`category` (what it is) · `relied on for` (what this law does
+with it) · `limitation` (where and on whom it bites).**
+
 **Never invent** a clause number, article, edition, effective date, judicial decision or requirement.
 Where a precise provision is not verified, cite the instrument by name only. Every reference records
 the date its currency was checked, and adds "verify current requirements" where the authority can
