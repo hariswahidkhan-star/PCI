@@ -1145,8 +1145,9 @@ output here is a decision and not a number. Fictitious throughout.*
    the grantor's project director, who is the subject of the concern. Correspondence, the proposed
    mandate and the diligence file are preserved. Nobody questions the consultant, and nobody explains
    to the consultant why the signature has not come. The bid team is told only that the engagement
-   is on hold pending clearance, and is instructed to plan the bid without an intermediary. If the answer does
-   not arrive before the deadline, the sponsor bids without the consultant or does not bid.
+   is on hold pending clearance, and is instructed to plan the bid without an intermediary. If the
+   answer does not arrive before the deadline, the sponsor bids without the consultant or does not
+   bid.
 5. **Interpretation.** Three readings, and the third is the one to carry. **The stop is the
    decision.** There is no state in which the leader is "still considering" while the mandate is
    signed and the fee is paid; work that continues has decided to continue, and the person who kept
