@@ -3,7 +3,7 @@
 **Status:** Certification Laws for the **PCI AI Project Finance Leader** credential (PFL-AI).
 Version 2.0 — a complete reconstruction of the twenty-four-law v1.0 set onto the twenty-five-element
 structure required by the **PCI Law Drafting Manual** §5. **Thirty-three laws** and **one hundred and
-fifty-five process requirements**, anchored to eleven of the sixteen domains of the PFL-AI Body of
+fifty-six process requirements**, anchored to eleven of the sixteen domains of the PFL-AI Body of
 Knowledge (`../pfl-ai/`).
 
 **Governing instruments:** the [`PCI Professional Laws Charter`](PCI_PROFESSIONAL_LAWS_CHARTER.md)
@@ -160,6 +160,24 @@ reader can apply — what makes it so, measured against what, decided by whom (M
 definition below is circular.** Terms are used in these senses throughout, and a law that needs a
 narrower sense defines it in its own element 4.
 
+**Where a term is also defined in the Foundational Laws.** *material*, *independent*, *verified*,
+*evidence*, *competent reviewer*, *decision owner* and *escalation threshold* are also defined, at
+`D-01` to `D-28`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). The two sets are not
+identical, and three reading rules resolve the difference. First, **where a foundational law states
+its own defined term by its `D-NN` number, that definition governs that foundational obligation**, and
+nothing here narrows it. Second, **where a definition here and a foundational definition both bear on
+the same act, the one producing the wider obligation governs** — Charter §4 states that a PCI Law
+never lowers an obligation. Third, a term defined here and not there is a PFL-AI term and carries only
+the sense given here. The practical effect of the second rule is that the foundational six-limb test of
+*material* at `D-15` — which makes an item material where it bears on safety, on a contractual,
+regulatory, tax or financial-reporting position, or on a party's reliance — applies **in addition to**
+the engagement's materiality statement, and the materiality statement never removes an item that
+`D-15` catches.
+
+**How element 21 samples are drawn.** Where a law's element 21 tests a sample, the sample is selected
+by the reviewer performing the test, not by the professional whose work is under review, and the
+reviewer records the basis of selection.
+
 ### Core compliance-deciding terms
 
 **material** — A difference, item, omission or fact is *material* when, applied to the output in
@@ -185,7 +203,13 @@ tracing, clause-to-output comparison, reconciliation, sampling on a stated basis
 or sensitivity analysis — and has recorded the method, the source, the result and the date. Reading
 an output and finding it plausible is not verification. (*Collision flag:* the suite uses *verify* in
 this AI-assurance sense throughout, not in the engineering verification-and-validation sense recorded
-in `../registries/TERMINOLOGY_AUDIT.md` §2.2.)
+in `../registries/TERMINOLOGY_AUDIT.md` §2.2.) (*Collision flag, methods:* this list is the list of
+admissible methods at `PCI-FND-LAW-03-PR-01`, with two deliberate differences stated here rather than
+left to be discovered. *Clause-to-output comparison* is that list's *clause-to-summary comparison*
+applied to a model output rather than to a summary. *Named expert judgement* is deliberately absent:
+a figure produced by a financial model is reproducible, and an expert's opinion that it looks right is
+not a check on it. Where a foundational obligation is being discharged, the foundational list governs;
+where a figure in a *financial model* is being verified under this volume, this narrower list does.)
 
 **evidence** — A dated, retrievable record, attributable to an identified author or issuing party,
 which a person other than its author can retrieve and use to reach the same conclusion. An
@@ -639,13 +663,18 @@ professional obligations, 1.3.3 conflicts and independence. Also Domain 13 KA 13
 streams).
 
 **21. Compliance test.** A reviewer takes the engagement file and the conflicts register and performs
-four steps. (a) Confirms a screening record exists dated on or before the date work began. (b) For
+five steps. (a) Confirms a screening record exists dated on or before the date work began. (b) For
 each interest on the register at that date that touches a party to the transaction, locates the
 written disclosure and the consent, and confirms the consent post-dates the disclosure. (c) Confirms
 the engagement terms state the role and the side. (d) Where an information barrier is relied upon,
 locates a test result within the stated interval, performed by a person independent of both sides.
-Compliance is demonstrated when all four steps complete for every interest; an interest on the
-register with no disclosure, or a consent pre-dating its disclosure, is a breach.
+(e) **Works from the transaction rather than from the register:** compares the register against the
+transaction's party, counterparty, adviser, contractor and offtaker lists, the fee and engagement
+terms, and the credential holder's recent engagement history, and finds no relationship of a kind
+listed in `PCI-FND-LAW-08` that the register omits. Compliance is demonstrated when all five steps
+complete for every interest; an interest on the register with no disclosure, or a consent pre-dating
+its disclosure, is a breach, and so is a relationship that step (e) finds and the register does not
+carry — **a clean register is a pass only when step (e) confirms it is complete**.
 
 **22. Breach indicators.** A register with no entries on a transaction with many counterparties; a
 consent dated the same day as, or before, the disclosure it relies on; an engagement letter silent on
@@ -668,6 +697,10 @@ approval · supersedes `PFL-LAW-01-02` *Conflict Disclosure and the Two-Hat Rule
 note: restructured onto the twenty-five-element form; *connected person* defined for the first time;
 information-barrier testing raised from a minimum action to an identified process requirement;
 compliance test made performable; the ISO/IEC 17024 reference updated to record the 2026 edition.
+**Stage 9 amendment:** the compliance test began from the conflicts register, so an interest never
+entered on the register was never tested and the whole law could be satisfied by omission; step (e) now
+works from the transaction's own party, adviser and fee records against the relationship list in
+`PCI-FND-LAW-08`.
 
 ---
 
@@ -3516,6 +3549,12 @@ quantified effect where it can be quantified.
 - **PCI-PFL-LAW-13.01-PR-05 — No self-review.** A credential holder must not review their own work, and
   must not accept a review engagement whose fee, continuing mandate or other benefit varies with the
   conclusion reached.
+- **PCI-PFL-LAW-13.01-PR-06 — Exclusions named on the face of the report.** The reviewer must record,
+  in the *review scope statement* and on the face of the report, each excluded area that the reviewer
+  considers capable of a *material* effect on the conclusion, must state that the exclusion was set by
+  the engaging party, and must not describe the conclusion as unqualified while such an exclusion
+  stands. A scope narrow enough to exclude the area the reviewer believes carries the risk is a
+  reportable fact, not a private one.
 
 **6. Prohibited actions.** Reviewing one's own work; accepting a fee or mandate contingent on the
 conclusion; issuing a report without a scope statement; re-dating a scope statement after findings are
@@ -3526,7 +3565,8 @@ its removal.
 **7. Required evidence.** The independence statement addressing all four limbs, dated before
 engagement; the review scope statement as first issued and any recorded amendment; the findings log
 with quantified effects; the version identification; the engagement terms showing the fee basis; the
-reviewer's working papers supporting each finding.
+reviewer's working papers supporting each finding; the record under PR-06 of each excluded area the
+reviewer considers capable of a material effect.
 
 **8. Responsible role.** The named individual reviewer who signs the report, personally. The engaging
 party's *decision owner* for engaging a reviewer who satisfies element 10.
@@ -3618,14 +3658,17 @@ KA 13.2 Model audit · including the materiality threshold expressed in the tran
 Also KA 13.1 (the diligence streams) and Domain 6 KA 6.4 (model audit and its economics).
 
 **21. Compliance test.** A reviewer of the review takes the report, the engagement file and the model,
-and performs five steps. (a) Confirms an independence statement addressing all four limbs is dated
+and performs six steps. (a) Confirms an independence statement addressing all four limbs is dated
 before the engagement began. (b) Confirms the fee basis in the engagement terms does not vary with the
 conclusion. (c) Compares the scope statement as first issued with the one in the report and confirms
 either that they match or that a recorded, reasoned amendment exists dated before the findings. (d)
 Confirms every finding in the working papers appears in the report, with its quantified effect. (e)
-Confirms the report identifies the model version reviewed and disclaims later versions. Compliance is
-demonstrated when all five complete; a finding in the working papers absent from the report is a
-breach.
+Confirms the report identifies the model version reviewed and disclaims later versions. (f) Reads the
+scope statement's exclusions against the transaction's own risk register and the working papers, and
+confirms that every exclusion the working papers show the reviewer considered capable of a *material*
+effect is named on the face of the report under PR-06. Compliance is demonstrated when all six
+complete; a finding in the working papers absent from the report is a breach, and so is an exclusion
+the working papers treat as material that the report does not carry.
 
 **22. Breach indicators.** A report describing itself as independent with no independence statement; a
 success fee in the engagement letter; a scope statement dated after the fieldwork; findings graded
@@ -3646,6 +3689,10 @@ approval · supersedes `PFL-LAW-13-01` *Independence of Review* (v1.0). Amendmen
 the twenty-five-element form; *review scope statement* and *finding* defined; the four-limb independence
 test brought in from the Definitions; the labelled non-independent review route added at element 12,
 which v1.0 lacked and which practitioners resolved by calling such reviews independent anyway.
+**Stage 9 amendment:** an independent reviewer could satisfy every requirement while the engaging party
+scoped the review away from the area carrying the risk, producing a clean report that reads as
+assurance; `PR-06` and step (f) of element 21 require an exclusion the reviewer considers capable of a
+material effect to be named on the face of the report.
 
 ---
 
@@ -4295,8 +4342,14 @@ availability period, on any facility.
 precedent*, *evidence*, *material*, *decision owner*, *competent reviewer*, *verified*, *source line*.
 **In balance** — the state in which committed and available funding at least equals the remaining
 *cost-to-complete* plus the amounts the *finance documents* require to be held, tested on the basis those
-documents state. **Certified value** — the value of work performed as certified by the person the
-construction contract entitles to certify it.
+documents state. **Committed and available funding** — amounts that a party is legally bound to provide
+under an executed instrument and that the borrower is entitled to draw on satisfying conditions within
+its own control. A letter of support, a letter of comfort, an indication of interest, an uncommitted
+facility, a term sheet, an unexecuted equity subscription, a forecast surplus and an anticipated
+contingency release are **not** committed and available funding, and including any of them in the
+in-balance test misstates it. Where such an amount is presented at all, it is presented separately,
+named, and identified as uncommitted. **Certified value** — the value of work performed as certified by
+the person the construction contract entitles to certify it.
 
 **5. Required actions.**
 
@@ -4402,11 +4455,13 @@ control, including advance payments and bonds. Also Domain 8 KA 8.2 (schedule-dr
 **21. Compliance test.** A reviewer takes a draw request pack and performs five steps. (a) Traces every
 requested amount to a *certified value* or an evidenced incurred cost. (b) Confirms the *cost-to-complete*
 used is dated on or after the request date's cut-off and was prepared under `PCI-PFL-LAW-14.03`. (c)
-Recomputes the in-balance test on the documented basis and obtains the disclosed result. (d) Confirms
-each condition to the drawing is confirmed satisfied, and that any waived or deferred condition is named
-in the request. (e) Confirms advance payments and retention are shown separately and that recovery
-reconciles. Compliance is demonstrated when all five complete; a requested amount with no certificate or
-evidence of cost is a breach.
+Recomputes the in-balance test on the documented basis and obtains the disclosed result, **tracing every
+amount counted as funding to the executed instrument that commits it** and excluding any amount that is
+not *committed and available funding*. (d) Confirms each condition to the drawing is confirmed
+satisfied, and that any waived or deferred condition is named in the request. (e) Confirms advance
+payments and retention are shown separately and that recovery reconciles. Compliance is demonstrated
+when all five complete; a requested amount with no certificate or evidence of cost is a breach, and so
+is an in-balance test that turns positive only because an uncommitted amount was counted in it.
 
 **22. Breach indicators.** A request whose total matches the monthly budget rather than the
 certificates; a cost-to-complete reused from the previous month; an in-balance test that is always
@@ -4427,7 +4482,10 @@ content is exposed.
 approval · supersedes `PFL-LAW-14-01` *Drawdown Integrity* (v1.0). Amendment note: restructured onto the
 twenty-five-element form; *in balance* and *certified value* defined; the advance-payment and retention
 rule added as PR-05; the in-balance basis tied expressly to the finance documents; disclosure of a
-negative result made unwaivable.
+negative result made unwaivable. **Stage 9 amendment:** *committed and available funding* was undefined,
+so an in-balance test could be turned positive by counting a letter of comfort, an uncommitted facility
+or an anticipated contingency release; the term is now defined, the excluded instruments are named, and
+step (c) of element 21 traces every amount counted as funding to the instrument that commits it.
 
 ---
 
@@ -5312,7 +5370,12 @@ authority of any kind under this law**, and none can be delegated to one.
 it does not require independence, because it is a check of substance rather than an assurance opinion.
 Independence is required where the verification is relied upon by another party, in which case
 `PCI-PFL-LAW-13.01` governs. **An AI system is never *independent*: independence is a property of a
-relationship, and a tool has none.**
+relationship, and a tool has none.** **What PR-02 does not do is displace `PCI-FND-LAW-03`**, which
+requires a *material* calculation, model output or automated conclusion to be verified by a person
+independent of its preparation before **any** person relies on it — including a person inside the
+relying professional's own organisation. A PR-02 check by the relying professional is the substance
+check; where the contribution is material, the foundational independent verification is additional and
+remains outstanding until it is recorded or a waiver under `PCI-FND-LAW-03` element 12 is approved.
 
 **11. Materiality or threshold.** An AI contribution is *material* where the figures, terms or
 conclusions it affects are material on the recorded test in the transaction's own metric; the *decision
@@ -5439,6 +5502,10 @@ general confidentiality obligation remaining with `PCI-FND-LAW-09`. Amendment no
 record* and *authorised tool* defined; seeded-error testing of AI-operated checks added as PR-05; the
 prohibition on reducing human review made a process requirement in its own right; the EU AI Act
 characterised as legislation binding only within its own jurisdiction and only on systems in scope.
+**Stage 9 amendment:** element 10 stated that verification under PR-02 requires no independence, which
+read against `PCI-FND-LAW-03` lowered a foundational obligation on the same act; element 10 now states
+that PR-02 is the substance check and that the foundational independent verification of a material
+contribution is additional and remains outstanding until recorded or waived.
 
 ---
 
@@ -5633,7 +5700,8 @@ published figure within a credential holder's scope, and the design and operatio
 automation that produces one.
 
 **4. Defined terms.** *decision owner*, *competent reviewer*, *evidence*, *verified*, *AI-assisted
-work*, *material*, *authorised tool*, *escalation threshold*. **Sign-off** — a named individual's
+work*, *material*, *authorised tool* (defined at `PCI-PFL-LAW-16.01` element 4), *escalation threshold*.
+**Sign-off** — a named individual's
 recorded approval, given before the output takes effect, identifying what was approved, at which version,
 on what date, and on what basis. **Automated pipeline** — any sequence in which an output is produced and
 acted upon without an intervening human approval.
@@ -5823,6 +5891,11 @@ its resolution to be recorded in the law's file. The table below records the wor
 challenge) and Stage 10 (revision) over the whole set. **A finding is recorded whether or not it
 produced a change**, because a question answered and found satisfactory is part of the record.
 
+A **second red-team pass** was subsequently run across the whole four-file corpus. Its findings and their
+disposition are recorded in [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md); the amendments it produced
+in this volume are noted in the element 25 of each law changed, and the definitional reading rules it
+added sit at the head of the Definitions above.
+
 | # | Question | Laws affected | What changed |
 |---|---|---|---|
 | 1 | What exact failure does this law prevent? | All 33 | Element 2 rewritten in every law to name a specific observed failure rather than a general risk. Three laws whose v1.0 purpose was a restatement of the rule (`PFL-LAW-06-04`, `PFL-LAW-13-03`, `PFL-LAW-16-03`) now name the failure: an unproduceable figure, a closing record nobody can retrieve, an unbroken automated pipeline. |
@@ -5878,7 +5951,7 @@ they are recorded rather than resolved, per Charter §5 Stage 5:
 
 ## Index of PFL-AI Professional Laws
 
-Thirty-three laws · one hundred and fifty-five process requirements · eleven anchor domains. External
+Thirty-three laws · one hundred and fifty-six process requirements · eleven anchor domains. External
 reference categories are the Manual §6 numbers, given in full at the foot of the table.
 
 | ID | Official title | Anchor domain | Principal obligation (element 1, in brief) | External reference categories |
@@ -5928,7 +6001,7 @@ relied upon for a requirement except where element 17 says so expressly.
 
 *Version 2.0, compiled 2026-08-04. **Draft for approval under Charter §5** — Stages 6, 11, 12 and 13 not
 performed, Stages 4, 5 and 7 partial; see the stage record in the front matter. Thirty-three laws · one
-hundred and fifty-five process requirements · twenty-five elements in every law, none omitted · zero
+hundred and fifty-six process requirements · twenty-five elements in every law, none omitted · zero
 occurrences of the ISO requirement auxiliary · all internal cross-references resolve · British English
 throughout. The official publication of every external instrument always governs.*
 

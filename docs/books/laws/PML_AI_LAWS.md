@@ -3,7 +3,7 @@
 **Status:** Certification Law set for the **PML-AI** credential (PCI Project Management Leader – AI).
 Version 2.0, drafted under the **PCI Professional Laws Charter** (what a law is) and the **PCI Law
 Drafting Manual** (how a law is written). A law that does not conform to both does not pass gate.
-**Thirty-two laws and one hundred and forty-seven process requirements**, anchored across all sixteen
+**Thirty-two laws and one hundred and forty-eight process requirements**, anchored across all sixteen
 domains of the PML-AI Body of Knowledge (`../pml-ai/`).
 
 > **PCI Professional Laws are private professional certification requirements established by Project
@@ -196,6 +196,20 @@ Where the suite terminology audit (`../registries/TERMINOLOGY_AUDIT.md`) records
 genuinely different professional meanings across the three books, **both senses survive here and are
 flagged**; collapsing them would make the laws wrong.
 
+**Where a term is also defined in the Foundational Laws.** *material*, *independent*, *evidence*,
+*competent reviewer*, *decision owner* and *escalation threshold* are also defined, at `D-01` to
+`D-28`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md). The two sets are not identical, and
+three reading rules resolve the difference. First, **where a foundational law states its own defined
+term by its `D-NN` number, that definition governs that foundational obligation**, and nothing here
+narrows it. Second, **where a definition here and a foundational definition both bear on the same act,
+the one producing the wider obligation governs** — Charter §4 states that a PCI Law never lowers an
+obligation. Third, a term defined here and not there is a PML-AI term and carries only the sense given
+here.
+
+**How element 21 samples are drawn.** Where a law's element 21 tests "a stated sample", the sample is
+selected by the reviewer performing the test, not by the credential holder whose work is under review,
+and the reviewer records the basis of selection.
+
 ### Terms that decide compliance
 
 **acceptance** — A named authority's recorded decision that a deliverable meets the acceptance
@@ -247,7 +261,12 @@ cannot be reproduced are **not** evidence for the purposes of this set.
 **escalation threshold** — The documented value, condition or event stated in the organisation's
 delegation schedule at which a matter must be passed to a named higher authority, together with the
 time within which it must arrive there. A threshold with no stated destination, or with no stated
-time, is not an escalation threshold; it is an aspiration.
+time, is not an escalation threshold; it is an aspiration. **The absence of a documented threshold
+does not remove an escalation duty**: where the delegation schedule names no destination, the matter
+goes to the next authority above the decision owner for it, and where it states no time, the
+foundational period at `D-20` applies — one working day where the matter creates a risk to the safety
+of a person or an ongoing financial loss, five working days otherwise, running from the moment the
+credential holder first knows or suspects the matter.
 
 **gate** — A continuation decision taken by a named authority at a defined point in the delivery
 lifecycle, against criteria published before the evidence supporting the decision was assembled, and
@@ -1557,16 +1576,23 @@ subject to stated conditions; **condition-closure** means the verified completio
 - **`PCI-PML-LAW-03.03-PR-05` — Dissent is recorded.** Where any member of the deciding body disagrees
   with the decision, the disagreement and its reason must be recorded in the decision record. A decision
   recorded as unanimous when it was not is a false record.
+- **`PCI-PML-LAW-03.03-PR-06` — The criteria are set by the authority, not by the project.** The gate
+  criteria must be approved, before publication, by the authority that holds the gate decision or by the
+  authority the delegation schedule assigns to set them, and the approval must name that authority and
+  its date. **The project being gated must not be the approver of its own gate criteria.** Where the
+  project drafts them, the record must show that fact and the approving authority's assent to them as
+  published.
 
 **6. Prohibited actions.** Writing or altering criteria to fit the evidence. Admitting evidence with no
 date, no author and no version. Attaching a condition with no owner. Passing a gate on a promise that
 the evidence will follow. Recording a conditional pass and then never reporting closure. Presenting the
 absence of an assurance finding as an assurance opinion.
 
-**7. Required evidence.** The published criteria with their version and publication date; the gate pack
-with per-item provenance; the decision record with the named decision owner, the decision, the
-conditions with owners and dates, and any recorded dissent; the condition-closure report at the
-following gate; the independent reviewer's opinion where one is required.
+**7. Required evidence.** The published criteria with their version and publication date, and the
+approval of those criteria by the authority required by `PR-06`; the gate pack with per-item
+provenance; the decision record with the named decision owner, the decision, the conditions with owners
+and dates, and any recorded dissent; the condition-closure report at the following gate; the
+independent reviewer's opinion where one is required.
 
 **8. Responsible role.** The named chair of the gate body decides and answers for the decision. The
 named credential holder leading the project answers for the completeness and provenance of the pack and
@@ -1650,8 +1676,12 @@ period: (a) obtain the criteria and confirm their publication date and version p
 on any evidence item in the pack; (b) confirm every pack item carries a date, an author or source system
 and a version; (c) take any two criteria at random, apply them to the pack, and reach the same answer
 the gate body recorded; (d) find every condition attached to the decision carrying a named owner, a date
-and a consequence; and (e) find, in the following gate's pack, a closure status for each of those
-conditions. A gate whose criteria post-date its evidence fails the test outright.
+and a consequence; (e) find, in the following gate's pack, a closure status for each of those
+conditions; and (f) find, on the criteria themselves, the approval required by `PR-06`, naming an
+approving authority who is neither the project being gated nor a person reporting to it for the purpose
+of that gate. A gate whose criteria post-date its evidence fails the test outright, and so does a gate
+whose criteria the project set for itself — **criteria published in time but written by the party they
+judge produce the same unfailable gate as criteria written late.**
 
 **22. Breach indicators.** Criteria version dates later than the pack. Criteria phrased as
 "satisfactory", "adequate" or "on track" with no stated test. Conditions with no owner. Conditional
@@ -1672,7 +1702,11 @@ closed and the project is at its final gate.
 `PML-LAW-03-03` v1.0. Amendment note: renumbered and restructured; legislative drafting removed; the
 criteria-before-evidence ordering, criterion assessability, per-item provenance, condition fields and
 recorded dissent separated into five process requirements; compliance test replaced with a date-ordering
-and re-application test two reviewers can independently perform.
+and re-application test two reviewers can independently perform. **Stage 9 amendment:** the law fixed
+*when* the criteria are published but not *who* sets them, so a project could publish its own
+trivially satisfiable criteria before assembling evidence and comply in full while producing the
+unfailable gate element 2 describes; `PR-06` and step (f) of element 21 require the criteria to be
+approved by the authority that holds the gate decision.
 
 ---
 
@@ -3945,7 +3979,10 @@ not evidence of breach** — the evidence is the route, the register and the det
 organisation's governance sets the response time, the lookback window and the reporting period; this law
 requires that they exist and are applied. Where the organisation sets no lookback window, the credential
 holder must apply the period to the end of the project or twelve months, whichever is shorter, and record
-that they did so in the absence of a documented window.
+that they did so in the absence of a documented window. **That period is also the floor.** A documented
+lookback window shorter than it does not satisfy this law, because a window an organisation can set to a
+fortnight is a protection the organisation can switch off; where the documented window is shorter, the
+credential holder applies the floor and records that they did so.
 *Six-person internal project:* two named recipients — the project leader and one named manager outside the
 team — a one-page route sent to all six on day one, and a register that may hold no entries for months. The
 bypass demonstration is six lines. **A register with no entries is not a breach**; a register with no
@@ -4066,7 +4103,9 @@ bad news" — a state of affairs no reviewer could test, which failed audit ques
 obligation is now the **establishment and operation of a bypass route**, the protections are expressed as
 observable acts through a defined term for *detriment*, and the compliance test cross-matches two record
 sets that already exist. The concept of psychological safety remains the reason for the law and is taught
-in Domain 12; it is not the requirement, because it is not observable.
+in Domain 12; it is not the requirement, because it is not observable. **Stage 9 amendment:** the
+lookback window was set wholly by the organisation, so the protection in `PR-04` could be switched off
+by documenting a fortnight; element 11 now makes the law's own default the floor.
 
 ---
 
@@ -4152,7 +4191,11 @@ together as though they were comparable — which they are not.
 **12. Exception and waiver.** An exception permitting a release without complete acceptance evidence may be
 approved only by the release authority, only where the missing evidence is identified item by item with
 owners and dates, and only where the release is reversible or the residual risk is accepted by the party
-bearing it. No exception permits a decision class to have no recorded location.
+bearing it. No exception permits a decision class to have no recorded location. **This exception does not
+reach a mandatory precondition.** Where the release is a release into operational use, `PCI-PML-LAW-16.01`
+applies to it, and its element 12 permits no exception, waiver, dispensation or deferral in respect of a
+gate-block item — an iterative delivery model changes the cadence of the release, not the status of a
+safety case, a licence or a statutory notification.
 
 **13. Escalation trigger.** A decision exceeding the value envelope. A decision class with no recorded
 location. A release proposed without acceptance evidence. A product owner who cannot exercise the ordering
@@ -4229,7 +4272,9 @@ delivery is governed.
 `PML-LAW-13-01` v1.0. Amendment note: renumbered and restructured; legislative drafting removed; the
 decision-rights mapping, value envelope, release evidence, metric integrity and framework-adoption record
 separated into five process requirements; the Scrum Guide's characterisation corrected to state expressly
-that adoption is the whole of its force.
+that adoption is the whole of its force. **Stage 9 amendment:** element 12's release exception overlapped
+`PCI-PML-LAW-16.01`, whose element 12 admits no exception at all in respect of a mandatory precondition;
+element 12 now states that the exception does not reach one.
 
 ---
 
@@ -4623,6 +4668,10 @@ approves nothing.
 of the system that produced it, in the sense that they did not set the parameters, prompts, weights or
 thresholds for that output. Where that is impossible on a small project, the arrangement must be recorded
 and a second named person must perform the verification for the highest-consequence output class.
+**Independence of configuration is the minimum this law adds; it does not displace `PCI-FND-LAW-03`**,
+which requires a *material* calculation, model output or automated conclusion to be verified by a person
+independent of its preparation before any person relies on it. Where the verifier under this law is also
+the preparer of the output, this law is satisfied and the foundational verification is not.
 
 **11. Materiality or threshold.** This law states no accuracy figure and no confidence threshold. **A
 model's own confidence score is not a verification and must not be used as one.** The organisation's
@@ -4736,7 +4785,10 @@ Evidence selection: which artefacts establish that verification preceded relianc
 `PML-LAW-14-02` v1.0. Amendment note: renumbered and restructured; legislative drafting removed; the AI use
 record, the named-method rule, proportionate depth and the failure log separated into five process
 requirements; element 16 rewritten to name the permitted methods explicitly, because "review the AI output"
-was the defect the previous edition shared with most of the corpus.
+was the defect the previous edition shared with most of the corpus. **Stage 9 amendment:** element 10
+required independence only of the system's configuration, which allowed the preparer of a material
+output to be its verifier; element 10 now states that this is the minimum this law adds and does not
+displace the independent-person verification `PCI-FND-LAW-03` requires before reliance.
 
 ---
 
@@ -5134,6 +5186,18 @@ gate-block item is not met, and a credential holder must not seek, recommend or 
 organisation believes an item has been wrongly classified as mandatory, the remedy is to have the **owning
 authority** reclassify it, in writing, before the assessment — not to trade it at the gate.
 
+**The emergency case, stated so that the law survives it.** Where continuing without the transition is
+itself the greater danger — a failed system that cannot be restored, an asset that must be taken out of
+service — the answer is still not a trade at the gate. It is that **the authority that owns the item
+exercises its own emergency instrument**: a regulator's derogation, a safety authority's temporary
+approval, a licensing body's dispensation, an interim certificate. An item closed or varied through the
+owning authority's own emergency process is a **met** item, recorded under `PR-02` with that authority's
+instrument, its scope and its expiry, and reported at the next governance meeting. What a credential
+holder must not do is seek such an instrument from anyone other than the owning authority, treat its
+absence as a probability, or permit the transition while the item stands not met. Where the owning
+authority declines or cannot be reached, the decision remains **hold**, and the consequences of holding
+are escalated under `PCI-FND-LAW-11` rather than resolved at the gate.
+
 **13. Escalation trigger.** Any gate-block item not met as the transition date approaches. Any proposal to
 express a mandatory precondition as a probability, a rating or a cost. Any request for a dispensation
 against a gate-block item. Discovery that a gate-block item was closed by the project rather than by its
@@ -5227,7 +5291,13 @@ the current Domain 16 readiness model. The v1.0 law required readiness to be ass
 not distinguish mandatory preconditions from discretionary conditions, and therefore did not prohibit the
 central failure — a forbidden item entered as a probability. The two-block separation, the binary
 authority-named recording, the prohibitions on probability and on economic trade, and the conjunction rule
-are new, and element 12 now states expressly that no exception exists.
+are new, and element 12 now states expressly that no exception exists. **Stage 9 amendment:** the
+red-team's emergency case — the transition that must happen because continuing is the greater danger —
+had no compliant route, and a law with no route in the case that will arise is a law that gets broken;
+element 12 now states the route without conceding the duty, by directing the credential holder to the
+owning authority's own derogation or temporary-approval instrument, requiring it to be recorded under
+`PR-02` with its scope and expiry, and leaving *hold* as the decision where that authority declines or
+cannot be reached.
 
 ---
 
@@ -5539,10 +5609,16 @@ for the set as a whole, names the laws that failed a question in draft, and stat
 **Every failure listed was resolved before this edition was assembled**; the questions with an open
 finding are marked and carried into the outstanding due-process stages.
 
+The front-matter stage record above notes that the Stage 9 red-team was only partly worked for this
+edition. It has since been completed across the whole four-file corpus, and its findings and their
+disposition are recorded in [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md). The amendments that pass
+produced in this volume are noted in the element 25 of each law changed, and the definitional reading
+rules it added sit at the head of the Definitions above.
+
 | # | Question | Finding across the set | Action taken |
 |---|---|---|---|
 | 1 | What exact failure does this law prevent? | Answered in element 2 of all 32 laws. Three drafts stated a purpose that was really a benefit of compliance rather than a failure — `12.01`, `12.02`, `13.02`. | Element 2 rewritten in those three to name the failure: authority used to override professional judgement; information that stops flowing upward; the ordering right exercised by someone other than its named holder. |
-| 2 | Is the requirement mandatory or only recommended? | All 32 principal obligations and all 147 process requirements are expressed with **must** or **must not**. No `should` carries an obligation anywhere in the set; no Recommended Practice is published in this edition. | None needed. Checked mechanically. |
+| 2 | Is the requirement mandatory or only recommended? | All 32 principal obligations and all 148 process requirements are expressed with **must** or **must not**. No `should` carries an obligation anywhere in the set; no Recommended Practice is published in this edition. | None needed. Checked mechanically. |
 | 3 | Can a professional know whether it applies to them? | Element 3 of each law names the roles, the decisions and the delivery models. `15.01` and `15.02` initially read as though they bound every credential holder, when they bind those in programme and portfolio roles. | Element 3 of both narrowed, and element 11 of each states expressly what the obligation amounts to for a small internal project. |
 | 4 | Is the responsible person identifiable? | Element 8 of all 32 names an individual role. No law uses "the team", "management", "relevant people" or "the organisation" as a responsible role. Two drafts used "the PMO" — `03.03` and `09.02`. | Replaced with the named credential holder and the named artefact owner respectively. |
 | 5 | **Is the required action observable?** | **The set's hardest question, and the one the previous edition failed.** `12.01` required conduct ("act with integrity, model the behaviour") and `12.02` required a state of affairs ("maintain conditions in which any team member can report bad news"). Neither can be observed and therefore neither could be required. | `12.01` rebuilt around **one observable act** — overriding another person's professional statement — with five process requirements that each leave a record. `12.02` rebuilt around **three observable things**: a published route with named recipients, the bypass property demonstrated person by person, and a concern register with seven mandatory fields. Both now pass. |
@@ -5580,7 +5656,7 @@ finding are marked and carried into the outstanding due-process stages.
 
 ## Index of PML-AI Professional Laws
 
-**Thirty-two laws · one hundred and forty-seven process requirements · sixteen anchor domains.**
+**Thirty-two laws · one hundred and forty-eight process requirements · sixteen anchor domains.**
 External-reference categories are Drafting Manual §6 categories: **3** international voluntary standard ·
 **4** contract framework · **5** professional framework · **6** ethical code · **10** illustrative practice.
 Every law also relates to category **9**, PCI internal professional law, through its element 19, and that

@@ -3,7 +3,7 @@
 **Status:** Certification Law set for the **PCL-AI** credential (PCI AI Project Controls Leader).
 Version 2.0 — reconstructed under the [PCI Professional Laws Charter](PCI_PROFESSIONAL_LAWS_CHARTER.md)
 and the [PCI Law Drafting Manual](PCI_LAW_DRAFTING_MANUAL.md). **Thirty-three laws** carrying
-**one hundred and forty-four process requirements**, anchored to the thirteen-domain PCL-AI Body of
+**one hundred and forty-five process requirements**, anchored to the thirteen-domain PCL-AI Body of
 Knowledge (`../../bok/`). This edition supersedes the twenty-law set drafted on the earlier
 eighteen-field structure; the superseded identifiers are recorded law by law in element 25 and are
 never reused.
@@ -114,6 +114,26 @@ These definitions decide compliance. They are interpretive, not obligations — 
 created here; every requirement lives in an identified law or process requirement (Charter §3). A
 term is used below only in the sense given here.
 
+**Where a term is also defined in the Foundational Laws.** Several terms below — *material*,
+*independent*, *verified*, *evidence*, *competent reviewer*, *decision owner*, *escalation threshold*
+— are also defined, at `D-01` to `D-28`, in [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md).
+The two sets are not identical, and three reading rules resolve the difference. First, **where a
+foundational law states its own defined term by its `D-NN` number, that definition governs that
+foundational obligation**, and nothing here narrows it. Second, **where a definition here and a
+foundational definition both bear on the same act, the one producing the wider obligation governs** —
+Charter §4 states that a PCI Law never lowers an obligation, and this volume's own rule is that no law
+below reduces a foundational one. Third, a term defined here and not there is a PCL-AI term and carries
+only the sense given here. The practical effect of the second rule is that the foundational six-limb
+test of *material* at `D-15` — which makes an item material where it bears on safety, on a
+contractual, regulatory, tax or financial-reporting position, or on a party's reliance — applies to a
+project controls deliverable **in addition to** the materiality rule below, and the materiality rule
+never removes an item that `D-15` catches.
+
+**How element 21 samples are drawn.** Where a law's element 21 tests "a sample selected on a stated
+basis", the sample is selected by the reviewer performing the test, not by the professional whose work
+is under review, and the reviewer records the basis of selection. A test performed on a population the
+subject of the test chose is not the test element 21 describes.
+
 ### A. Terms that decide compliance
 
 **material.** An item, error, omission, variance or difference is *material* where it could change a
@@ -195,7 +215,15 @@ is a finish-to-finish relationship, so that its start is driven by nothing.
 raise the matter in writing to the **decision owner** and, where the law says so, above the decision
 owner. Reaching the threshold obliges escalation; the obligation does not depend on the
 professional's expectation of how the recipient will react, or on the matter being resolved
-afterwards.
+afterwards. **The events listed in element 13 of a law are additional to, and never in place of, the
+foundational escalation threshold at `D-10`**, which is reached at the earliest of six triggers
+including materiality, a risk to the safety of a person, and an effect on a decision already taken; a
+matter that meets `D-10` requires escalation under `PCI-FND-LAW-11` whether or not it appears in any
+element 13 below. **The time within which the matter must be raised** is the period the adopting
+organisation's published procedure states and, where it publishes none, the foundational period at
+`D-20` — one working day where the matter creates a risk to the safety of a person or an ongoing
+financial loss, five working days otherwise, running from the moment the professional first knows or
+suspects the matter rather than from the moment they confirm it.
 
 ### B. Subject-matter terms
 
@@ -401,7 +429,7 @@ record, the reviewer can name the dated document that places the transaction on 
 cut-off where it was recorded; (c) every post-cut-off movement appears in the late-transaction
 register with an underlying date and an approver; and (d) the cost position reconciles to the ledger
 or cost system with every difference itemised and explained. A transaction for which the reviewer can
-name no such document is an exception. Two reviewers applying (b) to the same window and the same
+name no such document is a failure of this test. Two reviewers applying (b) to the same window and the same
 sample basis produce the same list of exceptions.
 
 **22. Breach indicators.** A cost position issued with no stated cut-off; a cut-off date that moves
@@ -985,7 +1013,7 @@ EVM fundamentals.
 approved baseline versions, subtract one from the other by control account, and match every
 difference to an entry in the change register or to an authorised re-baseline, with no residual; and
 when every performance report issued in the period names the baseline version it used, and that
-version exists in the retained set. An unmatched residual of any value is an exception. Two reviewers
+version exists in the retained set. An unmatched residual of any value is a failure of this test. Two reviewers
 performing this subtraction on the same two files obtain the same residual.
 
 **22. Breach indicators.** A baseline file whose modification date falls after its approval date;
@@ -1043,6 +1071,13 @@ recorded, not as an administrative refresh.
 - **PCI-PCL-LAW-03.03-PR-04 — Retention of the outgoing baseline.** The outgoing baseline and its
   final variance position must be retained for the retention period of the project record and must
   remain retrievable for comparison.
+- **PCI-PCL-LAW-03.03-PR-05 — Aggregation of partial and successive re-baselines.** Partial
+  re-baselines of separate control accounts or phases, and successive re-baselines within the period
+  the adopting organisation's delegation states, must be aggregated for the purpose of determining
+  which authority approves, and the aggregation applied must be recorded with each submission. Where
+  the aggregate accumulated variance removed reaches the level at which the delegation requires a
+  higher authority, that authority approves, and a series of separately approved partial re-baselines
+  must not be used in place of it.
 
 **6. Prohibited actions.** Re-baselining to remove an adverse variance rather than because the
 baseline no longer represents the authorised plan; applying a re-baseline retrospectively; presenting
@@ -1052,7 +1087,7 @@ account to absorb another's overspend.
 **7. Required evidence.** The re-baseline submission with PR-01 and PR-02 content; the written
 approval naming the approver and the effective date; the retained outgoing baseline and its final
 variance; the reporting record showing pre-effective-date periods still measured against the outgoing
-baseline.
+baseline; the aggregation record required by PR-05.
 
 **8. Responsible role.** The **project controls lead** prepares and submits; the **baseline approval
 authority** approves; the **decision owner** for the project accepts the consequence for reporting.
@@ -1116,9 +1151,13 @@ re-baselining; Domain 5 · KA 5.4 Change control and cost impact.
 review: (a) a written approval exists, dated before the first report measured against the new
 baseline, naming the approver; (b) the submission states accumulated variance by control account at
 the effective date; (c) reports for periods before the effective date, as retained, still show
-variance against the outgoing baseline; and (d) the outgoing baseline is retrievable. A report
-measured against a new baseline before the approval date is an exception, and the test needs no
-judgement to reach it: the two dates are either in that order or they are not.
+variance against the outgoing baseline; (d) the outgoing baseline is retrievable; and (e) the reviewer
+totals the accumulated variance removed by **every** re-baseline in the period, partial and whole, and
+confirms that the aggregate was approved at the authority the delegation requires for that total rather
+than only at the authority each part required on its own. A report measured against a new baseline
+before the approval date is a failure of this test, and the test needs no judgement to reach it: the
+two dates are either in that order or they are not. A series of partial re-baselines whose aggregate
+exceeds the authority that approved them is a failure of this test even where each part was approved.
 
 **22. Breach indicators.** Variance that resets to zero across control accounts in one period; a
 re-baseline effective date that precedes its approval date; prior-period reports reissued showing
@@ -1137,7 +1176,10 @@ a signed approval.
 
 **25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New law — the eighteen-field set treated re-baselining only as a
-clause inside PCL-LAW-03-02.
+clause inside PCL-LAW-03-02. **Stage 9 amendment:** the red-team found that the law could be complied
+with in full by re-baselining one control account at a time, each within the lowest approval band, so
+that no authority ever saw the reset the series achieved; `PR-05` and limb (e) of element 21 close that
+route by aggregating partial and successive re-baselines for banding.
 
 ---
 
@@ -1270,7 +1312,7 @@ without unexplained difference, to: the current actual cost position, the open *
 register, the **accrual** schedule, the approved-change register, the trend register, the stated
 contingency position and the current approved schedule status — and when the written basis names the
 method, the assumptions, the exclusions and the preparer. Any reconciling item without an explanation
-is an exception. Two reviewers performing this reconciliation from the same six sources reach the same
+is a failure of this test. Two reviewers performing this reconciliation from the same six sources reach the same
 list of unexplained differences.
 
 **22. Breach indicators.** A forecast equal to the budget for several consecutive periods followed by
@@ -1363,9 +1405,14 @@ review with named challengers per control account. The record required is identi
 **12. Exception and waiver.** An exception may be approved by the **decision owner**, in writing, where
 a forecast is needed before a challenge can be completed — for example in an emergency funding
 request. The forecast must then be marked as unchallenged on its face, the challenge must be completed
-within a stated period, and any change it produces must be reported to every recipient of the
+within the period the decision owner records at the time of approval and in any event before the next
+issue of the forecast, and any change it produces must be reported to every recipient of the
 unchallenged version. An unchallenged forecast that is not marked as such is a breach, not an
-exception.
+exception. **This exception does not displace `PCI-FND-LAW-03`**, whose element 12 makes no waiver of
+independent verification available where the item supports an irreversible commitment, a payment to a
+third party, an external regulatory or financial report, or a decision bearing on the safety of a
+person: an unchallenged forecast must not be used for any of those, and an emergency funding request
+that commits funds irreversibly is one of them.
 
 **13. Escalation trigger.** A challenge point that is material and unresolved at issue; a pattern of
 forecast movements in one direction across three or more consecutive periods; an instruction not to
@@ -1406,7 +1453,7 @@ KA 4.1 Performance management principles; Domain 6 · KA 6.3 Forecasting with EV
 challenge record names a challenger, states the date, lists questions covering each of the six matters
 in PR-01, records a response to each, and states whether the forecast changed; and when the
 challenger's independence can be established from the four facts without asking them. A challenge
-record with no question, or a challenger who prepared any part of the forecast, is an exception. Two
+record with no question, or a challenger who prepared any part of the forecast, is a failure of this test. Two
 reviewers applying the four independence facts to the same challenger reach the same answer.
 
 **22. Breach indicators.** Challenge records identical in wording between periods; challengers drawn
@@ -1425,7 +1472,10 @@ point the preparer refuses to record.
 
 **25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New law — the eighteen-field set required independent review only
-as a field within other laws and never defined its scope or record.
+as a field within other laws and never defined its scope or record. **Stage 9 amendment:** element 12
+gave the unchallenged-forecast exception an open-ended clock and offered an emergency funding request
+as its example, which is precisely the case in which `PCI-FND-LAW-03` element 12 makes no waiver
+available; the period is now fixed and the foundational carve-out is stated.
 
 ---
 ## Domain 4 — Performance Management, Variance Analysis & Reporting
@@ -1684,8 +1734,8 @@ Management reporting. Also Domain 6 · KA 6.2 Variances and performance indices.
 materiality rule, the analysis names a cause, cites a record, states the effect on completion cost and
 date, names an accountable individual and a date, and — where a recovery is asserted — either shows it
 in the forecast or states that it is not yet included. An explanation containing no noun that is not
-already in the variance table is an exception. A reviewer must be able to request any three cited
-records and receive them; failure to produce one is an exception. Two reviewers applying this to the
+already in the variance table is a failure of this test. A reviewer must be able to request any three cited
+records and receive them; failure to produce one is a failure of this test. Two reviewers applying this to the
 same report identify the same unsupported explanations.
 
 **22. Breach indicators.** Commentary that repeats the variance figures in prose; the same explanation
@@ -1818,7 +1868,7 @@ a dated assessment record exists stating the quantified effect and the materiali
 where material, a restatement exists showing original figure, corrected figure, difference, cause and
 periods affected; (c) a distribution record shows it reaching every recipient of the original; and (d)
 the control cause is recorded. An error corrected only inside the next period's opening position, with
-no assessment record, is an exception. Two reviewers comparing the retained reports before and after
+no assessment record, is a failure of this test. Two reviewers comparing the retained reports before and after
 the correction reach the same conclusion about whether a restatement was issued.
 
 **22. Breach indicators.** Prior-period figures that change between reports without a restatement;
@@ -1963,7 +2013,7 @@ for the period with every difference itemised by type and explained; when the co
 agrees to the procurement or contract system with every open instrument present; when a duplicate-cost
 test record exists stating the method used and the items examined; and when the remaining value of a
 sample of open commitments can each be derived from the instrument and the receipted value. An open
-instrument absent from the register is an exception. Two reviewers performing the ledger reconciliation
+instrument absent from the register is a failure of this test. Two reviewers performing the ledger reconciliation
 from the same extracts reach the same difference list.
 
 **22. Breach indicators.** A persistent difference between the cost system and the ledger described the
@@ -2104,7 +2154,7 @@ Also Domain 7 · KA 7.2 Contract management; Domain 8 · KA 8.4 Monitoring & Con
 an instruction, and site record of changed work in the period can be matched to a register entry dated
 in the same reporting cycle; when every entry carries the PR-02 content; and when the register's
 cumulative pending and approved positions at the cut-off agree to the forecast or are reconciled to it
-with reasons. An instruction with no register entry is an exception. Two reviewers testing the same
+with reasons. An instruction with no register entry is a failure of this test. Two reviewers testing the same
 correspondence sample against the same register produce the same unmatched list.
 
 **22. Breach indicators.** Register entries created in batches at period end; changes with a
@@ -2255,7 +2305,7 @@ five PR categories with a stated value or a stated nil; when a schedule scenario
 with a run date and the stated completion effect matches its output; when the cumulative position at
 the assessment date is stated and agrees to the change register; and when the assumptions, exclusions
 and pricing validity period are recorded. A stated schedule effect that the retained scenario does not
-produce is an exception. Two reviewers re-running the retained scenario obtain the same completion
+produce is a failure of this test. Two reviewers re-running the retained scenario obtain the same completion
 effect.
 
 **22. Breach indicators.** Changes assessed at nil schedule effect as a matter of routine; assessments
@@ -2397,7 +2447,7 @@ Controlling.
 approver named in the approval record is a different individual from every name on the assessment; the
 approval cites a band in the recorded delegation and the value falls within it; the baseline movement
 equals the approved value; and changes sharing a cause were aggregated for banding. An approval whose
-approver appears anywhere on the assessment is an exception, and the test requires no judgement — the
+approver appears anywhere on the assessment is a failure of this test, and the test requires no judgement — the
 names either differ or they do not. Two reviewers comparing the same approval and assessment records
 reach the same result.
 
@@ -2543,7 +2593,7 @@ stated basis: (a) a measurement method is recorded and its record predates the w
 start; (b) where the method uses milestones or units, the milestones or units and their weights are
 recorded; (c) any change of method is supported by an approved change stating its effect; and (d) the
 method matches the schedule statusing rule for the same work. A work package whose method record
-postdates its actual start is an exception — a date comparison, not a judgement. Two reviewers testing
+postdates its actual start is a failure of this test — a date comparison, not a judgement. Two reviewers testing
 the same sample reach the same exception list.
 
 **22. Breach indicators.** Level of effort growing as a proportion of the baseline; methods recorded in
@@ -2688,7 +2738,7 @@ payment.
 stated basis, the reviewer can name and retrieve for each the dated record produced by or verifiable
 against a source other than the claimant, and that record supports the quantum claimed; and when the
 verification record states the population or sample, the selection basis, the method and the exceptions
-found. A claim for which the reviewer can retrieve no such record is an exception. Two reviewers given
+found. A claim for which the reviewer can retrieve no such record is a failure of this test. Two reviewers given
 the same sample and the same evidence set reach the same exception list — which is the whole point of
 defining objective evidence of progress rather than leaving "supported" undefined.
 
@@ -2825,7 +2875,7 @@ Variance analysis.
 for any published index, recompute the index, and obtain the published figure; when the planned value
 cites a baseline version that exists in the retained set; when the actual cost agrees to the reconciled
 cost position for the same cut-off; and when the report states what scope the index covers and what it
-excludes. A published index that cannot be recomputed from retained inputs is an exception. Two
+excludes. A published index that cannot be recomputed from retained inputs is a failure of this test. Two
 reviewers recomputing from the same retained inputs obtain the same figure — if they cannot, the law
 has been breached whatever the report says.
 
@@ -2966,7 +3016,7 @@ and its inputs; when a reviewer recomputing from those inputs obtains the publis
 alternative-formula range is shown or its absence explained; when any reported to-complete performance
 index is accompanied by a comparison with achieved performance; and when a reconciliation to the
 bottom-up estimate exists with material differences explained. An estimate at completion whose method is
-not stated is an exception on its face. Two reviewers recomputing from the stated inputs obtain the same
+not stated is a failure of this test on its face. Two reviewers recomputing from the stated inputs obtain the same
 figure.
 
 **22. Breach indicators.** The method changing in the period when the previous method's result
@@ -3109,7 +3159,7 @@ management. Also Domain 5 · KA 5.4 Change control and cost impact.
 **21. Compliance test.** Compliance is demonstrated when, for a sample of commercial outputs selected on
 a stated basis, each relied-on term cites a document and provision; the cited document is in the
 contract register as executed; and reading that provision supports the use made of it. An output citing
-no document, or citing a document the register does not record as executed, is an exception. Two
+no document, or citing a document the register does not record as executed, is a failure of this test. Two
 reviewers reading the same cited provisions reach the same conclusion about whether the output's use of
 the term is supported — and where they do not, the disagreement is itself the signal that PR-03 should
 have been applied.
@@ -3258,7 +3308,7 @@ basis to include the highest values and the oldest open entries, the reviewer ca
 the originating document to the value in the cost position without asking the preparer; when every entry
 carries a status from the defined list with its date; when every recorded event and notice date matches
 the source document; and when the register's totals by status reconcile to the cost position and the
-forecast. A recorded date that differs from the source document is an exception. Two reviewers walking
+forecast. A recorded date that differs from the source document is a failure of this test. Two reviewers walking
 the same chains reach the same conclusion about which are complete.
 
 **22. Breach indicators.** Claim values in the forecast that exceed the assessed values in the register;
@@ -3401,7 +3451,7 @@ a stated basis, each names a supporting record that the reviewer can retrieve an
 quantity or entitlement claimed; when the cumulative applied and certified position reconciles to
 reported progress and to the cost position with differences explained; and when materials, advances,
 retention and set-offs are separately identified with their contractual basis cited. A line whose
-support cannot be retrieved is an exception. Two reviewers testing the same sample reach the same
+support cannot be retrieved is a failure of this test. Two reviewers testing the same sample reach the same
 exception list.
 
 **22. Breach indicators.** Applications that always equal the amount needed to meet a cash target;
@@ -3842,7 +3892,7 @@ no actual date in the file falls after that status date; when, for the longest-p
 activities and a recorded random sample of the remainder, each actual date matches a dated record or is
 marked as estimated with a basis; when every in-progress activity's remaining duration has a recorded
 re-assessment; when manually entered forecast dates are identified; and when a comparison against the
-approved baseline shows baseline dates unchanged. An actual date after the status date is an exception
+approved baseline shows baseline dates unchanged. An actual date after the status date is a failure of this test
 detectable by query, and so is a baseline date that has moved. Two reviewers running the same queries on
 the same file obtain the same results.
 
@@ -3982,7 +4032,7 @@ of duties. Also Domain 4 · KA 4.3 Management reporting; Domain 13 · KA 13.2 Da
 records and denied access to the preparer, can reproduce a recorded sample of figures from an issued
 deliverable and obtain the same values; when each issued deliverable has a retained issue set containing
 the components in PR-01; and when any AI-assisted figure has a retained tool configuration record. A
-figure the reviewer cannot reproduce without asking the preparer is an exception — and the test is
+figure the reviewer cannot reproduce without asking the preparer is a failure of this test — and the test is
 deliberately constructed so that it fails when the only route to the answer is a conversation.
 
 **22. Breach indicators.** Working papers held in personal drives; extracts with no timestamps; issued
@@ -4120,7 +4170,7 @@ risk process. Also Domain 5 · KA 5.4 Change control and cost impact.
 is a present fact, an event that is uncertain, and an effect on a stated objective; when every entry names
 one individual; when no entry describes an event that has already occurred; and when the sum of exposure
 in the risk position and the amounts for the same events in the forecast contains no double count. An
-entry whose "cause" is itself uncertain, or whose "event" has already happened, is an exception. Two
+entry whose "cause" is itself uncertain, or whose "event" has already happened, is a failure of this test. Two
 reviewers applying the three-part test to the same register produce the same exception list — the test
 turns on the grammar of the entry, not on the reviewer's view of the risk.
 
@@ -4266,7 +4316,7 @@ analysis; KA 12.3 Contingency and management reserve. Also Domain 3 · KA 3.2 Co
 probabilistic, states the confidence level adopted and the figures at the levels either side; states the
 correlation assumptions and the effect of assuming independence; states which risks are covered and which
 are not; and when the retained model can be re-run by a **competent reviewer** to reproduce the stated
-figure. A contingency figure whose confidence level is not stated is an exception on its face. Two
+figure. A contingency figure whose confidence level is not stated is a failure of this test on its face. Two
 reviewers re-running the retained model with the retained inputs obtain the same distribution.
 
 **22. Breach indicators.** Contingency stated as a round percentage of the estimate; the same percentage
@@ -4402,7 +4452,7 @@ opening balance, plus approved additions, less approved drawdowns and releases, 
 no residual; when every drawdown cites a register risk, carries evidence that the event occurred, and names
 an approver who does not own the receiving control account; and when the period report states remaining
 contingency alongside the assessed remaining exposure. A movement in the contingency balance with no
-approval is an exception, and it is found by arithmetic rather than by judgement. Two reviewers performing
+approval is a failure of this test, and it is found by arithmetic rather than by judgement. Two reviewers performing
 the reconciliation on the same records obtain the same residual.
 
 **22. Breach indicators.** Contingency falling in exactly the amount of each period's overspend; drawdowns
@@ -4566,7 +4616,7 @@ approved-use record names the classes of work and data it is approved for, dated
 data-handling determination records whether the tool retains, trains on, discloses or exports the data,
 with the date and the source of the answer; and (c) for a sample of AI-assisted deliverables selected on a
 stated basis, each carries a tool configuration record naming tool, model and material settings. A
-deliverable whose producing tool cannot be identified is an exception. Two reviewers testing the same
+deliverable whose producing tool cannot be identified is a failure of this test. Two reviewers testing the same
 sample reach the same list, because each element of the test is the presence or absence of a dated record.
 
 **22. Breach indicators.** Outputs whose style or structure changes between periods with no recorded model
@@ -4652,6 +4702,13 @@ its use.
 **10. Independence requirement.** The verifier must be **independent** of the configuration of the tool
 under the fourth fact in the definition. Where the AI-generated figure is material to an external
 submission or an incentive, the recomputation must also be independent of the party the figure favours.
+**The recomputation this law requires is additional to, and does not displace, the verification
+`PCI-FND-LAW-03` requires**: a material figure must also be verified by a person independent of its
+preparation before any person relies on it, and a recomputation performed by the professional who
+produced or issued the figure satisfies this law's element 1 but does not satisfy that one. Where the
+same individual performs both, the working record must say so, and the foundational verification
+remains outstanding until an independent person performs it or a waiver under `PCI-FND-LAW-03`
+element 12 is recorded.
 
 **11. Materiality or threshold.** Recomputation is required for every AI-generated figure that is
 **material** to the deliverable, and for the components that drive it. Below the materiality rule,
@@ -4721,7 +4778,7 @@ deliverable, a retained verification record shows an independent recomputation, 
 resolution of any difference; when a reviewer re-performing that recomputation from the retained inputs
 obtains the issued figure; when classification output carries a recorded sample basis and error rate; and
 when the deliverable names a human verifier and a human approver with dates. A verification record that
-states only "reviewed" is an exception. Two reviewers re-performing the recomputation from the same
+states only "reviewed" is a failure of this test. Two reviewers re-performing the recomputation from the same
 retained inputs obtain the same figure — which is the point: an output nobody can independently reproduce
 was never verified, whatever the record says.
 
@@ -4740,7 +4797,11 @@ verification record required. Calculation review: recomputing an index the tool 
 
 **25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-13-02 *AI Verification* and
-PCL-LAW-13-03 *Human Sign-Off*; both identifiers are retired and are not reused.
+PCL-LAW-13-03 *Human Sign-Off*; both identifiers are retired and are not reused. **Stage 9 amendment:**
+element 10 required the verifier to be independent only of the tool's configuration, which permitted the
+professional who produced an AI-generated figure to recompute it and record the recomputation as its
+verification; element 10 now states that this law's recomputation is additional to, and does not
+displace, the independent-person verification `PCI-FND-LAW-03` requires before reliance.
 
 ---
 
@@ -4807,6 +4868,9 @@ output; the **commercial lead** approves any commercial position derived from AI
 **10. Independence requirement.** The verifier must be **independent** of the tool's configuration. Where
 the output supports a claim, a defence or an entitlement, the verification must additionally be performed
 by a person **independent** of the party the outcome favours, consistent with `PCI-PCL-LAW-10.02`.
+**The tracing this law requires is additional to, and does not displace, the verification
+`PCI-FND-LAW-03` requires** of a material output before any person relies on it; tracing performed by
+the professional who produced the output satisfies this law's element 1 but does not satisfy that one.
 
 **11. Materiality or threshold.** Tracing is required in full for every material output and for every
 extraction that affects entitlement, a date, a rate or a quantity — sampling is not permitted for those,
@@ -4876,7 +4940,7 @@ retained file arrives at the same path; (b) for AI-proposed risks, each accepted
 owner's confirmation and satisfies the three-part test; (c) for each material extraction, the record names
 the document and provision, and reading it supports the use made of it; (d) each narrative assertion has a
 producible supporting record; and (e) every absence claim relied on has an independent test recorded. An
-assertion whose supporting record cannot be produced is an exception. Two reviewers repeating (a) and (c)
+assertion whose supporting record cannot be produced is a failure of this test. Two reviewers repeating (a) and (c)
 on the same artefacts reach the same result.
 
 **22. Breach indicators.** Schedule analyses issued minutes after the file was produced; risk registers that
@@ -4895,7 +4959,9 @@ be produced.
 
 **25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-13-02 *AI Verification*; that identifier
-is retired and is not reused.
+is retired and is not reused. **Stage 9 amendment:** element 10 now states that the tracing this law
+requires is additional to, and does not displace, the independent-person verification
+`PCI-FND-LAW-03` requires before reliance.
 
 ---
 
@@ -5013,7 +5079,7 @@ Management reporting.
 the deliverable itself contains a disclosure naming the figures, analyses or sections the AI contributed
 to, the class of tool, and the verification performed; and when the tool configuration record and
 verification records referenced can be produced. A deliverable whose AI contribution is established from
-the configuration records but which carries no disclosure is an exception; so is a disclosure that names no
+the configuration records but which carries no disclosure is a failure of this test; so is a disclosure that names no
 figure or section. Two reviewers comparing the disclosure against the configuration and verification
 records reach the same conclusion.
 
@@ -5049,8 +5115,8 @@ produced no change say so, and say why.
 | 2 | Mandatory or only recommended? | All 33 | Every obligation is `must` or `must not`. No `should` carries an obligation anywhere in the set, and no Recommended Practices are issued in this edition, so nothing mandatory can hide at Charter Level 5. |
 | 3 | Can a professional know whether it applies? | All 33 | Element 3 now names the *acts* governed (prepare · review · approve · give assurance) and the artefacts, rather than a job family. `PCI-PCL-LAW-13.01` was amended to state expressly that an embedded AI feature is in scope, after a reviewer read the draft as covering standalone tools only. |
 | 4 | Is the responsible person identifiable? | All 33 | A defined role vocabulary was added to the Definitions, each role defined by function rather than title, with the rule that a person holding two roles on a small project never removes an independence requirement. Every element 8 names a role from that list; "the team" and "management" appear nowhere. |
-| 5 | Is the required action observable? | All 33 | 144 process requirements were created, each stating an act that leaves a record. Bundled obligations in the superseded set (for example one clause requiring identification, assessment, approval and baseline update of change) were split across `PCI-PCL-LAW-05.02`, `05.03` and `05.04`. |
-| 6 | Is compliance provable? | All 33 | Element 21 was written as a performable test in every law — the element the superseded eighteen-field set lacked entirely. Each test states the population, the method and what constitutes an exception, and closes with the condition that two reviewers applying it reach the same answer. |
+| 5 | Is the required action observable? | All 33 | 145 process requirements were created, each stating an act that leaves a record. Bundled obligations in the superseded set (for example one clause requiring identification, assessment, approval and baseline update of change) were split across `PCI-PCL-LAW-05.02`, `05.03` and `05.04`. |
+| 6 | Is compliance provable? | All 33 | Element 21 was written as a performable test in every law — the element the superseded eighteen-field set lacked entirely. Each test states the population, the method and what constitutes a failure, and closes with the condition that two reviewers applying it reach the same answer. **Stage 9 correction:** twenty-eight of those tests originally closed by saying that the defective condition "is an exception", in the audit sense of a finding. In this corpus *exception* is a Charter §8 term meaning an **approved departure**, and Charter §8 states expressly that an undocumented departure is a breach and not an exception. Every one of the twenty-eight now reads "is a failure of this test". |
 | 7 | Is the required evidence proportionate? | 01.01 · 01.02 · 05.01 · 06.02 · 10.03 · 13.02 | Evidence was limited to records the process already produces. Four drafting proposals were removed as disproportionate: a standing log of every cost-code decision, a signed certificate per progress claim, a full re-performance of every AI output, and a separate schedule-quality report per issue. Sampling on a recorded basis replaced them, with full testing retained only where a single item carries the consequence — dates, contract terms, longest-path activities. |
 | 8 | Can the law be audited? | All 33 | Every element 21 names what the auditor examines and where it is retained, and `PCI-PCL-LAW-11.01` was added to make retention itself an obligation, because the other 32 tests assume the records still exist. |
 | 9 | Can the law be examined through a scenario? | All 33 | Element 24 names the item type — scenario judgement, evidence selection, calculation review, escalation decision, ethical dilemma or AI-verification case. No law is examinable only by recalling its number. |
@@ -5080,7 +5146,10 @@ where a stage was performed with AI assistance rather than by a named human. For
   were performed **with AI assistance**, from the superseded twenty-law set, the PCL-AI Body of Knowledge
   and the suite external-reference register, under human direction.
 - **Stage 9** (red-team challenge) was performed in part, as the audit table above records — the question
-  10 findings are its principal product.
+  10 findings are its principal product. A **second red-team pass** was subsequently run across the whole
+  four-file corpus; its findings and their disposition are recorded in
+  [`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md), and the amendments it produced in this file are
+  noted in the element 25 of each law changed and in the question 6 row above.
 - **Stages 4 to 8 and 10 to 13** — technical review, standards and legal-characterisation review,
   practitioner consultation, impact assessment, scenario testing, revision, approval, publication and
   post-implementation review — **have not been performed.** This set is therefore a draft for approval and
@@ -5132,7 +5201,7 @@ in the law and in audit finding 13. "—" means the law cites no external author
 | `PCI-PCL-LAW-13.03` | Verification of AI-Generated Schedule, Risk and Extraction Output | 13 — AI for Project Controls | Trace AI-generated schedule, risk and extraction output to the network, register or source document before use. | 3, 5 |
 | `PCI-PCL-LAW-13.04` | Disclosure of AI Assistance in a Controls Deliverable | 13 — AI for Project Controls | Disclose material AI assistance inside the deliverable it affected, naming what the AI contributed. | 3, 7 |
 
-**Thirty-three laws · one hundred and forty-four process requirements · ten of the thirteen PCL-AI
+**Thirty-three laws · one hundred and forty-five process requirements · ten of the thirteen PCL-AI
 domains carrying an anchored law.** Domains 2, 8 and 9 carry no law of their own in this
 edition: their subject matter is reached through the laws anchored elsewhere and listed in element 20 —
 financial reporting through `01.01`, `01.02` and `07.03`; the project lifecycle through `03.01`, `05.02`

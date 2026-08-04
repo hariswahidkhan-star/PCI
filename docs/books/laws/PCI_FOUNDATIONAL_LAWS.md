@@ -721,7 +721,20 @@ be re-approved rather than rolled forward. The compensating controls are mandato
 (b) the limitation is stated in the issued output, in the same place as the conclusion; and (c) the
 waiver is reported to the engagement lead and recorded in a waiver log. **A waiver is not available where
 the item supports an irreversible commitment, a payment to a third party, an external regulatory or
-financial report, or a decision bearing on the safety of a person.**
+financial report, or a decision bearing on the safety of a person** — in each of those four cases the
+consequence of an error is either unrecoverable or borne by someone outside the engagement, which is
+precisely when a second pair of eyes is worth most.
+
+**One narrow allowance exists, and it is not a waiver.** Where an item cannot be verified in the time
+available and acting on it is unavoidable to protect the safety of a person, the professional may rely
+on it **to the extent necessary to protect that person**, and must then do all of the following: record
+the reliance, the necessity, and what was attempted to obtain verification, within one working day;
+state the limitation to every recipient of the item; obtain and record the verification as soon as it
+can be obtained; and communicate any resulting difference under `PCI-FND-LAW-15`. The decision owner
+must record their position on the reliance within five working days. The item must not be relied upon
+for any purpose beyond protecting that person until the verification is recorded. **This allowance does
+not extend to commercial urgency, a deadline, a reporting cycle or a funding date**, and the obligation
+to obtain the verification is not discharged by the emergency, only deferred by it.
 
 **13. Escalation trigger.** A material item is discovered to have been relied upon without verification;
 a verification failure is overruled without a decision under `PCI-FND-LAW-13`; a verifier reports
@@ -812,7 +825,12 @@ by AI-verification case (an output "verified" by re-prompting the same system).
 
 **25. Version and status.** Version 1.0 · approval date: not approved — draft submitted under Charter §5
 Stage 11 · effective date: on approval · amendment note: carries forward the verification substance of the
-withdrawn `PCI-LAW-F-02`.
+withdrawn `PCI-LAW-F-02`. **Stage 9 amendment:** the second red-team pass found that the law had no
+compliant route in the one case that will certainly arise — an unverified item that must be acted on to
+protect a person — and a law with no route in that case is a law that gets broken and teaches contempt
+for the rest; element 12 now carries a bounded allowance with recording, disclosure, deferred
+verification and the decision owner's after-the-fact position, and states why the four no-waiver cases
+are what they are.
 
 ### Process requirements under PCI-FND-LAW-03
 
@@ -1579,6 +1597,16 @@ of the four `-PR-01` safeguards is applied, and that choice belongs to the perso
 is owed. Where an engagement's terms forbid a safeguard the matter requires, the professional must withdraw
 from the matter.
 
+**One narrow allowance exists, and it is not an exception to disclosure.** Where withdrawal under
+safeguard (a) would leave a matter bearing on the safety of a person with nobody able to act, the
+conflicted professional may act **to the extent necessary to protect that person**, and must then do all
+of the following: record the conflict, the necessity and each act taken, at the time; disclose in
+writing to the person or body to whom the duty is owed within one working day; and withdraw as soon as
+another person is able to act. That body must record its position on the acts taken within five working
+days, and must decide which `-PR-01` safeguard operates from that point. **The allowance does not extend
+to commercial urgency, a deadline or the inconvenience of finding a substitute**, and it never permits
+the professional to choose their own safeguard or to keep the conflict off the record.
+
 **13. Escalation trigger.** Discovery of an undisclosed conflict affecting a decision already taken; a
 conflicted professional resisting recusal or withdrawal; a conflict held by the most senior available
 decision owner; a party attempting to keep a disclosure off the record.
@@ -1658,7 +1686,11 @@ only available decision owner).
 **25. Version and status.** Version 1.0 · approval date: not approved — draft submitted under Charter §5
 Stage 11 · effective date: on approval · amendment note: supersedes `PCI-LAW-F-10`, withdrawn; the
 undefined judgement word "appropriately" used in that law is replaced by the closed list of safeguards in
-`-PR-01`.
+`-PR-01`. **Stage 9 amendment:** the second red-team pass found that where withdrawal is the only
+available safeguard and the matter bears on a person's safety, the law required the only person able to
+act to stand aside; element 12 now carries a bounded allowance to act to the extent necessary to protect
+that person, with the disclosure duty untouched and the choice of safeguard still belonging to the person
+or body to whom the duty is owed.
 
 ### Process requirements under PCI-FND-LAW-08
 
@@ -2922,7 +2954,7 @@ without a defect being identified, not that it was skipped.
 | 15 | Does it define the relevant materiality threshold? | All 15 | **Changed.** No percentage is invented anywhere in this set, per Manual §5.3. *Material* is defined once at D-15 by a six-limb test, with the adopting organisation's published tolerance as one limb and a recorded decision-owner determination as the fallback. Two laws state expressly that **no** threshold applies — `PCI-FND-LAW-09` (a single record can identify a person) and `PCI-FND-LAW-08` (every conflict within D-05 is declarable) — because a threshold there would have been a loophole. |
 | 16 | Does it cover AI use? | All 15 | **No change required.** Elements 14, 15 and 16 are present in all fifteen laws, and element 16 names a specific method in every case rather than saying "review the AI output". |
 | 17 | Does it preserve human accountability? | 01, 03, 04, 13, 14 | **Changed.** `PCI-FND-LAW-14` element 10 was added to state that an AI system is **never** independent for the purposes of these laws, because it does not hold the accountability that independence exists to protect. Without it, a reader could have argued that a second model satisfied `PCI-FND-LAW-03`. |
-| 18 | Does it contain an exception process? | All 15 | **Changed.** Element 12 in every law states either the exception process in full — approver, justification, duration, compensating controls, reporting — or that no exception is permitted. Six laws permit none: `01`, `08` (to disclosure), `11`, `14`, `15` (to communication), and `13` in substance, since an override is itself the recorded exception mechanism. `PCI-FND-LAW-03` element 12 gained the carve-out that **no waiver is available** where the item supports an irreversible commitment, a payment, an external report or a safety decision. |
+| 18 | Does it contain an exception process? | All 15 | **Changed.** Element 12 in every law states either the exception process in full — approver, justification, duration, compensating controls, reporting — or that no exception is permitted. Six laws permit none: `01`, `08` (to disclosure), `11`, `14`, `15` (to communication), and `13` in substance, since an override is itself the recorded exception mechanism. `PCI-FND-LAW-03` element 12 gained the carve-out that **no waiver is available** where the item supports an irreversible commitment, a payment, an external report or a safety decision. **Stage 9 addition:** the second red-team pass tested every element 12 against a genuine emergency and found two laws with no compliant route in the case that will certainly arise. `PCI-FND-LAW-03` and `PCI-FND-LAW-08` each gained a **narrow allowance, not a waiver** — act only to the extent necessary to protect the safety of a person, record it, disclose it within one working day, obtain the deferred verification or the substitute safeguard, and have the accountable person record their position within five working days. Neither allowance reaches commercial urgency. |
 | 19 | Does it define escalation? | All 15 | **Changed.** *Escalation threshold* is defined once at D-10 by six triggers, one of which is the adopting organisation's own criteria, so the law functions with or without a threshold framework. Element 13 in every law names the events that require escalation rather than saying "where appropriate". |
 | 20 | Is every important term defined? | All 15 | **Changed — the second-heaviest source of revision.** Twenty-eight terms are defined at D-01 to D-28 and used identically throughout. Undefined judgement words were removed from every obligation: **"appropriately"** is gone from `PCI-FND-LAW-08` and replaced by the closed list at `08-PR-01`, as the drafting brief required; **"reasonable"** was removed from an early `08` element 21 and replaced with a comparison against the D-05 relationship list; **"adequate", "relevant", "timely" and "sufficient"** appear in no obligation. **"Promptly"** is defined at D-20 with a one-working-day and five-working-day default, and a stated start point at knowledge or suspicion rather than confirmation. No definition is circular: *material*, *independent*, *verified* and *evidence* are each defined by a test the reader applies, not by a synonym. |
 | 21 | Is the language concrete and modern? | All 15 | **Changed.** Modern must-drafting only; the ISO requirement verb appears nowhere. Five element-21 compliance tests were rejected as too weak to produce agreement between two reviewers and rewritten: `01` (now a no-notice question to the named individual), `05` (now a two-way match between the assumption statement and the sensitivity statement), `07` (now a reproduction the reviewer performs unaided), `11` (now sampled from the population of matters, not of escalations) and `13` (now read from the control logs and the configuration change history, not from the override log). |
@@ -2946,6 +2978,15 @@ instrument this set names**: a voluntary framework that is neither environmental
 the OECD AI Principles), and a national standard (ANSI/EIA-748, which this set consequently does not cite).
 Both are recorded here under category 10 or omitted, and the register's own category is shown alongside. The
 honest fix is a Manual amendment adding those two values, which is outside this file's authority to make.
+
+**A second red-team pass, run later across the whole four-file corpus**, is recorded in
+[`LAW_RED_TEAM_REPORT.md`](LAW_RED_TEAM_REPORT.md). It produced two amendments to this file — the
+emergency allowances in `PCI-FND-LAW-03` and `PCI-FND-LAW-08` element 12, noted in their element 25 — and
+a body of findings against the three certification sets, including a set of definitional collisions
+between this file's `D-01` to `D-28` and the per-credential definitions. Those collisions are resolved
+for now by a reading rule published at the head of each certification volume's Definitions; the durable
+fix is a single **PCI Law Definitions Register**, which the Drafting Manual §4 already contemplates and
+which no file in this set has authority to create.
 
 ---
 
