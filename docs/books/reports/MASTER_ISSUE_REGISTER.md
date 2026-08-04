@@ -1,6 +1,6 @@
 # Master Issue Register — PCI AI Certification BoK Suite
 
-**Programme:** PCI AI Certification BoK Suite audit · **Report date:** 2026-08-04  
+**Programme:** PCI AI Certification BoK Suite audit · **Report date:** 2026-08-04 (critical findings closed and volumes rebuilt)  
 **Source:** professional-completeness audit of all 45 domains across the three volumes, by six
 independent auditors, plus three deep technical reviews and two adversarial law red-team passes.
 
