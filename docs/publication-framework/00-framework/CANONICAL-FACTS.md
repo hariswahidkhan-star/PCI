@@ -169,8 +169,19 @@ the clock. Verified on a sample or risk basis.
 ### 4.5 Recertification
 
 Three-year cycle with a **mandatory AI-currency component**. In the platform, the CPD category satisfying
-it is literally named **"AI currency"**. Only approved CPD entries within the current cycle count. CPD
-categories: structured learning · learning through work · contribution to the profession · formal study.
+it is literally named **"AI currency"** (`Core/CpdPolicy.cs`). Only approved CPD entries within the current
+cycle count.
+
+**CPD categories — two sets exist, and they disagree.** Use the platform set; note the divergence.
+
+| Source | Categories |
+|---|---|
+| **Platform API** (`Endpoints/StudentExam.cs`) — **authoritative** | Structured learning · Practice & application · Contribution · Events & webinars · **AI currency** |
+| Public pages (`recert.html`, `cpd-policy.html`) | structured learning · learning through work · contribution to the profession · formal study |
+
+The platform set has five categories and names the AI-currency one explicitly; the public set has four and
+does not. A candidate reading the website and then using the portal meets two different vocabularies.
+Write the platform set, and record the divergence — see §9.5.
 
 ---
 
@@ -245,6 +256,20 @@ Record these; do not silently resolve them, and do not repeat them.
    **current blueprint names**.
 4. **Retired naming throughout `docs/bok/`, `docs/publications/`, parts of `docs/downloads/`.** → Write
    PCL-AI; flag the legacy file rather than editing it.
+5. **CPD categories.** The portal serves five categories; the public pages describe four different ones
+   (§4.5). → Use the platform set. This one needs an operator decision, not an editorial one.
+6. **Retake waiting period.** The platform default is `exam_default_retake_wait_days = 0`, while the
+   predecessor candidate handbook states that "a short waiting period applies". → `[CONFIRM: …]` naming
+   both. Do not quote a number.
+7. **Two scheduling clocks that interact badly.** The payment-to-schedule deadline is 12 months
+   (`payments.exam_schedule_deadline`); the booking horizon is 365 days
+   (`exam_default_window_days`). They are distinct: rescheduling moves the booking date but never extends
+   the entitlement deadline, so a candidate who reschedules late can hold a valid booking for a date their
+   entitlement no longer covers. → Say so explicitly wherever booking is described.
+8. **The reschedule dead zone.** Free rescheduling ends 72 hours before; bookings lock 24 hours before.
+   The rules do not say what happens in the 48-hour band between. → Genuine gap; `[CONFIRM: …]`.
+9. **Refund and cancellation terms.** Candidates must consent to a refund policy before booking, but its
+   terms appear nowhere in the platform settings. → `[CONFIRM: …]`; never invent terms.
 
 ---
 

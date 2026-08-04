@@ -42,7 +42,7 @@ placeholders: 2
 credential, and how to use the underlying thirteen-domain framework for three jobs it does well: writing a
 role specification that describes competence rather than tools, structuring an interview that tests
 judgement, and assessing a controls function's capability gaps with a weighted coverage measure. It includes
-a worked gap assessment and a checklist a head of function can take into a resourcing meeting.
+a worked gap assessment and a checklist for a resourcing meeting.
 
 **Who this is for.** Heads of project controls, PMO leads, engineering and commercial directors, and the
 hiring managers and HR business partners who write the specification and sit on the panel.
@@ -59,7 +59,7 @@ know`; the domains sampled are mapped in `PCB-02 — The thirteen domains at a g
 Five limits belong on the same page, because a manager who learns them later will discount the credential
 entirely.
 
-**It is a point-in-time assessment.** Valid for three years and maintained through continuing professional
+**It is a point-in-time assessment.** Valid for three years, maintained through continuing professional
 development including a mandatory AI-currency component. It reports what was demonstrated at a sitting.
 
 **PCI is not accredited.** The framework is developed with reference to ISO/IEC 17024
@@ -68,7 +68,7 @@ accreditation body, holds no governmental approval and claims no university equi
 procurement or HR policy requires an accredited certification, this one does not currently meet it.
 
 **Eligibility is three years' professional experience in any field** — not three years in project controls.
-Sector and domain experience remain entirely yours to assess.
+Sector and domain experience remain yours to assess.
 
 **One route requires no examination.** Of the three published routes — standard, founding member and
 honorary fellow — the honorary route involves no sitting. Where a credential matters to a decision, verify
@@ -76,23 +76,23 @@ which route earned it; see `CER-04 — Routes into PCI: standard, founding, hono
 
 **Certification is separate from membership, and from training.** Membership grades — Student, Associate,
 Professional, Fellow — are a different ladder. PCI owns the standard and the examination; Certuvo is the
-separate official preparation and training partner, and the certification decision is independent of who
-prepared the candidate, or whether anyone did.
+separate official training partner, and the certification decision is independent of who prepared the
+candidate, or whether anyone did.
 
 ## 2. Using the domains as a role specification
 
-Most controls specifications describe software, which selects a candidate pool for tool familiarity and
-produces a role rewritten every time the tool changes. A published framework lets you specify the competence
-and treat the tool as a training item.
+Most controls specifications describe software, which selects for tool familiarity and produces a role
+rewritten every time the tool changes. A published framework lets you specify the competence and treat the
+tool as a training item.
 
-The method takes about an hour. For each of the thirteen domains, mark the role **required**, **supporting**
-or **not applicable**; then for each *required* domain name the artefact the post-holder owns, the frequency
-at which they produce it, and who reviews it. That last step is what turns a framework into a specification.
-"Domain 6 required" tells a candidate nothing; "owns the monthly earned value report across fourteen control
-accounts, published to the project board by working day five, reviewed by the controls manager" tells them
-exactly what they are applying for.
+The method takes about an hour. Mark each of the thirteen domains **required**, **supporting** or **not
+applicable**; then for each *required* domain name the artefact the post-holder owns, the frequency at which
+they produce it, and who reviews it. That last step turns a framework into a specification. "Domain 6
+required" tells a candidate nothing; "owns the monthly earned value report across fourteen control accounts,
+published to the project board by working day five, reviewed by the controls manager" tells them exactly
+what they are applying for.
 
-A pattern for three common posts, offered as a starting point and not a standard:
+A pattern for three common posts — a starting point, not a standard:
 
 | Post | Required domains | Supporting | Typical owned artefact |
 |---|---|---|---|
@@ -100,52 +100,45 @@ A pattern for three common posts, offered as a starting point and not a standard
 | Planner / scheduler | 3, 6, 10, 12 | 8, 9, 5 | Baselined and progressed schedule, critical-path narrative |
 | Controls manager | 3, 4, 5, 6, 10, 12 | all remaining | Integrated monthly report and the estimate at completion |
 
-Two rules keep this honest. **Do not require all thirteen domains for every post** — a specification that
-requires everything selects for candidates willing to overstate, and leaves the role impossible to develop
+Two rules keep this honest. **Do not require all thirteen domains for every post** — a specification
+requiring everything selects for candidates willing to overstate and leaves the role impossible to develop
 into. And **do not use the examination group weights as a role weighting**: forty per cent examination
 weight on finance is not forty per cent of a cost engineer's week.
 
 ## 3. Using the framework in hiring
 
 A domain map beats a competency form as an interview structure, because it produces questions with right
-answers.
+answers. Use one probe per required domain — the probes in `PCB-04` §2 are written for this, and share a
+shape worth copying: give a situation and a little data, then ask what the candidate would do next and why.
+One who names the cause of a variance before selecting a forecasting method is demonstrating judgement; one
+who names a formula is demonstrating recall.
 
-**One probe per required domain.** The probes in `PCB-04` §2 are written for this. They share a shape worth
-copying: give a situation and a little data, then ask what the candidate would do next and why. A candidate
-who names the cause of a variance before selecting a forecasting method is demonstrating judgement; one who
-names a formula is demonstrating recall.
+Three additions earn their place on any panel. **Ask for the working, not the tool** — "show me how you
+would find total float on this ten-activity network" separates candidates faster than any question about
+scheduling software, because it cannot be answered from a template. **Ask one question about being wrong** —
+"tell me about a forecast you defended that turned out optimistic: what did you miss, and what changed
+afterwards?" There is no correct answer; you are assessing whether the candidate treats a forecast as a
+position they own. **Ask one AI question and score the governance, not the enthusiasm** — "you have an
+AI-generated variance narrative in front of you; which two figures do you verify before it goes to the
+board, and against what?"
 
-**Ask for the working, not the tool.** "Show me how you would find total float on this ten-activity network"
-separates candidates faster than any question about scheduling software, because it cannot be answered from
-a template.
-
-**Ask one question about being wrong.** "Tell me about a forecast you defended that turned out optimistic —
-what did you miss, and what changed in how you forecast afterwards?" There is no correct answer; you are
-assessing whether the candidate treats a forecast as a position they own.
-
-**Ask one AI question, and score the governance rather than the enthusiasm.** "You have an AI-generated
-variance narrative in front of you. Which two figures do you verify before it goes to the board, and against
-what?" AI proposes; the professional disposes — a candidate who cannot name what they would check has not
-internalised the second half.
-
-**Do not ask candidates to reproduce examination content.** Sample items are published study material; live
-content is secured and never published. A candidate who offers you live item content has told you something
-important about their conduct.
+Do not ask candidates to reproduce examination content. Sample items are published study material; live
+content is secured and never published, and a candidate who offers you any has told you something about
+their conduct.
 
 ## 4. Worked example — a capability gap assessment
 
-*Illustrative figures. This is a management heuristic, not a PCI instrument, and the Institute publishes no
-such index.*
+*Illustrative figures. A management heuristic, not a PCI instrument — the Institute publishes no such
+index.*
 
 A controls function of nine people. For each of the thirteen domains the head of function records how many
-of the nine can work **unsupervised** in it — one deliberately blunt judgement made in a single session, not
+of the nine can work **unsupervised** in it: one deliberately blunt judgement made in a single session, not
 a survey.
 
 **Recorded counts (people, out of 9).** Group A: D1 = 2, D2 = 1, D3 = 7, D4 = 6. Group B: D5 = 8, D6 = 5,
 D7 = 4, D8 = 6, D9 = 2, D10 = 7, D11 = 1, D12 = 4. Group C: D13 = 1.
 
-**Step 1 — unweighted coverage.** Competent person-domains `= 16 + 37 + 1 = 54`; available slots
-`= 13 × 9 = 117`.
+**Step 1 — unweighted coverage.** Competent person-domains `= 16 + 37 + 1 = 54`; slots `= 13 × 9 = 117`.
 `Unweighted coverage = 54 ÷ 117 = 46.2 %`
 
 **Step 2 — coverage by group**, as the mean count across the group's domains, over the nine people.
@@ -153,11 +146,11 @@ D7 = 4, D8 = 6, D9 = 2, D10 = 7, D11 = 1, D12 = 4. Group C: D13 = 1.
 `Group B = (8 + 5 + 4 + 6 + 2 + 7 + 1 + 4) ÷ 8 = 4.625 → 4.625 ÷ 9 = 51.4 %`
 `Group C = 1 ÷ 1 = 1.000 → 1.000 ÷ 9 = 11.1 %`
 
-**Step 3 — the weighted index**, applying the published group weights of 0.40, 0.40 and 0.20.
+**Step 3 — the weighted index**, at the published group weights of 0.40, 0.40 and 0.20.
 `Index = (0.40 × 0.4444) + (0.40 × 0.5139) + (0.20 × 0.1111) = 0.1778 + 0.2056 + 0.0222 = 40.6 %`
 
 The weighted index sits 5.6 percentage points below the unweighted 46.2 per cent because the thinnest
-coverage — one person in nine in Domain 13 — sits where a fifth of the framework's weight rests on a single
+coverage — one person in nine in Domain 13 — is where a fifth of the framework's weight rests on a single
 domain. The headline number flatters the function; the weighted one does not.
 
 **Step 4 — two development options**, each adding four person-domain competencies.
@@ -173,24 +166,24 @@ same training effort**, because the twenty per cent AI weight rides on one domai
 finance weight spreads across four.
 
 **The warning that makes this usable.** That doubling is an artefact of the arithmetic, not a finding about
-your team: it says the *index* is twice as sensitive to Domain 13, not that Domain 13 training is twice as
-valuable to your projects. If the function's live problem is a disputed revenue position, option 2 is the
-right decision and the index is the wrong instrument. All figures are computed from unrounded values and
-shown to one decimal place, which is why the option indices do not reconcile exactly to the sum of the
-rounded increments. Use the index to find where you are thin, never to choose what to do about it.
+your team: the *index* is twice as sensitive to Domain 13, which is not to say Domain 13 training is twice
+as valuable to your projects. If the function's live problem is a disputed revenue position, option 2 is the
+right decision and the index is the wrong instrument. All figures are computed unrounded and shown to one
+decimal place, which is why the option indices do not reconcile exactly to the sum of the rounded
+increments. Use the index to find where you are thin, never to choose what to do about it.
 
 ## 5. Using the framework for development
 
 The same counts drive a development plan more usefully than they drive an index.
 
-**Find the single points of failure first.** Any domain covered by one person is a resilience problem before
+**Find the single points of failure first.** A domain covered by one person is a resilience problem before
 it is a capability problem. Here that is Domains 11 and 13 — and business process cycles is the one most
 functions never think to develop, because it looks like finance's job until an invoice dispute proves
 otherwise.
 
 **Set development against artefacts, not courses.** "Understands earned value" is unassessable. "Produces
 the monthly estimate at completion for two control accounts, reviewed by the controls manager, for three
-consecutive months" has a completion test. `CAR-07 — Building a portfolio of evidence` covers how an
+consecutive months" has a completion test; `CAR-07 — Building a portfolio of evidence` covers how an
 individual records it.
 
 **Decide deliberately whether to sponsor certification.** An examination validates knowledge; it does not
@@ -202,19 +195,14 @@ published with the recertification rules]`.
 
 ## 6. What not to use the framework for
 
-**Not as a pay scale.** The framework says nothing about remuneration and PCI publishes no salary data. Any
-figure attributed to the Institute today is not ours.
-
-**Not to screen out non-certified candidates.** Many excellent controls professionals are certified by
-nobody. The framework's hiring value is the structure it gives your questions, which works identically on
-candidates who hold nothing.
-
-**Not as accreditation, to your client.** "Our team is PCI-certified" is accurate; implying accredited or
-government-recognised certification is not, and the Institute will not support it.
-
-**Not for the sibling credentials.** This framework and its blueprint are PCL-AI only. No examination
-blueprint exists yet for PFL-AI in project finance or PML-AI in project management, so no weighting or
-coverage claim can be made for either.
+**Not as a pay scale** — the framework says nothing about remuneration and PCI publishes no salary data. Any
+figure attributed to the Institute today is not ours. **Not to screen out non-certified candidates** — many
+excellent controls professionals are certified by nobody, and the framework's hiring value is the structure
+it gives your questions, which works identically on people who hold nothing. **Not as accreditation, to your
+client** — "our team is PCI-certified" is accurate; implying accredited or government-recognised
+certification is not, and the Institute will not support it. **Not for the sibling credentials** — this
+framework and its blueprint are PCL-AI only, and no examination blueprint exists yet for PFL-AI in project
+finance or PML-AI in project management.
 
 ## 7. Checklist
 

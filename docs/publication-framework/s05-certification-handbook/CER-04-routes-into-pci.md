@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, employer, executive]
 level: foundation
-reading_time_min: 11
+reading_time_min: 9
 summary: >
   There are three public routes into PCI. The standard route is application, payment and examination. The
   founding route is an invitation-only cohort entered with a code that waives the fee and bundles

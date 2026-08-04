@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: professional
-reading_time_min: 14
+reading_time_min: 13
 summary: >
   A method document on AI in planning and scheduling. It sets out what machine capability genuinely
   contributes — logic and health checking at volume, duration realism against history, progress-based slip

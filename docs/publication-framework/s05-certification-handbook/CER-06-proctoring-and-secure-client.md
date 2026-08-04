@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, employer]
 level: practitioner
-reading_time_min: 15
+reading_time_min: 13
 summary: >
   A PCI sitting is proctored: you complete a readiness check, an identity check against government-issued
   photo identification and a room scan, then sit in a locked-down environment that blocks a second monitor,

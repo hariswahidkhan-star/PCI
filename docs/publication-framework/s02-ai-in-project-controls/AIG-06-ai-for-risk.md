@@ -81,19 +81,19 @@ absent from this register. The output is a list of candidates for a human to acc
 the rejections matter as much as the acceptances, because they are where the reasoning is recorded.
 
 **Risks visible in correspondence.** Requests for information (RFIs), non-conformance reports (NCRs),
-site instructions, minutes and letters contain the early signals of most cost and delay risk: a supplier
-querying a delivery date, a repeated query about an interface, an access restriction mentioned in passing.
-Machine reading covers the whole corpus rather than the sample a human can manage, and this coverage is the
+site instructions, minutes and letters carry the early signals of most cost and delay risk: a supplier
+querying a delivery date, a repeated interface query, an access restriction mentioned in passing. Machine
+reading covers the whole corpus rather than the sample a human can manage, and that coverage is the
 strongest argument for AI anywhere in risk work.
 
 **Structural gaps.** Cross-reading the register against the schedule and estimate surfaces omissions
-mechanically: long-lead packages with no supply risk, activities on the driving path with no risk
-attached, single-source suppliers with no alternative, work in a jurisdiction where consents are not
-represented. These are not clever inferences; they are joins that nobody has time to do by hand.
+mechanically: long-lead packages with no supply risk, driving-path activities with no risk attached,
+single-source suppliers with no alternative, consents unrepresented. These are not clever inferences; they
+are joins nobody has time to do by hand.
 
-**Hygiene.** De-duplicating near-identical entries, merging entries describing the same event from two
-packages, standardising categories, and rewriting entries into a disciplined cause–event–effect form are
-tasks a language model does well and a busy risk manager does last.
+**Hygiene.** De-duplicating near-identical entries, merging two packages' descriptions of the same event,
+standardising categories and rewriting entries into a disciplined cause–event–effect form are tasks a
+language model does well and a busy risk manager does last.
 
 ## 3. What identification cannot see
 
@@ -136,7 +136,7 @@ that are defaults should be reported alongside the result.
 **Zero correlation, unexamined.** Independence is the default in most tools and is almost never true:
 productivity risks move together, weather affects several activities, a single supplier fails once and
 appears in four risks. Independence narrows the distribution and lowers the upper percentiles, which is to
-say it makes the answer more comfortable and less true. §9 quantifies this on a small register.
+say it makes the answer more comfortable and less true. §8 quantifies this on a small register.
 
 **A distribution fitted to too few points.** Fitting a shape to five historical observations is curve
 drawing, not estimation. Where evidence is thin, a simple triangular or uniform range honestly labelled as
@@ -186,7 +186,7 @@ an owner from a pattern in the register is proposing, not deciding.
 5. **Check stability.** Re-run and confirm the reported percentiles are stable at the precision being
    reported.
 6. **Sanity-check against a deterministic sum.** Compare with the sum of expected monetary values (EMV).
-   The two answer different questions, and the relationship between them should be explicable — see §9.
+   The two answer different questions, and the relationship between them should be explicable — see §8.
 7. **Check for double counting.** Risk allowances embedded in the estimate, contingency held at package
    level, and provisions in the forecast frequently overlap. Reconcile explicitly, once, and record it.
 8. **List what is excluded.** Every risk left out of the quantification, and why, reported with the result.
@@ -209,8 +209,8 @@ occurred — a discipline most organisations lack and can start this year.
 **Correlation is set once and never revisited.** The assumption is made during set-up by whoever built the
 model, is not visible in the output, and survives every subsequent review because nobody knows it is there.
 
-**The tornado is read as a cause list.** A sensitivity ranking shows which inputs move the answer, which
-depends on the ranges assigned as much as on the risks themselves. A risk with a wide default range will
+**The tornado is read as a cause list.** A sensitivity ranking shows which inputs move the answer, and that
+depends on the ranges assigned as much as on the risks themselves: a risk with a wide default range will
 outrank a real risk with a tight measured one.
 
 **Contingency drifts into a target.** Once a P80 figure is in a budget, pressure to reduce it produces
@@ -239,15 +239,18 @@ contingency: no single outcome equals it, and it says nothing about the spread. 
 the simulation, not as an answer.
 
 **Step 2 — the simulation, as first run.** With impacts ranged and risks modelled as independent, the run
-returns **P50 = 1,010,000** and **P80 = 1,340,000** (illustrative outputs from the ranges assumed for this
+returns **P50 = 840,000** and **P80 = 1,340,000** (illustrative outputs from the ranges assumed for this
 example). At the organisation's stated appetite, contingency is recommended at P80.
 
 `Uplift over the EMV sum = 1,340,000 − 885,000 = 455,000`, which is
 `455,000 ÷ 885,000 = 0.514 = 51.4 %` above the EMV sum
 
-That relationship is explicable: the P80 sits above the mean because the register contains a low-probability,
-high-impact entry (R3) that stretches the upper tail. If a simulation ever returns a P80 *below* the EMV
-sum, something is wrong with the model, not with the register.
+The relationship should be explicable, and here it is. The EMV sum of 885,000 approximates the *mean* of
+the simulated total; the P50 of 840,000 sits below it, which is the signature of a right-skewed
+distribution — the low-probability, high-impact entry (R3) drags the mean up without moving the median.
+The P80 then sits well above both, because it reaches into that tail. A P80 *below* the EMV sum is also
+possible where one rare, very large risk dominates the register: the mean is lifted by an outcome the 80th
+percentile never reaches. That is a result to investigate and explain, not one to assume is an error.
 
 **Step 3 — testing the correlation assumption.** R2 and R4 are both ground and productivity related: if the
 excavation is harder than assumed, installation productivity is likely to suffer too. The analyst re-runs

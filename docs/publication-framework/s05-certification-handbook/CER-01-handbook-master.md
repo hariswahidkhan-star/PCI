@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: practitioner
-reading_time_min: 18
+reading_time_min: 17
 summary: >
   This handbook is the candidate-facing contract for PCI certification. It states, in one place, what the
   three credentials are, who may apply, how the routes differ, how booking and fees work, what happens on
@@ -81,10 +81,10 @@ in this handbook creates a right to a credential.
 
 ### 1.4 How to read a bracketed placeholder
 
-Where you see `[CONFIRM: …]`, an operational figure is genuinely not yet fixed, and the Institute has
-chosen to show you the gap rather than fill it with a plausible number. Those figures are confirmed at
-checkout or in the published policy before they can affect you. This is the same discipline the Institute
-applies to its own status: see §3.
+Where you see a bracketed **CONFIRM** marker, an operational figure is genuinely not yet fixed, and the
+Institute has chosen to show you the gap rather than fill it with a plausible number. Those figures are
+confirmed at checkout or in the published policy before they can affect you. This is the same discipline
+the Institute applies to its own status: see §3.
 
 ---
 

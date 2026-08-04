@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, employer]
 level: foundation
-reading_time_min: 12
+reading_time_min: 11
 summary: >
   Payment opens a twelve-month window in which to schedule and sit; a slot may be chosen up to 365 days
   ahead; launch opens 15 minutes before the slot with a 30-minute grace period; a booking may be

@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive]
 level: professional
-reading_time_min: 14
+reading_time_min: 16
 summary: >
   How to establish a project controls function where none exists, in the order that works: coding
   structure before tools, cut-off before dashboards, and a defined control-account level before anyone
@@ -258,12 +258,9 @@ project is implied.
 
 ### 9.1 The reporting calendar, derived backwards
 
-**Assumptions.** A monthly cycle. The project steering committee, which holds the authority to approve
-a baseline change, meets on the tenth working day of each month. Readers require three working days
-with the pack before the meeting. Cut-off is the last calendar day of the preceding month. A five-day
-working week; public holidays would shift every date and are ignored here.
-
-Working backwards from the meeting:
+**Assumptions.** A monthly cycle; a five-day working week, holidays ignored. The steering committee,
+which may approve a baseline change, meets on the tenth working day. Readers need three working days
+with the pack. Cut-off is the last calendar day of the preceding month. Working backwards:
 
 | Working day | Activity |
 |---|---|
@@ -290,11 +287,10 @@ negotiated as one rather than inherited.
 
 ### 9.2 Sizing the control-account population
 
-**Assumptions.** Budget at completion 24,000,000 currency units. The organisation reports a variance
-when it exceeds 10 % of the account's budget. The smallest variance the project director has said must
-be visible is 150,000. Monthly effort per control account — data check, reconciliation, status
-conversation, commentary — is 40 minutes. The function has 1.5 full-time equivalents available, at 150
-productive hours per month each.
+**Assumptions.** Budget at completion 24,000,000 currency units. A variance is reported when it exceeds
+10 % of its account's budget. The smallest variance the project director requires to be visible is
+150,000. Monthly effort per control account — data check, reconciliation, status conversation,
+commentary — is 40 minutes. The function has 1.5 full-time equivalents at 150 productive hours a month.
 
 **Floor, from the detection test.**
 

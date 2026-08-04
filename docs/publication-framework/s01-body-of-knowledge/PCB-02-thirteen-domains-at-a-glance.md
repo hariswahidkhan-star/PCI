@@ -125,9 +125,9 @@ is measured and priced (7.3); invoicing and applications for payment (7.4); and 
 commercial cycle, tying billing back to the over- and under-billing position (7.5).
 
 **Domain 8 · Project Management Lifecycle (6 KAs).** *Where does controls work sit in the wider job?* The
-five process groups — initiating (8.1), planning (8.2), executing (8.3), monitoring and controlling (8.4)
-and closing (8.5) — followed by development approaches: predictive, iterative, incremental and adaptive
-(8.6), including the distinction between incremental and iterative that is most often confused.
+five process groups — initiating (8.1), planning (8.2), executing (8.3), monitoring and controlling (8.4),
+closing (8.5) — then development approaches: predictive, iterative, incremental and adaptive (8.6),
+including the incremental-versus-iterative distinction that is most often confused.
 
 **Domain 9 · Agile, Scrum & Adaptive Delivery for Project Controls (6 KAs).** *How do I measure work whose
 scope is meant to change?* Agile foundations (9.1); the Scrum framework in depth (9.2); backlogs,
@@ -142,9 +142,9 @@ crashing, fast-tracking and levelling (10.3); and progress measurement and sched
 
 **Domain 11 · Business Process Cycles (3 KAs).** *Which transaction created this number?* Order-to-cash
 (11.1); procure-to-pay (11.2); and internal control and segregation of duties, including the three-way match
-and the audit trail (11.3). It is the shortest domain in the framework and among the most load-bearing: it is
-where the accounting of Domains 1–2, the cost control of Domain 5 and the commercial cycle of Domain 7 meet
-the daily transaction flow.
+and the audit trail (11.3). The shortest domain in the framework and among the most load-bearing: where the
+accounting of Domains 1–2, the cost control of Domain 5 and the commercial cycle of Domain 7 meet the daily
+transaction flow.
 
 **Domain 12 · Risk Management for Project Controls (3 KAs).** *Where does the range around every forecast
 come from?* The risk framework, including appetite and tolerance (12.1); the risk process — identify,
@@ -171,12 +171,11 @@ subject and where it must not be trusted, and knowledge area 13.5 carries the sy
 treatment. Governed-AI judgement can therefore appear inside an item sitting in any group.
 
 **It does not tell you where the examination will press.** Scenarios cross domains deliberately: a schedule
-slip carries cost, risk, commercial and reporting consequences, and an item may require all four. Revising
-domain by domain in isolation prepares for a paper this framework does not produce.
+slip carries cost, risk, commercial and reporting consequences, and one item may require all four.
 
-**It does not tell you where to spend your time.** That depends on your gaps, not on the map. A cost engineer
-from an accounting background typically under-prepares Domains 8–10; a planner typically under-prepares
-Domains 1–4. The map is the same for both; the revision plan should not be.
+**It does not tell you where to spend your time.** That depends on your gaps. A cost engineer from an
+accounting background typically under-prepares Domains 8–10; a planner typically under-prepares Domains 1–4.
+The map is the same for both; the revision plan should not be.
 
 ---
 

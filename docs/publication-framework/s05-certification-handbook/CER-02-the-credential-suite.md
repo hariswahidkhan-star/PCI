@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: practitioner
-reading_time_min: 11
+reading_time_min: 10
 summary: >
   PCI certifies three credentials at Leader level — PCL-AI in project controls, PFL-AI in project finance
   and PML-AI in project management — each valid for three years and each built on the same governed-AI

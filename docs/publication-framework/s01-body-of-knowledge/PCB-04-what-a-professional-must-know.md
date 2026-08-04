@@ -50,14 +50,13 @@ and interviewers who want a better question than "tell me about your earned valu
 ## 1. Why propositions and not a syllabus
 
 A syllabus lists what is covered. A claim states what a holder can do, in terms specific enough to be wrong.
-The eleven below are written to be falsifiable: each names a thing a professional either can or cannot do,
-with a test attached. Where a proposition is a rule, it is stated as a rule; where it is a judgement, it says
-so, because the difference between the two is most of what separates a competent professional from a
-well-trained one.
+The eleven below are written to be falsifiable: each names something a professional either can or cannot do,
+with a test attached. Where a proposition is a rule it says so; where it is a judgement it says so too,
+because that difference is most of what separates a competent professional from a well-trained one.
 
-These are eleven propositions across thirteen domains, and there is no one-to-one correspondence: several
-draw on three or four domains at once. They are also not the PCL-AI competency set — that is fourteen named
-competencies, treated in `CMP-03 — PCL-AI: the fourteen competencies`. The propositions are what the
+There are eleven propositions across thirteen domains and no one-to-one correspondence — several draw on
+three or four domains at once. They are also not the PCL-AI competency set, which is fourteen named
+competencies treated in `CMP-03 — PCL-AI: the fourteen competencies`. The propositions are what those
 competencies look like when someone is doing the work.
 
 ## 2. The eleven propositions
@@ -132,40 +131,39 @@ the two figures you would verify first, and against what. *Where:* Domain 13 (KA
 
 ## 3. How each proposition is evidenced
 
-The propositions are assessed in the examination through four-option, single-best-answer items, mostly at
-the application and analysis cognitive levels, in scenarios that cross domains deliberately — because
-propositions 6, 8 and 11 are not separable from the others in practice. No formula sheet is provided:
-selecting the right formula is part of proposition 6.
+The propositions are assessed through four-option, single-best-answer items, mostly at the application and
+analysis cognitive levels, in scenarios that cross domains deliberately — because propositions 6, 8 and 11
+are not separable from the others in practice. No formula sheet is provided: selecting the right formula is
+part of proposition 6.
 
-The examination is a sample, not a census. It cannot observe proposition 7 done on paper or proposition 11
-done under time pressure with a real model. What it can do is establish that the candidate knows what the
-right answer looks like and why the plausible wrong ones are wrong. Employers who want the rest should use
-the propositions as an interview and development structure; `PCB-06 — Using the Body of Knowledge: a guide
-for employers` sets out how.
+The examination is a sample, not a census. It cannot observe proposition 7 done on paper, or proposition 11
+done under time pressure with a real model. What it establishes is that the candidate knows what the right
+answer looks like and why the plausible wrong ones are wrong. Employers wanting the rest should use the
+propositions as an interview and development structure; `PCB-06 — Using the Body of Knowledge: a guide for
+employers` sets out how.
 
 ## 4. What is not claimed
 
-None of the eleven asserts experience, seniority or results. The credential's eligibility rule is three
-years of professional experience in any field, which establishes that a candidate has worked, not that they
-have worked in project controls. A pass says the propositions were demonstrated against a published
-standard at a sitting — it does not say they are being practised today, and it certainly does not predict a
-project outcome, a salary or a promotion.
+None of the eleven asserts experience, seniority or results. Eligibility is three years of professional
+experience in any field, which establishes that a candidate has worked — not that they have worked in
+project controls. A pass says the propositions were demonstrated against a published standard at a sitting;
+it does not say they are being practised today, and it predicts no project outcome, salary or promotion.
 
-Nor is the list a maturity model. There is no claim that a professional who can do all eleven is finished;
-the framework is explicit that judgement deepens with exposure to work these propositions only describe.
+Nor is the list a maturity model. Nothing claims a professional who can do all eleven is finished; judgement
+deepens with exposure to work these propositions only describe.
 
 ## 5. How this goes wrong
 
-**Treating the tests as an examination.** The tests in §2 are conversational probes for self-audit and
-interviews. They are not sample examination items, they are not drawn from any item bank, and answering them
-well predicts nothing about a sitting.
+**Treating the tests as examination content.** The tests in §2 are conversational probes for self-audit and
+interviews. They are not sample items, are drawn from no item bank, and answering them well predicts nothing
+about a sitting.
 
 **Reading proposition 7 as nostalgia.** Nobody schedules a programme by hand. The proposition is about being
 able to tell when the tool is wrong, which requires having done it by hand often enough to recognise a
 result that cannot be right.
 
-**Using the list as a job description.** Eleven propositions is a competence claim, not a role. A real role
-weights them by what the project needs; a graduate planner and a controls manager on the same programme
+**Using the list as a job description.** A competence claim is not a role. A real role weights the
+propositions by what the project needs — a graduate planner and a controls manager on the same programme
 should be strong in different ones. That mapping is an employer's judgement, not the Institute's.
 
 ---

@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [executive, manager]
 level: leader
-reading_time_min: 12
+reading_time_min: 13
 summary: >
   This guide sets out the Institute's position on artificial intelligence in a project controls function:
   what AI genuinely changes (the economics of coverage, of cycle time and of early warning), what it does
@@ -152,7 +152,7 @@ control framework that houses it is `AIG-08 — Governing AI on a project`.
 **5.5 A value case with the governance cost netted.** Licences, integration, data remediation, training and
 the ongoing verification effort — all of it — set against measured savings, not vendor-claimed ones. The
 most common way an AI business case flatters itself is by pricing the licence and omitting the checking.
-§7 works one through.
+§8 works one through.
 
 **5.6 A stop rule.** What result would cause this to be discontinued, decided before the pilot starts. A
 pilot that cannot fail is not a pilot; it is a procurement with extra steps.

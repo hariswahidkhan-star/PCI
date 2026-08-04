@@ -62,9 +62,8 @@ complete, whether the method chosen matches the reason the variance occurred, an
 presenting it can explain the movement since last period in terms a director can act on.
 
 AI changes the cost of producing candidates and explanations. It does not touch the defence. A model that
-returns an estimate at completion (EAC) of 9.1 million in under a second has given you a number and none of
-the three things above. The discipline in this document is about extracting the real contribution while
-keeping the defence intact.
+returns an estimate at completion (EAC) in under a second has given you a number and none of the three
+things above.
 
 The terms used throughout, expanded once: **planned value (PV)** is the budgeted cost of work scheduled;
 **earned value (EV)** the budgeted cost of work performed; **actual cost (AC)** the cost incurred for that
@@ -81,15 +80,14 @@ completion`; this document assumes it and concentrates on the AI contribution an
 but an incomplete AC: goods received not invoiced (GRNI) unaccrued, commitments not reflected,
 subcontractor valuations in transit, a late invoice run. Classification and matching capability is genuinely
 good at reconciling purchase orders, receipts and invoices at volume, proposing accruals from receipt
-records, and flagging the lines where the three do not agree. This is the highest-value, lowest-risk
-contribution on the list, and it improves the forecast without touching the forecasting method at all.
+records, and flagging the lines where the three disagree. This is the highest-value, lowest-risk
+contribution on the list, and it improves the forecast without touching the method at all.
 
 **2.2 Candidate EACs, generated across methods.** Producing the CPI-based, composite and
 remaining-work-at-budget variants for every control account, every period, is tedious and therefore is
 often done for a handful of accounts. A model does all of them and ranks the divergence. The value is not
 the numbers — they are arithmetic — but the **spread**: accounts where the methods agree need less
-attention than accounts where they diverge widely, and that ranking is a genuinely useful way to direct
-scarce analytical time.
+attention than those where they diverge widely, which is a useful way to direct scarce analytical time.
 
 **2.3 Driver decomposition.** Given cost, quantity, rate and commitment data, a model can decompose a
 movement into components: rate against usage, escalation against scope, this package against that one.
@@ -102,10 +100,10 @@ productivity across hundreds of accounts, and raising a signal when a trend is s
 threshold is breached, is work that scales badly for humans and well for machines. Sustained-decline
 detection across three or four periods is the single most useful early-warning pattern in cost control.
 
-**2.5 Ranges and scenarios.** A model can produce a range around a central forecast quickly, and can run
-scenarios — escalation at a different rate, productivity recovering or not — so the professional presents a
-range with named drivers instead of a single point with false precision. The confidence level and the
-scenario set are professional choices; the computation is not.
+**2.5 Ranges and scenarios.** Producing a range around a central forecast, and running scenarios —
+escalation at a different rate, productivity recovering or not — lets the professional present a range with
+named drivers instead of a single point with false precision. The confidence level and the scenario set are
+professional choices; the computation is not.
 
 **2.6 Narrative drafting.** A first-draft variance narrative from the numbers, in the house format, saves
 real time. Every figure in it is recomputed before it leaves, and every causal claim is either confirmed
@@ -136,8 +134,8 @@ appetite, and it is the point at which a forecast becomes money. A model may com
 remaining balance; the release decision is made by the named authority, minuted.
 
 **Reclassification of scope as variation.** Whether work is a variation, a claim or absorbed scope is a
-contractual judgement with entitlement consequences, and it changes the forecast materially. Extraction may
-locate the clause and the correspondence; the position is taken by a commercial professional with legal
+contractual judgement with entitlement consequences, and it moves the forecast materially. Extraction may
+locate the clause and the correspondence; the position is taken by a commercial professional, with legal
 review where the exposure warrants it.
 
 ## 4. Validating an AI-produced forecast number
@@ -165,10 +163,10 @@ three are proportionate to the stakes.
 6. **Compare against one independent simple method.** A quantity-based or rate-based estimate to complete,
    done crudely, is a valuable check on a sophisticated one. Where the two disagree materially, the
    sophistication is on trial, not the simplicity.
-7. **Check for double counting.** Risk allowances included in the model's forecast and also carried in
-   contingency; escalation applied both in the rate and in a provision; a variation counted in both the
-   forecast and the change log. Double counting is the most common single defect in AI-assembled forecasts,
-   because assembly from multiple sources is exactly what the tooling makes easy.
+7. **Check for double counting.** Risk allowances carried both in the forecast and in contingency;
+   escalation applied both in the rate and in a provision; a variation counted in both the forecast and the
+   change log. Double counting is the most common defect in AI-assembled forecasts, because assembly from
+   multiple sources is exactly what the tooling makes easy.
 
 Where the model was trained on your historical projects, one further check applies before reliance rather
 than at each use: **is the training history comparable to this job** in scope, contract type, location and
@@ -187,10 +185,10 @@ gets moved, claims get settled and budgets get changed. It cannot distinguish th
 recovery on a job where nothing has changed.
 
 **The forecast is precise and unfounded.** An EAC quoted to the currency unit from inputs that are ranges
-communicates confidence the analysis does not have. Round to the precision the inputs support and say what
-the range is.
+communicates confidence the analysis does not have. Round to the precision the inputs support and state the
+range.
 
-**Trend detection is tuned until it stops complaining.** Early warning that generates too many signals is
+**Trend detection is tuned until it stops complaining.** Early warning that generates too many signals gets
 turned down until it generates none, and the tuning is done by whoever finds the alerts annoying rather
 than by whoever owns the risk. Threshold changes are control changes: they get an owner and a record.
 
@@ -200,12 +198,12 @@ causal claim in a generated narrative is either traced to the analysis or remove
 
 **Incomplete actuals are forecast forward.** The most expensive arithmetic error in cost control is
 forecasting from an AC missing a month of accruals: CPI looks strong, the EAC looks comfortable, and both
-correct sharply when the invoices land. AI makes this worse when it accelerates the cycle, because there is
-less elapsed time for late documents to arrive before the pack closes.
+correct sharply when the invoices land. Accelerating the cycle makes this worse, because there is less
+elapsed time for late documents to arrive before the pack closes.
 
 **Nobody re-tests the model after the portfolio changes.** A model that performed well on building work is
 applied to civils, or the delivery model shifts from reimbursable to lump sum, and performance degrades
-without a single alarm. Re-test on a change in the work, not only on a calendar.
+without an alarm. Re-test on a change in the work, not only on a calendar.
 
 ## 6. Worked example — validating an AI-produced EAC
 

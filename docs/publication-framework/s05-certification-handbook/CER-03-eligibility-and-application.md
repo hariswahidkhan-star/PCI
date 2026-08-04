@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, employer]
 level: foundation
-reading_time_min: 13
+reading_time_min: 12
 summary: >
   PCI's entry requirement is three years of professional experience in any field, counted on a
   full-time-equivalent basis, with no degree requirement. This document shows how to count those years

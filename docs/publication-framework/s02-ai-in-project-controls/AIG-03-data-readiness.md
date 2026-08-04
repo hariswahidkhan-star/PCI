@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 14
 summary: >
   Most AI failures in a project controls function are data failures wearing a model's clothes. This
   document sets out what AI actually needs from controls data — a coding structure that is used rather than
