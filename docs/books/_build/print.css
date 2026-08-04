@@ -319,13 +319,13 @@ nav#TOC a::after {
 
 /* ---- Back matter: derived glossary ------------------------------------------------ */
 .backmatter { page-break-before: always; }
-/* Back matter sets its OWN running head. Without this the appendices, the laws, the glossary and
+/* Back matter sets its OWN running head. Without this the appendices, the standards, the glossary and
    the index all ran under the last domain's chapter title, which is a lie about where the reader
    is. Every element that opens a back-matter section re-sets the string. */
 .backmatter .bmtitle,
-.backmatter .lawstitle,
+.backmatter .stdstitle,
 .appendices h2.apptitle,
-.lawspart h2.lawset,
+.stdspart h2.stdset,
 .bookindex .ixtitle { string-set: chaptertitle content(); }
 .backmatter .bmtitle {
   font-family: "IBM Plex Serif", Georgia, serif; font-size: 30pt; font-weight: 600;
@@ -373,31 +373,31 @@ nav#TOC a::after {
 }
 .appendices tr { break-inside: avoid; }
 
-/* ---- Call-out boxes: the PCI Standard visual system (laws/SUPERSEDED_LAW_SYSTEM_v0.md §6) ----------
+/* ---- Call-out boxes: the PCI Standard visual system (laws/PCI_STANDARDS_DRAFTING_MANUAL.md §8) ----------
    Colour is never the only distinction. Each box carries a written label and an icon, and each has
-   a DIFFERENT border style — solid (law), double (external reference), dashed (guidance), dotted
+   a DIFFERENT border style — solid (standard), double (external reference), dashed (guidance), dotted
    (caution) — so the four remain distinguishable in grayscale print and to a colour-blind reader.
    Body copy stays near-black on the tint; the colour carries the label, the heading and the border
    only, and no long passage is ever set in red. */
-.pci-law, .ext-ref, .pci-guidance, .pci-caution {
+.pci-standard, .ext-ref, .pci-guidance, .pci-caution {
   margin: 3.6mm 0; padding: 3mm 4mm 2.6mm 4mm; border-radius: 1.2mm;
   page-break-inside: auto; text-align: left;
 }
-.pci-law > *:last-child, .ext-ref > *:last-child,
+.pci-standard > *:last-child, .ext-ref > *:last-child,
 .pci-guidance > *:last-child, .pci-caution > *:last-child { margin-bottom: 0; }
-.pci-law p, .ext-ref p, .pci-guidance p, .pci-caution p,
-.pci-law li, .ext-ref li, .pci-guidance li, .pci-caution li {
+.pci-standard p, .ext-ref p, .pci-guidance p, .pci-caution p,
+.pci-standard li, .ext-ref li, .pci-guidance li, .pci-caution li {
   color: #0F172A;                       /* body copy is black on the tint, never coloured */
 }
-.pci-law::before, .ext-ref::before, .pci-guidance::before, .pci-caution::before {
+.pci-standard::before, .ext-ref::before, .pci-guidance::before, .pci-caution::before {
   display: block; font-family: Inter, "DejaVu Sans", sans-serif; font-size: 6.6pt; font-weight: 700;
   letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 1.6mm;
 }
 
-.pci-law {
+.pci-standard {
   background: #FDECEC; border: 0.5pt solid #C62828; border-left: 3pt solid #9B1C1C;
 }
-.pci-law::before { content: "§ PCI STANDARD"; color: #9B1C1C; }
+.pci-standard::before { content: "§ PCI STANDARD"; color: #9B1C1C; }
 
 .ext-ref {
   background: #EEF4FF; border: 1.6pt double #1D4ED8; border-left: 3.4pt double #1D4ED8;
@@ -417,42 +417,42 @@ nav#TOC a::after {
 .pci-caution::before { content: "⚠ CAUTION"; color: #B45309; }
 
 /* Boxes nested inside a law box sit tighter and never re-tint the whole page. */
-.pci-law .ext-ref, .pci-law .pci-caution, .pci-law .pci-guidance {
+.pci-standard .ext-ref, .pci-standard .pci-caution, .pci-standard .pci-guidance {
   margin: 2.4mm 0; padding: 2.2mm 3mm 1.8mm 3mm;
 }
 
 /* ---- Back matter: the PCI Standards part ---------------------------------- */
-.lawspart h2.lawset {
+.stdspart h2.stdset {
   font-family: "IBM Plex Serif", Georgia, serif; font-size: 21pt; font-weight: 600;
   color: #0F172A; margin: 0 0 4mm 0; padding-bottom: 2.5mm;
   border-bottom: 0.5mm solid #C62828; break-after: avoid; page-break-before: always;
 }
-.lawspart h2.lawset::before { content: none; }
-.lawspart h3.lawgroup {
+.stdspart h2.stdset::before { content: none; }
+.stdspart h3.stdgroup {
   font-family: Inter, sans-serif; font-size: 12pt; font-weight: 800; color: #9B1C1C;
   letter-spacing: -0.005em; margin: 8mm 0 3mm 0; padding-bottom: 1.5mm;
   border-bottom: 0.4pt solid #F1C7C7; break-after: avoid;
 }
-.lawspart p { font-family: Inter, sans-serif; font-size: 9pt; line-height: 1.58; color: #0F172A; }
-.lawspart .pci-law p { font-size: 8.6pt; line-height: 1.52; margin-bottom: 1.8mm; }
-.lawspart .pci-law .lawhead {
+.stdspart p { font-family: Inter, sans-serif; font-size: 9pt; line-height: 1.58; color: #0F172A; }
+.stdspart .pci-standard p { font-size: 8.6pt; line-height: 1.52; margin-bottom: 1.8mm; }
+.stdspart .pci-standard .stdhead {
   font-family: Inter, sans-serif; margin-bottom: 2.2mm; break-after: avoid;
 }
-.lawspart .pci-law .lawid {
+.stdspart .pci-standard .stdid {
   display: block; font-size: 8.2pt; font-weight: 700; letter-spacing: 0.14em; color: #9B1C1C;
   margin-bottom: 0.8mm;
 }
-.lawspart .pci-law .lawname {
+.stdspart .pci-standard .stdname {
   display: block; font-size: 11.5pt; font-weight: 800; color: #0F172A; line-height: 1.25;
 }
-.lawspart table { font-size: 7.8pt; width: 100%; border-collapse: collapse; margin: 3mm 0 5mm 0; }
-.lawspart th {
+.stdspart table { font-size: 7.8pt; width: 100%; border-collapse: collapse; margin: 3mm 0 5mm 0; }
+.stdspart th {
   font-family: Inter, sans-serif; font-size: 7.4pt; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.3pt; color: #FFFFFF; background: #9B1C1C; text-align: left;
   border: none; padding: 1.4mm 2mm;
 }
-.lawspart td {
+.stdspart td {
   padding: 1.2mm 2mm; border-bottom: 0.15mm solid #E2E8F0; vertical-align: top; line-height: 1.42;
 }
-.lawspart tr { break-inside: avoid; }
-.lawspart code { color: #9B1C1C; }
+.stdspart tr { break-inside: avoid; }
+.stdspart code { color: #9B1C1C; }

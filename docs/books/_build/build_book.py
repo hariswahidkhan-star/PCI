@@ -16,7 +16,7 @@ import markdown
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent
-LAWS_DIR = ROOT / "laws"
+STANDARDS_DIR = ROOT / "laws"
 
 BOOKS = {
     "pml-ai": {
@@ -32,7 +32,7 @@ BOOKS = {
             "themes": "Leadership · delivery systems · governance · the governed use of AI",
             "chart": "paths",
         },
-        # Certification law set appended as back matter (skipped silently when not yet authored).
+        # Certification standard set appended as back matter (skipped silently when not yet authored).
         "laws_file": "PML_AI_STANDARDS.md",
         # (part number, title, description, domain range) — a divider is emitted only where the
         # part's lowest-numbered EXISTING domain is found, so parts appear as authorship reaches them.
@@ -346,16 +346,16 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
 
 # ---------------------------------------------------------------------------------------------
 # PCI Standards — back-matter part assembled from the shared foundational set plus the
-# book's own certification law set. Both are authored elsewhere; either may be absent mid-run, and
+# book's own certification standard set. Both are authored elsewhere; either may be absent mid-run, and
 # an absent file is skipped rather than fatal.
 # ---------------------------------------------------------------------------------------------
 
-# Fields the law format carries that are call-outs in their own right (SUPERSEDED_LAW_SYSTEM_v0.md §6).
-LAW_FIELD_BOXES = (("External references.", "ext-ref"),
+# Fields the standard format carries that are call-outs in their own right (PCI_STANDARDS_DRAFTING_MANUAL.md §8).
+STD_FIELD_BOXES = (("External references.", "ext-ref"),
                    ("Jurisdictional caution.", "pci-caution"))
 
 
-def _law_prose(md: str) -> str:
+def _std_prose(md: str) -> str:
     inner = markdown.markdown(md, extensions=["tables"])
     inner = inner.replace("<hr />", "")
     # The legal-status disclaimer is set as a blockquote in source; it is a caution, so it prints
@@ -364,20 +364,20 @@ def _law_prose(md: str) -> str:
     return inner
 
 
-def _law_box(law_id: str, title: str, body_md: str) -> str:
+def _std_box(law_id: str, title: str, body_md: str) -> str:
     inner = markdown.markdown(body_md, extensions=["tables"])
     inner = inner.replace("<hr />", "")
-    for label, cls in LAW_FIELD_BOXES:
+    for label, cls in STD_FIELD_BOXES:
         inner = re.sub(r"<p><strong>" + re.escape(label) + r"</strong>\s*(.*?)</p>",
                        lambda m, c=cls: f'<div class="{c}"><p>{m.group(1)}</p></div>',
                        inner, flags=re.S)
-    return (f'<div class="pci-law" id="{slug("law-" + law_id)}">'
-            f'<div class="lawhead"><span class="lawid">{law_id}</span>'
-            f'<span class="lawname">{title}</span></div>{inner}</div>')
+    return (f'<div class="pci-standard" id="{slug("standard-" + law_id)}">'
+            f'<div class="stdhead"><span class="stdid">{law_id}</span>'
+            f'<span class="stdname">{title}</span></div>{inner}</div>')
 
 
-def render_law_file(path: pathlib.Path) -> tuple:
-    """One law file → (set title, html, law count)."""
+def render_standards_file(path: pathlib.Path) -> tuple:
+    """One standards file → (set title, html, standard count)."""
     text = path.read_text(encoding="utf-8")
     m = re.match(r"#\s+([^\n]+)\n", text)
     set_title = m.group(1).strip() if m else path.stem.replace("_", " ")
@@ -393,11 +393,11 @@ def render_law_file(path: pathlib.Path) -> tuple:
             law = None
             return
         if law:
-            out.append(_law_box(law[0], law[1], chunk))
+            out.append(_std_box(law[0], law[1], chunk))
         elif guidance:
-            out.append('<div class="pci-guidance">' + _law_prose(chunk) + "</div>")
+            out.append('<div class="pci-guidance">' + _std_prose(chunk) + "</div>")
         else:
-            out.append(_law_prose(chunk))
+            out.append(_std_prose(chunk))
         law = None
 
     laws = 0
@@ -414,7 +414,7 @@ def render_law_file(path: pathlib.Path) -> tuple:
         elif head2:
             flush()
             guidance = "how to read" in head2.group(1).lower()
-            out.append(f'<h3 class="lawgroup" id="{slug(set_title + "-" + head2.group(1))}" '
+            out.append(f'<h3 class="stdgroup" id="{slug(set_title + "-" + head2.group(1))}" '
                        f'data-toc="2">{head2.group(1)}</h3>')
         else:
             buf.append(line)
@@ -424,27 +424,27 @@ def render_law_file(path: pathlib.Path) -> tuple:
 
 def render_laws(book: str, cfg: dict) -> str:
     """The whole 'PCI Standards' part, or '' when no law file is present yet."""
-    wanted = [LAWS_DIR / "PCI_FOUNDATIONAL_STANDARDS.md", LAWS_DIR / cfg.get("laws_file", "_none_")]
+    wanted = [STANDARDS_DIR / "PCI_FOUNDATIONAL_STANDARDS.md", STANDARDS_DIR / cfg.get("laws_file", "_none_")]
     files = [f for f in wanted if f.exists()]
     missing = [f.name for f in wanted if not f.exists()]
     if missing:
-        print(f"laws: skipped (not yet authored) — {', '.join(missing)}")
+        print(f"standards: skipped (not yet authored) — {', '.join(missing)}")
     if not files:
         return ""
     sets, total = [], 0
     for f in files:
         try:
-            title, html, laws = render_law_file(f)
+            title, html, laws = render_standards_file(f)
         except Exception as exc:                      # a malformed law file must not lose the book
-            print(f"laws: FAILED to render {f} — {type(exc).__name__}: {exc}")
+            print(f"standards: FAILED to render {f} — {type(exc).__name__}: {exc}")
             continue
         total += laws
-        sets.append(f'<h2 class="lawset" id="{slug(title)}" data-toc="2">{title}</h2>' + html)
+        sets.append(f'<h2 class="stdset" id="{slug(title)}" data-toc="2">{title}</h2>' + html)
     if not sets:
         return ""
-    print(f"laws: {total} laws from {len(sets)} set(s)")
-    return ('<div class="backmatter lawspart">'
-            '<h1 class="lawstitle bmtitle" id="pci-professional-laws" data-toc="1">'
+    print(f"standards: {total} standards from {len(sets)} set(s)")
+    return ('<div class="backmatter stdspart">'
+            '<h1 class="stdstitle bmtitle" id="pci-professional-laws" data-toc="1">'
             'PCI Standards</h1>'
             '<p class="bmnote">Mandatory professional rules established by PCI Global for work '
             'within a PCI certification scope. They are not legislation and do not displace '
