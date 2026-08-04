@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager]
 level: practitioner
-reading_time_min: 23
+reading_time_min: 28
 summary: >
   Five constructed, explicitly fictitious cases in which a project controls professional is pressed to
   report something other than what the evidence shows: a forecast softened before a board meeting, an

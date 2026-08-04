@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: professional
-reading_time_min: 24
+reading_time_min: 28
 summary: >
   The Institute's code of ethics and professional conduct: the standard of behaviour required of
   everyone who applies for, sits for or holds a PCI credential. It states eight principles and then

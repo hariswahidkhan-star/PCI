@@ -64,7 +64,7 @@ the first person who asks where it came from. Columns AL to AN make the link exp
 
 It is not an issues log. An issue has happened; a risk has not. Mixing them is the fastest way to make a
 register unreadable, because the two need different fields and different meetings. Keep a separate issues
-log and cross-reference it in column AQ when a risk is realised.
+log and cross-reference it in column AR when a risk is realised.
 
 ## 2. How to complete it
 
@@ -163,7 +163,7 @@ absorb, such as a milestone with a monetary consequence or a consent that cannot
 
 ### 2.4 Set the review cadence when you open the row
 
-Column AP is a date, not a frequency. A risk with a proximity three months away and a review date in six
+Column AQ is a date, not a frequency. A risk with a proximity three months away and a next review in six
 months is not being managed. Set the next review inside the proximity window, and make the risk owner —
 not the risk manager — accountable for the review.
 

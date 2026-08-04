@@ -84,8 +84,8 @@ assembly of all six into the project execution plan.
 
 ## 3. The permitted-use register
 
-The register is the operative document — not a list of approved products but a list of **approved uses**,
-because the same tool is appropriate for one task and reckless for another. One row per permitted use:
+The register is the operative document — not a list of approved products but of **approved uses**, because
+the same tool is appropriate for one task and reckless for another. One row per use:
 
 | Column | Content | Why it is there |
 |---|---|---|
@@ -111,7 +111,7 @@ log is the most informative document in the framework after six months.
 ## 4. Verification tiers
 
 The commonest governance failure is a uniform rule — "all AI outputs must be verified" — which is either
-unaffordable or ignored. Set three tiers and assign one to every register row.
+unaffordable or ignored. Set three tiers; assign one to every register row.
 
 **Tier 1 — Independent recomputation.** The reviewer reproduces the number by an independent route without
 reference to the model's working, then compares; assumptions, method and the reason for the method are
@@ -140,8 +140,8 @@ Three points decide whether tiers work.
 
 Four things make project confidentiality more than a compliance formality: unit rates and build-ups,
 subcontract terms and commercial positions, claims and dispute strategy, and personal data in
-correspondence and resource records. In joint ventures, some of it is confidential *between the parties on
-your own project*.
+correspondence and resource records. In joint ventures, some is confidential *between the parties on your
+own project*.
 
 **Map the classification before mobilisation, not at first use.** Write down which project artefacts fall
 into which class of the organisation's scheme: cost model, risk register, subcontract set, correspondence

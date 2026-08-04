@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager]
 level: practitioner
-reading_time_min: 19
+reading_time_min: 17
 summary: >
   The conduct obligations that attach to AI-assisted project controls work: keeping commercially
   sensitive and personal project data out of systems the data owner does not control, understanding

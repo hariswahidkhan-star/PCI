@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager]
 level: practitioner
-reading_time_min: 16
+reading_time_min: 17
 summary: >
   A clause-by-clause reading of the eight principles in the PCI code of ethics and professional
   conduct: what each one requires in ordinary work, the reasoning that puts it in the Code, the point

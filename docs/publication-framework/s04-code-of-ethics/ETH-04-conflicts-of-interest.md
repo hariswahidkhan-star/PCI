@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, employer]
 level: practitioner
-reading_time_min: 18
+reading_time_min: 17
 summary: >
   How conflicts of interest arise in a project controls function and what to do about each of them:
   moving between contractor and client, gifts and hospitality, family and personal relationships in a

@@ -180,19 +180,18 @@ cost report and the ledger is a finding, not a rounding.
 
 A purchase order is not a document; it is the head of a stream. Once raised, it generates goods
 receipts, invoices, accruals, retentions, variations and payment records, and every one of them
-inherits the code the purchase order carried. Change the code afterwards and you are not editing one
-field — you are re-coding a stream, in a system that in most cases requires a formal amendment to do it.
+inherits the code the purchase order carried. Change the code afterwards and you are not editing a
+field — you are re-coding a stream, in a system that usually requires a formal amendment to do it.
 
-That is why the coding structure sits at position 3.2 in the dependency chain in
-`BPG-01 — Building a project controls function from zero`, before tooling and before any reporting. The
-cost of the decision is roughly constant whenever it is made. The cost of *reversing* it grows with the
-number of transactions already posted and the number of commitments already open, and §9 puts numbers
-on both sides.
+That is why the coding structure sits early in the dependency chain in `BPG-01 — Building a project
+controls function from zero`, before tooling and before any reporting. The cost of the decision is
+roughly constant whenever it is made; the cost of *reversing* it grows with the transactions already
+posted and the commitments already open, and §9 puts numbers on both sides.
 
-There is a legitimate middle path where the structure genuinely cannot be finalised early: fix the
-segment layout and the cost-type list, which are stable, and leave the WBS segment's lower levels to be
-populated as the scope is defined. What must not be deferred is the *shape* — because a shape change is
-what forces the re-code.
+Where the structure genuinely cannot be finalised early, there is a legitimate middle path: fix the
+segment layout and the cost-type list, which are stable, and populate the WBS segment's lower levels as
+scope is defined. What must not be deferred is the *shape*, because a shape change is what forces the
+re-code.
 
 ## 7. Direct, indirect and the allocation question
 

@@ -34,7 +34,7 @@ sources:
   - "ETH-01 — The PCI code of ethics and professional conduct (this framework)"
   - "PCI Candidate Handbook, docs/downloads/candidate-handbook.md, repository copy read August 2026"
   - "PCI platform casework module, backend/Endpoints/Casework.cs, read August 2026 — recorded case types and case states"
-placeholders: 12
+placeholders: 13
 ---
 
 # Raising concerns: complaints, investigations, sanctions
