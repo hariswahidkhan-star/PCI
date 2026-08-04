@@ -66,8 +66,8 @@ turned into artefacts with owners, frequencies and fields.
 
 ## 2. Six control objects
 
-Everything that follows attaches to one of six objects. If your framework has all six, it is auditable.
-If it has fewer, name which one is missing and why.
+Everything that follows attaches to one of six objects. A framework with all six is auditable; a framework
+with fewer should name which is missing, and why.
 
 | # | Control object | What it fixes | Owner (typical) | Cadence |
 |---|---|---|---|---|
@@ -115,23 +115,22 @@ the most informative document in the framework after six months.
 
 ## 4. Verification tiers
 
-The most common governance failure is a uniform rule — "all AI outputs must be verified" — which is
-either unaffordable or ignored. Set three tiers and assign one to every register row.
+The commonest governance failure is a uniform rule — "all AI outputs must be verified" — which is either
+unaffordable or ignored. Set three tiers and assign one to every register row.
 
-**Tier 1 — Independent recomputation.** The reviewer reproduces the number by an independent route
-without reference to the model's working, then compares; assumptions, method and the reason for the method
-are recorded. Applied to anything reported outside the project, anything entering a baseline or a forecast
+**Tier 1 — Independent recomputation.** The reviewer reproduces the number by an independent route without
+reference to the model's working, then compares; assumptions, method and the reason for the method are
+recorded. Applied to anything reported outside the project, anything entering a baseline or a forecast
 that funds a decision, and anything with a contractual effect.
 
-**Tier 2 — Source verification.** Every figure and extracted item is traced to its source document or
-record, every causal claim checked against the underlying analysis, and anything the model could not
-ground is deleted rather than softened. Applied to internal analysis, extraction, narrative drafting over
-verified data and register enrichment.
+**Tier 2 — Source verification.** Every figure and extracted item traced to its source record, every
+causal claim checked against the underlying analysis, and anything the model could not ground deleted
+rather than softened. Applied to internal analysis, extraction, narrative drafting over verified data and
+register enrichment.
 
 **Tier 3 — Sampled acceptance with monitoring.** High-volume, low-unit-consequence output — coded
 transaction lines, metadata enrichment — accepted on a defined sample with an error threshold and
-monitored for drift on a stated cadence. Sample size, threshold and the action on breach are written down
-before the first run.
+monitored for drift. Sample size, threshold and the action on breach are written down before the first run.
 
 Three points decide whether tiers work.
 
@@ -174,23 +173,22 @@ underlying access model, tested with a named unprivileged account before go-live
 This is the control object most frameworks omit, and the one that ages an otherwise sound framework into
 a false assurance.
 
-The system you validated is not the system you are using. Hosted models are updated by their vendors;
-platform features change on the vendor's release cycle; a retrieval corpus changes every time someone
-files a document; a forecasting model's world changes as the portfolio changes. Nothing in your project
-changed, and the behaviour did. Four controls follow.
+The system you validated is not the system you are using. Hosted models are updated by their vendors,
+platform features change on the vendor's release cycle, a retrieval corpus changes every time someone
+files a document, and a forecasting model's world changes as the portfolio changes. Nothing in your
+project changed, and the behaviour did. Four controls follow.
 
 **Version identification.** The verification record captures the tool, and the model or version identifier
-where the vendor exposes one. Where the vendor exposes nothing — common for embedded platform features —
-record that fact: "version unknown" is itself a finding, and it caps how far a number can be
-reconstructed later.
+where the vendor exposes one. Where it exposes nothing — common for embedded platform features — record
+that: "version unknown" is a finding, and it caps how far a number can be reconstructed later.
 
 **Re-validation triggers.** Re-validate on any of: a vendor-notified model or feature change; a change to
 the retrieval corpus's scope or permissions; a change to an upstream data structure such as the cost
-breakdown structure or the code of accounts; a project stage gate; a failed sample under Tier 3; and a
-stated calendar cadence for anything at Tier 1. Write the trigger list into the plan.
+breakdown structure or code of accounts; a project stage gate; a failed sample under Tier 3; and a stated
+calendar cadence for anything at Tier 1. Write the trigger list into the plan.
 
 **Re-validation method.** Re-run a versioned set of test cases whose correct answers were established by
-professionals, and compare with the previous run — the same instrument used to evaluate the tool at
+professionals and compare with the previous run — the same instrument used to evaluate the tool at
 purchase, kept and re-used. `AIG-09` §7 covers what a change in the results means.
 
 **Change is announced, not discovered.** The register's tool owner tracks vendor release notes and tells
@@ -341,20 +339,20 @@ which day. That is the whole purpose of the framework.
 ## Related
 
 - `AIG-09 — Bias, explainability and auditability` — what the verification record must contain for a number to be reconstructable
-- `AIG-10 — Human in the loop: what AI may and may not decide` — the decision boundary and authority thresholds that control object 3 depends on
-- `AIG-11 — Evaluating AI tools — a buyer's due-diligence guide` — how residency, training and versioning answers are obtained before a tool reaches the register
+- `AIG-10 — Human in the loop: what AI may and may not decide` — the decision boundary and thresholds control object 3 depends on
+- `AIG-11 — Evaluating AI tools — a buyer's due-diligence guide` — how residency, training and versioning answers are obtained
 - `ETH-05 — The ethical use of AI and data` — the professional-conduct obligations underneath the controls
 - `TPL-01 — Project controls execution plan` — the plan these clauses are written into
 
 ## Sources and standards
 
-- PCI Body of Knowledge, Domain 13 (AI for Project Controls & Project Management), `docs/bok/` — the governance, assurance and maturity material this document draws on; explained here in our own words.
-- The Institute's candidate AI-use policy (`docs/downloads/`) — the governing position on AI in preparation, examination and practice.
+- PCI Body of Knowledge, Domain 13 (AI for Project Controls & Project Management), `docs/bok/` — the governance and assurance material this document draws on, explained in our own words.
+- The Institute's candidate AI-use policy (`docs/downloads/`).
 
-Standards named but not reproduced or summarised in detail: ISO/IEC 42001 (management systems for
-artificial intelligence) and ISO 31000 (risk management) are the natural reading for a function
-formalising this at organisational rather than project level. This document is a project controls
-framework, not a management-system standard, and is not a route to conformity with either.
+Standards named but not reproduced: ISO/IEC 42001 (management systems for artificial intelligence) and
+ISO 31000 (risk management) are the natural reading for a function formalising this at organisational
+rather than project level. This is a project controls framework, not a management-system standard, and is
+not a route to conformity with either.
 
 ## Status and version
 

@@ -194,9 +194,10 @@ character entirely.
 private contingency, is the same defect in opposite directions. Both are visible over time as forecast bias
 — a project whose EAC only ever moves in one direction was not forecasting, it was conceding.
 
-**Rounding the index before dividing by it.** `CPI = 0.9` used in place of 0.897 shifts a USD 20 million EAC
-by more than a quarter of a million. Carry full precision through the calculation and round only the
-presented result.
+**Rounding the index before dividing by it.** On a budget of 18,000,000, a CPI of 0.8949 gives
+`18,000,000 ÷ 0.8949 = 20,113,979`. Round the index to 0.89 first and the same calculation gives
+`18,000,000 ÷ 0.89 = 20,224,719` — about 111,000 of forecast created by rounding. Carry full precision
+through the calculation and round only the presented result.
 
 **Forecasting the whole project as one number.** EAC computed on project totals hides offsetting movements:
 a control account 400,000 under and another 900,000 over produce a comfortable-looking aggregate. Forecast

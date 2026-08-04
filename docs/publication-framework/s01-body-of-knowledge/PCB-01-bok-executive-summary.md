@@ -125,65 +125,63 @@ act on — is set out in `PCB-04 — What a project controls professional must k
 
 Four limits belong in the same breath.
 
-**It is a point-in-time assessment, not a warranty of practice.** The credential is valid for three years
-and is maintained through continuing professional development including a mandatory AI-currency component.
-It says what was demonstrated, not what is being done today.
+**It is a point-in-time assessment, not a warranty of practice.** Valid for three years and maintained
+through continuing professional development including a mandatory AI-currency component. It says what was
+demonstrated, not what is being done today.
 
 **It is not accreditation.** The framework is developed with reference to ISO/IEC 17024
 personnel-certification principles. PCI is **not accredited** by ANAB, IAS or any other ISO/IEC 17024
-accreditation body, holds no governmental approval, and claims no university equivalence. The Institute is
-at the first step of a published four-step path: standard defined, then candidate enrolment, then
-accreditation, then recognition. We are at step one and say so.
+accreditation body, holds no governmental approval and claims no university equivalence. The Institute is at
+step one of a published four-step path — standard defined, then candidate enrolment, then accreditation,
+then recognition — and says so.
 
-**It certifies knowledge and judgement, not outcomes.** Nothing in the framework predicts a salary, a
-promotion or a project result, and PCI makes no representation about any of them.
+**It certifies knowledge and judgement, not outcomes.** Nothing here predicts a salary, a promotion or a
+project result, and PCI makes no representation about any of them.
 
-**It is separate from membership.** PCI membership grades — Student, Associate, Professional, Fellow — are
-a different ladder with different requirements. A credential is earned by examination; a grade is a
-standing. Conflating them is the single most common error in describing PCI, and it is worth an employer's
-attention when reading a CV.
+**It is separate from membership.** PCI membership grades — Student, Associate, Professional, Fellow — are a
+different ladder. A credential is earned by examination; a grade is a standing. Conflating them is the most
+common error in describing PCI, and it is worth an employer's attention on a CV.
 
 ## 6. What the Body of Knowledge deliberately excludes
 
-A framework is defined as much by its boundary as its contents. Three exclusions are load-bearing.
+A framework is defined as much by its boundary as its contents, and three exclusions are load-bearing.
 
 **No jurisdiction's law or tax treatment is presented as universal.** Where accounting, legal or tax
-treatment varies by country, the framework describes the principle and says that it varies. A candidate is
-never assessed on one country's rule.
+treatment varies by country, the framework teaches the principle and says that it varies. No candidate is
+assessed on one country's rule.
 
-**No vendor's tool is examined.** Scheduling, cost and analytics software change faster than a
-certification cycle; the framework examines the method — a forward and backward pass computed by hand, a
-forecast method selected against the cause of a variance — because that survives the tool.
+**No vendor's tool is examined.** Scheduling, cost and analytics software change faster than a certification
+cycle. The framework examines the method — a forward and backward pass computed by hand, a forecast method
+selected against the cause of a variance — because that survives the tool.
 
-**No blueprint exists yet for the sibling credentials.** The Institute certifies three credentials at
-Leader level: PCL-AI in project controls, PFL-AI in project finance and PML-AI in project management. This
-Body of Knowledge and its blueprint are **PCL-AI only**. No examination blueprint, weighting or item
-specification exists yet for PFL-AI or PML-AI, and any document implying otherwise is wrong.
+**No blueprint exists yet for the sibling credentials.** The Institute certifies three credentials at Leader
+level: PCL-AI in project controls, PFL-AI in project finance and PML-AI in project management. This Body of
+Knowledge and its blueprint are **PCL-AI only**; no blueprint, weighting or item specification exists yet
+for the other two, and any document implying otherwise is wrong.
 
 ## 7. Where the framework is unfinished
 
-Every domain is a first authored draft pending subject-matter-expert review; the appendices are assembled
-from finished domains. The job-task analysis that will validate the sampling has not yet run. The
-first edition's effective date is `[CONFIRM: first-edition effective date for the PCL-AI Body of
-Knowledge]`. `PCB-05 — How the Body of Knowledge was built` sets out the authoring and review standard the
-material has already passed and the gates still ahead of it.
+Every domain is a first authored draft pending subject-matter-expert review, and the appendices are assembled
+from finished domains. The job-task analysis that will validate the sampling has not run. The first edition's
+effective date is `[CONFIRM: first-edition effective date for the PCL-AI Body of Knowledge]`. `PCB-05 — How
+the Body of Knowledge was built` sets out the standard the material has already passed and the gates ahead
+of it.
 
-Publishing the unfinished parts is a choice. A framework that will govern other people's careers should be
-readable and arguable before it is binding, and a reader who can see exactly which parts are settled is in a
-better position to challenge the parts that are not. If a domain misses something the job actually requires,
-the Institute would rather hear it now than defend it later.
+Publishing the unfinished parts is a choice with a cost. A framework that will govern other people's careers
+should be arguable before it is binding, and a reader who can see which parts are settled is better placed
+to challenge the parts that are not. If a domain misses something the job requires, the Institute would
+rather hear it now than defend it later.
 
 ## 8. How this goes wrong
 
-The most damaging misreading is treating the group weights as a study-time rule. They are examination
-sampling weights. A planner who is strong on Domains 8–10 and weak on 1–4 should not spend forty per cent of
-their revision on finance because the group carries forty per cent; they should spend most of it there,
-because that is where their gap is. The weighting tells you what the paper looks like, not what your
-revision should look like.
+The most damaging misreading treats the group weights as a study-time rule. They are examination sampling
+weights. A planner strong on Domains 8–10 and weak on 1–4 should not spend forty per cent of revision on
+finance because the group carries forty per cent — they should spend most of it there, because that is where
+the gap is.
 
-The second is reading a domain title as a subject boundary. Domain 6 is not "the earned value questions" —
-earned value logic appears inside contract, schedule, risk and agile scenarios, because that is where it
-appears at work. Examination scenarios cross domains deliberately.
+The second reads a domain title as a subject boundary. Domain 6 is not "the earned value questions": earned
+value logic appears inside contract, schedule, risk and agile scenarios, because that is where it appears at
+work.
 
 ---
 

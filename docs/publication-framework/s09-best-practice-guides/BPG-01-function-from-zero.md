@@ -130,21 +130,21 @@ else's requirement.
 The smallest set of artefacts that constitutes a real function — not a good one, a real one — is
 shorter than most implementation plans suggest.
 
-| Artefact | What it must contain to count | Typical first-pass effort |
-|---|---|---|
-| Work breakdown structure and dictionary | Every element defined in a sentence, with an owner and an inclusion/exclusion note | 3–5 working days |
-| Code of accounts | Segment definitions, the valid-combination rule, and who may create a new code | 2–3 working days |
-| Control-account register | Account, WBS element, responsible manager, budget, measurement technique | 2 working days |
-| Time-phased cost baseline | Budget spread across the schedule, at control-account level | 3–5 working days |
-| Cut-off calendar | Cut-off date and the working-day sequence to issue | Half a day |
-| Rules-of-credit register | Technique and evidence per work package | 2–4 working days |
-| Change register | Every trend, its status and its cost impact, from day one | Half a day to open |
-| Monthly report | One page of numbers, one page of narrative, per control account beneath | 2 days per cycle |
+| Artefact | What it must contain to count |
+|---|---|
+| Work breakdown structure and dictionary | Every element defined in a sentence, with an owner and an inclusion/exclusion note |
+| Code of accounts | Segment definitions, the valid-combination rule, and who may create a new code |
+| Control-account register | Account, WBS element, responsible manager, budget, measurement technique |
+| Time-phased cost baseline | Budget spread across the schedule, at control-account level |
+| Cut-off calendar | Cut-off date and the working-day sequence to issue |
+| Rules-of-credit register | Technique and evidence per work package |
+| Change register | Every trend, its status and its cost impact, from day one |
+| Monthly report | One page of numbers, one page of narrative, control-account detail beneath |
 
-Everything on that list is a document or a register; none of it needs a tool beyond a spreadsheet. That
-is the point — the function is the discipline, and software is an efficiency layer over it.
-`TPL-01 — Project controls execution plan` gives the wrapper that names all of these, their owners and
-their frequencies in one controlled document, and that is the artefact a sponsor should approve.
+Everything on that list is a document or a register; none needs a tool beyond a spreadsheet. That is
+the point — the function is the discipline, and software is an efficiency layer over it.
+`TPL-01 — Project controls execution plan` names all of them, their owners and their frequencies in one
+controlled document, and that is the artefact a sponsor should approve.
 
 ## 5. Cut-off before dashboards
 
@@ -211,15 +211,12 @@ Minimum control accounts = (Budget at completion × variance reporting threshold
 
 The logic is direct. If a variance is reported only when it exceeds a percentage of its account's
 budget, the account has to be small enough that the smallest problem you care about clears that
-percentage. Both inputs are decisions the organisation must make explicitly, and both belong in the
-controls execution plan. Set the floor from the calculation, then check the ceiling against capacity:
-accounts multiplied by monthly effort per account must leave room for analysis. §9.2 runs both
-directions on one set of figures.
+percentage. Both inputs are explicit organisational decisions and both belong in the controls execution
+plan. Set the floor from the calculation, then check the ceiling against capacity: accounts multiplied
+by monthly effort per account must leave room for analysis. §9.2 runs both directions.
 
-Two qualifications. The formula uses the *average* account size, so a portfolio with a wide spread of
-account values needs the test applied to the largest accounts individually. And the threshold is a
-reporting trigger, not a materiality judgement — a small variance with a structural cause matters more
-than a large one-off, which is why the narrative matters as much as the number.
+One qualification: the formula uses the *average* account size, so a portfolio with a wide spread of
+account values needs the test applied to the largest accounts individually.
 
 ## 8. How this goes wrong
 
@@ -243,18 +240,16 @@ reverse-engineering the thing it was supposed to be measuring against.
 
 **Everything is measured, nothing is owned.** Two hundred work packages, each with a percentage, none
 with a named control-account manager. Progress collected by the controls team belongs to the controls
-team, so the numbers get argued with rather than acted on. Accountability comes from who signs, not
-from who calculates.
+team, so the numbers get argued with rather than acted on. Accountability comes from who signs.
 
 **The function reports to the wrong meeting.** The pack goes to a monthly review with no authority to
-approve a change, so every decision defers to a body that meets quarterly and the variance is two
-months old on arrival. Establish which meeting owns the change-control gate before designing the
-calendar around it.
+approve a change, so decisions defer to a body that meets quarterly and the variance is two months old
+on arrival. Establish which meeting owns the change-control gate before designing the calendar.
 
 **Level of effort creeps into the baseline.** Supervision, project management and the controls function
-itself are budgeted as work packages that earn by the calendar, cannot show a schedule variance, and
-dilute every index they are aggregated into. Segregate them from the outset; retrofitting the
-separation means restating the trend.
+itself are budgeted as packages that earn by the calendar, cannot show a schedule variance, and dilute
+every index they are aggregated into. Segregate them from the outset; retrofitting the separation means
+restating the trend.
 
 ## 9. Worked example
 
@@ -270,17 +265,17 @@ working week; public holidays would shift every date and are ignored here.
 
 Working backwards from the meeting:
 
-| Working day | Activity | Blocked by |
-|---|---|---|
-| WD 10 | Steering committee | — |
-| WD 8–9 | Reading time | Pack issued |
-| WD 7 | Pack issued | Sign-off complete |
-| WD 6 | Project manager review and sign-off | Draft complete |
-| WD 5 | Narrative drafted with control-account managers | Variances computed |
-| WD 4 | Earned value computed; variances analysed | Cost and progress both complete |
-| WD 3 | Accruals determined and posted; schedule progressed to the status date | Source data in |
-| WD 2 | Cost extracted from the ledger; goods-received-not-invoiced report pulled | Cut-off passed |
-| WD 1 | Field progress returns and timesheets submitted against the cut-off | Cut-off passed |
+| Working day | Activity |
+|---|---|
+| WD 10 | Steering committee |
+| WD 8–9 | Reading time |
+| WD 7 | Pack issued |
+| WD 6 | Project manager review and sign-off |
+| WD 5 | Narrative drafted with control-account managers |
+| WD 4 | Earned value computed; variances analysed |
+| WD 3 | Accruals determined and posted; schedule progressed to the status date |
+| WD 2 | Cost extracted from the ledger; goods-received-not-invoiced report pulled |
+| WD 1 | Field progress returns and timesheets submitted against the cut-off |
 
 Seven working days run from cut-off to issue, of which two are pure data collection and one is
 judgement. That is the whole argument for sequence: **only four working days in the month are available
