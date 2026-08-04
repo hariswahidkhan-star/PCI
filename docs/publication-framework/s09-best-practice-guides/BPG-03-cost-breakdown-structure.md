@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 16
+reading_time_min: 17
 summary: >
   How to design the cost breakdown structure and the code of accounts that every project transaction
   will carry: the difference between the scope axis and the cost axis, cost types and resource classes,

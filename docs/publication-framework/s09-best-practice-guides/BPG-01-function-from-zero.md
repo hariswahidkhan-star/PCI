@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive]
 level: professional
-reading_time_min: 16
+reading_time_min: 17
 summary: >
   How to establish a project controls function where none exists, in the order that works: coding
   structure before tools, cut-off before dashboards, and a defined control-account level before anyone

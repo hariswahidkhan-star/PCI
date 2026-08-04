@@ -186,16 +186,12 @@ anyone.
 ## 7. Verification without disclosure
 
 Evidence that cannot be checked is an assertion with extra sentences. Four forms that disclose nothing:
-
-**A referee by role.** "The project controls manager to whom I reported can confirm this" — with the name
-supplied privately at the point it is needed, not published.
-
-**A countersignature.** A line manager signing a competency record, which is what most structured
-development schemes rely on and what `CMP-10 — Assessing competence` describes for formal assessment.
-
-**An independent artefact or audit trace.** A template, procedure or tool you wrote that continued in use;
-a training session recorded internally; or "this control was tested in an internal audit and the finding
-closed", referenced by type and period rather than by number.
+**a referee by role** ("the project controls manager to whom I reported can confirm this", the name
+supplied privately when needed, never published); **a countersignature**, a line manager signing a
+competency record, which is what structured development schemes rely on and what `CMP-10 — Assessing
+competence` describes for formal assessment; **an independent artefact or audit trace**, such as a
+template or procedure you wrote that stayed in use, or "this control was tested in an internal audit and
+the finding closed", referenced by type and period rather than by number; and assessed knowledge.
 
 **Assessed knowledge.** A credential evidences knowledge against a published standard, examined
 independently of your employer. PCI's project controls credential is PCL-AI; it is examined, not
@@ -219,14 +215,14 @@ performance measurement, project risk, commercial and contract controls, predict
 project controls, digital reporting, automation, responsible AI, and human validation.
 
 One page each, carrying two records at the highest level you can honestly claim and one line naming the
-gap. The gap line is the most credible thing on the page, because a portfolio with no gaps reads as one
+gap. That gap line is the most credible thing on the page, because a portfolio with no gaps reads as one
 its author has never audited.
 
 Keep two versions and only two: a full one, with names, for your own reference and for a conversation
 under non-disclosure, and a shareable one anonymised by §6. A third, half-anonymised version is how a name
-eventually escapes. And on leaving an employer, capture your own record of decisions before you go and
-take nothing else — no documents, extracts, data or models. That is a legal boundary in most
-jurisdictions, and the part you may keep is the only part a future employer values anyway.
+eventually escapes. On leaving an employer, capture your own record of decisions and take nothing else —
+no documents, extracts, data or models. That is a legal boundary in most jurisdictions, and the part you
+may keep is the only part a future employer values.
 
 ## 9. How this goes wrong
 
@@ -242,14 +238,13 @@ result is a portfolio that identifies a client project to every reader in the se
 believes it is discreet. Its close relative is rounding rather than indexing: a rounded budget still
 discloses the magnitude, which is usually the confidential part.
 
-**Including a document.** A report screenshot, a register page, a model extract. All are the employer's
-property regardless of who typed them, and one of them converts a professional record into a disclosure
-incident.
+**Including a document.** A report screenshot, a register page, a model extract — all the employer's
+property regardless of who typed them, and any one of them converts a professional record into a
+disclosure incident.
 
-**Only recording successes.** Unbroken correctness is not believed, because nobody who has forecast
-anything has that record. A documented wrong forecast, with what you learned and changed, is stronger
-evidence of judgement than three correct ones — and a list of software proficiencies is weaker than
-either, evidencing only that you held a licence.
+**Only recording successes.** Unbroken correctness is not believed, because nobody who forecasts has that
+record. A documented wrong forecast, with what you learned and changed, is stronger evidence of judgement
+than three correct ones — and a list of software proficiencies weaker than either.
 
 ## 10. Worked example — one record, before and after anonymisation
 

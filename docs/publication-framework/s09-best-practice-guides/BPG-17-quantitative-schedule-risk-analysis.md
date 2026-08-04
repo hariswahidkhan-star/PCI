@@ -67,101 +67,94 @@ runs; the **P80**, the date it finishes on or before in eighty per cent of them;
 Three things it genuinely does, that a deterministic schedule cannot:
 
 **It exposes the optimism in the merge.** A deterministic forward pass takes the latest arrival at each
-convergence point. That is arithmetically correct and probabilistically optimistic, because the milestone is
-only met if *every* incoming path is met. Simulation captures this automatically, because it samples all
-paths together.
+convergence point — arithmetically correct and probabilistically optimistic, because the milestone is met
+only if *every* incoming path is met. Simulation samples all paths together, so the effect emerges by itself.
 
-**It ranks the drivers.** The output that changes management behaviour is rarely the date; it is the
-sensitivity ranking that says which activities and which register entries are doing the work in the tail.
-That ranking is a mitigation shopping list, priced.
+**It ranks the drivers.** The output that changes behaviour is rarely the date; it is the sensitivity
+ranking of which activities and which register entries are doing the work in the tail. That ranking is a
+mitigation shopping list, priced.
 
-**It separates commitment from target.** Running the model gives a project the language to hold an internal
-target and an external commitment at different confidence levels, with the gap between them named, owned and
-visible rather than smeared invisibly across activity durations.
+**It separates commitment from target.** It gives a project the language to hold an internal target and an
+external commitment at different confidence levels, with the gap between them named and visible rather than
+smeared invisibly across activity durations.
 
-Three things it does not do, which are the source of most of the trouble:
+Three things it does not do, which cause most of the trouble:
 
-**It does not tell you what the project will do.** It tells you what the model does. The distinction is the
-subject of §6 and is not a technicality.
+**It does not tell you what the project will do.** It tells you what the model does — the subject of §6, and
+not a technicality.
 
-**It does not find risks.** It quantifies the ones on the register and the ranges people were willing to
-state. Whatever the workshop did not surface is absent from the distribution, and its absence is invisible in
-the output.
+**It does not find risks.** It quantifies what is on the register and the ranges people were willing to
+state. Whatever the workshop did not surface is absent from the distribution, invisibly.
 
 **It does not repair a schedule.** A network that cannot recalculate honestly cannot be simulated honestly.
-§7 covers this, and it is the most common reason a QSRA result should be discarded rather than argued with.
+§7 covers this, and it is the commonest reason a result should be discarded rather than argued with.
 
 ## 2. Three-point estimates and the elicitation problem
 
 The input for duration uncertainty is a range per activity: an optimistic value, a most likely value and a
-pessimistic value, usually written as *a*, *m* and *b*. Getting these numbers is an interviewing problem
-before it is a modelling problem, and the interviewing is where most QSRA quality is won or lost.
+pessimistic value, written *a*, *m* and *b*. Getting these numbers is an interviewing problem before it is a
+modelling problem, and the interviewing is where most QSRA quality is won or lost.
 
 The dominant failure is **anchoring**. The estimator is shown the duration already in the schedule and asked
-for a range around it. The number in the schedule becomes the anchor, the range comes back as roughly plus
-or minus ten or fifteen per cent, and the model inherits the deterministic schedule's optimism with a
-decorative band around it. If the schedule's durations were set by working backwards from a required
-completion date — which is common and rarely admitted — the anchoring imports that too.
+for a range around it. That number becomes the anchor, the range comes back as roughly plus or minus ten or
+fifteen per cent, and the model inherits the deterministic schedule's optimism with a decorative band around
+it. Where the durations were themselves set by working backwards from a required completion date — common,
+and rarely admitted — the anchoring imports that too.
 
-Practical countermeasures, in the order they matter:
+Countermeasures, in the order they matter:
 
 **Ask for the pessimistic value first, and ask for it as a story.** "What would have to happen for this to
-take twelve weeks?" produces a different answer from "what is your worst case?", because the first requires
-a mechanism and the second invites a number the estimator feels comfortable defending. If no mechanism can be
-described, the pessimistic value is probably too low, not too high.
+take twelve weeks?" produces a different answer from "what is your worst case?", because the first requires a
+mechanism. If no mechanism can be described, the pessimistic value is probably too low.
 
-**Elicit from the person who does the work, not the person accountable for the date.** Accountability
-narrows ranges. It is not dishonesty; a manager who has committed to a date will genuinely find the
-pessimistic scenario less plausible than the crew supervisor does.
+**Elicit from the person who does the work, not the person accountable for the date.** Accountability narrows
+ranges. It is not dishonesty; a manager who has committed to a date genuinely finds the pessimistic scenario
+less plausible than the crew supervisor does.
 
-**Do not show the schedule duration until after the range is given.** Where that is impractical, at least
-record whether it was shown, so the reviewer knows which ranges to distrust.
+**Do not show the schedule duration until the range is given.** Where that is impractical, record whether it
+was shown, so the reviewer knows which ranges to distrust.
 
-**Define what the pessimistic value means and hold everyone to the same definition.** A pessimistic value
-that means "the worst I have personally seen" and one that means "the worst credible outcome short of a
-force-majeure event" are different quantities, and mixing them across a network produces a distribution that
-means nothing in particular.
+**Define what the pessimistic value means, and hold everyone to one definition.** "The worst I have
+personally seen" and "the worst credible outcome short of a force-majeure event" are different quantities,
+and mixing them across a network produces a distribution that means nothing in particular.
 
-**Calibrate against outturn.** The most effective correction is showing estimators how their previous ranges
-compared with what actually happened. Where the organisation captures that data at closeout, it is the
-single highest-value input to the next model. `BPG-20 — Closeout, lessons learned and benchmarking` covers
-capturing it.
+**Calibrate against outturn.** Showing estimators how their previous ranges compared with what actually
+happened is the most effective correction available. `BPG-20 — Closeout, lessons learned and benchmarking`
+covers capturing that data.
 
-Two conventions from the programme evaluation and review technique tradition are commonly used to summarise
-a three-point range. The weighted mean `(a + 4m + b) ÷ 6` and the spread approximation `(b − a) ÷ 6` are
-long-standing conventions, not requirements of any standard, and they are approximations to a particular
-family of distributions. They are used in §8 because they can be checked by hand. A real simulation samples
-from the chosen distribution directly and does not need them.
+Two conventions from the programme evaluation and review technique tradition summarise a three-point range:
+the weighted mean `(a + 4m + b) ÷ 6` and the spread approximation `(b − a) ÷ 6`. Both are long-standing
+conventions rather than requirements of any standard, and both are approximations to a particular family of
+distributions. They are used in §8 because they can be checked by hand; a real simulation samples the chosen
+distribution directly and needs neither.
 
 ## 3. Duration uncertainty and risk events are different inputs
 
 Two distinct sources of schedule uncertainty are frequently conflated, and conflating them either
 double-counts or omits.
 
-**Duration uncertainty** is the variability in how long a piece of work takes when it goes ahead as planned:
+**Duration uncertainty** is the variability in how long work takes when it goes ahead as planned:
 productivity varies, weather varies, the crew is better or worse than assumed. It applies to every activity,
-it is modelled by the three-point range, and it does not have a probability of occurrence — the work happens,
-the duration varies.
+is modelled by the three-point range, and has no probability of occurrence — the work happens, the duration
+varies.
 
 **Risk events** are discrete occurrences from the register that may or may not happen: a permit is refused, a
 vendor fails, contaminated ground is found. They have a probability of occurrence *and* an impact range, they
 strike specific activities, and they are modelled by mapping register entries onto the activities they would
-hit. This mapping is the **risk-driver** approach, and its virtue is that the model inherits the register
+hit. That mapping is the **risk-driver** approach, and its virtue is that the model inherits the register
 rather than running on a parallel set of assumptions.
 
 The double-count happens when an estimator, asked for a pessimistic duration, includes the effect of a
-register entry — "twelve weeks if the permit is late" — and the modeller then also loads the permit risk onto
-the same activity. The exposure is counted twice, the tail is overstated, and the resulting contingency
-request will not survive scrutiny by anyone who traces it.
+register entry — "twelve weeks if the permit is late" — and the modeller then loads the permit risk onto the
+same activity. The exposure is counted twice and the resulting contingency request will not survive anyone
+who traces it. The omission runs the other way: the range is elicited as "how long if nothing goes wrong",
+nothing is loaded from the register, the distribution is narrow, the P80 sits close to the P50, and the
+analysis is reported as showing a robust schedule.
 
-The omission happens in the other direction: the range is elicited as "how long if nothing goes wrong",
-nothing is loaded from the register, and the model contains no discrete risk at all. The distribution is then
-narrow, the P80 sits close to the P50, and the analysis is reported as showing the schedule is robust.
-
-The discipline that prevents both is a single instruction, given at elicitation and recorded on the input
-sheet: *give the range for this activity assuming the identified risks do not occur; the register is loaded
-separately.* `TPL-11 — Quantitative schedule risk analysis input sheet` carries the field structure this
-implies, and `BPG-16 — Risk registers that work` covers the register discipline the loading depends on.
+One instruction prevents both, given at elicitation and recorded on the input sheet: *give the range for this
+activity assuming the identified risks do not occur; the register is loaded separately.*
+`TPL-11 — Quantitative schedule risk analysis input sheet` carries the field structure this implies, and
+`BPG-16 — Risk registers that work` covers the register discipline the loading depends on.
 
 ## 4. Correlation is the assumption that decides the answer
 

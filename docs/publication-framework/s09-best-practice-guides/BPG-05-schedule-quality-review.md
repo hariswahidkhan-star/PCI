@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 15
+reading_time_min: 17
 summary: >
   How to review a schedule you did not build and decide whether its dates are results or assertions:
   logic completeness and open ends, constraints, lags and leads, calendars, negative and excessive

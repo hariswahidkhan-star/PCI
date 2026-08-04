@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, student]
 level: practitioner
-reading_time_min: 16
+reading_time_min: 17
 summary: >
   How to decompose scope so that the resulting structure can carry a budget, a schedule and an owner:
   the 100 % rule and what it actually forbids, how far to decompose and the test that tells you when to
