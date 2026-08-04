@@ -2,8 +2,8 @@
 
 **Status:** Binding drafting specification for every PCI Standard. Version 1.0.  
 **Companion:** the **PCI Standards Charter** (status, hierarchy, priority, due process,
-interpretation, amendment). This manual governs how a law is *written*; the Charter governs what a
-law *is*. A law must conform to both.
+interpretation, amendment). This manual governs how a standard is *written*; the Charter governs what
+a standard *is*. A standard must conform to both.
 
 ---
 
@@ -12,7 +12,7 @@ law *is*. A law must conform to both.
 PCI uses **modern must-drafting**. This is a deliberate choice and it is exclusive: PCI does not use
 ISO-style `shall` drafting, and the two systems are never mixed.
 
-| Word | Meaning in a PCI Law | Use it for |
+| Word | Meaning in a PCI Standard | Use it for |
 |---|---|---|
 | **must** | Mandatory PCI professional requirement | The obligation itself |
 | **must not** | Prohibited practice | Conduct that constitutes a breach |
@@ -20,7 +20,7 @@ ISO-style `shall` drafting, and the two systems are never mixed.
 | **may** | Permission | Something the professional is allowed to do |
 | **can** | Capability or possibility — never permission | Describing what a person, tool or method is able to do |
 
-**`shall` is not used as a normative form anywhere in a PCI Law**, in any field, including quotations
+**`shall` is not used as a normative form anywhere in a PCI Standard**, in any field, including quotations
 of PCI's own earlier drafts. Legislative `shall` is ambiguous — it has been read as both obligation
 and futurity — and modern drafting practice in the UK and elsewhere has moved to `must` for precisely
 that reason. A draft that uses `shall` to impose, permit or recommend anything fails gate.
@@ -29,8 +29,8 @@ that reason. A draft that uses `shall` to impose, permit or recommend anything f
 mapping in §1.0, this paragraph, a supersession note recording that an earlier draft used the word —
 may name `shall` in order to say that PCI does not use it. Refusing to print the word while trying to
 explain the mapping produces a circumlocution the reader cannot follow, which defeats the purpose of
-stating the mapping at all. The gate check is therefore: zero occurrences inside any law's twenty-five
-elements or any process requirement; occurrences permitted only in front matter that explains the
+stating the mapping at all. The gate check is therefore: zero occurrences inside any standard's
+twenty-five elements or any process requirement; occurrences permitted only in front matter that explains the
 convention, and only in that explanatory sense.
 
 ### 1.0 The `must` inversion — read this before drafting anything
@@ -41,15 +41,16 @@ most dangerous ambiguity in the whole system.
 In ISO/IEC drafting convention, `shall` expresses the document's own requirement, and **`must` is
 reserved for a constraint or obligation defined *outside* the document, stated for information** —
 using it does not make that external constraint a requirement of the document. So an ISO-literate
-reader meeting a PCI Law that says *"the professional must independently verify…"* may read it as
+reader meeting a PCI Standard that says *"the professional must independently verify…"* may read it as
 *"somebody else's rule, mentioned in passing"* — the precise opposite of what PCI intends.
 
 Three consequences follow, and none is optional:
 
-1. **Every PCI law publication must carry an explicit disclaimer of ISO verbal-form conventions**, in
-   the "How to read these laws" note, in this form or wording to the same effect:
+1. **Every PCI Standards publication must carry an explicit disclaimer of ISO verbal-form
+   conventions**, in the "How to read these standards" note, in this form or wording to the same
+   effect:
 
-   > These laws do not follow ISO/IEC verbal-form conventions. In a PCI Standard, **`must`
+   > These standards do not follow ISO/IEC verbal-form conventions. In a PCI Standard, **`must`
    > states PCI's own mandatory requirement** — the role that an ISO document gives to `shall`. PCI
    > does not use `shall` at all, and does not use `must` for external constraints.
 
@@ -60,7 +61,7 @@ Three consequences follow, and none is optional:
 
 3. **A legal or statutory obligation is never restated as a PCI requirement.** Voluntary-standard
    practice excludes restating law as the document's own requirement, and PCI follows it: legal
-   obligations appear only as external constraints or jurisdictional cautions, never as a PCI law.
+   obligations appear only as external constraints or jurisdictional cautions, never as a PCI standard.
 
 ### 1.1 Worked contrasts
 
@@ -131,7 +132,7 @@ a requirement — it is an aspiration, and it belongs in Recommended Practice or
 | Instrument | Form | Example |
 |---|---|---|
 | Foundational Standard | `PCI-FND-STD-NN` | `PCI-FND-STD-04` |
-| Certification / Domain Standard | `PCI-<CRED>-LAW-DD.NN` | `PCI-PCL-STD-06.03` |
+| Certification / Domain Standard | `PCI-<CRED>-STD-DD.NN` | `PCI-PCL-STD-06.03` |
 | Process Requirement | `<parent>-PR-NN` | `PCI-PCL-STD-06.03-PR-01` |
 | Recommended Practice | `<parent>-RP-NN` | `PCI-PFL-STD-10.01-RP-02` |
 
@@ -139,11 +140,11 @@ a requirement — it is an aspiration, and it belongs in Recommended Practice or
 anchorage. `NN` is a two-digit sequence within that domain.
 
 Identifiers are **stable**. All internal citation is by identifier — never by page number, because
-pagination changes. A withdrawn law's identifier is never reused.
+pagination changes. A withdrawn standard's identifier is never reused.
 
 ## 4. Defined terms
 
-Any term that could alter whether a professional has complied must be defined in the law that uses
+Any term that could alter whether a professional has complied must be defined in the standard that uses
 it, or in the **PCI Standards Definitions Register**, and used consistently.
 
 Terms that always need definition when they appear in an obligation: *material*, *independent*,
@@ -156,9 +157,9 @@ Define by the test a reader can apply: what makes it material, measured against 
 **Undefined judgement words are a drafting defect.** *Appropriate*, *adequate*, *reasonable*,
 *relevant*, *timely* and *sufficient* must either be defined, replaced with a stated test, or removed.
 
-## 5. The mandatory structure of a law
+## 5. The mandatory structure of a standard
 
-Every PCI Law carries all twenty-five elements below, in this order. No element may be omitted. Where
+Every PCI Standard carries all twenty-five elements below, in this order. No element may be omitted. Where
 an element is genuinely inapplicable, it states "Not applicable" **and gives the reason in one
 clause** — a bare "None." is a defect.
 
@@ -167,13 +168,13 @@ clause** — a bare "None." is a defect.
 
 **1. Normative requirement.**   One precise mandatory statement. One principal obligation.
 
-**2. Purpose.**                 The professional risk this law controls.
+**2. Purpose.**                 The professional risk this standard controls.
 
 **3. Scope.**                   Who is governed · which decisions · which projects, programmes or
                                 transactions · whether it applies to preparation, review,
                                 recommendation, approval or assurance.
 
-**4. Defined terms.**           Every term in this law that could alter compliance.
+**4. Defined terms.**           Every term in this standard that could alter compliance.
 
 **5. Required actions.**        The minimum actions necessary for compliance.
 
@@ -214,47 +215,47 @@ clause** — a bare "None." is a defect.
 
 **18. Jurisdictional caution.** What requires local legal, tax, accounting or regulatory advice.
 
-**19. Related PCI Laws.**       Stable identifiers.
+**19. Related PCI Standards.**  Stable identifiers.
 
 **20. Related Body of Knowledge content.** Certification · domain · Knowledge Area · topic.
 
 **21. Compliance test.**        A test an auditor, assessor or reviewer can actually perform.
 
-**22. Breach indicators.**      Observable indicators that the law may have been breached.
+**22. Breach indicators.**      Observable indicators that the standard may have been breached.
 
 **23. Consequence within PCI authority.** From the Charter §9 list only.
 
-**24. Examination application.** How the law can be tested by scenario judgement, evidence
+**24. Examination application.** How the standard can be tested by scenario judgement, evidence
                                 selection, escalation decision, calculation review, ethical dilemma
-                                or AI-verification case — not by memorising law numbers.
+                                or AI-verification case — not by memorising standard numbers.
 
 **25. Version and status.**     Version · approval date · effective date · amendment note.
 ```
 
 ### 5.0 Which elements are normative
 
-A law's twenty-five elements do not all carry obligation, and the structure must say which do.
+A standard's twenty-five elements do not all carry obligation, and the structure must say which do.
 Without this declaration a reader cannot tell whether a sentence in, say, element 22 binds them —
 and an assessor cannot tell what to assess.
 
 | Elements | Status | Effect |
 |---|---|---|
-| 1 Normative requirement · 5 Required actions · 6 Prohibited actions · 7 Required evidence · 12 Exception and waiver · 13 Escalation trigger · 15 AI prohibition · 16 AI verification | **Normative** | These bind. A breach of any of them is a breach of the law. |
-| 3 Scope · 4 Defined terms · 8 Responsible role · 9 Approval authority · 10 Independence requirement · 11 Materiality or threshold | **Normative — determinative** | These do not add obligation; they determine to whom, and in what circumstances, the normative elements apply. Getting one wrong changes what the law requires. |
+| 1 Normative requirement · 5 Required actions · 6 Prohibited actions · 7 Required evidence · 12 Exception and waiver · 13 Escalation trigger · 15 AI prohibition · 16 AI verification | **Normative** | These bind. A breach of any of them is a breach of the standard. |
+| 3 Scope · 4 Defined terms · 8 Responsible role · 9 Approval authority · 10 Independence requirement · 11 Materiality or threshold | **Normative — determinative** | These do not add obligation; they determine to whom, and in what circumstances, the normative elements apply. Getting one wrong changes what the standard requires. |
 | 14 AI application | **Permissive** | States what is allowed. Creates no obligation. |
-| 2 Purpose · 17 External reference · 18 Jurisdictional caution · 19 Related PCI Laws · 20 Related BoK content · 21 Compliance test · 22 Breach indicators · 23 Consequence · 24 Examination application · 25 Version and status | **Informative** | Explain, locate, test or administer the law. **They must not contain an obligation.** |
+| 2 Purpose · 17 External reference · 18 Jurisdictional caution · 19 Related PCI Standards · 20 Related BoK content · 21 Compliance test · 22 Breach indicators · 23 Consequence · 24 Examination application · 25 Version and status | **Informative** | Explain, locate, test or administer the standard. **They must not contain an obligation.** |
 
 Two consequences worth stating because both are easy to get wrong:
 
 - **The compliance test (21) is informative.** It describes how to test the obligation stated in the
   normative elements; it must never be the only place an obligation appears. If a reviewer can find
   a requirement in element 21 that is not in element 1, 5, 6 or 7, that is a drafting defect.
-- **Breach indicators (22) are informative.** An indicator suggests the law may have been breached;
-  it is not itself the breach, and it must not read as one.
+- **Breach indicators (22) are informative.** An indicator suggests the standard may have been
+  breached; it is not itself the breach, and it must not read as one.
 
 ### 5.1 On the compliance test (element 21)
 
-This element is what separates a law from a slogan. It must be written so that a reviewer can perform
+This element is what separates a standard from a slogan. It must be written so that a reviewer can perform
 it and reach the same answer as another reviewer.
 
 **Weak:** Compliance is demonstrated when the forecast has been properly reviewed.
@@ -290,7 +291,7 @@ Every external reference is classified as exactly one of these, and the categori
 | 6 | Ethical code | Binding only where a body, regulator or engagement has adopted it |
 | 7 | Industry guidance | No single authoritative publisher |
 | 8 | Voluntary environmental or social framework | e.g. Equator Principles — voluntary, not legislation |
-| 9 | PCI internal professional law | This system |
+| 9 | PCI internal professional standard | This system |
 | 10 | Illustrative practice | Named to illustrate, not relied on |
 | 11 | **National standard** | A published standard of one country's standards body (e.g. an ANSI-accredited US standard). Binds only where a contract or procurement regime imports it. Not an international standard, not industry guidance |
 | 12 | **Supervisory guidance** | A supervisor's published expectations, or an internationally agreed supervisory framework. **No legal force of its own**; applies only as a national authority transposes it or a supervised firm is subject to it. Never tag it as regulation |
@@ -309,7 +310,7 @@ Every external reference is classified as exactly one of these, and the categori
 
 **Specific rules that have already been breached once in this corpus and must not be again:**
 
-- IFRS and IAS are financial-reporting standards, never PCI laws, and are mandatory only for entities
+- IFRS and IAS are financial-reporting standards, never PCI Standards, and are mandatory only for entities
   applying IFRS Accounting Standards in a jurisdiction that has adopted them.
 - The IFRS *Conceptual Framework* is **not a standard** — the IASB states so expressly, and nothing in
   it overrides a Standard. Never source a requirement to it.
@@ -324,13 +325,13 @@ Every external reference is classified as exactly one of these, and the categori
   transposes them or a supervised firm is subject to them.
 
 **The category describes the instrument, not the use PCI makes of it.** An instrument has one
-category everywhere it appears; how a particular law relies on it is a separate statement. Writing
-"category 10 — illustrative practice" for the EU AI Act because *this* law only cites it to
-illustrate a shape gives the same instrument two categories across the corpus, which is the
+category everywhere it appears; how a particular standard relies on it is a separate statement.
+Writing "category 10 — illustrative practice" for the EU AI Act because *this* standard only cites it
+to illustrate a shape gives the same instrument two categories across the corpus, which is the
 inconsistency the classification exists to prevent. Legislation cited illustratively is still
 legislation: give it category 1 and say in the same bullet that it is relied on for no requirement in
-this law. The pattern to follow is: **`category` (what it is) · `relied on for` (what this law does
-with it) · `limitation` (where and on whom it bites).**
+this standard. The pattern to follow is: **`category` (what it is) · `relied on for` (what this
+standard does with it) · `limitation` (where and on whom it bites).**
 
 **Never invent** a clause number, article, edition, effective date, judicial decision or requirement.
 Where a precise provision is not verified, cite the instrument by name only. Every reference records
@@ -341,7 +342,7 @@ change.
 
 | Pattern | Why it fails |
 |---|---|
-| A requirement inside a note, example, case study, figure caption or rationale | Charter §3 — obligations exist only in identified laws and process requirements |
+| A requirement inside a note, example, case study, figure caption or rationale | Charter §3 — obligations exist only in identified standards and process requirements |
 | A requirement no one can verify | Unverifiable requirements cannot be audited, assessed or breached |
 | A circular definition | Defines nothing |
 | An undefined judgement word carrying the obligation | The requirement's content is unknown |
@@ -361,7 +362,7 @@ monochrome displays.
 
 | Call-out | Written label | Colour | Tint | Icon | Border |
 |---|---|---|---|---|---|
-| Mandatory law | `PCI PROFESSIONAL LAW` | Dark PCI Law Red `#9B1C1C` | `#FDECEC` | § | solid left |
+| Mandatory standard | `PCI PROFESSIONAL STANDARD` | Dark PCI Standard Red `#9B1C1C` | `#FDECEC` | § | solid left |
 | External authority | `EXTERNAL STANDARD OR FRAMEWORK` | Standards Blue `#1D4ED8` | `#EEF4FF` | ⬢ | double |
 | Recommended practice | `PCI RECOMMENDED PRACTICE` | Guidance Teal `#0F766E` | `#ECFDF5` | ✦ | dashed |
 | Jurisdictional caution | `JURISDICTIONAL CAUTION` | Amber `#B45309` | `#FEF3C7` | ⚠ | dotted |
@@ -371,20 +372,21 @@ only; large blocks of body text are never set in bright red.
 
 ## 9. The twenty-five audit questions
 
-Before any law is approved, every question below must be answered. **A law failing one or more must
-be revised before approval** — the failure and its resolution are recorded in the law's file.
+Before any standard is approved, every question below must be answered. **A standard failing one or
+more must be revised before approval** — the failure and its resolution are recorded in the
+standard's file.
 
-1. What exact failure does this law prevent?
+1. What exact failure does this standard prevent?
 2. Is the requirement mandatory or only recommended?
 3. Can a professional know whether it applies to them?
 4. Is the responsible person identifiable?
 5. Is the required action observable?
 6. Is compliance provable?
 7. Is the required evidence proportionate?
-8. Can the law be audited?
-9. Can the law be examined through a scenario?
+8. Can the standard be audited?
+9. Can the standard be examined through a scenario?
 10. Can a professional technically comply while defeating its purpose?
-11. Does it conflict with another PCI law?
+11. Does it conflict with another PCI Standard?
 12. Does it duplicate an external standard unnecessarily?
 13. Does it misrepresent external authority?
 14. Does it require legal or jurisdiction-specific advice?

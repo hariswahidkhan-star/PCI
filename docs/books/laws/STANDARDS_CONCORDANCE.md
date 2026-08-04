@@ -1,16 +1,16 @@
 # PCI Standard Concordance
 
 **Status:** Machine-checkable reference index for the PCI Standard system. It carries **no
-obligation**: every requirement lives in an identified law or process requirement (Charter §3), and
-nothing stated here creates, narrows or waives one. Where this file and a published law differ, the
-law governs and the difference is a defect in this file.
+obligation**: every requirement lives in an identified standard or process requirement (Charter §3),
+and nothing stated here creates, narrows or waives one. Where this file and a published standard
+differ, the standard governs and the difference is a defect in this file.
 
-**What it is for.** The four law files are rebuilt independently. A citation that resolves to the
-wrong law is more dangerous than one that does not resolve at all, because every automated check
-passes while the reader is sent to a different obligation. This file records, in one place, which
-certification law cites which foundational law, so that a change on either side is visible. It is
-verified by [`check_standards.py`](check_standards.py), which regenerates the table below from the law files
-themselves and fails if the published table has drifted.
+**What it is for.** The four standard files are rebuilt independently. A citation that resolves to
+the wrong standard is more dangerous than one that does not resolve at all, because every automated
+check passes while the reader is sent to a different obligation. This file records, in one place,
+which certification standard cites which foundational standard, so that a change on either side is
+visible. It is verified by [`check_standards.py`](check_standards.py), which regenerates the table
+below from the standard files themselves and fails if the published table has drifted.
 
 **Sources.** [`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md) ·
 [`PCL_AI_STANDARDS.md`](PCL_AI_STANDARDS.md) · [`PFL_AI_STANDARDS.md`](PFL_AI_STANDARDS.md) ·
@@ -22,7 +22,7 @@ themselves and fails if the published table has drifted.
 
 ## 1. The foundational set
 
-Fifteen laws, `PCI-FND-STD-01` to `PCI-FND-STD-15`. **A citation is correct only when the number and
+Fifteen standards, `PCI-FND-STD-01` to `PCI-FND-STD-15`. **A citation is correct only when the number and
 the subject agree**; the subject is the authority, the number is only its address.
 
 | ID | Subject | Principal obligation, in one line |
@@ -45,12 +45,12 @@ the subject agree**; the subject is the authority, the number is only its addres
 
 ---
 
-## 2. Which certification laws cite which foundational law
+## 2. Which certification standards cite which foundational standard
 
-Counts are of **citing laws**, not of citation occurrences: a law that names its foundational parent
-three times inside its own text is counted once.
+Counts are of **citing standards**, not of citation occurrences: a standard that names its
+foundational parent three times inside its own text is counted once.
 
-| Foundational law | Subject | PCL-AI (42) | PFL-AI (74) | PML-AI (97) |
+| Foundational standard | Subject | PCL-AI (42) | PFL-AI (74) | PML-AI (97) |
 |---|---|---|---|---|
 | `PCI-FND-STD-01` | Professional Accountability | `PCI-PCL-STD-12.01`<br>`PCI-PCL-STD-13.04` | `PCI-PFL-STD-16.01`<br>`PCI-PFL-STD-16.03` | `PCI-PML-STD-01.01`<br>`PCI-PML-STD-01.03`<br>`PCI-PML-STD-02.02`<br>`PCI-PML-STD-03.01`<br>`PCI-PML-STD-03.04`<br>`PCI-PML-STD-07.02`<br>`PCI-PML-STD-10.01`<br>`PCI-PML-STD-12.01`<br>`PCI-PML-STD-12.02`<br>`PCI-PML-STD-13.02`<br>`PCI-PML-STD-14.02` |
 | `PCI-FND-STD-02` | Evidence Before Assertion | `PCI-PCL-STD-01.01`<br>`PCI-PCL-STD-01.02`<br>`PCI-PCL-STD-03.01`<br>`PCI-PCL-STD-04.01`<br>`PCI-PCL-STD-04.02`<br>`PCI-PCL-STD-05.02`<br>`PCI-PCL-STD-05.03`<br>`PCI-PCL-STD-06.02`<br>`PCI-PCL-STD-07.03`<br>`PCI-PCL-STD-10.01`<br>`PCI-PCL-STD-10.03` | `PCI-PFL-STD-01.01`<br>`PCI-PFL-STD-06.01`<br>`PCI-PFL-STD-06.03`<br>`PCI-PFL-STD-06.04`<br>`PCI-PFL-STD-06.05`<br>`PCI-PFL-STD-09.02`<br>`PCI-PFL-STD-09.03`<br>`PCI-PFL-STD-10.05`<br>`PCI-PFL-STD-12.01`<br>`PCI-PFL-STD-13.02`<br>`PCI-PFL-STD-13.03`<br>`PCI-PFL-STD-13.04`<br>`PCI-PFL-STD-14.01`<br>`PCI-PFL-STD-14.02`<br>`PCI-PFL-STD-14.04`<br>`PCI-PFL-STD-15.01` | `PCI-PML-STD-01.01`<br>`PCI-PML-STD-02.01`<br>`PCI-PML-STD-02.02`<br>`PCI-PML-STD-03.03`<br>`PCI-PML-STD-05.01`<br>`PCI-PML-STD-06.01`<br>`PCI-PML-STD-07.01`<br>`PCI-PML-STD-08.01`<br>`PCI-PML-STD-09.01`<br>`PCI-PML-STD-09.02`<br>`PCI-PML-STD-11.01`<br>`PCI-PML-STD-13.01`<br>`PCI-PML-STD-15.02`<br>`PCI-PML-STD-16.01`<br>`PCI-PML-STD-16.02`<br>`PCI-PML-STD-16.03` |
@@ -68,22 +68,23 @@ three times inside its own text is counted once.
 | `PCI-FND-STD-14` | Responsible AI | `PCI-PCL-STD-13.01`<br>`PCI-PCL-STD-13.02`<br>`PCI-PCL-STD-13.03`<br>`PCI-PCL-STD-13.04` | `PCI-PFL-STD-06.05`<br>`PCI-PFL-STD-16.01`<br>`PCI-PFL-STD-16.02`<br>`PCI-PFL-STD-16.03` | `PCI-PML-STD-01.02`<br>`PCI-PML-STD-11.01`<br>`PCI-PML-STD-14.02` |
 | `PCI-FND-STD-15` | Correction Duty | `PCI-PCL-STD-04.03` | — | `PCI-PML-STD-01.01`<br>`PCI-PML-STD-08.02`<br>`PCI-PML-STD-11.01` |
 
-**Foundational laws with no citation from a credential are not a defect.** A certification law exists
-only where the credential's subject matter adds something the foundational law does not reach; where
-it adds nothing, no law is published (Manual §9 Q12). `PCI-FND-STD-08` and `PCI-FND-STD-11` carry no
-PCL-AI law, and `PCI-FND-STD-13` and `PCI-FND-STD-15` carry no PFL-AI law, for that reason.
+**Foundational standards with no citation from a credential are not a defect.** A certification
+standard exists only where the credential's subject matter adds something the foundational standard
+does not reach; where it adds nothing, no standard is published (Manual §9 Q12). `PCI-FND-STD-08` and
+`PCI-FND-STD-11` carry no PCL-AI standard, and `PCI-FND-STD-13` and `PCI-FND-STD-15` carry no PFL-AI
+standard, for that reason.
 
 ---
 
 ## 3. Superseded identifiers
 
 **Nothing below is a live citation.** These identifiers are recorded so that the history stays
-traceable; Charter §10 forbids reusing a withdrawn identifier, and no published law cites any of
+traceable; Charter §10 forbids reusing a withdrawn identifier, and no published standard cites any of
 them.
 
-### 3.1 The withdrawn fourteen-law foundational scheme `PCI-LAW-F-NN`
+### 3.1 The withdrawn fourteen-standard foundational scheme `PCI-LAW-F-NN`
 
-Withdrawn and replaced by the fifteen-law set in §1. The reason was structural — an eighteen-field
+Withdrawn and replaced by the fifteen-standard set in §1. The reason was structural — an eighteen-field
 template, two mixed normative-language systems, and several obligations bundled into single clauses.
 The mapping is reproduced from the supersession record in `PCI_FOUNDATIONAL_STANDARDS.md`, which governs.
 
@@ -105,18 +106,19 @@ The mapping is reproduced from the supersession record in `PCI_FOUNDATIONAL_STAN
 | `PCI-LAW-F-14` | No Misrepresentation of PCI Credentials or Accreditation Status | **Not carried forward at Level 1.** Credential-claim rules govern the PCI-to-holder relationship, not the conduct of professional work |
 
 **Four of the fifteen have no predecessor in the withdrawn set** — `PCI-FND-STD-06` (source and
-version integrity) and `PCI-FND-STD-13` (no silent override) are new laws, and `PCI-FND-STD-02` and
-`PCI-FND-STD-15` are new laws carrying part of a withdrawn one forward. A concordance that maps the
+version integrity) and `PCI-FND-STD-13` (no silent override) are new standards, and `PCI-FND-STD-02`
+and `PCI-FND-STD-15` are new standards carrying part of a withdrawn one forward. A concordance that maps the
 new numbers one-for-one onto the old is therefore wrong on its face, whatever it says.
 
 ### 3.2 The corrected PFL-AI concordance
 
 `PFL_AI_STANDARDS.md` v2.0 published a table equating each `PCI-FND-STD-NN` identifier with the subject of
-`PCI-LAW-F-NN` — it inferred its mapping from the superseded fourteen-law file. Every identifier
-resolved, so no dangling-reference check could see it, but many resolved to a different law than the
-citing sentence intended: `PCI-FND-STD-03` was equated with *Human Decision Authority*, which is law
-04's subject, and `PCI-FND-STD-02` with *Verification of AI Output Before Professional Use*, which is
-no longer a foundational subject at all. **That table is deleted.** Every foundational citation in
+`PCI-LAW-F-NN` — it inferred its mapping from the superseded fourteen-standard file. Every
+identifier resolved, so no dangling-reference check could see it, but many resolved to a different
+standard than the citing sentence intended: `PCI-FND-STD-03` was equated with *Human Decision
+Authority*, which is standard 04's subject, and `PCI-FND-STD-02` with *Verification of AI Output
+Before Professional Use*, which is no longer a foundational subject at all. **That table is
+deleted.** Every foundational citation in
 that volume has been re-pointed by subject, and the three subjects with no successor were handled as
 follows.
 
@@ -126,50 +128,51 @@ follows.
 | *Ethical conduct toward candidates, employers and the public* (`PCI-LAW-F-13`) | `PCI-FND-STD-11` in `PCI-PFL-STD-09.03` | Dropped in `PCI-PFL-STD-01.02` and `PCI-PFL-STD-13.02`, where the surviving duty is `PCI-FND-STD-08`, already cited |
 | *No misrepresentation of PCI credentials or accreditation status* (`PCI-LAW-F-14`) | `PCI-FND-STD-02` in `PCI-PFL-STD-13.02`; `PCI-FND-STD-14` in `PCI-PFL-STD-16.02` | Dropped in `PCI-PFL-STD-09.02`, `PCI-PFL-STD-09.03` and `PCI-PFL-STD-12.02`, where the surviving duty is `PCI-FND-STD-10` or `PCI-FND-STD-02`, already cited |
 
-**Five citations were dropped rather than re-pointed**, because pointing them at a law that does not
-carry the subject would reproduce the defect in a new form.
+**Five citations were dropped rather than re-pointed**, because pointing them at a standard that does
+not carry the subject would reproduce the defect in a new form.
 
 **Two citations kept their number and changed their subject**, which is the reverse trap and is
 recorded so it is not mistaken for an untouched line: `PCI-FND-STD-06` in `PCI-PFL-STD-06.04`,
 `PCI-PFL-STD-12.01`, `PCI-PFL-STD-14.01` and `PCI-PFL-STD-16.02` now cites *source and version
 integrity* rather than the withdrawn *data lineage and integrity*; `PCI-FND-STD-14` in
-`PCI-PFL-STD-16.02` now cites *responsible AI* rather than the withdrawn credential-claims law.
+`PCI-PFL-STD-16.02` now cites *responsible AI* rather than the withdrawn credential-claims standard.
 
-### 3.3 Withdrawn certification-law identifier schemes
+### 3.3 Withdrawn certification-standard identifier schemes
 
 | Credential | v1.0 form | Current form | Note |
 |---|---|---|---|
 | PCL-AI | `PCL-LAW-DD-NN` | `PCI-PCL-STD-DD.NN` | Whole set renumbered; each successor records its predecessor in element 25 |
-| PFL-AI | `PFL-LAW-DD-NN` | `PCI-PFL-STD-DD.NN` | Whole set renumbered; twenty-two of twenty-four v1.0 laws have a named successor |
+| PFL-AI | `PFL-LAW-DD-NN` | `PCI-PFL-STD-DD.NN` | Whole set renumbered; twenty-two of twenty-four v1.0 standards have a named successor |
 | PML-AI | `PML-LAW-DD-NN` | `PCI-PML-STD-DD.NN` | Whole set renumbered |
 
-### 3.4 The two PFL-AI v1.0 laws withdrawn without a successor law
+### 3.4 The two PFL-AI v1.0 standards withdrawn without a successor standard
 
-Recorded under Charter §10: a withdrawn law's withdrawal and its reason are published, and the law is
-not deleted from the record. Neither obligation was abolished; each became a process requirement
-under the law that already owned the surrounding discipline.
+Recorded under Charter §10: a withdrawn standard's withdrawal and its reason are published, and the
+standard is not deleted from the record. Neither obligation was abolished; each became a process
+requirement under the standard that already owned the surrounding discipline.
 
-| Withdrawn v1.0 law | Reason | Where the obligation now lives |
+| Withdrawn v1.0 standard | Reason | Where the obligation now lives |
 |---|---|---|
-| `PFL-LAW-04-01` — Appraisal Discipline (D4) | Bundled four obligations into one unenforceable sentence, and its subject is a presentation discipline rather than a distinct professional duty once `PCI-PFL-STD-01.01` governs how a financial judgement may be presented | `PCI-PFL-STD-01.01-PR-05`. Domain 4 anchors no law in this edition |
-| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Duplicated `PCI-PFL-STD-06.03` and `PCI-PFL-STD-12.01` in every respect but the prohibition on presenting a forecast revenue as contracted; Manual §9 Q12 treats a law that adds nothing to its neighbours as a defect | `PCI-PFL-STD-06.03-PR-05`. Domain 7 anchors no law in this edition |
+| `PFL-LAW-04-01` — Appraisal Discipline (D4) | Bundled four obligations into one unenforceable sentence, and its subject is a presentation discipline rather than a distinct professional duty once `PCI-PFL-STD-01.01` governs how a financial judgement may be presented | `PCI-PFL-STD-01.01-PR-05`. Domain 4 anchors no standard in this edition |
+| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Duplicated `PCI-PFL-STD-06.03` and `PCI-PFL-STD-12.01` in every respect but the prohibition on presenting a forecast revenue as contracted; Manual §9 Q12 treats a standard that adds nothing to its neighbours as a defect | `PCI-PFL-STD-06.03-PR-05`. Domain 7 anchors no standard in this edition |
 
 ---
 
 ## 4. What the validator checks
 
-[`check_standards.py`](check_standards.py) runs over the four law files and exits non-zero on any of:
+[`check_standards.py`](check_standards.py) runs over the four standard files and exits non-zero on
+any of:
 
 1. a `PCI-FND-STD-NN` citation whose number does not exist in the foundational set;
-2. a certification-law citation (`PCI-PCL-STD-…`, `PCI-PFL-STD-…`, `PCI-PML-STD-…`) that does not
-   resolve to a published law, in either direction;
-3. a law missing any of the Manual §5 twenty-five elements, or carrying them out of order;
-4. a duplicate law identifier;
-5. `shall` inside any law element or process requirement — the Manual §1 ban is on the form, so the
-   explanatory front matter that names the word in order to say PCI does not use it is permitted;
+2. a certification-standard citation (`PCI-PCL-STD-…`, `PCI-PFL-STD-…`, `PCI-PML-STD-…`) that does
+   not resolve to a published standard, in either direction;
+3. a standard missing any of the Manual §5 twenty-five elements, or carrying them out of order;
+4. a duplicate standard identifier;
+5. `shall` inside any standard element or process requirement — the Manual §1 ban is on the form, so
+   the explanatory front matter that names the word in order to say PCI does not use it is permitted;
 6. an anchor domain outside its credential's Body of Knowledge range — PCL-AI ≤ 13, PFL-AI ≤ 16,
    PML-AI ≤ 16;
-7. drift between §2 of this file and the citations actually published in the law files.
+7. drift between §2 of this file and the citations actually published in the standard files.
 
 **What it cannot check is the thing that caused the defect.** A citation whose number resolves but
 whose subject is wrong passes every mechanical test there is. Only reading the sentence catches it,
@@ -177,6 +180,6 @@ which is why §2 exists in a form a human can scan.
 
 ---
 
-*Compiled 2026-08-04 from the published law files. Draft for approval under
-Charter §5 — this index has no status of its own beyond the laws it indexes. British English
+*Compiled 2026-08-04 from the published standard files. Draft for approval under
+Charter §5 — this index has no status of its own beyond the standards it indexes. British English
 throughout.*

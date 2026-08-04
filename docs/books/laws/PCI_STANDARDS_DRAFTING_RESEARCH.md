@@ -3,8 +3,8 @@
 **Programme:** Reconstruction of the PCI Standards (PCL-AI, PFL-AI, PML-AI)
 **Stage:** 2 — establishing how high-quality normative requirements are actually written
 **Verification date:** 2026-08-04
-**Status:** Research input. This document is not itself a law, a rule or a drafting standard. It
-informs the revision of `SUPERSEDED_LAW_SYSTEM_v0.md` and the drafting of the law sets.
+**Status:** Research input. This document is not itself a standard, a rule or a drafting standard. It
+informs the revision of `SUPERSEDED_LAW_SYSTEM_v0.md` and the drafting of the standard sets.
 **Language:** British English.
 
 ---
@@ -12,7 +12,7 @@ informs the revision of `SUPERSEDED_LAW_SYSTEM_v0.md` and the drafting of the la
 ## 1. Why this report exists
 
 PCI Standards are intended to become testable, enforceable, evidence-based professional
-requirements. Before drafting any law, the programme needs a defensible answer to a prior question:
+requirements. Before drafting any standard, the programme needs a defensible answer to a prior question:
 *how do the bodies that write normative requirements well actually do it?*
 
 This report extracts **drafting principles, structures and governance methods** from the official
@@ -21,7 +21,7 @@ extracts method, not text. Nothing protected is reproduced (see §3 and §9).
 
 Three things this report deliberately does **not** do:
 
-1. It does not propose law wording. That is Stage 3.
+1. It does not propose standard wording. That is Stage 3.
 2. It does not assert any clause number, edition, effective date or requirement that could not be
    corroborated on 2026-08-04. Where a detail could not be corroborated it is marked
    **UNVERIFIED** in place, not guessed.
@@ -67,7 +67,7 @@ interchangeable and the distinction is load-bearing.
 | **U — Unverified** | Could not be corroborated on 2026-08-04. Recorded as an open item, never asserted as fact. |
 
 **Consequence for the programme:** everything in this report should be re-verified against the
-issuing bodies' own pages before any law text relies on it, and before any PCI publication cites it.
+issuing bodies' own pages before any standard text relies on it, and before any PCI publication cites it.
 A re-verification checklist is at §10.
 
 ### 2.3 A note on precision
@@ -130,7 +130,7 @@ publications. None reached tier F because of the egress block described in §2.1
 | Official pages identified | `https://www.iso.org/sites/directives/current/part2/index.xhtml`; `https://www.iec.ch/standards-development/isoiec-directives-part-2`; IEC drafting-guidance pages under `https://www.iec.ch/standardsdev/resources/draftingpublications/directives/` (verbal forms, scope, terms and definitions, normative references, annexes) |
 | Verification tier | **S** — content reported by search across multiple independent queries; both official domains blocked for direct fetch |
 | Edition | **UNVERIFIED.** Search returned document titles indicating a *Ninth edition, 2021* / *Edition 9.0 2021-05*, but also a reference to an eighth edition and to later amendment activity. The current edition as at 2026-08-04 was not established. **PCI must not cite an edition of the Directives until this is confirmed against ISO or IEC directly.** |
-| Why it matters to PCI | It is the most developed public treatment anywhere of the distinction between a requirement, a recommendation, a permission and a statement of capability — the exact distinction PCI's law sets must make on every page. |
+| Why it matters to PCI | It is the most developed public treatment anywhere of the distinction between a requirement, a recommendation, a permission and a statement of capability — the exact distinction PCI's standard sets must make on every page. |
 
 ### Source 2 — IFRS Foundation *Due Process Handbook*
 
@@ -171,7 +171,7 @@ publications. None reached tier F because of the egress block described in §2.1
 | Issuing body | Financial Conduct Authority (UK) |
 | Official pages identified | `https://handbook.fca.org.uk/handbook`; `https://handbook.fca.org.uk/handbook-readers-guide`; `https://www.fca.org.uk/publication/handbook/readers-guide_0.pdf`; `https://www.handbook.fca.org.uk/handbook/GEN/2/2.html`; `https://handbook.fca.org.uk/handbook/sup8`; `https://www.handbook.fca.org.uk/handbook/SUP/9/4.html`; `https://www.fca.org.uk/publication/corporate/statement-policy-cba.pdf` |
 | Verification tier | **S** |
-| Why chosen | It is the best publicly readable demonstration of a rulebook that *labels the legal status of every single provision on the face of the text*, and that provides formal machinery for exceptions (waivers), interpretation (individual guidance) and graded evidential weight. This is precisely the machinery PCI's law sets currently lack. |
+| Why chosen | It is the best publicly readable demonstration of a rulebook that *labels the legal status of every single provision on the face of the text*, and that provides formal machinery for exceptions (waivers), interpretation (individual guidance) and graded evidential weight. This is precisely the machinery PCI's standard sets currently lack. |
 
 ### Supporting source A — ISO/IEC 17021-1 (nonconformity classification)
 
@@ -216,7 +216,7 @@ form of or containing a requirement, and formal rules on form (ISO/IEC Directive
 FCA controls defined terms differently but as strictly: defined expressions appear in italics
 wherever they occur, so a reader always knows a special meaning is in play (S). *PCI implication:*
 one glossary, one meaning per term, one term per meaning, substitution-tested, and typographically
-signalled in the law text.
+signalled in the standard text.
 
 **4. How is applicability established?**
 Separately from scope and separately from the obligation. ISO/IEC Directives Part 2 requires
@@ -224,7 +224,7 @@ applicability statements in the Scope, introduced by set wording (S). The FCA st
 modules with an explicit *Application and purpose* section stating who the module binds before any
 substantive provision appears (S). ISO/IEC 17024 fixes applicability through the certification
 scheme, which defines the population of persons a requirement bears on (S). *PCI implication:*
-every PCI law needs an unambiguous answer to "does this bind me, today, in my role?" — currently
+every PCI standard needs an unambiguous answer to "does this bind me, today, in my role?" — currently
 carried by `Scope`, which should be split into *applies to whom* and *applies to what work*.
 
 **5. How are exceptions written?**
@@ -255,8 +255,8 @@ excludes properties for which no test method can verify the claim in a reasonabl
 guidance for standards writers makes the corollary explicit: a document containing no requirements
 is not intended to be used for conformity assessment at all (S). ISO/IEC 17024 requires assessment
 against competence criteria derived from a job or practice analysis (S). *PCI implication:* PCI's
-`Required evidence` field is the load-bearing field of the whole template. If a law's evidence field
-cannot name something a reviewer could actually inspect, the law is not a law yet.
+`Required evidence` field is the load-bearing field of the whole template. If a standard's evidence field
+cannot name something a reviewer could actually inspect, the standard is not a standard yet.
 
 **8. How is independent review required?**
 By structural separation rather than by exhortation. ISO/IEC 17024 requires impartiality, separation
@@ -297,8 +297,8 @@ provisions, one terminology, no synonyms (S). The IFRS architecture resolves sta
 making the accompanying material subordinate — a Basis for Conclusions accompanies but is not part
 of the Standard (S), and explanatory material in an Interpretations Committee agenda decision
 derives its authority from the Standards themselves (S). *PCI implication:* PCI needs a written
-precedence order (external law > authoritative standard > PCI law > PCI rule > guidance > example)
-stated as a foundational law, not merely as front matter.
+precedence order (external law > authoritative standard > PCI standard > PCI rule > guidance > example)
+stated as a foundational standard, not merely as front matter.
 
 **13. How is non-compliance classified?**
 Graded, against the requirement, on stated criteria. ISO/IEC 17021-1 defines a nonconformity as
@@ -321,7 +321,7 @@ bind the courts (S). The IFRS Foundation routes application questions to the Int
 Committee, which may publish an agenda decision with explanatory material after public consultation,
 or conclude that an amendment is needed instead (S). *PCI implication:* PCI needs a named
 interpretation route and a named appeal route, both published, both with time limits, and both
-separate from the law text.
+separate from the standard text.
 
 **15. How are requirements amended?**
 Through the same process that created them, with the change recorded. The IFRS Due Process Handbook
@@ -330,7 +330,7 @@ an Exposure Draft in December 2024 leading to a revised Handbook in April 2026 (
 Handbook changes through published instruments and Handbook Notices, and the Handbook is presented
 as a dated, versioned text (S). ISO/IEC Directives Part 2 governs revision and amendment of
 documents and controls how references to amended documents behave (S). *PCI implication:* PCI needs
-a law amendment register, dated versions of each law, and a rule that no law changes silently.
+a standard amendment register, dated versions of each standard, and a rule that no standard changes silently.
 
 **16. How are stakeholders consulted?**
 On published minimum terms. The IFRS Foundation's due process rests on transparency, full and fair
@@ -348,7 +348,7 @@ costs and benefits, of proposals, at all stages of standard-setting, and explain
 decisions (S). The FCA is required to publish a cost benefit analysis of proposed rules, with a
 narrow exemption where cost increases are absent or of minimal significance, and has established a
 CBA Panel and a published Statement of Policy on how it conducts such analysis (S). *PCI
-implication:* PCI must ask, for every law, what it will cost a candidate or credential holder to
+implication:* PCI must ask, for every standard, what it will cost a candidate or credential holder to
 comply and to evidence compliance — and record the answer.
 
 **18. How is conformity or compliance tested?**
@@ -368,7 +368,7 @@ successful performance, the competence required for each task, any prerequisites
 mechanisms and examination content; the examination then measures those competences using objective
 criteria and scoring, with the whole scheme subject to validation (S). *PCI implication:* PCI's
 `Examination relevance` field should be the visible end of an auditable chain
-(law → competence → scenario → scoring rubric), not a free-text note. Nothing in that chain may
+(standard → competence → scenario → scoring rubric), not a free-text note. Nothing in that chain may
 expose live examination content.
 
 **20. How is an audit trail maintained?**
@@ -380,8 +380,8 @@ certification lifecycle — application, assessment, examination, decision, cert
 recertification, suspension and withdrawal, appeals and complaints (S). ISO/IEC 17021-1 requires
 findings to be recorded so an informed decision can be made (S). The FCA maintains a dated,
 versioned Handbook with published change instruments (S). *PCI implication:* PCI already has an
-`audit_logs` mechanism in its platform; the law programme needs the documentary equivalent — a
-decision record per law, retained, and a published change history.
+`audit_logs` mechanism in its platform; the standard programme needs the documentary equivalent — a
+decision record per standard, retained, and a published change history.
 
 ---
 
@@ -392,65 +392,65 @@ identified" column reproduces protected text; each is a restatement in PCI's own
 
 | # | Research area | Authoritative source | Drafting principle identified | Application to PCI | Copyright restriction |
 |---|---|---|---|---|---|
-| 1 | Normative vocabulary | ISO/IEC Directives Part 2 (S) | A rule document must operate a closed set of auxiliaries, each carrying exactly one normative meaning, with a single preferred form per provision type and no synonyms, so that obligation, recommendation, permission and capability are never inferred from tone | PCI adopts a closed verbal-form set, publishes it as a Conventions clause at the front of every law volume, and bans synonyms for the mandatory form ("is required to", "is obliged to", "has a duty to") | Principle restatable. The Directives' verbal-forms tables, their wording and their equivalent-expression lists must not be reproduced or reformatted into a PCI table |
+| 1 | Normative vocabulary | ISO/IEC Directives Part 2 (S) | A rule document must operate a closed set of auxiliaries, each carrying exactly one normative meaning, with a single preferred form per provision type and no synonyms, so that obligation, recommendation, permission and capability are never inferred from tone | PCI adopts a closed verbal-form set, publishes it as a Conventions clause at the front of every standard volume, and bans synonyms for the mandatory form ("is required to", "is obliged to", "has a duty to") | Principle restatable. The Directives' verbal-forms tables, their wording and their equivalent-expression lists must not be reproduced or reformatted into a PCI table |
 | 2 | Provision-type mapping | ISO/IEC Directives Part 2 (S) | Requirements are carried by one dedicated auxiliary; recommendations by a second; permissions by a third; possibility and capability by a fourth | PCI maps: obligation → `must`; recommendation → `should`; permission → `may`; capability → `can`. PCI must state this mapping expressly because it differs from ISO's | Mapping is PCI's own. Do not reproduce ISO's tables or state that PCI follows the Directives |
 | 3 | The `must` collision | ISO/IEC Directives Part 2 (S) | In ISO/IEC drafting, `must` is reserved for constraints or obligations defined **outside** the document, given for information; using it does not make the external constraint a requirement of the document | **Critical.** PCI's chosen `must` = its own mandatory requirement is the inverse of ISO's use of the same word. PCI must publish an explicit disclaimer of ISO verbal-form conventions | Restatable as method. Do not quote the Directives' text on external constraints |
 | 4 | What a requirement is | ISO/IEC Directives Part 2; ISO conformity-assessment guidance for standards writers (S) | A requirement conveys objectively verifiable criteria from which no deviation is permitted if conformance is to be claimed | PCI adopts a gate: no statement enters a Rule unless a reviewer could determine fulfilment from evidence | Concept restatable in own words. The ISO definition sentence must not be reproduced |
-| 5 | Verifiability filter | ISO/IEC Directives Part 2 (S) | Only requirements capable of verification may be included; subjective formulations of the "sufficiently strong" kind are prohibited; and a property must not be specified where no method can verify the claim within a reasonable period | PCI bans undefined judgement adjectives in Rule text (material, reasonable, significant, appropriate, adequate, timely, robust) and must not write laws whose compliance can only be judged after the project ends | Restatable. Do not reproduce the Directives' example phrases |
-| 6 | What a voluntary document excludes | ISO/IEC Directives Part 2 (S) | Guarantee, commercial and contractual conditions are excluded from a document's requirements, and legal or statutory requirements are not restated as the document's own requirements | PCI laws bind professional conduct and method only. They never set commercial terms and never restate law as PCI law; legal obligations appear only as external constraints or jurisdictional cautions | Restatable. This principle underwrites PCI's legal-status disclaimer |
+| 5 | Verifiability filter | ISO/IEC Directives Part 2 (S) | Only requirements capable of verification may be included; subjective formulations of the "sufficiently strong" kind are prohibited; and a property must not be specified where no method can verify the claim within a reasonable period | PCI bans undefined judgement adjectives in Rule text (material, reasonable, significant, appropriate, adequate, timely, robust) and must not write standards whose compliance can only be judged after the project ends | Restatable. Do not reproduce the Directives' example phrases |
+| 6 | What a voluntary document excludes | ISO/IEC Directives Part 2 (S) | Guarantee, commercial and contractual conditions are excluded from a document's requirements, and legal or statutory requirements are not restated as the document's own requirements | PCI standards bind professional conduct and method only. They never set commercial terms and never restate law as PCI standard; legal obligations appear only as external constraints or jurisdictional cautions | Restatable. This principle underwrites PCI's legal-status disclaimer |
 | 7 | Scope as a normative element | ISO/IEC Directives Part 2 (S) | Scope is the mandatory opening element delimiting the subject and the limits of applicability, with applicability statements introduced by set wording so they are found in one predictable place | PCI's `Scope` field becomes structurally mandatory, is drafted before the Rule, and opens with one fixed pattern of PCI's own devising | Restatable. Do not adopt ISO's specific opening phrases verbatim |
 | 8 | Scope contains no obligations | ISO/IEC Directives Part 2 (S) | The scope statement must contain no requirements, permissions or recommendations, and is worded as statements of fact | PCI gate check: any `must`/`should`/`may` appearing in a `Scope` field is a drafting defect | Restatable |
-| 9 | Normative vs informative | ISO/IEC Directives Part 2 (S) | Each element of a document is classified as normative or informative, and the classification is made visible to the reader | PCI must classify each of the fields in its law template as normative or informative and print the classification. See §7(d) | Restatable. Do not reproduce the Directives' typographic conventions table |
+| 9 | Normative vs informative | ISO/IEC Directives Part 2 (S) | Each element of a document is classified as normative or informative, and the classification is made visible to the reader | PCI must classify each of the fields in its standard template as normative or informative and print the classification. See §7(d) | Restatable. Do not reproduce the Directives' typographic conventions table |
 | 10 | Examples are never normative | ISO/IEC Directives Part 2 (S) | Examples must not contain requirements, instructions, recommendations or permissions, and are written as statements of fact | PCI's worked examples and `AI application` illustrations must be scrubbed of obligation language | Restatable. Do not reproduce the Directives' rule text |
 | 11 | Notes are constrained | ISO/IEC Directives Part 2 (S) | Notes integrated in the text follow different rules from notes attached to a terminological entry; the two must not be conflated | PCI adopts one note type only — informative, never obligation-bearing — to remove the ambiguity entirely | Restatable. The distinction is UNVERIFIED as to detail; PCI's simplification avoids reliance on it |
-| 12 | Terms clause is normative | ISO/IEC Directives Part 2 (S) | The terms and definitions clause is a normative element of the document, not a reader's convenience | PCI's glossary becomes part of the law set, versioned with it, not an appendix | Restatable |
-| 13 | Substitution principle | ISO/IEC Directives Part 2 (S) | A definition must be written so that it can replace the term in context | PCI adds a mechanical substitution test to the law gate: substitute every defined term into every Rule that uses it and confirm the sentence still reads correctly | Restatable |
-| 14 | Definitions carry no requirements | ISO/IEC Directives Part 2 (S) | A definition must not take the form of, or contain, a requirement | PCI gate check: no `must` in the glossary. Obligations belong in laws, not in definitions | Restatable |
+| 12 | Terms clause is normative | ISO/IEC Directives Part 2 (S) | The terms and definitions clause is a normative element of the document, not a reader's convenience | PCI's glossary becomes part of the standard set, versioned with it, not an appendix | Restatable |
+| 13 | Substitution principle | ISO/IEC Directives Part 2 (S) | A definition must be written so that it can replace the term in context | PCI adds a mechanical substitution test to the standard gate: substitute every defined term into every Rule that uses it and confirm the sentence still reads correctly | Restatable |
+| 14 | Definitions carry no requirements | ISO/IEC Directives Part 2 (S) | A definition must not take the form of, or contain, a requirement | PCI gate check: no `must` in the glossary. Obligations belong in standards, not in definitions | Restatable |
 | 15 | Definition construction | ISO/IEC Directives Part 2 (S) | Definitions must not repeat the term being defined, and follow fixed formal conventions of construction | PCI gate check: automated detection of the defined term appearing inside its own definition and of two-term definitional loops; PCI publishes its own house rules for definition form | Restatable. Do not copy ISO's specific formatting rules as PCI rules |
 | 16 | Consistency across a suite | ISO/IEC Directives Part 2 (S) | Identical provisions are expressed in identical words, with one terminology and no synonyms; related documents share structure and numbering so a reader can navigate one from knowledge of another | Across PCL-AI, PFL-AI and PML-AI an identical obligation must be worded identically; the common domain-numbered ID scheme and common field order in `SUPERSEDED_LAW_SYSTEM_v0.md` are validated | Restatable |
 | 17 | Normative references | ISO/IEC Directives Part 2 (S) | Only documents whose content constitutes requirements of the document are listed as normative references | PCI separates *references that create obligation* from *references cited for orientation*. The current `External references` field conflates them | Restatable |
-| 18 | Dated vs undated references | ISO/IEC Directives Part 2 (S) | For a dated reference only the cited edition applies; for an undated reference the latest edition including amendments applies; normative reference to draft documents is strongly discouraged because the text can still change | Given PCI's ban on inventing editions and clause numbers, PCI references undated by instrument name with "verify current requirements", and never anchors a law to an exposure or consultation draft | Restatable. This is a rule about referencing, not reproducible text |
+| 18 | Dated vs undated references | ISO/IEC Directives Part 2 (S) | For a dated reference only the cited edition applies; for an undated reference the latest edition including amendments applies; normative reference to draft documents is strongly discouraged because the text can still change | Given PCI's ban on inventing editions and clause numbers, PCI references undated by instrument name with "verify current requirements", and never anchors a standard to an exposure or consultation draft | Restatable. This is a rule about referencing, not reproducible text |
 | 19 | Instructions vs requirements | ISO/IEC Directives Part 2 (S) | Direct procedural steps are expressed in the imperative mood; requirements use the mandatory auxiliary; the two forms are not interchangeable | PCI's `Minimum professional requirement` field is procedural and may use imperative steps; the `Rule` field must always use the mandatory auxiliary | Restatable |
 | 20 | Declared aim of the rules | ISO/IEC Directives Part 2 (S) | The stated aim of the drafting rules is documents that are clear, precise and unambiguous | PCI adopts the same declared aim and makes it the tie-breaker in editorial disputes | Restatable |
-| 21 | No requirements, no conformity | ISO, *Conformity assessment for standards writers* (S) | A document containing no requirements is not intended to be used for conformity assessment | If a PCI "law" contains no obligation, it is guidance and must be relabelled. This is the test that removes slogans | Restatable. ISO publication text must not be reproduced |
-| 22 | Assessment neutrality and separation | ISO, *Conformity assessment for standards writers* (S) | A requirement should not state a preference for who assesses it — first, second or third party — and conformity-assessment provisions are kept separate from technical requirements so each can be applied independently | PCI laws state *what* must be verified and by what evidence, not that only PCI may verify it; PCI separates the law (obligation) from the scheme documents (how PCI examines and audits) | Restatable |
+| 21 | No requirements, no conformity | ISO, *Conformity assessment for standards writers* (S) | A document containing no requirements is not intended to be used for conformity assessment | If a PCI "standard" contains no obligation, it is guidance and must be relabelled. This is the test that removes slogans | Restatable. ISO publication text must not be reproduced |
+| 22 | Assessment neutrality and separation | ISO, *Conformity assessment for standards writers* (S) | A requirement should not state a preference for who assesses it — first, second or third party — and conformity-assessment provisions are kept separate from technical requirements so each can be applied independently | PCI standards state *what* must be verified and by what evidence, not that only PCI may verify it; PCI separates the standard (obligation) from the scheme documents (how PCI examines and audits) | Restatable |
 | 23 | Process principles | IFRS Foundation Due Process Handbook (S) | Rule-making rests on three published principles: transparency, full and fair consultation, and accountability | PCI publishes a three-principle process statement in its own words and at its own scale | Principles are ideas, not protected expression; the Handbook's articulation must not be reproduced |
-| 24 | Process as a written rulebook | IFRS Foundation Due Process Handbook (S) | The process itself is documented as a set of requirements the rule-making body must meet, and the process document is amended through the same public process it prescribes | PCI writes a Law Development Procedure that binds PCI, holds itself to it, and changes it only by the route it sets out | Restatable |
-| 25 | Public record of reasoning and input | IFRS Foundation (S) | Meeting papers and material considered are made public, and comment letters received are published rather than merely summarised by the body itself | PCI publishes a short decision record per law and publishes the comments it receives, or states honestly that consultation was internal | Restatable |
+| 24 | Process as a written rulebook | IFRS Foundation Due Process Handbook (S) | The process itself is documented as a set of requirements the rule-making body must meet, and the process document is amended through the same public process it prescribes | PCI writes a Standard Development Procedure that binds PCI, holds itself to it, and changes it only by the route it sets out | Restatable |
+| 25 | Public record of reasoning and input | IFRS Foundation (S) | Meeting papers and material considered are made public, and comment letters received are published rather than merely summarised by the body itself | PCI publishes a short decision record per standard and publishes the comments it receives, or states honestly that consultation was internal | Restatable |
 | 26 | Minimum consultation period | IFRS Foundation Due Process Handbook (S) | A minimum comment period is fixed in advance (reported as 120 days normally for an exposure draft, with a shorter minimum, reported as 60 days, for narrow re-exposure), and materially changed proposals are re-exposed rather than pushed through | PCI sets its own published minimum, never shortens it silently, adopts a materiality trigger for re-consultation, and must not imply its period is equivalent to IFRS's | Durations are facts, not protected expression, but are **S** and must be re-verified before citation |
-| 27 | Feedback statement | IFRS Foundation (S) | The body publishes what it heard and how it responded, closing the consultation loop | PCI publishes a short feedback note with each law release | Restatable |
+| 27 | Feedback statement | IFRS Foundation (S) | The body publishes what it heard and how it responded, closing the consultation loop | PCI publishes a short feedback note with each standard release | Restatable |
 | 28 | Reasoned basis document | IFRS Foundation (S) | A Basis for Conclusions accompanies but is not part of the Standard — it explains the reasoning without adding requirements | PCI publishes a **Basis for Decision** (its own term) that is expressly non-normative. PCI should avoid the phrase "Basis for Conclusions" to prevent implied IFRS equivalence | Format and function restatable. IFRS Basis for Conclusions text must not be reproduced; avoid IFRS terms of art and marks |
-| 29 | Effects analysis | IFRS Foundation (S) | The likely effects — costs and benefits — of a proposed requirement are analysed and explained | PCI records, per law, the compliance and evidence burden it imposes on a candidate or credential holder | Restatable |
-| 30 | Post-implementation review | IFRS Foundation (S) | A review after implementation is mandatory, assesses whether the requirement achieved what was intended, runs in phases, may involve a formal request for information, and is timed to allow real implementation experience to accumulate | PCI schedules a proportionate review of each law set at a fixed interval after entry into effect and publishes the outcome | Restatable. Reported timings are **S**; do not cite IFRS timings as PCI's justification |
-| 31 | Effective dates and transition | IFRS Foundation (S); FCA (S) | Requirements carry a stated effective date, and those affected are allowed sufficient time to implement before compliance is expected | Every PCI law carries an "applies from" date and, where behaviour must change, a transition period. Laws never apply retrospectively to work already completed | Restatable |
-| 32 | Priority-setting consultation | IFRS Foundation (S) | The forward agenda is itself consulted on, at a fixed interval (reported as five-yearly) | PCI consults on which laws to write next, not only on the text of laws already drafted | Restatable; interval is **S** |
+| 29 | Effects analysis | IFRS Foundation (S) | The likely effects — costs and benefits — of a proposed requirement are analysed and explained | PCI records, per standard, the compliance and evidence burden it imposes on a candidate or credential holder | Restatable |
+| 30 | Post-implementation review | IFRS Foundation (S) | A review after implementation is mandatory, assesses whether the requirement achieved what was intended, runs in phases, may involve a formal request for information, and is timed to allow real implementation experience to accumulate | PCI schedules a proportionate review of each standard set at a fixed interval after entry into effect and publishes the outcome | Restatable. Reported timings are **S**; do not cite IFRS timings as PCI's justification |
+| 31 | Effective dates and transition | IFRS Foundation (S); FCA (S) | Requirements carry a stated effective date, and those affected are allowed sufficient time to implement before compliance is expected | Every PCI standard carries an "applies from" date and, where behaviour must change, a transition period. Standards never apply retrospectively to work already completed | Restatable |
+| 32 | Priority-setting consultation | IFRS Foundation (S) | The forward agenda is itself consulted on, at a fixed interval (reported as five-yearly) | PCI consults on which standards to write next, not only on the text of standards already drafted | Restatable; interval is **S** |
 | 33 | Interpretation route | IFRS Foundation (S) | Application questions are routed to a standing body that may publish explanatory material after public consultation, or conclude that amendment is required instead | PCI creates a named interpretation route with two possible outcomes: published clarification, or an amendment proposal | Restatable |
-| 34 | Authority of explanatory material | IFRS Foundation (S) | Explanatory material derives its authority from the requirements it explains; it does not create new requirements | PCI clarifications may explain a law but must never extend it. A clarification that adds obligation is an amendment and follows the amendment process | Restatable |
-| 35 | Independent process oversight | IFRS Foundation (S) | Compliance with the process is monitored by a body separate from the one that writes the requirements, which also handles complaints about the process | PCI must either create a genuinely separate reviewer of its law process, or state plainly that it has not. See §7(b) | Restatable |
+| 34 | Authority of explanatory material | IFRS Foundation (S) | Explanatory material derives its authority from the requirements it explains; it does not create new requirements | PCI clarifications may explain a standard but must never extend it. A clarification that adds obligation is an amendment and follows the amendment process | Restatable |
+| 35 | Independent process oversight | IFRS Foundation (S) | Compliance with the process is monitored by a body separate from the one that writes the requirements, which also handles complaints about the process | PCI must either create a genuinely separate reviewer of its standard process, or state plainly that it has not. See §7(b) | Restatable |
 | 36 | Avoiding the legislative "shall" | UK OPC *Drafting Guidance* (S) | Office policy is to avoid the legislative "shall"; obligations are imposed using "must". Limited exceptions exist, principally where text is inserted into an existing instrument that already uses the older form | PCI bans `shall` outright. PCI has no legacy instrument to amend, so the OPC exception does not arise. `SUPERSEDED_LAW_SYSTEM_v0.md` §3 currently permits `shall` and must be corrected | Restatable. Do not reproduce OPC passages until the licence position is confirmed (**UNVERIFIED**) |
 | 37 | Modern standard English | UK OPC *Drafting Guidance* (S) | Draft in modern, standard English using vocabulary reflecting ordinary general usage; avoid archaisms and expressions likely to cause difficulty | PCI bans hereinafter, aforesaid, notwithstanding, thereto, pursuant to, save that, in the event that | Restatable |
 | 38 | Conditional structure | UK OPC *Drafting Guidance* (S) | Conditions are set out before the obligation they qualify, in a structured conditional form, rather than trailed after it in provisos | PCI's `Rule` is a single sentence; conditions precede the obligation or move to `Scope` | Restatable |
 | 39 | Definitions discipline | UK OPC *Drafting Guidance*; UK tax-definitions review (S) | Definitions should be used sparingly, should not surprise the reader, and negative definitions should be rare | PCI defines only terms it actually uses normatively; no term may be defined contrary to its ordinary professional meaning without a visible flag | Restatable |
-| 40 | Good law criteria | UK Good Law initiative (S) | Good law is necessary, effective, clear, coherent and accessible — and this covers content, architecture, language and accessibility together | PCI adopts these five as the acceptance criteria for its law gate, in its own formulation | The five-word formulation is short and attributable; attribute it to the Good Law initiative rather than presenting it as PCI's invention |
-| 41 | Complexity has a cost | UK OPC, *When Laws Become Too Complex* (S) | Volume, piecemeal structure, excessive detail and frequent amendment make rules hard to understand and hard to comply with | PCI caps law count per domain and prefers one clear law to three overlapping ones. Every added law must justify its marginal complexity | Restatable |
-| 42 | Status marking on the face of the text | FCA Handbook (S) | Every provision carries a status marker identifying its legal character — rule, guidance, evidential provision, direction and others — and defined expressions are typographically distinguished wherever they appear | PCI marks every block with a status label (**LAW**, **RULE**, **GUIDANCE**, **EXTERNAL**, **EXAMPLE**) and flags defined terms in law text, linking them to the glossary. Colour must never be the only carrier — consistent with PCI's existing accessibility rule | Restatable. Do not copy the FCA's letters or their published meanings verbatim |
+| 40 | Good law criteria | UK Good Law initiative (S) | Good law is necessary, effective, clear, coherent and accessible — and this covers content, architecture, language and accessibility together | PCI adopts these five as the acceptance criteria for its standard gate, in its own formulation | The five-word formulation is short and attributable; attribute it to the Good Law initiative rather than presenting it as PCI's invention |
+| 41 | Complexity has a cost | UK OPC, *When Laws Become Too Complex* (S) | Volume, piecemeal structure, excessive detail and frequent amendment make rules hard to understand and hard to comply with | PCI caps standard count per domain and prefers one clear standard to three overlapping ones. Every added standard must justify its marginal complexity | Restatable |
+| 42 | Status marking on the face of the text | FCA Handbook (S) | Every provision carries a status marker identifying its legal character — rule, guidance, evidential provision, direction and others — and defined expressions are typographically distinguished wherever they appear | PCI marks every block with a status label (**LAW**, **RULE**, **GUIDANCE**, **EXTERNAL**, **EXAMPLE**) and flags defined terms in standard text, linking them to the glossary. Colour must never be the only carrier — consistent with PCI's existing accessibility rule | Restatable. Do not copy the FCA's letters or their published meanings verbatim |
 | 43 | Guidance is not binding | FCA Handbook (S) | Guidance does not bind, and there is no presumption that departing from it indicates a breach of the underlying rule | PCI's `should` provisions must be expressly non-binding. `SUPERSEDED_LAW_SYSTEM_v0.md` currently requires a recorded reason for departure — that makes `should` quasi-evidential and must be stated as such | Restatable |
 | 44 | Evidential provisions | FCA Handbook (S) | A middle category exists: provisions not binding in their own right, contravention of which may be relied on as tending to establish contravention of the binding rule | Directly useful to PCI. It gives a principled home for "recommended, but departure is evidentially relevant" without pretending such provisions are laws | Restatable. Do not reproduce the FCA's formulation or statutory references |
 | 45 | Safe-harbour effect | FCA Handbook (S) | Where a firm follows guidance indicating a way to comply, the regulator proceeds on the basis that the rule has been complied with | PCI can offer a safe harbour: following the stated method is accepted as compliance, without making that method the only route | Restatable |
 | 46 | Application and purpose sections | FCA Handbook (S) | Modules open with an explicit statement of who they apply to and what they are for, before any substantive provision | Validates PCI's `Scope` + `Purpose` fields; confirms they must come before, and be readable independently of, the Rule | Restatable |
-| 47 | Precise citation architecture | FCA Handbook (S) | Provisions are addressed by a stable module.chapter.section.paragraph reference carrying the status marker, so any provision can be cited exactly | Validates PCI's stable-ID rule. PCI should add the status marker into the citation form so a citation reveals whether it is law or guidance | Restatable |
+| 47 | Precise citation architecture | FCA Handbook (S) | Provisions are addressed by a stable module.chapter.section.paragraph reference carrying the status marker, so any provision can be cited exactly | Validates PCI's stable-ID rule. PCI should add the status marker into the citation form so a citation reveals whether it is a standard or guidance | Restatable |
 | 48 | Formal exception machinery | FCA Handbook, SUP 8 (S) | Relief from a rule is granted only against published conditions — that compliance would be unduly burdensome or would not achieve the purpose of the rule, and that relief would not undermine the body's objectives — and is published unless publication is inappropriate | PCI creates a written, conditioned, recorded exemption route with published criteria, replacing ad hoc prose hedges inside Rules | Restatable as method. Do not reproduce FCA text or the statutory tests verbatim |
 | 49 | Individual interpretation | FCA Handbook, SUP 9 (S) | A regulated person may obtain guidance on their own situation, with a published statement of what reliance on it achieves | PCI offers a candidate interpretation request route with a stated effect on later assessment | Restatable |
-| 50 | Consultation before rule-making | FCA (S) | Proposed rules are consulted on with a published explanation of purpose, a compatibility statement against the body's objectives, and an invitation for representations within a stated period | PCI's law consultation notice states purpose, alignment with PCI's certification objectives, and a response deadline | Restatable |
+| 50 | Consultation before rule-making | FCA (S) | Proposed rules are consulted on with a published explanation of purpose, a compatibility statement against the body's objectives, and an invitation for representations within a stated period | PCI's standard consultation notice states purpose, alignment with PCI's certification objectives, and a response deadline | Restatable |
 | 51 | Cost benefit analysis | FCA (S) | A cost benefit analysis of proposed rules is published, with a narrow exemption where cost increases are absent or of minimal significance, supported by a published statement of policy on how such analysis is done | PCI applies a proportionate version: what does compliance and evidence cost the credential holder, and is it justified by the risk addressed | Restatable |
-| 52 | Versioned rulebook | FCA (S) | The rulebook is dated and versioned, with changes made by published instruments and recorded in change notices | PCI publishes each law set with a version, a date and a change log; superseded text remains retrievable | Restatable |
-| 53 | Scheme built on job analysis | ISO/IEC 17024 (S) | A personnel certification scheme rests on a job or practice analysis identifying tasks, the competence each requires, prerequisites, and the assessment mechanisms and examination content | PCI's laws must trace to identified professional tasks, and the examination must trace to the laws. This closes the law → competence → scenario chain | Standard is copyright; may be named and characterised only. Do not reproduce clause text. **PCI must not claim conformity with ISO/IEC 17024 unless accredited** |
-| 54 | Valid and reliable assessment | ISO/IEC 17024 (S) | Assessment methods must be valid, reliable and objective, and reviewed periodically to remain current with the profession | PCI's examination items derived from laws must be reviewed on a stated cycle, with evidence of validity retained | As above |
+| 52 | Versioned rulebook | FCA (S) | The rulebook is dated and versioned, with changes made by published instruments and recorded in change notices | PCI publishes each standard set with a version, a date and a change log; superseded text remains retrievable | Restatable |
+| 53 | Scheme built on job analysis | ISO/IEC 17024 (S) | A personnel certification scheme rests on a job or practice analysis identifying tasks, the competence each requires, prerequisites, and the assessment mechanisms and examination content | PCI's standards must trace to identified professional tasks, and the examination must trace to the standards. This closes the standard → competence → scenario chain | Standard is copyright; may be named and characterised only. Do not reproduce clause text. **PCI must not claim conformity with ISO/IEC 17024 unless accredited** |
+| 54 | Valid and reliable assessment | ISO/IEC 17024 (S) | Assessment methods must be valid, reliable and objective, and reviewed periodically to remain current with the profession | PCI's examination items derived from standards must be reviewed on a stated cycle, with evidence of validity retained | As above |
 | 55 | Impartiality and separation | ISO/IEC 17024 (S) | The certification body must manage conflicts of interest and separate certification decisions from training and other commercial interests | PCI must state how its examination and certification decisions are separated from its training and publishing activities | As above |
 | 56 | Appeals and complaints | ISO/IEC 17024 (S) | Complaints and appeals procedures must be accessible, fair and handled impartially, giving candidates genuine recourse | PCI's `Consequences of breach` field must point to a published appeal route with a decision-maker who was not part of the original decision | As above |
-| 57 | Lifecycle and scheme governance | ISO/IEC 17024 (S) | The scheme governs the whole lifecycle — application, assessment, examination, decision, certification, recertification, surveillance, suspension and withdrawal, appeals and complaints — and scheme development and maintenance is a governed function with defined ownership, capable of sitting outside the certification body | PCI laws about credential holder conduct must connect to defined lifecycle states so a breach has a defined effect; PCI names an accountable owner for the law set and separates law authorship from law approval | As above |
-| 58 | Nonconformity defined | ISO/IEC 17021-1 (S) | Non-compliance is defined as non-fulfilment of a requirement — a gap between stated criteria and observed evidence | PCI defines breach against the law's own `Required evidence`, not against a general impression of poor practice | As above |
-| 59 | Graded classification and recording | ISO/IEC 17021-1 (S) | Non-compliance is graded by whether it defeats the intended result, a pattern of small failures against one requirement can amount to a systemic failure, and findings must be identified, classified and recorded so an informed decision can be made — a genuine non-compliance must never be downgraded to a mere improvement suggestion | PCI grades breaches as minor, material or systemic, escalates on repetition against one law, and records every finding with its classification. A breach is never quietly logged as feedback | As above |
+| 57 | Lifecycle and scheme governance | ISO/IEC 17024 (S) | The scheme governs the whole lifecycle — application, assessment, examination, decision, certification, recertification, surveillance, suspension and withdrawal, appeals and complaints — and scheme development and maintenance is a governed function with defined ownership, capable of sitting outside the certification body | PCI standards about credential holder conduct must connect to defined lifecycle states so a breach has a defined effect; PCI names an accountable owner for the standard set and separates standard authorship from standard approval | As above |
+| 58 | Nonconformity defined | ISO/IEC 17021-1 (S) | Non-compliance is defined as non-fulfilment of a requirement — a gap between stated criteria and observed evidence | PCI defines breach against the standard's own `Required evidence`, not against a general impression of poor practice | As above |
+| 59 | Graded classification and recording | ISO/IEC 17021-1 (S) | Non-compliance is graded by whether it defeats the intended result, a pattern of small failures against one requirement can amount to a systemic failure, and findings must be identified, classified and recorded so an informed decision can be made — a genuine non-compliance must never be downgraded to a mere improvement suggestion | PCI grades breaches as minor, material or systemic, escalates on repetition against one standard, and records every finding with its classification. A breach is never quietly logged as feedback | As above |
 
 **Row count: 59.**
 
@@ -479,7 +479,7 @@ word `must` it is the **exact inverse**. A reader trained on ISO documents, of w
 will contain many, will read a PCI `must` as "someone else's rule, mentioned for information", which
 is the precise opposite of what PCI intends.
 
-PCI must therefore publish, in the front matter of every law volume and every law web page, a
+PCI must therefore publish, in the front matter of every standard volume and every standard web page, a
 Conventions statement that does all of the following in PCI's own words:
 
 - states that `must` and `must not` express PCI's own mandatory requirements;
@@ -514,13 +514,13 @@ permits `must / must not / shall / shall not` interchangeably for mandatory rule
 contradicts the programme decision and must be corrected before drafting begins. Concretely:
 
 - amend `SUPERSEDED_LAW_SYSTEM_v0.md` §3 to remove `shall` and `shall not`;
-- add a mechanical gate check that fails any law set containing `shall` in any field;
+- add a mechanical gate check that fails any standard set containing `shall` in any field;
 - extend the check to the whole corpus, since imported or adapted text is the usual route by which
   `shall` re-enters a document — the OPC itself notes that the main reason to use the old form is
   insertion into an instrument that already uses it (S), and PCI has no such instrument.
 
 **Consequence 4 — PCI needs a replacement device for external constraints.** Because `must` is now
-spent on PCI's own obligations, PCI cannot use it for "the law requires X". PCI already has the
+spent on PCI's own obligations, PCI cannot use it for "the standard requires X". PCI already has the
 right containers — the `EXTERNAL REFERENCE` block and the `CAUTION` block — but needs a fixed
 formula. Recommended pattern, in PCI's own words and marked as external:
 
@@ -534,7 +534,7 @@ gives PCI a complete and unambiguous system without borrowing ISO's vocabulary.
 **Recommended closed verbal-form set for PCI** (PCI's own construction, not reproduced from any
 source):
 
-| Form | Meaning in PCI law | Where permitted |
+| Form | Meaning in PCI standard | Where permitted |
 |---|---|---|
 | `must` / `must not` | PCI mandatory requirement / prohibition | Rule, Minimum professional requirement, Required evidence, Independent review, Escalation trigger, Prohibited practice, AI restriction, Verification requirement |
 | `should` / `should not` | PCI recommendation (status per Option A or B above) | Practice guidance blocks only |
@@ -542,7 +542,7 @@ source):
 | `can` / `cannot` | Possibility or capability — a statement of fact, never a permission | Anywhere |
 | `is` / `are` | Statement of fact | Scope, Purpose, examples |
 
-**Banned in all law text:** `shall`, `shall not`, `ought to`, `is required to`, `is obliged to`,
+**Banned in all standard text:** `shall`, `shall not`, `ought to`, `is required to`, `is obliged to`,
 `has a duty to`, `will` used as an obligation, `may not` (ambiguous between prohibition and absence
 of permission — use `must not` or "is not permitted"), `endeavour to`, `use best efforts`, `as
 appropriate`, `where practicable`, `wherever possible` — the last three unless the condition is
@@ -560,17 +560,17 @@ badge.
 
 | Element | PCI form |
 |---|---|
-| A written process the body binds itself to | A published *PCI Law Development Procedure* — short, real, and actually followed |
+| A written process the body binds itself to | A published *PCI Standard Development Procedure* — short, real, and actually followed |
 | Three stated principles | Transparency, consultation and accountability, stated in PCI's own words and scaled to a private certifier |
 | Consultation with a fixed minimum period | PCI sets and publishes its own minimum. It must be a period PCI will genuinely honour, and must never be described as comparable to IFRS's |
-| Publishing what was heard | A short feedback note per law release, listing themes raised and PCI's response |
-| Reasoned basis, expressly non-normative | A **Basis for Decision** per law or per release. Use PCI's own term; avoid "Basis for Conclusions" |
-| Effective dates and transition | Every law carries an "applies from" date; behavioural changes get a transition period; no retrospective application |
-| Amendment through the same process | Laws change only through the published procedure, with a change log |
-| Review after implementation | A proportionate review of each law set at a fixed interval after it takes effect, with a published outcome |
+| Publishing what was heard | A short feedback note per standard release, listing themes raised and PCI's response |
+| Reasoned basis, expressly non-normative | A **Basis for Decision** per standard or per release. Use PCI's own term; avoid "Basis for Conclusions" |
+| Effective dates and transition | Every standard carries an "applies from" date; behavioural changes get a transition period; no retrospective application |
+| Amendment through the same process | Standards change only through the published procedure, with a change log |
+| Review after implementation | A proportionate review of each standard set at a fixed interval after it takes effect, with a published outcome |
 | Forward agenda consultation | Publish what PCI intends to draft next and invite comment |
 | A complaints route about the process | A named route for "PCI did not follow its own procedure", distinct from an appeal against a decision |
-| Clarifications cannot add obligation | A clarification that would extend a law is an amendment and follows the amendment route |
+| Clarifications cannot add obligation | A clarification that would extend a standard is an amendment and follows the amendment route |
 
 **Cannot honestly be adopted, or must not be claimed:**
 
@@ -579,7 +579,7 @@ badge.
 | Independent trustee-level oversight of process compliance | PCI has no equivalent body. Asserting one that does not exist, or is not genuinely independent, is worse than having none | Either constitute a genuinely separate reviewer with a published remit, or state plainly that process oversight is internal |
 | Public broadcast meetings and full papers publication | Not proportionate, and PCI cannot sustain it | Publish decisions and reasoning, not proceedings |
 | Global multi-stakeholder consultation | PCI does not have the reach; claiming it would be false | Describe the actual consultation population honestly — for example practitioners, employers, subject reviewers |
-| Formal effects analysis of the IFRS kind | Requires data and economic analysis PCI does not have | A proportionate compliance-burden note per law: what evidence must be produced, by whom, and at what cost |
+| Formal effects analysis of the IFRS kind | Requires data and economic analysis PCI does not have | A proportionate compliance-burden note per standard: what evidence must be produced, by whom, and at what cost |
 | Post-implementation review at IFRS depth and timing | Requires large-scale implementation evidence | A scaled review with a stated, smaller evidence base — and say that it is scaled |
 | Any statement of equivalence | Materially misleading | "PCI's process is informed by published standard-setting practice. It is PCI's own process and is not equivalent to, endorsed by, or affiliated with any standard-setting body." |
 
@@ -588,38 +588,39 @@ process is written down and the body is held to it.** A published PCI procedure 
 follow is a worse position than no published procedure at all, because it converts a gap into a
 verifiable failure. PCI should publish only what it will actually do.
 
-### (c) Keeping PCI laws clearly distinguishable from legislation
+### (c) Keeping PCI standards clearly distinguishable from legislation
 
-PCI has chosen the word "law" for its rules. That is a defensible branding choice for a professional
-body, but it carries a permanent obligation to prevent misunderstanding. The following are
-recommended as binding editorial constraints.
+PCI has chosen the word "Standard" for its instruments. That is a defensible choice for a
+professional body, but it carries a permanent obligation to prevent two misunderstandings: that these
+are legislation, and that they are the consensus output of a national or international standards body.
+The following are recommended as binding editorial constraints.
 
 **1. The status disclaimer travels with the text, not just the volume.** `SUPERSEDED_LAW_SYSTEM_v0.md` already
 mandates a legal-status disclaimer. Extend it: the disclaimer, or a short form of it, must appear in
-the running footer of every printed page of a law volume, in the header of every law web page, and
-in any exported extract or single-law PDF. Front matter is not read; footers are.
+the running footer of every printed page of a standard volume, in the header of every standard web page, and
+in any exported extract or single-standard PDF. Front matter is not read; footers are.
 
-**2. Make the precedence rule a numbered foundational law, not a preface.** The rule that applicable
+**2. Make the precedence rule a numbered foundational standard, not a preface.** The rule that applicable
 law, regulation, contract or a stricter authoritative standard governs should be `PCI-LAW-F-01` or
-equivalent — a law that cannot be extracted away from the set.
+equivalent — a standard that cannot be extracted away from the set.
 
-**3. Ban legislative register.** Prohibited in all PCI law text: *enacted*, *in force*, *statutory*,
+**3. Ban legislative register.** Prohibited in all PCI standard text: *enacted*, *in force*, *statutory*,
 *statute*, *regulation* (of PCI's own rules), *Act*, *section*/`s.5(2)(a)` citation style,
 *sub-section*, *comes into force*, *commencement*, *offence*, *penalty*, *fine*, *sanction* in its
 punitive legal sense, *shall come into effect*, *by order*, *competent authority*. Use instead:
-*PCI Law*, *issued*, *applies from*, *effective from*, *PCI requirement*, *breach*, *consequence*.
+*PCI Standard*, *issued*, *applies from*, *effective from*, *PCI requirement*, *breach*, *consequence*.
 
 **4. Keep the PCI identifier scheme visibly non-legislative.** `PCL-LAW-06-03` cannot be mistaken
-for a statutory citation. Retain it, and never cite a PCI law in a form resembling
+for a statutory citation. Retain it, and never cite a PCI standard in a form resembling
 "section 6(3)".
 
 **5. Consequences stay inside PCI's actual authority.** Breach consequences may only concern the
 examination, the certification, PCI's conduct and quality processes, and PCI's own record-keeping.
-No PCI law may state or imply a financial penalty, a legal liability, a professional disqualification
+No PCI standard may state or imply a financial penalty, a legal liability, a professional disqualification
 beyond PCI's own credential, or any consequence PCI cannot itself deliver.
 
-**6. Say who is bound and why.** PCI laws bind those who hold or seek a PCI credential, by agreement,
-as a condition of certification. State that in the foundational laws. It is the honest basis of the
+**6. Say who is bound and why.** PCI standards bind those who hold or seek a PCI credential, by agreement,
+as a condition of certification. State that in the foundational standards. It is the honest basis of the
 whole system and it is also the clearest possible statement that these are not laws of general
 application.
 
@@ -627,7 +628,7 @@ application.
 statutory typography, no "Queen's/King's Printer" style layout. PCI's existing colour-and-icon system
 already differentiates; keep it and keep it distinctive.
 
-**8. Do not restate law as PCI law.** This is also required by the ISO principle that a voluntary
+**8. Do not restate law as PCI standard.** This is also required by the ISO principle that a voluntary
 document excludes legal and statutory requirements (S). Where a legal obligation matters, it appears
 as an external constraint or a jurisdictional caution, never as a PCI `must`.
 
@@ -635,7 +636,7 @@ as an external constraint or a jurisdictional caution, never as a PCI `must`.
 
 **Trap 1 — requirements hidden in notes, examples and soft fields.**
 ISO's rule is unambiguous: examples must not contain requirements, instructions, recommendations or
-permissions (S). PCI's law template has eighteen fields and does not currently declare which of them
+permissions (S). PCI's standard template has eighteen fields and does not currently declare which of them
 are normative. That is the highest-probability source of defect in the entire programme, because a
 reader cannot comply with an obligation they cannot identify.
 
@@ -658,7 +659,7 @@ gate-check it. A recommended classification, for the programme to confirm:
 | Purpose | Informative |
 | External references | Informative — external constraints only |
 | Jurisdictional caution | Informative — external constraints only |
-| Related PCI laws / Related book content / Examination relevance | Informative |
+| Related PCI standards / Related book content / Examination relevance | Informative |
 | Consequences of breach | Normative as to classification; must not introduce new obligations |
 
 **Trap 2 — unverifiable requirements.**
@@ -677,7 +678,7 @@ removes slogans**, which is the stated purpose of the reconstruction.
 ISO prohibits circular definitions, prohibits definitions that take the form of or contain a
 requirement, and requires the substitution principle (S).
 
-*Action:* three mechanical checks in the law gate — (i) the defined term does not appear inside its
+*Action:* three mechanical checks in the standard gate — (i) the defined term does not appear inside its
 own definition, and no two-term definitional loop exists; (ii) no `must` appears anywhere in the
 glossary; (iii) substituting each definition into each Rule that uses the term produces a sentence
 that still reads correctly. Also: one glossary for the whole suite, one meaning per term, one term
@@ -689,25 +690,25 @@ This is the same defect as Trap 2 but it hides better, because judgement words r
 *Material*, *reasonable*, *significant*, *appropriate*, *adequate*, *timely*, *robust*, *sufficient*,
 *proportionate*, *best practice*, *industry standard*, *as required*, *where necessary*.
 
-*Action:* ban them in Rule text unless the law does one of three things: (i) gives a threshold;
+*Action:* ban them in Rule text unless the standard does one of three things: (i) gives a threshold;
 (ii) gives a decision procedure; or (iii) names the `Decision owner` who determines the question and
 the criteria they apply. Option (iii) is usually the right answer for professional judgement, and it
 has the advantage of being verifiable — you can check who decided and on what basis, even where you
 cannot check the judgement itself.
 
 **Trap 5 — duplicating an external standard without adding anything.**
-A PCI law that restates what IFRS 15, ISO 21500 or a FIDIC form already requires adds no obligation,
+A PCI standard that restates what IFRS 15, ISO 21500 or a FIDIC form already requires adds no obligation,
 creates copyright and misstatement risk, and becomes wrong the moment the external instrument
 changes. ISO's own rule excludes legal and statutory requirements from a document's requirements
 (S), and its referencing rules exist precisely so that documents do not carry stale copies of one
 another (S).
 
-*Action:* apply a **"what does PCI add?" test** to every law. Each law must state, in the Basis for
+*Action:* apply a **"what does PCI add?" test** to every standard. Each standard must state, in the Basis for
 Decision, the obligation it creates that the external instrument does not already create — typically
 one of: *evidence* (PCI requires the reasoning to be recorded in a specific form), *independence*
 (PCI requires a second person to check), *accountability* (PCI names the decision owner),
 *escalation* (PCI fixes the trigger), or *AI limitation* (PCI states what a model must not decide).
-If a law cannot answer the test, delete it and reference the external instrument instead.
+If a standard cannot answer the test, delete it and reference the external instrument instead.
 
 *Related discipline:* reference external instruments **undated, by name**, with "verify current
 requirements", so that PCI never carries a stale edition or clause number. This follows from ISO's
@@ -725,16 +726,16 @@ use `must not` or "is not required to" as intended.
 
 | # | Action | Owner | Depends on |
 |---|---|---|---|
-| 1 | Amend `SUPERSEDED_LAW_SYSTEM_v0.md` §3 to remove `shall`/`shall not` and adopt the closed verbal-form set in §7(a) | Law programme | — |
-| 2 | Add a Conventions clause covering verbal forms, the express disclaimer of ISO conventions, and field status | Law programme | 1 |
-| 3 | Classify every template field as normative or informative and print the classification | Law programme | 2 |
-| 4 | Decide `should` as Option A or Option B (§7(a), Consequence 2) and state it | Law programme | 2 |
+| 1 | Amend `SUPERSEDED_LAW_SYSTEM_v0.md` §3 to remove `shall`/`shall not` and adopt the closed verbal-form set in §7(a) | Standard programme | — |
+| 2 | Add a Conventions clause covering verbal forms, the express disclaimer of ISO conventions, and field status | Standard programme | 1 |
+| 3 | Classify every template field as normative or informative and print the classification | Standard programme | 2 |
+| 4 | Decide `should` as Option A or Option B (§7(a), Consequence 2) and state it | Standard programme | 2 |
 | 5 | Add gate checks: no `shall`; no `may not`; no banned judgement terms in Rule text; no `must` in glossary; substitution test; circularity test; evidence-artefact test | Build/checks (`docs/books/_build/checks`) | 1–4 |
-| 6 | Add the "what does PCI add?" test to the law gate | Law programme | — |
-| 7 | Draft the PCI Law Development Procedure covering only what PCI will actually do (§7(b)) | PCI governance | — |
+| 6 | Add the "what does PCI add?" test to the standard gate | Standard programme | — |
+| 7 | Draft the PCI Standard Development Procedure covering only what PCI will actually do (§7(b)) | PCI governance | — |
 | 8 | Move the legal-status disclaimer into running headers/footers and every export path | Publishing/typesetting | — |
 | 9 | Create the exemption route and the interpretation route, with published criteria | PCI governance | 7 |
-| 10 | Re-verify every source in §10 against the issuing bodies' own pages before any PCI publication cites them | Law programme | Network access |
+| 10 | Re-verify every source in §10 against the issuing bodies' own pages before any PCI publication cites them | Standard programme | Network access |
 
 ---
 

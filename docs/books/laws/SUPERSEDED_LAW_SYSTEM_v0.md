@@ -2,6 +2,9 @@
 
 **Status: SUPERSEDED — retained for history only. Do not draft to this document.**
 
+**Terminology note.** The instruments this document calls "laws" are now called **PCI Standards**; the
+wording below is left unchanged as a record of the superseded system.
+
 This was the first drafting specification for the PCI Standards. It has been replaced by two
 documents, and where this file and either of those disagree, **those govern**:
 

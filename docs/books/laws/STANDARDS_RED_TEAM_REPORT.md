@@ -1,21 +1,21 @@
 # PCI Standards — Red-Team Report
 
-**Instrument status: none.** This is a Charter §5 **Stage 9** record. It is not a PCI Law, it creates
-no obligation, and nothing in it may be cited as a requirement (Charter §3). Where it says a law was
-changed, the law itself is the record; where it says a finding was referred, the referral is the
+**Instrument status: none.** This is a Charter §5 **Stage 9** record. It is not a PCI Standard, it creates
+no obligation, and nothing in it may be cited as a requirement (Charter §3). Where it says a standard was
+changed, the standard itself is the record; where it says a finding was referred, the referral is the
 finding.
 
-**Scope of the exercise.** The four published law sets —
-[`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md) (15 laws),
+**Scope of the exercise.** The four published standard sets —
+[`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md) (15 standards),
 [`PCL_AI_STANDARDS.md`](PCL_AI_STANDARDS.md) (33), [`PFL_AI_STANDARDS.md`](PFL_AI_STANDARDS.md) (33) and
-[`PML_AI_STANDARDS.md`](PML_AI_STANDARDS.md) (32) — **113 laws and 532 process requirements**, read against the
+[`PML_AI_STANDARDS.md`](PML_AI_STANDARDS.md) (32) — **113 standards and 532 process requirements**, read against the
 [`PCI Standards Charter`](PCI_STANDARDS_CHARTER.md) and the
-[`PCI Standards Drafting Manual`](PCI_STANDARDS_DRAFTING_MANUAL.md). The red team did not draft these laws.
+[`PCI Standards Drafting Manual`](PCI_STANDARDS_DRAFTING_MANUAL.md). The red team did not draft these standards.
 
 **Method.** Six attack fronts (circumvention · ambiguity · technical compliance without substance ·
 conflict · impossible or disproportionate evidence · undefined judgement), plus a Stage 8 scenario
-sweep over twenty-three laws against all eight case types. Every finding below is a worked case, not
-an impression. Mechanical sweeps were run over all 113 laws for undefined judgement words inside the
+sweep over twenty-three standards against all eight case types. Every finding below is a worked case, not
+an impression. Mechanical sweeps were run over all 113 standards for undefined judgement words inside the
 eight normative elements, for timing words with no clock, and for the wording of every element 12 and
 element 21 in the corpus; the sweeps are what located findings **A-1**, **U-1** and **T-1**.
 
@@ -29,13 +29,13 @@ element 21 in the corpus; the sweeps are what located findings **A-1**, **U-1** 
 
 | | Count |
 |---|---|
-| Laws attacked with a specific constructed circumvention | **38** |
-| Circumventions that succeeded against the law as drafted | **17** |
+| Standards attacked with a specific constructed circumvention | **38** |
+| Circumventions that succeeded against the standard as drafted | **17** |
 | Circumventions closed by amendment | **17** |
-| Conflicts between laws found | **9** |
+| Conflicts between standards found | **9** |
 | Conflicts fixed as drafting errors | **7** |
 | Conflicts referred to the Interpretation Panel as policy | **2** |
-| Laws amended | **17** (2 foundational, 5 PCL, 5 PFL, 5 PML) |
+| Standards amended | **17** (2 foundational, 5 PCL, 5 PFL, 5 PML) |
 | Process requirements added | **3** |
 | Definitions amended or added | **8** |
 | Element-21 compliance tests strengthened | **6** |
@@ -46,8 +46,8 @@ element 21 in the corpus; the sweeps are what located findings **A-1**, **U-1** 
 tests are already built around the two defences that matter — the reviewer selects the sample, and the
 test starts from the population of *events* rather than the population of *records about events*. The
 three certification sets are good, but they are where the corpus leaks, and they leak in one
-characteristic way: **a certification law states a narrower version of a foundational obligation and,
-because the certification law is the one the candidate is examined on and works to, the narrower
+characteristic way: **a certification standard states a narrower version of a foundational obligation and,
+because the certification standard is the one the candidate is examined on and works to, the narrower
 version is the one that operates.** Eight of the seventeen closed circumventions are instances of that
 single pattern.
 
@@ -61,7 +61,7 @@ single pattern.
 
 `PCI-FND-STD-03` element 1 requires a material calculation, model output or automated conclusion to be
 verified **by a person independent (D-12) of its preparation** before any person relies on it. Each of
-the four certification laws that actually governs AI output in practice said something weaker on the
+the four certification standards that actually governs AI output in practice said something weaker on the
 same act:
 
 - `PCI-PCL-STD-13.02` element 10 — "The verifier must be **independent** of the configuration of the
@@ -82,51 +82,51 @@ well-formatted, confidently expressed and wrong" — is untouched, because self-
 exactly what survives a self-recomputation.
 
 Two features make this the most dangerous finding rather than merely the most common. First, it sits
-in the AI laws, which are the newest, the most used and the least settled by professional habit.
-Second, the reader who follows the certification law faithfully arrives at a *worse* outcome than the
-reader who ignores it and applies `PCI-FND-STD-03` alone — the certification law actively misleads.
+in the AI standards, which are the newest, the most used and the least settled by professional habit.
+Second, the reader who follows the certification standard faithfully arrives at a *worse* outcome than the
+reader who ignores it and applies `PCI-FND-STD-03` alone — the certification standard actively misleads.
 
 **Fix.** Element 10 of each of the four now states that the check it requires is **additional to, and
 does not displace**, the independent-person verification `PCI-FND-STD-03` requires before reliance, and
-that where the verifier is also the preparer the certification law is satisfied and the foundational
-one is not. The amendment is recorded in each law's element 25.
+that where the verifier is also the preparer the certification standard is satisfied and the foundational
+one is not. The amendment is recorded in each standard's element 25.
 
 ---
 
 ## 3. Front 1 — Circumvention
 
-Thirty-eight laws were attacked with a specific route by which a professional could satisfy every
+Thirty-eight standards were attacked with a specific route by which a professional could satisfy every
 stated action and every evidence requirement while wholly defeating the stated Purpose. Seventeen
 routes succeeded. All seventeen are closed.
 
 ### Closed
 
-| # | Law(s) | The route, worked | How it is now closed | Severity |
+| # | Standard(s) | The route, worked | How it is now closed | Severity |
 |---|---|---|---|---|
 | C-1 | `PCI-PCL-STD-13.02` · `13.03` · `PCI-PFL-STD-16.01` · `PCI-PML-STD-14.02` | Self-verification of one's own AI output — see §2 | Element 10 of each: the check is additional to `PCI-FND-STD-03`, not a substitute | **Critical** |
-| C-2 | `PCI-PML-STD-03.03` | The law fixes *when* gate criteria are published but never *who sets them*. A project publishes criteria of its own drafting — dated, version-identified, assessable, and calibrated so it cannot fail — before assembling any evidence. Every process requirement is met and element 21(a)–(e) passes; the gate that "cannot fail" of element 2 is produced in full compliance | New `PCI-PML-STD-03.03-PR-06`: criteria approved by the authority holding the gate decision before publication; the project must not approve its own criteria. Element 7 and a new element 21(f) test for the approval | **High** |
-| C-3 | `PCI-PFL-STD-01.02` | Element 21 step (b) begins "For each interest **on the register**…". An interest never entered on the register is never tested, so the whole law is defeated by omission — and the register is maintained by the person with the interest | New element 21 step (e) works from the transaction's party, adviser, contractor, offtaker and fee records against the `PCI-FND-STD-08` relationship list. "A clean register is a pass only when step (e) confirms it is complete" | **High** |
+| C-2 | `PCI-PML-STD-03.03` | The standard fixes *when* gate criteria are published but never *who sets them*. A project publishes criteria of its own drafting — dated, version-identified, assessable, and calibrated so it cannot fail — before assembling any evidence. Every process requirement is met and element 21(a)–(e) passes; the gate that "cannot fail" of element 2 is produced in full compliance | New `PCI-PML-STD-03.03-PR-06`: criteria approved by the authority holding the gate decision before publication; the project must not approve its own criteria. Element 7 and a new element 21(f) test for the approval | **High** |
+| C-3 | `PCI-PFL-STD-01.02` | Element 21 step (b) begins "For each interest **on the register**…". An interest never entered on the register is never tested, so the whole standard is defeated by omission — and the register is maintained by the person with the interest | New element 21 step (e) works from the transaction's party, adviser, contractor, offtaker and fee records against the `PCI-FND-STD-08` relationship list. "A clean register is a pass only when step (e) confirms it is complete" | **High** |
 | C-4 | `PCI-PFL-STD-14.02` | *In balance* is defined as "committed and available funding" ≥ remaining cost-to-complete, but neither "committed" nor "available" was defined. A sponsor's letter of comfort, an uncommitted facility and an anticipated contingency release are counted, the test returns positive, and `PR-03` is satisfied by disclosing a result that is untrue. The lenders' principal protection is removed at the exact moment element 2 identifies as the exposure point | *Committed and available funding* defined at element 4, with the six excluded instruments named; element 21(c) now traces every amount counted as funding to the instrument that commits it | **High** |
 | C-5 | `PCI-PCL-STD-03.03` | Re-baseline one control account at a time. Each partial re-baseline is genuinely approved, states its accumulated variance, carries an effective date and retains the outgoing baseline — and each falls within the lowest delegation band. Across a period the whole project's adverse variance is erased and no authority ever sees the reset. `PCI-PCL-STD-05.04-PR-05` anticipates exactly this for changes; `03.03` had no aggregation rule | New `PCI-PCL-STD-03.03-PR-05`: partial and successive re-baselines aggregate for banding; new element 21(e) totals the variance removed across the period and tests it against the authority that approved it | **High** |
 | C-6 | `PCI-PFL-STD-13.01` | The engaging party is entitled to set the scope before the review begins. Scope the model audit away from the tax model and the liquidated-damages mechanics — the two areas the reviewer believes carry the risk — and issue a clean, genuinely independent report on which lenders rely. Independence is intact; the review is worthless | New `PCI-PFL-STD-13.01-PR-06`: every excluded area the reviewer considers capable of a material effect is named on the face of the report, with the fact that the engaging party set the exclusion; element 21 gains step (f) | **High** |
-| C-7 | `PCI-PML-STD-12.02` | `PR-04`'s detriment review bites only inside "the documented lookback window", and the organisation documents the window. Set it to two weeks and the protection switches off while the law is complied with in full | Element 11: the law's own default (end of project or twelve months, whichever is shorter) is now also the **floor**; a shorter documented window does not satisfy the law | **High** |
+| C-7 | `PCI-PML-STD-12.02` | `PR-04`'s detriment review bites only inside "the documented lookback window", and the organisation documents the window. Set it to two weeks and the protection switches off while the standard is complied with in full | Element 11: the standard's own default (end of project or twelve months, whichever is shorter) is now also the **floor**; a shorter documented window does not satisfy the standard | **High** |
 | C-8 | PCL corpus-wide (27 lines across 28 element-21 tests) | Twenty-eight compliance tests closed by saying the defective condition "**is an exception**". In this corpus *exception* is a Charter §8 term meaning an **approved departure**, and Charter §8 states that an undocumented departure is a breach and not an exception. Read in the corpus's own vocabulary, twenty-eight tests said the failure condition was permitted | Every occurrence now reads "is a failure of this test". Recorded in the PCL audit table, question 6 | **High** |
-| C-9 | All three certification sets | Use the narrower certification definition of *material* to escape `D-15`. PCL's and PFL's definitions turn only on whether a decision would change; `D-15` additionally catches an item bearing on safety, on a contractual, regulatory, tax or financial-reporting position, or on a party's reliance. A variance that endangers nobody's decision but changes a contractual position is immaterial under PCL and material under the foundational law | A reading rule at the head of each certification volume's Definitions: where a definition here and a foundational definition bear on the same act, **the one producing the wider obligation governs**, and the `D-15` limbs apply in addition | **High** |
-| C-10 | All three certification sets | Element 21 in fifteen certification laws tests "a sample selected on a stated basis" or "a stated sample" without saying who selects it. The foundational set says "selected by the reviewer **and not by the professional**" every time, so the drafters knew it mattered. The preparer selects a favourable sample, records the basis, and the test passes | A reading rule at the head of each certification volume's Definitions: the sample is selected by the reviewer performing the test, and the reviewer records the basis | **Medium** |
-| C-11 | `PCI-PCL-STD-03.05` | Element 12 permitted an unchallenged forecast "in an emergency funding request", with the challenge to follow "within a stated period" — stated by nobody, with no outer limit. An emergency funding request is also the case in which `PCI-FND-STD-03` element 12 makes **no** waiver available. A professional could comply with the certification law while breaching the foundational one, indefinitely | Element 12 now fixes the period (recorded by the decision owner at approval, and in any event before the next issue) and states the `PCI-FND-STD-03` carve-out expressly | **High** |
+| C-9 | All three certification sets | Use the narrower certification definition of *material* to escape `D-15`. PCL's and PFL's definitions turn only on whether a decision would change; `D-15` additionally catches an item bearing on safety, on a contractual, regulatory, tax or financial-reporting position, or on a party's reliance. A variance that endangers nobody's decision but changes a contractual position is immaterial under PCL and material under the foundational standard | A reading rule at the head of each certification volume's Definitions: where a definition here and a foundational definition bear on the same act, **the one producing the wider obligation governs**, and the `D-15` limbs apply in addition | **High** |
+| C-10 | All three certification sets | Element 21 in fifteen certification standards tests "a sample selected on a stated basis" or "a stated sample" without saying who selects it. The foundational set says "selected by the reviewer **and not by the professional**" every time, so the drafters knew it mattered. The preparer selects a favourable sample, records the basis, and the test passes | A reading rule at the head of each certification volume's Definitions: the sample is selected by the reviewer performing the test, and the reviewer records the basis | **Medium** |
+| C-11 | `PCI-PCL-STD-03.05` | Element 12 permitted an unchallenged forecast "in an emergency funding request", with the challenge to follow "within a stated period" — stated by nobody, with no outer limit. An emergency funding request is also the case in which `PCI-FND-STD-03` element 12 makes **no** waiver available. A professional could comply with the certification standard while breaching the foundational one, indefinitely | Element 12 now fixes the period (recorded by the decision owner at approval, and in any event before the next issue) and states the `PCI-FND-STD-03` carve-out expressly | **High** |
 | C-12 | `PCI-PML-STD-13.01` | Element 12 permits a release without complete acceptance evidence where the release is reversible or the residual risk is accepted. `PCI-PML-STD-16.01` covers "operational release … in every delivery model", permits no exception at all in respect of a mandatory precondition, and was not cited. An adaptive release into operational use could be taken under `13.01`'s exception with a safety case open | Element 12 of `13.01` now states that the exception does not reach a mandatory precondition, and cites `16.01` | **High** |
-| C-13 | `PCI-PCL-STD-*` (definitions) | PCL's *escalation threshold* is defined as "the event stated in element 13 of a law", with no clock. A matter that is material, or that endangers a person, but which no element 13 happens to enumerate, reaches no threshold — and no element 13 in PCL states a time | Definition now states that element 13 events are **additional to** `D-10`, and that the time is the organisation's published period or, failing that, `D-20` | **Medium** |
+| C-13 | `PCI-PCL-STD-*` (definitions) | PCL's *escalation threshold* is defined as "the event stated in element 13 of a standard", with no clock. A matter that is material, or that endangers a person, but which no element 13 happens to enumerate, reaches no threshold — and no element 13 in PCL states a time | Definition now states that element 13 events are **additional to** `D-10`, and that the time is the organisation's published period or, failing that, `D-20` | **Medium** |
 | C-14 | `PCI-PML-STD-*` (definitions) | PML's *escalation threshold* required a stated destination and a stated time, and said that a threshold lacking either "is not an escalation threshold". An organisation that omits the time from its delegation schedule therefore has no PML escalation thresholds and no PML escalation duties — a perverse incentive to draft badly | Definition now states that the absence of a documented threshold does not remove the duty: the destination defaults to the next authority above the decision owner, and the time to `D-20` | **Medium** |
 | C-15 | `PCI-FND-STD-03` (emergency) | See §6, E-1. A professional acting on an unverified item to protect a person had no compliant route, so the honest act was a breach | Bounded allowance added at element 12 | **High** |
-| C-16 | `PCI-FND-STD-08` (emergency) | See §6, E-2. Where withdrawal was the only available safeguard and the matter bore on a person's safety, the law required the only person able to act to stand aside | Bounded allowance added at element 12 | **High** |
+| C-16 | `PCI-FND-STD-08` (emergency) | See §6, E-2. Where withdrawal was the only available safeguard and the matter bore on a person's safety, the standard required the only person able to act to stand aside | Bounded allowance added at element 12 | **High** |
 | C-17 | `PCI-PML-STD-16.01` (emergency) | See §6, E-3. The credential holder was forbidden to "seek, recommend or record" a dispensation — including the owning authority's own lawful emergency derogation | Element 12 now states the route through the owning authority's own instrument, without conceding the duty | **High** |
 
-### Attacks that failed — the laws held
+### Attacks that failed — the standards held
 
 Recorded because a red-team report that lists only its successes overstates the defect rate. In each
 case a specific route was constructed and a specific provision defeated it.
 
-| Law | Route attempted | What defeated it |
+| Standard | Route attempted | What defeated it |
 |---|---|---|
 | `PCI-FND-STD-01` | Acceptance records entered in bulk at period end by an administrator | Element 21(c) attributability + (d) the no-notice question to the named individual |
 | `PCI-FND-STD-02` | Attach a document that does not support the claim and cite it | Element 21(c): the reviewer must reach the same magnitude, direction and qualification from the evidence alone |
@@ -163,7 +163,7 @@ and the reading rules below are a patch, not the cure (see **P-1**).
 | **independent** | `D-12`, five limbs; line reporting to the preparer's manager does **not** by itself defeat it, appraisal on the outcome does | Four facts, including not reporting to the preparer for that work | Four limbs, including **not in the preparer's reporting line at all** | Five limbs, relative to a specified matter | Four different tests for one word. PFL's is the strictest; `D-12`'s express carve-out for line reporting is contradicted by it. **Referred as R-4** |
 | **competent reviewer** | `D-04`, two limbs, **independence not required** | Independence built in | Independence **plus** written authorisation to record a conclusion | Did not prepare, direct, specify or approve | `PCI-FND-STD-10` element 12's supervised-acquisition exception requires the supervisor to be a `D-04` competent reviewer; under the certification definitions a supervisor can never qualify, so the exception is unusable. **Closed by the `D-NN` reading rule; the divergence referred as R-5** |
 | **verified** | `D-26` + `PCI-FND-STD-03-PR-01`: eight named methods | The same eight | **Seven** — *named expert judgement* absent, and *clause-to-summary comparison* renamed *clause-to-output comparison* | Split into V&V verification and AI verification, with a nine-item method list at element 16 of `14.02` | PFL is stricter, which is not a loophole, but the divergence was silent. **Now stated as deliberate with its reason; confirm with an SME — R-6** |
-| **escalation threshold** | `D-10`, six substantive triggers; reaching it starts the `D-20` clock | "The event stated in element 13 of a law" — no clock | A condition recorded before work begins | A documented value in the delegation schedule, with a time; without a time it "is not an escalation threshold" | Two live defects, **closed as C-13 and C-14** |
+| **escalation threshold** | `D-10`, six substantive triggers; reaching it starts the `D-20` clock | "The event stated in element 13 of a standard" — no clock | A condition recorded before work begins | A documented value in the delegation schedule, with a time; without a time it "is not an escalation threshold" | Two live defects, **closed as C-13 and C-14** |
 | **evidence** | `D-11`, with a closed list of four things that are **not** evidence | Similar, adds "an AI-generated summary of a record is not evidence of the underlying fact" | Similar | Similar, adds an unreproducible dashboard state | Compatible; no defect |
 | **decision owner** | `D-08` | §A | Core terms | Terms | Compatible; all four exclude committees without a named chair |
 
@@ -189,7 +189,7 @@ patterns were found.
 | # | Pattern | Where | Disposition |
 |---|---|---|---|
 | T-1 | **A sample the preparer chooses** — fifteen certification element-21 tests say "a sample selected on a stated basis" without naming the selector, against the foundational set's uniform "selected by the reviewer and not by the professional" | PCL `06.01` `06.02` `07.01` `07.02` `07.03` `11.01`; PML `01.01` `01.03` `09.01` `11.01` `12.01` `13.02` `15.01`; PFL `06.01` `16.03` | **Fixed as C-10** by a reading rule in each volume's Definitions. Individually rewriting fifteen element 21s was rejected as higher-risk than one interpretive rule |
-| T-2 | **A review that is the preparer re-reading their own work** | The four AI laws | **Fixed as C-1** |
+| T-2 | **A review that is the preparer re-reading their own work** | The four AI standards | **Fixed as C-1** |
 | T-3 | **A register that exists but is empty** | `PCI-PFL-STD-01.02` — the compliance test read the register rather than the transaction | **Fixed as C-3.** The same defect does **not** exist in `PCI-FND-STD-08`, whose element 21(e) already works from the participant, supplier, counterparty and vendor-selection records |
 | T-4 | **A document produced instead of the thing being done** | `PCI-PML-STD-03.03` — criteria published on time, written by the party they judge | **Fixed as C-2** |
 | T-5 | **A disclosure that discloses nothing** | `PCI-PFL-STD-14.02-PR-03` — the in-balance result is disclosed truthfully, computed on funding that does not exist | **Fixed as C-4** |
@@ -197,7 +197,7 @@ patterns were found.
 
 ---
 
-## 6. Front 4 — Conflicts between laws
+## 6. Front 4 — Conflicts between standards
 
 Nine conflicts found. Seven were plain drafting errors and are fixed. Two are genuine policy questions
 and are referred with the question stated.
@@ -206,8 +206,8 @@ and are referred with the question stated.
 
 | # | Pair | The conflict | Fix |
 |---|---|---|---|
-| X-1 | `PCI-FND-STD-03` ↔ `PCI-PCL-STD-13.02` / `13.03` / `PCI-PFL-STD-16.01` / `PCI-PML-STD-14.02` | Different independence thresholds on the same act. Charter §4 says the foundational law governs and "a PCI Law never lowers an obligation"; the certification laws lowered it on their face | Element 10 cross-references — see C-1 |
-| X-2 | `PCI-FND-STD-03` element 12 ↔ `PCI-PCL-STD-03.05` element 12 | The foundational law makes **no** waiver available where the item supports an irreversible commitment or a payment; the certification law offered an emergency funding request as its worked example of when the exception applies | C-11 |
+| X-1 | `PCI-FND-STD-03` ↔ `PCI-PCL-STD-13.02` / `13.03` / `PCI-PFL-STD-16.01` / `PCI-PML-STD-14.02` | Different independence thresholds on the same act. Charter §4 says the foundational standard governs and "a PCI Standard never lowers an obligation"; the certification standards lowered it on their face | Element 10 cross-references — see C-1 |
+| X-2 | `PCI-FND-STD-03` element 12 ↔ `PCI-PCL-STD-03.05` element 12 | The foundational standard makes **no** waiver available where the item supports an irreversible commitment or a payment; the certification standard offered an emergency funding request as its worked example of when the exception applies | C-11 |
 | X-3 | `PCI-PML-STD-16.01` ↔ `PCI-PML-STD-13.01` | Absolute no-exception rule against a release exception covering the same act | C-12 |
 | X-4 | `PCI-FND-STD-11` / `D-10` ↔ PCL *escalation threshold* | The certification definition narrowed the foundational duty and supplied no clock | C-13 |
 | X-5 | `PCI-FND-STD-11` / `D-20` ↔ PML *escalation threshold* | The certification definition extinguished the duty where the organisation drafted badly | C-14 |
@@ -222,7 +222,7 @@ within `D-05` must be disclosed; there is no threshold", and prohibits the profe
 oneself that a disclosed conflict needs no safeguard". `PCI-PFL-STD-01.02` element 1 triggers
 disclosure on what "a **reasonable party** to that financing would want to know", and its element 4
 states that "**the test is applied by the credential holder**". The wider-obligation reading rule means
-`D-05` still catches everything it catches, so the practical gap is closed — but the two laws state
+`D-05` still catches everything it catches, so the practical gap is closed — but the two standards state
 genuinely different philosophies of conflict disclosure (closed list versus judgement standard), and
 choosing between them is a policy decision.
 
@@ -236,7 +236,7 @@ A waiver of independent verification is available only where no person meeting `
 external reviewer can be engaged — and it is unavailable altogether where the item supports an
 irreversible commitment, a payment to a third party, an external report or a safety decision. For a
 sole practitioner or a two-person firm, essentially every material estimate supports a payment. The
-practical effect is that the foundational law requires a paid external reviewer on almost every
+practical effect is that the foundational standard requires a paid external reviewer on almost every
 material output of a very small practice.
 
 > **Question for the Interpretation Panel.** Is that effect intended? If it is, `PCI-FND-STD-03`
@@ -254,7 +254,7 @@ organisation.
 |---|---|---|---|
 | R-7 | `PCI-FND-STD-09` element 21(d) — the reviewer "searches the professional's outbound traffic, prompt history, shared-drive and mailbox records for the period" | The evidence may not be **producible without information the professional has no right to**: employee-monitoring, works-council and data-protection regimes restrict exactly this search in several jurisdictions, and a two-person firm has no logging to search. Element 18 cautions on personal data but the test is stated unconditionally | **Referred.** A red team should not narrow a confidentiality test; the Panel should decide whether (d) becomes "so far as the applicable monitoring and data-protection regime permits, and otherwise by a recorded attestation plus tool-inventory inspection" |
 | R-8 | `PCI-PFL-STD-14.04-PR-02` — three named individuals for prepare, authorise and reconcile, with **no *de minimis*** | Element 11's small case is "three people in the finance function". A genuine two-person borrower's finance function must buy an external administrator or a board member's time for every payment run | **Referred.** The obligation is right; whether the cost is proportionate at the very bottom of the range is a practitioner-consultation question |
-| R-9 | `PCI-FND-STD-12` element 21 — "the reviewer tests **one record known to have been amended**" | Where no in-period record was amended, the test cannot be completed, and a law that cannot be tested cannot be passed | **Referred** as an editorial correction for the Panel: "where any record was amended in the period" |
+| R-9 | `PCI-FND-STD-12` element 21 — "the reviewer tests **one record known to have been amended**" | Where no in-period record was amended, the test cannot be completed, and a standard that cannot be tested cannot be passed | **Referred** as an editorial correction for the Panel: "where any record was amended in the period" |
 | R-10 | `PCI-PFL-STD-13.01-PR-06` (new) | Requires the reviewer to form and record a view on which exclusions could be material — a judgement they may prefer not to record | **Accepted as proportionate.** It is one line in a document the reviewer already writes, and it is the only thing that makes a scoped-to-pass review visible |
 | R-11 | `PCI-PML-STD-12.02-PR-06` — the assurance-discovered versus team-reported indicator | Requires both populations to be classified consistently; on a small project the denominator may be two | **Held.** Element 11 already states that a register with no entries is not a breach, and the indicator is drawn from records the project already produces |
 
@@ -262,13 +262,13 @@ organisation.
 
 ## 8. Front 6 — Undefined judgement
 
-A mechanical sweep of the eight normative elements (1, 5, 6, 7, 12, 13, 15, 16) of all 113 laws for
+A mechanical sweep of the eight normative elements (1, 5, 6, 7, 12, 13, 15, 16) of all 113 standards for
 *appropriate*, *adequate*, *reasonable*, *relevant*, *timely*, *sufficient* and *promptly* returned
 **eight hits in total**, which is an unusually clean result for a corpus of this size.
 
 | # | Occurrence | Finding |
 |---|---|---|
-| U-1 | `PCI-PFL-STD-01.02` element 1 — "a **reasonable** party … would want to know" | Defined at element 4 of that law. **Not a defect**, but it is the judgement standard behind conflict **R-1** |
+| U-1 | `PCI-PFL-STD-01.02` element 1 — "a **reasonable** party … would want to know" | Defined at element 4 of that standard. **Not a defect**, but it is the judgement standard behind conflict **R-1** |
 | U-2 | `PCI-PCL-STD-06.01` and `06.04` element 15 — AI must not "decide that level of effort is **appropriate**" / "decide which method is **appropriate**" | Element 15 is a prohibition on an AI system, not an obligation on a person; the judgement word describes the thing the AI must not do. **Not a defect** |
 | U-3 | `PCI-PFL-STD-01.01` element 15 — AI must not conclude a project is "**adequately** funded" | As U-2. **Not a defect** |
 | U-4 | `PCI-PCL-STD-12.03` element 15 — AI must not "determine that remaining contingency is **sufficient**" | As U-2. **Not a defect** |
@@ -281,10 +281,10 @@ A mechanical sweep of the eight normative elements (1, 5, 6, 7, 12, 13, 15, 16) 
 
 ## 9. Stage 8 — Scenario testing
 
-Twenty-three laws against all eight case types. **P** = passes as drafted · **F→fix** = failed and was
+Twenty-three standards against all eight case types. **P** = passes as drafted · **F→fix** = failed and was
 fixed in this pass · **R** = failed or strained and is referred.
 
-| Law | Normal | Boundary | **Emergency** | Conflict | AI-assisted | Multi-jurisdiction | Small project | Megaproject |
+| Standard | Normal | Boundary | **Emergency** | Conflict | AI-assisted | Multi-jurisdiction | Small project | Megaproject |
 |---|---|---|---|---|---|---|---|---|
 | `PCI-FND-STD-03` | P | P | **F→fix E-1** | P | P | P | **R-2** | P |
 | `PCI-FND-STD-04` | P | P | P (named deputy) | P | P | P | P (one recorded line) | P |
@@ -316,8 +316,8 @@ fix, and `PCI-FND-STD-03`'s small-project cell carries **R-2**).
 
 ### The emergency case, worked
 
-The emergency case was the weakest, as expected. Three laws had no compliant route in a case that will
-certainly arise, and a law with no route in that case is a law that gets broken — which teaches
+The emergency case was the weakest, as expected. Three standards had no compliant route in a case that will
+certainly arise, and a standard with no route in that case is a standard that gets broken — which teaches
 contempt for the rest of the system. Each gained a **bounded route**, stating who may invoke it, what
 must still be recorded, what is never waived, and how it is ratified afterwards.
 
@@ -335,7 +335,7 @@ are what they are.
 
 **E-2 · `PCI-FND-STD-08`.** *Case:* the only person able to act on a safety matter holds a conflict, and
 element 10 makes withdrawal the only remaining safeguard where no independent person exists inside or
-outside the organisation. The law requires the only capable person to stand aside.
+outside the organisation. The standard requires the only capable person to stand aside.
 *Route added:* act **only to the extent necessary to protect that person**; record the conflict, the
 necessity and each act at the time; disclose in writing within one working day; withdraw as soon as
 another person can act; the person or body to whom the duty is owed records its position within five
@@ -354,7 +354,7 @@ anyone other than the owning authority remains prohibited; where the authority d
 reached, the decision remains **hold** and the consequences of holding are escalated under
 `PCI-FND-STD-11`.
 
-**Laws where no emergency exception exists, and the reason is now visible.** `PCI-FND-STD-14` (element
+**Standards where no emergency exception exists, and the reason is now visible.** `PCI-FND-STD-14` (element
 12 already enumerates urgency, volume, cost pressure, staffing, client instruction and vendor assurance
 and rejects each), `PCI-FND-STD-11`, `PCI-FND-STD-15`, `PCI-PFL-STD-14.04` (element 12 states the
 compliant urgent route is an alternative named authoriser, "never by collapsing the roles") and
@@ -365,8 +365,8 @@ available and takes no longer than the non-compliant one.
 
 ## 10. What was fixed
 
-Seventeen laws amended across four files. Three new process requirements. Every amendment is recorded
-in the amended law's element 25, and the file-level records point here.
+Seventeen standards amended across four files. Three new process requirements. Every amendment is recorded
+in the amended standard's element 25, and the file-level records point here.
 
 **`PCI_FOUNDATIONAL_STANDARDS.md`**
 - `PCI-FND-STD-03` element 12 — emergency allowance (E-1); reason stated for the four no-waiver cases.
@@ -400,7 +400,7 @@ in the amended law's element 25, and the file-level records point here.
 - `PCI-PML-STD-16.01` — element 12 emergency route.
 - Audit-table preamble updated. PR count 147 → 148.
 
-**What was deliberately not done.** No law was restructured, no identifier renumbered, no obligation
+**What was deliberately not done.** No standard was restructured, no identifier renumbered, no obligation
 weakened. Where a choice existed between loosening a duty and tightening a test, the test was tightened
 — including in `PCI-PFL-STD-16.01`, where the temptation was to add *named expert judgement* to the
 method list and the correct answer was to explain why it is absent.
@@ -415,16 +415,16 @@ subject-matter expert, and a red team that fixed them would be legislating.
 ### Structural
 
 **P-1 · There is no PCI Standards Definitions Register, and the corpus needs one.**
-Manual §4 permits a term to be defined "in the law that uses it, **or in the PCI Law Definitions
+Manual §4 permits a term to be defined "in the standard that uses it, **or in the PCI Standard Definitions
 Register**". No such register exists, so each volume built its own, and seven compliance-deciding terms
 now diverge across four files. The reading rules added in this pass are a patch that resolves *which*
 definition wins; they do not stop the definitions drifting further apart at the next edition, and they
-place an interpretive burden on every reader of every law. **Recommendation: create the register, move
+place an interpretive burden on every reader of every standard. **Recommendation: create the register, move
 the seven terms into it, and leave per-volume definitions only for genuinely credential-specific
 terms.** No file in the corpus has authority to do this.
 
 **P-2 · Charter §4's priority order is unsettled by counsel, and every conflict finding depends on it.**
-Charter §4 states this itself. Seven of the nine conflicts in §6 were resolved by applying "a PCI Law
+Charter §4 states this itself. Seven of the nine conflicts in §6 were resolved by applying "a PCI Standard
 never lowers an obligation". If counsel reaches a different view of the order, those resolutions are
 reopened.
 
@@ -491,12 +491,12 @@ right place to test all of them.
 claims) were read but not attacked substantively.** Both turn on subject matter this red team is not
 competent in — Islamic finance and sustainable-finance taxonomies. `PCI-FND-STD-10` is the reason for
 saying so rather than producing confident findings about them. **Both need a named subject specialist
-under Charter §5 Stage 4 before approval**, and `09.02` in particular, because it is the one law in the
+under Charter §5 Stage 4 before approval**, and `09.02` in particular, because it is the one standard in the
 corpus whose element 12 correctly records that PCI has no authority to grant an exception at all.
 
 **R-17 · Charter §5 Stage 4 (technical review) and Stage 6 (practitioner consultation) remain
 unperformed for all four files.** Nothing in this report substitutes for either. A red team can show
-that a law is gameable; only a practitioner can show that it is unworkable, and only a specialist can
+that a standard is gameable; only a practitioner can show that it is unworkable, and only a specialist can
 show that it is wrong.
 
 ---
@@ -508,26 +508,26 @@ $ cd /home/user/PCI/docs/books/laws && python3 check_standards.py
 PCI Standards — reference-integrity check
 ==============================================================================
 Files: PCI_FOUNDATIONAL_STANDARDS.md, PCL_AI_STANDARDS.md, PFL_AI_STANDARDS.md, PML_AI_STANDARDS.md
-Laws parsed: 113 (PCI 15, PCL 33, PFL 33, PML 32)
+Standards parsed: 113 (PCI 15, PCL 33, PFL 33, PML 32)
 
-  ok    duplicate identifiers                              113 laws, 532 process requirements, all unique
-  ok    twenty-five elements, in Manual §5 order           all 113 laws carry every element in order
+  ok    duplicate identifiers                              113 standards, 532 process requirements, all unique
+  ok    twenty-five elements, in Manual §5 order           all 113 standards carry every element in order
   ok    foundational citations resolve                     725 citations, all within `PCI-FND-STD-01`–`PCI-FND-STD-15`
-  ok    certification-law citations resolve                1469 citations against 98 published laws
+  ok    certification-standard citations resolve           1469 citations against 98 published standards
   ok    process-requirement citations resolve              594 citations against 532 defined requirements
-  ok    no `shall` in a law element or process requirement zero occurrences inside any of the 113 laws
+  ok    no `shall` in a standard element or process requirement zero occurrences inside any of the 113 standards
   ok    anchor domains within the credential range         PCL ≤ 13, PFL ≤ 16, PML ≤ 16
-  ok    STANDARDS_CONCORDANCE.md matches the law files           subjects and citation map current
+  ok    STANDARDS_CONCORDANCE.md matches the standard files           subjects and citation map current
 
 ------------------------------------------------------------------------------
-PASSED — 113 laws, 532 process requirements, 725 foundational citations and 1469 certification citations all resolve.
+PASSED — 113 standards, 532 process requirements, 725 foundational citations and 1469 certification citations all resolve.
 ```
 
 Exit code 0.
 
 ---
 
-*Charter §5 Stage 9 record, prepared 4 August 2026. Not a PCI Law; creates no obligation. The
+*Charter §5 Stage 9 record, prepared 4 August 2026. Not a PCI Standard; creates no obligation. The
 seventeen items in §11 are the agenda for human review and none of them was fixed in this pass.*
 
 > **AI proposes; the professional verifies, decides and remains accountable.**

@@ -7,15 +7,15 @@ Plain Python 3, no third-party imports. Run from anywhere:
 
 Exits 0 when every check passes, 1 otherwise. Checks, in the order reported:
 
-  1. Duplicate law identifiers.
+  1. Duplicate standard identifiers.
   2. Manual §5 structure — all twenty-five elements present, in order, correctly named.
-  3. Foundational citations — every `PCI-FND-STD-NN` resolves to a published foundational law.
-  4. Certification citations — every `PCI-<CRED>-LAW-DD.NN` resolves, in either direction.
+  3. Foundational citations — every `PCI-FND-STD-NN` resolves to a published foundational standard.
+  4. Certification citations — every `PCI-<CRED>-STD-DD.NN` resolves, in either direction.
   5. Process-requirement citations — every `<parent>-PR-NN` resolves to a defined requirement.
-  6. Manual §1 normative language — no `shall` inside a law element or a process requirement.
+  6. Manual §1 normative language — no `shall` inside a standard element or a process requirement.
      Front matter that names the word in order to explain the convention is permitted (Manual §1).
   7. Anchor domains — within each credential's Body of Knowledge range.
-  8. Concordance currency — STANDARDS_CONCORDANCE.md §1 and §2 match the published law files.
+  8. Concordance currency — STANDARDS_CONCORDANCE.md §1 and §2 match the published standard files.
 
 What this cannot check is the defect it was written after: a citation whose number resolves but whose
 subject is not the one the citing sentence describes. Only reading the sentence catches that. The
@@ -31,7 +31,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 FOUNDATIONAL = 'PCI_FOUNDATIONAL_STANDARDS.md'
 CERT_FILES = {'PCL': 'PCL_AI_STANDARDS.md', 'PFL': 'PFL_AI_STANDARDS.md', 'PML': 'PML_AI_STANDARDS.md'}
 CONCORDANCE = 'STANDARDS_CONCORDANCE.md'
-LAW_FILES = [FOUNDATIONAL] + [CERT_FILES[c] for c in ('PCL', 'PFL', 'PML')]
+STANDARD_FILES = [FOUNDATIONAL] + [CERT_FILES[c] for c in ('PCL', 'PFL', 'PML')]
 
 # Manual §5 — the twenty-five elements, in the order they must appear.
 ELEMENTS = [
@@ -39,7 +39,7 @@ ELEMENTS = [
     'Prohibited actions', 'Required evidence', 'Responsible role', 'Approval authority',
     'Independence requirement', 'Materiality or threshold', 'Exception and waiver',
     'Escalation trigger', 'AI application', 'AI prohibition', 'AI verification',
-    'External reference', 'Jurisdictional caution', 'Related PCI Laws',
+    'External reference', 'Jurisdictional caution', 'Related PCI Standards',
     'Related Body of Knowledge content', 'Compliance test', 'Breach indicators',
     'Consequence within PCI authority', 'Examination application', 'Version and status',
 ]
@@ -48,11 +48,11 @@ ELEMENTS = [
 DOMAIN_LIMIT = {'PCL': 13, 'PFL': 16, 'PML': 16}
 
 FND_ID = re.compile(r'PCI-FND-STD-(\d{2})(?![\d])')
-CERT_ID = re.compile(r'PCI-(PCL|PFL|PML)-LAW-(\d{2})\.(\d{2})(?![\d])')
-PR_ID = re.compile(r'PCI-[A-Z]{3}-LAW-[\d.]+-PR-\d{2}')
-PR_DEF = re.compile(r'^(?:-\s+)?\*\*`?(PCI-[A-Z]{3}-LAW-[\d.]+-PR-\d{2})`?\s*(?:—|\.)', re.M)
+CERT_ID = re.compile(r'PCI-(PCL|PFL|PML)-STD-(\d{2})\.(\d{2})(?![\d])')
+PR_ID = re.compile(r'PCI-[A-Z]{3}-STD-[\d.]+-PR-\d{2}')
+PR_DEF = re.compile(r'^(?:-\s+)?\*\*`?(PCI-[A-Z]{3}-STD-[\d.]+-PR-\d{2})`?\s*(?:—|\.)', re.M)
 HEADING = re.compile(r'^(#{2,6})\s+(.*)$', re.M)
-LAW_HEADING = re.compile(r'^(#{2,6})\s+PCI STANDARD\s+(\S+)\s+—\s+(.*)$', re.M)
+STANDARD_HEADING = re.compile(r'^(#{2,6})\s+PCI STANDARD\s+(\S+)\s+—\s+(.*)$', re.M)
 ELEMENT_MARK = re.compile(r'^\*\*(\d{1,2})\.\s+([^*]+?)\.\*\*', re.M)
 SHALL = re.compile(r'\bshall\b', re.I)
 
@@ -90,65 +90,65 @@ def read(fname):
         return fh.read()
 
 
-def parse_laws(fname, text):
-    """Return (laws, front_matter_end). A law's region runs from its heading to the next law
-    heading, or to the next heading at the same or higher level that is not a law heading."""
+def parse_standards(fname, text):
+    """Return (standards, front_matter_end). A standard's region runs from its heading to the next
+    standard heading, or to the next heading at the same or higher level that is not one."""
     headings = []
     for m in HEADING.finditer(text):
         level = len(m.group(1))
-        lm = LAW_HEADING.match(m.group(0))
+        lm = STANDARD_HEADING.match(m.group(0))
         headings.append({
             'pos': m.start(), 'end': m.end(), 'level': level,
-            'law': (lm.group(2), lm.group(3).strip()) if lm else None,
+            'standard': (lm.group(2), lm.group(3).strip()) if lm else None,
         })
-    laws = []
+    standards = []
     for i, h in enumerate(headings):
-        if not h['law']:
+        if not h['standard']:
             continue
         stop = len(text)
         for j in range(i + 1, len(headings)):
             n = headings[j]
-            if n['law'] or n['level'] <= h['level']:
+            if n['standard'] or n['level'] <= h['level']:
                 stop = n['pos']
                 break
-        laws.append({
-            'file': fname, 'id': h['law'][0], 'title': h['law'][1],
+        standards.append({
+            'file': fname, 'id': h['standard'][0], 'title': h['standard'][1],
             'start': h['pos'], 'stop': stop, 'body': text[h['end']:stop],
             'line': line_of(text, h['pos']),
         })
-    front_end = laws[0]['start'] if laws else len(text)
-    return laws, front_end
+    front_end = standards[0]['start'] if standards else len(text)
+    return standards, front_end
 
 
 def main():
     rep = Report()
-    texts = {f: read(f) for f in LAW_FILES}
-    laws = []
+    texts = {f: read(f) for f in STANDARD_FILES}
+    standards = []
     fronts = {}
-    for f in LAW_FILES:
-        got, front_end = parse_laws(f, texts[f])
-        laws.extend(got)
+    for f in STANDARD_FILES:
+        got, front_end = parse_standards(f, texts[f])
+        standards.extend(got)
         fronts[f] = front_end
 
     print('PCI Standards — reference-integrity check')
     print('=' * 78)
-    print('Files: %s' % ', '.join(LAW_FILES))
-    print('Laws parsed: %d (%s)' % (
-        len(laws), ', '.join('%s %d' % (f.split('_')[0], sum(1 for l in laws if l['file'] == f))
-                             for f in LAW_FILES)))
+    print('Files: %s' % ', '.join(STANDARD_FILES))
+    print('Standards parsed: %d (%s)' % (
+        len(standards), ', '.join('%s %d' % (f.split('_')[0], sum(1 for l in standards if l['file'] == f))
+                                  for f in STANDARD_FILES)))
     print()
 
     # ---------------------------------------------------------------- 1. duplicates
     seen = {}
     dup = []
-    for l in laws:
+    for l in standards:
         if l['id'] in seen:
             dup.append('`%s` defined twice — %s:%d and %s:%d'
                        % (l['id'], seen[l['id']]['file'], seen[l['id']]['line'], l['file'], l['line']))
         else:
             seen[l['id']] = l
     pr_defs = {}
-    for f in LAW_FILES:
+    for f in STANDARD_FILES:
         for m in PR_DEF.finditer(texts[f]):
             pid = m.group(1)
             if pid in pr_defs:
@@ -157,11 +157,11 @@ def main():
             else:
                 pr_defs[pid] = '%s:%d' % (f, line_of(texts[f], m.start()))
     rep.check('duplicate identifiers', dup,
-              '%d laws, %d process requirements, all unique' % (len(seen), len(pr_defs)))
+              '%d standards, %d process requirements, all unique' % (len(seen), len(pr_defs)))
 
     # ---------------------------------------------------------------- 2. structure
     struct = []
-    for l in laws:
+    for l in standards:
         found = ELEMENT_MARK.findall(l['body'])
         nums = [int(n) for n, _ in found]
         names = [n.strip() for _, n in found]
@@ -181,13 +181,13 @@ def main():
                 struct.append('`%s` (%s) element %d is named "%s", expected "%s"'
                               % (l['id'], l['file'], i + 1, got, want))
     rep.check('twenty-five elements, in Manual §5 order', struct,
-              'all %d laws carry every element in order' % len(laws))
+              'all %d standards carry every element in order' % len(standards))
 
     # ---------------------------------------------------------------- 3. foundational citations
-    fnd_ids = {l['id'][-2:] for l in laws if l['id'].startswith('PCI-FND-STD-')}
+    fnd_ids = {l['id'][-2:] for l in standards if l['id'].startswith('PCI-FND-STD-')}
     bad_fnd = []
     n_fnd = 0
-    for f in LAW_FILES + [CONCORDANCE]:
+    for f in STANDARD_FILES + [CONCORDANCE]:
         text = texts.get(f) or read(f)
         for m in FND_ID.finditer(text):
             n_fnd += 1
@@ -199,23 +199,23 @@ def main():
               % (n_fnd, max(fnd_ids)))
 
     # ---------------------------------------------------------------- 4. certification citations
-    cert_ids = {l['id'] for l in laws if not l['id'].startswith('PCI-FND-STD-')}
+    cert_ids = {l['id'] for l in standards if not l['id'].startswith('PCI-FND-STD-')}
     bad_cert = []
     n_cert = 0
-    for f in LAW_FILES + [CONCORDANCE]:
+    for f in STANDARD_FILES + [CONCORDANCE]:
         text = texts.get(f) or read(f)
         for m in CERT_ID.finditer(text):
             n_cert += 1
             if m.group(0) not in cert_ids:
-                bad_cert.append('%s:%d cites `%s`, which is not a published law'
+                bad_cert.append('%s:%d cites `%s`, which is not a published standard'
                                 % (f, line_of(text, m.start()), m.group(0)))
-    rep.check('certification-law citations resolve', bad_cert,
-              '%d citations against %d published laws' % (n_cert, len(cert_ids)))
+    rep.check('certification-standard citations resolve', bad_cert,
+              '%d citations against %d published standards' % (n_cert, len(cert_ids)))
 
     # ---------------------------------------------------------------- 5. process requirements
     bad_pr = []
     n_pr = 0
-    for f in LAW_FILES + [CONCORDANCE]:
+    for f in STANDARD_FILES + [CONCORDANCE]:
         text = texts.get(f) or read(f)
         for m in PR_ID.finditer(text):
             n_pr += 1
@@ -230,9 +230,9 @@ def main():
 
     # ---------------------------------------------------------------- 6. `shall`
     shall_err, shall_note = [], []
-    for f in LAW_FILES:
+    for f in STANDARD_FILES:
         text = texts[f]
-        spans = [(l['start'], l['stop'], l['id']) for l in laws if l['file'] == f]
+        spans = [(l['start'], l['stop'], l['id']) for l in standards if l['file'] == f]
         for m in SHALL.finditer(text):
             ln = line_of(text, m.start())
             inside = next((lid for a, b, lid in spans if a <= m.start() < b), None)
@@ -243,15 +243,15 @@ def main():
                 shall_note.append('%s:%d names "%s" in front matter — permitted where it explains '
                                   'the convention (Manual §1)' % (f, ln, m.group(0)))
             else:
-                shall_note.append('%s:%d names "%s" outside any law — check it is explanatory'
+                shall_note.append('%s:%d names "%s" outside any standard — check it is explanatory'
                                   % (f, ln, m.group(0)))
-    rep.check('no `shall` in a law element or process requirement', shall_err,
-              'zero occurrences inside any of the %d laws' % len(laws))
-    rep.warn('`shall` outside a law', shall_note)
+    rep.check('no `shall` in a standard element or process requirement', shall_err,
+              'zero occurrences inside any of the %d standards' % len(standards))
+    rep.warn('`shall` outside a standard', shall_note)
 
     # ---------------------------------------------------------------- 7. anchor domains
     bad_dom = []
-    for l in laws:
+    for l in standards:
         m = CERT_ID.match(l['id'])
         if not m:
             continue
@@ -273,20 +273,20 @@ def main():
 
     if conc:
         # §1 — subjects must match the foundational titles.
-        titles = {l['id'][-2:]: l['title'] for l in laws if l['id'].startswith('PCI-FND-STD-')}
+        titles = {l['id'][-2:]: l['title'] for l in standards if l['id'].startswith('PCI-FND-STD-')}
         for n, subject in re.findall(r'^\| `PCI-FND-STD-(\d\d)` \| ([^|]+?) \|', conc, re.M):
             want = titles.get(n)
             if want and subject.strip() != want:
-                conc_problems.append('§1 gives `PCI-FND-STD-%s` the subject "%s"; the law is titled '
-                                     '"%s"' % (n, subject.strip(), want))
-        # §2 — the citation map must match what the law files actually say.
+                conc_problems.append('§1 gives `PCI-FND-STD-%s` the subject "%s"; the standard is '
+                                     'titled "%s"' % (n, subject.strip(), want))
+        # §2 — the citation map must match what the standard files actually say.
         actual = {n: {c: [] for c in CERT_FILES} for n in titles}
         for cred, fname in CERT_FILES.items():
-            for l in [x for x in laws if x['file'] == fname]:
+            for l in [x for x in standards if x['file'] == fname]:
                 for n in sorted(set(FND_ID.findall(l['body']))):
                     if n in actual:
                         actual[n][cred].append(l['id'])
-        body = conc.split('## 2. Which certification laws cite which foundational law', 1)
+        body = conc.split('## 2. Which certification standards cite which foundational standard', 1)
         published = {}
         if len(body) == 2:
             for row in re.findall(r'^\| `PCI-FND-STD-(\d\d)` \|([^\n]*)$', body[1], re.M):
@@ -314,7 +314,7 @@ def main():
                            ' — missing ' + ', '.join('`%s`' % x for x in missing) if missing else '',
                            ' — lists ' + ', '.join('`%s`' % x for x in extra) +
                            ' which no longer cites it' if extra else ''))
-    rep.check('STANDARDS_CONCORDANCE.md matches the law files', conc_problems,
+    rep.check('STANDARDS_CONCORDANCE.md matches the standard files', conc_problems,
               'subjects and citation map current')
 
     # ---------------------------------------------------------------- report
@@ -328,8 +328,8 @@ def main():
                  ', %d note%s' % (len(rep.warnings), '' if len(rep.warnings) == 1 else 's')
                  if rep.warnings else ''))
         return 1
-    print('PASSED — %d laws, %d process requirements, %d foundational citations and %d '
-          'certification citations all resolve.' % (len(laws), len(pr_defs), n_fnd, n_cert))
+    print('PASSED — %d standards, %d process requirements, %d foundational citations and %d '
+          'certification citations all resolve.' % (len(standards), len(pr_defs), n_fnd, n_cert))
     if rep.warnings:
         print('         %d note%s recorded above.'
               % (len(rep.warnings), '' if len(rep.warnings) == 1 else 's'))

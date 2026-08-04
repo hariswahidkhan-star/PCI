@@ -1,9 +1,9 @@
-# PML-AI Professional Laws — PCI Project Management Leader – AI
+# PML-AI Professional Standards — PCI Project Management Leader – AI
 
 **Status:** Certification Standard set for the **PML-AI** credential (PCI Project Management Leader – AI).
-Version 2.0, drafted under the **PCI Standards Charter** (what a law is) and the **PCI Law
-Drafting Manual** (how a law is written). A law that does not conform to both does not pass gate.
-**Thirty-two laws and one hundred and forty-eight process requirements**, anchored across all sixteen
+Version 2.0, drafted under the **PCI Standards Charter** (what a standard is) and the **PCI Standard
+Drafting Manual** (how a standard is written). A standard that does not conform to both does not pass gate.
+**Thirty-two standards and one hundred and forty-eight process requirements**, anchored across all sixteen
 domains of the PML-AI Body of Knowledge (`../pml-ai/`).
 
 > **PCI Standards are private professional certification requirements established by Project
@@ -14,7 +14,7 @@ domains of the PML-AI Body of Knowledge (`../pml-ai/`).
 
 ---
 
-## How to read these laws
+## How to read these standards
 
 ### The two governing instruments
 
@@ -26,24 +26,24 @@ two documents prevail over anything below.
 
 ### Identifiers
 
-Each law is cited as **`PCI-PML-STD-DD.NN`**, where `DD` is the two-digit Body-of-Knowledge domain of
+Each standard is cited as **`PCI-PML-STD-DD.NN`**, where `DD` is the two-digit Body-of-Knowledge domain of
 primary anchorage and `NN` a two-digit sequence within that domain. Each process requirement is cited
 as **`PCI-PML-STD-DD.NN-PR-NN`**. Identifiers are stable and are the only citation form; page numbers
 are never used, because pagination changes. A withdrawn identifier is never reused.
 
 **This edition renumbers the whole set.** The previous edition used `PML-LAW-DD-NN`. Element 25 of
-each law records the identifier it supersedes, so a citation made under the old scheme can be
+each standard records the identifier it supersedes, so a citation made under the old scheme can be
 resolved. The old `PML-LAW-01-02` carried the title *Human Decision Authority in Delivery*, which
-collided with the foundational law **Human Decision Authority**; it is republished here as
+collided with the foundational standard **Human Decision Authority**; it is republished here as
 `PCI-PML-STD-01.02` under the distinguishing title **Reserved Delivery Decisions and the Named
 Human Decider**, and its obligation is narrowed to what a delivery leader must do that the
-foundational law does not already require.
+foundational standard does not already require.
 
 ### The normative language, and the ISO mapping
 
 PCI uses **modern must-drafting**, exclusively.
 
-| Word | Meaning in a PCI Law |
+| Word | Meaning in a PCI Standard |
 |---|---|
 | **must** | Mandatory PCI professional requirement |
 | **must not** | Prohibited practice; a breach |
@@ -54,7 +54,7 @@ PCI uses **modern must-drafting**, exclusively.
 **The ISO mapping, stated for readers who work to ISO/IEC drafting conventions.** In an ISO or IEC
 deliverable, requirements are expressed with the auxiliary verb that ISO/IEC Directives Part 2
 reserves for requirements, and a reader trained on those conventions may misread **must** as an
-external constraint rather than as the requirement itself. In a PCI Law, **must** *is* the
+external constraint rather than as the requirement itself. In a PCI Standard, **must** *is* the
 requirement form, and it occupies exactly the place that ISO/IEC drafting gives to its requirement
 verb. That verb is deliberately not printed anywhere in this file, in any field, including in
 quotations of PCI's own earlier drafts, because it has been read as both obligation and futurity and
@@ -63,12 +63,12 @@ for it before publication; the check is recorded in the audit table.
 
 **Consequence for the reader of the previous edition:** every rule in the 2026 v1.0 set that was
 drafted with that verb has been re-expressed here with **must**. No obligation was weakened in the
-translation; several were strengthened, and each such change is noted in element 25 of the law
+translation; several were strengthened, and each such change is noted in element 25 of the standard
 concerned.
 
 ### One obligation per requirement
 
-Element 1 of every law states **one** principal obligation. Everything else the law requires appears
+Element 1 of every standard states **one** principal obligation. Everything else the standard requires appears
 as a numbered **process requirement** under element 5. Process requirements are Level 4 instruments
 in the Charter's hierarchy: **they are mandatory**, they are breached independently of one another,
 and they are cited independently. Nothing in a note, a rationale, a bracket or a commentary sentence
@@ -77,11 +77,11 @@ the Interpretation Panel corrects it.
 
 ### The relationship to the Foundational Standards
 
-Every law below sits under the **PCI Foundational Standards**, which bind every credential holder in all
+Every standard below sits under the **PCI Foundational Standards**, which bind every credential holder in all
 three credentials. This file cites them in the Charter §3 identifier form `PCI-FND-STD-NN`. The
-foundational set is a **fifteen-law** set, and its subjects are listed below. This is the same
+foundational set is a **fifteen-standard** set, and its subjects are listed below. This is the same
 concordance the rebuilt PCL-AI Certification Standard set uses, so that `PCI-FND-STD-NN` denotes the same
-law in every credential's law file:
+standard in every credential's standard file:
 
 | ID | Subject | ID | Subject |
 |---|---|---|---|
@@ -94,15 +94,15 @@ law in every credential's law file:
 | `PCI-FND-STD-07` | Data lineage | `PCI-FND-STD-15` | Correction duty |
 | `PCI-FND-STD-08` | Conflict disclosure | | |
 
-**The published foundational file carries these fifteen laws under these identifiers.** Every
+**The published foundational file carries these fifteen standards under these identifiers.** Every
 `PCI-FND-STD-NN` citation below therefore resolves directly against
 [`PCI_FOUNDATIONAL_STANDARDS.md`](PCI_FOUNDATIONAL_STANDARDS.md), and the subject it carries there is the
 subject intended here. The superseded `PCI-LAW-F-NN` identifiers are recorded, for historical
 traceability only, in [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md); no live citation uses them.
 
-**A certification law must add.** Where a law below governs the same subject as a foundational law, it
+**A certification standard must add.** Where a standard below governs the same subject as a foundational standard, it
 states what leading projects, programmes and portfolios specifically requires that the foundational
-law does not — a named artefact, a named authority, a named record, a named test. A certification law
+standard does not — a named artefact, a named authority, a named record, a named test. A certification standard
 that only restates its parent is a defect and is listed as such in the audit table.
 
 ### External references
@@ -120,7 +120,7 @@ categories are never combined:
 | 6 | Ethical code | PMI Code of Ethics and Professional Conduct |
 | 7 | Industry guidance | *(not used)* |
 | 8 | Voluntary environmental or social framework | *(not used)* |
-| 9 | PCI internal professional law | the Foundational Standards and this set |
+| 9 | PCI internal professional standard | the Foundational Standards and this set |
 | 10 | Illustrative practice | the EU AI Act, the GDPR, the NIST AI RMF, the OECD AI Principles, the G20/OECD Principles of Corporate Governance |
 
 Four rules govern every entry, and each of them has been breached once somewhere in this corpus:
@@ -141,7 +141,7 @@ Four rules govern every entry, and each of them has been breached once somewhere
 **No clause number, article, edition or effective date is asserted in this file.** Editions live in
 the suite External-Reference Register (`../registries/EXTERNAL_AUTHORITIES.md`), dated, with their
 verification status; each element 17 entry gives the register reference (`EXT-0NN`) and the date the
-currency was checked. Where the register records an entry as not independently verified, the law says
+currency was checked. Where the register records an entry as not independently verified, the standard says
 so. **A reader relying on any instrument named below must obtain the current edition from its
 publisher.** Nothing here is reproduced from any of them.
 
@@ -155,7 +155,7 @@ file**, and the register reference is given so a reader can see both.
 Naming an external instrument means only that the instrument exists and bears on the topic under
 discussion. No standards
 body, professional institute, government, supervisory authority or employer has reviewed, approved,
-endorsed or accredited these laws, the PML-AI credential or PCI Global.
+endorsed or accredited these standards, the PML-AI credential or PCI Global.
 
 ### British English and the volume's forms
 
@@ -173,12 +173,12 @@ edition:
 | 1 Problem definition · 2 Drafting instruction | Yes | Named human commissioner; the drafting brief is the reconstruction specification for this edition |
 | 3 Initial draft | Yes | AI-assisted drafting against the Manual's structure |
 | 5 Standards and legal-characterisation review | Partial | Checked against the suite External-Reference Register; **no external publisher was contacted for this edition** |
-| 8 Scenario testing | Partial | Every law tested against a six-person internal project and a multi-partner national programme (element 11); other scenario classes untested |
+| 8 Scenario testing | Partial | Every standard tested against a six-person internal project and a multi-partner national programme (element 11); other scenario classes untested |
 | 9 Red-team challenge | Partial | The technical-compliance and unverifiable-requirement classes were worked; the full red-team is outstanding |
 | 10 Revision | Yes | Findings recorded in the audit table at the end of this file |
 | 4 Technical review · 6 Practitioner consultation · 7 Impact assessment · 11 Approval · 12 Publication · 13 Post-implementation review | **No** | Outstanding |
 
-**This set is therefore a draft pending approval.** Element 25 of every law says so. PCI is a small
+**This set is therefore a draft pending approval.** Element 25 of every standard says so. PCI is a small
 private certifier and this process must never be represented as equivalent in scale, independence or
 authority to that of a public standard-setter.
 
@@ -194,7 +194,7 @@ These definitions decide compliance. Every one is written as a test a reader can
 the thing what it is, measured against what, decided by whom — and none defines a term by itself.
 Where the suite terminology audit (`../registries/TERMINOLOGY_AUDIT.md`) records that a term carries
 genuinely different professional meanings across the three books, **both senses survive here and are
-flagged**; collapsing them would make the laws wrong.
+flagged**; collapsing them would make the standards wrong.
 
 **Where a term is also defined in the Foundational Standards.** *material*, *independent*, *evidence*,
 *competent reviewer*, *decision owner* and *escalation threshold* are also defined, at `D-01` to
@@ -207,13 +207,13 @@ that reconciliation; the register carries both senses of each, with the context 
 because collapsing a real collision would make this volume wrong.
 
 Three reading rules remain, and they still matter for any term this reconciliation did not reach.
-First, **where a foundational law states its own defined term by its `D-NN` number, that definition
+First, **where a foundational standard states its own defined term by its `D-NN` number, that definition
 governs that foundational obligation**, and nothing here narrows it. Second, **where a definition here
 and a foundational definition both bear on the same act, the one producing the wider obligation
-governs** — Charter §4 states that a PCI Law never lowers an obligation. Third, a term defined here and
+governs** — Charter §4 states that a PCI Standard never lowers an obligation. Third, a term defined here and
 not there is a PML-AI term and carries only the sense given here.
 
-**How element 21 samples are drawn.** Where a law's element 21 tests "a stated sample", the sample is
+**How element 21 samples are drawn.** Where a standard's element 21 tests "a stated sample", the sample is
 selected by the reviewer performing the test, not by the credential holder whose work is under review,
 and the reviewer records the basis of selection.
 
@@ -233,7 +233,7 @@ usage.*
 - **Benefits baseline** — the measured pre-change position from which a benefit is measured, captured
   before the change and never reconstructed after it.
 
-Where both senses could be meant in one sentence, this set writes the qualified form. A law that says
+Where both senses could be meant in one sentence, this set writes the qualified form. A standard that says
 *baseline* in a benefits context and means the plan is a defect.
 
 **benefit** — A measurable improvement resulting from an outcome, owned by a named individual outside
@@ -246,14 +246,14 @@ item, satisfies all of: (a) their competence in the subject matter is evidenced 
 assessed competence record or documented experience of comparable work, **recorded for that class of
 review before the review begins**; (b) they are able to state what would make the item wrong and which
 method would detect that error; and (c) they hold the technical knowledge and delivery experience to
-perform the verification method the law requires and to reach a conclusion on the matter **without
+perform the verification method the standard requires and to reach a conclusion on the matter **without
 relying on the preparer's explanation of it**. Competence is recorded against the class of work, not
 against seniority, job title or availability. **Independence is not a limb of competence:** the
 requirement that the reviewer did not prepare, direct, specify or approve the thing being reviewed is
-*independence*, defined below, and it is imposed by each law's element 10 rather than by this
+*independence*, defined below, and it is imposed by each standard's element 10 rather than by this
 definition. The two were previously folded together here, which made `PCI-FND-STD-10` element 12's
 supervised-acquisition exception unusable, because that exception needs a reviewer who is competent and
-is precisely not independent — a supervisor. No law loses an independence requirement by the change:
+is precisely not independent — a supervisor. No standard loses an independence requirement by the change:
 every element 10 that required one still states it.
 
 **decision owner** — *(Canonical — `D-08`.)* The single named individual holding authority, under the
@@ -455,7 +455,7 @@ others without asking the author.
 - **V&V verification** — the check that what was built is what was specified. (Its partner,
   *validation*, asks whether what was built produces the outcome that was needed.)
 - **AI verification** — a named human's check of machine output against source before reliance on it.
-  This is the sense carried by the suite principle and by element 16 of every law below. **The test is
+  This is the sense carried by the suite principle and by element 16 of every standard below. **The test is
   the canonical *verified* at `D-26`**: a named *competent reviewer* applies one of the eight
   admissible methods — independent recomputation, source tracing, clause-to-summary comparison,
   sampling on a stated basis, reconciliation, boundary testing, sensitivity analysis, or named expert
@@ -466,7 +466,7 @@ others without asking the author.
 
 Where a sentence could carry either sense, this set writes the qualified form. **The two senses are a
 declared collision, not a defect**: collapsing V&V verification into AI verification would make this
-set's delivery-assurance laws wrong. Both are recorded at
+set's delivery-assurance standards wrong. Both are recorded at
 [`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md) §4 with the context each belongs
 to, and at `../registries/TERMINOLOGY_AUDIT.md` Issue 9.
 
@@ -480,7 +480,7 @@ remain personally accountable for every delivery decision taken under their auth
 decision informed, drafted, modelled or recommended by an AI system, an adviser, a supplier or a
 committee.
 
-**2. Purpose.** Delivery leadership is an accountable role, not a coordinating one. Every other law in
+**2. Purpose.** Delivery leadership is an accountable role, not a coordinating one. Every other standard in
 this set assumes there is one identifiable person who answers for the decision. Where accountability
 is diffused across a governance diagram, a delivery partner and an analytics platform, nobody answers
 and the project drifts unowned until it fails visibly.
@@ -534,7 +534,7 @@ approved by the leader.
 accountability is by definition non-independent of delivery; independence attaches instead to the
 assurance of these records, which `PCI-PML-STD-01.03-PR-06` governs.
 
-**11. Materiality or threshold.** This law sets no number. The materiality of a delivery decision is
+**11. Materiality or threshold.** This standard sets no number. The materiality of a delivery decision is
 decided by the definition of *material* above, applied against the organisation's documented
 delegation schedule. The credential holder must apply the documented thresholds; where the
 organisation has none for a decision class, the credential holder must record that gap and treat every
@@ -576,7 +576,7 @@ human owner, a reasoning field and a versioned information reference are present
   sponsor and a project manager · edition not asserted here; recorded at **EXT-028** in the suite
   External-Reference Register · **Manual §6 category 3 — international voluntary standard** · currency
   checked 2026-08-03 · limitation: guidance only, voluntary unless imported by contract or regulation;
-  nothing is certifiable against it; it is not the source of this law's obligation.
+  nothing is certifiable against it; it is not the source of this standard's obligation.
 - **ISO** · *ISO 21505, Project, programme and portfolio management — Guidance on governance* · relied
   on for: the location of delivery accountability inside an organisation's governance arrangements ·
   **EXT-032**, recorded as **not independently verified — verify current requirements** · **Manual §6
@@ -596,7 +596,7 @@ roles, employment law and the law of professional negligence determine **legal**
 independently of this professional requirement, and can place it on a person other than the credential
 holder. Obtain local legal advice on the statutory roles attaching to a specific project and entity.
 
-**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-02`; `PCI-FND-STD-04`; `PCI-FND-STD-12`;
+**19. Related PCI Standards.** `PCI-FND-STD-01`; `PCI-FND-STD-02`; `PCI-FND-STD-04`; `PCI-FND-STD-12`;
 `PCI-FND-STD-15`; `PCI-PML-STD-01.02`; `PCI-PML-STD-03.02`; `PCI-PML-STD-03.04`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 1 · KA 1.2 The project leader's
@@ -643,11 +643,11 @@ the organisation has reserved to a human decider is taken by the named individua
 authority, on evidence that individual has examined, and must not permit such a decision to be
 executed on the output of an automated or AI system without that examination.
 
-**2. Purpose.** `PCI-FND-STD-04` establishes that a human decides. This law addresses what is specific
+**2. Purpose.** `PCI-FND-STD-04` establishes that a human decides. This standard addresses what is specific
 to delivery: automation in delivery does not usually announce itself as a decision. A prioritisation
 engine reorders a backlog, a scheduling tool re-sequences a network, a resource optimiser reassigns
 people, a risk model closes a risk — and each of those is a decision that has already taken effect by
-the time a human sees it. The failure this law prevents is **decision by default**: nobody decided,
+the time a human sees it. The failure this standard prevents is **decision by default**: nobody decided,
 the system acted, and the record shows an approval that was never an examination.
 
 **3. Scope.** Every credential holder in a delivery leadership or delivery governance role, for every
@@ -702,8 +702,8 @@ parameters, weights or thresholds for the decision in question. Where the same p
 both on a small project, `PCI-PML-STD-01.03-PR-05` applies and the arrangement is recorded and reported
 to the sponsor.
 
-**11. Materiality or threshold.** This law sets no number. The reserved-class list *is* the threshold
-instrument, and this law requires that it exists, is approved, is dated, and is applied. The listed
+**11. Materiality or threshold.** This standard sets no number. The reserved-class list *is* the threshold
+instrument, and this standard requires that it exists, is approved, is dated, and is applied. The listed
 minimum classes above are the floor; the organisation's governance sets everything else.
 *Six-person internal project:* the list is seven lines and the inventory is three rows — most such
 projects run one scheduling tool, one issue tracker and one spreadsheet with a model in it.
@@ -753,7 +753,7 @@ such number by an independent method and record the comparison.
   risk-tiered regulatory shape that treats human oversight as a design question · **EXT-100** ·
   **Manual §6 category 1 — applicable legislation or regulation** · currency checked 2026-08-03 · limitation: **binding
   legislation within the European Union only**, named here only to illustrate the shape; it is
-  relied on for no requirement in this law, and whether it applies to a given project is a question for
+  relied on for no requirement in this standard, and whether it applies to a given project is a question for
   qualified local counsel.
 
 **18. Jurisdictional caution.** Whether a particular automated decision is lawful, whether it triggers
@@ -761,7 +761,7 @@ a transparency, human-review or impact-assessment duty, and what disclosure is o
 person are jurisdiction-specific questions. Obtain local legal advice before deploying automation that
 affects people's work allocation, pay, assessment or employment.
 
-**19. Related PCI Laws.** `PCI-FND-STD-04`; `PCI-FND-STD-03`; `PCI-FND-STD-14`; `PCI-FND-STD-13`;
+**19. Related PCI Standards.** `PCI-FND-STD-04`; `PCI-FND-STD-03`; `PCI-FND-STD-14`; `PCI-FND-STD-13`;
 `PCI-PML-STD-01.01`; `PCI-PML-STD-03.02`; `PCI-PML-STD-13.02`; `PCI-PML-STD-14.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 1 · KA 1.4 Ethics and the responsible use of
@@ -793,10 +793,10 @@ whether a decision has been taken, by whom, and what must happen next. Evidence 
 artefact proves a human examined the recommendation rather than approved it.
 
 **25. Version and status.** Version 2.0 · **not yet approved** · effective on approval · supersedes
-`PML-LAW-01-02` v1.0. Amendment note: **retitled** to remove the collision with the foundational law
+`PML-LAW-01-02` v1.0. Amendment note: **retitled** to remove the collision with the foundational standard
 *Human Decision Authority*; obligation narrowed to what delivery leadership adds — the reserved-class
 list, the automation inventory, the prohibition on automatic effect and the examination record — so the
-law adds rather than restates; renumbered and restructured; legislative drafting removed.
+standard adds rather than restates; renumbered and restructured; legislative drafting removed.
 
 ---
 
@@ -808,7 +808,7 @@ recommendation, evaluation or assurance opinion on a matter in which they hold a
 **2. Purpose.** Until the current edition of the PML-AI manuscript set, the phrase *conflict of
 interest* appeared nowhere in it. The volume taught gates, steering committees, weighted scoring,
 supplier selection and three lines of assurance, and none of that machinery carried a rule about **who
-is barred from deciding**. That gap is now closed in the manuscript at Domain 1, KA 1.2.2a; this law is its
+is barred from deciding**. That gap is now closed in the manuscript at Domain 1, KA 1.2.2a; this standard is its
 enforceable counterpart. The failure it prevents is the one the machinery cannot see: a decision that
 is procedurally perfect — criteria published, scores recorded, minutes taken — and taken by a person
 whose judgement was engaged elsewhere. Its hardest case is **assurance capture**, where the second line
@@ -877,11 +877,11 @@ abstention on an item. The sponsor determines a structural interest touching a p
 governing body determines a structural interest touching the sponsor, the assurance function or the
 chair. **The interested party never determines their own case.**
 
-**10. Independence requirement.** This law *is* the independence requirement for the set. Its `PR-06`
+**10. Independence requirement.** This standard *is* the independence requirement for the set. Its `PR-06`
 test is applied by matching names, not by relying on titles: a permanently titled independent function
 is not independent of an artefact whose authorship record carries its name.
 
-**11. Materiality or threshold.** This law sets no financial threshold, and one would defeat it — a
+**11. Materiality or threshold.** This standard sets no financial threshold, and one would defeat it — a
 personal connection has no value in currency. The test is the definition of *conflict of interest*
 above, applied by the chair, together with the daylight test the manuscript states at KA 1.4.1: would
 every party seeing the full picture still regard the decision as impartial? Where an organisation's
@@ -926,10 +926,10 @@ trace each assurer's name against the assured artefact's authorship and approval
   existence of a professional expectation of conflict disclosure and impartiality · **EXT-063**,
   recorded as **not independently verified — verify current requirements** · **Manual §6 category 6 —
   ethical code** · limitation: binding only where a body, regulator or engagement has adopted it; a PCI
-  credential holder not subject to it is not made subject to it by this law. No text is reproduced.
+  credential holder not subject to it is not made subject to it by this standard. No text is reproduced.
 - **ISO/IEC** · *ISO/IEC 17024, Conformity assessment — General requirements for bodies operating
   certification of persons* · relied on for: the existence of impartiality requirements on bodies that
-  certify people, which is why PCI holds itself to this law as well · **EXT-022** · **Manual §6
+  certify people, which is why PCI holds itself to this standard as well · **EXT-022** · **Manual §6
   category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation: it binds
   certification bodies, not credential holders; voluntary unless imported.
 - **OECD (G20/OECD)** · *G20/OECD Principles of Corporate Governance* · relied on for: the existence of
@@ -939,18 +939,18 @@ trace each assurer's name against the assured artefact's authorship and approval
 
 **18. Jurisdictional caution.** Public-procurement law, anti-bribery law, company law, charity law and
 sector regulation impose their own conflict rules, registration duties and criminal consequences, and
-they differ by jurisdiction and by the nature of the buying entity. Compliance with this law is not
+they differ by jurisdiction and by the nature of the buying entity. Compliance with this standard is not
 compliance with any of them. Obtain local legal advice before designing a declaration or evaluation
 process for a publicly funded procurement.
 
-**19. Related PCI Laws.** `PCI-FND-STD-08` (the parent disclosure obligation); `PCI-FND-STD-01`;
+**19. Related PCI Standards.** `PCI-FND-STD-08` (the parent disclosure obligation); `PCI-FND-STD-01`;
 `PCI-FND-STD-10`; `PCI-PML-STD-03.03`; `PCI-PML-STD-09.01`; `PCI-PML-STD-10.01`;
 `PCI-PML-STD-12.02`.
-**What this law adds to `PCI-FND-STD-08`:** the foundational law requires disclosure of a conflict.
-This law requires
+**What this standard adds to `PCI-FND-STD-08`:** the foundational standard requires disclosure of a conflict.
+This standard requires
 **abstention with a named substitute decider**, requires a **nil return** so silence becomes evidence,
 requires a **role change** for structural interests, and applies a **name-matching test to assurance
-independence** — none of which the foundational law states.
+independence** — none of which the foundational standard states.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 1 · KA 1.2 · topic 1.2.2a Interests,
 competence and confidentiality. Also Domain 3 KA 3.3 topics 3.3.2 assurance lines and 3.3.4 the decision
@@ -987,8 +987,8 @@ for a month. Evidence selection: which two artefacts would show whether an award
 an interested party. Scenario judgement: a steering member's former employer is one of three bidders and
 the member offers to "stay in the room but not vote".
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law** —
-there is no predecessor in the v1.0 set, and its absence was the completeness finding this law answers.
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard** —
+there is no predecessor in the v1.0 set, and its absence was the completeness finding this standard answers.
 Amendment note: none.
 
 ---
@@ -1066,10 +1066,10 @@ authority level the delegation schedule sets. On a project too small to supply s
 internally, independence may be met by a named reviewer from another part of the organisation who did
 not contribute to the case, and the arrangement is recorded.
 
-**11. Materiality or threshold.** This law sets no percentage. A misstatement is material when it meets
+**11. Materiality or threshold.** This standard sets no percentage. A misstatement is material when it meets
 the definition of *material* above — it could reasonably have changed the approval, its conditions or
 the authority at which it was taken. The organisation's governance sets the documented approval
-thresholds and the documented tolerance for restatement, and this law requires that those documented
+thresholds and the documented tolerance for restatement, and this standard requires that those documented
 figures exist, are approved, and are applied. Where an organisation has no documented tolerance, the
 credential holder must escalate every restatement.
 *Six-person internal project:* the case is four pages, the assumption register is eight rows and the
@@ -1126,10 +1126,10 @@ listed-company disclosure duties and grant conditions impose their own appraisal
 disclosure requirements, and misstating a case to obtain public funds can engage criminal law. Obtain
 local legal advice where a case supports a regulated funding application or a market disclosure.
 
-**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-PML-STD-02.02`;
+**19. Related PCI Standards.** `PCI-FND-STD-05`; `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-PML-STD-02.02`;
 `PCI-PML-STD-03.03`; `PCI-PML-STD-15.02`; `PCI-PML-STD-16.03`.
-**What this law adds to `PCI-FND-STD-05`:** the foundational law requires assumptions to be
-transparent. This law requires **symmetric treatment across options**, an **owned and dated
+**What this standard adds to `PCI-FND-STD-05`:** the foundational standard requires assumptions to be
+transparent. This standard requires **symmetric treatment across options**, an **owned and dated
 assumption
 register**, an **honestly drawn do-minimum**, **restatement at every gate**, and **kill criteria fixed
 before approval** — the specific mechanics by which a delivery business case goes wrong.
@@ -1231,9 +1231,9 @@ sense defined above: not accountable for delivering the output, and answering in
 operating organisation. Measurement of realised benefits must be produced by, or verified by, a party
 independent of the delivery team — see `PCI-PML-STD-16.03`.
 
-**11. Materiality or threshold.** This law sets no threshold, because ownership is binary: a benefit is
+**11. Materiality or threshold.** This standard sets no threshold, because ownership is binary: a benefit is
 owned or it is not. The organisation's governance sets which benefits are individually tracked and
-which are aggregated, and this law requires that documented rule to exist and to be applied. A benefit
+which are aggregated, and this standard requires that documented rule to exist and to be applied. A benefit
 below the documented individual-tracking threshold must still carry a named owner for its aggregate.
 *Six-person internal project:* one benefit, one owner, one measure already produced monthly by an
 existing report — the whole obligation is three cells in a table.
@@ -1279,7 +1279,7 @@ against both components' registers.
 tax authority, the accuracy of the claim can engage funding-condition, disclosure or fraud law. Obtain
 local legal advice before a benefits statement is made outside the organisation.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-01`; `PCI-FND-STD-12`; `PCI-PML-STD-02.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-01`; `PCI-FND-STD-12`; `PCI-PML-STD-02.01`;
 `PCI-PML-STD-15.02`; `PCI-PML-STD-16.02`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 2 · KA 2.3 Benefits, value and sustainability
@@ -1312,7 +1312,7 @@ the sum of its components' distinct improvements.
 `PML-LAW-02-02` v1.0. Amendment note: renumbered and restructured; legislative drafting removed; the
 benefits-baseline sense of *baseline* separated from the control sense per the suite terminology audit;
 the compliance test strengthened to require confirmation with sampled owners, which is what makes the
-law provable rather than documentary.
+standard provable rather than documentary.
 
 ---
 
@@ -1371,14 +1371,14 @@ artefacts. The **sponsor**, for securing their approval. The governing body, for
 
 **9. Approval authority.** The governing body approves the delegation schedule and the gate points. The
 sponsor approves the tailoring decision within the governing body's stated limits. The project leader
-approves nothing in this law.
+approves nothing in this standard.
 
 **10. Independence requirement.** The approval of the governance arrangements must be taken by a body
 independent of the delivery organisation in the sense defined above. Where a delivery partner sits on
 the approving body, that partner's members must abstain from the approval of the delegation schedule
 under `PCI-PML-STD-01.03-PR-04`.
 
-**11. Materiality or threshold.** This law sets no financial trigger for "commitment", because
+**11. Materiality or threshold.** This standard sets no financial trigger for "commitment", because
 organisations define commitment differently — order, contract signature, purchase requisition, hire.
 The credential holder must apply the organisation's documented definition of commitment and its
 documented approval thresholds; where none is documented, the credential holder must escalate before
@@ -1431,7 +1431,7 @@ authority under statute and grant conditions determine who may lawfully bind an 
 professionally correct delegation schedule can still be legally ineffective. Obtain local legal advice
 on authority to contract for the specific entity and funding route.
 
-**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-12`; `PCI-PML-STD-03.02`;
+**19. Related PCI Standards.** `PCI-FND-STD-01`; `PCI-FND-STD-12`; `PCI-PML-STD-03.02`;
 `PCI-PML-STD-03.03`; `PCI-PML-STD-03.04`; `PCI-PML-STD-13.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.1 Governance models · topics 3.1.1
@@ -1475,7 +1475,7 @@ aggregate a decision so as to avoid the authority the schedule requires.
 **2. Purpose.** Delegation schedules fail in two directions, and both are common. Upward: everything
 goes to the steering committee, the committee becomes a queue, and the escalation that matters arrives
 behind forty that do not. Downward: a decision above the limit is split into three below it, or taken
-under an urgency provision that becomes ordinary practice. This law addresses the second, which is the
+under an urgency provision that becomes ordinary practice. This standard addresses the second, which is the
 one that produces exposure nobody approved.
 
 **3. Scope.** Every credential holder taking, recommending, ratifying or recording a delivery decision,
@@ -1521,7 +1521,7 @@ records showing destination and elapsed time against the stated time.
 role the schedule assigns for each other class. The governing body owns the schedule itself.
 
 **9. Approval authority.** The governing body approves the delegation schedule, its thresholds, its
-aggregation rule and its relatedness class. The sponsor approves nothing in this law that would raise
+aggregation rule and its relatedness class. The sponsor approves nothing in this standard that would raise
 their own authority.
 
 **10. Independence requirement.** Not applicable to the taking of a decision within delegated authority,
@@ -1529,9 +1529,9 @@ because delegation exists precisely so that the accountable party decides; indep
 periodic testing of the schedule's operation, which must be performed by a competent reviewer
 independent of the decisions tested.
 
-**11. Materiality or threshold.** **This law invents no figure and no percentage**, and doing so would be
+**11. Materiality or threshold.** **This standard invents no figure and no percentage**, and doing so would be
 wrong: delegated authority levels are set by an organisation's own governance against its own balance
-sheet, risk appetite and decision rate. What this law requires is that documented thresholds, a
+sheet, risk appetite and decision rate. What this standard requires is that documented thresholds, a
 documented aggregation rule, a documented relatedness class and a documented period exist, and are
 applied. Where a threshold has been set without reference to the observed decision rate, so that it
 either never trips or trips on ordinary traffic, the credential holder must record that finding and
@@ -1582,14 +1582,14 @@ entries and confirm against source minutes that the recorded value, class and au
 - **COSO** · *Internal Control — Integrated Framework* · relied on for: the existence of an
   authorisation control concept · **EXT-084** · **Manual §6 category 10 — illustrative practice** ·
   currency checked 2026-08-03 · limitation: voluntary in itself, though widely imported by regulators;
-  it is not legislation and this law does not rely on it for any requirement.
+  it is not legislation and this standard does not rely on it for any requirement.
 
 **18. Jurisdictional caution.** Whether a person has legal authority to bind an entity is determined by
 company law, delegated statutory authority, procurement regulation and the entity's own constitution,
 not by a delegation schedule. A decision within delegated professional authority can still be legally
 ineffective. Obtain local legal advice on binding authority.
 
-**19. Related PCI Laws.** `PCI-FND-STD-04`; `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-FND-STD-13`;
+**19. Related PCI Standards.** `PCI-FND-STD-04`; `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-FND-STD-13`;
 `PCI-PML-STD-01.01`; `PCI-PML-STD-03.01`; `PCI-PML-STD-04.01`; `PCI-PML-STD-08.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.2 Sponsorship and steering · topic
@@ -1699,7 +1699,7 @@ assurance opinion must be given by a competent reviewer independent of the pack'
 the name-matching rule in `PCI-PML-STD-01.03-PR-06`. **An assurance function must not opine on a plan it
 helped produce**, and the opinion must state positively that it did not.
 
-**11. Materiality or threshold.** This law sets no number. Which gates require independent assurance,
+**11. Materiality or threshold.** This standard sets no number. Which gates require independent assurance,
 what evidence depth each gate requires, and what tolerance triggers a hold are set by the organisation's
 governance and must be documented and applied. The credential holder must apply the documented depth;
 where a gate's evidence requirement is not documented, they must record the gap and escalate it.
@@ -1745,7 +1745,7 @@ against the source and confirm the summary states the same position, including i
   certifiable requirement for documented information and its control · **EXT-033** · **Manual §6
   category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation: **this is
   the certifiable one in the ISO 9000 family**, but certification is voluntary and concerns a management
-  system; a project is not certified against it and this law does not import its requirements.
+  system; a project is not certified against it and this standard does not import its requirements.
 - **ISO** · *ISO 21505, Guidance on governance* · relied on for: the existence of assurance lines within
   governance · **EXT-032**, **not independently verified** · **Manual §6 category 3** · limitation: as
   above, with an open verification status.
@@ -1755,7 +1755,7 @@ consent or a statutory notification, the effective decision belongs to the body 
 a professional gate decision does not substitute for it. Obtain local legal advice on which approvals a
 specific project requires and who may grant them.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-PML-STD-01.03`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-PML-STD-01.03`;
 `PCI-PML-STD-03.01`; `PCI-PML-STD-09.01`; `PCI-PML-STD-16.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.3 Assurance, gates and escalation ·
@@ -1793,7 +1793,7 @@ closed and the project is at its final gate.
 `PML-LAW-03-03` v1.0. Amendment note: renumbered and restructured; legislative drafting removed; the
 criteria-before-evidence ordering, criterion assessability, per-item provenance, condition fields and
 recorded dissent separated into five process requirements; compliance test replaced with a date-ordering
-and re-application test two reviewers can independently perform. **Stage 9 amendment:** the law fixed
+and re-application test two reviewers can independently perform. **Stage 9 amendment:** the standard fixed
 *when* the criteria are published but not *who* sets them, so a project could publish its own
 trivially satisfiable criteria before assembling evidence and comply in full while producing the
 unfailable gate element 2 describes; `PR-06` and step (f) of element 21 require the criteria to be
@@ -1847,7 +1847,7 @@ without written confirmation. Allowing a delivery supplier to supply the sponsor
 decision-service-level record and the log of reserved decisions with elapsed times; escalations raised
 on breach; sponsor-change handover records.
 
-**8. Responsible role.** The named credential holder leading delivery, for every obligation in this law.
+**8. Responsible role.** The named credential holder leading delivery, for every obligation in this standard.
 The governing body appoints the sponsor and answers for the appointment.
 
 **9. Approval authority.** The governing body appoints and replaces the sponsor and approves the
@@ -1859,8 +1859,8 @@ by, contracted to, or remunerated by reference to the performance of the organis
 work. Where the organisation is delivering to itself, the sponsor must sit outside the delivery
 reporting line for the purpose of the project.
 
-**11. Materiality or threshold.** This law sets no number. The reserved-decision list and the decision
-service level are set by the organisation's governance, and this law requires that both are documented
+**11. Materiality or threshold.** This standard sets no number. The reserved-decision list and the decision
+service level are set by the organisation's governance, and this standard requires that both are documented
 and applied. Where the organisation states no service level, the credential holder must propose one in
 writing and record the sponsor's response.
 *Six-person internal project:* the sponsor is a line director, the reserved list is four items, and the
@@ -1908,7 +1908,7 @@ carries statutory or regulatory duties — for safety, for public funds, for dat
 distinct from this professional requirement and cannot be delegated. Obtain local legal advice on the
 statutory roles attaching to the specific project and entity.
 
-**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-11`; `PCI-PML-STD-01.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-01`; `PCI-FND-STD-11`; `PCI-PML-STD-01.01`;
 `PCI-PML-STD-02.01`; `PCI-PML-STD-02.02`; `PCI-PML-STD-03.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 3 · KA 3.2 Sponsorship and steering · topics
@@ -1937,8 +1937,8 @@ to due process and a right of appeal.
 a reserved contingency release is due. Evidence selection: which artefact establishes that sponsorship
 was accepted. Escalation decision: the incoming sponsor is a director of the delivery partner.
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law** —
-sponsorship was addressed in the v1.0 set only through the *Related PCI laws* fields of other laws, which
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard** —
+sponsorship was addressed in the v1.0 set only through the *Related PCI standards* fields of other standards, which
 created no obligation. Amendment note: none.
 
 ---
@@ -2006,9 +2006,9 @@ A supplier may never approve a change to the client's baseline.
 a competent reviewer independent of that supplier before the decision. Where the change originates with
 the project leader, the assessment must be reviewed by a competent reviewer who did not prepare it.
 
-**11. Materiality or threshold.** This law states no figure. The change authority levels, the aggregation
+**11. Materiality or threshold.** This standard states no figure. The change authority levels, the aggregation
 rule and the class of change requiring independent assessment are set by the organisation's governance;
-this law requires that they are documented and applied, and that **every** change is registered
+this standard requires that they are documented and applied, and that **every** change is registered
 regardless of value so the aggregation rule can see its inputs.
 *Six-person internal project:* one register, one weekly change slot, and a seven-column assessment that
 is usually six "none" entries and one line of substance.
@@ -2063,7 +2063,7 @@ condition-precedent provisions and time bars whose effect is determined by the g
 contract, and a change correctly processed internally can still be barred contractually. Obtain legal
 advice on the applicable contract's notice requirements before relying on an internal change record.
 
-**19. Related PCI Laws.** `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-FND-STD-13`; `PCI-PML-STD-03.02`;
+**19. Related PCI Standards.** `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-FND-STD-13`; `PCI-PML-STD-03.02`;
 `PCI-PML-STD-05.01`; `PCI-PML-STD-06.01`; `PCI-PML-STD-07.01`; `PCI-PML-STD-10.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 4 · KA 4.3 Integrated baselines · topics
@@ -2154,8 +2154,8 @@ of its production, applying `PCI-PML-STD-09.01`. The scope reconciliation itself
 project and must be reviewed at gates by a competent reviewer independent of the delivery organisation
 where the delegation schedule requires assurance at that gate.
 
-**11. Materiality or threshold.** This law sets no percentage of scope. The organisation's governance
-sets the change-authority thresholds and the reconciliation interval, and this law requires that both are
+**11. Materiality or threshold.** This standard sets no percentage of scope. The organisation's governance
+sets the change-authority thresholds and the reconciliation interval, and this standard requires that both are
 documented and applied. Every item of out-of-scope work is registered regardless of size, because the
 aggregation rule in `PCI-PML-STD-03.02` cannot operate on unregistered items.
 *Six-person internal project:* the baseline is a one-page inclusion and exclusion list, the criteria are
@@ -2206,7 +2206,7 @@ exist and pre-date production.
 was validly instructed, are contractual questions determined by the governing law and the contract's own
 mechanisms. Obtain legal advice before relying on an internal scope record in a commercial claim.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-FND-STD-13`; `PCI-PML-STD-04.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-FND-STD-13`; `PCI-PML-STD-04.01`;
 `PCI-PML-STD-05.02`; `PCI-PML-STD-09.01`; `PCI-PML-STD-13.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 5 · KA 5.1 Scope definition and the scope
@@ -2300,7 +2300,7 @@ independent of the work that satisfies it, under `PCI-PML-STD-09.01`. The tracea
 maintained by the project and reviewed at gates by a competent reviewer independent of the delivery
 organisation where the delegation schedule requires assurance.
 
-**11. Materiality or threshold.** This law sets no number of requirements and no coverage percentage,
+**11. Materiality or threshold.** This standard sets no number of requirements and no coverage percentage,
 because a coverage percentage is exactly the figure that gets managed rather than met. What it requires is
 that **the orphan counts are reported**, that the trend is visible, and that the organisation's governance
 sets the tolerance at which an orphan count triggers escalation.
@@ -2340,7 +2340,7 @@ sample, because its population is small and its failure mode is severe.
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
   certifiable requirement that product requirements are determined, reviewed and verified · **EXT-033** ·
   **Manual §6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported;
-  certification concerns a management system, not a project; this law imports none of its requirements.
+  certification concerns a management system, not a project; this standard imports none of its requirements.
 - **Project Management Institute** · *PMBOK Guide* · relied on for: the existence of a requirements
   traceability matrix as professional practice · **EXT-060** · **Manual §6 category 5 — professional
   framework** · currency checked 2026-08-03 · limitation: **never regulatory authority**; no edition
@@ -2351,7 +2351,7 @@ safety regulation, accessibility law or data-protection law are determined by th
 the regulator, not by the project's register. Obtain local legal and regulatory advice on which
 requirements are non-removable for the specific project.
 
-**19. Related PCI Laws.** `PCI-FND-STD-06`; `PCI-FND-STD-07`; `PCI-FND-STD-12`; `PCI-PML-STD-05.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-06`; `PCI-FND-STD-07`; `PCI-FND-STD-12`; `PCI-PML-STD-05.01`;
 `PCI-PML-STD-09.01`; `PCI-PML-STD-13.02`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 5 · KA 5.2 Requirements elicitation, analysis
@@ -2451,11 +2451,11 @@ schedule must be reviewed by a competent reviewer independent of its preparation
 supports a contractual claim or a committed external date, the review must also be independent of the
 party that benefits from the date.
 
-**11. Materiality or threshold.** **This law states no float threshold, no density figure and no
+**11. Materiality or threshold.** **This standard states no float threshold, no density figure and no
 percentage**, and inventing one would be indefensible: what counts as an acceptable constraint count or
 float profile depends on the contract, the sector and the planning method. The organisation's governance
 must document the schedule-quality criteria it applies, the tolerance at which a variance is escalated,
-and the sample size for progress evidence; this law requires that they exist and are applied. Where the
+and the sample size for progress evidence; this standard requires that they exist and are applied. Where the
 organisation applies a published schedule-assessment method, the credential holder must record which
 method and which criteria, so that a reported score can be interpreted.
 *Six-person internal project:* forty activities in a shared tool, three constraints each with a stated
@@ -2509,7 +2509,7 @@ a liquidated-damages position, the acceptable method and the evidential standard
 contract and by the forum, and they differ between jurisdictions and between tribunals. Obtain legal
 advice before a schedule is relied on in a claim.
 
-**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-02`; `PCI-FND-STD-13`; `PCI-PML-STD-04.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-05`; `PCI-FND-STD-02`; `PCI-FND-STD-13`; `PCI-PML-STD-04.01`;
 `PCI-PML-STD-07.01`; `PCI-PML-STD-08.01`; `PCI-PML-STD-15.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 6 · KA 6.1 Planning levels and logic networks;
@@ -2605,16 +2605,16 @@ releasing authority; the record of adverse movements with the date known and the
 project's name. The named cost or finance role, for its preparation and for the ledger reconciliation.
 
 **9. Approval authority.** The authority the governance plan names releases contingency; the authority it
-names — typically the sponsor or change authority, and this law does not assume which — releases
+names — typically the sponsor or change authority, and this standard does not assume which — releases
 management reserve, through change control. Neither is released by the person who prepares the forecast.
 
 **10. Independence requirement.** The ledger reconciliation must be prepared or verified by a person
 independent of the project's cost reporting. At each gate at which the delegation schedule requires
 assurance, the forecast must be reviewed by a competent reviewer independent of its preparation.
 
-**11. Materiality or threshold.** This law states no percentage. The organisation's governance sets the
+**11. Materiality or threshold.** This standard states no percentage. The organisation's governance sets the
 materiality threshold for adverse movement, the reconciliation interval, the contingency release
-authority and the forecast tolerance; this law requires that each is documented and applied. Where the
+authority and the forecast tolerance; this standard requires that each is documented and applied. Where the
 governance plan does not name the authority that releases management reserve, the credential holder must
 escalate that gap rather than assume the answer — the suite terminology audit records that different
 books name different roles, and assuming one is how a reserve is released by someone who could not
@@ -2665,10 +2665,10 @@ confirmed by a named human before it is reported as resolved.
 
 **18. Jurisdictional caution.** How costs are recognised, when a liability is recorded, how contract
 assets and provisions are measured and what must be disclosed are determined by the financial-reporting
-framework the entity applies and by its auditors, not by a project cost report. **This law states no
+framework the entity applies and by its auditors, not by a project cost report. **This standard states no
 accounting treatment.** Obtain qualified accounting advice for the specific entity and framework.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-FND-STD-07`; `PCI-PML-STD-04.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-FND-STD-07`; `PCI-PML-STD-04.01`;
 `PCI-PML-STD-06.01`; `PCI-PML-STD-07.02`; `PCI-PML-STD-08.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 7 · KA 7.1 Estimating and budgeting; KA 7.2
@@ -2699,9 +2699,9 @@ contingency is proposed to cover a base-cost overrun four weeks before a gate. E
 artefacts establish the completeness of a reported position.
 
 **25. Version and status.** Version 2.0 · **not yet approved** · effective on approval · supersedes
-`PML-LAW-07-01` v1.0, whose subject matter is split between this law and `PCI-PML-STD-07.02`. Amendment
+`PML-LAW-07-01` v1.0, whose subject matter is split between this standard and `PCI-PML-STD-07.02`. Amendment
 note: renumbered and restructured; legislative drafting removed; resource obligations moved out to their
-own law so that one law carries one principal obligation; the four-element completeness rule, ledger
+own standard so that one standard carries one principal obligation; the four-element completeness rule, ledger
 reconciliation, method consistency, separate reserve reporting and same-cycle adverse reporting separated
 into five process requirements.
 
@@ -2767,10 +2767,10 @@ consent is by definition an interested party's consent to their own resource; in
 the portfolio-level capacity test in `PCI-PML-STD-15.02`, which must be performed by a function
 independent of any single competing project.
 
-**11. Materiality or threshold.** This law sets no percentage of a person's time. The organisation's
+**11. Materiality or threshold.** This standard sets no percentage of a person's time. The organisation's
 governance sets the threshold at which a resource assumption is material enough to require a recorded
 agreement, the limits on working hours and duration, and the escalation route for competing claims; this
-law requires that these exist and are applied. Where no threshold is documented, every named individual
+standard requires that these exist and are applied. Where no threshold is documented, every named individual
 in the plan requires a recorded agreement.
 *Six-person internal project:* six agreements, one line each, in an email thread the leader retains — and
 the aggregate test is a single check that no one appears on two plans at once.
@@ -2810,7 +2810,7 @@ competing plans before it is escalated.
   for use* · relied on for: the existence of a certifiable management-system standard within which
   workload and fatigue are addressed as health and safety matters · **EXT-123** · **Manual §6 category 3**
   · currency checked 2026-08-03 · limitation: certifiable, but adoption is voluntary unless a contract or
-  regulator requires it; this law imports none of its requirements and states no fatigue rule of its own.
+  regulator requires it; this standard imports none of its requirements and states no fatigue rule of its own.
 - **AACE International** · *Total Cost Management (TCM) Framework* · relied on for: the existence of
   resource economics within a cost-management framework · **EXT-064**, **not independently verified** ·
   **Manual §6 category 5 — professional framework** · limitation: **never regulatory authority**; no text
@@ -2821,7 +2821,7 @@ rights, secondment and agency-worker rules, and health-and-safety duties determi
 required of people, and they differ sharply by jurisdiction. Obtain local legal and human-resources
 advice before planning on extended hours, cross-border deployment or supplier staff substitution.
 
-**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-11`; `PCI-PML-STD-06.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-01`; `PCI-FND-STD-11`; `PCI-PML-STD-06.01`;
 `PCI-PML-STD-07.01`; `PCI-PML-STD-12.01`; `PCI-PML-STD-15.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 7 · KA 7.4 Resource economics, procurement
@@ -2850,10 +2850,10 @@ showing a specialist committed at 160 per cent. Scenario judgement: a resource o
 specialist a fortnight before a milestone. Ethical dilemma: a plan can only be met by sustained overtime
 the leader has not disclosed.
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law**,
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard**,
 carrying the resource obligations formerly bundled inside `PML-LAW-07-01` v1.0, which stated cost and
 resource obligations in one rule and could therefore be breached in two unrelated ways at once. Amendment
-note: separated so that each law carries one principal obligation.
+note: separated so that each standard carries one principal obligation.
 
 ---
 
@@ -2921,7 +2921,7 @@ risk register and the escalation record must be reviewed by a competent reviewer
 delivery organisation, whose review includes testing whether risks that met the threshold were escalated.
 That reviewer must not be the function that maintains the register.
 
-**11. Materiality or threshold.** **This law sets no exposure figure, no matrix and no score**, because
+**11. Materiality or threshold.** **This standard sets no exposure figure, no matrix and no score**, because
 risk appetite is an organisational decision and a number imported from elsewhere is a number nobody owns.
 It requires that the organisation documents its escalation thresholds, their named destinations and their
 times, and that the credential holder applies them. Where the organisation documents no threshold for a
@@ -2963,7 +2963,7 @@ register. Where AI has aged risks against thresholds, a competent reviewer must 
 - **ISO** · *ISO 31000, Risk management — Guidelines* · relied on for: the existence of a risk-management
   process concept including escalation and review · **EXT-020** · **Manual §6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: **guidance, and ISO states expressly
-  that it is not a certifiable standard**; voluntary; this law relies on it for no requirement.
+  that it is not a certifiable standard**; voluntary; this standard relies on it for no requirement.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of risk management
   within delivery practice · **EXT-028** · **Manual §6 category 3** · currency checked 2026-08-03 ·
   limitation: guidance; voluntary; not certifiable.
@@ -2977,11 +2977,11 @@ auditor or a market are set by law and by licence conditions and carry their own
 shorter than any internal threshold. Obtain local legal advice on mandatory reporting duties attaching to
 the specific project and sector.
 
-**19. Related PCI Laws.** `PCI-FND-STD-11` (the parent duty to escalate); `PCI-FND-STD-05`;
+**19. Related PCI Standards.** `PCI-FND-STD-11` (the parent duty to escalate); `PCI-FND-STD-05`;
 `PCI-FND-STD-02`; `PCI-PML-STD-03.02`; `PCI-PML-STD-07.01`; `PCI-PML-STD-08.02`;
 `PCI-PML-STD-12.02`; `PCI-PML-STD-15.01`.
-**What this law adds to `PCI-FND-STD-11`:** the foundational law creates the duty to escalate a
-material misstatement. This law
+**What this standard adds to `PCI-FND-STD-11`:** the foundational standard creates the duty to escalate a
+material misstatement. This standard
 requires **one named risk owner**, escalation **on threshold rather than on expectation of resolution**,
 an **option set with closing dates**, an explicit **action-window test**, and **contingency drawn only
 against a pre-registered risk**.
@@ -3080,9 +3080,9 @@ able to act; independence attaches to the periodic review of closures, which mus
 by a competent reviewer independent of the delivery organisation where the delegation schedule requires
 assurance.
 
-**11. Materiality or threshold.** This law states no issue count and no age limit. The organisation's
+**11. Materiality or threshold.** This standard states no issue count and no age limit. The organisation's
 governance sets the ageing margin that triggers escalation, the recurrence window and the closure review
-sample; this law requires that they exist and are applied. Every issue is recorded regardless of size,
+sample; this standard requires that they exist and are applied. Every issue is recorded regardless of size,
 because the ageing profile and the recurrence analysis both depend on a complete population.
 *Six-person internal project:* the register is the team's issue tracker with three extra fields, and the
 ageing report is a saved filter reviewed at the weekly meeting.
@@ -3124,14 +3124,14 @@ resolution statement against the evidence it cites.
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
   certifiable requirement to control nonconformity and to take corrective action · **EXT-033** ·
   **Manual §6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported;
-  certification concerns a management system; this law imports none of its requirements.
+  certification concerns a management system; this standard imports none of its requirements.
 
 **18. Jurisdictional caution.** Some issues carry statutory reporting duties — safety incidents, data
 breaches, environmental events, regulatory breaches — with their own recipients and timescales that
 override any internal register. Obtain local legal advice on mandatory incident reporting for the sector
 and jurisdiction.
 
-**19. Related PCI Laws.** `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-FND-STD-15`; `PCI-PML-STD-08.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-FND-STD-15`; `PCI-PML-STD-08.01`;
 `PCI-PML-STD-09.01`; `PCI-PML-STD-09.02`; `PCI-PML-STD-12.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 8 · KA 8.1 topic on issues as occurred risks;
@@ -3161,7 +3161,7 @@ than a list. Scenario judgement: an issue has been open past its date for three 
 left the organisation. Calculation review: reproducing an ageing profile and identifying the two entries
 that carry the exposure.
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law** — the
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard** — the
 v1.0 set addressed risk and left issues to be inferred from it, which left the occurred-risk population
 ungoverned. Amendment note: none.
 
@@ -3230,9 +3230,9 @@ internal projects — the acceptance authority must sit outside the producing te
 be recorded; and where the deliverable will be operated by another organisation, `PR-04` supplies the
 independence that a small structure cannot.
 
-**11. Materiality or threshold.** This law states no defect count and no pass rate. The organisation's
+**11. Materiality or threshold.** This standard states no defect count and no pass rate. The organisation's
 governance sets the acceptance authority by deliverable class, the classes requiring independent test,
-the retention period and the tolerance for carried nonconformities; this law requires that these exist
+the retention period and the tolerance for carried nonconformities; this standard requires that these exist
 and are applied. A nonconformity bearing on safety, a licence condition or a statutory duty is not
 carried under any tolerance — it is a mandatory precondition under `PCI-PML-STD-16.01`.
 *Six-person internal project:* the criteria are five lines per deliverable agreed at kick-off, acceptance
@@ -3271,7 +3271,7 @@ statutory subset must be re-checked in full rather than by sample.
   certifiable requirement to verify that outputs meet requirements before release · **EXT-033** ·
   **Manual §6 category 3 — international voluntary standard** · currency checked 2026-08-03 ·
   limitation: **the certifiable member of its family**, but adoption is voluntary unless a contract or
-  regulator requires it; a project is not certified against it; this law imports none of its
+  regulator requires it; a project is not certified against it; this standard imports none of its
   requirements and reproduces none of its text.
 - **ISO** · *ISO 9000, Quality management systems — Fundamentals and vocabulary* · relied on for: the
   existence of an agreed vocabulary distinguishing conformity from nonconformity · **EXT-034**, **not
@@ -3286,7 +3286,7 @@ survive it are contractual and statutory questions determined by the governing l
 acceptance is regulated separately by a safety, health or licensing authority. Obtain legal advice before
 relying on an internal acceptance record in a commercial or regulatory position.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-PML-STD-01.03`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-PML-STD-01.03`;
 `PCI-PML-STD-05.01`; `PCI-PML-STD-05.02`; `PCI-PML-STD-16.01`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 9 · KA 9.1 Quality planning; KA 9.2 Assurance
@@ -3351,7 +3351,7 @@ accepted as valid.
 - **`PCI-PML-STD-09.02-PR-02` — Review separated from assessment.** A post-project or post-implementation
   review must be conducted separately from any individual performance assessment, and its record must not
   be used as evidence in one. Where the two are combined, the review's output is not evidence of
-  compliance with this law.
+  compliance with this standard.
 - **`PCI-PML-STD-09.02-PR-03` — Root cause where a defect recurs.** Where a defect, issue or
   nonconformity recurs within the window the governance sets, the credential holder must commission a
   root-cause analysis and must record its conclusion and the artefact change it produces.
@@ -3383,9 +3383,9 @@ independent of the work in which the defect arose. A retrospective within an ada
 facilitated internally, and independence attaches instead to the periodic sampling of artefact changes at
 gates.
 
-**11. Materiality or threshold.** This law states no lesson count and no reuse rate. The organisation's
+**11. Materiality or threshold.** This standard states no lesson count and no reuse rate. The organisation's
 governance sets the recurrence window that triggers root-cause analysis, the review points in the
-lifecycle and the retention period for review records; this law requires that they exist and are applied.
+lifecycle and the retention period for review records; this standard requires that they exist and are applied.
 Where an organisation measures the reuse of lessons, the credential holder must record the basis of the
 measure so that it is interpretable rather than decorative.
 *Six-person internal project:* one retrospective per iteration and one at closure; accepted lessons change
@@ -3435,7 +3435,7 @@ investigation or a public inquiry, and privilege rules differ by jurisdiction. O
 conducting a review into an event with legal or regulatory exposure, and never let that advice become a
 reason to hold no review.
 
-**19. Related PCI Laws.** `PCI-FND-STD-12`; `PCI-FND-STD-02`; `PCI-PML-STD-08.02`;
+**19. Related PCI Standards.** `PCI-FND-STD-12`; `PCI-FND-STD-02`; `PCI-PML-STD-08.02`;
 `PCI-PML-STD-09.01`; `PCI-PML-STD-12.02`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 9 · KA 9.4 Lessons learned, continuous
@@ -3538,10 +3538,10 @@ requires it. Assurance of the procurement must be provided by a competent review
 panel and of the requesting project, and must satisfy the name-matching test in
 `PCI-PML-STD-01.03-PR-06`.
 
-**11. Materiality or threshold.** This law states no value threshold and no minimum bidder count. The
+**11. Materiality or threshold.** This standard states no value threshold and no minimum bidder count. The
 organisation's governance — and, in the public sector, the applicable procurement regime — sets the
 competition thresholds, the award authorities, the aggregation rule and the standstill or debrief
-obligations; this law requires that the documented rules exist and are applied and that no requirement is
+obligations; this standard requires that the documented rules exist and are applied and that no requirement is
 split to fall below one.
 *Six-person internal project:* a single quotation exercise with three suppliers, criteria of four lines
 sent with the request, individual scores recorded in a shared sheet before discussion, and the leader's
@@ -3599,10 +3599,10 @@ full every submission the system would exclude.
 **18. Jurisdictional caution.** Public-procurement law, subsidy control, competition law, anti-bribery
 law and sector regulation impose binding, jurisdiction-specific rules on advertising, thresholds,
 standstill periods, debriefs, remedies and record-keeping, and breach can void an award or engage criminal
-liability. **This law does not state any of those rules and compliance with it is not compliance with
+liability. **This standard does not state any of those rules and compliance with it is not compliance with
 them.** Obtain local legal advice before running a regulated procurement.
 
-**19. Related PCI Laws.** `PCI-FND-STD-08`; `PCI-FND-STD-09`; `PCI-FND-STD-01`; `PCI-PML-STD-01.03`;
+**19. Related PCI Standards.** `PCI-FND-STD-08`; `PCI-FND-STD-09`; `PCI-FND-STD-01`; `PCI-PML-STD-01.03`;
 `PCI-PML-STD-03.02`; `PCI-PML-STD-04.01`; `PCI-PML-STD-09.01`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 10 · KA 10.1 Make-or-buy and the procurement
@@ -3628,7 +3628,7 @@ Debriefs that describe criteria the bidders were never given.
 escalation; examination failure; ethics review; certification investigation; suspension or withdrawal of
 the PML-AI credential — each subject to due process and a right of appeal. **PCI cannot set aside an
 award, impose a fine or create any legal liability**; those consequences, where they exist, arise under
-the applicable procurement or criminal law and not under this law.
+the applicable procurement or criminal law and not under this standard.
 
 **24. Examination application.** Ethical dilemma: at moderation the chair proposes to add a
 "deliverability" adjustment that was not published. Evidence selection: which artefacts would establish
@@ -3639,7 +3639,7 @@ been approached about a role with a bidder.
 `PML-LAW-10-01` v1.0. Amendment note: renumbered and restructured; legislative drafting removed;
 individual-scores-before-moderation, reasoned moderation changes, information symmetry and panel-interest
 clearance separated into process requirements; the link to `PCI-PML-STD-01.03` made explicit, which is the
-change that gives this law an enforceable rule about who is barred from scoring; consequence field
+change that gives this standard an enforceable rule about who is barred from scoring; consequence field
 corrected to
 state expressly what PCI cannot do.
 
@@ -3709,9 +3709,9 @@ by the delivery organisation; independence attaches at gates, where a competent 
 the delivery organisation must be able to reach a status position from the underlying data and compare it
 with the reported one.
 
-**11. Materiality or threshold.** This law states no variance percentage. Materiality is decided by the
+**11. Materiality or threshold.** This standard states no variance percentage. Materiality is decided by the
 definition above, applied against the decisions the report informs, and the organisation's governance sets
-the reporting tolerances, the rating derivation rule and the correction time; this law requires that these
+the reporting tolerances, the rating derivation rule and the correction time; this standard requires that these
 exist and are applied. **A fact bearing on safety, legality, a licence or a statutory duty is material at
 any size** and no tolerance excludes it.
 *Six-person internal project:* a weekly half-page with a stated rating rule of three lines and one
@@ -3762,11 +3762,11 @@ prospectus and market-abuse rules, grant-condition reporting, public-inquiry dut
 threshold for a legally material statement is not the same as the professional one used here. Obtain legal
 advice before any statement about delivery status is made outside the organisation.
 
-**19. Related PCI Laws.** `PCI-FND-STD-11` (the parent escalation obligation); `PCI-FND-STD-02`;
+**19. Related PCI Standards.** `PCI-FND-STD-11` (the parent escalation obligation); `PCI-FND-STD-02`;
 `PCI-FND-STD-15`; `PCI-FND-STD-14`; `PCI-PML-STD-06.01`; `PCI-PML-STD-07.01`; `PCI-PML-STD-08.01`;
 `PCI-PML-STD-12.01`.
-**What this law adds to `PCI-FND-STD-11`:** the foundational law requires a material misstatement to
-be escalated. This law adds the delivery-specific mechanics by which honest figures produce a
+**What this standard adds to `PCI-FND-STD-11`:** the foundational standard requires a material misstatement to
+be escalated. This standard adds the delivery-specific mechanics by which honest figures produce a
 dishonest
 picture — **same-document disclosure**, a **documented rating derivation with recorded overrides**, **one
 version of status across audiences**, a **correction duty to the original distribution**, and a **recorded
@@ -3815,12 +3815,12 @@ performed from source records.
 prepare, sign, present or withhold a professional statement that the person has told them, or has
 recorded, is inaccurate or incomplete.
 
-**2. Purpose.** Leadership conduct laws fail when they are written as character requirements, because
-character cannot be audited and an unverifiable requirement is not a requirement. This law is therefore
+**2. Purpose.** Leadership conduct standards fail when they are written as character requirements, because
+character cannot be audited and an unverifiable requirement is not a requirement. This standard is therefore
 drafted around the single leadership act that is both observable and gravely damaging: **the use of
 positional authority to override another professional's judgement about their own work.** Every reporting,
 estimating, scheduling and assurance control in this set depends on the person nearest the facts being
-able to state them; this law protects that, and leaves inspiration to the Body of Knowledge.
+able to state them; this standard protects that, and leaves inspiration to the Body of Knowledge.
 
 **3. Scope.** Every credential holder exercising authority over another person's professional output —
 line, project, matrix, contractual or client-side — including over supplier staff, seconded staff and
@@ -3874,11 +3874,11 @@ the receiving decision-maker may decide that they do not need it, and that decis
 **10. Independence requirement.** Where an override concerns an assurance conclusion, a test result or a
 safety assessment, the override must be reviewed by a competent reviewer independent of both the leader
 and the preparer before the statement is issued. For estimates, forecasts and schedules, independence
-attaches at gates under the law governing that artefact.
+attaches at gates under the standard governing that artefact.
 
-**11. Materiality or threshold.** This law sets no number. The organisation's governance sets the time for
+**11. Materiality or threshold.** This standard sets no number. The organisation's governance sets the time for
 acknowledging an adverse report and the classes of statement whose override requires independent review;
-this law requires that both exist and are applied. Every override of a professional statement is recorded
+this standard requires that both exist and are applied. Every override of a professional statement is recorded
 regardless of size, because the pattern of overrides is the evidence, and a threshold would remove the
 population that reveals it.
 *Six-person internal project:* the override record is a line in the same document with the leader's name
@@ -3916,7 +3916,7 @@ confirm by name that the transmitted summary is theirs before it is issued as su
   existence of professional expectations of honesty, responsibility, respect and fairness · **EXT-063**,
   **not independently verified — verify current requirements** · **Manual §6 category 6 — ethical code** ·
   limitation: binding only where a body, regulator or engagement has adopted it; a PCI credential holder
-  not subject to it is not made subject to it by this law; no text is reproduced.
+  not subject to it is not made subject to it by this standard; no text is reproduced.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of leadership and
   team-development activity within delivery practice · **EXT-028** · **Manual §6 category 3 —
   international voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not
@@ -3924,7 +3924,7 @@ confirm by name that the transmitted summary is theirs before it is issued as su
 - **ISO** · *ISO 45001, Occupational health and safety management systems — Requirements* · relied on for:
   the existence of a certifiable management-system standard within which worker consultation and
   participation are addressed · **EXT-123** · **Manual §6 category 3** · currency checked 2026-08-03 ·
-  limitation: certifiable, but voluntary unless required by contract or regulator; this law imports none
+  limitation: certifiable, but voluntary unless required by contract or regulator; this standard imports none
   of its requirements.
 
 **18. Jurisdictional caution.** Employment law, collective agreements, professional-body rules and, in
@@ -3932,7 +3932,7 @@ regulated professions, statutory duties govern what may be required of a profess
 they have when they refuse. Obtain local legal and human-resources advice before acting on an override
 dispute involving an employee, a contractor or a regulated professional.
 
-**19. Related PCI Laws.** `PCI-FND-STD-13`; `PCI-FND-STD-01`; `PCI-FND-STD-10`; `PCI-FND-STD-11`;
+**19. Related PCI Standards.** `PCI-FND-STD-13`; `PCI-FND-STD-01`; `PCI-FND-STD-10`; `PCI-FND-STD-11`;
 `PCI-PML-STD-11.01`; `PCI-PML-STD-12.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 12 · KA 12.1 Leadership theories in practice and
@@ -3968,7 +3968,7 @@ for their dissent to be recorded and the leader considers it unhelpful to the de
 
 **25. Version and status.** Version 2.0 · **not yet approved** · effective on approval · supersedes
 `PML-LAW-12-01` v1.0. Amendment note: renumbered, restructured and **substantially rewritten**. The v1.0
-law stated general conduct expectations that could not be audited — audit questions 5 and 6 both failed —
+standard stated general conduct expectations that could not be audited — audit questions 5 and 6 both failed —
 and the principal obligation has been replaced with the single observable act of overriding another
 person's professional statement, supported by five process requirements each of which leaves a record.
 
@@ -3983,10 +3983,10 @@ neither the subject of the concern nor in the subject's reporting line.
 **2. Purpose.** Every control in this set consumes voluntary upward information. Risk identification,
 nonconformance reporting, interface issues and escalation lead time all fail silently in the same way when
 people learn that raising a problem is penalised, and the leader becomes the last person on the project to
-know. **This law does not require a state of mind and does not require a leader to produce a feeling in
-another person.** A state of mind cannot be observed, cannot be audited and cannot be breached, so a law
-written around one would be an aspiration wearing a law's clothing — the exact defect the Drafting Manual
-prohibits. What this law requires instead is three things that are entirely observable: **a route that
+know. **This standard does not require a state of mind and does not require a leader to produce a feeling in
+another person.** A state of mind cannot be observed, cannot be audited and cannot be breached, so a standard
+written around one would be an aspiration wearing a standard's clothing — the exact defect the Drafting Manual
+prohibits. What this standard requires instead is three things that are entirely observable: **a route that
 goes around the person the concern is about**, **the absence of detriment to the person who used it**, and
 **a record showing the concern was answered.** Those are the conditions under which candour is possible;
 whether candour then occurs is a matter of leadership and is taught, not legislated.
@@ -4050,7 +4050,7 @@ period-by-period indicator under `PR-06` and its trend.
 
 **8. Responsible role.** The named credential holder leading the project, for establishing, publishing and
 operating the route and for the register. The named recipients, for responding. The employing
-organisation's designated function, for statutory whistleblowing and grievance matters, which this law
+organisation's designated function, for statutory whistleblowing and grievance matters, which this standard
 does not displace.
 
 **9. Approval authority.** The sponsor approves the route and its recipients, and approves any change to
@@ -4063,15 +4063,15 @@ delivery line. The reviewer of a justification under `PR-04` must be independent
 raised the concern and its subject, and must not be the person who decided the act. Where an allegation of
 detriment is made, the investigation must be conducted by a person independent of the project.
 
-**11. Materiality or threshold.** This law states no number of concerns, no target and no score, and any
+**11. Materiality or threshold.** This standard states no number of concerns, no target and no score, and any
 of those would be actively harmful: a concern target invites manufactured concerns and a survey score
-invites managed answers. **A survey result is not evidence of compliance with this law, and a low score is
+invites managed answers. **A survey result is not evidence of compliance with this standard, and a low score is
 not evidence of breach** — the evidence is the route, the register and the detriment review. The
-organisation's governance sets the response time, the lookback window and the reporting period; this law
+organisation's governance sets the response time, the lookback window and the reporting period; this standard
 requires that they exist and are applied. Where the organisation sets no lookback window, the credential
 holder must apply the period to the end of the project or twelve months, whichever is shorter, and record
 that they did so in the absence of a documented window. **That period is also the floor.** A documented
-lookback window shorter than it does not satisfy this law, because a window an organisation can set to a
+lookback window shorter than it does not satisfy this standard, because a window an organisation can set to a
 fortnight is a protection the organisation can switch off; where the documented window is shorter, the
 credential holder applies the floor and records that they did so.
 *Six-person internal project:* two named recipients — the project leader and one named manager outside the
@@ -4118,29 +4118,29 @@ verify that concern-route data is not among them.
   work — Guidelines* · relied on for: the existence of psychosocial risk as a recognised subject within
   occupational health and safety management · **EXT-124** · **Manual §6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: **guidance, not a requirements
-  standard — nothing can be certified against it**, and no obligation in this law derives from it. It is
+  standard — nothing can be certified against it**, and no obligation in this standard derives from it. It is
   named because a reader will expect it to be addressed, and the correct treatment is to say what it is.
 - **ISO** · *ISO 45001, Occupational health and safety management systems — Requirements with guidance for
   use* · relied on for: the existence of a certifiable management-system standard addressing worker
   consultation, participation and protection from reprisal · **EXT-123** · **Manual §6 category 3** ·
   currency checked 2026-08-03 · limitation: certifiable, but adoption is voluntary unless a contract or
-  regulator requires it; this law imports none of its requirements.
+  regulator requires it; this standard imports none of its requirements.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of team development
   and working environment within delivery practice · **EXT-028** · **Manual §6 category 3** · currency
   checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 
 **18. Jurisdictional caution.** Whistleblower protection, mandatory internal reporting channels, works-
 council consultation, employee monitoring, data-protection and anti-retaliation law differ sharply by
-jurisdiction and frequently impose obligations stricter and more specific than this law — including on
+jurisdiction and frequently impose obligations stricter and more specific than this standard — including on
 who may receive a report, how it must be handled, what records may be kept and for how long. **Obtain
 local legal advice before establishing a concern route, an anonymous channel, a register or any monitoring
 arrangement**, and where the applicable regime imposes a higher obligation, that regime governs.
 
-**19. Related PCI Laws.** `PCI-FND-STD-11` (the parent duty to escalate); `PCI-FND-STD-01`;
+**19. Related PCI Standards.** `PCI-FND-STD-11` (the parent duty to escalate); `PCI-FND-STD-01`;
 `PCI-FND-STD-09`; `PCI-PML-STD-08.02`; `PCI-PML-STD-09.02`; `PCI-PML-STD-12.01`;
 `PCI-PML-STD-14.01`.
-**What this law adds to `PCI-FND-STD-11`:** the foundational law creates a duty to escalate, which
-binds the person who holds the information. This law creates the **conditions under which they can
+**What this standard adds to `PCI-FND-STD-11`:** the foundational standard creates a duty to escalate, which
+binds the person who holds the information. This standard creates the **conditions under which they can
 discharge it** —
 a named recipient outside the line of the person concerned, protection from detriment tested by an
 independent review, and a record that the concern was answered.
@@ -4189,14 +4189,14 @@ concern names the sponsor.
 
 **25. Version and status.** Version 2.0 · **not yet approved** · effective on approval · supersedes
 `PML-LAW-12-02` v1.0 (*Psychological Safety*). Amendment note: renumbered, **retitled** and rewritten from
-the ground up. The v1.0 law required a leader to "maintain conditions in which any team member can report
+the ground up. The v1.0 standard required a leader to "maintain conditions in which any team member can report
 bad news" — a state of affairs no reviewer could test, which failed audit questions 5 and 6. The principal
 obligation is now the **establishment and operation of a bypass route**, the protections are expressed as
 observable acts through a defined term for *detriment*, and the compliance test cross-matches two record
-sets that already exist. The concept of psychological safety remains the reason for the law and is taught
+sets that already exist. The concept of psychological safety remains the reason for the standard and is taught
 in Domain 12; it is not the requirement, because it is not observable. **Stage 9 amendment:** the
 lookback window was set wholly by the organisation, so the protection in `PR-04` could be switched off
-by documenting a fortnight; element 11 now makes the law's own default the floor.
+by documenting a fortnight; element 11 now makes the standard's own default the floor.
 
 ---
 
@@ -4267,9 +4267,9 @@ its production under `PCI-PML-STD-09.01`. Assurance of an adaptive delivery must
 reviewer independent of the team, and must satisfy `PCI-PML-STD-01.03-PR-06` where that reviewer has
 contributed to the team's ways of working.
 
-**11. Materiality or threshold.** This law states no envelope value, no iteration length and no
+**11. Materiality or threshold.** This standard states no envelope value, no iteration length and no
 work-in-progress limit. The organisation's governance sets the value envelope, the escalation latency and
-the release authority; this law requires that they are documented and applied. Where a team operates a
+the release authority; this standard requires that they are documented and applied. Where a team operates a
 work-in-progress limit, its basis must be recorded so that a change to it is visible as a decision.
 *Six-person internal project:* one team, one product owner with an envelope stated in a sentence, releases
 accepted by a named user representative, and a metric definition of two lines. The decision-rights map is
@@ -4327,7 +4327,7 @@ who records which they did.
 agreed, when payment is due and what has been accepted that are determined by the governing law of the
 contract. Obtain legal advice before adopting an outcome-based or capacity-based contract structure.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-FND-STD-04`; `PCI-PML-STD-03.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-FND-STD-04`; `PCI-PML-STD-03.01`;
 `PCI-PML-STD-03.02`; `PCI-PML-STD-05.01`; `PCI-PML-STD-09.01`; `PCI-PML-STD-13.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 13 · KA 13.1 Agile principles and product
@@ -4379,7 +4379,7 @@ delivery accountability, and that the record names both.
 Either nobody can order the work, so the backlog is arbitrated by whoever escalates hardest; or the product
 role is nominal, held by someone who must obtain approval for every decision, in which case the authority
 sits with the approver and the record is false. The professional content of the role is the **decision
-right**, and this law protects it.
+right**, and this standard protects it.
 
 **3. Scope.** Every credential holder in a delivery leadership, product ownership or governance role, in
 adaptive, hybrid and product-organised delivery, including arrangements where a product outlives the
@@ -4428,8 +4428,8 @@ product. The credential holder approves neither.
 right and is not intended to be independent; independence attaches to the acceptance of increments under
 `PCI-PML-STD-09.01` and to the assurance of the arrangement under `PCI-PML-STD-01.03-PR-06`.
 
-**11. Materiality or threshold.** This law states no number. The value envelope and the escalation latency
-are set by the organisation's governance under `PCI-PML-STD-13.01-PR-02`; this law requires that the roles
+**11. Materiality or threshold.** This standard states no number. The value envelope and the escalation latency
+are set by the organisation's governance under `PCI-PML-STD-13.01-PR-02`; this standard requires that the roles
 are named and that the record is true. The test of nominality is not a percentage but the observable one:
 whether decisions within the stated envelope are taken and stand.
 *Six-person internal project:* one person may hold both roles, and that is entirely proper — the obligation
@@ -4467,7 +4467,7 @@ them and that they stood.
   accountable ordering role in one widely used adaptive framework · **EXT-086** · **Manual §6 category 5 —
   professional framework** · currency checked 2026-08-03 · limitation: **a voluntary framework; adoption
   is the whole of its force**; it is not a standard and nothing can be certified against it as a
-  requirements document; described in PCI's own words, no text reproduced. This law's obligation is PCI's
+  requirements document; described in PCI's own words, no text reproduced. This standard's obligation is PCI's
   own and does not derive from it.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of defined roles and
   responsibilities within delivery · **EXT-028** · **Manual §6 category 3 — international voluntary
@@ -4480,7 +4480,7 @@ them and that they stood.
 allocation of liability, intellectual property and data controllership is a contractual and regulatory
 question. Obtain legal advice before placing an ordering right outside the owning organisation.
 
-**19. Related PCI Laws.** `PCI-FND-STD-01`; `PCI-FND-STD-04`; `PCI-FND-STD-12`; `PCI-PML-STD-01.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-01`; `PCI-FND-STD-04`; `PCI-FND-STD-12`; `PCI-PML-STD-01.01`;
 `PCI-PML-STD-01.02`; `PCI-PML-STD-13.01`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 13 · KA 13.1 topic 13.1.2 product ownership as a
@@ -4510,8 +4510,8 @@ approval for every ordering decision, and the candidate states what the record m
 selection: which artefact establishes that the ordering right is exercised. Calculation review: a decision
 wait series showing a proxy arrangement.
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law** — the
-v1.0 set governed adaptive delivery in one law and left the product/project accountability boundary
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard** — the
+v1.0 set governed adaptive delivery in one standard and left the product/project accountability boundary
 unstated, which is the boundary most often blurred in practice. Amendment note: none.
 
 ---
@@ -4580,7 +4580,7 @@ project must not approve its own extension of purpose.
 independent of the team whose access is being reconciled. The confirmation of a legal basis must come from
 a function independent of the project.
 
-**11. Materiality or threshold.** This law states no data volume and no retention period, because retention
+**11. Materiality or threshold.** This standard states no data volume and no retention period, because retention
 is set by law, by contract and by the organisation's policy, and a number invented here would conflict with
 all three. It requires that the purpose record exists per data set, that the reconciliation interval is
 documented and met, and that the retention period recorded is the one the organisation's policy or the
@@ -4620,7 +4620,7 @@ as clean but which the purpose record indicates is likely to contain personal da
 - **ISO/IEC** · *ISO/IEC 27001, Information security management systems — Requirements* · relied on for:
   the existence of a certifiable requirement set for information-security management · **EXT-023** ·
   **Manual §6 category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation:
-  certifiable, but adoption is voluntary unless required by contract or regulator; this law imports none of
+  certifiable, but adoption is voluntary unless required by contract or regulator; this standard imports none of
   its controls.
 - **ISO/IEC** · *ISO/IEC 27701, Privacy information management systems — Requirements and guidance* ·
   relied on for: the existence of a privacy management-system standard · **EXT-038** · **Manual §6
@@ -4644,16 +4644,16 @@ as clean but which the purpose record indicates is likely to contain personal da
   data-protection approach · **EXT-101**, **not independently verified — verify current requirements** ·
   **Manual §6 category 10 — illustrative practice** · limitation: **this is binding legislation within the
   European Union**, named here only to illustrate the shape of such a regime; it is relied on for no
-  requirement in this law, and whether it or any other data-protection regime applies is a question for
+  requirement in this standard, and whether it or any other data-protection regime applies is a question for
   qualified local counsel.
 
 **18. Jurisdictional caution.** Data-protection law, employee-monitoring rules, works-council consultation,
 data-localisation requirements, sector confidentiality duties, breach-notification timescales and
 cross-border transfer restrictions are jurisdiction-specific and change frequently. **Compliance with this
-law is not compliance with any of them.** Obtain local legal advice before collecting, sharing, exporting
+standard is not compliance with any of them.** Obtain local legal advice before collecting, sharing, exporting
 or retaining personal or confidential project data.
 
-**19. Related PCI Laws.** `PCI-FND-STD-07`; `PCI-FND-STD-09`; `PCI-FND-STD-12`; `PCI-PML-STD-11.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-07`; `PCI-FND-STD-09`; `PCI-FND-STD-12`; `PCI-PML-STD-11.01`;
 `PCI-PML-STD-12.02`; `PCI-PML-STD-14.02`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 14 · KA 14.1 Digital project environments, data
@@ -4759,15 +4759,15 @@ approves nothing.
 of the system that produced it, in the sense that they did not set the parameters, prompts, weights or
 thresholds for that output. Where that is impossible on a small project, the arrangement must be recorded
 and a second named person must perform the verification for the highest-consequence output class.
-**Independence of configuration is the minimum this law adds; it does not displace `PCI-FND-STD-03`**,
+**Independence of configuration is the minimum this standard adds; it does not displace `PCI-FND-STD-03`**,
 which requires a *material* calculation, model output or automated conclusion to be verified by a person
-independent of its preparation before any person relies on it. Where the verifier under this law is also
-the preparer of the output, this law is satisfied and the foundational verification is not.
+independent of its preparation before any person relies on it. Where the verifier under this standard is also
+the preparer of the output, this standard is satisfied and the foundational verification is not.
 
-**11. Materiality or threshold.** This law states no accuracy figure and no confidence threshold. **A
+**11. Materiality or threshold.** This standard states no accuracy figure and no confidence threshold. **A
 model's own confidence score is not a verification and must not be used as one.** The organisation's
 governance sets the output classes, the materiality at which AI assistance is disclosed, and the
-verification depth by consequence; this law requires that these exist and are applied.
+verification depth by consequence; this standard requires that these exist and are applied.
 *Six-person internal project:* three AI uses — drafting, summarising and a scheduling assistant — one line
 each in the record, with source tracing for figures, clause-to-summary comparison for summaries and named
 approval for anything issued.
@@ -4793,7 +4793,7 @@ flag outputs relied on with no verification record.
 
 **15. AI prohibition.** An AI system must not decide, approve, certify, sign, waive, authorise, accept,
 assure or be recorded as verifying anything. It must not verify another AI system's output for the purposes
-of this law. It must not be represented as having independently verified anything, and no supplier statement
+of this standard. It must not be represented as having independently verified anything, and no supplier statement
 converts its output into verified information.
 
 **16. AI verification.** **The method is named per output class, from this list, and recorded before use:**
@@ -4835,10 +4835,10 @@ automated decision-making, intellectual property in generated output and liabili
 are jurisdiction-specific and are changing quickly. Obtain local legal advice before deploying AI in a
 process affecting people's rights, employment, safety, or access to a service.
 
-**19. Related PCI Laws.** `PCI-FND-STD-03` (the parent verification obligation); `PCI-FND-STD-14`;
+**19. Related PCI Standards.** `PCI-FND-STD-03` (the parent verification obligation); `PCI-FND-STD-14`;
 `PCI-FND-STD-04`; `PCI-FND-STD-01`; `PCI-PML-STD-01.02`; `PCI-PML-STD-11.01`; `PCI-PML-STD-14.01`.
-**What this law adds to `PCI-FND-STD-03`:** the foundational law requires independent verification
-before reliance. This law requires an **AI use record covering embedded features**, a **named method
+**What this standard adds to `PCI-FND-STD-03`:** the foundational standard requires independent verification
+before reliance. This standard requires an **AI use record covering embedded features**, a **named method
 per output class
 recorded before use**, **depth matched to consequence with the basis recorded**, and a **failure log routed
 into the organisation's standing artefacts**.
@@ -4878,7 +4878,7 @@ record, the named-method rule, proportionate depth and the failure log separated
 requirements; element 16 rewritten to name the permitted methods explicitly, because "review the AI output"
 was the defect the previous edition shared with most of the corpus. **Stage 9 amendment:** element 10
 required independence only of the system's configuration, which allowed the preparer of a material
-output to be its verifier; element 10 now states that this is the minimum this law adds and does not
+output to be its verifier; element 10 now states that this is the minimum this standard adds and does not
 displace the independent-person verification `PCI-FND-STD-03` requires before reliance.
 
 ---
@@ -4945,11 +4945,11 @@ assurance, the dependency register and the integrated confidence computation mus
 competent reviewer independent of every component, not merely of one — because a reviewer inside one
 component has an interest in where the dependency risk is recorded.
 
-**11. Materiality or threshold.** This law states no confidence figure. The organisation's governance sets
+**11. Materiality or threshold.** This standard states no confidence figure. The organisation's governance sets
 the confidence tolerance for an integrated milestone, the escalation threshold for a dependency at risk and
-the reporting cadence; this law requires that they are documented and applied, and that the **arithmetic is
+the reporting cadence; this standard requires that they are documented and applied, and that the **arithmetic is
 the conjunction** rather than an average — which is a method requirement, not a threshold.
-*Six-person internal project:* the law applies only where the project is a component of a programme, and
+*Six-person internal project:* the standard applies only where the project is a component of a programme, and
 then its obligation is to name a giver and a receiver for each of its handful of external dependencies and
 to raise a breach the day it is known.
 *Multi-partner national programme:* the register is held at programme level with per-partner extracts,
@@ -4997,7 +4997,7 @@ the named giver before it enters the register as a commitment.
 enforceable, what notice is required and what remedy exists are contractual questions determined by the
 governing law. Obtain legal advice before relying on a dependency register in a commercial position.
 
-**19. Related PCI Laws.** `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-PML-STD-06.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-FND-STD-12`; `PCI-PML-STD-06.01`;
 `PCI-PML-STD-08.01`; `PCI-PML-STD-08.02`; `PCI-PML-STD-11.01`; `PCI-PML-STD-15.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 15 · KA 15.1 Programme architecture and
@@ -5028,7 +5028,7 @@ Scenario judgement: a component offers to improve one dependency from 0.85 to 0.
 evaluates it against removing a different dependency. Evidence selection: what makes a dependency register
 a control.
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law** — the
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard** — the
 v1.0 set reached Domain 15 only through *Related book content* fields and therefore created no
 programme-level obligation. Amendment note: none.
 
@@ -5092,13 +5092,13 @@ independent of any single competing component, and the credential holder perform
 sponsor or leader of a component being ranked. Where the same person unavoidably holds both roles, they
 must abstain from the ranking of their own component under `PCI-PML-STD-01.03-PR-04`.
 
-**11. Materiality or threshold.** This law states no utilisation figure and no work-in-progress limit,
+**11. Materiality or threshold.** This standard states no utilisation figure and no work-in-progress limit,
 because both are organisation-specific and a borrowed number is worse than none. The organisation's
-governance sets the capacity basis, the intake threshold and the concurrency limits it applies; this law
+governance sets the capacity basis, the intake threshold and the concurrency limits it applies; this standard
 requires that these are documented, that the assessment is dated, and that intake is tested against them.
 Where protective capacity is held, its size and its basis must be recorded so that removing it is a visible
 decision.
-*Six-person internal project:* the law applies to the organisation that funds it rather than to the project;
+*Six-person internal project:* the standard applies to the organisation that funds it rather than to the project;
 for a small organisation the capacity assessment may be a single table of six people and their committed
 availability, which is enough to make an intake test real.
 *Multi-partner national programme:* capacity is assessed per pool per organisation and consolidated, the
@@ -5145,7 +5145,7 @@ a plan.
 regulated service can engage employment consultation, regulatory notification and public-law duties. Obtain
 local legal advice before a portfolio decision that stops work with those consequences.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-PML-STD-02.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-05`; `PCI-FND-STD-11`; `PCI-PML-STD-02.01`;
 `PCI-PML-STD-02.02`; `PCI-PML-STD-07.02`; `PCI-PML-STD-15.01`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 15 · KA 15.2 Benefits and portfolio balancing;
@@ -5176,7 +5176,7 @@ deferral the excess produces. Scenario judgement: a new component is directed in
 executive with no capacity test. Ethical dilemma: a ranking is adjusted after publication to move one
 sponsor's component up.
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law** — the
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard** — the
 v1.0 set contained no portfolio obligation. Amendment note: none.
 
 ---
@@ -5254,12 +5254,12 @@ the delivery date, and holding no interest in the transition proceeding. The rea
 must be reviewed at the transition gate by a competent reviewer independent of the delivery organisation,
 who must satisfy `PCI-PML-STD-01.03-PR-06`.
 
-**11. Materiality or threshold.** **This law states no readiness percentage, and any such figure would be
+**11. Materiality or threshold.** **This standard states no readiness percentage, and any such figure would be
 the defect it exists to prevent.** The gate block is binary and admits no threshold at all. For the
 discretionary block, the organisation's governance sets the confidence tolerance at which transition may be
-recommended and the escalation route below it; this law requires that the tolerance is documented, that the
+recommended and the escalation route below it; this standard requires that the tolerance is documented, that the
 computation is the conjunction, and that the assumption is stated. Which items belong in the gate block is
-set by law, licence, contract and the organisation's governance — not by this law and not by the project —
+set by law, licence, contract and the organisation's governance — not by this standard and not by the project —
 and the credential holder's obligation is to obtain that list from the owning authorities and record it.
 *Six-person internal project:* the gate block may contain a single item — an information-security sign-off,
 say — recorded met with the name of the person who signed it and the date; the discretionary block may hold
@@ -5277,7 +5277,7 @@ gate-block item is not met, and a credential holder must not seek, recommend or 
 organisation believes an item has been wrongly classified as mandatory, the remedy is to have the **owning
 authority** reclassify it, in writing, before the assessment — not to trade it at the gate.
 
-**The emergency case, stated so that the law survives it.** Where continuing without the transition is
+**The emergency case, stated so that the standard survives it.** Where continuing without the transition is
 itself the greater danger — a failed system that cannot be restored, an asset that must be taken out of
 service — the answer is still not a trade at the gate. It is that **the authority that owns the item
 exercises its own emergency instrument**: a regulator's derogation, a safety authority's temporary
@@ -5303,7 +5303,7 @@ condition most improves the joint probability.
 **15. AI prohibition.** An AI system must not decide readiness, close a mandatory precondition, assign a
 probability to one, recommend transition, or produce a readiness figure that is reported without a named
 human's derivation. **A model asked to score readiness across an undifferentiated condition list will
-produce exactly the defect this law prohibits**, and the credential holder must not use one in that form.
+produce exactly the defect this standard prohibits**, and the credential holder must not use one in that form.
 
 **16. AI verification.** **Independent recomputation plus boundary testing.** The discretionary conjunction
 must be recomputed by hand before the transition decision and reconciled to the reported figure. The
@@ -5332,11 +5332,11 @@ must be corrected before use.
 **18. Jurisdictional caution.** Which approvals, certificates, notifications and assessments are legally
 required before an asset, system or service enters use — and which body may grant each — are determined by
 statute, licence conditions, sector regulation and contract, and they differ by jurisdiction and by sector.
-**This law does not state which items are mandatory for any project, and a professional must not infer the
+**This standard does not state which items are mandatory for any project, and a professional must not infer the
 list from the examples given.** Obtain local legal and regulatory advice to establish the gate block for the
 specific transition.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-FND-STD-13`; `PCI-PML-STD-03.03`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-11`; `PCI-FND-STD-13`; `PCI-PML-STD-03.03`;
 `PCI-PML-STD-09.01`; `PCI-PML-STD-15.01`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.1 Handover, commissioning and
@@ -5367,7 +5367,7 @@ safety or licence item.
 escalation; examination failure on the associated competency; ethics review; certification investigation;
 suspension or withdrawal of the PML-AI credential — each subject to due process and a right of appeal.
 **PCI cannot authorise a transition, grant an approval, or override any regulator or safety authority**, and
-no PCI process substitutes for the approvals this law requires to be obtained from their owning authorities.
+no PCI process substitutes for the approvals this standard requires to be obtained from their owning authorities.
 
 **24. Examination application.** Calculation review: seven discretionary conditions whose product is
 computed and compared with the dashboard's average, with the candidate stating why the two differ and in
@@ -5378,13 +5378,13 @@ dilemma: an executive asks for the safety case to be shown as a probability so t
 
 **25. Version and status.** Version 2.0 · **not yet approved** · effective on approval · supersedes
 `PML-LAW-16-01` v1.0. Amendment note: renumbered, restructured and **substantially strengthened** to match
-the current Domain 16 readiness model. The v1.0 law required readiness to be assessed and evidenced but did
+the current Domain 16 readiness model. The v1.0 standard required readiness to be assessed and evidenced but did
 not distinguish mandatory preconditions from discretionary conditions, and therefore did not prohibit the
 central failure — a forbidden item entered as a probability. The two-block separation, the binary
 authority-named recording, the prohibitions on probability and on economic trade, and the conjunction rule
 are new, and element 12 now states expressly that no exception exists. **Stage 9 amendment:** the
 red-team's emergency case — the transition that must happen because continuing is the greater danger —
-had no compliant route, and a law with no route in the case that will arise is a law that gets broken;
+had no compliant route, and a standard with no route in the case that will arise is a standard that gets broken;
 element 12 now states the route without conceding the duty, by directing the credential holder to the
 owning authority's own derogation or temporary-approval instrument, requiring it to be recorded under
 `PR-02` with its scope and expiry, and leaving *hold* as the decision where that authority declines or
@@ -5456,9 +5456,9 @@ remunerated by reference to the project's closure. Where the project and the rec
 organisation, the acceptance authority must at least sit outside the project team and the arrangement must
 be recorded.
 
-**11. Materiality or threshold.** This law states no number. The organisation's governance sets the closure
+**11. Materiality or threshold.** This standard states no number. The organisation's governance sets the closure
 criteria, the handover set for each class of transfer, the supported-operation period and the tolerance for
-open items transferred; this law requires that they exist and are applied. An open item that is a mandatory
+open items transferred; this standard requires that they exist and are applied. An open item that is a mandatory
 precondition under `PCI-PML-STD-16.01` does not transfer — it is closed before transition or the transition
 does not happen.
 *Six-person internal project:* the handover set is six items, acceptance is a dated line signed by the
@@ -5506,7 +5506,7 @@ duties, data controllership and warranties transfer — and when — is determin
 not by a handover record. Obtain legal advice on what transfers and what remains, particularly for regulated
 assets and for personal data.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-PML-STD-09.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-12`; `PCI-PML-STD-09.01`;
 `PCI-PML-STD-13.02`; `PCI-PML-STD-14.01`; `PCI-PML-STD-16.01`; `PCI-PML-STD-16.03`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.2 Operational transition and contract
@@ -5536,7 +5536,7 @@ week before the project's funding ends. Evidence selection: which artefacts esta
 just documentation, was transferred. Calculation review: the cost of reconstructing as-built knowledge
 against the cost of recording it.
 
-**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new law** — the
+**25. Version and status.** Version 1.0 · **not yet approved** · effective on approval · **new standard** — the
 v1.0 set covered transition readiness and benefits measurement and left the acceptance of operational
 responsibility between them unstated. Amendment note: none.
 
@@ -5601,9 +5601,9 @@ of the delivery organisation and independent of the benefits owner where the own
 assessed on the benefit. Where an organisation is too small to supply that, the measurement must be taken
 directly from an unmodified source system extract and the extract retained.
 
-**11. Materiality or threshold.** This law states no tolerance for a shortfall. The organisation's governance
+**11. Materiality or threshold.** This standard states no tolerance for a shortfall. The organisation's governance
 sets the measurement period, the tolerance at which a shortfall is escalated, and the point at which a
-benefit is closed as unrealised; this law requires that these exist and are applied and that a shortfall
+benefit is closed as unrealised; this standard requires that these exist and are applied and that a shortfall
 inside tolerance is still reported.
 *Six-person internal project:* one benefit, measured from a report the operating team already produces,
 compared with a baseline captured before go-live, reported once at three months and once at twelve.
@@ -5654,7 +5654,7 @@ engage grant-condition, disclosure, procurement and fraud law, and the legal sta
 not the professional one used here. Obtain legal advice before a benefits claim is made outside the
 organisation.
 
-**19. Related PCI Laws.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-PML-STD-02.01`;
+**19. Related PCI Standards.** `PCI-FND-STD-02`; `PCI-FND-STD-06`; `PCI-FND-STD-12`; `PCI-PML-STD-02.01`;
 `PCI-PML-STD-02.02`; `PCI-PML-STD-11.01`; `PCI-PML-STD-15.02`; `PCI-PML-STD-16.02`.
 
 **20. Related Body of Knowledge content.** PML-AI · Domain 16 · KA 16.4 Benefits measurement, responsible
@@ -5694,45 +5694,45 @@ separated from the control sense per the suite terminology audit.
 ---
 ## Audit findings — the twenty-five questions worked over the set
 
-Drafting Manual §9 requires that every question below is answered before approval, and that a law
+Drafting Manual §9 requires that every question below is answered before approval, and that a standard
 failing one is revised, with the failure and its resolution recorded. This table records the working
-for the set as a whole, names the laws that failed a question in draft, and states what was changed.
+for the set as a whole, names the standards that failed a question in draft, and states what was changed.
 **Every failure listed was resolved before this edition was assembled**; the questions with an open
 finding are marked and carried into the outstanding due-process stages.
 
 The front-matter stage record above notes that the Stage 9 red-team was only partly worked for this
 edition. It has since been completed across the whole four-file corpus, and its findings and their
 disposition are recorded in [`STANDARDS_RED_TEAM_REPORT.md`](STANDARDS_RED_TEAM_REPORT.md). The amendments that pass
-produced in this volume are noted in the element 25 of each law changed, and the definitional reading
+produced in this volume are noted in the element 25 of each standard changed, and the definitional reading
 rules it added sit at the head of the Definitions above.
 
 | # | Question | Finding across the set | Action taken |
 |---|---|---|---|
-| 1 | What exact failure does this law prevent? | Answered in element 2 of all 32 laws. Three drafts stated a purpose that was really a benefit of compliance rather than a failure — `12.01`, `12.02`, `13.02`. | Element 2 rewritten in those three to name the failure: authority used to override professional judgement; information that stops flowing upward; the ordering right exercised by someone other than its named holder. |
+| 1 | What exact failure does this standard prevent? | Answered in element 2 of all 32 standards. Three drafts stated a purpose that was really a benefit of compliance rather than a failure — `12.01`, `12.02`, `13.02`. | Element 2 rewritten in those three to name the failure: authority used to override professional judgement; information that stops flowing upward; the ordering right exercised by someone other than its named holder. |
 | 2 | Is the requirement mandatory or only recommended? | All 32 principal obligations and all 148 process requirements are expressed with **must** or **must not**. No `should` carries an obligation anywhere in the set; no Recommended Practice is published in this edition. | None needed. Checked mechanically. |
-| 3 | Can a professional know whether it applies to them? | Element 3 of each law names the roles, the decisions and the delivery models. `15.01` and `15.02` initially read as though they bound every credential holder, when they bind those in programme and portfolio roles. | Element 3 of both narrowed, and element 11 of each states expressly what the obligation amounts to for a small internal project. |
-| 4 | Is the responsible person identifiable? | Element 8 of all 32 names an individual role. No law uses "the team", "management", "relevant people" or "the organisation" as a responsible role. Two drafts used "the PMO" — `03.03` and `09.02`. | Replaced with the named credential holder and the named artefact owner respectively. |
+| 3 | Can a professional know whether it applies to them? | Element 3 of each standard names the roles, the decisions and the delivery models. `15.01` and `15.02` initially read as though they bound every credential holder, when they bind those in programme and portfolio roles. | Element 3 of both narrowed, and element 11 of each states expressly what the obligation amounts to for a small internal project. |
+| 4 | Is the responsible person identifiable? | Element 8 of all 32 names an individual role. No standard uses "the team", "management", "relevant people" or "the organisation" as a responsible role. Two drafts used "the PMO" — `03.03` and `09.02`. | Replaced with the named credential holder and the named artefact owner respectively. |
 | 5 | **Is the required action observable?** | **The set's hardest question, and the one the previous edition failed.** `12.01` required conduct ("act with integrity, model the behaviour") and `12.02` required a state of affairs ("maintain conditions in which any team member can report bad news"). Neither can be observed and therefore neither could be required. | `12.01` rebuilt around **one observable act** — overriding another person's professional statement — with five process requirements that each leave a record. `12.02` rebuilt around **three observable things**: a published route with named recipients, the bypass property demonstrated person by person, and a concern register with seven mandatory fields. Both now pass. |
-| 6 | **Is compliance provable?** | Element 21 of every law is now a test a reviewer performs against records that exist. The behavioural laws were the exposure: a leadership law provable only by testimony proves nothing. | `12.02` element 21 test (e) **cross-matches two record sets that already exist** — the concern register against assignment, role-change and assessment records — so that detriment is found by matching dates and names rather than by asking anybody how they felt. `12.01` element 21 test (a) uses **document version history**, which is produced automatically by every document system in use. |
-| 7 | Is the required evidence proportionate? | Element 7 was tested against a six-person project throughout. Two laws required evidence a small project cannot economically produce — an earlier `05.02` required full traceability tooling and an earlier `14.02` required a verification log per output instance. | `05.02` now requires a maintained matrix in any form and full traversal only for the regulatory and safety subset; `14.02` requires a method per **output class**, not per output. |
-| 8 | Can the law be audited? | Yes for all 32. Each element 21 names the artefacts to obtain and the comparison to make. | None needed. |
-| 9 | Can the law be examined through a scenario? | Element 24 of every law gives at least two examination modes drawn from the Manual's list. No law is examinable only by recalling its number. | None needed. |
-| 10 | **Can a professional technically comply while defeating its purpose?** | **Six laws were vulnerable and were changed.** `03.02` — register only decisions above the limit, so the aggregation rule sees nothing. `05.02` — resolve orphans by deleting requirements. `08.01` — reassess exposure downward instead of escalating. `13.01` — raise throughput by starting more work. `16.01` — enter a mandatory precondition as a high probability so the readiness figure stays true-looking. `12.02` — publish a route whose only recipient is the person concerns are about. | `03.02-PR-02` universal registration; `05.02-PR-03` orphans reported, not tidied; `08.01-PR-02` escalate on threshold rather than on expectation of resolution, with **the date the threshold was met** recorded beside the date escalated; `13.01-PR-04` metrics reported with the work-in-progress position; `16.01-PR-03` and `-PR-04` prohibit probability and prohibit economic trade, and element 16 adds a **boundary test of the assessment's structure**; `12.02-PR-02` the bypass property, demonstrated person by person. |
-| 11 | Does it conflict with another PCI law? | No conflict found. Two overlaps were resolved by narrowing: `01.02` against `PCI-FND-STD-04`, and `05.01` against `04.01` where a scope change is also a baseline change. | `01.02` retitled and narrowed to the reserved-class list, the automation inventory and the examination record. `05.01-PR-03` routes scope additions **into** `04.01` rather than duplicating its assessment. |
-| 12 | Does it duplicate an external standard unnecessarily? | No law imports a requirement from an external instrument. Every element 17 entry states what the instrument is relied on **for** — usually the existence of a concept — and states that the obligation is PCI's own. | The phrase "it is not the source of this law's obligation" or its equivalent appears in the limitation column throughout. |
-| 13 | Does it misrepresent external authority? | Four risks were identified and closed. ISO 21500 is **context and concepts** since its current edition, not project-management guidance. ISO 45003 is **guidance and nothing can be certified against it**. The Scrum Guide is a **voluntary framework whose adoption is the whole of its force**, not a standard. The EU AI Act and the GDPR are **binding legislation in their own jurisdictions**, named here to illustrate a shape and relied on for nothing. | All four stated expressly at the point of use. No clause number, article, edition or effective date is asserted anywhere; editions are held in the suite register with their verification status, and rows recorded there as **not independently verified** are marked as such in the law that cites them. |
+| 6 | **Is compliance provable?** | Element 21 of every standard is now a test a reviewer performs against records that exist. The behavioural standards were the exposure: a leadership standard provable only by testimony proves nothing. | `12.02` element 21 test (e) **cross-matches two record sets that already exist** — the concern register against assignment, role-change and assessment records — so that detriment is found by matching dates and names rather than by asking anybody how they felt. `12.01` element 21 test (a) uses **document version history**, which is produced automatically by every document system in use. |
+| 7 | Is the required evidence proportionate? | Element 7 was tested against a six-person project throughout. Two standards required evidence a small project cannot economically produce — an earlier `05.02` required full traceability tooling and an earlier `14.02` required a verification log per output instance. | `05.02` now requires a maintained matrix in any form and full traversal only for the regulatory and safety subset; `14.02` requires a method per **output class**, not per output. |
+| 8 | Can the standard be audited? | Yes for all 32. Each element 21 names the artefacts to obtain and the comparison to make. | None needed. |
+| 9 | Can the standard be examined through a scenario? | Element 24 of every standard gives at least two examination modes drawn from the Manual's list. No standard is examinable only by recalling its number. | None needed. |
+| 10 | **Can a professional technically comply while defeating its purpose?** | **Six standards were vulnerable and were changed.** `03.02` — register only decisions above the limit, so the aggregation rule sees nothing. `05.02` — resolve orphans by deleting requirements. `08.01` — reassess exposure downward instead of escalating. `13.01` — raise throughput by starting more work. `16.01` — enter a mandatory precondition as a high probability so the readiness figure stays true-looking. `12.02` — publish a route whose only recipient is the person concerns are about. | `03.02-PR-02` universal registration; `05.02-PR-03` orphans reported, not tidied; `08.01-PR-02` escalate on threshold rather than on expectation of resolution, with **the date the threshold was met** recorded beside the date escalated; `13.01-PR-04` metrics reported with the work-in-progress position; `16.01-PR-03` and `-PR-04` prohibit probability and prohibit economic trade, and element 16 adds a **boundary test of the assessment's structure**; `12.02-PR-02` the bypass property, demonstrated person by person. |
+| 11 | Does it conflict with another PCI standard? | No conflict found. Two overlaps were resolved by narrowing: `01.02` against `PCI-FND-STD-04`, and `05.01` against `04.01` where a scope change is also a baseline change. | `01.02` retitled and narrowed to the reserved-class list, the automation inventory and the examination record. `05.01-PR-03` routes scope additions **into** `04.01` rather than duplicating its assessment. |
+| 12 | Does it duplicate an external standard unnecessarily? | No standard imports a requirement from an external instrument. Every element 17 entry states what the instrument is relied on **for** — usually the existence of a concept — and states that the obligation is PCI's own. | The phrase "it is not the source of this standard's obligation" or its equivalent appears in the limitation column throughout. |
+| 13 | Does it misrepresent external authority? | Four risks were identified and closed. ISO 21500 is **context and concepts** since its current edition, not project-management guidance. ISO 45003 is **guidance and nothing can be certified against it**. The Scrum Guide is a **voluntary framework whose adoption is the whole of its force**, not a standard. The EU AI Act and the GDPR are **binding legislation in their own jurisdictions**, named here to illustrate a shape and relied on for nothing. | All four stated expressly at the point of use. No clause number, article, edition or effective date is asserted anywhere; editions are held in the suite register with their verification status, and rows recorded there as **not independently verified** are marked as such in the standard that cites them. |
 | 14 | Does it require legal or jurisdiction-specific advice? | Element 18 of all 32 states what needs local advice. The heaviest are `10.01` (procurement regimes), `12.02` (whistleblowing, monitoring, works councils), `14.01` (data protection) and `16.01` (which approvals are legally required, and who may grant them). | `16.01` element 18 states expressly that **the professional must not infer the gate-block list from the examples given** — the examples are the manuscript's, and the list is the owning authorities'. |
-| 15 | Does it define the relevant materiality threshold? | Yes, and **no law in this set invents a percentage.** Element 11 of every law requires that the organisation's own documented threshold exists and is applied, and states the professional-judgement criteria and the applying role where no number is defensible. Three laws state expressly that a number would be harmful: `12.02` (a concern target invites manufactured concerns), `15.02` (a borrowed utilisation figure is worse than none) and `16.01` (the gate block is binary and admits no threshold at all). | Element 11 of every law carries a *six-person internal project* line and a *multi-partner national programme* line, which is where the thresholds were tested. |
-| 16 | Does it cover AI use? | Elements 14, 15 and 16 appear in all 32 laws. | None needed. |
-| 17 | Does it preserve human accountability? | Element 15 of every law prohibits an AI system from deciding, approving, certifying, signing, waiving, authorising or being recorded as verifying. `01.01`, `01.02` and `14.02` carry the load. | `14.02` element 15 adds that **an AI system must not verify another AI system's output** for the purposes of this set. |
-| 18 | Does it contain an exception process? | Element 12 of all 32. **Four laws state that no exception is permitted**, and each gives the reason: `01.03` (accountability for a conflicted decision cannot be waived; escalate instead), `12.01` (the principal obligation), `12.02` (`PR-02`, `PR-04`, `PR-05`) and `16.01` (no exception exists in respect of a mandatory precondition, and none may be sought). | `16.01` element 12 also states the correct remedy where a classification is disputed: have the **owning authority** reclassify it in writing before the assessment. |
+| 15 | Does it define the relevant materiality threshold? | Yes, and **no standard in this set invents a percentage.** Element 11 of every standard requires that the organisation's own documented threshold exists and is applied, and states the professional-judgement criteria and the applying role where no number is defensible. Three standards state expressly that a number would be harmful: `12.02` (a concern target invites manufactured concerns), `15.02` (a borrowed utilisation figure is worse than none) and `16.01` (the gate block is binary and admits no threshold at all). | Element 11 of every standard carries a *six-person internal project* line and a *multi-partner national programme* line, which is where the thresholds were tested. |
+| 16 | Does it cover AI use? | Elements 14, 15 and 16 appear in all 32 standards. | None needed. |
+| 17 | Does it preserve human accountability? | Element 15 of every standard prohibits an AI system from deciding, approving, certifying, signing, waiving, authorising or being recorded as verifying. `01.01`, `01.02` and `14.02` carry the load. | `14.02` element 15 adds that **an AI system must not verify another AI system's output** for the purposes of this set. |
+| 18 | Does it contain an exception process? | Element 12 of all 32. **Four standards state that no exception is permitted**, and each gives the reason: `01.03` (accountability for a conflicted decision cannot be waived; escalate instead), `12.01` (the principal obligation), `12.02` (`PR-02`, `PR-04`, `PR-05`) and `16.01` (no exception exists in respect of a mandatory precondition, and none may be sought). | `16.01` element 12 also states the correct remedy where a classification is disputed: have the **owning authority** reclassify it in writing before the assessment. |
 | 19 | Does it define escalation? | Element 13 of all 32. The defined term *escalation threshold* requires a named destination **and** a time; `03.02-PR-05` makes encountering one without them an escalable defect in itself. | None needed. |
 | 20 | Is every important term defined? | Thirteen compliance-deciding terms are defined at the head of the file, plus nineteen supporting terms. Terms the suite terminology audit records as carrying legitimately different meanings across the three books are **kept apart and flagged**, not collapsed: *sponsor* (delivery sense used; the project-finance sense is PFL-AI's), *baseline* (control sense and benefits sense, both defined), *verification* (V&V sense and AI-assurance sense, both defined), *governance* (project sense and data governance, written in full), and *benefit* against *value* against Earned Value. | The definition of *material* was rewritten twice: it now states that safety, legality, licence and truthfulness matters are material **irrespective of size** and that no documented threshold reduces them. |
 | 21 | **Is the language concrete and modern?** | **Zero occurrences of the legislative auxiliary verb** in the file, in any field, checked mechanically. No `may not` is used for a prohibition. No undefined judgement word carries an obligation: *appropriate*, *adequate*, *reasonable*, *timely* and *sufficient* were removed from every obligation or replaced with a stated test. | The Manual §1 requirement to state the ISO mapping was met **without printing the prohibited word**: the mapping is stated by reference to the auxiliary that ISO/IEC Directives Part 2 reserves for requirements. This is recorded here because it is a deliberate resolution of a tension between two Manual provisions, and the Interpretation Panel should confirm it. |
-| 22 | **Does it impose an impossible or excessive burden?** | Tested law by law against a six-person internal project. Three drafts were excessive: an earlier `03.01` required four separate approved artefacts on any project of any size; an earlier `10.01` required a three-person panel; an earlier `16.03` required independent measurement in all cases. | `03.01-PR-03` makes proportionate tailoring an express, recorded decision so light governance is a choice rather than an omission; `10.01` element 11 scales to a three-supplier quotation exercise; `16.03` element 10 permits, for an organisation too small to supply independence, measurement taken directly from an unmodified source extract that is retained. **The residual burden is honestly stated:** `01.03`, `12.02` and `16.01` each add real recording work, and each was retained because the failure it prevents is severe. |
-| 23 | Can it operate on both small projects and megaprojects? | Yes — element 11 of every law states both cases explicitly, and this is where the set was most often rewritten. | Recorded in element 11 throughout. |
-| 24 | Can it operate internationally? | No law depends on a single jurisdiction's legal concepts. Element 18 of every law states what is jurisdiction-specific, and no law states a legal position. | `12.02` element 18 states expressly that where a national whistleblowing or monitoring regime imposes a higher or more specific obligation, **that regime governs**. |
-| 25 | Is there a clear consequence within PCI's authority? | Element 23 of all 32 draws only from Charter §9. Three laws state expressly what PCI **cannot** do, because those are the three where a reader might otherwise assume a wider power: `10.01` (PCI cannot set aside an award or impose a fine), `12.02` (PCI cannot compensate, order reinstatement or penalise an employer) and `16.01` (PCI cannot authorise a transition or override a regulator). | Added to those three; the remainder rely on the Charter §9 list, which is stated in full in each. |
+| 22 | **Does it impose an impossible or excessive burden?** | Tested standard by standard against a six-person internal project. Three drafts were excessive: an earlier `03.01` required four separate approved artefacts on any project of any size; an earlier `10.01` required a three-person panel; an earlier `16.03` required independent measurement in all cases. | `03.01-PR-03` makes proportionate tailoring an express, recorded decision so light governance is a choice rather than an omission; `10.01` element 11 scales to a three-supplier quotation exercise; `16.03` element 10 permits, for an organisation too small to supply independence, measurement taken directly from an unmodified source extract that is retained. **The residual burden is honestly stated:** `01.03`, `12.02` and `16.01` each add real recording work, and each was retained because the failure it prevents is severe. |
+| 23 | Can it operate on both small projects and megaprojects? | Yes — element 11 of every standard states both cases explicitly, and this is where the set was most often rewritten. | Recorded in element 11 throughout. |
+| 24 | Can it operate internationally? | No standard depends on a single jurisdiction's legal concepts. Element 18 of every standard states what is jurisdiction-specific, and no standard states a legal position. | `12.02` element 18 states expressly that where a national whistleblowing or monitoring regime imposes a higher or more specific obligation, **that regime governs**. |
+| 25 | Is there a clear consequence within PCI's authority? | Element 23 of all 32 draws only from Charter §9. Three standards state expressly what PCI **cannot** do, because those are the three where a reader might otherwise assume a wider power: `10.01` (PCI cannot set aside an award or impose a fine), `12.02` (PCI cannot compensate, order reinstatement or penalise an employer) and `16.01` (PCI cannot authorise a transition or override a regulator). | Added to those three; the remainder rely on the Charter §9 list, which is stated in full in each. |
 
 ### Definitions reconciliation
 
@@ -5750,7 +5750,7 @@ owner*, *escalation threshold* and *conflict of interest* now carry the canonica
   than the divergence.
 - ***Competent reviewer* no longer folds independence into competence.** The limb requiring that the
   reviewer did not prepare, direct, specify or approve the thing reviewed is *independence*, imposed by
-  each law's element 10 and tested separately. That separation is what makes `PCI-FND-STD-10` element
+  each standard's element 10 and tested separately. That separation is what makes `PCI-FND-STD-10` element
   12's supervised-acquisition exception usable, and no element 10 loses an independence requirement.
 - ***Material AI assistance* was undefined here** while `PCI-PML-STD-14.02` element 21(d) made
   compliance turn on it. The canonical definition is supplied so the test can be applied; the
@@ -5760,19 +5760,19 @@ owner*, *escalation threshold* and *conflict of interest* now carry the canonica
 
 | Finding | Why it is open | Where it goes |
 |---|---|---|
-| **Six external-reference rows are recorded as "not independently verified" in the suite register** — ISO 21503, ISO 21504, ISO 21505, ISO 9000, the PMBOK Guide's companion *Code of Ethics and Professional Conduct*, and the AACE TCM Framework. | Charter §5 Stage 5 was performed against the register, not against the publishers. | Verification before publication; each citing law states the open status in element 17. |
-| ~~**The published foundational file lags the concordance.**~~ **Closed.** | `PCI_FOUNDATIONAL_STANDARDS.md` now carries fifteen laws under the Charter §3 form `PCI-FND-STD-01` to `PCI-FND-STD-15`, with the subjects listed in *How to read these laws* above. Every citation in this set resolves against the published file itself. | Closed on the foundational rebuild. The superseded `PCI-LAW-F-NN` identifiers survive only as history, in [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md). |
-| **Charter §5 Stages 4, 6, 7, 11, 12 and 13 have not been performed.** | Technical review, practitioner consultation, impact assessment, approval, publication and post-implementation review are outstanding. | Element 25 of every law records the set as **not yet approved**, with the effective date on approval. |
+| **Six external-reference rows are recorded as "not independently verified" in the suite register** — ISO 21503, ISO 21504, ISO 21505, ISO 9000, the PMBOK Guide's companion *Code of Ethics and Professional Conduct*, and the AACE TCM Framework. | Charter §5 Stage 5 was performed against the register, not against the publishers. | Verification before publication; each citing standard states the open status in element 17. |
+| ~~**The published foundational file lags the concordance.**~~ **Closed.** | `PCI_FOUNDATIONAL_STANDARDS.md` now carries fifteen standards under the Charter §3 form `PCI-FND-STD-01` to `PCI-FND-STD-15`, with the subjects listed in *How to read these standards* above. Every citation in this set resolves against the published file itself. | Closed on the foundational rebuild. The superseded `PCI-LAW-F-NN` identifiers survive only as history, in [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md). |
+| **Charter §5 Stages 4, 6, 7, 11, 12 and 13 have not been performed.** | Technical review, practitioner consultation, impact assessment, approval, publication and post-implementation review are outstanding. | Element 25 of every standard records the set as **not yet approved**, with the effective date on approval. |
 | **The ISO-mapping statement resolves a tension between two Manual provisions.** | Manual §1 both prohibits the legislative auxiliary everywhere and requires the ISO mapping to be stated. This file states the mapping by describing the auxiliary rather than printing it. | Interpretation Panel confirmation under Charter §6. |
 
 ---
 
-## Index of PML-AI Professional Laws
+## Index of PML-AI Professional Standards
 
-**Thirty-two laws · one hundred and forty-eight process requirements · sixteen anchor domains.**
+**Thirty-two standards · one hundred and forty-eight process requirements · sixteen anchor domains.**
 External-reference categories are Drafting Manual §6 categories: **3** international voluntary standard ·
 **4** contract framework · **5** professional framework · **6** ethical code · **10** illustrative practice.
-Every law also relates to category **9**, PCI internal professional law, through its element 19, and that
+Every standard also relates to category **9**, PCI internal professional standard, through its element 19, and that
 category is not repeated in the table.
 
 | ID | Official title | Anchor domain | Principal obligation | External reference categories |
@@ -5812,21 +5812,21 @@ category is not repeated in the table.
 
 ### Distribution
 
-Every one of the sixteen PML-AI domains carries at least one law. Domain 3 carries four, because
+Every one of the sixteen PML-AI domains carries at least one standard. Domain 3 carries four, because
 governance is where decision rights, gate evidence and sponsorship are taught; Domain 16 carries three,
 because transition, operational acceptance and benefits measurement are three separate decisions that
 fail in three separate ways; Domains 1, 2, 5, 7, 8, 9, 12, 13, 14 and 15 carry two or three; Domains 4,
-6, 10 and 11 carry the single law their material makes mandatory.
+6, 10 and 11 carry the single standard their material makes mandatory.
 
-**Eight laws are new in this edition** — `01.03`, `03.04`, `07.02`, `08.02`, `13.02`, `15.01`, `15.02`
+**Eight standards are new in this edition** — `01.03`, `03.04`, `07.02`, `08.02`, `13.02`, `15.01`, `15.02`
 and `16.02` — and two were rebuilt because they could not be verified: `12.01` and `12.02`. `01.02` was
-retitled to end a collision with the foundational law *Human Decision Authority*, and `09.02` was
+retitled to end a collision with the foundational standard *Human Decision Authority*, and `09.02` was
 retitled and given a new principal obligation. The remainder were renumbered, restructured to the
 twenty-five-element form,
 re-drafted in must-form, split into one principal obligation plus process requirements, and given a
 compliance test that can actually be performed.
 
-Every law in this set operates under the Foundational Standards `PCI-FND-STD-01` to `PCI-FND-STD-15`, under
+Every standard in this set operates under the Foundational Standards `PCI-FND-STD-01` to `PCI-FND-STD-15`, under
 the **PCI Standards Charter** and the **PCI Standards Drafting Manual**, and under one principle:
 
 > **AI proposes; the professional verifies, decides and remains accountable.**

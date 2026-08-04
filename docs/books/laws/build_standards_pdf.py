@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the PCI Standards as a single A4 publication.
 
-Assembles the Charter, the Drafting Manual, the four law sets and the
+Assembles the Charter, the Drafting Manual, the four standard sets and the
 concordance, converts to HTML via pandoc, and renders with WeasyPrint.
 
 Usage:  python3 build_standards_pdf.py [output.pdf]
@@ -46,7 +46,7 @@ TITLE = f"""
   <div class="warn2">
     <strong>Not yet approved.</strong> This edition has not completed the due process in Charter
     &sect;5. Practitioner consultation, approval by a named PCI body and post-implementation review
-    have not been performed, and no named human has approved any law in it.
+    have not been performed, and no named human has approved any standard in it.
   </div>
 </div>
 """
@@ -102,7 +102,7 @@ def main() -> None:
             continue
         parts.append(path.read_text(encoding="utf-8"))
         print(f"included: {name}")
-    combined = HERE / "_combined_laws.md"
+    combined = HERE / "_combined_standards.md"
     combined.write_text("\n\n".join(parts), encoding="utf-8")
 
     html = subprocess.run(
