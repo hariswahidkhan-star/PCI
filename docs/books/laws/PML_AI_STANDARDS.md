@@ -78,7 +78,7 @@ the Interpretation Panel corrects it.
 ### The relationship to the Foundational Standards
 
 Every standard below sits under the **PCI Foundational Standards**, which bind every credential holder in all
-three credentials. This file cites them in the Charter §3 identifier form `PCI-FND-STD-NN`. The
+three credentials. This file cites them in the Charter section 3 identifier form `PCI-FND-STD-NN`. The
 foundational set is a **fifteen-standard** set, and its subjects are listed below. This is the same
 concordance the rebuilt PCL-AI Certification Standard set uses, so that `PCI-FND-STD-NN` denotes the same
 standard in every credential's standard file:
@@ -107,7 +107,7 @@ that only restates its parent is a defect and is listed as such in the audit tab
 
 ### External references
 
-Every external reference is classified as exactly **one** Drafting Manual §6 category, and the
+Every external reference is classified as exactly **one** Drafting Manual section 6 category, and the
 categories are never combined:
 
 | # | Category | Used in this file for |
@@ -147,7 +147,7 @@ publisher.** Nothing here is reproduced from any of them.
 
 **The two taxonomies.** The suite register uses its own seven-category scheme; the Drafting Manual
 uses ten. Where the two differ — most visibly for the Scrum Guide, which the register calls a
-voluntary framework and the Manual's scheme reaches through category 5 — **Manual §6 governs this
+voluntary framework and the Manual's scheme reaches through category 5 — **Manual section 6 governs this
 file**, and the register reference is given so a reader can see both.
 
 ### No endorsement
@@ -164,7 +164,7 @@ the suite editorial charter (`../registries/TERMINOLOGY.md`).
 
 ### The due-process record, stated honestly
 
-Charter §5 requires thirteen stages and requires the file to record which were performed and by whom,
+Charter section 5 requires thirteen stages and requires the file to record which were performed and by whom,
 **including where a stage was performed with AI assistance rather than by a named human.** For this
 edition:
 
@@ -210,7 +210,7 @@ Three reading rules remain, and they still matter for any term this reconciliati
 First, **where a foundational standard states its own defined term by its `D-NN` number, that definition
 governs that foundational obligation**, and nothing here narrows it. Second, **where a definition here
 and a foundational definition both bear on the same act, the one producing the wider obligation
-governs** — Charter §4 states that a PCI Standard never lowers an obligation. Third, a term defined here and
+governs** — Charter section 4 states that a PCI Standard never lowers an obligation. Third, a term defined here and
 not there is a PML-AI term and carries only the sense given here.
 
 **How element 21 samples are drawn.** Where a standard's element 21 tests "a stated sample", the sample is
@@ -467,7 +467,7 @@ others without asking the author.
 Where a sentence could carry either sense, this set writes the qualified form. **The two senses are a
 declared collision, not a defect**: collapsing V&V verification into AI verification would make this
 set's delivery-assurance standards wrong. Both are recorded at
-[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md) §4 with the context each belongs
+[`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md) section 4 with the context each belongs
 to, and at `../registries/TERMINOLOGY_AUDIT.md` Issue 9.
 
 ---
@@ -574,21 +574,21 @@ human owner, a reasoning field and a versioned information reference are present
 - **ISO** · *ISO 21502, Project, programme and portfolio management — Guidance on project management* ·
   relied on for: the existence of a distribution of accountabilities between a governing body, a
   sponsor and a project manager · edition not asserted here; recorded at **EXT-028** in the suite
-  External-Reference Register · **Manual §6 category 3 — international voluntary standard** · currency
+  External-Reference Register · **Manual section 6 category 3 — international voluntary standard** · currency
   checked 2026-08-03 · limitation: guidance only, voluntary unless imported by contract or regulation;
   nothing is certifiable against it; it is not the source of this standard's obligation.
 - **ISO** · *ISO 21505, Project, programme and portfolio management — Guidance on governance* · relied
   on for: the location of delivery accountability inside an organisation's governance arrangements ·
-  **EXT-032**, recorded as **not independently verified — verify current requirements** · **Manual §6
+  **EXT-032**, recorded as **not independently verified — verify current requirements** · **Manual section 6
   category 3** · limitation: as above, and the register's verification status is open.
 - **ISO/IEC** · *ISO/IEC 42001, Information technology — Artificial intelligence — Management system* ·
   relied on for: the existence of an expectation that organisational roles and responsibilities for AI
-  use are assigned · **EXT-021** · **Manual §6 category 3** · currency checked 2026-08-03 · limitation:
+  use are assigned · **EXT-021** · **Manual section 6 category 3** · currency checked 2026-08-03 · limitation:
   a certifiable management-system standard, voluntary unless adopted; certification concerns a
   management system, not any individual decision.
 - **OECD** · *Recommendation of the Council on Artificial Intelligence (the OECD AI Principles)* ·
   relied on for: the proposition that human actors remain accountable for AI-influenced outcomes ·
-  **EXT-081** · **Manual §6 category 10 — illustrative practice** · currency checked 2026-08-03 ·
+  **EXT-081** · **Manual section 6 category 10 — illustrative practice** · currency checked 2026-08-03 ·
   limitation: a Council Recommendation, not binding law even on adherents; never legislation.
 
 **18. Jurisdictional caution.** Directors' duties, statutory delivery, safety, planning and licensing
@@ -628,7 +628,7 @@ candidate locates accountability and states the next required act. Evidence sele
 five artefacts, the two that would establish who decided. Escalation decision: an instruction to act
 outside recorded authority.
 
-**25. Version and status.** Version 2.0 · **not yet approved** (Charter §5 Stage 11 outstanding) ·
+**25. Version and status.** Version 2.0 · **not yet approved** (Charter section 5 Stage 11 outstanding) ·
 effective on approval · supersedes `PML-LAW-01-01` v1.0. Amendment note: renumbered; restructured to
 the twenty-five-element form; legislative drafting removed; the former single rule split into one
 principal obligation and four process requirements; compliance test replaced with a performable
@@ -741,17 +741,17 @@ such number by an independent method and record the comparison.
 **17. External reference.**
 - **ISO/IEC** · *ISO/IEC 38507, Governance implications of the use of artificial intelligence by
   organizations* · relied on for: the existence of governing-body-level questions about where AI is
-  permitted to act · **EXT-037** · **Manual §6 category 3 — international voluntary standard** ·
+  permitted to act · **EXT-037** · **Manual section 6 category 3 — international voluntary standard** ·
   currency checked 2026-08-03 · limitation: guidance aimed at governing bodies, not at practitioners;
   voluntary; not certifiable.
 - **NIST (US Department of Commerce)** · *Artificial Intelligence Risk Management Framework
   (AI RMF 1.0)* · relied on for: the existence of a govern-map-measure-manage shape for AI risk ·
-  **EXT-080** · **Manual §6 category 10 — illustrative practice** · currency checked 2026-08-03 ·
+  **EXT-080** · **Manual section 6 category 10 — illustrative practice** · currency checked 2026-08-03 ·
   limitation: NIST states it is voluntary, rights-preserving and non-sector-specific; **it is not a
   standard and not a regulation**.
 - **European Union** · *Regulation (EU) 2024/1689 (the AI Act)* · relied on for: illustrating a
   risk-tiered regulatory shape that treats human oversight as a design question · **EXT-100** ·
-  **Manual §6 category 1 — applicable legislation or regulation** · currency checked 2026-08-03 · limitation: **binding
+  **Manual section 6 category 1 — applicable legislation or regulation** · currency checked 2026-08-03 · limitation: **binding
   legislation within the European Union only**, named here only to illustrate the shape; it is
   relied on for no requirement in this standard, and whether it applies to a given project is a question for
   qualified local counsel.
@@ -924,16 +924,16 @@ trace each assurer's name against the assured artefact's authorship and approval
 **17. External reference.**
 - **Project Management Institute** · *Code of Ethics and Professional Conduct* · relied on for: the
   existence of a professional expectation of conflict disclosure and impartiality · **EXT-063**,
-  recorded as **not independently verified — verify current requirements** · **Manual §6 category 6 —
+  recorded as **not independently verified — verify current requirements** · **Manual section 6 category 6 —
   ethical code** · limitation: binding only where a body, regulator or engagement has adopted it; a PCI
   credential holder not subject to it is not made subject to it by this standard. No text is reproduced.
 - **ISO/IEC** · *ISO/IEC 17024, Conformity assessment — General requirements for bodies operating
   certification of persons* · relied on for: the existence of impartiality requirements on bodies that
-  certify people, which is why PCI holds itself to this standard as well · **EXT-022** · **Manual §6
+  certify people, which is why PCI holds itself to this standard as well · **EXT-022** · **Manual section 6
   category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation: it binds
   certification bodies, not credential holders; voluntary unless imported.
 - **OECD (G20/OECD)** · *G20/OECD Principles of Corporate Governance* · relied on for: the existence of
-  a governance expectation that conflicted parties do not decide · **EXT-128** · **Manual §6 category
+  a governance expectation that conflicted parties do not decide · **EXT-128** · **Manual section 6 category
   10 — illustrative practice** · currency checked 2026-08-03 · limitation: a Council Recommendation;
   non-binding; **not legislation**.
 
@@ -1108,16 +1108,16 @@ robustness.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of a business
-  case as a governance instrument reviewed through the lifecycle · **EXT-028** · **Manual §6 category
+  case as a governance instrument reviewed through the lifecycle · **EXT-028** · **Manual section 6 category
   3 — international voluntary standard** · currency checked 2026-08-03 · limitation: guidance;
   voluntary; not certifiable; not the source of this obligation.
 - **ISO** · *ISO 21504, Guidance on portfolio management* · relied on for: the existence of a
   portfolio-level test that a component still merits its funding · **EXT-031**, recorded as **not
-  independently verified — verify current requirements** · **Manual §6 category 3** · limitation: as
+  independently verified — verify current requirements** · **Manual section 6 category 3** · limitation: as
   above, with an open verification status.
 - **AACE International** · *Total Cost Management (TCM) Framework* · relied on for: the existence and
   purpose of a maturity-based progression in estimate reliability · **EXT-064**, recorded as **not
-  independently verified — verify current requirements** · **Manual §6 category 5 — professional
+  independently verified — verify current requirements** · **Manual section 6 category 5 — professional
   framework** · limitation: **professional framework, never regulatory authority**; no accuracy range,
   class table or recommended-practice text is reproduced.
 
@@ -1266,13 +1266,13 @@ against both components' registers.
 **17. External reference.**
 - **ISO** · *ISO 21503, Guidance on programme management* · relied on for: the existence of a
   programme-level concern with benefits that no single component delivers · **EXT-030**, recorded as
-  **not independently verified — verify current requirements** · **Manual §6 category 3 — international
+  **not independently verified — verify current requirements** · **Manual section 6 category 3 — international
   voluntary standard** · limitation: guidance; voluntary; not certifiable; open verification status.
 - **ISO** · *ISO 21504, Guidance on portfolio management* · relied on for: the existence of a portfolio
   concern with the benefits a component is funded to produce · **EXT-031**, **not independently
-  verified** · **Manual §6 category 3** · limitation: as above.
+  verified** · **Manual section 6 category 3** · limitation: as above.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of benefit
-  identification and realisation as lifecycle activities · **EXT-028** · **Manual §6 category 3** ·
+  identification and realisation as lifecycle activities · **EXT-028** · **Manual section 6 category 3** ·
   currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 
 **18. Jurisdictional caution.** Where benefits are claimed to a grant funder, a regulator, a market or a
@@ -1416,13 +1416,13 @@ must then approve the pack by name.
 **17. External reference.**
 - **ISO** · *ISO 21505, Guidance on governance of projects, programmes and portfolios* · relied on for:
   the existence of a governance framework distinct from management · **EXT-032**, **not independently
-  verified — verify current requirements** · **Manual §6 category 3 — international voluntary standard**
+  verified — verify current requirements** · **Manual section 6 category 3 — international voluntary standard**
   · limitation: guidance; voluntary; not certifiable; open verification status.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of pre-delivery
-  governance establishment · **EXT-028** · **Manual §6 category 3** · currency checked 2026-08-03 ·
+  governance establishment · **EXT-028** · **Manual section 6 category 3** · currency checked 2026-08-03 ·
   limitation: guidance; voluntary; not certifiable.
 - **OECD (G20/OECD)** · *G20/OECD Principles of Corporate Governance* · relied on for: the existence of
-  a board-level expectation that authority is defined before it is exercised · **EXT-128** · **Manual §6
+  a board-level expectation that authority is defined before it is exercised · **EXT-128** · **Manual section 6
   category 10 — illustrative practice** · currency checked 2026-08-03 · limitation: a Council
   Recommendation; non-binding; **not legislation**.
 
@@ -1572,15 +1572,15 @@ entries and confirm against source minutes that the recorded value, class and au
 **17. External reference.**
 - **ISO** · *ISO 21505, Guidance on governance of projects, programmes and portfolios* · relied on for:
   the existence of defined decision authority within governance · **EXT-032**, **not independently
-  verified** · **Manual §6 category 3 — international voluntary standard** · limitation: guidance;
+  verified** · **Manual section 6 category 3 — international voluntary standard** · limitation: guidance;
   voluntary; not certifiable; open verification status.
 - **Project Management Institute** · *A Guide to the Project Management Body of Knowledge (PMBOK
   Guide)* · relied on for: the existence of change and decision authority structures in professional
-  practice · **EXT-060** · **Manual §6 category 5 — professional framework** · currency checked
+  practice · **EXT-060** · **Manual section 6 category 5 — professional framework** · currency checked
   2026-08-03 · limitation: **a professional framework, never regulatory authority**; no edition is
   asserted and no text is reproduced.
 - **COSO** · *Internal Control — Integrated Framework* · relied on for: the existence of an
-  authorisation control concept · **EXT-084** · **Manual §6 category 10 — illustrative practice** ·
+  authorisation control concept · **EXT-084** · **Manual section 6 category 10 — illustrative practice** ·
   currency checked 2026-08-03 · limitation: voluntary in itself, though widely imported by regulators;
   it is not legislation and this standard does not rely on it for any requirement.
 
@@ -1738,16 +1738,16 @@ against the source and confirm the summary states the same position, including i
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of stage-gate
-  style continuation decisions in project governance · **EXT-028** · **Manual §6 category 3 —
+  style continuation decisions in project governance · **EXT-028** · **Manual section 6 category 3 —
   international voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary;
   not certifiable.
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
-  certifiable requirement for documented information and its control · **EXT-033** · **Manual §6
+  certifiable requirement for documented information and its control · **EXT-033** · **Manual section 6
   category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation: **this is
   the certifiable one in the ISO 9000 family**, but certification is voluntary and concerns a management
   system; a project is not certified against it and this standard does not import its requirements.
 - **ISO** · *ISO 21505, Guidance on governance* · relied on for: the existence of assurance lines within
-  governance · **EXT-032**, **not independently verified** · **Manual §6 category 3** · limitation: as
+  governance · **EXT-032**, **not independently verified** · **Manual section 6 category 3** · limitation: as
   above, with an open verification status.
 
 **18. Jurisdictional caution.** Where a gate decision concerns a safety case, a licence, a permission, a
@@ -1893,14 +1893,14 @@ list the project is operating is the list they accept.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of a sponsor role
-  distinct from the project manager · **EXT-028** · **Manual §6 category 3 — international voluntary
+  distinct from the project manager · **EXT-028** · **Manual section 6 category 3 — international voluntary
   standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 21505, Guidance on governance* · relied on for: the existence of an accountable owner
-  within governance arrangements · **EXT-032**, **not independently verified** · **Manual §6 category
+  within governance arrangements · **EXT-032**, **not independently verified** · **Manual section 6 category
   3** · limitation: as above, with an open verification status.
 - **OECD (G20/OECD)** · *G20/OECD Principles of Corporate Governance* · relied on for: the existence of
   a board expectation that an accountable executive owner exists for major commitments · **EXT-128** ·
-  **Manual §6 category 10 — illustrative practice** · currency checked 2026-08-03 · limitation: a
+  **Manual section 6 category 10 — illustrative practice** · currency checked 2026-08-03 · limitation: a
   Council Recommendation; non-binding; **not legislation**.
 
 **18. Jurisdictional caution.** In some jurisdictions and sectors the sponsor or senior responsible owner
@@ -2043,18 +2043,18 @@ recorded.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of integrated
-  change control as a lifecycle practice · **EXT-028** · **Manual §6 category 3 — international
+  change control as a lifecycle practice · **EXT-028** · **Manual section 6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **FIDIC** · *FIDIC suite of conditions of contract* · relied on for: the existence of contractual
   variation and claim mechanisms that run in parallel with, and do not replace, internal change control
-  · **EXT-050** · **Manual §6 category 4 — contract framework** · currency checked 2026-08-03 ·
+  · **EXT-050** · **Manual section 6 category 4 — contract framework** · currency checked 2026-08-03 ·
   limitation: **binds only the parties who adopt it, through the contract they sign**; characterised
   generically, no clause numbers cited, no text reproduced.
 - **NEC** · *NEC4 suite of contracts* · relied on for: the existence of a compensation-event mechanism
-  with its own notification timescales · **EXT-051** · **Manual §6 category 4 — contract framework** ·
+  with its own notification timescales · **EXT-051** · **Manual section 6 category 4 — contract framework** ·
   currency checked 2026-08-03 · limitation: as above; characterised generically.
 - **Project Management Institute** · *PMBOK Guide* · relied on for: the existence of change control as
-  professional practice · **EXT-060** · **Manual §6 category 5 — professional framework** · currency
+  professional practice · **EXT-060** · **Manual section 6 category 5 — professional framework** · currency
   checked 2026-08-03 · limitation: **a professional framework, never regulatory authority**; no edition
   asserted, no text reproduced.
 
@@ -2190,15 +2190,15 @@ exist and pre-date production.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of scope definition
-  and control as lifecycle practices · **EXT-028** · **Manual §6 category 3 — international voluntary
+  and control as lifecycle practices · **EXT-028** · **Manual section 6 category 3 — international voluntary
   standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 21500, Project, programme and portfolio management — Context and concepts* · relied on
-  for: the vocabulary of project, programme and portfolio context · **EXT-027** · **Manual §6 category
+  for: the vocabulary of project, programme and portfolio context · **EXT-027** · **Manual section 6 category
   3** · currency checked 2026-08-03 · limitation: since its current edition this document carries context
   and concepts, **not project-management guidance**, which moved to ISO 21502; it is cited here for
   concepts only.
 - **Project Management Institute** · *PMBOK Guide* · relied on for: the existence of scope baselines and
-  breakdown structures in professional practice · **EXT-060** · **Manual §6 category 5 — professional
+  breakdown structures in professional practice · **EXT-060** · **Manual section 6 category 5 — professional
   framework** · currency checked 2026-08-03 · limitation: **never regulatory authority**; no edition
   asserted; no text reproduced.
 
@@ -2335,14 +2335,14 @@ sample, because its population is small and its failure mode is severe.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of requirements
-  management within delivery practice · **EXT-028** · **Manual §6 category 3 — international voluntary
+  management within delivery practice · **EXT-028** · **Manual section 6 category 3 — international voluntary
   standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
   certifiable requirement that product requirements are determined, reviewed and verified · **EXT-033** ·
-  **Manual §6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported;
+  **Manual section 6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported;
   certification concerns a management system, not a project; this standard imports none of its requirements.
 - **Project Management Institute** · *PMBOK Guide* · relied on for: the existence of a requirements
-  traceability matrix as professional practice · **EXT-060** · **Manual §6 category 5 — professional
+  traceability matrix as professional practice · **EXT-060** · **Manual section 6 category 5 — professional
   framework** · currency checked 2026-08-03 · limitation: **never regulatory authority**; no edition
   asserted; no text reproduced.
 
@@ -2493,15 +2493,15 @@ assistance must be confirmed by **sampling with a stated basis** against physica
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of schedule
-  development and control as lifecycle practices · **EXT-028** · **Manual §6 category 3 — international
+  development and control as lifecycle practices · **EXT-028** · **Manual section 6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **Project Management Institute** · *Practice Standard for Scheduling* · relied on for: the existence of
-  recognised schedule-quality attributes in professional practice · **EXT-062** · **Manual §6 category 5
+  recognised schedule-quality attributes in professional practice · **EXT-062** · **Manual section 6 category 5
   — professional framework** · currency checked 2026-08-03 · limitation: **never regulatory authority**;
   no metric, threshold or checklist from it is reproduced or relied on.
 - **AACE International** · *Total Cost Management (TCM) Framework* · relied on for: the existence of a
   planning and scheduling process within a cost-management framework · **EXT-064**, **not independently
-  verified — verify current requirements** · **Manual §6 category 5 — professional framework** ·
+  verified — verify current requirements** · **Manual section 6 category 5 — professional framework** ·
   limitation: as above; no recommended-practice text is reproduced.
 
 **18. Jurisdictional caution.** Where a schedule supports an extension-of-time claim, a delay analysis or
@@ -2652,14 +2652,14 @@ confirmed by a named human before it is reported as resolved.
 **17. External reference.**
 - **AACE International** · *Total Cost Management (TCM) Framework* · relied on for: the existence and
   purpose of a cost-control cycle and of maturity-based estimate classification · **EXT-064**, **not
-  independently verified — verify current requirements** · **Manual §6 category 5 — professional
+  independently verified — verify current requirements** · **Manual section 6 category 5 — professional
   framework** · limitation: **a professional framework, never regulatory authority**; no class table,
   accuracy range or recommended-practice text is reproduced.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of cost planning
-  and control as lifecycle practices · **EXT-028** · **Manual §6 category 3 — international voluntary
+  and control as lifecycle practices · **EXT-028** · **Manual section 6 category 3 — international voluntary
   standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **Project Management Institute** · *PMBOK Guide* · relied on for: the existence of cost baselines,
-  reserves and forecasting in professional practice · **EXT-060** · **Manual §6 category 5** · currency
+  reserves and forecasting in professional practice · **EXT-060** · **Manual section 6 category 5** · currency
   checked 2026-08-03 · limitation: **never regulatory authority**; no edition asserted; no text
   reproduced.
 
@@ -2803,17 +2803,17 @@ competing plans before it is escalated.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of resource
-  planning and of the negotiation of resources with those who control them · **EXT-028** · **Manual §6
+  planning and of the negotiation of resources with those who control them · **EXT-028** · **Manual section 6
   category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation: guidance;
   voluntary; not certifiable.
 - **ISO** · *ISO 45001, Occupational health and safety management systems — Requirements with guidance
   for use* · relied on for: the existence of a certifiable management-system standard within which
-  workload and fatigue are addressed as health and safety matters · **EXT-123** · **Manual §6 category 3**
+  workload and fatigue are addressed as health and safety matters · **EXT-123** · **Manual section 6 category 3**
   · currency checked 2026-08-03 · limitation: certifiable, but adoption is voluntary unless a contract or
   regulator requires it; this standard imports none of its requirements and states no fatigue rule of its own.
 - **AACE International** · *Total Cost Management (TCM) Framework* · relied on for: the existence of
   resource economics within a cost-management framework · **EXT-064**, **not independently verified** ·
-  **Manual §6 category 5 — professional framework** · limitation: **never regulatory authority**; no text
+  **Manual section 6 category 5 — professional framework** · limitation: **never regulatory authority**; no text
   reproduced.
 
 **18. Jurisdictional caution.** Working-time law, collective agreements, works-council consultation
@@ -2961,15 +2961,15 @@ register. Where AI has aged risks against thresholds, a competent reviewer must 
 
 **17. External reference.**
 - **ISO** · *ISO 31000, Risk management — Guidelines* · relied on for: the existence of a risk-management
-  process concept including escalation and review · **EXT-020** · **Manual §6 category 3 — international
+  process concept including escalation and review · **EXT-020** · **Manual section 6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: **guidance, and ISO states expressly
   that it is not a certifiable standard**; voluntary; this standard relies on it for no requirement.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of risk management
-  within delivery practice · **EXT-028** · **Manual §6 category 3** · currency checked 2026-08-03 ·
+  within delivery practice · **EXT-028** · **Manual section 6 category 3** · currency checked 2026-08-03 ·
   limitation: guidance; voluntary; not certifiable.
 - **ISO/IEC** · *ISO/IEC 23894, Guidance on risk management for artificial intelligence* · relied on for:
   the existence of AI-specific risk guidance sitting alongside the AI management-system standard ·
-  **EXT-024** · **Manual §6 category 3** · currency checked 2026-08-03 · limitation: **guidance, not
+  **EXT-024** · **Manual section 6 category 3** · currency checked 2026-08-03 · limitation: **guidance, not
   requirements**; voluntary; not certifiable.
 
 **18. Jurisdictional caution.** Duties to report certain risks to a regulator, a safety authority, an
@@ -3115,15 +3115,15 @@ resolution statement against the evidence it cites.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of issue
-  management as a lifecycle practice distinct from risk management · **EXT-028** · **Manual §6 category
+  management as a lifecycle practice distinct from risk management · **EXT-028** · **Manual section 6 category
   3 — international voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary;
   not certifiable.
 - **ISO** · *ISO 31000, Risk management — Guidelines* · relied on for: the distinction between an
-  uncertain event and one that has occurred · **EXT-020** · **Manual §6 category 3** · currency checked
+  uncertain event and one that has occurred · **EXT-020** · **Manual section 6 category 3** · currency checked
   2026-08-03 · limitation: **guidance, expressly not certifiable**; voluntary.
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
   certifiable requirement to control nonconformity and to take corrective action · **EXT-033** ·
-  **Manual §6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported;
+  **Manual section 6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported;
   certification concerns a management system; this standard imports none of its requirements.
 
 **18. Jurisdictional caution.** Some issues carry statutory reporting duties — safety incidents, data
@@ -3269,16 +3269,16 @@ statutory subset must be re-checked in full rather than by sample.
 **17. External reference.**
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
   certifiable requirement to verify that outputs meet requirements before release · **EXT-033** ·
-  **Manual §6 category 3 — international voluntary standard** · currency checked 2026-08-03 ·
+  **Manual section 6 category 3 — international voluntary standard** · currency checked 2026-08-03 ·
   limitation: **the certifiable member of its family**, but adoption is voluntary unless a contract or
   regulator requires it; a project is not certified against it; this standard imports none of its
   requirements and reproduces none of its text.
 - **ISO** · *ISO 9000, Quality management systems — Fundamentals and vocabulary* · relied on for: the
   existence of an agreed vocabulary distinguishing conformity from nonconformity · **EXT-034**, **not
-  independently verified — verify current requirements** · **Manual §6 category 3** · limitation: a
+  independently verified — verify current requirements** · **Manual section 6 category 3** · limitation: a
   vocabulary standard; **not certifiable**; voluntary.
 - **ISO** · *ISO 10006, Quality management — Guidelines for quality management in projects* · relied on
-  for: the existence of project-specific quality guidance · **EXT-035** · **Manual §6 category 3** ·
+  for: the existence of project-specific quality guidance · **EXT-035** · **Manual section 6 category 3** ·
   currency checked 2026-08-03 · limitation: **guidelines, not requirements**; voluntary; not certifiable.
 
 **18. Jurisdictional caution.** Whether acceptance has occurred, what it transfers, and what remedies
@@ -3420,14 +3420,14 @@ against both underlying records.
 
 **17. External reference.**
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
-  certifiable requirement for corrective action addressing causes · **EXT-033** · **Manual §6 category 3
+  certifiable requirement for corrective action addressing causes · **EXT-033** · **Manual section 6 category 3
   — international voluntary standard** · currency checked 2026-08-03 · limitation: voluntary unless
   imported; certification concerns a management system; no requirement is imported here.
 - **ISO** · *ISO 10006, Guidelines for quality management in projects* · relied on for: the existence of
-  project-level improvement guidance · **EXT-035** · **Manual §6 category 3** · currency checked
+  project-level improvement guidance · **EXT-035** · **Manual section 6 category 3** · currency checked
   2026-08-03 · limitation: **guidelines, not requirements**; voluntary; not certifiable.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of lessons capture
-  as a lifecycle practice · **EXT-028** · **Manual §6 category 3** · currency checked 2026-08-03 ·
+  as a lifecycle practice · **EXT-028** · **Manual section 6 category 3** · currency checked 2026-08-03 ·
   limitation: guidance; voluntary; not certifiable.
 
 **18. Jurisdictional caution.** Review records can be disclosable in litigation, arbitration, a regulatory
@@ -3581,19 +3581,19 @@ full every submission the system would exclude.
 
 **17. External reference.**
 - **FIDIC** · *FIDIC suite of conditions of contract* · relied on for: the existence of standard-form
-  contractual structures a procurement may adopt · **EXT-050** · **Manual §6 category 4 — contract
+  contractual structures a procurement may adopt · **EXT-050** · **Manual section 6 category 4 — contract
   framework** · currency checked 2026-08-03 · limitation: **binds only the parties who adopt it, by
   signature**; characterised generically, no clause numbers cited, no text reproduced; it is not
   legislation.
 - **NEC** · *NEC4 suite of contracts* · relied on for: the existence of an alternative standard-form
-  structure with its own change and notification mechanics · **EXT-051** · **Manual §6 category 4** ·
+  structure with its own change and notification mechanics · **EXT-051** · **Manual section 6 category 4** ·
   currency checked 2026-08-03 · limitation: as above.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of procurement
-  within delivery practice · **EXT-028** · **Manual §6 category 3 — international voluntary standard** ·
+  within delivery practice · **EXT-028** · **Manual section 6 category 3 — international voluntary standard** ·
   currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **Project Management Institute** · *Code of Ethics and Professional Conduct* · relied on for: the
   existence of a professional expectation of fairness and impartiality in supplier dealings ·
-  **EXT-063**, **not independently verified — verify current requirements** · **Manual §6 category 6 —
+  **EXT-063**, **not independently verified — verify current requirements** · **Manual section 6 category 6 —
   ethical code** · limitation: binding only where a body, regulator or engagement has adopted it.
 
 **18. Jurisdictional caution.** Public-procurement law, subsidy control, competition law, anti-bribery
@@ -3748,13 +3748,13 @@ rule by hand.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of reporting and
-  information management within delivery practice · **EXT-028** · **Manual §6 category 3 — international
+  information management within delivery practice · **EXT-028** · **Manual section 6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 21505, Guidance on governance* · relied on for: the existence of an information flow from
-  delivery to the governing body · **EXT-032**, **not independently verified** · **Manual §6 category 3**
+  delivery to the governing body · **EXT-032**, **not independently verified** · **Manual section 6 category 3**
   · limitation: as above, with an open verification status.
 - **Project Management Institute** · *PMBOK Guide* · relied on for: the existence of performance reporting
-  in professional practice · **EXT-060** · **Manual §6 category 5 — professional framework** · currency
+  in professional practice · **EXT-060** · **Manual section 6 category 5 — professional framework** · currency
   checked 2026-08-03 · limitation: **never regulatory authority**; no edition asserted; no text reproduced.
 
 **18. Jurisdictional caution.** Statements about a project can engage listed-company disclosure duties,
@@ -3914,16 +3914,16 @@ confirm by name that the transmitted summary is theirs before it is issued as su
 **17. External reference.**
 - **Project Management Institute** · *Code of Ethics and Professional Conduct* · relied on for: the
   existence of professional expectations of honesty, responsibility, respect and fairness · **EXT-063**,
-  **not independently verified — verify current requirements** · **Manual §6 category 6 — ethical code** ·
+  **not independently verified — verify current requirements** · **Manual section 6 category 6 — ethical code** ·
   limitation: binding only where a body, regulator or engagement has adopted it; a PCI credential holder
   not subject to it is not made subject to it by this standard; no text is reproduced.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of leadership and
-  team-development activity within delivery practice · **EXT-028** · **Manual §6 category 3 —
+  team-development activity within delivery practice · **EXT-028** · **Manual section 6 category 3 —
   international voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not
   certifiable.
 - **ISO** · *ISO 45001, Occupational health and safety management systems — Requirements* · relied on for:
   the existence of a certifiable management-system standard within which worker consultation and
-  participation are addressed · **EXT-123** · **Manual §6 category 3** · currency checked 2026-08-03 ·
+  participation are addressed · **EXT-123** · **Manual section 6 category 3** · currency checked 2026-08-03 ·
   limitation: certifiable, but voluntary unless required by contract or regulator; this standard imports none
   of its requirements.
 
@@ -4116,17 +4116,17 @@ verify that concern-route data is not among them.
 **17. External reference.**
 - **ISO** · *ISO 45003, Occupational health and safety management — Psychological health and safety at
   work — Guidelines* · relied on for: the existence of psychosocial risk as a recognised subject within
-  occupational health and safety management · **EXT-124** · **Manual §6 category 3 — international
+  occupational health and safety management · **EXT-124** · **Manual section 6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: **guidance, not a requirements
   standard — nothing can be certified against it**, and no obligation in this standard derives from it. It is
   named because a reader will expect it to be addressed, and the correct treatment is to say what it is.
 - **ISO** · *ISO 45001, Occupational health and safety management systems — Requirements with guidance for
   use* · relied on for: the existence of a certifiable management-system standard addressing worker
-  consultation, participation and protection from reprisal · **EXT-123** · **Manual §6 category 3** ·
+  consultation, participation and protection from reprisal · **EXT-123** · **Manual section 6 category 3** ·
   currency checked 2026-08-03 · limitation: certifiable, but adoption is voluntary unless a contract or
   regulator requires it; this standard imports none of its requirements.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of team development
-  and working environment within delivery practice · **EXT-028** · **Manual §6 category 3** · currency
+  and working environment within delivery practice · **EXT-028** · **Manual section 6 category 3** · currency
   checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 
 **18. Jurisdictional caution.** Whistleblower protection, mandatory internal reporting channels, works-
@@ -4309,17 +4309,17 @@ who records which they did.
 **17. External reference.**
 - **Ken Schwaber and Jeff Sutherland** · *The Scrum Guide* · relied on for: the existence of a defined
   set of accountabilities, events and artefacts in one widely used adaptive framework · **EXT-086** ·
-  **Manual §6 category 5 — professional framework** · currency checked 2026-08-03 · limitation: **a
+  **Manual section 6 category 5 — professional framework** · currency checked 2026-08-03 · limitation: **a
   voluntary framework whose adoption is the whole of its force.** It binds a team that has adopted it and
   nobody else; it is **not a standard**, nothing can be certified against it as a requirements document,
   and no PCI obligation derives from it. Its concepts are described here in PCI's own words; no text is
-  reproduced. The suite register classifies it as a voluntary framework; Manual §6 governs this file and
+  reproduced. The suite register classifies it as a voluntary framework; Manual section 6 governs this file and
   places it at category 5.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of tailoring and of
-  iterative life cycles within delivery practice · **EXT-028** · **Manual §6 category 3 — international
+  iterative life cycles within delivery practice · **EXT-028** · **Manual section 6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **Project Management Institute** · *PMBOK Guide* · relied on for: the existence of adaptive and hybrid
-  approaches in professional practice · **EXT-060** · **Manual §6 category 5 — professional framework** ·
+  approaches in professional practice · **EXT-060** · **Manual section 6 category 5 — professional framework** ·
   currency checked 2026-08-03 · limitation: **never regulatory authority**; no edition asserted; no text
   reproduced.
 
@@ -4464,16 +4464,16 @@ them and that they stood.
 
 **17. External reference.**
 - **Ken Schwaber and Jeff Sutherland** · *The Scrum Guide* · relied on for: the existence of a single
-  accountable ordering role in one widely used adaptive framework · **EXT-086** · **Manual §6 category 5 —
+  accountable ordering role in one widely used adaptive framework · **EXT-086** · **Manual section 6 category 5 —
   professional framework** · currency checked 2026-08-03 · limitation: **a voluntary framework; adoption
   is the whole of its force**; it is not a standard and nothing can be certified against it as a
   requirements document; described in PCI's own words, no text reproduced. This standard's obligation is PCI's
   own and does not derive from it.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of defined roles and
-  responsibilities within delivery · **EXT-028** · **Manual §6 category 3 — international voluntary
+  responsibilities within delivery · **EXT-028** · **Manual section 6 category 3 — international voluntary
   standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 21505, Guidance on governance* · relied on for: the existence of accountability
-  definition within governance arrangements · **EXT-032**, **not independently verified** · **Manual §6
+  definition within governance arrangements · **EXT-032**, **not independently verified** · **Manual section 6
   category 3** · limitation: as above, with an open verification status.
 
 **18. Jurisdictional caution.** Where a supplier holds decision rights over a client's product, the
@@ -4619,30 +4619,30 @@ as clean but which the purpose record indicates is likely to contain personal da
 **17. External reference.**
 - **ISO/IEC** · *ISO/IEC 27001, Information security management systems — Requirements* · relied on for:
   the existence of a certifiable requirement set for information-security management · **EXT-023** ·
-  **Manual §6 category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation:
+  **Manual section 6 category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation:
   certifiable, but adoption is voluntary unless required by contract or regulator; this standard imports none of
   its controls.
 - **ISO/IEC** · *ISO/IEC 27701, Privacy information management systems — Requirements and guidance* ·
-  relied on for: the existence of a privacy management-system standard · **EXT-038** · **Manual §6
+  relied on for: the existence of a privacy management-system standard · **EXT-038** · **Manual section 6
   category 3** · currency checked 2026-08-03 · limitation: **materially changed between editions** — the
   earlier edition was an extension to an information-security management system and the current one is a
   standalone standard certifiable in its own right. **Verify which edition any claim of conformity refers
   to.** Voluntary unless required.
 - **ISO** · *ISO 8000 data-quality standards* (a multi-part series) · relied on for: the existence of a
-  standardised treatment of data quality · **EXT-026** · **Manual §6 category 3** · currency checked
+  standardised treatment of data quality · **EXT-026** · **Manual section 6 category 3** · currency checked
   2026-08-03 · limitation: **a series, not one document**; voluntary; cited generically and relied on for
   no requirement.
 - **ISO/IEC** · *ISO/IEC 25012, Data quality model* · relied on for: the existence of a defined set of
-  data-quality characteristics · **EXT-036** · **Manual §6 category 3** · currency checked 2026-08-03 ·
+  data-quality characteristics · **EXT-036** · **Manual section 6 category 3** · currency checked 2026-08-03 ·
   limitation: voluntary; a model, not a requirements standard for a project; check for supersession within
   its series.
 - **ISO** · *ISO 19650 series, Information management using building information modelling* · relied on
   for: the existence of a common data environment concept in the built environment · **EXT-039** ·
-  **Manual §6 category 3** · currency checked 2026-08-03 · limitation: **a series**; voluntary; sector-
+  **Manual section 6 category 3** · currency checked 2026-08-03 · limitation: **a series**; voluntary; sector-
   specific; cited generically.
 - **European Union** · *General Data Protection Regulation* · relied on for: illustrating a rights-based
   data-protection approach · **EXT-101**, **not independently verified — verify current requirements** ·
-  **Manual §6 category 10 — illustrative practice** · limitation: **this is binding legislation within the
+  **Manual section 6 category 10 — illustrative practice** · limitation: **this is binding legislation within the
   European Union**, named here only to illustrate the shape of such a regime; it is relied on for no
   requirement in this standard, and whether it or any other data-protection regime applies is a question for
   qualified local counsel.
@@ -4805,27 +4805,27 @@ which a difference becomes a failure. Verification is performed **before** relia
 **17. External reference.**
 - **ISO/IEC** · *ISO/IEC 42001, Artificial intelligence management system* · relied on for: the existence
   of a management-system standard for AI governance, including assignment of roles · **EXT-021** ·
-  **Manual §6 category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation:
+  **Manual section 6 category 3 — international voluntary standard** · currency checked 2026-08-03 · limitation:
   certifiable as a management system, but adoption is voluntary; certification says nothing about any
   individual output; no requirement is imported here.
 - **ISO/IEC** · *ISO/IEC 23894, Guidance on risk management for artificial intelligence* · relied on for:
-  the existence of AI-specific risk guidance · **EXT-024** · **Manual §6 category 3** · currency checked
+  the existence of AI-specific risk guidance · **EXT-024** · **Manual section 6 category 3** · currency checked
   2026-08-03 · limitation: **guidance, not requirements**; voluntary; not certifiable.
 - **ISO/IEC** · *ISO/IEC 38507, Governance implications of the use of artificial intelligence by
   organizations* · relied on for: the existence of governing-body-level questions about AI use ·
-  **EXT-037** · **Manual §6 category 3** · currency checked 2026-08-03 · limitation: guidance for governing
+  **EXT-037** · **Manual section 6 category 3** · currency checked 2026-08-03 · limitation: guidance for governing
   bodies; voluntary; not certifiable.
 - **NIST (US Department of Commerce)** · *Artificial Intelligence Risk Management Framework (AI RMF 1.0)* ·
   relied on for: the existence of a voluntary function-based framework for AI risk · **EXT-080** ·
-  **Manual §6 category 10 — illustrative practice** · currency checked 2026-08-03 · limitation: **voluntary,
+  **Manual section 6 category 10 — illustrative practice** · currency checked 2026-08-03 · limitation: **voluntary,
   rights-preserving and non-sector-specific by NIST's own description; not a standard and not a
   regulation**.
 - **OECD** · *Recommendation of the Council on Artificial Intelligence (the OECD AI Principles)* · relied
   on for: the existence of an international expectation of human accountability for AI-influenced outcomes
-  · **EXT-081** · **Manual §6 category 10 — illustrative practice** · currency checked 2026-08-03 ·
+  · **EXT-081** · **Manual section 6 category 10 — illustrative practice** · currency checked 2026-08-03 ·
   limitation: a Council Recommendation; **never legislation**; non-binding even on adherents.
 - **European Union** · *Regulation (EU) 2024/1689 (the AI Act)* · relied on for: illustrating a risk-tiered
-  regulatory approach · **EXT-100** · **Manual §6 category 1 — applicable legislation or regulation** · currency checked
+  regulatory approach · **EXT-100** · **Manual section 6 category 1 — applicable legislation or regulation** · currency checked
   2026-08-03 · limitation: **binding legislation within the European Union only**, named here to illustrate the
   shape only; relied on for no requirement; applicability to any given project is a question for qualified
   local counsel.
@@ -4984,13 +4984,13 @@ the named giver before it enters the register as a commitment.
 **17. External reference.**
 - **ISO** · *ISO 21503, Guidance on programme management* · relied on for: the existence of programme-level
   integration and dependency management · **EXT-030**, **not independently verified — verify current
-  requirements** · **Manual §6 category 3 — international voluntary standard** · limitation: guidance;
+  requirements** · **Manual section 6 category 3 — international voluntary standard** · limitation: guidance;
   voluntary; not certifiable; open verification status.
 - **ISO** · *ISO 21505, Guidance on governance* · relied on for: the existence of governance across
-  multiple components · **EXT-032**, **not independently verified** · **Manual §6 category 3** ·
+  multiple components · **EXT-032**, **not independently verified** · **Manual section 6 category 3** ·
   limitation: as above.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of interface and
-  dependency management within delivery · **EXT-028** · **Manual §6 category 3** · currency checked
+  dependency management within delivery · **EXT-028** · **Manual section 6 category 3** · currency checked
   2026-08-03 · limitation: guidance; voluntary; not certifiable.
 
 **18. Jurisdictional caution.** Where a dependency crosses a contractual boundary, whether it is
@@ -5132,13 +5132,13 @@ a plan.
 **17. External reference.**
 - **ISO** · *ISO 21504, Guidance on portfolio management* · relied on for: the existence of portfolio
   balancing against capacity and strategy · **EXT-031**, **not independently verified — verify current
-  requirements** · **Manual §6 category 3 — international voluntary standard** · limitation: guidance;
+  requirements** · **Manual section 6 category 3 — international voluntary standard** · limitation: guidance;
   voluntary; not certifiable; open verification status.
 - **ISO** · *ISO 21503, Guidance on programme management* · relied on for: the existence of a programme
-  layer between portfolio and project · **EXT-030**, **not independently verified** · **Manual §6 category
+  layer between portfolio and project · **EXT-030**, **not independently verified** · **Manual section 6 category
   3** · limitation: as above.
 - **ISO** · *ISO 21500, Context and concepts* · relied on for: the vocabulary distinguishing project,
-  programme and portfolio · **EXT-027** · **Manual §6 category 3** · currency checked 2026-08-03 ·
+  programme and portfolio · **EXT-027** · **Manual section 6 category 3** · currency checked 2026-08-03 ·
   limitation: **context and concepts only** since its current edition; guidance moved to ISO 21502.
 
 **18. Jurisdictional caution.** Portfolio decisions that change employment, close operations, or alter a
@@ -5314,18 +5314,18 @@ must be corrected before use.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of transition and
-  handover as lifecycle activities · **EXT-028** · **Manual §6 category 3 — international voluntary
+  handover as lifecycle activities · **EXT-028** · **Manual section 6 category 3 — international voluntary
   standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
-  certifiable requirement that outputs are verified before release · **EXT-033** · **Manual §6 category 3**
+  certifiable requirement that outputs are verified before release · **EXT-033** · **Manual section 6 category 3**
   · currency checked 2026-08-03 · limitation: voluntary unless imported; certification concerns a management
   system; no requirement is imported here.
 - **ISO** · *ISO 10006, Guidelines for quality management in projects* · relied on for: the existence of
-  project-specific quality guidance covering closure · **EXT-035** · **Manual §6 category 3** · currency
+  project-specific quality guidance covering closure · **EXT-035** · **Manual section 6 category 3** · currency
   checked 2026-08-03 · limitation: **guidelines, not requirements**; voluntary; not certifiable.
 - **ISO** · *ISO 45001, Occupational health and safety management systems — Requirements* · relied on for:
   the existence of a certifiable management-system standard within which operational readiness for safety
-  is addressed · **EXT-123** · **Manual §6 category 3** · currency checked 2026-08-03 · limitation:
+  is addressed · **EXT-123** · **Manual section 6 category 3** · currency checked 2026-08-03 · limitation:
   certifiable, but voluntary unless required; **it does not determine which items are mandatory
   preconditions for any given transition** — law, licence and contract do.
 
@@ -5490,14 +5490,14 @@ received it.
 
 **17. External reference.**
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of transition and
-  closure activities within delivery practice · **EXT-028** · **Manual §6 category 3 — international
+  closure activities within delivery practice · **EXT-028** · **Manual section 6 category 3 — international
   voluntary standard** · currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 9001, Quality management systems — Requirements* · relied on for: the existence of a
   certifiable requirement to control documented information and to release outputs · **EXT-033** ·
-  **Manual §6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported; no
+  **Manual section 6 category 3** · currency checked 2026-08-03 · limitation: voluntary unless imported; no
   requirement is imported here.
 - **ISO** · *ISO 15489-1, Records management — Concepts and principles* · relied on for: the existence of
-  records-management principles governing the retention and transfer of records · **EXT-025** · **Manual §6
+  records-management principles governing the retention and transfer of records · **EXT-025** · **Manual section 6
   category 3** · currency checked 2026-08-03 · limitation: voluntary; guidance on principles; not a
   certifiable requirement for a project.
 
@@ -5637,17 +5637,17 @@ alternative causes for attribution, a named human must assess each and record th
 **17. External reference.**
 - **ISO** · *ISO 21504, Guidance on portfolio management* · relied on for: the existence of benefits
   tracking at portfolio level · **EXT-031**, **not independently verified — verify current requirements** ·
-  **Manual §6 category 3 — international voluntary standard** · limitation: guidance; voluntary; not
+  **Manual section 6 category 3 — international voluntary standard** · limitation: guidance; voluntary; not
   certifiable; open verification status.
 - **ISO** · *ISO 21503, Guidance on programme management* · relied on for: the existence of benefits
-  realisation as a programme concern · **EXT-030**, **not independently verified** · **Manual §6 category
+  realisation as a programme concern · **EXT-030**, **not independently verified** · **Manual section 6 category
   3** · limitation: as above.
 - **ISO** · *ISO 21502, Guidance on project management* · relied on for: the existence of benefits
-  identification and realisation within delivery practice · **EXT-028** · **Manual §6 category 3** ·
+  identification and realisation within delivery practice · **EXT-028** · **Manual section 6 category 3** ·
   currency checked 2026-08-03 · limitation: guidance; voluntary; not certifiable.
 - **ISO** · *ISO 15489-1, Records management — Concepts and principles* · relied on for: the existence of
   records-management principles governing retention of the evidence a measurement rests on · **EXT-025** ·
-  **Manual §6 category 3** · currency checked 2026-08-03 · limitation: voluntary; principles guidance.
+  **Manual section 6 category 3** · currency checked 2026-08-03 · limitation: voluntary; principles guidance.
 
 **18. Jurisdictional caution.** Benefits statements made to funders, regulators, markets or the public can
 engage grant-condition, disclosure, procurement and fraud law, and the legal standard for such a statement is
@@ -5694,7 +5694,7 @@ separated from the control sense per the suite terminology audit.
 ---
 ## Audit findings — the twenty-five questions worked over the set
 
-Drafting Manual §9 requires that every question below is answered before approval, and that a standard
+Drafting Manual section 9 requires that every question below is answered before approval, and that a standard
 failing one is revised, with the failure and its resolution recorded. This table records the working
 for the set as a whole, names the standards that failed a question in draft, and states what was changed.
 **Every failure listed was resolved before this edition was assembled**; the questions with an open
@@ -5728,11 +5728,11 @@ rules it added sit at the head of the Definitions above.
 | 18 | Does it contain an exception process? | Element 12 of all 32. **Four standards state that no exception is permitted**, and each gives the reason: `01.03` (accountability for a conflicted decision cannot be waived; escalate instead), `12.01` (the principal obligation), `12.02` (`PR-02`, `PR-04`, `PR-05`) and `16.01` (no exception exists in respect of a mandatory precondition, and none may be sought). | `16.01` element 12 also states the correct remedy where a classification is disputed: have the **owning authority** reclassify it in writing before the assessment. |
 | 19 | Does it define escalation? | Element 13 of all 32. The defined term *escalation threshold* requires a named destination **and** a time; `03.02-PR-05` makes encountering one without them an escalable defect in itself. | None needed. |
 | 20 | Is every important term defined? | Thirteen compliance-deciding terms are defined at the head of the file, plus nineteen supporting terms. Terms the suite terminology audit records as carrying legitimately different meanings across the three books are **kept apart and flagged**, not collapsed: *sponsor* (delivery sense used; the project-finance sense is PFL-AI's), *baseline* (control sense and benefits sense, both defined), *verification* (V&V sense and AI-assurance sense, both defined), *governance* (project sense and data governance, written in full), and *benefit* against *value* against Earned Value. | The definition of *material* was rewritten twice: it now states that safety, legality, licence and truthfulness matters are material **irrespective of size** and that no documented threshold reduces them. |
-| 21 | **Is the language concrete and modern?** | **Zero occurrences of the legislative auxiliary verb** in the file, in any field, checked mechanically. No `may not` is used for a prohibition. No undefined judgement word carries an obligation: *appropriate*, *adequate*, *reasonable*, *timely* and *sufficient* were removed from every obligation or replaced with a stated test. | The Manual §1 requirement to state the ISO mapping was met **without printing the prohibited word**: the mapping is stated by reference to the auxiliary that ISO/IEC Directives Part 2 reserves for requirements. This is recorded here because it is a deliberate resolution of a tension between two Manual provisions, and the Interpretation Panel should confirm it. |
+| 21 | **Is the language concrete and modern?** | **Zero occurrences of the legislative auxiliary verb** in the file, in any field, checked mechanically. No `may not` is used for a prohibition. No undefined judgement word carries an obligation: *appropriate*, *adequate*, *reasonable*, *timely* and *sufficient* were removed from every obligation or replaced with a stated test. | The Manual section 1 requirement to state the ISO mapping was met **without printing the prohibited word**: the mapping is stated by reference to the auxiliary that ISO/IEC Directives Part 2 reserves for requirements. This is recorded here because it is a deliberate resolution of a tension between two Manual provisions, and the Interpretation Panel should confirm it. |
 | 22 | **Does it impose an impossible or excessive burden?** | Tested standard by standard against a six-person internal project. Three drafts were excessive: an earlier `03.01` required four separate approved artefacts on any project of any size; an earlier `10.01` required a three-person panel; an earlier `16.03` required independent measurement in all cases. | `03.01-PR-03` makes proportionate tailoring an express, recorded decision so light governance is a choice rather than an omission; `10.01` element 11 scales to a three-supplier quotation exercise; `16.03` element 10 permits, for an organisation too small to supply independence, measurement taken directly from an unmodified source extract that is retained. **The residual burden is honestly stated:** `01.03`, `12.02` and `16.01` each add real recording work, and each was retained because the failure it prevents is severe. |
 | 23 | Can it operate on both small projects and megaprojects? | Yes — element 11 of every standard states both cases explicitly, and this is where the set was most often rewritten. | Recorded in element 11 throughout. |
 | 24 | Can it operate internationally? | No standard depends on a single jurisdiction's legal concepts. Element 18 of every standard states what is jurisdiction-specific, and no standard states a legal position. | `12.02` element 18 states expressly that where a national whistleblowing or monitoring regime imposes a higher or more specific obligation, **that regime governs**. |
-| 25 | Is there a clear consequence within PCI's authority? | Element 23 of all 32 draws only from Charter §9. Three standards state expressly what PCI **cannot** do, because those are the three where a reader might otherwise assume a wider power: `10.01` (PCI cannot set aside an award or impose a fine), `12.02` (PCI cannot compensate, order reinstatement or penalise an employer) and `16.01` (PCI cannot authorise a transition or override a regulator). | Added to those three; the remainder rely on the Charter §9 list, which is stated in full in each. |
+| 25 | Is there a clear consequence within PCI's authority? | Element 23 of all 32 draws only from Charter section 9. Three standards state expressly what PCI **cannot** do, because those are the three where a reader might otherwise assume a wider power: `10.01` (PCI cannot set aside an award or impose a fine), `12.02` (PCI cannot compensate, order reinstatement or penalise an employer) and `16.01` (PCI cannot authorise a transition or override a regulator). | Added to those three; the remainder rely on the Charter section 9 list, which is stated in full in each. |
 
 ### Definitions reconciliation
 
@@ -5760,17 +5760,17 @@ owner*, *escalation threshold* and *conflict of interest* now carry the canonica
 
 | Finding | Why it is open | Where it goes |
 |---|---|---|
-| **Six external-reference rows are recorded as "not independently verified" in the suite register** — ISO 21503, ISO 21504, ISO 21505, ISO 9000, the PMBOK Guide's companion *Code of Ethics and Professional Conduct*, and the AACE TCM Framework. | Charter §5 Stage 5 was performed against the register, not against the publishers. | Verification before publication; each citing standard states the open status in element 17. |
-| ~~**The published foundational file lags the concordance.**~~ **Closed.** | `PCI_FOUNDATIONAL_STANDARDS.md` now carries fifteen standards under the Charter §3 form `PCI-FND-STD-01` to `PCI-FND-STD-15`, with the subjects listed in *How to read these standards* above. Every citation in this set resolves against the published file itself. | Closed on the foundational rebuild. The superseded `PCI-LAW-F-NN` identifiers survive only as history, in [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md). |
-| **Charter §5 Stages 4, 6, 7, 11, 12 and 13 have not been performed.** | Technical review, practitioner consultation, impact assessment, approval, publication and post-implementation review are outstanding. | Element 25 of every standard records the set as **not yet approved**, with the effective date on approval. |
-| **The ISO-mapping statement resolves a tension between two Manual provisions.** | Manual §1 both prohibits the legislative auxiliary everywhere and requires the ISO mapping to be stated. This file states the mapping by describing the auxiliary rather than printing it. | Interpretation Panel confirmation under Charter §6. |
+| **Six external-reference rows are recorded as "not independently verified" in the suite register** — ISO 21503, ISO 21504, ISO 21505, ISO 9000, the PMBOK Guide's companion *Code of Ethics and Professional Conduct*, and the AACE TCM Framework. | Charter section 5 Stage 5 was performed against the register, not against the publishers. | Verification before publication; each citing standard states the open status in element 17. |
+| ~~**The published foundational file lags the concordance.**~~ **Closed.** | `PCI_FOUNDATIONAL_STANDARDS.md` now carries fifteen standards under the Charter section 3 form `PCI-FND-STD-01` to `PCI-FND-STD-15`, with the subjects listed in *How to read these standards* above. Every citation in this set resolves against the published file itself. | Closed on the foundational rebuild. The superseded `PCI-LAW-F-NN` identifiers survive only as history, in [`STANDARDS_CONCORDANCE.md`](STANDARDS_CONCORDANCE.md). |
+| **Charter section 5 Stages 4, 6, 7, 11, 12 and 13 have not been performed.** | Technical review, practitioner consultation, impact assessment, approval, publication and post-implementation review are outstanding. | Element 25 of every standard records the set as **not yet approved**, with the effective date on approval. |
+| **The ISO-mapping statement resolves a tension between two Manual provisions.** | Manual section 1 both prohibits the legislative auxiliary everywhere and requires the ISO mapping to be stated. This file states the mapping by describing the auxiliary rather than printing it. | Interpretation Panel confirmation under Charter section 6. |
 
 ---
 
 ## Index of PML-AI Professional Standards
 
 **Thirty-two standards · one hundred and forty-eight process requirements · sixteen anchor domains.**
-External-reference categories are Drafting Manual §6 categories: **3** international voluntary standard ·
+External-reference categories are Drafting Manual section 6 categories: **3** international voluntary standard ·
 **4** contract framework · **5** professional framework · **6** ethical code · **10** illustrative practice.
 Every standard also relates to category **9**, PCI internal professional standard, through its element 19, and that
 category is not repeated in the table.

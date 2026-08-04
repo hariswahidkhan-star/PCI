@@ -1606,7 +1606,7 @@ forecast that cannot be defended → 4.3.7; the full EVM/EAC treatment → Domai
 payment terms → Domain 7; risk, contingency derivation and draw-down governance → Domain 12; predictive
 forecasting → Domain 13, KA 13.5.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 five certification standards here: `PCI-PCL-STD-03.01` (scope completeness of the performance measurement
 baseline), `PCI-PCL-STD-03.02` (baseline approval, version control and the change prohibition),
 `PCI-PCL-STD-03.03` (authority to re-baseline), `PCI-PCL-STD-03.04` (completeness of the estimate at

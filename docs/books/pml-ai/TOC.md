@@ -2,7 +2,7 @@
 
 **Book:** PCI Project Management Leader – AI Body of Knowledge
 **Structure:** 4 parts · 16 domains · 63 knowledge areas, numbered `Domain.KA.Topic` per the pattern
-spec. Every domain follows the family chapter shape (§4 of `PCI_BOOK_PATTERN_SPEC.md`): *Why this
+spec. Every domain follows the family chapter shape (section 4 of `PCI_BOOK_PATTERN_SPEC.md`): *Why this
 domain exists* + learning objectives → Knowledge Areas → Advanced topics → Case study(ies) → Executive
 perspective → Calculation exercises (quantitative domains) → Practitioner's toolkit → Exam preparation →
 Domain summary. Responsible-AI treatment appears **in every domain** (an "AI in this domain" section

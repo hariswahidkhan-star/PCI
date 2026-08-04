@@ -794,7 +794,7 @@ where a contract does import one it is the contract that settles which parts app
 there. So the honest answer to "what is an EVMS assessed against?" is: against the instrument the contract
 names, on the terms the contract sets, which is a question answered by reading the contract, not by reading
 this book. Naming these instruments here is identification only; nothing in this reference states what any of
-them requires, and the official publication of each governs (Conventions, §9).
+them requires, and the official publication of each governs (Conventions, section 9).
 
 **What can be scaled away** is ceremony and granularity: the number of control accounts, the depth of the
 reporting formats, the independent surveillance function. **What cannot be scaled away** are the three things
@@ -1474,7 +1474,7 @@ control accounts → 5.2–5.3; variance reading and reporting → 4.2–4.3; th
 a status cannot be defended → 4.3.7; revenue recognition that EAC feeds → 2.2.6; critical path → Domain 10;
 AgileEVM → 9.5; predictive EAC and driver analysis → 13.5.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 four certification standards here: `PCI-PCL-STD-06.01` (earned value measurement rules fixed before
 performance), `PCI-PCL-STD-06.02` (objective evidence of progress), `PCI-PCL-STD-06.03` (coherence of the
 three earned value data points) and `PCI-PCL-STD-06.04` (selection and disclosure of the

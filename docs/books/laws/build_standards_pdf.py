@@ -51,7 +51,7 @@ COVER = family.cover_html(
     principle="Mandatory professional requirements. Not legislation,<br/>"
               "and never a substitute for applicable law.",
     badge="Version 1.0 — draft for approval",
-    badgesub="Charter §5 due process not complete · no named human has approved any standard",
+    badgesub="Charter section 5 due process not complete · no named human has approved any standard",
     tag="Advancing standards. Elevating professionals.")
 
 TITLE = f"""
@@ -72,7 +72,7 @@ TITLE = f"""
     regulatory, contractual or authoritative requirement imposes a higher or different obligation,
     that requirement prevails.</p>
     <p><strong>Not yet approved.</strong> This edition has not completed the due process in Charter
-    &sect;5. Practitioner consultation, approval by a named PCI body and post-implementation review
+    section 5. Practitioner consultation, approval by a named PCI body and post-implementation review
     have not been performed, and no named human has approved any standard in it.</p>
   </div>
 </div>

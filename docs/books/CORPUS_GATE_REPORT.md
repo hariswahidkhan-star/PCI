@@ -1,10 +1,10 @@
 # Corpus Gate Report — Phases 2, 3 and 4
 
 **Scope:** the complete domain corpus of both volumes — PML-AI Domains 1–16 and PFL-AI Domains 1–16.
-**Status:** **GATE PASSED for the domain corpus.** Phases 5–8 have not started; §10 below is the part
+**Status:** **GATE PASSED for the domain corpus.** Phases 5–8 have not started; section 10 below is the part
 of this report that matters most and should be read before the numbers above it.
 
-Phases 2, 3 and 4 are reported together because they were delivered together. The charter (§8)
+Phases 2, 3 and 4 are reported together because they were delivered together. The charter (section 8)
 sequences them as foundations → core technical batches → leadership/governance/AI, and the scaled
 authorship run produced all three in one pass. Writing three separate gate reports for one run would
 be a fiction; this is the standard report, once, over the whole corpus.
@@ -143,7 +143,7 @@ seven structural defects (no key, multiple keys, no rationale, too few options, 
 stem asks nothing) and currently reports **0 open defects**.
 
 **Cognitive-level coverage.** This is reported as a fact for blueprint review, not as a claim that the
-weightings are right — the blueprint is an open decision (§9).
+weightings are right — the blueprint is an open decision (section 9).
 
 | Level | PML-AI | PFL-AI |
 |---|---|---|
@@ -184,7 +184,7 @@ rationales that mis-derived their own numbers, and stems missing a datum needed 
 | Family pattern conformance | **PASS** — after normalising 21 summary headings and one toolkit series |
 | Master-thread numeric continuity | **PASS** — swept; four near-misses investigated individually and all legitimate |
 | MCQ integrity | **PASS** — after 25 fixes, including 2 blockers |
-| IP and legal safety | **PASS** — after 32 reviewed items, several fixed (see §8) |
+| IP and legal safety | **PASS** — after 32 reviewed items, several fixed (see section 8) |
 | Independent human review | **NOT STARTED** — Phase 6 |
 | Phase 5 companions | **NOT STARTED** |
 
@@ -221,7 +221,7 @@ Swept across all 32 manuscripts and separately audited per domain by a dedicated
 
 ## 9. Open decisions for a human expert
 
-1. **The page-target strategy — now the single largest open decision.** 1,432 against 2,400, and §2
+1. **The page-target strategy — now the single largest open decision.** 1,432 against 2,400, and section 2
    records that the previously planned route to closing the gap has been **built and found
    insufficient**: the question banks, glossaries, appendices and first capstones together contributed
    about 100 of the 435 pages added, because companion material that is forbidden to repeat the
@@ -265,7 +265,7 @@ Phase 6 and Phase 7 questions and they are untouched.
 
 Nothing here should be presented to a candidate, a regulator, an accreditation body or a customer as
 reviewed material. The page count is not a proxy for readiness, and this report should not be quoted
-without §10.
+without section 10.
 
 ## 11. Files changed
 

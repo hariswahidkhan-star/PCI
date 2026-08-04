@@ -45,13 +45,13 @@ against it.
 
 **Identifiers.** Each standard is cited as `PCI-PCL-STD-DD.NN`, where `DD` is the two-digit PCL-AI Body of
 Knowledge domain of primary anchorage and `NN` a sequence within that domain. Process requirements
-are cited as `PCI-PCL-STD-DD.NN-PR-NN`. **Process requirements are mandatory** — Charter §3, Level 4 —
+are cited as `PCI-PCL-STD-DD.NN-PR-NN`. **Process requirements are mandatory** — Charter section 3, Level 4 —
 and a breach of one is a breach. Citation is by identifier and never by page number, because pagination
 changes. Where a standard reaches beyond its anchor domain, the anchor is the domain that *teaches* it and
 the reach is stated in element 3.
 
 **These standards sit under the Foundational Standards.** The foundational set binds every PCI credential
-holder, PCL-AI included. It is cited here in the Charter §3 identifier form `PCI-FND-STD-NN`; the
+holder, PCL-AI included. It is cited here in the Charter section 3 identifier form `PCI-FND-STD-NN`; the
 subjects are:
 
 | ID | Subject | ID | Subject |
@@ -76,7 +76,7 @@ of this file.
 
 **External references are classified, never reproduced.** Every reference in element 17 carries the
 issuing organisation, the title, the subject it is cited for, what was checked about its edition or
-effective date, its nature under Manual §6, the date its currency was checked, and its applicability
+effective date, its nature under Manual section 6, the date its currency was checked, and its applicability
 limitation. Real instruments are named and characterised in PCI's own words; the official publication
 always governs. No clause number, article, edition, judicial decision or requirement is asserted
 unless it was verified, and the register at
@@ -84,7 +84,7 @@ unless it was verified, and the register at
 disclosure point behind these entries.
 
 **Two instruments needing the Manual's later categories.** **ANSI/EIA-748** (a US national standard
-published by SAE International under ANSI accreditation) is classified under Manual §6 **category 11,
+published by SAE International under ANSI accreditation) is classified under Manual section 6 **category 11,
 national standard** — it binds only where a contract or procurement regime imports it. The **NIST AI
 Risk Management Framework** is a voluntary framework issued by a national standards institute and is
 classified by its subject with its voluntary status and origin stated at the point of use. Both were
@@ -111,7 +111,7 @@ and the interpretation of contract terms are jurisdiction-specific and belong to
 ## Definitions
 
 These definitions decide compliance. They are interpretive, not obligations — no requirement is
-created here; every requirement lives in an identified standard or process requirement (Charter §3). A
+created here; every requirement lives in an identified standard or process requirement (Charter section 3). A
 term is used below only in the sense given here.
 
 **Where a term is also defined in the Foundational Standards.** Several terms below — *material*,
@@ -128,7 +128,7 @@ Three reading rules remain, and they still matter for any term this reconciliati
 First, **where a foundational standard states its own defined term by its `D-NN` number, that definition
 governs that foundational obligation**, and nothing here narrows it. Second, **where a definition here
 and a foundational definition both bear on the same act, the one producing the wider obligation
-governs** — Charter §4 states that a PCI Standard never lowers an obligation, and this volume's own rule is
+governs** — Charter section 4 states that a PCI Standard never lowers an obligation, and this volume's own rule is
 that no standard below reduces a foundational one. Third, a term defined here and not there is a PCL-AI
 term and carries only the sense given here.
 
@@ -348,7 +348,7 @@ is then met from outside the project under the definition of **independent**.
 | **risk lead** | The individual accountable for the risk register and the quantified risk analysis |
 | **baseline approval authority** | The individual holding recorded authority to approve or reject a baseline or a re-baseline |
 | **change authority** | The individual or body holding recorded authority to approve or reject a change at its value |
-| **decision owner** | As defined in §A |
+| **decision owner** | As defined in section A |
 
 ---
 ## Domain 1 — Foundations of Accounting for Project Controls
@@ -452,11 +452,11 @@ any error of principle.
 - **IFRS Foundation / IASB — IAS 37 *Provisions, Contingent Liabilities and Contingent Assets*.**
   Cited for the reporting boundary between an accrual, a provision and a contingent liability, which
   the records this standard requires must be capable of supporting. Edition: in force; no clause number
-  asserted. Nature: Manual §6 category 2, authoritative financial-reporting standard. Currency
+  asserted. Nature: Manual section 6 category 2, authoritative financial-reporting standard. Currency
   checked 2026-08-03 (register EXT-006). Applicability: mandatory only for entities applying IFRS
   Accounting Standards in a jurisdiction that has adopted them; it binds no one through this standard.
 - **AACE International — *Total Cost Management Framework*.** Cited for the cost-control cycle within
-  which period cut-off sits. Edition: not asserted — not independently verified. Nature: Manual §6
+  which period cut-off sits. Edition: not asserted — not independently verified. Nature: Manual section 6
   category 5, professional framework; not regulatory authority. Register EXT-064, unverified at
   2026-08-03. Applicability: persuasive only, and only where an organisation adopts it.
 
@@ -502,7 +502,7 @@ and which do not, and identify the entry that cannot be supported. Escalation de
 instruction to "leave that one until next month" from a person senior to the candidate. Evidence
 selection: choosing, from a list, the record that proves the period assignment.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 (initial draft in the mandatory
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 (initial draft in the mandatory
 structure); stages 4–13 outstanding · Approval date: not yet approved · Effective: on approval ·
 Supersedes PCL-LAW-01-01 *Cost Recognition and Cut-Off* of the eighteen-field set; that identifier is
 retired and is not reused.
@@ -603,7 +603,7 @@ absence.
 
 - **IFRS Foundation / IASB — IAS 37 *Provisions, Contingent Liabilities and Contingent Assets*.**
   Cited for the boundary between accruals, provisions and contingent liabilities that PR-04 keeps
-  visible. Edition: in force; no clause number asserted. Nature: Manual §6 category 2, authoritative
+  visible. Edition: in force; no clause number asserted. Nature: Manual section 6 category 2, authoritative
   financial-reporting standard. Currency checked 2026-08-03 (register EXT-006). Applicability:
   entities applying IFRS Accounting Standards in an adopting jurisdiction only.
 
@@ -645,7 +645,7 @@ due process and a right of appeal.
 a goods-receipt listing and a draft accrual register, and must identify the omitted liability and the
 unsupported accrual. Ethical dilemma: a request to "hold the accrual until the claim is agreed".
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Supersedes PCL-LAW-01-02 *Accrual Completeness*; that identifier
 is retired and is not reused.
 
@@ -743,12 +743,12 @@ only the sampled item.
 
 - **AACE International — *Total Cost Management Framework*.** Cited for the role of the cost
   breakdown structure in the cost-control cycle. Edition not asserted — not independently verified.
-  Nature: Manual §6 category 5, professional framework; not regulatory authority. Register EXT-064,
+  Nature: Manual section 6 category 5, professional framework; not regulatory authority. Register EXT-064,
   unverified at 2026-08-03. Applicability: persuasive only, on adoption.
 - **DAMA International — *DAMA-DMBOK: Data Management Body of Knowledge*.** Cited only for the
   existence of reference-data and master-data disciplines that a coding structure depends on.
   Edition: 2nd edition (2017) recorded in the register; no content reproduced or structurally
-  mirrored. Nature: Manual §6 category 7, industry guidance. Currency checked 2026-08-03 (register
+  mirrored. Nature: Manual section 6 category 7, industry guidance. Currency checked 2026-08-03 (register
   EXT-092). Applicability: a commercially published body of knowledge with no standard-setter's
   authority; persuasive only.
 
@@ -789,7 +789,7 @@ candidate identifies the transaction coded to the wrong control account and name
 proves it. Scenario judgement: a control account owner asks for a transfer "to tidy up the
 presentation" days before a governance review.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — no predecessor in the eighteen-field set, which
 addressed cost coding only inside PCL-LAW-01-01.
 
@@ -891,11 +891,11 @@ tested by an independent manual trace of a sample stratified by value and by sco
 **17. External reference.**
 
 - **AACE International — *Total Cost Management Framework*.** Cited for baseline and control-account
-  concepts in the cost-control cycle. Edition not asserted — unverified. Nature: Manual §6 category 5,
+  concepts in the cost-control cycle. Edition not asserted — unverified. Nature: Manual section 6 category 5,
   professional framework. Register EXT-064, unverified at 2026-08-03. Persuasive only, on adoption.
 - **Project Management Institute — *A Guide to the Project Management Body of Knowledge (PMBOK
   Guide)*.** Cited for the concept of a performance measurement baseline. Edition deliberately not
-  asserted. Nature: Manual §6 category 5, professional framework; not regulatory authority. Register
+  asserted. Nature: Manual section 6 category 5, professional framework; not regulatory authority. Register
   EXT-060, checked 2026-08-03. Persuasive only.
 
 **18. Jurisdictional caution.** Whether scope is authorised is a contractual and corporate-authority
@@ -936,7 +936,7 @@ work breakdown structure and a control account register, and must identify the m
 ownerless control account and the control account with shared scope. Escalation decision: pressure to
 approve a baseline before the trace is complete because a board date is fixed.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-03-02 *Baseline Integrity*, which
 bundled scope completeness, approval and change control into one requirement; that identifier is
 retired and is not reused.
@@ -1036,13 +1036,13 @@ personally examine every difference the tool could not match.
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of a recognised set of management-system expectations under which baseline control
   operates. **Edition and guideline count deliberately not asserted**, because the guideline count
-  changed at the most recent revision. Nature: a **national standard** — Manual §6
+  changed at the most recent revision. Nature: a **national standard** — Manual section 6
   **category 11**, which binds only where a contract or procurement regime imports it. Currency checked 2026-08-03 (register
   EXT-130 / EXT-090). Applicability: binding only where a contract or a procurement regime imports it;
   it imposes nothing through this standard.
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
   existence of an international treatment of baseline control. Edition: 2018 recorded in the register,
-  with a second edition in development; no clause asserted. Nature: Manual §6 category 3,
+  with a second edition in development; no clause asserted. Nature: Manual section 6 category 3,
   international voluntary standard. Checked 2026-08-03 (register EXT-029). Applicability: voluntary
   unless adopted by regulation or contract.
 
@@ -1082,7 +1082,7 @@ right of appeal.
 a change register and must identify the movement that no change supports. Ethical dilemma: a request
 to "just realign the phasing" before a governance review, with no change raised.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-03-02 *Baseline Integrity*; that
 identifier is retired and is not reused.
 
@@ -1182,7 +1182,7 @@ produced it, and must reconcile the two results before the submission is issued.
 
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
   existence of an international treatment of baseline maintenance. Edition: 2018 per register, second
-  edition in development; no clause asserted. Nature: Manual §6 category 3, international voluntary
+  edition in development; no clause asserted. Nature: Manual section 6 category 3, international voluntary
   standard. Checked 2026-08-03 (EXT-029). Voluntary unless adopted by contract or regulation.
 
 **18. Jurisdictional caution.** Where a contract, a funder's conditions or a public-sector approval
@@ -1225,7 +1225,7 @@ meeting so that "the variance conversation can be about the future". Evidence se
 which document proves a re-baseline was authorised, from a set including an email chain, a minute and
 a signed approval.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — the eighteen-field set treated re-baselining only as a
 clause inside PCL-LAW-03-02. **Stage 9 amendment:** the red-team found that the standard could be complied
 with in full by re-baselining one control account at a time, each within the lowest approval band, so
@@ -1337,11 +1337,11 @@ sensitivity of the total to the two largest such values and record the result.
 **17. External reference.**
 
 - **AACE International — *Total Cost Management Framework*.** Cited for the forecasting step of the
-  cost-control cycle. Edition not asserted — unverified. Nature: Manual §6 category 5, professional
+  cost-control cycle. Edition not asserted — unverified. Nature: Manual section 6 category 5, professional
   framework. Register EXT-064. Persuasive only, on adoption.
 - **Project Management Institute — *A Guide to the Project Management Body of Knowledge (PMBOK
   Guide)*.** Cited for the concept of an estimate at completion. Edition deliberately not asserted.
-  Nature: Manual §6 category 5, professional framework; not regulatory authority. Register EXT-060,
+  Nature: Manual section 6 category 5, professional framework; not regulatory authority. Register EXT-060,
   checked 2026-08-03. Persuasive only.
 
 **18. Jurisdictional caution.** Where a forecast is used in statutory financial reporting — for
@@ -1382,7 +1382,7 @@ approved-change register and a trend register, the candidate identifies which it
 omits and restates the estimate at completion. Scenario judgement: a forecast that matches the funding
 limit exactly, with a trend register that would exceed it.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-03-03 *Forecast Honesty*; that
 identifier is retired and is not reused.
 
@@ -1521,7 +1521,7 @@ process and a right of appeal.
 challengers and must identify which are independent and why. Escalation decision: a material challenge
 point the preparer refuses to record.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — the eighteen-field set required independent review only
 as a field within other standards and never defined its scope or record. **Stage 9 amendment:** element 12
 gave the unchallenged-forecast exception an open-ended clock and offered an emergency funding request
@@ -1622,7 +1622,7 @@ least one total, because a reconciliation that always balances is more often a d
 
 - **COSO (Committee of Sponsoring Organizations of the Treadway Commission) — *Internal Control —
   Integrated Framework*.** Cited for the concept of control activities over information used in
-  reporting. Edition: 2013 recorded in the register. Nature: Manual §6 category 5, professional
+  reporting. Edition: 2013 recorded in the register. Nature: Manual section 6 category 5, professional
   framework published by a private-sector committee of professional bodies; not regulatory authority
   in itself, though widely imported by regulators. Checked 2026-08-03 (register EXT-084).
   Applicability: voluntary unless an organisation or a regulator adopts it.
@@ -1663,7 +1663,7 @@ appeal.
 candidate identifies the figure that does not reconcile and names the record needed to resolve it.
 Scenario judgement: a request to issue with the reconciliation "to follow".
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-04-01 *Reporting Integrity*; that
 identifier is retired and is not reused.
 
@@ -1762,10 +1762,10 @@ not evidence, and an AI narrative that reads well is the most likely to be issue
 **17. External reference.**
 
 - **COSO — *Internal Control — Integrated Framework*.** Cited for the concept of quality information
-  supporting internal control. Edition: 2013 per register. Nature: Manual §6 category 5, professional
+  supporting internal control. Edition: 2013 per register. Nature: Manual section 6 category 5, professional
   framework; not regulatory authority. Checked 2026-08-03 (EXT-084). Voluntary unless adopted.
 - **AACE International — *Total Cost Management Framework*.** Cited for the analysis step in the
-  cost-control cycle. Edition not asserted — unverified. Nature: Manual §6 category 5, professional
+  cost-control cycle. Edition not asserted — unverified. Nature: Manual section 6 category 5, professional
   framework. Register EXT-064. Persuasive only, on adoption.
 
 **18. Jurisdictional caution.** A variance explanation that attributes cause to a contracting party
@@ -1803,7 +1803,7 @@ appeal.
 and must identify which state a cause and which restate the number. Evidence selection: naming the
 record that would substantiate a claimed productivity cause.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-04-01 *Reporting Integrity*; that
 identifier is retired and is not reused.
 
@@ -1936,7 +1936,7 @@ process and a right of appeal.
 suggestion to "pick it up in the next report". Evidence selection: identifying which records establish
 who relied on the original figure.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — the eighteen-field set contained no correction or
 restatement requirement.
 
@@ -2039,10 +2039,10 @@ must be tested by an independent duplicate query, because a tool cannot evidence
 **17. External reference.**
 
 - **COSO — *Internal Control — Integrated Framework*.** Cited for reconciliation as a control activity.
-  Edition: 2013 per register. Nature: Manual §6 category 5, professional framework; not regulatory
+  Edition: 2013 per register. Nature: Manual section 6 category 5, professional framework; not regulatory
   authority. Checked 2026-08-03 (EXT-084). Voluntary unless adopted.
 - **AACE International — *Total Cost Management Framework*.** Cited for the measurement step of the
-  cost-control cycle. Edition not asserted — unverified. Nature: Manual §6 category 5, professional
+  cost-control cycle. Edition not asserted — unverified. Nature: Manual section 6 category 5, professional
   framework. Register EXT-064. Persuasive only, on adoption.
 
 **18. Jurisdictional caution.** The ledger, the cost object and the allocation of shared or
@@ -2082,7 +2082,7 @@ and a draft cost position, the candidate identifies the duplicate, the missing c
 unexplained difference. Scenario judgement: a difference explained as "timing" for a fourth
 consecutive period.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — the eighteen-field set had no actual-cost reconciliation
 or commitment-completeness requirement.
 
@@ -2180,12 +2180,12 @@ casually.
 
 - **FIDIC (International Federation of Consulting Engineers) — FIDIC suite of conditions of contract.**
   Cited generically for the existence of variation and claim mechanisms with time-bound procedures.
-  **No clause number, book or edition asserted.** Nature: Manual §6 category 4, contract framework.
+  **No clause number, book or edition asserted.** Nature: Manual section 6 category 4, contract framework.
   Checked 2026-08-03 (register EXT-050). Applicability: binds only the parties to a contract that
   adopts it, and only on its own terms.
 - **NEC (Thomas Telford / ICE) — NEC4 suite of contracts.** Cited generically for the
   compensation-event mechanism as an example of early notification. No clause number asserted. Nature:
-  Manual §6 category 4, contract framework. Checked 2026-08-03 (register EXT-051). Binds only adopting
+  Manual section 6 category 4, contract framework. Checked 2026-08-03 (register EXT-051). Binds only adopting
   parties.
 
 **18. Jurisdictional caution.** Whether an event is a variation, a compensation event, a claim or none
@@ -2221,7 +2221,7 @@ investigation, suspension or withdrawal — each subject to due process and a ri
 which the candidate must identify the events requiring registration and the one that does not.
 Escalation decision: an instruction to hold a change off the register until entitlement is agreed.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-05-01 *Change Control*; that
 identifier is retired and is not reused.
 
@@ -2327,14 +2327,14 @@ each AI-proposed interface against the interface register.
 **17. External reference.**
 
 - **FIDIC — FIDIC suite of conditions of contract.** Cited generically for variation valuation and
-  time-effect mechanisms. No clause number, book or edition asserted. Nature: Manual §6 category 4,
+  time-effect mechanisms. No clause number, book or edition asserted. Nature: Manual section 6 category 4,
   contract framework. Checked 2026-08-03 (EXT-050). Binds only adopting parties.
 - **NEC — NEC4 suite of contracts.** Cited generically for the assessment of compensation events on a
-  forecast basis. No clause number asserted. Nature: Manual §6 category 4, contract framework. Checked
+  forecast basis. No clause number asserted. Nature: Manual section 6 category 4, contract framework. Checked
   2026-08-03 (EXT-051). Binds only adopting parties.
 - **AACE International — Recommended Practices on risk analysis and contingency determination.** Cited
   as a class for the existence of recognised methods relevant to the risk effect of change. No
-  numbered Recommended Practice asserted; not independently verified. Nature: Manual §6 category 5,
+  numbered Recommended Practice asserted; not independently verified. Nature: Manual section 6 category 5,
   professional framework. Register EXT-068. Persuasive only.
 
 **18. Jurisdictional caution.** The valuation rules for a variation, the entitlement to time and to
@@ -2373,7 +2373,7 @@ of appeal.
 the candidate assesses the completion effect and the cumulative position and identifies the missing
 category. Scenario judgement: a change presented as "no time effect" on a critical-path activity.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-05-01 *Change Control*; that
 identifier is retired and is not reused.
 
@@ -2472,12 +2472,12 @@ cluster the tool flags as possible splitting, recording the conclusion for each.
 **17. External reference.**
 
 - **COSO — *Internal Control — Integrated Framework*.** Cited for segregation of duties and
-  authorisation as control activities. Edition: 2013 per register. Nature: Manual §6 category 5,
+  authorisation as control activities. Edition: 2013 per register. Nature: Manual section 6 category 5,
   professional framework; not regulatory authority. Checked 2026-08-03 (EXT-084). Voluntary unless
   adopted.
 - **ISO — ISO 21502 *Project, programme and portfolio management — Guidance on project management*.**
   Cited for the existence of governance and control expectations around change. Edition: 2020 per
-  register; no clause asserted. Nature: Manual §6 category 3, international voluntary standard.
+  register; no clause asserted. Nature: Manual section 6 category 3, international voluntary standard.
   Checked 2026-08-03 (EXT-028). Voluntary unless adopted by regulation or contract.
 
 **18. Jurisdictional caution.** Corporate authority to commit expenditure is determined by the entity's
@@ -2516,7 +2516,7 @@ withdrawal — each subject to due process and a right of appeal.
 signature because "the approver is on leave and the works cannot wait". Evidence selection: identifying
 which record proves the approval was within delegated authority.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-05-01 *Change Control* and
 PCL-LAW-11-01 *Segregation of Duties*; both identifiers are retired and are not reused.
 
@@ -2616,12 +2616,12 @@ is approved.
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of recognised management-system expectations covering the definition of work and its
   measurement. **Edition and guideline count deliberately not asserted.** Nature: a **national
-  standard**; Manual §6 **category 11, national standard**. Checked
+  standard**; Manual section 6 **category 11, national standard**. Checked
   2026-08-03 (registers EXT-130 / EXT-090). Applicability: binding only where a contract or procurement
   regime imports it.
 - **Project Management Institute — *The Standard for Earned Value Management*.** Cited for the
   existence of recognised measurement methods. Edition: not established — not independently verified.
-  Nature: Manual §6 category 5, professional framework; not regulatory authority. Register EXT-061.
+  Nature: Manual section 6 category 5, professional framework; not regulatory authority. Register EXT-061.
   Persuasive only.
 
 **18. Jurisdictional caution.** Where a contract or procurement regime imports an earned value
@@ -2660,7 +2660,7 @@ subject to due process and a right of appeal.
 which is level of effort applied to discrete work. Calculation review: the effect on the reported cost
 performance index of a mid-period change of milestone weights.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-06-01 *Earned Value Integrity*; that
 identifier is retired and is not reused.
 
@@ -2763,11 +2763,11 @@ against something outside the tool.
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of recognised expectations that performance measurement rest on the work actually
   accomplished. Edition and guideline count deliberately not asserted. Nature: national standard,
-  classified as Manual §6 **category 11, national standard**. Checked 2026-08-03
+  classified as Manual section 6 **category 11, national standard**. Checked 2026-08-03
   (EXT-130 / EXT-090). Binding only where a contract or procurement regime imports it.
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
   international treatment of performance measurement. Edition: 2018 per register; second edition in
-  development; no clause asserted. Nature: Manual §6 category 3, international voluntary standard.
+  development; no clause asserted. Nature: Manual section 6 category 3, international voluntary standard.
   Checked 2026-08-03 (EXT-029). Voluntary unless adopted.
 
 **18. Jurisdictional caution.** Where progress determines an entitlement to payment, the contract's
@@ -2807,7 +2807,7 @@ of appeal.
 constitute objective evidence of progress for a given claim and which do not. Ethical dilemma: a
 supervisor's request to "round it up to 80 so the application clears".
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-06-01 *Earned Value Integrity* and
 PCL-LAW-10-03 *Progress Measurement*; both identifiers are retired and are not reused.
 
@@ -2900,11 +2900,11 @@ publication rather than explained afterwards.
 
 - **SAE International (ANSI-accredited) — ANSI/EIA-748 *Earned Value Management Systems*.** Cited for
   the existence of recognised expectations that performance data be internally consistent. Edition and
-  guideline count deliberately not asserted. Nature: **national standard** — Manual §6 category 11. Checked 2026-08-03 (EXT-130 / EXT-090). Binding only
+  guideline count deliberately not asserted. Nature: **national standard** — Manual section 6 category 11. Checked 2026-08-03 (EXT-130 / EXT-090). Binding only
   where imported by contract or procurement regime.
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
   international treatment of earned value data. Edition 2018 per register; no clause asserted. Nature:
-  Manual §6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-029). Voluntary
+  Manual section 6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-029). Voluntary
   unless adopted.
 
 **18. Jurisdictional caution.** Where indices feed a contractual incentive, a payment mechanism or a
@@ -2942,7 +2942,7 @@ appeal.
 mismatch, the candidate identifies the mismatch, quantifies its effect on the cost performance index and
 states the correct treatment.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — the eighteen-field set assumed data coherence rather than
 requiring it.
 
@@ -3042,10 +3042,10 @@ adopted figure to its principal input.
 
 - **Project Management Institute — *The Standard for Earned Value Management*.** Cited for the
   existence of a recognised family of estimate-at-completion methods. Edition not established — not
-  independently verified. Nature: Manual §6 category 5, professional framework; not regulatory
+  independently verified. Nature: Manual section 6 category 5, professional framework; not regulatory
   authority. Register EXT-061. Persuasive only.
 - **AACE International — *Total Cost Management Framework*.** Cited for forecasting within the
-  cost-control cycle. Edition not asserted — unverified. Nature: Manual §6 category 5, professional
+  cost-control cycle. Edition not asserted — unverified. Nature: Manual section 6 category 5, professional
   framework. Register EXT-064. Persuasive only, on adoption.
 
 **18. Jurisdictional caution.** Where an estimate at completion is used in statutory reporting — for
@@ -3082,7 +3082,7 @@ appeal.
 under two recognised methods, states the range, interprets the to-complete performance index and
 identifies which figure the evidence supports. Scenario judgement: a method changed without disclosure.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — the eighteen-field set required forecast honesty but did
 not address method selection or disclosure.
 
@@ -3185,10 +3185,10 @@ least likely to be opened.
 - **FIDIC — FIDIC suite of conditions of contract.** Cited generically for the existence of standard
   forms whose provisions vary between books and between editions. **No clause number, book or edition
   asserted** — clause numbering has moved between editions, which is itself part of the reason for this
-  standard. Nature: Manual §6 category 4, contract framework. Checked 2026-08-03 (EXT-050). Binds only the
+  standard. Nature: Manual section 6 category 4, contract framework. Checked 2026-08-03 (EXT-050). Binds only the
   parties to a contract that adopts it, on its own terms as amended by the parties.
 - **NEC — NEC4 suite of contracts.** Cited generically for the existence of a standard form with
-  time-bound notification mechanisms. No clause number asserted. Nature: Manual §6 category 4, contract
+  time-bound notification mechanisms. No clause number asserted. Nature: Manual section 6 category 4, contract
   framework. Checked 2026-08-03 (EXT-051). Binds only adopting parties.
 
 **18. Jurisdictional caution.** The meaning and effect of a contract term, the validity of a notice, the
@@ -3227,7 +3227,7 @@ appeal.
 contract and an AI-generated summary, the candidate identifies which may be relied on. Ethical dilemma:
 pressure to state that a claim "is clearly entitled" without legal advice.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-07-01 *Commercial Traceability*; that
 identifier is retired and is not reused.
 
@@ -3328,14 +3328,14 @@ which is why PR-03 admits no sampling for material entries.
 
 - **FIDIC — FIDIC suite of conditions of contract.** Cited generically for the existence of time-bound
   notice and claim procedures whose operation depends on dates. No clause number, book or edition
-  asserted. Nature: Manual §6 category 4, contract framework. Checked 2026-08-03 (EXT-050). Binds only
+  asserted. Nature: Manual section 6 category 4, contract framework. Checked 2026-08-03 (EXT-050). Binds only
   adopting parties.
 - **NEC — NEC4 suite of contracts.** Cited generically for the compensation-event notification
-  mechanism. No clause number asserted. Nature: Manual §6 category 4, contract framework. Checked
+  mechanism. No clause number asserted. Nature: Manual section 6 category 4, contract framework. Checked
   2026-08-03 (EXT-051). Binds only adopting parties.
 - **AACE International — Recommended Practice 29R-03 *Forensic Schedule Analysis*.** Cited for the
   existence of recognised delay-analysis methods relevant to time-related claims. Not independently
-  verified; no method prescribed here. Nature: Manual §6 category 5, professional framework. Register
+  verified; no method prescribed here. Nature: Manual section 6 category 5, professional framework. Register
   EXT-067. Applicability: persuasive only; the acceptability of any method differs between forums and
   jurisdictions.
 
@@ -3374,7 +3374,7 @@ of appeal.
 reported as agreed, and a notice date that does not match the correspondence. Escalation decision: an
 entitlement approaching a time bar that nobody has submitted.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-07-01 *Commercial Traceability*; that
 identifier is retired and is not reused.
 
@@ -3472,12 +3472,12 @@ record; and must confirm rates against the executed contract's schedule of price
 - **IFRS Foundation / IASB — IFRS 15 *Revenue from Contracts with Customers*.** Cited to mark the
   boundary this standard respects: billing and payment are not revenue, and the reconciliation required by
   PR-02 must be capable of supporting the entity's revenue determination without purporting to make it.
-  Edition: issued May 2014, in force; no clause asserted. Nature: Manual §6 category 2, authoritative
+  Edition: issued May 2014, in force; no clause asserted. Nature: Manual section 6 category 2, authoritative
   financial-reporting standard. Checked 2026-08-03 (register EXT-001). Applicability: mandatory only for
   entities applying IFRS Accounting Standards in a jurisdiction that has adopted them; it creates no
   obligation through this standard.
 - **FIDIC — FIDIC suite of conditions of contract.** Cited generically for the existence of interim
-  payment and certification mechanisms. No clause number, book or edition asserted. Nature: Manual §6
+  payment and certification mechanisms. No clause number, book or edition asserted. Nature: Manual section 6
   category 4, contract framework. Checked 2026-08-03 (EXT-050). Binds only adopting parties.
 
 **18. Jurisdictional caution.** Payment entitlement, certification, payment notices, withholding and
@@ -3518,7 +3518,7 @@ and a draft application, the candidate identifies the over-claimed line and the 
 line. Ethical dilemma: an instruction to include an unsupported line "because it will be certified down
 anyway".
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · New standard — the eighteen-field set addressed commercial traceability
 but contained no payment-application requirement.
 
@@ -3623,17 +3623,17 @@ AI-assisted edit, because closing an open end can create a new one.
 - **U.S. Government Accountability Office — *GAO Schedule Assessment Guide: Best Practices for Project
   Schedules*.** Cited for the existence of a public audit institution's published expectations on
   schedule quality. Edition: GAO-16-89G, issued 22 December 2015, per the register; no practice text
-  reproduced. Nature: Manual §6 category 5, professional framework published by a public audit
+  reproduced. Nature: Manual section 6 category 5, professional framework published by a public audit
   institution; not a regulation. Checked 2026-08-03 (register EXT-069). Applicability: persuasive; it
   binds only where a client or a procurement regime requires its use.
 - **Defense Contract Management Agency (US) — *DCMA 14-Point Schedule Assessment*.** Cited for the
   existence of a widely used metric set that includes logic and constraint checks. Not independently
   verified; **no metric value or tolerance is asserted or adopted here** — this standard's tests are its own.
-  Nature: Manual §6 category 7, industry guidance. Register EXT-091. Applicability: no standard-setter's
+  Nature: Manual section 6 category 7, industry guidance. Register EXT-091. Applicability: no standard-setter's
   authority; used only where an organisation or a client adopts it.
 - **Project Management Institute — *Practice Standard for Scheduling*.** Cited for the existence of a
   recognised treatment of schedule construction. Edition: third edition per the register; no clause
-  asserted. Nature: Manual §6 category 5, professional framework; not regulatory authority. Checked
+  asserted. Nature: Manual section 6 category 5, professional framework; not regulatory authority. Checked
   2026-08-03 (EXT-062). Persuasive only.
 
 **18. Jurisdictional caution.** Where a contract prescribes a scheduling specification — permitted
@@ -3673,7 +3673,7 @@ each subject to due process and a right of appeal.
 the open ends, the constraint used in place of logic and the negative lag concealing an overlap.
 Calculation review: the effect on completion of removing an unjustified constraint.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Supersedes PCL-LAW-10-01 *Schedule Logic*; that identifier is
 retired and is not reused.
 
@@ -3771,16 +3771,16 @@ detects a path that the tool has computed correctly from logic that is wrong.
 
 - **U.S. Government Accountability Office — *GAO Schedule Assessment Guide: Best Practices for Project
   Schedules*.** Cited for the existence of published expectations on critical-path validity. Edition:
-  GAO-16-89G, issued 22 December 2015; no practice text reproduced. Nature: Manual §6 category 5,
+  GAO-16-89G, issued 22 December 2015; no practice text reproduced. Nature: Manual section 6 category 5,
   professional framework published by a public audit institution; not a regulation. Checked 2026-08-03
   (EXT-069). Persuasive; binding only where a client or procurement regime requires it.
 - **AACE International — Recommended Practice 29R-03 *Forensic Schedule Analysis*.** Cited for the
   existence of recognised delay-analysis methods. Not independently verified; no method prescribed or
-  preferred here. Nature: Manual §6 category 5, professional framework. Register EXT-067.
+  preferred here. Nature: Manual section 6 category 5, professional framework. Register EXT-067.
   Applicability: persuasive only; acceptability differs between forums and jurisdictions.
 - **Project Management Institute — *Practice Standard for Scheduling*.** Cited for the recognised
   treatment of network analysis. Edition: third edition per register; no clause asserted. Nature: Manual
-  §6 category 5, professional framework. Checked 2026-08-03 (EXT-062). Persuasive only.
+  section 6 category 5, professional framework. Checked 2026-08-03 (EXT-062). Persuasive only.
 
 **18. Jurisdictional caution.** Which delay-analysis method a tribunal, adjudicator, arbitrator or court
 will accept differs between forums and jurisdictions, and the entitlement that follows from a delay is a
@@ -3816,7 +3816,7 @@ certification investigation, suspension or withdrawal — each subject to due pr
 calendars, the candidate identifies the true longest path and explains why the software's reported path
 differs. Scenario judgement: an acceleration proposal aimed at a path that is not driving completion.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Supersedes PCL-LAW-10-02 *Critical Path Verification*; that
 identifier is retired and is not reused.
 
@@ -3916,12 +3916,12 @@ remaining.
 
 - **U.S. Government Accountability Office — *GAO Schedule Assessment Guide: Best Practices for Project
   Schedules*.** Cited for the existence of published expectations on schedule updating and status.
-  Edition: GAO-16-89G, 22 December 2015; no practice text reproduced. Nature: Manual §6 category 5,
+  Edition: GAO-16-89G, 22 December 2015; no practice text reproduced. Nature: Manual section 6 category 5,
   professional framework published by a public audit institution; not a regulation. Checked 2026-08-03
   (EXT-069). Persuasive; binding only where required by a client or procurement regime.
 - **ISO — ISO 21508 *Earned value management in project and programme management*.** Cited for the
   alignment of schedule status with performance measurement. Edition: 2018 per register; no clause
-  asserted. Nature: Manual §6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-029).
+  asserted. Nature: Manual section 6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-029).
   Voluntary unless adopted.
 
 **18. Jurisdictional caution.** Where a contract prescribes the form, frequency and content of schedule
@@ -3958,7 +3958,7 @@ certification investigation, suspension or withdrawal — each subject to due pr
 the candidate selects the record that establishes an actual start. Scenario judgement: a statused schedule
 whose completion date has not moved despite a month of slippage on the driving path.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-10-03 *Progress Measurement*; that
 identifier is retired and is not reused.
 
@@ -4056,11 +4056,11 @@ reproduced.
 
 - **ISO — ISO 15489-1 *Information and documentation — Records management — Part 1: Concepts and
   principles*.** Cited for the existence of an international treatment of records management concepts.
-  Edition: 2016 per the register; no clause asserted. Nature: Manual §6 category 3, international
+  Edition: 2016 per the register; no clause asserted. Nature: Manual section 6 category 3, international
   voluntary standard. Checked 2026-08-03 (register EXT-025). Applicability: voluntary unless adopted by
   regulation or contract.
 - **COSO — *Internal Control — Integrated Framework*.** Cited for the concept of retaining information
-  supporting internal control. Edition: 2013 per register. Nature: Manual §6 category 5, professional
+  supporting internal control. Edition: 2013 per register. Nature: Manual section 6 category 5, professional
   framework; not regulatory authority. Checked 2026-08-03 (EXT-084). Voluntary unless adopted.
 
 **18. Jurisdictional caution.** Statutory retention periods, data-protection obligations governing what
@@ -4098,7 +4098,7 @@ right of appeal.
 candidate record sets of which only one permits reproduction. Evidence selection: identifying which
 components of an issue set are missing.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Supersedes PCL-LAW-11-02 *The Audit Trail*; that identifier is
 retired and is not reused.
 
@@ -4194,13 +4194,13 @@ of them.
 
 - **ISO — ISO 31000 *Risk management — Guidelines*.** Cited for the existence of an internationally
   recognised treatment of risk-management principles. Edition: ISO 31000:2018, second edition, reviewed
-  and confirmed 2023 per the register; no clause asserted. Nature: Manual §6 category 3, international
+  and confirmed 2023 per the register; no clause asserted. Nature: Manual section 6 category 3, international
   voluntary standard — **guidance, and expressly not a certifiable requirements standard**. Checked
   2026-08-03 (register EXT-020). Applicability: voluntary unless adopted by regulation or contract; this
   standard does not restate its process and does not require conformity with it.
 - **Project Management Institute — *A Guide to the Project Management Body of Knowledge (PMBOK Guide)*.**
   Cited for the recognised concept of a risk register. Edition deliberately not asserted. Nature: Manual
-  §6 category 5, professional framework; not regulatory authority. Checked 2026-08-03 (EXT-060).
+  section 6 category 5, professional framework; not regulatory authority. Checked 2026-08-03 (EXT-060).
   Persuasive only.
 
 **18. Jurisdictional caution.** Risks with safety, environmental, employment or regulatory consequences
@@ -4237,7 +4237,7 @@ subject to due process and a right of appeal.
 identify those that are topics, those that are issues and those that are properly formed risks. Evidence
 selection: identifying the record that establishes a stated cause as a present fact.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-12-01 *Risk and Contingency Governance*;
 that identifier is retired and is not reused.
 
@@ -4341,13 +4341,13 @@ assumption. A single simulation run accepted without these tests is not verifica
 **17. External reference.**
 
 - **ISO — ISO 31000 *Risk management — Guidelines*.** Cited for internationally recognised risk-management
-  principles. Edition: 2018, confirmed 2023 per register; no clause asserted. Nature: Manual §6 category
+  principles. Edition: 2018, confirmed 2023 per register; no clause asserted. Nature: Manual section 6 category
   3, international voluntary standard — guidance, not a certifiable requirements standard. Checked
   2026-08-03 (EXT-020). Voluntary unless adopted; this standard does not restate it.
 - **AACE International — Recommended Practices on risk analysis and contingency determination.** Cited as
   a class for the existence of recognised contingency-determination methods. **No numbered Recommended
   Practice, accuracy range or class table asserted or reproduced**; not independently verified. Nature:
-  Manual §6 category 5, professional framework. Register EXT-068. Persuasive only.
+  Manual section 6 category 5, professional framework. Register EXT-068. Persuasive only.
 
 **18. Jurisdictional caution.** Where contingency or reserve is reflected in statutory financial
 statements — as a provision, an onerous-contract charge or otherwise — the applicable accounting
@@ -4382,7 +4382,7 @@ right of appeal.
 candidate states the contingency at two confidence levels and explains what the choice between them
 means. Scenario judgement: a contingency reduced by changing a correlation assumption.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-12-01 *Risk and Contingency Governance*;
 that identifier is retired and is not reused.
 
@@ -4477,11 +4477,11 @@ register entry and the evidence that the event occurred.
 **17. External reference.**
 
 - **ISO — ISO 31000 *Risk management — Guidelines*.** Cited for recognised risk-management principles
-  including monitoring and review. Edition: 2018, confirmed 2023; no clause asserted. Nature: Manual §6
+  including monitoring and review. Edition: 2018, confirmed 2023; no clause asserted. Nature: Manual section 6
   category 3, international voluntary standard — guidance, not certifiable. Checked 2026-08-03 (EXT-020).
   Voluntary unless adopted.
 - **COSO — *Internal Control — Integrated Framework*.** Cited for authorisation as a control activity over
-  the use of reserves. Edition: 2013 per register. Nature: Manual §6 category 5, professional framework;
+  the use of reserves. Edition: 2013 per register. Nature: Manual section 6 category 5, professional framework;
   not regulatory authority. Checked 2026-08-03 (EXT-084). Voluntary unless adopted.
 
 **18. Jurisdictional caution.** Where contingency or reserve is held under a funding agreement, a public
@@ -4518,7 +4518,7 @@ appeal.
 identifies the unapproved movement and computes the shortfall against remaining exposure. Ethical dilemma:
 a control account owner asking to approve a drawdown into their own account "to keep the report clean".
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-12-01 *Risk and Contingency Governance*;
 that identifier is retired and is not reused.
 
@@ -4628,17 +4628,17 @@ itself, which is generated text and not evidence of the provider's obligations.
 - **ISO/IEC — ISO/IEC 42001 *Information technology — Artificial intelligence — Management system*.**
   Cited for the existence of an AI management-system standard against which an organisation's tool
   governance can be organised. Edition: ISO/IEC 42001:2023, first edition, per the register; no clause
-  asserted. Nature: Manual §6 category 3, international voluntary standard; certifiable, but certification
+  asserted. Nature: Manual section 6 category 3, international voluntary standard; certifiable, but certification
   is a third party's opinion and not a substitute for this standard. Checked 2026-08-03 (register EXT-021).
   Voluntary unless adopted by regulation or contract.
 - **ISO/IEC — ISO/IEC 27001 *Information security management systems — Requirements*.** Cited for the
   existence of an information-security management standard relevant to the data-handling determination.
-  Edition: ISO/IEC 27001:2022 with Amd 1:2024 per the register; no clause asserted. Nature: Manual §6
+  Edition: ISO/IEC 27001:2022 with Amd 1:2024 per the register; no clause asserted. Nature: Manual section 6
   category 3, international voluntary standard. Checked 2026-08-03 (EXT-023). Voluntary unless adopted.
 - **NIST (US Department of Commerce) — *Artificial Intelligence Risk Management Framework (AI RMF 1.0)*.**
   Cited for the existence of a voluntary framework organising AI risk into govern, map, measure and
   manage functions. Edition: AI RMF 1.0, January 2023, per the register. Nature: a voluntary framework
-  from a national standards institute; Classified as Manual §6 category 7, industry guidance: it has a single authoritative
+  from a national standards institute; Classified as Manual section 6 category 7, industry guidance: it has a single authoritative
   publisher but no standard-setter's binding force. Checked 2026-08-03 (register EXT-080). Applicability:
   expressly voluntary and non-regulatory.
 
@@ -4682,7 +4682,7 @@ and must identify which fall inside a stated approved boundary and which do not,
 settle the question. Ethical dilemma: a deadline met by pasting a confidential rate schedule into an
 unapproved assistant.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-13-01 *Data Lineage*; that identifier is
 retired and is not reused.
 
@@ -4794,15 +4794,15 @@ first, that is a cross-check and not a verification, and it must be recorded as 
 
 - **ISO/IEC — ISO/IEC 42001 *Artificial intelligence — Management system*.** Cited for the existence of an
   AI management-system standard covering oversight of AI outputs. Edition: 2023 per register; no clause
-  asserted. Nature: Manual §6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-021).
+  asserted. Nature: Manual section 6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-021).
   Voluntary unless adopted.
 - **ISO/IEC — ISO/IEC 23894 *Artificial intelligence — Guidance on risk management*.** Cited for the
   existence of guidance on AI risk. Edition: 2023 per register; guidance, not requirements; no clause
-  asserted. Nature: Manual §6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-024).
+  asserted. Nature: Manual section 6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-024).
   Voluntary unless adopted.
 - **NIST — *AI Risk Management Framework (AI RMF 1.0)*.** Cited for the existence of a voluntary framework
   addressing measurement and management of AI risk. Edition: 1.0, January 2023. Nature: voluntary
-  framework from a national standards institute; classified as Manual §6 category 7, industry guidance. Checked 2026-08-03 (EXT-080). Expressly voluntary and
+  framework from a national standards institute; classified as Manual section 6 category 7, industry guidance. Checked 2026-08-03 (EXT-080). Expressly voluntary and
   non-regulatory.
 
 **18. Jurisdictional caution.** Where AI is used in a context that applicable legislation classifies as
@@ -4842,7 +4842,7 @@ certification investigation, suspension or withdrawal — each subject to due pr
 completion, its inputs and a deliberate error, and must recompute, identify the error and state the
 verification record required. Calculation review: recomputing an index the tool reported.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-13-02 *AI Verification* and
 PCL-LAW-13-03 *Human Sign-Off*; both identifiers are retired and are not reused. **Stage 9 amendment:**
 element 10 required the verifier to be independent only of the tool's configuration, which permitted the
@@ -4955,14 +4955,14 @@ requirement exists for.
 
 - **ISO/IEC — ISO/IEC 42001 *Artificial intelligence — Management system*.** Cited for the existence of an
   AI management-system standard covering human oversight of AI output. Edition: 2023; no clause asserted.
-  Nature: Manual §6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-021). Voluntary
+  Nature: Manual section 6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-021). Voluntary
   unless adopted.
 - **ISO/IEC — ISO/IEC 23894 *Artificial intelligence — Guidance on risk management*.** Cited for guidance
-  on AI-specific risk. Edition: 2023; guidance, not requirements. Nature: Manual §6 category 3,
+  on AI-specific risk. Edition: 2023; guidance, not requirements. Nature: Manual section 6 category 3,
   international voluntary standard. Checked 2026-08-03 (EXT-024). Voluntary unless adopted.
 - **U.S. Government Accountability Office — *GAO Schedule Assessment Guide*.** Cited for published
   expectations on schedule quality against which an AI-generated schedule analysis can be tested. Edition:
-  GAO-16-89G, 22 December 2015; no practice text reproduced. Nature: Manual §6 category 5, professional
+  GAO-16-89G, 22 December 2015; no practice text reproduced. Nature: Manual section 6 category 5, professional
   framework from a public audit institution; not a regulation. Checked 2026-08-03 (EXT-069). Persuasive
   only.
 
@@ -5004,7 +5004,7 @@ activity, and an AI contract summary that drops a condition precedent — the ca
 and state the verification each required. Ethical dilemma: issuing a generated narrative whose basis cannot
 be produced.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-13-02 *AI Verification*; that identifier
 is retired and is not reused. **Stage 9 amendment:** element 10 now states that the tracing this standard
 requires is additional to, and does not displace, the independent-person verification
@@ -5099,13 +5099,13 @@ and vague about the artefact fails this test.
 
 - **OECD — *Recommendation of the Council on Artificial Intelligence* (the OECD AI Principles),
   OECD/LEGAL/0449.** Cited for internationally agreed principles including transparency about AI use.
-  Adopted 2019; revised May 2024, per the register. Nature: Manual §6 category 7, industry guidance in the
+  Adopted 2019; revised May 2024, per the register. Nature: Manual section 6 category 7, industry guidance in the
   Manual's vocabulary — an OECD Council **Recommendation**, and expressly **not legislation**, binding on
   no one, including adherents. Checked 2026-08-03 (register EXT-081). Applicability: none of its own; it
   reaches a practitioner only through instruments a jurisdiction or an organisation adopts.
 - **ISO/IEC — ISO/IEC 42001 *Artificial intelligence — Management system*.** Cited for the existence of a
   management-system standard addressing transparency of AI use. Edition: 2023; no clause asserted. Nature:
-  Manual §6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-021). Voluntary unless
+  Manual section 6 category 3, international voluntary standard. Checked 2026-08-03 (EXT-021). Voluntary unless
   adopted.
 
 **18. Jurisdictional caution.** Disclosure obligations concerning AI use are emerging and differ by
@@ -5145,14 +5145,14 @@ and conduct processes.
 verified, issued with no disclosure, and a recipient who later asks how the figure was produced.
 AI-verification case: judging which of four disclosure statements satisfies PR-02.
 
-**25. Version and status.** Version 2.0 · Charter §5 stage reached: 3 · Approval date: not yet
+**25. Version and status.** Version 2.0 · Charter section 5 stage reached: 3 · Approval date: not yet
 approved · Effective: on approval · Partially supersedes PCL-LAW-13-04 *Professional Accountability*; that
 identifier is retired and is not reused.
 
 ---
 ## Audit-question findings
 
-The Manual §9 questions were worked across the whole set before issue. The table records, for each
+The Manual section 9 questions were worked across the whole set before issue. The table records, for each
 question, the standards it changed and what changed — not merely that the question was asked. Findings that
 produced no change say so, and say why.
 
@@ -5163,14 +5163,14 @@ produced no change say so, and say why.
 | 3 | Can a professional know whether it applies? | All 33 | Element 3 now names the *acts* governed (prepare · review · approve · give assurance) and the artefacts, rather than a job family. `PCI-PCL-STD-13.01` was amended to state expressly that an embedded AI feature is in scope, after a reviewer read the draft as covering standalone tools only. |
 | 4 | Is the responsible person identifiable? | All 33 | A defined role vocabulary was added to the Definitions, each role defined by function rather than title, with the rule that a person holding two roles on a small project never removes an independence requirement. Every element 8 names a role from that list; "the team" and "management" appear nowhere. |
 | 5 | Is the required action observable? | All 33 | 145 process requirements were created, each stating an act that leaves a record. Bundled obligations in the superseded set (for example one clause requiring identification, assessment, approval and baseline update of change) were split across `PCI-PCL-STD-05.02`, `05.03` and `05.04`. |
-| 6 | Is compliance provable? | All 33 | Element 21 was written as a performable test in every standard — the element the superseded eighteen-field set lacked entirely. Each test states the population, the method and what constitutes a failure, and closes with the condition that two reviewers applying it reach the same answer. **Stage 9 correction:** twenty-eight of those tests originally closed by saying that the defective condition "is an exception", in the audit sense of a finding. In this corpus *exception* is a Charter §8 term meaning an **approved departure**, and Charter §8 states expressly that an undocumented departure is a breach and not an exception. Every one of the twenty-eight now reads "is a failure of this test". |
+| 6 | Is compliance provable? | All 33 | Element 21 was written as a performable test in every standard — the element the superseded eighteen-field set lacked entirely. Each test states the population, the method and what constitutes a failure, and closes with the condition that two reviewers applying it reach the same answer. **Stage 9 correction:** twenty-eight of those tests originally closed by saying that the defective condition "is an exception", in the audit sense of a finding. In this corpus *exception* is a Charter section 8 term meaning an **approved departure**, and Charter section 8 states expressly that an undocumented departure is a breach and not an exception. Every one of the twenty-eight now reads "is a failure of this test". |
 | 7 | Is the required evidence proportionate? | 01.01 · 01.02 · 05.01 · 06.02 · 10.03 · 13.02 | Evidence was limited to records the process already produces. Four drafting proposals were removed as disproportionate: a standing log of every cost-code decision, a signed certificate per progress claim, a full re-performance of every AI output, and a separate schedule-quality report per issue. Sampling on a recorded basis replaced them, with full testing retained only where a single item carries the consequence — dates, contract terms, longest-path activities. |
 | 8 | Can the standard be audited? | All 33 | Every element 21 names what the auditor examines and where it is retained, and `PCI-PCL-STD-11.01` was added to make retention itself an obligation, because the other 32 tests assume the records still exist. |
 | 9 | Can the standard be examined through a scenario? | All 33 | Element 24 names the item type — scenario judgement, evidence selection, calculation review, escalation decision, ethical dilemma or AI-verification case. No standard is examinable only by recalling its number. |
 | 10 | Can a professional technically comply while defeating its purpose? | 03.02 · 05.02 · 05.04 · 06.02 · 10.01 · 10.03 · 12.02 · 13.02 · 13.03 | **The most productive question in the audit.** Eight specific defeats were identified and closed by adding prohibitions or process requirements: adding meaningless logic to clear an open-end count (`10.01-PR-04`); splitting a change to stay below an approval band (`05.02` element 6; `05.04-PR-05`); assembling a material baseline edit from immaterial ones (`03.02` element 11 removes any threshold); claiming progress within a verification sample's blind spot (`06.02-PR-02` requires the highest-value and most-moved claims to be in the sample); leaving remaining durations to fall by elapsed time (`10.03-PR-02`); choosing a confidence level after seeing the answer (`12.02-PR-01` requires the levels either side to be shown); drawing the verification sample only from items the tool flagged (`13.02-PR-03`); and accepting "no issues found" from a tool as assurance (`13.03-PR-05`). |
 | 11 | Does it conflict with another PCI standard? | 03.02 ↔ 10.03 · 04.01 ↔ 11.01 · 05.04 ↔ 12.03 · 03.04 ↔ 06.04 | Four overlaps were found and scoped rather than left to interpretation. Schedule baseline protection sits in `03.02-PR-04` and is cross-referred from `10.03-PR-04` rather than restated. `04.01` governs reconciliation at issue; `11.01` governs reproduction afterwards. Change funding sits in `05.04`; contingency drawdown in `12.03`, with an express prohibition on using one to do the other. Forecast completeness sits in `03.04`; method disclosure in `06.04`, reconciled by `06.04-PR-03`. |
-| 12 | Does it duplicate an external standard unnecessarily? | 12.01 · 12.02 · 03.02 · 06.01 · 06.02 · 06.03 | ISO 31000's risk process is **not** restated: the two risk standards impose statement quality, ownership and disclosure obligations the standard does not contain, and say expressly that they do not require conformity with it. The earned value standards cite ANSI/EIA-748 for the existence of management-system expectations only and impose PCI's own tests. All citations of the IFRS *Conceptual Framework* carried by the superseded set were **removed**: Manual §6 forbids sourcing a requirement to it, and it was doing no work. |
-| 13 | Does it misrepresent external authority? | 03.02 · 06.01 · 06.02 · 06.03 · 13.01 · 13.02 · 13.04 · 10.01 | ANSI/EIA-748 is now described as a **national standard binding only where a contract or procurement regime imports it**, with its **edition and guideline count deliberately not asserted** — the count changed at the most recent revision, and the superseded set's silence on it was correct and is preserved. Manual §6 has since added a *national standard* category (11) and a *supervisory guidance* category (12); ANSI/EIA-748 is now classified under category 11, and the NIST AI RMF under category 7 with its voluntary status and national origin stated at each use. The EU AI Act and the GDPR were moved out of element 17 into element 18, because the corpus uses them as jurisdictional cautions and not as authority. The OECD AI Principles are marked expressly as a Council Recommendation and not legislation. No clause number, article or judicial decision is asserted anywhere in the set. |
+| 12 | Does it duplicate an external standard unnecessarily? | 12.01 · 12.02 · 03.02 · 06.01 · 06.02 · 06.03 | ISO 31000's risk process is **not** restated: the two risk standards impose statement quality, ownership and disclosure obligations the standard does not contain, and say expressly that they do not require conformity with it. The earned value standards cite ANSI/EIA-748 for the existence of management-system expectations only and impose PCI's own tests. All citations of the IFRS *Conceptual Framework* carried by the superseded set were **removed**: Manual section 6 forbids sourcing a requirement to it, and it was doing no work. |
+| 13 | Does it misrepresent external authority? | 03.02 · 06.01 · 06.02 · 06.03 · 13.01 · 13.02 · 13.04 · 10.01 | ANSI/EIA-748 is now described as a **national standard binding only where a contract or procurement regime imports it**, with its **edition and guideline count deliberately not asserted** — the count changed at the most recent revision, and the superseded set's silence on it was correct and is preserved. Manual section 6 has since added a *national standard* category (11) and a *supervisory guidance* category (12); ANSI/EIA-748 is now classified under category 11, and the NIST AI RMF under category 7 with its voluntary status and national origin stated at each use. The EU AI Act and the GDPR were moved out of element 17 into element 18, because the corpus uses them as jurisdictional cautions and not as authority. The OECD AI Principles are marked expressly as a Council Recommendation and not legislation. No clause number, article or judicial decision is asserted anywhere in the set. |
 | 14 | Does it require legal or jurisdiction-specific advice? | All 33, materially 01.01 · 01.02 · 05.02 · 07.01 · 07.02 · 07.03 · 10.02 · 11.01 · 12.02 · 13.01 | Element 18 in every standard. `07.01-PR-03` was added to make the competence boundary an obligation rather than a caution: a controls professional must refer questions of contractual meaning and entitlement and must not state a legal conclusion. `11.01` element 18 records that a retention obligation never overrides a legal duty to delete personal data. |
 | 15 | Does it define the relevant materiality threshold? | All 33 | Element 11 in every standard, and a single defined **materiality rule** in the Definitions that is configurable by the adopting organisation's governance and, failing that, recorded by the professional. **No percentage is invented anywhere in the set.** Where a number would have been arbitrary — the contingency confidence level, the near-critical float range, the variance reporting basis — the standard requires the basis and the decision-maker to be recorded instead. |
 | 16 | Does it cover AI use? | All 33 | Elements 14, 15 and 16 appear in every standard, not only in Domain 13, and element 16 names a method in each — recomputation, source tracing, reconciliation, sampling on a stated basis, boundary testing, sensitivity analysis, clause-to-summary comparison or named human judgement recorded with reasoning. "Review the AI output" appears nowhere. |
@@ -5178,15 +5178,15 @@ produced no change say so, and say why.
 | 18 | Does it contain an exception process? | All 33 | Element 12 in every standard. Twelve standards permit a bounded exception with an approver, a justification, a duration and a compensating control; the remainder state that no exception is permitted, and several permit an exception to one process requirement while refusing one to the principal obligation. |
 | 19 | Does it define escalation? | All 33 | Element 13 in every standard names the triggering event, and the Definitions fix **escalation threshold** so that the duty does not depend on the professional's expectation of the recipient's reaction. |
 | 20 | Is every important term defined? | All 33 | A Definitions section defines the fourteen terms the brief requires plus twelve subject-matter terms, four AI terms and nine roles. Definitions are non-circular and each states a test a reader can apply. Undefined judgement words carrying obligations — *appropriate*, *adequate*, *reasonable*, *timely*, *sufficient* — were removed and replaced with stated tests. |
-| 21 | Is the language concrete and modern? | All 33 | The legislative requirement verb prohibited by Manual §1 was eliminated. It had entered the superseded set through an earlier red-team pass; this set contains **zero** occurrences of it, in any field, and the ISO mapping in *How to read these standards* is written so that the convention is explained without using the word. |
+| 21 | Is the language concrete and modern? | All 33 | The legislative requirement verb prohibited by Manual section 1 was eliminated. It had entered the superseded set through an earlier red-team pass; this set contains **zero** occurrences of it, in any field, and the ISO mapping in *How to read these standards* is written so that the convention is explained without using the word. |
 | 22 | Does it impose an impossible or excessive burden? | 06.02 · 10.01 · 10.03 · 12.02 · 13.02 · 13.03 | Six burdens were reduced. Schedule integrity is tested by a **query** rather than a manual review, so it costs the same at any scale. Progress and classification verification are sampled on a recorded basis. Contingency quantification expressly accepts a documented expected-value build-up where a probabilistic model would cost more than the contingency it sizes. AI verification is full only for material figures and for items where one error carries the whole consequence. One proposed standard — a standing independent quality review of every controls deliverable — was dropped as disproportionate to any failure it would prevent. |
 | 23 | Can it operate on both small projects and megaprojects? | All 33 | Every element 11 carries an explicit scaling paragraph tested against a USD 2 million refurbishment and a USD 5 billion programme. Three standards changed as a result: `03.05` and `05.04` now provide that independence and change authority are obtained **from outside the project** where the project cannot supply them, so a two-person team is not placed in automatic breach; `04.02` records that a percentage-only variance rule generates noise on a small project and nothing at all on a megaproject, and requires the basis chosen to be recorded; and `10.02` fixes the obligation to record the basis of the near-critical range rather than fixing the range, because it genuinely must differ between the two. |
 | 24 | Can it operate internationally? | All 33 | No standard depends on a single jurisdiction's requirements. Accounting treatment, tax, contractual entitlement, payment legislation, records retention and data protection are all left to element 18 and to local advisers. External instruments are cited with their applicability limitation stated at each use. |
-| 25 | Is there a clear consequence within PCI's authority? | All 33 | Element 23 draws only on the Charter §9 list and states in each standard that PCI can impose no fine, no civil or criminal liability and no other consequence. Every consequence is subject to due process and a right of appeal. |
+| 25 | Is there a clear consequence within PCI's authority? | All 33 | Element 23 draws only on the Charter section 9 list and states in each standard that PCI can impose no fine, no civil or criminal liability and no other consequence. Every consequence is subject to due process and a right of appeal. |
 
-### How this edition was produced — Charter §5 record
+### How this edition was produced — Charter section 5 record
 
-Charter §5 requires a standard's file to record honestly which stages were performed and by whom, including
+Charter section 5 requires a standard's file to record honestly which stages were performed and by whom, including
 where a stage was performed with AI assistance rather than by a named human. For this edition:
 
 - **Stages 1–3** (problem definition, drafting instruction, initial draft in the mandatory structure)
@@ -5200,7 +5200,7 @@ where a stage was performed with AI assistance rather than by a named human. For
 - **Definitions reconciliation.** The red team's structural finding **P-1** — that no PCI Standard
   Definitions Register existed, so each volume built its own and seven compliance-deciding terms
   diverged — has since been closed. The register is published at
-  [`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md), and §A above was reconciled to
+  [`PCI_STANDARDS_DEFINITIONS_REGISTER.md`](PCI_STANDARDS_DEFINITIONS_REGISTER.md), and section A above was reconciled to
   it. In this file that changed the wording of *material*, *independent*, *verified*, *current*,
   *competent reviewer*, *decision owner*, *evidence*, *approved*, *escalation threshold* and *material
   AI assistance*; **no obligation changed**, because each now states in one place the reading the
@@ -5222,7 +5222,7 @@ where a stage was performed with AI assistance rather than by a named human. For
 
 ## Index of PCL-AI Professional Standards
 
-External-reference categories are Manual §6 numbers: **2** authoritative financial-reporting standard ·
+External-reference categories are Manual section 6 numbers: **2** authoritative financial-reporting standard ·
 **3** international voluntary standard · **4** contract framework · **5** professional framework ·
 **7** industry guidance. A national standard is classified under category **11**, added to the Manual for exactly this case
 in the standard and in audit finding 13. "—" means the standard cites no external authority and says why.

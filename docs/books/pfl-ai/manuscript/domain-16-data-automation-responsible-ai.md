@@ -1388,7 +1388,7 @@ Domain 10 (KA 10.4.4) identified as the most valuable asset in a covenant relati
 **Retention: the component that turns an audit trail into a record.** The trail above exists to
 make an output defensible a year later. A year is the wrong horizon: the artefacts of a project
 financing must survive a facility of twenty-five years, a limitation period that can run from
-events late in that life, and several changes of personnel. §16.4.1 correctly identifies a
+events late in that life, and several changes of personnel. Section 16.4.1 correctly identifies a
 *processor's* retention (whether a service keeps inputs, for how long, whether it trains on them
 and where they rest) as a contractual question to settle before use. The mirror obligation is
 the organisation's own, and it is stated here.
@@ -1597,7 +1597,7 @@ made with the tiering in place.
    under a named custodian. The periods are jurisdiction-specific and established with counsel
    and the reporting accountants.
 5. *What is the mirror of the processor-retention question?* The organisation's own retention
-   duty for what it creates. §16.4.1 settles what the service keeps; this settles what the
+   duty for what it creates. Section 16.4.1 settles what the service keeps; this settles what the
    organisation must keep, and the second is the one that survives the vendor.
 6. *What cuts against retention, and how is it resolved?* A minimisation or deletion obligation
    over information about identified individuals. It is reconciled with the retention period

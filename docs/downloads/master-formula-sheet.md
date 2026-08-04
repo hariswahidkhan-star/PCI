@@ -5,7 +5,7 @@
 taught and worked. Candidates are expected to know the core formulas; this sheet is a study aid and is not
 provided in the examination. Symbols follow the Body of Knowledge's master symbol table throughout.
 
-All symbols are defined once here and used identically across the book (Style Spine §4). Currency in USD
+All symbols are defined once here and used identically across the book (Style Spine section 4). Currency in USD
 (+SAR where useful); ratios/indices to 2 dp; adverse amounts in parentheses.
 
 ## A1. Accounting & financial reporting (Domains 1–2)

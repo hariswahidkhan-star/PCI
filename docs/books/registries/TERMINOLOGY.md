@@ -7,7 +7,7 @@ silent redefinition in a chapter is a gate defect. British English throughout.
 ## 1. Inherited from the PCL-AI conventions chapter (unchanged meanings)
 
 Accrual basis · Baseline · Control account (CA) · Cost breakdown structure (CBS) · Provision ·
-Recognition · Work breakdown structure (WBS) — as defined in `docs/bok/00-style-spine.md` §3, plus the
+Recognition · Work breakdown structure (WBS) — as defined in `docs/bok/00-style-spine.md` section 3, plus the
 full PCL-AI global glossary (`docs/bok/appendices.md`, Appendix B) which governs any term it contains.
 
 ## 2. Programme-level terms (fixed at Phase 0)

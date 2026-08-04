@@ -93,7 +93,7 @@ explain credential history. None is displayed as an active credential.
 
 Residual scan over published book sources, build scripts and platform code, excluding the archived
 artifact filename, the two deliberate former-name notices and the internal governance records listed
-in §4:
+in section 4:
 
 | Search | Residual occurrences |
 |---|---|

@@ -47,7 +47,7 @@ it or a contract or mandate imports it. That is precisely why the discipline in 
 without anything being "breached", and the professional question is always whether the *judgement* is sound,
 not whether a box has been ticked. Naming the standard identifies it and nothing more. This reference does not
 state what it contains or requires, its own publication governs, and its issuing body is not associated with,
-does not endorse and has not reviewed this book (Conventions, §9).
+does not endorse and has not reviewed this book (Conventions, section 9).
 
 ### 12.1.3 Risk appetite and tolerance
 
@@ -1216,7 +1216,7 @@ Domain 3, the schedule stress-test in Domain 10, and the range around every fore
 change control/re-baselining → 5.4; lessons-learned feeding identification → 8.5; AI risk scoring/simulation →
 13.5.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 three certification standards here: `PCI-PCL-STD-12.01` (risk statement quality and named ownership),
 `PCI-PCL-STD-12.02` (basis and confidence level of quantified contingency) and `PCI-PCL-STD-12.03`
 (contingency draw-down authority and re-assessment of remaining exposure, the instrument behind the draw-down

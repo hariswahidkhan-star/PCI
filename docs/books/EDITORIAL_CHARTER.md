@@ -42,7 +42,7 @@ Portfolio theme, used where it genuinely fits (never as a per-page slogan):
 7. Version every chapter; retain editorial history; technical + editorial approval before publication.
 8. Never expose secure exam questions; educational badges are never conflated with accredited
    qualifications.
-9. Never generate the books in one uncontrolled pass — phase gates are mandatory (§8).
+9. Never generate the books in one uncontrolled pass — phase gates are mandatory (section 8).
 10. Page count is an output check, not a writing method: no oversized type, whitespace padding,
     duplicated text, filler, repeated definitions, inflated appendices or one-paragraph pages.
 

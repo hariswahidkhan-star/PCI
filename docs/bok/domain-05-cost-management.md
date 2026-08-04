@@ -1405,7 +1405,7 @@ modifications in revenue → 2.2.8; the flexed budget → 4.2.2; reserves and th
 treatment → Domain 6; variations and commercial change → 7.2; risk and contingency → Domain 12; automated
 coding/reconciliation/change detection → Domain 13, KA 13.5.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 four certification standards here: `PCI-PCL-STD-05.01` (completeness and reconciliation of the recorded cost
 position), `PCI-PCL-STD-05.02` (identification and registration of change), `PCI-PCL-STD-05.03` (completeness
 of change impact assessment) and `PCI-PCL-STD-05.04` (change authority and segregation of preparation from

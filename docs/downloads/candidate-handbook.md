@@ -4,7 +4,7 @@
 **How to use this handbook.** Read it end to end once, several weeks before you intend to sit; then use it
 as a reference at each stage — applying, preparing, booking, sitting and maintaining the credential. It
 summarises the published PCI policies in one candidate-facing document. Where this handbook and a published
-policy differ, the published policy prevails (see §10).
+policy differ, the published policy prevails (see section 10).
 
 ## 1. About the credential
 
@@ -31,7 +31,7 @@ The PCL-AI is made for the people who hold projects to account:
 - Project, programme and portfolio managers
 
 Capable people moving into the field are equally welcome: eligibility is based on professional experience,
-not a particular degree or job title (§3).
+not a particular degree or job title (section 3).
 
 ### 1.3 The governing principle
 
@@ -182,7 +182,7 @@ and asks what a competent professional would do next. The multiple-choice format
 and objective; the scenario design puts the emphasis on applied judgement rather than recall.
 
 Item counts will be confirmed by a formal job-task analysis, and the pass mark will be set by a
-modified-Angoff standard-setting study, before the examination goes live (§7.1).
+modified-Angoff standard-setting study, before the examination goes live (section 7.1).
 
 ### 5.2 Delivery
 
@@ -237,7 +237,7 @@ The examination rules protect one thing: that a pass means the same thing for ev
 examination you must:
 
 - present genuine identification and sit the examination yourself — no impersonation in either direction;
-- use no unauthorised materials, devices or assistance of any kind (including any AI tool — see §9);
+- use no unauthorised materials, devices or assistance of any kind (including any AI tool — see section 9);
 - follow the proctor's instructions throughout;
 - **not disclose examination content**, during or after the sitting. Examination items are confidential and
   secured; reconstructing, sharing or soliciting them — in study groups, online forums or anywhere else —
@@ -248,7 +248,7 @@ examination you must:
 Suspected breaches are examined under the published examination-misconduct procedure, with fair process:
 you are told what is alleged, given a genuine opportunity to respond, and judged by people with no conflict
 of interest. Outcomes are proportionate and can include invalidation of a result, loss of the right to
-resit (§8), and — for certified professionals — suspension or withdrawal of certification. Adverse
+resit (section 8), and — for certified professionals — suspension or withdrawal of certification. Adverse
 decisions carry a right of appeal.
 
 ### 6.3 Appeals and complaints
@@ -273,7 +273,7 @@ live — the certification framework is developed with reference to ISO/IEC 1702
 principles — and the same standard will apply to every candidate and every examination form.
 
 Your results letter will show domain-level performance — for unsuccessful candidates, this is the map for
-targeted preparation before a resit (§8).
+targeted preparation before a resit (section 8).
 
 ### 7.2 The certification decision
 
@@ -336,7 +336,7 @@ The position is simple and follows directly from the governing principle:
 - **In the examination itself, AI is prohibited.** No AI tool, assistant or service of any kind may be
   used during a sitting, on any device, for any purpose. The examination measures *your* judgement —
   including your judgement about AI — and any AI assistance during the examination is misconduct under the
-  examination rules (§6).
+  examination rules (section 6).
 
 The companion AI-use policy document sets out this position in full, together with PCI's published AI
 governance policies, which govern how the Institute itself uses AI and what is expected of certified
@@ -348,7 +348,7 @@ professionals after award.
 
 Questions about anything in this handbook — eligibility, accommodations, booking, policies — can be raised
 through the contact page on the PCI website. Accommodation requests use the accommodation request form;
-appeals and complaints use their published routes (§6.3).
+appeals and complaints use their published routes (section 6.3).
 
 ### 10.2 Policy precedence
 

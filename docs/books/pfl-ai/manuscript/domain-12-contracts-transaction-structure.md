@@ -1230,7 +1230,7 @@ probability is assigned.
   **shorter** than the one it has just been given, and starts from the event rather than from
   the day the contractor's notice arrived. Any gap between the two periods is an **uninsured
   exposure**, and it is identified at contract stage rather than at claim stage, alongside the
-  threshold and approval architecture of §12.4.2. A project company with a 28-day upstream
+  threshold and approval architecture of section 12.4.2. A project company with a 28-day upstream
   period and a 42-day downstream one has bought a fortnight of exposure on every compensation
   event for the life of the contract.
 - **Contemporaneous records are the evidence quantum is proved on.** Site records,

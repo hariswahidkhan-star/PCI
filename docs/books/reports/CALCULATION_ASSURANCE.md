@@ -37,7 +37,7 @@ verification suite from one that merely restates the book.
 ### Method 2 — independent recomputation (human-directed, sampled)
 
 Three independent technical reviews recomputed printed results from the rendered PDFs, without reference
-to the check modules, using separate arithmetic. This is the second engine required by §9.3: it does not
+to the check modules, using separate arithmetic. This is the second engine required by section 9.3: it does not
 inherit the first engine's formulas.
 
 | Volume | Results independently recomputed | Substantive defects found |
@@ -70,11 +70,11 @@ Every defect below is corrected in source and re-verified.
 | Independently recomputed by a second, non-inheriting method | ~145 sampled across all three volumes |
 | Passing after correction | all |
 | Corrected during this programme | 8 defect clusters (table above) |
-| Requiring professional judgement rather than arithmetic | see §4 |
-| Requiring external legal, tax or accounting input | see §4 |
+| Requiring professional judgement rather than arithmetic | see section 4 |
+| Requiring external legal, tax or accounting input | see section 4 |
 | **Unresolved calculation defects** | **0** |
 
-## 4. The limits of this statement — read before quoting §3
+## 4. The limits of this statement — read before quoting section 3
 
 **Coverage is not uniform across the three volumes.** The 15,613-check figure covers PML-AI and PFL-AI.
 The PCL-AI volume has **no equivalent machine suite**; its assurance rests on the independent
@@ -89,7 +89,7 @@ chosen is the one a competent practitioner would choose, that the assumption beh
 reasonable, that the worked example teaches the right lesson, or that the interpretation drawn from a
 correct number is sound. Four of the eight defects above (CA-02, CA-03, CA-05, CA-06) were *not*
 arithmetic errors — they were interpretation, precision, illustration and record-keeping defects that a
-machine suite passed and a human reviewer caught. That ratio is the argument for §5.
+machine suite passed and a human reviewer caught. That ratio is the argument for section 5.
 
 **Jurisdiction-sensitive figures.** Every tax rate, contract-law rule and regulatory threshold appearing
 in an example is illustrative. No calculation in any volume should be relied upon for a live decision in

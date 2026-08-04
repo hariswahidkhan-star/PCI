@@ -119,7 +119,7 @@ familiar any calculation in any domain can be followed at speed:
 1. **Setup**: the scenario in a sentence or two, with the given data listed.
 2. **Formula**: the formula stated, each variable named with its unit.
 3. **Substitution**: the numbers substituted in, shown explicitly.
-4. **Result**: the computed answer, rounded per §7 and stated with its unit.
+4. **Result**: the computed answer, rounded per section 7 and stated with its unit.
 5. **Interpretation**: what the number *means* for the decision in front of the professional.
 
 The interpretation step is never decorative: a figure that has not been interpreted has not yet been used.

@@ -44,7 +44,7 @@ individuals.
 ## Finding-by-finding record
 
 ### PFL-02 (major) — the duty to correct
-**D1 §1.3.1.** "Candour about numbers" extended into a standing rule with the four elements the
+**D1 section 1.3.1.** "Candour about numbers" extended into a standing rule with the four elements the
 book's governance uses: the **trigger** (materiality judged against the recipient's decision, not
 the size of the arithmetic; material until someone senior decides otherwise in writing); the
 **decision rights** (the correction is owned by the signer of the original output, external
@@ -77,7 +77,7 @@ summary, `TOC.md` KA 4.3 entry, and the existing "Public-sector appraisal" indus
 bullet extended to point at the new topic.
 
 ### PFL-04 (major) — control in the shareholders' agreement
-**D5 §5.2.3, new block "Control: reserved matters, transfers and deadlock."** Reserved-matter
+**D5 section 5.2.3, new block "Control: reserved matters, transfers and deadlock."** Reserved-matter
 classes and the logic that generates them (anything that changes the risk the minority underwrote),
 with the working rule that **the threshold matters as much as the list** — a 75 % matter is
 controlled by any holder above 25 %, so the veto map is arithmetic. The **two-approval problem**:
@@ -94,7 +94,7 @@ timetable, the deadlock mechanism, and a veto-map footer.
 
 ### PFL-05 (major) — the data-handling precondition in the AI sections
 A data precondition added immediately before the "must not go" paragraph in each named block:
-**D5 KA 5.3, D6 §6.4.4, D7 KA 7.1, D7 KA 7.4, D8 KA 8.1.** Common form: the material is confidential
+**D5 KA 5.3, D6 section 6.4.4, D7 KA 7.1, D7 KA 7.4, D8 KA 8.1.** Common form: the material is confidential
 project material, processed only in an environment approved for that data classification **and
 permitted by the confidentiality undertakings that cover it**, and establishing that permission is a
 *precondition of the task, not a review of it* — usually a **permitted-recipient** question rather
@@ -103,7 +103,7 @@ Specific additions where the risk is specific: **D7 KA 7.1** — unsigned drafts
 counterparty's position as well as the project's, and grantor tender rules frequently restrict where
 bid material may be processed. **D7 KA 7.4** — counterparty credit assessment is material about an
 identified third party, with a data-protection caution for directors, owners and politically exposed
-persons in a control chain, and the retention position set at the same time. **D6 §6.4.4** —
+persons in a control chain, and the retention position set at the same time. **D6 section 6.4.4** —
 uploading a workbook for a structure scan discloses everything else in the workbook. **D8 KA 8.1** —
 the benchmark-library caution the book had nowhere: outturn data is usually the *client's*
 confidential information, permission on one engagement is not permission on the next, **a benchmark
@@ -115,11 +115,11 @@ required, held with the library.
 *benchmark provenance* line.
 **Deviation from the proposed correction:** the finding asks each block to cross-refer to
 "Domain 1 KA 1.3.3". The confidentiality rule ("confidentiality travels with the data") is in
-**§1.3.4**, not §1.3.3 (which is conflicts and independence). All five cross-references point to
+**section 1.3.4**, not section 1.3.3 (which is conflicts and independence). All five cross-references point to
 KA 1.3.4, and forward to Domain 16 as asked. Citing 1.3.3 would have been a broken pointer.
 
 ### PFL-06 (major) — the model after close
-**D6 §6.4.3, new block "The model after close."** The closing model becomes a **contractual object**
+**D6 section 6.4.3, new block "The model after close."** The closing model becomes a **contractual object**
 defined by the finance documents; four consequences — it is **locked** and amended only through the
 documents' own mechanism (proposal, evidence, agent or lender consent), with the practical control
 that the closing model is filed as a read-only artefact whose integrity can be demonstrated later;
@@ -136,7 +136,7 @@ that opens without the original toolchain, under a named custodian.
 **Apparatus:** 4 key terms, MCQ 6.4-I, 4 self-check items.
 
 ### PFL-07 (major) — who measures, who certifies, and what happens while it is disputed
-**D7 §7.1.3, new subsection after the worked example.** The measurement source and its
+**D7 section 7.1.3, new subsection after the worked example.** The measurement source and its
 calibration/audit regime as a bankability condition, including the **deemed-availability rule on
 metering failure** ("a structure in which the offtaker owns the meters and failure is deemed nil has
 transferred more risk than the multiplier suggests"). The **certification chain** and the three
@@ -154,7 +154,7 @@ quantity: measurement, certification, evidence, dispute, cash timing.
 **Apparatus:** 4 key terms, MCQ 7.1-H, 4 self-check items.
 
 ### PFL-08 (major) — subsidy control on the funding plan
-**D9 §9.4.1, closing paragraph.** Every form in the support table raises a question the funding plan
+**D9 section 9.4.1, closing paragraph.** Every form in the support table raises a question the funding plan
 cannot answer for itself: has the support been **properly granted**? Many jurisdictions are
 understood to operate régimes governing whether and how public support may be given, and there are
 international disciplines between states. The consequence is characteristically described as
@@ -166,7 +166,7 @@ before financial close, on the condition-precedent schedule with a named owner, 
 closing set. Two cautions: the régime, thresholds, procedure and consequences are jurisdiction- and
 time-specific and nothing here states them anywhere; and this is not a matter on which a financial
 adviser, a model or a sponsor's own view is worth anything.
-**Cross-referenced into D13 §13.3.1** as a third-party condition category, with the reason it sits
+**Cross-referenced into D13 section 13.3.1** as a third-party condition category, with the reason it sits
 there (neither sponsors nor lenders control it).
 **Apparatus:** 3 key terms in KA 9.4, 2 self-check items; Toolkit 9.T.3 carries the confirmation.
 
@@ -184,7 +184,7 @@ definitional ambiguity where the documents conflict — that is for counsel and 
 default. Both close on the canonical principle.
 
 ### PFL-10 (major) — the hedging mandate
-**D11 new §11.3.1b "The hedging mandate"**, placed before the currency topic, with five lettered
+**D11 new section 11.3.1b "The hedging mandate"**, placed before the currency topic, with five lettered
 parts: **(a) decision rights** — board-approved policy on a mandate agreed with lenders, execution
 by a named officer within limits stated in figures, execution separated from confirmation;
 **(b) the prohibition** — hedging beyond the amortisation profile or with no underlying exposure is
@@ -204,7 +204,7 @@ reporting accountants **before** a hedge is transacted. Standing caution added.
 mandate reference and the last notional-to-profile reconciliation date.
 
 ### PFL-11 (major) — notice, records and the back-to-back check
-**D12 §12.4.3, new block at the head of the topic, before the worked example.** Five dated facts to
+**D12 section 12.4.3, new block at the head of the topic, before the worked example.** Five dated facts to
 establish before any probability is assigned: **notice** as commonly a condition precedent to
 entitlement, with the instruction to **compute nothing until the notice position is established**,
 because a probability set applied to an unpreserved entitlement produces a defensible-looking
@@ -220,7 +220,7 @@ with the upstream back-to-back position recorded beside it, plus a records-reten
 **Apparatus:** 3 key terms, MCQ 12.4-H, 3 self-check items.
 
 ### PFL-12 (major) — the professional obligation in distress
-**D15 §15.4.1, boxed "Professional obligation" before any arithmetic.** The diagnostic is a
+**D15 section 15.4.1, boxed "Professional obligation" before any arithmetic.** The diagnostic is a
 **mandatory escalation trigger**: the finding goes in writing to the SPV board and to counsel in the
 jurisdiction of incorporation *and* under the governing law of the finance documents, which are
 frequently not the same and can give different answers, before the three levers are discussed with a
@@ -231,7 +231,7 @@ here, and the professional point that the directors are no longer taking ordinar
 decisions. **No distribution once the sustainable-service test fails without a written confirmation,
 on the figures then current, that it remains lawful**, distinguished from the finance documents'
 contractual lock-up test.
-**§15.4.3** gains a third qualification: the enforcement floor is a model of a **legally available**
+**section 15.4.3** gains a third qualification: the enforcement floor is a model of a **legally available**
 enforcement, and moratoria, court-supervised processes, service-continuity obligations, grantor
 step-in and the reopening of earlier payments can each move it — so the position is confirmed with
 counsel before the floor is used as a negotiating boundary, since a boundary drawn on an unavailable
@@ -240,7 +240,7 @@ enforcement is an assumption presented as a constraint.
 Toolkit 15.T.2 files the distribution confirmations.
 
 ### PFL-13 (major) — record retention across D9–D16
-**§16.4.4** gains a **retention** block stating the rule and its basis (longest of the applicable
+**section 16.4.4** gains a **retention** block stating the rule and its basis (longest of the applicable
 limitation period, the facility's life and tail, and any statutory tax, accounting or regulatory
 requirement), the three disciplines that make a period meaningful (model version, input data version
 and attribution retained *alongside* the output; a form that opens without the toolchain that
@@ -248,7 +248,7 @@ produced it, with export terms negotiated in the contract rather than at renewal
 with recorded handover), and the two opposing cautions — periods are jurisdiction-specific, and a
 minimisation or deletion obligation over information about identified individuals can cut across
 them, reconciled with the data-protection adviser when the arrangement is designed.
-**§13.1.5** gains the same rule for the **closing set**, itemised.
+**section 13.1.5** gains the same rule for the **closing set**, itemised.
 **All 25 toolkits in D9–D16** now carry an explicit retention line naming period, form and
 custodian — including **Toolkit 13.T.3 Part D** (the close register, condition-precedent evidence
 and signed funds-flow reconciliation), **Toolkit 13.T.2** (the model-audit finding register, with
@@ -271,7 +271,7 @@ row carrying the PFL-02 record. Explicit retention lines also added to the other
 finding names: **3.T.1** (as a table row), **4.T.4**, **5.T.1**, **6.T.3**, **7.T.3**, **8.T.1**.
 
 ### PFL-15 (moderate) — day-count conventions
-**D3 §3.3.4.** `actual/actual` added to the table with its typical home. New block **"Three things
+**D3 section 3.3.4.** `actual/actual` added to the table with its typical home. New block **"Three things
 the table does not settle"**: *which actual/actual* (a family whose variants differ in the
 denominator, and the convention for which leap year is the defining case); *which 30/360* (variants
 differing on 31st-day and month-end treatment, which can accrue different interest over the same
@@ -289,7 +289,7 @@ centres and whether period end dates roll, and the end-of-month rule — plus a 
 **Apparatus:** 3 key terms, 2 self-check items.
 
 ### PFL-16 (moderate) — naming the anchor for the estimate-class ladder
-**D8 §8.1.2.** The existing disclaimer sentence is kept **verbatim**, and the anchor is now named in
+**D8 section 8.1.2.** The existing disclaimer sentence is kept **verbatim**, and the anchor is now named in
 the same form D5 uses for the Equator Principles: AACE International's Recommended Practices on
 cost-estimate classification, characterised as voluntary professional guidance, not a standard and
 not a regulatory requirement, the property of their publisher, named for identification only so a
@@ -310,13 +310,13 @@ asks for a "cost management" grouping; the generator's existing family is **"Cos
 and a second near-identical family would have been a defect, so the entry lands there.
 
 ### PFL-17 (moderate) — related-party governance where the arithmetic depends on it
-**D12 §12.3.2** gains a **fourth discipline**: where the guarantor is in the sponsor's group, the
+**D12 section 12.3.2** gains a **fourth discipline**: where the guarantor is in the sponsor's group, the
 cover and the equity support are not independent, so identify **every other obligation resting on
 that same obligor** — equity commitment, contingent equity, cost-overrun undertaking, the in-balance
 cash call, guarantees on the group's other projects — and **state the aggregate**, because the
 events that call one call the others. "A security package whose parent guarantee and whose equity
 support are the same covenant has diversified nothing."
-**§12.1.1** extends the arm's-length rule beyond O&M to the EPC contract and the security package:
+**section 12.1.1** extends the arm's-length rule beyond O&M to the EPC contract and the security package:
 disclosure, testing on an arm's-length basis by someone outside the commercial line, and recording
 the approving body — with the note that a related-party contract is characteristically a reserved
 matter (cross-refers PFL-04) and any consent requirement is established rather than assumed.
@@ -327,7 +327,7 @@ counted as cover until those are recorded.
 **Apparatus:** 2 key terms, MCQ 12.3-F, 2 self-check items.
 
 ### PFL-18 (moderate) — accounting and régime in the handback topic
-**D15 §15.4.5**, closing block. *(a) Accounting:* the residual obligation is normally recognised as
+**D15 section 15.4.5**, closing block. *(a) Accounting:* the residual obligation is normally recognised as
 a **provision**, unwinds through the income statement over the concession and is **remeasured on the
 condition survey**, so reported profit and net assets can move with no cash moving — and where any
 covenant or distribution test has an accounting basis, a remeasurement can move it in a year when
@@ -367,7 +367,7 @@ Finding PFL-16 asks for this. `registries/` is outside the scope set for this wo
 agent may hold. The precise edit needed: in the "used in" column of **EXT-065** (AACE RP 17R-97) and
 **EXT-066** (RP 18R-97), which currently read `Laws PCL-LAW-03-01`, add `PFL-AI D8`. No other change
 is required — the existing note on both rows ("no accuracy ranges or class tables are reproduced")
-already describes the treatment §8.1.2 applies.
+already describes the treatment section 8.1.2 applies.
 
 **Not a defect, recorded for the reader of this file.** Four cross-references in the corpus do not
 resolve to a topic heading: `KA 6.4.1b` (D16 → a D6 worked example), `PML-AI D7 KA 7.3.4` and

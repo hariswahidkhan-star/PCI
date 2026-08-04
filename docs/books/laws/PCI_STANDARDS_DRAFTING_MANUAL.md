@@ -16,7 +16,7 @@ ISO-style `shall` drafting, and the two systems are never mixed.
 |---|---|---|
 | **must** | Mandatory PCI professional requirement | The obligation itself |
 | **must not** | Prohibited practice | Conduct that constitutes a breach |
-| **should** | Recommended practice; a justified alternative may be acceptable | Level 5 recommendations only — see §1.3 |
+| **should** | Recommended practice; a justified alternative may be acceptable | Level 5 recommendations only — see section 1.3 |
 | **may** | Permission | Something the professional is allowed to do |
 | **can** | Capability or possibility — never permission | Describing what a person, tool or method is able to do |
 
@@ -26,7 +26,7 @@ and futurity — and modern drafting practice in the UK and elsewhere has moved 
 that reason. A draft that uses `shall` to impose, permit or recommend anything fails gate.
 
 **The ban is on the form, not on the word.** Explanatory material *about* the convention — the ISO
-mapping in §1.0, this paragraph, a supersession note recording that an earlier draft used the word —
+mapping in section 1.0, this paragraph, a supersession note recording that an earlier draft used the word —
 may name `shall` in order to say that PCI does not use it. Refusing to print the word while trying to
 explain the mapping produces a circumlocution the reader cannot follow, which defeats the purpose of
 stating the mapping at all. The gate check is therefore: zero occurrences inside any standard's
@@ -55,7 +55,7 @@ Three consequences follow, and none is optional:
    > does not use `shall` at all, and does not use `must` for external constraints.
 
 2. **PCI needs a different device for signalling an external constraint**, because `must` is no
-   longer available for it. See §1.2 — external constraints are stated with `may impose` and are
+   longer available for it. See section 1.2 — external constraints are stated with `may impose` and are
    confined to element 17 (External reference) and element 18 (Jurisdictional caution). An external
    obligation is never expressed as a PCI `must`.
 
@@ -190,7 +190,7 @@ follow it in this order:
 | 20 | **Related Body of Knowledge content** | Certification · domain · Knowledge Area · topic. |
 | 21 | **Compliance test** | A test an auditor, assessor or reviewer can actually perform. |
 | 22 | **Breach indicators** | Observable indicators that the standard may have been breached. |
-| 23 | **Consequence within PCI authority** | From the Charter §9 list only. |
+| 23 | **Consequence within PCI authority** | From the Charter section 9 list only. |
 | 24 | **Examination application** | How the standard can be tested by scenario judgement, evidence selection, escalation decision, calculation review, ethical dilemma or AI-verification case — not by memorising standard numbers. |
 | 25 | **Version and status** | Version · approval date · effective date · amendment note. ``` |
 ### 5.0 Which elements are normative
@@ -303,7 +303,7 @@ change.
 
 | Pattern | Why it fails |
 |---|---|
-| A requirement inside a note, example, case study, figure caption or rationale | Charter §3 — obligations exist only in identified standards and process requirements |
+| A requirement inside a note, example, case study, figure caption or rationale | Charter section 3 — obligations exist only in identified standards and process requirements |
 | A requirement no one can verify | Unverifiable requirements cannot be audited, assessed or breached |
 | A circular definition | Defines nothing |
 | An undefined judgement word carrying the obligation | The requirement's content is unknown |
@@ -313,20 +313,32 @@ change.
 | A vague responsible role | Nobody is accountable |
 | Duplicating an external standard without adding an obligation | Creates the impression PCI is restating law, and goes stale when the standard moves |
 | Hedging inside the Normative requirement ("where practical", "should generally", "may wish to") | Qualifications belong in Scope, Threshold or Jurisdictional caution |
-| Claiming a consequence outside PCI's authority | Charter §2 and §9 |
+| Claiming a consequence outside PCI's authority | Charter section 2 and section 9 |
 
 ## 8. Visual presentation
 
-Colour is never the only distinction. Every call-out carries a written label, an icon, a border
-treatment and an identifier, so the categories survive greyscale printing, screen reading and
-monochrome displays.
+Colour is never the only distinction. Every call-out carries a written label, a border treatment
+and an identifier, so the categories survive greyscale printing, screen reading and monochrome
+displays.
 
-| Call-out | Written label | Colour | Tint | Icon | Border |
-|---|---|---|---|---|---|
-| Mandatory standard | `PCI PROFESSIONAL STANDARD` | Dark PCI Standard Red `#9B1C1C` | `#FDECEC` | § | solid left |
-| External authority | `EXTERNAL STANDARD OR FRAMEWORK` | Standards Blue `#1D4ED8` | `#EEF4FF` | ⬢ | double |
-| Recommended practice | `PCI RECOMMENDED PRACTICE` | Guidance Teal `#0F766E` | `#ECFDF5` | ✦ | dashed |
-| Jurisdictional caution | `JURISDICTIONAL CAUTION` | Amber `#B45309` | `#FEF3C7` | ⚠ | dotted |
+| Call-out | Written label | Colour | Ground | Border |
+|---|---|---|---|---|
+| Mandatory standard | `PCI standard` | Standards Green `#14432E` | pale green tint | 2 pt solid left |
+| External authority | `external standard or framework` | Standards Green `#14432E` | none | 2.8 pt double left |
+| Recommended practice | `PCI recommended practice` | Mid Green `#2D6A4F` | none | 1 pt dashed left |
+| Jurisdictional caution | `caution` | Amber `#8A5A00` | pale amber tint | 1 pt dotted left |
+
+One accent, not four. Green carries the mandatory standards, the external authorities and the
+recommended practices, separated by border treatment and by their written labels rather than by
+hue — four competing colours on a page make none of them mean anything. Amber is reserved for the
+jurisdictional caution alone: a caution that shares the accent stops reading as a caution.
+
+**No icons and no section signs.** A pictographic marker renders as a blank box wherever the font
+lacks the glyph, and a reader who meets an empty rectangle learns nothing. The written label and
+the identifier carry the meaning, so both survive any font, any greyscale printer and any screen
+reader. Cross-references are written as words — *section 4.2*, *Charter section 5* — for the same
+reason, and because the section sign belongs to statutory drafting, which is a register this
+corpus deliberately does not borrow.
 
 Body copy inside a call-out is black on the light tint. Colour carries the heading, border and label
 only; large blocks of body text are never set in bright red.

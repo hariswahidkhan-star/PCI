@@ -17,7 +17,7 @@ requirements. Before drafting any standard, the programme needs a defensible ans
 
 This report extracts **drafting principles, structures and governance methods** from the official
 guidance of bodies whose entire business is writing rules that other people must comply with. It
-extracts method, not text. Nothing protected is reproduced (see §3 and §9).
+extracts method, not text. Nothing protected is reproduced (see section 3 and section 9).
 
 Three things this report deliberately does **not** do:
 
@@ -68,7 +68,7 @@ interchangeable and the distinction is load-bearing.
 
 **Consequence for the programme:** everything in this report should be re-verified against the
 issuing bodies' own pages before any standard text relies on it, and before any PCI publication cites it.
-A re-verification checklist is at §10.
+A re-verification checklist is at section 10.
 
 ### 2.3 A note on precision
 
@@ -109,7 +109,7 @@ A single rule covers all of them and should be carried into PCI's drafting conve
 > **PCI reproduces no protected text. PCI names the instrument, states in its own words why the
 > instrument matters, and directs the reader to the official publication, which governs.**
 
-This is already PCI's stated position in `SUPERSEDED_LAW_SYSTEM_v0.md` §5. This report confirms it is the right
+This is already PCI's stated position in `SUPERSEDED_LAW_SYSTEM_v0.md` section 5. This report confirms it is the right
 one and adds that it must apply to *method* documents (the Directives, the Handbook, the Drafting
 Guidance) exactly as it applies to *subject-matter* standards (IFRS 15, ISO 21500 and the like).
 
@@ -118,7 +118,7 @@ Guidance) exactly as it applies to *subject-matter* standards (IFRS 15, ISO 2150
 ## 4. Source register
 
 Five primary sources plus two supporting sources were used. All are the issuing bodies' own
-publications. None reached tier F because of the egress block described in §2.1.
+publications. None reached tier F because of the egress block described in section 2.1.
 
 ### Source 1 — ISO/IEC Directives, Part 2
 
@@ -189,7 +189,7 @@ can be assessed at all.
 ## 5. The twenty questions, answered
 
 Each answer states the mechanism, the source that answers it, and what it means for PCI. Tiers are
-as defined in §2.2.
+as defined in section 2.2.
 
 **1. How is a mandatory requirement distinguished from guidance?**
 By a fixed vocabulary, applied without exception, and — in the best rulebooks — by a visible status
@@ -287,8 +287,8 @@ states that using it does not make the external constraint a requirement of the 
 requirements (S). (iii) It controls incorporation by reference: only references whose content
 constitutes requirements go in the normative references list; for dated references only the cited
 edition applies, and for undated references the latest edition including amendments applies (S).
-*PCI implication:* this is the single most directly transferable finding in the report — see §7(a)
-and §7(d).
+*PCI implication:* this is the single most directly transferable finding in the report — see section 7(a)
+and section 7(d).
 
 **12. How are conflicts between requirements resolved?**
 By an express precedence rule and by drafting consistency. ISO/IEC Directives Part 2 attacks the
@@ -311,7 +311,7 @@ binding and departure from it raises no presumption of breach, whereas evidentia
 though not binding in their own right — may be relied on as tending to establish contravention of
 the underlying rule (S). *PCI implication:* PCI's `Consequences of breach` field should classify,
 not narrate; and PCI needs to decide whether departure from a `should` is evidentially relevant
-(see §7(a)).
+(see section 7(a)).
 
 **14. How is appeal or interpretation handled?**
 As separate machinery from the rule itself. ISO/IEC 17024 requires accessible, fair and impartial
@@ -340,7 +340,7 @@ period of 120 days, with a shorter minimum (reported as 60 days) available for n
 (S). Priorities are set through a five-yearly agenda consultation (S). The FCA consults through
 consultation papers that must explain the purpose of the proposed rules, invite representations
 within a stated period, and be followed by feedback (S). *PCI implication:* PCI can adopt the
-*shape* of this honestly at a fraction of the scale — see §7(b).
+*shape* of this honestly at a fraction of the scale — see section 7(b).
 
 **17. How is implementation impact assessed?**
 Before the requirement is made, and again after. The IFRS Foundation analyses the likely effects,
@@ -387,7 +387,7 @@ decision record per standard, retained, and a published change history.
 
 ## 6. Extracted drafting principles
 
-One row per principle. **Tier** is as defined in §2.2. Nothing in the "Drafting principle
+One row per principle. **Tier** is as defined in section 2.2. Nothing in the "Drafting principle
 identified" column reproduces protected text; each is a restatement in PCI's own words.
 
 | # | Research area | Authoritative source | Drafting principle identified | Application to PCI | Copyright restriction |
@@ -400,7 +400,7 @@ identified" column reproduces protected text; each is a restatement in PCI's own
 | 6 | What a voluntary document excludes | ISO/IEC Directives Part 2 (S) | Guarantee, commercial and contractual conditions are excluded from a document's requirements, and legal or statutory requirements are not restated as the document's own requirements | PCI standards bind professional conduct and method only. They never set commercial terms and never restate law as PCI standard; legal obligations appear only as external constraints or jurisdictional cautions | Restatable. This principle underwrites PCI's legal-status disclaimer |
 | 7 | Scope as a normative element | ISO/IEC Directives Part 2 (S) | Scope is the mandatory opening element delimiting the subject and the limits of applicability, with applicability statements introduced by set wording so they are found in one predictable place | PCI's `Scope` field becomes structurally mandatory, is drafted before the Rule, and opens with one fixed pattern of PCI's own devising | Restatable. Do not adopt ISO's specific opening phrases verbatim |
 | 8 | Scope contains no obligations | ISO/IEC Directives Part 2 (S) | The scope statement must contain no requirements, permissions or recommendations, and is worded as statements of fact | PCI gate check: any `must`/`should`/`may` appearing in a `Scope` field is a drafting defect | Restatable |
-| 9 | Normative vs informative | ISO/IEC Directives Part 2 (S) | Each element of a document is classified as normative or informative, and the classification is made visible to the reader | PCI must classify each of the fields in its standard template as normative or informative and print the classification. See §7(d) | Restatable. Do not reproduce the Directives' typographic conventions table |
+| 9 | Normative vs informative | ISO/IEC Directives Part 2 (S) | Each element of a document is classified as normative or informative, and the classification is made visible to the reader | PCI must classify each of the fields in its standard template as normative or informative and print the classification. See section 7(d) | Restatable. Do not reproduce the Directives' typographic conventions table |
 | 10 | Examples are never normative | ISO/IEC Directives Part 2 (S) | Examples must not contain requirements, instructions, recommendations or permissions, and are written as statements of fact | PCI's worked examples and `AI application` illustrations must be scrubbed of obligation language | Restatable. Do not reproduce the Directives' rule text |
 | 11 | Notes are constrained | ISO/IEC Directives Part 2 (S) | Notes integrated in the text follow different rules from notes attached to a terminological entry; the two must not be conflated | PCI adopts one note type only — informative, never obligation-bearing — to remove the ambiguity entirely | Restatable. The distinction is UNVERIFIED as to detail; PCI's simplification avoids reliance on it |
 | 12 | Terms clause is normative | ISO/IEC Directives Part 2 (S) | The terms and definitions clause is a normative element of the document, not a reader's convenience | PCI's glossary becomes part of the standard set, versioned with it, not an appendix | Restatable |
@@ -426,8 +426,8 @@ identified" column reproduces protected text; each is a restatement in PCI's own
 | 32 | Priority-setting consultation | IFRS Foundation (S) | The forward agenda is itself consulted on, at a fixed interval (reported as five-yearly) | PCI consults on which standards to write next, not only on the text of standards already drafted | Restatable; interval is **S** |
 | 33 | Interpretation route | IFRS Foundation (S) | Application questions are routed to a standing body that may publish explanatory material after public consultation, or conclude that amendment is required instead | PCI creates a named interpretation route with two possible outcomes: published clarification, or an amendment proposal | Restatable |
 | 34 | Authority of explanatory material | IFRS Foundation (S) | Explanatory material derives its authority from the requirements it explains; it does not create new requirements | PCI clarifications may explain a standard but must never extend it. A clarification that adds obligation is an amendment and follows the amendment process | Restatable |
-| 35 | Independent process oversight | IFRS Foundation (S) | Compliance with the process is monitored by a body separate from the one that writes the requirements, which also handles complaints about the process | PCI must either create a genuinely separate reviewer of its standard process, or state plainly that it has not. See §7(b) | Restatable |
-| 36 | Avoiding the legislative "shall" | UK OPC *Drafting Guidance* (S) | Office policy is to avoid the legislative "shall"; obligations are imposed using "must". Limited exceptions exist, principally where text is inserted into an existing instrument that already uses the older form | PCI bans `shall` outright. PCI has no legacy instrument to amend, so the OPC exception does not arise. `SUPERSEDED_LAW_SYSTEM_v0.md` §3 currently permits `shall` and must be corrected | Restatable. Do not reproduce OPC passages until the licence position is confirmed (**UNVERIFIED**) |
+| 35 | Independent process oversight | IFRS Foundation (S) | Compliance with the process is monitored by a body separate from the one that writes the requirements, which also handles complaints about the process | PCI must either create a genuinely separate reviewer of its standard process, or state plainly that it has not. See section 7(b) | Restatable |
+| 36 | Avoiding the legislative "shall" | UK OPC *Drafting Guidance* (S) | Office policy is to avoid the legislative "shall"; obligations are imposed using "must". Limited exceptions exist, principally where text is inserted into an existing instrument that already uses the older form | PCI bans `shall` outright. PCI has no legacy instrument to amend, so the OPC exception does not arise. `SUPERSEDED_LAW_SYSTEM_v0.md` section 3 currently permits `shall` and must be corrected | Restatable. Do not reproduce OPC passages until the licence position is confirmed (**UNVERIFIED**) |
 | 37 | Modern standard English | UK OPC *Drafting Guidance* (S) | Draft in modern, standard English using vocabulary reflecting ordinary general usage; avoid archaisms and expressions likely to cause difficulty | PCI bans hereinafter, aforesaid, notwithstanding, thereto, pursuant to, save that, in the event that | Restatable |
 | 38 | Conditional structure | UK OPC *Drafting Guidance* (S) | Conditions are set out before the obligation they qualify, in a structured conditional form, rather than trailed after it in provisos | PCI's `Rule` is a single sentence; conditions precede the obligation or move to `Scope` | Restatable |
 | 39 | Definitions discipline | UK OPC *Drafting Guidance*; UK tax-definitions review (S) | Definitions should be used sparingly, should not surprise the reader, and negative definitions should be rare | PCI defines only terms it actually uses normatively; no term may be defined contrary to its ordinary professional meaning without a visible flag | Restatable |
@@ -509,11 +509,11 @@ choose, and say which:
 What PCI must not do is keep the current position, in which `should` is described as a
 recommendation but carries an unstated obligation to justify departure.
 
-**Consequence 3 — `shall` must disappear, and it currently has not.** `SUPERSEDED_LAW_SYSTEM_v0.md` §3 presently
+**Consequence 3 — `shall` must disappear, and it currently has not.** `SUPERSEDED_LAW_SYSTEM_v0.md` section 3 presently
 permits `must / must not / shall / shall not` interchangeably for mandatory rules. That directly
 contradicts the programme decision and must be corrected before drafting begins. Concretely:
 
-- amend `SUPERSEDED_LAW_SYSTEM_v0.md` §3 to remove `shall` and `shall not`;
+- amend `SUPERSEDED_LAW_SYSTEM_v0.md` section 3 to remove `shall` and `shall not`;
 - add a mechanical gate check that fails any standard set containing `shall` in any field;
 - extend the check to the whole corpus, since imported or adapted text is the usual route by which
   `shall` re-enters a document — the OPC itself notes that the main reason to use the old form is
@@ -714,7 +714,7 @@ If a standard cannot answer the test, delete it and reference the external instr
 requirements", so that PCI never carries a stale edition or clause number. This follows from ISO's
 dated/undated distinction (S) and from PCI's existing ban on inventing clause numbers and editions.
 
-**Trap 6 — `shall` leakage.** Add it to the gate as a hard failure (see §7(a), Consequence 3).
+**Trap 6 — `shall` leakage.** Add it to the gate as a hard failure (see section 7(a), Consequence 3).
 Imported and adapted text is how it returns.
 
 **Trap 7 — `may not`.** Ambiguous between "is prohibited from" and "is not required to". Ban it;
@@ -726,16 +726,16 @@ use `must not` or "is not required to" as intended.
 
 | # | Action | Owner | Depends on |
 |---|---|---|---|
-| 1 | Amend `SUPERSEDED_LAW_SYSTEM_v0.md` §3 to remove `shall`/`shall not` and adopt the closed verbal-form set in §7(a) | Standard programme | — |
+| 1 | Amend `SUPERSEDED_LAW_SYSTEM_v0.md` section 3 to remove `shall`/`shall not` and adopt the closed verbal-form set in section 7(a) | Standard programme | — |
 | 2 | Add a Conventions clause covering verbal forms, the express disclaimer of ISO conventions, and field status | Standard programme | 1 |
 | 3 | Classify every template field as normative or informative and print the classification | Standard programme | 2 |
-| 4 | Decide `should` as Option A or Option B (§7(a), Consequence 2) and state it | Standard programme | 2 |
+| 4 | Decide `should` as Option A or Option B (section 7(a), Consequence 2) and state it | Standard programme | 2 |
 | 5 | Add gate checks: no `shall`; no `may not`; no banned judgement terms in Rule text; no `must` in glossary; substitution test; circularity test; evidence-artefact test | Build/checks (`docs/books/_build/checks`) | 1–4 |
 | 6 | Add the "what does PCI add?" test to the standard gate | Standard programme | — |
-| 7 | Draft the PCI Standard Development Procedure covering only what PCI will actually do (§7(b)) | PCI governance | — |
+| 7 | Draft the PCI Standard Development Procedure covering only what PCI will actually do (section 7(b)) | PCI governance | — |
 | 8 | Move the legal-status disclaimer into running headers/footers and every export path | Publishing/typesetting | — |
 | 9 | Create the exemption route and the interpretation route, with published criteria | PCI governance | 7 |
-| 10 | Re-verify every source in §10 against the issuing bodies' own pages before any PCI publication cites them | Standard programme | Network access |
+| 10 | Re-verify every source in section 10 against the issuing bodies' own pages before any PCI publication cites them | Standard programme | Network access |
 
 ---
 
@@ -750,7 +750,7 @@ use `must not` or "is not required to" as intended.
   reconstructed.
 - Source names, document titles and URLs are used for identification and attribution. Trade marks
   remain those of their owners; no endorsement or affiliation is implied.
-- The verbal-form table in §7(a) is PCI's own convention, constructed for PCI's purposes. It is not
+- The verbal-form table in section 7(a) is PCI's own convention, constructed for PCI's purposes. It is not
   derived from, and must not be presented as consistent with, the ISO/IEC verbal-form system.
 - Where a source's licence position could not be verified (OPC *Drafting Guidance*, FCA Handbook),
   the stricter restate-only position has been applied.
@@ -766,7 +766,7 @@ own page before any PCI publication relies on it.
 |---|---|---|---|
 | 1 | Current edition and date of ISO/IEC Directives, Part 2 | PCI must never cite an edition it has not confirmed. Search evidence was inconsistent (titles indicating a ninth edition dated 2021, a reference to an eighth edition, and later amendment activity) | `https://www.iso.org/sites/directives/current/part2/index.xhtml`; `https://www.iec.ch/standards-development/isoiec-directives-part-2` |
 | 2 | Exact contents and numbering of the verbal-forms tables | PCI does not need the contents — it must not reproduce them — but must confirm the substance of the `must`/external-constraint rule before publishing its disclaimer | As above |
-| 3 | Exact publication date and structure of the April 2026 IFRS Due Process Handbook | Cited in §4 and §5 as S | `https://www.ifrs.org/groups/due-process-oversight-committee/due-process-handbook/` |
+| 3 | Exact publication date and structure of the April 2026 IFRS Due Process Handbook | Cited in section 4 and section 5 as S | `https://www.ifrs.org/groups/due-process-oversight-committee/due-process-handbook/` |
 | 4 | IFRS minimum comment periods (reported as 120 days; 60 days for narrow re-exposure) and the five-yearly agenda consultation interval | PCI should not cite these figures unless confirmed; PCI sets its own regardless | As above |
 | 5 | Whether an OPC *Drafting Guidance* version later than 19 March 2024 exists | PCI cites the guidance as the basis for its `must` decision | `https://www.gov.uk/government/publications/drafting-bills-for-parliament` |
 | 6 | Licence terms of the OPC *Drafting Guidance* PDF (OGL v3.0 assumed but not confirmed) | Determines whether PCI may quote at all | As above |
@@ -777,10 +777,10 @@ own page before any PCI publication relies on it.
 | 11 | Whether the ISO rule on notes to terminological entries differs from notes in text as reported | PCI's recommendation (one informative note type only) is deliberately designed not to depend on this | Directives Part 2 terms-and-definitions provisions |
 
 **Re-verification is a prerequisite for publication, not for drafting.** Stage 3 drafting can
-proceed on the method findings in §6 and §7, because those are principles of construction that PCI
+proceed on the method findings in section 6 and section 7, because those are principles of construction that PCI
 adopts as its own. Only citation of the sources requires the checks above.
 
 ---
 
 *End of report. Verification date 2026-08-04. No source in this report reached direct-fetch
-verification; see §2.1.*
+verification; see section 2.1.*

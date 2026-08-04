@@ -8,14 +8,14 @@ Plain Python 3, no third-party imports. Run from anywhere:
 Exits 0 when every check passes, 1 otherwise. Checks, in the order reported:
 
   1. Duplicate standard identifiers.
-  2. Manual §5 structure — all twenty-five elements present, in order, correctly named.
+  2. Manual section 5 structure — all twenty-five elements present, in order, correctly named.
   3. Foundational citations — every `PCI-FND-STD-NN` resolves to a published foundational standard.
   4. Certification citations — every `PCI-<CRED>-STD-DD.NN` resolves, in either direction.
   5. Process-requirement citations — every `<parent>-PR-NN` resolves to a defined requirement.
-  6. Manual §1 normative language — no `shall` inside a standard element or a process requirement.
-     Front matter that names the word in order to explain the convention is permitted (Manual §1).
+  6. Manual section 1 normative language — no `shall` inside a standard element or a process requirement.
+     Front matter that names the word in order to explain the convention is permitted (Manual section 1).
   7. Anchor domains — within each credential's Body of Knowledge range.
-  8. Concordance currency — STANDARDS_CONCORDANCE.md §1 and §2 match the published standard files.
+  8. Concordance currency — STANDARDS_CONCORDANCE.md section 1 and section 2 match the published standard files.
 
 What this cannot check is the defect it was written after: a citation whose number resolves but whose
 subject is not the one the citing sentence describes. Only reading the sentence catches that. The
@@ -33,7 +33,7 @@ CERT_FILES = {'PCL': 'PCL_AI_STANDARDS.md', 'PFL': 'PFL_AI_STANDARDS.md', 'PML':
 CONCORDANCE = 'STANDARDS_CONCORDANCE.md'
 STANDARD_FILES = [FOUNDATIONAL] + [CERT_FILES[c] for c in ('PCL', 'PFL', 'PML')]
 
-# Manual §5 — the twenty-five elements, in the order they must appear.
+# Manual section 5 — the twenty-five elements, in the order they must appear.
 ELEMENTS = [
     'Normative requirement', 'Purpose', 'Scope', 'Defined terms', 'Required actions',
     'Prohibited actions', 'Required evidence', 'Responsible role', 'Approval authority',
@@ -180,7 +180,7 @@ def main():
             if got != want and not got.startswith(want):
                 struct.append('`%s` (%s) element %d is named "%s", expected "%s"'
                               % (l['id'], l['file'], i + 1, got, want))
-    rep.check('twenty-five elements, in Manual §5 order', struct,
+    rep.check('twenty-five elements, in Manual section 5 order', struct,
               'all %d standards carry every element in order' % len(standards))
 
     # ---------------------------------------------------------------- 3. foundational citations
@@ -241,7 +241,7 @@ def main():
                                  % (f, ln, m.group(0), inside))
             elif m.start() < fronts[f]:
                 shall_note.append('%s:%d names "%s" in front matter — permitted where it explains '
-                                  'the convention (Manual §1)' % (f, ln, m.group(0)))
+                                  'the convention (Manual section 1)' % (f, ln, m.group(0)))
             else:
                 shall_note.append('%s:%d names "%s" outside any standard — check it is explanatory'
                                   % (f, ln, m.group(0)))
@@ -272,14 +272,14 @@ def main():
         conc = ''
 
     if conc:
-        # §1 — subjects must match the foundational titles.
+        # section 1 — subjects must match the foundational titles.
         titles = {l['id'][-2:]: l['title'] for l in standards if l['id'].startswith('PCI-FND-STD-')}
         for n, subject in re.findall(r'^\| `PCI-FND-STD-(\d\d)` \| ([^|]+?) \|', conc, re.M):
             want = titles.get(n)
             if want and subject.strip() != want:
-                conc_problems.append('§1 gives `PCI-FND-STD-%s` the subject "%s"; the standard is '
+                conc_problems.append('Section 1 gives `PCI-FND-STD-%s` the subject "%s"; the standard is '
                                      'titled "%s"' % (n, subject.strip(), want))
-        # §2 — the citation map must match what the standard files actually say.
+        # section 2 — the citation map must match what the standard files actually say.
         actual = {n: {c: [] for c in CERT_FILES} for n in titles}
         for cred, fname in CERT_FILES.items():
             for l in [x for x in standards if x['file'] == fname]:
@@ -297,10 +297,10 @@ def main():
                                 [m.group(0) for m in CERT_ID.finditer(cells[i])] or []
                                 for i, cred in enumerate(('PCL', 'PFL', 'PML'))} if cells else {}
         else:
-            conc_problems.append('§2 heading not found')
+            conc_problems.append('Section 2 heading not found')
         for n in sorted(titles):
             if n not in published:
-                conc_problems.append('§2 has no row for `PCI-FND-STD-%s`' % n)
+                conc_problems.append('Section 2 has no row for `PCI-FND-STD-%s`' % n)
                 continue
             for cred in ('PCL', 'PFL', 'PML'):
                 pub = published[n].get(cred, [])
@@ -309,7 +309,7 @@ def main():
                     missing = [x for x in act if x not in pub]
                     extra = [x for x in pub if x not in act]
                     conc_problems.append(
-                        '§2 row `PCI-FND-STD-%s` / %s-AI is out of date%s%s'
+                        'Section 2 row `PCI-FND-STD-%s` / %s-AI is out of date%s%s'
                         % (n, cred,
                            ' — missing ' + ', '.join('`%s`' % x for x in missing) if missing else '',
                            ' — lists ' + ', '.join('`%s`' % x for x in extra) +

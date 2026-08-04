@@ -355,7 +355,7 @@ sentiment. 1.2.2a supplies the instrument.
 
 **The escalation duty.** When these conflict beyond the leader's authority to resolve, the
 professional act is to escalate with options, not to absorb the conflict silently and hope. An
-unescalated conflict becomes a late surprise, and late surprises are the failure mode of §1.1.2.
+unescalated conflict becomes a late surprise, and late surprises are the failure mode of section 1.1.2.
 
 **The honesty asymmetry.** Bad news travels badly: it costs the messenger and helps the project. A
 leader's most consequential cultural act is making early bad news *safe*, because a schedule or cost

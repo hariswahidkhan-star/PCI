@@ -2009,7 +2009,7 @@ and *accrual/cut-off proposal* (KA 1.3); it is genuinely useful but higher-judge
 professional verifies, decides and remains accountable**. The professional remains accountable for the entry,
 the estimate and the sign-off.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 three certification standards here: `PCI-PCL-STD-01.01` (cost cut-off integrity), `PCI-PCL-STD-01.02` (accrual
 completeness and basis) and `PCI-PCL-STD-01.03` (cost classification and cost-code integrity). The
 foundational standards binding on every PCI credential holder apply throughout, in particular `PCI-FND-STD-01`

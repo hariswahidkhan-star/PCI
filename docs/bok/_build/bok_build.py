@@ -67,7 +67,7 @@ for dnum, ka, title, chtml in chapters:
 all_text = "\n".join(open(f, encoding="utf-8").read() for d in domain_dirs
                      for f in glob.glob(os.path.join(BOK, d, "*.md")))
 
-# Appendix A — master formula & symbol sheet (authoritative, from the style spine §5)
+# Appendix A — master formula & symbol sheet (authoritative, from the style spine section 5)
 APPENDIX_A_MD = """# Appendix A — Master Formula & Symbol Sheet
 
 This sheet consolidates the canonical symbols and formulae used identically throughout the Body of

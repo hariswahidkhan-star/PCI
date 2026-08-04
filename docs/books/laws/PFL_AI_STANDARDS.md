@@ -2,7 +2,7 @@
 
 **Status:** Certification Standards for the **PCI AI Project Finance Leader** credential (PFL-AI).
 Version 2.0 — a complete reconstruction of the twenty-four-standard v1.0 set onto the twenty-five-element
-structure required by the **PCI Standards Drafting Manual** §5. **Thirty-three standards** and **one hundred and
+structure required by the **PCI Standards Drafting Manual** section 5. **Thirty-three standards** and **one hundred and
 fifty-six process requirements**, anchored to eleven of the sixteen domains of the PFL-AI Body of
 Knowledge (`../pfl-ai/`).
 
@@ -15,7 +15,7 @@ instrument differ, the instrument prevails and the difference is a defect in thi
 
 ## Legal and professional status
 
-The following statement is required by Charter §2 in every publication that contains or cites a PCI
+The following statement is required by Charter section 2 in every publication that contains or cites a PCI
 Standard, and is reproduced here in full:
 
 > **PCI Standards are private professional certification requirements established by Project
@@ -36,7 +36,7 @@ law (see `PCI-PFL-STD-09.02`).
 
 ### The requirement form, and the ISO mapping
 
-PCI uses **modern must-drafting**, exclusively (Manual §1).
+PCI uses **modern must-drafting**, exclusively (Manual section 1).
 
 | Word | Force in a PCI Standard |
 |---|---|
@@ -55,7 +55,7 @@ permission in both; `can` marks capability in both and permission in neither.
 
 PCI does not use the ISO requirement auxiliary anywhere in a standard, in any element, including in
 quotations of PCI's own earlier drafts — it has been read as both obligation and futurity, and a
-draft containing it fails gate (Manual §1). **That word is therefore deliberately not printed
+draft containing it fails gate (Manual section 1). **That word is therefore deliberately not printed
 anywhere in this volume**, including in this paragraph, which is why the mapping above is expressed
 by description rather than by example. Version 1.0 of this set used it in twenty-two of its
 twenty-four standards, and one standard — `PFL-LAW-06-05`, Model Change Governance — carried four of its five
@@ -79,7 +79,7 @@ identifier is never reused.
 **Process requirements are mandatory.** They sit at Charter Level 4, are breached independently of
 their parent standard, and are assessed independently. They exist so that each standard's element 1 carries
 **one** principal obligation and every remaining obligation still has an identifier, a subject, an
-action, an object and a test of its own (Manual §2).
+action, an object and a test of its own (Manual section 2).
 
 ### These standards sit under the Foundational Standards
 
@@ -110,7 +110,7 @@ foundational standard is a drafting defect and is withdrawn, not published.
 ### External references
 
 Every external instrument is **named and characterised in PCI's own words, never reproduced**, and
-classified as exactly one of the ten categories in Manual §6. Each reference records the issuing
+classified as exactly one of the ten categories in Manual section 6. Each reference records the issuing
 organisation, the title, the subject, what was checked and when, the nature of the authority, and the
 limitation on its applicability. **No clause number, article, edition, effective date or judicial
 decision is asserted unless it was verified**, and where a precise provision was not verified the
@@ -124,9 +124,9 @@ institute, government, supervisory authority, export credit agency, Shariah supe
 verifier, second-party opinion provider or financial institution has reviewed, approved, endorsed or
 accredited these standards, the PCI AI Project Finance Leader credential or PCI Global.
 
-### Charter §5 due-process record for this edition
+### Charter section 5 due-process record for this edition
 
-Charter §5 requires each standard's file to record honestly which of the thirteen stages were performed
+Charter section 5 requires each standard's file to record honestly which of the thirteen stages were performed
 and by whom, **including where a stage was performed with AI assistance rather than by a named
 human**. For this edition, across the whole set:
 
@@ -144,7 +144,7 @@ human**. For this edition, across the whole set:
 | 11 Approval · 12 Publication · 13 Post-implementation review | **Not performed** | — |
 
 **This edition is therefore a draft for approval, not an approved standard set**, and every element 25
-says so. Charter §5 forbids publishing a standard solely because it was drafted and appeared reasonable,
+says so. Charter section 5 forbids publishing a standard solely because it was drafted and appeared reasonable,
 including where it was drafted with AI assistance; that prohibition governs this volume.
 
 ### The suite principle
@@ -156,7 +156,7 @@ including where it was drafted with AI assistance; that prohibition governs this
 ## Definitions
 
 Every term below could alter whether a professional has complied, so each is defined by a test a
-reader can apply — what makes it so, measured against what, decided by whom (Manual §4). **No
+reader can apply — what makes it so, measured against what, decided by whom (Manual section 4). **No
 definition below is circular.** Terms are used in these senses throughout, and a standard that needs a
 narrower sense defines it in its own element 4.
 
@@ -174,7 +174,7 @@ Three reading rules remain, and they still matter for any term this reconciliati
 First, **where a foundational standard states its own defined term by its `D-NN` number, that definition
 governs that foundational obligation**, and nothing here narrows it. Second, **where a definition here
 and a foundational definition both bear on the same act, the one producing the wider obligation
-governs** — Charter §4 states that a PCI Standard never lowers an obligation. Third, a term defined here
+governs** — Charter section 4 states that a PCI Standard never lowers an obligation. Third, a term defined here
 and not there is a PFL-AI term and carries only the sense given here.
 
 **How element 21 samples are drawn.** Where a standard's element 21 tests a sample, the sample is selected
@@ -227,14 +227,14 @@ admissible methods** — the list at `PCI-FND-STD-03-PR-01` — are independent 
 tracing, clause-to-summary comparison, sampling on a stated basis, reconciliation, boundary testing,
 sensitivity analysis, and named expert judgement recorded with its reasoning. (*Collision flag:* the
 suite uses *verify* in this AI-assurance sense throughout, not in the engineering
-verification-and-validation sense recorded in `../registries/TERMINOLOGY_AUDIT.md` §2.2.)
+verification-and-validation sense recorded in `../registries/TERMINOLOGY_AUDIT.md` section 2.2.)
 (*Deliberate narrowing, methods:* **where a figure in a *financial model* is being verified under this
 volume**, two differences apply and both narrow the term. *Clause-to-output comparison* replaces
 *clause-to-summary comparison*, applied to a model output rather than to a summary. *Named expert
 judgement* is not admissible: a figure produced by a financial model is reproducible, and an expert's
 opinion that it looks right is not a check on it. Where a foundational obligation is being discharged,
 the eight-method list governs. *Referred:* red-team **R-6** — a modelling subject specialist should
-confirm the reason, and the Panel should decide whether renaming a Manual §5.2 method is acceptable.)
+confirm the reason, and the Panel should decide whether renaming a Manual section 5.2 method is acceptable.)
 
 **evidence** — *(Canonical — `D-11`.)* A dated record that exists independently of the assertion it
 supports, that identifies its source, its version where it has one, and its author or issuing party,
@@ -296,7 +296,7 @@ delegation of authority has given assent identifiably, recording the date, the v
 the scope of the assent. Silence, absence of objection, unrecorded verbal assent, assent by a person
 outside their recorded authority, and assent recorded after the item was used are not approval. (A
 *waiver* under the **finance documents** is a different instrument and is defined separately below; so
-is a Charter §8 waiver of a PCI Standard.)
+is a Charter section 8 waiver of a PCI Standard.)
 
 **current** — *(Canonical — `D-30`.)* A record, figure, extract, document or version is *current*
 where it is the latest version issued by the system or authority that owns it as at the output's stated
@@ -382,7 +382,7 @@ uses*.
 
 **base case** — The agreed model case that the finance documents identify as the case against which
 the transaction was sized and agreed. (*This volume does not use the word* baseline, *which collides
-across two senses in the suite — see* `../registries/TERMINOLOGY_AUDIT.md` §2.3.)
+across two senses in the suite — see* `../registries/TERMINOLOGY_AUDIT.md` section 2.3.)
 
 ### Modelling and governance terms
 
@@ -428,7 +428,7 @@ outside the model that produced it.
 
 **voluntary framework** — A framework whose whole force is that an organisation chooses to adopt it;
 an organisation may lawfully decline to adopt it. **A voluntary framework must never be described as
-legislation, regulation or law** (Charter §2; Manual §6). Where a jurisdiction has enacted a
+legislation, regulation or law** (Charter section 2; Manual section 6). Where a jurisdiction has enacted a
 taxonomy, labelling or disclosure regime, that regime is legislation *in that jurisdiction only*, its
 applicability to a given entity is a question for qualified local counsel, and it does not make the
 voluntary framework it resembles into law anywhere.
@@ -539,13 +539,13 @@ method and date.
   makes an accounting result a different statement from a cash fact. Checked: named without clause,
   edition or date (register `EXT-011`, verified 2026-08-03). Nature: **authoritative
   financial-reporting material that is expressly not a standard** — the IASB states that nothing in it
-  overrides a Standard. Manual §6 records it separately for that reason. Applicability limitation:
+  overrides a Standard. Manual section 6 records it separately for that reason. Applicability limitation:
   **no requirement in this standard is sourced to it**; it is named to explain a distinction, and it
   creates no obligation for anyone.
 - **IAS 7 *Statement of Cash Flows*.** Issuing organisation: IFRS Foundation / IASB. Subject: the
   presentation and classification of cash movements against which a modelled cash line is reconciled.
   Checked: current, by name only, no clause asserted (register `EXT-120`, verified 2026-08-03).
-  Nature: Manual §6 category 2 — authoritative financial-reporting standard. Applicability
+  Nature: Manual section 6 category 2 — authoritative financial-reporting standard. Applicability
   limitation: mandatory only for entities applying IFRS Accounting Standards in a jurisdiction that
   has adopted them; it defines no *coverage ratio* and no liquidity test. Verify current requirements.
 
@@ -588,7 +588,7 @@ favourable figure whose horizon changed between drafts without a recorded reason
 **23. Consequence within PCI authority.** Correction required and the affected output withheld from
 use until corrected; additional independent review; escalation to the decision owner; failure of the
 associated examination competency; ethics review; certification investigation; suspension or
-withdrawal of the credential. Each is subject to due process and a right of appeal (Charter §9). PCI
+withdrawal of the credential. Each is subject to due process and a right of appeal (Charter section 9). PCI
 claims no other consequence.
 
 **24. Examination application.** Scenario judgement: a profitable-looking forecast conceals a dated
@@ -597,7 +597,7 @@ Calculation review: a candidate is given a cash line and an accrual result and m
 reconciliation. Evidence selection: from a document set, the candidate selects what proves ability to
 pay on a date. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 (stage record in the
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 (stage record in the
 front matter; Stages 6, 11, 12 and 13 not performed) · effective on approval · supersedes
 `PFL-LAW-01-01` *Cash Before Appearance* (v1.0). Amendment note: restructured onto the
 twenty-five-element form; the single bundled rule split into one principal obligation and four
@@ -714,14 +714,14 @@ as one.
 - **ISO/IEC 17024 *Conformity assessment — General requirements for bodies operating certification of
   persons*.** Issuing organisation: ISO/IEC. Subject: impartiality and the management of conflicts in
   the certification of persons. Checked: a **2026 edition has been published, superseding the 2012
-  edition** (register `EXT-022`, verified 2026-08-03); no clause is cited here. Nature: Manual §6
+  edition** (register `EXT-022`, verified 2026-08-03); no clause is cited here. Nature: Manual section 6
   category 3 — international voluntary standard. Applicability limitation: voluntary unless a law or
   contract imports it; it addresses certification bodies, not project finance advisers, and is named
   here as the reference discipline for conflict management in assessment roles. **No accreditation to,
   or certification against, this standard is claimed by PCI through this reference.**
 - **G20/OECD *Principles of Corporate Governance*.** Issuing organisation: OECD, with the G20.
   Subject: disclosure, related-party transactions and the management of conflicts in governance.
-  Checked: 2023 revision, OECD/LEGAL/0413 (register `EXT-128`, verified 2026-08-03). Nature: Manual §6
+  Checked: 2023 revision, OECD/LEGAL/0413 (register `EXT-128`, verified 2026-08-03). Nature: Manual section 6
   category 5 — professional framework; specifically an **OECD Council Recommendation, which is
   intergovernmental, non-binding and not legislation anywhere**. Applicability limitation: creates no
   obligation for any credential holder; named for the governance context only.
@@ -767,14 +767,14 @@ a person in the preparer's reporting line.
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Ethical dilemma: an adviser is offered a second role, a success fee
 or a referral payment mid-transaction, and the candidate must decide whether to disclose, decline or
 proceed and on what record. Evidence selection: from an engagement file, the candidate identifies what
 is missing before work may begin. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-01-02` *Conflict Disclosure and the Two-Hat Rule* (v1.0). Amendment
 note: restructured onto the twenty-five-element form; *connected person* defined for the first time;
 information-barrier testing raised from a minimum action to an identified process requirement;
@@ -886,7 +886,7 @@ is missing from the schedule. Completeness is a human judgement and must be reco
 - **The Equator Principles.** Issuing organisation: the Equator Principles Association. Subject: a
   risk-management framework under which participating financial institutions apply agreed
   environmental and social requirements to project finance. Checked: EP4, adopted 18 November 2019,
-  effective 1 October 2020 (register `EXT-082`, verified 2026-08-03). Nature: Manual §6 category 8 —
+  effective 1 October 2020 (register `EXT-082`, verified 2026-08-03). Nature: Manual section 6 category 8 —
   **voluntary environmental or social framework; not legislation, and not regulation**. Applicability
   limitation: applies only to transactions of adopting institutions, and only as those institutions
   apply it; adoption is the whole of its force.
@@ -894,12 +894,12 @@ is missing from the schedule. Completeness is a human judgement and must be reco
   International Finance Corporation, World Bank Group. Subject: environmental and social performance
   expectations widely used as a reference benchmark in project finance. Checked: 2012 edition,
   effective 1 January 2012; a Sustainability Framework update is in progress (register `EXT-083`,
-  verified 2026-08-03). Nature: Manual §6 category 8 — voluntary environmental or social framework.
+  verified 2026-08-03). Nature: Manual section 6 category 8 — voluntary environmental or social framework.
   Applicability limitation: binding on IFC clients by contract; on others only where adopted, including
   through EP4. **Status is moving — verify the current position.**
 - **ISO 31000 *Risk management — Guidelines*.** Issuing organisation: ISO. Subject: principles and a
   process for managing risk. Checked: ISO 31000:2018, 2nd edition, reviewed and confirmed 2023
-  (register `EXT-020`, verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary
+  (register `EXT-020`, verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary
   standard, and **guidance rather than a certifiable requirements standard; nothing can be certified
   against it**. Applicability limitation: voluntary unless a law or contract imports it.
 
@@ -937,14 +937,14 @@ condition that disappeared between versions without a resolution record.
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Scenario judgement: a candidate is given a memorandum describing a
 project as bankable and a document set in which one permit is a draft, and must identify the defect
 and the compliant wording. Evidence selection: choosing which document proves a condition satisfied.
 No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-05-01` *The Bankability Test* (v1.0). Amendment note: restructured onto
 the twenty-five-element form; *bankability condition* defined; the re-test and notification duty added
 as PR-04; threshold rewritten to state expressly that a conjunction admits no completeness percentage.
@@ -1052,12 +1052,12 @@ recorded with its date and its result.
 - **ICAEW *Financial Modelling Code*.** Issuing organisation: the Institute of Chartered Accountants
   in England and Wales. Subject: principles for building, documenting and controlling financial
   models. Checked: current, by name only, no clause or edition asserted (register `EXT-125`, verified
-  2026-08-03). Nature: Manual §6 category 5 — professional framework. Applicability limitation:
+  2026-08-03). Nature: Manual section 6 category 5 — professional framework. Applicability limitation:
   principles-based guidance published by a professional body; **not a compliance standard, not
   certifiable, and binding on no one unless a body, regulator or engagement adopts it.**
 - **The FAST Standard.** Issuing organisation: the FAST Standard Organisation. Subject: a structural
   convention for spreadsheet financial models. Checked: current, by name only, no edition asserted
-  (register `EXT-126`, verified 2026-08-03). Nature: Manual §6 category 5 — professional framework;
+  (register `EXT-126`, verified 2026-08-03). Nature: Manual section 6 category 5 — professional framework;
   **voluntary, adopted by choice, and imposing no obligation of its own**. Applicability limitation:
   this standard requires the separation of inputs, calculations and outputs; it does **not** require
   conformity with this or any other named modelling convention, and adopting one does not by itself
@@ -1098,14 +1098,14 @@ model circulated with a note that "the balance sheet is out by a small amount".
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: a candidate is given a model extract with a
 seeded architecture defect and must find it and state the compliant structure. Scenario judgement: a
 close deadline against a failing check, testing whether the candidate stops circulation or invokes the
 element 12 route correctly. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-06-01` *Model Integrity* (v1.0). Amendment note: restructured onto the
 twenty-five-element form; *check block* and *invariant* defined; scenario-switch integrity added as
 PR-05; the element 12 route for a failing check made explicit, bounded and reportable; boundary
@@ -1204,13 +1204,13 @@ until the sample confirms the scan looked where it claimed to.
 
 - **The FAST Standard.** Issuing organisation: the FAST Standard Organisation. Subject: structural
   and formula conventions for spreadsheet models, including consistency across a row. Checked: current,
-  by name only (register `EXT-126`, verified 2026-08-03). Nature: Manual §6 category 5 — professional
+  by name only (register `EXT-126`, verified 2026-08-03). Nature: Manual section 6 category 5 — professional
   framework; **voluntary**. Applicability limitation: this standard requires *row consistency* and the
   absence of embedded constants; it does not require conformity with this convention, and conformity
   with it does not by itself satisfy this standard.
 - **ICAEW *Financial Modelling Code*.** Issuing organisation: ICAEW. Subject: transparency and
   documentation of model calculations. Checked: current, by name only (register `EXT-125`, verified
-  2026-08-03). Nature: Manual §6 category 5 — professional framework. Applicability limitation:
+  2026-08-03). Nature: Manual section 6 category 5 — professional framework. Applicability limitation:
   guidance published by a professional body; not certifiable; binding only where adopted.
 
 **18. Jurisdictional caution.** Where a model or a figure derived from it is included in an offering
@@ -1246,13 +1246,13 @@ adjustment nobody can locate.
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: a candidate is given a model row with a seeded
 constant and must locate it and state its effect across the case set. Evidence selection: choosing
 which record proves an override was authorised. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-06-02` *Formula Transparency* (v1.0). Amendment note: restructured onto
 the twenty-five-element form; *override* and *row consistency* defined; the override register given six
 mandatory fields and a removal date; the compliance test converted into a repeatable scan-and-reconcile
@@ -1352,12 +1352,12 @@ derived by calculation. Verification is recorded per assumption, not per registe
 
 - **ICAEW *Financial Modelling Code*.** Issuing organisation: ICAEW. Subject: documentation of model
   inputs and assumptions. Checked: current, by name only (register `EXT-125`, verified 2026-08-03).
-  Nature: Manual §6 category 5 — professional framework. Applicability limitation: guidance; not
+  Nature: Manual section 6 category 5 — professional framework. Applicability limitation: guidance; not
   certifiable; binding only where adopted.
 - **ISO 8000 (data-quality series).** Issuing organisation: ISO. Subject: data quality, including the
   provenance and completeness of data used in decisions. Checked: a **multi-part series** — Part 1
   (Overview) is ISO 8000-1:2022, with further parts issued separately; cited generically, no part
-  relied upon (register `EXT-026`, verified 2026-08-03). Nature: Manual §6 category 3 — international
+  relied upon (register `EXT-026`, verified 2026-08-03). Nature: Manual section 6 category 3 — international
   voluntary standard. Applicability limitation: voluntary unless a law or contract imports it; the
   series addresses data quality generally and imposes nothing on a project financing of its own force.
 
@@ -1400,14 +1400,14 @@ team name.
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Evidence selection: from a register extract, the candidate identifies
 which assumptions must not be used in a decision-grade case and why. Scenario judgement: a stale price
 assumption is carried into a close, and the candidate must state the required action. No live
 examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-06-03` *Assumption Traceability* (v1.0). Amendment note: restructured
 onto the twenty-five-element form; *assumption register* and *basis* defined; the review-date and
 re-confirmation duty added as PR-04; the compliance test made performable by tying the sample to a
@@ -1506,12 +1506,12 @@ the date and the tracer's name.
 
 - **ISO 8000 (data-quality series).** Issuing organisation: ISO. Subject: data provenance and quality.
   Checked: multi-part series, Part 1 is ISO 8000-1:2022; cited generically (register `EXT-026`,
-  verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary standard. Applicability
+  verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary standard. Applicability
   limitation: voluntary unless imported by law or contract.
 - **ISO 15489-1 *Information and documentation — Records management — Part 1: Concepts and
   principles*.** Issuing organisation: ISO. Subject: the characteristics that make a record reliable
   and retrievable. Checked: ISO 15489-1:2016 (register `EXT-025`, verified 2026-08-03). Nature: Manual
-  §6 category 3 — international voluntary standard. Applicability limitation: voluntary unless imported
+  section 6 category 3 — international voluntary standard. Applicability limitation: voluntary unless imported
   by law or contract; it sets no retention period for a project financing, which is a matter for the
   *finance documents*, local law and the engaging organisation's governance.
 
@@ -1548,14 +1548,14 @@ underlying report was superseded.
 **23. Consequence within PCI authority.** Correction required and the affected figure or output
 withheld; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Evidence selection: given a figure and four candidate records, the
 candidate selects the one that constitutes a source line. Scenario judgement: a lender challenges a
 figure at close and the source cannot be produced — the candidate must state the required action and
 its sequence. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-06-04` *The Source Line* (v1.0). Amendment note: restructured onto the
 twenty-five-element form; *producible on request* defined with a response time; retention of the record
 rather than a link added as PR-03; withdrawal and notification made an identified process requirement;
@@ -1665,18 +1665,18 @@ recomputation of any regression figure whose movement is *material*.
 
 - **ICAEW *Financial Modelling Code*.** Issuing organisation: ICAEW. Subject: version control and
   documentation of financial models. Checked: current, by name only (register `EXT-125`, verified
-  2026-08-03). Nature: Manual §6 category 5 — professional framework. Applicability limitation:
+  2026-08-03). Nature: Manual section 6 category 5 — professional framework. Applicability limitation:
   guidance; not certifiable; binding only where adopted.
 - **ISO/IEC 42001 *Information technology — Artificial intelligence — Management system*.** Issuing
   organisation: ISO/IEC. Subject: organisational management of AI systems, including lifecycle and
   change controls. Checked: ISO/IEC 42001:2023, 1st edition (register `EXT-021`, verified 2026-08-03).
-  Nature: Manual §6 category 3 — international voluntary standard. Applicability limitation: voluntary
+  Nature: Manual section 6 category 3 — international voluntary standard. Applicability limitation: voluntary
   unless imported by law or contract; it addresses an organisation's AI management system, not a
   project's model, and imposes nothing on a financing of its own force.
 - ***Supervisory Guidance on Model Risk Management* (SR 11-7 / OCC 2011-12).** Issuing organisation:
   United States banking supervisors. Subject: expectations for model development, implementation, use,
   validation and governance in supervised institutions. Checked: **not independently verified — verify
-  current requirements** (register `EXT-102`). Nature: Manual §6 category 10 — illustrative practice;
+  current requirements** (register `EXT-102`). Nature: Manual section 6 category 10 — illustrative practice;
   specifically **supervisory guidance, jurisdiction-specific, addressed to supervised institutions and
   not to project sponsors or advisers**. Applicability limitation: named for context only; **no
   requirement in this standard is sourced to it**, and it is not law anywhere outside the supervisory
@@ -1721,14 +1721,14 @@ with no log entry.
 **23. Consequence within PCI authority.** Correction required and the affected version withdrawn from
 use; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Scenario judgement: a locked close model has moved and the candidate
 must state what may still be quoted, to whom, and what must be escalated. AI-verification case: an AI
 system has rebuilt a schedule overnight and the candidate must state the log, regression and approval
 steps required before the version is used. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-06-05` *Model Change Governance* (v1.0). Amendment note: **the v1.0
 red-team revision expressed four of this standard's five sub-obligations on the ISO requirement auxiliary;
 all four are restated here on `must`, with no change of substance**, and each now has its own process
@@ -1840,7 +1840,7 @@ recorded as uncommitted.
 - **The Basel Framework.** Issuing organisation: the Basel Committee on Banking Supervision. Subject:
   the supervisory context in which lenders assess and hold project exposures. Checked: the consolidated
   framework as maintained by the BCBS; no standard, paragraph or date asserted (register `EXT-110`,
-  verified 2026-08-03). Nature: Manual §6 category 10 — illustrative practice; specifically
+  verified 2026-08-03). Nature: Manual section 6 category 10 — illustrative practice; specifically
   **internationally agreed supervisory standards with no legal force of their own**. Applicability
   limitation: the Committee has no supranational authority; its standards reach a bank only as a
   national authority transposes them, and they **never apply directly to a project, a sponsor or an
@@ -1848,7 +1848,7 @@ recorded as uncommitted.
 - **OECD *Arrangement on Officially Supported Export Credits*.** Issuing organisation: OECD. Subject:
   constraints participating agencies apply to officially supported export credits, including minimum
   premium rates, maximum repayment terms and starting points. Checked: **not independently verified —
-  verify current requirements** (register `EXT-085`). Nature: Manual §6 category 10 — illustrative
+  verify current requirements** (register `EXT-085`). Nature: Manual section 6 category 10 — illustrative
   practice; specifically an **inter-governmental understanding, not a treaty and not legislation**.
   Applicability limitation: its terms are revised periodically and vary by sector, so they must be
   checked as at the transaction date rather than assumed; it binds participating agencies through their
@@ -1892,14 +1892,14 @@ document; a failure case absent from the pack because "it does not arise".
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: two tranches with different fee structures, where
 the candidate must compare on all-in effective cost and explain why the headline comparison reverses.
 Scenario judgement: a structure that only closes if a refinancing occurs in year seven — the candidate
 must identify the dependency and state the required disclosure. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-09-01` *Capital-Structure Justification* (v1.0). Amendment note:
 restructured onto the twenty-five-element form; *structural dependency* defined; the all-in
 effective-cost discipline raised from prose to PR-03; the failure case made a process requirement; the
@@ -2030,7 +2030,7 @@ corrected**, so that it cannot be recovered from a draft.
 - **Standards issued by the Accounting and Auditing Organisation for Islamic Financial Institutions
   (AAOIFI).** Issuing organisation: AAOIFI. Subject: accounting, auditing, governance and Shariah
   standards used in Islamic finance markets. Checked: **named only; no standard, number, edition or
-  date is asserted, and none was verified.** Nature: Manual §6 category 5 — professional framework.
+  date is asserted, and none was verified.** Nature: Manual section 6 category 5 — professional framework.
   Applicability limitation: **a determination for a specific structure is made by the *competent body*,
   not by a standard**; AAOIFI standards are mandatory only where a jurisdiction's regulator or an
   institution's own constitution has adopted them, and whether they apply to a given transaction is a
@@ -2039,7 +2039,7 @@ corrected**, so that it cannot be recovered from a draft.
 - **ISO 37001 *Anti-bribery management systems — Requirements with guidance for use*.** Issuing
   organisation: ISO. Subject: anti-bribery management systems, named here because multi-source Islamic
   and export-credit structures commonly involve intermediaries and agency arrangements. Checked: ISO
-  37001:2025, superseding ISO 37001:2016 (register `EXT-133`, verified 2026-08-04). Nature: Manual §6
+  37001:2025, superseding ISO 37001:2016 (register `EXT-133`, verified 2026-08-04). Nature: Manual section 6
   category 3 — international voluntary standard. Applicability limitation: adoption is voluntary unless
   a contract or regulator requires it, and **certification against it is a third party's opinion about
   a management system at a point in time, not a legal defence**.
@@ -2090,7 +2090,7 @@ explaining why a structure is compliant; a service-agency pass-back described bu
 withheld from use until corrected; additional independent review; escalation to the decision owner;
 failure of the associated examination competency; ethics review; certification investigation;
 suspension or withdrawal of the credential. Each subject to due process and a right of appeal (Charter
-§9). **PCI claims no other consequence, and specifically claims no authority to rule on, validate or
+section 9). **PCI claims no other consequence, and specifically claims no authority to rule on, validate or
 invalidate any question of religious law.**
 
 **24. Examination application.** Scenario judgement: a candidate is asked to approve marketing material
@@ -2100,10 +2100,10 @@ and a conventional tranche on all-in effective cost, where the headline ranking 
 Ethical dilemma: a client asks the candidate to confirm that a structure "would obviously be approved".
 No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 of this set contained no standard on this
 subject, and the Body of Knowledge carried the boundary in a chapter scope statement only, where under
-Charter §3 it could not create an obligation. This standard places the obligation where it can be assessed
+Charter section 3 it could not create an obligation. This standard places the obligation where it can be assessed
 and breached.
 
 ---
@@ -2237,14 +2237,14 @@ recorded as an eligibility determination.**
   management of proceeds, reporting and, for linked instruments, key performance indicator selection
   and target calibration. Checked: **named generically; no publisher, title, edition or date is
   asserted, and none was verified** — consistent with the PFL-AI manuscript, which also names them
-  generically. Nature: Manual §6 category 8 — **voluntary environmental or social framework**.
+  generically. Nature: Manual section 6 category 8 — **voluntary environmental or social framework**.
   Applicability limitation: **voluntary; adoption is the whole of their force; none of them is a global
   standard and none is legislation anywhere.**
 - **Jurisdictional taxonomy, labelling and disclosure regimes.** Issuing organisations: national and
   supranational legislatures and regulators. Subject: criteria for describing an economic activity,
   instrument or fund as environmentally or socially qualifying, and the disclosures required.
   Checked: **named generically; no regime, article, threshold or date is asserted, and none was
-  verified.** Nature: Manual §6 category 1 — applicable legislation or regulation, **but only within
+  verified.** Nature: Manual section 6 category 1 — applicable legislation or regulation, **but only within
   the enacting jurisdiction and only where the entity is in scope**. Applicability limitation: these
   regimes differ materially between jurisdictions and change frequently; **treating one jurisdiction's
   taxonomy as universal is the characteristic error in this area**. Whether a given regime applies to a
@@ -2252,13 +2252,13 @@ recorded as an eligibility determination.**
 - **IFC *Performance Standards on Environmental and Social Sustainability*.** Issuing organisation:
   IFC, World Bank Group. Subject: environmental and social performance expectations used as a reference
   benchmark. Checked: 2012 edition; Sustainability Framework update in progress (register `EXT-083`,
-  verified 2026-08-03). Nature: Manual §6 category 8 — voluntary environmental or social framework.
+  verified 2026-08-03). Nature: Manual section 6 category 8 — voluntary environmental or social framework.
   Applicability limitation: binding on IFC clients by contract; on others only where adopted. **Status
   is moving — verify the current position.**
 - **The Equator Principles.** Issuing organisation: the Equator Principles Association. Subject: a
   voluntary framework under which adopting financial institutions apply agreed environmental and social
   requirements. Checked: EP4, adopted 18 November 2019, effective 1 October 2020 (register `EXT-082`,
-  verified 2026-08-03). Nature: Manual §6 category 8 — voluntary environmental or social framework.
+  verified 2026-08-03). Nature: Manual section 6 category 8 — voluntary environmental or social framework.
   Applicability limitation: **voluntary; never legislation**; applies only to transactions of adopting
   institutions, as those institutions apply it.
 
@@ -2304,7 +2304,7 @@ second jurisdiction with no fresh advice; a claim whose supporting review expire
 **23. Consequence within PCI authority.** Correction required and the affected claim or output withheld
 from use until corrected; additional independent review; escalation; failure of the associated
 examination competency; ethics review; certification investigation; suspension or withdrawal of the
-credential. Each subject to due process and a right of appeal (Charter §9). PCI claims no other
+credential. Each subject to due process and a right of appeal (Charter section 9). PCI claims no other
 consequence, and PCI neither certifies nor endorses any instrument, label or framework.
 
 **24. Examination application.** Scenario judgement: a draft press release says an instrument is
@@ -2314,7 +2314,7 @@ economics of a sustainability-linked facility against the cost of its verificati
 dilemma: an arranger asks for a firmer word than the evidence supports. No live examination content is
 exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 contained no standard on sustainability
 claims, which left the corpus's most exposed representation area governed only by a general honesty
 obligation. *Claim strength* and *second-party opinion* defined; the voluntary-versus-legislation rule
@@ -2420,7 +2420,7 @@ the reviewer's name and date.
 
 - **IAS 7 *Statement of Cash Flows*.** Issuing organisation: IFRS Foundation / IASB. Subject: the
   presentation and classification of cash movements against which a modelled cash line is reconciled.
-  Checked: current, by name only (register `EXT-120`, verified 2026-08-03). Nature: Manual §6 category
+  Checked: current, by name only (register `EXT-120`, verified 2026-08-03). Nature: Manual section 6 category
   2 — authoritative financial-reporting standard. Applicability limitation: mandatory only for entities
   applying IFRS Accounting Standards in a jurisdiction that has adopted them. **It defines no *CFADS*
   and no *coverage ratio*: those are creatures of the finance documents.** Verify current requirements.
@@ -2461,14 +2461,14 @@ unchanged after an amendment that redefined a component.
 **23. Consequence within PCI authority.** Correction required and the affected calculation withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: a candidate is given a defined term and a model
 line that differ by one item and must find it and quantify its effect on the minimum ratio. Evidence
 selection: choosing the document that establishes a component of the definition. No live examination
 content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard** — the subject was carried inside `PFL-LAW-10-01` (v1.0), which bundled the
 definition, the calculation and the reporting into one rule. Amendment note: separated so that the
 definition has its own obligation, its own evidence and its own test; *definition schedule* defined;
@@ -2570,13 +2570,13 @@ the target coverage level to the document or approval that states it. Recorded w
 - **The Basel Framework.** Issuing organisation: the Basel Committee on Banking Supervision. Subject:
   the supervisory context of lenders' credit assessment. Checked: consolidated framework as maintained
   by the BCBS; no standard, paragraph or date asserted (register `EXT-110`, verified 2026-08-03).
-  Nature: Manual §6 category 10 — illustrative practice; **internationally agreed supervisory standards
+  Nature: Manual section 6 category 10 — illustrative practice; **internationally agreed supervisory standards
   with no legal force of their own**, reaching a bank only as a national authority transposes them and
   **never applying directly to a project or its sponsors**. Applicability limitation: named for context;
   **no requirement in this standard is sourced to it, and it sets no coverage level for any transaction.**
 - **IAS 7 *Statement of Cash Flows*.** Issuing organisation: IFRS Foundation / IASB. Subject: cash-flow
   presentation against which the sizing cash line is reconciled. Checked: current, by name only
-  (register `EXT-120`, verified 2026-08-03). Nature: Manual §6 category 2 — authoritative
+  (register `EXT-120`, verified 2026-08-03). Nature: Manual section 6 category 2 — authoritative
   financial-reporting standard. Applicability limitation: mandatory only for entities applying IFRS
   Accounting Standards in an adopting jurisdiction; it defines no coverage ratio and no sizing method.
 
@@ -2613,14 +2613,14 @@ credit that changed the level rather than the quantum.
 **23. Consequence within PCI authority.** Correction required and the affected sizing withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: sizing from a given *CFADS* profile at a stated
 target level and tenor, then re-sizing at a different level to expose the quantum's sensitivity.
 Scenario judgement: a sponsor asks for the quantum to be raised by moving the target level. No live
 examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard** — the subject was implicit in `PFL-LAW-10-01` (v1.0), which addressed reporting
 rather than sizing. Amendment note: *sizing basis* defined with six components; the quantum's
 sensitivity made a process requirement; the threshold rewritten to state expressly that PCI publishes
@@ -2725,12 +2725,12 @@ statements before certifying or submitting. Each recorded with the reviewer's na
 
 - **IAS 7 *Statement of Cash Flows*.** Issuing organisation: IFRS Foundation / IASB. Subject: the
   classification of cash flows against which the modelled cash line is reconciled. Checked: current, by
-  name only (register `EXT-120`, verified 2026-08-03). Nature: Manual §6 category 2 — authoritative
+  name only (register `EXT-120`, verified 2026-08-03). Nature: Manual section 6 category 2 — authoritative
   financial-reporting standard. Applicability limitation: entities applying IFRS Accounting Standards
   in an adopting jurisdiction only; **it defines no coverage ratio.**
 - **The Basel Framework.** Issuing organisation: the Basel Committee on Banking Supervision. Subject:
   the supervisory context of lenders' credit assessment and monitoring. Checked: consolidated framework;
-  no standard or date asserted (register `EXT-110`, verified 2026-08-03). Nature: Manual §6 category 10
+  no standard or date asserted (register `EXT-110`, verified 2026-08-03). Nature: Manual section 6 category 10
   — illustrative practice; **internationally agreed supervisory standards with no legal force of their
   own.** Applicability limitation: named for context; **no requirement in this standard is sourced to it.**
 
@@ -2769,14 +2769,14 @@ no statement of whose projection it uses.
 **23. Consequence within PCI authority.** Correction required and the affected report or certificate
 withheld; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: an average coverage figure conceals a failing
 period, and the candidate must locate the binding period and restate the report compliantly. Evidence
 selection: which workings a compliance certificate needs behind it. No live examination content is
 exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes the reporting limb of `PFL-LAW-10-01` *Debt-Service Coverage Truth* (v1.0).
 Amendment note: the v1.0 rule is split across `PCI-PFL-STD-10.01` (definition),
 `PCI-PFL-STD-10.02` (sizing) and this standard (calculation and reporting); *binding period* and *period
@@ -2882,13 +2882,13 @@ An AI-produced answer to an *interpretive question* is deleted, not filed.
   position. Checked: in force for periods beginning before 1 January 2027; **IFRS 18 *Presentation and
   Disclosure in Financial Statements* replaces IAS 1 for annual reporting periods beginning on or after
   1 January 2027, earlier application permitted** (register `EXT-004` / `EXT-003`, verified
-  2026-08-03). Nature: Manual §6 category 2 — authoritative financial-reporting standard. Applicability
+  2026-08-03). Nature: Manual section 6 category 2 — authoritative financial-reporting standard. Applicability
   limitation: entities applying IFRS Accounting Standards in an adopting jurisdiction only; **confirm
   which instrument applies to the period being reported**, and note that reporting classification is
   not covenant compliance — only the finance documents determine that.
 - **The Basel Framework.** Issuing organisation: the Basel Committee on Banking Supervision. Subject:
   the supervisory context of lenders' covenant monitoring. Checked: consolidated framework; no standard
-  or date asserted (register `EXT-110`, verified 2026-08-03). Nature: Manual §6 category 10 —
+  or date asserted (register `EXT-110`, verified 2026-08-03). Nature: Manual section 6 category 10 —
   illustrative practice; **internationally agreed supervisory standards with no legal force of their
   own**. Applicability limitation: named for context; **no requirement in this standard is sourced to it.**
 
@@ -2929,14 +2929,14 @@ facilities with different definitions; a lock-up reported to a board as a defaul
 **23. Consequence within PCI authority.** Correction required and the affected report withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Escalation decision: a position moves within the escalation threshold
 before a test date and the candidate must state who is told, when, and on what record. Ethical dilemma:
 a sponsor asks the candidate to confirm that no default has occurred. No live examination content is
 exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-10-02` *Covenant Interpretation* (v1.0). Amendment note: restructured
 onto the twenty-five-element form; the single bundled rule reduced to one principal obligation with
 five process requirements; *covenant register* and *interpretive question* defined; the lock-up/default
@@ -3044,7 +3044,7 @@ against the permitted-application list before it is made.
 - **IAS 7 *Statement of Cash Flows*.** Issuing organisation: IFRS Foundation / IASB. Subject: the
   classification of cash and of restricted balances in the statement of cash flows, which is where a
   reserve balance meets the reported position. Checked: current, by name only (register `EXT-120`,
-  verified 2026-08-03). Nature: Manual §6 category 2 — authoritative financial-reporting standard.
+  verified 2026-08-03). Nature: Manual section 6 category 2 — authoritative financial-reporting standard.
   Applicability limitation: entities applying IFRS Accounting Standards in an adopting jurisdiction
   only; **it does not determine whether a reserve is adequately funded — the finance documents do.**
 
@@ -3083,14 +3083,14 @@ obligation that has been open for several periods without report; a reserve bala
 **23. Consequence within PCI authority.** Correction required and the affected certificate or report
 withheld; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Scenario judgement: a release is requested to enable a distribution
 and one condition is unsatisfied — the candidate must state the required action. Calculation review:
 computing a required balance on a documented basis and reconciling it to an account confirmation. No
 live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 addressed reserves only obliquely,
 through the distribution standard. *Required balance* and *permitted application* defined; independent
 confirmation of balances made an element 10 requirement; replenishment tracking added as its own
@@ -3193,19 +3193,19 @@ that evidences it. An AI matrix that has not been clause-checked is a draft, not
 
 - **ISO 31000 *Risk management — Guidelines*.** Issuing organisation: ISO. Subject: principles and a
   process for managing risk. Checked: ISO 31000:2018, 2nd edition, reviewed and confirmed 2023 (register
-  `EXT-020`, verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary standard;
+  `EXT-020`, verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary standard;
   **guidance, not a certifiable requirements standard — nothing can be certified against it.**
   Applicability limitation: voluntary unless a law or contract imports it.
 - **The FIDIC suite of conditions of contract.** Issuing organisation: FIDIC (International Federation
   of Consulting Engineers). Subject: standard forms allocating construction risk between employer and
   contractor. Checked: **characterised generically; no book, clause number or edition is asserted**
   (register `EXT-050`, verified 2026-08-03 — note that clause numbering moved between editions).
-  Nature: Manual §6 category 4 — contract framework. Applicability limitation: **binds only the parties
+  Nature: Manual section 6 category 4 — contract framework. Applicability limitation: **binds only the parties
   who adopt it, and only through the contract they sign; it is not generally applicable legislation.**
 - **IFC *Performance Standards on Environmental and Social Sustainability*.** Issuing organisation:
   IFC, World Bank Group. Subject: environmental and social risk expectations. Checked: 2012 edition;
   Sustainability Framework update in progress (register `EXT-083`, verified 2026-08-03). Nature: Manual
-  §6 category 8 — voluntary environmental or social framework. Applicability limitation: binding on IFC
+  section 6 category 8 — voluntary environmental or social framework. Applicability limitation: binding on IFC
   clients by contract; on others only where adopted. **Status is moving — verify the current position.**
 
 **18. Jurisdictional caution.** The enforceability of a liability cap, an exclusion clause, a liquidated
@@ -3243,14 +3243,14 @@ since.
 **23. Consequence within PCI authority.** Correction required and the affected matrix or report
 withheld; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Scenario judgement: a matrix shows a completion risk as transferred and
 the contract caps damages well below the funded cost of delay — the candidate must quantify the
 residual and restate the row. Evidence selection: which document establishes where a risk lands. No
 live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-11-01` *Risk Allocation Honesty* (v1.0). Amendment note: restructured
 onto the twenty-five-element form; *allocation matrix* and *residual position* defined; counterparty
 capacity and the orphan/double-cover report raised to process requirements; FIDIC characterisation
@@ -3355,13 +3355,13 @@ Recorded per term with the reader's name and the date.
 - **The FIDIC suite of conditions of contract.** Issuing organisation: FIDIC. Subject: standard forms
   of construction contract whose clause numbering and drafting differ between editions and amendment
   sets. Checked: **characterised generically; no book, clause number or edition asserted** (register
-  `EXT-050`, verified 2026-08-03). Nature: Manual §6 category 4 — contract framework. Applicability
+  `EXT-050`, verified 2026-08-03). Nature: Manual section 6 category 4 — contract framework. Applicability
   limitation: **binds only the parties who adopt it, through the contract they sign — never
   legislation**; and a project's contract is commonly an amended form, so the standard form is not a
   safe source for a term.
 - **ISO 15489-1 *Information and documentation — Records management — Part 1: Concepts and
   principles*.** Issuing organisation: ISO. Subject: the characteristics that make a record reliable and
-  retrievable. Checked: ISO 15489-1:2016 (register `EXT-025`, verified 2026-08-03). Nature: Manual §6
+  retrievable. Checked: ISO 15489-1:2016 (register `EXT-025`, verified 2026-08-03). Nature: Manual section 6
   category 3 — international voluntary standard. Applicability limitation: voluntary unless imported by
   law or contract.
 
@@ -3398,14 +3398,14 @@ reflects; a discrepancy found and quietly corrected without a report.
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Evidence selection: given a term sheet, a diligence summary and an
 executed clause that differ, the candidate identifies the source that governs and the required action.
 AI-verification case: a machine extraction omits a proviso that reverses the result. No live examination
 content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 required the executed documents to be
 applied in the covenant and conditions-precedent standards but never stated the sourcing discipline itself,
 so the obligation existed only by implication. *Executed document* and *clause-level reading* defined;
@@ -3517,20 +3517,20 @@ of advice that the adviser has not confirmed is not advice.
 
 - **IAS 12 *Income Taxes*.** Issuing organisation: IFRS Foundation / IASB. Subject: the financial
   *reporting* of income taxes. Checked: current, by name only (register `EXT-121`, verified
-  2026-08-03). Nature: Manual §6 category 2 — authoritative financial-reporting standard. Applicability
+  2026-08-03). Nature: Manual section 6 category 2 — authoritative financial-reporting standard. Applicability
   limitation: entities applying IFRS Accounting Standards in an adopting jurisdiction only; **it
   governs the reporting of tax, never the tax position itself**, which is a matter of the applicable tax
   law and requires qualified local advice.
 - **OECD *Model Tax Convention on Income and on Capital*.** Issuing organisation: OECD. Subject: a
   model text used in negotiating bilateral tax treaties. Checked: current, by name only; no article or
-  date asserted (register `EXT-129`, verified 2026-08-03). Nature: Manual §6 category 10 — illustrative
+  date asserted (register `EXT-129`, verified 2026-08-03). Nature: Manual section 6 category 10 — illustrative
   practice. Applicability limitation: **it is a model instrument and is not law in any jurisdiction.**
   Only an executed treaty between the relevant states, as applied under each state's domestic law,
   binds — and its terms commonly differ from the model. Named for context only.
 - **ISO/IEC 17024 *Conformity assessment — General requirements for bodies operating certification of
   persons*.** Issuing organisation: ISO/IEC. Subject: the scope and limits of what a personnel
   certification attests. Checked: a **2026 edition has been published, superseding the 2012 edition**
-  (register `EXT-022`, verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary
+  (register `EXT-022`, verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary
   standard. Applicability limitation: voluntary unless imported by law or contract; **PCI claims no
   accreditation to it through this reference**, and a PCI credential attests competence in project
   finance, not authority to advise on law or tax.
@@ -3575,14 +3575,14 @@ note; a phrase such as "market practice is" used to settle a legal question.
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Ethical dilemma: a sponsor presses for a view on deductibility before
 close and the candidate must state what they may say, what they must not say, and what they must obtain. Evidence
 selection: identifying which of four documents constitutes advice the relying party may rely upon. No
 live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-12-01` *The Advice Boundary* (v1.0). Amendment note: restructured onto
 the twenty-five-element form; *qualified adviser* and *treatment* defined; the boundary-question log,
 the modelling-to-the-limits rule and the fresh-advice-on-change rule made process requirements; the
@@ -3705,20 +3705,20 @@ reviewer's own work, not to the tool's.**
   Independence Standards)*.** Issuing organisation: the International Ethics Standards Board for
   Accountants, under IFAC. Subject: ethics and independence for professional accountants. Checked:
   current, by name only; no section or date asserted (register `EXT-127`, verified 2026-08-03). Nature:
-  Manual §6 category 6 — ethical code. Applicability limitation: **binding only where a professional
+  Manual section 6 category 6 — ethical code. Applicability limitation: **binding only where a professional
   body, regulator or engagement has adopted it. A PCI credential holder who is not subject to it is not
   made subject to it by a PCI standard**; it is named because its independence concepts are the reference
   discipline this standard's four limbs express in PCI's own words.
 - **ISO/IEC 17024 *Conformity assessment — General requirements for bodies operating certification of
   persons*.** Issuing organisation: ISO/IEC. Subject: impartiality in certification of persons.
   Checked: a **2026 edition has been published, superseding the 2012 edition** (register `EXT-022`,
-  verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary standard. Applicability
+  verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary standard. Applicability
   limitation: voluntary unless imported by law or contract; addresses certification bodies, not
   reviewers of financial models. **No PCI accreditation is claimed through this reference.**
 - **The Equator Principles.** Issuing organisation: the Equator Principles Association. Subject: the
   independent-review expectations adopting institutions apply to environmental and social assessment.
   Checked: EP4, adopted 18 November 2019, effective 1 October 2020 (register `EXT-082`, verified
-  2026-08-03). Nature: Manual §6 category 8 — voluntary environmental or social framework.
+  2026-08-03). Nature: Manual section 6 category 8 — voluntary environmental or social framework.
   Applicability limitation: **voluntary; never legislation**; applies to adopting institutions' own
   transactions.
 
@@ -3760,13 +3760,13 @@ afterwards; a reviewer employed by the sponsor reviewing the sponsor's own model
 **23. Consequence within PCI authority.** Correction required and the affected report withheld from
 reliance; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Ethical dilemma: a reviewer is asked to downgrade a finding in exchange
 for the next mandate. Evidence selection: from an engagement file, the candidate identifies which
 documents establish independence and which do not. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-13-01` *Independence of Review* (v1.0). Amendment note: restructured onto
 the twenty-five-element form; *review scope statement* and *finding* defined; the four-limb independence
 test brought in from the Definitions; the labelled non-independent review route added at element 12,
@@ -3872,13 +3872,13 @@ describes. A clean machine screen is not a finding of independence.
 - **IESBA / IFAC — *International Code of Ethics for Professional Accountants (including International
   Independence Standards)*.** Issuing organisation: IESBA, under IFAC. Subject: independence in fact and
   in appearance, and threats to it. Checked: current, by name only (register `EXT-127`, verified
-  2026-08-03). Nature: Manual §6 category 6 — ethical code. Applicability limitation: **binding only
+  2026-08-03). Nature: Manual section 6 category 6 — ethical code. Applicability limitation: **binding only
   where a professional body, regulator or engagement has adopted it; a PCI credential holder who is not
   subject to it is not made subject to it by a PCI standard.** Named as the reference discipline; this standard's
   four limbs are PCI's own formulation.
 - **G20/OECD *Principles of Corporate Governance*.** Issuing organisation: OECD, with the G20. Subject:
   disclosure and the management of conflicts in governance. Checked: 2023 revision, OECD/LEGAL/0413
-  (register `EXT-128`, verified 2026-08-03). Nature: Manual §6 category 5 — professional framework;
+  (register `EXT-128`, verified 2026-08-03). Nature: Manual section 6 category 5 — professional framework;
   specifically an **OECD Council Recommendation — intergovernmental, non-binding, not legislation
   anywhere.** Applicability limitation: creates no obligation for a credential holder.
 
@@ -3916,14 +3916,14 @@ line; the words *objective* and *independent* used interchangeably.
 **23. Consequence within PCI authority.** Correction required and the affected description withdrawn;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Scenario judgement: a firm advising the sponsor is asked to provide the
 lenders' model audit, and the candidate must state what may be described how. Ethical dilemma: a
 proposed fee uplift payable on financial close, offered to an assurance provider. No live examination
 content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard** — v1.0 addressed independence only inside `PFL-LAW-13-01`, and only for reviews.
 Amendment note: *contingent benefit* and *role separation* defined; firm-level and individual-level
 assessment separated; the correction duty added; the honest-description route made explicit so that
@@ -4029,13 +4029,13 @@ entitle. An AI match between a data-room document and a condition is a candidate
 - **ISO 15489-1 *Information and documentation — Records management — Part 1: Concepts and
   principles*.** Issuing organisation: ISO. Subject: what makes a record reliable, authentic and
   retrievable — the properties a condition-satisfaction record needs. Checked: ISO 15489-1:2016
-  (register `EXT-025`, verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary
+  (register `EXT-025`, verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary
   standard. Applicability limitation: voluntary unless imported by law or contract; it sets no condition
   and no retention period for a financing.
 - **The Equator Principles.** Issuing organisation: the Equator Principles Association. Subject:
   environmental and social conditions that adopting institutions commonly make conditions to
   effectiveness or drawing. Checked: EP4, adopted 18 November 2019, effective 1 October 2020 (register
-  `EXT-082`, verified 2026-08-03). Nature: Manual §6 category 8 — voluntary environmental or social
+  `EXT-082`, verified 2026-08-03). Nature: Manual section 6 category 8 — voluntary environmental or social
   framework. Applicability limitation: **voluntary; never legislation.** Where an adopting institution
   makes it a condition, the obligation comes from the finance documents, not from the framework.
 
@@ -4074,14 +4074,14 @@ borrower's own counsel where the documents require the agent's.
 **23. Consequence within PCI authority.** Correction required and the affected certificate or report
 withheld; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Escalation decision: two conditions remain outstanding on the morning
 of close and the candidate must state what may be certified, by whom, and what must be escalated.
 Evidence selection: distinguishing a deliverable from an acceptance. No live examination content is
 exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-13-02` *Conditions Precedent* (v1.0). Amendment note: restructured onto
 the twenty-five-element form; *CP register* and *acceptance* defined; the seven register fields
 specified; waiver and deferral tracking to closure added as PR-04; the compliance test made performable
@@ -4191,14 +4191,14 @@ in the index with the reviewer's name and the date.
 - **ISO 15489-1 *Information and documentation — Records management — Part 1: Concepts and
   principles*.** Issuing organisation: ISO. Subject: authenticity, reliability, integrity and usability
   of records — the four properties a closing record must have to be usable years later. Checked: ISO
-  15489-1:2016 (register `EXT-025`, verified 2026-08-03). Nature: Manual §6 category 3 — international
+  15489-1:2016 (register `EXT-025`, verified 2026-08-03). Nature: Manual section 6 category 3 — international
   voluntary standard. Applicability limitation: voluntary unless imported by law or contract; it sets no
   retention period for a project financing.
 - **ISO/IEC 27001 *Information security, cybersecurity and privacy protection — Information security
   management systems — Requirements*.** Issuing organisation: ISO/IEC. Subject: information-security
   management, relevant to the integrity and availability of a retained closing record. Checked: ISO/IEC
   27001:2022, 3rd edition, **plus Amendment 1:2024** (register `EXT-023`, verified 2026-08-03). Nature:
-  Manual §6 category 3 — international voluntary standard; certifiable. Applicability limitation:
+  Manual section 6 category 3 — international voluntary standard; certifiable. Applicability limitation:
   voluntary unless imported by law or contract; certification is a third party's opinion about a
   management system at a point in time.
 
@@ -4238,13 +4238,13 @@ record two years later.
 **23. Consequence within PCI authority.** Correction required and any closing certification withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Evidence selection: from a list of documents, the candidate assembles
 the minimum complete closing record. Scenario judgement: a transaction is announced as closed while one
 facility's documents are not yet effective. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-13-03` *Financial-Close Evidence* (v1.0). Amendment note: restructured
 onto the twenty-five-element form; *closing record* and *closed* defined; the open-items handover added
 as PR-04; retrievability by a person who was not present at close made the operative test of retention,
@@ -4349,12 +4349,12 @@ a *balancing item* and removed.
 - **The FIDIC suite of conditions of contract.** Issuing organisation: FIDIC. Subject: the payment and
   certification mechanics that determine when a construction cost becomes a use. Checked: characterised
   generically; **no book, clause number or edition asserted** (register `EXT-050`, verified 2026-08-03).
-  Nature: Manual §6 category 4 — contract framework. Applicability limitation: binds only the parties
+  Nature: Manual section 6 category 4 — contract framework. Applicability limitation: binds only the parties
   who adopt it, through the contract they sign; not legislation, and commonly amended in a project
   contract.
 - **ISO 15489-1 *Records management — Part 1*.** Issuing organisation: ISO. Subject: reliability and
   retrievability of the records evidencing each source and use. Checked: ISO 15489-1:2016 (register
-  `EXT-025`, verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary standard.
+  `EXT-025`, verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary standard.
   Applicability limitation: voluntary unless imported by law or contract.
 
 **18. Jurisdictional caution.** Whether a grant or subsidy is committed and irrevocable, the tax
@@ -4392,13 +4392,13 @@ multi-currency deal; a statement dated before the last variation order.
 **23. Consequence within PCI authority.** Correction required and the affected statement withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: a statement balances only through a plug, and the
 candidate must locate it, name the unfunded amount and restate the statement. Evidence selection: which
 document makes a source committed. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 mentioned the sources-and-uses
 statement inside the close and drawdown standards but imposed no obligation on its integrity. *Committed
 source* and *balancing item* defined; per-currency treatment required at scale; the unfunded-amount
@@ -4508,13 +4508,13 @@ invoice and a request line is not evidence that the work was performed.
 - **The FIDIC suite of conditions of contract.** Issuing organisation: FIDIC. Subject: the interim
   payment and certification mechanism through which value becomes payable. Checked: characterised
   generically; **no book, clause number or edition asserted** (register `EXT-050`, verified 2026-08-03).
-  Nature: Manual §6 category 4 — contract framework. Applicability limitation: binds only the parties
+  Nature: Manual section 6 category 4 — contract framework. Applicability limitation: binds only the parties
   who adopt it, through the contract they sign; project contracts commonly amend it, so the standard
   form is not a safe source for the mechanism actually in force — read the executed contract under
   `PCI-PFL-STD-12.01`.
 - **ISO 15489-1 *Records management — Part 1*.** Issuing organisation: ISO. Subject: the reliability of
   the certification and payment record. Checked: ISO 15489-1:2016 (register `EXT-025`, verified
-  2026-08-03). Nature: Manual §6 category 3 — international voluntary standard. Applicability
+  2026-08-03). Nature: Manual section 6 category 3 — international voluntary standard. Applicability
   limitation: voluntary unless imported by law or contract.
 
 **18. Jurisdictional caution.** Statutory payment regimes and pay-when-certified rules, construction
@@ -4553,14 +4553,14 @@ condition confirmed by the borrower where the documents require the agent.
 **23. Consequence within PCI authority.** Correction required and the affected request or certificate
 withheld; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Scenario judgement: a contractor's application exceeds the certified
 value and the deadline is today — the candidate must state what may be requested and what must be
 disclosed. Calculation review: performing the in-balance test on a documented basis. No live examination
 content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-14-01` *Drawdown Integrity* (v1.0). Amendment note: restructured onto the
 twenty-five-element form; *in balance* and *certified value* defined; the advance-payment and retention
 rule added as PR-05; the in-balance basis tied expressly to the finance documents; disclosure of a
@@ -4670,12 +4670,12 @@ machine's; and reconciliation of the movement explanation to the underlying chan
 - **The FIDIC suite of conditions of contract.** Issuing organisation: FIDIC. Subject: variation, claim
   and extension-of-time mechanisms that generate the exposures a cost-to-complete must carry. Checked:
   characterised generically; **no book, clause number or edition asserted** (register `EXT-050`,
-  verified 2026-08-03). Nature: Manual §6 category 4 — contract framework. Applicability limitation:
+  verified 2026-08-03). Nature: Manual section 6 category 4 — contract framework. Applicability limitation:
   binds only the parties who adopt it, through the contract they sign; commonly amended.
 - **IAS 37 *Provisions, Contingent Liabilities and Contingent Assets*.** Issuing organisation: IFRS
   Foundation / IASB. Subject: the boundary between a provision and a contingent liability, which is
   where a claim exposure meets the reported position. Checked: in force, by name only (register
-  `EXT-006`, verified 2026-08-03). Nature: Manual §6 category 2 — authoritative financial-reporting
+  `EXT-006`, verified 2026-08-03). Nature: Manual section 6 category 2 — authoritative financial-reporting
   standard. Applicability limitation: entities applying IFRS Accounting Standards in an adopting
   jurisdiction only; **it governs reporting, not the funding assessment**, and an exposure excluded from
   a provision is still included in a cost-to-complete.
@@ -4716,14 +4716,14 @@ variation.
 **23. Consequence within PCI authority.** Correction required and the affected report or drawing
 withheld; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: building a cost-to-complete from components and
 comparing it with the budget-less-incurred figure to expose the difference. Scenario judgement: a
 notified claim is recorded at nil and the candidate must state the required treatment. No live
 examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard** — v1.0 required a "current cost-to-complete" inside `PFL-LAW-14-01` but never
 said how one is built, which left the commonest error uncontrolled. Amendment note: *assessed claim
 exposure* and *remaining scope* defined; the component build-up, programme linkage, contingency adequacy
@@ -4835,13 +4835,13 @@ account statements. Detection is where AI is useful here; authorisation is where
   Sponsoring Organizations of the Treadway Commission. Subject: internal control, including segregation
   of duties and control activities over payments. Checked: 2013 framework, revising the 1992 original;
   seventeen principles across five components (register `EXT-084`, verified 2026-08-03). Nature: Manual
-  §6 category 5 — professional framework; **voluntary in itself**, although widely imported by
+  section 6 category 5 — professional framework; **voluntary in itself**, although widely imported by
   regulators and internal-control regimes. Applicability limitation: adoption is voluntary unless a law,
   regulator or contract imports it; it creates no obligation for a project of its own force.
 - **ISO/IEC 27001 *Information security, cybersecurity and privacy protection — Information security
   management systems — Requirements*.** Issuing organisation: ISO/IEC. Subject: access control,
   authorisation and the integrity of instruction channels. Checked: ISO/IEC 27001:2022, 3rd edition,
-  **plus Amendment 1:2024** (register `EXT-023`, verified 2026-08-03). Nature: Manual §6 category 3 —
+  **plus Amendment 1:2024** (register `EXT-023`, verified 2026-08-03). Nature: Manual section 6 category 3 —
   international voluntary standard; certifiable. Applicability limitation: voluntary unless imported by
   law or contract; certification is an opinion about a management system at a point in time.
 
@@ -4883,7 +4883,7 @@ approval rights; a distribution paid while a lock-up test was failing.
 **23. Consequence within PCI authority.** Correction required and the affected process suspended pending
 correction; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence — in particular, PCI has
+due process and a right of appeal (Charter section 9). PCI claims no other consequence — in particular, PCI has
 no authority over any criminal or regulatory consequence of a payment, which belongs to the relevant
 authorities.
 
@@ -4892,7 +4892,7 @@ authoriser is unavailable — the candidate must state the compliant route. AI-v
 automation is proposed that would prepare, approve and reconcile payments, and the candidate must
 identify the prohibited configuration. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-14-02` *Funds-Flow Control* (v1.0). Amendment note: restructured onto the
 twenty-five-element form; *segregation of duties* and *authorised signatory* defined; payee verification
 through an independent channel added as PR-04; post-execution reconciliation by a third person added as
@@ -5005,13 +5005,13 @@ omitted; and the signatory's own confirmation of no default. Recorded on the cer
   which is where a distribution meets the reported position. Checked: in force for periods beginning
   before 1 January 2027; **IFRS 18 replaces IAS 1 for annual reporting periods beginning on or after 1
   January 2027, earlier application permitted** (register `EXT-004` / `EXT-003`, verified 2026-08-03).
-  Nature: Manual §6 category 2 — authoritative financial-reporting standard. Applicability limitation:
+  Nature: Manual section 6 category 2 — authoritative financial-reporting standard. Applicability limitation:
   entities applying IFRS Accounting Standards in an adopting jurisdiction only; **it does not determine
   whether a distribution is permitted**, which is a matter for the finance documents and for company
   law. Confirm which instrument applies to the period.
 - **G20/OECD *Principles of Corporate Governance*.** Issuing organisation: OECD, with the G20. Subject:
   the governance of decisions affecting shareholders and creditors. Checked: 2023 revision,
-  OECD/LEGAL/0413 (register `EXT-128`, verified 2026-08-03). Nature: Manual §6 category 5 — professional
+  OECD/LEGAL/0413 (register `EXT-128`, verified 2026-08-03). Nature: Manual section 6 category 5 — professional
   framework; an **OECD Council Recommendation — non-binding, not legislation**. Applicability
   limitation: creates no obligation for a credential holder.
 
@@ -5053,7 +5053,7 @@ who prepared the calculation with no independent recomputation.
 **23. Consequence within PCI authority.** Correction required and any certification withheld; additional
 independent review; escalation; failure of the associated examination competency; ethics review;
 certification investigation; suspension or withdrawal of the credential. Each subject to due process and
-a right of appeal (Charter §9). PCI claims no other consequence, and has no authority over the corporate
+a right of appeal (Charter section 9). PCI claims no other consequence, and has no authority over the corporate
 or legal consequences of an unlawful distribution.
 
 **24. Examination application.** Escalation decision: a forward-looking condition fails while the
@@ -5061,7 +5061,7 @@ backward-looking one passes, and the candidate must state what may be certified 
 escalated. Ethical dilemma: a sponsor proposes releasing a reserve to pass the test. No live examination
 content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-15-01` *Distribution Restriction* (v1.0). Amendment note: restructured
 onto the twenty-five-element form; *distribution condition* and *test date* defined; the waterfall-
 position confirmation and the lock-up-reporting rule made process requirements; element 18 strengthened
@@ -5168,12 +5168,12 @@ under `PCI-PFL-STD-12.01`.
 - **IAS 36 *Impairment of Assets*.** Issuing organisation: IFRS Foundation / IASB. Subject: the
   impairment-indicator discipline, relevant where a refinancing signals a change in the asset's expected
   cash flows. Checked: current, by name only (register `EXT-122`, verified 2026-08-03). Nature: Manual
-  §6 category 2 — authoritative financial-reporting standard. Applicability limitation: entities
+  section 6 category 2 — authoritative financial-reporting standard. Applicability limitation: entities
   applying IFRS Accounting Standards in an adopting jurisdiction only; it governs reporting, not the
   refinancing decision.
 - **The Basel Framework.** Issuing organisation: the Basel Committee on Banking Supervision. Subject:
   the supervisory context that shapes lender appetite, pricing and tenor. Checked: consolidated
-  framework; no standard or date asserted (register `EXT-110`, verified 2026-08-03). Nature: Manual §6
+  framework; no standard or date asserted (register `EXT-110`, verified 2026-08-03). Nature: Manual section 6
   category 10 — illustrative practice; **internationally agreed supervisory standards with no legal
   force of their own**, reaching a bank only as a national authority transposes them. Applicability
   limitation: named for context; **no requirement in this standard is sourced to it.**
@@ -5214,13 +5214,13 @@ depends entirely on a tenor extension whose total interest cost is not shown.
 **23. Consequence within PCI authority.** Correction required and the recommendation withheld; additional
 independent review; escalation; failure of the associated examination competency; ethics review;
 certification investigation; suspension or withdrawal of the credential. Each subject to due process and
-a right of appeal (Charter §9). PCI claims no other consequence.
+a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Calculation review: computing a refinancing gain net of break and
 hedge-unwind costs, where the headline saving reverses. Ethical dilemma: an adviser whose fee depends on
 completion is asked whether the refinancing is worth doing. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 addressed refinancing only as a
 prohibited dependency inside the capital-structure standard. *Refinancing gain* and *all-in cost of
 achievement* defined; the surrendered-protection schedule, the do-nothing case and the adviser-interest
@@ -5324,13 +5324,13 @@ clause, never a machine count.
 
 - **ISO 15489-1 *Records management — Part 1*.** Issuing organisation: ISO. Subject: the authenticity
   and integrity of the amended document record. Checked: ISO 15489-1:2016 (register `EXT-025`, verified
-  2026-08-03). Nature: Manual §6 category 3 — international voluntary standard. Applicability limitation:
+  2026-08-03). Nature: Manual section 6 category 3 — international voluntary standard. Applicability limitation:
   voluntary unless imported by law or contract.
 - **IAS 1 *Presentation of Financial Statements*.** Issuing organisation: IFRS Foundation / IASB.
   Subject: the classification of liabilities as current or non-current, which a waiver's timing and
   duration can change. Checked: in force for periods beginning before 1 January 2027; **IFRS 18 replaces
   IAS 1 for annual reporting periods beginning on or after 1 January 2027** (register `EXT-004` /
-  `EXT-003`, verified 2026-08-03). Nature: Manual §6 category 2 — authoritative financial-reporting
+  `EXT-003`, verified 2026-08-03). Nature: Manual section 6 category 2 — authoritative financial-reporting
   standard. Applicability limitation: entities applying IFRS Accounting Standards in an adopting
   jurisdiction only; **the reporting consequence of a waiver is not the same question as its contractual
   effect.** Confirm which instrument applies to the period.
@@ -5372,13 +5372,13 @@ no escalation; a consent from the agent where the documents require all lenders.
 **23. Consequence within PCI authority.** Correction required and the affected reporting withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** Escalation decision: a waiver expires before the underlying position is
 cured, and the candidate must state what is reported and to whom. Evidence selection: distinguishing an
 agreement in principle from an effective waiver. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 required waivers to be logged inside
 the covenant standard but imposed no obligation on entitlement, form, conditions, expiry or knock-on effects.
 *Entitled party* and *knock-on effect* defined; the waived-is-not-satisfied rule restated here as a
@@ -5499,31 +5499,31 @@ not a method and does not satisfy this element.
 
 - **ISO/IEC 42001 *Information technology — Artificial intelligence — Management system*.** Issuing
   organisation: ISO/IEC. Subject: organisational management of AI systems across their lifecycle.
-  Checked: ISO/IEC 42001:2023, 1st edition (register `EXT-021`, verified 2026-08-03). Nature: Manual §6
+  Checked: ISO/IEC 42001:2023, 1st edition (register `EXT-021`, verified 2026-08-03). Nature: Manual section 6
   category 3 — international voluntary standard. Applicability limitation: voluntary unless imported by
   law or contract; it addresses an organisation's management system, not a project's model.
 - **ISO/IEC 23894 *Information technology — Artificial intelligence — Guidance on risk management*.**
   Issuing organisation: ISO/IEC. Subject: guidance on managing AI-related risk. Checked: ISO/IEC
-  23894:2023 (register `EXT-024`, verified 2026-08-03). Nature: Manual §6 category 3 — international
+  23894:2023 (register `EXT-024`, verified 2026-08-03). Nature: Manual section 6 category 3 — international
   voluntary standard; **guidance, not requirements — it sits alongside ISO/IEC 42001, not under it.**
   Applicability limitation: voluntary unless imported.
 - **NIST *Artificial Intelligence Risk Management Framework* (AI RMF 1.0), NIST AI 100-1.** Issuing
   organisation: NIST, US Department of Commerce. Subject: a function-based approach to AI risk — govern,
   map, measure, manage. Checked: AI RMF 1.0, January 2023 (register `EXT-080`, verified 2026-08-03).
-  Nature: Manual §6 category 7 — industry guidance; NIST states it is **voluntary, rights-preserving and
+  Nature: Manual section 6 category 7 — industry guidance; NIST states it is **voluntary, rights-preserving and
   non-sector-specific — not a standard and not a regulation.** Applicability limitation: creates no
   obligation for anyone.
 - ***Supervisory Guidance on Model Risk Management* (SR 11-7 / OCC 2011-12).** Issuing organisation:
   United States banking supervisors. Subject: model development, validation and governance expectations
   in supervised institutions. Checked: **not independently verified — verify current requirements**
-  (register `EXT-102`). Nature: Manual §6 category 10 — illustrative practice; **supervisory guidance,
+  (register `EXT-102`). Nature: Manual section 6 category 10 — illustrative practice; **supervisory guidance,
   jurisdiction-specific, addressed to supervised institutions.** Applicability limitation: named for
   context only; **no requirement in this standard is sourced to it.**
 - **Regulation (EU) 2024/1689 (the EU AI Act).** Issuing organisation: the European Union. Subject:
   harmonised rules on artificial intelligence, including obligations that turn on a system's risk
   classification. Checked: in force since 1 August 2024, with phased application — general application
   from 2 August 2026 and remaining rules by 2 August 2027 (register `EXT-100`, verified 2026-08-03).
-  Nature: **binding legislation within the European Union**; Manual §6 category 1 where an entity is in
+  Nature: **binding legislation within the European Union**; Manual section 6 category 1 where an entity is in
   scope. Applicability limitation: **binding only within its own jurisdiction and only on entities and
   systems within its scope**; whether it applies to a given deployment is a question for qualified
   counsel. It is named here as an external requirement where applicable, never as the source of a PCI
@@ -5570,14 +5570,14 @@ named professional wrote.
 **23. Consequence within PCI authority.** Correction required and the affected output withheld;
 additional independent review; escalation; failure of the associated examination competency; ethics
 review; certification investigation; suspension or withdrawal of the credential. Each subject to due
-process and a right of appeal (Charter §9). PCI claims no other consequence.
+process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** AI-verification case: an AI system has rebuilt a debt schedule and the
 candidate must state the verification method, the record required and what must not be relied upon.
 Scenario judgement: a machine check passes and a human review is proposed to be dropped. No live
 examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-16-02` *AI-Assisted Model Verification* (v1.0), and absorbs the
 transaction-information limb of `PFL-LAW-16-01` *Transaction Confidentiality* (v1.0) as PR-04, the
 general confidentiality obligation remaining with `PCI-FND-STD-09`. Amendment note: *AI contribution
@@ -5697,16 +5697,16 @@ survive in a draft.
 - **NIST *Artificial Intelligence Risk Management Framework* (AI RMF 1.0), NIST AI 100-1.** Issuing
   organisation: NIST, US Department of Commerce. Subject: identifying and managing AI risks including
   output reliability. Checked: AI RMF 1.0, January 2023 (register `EXT-080`, verified 2026-08-03).
-  Nature: Manual §6 category 7 — industry guidance; **voluntary; not a standard and not a regulation**.
+  Nature: Manual section 6 category 7 — industry guidance; **voluntary; not a standard and not a regulation**.
   Applicability limitation: creates no obligation for anyone.
 - **ISO 8000 (data-quality series).** Issuing organisation: ISO. Subject: data quality and provenance.
   Checked: multi-part series; Part 1 is ISO 8000-1:2022; cited generically, no part relied upon
-  (register `EXT-026`, verified 2026-08-03). Nature: Manual §6 category 3 — international voluntary
+  (register `EXT-026`, verified 2026-08-03). Nature: Manual section 6 category 3 — international voluntary
   standard. Applicability limitation: voluntary unless imported by law or contract.
 - **The suite external-reference register** — `../registries/EXTERNAL_AUTHORITIES.md`. Issuing
   organisation: PCI. Subject: the classification, edition status and verification date of every external
   authority named anywhere in the PCI Body of Knowledge programme. Checked: compiled 2026-08-03, revised
-  2026-08-04. Nature: Manual §6 category 9 — PCI internal professional standard and its supporting registry.
+  2026-08-04. Nature: Manual section 6 category 9 — PCI internal professional standard and its supporting registry.
   Applicability limitation: **it records what was found on a date; it never substitutes for the official
   publication, which always governs.**
 
@@ -5749,14 +5749,14 @@ precedent list with no jurisdictions; a citation that no one can locate.
 **23. Consequence within PCI authority.** Correction required and the affected statement withdrawn from
 the output; additional independent review; escalation; failure of the associated examination competency;
 ethics review; certification investigation; suspension or withdrawal of the credential. Each subject to
-due process and a right of appeal (Charter §9). PCI claims no other consequence.
+due process and a right of appeal (Charter section 9). PCI claims no other consequence.
 
 **24. Examination application.** AI-verification case: a research note cites a clause number and an
 edition, and the candidate must state what to do before either may be used. Evidence selection:
 distinguishing a primary source from a secondary description. Scenario judgement: a term sheet asserts a
 market range the candidate cannot source. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · **new standard — no v1.0 predecessor.** Amendment note: v1.0 covered AI in modelling but not in
 research, leaving the fabricated-citation failure mode — the most frequently observed AI failure in
 professional work — governed only by the general foundational verification duty. *Primary source* and
@@ -5868,25 +5868,25 @@ strength of a machine's assurance does not satisfy this element.
 - **ISO/IEC 42001 *Information technology — Artificial intelligence — Management system*.** Issuing
   organisation: ISO/IEC. Subject: governance of AI systems including human oversight in an organisation's
   management system. Checked: ISO/IEC 42001:2023, 1st edition (register `EXT-021`, verified 2026-08-03).
-  Nature: Manual §6 category 3 — international voluntary standard. Applicability limitation: voluntary
+  Nature: Manual section 6 category 3 — international voluntary standard. Applicability limitation: voluntary
   unless imported by law or contract.
 - **OECD *Recommendation of the Council on Artificial Intelligence* (the OECD AI Principles),
   OECD/LEGAL/0449.** Issuing organisation: OECD. Subject: principles for trustworthy AI including human
   agency and accountability. Checked: adopted 2019, **revised May 2024** (register `EXT-081`, verified
-  2026-08-03). Nature: Manual §6 category 5 — professional framework; an **OECD Council Recommendation —
+  2026-08-03). Nature: Manual section 6 category 5 — professional framework; an **OECD Council Recommendation —
   not binding law even on adherents, and never legislation.** Applicability limitation: creates no
   obligation for a credential holder.
 - **Regulation (EU) 2024/1689 (the EU AI Act).** Issuing organisation: the European Union. Subject:
   harmonised rules on artificial intelligence, including human-oversight obligations for certain systems.
   Checked: in force since 1 August 2024; phased application, general application from 2 August 2026
   (register `EXT-100`, verified 2026-08-03). Nature: **binding legislation within the European Union**;
-  Manual §6 category 1 where an entity is in scope. Applicability limitation: **binding only within its
+  Manual section 6 category 1 where an entity is in scope. Applicability limitation: **binding only within its
   own jurisdiction and only on entities and systems within its scope.** Named as an external requirement
   where applicable; **no PCI obligation is sourced to it**, and this standard applies to every credential
   holder regardless of whether that Regulation does.
 - **COSO — *Internal Control — Integrated Framework*.** Issuing organisation: COSO. Subject: control
   activities, authorisation and accountability. Checked: 2013 framework (register `EXT-084`, verified
-  2026-08-03). Nature: Manual §6 category 5 — professional framework; **voluntary in itself**, though
+  2026-08-03). Nature: Manual section 6 category 5 — professional framework; **voluntary in itself**, though
   widely imported by regulators. Applicability limitation: creates no obligation of its own force.
 
 **18. Jurisdictional caution.** Who may sign a certificate or a representation, the validity of electronic
@@ -5928,7 +5928,7 @@ issued without disclosure; an automation with both production and release rights
 **23. Consequence within PCI authority.** Correction required and the affected output withheld or
 withdrawn; the process suspended pending correction; additional independent review; escalation; failure
 of the associated examination competency; ethics review; certification investigation; suspension or
-withdrawal of the credential. Each subject to due process and a right of appeal (Charter §9). PCI claims
+withdrawal of the credential. Each subject to due process and a right of appeal (Charter section 9). PCI claims
 no other consequence.
 
 **24. Examination application.** AI-verification case: an automation is proposed that would publish a
@@ -5936,7 +5936,7 @@ covenant certificate on a schedule, and the candidate must identify the prohibit
 compliant design. Ethical dilemma: a signatory is asked to sign an output they cannot explain because the
 deadline has passed. No live examination content is exposed.
 
-**25. Version and status.** Version 2.0 · **draft for approval** under Charter §5 · effective on
+**25. Version and status.** Version 2.0 · **draft for approval** under Charter section 5 · effective on
 approval · supersedes `PFL-LAW-16-03` *Human Approval* (v1.0). Amendment note: restructured onto the
 twenty-five-element form; *sign-off* and *automated pipeline* defined; the explain-without-the-tool test
 added as PR-05, which converts an unverifiable "approval" into an observable one; the alternate-signatory
@@ -5945,7 +5945,7 @@ route stated expressly so that unavailability cannot be used to justify automate
 ---
 ## Withdrawal record — v1.0 standards with no successor
 
-Charter §10 requires that a withdrawn standard's withdrawal and its reason be published, and that the standard is
+Charter section 10 requires that a withdrawn standard's withdrawal and its reason be published, and that the standard is
 not deleted from the record. Twenty-two of v1.0's twenty-four standards are superseded by a named standard above,
 recorded in each successor's element 25. **Two are withdrawn without a successor standard**, and their
 obligations are carried as process requirements instead, in the domain that already owns the surrounding
@@ -5954,7 +5954,7 @@ discipline.
 | Withdrawn v1.0 standard | Reason for withdrawal | Where the obligation now lives |
 |---|---|---|
 | `PFL-LAW-04-01` — Appraisal Discipline (D4) | Its rule bundled four obligations — a stated basis, internal consistency between cash flows and discount rate, one horizon and one perspective, and a prohibition on re-cutting a measure — into a single unenforceable sentence, and its subject is a *presentation* discipline rather than a distinct professional duty. It is not a certification standard's worth of independent obligation once `PCI-PFL-STD-01.01` governs how a financial judgement may be presented. | **`PCI-PFL-STD-01.01-PR-05`**, whose parent standard's scope already reaches appraisals. The basis must be stated in full, the cash flows and the discount rate must share one inflation and one currency basis, and re-basing a measure after a result is known is prohibited. Element 21 gained a fifth step that recomputes the measure on the stated basis. Domain 4 therefore anchors no standard in this edition — recorded here so that its absence is deliberate. |
-| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Its substance is an assumption-register requirement — record what a revenue actually is — and it duplicated `PCI-PFL-STD-06.03` and `PCI-PFL-STD-12.01` in every respect but one: the prohibition on presenting a forecast revenue as contracted. Manual §9 Q12 treats a standard that adds nothing to its neighbours as a defect. | **`PCI-PFL-STD-06.03-PR-05`**: every revenue assumption must record whether it is contracted, regulated, availability-based or forecast, whether it is indexed or fixed, and the payer's credit standing; and a forecast or merchant revenue must not be presented as contracted. Element 21 gained a fifth step tracing any contracted amount to an executed agreement. Domain 7 therefore anchors no standard in this edition. |
+| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Its substance is an assumption-register requirement — record what a revenue actually is — and it duplicated `PCI-PFL-STD-06.03` and `PCI-PFL-STD-12.01` in every respect but one: the prohibition on presenting a forecast revenue as contracted. Manual section 9 Q12 treats a standard that adds nothing to its neighbours as a defect. | **`PCI-PFL-STD-06.03-PR-05`**: every revenue assumption must record whether it is contracted, regulated, availability-based or forecast, whether it is indexed or fixed, and the payer's credit standing; and a forecast or merchant revenue must not be presented as contracted. Element 21 gained a fifth step tracing any contracted amount to an executed agreement. Domain 7 therefore anchors no standard in this edition. |
 
 **Five of the sixteen domains anchor no standard**: Domain 2 (accounting foundations), Domain 3 (time value of
 money), Domain 4 (investment appraisal), Domain 7 (revenue and commercial models) and Domain 8 (cost,
@@ -5966,9 +5966,9 @@ challenge it rather than assume it.
 
 ---
 
-## Audit findings — the twenty-five questions of Manual §9
+## Audit findings — the twenty-five questions of Manual section 9
 
-Manual §9 requires every question to be answered before a standard is approved, and requires the failure and
+Manual section 9 requires every question to be answered before a standard is approved, and requires the failure and
 its resolution to be recorded in the standard's file. The table below records the working of Stage 9 (red-team
 challenge) and Stage 10 (revision) over the whole set. **A finding is recorded whether or not it
 produced a change**, because a question answered and found satisfactory is part of the record.
@@ -5995,7 +5995,7 @@ added sit at the head of the Definitions above.
 | 13 | **Does it misrepresent external authority?** | 09.01 · 09.02 · 09.03 · 10.02 · 10.03 · 10.04 · 12.02 · 15.02 · 16.01 · 16.03 | **The highest risk in this volume, and the question most work went into.** Findings: (a) the **Basel Framework** appears in four standards and each now states it is an internationally agreed supervisory standard with **no legal force of its own**, reaching a bank only as a national authority transposes it, never applying to a project or sponsor, and **not the source of any requirement**; (b) the **IFRS Conceptual Framework** is cited once, in `01.01`, expressly as **not a standard**, and no requirement is sourced to it; (c) the **OECD Model Tax Convention** is stated to be **not law in any jurisdiction**; (d) the **Equator Principles**, **IFC Performance Standards** and the market principles behind green and sustainability-linked instruments are all tagged voluntary at every use, and `09.03-PR-03` makes describing a voluntary framework as legislation a breach; (e) the **FAST Standard** and the **ICAEW Code** are stated to impose no obligation of their own; (f) **IESBA** is stated to bind **only where a body, regulator or engagement has adopted it**, and expressly not to be imported by a PCI standard; (g) the **OECD Arrangement on Officially Supported Export Credits** is characterised as an inter-governmental understanding, not a treaty and not legislation; (h) the **EU AI Act** is the only instrument called legislation, and is stated to bind only within its jurisdiction and only on systems in scope; (i) **SR 11-7** is characterised as supervisory guidance addressed to supervised institutions, not to advisers. **No clause number, article, edition or effective date is asserted anywhere in this volume except three that were verified**: the IAS 1 → IFRS 18 replacement date of 1 January 2027, ISO/IEC 27001:2022 + Amd 1:2024, and the EU AI Act's phased application dates. `16.02` exists because this failure mode is now largely machine-generated. **Two open items are recorded below the table.** |
 | 14 | **Does it require legal or jurisdiction-specific advice?** | All 33 | **No standard in this set records "Not applicable" at element 18**, which was a deliberate target: tax, security interests, insolvency, distributions, sanctions and financial-crime obligations are jurisdiction-specific and this is the volume where a generic caution does most damage. Each element 18 names the specific exposures — for example enforceability of a liability cap (`11.01`), lien priority over lenders' security (`14.02`), distributable-reserve and clawback rules with possible personal liability for directors (`15.01`), estoppel arising from repeated informal waivers (`15.03`), and recognition of a competent body and the tax and insolvency characterisation of an Islamic structure (`09.02`). `12.02` is a jurisdictional caution in its entirety. |
 | 15 | Does it define the relevant materiality threshold? | All 33 | Element 11 in every standard states who sets the threshold, in what metric, and where it is recorded. **PCI publishes no percentage anywhere in this volume.** Where a threshold belongs to the transaction — every coverage level, every reserve balance, every consent threshold, every in-balance test — the standard requires **the documented figure to be used and tested**, and says expressly that PCI sets none. |
-| 16 | Does it cover AI use? | All 33 | Elements 14, 15 and 16 are populated in every standard. Element 16 names a method from the Manual §5.2 list; "review the AI output" appears nowhere. Three standards add a deletion rule — an AI compliance assertion (`09.02`), an AI answer to a construction question (`10.04`) and an untraceable AI citation (`16.02`) are **deleted rather than corrected**, so they cannot survive in a draft. |
+| 16 | Does it cover AI use? | All 33 | Elements 14, 15 and 16 are populated in every standard. Element 16 names a method from the Manual section 5.2 list; "review the AI output" appears nowhere. Three standards add a deletion rule — an AI compliance assertion (`09.02`), an AI answer to a construction question (`10.04`) and an untraceable AI citation (`16.02`) are **deleted rather than corrected**, so they cannot survive in a draft. |
 | 17 | Does it preserve human accountability? | All 33 | Every element 9 vests approval in a named human or in a party the finance documents name. `16.03-PR-03` prohibits the unbroken automated pipeline as an architecture; `14.04` element 15 makes an automated identity holding prepare, authorise and reconcile rights a prohibited configuration; `13.01` and `13.02` state that an AI system is never *independent*, because independence is a property of a relationship. |
 | 18 | Does it contain an exception process? | All 33 | Element 12 states either the process — who approves, what justification, how long, what compensating control, to whom reported — or that no exception is permitted. **Nine standards permit no exception at all.** `09.02` records that PCI cannot grant one, because the subject matter is a determination PCI does not make. Three standards (`06.05`, `12.01`, `16.01`) gained a **bounded, reported** exception route in place of a rule that practice was quietly ignoring. |
 | 19 | Does it define escalation? | All 33 | Element 13 lists observable trigger events, not a general duty. *escalation threshold* is defined once and is set by the finance documents or by the adopting organisation's governance, never by PCI. |
@@ -6004,7 +6004,7 @@ added sit at the head of the Definitions above.
 | 22 | **Does it impose an impossible or excessive burden?** | 06.03 · 06.04 · 12.01 · 13.01 · 14.04 · 16.01 · 16.02 | Six burdens were reduced and one deliberately kept. Reduced: full treatment reserved for *material* items with stated-basis sampling elsewhere (`06.03`, `06.04`, `12.01`, `16.01`, `16.02`); review scope and materiality agreed **before** work begins so the reviewer is not asked to test everything (`13.01`). **Kept, deliberately:** `14.04-PR-02` segregation of duties admits no *de minimis*, and a small finance function satisfies it by naming the third role outside the function — a board member or an external administrator — rather than by relaxing the rule. That is stated in element 11 so the small-organisation route is visible rather than left to be discovered. |
 | 23 | **Can it operate on small projects and megaprojects?** | All 33 | Every element 11 carries a *Scale test* naming both a small municipal project and a multi-billion cross-border financing. The test changed six standards: `06.01`, `10.01`, `10.03`, `13.03`, `14.01` and `15.01` now require the relevant record or test **per facility, per tranche or per currency** at scale, because a consolidated position can be true of no facility in the transaction; `14.04` gained the small-organisation segregation route; `13.01` gained per-workstream materiality. |
 | 24 | Can it operate internationally? | All 33 | No standard depends on a single jurisdiction's institutions, forms or terminology. Every obligation that could be jurisdiction-bound is expressed as a duty to apply the **finance documents'** own terms and to obtain local advice. British English throughout; the transliteration *Shariah* is used with *Sharia* noted as the same word. |
-| 25 | Is there a clear consequence within PCI authority? | All 33 | Element 23 draws only on the Charter §9 list and states in every standard that PCI claims no other consequence. `09.02` adds that PCI claims no authority to rule on any question of religious law; `14.04` and `15.01` add that criminal, regulatory and corporate consequences belong to the relevant authorities and not to PCI. |
+| 25 | Is there a clear consequence within PCI authority? | All 33 | Element 23 draws only on the Charter section 9 list and states in every standard that PCI claims no other consequence. `09.02` adds that PCI claims no authority to rule on any question of religious law; `14.04` and `15.01` add that criminal, regulatory and corporate consequences belong to the relevant authorities and not to PCI. |
 
 ### Definitions reconciliation
 
@@ -6035,7 +6035,7 @@ changed by the reconciliation**; three things are worth naming.
 ### Open items recorded against Q13
 
 Two matters were found during the external-reference pass that this volume cannot close on its own, and
-they are recorded rather than resolved, per Charter §5 Stage 5:
+they are recorded rather than resolved, per Charter section 5 Stage 5:
 
 1. **AAOIFI is not registered.** `PCI-PFL-STD-09.02` names the Accounting and Auditing Organisation for
    Islamic Financial Institutions, following the PFL-AI manuscript at KA 9.3.1. It has **no entry in
@@ -6043,7 +6043,7 @@ they are recorded rather than resolved, per Charter §5 Stage 5:
    edition or date asserted, and no requirement is sourced to it. **Action required:** register it, with
    its category and the note that some jurisdictions have made its standards mandatory by regulation
    while others leave the question to each institution.
-2. **Manual §6's category list has no value for a voluntary intergovernmental instrument.** The
+2. **Manual section 6's category list has no value for a voluntary intergovernmental instrument.** The
    G20/OECD *Principles of Corporate Governance* and the OECD *AI Principles* are Council
    Recommendations; the OECD *Arrangement on Officially Supported Export Credits* is an
    inter-governmental understanding. None is an ISO/IEC standard (category 3), an environmental or
@@ -6052,7 +6052,7 @@ they are recorded rather than resolved, per Charter §5 Stage 5:
    the applicability limitation, which is the honest choice among the available values. This is a
    **borderline call, recorded so that it is deliberate rather than accidental** — the same treatment
    `../registries/EXTERNAL_AUTHORITIES.md` correction C-04 applies to ANSI/EIA-748. **Action required:**
-   extend Manual §6 with a category for voluntary intergovernmental instruments, or confirm the present
+   extend Manual section 6 with a category for voluntary intergovernmental instruments, or confirm the present
    classification.
 
 ---
@@ -6060,7 +6060,7 @@ they are recorded rather than resolved, per Charter §5 Stage 5:
 ## Index of PFL-AI Professional Standards
 
 Thirty-three standards · one hundred and fifty-six process requirements · eleven anchor domains. External
-reference categories are the Manual §6 numbers, given in full at the foot of the table.
+reference categories are the Manual section 6 numbers, given in full at the foot of the table.
 
 | ID | Official title | Anchor domain | Principal obligation (element 1, in brief) | External reference categories |
 |---|---|---|---|---|
@@ -6098,7 +6098,7 @@ reference categories are the Manual §6 numbers, given in full at the foot of th
 | PCI-PFL-STD-16.02 | AI Precedent and Market-Term Research | D16 — Data, automation and responsible AI in finance | Must not use an AI statement about the outside world until traced to the primary source and confirmed | 3 · 7 · 9 |
 | PCI-PFL-STD-16.03 | Human Sign-Off | D16 — Data, automation and responsible AI in finance | Every decision, certification, representation and external report must be approved by a named human before effect | 1 · 3 · 5 |
 
-**Manual §6 external-reference categories used above:** 1 applicable legislation or regulation · 2
+**Manual section 6 external-reference categories used above:** 1 applicable legislation or regulation · 2
 authoritative financial-reporting standard · 3 international voluntary standard · 4 contract framework ·
 5 professional framework · 6 ethical code · 7 industry guidance · 8 voluntary environmental or social
 framework · 9 PCI internal professional standard · 10 illustrative practice. **A category is a statement
@@ -6107,7 +6107,7 @@ relied upon for a requirement except where element 17 says so expressly.
 
 ---
 
-*Version 2.0, compiled 2026-08-04. **Draft for approval under Charter §5** — Stages 6, 11, 12 and 13 not
+*Version 2.0, compiled 2026-08-04. **Draft for approval under Charter section 5** — Stages 6, 11, 12 and 13 not
 performed, Stages 4, 5 and 7 partial; see the stage record in the front matter. Thirty-three standards · one
 hundred and fifty-six process requirements · twenty-five elements in every standard, none omitted · zero
 occurrences of the ISO requirement auxiliary · all internal cross-references resolve · British English

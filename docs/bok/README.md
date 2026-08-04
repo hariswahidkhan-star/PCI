@@ -46,7 +46,7 @@ in the build order (`build/build_pdf.py`).
 | — | Appendices (glossary · formula sheet · self-check answers · standards & figure indexes · MCQ bank · capstone) | [`appendices.md`](appendices.md) | ✅ Complete — all 13 domains consolidated |
 
 Legend: ✅ complete · 🚧 in progress · ⏳ planned. Each domain is authored to the per-KA checklist in the
-Style Spine (§10) and is a **first authored draft** pending subject-matter-expert (SME) review before it is
+Style Spine (section 10) and is a **first authored draft** pending subject-matter-expert (SME) review before it is
 treated as final certification content.
 
 ## Authoring order

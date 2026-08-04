@@ -1552,7 +1552,7 @@ Organisations that govern AI seriously anchor their arrangements to published in
 expected to be able to name the principal ones, say **what kind of thing each is**, and recognise that only
 one of them is law. Each is **named and characterised here in this book's own words**: nothing is reproduced,
 no clause, requirement or obligation is restated, and **the official publication of each instrument governs**
-(Conventions, §9).
+(Conventions, section 9).
 
 - **ISO/IEC 42001**: an **international standard** describing a management system for artificial intelligence:
   the governance, roles, controls and improvement cycle an organisation runs around its AI use. Adoption is
@@ -1579,7 +1579,7 @@ description here is authoritative. Applicability is **jurisdiction-specific**: a
 is sufficient in one country can be non-compliant in another, and **data-protection, privacy, employment and
 sector regulation** bite on AI use whether or not an AI-specific instrument applies at all. Where a function
 operates across borders, which instruments apply, and what they demand, is a question for legal and
-compliance, answered before the tool is switched on rather than after an incident (13.6.5c, §2). None of this
+compliance, answered before the tool is switched on rather than after an incident (13.6.5c, section 2). None of this
 displaces the accountability this knowledge area is built on: a framework is not a signature, and "the
 standard says so" is no more a defence than "the model said so". **AI proposes; the professional verifies,
 decides and remains accountable.**
@@ -2487,7 +2487,7 @@ stable.*
 
 ### Toolkit 13.T.1 — AI tool register template
 
-The approved-tool register the model policy requires (13.6.5c, §3): each tool, its permitted data classes and
+The approved-tool register the model policy requires (13.6.5c, section 3): each tool, its permitted data classes and
 uses, and its assurance standard. Three illustrative rows: an assistant, a RAG system, an ML forecaster.
 
 | Tool | Category (13.4) | Approved data classes | Grounding required? | Verification standard | Owner | Last validated | Status |
@@ -2498,10 +2498,10 @@ uses, and its assurance standard. Three illustrative rows: an assistant, a RAG s
 
 **Usage note.** The register is the operational form of the policy's approved-tools rule: no data may enter a
 tool above the data classification for which that tool is approved, and a governed enterprise alternative is
-used in preference to a public tool (13.2.5, 13.6.5c §3). The category column ties each tool to its
+used in preference to a public tool (13.2.5, 13.6.5c section 3). The category column ties each tool to its
 category-specific governance risk from 13.4.2b: hallucination for assistants, source-access control and corpus
 currency for RAG, explainability and training-data representativeness for ML. The last-validated column
-enforces the quarterly re-validation cadence (13.6.5c §8), because capabilities and data-handling terms
+enforces the quarterly re-validation cadence (13.6.5c section 8), because capabilities and data-handling terms
 change: the forecaster's "Revalidation due" status means its outputs carry extra scrutiny until the owner
 re-validates. Keep the columns stable so the register can be audited period over period.
 
@@ -2520,7 +2520,7 @@ faithfully as the passes.
 **Usage note.** The form turns the verification checklist from a habit into a record: for each material output
 (forecasts, disclosures, commercial positions, board reporting) it captures what the AI produced, who verified
 it, and on what basis, which is exactly the audit trail the policy requires and the defence a challenged
-number needs (13.6.2, 13.6.5c §5). An output that fails any column is not released until the failure is fixed,
+number needs (13.6.2, 13.6.5c section 5). An output that fails any column is not released until the failure is fixed,
 footnoting a known inconsistency defeats the assurance the record exists to provide (MCQ 13.6-D). The paired
 rows show that rule working: the first row is the value of the form, because a plausible-looking forecast that
 no method reproduces is exactly what an unrecorded verification lets through, and the second row is what
@@ -2600,7 +2600,7 @@ cost coding/control → 1.5, 5.2; scheduling → 10; agile/AgileEVM → 9.5; con
 risk → 12; financial reporting/IFRS 15/IAS 37 → 1–2. The "AI in this domain" boxes throughout the book are the
 per-chapter instances of the workflows collected here.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 four certification standards here: `PCI-PCL-STD-13.01` (approved tools, recorded configuration and protected
 project data), `PCI-PCL-STD-13.02` (verification of AI-generated quantitative controls output),
 `PCI-PCL-STD-13.03` (verification of AI-generated schedule, risk and extraction output) and

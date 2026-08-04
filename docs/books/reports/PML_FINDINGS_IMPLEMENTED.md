@@ -20,17 +20,17 @@ All four derived-file generators re-run and re-run with `--check`: **0 defects e
 | # | Finding | Severity | Status |
 |---|---|---|---|
 | PML-03 | D2 2.3.3 sustainability as a disclosed claim | major | Implemented |
-| PML-04 | D3 3.3.2 three-lines model attributed and characterised | major | Implemented, one deviation (§3.1) |
+| PML-04 | D3 3.3.2 three-lines model attributed and characterised | major | Implemented, one deviation (section 3.1) |
 | PML-05 | D3 3.3.4 custody and retention of the decision record | major | Implemented |
 | PML-06 | D6 6.4.2 non-financial ceilings on compression | major | Implemented |
 | PML-07 | D7 KA 7.2 and D8 KA 8.3 "AI in this KA" sections | major | Implemented |
-| PML-08 | D8 8.4.3 crisis leadership as an instrument | major | Implemented, one deviation (§3.2) |
+| PML-08 | D8 8.4.3 crisis leadership as an instrument | major | Implemented, one deviation (section 3.2) |
 | PML-09 | D9 9.3.1 record retention and custody | major | Implemented |
-| PML-10 | D10 (+D15, D16) external reference points | major | Implemented, one scope judgement (§3.4) |
+| PML-10 | D10 (+D15, D16) external reference points | major | Implemented, one scope judgement (section 3.4) |
 | PML-11 | D11 the register as a record about identified people | major | Implemented |
 | PML-12 | D12 12.4.3 when the decision goes the other way | major | Implemented |
 | PML-13 | D14 14.4.3 the failure route | major | Implemented |
-| PML-14 | D15 15.2.1 cashable / non-cashable classification | major | Implemented, one deviation (§3.3) |
+| PML-14 | D15 15.2.1 cashable / non-cashable classification | major | Implemented, one deviation (section 3.3) |
 | PML-15 | D8 8.3.1 duty-engaged rows leave the EMV comparison | moderate | Implemented |
 | PML-16 | Domain-opener standards anchors | moderate | Implemented |
 | PML-17 | D9 9.3.1 cumulative-effect test operationalised | moderate | Implemented |
@@ -38,7 +38,7 @@ All four derived-file generators re-run and re-run with `--check`: **0 defects e
 | PML-19 | D13 13.1.2 what the ordering right does not reach | moderate | Implemented |
 
 Seventeen findings worked; all seventeen implemented. Three carry a deliberate departure from the
-proposed correction and one carries a scope judgement, each stated in §3 with its reasoning.
+proposed correction and one carries a scope judgement, each stated in section 3 with its reasoning.
 
 ---
 
@@ -209,7 +209,7 @@ with a copy to a party other than the decision-maker; **declining the signature*
 readiness certificate, completion statement, forecast or account the leader does not believe, in
 writing, saying what would have to change; and the **route of last resort** for safety and harm — next
 governance tier, independent assurance, then the board or its audit or risk committee, each step in
-writing. Closes with the neutral note on protected-disclosure arrangements (§3.5 below on wording).
+writing. Closes with the neutral note on protected-disclosure arrangements (section 3.5 below on wording).
 Toolkit 12.T.3 gains a closing block — custodian; access limited to the leader, their manager and HR;
 a copy to the individual; a retention period from the organisation's employment-records policy with
 disposal; the working-note/file distinction; and the statement that where the record may feed a formal
@@ -241,7 +241,7 @@ against. The **decision right** is stated: the finance owner of the affected bud
 board and not the delivering component, confirms cashability in writing naming the line and the
 period, and **an unconfirmed cashable claim is recorded as capacity-released until it is**. Worked
 example 15.2.1 gains a fourth interpretation point disclosing the composition of its own denominator
-(§3.3 on the option taken). Toolkit 15.T.3 gains the fund-type tag per line, a subtotal by fund type,
+(section 3.3 on the option taken). Toolkit 15.T.3 gains the fund-type tag per line, a subtotal by fund type,
 the composition of the stream the rule is applied to, and two further integrity counts. Four key
 terms, two self-check items, a learning objective and a summary passage.
 `manuscript/domain-16-transition-closeout-benefits.md` 16.4.1 adds the fund type to the required
@@ -447,7 +447,7 @@ characterisation that did not cover the use.
 
 ### Nothing left open
 
-No finding was deferred. The four judgement calls are recorded in §3. One item is worth a reviewer's
+No finding was deferred. The four judgement calls are recorded in section 3. One item is worth a reviewer's
 eye at the next pass rather than being a defect of this work: `TOC.md`'s back-matter list names the
 standards register as "Appendix C" while `STANDARDS.md` generates as "Appendix F" and `APPENDICES.md`
 generates A–E. The new reference-point paragraphs deliberately avoid citing an appendix letter for

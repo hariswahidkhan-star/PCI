@@ -1,7 +1,7 @@
 # PCI Standards — Red-Team Report
 
-**Instrument status: none.** This is a Charter §5 **Stage 9** record. It is not a PCI Standard, it creates
-no obligation, and nothing in it may be cited as a requirement (Charter §3). Where it says a standard was
+**Instrument status: none.** This is a Charter section 5 **Stage 9** record. It is not a PCI Standard, it creates
+no obligation, and nothing in it may be cited as a requirement (Charter section 3). Where it says a standard was
 changed, the standard itself is the record; where it says a finding was referred, the referral is the
 finding.
 
@@ -103,23 +103,23 @@ routes succeeded. All seventeen are closed.
 
 | # | Standard(s) | The route, worked | How it is now closed | Severity |
 |---|---|---|---|---|
-| C-1 | `PCI-PCL-STD-13.02` · `13.03` · `PCI-PFL-STD-16.01` · `PCI-PML-STD-14.02` | Self-verification of one's own AI output — see §2 | Element 10 of each: the check is additional to `PCI-FND-STD-03`, not a substitute | **Critical** |
+| C-1 | `PCI-PCL-STD-13.02` · `13.03` · `PCI-PFL-STD-16.01` · `PCI-PML-STD-14.02` | Self-verification of one's own AI output — see section 2 | Element 10 of each: the check is additional to `PCI-FND-STD-03`, not a substitute | **Critical** |
 | C-2 | `PCI-PML-STD-03.03` | The standard fixes *when* gate criteria are published but never *who sets them*. A project publishes criteria of its own drafting — dated, version-identified, assessable, and calibrated so it cannot fail — before assembling any evidence. Every process requirement is met and element 21(a)–(e) passes; the gate that "cannot fail" of element 2 is produced in full compliance | New `PCI-PML-STD-03.03-PR-06`: criteria approved by the authority holding the gate decision before publication; the project must not approve its own criteria. Element 7 and a new element 21(f) test for the approval | **High** |
 | C-3 | `PCI-PFL-STD-01.02` | Element 21 step (b) begins "For each interest **on the register**…". An interest never entered on the register is never tested, so the whole standard is defeated by omission — and the register is maintained by the person with the interest | New element 21 step (e) works from the transaction's party, adviser, contractor, offtaker and fee records against the `PCI-FND-STD-08` relationship list. "A clean register is a pass only when step (e) confirms it is complete" | **High** |
 | C-4 | `PCI-PFL-STD-14.02` | *In balance* is defined as "committed and available funding" ≥ remaining cost-to-complete, but neither "committed" nor "available" was defined. A sponsor's letter of comfort, an uncommitted facility and an anticipated contingency release are counted, the test returns positive, and `PR-03` is satisfied by disclosing a result that is untrue. The lenders' principal protection is removed at the exact moment element 2 identifies as the exposure point | *Committed and available funding* defined at element 4, with the six excluded instruments named; element 21(c) now traces every amount counted as funding to the instrument that commits it | **High** |
 | C-5 | `PCI-PCL-STD-03.03` | Re-baseline one control account at a time. Each partial re-baseline is genuinely approved, states its accumulated variance, carries an effective date and retains the outgoing baseline — and each falls within the lowest delegation band. Across a period the whole project's adverse variance is erased and no authority ever sees the reset. `PCI-PCL-STD-05.04-PR-05` anticipates exactly this for changes; `03.03` had no aggregation rule | New `PCI-PCL-STD-03.03-PR-05`: partial and successive re-baselines aggregate for banding; new element 21(e) totals the variance removed across the period and tests it against the authority that approved it | **High** |
 | C-6 | `PCI-PFL-STD-13.01` | The engaging party is entitled to set the scope before the review begins. Scope the model audit away from the tax model and the liquidated-damages mechanics — the two areas the reviewer believes carry the risk — and issue a clean, genuinely independent report on which lenders rely. Independence is intact; the review is worthless | New `PCI-PFL-STD-13.01-PR-06`: every excluded area the reviewer considers capable of a material effect is named on the face of the report, with the fact that the engaging party set the exclusion; element 21 gains step (f) | **High** |
 | C-7 | `PCI-PML-STD-12.02` | `PR-04`'s detriment review bites only inside "the documented lookback window", and the organisation documents the window. Set it to two weeks and the protection switches off while the standard is complied with in full | Element 11: the standard's own default (end of project or twelve months, whichever is shorter) is now also the **floor**; a shorter documented window does not satisfy the standard | **High** |
-| C-8 | PCL corpus-wide (27 lines across 28 element-21 tests) | Twenty-eight compliance tests closed by saying the defective condition "**is an exception**". In this corpus *exception* is a Charter §8 term meaning an **approved departure**, and Charter §8 states that an undocumented departure is a breach and not an exception. Read in the corpus's own vocabulary, twenty-eight tests said the failure condition was permitted | Every occurrence now reads "is a failure of this test". Recorded in the PCL audit table, question 6 | **High** |
+| C-8 | PCL corpus-wide (27 lines across 28 element-21 tests) | Twenty-eight compliance tests closed by saying the defective condition "**is an exception**". In this corpus *exception* is a Charter section 8 term meaning an **approved departure**, and Charter section 8 states that an undocumented departure is a breach and not an exception. Read in the corpus's own vocabulary, twenty-eight tests said the failure condition was permitted | Every occurrence now reads "is a failure of this test". Recorded in the PCL audit table, question 6 | **High** |
 | C-9 | All three certification sets | Use the narrower certification definition of *material* to escape `D-15`. PCL's and PFL's definitions turn only on whether a decision would change; `D-15` additionally catches an item bearing on safety, on a contractual, regulatory, tax or financial-reporting position, or on a party's reliance. A variance that endangers nobody's decision but changes a contractual position is immaterial under PCL and material under the foundational standard | A reading rule at the head of each certification volume's Definitions: where a definition here and a foundational definition bear on the same act, **the one producing the wider obligation governs**, and the `D-15` limbs apply in addition | **High** |
 | C-10 | All three certification sets | Element 21 in fifteen certification standards tests "a sample selected on a stated basis" or "a stated sample" without saying who selects it. The foundational set says "selected by the reviewer **and not by the professional**" every time, so the drafters knew it mattered. The preparer selects a favourable sample, records the basis, and the test passes | A reading rule at the head of each certification volume's Definitions: the sample is selected by the reviewer performing the test, and the reviewer records the basis | **Medium** |
 | C-11 | `PCI-PCL-STD-03.05` | Element 12 permitted an unchallenged forecast "in an emergency funding request", with the challenge to follow "within a stated period" — stated by nobody, with no outer limit. An emergency funding request is also the case in which `PCI-FND-STD-03` element 12 makes **no** waiver available. A professional could comply with the certification standard while breaching the foundational one, indefinitely | Element 12 now fixes the period (recorded by the decision owner at approval, and in any event before the next issue) and states the `PCI-FND-STD-03` carve-out expressly | **High** |
 | C-12 | `PCI-PML-STD-13.01` | Element 12 permits a release without complete acceptance evidence where the release is reversible or the residual risk is accepted. `PCI-PML-STD-16.01` covers "operational release … in every delivery model", permits no exception at all in respect of a mandatory precondition, and was not cited. An adaptive release into operational use could be taken under `13.01`'s exception with a safety case open | Element 12 of `13.01` now states that the exception does not reach a mandatory precondition, and cites `16.01` | **High** |
 | C-13 | `PCI-PCL-STD-*` (definitions) | PCL's *escalation threshold* is defined as "the event stated in element 13 of a standard", with no clock. A matter that is material, or that endangers a person, but which no element 13 happens to enumerate, reaches no threshold — and no element 13 in PCL states a time | Definition now states that element 13 events are **additional to** `D-10`, and that the time is the organisation's published period or, failing that, `D-20` | **Medium** |
 | C-14 | `PCI-PML-STD-*` (definitions) | PML's *escalation threshold* required a stated destination and a stated time, and said that a threshold lacking either "is not an escalation threshold". An organisation that omits the time from its delegation schedule therefore has no PML escalation thresholds and no PML escalation duties — a perverse incentive to draft badly | Definition now states that the absence of a documented threshold does not remove the duty: the destination defaults to the next authority above the decision owner, and the time to `D-20` | **Medium** |
-| C-15 | `PCI-FND-STD-03` (emergency) | See §6, E-1. A professional acting on an unverified item to protect a person had no compliant route, so the honest act was a breach | Bounded allowance added at element 12 | **High** |
-| C-16 | `PCI-FND-STD-08` (emergency) | See §6, E-2. Where withdrawal was the only available safeguard and the matter bore on a person's safety, the standard required the only person able to act to stand aside | Bounded allowance added at element 12 | **High** |
-| C-17 | `PCI-PML-STD-16.01` (emergency) | See §6, E-3. The credential holder was forbidden to "seek, recommend or record" a dispensation — including the owning authority's own lawful emergency derogation | Element 12 now states the route through the owning authority's own instrument, without conceding the duty | **High** |
+| C-15 | `PCI-FND-STD-03` (emergency) | See section 6, E-1. A professional acting on an unverified item to protect a person had no compliant route, so the honest act was a breach | Bounded allowance added at element 12 | **High** |
+| C-16 | `PCI-FND-STD-08` (emergency) | See section 6, E-2. Where withdrawal was the only available safeguard and the matter bore on a person's safety, the standard required the only person able to act to stand aside | Bounded allowance added at element 12 | **High** |
+| C-17 | `PCI-PML-STD-16.01` (emergency) | See section 6, E-3. The credential holder was forbidden to "seek, recommend or record" a dispensation — including the owning authority's own lawful emergency derogation | Element 12 now states the route through the owning authority's own instrument, without conceding the duty | **High** |
 
 ### Attacks that failed — the standards held
 
@@ -165,14 +165,14 @@ and the reading rules below are a patch, not the cure (see **P-1**).
 | **verified** | `D-26` + `PCI-FND-STD-03-PR-01`: eight named methods | The same eight | **Seven** — *named expert judgement* absent, and *clause-to-summary comparison* renamed *clause-to-output comparison* | Split into V&V verification and AI verification, with a nine-item method list at element 16 of `14.02` | PFL is stricter, which is not a loophole, but the divergence was silent. **Now stated as deliberate with its reason; confirm with an SME — R-6** |
 | **escalation threshold** | `D-10`, six substantive triggers; reaching it starts the `D-20` clock | "The event stated in element 13 of a standard" — no clock | A condition recorded before work begins | A documented value in the delegation schedule, with a time; without a time it "is not an escalation threshold" | Two live defects, **closed as C-13 and C-14** |
 | **evidence** | `D-11`, with a closed list of four things that are **not** evidence | Similar, adds "an AI-generated summary of a record is not evidence of the underlying fact" | Similar | Similar, adds an unreproducible dashboard state | Compatible; no defect |
-| **decision owner** | `D-08` | §A | Core terms | Terms | Compatible; all four exclude committees without a named chair |
+| **decision owner** | `D-08` | Section A | Core terms | Terms | Compatible; all four exclude committees without a named chair |
 
 **A-2 · `authorised tool` listed as a defined term where it is neither defined nor used.**
 `PCI-PFL-STD-16.03` element 4 lists *authorised tool*; the term is defined at `PCI-PFL-STD-16.01`
 element 4 and appears nowhere in `16.03`. Element 4 is normative-determinative, so an undefined term in
-it is a Manual §4 defect. **Fixed** — element 4 now carries the pointer. Severity: low.
+it is a Manual section 4 defect. **Fixed** — element 4 now carries the pointer. Severity: low.
 
-**A-3 · *exception* used in two incompatible senses.** Charter §8 sense (an approved departure) against
+**A-3 · *exception* used in two incompatible senses.** Charter section 8 sense (an approved departure) against
 the audit sense (a finding). Twenty-eight instances of the audit sense sat inside PCL element 21s.
 **Fixed as C-8.** One residual instance is left standing deliberately: `PCI-PCL-STD-06.02` element 21
 requires a verification record to state "the exceptions found", which is a field of a record rather
@@ -206,7 +206,7 @@ and are referred with the question stated.
 
 | # | Pair | The conflict | Fix |
 |---|---|---|---|
-| X-1 | `PCI-FND-STD-03` ↔ `PCI-PCL-STD-13.02` / `13.03` / `PCI-PFL-STD-16.01` / `PCI-PML-STD-14.02` | Different independence thresholds on the same act. Charter §4 says the foundational standard governs and "a PCI Standard never lowers an obligation"; the certification standards lowered it on their face | Element 10 cross-references — see C-1 |
+| X-1 | `PCI-FND-STD-03` ↔ `PCI-PCL-STD-13.02` / `13.03` / `PCI-PFL-STD-16.01` / `PCI-PML-STD-14.02` | Different independence thresholds on the same act. Charter section 4 says the foundational standard governs and "a PCI Standard never lowers an obligation"; the certification standards lowered it on their face | Element 10 cross-references — see C-1 |
 | X-2 | `PCI-FND-STD-03` element 12 ↔ `PCI-PCL-STD-03.05` element 12 | The foundational standard makes **no** waiver available where the item supports an irreversible commitment or a payment; the certification standard offered an emergency funding request as its worked example of when the exception applies | C-11 |
 | X-3 | `PCI-PML-STD-16.01` ↔ `PCI-PML-STD-13.01` | Absolute no-exception rule against a release exception covering the same act | C-12 |
 | X-4 | `PCI-FND-STD-11` / `D-10` ↔ PCL *escalation threshold* | The certification definition narrowed the foundational duty and supplied no clock | C-13 |
@@ -229,7 +229,7 @@ choosing between them is a policy decision.
 > **Question for the Interpretation Panel.** Is `PCI-PFL-STD-01.02`'s reasonable-party test intended to
 > *widen* `D-05` only, or to *replace* it for project-finance work? If the former, element 1 should say
 > so. If the latter, it conflicts with `PCI-FND-STD-08` element 12's no-exception rule and with Charter
-> §4, and one of the two must change.
+> section 4, and one of the two must change.
 
 **R-2 · `PCI-FND-STD-03` element 12 ↔ the two-person consultancy.**
 A waiver of independent verification is available only where no person meeting `D-12` exists **and** no
@@ -380,7 +380,7 @@ in the amended standard's element 25, and the file-level records point here.
 - `PCI-PCL-STD-03.03` — new `-PR-05`; elements 7 and 21.
 - `PCI-PCL-STD-03.05` — element 12.
 - `PCI-PCL-STD-13.02`, `PCI-PCL-STD-13.03` — element 10.
-- Audit table question 6 and the Charter §5 record updated. PR count 144 → 145.
+- Audit table question 6 and the Charter section 5 record updated. PR count 144 → 145.
 
 **`PFL_AI_STANDARDS.md`**
 - Definitions — reading rule; sampling rule; *verified* method-list collision stated as deliberate.
@@ -415,7 +415,7 @@ subject-matter expert, and a red team that fixed them would be legislating.
 ### Structural
 
 **P-1 · There is no PCI Standards Definitions Register, and the corpus needs one.**
-Manual §4 permits a term to be defined "in the standard that uses it, **or in the PCI Standard Definitions
+Manual section 4 permits a term to be defined "in the standard that uses it, **or in the PCI Standard Definitions
 Register**". No such register exists, so each volume built its own, and seven compliance-deciding terms
 now diverge across four files. The reading rules added in this pass are a patch that resolves *which*
 definition wins; they do not stop the definitions drifting further apart at the next edition, and they
@@ -423,8 +423,8 @@ place an interpretive burden on every reader of every standard. **Recommendation
 the seven terms into it, and leave per-volume definitions only for genuinely credential-specific
 terms.** No file in the corpus has authority to do this.
 
-**P-2 · Charter §4's priority order is unsettled by counsel, and every conflict finding depends on it.**
-Charter §4 states this itself. Seven of the nine conflicts in §6 were resolved by applying "a PCI Standard
+**P-2 · Charter section 4's priority order is unsettled by counsel, and every conflict finding depends on it.**
+Charter section 4 states this itself. Seven of the nine conflicts in section 6 were resolved by applying "a PCI Standard
 never lowers an obligation". If counsel reaches a different view of the order, those resolutions are
 reopened.
 
@@ -445,7 +445,7 @@ reopened.
   supervisor.
 - **R-6 · PFL's *verified* omits *named expert judgement* and renames *clause-to-summary comparison*.**
   Now stated as deliberate with a reason a red team supplied. **A modelling SME should confirm the
-  reason is right**, and the Panel should decide whether renaming a Manual §5.2 method is acceptable.
+  reason is right**, and the Panel should decide whether renaming a Manual section 5.2 method is acceptable.
 
 ### Emergency and proportionality
 
@@ -456,9 +456,9 @@ reopened.
   local law, not by PCI. **Question:** should element 12 carry an allowance mirroring `PCI-FND-STD-03`'s
   new one, expressly subject to reserved-activity law, or should it state that no allowance exists and
   that the professional's duty is to summon competence and escalate?
-- **R-2 · `PCI-FND-STD-03` and the two-person practice** — see §6.
-- **R-8 · `PCI-PFL-STD-14.04` segregation of duties at the bottom of the size range** — see §7.
-- **R-7 · `PCI-FND-STD-09` element 21(d) and employee-monitoring law** — see §7.
+- **R-2 · `PCI-FND-STD-03` and the two-person practice** — see section 6.
+- **R-8 · `PCI-PFL-STD-14.04` segregation of duties at the bottom of the size range** — see section 7.
+- **R-7 · `PCI-FND-STD-09` element 21(d) and employee-monitoring law** — see section 7.
 - **R-13 · `PCI-PML-STD-16.01`'s new emergency route assumes the owning authority has a derogation
   process.** Many do; some do not. **Question:** should a further process requirement oblige the
   credential holder to establish, when the gate block is assembled, whether each owning authority
@@ -491,10 +491,10 @@ right place to test all of them.
 claims) were read but not attacked substantively.** Both turn on subject matter this red team is not
 competent in — Islamic finance and sustainable-finance taxonomies. `PCI-FND-STD-10` is the reason for
 saying so rather than producing confident findings about them. **Both need a named subject specialist
-under Charter §5 Stage 4 before approval**, and `09.02` in particular, because it is the one standard in the
+under Charter section 5 Stage 4 before approval**, and `09.02` in particular, because it is the one standard in the
 corpus whose element 12 correctly records that PCI has no authority to grant an exception at all.
 
-**R-17 · Charter §5 Stage 4 (technical review) and Stage 6 (practitioner consultation) remain
+**R-17 · Charter section 5 Stage 4 (technical review) and Stage 6 (practitioner consultation) remain
 unperformed for all four files.** Nothing in this report substitutes for either. A red team can show
 that a standard is gameable; only a practitioner can show that it is unworkable, and only a specialist can
 show that it is wrong.
@@ -511,7 +511,7 @@ Files: PCI_FOUNDATIONAL_STANDARDS.md, PCL_AI_STANDARDS.md, PFL_AI_STANDARDS.md, 
 Standards parsed: 113 (PCI 15, PCL 33, PFL 33, PML 32)
 
   ok    duplicate identifiers                              113 standards, 532 process requirements, all unique
-  ok    twenty-five elements, in Manual §5 order           all 113 standards carry every element in order
+  ok    twenty-five elements, in Manual section 5 order           all 113 standards carry every element in order
   ok    foundational citations resolve                     725 citations, all within `PCI-FND-STD-01`–`PCI-FND-STD-15`
   ok    certification-standard citations resolve           1469 citations against 98 published standards
   ok    process-requirement citations resolve              594 citations against 532 defined requirements
@@ -527,7 +527,7 @@ Exit code 0.
 
 ---
 
-*Charter §5 Stage 9 record, prepared 4 August 2026. Not a PCI Standard; creates no obligation. The
-seventeen items in §11 are the agenda for human review and none of them was fixed in this pass.*
+*Charter section 5 Stage 9 record, prepared 4 August 2026. Not a PCI Standard; creates no obligation. The
+seventeen items in section 11 are the agenda for human review and none of them was fixed in this pass.*
 
 > **AI proposes; the professional verifies, decides and remains accountable.**

@@ -22,7 +22,7 @@ distractor cannot be arithmetically impossible without the gate failing.
 A bank weighted heavily to recall tests memory rather than competence; one weighted
 heavily to Evaluation is unanswerable under time pressure. The distribution above is a fact
 to be reviewed against the examination blueprint, not a claim that it is correctly balanced —
-the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
+the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` section 9).
 
 ## Coverage by domain
 

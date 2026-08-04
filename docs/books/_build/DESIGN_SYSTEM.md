@@ -107,10 +107,14 @@ print. Colour is never the only distinction.
 | Practice guidance | `PCI RECOMMENDED PRACTICE` | 1 pt dashed, left | none |
 | Caution | `CAUTION` | 1 pt dotted, left | amber tint |
 
-**No `§` and no pictographic icons.** A section sign in front of an identifier that is already
-displayed adds nothing, and glyph availability across fonts and readers is a liability — a marker
-that renders as a blank box in one environment is worse than no marker. The label and the identifier
-carry the meaning.
+**No section sign and no pictographic icons.** A section sign in front of an identifier that is
+already displayed adds nothing, and glyph availability across fonts and readers is a liability — a
+marker that renders as a blank box in one environment is worse than no marker. The label and the
+identifier carry the meaning.
+
+This extends to cross-references in prose, which are written as words: *section 4.2*, *Charter
+section 5*. The sign is a statutory-drafting convention, and these volumes state professional
+requirements, not law — borrowing the mark borrows the register with it.
 
 ## 6. Openers
 
@@ -128,4 +132,4 @@ Part dividers get a full page: number, title, one line of orientation, nothing e
 - Faux small caps and faux italics.
 - Centred body text.
 - Underlining for emphasis.
-- Any font not in §1.
+- Any font not in section 1.

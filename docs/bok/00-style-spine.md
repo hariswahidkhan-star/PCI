@@ -108,7 +108,7 @@ the book:
 1. **Setup** — the scenario in one or two sentences, with the given data listed.
 2. **Formula** — the formula stated, each variable named with its unit.
 3. **Substitution** — the numbers substituted in, shown explicitly.
-4. **Result** — the computed answer, rounded per §7 and stated with its unit.
+4. **Result** — the computed answer, rounded per section 7 and stated with its unit.
 5. **Interpretation** — one or two sentences on what the number *means* for the professional's decision.
 
 Numbers **must actually add up** — re-check every calculation. Where an assumption is needed, state it
@@ -181,14 +181,14 @@ Author each KA to this checklist; a KA is complete only when every applicable li
 - [ ] **Definition & purpose** for each topic — precise, professional, with the real standard named.
 - [ ] **Underlying principle / the "why."**
 - [ ] **Formulae** stated, every variable and unit defined (restating spine symbols).
-- [ ] **≥ 1 fully worked example** in the §5 five-line format, numbers re-checked, realistic USD (+SAR where useful).
+- [ ] **≥ 1 fully worked example** in the section 5 five-line format, numbers re-checked, realistic USD (+SAR where useful).
 - [ ] **A second example or mini-case** for any non-trivial topic.
-- [ ] **≥ 1 numbered figure spec** (§6) and, where motion helps, a digital-only animation storyboard.
+- [ ] **≥ 1 numbered figure spec** (section 6) and, where motion helps, a digital-only animation storyboard.
 - [ ] **Common pitfalls / misconceptions.**
 - [ ] **"AI in this KA or domain"** — how AI assists and its governance limits ("AI proposes; the professional verifies, decides and remains accountable"): at least one substantive AI section per domain, plus per-KA boxes wherever
       the AI use is distinct (Domain 13, KA 13.5 carries the systematic per-domain coverage).
 - [ ] **Key-terms box.**
-- [ ] **3–6 sample MCQs** (§8) with answers, rationales and topic/level tags.
+- [ ] **3–6 sample MCQs** (section 8) with answers, rationales and topic/level tags.
 - [ ] **2–4 self-check questions** with answers.
 - [ ] **Cross-references** by number to related topics.
 

@@ -10,7 +10,7 @@
 
 ## Appendix A — Master formula sheet
 
-All symbols are defined once and used identically across the book (Conventions, §4). Currency in USD
+All symbols are defined once and used identically across the book (Conventions, section 4). Currency in USD
 (+SAR where useful); ratios/indices to 2 dp; adverse amounts in parentheses.
 
 ### A1. Accounting & financial reporting (Domains 1–2)
@@ -97,7 +97,7 @@ All symbols are defined once and used identically across the book (Conventions, 
 ## Appendix B — Global glossary
 
 Consolidated from every domain's key-terms box: **280 terms**, each shown with the KA where it is first
-defined. Where a term recurs across domains, the first definition governs (Conventions, §3).
+defined. Where a term recurs across domains, the first definition governs (Conventions, section 3).
 
 | Term | Definition | First defined |
 |---|---|---|
@@ -386,7 +386,7 @@ defined. Where a term recurs across domains, the first definition governs (Conve
 
 ## Appendix C — Standards & frameworks referenced
 
-Named at principle level; **never reproduced verbatim** (Conventions, §9). Real frameworks only; no fabricated
+Named at principle level; **never reproduced verbatim** (Conventions, section 9). Real frameworks only; no fabricated
 citations. Each entry is tagged with what kind of authority it is, because the distinction changes what a
 professional owes it: an accounting standard that governs a set of financial statements is not the same
 obligation as a voluntary framework a project chooses to adopt. **The official publication governs in every
@@ -400,7 +400,7 @@ relying on any of them for a live decision should verify the current requirement
 
 **Not in this table: PCI's own instrument.** The identifiers `PCI-FND-STD-NN` and `PCI-PCL-STD-DD.NN` that
 appear at the close of each domain are **PCI Standards**: the Institute's own companion instrument
-(Conventions, §11), not external references. They are private professional requirements binding within PCI's
+(Conventions, section 11), not external references. They are private professional requirements binding within PCI's
 certification scope; they are not legislation, and they neither derive from nor stand behind any instrument
 listed below. The two are indexed separately on purpose, so that a PCI requirement is never mistaken for an
 external one, or the reverse.
@@ -445,7 +445,7 @@ external one, or the reverse.
 > and 2.1 (that a reader must be able to see what an entity owns, owes, earned and spent, on a consistent
 > basis between periods) are unaffected. Its scope, its effective date and what it means for any particular
 > entity are matters to confirm with the issuing body and with the entity's auditors; nothing is stated here.
-> This mirrors how §2.4 treats the IAS 11 → IFRS 15 transition.
+> This mirrors how section 2.4 treats the IAS 11 → IFRS 15 transition.
 
 > **Category definitions.** *Authoritative accounting standard*: issued by a standard-setter and applied by
 > entities reporting under that framework. *International standard*: issued by ISO/IEC; some are certifiable
@@ -508,7 +508,7 @@ Every numbered figure specification, with its digital-only animation storyboard 
 | Fig 13.7.1 | The AI-maturity ladder *(animated)* | 13.7 |
 
 Illustration style throughout: brand blue `#1D4ED8`, Plus Jakarta Sans labels, clean professional diagrams
-(Conventions, §6). Animations are **digital/LMS-only**; the print/PDF uses the static figure rendered from the
+(Conventions, section 6). Animations are **digital/LMS-only**; the print/PDF uses the static figure rendered from the
 same spec.
 
 ---
@@ -738,7 +738,7 @@ end of each Knowledge Area.
 
 Every sample multiple-choice question in the book, collected in one bank: **321 items** across the thirteen
 domains, in book order, each with its four options, its correct answer, and its topic-and-level tag
-(Conventions, §8). Items are numbered **`PCL-MCQ-DD-NN`** (domain, then position within the domain) and the
+(Conventions, section 8). Items are numbered **`PCL-MCQ-DD-NN`** (domain, then position within the domain) and the
 numbering is stable, so an item can be cited in study notes and found again. Each entry also names the
 Knowledge Area item it comes from, where the **rationale** explaining the right answer and each distractor is
 set out in full.
@@ -772,7 +772,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 > **Blueprint separation.** These are **study items**, written from the same blueprint as the examination but
 > maintained separately from any live examination bank, and tagged to topic numbers and cognitive levels so a
 > weak result points straight back at the topic that fixes it. They are not reused as live examination
-> questions (Conventions, §8).
+> questions (Conventions, section 8).
 
 ### Domain 1 — Foundations of Accounting for Project Controls
 
@@ -3428,7 +3428,7 @@ The Month-5 `PV` of USD 520,000 is read straight off the 3.3.3 phasing table: th
 **What the professional does.** Before computing any index, make cost-to-date *true*. At Month 5 the cost
 ledger shows purchase orders and subcontracts raised (commitments) of **USD 640,000**; invoices processed
 (actuals) of **USD 410,000**; and goods/services received but not yet invoiced (accruals) of **USD 120,000**.
-*Assumption (stated per the worked-example format, Conventions §5): all accrued work is under the raised POs, so the accrual reduces
+*Assumption (stated per the worked-example format, Conventions section 5): all accrued work is under the raised POs, so the accrual reduces
 the open commitment.*
 
 ```

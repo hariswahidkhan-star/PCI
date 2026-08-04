@@ -1,7 +1,7 @@
 # Phase 0 Report — Governance and Blueprint (PML-AI · PFL-AI Books Programme)
 
 **Phase:** 0 of 8 · **Gate condition:** demonstrate how both proposed books follow the established PCI
-book pattern · **Verdict:** gate condition met — see §3; three outstanding expert decisions logged (§10).
+book pattern · **Verdict:** gate condition met — see section 3; three outstanding expert decisions logged (section 10).
 
 ---
 
@@ -33,7 +33,7 @@ appendices; two incompatible MCQ formats; four chapter-heading forms; broken hea
 glossaries; currency convention violated (GBP-majority PML, zero SAR); a one-off `®` usage against
 platform trademark policy; and a **stale published PML PDF** rendered before its own merge-conflict
 fix, with no committed build script able to reproduce either PDF. Full defect list: decision register
-§B (D-20…D-27). **Ruling:** pattern source *and* content — do not reuse; the platform serving channel
+section B (D-20…D-27). **Ruling:** pattern source *and* content — do not reuse; the platform serving channel
 (watermarking, versioning, audit) — preserve exactly (D-26). The interim PDFs stay live until Phase 8
 replacement.
 
@@ -88,15 +88,15 @@ and will be re-scored at each phase gate.
    working estimate ≈ 240,000–280,000 words per book (PCL-AI First Edition ratio: ~207k words →
    ~950–970 pp, then scaled by the deeper apparatus and appendices).
 3. **Competencies covered:** 24/24 PML-AI and 19/19 PFL-AI published competencies mapped to domains
-   (competency maps §1); examination weightings proposed as indicative, pending OD-2.
+   (competency maps section 1); examination weightings proposed as indicative, pending OD-2.
 4. **Sources added:** 10 seed rows in `registries/SOURCES.md` with rights posture; prohibited-use
    register established.
 5. **Calculations validated:** none due this phase; formula registry seeded (10 inherited symbol
    groups verified in PCL-AI; 5 PML + 14 PFL new entries registered, verification scheduled with the
    Phase 1 golden-answer harness).
 6. **Figures/tables produced:** none due; figure registry and standards established.
-7. **MCQs/exercises created:** none due; formats fixed (spine §8 + two-reviewer rule).
-8. **Quality-gate results:** Phase 0 gate met (§3). No chapter gates run yet.
+7. **MCQs/exercises created:** none due; formats fixed (spine section 8 + two-reviewer rule).
+8. **Quality-gate results:** Phase 0 gate met (section 3). No chapter gates run yet.
 9. **Similarity/copyright findings:** interim manuscripts contain no wrong-certification leakage and
    no conflict markers (verified); one trademark-symbol violation logged (D-25). No third-party text
    reproduction found in pattern sources.

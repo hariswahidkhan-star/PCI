@@ -395,7 +395,7 @@ a number the `EAC` and the commercial forecast should carry.
 jurisdiction) provide tested allocations of risk, roles (e.g. the Engineer), and procedures for variations,
 claims, payment and dispute resolution. A controls professional should understand **at a concept level** how a
 standard form allocates risk and structures the payment/variation/claims machinery, without reproducing its
-wording. (Named at awareness level only, consistent with the citation rules: Spine §9.)
+wording. (Named at awareness level only, consistent with the citation rules: Spine section 9.)
 
 ### 7.2.6 Notices, time bars and the statutory overlay
 
@@ -1821,7 +1821,7 @@ delay-analysis method and its governing-law caveat → Advanced 10.A.6; the duty
 position that cannot be defended → 4.3.7; record retention at closure → 8.5.1; process cycles (O2C billing) →
 Domain 11; contract-analytics AI → 13.4–13.5.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 three certification standards here: `PCI-PCL-STD-07.01` (contract source verification), `PCI-PCL-STD-07.02`
 (traceability of variations and claims; the discipline behind the notice register of 7.2.6 and the claim file
 of Toolkit 7.T.2) and `PCI-PCL-STD-07.03` (support and reconciliation of applications for payment). The

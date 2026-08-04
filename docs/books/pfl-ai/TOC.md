@@ -2,7 +2,7 @@
 
 **Book:** PCI AI Project Finance Leader Body of Knowledge
 **Structure:** 4 parts · 16 domains · 61 knowledge areas, numbered `Domain.KA.Topic` per the pattern
-spec; family chapter shape throughout (see `PCI_BOOK_PATTERN_SPEC.md` §4). Responsible AI appears in
+spec; family chapter shape throughout (see `PCI_BOOK_PATTERN_SPEC.md` section 4). Responsible AI appears in
 every domain, with Domain 16 carrying the systematic treatment. This is an educational professional
 reference, not individualized investment, legal, tax or accounting advice — the front matter carries the
 extended finance disclaimers (decision register D-14).

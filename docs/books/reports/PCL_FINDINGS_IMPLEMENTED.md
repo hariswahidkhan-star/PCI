@@ -6,9 +6,9 @@
 were not touched.
 **Worklist:** 18 findings, PCL-03 to PCL-20.
 **Arithmetic gate:** `docs/books/_build/verify_formulas.py` — `✓ all golden answers verified`, 0 failures,
-before and after. **No existing number was altered and no new number was introduced** (see §3).
+before and after. **No existing number was altered and no new number was introduced** (see section 3).
 **Legal sweep:** preserved in full. No caution, referral or jurisdictional qualification was removed; twelve
-new ones were added (§4).
+new ones were added (section 4).
 
 ---
 
@@ -19,10 +19,10 @@ new ones were added (§4).
 The worklist referred to the instruments by their withdrawn names and identifiers (`PCL_AI_LAWS.md`,
 `PCL-LAW-DD-NN`, `PCI-LAW-F-NN`). Those are superseded. Every citation written here uses the live forms
 `PCI-FND-STD-NN` and `PCI-PCL-STD-DD.NN`, re-pointed **by subject** rather than by number, using
-`laws/STANDARDS_CONCORDANCE.md` §3.1 — where the old fourteen-standard foundational scheme maps
+`laws/STANDARDS_CONCORDANCE.md` section 3.1 — where the old fourteen-standard foundational scheme maps
 many-to-many onto the new fifteen, so a one-for-one renumbering would have been wrong.
 
-- **`00-conventions.md` §11 (new)** — "The PCI Standards — the companion instrument": what the Standards are,
+- **`00-conventions.md` section 11 (new)** — "The PCI Standards — the companion instrument": what the Standards are,
   that they are private professional requirements and not legislation, that a stricter legal, regulatory,
   contractual or authoritative professional requirement governs over them, the two identifier forms with a
   worked example of each, the anchoring convention, and why some domains anchor none.

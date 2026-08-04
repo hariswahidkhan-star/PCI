@@ -15,7 +15,7 @@ rename.)*
 
 | ID | Element (evidence) | Ruling | Reason / action |
 |---|---|---|---|
-| D-01 | Domain → KA → Topic numbering, cross-reference-by-number (`00-style-spine.md` §2) | **Preserve exactly** | The family's navigation and blueprint-mapping backbone |
+| D-01 | Domain → KA → Topic numbering, cross-reference-by-number (`00-style-spine.md` section 2) | **Preserve exactly** | The family's navigation and blueprint-mapping backbone |
 | D-02 | Domain chapter shape (why-it-exists → KAs → advanced → cases → executive perspective → exercises → toolkit → exam prep → summary) | **Preserve exactly** | Proven across 13 PCP-AI domains; the suite's recognisable rhythm |
 | D-03 | Worked-example five-step skeleton + labelled panel | **Preserve exactly** | Core pedagogy; numbers independently re-verified |
 | D-04 | Key-terms boxes, self-checks, MCQ format (4 options, marked answer, rationale, `[topic · level]` tag) | **Preserve exactly** | Feeds glossary/index generation and blueprint mapping |
@@ -28,14 +28,14 @@ rename.)*
 | D-11 | Governing principle wording "AI proposes, the professional disposes" | **Adapt** | The new books carry the suite evolution: **"AI proposes; the professional verifies, decides and remains accountable"** — same doctrine, sharper accountability language; PCP-AI text unchanged |
 | D-12 | 40/40/20 weighting language | **Adapt** | Each new book states its own blueprint weighting from its competency map; the split is per-certification |
 | D-13 | Citation rules (name real frameworks; own words; no invented citations) | **Preserve exactly** | Legal safety + originality; now backed by `registries/SOURCES.md` with rights status |
-| D-14 | Educational disclaimer paragraph | **Adapt** | PFL-AI additionally carries finance/accounting/tax/legal/investment disclaimers and jurisdiction caveats (charter §9) |
+| D-14 | Educational disclaimer paragraph | **Adapt** | PFL-AI additionally carries finance/accounting/tax/legal/investment disclaimers and jurisdiction caveats (charter section 9) |
 | D-15 | Two-generation source history (per-KA `_build/` vs whole-domain `build/`) | **Correct before reuse** | One pipeline only for the new books: the whole-domain + WeasyPrint premium pipeline; `_build/` is historical |
 | D-16 | Accessibility state of v1 PDF (real text, bookmarks, contrast — but no tagged structure tree, no embedded alt text) | **Correct before reuse** | New books must produce tagged, WCAG-oriented PDFs with alt text and table headers; do not inherit the gap |
 | D-17 | Trademark symbols: none in PCI branding; third-party marks acknowledged once on the copyright page | **Preserve exactly** | Matches current PCI policy; the ® symbols found once in the interim PML text are removed by D-25 |
 
 ## B. Rulings on the interim `backend/books/` PML/PFL manuscripts (found on main)
 
-The audit (see `PHASE0_REPORT.md` §2) found both manuscripts are machine-authored interim editions that
+The audit (see `PHASE0_REPORT.md` section 2) found both manuscripts are machine-authored interim editions that
 do **not** follow the family pattern: flat 24/19-chapter lists with no Part/Domain/KA structure,
 near-uniform ~2,700-word chapters (a generation quota, not content-driven depth), no figures, no
 key-terms boxes, no self-checks, no numbered cross-references, no appendices, two incompatible MCQ

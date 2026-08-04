@@ -33,8 +33,8 @@ LANG = "en-GB"
 # side-effect free.
 # =================================================================================================
 
-# Pictographic markers are forbidden in a published page (DESIGN_SYSTEM.md §5, §7). A tick, a
-# hexagon or a warning triangle is a glyph-availability liability — it renders as a blank box in
+# Pictographic markers are forbidden in a published page (DESIGN_SYSTEM.md sections 5 and 7). A
+# tick, a hexagon or a warning triangle is a glyph-availability liability — it renders as a box in
 # whichever environment lacks it, which is worse than no marker — and none of them says anything
 # the written label beside it does not. Swept at render time because the corpus is owned elsewhere.
 # Arrows, mathematical operators and box-drawing characters are NOT pictographs: they carry
@@ -46,8 +46,11 @@ _ICONS = (
     "️︎"                                                    # emoji variation selectors
 )
 _ICON_RE = re.compile("[" + _ICONS + "]|[\U0001F000-\U0001FAFF]")
-# A section sign in front of an identifier that is already displayed adds nothing; the ones that
-# remain are genuine prose cross-references ("Charter §5") and are left alone.
+# The section sign is gone from the corpus: it belongs to statutory drafting, which is a register
+# these volumes deliberately do not borrow, and it renders as a blank box wherever the font lacks
+# it. Cross-references are written as words ("Charter section 5"). This pattern stays as a backstop
+# so a reintroduced sign is stripped at render time rather than reaching a printed page — it catches
+# both the sign standing alone before an identifier and the sign heading a call-out label.
 _MARKER_SECTION_RE = re.compile(r"[·|]?\s*§(?=\s*(?:<|$))|§\s*(?=(?:PCI\s+STANDARD|EXTERNAL|CAUTION)\b)")
 
 
@@ -656,7 +659,7 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
 # ---------------------------------------------------------------------------------------------
 
 # Two of a standard's twenty-five elements are call-outs in their own right
-# (PCI_STANDARDS_DRAFTING_MANUAL.md §8). They are matched tolerantly — with or without the element
+# (PCI_STANDARDS_DRAFTING_MANUAL.md section 8). They are matched tolerantly — with or without the element
 # number, singular or plural — because a field that is boxed in one standard and not in the next
 # looks like a mistake rather than a system. The element number and name are kept inside the box
 # and the class's own small-caps label is suppressed there: the standards cite their elements by

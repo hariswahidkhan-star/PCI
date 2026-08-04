@@ -53,7 +53,7 @@ question of the governing law, on which the book states no jurisdiction's positi
 
 Two generated artefacts still carry the pre-verification tags and need regenerating once every
 domain in this batch has been verified: `pfl-ai/QUESTION_BANK.md` (13.1-E, 13.2-E and 16.3-E) and
-`CORPUS_GATE_REPORT.md` §4 (PFL-AI Evaluation 122 to 120, Analysis 131 to 133). Neither is
+`CORPUS_GATE_REPORT.md` section 4 (PFL-AI Evaluation 122 to 120, Analysis 131 to 133). Neither is
 regenerated from here, because both read every manuscript and siblings are still in flight.
 """
 

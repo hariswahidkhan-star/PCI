@@ -397,7 +397,7 @@ is a gate failure and was recorded as one rather than absorbed. A focused six-ag
 that verification; until it lands, nothing in those six domains should be relied on.
 
 **Two pattern deviations, found by audit and normalised corpus-wide.** New domains had used
-`## Summary — Domain N` where the pattern spec §4.10 and the approved book both specify
+`## Summary — Domain N` where the pattern spec section 4.10 and the approved book both specify
 `## Domain N summary` (21 files), and one domain numbered its toolkits `### 16.T.n` rather than
 `### Toolkit 16.T.n`. All 32 summaries and all 96 toolkits are now uniform.
 
@@ -430,7 +430,7 @@ domain count is now interpolated from the manuscripts actually built, so it cann
 2. **Apply the registry updates** each verifier reports, and flip the remaining ⏳ rows. `WACC` is now
    ✅ — PFL-AI D9 derives it and discharges D4's use of 8 % as a given. `EVA(benefit)` waits on
    `pml_d16`.
-3. **Phase 2 gate report**, then the phases the charter §8 sequences and this batch did NOT do:
+3. **Phase 2 gate report**, then the phases the charter section 8 sequences and this batch did NOT do:
    Phase 3 cases and question banks, Phase 4 glossaries and appendices, Phase 5 indexes, Phase 6
    accessibility, Phase 7 pilot review. Scaled authorship produced the domain corpus; it did not
    produce the back matter, and the page count must not be read as though it had.

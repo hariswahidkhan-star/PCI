@@ -22,7 +22,7 @@ published PDF:
 | Whole-domain source corpus (13 domain files + appendices, ~207k words) | `docs/bok/domain-*.md`, `appendices.md` | **Second-generation (current) maintained source**, listed as the live corpus in `docs/bok/README.md` |
 | Style Spine (authoring standard) | `docs/bok/00-style-spine.md` | The book family's documented authoring standard — terminology, symbols, worked-example/figure/MCQ formats, citation rules |
 | Premium print pipeline | `docs/bok/build/build_pdf.py` + `print.css` + `figures/*.svg` + `cover.jpg` | **Current typesetting standard** (pandoc → WeasyPrint, A4, premium chapter/part openers, generated TOC + index) |
-| Served student editions | `backend/books/*.md` + `*.pdf`, delivered through the platform's document system | Distribution channel (watermarking/versioning handled by the platform, see §12) |
+| Served student editions | `backend/books/*.md` + `*.pdf`, delivered through the platform's document system | Distribution channel (watermarking/versioning handled by the platform, see section 12) |
 
 **Ruling (Phase 0):** the pattern for PML-AI and PFL-AI is taken from the **second-generation corpus +
 the `build/` premium pipeline**, which is the maintained standard the Institute's README designates as
@@ -110,7 +110,7 @@ Five-step skeleton, rendered as a labelled panel ("WORKED EXAMPLE", crimson left
 
 Inherently tabular computations (network passes, multi-scenario comparisons) may replace steps 1–4 with
 a labelled table, but the Interpretation line remains. **Numbers must actually compute** — every example
-is independently re-verified (see §14 of the programme charter and the formula registry).
+is independently re-verified (see section 14 of the programme charter and the formula registry).
 
 ## 6. Figures
 

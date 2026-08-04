@@ -747,7 +747,7 @@ therefore **6.20 %**.
 
 The arithmetic above says what ratio to hold. It says nothing about **who decides, who executes,
 what may not be done, and what a reviewer should be able to find**; and hedging is a place where
-a project with impeccable arithmetic and no mandate loses money quickly. Compare §9.1.2, which
+a project with impeccable arithmetic and no mandate loses money quickly. Compare section 9.1.2, which
 imposes a hard rule on a decision of comparable consequence: no shareholder-loan shield may be
 modelled without a written tax opinion. Hedging deserves the same treatment, and this is it.
 

@@ -5,10 +5,10 @@ Plain Python 3, no third-party imports. Run from anywhere:
 
     python3 docs/books/laws/make_standards_registers.py
 
-It reads the four standard files, parses all 113 standards into their twenty-five Manual §5 elements, and
+It reads the four standard files, parses all 113 standards into their twenty-five Manual section 5 elements, and
 writes:
 
-  * PCI_STANDARDS_DEFINITIONS_REGISTER.md      — the canonical definitions, from the table in §DEFS below
+  * PCI_STANDARDS_DEFINITIONS_REGISTER.md      — the canonical definitions, from the table in section DEFS below
                                            joined to element 4 of every standard (which standards rely on it)
   * PCI_STANDARDS_COMPLIANCE_TEST_CATALOGUE.md — element 21 of every standard
   * PCI_STANDARDS_EVIDENCE_REGISTER.md         — element 7 of every standard
@@ -114,7 +114,7 @@ def ids(seq):
     return ' · '.join('`%s`' % x for x in seq)
 
 
-# ---------------------------------------------------------------------------- §DEFS
+# ---------------------------------------------------------------------------- section DEFS
 # The canonical definitions register. Each entry:
 #   key       — the term as it is written in the standards
 #   kind      — 'suite' (one meaning everywhere) or 'collision' (per-credential, preserved)
@@ -156,7 +156,7 @@ DEFS = [
              "Six limbs — decision · published tolerance · contractual, regulatory, tax or "
              "financial-reporting position · safety · reliance · organisation's criteria. No "
              "“irrespective of size” sentence."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "Decision-change only, plus a recorded **materiality rule** and a cumulative test. "
              "Narrower than `D-15`: a variance that endangers nobody's decision but changes a "
              "contractual position was immaterial here and material foundationally."),
@@ -211,7 +211,7 @@ DEFS = [
             ('`PCI_FOUNDATIONAL_STANDARDS.md` `D-12`',
              "Five limbs. Express carve-out: “reporting to the preparer's line manager does "
              "not by itself defeat independence; being appraised on the outcome does”."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "Four facts — did not prepare; **does not report to the preparer in respect of that "
              "work**; no benefit turning on the outcome; neither selected nor configured the AI "
              "tool."),
@@ -263,7 +263,7 @@ DEFS = [
             ('`PCI_FOUNDATIONAL_STANDARDS.md` `D-26` + `PCI-FND-STD-03-PR-01`',
              "Named competent reviewer applies one of **eight** named methods and records method, "
              "scope, inputs, date and result."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "The same eight methods, with the record extended to the population or sample and its "
              "selection basis and to every difference and its resolution."),
             ('`PFL_AI_STANDARDS.md` core terms',
@@ -284,7 +284,7 @@ DEFS = [
             "keeping its narrowing and its reason; PML-AI's *AI verification* sense now points at "
             "`D-26` for the test and the method list. **Referred:** "
             "red-team **R-6** — a modelling SME should confirm the reason for excluding named "
-            "expert judgement, and the Panel should decide whether renaming a Manual §5.2 method is "
+            "expert judgement, and the Panel should decide whether renaming a Manual section 5.2 method is "
             "acceptable."),
     ),
     dict(
@@ -313,7 +313,7 @@ DEFS = [
              "Record independent of the assertion, identifying source, date and author or issuing "
              "system, retrievable by a person other than the author. Closed list of **four** things "
              "that are not evidence."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "Retained, dated record originating outside the assertion, **sufficient for a "
              "competent reviewer to reach the same conclusion without asking the preparer**. Adds "
              "the AI-generated summary and the unversioned working copy to the exclusions."),
@@ -365,7 +365,7 @@ DEFS = [
              "Two limbs — evidenced subject-matter competence, and the ability to state what would "
              "make the item wrong and which method would detect it. **Independence deliberately "
              "not required.**"),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "Can perform the method without assistance from the preparer; holds knowledge at the "
              "level of the relevant BoK domain; **and is independent as defined**."),
             ('`PFL_AI_STANDARDS.md` core terms',
@@ -410,7 +410,7 @@ DEFS = [
              "Single named individual with authority to approve, reject, amend or defer, bearing "
              "the consequence; named chair where a body decides collectively; never a role held by "
              "nobody, a system, a model or a vendor."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "Single named individual holding delegated authority to take or withhold the decision "
              "the deliverable supports, and accountable for it; committee excluded; the named chair "
              "stands in."),
@@ -456,7 +456,7 @@ DEFS = [
             ('`PCI_FOUNDATIONAL_STANDARDS.md` `D-10`',
              "Six substantive triggers; reaching it starts the `D-20` clock. No destination "
              "fallback."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "Originally “the event stated in element 13 of a standard” — **no clock and no "
              "substantive trigger**, so a matter no element 13 enumerated reached no threshold. "
              "Rebuilt on `D-10` and `D-20` by red-team **C-13**."),
@@ -581,17 +581,17 @@ DEFS = [
             "assent recorded after the item was used are **not** approval."),
         variants=[
             ('`PCI_FOUNDATIONAL_STANDARDS.md`',
-             "**No definition**, although Manual §4 names *approved* as a term that always needs "
+             "**No definition**, although Manual section 4 names *approved* as a term that always needs "
              "one when it appears in an obligation, and the foundational standards use it in "
              "obligations."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "As canonical — assent given identifiably, with date, version and scope; silence, "
              "absence of objection, unrecorded verbal assent and after-the-fact assent excluded."),
             ('`PFL_AI_STANDARDS.md`', "No definition."),
             ('`PML_AI_STANDARDS.md`', "No definition; *acceptance* and *gate* are defined instead."),
         ],
         resolution=(
-            "A **Manual §4 gap**, not a divergence: only one of four files defined a term all four "
+            "A **Manual section 4 gap**, not a divergence: only one of four files defined a term all four "
             "use in obligations. PCL-AI's definition is adopted as canonical because it is the only "
             "one and it is applicable as written. **Edited:** added as `D-29` to "
             "`PCI_FOUNDATIONAL_STANDARDS.md`; PCL-AI's local text replaced by the canonical wording; the "
@@ -611,16 +611,16 @@ DEFS = [
             "age."),
         variants=[
             ('`PCI_FOUNDATIONAL_STANDARDS.md`',
-             "**No definition**, although Manual §4 names *current* as always needing one. "
+             "**No definition**, although Manual section 4 names *current* as always needing one. "
              "`PCI-FND-STD-06` (Source and Version Integrity) turns on it."),
-            ('`PCL_AI_STANDARDS.md` §A',
+            ('`PCL_AI_STANDARDS.md` section A',
              "As canonical, measured at the deliverable's **cut-off** (itself a PCL-AI defined "
              "term)."),
             ('`PFL_AI_STANDARDS.md`', "No definition; *authoritative version* carries the related idea."),
             ('`PML_AI_STANDARDS.md`', "No definition; *evidence* requires version identification."),
         ],
         resolution=(
-            "A **Manual §4 gap**. PCL-AI's definition adopted as canonical, generalised so that it "
+            "A **Manual section 4 gap**. PCL-AI's definition adopted as canonical, generalised so that it "
             "works where no cut-off is stated (PCL-AI's *cut-off* is a PCL-AI term). **Edited:** "
             "added as `D-30` to `PCI_FOUNDATIONAL_STANDARDS.md`; PCL-AI's text replaced by the canonical "
             "wording; the canonical entry added to PFL-AI and PML-AI, which had none."),
@@ -640,7 +640,7 @@ DEFS = [
             ('`PCI_FOUNDATIONAL_STANDARDS.md`',
              "No definition. Uses *material AI assistance* twice and *material AI contribution* "
              "once, relying on `D-15` plus `D-02`."),
-            ('`PCL_AI_STANDARDS.md` §C', "As canonical. The only definition in the corpus."),
+            ('`PCL_AI_STANDARDS.md` section C', "As canonical. The only definition in the corpus."),
             ('`PFL_AI_STANDARDS.md`',
              "**No definition**, yet `PCI-PFL-STD-16.01` element 21(a) makes compliance turn on "
              "“each *material* AI contribution” and `PCI-PFL-STD-16.03` element 21(d) on "
@@ -650,7 +650,7 @@ DEFS = [
              "“every artefact with material AI assistance”."),
         ],
         resolution=(
-            "A **Manual §4 defect found in this pass**: two volumes make a compliance test turn on "
+            "A **Manual section 4 defect found in this pass**: two volumes make a compliance test turn on "
             "an undefined term. PCL-AI's definition is adopted as canonical, with the materiality "
             "measurement left to the credential's own application rule. **Edited:** PCL-AI's text "
             "replaced by the canonical wording; the canonical entry added to PFL-AI and PML-AI, each "
@@ -665,7 +665,7 @@ DEFS = [
         probes=[r'\bbaseline\b'],
         canonical=(
             "**No single definition — context flag required.** Three senses, all correct "
-            "professional usage, recorded at `../registries/TERMINOLOGY_AUDIT.md` §2.3 as a genuine "
+            "professional usage, recorded at `../registries/TERMINOLOGY_AUDIT.md` section 2.3 as a genuine "
             "collision. **(1) Control baseline** *(PCL-AI, PML-AI)* — the approved, "
             "version-controlled, time-phased combination of scope, budget and schedule against "
             "which performance is measured, at the version identified in its approval record; "
@@ -678,7 +678,7 @@ DEFS = [
             "meant in one sentence, the qualified form is written."),
         variants=[
             ('`PCI_FOUNDATIONAL_STANDARDS.md`', "Does not define it; uses it in the control sense only."),
-            ('`PCL_AI_STANDARDS.md` §B',
+            ('`PCL_AI_STANDARDS.md` section B',
              "**performance measurement baseline** — approved time-phased scope, budget and "
              "schedule, abbreviated *baseline* throughout. Control sense only."),
             ('`PFL_AI_STANDARDS.md` transaction terms',
@@ -745,7 +745,7 @@ DEFS = [
             ('`PCL_AI_STANDARDS.md`', "AI-assurance sense only."),
             ('`PFL_AI_STANDARDS.md`',
              "AI-assurance sense only, with an express collision flag pointing at "
-             "`../registries/TERMINOLOGY_AUDIT.md` §2.2."),
+             "`../registries/TERMINOLOGY_AUDIT.md` section 2.2."),
             ('`PML_AI_STANDARDS.md`', "**Both senses, already context-flagged.**"),
         ],
         resolution=(
@@ -803,10 +803,10 @@ DEFS = [
         canonical=(
             "**No single definition — context flag required.** These three words each carry a PCI "
             "sense and a finance-document sense, and the two are not the same act. **PCI sense "
-            "(Charter §7, §8):** a **waiver** or **exception** is an approved departure from a PCI "
+            "(Charter section 7, section 8):** a **waiver** or **exception** is an approved departure from a PCI "
             "Standard, with a named approver, a stated justification, a stated duration, compensating "
             "controls and a reporting obligation — and an undocumented departure is a breach, not "
-            "an exception; an **amendment** is a substantive change to a standard under Charter §7. "
+            "an exception; an **amendment** is a substantive change to a standard under Charter section 7. "
             "**Finance-document sense (PFL-AI):** a **waiver** is a finance party's consent, in the "
             "form the documents require, to disregard a specific breach or unsatisfied condition on "
             "stated terms and for a stated period; an **amendment** is an executed change to the "
@@ -815,7 +815,7 @@ DEFS = [
             "`PCI-PCL-STD-06.02` element 21 (“the exceptions found”), as a field of a "
             "record rather than a statement of consequence."),
         variants=[
-            ('`PCI_FOUNDATIONAL_STANDARDS.md`', "PCI sense only, from Charter §8; not separately defined."),
+            ('`PCI_FOUNDATIONAL_STANDARDS.md`', "PCI sense only, from Charter section 8; not separately defined."),
             ('`PCL_AI_STANDARDS.md`',
              "PCI sense. Twenty-eight element-21 tests used the **audit sense** (“is an "
              "exception” for a failure condition) until red-team **C-8** changed them to "
@@ -851,10 +851,10 @@ FILE_EDITS = [
      'these edits.'),
     ('PCL_AI_STANDARDS.md',
      'Definitions preamble rewritten: the reconciliation is stated and the three reading rules are '
-     'kept for terms it did not reach. §A **material · independent · verified · current · competent '
+     'kept for terms it did not reach. Section A **material · independent · verified · current · competent '
      'reviewer · decision owner · evidence · approved · escalation threshold** replaced with the '
      'canonical wording, PCL-AI’s materiality rule kept as the stated measurement of limb (b). '
-     '§C **material AI assistance** replaced with the canonical wording. The Charter §5 record gains '
+     'Section C **material AI assistance** replaced with the canonical wording. The Charter section 5 record gains '
      'a *Definitions reconciliation* bullet naming the two substantive corrections — independence '
      'removed from competence, and the *evidence · competent reviewer · verified* circularity '
      'broken.'),
@@ -926,7 +926,7 @@ JUDGEMENT = OrderedDict([
                           'PFL-AI defines neither *material AI assistance* nor *material AI '
                           'contribution*'),
     ('PCI-PFL-STD-16.02', 'step (d) — whether every external instrument is **characterised '
-                          'correctly** under Manual §6'),
+                          'correctly** under Manual section 6'),
     ('PCI-PFL-STD-16.03', 'step (d) — **material** AI assistance, undefined in this volume; step (e) '
                           '— whether the signatory **can explain** the basis and limitations'),
     ('PCI-PML-STD-03.02', 'a **material gap** between the two counts fails the test, with no quantum '
@@ -1288,7 +1288,7 @@ def cognitive_of(el24):
 def header(title, what, how):
     return ('# %s\n\n**Instrument status: none.** This is a derived register. It is not a PCI Standard, '
             'it creates no obligation, and nothing in it may be cited as a requirement '
-            '(Charter §3).\n\n%s %s %s\n\n---\n\n' % (title, what, how, STAMP))
+            '(Charter section 3).\n\n%s %s %s\n\n---\n\n' % (title, what, how, STAMP))
 
 
 def write(name, text):
@@ -1325,7 +1325,7 @@ def build_definitions(standards):
     out = [header(
         'PCI Standards Definitions Register',
         'It is the single canonical statement of every term that decides compliance across the '
-        'PCI Standard corpus — the register Drafting Manual §4 permits a standard to define its '
+        'PCI Standard corpus — the register Drafting Manual section 4 permits a standard to define its '
         'terms in, and whose absence the red-team report records as finding **P-1**, the corpus’s '
         'largest structural defect.',
         'It was derived by reading the Definitions section of all four standard files against each '
@@ -1337,17 +1337,17 @@ def build_definitions(standards):
 
     out.append('## 1. How to read this register\n\n'
                'Every definition below is written as **a test a reader can apply** — what makes the '
-               'thing what it is, measured against what, decided by whom (Manual §4). None defines a '
+               'thing what it is, measured against what, decided by whom (Manual section 4). None defines a '
                'term by itself.\n\n'
-               '- **Canonical entries (§3)** are terms that must mean the same thing in every standard. '
+               '- **Canonical entries (Section 3)** are terms that must mean the same thing in every standard. '
                'One definition governs; the file-by-file variations are recorded so that the change '
                'is visible and reversible.\n'
-               '- **Declared collisions (§4)** are terms that carry genuinely different professional '
+               '- **Declared collisions (Section 4)** are terms that carry genuinely different professional '
                'meanings in different credentials. They are **not** collapsed. Each states both or '
                'all senses with the context each belongs to, because forcing a single definition on '
                'a real collision makes one of the volumes wrong.\n'
                '- **Which standards rely on it** is computed from element 4 of every standard, not asserted. '
-               'Element 4 is normative-determinative (Manual §5.0): getting the definition wrong '
+               'Element 4 is normative-determinative (Manual section 5.0): getting the definition wrong '
                'changes what those standards require.\n'
                '- **Nothing here creates, widens or narrows an obligation.** Where reconciling a '
                'definition would have done so, the divergence is stated rather than resolved, and '
@@ -1359,7 +1359,7 @@ def build_definitions(standards):
     out.append('| Canonical — one meaning everywhere | **%d** |\n' % len(suite))
     out.append('| Declared collisions — preserved, not collapsed | **%d** |\n' % len(collide))
     out.append('| Terms the red-team report identified as divergent | 7 |\n')
-    out.append('| Further divergences or Manual §4 gaps found in this pass | **%d** |\n'
+    out.append('| Further divergences or Manual section 4 gaps found in this pass | **%d** |\n'
                % (len(suite) - 7))
     out.append('| Circular definitions found and fixed | **1** |\n')
     out.append('| Standards whose element 4 lists at least one registered term | **%d** of %d |\n'
@@ -1369,7 +1369,7 @@ def build_definitions(standards):
                '**Found in addition here** — *promptly* (defined once, and until this pass '
                'unreachable from `PFL_AI_STANDARDS.md`, whose *escalation threshold* named no time at '
                'all); *conflict* (a closed list foundationally, a judgement standard in PFL-AI, an '
-               'appearance test in PML-AI); *approved* and *current* (Manual §4 names both as always '
+               'appearance test in PML-AI); *approved* and *current* (Manual section 4 names both as always '
                'needing definition; only PCL-AI defined either); and *material AI assistance* '
                '(defined only in PCL-AI, yet three element-21 compliance tests in PFL-AI and PML-AI '
                'turn on it).\n\n')
@@ -1412,14 +1412,14 @@ def build_definitions(standards):
         out.append('\n**Resolution.** %s\n\n' % d['resolution'])
 
     out.append('---\n\n## 5. The circular definition, and how it was broken\n\n'
-               'One closed loop was found, in `PCL_AI_STANDARDS.md` §A, across three terms that all '
+               'One closed loop was found, in `PCL_AI_STANDARDS.md` section A, across three terms that all '
                'decide compliance:\n\n'
                '> *verified* was defined as a method applied against **evidence** → *evidence* was '
                'defined as a record sufficient for a **competent reviewer** to reach the same '
                'conclusion → *competent reviewer* was defined as a person able to perform **the '
                'verification method** a standard requires, whose admissible list lived inside *verified*.\n\n'
                'None of the three could be applied without one of the others, which is exactly what '
-               'Manual §4 forbids: *"Define by the test a reader can apply."* The loop is broken by '
+               'Manual section 4 forbids: *"Define by the test a reader can apply."* The loop is broken by '
                'defining **evidence by properties of the record itself** — that it exists '
                'independently of the assertion, is dated, identifies its source and author, and can '
                'be retrieved and used by a person other than the author of the assertion. That is '
@@ -1431,7 +1431,7 @@ def build_definitions(standards):
 
     out.append('---\n\n## 6. What this register does not settle\n\n'
                'Four questions are **referred, not resolved**, because answering them would move an '
-               'obligation and that is a decision for the Interpretation Panel under Charter §6, '
+               'obligation and that is a decision for the Interpretation Panel under Charter section 6, '
                'not for a register:\n\n'
                '| Ref | Question |\n|---|---|\n'
                '| **R-1** | Conflict disclosure by closed list (`D-05`) or by judgement standard '
@@ -1476,7 +1476,7 @@ def build_tests(standards):
         'two reviewers performing it independently would reach the same answer.',
         'It was derived by extracting element 21 from each standard mechanically; the first three '
         'columns are generated from that text, and the last column was assigned by reading every '
-        'element 21 against the five tests stated in §2 and is carried, with its reason for each '
+        'element 21 against the five tests stated in section 2 and is carried, with its reason for each '
         'standard, in `make_standards_registers.py`. **The tests are reported, not rewritten** — where a test '
         'is weak, that is the standard’s wording and not this catalogue’s.')]
 
@@ -1626,7 +1626,7 @@ def build_evidence(standards):
         'the retention basis where one is stated.',
         'It was derived by splitting each standard’s element 7 into its listed artefacts, '
         'normalising each to an artefact family, and joining the families to element 8 (responsible '
-        'role) of the citing standards. Element 7 is **normative** under Manual §5.0: what appears here '
+        'role) of the citing standards. Element 7 is **normative** under Manual section 5.0: what appears here '
         'must exist for the standard to be complied with.')]
 
     out.append('## 1. Summary\n\n| | Count |\n|---|---|\n')
@@ -1644,7 +1644,7 @@ def build_evidence(standards):
                'none, the issuing professional is the records owner for the records they control. '
                'The *Retention basis* column below therefore reads **`PCI-FND-STD-12` + `D-23`** '
                'unless the standard itself says otherwise, and the two places it says otherwise are '
-               'named in §4.\n\n')
+               'named in section 4.\n\n')
 
     out.append('## 2. High-leverage artefacts — required by three or more standards\n\n'
                'These are the records an organisation must get right first: one weak artefact here '
@@ -1669,7 +1669,7 @@ def build_evidence(standards):
     out.append('\n## 3. Artefacts required by exactly one standard\n\n'
                'Each of these exists because one standard needs it. That is not wrong — a standard may need a '
                'record nothing else needs — but it is where an evidence burden is least likely to be '
-               'reused, and it is therefore where a **proportionality review** under Charter §5 '
+               'reused, and it is therefore where a **proportionality review** under Charter section 5 '
                'Stage 7 should start. **%d** families are in this class; they are listed by the standard '
                'that requires them.\n\n' % len(single))
     by_standard = defaultdict(list)
@@ -1722,7 +1722,7 @@ def build_evidence(standards):
                '(`PCI-PML-STD-12.02-PR-06`, whose denominator on a small project may be two), and '
                'the capacity assessment per constrained pool (`PCI-PML-STD-15.02`).\n\n'
                '**What the register cannot tell you** is whether the burden as a whole is '
-               'proportionate. That is Charter §5 Stage 7, and Stage 6 practitioner consultation has '
+               'proportionate. That is Charter section 5 Stage 7, and Stage 6 practitioner consultation has '
                'not been performed for any of the four files.\n\n'
                '---\n\n*Derived register. Not a PCI Standard; creates no obligation.*\n\n'
                '> **AI proposes; the professional verifies, decides and remains accountable.**\n')
@@ -1790,7 +1790,7 @@ def build_authorities(standards):
     def reg_cat(ext):
         return reg.get(ext, {}).get('category', '—')
 
-    # Manual §6 category vs register category: report the pairing for every registered instrument.
+    # Manual section 6 category vs register category: report the pairing for every registered instrument.
     mismatch = []
     for k, v in inst.items():
         if not v['ext'] or v['ext'] not in reg:
@@ -1811,7 +1811,7 @@ def build_authorities(standards):
     out = [header(
         'PCI Standard External-Authority Matrix',
         'It is element 17 — external reference — of all 113 PCI Standards: every instrument '
-        'the corpus names, who issues it, the Drafting Manual §6 category the standards give it, which '
+        'the corpus names, who issues it, the Drafting Manual section 6 category the standards give it, which '
         'standards cite it, whether its currency was verified, and whether the citing standard states its '
         'applicability limitation.',
         'It was derived by parsing every element 17 bullet in the corpus and joining it, by its '
@@ -1826,31 +1826,31 @@ def build_authorities(standards):
     out.append('| Instruments carrying an `EXT-` register identifier | **%d** |\n'
                % (len(inst) - len(unregistered)))
     out.append('| **Cited by a standard and absent from the register** | **%d** |\n' % len(unregistered))
-    out.append('| Instruments given **more than one** Manual §6 category across the corpus | **%d** |\n'
+    out.append('| Instruments given **more than one** Manual section 6 category across the corpus | **%d** |\n'
                % len(inconsistent))
     out.append('| Category disagreements between a standard and the register | **%d** |\n' % len(mismatch))
     out.append('| Citations with **no applicability limitation stated** | **%d** of %d |\n'
                % (len(nolimit), bullets_total))
-    out.append('| Manual §6 categories in use | %s |\n'
+    out.append('| Manual section 6 categories in use | %s |\n'
                % ', '.join(str(c) for c in sorted({c for v in inst.values() for c in v['cats']})))
-    out.append('| Manual §6 categories defined but **never used** | 11 (national standard), '
+    out.append('| Manual section 6 categories defined but **never used** | 11 (national standard), '
                '12 (supervisory guidance) |\n')
 
     out.append('\n## 2. The four findings\n\n')
 
     out.append('### 2.1 Cited by a standard, absent from the register — **%d instruments**\n\n'
-               '`../registries/EXTERNAL_AUTHORITIES.md` §1 states that it is "the single place where '
-               'the programme records" each authority, and §13 says the standard files’ instruments '
+               '`../registries/EXTERNAL_AUTHORITIES.md` section 1 states that it is "the single place where '
+               'the programme records" each authority, and section 13 says the standard files’ instruments '
                'were added "so that this file remains the single disclosure point it claims to be". '
                'These are the gaps in that claim.\n\n'
-               '| Instrument, as the standard names it | Cited by | Manual §6 category the standard gives it |\n'
+               '| Instrument, as the standard names it | Cited by | Manual section 6 category the standard gives it |\n'
                '|---|---|---|\n' % len(unregistered))
     for k, v in unregistered:
         cats = ', '.join('%d — %s' % (c, CAT_NAMES.get(c, '?')) for c in sorted(v['cats'])) or '**none stated**'
         out.append('| %s | %s | %s |\n' % (plain(v['name']), ids(sorted(set(v['standards']))), cats))
     out.append('\n**AAOIFI is the one that matters.** `PCI-PFL-STD-09.02` names the standards of the '
                'Accounting and Auditing Organisation for Islamic Financial Institutions and gives '
-               'them Manual §6 category 5 (professional framework), yet no `EXT-` row exists. The '
+               'them Manual section 6 category 5 (professional framework), yet no `EXT-` row exists. The '
                'standard’s own file records the gap at its end. It is also the standard the red team '
                'declined to attack (**R-16**, out of its competence), and the one whose element 12 '
                'correctly records that **PCI has no authority to grant an exception at all**. An '
@@ -1865,7 +1865,7 @@ def build_authorities(standards):
                'them would require naming instruments nobody checked.\n\n')
 
     out.append('### 2.2 One instrument, two categories — **%d instruments**\n\n'
-               'Manual §6 requires exactly one category per reference and says the categories are '
+               'Manual section 6 requires exactly one category per reference and says the categories are '
                'never combined. These instruments carry different categories in different standards, '
                'which means a reader cannot learn an instrument’s status from the corpus.\n\n'
                '| Instrument | Categories given | Where |\n|---|---|---|\n' % len(inconsistent))
@@ -1895,10 +1895,10 @@ def build_authorities(standards):
                '— illustrative practice** in `PCI-PML-STD-01.02` and `PCI-PML-STD-14.02`. Both are '
                'defensible readings of the corpus’s own conventions — the foundational file '
                'states that "**only** Regulation (EU) 2024/1689 is described as legislation, and only '
-               'within the European Union", while `../registries/EXTERNAL_AUTHORITIES.md` §2 '
+               'within the European Union", while `../registries/EXTERNAL_AUTHORITIES.md` section 2 '
                'deliberately registers real legislation as an *illustrative reference* because that '
                'is how the corpus uses it. **They cannot both be right on the face of the '
-               'citations**, and Manual §6 says the categories are never combined. This is the one '
+               'citations**, and Manual section 6 says the categories are never combined. This is the one '
                'item in this matrix that bears on whether a reader thinks an instrument binds them, '
                'and it should go to the Interpretation Panel rather than be corrected by a '
                'register.\n\n'
@@ -1911,13 +1911,13 @@ def build_authorities(standards):
                'independently.**\n')
 
     out.append('\n### 2.3 Categories 11 and 12 exist and no standard uses them\n\n'
-               'Drafting Manual §6 was extended to twelve categories, and records the extension as a '
+               'Drafting Manual section 6 was extended to twelve categories, and records the extension as a '
                'deliberate deviation from the programme brief, precisely because **ANSI/EIA-748 is a '
                'national standard and the Basel framework and a banking supervisor’s model-risk '
                'expectations are supervisory**. Every standard in the corpus predates that extension in '
                'its citation practice:\n\n'
-               '| Instrument | What the standards say | What Manual §6 now provides |\n|---|---|---|\n'
-               '| **ANSI/EIA-748** (`EXT-130`) | "a **national standard**; Manual §6 has no such '
+               '| Instrument | What the standards say | What Manual section 6 now provides |\n|---|---|---|\n'
+               '| **ANSI/EIA-748** (`EXT-130`) | "a **national standard**; Manual section 6 has no such '
                'category, so it is classified here at closest fit as **category 3**, with the '
                'mismatch stated" — in all four citing standards | **Category 11 — national standard**, '
                'added for this instrument by name |\n'
@@ -1930,12 +1930,12 @@ def build_authorities(standards):
                'The standards are not *wrong* — each states the mismatch on the face of the citation, '
                'which is the honest treatment of a category that did not exist. But the Manual now '
                'provides the categories, and until the citations move, the corpus contains four '
-               'standards asserting that Manual §6 offers no national-standard category when it offers '
+               'standards asserting that Manual section 6 offers no national-standard category when it offers '
                'one. **This is a citation-maintenance task, not a red-team finding**, and it does '
                'not change any obligation.\n\n')
 
     out.append('### 2.4 Citations with no applicability limitation — **%d of %d**\n\n'
-               'Manual §5 requires element 17 to record seven things for each authority, the last '
+               'Manual section 5 requires element 17 to record seven things for each authority, the last '
                'being the applicability limitation, and the foundational file’s own note on '
                'external references calls the conventions "not optional". The bullets below state '
                'issuer, subject, edition and category but stop short of stating who the instrument '
@@ -1958,7 +1958,7 @@ def build_authorities(standards):
                'certification files vary between them.\n\n')
 
     out.append('---\n\n## 3. The matrix\n\n'
-               '| Instrument | Issuer | Manual §6 category | Standards citing it | Verification status | '
+               '| Instrument | Issuer | Manual section 6 category | Standards citing it | Verification status | '
                'Applicability limitation stated? |\n|---|---|---|---|---|---|\n')
     for k, v in sorted(inst.items(), key=lambda kv: (-len(set(kv[1]['standards'])), kv[1]['name'])):
         lids = sorted(set(v['standards']))
@@ -1988,12 +1988,12 @@ def build_authorities(standards):
                '**No edition, clause number, article, effective date or requirement was invented, '
                'inferred or completed.** Where a standard cites an instrument by name only, this matrix '
                'cites it by name only. Where a standard records "not independently verified", so does '
-               'this matrix. Manual §6 forbids the alternative, and a matrix that filled the gaps '
+               'this matrix. Manual section 6 forbids the alternative, and a matrix that filled the gaps '
                'would be more dangerous than the gaps.\n\n'
                'Currency was not re-checked with any publisher for this pass. Every verification '
                'date in the third column is the date the **register** recorded, not a date this '
-               'matrix established. `../registries/EXTERNAL_AUTHORITIES.md` §3 states that every row '
-               'is a snapshot and not a warranty, and §12 lists the rows whose status is known to be '
+               'matrix established. `../registries/EXTERNAL_AUTHORITIES.md` section 3 states that every row '
+               'is a snapshot and not a warranty, and section 12 lists the rows whose status is known to be '
                'moving; both apply here unchanged.\n\n'
                '---\n\n*Derived matrix. Not a PCI Standard; creates no obligation.*\n\n'
                '> **AI proposes; the professional verifies, decides and remains accountable.**\n')
@@ -2023,7 +2023,7 @@ def build_blueprint(standards):
         'assessment mode each standard states, at what cognitive level, and for which credential’s '
         'examination.',
         'It was derived by extracting element 24 from each standard and matching it against the six '
-        'assessment modes Drafting Manual §5 names. **It contains no examination items.** A '
+        'assessment modes Drafting Manual section 5 names. **It contains no examination items.** A '
         'blueprint states what may be assessed and how; live items are kept separate, and putting '
         'them in a derived register that is regenerated on every edit would compromise them.')]
 
@@ -2040,7 +2040,7 @@ def build_blueprint(standards):
                'have one.\n\n'
                '**No standard states a cognitive level.** Element 24 names the *mode* and the *case*, '
                'never the level of cognition demanded. The Cognitive level column below is therefore '
-               '**derived, not extracted** — by the rule in §3 — and it is the one column in this '
+               '**derived, not extracted** — by the rule in section 3 — and it is the one column in this '
                'blueprint that an examination designer must review rather than adopt.\n\n')
 
     out.append('## 2. Coverage — which modes are over- and under-used\n\n'
@@ -2090,7 +2090,7 @@ def build_blueprint(standards):
                'recomputation, a reproduction, a selection or an escalation decision |\n'
                '| **Comprehension** — recognise the correct record or route | does none of the above '
                '|\n\n'
-               '**Recall is deliberately absent.** Manual §5 element 24 ends "not by memorising standard '
+               '**Recall is deliberately absent.** Manual section 5 element 24 ends "not by memorising standard '
                'numbers", and no element 24 in the corpus invites recall. That is a strength worth '
                'stating.\n\n')
 

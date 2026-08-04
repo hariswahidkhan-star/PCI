@@ -85,6 +85,6 @@ their own name:
 
 ## 7. Register status
 
-**OPEN.** No row in §3 or §4 may be marked closed until a named individual has recorded approval
+**OPEN.** No row in section 3 or section 4 may be marked closed until a named individual has recorded approval
 against it. This register must be published with any statement about the suite's readiness, and
-§1 must not be omitted when it is quoted.
+section 1 must not be omitted when it is quoted.

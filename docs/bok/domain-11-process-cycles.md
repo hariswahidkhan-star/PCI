@@ -304,7 +304,7 @@ Framework**, published by a private-sector body. It is a **voluntary framework**
 force. It is not legislation, it is not issued by a regulator, and it imposes nothing on any organisation that
 has not chosen it or been asked for it. Naming it identifies it and nothing more. This reference does not
 state what it contains or requires, its own publication governs, and its issuing body is not associated with,
-does not endorse and has not reviewed this book (Conventions, §9). Appendix C records the entry.
+does not endorse and has not reviewed this book (Conventions, section 9). Appendix C records the entry.
 
 > **A caution on scope — who has to do what.** Whether an organisation must **document** its internal control
 > over financial reporting, **assess** it formally, or have that assessment **attested** by its external
@@ -1215,7 +1215,7 @@ tells a controls professional where their numbers come from and where they can f
 2.3; the commitment→accrual→actual cost cycle → 5.2; interim valuations and billing → 7.4; cash-flow and the
 funding trough → 3.5; process mining and matching AI → 13.4–13.5.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 one certification standard here: `PCI-PCL-STD-11.01` (reproducibility of the reported controls position). It
 is a PCI requirement and is unrelated to the voluntary external framework named at 11.3.1, which neither
 stands behind it nor is affected by it. The foundational standards binding on every PCI credential holder

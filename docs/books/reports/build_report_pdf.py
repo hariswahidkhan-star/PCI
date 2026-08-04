@@ -58,7 +58,7 @@ TITLE = f"""
     <p><strong>Read before quoting any readiness claim.</strong> No named human subject-matter
     expert has reviewed this material. The corpus was AI-drafted, and so was this programme's work
     on it. Gate&nbsp;3 (technical review) and Gate&nbsp;13 (final approval) are recorded as not
-    started. See the Executive Audit Report &sect;5 and the Sign-Off Register &sect;1.</p>
+    started. See the Executive Audit Report section 5 and the Sign-Off Register section 1.</p>
   </div>
 </div>
 """

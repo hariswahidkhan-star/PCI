@@ -1434,7 +1434,7 @@ forecast on the dashboard → 3.4, Domain 6; cost coding that makes aggregation 
 on the dashboard → Domain 12; automated commentary and NL querying → Domain 13, KA 13.5; chart-design craft →
 the platform's dataviz guidance.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 three certification standards here: `PCI-PCL-STD-04.01` (reconciliation of the performance report to source
 records), `PCI-PCL-STD-04.02` (explanation of material variance) and `PCI-PCL-STD-04.03` (correction and
 restatement of a reported error). The duty to escalate taught at 4.3.7 is the book's treatment of

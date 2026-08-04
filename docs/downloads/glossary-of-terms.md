@@ -5,7 +5,7 @@
 taught; the same definitions govern everywhere in the Body of Knowledge, the examination and the Institute's
 publications.
 
-Consolidated from every domain's key-terms box — **255 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Style Spine §3).
+Consolidated from every domain's key-terms box — **255 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Style Spine section 3).
 
 | Term | Definition | First defined |
 |---|---|---|

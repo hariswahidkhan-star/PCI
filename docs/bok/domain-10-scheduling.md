@@ -783,7 +783,7 @@ anyone of its own force; and neither applies to a project unless the contract im
 to work to it, and where a contract does import one, it is the contract that settles which parts apply. Naming
 them here is identification only: nothing in this reference states what either document says or requires, the
 publications themselves govern, and neither body is associated with, endorses or has reviewed this book
-(Conventions, §9). Appendix C records both.
+(Conventions, section 9). Appendix C records both.
 
 **The answer depends on the governing law as much as on the method.** Three questions in particular are
 settled outside the analysis. How **concurrent delay** is treated where both parties' delays overlap: full
@@ -1398,7 +1398,7 @@ releases as schedule increments mapped to milestones.
 blind spot → 6.4; the time-phased cost baseline (PV) → 3.3; schedule risk and contingency → Domain 12; hybrid
 Sprint-to-milestone mapping → 9.6; AI-assisted scheduling and delay prediction → 13.5.
 
-**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, section 11, anchors
 three certification standards here: `PCI-PCL-STD-10.01` (schedule network integrity), `PCI-PCL-STD-10.02`
 (critical-path verification before reliance) and `PCI-PCL-STD-10.03` (status date and actual-date integrity);
 the last being what makes the contemporaneous record of Advanced 10.A.6 worth anything. The foundational

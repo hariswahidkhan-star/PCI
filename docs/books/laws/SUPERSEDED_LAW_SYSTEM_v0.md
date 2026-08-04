@@ -14,14 +14,14 @@ documents, and where this file and either of those disagree, **those govern**:
   twenty-five-element law structure, identifiers, external-reference classification, prohibited
   patterns, the visual system, and the twenty-five audit questions.
 
-**The specific contradiction that made supersession necessary:** §3 below permits `must`, `must not`,
+**The specific contradiction that made supersession necessary:** section 3 below permits `must`, `must not`,
 `shall` and `shall not` interchangeably for mandatory rules. PCI has since adopted **modern
-must-drafting exclusively**, and `shall` is now barred from every law in every field. §3 below is
+must-drafting exclusively**, and `shall` is now barred from every law in every field. Section 3 below is
 therefore wrong and must not be followed. The same section treats `should` as a recommendation while
 requiring a recorded reason for departure, which is not a recommendation at all — the Drafting Manual
-§1.3 splits that into a recommendation plus a separate recording requirement.
+section 1.3 splits that into a recommendation plus a separate recording requirement.
 
-The eighteen-field template in §4 below is likewise superseded by the twenty-five-element structure,
+The eighteen-field template in section 4 below is likewise superseded by the twenty-five-element structure,
 which adds — among others — the compliance test, breach indicators, defined terms, independence,
 threshold and exception elements that this version lacked.
 

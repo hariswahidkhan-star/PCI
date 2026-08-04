@@ -116,7 +116,7 @@ is material because of who it was paid to or what it reveals. **Going concern** 
 taken on facts a document does not contain. **Which framework applies** to an entity (2.1.3) is a matter for
 the entity and its auditors. And a model's confident answer about a presentation principle is not a source:
 this reference names standards and describes their principles in its own words, and so should any output
-relied on (Conventions, §9). Verify by tracing every flagged item back to the underlying schedule, and by
+relied on (Conventions, section 9). Verify by tracing every flagged item back to the underlying schedule, and by
 having the presentation judgements confirmed by the accounting-policy owner. Draft statements are
 pre-disclosure information, so this belongs in a **governed tool** only (Domain 13, KAs 13.2.5 and 13.3.4;
 `PCI-FND-STD-09`). **AI proposes; the professional verifies, decides and remains accountable.**
@@ -966,7 +966,7 @@ NRV evidence considered sufficient) is the entity's accounting policy, owned by 
 external auditor; the controls professional supplies and evidences the inputs and does not set or change it
 (the same allocation of decision rights as Domain 9, KA 9.5.4). A model asked what a standard requires will
 answer fluently and without a source; this book does not state what any standard requires either, and the
-official publication governs (Conventions, §9). Verify by reconciling the population back to the ledger,
+official publication governs (Conventions, section 9). Verify by reconciling the population back to the ledger,
 testing a sample of proposed classifications to the underlying documents, and routing every borderline item to
 the accounting-policy owner. **AI proposes; the professional verifies, decides and remains accountable.**
 
@@ -1886,7 +1886,7 @@ contract types, BoQ, interim valuations and over-/under-billing → Domain 7; ch
 variance narratives and management packs → Domain 4.
 
 **PCI Standards engaged by this domain.** Domain 2 anchors **no certification standard of its own**, which is
-the design, not an omission (Conventions, §11): a certification standard is published only where a
+the design, not an omission (Conventions, section 11): a certification standard is published only where a
 credential's subject matter adds an obligation the foundational set does not already reach, and the reporting
 judgements taught here are owned by the entity's finance function rather than by the controls professional.
 The standards a controls professional engages when working on this material are anchored elsewhere:

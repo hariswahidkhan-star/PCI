@@ -138,13 +138,13 @@ A **PCI Standards Interpretation Panel** is authorised to:
 - recommend amendments.
 
 **An interpretation must not silently amend a standard.** If the effect of a proposed interpretation
-is to add, remove, widen or narrow an obligation, it is an amendment and must go through §7. Every
+is to add, remove, widen or narrow an obligation, it is an amendment and must go through section 7. Every
 interpretation is published with its date, the standard it interprets, the question asked, and the
 reasoning.
 
 ## 7. Amendment
 
-A substantive change to a standard requires Stages 1–12 of §5, at a depth proportionate to the
+A substantive change to a standard requires Stages 1–12 of section 5, at a depth proportionate to the
 change. Every amendment records: the version superseded, what changed, why, the effective date, and
 any transitional arrangement. A standard's amendment history is published with the standard.
 

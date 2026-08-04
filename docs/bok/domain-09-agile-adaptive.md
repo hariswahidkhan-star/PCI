@@ -633,7 +633,7 @@ number that reconciles. (Domain 13, KA 13.5.10 draws the same line for AI-assist
 > equivalent revenue model in ASC 606, which was developed jointly and follows the same five-step shape.
 > Other frameworks exist. Which framework an entity reports under, and what its chosen measure of progress
 > must be, are matters for the entity and its auditors; nothing here states the requirements of any framework,
-> and the official publication of each governs (Conventions, §9).
+> and the official publication of each governs (Conventions, section 9).
 
 **AI in this KA.** AI is strong here (Domain 13, KA 13.5): forecasting velocity and release completion from
 Sprint history, generating three-point ranges, detecting flow anomalies, and projecting AgileEVM `EAC`. It can
@@ -1448,7 +1448,7 @@ audit trail.
 reconciliation → 7.4–7.5; three-point forecasting → 3.4; AI for backlog/velocity/flow → 13.5.
 
 **PCI Standards engaged by this domain.** Domain 9 anchors **no certification standard of its own**: the
-design described in the Conventions, §11: adaptive delivery reuses the measurement, forecasting and change
+design described in the Conventions, section 11: adaptive delivery reuses the measurement, forecasting and change
 obligations rather than adding new ones. Those engaged here are anchored elsewhere: `PCI-PCL-STD-06.01` and
 `PCI-PCL-STD-06.02` behind AgileEVM's earning rules and evidence of progress, `PCI-PCL-STD-06.04` behind the
 forecast method and its disclosure, `PCI-PCL-STD-03.02` behind transparent rebaselining, and

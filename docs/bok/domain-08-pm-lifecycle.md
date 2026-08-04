@@ -1550,7 +1550,7 @@ contemporaneous records → Advanced 10.A.6; risk in planning/controlling → Do
 reaches an AI tool → 13.2.5; AI across the lifecycle → 13.5.
 
 **PCI Standards engaged by this domain.** Domain 8 anchors **no certification standard of its own**: the
-design described in the Conventions, §11: the lifecycle is the frame the other domains' obligations sit inside
+design described in the Conventions, section 11: the lifecycle is the frame the other domains' obligations sit inside
 rather than a source of separate ones. The standards a controls professional engages while running the
 lifecycle are anchored elsewhere: `PCI-PCL-STD-05.03` and `PCI-PCL-STD-05.04` behind the integrated change
 control of 8.4.2, `PCI-PCL-STD-03.02` and `PCI-PCL-STD-03.03` behind the baselines of 8.2.2, and

@@ -44,7 +44,7 @@ thing no amount of further automated work can supply: named human subject-matter
 | **Readiness** | **Amber** — releasable as study material once reviewed | **Amber** | **Amber** |
 
 No volume is Green, and none should be described as release-ready, for one reason stated plainly in
-§5. No volume is Red: there is no longer a known defect that would mislead a candidate.
+section 5. No volume is Red: there is no longer a known defect that would mislead a candidate.
 
 ## 3. Critical findings, and their disposition
 
@@ -103,7 +103,7 @@ accreditation body as reviewed material until that review is recorded.
 
 | Gate | Status | Note |
 |---|---|---|
-| 1 — Inventory complete | **Pass** | Scripted inventory across all 45 domains; see §2 |
+| 1 — Inventory complete | **Pass** | Scripted inventory across all 45 domains; see section 2 |
 | 2 — Naming complete | **Pass** | Zero unauthorised retired-name occurrences; see the Naming Migration Report |
 | 3 — Technical review complete | **FAIL — not started** | Requires named subject reviewers |
 | 4 — Calculation verification | **Partial** | 15,613 checks passing for PFL + PML; **no suite exists for PCL-AI** |

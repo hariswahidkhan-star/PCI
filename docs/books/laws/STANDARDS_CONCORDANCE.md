@@ -1,7 +1,7 @@
 # PCI Standard Concordance
 
 **Status:** Machine-checkable reference index for the PCI Standard system. It carries **no
-obligation**: every requirement lives in an identified standard or process requirement (Charter §3),
+obligation**: every requirement lives in an identified standard or process requirement (Charter section 3),
 and nothing stated here creates, narrows or waives one. Where this file and a published standard
 differ, the standard governs and the difference is a defect in this file.
 
@@ -70,7 +70,7 @@ foundational parent three times inside its own text is counted once.
 
 **Foundational standards with no citation from a credential are not a defect.** A certification
 standard exists only where the credential's subject matter adds something the foundational standard
-does not reach; where it adds nothing, no standard is published (Manual §9 Q12). `PCI-FND-STD-08` and
+does not reach; where it adds nothing, no standard is published (Manual section 9 Q12). `PCI-FND-STD-08` and
 `PCI-FND-STD-11` carry no PCL-AI standard, and `PCI-FND-STD-13` and `PCI-FND-STD-15` carry no PFL-AI
 standard, for that reason.
 
@@ -79,12 +79,12 @@ standard, for that reason.
 ## 3. Superseded identifiers
 
 **Nothing below is a live citation.** These identifiers are recorded so that the history stays
-traceable; Charter §10 forbids reusing a withdrawn identifier, and no published standard cites any of
+traceable; Charter section 10 forbids reusing a withdrawn identifier, and no published standard cites any of
 them.
 
 ### 3.1 The withdrawn fourteen-standard foundational scheme `PCI-LAW-F-NN`
 
-Withdrawn and replaced by the fifteen-standard set in §1. The reason was structural — an eighteen-field
+Withdrawn and replaced by the fifteen-standard set in section 1. The reason was structural — an eighteen-field
 template, two mixed normative-language systems, and several obligations bundled into single clauses.
 The mapping is reproduced from the supersession record in `PCI_FOUNDATIONAL_STANDARDS.md`, which governs.
 
@@ -147,14 +147,14 @@ integrity* rather than the withdrawn *data lineage and integrity*; `PCI-FND-STD-
 
 ### 3.4 The two PFL-AI v1.0 standards withdrawn without a successor standard
 
-Recorded under Charter §10: a withdrawn standard's withdrawal and its reason are published, and the
+Recorded under Charter section 10: a withdrawn standard's withdrawal and its reason are published, and the
 standard is not deleted from the record. Neither obligation was abolished; each became a process
 requirement under the standard that already owned the surrounding discipline.
 
 | Withdrawn v1.0 standard | Reason | Where the obligation now lives |
 |---|---|---|
 | `PFL-LAW-04-01` — Appraisal Discipline (D4) | Bundled four obligations into one unenforceable sentence, and its subject is a presentation discipline rather than a distinct professional duty once `PCI-PFL-STD-01.01` governs how a financial judgement may be presented | `PCI-PFL-STD-01.01-PR-05`. Domain 4 anchors no standard in this edition |
-| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Duplicated `PCI-PFL-STD-06.03` and `PCI-PFL-STD-12.01` in every respect but the prohibition on presenting a forecast revenue as contracted; Manual §9 Q12 treats a standard that adds nothing to its neighbours as a defect | `PCI-PFL-STD-06.03-PR-05`. Domain 7 anchors no standard in this edition |
+| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Duplicated `PCI-PFL-STD-06.03` and `PCI-PFL-STD-12.01` in every respect but the prohibition on presenting a forecast revenue as contracted; Manual section 9 Q12 treats a standard that adds nothing to its neighbours as a defect | `PCI-PFL-STD-06.03-PR-05`. Domain 7 anchors no standard in this edition |
 
 ---
 
@@ -166,20 +166,20 @@ any of:
 1. a `PCI-FND-STD-NN` citation whose number does not exist in the foundational set;
 2. a certification-standard citation (`PCI-PCL-STD-…`, `PCI-PFL-STD-…`, `PCI-PML-STD-…`) that does
    not resolve to a published standard, in either direction;
-3. a standard missing any of the Manual §5 twenty-five elements, or carrying them out of order;
+3. a standard missing any of the Manual section 5 twenty-five elements, or carrying them out of order;
 4. a duplicate standard identifier;
-5. `shall` inside any standard element or process requirement — the Manual §1 ban is on the form, so
+5. `shall` inside any standard element or process requirement — the Manual section 1 ban is on the form, so
    the explanatory front matter that names the word in order to say PCI does not use it is permitted;
 6. an anchor domain outside its credential's Body of Knowledge range — PCL-AI ≤ 13, PFL-AI ≤ 16,
    PML-AI ≤ 16;
-7. drift between §2 of this file and the citations actually published in the standard files.
+7. drift between section 2 of this file and the citations actually published in the standard files.
 
 **What it cannot check is the thing that caused the defect.** A citation whose number resolves but
 whose subject is wrong passes every mechanical test there is. Only reading the sentence catches it,
-which is why §2 exists in a form a human can scan.
+which is why section 2 exists in a form a human can scan.
 
 ---
 
 *Compiled 2026-08-04 from the published standard files. Draft for approval under
-Charter §5 — this index has no status of its own beyond the standards it indexes. British English
+Charter section 5 — this index has no status of its own beyond the standards it indexes. British English
 throughout.*
