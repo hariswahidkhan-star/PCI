@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 16
 summary: >
   Four standard ways of computing an estimate at completion will give four different answers from the
   same inputs, because each encodes a different assumption about whether the variance suffered so far

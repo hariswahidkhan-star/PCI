@@ -70,6 +70,37 @@ check.
 
 ---
 
+## 3a. Conventions the documents refused to settle
+
+Where two conventions are genuinely in live use, the manuscripts name both and require the *project* to
+declare which it uses, rather than the Institute quietly picking one. Recorded so a reviewer knows these
+were decisions, not oversights.
+
+| Convention | Where | Treatment |
+|---|---|---|
+| **Index rounding** — 2 dp (`docs/downloads/master-formula-sheet.md`) vs 3 dp (`EDITORIAL-STANDARD.md` §5) | `TPL-07` §3.4 | Both named; 3 dp recommended with a reason; the project must state its choice |
+| **Whether contingency sits inside budget at completion** | `TPL-01`, `TPL-04`, `TPL-07`, `TPL-08` | Both conventions in live use; each template requires the project to state its own |
+| **Schedule-quality thresholds** | `BPG-05`, `TPL-14` | Measurement supplied as arithmetic; the threshold is a parameter the project agrees and records. No third-party checklist reproduced, no threshold attributed to a published standard |
+| **Concurrency in delay analysis** | `BPG-12` | Three competing approaches presented; which applies depends on contract, governing law and forum |
+
+## 3b. Further items for the coordinator
+
+1. **`CMP-10` title variance.** The registry row reads "Assessing competence — evidence, rubrics,
+   moderation"; the manuscript uses "…rubrics and moderation". Align one to the other.
+2. **American spelling inside a platform string.** The seeded PML-AI competency is
+   *"Benefits realization"*. `CMP-05` renders it *realisation* for a British English series and says so
+   openly. The platform string is the thing that should change.
+3. **Word-count basis needs a ruling.** Several table- and clause-heavy documents (`AIG-08`, `AIG-10`,
+   `AIG-11`, `CAR-07`, `CAR-08`, `SAL-02`) sit inside the length band on prose but above it on a raw
+   `wc -w` that counts table pipes and list markers. A series lead should rule on which basis the ceiling
+   is measured before anyone trims substance to hit a number.
+4. **S07 depends on S08 being real.** `CAR-01` and `CAR-06` route every market question to `SAL-01` and
+   `SAL-06` rather than estimating. If S08 slips, S07 publishes a promise it cannot redeem — the calendar
+   sequencing (S07 in weeks 44–47, S08 in 48–50) should be reversed or the cross-references softened.
+5. **The Body of Knowledge names commercial AI products** in KA 13.4.1's tool-category table. Series S02
+   deliberately did not carry those forward, referring to capability classes instead. The BoK table is
+   worth revisiting on its own terms.
+
 ## 4. Deliberate omissions
 
 Things an author could have written and correctly did not.

@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 16
 summary: >
   A baseline change request is the document that moves scope, budget or dates from one approved state to
   another, and the record that has to survive an audit two years later. This template gives the form —

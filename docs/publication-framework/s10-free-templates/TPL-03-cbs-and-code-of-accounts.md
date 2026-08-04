@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 12
+reading_time_min: 14
 summary: >
   A cost breakdown structure decides what questions you will be able to answer about cost for the life
   of the project, because a cost can only be analysed along the dimensions it was coded with. This

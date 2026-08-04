@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 12
+reading_time_min: 14
 summary: >
   A work breakdown structure decomposes the scope of a project into elements that can be budgeted,
   assigned and measured; the dictionary is where each element acquires a description, a deliverable,

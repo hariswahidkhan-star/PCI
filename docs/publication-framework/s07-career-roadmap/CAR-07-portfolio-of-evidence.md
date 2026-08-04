@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, student, employer]
 level: practitioner
-reading_time_min: 14
+reading_time_min: 15
 summary: >
   A curriculum vitae asserts; a portfolio demonstrates. This document gives a five-part structure for an
   evidence record, a graded scale from presence to ownership, an inventory of where evidence appears in an
@@ -54,12 +54,12 @@ A curriculum vitae lists positions occupied. It answers "where were you" and, by
 long" — and neither question separates two people with the same title on the same project, one of whom
 owned the forecast and one of whom formatted the report.
 
-An experienced interviewer, a competency assessor and a client's technical panel all want the same three
-things instead. **What did you decide** — not what the team decided; a decision has an owner, a date and a
-rejected alternative. **What changed because of it** — a number that moved, an error prevented, a claim
-defended, a control that stopped a class of failure rather than one instance. **How do you know** —
-evidence someone else can test, including the record of the times you were wrong. A portfolio is those
-three questions, answered repeatedly, in a structure someone can read quickly.
+An interviewer, a competency assessor and a client's technical panel want three other things.
+**What did you decide** — not what the team decided; a decision has an owner, a date and a rejected
+alternative. **What changed because of it** — a number that moved, an error prevented, a claim defended, a
+control that stopped a class of failure rather than one instance. **How do you know** — evidence someone
+else can test, including the record of the times you were wrong. A portfolio is those three questions,
+answered repeatedly, in a structure someone can read quickly.
 
 ## 2. The unit of evidence
 
@@ -69,8 +69,8 @@ One record, five parts. Fitting on one page is a feature.
 a package of control accounts, including method selection and defence to the project director."*
 
 **2. The context.** Enough to make the claim assessable and no more: type of project, contract form,
-relative scale, your role and reporting line. Not the client, the project or the contract value — §5 and
-§6 explain why.
+relative scale, your role and reporting line. Not the client, project or contract value — §5 and §6
+explain why.
 
 **3. The action.** What you personally did, in the first person singular, with the decision explicit and
 the alternative named. *"I selected a performance-persists forecast rather than the one-off-variance basis
@@ -98,9 +98,9 @@ Weak evidence is usually weak because it sits at the wrong rung of this scale.
 | Ownership | "Owned the forecast for eleven control accounts, including method selection, and defended it at the monthly review" | That you can be held to an answer |
 | Change | "Found that the accrual routine was missing subcontract work certified after cut-off; redesigned it; the correction moved reported cost performance and stopped the understatement recurring" | That the organisation is different because you were in it |
 
-Ownership and change are what get read, and neither can be manufactured at the point you need it — only
-captured, while it happens. `CMP-02 — Competency levels and how they are evidenced` sets out how the
-Institute levels competence; this document is about the record you keep for yourself.
+Ownership and change are what get read, and neither can be manufactured when you need it — only captured
+while it happens. `CMP-02 — Competency levels and how they are evidenced` sets out how the Institute
+levels competence; this is about the record you keep for yourself.
 
 ## 4. Where the evidence already is
 
@@ -119,8 +119,7 @@ An ordinary reporting month generates more evidence than most people record in a
 - the forecast you published in advance with a falsification condition (`CAR-03` §6) and how it behaved.
 
 Ten minutes at the end of each cycle, capturing one record from that list, produces a portfolio with
-nothing reconstructed after the fact — and reconstruction after the fact is where both accuracy and
-confidentiality tend to fail.
+nothing reconstructed after the fact — and reconstruction is where accuracy and confidentiality both fail.
 
 ## 5. Confidentiality: what you may not take, and the test to apply
 
@@ -137,16 +136,16 @@ disclose:
 - anything under a non-disclosure agreement, and in listed-company contexts anything price-sensitive.
 
 **The three-reader test.** Before a record leaves your possession, ask whether it could be read without
-harm or embarrassment by the client, by your employer's commercial director, and by a competitor. If the
-answer to any of the three is no, it is not ready. That is a stricter test than "would anyone recognise
-it", and it is the right one, because the harm from disclosure does not require recognition.
+harm or embarrassment by the client, by your employer's commercial director, and by a competitor. If any
+answer is no, it is not ready. That is stricter than "would anyone recognise it", and it is the right
+test, because harm from disclosure does not require recognition.
 
 Where a conflict is live between what you may say and what you believe should be said, the Institute's
 treatment is in `ETH-04 — Conflicts of interest in project controls`.
 
 ## 6. Anonymising a case properly
 
-Most attempted anonymisation removes the name and stops. That is not anonymisation; it is redaction of the
+Most attempted anonymisation removes the name and stops, which is not anonymisation but redaction of the
 single least informative field. Work through all seven steps.
 
 **Step 1 — remove direct identifiers.** Client, project, contract number, site, joint-venture partners,
@@ -163,9 +162,9 @@ budget at completion is usually the natural one — set it to 100, and express e
 proportion of it. State plainly that figures are indexed. §10 works this through.
 
 **Step 4 — keep the ratios, because they carry the teaching.** Performance indices, variance percentages,
-proportions of budget, days of movement and productivity factors all survive indexation, and they are what
-make the record instructive. A reader learns nothing from a currency amount they cannot contextualise and
-everything from an index that moved from 1.09 to 1.00.
+proportions of budget, days of movement and productivity factors all survive indexation. A reader learns
+nothing from a currency amount they cannot contextualise and everything from an index that moved from
+1.09 to 1.00.
 
 **Step 5 — check for re-identification through the incident itself.** A distinctive event — an unusual
 failure, a well-known dispute, a notable delay — can identify a project more precisely than any figure.
@@ -173,43 +172,42 @@ Describe its mechanism without the case, or do not use it.
 
 **Step 6 — label the anonymisation.** In the record: *"Figures indexed to a budget of 100. Project, client
 and period not identified. No confidential document is reproduced and no figure can be derived from this
-record."* A reader who can see the discipline you applied trusts the rest of it more.
+record."* A reader who can see the discipline you applied trusts the rest more.
 
 **Step 7 — seek permission where it is possible, and record the answer.** For anything more detailed than
-an indexed record, ask in writing and keep the reply. If it is refused, record the refusal and use the
+an indexed record, ask in writing and keep the reply. If refused, record the refusal and use the
 method-only version. Silence is not consent.
 
 **Where even the indexed case is identifiable, write the method instead.** "How to test whether a recovery
-claim is plausible" teaches everything the case would have taught, cites no project, and can be shown to
-anyone.
+claim is plausible" teaches what the case would have taught, cites no project, and can be shown to anyone.
 
 ## 7. Verification without disclosure
 
-Evidence that cannot be checked is an assertion with extra sentences. Four forms that disclose nothing:
+Evidence that cannot be checked is an assertion with extra sentences. Three forms disclose nothing:
 **a referee by role** ("the project controls manager to whom I reported can confirm this", the name
 supplied privately when needed, never published); **a countersignature**, a line manager signing a
 competency record, which is what structured development schemes rely on and what `CMP-10 — Assessing
-competence` describes for formal assessment; **an independent artefact or audit trace**, such as a
-template or procedure you wrote that stayed in use, or "this control was tested in an internal audit and
-the finding closed", referenced by type and period rather than by number; and assessed knowledge.
+competence` describes for formal assessment; and **an independent artefact or audit trace**, such as a
+procedure you wrote that stayed in use, or "this control was tested in an internal audit and the finding
+closed", referenced by type and period rather than by number.
 
-**Assessed knowledge.** A credential evidences knowledge against a published standard, examined
-independently of your employer. PCI's project controls credential is PCL-AI; it is examined, not
-portfolio-assessed, and PCI is developed with reference to ISO/IEC 17024 personnel-certification
-principles and is not accredited. Credential and portfolio evidence different things — knowledge and
-practice — and neither substitutes for the other. A membership grade is a third thing again: a standing,
-not a certification, and conflating the ladders is an easy way to look careless.
+**Assessed knowledge is the fourth, and it verifies something different.** A credential evidences
+knowledge against a published standard, examined independently of your employer. PCI's project controls
+credential is PCL-AI; it is examined, not portfolio-assessed, and PCI is developed with reference to
+ISO/IEC 17024 personnel-certification principles and is not accredited. Credential and portfolio evidence
+knowledge and practice respectively, and neither substitutes for the other. A membership grade is a third
+thing again — a standing, not a certification — and conflating the ladders looks careless.
 
-Continuing professional development records verify differently, being structured: PCI recertification runs
-on a three-year cycle with a mandatory AI-currency component, and only approved entries in the current
-cycle count. The binding volume is `[CONFIRM: required CPD hours per three-year cycle — the student portal
-currently shows a 30-hour target, and the binding requirement will be published with the recertification
-rules]`, and `CER-08` owns the rules.
+Continuing professional development records verify differently again, being structured: PCI
+recertification runs on a three-year cycle with a mandatory AI-currency component, and only approved
+entries in the current cycle count. The binding volume is `[CONFIRM: required CPD hours per three-year
+cycle — the student portal currently shows a 30-hour target, and the binding requirement will be published
+with the recertification rules]`; `CER-08` owns the rules.
 
 ## 8. Structuring the portfolio itself
 
 Organise by competency, not by employer: an employer-ordered portfolio makes the reader do the mapping,
-and readers do not. Use the PCL-AI competency set as the index — project controls governance, cost
+and readers do not. Use the PCL-AI competency set as the index: project controls governance, cost
 management, planning and scheduling, earned value management, forecasting and estimate at completion,
 performance measurement, project risk, commercial and contract controls, predictive analytics, AI-enabled
 project controls, digital reporting, automation, responsible AI, and human validation.
@@ -226,12 +224,12 @@ may keep is the only part a future employer values.
 
 ## 9. How this goes wrong
 
-**Writing it at the end.** Portfolios assembled during a job search are vague about exactly the details
-that matter — the date, the alternative rejected, the number before and after — because those were never
+**Writing it at the end.** Portfolios assembled during a job search are vague about the details that
+matter — the date, the alternative rejected, the number before and after — because those were never
 captured and cannot now be reconstructed honestly.
 
 **Claiming the team's work.** "We reduced the forecast" evidences nothing about you. Assessors probe
-collective verbs first, knowing what they will find.
+collective verbs first.
 
 **Removing the name and calling it anonymised.** Step 2 of §6 is the step that gets skipped, and the
 result is a portfolio that identifies a client project to every reader in the sector while its author
@@ -248,9 +246,9 @@ than three correct ones — and a list of software proficiencies weaker than eit
 
 ## 10. Worked example — one record, before and after anonymisation
 
-*Illustrative figures.* Currency-neutral, one control period, rounded as stated. Assumptions: progress
-measured to agreed rules of credit; the accrual identified was the complete un-invoiced position at the
-cut-off; no change was approved in the period.
+*Illustrative figures.* Currency-neutral, one control period. Assumptions: progress measured to agreed
+rules of credit; the accrual identified was the complete un-invoiced position at cut-off; no change
+approved in the period.
 
 **The confidential version — accurate, and unpublishable.**
 
@@ -258,11 +256,10 @@ cut-off; no change was approved in the period.
 > cut-off that subcontract liabilities of 1,260,000 had not been accrued. Earned value at that date was
 > 15,000,000 against invoiced cost of 13,800,000.
 
-The arithmetic behind it. Cost performance index before the correction = earned value ÷ actual cost =
+The arithmetic. Cost performance index before correction = earned value ÷ actual cost =
 15,000,000 ÷ 13,800,000 = **1.087**. Actual cost with the accrual booked = 13,800,000 + 1,260,000 =
-**15,060,000**. Cost performance index after = 15,000,000 ÷ 15,060,000 = **0.996**. One entry moved the
-reported cost performance from 8.7 % above parity — work earned exceeding cost incurred — to marginally
-below it.
+**15,060,000**. Index after = 15,000,000 ÷ 15,060,000 = **0.996**. One entry moved reported performance
+from 8.7 % above parity — work earned exceeding cost incurred — to marginally below it.
 
 **The anonymised version — publishable, and it teaches the same lesson.**
 
@@ -283,15 +280,14 @@ Accrual: 1,260,000 ÷ 42,000,000 × 100 = **3.0**.
 Index before: 35.7 ÷ 32.9 = **1.085**, against 1.087 computed on the raw figures.
 Index after: 35.7 ÷ (32.9 + 3.0) = 35.7 ÷ 35.9 = **0.994**, against 0.996 on the raw figures.
 
-The drift of two thousandths in each index is rounding introduced by publishing the indexed values to one
+The drift of two thousandths in each index is rounding introduced by publishing indexed values to one
 decimal place, and it changes nothing a reader would conclude. That is the test of a good anonymisation:
 the magnitudes are gone and unrecoverable, the ratios are intact to within stated rounding, and the lesson
-— that one missed accrual can move a reported position across the line between earning and overspending —
-is exactly as instructive as in the confidential version.
+— that one missed accrual can move a position across the line between earning and overspending — is as
+instructive as in the confidential version.
 
-**What else was removed, and why.** The budget, as the identifying magnitude; the named month, because a
-cut-off calendar is a fingerprint and period plus sector plus value band narrows the field sharply; and
-the specific process industry, widened to "industrial", per step 2.
+**What else went, and why.** The budget, as the identifying magnitude; the named month, because a cut-off
+calendar is a fingerprint; and the specific process industry, widened to "industrial", per step 2.
 
 ## 11. Checklist — the portfolio audit
 
@@ -300,8 +296,8 @@ the specific process industry, widened to "industrial", per step 2.
 - At least half your records sit at ownership or change on the scale in §3, and at least one describes
   something you got wrong and what changed as a result.
 - No record contains a client name, project name, contract value, rate, margin or extract of a document.
-- Every case has been through all seven anonymisation steps, not only step 1.
-- Every figure is indexed to a stated base, and the indexation is labelled.
+- Every case has been through all seven anonymisation steps, not only step 1, and every figure is indexed
+  to a stated base with the indexation labelled.
 - You have applied the three-reader test in §5 to the shareable version.
 - Permissions sought are recorded, including refusals.
 - The portfolio is indexed by competency, with a stated gap on each page.

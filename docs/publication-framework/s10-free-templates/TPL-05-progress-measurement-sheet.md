@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 16
 summary: >
   Per cent complete is an assertion, and the sheet that produces it is where the assertion is either
   evidenced or invented. This template gives the measurement sheet and the rule-of-credit library behind

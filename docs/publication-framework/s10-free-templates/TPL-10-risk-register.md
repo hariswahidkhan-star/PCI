@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 14
+reading_time_min: 20
 summary: >
   A risk register built so that each entry can be acted on rather than admired. Cause, event and effect are
   three separate fields, not one sentence. Probability and impact are scored against a scale the project

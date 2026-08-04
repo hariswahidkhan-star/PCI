@@ -195,9 +195,11 @@ done
 # S09 and S10 additionally require a worked example and a checklist.
 WORKED_ERRORS=0
 for f in $(find "$ROOT/s09-best-practice-guides" -name 'BPG-*.md' 2>/dev/null); do
-  grep -qi '^## .*worked example' "$f" || { warn "${f#"$ROOT/"} missing worked example"; WORKED_ERRORS=$((WORKED_ERRORS+1)); }
-  grep -qi '^## .*checklist'      "$f" || { warn "${f#"$ROOT/"} missing checklist"; WORKED_ERRORS=$((WORKED_ERRORS+1)); }
-  grep -qi '^## How this goes wrong' "$f" || { warn "${f#"$ROOT/"} missing 'How this goes wrong'"; WORKED_ERRORS=$((WORKED_ERRORS+1)); }
+  # Headings are numbered per DOCUMENT-TEMPLATE.md ("## 9. How this goes wrong"), so match
+  # the text rather than anchoring on the word immediately after the hashes.
+  grep -qiE '^## .*worked example'      "$f" || { warn "${f#"$ROOT/"} missing worked example"; WORKED_ERRORS=$((WORKED_ERRORS+1)); }
+  grep -qiE '^## .*checklist'           "$f" || { warn "${f#"$ROOT/"} missing checklist"; WORKED_ERRORS=$((WORKED_ERRORS+1)); }
+  grep -qiE '^## .*how this goes wrong' "$f" || { warn "${f#"$ROOT/"} missing 'How this goes wrong'"; WORKED_ERRORS=$((WORKED_ERRORS+1)); }
 done
 [ "$WORKED_ERRORS" -eq 0 ] && pass "every best-practice guide has a worked example, checklist and failure section"
 
@@ -230,9 +232,21 @@ fi
 # ---------------------------------------------------------------------------
 head_ "12. Accreditation language"
 # ---------------------------------------------------------------------------
-ACC=$(printf '%s\n' "$MANUSCRIPTS" | xargs grep -nEi \
-  'is accredited|fully accredited|accredited by|government[- ]recognised|guaranteed (job|employment|salary)' 2>/dev/null \
-  | grep -viE 'not accredited|is not accredited|no claims of accreditation|makes no claim' || true)
+# Sentence-scoped, not line-scoped. A prohibition ("must not describe the credential as
+# accredited") and a negation split across a line break ("is not\naccredited by any body")
+# both read as claims to a line-based grep, and both are the opposite of a claim.
+ACC=$(printf '%s\n' "$MANUSCRIPTS" | python3 -c '
+import re, sys
+CLAIM = re.compile(r"is accredited|fully accredited|accredited by|government[- ]recognised"
+                   r"|guaranteed (job|employment|salary)", re.I)
+NEGATED = re.compile(r"\bnot\b|\bnever\b|\bno\b|\bnor\b|\bcannot\b|\bwithout\b|\bprohibit"
+                     r"|\bmust not\b|\bdoes not\b|\bmakes no\b|\bimplying\b|\bimply\b", re.I)
+for path in (p.strip() for p in sys.stdin if p.strip()):
+    text = re.sub(r"\s+", " ", open(path, encoding="utf-8").read())
+    for sentence in re.split(r"(?<=[.;:!?])\s+", text):
+        if CLAIM.search(sentence) and not NEGATED.search(sentence):
+            print(f"{path}: {sentence[:150]}")
+' 2>/dev/null || true)
 if [ -z "$ACC" ]; then
   pass "no unqualified accreditation or guaranteed-outcome claim"
 else
@@ -258,9 +272,10 @@ head_ "Summary"
 # ---------------------------------------------------------------------------
 printf '  documents: %s\n  failures:  %s\n  warnings:  %s\n' "$COUNT" "$FAIL" "$WARN"
 
+echo
 if [ "$FAIL" -gt 0 ]; then
-  red "\nFramework does not pass the publication gate."
+  red "Framework does not pass the publication gate."
   exit 1
 fi
-green "\nFramework passes the publication gate."
+green "Framework passes the publication gate."
 exit 0

@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: professional
-reading_time_min: 15
+reading_time_min: 21
 summary: >
   The three sheets a quantitative schedule risk analysis actually needs: duration uncertainty by activity
   with three-point estimates and a stated distribution, discrete risk events mapped from the risk register,

@@ -141,6 +141,9 @@ Numbering convention inherited from `docs/bok/00-style-spine.md`: **Domain.KA.To
 | Certificate validity | **3 years** |
 | Interface languages | English, Arabic, Spanish, French, Korean, Chinese, Russian |
 | Proctoring | Enabled: identity check, room scan, second-monitor block |
+| **Negative marking** | **None.** Every item is weighted equally (`Endpoints/StudentExam.cs`, `InitScorer`) |
+| **Proctoring signals** | **Audit-only by default.** Automatic invalidation is opt-in and switched off (`Core/Lifecycle.cs`) — a flag raises a review, it does not fail anyone |
+| Evidence retention | `evidence_retention_days` defaults to 365, configurable (`Core/RetentionService.cs`) |
 
 ### 4.2 Deliberately not yet fixed — say so, do not invent
 
@@ -250,10 +253,15 @@ Record these; do not silently resolve them, and do not repeat them.
    `certification.html` renders "Level: Professional". → Use **Leader**, and treat the competency-scale
    word "professional" (S03) as a distinct concept, clearly labelled.
 2. **Exam fee.** USD 500 (platform) vs USD 350 (legacy pack). → `[CONFIRM: …]`, per §4.3.
-3. **Domain group names.** The legacy pack uses *A. Financial Reporting & Accounting / B. Project
-   Management, Controls & Delivery / C. AI for Project Controls*; the current blueprint uses *Project
-   accounting & finance / Project management principles / AI knowledge & practical approach*. → Use the
-   **current blueprint names**.
+3. **Domain groups — the names differ, and so does the membership.** The legacy pack uses
+   *A. Financial Reporting & Accounting / B. Project Management, Controls & Delivery / C. AI for Project
+   Controls*; the current blueprint uses *Project accounting & finance / Project management principles /
+   AI knowledge & practical approach*. More seriously, the legacy pack **assigns different domains to
+   each group** — its Area A holds D1, D2, D5, D7, D11 and Area B holds D3, D4, D6, D8, D9, D10, D12,
+   against the current D1–D4 / D5–D12 / D13. → Use the **current blueprint** for both names and
+   membership. The legacy pack also publishes indicative **per-domain** percentages that are internally
+   consistent only under its own grouping; the current blueprint publishes no per-domain weight, and
+   those figures must not be carried forward.
 4. **Retired naming throughout `docs/bok/`, `docs/publications/`, parts of `docs/downloads/`.** → Write
    PCL-AI; flag the legacy file rather than editing it.
 5. **CPD categories.** The portal serves five categories; the public pages describe four different ones

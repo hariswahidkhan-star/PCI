@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 12
+reading_time_min: 17
 summary: >
   A working cash flow forecast that separates the three things most forecasts merge: the value of work
   executed, the value certified for payment, and the cash that actually arrives. It models retention

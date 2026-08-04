@@ -41,9 +41,10 @@ before anyone is asked for a variance. The guide gives the dependency chain, a m
 function against the smallest variance it has to detect, a worked reporting calendar derived backwards
 from the governance meeting, and an explicit list of what to defer and how to say so out loud.
 
-**Who this is for.** Project controls managers and heads of PMO asked to build a function on a new
-programme or in an organisation that has never had one; project directors deciding what to fund first;
-finance business partners who will have to live with whatever coding scheme gets chosen.
+**Who this is for.** Project controls managers and heads of project management office asked to build a
+function on a new programme or in an organisation that has never had one; project directors deciding
+what to fund first; finance business partners who will have to live with whatever coding scheme gets
+chosen.
 
 ---
 
@@ -95,8 +96,8 @@ is how a rebuild gets the wrong budget.
 The order below is not a preference. Each item is genuinely blocked by the one above it.
 
 **3.1 Reportable scope.** Decide what the project is made of, expressed as deliverables rather than as
-departments. This is the work breakdown structure, and it parents everything else because it determines
-what a variance can be *about*. `BPG-02 — The work breakdown structure` owns the method.
+departments. This is the work breakdown structure (WBS), and it parents everything else because it
+determines what a variance can be *about*. `BPG-02 — The work breakdown structure` owns the method.
 
 **3.2 The coding structure.** Decide how cost will be classified — by scope element, by cost type, by
 resource class — and fix the code format. This must happen before the first commitment is raised,

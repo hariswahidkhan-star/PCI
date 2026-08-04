@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 17
 summary: >
   A change order log that tracks each change from first identification to agreement, records the date of
   every status transition, keeps the submitted, assessed and best-estimate values apart, and carries the

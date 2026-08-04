@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 16
 summary: >
   A project controls execution plan states how a specific project will be measured: which structures
   exist, what the baseline is, how progress is claimed and verified, what gets reported to whom and
@@ -102,8 +102,8 @@ the block, paste it into a single column, split on the pipe character, and delet
 
 ## 3. The template
 
-Copy from here. Numbering is designed for citation — a change request can reference "PCEP §5.3" and mean
-one thing.
+Copy from here. Numbering is designed for citation — a change request can reference "PCEP §3.5" and mean
+exactly one clause.
 
 ### 3.0 Document control
 
@@ -132,8 +132,9 @@ confirmed that in writing?
 ### 3.2 Definitions used on this project
 
 **Prompts.** Define each of the following once, here, with the arithmetic where arithmetic applies:
-budget at completion (does it include the contingency reserve, or not — see §6.1 of this document);
-management reserve and who holds it; commitment; accrual; actual cost; per cent complete; earned value;
+budget at completion (does it include the contingency reserve, or not — the choice governs every index
+reported in `TPL-07`); management reserve and who holds it; commitment; accrual; actual cost; per cent
+complete; earned value;
 milestone; float and who owns it; "approved change"; "authorised to proceed". For each, name the system
 that holds the value.
 

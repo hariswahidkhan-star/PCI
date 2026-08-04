@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: foundation
-reading_time_min: 13
+reading_time_min: 14
 summary: >
   Project controls is staffed almost entirely by transfer, from engineering, quantity surveying and
   commercial, finance and accounting, site supervision, data and analytics, and directly from education.

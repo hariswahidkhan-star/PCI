@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, employer]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 14
 summary: >
   The cost ladder described by what is actually owned at each rung — the work, the artefacts, and the
   decisions a person is trusted to make — from cost analyst to cost manager. Its centre is the transition

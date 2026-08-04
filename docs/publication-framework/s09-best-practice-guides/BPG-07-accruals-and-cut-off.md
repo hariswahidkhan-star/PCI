@@ -243,8 +243,8 @@ implied — the treatment of any specific item follows the framework the entity 
 
 | Item | Value |
 |---|---:|
-| Budget at completion | 5,600,000 |
-| Earned value at the data date | 3,720,000 |
+| Budget at completion (BAC) | 5,600,000 |
+| Earned value at the data date (EV) | 3,720,000 |
 | Invoices processed to date (ledger actuals) | 3,140,000 |
 | Goods received not invoiced (from the goods-receipt report) | 268,000 |
 | Subcontract work surveyed in the period, not yet certified or billed | 412,000 |
@@ -257,6 +257,8 @@ True actual cost  = 3,140,000 + 794,700 = 3,934,700
 ```
 
 ### 9.2 The same month, reported two ways
+
+Writing actual cost as AC, the cost performance index as CPI and the cost variance as CV:
 
 ```
 Without the accrual:  CPI = EV ÷ AC = 3,720,000 ÷ 3,140,000 = 1.185
@@ -271,8 +273,8 @@ The index swings by 1.185 − 0.945 = **0.240**, twenty-four index points. The v
 statements describe the same project.
 
 **What this does to the forecast.** Forecasting on the assumption that performance to date persists —
-one method among several, and `BPG-09 — Estimate at completion` owns the choice — the two views diverge
-by more than the accrual itself:
+one method among several, and `BPG-09 — Estimate at completion` owns the choice — the estimate at
+completion (EAC) and variance at completion (VAC) diverge by more than the accrual itself:
 
 ```
 Without the accrual: EAC = BAC ÷ CPI = 5,600,000 ÷ 1.184713 = 4,727,000

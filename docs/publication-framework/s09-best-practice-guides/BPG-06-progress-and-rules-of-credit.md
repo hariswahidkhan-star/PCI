@@ -191,8 +191,8 @@ a direction nobody can predict.
 
 The level-of-effort problem is the roll-up's characteristic distortion. Because level-of-effort packages
 earn by the calendar, their earned value equals their planned value by construction and their schedule
-performance index is 1.000 whatever is happening. Aggregate them with discrete work and they pull the
-combined index towards 1.000 in proportion to their share. §9.4 quantifies this.
+performance index (SPI) is 1.000 whatever is happening. Aggregate them with discrete work and they pull
+the combined index towards 1.000 in proportion to their share. §9.4 quantifies this.
 
 Two responses. **Segregate** level-of-effort packages into their own control accounts so the discrete
 performance can be read on its own. And **report the share**: state, every period, what proportion of

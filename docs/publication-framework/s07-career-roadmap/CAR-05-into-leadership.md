@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [manager, executive, practitioner]
 level: leader
-reading_time_min: 13
+reading_time_min: 14
 summary: >
   Below leadership, a controls professional is measured on the accuracy of what they produce. At
   leadership they are measured on whether the organisation acts on it. This document sets out what

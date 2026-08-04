@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: professional
-reading_time_min: 14
+reading_time_min: 20
 summary: >
   A schedule quality review in fourteen checks covering logic, open ends, constraints, negative float, lags
   and leads, out-of-sequence progress, duration distribution, critical path credibility, resourcing,

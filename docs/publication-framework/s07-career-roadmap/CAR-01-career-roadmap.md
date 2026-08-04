@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: foundation
-reading_time_min: 12
+reading_time_min: 14
 summary: >
   A map of the project controls function as it is actually staffed: six interlocking disciplines,
   the artefacts each one owns, and the four transitions that separate someone who produces numbers

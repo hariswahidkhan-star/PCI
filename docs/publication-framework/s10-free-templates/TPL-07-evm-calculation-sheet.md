@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 12
+reading_time_min: 14
 summary: >
   An earned value sheet takes four entered numbers per control account — budget at completion, planned
   value, earned value and actual cost — and derives everything else by arithmetic. This template gives

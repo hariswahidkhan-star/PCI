@@ -68,7 +68,7 @@ but nothing in between.
 
 Three components, approved together, each with its own version.
 
-**The scope baseline** — the work breakdown structure, the dictionary, and the scope statement it
+**The scope baseline** — the work breakdown structure (WBS), the dictionary, and the scope statement it
 implements. This is the reference for every subsequent question about whether something is a change or
 was always included. `BPG-02 — The work breakdown structure` covers its construction.
 
@@ -256,6 +256,9 @@ the nearest 1,000 where a rounded figure is presented. No real project is implie
 | Earned value (EV) | 2,040,000 |
 | Actual cost (AC) | 2,310,000 |
 
+Cost variance (CV), schedule variance (SV), cost performance index (CPI) and schedule performance index
+(SPI) follow directly:
+
 ```
 CV  = EV − AC = 2,040,000 − 2,310,000 = −270,000
 SV  = EV − PV = 2,040,000 − 2,400,000 = −360,000
@@ -264,7 +267,8 @@ SPI = EV ÷ PV = 2,040,000 ÷ 2,400,000 = 0.850
 ```
 
 Forecasting on the assumption that performance to date persists — one method among several, and
-`BPG-09 — Estimate at completion` owns the choice — gives:
+`BPG-09 — Estimate at completion` owns the choice — gives an estimate at completion (EAC) and a
+variance at completion (VAC):
 
 ```
 EAC = BAC ÷ CPI = 6,000,000 ÷ 0.883116 = 6,794,000  (to the nearest 1,000)

@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: professional
-reading_time_min: 15
+reading_time_min: 19
 summary: >
   The structure of a claim or extension-of-time submission that can survive being read by someone looking
   for a reason to reject it: the contractual basis element by element, the notice record including where it
