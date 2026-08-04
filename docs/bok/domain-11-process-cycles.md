@@ -504,7 +504,38 @@ write-off (11.3.2, MCQ 11.3-D) — and analytics profiling credit-note volume by
 **Red flags a controls professional escalates:** a vendor sharing bank details or an address with an
 employee; round-sum invoices clustering just below an approval limit; a supplier used by a single buyer;
 suppliers created and first paid within days; credit notes concentrated on one customer or one user. None
-is proof — each is the *condition* for fraud, which the audit trail then confirms or clears (11.3.3).
+is proof — each is the *condition* for fraud, which the audit trail then confirms or clears (11.3.3) — in the
+hands set out below.
+
+**What a professional does with a red flag.** Spotting the flag is the easy half. What follows is a protocol,
+and departing from it can destroy the case, expose the organisation and expose the individual who departed
+from it. The controls professional **escalates and preserves; they do not investigate**.
+
+- **Escalate on the named route.** The flag goes to the route the organisation has named for it — ordinarily
+  **internal audit** or **compliance**, with **legal** where a contract or a duty is engaged — and, where
+  management itself may be implicated, the **audit committee** is the ultimate recipient, because it exists
+  precisely so that a concern about management has somewhere to go above management. A function that cannot
+  say today who its route is has a control gap, and the time to close it is before it is needed.
+- **Do not investigate, confront or notify.** Do not question the individual, and do not tell their line
+  manager — line management is exactly where a colluding or negligent party may sit. Alerting a suspect
+  ("tipping off") is a criminal offence in some jurisdictions, and even where it is not, it ends the enquiry
+  before it starts: explanations get aligned, records get tidied, and the evidential position is gone.
+- **Preserve before any enquiry.** Transactions, master-data change history, email and the system and access
+  logs (11.3.3) are left **unchanged** and protected from routine deletion or archiving, and access rights are
+  left as they are rather than helpfully revoked — a sudden change of permissions is itself a signal to
+  anyone watching. Preservation happens first, because it is the one step that cannot be done later.
+- **Hand it to those with the mandate.** Investigation is a **forensic** and **internal-audit** discipline,
+  with the independence, authority and training that a line controls function does not have — and cannot have
+  over a control it designed and operates itself (11.3.1). The controls professional supplies the analytics,
+  the reconstruction and the records; someone else interviews, concludes and, if it comes to it, testifies.
+- **Duties may run outside the organisation.** In some jurisdictions a suspicion triggers a **mandatory
+  external report** — suspicious-activity, bribery and anti-money-laundering regimes are the usual examples —
+  on a defined timescale, whatever the organisation would prefer; and a person who raises a concern in good
+  faith may attract **whistleblower protection**. What applies varies by jurisdiction, sector and role, and
+  it is a question for **qualified counsel**, asked early rather than after a deadline has passed.
+
+None of this presumes guilt. It is what preserves the value of the eventual answer — fraud or no fraud — for
+whoever must later rely on it, and it is the discipline the case study below applies to a live finding.
 
 ### Advanced 11.A.3 — Master-data governance
 
@@ -652,18 +683,36 @@ senior buyer both create a PO and approve it — and under deadline pressure, fo
 a **segregation-of-duties breach** (11.3.2): not necessarily fraud, but the *condition* for it. One person
 controlled the commit-the-company step end-to-end, with no second check.
 
-The response follows the domain's playbook. The **system roles are corrected** using an SoD matrix of the
-11.3.2b form — raise, approve, receive and pay mapped to different roles, with the raise-and-approve conflict
-made impossible in the system rather than merely discouraged in the manual. The **14 POs are audited**
-individually: two contain errors (a duplicated line item and a wrong cost code, both corrected), and **no
-fraud** is found. And a **continuous-controls monitor** is left running — a standing query over the event log
-that flags any future same-user raise-and-approve within a day, not a year.
+The response follows the domain's playbook, and the sequence matters as much as the actions. Because a
+same-user raise-and-approve is the *condition* for fraud as well as a control weakness, the finding is
+**escalated, not investigated** (Advanced 11.A.2). The company is too small for an in-house internal-audit
+function, so it uses the route its board named when the review was commissioned: an **external internal-audit
+provider reporting to the audit committee**. The buyer and their line manager are not approached, and the
+event log, the 14 POs and the related invoices and payments are **preserved unchanged** while the referral is
+made. **Internal audit then reviews the 14 POs individually** under its own mandate, with the controls
+function supplying the process-mining evidence, the transaction records and the reconstruction — and not the
+conclusion, which is not the function's to reach about a control it designed and operates itself. Internal
+audit finds that two of the POs contain errors (a duplicated line item and a wrong cost code, both corrected)
+and concludes that **no fraud** occurred. With that conclusion recorded by the function entitled to reach it,
+the **system roles are corrected** using an SoD matrix of the 11.3.2b form — raise, approve, receive and pay
+mapped to different roles, with the raise-and-approve conflict made impossible in the system rather than
+merely discouraged in the manual, the timing agreed with internal audit so that the fix does not announce the
+review. And a **continuous-controls monitor** is left running — a standing query over the event log that flags
+any future same-user raise-and-approve within a day, not a year.
 
 The lesson the credential wants drawn: the **audit trail made the breach findable** — every raise and approval
 was logged with user and timestamp, which is why the breach could be reconstructed at all (11.3.3). **Process
 mining made finding it cheap** — one analytical pass over the log did what a manual sample-based audit might
 have missed entirely, because 14 POs in a year of thousands is exactly the kind of needle sampling does not
 reliably hit.
+
+And the third lesson is about **who does what with a finding**. The controls function found it, preserved it
+and referred it; internal audit reviewed it and owned the conclusion. Had the function investigated its own
+control area, questioned the buyer and announced "no fraud", the words would have been the same and worth
+nothing — the reviewer would have been the owner of the failed control, the evidence could have moved before
+anyone looked at it, and a board, an external auditor or a court would have been entitled to discount the
+finding entirely. The escalation protocol is not bureaucracy around the control; on a finding like this one it
+*is* the control (Advanced 11.A.2).
 
 ### Duplicate payments (KA 11.2/11.3)
 
@@ -732,7 +781,9 @@ A candidate reading this case should be able to name where each result came from
 three-way match** (KA 11.2) produced the exception reduction — and the crucial point is *what changed*: agreed
 tolerances plus assisted matching, not the abolition of the control. **Segregation of duties and the audit
 trail** (KA 11.3) produced the breach finding — SoD defines the conflict (raise versus approve), the audit
-trail records who actually did what, and the 11.3.2b matrix is how the fix is designed into system roles.
+trail records who actually did what, and the 11.3.2b matrix is how the fix is designed into system roles. What
+was done *with* the finding is examinable in its own right: preserve, refer to internal audit, do not confront
+and do not conclude on your own control (Advanced 11.A.2).
 **Process mining as a detective control at scale** (11.3.3) is what made a year of transactions auditable in
 one pass — 14 breaching POs and 3-a-quarter duplicates are precisely the low-frequency patterns that
 whole-population analysis catches and sampling misses. **O2C and receivables as cash** (KA 11.1) produced the

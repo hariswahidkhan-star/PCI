@@ -1344,7 +1344,7 @@ recalculate. The AI found the defects; the planner decided what each meant.
 
 *Topics: 13.6.1 "AI proposes; the professional verifies, decides and remains accountable" · 13.6.2 accountability, sign-off and auditability ·
 13.6.3 hallucination, bias and confidentiality · 13.6.4 when not to use AI · 13.6.5 an AI-use policy and
-verification checklist.*
+verification checklist · 13.6.6 external anchors — the instruments this governance reflects.*
 
 ### 13.6.1 "AI proposes; the professional verifies, decides and remains accountable"
 
@@ -1432,47 +1432,93 @@ commercial analyses and disclosures — whether the tool is stand-alone or embed
 this policy transfers accountability to a tool: accountability for every output rests with a named
 professional.
 
-**2. Approved tools & data rules.** Staff may use only the tools on the approved register, which records each
+**2. Legal & regulatory compliance.** Use of AI under this policy must comply with all law and regulation
+applicable in each jurisdiction in which the function operates — AI-specific regulation, data-protection and
+privacy law, employment law, and any sector regulation or supervisory expectation binding on the organisation
+— and with any restriction on AI use imposed by a client, a contract or a professional body. Where such an
+obligation applies, **it overrides this policy**: this policy sets the function's own floor and may only be
+stricter than what the law requires, never a substitute for it and never a permission beneath it. What applies
+is jurisdiction-specific, and the function does not decide it alone: legal and compliance confirm the position
+for the function's activities, markets and data, and are consulted before a new tool, a new data class or a
+new jurisdiction is brought within scope. The principal external instruments this policy reflects are named
+at 13.6.6.
+
+**3. Approved tools & data rules.** Staff may use only the tools on the approved register, which records each
 tool, its permitted data classifications and its permitted uses. Confidential, commercially sensitive or
 personal data must not be entered into any tool outside the approved register, and no data may be entered
 into a tool above the data classification for which that tool is approved. Where a governed enterprise
 alternative exists, it must be used in preference to a public tool. Requests to add a tool to the register are
 made to the controls director and assessed for data handling, residency and auditability before approval.
 
-**3. Verification & sign-off.** Every AI-assisted output must be verified against source before it is used or
+**4. Verification & sign-off.** Every AI-assisted output must be verified against source before it is used or
 circulated: figures recomputed, extractions checked against the cited document, and causal claims confirmed
 against the underlying analysis. A named professional signs off each AI-assisted output and is accountable for
 it; "the model produced it" is not an acceptable basis for release. The AI-output assurance checklist (13.6.5)
 must be applied to material outputs — forecasts, disclosures, commercial positions and board reporting — and
 an output that fails any checklist line is not released until the failure is fixed.
 
-**4. Disclosure & audit trail.** AI assistance must be disclosed wherever the receiving forum, client,
+**5. Disclosure & audit trail.** AI assistance must be disclosed wherever the receiving forum, client,
 regulator or contract requires it, and in all board-level and external reporting. For each material
 AI-assisted output, staff must record what the AI produced, who reviewed and approved it, and what was changed
 in review. These records form part of the function's audit trail and must be retained so that any
 AI-influenced number can be traced to source and defended later.
 
-**5. Prohibited uses.** AI tools must not be used to make deterministic control decisions for which an
+**6. Prohibited uses.** AI tools must not be used to make deterministic control decisions for which an
 approved rule exists — such decisions are made by transparent, auditable rules. No unverified AI-generated
 figure, citation or clause may appear in any report or register. Entitlement, revenue-recognition,
 provisioning and similar professional judgements must not be delegated to a model: AI may assemble and
 summarise the material, but the judgement is made, and owned, by a qualified person with legal or specialist
 review where required.
 
-**6. Incidents & near-misses.** Any AI-related incident or near-miss — a hallucinated figure or clause, a
+**7. Incidents & near-misses.** Any AI-related incident or near-miss — a hallucinated figure or clause, a
 confidentiality breach, an unverified output circulated — must be reported to the controls director without
 delay. Each incident is logged, the lesson is shared openly across the function rather than buried, and the
 policy and working practices are updated where the incident shows a gap. Open reporting of near-misses is
 treated as professional conduct, not failure.
 
-**7. Review cadence.** The approved-tool register is re-validated quarterly, because tool capabilities and
+**8. Review cadence.** The approved-tool register is re-validated quarterly, because tool capabilities and
 data-handling terms change. This policy is reviewed annually, or immediately after any material incident. All
 staff complete training in prompting, verification and this policy before using AI tools, with refresher
 training at least annually.
 
 *A template to adapt — the policy's force comes from the sign-off discipline it encodes, not the paper.*
 
-**AI proposes; the professional verifies, decides and remains accountable.**
+### 13.6.6 External anchors — the instruments this governance reflects
+
+**Why a professional needs to know these exist.** Everything above is written as a function's own policy,
+because that is what a controls professional can actually adopt. It does not stand on its own authority.
+Organisations that govern AI seriously anchor their arrangements to published instruments, and a candidate is
+expected to be able to name the principal ones, say **what kind of thing each is**, and recognise that only
+one of them is law. Each is **named and characterised here in this book's own words** — nothing is
+reproduced, no clause, requirement or obligation is restated, and **the official publication of each
+instrument governs** (Conventions, §9).
+
+- **ISO/IEC 42001:2023** — an **international standard** describing a management system for artificial
+  intelligence: the governance, roles, controls and improvement cycle an organisation runs around its AI use.
+  Adoption is **voluntary**, and a management system **can be certified** against it. It is not law.
+- **ISO/IEC 23894:2023** — an **international standard** offering **guidance** on managing risk in the context
+  of AI. It is guidance rather than requirements, so **nothing can be certified against it**; it sits
+  alongside ISO/IEC 42001 rather than beneath it.
+- **NIST AI RMF 1.0** — the AI Risk Management Framework published by the US National Institute of Standards
+  and Technology, organised around four functions (govern, map, measure, manage). NIST publishes it as
+  voluntary: it is a **voluntary, function-based framework — not a standard and not a regulation**.
+- **The OECD AI Principles** — a **Recommendation of the OECD Council**: an intergovernmental statement of
+  principle on trustworthy AI. It is **not binding, even on the countries that adhere to it**, and it must
+  never be described as legislation.
+- **Regulation (EU) 2024/1689, the EU AI Act** — the only instrument in this list that is **legislation**. It
+  is **binding within the European Union and nowhere else of its own force**, and it applies in phases rather
+  than all at once, with general application from **2 August 2026**.
+
+**What this list is for, and what it is not.** Four of the five are adopted by choice; one is law where it
+reaches. Naming them is **characterisation, not reproduction** — a candidate who needs to know what any of
+them requires reads the instrument itself, or takes advice, and never infers a requirement from this book.
+Applicability is **jurisdiction-specific**: an AI-use policy (13.6.5c) that is sufficient in one country can
+be non-compliant in another, and **data-protection, privacy, employment and sector regulation** bite on AI use
+whether or not an AI-specific instrument applies at all. Where a function operates across borders, which
+instruments apply — and what they demand — is a question for legal and compliance, answered before the tool is
+switched on rather than after an incident (13.6.5c, §2). None of this displaces the accountability this
+knowledge area is built on: a framework is not a signature, and "the standard says so" is no more a defence
+than "the model said so". **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 13.6
 
@@ -1811,7 +1857,13 @@ holds without amendment.
 
 Once ML models influence real decisions — a predictive `EAC` (KA 13.5.3), a risk score (KA 13.5.9) — ad-hoc
 checking is not enough; the function needs **model risk management**, a discipline long practised in
-regulated industries and described here generically.
+regulated industries. Its shape is not invented here: banking supervisors in the United States have published
+**supervisory guidance on model risk management** (**SR 11-7 / OCC 2011-12**), which is where much of the
+private sector's vocabulary for validating and monitoring models originates. That guidance is named here as an
+example and characterised in this book's own words — it is **supervisory guidance, not legislation**, it is
+**jurisdiction-specific**, it binds **only the firms those supervisors supervise**, and its requirements are
+neither reproduced nor summarised as obligations: the official publication governs (13.6.6). The treatment
+below stays deliberately generic, so that it transfers to a controls function of any size in any sector.
 
 - **Validation before use.** The model is tested on data held back from training, its assumptions and
   training-data representativeness challenged (KA 13.2), and its limitations documented. Evidence like the
@@ -2350,7 +2402,7 @@ stable.*
 
 ### Toolkit 13.T.1 — AI tool register template
 
-The approved-tool register the model policy requires (13.6.5c, §2): each tool, its permitted data classes and
+The approved-tool register the model policy requires (13.6.5c, §3): each tool, its permitted data classes and
 uses, and its assurance standard. Three illustrative rows — an assistant, a RAG system, an ML forecaster.
 
 | Tool | Category (13.4) | Approved data classes | Grounding required? | Verification standard | Owner | Last validated | Status |
@@ -2361,10 +2413,10 @@ uses, and its assurance standard. Three illustrative rows — an assistant, a RA
 
 **Usage note.** The register is the operational form of the policy's approved-tools rule: no data may enter a
 tool above the data classification for which that tool is approved, and a governed enterprise alternative is
-used in preference to a public tool (13.2.5, 13.6.5c §2). The category column ties each tool to its
+used in preference to a public tool (13.2.5, 13.6.5c §3). The category column ties each tool to its
 category-specific governance risk from 13.4.2b — hallucination for assistants, source-access control and
 corpus currency for RAG, explainability and training-data representativeness for ML. The last-validated
-column enforces the quarterly re-validation cadence (13.6.5c §7), because capabilities and data-handling
+column enforces the quarterly re-validation cadence (13.6.5c §8), because capabilities and data-handling
 terms change: the forecaster's "Revalidation due" status means its outputs carry extra scrutiny until the
 owner re-validates. Keep the columns stable so the register can be audited period over period.
 
@@ -2383,7 +2435,7 @@ faithfully as the passes.
 **Usage note.** The form turns the verification checklist from a habit into a record: for each material
 output — forecasts, disclosures, commercial positions, board reporting — it captures what the AI produced,
 who verified it, and on what basis, which is exactly the audit trail the policy requires and the defence a
-challenged number needs (13.6.2, 13.6.5c §4). An output that fails any column is not released until the
+challenged number needs (13.6.2, 13.6.5c §5). An output that fails any column is not released until the
 failure is fixed — footnoting a known inconsistency defeats the assurance the record exists to provide
 (MCQ 13.6-D). The paired rows show that rule working: the first row is the value of the form, because a
 plausible-looking forecast that no method reproduces is exactly what an unrecorded verification lets through,
@@ -2451,7 +2503,8 @@ quality dimensions; governance and lineage; controls data sources; confidentiali
 coding — matched to task and governance). Its heart is **AI applied across the lifecycle** — ten hands-on
 workflows, each *input → AI step → professional verification → owned output*, cross-referencing every earlier
 domain. It closes with **governance, ethics and assurance** (accountability, sign-off, auditability;
-hallucination/bias/confidentiality; when not to use AI; an AI-use policy and verification checklist) and
+hallucination/bias/confidentiality; when not to use AI; an AI-use policy and verification checklist; and the
+external anchors that policy reflects, of which only the EU AI Act is legislation) and
 **building the capability** (maturity model, integration, upskilling, value measurement, pitfalls, and an
 honest outlook). The durable professional skill is the judgement to **direct, verify and own** AI-assisted work
 — exactly what the PCL-AI certifies.

@@ -192,7 +192,9 @@ Real frameworks are named and their principles explained; nothing is invented an
 
 - **Named at principle level.** IFRS 15, IAS 1, IAS 2, IAS 16, IAS 23, IAS 37 and IFRS 16; the PMBOK Guide and
   the AACE Total Cost Management framework; ISO 31000 and ISO/IEC 17024; the Agile Manifesto, the Scrum Guide,
-  Kanban and Lean. **Appendix C** indexes every framework this book refers to and where it is used.
+  Kanban and Lean; and, for AI governance (13.6.6), ISO/IEC 42001, ISO/IEC 23894, the NIST AI RMF, the OECD AI
+  Principles and the EU AI Act — of which only the last is legislation, and only within its own jurisdiction.
+  **Appendix C** indexes every framework this book refers to and where it is used.
 - **In this book's own words.** No standard's text is reproduced. A principle is summarised — "under IAS 37 a
   provision is recognised when…" — and every example, table, figure and question is original. Clause numbers,
   page references and quotations are never manufactured to look authoritative.

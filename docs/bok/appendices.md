@@ -389,6 +389,12 @@ relying on any of them for a live decision should verify the current requirement
 | **Kanban / Lean** | Industry practice | Flow and waste-reduction principles | 9.4 |
 | **SAFe / LeSS / Scrum-of-Scrums** | Voluntary framework | Scaling frameworks (awareness level) | 9.4 |
 | **FIDIC (and jurisdictional forms)** | Contract framework | Standard contract forms (awareness level) | 7.2 |
+| **ISO/IEC 42001** | International standard (certifiable management-system standard) | An AI management system — governance, roles, controls and improvement around AI use | 13.6 |
+| **ISO/IEC 23894** | International standard (guidance, not certifiable) | Guidance on managing risk in the context of AI | 13.6 |
+| **NIST AI RMF 1.0** | Voluntary framework | AI risk management by four functions (govern, map, measure, manage); not a standard and not a regulation | 13.6 |
+| **OECD AI Principles** | Voluntary framework (an OECD Council Recommendation) | Intergovernmental principles for trustworthy AI; not binding, even on adherents | 13.6 |
+| **EU AI Act — Regulation (EU) 2024/1689** | Illustrative reference *(actual status: binding EU legislation)* | Named as the shape AI governance must anticipate; binding within the EU only, applying in phases | 13.6 |
+| **SR 11-7 / OCC 2011-12** | Illustrative reference *(actual status: supervisory guidance, jurisdiction-specific)* | Model risk management as an established discipline; binding only on supervised firms | 13.A.2 |
 
 > **Forthcoming change — IFRS 18.** IFRS 18 *Presentation and Disclosure in Financial Statements* replaces
 > IAS 1 for annual reporting periods beginning on or after 1 January 2027, and consequentially retitles
@@ -404,8 +410,13 @@ relying on any of them for a live decision should verify the current requirement
 > *Contract framework* — a published family of contract forms adopted by agreement between parties.
 > *Professional guidance* — a professional body's recommended practice. *Voluntary framework* — adopted by
 > choice, imposing no legal obligation. *Industry practice* — a widely used approach with no single
-> authoritative publisher. No entry in this table is legislation, and none is described as such; where local
-> law or a contract imposes a stricter requirement, that requirement governs. The programme's full
+> authoritative publisher. *Illustrative reference* — named to show the shape of an instrument or of a
+> regulatory pattern, and relied on for no requirement in this book; where such an entry is in fact
+> legislation or supervisory guidance, its actual status is stated in its Category cell. One entry — the EU AI
+> Act — is genuine legislation, binding within the European Union and nowhere else of its own force; it is
+> named here as a reference point, not as a source of obligation on any reader. No other entry in this table
+> is legislation, and none is described as such. Applicability is jurisdiction-specific throughout, and where
+> local law or a contract imposes a stricter requirement, that requirement governs. The programme's full
 > cross-volume register, with verification dates, is maintained as the PCI External-Reference Register.
 
 ---
