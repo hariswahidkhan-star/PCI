@@ -1,8 +1,8 @@
 # Executive Audit Report — PCI AI Certification BoK Suite
 
-**Programme:** PCI AI Certification BoK Suite — audit, verification, law framework, renaming, indexing
-and publication  
-**Report date:** 2026-08-03  
+**Programme:** PCI AI Certification BoK Suite — audit, verification, standards framework, renaming,
+indexing, legal characterisation and publication  
+**Report date:** 2026-08-04 (revised after the Standards migration, the legal sweep and implementation of all findings)  
 **Volumes:** PCL-AI (PCI AI Project Controls Leader) · PFL-AI (PCI AI Project Finance Leader) ·
 PML-AI (PCI Project Management Leader – AI)
 
@@ -25,7 +25,7 @@ the appendices, two stub appendices promising content that did not exist, and �
 volumes — an answer-key marker that silently vanished in print, deleting the correct answer from all
 813 sample MCQs.
 
-All of that is now fixed. The volumes rebuild clean, carry a coherent PCI Standard framework,
+All of that is now fixed. The volumes rebuild clean, carry a coherent PCI Standards framework,
 and the retired PCP-AI identity is gone from published content. **What remains outstanding is the one
 thing no amount of further automated work can supply: named human subject-matter review.**
 
@@ -33,14 +33,14 @@ thing no amount of further automated work can supply: named human subject-matter
 
 | | PCL-AI | PFL-AI | PML-AI |
 |---|---|---|---|
-| Pages (rebuilt) | 947 | 802 | 822 |
+| Pages (rebuilt) | 1,229 | 960 | 969 |
 | Domains / Knowledge Areas | 13 / 61 | 16 / 61 | 16 / 63 |
 | Worked examples | 146 | 179 | 161 |
 | Sample MCQs | 309 | 450 | 363 |
 | Case studies | 26 | 33 | 33 |
 | Figures | 33 | 46 | 51 |
 | Machine-verified calculations | **none — no suite exists** | 7,935 | 7,678 |
-| Professional Laws (foundational + certification) | 14 + 20 | 14 + 24 | 14 + 24 |
+| PCI Standards (foundational + certification) | 15 + 33 | 15 + 33 | 15 + 32 |
 | **Readiness** | **Amber** — releasable as study material once reviewed | **Amber** | **Amber** |
 
 No volume is Green, and none should be described as release-ready, for one reason stated plainly in
@@ -82,7 +82,7 @@ No volume is Green, and none should be described as release-ready, for one reaso
 ## 5. What is NOT done, and why it matters most
 
 **No named human subject-matter expert has reviewed any of this material.** The corpus was AI-drafted
-end to end. Everything this programme added — 82 Professional Laws, the registers, the appendices, the
+end to end. Everything this programme added — 113 PCI Standards, the registers, the appendices, the
 corrections — was also AI-produced, reviewed by independent adversarial agents rather than by people.
 
 A passing verification suite and a clean red-team pass establish something real but narrow: the
@@ -139,3 +139,36 @@ In priority order:
    publishing decision, not an audit correction — but it should not stay open long.
 5. **Close the seven unanchored domains** in the law framework, most notably PCL-AI Domain 2, the
    IFRS 15 flagship, which carries no law at all.
+
+## 7. Post-audit work: the Standards migration and the legal sweep
+
+Two further programmes ran after the audit above and change its conclusions in one direction only —
+towards lower exposure.
+
+**The Professional Laws became the PCI Standards.** Calling a private certification body's
+requirements "Laws" asserted legislative character on every page that no disclaimer could undo. The
+instruments, their identifiers and every reference to them were migrated: 1,739 prose changes where
+"law" meant a PCI instrument, and 167 occurrences deliberately preserved where it meant actual
+legislation. The Charter now also meets the risk the new name creates — that "Standards" may suggest
+a consensus standard — by stating that these are one private body's scheme requirements, developed
+through no balloted or multi-stakeholder process, and accredited by nobody.
+
+**A legal-characterisation sweep ran across all three volumes**, removing every statement of what the
+law requires, every assertion that conduct is an offence, every claim about what an external standard
+requires, and every characterisation of an organisation's act as lawful or unlawful. Professional
+duties were kept and referred onward to qualified counsel; five new cautions were added and none
+removed. The highest-risk passage was one this programme had itself added weeks earlier to close a
+critical completeness finding — a reminder that closing a professional gap and opening a legal one
+can be the same edit.
+
+**What the sweep could not reach**, and what therefore heads the legal-review agenda: whether PCI's
+own certification terms and scheme rules actually provide for the consequences its Standards assert —
+suspension, withdrawal, investigation. That is a question about PCI's contracts, not about these
+documents, and no drafting can answer it.
+
+**Reference integrity was repaired twice**, in each case after an automated check had reported
+success. Eighty-nine standard citations pointed at identifiers that resolved perfectly while carrying
+a different subject, and 114 register citations pointed at identifiers withdrawn in an earlier
+migration. Both classes are now enforced by a validator whose every check was mutation-tested against
+a planted defect — because the lesson of both failures is that a green check proves nothing until you
+have watched it go red.
