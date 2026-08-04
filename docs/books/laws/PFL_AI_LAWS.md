@@ -84,32 +84,24 @@ action, an object and a test of its own (Manual §2).
 ### These laws sit under the Foundational Laws
 
 The foundational set binds every PCI credential holder, including every holder of the PCI AI Project
-Finance Leader credential. The Charter and Manual give it the identifier form `PCI-FND-LAW-NN`; the
-published file [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md) still carries the earlier form
-`PCI-LAW-F-NN`. **This volume cites the Charter form and publishes the mapping**, so that every
-cross-reference resolves to a law that actually exists:
+Finance Leader credential. **The foundational set is published in full at
+[`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md) as fifteen laws in the identifier form
+`PCI-FND-LAW-01` to `PCI-FND-LAW-15`, and every `PCI-FND-LAW-NN` citation in this volume cites that
+file directly.** No mapping table is published here: a citation resolves by opening the foundational
+file at the identifier cited, and the subject it carries there is the subject intended here. The
+suite-wide concordance of which certification law cites which foundational law is maintained at
+[`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md), which also records the superseded `PCI-LAW-F-NN`
+identifiers for historical traceability.
 
-| Charter form (cited here) | Published form | Title |
+**Three subjects cited by v2.0 no longer exist as foundational laws**, because the foundational set
+was rebuilt to fifteen new subjects. Every citation that named one of them has been re-pointed to the
+closest live subject, and the substitution is recorded in `LAW_CONCORDANCE.md`:
+
+| Subject cited by v2.0 | Status | Where citations now point |
 |---|---|---|
-| `PCI-FND-LAW-01` | `PCI-LAW-F-01` | Professional Accountability and the Suite Principle |
-| `PCI-FND-LAW-02` | `PCI-LAW-F-02` | Verification of AI Output Before Professional Use |
-| `PCI-FND-LAW-03` | `PCI-LAW-F-03` | Human Decision Authority |
-| `PCI-FND-LAW-04` | `PCI-LAW-F-04` | Disclosure of Material AI Assistance |
-| `PCI-FND-LAW-05` | `PCI-LAW-F-05` | Evidence and the Audit Trail |
-| `PCI-FND-LAW-06` | `PCI-LAW-F-06` | Data Lineage and Integrity |
-| `PCI-FND-LAW-07` | `PCI-LAW-F-07` | Honesty in Reporting and Forecasting |
-| `PCI-FND-LAW-08` | `PCI-LAW-F-08` | Competence Boundaries and Referral |
-| `PCI-FND-LAW-09` | `PCI-LAW-F-09` | Confidentiality and Information Protection |
-| `PCI-FND-LAW-10` | `PCI-LAW-F-10` | Conflict-of-Interest Disclosure |
-| `PCI-FND-LAW-11` | `PCI-LAW-F-11` | Duty to Escalate |
-| `PCI-FND-LAW-12` | `PCI-LAW-F-12` | Record Retention |
-| `PCI-FND-LAW-13` | `PCI-LAW-F-13` | Ethical Conduct Toward Candidates, Employers and the Public |
-| `PCI-FND-LAW-14` | `PCI-LAW-F-14` | No Misrepresentation of PCI Credentials or Accreditation Status |
-| `PCI-FND-LAW-15` | — | **Unallocated at this revision.** |
-
-**`PCI-FND-LAW-15` is not cited anywhere in this volume**, because the foundational set contains
-fourteen laws and citing an identifier with no law behind it would be a false cross-reference. The
-identifier is reserved, not used.
+| *Honesty in reporting and forecasting* | Withdrawn as a separate law; its substance is split | `PCI-FND-LAW-05` (transparent assumptions) for presentation honesty, `PCI-FND-LAW-02` (evidence before assertion) where the sentence turns on evidence for a claim, `PCI-FND-LAW-11` (escalation of material misstatement) where it turns on raising a known problem |
+| *Ethical conduct toward candidates, employers and the public* | Not carried forward at Level 1 — a certification-conditions matter | `PCI-FND-LAW-08` or `PCI-FND-LAW-11` where the specific duty survives there; otherwise the citation is dropped rather than pointed at a law that does not carry the subject |
+| *No misrepresentation of PCI credentials or accreditation status* | Not carried forward at Level 1 — governs the PCI-to-holder relationship, not professional work | `PCI-FND-LAW-02` or `PCI-FND-LAW-14` where a live misrepresentation duty covers the point; otherwise dropped |
 
 **A certification law must add.** Every law below carries, in element 19, an explicit statement of
 what it requires that its foundational parent does not. A certification law that merely restates a
@@ -457,10 +449,10 @@ cash forecast. The consequences for directors and officers of continuing to trad
 payment, differ by jurisdiction and can be personal. Obtain local legal and accounting advice before
 any statement about an entity's ability to continue or to pay.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07` (honesty in reporting and forecasting);
-`PCI-FND-LAW-05`; `PCI-PFL-LAW-10.01`; `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-14.02`;
-`PCI-PFL-LAW-15.01`. **Increment over the foundational parent:** `PCI-FND-LAW-07` requires honest
-reporting generally; this law fixes *what honesty means in a financing* — the obligation is dated, the
+**19. Related PCI Laws.** `PCI-FND-LAW-05` (transparent assumptions); `PCI-FND-LAW-02`;
+`PCI-PFL-LAW-10.01`; `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.01`. **Increment over
+the foundational parent:** `PCI-FND-LAW-05` requires a conclusion to carry the material assumptions
+it depends on; this law fixes *what honesty means in a financing* — the obligation is dated, the
 test is at the payment date, the reconciliation is itemised, and the averaging convention is
 disclosed on the face of the output.
 
@@ -634,12 +626,12 @@ determine the *legal* consequences of an undisclosed interest, and they differ b
 role. Consent is not a universal cure. Obtain local legal advice before relying on consent, and note
 that anti-bribery obligations can be extraterritorial.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-10` (conflict-of-interest disclosure); `PCI-FND-LAW-13`;
-`PCI-PFL-LAW-13.02`; `PCI-PFL-LAW-16.03`. **Increment over the foundational parent:**
-`PCI-FND-LAW-10` requires disclosure of conflicts; this law adds the multi-party structure specific
-to a financing — screening against the full party list at each accession and transfer, the two-hat
-prohibition on advising both sides of one question, tested information barriers, and the rule that
-consent obtained on incomplete disclosure is not consent.
+**19. Related PCI Laws.** `PCI-FND-LAW-08` (conflict disclosure); `PCI-PFL-LAW-13.02`;
+`PCI-PFL-LAW-16.03`. **Increment over the foundational parent:** `PCI-FND-LAW-08` requires
+disclosure of conflicts; this law adds the multi-party structure specific to a financing — screening
+against the full party list at each accession and transfer, the two-hat prohibition on advising both
+sides of one question, tested information barriers, and the rule that consent obtained on incomplete
+disclosure is not consent.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 1 — Foundations of project finance
 leadership · KA 1.3 Ethics, fiduciary awareness and responsible AI · topics 1.3.1 fiduciary and
@@ -803,11 +795,11 @@ change of administration. A condition satisfied under one jurisdiction's regime 
 another's. Obtain local legal advice on each permit, each land right and the grantor's capacity to
 contract.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-09.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-09.01`;
 `PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-13.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` requires honest reporting; this law converts a single summary adjective
-into an evidenced conjunction with a named owner and a resolution path for each limb, and forbids the
-aggregation that hides a failing limb.
+parent:** `PCI-FND-LAW-05` requires a conclusion to carry the material assumptions it depends on;
+this law converts a single summary adjective into an evidenced conjunction with a named owner and a
+resolution path for each limb, and forbids the aggregation that hides a failing limb.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 5 — Project development and bankability ·
 KA 5.3 The bankability test · and KA 5.4 Construction and operational readiness. Also Domain 1 KA 1.2
@@ -962,12 +954,12 @@ governs, what representations attach to it and what liability follows from an er
 positions differ by jurisdiction and by engagement. Obtain qualified legal advice on the contractual
 status of the model before releasing it outside the preparing organisation.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-06`; `PCI-PFL-LAW-06.02`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-07`; `PCI-PFL-LAW-06.02`;
 `PCI-PFL-LAW-06.03`; `PCI-PFL-LAW-06.05`; `PCI-PFL-LAW-13.01`; `PCI-PFL-LAW-16.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-06` requires data lineage and integrity; this law adds the
-structural preconditions that make lineage checkable in a financing model — role separation per cell,
-one declared timeline, a visible check block of named invariants, and a circulation stop while any
-check fails.
+the foundational parent:** `PCI-FND-LAW-07` requires data lineage; this law adds the structural
+preconditions that make lineage checkable in a financing model — role separation per cell, one
+declared timeline, a visible check block of named invariants, and a circulation stop while any check
+fails.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 6 — Financial modelling · KA 6.1 Model
 architecture · topics: the inputs–calculations–outputs separation and the model timeline. Also KA 6.2
@@ -1112,9 +1104,9 @@ liability regime for a misstatement is jurisdiction-specific and can extend pers
 who prepared or signed it. Obtain qualified legal advice before a model figure is quoted in any such
 document.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-07`; `PCI-PFL-LAW-06.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-05`; `PCI-PFL-LAW-06.01`;
 `PCI-PFL-LAW-06.03`; `PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-16.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-06` requires that data can be traced to its origin; this law adds the
+parent:** `PCI-FND-LAW-07` requires that data can be traced to its origin; this law adds the
 calculation-level discipline that makes tracing possible at all — no constant inside a formula, one
 formula per row, and every unavoidable override registered, visible, dated and owned.
 
@@ -1261,11 +1253,12 @@ regime, or an out-of-date determination, is a defect that a reviewer cannot dete
 alone. Obtain qualified local tax and regulatory advice on each such assumption — see
 `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-05`; `PCI-PFL-LAW-06.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-02`; `PCI-PFL-LAW-06.01`;
 `PCI-PFL-LAW-06.02`; `PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-16.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-06` requires lineage from a figure to its origin; this law adds the register
+parent:** `PCI-FND-LAW-07` requires lineage from a figure to its origin; this law adds the register
 that makes lineage survive a change of personnel — six mandatory fields, a named human owner per
-assumption, single entry, and a review date that expires the assumption rather than letting it drift.
+assumption, single entry, and a review date that expires the assumption rather than letting it
+drift.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 6 — Financial modelling · KA 6.1 Model
 architecture and KA 6.2 Construction-period and operating models. Also Domain 8 KA 8.1 (cost estimate
@@ -1413,11 +1406,12 @@ jurisdiction-specific and can conflict with one another in a cross-border financ
 policy lawful in one jurisdiction can breach another's. Obtain local legal advice on retention and on
 cross-border transfer before designing the retention arrangement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PFL-LAW-06.03`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-12`; `PCI-PFL-LAW-06.03`;
 `PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-16.02`. **Increment over the foundational parent:**
-`PCI-FND-LAW-05` requires an audit trail; this law states what the trail must contain for a financing
-figure — document, version, issuing party — makes production on request the test, retains the record
-rather than a link, and imposes a positive duty to withdraw and notify when production fails.
+`PCI-FND-LAW-02` requires the evidence behind a claim to be identified in the working record and
+retrievable; this law states what the trail must contain for a financing figure — document, version,
+issuing party — makes production on request the test, retains the record rather than a link, and
+imposes a positive duty to withdraw and notify when production fails.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 6 — Financial modelling · KA 6.1 Model
 architecture. Also Domain 13 KA 13.1 (the diligence streams) and KA 13.3 (conditions precedent and
@@ -1580,12 +1574,14 @@ control constitutes evidence of a document's state, and whether an electronic si
 effective, are also jurisdiction-specific. Obtain qualified legal advice on the contractual status of
 the model before amending an agreed version.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-12`; `PCI-FND-LAW-04`; `PCI-PFL-LAW-06.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-FND-LAW-14`; `PCI-PFL-LAW-06.01`;
 `PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-16.01`. **Increment over the foundational parent:**
-`PCI-FND-LAW-05` requires an audit trail and `PCI-FND-LAW-12` requires retention; this law adds what a
-*transaction* model needs on top — a single authoritative version among many circulating copies, a
-regression suite whose every movement is explained *before* acceptance, a human author on every change
-including AI-made ones, and a locked close case that later work cannot silently overwrite.
+`PCI-FND-LAW-02` requires the evidence behind a figure to be identified and retrievable and
+`PCI-FND-LAW-12` requires every record to be attributable, time-fixed and any later alteration
+detectable; this law adds what a *transaction* model needs on top — a single authoritative version
+among many circulating copies, a regression suite whose every movement is explained *before*
+acceptance, a human author on every change including AI-made ones, and a locked close case that
+later work cannot silently overwrite.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 6 — Financial modelling · KA 6.4 Checks,
 sensitivity, model audit and AI controls · topics: model audit and governance; AI-assisted modelling
@@ -1751,11 +1747,12 @@ Sanctions and financial-crime obligations may also restrict which capital provid
 Obtain qualified local tax and legal advice on each instrument and each jurisdiction in the structure
 before the structure is recommended — see `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-08`; `PCI-PFL-LAW-05.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-10`; `PCI-PFL-LAW-05.01`;
 `PCI-PFL-LAW-10.02`; `PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-15.02`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` forbids a misleading forecast; this law addresses the specific way a
-funding plan misleads — by resting on an event nobody has committed to — and requires the dependency
-to be scheduled, owned, dated, and modelled in failure.
+parent:** `PCI-FND-LAW-05` forbids issuing a forecast or recommendation without the material
+assumptions it rests on; this law addresses the specific way a funding plan misleads — by resting on
+an event nobody has committed to — and requires the dependency to be scheduled, owned, dated, and
+modelled in failure.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 9 — Funding structure and sources of
 capital · KA 9.1 Equity and shareholder instruments, KA 9.2 Senior, subordinated and mezzanine debt and
@@ -1942,13 +1939,13 @@ institution's own board. Obtain qualified local legal, tax and Shariah advice fo
 structure, the specific documents and the specific jurisdiction, and do not carry an answer across a
 border.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08` (competence boundaries and referral); `PCI-FND-LAW-07`;
-`PCI-FND-LAW-14`; `PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-12.02`. **Increment over the
-foundational parent:** `PCI-FND-LAW-08` requires a professional to work within competence and to refer
-beyond it; this law identifies one specific boundary that a finance professional crosses easily and
-almost always inadvertently — a label — and converts the referral duty into a producible determination,
-a no-extrapolation rule, a pending-status rule and a standing statement that PCI has no authority over
-the determination at all.
+**19. Related PCI Laws.** `PCI-FND-LAW-10` (competence and limitation); `PCI-FND-LAW-02`;
+`PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-12.02`. **Increment over the foundational
+parent:** `PCI-FND-LAW-10` requires a professional to work within the competence they hold and not
+to issue work beyond it; this law identifies one specific boundary that a finance professional
+crosses easily and almost always inadvertently — a label — and converts the referral duty into a
+producible determination, a no-extrapolation rule, a pending-status rule and a standing statement
+that PCI has no authority over the determination at all.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 9 — Funding structure and sources of
 capital · KA 9.3 Islamic finance concepts, export credit and development finance · topic 9.3.1 Islamic
@@ -2158,13 +2155,13 @@ and the answer differs by jurisdiction, by instrument and by investor type. Obta
 legal advice before any sustainability claim is published, and re-take that advice before the same
 claim is repeated in another jurisdiction.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07` (honesty in reporting); `PCI-FND-LAW-13`;
-`PCI-FND-LAW-14`; `PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-10.04`. **Increment over the
-foundational parent:** `PCI-FND-LAW-07` requires honest reporting; this law addresses the specific
-mechanism by which a sustainability statement becomes dishonest without anyone lying — strength drift
-between *intended*, *assessed*, *aligned* and *certified* — and adds the register, the voluntary-status
-rule, the metric particulars, the ratchet economics and a positive duty to withdraw when evidence
-lapses.
+**19. Related PCI Laws.** `PCI-FND-LAW-02` (evidence before assertion); `PCI-FND-LAW-11`;
+`PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-10.04`. **Increment over the foundational
+parent:** `PCI-FND-LAW-02` forbids a claim that the identified evidence does not support; this law
+addresses the specific mechanism by which a sustainability statement becomes dishonest without
+anyone lying — strength drift between *intended*, *assessed*, *aligned* and *certified* — and adds
+the register, the voluntary-status rule, the metric particulars, the ratchet economics and a
+positive duty to withdraw when evidence lapses.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 9 — Funding structure and sources of
 capital · KA 9.4 Government support, grants, sustainable finance and refinancing · topic 9.4.3 green
@@ -2320,12 +2317,12 @@ definitions — are jurisdiction-specific and change with legislation. Obtain qu
 construction and qualified local tax advice on the tax components, and never resolve a construction
 question inside the model.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-07`; `PCI-PFL-LAW-01.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-05`; `PCI-PFL-LAW-01.01`;
 `PCI-PFL-LAW-10.02`; `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-15.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-06` requires data integrity and lineage; this law names the one
-quantity in a financing whose *definition* — not its data — is the usual point of failure, and requires
-an item-by-item schedule sourced to the defining clause, reconciled to the model and to the statements,
-and re-derived on every amendment.
+the foundational parent:** `PCI-FND-LAW-07` requires a figure to be traceable from its sources to
+the output that was approved; this law names the one quantity in a financing whose *definition* —
+not its data — is the usual point of failure, and requires an item-by-item schedule sourced to the
+defining clause, reconciled to the model and to the statements, and re-derived on every amendment.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 10 — Debt sizing, covenants and credit
 metrics · KA 10.1 Debt capacity and sizing · topic 10.1.1 cash available for debt service. Also Domain
@@ -2474,11 +2471,12 @@ project or a sector can each cap the quantum independently of the coverage arith
 jurisdiction-specific. Obtain qualified local tax and regulatory advice before a quantum is relied
 upon — see `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-10.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-10.01`;
 `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-10.05`; `PCI-PFL-LAW-06.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` forbids a forecast that misleads; this law names the specific reverse-
-engineering that produces a misleading quantum — choosing the coverage level to fit the answer — and
-requires the basis to be recorded, sourced and stress-tested before the quantum is quoted.
+parent:** `PCI-FND-LAW-05` forbids a forecast issued without the assumptions it depends on; this law
+names the specific reverse-engineering that produces a misleading quantum — choosing the coverage
+level to fit the answer — and requires the basis to be recorded, sourced and stress-tested before
+the quantum is quoted.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 10 — Debt sizing, covenants and credit
 metrics · KA 10.1 Debt capacity and sizing · topics: sizing from coverage, sculpting, and the effective
@@ -2628,11 +2626,12 @@ matters for the governing law of the *finance documents* and for qualified couns
 the classification consequences of a breach are a reporting question in the entity's own framework and
 jurisdiction.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-PFL-LAW-01.01`; `PCI-PFL-LAW-10.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-PFL-LAW-01.01`; `PCI-PFL-LAW-10.01`;
 `PCI-PFL-LAW-10.02`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-15.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` requires honest reporting; this law specifies the three things a coverage
-number needs before it is honest — its definition, its period basis and its minimum — and requires the
-series and every adjustment to travel with it.
+parent:** `PCI-FND-LAW-05` requires a conclusion to travel with the assumptions and the basis it
+depends on; this law specifies the three things a coverage number needs before it is honest — its
+definition, its period basis and its minimum — and requires the series and every adjustment to
+travel with it.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 10 — Debt sizing, covenants and credit
 metrics · KA 10.2 The coverage ratios · topics: the period test, the horizon tests, and reading a ratio
@@ -2784,12 +2783,13 @@ injunctive relief, and the interaction with insolvency law are all determined by
 the *finance documents* and by the law of the place of enforcement, which need not be the same. Obtain
 qualified legal advice, and **never act on a modelled interpretation**.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08` (competence boundaries and referral); `PCI-FND-LAW-11`;
+**19. Related PCI Laws.** `PCI-FND-LAW-10` (competence and limitation); `PCI-FND-LAW-11`;
 `PCI-PFL-LAW-10.01`; `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-12.02`; `PCI-PFL-LAW-15.01`;
-`PCI-PFL-LAW-15.03`. **Increment over the foundational parent:** `PCI-FND-LAW-08` requires referral
-beyond competence; this law draws the boundary precisely for a financing — arithmetic on defined inputs
-is the professional's; the construction of the words is counsel's — and adds the register, the referral
-log and the rule that a lock-up and a default are reported as different events.
+`PCI-PFL-LAW-15.03`. **Increment over the foundational parent:** `PCI-FND-LAW-10` forbids issuing
+work that requires competence not held; this law draws the boundary precisely for a financing —
+arithmetic on defined inputs is the professional's; the construction of the words is counsel's — and
+adds the register, the referral log and the rule that a lock-up and a default are reported as
+different events.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 10 — Debt sizing, covenants and credit
 metrics · KA 10.4 Covenants, default and cure · topics: covenant types, distribution lock-up, events of
@@ -2940,12 +2940,12 @@ offshore reserve are all jurisdiction-specific — and in a cross-border financi
 jurisdiction, the borrower's and the governing law's may differ. Obtain qualified local legal advice on
 each account before relying on a reserve as security or as available cash.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.01`;
 `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-14.04`; `PCI-PFL-LAW-15.01`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` requires an evidenced trail; this law states what the trail must prove for a
-reserve — the required balance sourced to its clause, funding on the date and in the permitted form,
-each application checked against the permitted list before it is made, replenishment tracked to
-restoration, and independent confirmation of the balance itself.
+parent:** `PCI-FND-LAW-02` requires an evidenced trail behind a claim; this law states what the
+trail must prove for a reserve — the required balance sourced to its clause, funding on the date and
+in the permitted form, each application checked against the permitted list before it is made,
+replenishment tracked to restoration, and independent confirmation of the balance itself.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 10 — Debt sizing, covenants and credit
 metrics · KA 10.3 Reserve accounts and the debt-service schedule · including reserve tolerance. Also
@@ -3100,12 +3100,12 @@ jurisdiction- and insurer-specific; and sanctions may make a counterparty unusab
 credit. Obtain qualified local legal advice on the enforceability of each transfer mechanism before
 relying on it — a cap that is void does not cap.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-05.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-05.01`;
 `PCI-PFL-LAW-09.01`; `PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-12.02`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` requires honest reporting; this law names the mechanism by which a risk
-matrix becomes dishonest without a false statement in it — reading a transfer at its headline rather
-than at its limit — and requires caps, exclusions, counterparty capacity, orphans and double cover all
-to be on the face of the record.
+parent:** `PCI-FND-LAW-05` requires the conditions a conclusion rests on to be stated with equal
+prominence; this law names the mechanism by which a risk matrix becomes dishonest without a false
+statement in it — reading a transfer at its headline rather than at its limit — and requires caps,
+exclusions, counterparty capacity, orphans and double cover all to be on the face of the record.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 11 — Risk identification and allocation ·
 KA 11.1–11.4. Also Domain 12 KA 12.4 (risk allocation, claims and change) and Domain 5 KA 5.3 (the
@@ -3256,12 +3256,12 @@ entire-agreement clause, and the admissibility of pre-contractual material in co
 questions of the governing law and can differ between the contracts in a single financing. Obtain
 qualified legal advice on the effective document set before relying on it — see `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-06`; `PCI-PFL-LAW-06.04`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-PFL-LAW-06.04`;
 `PCI-PFL-LAW-10.01`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-16.02`. **Increment over
-the foundational parent:** `PCI-FND-LAW-06` requires lineage to a source; this law fixes what counts as
-the source for a contractual term — the executed clause with its definitions and provisos, at the
-version in effect — and adds a positive duty to report a discrepancy back to whoever produced the
-summary that was wrong.
+the foundational parent:** `PCI-FND-LAW-06` requires a dated check that a source is the version in
+force for the matter; this law fixes what counts as the source for a contractual term — the executed
+clause with its definitions and provisos, at the version in effect — and adds a positive duty to
+report a discrepancy back to whoever produced the summary that was wrong.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 12 — Contracts and transaction structure ·
 KA 12.1 EPC and O&M, KA 12.2 offtake, concession, supply and interface agreements, KA 12.3 guarantees,
@@ -3429,13 +3429,13 @@ specific, frequently amended, and often interact across the several jurisdiction
 financing. An answer obtained for one entity, one structure, one period or one jurisdiction says nothing
 about another.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-08` (competence boundaries and referral); `PCI-FND-LAW-11`;
-`PCI-FND-LAW-14`; `PCI-PFL-LAW-06.03`; `PCI-PFL-LAW-09.02`; `PCI-PFL-LAW-10.04`;
-`PCI-PFL-LAW-12.01`. **Increment over the foundational parent:** `PCI-FND-LAW-08` requires referral
-beyond competence; this law makes the referral operational in a financing — a logged boundary question,
-written advice before adoption, modelling to the advice's stated limits, and fresh advice on any change
-of entity, structure, period or jurisdiction, which is the failure mode a general competence rule never
-catches.
+**19. Related PCI Laws.** `PCI-FND-LAW-10` (competence and limitation); `PCI-FND-LAW-11`;
+`PCI-PFL-LAW-06.03`; `PCI-PFL-LAW-09.02`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-12.01`. **Increment over
+the foundational parent:** `PCI-FND-LAW-10` forbids accepting or continuing work that requires
+competence not held; this law makes the referral operational in a financing — a logged boundary
+question, written advice before adoption, modelling to the advice's stated limits, and fresh advice
+on any change of entity, structure, period or jurisdiction, which is the failure mode a general
+competence rule never catches.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 12 — Contracts and transaction structure ·
 KA 12.1–12.4, whose treatment is expressly commercial, with jurisdiction-specific matters referred to
@@ -3606,12 +3606,12 @@ engagement letter, and any statutory or professional restriction on providing bo
 assurance services to the same client, are jurisdiction- and profession-specific. Obtain qualified
 legal advice on reliance and liability before a report is provided to a party outside the engagement.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-10`; `PCI-FND-LAW-08`; `PCI-PFL-LAW-01.02`;
+**19. Related PCI Laws.** `PCI-FND-LAW-08`; `PCI-FND-LAW-10`; `PCI-PFL-LAW-01.02`;
 `PCI-PFL-LAW-06.05`; `PCI-PFL-LAW-13.02`; `PCI-PFL-LAW-16.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-10` requires conflicts to be disclosed; this law goes further for a review by
+parent:** `PCI-FND-LAW-08` requires conflicts to be disclosed; this law goes further for a review by
 making independence a four-limb factual test recorded *before* engagement, forbidding self-review
-outright, fixing the scope and materiality before findings are known, and requiring a non-independent
-review to be labelled as one rather than merely disclosed.
+outright, fixing the scope and materiality before findings are known, and requiring a
+non-independent review to be labelled as one rather than merely disclosed.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 13 — Due diligence and financial close ·
 KA 13.2 Model audit · including the materiality threshold expressed in the transaction's own metric.
@@ -3759,12 +3759,12 @@ certain services, and the legal effect of describing an output as independent di
 by profession — and a description lawful in one place can be a regulated statement in another. Obtain
 qualified legal and professional-body advice before using the word in a regulated context.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-10`; `PCI-FND-LAW-13`; `PCI-FND-LAW-14`; `PCI-PFL-LAW-01.02`;
+**19. Related PCI Laws.** `PCI-FND-LAW-08`; `PCI-FND-LAW-02`; `PCI-PFL-LAW-01.02`;
 `PCI-PFL-LAW-13.01`; `PCI-PFL-LAW-09.03`. **Increment over the foundational parent:**
-`PCI-FND-LAW-10` requires conflicts to be disclosed and `PCI-FND-LAW-14` forbids misrepresenting a PCI
-credential; this law addresses a different misrepresentation — the word *independent* applied to an
-adviser or an output — and converts it from a self-description into a recorded four-limb factual test
-assessed at both individual and firm level.
+`PCI-FND-LAW-08` requires conflicts to be disclosed and `PCI-FND-LAW-02` forbids a claim that the
+identified evidence does not support; this law addresses one such claim — the word *independent*
+applied to an adviser or an output — and converts it from a self-description into a recorded
+four-limb factual test assessed at both individual and firm level.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 13 — Due diligence and financial close ·
 KA 13.1 The diligence streams. Also Domain 1 KA 1.3 (conflicts and independence) and Domain 13 KA 13.2
@@ -3917,12 +3917,12 @@ are all jurisdiction-specific — and in a multi-jurisdictional financing each c
 by a different law. Obtain qualified local legal advice on each condition's satisfaction in its own
 jurisdiction; a condition satisfied under one law is not thereby satisfied under another.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-07`; `PCI-FND-LAW-11`;
-`PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.03`. **Increment over
-the foundational parent:** `PCI-FND-LAW-05` requires an evidenced trail; this law states what the trail
-must contain for a condition — the deliverable *and* the acceptance by the entitled party in the
-required form — and forbids the specific substitution that a close under time pressure invites, namely
-recording a waiver or a deferral as satisfaction.
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-12.01`;
+`PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.03`. **Increment over the foundational
+parent:** `PCI-FND-LAW-02` requires an evidenced trail behind a claim; this law states what the
+trail must contain for a condition — the deliverable *and* the acceptance by the entitled party in
+the required form — and forbids the specific substitution that a close under time pressure invites,
+namely recording a waiver or a deferral as satisfaction.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 13 — Due diligence and financial close ·
 KA 13.3 Conditions precedent and documentation · including the CP chain and its duration. Also KA 13.4
@@ -4080,12 +4080,12 @@ conflict across the jurisdictions in one financing. A missed post-close registra
 invalidate security. Obtain qualified local legal advice on execution formalities, post-close filings
 and retention before the record is designed.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-12`; `PCI-PFL-LAW-06.05`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-12`; `PCI-PFL-LAW-06.05`;
 `PCI-PFL-LAW-13.03`; `PCI-PFL-LAW-14.01`; `PCI-PFL-LAW-14.04`. **Increment over the foundational
-parent:** `PCI-FND-LAW-12` requires records to be retained; this law names the components a *financing*
-record must contain, requires them to be one identified set with an index and a version per component,
-requires the closing numbers to reconcile, and requires the open items to be handed to the person who
-will administer them.
+parent:** `PCI-FND-LAW-12` requires records to be attributable, time-fixed and any later alteration
+detectable; this law names the components a *financing* record must contain, requires them to be one
+identified set with an index and a version per component, requires the closing numbers to reconcile,
+and requires the open items to be handed to the person who will administer them.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 13 — Due diligence and financial close ·
 KA 13.4 Syndication and financial close · including the funds-flow statement reconciled to the
@@ -4235,12 +4235,12 @@ treatment of an undrawn commitment are all jurisdiction-specific and can change 
 qualified local legal and tax advice on each source and on the treatment of financing costs — see
 `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-07`; `PCI-PFL-LAW-09.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-06`; `PCI-FND-LAW-02`; `PCI-PFL-LAW-09.01`;
 `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-14.03`; `PCI-PFL-LAW-14.04`; `PCI-PFL-LAW-13.04`. **Increment over
-the foundational parent:** `PCI-FND-LAW-07` forbids a misleading presentation; this law names the
-mechanism specific to a funding plan — a plug that makes an out-of-balance project look funded — and
-requires each source to be classified against an executed document and each line to stand on its own
-evidence.
+the foundational parent:** `PCI-FND-LAW-02` forbids presenting a figure that the identified evidence
+does not support; this law names the mechanism specific to a funding plan — a plug that makes an
+out-of-balance project look funded — and requires each source to be classified against an executed
+document and each line to stand on its own evidence.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 14 — Construction monitoring and drawdown ·
 KA 14.1 Sources and uses, draw requests and conditions. Also Domain 6 KA 6.2 (sources and uses; the
@@ -4388,11 +4388,12 @@ certified value and on advance payments, and the treatment of an advance-payment
 all jurisdiction-specific and can override the contract's own mechanics. Obtain qualified local legal
 advice on the payment regime and on lien risk before a drawdown structure is relied upon.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-07`; `PCI-PFL-LAW-13.03`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-05`; `PCI-PFL-LAW-13.03`;
 `PCI-PFL-LAW-14.01`; `PCI-PFL-LAW-14.03`; `PCI-PFL-LAW-14.04`. **Increment over the foundational
-parent:** `PCI-FND-LAW-05` requires evidence behind a claim; this law states what evidence a *drawing*
-needs — certified value or evidenced cost, a current cost-to-complete, and the documented in-balance
-test — and makes disclosure of a negative result unwaivable even where the drawing itself is waived.
+parent:** `PCI-FND-LAW-02` requires evidence behind a claim; this law states what evidence a
+*drawing* needs — certified value or evidenced cost, a current cost-to-complete, and the documented
+in-balance test — and makes disclosure of a negative result unwaivable even where the drawing itself
+is waived.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 14 — Construction monitoring and drawdown ·
 KA 14.1 Sources and uses, draw requests and conditions · and KA 14.3 Progress certification and change
@@ -4545,12 +4546,12 @@ disputed amounts on insolvency are jurisdiction-specific and materially affect a
 time bar that is enforceable in one jurisdiction might not be enforceable in another. Obtain qualified local legal
 advice on claim validity and time bars before an exposure is assessed as low.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-14.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-14.01`;
 `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-11.01`; `PCI-PFL-LAW-06.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` requires an honest forecast; this law fixes the construction-phase method —
-a build-up from components rather than a deduction from budget, an assessed exposure for every notified
-claim, a named programme, and a movement explanation by component — which is what makes the forecast
-capable of rising.
+parent:** `PCI-FND-LAW-05` requires a forecast to be issued with the assumptions it depends on; this
+law fixes the construction-phase method — a build-up from components rather than a deduction from
+budget, an assessed exposure for every notified claim, a named programme, and a movement explanation
+by component — which is what makes the forecast capable of rising.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 14 — Construction monitoring and drawdown ·
 KA 14.2 Cost-to-complete and contingency draw · including assessed claim exposure. Also Domain 8 KA 8.3
@@ -4712,12 +4713,12 @@ individual authoriser personally. **A payment that is contractually correct can 
 Obtain qualified local legal advice on the payment perimeter, and treat sanctions and financial-crime
 screening as a separate obligation owed to the institution's own compliance function.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-03`; `PCI-FND-LAW-11`;
-`PCI-PFL-LAW-10.05`; `PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.01`;
-`PCI-PFL-LAW-16.03`. **Increment over the foundational parent:** `PCI-FND-LAW-03` reserves decision
-authority to humans; this law applies that to the one place in a financing where an automated pipeline
-can move money — three named humans in three segregated roles, authorisation within a lodged mandate,
-payee verification through an independent channel, and an express prohibition on an automated identity
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-04`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.05`;
+`PCI-PFL-LAW-13.04`; `PCI-PFL-LAW-14.02`; `PCI-PFL-LAW-15.01`; `PCI-PFL-LAW-16.03`. **Increment over
+the foundational parent:** `PCI-FND-LAW-04` reserves decision authority to a named human decision
+owner; this law applies that to the one place in a financing where an automated pipeline can move
+money — three named humans in three segregated roles, authorisation within a lodged mandate, payee
+verification through an independent channel, and an express prohibition on an automated identity
 holding more than one role.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 14 — Construction monitoring and drawdown ·
@@ -4882,13 +4883,13 @@ jurisdiction-specific, and a distribution permitted by the finance documents may
 recoverable. Personal liability for directors is possible. Obtain qualified local legal, accounting and
 tax advice before every distribution — see `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-01.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-01.01`;
 `PCI-PFL-LAW-10.03`; `PCI-PFL-LAW-10.04`; `PCI-PFL-LAW-10.05`; `PCI-PFL-LAW-14.04`;
-`PCI-PFL-LAW-15.03`. **Increment over the foundational parent:** `PCI-FND-LAW-11` requires escalation of
-a defined exception; this law defines the exception precisely for the one irreversible act in a
-financing, requires every condition to be tested at the documented date on the documented basis, forbids
-releasing a reserve to pass the test, and separates the contractual question from the company-law
-question that no finance document answers.
+`PCI-PFL-LAW-15.03`. **Increment over the foundational parent:** `PCI-FND-LAW-11` requires
+escalation of a defined exception; this law defines the exception precisely for the one irreversible
+act in a financing, requires every condition to be tested at the documented date on the documented
+basis, forbids releasing a reserve to pass the test, and separates the contractual question from the
+company-law question that no finance document answers.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 15 — Operations, performance and
 restructuring · KA 15.2 The cash waterfall in operation, reserves and distributions · including the
@@ -5044,12 +5045,13 @@ change-of-control or refinancing-gain-sharing obligation to a public grantor are
 jurisdiction-specific and can reverse a refinancing case. Obtain qualified local legal and tax advice
 before a refinancing is recommended — see `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-10`; `PCI-PFL-LAW-09.01`;
+**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-08`; `PCI-PFL-LAW-09.01`;
 `PCI-PFL-LAW-13.02`; `PCI-PFL-LAW-15.03`; `PCI-PFL-LAW-10.04`. **Increment over the foundational
-parent:** `PCI-FND-LAW-07` requires honest reporting and `PCI-FND-LAW-10` requires conflicts to be
-disclosed; this law joins them at the point where they interact worst — a transaction recommended by
-someone paid for it happening — and requires a net present-value computation, a decomposition, a
-surrendered-protection schedule and a do-nothing case before the recommendation is made.
+parent:** `PCI-FND-LAW-05` requires a recommendation to carry the assumptions it rests on and
+`PCI-FND-LAW-08` requires conflicts to be disclosed; this law joins them at the point where they
+interact worst — a transaction recommended by someone paid for it happening — and requires a net
+present-value computation, a decomposition, a surrendered-protection schedule and a do-nothing case
+before the recommendation is made.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 15 — Operations, performance and
 restructuring · KA 15.3 Refinancing, waivers and amendments. Also Domain 9 KA 9.4 (refinancing gain,
@@ -5200,12 +5202,13 @@ insolvency are all questions of the governing law of the *finance documents*. **
 waivers can change the parties' rights in ways the documents do not describe.** Obtain qualified legal
 advice on form, authority and the effect of past conduct.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-05`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.04`;
+**19. Related PCI Laws.** `PCI-FND-LAW-12`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-10.04`;
 `PCI-PFL-LAW-13.03`; `PCI-PFL-LAW-15.01`; `PCI-PFL-LAW-15.02`; `PCI-PFL-LAW-12.02`. **Increment over
-the foundational parent:** `PCI-FND-LAW-05` requires the record to show what happened; this law states
-what a *financing's* waiver record must show — entitlement at the right threshold, execution in the
-required form, conditions and expiry tracked to closure, knock-on effects traced through every dependent
-term, and the underlying position reported alongside the waiver rather than replaced by it.
+the foundational parent:** `PCI-FND-LAW-12` requires the record to show what happened, attributably
+and with any later alteration detectable; this law states what a *financing's* waiver record must
+show — entitlement at the right threshold, execution in the required form, conditions and expiry
+tracked to closure, knock-on effects traced through every dependent term, and the underlying
+position reported alongside the waiver rather than replaced by it.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 15 — Operations, performance and
 restructuring · KA 15.3 Refinancing, waivers and amendments. Also Domain 10 KA 10.4 (waiver and
@@ -5389,14 +5392,15 @@ agreement on processing transaction information are all jurisdiction- and engage
 changing quickly. Obtain qualified legal advice before deploying an AI tool on transaction information —
 see `PCI-FND-LAW-09` and `PCI-PFL-LAW-12.02`.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02` (verification of AI output before professional use);
-`PCI-FND-LAW-01`; `PCI-FND-LAW-04`; `PCI-FND-LAW-06`; `PCI-FND-LAW-09`; `PCI-PFL-LAW-06.01`;
-`PCI-PFL-LAW-06.05`; `PCI-PFL-LAW-13.01`; `PCI-PFL-LAW-16.03`. **Increment over the foundational
-parent:** `PCI-FND-LAW-02` requires AI output to be verified before use; this law names the verification
+**19. Related PCI Laws.** `PCI-FND-LAW-03` (independent verification); `PCI-FND-LAW-01`;
+`PCI-FND-LAW-14`; `PCI-FND-LAW-07`; `PCI-FND-LAW-09`; `PCI-PFL-LAW-06.01`; `PCI-PFL-LAW-06.05`;
+`PCI-PFL-LAW-13.01`; `PCI-PFL-LAW-16.03`. **Increment over the foundational parent:**
+`PCI-FND-LAW-03` requires a material calculation, model output or automated conclusion to be
+verified by an independent person before anyone relies on it; this law names the verification
 methods that count in *financial modelling*, requires the method to be recorded per contribution,
 requires an AI-operated check to be proved against a seeded error before it is relied upon, forbids
-reducing human review because a machine check passed, and ties tool authorisation to the classification
-of transaction information.
+reducing human review because a machine check passed, and ties tool authorisation to the
+classification of transaction information.
 
 **20. Related Body of Knowledge content.** PFL-AI · Domain 16 — Data, automation and responsible AI in
 finance · KA 16.2 Scenario generation, document review and model assistance · KA 16.3 Explainability,
@@ -5564,11 +5568,11 @@ market data restricts reproduction and redistribution, and those restrictions ar
 Obtain qualified local legal advice before asserting that an instrument applies, and before reproducing
 any part of a copyright work.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-02`; `PCI-FND-LAW-06`; `PCI-FND-LAW-14`;
-`PCI-PFL-LAW-06.04`; `PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-12.02`; `PCI-PFL-LAW-09.03`;
-`PCI-PFL-LAW-16.01`. **Increment over the foundational parent:** `PCI-FND-LAW-02` requires AI output to
-be verified before use; this law addresses the class of output that verification most often skips — a
-statement about the outside world — and adds primary-source tracing, a currency check, a correct
+**19. Related PCI Laws.** `PCI-FND-LAW-03`; `PCI-FND-LAW-06`; `PCI-FND-LAW-14`; `PCI-PFL-LAW-06.04`;
+`PCI-PFL-LAW-12.01`; `PCI-PFL-LAW-12.02`; `PCI-PFL-LAW-09.03`; `PCI-PFL-LAW-16.01`. **Increment over
+the foundational parent:** `PCI-FND-LAW-03` requires an automated conclusion to be verified before
+reliance; this law addresses the class of output that verification most often skips — a statement
+about the outside world — and adds primary-source tracing, a currency check, a correct
 characterisation of legal status, an absolute bar on asserting an unverified particular, and a
 comparability statement for every precedent relied upon.
 
@@ -5646,7 +5650,7 @@ acted upon without an intervening human approval.
   approve an *automated pipeline* in which an AI output becomes a payment, a certificate, a
   representation to a lender or a published figure without a human *sign-off*.
 - **PCI-PFL-LAW-16.03-PR-04 — Disclosure of material AI assistance.** The signatory must disclose
-  *material* AI assistance in the production of the output, in the manner `PCI-FND-LAW-04` requires, and
+  *material* AI assistance in the production of the output, in the manner `PCI-FND-LAW-14` requires, and
   must not present AI-assisted work as unassisted.
 - **PCI-PFL-LAW-16.03-PR-05 — The signatory answers.** The signatory must be able to explain the output's
   basis, its principal assumptions and its limitations without reference to the tool that produced it,
@@ -5742,10 +5746,10 @@ produces legal effects on a person are all jurisdiction-specific. A sign-off arr
 jurisdiction might not satisfy another's requirements for the same document. Obtain qualified local legal
 advice on signing authority and on automated decision-making before designing a release process.
 
-**19. Related PCI Laws.** `PCI-FND-LAW-01` (professional accountability and the suite principle);
-`PCI-FND-LAW-03` (human decision authority); `PCI-FND-LAW-04`; `PCI-FND-LAW-02`;
-`PCI-PFL-LAW-14.04`; `PCI-PFL-LAW-16.01`; `PCI-PFL-LAW-16.02`; `PCI-PFL-LAW-13.01`. **Increment over
-the foundational parent:** `PCI-FND-LAW-03` reserves decision authority to humans; this law makes that
+**19. Related PCI Laws.** `PCI-FND-LAW-01` (professional accountability); `PCI-FND-LAW-04` (human
+decision authority); `PCI-FND-LAW-14`; `PCI-FND-LAW-03`; `PCI-PFL-LAW-14.04`; `PCI-PFL-LAW-16.01`;
+`PCI-PFL-LAW-16.02`; `PCI-PFL-LAW-13.01`. **Increment over the foundational parent:**
+`PCI-FND-LAW-04` reserves decision authority to a named human decision owner; this law makes that
 enforceable in a financing by naming the outputs that require a sign-off before effect, requiring
 competence and authority to be recorded for each signatory, prohibiting the unbroken pipeline as an
 architecture rather than as a decision, and requiring the signatory to be able to explain the output

@@ -65,8 +65,10 @@ subjects are:
 | `PCI-FND-LAW-07` | Data lineage | `PCI-FND-LAW-15` | Correction duty |
 | `PCI-FND-LAW-08` | Conflict disclosure | | |
 
-The published foundational file carries the legacy identifier form `PCI-LAW-F-NN`; the concordance
-between the two forms is maintained by the PCI Law Interpretation Panel and is not restated here.
+The published foundational file [`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md) carries these
+fifteen laws under these identifiers, so every citation below resolves against it directly. The
+superseded `PCI-LAW-F-NN` identifiers are recorded, for historical traceability only, in
+[`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md); no live citation uses them.
 **No law below reduces a foundational obligation.** Each names the foundational law it serves in
 element 19 and adds what project controls specifically requires — a certification law that only
 restated its foundational parent was either sharpened or dropped during the audit recorded at the end

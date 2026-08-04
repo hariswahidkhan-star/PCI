@@ -44,9 +44,11 @@ conduct processes.
 
 ## 2. Hierarchy
 
-1. **PCI Foundational Laws** — apply to all three credentials. IDs `PCI-LAW-F-NN`.
-2. **Certification Laws** — apply to one credential. IDs `PCL-LAW-DD-NN`, `PFL-LAW-DD-NN`,
-   `PML-LAW-DD-NN`, where `DD` is the two-digit domain of primary anchorage and `NN` a two-digit
+1. **PCI Foundational Laws** — apply to all three credentials. IDs `PCI-FND-LAW-NN` (`PCI-FND-LAW-01`
+   to `PCI-FND-LAW-15`). The superseded form `PCI-LAW-F-NN` is withdrawn and is recorded only in
+   [`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md).
+2. **Certification Laws** — apply to one credential. IDs `PCI-PCL-LAW-DD.NN`, `PCI-PFL-LAW-DD.NN`,
+   `PCI-PML-LAW-DD.NN`, where `DD` is the two-digit domain of primary anchorage and `NN` a two-digit
    sequence within that domain. A certification law that spans domains anchors to the domain that
    teaches it and lists the others under *Related book content*.
 3. **Process Rules** — operational requirements subordinate to a law (numbered `…-R1`, `…-R2` under

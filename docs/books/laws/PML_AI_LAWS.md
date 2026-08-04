@@ -94,12 +94,11 @@ law in every credential's law file:
 | `PCI-FND-LAW-07` | Data lineage | `PCI-FND-LAW-15` | Correction duty |
 | `PCI-FND-LAW-08` | Conflict disclosure | | |
 
-**The published foundational file still carries the legacy identifier form `PCI-LAW-F-NN` and contains
-fourteen laws.** The concordance between the legacy form and the fifteen subjects above is maintained by
-the PCI Law Interpretation Panel and is not restated here; this file cites the Charter §3 form
-throughout, and every citation below resolves against the concordance. **The divergence between the
-published file and the concordance is recorded as an open finding at the end of this file** — it is a
-renumbering task on the foundational set, not a defect in these laws.
+**The published foundational file carries these fifteen laws under these identifiers.** Every
+`PCI-FND-LAW-NN` citation below therefore resolves directly against
+[`PCI_FOUNDATIONAL_LAWS.md`](PCI_FOUNDATIONAL_LAWS.md), and the subject it carries there is the
+subject intended here. The superseded `PCI-LAW-F-NN` identifiers are recorded, for historical
+traceability only, in [`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md); no live citation uses them.
 
 **A certification law must add.** Where a law below governs the same subject as a foundational law, it
 states what leading projects, programmes and portfolios specifically requires that the foundational
@@ -534,7 +533,7 @@ the organisation has reserved to a human decider is taken by the named individua
 authority, on evidence that individual has examined, and must not permit such a decision to be
 executed on the output of an automated or AI system without that examination.
 
-**2. Purpose.** `PCI-FND-LAW-03` establishes that a human decides. This law addresses what is specific
+**2. Purpose.** `PCI-FND-LAW-04` establishes that a human decides. This law addresses what is specific
 to delivery: automation in delivery does not usually announce itself as a decision. A prioritisation
 engine reorders a backlog, a scheduling tool re-sequences a network, a resource optimiser reassigns
 people, a risk model closes a risk — and each of those is a decision that has already taken effect by
@@ -4564,7 +4563,7 @@ legislation within its own jurisdiction and is relied on here for nothing.
 decision, a report or a deliverable until a named human has verified it by a method recorded for that class
 of output.
 
-**2. Purpose.** `PCI-FND-LAW-02` requires verification before professional use. What delivery adds is that
+**2. Purpose.** `PCI-FND-LAW-03` requires verification before professional use. What delivery adds is that
 AI output arrives inside artefacts other people then rely on without knowing its origin: a risk register
 populated by a model, a schedule narrative generated from data, a supplier evaluation summary, a lessons
 theme. The failure this prevents is **unattributed reliance** — an output nobody checked because everybody
@@ -4592,7 +4591,7 @@ the record of where AI is used on the project, for what, by whom, and with which
   the AI output" is not a method** and does not satisfy this requirement.
 - **`PCI-PML-LAW-14.02-PR-03` — Material AI assistance is disclosed.** Where AI assistance is material to
   a deliverable or a report, the credential holder must disclose it in the artefact, under
-  `PCI-FND-LAW-04`, in the form the organisation's governance sets.
+  `PCI-FND-LAW-14`, in the form the organisation's governance sets.
 - **`PCI-PML-LAW-14.02-PR-04` — Verification proportionate to reliance.** The depth of verification must
   be matched to the consequence of the output being wrong, and the credential holder must record the basis
   on which the depth was chosen for each output class.
@@ -5552,7 +5551,7 @@ finding are marked and carried into the outstanding due-process stages.
 | 8 | Can the law be audited? | Yes for all 32. Each element 21 names the artefacts to obtain and the comparison to make. | None needed. |
 | 9 | Can the law be examined through a scenario? | Element 24 of every law gives at least two examination modes drawn from the Manual's list. No law is examinable only by recalling its number. | None needed. |
 | 10 | **Can a professional technically comply while defeating its purpose?** | **Six laws were vulnerable and were changed.** `03.02` — register only decisions above the limit, so the aggregation rule sees nothing. `05.02` — resolve orphans by deleting requirements. `08.01` — reassess exposure downward instead of escalating. `13.01` — raise throughput by starting more work. `16.01` — enter a mandatory precondition as a high probability so the readiness figure stays true-looking. `12.02` — publish a route whose only recipient is the person concerns are about. | `03.02-PR-02` universal registration; `05.02-PR-03` orphans reported, not tidied; `08.01-PR-02` escalate on threshold rather than on expectation of resolution, with **the date the threshold was met** recorded beside the date escalated; `13.01-PR-04` metrics reported with the work-in-progress position; `16.01-PR-03` and `-PR-04` prohibit probability and prohibit economic trade, and element 16 adds a **boundary test of the assessment's structure**; `12.02-PR-02` the bypass property, demonstrated person by person. |
-| 11 | Does it conflict with another PCI law? | No conflict found. Two overlaps were resolved by narrowing: `01.02` against `PCI-FND-LAW-03`, and `05.01` against `04.01` where a scope change is also a baseline change. | `01.02` retitled and narrowed to the reserved-class list, the automation inventory and the examination record. `05.01-PR-03` routes scope additions **into** `04.01` rather than duplicating its assessment. |
+| 11 | Does it conflict with another PCI law? | No conflict found. Two overlaps were resolved by narrowing: `01.02` against `PCI-FND-LAW-04`, and `05.01` against `04.01` where a scope change is also a baseline change. | `01.02` retitled and narrowed to the reserved-class list, the automation inventory and the examination record. `05.01-PR-03` routes scope additions **into** `04.01` rather than duplicating its assessment. |
 | 12 | Does it duplicate an external standard unnecessarily? | No law imports a requirement from an external instrument. Every element 17 entry states what the instrument is relied on **for** — usually the existence of a concept — and states that the obligation is PCI's own. | The phrase "it is not the source of this law's obligation" or its equivalent appears in the limitation column throughout. |
 | 13 | Does it misrepresent external authority? | Four risks were identified and closed. ISO 21500 is **context and concepts** since its current edition, not project-management guidance. ISO 45003 is **guidance and nothing can be certified against it**. The Scrum Guide is a **voluntary framework whose adoption is the whole of its force**, not a standard. The EU AI Act and the GDPR are **binding legislation in their own jurisdictions**, named here to illustrate a shape and relied on for nothing. | All four stated expressly at the point of use. No clause number, article, edition or effective date is asserted anywhere; editions are held in the suite register with their verification status, and rows recorded there as **not independently verified** are marked as such in the law that cites them. |
 | 14 | Does it require legal or jurisdiction-specific advice? | Element 18 of all 32 states what needs local advice. The heaviest are `10.01` (procurement regimes), `12.02` (whistleblowing, monitoring, works councils), `14.01` (data protection) and `16.01` (which approvals are legally required, and who may grant them). | `16.01` element 18 states expressly that **the professional must not infer the gate-block list from the examples given** — the examples are the manuscript's, and the list is the owning authorities'. |
@@ -5573,7 +5572,7 @@ finding are marked and carried into the outstanding due-process stages.
 | Finding | Why it is open | Where it goes |
 |---|---|---|
 | **Six external-reference rows are recorded as "not independently verified" in the suite register** — ISO 21503, ISO 21504, ISO 21505, ISO 9000, the PMBOK Guide's companion *Code of Ethics and Professional Conduct*, and the AACE TCM Framework. | Charter §5 Stage 5 was performed against the register, not against the publishers. | Verification before publication; each citing law states the open status in element 17. |
-| **The published foundational file lags the concordance.** | `PCI_FOUNDATIONAL_LAWS.md` still carries fourteen laws under the legacy form `PCI-LAW-F-NN`, while this set and the rebuilt PCL-AI set both cite the fifteen-subject Charter §3 concordance. | A renumbering task on the foundational set, not a defect in these laws. Until it is done, the concordance in *How to read these laws* is the resolving reference and the Interpretation Panel holds the legacy mapping. |
+| ~~**The published foundational file lags the concordance.**~~ **Closed.** | `PCI_FOUNDATIONAL_LAWS.md` now carries fifteen laws under the Charter §3 form `PCI-FND-LAW-01` to `PCI-FND-LAW-15`, with the subjects listed in *How to read these laws* above. Every citation in this set resolves against the published file itself. | Closed on the foundational rebuild. The superseded `PCI-LAW-F-NN` identifiers survive only as history, in [`LAW_CONCORDANCE.md`](LAW_CONCORDANCE.md). |
 | **Charter §5 Stages 4, 6, 7, 11, 12 and 13 have not been performed.** | Technical review, practitioner consultation, impact assessment, approval, publication and post-implementation review are outstanding. | Element 25 of every law records the set as **not yet approved**, with the effective date on approval. |
 | **The ISO-mapping statement resolves a tension between two Manual provisions.** | Manual §1 both prohibits the legislative auxiliary everywhere and requires the ISO mapping to be stated. This file states the mapping by describing the auxiliary rather than printing it. | Interpretation Panel confirmation under Charter §6. |
 
