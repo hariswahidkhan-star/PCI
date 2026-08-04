@@ -5,7 +5,7 @@
 > the chapters' own. To change an item, change it in its Knowledge Area and regenerate —
 > which is why there is no second copy to fall out of step.
 
-**450 items** across 16 domains. Every numeric option in every item is
+**453 items** across 16 domains. Every numeric option in every item is
 independently recomputed by the golden-answer suite, not only the correct one, so a
 distractor cannot be arithmetically impossible without the gate failing.
 
@@ -14,10 +14,10 @@ distractor cannot be arithmetically impossible without the gate failing.
 | Level | Items | Share |
 |---|---|---|
 | Recall | 13 | 2.9 % |
-| Comprehension | 63 | 14.0 % |
-| Application | 117 | 26.0 % |
-| Analysis | 137 | 30.4 % |
-| Evaluation | 120 | 26.7 % |
+| Comprehension | 65 | 14.3 % |
+| Application | 118 | 26.0 % |
+| Analysis | 137 | 30.2 % |
+| Evaluation | 120 | 26.5 % |
 
 A bank weighted heavily to recall tests memory rather than competence; one weighted
 heavily to Evaluation is unanswerable under time pressure. The distribution above is a fact
@@ -28,7 +28,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 | Domain | Items | Levels represented |
 |---|---|---|
-| 1 | 24 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 1 | 27 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 2 | 30 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 3 | 32 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 4 | 24 | Recall, Comprehension, Application, Analysis, Evaluation |
@@ -219,7 +219,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Candour about numbers is a duty, not a style (A); a private note documents the misrepresentation without preventing it (C); B both refuses the breach and offers the legitimate route to confidence — evidence. D skips the professional obligation to fix the problem before escalating personal exits.
 
 
-**1.3-B** `[1.3.2 · Application]` A bank advising a grantor on a tender also wishes to lend to one of the bidders. The minimum acceptable handling is:
+**1.3-B** `[1.3.3 · Application]` A bank advising a grantor on a tender also wishes to lend to one of the bidders. The minimum acceptable handling is:
 
 - A. proceed — different departments are involved
 - B. disclose the dual role to the grantor, and either obtain informed consent with effective information barriers or decline one role ✅
@@ -229,7 +229,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Disclosure plus genuine separation (or declination) is the standing machinery; department labels alone are not barriers (A); concealment converts a conflict into misconduct (C); D is the conflict operating in the open.
 
 
-**1.3-C** `[1.3.3 · Recall]` Under the PCI responsible-AI principle, responsibility for an AI-drafted covenant summary used in a credit paper rests with:
+**1.3-C** `[1.3.4 · Recall]` Under the PCI responsible-AI principle, responsibility for an AI-drafted covenant summary used in a credit paper rests with:
 
 - A. the AI vendor
 - B. the model itself
@@ -239,44 +239,44 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Accountability cannot be delegated to software or its supplier; tool approval governs *which* tools may be used, never *who* answers for the output.
 
 
-**1.3-D** `[1.3.2 · Application]` Disclosing a second mandate would cost a firm the 250,000 fee at risk on it. If concealed and later discovered, the firm loses 900,000 of unpaid fees, 12,750,000 of jurisdictional franchise and 400,000 of legal cost. The breakeven probability of discovery is:
+**1.3-D** `[1.3.3 · Application]` Disclosing a second mandate would cost a firm the 250,000 fee at risk on it. If concealed and later discovered, the firm loses 900,000 of unpaid fees, 12,750,000 of jurisdictional franchise and 400,000 of legal cost. The breakeven probability of discovery is:
 
 - A. 1.7794 % ✅
 - B. 27.7778 %
 - C. 1.9608 %
 - D. there is no breakeven — concealment can never pay at any probability
 
-*Rationale:* `250,000/14,050,000 = 1.7794 %` (WE 1.3.2). B divides by the 900,000 of forfeited fees alone and ignores the franchise, which is the largest term; C counts the franchise and drops the forfeited fees and legal cost. D is the answer a reader gives from the duty rather than from the arithmetic — the duty is indeed unconditional, but the calculation does have a finite breakeven, and being able to state it is what closes a commercial argument.
+*Rationale:* `250,000/14,050,000 = 1.7794 %` (WE 1.3.3). B divides by the 900,000 of forfeited fees alone and ignores the franchise, which is the largest term; C counts the franchise and drops the forfeited fees and legal cost. D is the answer a reader gives from the duty rather than from the arithmetic — the duty is indeed unconditional, but the calculation does have a finite breakeven, and being able to state it is what closes a commercial argument.
 
 
-**1.3-E** `[1.3.3 · Application]` A negotiating position taken on an unverified AI-reported benchmark held Kestrel's close nine weeks at a cost of delay of 124,133.33 per week. The cost of the episode was:
+**1.3-E** `[1.3.4 · Application]` A negotiating position taken on an unverified AI-reported benchmark held Kestrel's close nine weeks at a cost of delay of 124,133.33 per week. The cost of the episode was:
 
 - A. USD 1,117,200 ✅
 - B. USD 2,112,729
 - C. USD 252,000
 - D. USD 124,133
 
-*Rationale:* `9 × 124,133.33 = 1,117,200` (WE 1.3.3). B is the present value of the 60-basis-point prize the false benchmark appeared to offer — the amount at stake, not the amount spent; C is one year of that margin difference undiscounted; D prices a single week.
+*Rationale:* `9 × 124,133.33 = 1,117,200` (WE 1.3.4). B is the present value of the 60-basis-point prize the false benchmark appeared to offer — the amount at stake, not the amount spent; C is one year of that margin difference undiscounted; D prices a single week.
 
 
-**1.3-F** `[1.3.3 · Comprehension]` Under the responsible-AI principle as fixed in this domain, which statement is correct?
+**1.3-F** `[1.3.4 · Comprehension]` Under the responsible-AI principle as fixed in this domain, which statement is correct?
 
 - A. an approved tool's output may be relied on without further checking, since approval is the control
 - B. verifying a number and verifying a claim are different acts: the first is independent recomputation, the second is tracing the assertion to a source that exists and is the right version ✅
 - C. AI output must be disclosed to the client in every case, however immaterial
 - D. confidentiality obligations do not attach to data entered into an AI tool, because no third party reads it
 
-*Rationale:* 1.3.3 separates the two verification acts precisely because they fail differently and are caught by different habits. A confuses tool governance with output accountability (MCQ 1.3-C); C overstates the rule, which attaches to *material* use touching deliverables; D is wrong on the foundational point that entering deal data into a tool is itself a disclosure.
+*Rationale:* 1.3.4 separates the two verification acts precisely because they fail differently and are caught by different habits. A confuses tool governance with output accountability (MCQ 1.3-C); C overstates the rule, which attaches to *material* use touching deliverables; D is wrong on the foundational point that entering deal data into a tool is itself a disclosure.
 
 
-**1.3-G** `[1.3.3 · Evaluation]` After an unverified benchmark cost Kestrel **1,117,200** of delay (WE 1.3.3), four controls are proposed. Which should the leader adopt first?
+**1.3-G** `[1.3.4 · Evaluation]` After an unverified benchmark cost Kestrel **1,117,200** of delay (WE 1.3.4), four controls are proposed. Which should the leader adopt first?
 
 - A. prohibit general-purpose AI tools for market and precedent research
 - B. require that no benchmark enter a negotiating position without a source line naming the transaction, the document and the date ✅
 - C. procure an enterprise AI tool whose licence carries a vendor indemnity
 - D. require a second analyst to review every AI-generated summary before it is circulated
 
-*Rationale:* the loss arose because an unsourced number became a negotiating position, and a stale internal spreadsheet produces the identical loss — so the control that matches the failure is a rule about numbers rather than about tools (1.3.3). A is defensible and narrower than the risk: it forgoes a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the profession cannot rely on — on Kestrel's facts none of the 1,117,200 was a loss the licence reached, and what a particular indemnity in fact covers is a question for the contract and for counsel rather than a planning assumption — and tool approval governs *which* tools may be used, never *who* answers for the output (MCQ 1.3-C). D would probably have caught this instance and is the right *second* control, applied to material items; as a blanket rule it charges a second analyst against every summary, most of which never reach a negotiation.
+*Rationale:* the loss arose because an unsourced number became a negotiating position, and a stale internal spreadsheet produces the identical loss — so the control that matches the failure is a rule about numbers rather than about tools (1.3.4). A is defensible and narrower than the risk: it forgoes a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the profession cannot rely on — on Kestrel's facts none of the 1,117,200 was a loss the licence reached, and what a particular indemnity in fact covers is a question for the contract and for counsel rather than a planning assumption — and tool approval governs *which* tools may be used, never *who* answers for the output (MCQ 1.3-C). D would probably have caught this instance and is the right *second* control, applied to material items; as a blanket rule it charges a second analyst against every summary, most of which never reach a negotiation.
 
 
 **1.3-H** `[1.3.1 · Evaluation]` A board asks for "one number" for the incremental cost of the limited-recourse route, having been shown **5,202,128** built on a 140-basis-point margin differential and a 40 % enforcement recovery. The most professional response is:
@@ -287,6 +287,36 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. give the figure computed on the 50 % recovery, as the more prudent of the two
 
 *Rationale:* candour about numbers means presenting a forecast with its assumptions and sensitivities, never as a certainty (1.3.1), and B does what the board asked while disclosing what would change the answer. A presents an estimate as a fact. C is a defensible instinct that fails the duty from the other side — declining to quantify leaves the judgment to whoever will. D substitutes one point estimate for another, and an unlabelled prudence misrepresents a forecast exactly as an unlabelled optimism does (MCQ 1.3-A).
+
+
+**1.3-I** `[1.3.2 · Application]` Three weeks before bids are due, the grantor's project director recommends a local development consultant whose fee is payable only on award, as a percentage of capital cost, contracted through an entity in a third jurisdiction. The bid manager asks to sign today. The professional response is:
+
+- A. sign, but cap the fee and add an anti-bribery warranty to the mandate — the warranty transfers the risk
+- B. do not sign, pay nothing, and refer the introduction and the proposed mandate to compliance or counsel; plan the bid without an intermediary and let the deadline take the consequence ✅
+- C. ask the grantor's project director for assurance about the consultant's standing before signing
+- D. sign a short retainer to preserve the option, and complete diligence before any success fee falls due
+
+*Rationale:* several red flags are present at once — a success-only fee disproportionate to any describable service, an intermediary introduced by the counterparty, and a contracting route with no commercial explanation — and an unresolved flag stops the step (1.3.2). A misreads a warranty as a control: it allocates loss between the parties and does nothing about an offence. C asks the source of the introduction to vouch for it, and tips off the person who is the subject of the concern. D is the commonest professional error in this topic, because it feels prudent — but the retainer is a payment, the mandate is a signature, and both are exactly the acts the stop rule prohibits while the question is open.
+
+
+**1.3-J** `[1.3.2 · Evaluation]` During construction, a project accountant notices that an approved agent's invoices are settled into an account in a jurisdiction unconnected with the contract. The most professional route is:
+
+- A. raise it with the sponsor's commercial director, who owns the agent relationship
+- B. raise it with the agent, who will have a straightforward explanation
+- C. raise it with compliance or counsel, preserve the payment and approval records, make no further payment on that route pending clearance, and tell no one else ✅
+- D. note the anomaly in the next monthly report to lenders and continue paying meanwhile
+
+*Rationale:* the escalation route runs to compliance or counsel and never to the commercial line, which has the strongest incentive to settle the matter quietly and may itself be implicated (1.3.2); A therefore delivers the concern to the wrong desk. B alerts the subject, which destroys the evidential position and may be a criminal offence in its own right. D is the seductive error: it is transparent, it is documented, and it continues to pay on the flagged route while the question is open — which is a decision to proceed, taken by whoever kept paying.
+
+
+**1.3-K** `[1.3.2 · Comprehension]` A contractor offers its ISO 37001 certification as assurance on a bribery question raised in diligence. The correct reading is:
+
+- A. certification satisfies the point — a certified anti-bribery management system is a defence to the offence
+- B. certification is evidence about a management system at a point in time; it is not a legal defence and says nothing about the transaction being diligenced ✅
+- C. certification is irrelevant, because ISO standards have no standing in financial transactions
+- D. certification binds the contractor's subcontractors, since the standard applies down the supply chain
+
+*Rationale:* ISO 37001 is a voluntary management-system standard, and conformity to it is a third party's opinion about a system rather than an answer about this counterparty and this payment (1.3.2); whether any defence exists, and what it requires, is a question of the applicable law and for counsel. C overcorrects — the certification is relevant evidence about the counterparty's controls, just not the evidence being claimed. D asserts a reach the diligence must establish for itself, contract by contract.
 
 
 ## Domain 2

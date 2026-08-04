@@ -201,7 +201,7 @@ legal advice before relying on consent as a cure.
 **Related PCI laws.** PCI-LAW-F-10; PCI-LAW-F-13; PFL-LAW-13-01; PFL-LAW-16-01.
 
 **Related book content.** Domain 1, KA 1.3 — Ethics, fiduciary awareness and responsible AI (1.3.1
-obligations and duties; 1.3.2 conflicts and independence); Domain 1, Toolkit 1.T.3 — Conflicts and
+obligations and duties; 1.3.3 conflicts and independence); Domain 1, Toolkit 1.T.3 — Conflicts and
 AI-use register; Domain 1, Case study B — the adviser with two hats; Domain 13, KA 13.1 — The
 diligence streams.
 

@@ -27,7 +27,8 @@ disclaimers; standards & trademarks; originality) · How to use this reference �
 - **KA 1.2 — Value, cash and risk:** 1.2.1 value creation in projects · 1.2.2 cash as the binding
   constraint · 1.2.3 the risk-return-bankability triangle
 - **KA 1.3 — Ethics, fiduciary awareness and responsible AI:** 1.3.1 fiduciary and professional
-  obligations · 1.3.2 conflicts and independence · 1.3.3 the PCI responsible-AI principle in finance
+  obligations · 1.3.2 financial crime: bribery, sanctions and the money-laundering perimeter ·
+  1.3.3 conflicts and independence · 1.3.4 the PCI responsible-AI principle in finance
 
 ### Domain 2 — Accounting and financial-statement foundations
 - **KA 2.1 — The accrual model:** accrual concepts · recognition · the statements as one system

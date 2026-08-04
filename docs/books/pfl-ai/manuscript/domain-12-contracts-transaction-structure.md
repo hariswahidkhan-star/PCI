@@ -290,7 +290,7 @@ worth more than any cap: the value at stake is continuity of revenue, and the fa
 continuity is a new operator, not a claim against the old one. Where the O&M contractor is an
 affiliate of the sponsor — very common — the conflict must be disclosed and the agreement tested
 on arm's-length terms, because a lender is being asked to accept a related-party contract as a
-bankability item (Domain 1, KA 1.3.2).
+bankability item (Domain 1, KA 1.3.3).
 
 ### AI in this KA
 

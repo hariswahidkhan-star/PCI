@@ -4,7 +4,7 @@
 > themselves. A standard referenced in a chapter and missing from this register fails the
 > build, so a reference cannot enter the corpus without being disclosed here.
 
-This volume references **10 documents, standards or frameworks**. Every one is *named*
+This volume references **13 documents, standards or frameworks**. Every one is *named*
 and *characterised* — never reproduced. No protected text, table, figure, clause, checklist or
 question from any of them appears in this volume; each is described at the level of its stated
 scope, in this programme's own words, and the treatment of the underlying subject is this
@@ -47,7 +47,15 @@ redistributed by this programme.
 |---|---|---|
 | **Equator Principles** | a voluntary risk-management framework adopted by participating financial institutions for environmental and social risk in project finance | D5, D9 |
 | **IFC Performance Standards** | the International Finance Corporation's environmental and social performance standards, widely adopted as a reference benchmark in project finance | D5 |
-| **OECD** | the Organisation for Economic Co-operation and Development, referenced for its arrangement on officially supported export credits | D9 |
+| **OECD** | the Organisation for Economic Co-operation and Development, referenced for its arrangement on officially supported export credits and for its convention on combating bribery of foreign public officials | D1, D9 |
+
+## Financial crime, anti-bribery and sanctions
+
+| Reference | Described in this volume as addressing | Discussed in |
+|---|---|---|
+| **OECD Anti-Bribery Convention** | the Convention on Combating Bribery of Foreign Public Officials in International Business Transactions — a treaty whose obligations bind the states party to it and which takes effect only through each signatory's own domestic criminal law, so it is not itself law in any jurisdiction | D1 |
+| **FATF** | the Financial Action Task Force, referenced for its Recommendations on combating money laundering and the financing of terrorism and proliferation — an intergovernmental standard addressed to countries and reaching a project only through national law and supervised institutions, not legislation in itself | D1 |
+| **ISO 37001** | anti-bribery management systems — a voluntary management-system standard; certification against it is a third party's opinion about a management system at a point in time and is not a legal defence | D1 |
 
 ## What this register does not contain
 

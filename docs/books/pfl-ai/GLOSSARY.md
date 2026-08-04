@@ -6,7 +6,7 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**446 terms**, consolidated from 459 key-terms entries across 16 domains.
+**455 terms**, consolidated from 468 key-terms entries across 16 domains.
 
 ## A
 
@@ -45,6 +45,8 @@
 **Assessed claim exposure** — The SPV's and adviser's judgment of the probable settled cost of notified but unagreed claims. *(KA 14.2)*
 
 **Asset-capital matching** — Pairing project risk phases with the capital suited to hold them — on two axes, risk-holding capability and timing. *(KA 1.1)*
+
+**Associated person** — Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its criminal exposure runs. *(KA 1.3)*
 
 **At-risk commitment** — Option premiums, bid bonds, reservations — cash forfeited if the project dies. *(KA 5.1)*
 
@@ -85,6 +87,8 @@
 **Basis bridge** — The documented reconciliation between two models of one project. *(KA 6.1)*
 
 **Basis risk (pass-through)** — Exposure remaining because the reference index differs from the price actually paid. *(KA 11.2)*
+
+**Beneficial ownership** — The natural persons who ultimately own or control a counterparty, traced through the chain rather than to the first corporate name. *(KA 1.3)*
 
 **Binding covenant** — The covenant crossed by the smallest common stress; identified by solving each covenant for the same stress variable, not by comparing ratio levels. *(KA 10.2)*
 
@@ -367,7 +371,7 @@
 
 ## E
 
-**EAV / EAV** — NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. *(KA 4.2)*
+**EAV** — NPV (cost PV) converted to a level annual equivalent via `AF(r, n)`. *(KA 4.2)*
 
 **EBIT** — Operating profit after depreciation; performance including capital consumption. *(KA 2.2)*
 
@@ -420,6 +424,10 @@
 **Expected loss** — `PD × EAD × LGD`; linear in exposure, and therefore blind to concentration. *(KA 7.4)*
 
 ## F
+
+**Facilitation payment** — A small payment to secure a routine act the project is already entitled to; a bribe in most regimes, whatever it is called locally. *(KA 1.3)*
+
+**Failure-to-prevent offence** — An organisation's offence of failing to prevent bribery by an associated person; not knowing what the intermediary did is not a defence. *(KA 1.3)*
 
 **Fatal condition** — A condition whose failure ends the project regardless of everything else. *(KA 5.1)*
 
@@ -712,6 +720,8 @@
 
 **Payback / discounted payback** — Years for cumulative (discounted) inflows to repay `I₀`; exposure measures. *(KA 4.2)*
 
+**Payment-route record** — Which entity was paid, in which jurisdiction, into an account in whose name, against what invoice — with the approved reason for any departure. *(KA 1.3)*
+
 **PD / EAD / LGD** — Probability of default over a stated horizon · exposure when it occurs · proportion not recovered. *(KA 7.4)*
 
 **Percentage method** — Contingency as a policy share of base cost; states no confidence and does not respond to risk retirement. *(KA 8.3)*
@@ -725,6 +735,8 @@
 **PI** — PV of inflows / `I₀`; value per scarce dollar, for rationing. *(KA 4.2)*
 
 **PLCR** — PV of `CFADS` to end of project life ÷ debt outstanding; counts the tail. *(KA 10.2)*
+
+**Politically exposed person** — Someone entrusted with a prominent public function, with their close associates and family; a status that raises the standard of enquiry, never a finding of wrongdoing. *(KA 1.3)*
 
 **Post-close undertaking** — A condition converted into a dated covenant surviving close. *(KA 13.3)*
 
@@ -808,6 +820,8 @@
 
 ## S
 
+**Sanctions screening** — Checking parties and their ownership against applicable designations — at close and on change of control, as a repeated control rather than a one-off. *(KA 1.3)*
+
 **Scenario coverage** — `1 − (1 − p)ᵏ`: the chance `k` scenarios contain a mode of probability `p`. *(KA 16.2)*
 
 **Scope layers** — Arithmetic · structure · documents · assumptions and provenance; the expensive errors sit in the last two. *(KA 13.2)*
@@ -850,6 +864,8 @@
 
 **Stepped damages** — Delay damages that rise through the programme to match a rising exposure. *(KA 8.4)*
 
+**Stop rule** — Where a red flag is unresolved the leader does not proceed pending written clearance: no payment, no signature, no certification. *(KA 1.3)*
+
 **Subordinated shareholder loan** — Sponsor funding as ranked debt; may create a tax shield, dangerous if mis-ranked. *(KA 9.1)*
 
 **Subordination** — Junior claims paid only after senior tests pass. *(KA 10.3)*
@@ -884,6 +900,8 @@
 **Time impact of a claim** — Extension days × delay damages rate — the damages forgone by granting time. *(KA 12.4)*
 
 **Timeline flags** — Mutually exclusive period markers (construction, operations, loan life, tail) that calculations multiply by. *(KA 6.1)*
+
+**Tipping off** — Alerting the subject of a suspicion or a report; an offence in many regimes and fatal to the enquiry in all of them. *(KA 1.3)*
 
 **Tolerance** — The fall in a named driver that takes coverage to a threshold; the operational form of headroom. *(KA 7.3)*
 

@@ -199,7 +199,7 @@ every annotated value in a drawn figure is a literal verified by the golden-answ
 
 ## Appendix E — Practitioner's toolkit library
 
-**52 adoption-ready artefacts**, indexed here and defined in the Knowledge Areas they belong
+**53 adoption-ready artefacts**, indexed here and defined in the Knowledge Areas they belong
 to. They are indexed rather than reprinted deliberately: a template that exists twice is a template
 that will disagree with itself, and the version in the chapter is the one the surrounding text
 explains. Adapt the headings to your organisation, then keep them stable — a checklist whose wording
@@ -211,6 +211,7 @@ changes every quarter records nothing over time.
 | 1.T.2 | Financing-route decision record | Options considered (corporate / limited recourse / non-recourse / hybrid) · recourse sentence |
 | 1.T.3 | Conflicts and AI-use register | Conflicts: relationship · parties affected · disclosure date · handling (barriers/consent/ |
 | 1.T.4 | Recourse-cost worksheet (one per financing route considered) | The arithmetic of WE 1.1.2, in the order a decision paper needs it, so that the incremental cost of |
+| 1.T.5 | Intermediary engagement and financial-crime evidence file (one per intermediary) | The file that must exist before an agent, adviser or introducer is engaged, and be kept current |
 | 2.T.1 | Defined-terms sheet (one per financing) | For each term used in a covenant or report — CFADS, EBITDA, net debt, distributable cash, |
 | 2.T.2 | Accrual-to-cash bridge (standing monthly schedule) | Net income · + depreciation and amortisation · + other non-cash charges (provisions) · |
 | 2.T.3 | Statement-integrity checklist |  |

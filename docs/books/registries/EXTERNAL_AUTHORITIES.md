@@ -20,7 +20,7 @@ single place where the programme records, for each authority:
 - whether the entry was independently verified, and when.
 
 **Coverage.** Each book carries its own derived `STANDARDS.md` generated from its manuscripts
-(`pml-ai/STANDARDS.md`, 22 entries; `pfl-ai/STANDARDS.md`, 10 entries). Those registers are
+(`pml-ai/STANDARDS.md`, 22 entries; `pfl-ai/STANDARDS.md`, 13 entries). Those registers are
 build-gated but **book-scoped**, and two bodies of content fall outside them entirely:
 
 - **PCL-AI (`docs/bok/`) has no `STANDARDS.md` at all.** Its authorities — the IFRS/IAS suite,
@@ -82,6 +82,10 @@ authoritative record of it. **41 of the 70 entries below were verified this way*
 than the 20 most-cited authorities. A further **22 are marked unverified** and carry no edition
 claim. The remaining **7** are generic classes (local GAAP, US GAAP, Kanban/Lean) or negative
 findings in §11, where there is no edition to verify; each says so in its own row.
+
+**Rows dated 2026-08-04** were added after that compilation and were checked on that date against
+the publisher's own site or an authoritative record of it (iso.org, fatf-gafi.org,
+legalinstruments.oecd.org). They are listed in §14.
 
 ---
 
@@ -221,6 +225,8 @@ operational.
 | EXT-033 | ISO 9001 | Revision in progress at ISO/TC 176/SC 2 | Watch |
 | EXT-083 | IFC Performance Standards | Sustainability Framework **update in progress** | Watch |
 | EXT-060 | PMBOK Guide | **Eighth Edition** now current | Already effective; corpus cites no edition, so unaffected |
+| EXT-133 | ISO 37001 | **2025 edition published**, superseding ISO 37001:2016 | Already effective; the book states no edition, so the prose is unaffected |
+| EXT-132 | FATF Recommendations | **Updated periodically** by plenary decision, so any edition claim ages within months | Continuous — re-verify at each publication; the book cites no Recommendation by number |
 
 ---
 
@@ -244,6 +250,23 @@ remains the single disclosure point it claims to be.
 | EXT-128 | OECD (G20/OECD) | **G20/OECD Principles of Corporate Governance** | 2023 revision (OECD/LEGAL/0413) | voluntary framework | Laws PFL-LAW-01-02, PFL-LAW-10-02, PFL-LAW-15-01 | 2026-08-03 | An OECD Council Recommendation. Non-binding; not legislation. The current title carries the G20/OECD attribution. |
 | EXT-129 | OECD | **Model Tax Convention on Income and on Capital** | current | illustrative reference | Law PFL-LAW-12-01 | 2026-08-03 | A model instrument. **It is not law in any jurisdiction**; only the executed treaty and domestic law bind. |
 | EXT-130 | SAE International (ANSI-accredited) | **ANSI/EIA-748** *Earned Value Management Systems* | edition deliberately not asserted | national standard | Laws PCL-LAW-03-02, PCL-LAW-06-01 | 2026-08-03 | A published US national standard, binding only where a contract or procurement regime imports it. The law files deliberately assert no guideline count or edition, because the guideline count changed at EIA-748-E. |
+
+## 14. Financial crime, anti-bribery and sanctions
+
+Three instruments registered on 2026-08-04, when PFL-AI D1 KA 1.3 gained a topic on bribery,
+sanctions and the money-laundering perimeter (**1.3.2**). They are grouped here because they are the
+three most often misdescribed instruments in this subject matter, and because the category column is
+the entire point of registering them: **a treaty that is not law in any jurisdiction, an
+intergovernmental standard that is not legislation, and a voluntary standard whose certification is
+not a defence.** The book names and characterises each and relies on none of them for a requirement;
+the applicable offence, its extraterritorial reach and any adequate-procedures defence are stated in
+the text to be jurisdiction-specific questions for qualified counsel.
+
+| Ref ID | Authority | Full title | Edition/year checked | Category | Book locations | Verification date | Notes |
+|---|---|---|---|---|---|---|---|
+| EXT-131 | OECD | **Convention on Combating Bribery of Foreign Public Officials in International Business Transactions** (the "OECD Anti-Bribery Convention"), OECD/LEGAL/0293 | Adopted 21 November 1997; **entered into force February 1999**; **46 Parties** at the date checked | illustrative reference *(actual status: **a treaty**, binding on the states party to it and taking effect only through each signatory's own domestic criminal law)* | PFL-AI D1 §1.3.2 | 2026-08-04 | Registered as an illustrative reference on the §2 rule and the EXT-100 precedent: the corpus names it to characterise a regulatory shape and relies on it for no requirement. **It is not itself law anywhere** — the signatories implemented it differently, so what applies to a transaction is the domestic offence. Monitored by peer review through the OECD Working Group on Bribery. The book states no article, no offence definition and no penalty. |
+| EXT-132 | Financial Action Task Force (FATF) | **International Standards on Combating Money Laundering and the Financing of Terrorism & Proliferation — the FATF Recommendations** | Adopted February 2012; **updated periodically**, with updates recorded by the publisher through 2026 (Recommendation 16 revised at the June 2025 plenary) | illustrative reference — intergovernmental standards with **no legal force of their own** | PFL-AI D1 §1.3.2 | 2026-08-04 | The same treatment as the Basel Framework (EXT-110), and for the same reason: the Recommendations are addressed to **countries**, and they reach a project only through national legislation and the supervised institutions that implement it. They must never be described as regulation applying directly to a project, a sponsor or an adviser. The book cites no Recommendation by number. **Moving — see §12.** |
+| EXT-133 | ISO | **ISO 37001** *Anti-bribery management systems — Requirements with guidance for use* | **ISO 37001:2025**, superseding ISO 37001:2016 | international standard | PFL-AI D1 §1.3.2 | 2026-08-04 | Certifiable, and that is exactly where it is misused: **certification is not a legal defence**, it is a third party's opinion about a management system at a point in time. The book says so at the point of use and again in `pfl-ai/STANDARDS.md`. Adoption is voluntary unless a contract or regulator requires it. **Newly revised — see §12.** |
 
 ## Corrections needed in the books
 
@@ -354,3 +377,9 @@ evidence base the books do not have.
 that date, 22 marked "not independently verified — verify current requirements" and carrying no
 edition claim, 7 generic classes or negative findings with no edition to verify. **6 corrections
 raised.** British English throughout. The official publication always governs.*
+
+*Revised 2026-08-04: §14 registers three financial-crime authorities — EXT-131 to EXT-133 — each
+verified on that date, together with the two §12 rows they add. The counts in the paragraph above
+describe the 2026-08-03 compilation and have deliberately **not** been restated, because a
+recompilation is a separate exercise from an addition and this register does not assert a total it
+has not recounted.*

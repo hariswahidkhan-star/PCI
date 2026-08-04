@@ -85,7 +85,27 @@ FAMILIES = [
                                       "social performance standards, widely adopted as a reference "
                                       "benchmark in project finance"),
         ("OECD", "the Organisation for Economic Co-operation and Development, referenced for its "
-                 "arrangement on officially supported export credits"),
+                 "arrangement on officially supported export credits and for its convention on "
+                 "combating bribery of foreign public officials"),
+    ]),
+    # Financial crime is the one duty in the ethics chapter whose breach is criminal, and the three
+    # instruments below are the three most often misdescribed: a treaty that is not law anywhere, an
+    # intergovernmental standard that is not legislation, and a voluntary standard whose certification
+    # is not a defence. Each is characterised by WHAT IT IS, because that is the whole disclosure.
+    ("Financial crime, anti-bribery and sanctions", [
+        ("OECD Anti-Bribery Convention", "the Convention on Combating Bribery of Foreign Public "
+                                         "Officials in International Business Transactions — a "
+                                         "treaty whose obligations bind the states party to it and "
+                                         "which takes effect only through each signatory's own "
+                                         "domestic criminal law, so it is not itself law in any "
+                                         "jurisdiction"),
+        ("FATF", "the Financial Action Task Force, referenced for its Recommendations on combating "
+                 "money laundering and the financing of terrorism and proliferation — an "
+                 "intergovernmental standard addressed to countries and reaching a project only "
+                 "through national law and supervised institutions, not legislation in itself"),
+        ("ISO 37001", "anti-bribery management systems — a voluntary management-system standard; "
+                      "certification against it is a third party's opinion about a management "
+                      "system at a point in time and is not a legal defence"),
     ]),
     ("Cost engineering", [
         ("AACE", "AACE International, referenced for the existence and purpose of the cost-estimate "
@@ -119,6 +139,10 @@ PATTERNS = [
     (r"\bGeneral Data Protection Regulation\b", lambda m: m.group(0)),
     (r"\bIFRS\s?\d{1,2}\b", lambda m: re.sub(r"\s+", " ", m.group(0))),
     (r"\bIAS\s?\d{1,2}\b", lambda m: re.sub(r"\s+", " ", m.group(0))),
+    # Wrapped across lines in the manuscripts, so whitespace runs — never a literal space.
+    (r"\bCombating\s+Bribery\s+of\s+Foreign\s+Public\s+Officials\b|\bOECD\s+Anti-Bribery\s+Convention\b",
+     lambda m: "OECD Anti-Bribery Convention"),
+    (r"\bFATF\b", lambda m: "FATF"),
     (r"\bEquator Principles\b", lambda m: m.group(0)),
     (r"\bIFC Performance Standards\b", lambda m: m.group(0)),
     (r"\bNIST\b", lambda m: m.group(0)),

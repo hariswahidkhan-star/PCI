@@ -7,8 +7,8 @@ long-lived, single-purpose asset whose only security is *itself* — its contrac
 they will produce. This domain establishes what makes that answer work, and what the leader at
 the centre of it actually does. It maps the role across the project lifecycle (KA 1.1), builds
 the discipline's three-cornered logic — value, cash and risk (KA 1.2) — and grounds the
-profession's obligations: fiduciary awareness, independence, and the governed use of AI
-(KA 1.3). Everything later in the book is a specialisation of this domain: the mathematics
+profession's obligations: fiduciary awareness, the financial-crime duties whose breach is criminal,
+independence, and the governed use of AI (KA 1.3). Everything later in the book is a specialisation of this domain: the mathematics
 (Domains 3–4), the structures (Domains 5, 9, 12), the lender's machinery (Domains 10, 13–15)
 and the AI curriculum (Domain 16) all stand on the concepts fixed here. A reader who finishes
 only this domain should already reason like the profession: *follow the cash, price the risk,
@@ -28,7 +28,10 @@ difference, and translate covenant headroom into days of receivables; derive the
 identity, locate the crossover at which leverage stops helping, and show how far the equity
 cliff moves when the same debt amortises rather than paying interest only; price a retained
 risk through the capital structure the lenders will impose; price sponsor support as a
-contingent claim; state the risk-return-bankability logic; and apply the profession's ethical
+contingent claim; state the risk-return-bankability logic; recognise the prohibited acts in
+bribery, sanctions and money laundering, triage the red flags that stop the work, name the
+escalation route and the evidence that must exist, and characterise the principal external
+instruments for what they are rather than as law; and apply the profession's ethical
 and responsible-AI obligations to realistic situations — including in explicit expected-value
 terms, while explaining why the duty does not depend on the arithmetic.
 
@@ -1028,7 +1031,7 @@ continue: the flag is resolved and cleared, in writing, or the step does not hap
 | Red flag | Why it is a flag | What it obliges |
 |---|---|---|
 | An agent or adviser whose fee is **success-based and disproportionate** to any service that can be described | The fee is priced against an outcome rather than against work, so what is being bought cannot be read off the invoice; the excess over demonstrable service is unexplained by construction | No engagement until the service is specified, the fee benchmarked against comparable work, and both approved in writing outside the deal team |
-| An **intermediary introduced by the counterparty** | The party on the other side of the negotiation is choosing who sits inside your payment chain — the one relationship a leader cannot diligence by asking the introducer | Disclose the introduction, diligence the party independently of anything the counterparty supplies, and refer the engagement to compliance or counsel before any mandate is signed |
+| An **intermediary introduced by the counterparty** | The party on the other side of the negotiation is choosing who sits inside the sponsor's payment chain — the one relationship a leader cannot diligence by asking the introducer | Disclose the introduction, diligence the party independently of anything the counterparty supplies, and refer the engagement to compliance or counsel before any mandate is signed |
 | An **unexplained offshore payment route** | Distance between where a service is performed and where it is paid is the common signature of both bribery and laundering, and an unexplained route is unexplained however ordinary the bank is | Payment goes to the contracting entity, in the contracting jurisdiction, into an account in its own name — any departure needs a documented commercial reason approved before payment |
 | A request to **route payment to a third jurisdiction**, or to a party other than the contracting one | The same signature, made explicit, and usually made late — after the commercial terms are agreed and the leverage has moved | Stop the payment. Not a treasury exception: the request itself is escalated, and the underlying arrangement is re-examined |
 | A **politically exposed person** in the ownership or control chain | A commercial payment may be a channel to someone who decides the project's permits, tariff or award. This is a status, not a finding of wrongdoing — what it changes is the standard of enquiry and who must approve | Enhanced diligence to natural persons, the connection recorded, and approval at a level above the deal team; where the person can influence a decision affecting the project, expect the answer to be no |
@@ -1092,7 +1095,7 @@ through national legislation and the supervised institutions that implement it �
 legislation anywhere and confer no obligation directly. **ISO 37001** is a **voluntary
 management-system standard** for anti-bribery management systems; an organisation may be certified
 against it, and **certification is not a legal defence** — it is a third party's opinion about a
-management system at a point in time, and it says nothing about the transaction in front of you. All
+management system at a point in time, and it says nothing about the transaction under diligence. All
 three are named here for identification only, none is reproduced or summarised as a source of
 requirements, and none of the issuing bodies is associated with this book.
 
@@ -1140,9 +1143,9 @@ output here is a decision and not a number. Fictitious throughout.*
 4. **Result.** The mandate is not signed and no fee, retainer or expense is paid. The matter goes to
    compliance and counsel the same day — not to the sponsor's commercial director, and not back to
    the grantor's project director, who is the subject of the concern. Correspondence, the proposed
-   mandate and the diligence file are preserved. Nobody questions the consultant, and nobody tells
-   him why the signature has not come. The bid team is told only that the engagement is on hold
-   pending clearance and is instructed to plan the bid without an intermediary. If the answer does
+   mandate and the diligence file are preserved. Nobody questions the consultant, and nobody explains
+   to the consultant why the signature has not come. The bid team is told only that the engagement
+   is on hold pending clearance, and is instructed to plan the bid without an intermediary. If the answer does
    not arrive before the deadline, the sponsor bids without the consultant or does not bid.
 5. **Interpretation.** Three readings, and the third is the one to carry. **The stop is the
    decision.** There is no state in which the leader is "still considering" while the mandate is
@@ -1310,7 +1313,7 @@ what was found. Anything shorter is an assertion that checking happened.
 | **Politically exposed person** | Someone entrusted with a prominent public function, with their close associates and family; a status that raises the standard of enquiry, never a finding of wrongdoing. |
 | **Sanctions screening** | Checking parties and their ownership against applicable designations — at close and on change of control, as a repeated control rather than a one-off. |
 | **Tipping off** | Alerting the subject of a suspicion or a report; an offence in many regimes and fatal to the enquiry in all of them. |
-| **The stop rule** | Where a red flag is unresolved the leader does not proceed pending written clearance: no payment, no signature, no certification. |
+| **Stop rule** | Where a red flag is unresolved the leader does not proceed pending written clearance: no payment, no signature, no certification. |
 | **Payment-route record** | Which entity was paid, in which jurisdiction, into an account in whose name, against what invoice — with the approved reason for any departure. |
 | **Conflict of interest** | An interest that could bias judgment; declared, managed or declined. |
 | **Daylight test** | Would full disclosure of interests leave the advice trusted? |
@@ -1778,6 +1781,11 @@ What a project finance director cannot delegate in this domain:
   arrive, and who is exposed if it does not?*
 - **The conflicts register.** Kept current, disclosed early, tested against daylight —
   because the director's own relationships are usually the largest entries.
+- **The intermediary list, and who approved each one.** Every agent, adviser and introducer the
+  project pays, with the service bought, the approver outside the commercial line, and the account
+  and jurisdiction the money reaches (Toolkit 1.T.5). The director also owns the standing instruction
+  that an unresolved red flag stops the work — and the fact that nobody in the organisation has ever
+  been penalised for stopping it.
 - **The AI accountability line.** Named humans own machine output; the director owns the
   culture that makes that real (Domain 16 gives the machinery; Domain 1 gives the law).
 
@@ -1870,32 +1878,6 @@ declined) · review date. AI use: tool and environment · data classification cl
 verification steps and named verifier · disclosure status. One register, one owner, standing
 agenda item.
 
-### Toolkit 1.T.5 — Intermediary engagement and financial-crime evidence file (one per intermediary)
-
-The file that must exist before an agent, adviser or introducer is engaged, and be kept current
-afterwards — built so that a lender's reviewer, an auditor or counsel can read it cold.
-
-*Before engagement.* Who introduced the party, and were they on the other side of the negotiation ·
-the service being bought, described in terms someone outside the deal can test · the fee, its basis
-and the comparison it was benchmarked against · beneficial ownership traced to natural persons, with
-the source and date of each fact and any gap named as a gap · sanctions screening of the party and
-its owners, with hits, clearance reasoning and the clearer's name · politically exposed persons
-identified in the ownership, control or management chain · the red-flag triage of 1.3.2, each flag
-marked resolved or open · the approver **outside the commercial line**, and the date.
-
-*In the terms.* Anti-bribery and sanctions warranties · audit and inspection rights over the
-intermediary's records · no subcontracting, assignment or sub-agency without consent · payment only
-to the contracting entity, in the contracting jurisdiction, into an account in its own name ·
-termination on breach, with fees repayable.
-
-*While the engagement runs.* The payment-route record per invoice · screening re-run on change of
-control, on any new party and on the stated refresh cycle · the escalation record — what was raised,
-by whom, to whom, when, what was decided, and what was done while the question was open.
-
-*Rule.* The file is opened before the mandate is signed, not assembled afterwards. An engagement with
-no approver outside the deal team is not approved, and an unresolved flag means the work stops until
-clearance is given in writing.
-
 ### Toolkit 1.T.4 — Recourse-cost worksheet (one per financing route considered)
 
 The arithmetic of WE 1.1.2, in the order a decision paper needs it, so that the incremental cost of
@@ -1919,6 +1901,34 @@ gearing — WE 1.2.1) · the recourse sentence in three limbs · decision, decis
 *Rule.* The recovery assumption and the discount rate are named on the face of the paper. A
 breakeven presented without them is not reviewable.
 
+### Toolkit 1.T.5 — Intermediary engagement and financial-crime evidence file (one per intermediary)
+
+The file that must exist before an agent, adviser or introducer is engaged, and be kept current
+afterwards — built so that a lender's reviewer, an auditor or counsel can read it cold.
+
+*Before engagement.* Who introduced the party, and whether they sit on the other side of the
+negotiation · the service being bought, described in terms someone outside the deal can test · the
+fee, its basis, and the comparison it was benchmarked against · beneficial ownership traced to
+natural persons, with the source and date of each fact and any gap named as a gap · sanctions
+screening of the party and its owners, with hits, clearance reasoning and the clearer's name ·
+politically exposed persons identified in the ownership, control or management chain · the red-flag
+triage of 1.3.2, each flag marked resolved or open · the approver **outside the commercial line**,
+and the date.
+
+*In the terms.* Anti-bribery and sanctions warranties · audit and inspection rights over the
+intermediary's records · no subcontracting, assignment or sub-agency without consent · payment only
+to the contracting entity, in the contracting jurisdiction, into an account in its own name ·
+termination on breach, with fees repayable.
+
+*While the engagement runs.* The payment-route record per invoice · screening re-run on change of
+control, on the admission of any new party and on the stated refresh cycle · the escalation record —
+what was raised, by whom, to whom, when, what was decided, and what was done while the question was
+open.
+
+*Rule.* The file is opened before the mandate is signed, not assembled afterwards. An engagement with
+no approver outside the deal team is not approved, and an unresolved flag stops the work until
+clearance is given in writing.
+
 ## Exam preparation — Domain 1
 
 **The traps.** Recourse classifications (comfort letter ≠ guarantee — Exercise 1.3) ·
@@ -1932,7 +1942,13 @@ recourse route's incremental cost by the *facility* rather than by the exposure 
 without its discount rate (WE 1.1.4, Exercise 1.6) · measuring covenant headroom from the reported
 ratio instead of from the covenant (Exercise 1.7) · comparing a risk-transfer quote with the risk's
 expected cost instead of with the cost of retention (WE 1.2.1) · reading a breakeven above 100 % as
-an arithmetic error rather than as an impossible configuration.
+an arithmetic error rather than as an impossible configuration · treating a facilitation payment as
+something other than a bribe because it is small, routine or locally normal (1.3.2) · escalating a
+financial-crime concern up the commercial line rather than to compliance or counsel, or "just
+asking" the intermediary — which is tipping off · reading a contractual anti-bribery warranty, or a
+counterparty's ISO 37001 certification, as a defence to an offence · continuing to pay, sign or
+certify while a red flag is open, on the reasoning that nothing has been decided yet (MCQ 1.3-I,
+MCQ 1.3-J).
 
 **Reflection questions.**
 1. Take a project you know: write its recourse sentence in under 25 words. Who stands behind
@@ -1941,10 +1957,13 @@ an arithmetic error rather than as an impossible configuration.
    structural (not cosmetic) fix would close it?
 3. What in your team's current AI usage would fail the daylight test if disclosed in full —
    and what changes tomorrow because you asked?
-4. For your current financing: what is the incremental cost of its recourse position, what exposure
+4. Name every intermediary your current project pays. For each: who introduced them, what service
+   is bought, who approved the fee from outside the deal team, and into which account in which
+   jurisdiction the money goes. If any of those four answers is missing, that is the finding.
+5. For your current financing: what is the incremental cost of its recourse position, what exposure
    does that position remove, and what failure probability would make the two equal? If nobody can
    answer, who approved the cost?
-5. State your project's three thresholds from memory — the cash level at which the covenant fails,
+6. State your project's three thresholds from memory — the cash level at which the covenant fails,
    the level at which equity cash reaches zero, and the level at which the lender's coverage test
    for distributions locks up. If the second is much further away than you expected, check whether
    your mental model has the debt amortising.
@@ -1975,7 +1994,11 @@ tolerates a 65.00 % cash decline interest-only and **30.42 %** amortising, with 
 at **16.51 %**. Timing has its own arithmetic and its own trap: a 15-year availability stream has a
 Macaulay duration of **6.5945 years**, and no level stream at 8 % can exceed **13.5** at any tenor,
 so matching an asset's life is not matching its duration. Around the technique stands the profession:
-fiduciary-grade candour about numbers and limits, conflicts managed in daylight — where the breakeven
+fiduciary-grade candour about numbers and limits; the financial-crime duties, which are the only ones
+in the lattice whose breach is criminal and where a facilitation payment is a bribe, an intermediary's
+conduct is the organisation's exposure whether or not it knew, and an unresolved red flag stops the
+work while the concern travels to compliance or counsel rather than up the commercial line; conflicts
+managed in daylight — where the breakeven
 discovery probability is **1.7794 %** and the calculation has no upside term — and machine assistance
 governed by the suite principle, whose foundational demand is that a benchmark carry a source line
 before it becomes a negotiating position, the omission that cost Kestrel **1,117,200** for nothing.
