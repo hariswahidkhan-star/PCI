@@ -284,6 +284,20 @@ Every external reference is classified as exactly one of these, and the categori
 | 8 | Voluntary environmental or social framework | e.g. Equator Principles — voluntary, not legislation |
 | 9 | PCI internal professional law | This system |
 | 10 | Illustrative practice | Named to illustrate, not relied on |
+| 11 | **National standard** | A published standard of one country's standards body (e.g. an ANSI-accredited US standard). Binds only where a contract or procurement regime imports it. Not an international standard, not industry guidance |
+| 12 | **Supervisory guidance** | A supervisor's published expectations, or an internationally agreed supervisory framework. **No legal force of its own**; applies only as a national authority transposes it or a supervised firm is subject to it. Never tag it as regulation |
+
+> **Note on categories 11 and 12.** The programme brief specified ten categories. Two more were added
+> because the ten had no accurate home for instruments the corpus actually cites, and forcing them
+> into an existing category would have been exactly the misclassification the scheme exists to
+> prevent: ANSI/EIA-748 is a *national* standard, not an international one and not industry practice;
+> the Basel framework and a banking supervisor's model-risk expectations are *supervisory*, and
+> tagging either as regulation would state that they bind directly, which they do not. Category 3
+> ("international voluntary standard") also does not fit a non-international voluntary framework such
+> as the NIST AI RMF or the OECD AI Principles — classify those under category 7 or 8 by their
+> subject, and state in the reference itself that they are voluntary and where they originate.
+> These two additions are recorded here as a deviation from the brief, with the reason, rather than
+> made silently.
 
 **Specific rules that have already been breached once in this corpus and must not be again:**
 
