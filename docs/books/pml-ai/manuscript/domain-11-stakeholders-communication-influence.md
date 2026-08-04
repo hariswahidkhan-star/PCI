@@ -115,7 +115,7 @@ but relationships attach to people, a point 11.A.2 makes arithmetic.
 **The four questions that make a register useful.** Not "who are the stakeholders?" but: what does
 this party **decide, consent to, resource, or do** that the project needs? What does the project
 change **for them**, and is that a gain or a loss in their own terms? What is their **relationship
-to the other parties**, who do they follow, and who follows them? And what is the **cost if their
+to the other parties** — who do they follow, and who follows them? And what is the **cost if their
 agreement arrives late**? The last question converts a register from an administrative artefact into
 a planning input, because it produces a number, and 11.1.2 computes it.
 

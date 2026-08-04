@@ -8,9 +8,9 @@ starts, with levels of plan and the logic that binds work together (KA 6.1). The
 method is then built in full, forward and backward passes and both kinds of float (KA 6.2), before
 the realities the textbook network ignores — resources, constraints, milestones and rolling-wave
 elaboration — are added (KA 6.3). The domain finishes with delivery flow across predictive, agile
-and hybrid worlds: recovery, compression economics, and forecasting under uncertainty (KA 6.4). Cost joins schedule in
-Domain 7 (earned value); risk quantification deepens in Domain 8. A leader who cannot read a network
-diagram is hostage to whoever can; this domain removes the hostage-taking.
+and hybrid worlds: recovery, compression economics, and forecasting under uncertainty (KA 6.4). Cost
+joins schedule in Domain 7 (earned value); risk quantification deepens in Domain 8. A leader who
+cannot read a network diagram is hostage to whoever can; this domain removes the hostage-taking.
 
 **Learning objectives.** After this domain a candidate can: choose the right planning level for an
 audience and a decision; build a logic network with correct dependency types; **model an approval as

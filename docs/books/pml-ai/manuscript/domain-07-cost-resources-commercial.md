@@ -1280,11 +1280,11 @@ capability** will mis-price every option in Domain 6's compression decisions.
    rates against a schedule built on productive hours is under-funded by that multiplier before any
    risk materialises, and the discrepancy is invisible because both documents look right.
 
-   **Utilisation is the number with the most leverage on the sheet, and nobody owns it.** Cost per productive
-   hour scales as `1/utilisation`, so losing five points from 85 % to 80 % raises it to **USD
-   107.0850**: **+6.25 %**, exactly the ratio `0.85/0.80`. On Auriga, where labour is 62 % of `BAC`
-   (**USD 2,480,000**) that is **USD 155,000**, which is **77.50 %** of the entire USD 200,000 cost
-   variance the week-13 board meeting exists to discuss. **Five points of utilisation is
+   **Utilisation is the number with the most leverage on the sheet, and nobody owns it.** Cost per
+   productive hour scales as `1/utilisation`, so losing five points from 85 % to 80 % raises it to
+   **USD 107.0850**: **+6.25 %**, exactly the ratio `0.85/0.80`. On Auriga, where labour is 62 % of
+   `BAC` (**USD 2,480,000**) that is **USD 155,000**, which is **77.50 %** of the entire USD 200,000
+   cost variance the week-13 board meeting exists to discuss. **Five points of utilisation is
    three-quarters of the variance everyone is arguing about**, and it is lost in ways nobody
    records: waiting for access, waiting for a permit, waiting for a decision (Domain 3's governance
    latency, priced in Case study C), re-mobilising after a stand-down.

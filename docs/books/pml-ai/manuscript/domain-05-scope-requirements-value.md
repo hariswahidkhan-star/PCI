@@ -1445,12 +1445,12 @@ delay; and the cumulative total set beside Domain 4's authorised drift, so the r
 share of total scope movement the change log actually captured**.
 
 *Acceptance-criterion patterns*, four forms that make a criterion testable. **Threshold:** given
-*[state]*, when *[action]*, the result is *[observable]* within *[limit]*, for performance, capacity
-and time. **Enumeration:** the deliverable handles each of *[n]* listed cases, each individually
-verifiable, for functional coverage, and it forces the case list into the open. **Negative:** given
-*[invalid input or failure condition]*, the result is *[defined behaviour]*. The pattern that
-catches the exception handling nobody specified. **Evidence:** acceptance requires *[named
-artefact]* reviewed by *[named role]*, for requirements whose satisfaction is a judgement (clinical
+*[state]*, when *[action]*, the result is *[observable]* within *[limit]* (for performance, capacity
+and time). **Enumeration:** the deliverable handles each of *[n]* listed cases, each individually
+verifiable (for functional coverage, and it forces the case list into the open). **Negative:** given
+*[invalid input or failure condition]*, the result is *[defined behaviour]* (the pattern that
+catches the exception handling nobody specified). **Evidence:** acceptance requires *[named
+artefact]* reviewed by *[named role]* (for requirements whose satisfaction is a judgement: clinical
 safety, accessibility, regulatory conformance), which is how a judgement becomes auditable rather
 than an opinion. Prohibit four constructions outright: "correctly", "appropriately", "as required",
 and any comparative without a referent.

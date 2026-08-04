@@ -260,7 +260,7 @@ well-formatted numbers with no provenance which then drive a real budget. Where 
 exist, the correct output is that it does not exist, plus the range over which the conclusion holds.
 
 **Verification, concretely.** Reproduce the whole `CoQ` table by hand or in a spreadsheet whose
-formulae are visible, four multiplications and a sum per regime, and state every input's source
+formulae are visible (four multiplications and a sum per regime), and state every input's source
 beside it. Publish the marginal step analysis and the range of optimality, not the point minimum,
 because those tell a board whether the recommendation is robust or fragile. And where an AI system
 has classified historical costs into the four categories, sample-check the classification on a

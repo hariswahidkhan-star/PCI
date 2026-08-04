@@ -636,9 +636,15 @@ def inject_figures(book_dir: pathlib.Path, corpus: str) -> str:
 # an absent file is skipped rather than fatal.
 # ---------------------------------------------------------------------------------------------
 
-# Fields the standard format carries that are call-outs in their own right (PCI_STANDARDS_DRAFTING_MANUAL.md §8).
-STD_FIELD_BOXES = (("External references.", "ext-ref"),
-                   ("Jurisdictional caution.", "pci-caution"))
+# Two of a standard's twenty-five elements are call-outs in their own right
+# (PCI_STANDARDS_DRAFTING_MANUAL.md §8). They are matched tolerantly — with or without the element
+# number, singular or plural — because a field that is boxed in one standard and not in the next
+# looks like a mistake rather than a system. The element number and name are kept inside the box
+# and the class's own small-caps label is suppressed there: the standards cite their elements by
+# number ("named in element 19"), so the number cannot be thrown away, and the field name already
+# says what the call-out is.
+STD_FIELD_BOXES = ((r"External references?\.", "ext-ref field"),
+                   (r"Jurisdictional cautions?\.", "pci-caution field"))
 
 
 def _std_prose(md: str) -> str:
@@ -653,9 +659,10 @@ def _std_prose(md: str) -> str:
 def _std_box(law_id: str, title: str, body_md: str) -> str:
     inner = markdown.markdown(body_md, extensions=["tables"])
     inner = inner.replace("<hr />", "")
-    for label, cls in STD_FIELD_BOXES:
-        inner = re.sub(r"<p><strong>" + re.escape(label) + r"</strong>\s*(.*?)</p>",
-                       lambda m, c=cls: f'<div class="{c}"><p>{m.group(1)}</p></div>',
+    for pattern, cls in STD_FIELD_BOXES:
+        inner = re.sub(r"(<p><strong>(?:\d+\.\s*)?" + pattern + r"</strong>(?:(?!</p>).)*</p>)"
+                       r"(\s*<ul>(?:(?!</ul>).)*</ul>)?",
+                       lambda m, c=cls: f'<div class="{c}">{m.group(1)}{m.group(2) or ""}</div>',
                        inner, flags=re.S)
     return (f'<div class="pci-standard" id="{slug("standard-" + law_id)}">'
             f'<div class="stdhead"><span class="stdid">{law_id}</span>'

@@ -9,10 +9,10 @@ instruments: what a project leader is *for*, what they are answerable for, and h
 steady-state function. KA 1.2 defines accountability precisely, because the word is used loosely and
 the distinction decides who answers when things go wrong. KA 1.3 builds the two habits of mind that
 separate a leader from a coordinator — systems thinking, and the discipline of outputs versus
-outcomes versus benefits. Ethics and the governed use of AI are grounded in KA 1.4. A reader who
-finishes only this domain should already reason like the profession: *know what
-success actually means, know who owns it, and stay answerable for the judgment even when a machine
-produced the analysis.*
+outcomes versus benefits. Professional ethics and the governed use of AI are grounded in KA 1.4. A
+reader who finishes only this domain should already reason like the profession: *know what success
+actually means, know who owns it, and stay answerable for the judgment even when a machine produced
+the analysis.*
 
 **Learning objectives.** After this domain a candidate can: distinguish projects, programmes and
 portfolios and explain what each optimises; **price the delivery verdict and the programme verdict
@@ -1379,7 +1379,8 @@ a safety decision, which the example expressly rules out.
 5. *What does a breakeven above 100 % tell you?* — That no error rate could justify that check on that
    artefact: it is unjustifiable rather than merely uneconomic (1.4.3).
 6. *Where must this arithmetic not be the deciding test?* — Where a duty arising under law or
-   regulation, a licence or safety is engaged; there its only legitimate use is to show the review is also cheap (1.4.3).
+   regulation, a licence or safety is engaged; there its only legitimate use is to show the review
+   is also cheap (1.4.3).
 
 ---
 

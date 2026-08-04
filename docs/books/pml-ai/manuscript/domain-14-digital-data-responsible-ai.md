@@ -1163,9 +1163,9 @@ nobody can explain it in the terms the criterion was written in. That is the gen
 explanation must be in the vocabulary of the obligation, not of the model.**
 
 **The three levels a leader should distinguish**, because they have different costs and different
-triggers. *No explanation required*: the output informs an internal, reversible, low-consequence
+triggers. *No explanation required.* The output informs an internal, reversible, low-consequence
 choice; most permitted AI use sits here, and demanding explainability of all of it is how
-organisations make responsible AI unaffordable. *Explanation required*, a person affected by the
+organisations make responsible AI unaffordable. *Explanation required.* A person affected by the
 decision, or a body reviewing it, is entitled to know its basis: a supplier not shortlisted, a
 change not approved, a clinic prioritised for support ahead of another. Here the requirement is
 satisfied by the *human's* reasoning, evidenced, with the AI output as one input, which is the
