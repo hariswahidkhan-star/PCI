@@ -1,12 +1,18 @@
 # Suite Terminology Register and Collision Audit — PCL-AI · PML-AI · PFL-AI
 
 **Status:** Audit of how 28 load-bearing terms are actually defined and used across the three books
-and the law set, checked against the shared registry `TERMINOLOGY.md`.
+and the PCI Standard set, checked against the shared registry `TERMINOLOGY.md`.
+
+**Identifier note.** The instruments this audit originally called *laws* are now **PCI Standards**, and
+their identifiers migrated twice — `PCL-LAW-13-04` → `PCI-PCL-LAW-13.04` → `PCI-PCL-STD-13.04`. Every
+identifier cited below has been re-pointed **by subject** to the standard that carries the meaning the
+sentence relies on, not by matching numbers: two of the three did not keep their number or their title.
+The mapping is recorded in [`../laws/STANDARDS_CONCORDANCE.md`](../laws/STANDARDS_CONCORDANCE.md) §3.
 
 **Method.** Every row below was built by reading the definitions where they live — the
 `### Key terms — KA N.K` tables in `pml-ai/manuscript/` and `pfl-ai/manuscript/`, the derived
 `GLOSSARY.md` of each book, PCL-AI's Appendix B (`docs/bok/appendices.md`), the binding
-`docs/bok/00-style-spine.md` §3, and the law files — and then counting actual usage across the
+`docs/bok/00-style-spine.md` §3, and the PCI Standard files — and then counting actual usage across the
 corpus. Nothing here is inferred from a term's ordinary meaning. Counts are from the corpus as it
 stood on **2026-08-03**.
 
@@ -34,7 +40,7 @@ manuscripts by `_build/make_glossary.py`, which already classifies multiply-defi
 RESOLVED, CROSS-REFERENCED, LAYERED, REDUNDANT or COLLISION and fails the build on the last two.
 Running it on 2026-08-03 reports **0 open defects** (581 PML-AI terms, 446 PFL-AI terms). That
 checker is good, and this audit does not duplicate it. What it cannot see is the ground this audit
-covers: **PCL-AI, which has no derived glossary of that kind; the law files, which are outside every
+covers: **PCL-AI, which has no derived glossary of that kind; the PCI Standard files, which are outside every
 book build; the symbol registry in `FORMULAS.md`; and cross-book agreement.** Every issue in §4 is
 invisible to the in-book checker for one of those reasons.
 
@@ -43,7 +49,9 @@ invisible to the in-book checker for one of those reasons.
 ## 2. The register
 
 Books are abbreviated **PCL** (PCL-AI, `docs/bok/`), **PML** (`docs/books/pml-ai/`), **PFL**
-(`docs/books/pfl-ai/`), **Laws** (`docs/books/laws/`).
+(`docs/books/pfl-ai/`), **Standards** (the PCI Standard set, `docs/books/laws/`). The Book(s) column
+below reads **Standards** where earlier revisions read *Laws*; it is the same body of content under its
+current name.
 
 ### 2.1 Structural terms
 
@@ -59,13 +67,13 @@ Books are abbreviated **PCL** (PCL-AI, `docs/bok/`), **PML** (`docs/books/pml-ai
 | Term | Book(s) | First definition | Later definitions | Inconsistent usage found | Proposed suite definition | Collision note |
 |---|---|---|---|---|---|---|
 | **sponsor** | PML, PFL | PML KA 3.2: "The individual accountable for the project's business outcome and mandate." | PFL KA 1.1: "Equity investor promoting the project (**this book's project-finance sense**)." PFL KA 5.2 expands: "brings capital, capability, access and credit." | **None — this is handled correctly.** `TERMINOLOGY.md` already flags it, and PFL's glossary entry carries the context flag in its own text | **No single definition — context flag required.** | **Genuine collision, correctly resolved.** *Delivery/governance sense:* the accountable executive owner of the business case. *Project-finance sense:* an equity investor promoting the project. Both are standard in their own professions; neither may displace the other. This is the model the other collisions below should follow. |
-| **accountability** | PML, Laws | PML KA 1.2: "The obligation to answer; single-holder, non-delegable." | Laws use it throughout as the organising idea (PCI-LAW-F-01, PCL-LAW-13-04) without redefining — correct, they cite the concept | None. But **PCL and PFL never define it** despite 137 uses corpus-wide | **The obligation to answer for an outcome; held by one person and not delegable.** | None. Cleanly distinguished from *responsibility* by PML — the sharpest pair in the corpus. |
+| **accountability** | PML, Standards | PML KA 1.2: "The obligation to answer; single-holder, non-delegable." | The Standard set uses it throughout as the organising idea (`PCI-FND-STD-01` *Professional Accountability*, and `PCI-PCL-STD-13.04`, which cites it rather than restating it) without redefining — correct, they cite the concept. **Re-pointed by subject:** the PCL-AI standard formerly titled *Professional Accountability* (`PCL-LAW-13-04`) is now `PCI-PCL-STD-13.04` *Disclosure of AI Assistance in a Controls Deliverable* — same identifier position, different title | None. But **PCL and PFL never define it** despite 137 uses corpus-wide | **The obligation to answer for an outcome; held by one person and not delegable.** | None. Cleanly distinguished from *responsibility* by PML — the sharpest pair in the corpus. |
 | **responsibility** | PML | PML KA 1.2: "The obligation to do; shareable and delegable." | None | None | **The obligation to perform work; shareable and delegable.** | None. The accountability/responsibility pair is defined once, correctly, and used consistently. |
 | **governance** | PML, PCL | PML KA 3.1: "The decision rights, accountabilities and information flows through which an organisation directs and controls a project." | PCL Appendix B (line 211) defines only **"Governance / lineage"** in the *data* sense: "Ownership/definitions/access / traceability of a data point to source" | **Yes, mild.** PCL's only glossary entry for the word is data governance; project governance is used ~588 times corpus-wide and never defined in PCL | **The decision rights, accountabilities and information flows through which an organisation directs and controls a project, programme or portfolio.** Data governance to be written as *data governance*, always. | **Genuine collision between two established senses** — enterprise/project governance and data governance. Resolution is naming discipline, not one definition. |
 | **assurance** | PML | **Never defined as a base term.** PML KA 3.3 defines only *assurance map* and *assurance capture* | None | **Gap.** 162 uses corpus-wide, no definition anywhere | **Independent examination providing confidence that a control, process or deliverable is what it is claimed to be.** | Must be distinguished from *verification* — see below. |
-| **verification** | PML, PCL, PFL, Laws | PML KA 5.4: "Did we build what we specified?" (paired with *validation*: "Does what we built produce the outcome we needed?") | PCL KA 13.3: "Checking every AI output against source before use." PFL KA 1.3 *verification duty*: "The named human's obligation to check machine output before reliance." PML KA 1.4 *verification proportionality*: "Depth of checking matched to the stakes of reliance" | **Yes — two different concepts share the word**, and the suite principle uses the second sense while PML D5 teaches the first | **No single definition — context flag required.** | **Genuine collision.** *Engineering V&V sense:* did we build what we specified (vs *validation*: does it produce the outcome). *AI-assurance sense:* checking machine output against source before reliance. The suite principle "AI proposes; **the professional verifies**, decides and remains accountable" is the second sense. Both must survive; write *V&V verification* or *AI verification* where a chapter risks ambiguity. |
-| **responsible AI** | PML, PFL, Laws | **Never defined as a base term.** `TERMINOLOGY.md` defines "**Responsible AI principle**" (the suite formulation) but not the phrase itself | Two domains are *named* for it (PML D14, PFL D16) | Only 6 bare uses of "responsible AI"; the corpus overwhelmingly uses the principle instead | Keep **"Responsible AI principle"** as the defined term and continue to prefer it. Add: *responsible AI* = the practice of applying that principle. | None. Low-traffic term; the discipline of using the *principle* rather than the adjective is working. |
-| **professional judgement** | PCL, PML, PFL, Laws | Never given a glossary definition in any book | — | **Spelling is inconsistent**: "professional judgment" (PFL D3, PFL D5, PML D1) and "professional judgement" (PFL D5, PML D12/D14/D16, PCL D4/D6/D13, Laws) both appear — twice inside PFL D5 alone | **The reasoned exercise of expertise where the evidence does not determine the answer; it is the thing a professional is accountable for and the thing AI may not perform.** | None conceptually. The problem is orthographic — see §4 Issue 7. |
+| **verification** | PML, PCL, PFL, Standards | PML KA 5.4: "Did we build what we specified?" (paired with *validation*: "Does what we built produce the outcome we needed?") | PCL KA 13.3: "Checking every AI output against source before use." PFL KA 1.3 *verification duty*: "The named human's obligation to check machine output before reliance." PML KA 1.4 *verification proportionality*: "Depth of checking matched to the stakes of reliance" | **Yes — two different concepts share the word**, and the suite principle uses the second sense while PML D5 teaches the first | **No single definition — context flag required.** | **Genuine collision.** *Engineering V&V sense:* did we build what we specified (vs *validation*: does it produce the outcome). *AI-assurance sense:* checking machine output against source before reliance. The suite principle "AI proposes; **the professional verifies**, decides and remains accountable" is the second sense. Both must survive; write *V&V verification* or *AI verification* where a chapter risks ambiguity. |
+| **responsible AI** | PML, PFL, Standards | **Never defined as a base term.** `TERMINOLOGY.md` defines "**Responsible AI principle**" (the suite formulation) but not the phrase itself | Two domains are *named* for it (PML D14, PFL D16) | Only 6 bare uses of "responsible AI"; the corpus overwhelmingly uses the principle instead | Keep **"Responsible AI principle"** as the defined term and continue to prefer it. Add: *responsible AI* = the practice of applying that principle. | None. Low-traffic term; the discipline of using the *principle* rather than the adjective is working. |
+| **professional judgement** | PCL, PML, PFL, Standards | Never given a glossary definition in any book | — | **Spelling is inconsistent**: "professional judgment" (PFL D3, PFL D5, PML D1) and "professional judgement" (PFL D5, PML D12/D14/D16, PCL D4/D6/D13, and the Standard set) both appear — twice inside PFL D5 alone | **The reasoned exercise of expertise where the evidence does not determine the answer; it is the thing a professional is accountable for and the thing AI may not perform.** | None conceptually. The problem is orthographic — see §4 Issue 7. |
 
 ### 2.3 Planning, control and measurement
 
@@ -74,7 +82,7 @@ Books are abbreviated **PCL** (PCL-AI, `docs/bok/`), **PML** (`docs/books/pml-ai
 | **baseline** | PCL (binding), PML | **`00-style-spine.md` §3 (line 63)** — inherited, binding: "The approved, version-controlled plan (scope, schedule or cost) against which performance is measured." | PML KA 2.3: "The measured pre-change position; must be measured before, not reconstructed after." PCL Appendix B: "**Baselines (scope/schedule/cost)** — The approved, integrated plans control measures against" | **Yes, material.** `TERMINOLOGY.md` §1 lists *Baseline* as inherited **unchanged**, but PML's glossary carries the benefits-measurement sense as canonical. PML then uses the *plan* sense in D4 (*baseline drift*, *baseline maintenance*) — both senses live in one book | **No single definition — context flag required.** | **Genuine collision, currently undeclared.** *Control sense (inherited, binding):* the approved, version-controlled plan performance is measured against. *Measurement sense:* the pre-change position a benefit is measured from, captured before the change. Both are legitimate; PML needs both. Write *benefits baseline* for the second. See §4 Issue 3. |
 | **contingency** | PCL, PML, PFL | PCL D3 (line 128): "**Contingency reserve** — For identified risks; inside the baseline; PM-controlled." | PML KA 7.1: "Inside the baseline; funds identified risks; PM-controlled." PFL KA 8.3: "**Contingency** — Funded provision for identified risks within agreed scope; drawn on certification." | None. PCL and PML agree word for word in substance; PFL adds the financing mechanic (*drawn on certification*) without contradicting them | **A provision for identified risks, held inside the baseline and released under a stated authority.** | None. A clean example of layered depth done right. |
 | **management reserve** | PCL, PML, PFL | PCL D3 (line 129): "For unforeseen scope/risk; outside the baseline; **management-controlled**." PCL D12 (line 405) repeats it | PML KA 7.1: "Outside the baseline; unknown-unknowns; **sponsor-controlled**." PML KA 8.3 table: "Sponsor / change authority, via change control." PFL KA 8.3: "in a financing, largely replaced by contingent support" | **Yes.** The controlling role differs: *management* (PCL) versus *sponsor* (PML). Both are defensible practice; the registry claims consistency | **A provision for unidentified risk and scope change, held outside the baseline and released only by the authority named in the governance plan** — which names the role rather than guessing it. | Not a collision — an unreconciled detail. See §4 Issue 5. |
-| **forecast** | PCL, PML, PFL, Laws | **Never defined as a base term in any book** | Compounds only (*forecast honesty* in PCL-LAW-03-03, EAC methods in PCL D6) | **Gap.** 1,173 uses corpus-wide; a whole PCI law (PCL-LAW-03-03) governs it | **A current best estimate of a future outcome, stated with its method and its assumptions.** | None. Pure gap. |
+| **forecast** | PCL, PML, PFL, Standards | **Never defined as a base term in any book** | Compounds only (*forecast honesty*, the subject of the withdrawn `PCL-LAW-03-03`, now `PCI-PCL-STD-03.04` *Completeness of the Estimate at Completion*; EAC methods in PCL D6) | **Gap.** 1,173 uses corpus-wide; two whole PCI Standards govern it (`PCI-PCL-STD-03.04` and `PCI-PCL-STD-03.05` *Independent Challenge and Approval of the Forecast*) | **A current best estimate of a future outcome, stated with its method and its assumptions.** | None. Pure gap. |
 | **EAC** | PCL, PML, PFL | PCL Appendix B (line 104): "**`EAC` / `ETC`** — Estimate at completion / to complete; `EAC = AC + ETC`." Registered in `FORMULAS.md` §1 in this sense only | PML KA 7.3: "Estimate at / to complete; `EAC = AC + ETC`" — identical. PFL KA 8.4 uses the same sense (`CTC` = `EAC − AC`). **PFL KA 4.2.3 (line 671) defines "`EAV` / EAC" as "NPV (cost PV) converted to a level annual equivalent"**, with the formula `EAC = PV / AF(r, n)` at lines 590–593 | **Yes — the sharpest inconsistency in the corpus.** One symbol, two different formulas, inside one book | **`EAC` = Estimate at Completion, suite-wide, without exception.** The annuity sense is already registered as **`EAV`** in `FORMULAS.md` §3 and must use it. | **Genuine professional collision** — *equivalent annual cost* is standard finance usage and *estimate at completion* is standard controls usage. But unlike *sponsor* or *PV*, this one is **undeclared and unregistered**, and it collides with an inherited symbol. See §4 Issue 1. |
 | **PV** | PCL, PML, PFL | `FORMULAS.md` §1: **`PV` (BCWS) = Planned Value (EVM context)**; separately **`PV(x)` = present value of amount `x`** | `FORMULAS.md` lines 26–28 carry an explicit **notation clash rule**: "`PV` = Planned Value in EVM contexts; discounting always writes 'present value' in words or `PV(x)`. PFL-AI … use `PV(x)`/`FV(x)` forms throughout and reserve bare `PV` for EVM material only." | **Yes — the rule is breached in both books.** PFL uses bare `PV` for present value **93 times across 12 domains** (D3: 32, D4: 27). PML uses bare `PV` for present value **33 times in D2** while using bare `PV` for Planned Value **80 times in D4/D7/D15** | **No single definition — context flag required**, exactly as `FORMULAS.md` already says. The *rule* is right; compliance is the problem. | **Genuine collision, correctly anticipated and then not enforced.** *EVM sense:* Planned Value (BCWS). *Discounting sense:* present value. See §4 Issue 2. |
 
@@ -232,8 +240,10 @@ also removes the implication that any one role is universally correct.
 ### Issue 6 — the suite principle appears in three wordings *(defect)*
 
 **Files:**
-- `docs/books/laws/SUPERSEDED_LAW_SYSTEM_v0.md` **§8**: "One approved formulation, everywhere, in all three books
-  and every law publication."
+- `docs/books/laws/PCI_STANDARDS_DRAFTING_MANUAL.md` **§10** and `docs/books/laws/PCI_STANDARDS_CHARTER.md`
+  **§11** — *Governing principle*, both carrying the approved formulation verbatim. (The rule was first
+  stated in the superseded `SUPERSEDED_LAW_SYSTEM_v0.md` §8: "One approved formulation, everywhere, in
+  all three books and every law publication.")
 - `docs/books/pfl-ai/manuscript/domain-01-foundations.md` **line 1106**: "AI proposes; the
   professional verifies, decides**,** remains accountable." — the "and" is missing
 - `docs/bok/domain-13-ai-for-project-controls.md` **line 1241**: "AI proposes; the professional
@@ -252,8 +262,8 @@ exactly the kind of rule a build gate should hold, and it is currently held by n
 **Files:** `docs/books/pfl-ai/manuscript/` — **85 uses of American "judgment" against 9 of British
 "judgement"**, across at least 11 of the 16 domains.
 
-The rest of the corpus is consistent: PCL-AI 117 British / 1 American; PML-AI 107 / 29; the law files
-22 / 0. `TERMINOLOGY.md` §1 requires "British English throughout", and the editorial charter is
+The rest of the corpus is consistent: PCL-AI 117 British / 1 American; PML-AI 107 / 29; the PCI
+Standard files 22 / 0. `TERMINOLOGY.md` §1 requires "British English throughout", and the editorial charter is
 suite-wide.
 
 The mixing occurs **inside a single file**: `domain-05-development-bankability.md` uses "professional
@@ -261,8 +271,9 @@ judgment" at line 690 and "professional judgement" elsewhere in the same domain.
 
 **Proposed resolution.** Replace "judgment" with "judgement" throughout `pfl-ai/manuscript/` and the
 29 instances in `pml-ai/manuscript/`, with one exception preserved: **"judgment" is correct British
-English for a court's decision**, so check each occurrence in legal-forum passages (PCL-LAW-10-02's
-delay-analysis material and PFL D12 contract chapters) before replacing. Add a spelling check to
+English for a court's decision**, so check each occurrence in legal-forum passages (the delay-analysis
+material of `PCI-PCL-STD-10.02` *Critical-Path Verification Before Reliance* and PFL D12 contract
+chapters) before replacing. Add a spelling check to
 `_build/run_checks.py`.
 
 ### Issue 8 — `TERMINOLOGY.md` has been corrupted by a global rename *(defect)*
@@ -325,7 +336,7 @@ Five terms the corpus leans on constantly are defined only as compounds:
 | Term | Uses corpus-wide | Defined as | Base definition |
 |---|---|---|---|
 | **value** | 2,601 | *value envelope*, *value of information*, *value per unit of constraint*, *value measurement* | **none** |
-| **forecast** | 1,173 | *forecast honesty* (a law), EAC methods | **none** |
+| **forecast** | 1,173 | *forecast honesty* (the subject of `PCI-PCL-STD-03.04`), EAC methods | **none** |
 | **benefit** | 890 | *benefits owner/profile/map/bridge/measurement plan*, *benefits realization* | **none** |
 | **assurance** | 162 | *assurance map*, *assurance capture* | **none** |
 | **governance** | 588 | PML KA 3.1 defines it; **PCL defines only "governance / lineage"** (data sense) | partial |
