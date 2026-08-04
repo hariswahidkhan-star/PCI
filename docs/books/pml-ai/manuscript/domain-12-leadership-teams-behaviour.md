@@ -46,8 +46,11 @@ an economic decision with a breakeven, citing Domain 3's threshold arithmetic ra
 structure and time a difficult conversation and price its deferral; **compute working-hour overlap from
 a common time reference, price the round-trip latency of a zero-overlap pair, and design a shared and
 rotated overlap window**; lead multicultural teams without substituting stereotype for enquiry; hold
-the ethical obligations that cannot be delegated; and govern AI's use in people decisions, where the
-constraints are tighter than anywhere else in the book.
+the ethical obligations that cannot be delegated **and say what to do when the decision goes the other
+way — the dissent record, the signature declined in writing, and the escalation route beyond the
+accountable person where harm is in question**; **specify the custodian, access, copy, retention and
+disposal of a conversation record without stating any jurisdiction's requirements**; and govern AI's
+use in people decisions, where the constraints are tighter than anywhere else in the book.
 
 **The master threads.** Meridian Care Records supplies the programme case: the rollout to **40
 clinics**, benefits **USD 685,440** a year at 70 % adoption, **cost of delay USD 14,280 per week**
@@ -1042,6 +1045,55 @@ infers what the leader actually values, made quickly and observed closely. And *
 the reliable test is whether you would be comfortable if the whole decision, including your reasoning,
 were in the decision record with your name on it.
 
+**When the decision goes the other way.** Every path above ends in the same place — *state it in
+writing, then let the accountable person decide with the information*. That is right, and it is
+incomplete, because it says nothing about the case the leader actually fears: the accountable person,
+having been told in writing, directs the misstatement anyway, or proceeds despite a stated safety
+objection. A professional obligation asserted without a mechanism for that case is an exhortation.
+The mechanism has four parts.
+
+**Record a dissent.** Not a complaint and not a resignation letter — a dated record of five things:
+the fact as you stated it, the date and forum in which you stated it, to whom, the decision that was
+taken, and **the risk you believe remains**. It is filed in the decision record under Domain 3,
+KA 3.3.4, which is the register that answers *was this reasonable on what was known at the time?*,
+and **a copy goes to a party other than the decision-maker** — the assurance function, the programme
+office, the sponsor's own line, whichever the governance provides — for the plain reason that a
+record held only by the person it concerns is a record that can cease to exist. The tone is factual
+and the content is specific. A dissent that characterises the decision-maker rather than the decision
+is weaker, not stronger, and it converts a professional record into a personal dispute.
+
+**Decline the signature you do not believe.** The leader does not sign an acceptance, a readiness
+certificate, a completion statement, a forecast or a final account they do not believe to be true —
+and says **in writing why**, naming what would have to change for the signature to be available. This
+is the point at which the obligation stops being about reporting and starts being about attestation:
+a signature is a representation to everyone downstream who relies on it, and Domain 14, KA 14.4.3
+makes the same point about being asked to verify an output without the time or information to do it.
+Refusing a signature is a professional act with consequences, and the mechanism is designed so that
+the refusal is documented, reasoned and reversible rather than dramatic.
+
+**Escalate beyond the accountable person where the matter is safety or harm.** For an ordinary
+commercial disagreement, the accountable person's decision stands and the dissent is the record. For
+a risk of harm to people, **it does not**: the obligation to escalate beyond the accountable person is
+absolute and personal, it is not subject to the delegation schedule, and the route is stated in
+advance so that nobody has to invent one under pressure — the next governance tier (Domain 3,
+KA 3.3.3, at its stated latency), then independent assurance or internal audit, then the board or its
+audit or risk committee. Each step is taken in writing, each is recorded, and the leader keeps their
+own copy of what was sent and when.
+
+**The neutral closing note, and it is expressly not legal advice.** Arrangements protecting a person
+who raises a concern in good faith — often described as protected-disclosure or whistleblowing
+regimes — are understood to exist in many jurisdictions. Their scope, the conditions attached to
+them, who is covered, which routes qualify and what protection follows differ materially between
+them, and **nothing here states the position in any jurisdiction, states that any such arrangement
+applies to any person or organisation, or characterises any response to a disclosure as lawful or
+otherwise.** Two practical consequences follow, and they are the whole of what this book will say.
+The organisation's own policy and its legal function are engaged **before** any step outside the
+organisation, because the order in which steps are taken can matter and is not something to work out
+alone. And the professional obligation that does not depend on any of it is narrower and
+unconditional: **raise the concern internally, promptly, in writing, keep your own copy, and take
+advice early.** Where a leader believes they are being placed in an untenable position, that is a
+matter for qualified advice in their own jurisdiction, and this book is not a substitute for it.
+
 Two closing observations. Ethical failure in delivery is rarely a single dramatic choice; it is an
 accumulation of small deferrals — an unreported slippage, an unraised concern, a number rounded
 favourably — each defensible alone and collectively a misrepresentation, and the countermeasure is the
@@ -1104,6 +1156,10 @@ the only part of the output that carries the ethics.
 | **Handover artefact** | What was done, what is in flight, what is blocked, what the next party must decide. |
 | **Within-group variation** | The reason national-culture averages cannot predict an individual's behaviour. |
 | **Honest attribution (AI)** | Stating what was AI-generated and what was verified, and how. |
+| **Dissent record** | The dated record of the fact stated, when and to whom, the decision taken, and the risk the leader believes remains — filed in the decision record, with a copy to a party other than the decision-maker. |
+| **Declining the signature** | The refusal to sign an acceptance, readiness certificate, forecast or account the leader does not believe, stated in writing with what would have to change. |
+| **Route of last resort** | For a risk of harm to people: next governance tier, then independent assurance, then the board or its audit or risk committee — stated in advance, each step in writing. |
+| **Employment-records provisions** | Custodian, access list, copy to the individual, retention period from the organisation's policy, and disposal — settled with human resources, legal and the data-protection accountability holder, whose requirements differ by territory and are not stated in this book. |
 
 ### Sample MCQs — KA 12.4
 
@@ -1167,6 +1223,17 @@ has just failed.
 3. *What are national-culture frameworks good for, and not good for?* — Anticipating that differences
    exist; not predicting an individual's behaviour, because within-group variation exceeds the
    between-group differences described.
+4. *The accountable person has been told in writing and directs the misstatement anyway. What does
+   the leader do?* — Record a dissent — fact stated, date, to whom, decision taken, risk remaining —
+   in the decision record with a copy to a party other than the decision-maker; decline to sign what
+   they do not believe, in writing, saying what would have to change; and where the matter is a risk
+   of harm to people, escalate beyond the accountable person by the stated route: next governance
+   tier, independent assurance, then the board or its audit committee (12.4.3).
+5. *What does this book say about protected-disclosure regimes?* — That such arrangements are
+   understood to exist in many jurisdictions, that their scope, conditions and protections differ
+   materially, and that nothing here states the position anywhere. The organisation's policy and its
+   legal function are engaged before any external step; the unconditional obligation is to raise the
+   concern internally, promptly, in writing, keep a copy, and take advice early.
 
 ---
 
@@ -1542,6 +1609,35 @@ past their review date. Where a formal consequence is possible, the applicable p
 human-resources and legal functions are engaged before the conversation, and the jurisdiction's
 requirements govern.
 
+**The record as a record — the block this template is incomplete without.** What the two sides above
+produce is a dated file of observations about a named individual's work, together with that
+individual's own account. It is not the leader's private aide-mémoire, and treating it as one is the
+commonest failure in the artefact. Six provisions, and they are cheap:
+
+- **A named custodian.** One role accountable for the file existing and being retrievable — normally
+  the leader while the matter is live, and the human-resources function once it is not.
+- **A limited access list.** The leader, the leader's manager, and human resources. Not the team, not
+  the successor by default, not a shared drive, and not an attachment on a thread.
+- **A copy to the individual.** The template already asks for *their confirmation that the record is
+  accurate*; that confirmation is meaningless unless they hold a copy of what they are confirming.
+  Give it at the same time, and record that you did.
+- **A retention period taken from the organisation's employment-records policy**, not set by the
+  project and not left open-ended, with **disposal at the end of it** by a stated authority. A note
+  about a conversation held four years ago, retained because nobody decided otherwise, serves nobody
+  and is the version most likely to surface at the wrong moment.
+- **A stated distinction between the leader's working note and the file.** The preparation side of
+  this sheet is a working note; the "after" side, once shared and confirmed, is a document that may
+  be produced in a formal process later. Where the matter may feed such a process, its retention,
+  access and custody belong to the **human-resources and legal functions**, not to the leader, and
+  they should be told the file exists.
+- **Nothing here states the position in any jurisdiction.** What may be recorded about an individual,
+  for how long, who may see it, and what entitlement the individual has to see or correct it differ
+  substantially between territories and employment relationships, and are settled with the
+  human-resources and legal functions and with whoever holds data-protection accountability in the
+  organisation (Domain 11, KA 11.1.2 makes the same point about the stakeholder register). Keeping a
+  contemporaneous record remains a non-optional professional obligation (12.3.4); how it is held is
+  not the project's decision alone.
+
 ---
 
 ## Exam preparation — Domain 12
@@ -1654,7 +1750,14 @@ working whose allocation — 10/5, 15/0, or 7.5/7.5 rotated — is an ethical de
 explicitly. Culture varies in ways worth anticipating and not in ways that predict an individual, and the
 ethical obligations — reporting what is true, refusing a date you do not believe, protecting the team,
 stopping for safety, being fair in the decisions people watch — are the ones from which a team infers what
-a leader actually values.
+a leader actually values. And where the accountable person, told in writing, decides the other way, the
+obligation has a mechanism rather than a sentiment: a **dissent** recorded in the decision log with a
+copy held outside the decision-maker's reach, a **signature declined** in writing with what would have
+to change, and — where the risk is harm to people — an **escalation route** stated in advance that runs
+past the accountable person to the next tier, to independent assurance, and to the board or its audit
+committee. Arrangements protecting a person who raises a concern are understood to exist in many
+jurisdictions and differ materially; nothing here states the position in any of them, and the
+organisation's policy and legal function are engaged before any external step.
 
 The through-line: **the human capacity of a delivery organisation is a designed quantity with a computable
 cost.** Case study B is the domain in one sentence — a conversation worth USD 1,980 deferred fourteen

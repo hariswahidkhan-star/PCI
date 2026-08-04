@@ -45,8 +45,9 @@ effort at constant cost**, and stop the lines duplicating; design an escalation 
 total latency, an out-of-cycle mechanism and **a decision action window tested against the remaining
 duration**; set objective escalation triggers on named forecast methods; maintain an auditable
 decision record, **price its re-decision tax**, and **design a cumulative test that catches clusters
-without re-centralising the delegated band**; and govern AI-assisted governance analysis without
-delegating any decision to it.
+without re-centralising the delegated band**; **specify custody, version integrity, retention and
+closure handover for each class of governance record, and say who sets the period**; and govern
+AI-assisted governance analysis without delegating any decision to it.
 
 **The master programme, and the master project.** Meridian Care Records continues from Domains 1
 and 2 — the clinical-records rollout to **40 clinics**, approved cost **USD 2,400,000**, benefits
@@ -58,6 +59,15 @@ the volume's single-project thread, **Project Auriga** — 25 weeks, BAC **USD 4
 13 the position PV 2,080,000 / EV 1,920,000 / AC 2,120,000 that Domains 6 and 7 develop — because an
 escalation trigger has to be written against a forecast method, and 3.3.3 shows that the choice of
 method decides whether the trigger fires.
+
+**Reference points.** The international document most often named in connection with this subject is
+**ISO 21505**, which addresses guidance on the governance of projects, programmes and portfolios. It
+is voluntary guidance describing practice — not legislation, and not a certifiable requirement — and
+it obliges nobody of itself unless an organisation, a contract or a regulator adopts it. It is named
+here and not reproduced: no clause, table or checklist from it appears in this volume, everything
+below is this book's own, and a reader who wants the document should obtain the current edition from
+its publisher. Naming it implies no endorsement in either direction. KA 3.3.2 names a second
+reference point, an assurance architecture published by a professional body, on the same terms.
 
 ---
 
@@ -1124,16 +1134,40 @@ that detects half.
 
 ### 3.3.2 Assurance lines
 
+**Where the vocabulary comes from, before it is used.** The "three lines" language used below is not
+generic professional vocabulary; it belongs to an assurance architecture published by the
+**Institute of Internal Auditors**. It is voluntary guidance owned by a named body rather than a
+standard, a regulation or a requirement, and its owner has revised it, so the current formulation is
+better read as a model of *roles and their relationships* than as sequential lines of defence — the
+older "three lines of defence" framing, with its implication that assurance is a series of barriers
+an error passes through, is the reading its own publisher moved away from. What follows is described
+in this book's own words; nothing from the model is reproduced, and a reader who wants it should
+obtain the current version from its publisher, who has not reviewed or endorsed this volume.
+
+It is also **one architecture among several.** The assurance structure that actually applies to a
+project is set by the organisation's own governance and, in regulated sectors, by what the regulator
+expects of that organisation — so three-line vocabulary is a *lens for finding gaps and duplication*,
+not an obligation to arrange anything in threes. Where an organisation's structure does not map onto
+it, the useful questions survive the translation: who prevents, who checks independently, who forms
+an opinion on the whole, and who can be told no.
+
 **The three lines, and what each is for.**
 
 - **First line — management.** The project's own controls: reviews, testing, quality checks,
   reporting. Owned by the project leader, and the only line that can prevent a defect rather than
   detect it.
 - **Second line — oversight function.** A PMO, risk or quality function providing independent
-  challenge while remaining inside management's chain. Its value is comparability across the
-  portfolio and pattern detection no single project can see.
-- **Third line — internal audit (and external assurance).** Independent of management, reporting to
-  the audit committee or equivalent, forming an opinion on whether the whole control system works.
+  challenge while **typically** remaining inside management's chain. Its value is comparability
+  across the portfolio and pattern detection no single project can see.
+- **Third line — internal audit (and external assurance).** Independent of management, **typically**
+  reporting to an audit committee or equivalent body, forming an opinion on whether the whole control
+  system works.
+
+Both "typically" qualifications are load-bearing. Reporting lines vary with organisational form — the
+functional, matrix, projectised and multi-party structures of KA 3.1.2 place the second and third
+lines differently, and in a consortium or joint venture there may be two of each, answering to
+different parents with different appetites. Establish where each line actually reports **before**
+relying on its independence, because an assurance product's value is set by who can overrule it.
 
 **The failure modes.** *Duplication* — three lines asking the same questions, which multiplies cost
 and destroys the project team's willingness to engage. *Gap* — everyone assumes another line covers
@@ -1614,6 +1648,56 @@ control improvement.
    control, the same interface — not by who requested them or which budget they hit, because the
    exposure the rule exists to catch is a coherent change to one thing, arriving in instalments.
 
+**Custody and retention — the part that decides whether any of this survives.** Everything above
+assumes the record still exists when it is wanted. The questions that make a decision record valuable
+— *was it reasonable on what was known at the time?* — are asked in a lessons review, a dispute, an
+audit or an inquiry, all of which happen years after the decision and long after the temporary
+organisation that made it has been dissolved. A record with no custodian and no retention period is
+the artefact most likely to be missing at the moment it is needed, and its absence converts a
+defensible decision into an indefensible one exactly as reliably as a missing version reference does.
+
+Four provisions close that gap, and they are decided in advance rather than at closure.
+
+**A named custodian, by class.** The decision log, the change log (Domain 4, KA 4.4), gate packs, the
+baseline archive (Domain 4, KA 4.3.3), the assurance opinions of 3.3.2 and acceptance evidence
+(Domain 5, KA 5.4.3) each have one named role accountable for their existence, completeness and
+retrievability. A role, not a person, because people move; and one role per class, because a record
+class custodied by "the project" is custodied by nobody once the project ends.
+
+**A system that preserves version and prevents silent amendment.** The record is held where an
+earlier version cannot be quietly replaced by a later one. Where a record is amended, the amendment
+travels with it — **what changed, who changed it, when, and why** — because the difference between a
+corrected record and a rewritten one is the whole of its evidential value. An "amended" record that
+looks identical to an original is worse than no record, since it invites reliance it cannot support.
+
+**A retention period set as a governance decision, taken in advance.** The period for each class is
+set at the longest of: the limitation period under the contract, any retention requirement the
+organisation is subject to, the benefits-realisation horizon the record must outlive (Domain 16,
+KA 16.4.1's measurement plan can run for years after closure), and the organisation's own records
+policy. It is stated as a schedule by class, never as a single rule for everything — Domain 16,
+KA 16.4.4 works the economics, and finds that retaining contractual and technical evidence pays as
+insurance at a very low probability of ever needing it while retaining personal data is the opposite
+trade. **The standing caveat:** retention requirements, limitation periods and disposal obligations
+are jurisdiction-, sector- and record-class-specific, they differ substantially, and they are taken
+from the organisation's records and legal functions and from qualified counsel. Nothing here states a
+legal minimum or maximum, and nothing here should be relied on as stating one.
+
+**An explicit handover of custody at closure.** The project ends; the records do not. Closure
+transfers each class to a named continuing custodian in a permanent organisation, with the transfer
+itself recorded — what was transferred, in what form, to whom, and until when. This is Domain 16's
+responsible-archive obligation seen from the governance end, and it is the provision most often
+discovered to be missing at the point where the only people who knew where anything was kept have
+left.
+
+**Who may see it, and who may not.** Access to the decision record is a governance decision too.
+Declared-interest entries, escalation notes and dissents name identified individuals and record
+positions attributed to them, so the log is not a general-circulation document: it carries a stated
+access list, and any entry about an identified person attracts the data-protection considerations
+Domain 11, KA 11.1.2 sets out for the stakeholder register and Domain 16, KA 16.4.4 sets out for the
+archive. Settle the wording, the holding and the access with whoever holds data-protection
+accountability in the organisation **before** the log is built rather than after it is requested;
+keeping the record itself remains non-optional.
+
 ### AI in this KA
 
 **Where it earns its place.** Extracting a structured decision register from meeting minutes and
@@ -1641,7 +1725,7 @@ because all of it is a handful of operations and none of it should ever be taken
 |---|---|
 | **Stage gate** | A continuation decision by a named authority against pre-set criteria, with power to stop, hold or redirect. |
 | **Conditional pass** | Proceeding subject to conditions — a real instrument only if the conditions have owners, dates and consequences. |
-| **Three lines of assurance** | Management controls; independent oversight inside management; independent audit outside it. |
+| **Three lines of assurance** | Management controls; independent oversight typically inside management; independent audit typically reporting outside it. A model of roles published by a professional body, revised by its owner, voluntary rather than required — a lens for finding gaps and duplication, not an obligatory structure. |
 | **Assurance map** | Risks and controls against assurance lines, marking coverage, gaps and duplication. |
 | **Assurance capture** | An assurance function assuring work it helped produce, and therefore unable to challenge it. |
 | **Escalation class** | A defined trigger, destination, decision, latency and out-of-cycle route. |
@@ -1657,6 +1741,9 @@ because all of it is a handful of operations and none of it should ever be taken
 | **Re-decision tax** | The committee slots and delay cost consumed by questions that had already been decided. |
 | **Cumulative test** | The delegation-schedule provision that related decisions aggregating above `X` within period `P` require the authority appropriate to the aggregate. Setting `X` and `P` is arithmetic, not judgement, and is derived in Domain 4, KA 4.3.3 — a round number chosen without reference to the observed decision rate provides the appearance of a control and none of the function. |
 | **Relatedness class** | The set over which a cumulative test sums; widening it multiplies false trips and re-centralises the delegation. |
+| **Record custodian** | The named role accountable for a record class existing, being complete and being retrievable — one role per class, so that no class is custodied by "the project". |
+| **Retention period** | How long a record class is held, set in advance at the longest of contractual limitation, applicable retention requirement, benefits-realisation horizon and records policy; a schedule by class, never one rule, and never a legal position stated by this book. |
+| **Custody handover** | The recorded transfer of each record class to a continuing custodian at closure, so records outlive the temporary organisation. |
 
 ### Sample MCQs — KA 3.3
 
@@ -1794,6 +1881,16 @@ review makes when it does not count trips; C invents a partial figure; D compoun
 7. *What are the two parameters of a cumulative test, and which one usually goes wrong?* — The aggregate
    threshold `X` and the relatedness class; widening the class is the natural error and it re-centralises
    the delegated band (3.3.4c).
+8. *Whose is the "three lines" vocabulary, and what does that change?* — It is an assurance
+   architecture published by a professional body, voluntary and since revised by its owner into a
+   model of roles rather than sequential defences. It is a lens for finding gaps and duplication; the
+   applicable structure is set by the organisation's own governance and, in regulated sectors, by
+   what the regulator expects (3.3.2).
+9. *Name the four provisions that keep a decision record usable years later.* — A named custodian by
+   record class; a system that preserves version and carries any amendment with its amender and
+   reason; a retention period set in advance at the longest of the applicable drivers, with its
+   source named; and a recorded handover of custody at closure (3.3.4). Retention requirements
+   themselves come from the records and legal functions, not from this book.
 
 ---
 
@@ -2230,6 +2327,19 @@ figures belong on the same monthly page because they convert the counts into an 
 slots as a **share of committee capacity**, which is what corrects a capacity model that would otherwise
 read low by the re-decision rate.
 
+**The custody block, completed once per record class and reviewed at every gate** (3.3.4): record
+class (decision log · change log · gate packs · baseline archive · assurance opinions · acceptance
+evidence) · **named custodian role** · where it is held, and whether that system preserves version
+and records amendments with the amender and the reason · **retention period**, with the source of the
+period named — contractual limitation, an applicable retention requirement, the benefits-realisation
+horizon or the organisation's records policy, whichever is longest · disposal or de-identification
+action at the end of it · **access list**, since entries naming identified individuals are not
+general-circulation material · and the **closure handover**: the continuing custodian in the
+permanent organisation, the date custody transfers, and the record of the transfer itself. Retention
+requirements and limitation periods are jurisdiction- and sector-specific and come from the records
+and legal functions, never from this template. Two monthly counts: record classes with no named
+custodian, and classes whose retention period has no stated source.
+
 ### Toolkit 3.T.4 — Gate and conditional-pass checklist
 
 Two halves, and the second is the one that is usually missing. **Before the gate:** criteria written and
@@ -2353,8 +2463,10 @@ tail, where **22.73 %** of Meridian's decisions carried **60.81 %** of the wait 
 differently removed **43.92 %** of the cost. Steering committees fail in five predictable ways, four of
 them designed in, and their true load is not the average: Meridian's 74.0 % concealed **110.00 %** at
 phase boundaries and, once re-decisions were counted, **98.08 %** overall. Gates buy optionality against
-irreversibility and belong where irreversibility steps up. Assurance has three lines whose worst failure
-is capture, and whose effort concentrates where review is comfortable rather than where exposure is.
+irreversibility and belong where irreversibility steps up. Assurance is usefully read through the
+three-line model — a voluntary architecture published by a professional body and since revised by it,
+a lens rather than an obligation — whose worst failure is capture, and whose effort concentrates where
+review is comfortable rather than where exposure is.
 Escalation is a timed pathway with an out-of-cycle route and an objective trigger that **names its
 forecast method** — Auriga's three estimates at completion sit at **5.00 %**, **10.42 %** and **15.20 %**
 of BAC against a 10 % tolerance, so an unnamed method delegates the escalation to whoever prepares the
@@ -2365,7 +2477,13 @@ template. Case study B's four differences were assembled from **20** individuall
 totalling **700,000**, which is the whole argument for a delegation schedule that reads on reversibility
 and externality and aggregates — and its first cumulative rule, summed over four workstreams, would have
 tripped in all **16** workstream-quarters on ordinary traffic, which is why such a rule must be sized
-against the base rate of the class it sums over.
+against the base rate of the class it sums over. And a record only answers a question years later if
+somebody was made responsible for its still being there: every class of governance record carries a
+named custodian, a system that preserves version and carries any amendment with its reason, a
+retention period set in advance at the longest of the applicable drivers with its source named, an
+access list because these records name identified people, and a recorded handover of custody at
+closure — the retention requirements themselves coming from the records and legal functions and from
+qualified counsel, never from this book.
 
 The through-line: **governance has a price, the price is computable, and until it is computed
 governance complaints are cultural and go nowhere.** Compute it, and they become engineering.

@@ -50,6 +50,22 @@ FAMILIES = [
     ("Risk", [
         ("ISO 31000", "risk management — principles and guidelines"),
     ]),
+    # Sustainability reporting is the one area where a voluntary framework and a mandatory
+    # disclosure regime are most often conflated, so the entry says which this is.
+    ("Environmental and sustainability quantification", [
+        ("ISO 14064", "the quantification and reporting of greenhouse-gas emissions and removals — "
+                      "voluntary guidance, and not itself a disclosure obligation"),
+    ]),
+    # An assurance architecture owned by a named professional body, revised by its owner. It is
+    # neither a standard nor a requirement, and the volumes use it as a lens rather than a rule.
+    ("Assurance and internal audit", [
+        ("Institute of Internal Auditors", "an assurance architecture, commonly called the three "
+                                           "lines, published by a professional body and revised by "
+                                           "it into a model of roles rather than sequential lines of "
+                                           "defence — voluntary guidance, neither a standard nor a "
+                                           "requirement, and described in this volume in its own "
+                                           "words"),
+    ]),
     ("Quality and data quality", [
         ("ISO 9000", "quality management systems — fundamentals and vocabulary"),
         ("ISO 9001", "quality management systems — the certifiable requirements standard"),
@@ -87,8 +103,11 @@ FAMILIES = [
                                       "social performance standards, widely adopted as a reference "
                                       "benchmark in project finance"),
         ("OECD", "the Organisation for Economic Co-operation and Development, referenced for its "
-                 "arrangement on officially supported export credits and for its convention on "
-                 "combating bribery of foreign public officials"),
+                 "arrangement on officially supported export credits, for its convention on "
+                 "combating bribery of foreign public officials, and for its Guidelines for "
+                 "Multinational Enterprises and the associated due-diligence guidance — "
+                 "recommendations addressed to adhering governments and, through them, to "
+                 "enterprises, and not obligations of themselves"),
     ]),
     # Financial crime is the one duty in the ethics chapter whose breach is criminal, and the three
     # instruments below are the three most often misdescribed: a treaty that is not law anywhere, an
@@ -109,9 +128,45 @@ FAMILIES = [
                       "system at a point in time and should never be offered or accepted as a "
                       "defence"),
     ]),
+    # Standard-form contracts are PRIVATELY PUBLISHED MODEL FORMS. They have no standing of their
+    # own: they matter to a project because the parties wrote one into their agreement, and what it
+    # then means between them is a question of that contract and the applicable law. The register
+    # must not let a familiar acronym read as an authority.
+    ("Standard-form contract families", [
+        ("NEC", "a family of privately published standard-form construction and engineering "
+                "contracts, named for identification only; it has no standing of its own and takes "
+                "effect only where parties adopt it in their agreement"),
+        ("FIDIC", "a family of privately published standard-form engineering and construction "
+                  "contracts, named for identification only; it has no standing of its own and takes "
+                  "effect only where parties adopt it in their agreement"),
+        ("JCT", "a family of privately published standard-form building contracts, named for "
+                "identification only; it has no standing of its own and takes effect only where "
+                "parties adopt it in their agreement"),
+        ("ISO 44001", "the management of collaborative business relationships — voluntary guidance"),
+    ]),
+    # Non-binding international instruments supply the METHOD of human-rights due diligence. They
+    # are addressed to states and, through them, to enterprises as expectations of conduct; they are
+    # a different kind of thing from national due-diligence legislation and the register says so.
+    ("Responsible and sustainable procurement", [
+        ("UN Guiding Principles on Business and Human Rights", "business responsibility for human "
+                                                               "rights — a non-binding international "
+                                                               "instrument that supplies a method "
+                                                               "and imposes no obligation of itself"),
+        ("ISO 20400", "sustainable procurement — voluntary guidance, and not a certifiable "
+                      "requirements standard"),
+    ]),
+    ("Records and service management", [
+        ("ISO 15489", "records management — what a record is, and the controls that keep it "
+                      "authentic, reliable and usable over time; voluntary guidance, and it states "
+                      "no retention period applicable to any organisation"),
+        ("ISO/IEC 20000", "service management, the discipline a receiving organisation runs when it "
+                          "accepts a service into support; voluntary guidance"),
+    ]),
     ("Cost engineering", [
         ("AACE", "AACE International, referenced for the existence and purpose of the cost-estimate "
-                 "classification progression in its Total Cost Management framework"),
+                 "classification progression — in its Total Cost Management framework and in its "
+                 "Recommended Practices on cost-estimate classification; voluntary professional "
+                 "guidance, named for identification only and never reproduced"),
     ]),
     ("Industrial control system security", [
         ("IEC 62443", "security for industrial automation and control systems"),
@@ -150,6 +205,14 @@ PATTERNS = [
     (r"\bNIST\b", lambda m: m.group(0)),
     (r"\bOECD\b", lambda m: m.group(0)),
     (r"\bAACE\b", lambda m: m.group(0)),
+    # Named bodies and instruments with no catalogue number. Wrapped across lines in the
+    # manuscripts, so whitespace runs — never a literal space.
+    (r"\bInstitute\s+of\s+Internal\s+Auditors\b", lambda m: "Institute of Internal Auditors"),
+    (r"\bUN\s+Guiding\s+Principles\s+on\s+Business\s+and\s+Human\s+Rights\b",
+     lambda m: "UN Guiding Principles on Business and Human Rights"),
+    (r"(?<![\w-])NEC(?![\w-])", lambda m: "NEC"),
+    (r"(?<![\w-])FIDIC(?![\w-])", lambda m: "FIDIC"),
+    (r"(?<![\w-])JCT(?![\w-])", lambda m: "JCT"),
 ]
 
 

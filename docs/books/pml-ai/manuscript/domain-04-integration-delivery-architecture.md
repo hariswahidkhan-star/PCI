@@ -54,6 +54,14 @@ picks up **Project Auriga** — the 25-week control-systems upgrade — to work 
 at the scale of a single project, because the two scales need different illustrations and a book that
 uses only one has taught only half the discipline.
 
+**Reference points.** The international document most often named in connection with integration and
+the management of a project as a whole is **ISO 21502**, which addresses guidance on project
+management. It is voluntary guidance describing practice — not legislation, and not a certifiable
+requirement — and it obliges nobody of itself unless an organisation, a contract or a regulator adopts
+it. It is named here and not reproduced: no clause, table or checklist from it appears in this volume,
+the treatment below is this book's own, and a reader who wants the document should obtain the current
+edition from its publisher. Naming it implies no endorsement in either direction.
+
 ---
 
 ## Knowledge Area 4.1 — Charter and management plans

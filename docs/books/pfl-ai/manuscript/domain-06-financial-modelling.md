@@ -1207,6 +1207,46 @@ delivery parameters), and the answer is more interesting than "yes".
    early, audit competently, and use the arithmetic to argue about *timing and scope* rather than
    about whether to audit at all.
 
+**The model after close.** Everything above treats governance as an internal discipline. At
+financial close it stops being one. In a limited-recourse financing the model agreed at close
+becomes a **contractual object**: the finance documents define it — the *base case*, the *initial
+financial model*, the *agreed financial model*; the term varies — they fix it as at close, and they
+make it the reference against which later obligations are measured. Four consequences follow, and a
+model team that has not been told them will breach one of them inside a year.
+
+- **It is locked, and it is not the team's to change.** After close the defined model is amended
+  only through the mechanism the documents provide: characteristically a sponsor proposal, evidence
+  supporting the change, and the consent of the agent or of a stated majority of lenders, sometimes
+  with a technical or model adviser's confirmation. An "updated model" circulated without passing
+  through that mechanism is not the model; it is a working file that looks like it. The practical
+  control is simple and is almost never in place on day one: **the closing model is filed as a
+  read-only artefact whose integrity can be demonstrated later**, and the operating model is a
+  separate file carrying its own version chain.
+- **The operating model must reconcile to it.** Covenant certification, the compliance certificate
+  and the ratio tests of Domain 10 are produced from an updated model, and **the reconciliation
+  between that model and the closing base case is itself a deliverable** — a bridge, line by line,
+  showing which movements are actuals, which are consented amendments and which are re-forecasts. A
+  ratio certified from a model nobody has bridged is a number with no provenance, and it is the
+  number the agent will ask about.
+- **It is the factual basis of a representation.** Sponsors characteristically represent, in terms
+  the documents set, that the model was prepared in good faith on assumptions believed reasonable
+  when it was given. That is why a discovered error in the closing model is not a modelling
+  embarrassment: it engages the **duty to correct** of Domain 1, KA 1.3.1 — the trigger, the
+  ownership of the correction, the route to the lender through the channel the documents provide
+  for notices, and the record. Case study B is this fact pattern found eleven weeks early; the same
+  facts found eleven weeks *late* are a correction obligation before they are a resize negotiation.
+- **Who may open it read-write is a control, not an IT preference.** Custody of the authoritative
+  file, and what happens to that custody when the modeller leaves, belong in the governance register
+  (Toolkit 6.T.3) rather than in someone's memory.
+
+*The standing caution.* The defined term used, exactly what is locked, who must consent to an
+amendment and at what threshold, the form of the reconciliation, and the wording and reach of any
+model-related representation are **drafting matters that differ by facility and by governing law and
+are for qualified counsel on the specific documents**. Nothing here states what any facility
+requires, and nothing here characterises any act or omission as lawful or unlawful. What the
+professional owes is to establish those terms from the executed documents *before* the first
+compliance certificate is produced, and to record them where the team producing it will see them.
+
 ### 6.4.4 AI-assisted modelling controls
 
 **The specific opportunity.** Four uses are strong enough to change how the work is staffed.
@@ -1217,6 +1257,15 @@ log trustworthy rather than aspirational. **Adversarial test generation**: the c
 waterfall — a `CFADS` failing every tier, a reserve emptying, tax losses exhausting mid-loan — which
 humans under time pressure reliably fail to imagine. And **documentation from the model**, drafting
 the assumption register from the input block so the two cannot drift apart.
+
+**Before any of it — the data question, which comes first.** The financing model, the term sheet
+and the draft finance documents are the highest-classification material on the transaction: the
+model contains the sponsors' negotiating position, the lenders' pricing and the base case the
+representations will be given on. They are processed **only in an environment approved for that data
+classification and permitted by the confidentiality undertakings that cover them**, and establishing
+that permission is a precondition of the task rather than a review of it. Uploading a workbook to a
+general tool for a structure scan is a disclosure of everything else in the workbook, which is the
+whole model. Domain 1, KA 1.3.4 states the rule; Domain 16 builds the machinery.
 
 **The specific prohibitions.** No AI output is a tax treatment, an accounting policy, a covenant
 definition, a waterfall order or a legal consequence — each has a named professional owner and a
@@ -1273,6 +1322,10 @@ move the audit earlier.
 | **Input provenance** | Every external input traced to a source document, version and date. |
 | **Golden-answer regression suite** | Verified results rerun after every edit; unexplained change blocks release. |
 | **Breakeven fee / error rate / detection rate** | The three points at which a review stops adding value. |
+| **Base case (contractual)** | The model as defined and fixed by the finance documents at close; the reference for later ratio tests, amendable only through the documents' own consent mechanism. |
+| **Base-case reconciliation** | The line-by-line bridge from the closing model to the operating model used for covenant certification, separating actuals, consented amendments and re-forecasts; itself a deliverable. |
+| **Model custody** | Who may open the authoritative file read-write, who releases copies, and what happens to that custody on a personnel change. |
+| **Evidential set (model)** | Closing model, audit report and findings, provenance table, change log, reconciliation and AI-edit log, retained together because separating them destroys most of their value. |
 
 ### Sample MCQs — KA 6.4
 
@@ -1405,6 +1458,23 @@ arithmetically tempting answer, because on this linear model a joint move is exa
 separate ones — and that is the trap, since adding the rows reproduces the number while still
 assigning the bundle no likelihood.
 
+**MCQ 6.4-I `[6.4.3 · Analysis]`** Eighteen months after close, a modeller improves the tax logic in
+the project's model, reruns the covenant test on the improved logic and issues the compliance
+certificate from it. The check block is green and the golden answers still reproduce. The primary
+governance failure is:
+- A. none — the model is more accurate than it was, and the check block confirms the arithmetic
+- B. the model agreed at close is a defined contractual object amended only through the mechanism the finance documents provide, so the certificate has been produced from a model that is not the reference it must reconcile to, and the change has bypassed both the consent route and the base-case reconciliation ✅
+- C. the modeller failed to run a sensitivity table alongside the certificate
+- D. tax logic may never be changed in a project model, because the tax treatment is fixed at close
+
+*Rationale:* after close the defined base case is locked and the operating model must bridge to it,
+with actuals, consented amendments and re-forecasts shown separately (6.4.3, "The model after
+close"); an unconsented improvement is still an unconsented change, and internal correctness is not
+the test. A applies the pre-close standard after close. C is a real discipline answering a different
+question. D overstates: tax facts and treatments do change, which is exactly why the amendment
+mechanism exists — and what that mechanism requires, and at what consent threshold, is a matter for
+counsel on the specific documents.
+
 ### Self-check — KA 6.4
 
 1. *Why is "the model balances" not evidence of accuracy?* — A consistently propagated error
@@ -1415,6 +1485,24 @@ assigning the bundle no likelihood.
 3. *What decides whether a model audit pays?* — Its elapsed time, not its fee: moving it early
    lifts net value from 317,547 to 602,744 and cuts the breakeven error rate from 20.10 % to
    8.05 %.
+4. *Who may change the model after close?* — Not the model team on its own. The finance documents
+   define the closing model and provide the amendment mechanism — proposal, supporting evidence and
+   the agent's or lenders' consent. The exact term, threshold and evidence are drafting matters for
+   counsel on the specific documents.
+5. *What must accompany a covenant ratio produced from the operating model?* — The reconciliation to
+   the closing base case, separating actuals, consented amendments and re-forecasts. A ratio from an
+   unbridged model has no provenance.
+6. *An error is found in the closing model a year after close. Is it a modelling problem?* — No. The
+   model is the factual basis of a representation, so the duty to correct engages: the signer owns
+   the correction, the accountable principal decides on notification, it travels through the
+   documents' notice channel, and the record is made (Domain 1, KA 1.3.1). Whether it also engages a
+   representation or an event of default is for counsel on those documents.
+7. *How long is the closing model kept, and in what form?* — For the longest of the facility's life
+   and tail, the applicable limitation period and any statutory requirement the organisation has
+   established; in a form that opens without the original toolchain and reproduces each figure from
+   its own trail; with a named custodian, and with the audit report, provenance table, change log,
+   reconciliation and AI-edit log held as one set. The periods themselves are jurisdiction-specific
+   and confirmed rather than assumed.
 
 ---
 
@@ -1611,6 +1699,15 @@ What a project finance director cannot delegate in this domain:
   5,333,333 and could have cost 15,607,667 because a superseded input survived a change log that
   did not cover inputs. Model governance is not a modelling matter; it is a control the director
   signs for.
+- **What happens when the error is found late — and who says so.** Case study B was found by the
+  *lenders'* auditor. Had the sponsor's team found it themselves, before or after close, the
+  obligation is the same one: correct a number a lender has relied on, through the channel the
+  finance documents provide, before the next decision that would use it, with the record of what was
+  wrong, when it was known and who was told (Domain 1, KA 1.3.1). The director owns the standing
+  instruction that **no commercial party may hold a correction back to protect a timetable**, and
+  owns the fact that nobody in the organisation has ever been penalised for making one. After close
+  the same discipline attaches to the defined base case, which is locked, reconciled to and
+  represented on — see "The model after close" in 6.4.3.
 
 ## Calculation exercises — Domain 6
 
@@ -1718,6 +1815,28 @@ authority after freeze · basis, horizon and case list as released · outstandin
 severity with owners and dates · AI-assisted edits, with the tool, the prompt intent, the human
 author and the diff reference. Front line: **which file is authoritative, who owns it, and what
 its check block says today.**
+
+*After close, two further lines, and they are the ones a leader needs years later.*
+
+**Access control and custody.** Who may open the authoritative file **read-write**, named
+individually rather than by team; who may release a copy outside the organisation and to whom; where
+the **closing model** is held as a read-only artefact whose integrity can be demonstrated later, and
+who holds the evidence of that integrity; and what happens to custody on a personnel change — the
+handover recorded, with a date, rather than inferred from a shared drive. A model with no named
+custodian after the modeller leaves has no owner, and the register is where that becomes visible
+before it becomes a problem.
+
+**Retention.** The closing model, the model-audit report and its finding register, the input
+provenance table, the change log, the base-case reconciliation and the AI-edit log are retained
+together — they are one evidential set, and separating them destroys most of their value. The period
+is the longest of: the life of the facility and its tail; the limitation period applicable to claims
+under the relevant documents; and any statutory tax, accounting or regulatory requirement the
+organisation has established. The form must **open without the original toolchain** and must
+reproduce each printed figure from its own trail, since a workbook that needs a discontinued add-in
+is a record in name only. A **named custodian** holds the set. The applicable periods, and any
+personal-data minimisation or deletion obligation cutting across them, are jurisdiction-specific,
+change over time and are confirmed with counsel and the organisation's data-protection adviser
+rather than assumed — this book states the rule and not the period.
 
 ## Exam preparation — Domain 6
 

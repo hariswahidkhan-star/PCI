@@ -244,3 +244,44 @@ speaks; Domains 5–12 apply it to delivery, with Domain 9 deliberately placed a
 delivery reuses the `EV`/`CPI`/`EAC` machinery; and Domain 13 comes last so that its workflows can be built on
 the disciplines they govern. **Appendix G** then runs a single project through all thirteen domains in one
 month-end close, which is the closest this reference comes to showing the job as it is actually done.
+
+---
+
+## 11. The PCI Standards — the companion instrument
+
+This reference teaches the discipline. A **companion instrument, the PCI Standards, states the conduct
+required of credential holders** — what must be done, who owns the decision, what evidence must exist, when a
+matter must be escalated, what practice is prohibited, what AI may and may not be used for, and how work must
+be verified. The two are designed to be read together: a domain here explains *how* earned value is measured,
+and the Standards state *what a credential holder must never do* to it.
+
+**What the Standards are.** They are **private professional requirements** established by Project Controls
+Institute Global and binding within PCI's own authority — examination scope, certification conditions, and
+PCI's quality and conduct processes. They are **not legislation, government regulation or legal advice**, and
+they do not displace anything. Where an applicable legal, regulatory, contractual or authoritative
+professional requirement imposes a higher or different obligation, **that requirement governs**. Nothing in
+this book, and nothing in the Standards, states the position under the law of any jurisdiction.
+
+**How they are cited here.** Two identifier forms appear:
+
+| Form | What it is | Example |
+|---|---|---|
+| `PCI-FND-STD-NN` | A **Foundational Standard**, binding on holders of every PCI credential | `PCI-FND-STD-11` — escalation of material misstatement |
+| `PCI-PCL-STD-DD.NN` | A **PCL-AI Certification Standard**, where `DD` is the two-digit domain of primary anchorage and `NN` its sequence within that domain | `PCI-PCL-STD-06.03` — coherence of the three earned-value data points |
+
+Citation is always by identifier, never by page number. Where a passage in this book names a standard, it is
+pointing at the obligation, not reproducing it: the published Standards govern their own wording, and a
+professional who needs to know exactly what one requires reads it there.
+
+**How the two instruments relate.** Each certification standard anchors to the domain that *teaches* its
+subject, which is why each domain's summary closes with the standards it engages. The relationship is
+one-directional in authority and two-directional in reading: **the Standards take their subject matter from
+these domains, and these domains take their non-negotiables from the Standards.** Where this book and a
+published standard appear to differ on what a professional must do, the standard governs and the difference is
+a defect in this book.
+
+**Not every domain anchors a certification standard, and that is by design.** A standard exists where a
+credential's subject matter adds an obligation the foundational set does not already reach; where a domain
+adds nothing beyond what the foundational standards require of every credential holder, no certification
+standard is published for it. A domain summary that lists only foundational standards is therefore complete,
+not truncated.

@@ -935,6 +935,16 @@ make it real rather than ceremonial: the acceptor is not the producer, and the e
 because the nine requirements of WE 5.2.3 were "accepted" and the record could not say by whom, on what
 evidence, or against what criterion.
 
+**"Retained" needs three fields, or it is a wish.** Acceptance evidence is the primary evidence in any
+later dispute, audit or defect claim, and those arrive years after the acceptance meeting, so the
+record carries a **record class**, a **named custodian role** and a **retention period with the source
+of that period named** — set at the longest of the contractual limitation period, any retention
+requirement the organisation is subject to, the benefits-realisation horizon and the organisation's
+records policy. Domain 3, KA 3.3.4 sets the custody machinery and Domain 16, KA 16.4.4 works the
+economics; the applicable retention requirements are jurisdiction- and sector-specific and come from
+the records and legal functions, not from this book. Custody transfers to a named continuing role at
+closure, because the acceptor's project will not exist when the evidence is asked for.
+
 **Conditional acceptance, and its price.** Deliverables are routinely accepted with open items, and
 this is often correct: waiting for perfection forgoes benefit at Meridian's 14,280 a week. But
 deferring an item moves it up the correction ladder of 5.2.1, and that movement is computable.

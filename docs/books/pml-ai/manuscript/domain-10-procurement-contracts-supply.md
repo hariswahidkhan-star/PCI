@@ -624,6 +624,29 @@ needed. *What the buyer is entitled to know* — access, records, audit and prog
 to run Domain 7's earned-value system across the boundary, because a supplier reporting percentage
 complete on its own definition supplies comfort, not control.
 
+**Reference points, characterised strictly.** A candidate should be able to name where the practice
+of contract form lives, and the naming has to be exact, because this is an area where a familiar
+acronym is routinely mistaken for an authority.
+
+Several families of **standard-form contract** are published and widely used — **NEC**, **FIDIC** and
+**JCT** in the English-language tradition, with established equivalents in civil-law systems. Each is
+a set of **privately published model forms**. None of them is legislation, a regulation or a
+standard in the sense KA 9.1.1 uses the word; none has any standing of its own. A standard form
+matters to a project because **the parties chose it and wrote it into their agreement**, and what it
+then means between them is a question of that contract and of the applicable law — which is a
+question for qualified counsel and not one this book answers. The professional value of knowing the
+families is that each embeds a *default risk allocation and a default administration rhythm*, so
+choosing one is choosing a starting position on the four questions above; the professional error is
+to treat "we are using a standard form" as though it settled an allocation that the parties have in
+fact amended. None of the publishers has reviewed or endorsed this volume, no form is reproduced or
+paraphrased here, and no clause is cited anywhere in it.
+
+On the collaboration side, **ISO 44001** is the document usually named as addressing the management
+of collaborative business relationships. It is voluntary guidance — it obliges nobody of itself
+unless an organisation or a contract adopts it — it is named here and not reproduced, and the
+alliance and collaborative-contracting material in this KA is written in this book's own words. A
+reader who wants it should obtain the current edition from its publisher.
+
 **Packaging, and the interface cost of splitting work.** How work is divided between contracts is a
 contract-strategy decision with a computable cost, and Domain 4's result applies directly: `n` packages
 let by a buyer who integrates them itself create up to `n(n−1)/2` pairwise interfaces, all of which the
@@ -1024,6 +1047,34 @@ buyer is established, where it sells, and the contract's governing law. Nothing 
 the requirements of any particular jurisdiction, and none of it is legal advice. What is portable is the
 *method*: risk-tier the supply base, apply proportionate diligence, contract for the standard and for
 the right to verify it, and act on what verification finds.
+
+**Reference points, and the distinction that must not be blurred.** The *method* named above is not
+this book's invention, and a candidate should be able to say where it comes from. Two international
+instruments are the usual reference points: the **UN Guiding Principles on Business and Human
+Rights** and the **OECD Guidelines for Multinational Enterprises**, together with the OECD's
+associated due-diligence guidance. Both are **non-binding international instruments**: they are
+addressed to states and, through them, to enterprises as expectations of conduct, and they impose no
+obligation of themselves on any project company. What they supply is the shape of the method — a
+risk-tiered rather than uniform diligence, diligence proportionate to severity and likelihood of harm
+rather than to contract value, a **remediation-first** response, and attention to the people affected
+rather than only to the buyer's exposure — and that shape is why the paragraph above is written as it
+is.
+
+**They are a different kind of thing from the national due-diligence legislation this section has
+already mentioned, and conflating the two is the error to avoid.** Legislation applies on its own
+terms within its own jurisdiction; a non-binding instrument does not, however widely it is cited or
+however often a contract refers to it. Which regimes reach a given buyer, on what thresholds, with
+what reporting, remains a question for qualified counsel — nothing here states the position anywhere,
+and adopting the method described below is a professional and commercial choice rather than a
+compliance conclusion.
+
+On the procurement side, **ISO 20400** is the document usually named as addressing sustainable
+procurement. It is **voluntary guidance and not a certifiable requirements standard** — there is no
+conformity to be claimed against it in the way there is against a requirements standard, and an
+organisation stating that it "follows" it has described an intention rather than evidenced an
+outcome. All three documents are named here and not reproduced; none of their publishers has
+reviewed or endorsed this volume; and a reader who wants any of them should obtain the current
+version from its publisher.
 
 **What "contracting for it" means concretely.** A stated standard the supplier must meet, not an
 aspiration. A right of audit — including of sub-tiers — with a duty to disclose them, which is also the

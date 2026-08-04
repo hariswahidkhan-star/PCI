@@ -725,7 +725,11 @@ A cost incurred on 29 March but invoiced 5 April belongs to **March**.
 and timesheets to *propose* month-end accruals, and flag costs whose service date and invoice date straddle a
 period boundary. This is high-value — cut-off errors are laborious to find manually. But the accrual *amount*
 often needs professional estimation (how much of a part-delivered service was performed?), and a model that
-accrues from a document date rather than a service date will reproduce the very pitfall above. **AI proposes; the professional verifies, decides and remains accountable.**
+accrues from a document date rather than a service date will reproduce the very pitfall above. Note what the
+inputs are: payroll and timesheet data are records about identified people, and supplier accounts are
+confidential commercial information — so this work belongs in a **governed tool** only, and personal data and
+supplier records must never be entered into an ungoverned or public one (Domain 13, KAs 13.2.5 and 13.3.4;
+`PCI-FND-STD-09`). **AI proposes; the professional verifies, decides and remains accountable.**
 
 **Worked example 1.3.5 — a missed accrual distorts CPI.**
 
@@ -1919,6 +1923,13 @@ individuals, not departments, in the owner column, and keep the sequence stable 
 step is visible. The pack this checklist produces is what keeps both the financial result and the
 earned-value `AC` honest at the same time (1.5.6).
 
+**Retention.** Close packs and the working papers behind them are retained for the entity's **accounting-record
+retention period** and for as long as its audit arrangements require, and longer where a matter is under
+dispute or enquiry. Retention periods for accounting records are set by requirements that differ between
+jurisdictions and by entity type; confirm the applicable period with the finance function rather than adopting
+a rule of thumb, and record it so the archive is not quietly shortened when a system is replaced (Domain 8,
+KA 8.5.1). The record-integrity principle behind this is `PCI-FND-STD-12`.
+
 ### Toolkit 1.T.2 — Accrual pack template
 
 | Control account | Basis (GRNI / timesheet / assessment) | Service period | Amount (USD) | Reversal date | Approved by |
@@ -1933,6 +1944,14 @@ The **basis** column is the audit trail: a reviewer challenges the GRNI report, 
 assessment method, not a bare number. The **reversal date** commits each accrual to automatic reversal on the
 first day of the next period, so the arriving invoice does not double-count the cost (1.3.3). The first row
 echoes the 1.5.6 mini-case: work performed USD 240,000, invoiced USD 180,000, accrual USD 60,000.
+
+**Retention.** Accrual support — the GRNI extracts, certified measures, timesheet counts and assessment
+workings that populate the basis column — is retained with the close pack it belongs to, on the same period
+as Toolkit 1.T.1, because an accrual whose basis has been discarded can no longer be defended to anyone. Where
+the support includes timesheets or other records about identified individuals, note that these are typically
+**personal data**: obligations covering how long they are held, how accurate they must be kept and who may
+see them vary by jurisdiction and employer, so the retention rule for that material comes from the
+organisation's data-protection function and from qualified advice, not from this table.
 
 ---
 
@@ -2002,3 +2021,13 @@ and reconciliation controls → Domain 11.
 and *accrual/cut-off proposal* (KA 1.3); it is genuinely useful but higher-judgement in *provisioning* (KA
 1.4) and *disclosure drafting* (KA 1.2). In every case the same principle governs: **AI proposes; the professional verifies, decides and remains accountable** — the professional remains accountable for the entry, the estimate and the sign-off.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+three certification standards here: `PCI-PCL-STD-01.01` (cost cut-off integrity), `PCI-PCL-STD-01.02` (accrual
+completeness and basis) and `PCI-PCL-STD-01.03` (cost classification and cost-code integrity). The
+foundational standards binding on every PCI credential holder apply throughout — in particular
+`PCI-FND-STD-01` (professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05`
+(transparent assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11`
+(escalation of material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible
+AI). The published Standards govern their own wording; they are private professional requirements established
+by PCI, not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

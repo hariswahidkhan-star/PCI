@@ -104,6 +104,23 @@ presented. Its principles recur throughout the domain:
 liability on another (2.2.7) to show a single "net" figure breaches IAS 1's no-offset principle and hides
 information users need. Each contract's position is assessed and presented on its own.
 
+**AI in this KA.** The useful applications here are comparison and consistency work: checking that a draft
+set of statements presents the same line items on the same basis as the prior period, that comparatives have
+been restated where presentation changed, that a disclosure referred to in one place exists in another, and
+that terminology is used identically throughout a long document. Those are exactly the checks a tired reviewer
+misses at the end of a reporting cycle, and a model does not tire.
+
+What sits outside the tool is the framework's central judgements. **Materiality** is a judgement about what
+could influence a user's decision — a model can compute a percentage, but it cannot know that an immaterial
+sum is material because of who it was paid to or what it reveals. **Going concern** is management's
+assessment, taken on facts a document does not contain. **Which framework applies** to an entity (2.1.3) is a
+matter for the entity and its auditors. And a model's confident answer about a presentation principle is not a
+source: this reference names standards and describes their principles in its own words, and so should any
+output relied on (Conventions, §9). Verify by tracing every flagged item back to the underlying schedule, and
+by having the presentation judgements confirmed by the accounting-policy owner. Draft statements are
+pre-disclosure information, so this belongs in a **governed tool** only (Domain 13, KAs 13.2.5 and 13.3.4;
+`PCI-FND-STD-09`). **AI proposes; the professional verifies, decides and remains accountable.**
+
 ### Key terms — KA 2.1
 
 | Term | Meaning |
@@ -531,7 +548,11 @@ disclosures; and flagging contracts whose forecast cost is approaching price (an
 It does **not** make the recognition *judgements* — whether promises are distinct, whether recognition is
 over time or at a point, whether variable consideration passes the constraint. Those are accounting
 judgements, auditable and signed off by a person, and a plausible-but-wrong machine reading of a clause can
-move reported profit by millions. **AI proposes; the professional verifies, decides and remains accountable.**
+move reported profit by millions. The material involved is also among the most sensitive in the organisation
+— executed contracts, pricing, and revenue positions that are not yet public — so extraction and drafting
+belong in a **governed tool** only, and contract text and pre-disclosure figures must never be entered into an
+ungoverned or public one (Domain 13, KAs 13.2.5 and 13.3.4; `PCI-FND-STD-09`). **AI proposes; the professional
+verifies, decides and remains accountable.**
 
 ### Key terms — KA 2.2
 
@@ -932,6 +953,24 @@ typical construction contract that met IAS 11's percentage-of-completion still r
 IFRS 15, but the *reasoning* now runs through control and enforceable rights to payment, and the disclosures
 and the treatment of variable consideration and modifications are more rigorous. A controls professional
 reading older references or legacy contracts should recognise IAS 11 terminology but apply the IFRS 15 model.
+
+**AI in this KA.** This Knowledge Area is a cluster of *boundary* questions — capitalise or expense, cost or
+net realisable value, lease or service, capitalise or expense the borrowing cost — and boundary questions are
+where AI is most useful and most dangerous at the same time. Useful: sorting a large capital-spend population
+against the entity's own written capitalisation policy so that only the genuinely borderline items reach a
+person; scanning a lease and supplier population for arrangements that may convey the right to control an
+identified asset; assembling the componentisation and useful-life data behind a depreciation run; flagging
+stock whose carrying amount looks high against recent selling prices.
+
+Dangerous: every one of those outputs is a *proposal against a policy*, not a conclusion. The policy itself —
+the capitalisation threshold, the useful lives, the judgement on whether an asset is a qualifying asset, the
+NRV evidence considered sufficient — is the entity's accounting policy, owned by finance and tested by the
+external auditor; the controls professional supplies and evidences the inputs and does not set or change it
+(the same allocation of decision rights as Domain 9, KA 9.5.4). A model asked what a standard requires will
+answer fluently and without a source; this book does not state what any standard requires either, and the
+official publication governs (Conventions, §9). Verify by reconciling the population back to the ledger,
+testing a sample of proposed classifications to the underlying documents, and routing every borderline item
+to the accounting-policy owner. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 2.4
 
@@ -1631,7 +1670,10 @@ in advance, so a surprise loss is a monitoring failure before it is an accountin
 - **Contract-asset growth read as strength.** "Revenue ahead of billing" is unbilled work-in-progress the
   business is financing — working capital tied up, and an early warning for the cash-flow forecast.
 - **The onerous test treated as a year-end formality.** By the time the auditors ask, the loss has already
-  happened; the moment the forecast margin turns negative, the whole remaining loss lands at once.
+  happened; the moment the forecast margin turns negative, the whole remaining loss lands at once. Where a
+  professional is asked to defer that test, or to hold an `EAC` at a figure the evidence no longer supports so
+  that the trigger is not reached, the duty to escalate applies exactly as set out in Domain 4, KA 4.3.7 —
+  object in writing, with the evidence, before the pack is issued, and keep the record.
 
 **What good looks like.** Each significant contract has its judgements documented and standing: the distinct
 performance obligations, the over-time criterion relied on, the standalone selling prices used to allocate,
@@ -1853,3 +1895,18 @@ accounts → 1.5; budgeting and cash-flow forecasting → Domain 3; EVM and EAC 
 contract types, BoQ, interim valuations and over-/under-billing → Domain 7; change control → 5.4, 7.2;
 variance narratives and management packs → Domain 4.
 
+**PCI Standards engaged by this domain.** Domain 2 anchors **no certification standard of its own** — which is
+the design, not an omission (Conventions, §11): a certification standard is published only where a
+credential's subject matter adds an obligation the foundational set does not already reach, and the reporting
+judgements taught here are owned by the entity's finance function rather than by the controls professional.
+The standards a controls professional engages when working on this material are anchored elsewhere —
+`PCI-PCL-STD-01.01` (cost cut-off integrity), `PCI-PCL-STD-03.04` (completeness of the estimate at completion,
+which drives cost-to-cost progress), `PCI-PCL-STD-06.04` (selection and disclosure of the
+estimate-at-completion method) and `PCI-PCL-STD-07.03` (support and reconciliation of applications for
+payment). The foundational standards binding on every PCI credential holder apply throughout — in particular
+`PCI-FND-STD-01` (professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05`
+(transparent assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11`
+(escalation of material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible
+AI). The published Standards govern their own wording; they are private professional requirements established
+by PCI, not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

@@ -93,7 +93,7 @@ professional verifies, decides and remains accountable.*
 
 ## Appendix C — Verification record
 
-**7,678 golden-answer checks** stand behind this volume. Every number printed as a *result* —
+**7,686 golden-answer checks** stand behind this volume. Every number printed as a *result* —
 in worked examples, in-text calculations, multiple-choice options (all of them, not only the correct
 one), exercise solutions, case studies and figure specifications — is recomputed independently with
 decimal arithmetic at 28-digit precision and compared to the printed value. Each domain's module also
@@ -109,7 +109,7 @@ claim cannot silently stop being true.
 | 5 | Scope, Requirements and Value Definition | 326 |
 | 6 | Planning, Scheduling and Delivery Flow | 545 |
 | 7 | Cost, Resources and Commercial Awareness | 385 |
-| 8 | Risk, Uncertainty and Resilience | 535 |
+| 8 | Risk, Uncertainty and Resilience | 543 |
 | 9 | Quality, Assurance and Continuous Improvement | 302 |
 | 10 | Procurement, Contracts and Supply Networks | 299 |
 | 11 | Stakeholders, Communication and Influence | 236 |
@@ -119,7 +119,7 @@ claim cannot silently stop being true.
 | 15 | Programmes, Portfolios and Enterprise Delivery | 274 |
 | 16 | Transition, Closeout and Benefits Realisation | 341 |
 | 17 | Appendix G — integrated capstones | 324 |
-| | **Total** | **7,678** |
+| | **Total** | **7,686** |
 
 The Institute's verification suite recomputes this record in full on demand, and can recompute a
 single domain of it as readily as the whole volume. The suite is fail-closed: a check that cannot

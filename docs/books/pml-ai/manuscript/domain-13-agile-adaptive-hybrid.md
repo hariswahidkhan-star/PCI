@@ -36,7 +36,9 @@ things to measure, and every one of them is a number.**
 **Learning objectives.** After this domain a candidate can: state the conditions under which adaptive
 delivery outperforms predictive delivery and the conditions under which it does not, in terms of
 feedback cost and requirement volatility rather than preference; specify product ownership as a
-decision right with a named holder, and apply the decidability test of Domain 3 to it; rank a backlog
+decision right with a named holder, and apply the decidability test of Domain 3 to it; **state the two
+bounds on the ordering right — the value envelope, and the obligation items the right does not reach —
+and exclude those items from the priced ranking**; rank a backlog
 by **delay-cost density** and compute the delay cost of a chosen sequence, its saving against the
 intuitive ordering, and the breakeven estimate error that would change the ranking; state and apply
 **Little's Law** in both directions — deriving cycle time from work in progress and throughput, and
@@ -149,6 +151,37 @@ or reject an increment against pre-agreed criteria (Domain 5, KA 5.4.2); and esc
 exceeds their envelope, within a stated latency (Domain 3, KA 3.3.3). Meridian's product owner holds
 an envelope of **USD 25,000** per change — the threshold Domain 3's KA 3.2.3 arithmetic recommended —
 and the 15 % of items that exceed it are what KA 13.3.2 prices.
+
+**What the ordering right does not reach.** The value envelope is one boundary on the role and it is
+not the only one, and the second is the one that causes damage when it is left unstated. **The
+product owner orders discretionary value.** Items that carry a safety, regulatory, statutory,
+contractual or security-remediation obligation are **constraints on the order, not candidates within
+it**. Three consequences follow, and they are stated here rather than a thousand lines later because
+this is where the decision right is defined:
+
+- **They are scheduled to their required date by the authority accountable for the obligation** — the
+  clinical-safety authority, the information-governance authority, the security owner, the contract
+  manager — not by the product owner, and not by the team's estimate of when it is convenient.
+- **They are excluded from the delay-cost-density ranking of 13.1.3.** A priced ranking answers the
+  question *what is most valuable to build next?*, and that question is not open for an obligation.
+  Ranking such an item alongside discretionary features does not produce a rigorous answer; it
+  produces a computed number that will sometimes place a clinical-safety mitigation below a
+  reporting enhancement, which is not a trade-off but a category error. Where the obligation itself
+  admits options — *how* it is met, at what cost, in what sequence among other obligations — the
+  arithmetic returns, applied to the options rather than to whether.
+- **A product owner who deprioritises one has exceeded the right rather than exercised it.** This is
+  the same distinction Domain 3 draws between a decision class and its authority, and Domain 8,
+  KA 8.3.1 draws between a priced response and a duty: authority over the order of value is not
+  authority over what must be done. The countermeasure is a **classification on the backlog item
+  itself**, applied when the item is created and owned by the accountable authority — obligation or
+  discretionary — because a distinction that has to be remembered at ranking time will not be.
+
+Whether an obligation of this kind is in fact engaged, by what, and on whom, is established with the
+accountable authority for that class and, where it is a question of law or regulation, with qualified
+counsel — not by the product owner and not by this book, which states no position anywhere. The
+healthcare Industry variation below shows the governance half of the same rule in operation: clinical
+sign-off sits with clinical authority and those classes cannot be resolved by a written-resolution
+route.
 
 ### 13.1.3 Prioritisation as a priced sequencing decision
 
@@ -277,6 +310,8 @@ has re-created the big-bang release the arithmetic above shows to be worth **USD
 | **Hybrid delivery** | A deliberate combination of predictive and adaptive methods under one governance frame, with a named boundary between them. |
 | **Product owner** | The single individual accountable for the order of the backlog within a value envelope set by the sponsor. |
 | **Value envelope** | The bounded authority within which a product owner may commit capacity without escalation. |
+| **Obligation item** | A backlog item carrying a safety, regulatory, statutory, contractual or security-remediation obligation. A constraint on the order, not a candidate within it: scheduled to its required date by the authority accountable for the obligation and excluded from the delay-cost-density ranking. |
+| **Ordering right, and its two bounds** | The product owner orders *discretionary* value, within a value envelope above which decisions escalate and outside the obligation items the ordering right does not reach. Deprioritising an obligation item exceeds the right rather than exercising it. |
 | **Delay-cost density** | Cost of delay per week ÷ effort in team-weeks; sequencing in decreasing order minimises total delay cost. |
 | **Increment** | A slice of product complete against the definition of done and therefore judgeable, releasable or rejectable alone. |
 | **Definition of done** | The pre-agreed, binary, testable standard that gives the word "done" one meaning across every report. |
@@ -353,6 +388,12 @@ D is a lagging and non-specific signal.
 3. *What single property creates the value of sequencing, and what happens without it?* —
    Releasability. Without it every item completes at the end and the total delay cost is the same for
    every order — on Meridian, **USD 485,520** instead of **USD 231,880**.
+4. *Name the two bounds on a product owner's ordering right.* — The **value envelope** set by the
+   sponsor, above which the decision escalates; and the **obligation items** — safety, regulatory,
+   statutory, contractual, security-remediation — which are constraints on the order rather than
+   candidates within it, scheduled by the authority accountable for the obligation and excluded from
+   the delay-cost-density ranking. Deprioritising one exceeds the right rather than exercising it
+   (13.1.2).
 
 ---
 
@@ -1569,7 +1610,10 @@ verify by walking to the board, and a delivery design that cannot fill it in is 
 Columns: item or epic · outcome statement · **benefits-map line and owner** (the numerator's provenance —
 without it the density is advocacy with arithmetic on top) · cost of delay per week · effort in
 team-weeks · **density** · dependency constraints · **releasable alone? (yes/no)** · acceptance
-criterion · product-owner decision (order / defer / decline) with date. Two standing checks: the
+criterion · **classification — obligation or discretionary**, applied when the item is created and
+owned by the accountable authority for that class, since an **obligation item** is scheduled to its
+required date by that authority and is excluded from the density ranking altogether (13.1.2) ·
+product-owner decision (order / defer / decline) with date, available only on discretionary items. Two standing checks: the
 **breakeven test** for the top three items — the cost-of-delay increase that would reorder them, which
 tells you whether the order is robust or fragile; and the **releasability count**, because items that
 cannot be released alone forfeit the sequencing value the sheet exists to capture (on Meridian,
@@ -1662,7 +1706,12 @@ alone, **USD 276,080**; in the worst available order, **USD 386,920**. The seque
 therefore worth **USD 155,040**, and the ranking is robust to a **55.6 %** error in the largest epic's
 estimate. All of that value depends on **releasability**: a single release at week 34 costs
 **USD 485,520** whatever the order, so incremental release is worth **USD 253,640** on this release
-alone.
+alone. And the ranking has a boundary as well as a formula: the product owner orders
+*discretionary* value, so items carrying a safety, regulatory, statutory, contractual or
+security-remediation obligation are constraints on the order rather than candidates within it —
+scheduled to their required date by the authority accountable for the obligation, excluded from the
+density ranking, and classified as such when the item is created. A product owner who deprioritises
+one has exceeded the ordering right rather than exercised it.
 
 Flow rests on one theorem. **Little's Law** — `W = T × C` — says that cycle time is a consequence of a
 management decision about work in progress, and that at fixed work in progress a cycle-time reduction

@@ -40,6 +40,15 @@ identify → analyse → evaluate → treat → monitor and review → communica
 professional the operative principles are **integration** (risk feeds the estimate, schedule and forecast) and
 **proportionality** (the effort matches the stakes).
 
+**What kind of instrument it is.** ISO 31000 is a **voluntary international standard offering guidance rather
+than requirements**; it is not intended for certification, and it has no force unless an organisation adopts
+it or a contract or mandate imports it. That is precisely why the discipline in this domain is described as
+**principle-led rather than compliance-led**: a practice can depart from a principle the standard articulates
+without anything being "breached", and the professional question is always whether the *judgement* is sound,
+not whether a box has been ticked. Naming the standard identifies it and nothing more — this reference does
+not state what it contains or requires, its own publication governs, and its issuing body is not associated
+with, does not endorse and has not reviewed this book (Conventions, §9).
+
 ### 12.1.3 Risk appetite and tolerance
 
 **The principle.** **Risk appetite** is the amount of risk an organisation is willing to *seek or accept* in
@@ -68,7 +77,7 @@ capital — appetite and tolerance calibrate the balance.
 |---|---|
 | **Risk** | An uncertain event/condition affecting objectives — threat or opportunity. |
 | **Issue** | A risk that has already occurred. |
-| **ISO 31000** | Principles/process for integrated, proportionate risk management. |
+| **ISO 31000** | A voluntary international standard offering guidance — not requirements — on integrated, proportionate risk management; not intended for certification, and of no force unless adopted or imported by a contract or mandate. |
 | **Risk appetite / tolerance** | Risk willingly accepted / acceptable variation around it. |
 
 ### Sample MCQs — KA 12.1
@@ -103,16 +112,20 @@ managing the upside deliberately is part of the discipline. An issue is a materi
 constraint are different concepts.
 
 **MCQ 12.1-D `[12.1.2 · Application]`** A team updates its risk register once a quarter as a standalone
-exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 principle chiefly breached is:
-- A. Integration — risk management should be part of decision-making, feeding the estimate, schedule and
+exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 principle this practice most
+clearly departs from is:
+- A. Integration — risk management belongs inside decision-making, feeding the estimate, schedule and
   forecast. ✅
 - B. Proportionality — the effort exceeds the stakes.
-- C. None — quarterly updates satisfy the standard.
+- C. None — a quarterly cadence is a matter of judgement, not of principle.
 - D. Appetite — the tolerance thresholds are set too low.
 
-*Rationale:* ISO 31000 treats risk management as integrated into decision-making, not a bolt-on register;
-disconnecting it from the numbers it should inform breaches integration. B misreads the defect as
-over-effort; C excuses it; D concerns appetite calibration, a different matter.
+*Rationale:* The standard articulates risk management as integrated into decision-making rather than as a
+bolt-on register, so disconnecting the register from the numbers it should inform is a departure from
+integration. Note the framing: ISO 31000 is voluntary guidance (12.1.2), so a practice **departs from** a
+principle rather than breaching a requirement — the same distinction MCQ 12.1-B draws. B misreads the defect
+as over-effort; C treats a genuine departure as mere cadence; D concerns appetite calibration, a different
+matter.
 
 **MCQ 12.1-E `[12.1.3 · Application]`** The board's appetite statement caps any single project's P80 risk
 exposure at **1.5 %** of group profit of **USD 60,000,000**. A tender's quantified exposure comes out at
@@ -390,6 +403,47 @@ has spent its contingency but still carries major open risks is exposed, and tha
 (Domain 4). Where the register grows beyond what contingency can cover, escalation to the management reserve is
 a **re-baselining** event (Domain 5, KA 5.4), not a silent overspend.
 
+**Draw-down governance.** "Contingency is PM-controlled" states where the money sits, not how it is released.
+Without the mechanics below, the quarterly review's central question — *does every draw trace to a materialised
+register risk?* (Toolkit 12.T.2) — cannot be answered from anything the project holds.
+
+**The draw-down request is the controlling artefact.** A draw is made against a request, and the request
+carries:
+
+- the **date** and the **requester**;
+- the **register ID** of the risk that has materialised — a draw with no register ID is not a contingency
+  draw, it is an unexplained overspend wearing the word;
+- the **evidence that it materialised**, distinguishing it from a risk that has merely become more likely;
+- the **amount** and its **substantiation** — how the figure was built, not simply asserted, and how it
+  compares with the impact carried in the register (a draw far above the registered impact is a signal that
+  the risk was mis-quantified, and that finding belongs in the record);
+- the **revised remaining exposure** after the risk is closed out.
+
+**Who approves.** The **project manager** approves within a **stated delegated limit**, recorded before it is
+used; above that limit the **sponsor** approves. As everywhere in this reference, **the requester is never the
+approver** — the person who says the risk has materialised is not the person who releases the money for it
+(Domain 5, KA 5.4.3; Domain 8, KA 8.4.2).
+
+**What happens to the register at the same moment.** A materialised risk is no longer a risk. The register
+entry is **closed** and an **issue** is opened for the consequence being managed (12.1.1), in the same
+transaction as the draw. A register that still carries a risk whose contingency has been spent is
+double-counting exposure; an issue log that never receives the closed risks makes the draw untraceable from
+the other direction.
+
+**What gets reported.** Every period report states **remaining contingency against remaining exposure at the
+stated P-level** — not the opening figure, and not the drawn amount alone (worked example 12.3.1b; Domain 4,
+KA 4.3). That single comparison is the domain's headline control, and it belongs on the face of the report.
+
+**The escalation trigger.** When remaining contingency **falls below remaining exposure at the stated
+P-level**, the project escalates rather than continuing to draw. Escalation to the **management reserve** is a
+re-baselining event requiring the change authority of Domain 5, KA 5.4.3 — the project board or the body
+holding that band — and it is raised **before** the reserve is needed, not after the contingency line reaches
+zero.
+
+**Retention.** The draw-down log and the requests behind it are retained with the project record (Domain 8,
+KA 8.5.1). These disciplines are the substance of `PCI-PCL-STD-12.03` (contingency draw-down authority and
+re-assessment of remaining exposure), resting on `PCI-FND-STD-04` (human decision authority).
+
 **AI in this KA.** AI supports risk management across the process (Domain 13, KA 13.5): identifying risks from
 project data and analogous histories, scoring probability/impact, running and interpreting Monte Carlo
 simulations, and tracking leading indicators of emerging risk. The judgements — whether a risk is real, whether
@@ -405,6 +459,8 @@ can leave a project dangerously exposed. **AI proposes; the professional verifie
 | **Management reserve** | Budget for unidentified risk; outside the baseline; management-controlled. |
 | **P80 contingency** | Contingency set at an 80 %-confidence outcome from a risk model. |
 | **Draw-down / re-baselining** | Consuming contingency as risks occur / escalating beyond it as a baseline change. |
+| **Draw-down request** | The controlling artefact for a draw: date, requester, register ID, evidence of materialisation, amount and its substantiation, and the revised remaining exposure. |
+| **Delegated draw limit** | The recorded value within which the project manager may approve a draw; above it, the sponsor approves — and the requester is never the approver. |
 
 ### Sample MCQs — KA 12.3
 
@@ -478,12 +534,34 @@ re-baselining rather than a silent overspend (12.3.3, 12.3.2). A tests against t
 opening-figure illusion; B nets only the first draw; D confuses a normal draw-down with an emerging
 shortfall that must be visible in reporting.
 
+**MCQ 12.3-G `[12.3.3 · Analysis]`** A period report shows contingency reduced by a round sum described as
+"recovery works following site conditions". There is no register ID, no evidence that a registered risk
+materialised, and the register still carries the ground-conditions risk at its opening probability. The most
+accurate description is:
+- A. A normal contingency draw-down; the description is sufficient for a period report.
+- B. Not a contingency draw at all in governance terms — an unexplained overspend, with exposure now
+  double-counted because the register was never closed and no issue was opened. ✅
+- C. A re-baselining event requiring management reserve.
+- D. A change requiring the client's approval.
+
+*Rationale:* A draw traces to a materialised register risk, with evidence and substantiation, and closes that
+register entry while opening an issue for the consequence being managed (12.3.3). Without the ID and the
+closure the money has left the reserve unexplained *and* the same exposure is still being carried — the two
+failures the quarterly review's draw-down question exists to catch (Toolkit 12.T.2). A accepts a narrative in
+place of a trace. C and D name different mechanisms; nothing here says the reserve is exhausted or that scope
+has changed.
+
 ### Self-check — KA 12.3
 
 1. How is defensible contingency derived? *(From quantified risk — an EMV sum or, better, a Monte Carlo
    P-level — documented against the register, not a flat percentage.)*
 2. What distinguishes drawing contingency from needing the management reserve? *(Contingency draw-down is
    normal for register risks; needing management reserve is a re-baselining event for unforeseen scope/risk.)*
+3. What does a draw-down request carry, and who approves it? *(Date, requester, register ID, evidence of
+   materialisation, amount with its substantiation, and revised remaining exposure; approved by the project
+   manager within a recorded delegated limit and by the sponsor above it — never by the requester.)*
+4. What happens to the register entry at the moment of a draw? *(It is closed and an issue is opened for the
+   consequence, in the same transaction, so exposure is not counted twice.)*
 
 ---
 
@@ -696,7 +774,13 @@ event, not a quiet top-up.
 
 Mid-shutdown, **R1 materialises**: the vendor confirms the filling heads will miss the opening of the window.
 The pre-agreed recovery — airfreighting the remaining tooling and working the installation crew on overtime to
-re-sequence — costs **USD 130,000**, drawn from contingency. The controls lead now runs the test that
+re-sequence — costs **USD 130,000**, drawn from contingency. The draw goes through the governance of 12.3.3
+rather than around it: a **draw-down request** raised by the controls lead, citing **register ID R1**, the
+vendor's written confirmation as evidence that the risk has materialised, the airfreight and overtime
+build-up as substantiation of the amount, and the revised remaining exposure. It is **approved by the project
+manager**, within the delegated limit recorded at baseline for in-scope draws against registered risks — the
+requester and the approver being different people — and **R1 is closed on the register and opened as an issue
+in the same transaction**, so the exposure is not counted twice. The controls lead now runs the test that
 distinguishes a live register from a filed one.
 
 1. **Setup.** Contingency was set at **USD 350,000**; R1's materialisation draws **USD 130,000**. The register
@@ -1026,10 +1110,10 @@ stable.*
 The columns a register needs to support this domain's process end-to-end — no fewer, and rarely many more.
 Two example rows echo the register of 12.2.3.
 
-| ID | Cause–event–effect statement (12.2.1) | Owner | Probability | Impact (USD) | EMV (USD) | Response & cost (12.2.4) | Residual P/I | Contingency drawn (USD) | Review date |
-|---|---|---|---:|---:|---:|---|---|---:|---|
-| R-01 | *Because* the works are over made ground with incomplete records, *there is a risk that* adverse ground conditions are found, *leading to* redesign and delay cost. | Engineering manager | 30 % | 200,000 | 60,000 | Mitigate — pre-start ground survey, USD 30,000 | 10 % / 200,000 | 0 | 31 Aug 2026 |
-| R-02 | *Because* the works permit is still with the authority, *there is a risk that* it is granted late, *leading to* standing time and prolongation cost. | Project manager | 40 % | 100,000 | 40,000 | Mitigate — early submission and weekly expediting, USD 8,000 | 20 % / 100,000 | 0 | 31 Aug 2026 |
+| ID | Cause–event–effect statement (12.2.1) | Owner | Probability | Impact (USD) | EMV (USD) | Response & cost (12.2.4) | Residual P/I | Contingency drawn (USD) | Draw approved by (band) | Draw approval date | Review date |
+|---|---|---|---:|---:|---:|---|---|---:|---|---|---|
+| R-01 | *Because* the works are over made ground with incomplete records, *there is a risk that* adverse ground conditions are found, *leading to* redesign and delay cost. | Engineering manager | 30 % | 200,000 | 60,000 | Mitigate — pre-start ground survey, USD 30,000 | 10 % / 200,000 | 0 | — (no draw) | — | 31 Aug 2026 |
+| R-02 | *Because* the works permit is still with the authority, *there is a risk that* it is granted late, *leading to* standing time and prolongation cost. | Project manager | 40 % | 100,000 | 40,000 | Mitigate — early submission and weekly expediting, USD 8,000 | 20 % / 100,000 | 0 | — (no draw) | — | 31 Aug 2026 |
 
 **Usage note.** Each column carries a piece of the domain's discipline: the cause–event–effect statement makes
 the risk ownable and priceable (12.2.1); `EMV = probability × impact` gives the quantitative building block
@@ -1040,6 +1124,15 @@ what makes the remaining-contingency-vs-remaining-exposure test possible at ever
 review date keeps the register living rather than filed (12.2.5). Keep the columns stable — a register whose
 shape changes each quarter cannot be trended, audited or trusted as the basis of the contingency it justifies
 (12.3.1).
+
+**The two approval columns.** *Draw approved by (band)* and *Draw approval date* are what turn the
+contingency-drawn figure from a number into a governed transaction: every draw traces to a materialised
+register risk, to a named approver acting within a recorded delegated band, and to a date — which is exactly
+what the quarterly review asks for and what nothing else on the register can supply (12.3.3; Toolkit 12.T.2).
+The band matters as much as the name: a draw inside the project manager's recorded limit and a draw released
+by the sponsor above it are different governance events, and the log should show which one happened. The
+requester is never the approver. Where a risk is drawn against, the entry is **closed** here and an **issue**
+opened at the same time (12.3.3), so the register never carries exposure that has already been funded.
 
 ### Toolkit 12.T.2 — Quarterly risk review agenda
 
@@ -1112,16 +1205,34 @@ for draw-down items, compute remaining contingency and remaining exposure separa
 
 Risk management handles the uncertainty every estimate, schedule and forecast is made under. A **risk** is an
 uncertain event affecting objectives — threat or opportunity — and the honest forecast is always a **range**.
-Working to **ISO 31000** principles (integrated, proportionate, information-based), the **risk process**
+Working to the principles **ISO 31000** articulates (integrated, proportionate, information-based) — voluntary
+guidance adopted rather than imposed, so the discipline here is principle-led rather than compliance-led
+(12.1.2) — the **risk process**
 identifies risks as cause-event-effect in a living **register**, analyses them **qualitatively** (probability–
 impact matrix) and **quantitatively** (**EMV** and Monte Carlo), plans **responses** (avoid/transfer/mitigate/
 accept), and **monitors** continuously. Quantified risk becomes **contingency** — ideally a Monte Carlo P-level,
 inside the baseline and PM-controlled — distinct from the **management reserve** for unknown-unknowns outside
-the baseline. Drawing contingency is normal; exceeding it is a re-baselining event. Risk is thus the source of
-the contingency in Domain 3, the schedule stress-test in Domain 10, and the range around every forecast.
+the baseline. Drawing contingency is normal, but it is **governed**: a draw-down request citing the register
+ID of the materialised risk, with evidence and substantiation, approved within a recorded delegated limit by
+someone other than the requester, closing the register entry and opening an issue at the same moment — and
+remaining contingency reported against remaining exposure every period. Exceeding it is a re-baselining event.
+Risk is thus the source of the contingency in Domain 3, the schedule stress-test in Domain 10, and the range
+around every forecast.
 
 **Cross-references.** Contingency vs management reserve and the budget → 3.1; schedule-risk/Monte Carlo →
 10.3.4; risk transfer via contracts/bonds → 7.1–7.2; leading indicators and reporting risk exposure → 4.1, 4.3;
 change control/re-baselining → 5.4; lessons-learned feeding identification → 8.5; AI risk scoring/simulation →
 13.5.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+three certification standards here: `PCI-PCL-STD-12.01` (risk statement quality and named ownership),
+`PCI-PCL-STD-12.02` (basis and confidence level of quantified contingency) and `PCI-PCL-STD-12.03`
+(contingency draw-down authority and re-assessment of remaining exposure — the instrument behind the draw-down
+governance of 12.3.3). These are PCI requirements and are separate from ISO 31000, which is voluntary guidance
+(12.1.2). The foundational standards binding on every PCI credential holder apply throughout — in particular
+`PCI-FND-STD-01` (professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05`
+(transparent assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11`
+(escalation of material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible
+AI). The published Standards govern their own wording; they are private professional requirements established
+by PCI, not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

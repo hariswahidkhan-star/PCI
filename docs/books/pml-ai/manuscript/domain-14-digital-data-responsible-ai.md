@@ -62,7 +62,10 @@ consequence of an escaped error, and price the tiered standard against uniform a
 and price the reperformance step that closes the gap**; specify explainability as a decision
 requirement rather than a model property; **compute differential error rates across groups, price
 the remediation, and state where expected-value reasoning stops applying**; maintain an AI use
-register that satisfies Domain 1's accountability test; and **compute the economics of security
+register that satisfies Domain 1's accountability test; **state the failure route for an output found
+materially wrong after reliance — stop and suspend, enumerate the decisions that cited it, notify the
+same day, reopen above a pre-set threshold with the original authority, record whether anyone outside
+must be told and on whose determination, and re-measure before resumption**; and **compute the economics of security
 controls, distinguishing probability reduction from impact reduction and demonstrating why control
 benefits are sub-additive**.
 
@@ -1262,6 +1265,8 @@ descriptive:
 | **Model, prompt and grounding versions** | Reproducibility, and the retrospective question of 14.3.2. |
 | **Data and confidentiality boundary** | What may be supplied to the tool, stated before use, not after an incident. |
 | **Prohibited adjacent uses** | The uses that must not creep in — the scope creep of AI adoption, and it is real. |
+| **Failure route — who is notified and within what period** | Written before any failure: who is told on the day an output is found to be materially wrong, in what form, and who authorises resumption after re-measurement. A register entry without one has an accountable person and nothing for them to do. |
+| **Decisions to reopen on failure** | The materiality threshold, set in advance, above which decisions that cited this output are reopened by the authority that took them — with any decision not reopened recorded as considered and confirmed, and why. |
 
 **Three accountability failures the register exists to prevent.** The **unattributed output**: a
 document, register or analysis in circulation with no author who can answer for it, which is Domain
@@ -1282,6 +1287,52 @@ their work, must not be evaluated by inference from telemetry (Domain 12), and m
 decline to sign for an output they have not been given the time or the information to verify — the
 last being the point at which a verification standard either is real or is a document, because a
 standard that cannot be met in the time allowed simply relocates accountability onto whoever signs.
+
+**When a relied-upon output turns out to be wrong.** Everything above is preventive, and a control
+set with no failure path is governance asserted rather than operationalised. The register names an
+accountable person for every output; this is what that accountability *obliges them to do* when the
+output fails — when an output relied on in a recorded decision is later found to be materially wrong,
+or when the differential error of 14.4.2 is detected in a deployed use. It is a sequence, and the
+order matters:
+
+1. **Stop the use and suspend the register entry.** Before anything is investigated. A use whose
+   error rate is now known to be wrong has no defensible verification tier, because the tier was
+   derived from `p` and `q` that have just been falsified. Suspension is the default and continuing
+   is the exception, taken by the accountable person in writing with a stated reason.
+2. **Identify every recorded decision that cited the output.** This is what the register's
+   **decision informed** column is for, and it is the column that repays the whole instrument on the
+   day it is needed. If the question "which decisions rest on this?" cannot be answered from the
+   register in an afternoon, the register is descriptive rather than testable.
+3. **Notify in writing, on the day it is known.** The accountable person and the decision-maker are
+   told the same day, in the escalation-grade form of Domain 11, KA 11.2.3 — what is known, what is
+   not yet known, what has already been stopped, what decision is now requested and by when. Not a
+   meeting invitation; not a verbal heads-up followed by a note next week.
+4. **Reopen the decisions above a stated materiality threshold, with the same authority that took
+   them.** The threshold is set in advance, in the register, because a threshold chosen after the
+   failure will be chosen to suit it. Reopening is by the original authority — a decision taken by a
+   steering body is reopened by that body, not corrected by the project — and a decision that is not
+   reopened is recorded as *considered and confirmed*, with the reason, so that the absence of action
+   is itself attributable.
+5. **Record whether anyone outside must be told, and on whose determination.** An affected person, a
+   counterparty, an insurer or a supervisory body may need to be informed. Whether any such
+   obligation arises, to whom, in what form and on what clock is established with the relevant
+   authority and with qualified counsel — **nothing here states the position in any jurisdiction, and
+   nothing here characterises any act or omission as compliant or otherwise.** What this domain does
+   require is that the question is *asked*, by a named person, promptly, and that the answer and its
+   source are recorded. Domain 8, KA 8.4.3's notification map is the instrument, and an AI-use
+   failure is exactly the class of event it exists for.
+6. **Re-measure before the use resumes, under a named authority.** `p` and `q` are re-measured by the
+   seeded-error method of 14.A.2, using the same method as before so the numbers are comparable, and
+   the verification tier is recomputed from the measurements rather than restored to what it was. A
+   named authority — not the user of the tool — authorises resumption, and the register records the
+   suspension, the re-measurement and the resumption as three dated events.
+
+Two observations that generalise. **The failure route is written before the failure**, in the
+register, because every step above is one nobody will design well at the moment they need it. And a
+failure discovered by the organisation itself, handled this way, is a functioning control system;
+the same failure discovered by someone outside it, with no route, is an accountability defect — which
+is the same distinction Domain 9 draws between a defect caught by containment and a defect that
+escaped.
 
 ### 14.4.4 Cybersecurity and privacy in a digital delivery estate
 
@@ -1404,7 +1455,8 @@ quietly becoming a prohibited one — is invisible from inside the team using it
 | **Differential error** | A systematic difference in error rates between identifiable groups; measurable only by disaggregated measurement. |
 | **Recall (by group)** | Flagged at-risk cases ÷ actual at-risk cases within a group. |
 | **Base-rate difference** | Unequal prevalence between groups, which makes simultaneous equalisation of all error measures impossible. |
-| **AI use register** | The row-per-use record of use, decision informed, accountable person, consequence, measurements, tier, versions and boundary. |
+| **AI use register** | The row-per-use record of use, decision informed, accountable person, consequence, measurements, tier, versions, boundary, failure route and decisions to reopen on failure. |
+| **Failure route** | The pre-written sequence for an output found materially wrong after reliance: stop and suspend, enumerate the decisions that cited it, notify in writing that day, reopen above the stated materiality threshold with the original authority, record whether anyone outside must be told and on whose determination, and re-measure under a named authority before resumption. |
 | **Accountability laundering** | Presenting a model's output as a neutral input to avoid owning the judgement it embodies. |
 | **Expected annual loss (`EAL`)** | Incident probability × assessed impact; the residual after a control is the basis of comparison. |
 | **Sub-additivity of controls** | Combined avoided loss is less than the sum of individual avoided losses, because reductions multiply. |
@@ -1482,7 +1534,17 @@ grievance.
 3. *What does the AI use register have to contain to satisfy Domain 1's accountability test?* — A
    named accountable human per use, the decision informed, the assessed consequence, the measured
    error and detection rates with their dates, the verification tier applied, the model, prompt and
-   grounding versions, the data boundary, and the adjacent uses that are prohibited.
+   grounding versions, the data boundary, the adjacent uses that are prohibited, and the failure
+   route with the decisions to reopen if the output turns out to be wrong.
+4. *An output relied on in a recorded decision is found to be materially wrong. State the sequence.*
+   — Stop the use and suspend the register entry; enumerate every recorded decision that cited the
+   output from the register's *decision informed* column; notify the accountable person and the
+   decision-maker in writing the same day, in escalation-grade form; reopen decisions above the
+   pre-set materiality threshold with the authority that took them, recording those not reopened as
+   considered and confirmed; record whether an affected person, counterparty, insurer or supervisory
+   body must be told and on whose determination — a question for the relevant authority and for
+   qualified counsel, never settled inside the project; and re-measure `p` and `q` by the same method
+   under a named authority before the use resumes (14.4.3).
 
 ---
 
@@ -1540,13 +1602,24 @@ be specified once and reused, because the comparability of measurements over tim
 detectable at all; a re-measurement by a different method produces a different number and no
 information.
 
-Two lifecycle obligations close the loop. **Retirement**: a use that is no longer needed is removed
+Three lifecycle obligations close the loop. **Retirement**: a use that is no longer needed is removed
 from the register and from the estate, because an unmaintained tool whose measurements have expired is
 worse than no tool — it produces output nobody is verifying to a standard nobody has revisited.
-And **retention**: the model version, prompt, grounding material and verification record for anything
+**Retention**: the model version, prompt, grounding material and verification record for anything
 relied on must survive the project, which is Domain 16, KA 16.4's responsible archive and
 model/data retention obligation, and which must be designed at mobilisation because it cannot be
 reconstructed at closeout.
+
+And **failure**, which is the one the triggers above imply and do not state. A revalidation trigger
+that fires because the measurements have gone stale is hygiene; a trigger that fires because an output
+already relied on has been found materially wrong, or because differential error has been detected in
+a deployed use, is an **incident with an accountable route**, and it runs through 14.4.3's sequence
+rather than through a re-measurement diary: stop the use and suspend the entry, enumerate the
+decisions that cited the output, notify the accountable person and the decision-maker in writing that
+day, reopen above the stated materiality threshold with the authority that took the decision, record
+whether anyone outside must be told and on whose determination, and re-measure under a named
+authority before resumption. The distinction is worth naming because the two arrive looking identical
+in a monitoring report — a number has moved — and only one of them has a clock on it.
 
 ### 14.A.3 The reviewer's digital and AI eye
 
@@ -1568,9 +1641,12 @@ trigger (14.A.2). The verification standard is **published**, and the thresholds
 hand as `Δv/(p·Δq)` (14.3.3). Outputs whose consequences sit near a **governance threshold** are
 reperformed regardless of tier (14.3.4). Error rates for anything that allocates support, priority or
 resource are **measured by group**, with the groups defined in advance and the fairness measure chosen
-by a named person (14.4.2). Security control cases **do not add** avoided losses (14.4.4). And the
-question that subsumes several of the others: for any AI-informed output in circulation, *if this were
-wrong, whose judgement was wrong?* — if nobody can answer, the output is not governed.
+by a named person (14.4.2). Security control cases **do not add** avoided losses (14.4.4).
+**Every register entry names a failure route, and every AI-informed decision can be found from the
+output that informed it** (14.4.3) — the second half being the test of the first, since a failure
+route that cannot enumerate the decisions to reopen is a notification list rather than a control. And
+the question that subsumes several of the others: for any AI-informed output in circulation, *if this
+were wrong, whose judgement was wrong?* — if nobody can answer, the output is not governed.
 
 ---
 
@@ -1718,9 +1794,11 @@ What a programme director cannot delegate in this domain:
 - **That `p` and `q` are measured, dated and re-triggered.** A seeded-error programme with a named
   owner. An unmeasured error rate freezes the standard and forfeits the entire productivity gain,
   which arrives as reduced checking rather than faster drafting (14.3.3, 14.A.2).
-- **The AI use register, and the question it answers.** For every AI-informed output in circulation:
-  *if this were wrong, whose judgement was wrong?* No answer means no governance, and it is Domain
-  1's accountability-without-a-holder defect in a new costume (14.4.3).
+- **The AI use register, and the two questions it answers.** For every AI-informed output in
+  circulation: *if this were wrong, whose judgement was wrong?* — and *what happens on the day it
+  turns out to be?* No answer to the first means no governance; no answer to the second means the
+  accountable person has a title and no obligation. Every entry carries a failure route and the
+  decisions to reopen (14.4.3).
 - **Disaggregated measurement wherever an output allocates support, priority or resource.** Groups
   defined in advance, error rates measured by group, the fairness measure chosen explicitly and
   recorded. Aggregate accuracy conceals exactly the failure that will be raised publicly (14.4.2).
@@ -1822,10 +1900,13 @@ Two linked tables on two pages, owned by one named person and reviewed at every 
 register**, one row per use: use and output class · decision informed · accountable human · assessed
 consequence per escaped error `u` · measured `p` and `q` with method, sample size and date · verification
 tier applied · model, prompt and grounding versions · data and confidentiality boundary · prohibited
-adjacent uses · re-measurement trigger and next review date. **The standard**, one row per tier:
+adjacent uses · **failure route — who is notified and within what period** · **decisions to reopen on
+failure**, with the materiality threshold set in advance · re-measurement trigger and next review
+date. **The standard**, one row per tier:
 tier · description · cost per item `v` · measured detection rate `q` · the derived threshold
-`u* = Δv/(p·Δq)` · who may perform it. Two integrity checks run monthly, each a count: uses whose
-measurements are past their re-measurement trigger, and outputs in circulation with no register row.
+`u* = Δv/(p·Δq)` · who may perform it. Three integrity checks run monthly, each a count: uses whose
+measurements are past their re-measurement trigger, outputs in circulation with no register row, and
+**register rows with no failure route** (14.4.3).
 The register's value is that it makes the question *whose judgement was wrong?* answerable in advance
 rather than after an incident.
 
@@ -1988,4 +2069,8 @@ this domain is what makes the middle verb affordable.** Verification without ari
 theatre or negligence, and usually both at once in the same organisation: excessive on the outputs
 that do not matter, absent on the ones that do. Compute the consequence, derive the tier, measure the
 rates, reperform anything near a threshold, and keep a register that can answer the only question
-that finally matters — *if this were wrong, whose judgement was wrong?*
+that finally matters — *if this were wrong, whose judgement was wrong?* — together with the question
+that follows it on the day the answer is needed: *and what do we do now?* Every entry names a failure
+route: stop and suspend, enumerate the decisions that cited the output, notify the same day, reopen
+above a pre-set threshold with the authority that decided, record whether anyone outside must be told
+and on whose determination, and re-measure before resuming.

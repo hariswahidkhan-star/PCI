@@ -32,7 +32,9 @@ of a crew-week**; distinguish the main contract models by who carries cost risk 
 hours breakeven between time-and-materials and a fixed price**; compute a cost-incentive fee and
 the point of total assumption, **and show how the share ratio and the ceiling move it**; explain
 why cash flow and profit differ on a project **and compute the working capital a project
-absorbs**; **price the governance latency on a reserve release**; and govern AI-produced cost
+absorbs**; **price the governance latency on a reserve release**; **verify an automated accrual,
+ledger or commitment feed against the ledger, the following period's reversal and a hand-reproduced
+coverage figure, and name the four determinations no tool may make**; and govern AI-produced cost
 forecasts under the family verification rule.
 
 **The master worked project.** Project Auriga continues from Domain 6 — the 25-week
@@ -51,6 +53,16 @@ Domains 1, 2, 15 and 16, approved cost **USD 2,400,000**, cost of delay **USD 14
 at its planned 70 % adoption — returns in Case study C, because reserve architecture and the
 latency of the authority that releases it are programme-scale cost questions a single project
 cannot show.
+
+**Reference points.** The body most often named in connection with the cost-engineering material of
+KA 7.1 is **AACE International**, referenced for the existence and purpose of the cost-estimate
+classification progression in its Total Cost Management framework (7.1.1). It is a professional
+association's framework — voluntary, describing practice, neither legislation nor a certifiable
+requirement — and it obliges nobody of itself unless an organisation or a contract adopts it. It is
+named here and not reproduced: no class table, range or definition from it appears in this volume,
+the treatment in 7.1.1 is written in this book's own words, and a reader who wants the framework
+should obtain the current version from its publisher. Naming it implies no endorsement in either
+direction.
 
 ---
 
@@ -570,6 +582,43 @@ re-baselining happens only through change control, with an audit trail (Domain 4
 transfers between control accounts are logged, not silent; and the baseline never absorbs a
 variance by moving budget to where the money went. A baseline edited to match reality has stopped
 measuring anything — the cost analogue of Domain 6's pinned milestone.
+
+### AI in this KA
+
+**Where it earns its place.** This knowledge area is where the most valuable automation in the whole
+cost discipline sits, because everything here is reconciliation and nobody has time to do it by hand.
+**Reconciling ledger actuals to the cost report** line by line, and producing the *list* of
+differences rather than only the total, since the total is what a project already knows and the list
+is what it can act on. **Identifying periods with no accrual posted against evidence that work was
+received** — goods-receipt notes, timesheets, site records, progress certificates — which is exactly
+the omission Worked example 7.2.1 costs at USD 416,667 of forecast error, and which is invisible in
+any index until the invoice lands. **Sweeping open purchase orders** to compute commitment coverage
+and to flag lines with no receipt movement for a stated period, which is the stale-commitment
+hygiene of 7.2.1b that never happens because nothing in a performance index rewards it. And
+**flagging control-account transfers not carried by a change reference**, which is 7.2.3's baseline
+integrity rule expressed as a query rather than as an aspiration.
+
+**Where it must not go.** Four determinations, and each of them moves money or moves the measurement
+basis. **Determining whether work has been received** — a measurement judgement belonging to a named
+human with the standing to make it, and the input on which every accrual rests. **Setting or
+adjusting an accrual**: an accrual is an assertion about value received, and a model that estimates
+one from a run rate has invented the very number the control exists to test. **Authorising a
+control-account transfer**, which is a change decision under Domain 4, KA 4.3. And **re-baselining**
+in any form, since a baseline edited to match reality has stopped measuring anything. A tool may
+propose all four and may compute what each would do; the authorisation is a person's, recorded.
+
+**Verification, concretely.** Three checks, each cheap and each reproducible by hand. **Recompute the
+`AC`-plus-accrual total against the ledger** for the period and confirm it reconciles to the
+signed month-end position — the control 7.2.1 names, run as arithmetic rather than as an assurance.
+**Confirm the reversal in the following period**: an accrual is a timing entry, so it must reverse,
+and an accrual that does not reverse is either a real cost that has been double-counted or an
+adjustment wearing an accrual's clothing. That test is what makes 7.2.1's invariant — an accrual
+omission cancels cumulatively and misstates every period in between — checkable rather than merely
+stated. And **reproduce commitment coverage by hand for one period**, including the stale-line
+cleanse, because a coverage figure that nobody has ever recomputed is the number most likely to be
+quietly wrong in the direction that flatters. Where any of these feeds a report a board reads, the
+verification card of Domain 1, KA 1.4.3 applies: state who verified it, how, and what the check would
+have caught.
 
 ### Key terms — KA 7.2
 

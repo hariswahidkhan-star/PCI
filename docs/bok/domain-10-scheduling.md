@@ -775,6 +775,28 @@ record-keeping discipline of Domain 7 (Toolkit 7.T.2) and the treatment of concu
 sit alongside this topic. Fragnet mechanics and window-by-window comparisons are automatable; choosing the
 method the tribunal will accept, and owning the causation story, is the delay analyst's craft.
 
+**Where the taxonomies come from.** The families above are not this reference's invention, and a practitioner
+will meet them under names given by two widely cited sources: the **Society of Construction Law's Delay and
+Disruption Protocol**, and **AACE International's recommended practice on forensic schedule analysis**. Both
+are **voluntary professional guidance published by private bodies**. Neither is legislation; neither binds
+anyone of its own force; and neither applies to a project unless the contract imports it or the parties agree
+to work to it — and where a contract does import one, it is the contract that settles which parts apply.
+Naming them here is identification only: nothing in this reference states what either document says or
+requires, the publications themselves govern, and neither body is associated with, endorses or has reviewed
+this book (Conventions, §9). Appendix C records both.
+
+**The answer depends on the governing law as much as on the method.** Three questions in particular are
+settled outside the analysis. How **concurrent delay** is treated where both parties' delays overlap — full
+entitlement, apportionment, time but not money, or something else (Advanced 7.A.1). **Who owns float**, and
+therefore whether an event absorbed by float is compensable at all (KA 10.2.4) — the very question the 10-day
+event and 7-day output above turns on. And whether the situation calls for a **prospective** or a
+**retrospective** view. Starting points on all three differ between legal traditions — common-law and
+civil-law systems have developed them differently — between jurisdictions within each tradition, and between
+standard contract forms. A delay position is therefore a legal position before it is a schedule one: the
+analyst supplies the method, the fragnet, the update pair and the contemporaneous record; the contract and
+qualified counsel decide entitlement, and are engaged **before a method is adopted**, not after a position has
+been asserted (Domain 7, KAs 7.2.2 and 7.2.6, and Advanced 7.A.1).
+
 **A caution on what this topic is.** Everything above is *method* — how a schedule is analysed and what the
 analysis can honestly support. Whether an extension of time is due, whether delay is concurrent and what
 follows if it is, what a contract's notice provisions mean, and what any of it entitles either party to, are
@@ -783,6 +805,13 @@ families and jurisdictions. Nothing here states an entitlement, and the word "en
 example above names the output of an analytical method, not a legal conclusion. The controls professional's
 product is the analysis and the contemporaneous record; the entitlement position is settled by those
 qualified to give it, and their advice is taken before a claim or a rejection is issued.
+
+**And the record has to still exist.** Every method above is built from **contemporaneous updates** — the
+schedule as it stood at the time, not as it was reconstructed afterwards. Those updates are archived at
+project closure on stated terms: a retention period set by the longest applicable requirement, a named
+custodian, a readable format and tested retrieval (Domain 8, KA 8.5.1; Domain 7, Toolkit 7.T.2). A programme
+whose update history was left on a decommissioned server has lost the analysis as completely as one that never
+updated at all.
 
 ---
 
@@ -1380,3 +1409,14 @@ increments mapped to milestones.
 blind spot → 6.4; the time-phased cost baseline (PV) → 3.3; schedule risk and contingency → Domain 12; hybrid
 Sprint-to-milestone mapping → 9.6; AI-assisted scheduling and delay prediction → 13.5.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+three certification standards here: `PCI-PCL-STD-10.01` (schedule network integrity), `PCI-PCL-STD-10.02`
+(critical-path verification before reliance) and `PCI-PCL-STD-10.03` (status date and actual-date integrity) —
+the last being what makes the contemporaneous record of Advanced 10.A.6 worth anything. The foundational
+standards binding on every PCI credential holder apply throughout — in particular `PCI-FND-STD-01`
+(professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05` (transparent
+assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11` (escalation of
+material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible AI). The
+published Standards govern their own wording; they are private professional requirements established by PCI,
+not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

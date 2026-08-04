@@ -22,7 +22,9 @@ never be summed**; plan resources against the schedule, **produce a resource-fea
 under a hard cap, distinguish the critical chain from the critical path and price the peak that
 binds**; apply rolling-wave elaboration honestly and **price the commitment exposure a ranged
 planning package carries**; **build a compression menu with cost slopes, locate the least-cost
-duration and state the range of week-values over which it holds**; price fast-tracking as a
+duration and state the range of week-values over which it holds**; **state the non-financial ceiling
+on each compression lever and the second signature a shift, night-working or simultaneous-operations
+move requires**; price fast-tracking as a
 probabilistic decision with a **breakeven rework probability**; distinguish predictive, agile and
 hybrid scheduling, **translate a throughput forecast into a required rate through the backward
 pass**, and govern each; **size and manage a schedule buffer from aggregated safety, and forecast
@@ -1183,6 +1185,41 @@ Both obey the same law: work the critical path, and re-run the passes after ever
 > crash cost rising linearly while saved-week value flattens after the first week, so the second
 > crashed week loses money.
 
+**What bounds the menu, before any of it is priced.** A cost slope says what a week *costs*. It does
+not say whether the week is **available**, and the menu below would be professionally misleading if
+read as though it did. Every compression lever in it — overtime, a second shift, night working, crew
+addition, overlapping two disciplines on the same plant — carries a **non-financial ceiling** that
+sits above its cost:
+
+- **Working time, rest and fatigue.** Limits on hours, rest periods and consecutive shifts, and the
+  duty to manage fatigue as a hazard rather than as a productivity variable.
+- **The safety case and the permit regime.** What the plant, the site or the system is authorised to
+  have done to it, and under what conditions — permits to work, isolations, competency requirements
+  and the conditions attached to any approval the asset holds.
+- **Agreement terms.** Collective and individual employment agreements, and subcontract terms, which
+  may set shift patterns, notice, rates and maximum hours independently of anything the schedule
+  wants.
+
+These ceilings are **jurisdiction-, sector- and site-specific**, they differ substantially, and they
+are taken from the safety function, from human resources and from qualified counsel — never from a
+cost slope, and never from this book, which states no legal position and characterises no
+arrangement as permitted or otherwise. The professional consequence is a hard one and it is the point
+of the paragraph: **a lever whose ceiling binds is not available at any price**, and it is struck
+from the menu before the optimisation is run rather than priced into it. A compression plan that
+contains a lever nobody asked the safety function about is not an aggressive plan; it is an
+unpriced one.
+
+**Which makes compression a two-signature decision.** Where a compression move changes a shift
+pattern, adds night working, or overlaps disciplines on the same plant, the decision requires the
+**named safety approver** in addition to the authority spending the money — the two are different
+people and the second cannot speak for the first. The same holds for a change that touches a
+condition of any approval the asset or the system holds: the approval's owner decides whether the
+move is available, and that decision sits outside the project's authority. The recovery plan
+(Toolkit 6.T.2) records **both** authorities, and a recovery plan naming only the funder has recorded
+half the decision. Worked example 6.4.2c's overlap of installation and commissioning is exactly this
+case: it is a simultaneous-operations question before it is an arithmetic one, and in many sectors it
+requires a separate review and approval before the overlap can be bought at all.
+
 **Worked example 6.4.2b — the whole compression menu, and the least-cost duration.**
 
 1. **Setup.** The example above priced **one** lever. A leader planning a compression programme
@@ -1351,8 +1388,11 @@ float harvesting from non-critical paths (G's 8 weeks fund nothing on the new cr
 its resources might); crashing the *new* critical path (now through D); fast-tracking E against
 D's tail with an explicit rework risk (Domain 8's risk register prices it); and scope or
 acceptance re-negotiation (Domain 5) as the honest last resort. A **recovery plan** states the
-target date, the moves, their costs and risks, and the decision authority spending them —
-the template is toolkit 6.T.2.
+target date, the moves, their costs and risks, each move's **non-financial ceiling**, and the
+decision authorities: the one spending the money and, where a move changes shift patterns, adds
+night working, overlaps disciplines on the same plant or touches a condition of an approval, the
+**named safety or approval-holding authority** whose agreement the money cannot substitute for.
+The template is toolkit 6.T.2.
 
 ### 6.4.3 Forecasting and scenario analysis
 
@@ -1447,7 +1487,9 @@ calibration record is the machine version of the site manager who is "sure it'll
 |---|---|
 | **Crashing / fast-tracking** | Buying duration with money / with overlap risk. |
 | **Path migration** | The critical path moving as durations change; why passes are re-run. |
-| **Recovery plan** | Target date, ranked moves, costs, risks, decision authority. |
+| **Recovery plan** | Target date, ranked moves, costs, risks, non-financial ceilings, and **both** decision authorities — the one spending the money and the safety or approval-holding authority where one is engaged. |
+| **Non-financial ceiling** | The working-time, rest, fatigue, safety-case, permit or agreement limit bounding a compression lever. Supplied by the safety function, HR or counsel, jurisdiction- and sector-specific, and where it binds the lever is unavailable at any price. |
+| **Simultaneous operations** | Two disciplines working the same plant at once; a safety decision requiring its own review and approval before it is an arithmetic one. |
 | **Three-point / PERT estimate** | `tₑ = (o+4m+p)/6`, `σ = (p−o)/6`. |
 | **Scenario analysis** | Complete network re-runs under coherent stated assumptions. |
 | **Integration milestone** | The CPM node where an agile stream's delivery enters the network. |
@@ -1581,6 +1623,13 @@ is what leaves the requirement untested.
    team's best observed rate.
 6. *When does a three-point estimate add nothing?* — When it is symmetric: the bias is
    `(o − 2m + p)/6`, which is zero, so `tₑ = m` and only the spread is new information.
+7. *What does a cost slope not tell you about a compression lever?* — Whether the week is available.
+   Working-time, rest and fatigue limits, safety-case and permit conditions and agreement terms each
+   set a ceiling above the price; where a ceiling binds, the lever is struck from the menu rather
+   than priced into it, and the ceilings come from the safety function, HR and counsel (6.4.2).
+8. *Who signs a compression that changes a shift pattern or overlaps disciplines on live plant?* —
+   The authority spending the money **and** the named safety or approval-holding authority. The
+   recovery plan records both; money cannot substitute for the second signature.
 
 ---
 
@@ -2105,7 +2154,11 @@ per week of a linear ramp is `(N/2) ×` per-unit benefit, exactly half the stead
 
 Per candidate activity: current duration · which paths it lies on · cost slope per week · technical
 maximum weeks · owning discipline and the basis of the quote · risk consequence of taking it
-(coordination, quality, rework) · expiry — the date after which the option no longer exists. Then, on
+(coordination, quality, rework) · **non-financial ceiling** — the working-time, rest, fatigue,
+safety-case, permit or agreement limit that bounds this lever, with the function that supplied it ·
+**the approval it needs** beyond the money, naming the safety or approval-holding authority where one
+is engaged · expiry — the date after which the option no longer exists. A lever whose ceiling binds is
+struck from the menu, not discounted in it (6.4.2). Then, on
 one line: the value of a week (cost of delay plus any time-related indirect cost), the resulting
 least-cost duration, and the range of week-values over which that duration stays optimal. Re-priced
 whenever the network changes, because the cheapest week is a property of the current binding paths.
@@ -2114,8 +2167,11 @@ whenever the network changes, because the cheapest week is a property of the cur
 
 Slip statement (activity, cause, size, date detected) · re-run pass results (new duration, new
 critical path, float table) · options priced in expected cost (re-sequence / harvest / crash /
-fast-track / renegotiate), each with risk and owner · selected plan and its decision authority ·
-revised commitments and the stakeholder notice list · review date.
+fast-track / renegotiate), each with risk and owner, **and each with its non-financial ceiling and
+the approval it needs** (6.4.2) · selected plan and **both** its decision authorities — the authority
+spending the money and, where a shift pattern, night working, an overlap of disciplines or a
+condition of an approval is engaged, the **named safety or approval-holding authority** · revised
+commitments and the stakeholder notice list · review date.
 
 ### Toolkit 6.T.3 — Milestone register
 
@@ -2168,7 +2224,9 @@ windows and horizons — and connect it hard: a plan only 73.33 % loaded on aver
 its peak, an activity with eight weeks of logical float set the resource-constrained duration, and one
 engineer-week of excess demand was worth USD 45,000. Delivery flow closes the loop: a compression menu
 with rising cost slopes whose least-cost duration is 22 weeks and holds for any week worth
-40,000–55,000, fast-tracking priced with two breakeven probabilities rather than a hope, recovery
+40,000–55,000 — each lever carrying a non-financial ceiling above its price, and a shift-pattern,
+night-working or simultaneous-operations move carrying a second signature the money cannot buy —
+fast-tracking priced with two breakeven probabilities rather than a hope, recovery
 ranked from re-choice to renegotiation, buffers sized by aggregating safety and managed by their
 consumption ratio, rollouts scheduled as a takt and valued as an integral, and agile streams joined to
 the network through a required rate read off the backward pass. The leadership spine throughout:

@@ -443,6 +443,29 @@ The methods bracket the outcome from **1.05m to 1.15m** — a USD 100,000 range 
 Selecting mechanically — always using one formula — is the classic error; the formulae encode assumptions, and
 the professional owns the assumption. The `TCPI` reality check (6.2.3) and the `CPI` trend inform the choice.
 
+**AI in this KA.** Predictive `EAC` is the single most consequential AI application in project controls
+(Domain 13, KA 13.5.3), and it belongs here rather than only in KA 6.4. What a model genuinely adds is
+*earliness and breadth*: it can detect a `CPI` trend turning at control-account level weeks before a monthly
+review would notice, attribute movement to drivers (productivity, quantity growth, rate) across hundreds of
+accounts at once, and generate a range rather than a point — which is a better input to a board conversation
+than a single figure has ever been.
+
+The limits are structural, not teething problems. A model fitted to cost history **cannot see the critical
+path**, so it cannot know that the remaining work is sequenced differently from the work already done — the
+precise condition under which method (c) or (d) is the right choice. It cannot see the **cause** of a
+variance, only its shape, and cause is what selects among methods (a)–(d) above: a closed one-off rate spike
+and a persisting productivity problem look identical in the numbers and demand opposite forecasts. It has no
+view on a phase change that has not happened yet. And it cannot **own** a forecast defended to a board, which
+is what an `EAC` ultimately is.
+
+So the verification is specific, and it is the domain's own machinery: run the **`TCPI` check** of 6.2.3
+against the model's `EAC` and ask whether the implied remaining efficiency is credible against the efficiency
+actually achieved; test the model's implicit assumption against the **`CPI`-stability** evidence of Advanced
+6.A.5 before accepting any to-budget or recovery claim; and state the method and its assumption in the report
+whether the number came from a model or a spreadsheet. A predictive `EAC` accepted without those two checks is
+an unattributed assumption with a confident interface. **AI proposes; the professional verifies, decides and
+remains accountable.**
+
 ### 6.3.4 VAC and the completion picture
 
 **Formula.** `VAC = BAC − EAC` (negative = projected overrun).
@@ -733,7 +756,8 @@ performance measurement baseline, so that work packages can again be planned and
 achievable budgets; the accumulated variances are either retained on the record or explicitly adjusted; and
 the whole change is documented, justified and approved by the customer before it takes effect. Practitioners
 will meet the OTB/OTS on US-government-style EVMS programmes, where it is a recognised reprogramming action
-rather than an improvisation. The OTB is the legitimate counterpart of the rubber baseline: the arithmetic
+rather than an improvisation — part of the formal EVMS practice whose published anchors are named in
+Advanced 6.A.2. The OTB is the legitimate counterpart of the rubber baseline: the arithmetic
 is the same — new budget, restated `PV`, indices that start again — but the governance is opposite. One is
 an approved, disclosed, one-time reset with an audit trail that preserves how bad things were; the other is
 quiet serial re-planning that erases the record. The test of any re-baseline is not whether the numbers
@@ -750,6 +774,31 @@ deliberately simple earning rules — 0/100, 50/50 and units completed in prefer
 percent-complete (6.1.2); a monthly cadence aligned to the ledger close so `AC` arrives accrual-complete;
 and a report built around a handful of measures — `CPI`, `SPI`, `EAC`, `TCPI` — rather than a full formal
 data set.
+
+**Where the formal apparatus comes from — and what kind of instrument each anchor is.** The "guidelines,
+criteria and surveillance" above are not invented programme by programme. Three published instruments are the
+ones a practitioner actually meets, and the difference between them matters more than their contents:
+
+- **ANSI/EIA-748** — a *national standard*, published through a United States standards-accreditation process,
+  addressing the characteristics an earned-value management system is expected to exhibit. It is **voluntary
+  in itself**. It reaches a programme only where a contract or a procurement regime imports it, which is
+  exactly what happens on major US government contracts — and that is where the guideline-by-guideline
+  vocabulary of "EVMS compliance", system validation and surveillance comes from, together with the
+  disciplined reprogramming practice (the over-target baseline of 6.A.1).
+- **ISO 21508** — an *international standard* offering **guidance** on earned value management in project and
+  programme management. It is guidance rather than a certifiable requirement set, and like any ISO guidance
+  document it has effect where an organisation chooses to work to it.
+- **Professional-body practice guidance on earned value management**, of which PMI's is the most widely held
+  — *professional guidance*, describing recommended practice for practitioners rather than conditions on
+  anyone.
+
+**None of the three is legislation, and none of them is what makes EVM mandatory on a project.** Whatever
+force any of them carries on a given programme comes from the **contract** or the funder's own conditions, and
+where a contract does import one it is the contract that settles which parts apply and what "compliance"
+means there. So the honest answer to "what is an EVMS assessed against?" is: against the instrument the
+contract names, on the terms the contract sets — which is a question answered by reading the contract, not by
+reading this book. Naming these instruments here is identification only; nothing in this reference states what
+any of them requires, and the official publication of each governs (Conventions, §9).
 
 **What can be scaled away** is ceremony and granularity: the number of control accounts, the depth of the
 reporting formats, the independent surveillance function. **What cannot be scaled away** are the three
@@ -784,7 +833,9 @@ is self-assessed and no one reconciles the colour to the numbers.
   way assessed percentages do not.
 - **Trend review** (Domain 4, KA 4.1.2) — an `EV` curve flat across successive periods while `AC` climbs is
   a leading indicator of a troubled tail, and a status that stays green against a sliding `CPI`/`SPI` trend
-  is the watermelon signature; the reconciliation of narrative to numbers is a standing check.
+    is the watermelon signature; the reconciliation of narrative to numbers is a standing check. Where a
+  professional is asked to leave a status green against a trend they cannot defend, the reconciliation stops
+  being an analytical step and becomes the escalation trigger of Domain 4, KA 4.3.7.
 - **Separate tracking of punch-list and closeout effort** — giving the tail its own control account or work
   packages, with their own budget and earning rules, so closeout is measured work rather than an untracked
   residue smeared across finished accounts.
@@ -1005,6 +1056,14 @@ demand; and the **earned-schedule time picture**, cross-checked against the crit
 story is stated in months as well as dollars. Decision-ready, no spin (Domain 4, KA 4.3.3): the likely
 outcome, the assumption behind it, the alternatives, and why the original figure no longer holds — delivered
 at Month 12, early enough for every option to still be open.
+
+**And if the report is edited on its way up.** The professional does not make the choice, but the professional
+does own what the board is choosing *from*. If the fan is reduced to its most optimistic branch, if the
+persisting-productivity assumption is dropped, or if the `TCPI` reality check is removed so that option 3
+reads as costless, then the report no longer supports the decision it is presented for — and that is the
+trigger for the duty set out in Domain 4, KA 4.3.7. The response is the one stated there: object in writing,
+with the evidence, before the report is issued; take it up the route until someone owns the difference; keep
+the record; and do not let an analysis you did not produce be attributed to you.
 
 ### What the credential expects
 
@@ -1327,6 +1386,16 @@ protect `AC` through Domain 5's data layer; the baseline items guard against the
 Advanced 6.A.1. Sign it monthly at the same level that signs the report itself, so data quality carries the
 same accountability as the numbers it underwrites.
 
+**Retention.** The artefacts this checklist depends on — the baseline change log, the control-account budget
+logs, the reserve-release records and the signed checklists themselves — are retained for the **life of the
+programme plus the organisation's audit and record-retention period**, and longer where a dispute is live or
+foreseeable (Domain 8, KA 8.5.1; Domain 7, Toolkit 7.T.2). The reason is specific to this domain: Advanced
+6.A.1's test of a re-baseline is whether a reviewer can still reconstruct the journey, and a journey whose
+logs have been discarded cannot be reconstructed by anyone, however good the current numbers look. Retention
+periods themselves are set by the contract, by the organisation's own requirements and by obligations that
+vary between jurisdictions — confirm the period locally rather than assuming one. The record-integrity
+principle behind this is `PCI-FND-STD-12`.
+
 ### Toolkit 6.T.2 — Monthly EV report one-pager layout
 
 | Block | Content | Source |
@@ -1408,6 +1477,20 @@ by earned schedule, critical-path analysis (Domain 10) and the discipline of Dom
 established here is the language reused for adaptive delivery in Domain 9.
 
 **Cross-references.** The Planned Value baseline → 3.3; the EAC family introduced → 3.4; true cost-to-date and
-control accounts → 5.2–5.3; variance reading and reporting → 4.2–4.3; revenue recognition that EAC feeds →
-2.2.6; critical path → Domain 10; AgileEVM → 9.5; predictive EAC and driver analysis → 13.5.
+control accounts → 5.2–5.3; variance reading and reporting → 4.2–4.3; the duty to escalate where a forecast or
+a status cannot be defended → 4.3.7; revenue recognition that EAC feeds → 2.2.6; critical path → Domain 10;
+AgileEVM → 9.5; predictive EAC and driver analysis → 13.5.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+four certification standards here: `PCI-PCL-STD-06.01` (earned value measurement rules fixed before
+performance), `PCI-PCL-STD-06.02` (objective evidence of progress), `PCI-PCL-STD-06.03` (coherence of the
+three earned value data points) and `PCI-PCL-STD-06.04` (selection and disclosure of the
+estimate-at-completion method). None of them is ANSI/EIA-748 or any other external instrument: the external
+anchors named in Advanced 6.A.2 are separate documents with a separate basis, and neither set stands behind
+the other. The foundational standards binding on every PCI credential holder apply throughout — in particular
+`PCI-FND-STD-01` (professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05`
+(transparent assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11`
+(escalation of material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible
+AI). The published Standards govern their own wording; they are private professional requirements established
+by PCI, not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

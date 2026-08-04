@@ -19,7 +19,10 @@ explain why it is the primary measure of value; compute IRR, recognise its patho
 MIRR and state what it fixes and what it does not; apply payback and discounted payback as
 exposure measures, not value measures; rank with the profitability index under capital
 rationing; compare unequal lives with equivalent annual value; resolve NPV–IRR conflicts on
-mutually exclusive projects; and subject any machine-produced appraisal to the family's
+mutually exclusive projects; describe the decision rule applied on the other side of a concession
+table — a value-for-money comparison of risk-adjusted whole-life cost against a constructed
+counterfactual, taken inside a separate affordability envelope — and explain why a bid can pass one
+of those tests and fail the other; and subject any machine-produced appraisal to the family's
 verification rule.
 
 **The master appraisal.** The Kestrel Water SPC financing of Domain 3 now faces its investment
@@ -809,7 +812,7 @@ finding where it changes nothing.
 ## Knowledge Area 4.3 — Decision contexts: exclusivity, rationing and judgment
 
 *Topics: 4.3.1 mutually exclusive investments · 4.3.2 capital rationing · 4.3.3 the limits of
-the numbers.*
+the numbers · 4.3.4 the other side of the table: how a public grantor decides.*
 
 ### 4.3.1 Mutually exclusive investments
 
@@ -1024,6 +1027,72 @@ root, compute from the root.
    more revenue is worth precisely a tenth of the outlay, and no percentage can carry that
    information because it has divided the scale out.
 
+### 4.3.4 The other side of the table: how a public grantor decides
+
+Everything in this domain so far is the **sponsor's** decision rule: discount the project's cash at
+a rate the sponsor owns, and take the proposal that adds the most value. On a concession or a
+public-private partnership — which is where most of this book's projects live — that rule decides
+only half of the outcome. The other half is taken across the table, by a public authority applying a
+different test, in a different unit of account, against a comparison the bidder cannot see. **A bid
+team that has modelled only its own NPV has modelled half the decision**, which is why an appraisal
+domain has to state the other half even though the bidder never performs it.
+
+**Two tests, and a proposal must pass both.**
+
+*Value for money.* The authority's first question is not "does this earn a return?" but "does
+procuring the service this way deliver better whole-life value than the realistic alternative?" The
+comparison runs against a **constructed counterfactual** — a costed model of what it would take the
+authority to deliver the same service through conventional procurement — with each route
+risk-adjusted, so that the risks the public sector would retain under each are priced into that
+route rather than assumed away. Three consequences follow at once, and each is a place bid teams are
+routinely surprised.
+
+- It is a comparison of **risk-adjusted whole-life cost, not of return**. The bidder's IRR is not an
+  input to it, and a paper arguing that the equity return is modest is answering a question the
+  authority did not ask. What is being compared is two cost streams over the service life.
+- The counterfactual is a **model the authority owns**. A bidder cannot verify it and generally
+  cannot rebut it directly. What a bidder *can* do is work out which risks the concession route is
+  being credited with transferring, and make sure the proposal actually transfers them — because a
+  risk priced into the bid and then drafted back to the authority in the contract fails twice: the
+  bidder has paid for it and the authority cannot count it.
+- The discount rate, the risk adjustments and the sensitivities required are **set by published
+  guidance rather than chosen by the analyst**. This is 4.3.3's "owned rate" again, with the
+  ownership sitting somewhere the bidder cannot reach.
+
+*Affordability.* The second question is separate, and it is not an appraisal output at all.
+Affordability asks whether the payment stream the proposal creates — availability payment, subsidy,
+contingent commitment — fits inside the budget the authority actually holds, **in the years it falls
+due**. It is a budget fact, arrived at through a public budgeting process and expressed on the
+authority's own budgeting and accounting basis rather than in present value.
+
+The relationship between the two tests is the point to carry: **they are independent, so a proposal
+can pass one and fail the other.** A bid can be excellent value for money across thirty years and
+still be unaffordable because the payments in years three to seven exceed the envelope; a cheap bid
+can sit comfortably inside the envelope and still fail value for money because the counterfactual is
+cheaper still. And re-profiling a payment stream to fit the envelope while holding whole-life cost
+constant improves affordability and does nothing whatever for value for money — which is precisely
+the kind of restructuring a bid team should recognise for what it is before offering it as a
+concession.
+
+**What this changes for the bid team.** The winning bid is the one that is fundable to the sponsor
+and its lenders **and** passes both of the grantor's tests. Three questions therefore belong in the
+bid strategy before anything is priced: which risks the authority believes this route transfers, and
+whether the draft contract actually transfers them; what the *shape* of the payment stream does to
+the authority's budget year by year, not merely in aggregate; and where the proposal's whole-life
+cost is likely to sit against a counterfactual that must be inferred — usually from the authority's
+own consultation material and from what it has procured before. None of the three is a modelling
+question, and all three change the model.
+
+**The standing caution.** Appraisal guidance for public bodies is published, revised and withdrawn
+by the authority that owns it, and it differs — sometimes fundamentally — between jurisdictions and
+between sectors within one jurisdiction. Nothing is reproduced or summarised here: what is described
+above is the *shape* of the practice, in this book's own words, so that a professional recognises
+the decision being taken opposite them. The applicable guidance, the prescribed rate, the required
+risk adjustments and the mandatory sensitivities are read from the owning authority at the date of
+the appraisal, and never assumed from a previous bid or another country. Whether any procurement
+obligation attaches to how an authority conducts the comparison, and what remedy a bidder has if it
+does, is a question for qualified counsel in that jurisdiction; nothing here states it.
+
 ### AI in this KA
 
 Ranking under constraints is combinatorial — machine territory — and constraint errors are
@@ -1046,6 +1115,9 @@ not adjustments smuggled into assumptions.
 | **Breakeven inflow** | `I₀ / AF(r, n)`; the revenue level at which NPV reaches zero. |
 | **Two-way sensitivity** | NPV tabulated across the two dominating assumptions jointly, not separately. |
 | **Indivisible project** | Funded whole or not at all; the reason enumeration replaces sorting. |
+| **Value for money (grantor's test)** | Whether the concession route delivers better risk-adjusted whole-life value than a conventionally procured alternative; a comparison of cost streams, not of return. |
+| **Public sector comparator** | The constructed, costed counterfactual of delivering the same service conventionally, against which the concession route is compared; a model the authority owns and the bidder cannot verify. |
+| **Affordability envelope** | The budget the authority actually holds for the payment stream, year by year; a budget fact rather than an appraisal output, and independent of value for money. |
 
 ### Sample MCQs — KA 4.3
 
@@ -1161,6 +1233,22 @@ exposed to the correlated rate movement the table already prices (4.3.3). A spen
 buffer. C mistakes a forecast for a position. D is B's arithmetic with the judgement removed — the
 model will indeed show a positive NPV, which is precisely why the number alone cannot settle it.
 
+**MCQ 4.3-I `[4.3.4 · Analysis]`** A consortium's bid for an availability-based concession is
+comfortably NPV-positive at the sponsors' own hurdle and fully fundable on the lenders' coverage
+tests. The authority rejects it. Which single explanation is most consistent with how a public
+grantor decides?
+- A. impossible — a fundable, NPV-positive bid satisfies both sides of the table
+- B. the bid may fail the authority's value-for-money comparison against its constructed counterfactual, or fall outside its affordability envelope in the years the payments arise; both are tests the sponsors' NPV does not speak to, and they are independent of each other ✅
+- C. the authority must have used a higher discount rate than the sponsors, so the same cash flows produced a negative NPV on its side
+- D. the equity return must have been judged excessive, since return is what the authority is comparing
+
+*Rationale:* the grantor's tests are a comparison of risk-adjusted whole-life cost against a
+counterfactual it owns, and separately a year-by-year budget test; a bidder's NPV is an input to
+neither (4.3.4). C describes the sponsor's own calculation performed twice and misses that the
+authority is comparing two *cost streams*, not appraising the bidder's investment. D makes return
+the unit of account, which is the error the topic exists to correct. A assumes one decision rule
+where there are three.
+
 ### Self-check — KA 4.3
 
 1. *Why does incremental IRR always agree with NPV on a pairwise choice?* — It tests whether
@@ -1179,6 +1267,16 @@ model will indeed show a positive NPV, which is precisely why the number alone c
 6. *Greedy PI selects W, V, Z for +4,580,000 on an 18,000,000 spend. What two facts must the
    board be shown?* — The 2,000,000 unspent, and the runner-up set (W + X, +5,400,000) — together
    they disclose the 820,000 the packing costs.
+7. *What is a public grantor comparing when it tests value for money?* — Risk-adjusted whole-life
+   cost of the concession route against a constructed counterfactual for delivering the same service
+   conventionally. It is a comparison of cost streams; the bidder's return is not an input.
+8. *Can a bid pass value for money and still be rejected?* — Yes. Affordability is a separate test
+   and a budget fact: the payment stream must fit the authority's envelope in the years it falls
+   due. Re-profiling payments to fit that envelope improves affordability and changes whole-life
+   value not at all.
+9. *Why is a risk priced into the bid but drafted back to the authority a double loss?* — The bidder
+   has paid for it in its price, and the authority cannot credit the transfer in its comparison, so
+   the same risk weakens the bid on both tests at once.
 
 ---
 
@@ -1366,7 +1464,12 @@ The fuller list, in the order a reviewer should run it:
   than chosen. The rate, its basis and the required sensitivities differ by jurisdiction and are
   revised over time, so the applicable guidance is read at the date of the appraisal rather than
   assumed; what generalises is only the shape, that the numbers travel with a governance file, which
-  is the direction this domain pushes every sector.
+  is the direction this domain pushes every sector. Where the authority is not appraising its own
+  investment but deciding whether to procure through a concession, the prescribed method changes
+  again: the test becomes risk-adjusted whole-life value against a constructed counterfactual, taken
+  inside a separate affordability envelope, and a bidder's own NPV is not an input to either.
+  KA 4.3.4 develops this, and it is the half of the decision a bid team does not perform and must
+  still understand.
 - **Real estate and social infrastructure.** Terminal value dominates: a large share of NPV can sit
   in a single residual figure at the horizon, so the appraisal's centre of gravity moves from the
   cash-flow years to the exit assumption, and the sensitivity that matters is on that one line.
@@ -1710,6 +1813,11 @@ The ninth and tenth lines are the ones that catch career-shortening errors: a pr
 equity stream is worth 25,177,784 of misstatement on this project alone (KA 4.A.3), and a convention
 applied inconsistently is worth 3.9 % of present value at 8 %.
 
+*Retention.* The sheet is the record of *why* the rate in a board paper was the rate, and the
+question is asked years later, when the paper is being defended rather than written. It is retained
+with the appraisal it supports, on the standing basis in the toolkit preamble — period, form and
+named custodian recorded on the sheet itself, alongside the rate owner.
+
 ## Exam preparation — Domain 4
 
 **The calculation traps.** Forgetting to deduct `I₀` (MCQ 4.1-A distractor D) · discounting
@@ -1773,7 +1881,11 @@ Exercise 4.5); EAV makes unequal lives commensurable. Mutually exclusive choices
 NPV, narrated by incremental IRR and the crossover geometry; rationing resolves by
 disciplined packing plus the financing question for what was turned away; and the limits of
 the numbers — options, strategy, forecast asymmetry — are stated in the open, as owned
-judgments.
+judgments. On a concession the sponsor's rule decides only half the outcome: the grantor is testing
+risk-adjusted whole-life cost against a counterfactual it owns, inside an affordability envelope
+that is a budget fact rather than an appraisal output, so a bid can be fundable, NPV-positive and
+still correctly rejected — and a bid team that has modelled only its own NPV has modelled half the
+decision.
 
 Three findings from this domain's arithmetic outlast the formulae. **Timing is priced even when
 totals are not:** the ramp profile of 4.1.1b moves not one dollar of forecast revenue and costs

@@ -119,6 +119,24 @@ released funding, committed and forecast against *each other*, and escalate when
 release profile *early* — asking for the next tranche after the money runs out is not controls, it is
 archaeology.
 
+**AI in this KA.** At budget-setting, AI is most useful as a *challenge function* rather than a producer.
+Given a portfolio of completed projects it can test a draft budget for the omissions that recur — a scope
+element carried in comparable projects and missing here, a preliminaries allowance well outside the
+distribution, an escalation assumption inconsistent with the delivery period — and it can reconcile a
+bottom-up build to its top-down envelope far faster than a spreadsheet audit. It can also keep the funded
+ceiling, the committed position and the forecast aligned, and raise the flag when the forecast is on course to
+breach a release profile.
+
+Its limits are the ones that decide a budget. Contingency is set to a **stated confidence level against a
+quantified exposure** (Domain 12, KA 12.2), not to a historical average, and the choice of level is a
+governance decision about risk appetite. The split between contingency and management reserve reflects who is
+authorised to spend what (3.1.4), which is an organisational fact no model can read off a data set. And a
+budget built from analogues inherits whatever optimism the analogues carried — the ratchet of Advanced 3.A.5
+is exactly a pattern that repeats when history is treated as evidence rather than as a starting hypothesis.
+Verify by re-deriving the envelope, by testing the contingency against the risk analysis rather than against
+comparables, and by recording every AI-suggested inclusion or exclusion in the basis of estimate (3.2.3) so it
+is challengeable. **AI proposes; the professional verifies, decides and remains accountable.**
+
 ### Key terms — KA 3.1
 
 | Term | Meaning |
@@ -279,6 +297,22 @@ cost baseline (3.1.3).
 documentary: always state the class and range, and keep the BoE current, so stakeholders anchor on a *range
 that tightens* as definition matures, not a *point that appears to move*.
 
+**AI in this KA.** Estimating is where machine learning has the most obvious fit, because parametric
+estimating **is** regression with a professional wrapper. A model trained on a clean historical set can fit
+cost-estimating relationships across more variables than a manual build can carry, normalise historical data
+for time and location (Advanced 3.A.2), suggest analogues a human would not think to look for, and produce a
+range rather than a point.
+
+Three limits decide whether that help is safe. First, **the estimate class governs** (3.2.1): a model does not
+make a Class 5 estimate a Class 2 one, and quoting a machine-generated figure without its class and range is
+the pitfall above, industrialised. Second, **the data set is the estimate** — a relationship fitted to
+projects that are not comparable in scope, market, procurement route or period is precise about the wrong
+thing, and a model will not volunteer that its inputs were unrepresentative. Third, an estimate has to be
+**defended**, and a defence is a chain of stated assumptions, not an output. So the verification is the basis
+of estimate itself (3.2.3): every driver, rate, source, inclusion, exclusion and normalisation the model used
+is written into the BoE in the same form as a manual estimate's, and anything that cannot be written down
+that way is not used. **AI proposes; the professional verifies, decides and remains accountable.**
+
 ### Key terms — KA 3.2
 
 | Term | Meaning |
@@ -399,6 +433,22 @@ performance at a glance.
 > S-shaped brand-blue curve through the cumulative points; light grey vertical bars for the monthly PV.
 > *Animation storyboard (digital-only):* the curve draws month by month; a moving vertical "data date" line
 > sweeps across, and at Month 5 a marker reads "PV = 520" — later reused to overlay EV and AC in Domain 6.
+
+**AI in this KA.** Time-phasing is largely mechanical once the schedule and the budget exist, which is
+precisely why it is worth automating: a tool can spread control-account budgets over the approved schedule,
+re-spread them when the schedule is updated, apply resource-driven rather than straight-line profiles, and
+compare the resulting `PV` curve with the profile of comparable completed projects to flag a shape that does
+not look like delivery — a front-loaded curve on a project whose long-lead procurement has not started, for
+example.
+
+What it cannot supply is the input that makes the curve true. `PV` is only meaningful if it is phased over the
+**approved, resource-sensible schedule** (Domain 10) and drawn from a **controlled baseline** (3.1.3); a
+beautifully smooth S-curve over an unachievable schedule is a more convincing wrong answer than a lumpy one
+over a real schedule. Nor can a model decide the earning rules that will later measure against this curve
+(Domain 6, KA 6.1.2) — that is a choice made before performance begins, and made by people who will be held to
+it. Verify by reconciling the spread total back to the `BAC`, checking the curve against the schedule's
+resource profile and its long-lead milestones, and confirming that the baseline it was drawn from is the
+current approved one. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 3.3
 
@@ -1004,6 +1054,12 @@ forecast cycle (3.4.3) — the point at which the honest-forecast culture of the
 or broken. An AI model can flag ratchet patterns across a portfolio faster than a review board can — but
 deciding whether the cause is optimism or sandbagging is a human judgement: **AI proposes; the professional verifies, decides and remains accountable.**
 
+**And when the ratchet is being maintained deliberately.** A professional asked to hold an `EAC` below what
+the evidence supports — so that this period's step is small enough to pass unremarked, or so that a reserve
+position is not breached — is at the trigger described in Domain 4, KA 4.3.7, not in a forecasting
+disagreement. The response is the one set out there: state the objection in writing, with the evidence, before
+the forecast is issued; take it up the route until someone owns the difference; and keep the record.
+
 ---
 
 ## Case study — Domain 3: budgeting and forecasting an offshore-wind package (energy)
@@ -1541,10 +1597,25 @@ analogously, parametrically or bottom-up, and are made defensible by a **basis o
 Forecasting projects the **`EAC`** honestly and early — by methods that encode different assumptions about
 whether today's variance is atypical, typical, or compounding — and re-produces it each period as a rolling
 forecast reading the trend. Finally, **cash-flow forecasting** models the timing gap that makes a profitable
-project still need funding, and sizes the **peak funding requirement** the business must arrange.
+project still need funding, and sizes the **peak funding requirement** the business must arrange — with any
+irrecoverable indirect tax or non-creditable withholding budgeted as **cost**, on a position confirmed with
+the tax function and recorded in the basis of estimate.
 
 **Cross-references.** Profit vs cash → 1.2.6; cost coding/control accounts → 1.5; revenue vs billing (the
-inflow side) → 2.2.7, 7.4–7.5; performance measurement and variance → Domain 4; the full EVM/EAC treatment →
-Domain 6; contract types, retention and payment terms → Domain 7; risk and contingency derivation → Domain 12;
-predictive forecasting → Domain 13, KA 13.5.
+inflow side) → 2.2.7, 7.4–7.5; performance measurement and variance → Domain 4; the duty to escalate a
+forecast that cannot be defended → 4.3.7; the full EVM/EAC treatment → Domain 6; contract types, retention and
+payment terms → Domain 7; risk, contingency derivation and draw-down governance → Domain 12; predictive
+forecasting → Domain 13, KA 13.5.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+five certification standards here: `PCI-PCL-STD-03.01` (scope completeness of the performance measurement
+baseline), `PCI-PCL-STD-03.02` (baseline approval, version control and the change prohibition),
+`PCI-PCL-STD-03.03` (authority to re-baseline), `PCI-PCL-STD-03.04` (completeness of the estimate at
+completion) and `PCI-PCL-STD-03.05` (independent challenge and approval of the forecast). The foundational
+standards binding on every PCI credential holder apply throughout — in particular `PCI-FND-STD-01`
+(professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05` (transparent
+assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11` (escalation of
+material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible AI). The
+published Standards govern their own wording; they are private professional requirements established by PCI,
+not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

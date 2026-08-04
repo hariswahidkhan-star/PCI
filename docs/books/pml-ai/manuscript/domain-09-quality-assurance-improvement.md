@@ -39,7 +39,11 @@ design a containment chain and compute its escape fraction as the product of lay
 prevention**; show arithmetically why equal money on prevention beats equal money on appraisal, and
 name the condition under which it does not; **convert a rework share of capacity into a duration
 multiplier and a delay cost and explain why the relationship is hyperbolic**; run a formal acceptance
-decision and select a nonconformance disposition with its authority; **compute what a clean
+decision and select a nonconformance disposition with its authority; **make the cumulative-effect
+test operable by fixing its threshold source, derivation, period, relatedness test, owner and
+consequence on breach, and recognise where a disposition additionally engages an approval body
+outside the project**; **assign acceptance and disposition records a class, a custodian and a
+retention period with the source of that period named**; **compute what a clean
 acceptance sample does and does not establish, derive the breakeven defective fraction from the
 ratio of verification cost to failure cost, and test an acceptance plan for self-consistency**;
 conduct root-cause analysis to the level at which the cause can be removed and price removal against
@@ -719,6 +723,74 @@ Domain 3's Case study B at deliverable level. The cumulative-effect test — rel
 aggregating above a threshold within a period require the authority appropriate to the aggregate — is
 the countermeasure, and it is the instrument Domain 4, KA 4.4 applies to change.
 
+**The authority column stops at the design authority, and sometimes the decision does not.** In
+sectors operating under an approval regime — where a certifying body, a notified assessor or a
+regulator has a standing in the item's fitness for use, as in aerospace, rail signalling, medical
+devices, pressure systems and nuclear — a repair, a concession or a regrade may engage that body as
+well, potentially **before the item is used**. The professional position is therefore that such a
+disposition is **treated as unavailable until the external position has been established**, and that
+establishing it sits *outside* the project's authority: no internal signature substitutes for it, and
+it is not something a commercial pressure can be allowed to shorten. Whether any external
+notification or acceptance is engaged, by whom, for what and in what form differs by sector and by
+jurisdiction, and is established with the organisation's regulatory or technical-compliance function
+and with the body itself. **Nothing here states the position anywhere, and nothing here
+characterises any disposition as acceptable, or unacceptable, to any body.** The obligation this
+domain does impose is that the disposition record names, for each disposition class, **whether an
+external acceptance is engaged and who established that** — recorded before the disposition is
+granted, not discovered at inspection.
+
+**Making the cumulative-effect test operable.** As stated, the test has three undefined parameters
+and no owner, which is why it is widely written into procedures and nowhere enforced. Five decisions
+make it real, and all five belong in the quality management plan of 9.1.3 rather than in the
+judgement of whoever is granting the concession:
+
+- **Who sets the threshold, and when.** The **sponsor or design authority sets it at baseline** —
+  the party that carries the consequence of an altered product, never the delivery team that would
+  trip it. Setting it late, or setting it by whoever is asked first, produces a threshold shaped by
+  the concessions already granted.
+- **Where the threshold comes from.** It is derived, not chosen round: the same window logic Domain
+  3, KA 3.3.4c derives for a delegation's cumulative rule applies unchanged. The threshold sits
+  comfortably **above** the base-rate aggregate of ordinary concession traffic in that class per
+  period, and comfortably **below** the aggregate at which the delivered product would differ
+  materially from the specified one. A threshold below the base rate re-centralises every
+  disposition and will be abandoned within two months; a threshold above the material-difference
+  point is decorative.
+- **The aggregation period.** Stated explicitly — a quarter, a release, or the deliverable's whole
+  production run — and chosen so that a slow accumulation cannot escape by straddling two periods.
+  Where a deliverable is produced once, the period is the deliverable.
+- **The test for relatedness.** By **what the concessions touch** — the same deliverable, the same
+  interface, the same assured control, the same requirement — never by who requested them or which
+  budget carried them, because the exposure the rule exists to catch is a coherent change to one
+  thing arriving in instalments. Widening the class is the natural error and it multiplies false
+  trips.
+- **The named owner of the running total.** One person maintains it — normally the quality function
+  — and reports it monthly against the threshold whether or not anything moved, because a total
+  reported only when it is interesting cannot be distinguished from a total nobody kept.
+
+**And what a breach triggers, stated in advance.** On breach, further concessions **in that class**
+are suspended pending a decision by the authority appropriate to the aggregate, taken through Domain
+3's escalation machinery at its stated latency rather than by informal referral. The decision before
+that authority is not "may this one be granted?" but the harder and correct question: *given what has
+already been conceded, is the delivered product still the specified one, and if not, what is now
+being accepted?* Suspension is the part that gives the rule teeth, and it is also the part most often
+omitted — a cumulative test with no consequence on breach is a counter, and a counter is not a
+control.
+
+**The record, and how long it lives.** Acceptance records, concession authorisations, disposition
+decisions and the verification evidence behind them are the primary evidence in any later dispute,
+audit, defect claim or inspection — and all of those arrive years after the signature, when the
+people are gone and the memory is not admissible. So each is assigned a **record class**, with a
+**named custodian role**, a **retention period** and a stated **disposal authority**, on the custody
+machinery of Domain 3, KA 3.3.4. The period is set by the applicable regime and by contract rather
+than by the project's convenience, it differs by jurisdiction and by sector, and it is taken from the
+organisation's records, regulatory and legal functions — **nothing in this domain states a legal
+minimum or maximum, and nothing here should be relied on as stating one.** Domain 16, KA 16.4.4 works
+the economics and reaches a conclusion worth carrying here: retaining contract and technical evidence
+pays as insurance at a very low probability of ever needing it, so the reflex to purge for storage
+cost is almost always wrong, and retention is **a schedule by class, never a single rule**. Custody
+transfers to a named continuing role at closure, because the quality function that signed will not
+exist in the organisation that is asked.
+
 ### 9.3.2 Acceptance sampling and what a passing sample establishes
 
 Verifying every item is often uneconomic, so acceptance is taken on a sample. The arithmetic is
@@ -876,7 +948,11 @@ is the line that tells a reviewer whether the plan can support the decision it i
 | **Nonconformance** | Output that does not meet its specified requirement. |
 | **Concession (use as is)** | Acceptance of a nonconformance as it stands, authorised by the party bearing the consequence. |
 | **Regrade** | Use of nonconforming output for a lesser purpose for which it conforms, with traceability. |
-| **Cumulative-effect test** | The rule that related concessions aggregating above a threshold require the authority appropriate to the aggregate. |
+| **Cumulative-effect test** | The rule that related concessions aggregating above a threshold require the authority appropriate to the aggregate. Operable only once five things are fixed in the quality plan: who sets the threshold (sponsor or design authority, at baseline), how it is derived, the aggregation period, the relatedness test, and the named owner of the running total. |
+| **Relatedness class (concessions)** | The set over which the cumulative total is summed — defined by what the concessions touch, never by who requested them; widening it multiplies false trips. |
+| **Suspension on breach** | The consequence that gives the cumulative test teeth: further concessions in that class stop pending a decision by the authority appropriate to the aggregate, taken through the escalation machinery. |
+| **External acceptance** | Where an approval regime applies, a body outside the project may need to be notified of, or to accept, a repair, concession or regrade before use. It sits outside the project's authority and differs by sector and jurisdiction; the record names whether it is engaged and who established that. |
+| **Record class, custodian, retention period** | The three fields that make "the evidence is retained" real: what class of record this is, the named role accountable for it existing, and how long it is held with the source of that period named. Periods come from the applicable regime and the contract, not from this book. |
 | **Acceptance sampling** | Accepting or rejecting a population on the evidence of a sample. |
 | **Confidence bound (`p_upper`)** | `1 − α^(1/n)` — the largest defective fraction consistent with a clean sample of `n`. |
 | **Breakeven defective fraction (`p*`)** | `c/u` — verification cost ÷ escaped-defect cost; above it, full verification pays. Independent of `n`. |
@@ -963,6 +1039,20 @@ layer's miss.
 3. *Who may authorise a concession, and what must accompany it?* — The party bearing the consequence,
    never the producer alone; plus a register entry and a cumulative-effect test, since individually
    minor concessions aggregate into a different product.
+4. *What five things must be fixed before a cumulative-effect test is a control rather than a
+   sentence?* — Who sets the threshold and when (sponsor or design authority, at baseline); how it is
+   derived (above the base-rate aggregate of the class, below the material-difference point); the
+   aggregation period; the relatedness test, defined by what the concessions touch; and the named
+   owner of the running total. Plus the consequence on breach: suspension of further concessions in
+   that class pending the aggregate authority's decision (9.3.1).
+5. *When does a disposition need something the project cannot give it?* — Where an approval regime
+   applies, a repair, concession or regrade may need notification to or acceptance by a certifying
+   body or regulator before use. That sits outside the project's authority, differs by sector and
+   jurisdiction, and is established with the regulatory function and the body itself.
+6. *What three fields turn "the evidence is retained" into a retention obligation?* — Record class,
+   named custodian role, and retention period with the source of that period named — the source being
+   the applicable regime and the contract, not the project's convenience. Nothing in this domain
+   states a legal minimum (Domain 3, KA 3.3.4; Domain 16, KA 16.4.4).
 
 ---
 
@@ -1614,12 +1704,21 @@ the verification evidence · **the sampling plan, if any, with `n`, the acceptan
 bound `1 − 0.05^(1/n)`, the verification unit cost `c`, the escaped-defect unit cost `u`, the breakeven
 `p* = c/u`, and a pass/fail on the test that the bound lies below the breakeven** · the acceptance
 decision with a **named signatory and role** · the open nonconformances at acceptance, each with its
-disposition (rework / repair / concession / regrade / reject), the authority that granted it and the
-party bearing the consequence · and the running **cumulative concession total** against its threshold.
+disposition (rework / repair / concession / regrade / reject), the authority that granted it, the
+party bearing the consequence and **whether an external acceptance is engaged**, naming the body and
+who established that (9.3.1) · and the running **cumulative concession total** against its threshold,
+with the threshold's **source** (sponsor or design authority, set at baseline), its **relatedness
+class**, its **aggregation period** and the **named owner of the running total** printed on the same
+sheet, so the test can be audited rather than merely quoted. Three record fields close it: **record
+class** · **custodian role** · **retention period with the source of the period named**, that source
+being the applicable regime and the contract rather than the project — the periods themselves come
+from the organisation's records, regulatory and legal functions, and nothing in this template states
+a legal minimum (Domain 3, KA 3.3.4; Domain 16, KA 16.4.4).
 Monthly integrity counts, each a number: deliverables accepted without a named signatory; concessions
-granted by the producer; sampling plans failing the self-consistency test; and cumulative concession
-value against threshold. Those four counts will find a quality function's defects before an auditor
-does.
+granted by the producer; sampling plans failing the self-consistency test; cumulative concession
+value against threshold, **with the classes currently suspended on breach**; and records with no
+custodian or no retention period. Those counts will find a quality function's defects before an
+auditor does.
 
 ### Toolkit 9.T.3 — Improvement register: rework, yield and cause
 
@@ -1732,7 +1831,15 @@ the ten after that USD 50,000.
 
 Acceptance is a decision with a named signatory, and the five dispositions carry different authorities
 — a concession belongs to whoever bears the consequence, never to the producer, and must be counted
-cumulatively. Sampling yields the domain's sharpest result: a clean sample of 20 instrument loops
+cumulatively, under a test whose threshold, derivation, period, relatedness class, owner and
+consequence on breach are all fixed at baseline rather than asserted in a procedure. Two things sit
+outside the table: where an approval regime applies, a repair, concession or regrade may additionally
+need a body outside the project to be told or to accept it before use; and the records this KA
+creates — acceptances, concessions, dispositions and their evidence — are the primary evidence of any
+later dispute or inspection, so each carries a class, a custodian and a retention period whose source
+is named, the periods themselves coming from the applicable regime, the contract and the
+organisation's legal and records functions rather than from this book. Sampling yields the domain's
+sharpest result: a clean sample of 20 instrument loops
 bounds the defective fraction only at **13.91 %**, while the breakeven at which full verification pays
 is `p* = c/u = 1,400/12,000 =` **11.67 %**, independent of the sample size — so **the plan cannot
 exclude the defect rate at which its own strategy is wrong**, and five more loops (USD 7,000) repairs

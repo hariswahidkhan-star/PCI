@@ -648,8 +648,9 @@ position with qualified counsel before a coverage case is built on it.
 
 ## Knowledge Area 11.3 — Counterparty, political, currency, interest-rate and force-majeure risk
 
-*Topics: 11.3.1 interest-rate exposure and the hedge ratio · 11.3.2 currency mismatch · 11.3.3 the
-counterparty risk inside the allocation · 11.3.4 political, regulatory and force majeure.*
+*Topics: 11.3.1 interest-rate exposure and the hedge ratio · 11.3.1b the hedging mandate · 11.3.2
+currency mismatch · 11.3.3 the counterparty risk inside the allocation · 11.3.4 political,
+regulatory and force majeure.*
 
 ### 11.3.1 Interest-rate exposure and the hedge ratio
 
@@ -723,6 +724,71 @@ because the curve slopes upward; the all-in fixed cost is therefore **6.20 %**.
 > 70.06 % is the minimum hedge ratio that survives a 200 bp shock. Source: PCI original. Alt text:
 > three coverage curves falling as the reference rate rises, the unhedged curve crossing the covenant
 > threshold at about seventy-four basis points while the hedged lines stay above it throughout.
+
+### 11.3.1b The hedging mandate
+
+The arithmetic above says what ratio to hold. It says nothing about **who decides, who executes,
+what may not be done, and what a reviewer should be able to find** — and hedging is a place where a
+project with impeccable arithmetic and no mandate loses money quickly. Compare §9.1.2, which imposes
+a hard rule on a decision of comparable consequence: no shareholder-loan shield may be modelled
+without a written tax opinion. Hedging deserves the same treatment, and this is it.
+
+**(a) Decision rights.** The **hedging policy** — what is hedged, over what horizon, to what ratio,
+with what instruments — is approved by the **SPV board**, on a mandate agreed with the lenders and
+reflected in the facility's hedging covenant. Individual transactions are then executed by a **named
+officer within that mandate**: named in a board resolution, with an alternate, and with the mandate's
+limits stated in figures rather than in adjectives. **No execution may exceed the documented notional
+or tenor.** The four-eyes rule applies to execution and to confirmation, and the person who executes
+is not the person who confirms.
+
+**(b) The prohibition, stated as a prohibition.** The mandate exists to hedge a **documented
+exposure**. Hedging beyond the amortisation profile, or with no underlying exposure at all, is
+**speculation**, it is outside any project treasury mandate, and finance documents routinely prohibit
+it outright. The subtle version is the one that actually happens: a flat hedge notional against a
+declining balance leaves the project **over-hedged in its later years**, which the worked example
+above already flags as inefficiency — under a mandate it is a **breach**, not an inefficiency,
+because the excess notional is a position taken on rates rather than a hedge of an exposure. The
+notional profile is therefore reconciled to the amortisation schedule period by period, at inception
+and at every prepayment, sweep or resize, and a prepayment that shortens the loan is a hedging event
+before it is a treasury saving.
+
+**(c) The documentation and evidence that must exist.** A reviewer should be able to find, in one
+place: the board resolution approving the policy and the named officers; the **hedging strategy
+letter** delivered to the agent, where the facility requires one; the **master agreement and its
+schedule** with the hedge counterparty, and any credit support annexe, with the elections that were
+actually negotiated rather than the standard form; each **confirmation**, reconciled line by line to
+the amortisation schedule it hedges; the **hedge counterparty credit approval**, recording the
+issuer standing required by the finance documents and the **replacement obligation on downgrade**,
+including who must replace, within what period, and at whose cost; and the mark-to-market position
+reported at each covenant test date, because a break cost is a real obligation that appears in no
+coverage ratio.
+
+**(d) Escalation.** Three events go to the board **and** to the agent **before** anything is
+executed, not after: any breach of, or expected breach of, the covenanted hedging ratio; any
+downgrade of a hedge counterparty below the standing the documents specify; and any proposed unwind,
+novation or restructuring of a hedge. The third is the one most often treated as a treasury decision
+and is not: unwinding a hedge crystallises a mark-to-market amount, changes the covenanted ratio and
+frequently requires a consent, and the temptation to do it is highest exactly when rates have moved
+most.
+
+**(e) Accounting, which is nobody's afterthought and everybody's surprise.** Where a project applies
+hedge accounting, the designation has to be established and documented at inception and maintained
+thereafter; **failing to achieve or to maintain it puts mark-to-market movements through profit and
+loss**, which can disturb accounting-based covenants, reported net worth and distributable reserves
+even though no cash has moved and the economic hedge is working perfectly. Whether hedge accounting
+is available, what the designation and documentation requirements are, and what the consequences of
+losing it would be are **framework- and jurisdiction-specific**, they change, and they must be
+**confirmed with the reporting accountants before a hedge is transacted** — not discovered at the
+first reporting date. Nothing here states the treatment under any framework.
+
+*The standing caution.* What a specific facility's hedging covenant requires, what its hedging
+strategy letter must contain, whether a proposed transaction is inside or outside the mandate it
+creates, and what the consequences of a breach are, are questions on the executed documents for
+qualified counsel, and the accounting is for the reporting accountants. Nothing here states the
+position under any facility or any framework, and nothing here characterises any transaction as
+permitted or prohibited under law. What the professional owes is the mandate, the reconciliation and
+the evidence — and Toolkit 11.T.2 is where the ratio in force, the ratio covenanted and the hedge
+profile against the amortisation profile are already recorded.
 
 ### 11.3.2 Currency mismatch
 
@@ -916,6 +982,11 @@ recurring failure is a monitor that keeps computing correctly against superseded
 | **Conditional probability of default** | Default probability given a claim of the size the allocation contemplates — the relevant figure for transferred risk. |
 | **Waiting period / deductible** | Time or amount an insured bears before indemnity; must be tested against covenant headroom in days. |
 | **Force majeure** | Allocation to nobody: obligations suspend, debt service does not. |
+| **Hedging mandate** | The board-approved policy, agreed with lenders, within which a named officer may execute hedges; limits stated in figures, execution separated from confirmation. |
+| **Over-hedging** | A notional exceeding the exposure it hedges — characteristically a flat notional against a declining balance; under a mandate it is a breach and a rate position, not an inefficiency. |
+| **Hedging strategy letter** | The statement of the hedging approach delivered to the agent where the facility requires it; part of the evidence set a reviewer should be able to find in one place. |
+| **Downgrade replacement obligation** | The requirement to replace a hedge counterparty whose credit standing falls below the level the finance documents specify — who replaces, within what period, at whose cost. |
+| **Hedge-accounting designation** | The documented designation that keeps mark-to-market movements out of profit and loss; framework- and jurisdiction-specific, confirmed with the reporting accountants before a hedge is transacted. |
 
 ### Sample MCQs — KA 11.3
 
@@ -1027,6 +1098,23 @@ reserve fully funded. Two disciplines belong with A — the hedge profile should
 outstanding balance rather than sit flat, and the hedge counterparty's own credit is now inside the
 structure.
 
+**MCQ 11.3-H `[11.3.1b · Evaluation]`** With rates having fallen, a project's treasurer proposes to
+unwind part of the swap, bank the mark-to-market gain and re-hedge later at a better level, holding
+the covenanted ratio on average across the year. The soundest response is:
+- A. proceed — the covenanted ratio is met on average, and crystallising a gain is a treasury decision within the treasurer's normal authority
+- B. stop: the proposal is a rate position rather than a hedge of an exposure, an unwind crystallises a mark-to-market amount and changes the covenanted ratio, and a proposed unwind goes to the board and to the agent before execution, not after ✅
+- C. proceed if the reporting accountants confirm the accounting treatment first, since the accounting is the only open question
+- D. refuse permanently — a hedge once transacted may never be unwound
+
+*Rationale:* the mandate exists to hedge a documented exposure, and a hedge taken off in the
+expectation of re-hedging better is a view on rates (11.3.1b); the escalation rule names an unwind
+explicitly, and the temptation is greatest exactly when rates have moved most. A treats a covenant
+tested at a point as one satisfied on average and treats an escalation event as ordinary authority.
+C identifies a real requirement — the accounting consequence must be confirmed before a hedge is
+transacted — but makes it the whole question. D overstates: unwinds happen, on a prepayment or a
+refinancing; what the mandate requires is that they are approved and consented before they are
+executed. Whether a specific facility requires a consent is a question on the documents for counsel.
+
 ### Self-check — KA 11.3
 
 1. *State Kestrel's three unhedged interest-rate breakevens.* — Covenant at 6.7390 % (+73.9 bp),
@@ -1036,6 +1124,22 @@ structure.
    Kestrel's expected credit loss moves from 46,410 to 371,280 on that correction.
 3. *State the maximum tolerable insurance waiting period for Kestrel and why.* — 21 days: covenant
    headroom of 372,437.72 divided by daily `CFADS` of 17,733.33.
+4. *Who decides the hedge ratio, and who may execute?* — The board approves the policy and the ratio
+   on a mandate agreed with the lenders; a named officer executes within it, with limits stated in
+   figures, and the person who executes does not confirm.
+5. *Why is a flat hedge notional against an amortising loan a breach rather than an inefficiency?* —
+   Because the excess notional hedges no exposure: it is a position taken on rates, which is outside
+   any project treasury mandate and is characteristically prohibited by the finance documents. The
+   notional is reconciled to the amortisation schedule at inception and at every prepayment or
+   resize.
+6. *Name the three events that go to the board and the agent before execution.* — A breach or
+   expected breach of the covenanted hedging ratio; a hedge counterparty downgraded below the
+   specified standing; and any proposed unwind, novation or restructuring of a hedge.
+7. *What can go wrong in the accounts even when the hedge works perfectly?* — Losing hedge-accounting
+   designation puts mark-to-market movements through profit and loss, which can disturb
+   accounting-based covenants and reported net worth with no cash moving. Availability, documentation
+   and consequences are framework- and jurisdiction-specific and are confirmed with the reporting
+   accountants before the hedge is transacted.
 
 ---
 
@@ -1642,7 +1746,11 @@ ground for transfer (control / capacity / neither) · mechanism (clause, guarant
 reserve) · liability cap · credit standing behind the cap · decision and decision owner. Rules: a
 line with "neither" in the grounds column may not be transferred without a written reason from the
 decision owner; a negative breakeven loading is a stop, not a negotiation; and the sheet totals must
-reconcile to the retained register the contingency provision is sized against.
+reconcile to the retained register the contingency provision is sized against. *Retention:* held by
+a named custodian with the contract set the transfers were effected through, for the longest of the
+life of those contracts, the applicable limitation period and any statutory requirement the
+organisation has established — it is the evidence of *why* a risk was transferred or retained, which
+is the question asked when the risk materialises.
 
 ### Toolkit 11.T.2 — The breakeven page (one side of paper, per facility)
 
@@ -1656,7 +1764,12 @@ level at which it fails (Domain 7) · the **outage length in days** at which it 
 insurance waiting period and deductible, every grace period and every cure period · the
 **counterparty concentration schedule**: exposure, mechanism, cap, credit standing, and the
 correlation of the call with that standing. A footer states, in bold, which single exposure is nearest
-its breakeven — and the answer is rarely the one the risk register ranks first.
+its breakeven — and the answer is rarely the one the risk register ranks first. The hedging rows
+carry the mandate reference alongside the ratio: the board resolution, the named executing officer,
+and the date of the last reconciliation of hedge notional to amortisation profile (11.3.1b).
+*Retention:* each issue is kept as issued, by a named custodian, for the life of the facility plus
+the applicable limitation period — a superseded breakeven page is the record of what the project knew
+at that date, and overwriting it destroys exactly that.
 
 ### Toolkit 11.T.3 — Register aggregation and re-cut worksheet
 
@@ -1669,7 +1782,10 @@ assumption; the resulting mean and percentile; and the gap to the sponsor case, 
 stressed `CFADS` and `DSCR`, the **covenant-preserving exposure ceiling** (headroom × `AF(r, n)`), and
 the debt quantum each measure supports at the covenant ratio. A model register in the operating
 envelope appears in the item list with an owner, a validation date, a monitored drift metric and a
-documented manual fallback, or it is recorded as unquantified.
+documented manual fallback, or it is recorded as unquantified. *Retention:* held by a named
+custodian with the evidence references each item cites, for the longest of the facility's life and
+tail, the applicable limitation period and any statutory requirement the organisation has
+established, in a form that reproduces each percentile from its own inputs rather than from a chart.
 
 ## Exam preparation — Domain 11
 

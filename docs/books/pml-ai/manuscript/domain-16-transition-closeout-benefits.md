@@ -44,7 +44,7 @@ mechanism and strike a final account including variations, claim settlement and 
 **compute the monthly carrying cost of an open claim and the breakeven settlement premium**; run a
 post-project review whose lessons are retrievable, and compute the breakeven reuse rate that makes it
 worth holding; build a benefits measurement plan with a named owner, defined measures, a pre-change
-baseline and a stated duration; **decompose realised benefit against the business case into adoption,
+baseline, a **fund type carried forward from the approval** and a stated duration; **decompose realised benefit against the business case into adoption,
 benefit-per-unit and timing components, state the interaction term and the convention that assigns
 it**; test attribution against a comparison cohort established at baseline; set a class-by-class
 retention and deletion schedule for evidence, personal data and the models used in delivery
@@ -65,6 +65,19 @@ regional utility, **BAC USD 4,000,000**, `CPI` **0.91** and `SPI` **0.92** at we
 commissioning test and final account settled in Case study B. The benefits measure used throughout is
 the benefits register's benefit measure (`EVA(benefit)` in the shared symbol table, written in words
 here to avoid the earned-value clash).
+
+**Reference points.** Two areas of this domain have external reference points worth naming, and both
+are named rather than relied upon. For the archive and retention material of KA 16.4.4, **ISO 15489**
+is the document usually named as addressing records management — what a record is, and the controls
+that keep it authentic, reliable and usable over time. For the operational-transition material of
+KA 16.2, **ISO/IEC 20000** is the document usually named as addressing service management, which is
+the discipline the receiving organisation is running when it accepts a service into support. Both are
+voluntary guidance: neither is legislation, neither obliges anyone of itself unless an organisation,
+a contract or a regulator adopts it, and neither states any retention period applicable to any
+organisation — retention requirements come from the applicable regime, the contract and the
+organisation's records and legal functions, as KA 16.4.4 says throughout. They are named here and not
+reproduced, and a reader who wants either should obtain the current edition from its publisher.
+Naming them implies no endorsement in either direction.
 
 ---
 
@@ -951,7 +964,20 @@ AI-assisted decisions.*
 **Definition.** A benefits measurement plan states, for each benefit in the register, the measure and
 its exact definition, the baseline value and the date it was taken, the target and its profile over
 time, the frequency and method of measurement, the named owner accountable for realisation, the
-reporting route, and the date the measurement obligation ends.
+**fund type** — cashable (with the budget line named and the finance owner's written confirmation),
+capacity-released, cost-avoidance or non-financial (Domain 15, KA 15.2.1) — the reporting route, and
+the date the measurement obligation ends.
+
+**The fund type is not an accounting nicety, and it is the element most often missing.** It decides
+*what the realised number can be compared against*, and therefore whether the closing account of
+16.4.2 is answering the question the approval was granted on. A benefit approved on a cash test and
+realised as capacity has not failed; it has been measured against the wrong comparator, and the two
+readings will be argued about for a year. Carrying the classification from the approval into the
+measurement plan is what stops that, and it also carries the **finance owner's confirmation** with
+it: where a benefit was approved as cashable, the measurement plan names the budget line that was to
+come off and the period it was to come off in, so the realisation review can ask the only question
+that settles it — *did it?* An unconfirmed cashable claim is measured as capacity-released until the
+confirmation exists, exactly as it is recorded in the portfolio register.
 
 Every element earns its place by a failure it prevents, and three deserve emphasis because they are
 the ones that make a measured number arguable.
@@ -1238,7 +1264,8 @@ and the date, which is itself retained under the longest applicable period.
 
 | Term | Meaning |
 |---|---|
-| **Benefits measurement plan** | Measure definition, baseline and date, target profile, method, frequency, owner, reporting route and end date, per benefit. |
+| **Benefits measurement plan** | Measure definition, baseline and date, target profile, method, frequency, owner, **fund type**, reporting route and end date, per benefit. |
+| **Fund type (carried from approval)** | Cashable with the budget line named and the finance owner's written confirmation, capacity-released, cost-avoidance or non-financial (Domain 15, KA 15.2.1). It decides what the realised number may be compared against, and an unconfirmed cashable claim is measured as capacity-released. |
 | **Registered measure** | The single definition of a benefit measure fixed before measurement; variants are identified, not substituted. |
 | **Closing account** | Reconciliation of realised value against the promise, decomposed into its causes and reported to the approving body. |
 | **Benefit per unit of adoption-hours (`U`)** | clinics × valuation rate × operating weeks — the constant in `benefit = U × a × h`. |
@@ -1332,6 +1359,11 @@ the omission that made 28.50 % of Meridian's AI-informed decision base unexplain
    as insurance above a 3.64 % need probability, so cost is never the argument for deleting it;
    personal data carries exposure that dwarfs its storage cost, so de-identification pays for itself —
    17,940 net on Meridian's 1.1 TB.
+4. *Why does the measurement plan carry the fund type forward from the approval?* — Because the fund
+   type decides what the realised number may be compared against. A benefit approved on a cash test
+   and realised as capacity has not failed; it has been measured against the wrong comparator. Where
+   a benefit was approved as cashable, the plan names the budget line and the period, so the review
+   can ask whether it came off (16.4.1; Domain 15, KA 15.2.1).
 
 ---
 

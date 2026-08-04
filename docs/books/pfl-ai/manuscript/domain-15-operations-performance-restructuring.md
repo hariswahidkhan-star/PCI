@@ -1089,6 +1089,37 @@ problem and reserves exist for it. If it exceeds sustainable service for the rem
 project has a **capital structure problem**, and only three levers can close it: **time**
 (extend), **principal** (reduce), or **new money** (inject).
 
+> **Professional obligation — read this before the arithmetic.** Reaching the diagnostic above is
+> not a modelling result; it is a **mandatory escalation trigger**. Three things follow, and they
+> come before any option is priced.
+>
+> **Escalate.** The finding goes to the **SPV board** and to **qualified counsel** — in the SPV's
+> jurisdiction of incorporation *and* under the governing law of the finance documents, which are
+> frequently not the same and can give different answers. It is escalated as a finding, on a date,
+> in writing; the three levers are not discussed with a lender before that has happened.
+>
+> **Directors' duties may change, and the consequences are personal.** As a company approaches
+> insolvency, many jurisdictions are understood to shift the focus of directors' duties wholly or
+> partly from shareholders towards creditors, and to attach personal consequences to continuing to
+> trade, to making distributions, or to preferring one creditor over another. What the shift is,
+> when it engages, what it requires and what follows from getting it wrong **differ fundamentally
+> by jurisdiction** and are questions for that counsel. This book states none of them, and
+> characterises no act or omission as lawful or unlawful. The professional point is the one that
+> generalises: **the moment the sustainable-service test fails, the directors are no longer taking
+> ordinary commercial decisions, and they must be advised on what they now owe and to whom before
+> they take the next one.**
+>
+> **Stop the distribution.** Once the sustainable-service test fails, **no distribution is made
+> without a written confirmation that it remains lawful** — obtained for that distribution, on the
+> figures then current, not inherited from a confirmation given when the project was performing.
+> The same discipline applies to any payment that would prefer one creditor, to any grant of new
+> security, and to any transfer of an asset out of the SPV. The distribution lock in the finance
+> documents is a *contractual* test; this is a separate one, it is not in the model, and it is not
+> the treasurer's to judge.
+>
+> Everything below assumes these three have been done. The arithmetic prices options; it does not
+> establish that they are available.
+
 ### 15.4.2 The three restructurings, compared
 
 **Worked example 15.4.2 — Kestrel on the permanent-deterioration branch.**
@@ -1179,6 +1210,19 @@ floor, and no sponsor rationally accepts one leaving less than the value of its 
    a bank owning a desalination plant. That is why Domain 10 (KA 10.4.3) observed that lenders
    rarely accelerate a fundamentally sound project — the floor bounds the negotiation, but the
    negotiation is conducted well inside it.
+
+   And a third qualification, which precedes both. **The floor is a model of a *legally available*
+   enforcement**, and the arithmetic simply assumes that the security can be enforced, on those
+   terms, on that timetable. Whether it can, how quickly, and on what terms is determined by the
+   insolvency and security régime that applies — and a statutory moratorium, a court-supervised
+   process, an obligation to maintain a public service, a grantor's step-in or continuity right, or
+   the reopening of payments made before the process began can each move the floor materially, and
+   not always downwards. **The enforcement position is therefore confirmed with counsel in the
+   relevant jurisdictions before the floor is used as a negotiating boundary**, because a boundary
+   drawn on an enforcement that is not available on those terms is not a boundary at all — it is an
+   assumption presented to the other side as a constraint. Nothing here states the position under
+   any régime, and nothing here characterises any enforcement, payment or distribution as lawful or
+   unlawful.
 
 > **Fig 15.4.1 — The restructuring frontier.** Scatter plot for Kestrel at the end of operating
 > year three on the permanent-deterioration branch. X-axis: lender recovery as the present value at
@@ -1299,6 +1343,44 @@ And **the asset's residual value belongs to whoever the concession says it belon
 usually the grantor and never automatically the sponsor: Domain 4's appraisal treated the tail as
 project cash, and the concession may treat the terminal asset as worth nothing at all to equity.
 
+**Two dimensions the discounted-cash-flow framing leaves out, and both change the conclusion.**
+
+*It is an accounting number before it is a funding profile.* The residual obligation is normally
+recognised as a **provision** in the accounts rather than appearing only when the cash is spent: it
+is measured on an estimate of the cost of settling it, **unwinds through the income statement over
+the concession** as the discounting rewinds, and is **remeasured whenever the estimate or the rate
+changes** — which the condition survey guarantees it will. Two consequences a cash model does not
+show. Reported profit and net assets move on remeasurement, with no cash moving at all; and where
+**any covenant or distribution test has an accounting basis** — a net-worth test, a gearing test on
+book values, a distributable-reserves constraint — a remeasurement can move that test in a year when
+nothing about the project has changed. The applicable reporting framework, whether a provision is
+recognised at all on these facts, how it is measured and how it interacts with any accounting-based
+covenant are **framework- and jurisdiction-specific**, they change, and they are **confirmed with
+the reporting accountants** rather than assumed. Nothing here states the treatment under any
+framework.
+
+*The funding profile is not always negotiable.* The arithmetic above, and its conclusion that "below
+the discount rate, sponsors rationally defer and grantors rationally insist", assumes that the form,
+timing and amount of the security are a matter between the two parties. In several sectors they are
+not. Where decommissioning, restoration or handback security is set by a **statutory régime or a
+regulator** — as is common in extractives, in nuclear and in parts of the water, waste and energy
+sectors — the instrument, the timing and the quantum can be prescribed, reviewed periodically and
+revised upwards, with no scope to defer and sometimes no scope to substitute a cheaper instrument.
+The behavioural conclusion above therefore holds only where the obligation is purely contractual,
+and stating it more broadly than that would be wrong. **The professional first step is accordingly
+to establish whether the obligation is contractual, regulatory or both** — with counsel, in each
+relevant jurisdiction — before any deferral argument is prepared, because a negotiating position
+built on a profile that is not the concessionaire's to choose fails in public.
+
+*And name the owner.* The recommended structure — a reserve plus a handback bond or parent guarantee
+— has an owner and an approver like any other commitment: it is **proposed by the finance director,
+approved by the SPV board**, and checked against the concession and the finance documents for any
+consent it requires. Two items then become **standing board-reported** rather than things discovered
+late: the **date of the next condition survey**, and the **vintage of the current residual-cost
+estimate** with the date it was last revisited. An estimate first tested two to five years before
+expiry is an estimate nobody has challenged for twenty years, and by then the only remaining lever
+is cash.
+
 ### AI in this KA
 
 **Where it earns its place.** Restructuring analysis is combinatorial — tenor, haircut, injection,
@@ -1339,6 +1421,11 @@ about a distressed buyer as an assumption, with an owner.
 | **Yield compression** | Value created by selling at a lower required return than the seller's own — a market view, not performance. |
 | **Handback** | Transfer of the asset at concession end in a specified condition; the residual obligation and its reserve. |
 | **Condition survey** | The pre-expiry inspection that fixes the handback obligation against the funded estimate. |
+| **Escalation trigger (distress)** | The failure of the sustainable-service test, which goes to the board and to counsel as a finding before any option is priced or discussed with a lender. |
+| **Distribution confirmation** | The written confirmation, obtained for the specific distribution on the figures then current, that it remains lawful once the sustainable-service test has failed; separate from the finance documents' contractual lock-up test. |
+| **Legally available enforcement** | The qualification on the enforcement floor: whether security can be enforced, how quickly and on what terms is set by the applicable régime, and moratoria, court processes, service-continuity obligations, grantor step-in and the reopening of earlier payments can all move it. |
+| **Handback provision** | The accounting recognition of the residual obligation, which unwinds over the concession and is remeasured on survey; it can move an accounting-based covenant with no cash moving. |
+| **Prescribed handback security** | Decommissioning or handback security whose form, timing and quantum are set by statute or a regulator rather than negotiated; where it applies, the deferral argument does not. |
 
 ### Sample MCQs — KA 15.4
 
@@ -1441,6 +1528,24 @@ for one period or for the remaining life (15.4.1). C counts breaches, which says
 forecast. D describes a liquidity event reserves exist to absorb: Kestrel's debt service reserve was never
 drawn across six deteriorating years, while the distribution test bound throughout.
 
+**MCQ 15.4-G `[15.4.1 · Evaluation]`** A finance director computes sustainable debt service and finds
+that scheduled service exceeds it for the whole remaining life. A distribution is due to be paid in
+three weeks, and the finance documents' lock-up test is satisfied on the last certified figures. The
+first action is:
+- A. pay the distribution — the contractual lock-up test is the test, and it is satisfied
+- B. escalate the finding in writing to the SPV board and to counsel in the jurisdiction of incorporation and under the governing law of the finance documents, obtain advice on what the directors now owe and to whom, and make no distribution without a written confirmation on the figures then current ✅
+- C. open discussions with the lenders on the three levers, so that a proposal is ready before the news reaches them
+- D. re-run the model on a more optimistic case to confirm the finding before troubling anyone
+
+*Rationale:* the diagnostic is an escalation trigger, not a modelling result (15.4.1). A treats a
+contractual test as the whole question: the lock-up is one test, and the separate question of whether
+a distribution remains lawful is jurisdiction-specific and not the treasurer's to judge. C reverses
+the order — the board and counsel come before the counterparty, and the directors' position must be
+understood before a proposal is made in their name. D is the most dangerous answer because it looks
+diligent: re-running a case is not verification, and delay while duties may already have shifted is
+itself a decision. What the duties are, when they shift and what follows are matters for that
+counsel; nothing here states them.
+
 ### Self-check — KA 15.4
 
 1. *What single test distinguishes distress from a bad period?* — Whether scheduled service exceeds
@@ -1451,6 +1556,22 @@ drawn across six deteriorating years, while the distribution test bound througho
 3. *Why does a grantor insist on early handback funding when it costs the sponsor more?* — Not
    arithmetic but counterparty risk: a late-funded reserve depends on the concessionaire's solvency
    in the final decade. The clean answer is a reserve plus a bond or guarantee.
+4. *What happens the moment the sustainable-service test fails, before any option is priced?* — The
+   finding is escalated in writing to the SPV board and to counsel in the jurisdiction of
+   incorporation and under the governing law of the finance documents; the directors are advised on
+   what their duties now require, because the focus of those duties may shift towards creditors with
+   personal consequences that differ fundamentally by jurisdiction; and no distribution is made
+   without a written confirmation, on the figures then current, that it remains lawful.
+5. *What does the enforcement floor assume that the model does not state?* — That the enforcement it
+   prices is legally available on those terms and that timetable. A moratorium, a court-supervised
+   process, a service-continuity or step-in obligation, or the reopening of earlier payments can
+   each move it, so the position is confirmed with counsel before the floor is used as a
+   negotiating boundary.
+6. *What does the handback discounted-cash-flow framing leave out?* — Two things. The obligation is
+   normally provided for in the accounts, unwinding over the concession and remeasured on survey,
+   which can move an accounting-based covenant with no cash moving; and where the form, timing and
+   quantum of the security are prescribed by statute or a regulator, the deferral conclusion does
+   not apply at all. Establish first whether the obligation is contractual, regulatory or both.
 
 ---
 
@@ -1778,7 +1899,9 @@ decomposed into receivables, payables and inventory · **`CFADS` as defined**, w
 reference. Two columns beside each row: budget and prior period. Two rules: the working-capital
 movement is a derived figure from balance-sheet positions and never a plug; and the sheet carries
 the cash-to-revenue gearing at the foot, so every variance can be read straight into covenant
-headroom.
+headroom. *Retention:* each period's bridge is kept as issued, by a named custodian, with the
+compliance certificate it supported, for the life of the facility plus the applicable limitation
+period — the reported `CFADS` of a given period is what a later dispute or refinancing turns on.
 
 ### Toolkit 15.T.2 — Operating covenant and distribution register (one per facility, per test date)
 
@@ -1789,7 +1912,11 @@ reserve balances against required levels · block-account balance and what it is
 cures used and remaining, with the value of the largest breach each remaining cure would cover ·
 information covenants due and delivered · cross-default links to other facilities (15.A.2). Front
 line, in this order: **which test binds first, by how much cash, in which driver, and how many
-cures remain.**
+cures remain.** *Retention:* each test date's register is kept as issued, by a named custodian, with
+the certificate, any waiver or amendment obtained and the confirmations supporting any distribution
+made, for the life of the facility plus the applicable limitation period. Where the
+sustainable-service test has failed, the written confirmation obtained for each distribution
+(15.4.1) is filed here rather than with the payment instruction.
 
 ### Toolkit 15.T.3 — Transaction decision sheet (refinancing, amendment or restructuring)
 
@@ -1812,6 +1939,13 @@ cures remain.**
 - [ ] Cure inventory stated; the option value of each remaining cure quantified.
 - [ ] AI-produced analysis: the breakeven re-derived independently, one period recomputed by hand,
       every clause reading checked against the document, verifier named.
+- [ ] **Before the sheet is used in a distress case**: the escalation to the board and to counsel
+      recorded with its date; the advice on directors' duties obtained; the distribution position
+      confirmed in writing; and the enforcement floor marked with the jurisdictions in which its
+      availability has been confirmed (15.4.1, 15.4.3).
+- [ ] Retention: the completed sheet, its inputs and the advice it relied on are held together by a
+      named custodian for the longest of the facility's life and tail, the applicable limitation
+      period and any statutory requirement the organisation has established.
 
 ## Exam preparation — Domain 15
 

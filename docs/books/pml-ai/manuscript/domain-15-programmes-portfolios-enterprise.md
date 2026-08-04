@@ -42,6 +42,8 @@ the per-dependency reliability a stated milestone confidence demands, and use it
 better estimating cannot possibly deliver the target; rank the three structural levers — reduce the
 count, decouple, buffer — and price each; build a portfolio benefits bridge that eliminates shared,
 same-pool, cascade and already-committed double counts, and show what elimination does to payback;
+**classify every registered benefit by fund type, name the finance owner who confirms cashability in
+writing, and disclose the composition of a stream before a cash test is applied to it**;
 **allocate a portfolio under a multi-period capacity constraint, demonstrate that aggregate
 feasibility does not imply period feasibility, and quantify what a ranking heuristic leaves on the
 table**; apply Domain 13's flow arithmetic to portfolio work in progress and price the benefit
@@ -61,6 +63,16 @@ health group's **five-component portfolio** (records, referrals interoperability
 scheduling, analytics platform, pharmacy stock automation) with a combined approved cost of
 **USD 4,880,000**, and inside a **five-tier enterprise decision architecture**. Every figure in the
 chapter descends from those.
+
+**Reference points.** Two international documents are the usual reference points for the material of
+this domain: **ISO 21503**, which addresses guidance on programme management, and **ISO 21504**, which
+addresses guidance on portfolio management — both within the **ISO 21500** family Domain 1 introduced,
+and both sitting alongside **ISO 21505** on governance, which Domain 3 names. All are voluntary
+guidance describing practice: none is legislation, none is a certifiable requirement, and none obliges
+anyone of itself unless an organisation, a contract or a regulator adopts it. They are named here and
+not reproduced — no clause, table or process model from any of them appears in this volume, and every
+method below is derived rather than cited — and a reader who wants any of them should obtain the
+current edition from its publisher. Naming them implies no endorsement in either direction.
 
 ---
 
@@ -375,8 +387,30 @@ rebalancing, staging and stopping.*
 
 **Definition.** A portfolio benefits register is the single authoritative statement of what the
 portfolio will deliver, by benefit rather than by component, with each benefit carrying a measure, a
-baseline, a receiving-organisation owner and the components that contribute to it. It is organised by
-benefit precisely so that two components contributing to one benefit cannot each claim it.
+baseline, a receiving-organisation owner, a **fund-type classification** and the components that
+contribute to it. It is organised by benefit precisely so that two components contributing to one
+benefit cannot each claim it.
+
+**The classification is mandatory, and it is the field portfolios most often omit.** Every benefit is
+recorded as exactly one of four types, because a portfolio total that mixes them silently cannot be
+tested against any investment rule:
+
+| Type | What it means | What it can be compared against |
+|---|---|---|
+| **Cashable** | A budget line is removed or reduced, and the money is available to spend on something else. The **budget line is named** in the register. | A cash outlay — payback, cash NPV, funding cases |
+| **Capacity-released** | Time, sessions, space or licences are freed. Nothing leaves anyone's budget; the value is realised only if the freed capacity is redeployed to something the organisation wanted. | Other capacity, or a cash figure only once redeployment is agreed and named |
+| **Cost-avoidance** | A cost that would otherwise have been incurred is not incurred. Real, and not a saving against today's budget. | A future outlay, on a stated counterfactual |
+| **Non-financial** | Quality, safety, experience, compliance posture, decision quality. | Its own measure, reported in its own unit |
+
+**And the decision right, which is the part that makes the classification more than a label.** The
+**finance owner of the affected budget** — not the portfolio board, and emphatically not the
+delivering component — confirms cashability **in writing**, naming the budget line and the period
+from which it comes off. Until that confirmation exists, **an unconfirmed cashable claim is recorded
+as capacity-released.** The reason is not bureaucratic: a component cannot remove money from a budget
+it does not hold, and the commonest way a portfolio ends up with an approval finance cannot honour is
+that nobody with the authority to remove the budget was ever asked. Domain 2, KA 2.3.2's
+cash-releasing/non-cash-releasing distinction is the project-level version of the same test; this is
+it applied where the money is actually held.
 
 Component business cases, written separately to be approved, overstate the portfolio's total for four
 distinct and separately detectable reasons. Naming them matters because each has a different
@@ -444,6 +478,39 @@ contractual price reduction. Correction: reset the baseline to the committed pos
    is an enterprise asset and its cap is an enterprise fact, which is why benefits are owned by the
    receiving organisation and not by the delivering component (Domain 2, KA 2.3.2; Domain 16 measures
    them).
+
+   **Fourth, and it is the disclosure this example would be dishonest without: the payback test above
+   is being applied to a mixed stream, by the committee's own convention.** Simple payback compares a
+   cash outlay against a cash return. The USD 4,880,000 is cash. The benefit stream it is divided
+   into is not homogeneous, and the register's fund-type column is what says so:
+
+   - **Released clinician time** from chasing paper referrals is **capacity-released**. It leaves
+     nobody's budget. It is valuable — it is the largest single element of Meridian's own case — but
+     it repays a cash outlay only to the extent the freed sessions are redeployed to something the
+     organisation would otherwise have bought.
+   - The **administrative posts valued at 42,000 each** are **cashable only if the establishment is
+     reduced and the budget line deleted**, which is precisely the confirmation the finance owner of
+     that budget must give in writing. Absent it, they are capacity-released, and the same-pool
+     correction above has already shown that the two components between them claimed more posts than
+     the pool contains.
+   - **"Improved decision-making"** is **non-financial**, and it is also the cascade double count
+     eliminated in adjustment (iii) — which is not a coincidence. Unclassified benefits are where
+     double counts hide, because a benefit with no fund type has no owner who would notice it being
+     claimed twice.
+   - **Pharmacy stock savings** are **cost-avoidance or cashable** depending on whether the stock
+     budget is actually reduced — a question for the budget holder, not for the component.
+
+   None of that changes a figure above, and stating it changes what the figures **mean**. The
+   professional obligation is therefore not to abandon the committee's rule but to **disclose the
+   composition of the denominator the rule is being applied to**, so that the committee applies its
+   convention knowingly: *this is a four-year payback test run against a mixed stream, of which the
+   following is confirmed cashable by the named budget holders and the following is not.* A committee
+   told that will sometimes still approve, and it will approve something it understands. A committee
+   not told that has been given a cash-shaped number that finance cannot honour, and the approval it
+   grants is the one Domain 16's benefits review reopens. The register's classification and the
+   finance owner's written confirmation are what make the sentence available; without them the honest
+   payback figure of 4.3129 years is more defensible than the unreconciled 3.5188 and is still a
+   comparison of cash against something that is not all cash.
 
 ### 15.2.2 Balancing under a binding constraint
 
@@ -588,7 +655,10 @@ marginal.
 
 | Term | Meaning |
 |---|---|
-| **Portfolio benefits register** | The authoritative statement of portfolio benefits, organised by benefit rather than by component. |
+| **Portfolio benefits register** | The authoritative statement of portfolio benefits, organised by benefit rather than by component, each carrying a measure, a baseline, a receiving-organisation owner, a fund type and its contributing components. |
+| **Fund type** | Cashable (a named budget line is removed), capacity-released (time or space freed, no budget moves), cost-avoidance (a future outlay not incurred) or non-financial. Mandatory, because a total that mixes them cannot be tested against a cash rule. |
+| **Cashability confirmation** | The written confirmation, from the finance owner of the affected budget, that a claimed saving is budget-removable and from which period. Until it exists the claim is carried as capacity-released. |
+| **Mixed-stream test** | An investment rule applied to a benefit stream of more than one fund type. Permitted as a committee's own convention, but only where the composition of the denominator is disclosed with the result. |
 | **Benefits bridge** | The reconciliation from gross claimed benefit through eliminations and adoption to net realistic benefit. |
 | **Shared benefit** | One benefit claimed by two components that both genuinely contribute to it; counted once. |
 | **Same-pool over-claim** | Aggregate claims on a resource pool exceeding the pool; capped at the pool and allocated. |
@@ -672,6 +742,14 @@ prevents a wrong decision and creates no value.
 3. *What is the honest output of a portfolio enumeration?* — The feasible frontier: the top few sets,
    the binding period for each rejected one, and what distinguishes them — not a single winner, since
    the value estimates cannot support that precision.
+4. *Name the four fund types, and who confirms the first of them.* — Cashable, capacity-released,
+   cost-avoidance, non-financial. The **finance owner of the affected budget** confirms cashability
+   in writing, naming the budget line and the period; not the portfolio board and not the delivering
+   component. An unconfirmed cashable claim is carried as capacity-released (15.2.1).
+5. *What must accompany a payback result computed on a mixed benefit stream?* — The composition of
+   the denominator: which elements are confirmed cashable and which are not. A cash test applied to
+   an undisclosed mixture produces a cash-shaped number finance cannot honour, and the approval it
+   supports is the one Domain 16's benefits review reopens.
 
 ---
 
@@ -1536,14 +1614,20 @@ used for work in flight.
 ### Toolkit 15.T.3 — Portfolio benefits bridge
 
 A single reconciliation, top to bottom, published with every investment paper: gross claimed benefit
-at full potential by component; then a line per elimination, each tagged **shared / same-pool /
-cascade / already-committed**, with the components affected, the basis, and the receiving owner who
-has accepted it; then net full-potential benefit and the **elimination rate**; then the adoption
-adjustment with its source; then net realistic benefit. Beneath it: the investment rule being applied,
-the result, and the **breakeven elimination rate** at which the rule just holds. Two integrity checks,
-both counts: same-pool claims reconciled against establishment data, and benefits accepted in writing
-by the receiving budget holder. A bridge whose eliminations no receiving owner has signed is a
-calculation, not a reconciliation.
+at full potential by component, **each line carrying its fund type — cashable (with the budget line
+named) / capacity-released / cost-avoidance / non-financial**; then a line per elimination, each
+tagged **shared / same-pool / cascade / already-committed**, with the components affected, the basis,
+and the receiving owner who has accepted it; then net full-potential benefit and the **elimination
+rate**; then the adoption adjustment with its source; then net realistic benefit, **subtotalled by
+fund type**. Beneath it: the investment rule being applied, **the composition of the stream the rule
+is being applied to**, the result, and the **breakeven elimination rate** at which the rule just
+holds. Four integrity checks, all counts: same-pool claims reconciled against establishment data;
+benefits accepted in writing by the receiving budget holder; **benefits classified cashable and
+confirmed in writing by the finance owner of the named budget line**; and **benefits classified
+cashable but not yet so confirmed** — which are carried as capacity-released until they are (15.2.1).
+A bridge whose eliminations no receiving owner has signed is a calculation, not a reconciliation; a
+bridge that applies a cash test to an unclassified stream is a calculation whose denominator nobody
+has disclosed.
 
 ---
 
@@ -1632,7 +1716,12 @@ payback from **3.5188** to **4.3129 years** and fails a four-year rule whose bre
 rate was **12.03 %**. Eliminating a double count creates no value; it prevents a wrong decision, which
 is why it cannot appear in the enterprise PMO's value case — a case that here shows a **89,390**
 year-one surplus on a one-off and a **476,350** year-two deficit, closable only by capturing
-**47.16 %** of the recurring allocation gap.
+**47.16 %** of the recurring allocation gap. And the reconciled figure is still a mixed
+stream: every registered benefit carries a **fund type** — cashable with its budget line named,
+capacity-released, cost-avoidance or non-financial — the **finance owner of the affected budget**
+confirms cashability in writing or the claim is carried as capacity-released, and a cash test applied
+to the total is disclosed as what it is, a committee convention over a mixture whose composition is
+printed beside the result.
 
 **And the decisions themselves have a price.** Five tiers, 85 decisions and **468 gross
 latency-weeks** cost **USD 1,670,760** a year at Meridian's cost of delay. One week off every paper

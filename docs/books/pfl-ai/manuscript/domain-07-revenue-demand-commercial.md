@@ -223,6 +223,69 @@ were one.
    risk it controls but must then actually control, with Domain 10's maintenance reserve funded and
    the outage plan built around the deduction formula rather than engineering convenience.
 
+**Who measures, who certifies, and what happens while it is disputed.** The arithmetic above assumes
+a number — availability — arrives each month and is agreed. It does not arrive; it is *produced*, by
+somebody, from something, and it can be contested. The governance layer around the formula decides
+whether a deduction is ever actually applied, and it is a bankability question of the same order as
+the multiplier.
+
+*The measurement source.* A deduction formula is only as good as the metering behind it. What
+physically measures availability — the plant control system, a revenue meter, an offtaker's own
+instrumentation, a manual log — and how is it calibrated, by whom, on what cycle, and to what
+tolerance? Who may recalibrate, and does a recalibration reopen prior periods? What happens during a
+metering outage: is availability deemed, estimated from a preceding period, or treated as nil? A
+structure in which the offtaker owns the meters and the deemed-availability rule on meter failure is
+"nil" has transferred more risk than the multiplier suggests. **Metering, calibration and the
+failure rule are bankability conditions** and belong in the condition register of Domain 5, not in a
+technical annexe.
+
+*The certification chain.* Somebody produces the primary availability record and somebody certifies
+it. The three common architectures — SPV self-reports and the offtaker may challenge; the offtaker
+measures and the SPV may challenge; an independent engineer certifies and both may challenge — put
+the burden of proof in three different places, and the burden of proof is worth more than a
+percentage point of multiplier. Establish which one the contract creates, what the challenge window
+is, and **what happens to a period nobody challenges in time**, because an unchallenged month is
+usually final.
+
+*The evidence, and how long it must survive.* Whoever bears the burden must be able to prove the
+month years later. The underlying availability data — meter records, control-system logs, outage
+records with their causes and permits, maintenance records, correspondence notifying outages — is
+retained through the contractual challenge window **and** the period in which a dispute about it can
+still be brought, which is longer and is jurisdiction-specific. The standing retention rule in the
+toolkit preamble applies: period, form, named custodian, in a form that opens without the system
+that created it, since control-system data is exactly the kind that becomes unreadable when the
+plant's software is upgraded.
+
+*Escalation, and who may settle.* The escalation route is typically a stated sequence — operational
+meeting, senior representatives, then expert determination or arbitration — and its cost allocation
+matters, because a mechanism in which each party bears its own costs is one the larger party can
+afford to use for its own sake. Two internal locks belong on the SPV side. First, **name who may
+settle a deduction claim on the SPV's behalf**, with a threshold above which it goes to the board.
+Second, and more easily missed: **a settlement that changes a covenant ratio is not an operational
+decision.** Agreeing a disputed deduction that moves the coverage ratio, or conceding a run of
+months to close a commercial argument, reaches into the finance documents; whether it needs anything
+of the lenders is a document question, and the answer is established before the concession is
+offered, not after.
+
+*The cash-timing consequence, which is the one with a number attached.* Ask whether deductions are
+**applied pending resolution**. If they are — a pay-then-argue mechanism — a disputed operational
+judgment becomes an immediate cash reduction and therefore an immediate coverage event, **before
+anyone has ruled on it**. On the table above, a contested run of deductions equivalent to three
+points of availability moves reported coverage by roughly the slope already computed, and it does so
+in the quarter the dispute starts rather than the quarter it ends. If instead the disputed amount is
+withheld or escrowed pending determination, the exposure is to the counterparty's credit and to the
+delay, which is a different risk and a smaller one. This single question — pay first or argue first
+— changes the reserve the structure needs, and it is the question most often left to the operations
+team to discover.
+
+*The standing caution.* Whether deductions may be applied pending resolution, what remedy attaches
+to a deduction later found to be wrongly applied, whether an unchallenged period is conclusive, and
+how long a dispute about a past month may be brought are **drafting and jurisdiction questions for
+qualified counsel on the governing law of the contract**. Nothing here states the position in any
+jurisdiction, and nothing here characterises any deduction as rightful or wrongful. What the
+professional owes is to establish each of them from the executed documents, record them in
+Toolkit 7.T.1, and make sure the operations team that will live with them has read the answer.
+
 ### AI in this KA
 
 Machine assistance earns its place in three tasks. **Extracting the payment mechanism** — charge
@@ -232,6 +295,16 @@ output is a specification a modeller can implement (Toolkit 7.T.1). **Reconcilin
 tariff to the contractual tariff** by recomputing a historical invoice from the extracted formula
 is a genuine test with a right answer. And **monitoring deductions** against availability data as
 it accrues turns a quarterly surprise into a weekly signal.
+
+Before any of it, the data question, which comes first: an offtake or concession contract — and above
+all an **unsigned draft** of one — is the highest-classification material in the transaction, because
+it carries the counterparty's position as well as the project's. It is processed **only in an
+environment approved for that data classification and permitted by the confidentiality undertakings
+that cover it**, and establishing that permission is a precondition of the extraction rather than a
+review of it. It is usually a permitted-recipient question rather than a tool-quality one: an
+approved tool used outside the disclosure the undertaking permits is still a disclosure, and a
+grantor's tender rules frequently restrict where bid material may be processed at all. Domain 1,
+KA 1.3.4 states the rule; Domain 16 builds the machinery.
 
 Where it must not go: **the deduction formula must never be paraphrased into the model.** A summary
 rendering "1.5 times the availability shortfall applied to the capacity charge" as a pro-rata
@@ -254,6 +327,10 @@ decides and remains accountable.**
 | **Take-or-pay** | Contractual floor volume paid whether taken or not; often subject to make-up rights. |
 | **Availability deduction** | Reduction in the capacity charge for failing the availability standard, commonly at a multiplier. |
 | **Deduction multiplier** | The factor applied to the availability shortfall; converts one operational point into more than one point of cash. |
+| **Deemed availability** | The value availability takes when it cannot be measured — deemed, estimated from a prior period, or nil; a term with the same cash consequence as the multiplier. |
+| **Certification chain** | Who produces the primary availability record, who certifies it, who may challenge, and within what window; it decides where the burden of proof sits. |
+| **Pay-then-argue mechanism** | A deduction regime under which amounts are applied pending resolution, so a contested operational judgment becomes an immediate coverage event before anyone has ruled on it. |
+| **Settlement lock** | The rule that settling a deduction claim which moves a covenant ratio is not a purely operational decision; it is checked against the finance documents before it is offered. |
 
 ### Sample MCQs — KA 7.1
 
@@ -359,6 +436,24 @@ risk the project must then genuinely manage (7.1.2, 7.1.3). A ignores that the t
 risks behind. C reverses the availability mechanism, whose whole point is that the project answers for
 availability. D names risks neither instrument addresses.
 
+**MCQ 7.1-H `[7.1.3 · Evaluation]`** Two bidders' term sheets carry the identical deduction formula
+and the identical 1.5× multiplier. In sheet A the offtaker owns and maintains the availability
+meters, availability is deemed nil during any metering failure, and deductions are applied pending
+resolution of a dispute. In sheet B the meters are jointly witnessed and independently calibrated,
+metering failure is deemed at the preceding period's availability, and disputed deductions are
+escrowed until determination. The correct assessment is:
+- A. the two are the same exposure, since the multiplier and the formula are identical and the multiplier is what does the damage
+- B. sheet A carries materially more exposure: the measurement source, the deemed-availability rule and the pay-then-argue timing each move cash independently of the formula, and the last of them converts a contested operational judgment into an immediate coverage event before anyone has ruled ✅
+- C. sheet B is worse, because escrow exposes the project to the offtaker's credit for the escrowed amounts
+- D. the difference is a technical-adviser matter and does not belong in a commercial comparison
+
+*Rationale:* the formula is only the last step; who measures, what is deemed when measurement fails,
+and whether cash moves before determination decide whether a deduction is ever actually applied and
+when (7.1.3). A stops at the arithmetic the domain has already priced. C identifies a real but
+smaller exposure — credit and delay on the escrowed sum — and weighs it against an immediate
+coverage event. D is the misclassification the section exists to correct: these are first-order
+commercial terms.
+
 ### Self-check — KA 7.1
 
 1. *Why does an expected `DSCR` convey nothing about bankability?* — Coverage is tested in a
@@ -368,6 +463,21 @@ availability. D names risks neither instrument addresses.
    availability; `CFADS` of 6,011,562, which is 372,438 of annual cash below base (Domain 10).
 3. *What has an availability structure actually done to a project's risk?* — Converted demand
    risk into operational risk, which the project controls but must then genuinely manage.
+4. *Who produces the availability number the deduction formula operates on?* — Somebody, from
+   something: the certification chain — primary record, certifier, challenge window, and what
+   happens to a month nobody challenges — decides where the burden of proof sits, and that is worth
+   more than a percentage point of multiplier.
+5. *What is the deemed-availability rule, and why does it matter?* — What availability is taken to
+   be when it cannot be measured. A structure in which the offtaker owns the meters and failure is
+   deemed nil has transferred more risk than the multiplier suggests.
+6. *Why is "are deductions applied pending resolution?" the question with a number attached?* —
+   Because a pay-then-argue mechanism turns a contested operational judgment into an immediate cash
+   reduction and therefore an immediate coverage event, in the quarter the dispute starts rather
+   than the quarter it ends. Withholding or escrow converts the same exposure into counterparty
+   credit and delay, which is smaller.
+7. *Who may settle a disputed deduction?* — A named person, below a stated threshold — and never
+   where the settlement moves a covenant ratio, which reaches into the finance documents and is
+   checked against them before anything is offered.
 
 ---
 
@@ -1160,6 +1270,18 @@ and run large stress grids including the correlated bundles a workshop would nev
 extract guarantee, letter-of-credit and termination-compensation terms into the structured form
 Toolkit 7.T.3 requires.
 
+**Before any of it, the data question, which comes first.** A counterparty credit assessment is
+material about an identified third party, assembled from sources with their own terms of use and
+often held under a confidentiality undertaking given to that counterparty; the guarantee and
+termination-compensation terms being extracted are frequently unsigned. All of it is processed
+**only in an environment approved for that data classification and permitted by the confidentiality
+undertakings that cover it**, and establishing that permission is a precondition of the task rather
+than a review of it. Where the assessment records information about identified individuals — a
+counterparty's directors, owners or politically exposed persons in its control chain — the
+data-protection basis for holding and processing it is settled with the organisation's
+data-protection adviser before the file is built, and the retention position is set at the same time
+(Toolkit 7.T.3). Domain 1, KA 1.3.4 states the rule; Domain 16 builds the machinery.
+
 **They must not**: assign a `PD`, `LGD` or recovery assumption that becomes an input to a financing
 decision without a named professional adopting it, because each embeds a legal and market judgment
 a model states with unwarranted confidence; conclude whether facts constitute a counterparty default
@@ -1621,6 +1743,25 @@ is reportable until a historical or hypothetical period has been computed from t
 hand and agreed with the model** (7.1.3). The deduction row carries its multiplier, its cap and
 its cure regime explicitly, because a summary that omits them understates exposure by a third.
 
+*Section B — the governance of the measurement, one block per measured quantity (KA 7.1.3).*
+**Measurement:** the instrument or system of record · who owns and maintains it · the calibration
+regime, its cycle and its tolerance · who may recalibrate and whether a recalibration reopens prior
+periods · the **deemed-availability rule on metering failure**, quoted from the clause.
+**Certification:** who produces the primary record · who certifies it · the challenge window and what
+happens to a period nobody challenges in time. **Evidence:** the underlying data to be retained
+(meter records, control-system logs, outage records with causes, maintenance records, outage
+notifications), the retention period against the longer of the challenge window and the period in
+which a dispute may still be brought, the form (must open without the system that created it) and
+the named custodian. **Dispute:** the escalation sequence with its time limits · the determination
+forum · who bears the cost · **who may settle on the SPV's behalf, and the threshold above which the
+board decides** · the standing lock that a settlement changing a covenant ratio is not an operational
+decision and is checked against the finance documents first. **Cash timing:** whether deductions are
+applied pending resolution, or withheld or escrowed — stated as a yes/no on the face of the sheet,
+with the reserve consequence noted. Rule: the periods, the conclusiveness of an unchallenged month
+and the remedy for a deduction later found to be wrongly applied are established from the executed
+documents with qualified counsel in the governing jurisdiction, and recorded here as answers rather
+than assumptions.
+
 ### Toolkit 7.T.2 — Indexation mismatch map
 
 Domain 3's escalation register (Toolkit 3.T.3) catalogues each line's index mechanics. This
@@ -1646,6 +1787,15 @@ not on revenue · the correlated bundles with their rationale · the **minimum**
 loan life in each · the reverse stress result for every covenant, expressed as a tolerance in each
 driver, with a note on **who controls that driver**. Front page: the smallest tolerance, its
 driver, its owner, and the date it was last recomputed.
+
+*Retention and data protection.* Section A holds information about identified third parties, and
+frequently about identified individuals in a counterparty's ownership, control or management chain.
+Record against the pack: its retention period and basis, its form, and its named custodian, on the
+standing basis in the toolkit preamble; the confidentiality undertaking under which each item of
+counterparty information is held, and any restriction on onward disclosure; and the lawful basis and
+minimisation position for the personal information it contains, settled with the organisation's
+data-protection adviser before the pack is built rather than at the first refresh. The applicable
+periods and obligations are jurisdiction-specific and are confirmed, not assumed.
 
 ## Exam preparation — Domain 7
 

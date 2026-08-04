@@ -103,6 +103,21 @@ precisely the losses a project company actually suffers — forgone revenue, fin
 profit — which is why liquidated damages exist at all: they are the agreed, recoverable
 substitute for a loss the contract has excluded.
 
+**The arm's-length rule is not only an O&M rule.** Sponsor-affiliate contracting is at least as
+common on the construction side as on the operating side, and the six limits above are precisely
+where an affiliate relationship shows: a price, a damages rate, two sub-caps and an aggregate cap
+negotiated between related parties are terms nobody was fully adverse about. Wherever the EPC
+contractor, the operator, a supplier under a material input contract, or the provider of any
+instrument in the security package (KA 12.3) is an **affiliate of a sponsor**, the relationship is
+**disclosed**, the terms are **tested on an arm's-length basis** by someone outside the commercial
+line, and the body that approved the related-party arrangement is **recorded** — because a lender is
+being asked to accept related-party terms as a bankability item (Domain 1, KA 1.3.3; the O&M case is
+developed at 12.1.4, and the double-counting it creates in the security package at 12.3.2). Whether
+a related-party contract also engages any approval requirement under the SPV's constitution, the
+shareholders' agreement or the finance documents is a question on those documents; it is
+characteristically a reserved matter (Domain 5, KA 5.2.3), and it is established rather than
+assumed.
+
 Whether a particular damages provision is enforceable as agreed compensation, whether it is
 vulnerable to challenge as a penalty, how "consequential loss" is construed, and whether an
 aggregate cap survives particular breaches are all **jurisdiction-specific questions of law and
@@ -879,6 +894,22 @@ cap?" but "**what is the risk-adjusted cover, and how does it compare with the e
    range, a named owner for the assessment, and a structural response — an unconditional
    instrument — rather than a more confident number.
 
+   **And a fourth discipline, which the 0.70 conceals more completely than the correlation does.**
+   Where the guarantor sits **in the sponsor's own group**, the cover and the equity support are not
+   independent — they rest on one balance sheet, and the project has counted it more than once. Before
+   the risk-adjusted total is reported, identify **every other obligation resting on that same
+   obligor** and state the aggregate: the equity commitment and any commitment letter behind it
+   (Domain 5, KA 5.2.3); the contingent equity and cost-overrun undertaking (Domain 9); the in-balance
+   cash-call obligation during construction (Domain 14); guarantees given on the group's *other*
+   projects, which the project team will not find without asking; and this guarantee. The number that
+   matters is not the 4,800,000 in the table but the total the group is standing behind across every
+   line of the structure, because the events that call one of them are the events that call the
+   others. A security package whose parent guarantee and whose equity support are the same covenant
+   has diversified nothing, and reporting the two separately without the aggregate is the same
+   reporting failure as netting cover against exposure — the numbers are all correct and the picture
+   is wrong. State the aggregate, name the obligor, and say plainly that the cover and the equity
+   support are correlated.
+
 ### 12.3.3 Direct agreements and step-in
 
 **Definition.** A **direct agreement** is a tripartite contract among the project company, a key
@@ -953,6 +984,8 @@ each instrument is callable as modelled before any recovery appears in a lender 
 | **Direct agreement** | Tripartite notice, cure and step-in rights making contracts survive SPV default. |
 | **Step-in** | Lenders or their nominee assuming a contract instead of allowing termination. |
 | **Instrument expiry gap** | The dated hole where an instrument expires before the exposure it covers. |
+| **Related-party instrument** | Cover provided by an entity in a sponsor's group; counted only once the arm's-length test, the disclosure and the approving body are recorded. |
+| **Same-obligor aggregate** | The total of every obligation resting on one group balance sheet — guarantee, equity commitment, contingent equity, cost-overrun undertaking, cash call, other projects' guarantees; the number the risk-adjusted total conceals. |
 
 ### Sample MCQs — KA 12.3
 
@@ -1050,6 +1083,22 @@ is a gap in the stack with a date on it (12.3.1). A reduces three attributes to 
 price of the certainty, not an extra. C confuses credit support with the lenders' own asset security. B
 asserts as a rule what is a drafting question in each instrument.
 
+**MCQ 12.3-F `[12.3.2 · Analysis]`** A security package shows a parent company guarantee from the
+lead sponsor's group behind the EPC contractor, assessed at a 0.70 probability of payment. The same
+group has given the equity commitment, the contingent equity and the cost-overrun undertaking. The
+reviewer's first requirement is:
+- A. none — the 0.70 already prices the guarantor's credit, and each obligation has been assessed on its own terms
+- B. the aggregate of every obligation resting on that one obligor, stated beside the risk-adjusted cover, because the guarantee and the equity support are not independent and the events that call one call the others ✅
+- C. that the guarantee be replaced by an on-demand bond, since a 0.70 assessment is never acceptable
+- D. that the probability be lowered from 0.70 to reflect the additional obligations
+
+*Rationale:* the assessment prices the obligor's credit, not the number of claims that will arrive
+at once; a package whose parent guarantee and equity support are the same covenant has diversified
+nothing, and the aggregate is the disclosure (12.3.2). C converts a diligence finding into a
+negotiating demand without pricing the trade the 1.4286× equivalence makes available. D buries the
+finding inside a probability, which is exactly the reporting failure this KA exists to prevent —
+adjust the number and the reader can no longer see what was adjusted or why.
+
 ### Self-check — KA 12.3
 
 1. *State the sufficiency test in one line.* — Risk-adjusted cover, Σ(face × probability of
@@ -1058,6 +1107,13 @@ asserts as a rule what is a drafting question in each instrument.
    equivalent face is 1.4286× the bond — 6,857,143 for a 4,800,000 bond.
 3. *Which instrument attribute is most often missed?* — Expiry: an instrument that expires before
    its exposure ends is a dated hole in the stack.
+4. *Why is a sponsor-group guarantee not independent of the equity support?* — Because both rest on
+   one balance sheet, and the events that call one call the others. State the aggregate of every
+   obligation on that obligor — equity commitment, contingent equity, cost-overrun undertaking,
+   in-balance cash call, other projects' guarantees — beside the risk-adjusted cover.
+5. *What must be recorded before a related-party instrument counts as cover?* — The relationship
+   disclosed, the terms tested on an arm's-length basis by someone outside the commercial line, and
+   the body that approved the arrangement, with the date and any consent required for it.
 
 ---
 
@@ -1134,6 +1190,47 @@ well as individual thresholds belong in the drafting.
 contract. Its commercial value to either party is not the sum claimed. It is the **expected
 recovery, net of the cost of obtaining it, discounted for the time it takes** — and because
 disputes are slow and expensive, that arithmetic frequently inverts the negotiating intuition.
+
+**Notice, records and the back-to-back check — before any of the arithmetic.** The expected-recovery
+model below operates on merits and process economics. It assumes something it never states: that the
+claim exists as an entitlement at all. Under most standard forms it does not, unless notice was
+given. Five things are established as **dated facts** before a single probability is assigned.
+
+- **The notice position, first and as a fact rather than an argument.** Service of a valid notice
+  within a stated period after the event, in the stated form, to the stated recipient, is commonly a
+  **condition precedent to entitlement** — which means a claim not notified in time can be worth
+  nothing regardless of its merits. The professional consequence is procedural: **compute nothing
+  until the notice position is established**, because a probability set applied to an entitlement
+  that was never preserved produces a defensible-looking expected recovery for a claim that has
+  none, and that number then travels into a board paper, a lender report and a provision.
+- **The back-to-back check, which runs upstream.** Where the project company receives a claim from
+  its contractor and the same event gives it a claim against the grantor or the offtaker, it must
+  pass the claim up within **that** contract's own notice period — which is frequently **shorter**
+  than the one it has just been given, and starts from the event rather than from the day the
+  contractor's notice arrived. Any gap between the two periods is an **uninsured exposure**, and it
+  is identified at contract stage rather than at claim stage, alongside the threshold and approval
+  architecture of §12.4.2. A project company with a 28-day upstream period and a 42-day downstream
+  one has bought a fortnight of exposure on every compensation event for the life of the contract.
+- **Contemporaneous records are the evidence quantum is proved on.** Site records, correspondence,
+  programme updates, resource returns and cost records must be maintained **from the date of the
+  event**, not assembled at claim stage — a record created afterwards is an argument about what
+  happened, while a record created at the time is evidence of it. The gap between the two is
+  routinely the difference between the 1,050,000 assessment below and the 1,870,000 claimed. Records
+  are retained on the standing basis in the toolkit preamble, for at least as long as a claim on the
+  event can still be brought.
+- **A named owner and an internal deadline.** The **project company's contract manager** owns
+  identification of a potentially notifiable event, and the internal deadline for escalating one to
+  that owner and to counsel is set **well inside** the contractual period — because the contractual
+  clock runs from the event, not from the day somebody realised it mattered. An organisation with no
+  internal deadline has delegated its notice position to whoever happened to notice.
+- **The standing caution.** Whether a time bar operates as a strict condition precedent, whether it
+  can be relieved and on what basis, what a valid notice must contain and to whom it must go, are
+  **jurisdiction- and form-specific questions for qualified counsel** on the executed contract.
+  Nothing here states the position under any form or any governing law, and nothing here
+  characterises any notice as valid or invalid. What the professional owes is that the question is
+  asked, dated and answered *before* the claim is valued.
+
+Only once those five are settled does the arithmetic below mean anything.
 
 **Worked example 12.4.3 — Kestrel's contractor claims 90 days and 1,870,000.**
 
@@ -1281,6 +1378,9 @@ settlement ceiling is used in a negotiation mandate.
 | **Time impact of a claim** | Extension days × delay damages rate — the damages forgone by granting time. |
 | **Settlement ceiling** | Present value of fighting less negotiation cost; the rational maximum to settle at. |
 | **Breakeven disputed sum** | The dispute size above which litigating beats settling at the midpoint. |
+| **Notice as a condition precedent** | The common position under standard forms that valid, timely notice is a precondition of entitlement, so an unnotified claim can be worth nothing regardless of merit; whether and how it operates is for counsel on the executed contract. |
+| **Back-to-back notice check** | The comparison of the upstream notice period the project company must meet with the downstream period it has been given; the gap is an uninsured exposure identified at contract stage. |
+| **Contemporaneous records** | Site records, correspondence, programme updates and cost records maintained from the date of the event; the evidence quantum is proved on, as distinct from an argument assembled at claim stage. |
 
 ### Sample MCQs — KA 12.4
 
@@ -1393,6 +1493,22 @@ rate survives challenge as a penalty, and how a consent threshold interacts with
 negative covenants, are governing-law questions for qualified counsel; the commercial task is to
 price the asymmetry and ask for the term.
 
+**MCQ 12.4-H `[12.4.3 · Evaluation]`** A contractor's claim arrives with strong merits and detailed
+quantum. The project team asks the commercial manager for an expected-recovery assessment for the
+month-end report. The first thing the manager should do is:
+- A. build the probability set and the settlement ceiling, since merits and quantum are what determine value
+- B. establish the notice position as a dated fact — whether a valid notice was served within the contractual period — and compute nothing until it is settled, because under many forms notice is a condition precedent to entitlement and an unnotified claim can be worth nothing regardless of merit ✅
+- C. reject the claim on the assumption that notice was late, and reserve the position
+- D. report the claimed sum as the exposure until the arbitration outcome is known
+
+*Rationale:* the arithmetic operates on merits and process economics and silently assumes the
+entitlement exists (12.4.3); running it first produces a defensible-looking expected recovery for a
+claim that may have none, and that figure then travels into a report and a provision. C asserts a
+conclusion in place of a fact and is the mirror error. D reports the claim rather than the exposure
+and ignores the time impact, which is usually the larger number. Whether a time bar operates
+strictly, and whether it can be relieved, are questions for counsel on the executed contract and its
+governing law.
+
 ### Self-check — KA 12.4
 
 1. *What is the largest number in a typical extension-of-time negotiation?* — Usually the time
@@ -1403,6 +1519,17 @@ price the asymmetry and ask for the term.
    settlement.
 3. *Why do most claims settle?* — Because process cost and delay dominate: on these assumptions a
    dispute must exceed 6,901,234 before litigating beats settling at the midpoint.
+4. *What is established before any of that arithmetic is run?* — The notice position, as a dated
+   fact. Valid, timely notice is commonly a condition precedent to entitlement, so a probability set
+   applied to an unnotified claim produces a defensible-looking expected recovery for something worth
+   nothing.
+5. *What is the back-to-back check, and when is it done?* — Comparing the project company's own
+   upstream notice period against the downstream period it has received. It is done at contract
+   stage, because any gap is an uninsured exposure on every compensation event for the life of the
+   contract — not at claim stage, when it is a discovery rather than a decision.
+6. *Who owns identification of a notifiable event?* — The project company's contract manager, on an
+   internal deadline set well inside the contractual period, because the contractual clock runs from
+   the event and not from the day somebody realised it mattered.
 
 ---
 
@@ -1736,7 +1863,11 @@ percentage the cap reaches** on the stated basis · the basis itself (bare coven
 from the cap, each marked "uncapped" and sized · the exclusion of consequential loss, quoted · the
 combined stress exposure and the residue in currency and as a share of equity. Rule: no contract
 goes to signature until the residue line is filled and initialled by the accountable sponsor
-executive.
+executive. Two further rows where the counterparty is a sponsor affiliate: **related party (Y/N) and
+the relationship**, and **the disclosure made and the body that approved it**, with the date and any
+consent required (12.1.1). *Retention:* held by a named custodian with the executed contract, for
+the longest of the contract's life including its defects and warranty periods, the applicable
+limitation period and any statutory requirement the organisation has established.
 
 ### Toolkit 12.T.2 — Security package sufficiency register (one per transaction)
 
@@ -1744,9 +1875,19 @@ One row per instrument: instrument type · obligor, and which entity in the grou
 · face amount and currency · conditionality (on demand / conditional / requires proof of loss) ·
 credit assessment, with the assessor's name and date · **risk-adjusted amount** · the exposure it
 covers and that exposure's end date · **the instrument's expiry, and the gap in days if it is
-earlier** · counsel's confirmation that it is callable as modelled, with date. Footer lines: total
-face, total risk-adjusted, stress exposure, **residue in currency and as a percentage of equity**.
-Rule: no lender or equity case reports cover without the risk-adjusted total beside the face total.
+earlier** · counsel's confirmation that it is callable as modelled, with date · **related party
+(Y/N) and the relationship** — which sponsor, and how · **other group obligations resting on the
+same obligor**, listed and totalled (equity commitment, contingent equity, cost-overrun undertaking,
+in-balance cash call, guarantees on the group's other projects) · **the disclosure made and the body
+that approved the related-party arrangement**, with the date, and whether any shareholder or lender
+consent was required for it. Footer lines: total face, total risk-adjusted, stress exposure,
+**residue in currency and as a percentage of equity**, and — separately — **the aggregate exposure
+of each group obligor across the whole structure**. Rule: no lender or equity case reports cover
+without the risk-adjusted total beside the face total; and no related-party instrument is counted as
+cover until the arm's-length test, the disclosure and the approval are recorded (12.1.1, 12.3.2).
+*Retention:* held by a named custodian with the instruments themselves and the credit assessments
+behind them, for the longest of the exposure period each instrument covers, the applicable
+limitation period and any statutory requirement the organisation has established.
 
 ### Toolkit 12.T.3 — Claim assessment and settlement-zone worksheet (one per claim)
 
@@ -1761,7 +1902,14 @@ of the expected award, present value of own costs, present value of fighting, th
 ceiling, the saving against a midpoint settlement, and the organisation's standing breakeven
 disputed sum. Section 5 — **non-financial**: relationship, precedent across open claims, lender
 disclosure obligation and date, and any consent required for a settlement that touches a material
-contract. Rule: the mandate given to a negotiator states the ceiling, not the aspiration.
+contract. Rule: the mandate given to a negotiator states the ceiling, not the aspiration — and
+**Section 4 is not started until the header's notice line is a dated fact** (12.4.3), with the
+upstream back-to-back position recorded beside it: the period the project company has to pass the
+claim on, the date it expires, and who owns serving it. *Retention:* the worksheet and the
+contemporaneous records it rests on — site records, correspondence, programme updates, cost records
+— are held by a named custodian for at least as long as a claim on the event can still be brought,
+in a form that opens without the systems that created them; the period is jurisdiction-specific and
+is established with counsel rather than assumed.
 
 ## Exam preparation — Domain 12
 

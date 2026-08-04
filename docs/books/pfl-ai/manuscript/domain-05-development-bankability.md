@@ -380,6 +380,78 @@ any sponsor whose own credit falls below the lenders' threshold.
    not sign them lightly. It is a question for qualified counsel in the governing jurisdiction, not a
    modelling assumption.
 
+**Control: reserved matters, transfers and deadlock.** The liability basis decides what each sponsor
+*owes*. The rest of the agreement decides what each sponsor can *stop*, and that is the half most
+often left to the lawyers and discovered afterwards. A 10 % industrial partner whose consent is
+needed to approve the annual budget is a completely different counterparty from a 10 % partner whose
+consent is not, and nothing in the commitment table above tells the two apart.
+
+*Reserved matters.* A **reserved matter** is a decision the board may not take alone: it requires a
+supermajority or unanimity of shareholders, or the affirmative vote of a named holder. The classes
+recur because the underlying logic recurs — **anything that changes the risk the minority
+underwrote when it subscribed**. In practice that means the annual budget and business plan;
+additional indebtedness, refinancing and any change to the security package; a variation or a
+capital commitment above a stated threshold; a change to the scope, the technology or the
+operating regime; entry into or amendment of a **related-party contract** (Domain 12, KA 12.1.4);
+disposal of a material asset or of the concession itself; distributions policy; a change to the
+constitutional documents or the share capital; the appointment or replacement of the operator and
+of the auditors; the commencement or settlement of material litigation; and any step towards a
+solvent or insolvent reorganisation. Two working rules follow. **The threshold is as important as
+the list** — a matter reserved to a 75 % vote is controlled by any holder above 25 %, so the veto
+map is arithmetic and should be drawn as one. And **the list is a risk-allocation document, not
+boilerplate**: a sponsor contributing technology and a sponsor contributing money want different
+matters reserved, and a list copied from a previous deal reserves the previous deal's concerns.
+
+*The interaction with the finance documents — the two-approval problem.* Several of those matters
+also require **lender or agent consent** under the finance documents: additional debt, a change to
+the business plan the base case was built on, a disposal, a variation above a threshold, a change of
+operator. A decision can therefore need **two independent approvals**, on two different timetables,
+with two different consequences for failure — and each of them can be given subject to conditions
+the other has not seen. The sponsor register must show both, per decision class, or the project team
+will schedule one and be surprised by the other. This is the commonest cause of a "board-approved"
+variation sitting unexecutable for a month.
+
+*Transfer restrictions, and why lenders care.* Transfers are usually restricted through construction
+and for a period after completion — a **lock-in** — because the lenders' credit case rests on the
+sponsors who signed the support obligations, not on whoever buys the shares afterwards. Beyond the
+lock-in, the standard machinery is **pre-emption** (a selling shareholder must first offer to the
+others, at a price set by a stated mechanism), sometimes with tag-along and drag-along rights, plus
+**change-of-control consent** under the concession or the offtake, and consent under the finance
+documents. The bankability point is structural and easily missed: the lenders take security over
+shares that are **not freely transferable**, so what enforcement actually delivers depends on the
+consents that survive it. A share pledge over a company whose concession terminates on an
+unconsented change of control is worth what the grantor agrees it is worth — which is precisely what
+a direct agreement (KA 5.A.2, Domain 12) is negotiated to fix.
+
+*Deadlock.* Reserving matters manufactures deadlock, so the agreement must say how deadlock breaks.
+The usual mechanisms — escalation to the sponsors' senior executives, an expert or chairman's
+casting vote, a put or call between the parties, a shoot-out (one side names a price, the other
+chooses to buy or sell at it), or dissolution — are not neutral procedure. **The choice of mechanism
+decides who effectively controls the vehicle.** A shoot-out favours the party with the deeper
+balance sheet and the readier access to consents; a casting vote hands control to whoever appoints
+the chair; escalation with no terminal step favours whoever prefers the status quo, which in a
+project under construction is rarely the party that wants the decision. Read the mechanism as a
+control term, not as a dispute clause, and read it before the shares are subscribed.
+
+*Default and dilution.* The mechanic that gives all of this teeth is what happens when a shareholder
+fails to fund a call on the obligations priced above: interest on the unpaid amount, suspension of
+voting rights and of the reserved-matter veto, funding by the other shareholders as loan or as
+equity, and **dilution on a formula that is often deliberately punitive** so that declining a call is
+the expensive option. Case study B computes the cost of declining a representative call; the point
+here is that the dilution formula and the reserved-matter list are one design. A defaulting
+shareholder that keeps its veto has not been penalised, and a punitive formula attached to a call
+the minority never agreed to is how a minority is squeezed out — which is why the *funding
+obligation*, the *reserved matters* and the *default mechanic* are negotiated together or not
+properly at all.
+
+*The standing caution, extended.* As with the liability basis, every term in this paragraph is a
+matter of drafting and of the governing law of the agreement: whether a veto is effective, how a
+pre-emption or a shoot-out operates, whether a dilution formula is enforceable as drafted, and what
+a minority's position is if it is not, are questions for qualified counsel in the governing
+jurisdiction. Nothing here states the position under any of them, and none of it is a modelling
+assumption. What the professional owes is the **decision-rights map** — recorded in Toolkit 5.T.2,
+maintained as the documents change, and shown to the board before the shares are subscribed.
+
 ### 5.2.4 Funding the equity, and the equity bridge
 
 Equity may be funded **pro rata** with debt, **front-ended** (lenders' preference — sponsors' money at
@@ -428,6 +500,14 @@ recorded.
 | **Cost-overrun support** | A sponsor commitment to fund construction cost above budget, up to a cap. |
 | **Committed capital** | Base equity + support commitments; the real exposure (40.0 % of capex for Kestrel). |
 | **Equity bridge loan** | Construction-period facility funding equity, repaid by sponsors at completion. |
+| **Reserved matter** | A decision the board may not take alone, requiring a stated shareholder majority or a named holder's consent; the list is a risk-allocation document, and the threshold decides who holds the veto. |
+| **Veto map** | The arithmetic of the reserved-matter thresholds: for each holder, the matters it can block alone. |
+| **Two-approval problem** | A decision needing both a shareholder approval and a lender or agent consent, on different timetables and with different consequences for failure. |
+| **Lock-in** | The period, usually through construction and beyond completion, in which shares may not be transferred, because the lenders' credit case rests on the sponsors who signed the support obligations. |
+| **Pre-emption** | The requirement that a selling shareholder first offer its shares to the others at a price set by a stated mechanism. |
+| **Change-of-control consent** | The concession's or offtake's requirement that a change in the SPV's ownership be consented to; the reason security over shares delivers what the consents allow it to deliver. |
+| **Deadlock mechanism** | The route out of a refused reserved matter — escalation, casting vote, put/call, shoot-out or dissolution; a control term rather than a dispute clause, because the choice decides who effectively controls the vehicle. |
+| **Default and dilution mechanic** | What follows a failure to fund a call: interest, suspension of voting rights, funding by the others, and dilution on a formula designed to make declining the expensive option. |
 
 ### Sample MCQs — KA 5.2
 
@@ -533,6 +613,22 @@ remoteness among the things it does **not** achieve by itself. A and C collapse 
 assessment into a documentary construct, and it is the confusion behind the belief that a
 single-purpose entity is insolvency-proof; D invents a timing distinction the structure does not make.
 
+**MCQ 5.2-H `[5.2.3 · Analysis]`** Kestrel's shareholders' agreement reserves approval of the annual
+budget to a 75 % shareholder vote. The industrial partner holds 10 %, the fund 35 %, the operator
+55 %. The project team schedules a budget approval for the June board. The most important thing the
+decision-rights map should tell them is:
+- A. nothing new — at 10 % the industrial partner cannot block a 75 % vote, so the operator and the fund carry it between them
+- B. that the fund alone can block the budget at this threshold, that the same budget change may separately require lender or agent consent under the finance documents on its own timetable, and what deadlock mechanism applies if either is refused ✅
+- C. that the threshold should be renegotiated to a simple majority, since a 75 % reserved matter is unworkable in a three-sponsor vehicle
+- D. that lender consent is unnecessary, because the budget is an internal shareholder matter and the reserved-matter list governs it
+
+*Rationale:* a 75 % threshold hands a veto to any holder above 25 % — the fund at 35 % — so the veto
+map, not the shareholding table, is what the team needs (5.2.3); and a change to the business plan
+the base case was built on is characteristically also a lender consent, which is the two-approval
+problem. A reads the shareholding and not the threshold. C is a negotiating opinion offered instead
+of the map, and it is being offered after subscription, when the term is fixed. D is the assumption
+that leaves a board-approved decision unexecutable.
+
 ### Self-check — KA 5.2
 
 1. *State Kestrel's per-sponsor committed capital and the group total.* — 13,200,000 / 8,400,000 /
@@ -541,6 +637,18 @@ single-purpose entity is insolvency-proof; D invents a timing distinction the st
    accounting consolidation, and does not remove tax or reputational exposure.
 3. *What is an equity bridge worth, and to whom?* — Nothing to the project; to the sponsors, 1,480,688 —
    8.69 % — the spread between the 5.5 % bridge rate and their 12 % requirement over the deferral.
+4. *What does a reserved-matter list actually allocate?* — Risk, not procedure: it reserves anything
+   that changes the risk the minority underwrote. And the threshold matters as much as the list — a
+   75 % matter is controlled by any holder above 25 %.
+5. *Why can a board-approved variation still be unexecutable?* — Because several reserved matters are
+   also lender or agent consents under the finance documents, on a separate timetable; the
+   decision-rights map records both approvals per decision class or the project schedules one.
+6. *Why is a share pledge not the same as control on enforcement?* — The shares are not freely
+   transferable: lock-in, pre-emption and change-of-control consent under the concession all bear on
+   what enforcement delivers, which is what a direct agreement is negotiated to fix.
+7. *Why read a deadlock clause as a control term?* — Because the mechanism decides who effectively
+   controls the vehicle: a shoot-out favours the deeper balance sheet, a casting vote favours whoever
+   appoints the chair, and open-ended escalation favours whoever prefers the status quo.
 
 ---
 
@@ -682,6 +790,19 @@ good, and a leader who lets the lenders' comfort choose the engineering has outs
 lifecycle decision to a credit committee whose horizon is 12 years (Domain 8).
 
 ### AI in this KA
+
+**Before any of it — the data question, which comes first.** Consent registers, offtake drafts and
+unsigned project documents are the most confidential material a development team holds. They are
+processed **only in an environment approved for that data classification and permitted by the
+confidentiality undertakings that cover them** — the project non-disclosure agreement, the
+shareholders' agreement, the adviser's engagement terms and any grantor-imposed restriction on
+tender material. Establishing that permission is a *precondition of the task, not a review of it*,
+and it is usually a **permitted-recipient** question rather than a tool-quality one: a tool the
+organisation has approved, used outside the disclosure the undertaking permits, is still a
+disclosure. Where the material identifies individuals — landowners in a corridor, named officials in
+a consent chain — the data-protection position is settled before the extraction runs, not after.
+Domain 1, KA 1.3.4 states the rule ("confidentiality travels with the data"); Domain 16 builds the
+machinery that makes it checkable.
 
 **Earns:** building and maintaining the consent and land registers from source documents; extracting
 defined terms, tenors, indexation formulae, termination provisions and conditions precedent into a
@@ -1423,6 +1544,14 @@ of the probabilities** (never the mean), the joint probability of close, and the
 **marginal gain** — the next period's work plan. Rule: a condition with no evidential test is not a
 condition but a hope, and is recorded as such.
 
+*Retention.* The register is the contemporaneous record of what was known, and assessed, at each
+point in development — which is the question asked years later when a condition turns out to have
+been satisfied on a thinner basis than anyone remembers. It is retained with the closing set, on the
+standing basis in the toolkit preamble: period, form and named custodian recorded on the register
+itself. Where rows name individual landowners, objectors or officials, the personal-information
+position is settled with the organisation's data-protection adviser before the register is
+circulated.
+
 ### Toolkit 5.T.2 — Sponsor commitment and support schedule
 
 One row per sponsor. Columns: equity share · base equity commitment · each support commitment separately
@@ -1433,6 +1562,18 @@ place at close** · the default and dilution mechanic, with **the cost of declin
 representative call size (Case study B's 180,995 against 1,600,000). Footer: group committed capital as a
 percentage of capital cost, and the identity of the weakest credit in the group. Rule: no board approves
 an equity share without seeing the committed-capital column.
+
+*Second sheet — the decision-rights map (KA 5.2.3).* One row per **decision class** rather than per
+sponsor: the decision (budget, additional debt, business-plan change, related-party contract,
+variation above the threshold, disposal, change of operator, distribution, insolvency step) · who
+**proposes** it · the board or shareholder majority that **approves** it, with the threshold stated
+as a percentage and the holders who can block at that threshold named · whether **lender or agent
+consent is also required** and under which document · the consent timetable and who chases it · the
+**deadlock mechanism** that applies if approval is refused · the transfer and change-of-control
+consents that bear on the same decision. Footer: the veto map — for each holder, the matters it can
+block alone. Rule: a decision class showing one approval where the finance documents require a
+second is the register's most expensive omission, and the map is re-read at every amendment to
+either document set, not only when the shareholders' agreement changes.
 
 ### Toolkit 5.T.3 — COD-slip and readiness pack
 

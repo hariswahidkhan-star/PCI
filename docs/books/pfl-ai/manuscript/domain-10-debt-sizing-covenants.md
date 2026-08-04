@@ -324,13 +324,29 @@ next Knowledge Area asks what the coverage ratios do and do not notice when stru
 
 ### AI in this KA
 
-Model-building and scenario generation are legitimate machine work at this scale, and there is a
-specific failure mode here worth naming: an assistant asked to "size the debt" will apply the
-*textbook* `CFADS` definition rather than the facility's, and produce a defensible-looking number
-that the lender's own model will contradict. Verification is therefore definitional before it is
-arithmetical — check that the model's `CFADS` line implements the documented definition clause by
-clause, then recompute one period's ratio by hand. A sculpted schedule adds a second, purely
-arithmetical check that is worth automating: a machine-built sculpt must reproduce
+**Where it earns its place.** Model-building and scenario generation are legitimate machine work at
+this scale: rebuilding a capacity calculation across many rate, tenor and coverage combinations;
+generating and running the sculpting arithmetic period by period; and tabulating the sizing
+consequences of a proposed change fast enough that the negotiation can use them. There is a specific
+failure mode worth naming: an assistant asked to "size the debt" will apply the *textbook* `CFADS`
+definition rather than the facility's, and produce a defensible-looking number that the lender's own
+model will contradict.
+
+**Where it must not go.** Three prohibitions, and the first is that failure mode stated as a rule
+rather than as a check. **No model may adopt a `CFADS` definition that has not been traced clause by
+clause to the executed facility** — a definition inferred from a term sheet, from a previous
+transaction or from the tool's own general knowledge is not a definition, and every number built on
+it is wrong in a way no downstream check will catch. **No model may select the sizing ratio, the
+sculpting target `λ` or the target coverage.** Those are credit judgments owned by the lender and
+negotiated by the sponsor; a machine that supplies them has replaced a negotiation with a default,
+and the default will be the textbook's. And **no machine-produced capacity number may be circulated
+without the Toolkit 10.T.4 sizing-basis statement attached**, because a capacity figure without
+lines 1 to 5 agreed is an opinion, and a fluent opinion travels further than a hedged one.
+
+**Verification, concretely.** Definitional before arithmetical: confirm that the model's `CFADS`
+line implements the documented definition clause by clause, with the confirmer named and dated
+(Toolkit 10.T.1), then recompute one period's ratio by hand. A sculpted schedule adds a second,
+purely arithmetical check that is worth automating: a machine-built sculpt must reproduce
 `(A/λ) × AF(r(1 − T/λ), n)` to the cent, and a solver that has merely iterated until the closing
 balance rounds to zero will not. **AI proposes; the professional verifies, decides and remains
 accountable.**
@@ -733,17 +749,33 @@ senior-only case throughout.
 
 ### AI in this KA
 
-Computing four ratios across a 25-year model is exactly what machines should do, and their outputs
-are dangerously plausible because the arithmetic is simple and the *definitions* are not. The
-invariants of 10.A.3 are the defence, and the `LLCR` = `DSCR` identity of 10.2.2 is the cheapest
-single check available on any level-cash model. Two further checks are worth building into any
-machine-produced coverage pack because they are one division each and they catch the errors a scanner
-misses: **`DSCR ÷ LLCR`**, which flags coverage manufactured by deferral rather than earned (10.2.3),
-and the **binding-covenant stress**, because a compliance dashboard that reports every covenant as
-"pass" has told the reader nothing about which one is closest to failing (10.2.4). Where an AI
-produces a covenant-compliance summary across a portfolio of facilities, the verification duty is to
-test it against the documents on a sample — because the failure will not be arithmetic, it will be a
-definition read from the wrong agreement.
+**Where it earns its place.** Computing four ratios across a 25-year model is exactly what machines
+should do, and doing it across a portfolio of facilities is work no human team performs consistently.
+Their outputs are dangerously plausible because the arithmetic is simple and the *definitions* are
+not. The invariants of 10.A.3 are the defence, and the `LLCR` = `DSCR` identity of 10.2.2 is the
+cheapest single check available on any level-cash model. Two further checks are worth building into
+any machine-produced coverage pack because they are one division each and they catch the errors a
+scanner misses: **`DSCR ÷ LLCR`**, which flags coverage manufactured by deferral rather than earned
+(10.2.3), and the **binding-covenant stress**, because a compliance dashboard that reports every
+covenant as "pass" has told the reader nothing about which one is closest to failing (10.2.4).
+
+**Where it must not go.** **No model may certify a covenant compliance position.** Certification is
+an act by a named officer of the borrower on a stated basis, and a machine-produced pack is an input
+to it, never a substitute for it. **No ratio may be reported as "the" ratio without its definition
+source recorded** — which agreement, which clause, which version — because the same project can
+carry three different `DSCR`s that are all correct under three different documents, and a pack that
+prints one of them unlabelled has made a choice on the reader's behalf. And **no model may resolve a
+definitional ambiguity where the documents conflict.** Where two documents define the same term
+differently, or where one is silent, the resolution is a matter for qualified counsel and for the
+agent under the documents' own machinery; a model that picks the more favourable reading, or the
+market-standard one, has taken a legal position in a spreadsheet. Nothing in this book states what
+any facility's terms mean.
+
+**Verification, concretely.** Where an AI produces a covenant-compliance summary across a portfolio
+of facilities, the verification duty is to test it against the documents on a stated sample, with
+the verifier named and dated — because the failure will not be arithmetic, it will be a definition
+read from the wrong agreement. **AI proposes; the professional verifies, decides and remains
+accountable.**
 
 ### Key terms — KA 10.2
 
@@ -1921,7 +1953,10 @@ Column 1: each line of the facility's `CFADS` definition, with its clause refere
 model line implementing it. Column 3: included/excluded and on what basis (cash or accrued; above or
 below `CFADS`). Column 4: the person who confirmed the match, and the date. Rule: no coverage ratio
 is reportable until every definition line has a confirmed model line (Domain 2's defined-terms
-sheet, made specific to `CFADS`).
+sheet, made specific to `CFADS`). *Retention:* held by a named custodian for the life of the
+facility plus the applicable limitation period, with the clause extracts it was built from, in a
+form that reproduces each mapping from its own trail — it is the document that answers "on what
+basis was this ratio reported?" long after the modeller has left.
 
 ### Toolkit 10.T.2 — Covenant dashboard (per facility, per test date)
 
@@ -1929,7 +1964,9 @@ Per covenant: test name and clause · test date and frequency · historic or for
 threshold · current/forecast value · **the `CFADS` level at which it triggers** · cash headroom in
 currency and as a percentage of base case · lock-up threshold and its own trigger level · reserve
 balances against required levels · cures used and remaining · reporting obligations due. Front line:
-**which covenant binds first, and by how much cash.**
+**which covenant binds first, and by how much cash.** *Retention:* each test date's dashboard is
+kept as issued — not overwritten by the next one — by a named custodian, for the life of the
+facility plus the applicable limitation period, with the compliance certificate it supported.
 
 ### Toolkit 10.T.3 — Coverage model check (before any ratio is quoted)
 
@@ -1952,6 +1989,8 @@ balances against required levels · cures used and remaining · reporting obliga
       that route's annual cost stated.
 - [ ] The binding covenant identified by solving all covenants for one common stress.
 - [ ] AI-produced covenant summaries sampled against the documents; verifier named.
+- [ ] Retention set: the completed checklist is held with the model version it certifies, by a named
+      custodian, for the life of the facility plus the applicable limitation period.
 
 ### Toolkit 10.T.4 — Sizing-basis statement (one page, agreed before any capacity number circulates)
 
@@ -1967,7 +2006,10 @@ sweep share, its base, its priority in the waterfall, and the average life befor
 **9 — the thresholds**: distribution condition, covenant and lock-up trigger, each in ratio *and* in
 `CFADS`, with the years each catches on the agreed case. Rule: a debt-capacity figure quoted without
 lines 1 to 5 agreed is an opinion, not a number — and the three answers of Worked example 10.1.3 are
-what happens when it is quoted anyway.
+what happens when it is quoted anyway. *Retention:* the agreed statement is held by a named
+custodian with the closing set, for the longest of the facility's life and tail, the applicable
+limitation period and any statutory requirement the organisation has established, because it is the
+record of what the capacity number *meant* when it was agreed.
 
 ## Exam preparation — Domain 10
 

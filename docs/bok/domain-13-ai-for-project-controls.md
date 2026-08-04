@@ -227,7 +227,8 @@ describes the knowledge cutoff; D has nothing to do with the concept.
 ## Knowledge Area 13.2 — Data: the fuel
 
 *Topics: 13.2.1 garbage in, garbage out · 13.2.2 data quality dimensions · 13.2.3 structure, governance and
-lineage · 13.2.4 project-controls data sources · 13.2.5 privacy, confidentiality and preparing data.*
+lineage · 13.2.4 project-controls data sources · 13.2.5 privacy, confidentiality, personal data and preparing
+data.*
 
 ### 13.2.1 Garbage in, garbage out
 
@@ -300,6 +301,44 @@ Use **governed** enterprise tools with appropriate data handling, and **anonymis
 Preparing data — cleaning, coding, de-duplicating, structuring — is often the majority of the effort in any AI
 initiative, and it is work a controls professional is well-placed to lead.
 
+**Personal data is a separate question, and a larger one.** "Is it confidential?" and "is it personal data?"
+are different tests, and passing the first does not answer the second. Project controls handles a great deal
+of information about identified people — timesheets and their narratives, labour and daywork records, site
+attendance and access logs, CVs and grade evidence, stakeholder registers (Domain 8, KA 8.1.3), escalation and
+investigation notes (Domain 4, KA 4.3.7; Domain 11, Advanced 11.A.2) — and most of it is about the
+organisation's own workforce or its supply chain's. Before any of it reaches an AI tool, six questions are
+settled, and settled *first*:
+
+1. **On what basis is it being used at all?** Personal data is processed for a stated, legitimate reason, and
+   the reason for using it in a new way is established before the use begins, not inferred afterwards from the
+   fact that the data was already held.
+2. **Is the new use compatible with why it was collected?** Data gathered to pay people is not automatically
+   available to classify, score or monitor them. A new purpose is a new decision.
+3. **Has it been minimised?** Strip the fields the task does not need — names, identifiers, free-text asides —
+   and prefer aggregated or pseudonymised data wherever the task survives it. Most controls analytics does.
+4. **Does the privacy notice given to those people cover this use?** If the notice describes payroll
+   processing and the tool is a classifier that will drive invoices, it does not, and that gap is fixed before
+   the pilot rather than after it.
+5. **Does the processing need a formal impact assessment?** Large-scale, systematic or workforce-monitoring
+   uses are the ones that most often do; the answer comes from the data-protection function, not from the
+   project.
+6. **If the data will cross borders, what makes that transfer permissible?** Cloud AI services frequently
+   process data outside the country it was collected in, and that is a question to answer *before* selecting
+   the tool (13.6.3).
+
+> **A caution on what governs.** These obligations arise under **data-protection law, which differs by
+> jurisdiction** — commonly by where the people the data is about are, not only by where the organisation is
+> — and which changes. The European Union's General Data Protection Regulation is the most widely referenced
+> example, named here only to identify the kind of instrument meant; many other jurisdictions operate regimes
+> of their own, with different scope, different terms and different mechanics. **Nothing about it, or about
+> any of them, is stated here.** **Uses involving employees attract additional constraints in many places**, and in some
+> they engage consultation duties with workforce representatives before a system is introduced at all.
+> **Nothing here states the position in any jurisdiction, and none of it should be relied on as advice.** The
+> applicable law governs, and the questions above are answered with the organisation's data-protection
+> function and qualified counsel — *before* the data moves, because a transfer cannot be undone by deciding
+> afterwards that it should not have happened. What this book does impose, unconditionally, is the sequence:
+> ask first, record the answers, and do not treat "we already hold it" as permission to use it in a new way.
+
 ### Key terms — KA 13.2
 
 | Term | Meaning |
@@ -308,6 +347,10 @@ initiative, and it is work a controls professional is well-placed to lead.
 | **Data quality dimensions** | Accuracy, completeness, consistency, timeliness, validity, uniqueness. |
 | **Structured / unstructured** | Tabular (ML) vs free-form (GenAI/RAG) data. |
 | **Governance / lineage** | Ownership/definitions/access / traceability of a data point to source. |
+| **Personal data** | Information about identified or identifiable people — a separate test from confidentiality, carrying obligations that vary by jurisdiction. |
+| **Purpose limitation** | The principle that data collected for one stated purpose is not automatically available for a different one. |
+| **Data minimisation** | Using only the fields the task needs, preferring aggregated or pseudonymised data. |
+| **Data-protection impact assessment** | A formal assessment of a higher-risk processing activity, undertaken before it begins, on the data-protection function's determination. |
 
 ### Sample MCQs — KA 13.2
 
@@ -394,6 +437,13 @@ fine-tuning specialises a model; prompt patterns shape instructions — none pro
    uniqueness.)*
 2. Why is data lineage essential for AI in controls? *(Auditability — an AI-influenced number must be traceable
    to source when challenged.)*
+3. "The data is not commercially sensitive, so it is safe to use." What does this miss? *(Confidentiality and
+   personal data are separate tests: information about identified people carries its own obligations — basis,
+   purpose, minimisation, notice, impact assessment, transfer — which vary by jurisdiction and are settled
+   with the data-protection function before the data moves.)*
+4. Why is "we already hold it" not permission to use it in a new way? *(Data collected for one stated purpose
+   is not automatically available for another; a new purpose is a new decision, and the privacy notice given
+   to the people concerned has to cover it.)*
 
 ---
 
@@ -1374,6 +1424,12 @@ is.
 - **Confidentiality / IP / data residency** — sensitive data pasted into ungoverned tools can be exposed or
   used to train models; data may cross jurisdictions. **Mitigation:** governed enterprise tools; no confidential
   data in public tools; know where data is processed and stored.
+- **Personal data** — a separate risk from confidentiality, and the one most often missed because the data is
+  already lawfully held for another purpose. **Mitigation:** the sequence at 13.2.5 — basis, compatible
+  purpose, minimisation, privacy notice, whether an impact assessment is required, and what makes a
+  cross-border transfer permissible — answered with the data-protection function and qualified counsel
+  **before** the data reaches the tool. Obligations differ by jurisdiction, workforce data attracts additional
+  constraints, and the applicable law governs; nothing in this book states the position anywhere.
 
 ### 13.6.4 When not to use AI
 
@@ -2319,6 +2375,28 @@ scale), lifting first-pass confidence to **94 %**.
    unpriced benefit is stated as unpriced: narratives coded the same day they are written, so WIP and
    billing cut-off improve in ways the team saw but did not monetise.
 
+**The privacy work that came before any of this.** Timesheet narratives are written by identified people about
+their own working days, so this pilot is large-scale processing of **workforce personal data**, and the 13.2.5
+questions were answered before a single line reached a model — not after the business case looked good. The
+firm established why the data could be used for a new purpose (coding for billing is not the purpose it was
+collected for, which was payment), minimised the fields the classifier saw (narrative and task context, with
+identifiers stripped from the training set), confirmed that the privacy notice given to staff actually covered
+automated coding and told them plainly that it was happening, took the data-protection function's
+determination on whether a formal impact assessment was needed for processing at this scale, checked where
+the tooling would process the data and what made any cross-border transfer permissible, and set a retention
+limit on the training corpus rather than keeping narratives indefinitely because they were useful.
+
+Two points are worth stating as the general lesson rather than as this firm's arrangements. First, the fact
+that the classifier's output drives **client invoices** raises the stakes on both sides: it is why a named
+professional stands behind the invoice (13.6.2), and it is also why staff whose words are being read by a
+machine to bill a client are entitled to know that. Second, **whether any of the above was legally sufficient
+is not a question this book answers.** Data-protection obligations, and the additional constraints that attach
+to workforce data and to employee monitoring, differ by jurisdiction and change; in some places introducing a
+system of this kind engages consultation duties before it starts. The applicable law governs, and the position
+is taken from the organisation's data-protection function and qualified counsel (13.2.5). The professional
+discipline this case does teach is the sequence: **privacy questions answered, and recorded, before the pilot
+— not after the saving is calculated.**
+
 Set side by side, the two pilots taught the firm the domain's data lesson better than any course: the same
 technique family failed at 34 examples and succeeded at 480,000. **The data decided; the tool never had a
 vote** (13.2.1).
@@ -2520,3 +2598,15 @@ cost coding/control → 1.5, 5.2; scheduling → 10; agile/AgileEVM → 9.5; con
 risk → 12; financial reporting/IFRS 15/IAS 37 → 1–2. The "AI in this domain" boxes throughout the book are the
 per-chapter instances of the workflows collected here.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+four certification standards here: `PCI-PCL-STD-13.01` (approved tools, recorded configuration and protected
+project data), `PCI-PCL-STD-13.02` (verification of AI-generated quantitative controls output),
+`PCI-PCL-STD-13.03` (verification of AI-generated schedule, risk and extraction output) and
+`PCI-PCL-STD-13.04` (disclosure of AI assistance in a controls deliverable). The foundational standards
+binding on every PCI credential holder apply throughout — in particular `PCI-FND-STD-01` (professional
+accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05` (transparent assumptions),
+`PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11` (escalation of material
+misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible AI). The published
+Standards govern their own wording; they are private professional requirements established by PCI, not
+legislation, and where an applicable legal, regulatory, contractual or authoritative professional requirement
+imposes a higher or different obligation, that requirement governs.

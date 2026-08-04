@@ -48,7 +48,11 @@ the response families with their secondary risks priced, and show where omitting
 risks selects the wrong response**; explain resilience as distinct from prediction and **price a
 resilience measure on both its expected value and its tail**; recognise the biases that corrupt
 estimates and reviews, **and reconcile a bottom-up register against a reference class of comparable
-outturns**; lead in a crisis; **compute merge bias at a convergence point, correct it for shared
+outturns**; lead in a crisis — **specifying who declares it, what authorities the declaration
+changes and who stands it down, building the notification map before it is needed, keeping a
+contemporaneous decision log from the declaration, and pricing the drift between an early
+notification and a late one**; **mark the register rows where a duty is engaged and take them out of
+the expected-value comparison before it is run**; **compute merge bias at a convergence point, correct it for shared
 predecessors, and state the date range over which it stops mattering**; and govern AI-produced risk
 analysis, **including deriving the base rate at which a sensitive monitor beats a specific one**.
 
@@ -66,6 +70,14 @@ Domains 1, 2, 5, 15 and 16: **40 clinics**, approved cost **USD 2,400,000**, a c
 **USD 14,280 per week**, and a board risk appetite that this domain converts into a number. Its
 five quantified risks total **USD 119,000** of `EMV` against a 5 % tolerance of **USD 120,000** —
 which is the whole problem in one comparison, and the reason KA 8.3 exists.
+
+**Reference points.** The international document most often named in connection with this subject is
+**ISO 31000**, which addresses risk management principles and guidance on managing risk. It is
+voluntary guidance describing practice — not legislation, and not a certifiable requirement — and it
+obliges nobody of itself unless an organisation, a contract or a regulator adopts it. It is named
+here and not reproduced: no clause, table, matrix or process diagram from it appears in this volume,
+every method below is derived rather than cited, and a reader who wants the document should obtain
+the current edition from its publisher. Naming it implies no endorsement in either direction.
 
 ---
 
@@ -963,6 +975,28 @@ cannot survive is not managed by its `EMV`; it is avoided, transferred, or the p
 is reconsidered. `EMV` funds portfolios; existential risks are handled by structure, and confusing
 the two is how organisations optimise their way into single points of failure.
 
+**Where a duty is engaged, the menu is shorter.** Domain 1, KA 1.4.3 states the boundary and it
+governs here unchanged: **where a duty arising under law or regulation, an operating licence or a
+safety obligation is engaged, the duty is not transferable and acceptance is not an available
+response.** Insurance and contract terms move *money*; they do not move the duty or the
+accountability, and they move the money only so far as the wording and the applicable law allow —
+which is why the recovery percentage in the transfer arithmetic below comes from qualified counsel
+rather than from the register. This is not a refinement of the expected-cost rule; it removes rows
+from it.
+
+The practical consequence for the comparison that follows is procedural, and it is the part most
+often skipped. **Rows whose realisation would engage such a duty are marked and taken out of the EMV
+comparison before it is run.** What remains for those rows is a narrower question — *how* the duty
+is met, at what cost, on what evidence — and it is answered by choosing among compliant options, not
+by weighing compliance against its expected cost. A register that prices "accept" against a
+duty-engaged row has not made an aggressive commercial judgement; it has answered a question that was
+never open, and the arithmetic beside it lends the answer a false respectability. The register
+therefore carries a **duty-engaged flag** as a mandatory field, mirroring the non-prioritisable
+regulatory class of Domain 5 and Domain 1's `mandatory — not an expected-value decision` marking on
+the verification card. Whether any duty is in fact engaged, by what, and on whom, is a question for
+qualified counsel and the relevant regulator in the relevant jurisdiction; nothing here states the
+position anywhere, and the flag records that the question was asked and by whom it was answered.
+
 **Secondary risks.** Every response creates its own — fast-tracking creates rework risk, a transfer
 creates counterparty risk, mitigation creates delivery risk on the mitigation itself. A register
 whose responses have no secondary entries has not been thought through. That is usually asserted as a
@@ -1032,15 +1066,20 @@ response is cheapest.
    the two ends of one calculation, and the register should record the cost at which the answer flips,
    not just the answer.
 
-   **Two boundaries on all of it.** First, this comparison is on **expected cost only**. Worked
+   **Three boundaries on all of it.** First, this comparison is on **expected cost only**. Worked
    example 8.2.4c's result applies here too: the reduce option is a probability lever and the transfer
    is effectively an impact lever, so if the binding constraint were the confidence level rather than
    the expected cost, the ranking would need recomputing on variance — dual-qualifying leaves
    `0.15 × 0.85 × 240,000² = 7,344,000,000` of variance where the transfer leaves
    `0.35 × 0.65 × 96,000² = 2,096,640,000`. Second, and overriding: **if R1's impact were
    existential rather than 6 % of `BAC`, the avoid option's 119,000 would be cheap** and the whole
-   table would be the wrong instrument. That is the next rule, and it is not a refinement of this one
-   but a limit on it.
+   table would be the wrong instrument. That is a limit on this rule rather than a refinement of it.
+   Third, and equally overriding: the table is the right instrument for R1 **because R1 is a
+   commercial lead-time exposure with no duty attached to it**. Had the same slip engaged a safety
+   obligation or a condition of the utility's operating licence, the accept row would not appear on
+   the table at all and the transfer row would be priced as money only, with the duty and the
+   accountability remaining exactly where they were. Marking the duty-engaged rows and lifting them
+   out is therefore the *first* step in building this comparison, not a caveat on its result.
 
 ### 8.3.2 Reserves and their authority
 
@@ -1182,6 +1221,46 @@ theatre, and the honest response is to fix the process rather than reformat the 
 risks (supplier confirmations slipping, defect discovery rate rising, permit queue lengthening)
 that fire before the event, which is what makes a response affordable (Domain 6's lead-time point).
 
+### AI in this KA
+
+**Where it earns its place.** The recomputation work, which is mechanical, tedious and therefore
+skipped. **Recomputing the reserve requirement each period from the register still open** — mean,
+variance, σ and the P-level at the stated confidence — which is Worked example 8.3.2b's whole
+finding and the reason the naive drawdown test passes while the real test fails. **Recomputing the
+adequacy ratio and the implied confidence** the remaining reserve actually buys, and reporting the
+trend rather than the point. **Assembling response-option comparisons** at the scale of a full
+register: response cost, residual `EMV`, secondary `EMV` and total expected cost per option, with
+the breakeven at which the ranking flips, which is the number 8.3.1 says the register should carry
+and almost never does. **Listing register hygiene defects** — risks whose window has passed but
+which remain open, responses with no secondary entry, entries whose early-warning indicator has
+never moved — each reported with its location so a human can confirm it. And **sweeping draws
+against the published protocol** for the two conditions that make a reserve a reserve: that the
+approver was entitled to approve, and that the interest declaration is present with a nil return
+where there was none.
+
+**Where it must not go.** **No model output may authorise a reserve draw.** A draw is an
+attributable decision under the published protocol of 8.3.2, taken by a named person who is entitled
+to take it and who is not the person the draw relieves; a tool that computes the draw, drafts the
+justification and populates the approval has produced everything except the only part that matters.
+Nor may a model **choose the confidence level** — that is derived from a board's appetite statement
+and is a governance act — **set or revise a probability or an impact** without the named owner's
+assessment, or **retire a risk**, which is an evidenced judgement that a window has closed. And no
+model may decide **whether a duty is engaged** on a register row: that determination comes from
+qualified counsel and the relevant regulator, and a tool's confident answer to it is the most
+dangerous single output this domain could accept, because it looks like analysis and removes a row
+from a comparison it should never have entered.
+
+**Verification, concretely.** Reproduce the reserve requirement by hand for one period against the
+open register, because the failure mode is a stale register rather than bad arithmetic — the
+recomputation is only as honest as the open/retired flags feeding it. Confirm that every retired risk
+carries retirement *evidence* and a date, since retirement releases variance-weighted reserve well
+above the risk's `EMV` and is therefore worth getting wrong in someone's favour. Check every
+recomputed σ against the independence assumption stated on the contingency derivation sheet
+(Toolkit 8.T.2), because a tool will assume independence silently and 8.2.4b shows what that costs.
+And test each proposed response comparison for its secondary entries before reading its ranking: a
+comparison with no secondaries is not a cheaper analysis, it is a different and wrong one, by
+USD 8,600 in the example above.
+
 ### Key terms — KA 8.3
 
 | Term | Meaning |
@@ -1194,6 +1273,7 @@ that fire before the event, which is what makes a response affordable (Domain 6'
 | **Tolerance** | The amount by which an objective may be exceeded before appetite is breached; the room inside which contingency sits. |
 | **Adequacy ratio** | Remaining reserve ÷ the confidence-level requirement of the register still open; below 1.00 is a governance trigger. |
 | **Counterparty risk (priced)** | The secondary `EMV` of a transfer: `p × P(cannot pay) × amount recovered`, usually correlated with the event transferred. |
+| **Duty-engaged flag** | A mandatory register field marking a row whose realisation would engage a duty arising under law or regulation, an operating licence or a safety obligation. Such rows leave the EMV comparison before it is run: the duty is not transferable and acceptance is not available. Whether a duty is engaged is a question for counsel and the regulator, and the flag records who answered it. |
 
 ### Sample MCQs — KA 8.3
 
@@ -1463,6 +1543,134 @@ make the second mistake), and **capture the lesson while it is vivid** (Domain 9
 lessons-learned). Domain 6's recovery machinery is the schedule expression of the same posture:
 re-run the passes, price the options, escalate the trade with named authority.
 
+That is posture. Posture is necessary and it is not an instrument, and the three parts below are what
+turn it into one. Each is written in advance, because none of them can be designed at the moment it
+is needed.
+
+**Declaration and authority — who may say the word, and what the word changes.**
+
+A crisis that is never declared is managed by whoever happens to be in the room, at ordinary latency,
+under ordinary authority — which is the failure 3.A.1 describes. So the design states four things.
+**Who may declare**, by named role, with at least one alternate reachable outside working hours; the
+threshold should be low enough that declaring is not itself a career act, because a declaration
+threshold set by embarrassment is set too high. **What the declaration changes**, stated as
+authorities rather than as urgency: a named **stop-work authority** and the scope of what it may
+stop; a stated **fund** the crisis lead may commit against, with the reserve it draws on named and
+the ordinary draw protocol of 8.3.2 expressly modified rather than ignored — an emergency that
+suspends the protocol silently has removed the control at the moment it matters; and a **standing
+meeting cadence** with a fixed information pack, which is what stops the day dissolving into
+briefings. **Who stands it down**, which is normally the declaring role or its superior and never
+the crisis lead alone, with a stated hand-back of the temporary authorities. And **what does not
+change**: the accountability for the decisions taken, the duty rule of 8.3.1, and the obligation to
+record. This is deliberately modelled on the emergency change route of Domain 4, KA 4.4.1 — the two
+instruments should be consistent, because they will be used together and a project cannot operate
+two different definitions of "urgent".
+
+**Notification — the map that has to exist before the day it is needed.**
+
+A serious materialised risk frequently brings obligations that run *outside* the organisation and on
+a clock the project does not control: safety and environmental authorities, data-protection
+authorities, market or listing disclosure, insurer notification conditions, and client or
+counterparty notification provisions in the contract. The professional obligation is to establish, in
+advance, **which of these could apply to this project's sector, territory and contract, who
+determines that they apply, to whom the notification goes, within what period, and who is entitled to
+make it** — recorded as a one-page **notification map** held with the risk register and reviewed
+whenever the register is.
+
+**The standing caution, and it is the point of the paragraph.** Obligations of this kind arise under
+law, regulation, licence conditions or contract rather than at the project's discretion — but whether
+any of them reaches this organisation, this incident, this territory and this timetable is a question
+for the relevant authority and for qualified counsel. **Nothing here states the position in any
+jurisdiction, states what any regime requires, or characterises any act or omission as compliant or
+otherwise.** The professional obligation this domain does impose is narrower and unconditional: build
+the map before the incident, name the person who takes the question to counsel, take it promptly, and
+record that you did. A leader who is discovering on the day *whether* an obligation exists has already
+lost the part of the response that could not be recovered.
+
+Two further provisions belong on the map. The **insurer** entry is the one most often missing, and
+notification conditions in a policy are frequently tighter than anything else on the page. And the
+map records **who may speak** — because an unco-ordinated notification made by the wrong person, in
+the wrong terms, to the right recipient is a problem the organisation then owns twice.
+
+**Record — from the moment of declaration, not from the moment of recovery.**
+
+The declaration starts a **contemporaneous decision log**: reference, **time** rather than date,
+decision-maker by name and role, the decision in words permitting one reading, the information relied
+on with its version, and what was known to be unknown at the time. That is Domain 3, KA 3.3.4's
+record with a finer clock, and the reason for the finer clock is that a crisis produces several
+decisions an hour and the sequence is exactly what a later reader will want to reconstruct.
+
+Alongside it, an instruction that is easy to state and hard to follow: **preserve rather than tidy.**
+From the declaration, the working papers, logs, messages, readings, drafts and superseded versions
+are retained as they are, not cleaned up, not consolidated, not selectively kept. The instinct under
+pressure is to produce a neat account and discard the mess it came from; the mess is the evidence
+that the account was reasonable on what was known at the time, and it is unrecoverable once
+overwritten. Custody, retention and access follow Domain 3, KA 3.3.4's provisions, and where records
+name identified individuals the data-protection considerations of Domain 11, KA 11.1.2 and Domain 16,
+KA 16.4.4 apply from the first entry.
+
+The three parts interlock with the machinery the volume has already built: the escalation route of
+Domain 3, KA 3.3.3 is what carries the declaration upward at a stated latency, and the emergency
+change route of Domain 4, KA 4.4.1 is what carries the resulting scope and baseline moves — a crisis
+that bypasses both has not been fast, it has been undocumented.
+
+**Worked example 8.4.3 — the price of a notification that drifts.**
+
+1. **Setup.** A record-integrity incident on Meridian is confirmed at the start of week 0, and the
+   programme's notification map (above) identifies an external recipient with a **72-hour** clock.
+   Notifying inside the window costs an assessment and notification pack — specialist time, counsel
+   and the evidence bundle — of **USD 26,000**, and a **2-week** hold on clinic onboarding while the
+   affected records are re-verified. If instead the decision drifts and the notification is made at
+   **week 6**, the same 26,000 pack and the same 2-week hold are incurred anyway, and two further
+   costs appear: the affected records stay in use for six more weeks, so records created in that
+   period must also be re-verified, assessed at **USD 9,500 a week**; and the 2-week hold, and with
+   it the resumption of onboarding, moves six weeks later at Meridian's cost of delay of
+   **USD 14,280 a week**. What did the drift cost?
+2. **Formula.** Cost of notifying early `=` pack `+` hold weeks `×` cost of delay. Cost of notifying
+   late `=` that, `+` drift weeks `×` (propagation rate `+` cost of delay). Avoidable cost `=` drift
+   weeks `×` (propagation rate `+` cost of delay). Weeks of drift that cost as much as the whole
+   notification pack `=` pack `÷` (propagation rate `+` cost of delay).
+3. **Substitution.** Early `26,000 + 2 × 14,280`. Late `26,000 + 2 × 14,280 + 6 × 9,500 +
+   6 × 14,280`. Avoidable `6 × (9,500 + 14,280)`. Pack-equivalent drift `26,000 ÷ 23,780`.
+4. **Result.** Notifying inside the window costs **USD 54,560**. Notifying at week 6 costs
+   **USD 197,240**. The six weeks of drift therefore cost **USD 142,680** — **2.6151 times** the
+   entire cost of notifying on time. The avoidable cost accrues at **USD 23,780 a week**, so
+   **1.0934 weeks** of drift costs as much as the whole notification pack.
+5. **Interpretation.** Four readings, and the last is a prohibition rather than a lesson.
+
+   **The run rate is the argument, not the total.** USD 142,680 is a number that arrives after the
+   fact and persuades nobody in advance. **USD 23,780 a week** is a number a leader can put in front
+   of a sponsor on day one, and it has the same shape as Worked example 1.2.2's escalation timing:
+   the cost of an early notification is fixed and small, the cost of a late one grows linearly with
+   the delay, so the benefit-to-cost ratio of acting early is bounded only by how long the drift
+   would otherwise have run. That is why the instrument is a map and a named owner rather than an
+   exhortation to move quickly.
+
+   **The pack pays for itself in about a week.** At 1.0934 weeks, the whole USD 26,000 of assessment,
+   counsel and evidence bundling is recovered by avoiding one week of drift — which disposes of the
+   objection that a full assessment is disproportionate to an incident of uncertain size. Standing an
+   assessment team up immediately is close to free in expectation and expensive only if the incident
+   turns out to be nothing, which is the one outcome nobody regrets paying for.
+
+   **The propagation term is what distinguishes this from an ordinary delay.** An ordinary schedule
+   slip costs the cost of delay. This costs the cost of delay **plus** a rate of contamination: every
+   week the affected records remain in use enlarges the population that has to be re-verified. Look
+   for that second term whenever a materialised risk involves data, materials, medication, a shared
+   platform or anything else that is *consumed downstream while the decision is pending*, because it
+   is the term that makes early notification arithmetically obvious and it is the term nobody puts in
+   the paper.
+
+   **The prohibition, and it overrides everything above.** *This arithmetic prices drift; it never
+   decides whether a notification is due.* Whether an obligation applies, to whom, and on what clock
+   is determined by the relevant authority and by qualified counsel, and it is not an expected-value
+   question — the rule of 8.3.1 applies here at its sharpest. A leader who uses figures of this kind
+   to argue that a notification can wait because the weekly rate looks modest has inverted the
+   example: the numbers exist to fund the fast response, never to price the option of not making one.
+   Two cautions on the figures themselves. The 9,500 a week is an assessed propagation rate and
+   should be recorded in the register with its owner and basis, like any other assessment. And the
+   two components are not independent — a longer drift makes both the re-verification population and
+   the onboarding restart worse — so the linear model here is a floor, not a forecast.
+
 ### 8.4.4 AI-enabled risk sensing
 
 The genuine capability is **detection at scale**: anomaly detection across cost, schedule, quality
@@ -1563,6 +1771,10 @@ measure, and neither of which is a matter of opinion.
 | **Consequence threshold** | A point where the consequence function steps rather than scales; where resilience is bought. |
 | **Base rate** | The prevalence of the condition a monitor looks for; with the saving-to-investigation ratio it decides how a monitor should be tuned. |
 | **Precision** | True alerts ÷ all alerts; worth investigating while precision exceeds investigation cost ÷ saving. |
+| **Crisis declaration** | The named role's act that changes stated authorities — a stop-work authority, a stated fund against a named reserve, a standing cadence — and which someone other than the crisis lead stands down. |
+| **Notification map** | The one-page record, written before any incident, of which external notifications could fall due, who determines that they do, to whom, within what period and who may make them. Whether any obligation applies is for the relevant authority and qualified counsel, never for the project alone. |
+| **Preserve rather than tidy** | From declaration, working papers, logs, messages and superseded drafts are retained as they are; the mess is the evidence that the account was reasonable on what was known. |
+| **Propagation rate** | The weekly cost of a materialised risk continuing to contaminate downstream work while a decision is pending; the term that makes early notification arithmetically obvious and is usually omitted. |
 
 ### Sample MCQs — KA 8.4
 
@@ -1658,6 +1870,19 @@ response and ownership — the reference class names no risk, no owner and no ac
    same quantity; the reference class already contains the register's risks.
 6. *What two quantities decide whether a monitor should be tuned sensitive or specific?* — The base
    rate and the ratio of the saving from a caught problem to the cost of investigating an alert.
+7. *What does a crisis declaration actually change?* — Stated authorities, not urgency: a named
+   stop-work authority, a stated fund against a named reserve with the draw protocol expressly
+   modified rather than suspended, and a standing cadence. The declaring role or its superior stands
+   it down; the crisis lead does not (8.4.3).
+8. *What is a notification map, and when is it written?* — A one-page record of which external
+   notifications could fall due, who determines that they do, to whom, within what period and who
+   may make them — written before any incident and held with the risk register. Whether any
+   obligation applies is a question for the relevant authority and qualified counsel.
+9. *What is the run rate in Worked example 8.4.3, and why is it the number to lead with?* —
+   **USD 23,780 a week**, the propagation rate plus the cost of delay. The pack and the hold are
+   incurred either way and cancel from the comparison, so drift is the whole decision, and the pack
+   is repaid by **1.0934 weeks** of avoided drift. The arithmetic prices drift; it never decides
+   whether a notification is due.
 
 ---
 
@@ -2114,11 +2339,17 @@ programme to another, since it moves with both the base rate and the saving-to-i
 ### Toolkit 8.T.1 — Risk register columns that earn their keep
 
 ID · **cause → event → consequence** statement · affected objective · **common driver** (8.A.1) ·
-probability · impact (cost and time) · `EMV` · qualitative band (screening only) · response family
-and description · **response cost and expected `EMV` reduction** · **secondary risks created** ·
-owner (a person) · early-warning indicator · review date · status (open/retired/**issue**) ·
-retirement evidence. Omit any column and the register loses a specific capability; the two most
-commonly missing — common driver and response cost — are the two that make it decision-useful.
+**duty-engaged flag** — whether realisation would engage a duty arising under law or regulation, an
+operating licence or a safety obligation, with who determined that and when (8.3.1); a flagged row
+leaves the `EMV` comparison before it is run, because the duty is not transferable and acceptance is
+not available · probability · impact (cost and time) · `EMV` · qualitative band (screening only) ·
+response family and description · **response cost and expected `EMV` reduction** · **secondary risks
+created** · owner (a person) · early-warning indicator · **notification map reference**, where
+realisation could bring an external notification (8.4.3) · review date · status
+(open/retired/**issue**) · retirement evidence. Omit any column and the register loses a specific
+capability; the two most commonly missing — common driver and response cost — are the two that make
+it decision-useful, and the duty-engaged flag is the one whose absence lets an arithmetic answer
+stand where no question was open.
 
 ### Toolkit 8.T.2 — Contingency derivation sheet (one per baseline)
 
@@ -2279,7 +2510,18 @@ is decided by a crossover base rate (**1.3465 %**), not by preference. Applied t
 same tools give merge bias its honest form: Auriga's node E has a **13.16 %** chance of its
 deterministic date, not the 20.34 % of its critical path nor the 9.25 % of a naive product, and the
 effect fades from a 35.31 % distortion at week 16 to 0.37 % by week 20, so a merge-bias figure without
-a date is not a result. Crisis leadership closes the domain: stabilise, establish facts, decide
-against a clock, communicate early. Independence is the assumption most likely to be convenient and
+a date is not a result. Crisis leadership closes the domain, and it is an instrument rather than a
+posture: stabilise, establish facts, decide against a clock and communicate early — under a
+**declaration** by a named role that changes stated authorities and that someone else stands down, a
+**notification map** written before any incident because an obligation cannot be discovered on the
+day, and a contemporaneous decision log kept from the declaration under an instruction to preserve
+rather than tidy. The drift between an early notification and a late one is priceable in the
+project's own terms: on Meridian, an avoidable **USD 23,780 a week**, repaying the whole
+USD 26,000 notification pack in **1.0934 weeks** — arithmetic that funds a fast response and never
+decides whether a notification is due, which is a question for the relevant authority and for
+qualified counsel. The same boundary governs response selection: where a duty arising under law or
+regulation, an operating licence or a safety obligation is engaged, the duty is not transferable and
+acceptance is not an available response, so the row is flagged and lifted out of the `EMV`
+comparison before it is run. Independence is the assumption most likely to be convenient and
 wrong: count drivers, not entries. Domain 9 turns to quality and the assurance that catches what risk
 analysis missed.

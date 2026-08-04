@@ -1357,11 +1357,42 @@ convention moves real money on large balances:
 | **30/360** | Every month 30 days, year 360 | Bonds, some term loans |
 | **actual/360** | Actual days elapsed, year 360 | Money markets, most floating-rate loans |
 | **actual/365** | Actual days elapsed, year 365 | Sterling markets, some jurisdictions |
+| **actual/actual** | Actual days elapsed, divided by the actual length of the year — or of the period, depending on the variant the document names | Government and many corporate bonds; a number of multilateral facilities |
+
+**Three things the table does not settle — and a schedule cannot be built without them.**
+
+*Which actual/actual.* This is a family rather than a single rule. Its variants differ in what the
+denominator is — the actual days in the calendar year, the actual days in the coupon period
+annualised by the payment frequency, or a split across a year boundary — and they do not all return
+the same accrual for the same period. It is also the convention for which the leap-year question is
+the defining case rather than a footnote, because the denominator itself moves. A register entry
+reading "actual/actual" is not yet implementable: it records the variant the document names.
+
+*Which 30/360.* Likewise a family. The variants differ on how a period that begins or ends on the
+31st of a month is treated, and on month-end dates in February, and two of them can accrue different
+interest over the identical period. The difference is invisible on the illustrative quarter below,
+which begins and ends mid-month, and it is worth real money on a facility whose payment dates fall
+at month end. Record the variant, not the family.
+
+*The rolling convention, which the table does not mention at all.* Separately from the day-count
+basis, a facility states what happens when a scheduled date is not a business day in the relevant
+centres — **following** (move to the next business day), **modified following** (move forward unless
+that crosses into the next month, in which case move back) or **preceding** (move back) — and
+separately again whether the *period end dates* roll with the payment dates or stay on their
+unadjusted schedule, and whether an end-of-month rule holds a schedule anchored on a month end on
+month ends thereafter. These choices change the number of days in the accrual period and the date
+the cash actually moves, so they change every figure computed below. **A model can implement the
+day-count basis perfectly and still build the wrong schedule**, because the days it counted were
+never the days the facility counts — and the failure is silent, since the schedule still balances to
+itself. Day-count *variant*, and business-day convention *with its business-day centres and the
+end-of-month rule*, are therefore separate rows in the assumption register (3.T.1) rather than
+details of one entry.
 
 **Worked example 3.3.4 — one quarter, three conventions.**
 
 1. **Setup.** Interest accrues on Kestrel's USD 42,000,000 drawn balance at 6.0 % for one
-   calendar quarter that contains **92 actual days**. Compute the interest under each convention.
+   calendar quarter that contains **92 actual days**, on an unadjusted schedule so that no rolling
+   convention applies. Compute the interest under 30/360, actual/360 and actual/365.
 2. **Formula.** Interest = balance × rate × (days counted / year basis).
 3. **Substitution.** 30/360: `42,000,000 × 0.06 × 90/360`. actual/360:
    `× 92/360`. actual/365: `× 92/365`.
@@ -1413,7 +1444,9 @@ convention moves real money on large balances:
    differs by currency, product and jurisdiction and changes over time; the only authority is the
    facility agreement's own definition, and where a facility is silent or ambiguous on the basis, the
    point is one for **qualified legal counsel in the governing jurisdiction** before the model is
-   built on an assumption.
+   built on an assumption. The same caution governs the day-count *variant* and the business-day and
+   rolling conventions named above: they are contractual terms, they are not defaults, and a schedule
+   built on an assumed one is an assumption presented as a calculation.
 
 ### AI in this domain — the systematic view
 
@@ -1461,6 +1494,9 @@ definitional choice moves the answer more than any arithmetic in the calculation
 | **Spot / forward rate** | Exchange rate now / contracted for a future date. |
 | **Covered interest parity** | Forward ≈ spot × interest-ratio; the no-arbitrage forward, and the reason two routes to one hedged value agree. |
 | **Day-count basis** | The contractual numerator and denominator for accruing interest; actual/360 is a `365/360` uplift on all interest. |
+| **Day-count variant** | The specific member of a day-count family the document names; "30/360" and "actual/actual" are families whose members accrue differently over the same period. |
+| **Business-day convention** | What happens when a scheduled date is not a business day in the named centres — following, modified following or preceding; it changes the accrual period and the payment date, and is a separate input from the day-count basis. |
+| **End-of-month rule** | Whether a schedule anchored on a month end continues to fall on month ends; recorded per instrument, not assumed. |
 
 ### Sample MCQs — KA 3.3
 
@@ -1638,6 +1674,15 @@ the arithmetic: a smaller denominator produces a *larger* daily rate.
 6. *Why does an actual/360 facility not appear more expensive in a rate comparison?* — Because the
    uplift lives in the day-count definition rather than the quoted rate; it is worth 8.33 basis
    points at 6 %, and it belongs in the all-in cost alongside fees.
+7. *The register says "30/360". Is the schedule now specifiable?* — Not yet. 30/360 and
+   actual/actual are families whose members treat 31st-day and month-end dates differently and can
+   accrue different interest over the same period; the register records the variant the document
+   names.
+8. *A model implements the day-count basis exactly and still builds the wrong schedule. How?* — The
+   business-day convention was not implemented. Following, modified following or preceding — and
+   whether period end dates roll and whether an end-of-month rule applies — change the days in the
+   accrual period and the date cash moves. The error is silent because the schedule still balances
+   against itself.
 
 ---
 
@@ -2074,8 +2119,12 @@ the register is adopted.*
 | Rate construction (quoted / EAR / continuous / growth-adjusted `r*`) | The domain's most confusable pair sit two basis points apart (3.A.1) |
 | Compounding frequency **and payment frequency**, separately | They are different levers and pull in opposite directions (WE 3.2.3c) |
 | Day-count basis | Worth 8.33 bp at 6 % on actual/360, and invisible in a rate (WE 3.3.4b) |
+| Day-count **variant**, quoted from the document's own definition | "30/360" and "actual/actual" are families whose members accrue differently over the same period; the family name is not implementable (3.3.4) |
+| Business-day convention (following / modified following / preceding), the business-day **centres**, and whether period end dates roll | Changes the days in the accrual period and the date cash moves; a correct day-count basis on the wrong roll still builds the wrong schedule (3.3.4) |
+| End-of-month rule (applies / does not) | Decides whether a schedule anchored on a month end stays on month ends (3.3.4) |
 | Timing convention (arrears/advance/mid-period) | Half-period errors caught (3.A.2) |
 | Escalation index, lag, cap/floor, weighting | Contractual, not invented (3.3.2, WE 3.3.2b) |
+| Retention period, form and named custodian | The register is what lets a schedule be reproduced years later; held at least as long as the instrument it describes, in a form that opens without the model that used it (toolkit preamble) |
 
 ### Toolkit 3.T.2 — Schedule QA checklist
 

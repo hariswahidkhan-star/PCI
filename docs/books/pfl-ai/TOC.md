@@ -52,7 +52,9 @@ disclaimers; standards & trademarks; originality) · How to use this reference �
 - **KA 4.2 — Complementary measures:** payback · discounted payback · profitability index ·
   equivalent annual value
 - **KA 4.3 — Decision contexts:** capital rationing · mutually exclusive investments · decision
-  limitations and judgment
+  limitations and judgment · the grantor's decision rule (value for money against a constructed
+  counterfactual, inside an affordability envelope) — named for identification, no external
+  appraisal guidance reproduced
 
 ## Part Two — Structuring and modelling (Domains 5–9)
 

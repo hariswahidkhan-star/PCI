@@ -6,18 +6,22 @@ The contract is where risk is allocated, where money is defined, and where a pro
 won or lost. A controls professional who does not understand the **contract type** cannot forecast who bears
 an overrun; one who cannot read a **bill of quantities** cannot value work; one who does not link **billing**
 to **earned value** and to **IFRS 15 revenue** cannot reconcile the three numbers a project reports. This
-domain covers contract types and their risk allocation (KA 7.1); contract management across the lifecycle —
-variations, claims, liquidated damages, retention, bonds (KA 7.2); the **bill of quantities** and how work is
-measured and priced (KA 7.3); **invoicing and applications for payment** — interim valuations, certification,
-retention (KA 7.4); and **revenue recognition in the commercial cycle**, tying billing back to IFRS 15 and
-the over-/under-billing position (KA 7.5). It is the commercial counterpart of the finance group and the
-bridge between the schedule/cost machinery and the money.
+domain covers contract types and their risk allocation, including what a reimbursable form actually makes
+reimbursable (KA 7.1); contract management across the lifecycle — variations, claims, liquidated damages,
+retention, bonds, and the notices and time bars on which entitlement stands or falls (KA 7.2); the **bill of
+quantities** and how work is measured and priced (KA 7.3); **invoicing and applications for payment** —
+interim valuations, certification, retention (KA 7.4); and **revenue recognition in the commercial cycle**,
+tying billing back to IFRS 15 and the over-/under-billing position (KA 7.5). It is the commercial counterpart
+of the finance group and the bridge between the schedule/cost machinery and the money.
 
 **Learning objectives.** After this domain a candidate can: select a contract type and explain its risk
-allocation, including target-cost pain/gain mechanics; describe the contract lifecycle and the commercial
-instruments (variations, claims, LDs, retention, bonds); price and remeasure a bill of quantities; prepare an
-interim application for payment with retention; and reconcile billing to earned value and to IFRS 15 revenue
-via the contract asset/liability.
+allocation, including target-cost pain/gain mechanics; distinguish allowable from disallowed cost under a
+reimbursable form and state the coding, audit-readiness and forecasting duties that follow; describe the
+contract lifecycle and the commercial instruments (variations, claims, LDs, retention, bonds); operate the
+notice discipline — identify the event, find the window, diarise it, serve in time, substantiate afterwards —
+and recognise where a statutory overlay may sit above the contract's payment and dispute machinery; price and
+remeasure a bill of quantities; prepare an interim application for payment with retention; and reconcile
+billing to earned value and to IFRS 15 revenue via the contract asset/liability.
 
 ---
 
@@ -60,6 +64,39 @@ controls professional establishes.
   a target, via a **share ratio** — restoring a cost-control incentive.
 - **Cost-plus award fee (CPAF)** — cost plus a fee awarded subjectively against performance criteria.
 
+**What makes a cost reimbursable — allowable cost.** Every form in this topic pays "cost", and none of them
+means *all* cost. What a client reimburses is **allowable cost** — called *defined cost*, *reimbursable cost*
+or *actual cost* in different standard forms — and it is a **subset defined by the contract**, not whatever
+the contractor's ledger happens to contain. Reimbursable forms typically do three things at once: they state
+positively what is payable and on what basis (people at scheduled rates or at cost with a stated build-up,
+plant, materials, subcontracts, site overhead); they **exclude** categories; and they give the client
+**open-book access and audit rights** over the records that evidence the claim, for a period the contract
+states. The exclusions recur across forms: cost arising from the contractor's own default, rework and
+rectification of defective work, correcting the contractor's own errors, head-office and corporate overhead
+where the fee is intended to cover it, non-productive or unapproved time, finance costs, and the cost of
+preparing a claim. Whatever the ledger shows, cost inside an excluded category is **disallowed cost** — it is
+borne by the contractor, and it does not enter the fee or share arithmetic below.
+
+Two duties follow, and they are the most practical obligations in this domain:
+
+1. **Code and segregate at source.** The cost ledger must separate allowable from non-allowable cost **as the
+   cost is incurred** (Domain 5, KA 5.2.3), through the cost code itself rather than by adjustment at the
+   point of application. A rectification cost coded as production cost in March cannot reliably be unpicked
+   in November, and a contractor who tries will be arguing about its own records rather than about the
+   client's audit.
+2. **Keep the records audit-ready, continuously.** Timesheets, plant returns, delivery records, subcontract
+   accounts and the coding that ties them to each application must be retrievable and readable for as long as
+   the client's inspection and audit rights run — commonly well past completion (Toolkit 7.T.2; Domain 8,
+   KA 8.5.1). "Audit-ready" is a state maintained monthly, not a project reconstructed on demand.
+
+And there is a forecasting consequence that reaches back into Domain 6: **forecast on allowable cost, not on
+total cost**. An `EAC` built on everything the site is spending overstates what the client will reimburse and
+understates the contractor's own exposure — and because the fee and pain/gain mechanisms in 7.1.3 and 7.1.4
+run on the allowable base, a forecast on the wrong base produces a share position that will not survive the
+first audit. Where the contract's definition is ambiguous — and it often is at the margins — the question is
+settled by reading the contract with the commercial and legal teams, and the answer is recorded, not carried
+in someone's head.
+
 **Worked example 7.1.3 — CPIF fee adjustment.**
 
 1. **Setup.** Target cost **USD 10,000,000**; target fee **USD 800,000**; share ratio **50/50** (client/
@@ -71,6 +108,11 @@ controls professional establishes.
    1,100,000 = 10,500,000` — against a target price of 10,800,000, a **USD 300,000 saving** to the client.
 5. **Interpretation.** The 600,000 underrun is shared 50/50 (300k to each party), so the contractor is
    *rewarded* for beating the target — the point of the incentive. An overrun would cut the fee symmetrically.
+
+> **A note on the base.** "Actual cost" in this example — and in every fee, share and pain/gain calculation in
+> this domain — means **audited allowable cost as the contract defines it**, not the contractor's total
+> recorded cost. Substituting the ledger total for the allowable base is the commonest way a share position
+> computed with perfect arithmetic is nevertheless wrong.
 
 ### 7.1.4 Target cost and pain/gain
 
@@ -103,7 +145,10 @@ clearest places where an earned-value forecast becomes a commercial number a boa
    USD 1,000,000.
 5. **Interpretation.** Caps/collars bound each party's exposure — protecting the contractor from catastrophic
    overruns but also weakening the incentive beyond the cap. A controls professional forecasting an `EAC` above
-   target (Domain 6) must know where the cap bites to quantify the real commercial exposure.
+   target (Domain 6) must know where the cap bites to quantify the real commercial exposure. As in 7.1.3, the
+   "actual cost" driving the overrun is **audited allowable cost** under the contract's definition; cost
+   falling in an excluded category is borne by the contractor outside the share mechanism altogether, so
+   pricing the pain-share off the ledger total both overstates the client's share and hides the contractor's.
 
 ### 7.1.5 T&M, unit-rate, framework and EPC
 
@@ -169,6 +214,9 @@ walked deliberately, not drifted).
 | **Target cost / pain-gain** | Shared cost risk against a target, within a cap/collar. |
 | **EPC / turnkey** | Single-contractor delivery of the whole asset. |
 | **Man-day / man-hour (MDMH) rates** | Labour billed per approved day/hour at graded rates — input bought; productivity risk stays with the client. |
+| **Allowable (defined) cost** | The subset of incurred cost the contract makes reimbursable — the base for fee, share and pain/gain arithmetic. |
+| **Disallowed cost** | Cost falling in a category the contract excludes; borne by the contractor and outside the share mechanism. |
+| **Open book / audit rights** | The client's contractual right to inspect and audit the records evidencing a reimbursable claim, for a stated period. |
 
 ### Sample MCQs — KA 7.1
 
@@ -224,19 +272,52 @@ contractor bears ____ risk:
 quantities arise (quantity risk) while the contractor is held to its tendered rates (rate risk). B inverts the
 allocation; C describes cost-plus; D describes lump sum.
 
+**MCQ 7.1-F `[7.1.3 · Analysis]`** On a target-cost contract, the site ledger includes the cost of rectifying
+defective welding — a category the contract excludes from defined cost. The controls professional computes
+the pain-share from the ledger total. The consequence is that:
+- A. Nothing; the arithmetic is correct and the share ratio has been applied properly.
+- B. The pain-share is computed on a base the contract does not recognise, so the client is charged a share of
+  cost the contractor bears alone. ✅
+- C. The contractor's fee floor is breached.
+- D. The rectification cost becomes a variation.
+
+*Rationale:* Fee and share mechanisms run on **allowable (defined) cost**; cost inside an excluded category is
+disallowed and sits with the contractor outside the mechanism (7.1.3). Applying the ratio to the ledger total
+therefore transfers to the client a share of cost it never agreed to bear — arithmetic that is internally
+correct and commercially wrong, and the first thing an open-book audit finds. C introduces a cap that is not
+in the facts. D re-characterises a defect as a change, which no exclusion clause permits.
+
+**MCQ 7.1-G `[7.1.3 · Application]`** The most effective control for keeping a reimbursable claim audit-ready
+is to:
+- A. Reconcile allowable and non-allowable cost at the point each application is prepared.
+- B. Code allowable and non-allowable cost separately at source, as cost is incurred. ✅
+- C. Retain all invoices in date order for the contract's audit period.
+- D. Agree the total with the client's quantity surveyor each month.
+
+*Rationale:* Segregation has to happen in the cost code as the cost arises (7.1.3; Domain 5, KA 5.2.3);
+anything later is reconstruction, and reconstruction is what an auditor challenges. A is the retrospective
+unpicking the rule exists to avoid. C is necessary but not sufficient — undifferentiated records do not
+evidence allowability. D agrees a number without evidencing its composition.
+
 ### Self-check — KA 7.1
 
 1. Order lump sum, target cost and cost-plus by who bears cost risk. *(Lump sum → contractor; target cost →
    shared; cost-plus → client.)*
 2. Why does a target-cost contract make an `EAC` a commercial number? *(An `EAC` above target quantifies the
    contractor's pain-share now.)*
+3. What does "actual cost" mean in a fee or pain/gain calculation? *(Audited allowable cost as the contract
+   defines it — not the contractor's total recorded cost.)*
+4. Name the two duties that follow from a reimbursable form. *(Code and segregate allowable from
+   non-allowable cost at source; keep the supporting records audit-ready for as long as the client's
+   inspection and audit rights run.)*
 
 ---
 
 ## Knowledge Area 7.2 — Contract management
 
 *Topics: 7.2.1 the contract lifecycle · 7.2.2 variations and claims · 7.2.3 liquidated damages · 7.2.4
-retention, bonds and guarantees · 7.2.5 standard forms (FIDIC awareness).*
+retention, bonds and guarantees · 7.2.5 standard forms (FIDIC awareness) · 7.2.6 notices, time bars and the
+statutory overlay.*
 
 > **Standing caution for this knowledge area.** What follows describes the *management discipline* of contract
 > administration — the records, notices, valuations and forecasts a controls professional owns. It does not
@@ -315,6 +396,94 @@ claims, payment and dispute resolution. A controls professional should understan
 standard form allocates risk and structures the payment/variation/claims machinery, without reproducing its
 wording. (Named at awareness level only, consistent with the citation rules — Spine §9.)
 
+### 7.2.6 Notices, time bars and the statutory overlay
+
+**Why this topic exists.** 7.2.2 says a claim "must be **notified**". That short word carries more weight than
+any other in this Knowledge Area. Many standard forms are drafted so that the notice operates as a **condition
+precedent** to the entitlement: the clause is written so that, if the notice is not given within the stated
+window, the entitlement does not survive — and the claim is then never assessed on its merits at all. A claim
+that would have succeeded on cause, effect and quantum can be lost on the date it was sent. Whether a
+particular clause has that effect, and how it operates under the governing law, is a question for the contract
+and for qualified counsel (see the standing caution at the head of this Knowledge Area). What the controls
+professional owns is the *behaviour* that keeps the question academic.
+
+**The discipline: diarise, serve, then substantiate.** The first act on any potentially compensable event is
+not to price it:
+
+1. **Identify the event when it is known** — an instruction, information issued late, an unforeseen condition,
+   a client-caused disruption, a suspension. *Potentially* compensable is a deliberately low bar; the merits
+   assessment comes later, and it comes after the notice.
+2. **Find the window that applies to that kind of event.** Read the notice provision itself — note the
+   **trigger** (does the clock start at the event, or at the moment the party became or should have become
+   aware of it?) and the **length**. Different events under one contract often carry different windows.
+3. **Diarise it visibly.** The date belongs in the commercial register with a named owner, not in an inbox.
+4. **Serve it in time, in the form and to the address the contract specifies.** A notice given late, to the
+   wrong recipient, in the wrong medium, or without the content the clause calls for may be treated as no
+   notice at all.
+5. **Then substantiate** — cause, effect and quantum (7.2.2), built once the position is protected.
+
+Hence the rule of thumb worth carrying into every project: **notify early, price later.** A notice served on
+an event that turns out not to be compensable costs a little goodwill. A notice not served on an event that
+was compensable costs the entitlement, and no amount of subsequent analysis recovers it.
+
+**A decision walkthrough — the meritorious claim that is never read.** Follow one event through a form in
+which the notice is a condition precedent. Nothing here turns on arithmetic; that is the point.
+
+| Stage | What the team does | What it does to the claim |
+|---|---|---|
+| The event occurs | Access to a work face is delayed by a client-side approval. The site team records it in the daily diary and works around it. | Nothing yet. The record is good; the record is not a notice. |
+| The window opens | The contract's notice provision for this kind of event starts running. Nobody reads the clause, because the commercial view is "let's see how bad it gets first". | The clock is running, invisibly. |
+| Cause and effect are built | Four weeks later the disruption is measurable. The planner produces a defensible critical-path analysis; the cost engineer builds a quantum from time-related rates. | The claim is now technically strong — cause, effect and quantum all evidenced. |
+| The notice is served | The claim is submitted, with the notice inside it. | Under a condition-precedent clause the intended effect is that the entitlement did not survive the window; the assessment never reaches cause, effect or quantum. |
+| The review | The team argues merit. The other party does not dispute the merit. | Merit was never the question. The analysis was excellent and irrelevant. |
+
+Read the table backwards and the lesson is a sequencing one: the strongest technical work in this domain is
+worthless if it is done in the wrong order. This is also the single clearest case for the record discipline of
+7.2.1 — a diary entry is evidence, a diarised notice date is protection, and only one of them is a substitute
+for the other.
+
+**The statutory overlay.** The contract does not always have the last word on payment and dispute mechanics.
+Regimes are understood to exist in a number of jurisdictions that set aspects of construction payment by
+legislation — steps and notices around payment and any withholding from it, restrictions on making payment to
+one party conditional on another party being paid first, and expectations about payment promptness — and, in
+some, a right to refer a dispute to a rapid interim decision that is understood to exist whether or not the
+contract provides for one, on a timetable set outside the contract. **Their availability, their scope and
+their effect vary by jurisdiction, by sector and by contract, they change, and nothing in this book states the
+position anywhere.** The professional consequences are nevertheless stable: read the **governing law clause**
+as carefully as the payment clause; never assume that the contract is the whole picture, and never assume
+that a regime encountered on a previous project applies to this one; and obtain **local legal advice** before
+a payment position, a withholding, a suspension or a referral is taken. Where the contract and any such
+regime appear inconsistent, that is a legal question rather than a commercial preference, and it is answered
+before a position is asserted rather than after it has been.
+
+**What this means for the controls function's own records.** Every notice served, its date, its route and the
+acknowledgement received are part of the commercial record and are retained with the claim file (Toolkit
+7.T.2). The traceability discipline behind this is `PCI-PCL-STD-07.02`.
+
+**AI in this KA.** Contract analytics is the AI application with the widest reach in commercial management,
+and the narrowest safe use. What it genuinely adds is **coverage**: across a portfolio of dozens of
+subcontracts a model can locate and tabulate the notice provisions, the variation and valuation mechanics, the
+payment steps, the LD rate and cap, the retention terms and the governing-law clause far faster than a team
+can read them, and it can flag where one subcontract's terms diverge from the head contract's — the
+back-to-back gaps that surface later as unrecoverable cost (Domain 13, KA 13.5.7).
+
+The limits are sharp, and two of them are specific to this Knowledge Area. **Extraction is not entitlement.**
+A model can tell you what a clause says; it cannot tell you whether an entitlement arises, and the two are
+routinely confused in practice. And a model **must not be relied on to confirm that a notice window is still
+open, or that a clause is a condition precedent** (7.2.6) — those are the two determinations where being
+confidently wrong destroys the position rather than merely delaying it, and where a generated citation that
+looks right is more dangerous than no answer at all. Verify by reading the cited clause **in the executed
+contract**, including its amendments and any incorporated schedules, and by having the characterisation of the
+clause confirmed by counsel where anything turns on it.
+
+**Confidentiality, and the privilege question.** Contracts, subcontract pricing and claim files are among the
+most sensitive material a controls professional handles: live contracts and claim files must never be entered
+into an ungoverned or public tool, and this work belongs in a **governed tool** only (Domain 13, KAs 13.2.5
+and 13.3.4; `PCI-FND-STD-09`). A claim file additionally may attract **legal privilege** or be covered by a
+confidentiality undertaking in the contract itself, and privilege can be affected by how material is handled
+and who it is shared with. Confirm with legal **before** any external or third-party tool touches a claim
+file — not afterwards. **AI proposes; the professional verifies, decides and remains accountable.**
+
 ### Key terms — KA 7.2
 
 | Term | Meaning |
@@ -324,6 +493,9 @@ wording. (Named at awareness level only, consistent with the citation rules — 
 | **Liquidated damages (LDs)** | A pre-agreed sum for a defined breach (usually late completion). |
 | **Retention** | A percentage withheld as security, released in stages. |
 | **Performance / advance-payment / retention bond** | Third-party security instruments. |
+| **Condition precedent (to a claim)** | A contractual requirement — commonly a notice within a stated window — drafted so that the entitlement does not survive if it is not met. |
+| **Time bar** | The point at which a notice window closes, after which a claim may not be assessed on its merits at all. |
+| **Notice register** | The commercial record of every notice due and served, with its trigger, window, owner, date and acknowledgement. |
 
 ### Sample MCQs — KA 7.2
 
@@ -378,11 +550,46 @@ main commercial effect is:
 full value now, shallowing the funding trough, in exchange for the bond's fee. The client still holds security
 (the bond), so B is wrong; C reverses the cash effect; D confuses unrelated instruments.
 
+**MCQ 7.2-F `[7.2.6 · Analysis]`** A client-caused disruption is fully evidenced: contemporaneous records,
+a critical-path analysis showing the effect, and a quantum built from contract preliminaries rates. The
+contract makes notice within a stated window a condition precedent, and the notice was given only when the
+claim was submitted, well after the window closed. The most likely outcome, and the lesson, are:
+- A. The claim succeeds; the strength of the evidence cures the late notice.
+- B. The claim is reduced in proportion to the delay in notifying.
+- C. The entitlement may not survive the window at all, so the claim is never assessed on its merits — notice
+  is served first, substantiation is built afterwards. ✅
+- D. The claim converts automatically into a variation.
+
+*Rationale:* Where a form makes notice a condition precedent, the clause is drafted so that the entitlement
+does not survive a missed window, and merit is never reached (7.2.6) — which is why the professional's first
+act on a potentially compensable event is to diarise and serve, not to price. A and B assume a proportionality
+that a condition precedent is specifically drafted to exclude. D invents a conversion no contract provides.
+(Whether a particular clause has that effect under the governing law is a question for counsel — the
+behaviour taught here does not depend on the answer.)
+
+**MCQ 7.2-G `[7.2.6 · Application]`** A controls professional learns of an event that *might* be compensable
+but is not yet quantifiable. The correct first step is to:
+- A. Wait until the cost effect can be measured, then notify with the substantiation attached.
+- B. Identify the applicable notice provision, diarise the window, and serve the notice in the form and time
+  the contract requires. ✅
+- C. Raise it verbally at the next progress meeting and minute it.
+- D. Open a claim file and begin the delay analysis.
+
+*Rationale:* Notify early, price later (7.2.6): the window runs from the event or from awareness of it, not
+from the point at which quantum becomes measurable. A is the sequence that loses entitlements. C confuses a
+record with a notice — a minute is evidence, not service. D is useful work in the wrong order.
+
 ### Self-check — KA 7.2
 
 1. What three things must a claim establish? *(Cause, effect and quantum — notified and substantiated.)*
 2. Why does retention matter to cash-flow forecasting? *(It withholds cash until completion/defects release,
    deepening and lengthening the funding trough.)*
+3. What is a condition precedent, and why does it change the order of work on a claim? *(A requirement — often
+   notice within a window — drafted so the entitlement does not survive without it; so the notice is served
+   before the substantiation is built, not with it.)*
+4. Name two things to check beyond the contract before taking a payment or referral position. *(The governing
+   law, and local legal advice — payment and dispute mechanics are understood to be set by legislation in some
+   jurisdictions, and the position varies.)*
 
 ---
 
@@ -532,6 +739,15 @@ the **amount due** this period. This is the cash-inflow side of the funding curv
 **certifies** the amount agreed; the client **pays** the certified sum within the contractual period.
 Differences between applied and certified amounts are a normal commercial tension — and a source of dispute if
 persistent. The certified amount, not the applied amount, drives cash.
+
+**The contract may not be the whole mechanism.** The sequence above describes what the contract provides.
+Payment mechanics are also **understood to be set by legislation in a number of jurisdictions** — steps and
+notices around payment and any withholding from it, limits on making payment conditional on someone else
+being paid first, expectations about promptness — and where such a regime applies it may operate differently
+from what the contract says. Availability, scope and effect vary by jurisdiction, by sector and by contract,
+and nothing here states the position anywhere: this is the statutory overlay set out at 7.2.6, and the
+practical rule is the one given there — read the governing law as well as the payment clause, and take local
+legal advice before a payment position or a withholding is taken.
 
 ### 7.4.3 Retention in the valuation — worked
 
@@ -772,7 +988,13 @@ integrated commercial-to-accounting judgement the credential certifies.
 analysing claims/variations, checking valuations and flagging billing anomalies, and reconciling billing to
 `EV` and IFRS 15 revenue. The recognition and entitlement judgements — whether a variation is valid, whether a
 claim is substantiated, whether revenue may be recognised — remain the professional's, auditable and signed
-off. **AI proposes; the professional verifies, decides and remains accountable.**
+off; the measure of progress used for recognition is in any case finance's accounting-policy judgement rather
+than the controls function's (Domain 9, KA 9.5.4). And the constraint on **where** this work happens is
+absolute: live contracts, claim files and the personal data inside timesheet and daywork records must never
+be entered into an ungoverned or public tool, so this belongs in a **governed tool** only (Domain 13, KAs
+13.2.5 and 13.3.4; `PCI-FND-STD-09`). A claim file may additionally attract **legal privilege** or sit under a
+confidentiality undertaking in the contract itself — confirm with legal **before** any external tool is used
+on one, not after. **AI proposes; the professional verifies, decides and remains accountable.**
 
 ### Key terms — KA 7.5
 
@@ -982,8 +1204,12 @@ defensible mile and owning the causal story is the commercial professional's.
 ### Advanced 7.A.6 — When agreement fails: the dispute-resolution ladder
 
 **The principle.** Most variations and claims settle through the contract machinery of 7.2.2; a **dispute**
-is what remains when they do not. Contracts arrange what happens next as an **escalating ladder**, each rung
-slower, costlier and less controllable than the one below it:
+is what remains when they do not. What happens next is arranged as an **escalating ladder**, each rung slower,
+costlier and less controllable than the one below it — a ladder set **by the contract and, where one applies,
+by any statutory regime governing the matter** (7.2.6). That second source matters: some rungs described below
+are understood to exist in some jurisdictions independently of what the parties agreed, with a timetable fixed
+outside the contract, so the ladder on any given project is established by reading both, with advice, rather
+than by reading the contract alone.
 
 - **Structured negotiation.** Commercial teams first; failing that, escalation to executives who are not
   personally invested in the positions taken below. Cheap, fast, relationship-preserving — and where the
@@ -992,8 +1218,12 @@ slower, costlier and less controllable than the one below it:
   or on referral — gives a decision typically expressed as **binding at least temporarily**, the design
   intent being that the parties act on it while
   the underlying dispute resolves or is escalated, so the project keeps moving — a
-  decision in weeks, not years. Whether, and with what effect, such a decision binds in a particular case
-  turns on the contract and on the applicable law, and is a question for counsel rather than for this book.
+  decision in weeks, not years. This rung is not always a creature of the contract: a right to refer a dispute
+  to a rapid interim decision is **understood to exist in some jurisdictions whether or not the contract
+  provides for one**, on a timetable set outside the contract (7.2.6). Whether such a right is available here,
+  whether the contract's own provision or something else governs the process, and with what effect a decision
+  binds in a particular case, turn on the contract and on the applicable law, and are questions for counsel
+  rather than for this book.
 - **Arbitration or litigation.** The final rung: a binding award or judgment. Final, slow and costly — and
   by the time a claim reaches this rung, the records discipline of 7.2.2 and the claim file of Toolkit 7.T.2
   **is** the case, because the tribunal sees only what was recorded at the time.
@@ -1474,8 +1704,10 @@ stable.*
 | LD rate & cap (7.2.3) | Rate per day, the milestone it attaches to, any cap | USD 25,000/day on the sectional station-handover milestone |
 | Retention % & release (7.2.4, 7.4.3) | Percentage withheld; release triggers | 3 % withheld; half at practical completion, half after the defects period |
 | Bonds & expiry dates (7.2.4, 7.A.3) | Each instrument's form (on-demand/conditional), value, expiry, release condition | Performance bond, on-demand, 10 % of contract value; release at defects certificate — diarised |
-| Key notice periods (7.2.1–7.2.2) | Contractual time limits for claims/variation notices | Claim notice within the contract's stated period of the event; records kept contemporaneously |
+| Key notice periods (7.2.1–7.2.2, 7.2.6) | Contractual time limits for claims/variation notices; the trigger for each window, and whether the provision is drafted as a condition precedent | Claim notice within the contract's stated period of the event; trigger and window recorded per event type; records kept contemporaneously; characterisation confirmed with counsel |
 | Variation procedure refs (7.2.2) | Instruction, pricing basis, agreement point, target/baseline adjustment | Instructed in writing; priced from BoQ rates; agreed before work; target adjusted immediately |
+| Basis of actual cost — allowable-cost definition and audit rights (7.1.3) | What the contract makes reimbursable, what it excludes, and the client's inspection/audit rights and the period they run for | Defined cost per the contract schedule; rectification, head-office overhead and claim-preparation cost excluded; open-book access, audit rights running past completion — ledger coded to segregate at source |
+| Governing law and any statutory overlay (7.2.6) | The governing-law clause, and whether local advice has been taken on payment and dispute mechanics | Governing law recorded at award; local advice obtained before any withholding or referral |
 
 **Usage note.** One sheet per contract, completed at award and kept current, so the first commercial fact —
 who bears cost risk (7.1.1) — is never rediscovered mid-crisis. The example column echoes the rail
@@ -1498,6 +1730,19 @@ moves every downstream calculation.
 - [ ] Extension-of-time and LD relief quantified alongside the money claim (7.2.3).
 - [ ] Commercial forecast, billing and IFRS 15 revenue treatment aligned — the variation treated as a contract modification (Domain 2, KA 2.2.8; 7.5).
 - [ ] File progressed to agreement — status and next action tracked, not parked for the final account.
+- [ ] Notice register complete — every notice due and served, with its trigger, window, date, route and acknowledgement (7.2.6).
+- [ ] Retention period established and recorded on the file, with a named custodian and a tested retrieval route (below).
+
+**Retention.** The complete claim file is retained for the period set by the **contract's records and audit
+provisions** and by the **limitation or prescription period applicable to claims under the governing law**,
+whichever is the longer — and beyond either where a dispute is live or foreseeable. Confirm the period
+locally: limitation and prescription periods vary by jurisdiction, and can also depend on how the contract was
+executed, which is a question for qualified counsel rather than an assumption for the commercial team. The
+reason is stated in Advanced 7.A.6 — at the top rung of the ladder the tribunal sees only what was recorded at
+the time, so the claim file **is** the case, and a file that has been archived into an unreadable format or a
+decommissioned system has been destroyed as effectively as if it had been thrown away. Record the period on
+the file itself, name the custodian who holds it once the project team disbands, and test retrieval rather
+than assuming it (Domain 8, KA 8.5.1). The record-integrity principle behind this is `PCI-FND-STD-12`.
 
 **Usage note.** The checklist enforces the cause–effect–quantum discipline of 7.2.2: all three, or the
 claim fails — and the antidote to the global claim of Advanced 7.A.2 is exactly this event-by-event build,
@@ -1559,8 +1804,13 @@ fixed in memory, so bank those marks early and spend the surplus on the pain/gai
 ## Domain 7 summary
 
 The contract allocates cost risk along a spectrum — lump sum (contractor), target cost (shared, with pain/gain
-mechanics that make an `EAC` a live commercial number), cost-plus (client) — and is administered across its
-lifecycle through variations, claims (cause/effect/quantum), liquidated damages, retention and bonds. The
+mechanics that make an `EAC` a live commercial number), cost-plus (client) — and every reimbursable form pays
+**allowable cost**, a contract-defined subset that must be segregated in the cost code at source and kept
+audit-ready for as long as the client's inspection rights run. The contract is administered across its
+lifecycle through variations, claims (cause/effect/quantum), liquidated damages, retention and bonds — and
+through **notices**, where a window missed can extinguish an entitlement the merits would have carried, and
+where the contract's payment and dispute machinery may sit beneath a statutory overlay that has to be checked
+with local advice rather than assumed (7.2.6). The
 **bill of quantities** turns measured quantities and rates into money at tender, valuation and variation, with
 time-related preliminaries a key delay exposure. **Interim valuations** convert measured progress into an
 application for payment — value done, less retention, less previous payments — and the certified amount drives
@@ -1571,6 +1821,19 @@ credential is built on.
 
 **Cross-references.** IFRS 15 and contract asset/liability → 2.2; contract modifications in revenue → 2.2.8;
 principal/agent (gross/net) → 2.3; cash-flow and the funding trough → 3.5; the EAC that drives pain-share →
-Domain 6; change control → 5.4; delay forecasting and LDs → Domains 6 and 10; process cycles (O2C billing) →
+Domain 6; change control and the change-authority ladder → 5.4; delay forecasting and LDs → Domains 6 and 10;
+delay-analysis method and its governing-law caveat → Advanced 10.A.6; the duty to escalate a commercial
+position that cannot be defended → 4.3.7; record retention at closure → 8.5.1; process cycles (O2C billing) →
 Domain 11; contract-analytics AI → 13.4–13.5.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+three certification standards here: `PCI-PCL-STD-07.01` (contract source verification), `PCI-PCL-STD-07.02`
+(traceability of variations and claims — the discipline behind the notice register of 7.2.6 and the claim file
+of Toolkit 7.T.2) and `PCI-PCL-STD-07.03` (support and reconciliation of applications for payment). The
+foundational standards binding on every PCI credential holder apply throughout — in particular
+`PCI-FND-STD-01` (professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05`
+(transparent assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11`
+(escalation of material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible
+AI). The published Standards govern their own wording; they are private professional requirements established
+by PCI, not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

@@ -14,8 +14,9 @@ to influence it.
 **Learning objectives.** After this domain a candidate can: classify costs (direct/indirect, fixed/variable)
 and compute overhead absorption and over/under-recovery; operate the commitment → accrual → actual cost
 cycle and explain why committed cost matters to control; structure cost through a CBS and control accounts;
-and run a disciplined change-control process, assessing the cost impact of trends, variations and change
-orders.
+run a disciplined change-control process, assessing the cost impact of trends, variations and change
+orders; and apply the change-authority ladder — who assesses, who approves, what evidence a change record
+must carry, and when a change escalates before it is approved.
 
 ---
 
@@ -106,6 +107,17 @@ above plan) worth investigating.
 5. **Interpretation.** The choice of activity base materially changes the cost loaded onto a job. The base
    should reflect the true cost driver (5.1.2); a base that does not drive the cost mis-allocates it into
    every unit cost.
+
+**AI in this KA.** Cost classification is a well-shaped machine-learning problem: given a coded history, a
+model can propose the direct/indirect and fixed/variable split for new ledger lines, cluster spend to suggest
+which activity genuinely drives an overhead pool (5.1.2), and flag lines whose classification looks
+inconsistent with their description. The limits sit exactly where the judgement does. A model reproduces the
+history it was trained on, so a pool that has always been absorbed on the wrong base will keep being absorbed
+on the wrong base, confidently; it cannot know that a new contract has changed what "direct" means for this
+project; and it has no view on whether an absorption rate is defensible to the client, only on what the
+previous rate was. Verify by re-deriving the rate from the budgeted overhead and the budgeted base, and by
+testing a sample of reclassified lines back to source. **AI proposes; the professional verifies, decides and
+remains accountable.**
 
 ### Key terms — KA 5.1
 
@@ -266,7 +278,12 @@ applications in project controls (Domain 1, KA 1.5; Domain 13, KA 13.5): models 
 invoice/PO narratives, match extracted cost to the ledger and flag exceptions, detect duplicate or anomalous
 postings, and propose month-end accruals from goods-received-not-invoiced data. The professional owns the
 mapping rules, the exceptions and the accrual judgements — an auto-accrual from a document date rather than a
-service date reproduces a real cut-off error at scale. **AI proposes; the professional verifies, decides and remains accountable.**
+service date reproduces a real cut-off error at scale. And note what this data *is*: supplier and
+subcontract pricing, rates, payment behaviour and the project's own cost position are confidential and
+commercially sensitive, and some feeds (timesheets, labour records) carry personal data. This work belongs in
+a **governed tool** only — supplier and cost-ledger data must never be entered into an ungoverned or public
+tool (Domain 13, KAs 13.2.5 and 13.3.4; `PCI-FND-STD-09`). **AI proposes; the professional verifies, decides
+and remains accountable.**
 
 ### Key terms — KA 5.2
 
@@ -403,6 +420,16 @@ trustworthy — if not, no amount of EVM formula rigour rescues it.
 > output "Earned value performance (CPI/SPI)". *Animation storyboard (digital-only):* the four inputs flow
 > into the node in turn; the node then emits the CPI/SPI outputs, previewing Domain 6.
 
+**AI in this KA.** Structural work is where AI earns its place here: proposing a CBS mapping for a new project
+from the coding conventions of completed ones, testing a draft WBS×OBS matrix for control accounts that have
+no owner, no budget or no schedulable work beneath them, and flagging where a CA's granularity looks out of
+line with comparable accounts. What it cannot do is choose the level of control. Where a control account
+should sit is a management judgement about who is accountable for what — too granular and the reporting
+overhead swamps the insight, too coarse and a variance has no owner (5.3.2) — and that judgement belongs to
+the people who will be held to the accounts. Verify a proposed structure the same way you would a manual one:
+every CA has one accountable manager, a time-phased budget, and work packages whose completion can be
+evidenced (6.1.2). **AI proposes; the professional verifies, decides and remains accountable.**
+
 ### Key terms — KA 5.3
 
 | Term | Meaning |
@@ -466,7 +493,7 @@ element.
 ## Knowledge Area 5.4 — Change control and cost impact
 
 *Topics: 5.4.1 why change control matters · 5.4.2 trends, variations and change orders · 5.4.3 assessing cost
-impact and protecting the baseline.*
+impact, the change-authority ladder and protecting the baseline.*
 
 ### 5.4.1 Why change control matters
 
@@ -542,7 +569,7 @@ see, so the minimum content of a change record is fixed rather than left to the 
 - a **unique reference** and the **originating instruction, trend or event** that gave rise to it;
 - the **full impact assessment** — direct cost, knock-on cost (disruption, acceleration, time-related
   preliminaries), the schedule effect assessed *through the network* rather than estimated in isolation
-  (Domain 10, KA 10.3), the risk and interface effect, and any effect stated as nil rather than omitted;
+  (Domain 10, KA 10.2), the risk and interface effect, and any effect stated as nil rather than omitted;
 - the **funding source** proposed — contingency, management reserve, or client funding — and the balance
   remaining on that source before and after;
 - the **options considered**, including doing nothing, and why the recommended one is recommended;
@@ -635,12 +662,44 @@ as:
 is quietly lost — the "variance" no longer measures performance against an agreed scope. A treats a control
 failure as routine; B and C are recognition and allocation issues, not uncontrolled scope growth.
 
+**MCQ 5.4-F `[5.4.3 · Analysis]`** A cost engineer assesses a client-instructed change, prices it, and — being
+the delegated holder of a value band that covers it — signs the approval themselves. The change is correctly
+priced and correctly baselined. The principal control weakness is:
+- A. None; the pricing and the baseline update are both correct.
+- B. The assessor and the approver are the same person, so no independent mind ever tested the assessment. ✅
+- C. The change should have been logged as a trend before it was assessed.
+- D. Client-instructed changes cannot be funded from contingency.
+
+*Rationale:* Change control exists to put a second mind between a cost and the budget; where preparation and
+approval sit with the same person, the process produces paperwork and prevents nothing — and that defect
+survives a correct price and a correct baseline entry (5.4.3). A treats a correct outcome as evidence of a
+sound control. C is wrong on the facts: an instruction already received is a change, not a trend (5.4.2).
+D invents a funding rule — the funding-source question is separate from the authority question.
+
+**MCQ 5.4-G `[5.4.3 · Application]`** A variation's assessed cost exceeds the contingency remaining on the
+funding source proposed for it. The correct sequence is:
+- A. Approve the change, then report the contingency overdraw in the period report.
+- B. Approve the change and re-baseline, recording the reserve position afterwards.
+- C. Escalate to the next level of authority before approval, with the funding position stated. ✅
+- D. Split the change so each part falls within the remaining contingency.
+
+*Rationale:* A change that would exhaust its funding source escalates *before* approval, so that the decision
+to release further funding is taken by the body entitled to take it (5.4.3). A and B convert a governance
+decision into an after-the-fact accounting entry. D is splitting — precisely the practice the aggregation rule
+exists to prevent.
+
 ### Self-check — KA 5.4
 
 1. Distinguish a trend from a variation. *(Trend — early warning of a possible change; variation — a formal,
    priced, agreed change.)*
 2. When a materialised risk draws on contingency, does `BAC` change? Why or why not? *(No — contingency is
    already inside the baseline; drawing it consumes reserve, it does not add scope.)*
+3. Who owns the impact assessment, and who approves the change? *(The controls professional assesses and
+   recommends; a change authority holding the relevant delegated band approves — never the same person on the
+   same change.)*
+4. Name the event that sends a change up the ladder before it is approved. *(An assessed cost exceeding the
+   remaining reserve of its proposed funding source — also a breach of a baseline tolerance, or a change
+   altering a contractual obligation.)*
 
 ---
 
@@ -1261,11 +1320,11 @@ margin (5.4.2).
 
 ### Toolkit 5.T.2 — Change/trend log template
 
-| Ref | Description | Type (trend/variation) | Status | Cost impact (USD) | Schedule impact | Funded from (contingency/MR/client) | Approved by | Baseline updated |
-|---|---|---|---|---:|---|---|---|---|
-| CH-001 | Client-instructed new scope | Variation | Approved | +300,000 | +3 weeks | Management reserve | Project board | Yes — `BAC` 9,700,000 → 10,000,000 |
-| CH-002 | Materialised ground risk | Risk draw (in-scope) | Closed | +150,000 | None | Contingency | PM (within delegation) | No — draw within baseline; contingency 700,000 → 550,000 |
-| CH-003 | Probable instruction — additional access steelwork | Trend | Open | +180,000 (est.) | TBC | Not yet agreed | — | No — not yet approved |
+| Ref | Description | Type (trend/variation) | Status | Cost impact (USD) | Schedule impact | Funded from (contingency/MR/client) | Assessed by | Approved by (authority band) | Evidence pack complete | Baseline updated |
+|---|---|---|---|---:|---|---|---|---|---|---|
+| CH-001 | Client-instructed new scope | Variation | Approved | +300,000 | +3 weeks | Management reserve | Cost engineer | Project board — reserve release | Yes | Yes — `BAC` 9,700,000 → 10,000,000 |
+| CH-002 | Materialised ground risk | Risk draw (in-scope) | Closed | +150,000 | None | Contingency | Cost engineer | PM, within delegated limit | Yes | No — draw within baseline; contingency 700,000 → 550,000 |
+| CH-003 | Probable instruction — additional access steelwork | Trend | Open | +180,000 (est.) | TBC | Not yet agreed | Cost engineer | — (not yet submitted) | No | No — not yet approved |
 
 **Usage note.** The log holds every trend, variation and reserve draw so the current baseline reconciles to
 the original at any moment — "how has the `BAC` moved, by how much, and why?" answerable on demand (5.4.3).
@@ -1275,6 +1334,18 @@ mechanisms distinct is what stops scope growth hiding inside "risk". Trends are 
 probable, not when they are formalised (5.4.2) — the potential forecast including open trends is the figure
 the pack reports beneath the approved-scope forecast. Close every rejected change explicitly rather than
 deleting it, so the audit trail survives.
+
+**The two columns that carry the governance.** *Assessed by* and *Approved by* are separate columns because
+they are separate people (5.4.3); a log in which one name fills both on the same row is showing a control
+failure, not saving a column. The *Approved by* cell names the **authority band** the approval was given
+under, not merely a job title, so a reader can test the approval against the recorded ladder — a PM's
+delegated limit for an in-scope contingency draw, the project board for a reserve release or a
+baseline-changing variation. *Evidence pack complete* is the gate: no row moves to Approved until the change
+record carries the originating instruction, the full impact assessment (including the schedule effect run
+through the network and any nil effects stated), the funding source with its balance before and after, and
+the options considered. **Retention:** the change log and the assessments behind it are part of the project
+record and are retained with it (Domain 8, KA 8.5.1); a baseline movement whose supporting assessment has
+been discarded can no longer be explained to anyone.
 
 ---
 
@@ -1330,11 +1401,26 @@ accruals so **cost-to-date** — and therefore `AC` and `CPI` — is true, all r
 ongoing data integrity. Cost is organised through the **CBS** and **control accounts**, the WBS×OBS
 integration points where earned value is measured. And **change control** protects the baseline: logging
 trends early, formalising variations, assessing full cost impact, and re-baselining only through authorised
-change — keeping every movement of the `BAC` traceable. This domain is the data-and-discipline layer beneath
-the earned-value formulae of Domain 6.
+change — keeping every movement of the `BAC` traceable. The authority beneath that discipline is explicit:
+the controls professional assesses and recommends, a change authority approves within a recorded delegated
+band, the two are never the same person on the same change, and a change that would exhaust its funding
+source goes up the ladder before it is approved rather than after. This domain is the data-and-discipline
+layer beneath the earned-value formulae of Domain 6.
 
 **Cross-references.** Accruals and cut-off → 1.3.5; cost coding and control accounts → 1.5; contract
 modifications in revenue → 2.2.8; the flexed budget → 4.2.2; reserves and the baseline → 3.1; the full EVM
 treatment → Domain 6; variations and commercial change → 7.2; risk and contingency → Domain 12; automated
 coding/reconciliation/change detection → Domain 13, KA 13.5.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+four certification standards here: `PCI-PCL-STD-05.01` (completeness and reconciliation of the recorded cost
+position), `PCI-PCL-STD-05.02` (identification and registration of change), `PCI-PCL-STD-05.03` (completeness
+of change impact assessment) and `PCI-PCL-STD-05.04` (change authority and segregation of preparation from
+approval) — the last two being the instrument behind the change-authority ladder of 5.4.3. The foundational
+standards binding on every PCI credential holder apply throughout — in particular `PCI-FND-STD-01`
+(professional accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05` (transparent
+assumptions), `PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11` (escalation of
+material misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible AI). The
+published Standards govern their own wording; they are private professional requirements established by PCI,
+not legislation, and where an applicable legal, regulatory, contractual or authoritative professional
+requirement imposes a higher or different obligation, that requirement governs.

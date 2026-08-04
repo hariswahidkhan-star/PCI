@@ -7,16 +7,18 @@ results **change a decision**. This domain is about turning numbers into managed
 of performance management — KPIs, targets, thresholds and the difference between leading and lagging
 indicators (KA 4.1); **variance analysis**, which decomposes the gap between plan and actual into its
 *causes* — price, quantity, rate, efficiency — so the right lever is pulled (KA 4.2); **management reporting**
-— designing the report and the project-controls dashboard for the audience and the decision (KA 4.3); and
-**data visualisation and storytelling**, presenting controls data so it informs rather than distorts (KA
-4.4). It closes the finance group and hands directly to the earned-value machinery of Domain 6, of which
-cost/schedule variance is a special case.
+— designing the report and the project-controls dashboard for the audience and the decision, and the **duty to
+escalate** when a report cannot be defended on the evidence (KA 4.3); and **data visualisation and
+storytelling**, presenting controls data so it informs rather than distorts (KA 4.4). It closes the finance
+group and hands directly to the earned-value machinery of Domain 6, of which cost/schedule variance is a
+special case.
 
 **Learning objectives.** After this domain a candidate can: design KPIs with targets, thresholds and
 tolerances and distinguish leading from lagging indicators; decompose a total cost variance into price/rate
 and quantity/efficiency components and build a variance bridge from budget to actual; design an
-audience-appropriate management report and exception report; and select and present visualisations that
-inform decisions and avoid common distortions.
+audience-appropriate management report and exception report; apply the duty to escalate — its trigger, the
+written act, the route, the record it leaves and the practices it forbids; and select and present
+visualisations that inform decisions and avoid common distortions.
 
 ---
 
@@ -271,6 +273,12 @@ late by claims and closeout costs. A book of contracts that all fade tells you t
    reconcile to that quarter's EAC bridge (Domain 3, KA 3.4.3): fade with no bridge lines is unexplained
    drift, the worst kind.
 
+**When fade is held back.** Fade is uncomfortable to report and easy to defer — the step is small this
+quarter, the recovery plan is "in preparation", the remeasure is "not final". A professional asked to leave a
+known fade step out of the pack, or to describe it as a timing matter when the analysis shows it is not, is
+at the trigger described in 4.3.7, and the response is the one set out there: object in writing, with the
+evidence, before the pack is issued.
+
 ### Key terms — KA 4.2
 
 | Term | Meaning |
@@ -357,7 +365,8 @@ variance, which can be favourable or adverse.
 ## Knowledge Area 4.3 — Management reporting
 
 *Topics: 4.3.1 designing the report for the decision · 4.3.2 the project-controls dashboard · 4.3.3 narrative
-vs numbers · 4.3.4 cadence and audience · 4.3.5 the exception report.*
+vs numbers · 4.3.4 cadence and audience · 4.3.5 the exception report · 4.3.6 worked example — an exception
+report from a RAG dashboard · 4.3.7 when the report is contested — the duty to escalate.*
 
 ### 4.3.1 Designing the report for the decision
 
@@ -427,6 +436,80 @@ amber (CA-03) — each with its variance, root cause, impact and action — and 
 unelaborated. This turns a six-account status into a three-line action list, concentrating attention where it
 changes outcomes.
 
+### 4.3.7 When the report is contested — the duty to escalate
+
+**Why this topic sits here, and why every other domain points at it.** This reference places personal
+accountability on the professional on almost every page: *the professional owns the assumption*, *the human
+signs off*, *reject the to-budget claim*, *decision-ready, no spin*. It also describes, repeatedly, the
+pressure that makes that accountability expensive — reporting that stays green until the month it turns red
+(Domain 6, Advanced 6.A.3), margin fade reported only once it is unrecoverable (4.2.6), an onerous-contract
+test treated as a year-end formality (Domain 2). Those passages diagnose; this one says what to do. It is the
+**standing treatment for the whole reference**: Domains 2, 3, 5, 6 and 7 refer back to 4.3.7 rather than
+repeating it.
+
+**The trigger.** The duty engages when a professional is asked to issue, sign, or leave uncorrected a figure,
+narrative or omission that they **cannot defend on the evidence in front of them**. It is not a disagreement
+about judgement — two competent people can prefer different `EAC` methods on the same data (Domain 6, KA
+6.3.3), and that is an argument to be had and recorded, not an escalation. The line is crossed when the
+professional would be asserting something the evidence does not support, or staying silent while somebody
+else does: a caveat deleted, a known cost left out of a forecast, a variance explained by a cause the
+analysis does not show, a report edited between the controls pack and the board pack.
+
+**The required act — in writing, before issue.** State the objection **in writing, with the evidence, before
+the report goes out**. Not afterwards, and not verbally: an objection that leaves no record did not happen,
+and the professional who made it has taken the risk without keeping the protection. The written form is
+short and factual — what the report says, what the evidence shows, what the difference is worth, and what
+would make the report defensible. The tone is the same one the rest of Domain 4 teaches: decision-ready, no
+spin, no accusation. Recording an observation is a professional act; characterising a colleague's motive is
+not, and is not the professional's to make (Domain 11, Advanced 11.A.2 makes the same distinction).
+
+**The route.** Raise it first with the person who can fix it — normally the project manager or the report
+owner. If the response is inadequate, take it to the **project board**; then to the **sponsor**; then to the
+function that is accountable for the integrity of reported information *independently of the project* —
+internal audit, group finance, the assurance function, whatever the organisation calls it. "Inadequate" has a
+working definition: the number is unchanged, the evidence has not been addressed, and no one has taken
+ownership of the difference. Persist to the next level in that case. Where the report will reach parties
+outside the organisation — a lender, a client, a public disclosure — the escalation runs **before** it goes,
+not after.
+
+**The record.** Keep what was raised, on what evidence, to whom, when, and what response came back. That
+record is the professional's own file as much as the project's; it is what makes an assertion about the
+professional's conduct testable a year later, when memories have reorganised themselves. Retain it with the
+project record (Domain 8, KA 8.5.1).
+
+> **A caution on the records this duty creates.** An escalation record names identified people — who was
+> asked, who answered, and what they said. Records of that kind are typically **personal data**, and
+> obligations covering their accuracy, proportionality, retention and the rights of the people named vary by
+> jurisdiction and by employer. Keeping the record remains the non-optional professional control; how it is
+> worded, where it is held, for how long and who may see it are questions for the organisation's
+> data-protection function and for qualified advice. The operative drafting rule is the one Domain 11 gives:
+> **record the observation, not a conclusion about the person.** "The forecast issued on Tuesday omitted the
+> cost assessed in change CH-014, and I set that out in writing to the project manager the previous Friday" is
+> a fact. "The project manager is concealing an overspend" is an allegation the controls professional is not
+> in a position to make.
+
+**The prohibitions.** Four things the professional does not do, whatever the pressure:
+
+- **Do not sign** a figure you cannot defend on the evidence.
+- **Do not permit the analysis to be attributed to you** if it has been changed after you released it — ask
+  for your name to come off, in writing, and keep the request.
+- **Do not participate in suppression** — deleting a caveat, re-cutting a chart's baseline to flatten a trend
+  (4.4.2), moving an exception out of the exception report (4.3.5), or timing an issue's disclosure to miss a
+  board meeting.
+- **Do not go silent.** Withdrawing from the report is not the same as raising the objection, and the duty is
+  not discharged by declining to be involved.
+
+**What this is, and what it is not.** These are the professional obligations PCI places on its credential
+holders, and they are the substance of `PCI-FND-STD-11` (escalation of material misstatement), together with
+`PCI-FND-STD-05` (transparent assumptions), `PCI-FND-STD-15` (correction duty), `PCI-FND-STD-01` (professional
+accountability) and, in this domain, `PCI-PCL-STD-04.02` (explanation of material variance) and
+`PCI-PCL-STD-04.03` (correction and restatement of a reported error). They are **not** a statement of anyone's
+legal rights or duties. Whether an employment protection, a protected-disclosure route or any obligation to
+report outside the organisation exists in a given jurisdiction, sector or contract — and what any of it
+requires — varies, changes, and is a question for qualified counsel taken **before** any external step is
+contemplated. What the professional owes unconditionally is the internal act: raise it in writing, with the
+evidence, at the time, to the level that can remedy it, and keep the record.
+
 ### Key terms — KA 4.3
 
 | Term | Meaning |
@@ -436,6 +519,8 @@ changes outcomes.
 | **Overview-first, detail-on-demand** | Summary on one view, drill-down to the detail behind any red. |
 | **Exception report** | Only the out-of-tolerance items, with cause, impact and action. |
 | **Cadence** | The reporting frequency matched to audience and decision rhythm. |
+| **Duty to escalate** | The professional obligation to raise, in writing and before issue, a figure or narrative that cannot be defended on the evidence. |
+| **Escalation record** | The contemporaneous file of what was raised, on what evidence, to whom, when, and the response received. |
 
 ### Sample MCQs — KA 4.3
 
@@ -478,12 +563,44 @@ the earliest recoverable problems; D inverts the principle.
 and the forecast. A describes the working team's rhythm; C describes the executive/portfolio view; D serves
 no decision at any level.
 
+**MCQ 4.3-E `[4.3.7 · Analysis]`** A controls professional's pack shows an adverse forecast movement with its
+cause. The version that reaches the board has had the cause paragraph removed and the professional's name
+left on it. The professional's first act is to:
+- A. Say nothing; the numbers themselves are unchanged, so nothing has been misstated.
+- B. Raise the removal in writing, with the evidence, to the report owner before the board meets, and keep the
+  record. ✅
+- C. Ask verbally for the paragraph to be reinstated and, if refused, decline further involvement.
+- D. Report the matter outside the organisation immediately.
+
+*Rationale:* The duty engages on a narrative the professional cannot defend as issued, and it is discharged in
+writing, with the evidence, at the time, to the level that can remedy it (4.3.7). A ignores that a removed
+cause makes a correct number misleading. C fails twice — a verbal objection leaves no record, and withdrawing
+is not raising. D skips the internal route entirely and treats as automatic a step whose availability and
+consequences vary by jurisdiction and are for qualified counsel.
+
+**MCQ 4.3-F `[4.3.7 · Application]`** An escalation is raised to the project manager, who leaves the figure
+unchanged and does not address the evidence. The professional should:
+- A. Accept the decision; the project manager owns the report.
+- B. Re-issue the pack with their own figure substituted.
+- C. Take the same evidence to the project board, and onward if the response there is also inadequate. ✅
+- D. Record the objection in a private note and take no further step.
+
+*Rationale:* Where the number is unchanged, the evidence unaddressed and no one has taken ownership of the
+difference, the response is inadequate and the duty persists to the next level (4.3.7). A mistakes ownership
+of the report for ownership of the truth of it. B substitutes one unauthorised report for another. D keeps the
+record but abandons the act the record is supposed to evidence.
+
 ### Self-check — KA 4.3
 
 1. What four questions should a top-level controls dashboard answer at a glance? *(Where are we; where are we
    heading; what is off-track; what is being done about it.)*
 2. Why does audience-tailored reporting depend on good cost coding? *(The same data must aggregate
    automatically to each level; without source coding it becomes manual re-keying.)*
+3. What distinguishes a professional disagreement from the trigger for the duty to escalate? *(Disagreement is
+   about judgement on shared evidence; the duty engages when the professional would be asserting — or
+   silently permitting — something the evidence does not support.)*
+4. Name the four prohibitions the duty carries. *(Do not sign what you cannot defend; do not let a changed
+   analysis be attributed to you; do not participate in suppression; do not go silent.)*
 
 ---
 
@@ -1314,12 +1431,28 @@ exception** to focus attention. **Variance analysis** decomposes the plan-to-act
 quantity/efficiency causes — against a **flexed budget** — and communicates them through a **variance bridge**,
 so the right owner pulls the right lever. **Management reporting** designs for the decision and the audience,
 integrates a **controls dashboard** with RAG status and trend, pairs numbers with causal narrative, and
-reports by **exception**. **Data visualisation** matches chart to question — the S-curve and the waterfall
-above all — and tells a true story without distortion. Together these close the finance group and lead
-straight into earned value (Domain 6), where cost and schedule variance are formalised.
+reports by **exception**. It also carries the reference's standing statement of the **duty to escalate**
+(4.3.7) — what a professional does when asked to issue, sign or leave uncorrected something the evidence does
+not support: object in writing before issue, take it up the route until it is owned, keep the record, and
+never sign, lend a name to, or help suppress a number that cannot be defended. **Data visualisation** matches
+chart to question — the S-curve and the waterfall above all — and tells a true story without distortion.
+Together these close the finance group and lead straight into earned value (Domain 6), where cost and
+schedule variance are formalised.
 
 **Cross-references.** Management vs statutory reporting → 2.5; the Planned Value S-curve → 3.3; the EAC/VAC
 forecast on the dashboard → 3.4, Domain 6; cost coding that makes aggregation automatic → 1.5; risk exposure
 on the dashboard → Domain 12; automated commentary and NL querying → Domain 13, KA 13.5; chart-design craft →
 the platform's dataviz guidance.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+three certification standards here: `PCI-PCL-STD-04.01` (reconciliation of the performance report to source
+records), `PCI-PCL-STD-04.02` (explanation of material variance) and `PCI-PCL-STD-04.03` (correction and
+restatement of a reported error). The duty to escalate taught at 4.3.7 is the book's treatment of
+`PCI-FND-STD-11`. The foundational standards binding on every PCI credential holder apply throughout — in
+particular `PCI-FND-STD-01` (professional accountability), `PCI-FND-STD-02` (evidence before assertion),
+`PCI-FND-STD-05` (transparent assumptions), `PCI-FND-STD-09` (confidentiality and approved technology),
+`PCI-FND-STD-11` (escalation of material misstatement), `PCI-FND-STD-12` (record integrity) and
+`PCI-FND-STD-14` (responsible AI). The published Standards govern their own wording; they are private
+professional requirements established by PCI, not legislation, and where an applicable legal, regulatory,
+contractual or authoritative professional requirement imposes a higher or different obligation, that
+requirement governs.

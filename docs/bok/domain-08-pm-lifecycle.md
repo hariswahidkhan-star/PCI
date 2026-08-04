@@ -15,8 +15,11 @@ Management framework), never reproduced.
 
 **Learning objectives.** After this domain a candidate can: describe the five process groups and the key
 activities and artefacts of each; build a stakeholder analysis and a WBS; explain how monitoring & controlling
-uses earned value and integrated change control; run a disciplined project closure; and distinguish
-predictive, iterative, incremental, adaptive and hybrid approaches and select one for a project profile.
+uses earned value and integrated change control, including who authorises a change at what level, the minimum
+evidence a change request carries, the rule that no change is executed before authorisation and the route for
+a genuine emergency; run a disciplined project closure, including a records archive with a stated retention
+period, a named custodian and tested retrieval; and distinguish predictive, iterative, incremental, adaptive
+and hybrid approaches and select one for a project profile.
 
 **The threaded mini-case.** One project — *the delivery of a regional data-centre fit-out for "Northwind"* —
 runs through KAs 8.1–8.5, so the reader sees a single project pass through every process group.
@@ -58,6 +61,22 @@ direct input to report design.
 > labelled "Monitor" / "Keep informed" / "Keep satisfied" / "Manage closely"; the four stakeholders plotted as
 > brand-blue dots in their quadrants. *Animation storyboard (digital-only):* each stakeholder dot drops into
 > its quadrant with its engagement label appearing.
+
+> **A caution on the register this analysis creates.** A stakeholder register records **named individuals**
+> together with judgements about them — influence, attitude, whether they are supportive or resistant, how
+> they should be handled. Records of that kind are typically **personal data**, and the obligations attaching
+> to them — the basis on which they may be held at all, how accurate and proportionate they must be, how long
+> they may be kept, and the rights of the people described — vary by jurisdiction and by employer, change over
+> time, and are questions for the organisation's data-protection function and for qualified advice. Nothing
+> here states the position anywhere; the fuller treatment of the duties that arise before personal data is
+> used, and especially before it reaches any AI tool, is at Domain 13, KA 13.2.5.
+>
+> The analysis itself remains a legitimate professional control. Two drafting rules keep it defensible.
+> **Record the observable, not the character judgement** — "has rejected two of the last three change requests
+> on cost grounds" is a fact a person could see; "obstructive" is an opinion about someone that will be read
+> by people who never met them. And **hold it as the organisation's record, not a private file** — with a
+> stated retention period, controlled access, and the awareness that a register is capable of being seen by
+> its subjects.
 
 **Worked example 8.1.3 — a RACI for a controls deliverable.** Knowing *who* the stakeholders are leads
 directly to *who does what*. A **RACI** chart (Responsible / Accountable / Consulted / Informed) assigns each
@@ -359,7 +378,59 @@ not to *observe* the project but to *change its trajectory* in time.
 **full, cross-constraint** impact (scope, schedule, cost, quality, risk) before approval, and that approved
 changes update **all** affected baselines coherently (Domain 5, KA 5.4). "Integrated" guards against the
 common failure of approving a scope change for its direct cost while missing its schedule and risk knock-ons.
-The controls professional runs the impact assessment and maintains the change log.
+The controls professional runs the impact assessment and maintains the change log — and, as everywhere in this
+reference, **assesses and recommends without approving**. The mechanics below are the lifecycle expression of
+the change-authority ladder set out in Domain 5, KA 5.4.3.
+
+**Decision rights — who authorises a change.** A named authority approves; the assessor never does. On most
+projects that authority is a **change control board (CCB)** — a standing body with the project manager, the
+commercial lead, the technical authority and, where the change touches the customer, the customer's
+representative — and where no CCB exists the role is held by a named individual, recorded as such. Authority
+is delegated in **bands by value and by impact**, and the bands are written down before the first change
+arrives:
+
+| Change | Where authorisation sits |
+|---|---|
+| Within the project manager's recorded delegated limit, funded from contingency against a registered risk, no baseline movement | Project manager |
+| Above that limit, or moving any baseline (scope, schedule or cost), or releasing management reserve | Change control board |
+| Breaching a project tolerance, or requiring funding the project does not hold | Sponsor / project board |
+| Altering a contractual obligation, price or completion date | Sponsor **and** the counterparty's authorised representative, in whatever form the contract requires (Domain 7, KA 7.2) |
+
+Two rules protect the ladder: **the assessor is never the approver**, and **changes from one cause or one
+instruction are aggregated** to decide the band, so a change cannot be divided into approvable pieces.
+
+**Minimum evidence — what a change request carries before anyone can decide it.** A change request that
+reaches the authority incomplete cannot be approved, only guessed at. The minimum is:
+
+- a **unique identifier** and the **originator**, dated;
+- the **cause** — the instruction, event, defect, trend or opportunity that gave rise to it;
+- the **cross-constraint impact assessment**: scope, schedule (assessed through the network, not estimated in
+  isolation — Domain 10, KA 10.2), cost including knock-on and disruption effects, quality, risk, and effect on the
+  **benefits** the project exists to deliver (Advanced 8.A.2), with any nil effect stated as nil rather than
+  left out;
+- the **options considered**, including doing nothing, and why the recommendation is the recommendation;
+- the **funding source** and the balance remaining on it before and after;
+- the **approver, band and date**, plus any condition attached.
+
+**No change is executed before it is authorised.** That is the rule the whole process rests on, and the one
+most often broken in good faith. Where genuine urgency makes waiting unsafe or materially more expensive, an
+**emergency route** exists and is used honestly: the decision is taken by the most senior authority reachable,
+recorded as an emergency authorisation at the time with the reason and the person who gave it, and **ratified
+at the next meeting of the authority that should have approved it** — logged as an emergency change, not
+back-dated into the ordinary sequence. A project whose emergency route is used routinely does not have an
+emergency route; it has an unrecorded one.
+
+**Escalation triggers.** A change goes up the ladder *before* approval, not after, when it: breaches a
+**baseline tolerance**; exceeds the **remaining contingency** or the remaining balance of its funding source;
+alters a **contractual obligation**; or changes the project's **benefit case** or its stated success criteria
+(8.1.4). Each of these takes the decision outside the level that would otherwise take it, which is exactly why
+the escalation happens first.
+
+**Retention.** The change log and every assessment behind it are part of the project record and are archived
+with it at closure (8.5.1). A baseline movement whose supporting assessment has been discarded cannot be
+explained to an auditor, a funder or a tribunal — and by then no one remembers. The governance disciplines in
+this topic are the substance of `PCI-PCL-STD-05.03` and `PCI-PCL-STD-05.04`, resting on `PCI-FND-STD-04`
+(human decision authority) and `PCI-FND-STD-12` (record integrity).
 
 ### 8.4.3 Controlling the constraints
 
@@ -397,6 +468,9 @@ the artefacts differ from project to project, the loop does not.
 | **Monitoring & controlling** | Measuring against baselines and acting to correct — parallel to executing. |
 | **Integrated change control** | Assessing every change across all constraints before approval. |
 | **Constraint trade-offs** | Scope/schedule/cost/quality/risk balanced against each other. |
+| **Change control board (CCB)** | The standing body — or named individual — holding authority to approve change within stated bands. |
+| **Change request** | The controlling artefact: identifier, cause, cross-constraint assessment, options, funding source and approval record. |
+| **Emergency change** | A change authorised out of sequence for genuine urgency, recorded as such at the time and ratified by the proper authority afterwards. |
 
 ### Sample MCQs — KA 8.4
 
@@ -441,12 +515,45 @@ abdicates the controlling role; D pre-empts a decision that belongs to change co
 triggers corrective action, and reports the position. The other orderings act or report before anything has
 been measured or analysed.
 
+**MCQ 8.4-E `[8.4.2 · Analysis]`** Work on a client-instructed change begins immediately because the site
+team judges the delay of waiting to be more costly than the change itself. The change is later approved by the
+CCB at the assessed value. The correct treatment is:
+- A. None needed; the approval regularised the position.
+- B. Record it as an emergency change at the time, with the reason and the person who authorised it, and have
+  it ratified by the CCB as an emergency — not folded into the ordinary sequence. ✅
+- C. Approve it retrospectively at the project manager's delegated level, since the CCB agreed the value.
+- D. Treat the early start as scope creep and reverse the work.
+
+*Rationale:* No change is executed before authorisation; where urgency forces it, the emergency route is used
+**honestly** — recorded as such at the time and ratified as such afterwards, so a reader of the log can see
+how often it happens (8.4.2). A and C back-date the decision, which is what makes an emergency route
+untrustworthy. D punishes a defensible operational call rather than recording it properly.
+
+**MCQ 8.4-F `[8.4.2 · Application]`** A change request arrives with a priced direct cost, a funding source and
+a recommendation, but no assessment of its effect on the schedule, on risk, or on the benefit case. The change
+authority should:
+- A. Approve it, since the cost and the funding are both established.
+- B. Approve it conditionally, with the missing assessments to follow.
+- C. Return it: an incomplete request cannot be decided, only guessed at. ✅
+- D. Delegate the decision down to the project manager to save time.
+
+*Rationale:* The minimum evidence for a change request is fixed rather than discretionary, and nil effects are
+stated as nil rather than omitted (8.4.2) — an authority that approves on a partial assessment has approved
+the direct cost and accepted the knock-ons unseen, which is the exact failure "integrated" exists to prevent.
+B approves first and assesses afterwards. D moves the decision to a band that does not cover it.
+
 ### Self-check — KA 8.4
 
 1. Why is change control called "integrated"? *(Every change is assessed across all constraints and updates
    all affected baselines coherently.)*
 2. Which controls-discipline domains come together in monitoring & controlling? *(Earned value — 6; variance/
    reporting — 4; forecasting — 3/6; risk — 12.)*
+3. Who assesses a change, and who approves it? *(The controls professional assesses and recommends; a change
+   control board or other named authority approves within a recorded band — never the same person on the same
+   change.)*
+4. Name the four events that send a change up the ladder before approval. *(A breached baseline tolerance;
+   cost exceeding the remaining balance of its funding source; an altered contractual obligation; a change to
+   the benefit case or the success criteria.)*
 
 ---
 
@@ -460,6 +567,35 @@ been measured or analysed.
 accepted, closing contracts (release of retention, resolution of claims, Domain 7), demobilising resources,
 and archiving records. Orderly closure protects the organisation — unclosed contracts and unresolved claims
 are liabilities that linger.
+
+**Archiving is a requirement, not an activity.** "Records archived" is the line every closure checklist
+carries and almost none defines, which is why it fails so reliably: the team disbands, the file share is
+decommissioned two reorganisations later, and the records turn out to have been needed after all. Four things
+turn archiving into something a project can actually be held to.
+
+**How long.** The retention period is the **longest** of: the contract's own records and audit provisions; the
+period during which a claim under the contract may still be brought under the governing law, and the
+defects-liability period that sits inside it; the organisation's accounting and tax record-retention
+requirements; and any condition imposed by a funder, regulator, insurer or auditor. Anything **subject to a
+live or reasonably foreseeable dispute is held until that is resolved**, whatever the ordinary period says.
+These periods differ by jurisdiction, by contract form and by how a contract was executed, and they change —
+so the period is **confirmed with the commercial, finance and legal functions and written into the closure
+plan**, not assumed by the person doing the archiving. Nothing in this book states a period for anywhere.
+
+**Whose custody.** The archive passes to a **named custodian in the permanent organisation** — normally the
+PMO or the records function (Advanced 8.A.4) — with the handover recorded. A project team is a temporary
+organisation; leaving the record with it is leaving it with nobody.
+
+**In what form.** Retrievable and readable for the whole period, which is a stronger requirement than stored:
+formats become unopenable, systems are retired, licences lapse and access rights follow leavers out of the
+door. **Test retrieval at handover and again on a standing cycle** — pull a defined sample and open it — and
+treat a failed retrieval as a defect to fix, not a curiosity.
+
+**Why it matters downstream.** Two later disciplines in this reference rest entirely on this one. Delay
+analysis is built from contemporaneous schedule updates and site records (Advanced 10.A.6), and archived
+Sprint evidence is what makes adaptive delivery auditable after the fact (Domain 9, KA 9.6.4). Neither
+survives an archive that was never given a period, a custodian or a readable format. The record-integrity
+principle behind this is `PCI-FND-STD-12`; the claim-file case is in Domain 7, Toolkit 7.T.2.
 
 ### 8.5.2 Handover and the final account
 
@@ -520,6 +656,8 @@ of the quantitative lessons, because it holds the performance data.
 | **Closing** | Formal completion — acceptance, contract closure, demobilisation, archiving. |
 | **Final account** | The definitive commercial settlement of the project. |
 | **Lessons learned** | Captured experience and performance data feeding future projects. |
+| **Retention period (records)** | The stated period for which project records are kept — the longest of the contract, claim-limitation, accounting/tax and funder requirements, confirmed rather than assumed. |
+| **Records custodian** | The named holder of the archive in the permanent organisation once the project team disbands. |
 
 ### Sample MCQs — KA 8.5
 
@@ -556,12 +694,46 @@ original value only.
 so no liabilities linger. It cannot manufacture profit (A), lessons learned are part of closing rather than
 replaced by it (C), and baselines are never revised retrospectively (D).
 
+**MCQ 8.5-D `[8.5.1 · Analysis]`** A closure checklist records "records archived" against a project file
+share, and the team demobilises. Years later a dispute arises and the schedule updates cannot be opened.
+The defect in the closure was that:
+- A. The records should have been printed.
+- B. The archive was never given a stated period, a named custodian in the permanent organisation, or a tested
+  retrieval route. ✅
+- C. Archiving belongs to the operator, not the project.
+- D. Nothing; by then the records are beyond any reasonable retention period.
+
+*Rationale:* Archiving is only a control when it carries a period, a custodian and a demonstrated ability to
+retrieve — a project team is temporary, and unreadable storage is destruction with extra steps (8.5.1). A
+mistakes medium for governance. C hands the organisation's own record to a third party. D assumes a period the
+project never established, and periods vary by jurisdiction and contract.
+
+**MCQ 8.5-E `[8.5.1 · Application]`** A project's records are subject to a contract audit provision, an
+organisational accounting-retention requirement, and a claim that is being prepared by a subcontractor. The
+retention period applied should be:
+- A. The contract's audit period, because the contract governs the project.
+- B. The organisation's accounting requirement, because it applies to all records.
+- C. The shortest of the applicable periods, to limit storage cost and data held.
+- D. The longest of the applicable periods, extended for the records touched by the foreseeable dispute until
+  it is resolved. ✅
+
+*Rationale:* The period is the longest of the applicable requirements, and anything under a live or reasonably
+foreseeable dispute is held beyond it until resolution (8.5.1). A and B each pick one requirement and ignore
+the others. C inverts the rule — and would destroy the very records the pending claim will turn on.
+
 ### Self-check — KA 8.5
 
 1. What does the final account settle? *(The definitive commercial position — final remeasurement, agreed
    variations/claims, retention release.)*
 2. How do lessons learned connect to Domains 3 and 13? *(Actual performance data improves future estimates and
    trains forecasting models.)*
+3. What four things turn "records archived" into an auditable requirement? *(A stated period, a named
+   custodian in the permanent organisation, a hold rule for live or foreseeable disputes, and retrieval tested
+   in a readable format.)*
+4. What sets the period, and who confirms it? *(The longest of the contract's records/audit provisions, the
+   claim-limitation and defects-liability periods under the governing law, accounting and tax retention, and
+   any funder or regulator condition — confirmed with commercial, finance and legal, because the periods vary
+   by jurisdiction and contract form.)*
 
 ---
 
@@ -1152,9 +1324,13 @@ assessing the knock-ons across every baseline **and the benefit case**:
 | Schedule — fit-out prolongation, two months, with time-related cost | **USD 900,000** |
 | **CR-041 total** | **USD 9,600,000** |
 | Benefit — bed count | **−16 beds → −800 admissions/year** |
+| Assessed by | Programme controls manager (named, on the dated assessment) |
+| Approved by | **Programme board** — the band covering a baseline-moving change funded from programme reserve (8.4.2) |
 
-The USD 9,600,000 was authorised from programme reserve and is the largest of the fourteen changes in the
-reconciled log (`460.0m + 9.6m + 1.7m of thirteen smaller changes = 471.3m`). The benefit line is the one an
+The USD 9,600,000 was **assessed by the programme controls manager and approved by the programme board**, the
+authority band that covers a baseline-moving change funded from programme reserve (8.4.2) — the assessor and
+the approver being different people, and the approval record naming both. It is the largest of the fourteen
+changes in the reconciled log (`460.0m + 9.6m + 1.7m of thirteen smaller changes = 471.3m`). The benefit line is the one an
 undisciplined change process omits: a change assessed only on cost and schedule would have sailed through
 approval with the business case silently holed. Because the benefit impact was quantified at assessment, the
 gate pack could price the **restoration options** honestly: accept the −16 beds (benefit down 800
@@ -1282,7 +1458,11 @@ Sequenced from KA 8.5 — closing is real work, and every unchecked box is a lia
 - [ ] Bonds and guarantees released, or their expiry and release conditions logged and chased (Domain 7, KA 7.2.4).
 - [ ] Warranties and defects-period obligations logged with owners and dates.
 - [ ] Handover documentation complete and transferred to the operator/client (8.5.2).
-- [ ] Records archived — cost ledger, change log, contemporaneous records, schedule history (8.5.1).
+- [ ] Records archived — cost ledger, change log and its supporting assessments, contemporaneous records, schedule history, notices and claim files (8.5.1).
+- [ ] **Retention period stated in the closure plan** — the longest of the contract's records/audit provisions, the period during which a claim may still be brought under the governing law (including the defects-liability period), statutory accounting and tax retention, and any funder, regulator or insurer condition; confirmed with commercial, finance and legal rather than assumed (8.5.1).
+- [ ] **Anything under a live or foreseeable dispute held beyond the ordinary period** until it is resolved (8.5.1; Domain 7, Toolkit 7.T.2).
+- [ ] **Custodian named** in the permanent organisation — PMO or records function — with the handover recorded (8.5.1; Advanced 8.A.4).
+- [ ] **Retrieval tested, not assumed** — a defined sample pulled and opened at handover, and on a standing cycle thereafter, in a format that will still be readable for the whole period (8.5.1).
 - [ ] Performance data — actual `CPI`, productivity rates, unit costs — fed into the estimating library (8.5.3; Domain 3, KA 3.2).
 - [ ] Lessons learned captured in both registers, quantitative and qualitative, with the controls function as custodian of the numbers (8.5.3).
 - [ ] Benefits measurement plan handed live to the named benefit owners in operations (Advanced 8.A.2).
@@ -1295,6 +1475,13 @@ The retention and bond items are real receivables and real fees, tracked to zero
 (worked example 8.5.2; Domain 7, KA 7.A.3). The benefits item is the loop-closer: project success is
 demonstrable at closure, benefit success only afterwards, and the handover to a named owner in the
 operating organisation is what makes the second register measurable at all (8.1.4, 8.A.2).
+
+**On the five archiving lines.** They replace a single unenforceable tick. "Records archived" cannot be
+audited; a stated period, a named custodian, a held-for-dispute rule and a tested retrieval can. Note that the
+period is the *longest* of several, that it differs by jurisdiction and contract form, and that it is
+confirmed with the functions qualified to confirm it rather than settled by the person closing the box
+(8.5.1). Two later disciplines depend on these lines: delay analysis is built from contemporaneous updates
+(Advanced 10.A.6), and Sprint-level assurance rests on archived iteration evidence (Domain 9, KA 9.6.4).
 
 ---
 
@@ -1349,7 +1536,9 @@ The project lifecycle runs through five process groups: **initiating** (business
 success criteria), **planning** (scope/WBS and the three integrated baselines plus subsidiary plans),
 **executing** (performing the work and generating the data), **monitoring & controlling** (measuring against
 the baselines and correcting — the home of project controls, via earned value, variance and integrated change
-control), and **closing** (contract closure, final account, lessons learned). How the lifecycle is *applied*
+control with named decision rights, minimum change-request evidence and an honest emergency route), and
+**closing** (contract closure, final account, lessons learned, and an archive with a stated retention period,
+a named custodian and tested retrieval). How the lifecycle is *applied*
 varies along the **predictive-to-adaptive spectrum**, with **incremental** (adding parts) and **iterative**
 (refining the whole) as distinct ideas that agile combines, and **hybrid** delivery the norm on large
 programmes. The controls professional's work sits inside this lifecycle — setting the baseline in planning,
@@ -1357,7 +1546,22 @@ measuring it in controlling, and capturing its lessons in closing — and must b
 approach the project adopts.
 
 **Cross-references.** WBS/cost coding → 1.5; the baselines and reserves → 3.1; the PV baseline → 3.3; earned
-value in controlling → Domain 6; variance and reporting → Domain 4; integrated change control → 5.4; the final
-account → 7.3–7.4; adaptive delivery and AgileEVM → Domain 9; risk in planning/controlling → Domain 12;
-AI across the lifecycle → 13.5.
+value in controlling → Domain 6; variance and reporting → Domain 4; the duty to escalate → 4.3.7; integrated
+change control and the change-authority ladder → 5.4; the final account, claim-file retention and notices →
+7.3–7.4, Toolkit 7.T.2; adaptive delivery and AgileEVM → Domain 9; delay analysis built on archived
+contemporaneous records → Advanced 10.A.6; risk in planning/controlling → Domain 12; personal data before it
+reaches an AI tool → 13.2.5; AI across the lifecycle → 13.5.
 
+**PCI Standards engaged by this domain.** Domain 8 anchors **no certification standard of its own** — the
+design described in the Conventions, §11: the lifecycle is the frame the other domains' obligations sit inside
+rather than a source of separate ones. The standards a controls professional engages while running the
+lifecycle are anchored elsewhere — `PCI-PCL-STD-05.03` and `PCI-PCL-STD-05.04` behind the integrated change
+control of 8.4.2, `PCI-PCL-STD-03.02` and `PCI-PCL-STD-03.03` behind the baselines of 8.2.2, and
+`PCI-PCL-STD-07.02` and `PCI-PCL-STD-07.03` behind the final account of 8.5.2. The foundational standards
+binding on every PCI credential holder apply throughout — in particular `PCI-FND-STD-01` (professional
+accountability), `PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05` (transparent assumptions),
+`PCI-FND-STD-09` (confidentiality and approved technology), `PCI-FND-STD-11` (escalation of material
+misstatement), `PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible AI). The published
+Standards govern their own wording; they are private professional requirements established by PCI, not
+legislation, and where an applicable legal, regulatory, contractual or authoritative professional requirement
+imposes a higher or different obligation, that requirement governs.

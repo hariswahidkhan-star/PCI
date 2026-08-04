@@ -4,7 +4,7 @@
 > themselves. A standard referenced in a chapter and missing from this register fails the
 > build, so a reference cannot enter the corpus without being disclosed here.
 
-This volume references **22 documents, standards or frameworks**. Every one is *named*
+This volume references **33 documents, standards or frameworks**. Every one is *named*
 and *characterised* — never reproduced. No protected text, table, figure, clause, checklist or
 question from any of them appears in this volume; each is described at the level of its stated
 scope, in this programme's own words, and the treatment of the underlying subject is this
@@ -28,18 +28,30 @@ redistributed by this programme.
 
 | Reference | Described in this volume as addressing | Discussed in |
 |---|---|---|
-| **ISO 21500** | context and concepts for project, programme and portfolio management | D1 |
-| **ISO 21502** | guidance on project management | D1 |
-| **ISO 21503** | guidance on programme management | D1 |
-| **ISO 21504** | guidance on portfolio management | D1 |
-| **ISO 21505** | guidance on governance of projects, programmes and portfolios | D1 |
+| **ISO 21500** | context and concepts for project, programme and portfolio management | D1, D2, D15 |
+| **ISO 21502** | guidance on project management | D1, D4, D11 |
+| **ISO 21503** | guidance on programme management | D1, D15 |
+| **ISO 21504** | guidance on portfolio management | D1, D2, D15 |
+| **ISO 21505** | guidance on governance of projects, programmes and portfolios | D1, D3, D15 |
 | **ISO 10006** | quality management in projects | D1 |
 
 ## Risk
 
 | Reference | Described in this volume as addressing | Discussed in |
 |---|---|---|
-| **ISO 31000** | risk management — principles and guidelines | D1 |
+| **ISO 31000** | risk management — principles and guidelines | D1, D8 |
+
+## Environmental and sustainability quantification
+
+| Reference | Described in this volume as addressing | Discussed in |
+|---|---|---|
+| **ISO 14064** | the quantification and reporting of greenhouse-gas emissions and removals — voluntary guidance, and not itself a disclosure obligation | D2 |
+
+## Assurance and internal audit
+
+| Reference | Described in this volume as addressing | Discussed in |
+|---|---|---|
+| **Institute of Internal Auditors** | an assurance architecture, commonly called the three lines, published by a professional body and revised by it into a model of roles rather than sequential lines of defence — voluntary guidance, neither a standard nor a requirement, and described in this volume in its own words | D3 |
 
 ## Quality and data quality
 
@@ -67,11 +79,40 @@ redistributed by this programme.
 | **ISO/IEC 27701** | privacy information management. Its relationship to an ISO/IEC 27001 information-security management system, and whether it can be certified in its own right, differ between editions; establish which edition any claim of conformity refers to before relying on it | D14 |
 | **NIST** | the United States National Institute of Standards and Technology, referenced for its AI Risk Management Framework — a voluntary, function-based framework, not a standard and not a regulation | D14 |
 
+## Project finance, environmental and social frameworks
+
+| Reference | Described in this volume as addressing | Discussed in |
+|---|---|---|
+| **OECD** | the Organisation for Economic Co-operation and Development, referenced for its arrangement on officially supported export credits, for its convention on combating bribery of foreign public officials, and for its Guidelines for Multinational Enterprises and the associated due-diligence guidance — recommendations addressed to adhering governments and, through them, to enterprises, and not obligations of themselves | D10 |
+
+## Standard-form contract families
+
+| Reference | Described in this volume as addressing | Discussed in |
+|---|---|---|
+| **NEC** | a family of privately published standard-form construction and engineering contracts, named for identification only; it has no standing of its own and takes effect only where parties adopt it in their agreement | D10 |
+| **FIDIC** | a family of privately published standard-form engineering and construction contracts, named for identification only; it has no standing of its own and takes effect only where parties adopt it in their agreement | D10 |
+| **JCT** | a family of privately published standard-form building contracts, named for identification only; it has no standing of its own and takes effect only where parties adopt it in their agreement | D10 |
+| **ISO 44001** | the management of collaborative business relationships — voluntary guidance | D10 |
+
+## Responsible and sustainable procurement
+
+| Reference | Described in this volume as addressing | Discussed in |
+|---|---|---|
+| **UN Guiding Principles on Business and Human Rights** | business responsibility for human rights — a non-binding international instrument that supplies a method and imposes no obligation of itself | D10 |
+| **ISO 20400** | sustainable procurement — voluntary guidance, and not a certifiable requirements standard | D10 |
+
+## Records and service management
+
+| Reference | Described in this volume as addressing | Discussed in |
+|---|---|---|
+| **ISO 15489** | records management — what a record is, and the controls that keep it authentic, reliable and usable over time; voluntary guidance, and it states no retention period applicable to any organisation | D16 |
+| **ISO/IEC 20000** | service management, the discipline a receiving organisation runs when it accepts a service into support; voluntary guidance | D16 |
+
 ## Cost engineering
 
 | Reference | Described in this volume as addressing | Discussed in |
 |---|---|---|
-| **AACE** | AACE International, referenced for the existence and purpose of the cost-estimate classification progression in its Total Cost Management framework | D7 |
+| **AACE** | AACE International, referenced for the existence and purpose of the cost-estimate classification progression — in its Total Cost Management framework and in its Recommended Practices on cost-estimate classification; voluntary professional guidance, named for identification only and never reproduced | D7 |
 
 ## Industrial control system security
 

@@ -296,6 +296,28 @@ authorisation limits, matches, reconciliations and approvals embedded in O2C and
 after — reconciliations, exception reports). A controls professional both **relies on** these controls (the
 numbers are trustworthy because the controls work) and **operates** some of them (reconciliations, cut-off).
 
+**Where that articulation comes from.** The three-objective framing above — reporting, operations, compliance
+— and the vocabulary of a control environment, risk assessment, control activities, information and
+communication, and monitoring, are most widely associated with the **COSO Internal Control — Integrated
+Framework**, published by a private-sector body. It is a **voluntary framework**: adoption is the whole of its
+force. It is not legislation, it is not issued by a regulator, and it imposes nothing on any organisation that
+has not chosen it or been asked for it. Naming it identifies it and nothing more — this reference does not
+state what it contains or requires, its own publication governs, and its issuing body is not associated with,
+does not endorse and has not reviewed this book (Conventions, §9). Appendix C records the entry.
+
+> **A caution on scope — who has to do what.** Whether an organisation must **document** its internal control
+> over financial reporting, **assess** it formally, or have that assessment **attested** by its external
+> auditor is not a universal rule. Arrangements of that kind are understood to exist in several jurisdictions
+> and to reach different organisations differently — turning on matters such as where an entity is
+> incorporated, whether and where its securities are listed, its size, and the sector it operates in — and
+> they differ materially between regimes and change over time. **Nothing here states the position anywhere.**
+> For many organisations the discipline in this Knowledge Area is good practice they adopt because it works;
+> for others it sits inside a formal obligation. Which applies to a given entity is a question for its finance
+> function, its auditors and qualified advisers, and the applicable requirement — not this text — governs.
+> Note also that the word *compliance* in the objectives above is used in its ordinary control-framework
+> sense: conformity with the rules an organisation is subject to, whatever those turn out to be. It is not a
+> statement that any particular rule applies.
+
 ### 11.3.2 Segregation of duties
 
 **The principle.** **Segregation of duties (SoD)** requires that **no single person controls a whole
@@ -359,6 +381,7 @@ within too-wide a tolerance re-creates the very risk the control exists to preve
 | Term | Meaning |
 |---|---|
 | **Internal control** | Policies/procedures giving assurance over reporting, operations, compliance. |
+| **COSO Internal Control — Integrated Framework** | The most widely used articulation of internal-control objectives and components; a voluntary framework published by a private-sector body, adopted rather than imposed. |
 | **Preventive / detective control** | Stops an error occurring / detects it afterwards. |
 | **Segregation of duties (SoD)** | No single person controls a whole transaction. |
 | **Audit trail** | The verifiable record of who did what, when, with what authorisation. |
@@ -1095,6 +1118,17 @@ validates against (11.A.3): whoever processes payments must never amend bank det
 stable and re-test after every role or organisational change; a continuous monitor (11.A.4) then watches for
 conflicts re-emerging between tests.
 
+**Source and scope of this design.** The conflict pairs and the control-objective framing behind them follow
+the widely used articulation associated with the **COSO Internal Control — Integrated Framework** (11.3.1) —
+a **voluntary framework** published by a private-sector body, which imposes nothing on an organisation that
+has not adopted it, and whose own publication governs. This template is therefore **good practice offered for
+adoption, not a compliance instrument**: whether an entity has a formal obligation to document, assess or have
+attested its internal control over financial reporting depends on its jurisdiction, listing status, size and
+sector, differs materially between regimes and is a question for its finance function, its auditors and
+qualified advisers (11.3.1). Adapt the rows to the organisation's own roles and record which requirement, if
+any, the matrix is being maintained to satisfy — so a later reader knows whether it is being kept because it
+works or because someone will ask for it.
+
 ### Toolkit 11.T.2 — Month-end controls checklist
 
 Run before the period is closed and the numbers are relied on (Domains 1, 5).
@@ -1119,7 +1153,10 @@ receivables lines keep the cash-inflow forecast honest (Domain 3, KA 3.5), and t
 lines keep the detective machinery of 11.A.3–11.A.4 from silently decaying. Every unticked line at close is
 an exception with an owner, not a task deferred — an alert stream nobody actions implies a coverage that does
 not exist. Keep the items stable month to month so the scorecard (the case study's closing table) trends
-honestly.
+honestly. As with Toolkit 11.T.1, this is **good practice offered for adoption rather than a compliance
+instrument** — the control-objective framing behind it follows the voluntary articulation described at 11.3.1,
+and whether any formal obligation to document or attest internal control reaches a given entity is a
+jurisdiction- and entity-specific question for its finance function, its auditors and qualified advisers.
 
 ---
 
@@ -1181,3 +1218,14 @@ tells a controls professional where their numbers come from and where they can f
 2.3; the commitment→accrual→actual cost cycle → 5.2; interim valuations and billing → 7.4; cash-flow and the
 funding trough → 3.5; process mining and matching AI → 13.4–13.5.
 
+**PCI Standards engaged by this domain.** The companion instrument described in the Conventions, §11, anchors
+one certification standard here: `PCI-PCL-STD-11.01` (reproducibility of the reported controls position). It
+is a PCI requirement and is unrelated to the voluntary external framework named at 11.3.1, which neither
+stands behind it nor is affected by it. The foundational standards binding on every PCI credential holder
+apply throughout — in particular `PCI-FND-STD-01` (professional accountability), `PCI-FND-STD-02` (evidence
+before assertion), `PCI-FND-STD-05` (transparent assumptions), `PCI-FND-STD-09` (confidentiality and approved
+technology), `PCI-FND-STD-11` (escalation of material misstatement), `PCI-FND-STD-12` (record integrity) and
+`PCI-FND-STD-14` (responsible AI). The published Standards govern their own wording; they are private
+professional requirements established by PCI, not legislation, and where an applicable legal, regulatory,
+contractual or authoritative professional requirement imposes a higher or different obligation, that
+requirement governs.

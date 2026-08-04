@@ -270,6 +270,34 @@ log, the finding registers and their close-out evidence. It is not archive mater
 evidence base for the first covenant dispute, the first warranty claim, the first refinancing and
 the first sale, and Case study B shows what its absence costs.
 
+**How long the trail is kept, in what form, and by whom.** A trail that has been allowed to lapse is
+indistinguishable, three years later, from a trail that never existed, and this is the point at
+which most organisations lose the benefit of everything they did before close. The rule this book
+applies: the **closing set** — the diligence reports with their reliance letters, the disclosure
+index, the Q-and-A log, the finding registers with their close-out evidence, the condition-precedent
+evidence, the executed documents, the funds-flow reconciliation and the closing model with its audit
+report — is retained for **the longest of** three periods, and the longest is not usually the one
+people reach for first: the **life of the facility plus its tail**; the **limitation period
+applicable to claims under the relevant documents**, which runs from events that can occur late in
+that life; and any **statutory tax, accounting or regulatory requirement** the organisation has
+established for itself.
+
+Three disciplines make the period mean something. The set is retained **in a form that opens without
+the toolchain that created it** and that reproduces each figure from its own trail — a data room
+whose licence lapses is not a record, and neither is a workbook needing a discontinued add-in.
+**Model version, input data version and attribution are retained alongside the output**, not
+separately, because an output whose inputs have been archived elsewhere cannot be reconstructed and
+therefore cannot be defended. And a **named custodian** holds the set, with custody transferred by a
+recorded handover rather than inherited by whoever now has the drive.
+
+Two cautions. **Retention periods are jurisdiction-specific, differ by document type and change**;
+they are established for the specific entity and jurisdictions with counsel and the reporting
+accountants, and this book states the rule rather than the period. And where the trail holds
+information about identified individuals — diligence on directors and beneficial owners, screening
+results, Q-and-A correspondence — a **minimisation or deletion obligation may cut across the
+retention rule** in the opposite direction; the two are reconciled with the organisation's
+data-protection adviser before the set is archived, not when a request arrives.
+
 ### AI in this KA
 
 **Where it earns its place.** Data-room triage is now genuinely strong machine work and it attacks
@@ -313,6 +341,9 @@ evidence. **AI proposes; the professional verifies, decides and remains accounta
 | **Red-flag memorandum** | An early partial deliverable that lets findings be acted on inside the envelope. |
 | **Cross-stream interface list** | Register of assumptions touched by more than one adviser, each with a single named owner. |
 | **Data room / disclosure index** | The controlled disclosure repository and the numbered, dated record of what was disclosed. |
+| **Closing set** | The diligence reports and reliance letters, disclosure index, Q-and-A log, finding registers, condition-precedent evidence, executed documents, funds-flow reconciliation and closing model with its audit report, retained together as one evidential set. |
+| **Retention horizon** | The longest of the facility's life and tail, the applicable limitation period and any statutory tax, accounting or regulatory requirement; jurisdiction-specific, established rather than assumed. |
+| **Named custodian** | The person who holds a record set after the transaction team disperses, with custody transferred by recorded handover rather than inherited. |
 
 ### Sample MCQs — KA 13.1
 
@@ -435,6 +466,17 @@ study B) priced.
    returns nothing.
 3. *What does diligence buy, and what does it not?* — Information, and only where a decision would
    change; it never transfers risk and never discharges the reliant party's accountability.
+4. *How long is the closing set kept?* — For the longest of the facility's life and tail, the
+   limitation period applicable to claims under the relevant documents, and any statutory tax,
+   accounting or regulatory requirement the organisation has established. The periods are
+   jurisdiction-specific and established with counsel, not assumed.
+5. *What are the three disciplines that make a retention period mean something?* — A form that opens
+   without the toolchain that created it and reproduces each figure from its own trail; model
+   version, input version and attribution held alongside the output rather than separately; and a
+   named custodian, with custody transferred by recorded handover.
+6. *What can cut against retention?* — A minimisation or deletion obligation over information about
+   identified individuals. The two are reconciled with the organisation's data-protection adviser
+   before the set is archived, not when a request arrives.
 
 ---
 
@@ -747,7 +789,16 @@ forgivable in timetable terms. **Documentary** conditions — executed finance, 
 direct agreements, and the legal opinions that support them — fail through negotiation, and their
 duration is a function of how many parties must agree. **Third-party** conditions — permits,
 licences, land instruments, offtaker and grantor consents, letters of credit from banks that are
-not the lenders — are outside the group's control and are the standard source of close slippage.
+not the lenders — are outside the group's control and are the standard source of close slippage. This group also
+carries the **confirmation that any government support in the funding plan has been lawfully
+granted** — a written confirmation from counsel in the relevant jurisdiction, or evidence that any
+required notification, clearance or approval has been made and obtained, for each grant,
+concessional tranche, guarantee, tax measure or contribution in kind the plan relies on (Domain 9,
+KA 9.4.1). It sits here rather than among the documentary conditions because neither the sponsors
+nor the lenders control it, and it belongs on the schedule with a named owner and a date because
+the consequence of a defect characteristically falls on the project company rather than on the
+grantor. What the applicable régime requires, and what follows from a defect, are jurisdiction- and
+time-specific questions for that counsel; nothing here states the position anywhere.
 **Adviser and process** conditions — the diligence reports of KA 13.1, the model audit of KA 13.2,
 final credit approvals — have durations the transaction can influence but not compress at will.
 And **financial** conditions — equity funded or committed on acceptable terms, accounts opened,
@@ -1852,7 +1903,9 @@ percentage of `C`. **Part B, the cross-stream interface list:** every assumption
 than one adviser — availability, capacity, degradation, price, volume, tariff indexation, insured
 loss, tax rate, construction programme — with its single named owner, its value, its version and
 the streams that consume it. **Front line:** the envelope length, the binding stream, and the
-aggregate net value in parallel against in series.
+aggregate net value in parallel against in series. *Retention:* held with the closing set by a named
+custodian, on the basis in KA 13.1.5 — the reliance position and the liability cap recorded here are
+what a claim years later actually turns on.
 
 ### Toolkit 13.T.2 — Model-audit finding register (one per model version)
 
@@ -1864,7 +1917,13 @@ sheet, base case, sources and uses) · re-run of the golden-answer set (date and
 and date · disposition if accepted rather than corrected, with the written rationale. **Header
 block, mandatory before any count is quoted:** materiality threshold; counts by class;
 **class-weighted closure**; and the list of open Class 1 findings with their quantified effect. A
-finding count without this header block is not a reportable metric.
+finding count without this header block is not a reportable metric. *Retention:* this register is
+the primary evidence of **what was known at close** and of what was decided about it, so it is
+retained with the closing model and its audit report as one set, by a named custodian, on the basis
+in KA 13.1.5 — for the longest of the facility's life and tail, the applicable limitation period and
+any statutory requirement the organisation has established, in a form that opens without the
+toolchain that produced it. Findings accepted rather than corrected are retained with their written
+rationale, which is the entry most often needed and most often lost.
 
 ### Toolkit 13.T.3 — Close register: conditions, costs and funds flow (one per transaction)
 
@@ -1880,7 +1939,15 @@ with the total as a share of debt raised and of the envelope; the reconciliation
 provision and to sources and uses; and the effective cost of debt on lender fees and on total close
 costs. **Part C, funds flow:** every payment at close by payee and account, reconciled line by line
 to Part B, with the reconciliation signed by the agent and the finance director **before** close
-day, and payment instructions verified out of band.
+day, and payment instructions verified out of band. **Part D, retention:** the register, the
+condition-precedent evidence, the signed funds-flow reconciliation and the closing set are held by a
+**named custodian** for the longest of the facility's life and tail, the applicable limitation
+period and any statutory tax, accounting or regulatory requirement the organisation has established,
+in a form that opens without the toolchain that created it and reproduces each figure from its own
+trail; the entry records the period, its basis, the custodian and the date custody was last
+transferred. Where the register or its evidence holds information about identified individuals, the
+period is reconciled with any minimisation or deletion obligation before archiving (KA 13.1.5). The
+periods are jurisdiction-specific and are established with counsel rather than assumed.
 
 ## Exam preparation — Domain 13
 

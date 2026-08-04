@@ -1397,7 +1397,7 @@ what was found. Anything shorter is an assertion that checking happened.
 | **Payment-route record** | Which entity was paid, in which jurisdiction, into an account in whose name, against what invoice — with the approved reason for any departure. |
 | **Conflict of interest** | An interest that could bias judgment; declared, managed or declined. |
 | **Daylight test** | Would full disclosure of interests leave the advice trusted? |
-| **Responsible-AI principle** | AI proposes; the professional verifies, decides, remains accountable. |
+| **Responsible-AI principle** | AI proposes; the professional verifies, decides and remains accountable. |
 | **Verification duty** | The named human's obligation to check machine output before reliance. |
 | **Breakeven discovery probability** | Cost avoided by concealment ÷ loss on discovery; the arithmetic that has no upside term. |
 | **Source line** | The transaction, document and date behind a benchmark; without it a figure is an assertion, not evidence. |

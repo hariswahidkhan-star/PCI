@@ -5,7 +5,7 @@
 > the chapters' own. To change an item, change it in its Knowledge Area and regenerate —
 > which is why there is no second copy to fall out of step.
 
-**453 items** across 16 domains. Every numeric option in every item is
+**462 items** across 16 domains. Every numeric option in every item is
 independently recomputed by the golden-answer suite, not only the correct one, so a
 distractor cannot be arithmetically impossible without the gate failing.
 
@@ -13,11 +13,11 @@ distractor cannot be arithmetically impossible without the gate failing.
 
 | Level | Items | Share |
 |---|---|---|
-| Recall | 13 | 2.9 % |
-| Comprehension | 65 | 14.3 % |
-| Application | 118 | 26.0 % |
-| Analysis | 137 | 30.2 % |
-| Evaluation | 120 | 26.5 % |
+| Recall | 13 | 2.8 % |
+| Comprehension | 65 | 14.1 % |
+| Application | 118 | 25.5 % |
+| Analysis | 142 | 30.7 % |
+| Evaluation | 124 | 26.8 % |
 
 A bank weighted heavily to recall tests memory rather than competence; one weighted
 heavily to Evaluation is unanswerable under time pressure. The distribution above is a fact
@@ -28,21 +28,21 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 
 | Domain | Items | Levels represented |
 |---|---|---|
-| 1 | 27 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 1 | 28 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 2 | 30 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 3 | 32 | Recall, Comprehension, Application, Analysis, Evaluation |
-| 4 | 24 | Recall, Comprehension, Application, Analysis, Evaluation |
-| 5 | 28 | Comprehension, Application, Analysis, Evaluation |
-| 6 | 28 | Comprehension, Application, Analysis, Evaluation |
-| 7 | 28 | Comprehension, Application, Analysis, Evaluation |
+| 4 | 25 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 5 | 29 | Comprehension, Application, Analysis, Evaluation |
+| 6 | 29 | Comprehension, Application, Analysis, Evaluation |
+| 7 | 29 | Comprehension, Application, Analysis, Evaluation |
 | 8 | 29 | Comprehension, Application, Analysis, Evaluation |
 | 9 | 28 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 10 | 32 | Recall, Comprehension, Application, Analysis, Evaluation |
-| 11 | 26 | Comprehension, Application, Analysis, Evaluation |
-| 12 | 27 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 11 | 27 | Comprehension, Application, Analysis, Evaluation |
+| 12 | 29 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 13 | 30 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 14 | 28 | Recall, Comprehension, Application, Analysis, Evaluation |
-| 15 | 28 | Recall, Comprehension, Application, Analysis, Evaluation |
+| 15 | 29 | Recall, Comprehension, Application, Analysis, Evaluation |
 | 16 | 28 | Comprehension, Application, Analysis, Evaluation |
 
 ---
@@ -317,6 +317,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. certification binds the contractor's subcontractors, since the standard applies down the supply chain
 
 *Rationale:* ISO 37001 is a voluntary management-system standard, and conformity to it is a third party's opinion about a system rather than an answer about this counterparty and this payment (1.3.2); whether any defence exists, and what it requires, is a question of the applicable law and for counsel. C overcorrects — the certification is relevant evidence about the counterparty's controls, just not the evidence being claimed. D asserts a reach the diligence must establish for itself, contract by contract.
+
+
+**1.3-L** `[1.3.1 · Analysis]` Six weeks after a credit paper went to the lenders, an analyst finds that the demand forecast underneath it was superseded before the paper was issued. The working model was updated at the time; the lenders' copy was not, and the corrected figure moves the first-test coverage ratio below the covenant. The team lead says the point is moot because the model is already right. The correct professional response is:
+
+- A. no action is owed — the internal file is current, so the record has been corrected
+- B. raise it with the signing professional and the accountable principal, correct the figure to the lenders through the channel the finance documents provide before the next decision that would rely on it, and record what was wrong, when it was known, who was told and when ✅
+- C. wait for the lenders' model auditor to find it, since an independent finding is more credible than a self-report
+- D. correct it informally on the next relationship call, so that nothing goes on the file until counsel has advised whether a representation is engaged
+
+*Rationale:* the duty to correct is not discharged by a figure having been superseded internally (1.3.1) — the lenders still hold the wrong number, and materiality here is decided by the covenant the corrected figure crosses. A confuses abandoning a figure with correcting it. C is the Domain 6 Case study B failure stated as a strategy, and it leaves the recipient relying on a known error in the interval. D inverts the sequence twice: the informal route leaves no record, and the professional obligation is discharged first while the question of what the finance documents engage runs alongside it as a matter for counsel.
 
 
 ## Domain 2
@@ -1185,6 +1195,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Breakeven headroom is a buffer against *all* remaining uncertainty, not a budget to spend on one counterparty; consuming three-quarters of it in a negotiation leaves the project exposed to the correlated rate movement the table already prices (4.3.3). A spends the entire buffer. C mistakes a forecast for a position. D is B's arithmetic with the judgement removed — the model will indeed show a positive NPV, which is precisely why the number alone cannot settle it.
 
 
+**4.3-I** `[4.3.4 · Analysis]` A consortium's bid for an availability-based concession is comfortably NPV-positive at the sponsors' own hurdle and fully fundable on the lenders' coverage tests. The authority rejects it. Which single explanation is most consistent with how a public grantor decides?
+
+- A. impossible — a fundable, NPV-positive bid satisfies both sides of the table
+- B. the bid may fail the authority's value-for-money comparison against its constructed counterfactual, or fall outside its affordability envelope in the years the payments arise; both are tests the sponsors' NPV does not speak to, and they are independent of each other ✅
+- C. the authority must have used a higher discount rate than the sponsors, so the same cash flows produced a negative NPV on its side
+- D. the equity return must have been judged excessive, since return is what the authority is comparing
+
+*Rationale:* the grantor's tests are a comparison of risk-adjusted whole-life cost against a counterfactual it owns, and separately a year-by-year budget test; a bidder's NPV is an input to neither (4.3.4). C describes the sponsor's own calculation performed twice and misses that the authority is comparing two *cost streams*, not appraising the bidder's investment. D makes return the unit of account, which is the error the topic exists to correct. A assumes one decision rule where there are three.
+
+
 ## Domain 5
 
 **5.1-A** `[5.1.2 · Application]` A programme spends 1,000,000 screening, 3,000,000 on concept, 6,000,000 on feasibility and bid and 4,800,000 carrying two projects to close. Development cost per closed project is:
@@ -1315,6 +1335,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. credit separation applies during construction and bankruptcy remoteness during operations
 
 *Rationale:* 5.2.2 lists credit separation among the things the vehicle achieves and bankruptcy remoteness among the things it does **not** achieve by itself. A and C collapse a commercial assessment into a documentary construct, and it is the confusion behind the belief that a single-purpose entity is insolvency-proof; D invents a timing distinction the structure does not make.
+
+
+**5.2-H** `[5.2.3 · Analysis]` Kestrel's shareholders' agreement reserves approval of the annual budget to a 75 % shareholder vote. The industrial partner holds 10 %, the fund 35 %, the operator 55 %. The project team schedules a budget approval for the June board. The most important thing the decision-rights map should tell them is:
+
+- A. nothing new — at 10 % the industrial partner cannot block a 75 % vote, so the operator and the fund carry it between them
+- B. that the fund alone can block the budget at this threshold, that the same budget change may separately require lender or agent consent under the finance documents on its own timetable, and what deadlock mechanism applies if either is refused ✅
+- C. that the threshold should be renegotiated to a simple majority, since a 75 % reserved matter is unworkable in a three-sponsor vehicle
+- D. that lender consent is unnecessary, because the budget is an internal shareholder matter and the reserved-matter list governs it
+
+*Rationale:* a 75 % threshold hands a veto to any holder above 25 % — the fund at 35 % — so the veto map, not the shareholding table, is what the team needs (5.2.3); and a change to the business plan the base case was built on is characteristically also a lender consent, which is the two-approval problem. A reads the shareholding and not the threshold. C is a negotiating opinion offered instead of the map, and it is being offered after subscription, when the term is fixed. D is the assumption that leaves a board-approved decision unexecutable.
 
 
 **5.3-A** `[5.3.1 · Application]` Six bankability conditions have probabilities 0.92, 0.90, 0.95, 0.88, 0.93 and 0.85. The joint probability of close, assuming independence, is closest to:
@@ -1749,6 +1779,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* the difference is what each technique can represent, not the size or the number of the moves it makes: one-at-a-time measures the model's response to a single input and is silent on correlation and on behaviour at thresholds, which is what a coherent case exists to carry (6.4.2). A treats a difference in kind as a difference in degree — a wider step is still one input. C names a real discipline in the wrong place: coverage as well as value must be reported for *either* technique, which is why a table reporting only `NPV` ranks interest-rate risk last on Kestrel. D is the arithmetically tempting answer, because on this linear model a joint move is exactly the sum of the separate ones — and that is the trap, since adding the rows reproduces the number while still assigning the bundle no likelihood.
 
 
+**6.4-I** `[6.4.3 · Analysis]` Eighteen months after close, a modeller improves the tax logic in the project's model, reruns the covenant test on the improved logic and issues the compliance certificate from it. The check block is green and the golden answers still reproduce. The primary governance failure is:
+
+- A. none — the model is more accurate than it was, and the check block confirms the arithmetic
+- B. the model agreed at close is a defined contractual object amended only through the mechanism the finance documents provide, so the certificate has been produced from a model that is not the reference it must reconcile to, and the change has bypassed both the consent route and the base-case reconciliation ✅
+- C. the modeller failed to run a sensitivity table alongside the certificate
+- D. tax logic may never be changed in a project model, because the tax treatment is fixed at close
+
+*Rationale:* after close the defined base case is locked and the operating model must bridge to it, with actuals, consented amendments and re-forecasts shown separately (6.4.3, "The model after close"); an unconsented improvement is still an unconsented change, and internal correctness is not the test. A applies the pre-close standard after close. C is a real discipline answering a different question. D overstates: tax facts and treatments do change, which is exactly why the amendment mechanism exists — and what that mechanism requires, and at what consent threshold, is a matter for counsel on the specific documents.
+
+
 ## Domain 7
 
 **7.1-A** `[7.1.1 · Analysis]` Two structures for the same plant have identical expected `CFADS` of 6,384,000 and identical expected `DSCR` of 1.2743. Structure A pays that amount with certainty; Structure B's outcomes are 4,728,000 / 6,384,000 / 8,040,000 with probabilities 0.25 / 0.50 / 0.25. The soundest conclusion is:
@@ -1819,6 +1859,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. take-or-pay protects against price and an availability payment against cost
 
 *Rationale:* a floor is worth what the party writing it is good for and often protects cash timing far less than a summary suggests, while an availability structure converts demand risk into operational risk the project must then genuinely manage (7.1.2, 7.1.3). A ignores that the two leave different risks behind. C reverses the availability mechanism, whose whole point is that the project answers for availability. D names risks neither instrument addresses.
+
+
+**7.1-H** `[7.1.3 · Evaluation]` Two bidders' term sheets carry the identical deduction formula and the identical 1.5× multiplier. In sheet A the offtaker owns and maintains the availability meters, availability is deemed nil during any metering failure, and deductions are applied pending resolution of a dispute. In sheet B the meters are jointly witnessed and independently calibrated, metering failure is deemed at the preceding period's availability, and disputed deductions are escrowed until determination. The correct assessment is:
+
+- A. the two are the same exposure, since the multiplier and the formula are identical and the multiplier is what does the damage
+- B. sheet A carries materially more exposure: the measurement source, the deemed-availability rule and the pay-then-argue timing each move cash independently of the formula, and the last of them converts a contested operational judgment into an immediate coverage event before anyone has ruled ✅
+- C. sheet B is worse, because escrow exposes the project to the offtaker's credit for the escrowed amounts
+- D. the difference is a technical-adviser matter and does not belong in a commercial comparison
+
+*Rationale:* the formula is only the last step; who measures, what is deemed when measurement fails, and whether cash moves before determination decide whether a deduction is ever actually applied and when (7.1.3). A stops at the arithmetic the domain has already priced. C identifies a real but smaller exposure — credit and delay on the escrowed sum — and weighs it against an immediate coverage event. D is the misclassification the section exists to correct: these are first-order commercial terms.
 
 
 **7.2-A** `[7.2.2 · Application]` A banded tariff pays 0.55 per m³ on the first 18,000,000 m³, 0.35 on the next 6,000,000 and 0.10 above 24,000,000. At despatch of 19,200,000 m³ revenue is:
@@ -3119,6 +3169,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Interest-rate exposure is a covenant exposure long before it is a payment exposure, and treasury has answered the question four and a half times too generously (11.3.1). B is the under-hedging error in its usual form — the certain 84,000 is visible and the contingent range is not. C is the defensible weaker course and a common covenanted outcome: it does remove the whole range, and it pays 84,000 rather than 63,000, forgoes every benefit of falling rates, and enlarges the mark-to-market break cost that a later refinancing must pay. D misreads what a reserve does: it buys payment continuity and time, not compliance, and the breach at +73.9 basis points happens with the reserve fully funded. Two disciplines belong with A — the hedge profile should amortise with the outstanding balance rather than sit flat, and the hedge counterparty's own credit is now inside the structure.
 
 
+**11.3-H** `[11.3.1b · Evaluation]` With rates having fallen, a project's treasurer proposes to unwind part of the swap, bank the mark-to-market gain and re-hedge later at a better level, holding the covenanted ratio on average across the year. The soundest response is:
+
+- A. proceed — the covenanted ratio is met on average, and crystallising a gain is a treasury decision within the treasurer's normal authority
+- B. stop: the proposal is a rate position rather than a hedge of an exposure, an unwind crystallises a mark-to-market amount and changes the covenanted ratio, and a proposed unwind goes to the board and to the agent before execution, not after ✅
+- C. proceed if the reporting accountants confirm the accounting treatment first, since the accounting is the only open question
+- D. refuse permanently — a hedge once transacted may never be unwound
+
+*Rationale:* the mandate exists to hedge a documented exposure, and a hedge taken off in the expectation of re-hedging better is a view on rates (11.3.1b); the escalation rule names an unwind explicitly, and the temptation is greatest exactly when rates have moved most. A treats a covenant tested at a point as one satisfied on average and treats an escalation event as ordinary authority. C identifies a real requirement — the accounting consequence must be confirmed before a hedge is transacted — but makes it the whole question. D overstates: unwinds happen, on a prepayment or a refinancing; what the mandate requires is that they are approved and consented before they are executed. Whether a specific facility requires a consent is a question on the documents for counsel.
+
+
 **11.4-A** `[11.4.1 · Application]` A register of independent items has a mean of 2,125,000 and a variance of 4,982,875,000,000. Its P80 is closest to:
 
 - A. 2,125,000
@@ -3391,6 +3451,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 *Rationale:* Face amount, certainty and duration are three independent questions, and the third is the most frequently missed: a bond expiring at provisional completion does not reach the defects-liability period, and a guarantee expiring on a fixed date rather than on discharge of the underlying obligation is a gap in the stack with a date on it (12.3.1). A reduces three attributes to one — and the fee is the price of the certainty, not an extra. C confuses credit support with the lenders' own asset security. B asserts as a rule what is a drafting question in each instrument.
 
 
+**12.3-F** `[12.3.2 · Analysis]` A security package shows a parent company guarantee from the lead sponsor's group behind the EPC contractor, assessed at a 0.70 probability of payment. The same group has given the equity commitment, the contingent equity and the cost-overrun undertaking. The reviewer's first requirement is:
+
+- A. none — the 0.70 already prices the guarantor's credit, and each obligation has been assessed on its own terms
+- B. the aggregate of every obligation resting on that one obligor, stated beside the risk-adjusted cover, because the guarantee and the equity support are not independent and the events that call one call the others ✅
+- C. that the guarantee be replaced by an on-demand bond, since a 0.70 assessment is never acceptable
+- D. that the probability be lowered from 0.70 to reflect the additional obligations
+
+*Rationale:* the assessment prices the obligor's credit, not the number of claims that will arrive at once; a package whose parent guarantee and equity support are the same covenant has diversified nothing, and the aggregate is the disclosure (12.3.2). C converts a diligence finding into a negotiating demand without pricing the trade the 1.4286× equivalence makes available. D buries the finding inside a probability, which is exactly the reporting failure this KA exists to prevent — adjust the number and the reader can no longer see what was adjusted or why.
+
+
 **12.4-A** `[12.4.3 · Application]` A contractor claims 90 days and 1,870,000; delay damages are 20,000 per day; the project company's daily economic cost of delay is 24,733.33. The total exposure of the event to the project company is closest to:
 
 - A. USD 1,870,000
@@ -3459,6 +3529,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. accept the mechanics: prolongation is proved on actual cost, which is the fairest measure available
 
 *Rationale:* Change mechanics decide who funds a change and whether the funding exists, and a pre-agreed prolongation rate removes the largest single area of claim-quantification argument — which is why it belongs beside the delay damages rate and on the same evidence (12.4.2). B achieves symmetry by weakening the project's own recovery, which is the wrong direction from a rate that already recovers only 80.86 % of the daily economic cost of delay. C is the defensible weaker course and only protective if the schedule of rates is complete: where it is not, contract rates simply relocate the argument, so the ask is a complete schedule with a defined route for genuinely new work. D mistakes a measurement principle for a mechanism — proving actual cost after the event is precisely the exercise the pre-agreed rate exists to avoid, and it is conducted while the covenant is being tested. Whether a pre-agreed daily rate survives challenge as a penalty, and how a consent threshold interacts with the facility's negative covenants, are governing-law questions for qualified counsel; the commercial task is to price the asymmetry and ask for the term.
+
+
+**12.4-H** `[12.4.3 · Evaluation]` A contractor's claim arrives with strong merits and detailed quantum. The project team asks the commercial manager for an expected-recovery assessment for the month-end report. The first thing the manager should do is:
+
+- A. build the probability set and the settlement ceiling, since merits and quantum are what determine value
+- B. establish the notice position as a dated fact — whether a valid notice was served within the contractual period — and compute nothing until it is settled, because under many forms notice is a condition precedent to entitlement and an unnotified claim can be worth nothing regardless of merit ✅
+- C. reject the claim on the assumption that notice was late, and reserve the position
+- D. report the claimed sum as the exposure until the arbitration outcome is known
+
+*Rationale:* the arithmetic operates on merits and process economics and silently assumes the entitlement exists (12.4.3); running it first produces a defensible-looking expected recovery for a claim that may have none, and that figure then travels into a report and a provision. C asserts a conclusion in place of a fact and is the mirror error. D reports the claim rather than the exposure and ignores the time impact, which is usually the larger number. Whether a time bar operates strictly, and whether it can be relieved, are questions for counsel on the executed contract and its governing law.
 
 
 ## Domain 13
@@ -4325,6 +4405,16 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - D. distress is present once the debt service reserve has been drawn
 
 *Rationale:* The three are separated by what they are conditions *of* — a test, a profile and a payment — and the diagnostic between the second and third is whether scheduled service exceeds sustainable service for one period or for the remaining life (15.4.1). C counts breaches, which says nothing about the forecast. D describes a liquidity event reserves exist to absorb: Kestrel's debt service reserve was never drawn across six deteriorating years, while the distribution test bound throughout.
+
+
+**15.4-G** `[15.4.1 · Evaluation]` A finance director computes sustainable debt service and finds that scheduled service exceeds it for the whole remaining life. A distribution is due to be paid in three weeks, and the finance documents' lock-up test is satisfied on the last certified figures. The first action is:
+
+- A. pay the distribution — the contractual lock-up test is the test, and it is satisfied
+- B. escalate the finding in writing to the SPV board and to counsel in the jurisdiction of incorporation and under the governing law of the finance documents, obtain advice on what the directors now owe and to whom, and make no distribution without a written confirmation on the figures then current ✅
+- C. open discussions with the lenders on the three levers, so that a proposal is ready before the news reaches them
+- D. re-run the model on a more optimistic case to confirm the finding before troubling anyone
+
+*Rationale:* the diagnostic is an escalation trigger, not a modelling result (15.4.1). A treats a contractual test as the whole question: the lock-up is one test, and the separate question of whether a distribution remains lawful is jurisdiction-specific and not the treasurer's to judge. C reverses the order — the board and counsel come before the counterparty, and the directors' position must be understood before a proposal is made in their name. D is the most dangerous answer because it looks diligent: re-running a case is not verification, and delay while duties may already have shifted is itself a decision. What the duties are, when they shift and what follows are matters for that counsel; nothing here states them.
 
 
 ## Domain 16

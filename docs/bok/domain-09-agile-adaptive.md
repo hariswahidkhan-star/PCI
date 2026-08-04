@@ -609,10 +609,33 @@ revenue would be `40 % × 700,000 = 280,000` — but if cost-to-cost `% complete
 IFRS 15 revenue on the cost input method would be `35 % × 700,000 = 245,000`, a **USD 35,000** difference the
 professional must reconcile and explain (and which becomes a contract asset/liability, Domain 2, KA 2.2.7).
 
+**Story-point percentage is a proxy, not a measure of progress for recognition.** It measures relative effort
+against a *planned* scope, it moves when scope is rebaselined, and its unit is defined by the team rather than
+by anything external. It is a legitimate management measure and a useful cross-check; it is not, on its own,
+an acceptable basis for measuring progress towards satisfying a performance obligation, and it must be
+**reconciled to the entity's chosen input method** rather than substituted for it.
+
+**Who decides the recognition basis.** The controls professional owns the forecast, the scope-change
+transparency and the reconciliation of the three progress views. **The measure of progress used for revenue
+recognition is an accounting-policy judgement**, made by finance as the reporting entity's accounting-policy
+owner, applied consistently across similar performance obligations and tested by the external auditor. The
+controls professional **supplies and evidences the inputs — and does not select or change the recognition
+basis.** Where the story-point view and the cost-to-cost view diverge materially, the professional's act is to
+quantify the divergence, explain its cause and refer the basis question to finance; it is not to pick the
+number that reconciles. (Domain 13, KA 13.5.10 draws the same line for AI-assisted recognition work.)
+
+> **A jurisdictional note.** IFRS preparers apply IFRS 15; preparers reporting under US GAAP apply the
+> equivalent revenue model in ASC 606, which was developed jointly and follows the same five-step shape.
+> Other frameworks exist. Which framework an entity reports under, and what its chosen measure of progress
+> must be, are matters for the entity and its auditors; nothing here states the requirements of any framework,
+> and the official publication of each governs (Conventions, §9).
+
 **AI in this KA.** AI is strong here (Domain 13, KA 13.5): forecasting velocity and release completion from
 Sprint history, generating three-point ranges, detecting flow anomalies, and projecting AgileEVM `EAC`. It can
 also *mislead* if it treats story points as absolute or ignores scope rebaselining. The professional owns the
-forecast, the scope-change transparency and the revenue reconciliation. **AI proposes; the professional verifies, decides and remains accountable.**
+forecast, the scope-change transparency and the reconciliation of the three progress views; the recognition
+basis is finance's judgement, not the model's and not the controls function's. **AI proposes; the professional
+verifies, decides and remains accountable.**
 
 ### Key terms — KA 9.5
 
@@ -622,6 +645,7 @@ forecast, the scope-change transparency and the revenue reconciliation. **AI pro
 | **AgileEVM** | Earned value on variable scope using story-point % against a release budget. |
 | **Rebaselining** | Transparently resetting scope/`BAC` when scope is deliberately flexed. |
 | **Progress reconciliation (agile)** | Tying AgileEVM %, cost-to-cost %, and billing basis. |
+| **Measure of progress (recognition)** | The basis on which progress towards satisfying a performance obligation is measured — an accounting-policy judgement owned by finance, not by project controls. |
 
 ### Sample MCQs — KA 9.5
 
@@ -646,15 +670,20 @@ change requires transparent rebaselining. Points are not hours, velocity varies,
 formulae.
 
 **MCQ 9.5-C `[9.5.4 · Analysis]`** AgileEVM `% complete` is 40 % but cost-to-cost `% complete` is 35 % on an
-IFRS 15 over-time contract. The professional should:
-- A. Reconcile the two and recognise on the appropriate input basis (here cost-to-cost 35 %), explaining the difference. ✅
-- B. Recognise revenue at 40 %.
-- C. Ignore IFRS 15.
-- D. Average them to 37.5 %.
+over-time contract. The controls professional should:
+- A. Reconcile the two, evidence both sets of inputs, explain the cause of the difference, and refer the
+  measure of progress used for recognition to finance as the accounting-policy owner. ✅
+- B. Recognise revenue at 40 %, the AgileEVM measure.
+- C. Change the recognition basis to whichever view the contract's billing follows.
+- D. Average the two to 37.5 %.
 
-*Rationale:* IFRS 15's input method is typically cost-to-cost; story-point % is a proxy that must be
-reconciled, not substituted. The difference (and any resulting contract asset/liability) is explained, not
-averaged away.
+*Rationale:* Story-point percentage is a proxy for relative effort against planned scope, not a measure of
+progress towards satisfying a performance obligation, so it is reconciled rather than substituted (9.5.4). The
+choice of measure of progress is an accounting-policy judgement owned by finance, applied consistently and
+tested by the external auditor; the controls professional supplies and evidences the inputs and does not
+select or change the basis. B substitutes the proxy; C lets the billing mechanism drive recognition, which is
+the confusion 9.5.4 exists to prevent; D averages away the very difference that has to be explained (and that
+becomes a contract asset or liability, Domain 2, KA 2.2.7).
 
 **MCQ 9.5-D `[9.5.1 · Application]`** A capacity-funded team costs **USD 75,000 per Sprint**; `AC` to date is
 USD 300,000; the velocity forecast shows **6 Sprints remaining**. The `ETC` and `EAC` are:
@@ -683,6 +712,10 @@ values progress at actual cost, which is what `EV` must never do.
    valid only against a defined release scope/`BAC`, rebaselined transparently on scope change.)*
 2. Why can story-point % differ from IFRS 15 cost-to-cost %? *(Points measure relative effort/scope, not cost;
    costs may lead or lag points — reconcile and explain.)*
+3. Who selects the measure of progress used for revenue recognition, and what does the controls professional
+   supply? *(Finance, as the entity's accounting-policy owner, applied consistently and tested by the external
+   auditor; the controls professional supplies and evidences the inputs and reconciles the progress views, and
+   does not select or change the basis.)*
 
 ---
 
@@ -721,6 +754,16 @@ backlog, Sprint records, Increments, Definition of Done, review outcomes — for
 trail**. The controls/assurance task is to ensure that trail is **captured and auditable**: what was delivered
 each Sprint, what scope changed and why (rebaselining, 9.5.3), and how forecasts were derived. Done well,
 adaptive delivery is *more* transparent than a predictive plan that is updated quarterly.
+
+**But only if it survives.** This trail lives in delivery tooling — backlog systems, boards, pipelines — that
+is retired, migrated and re-licensed far more often than a document archive, and an assurance case built on
+Sprint evidence is worth nothing once that evidence is unreachable. The Sprint record is therefore treated as
+part of the project record and archived at closure on the same terms as everything else: a **stated retention
+period**, a **named custodian in the permanent organisation**, an **export in a format that will still open**,
+and **retrieval tested rather than assumed** (Domain 8, KA 8.5.1). Where the evidence includes records
+identifying individuals — who committed what, individual throughput — note that these are typically personal
+data and their retention and access are matters for the organisation's data-protection function and qualified
+advice (Domain 13, KA 13.2.5).
 
 **AI in this KA.** AI helps hybrid governance by reconciling predictive and adaptive status into one report,
 mapping Sprints to milestones, and drafting gate submissions from Sprint data. The professional owns the
@@ -1400,3 +1443,16 @@ three progress views, with the agile artefacts themselves forming a rich audit t
 6; IFRS 15 over-time recognition and contract asset/liability → 2.2; agile contract forms → 7.1; billing
 reconciliation → 7.4–7.5; three-point forecasting → 3.4; AI for backlog/velocity/flow → 13.5.
 
+**PCI Standards engaged by this domain.** Domain 9 anchors **no certification standard of its own** — the
+design described in the Conventions, §11: adaptive delivery reuses the measurement, forecasting and change
+obligations rather than adding new ones. Those engaged here are anchored elsewhere — `PCI-PCL-STD-06.01` and
+`PCI-PCL-STD-06.02` behind AgileEVM's earning rules and evidence of progress, `PCI-PCL-STD-06.04` behind the
+forecast method and its disclosure, `PCI-PCL-STD-03.02` behind transparent rebaselining, and
+`PCI-PCL-STD-05.02` behind the registration of scope change. The foundational standards binding on every PCI
+credential holder apply throughout — in particular `PCI-FND-STD-01` (professional accountability),
+`PCI-FND-STD-02` (evidence before assertion), `PCI-FND-STD-05` (transparent assumptions), `PCI-FND-STD-09`
+(confidentiality and approved technology), `PCI-FND-STD-11` (escalation of material misstatement),
+`PCI-FND-STD-12` (record integrity) and `PCI-FND-STD-14` (responsible AI). The published Standards govern
+their own wording; they are private professional requirements established by PCI, not legislation, and where
+an applicable legal, regulatory, contractual or authoritative professional requirement imposes a higher or
+different obligation, that requirement governs.

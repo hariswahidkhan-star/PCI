@@ -27,7 +27,9 @@ benefits profile that ramps rather than assuming steady state from day one, and 
 overstatement a flat assumption produces**; **distinguish flat-equivalent from ramped-basis
 breakeven adoption and convert between them**; define measurement baselines, **separate an
 attributable improvement from a raw one with a comparison cohort, and state the invariant that
-fixes the over-claim share**; avoid double-counting; rank candidates with weighted scoring and
+fixes the over-claim share**; avoid double-counting; **distinguish sustainability and social value as
+a constraint, as a benefit and as a disclosed claim, and state the four provisions a disclosed claim
+carries and who approves it**; rank candidates with weighted scoring and
 under a binding constraint, and state each method's limits; **compute how far a criterion weight
 must move to reverse a ranking, and which criteria can never decide anything**; **derive the
 marginal value of a unit of the binding constraint by enumeration and show why it is lumpy and
@@ -43,6 +45,15 @@ kill criteria that make honest gates possible.
 rollout to **40 clinics**, whose verified benefit figures (full potential **USD 979,200** per year;
 **USD 685,440** at the realistic 70 % adoption) are now used to build the business case that should
 have been written for it.
+
+**Reference points.** The portfolio material of KA 2.1 and the selection material of KA 2.2 have an
+international reference point worth naming: **ISO 21504**, which addresses guidance on portfolio
+management, sitting within the **ISO 21500** family Domain 1 introduced. Both are voluntary guidance
+describing practice — neither is legislation and neither is a certifiable requirement — and neither
+obliges anyone of itself unless an organisation, a contract or a regulator adopts it. They are named
+here and not reproduced: no clause, table or checklist from either appears in this volume, the
+treatment below is this book's own, and a reader who wants either document should obtain the current
+edition from its publisher. Naming them implies no endorsement in either direction.
 
 ---
 
@@ -1136,6 +1147,55 @@ capital solution with higher operating energy and shorter life frequently loses 
 basis, and the appraisal horizon of KA 2.2.2 is what makes that visible (PFL-AI Domain 4's
 equivalent annual value handles unequal lives).
 
+**As a disclosed claim:** the third way, and the one most often missed, because it is not an
+appraisal question at all. A benefit that stays inside the appraisal is an estimate a board may
+accept or challenge on the evidence. The moment the same benefit is reported *outside* the
+organisation — in a sustainability or annual report, in a bid or prequalification response, in a
+submission to a regulator, or in a financing or investor document — it stops being an estimate and
+becomes a **claim**, and a claim is held to a standard a forecast is not. Four provisions follow, and
+they are stated as professional obligations rather than as anyone's legal position:
+
+- **A stated boundary and method.** What is counted, over what period, against which baseline, on
+  whose emission or valuation factors, and what is deliberately excluded. A carbon or social-value
+  number without its boundary is not a measure: two organisations applying different boundaries
+  produce different figures from identical facts, and neither figure is checkable by the reader.
+- **A named owner.** One person accountable for the figure — the rule KA 2.3.2 applies to every other
+  benefit measure, and it does not weaken because the unit is tonnes or apprenticeship weeks rather
+  than currency.
+- **Retained evidence sufficient for someone else to test it.** External assurance, where it is
+  obtained, tests the evidence rather than the assertion, so a figure whose working papers were a
+  spreadsheet on one laptop cannot be assured whatever its accuracy. Domain 16, KA 16.4.4's retention
+  economics apply directly, and the record class, custodian and retention period are set *before* the
+  claim is published rather than after it is questioned. The benefits measurement plan of Domain 16,
+  KA 16.4.1 is where a claimed benefit acquires the measured evidence that later supports it.
+- **Approval by whoever signs the disclosure.** The project does not approve an external claim. That
+  approval belongs to the function that owns the report, the bid or the submission; the project's
+  obligation is to supply the measure, the boundary, the method and the evidence in a form that
+  function can sign, and to say plainly where the evidence stops.
+
+**The professional prohibition, in one line.** *A benefit that cannot be evidenced to the standard
+its intended audience requires is not reported as achieved.* Report the measured part as measured,
+the estimated part as estimated with its method beside it, and the unevidenced part not at all.
+Presenting a forecast as a result, counting a benefit the organisation did not cause, or moving the
+boundary until the number improves are the attribution failures of KA 2.3.2 committed in front of an
+audience that cannot see the working — which is why the profession treats the disclosed version as
+the graver of the two, and why the leader who supplies the number needs a written record of what was
+supplied and to whom.
+
+**The standing caveat, in this volume's usual form.** Which external disclosure and assurance
+obligations apply, to which entities, on what timetable, in what form, and with what consequence for
+an unsupported claim, is jurisdiction- and entity-specific, changes, and is taken from the
+organisation's reporting function and from qualified counsel — never from this book. Nothing here
+states the position in any jurisdiction, states what any regime requires, or characterises any
+organisation's disclosure as compliant or otherwise. One distinction is worth holding because it is
+routinely blurred: a **voluntary reporting framework** is something an organisation chooses to adopt,
+and a **disclosure regime** is something that applies on its own terms to those it reaches; adopting
+the first tells you nothing about the second, and the two questions go to the same advisers
+separately. Where a quantified greenhouse-gas figure is being prepared, **ISO 14064** is the document
+usually named as addressing the quantification and reporting of greenhouse-gas emissions and
+removals; it is voluntary guidance, it is named here and not reproduced, and it is not itself a
+disclosure obligation.
+
 ### 2.3.4 Assumptions and dependencies
 
 **Business cases fail through their assumptions**, and the assumptions are usually stated once and
@@ -1275,6 +1335,9 @@ and all three are reported with a location so a human can confirm them.
 | **Assumption register** | Statement, basis, impact-if-false, owner, test date, falsifying trigger. |
 | **Assumption exposure ratio** | `Σ EMV ÷ NPV`; as it approaches one, the case is a bet rather than a value proposition. |
 | **Test-order rule** | Rank assumptions by `EMV ÷ cost to test`, so the free tests are cleared before the paper is written. |
+| **Disclosed claim** | A benefit reported outside the organisation; needs a stated boundary and method, a named owner, retained evidence and the signing function's approval, and is never approved by the project. |
+| **Claim boundary** | What a sustainability or social-value measure counts and excludes, over what period and against which baseline; without it the number is not checkable. |
+| **Voluntary framework vs disclosure regime** | A framework is adopted by choice; a regime applies on its own terms. Adopting the first says nothing about the second, and both are questions for the reporting function and qualified counsel. |
 
 ### Sample MCQs — KA 2.3
 
@@ -1376,6 +1439,14 @@ around the NPV, not deductions from it; D treats a sanity ratio as an approval t
    31.4498 %, where the honest figure is **35.6035 %**.
 6. *What does an assumption exposure ratio approaching one tell a board?* — That the case is a bet
    rather than a value proposition, and should be staged with kill criteria rather than committed.
+7. *What changes when a sustainability or social-value benefit is reported outside the
+   organisation?* — It becomes a claim rather than an estimate: it needs a stated boundary and
+   method, a named owner, retained evidence someone else can test, and approval from the function
+   signing the disclosure. The project supplies it; the project does not approve it.
+8. *State the professional prohibition on disclosed benefits.* — A benefit that cannot be evidenced
+   to the standard its intended audience requires is not reported as achieved. Which external
+   obligations apply, and to whom, is for the reporting function and qualified counsel, not for this
+   book.
 
 ---
 
@@ -2162,7 +2233,11 @@ Per benefit: description · **the outcome measure that produces it** and its own
 project) · **enabling changes required**, each with an owner and whether funded · baseline value,
 measurement method and date measured · profile by year (**ramp explicit**) · cash-releasing or
 capacity · attribution note · single-claimant confirmation against the portfolio register ·
-review cadence.
+review cadence. Three further fields wherever the benefit may leave the organisation: **whether it is
+externally disclosed** and in what (report, bid, regulatory submission, financing document) · the
+**stated boundary and method** on which the figure rests, with what is excluded · and the **approving
+function and record class**, since the project supplies a disclosed claim and never approves one
+(2.3.3; Domain 16, KA 16.4.4 for the retention).
 
 ### Toolkit 2.T.3 — Gate decision pack rules
 
@@ -2257,8 +2332,11 @@ Meridian's 1,693,072) but remains a heuristic for lumpy candidates, and the cons
 value is lumpy too — 900,000 · 300,000 · 900,000 · 493,072 · 300,000 · 900,000 — so capacity is a block
 decision, add one unit or three and never two. Benefits require maps that include the **enabling
 change** most omit, baselines measured before the change, comparison cohorts, single claimants, honesty
-about cash-releasing versus capacity, and sustainability treated as constraint or as value but never
-confused between them; and an assumption register is priced, not listed — Meridian's carried
+about cash-releasing versus capacity, and sustainability treated as constraint, as value or as a
+disclosed claim but never confused between them — a disclosed claim carrying a stated boundary and
+method, a named owner, retained evidence and the signing function's approval, and never being
+reported as achieved on evidence its audience would not accept; and an assumption register is priced,
+not listed — Meridian's carried
 **USD 1,074,548** of expected exposure against a 1,332,898 NPV, a ratio of **0.8062**, of which 390,184
 was resolvable for nothing. And the discipline closes with stopping: continuation depends only on
 remaining cost against remaining benefit, plus the forward exit cost — 780,000 of value for 900,000 of

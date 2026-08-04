@@ -1912,6 +1912,11 @@ components of Part A's gross certified value as percentages, this period and cum
 off-site balance aged. **Rules:** the off-site line is nil unless vesting, segregation and insurance
 are all in place *for the amount certified*; the certification mix is reported whether or not anyone
 asks; and cumulative drawn is tied to the facility agent's statement, never to the model.
+*Retention:* each pack is held as submitted — not superseded by the next one — by a named custodian,
+with the certificates and evidence references it relied on, for the longest of the facility's life
+and tail, the applicable limitation period and any statutory requirement the organisation has
+established. A draw request is a certification: it is the record of what was represented, to whom,
+on what date.
 
 ### Toolkit 14.T.2 — Restated sources and uses, the in-balance test, and the `EAC` bridge
 
@@ -1927,7 +1932,11 @@ delivery organisation's cost report on each published method, then one line per 
 each labelled with the discipline that is blind to it — arriving at the lender's number. **Sheet 4,
 disaggregated performance:** `EV`, `AC` and `CPI` separately for fixed-price and owner-retained
 scope, with the blended index shown only to be marked "not to be used for forecasting". **Rule:** no
-cost report is issued, and no draw request signed, without Sheets 2 and 3 complete.
+cost report is issued, and no draw request signed, without Sheets 2 and 3 complete. *Retention:*
+each issue is kept as issued, by a named custodian, with the cost report and assessments it rests
+on, for the longest of the facility's life and tail, the applicable limitation period and any
+statutory requirement the organisation has established — the in-balance position at a given date is
+exactly what a later dispute turns on.
 
 ### Toolkit 14.T.3 — Contingency coverage and change-control register
 
@@ -1942,7 +1951,10 @@ effect; funding source, named; `ΔCFADS` claimed and by whom; `Δ debt service` 
 share; **marginal `DSCR`**; coverage-neutral maximum debt funding; headroom consumed; cumulative
 headroom consumed by all approved variations against the base-case headroom. **Rule:** the draw-rate
 check — contingency drawn against progress — does not appear on this form; and no variation is
-approved without a funding source and a marginal `DSCR`.
+approved without a funding source and a marginal `DSCR`. *Retention:* held by a named custodian with
+the approved variation instructions and the risk-register versions the percentiles were computed
+from, for the longest of the contract's life including its defects periods, the applicable
+limitation period and any statutory requirement the organisation has established.
 
 ## Exam preparation — Domain 14
 

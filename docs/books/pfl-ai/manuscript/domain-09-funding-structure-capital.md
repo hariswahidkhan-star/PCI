@@ -1155,6 +1155,35 @@ project than support of equal value that improves return**, because coverage is 
 constraint (9.1.4). A grantor seeking maximum financeability per unit of fiscal cost should
 therefore direct support at the coverage face — which is exactly what 9.4.2 quantifies.
 
+**The third point, and it belongs on the funding plan rather than on the grantor's side of it.**
+Every form in the table raises a question the funding plan cannot answer for itself: **has the
+support been properly granted?** Many jurisdictions are understood to operate régimes governing
+whether and how public support may be given — variously described as subsidy control or State aid —
+and there are international disciplines on subsidies operating between states; grants, concessional
+loans, guarantees, tax measures and support in kind can each fall within them. The professional
+reason this belongs in a chapter about *funding plans* is the shape of the consequence. Where such a
+régime applies and support has not been properly granted, the consequence is characteristically
+described as **recovery from the beneficiary, with interest** — and the beneficiary is the project
+company, not the grantor. That turns a public-law question into a hole in the funding plan, sitting
+on the exact line the reader has just been taught to build, and one that opens after financial close
+when the money has been spent.
+
+What the professional owes is therefore concrete and is not an opinion of their own. **A written
+legal confirmation that the support is lawfully granted** — or that any required notification,
+clearance or approval has been made and obtained — is obtained from qualified counsel in the
+relevant jurisdiction **before financial close**; it is listed on the condition-precedent schedule
+as a third-party condition with a named owner and a date (Domain 13, KA 13.3.1); and it is retained
+with the closing set for as long as recovery can be pursued, which is longer than most people
+assume. Lenders will ask for it in diligence in any event, and a funding plan that shows the support
+without showing the confirmation has recorded the benefit and omitted its condition.
+
+Two cautions of the kind this book always attaches. The applicable régime, its thresholds, what
+falls inside it, what procedure applies and what the consequences of a defect are, differ by
+jurisdiction and change over time — nothing here states the position anywhere, and nothing here
+characterises any support as lawful or unlawful. And this is not a matter on which a financial
+adviser, a model or a sponsor's own view is worth anything: it is a legal question with a legal
+answer, obtained in writing, from counsel who will be relied on.
+
 ### 9.4.2 Grants and concessional tranches
 
 **Worked example 9.4.2 — one grant, two structures, two entirely different projects.**
@@ -1350,6 +1379,9 @@ not the first year's.
 | **Refinancing gain** | PV of improved terms, net of costs; decomposed into rate and extension components. |
 | **Gain-share** | Contractual obligation to pass a defined share of a refinancing gain to the grantor. |
 | **Tail** | Project life beyond debt maturity; reduced by tenor extension. |
+| **Subsidy-control régime** | The régime, where one applies, governing whether public support may be given; its existence, scope and consequences are jurisdiction-specific and are a question for counsel. |
+| **Confirmation of lawful grant** | The written legal confirmation, obtained before close, that support in the funding plan has been properly granted; a third-party condition precedent with a named owner, retained with the closing set. |
+| **Recovery exposure (support)** | The funding-plan risk that improperly granted support is recovered from the project company with interest — a hole in the plan rather than a grantor problem. |
 
 ### Sample MCQs — KA 9.4
 
@@ -1478,6 +1510,16 @@ structure that lifts equity `IRR` by 429.20 basis points and leaves `DSCR` untou
    is the breakeven addition here.
 3. *How must a refinancing gain be reported?* — Net of costs and gain-share, decomposed into rate
    and extension components, at no fewer than two discount rates including the new loan rate.
+4. *Why is the lawfulness of government support a funding-plan question rather than a grantor
+   question?* — Because where support has not been properly granted the characteristic remedy is
+   recovery from the beneficiary with interest, and the beneficiary is the project company. The
+   exposure sits on the funding plan, after close, when the money has been spent.
+5. *What evidence must exist, and when?* — A written confirmation from counsel in the relevant
+   jurisdiction that the support is lawfully granted, or that any required notification or approval
+   has been made and obtained; before financial close; on the condition-precedent schedule as a
+   third-party condition with a named owner; retained with the closing set. The applicable régime
+   and its consequences are jurisdiction-specific and are never assumed from another country or an
+   earlier deal.
 
 ---
 
@@ -1779,6 +1821,12 @@ weights and their sum · resulting `WACC` · **the `WACC` at the coverage-bindin
 gap to the proposed structure · the sponsor's corporate `WACC`, stated for contrast, with a note
 that it is **not** the project rate. Rule: no appraisal in the organisation uses a discount rate
 without a current signed record, and the record is re-signed whenever the funding plan changes.
+*Retention:* held by a named custodian for the longest of the life of the facility and its tail, the
+limitation period applicable to claims under the relevant documents, and any statutory tax,
+accounting or regulatory requirement the organisation has established — with each source, opinion
+and quotation date held alongside the record rather than separately, in a form that reproduces the
+rate from its own trail. The periods themselves are jurisdiction-specific and are confirmed, not
+assumed.
 
 ### Toolkit 9.T.2 — Tranche comparison sheet (all-in, like-for-like)
 
@@ -1791,7 +1839,9 @@ proceeds actually available** · **all-in effective rate, solved from the stream
 service · `DSCR` contribution · **debt capacity supported at the target coverage** · grant
 element, where concessional. Two mandatory footers: the method statement (all-in rates solved, not
 added) and the separation rule (cost effects and capacity effects reported in different rows,
-never netted).
+never netted). *Retention:* held by a named custodian with the term sheets and fee letters the
+columns were built from, for the life of the tranche selected plus the applicable limitation period,
+in a form that reproduces each all-in rate from its own stream.
 
 ### Toolkit 9.T.3 — Capital-structure decision record
 
@@ -1802,7 +1852,13 @@ the escalation assumption that separates them · treatment of any grant, stated 
 instruments and their placement (SPV or HoldCo), with the lock-up shortfall at which HoldCo
 service stops · refinancing assumption, if any, and whether a gain-share applies. Front line:
 **which constraint binds, at what gearing, and what the structure costs in `WACC` to stay inside
-it.** The record is minuted with the decision, and the rejected structures stay in it.
+it.** The record is minuted with the decision, and the rejected structures stay in it. Where the
+structure relies on government support, the row also carries the **confirmation of lawful grant**
+(KA 9.4.1) — who obtained it, its date, and the condition-precedent line it sits on. *Retention:*
+held by a named custodian with the board minute, for the longest of the facility's life and tail,
+the applicable limitation period and any statutory requirement the organisation has established; the
+confirmation of lawful grant is retained for as long as recovery of the support could be pursued,
+which is a period established with counsel rather than assumed.
 
 ## Exam preparation — Domain 9
 

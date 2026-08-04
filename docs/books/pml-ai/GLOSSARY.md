@@ -6,7 +6,7 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**591 terms**, consolidated from 606 key-terms entries across 16 domains.
+**622 terms**, consolidated from 637 key-terms entries across 16 domains.
 
 ## A
 
@@ -46,7 +46,7 @@
 
 **Aggregation trap** — Averaging component ratios instead of summing their numerators and denominators; frequently reverses the sign. *(KA 15.4)*
 
-**AI use register** — The row-per-use record of use, decision informed, accountable person, consequence, measurements, tier, versions and boundary. *(KA 14.4)*
+**AI use register** — The row-per-use record of use, decision informed, accountable person, consequence, measurements, tier, versions, boundary, failure route and decisions to reopen on failure. *(KA 14.4)*
 
 **Alignment decay** — The erosion of strategic fit after approval, as strategy and understanding move. *(KA 2.1)*
 
@@ -108,13 +108,15 @@
 
 **Baseline maintenance** — Applying changes by accumulation, with traceability to authority, preserving the original. *(KA 4.3)*
 
+**Basis of an attitude entry** — The observed act and its source, recorded instead of a characterisation of the person; the form an assessment takes in a record that names identified individuals. *(KA 11.1)*
+
 **Benefit per unit of adoption-hours (U)** — clinics × valuation rate × operating weeks — the constant in `benefit = U × a × h`. *(KA 16.4)*
 
 **Benefits bridge** — The reconciliation from gross claimed benefit through eliminations and adoption to net realistic benefit. *(KA 15.2)*
 
 **Benefits map** — Output → enabling change → outcome → benefit → objective, with owners and measures. *(KA 2.3)*
 
-**Benefits measurement plan** — Measure definition, baseline and date, target profile, method, frequency, owner, reporting route and end date, per benefit. *(KA 16.4)*
+**Benefits measurement plan** — Measure definition, baseline and date, target profile, method, frequency, owner, **fund type**, reporting route and end date, per benefit. *(KA 16.4)*
 
 **Benefits owner** — The accountable person outside the project who will realise the benefit. *(KA 2.1)*
 
@@ -178,6 +180,8 @@
 
 **Cash-releasing / non-cash-releasing** — Benefits that reduce spend versus those that release capacity. *(KA 2.3)*
 
+**Cashability confirmation** — The written confirmation, from the finance owner of the affected budget, that a claimed saving is budget-removable and from which period. Until it exists the claim is carried as capacity-released. *(KA 15.2)*
+
 **Causation** — The demonstrated link from the contractual basis to the effect claimed; where most claims are decided. *(KA 10.4)*
 
 **Cause concentration** — The share of nonconformances attributable to the single largest root cause. *(KA 9.3)*
@@ -195,6 +199,8 @@
 **Channel load** — Channels × hours per channel per period; compared with engagement capacity to give the sustainable party count. *(KA 11.2)*
 
 **Charter** — The document authorising the project and conferring bounded authority on its leader. *(KA 4.1)*
+
+**Claim boundary** — What a sustainability or social-value measure counts and excludes, over what period and against which baseline; without it the number is not checkable. *(KA 2.3)*
 
 **Closing account** — Reconciliation of realised value against the promise, decomposed into its causes and reported to the approving body. *(KA 16.4)*
 
@@ -332,6 +338,8 @@
 
 **Crashing / fast-tracking** — Buying duration with money / with overlap risk. *(KA 6.4)*
 
+**Crisis declaration** — The named role's act that changes stated authorities — a stop-work authority, a stated fund against a named reserve, a standing cadence — and which someone other than the crisis lead stands down. *(KA 8.4)*
+
 **Criterion influence** — `(score range) × weight` — the most a criterion can move a total, and therefore what the model cannot decide. *(KA 2.2)*
 
 **Critical chain** — The binding sequence once logic *and* capacity are honoured; need not be the critical path. *(KA 6.3)*
@@ -345,7 +353,9 @@
 **Cumulative test** — The delegation-schedule provision that related decisions aggregating above `X` within period `P` require the authority appropriate to the aggregate. Setting `X` and `P` is arithmetic, not judgement, and is derived in Domain 4, KA 4.3.3 — a round number chosen without reference to the observed decision rate provides the appearance of a control and none of the function. *(KA 3.3)*
   <br/>· *Also read at KA 4.3:* A threshold on aggregated related changes over a stated period, set from the observed change rate.
 
-**Cumulative-effect test** — The rule that related concessions aggregating above a threshold require the authority appropriate to the aggregate. *(KA 9.3)*
+**Cumulative-effect test** — The rule that related concessions aggregating above a threshold require the authority appropriate to the aggregate. Operable only once five things are fixed in the quality plan: who sets the threshold (sponsor or design authority, at baseline), how it is derived, the aggregation period, the relatedness test, and the named owner of the running total. *(KA 9.3)*
+
+**Custody handover** — The recorded transfer of each record class to a continuing custodian at closure, so records outlive the temporary organisation. *(KA 3.3)*
 
 **CV SV** — `EV − AC` · `EV − PV`, in currency. *(KA 7.3)*
 
@@ -385,6 +395,8 @@
 
 **Declared interest** — Anything capable of affecting, or of appearing to affect, judgement on a matter before a person — financial, employment, personal, authorship of what is being assured, or a future role dependent on the outcome — disclosed in writing to the chair before the item is taken. *Context flag: the stakeholder sense of "interest" (attention paid) is Domain 11, KA 11.1.* *(KA 1.2)*
 
+**Declining the signature** — The refusal to sign an acceptance, readiness certificate, forecast or account the leader does not believe, stated in writing with what would have to change. *(KA 12.4)*
+
 **Decoupling** — Removing a predecessor from a milestone by designing an operable interim arrangement, multiplying the probability by `1/pᵢ`. *(KA 15.1)*
 
 **Defect rate by class (dᵢ)** — The share of records in a class failing that class's defined pass criteria. *(KA 14.1)*
@@ -398,6 +410,8 @@
 **Delegation** — Transfer of authority to decide and act, with the information and criteria to do so; accountability is retained. *(KA 12.3)*
 
 **Delegation schedule** — The statement of authority by decision class, on value, reversibility and externality. *(KA 3.2)*
+
+**Deletion point** — The stated end of the register: what is deleted at closure, what is retained, for how long and on whose authority — with departed role holders' assessments deleted at each refresh. *(KA 11.1)*
 
 **Delivery verdict** — The project-level judgment: was the output delivered to time, cost and quality? A one-off variance. *(KA 1.1)*
 
@@ -421,6 +435,8 @@
 
 **Digital twin** — A model kept synchronised with a real asset through a data connection; without synchronisation it is a drawing. *(KA 14.2)*
 
+**Disclosed claim** — A benefit reported outside the organisation; needs a stated boundary and method, a named owner, retained evidence and the signing function's approval, and is never approved by the project. *(KA 2.3)*
+
 **Discovery arrivals** — New items found necessary during build; subtracted from throughput to give the net drain. *(KA 13.2)*
 
 **Discretionary attention** — The leader's working week less recurring commitments; the resource all leadership acts are paid from. *(KA 12.1)*
@@ -430,6 +446,8 @@
 **Displaced judgment** — Ceasing to think because a tool is watching. *(KA 8.4)*
 
 **Disruption / measured mile** — Lost productivity on unchanged work, established by comparing an unimpacted period's productivity with the impacted period's. *(KA 10.4)*
+
+**Dissent record** — The dated record of the fact stated, when and to whom, the decision taken, and the risk the leader believes remains — filed in the decision record, with a copy to a party other than the decision-maker. *(KA 12.4)*
 
 **Distributed team** — A team whose members' working hours do not fully coincide; time distance, not spatial distance, is the governing variable. *(KA 12.4)*
 
@@ -444,6 +462,8 @@
 **Driver** — The reason the work exists; determines what success means and how it is measured. *(KA 2.1)*
 
 **Duration multiplier** — `1/(1 − r)` — the hyperbolic effect of rework on elapsed time. *(KA 9.2)*
+
+**Duty-engaged flag** — A mandatory register field marking a row whose realisation would engage a duty arising under law or regulation, an operating licence or a safety obligation. Such rows leave the EMV comparison before it is run: the duty is not transferable and acceptance is not available. Whether a duty is engaged is a question for counsel and the regulator, and the flag records who answered it. *(KA 8.3)*
 
 ## E
 
@@ -464,6 +484,8 @@
 **Emergency-route share** — Emergency changes ÷ total requests — a latency diagnostic, so set a review trigger on it rather than a target. *(KA 4.4)*
 
 **Emotional intelligence** — Four practised operations — self-awareness, self-regulation, social awareness, relationship management — skills, not a trait score. *(KA 12.1)*
+
+**Employment-records provisions** — Custodian, access list, copy to the individual, retention period from the organisation's policy, and disposal — settled with human resources, legal and the data-protection accountability holder, whose requirements differ by territory and are not stated in this book. *(KA 12.4)*
 
 **EMV** — probability × impact; the average of outcomes that will not individually occur. *(KA 8.2)*
 
@@ -522,11 +544,15 @@
 
 **Exposure per record** — `dᵢuᵢ` — the quantity that ranks remediation effort across classes. *(KA 14.1)*
 
+**External acceptance** — Where an approval regime applies, a body outside the project may need to be notified of, or to accept, a repair, concession or regrade before use. It sits outside the project's authority and differs by sector and jurisdiction; the record names whether it is engaged and who established that. *(KA 9.3)*
+
 **External-failure unit cost** — The average cost of one escaped defect in the operating context; set by context, not the project. *(KA 9.1)*
 
 ## F
 
 **Factual-claims register** — Each claim in an external communication with its source document, retained with the issued item. *(KA 11.4)*
+
+**Failure route** — The pre-written sequence for an output found materially wrong after reliance: stop and suspend, enumerate the decisions that cited it, notify in writing that day, reopen above the stated materiality threshold with the original authority, record whether anyone outside must be told and on whose determination, and re-measure under a named authority before resumption. *(KA 14.4)*
 
 **False stop / false continue** — Stopping a project that would have created value; continuing one that will not. The two errors a criterion trades. *(KA 2.4)*
 
@@ -565,6 +591,10 @@
 **Free float FF** — Slip available without delaying any successor; `FF ≤ TF`. *(KA 6.2)*
 
 **FS / SS / FF / SF** — The four dependency types. *(KA 6.1)*
+
+**Fund type** — Cashable (a named budget line is removed), capacity-released (time or space freed, no budget moves), cost-avoidance (a future outlay not incurred) or non-financial. Mandatory, because a total that mixes them cannot be tested against a cash rule. *(KA 15.2)*
+
+**Fund type (carried from approval)** — Cashable with the budget line named and the finance owner's written confirmation, capacity-released, cost-avoidance or non-financial (Domain 15, KA 15.2.1). It decides what the realised number may be compared against, and an unconfirmed cashable claim is measured as capacity-released. *(KA 16.4)*
 
 **Funding absorbed** — Cash paid out − cash received; equals client exposure − payables + loss to date. Best stated in days of spend (44.80 on Auriga). *(KA 7.4)*
 
@@ -729,6 +759,8 @@
 
 **Milestone** — Zero-duration event with an owner and a done-definition; its date is computed. *(KA 6.3)*
 
+**Mixed-stream test** — An investment rule applied to a benefit stream of more than one fund type. Permitted as a committee's own convention, but only where the composition of the denominator is disclosed with the result. *(KA 15.2)*
+
 **Model retention record** — Model identifier, version and date alongside input, output, verifier and decision — the minimum that makes an AI-informed decision explainable. *(KA 16.4)*
 
 **Monte Carlo simulation** — Repeated sampling to produce an outcome distribution rather than a point. *(KA 8.2)*
@@ -749,17 +781,25 @@
 
 **Net team capacity** — `hn − c·n(n − 1)/2`; maximised at 80–81 people under the illustrative parameters. *(KA 12.2)*
 
+**Non-financial ceiling** — The working-time, rest, fatigue, safety-case, permit or agreement limit bounding a compression lever. Supplied by the safety function, HR or counsel, jurisdiction- and sector-specific, and where it binds the lever is unavailable at any price. *(KA 6.4)*
+
 **Nonconformance** — Output that does not meet its specified requirement. *(KA 9.3)*
 
 **Notice provision** — The required form and period for notifying a claim; in some contracts and jurisdictions a condition precedent. *(KA 10.4)*
 
 **Notice-bar exposure** — The value of the heads of claim that depend on valid notice, grossed up for overhead and profit. *(KA 10.4)*
 
+**Notification map** — The one-page record, written before any incident, of which external notifications could fall due, who determines that they do, to whom, within what period and who may make them. Whether any obligation applies is for the relevant authority and qualified counsel, never for the project alone. *(KA 8.4)*
+
 ## O
+
+**Obligation item** — A backlog item carrying a safety, regulatory, statutory, contractual or security-remediation obligation. A constraint on the order, not a candidate within it: scheduled to its required date by the authority accountable for the obligation and excluded from the delay-cost-density ranking. *(KA 13.1)*
 
 **Omission credit** — The rate at which removed scope is credited back — typically below the bid rate, and the asymmetry that prices a net-zero change. *(KA 13.4)*
 
 **Operational transition** — Establishment of a funded, staffed, permanent capability to run and improve the delivered service. *(KA 16.2)*
+
+**Ordering right, and its two bounds** — The product owner orders *discretionary* value, within a value envelope above which decisions escalate and outside the obligation items the ordering right does not reach. Deprioritising an obligation item exceeds the right rather than exercising it. *(KA 13.1)*
 
 **Original-to-current reconciliation** — Original baseline + Σ approved changes = current baseline, exactly, every reporting period. *(KA 4.3)*
 
@@ -826,7 +866,7 @@
 **Portfolio** — The set of programmes and projects an organisation chooses to run within a finite capacity and a strategy. *(KA 15.1)*
   <br/>· *Also read at KA 1.1:* The funded, balanced set of projects and programmes.
 
-**Portfolio benefits register** — The authoritative statement of portfolio benefits, organised by benefit rather than by component. *(KA 15.2)*
+**Portfolio benefits register** — The authoritative statement of portfolio benefits, organised by benefit rather than by component, each carrying a measure, a baseline, a receiving-organisation owner, a fund type and its contributing components. *(KA 15.2)*
 
 **Portfolio one-page view** — The report supporting exactly three decisions: continue/change/stop, reallocate, escalate. *(KA 15.4)*
 
@@ -843,6 +883,8 @@
 **Precedence rule** — The pre-agreed rule for which authority prevails in a matrix conflict. *(KA 3.1)*
 
 **Precision** — True alerts ÷ all alerts; worth investigating while precision exceeds investigation cost ÷ saving. *(KA 8.4)*
+
+**Preserve rather than tidy** — From declaration, working papers, logs, messages and superseded drafts are retained as they are; the mess is the evidence that the account was reasonable on what was known. *(KA 8.4)*
 
 **Price normalisation** — The formula converting prices into scores; the ratio and linear conventions give different scores and different crossovers. *(KA 10.2)*
 
@@ -874,6 +916,8 @@
 **Project** — Temporary endeavour producing a defined result. *(KA 1.1)*
 
 **Prolongation** — Time-related costs of extended duration; requires a demonstrated critical-path effect. *(KA 10.4)*
+
+**Propagation rate** — The weekly cost of a materialised risk continuing to contaminate downstream work while a decision is pending; the term that makes early notification arithmetically obvious and is usually omitted. *(KA 8.4)*
 
 **Proportional shortfall** — The ratio `p′/p` by which lifting a condition multiplies the conjunction — the correct remediation ranking. *(KA 16.1)*
 
@@ -928,7 +972,11 @@
 
 **Recall (by group)** — Flagged at-risk cases ÷ actual at-risk cases within a group. *(KA 14.4)*
 
-**Recovery plan** — Target date, ranked moves, costs, risks, decision authority. *(KA 6.4)*
+**Record class, custodian, retention period** — The three fields that make "the evidence is retained" real: what class of record this is, the named role accountable for it existing, and how long it is held with the source of that period named. Periods come from the applicable regime and the contract, not from this book. *(KA 9.3)*
+
+**Record custodian** — The named role accountable for a record class existing, being complete and being retrievable — one role per class, so that no class is custodied by "the project". *(KA 3.3)*
+
+**Recovery plan** — Target date, ranked moves, costs, risks, non-financial ceilings, and **both** decision authorities — the one spending the money and the safety or approval-holding authority where one is engaged. *(KA 6.4)*
 
 **Recurrence rate** — Repeat nonconformances as a share of all; the test of whether causes are being removed. *(KA 9.3)*
   <br/>· *Also read at KA 9.4:* Repeat nonconformances as a share of all; the honest measure of an improvement loop.
@@ -939,6 +987,8 @@
 
 **Refusal permission** — An explicit instruction that "the source does not say" is an acceptable and expected answer. *(KA 14.3)*
 
+**Register access list** — The stated set of people who may read the stakeholder register; it is not a general-circulation document. *(KA 11.1)*
+
 **Registered measure** — The single definition of a benefit measure fixed before measurement; variants are identified, not substituted. *(KA 16.4)*
 
 **Regrade** — Use of nonconforming output for a lesser purpose for which it conforms, with traceability. *(KA 9.3)*
@@ -948,6 +998,8 @@
 **Rejection entry** — The log record of a change not approved — the entry most often missing and the reason requests recur. *(KA 4.4)*
 
 **Relatedness class** — The set over which a cumulative test sums; widening it multiplies false trips and re-centralises the delegation. *(KA 3.3)*
+
+**Relatedness class (concessions)** — The set over which the cumulative total is summed — defined by what the concessions touch, never by who requested them; widening it multiplies false trips. *(KA 9.3)*
 
 **Releasability** — The property that an increment can go live alone; it is what converts sequencing into value. *(KA 13.1)*
 
@@ -998,6 +1050,8 @@
 **Retention** — A withheld percentage of payment, released on completion criteria; Auriga's 5 % is 55.00 % of the bid margin at completion. *(KA 7.4)*
   <br/>· *Also read at KA 16.2:* A proportion of the contract sum withheld as security, released against defined events.
 
+**Retention period** — How long a record class is held, set in advance at the longest of contractual limitation, applicable retention requirement, benefits-realisation horizon and records policy; a schedule by class, never one rule, and never a legal position stated by this book. *(KA 3.3)*
+
 **Retention schedule** — Class-by-class statement of what is kept, for how long, on what authority, and what disposal or de-identification follows. *(KA 16.4)*
 
 **Retrieval rate** — The proportion of captured lessons retrieved before a comparable decision; the term in which almost all lesson value is lost. *(KA 16.3)*
@@ -1025,6 +1079,8 @@
 **Rolled throughput yield (RTY)** — `∏ yᵢ` — the share of items passing every sequential step first time. *(KA 9.4)*
 
 **Rolling wave** — Near-term detail, far-term packages, elaborated under change control. *(KA 6.3)*
+
+**Route of last resort** — For a risk of harm to people: next governance tier, then independent assurance, then the board or its audit or risk committee — stated in advance, each step in writing. *(KA 12.4)*
 
 **Route to market** — The competitive structure chosen for a procurement; each route buys a different amount of price discovery at a different cost in time. *(KA 10.2)*
 
@@ -1065,6 +1121,8 @@
 **Silent measure** — An outcome measure reported by two parties, owned by neither, and never accompanied by a proposed action. *(KA 1.2)*
 
 **Simple payback** — Cost ÷ annual benefit, in periods; scales as the reciprocal of adoption. *(KA 1.3)*
+
+**Simultaneous operations** — Two disciplines working the same plant at once; a safety decision requiring its own review and approval before it is an arithmetic one. *(KA 6.4)*
 
 **Single-A test** — The check that each decision class has exactly one Accountable role. *(KA 3.3)*
 
@@ -1116,6 +1174,8 @@
 
 **Surplus** — Own reservation value less the price agreed (buyer), or price less own reservation value (seller). *(KA 11.3)*
 
+**Suspension on breach** — The consequence that gives the cumulative test teeth: further concessions in that class stop pending a decision by the authority appropriate to the aggregate, taken through the escalation machinery. *(KA 9.3)*
+
 **Synthetic content risk** — Convincing reproduction of a programme's identity, spokespeople, voice or documents at negligible cost. *(KA 11.4)*
 
 **Systematic error** — An error repeating consistently across similar items — the characteristic shape of AI error, requiring stratified sampling. *(KA 9.4)*
@@ -1138,7 +1198,7 @@
 
 **Test-order rule** — Rank assumptions by `EMV ÷ cost to test`, so the free tests are cleared before the paper is written. *(KA 2.3)*
 
-**Three lines of assurance** — Management controls; independent oversight inside management; independent audit outside it. *(KA 3.3)*
+**Three lines of assurance** — Management controls; independent oversight typically inside management; independent audit typically reporting outside it. A model of roles published by a professional body, revised by its owner, voluntary rather than required — a lens for finding gaps and duplication, not an obligatory structure. *(KA 3.3)*
 
 **Three-point / PERT estimate** — `tₑ = (o+4m+p)/6`, `σ = (p−o)/6`. *(KA 6.4)*
 
@@ -1222,6 +1282,8 @@
 **Verification tier** — A defined review depth with a cost per item `v` and a measured detection rate `q`, performed by a named human. *(KA 14.3)*
 
 **Verification tier threshold** — `u*ₖ = Δvₖ/(p·Δqₖ)` — the escaped-error consequence at which the next tier begins to pay. *(KA 14.3)*
+
+**Voluntary framework vs disclosure regime** — A framework is adopted by choice; a regime applies on its own terms. Adopting the first says nothing about the second, and both are questions for the reporting function and qualified counsel. *(KA 2.3)*
 
 ## W
 

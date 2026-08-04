@@ -96,7 +96,7 @@ All symbols are defined once and used identically across the book (Conventions, 
 
 ## Appendix B — Global glossary
 
-Consolidated from every domain's key-terms box — **255 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Conventions, §3).
+Consolidated from every domain's key-terms box — **280 terms**, each shown with the KA where it is first defined. Where a term recurs across domains, the first definition governs (Conventions, §3).
 
 | Term | Definition | First defined |
 |---|---|---|
@@ -125,6 +125,7 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **AI-assisted disclosure/forecast** | AI-drafted output the professional verifies and signs off. | 13.5 |
 | **AI-maturity model** | Ad-hoc → piloting → standardised → integrated → governed/optimised. | 13.7 |
 | **AI-use policy / verification checklist** | The governance document and the operational assurance step. | 13.6 |
+| **Allowable (defined) cost** | The subset of incurred cost a contract makes reimbursable — the base for fee, share and pain/gain arithmetic. | 7.1 |
 | **Amount due** | Net certified value less previous payments. | 7.4 |
 | **Analogous / parametric / bottom-up** | Top-down scaling / rate × parameter / work-package build-up. | 3.2 |
 | **Articulation** | The way the statements interlock through shared figures (profit, cash, working capital). | 1.2 |
@@ -146,21 +147,26 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Cash-flow forecast** | A time-phased projection of cash in and out, separate from profit. | 3.5 |
 | **Category-to-task fit** | Matching the task and governance need to the right category. | 13.4 |
 | **Certification** | The client's agreement of the amount payable. | 7.4 |
+| **Change authority** | The person or body holding the delegated power to approve a change of a stated value and type — never the person who assessed it. | 5.4 |
 | **Change control** | The process to identify, assess, approve/reject and baseline change. | 5.4 |
+| **Change control board (CCB)** | The standing body — or named individual — holding authority to approve change within stated bands. | 8.4 |
 | **Change log** | The record reconciling current baseline to original, by change. | 5.4 |
 | **Change management** | Bringing people with you; honest about limits, resistant to hype. | 13.7 |
+| **Change request** | The controlling artefact for a change: identifier, cause, cross-constraint assessment, options, funding source and approval record. | 8.4 |
 | **Chart of accounts (CoA)** | The structured list of all ledger accounts, coded by class. | 1.5 |
 | **Chart-to-question fit** | Choosing the chart type that answers the actual question. | 4.4 |
 | **Claim** | A notified, substantiated assertion of entitlement to time/money. | 7.2 |
 | **Closing** | Formal completion — acceptance, contract closure, demobilisation, archiving. | 8.5 |
 | **Commercial-to-accounting loop** | Scope → cost → EV → billing → revenue → statements → reporting. | 7.5 |
 | **Commitment** | Cost the organisation is bound to once a PO/subcontract is raised. | 5.2 |
+| **Condition precedent (to a claim)** | A contractual requirement — commonly a notice within a stated window — drafted so that the entitlement does not survive if it is not met. | 7.2 |
 | **Constraint trade-offs** | Scope/schedule/cost/quality/risk balanced against each other. | 8.4 |
 | **Contingency reserve** | For identified risks; inside the baseline; PM-controlled. | 3.1 |
 | **Contingent liability / asset** | A possible obligation/inflow — disclosed, not recognised (subject to probability). | 1.4 |
 | **Contract asset / liability** | Revenue recognised vs amounts billed — under-billing (asset) vs over-billing (liability). | 2.2 |
 | **Control account (CA)** | The WBS×OBS intersection where scope, budget, cost and schedule integrate. | 1.5 |
 | **Controls dashboard** | An integrated cost/schedule/forecast/risk view with RAG status and trend. | 4.3 |
+| **COSO Internal Control — Integrated Framework** | The most widely used articulation of internal-control objectives and components; a voluntary framework published by a private-sector body, adopted rather than imposed. | 11.3 |
 | **Cost baseline / PMB** | The approved, time-phased budget; source of Planned Value; total = BAC. | 3.1 |
 | **Cost breakdown structure (CBS)** | Decomposition of cost by element/type. | 1.5 |
 | **Cost code** | A segmented code pinning a posting to project, scope, cost element and resource. | 1.5 |
@@ -176,24 +182,33 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Current vs non-current** | The IAS 1 split by expected realisation/settlement within ~12 months. | 1.2 |
 | **Cut-off** | Recording each transaction in the correct period. | 1.3 |
 | **Data integrity** | Ongoing correctness of the cost data (coding, commitments, accruals, one source). | 5.2 |
+| **Data minimisation** | Using only the fields a task needs, preferring aggregated or pseudonymised data. | 13.2 |
 | **Data quality dimensions** | Accuracy, completeness, consistency, timeliness, validity, uniqueness. | 13.2 |
+| **Data-protection impact assessment** | A formal assessment of a higher-risk processing activity, undertaken before it begins, on the data-protection function's determination. | 13.2 |
 | **Debit / Credit** | Left/right sides of an account; effect depends on account type. | 1.1 |
+| **Delegated draw limit** | The recorded value within which the project manager may approve a contingency draw; above it, the sponsor approves — and the requester is never the approver. | 12.3 |
+| **Delegated limit** | The recorded value band within which a named role may approve a change; above it, the change escalates. | 5.4 |
 | **Dependency (FS/SS/FF/SF)** | The four logical relationships between activities. | 10.1 |
 | **Depreciation** | Systematic spreading of a long-lived asset's cost over its useful life. | 1.3 |
 | **Direct / indirect cost** | Traceable to one cost object / supporting many (overhead). | 5.1 |
+| **Disallowed cost** | Cost falling in a category a contract excludes; borne by the contractor and outside the share mechanism. | 7.1 |
 | **Discount unwind** | The increase in a discounted provision as settlement nears, charged as finance cost. | 1.4 |
 | **Double-entry** | Recording every transaction with `Σ Dr = Σ Cr`. | 1.1 |
 | **Draw-down / re-baselining** | Consuming contingency as risks occur / escalating beyond it as a baseline change. | 12.3 |
+| **Draw-down request** | The controlling artefact for a contingency draw: date, requester, register ID, evidence of materialisation, amount and its substantiation, and the revised remaining exposure. | 12.3 |
 | **Driver analysis** | AI explanation of *why* a metric is moving (e.g. an EAC). | 13.5 |
+| **Duty to escalate** | The professional obligation to raise, in writing and before issue, a figure or narrative that cannot be defended on the evidence. | 4.3 |
 | **EAC (a)–(d)** | Budgeted-rate / current-CPI / CPI×SPI / bottom-up methods, each an assumption. | 6.3 |
 | **Earned schedule (`ES`)** | Earned value expressed as a point on the time axis; gives `SV(t)`, `SPI(t)`. | 6.4 |
 | **Earned Value (`EV`)** | Budgeted cost of work performed — progress valued at budget. | 6.1 |
 | **Earning rule / measurement method** | The rule converting physical progress to `EV` (0/100, 50/50, % complete, units, milestones). | 6.1 |
 | **Embedded AI** | AI features within the platforms controls already uses. | 13.4 |
+| **Emergency change** | A change authorised out of sequence for genuine urgency, recorded as such at the time and ratified by the proper authority afterwards. | 8.4 |
 | **Empirical process control** | Decisions from observation via transparency, inspection, adaptation. | 9.1 |
 | **Enhancing characteristics** | Comparability, verifiability, timeliness, understandability. | 2.1 |
 | **Entity concept** | The business is accounted for as separate from its owners. | 1.1 |
 | **EPC / turnkey** | Single-contractor delivery of the whole asset. | 7.1 |
+| **Escalation record** | The contemporaneous file of what was raised, on what evidence, to whom, when, and the response received. | 4.3 |
 | **Estimate class (AACE 5–1)** | Maturity-based classification driving expected accuracy range. | 3.2 |
 | **Exception report** | Only the out-of-tolerance items, with cause, impact and action. | 4.3 |
 | **Executing** | Performing the work packages and producing deliverables. | 8.3 |
@@ -210,6 +225,7 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Going concern** | The assumption the entity continues in operation. | 2.1 |
 | **Governance / lineage** | Ownership/definitions/access / traceability of a data point to source. | 13.2 |
 | **Gross vs net revenue** | Whole consideration vs only the entity's margin/fee. | 2.3 |
+| **Gross-up** | A contractual entitlement to be paid an increased amount so that, after a withholding, the recipient still receives the invoiced sum. | 3.5 |
 | **Guardrails** | Rules of safe use (confidentiality, verification, disclosure, audit trail). | 13.3 |
 | **Hallucination** | Confidently producing false content. | 13.1 |
 | **Hallucination / bias / confidentiality** | The three principal AI risks and their mitigations. | 13.6 |
@@ -227,7 +243,8 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Interim valuation / application** | Periodic assessment of value done, less retention and prior payments. | 7.4 |
 | **Internal control** | Policies/procedures giving assurance over reporting, operations, compliance. | 11.3 |
 | **Inverted iron triangle** | Fixed time & cost, variable scope. | 9.3 |
-| **ISO 31000** | Principles/process for integrated, proportionate risk management. | 12.1 |
+| **Irrecoverable input tax** | Value-added or goods-and-services tax an entity cannot recover, and which is therefore a cost of the project rather than a timing effect. | 3.5 |
+| **ISO 31000** | A voluntary international standard offering guidance — not requirements — on integrated, proportionate risk management; not intended for certification, and of no force unless adopted or imported by a contract or mandate. | 12.1 |
 | **Issue** | A risk that has already occurred. | 12.1 |
 | **Iterative** | Refining the same product over repeated passes. | 8.6 |
 | **Iterative refinement** | Prompt → review → refine. | 13.3 |
@@ -247,12 +264,15 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Management reporting** | Internal, flexible, timely, forward-looking reporting. | 2.5 |
 | **Management reserve** | For unforeseen scope/risk; outside the baseline; management-controlled. | 3.1 |
 | **Matching principle** | Recognise expenses in the same period as the income they help earn. | 1.3 |
+| **Measure of progress (recognition)** | The basis on which progress towards satisfying a performance obligation is measured — an accounting-policy judgement owned by finance, not by project controls. | 9.5 |
 | **Measurement** | Deriving quantities from design under a standard method. | 7.3 |
 | **Milestone-to-Sprint mapping** | Translating Sprints/releases into gate milestones. | 9.6 |
 | **Monitoring & controlling** | Measuring against baselines and acting to correct — parallel to executing. | 8.4 |
 | **Normal balance** | The side on which an account type increases. | 1.1 |
+| **Notice register** | The commercial record of every notice due and served, with its trigger, window, owner, date and acknowledgement. | 7.2 |
 | **Offsetting** | Netting assets/liabilities or income/expenses — generally prohibited. | 2.1 |
 | **Onerous contract** | Unavoidable costs exceed expected benefits; the loss is provided immediately. | 1.4 |
+| **Open book / audit rights** | A client's contractual right to inspect and audit the records evidencing a reimbursable claim, for a stated period. | 7.2 |
 | **Open PO / GRNI** | Commitment / goods-received-not-invoiced (accrual driver). | 11.2 |
 | **Order-to-cash (O2C)** | Order → credit → fulfil → invoice → collect → apply cash. | 11.1 |
 | **Over time vs point in time** | Whether an obligation is satisfied progressively or at a moment of control transfer. | 2.2 |
@@ -264,6 +284,7 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Peak funding requirement** | The deepest point of cumulative cash — the finance to arrange. | 3.5 |
 | **Performance / advance-payment / retention bond** | Third-party security instruments. | 7.2 |
 | **Performance obligation** | A promise to transfer a distinct good or service. | 2.2 |
+| **Personal data** | Information about identified or identifiable people — a separate test from confidentiality, carrying obligations that vary by jurisdiction. | 13.2 |
 | **PERT (three-point)** | `tE = (O + 4M + P)/6`; `σ = (P − O)/6`. | 10.1 |
 | **Planned Value (`PV`/BCWS)** | Cumulative planned spend to date — the cost-baseline curve; the budgeted cost of work scheduled by the data date. | 3.3 |
 | **Planning package** | Future work within a CA not yet detailed into work packages. | 5.3 |
@@ -289,6 +310,7 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Prompt patterns** | Reusable shapes: extraction, analysis, drafting, summarisation, transformation. | 13.3 |
 | **Propose → verify → own** | The universal AI-in-controls workflow shape. | 13.5 |
 | **Provision (IAS 37)** | Liability of uncertain timing or amount, meeting the three recognition tests. | 1.4 |
+| **Purpose limitation** | The principle that data collected for one stated purpose is not automatically available for a different one. | 13.2 |
 | **Qualitative analysis** | Probability × impact rating on a matrix. | 12.2 |
 | **Quality assurance** | Building quality into the process (vs inspecting it out). | 8.3 |
 | **Quantity/efficiency variance** | `(Actual quantity − Standard quantity) × Standard price`. | 4.2 |
@@ -296,12 +318,14 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Rebaselining** | Transparently resetting scope/`BAC` when scope is deliberately flexed. | 9.5 |
 | **Receivables ageing** | The overdue profile of amounts owed — a cash/revenue leading indicator. | 11.1 |
 | **Reconciliation** | Explaining the tie between the two views from one ledger. | 2.5 |
+| **Records custodian** | The named holder of a project archive in the permanent organisation once the project team disbands. | 8.5 |
 | **Relevance / materiality** | Capable of influencing decisions; material if its omission/misstatement would. | 2.1 |
 | **Remeasurement (contract form) / unit-rate** | Priced at rates against re-measured actual quantities. | 7.1 |
 | **Remeasurement (of a BoQ)** | Re-pricing at actual quantities. | 7.3 |
 | **Resource levelling / smoothing** | Respect resource limits (may extend) / even peaks within float (no extension). | 10.3 |
 | **Response strategies** | Avoid/transfer/mitigate/accept (threats); exploit/share/enhance/accept (opportunities). | 12.2 |
 | **Retention** | Cash withheld from payments until completion/defects periods pass. | 3.5 |
+| **Retention period (records)** | The stated period for which project records are kept — the longest of the contract, claim-limitation, accounting/tax and funder requirements, confirmed rather than assumed. | 8.5 |
 | **Risk** | An uncertain event/condition affecting objectives — threat or opportunity. | 12.1 |
 | **Risk appetite / tolerance** | Risk willingly accepted / acceptable variation around it. | 12.1 |
 | **Risk register** | The living record: cause-event-effect, owner, assessment, response. | 12.2 |
@@ -334,6 +358,7 @@ Consolidated from every domain's key-terms box — **255 terms**, each shown wit
 | **Target / threshold / tolerance** | The aim / the attention boundary / the allowable deviation. | 4.1 |
 | **Target cost / pain-gain** | Shared cost risk against a target, within a cap/collar. | 7.1 |
 | **Three-way match** | Matching invoice to PO and goods-receipt note before payment. | 11.2 |
+| **Time bar** | The point at which a notice window closes, after which a claim may not be assessed on its merits at all. | 7.2 |
 | **Time-phased budget** | The `BAC` spread across the schedule by period. | 3.3 |
 | **Token / context window / temperature** | Text unit / how much the model considers / randomness setting. | 13.1 |
 | **Tool category** | A class of AI tool (assistant, RAG, analysis, BI, PM-suite, ML, RPA, CLM, meeting, coding). | 13.4 |
@@ -372,6 +397,13 @@ accredited or has reviewed this book, the designation it supports or this progra
 this volume were checked against the issuing bodies' catalogues when this edition was prepared, and a reader
 relying on any of them for a live decision should verify the current requirement with the issuing body.
 
+**Not in this table: PCI's own instrument.** The identifiers `PCI-FND-STD-NN` and `PCI-PCL-STD-DD.NN` that
+appear at the close of each domain are **PCI Standards** — the Institute's own companion instrument
+(Conventions, §11), not external references. They are private professional requirements binding within PCI's
+certification scope; they are not legislation, and they neither derive from nor stand behind any instrument
+listed below. The two are indexed separately on purpose, so that a PCI requirement is never mistaken for an
+external one, or the reverse.
+
 | Standard / framework | Category | Used for | Domains |
 |---|---|---|---|
 | **IAS 1** | Authoritative accounting standard | Presentation of financial statements | 1.2, 2.1 |
@@ -382,9 +414,16 @@ relying on any of them for a live decision should verify the current requirement
 | **IAS 11 (legacy)** | Superseded accounting standard | Construction contracts — superseded by IFRS 15 | 2.4 |
 | **IFRS 15** | Authoritative accounting standard | Revenue from contracts with customers (five-step model) | 2.2, 2.3, 7.5, 9.5 |
 | **IFRS 16** | Authoritative accounting standard | Leases (right-of-use asset & lease liability) | 2.4 |
+| **ASC 606 (US GAAP)** | Authoritative accounting standard | The revenue model applied by US-GAAP preparers; named as the equivalent framework to IFRS 15, developed jointly with it | 9.5 |
 | **PMBOK Guide** | Professional guidance | Project management process groups & practices | 8 |
 | **AACE TCM Framework / estimate classes** | Professional guidance | Total cost management; estimate classification | 3.2 |
-| **ISO 31000** | International standard (guidance, not certifiable) | Risk management principles & process | 12 |
+| **ANSI/EIA-748** | National standard *(voluntary in itself; reaches a project only where a contract or procurement regime imports it)* | The characteristics an earned-value management system is expected to exhibit — the source of the guideline-based "EVMS compliance" vocabulary and of the formal reprogramming practice (over-target baseline) | 6.A.1, 6.A.2 |
+| **ISO 21508** | International standard (guidance, not certifiable) | Earned value management in project and programme management | 6.A.2 |
+| **PMI practice guidance on earned value management** | Professional guidance | Recommended practice on earned value for practitioners | 6.A.2 |
+| **SCL Delay and Disruption Protocol** | Professional guidance *(voluntary; binds nobody unless a contract imports it)* | A taxonomy of delay-analysis methods and the vocabulary practitioners use for them | 10.A.6 |
+| **AACE recommended practice on forensic schedule analysis** | Professional guidance *(voluntary; binds nobody unless a contract imports it)* | A second widely cited taxonomy of forensic schedule-analysis methods | 10.A.6 |
+| **COSO Internal Control — Integrated Framework** | Voluntary framework *(published by a private-sector body; adoption is the whole of its force)* | The most widely used articulation of internal-control objectives and components | 11.3.1, 11.T.1–11.T.2 |
+| **ISO 31000** | International standard (guidance, not requirements; not intended for certification) | Risk management principles & process | 12 |
 | **ISO/IEC 17024** | International standard | Personnel certification (credential design reference) | — |
 | **Agile Manifesto** | Voluntary framework | Agile values & principles (described, not reproduced) | 9.1 |
 | **Scrum Guide** | Voluntary framework | Scrum accountabilities, events, artefacts, commitments | 9.2 |
@@ -396,6 +435,7 @@ relying on any of them for a live decision should verify the current requirement
 | **NIST AI Risk Management Framework** | Voluntary framework | AI risk management by four functions (govern, map, measure, manage); not a standard and not a regulation | 13.6 |
 | **OECD AI Principles** | Voluntary framework (an OECD Council Recommendation) | Intergovernmental principles for trustworthy AI; a statement of principle rather than legislation | 13.6 |
 | **EU AI Act** | Illustrative reference *(understood to be legislation of the European Union)* | Named as the shape AI governance must anticipate; whether, when and how it reaches any organisation is a question for legal and compliance, not for this book | 13.6 |
+| **EU General Data Protection Regulation** | Illustrative reference *(understood to be legislation of the European Union)* | Named once, to identify the kind of instrument meant by "data-protection law"; whether it or any other regime reaches a given organisation, activity or data set is a question for the data-protection function and qualified counsel, not for this book | 13.2.5 |
 | **US banking supervisors' guidance on model risk management** | Illustrative reference *(understood to be supervisory guidance, jurisdiction-specific)* | Model risk management as an established discipline; addressed to the firms those supervisors supervise | 13.A.2 |
 
 > **Forthcoming change — IFRS 18.** A further standard, IFRS 18 *Presentation and Disclosure in Financial
@@ -410,14 +450,17 @@ relying on any of them for a live decision should verify the current requirement
 > **Category definitions.** *Authoritative accounting standard* — issued by a standard-setter and applied
 > by entities reporting under that framework. *International standard* — issued by ISO/IEC; some are
 > certifiable management-system standards, others are guidance that cannot be certified against.
+> *National standard* — a published standard issued through a single country's standards process; it is not
+> an international standard and not merely industry practice, and it reaches a project only where a contract
+> or a procurement regime imports it.
 > *Contract framework* — a published family of contract forms adopted by agreement between parties.
 > *Professional guidance* — a professional body's recommended practice. *Voluntary framework* — adopted by
 > choice, imposing no legal obligation. *Industry practice* — a widely used approach with no single
 > authoritative publisher. *Illustrative reference* — named to show the shape of an instrument or of a
 > regulatory pattern, and relied on for no requirement in this book; where such an entry is understood to be
-> legislation or supervisory guidance, that understanding is noted in its Category cell. One entry — the EU AI
-> Act — is understood to be legislation; it is
-> named here as a reference point, not as a source of obligation on any reader, and its reach is a question
+> legislation or supervisory guidance, that understanding is noted in its Category cell. Two entries — the EU
+> AI Act and the EU General Data Protection Regulation — are understood to be legislation; both are
+> named here as reference points, not as sources of obligation on any reader, and their reach is a question
 > for qualified advice. No other entry in this table
 > is legislation, and none is described as such. Applicability is jurisdiction-specific throughout, and where
 > local law or a contract imposes a stricter requirement, that requirement governs. The programme's full
@@ -474,7 +517,7 @@ same spec.
 ## Appendix E — Self-check answers
 
 Each Knowledge Area closes with two or three **self-check questions**, and each carries its answer alongside so
-a reader can self-mark on the spot. This appendix gathers all **129** of those answers into one key — by
+a reader can self-mark on the spot. This appendix gathers all **146** of those answers into one key — by
 domain, then by Knowledge Area and question number — for revision, for marking a study group, or for reading
 a domain's questions cold and checking afterwards. The questions themselves stay where they are learned, at
 the end of each Knowledge Area.
@@ -541,6 +584,8 @@ the end of each Knowledge Area.
 | 4.2 | 2 | It attributes the gap to named causes and magnitudes, showing what to act on. |
 | 4.3 | 1 | Where are we; where are we heading; what is off-track; what is being done about it. |
 | 4.3 | 2 | The same data must aggregate automatically to each level; without source coding it becomes manual re-keying. |
+| 4.3 | 3 | Disagreement is about judgement on shared evidence; the duty engages when the professional would be asserting — or silently permitting — something the evidence does not support. |
+| 4.3 | 4 | Do not sign what you cannot defend; do not let a changed analysis be attributed to you; do not participate in suppression; do not go silent. |
 | 4.4 | 1 | S-curve — how are we tracking over time; waterfall/variance bridge — what moved the number. |
 | 4.4 | 2 | Truncated axis; dual axes; 3-D/decoration; cherry-picked baseline; inconsistent small-multiple scales. |
 
@@ -556,6 +601,8 @@ the end of each Knowledge Area.
 | 5.3 | 2 | It integrates scope, budget, cost and schedule at a manageable, meaningful level. |
 | 5.4 | 1 | Trend — early warning of a possible change; variation — a formal, priced, agreed change. |
 | 5.4 | 2 | No — contingency is already inside the baseline; drawing it consumes reserve, it does not add scope. |
+| 5.4 | 3 | The controls professional assesses and recommends; a change authority holding the relevant delegated band approves — never the same person on the same change. |
+| 5.4 | 4 | An assessed cost exceeding the remaining reserve of its proposed funding source — also a breach of a baseline tolerance, or a change altering a contractual obligation. |
 
 ### Domain 6 — Earned Value Management & Forecasting (EVM / EAC)
 
@@ -576,8 +623,12 @@ the end of each Knowledge Area.
 |---|---:|---|
 | 7.1 | 1 | Lump sum → contractor; target cost → shared; cost-plus → client. |
 | 7.1 | 2 | An `EAC` above target quantifies the contractor's pain-share now. |
+| 7.1 | 3 | Audited allowable cost as the contract defines it — not the contractor's total recorded cost. |
+| 7.1 | 4 | Code and segregate allowable from non-allowable cost at source; keep the supporting records audit-ready for as long as the client's inspection and audit rights run. |
 | 7.2 | 1 | Cause, effect and quantum — notified and substantiated. |
 | 7.2 | 2 | It withholds cash until completion/defects release, deepening and lengthening the funding trough. |
+| 7.2 | 3 | A requirement — often notice within a window — drafted so the entitlement does not survive without it; so the notice is served before the substantiation is built, not with it. |
+| 7.2 | 4 | The governing law, and local legal advice — payment and dispute mechanics are understood to be set by legislation in some jurisdictions, and the position varies. |
 | 7.3 | 1 | Common tender basis; valuing work done; remeasurement/variation pricing. |
 | 7.3 | 2 | They are time-related — a delay extends them, creating prolongation cost. |
 | 7.4 | 1 | Gross value → less retention → net certified → less previous payments → amount due. |
@@ -597,8 +648,12 @@ the end of each Knowledge Area.
 | 8.3 | 2 | It returns as rework — a favourable variance hiding a quality liability. |
 | 8.4 | 1 | Every change is assessed across all constraints and updates all affected baselines coherently. |
 | 8.4 | 2 | Earned value — 6; variance/reporting — 4; forecasting — 3/6; risk — 12. |
+| 8.4 | 3 | The controls professional assesses and recommends; a change control board or other named authority approves within a recorded band — never the same person on the same change. |
+| 8.4 | 4 | A breached baseline tolerance; cost exceeding the remaining balance of its funding source; an altered contractual obligation; a change to the benefit case or the success criteria. |
 | 8.5 | 1 | The definitive commercial position — final remeasurement, agreed variations/claims, retention release. |
 | 8.5 | 2 | Actual performance data improves future estimates and trains forecasting models. |
+| 8.5 | 3 | A stated period, a named custodian in the permanent organisation, a hold rule for live or foreseeable disputes, and retrieval tested in a readable format. |
+| 8.5 | 4 | The longest of the contract's records/audit provisions, the claim-limitation and defects-liability periods under the governing law, accounting and tax retention, and any funder or regulator condition — confirmed with commercial, finance and legal, because the periods vary by jurisdiction and contract form. |
 | 8.6 | 1 | Incremental — add new working parts to the whole; iterative — refine the same product over passes. |
 | 8.6 | 2 | It determines how progress and cost are measured — fixed baseline vs velocity vs both. |
 
@@ -616,6 +671,7 @@ the end of each Knowledge Area.
 | 9.4 | 2 | SAFe, LeSS, Scrum-of-Scrums. |
 | 9.5 | 1 | `EV = %complete × BAC`; `CPI = EV/AC`; valid only against a defined release scope/`BAC`, rebaselined transparently on scope change. |
 | 9.5 | 2 | Points measure relative effort/scope, not cost; costs may lead or lag points — reconcile and explain. |
+| 9.5 | 3 | Finance, as the entity's accounting-policy owner, applied consistently and tested by the external auditor; the controls professional supplies and evidences the inputs and reconciles the progress views, and does not select or change the basis. |
 | 9.6 | 1 | Map Sprints/releases to milestones; report value delivered, run-rate, forecast and AgileEVM status. |
 | 9.6 | 2 | Capped T&M and target cost — they fund capacity/share risk over a flexible scope. |
 
@@ -653,6 +709,8 @@ the end of each Knowledge Area.
 | 12.2 | 2 | Avoid, transfer, mitigate/reduce, accept. |
 | 12.3 | 1 | From quantified risk — an EMV sum or, better, a Monte Carlo P-level — documented against the register, not a flat percentage. |
 | 12.3 | 2 | Contingency draw-down is normal for register risks; needing management reserve is a re-baselining event for unforeseen scope/risk. |
+| 12.3 | 3 | Date, requester, register ID, evidence of materialisation, amount with its substantiation, and revised remaining exposure; approved by the project manager within a recorded delegated limit and by the sponsor above it — never by the requester. |
+| 12.3 | 4 | It is closed and an issue is opened for the consequence, in the same transaction, so exposure is not counted twice. |
 
 ### Domain 13 — AI for Project Controls & Project Management
 
@@ -662,6 +720,8 @@ the end of each Knowledge Area.
 | 13.1 | 2 | Rules — deterministic check; ML — pattern from data; GenAI — generate/transform language, verified. |
 | 13.2 | 1 | Accuracy, completeness, consistency, timeliness, validity, uniqueness. |
 | 13.2 | 2 | Auditability — an AI-influenced number must be traceable to source when challenged. |
+| 13.2 | 3 | Confidentiality and personal data are separate tests: information about identified people carries its own obligations — basis, purpose, minimisation, notice, impact assessment, transfer — which vary by jurisdiction and are settled with the data-protection function before the data moves. |
+| 13.2 | 4 | Data collected for one stated purpose is not automatically available for another; a new purpose is a new decision, and the privacy notice given to the people concerned has to cover it. |
 | 13.3 | 1 | Role/context, task, data, format, constraints. |
 | 13.3 | 2 | No confidential data in ungoverned tools; always verify figures/citations; disclose; keep the audit trail. |
 | 13.4 | 1 | General LLM assistants; document/RAG; spreadsheet/data-analysis AI. |
@@ -677,29 +737,34 @@ the end of each Knowledge Area.
 
 ## Appendix F — Sample-MCQ bank
 
-Every sample multiple-choice question in the book, collected in one bank: **309 items** across the thirteen
+Every sample multiple-choice question in the book, collected in one bank: **321 items** across the thirteen
 domains, in book order, each with its four options, its correct answer, and its topic-and-level tag
 (Conventions, §8). Items are numbered **`PCL-MCQ-DD-NN`** — domain, then position within the domain — and the
 numbering is stable, so an item can be cited in study notes and found again. Each entry also names the
 Knowledge Area item it comes from, where the **rationale** explaining the right answer and each distractor is
 set out in full.
 
+**On order and stability.** Items added after an edition was first numbered are **appended at the end of their
+domain's block** rather than inserted at their chapter position, because a bank number that moves is worse
+than a block that is not in strict chapter order: a citation in someone's study notes must still resolve. The
+topic tag on each item — `[4.3.7 · Analysis]` — always shows where in the book it belongs.
+
 | Domain | KAs | Sample MCQs | Bank numbers |
 |---|---:|---:|---|
 | 1 Foundations of Accounting | 5 | 30 | PCL-MCQ-01-01 – 30 |
 | 2 Financial Reporting (IFRS 15) | 5 | 27 | PCL-MCQ-02-01 – 27 |
 | 3 Budgeting & Forecasting | 5 | 23 | PCL-MCQ-03-01 – 23 |
-| 4 Performance/Variance/Reporting | 4 | 18 | PCL-MCQ-04-01 – 18 |
-| 5 Cost Management | 4 | 18 | PCL-MCQ-05-01 – 18 |
+| 4 Performance/Variance/Reporting | 4 | 20 | PCL-MCQ-04-01 – 20 |
+| 5 Cost Management | 4 | 20 | PCL-MCQ-05-01 – 20 |
 | 6 EVM/EAC | 4 | 19 | PCL-MCQ-06-01 – 19 |
-| 7 Contracts & Commercial | 5 | 22 | PCL-MCQ-07-01 – 22 |
-| 8 PM Lifecycle | 6 | 23 | PCL-MCQ-08-01 – 23 |
+| 7 Contracts & Commercial | 5 | 26 | PCL-MCQ-07-01 – 26 |
+| 8 PM Lifecycle | 6 | 27 | PCL-MCQ-08-01 – 27 |
 | 9 Agile & Adaptive | 6 | 26 | PCL-MCQ-09-01 – 26 |
 | 10 Scheduling | 4 | 18 | PCL-MCQ-10-01 – 18 |
 | 11 Process Cycles | 3 | 16 | PCL-MCQ-11-01 – 16 |
 | 12 Risk Management | 3 | 17 | PCL-MCQ-12-01 – 17 |
 | 13 AI for Project Controls | 7 | 52 | PCL-MCQ-13-01 – 52 |
-| **Total** | **61** | **309** | |
+| **Total** | **61** | **321** | |
 
 The AI domain carries the largest share because it is examined at 20 % of the blueprint; Domains 11 and 12
 carry items drawn from their advanced topics as well as their Knowledge Areas, which is why some tags read
@@ -1502,6 +1567,22 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: B.** *(Rationale at MCQ 4.4-D, KA 4.4.)*
 
+**PCL-MCQ-04-19** `[4.3.7 · Analysis]` A controls professional's pack shows an adverse forecast movement with its cause. The version that reaches the board has had the cause paragraph removed and the professional's name left on it. The professional's first act is to:
+- A. Say nothing; the numbers themselves are unchanged, so nothing has been misstated.
+- B. Raise the removal in writing, with the evidence, to the report owner before the board meets, and keep the record.
+- C. Ask verbally for the paragraph to be reinstated and, if refused, decline further involvement.
+- D. Report the matter outside the organisation immediately.
+
+**Answer: B.** *(Rationale at MCQ 4.3-E, KA 4.3.)*
+
+**PCL-MCQ-04-20** `[4.3.7 · Application]` An escalation is raised to the project manager, who leaves the figure unchanged and does not address the evidence. The professional should:
+- A. Accept the decision; the project manager owns the report.
+- B. Re-issue the pack with their own figure substituted.
+- C. Take the same evidence to the project board, and onward if the response there is also inadequate.
+- D. Record the objection in a private note and take no further step.
+
+**Answer: C.** *(Rationale at MCQ 4.3-F, KA 4.3.)*
+
 ### Domain 5 — Cost Management & Cost Control
 
 **PCL-MCQ-05-01** `[5.1.3 · Application]` Budgeted overhead USD 600,000 over 30,000 hours; actual 28,000 hours; actual overhead USD 610,000. The overhead absorbed is:
@@ -1647,6 +1728,22 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 - D. Scope creep — uncontrolled change accumulating until variance against the baseline is meaningless.
 
 **Answer: D.** *(Rationale at MCQ 5.4-E, KA 5.4.)*
+
+**PCL-MCQ-05-19** `[5.4.3 · Analysis]` A cost engineer assesses a client-instructed change, prices it, and — being the delegated holder of a value band that covers it — signs the approval themselves. The change is correctly priced and correctly baselined. The principal control weakness is:
+- A. None; the pricing and the baseline update are both correct.
+- B. The assessor and the approver are the same person, so no independent mind ever tested the assessment.
+- C. The change should have been logged as a trend before it was assessed.
+- D. Client-instructed changes cannot be funded from contingency.
+
+**Answer: B.** *(Rationale at MCQ 5.4-F, KA 5.4.)*
+
+**PCL-MCQ-05-20** `[5.4.3 · Application]` A variation's assessed cost exceeds the contingency remaining on the funding source proposed for it. The correct sequence is:
+- A. Approve the change, then report the contingency overdraw in the period report.
+- B. Approve the change and re-baseline, recording the reserve position afterwards.
+- C. Escalate to the next level of authority before approval, with the funding position stated.
+- D. Split the change so each part falls within the remaining contingency.
+
+**Answer: C.** *(Rationale at MCQ 5.4-G, KA 5.4.)*
 
 ### Domain 6 — Earned Value Management & Forecasting (EVM / EAC)
 
@@ -1980,6 +2077,38 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: A.** *(Rationale at MCQ 7.5-D, KA 7.5.)*
 
+**PCL-MCQ-07-23** `[7.1.3 · Analysis]` On a target-cost contract, the site ledger includes the cost of rectifying defective welding — a category the contract excludes from defined cost. The controls professional computes the pain-share from the ledger total. The consequence is that:
+- A. Nothing; the arithmetic is correct and the share ratio has been applied properly.
+- B. The pain-share is computed on a base the contract does not recognise, so the client is charged a share of cost the contractor bears alone.
+- C. The contractor's fee floor is breached.
+- D. The rectification cost becomes a variation.
+
+**Answer: B.** *(Rationale at MCQ 7.1-F, KA 7.1.)*
+
+**PCL-MCQ-07-24** `[7.1.3 · Application]` The most effective control for keeping a reimbursable claim audit-ready is to:
+- A. Reconcile allowable and non-allowable cost at the point each application is prepared.
+- B. Code allowable and non-allowable cost separately at source, as cost is incurred.
+- C. Retain all invoices in date order for the contract's audit period.
+- D. Agree the total with the client's quantity surveyor each month.
+
+**Answer: B.** *(Rationale at MCQ 7.1-G, KA 7.1.)*
+
+**PCL-MCQ-07-25** `[7.2.6 · Analysis]` A client-caused disruption is fully evidenced: contemporaneous records, a critical-path analysis showing the effect, and a quantum built from contract preliminaries rates. The contract makes notice within a stated window a condition precedent, and the notice was given only when the claim was submitted, well after the window closed. The most likely outcome, and the lesson, are:
+- A. The claim succeeds; the strength of the evidence cures the late notice.
+- B. The claim is reduced in proportion to the delay in notifying.
+- C. The entitlement may not survive the window at all, so the claim is never assessed on its merits — notice is served first, substantiation is built afterwards.
+- D. The claim converts automatically into a variation.
+
+**Answer: C.** *(Rationale at MCQ 7.2-F, KA 7.2.)*
+
+**PCL-MCQ-07-26** `[7.2.6 · Application]` A controls professional learns of an event that *might* be compensable but is not yet quantifiable. The correct first step is to:
+- A. Wait until the cost effect can be measured, then notify with the substantiation attached.
+- B. Identify the applicable notice provision, diarise the window, and serve the notice in the form and time the contract requires.
+- C. Raise it verbally at the next progress meeting and minute it.
+- D. Open a claim file and begin the delay analysis.
+
+**Answer: B.** *(Rationale at MCQ 7.2-G, KA 7.2.)*
+
 ### Domain 8 — Project Management Lifecycle
 
 **PCL-MCQ-08-01** `[8.1.2 · Recall]` The document that formally authorises a project and the project manager is the:
@@ -2166,6 +2295,38 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: A.** *(Rationale at MCQ 8.6-E, KA 8.6.)*
 
+**PCL-MCQ-08-24** `[8.4.2 · Analysis]` Work on a client-instructed change begins immediately because the site team judges the delay of waiting to be more costly than the change itself. The change is later approved by the CCB at the assessed value. The correct treatment is:
+- A. None needed; the approval regularised the position.
+- B. Record it as an emergency change at the time, with the reason and the person who authorised it, and have it ratified by the CCB as an emergency — not folded into the ordinary sequence.
+- C. Approve it retrospectively at the project manager's delegated level, since the CCB agreed the value.
+- D. Treat the early start as scope creep and reverse the work.
+
+**Answer: B.** *(Rationale at MCQ 8.4-E, KA 8.4.)*
+
+**PCL-MCQ-08-25** `[8.4.2 · Application]` A change request arrives with a priced direct cost, a funding source and a recommendation, but no assessment of its effect on the schedule, on risk, or on the benefit case. The change authority should:
+- A. Approve it, since the cost and the funding are both established.
+- B. Approve it conditionally, with the missing assessments to follow.
+- C. Return it: an incomplete request cannot be decided, only guessed at.
+- D. Delegate the decision down to the project manager to save time.
+
+**Answer: C.** *(Rationale at MCQ 8.4-F, KA 8.4.)*
+
+**PCL-MCQ-08-26** `[8.5.1 · Analysis]` A closure checklist records "records archived" against a project file share, and the team demobilises. Years later a dispute arises and the schedule updates cannot be opened. The defect in the closure was that:
+- A. The records should have been printed.
+- B. The archive was never given a stated period, a named custodian in the permanent organisation, or a tested retrieval route.
+- C. Archiving belongs to the operator, not the project.
+- D. Nothing; by then the records are beyond any reasonable retention period.
+
+**Answer: B.** *(Rationale at MCQ 8.5-D, KA 8.5.)*
+
+**PCL-MCQ-08-27** `[8.5.1 · Application]` A project's records are subject to a contract audit provision, an organisational accounting-retention requirement, and a claim that is being prepared by a subcontractor. The retention period applied should be:
+- A. The contract's audit period, because the contract governs the project.
+- B. The organisation's accounting requirement, because it applies to all records.
+- C. The shortest of the applicable periods, to limit storage cost and data held.
+- D. The longest of the applicable periods, extended for the records touched by the foreseeable dispute until it is resolved.
+
+**Answer: D.** *(Rationale at MCQ 8.5-E, KA 8.5.)*
+
 ### Domain 9 — Agile, Scrum & Adaptive Delivery for Project Controls
 
 **PCL-MCQ-09-01** `[9.1.2 · Recall]` The three pillars of empirical process control are:
@@ -2320,11 +2481,11 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: B.** *(Rationale at MCQ 9.5-B, KA 9.5.)*
 
-**PCL-MCQ-09-20** `[9.5.4 · Analysis]` AgileEVM `% complete` is 40 % but cost-to-cost `% complete` is 35 % on an IFRS 15 over-time contract. The professional should:
-- A. Reconcile the two and recognise on the appropriate input basis (here cost-to-cost 35 %), explaining the difference.
-- B. Recognise revenue at 40 %.
-- C. Ignore IFRS 15.
-- D. Average them to 37.5 %.
+**PCL-MCQ-09-20** `[9.5.4 · Analysis]` AgileEVM `% complete` is 40 % but cost-to-cost `% complete` is 35 % on an over-time contract. The controls professional should:
+- A. Reconcile the two, evidence both sets of inputs, explain the cause of the difference, and refer the measure of progress used for recognition to finance as the accounting-policy owner.
+- B. Recognise revenue at 40 %, the AgileEVM measure.
+- C. Change the recognition basis to whichever view the contract's billing follows.
+- D. Average the two to 37.5 %.
 
 **Answer: A.** *(Rationale at MCQ 9.5-C, KA 9.5.)*
 
@@ -2678,10 +2839,10 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: D.** *(Rationale at MCQ 12.1-C, KA 12.1.)*
 
-**PCL-MCQ-12-04** `[12.1.2 · Application]` A team updates its risk register once a quarter as a standalone exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 principle chiefly breached is:
-- A. Integration — risk management should be part of decision-making, feeding the estimate, schedule and forecast.
+**PCL-MCQ-12-04** `[12.1.2 · Application]` A team updates its risk register once a quarter as a standalone exercise, disconnected from the estimate, schedule and forecast. The ISO 31000 principle this practice most clearly departs from is:
+- A. Integration — risk management belongs inside decision-making, feeding the estimate, schedule and forecast.
 - B. Proportionality — the effort exceeds the stakes.
-- C. None — quarterly updates satisfy the standard.
+- C. None — a quarterly cadence is a matter of judgement, not of principle.
 - D. Appetite — the tolerance thresholds are set too low.
 
 **Answer: A.** *(Rationale at MCQ 12.1-D, KA 12.1.)*

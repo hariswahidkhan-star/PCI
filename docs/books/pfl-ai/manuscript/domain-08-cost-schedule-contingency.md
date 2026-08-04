@@ -112,7 +112,14 @@ investigation, procurement and contracting progress. Professional estimating bod
 organisations publish classification frameworks of their own; the principle is common practice, the
 specific bands are always organisation-specific, and the table below is the PCI illustrative
 ladder used throughout this book — it reproduces no other body's classification and should not be
-read as one.
+read as one. The best-known published frameworks are **AACE International's Recommended Practices on
+cost-estimate classification** — voluntary professional guidance, not a standard and not a
+regulatory requirement, and the property of their publisher. They are named here for identification
+only, so that a reader can locate the framework their own organisation actually uses and map onto
+it; nothing from them is reproduced, summarised or paraphrased below, no association with this book
+is implied, and a reader who needs them should obtain the current versions from the publisher. That
+mapping is the practical point: a class-based contingency argument is made in a room with an
+estimator, and it only works if both people know which ladder the other is standing on.
 
 | Stage | Scope definition | Typical basis | Accuracy range | Implied contingency to the upper bound on a 48,000,000 base |
 |---|---|---|---|---|
@@ -234,6 +241,25 @@ reviewer's habit worth forming: read the `PLCR` and then ask what the project ow
 the life the `PLCR` counts.
 
 ### AI in this KA
+
+**Before any of it — two data questions, and the second is the one this Knowledge Area gets wrong.**
+The first is the standing rule: an estimate, its build-up and the supplier quotations behind it are
+confidential project material, processed only in an environment approved for that data
+classification and permitted by the confidentiality undertakings that cover them, which is a
+precondition of the task rather than a review of it (Domain 1, KA 1.3.4; Domain 16). The second is
+specific to benchmarking and is easy to miss because the data feels like the organisation's own. **A
+benchmark library assembled from other projects' or other clients' outturns may be used only where
+the engagements those figures came from permit it.** Outturn cost data is usually the *client's*
+confidential information rather than the adviser's, and a permission to use it on the engagement
+that produced it is not a permission to use it on the next one. Two further cautions. Anonymisation
+is not a solution where the benchmark set is thin: **a "benchmark" containing a single comparable is
+that comparable, relabelled**, and the same is true of a set from which one project is identifiable
+by capacity, technology or date. And where the contributing projects belong to parties who compete
+with each other, the assembly and circulation of cost information between them raises a competition
+question that is for qualified counsel and the organisation's compliance function to answer before
+the library is built, not after it is circulated — nothing here states the position in any
+jurisdiction. The professional requirement is a recorded permission basis per source engagement,
+held with the library and reviewed when the library is extended.
 
 Estimate benchmarking is genuinely good machine work — comparing a new estimate's unit rates,
 quantities and factored allowances against a library of prior estimates and outturns, and flagging
@@ -391,6 +417,15 @@ maintenance (8.1.3). D invents a funding route for a cost that is not funded at 
    which transferred base-estimate uncertainty and moved the estimate to a Stage E position.
 3. *State the year-seven consequence of omitting a maintenance reserve.* — `CFADS` 2,285,091,
    `DSCR` 0.4561 — a payment default, not merely a breach, on an otherwise healthy project.
+4. *Which classification framework does the ladder in 8.1.2 reproduce?* — None. It is the PCI
+   illustrative ladder. AACE International's Recommended Practices on cost-estimate classification
+   are named for identification only, so that a reader can map onto the framework their own
+   organisation uses; nothing from them is reproduced here.
+5. *What must be established before a benchmark library is used on a new engagement?* — That the
+   engagements the outturn data came from permit its use here. Outturn cost data is usually the
+   client's confidential information, and permission on one engagement is not permission on the
+   next; where the contributing parties compete, the assembly of cost information between them is a
+   question for counsel and compliance before the library is built.
 
 ---
 
@@ -1637,8 +1672,13 @@ contract transfers. **Range-based provision**: distribution used, parameters, me
 correlation matrix. **The reconciliation**: which of the two governs and why. **The funded figure**:
 amount, percentage of base, and the percentile it represents on the governing basis. **Contingent
 support**: amount, form, trigger, obligor, enforceable against what balance sheet. **Approval**:
-confidence level chosen, by whom, on what date. Rule: no contingency number leaves the organisation
-without this page attached, and the page is reissued at every recalculation milestone.
+confidence level chosen, by whom, on what date. **Benchmark provenance**: where any comparative
+outturn data came from, and the recorded permission basis under which this engagement may use it
+(KA 8.1 "AI in this KA"), with a note of any source for which the permission is unconfirmed.
+**Retention**: period, form and named custodian, on the standing basis in the toolkit preamble — the
+note is the document that defends a contingency decision after the outturn is known, which is years
+after it is taken. Rule: no contingency number leaves the organisation without this page attached,
+and the page is reissued at every recalculation milestone.
 
 ### Toolkit 8.T.2 — Construction cost model check (before any envelope is fixed)
 
