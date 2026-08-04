@@ -1174,8 +1174,8 @@ mis-split — it pulls revenue forward and understates the tail.
 ### Advanced 2.A.2 — Uninstalled materials and the integrity of PoC
 
 **The principle.** Cost-to-cost measurement (2.2.6) rests on one assumption: that cost incurred is a
-faithful proxy for **performance**. Any cost that does not represent progress breaks the proxy, and IFRS 15
-requires it to be kept out of the measure. The two standing examples are **uninstalled materials** —
+faithful proxy for **performance**. Any cost that does not represent progress breaks the proxy, and the
+measurement principle IFRS 15 addresses is that such cost is kept out of the measure. The two standing examples are **uninstalled materials** —
 delivered to site, paid for, but not yet built into the works — and **abnormal wastage** (including
 significant rework). Including either in the numerator inflates `PoC`, pulls revenue and margin forward,
 and then unwinds in a later period when the ratio catches up with reality — an overstatement, not a timing
