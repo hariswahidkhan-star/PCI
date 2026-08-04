@@ -49,6 +49,8 @@ Full per-document register with IDs, titles, status and LinkedIn mapping:
 | [`00-framework/LINKEDIN-PLAYBOOK.md`](00-framework/LINKEDIN-PLAYBOOK.md) | How a document becomes a post, carousel, newsletter or lead magnet |
 | [`00-framework/PUBLISHING-CALENDAR.md`](00-framework/PUBLISHING-CALENDAR.md) | The 52-week sequence that ships all 100 |
 | [`00-framework/GOVERNANCE-AND-REVIEW.md`](00-framework/GOVERNANCE-AND-REVIEW.md) | Review gates, versioning, corrections, legal risk, retirement |
+| [`00-framework/PLATFORM-INTEGRATION.md`](00-framework/PLATFORM-INTEGRATION.md) | How the 100 documents reach readers through `public_documents`, and how they sit alongside the libraries the platform already ships |
+| [`00-framework/validate.sh`](00-framework/validate.sh) | The executable publication gate — run it before any batch is marked published |
 
 ---
 
@@ -63,6 +65,8 @@ This framework **sits above** existing repository assets and does not duplicate 
 | `docs/publications/` — PCP-AI candidate information pack (01–04 + PDF) | **Sibling.** The candidate-facing pack; S05/S06 are the public, LinkedIn-facing treatment of the same facts. Facts must agree. |
 | `docs/books/` — PML-AI and PFL-AI book programme + `EDITORIAL_CHARTER.md` | **Binding standard.** Our editorial standard is a subset of that charter, tuned for short-form public documents. |
 | `docs/marketing/linkedin-launch-20-posts.md` | **Proven voice.** The 20 launch posts are the tonal reference; the calendar in §2 continues from them rather than restarting. |
+| `backend/Data/TemplatesLibrarySeed.cs` — **25 CSV templates** already published in the platform | **Complementary, not duplicated.** The CSVs are instruments that deliberately carry no formulas; S10 supplies the method, the formulas and the completion guidance they cannot hold. Full mapping in `00-framework/PLATFORM-INTEGRATION.md` §3. |
+| `backend/Data/PublicDocsSeed.cs` — the seeded governance and candidate document set | **The destination.** Everything here publishes into the same `public_documents` version chain. |
 
 **Rule:** where a fact appears in both `docs/bok/` and here, the BoK wins. Where a fact concerns the live
 platform (fees, durations, pass marks, CPD hours), the platform's configured settings win — see
