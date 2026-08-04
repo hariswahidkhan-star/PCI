@@ -16,7 +16,7 @@ ISO-style `shall` drafting, and the two systems are never mixed.
 |---|---|---|
 | **must** | Mandatory PCI professional requirement | The obligation itself |
 | **must not** | Prohibited practice | Conduct that constitutes a breach |
-| **should** | Recommended practice; a justified alternative may be acceptable | Level 5 recommendations only |
+| **should** | Recommended practice; a justified alternative may be acceptable | Level 5 recommendations only — see §1.3 |
 | **may** | Permission | Something the professional is allowed to do |
 | **can** | Capability or possibility — never permission | Describing what a person, tool or method is able to do |
 
@@ -25,11 +25,34 @@ earlier drafts. Legislative `shall` is ambiguous — it has been read as both ob
 and modern drafting practice in the UK and elsewhere has moved to `must` for precisely that reason.
 A draft containing `shall` fails gate.
 
-**The ISO mapping must be stated wherever these laws meet an ISO-literate audience.** A reader who
-works to ISO/IEC drafting conventions will expect `shall` to mark a requirement and may read `must`
-as an external constraint rather than a requirement. PCI's convention is therefore stated explicitly
-in every law publication: in a PCI Law, **`must` is the requirement form**, and it corresponds to
-what an ISO document would express with `shall`.
+### 1.0 The `must` inversion — read this before drafting anything
+
+PCI's choice of `must` is **the exact inverse of ISO's use of that same word**, and this is the single
+most dangerous ambiguity in the whole system.
+
+In ISO/IEC drafting convention, `shall` expresses the document's own requirement, and **`must` is
+reserved for a constraint or obligation defined *outside* the document, stated for information** —
+using it does not make that external constraint a requirement of the document. So an ISO-literate
+reader meeting a PCI Law that says *"the professional must independently verify…"* may read it as
+*"somebody else's rule, mentioned in passing"* — the precise opposite of what PCI intends.
+
+Three consequences follow, and none is optional:
+
+1. **Every PCI law publication must carry an explicit disclaimer of ISO verbal-form conventions**, in
+   the "How to read these laws" note, in this form or wording to the same effect:
+
+   > These laws do not follow ISO/IEC verbal-form conventions. In a PCI Professional Law, **`must`
+   > states PCI's own mandatory requirement** — the role that an ISO document gives to `shall`. PCI
+   > does not use `shall` at all, and does not use `must` for external constraints.
+
+2. **PCI needs a different device for signalling an external constraint**, because `must` is no
+   longer available for it. See §1.2 — external constraints are stated with `may impose` and are
+   confined to element 17 (External reference) and element 18 (Jurisdictional caution). An external
+   obligation is never expressed as a PCI `must`.
+
+3. **A legal or statutory obligation is never restated as a PCI requirement.** Voluntary-standard
+   practice excludes restating law as the document's own requirement, and PCI follows it: legal
+   obligations appear only as external constraints or jurisdictional cautions, never as a PCI law.
 
 ### 1.1 Worked contrasts
 
@@ -47,6 +70,29 @@ Where an obligation originates outside PCI, use this form and do not dress it as
 
 > Applicable law, regulation, contract or authoritative professional requirements may impose
 > additional obligations.
+
+External constraints live only in element 17 (External reference) and element 18 (Jurisdictional
+caution). They never appear in element 1 (Normative requirement), element 5 (Required actions) or
+element 6 (Prohibited actions), because those elements state what **PCI** requires.
+
+### 1.3 `should` — recommendation, not a disguised requirement
+
+A recommendation permits a justified alternative. It does **not** become a requirement because a
+reason must be recorded for departing from it.
+
+If PCI wants to say *"do this, or record why you did something else"*, that is a distinct device — a
+requirement to record a departure — and it must be written as one:
+
+> **Recommended practice.** The review should include sensitivity testing proportionate to the
+> materiality of the decision.
+>
+> **Associated requirement.** Where the review omits sensitivity testing, the reviewer must record
+> the reason for the omission in the review record.
+
+Written that way, the recommendation stays a recommendation and the recording obligation is a real,
+testable requirement with its own compliance test. Written the other way — "should … and a reason
+must be recorded for any departure" bundled into one clause — it is neither: it reads as a
+recommendation, binds like a requirement, and cannot be assessed as either.
 
 ## 2. One requirement per clause
 
@@ -176,6 +222,27 @@ clause** — a bare "None." is a defect.
 
 **25. Version and status.**     Version · approval date · effective date · amendment note.
 ```
+
+### 5.0 Which elements are normative
+
+A law's twenty-five elements do not all carry obligation, and the structure must say which do.
+Without this declaration a reader cannot tell whether a sentence in, say, element 22 binds them —
+and an assessor cannot tell what to assess.
+
+| Elements | Status | Effect |
+|---|---|---|
+| 1 Normative requirement · 5 Required actions · 6 Prohibited actions · 7 Required evidence · 12 Exception and waiver · 13 Escalation trigger · 15 AI prohibition · 16 AI verification | **Normative** | These bind. A breach of any of them is a breach of the law. |
+| 3 Scope · 4 Defined terms · 8 Responsible role · 9 Approval authority · 10 Independence requirement · 11 Materiality or threshold | **Normative — determinative** | These do not add obligation; they determine to whom, and in what circumstances, the normative elements apply. Getting one wrong changes what the law requires. |
+| 14 AI application | **Permissive** | States what is allowed. Creates no obligation. |
+| 2 Purpose · 17 External reference · 18 Jurisdictional caution · 19 Related PCI Laws · 20 Related BoK content · 21 Compliance test · 22 Breach indicators · 23 Consequence · 24 Examination application · 25 Version and status | **Informative** | Explain, locate, test or administer the law. **They must not contain an obligation.** |
+
+Two consequences worth stating because both are easy to get wrong:
+
+- **The compliance test (21) is informative.** It describes how to test the obligation stated in the
+  normative elements; it must never be the only place an obligation appears. If a reviewer can find
+  a requirement in element 21 that is not in element 1, 5, 6 or 7, that is a drafting defect.
+- **Breach indicators (22) are informative.** An indicator suggests the law may have been breached;
+  it is not itself the breach, and it must not read as one.
 
 ### 5.1 On the compliance test (element 21)
 

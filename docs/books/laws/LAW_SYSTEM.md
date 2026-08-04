@@ -1,7 +1,26 @@
 # The PCI Professional Law System
 
-**Status:** Binding drafting specification for every PCI Professional Law across the certification
-suite (PCL-AI, PFL-AI, PML-AI). Law sets that do not conform to this document do not pass gate.
+**Status: SUPERSEDED — retained for history only. Do not draft to this document.**
+
+This was the first drafting specification for the PCI Professional Laws. It has been replaced by two
+documents, and where this file and either of those disagree, **those govern**:
+
+- [`PCI_PROFESSIONAL_LAWS_CHARTER.md`](PCI_PROFESSIONAL_LAWS_CHARTER.md) — status, hierarchy,
+  priority, due process, interpretation, amendment, exceptions, consequences.
+- [`PCI_LAW_DRAFTING_MANUAL.md`](PCI_LAW_DRAFTING_MANUAL.md) — normative language, the
+  twenty-five-element law structure, identifiers, external-reference classification, prohibited
+  patterns, the visual system, and the twenty-five audit questions.
+
+**The specific contradiction that made supersession necessary:** §3 below permits `must`, `must not`,
+`shall` and `shall not` interchangeably for mandatory rules. PCI has since adopted **modern
+must-drafting exclusively**, and `shall` is now barred from every law in every field. §3 below is
+therefore wrong and must not be followed. The same section treats `should` as a recommendation while
+requiring a recorded reason for departure, which is not a recommendation at all — the Drafting Manual
+§1.3 splits that into a recommendation plus a separate recording requirement.
+
+The eighteen-field template in §4 below is likewise superseded by the twenty-five-element structure,
+which adds — among others — the compliance test, breach indicators, defined terms, independence,
+threshold and exception elements that this version lacked.
 
 ---
 
