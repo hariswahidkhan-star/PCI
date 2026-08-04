@@ -447,8 +447,8 @@ decision as impartial, and an interest that fails that test has already done its
 not it moved a single judgement.
 
 The duty is not to have no interests, which is impossible in a discipline where the same small
-population of people sponsors, delivers, assures and buys. It is a four-step sequence, and each step
-has a named owner and a place to live.
+population of people sponsors, delivers, assures and buys. It is a four-step sequence, and what makes
+it an instrument rather than an intention is that each step has somewhere to live.
 
 - **Identify.** A standing question, asked at appointment to any role and again as each gate,
   selection panel, evaluation or approval is convened: *do I hold an interest in what is about to be

@@ -33,10 +33,11 @@ behind.
 
 **Learning objectives.** After this domain a candidate can: specify handover as a set of conditions
 rather than a date, and distinguish what handover transfers from what it cannot; design commissioning
-and service-acceptance tests that test the service rather than the works; **compute the probability of
-a clean go-live as the conjunction of its readiness conditions, demonstrate why an averaged readiness
-dashboard systematically overstates it, and rank remediation by proportional rather than absolute
-shortfall**; price a hold-or-go decision against remediation cost under both independent and
+and service-acceptance tests that test the service rather than the works; **separate the mandatory
+preconditions of a transition, which are recorded met or not met and never traded, from the
+discretionary conditions; compute the probability of a clean go-live as the conjunction of the
+discretionary conditions, demonstrate why an averaged readiness dashboard systematically overstates
+it, and rank remediation by proportional rather than absolute shortfall**; price a hold-or-go decision against remediation cost under both independent and
 correlated failure assumptions; structure hypercare with exit criteria and a reversion plan; transfer
 a service to a run organisation with its total cost of ownership stated; operate the retention
 mechanism and strike a final account including variations, claim settlement and defect recovery;
@@ -153,8 +154,8 @@ reached.
 
 Keeping the two apart is the professional content of this section, because the failure is not that
 anyone consciously prices a safety approval — it is that a single readiness template invites every
-condition to be entered as a `p`, and a mandatory precondition entered as `p = 0.9` has been
-converted into a nine-in-ten chance that something forbidden is permissible. Two consequences follow.
+condition to be entered as a `p`, and a mandatory precondition given a probability at all has been
+silently converted into a chance that something forbidden is permissible. Two consequences follow.
 A gate-block item must never appear among the `pᵢ`, because a product that contains it can be raised
 by improving something else, which is exactly the trade the item exists to forbid. And a gate-block
 item must never appear in the go/hold economics of 16.1.4, because expressing it as a cost concedes
@@ -166,9 +167,9 @@ where the economic optimum is taken among *compliant* options rather than across
 where the boundary matters most, because this is the decision that is irreversible for the people who
 did not take it.
 
-The conjunction is then the most consequential piece of arithmetic in the domain, because the artefact that
-organisations actually use — a readiness dashboard showing a weighted percentage — is not a
-measurement of readiness at all. The product rule itself is Domain 15's (KA 15.1.3, where a
+The conjunction is then the most consequential piece of arithmetic in the domain, because the
+artefact that organisations actually use — a readiness dashboard showing a weighted percentage — is
+not a measurement of readiness at all. The product rule itself is Domain 15's (KA 15.1.3, where a
 six-predecessor programme milestone with no predecessor assessed worse than 0.85 comes to 52.95 per
 cent); what this KA adds is the contrast with the averaged dashboard, the remediation ranking that
 follows from it, and the two correlation bounds the go-live decision must be tested against. With `k`
@@ -194,12 +195,12 @@ true statements about the same event.
    readiness assessment was convened; those items carry no probability and are not among the seven,
    which is why no clinical-safety condition appears in the list below. The transition manager's
    assessment of the probability that each *discretionary* condition is fully met at the planned
-   go-live date, for a representative clinic, is: clinician training completed to the roster threshold **0.96**; data
-   migration reconciled and signed off **0.90**; interfaces verified in production **0.94**; network
-   and devices installed and load-tested **0.98**; workflow redesign signed off by the clinical lead
-   **0.85**; clinical champion in post and trained **0.80**; fallback and business-continuity
-   procedure rehearsed **0.92**. These are locally calibrated planning figures from the four pilot
-   clinics, not constants. The programme dashboard reports readiness as the equal-weight average.
+   go-live date, for a representative clinic, is: clinician training completed to the roster
+   threshold **0.96**; data migration reconciled and signed off **0.90**; interfaces verified in
+   production **0.94**; network and devices installed and load-tested **0.98**; workflow redesign
+   signed off by the clinical lead **0.85**; clinical champion in post and trained **0.80**;
+   fallback and business-continuity procedure rehearsed **0.92**. These are locally calibrated
+   planning figures from the four pilot clinics, not constants. The programme dashboard reports readiness as the equal-weight average.
 2. **Formula.** Dashboard reading `= (Σ pᵢ)/k`. Probability of a clean go-live `= ∏ pᵢ`.
 3. **Substitution.** Average `= 6.35/7`. Product
    `= 0.96 × 0.90 × 0.94 × 0.98 × 0.85 × 0.80 × 0.92`.
@@ -333,7 +334,11 @@ criteria and listing criteria for which no evidence exists — a genuinely valua
 and one humans do badly at scale. Drafting runbooks and reversion procedures from configuration
 baselines, for verification by the people who will use them.
 
-**Where it must not go.** It must not set the readiness probabilities. Those are judgements about
+**Where it must not go.** It must not record a gate-block item as met. A mandatory precondition is
+closed by the authority that grants it, and an assembled status line evidences that a document exists,
+never that an approval was given — the distinction that makes the named approving authority, rather
+than the collated status, the thing the certificate carries. It must not set the readiness
+probabilities. Those are judgements about
 specific organisations and specific people, and a model asked for them will supply confident,
 provenance-free numbers that then drive a real go-live decision — precisely the failure Domain 14
 KA 14.3 names. It must not issue a service acceptance, which is an accountable act by the receiving
