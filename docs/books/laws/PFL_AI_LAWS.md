@@ -3,7 +3,7 @@
 **Status:** Certification Laws for the **PCI AI Project Finance Leader** credential (PFL-AI).
 Version 2.0 — a complete reconstruction of the twenty-four-law v1.0 set onto the twenty-five-element
 structure required by the **PCI Law Drafting Manual** §5. **Thirty-three laws** and **one hundred and
-fifty-three process requirements**, anchored to eleven of the sixteen domains of the PFL-AI Body of
+fifty-five process requirements**, anchored to eleven of the sixteen domains of the PFL-AI Body of
 Knowledge (`../pfl-ai/`).
 
 **Governing instruments:** the [`PCI Professional Laws Charter`](PCI_PROFESSIONAL_LAWS_CHARTER.md)
@@ -5789,6 +5789,29 @@ added as PR-05, which converts an unverifiable "approval" into an observable one
 route stated expressly so that unavailability cannot be used to justify automated release.
 
 ---
+## Withdrawal record — v1.0 laws with no successor
+
+Charter §10 requires that a withdrawn law's withdrawal and its reason be published, and that the law is
+not deleted from the record. Twenty-two of v1.0's twenty-four laws are superseded by a named law above,
+recorded in each successor's element 25. **Two are withdrawn without a successor law**, and their
+obligations are carried as process requirements instead, in the domain that already owns the surrounding
+discipline.
+
+| Withdrawn v1.0 law | Reason for withdrawal | Where the obligation now lives |
+|---|---|---|
+| `PFL-LAW-04-01` — Appraisal Discipline (D4) | Its rule bundled four obligations — a stated basis, internal consistency between cash flows and discount rate, one horizon and one perspective, and a prohibition on re-cutting a measure — into a single unenforceable sentence, and its subject is a *presentation* discipline rather than a distinct professional duty. It is not a certification law's worth of independent obligation once `PCI-PFL-LAW-01.01` governs how a financial judgement may be presented. | **`PCI-PFL-LAW-01.01-PR-05`**, whose parent law's scope already reaches appraisals. The basis must be stated in full, the cash flows and the discount rate must share one inflation and one currency basis, and re-basing a measure after a result is known is prohibited. Element 21 gained a fifth step that recomputes the measure on the stated basis. Domain 4 therefore anchors no law in this edition — recorded here so that its absence is deliberate. |
+| `PFL-LAW-07-01` — Revenue Assumption Discipline (D7) | Its substance is an assumption-register requirement — record what a revenue actually is — and it duplicated `PCI-PFL-LAW-06.03` and `PCI-PFL-LAW-12.01` in every respect but one: the prohibition on presenting a forecast revenue as contracted. Manual §9 Q12 treats a law that adds nothing to its neighbours as a defect. | **`PCI-PFL-LAW-06.03-PR-05`**: every revenue assumption must record whether it is contracted, regulated, availability-based or forecast, whether it is indexed or fixed, and the payer's credit standing; and a forecast or merchant revenue must not be presented as contracted. Element 21 gained a fifth step tracing any contracted amount to an executed agreement. Domain 7 therefore anchors no law in this edition. |
+
+**Five of the sixteen domains anchor no law**: Domain 2 (accounting foundations), Domain 3 (time value of
+money), Domain 4 (investment appraisal), Domain 7 (revenue and commercial models) and Domain 8 (cost,
+schedule and contingency). Domains 2 and 3 are taught rather than governed — an arithmetic or
+presentation error there is caught by the laws that use the result. Domain 8's obligations sit in
+`PCI-PFL-LAW-14.03`, which is where a cost forecast becomes a funding statement. **This distribution is a
+deliberate scoping decision, not an oversight**, and it is recorded so that a later reviewer can
+challenge it rather than assume it.
+
+---
+
 ## Audit findings — the twenty-five questions of Manual §9
 
 Manual §9 requires every question to be answered before a law is approved, and requires the failure and
@@ -5851,7 +5874,7 @@ they are recorded rather than resolved, per Charter §5 Stage 5:
 
 ## Index of PFL-AI Professional Laws
 
-Thirty-three laws · one hundred and fifty-three process requirements · eleven anchor domains. External
+Thirty-three laws · one hundred and fifty-five process requirements · eleven anchor domains. External
 reference categories are the Manual §6 numbers, given in full at the foot of the table.
 
 | ID | Official title | Anchor domain | Principal obligation (element 1, in brief) | External reference categories |
@@ -5901,7 +5924,7 @@ relied upon for a requirement except where element 17 says so expressly.
 
 *Version 2.0, compiled 2026-08-04. **Draft for approval under Charter §5** — Stages 6, 11, 12 and 13 not
 performed, Stages 4, 5 and 7 partial; see the stage record in the front matter. Thirty-three laws · one
-hundred and fifty-three process requirements · twenty-five elements in every law, none omitted · zero
+hundred and fifty-five process requirements · twenty-five elements in every law, none omitted · zero
 occurrences of the ISO requirement auxiliary · all internal cross-references resolve · British English
 throughout. The official publication of every external instrument always governs.*
 

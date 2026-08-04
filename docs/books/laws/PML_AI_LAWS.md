@@ -5558,8 +5558,7 @@ finding are marked and carried into the outstanding due-process stages.
 | Finding | Why it is open | Where it goes |
 |---|---|---|
 | **Six external-reference rows are recorded as "not independently verified" in the suite register** — ISO 21503, ISO 21504, ISO 21505, ISO 9000, the PMBOK Guide's companion *Code of Ethics and Professional Conduct*, and the AACE TCM Framework. | Charter §5 Stage 5 was performed against the register, not against the publishers. | Verification before publication; each citing law states the open status in element 17. |
-| **`PCI-FND-LAW-15` does not exist.** | The foundational set contains fourteen laws. The reconstruction specification for this edition referred to a range ending at fifteen. | No law cites it. If a fifteenth is made, the Interpretation Panel adds the cross-references editorially under Charter §7. |
-| **The foundational set is still published under the legacy identifier form `PCI-LAW-F-NN`.** | This file uses the Charter §3 form `PCI-FND-LAW-NN`. | The mapping table in *How to read these laws* resolves every citation; the foundational file should be renumbered so the two agree. |
+| **The published foundational file lags the concordance.** | `PCI_FOUNDATIONAL_LAWS.md` still carries fourteen laws under the legacy form `PCI-LAW-F-NN`, while this set and the rebuilt PCL-AI set both cite the fifteen-subject Charter §3 concordance. | A renumbering task on the foundational set, not a defect in these laws. Until it is done, the concordance in *How to read these laws* is the resolving reference and the Interpretation Panel holds the legacy mapping. |
 | **Charter §5 Stages 4, 6, 7, 11, 12 and 13 have not been performed.** | Technical review, practitioner consultation, impact assessment, approval, publication and post-implementation review are outstanding. | Element 25 of every law records the set as **not yet approved**, with the effective date on approval. |
 | **The ISO-mapping statement resolves a tension between two Manual provisions.** | Manual §1 both prohibits the legislative auxiliary everywhere and requires the ISO mapping to be stated. This file states the mapping by describing the auxiliary rather than printing it. | Interpretation Panel confirmation under Charter §6. |
 
@@ -5624,7 +5623,7 @@ twenty-five-element form,
 re-drafted in must-form, split into one principal obligation plus process requirements, and given a
 compliance test that can actually be performed.
 
-Every law in this set operates under the Foundational Laws `PCI-FND-LAW-01` to `PCI-FND-LAW-14`, under
+Every law in this set operates under the Foundational Laws `PCI-FND-LAW-01` to `PCI-FND-LAW-15`, under
 the **PCI Professional Laws Charter** and the **PCI Law Drafting Manual**, and under one principle:
 
 > **AI proposes; the professional verifies, decides and remains accountable.**
