@@ -35,7 +35,7 @@ data class that determines whether anything built on top of it is usable. KA 14.
 organisations build on that substrate: dashboards, analytics, digital twins and automation, each
 tested against the decision it claims to serve and the volume at which it pays. KA 14.3 is the
 domain's core: where AI earns its place across the lifecycle, how a prompt becomes professional
-practice, and the derivation of the verification standard proportional to consequence: followed by
+practice, and the derivation of the verification standard proportional to consequence, followed by
 the arithmetic of why the plausible wrong number is the one to fear. KA 14.4 closes with the four
 obligations that cannot be computed away: explainability that supports a decision, differential
 error, human accountability, and the security and privacy of a delivery estate that now holds

@@ -4,11 +4,11 @@
 A leader who can defend a date but not a number is half-equipped. Domain 6 built the schedule; this
 domain builds the money that pays for it and the commercial arrangements that bind other people to
 deliver it. It starts with estimating and budgeting: how a credible number is constructed and what
-its accuracy claim actually means (KA 7.1); establishes the cost baseline and the forecasting that
-keeps it honest (KA 7.2); builds **earned value** in full, because it is the only technique that
-answers cost and schedule performance in one integrated language (KA 7.3); and closes with the
-commercial awareness a leader cannot delegate: resource economics, procurement strategy, contract
-models and cash flow (KA 7.4). Risk quantification deepens in Domain 8; contracts and supply
+its accuracy claim actually means (KA 7.1). From there it establishes the cost baseline and the
+forecasting that keeps it honest (KA 7.2), and builds **earned value** in full, because no other
+technique answers cost and schedule performance in one integrated language (KA 7.3). The close is
+the commercial awareness a leader cannot delegate: resource economics, procurement strategy,
+contract models and cash flow (KA 7.4). Risk quantification deepens in Domain 8; contracts and supply
 networks get their own treatment in Domain 10. What belongs here is the leader's own numeracy:
 enough to know when a forecast is arithmetic and when it is hope.
 
@@ -1280,7 +1280,7 @@ capability** will mis-price every option in Domain 6's compression decisions.
    rates against a schedule built on productive hours is under-funded by that multiplier before any
    risk materialises, and the discrepancy is invisible because both documents look right.
 
-   **Utilisation is the most leveraged number on the sheet and nobody owns it.** Cost per productive
+   **Utilisation is the number with the most leverage on the sheet, and nobody owns it.** Cost per productive
    hour scales as `1/utilisation`, so losing five points from 85 % to 80 % raises it to **USD
    107.0850**: **+6.25 %**, exactly the ratio `0.85/0.80`. On Auriga, where labour is 62 % of `BAC`
    (**USD 2,480,000**) that is **USD 155,000**, which is **77.50 %** of the entire USD 200,000 cost

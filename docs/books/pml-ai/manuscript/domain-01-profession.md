@@ -4,13 +4,13 @@
 
 Every technique in this book (the networks of Domain 6, the earned value of Domain 7, the risk
 quantification of Domain 8) is instrumentation. This domain is about the person holding the
-instruments: what a project leader is *for*, what they are answerable for, and how they think. It
-establishes the delivery landscape and how leading temporary work differs from running a
-steady-state function (KA 1.1); defines accountability precisely, because the word is used loosely
-and the distinction decides who answers when things go wrong (KA 1.2); builds the two habits of mind
-that separate a leader from a coordinator: systems thinking, and the discipline of outputs versus
-outcomes versus benefits (KA 1.3); and grounds professional ethics and the governed use of AI (KA
-1.4). A reader who finishes only this domain should already reason like the profession: *know what
+instruments: what a project leader is *for*, what they are answerable for, and how they think. KA
+1.1 establishes the delivery landscape and shows how leading temporary work differs from running a
+steady-state function. KA 1.2 defines accountability precisely, because the word is used loosely and
+the distinction decides who answers when things go wrong. KA 1.3 builds the two habits of mind that
+separate a leader from a coordinator — systems thinking, and the discipline of outputs versus
+outcomes versus benefits. Ethics and the governed use of AI are grounded in KA 1.4. A reader who
+finishes only this domain should already reason like the profession: *know what
 success actually means, know who owns it, and stay answerable for the judgment even when a machine
 produced the analysis.*
 
@@ -896,8 +896,8 @@ information?" but *what is the last responsible moment, and what does waiting co
 
    **Sequencing engagement before acceleration is what the numbers say, not a preference.** Adoption
    work raises both the benefit *and* the value of every subsequent timing decision, because the
-   cost of delay is proportional to adoption. Acceleration bought before adoption is secured is
-   leveraged on an unverified assumption; adoption secured first makes the acceleration worth more.
+   cost of delay is proportional to adoption. Acceleration bought before adoption is secured is a bet
+   on an unverified assumption; adoption secured first makes the acceleration worth more.
 
    **What breaks it.** The eight weeks must be genuinely available on the critical path: compression
    applied to non-critical work buys nothing at all, which Domain 6 (KA 6.4) computes properly, and
@@ -1495,9 +1495,9 @@ programme is publicly described as a failure. Both accounts cite true facts.
 against **outputs** (all 40 clinics, no adoption term), so it claimed USD 979,200 per year where the
 honest figure at 70 % adoption was USD 685,440, and actual adoption reached only about 40 %, giving
 roughly USD 391,680. Two failures compounded: an arithmetic one (skipping the outcome link, 1.3.2)
-and an accountability one (**nobody owned adoption**, the delivery leader owned installations, the
+and an accountability one. **Nobody owned adoption.** The delivery leader owned installations, the
 clinical directorate owned practice change, and no single name owned the measure that connected
-them, 1.2.1).
+them (1.2.1).
 
 **The account in numbers.** Both public verdicts were arithmetically defensible, which is the whole
 difficulty.

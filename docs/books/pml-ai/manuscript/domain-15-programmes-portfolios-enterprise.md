@@ -30,7 +30,7 @@ expensively. KA 15.3 treats enterprise capacity as the real constraint it is, ap
 flow arithmetic to a portfolio's work in progress, prices protective capacity honestly (it does not
 always pay), and subjects the enterprise PMO to the same value test it applies to everyone else. KA
 15.4 governs transformation: enterprise decision latency summed across tiers using Domain 3's
-formula, and strategic reporting; where the commonest portfolio report in circulation aggregates
+formula, and strategic reporting, where the commonest portfolio report in circulation aggregates
 performance in a way that reverses its sign.
 
 **Learning objectives.** After this domain a candidate can: distinguish a project, a programme and a

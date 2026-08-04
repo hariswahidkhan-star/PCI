@@ -5,12 +5,12 @@
 Domain 1 established that a project is judged on outcomes and benefits, not delivered outputs, and
 proved it arithmetically. That leaves the prior question unanswered: **how does work get chosen at
 all, and how does anyone know it was worth choosing?** This domain answers it. It sets the strategic
-context and treats alignment as a test that must be re-run rather than a box ticked at approval (KA
-2.1); builds the business case as a decision instrument, with the options analysis and appraisal
-that make it one, and the selection models that rank competing candidates (KA 2.2); works benefits
-mapping, measurement baselines and the sustainability dimension, plus the assumption and dependency
-management on which every forecast rests (KA 2.3); and closes with the hardest leadership act in the
-discipline, **stopping** (KA 2.4). The through-line is that a business case is a *promise about the
+context and treats alignment as a test to be re-run rather than a box ticked at approval (KA 2.1),
+then builds the business case as a decision instrument: the options analysis and appraisal that make
+it one, and the selection models that rank competing candidates (KA 2.2). Benefits mapping,
+measurement baselines and the sustainability dimension follow, with the assumption and dependency
+management on which every forecast rests (KA 2.3). The domain closes on the hardest leadership act
+in the discipline, **stopping** (KA 2.4). The through-line is that a business case is a *promise about the
 future made to obtain money*, and the professional question is always whether anyone will be held to
 it.
 

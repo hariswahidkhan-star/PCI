@@ -4,11 +4,11 @@
 A project leader's authority rests on one repeated act: making a credible statement about the
 future, when the work will finish, what could move that date, and what it would cost to move it
 back. This domain builds the machinery behind that credibility. It starts where planning actually
-starts, with levels of plan and the logic that binds work together (KA 6.1); builds the critical
-path method in full, forward and backward passes, and both kinds of float (KA 6.2); adds the
-realities the textbook network ignores, resources, constraints, milestones and rolling-wave
-elaboration (KA 6.3); and finishes with delivery flow across predictive, agile and hybrid worlds:
-recovery, compression economics, and forecasting under uncertainty (KA 6.4). Cost joins schedule in
+starts, with levels of plan and the logic that binds work together (KA 6.1). The critical path
+method is then built in full, forward and backward passes and both kinds of float (KA 6.2), before
+the realities the textbook network ignores — resources, constraints, milestones and rolling-wave
+elaboration — are added (KA 6.3). The domain finishes with delivery flow across predictive, agile
+and hybrid worlds: recovery, compression economics, and forecasting under uncertainty (KA 6.4). Cost joins schedule in
 Domain 7 (earned value); risk quantification deepens in Domain 8. A leader who cannot read a network
 diagram is hostage to whoever can; this domain removes the hostage-taking.
 
@@ -193,7 +193,7 @@ duration) are activities in disguise.
    it, which means treating the paper deadline as a milestone with float, not as an administrative
    detail.
 
-   **The cautions.** The 4:1 leverage is a property of this arrival date, not of the calendar, a
+   **The cautions.** The 4:1 leverage is a property of this arrival date, not of the calendar. A
    design finishing at week 21 gains nothing from compression because it already makes the week-24
    meeting, and a leader who reads "compress the design" as a general rule will buy weeks that
    convert into nothing. The gain is realised only if the approval sits on a binding path; on a path
