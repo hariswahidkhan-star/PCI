@@ -38,46 +38,33 @@ placeholders: 2
 
 > Role design, hiring and development built on a published framework rather than a job-advert template.
 
-**In one paragraph.** This document explains what a hiring manager can and cannot conclude from a PCL-AI
-credential, and how to use the underlying thirteen-domain framework for three jobs it does well: writing a
-role specification that describes competence rather than tools, structuring an interview that tests
-judgement, and assessing a controls function's capability gaps with a weighted coverage measure. It includes
-a worked gap assessment and a checklist for a resourcing meeting.
+**In one paragraph.** This document explains how to use the thirteen-domain framework behind the PCL-AI
+credential for three jobs it does well: writing a role specification that describes competence rather than
+tools, structuring an interview that tests judgement, and assessing a controls function's capability gaps
+with a weighted coverage measure. It includes a worked gap assessment and a checklist for a resourcing
+meeting.
 
 **Who this is for.** Heads of project controls, PMO leads, engineering and commercial directors, and the
 hiring managers and HR business partners who write the specification and sit on the panel.
 
 ---
 
-## 1. What the credential tells you, and what it does not
+## 1. What the credential tells you before you use the framework
 
 A PCL-AI holder has demonstrated competence against a published thirteen-domain framework, at a published
 standard, in one ninety-minute examination scored criterion-referenced rather than on a curve. The
 propositions they claim to be able to act on are in `PCB-04 — What a project controls professional must
-know`; the domains sampled are mapped in `PCB-02 — The thirteen domains at a glance`.
+know`; the limits on that claim — point-in-time validity, no accreditation, no outcome guarantee, and the
+separation from membership grades — are set out in `PCB-01 — The Project Controls Body of Knowledge —
+executive summary` §5, and an employer should read them before relying on the credential.
 
-Five limits belong on the same page, because a manager who learns them later will discount the credential
-entirely.
-
-**It is a point-in-time assessment.** Valid for three years, maintained through continuing professional
-development including a mandatory AI-currency component. It reports what was demonstrated at a sitting.
-
-**PCI is not accredited.** The framework is developed with reference to ISO/IEC 17024
-personnel-certification principles. PCI is not accredited by ANAB, IAS or any other ISO/IEC 17024
-accreditation body, holds no governmental approval and claims no university equivalence. If your
-procurement or HR policy requires an accredited certification, this one does not currently meet it.
-
-**Eligibility is three years' professional experience in any field** — not three years in project controls.
-Sector and domain experience remain yours to assess.
-
-**One route requires no examination.** Of the three published routes — standard, founding member and
-honorary fellow — the honorary route involves no sitting. Where a credential matters to a decision, verify
-which route earned it; see `CER-04 — Routes into PCI: standard, founding, honorary`.
-
-**Certification is separate from membership, and from training.** Membership grades — Student, Associate,
-Professional, Fellow — are a different ladder. PCI owns the standard and the examination; Certuvo is the
-separate official training partner, and the certification decision is independent of who prepared the
-candidate, or whether anyone did.
+Three points bear specifically on a hiring decision. **Eligibility is three years' professional experience
+in any field**, not three years in project controls — sector and domain experience remain yours to assess.
+**One route requires no examination**: of the three published routes, standard, founding member and honorary
+fellow, the honorary route involves no sitting, so verify which route earned a credential that matters to a
+decision (`CER-04 — Routes into PCI: standard, founding, honorary`). And **PCI owns the standard and the
+examination while Certuvo is the separate official training partner** — the certification decision is
+independent of who prepared the candidate, or whether anyone did.
 
 ## 2. Using the domains as a role specification
 
@@ -108,23 +95,21 @@ weight on finance is not forty per cent of a cost engineer's week.
 ## 3. Using the framework in hiring
 
 A domain map beats a competency form as an interview structure, because it produces questions with right
-answers. Use one probe per required domain — the probes in `PCB-04` §2 are written for this, and share a
+answers. Use one probe per required domain — the probes in `PCB-04` §2 are written for this and share a
 shape worth copying: give a situation and a little data, then ask what the candidate would do next and why.
 One who names the cause of a variance before selecting a forecasting method is demonstrating judgement; one
 who names a formula is demonstrating recall.
 
 Three additions earn their place on any panel. **Ask for the working, not the tool** — "show me how you
-would find total float on this ten-activity network" separates candidates faster than any question about
-scheduling software, because it cannot be answered from a template. **Ask one question about being wrong** —
-"tell me about a forecast you defended that turned out optimistic: what did you miss, and what changed
-afterwards?" There is no correct answer; you are assessing whether the candidate treats a forecast as a
-position they own. **Ask one AI question and score the governance, not the enthusiasm** — "you have an
-AI-generated variance narrative in front of you; which two figures do you verify before it goes to the
-board, and against what?"
+would find total float on this ten-activity network" cannot be answered from a template. **Ask one question
+about being wrong** — "tell me about a forecast you defended that turned out optimistic: what did you miss,
+and what changed afterwards?" There is no correct answer; you are assessing whether the candidate treats a
+forecast as a position they own. **Ask one AI question and score the governance, not the enthusiasm** — "you
+have an AI-generated variance narrative; which two figures do you verify before it goes to the board, and
+against what?"
 
 Do not ask candidates to reproduce examination content. Sample items are published study material; live
-content is secured and never published, and a candidate who offers you any has told you something about
-their conduct.
+content is secured and never published.
 
 ## 4. Worked example — a capability gap assessment
 
@@ -168,13 +153,11 @@ finance weight spreads across four.
 **The warning that makes this usable.** That doubling is an artefact of the arithmetic, not a finding about
 your team: the *index* is twice as sensitive to Domain 13, which is not to say Domain 13 training is twice
 as valuable to your projects. If the function's live problem is a disputed revenue position, option 2 is the
-right decision and the index is the wrong instrument. All figures are computed unrounded and shown to one
+right decision and the index is the wrong instrument. Figures are computed unrounded and shown to one
 decimal place, which is why the option indices do not reconcile exactly to the sum of the rounded
 increments. Use the index to find where you are thin, never to choose what to do about it.
 
 ## 5. Using the framework for development
-
-The same counts drive a development plan more usefully than they drive an index.
 
 **Find the single points of failure first.** A domain covered by one person is a resilience problem before
 it is a capability problem. Here that is Domains 11 and 13 — and business process cycles is the one most
@@ -195,14 +178,13 @@ published with the recertification rules]`.
 
 ## 6. What not to use the framework for
 
-**Not as a pay scale** — the framework says nothing about remuneration and PCI publishes no salary data. Any
-figure attributed to the Institute today is not ours. **Not to screen out non-certified candidates** — many
+**Not as a pay scale** — it says nothing about remuneration and PCI publishes no salary data; any figure
+attributed to the Institute today is not ours. **Not to screen out non-certified candidates** — many
 excellent controls professionals are certified by nobody, and the framework's hiring value is the structure
 it gives your questions, which works identically on people who hold nothing. **Not as accreditation, to your
 client** — "our team is PCI-certified" is accurate; implying accredited or government-recognised
-certification is not, and the Institute will not support it. **Not for the sibling credentials** — this
-framework and its blueprint are PCL-AI only, and no examination blueprint exists yet for PFL-AI in project
-finance or PML-AI in project management.
+certification is not. **Not for the sibling credentials** — this framework is PCL-AI only, and no
+examination blueprint exists yet for PFL-AI or PML-AI.
 
 ## 7. Checklist
 

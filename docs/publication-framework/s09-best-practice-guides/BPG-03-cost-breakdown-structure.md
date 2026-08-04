@@ -62,15 +62,15 @@ amount of scope decomposition answers it, because subcontract labour appears in 
 answered by the **cost breakdown structure (CBS)** — the decomposition of cost by element or type
 rather than by deliverable.
 
-The two axes are independent, and a single transaction carries a position on both. A 42,000 invoice for
+The two axes are independent, and a single transaction carries a position on both. An invoice for
 concrete supplied to the inlet works is coded to WBS element 1.3.2 *and* to cost type "permanent
 materials". Crossing the axes gives a matrix in which every cell is meaningful: the material cost of
 the inlet works, the total material cost of the project, and the total cost of the inlet works are all
-simple sums along a row, a column or both.
+sums along a row, a column or both.
 
-The **code of accounts** is the notation that carries both axes, plus whatever else the project needs
-to distinguish, on every single transaction. It is the most consequential piece of notation on the
-project, because once a transaction is stamped with it, the stamp is what everything downstream sees.
+The **code of accounts** is the notation carrying both axes, plus whatever else the project needs to
+distinguish, on every transaction. Once a transaction is stamped with it, the stamp is what everything
+downstream sees.
 
 ## 2. Cost types
 
@@ -104,15 +104,13 @@ and `BPG-10 — Contingency and management reserve` covers their treatment.
 The resource class axis sits beneath cost type and answers *what kind of resource*. Within direct
 labour: welder, pipefitter, electrician, supervisor. Within plant: crane, excavator, generator.
 
-It is optional, and it should be added only where a rate-and-quantity analysis is genuinely going to be
-performed, because it multiplies the code space and the discipline required to keep it clean. The test
-is simple: if nobody will ever ask "how many welder-hours at what rate?", do not create a welder
-resource class. An unused code segment does not stay empty — it fills with whatever the person raising
-the requisition selected first in the drop-down list, and then it is worse than nothing, because
-somebody will eventually report from it.
-
-Where resource classes are used, they must be defined with the same rigour as cost types: a definition,
-a unit of measure, and an explicit statement of what does *not* belong in them.
+It is optional and should be added only where a rate-and-quantity analysis will genuinely be performed,
+because it multiplies both the code space and the discipline needed to keep it clean. The test: if
+nobody will ever ask "how many welder-hours at what rate?", do not create a welder resource class. An
+unused segment does not stay empty — it fills with whatever appeared first in the drop-down list, and
+that is worse than nothing, because somebody will eventually report from it. Where resource classes are
+used, define them as rigorously as cost types: a definition, a unit of measure, and what does *not*
+belong in them.
 
 ## 4. Designing the code
 
@@ -157,15 +155,12 @@ The project code of accounts and the general ledger chart of accounts are differ
 different owners and different purposes, and forcing either to be the other produces a structure that
 serves neither.
 
-The general ledger exists to produce financial statements. Its classifications follow the requirements
-of financial reporting: the distinction between what is capitalised and what is expensed, between
-categories of expenditure that must be disclosed separately, between periods. It is owned by finance,
-it is subject to audit, and it changes rarely.
-
-The project code of accounts exists to produce management control. Its classifications follow the
-requirements of forecasting and accountability: which scope, whose responsibility, what kind of
-resource, which state of commitment. It is owned by the project, and it may legitimately be more
-granular than the ledger by an order of magnitude.
+The general ledger exists to produce financial statements. Its classifications follow financial
+reporting: what is capitalised and what is expensed, which categories must be disclosed separately,
+which period. It is owned by finance, subject to audit, and it changes rarely. The project code of
+accounts exists to produce management control. Its classifications follow forecasting and
+accountability: which scope, whose responsibility, what kind of resource, which state of commitment. It
+is owned by the project and may legitimately be more granular than the ledger by an order of magnitude.
 
 The correct relationship is a **defined many-to-one mapping** from project codes to ledger accounts,
 maintained as a controlled document, with two properties: every project code maps to exactly one ledger
@@ -201,22 +196,20 @@ what forces the re-code.
 
 ## 7. Direct, indirect and the allocation question
 
-Some cost cannot be attributed to a single scope element without a rule: site supervision, the
-site establishment, shared plant, quality assurance. There are three honest treatments and one
-dishonest one.
+Some cost cannot be attributed to a single scope element without a rule: site supervision, site
+establishment, shared plant, quality assurance. There are three honest treatments and one dishonest one.
 
-**Charge it to a dedicated indirect element.** Simple, transparent, and it keeps the deliverable
-accounts clean. The cost is visible as what it is. The weakness is that no deliverable carries its true
-full cost, so benchmarking against a fully-loaded rate needs a further step.
+**Charge it to a dedicated indirect element.** Simple and transparent, and it keeps the deliverable
+accounts clean — but no deliverable then carries its full cost, so benchmarking against a fully-loaded
+rate needs a further step.
 
-**Allocate it on a defined driver.** Spread site supervision across deliverables in proportion to
-direct labour hours, or shared plant in proportion to plant-hours booked. This gives fully-loaded
-deliverable costs at the price of a rule that must be documented, applied consistently, and understood
-by everyone reading the report.
+**Allocate it on a defined driver.** Spread supervision across deliverables in proportion to direct
+labour hours, or shared plant in proportion to plant-hours booked. Fully-loaded deliverable costs, at
+the price of a rule that must be documented, applied consistently and understood by every reader.
 
-**Do both, in different views.** Charge to the indirect element for control, and allocate only in a
-clearly labelled fully-loaded view for estimating and benchmarking. This is the Institute's recommended
-practice where the project has the maturity to maintain two views without confusing them.
+**Do both, in different views** — the indirect element for control, allocation only in a clearly
+labelled fully-loaded view for estimating. This is the Institute's recommended practice where the
+project can maintain two views without confusing them.
 
 The dishonest treatment is to allocate without documenting the driver, or to change the driver
 mid-project. Both make period-on-period comparison meaningless, and both are usually discovered when
@@ -224,33 +217,32 @@ somebody asks why a deliverable's unit rate moved without anything happening to 
 
 ## 8. How this goes wrong
 
-**Coding is decided by whoever raises the first requisition.** They select the code that gets the
-requisition approved. Everyone after them copies it, because it worked. Six months later the structure
-is whatever the first requisition happened to need.
+**Coding is decided by whoever raises the first requisition.** They select the code that gets it
+approved. Everyone after copies them, because it worked. Six months later the structure is whatever the
+first requisition happened to need.
 
 **The ledger is used as the project code of accounts.** The project inherits finance's chart, which has
-no scope dimension at all, so cost can be reported by type and by period but never by deliverable. The
-project then rebuilds the scope dimension in a spreadsheet, maintained by one person, reconciled to
-nothing.
+no scope dimension, so cost can be reported by type and by period but never by deliverable. The scope
+dimension gets rebuilt in a spreadsheet, maintained by one person, reconciled to nothing.
 
 **A segment is overloaded.** The cost type segment starts carrying discipline for a few elements
-because there was no discipline segment. Reports built on cost type now need an exception list, and the
-exception list is not in the report — it is in the analyst's head.
+because there was no discipline segment. Reports built on cost type now need an exception list, and
+that list is not in the report — it is in the analyst's head.
 
 **Escalation is buried in base rates.** The estimate applied escalation inside the unit rates rather
 than as a separate allowance. Two years in, nobody can say how much of the spend was escalation and how
 much was quantity growth, so the forecast cannot distinguish a price problem from a scope problem.
 
 **Codes are created to solve approval problems.** A cost that does not fit anywhere gets a new code
-rather than a decision. The code list grows monotonically, half of it is used once, and the reporting
-hierarchy stops rolling up cleanly.
+rather than a decision. The list grows monotonically, half of it is used once, and the hierarchy stops
+rolling up cleanly.
 
-**Hours are lost.** Labour is coded to money only. The productivity signal — earned hours against
-burned hours — becomes unavailable, and the project loses its earliest indicator of a labour overrun.
+**Hours are lost.** Labour is coded to money only, so the productivity signal — earned hours against
+burned hours — is unavailable, and the project loses its earliest indicator of a labour overrun.
 
-**The mapping to the ledger is undocumented.** It exists as a formula in a workbook. The person who
-wrote it moves on. The monthly reconciliation becomes an exercise in re-deriving somebody else's
-intent, and the difference is written off as timing.
+**The mapping to the ledger is undocumented.** It lives as a formula in a workbook; the person who
+wrote it moves on; the monthly reconciliation becomes an exercise in re-deriving somebody else's intent,
+and the difference is written off as timing.
 
 ## 9. Worked example
 

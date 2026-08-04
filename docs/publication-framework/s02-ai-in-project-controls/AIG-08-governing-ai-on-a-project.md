@@ -196,11 +196,11 @@ clauses, numbered so an assurance finding can cite them — see `TPL-01 — Proj
 the contract allows, subcontractors producing controls deliverables — and that accountability for every
 output rests with a named individual, not a tool.
 
-**AI-2 Permitted-use register.** Where it lives, who owns it, how a use is added, and the rule that a use
-not in the register is not permitted.
+**AI-2 Permitted-use register.** Where it lives, who owns it, how a use is added, and that a use not in
+the register is not permitted.
 
-**AI-3 Data classification and prohibited data.** The project's classification map (§5), the maximum
-classification per approved tool, and material that may not enter any tool on this project.
+**AI-3 Data classification and prohibited data.** The classification map (§5), the maximum classification
+per approved tool, and material that may not enter any tool on this project.
 
 **AI-4 Verification tiers.** The three tiers, what each requires, and that a tier is assigned in the
 register and lowered only by documented decision on measured evidence.
@@ -228,11 +228,10 @@ using AI on the project is briefed before first use.
 
 Three tests, none of which is "we have a policy". **Reconstruction:** pick an AI-assisted number that left
 the project last quarter and ask its named owner to reconstruct it — source data, method, what the model
-produced, what changed in review, who signed, when; more than an hour means the record is not doing its
-job. **Refusals:** no refusals in the log in six months means the framework is either unused or
-unconsulted, both findings. **Incidents:** zero incidents *and* zero near-misses across an active function
-means near-misses are not being reported, and the first thing you will learn about is an incident that
-reached the client.
+produced, what changed in review, who signed, when; more than an hour means the record is not working.
+**Refusals:** no refusals logged in six months means the framework is unused or unconsulted, both
+findings. **Incidents:** zero incidents *and* zero near-misses across an active function means near-misses
+are not reported, and the first thing you learn about will be an incident that reached the client.
 
 ## 9. How this goes wrong
 
@@ -277,13 +276,9 @@ Loaded cost of the reviewing grade: **USD 85 per hour**.
 **Formulae.** `monthly minutes = (Tier 1 count × Tier 1 minutes) + (Tier 2 count × Tier 2 minutes)`;
 `annual hours = (monthly minutes ÷ 60) × 12`; `annual cost = annual hours × loaded rate`.
 
-**Substitution.**
-
-- Tier 1 `= 4 × 90 = 360` minutes
-- Tier 2 `= 5 × 30 = 150` minutes
-- Monthly `= 360 + 150 = 510` minutes `= 510 ÷ 60 = 8.5` hours
-- Annual `= 8.5 × 12 = 102` hours
-- Annual cost `= 102 × 85 = USD 8,670`
+**Substitution.** Tier 1 `= 4 × 90 = 360` minutes; Tier 2 `= 5 × 30 = 150` minutes; monthly
+`= 360 + 150 = 510` minutes `= 510 ÷ 60 = 8.5` hours; annual `= 8.5 × 12 = 102` hours; annual cost
+`= 102 × 85 = USD 8,670`.
 
 **Result.** The framework costs **102 reviewer-hours and USD 8,670 a year** on this project, before any
 tool licence.
@@ -310,17 +305,17 @@ uses from the register. What it must not do is keep the register and abandon the
 
 When an AI-assisted number is challenged — by a client, an auditor, an adjudicator or a board — the answer
 should be a record and a name produced within the hour, not a search for who ran what, in which tool, on
-which day. That is the purpose of the framework.
+which day.
 
 ---
 
 ## Related
 
-- `AIG-09 — Bias, explainability and auditability` — what the verification record must contain for a number to be reconstructable
-- `AIG-10 — Human in the loop: what AI may and may not decide` — the decision boundary and thresholds control object 3 depends on
+- `AIG-09 — Bias, explainability and auditability` — what a verification record must contain to make a number reconstructable
+- `AIG-10 — Human in the loop: what AI may and may not decide` — the boundary and thresholds control object 3 depends on
 - `AIG-11 — Evaluating AI tools — a buyer's due-diligence guide` — how residency, training and versioning answers are obtained
-- `ETH-05 — The ethical use of AI and data` — the professional-conduct obligations underneath the controls
-- `TPL-01 — Project controls execution plan` — the plan these clauses are written into
+- `ETH-05 — The ethical use of AI and data` — the conduct obligations underneath the controls
+- `TPL-01 — Project controls execution plan` — the plan these clauses go into
 
 ## Sources and standards
 
@@ -328,9 +323,9 @@ which day. That is the purpose of the framework.
 - The Institute's candidate AI-use policy (`docs/downloads/`).
 
 Standards named but not reproduced: ISO/IEC 42001 (management systems for artificial intelligence) and
-ISO 31000 (risk management) are the natural reading for a function formalising this at organisational
-rather than project level. This is a project controls framework, not a management-system standard, and is
-not a route to conformity with either.
+ISO 31000 (risk management), the natural reading for a function formalising this at organisational rather
+than project level. This is a project controls framework, not a management-system standard, and not a
+route to conformity with either.
 
 ## Status and version
 

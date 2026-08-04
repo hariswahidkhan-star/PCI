@@ -392,7 +392,8 @@ agreement between the two numbers will not survive any change in the over-claim 
 ### 8.5 What it does to the reported indices
 
 *Assumption: the package's planned value is spread evenly across twelve months from 1 January, so planned
-value at 30 June is six months of 400,000.*
+value at 30 June is six months of 400,000. SPI is the schedule performance index, earned value divided by
+planned value.*
 
 ```
 PV (planned value)  = 6 × 400,000 = 2,400,000
