@@ -1258,8 +1258,8 @@ below derives it.
    meeting genuinely reads it; remove that meeting and the breakeven falls to `42.50/5,000 =`
    **0.8500 %**, a tenfold increase in the case for checking, with no change to the artefact at all.
 
-   **The limit, stated plainly: row three should not be decided this way.** Where a statutory duty,
-   an operating licence or patient safety is engaged, the obligation to review is not contingent on an
+   **The limit, stated plainly: row three should not be decided this way.** Where a duty arising
+   under law or regulation, an operating licence or patient safety is engaged, the obligation to review is not contingent on an
    expected-value test, and computing `P*` there has exactly one legitimate use — to show that the
    review is *also* cheap, which forecloses the cost argument. It must never be used to conclude that
    a safety review is not worth performing. What constitutes an adequate assessment, who is competent
@@ -1376,8 +1376,8 @@ safety decision, which the example expressly rules out.
    moves it (1.4.3).
 5. *What does a breakeven above 100 % tell you?* — That no error rate could justify that check on that
    artefact: it is unjustifiable rather than merely uneconomic (1.4.3).
-6. *Where must this arithmetic not be the deciding test?* — Where a statutory duty, licence or safety
-   is engaged; there its only legitimate use is to show the review is also cheap (1.4.3).
+6. *Where must this arithmetic not be the deciding test?* — Where a duty arising under law or
+   regulation, a licence or safety is engaged; there its only legitimate use is to show the review is also cheap (1.4.3).
 
 ---
 
@@ -1432,7 +1432,8 @@ achieves the opposite: it invites the authority to stop asking for advice, and i
 nothing anyway, because accountability is not reallocated by assertion (1.2.1).
 
 Two boundaries. First, dissent and comply applies to decisions within the range of legitimate
-judgment. It does **not** apply where the instruction is unlawful, where safety or a regulatory
+judgment. It does **not** apply where following the instruction would require the leader to act
+outside the law as they understand it, where safety or a regulatory
 obligation would be breached, or where the leader is being asked to make a statement they know to be
 untrue (1.4.1) — those are refusal-and-escalate situations, and they are the reason a profession has
 ethics rather than only a service ethic. Second, the protections available to someone who raises such
@@ -1719,7 +1720,8 @@ Three rules that make it usable rather than decorative. **A `q` with no named co
 zero** — this is the single field that determines whether the card is honest. **A class whose `P*`
 exceeds 100 % has its check removed, not reduced**, and the removal is recorded, because a check no
 error rate can justify is consuming attention that a real exposure needs. And **any class where a
-statutory duty, licence or safety is engaged is marked `mandatory — not an expected-value decision`**,
+duty arising under law or regulation, a licence or safety is engaged is marked
+`mandatory — not an expected-value decision`**,
 with the `P*` retained only as evidence that the review is cheap (1.4.3). Review the card when the
 tooling changes, not when the artefact changes.
 

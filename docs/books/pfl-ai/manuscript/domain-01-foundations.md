@@ -7,8 +7,8 @@ long-lived, single-purpose asset whose only security is *itself* — its contrac
 they will produce. This domain establishes what makes that answer work, and what the leader at
 the centre of it actually does. It maps the role across the project lifecycle (KA 1.1), builds
 the discipline's three-cornered logic — value, cash and risk (KA 1.2) — and grounds the
-profession's obligations: fiduciary awareness, the financial-crime duties whose breach is criminal,
-independence, and the governed use of AI (KA 1.3). Everything later in the book is a specialisation of this domain: the mathematics
+profession's obligations: fiduciary awareness, the financial-crime duties the profession treats as
+absolute, independence, and the governed use of AI (KA 1.3). Everything later in the book is a specialisation of this domain: the mathematics
 (Domains 3–4), the structures (Domains 5, 9, 12), the lender's machinery (Domains 10, 13–15)
 and the AI curriculum (Domain 16) all stand on the concepts fixed here. A reader who finishes
 only this domain should already reason like the profession: *follow the cash, price the risk,
@@ -954,8 +954,10 @@ in finance.*
 
 The project finance leader acts inside a lattice of duties: **fiduciary-type duties** to the
 employer or client (loyalty, care, confidentiality); **contractual duties** under mandates
-and finance documents; **statutory duties** (companies law, anti-bribery and corruption,
-sanctions, market conduct); and **professional duties** — competence, candour, and records
+and finance documents; **duties arising under law** — the usual headings are companies law,
+anti-bribery and corruption, sanctions and market conduct, though which of them reach a given
+person, entity or transaction varies by jurisdiction and is a question for qualified counsel;
+and **professional duties** — competence, candour, and records
 that let others check the work. Two standing disciplines follow. *Candour about numbers*:
 forecasts are presented with their assumptions and sensitivities, never as certainties
 (Domain 4, KA 4.3.3); an optimistic case knowingly presented as a base case is a
@@ -965,48 +967,62 @@ qualified counsel and advisers — is the same professional humility applied to 
 
 ### 1.3.2 Financial crime: bribery, sanctions and the money-laundering perimeter
 
-**Why this belongs in the foundations.** Of the duties listed in 1.3.1, this is the one whose breach
-is a **criminal offence** — for the organisation and, in many regimes, for the individual who
-authorised the payment, tolerated the arrangement or declined to ask. It belongs here rather than in
+**Why this belongs in the foundations.** Of the duties listed in 1.3.1, this is the one the profession
+treats as absolute — no commercial justification reopens it, and the professional standard applies to
+the organisation and to the individual who authorised the payment, tolerated the arrangement or
+declined to ask. It belongs here rather than in
 a compliance annexe because of where this book's projects are actually developed: in jurisdictions
 the sponsor does not live in, reached through local agents, development consultants and joint-venture
 partners, and financed by institutions whose conditions precedent and continuing covenants routinely
 include anti-corruption and sanctions representations. A conflict of interest (1.3.3) is a
-professional failure priced in fees and franchise. This one is priced in prosecutions, debarment from
-public procurement, an event of default under the finance documents, and a financing that cannot
-close because no lender will take the representation. It is also the duty most often met for the
+professional failure priced in fees and franchise. This one is priced in consequences of a different
+order — the loss of standing to bid public work, an event of default under the finance documents, and
+a financing that cannot close because no lender will take the representation — and, in many
+jurisdictions, in the attention of authorities whose powers a leader should assume are severe and
+should never try to gauge unaided. It is also the duty most often met for the
 first time at the worst moment — on a critical path, in an unfamiliar jurisdiction, on the
 counterparty's recommendation.
 
-**The prohibited acts, in plain terms.** Four families, stated as a leader needs to recognise them
-rather than as any statute frames them.
+**The conduct a leader must recognise, in plain terms.** Four families, described as the professional
+standard in this book treats them and as a leader needs to recognise them in the field. This is a
+professional taxonomy, not a statement of the law of any jurisdiction: what conduct is caught, by whom
+and where, is for qualified counsel in the jurisdictions concerned.
 
-- **Bribery** is offering, promising or giving — or requesting, agreeing to receive or accepting — a
-  financial or other advantage to secure the improper performance of a function. Both sides of the
-  transaction are caught. The advantage need not be money (a job for a relative, a scholarship, a
+- **Bribery**, as this book uses the term, is offering, promising or giving — or requesting, agreeing
+  to receive or accepting — a financial or other advantage to secure the improper performance of a
+  function. The professional standard treats both sides of the transaction alike. The advantage need
+  not be money (a job for a relative, a scholarship, a
   subcontract, hospitality out of all proportion to the occasion), it need not actually be paid, and
-  the project need not win: the offer completes the act.
-- **Bribery of a foreign public official** is a distinct and usually wider offence, and it is the one
-  this discipline meets most. "Public official" is drawn broadly enough to reach the counterparties a
+  the project need not win: for professional purposes the offer completes the act.
+- **Bribery of a foreign public official** is treated as a distinct and usually stricter category, and
+  it is the one
+  this discipline meets most. "Public official" should be read broadly enough to reach the counterparties a
   project deals with every day — state-owned utilities and offtakers, permitting and customs
-  authorities, sovereign funds, port and grid operators — and the improper-performance element may
-  not be required at all where the advantage was intended to obtain or retain business.
-- **A facilitation payment is a bribe in most regimes.** A small payment to secure a routine act to
+  authorities, sovereign funds, port and grid operators — and a leader should not assume that an
+  absence of improper performance puts an advantage intended to obtain or retain business outside the
+  category.
+- **Treat a facilitation payment as a bribe.** A small payment to secure a routine act to
   which the project is already entitled — releasing a permit that has been granted, clearing goods
-  already cleared, connecting a service already paid for — is prohibited under most anti-bribery
-  regimes whatever it is called locally and however normal it is said to be. The few regimes that
-  carve out an exception define it narrowly and audit it. Treat the category as prohibited, and treat
+  already cleared, connecting a service already paid for — falls inside the professional prohibition
+  in this book whatever it is called locally and however normal it is said to be. Anti-bribery
+  regimes differ, and where one is said to carve out an exception the exception is typically narrow.
+  Treat the category as prohibited, and treat
   any claimed exception as something to be advised in writing by counsel for that jurisdiction before
   the payment, not after. A payment made under a genuine threat to personal safety is a different
   question entirely: it is reported the same day to compliance and counsel, and it is never filed as
   an ordinary expense.
-- **Failure to prevent.** Several regimes make it an offence for an organisation to fail to prevent
-  bribery committed by an **associated person** — an agent, consultant, joint-venture partner,
-  distributor or subcontractor performing services for or on its behalf. Where such an offence
-  exists, **not knowing what the intermediary did is not a defence**; the organisation is answerable
-  for conduct it never saw. Where a defence exists at all it is a procedures defence, and it turns on
+- **Failure to prevent.** Several jurisdictions are understood to operate regimes under which an
+  organisation answers for bribery committed by an **associated person** — an agent, consultant,
+  joint-venture partner,
+  distributor or subcontractor performing services for or on its behalf. The professional lesson,
+  which holds whatever the local position turns out to be, is that **a leader should not assume that
+  not knowing what the intermediary did will protect the organisation**; plan on being answerable
+  for conduct nobody in the sponsor ever saw. Where such regimes admit a defence it is generally
+  described as a procedures defence, and it is said to turn on
   what the organisation actually did and can evidence — diligence performed, approval given by
-  someone outside the deal, terms imposed, payments monitored — not on what its policy says.
+  someone outside the deal, terms imposed, payments monitored — not on what its policy says. Whether
+  any such regime applies to a given organisation, and what it would take to satisfy it, is a question
+  for qualified counsel in the jurisdictions concerned.
 
 **Sanctions, and the money-laundering perimeter.** These are separate regimes with separate logic and
 neither is a subset of anti-bribery. **Sanctions** are not one list but many overlapping measures —
@@ -1021,8 +1037,10 @@ crime, and its practical bite on a project leader is usually indirect: the proje
 and insurers are themselves regulated, so their obligations arrive as the project's conditions —
 beneficial-ownership disclosure, source-of-funds evidence on equity, customer diligence on every
 payee. A sponsor that cannot evidence where its equity came from does not reach financial close.
-Note also that alerting the subject of a suspicion or of a report — **tipping off** — is itself an
-offence in many regimes, which is why the escalation route below runs where it does.
+Note also that alerting the subject of a suspicion or of a report — **tipping off** — is treated by
+this book as a serious professional failure in its own right, and restrictions on it are understood to
+exist in many jurisdictions, though their scope and their consequences vary and are a matter for
+qualified counsel. That is why the escalation route below runs where it does.
 
 **Red flags that oblige a leader to stop.** None of these is proof of anything, and treating them as
 accusations is its own failure. Each is a condition under which the professional may not simply
@@ -1051,7 +1069,9 @@ continue: the flag is resolved and cleared, in writing, or the step does not hap
   that may preserve it.
 - **Do not investigate, confront or warn.** No questioning of the agent, no call to the counterparty,
   no note to the intermediary's sponsor. Beyond destroying the evidential position, alerting the
-  subject may be a criminal offence in its own right (tipping off, above).
+  subject may expose the individual and the organisation to consequences of a kind this book does not
+  attempt to describe (tipping off, above) — which is precisely why the judgement is not the leader's
+  to make.
 - **Preserve the record before anything else.** Correspondence, the diligence file, approval trails
   and payment instructions are left exactly as they are and protected from routine deletion. This is
   the one step that cannot be done later.
@@ -1063,7 +1083,16 @@ continue: the flag is resolved and cleared, in writing, or the step does not hap
   waiting — it is a decision to proceed, taken by whoever kept working.
 
 **The evidence that must exist.** The test is not whether the leader believed the transaction clean;
-it is what a lender's reviewer, an auditor or a prosecutor can be shown two years later.
+it is what a lender's reviewer, an auditor or an investigator can be shown two years later.
+
+*Before reading the list: much of what follows is information about identified living people —
+beneficial owners, politically exposed persons, named intermediaries, and the individuals a concern
+is raised about. Records of that kind are typically personal data, and in most jurisdictions they
+attract obligations of accuracy, proportionality, retention and subject access whose detail varies
+considerably and which sit alongside any confidentiality the enquiry needs. Keeping the record is the
+professional control and it is not optional; how it is held, how long for, who may see it and how a
+suspicion is characterised in it are questions to settle with the organisation's data-protection
+function and qualified counsel before the file is built, not after.*
 
 - **Counterparty and beneficial-ownership due diligence** on sponsors, partners, contractors and
   intermediaries — traced to natural persons, dated, with the source of each fact recorded and the
@@ -1085,25 +1114,27 @@ it is what a lender's reviewer, an auditor or a prosecutor can be shown two year
 
 **The external instruments, and what each of them is not.** Three are worth naming, because they are
 named constantly and misdescribed almost as often. The **OECD Convention on Combating Bribery of
-Foreign Public Officials in International Business Transactions** is a **treaty**: its obligations
-bind the states that are Party to it, and it takes effect only through each signatory's own domestic
-criminal law, which the signatories have written differently. It is therefore not itself law in any
-jurisdiction, and what applies to a transaction is the domestic offence, not the Convention. The
+Foreign Public Officials in International Business Transactions** is a **treaty**, addressed to the
+states that are Party to it rather than to a project company; a leader should not read it as
+something that applies directly to a transaction, and should ask counsel what does. The
 **FATF Recommendations** are an **intergovernmental standard** on combating money laundering and the
-financing of terrorism and proliferation: they are addressed to countries and reach a project only
-through national legislation and the supervised institutions that implement it — they are not
-legislation anywhere and confer no obligation directly. **ISO 37001** is a **voluntary
+financing of terrorism and proliferation, addressed to countries; they reach a project in practice
+through the supervised institutions that finance and advise it, and should not be read as applying to
+the project of their own force. **ISO 37001** is a **voluntary
 management-system standard** for anti-bribery management systems; an organisation may be certified
-against it, and **certification is not a legal defence** — it is a third party's opinion about a
+against it, and **certification should never be offered or accepted as a defence** — it is a third
+party's opinion about a
 management system at a point in time, and it says nothing about the transaction under diligence. All
 three are named here for identification only, none is reproduced or summarised as a source of
-requirements, and none of the issuing bodies is associated with this book.
+requirements, no description of any of them here is authoritative, and none of the issuing bodies is
+associated with, endorses or has reviewed this book.
 
-**Standing caution — and it is not a formality.** Which offence applies, whether it reaches conduct
+**Standing caution — and it is not a formality.** Which regimes apply, whether they reach conduct
 by non-nationals or conduct wholly abroad (**extraterritorial reach**), who counts as an associated
 person, which sanctions regimes are engaged by a given payment route, and whether an
 adequate-procedures defence exists at all, are **jurisdiction-specific and time-variable questions
-for qualified counsel**. Nothing in this topic states the law of any jurisdiction, and nothing in it
+for qualified counsel**. Nothing in this topic states the law of any jurisdiction, nothing in it is
+authoritative about any regime it mentions, and nothing in it
 is a compliance programme. What it fixes is the professional standard: the acts a leader must
 recognise, the flags that stop the work, the route the concern travels, and the file that must exist.
 
@@ -1154,14 +1185,15 @@ output here is a decision and not a number. Fictitious throughout.*
    working is the person who decided. **The escalation route is a control, not etiquette.** Sending
    this to the commercial director would deliver it to the one person whose objectives the engagement
    serves, and telling the grantor's project director would tip off the source of the introduction —
-   both destroy the enquiry, and the second may be an offence. **And the exposure is not conditional
-   on knowing.** Where a failure-to-prevent offence applies, the sponsor answers for what an
+   both destroy the enquiry, and the second is the failure this topic warns about most sharply.
+   **And the exposure is not conditional
+   on knowing.** Where a failure-to-prevent regime applies, the sponsor answers for what an
    associated person does with a fee it approved, whether or not anyone in the deal team ever learns
    what the fee bought. That is why the control sits at engagement, before the money moves, and it is
    why "we had no idea" is a description of the problem rather than an answer to it. *Counsel
-   pointer:* whether any offence is engaged on these facts, whose law applies to a bid made by one
+   pointer:* whether any such regime is engaged on these facts, whose law applies to a bid made by one
    group company in another company's market, and what the organisation must do having formed a
-   suspicion — including whether a report is mandatory and to whom — are jurisdiction-specific
+   suspicion — including whether any report is expected of it, and to whom — are jurisdiction-specific
    questions for qualified counsel, and the escalation exists precisely so that they are asked by the
    people qualified to ask them.
 
@@ -1307,13 +1339,13 @@ what was found. Anything shorter is an assertion that checking happened.
 | Term | Meaning |
 |---|---|
 | **Fiduciary awareness** | Acting in the principal's interest with loyalty, care and confidentiality. |
-| **Facilitation payment** | A small payment to secure a routine act the project is already entitled to; a bribe in most regimes, whatever it is called locally. |
-| **Failure-to-prevent offence** | An organisation's offence of failing to prevent bribery by an associated person; not knowing what the intermediary did is not a defence. |
-| **Associated person** | Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its criminal exposure runs. |
+| **Facilitation payment** | A small payment to secure a routine act the project is already entitled to; treated as a bribe by this book's professional standard, whatever it is called locally. |
+| **Failure to prevent** | The pattern, understood to exist in several jurisdictions, under which an organisation answers for bribery by an associated person; a leader should not assume that not knowing what the intermediary did will protect the organisation. Local application is a question for counsel. |
+| **Associated person** | Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its exposure runs. |
 | **Beneficial ownership** | The natural persons who ultimately own or control a counterparty, traced through the chain rather than to the first corporate name. |
 | **Politically exposed person** | Someone entrusted with a prominent public function, with their close associates and family; a status that raises the standard of enquiry, never a finding of wrongdoing. |
 | **Sanctions screening** | Checking parties and their ownership against applicable designations — at close and on change of control, as a repeated control rather than a one-off. |
-| **Tipping off** | Alerting the subject of a suspicion or a report; an offence in many regimes and fatal to the enquiry in all of them. |
+| **Tipping off** | Alerting the subject of a suspicion or a report; a serious professional failure, restricted in many jurisdictions, and fatal to the enquiry in all of them. |
 | **Stop rule** | Where a red flag is unresolved the leader does not proceed pending written clearance: no payment, no signature, no certification. |
 | **Payment-route record** | Which entity was paid, in which jurisdiction, into an account in whose name, against what invoice — with the approved reason for any departure. |
 | **Conflict of interest** | An interest that could bias judgment; declared, managed or declined. |
@@ -1444,7 +1476,7 @@ asks to sign today. The professional response is:
 *Rationale:* several red flags are present at once — a success-only fee disproportionate to any
 describable service, an intermediary introduced by the counterparty, and a contracting route with no
 commercial explanation — and an unresolved flag stops the step (1.3.2). A misreads a warranty as a
-control: it allocates loss between the parties and does nothing about an offence. C asks the source of
+control: it allocates loss between the parties and does nothing about the underlying conduct. C asks the source of
 the introduction to vouch for it, and tips off the person who is the subject of the concern. D is the
 commonest professional error in this topic, because it feels prudent — but the retainer is a payment,
 the mandate is a signature, and both are exactly the acts the stop rule prohibits while the question
@@ -1461,14 +1493,15 @@ contract. The most professional route is:
 *Rationale:* the escalation route runs to compliance or counsel and never to the commercial line,
 which has the strongest incentive to settle the matter quietly and may itself be implicated (1.3.2);
 A therefore delivers the concern to the wrong desk. B alerts the subject, which destroys the
-evidential position and may be a criminal offence in its own right. D is the seductive error: it is
+evidential position and may carry consequences for the individual and the organisation that are not
+the accountant's to weigh. D is the seductive error: it is
 transparent, it is documented, and it continues to pay on the flagged route while the question is
 open — which is a decision to proceed, taken by whoever kept paying.
 
 **MCQ 1.3-K `[1.3.2 · Comprehension]`** A contractor offers its ISO 37001 certification as
 assurance on a bribery question raised in diligence. The correct reading is:
-- A. certification satisfies the point — a certified anti-bribery management system is a defence to the offence
-- B. certification is evidence about a management system at a point in time; it is not a legal defence and says nothing about the transaction being diligenced ✅
+- A. certification satisfies the point — a certified anti-bribery management system answers the concern
+- B. certification is evidence about a management system at a point in time; it should never be relied on as a defence and says nothing about the transaction being diligenced ✅
 - C. certification is irrelevant, because ISO standards have no standing in financial transactions
 - D. certification binds the contractor's subcontractors, since the standard applies down the supply chain
 
@@ -1498,7 +1531,7 @@ contract by contract.
 7. *An unresolved red flag has appeared on an intermediary. Who is told, and what happens meanwhile?*
    — Compliance or counsel, never the commercial line and never the intermediary; and nothing
    proceeds — no payment, no signature, no certification — until the flag is cleared in writing.
-8. *Why is "we did not know what the agent did" not an answer?* — Where a failure-to-prevent offence
+8. *Why is "we did not know what the agent did" not an answer?* — Where a failure-to-prevent regime
    applies the organisation answers for an associated person's conduct regardless of knowledge; the
    protection, where any exists, is the procedures actually performed and evidenced at engagement.
 9. *What must the file contain on any intermediary?* — Beneficial ownership to natural persons,
@@ -1947,7 +1980,7 @@ an arithmetic error rather than as an impossible configuration · treating a fac
 something other than a bribe because it is small, routine or locally normal (1.3.2) · escalating a
 financial-crime concern up the commercial line rather than to compliance or counsel, or "just
 asking" the intermediary — which is tipping off · reading a contractual anti-bribery warranty, or a
-counterparty's ISO 37001 certification, as a defence to an offence · continuing to pay, sign or
+counterparty's ISO 37001 certification, as a defence · continuing to pay, sign or
 certify while a red flag is open, on the reasoning that nothing has been decided yet (MCQ 1.3-I,
 MCQ 1.3-J).
 
@@ -1995,9 +2028,10 @@ tolerates a 65.00 % cash decline interest-only and **30.42 %** amortising, with 
 at **16.51 %**. Timing has its own arithmetic and its own trap: a 15-year availability stream has a
 Macaulay duration of **6.5945 years**, and no level stream at 8 % can exceed **13.5** at any tenor,
 so matching an asset's life is not matching its duration. Around the technique stands the profession:
-fiduciary-grade candour about numbers and limits; the financial-crime duties, which are the only ones
-in the lattice whose breach is criminal and where a facilitation payment is a bribe, an intermediary's
-conduct is the organisation's exposure whether or not it knew, and an unresolved red flag stops the
+fiduciary-grade candour about numbers and limits; the financial-crime duties, the only ones
+in the lattice the profession treats as admitting no commercial justification, where a facilitation
+payment is treated as a bribe, an intermediary's
+conduct is assumed to be the organisation's exposure whether or not it knew, and an unresolved red flag stops the
 work while the concern travels to compliance or counsel rather than up the commercial line; conflicts
 managed in daylight — where the breakeven
 discovery probability is **1.7794 %** and the calculation has no upside term — and machine assistance

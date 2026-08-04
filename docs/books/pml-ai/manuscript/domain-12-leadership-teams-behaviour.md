@@ -210,7 +210,8 @@ words.
 **Where it must not go.** Three prohibitions, firmer here than anywhere else in this book because the
 subject is people. **No inference about an individual's emotional state, engagement, personality or
 likelihood of leaving** from behavioural telemetry — keystrokes, message sentiment, camera analysis,
-attendance: such inference is unreliable, frequently unlawful depending on jurisdiction, and corrosive
+attendance: such inference is unreliable, restricted or prohibited in many jurisdictions — a
+question for qualified advice before any such tool is even considered — and corrosive
 of the trust every control in this domain depends on, and a leader who deploys it loses the truthful
 upward information of 12.1.1 permanently and will not be told why. **No AI-generated assessment of a
 person** entering a performance, promotion or termination decision. And **no AI-authored message
@@ -545,7 +546,7 @@ retained. Building the turnover model and its sensitivities.
 **Where it must not go.** Individual-level inference from communication data. The aggregate question —
 *are our pods real, or is everyone still talking to everyone?* — is legitimate; the same data at
 individual level becomes surveillance, is unreliable as a measure of anything worth knowing, is
-restricted or unlawful in many jurisdictions, and converts truthful upward information into managed
+restricted in many jurisdictions, and converts truthful upward information into managed
 information permanently. There is no version of *inferring who is disengaged* that this book endorses,
 and none of predicting which individuals will resign and acting on it: the prediction is weak, the action
 is visible, and the effect on those not selected is corrosive.

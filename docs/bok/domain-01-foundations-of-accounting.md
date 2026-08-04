@@ -860,7 +860,8 @@ If any test fails, no provision is recognised — instead there may be a **conti
 create a valid expectation in others (e.g. a published policy of honouring warranties beyond the strict legal
 term) — relevant where a controls or commercial function has committed the organisation in practice.
 
-**Common pitfall — provisioning for future operating losses.** IAS 37 does **not** permit a provision for
+**Common pitfall — provisioning for future operating losses.** The principle **IAS 37** addresses does not
+extend to a provision for
 *future* operating losses: there is no present obligation from a past event — the losses have not yet
 happened and can be avoided by future action. (An *onerous contract*, 1.4.5, is different: the obligating
 past event is signing the contract.) Provisioning for expected future losses generally is a classic error and
@@ -931,7 +932,8 @@ Present value   =  Future amount / (1 + r)^n
 ### 1.4.4 Contingent liabilities and contingent assets
 
 **The principle.** Where an obligation is only **possible** (not probable), or is present but **cannot be
-reliably measured**, IAS 37 requires it to be **disclosed as a contingent liability**, not recognised. A
+reliably measured**, the principle **IAS 37** addresses treats it as **disclosed as a contingent liability**,
+not recognised. A
 **contingent asset** (a possible inflow, e.g. a claim the entity has made against another party) is *not*
 recognised while it is merely possible, and is disclosed only when an inflow is **probable**; it is
 recognised only when the inflow is **virtually certain** (at which point it is no longer contingent). The
@@ -1018,8 +1020,8 @@ repair; D halves the rate or the cost in error.
 - C. The unavoidable loss on an onerous contract already signed.
 - D. Expected operating losses of the next financial year. ✅
 
-*Rationale:* IAS 37 prohibits provisioning for **future operating losses** — there is no present obligation
-from a past event. A, B and C all arise from past events (sales, an incident, signing a contract) and can
+*Rationale:* the provisioning principle does not reach **future operating losses** — there is no present
+obligation from a past event. A, B and C all arise from past events (sales, an incident, signing a contract) and can
 meet the tests.
 
 **MCQ 1.4-C `[1.4.5 · Application]`** A fixed-price contract has a price of USD 500,000, cost to date USD

@@ -46,7 +46,7 @@
 
 **Asset-capital matching** — Pairing project risk phases with the capital suited to hold them — on two axes, risk-holding capability and timing. *(KA 1.1)*
 
-**Associated person** — Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its criminal exposure runs. *(KA 1.3)*
+**Associated person** — Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its exposure runs. *(KA 1.3)*
 
 **At-risk commitment** — Option premiums, bid bonds, reservations — cash forfeited if the project dies. *(KA 5.1)*
 
@@ -425,9 +425,9 @@
 
 ## F
 
-**Facilitation payment** — A small payment to secure a routine act the project is already entitled to; a bribe in most regimes, whatever it is called locally. *(KA 1.3)*
+**Facilitation payment** — A small payment to secure a routine act the project is already entitled to; treated as a bribe by this book's professional standard, whatever it is called locally. *(KA 1.3)*
 
-**Failure-to-prevent offence** — An organisation's offence of failing to prevent bribery by an associated person; not knowing what the intermediary did is not a defence. *(KA 1.3)*
+**Failure to prevent** — The pattern, understood to exist in several jurisdictions, under which an organisation answers for bribery by an associated person; a leader should not assume that not knowing what the intermediary did will protect the organisation. Local application is a question for counsel. *(KA 1.3)*
 
 **Fatal condition** — A condition whose failure ends the project regardless of everything else. *(KA 5.1)*
 
@@ -901,7 +901,7 @@
 
 **Timeline flags** — Mutually exclusive period markers (construction, operations, loan life, tail) that calculations multiply by. *(KA 6.1)*
 
-**Tipping off** — Alerting the subject of a suspicion or a report; an offence in many regimes and fatal to the enquiry in all of them. *(KA 1.3)*
+**Tipping off** — Alerting the subject of a suspicion or a report; a serious professional failure, restricted in many jurisdictions, and fatal to the enquiry in all of them. *(KA 1.3)*
 
 **Tolerance** — The fall in a named driver that takes coverage to a threshold; the operational form of headroom. *(KA 7.3)*
 

@@ -193,11 +193,26 @@ Real frameworks are named and their principles explained; nothing is invented an
 - **Named at principle level.** IFRS 15, IAS 1, IAS 2, IAS 16, IAS 23, IAS 37 and IFRS 16; the PMBOK Guide and
   the AACE Total Cost Management framework; ISO 31000 and ISO/IEC 17024; the Agile Manifesto, the Scrum Guide,
   Kanban and Lean; and, for AI governance (13.6.6), ISO/IEC 42001, ISO/IEC 23894, the NIST AI RMF, the OECD AI
-  Principles and the EU AI Act — of which only the last is legislation, and only within its own jurisdiction.
+  Principles and the EU AI Act — of which only the last is understood to be legislation, and then only within
+  its own jurisdiction and on its own terms.
   **Appendix C** indexes every framework this book refers to and where it is used.
-- **In this book's own words.** No standard's text is reproduced. A principle is summarised — "under IAS 37 a
-  provision is recognised when…" — and every example, table, figure and question is original. Clause numbers,
-  page references and quotations are never manufactured to look authoritative.
+- **In this book's own words.** No standard's text is reproduced. A principle is summarised — "the principle
+  IAS 37 addresses is that a provision is recognised when…" — and every example, table, figure and question is
+  original. Clause numbers,
+  page references and quotations are never manufactured to look authoritative, and no clause, article,
+  paragraph or edition is cited as authority anywhere in this book.
+- **Named, never relied upon.** Naming a framework is identification, not a statement of what it requires.
+  Nothing in this book states the requirements of any standard, framework, regulation or law; the official
+  publication of each instrument governs, and a professional who needs to know what one requires reads it or
+  takes advice. **No standards body, regulator, government, professional association or issuing body named
+  anywhere in this book is associated with, has accredited, endorses, has approved or has reviewed this book,
+  the designation it supports or this programme.**
+- **Not legal, tax or accounting advice.** This is an educational reference, not individualised advice. Where
+  it touches law, regulation, tax, employment, insolvency, securities, sanctions or data protection, it
+  describes professional practice and the obligations PCI itself imposes; it does not state the position in
+  any jurisdiction. Those positions vary, they change, and they are for qualified counsel and advisers
+  engaged on the specific facts. Every such passage carries that referral, and the referral is part of the
+  teaching rather than a formality attached to it.
 - **Honest about AI.** Domain 13 describes real, current capabilities together with their limits and risks —
   hallucination, data quality, bias, confidentiality, auditability — and marks fast-moving capabilities as
   such. One principle governs the whole treatment: **AI proposes; the professional verifies, decides and

@@ -364,7 +364,9 @@ Named at principle level; **never reproduced verbatim** (Conventions, §9). Real
 citations. Each entry is tagged with what kind of authority it is, because the distinction changes what a
 professional owes it: an accounting standard that governs a set of financial statements is not the same
 obligation as a voluntary framework a project chooses to adopt. **The official publication governs in every
-case**; the descriptions here are this book's own words.
+case**; the descriptions here are this book's own words, they are not authoritative, and no requirement
+should be inferred from them. **No issuing body named in this table is associated with, endorses, has
+accredited or has reviewed this book, the designation it supports or this programme.**
 
 **Currency of these references.** Standards change. Editions, effective dates and titles stated anywhere in
 this volume were checked against the issuing bodies' catalogues when this edition was prepared, and a reader
@@ -391,30 +393,32 @@ relying on any of them for a live decision should verify the current requirement
 | **FIDIC (and jurisdictional forms)** | Contract framework | Standard contract forms (awareness level) | 7.2 |
 | **ISO/IEC 42001** | International standard (certifiable management-system standard) | An AI management system — governance, roles, controls and improvement around AI use | 13.6 |
 | **ISO/IEC 23894** | International standard (guidance, not certifiable) | Guidance on managing risk in the context of AI | 13.6 |
-| **NIST AI RMF 1.0** | Voluntary framework | AI risk management by four functions (govern, map, measure, manage); not a standard and not a regulation | 13.6 |
-| **OECD AI Principles** | Voluntary framework (an OECD Council Recommendation) | Intergovernmental principles for trustworthy AI; not binding, even on adherents | 13.6 |
-| **EU AI Act — Regulation (EU) 2024/1689** | Illustrative reference *(actual status: binding EU legislation)* | Named as the shape AI governance must anticipate; binding within the EU only, applying in phases | 13.6 |
-| **SR 11-7 / OCC 2011-12** | Illustrative reference *(actual status: supervisory guidance, jurisdiction-specific)* | Model risk management as an established discipline; binding only on supervised firms | 13.A.2 |
+| **NIST AI Risk Management Framework** | Voluntary framework | AI risk management by four functions (govern, map, measure, manage); not a standard and not a regulation | 13.6 |
+| **OECD AI Principles** | Voluntary framework (an OECD Council Recommendation) | Intergovernmental principles for trustworthy AI; a statement of principle rather than legislation | 13.6 |
+| **EU AI Act** | Illustrative reference *(understood to be legislation of the European Union)* | Named as the shape AI governance must anticipate; whether, when and how it reaches any organisation is a question for legal and compliance, not for this book | 13.6 |
+| **US banking supervisors' guidance on model risk management** | Illustrative reference *(understood to be supervisory guidance, jurisdiction-specific)* | Model risk management as an established discipline; addressed to the firms those supervisors supervise | 13.A.2 |
 
-> **Forthcoming change — IFRS 18.** IFRS 18 *Presentation and Disclosure in Financial Statements* replaces
-> IAS 1 for annual reporting periods beginning on or after 1 January 2027, and consequentially retitles
-> IAS 8. The presentation principles this book teaches at 1.2 and 2.1 — that a reader must be able to see
-> what an entity owns, owes, earned and spent, on a consistent basis between periods — are unaffected, but
-> the statement structure and the required disclosure of management-defined performance measures change.
-> Candidates and practitioners working to periods from 2027 onward should read those topics against IFRS 18.
+> **Forthcoming change — IFRS 18.** A further standard, IFRS 18 *Presentation and Disclosure in Financial
+> Statements*, has been issued and is expected to change how financial statements are presented, including
+> the treatment of management-defined performance measures. The presentation principles this book teaches at
+> 1.2 and 2.1 — that a reader must be able to see
+> what an entity owns, owes, earned and spent, on a consistent basis between periods — are unaffected. Its
+> scope, its effective date and what it means for any particular entity are matters to confirm with the
+> issuing body and with the entity's auditors; nothing is stated here.
 > This mirrors how §2.4 treats the IAS 11 → IFRS 15 transition.
 
-> **Category definitions.** *Authoritative accounting standard* — issued by a standard-setter and mandatory
-> for entities reporting under that framework. *International standard* — issued by ISO/IEC; some are
+> **Category definitions.** *Authoritative accounting standard* — issued by a standard-setter and applied
+> by entities reporting under that framework. *International standard* — issued by ISO/IEC; some are
 > certifiable management-system standards, others are guidance that cannot be certified against.
 > *Contract framework* — a published family of contract forms adopted by agreement between parties.
 > *Professional guidance* — a professional body's recommended practice. *Voluntary framework* — adopted by
 > choice, imposing no legal obligation. *Industry practice* — a widely used approach with no single
 > authoritative publisher. *Illustrative reference* — named to show the shape of an instrument or of a
-> regulatory pattern, and relied on for no requirement in this book; where such an entry is in fact
-> legislation or supervisory guidance, its actual status is stated in its Category cell. One entry — the EU AI
-> Act — is genuine legislation, binding within the European Union and nowhere else of its own force; it is
-> named here as a reference point, not as a source of obligation on any reader. No other entry in this table
+> regulatory pattern, and relied on for no requirement in this book; where such an entry is understood to be
+> legislation or supervisory guidance, that understanding is noted in its Category cell. One entry — the EU AI
+> Act — is understood to be legislation; it is
+> named here as a reference point, not as a source of obligation on any reader, and its reach is a question
+> for qualified advice. No other entry in this table
 > is legislation, and none is described as such. Applicability is jurisdiction-specific throughout, and where
 > local law or a contract imposes a stricter requirement, that requirement governs. The programme's full
 > cross-volume register, with verification dates, is maintained as the PCI External-Reference Register.
@@ -1848,7 +1852,7 @@ carry items drawn from their advanced topics as well as their Knowledge Areas, w
 
 **Answer: C.** *(Rationale at MCQ 7.2-A, KA 7.2.)*
 
-**PCL-MCQ-07-07** `[7.2.3 · Recall]` Liquidated damages are enforceable when they represent:
+**PCL-MCQ-07-07** `[7.2.3 · Recall]` In professional practice a liquidated-damages rate is set to represent:
 - A. A punitive penalty to deter breach.
 - B. The contractor's total revenue.
 - C. The retention amount.

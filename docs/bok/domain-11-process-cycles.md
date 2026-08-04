@@ -518,7 +518,10 @@ from it. The controls professional **escalates and preserves; they do not invest
   say today who its route is has a control gap, and the time to close it is before it is needed.
 - **Do not investigate, confront or notify.** Do not question the individual, and do not tell their line
   manager — line management is exactly where a colluding or negligent party may sit. Alerting a suspect
-  ("tipping off") is a criminal offence in some jurisdictions, and even where it is not, it ends the enquiry
+  ("tipping off") is treated by this book as a serious professional failure in its own right; restrictions
+  on it are understood to exist in many jurisdictions, they vary, and their consequences are a question for
+  qualified counsel rather than for the controls professional at the moment of discovery. Even where no such
+  restriction applies, alerting a suspect ends the enquiry
   before it starts: explanations get aligned, records get tidied, and the evidential position is gone.
 - **Preserve before any enquiry.** Transactions, master-data change history, email and the system and access
   logs (11.3.3) are left **unchanged** and protected from routine deletion or archiving, and access rights are
@@ -528,14 +531,27 @@ from it. The controls professional **escalates and preserves; they do not invest
   with the independence, authority and training that a line controls function does not have — and cannot have
   over a control it designed and operates itself (11.3.1). The controls professional supplies the analytics,
   the reconstruction and the records; someone else interviews, concludes and, if it comes to it, testifies.
-- **Duties may run outside the organisation.** In some jurisdictions a suspicion triggers a **mandatory
-  external report** — suspicious-activity, bribery and anti-money-laundering regimes are the usual examples —
-  on a defined timescale, whatever the organisation would prefer; and a person who raises a concern in good
-  faith may attract **whistleblower protection**. What applies varies by jurisdiction, sector and role, and
-  it is a question for **qualified counsel**, asked early rather than after a deadline has passed.
+- **Obligations may run outside the organisation.** Regimes requiring an external report on a suspicion —
+  suspicious-activity, bribery and anti-money-laundering regimes are the usual examples — are understood to
+  exist in a number of jurisdictions, sometimes on short and unforgiving timescales; and arrangements
+  protecting a person who raises a concern in good faith are understood to exist in others. Nothing here
+  states whether any of them applies to a given person, organisation, sector or role, and none of it should
+  be relied on: what applies varies, it changes, and it is a question for **qualified counsel**, asked early
+  rather than after a deadline may already have passed. The professional obligation this book does impose is
+  narrower and unconditional — raise the question with counsel promptly, and record that you did.
 
 None of this presumes guilt. It is what preserves the value of the eventual answer — fraud or no fraud — for
 whoever must later rely on it, and it is the discipline the case study below applies to a live finding.
+
+**A caution on the records this protocol creates.** A red flag, an escalation note and a preservation hold
+are, almost always, information about identified living people. Records of that kind are typically personal
+data, and in most jurisdictions they attract obligations of accuracy, proportionality, retention and subject
+access — obligations that vary considerably and that sit alongside the confidentiality the enquiry needs.
+Keeping the record is the professional control and it is not optional. How it is worded, how it is held, how
+long for and who may see it are questions to settle with the organisation's data-protection function and
+qualified counsel — before the file is built, not after. In particular, record the observation and not a
+conclusion about the person: "raised and approved by the same user ID on 14 March" is a fact; "X is
+defrauding the company" is an allegation the controls professional is not the function entitled to make.
 
 ### Advanced 11.A.3 — Master-data governance
 

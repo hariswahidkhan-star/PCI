@@ -135,7 +135,8 @@ against another project's contract liability of USD 250,000, presenting USD 150,
 - C. Incorrect — offsetting is generally prohibited; each contract is presented separately. ✅
 - D. Incorrect only if the projects are in different segments.
 
-*Rationale:* IAS 1 prohibits offsetting unless a standard requires/permits it. Separate contracts' positions
+*Rationale:* the presentation principle **IAS 1** addresses is that assets and liabilities are not offset
+unless the framework provides for it. Separate contracts' positions
 are presented gross. Even a single customer does not automatically permit netting across distinct contracts.
 
 **MCQ 2.1-C `[2.1.1 · Recall]`** The objective of general-purpose financial reporting is to provide
@@ -479,7 +480,8 @@ cost, **not distinct** from the single construction obligation → treatment (c)
 
 ### 2.2.9 Disclosures
 
-**The principle.** IFRS 15 requires disclosures that let users understand the **nature, amount, timing and
+**The principle.** The disclosure principle **IFRS 15** addresses is that users should be able to understand
+the **nature, amount, timing and
 uncertainty** of revenue and cash flows from contracts: disaggregated revenue, information about contract
 balances (opening/closing contract assets and liabilities and the revenue recognised from them), remaining
 performance obligations (the order book not yet recognised), and the significant judgements made — how
@@ -800,7 +802,8 @@ it.* Each is kept to principle + project relevance + a short example.
 
 ### 2.4.1 IAS 2 — Inventories
 
-**Principle & relevance.** **IAS 2** requires inventories to be measured at the **lower of cost and net
+**Principle & relevance.** The measurement principle **IAS 2** addresses is that inventories are carried at
+the **lower of cost and net
 realisable value (NRV)**. Cost includes purchase, conversion and other costs of bringing inventory to its
 present location and condition; NRV is the estimated selling price less costs to complete and sell. For
 project controls this touches **materials on site** and any **work in progress** not accounted for under
@@ -825,7 +828,8 @@ change strands committed materials.
 
 ### 2.4.2 IAS 16 — Property, plant and equipment
 
-**Principle & relevance.** **IAS 16** requires items of property, plant and equipment to be **capitalised** at
+**Principle & relevance.** The principle **IAS 16** addresses is that items of property, plant and equipment
+are **capitalised** at
 cost (purchase price plus directly attributable costs of getting the asset ready for use) and **depreciated**
 over their useful lives (Domain 1, KA 1.3.4), with residual value and useful life reviewed periodically.
 Subsequent costs are capitalised only if they meet the asset-recognition criteria; routine repairs are
@@ -879,9 +883,10 @@ and right-of-use asset at inception) is **USD 1,000,000**. Straight-line depreci
 
 ### 2.4.4 IAS 23 — Borrowing costs
 
-**Principle & relevance.** **IAS 23** requires **borrowing costs directly attributable to the acquisition,
+**Principle & relevance.** The principle **IAS 23** addresses is that **borrowing costs directly attributable
+to the acquisition,
 construction or production of a qualifying asset** (one that necessarily takes a substantial period to get
-ready for use) to be **capitalised** as part of the asset's cost; other borrowing costs are expensed. On large
+ready for use) are **capitalised** as part of the asset's cost; other borrowing costs are expensed. On large
 capital projects this can capitalise significant interest into the asset rather than charging it to profit
 during construction.
 
@@ -994,7 +999,7 @@ misstate the outcome; B is not permitted — IAS 11 is withdrawn.
 ### Self-check — KA 2.4
 
 1. State the IAS 2 measurement rule. *(Lower of cost and net realisable value.)*
-2. What does IAS 23 require for interest on a qualifying asset under construction? *(Capitalise directly
+2. How does the borrowing-cost principle treat interest on a qualifying asset under construction? *(Capitalise directly
    attributable borrowing costs into the asset's cost.)*
 3. Why did IFRS 15 supersede IAS 11? *(To bring construction into a single control-based revenue model
    applied consistently across industries, replacing the percentage-of-completion-by-default rule.)*

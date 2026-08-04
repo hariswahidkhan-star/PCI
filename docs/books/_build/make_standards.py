@@ -66,10 +66,10 @@ FAMILIES = [
         ("ISO/IEC 38507", "governance implications of an organisation's use of artificial "
                           "intelligence"),
         ("ISO/IEC 27001", "information-security management systems"),
-        ("ISO/IEC 27701", "privacy information management. The 2019 edition was an extension to an "
-                          "ISO/IEC 27001 information-security management system; the 2025 edition is "
-                          "a standalone management-system standard that can be certified in its own "
-                          "right. Verify which edition a claim of conformity refers to"),
+        ("ISO/IEC 27701", "privacy information management. Its relationship to an ISO/IEC 27001 "
+                          "information-security management system, and whether it can be certified in "
+                          "its own right, differ between editions; establish which edition any claim "
+                          "of conformity refers to before relying on it"),
         ("NIST", "the United States National Institute of Standards and Technology, referenced for "
                  "its AI Risk Management Framework — a voluntary, function-based framework, not a "
                  "standard and not a regulation"),
@@ -97,17 +97,17 @@ FAMILIES = [
     ("Financial crime, anti-bribery and sanctions", [
         ("OECD Anti-Bribery Convention", "the Convention on Combating Bribery of Foreign Public "
                                          "Officials in International Business Transactions — a "
-                                         "treaty whose obligations bind the states party to it and "
-                                         "which takes effect only through each signatory's own "
-                                         "domestic criminal law, so it is not itself law in any "
-                                         "jurisdiction"),
+                                         "treaty, addressed to the states party to it rather than "
+                                         "to a project company, and not to be read as applying "
+                                         "directly to a transaction"),
         ("FATF", "the Financial Action Task Force, referenced for its Recommendations on combating "
                  "money laundering and the financing of terrorism and proliferation — an "
-                 "intergovernmental standard addressed to countries and reaching a project only "
-                 "through national law and supervised institutions, not legislation in itself"),
+                 "intergovernmental standard addressed to countries, reaching a project in practice "
+                 "through the supervised institutions that finance and advise it"),
         ("ISO 37001", "anti-bribery management systems — a voluntary management-system standard; "
                       "certification against it is a third party's opinion about a management "
-                      "system at a point in time and is not a legal defence"),
+                      "system at a point in time and should never be offered or accepted as a "
+                      "defence"),
     ]),
     ("Cost engineering", [
         ("AACE", "AACE International, referenced for the existence and purpose of the cost-estimate "

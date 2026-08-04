@@ -753,6 +753,15 @@ change *when* cash moves, and therefore the funding requirement (3.5.3). The dis
 flows with their remittance dates, model net-plus-remit for WHT — and never let a VAT-inclusive invoice value
 contaminate the cost ledger (Domain 5, KA 5.2.4).
 
+> **Tax caution.** The rates above are illustrative and chosen to make the arithmetic legible; they are not
+> any jurisdiction's rates. Which indirect taxes apply, at what rate, on what base, with what registration,
+> invoicing and remittance timing, whether a withholding applies to a given cross-border payment and whether
+> any relief or treaty position is available, are **jurisdiction-specific questions that change over time**.
+> Nothing in this book states a tax position or should be relied on as one. What the controls professional
+> owns is the *cash-timing mechanics* — modelling the gross flow and its remittance date, and keeping tax out
+> of the cost ledger. The tax treatment itself comes from the entity's finance function and its qualified tax
+> advisers, and the forecast records whose advice it rests on.
+
 **Project bank accounts and ring-fenced cash.** Some funding structures put the project's cash in a
 **dedicated project bank account**. The pattern is common on JVs (each partner funds calls into the joint
 account), on government frameworks (statutory project bank accounts paying the supply chain directly, so a

@@ -1358,8 +1358,8 @@ part of it, and its limits matter as much as its results.
    both dominate it and inaction is not a serious option — which is the robust part of this
    analysis, and the part worth taking to the board. And the frame itself has a boundary: expected annual loss
    is a legitimate test where consequences are cost-compensable, and it is the **wrong test** where
-   the consequence is a statutory penalty, a licence condition, a duty of confidence or harm to a
-   person — there the control is a requirement whose cost is sized, not an investment whose return
+   the consequence is a penalty imposed by an authority, a licence condition, a duty of confidence
+   or harm to a person — there the control is a requirement whose cost is sized, not an investment whose return
    is computed, and presenting such a control as failing a cost test is a category error a leader
    should be able to name in the room.
 

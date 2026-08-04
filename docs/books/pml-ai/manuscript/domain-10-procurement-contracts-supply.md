@@ -1153,8 +1153,9 @@ Modelling sourcing options and their breakevens, as computed above.
 legal judgements on which qualified advice is required and on which a confident, unattributable opinion
 is actively dangerous. It must not generate a delay analysis presented as evidence — a chronology is an
 input to an expert's opinion, not the opinion. It must not decide a supplier's ethical standing from
-inference: a sanctions or adverse-media hit is a prompt to investigate, and treating it as a finding is
-both unfair and, in some jurisdictions, unlawful. And it must not supply the probabilities in 10.4.4;
+inference: a screening or adverse-media hit is a prompt to investigate, and treating it as a finding is
+both unfair and, in some jurisdictions, restricted — take advice before any such inference is acted
+on. And it must not supply the probabilities in 10.4.4;
 those come from delivery history and market intelligence, and a model asked for them will produce
 numbers indistinguishable from data.
 

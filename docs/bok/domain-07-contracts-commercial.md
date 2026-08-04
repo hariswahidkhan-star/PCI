@@ -238,6 +238,15 @@ allocation; C describes cost-plus; D describes lump sum.
 *Topics: 7.2.1 the contract lifecycle · 7.2.2 variations and claims · 7.2.3 liquidated damages · 7.2.4
 retention, bonds and guarantees · 7.2.5 standard forms (FIDIC awareness).*
 
+> **Standing caution for this knowledge area.** What follows describes the *management discipline* of contract
+> administration — the records, notices, valuations and forecasts a controls professional owns. It does not
+> state the law of any jurisdiction and it is not legal advice. Whether a clause means what a party thinks it
+> means, whether an entitlement arises, whether an instrument is effective as drafted, and what any of it
+> obliges either party to do are questions determined by the contract and by the applicable law; they vary
+> between contract families and jurisdictions, they change, and they belong to qualified counsel. The
+> professional obligation this book does impose is to keep the record, raise the question early, and never
+> assert a contractual position the function is not qualified to take.
+
 ### 7.2.1 The contract lifecycle
 
 > **Fig 7.2.1 — The contract lifecycle.** *Caption:* form, mobilise, administer, complete, close — administration is where the money and the records move. *Data:* five stages; administer highlighted.
@@ -276,9 +285,13 @@ full impact (direct + disruption + prolongation), and progress to agreement.
 ### 7.2.3 Liquidated damages
 
 **Definition & purpose.** **Liquidated damages (LDs)** are a pre-agreed sum payable by the contractor for a
-defined breach — usually **late completion**. In common-law jurisdictions LDs must be set as a **genuine
-pre-estimate** of the client's loss — a punitive "penalty" is unenforceable; many civil-law systems instead
-enforce penalty clauses subject to judicial adjustment, so the governing law must be checked. They give certainty (both parties know the cost of delay in advance) and cap the contractor's delay
+defined breach — usually **late completion**. Professional practice sets the rate as a **genuine
+pre-estimate** of the client's loss rather than as a punishment, and that is the discipline this book teaches.
+Legal systems differ in how they treat a pre-agreed sum that looks punitive rather than compensatory — the
+distinction is a live one in many common-law jurisdictions, and several civil-law systems approach the
+question differently again, with scope for adjustment. Which position applies to a given contract, and with
+what effect, turns on the governing law and is a question for qualified counsel; the professional obligation
+is to have it checked rather than assumed, and to record the answer. They give certainty (both parties know the cost of delay in advance) and cap the contractor's delay
 exposure at the agreed rate. A controls professional forecasting a late finish (Domain 6/10) can quantify the
 LD exposure directly: `LD exposure = LD rate × forecast days late`.
 
@@ -323,13 +336,15 @@ exposure is:
 
 *Rationale:* `10,000 × 20 = 200,000`. A is one day; B swaps the figures; D misplaces a zero.
 
-**MCQ 7.2-B `[7.2.3 · Recall]`** Liquidated damages are enforceable when they represent:
+**MCQ 7.2-B `[7.2.3 · Recall]`** In professional practice a liquidated-damages rate is set to represent:
 - A. A punitive penalty to deter breach.
 - B. The contractor's total revenue.
 - C. The retention amount.
 - D. A genuine pre-estimate of the client's likely loss. ✅
 
-*Rationale:* In a common-law jurisdiction LDs must be a genuine pre-estimate of loss, not a penalty. A describes an unenforceable penalty;
+*Rationale:* practice sets the rate against a genuine pre-estimate of the client's likely loss rather than as
+a punishment (7.2.3); how a particular legal system treats a rate that looks punitive varies and is a question
+for counsel. A describes the punitive framing practice avoids;
 B and C are unrelated figures.
 
 **MCQ 7.2-C `[7.2.4 · Analysis]`** Increasing retention from 5 % to 10 % on a project will, all else equal:
@@ -974,9 +989,11 @@ slower, costlier and less controllable than the one below it:
   personally invested in the positions taken below. Cheap, fast, relationship-preserving — and where the
   great majority of disputes end.
 - **Standing dispute boards / adjudication.** An independent board or adjudicator — appointed at the outset
-  or on referral — gives a decision that is **binding at least temporarily**: the parties must comply while
-  the underlying dispute resolves or is escalated. The design intent is to keep the project moving — a
-  decision in weeks, not years.
+  or on referral — gives a decision typically expressed as **binding at least temporarily**, the design
+  intent being that the parties act on it while
+  the underlying dispute resolves or is escalated, so the project keeps moving — a
+  decision in weeks, not years. Whether, and with what effect, such a decision binds in a particular case
+  turns on the contract and on the applicable law, and is a question for counsel rather than for this book.
 - **Arbitration or litigation.** The final rung: a binding award or judgment. Final, slow and costly — and
   by the time a claim reaches this rung, the records discipline of 7.2.2 and the claim file of Toolkit 7.T.2
   **is** the case, because the tribunal sees only what was recorded at the time.

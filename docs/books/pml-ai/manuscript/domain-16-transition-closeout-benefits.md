@@ -134,7 +134,7 @@ transition. It has **two blocks**, and only one of them is arithmetic.
 **The gate block: mandatory preconditions.** Some conditions of a transition are not assessments of
 likelihood at all. A **clinical safety case and its hazard log closed by clinical governance**; a
 **regulatory or licence approval granted** by the body empowered to grant it; a **data-protection or
-privacy assessment signed** by the accountable authority; **statutory notifications made**;
+privacy assessment signed** by the accountable authority; **notifications required of the organisation made**;
 **contractual takeover certificates issued**. Each of these is recorded **met or not met**, with the
 **approving authority named** and dated. None of them carries a probability, none of them is
 weighted, and none of them is available for economic trade against the cost of delay. The rule is one
@@ -161,8 +161,8 @@ by improving something else, which is exactly the trade the item exists to forbi
 item must never appear in the go/hold economics of 16.1.4, because expressing it as a cost concedes
 that some cost of delay would be large enough to buy it. Domain 14 states the same boundary for
 security and privacy controls — expected annual loss is a legitimate test where consequences are
-cost-compensable and the **wrong test** where the consequence is a statutory penalty, a licence
-condition, a duty of confidence or harm to a person (KA 14.4.4) — and Domain 9 states it for quality,
+cost-compensable and the **wrong test** where the consequence is a penalty imposed by an authority,
+a licence condition, a duty of confidence or harm to a person (KA 14.4.4) — and Domain 9 states it for quality,
 where the economic optimum is taken among *compliant* options rather than across them. Domain 16 is
 where the boundary matters most, because this is the decision that is irreversible for the people who
 did not take it.
@@ -505,7 +505,7 @@ Domain 10's contract mechanisms supply the drafting; the closeout discipline is 
 release is a decision with a record (Domain 3, KA 3.3.4), not an accounts-payable event.
 
 The jurisdictional caution is unavoidable and it is real: retention practice, its permissibility, any
-requirement to hold it in trust, and the statutory limitation periods on latent defects vary by
+requirement to hold it in trust, and the limitation periods on latent defects vary by
 jurisdiction and by contract family. Nothing in this domain states a legal position; it states a
 management discipline that must be operated within whatever legal frame applies.
 
@@ -1422,9 +1422,9 @@ decision base failed.
   probability — and a reversion plan must be viable at any point because the fallback is patient care,
   not a batch job. Benefits are overwhelmingly capacity rather than cash (Domain 2, KA 2.3.2), which
   makes the measure definition of 16.4.1 the whole argument.
-- **Public sector and government.** Closure reporting is frequently statutory and published, benefits
+- **Public sector and government.** Closure reporting is frequently required and published, benefits
   are audited by an external body against the approved case rather than against the honest one, and the
-  archive's retention period is set by public-records legislation rather than by the economics of
+  archive's retention period is commonly set by public-records requirements rather than by the economics of
   16.4.4. The practical consequence is that the adoption-term correction of 16.4.2 must be made and
   approved *before* delivery, because after it the published claim is the benchmark.
 - **Construction and infrastructure.** Commissioning, takeover, defects liability and the final account
@@ -1660,7 +1660,7 @@ column**.
 the **external or independent authority** that grants it, the status recorded as **met / not met**
 only, the date it was granted, and the reference to the granting instrument. The standing rows are
 the safety case and its hazard log closed by the accountable safety authority, regulatory or licence
-approval, the data-protection or privacy assessment, statutory notifications, and contractual
+approval, the data-protection or privacy assessment, required notifications, and contractual
 takeover certificates — with any further precondition the sector imposes. Beneath Block A, a
 **signature line for the approving authority itself**, by name and role, distinct from and above the
 project's and the receiving organisation's signatures: the certificate is not complete on the
@@ -1763,7 +1763,7 @@ lives — behind the whole-life comparison of 16.2.1 and Case study B.
 ## Domain 16 summary
 The project ends; the account does not. This domain replaces the handover *date* with a handover
 *condition*, and splits that condition set in two. Mandatory preconditions — the safety case and its
-hazard log, regulatory and licence approvals, the privacy assessment, statutory notifications,
+hazard log, regulatory and licence approvals, the privacy assessment, required notifications,
 takeover certificates — are recorded met or not met with their approving authority named, carry no
 probability and are never traded against the cost of delay; while one is open the only decision is
 hold. Above that gate block, readiness is a **conjunction**: Meridian's seven discretionary go-live

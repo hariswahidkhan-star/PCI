@@ -1437,7 +1437,8 @@ applicable in each jurisdiction in which the function operates — AI-specific r
 privacy law, employment law, and any sector regulation or supervisory expectation binding on the organisation
 — and with any restriction on AI use imposed by a client, a contract or a professional body. Where such an
 obligation applies, **it overrides this policy**: this policy sets the function's own floor and may only be
-stricter than what the law requires, never a substitute for it and never a permission beneath it. What applies
+stricter than any applicable legal or regulatory obligation, never a substitute for it and never a permission
+beneath it. What applies
 is jurisdiction-specific, and the function does not decide it alone: legal and compliance confirm the position
 for the function's activities, markets and data, and are consulted before a new tool, a new data class or a
 new jurisdiction is brought within scope. The principal external instruments this policy reflects are named
@@ -1493,25 +1494,29 @@ one of them is law. Each is **named and characterised here in this book's own wo
 reproduced, no clause, requirement or obligation is restated, and **the official publication of each
 instrument governs** (Conventions, §9).
 
-- **ISO/IEC 42001:2023** — an **international standard** describing a management system for artificial
+- **ISO/IEC 42001** — an **international standard** describing a management system for artificial
   intelligence: the governance, roles, controls and improvement cycle an organisation runs around its AI use.
   Adoption is **voluntary**, and a management system **can be certified** against it. It is not law.
-- **ISO/IEC 23894:2023** — an **international standard** offering **guidance** on managing risk in the context
+- **ISO/IEC 23894** — an **international standard** offering **guidance** on managing risk in the context
   of AI. It is guidance rather than requirements, so **nothing can be certified against it**; it sits
   alongside ISO/IEC 42001 rather than beneath it.
-- **NIST AI RMF 1.0** — the AI Risk Management Framework published by the US National Institute of Standards
+- **The NIST AI Risk Management Framework** — published by the US National Institute of Standards
   and Technology, organised around four functions (govern, map, measure, manage). NIST publishes it as
   voluntary: it is a **voluntary, function-based framework — not a standard and not a regulation**.
 - **The OECD AI Principles** — a **Recommendation of the OECD Council**: an intergovernmental statement of
-  principle on trustworthy AI. It is **not binding, even on the countries that adhere to it**, and it must
+  principle on trustworthy AI. It is a statement of principle rather than legislation, and it must
   never be described as legislation.
-- **Regulation (EU) 2024/1689, the EU AI Act** — the only instrument in this list that is **legislation**. It
-  is **binding within the European Union and nowhere else of its own force**, and it applies in phases rather
-  than all at once, with general application from **2 August 2026**.
+- **The European Union's AI Act** — the only instrument in this list that is understood to be
+  **legislation**. Whether, when and how it reaches a given organisation, activity or system — it is
+  understood to apply in phases rather than all at once — is a question for legal and compliance and not one
+  this book answers; no commencement date, scope or obligation should be taken from these pages.
 
-**What this list is for, and what it is not.** Four of the five are adopted by choice; one is law where it
-reaches. Naming them is **characterisation, not reproduction** — a candidate who needs to know what any of
+**What this list is for, and what it is not.** Four of the five are adopted by choice; one is understood to
+be legislation where it reaches. Naming them is **characterisation, not reproduction** — a candidate who needs
+to know what any of
 them requires reads the instrument itself, or takes advice, and never infers a requirement from this book.
+None of the issuing bodies is associated with, endorses or has reviewed this book, and no description here is
+authoritative.
 Applicability is **jurisdiction-specific**: an AI-use policy (13.6.5c) that is sufficient in one country can
 be non-compliant in another, and **data-protection, privacy, employment and sector regulation** bite on AI use
 whether or not an AI-specific instrument applies at all. Where a function operates across borders, which
@@ -1858,10 +1863,11 @@ holds without amendment.
 Once ML models influence real decisions — a predictive `EAC` (KA 13.5.3), a risk score (KA 13.5.9) — ad-hoc
 checking is not enough; the function needs **model risk management**, a discipline long practised in
 regulated industries. Its shape is not invented here: banking supervisors in the United States have published
-**supervisory guidance on model risk management** (**SR 11-7 / OCC 2011-12**), which is where much of the
+**supervisory guidance on model risk management**, which is where much of the
 private sector's vocabulary for validating and monitoring models originates. That guidance is named here as an
 example and characterised in this book's own words — it is **supervisory guidance, not legislation**, it is
-**jurisdiction-specific**, it binds **only the firms those supervisors supervise**, and its requirements are
+**jurisdiction-specific**, it is addressed to the firms those supervisors supervise rather than to the world,
+and its content is
 neither reproduced nor summarised as obligations: the official publication governs (13.6.6). The treatment
 below stays deliberately generic, so that it transfers to a controls function of any size in any sector.
 
@@ -2504,7 +2510,7 @@ coding — matched to task and governance). Its heart is **AI applied across the
 workflows, each *input → AI step → professional verification → owned output*, cross-referencing every earlier
 domain. It closes with **governance, ethics and assurance** (accountability, sign-off, auditability;
 hallucination/bias/confidentiality; when not to use AI; an AI-use policy and verification checklist; and the
-external anchors that policy reflects, of which only the EU AI Act is legislation) and
+external anchors that policy reflects, of which only the EU AI Act is understood to be legislation) and
 **building the capability** (maturity model, integration, upskilling, value measurement, pitfalls, and an
 honest outlook). The durable professional skill is the judgement to **direct, verify and own** AI-assisted work
 — exactly what the PCL-AI certifies.

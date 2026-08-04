@@ -775,6 +775,15 @@ record-keeping discipline of Domain 7 (Toolkit 7.T.2) and the treatment of concu
 sit alongside this topic. Fragnet mechanics and window-by-window comparisons are automatable; choosing the
 method the tribunal will accept, and owning the causation story, is the delay analyst's craft.
 
+**A caution on what this topic is.** Everything above is *method* — how a schedule is analysed and what the
+analysis can honestly support. Whether an extension of time is due, whether delay is concurrent and what
+follows if it is, what a contract's notice provisions mean, and what any of it entitles either party to, are
+**legal questions determined by the contract and by the applicable law**, and they vary between contract
+families and jurisdictions. Nothing here states an entitlement, and the word "entitlement" in the worked
+example above names the output of an analytical method, not a legal conclusion. The controls professional's
+product is the analysis and the contemporaneous record; the entitlement position is settled by those
+qualified to give it, and their advice is taken before a claim or a rejection is issued.
+
 ---
 
 ## Case study — Domain 10: scheduling an airport terminal fit-out (aviation)

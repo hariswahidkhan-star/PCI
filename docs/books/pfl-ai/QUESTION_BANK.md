@@ -296,7 +296,7 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. ask the grantor's project director for assurance about the consultant's standing before signing
 - D. sign a short retainer to preserve the option, and complete diligence before any success fee falls due
 
-*Rationale:* several red flags are present at once — a success-only fee disproportionate to any describable service, an intermediary introduced by the counterparty, and a contracting route with no commercial explanation — and an unresolved flag stops the step (1.3.2). A misreads a warranty as a control: it allocates loss between the parties and does nothing about an offence. C asks the source of the introduction to vouch for it, and tips off the person who is the subject of the concern. D is the commonest professional error in this topic, because it feels prudent — but the retainer is a payment, the mandate is a signature, and both are exactly the acts the stop rule prohibits while the question is open.
+*Rationale:* several red flags are present at once — a success-only fee disproportionate to any describable service, an intermediary introduced by the counterparty, and a contracting route with no commercial explanation — and an unresolved flag stops the step (1.3.2). A misreads a warranty as a control: it allocates loss between the parties and does nothing about the underlying conduct. C asks the source of the introduction to vouch for it, and tips off the person who is the subject of the concern. D is the commonest professional error in this topic, because it feels prudent — but the retainer is a payment, the mandate is a signature, and both are exactly the acts the stop rule prohibits while the question is open.
 
 
 **1.3-J** `[1.3.2 · Evaluation]` During construction, a project accountant notices that an approved agent's invoices are settled into an account in a jurisdiction unconnected with the contract. The most professional route is:
@@ -306,13 +306,13 @@ the blueprint weightings are an open decision (see `CORPUS_GATE_REPORT.md` §9).
 - C. raise it with compliance or counsel, preserve the payment and approval records, make no further payment on that route pending clearance, and tell no one else ✅
 - D. note the anomaly in the next monthly report to lenders and continue paying meanwhile
 
-*Rationale:* the escalation route runs to compliance or counsel and never to the commercial line, which has the strongest incentive to settle the matter quietly and may itself be implicated (1.3.2); A therefore delivers the concern to the wrong desk. B alerts the subject, which destroys the evidential position and may be a criminal offence in its own right. D is the seductive error: it is transparent, it is documented, and it continues to pay on the flagged route while the question is open — which is a decision to proceed, taken by whoever kept paying.
+*Rationale:* the escalation route runs to compliance or counsel and never to the commercial line, which has the strongest incentive to settle the matter quietly and may itself be implicated (1.3.2); A therefore delivers the concern to the wrong desk. B alerts the subject, which destroys the evidential position and may carry consequences for the individual and the organisation that are not the accountant's to weigh. D is the seductive error: it is transparent, it is documented, and it continues to pay on the flagged route while the question is open — which is a decision to proceed, taken by whoever kept paying.
 
 
 **1.3-K** `[1.3.2 · Comprehension]` A contractor offers its ISO 37001 certification as assurance on a bribery question raised in diligence. The correct reading is:
 
-- A. certification satisfies the point — a certified anti-bribery management system is a defence to the offence
-- B. certification is evidence about a management system at a point in time; it is not a legal defence and says nothing about the transaction being diligenced ✅
+- A. certification satisfies the point — a certified anti-bribery management system answers the concern
+- B. certification is evidence about a management system at a point in time; it should never be relied on as a defence and says nothing about the transaction being diligenced ✅
 - C. certification is irrelevant, because ISO standards have no standing in financial transactions
 - D. certification binds the contractor's subcontractors, since the standard applies down the supply chain
 

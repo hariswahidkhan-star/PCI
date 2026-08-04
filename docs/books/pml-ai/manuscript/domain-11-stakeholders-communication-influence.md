@@ -90,7 +90,8 @@ they were not part of, and each surprise arrives late.
 
 **What registers habitually omit**, consistently enough to be a checklist. *Parties with no
 organisational representation* — future users, patients, tenants, passengers, the public — whose
-interests are real, whose consent may be legally required, and who have no one on the distribution
+interests are real, whose consent may have to be obtained under obligations that vary by
+jurisdiction, and who have no one on the distribution
 list. *Internal parties whose work the project changes without commissioning them*: finance,
 procurement, legal, information security, service desks, training functions. *Parties visible only at
 handover*, where Domain 16's readiness failures originate. *The supplier's own subcontractors*, whose

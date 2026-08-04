@@ -1717,9 +1717,9 @@ date on which equity could first be paid.
 
 **And this is a legal question before it is an accounting one.** What constitutes a distributable
 profit, whether interim accounts may support a distribution, what solvency or net-asset test applies
-alongside it, and what the consequences of an unlawful distribution are for the directors who declared
-it and the shareholders who received it, vary materially between jurisdictions and are matters for
-counsel in the jurisdiction of incorporation. The practical discipline is narrow: **include a
+alongside it, and what follows for the directors who declared a distribution later challenged and for
+the shareholders who received it, vary materially between jurisdictions and are matters for
+counsel in the jurisdiction of incorporation, on which nothing here should be relied upon. The practical discipline is narrow: **include a
 distributable-reserves line beside the distributable-cash line in every distribution paper**, and
 confirm the legal test with counsel once per financing rather than once per dividend.
 
