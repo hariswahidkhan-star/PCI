@@ -125,7 +125,6 @@ def main() -> None:
            f"<style>html {{ string-set: booktitle \"{RUN_TITLE}\"; }}</style></head>"
            f"<body>{COVER}{TITLE}{toc}{body_html}</body></html>")
     doc = family.house_style(doc, "standards")
-    (HERE / "_combined_standards.html").write_text(doc, encoding="utf-8")
 
     from weasyprint import HTML, CSS as WCSS
     sheets = [WCSS(filename=str(family.HOUSE_CSS)), WCSS(string=COVER_CSS)]

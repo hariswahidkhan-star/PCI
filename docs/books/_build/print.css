@@ -198,9 +198,11 @@ h3.minihead {
    A chapter opener earns a page: the top third empty, the number large in the display cut and
    muted, the title beneath it, a hairline to close. No rule above, no box, no reversed panel.
    --------------------------------------------------------------------------------------------- */
+/* Openers are set flush left. They are divs, not headings, so without this they inherit the body's
+   justification and a three-word part title opens up into a line of word spaces. */
 .chapter {
   page: opener; page-break-before: always; page-break-after: always;
-  padding-top: 66mm;
+  padding-top: 66mm; text-align: left; hyphens: none;
 }
 .chapter .chapkicker {
   font-family: var(--sans); font-size: 9pt; font-weight: normal;
@@ -224,7 +226,7 @@ h3.minihead {
 /* Part dividers: number, title, one line of orientation, nothing else. */
 .partpage {
   page: divider; page-break-before: always; page-break-after: always;
-  padding-top: 78mm;
+  padding-top: 78mm; text-align: left; hyphens: none;
 }
 .partpage .partghost { display: none; }  /* a ghost numeral is ornament, not space */
 .partpage .partnum {
@@ -235,6 +237,7 @@ h3.minihead {
 .partpage .parttitle {
   font-family: var(--display); font-weight: normal; font-size: 30pt; line-height: 1.14;
   letter-spacing: -0.01em; color: var(--green); margin-bottom: 8mm;
+  text-align: left; hyphens: none; max-width: 118mm;
 }
 .partpage .partdesc {
   font-family: var(--text); font-size: 10.4pt; line-height: 1.55; color: var(--muted);
@@ -274,7 +277,7 @@ h3.minihead {
   line-height: 1.2; padding-bottom: 2.8mm; border-bottom: 0.6pt solid var(--rule);
   margin-bottom: 6mm; string-set: chaptertitle content();
 }
-.frontmatter p { text-align: left; }
+.frontmatter p { text-align: justify; }
 
 /* ---------------------------------------------------------------------------------------------
    6. Tables
@@ -318,7 +321,7 @@ th.num, td.num { text-align: right; font-feature-settings: var(--feat-lining); }
 td.id, td.id code, th.id, th.id code { white-space: nowrap; }
 table tr { break-inside: avoid; }
 table p { margin: 0 0 1.4mm 0; text-align: left; }
-table code { font-size: 0.94em; }
+table code { font-size: 0.88em; }
 /* A table that outruns the measure loses its outer padding before it loses its content. */
 table.wide { font-size: 8.2pt; }
 
@@ -331,7 +334,9 @@ caption {
    7. Identifiers, code and formulas — the mono cut of the same skeleton, lining tabular figures
    --------------------------------------------------------------------------------------------- */
 code, kbd, samp {
-  font-family: var(--mono); font-size: 0.92em; font-weight: normal;
+  /* Libertine Mono runs wide and optically large; at 0.92em it broke the colour of the text block
+     and sprawled formulas across extra lines. 0.84em sits it back into the line. */
+  font-family: var(--mono); font-size: 0.84em; font-weight: normal;
   font-feature-settings: var(--feat-lining);
   background: none; padding: 0; color: var(--green-mid);
   overflow-wrap: break-word; word-break: break-word;
@@ -460,10 +465,13 @@ ul.mcqopts li {
 }
 .pci-caution::before { content: "caution"; color: var(--amber); }
 
-/* A call-out nested inside a standard sits tighter and never re-tints the page. */
-.pci-standard .ext-ref, .pci-standard .pci-caution, .pci-standard .pci-guidance {
+/* A call-out nested inside a standard sits tighter, and the two that carry no ground of their own
+   stay groundless. The caution keeps its amber: inside a green-tinted standard it is the one place
+   the warm tint has work to do, and it is faint enough not to re-tint the page. */
+.pci-standard .ext-ref, .pci-standard .pci-guidance {
   margin: 3mm 0; padding: 2.4mm 0 2.4mm 4mm; background: none;
 }
+.pci-standard .pci-caution { margin: 3mm 0; padding: 2.4mm 3mm 2.4mm 4mm; }
 /* `field` marks a call-out that is one of a standard's numbered elements. It keeps the border
    treatment and drops the class label, because the element's own numbered name is the label — and
    printing both would say the same thing twice on every standard in the corpus. */
@@ -525,9 +533,13 @@ nav#TOC a::after {
   font-family: var(--text); font-size: 9pt; color: var(--ink); margin-bottom: 1mm;
   text-align: left; hyphens: auto; break-inside: avoid;
 }
-.bookindex .ixe a { color: inherit; display: block; padding-right: 8mm; }
+/* No dot leaders in an index. Leaders belong to a contents page, where entries are few and the eye
+   travels a long way to the folio; in a two-column index they stripe the page, and any entry that
+   wraps sends its leader across a line of its own. The folio simply follows the term, as it does
+   in every printed index. */
+.bookindex .ixe a { color: inherit; display: block; }
 .bookindex .ixe a::after {
-  content: leader(".") " " target-counter(attr(href url), page);
+  content: "  " target-counter(attr(href url), page);
   color: var(--muted); font-size: 8.6pt; font-feature-settings: "onum" 1; white-space: nowrap;
 }
 

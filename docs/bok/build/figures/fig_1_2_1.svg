@@ -6,11 +6,11 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-07-14T23:17:36.233671</dc:date>
+    <dc:date>2026-08-04T12:48:48.871617</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
-      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
      </cc:Agent>
     </dc:creator>
    </cc:Work>
@@ -40,7 +40,7 @@ Q 21.8304 19.0656 21.8304 20.7288
 L 21.8304 76.7232 
 Q 21.8304 78.3864 23.8392 78.3864 
 z
-" clip-path="url(#pb329ce8ac9)" style="fill: #eef3ff; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p62a270c36f)" style="fill: #f2f6f3; stroke: #14432e; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 261.5472 78.3864 
@@ -53,7 +53,7 @@ Q 259.5384 19.0656 259.5384 20.7288
 L 259.5384 76.7232 
 Q 259.5384 78.3864 261.5472 78.3864 
 z
-" clip-path="url(#pb329ce8ac9)" style="fill: #eef3ff; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p62a270c36f)" style="fill: #f2f6f3; stroke: #14432e; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 261.5472 180.9504 
@@ -66,7 +66,7 @@ Q 259.5384 121.6296 259.5384 123.2928
 L 259.5384 179.2872 
 Q 259.5384 180.9504 261.5472 180.9504 
 z
-" clip-path="url(#pb329ce8ac9)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p62a270c36f)" style="fill: #14432e; stroke: #14432e; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 23.8392 180.9504 
@@ -79,70 +79,70 @@ Q 21.8304 121.6296 21.8304 123.2928
 L 21.8304 179.2872 
 Q 21.8304 180.9504 23.8392 180.9504 
 z
-" clip-path="url(#pb329ce8ac9)" style="fill: #eef3ff; stroke: #1d4ed8; stroke-width: 1.2; stroke-linejoin: miter"/>
+" clip-path="url(#p62a270c36f)" style="fill: #f2f6f3; stroke: #14432e; stroke-width: 1.2; stroke-linejoin: miter"/>
    </g>
    <g id="patch_6">
     <path d="M 160.094034 48.726 
 Q 206.640286 48.726 250.95047 48.726 
-" clip-path="url(#pb329ce8ac9)" style="fill: none; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#p62a270c36f)" style="fill: none; stroke: #14432e; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 246.15047 46.326 
 L 250.95047 48.726 
 L 246.15047 51.126 
 z
-" clip-path="url(#pb329ce8ac9)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#p62a270c36f)" style="fill: #14432e; stroke: #14432e; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_7">
     <path d="M 325.494 83.990665 
 Q 325.494 99.316961 325.494 112.407189 
-" clip-path="url(#pb329ce8ac9)" style="fill: none; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#p62a270c36f)" style="fill: none; stroke: #14432e; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 327.894 107.607189 
 L 325.494 112.407189 
 L 323.094 107.607189 
 z
-" clip-path="url(#pb329ce8ac9)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#p62a270c36f)" style="fill: #14432e; stroke: #14432e; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="patch_8">
     <path d="M 160.094034 151.29 
 Q 206.640286 151.29 250.95047 151.29 
-" clip-path="url(#pb329ce8ac9)" style="fill: none; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#p62a270c36f)" style="fill: none; stroke: #14432e; stroke-width: 2; stroke-linecap: round"/>
     <path d="M 246.15047 148.89 
 L 250.95047 151.29 
 L 246.15047 153.69 
 z
-" clip-path="url(#pb329ce8ac9)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 2; stroke-linecap: round"/>
+" clip-path="url(#p62a270c36f)" style="fill: #14432e; stroke: #14432e; stroke-width: 2; stroke-linecap: round"/>
    </g>
    <g id="text_1">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(75.251937 46.434496)">SOPL</text>
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(58.621 57.929125)">Profit 17,000</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(73.818773 45.492475)">SOPL</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(52.924711 56.895072)">Profit 17,000</text>
    </g>
    <g id="text_2">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(312.324625 40.687182)">SOCE</text>
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(283.423102 52.181811)">Retained earnings</text>
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(310.219781 63.676439)">17,000</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(311.304117 39.791547)">SOCE</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(276.465836 51.194145)">Retained earnings</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(307.164937 62.596)">17,000</text>
    </g>
    <g id="text_3">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(312.858258 143.251182)">SOFP</text>
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(292.219508 154.745811)">Equity 117,000</text>
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(293.437437 166.240439)">Cash 129,000</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(311.30857 142.355176)">SOFP</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(285.185055 153.757773)">Equity 117,000</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #ffffff" transform="translate(289.306422 165.160371)">Cash 129,000</text>
    </g>
    <g id="text_4">
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(62.048422 143.251182)">Cash flows</text>
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(58.488891 154.745811)">Net increase</text>
-    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #0f172a" transform="translate(68.742953 166.240439)">129,000</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(59.232563 142.355918)">Cash flows</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(54.020922 153.758516)">Net increase</text>
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'Inter', 'DejaVu Sans'; fill: #1a1a1a" transform="translate(66.151977 165.160371)">129,000</text>
    </g>
    <g id="text_5">
-    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #1d4ed8" x="206.64" y="39.024" transform="rotate(-0 206.64 39.024)">profit</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #14432e" x="206.64" y="39.024" transform="rotate(-0 206.64 39.024)">profit</text>
    </g>
    <g id="text_6">
-    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: start; fill: #1d4ed8" x="342.234" y="99.4536" transform="rotate(-0 342.234 99.4536)">to equity</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: start; fill: #14432e" x="342.234" y="99.4536" transform="rotate(-0 342.234 99.4536)">to equity</text>
    </g>
    <g id="text_7">
-    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #1d4ed8" x="206.64" y="141.588" transform="rotate(-0 206.64 141.588)">closing cash</text>
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Inter', 'DejaVu Sans'; text-anchor: middle; fill: #14432e" x="206.64" y="141.588" transform="rotate(-0 206.64 141.588)">closing cash</text>
    </g>
   </g>
  </g>
  <defs>
-  <clipPath id="pb329ce8ac9">
+  <clipPath id="p62a270c36f">
    <rect x="5.76" y="5.76" width="401.76" height="194.04"/>
   </clipPath>
  </defs>

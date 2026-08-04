@@ -228,6 +228,35 @@ def build_toc(body_html: str, relabel: dict | None = None) -> str:
     return "".join(out)
 
 
+def normalise_list_indent(md: str) -> tuple:
+    """Re-indent 3-space list continuations to 4 so nested tables stay inside their list item.
+
+    The manuscripts indent content under a numbered step by three spaces. python-markdown needs
+    four: at three, a table under step 4 terminates the list, and step 5 opens a fresh <ol> that
+    restarts at 1. A five-step worked example then prints 1, 2, 3, 4, 1. The source convention is
+    perfectly readable and is used consistently, so this normalises at build time rather than
+    re-indenting several thousand lines of manuscript.
+    """
+    out, fixed, in_list, in_fence = [], 0, False, False
+    for line in md.split("\n"):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+        if in_fence:
+            out.append(line)
+            continue
+        if re.match(r"^\s{0,3}(?:\d+\.|[-*+])\s+\S", line):
+            in_list = True
+        elif in_list and line.strip() == "":
+            pass                                   # a blank line may still be inside the item
+        elif in_list and re.match(r"^ {3}(?! )\S", line):
+            line = " " + line                      # 3 -> 4, keeping the item open
+            fixed += 1
+        elif in_list and not line.startswith(" "):
+            in_list = False                        # unindented prose closes the list
+        out.append(line)
+    return "\n".join(out), fixed
+
+
 def house_style(html: str, label: str = "") -> str:
     """The passes every PCI volume gets, whatever built it."""
     return tag_table_columns(sweep_icons(strip_pandoc_default_css(html), label), label)
@@ -476,8 +505,11 @@ def _chart_coverage() -> str:
                 f'fill="none" stroke="{COVER_INK}" stroke-width="1.8"/>')
     bars.append(f'<path d="M{bx - 4:.1f} {line - 6:.1f} L{bx:.1f} {line:.1f} L{bx + 4:.1f} {line - 6:.1f}" '
                 f'fill="none" stroke="{COVER_INK}" stroke-width="1.8"/>')
-    bars.append(f'<text x="{bx:.1f}" y="{top - 9:.1f}" font-size="15" fill="{COVER_INK}" '
-                f'font-family="Linux Biolinum O" text-anchor="middle">headroom</text>')
+    # The label clears the tallest bar, not just its own: at bx it sat on the top edge of the two
+    # bars beside it.
+    bars.append(f'<text x="{bx:.1f}" y="{base - max(vals) * scale - 12:.1f}" font-size="15" '
+                f'fill="{COVER_INK}" font-family="Linux Biolinum O" '
+                f'text-anchor="middle">headroom</text>')
     return (
         '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
         + "".join(bars)
@@ -537,31 +569,18 @@ def _chart_variance() -> str:
     planned = path(s, 1.0, COVER_BAR, 1.8, "8 6")
     actual = path(lambda t: s(t) * 1.14, cut, COVER_BAR, 1.8)
     earned = path(lambda t: s(t) * 0.78, cut, COVER_HOT, 2.6)
-    pv = y0 - s(cut) * h
     ac = y0 - s(cut) * 1.14 * h
     ev = y0 - s(cut) * 0.78 * h
-    # The two gaps are measured where they occur and labelled clear of each other: the cost gap is
-    # bracketed above the schedule gap, and each label steps away from its bracket on a leader so
-    # the two never collide however the curves are tuned.
-    def bracket(x, ya, yb):
-        return (f'<line x1="{x:.1f}" y1="{ya:.1f}" x2="{x:.1f}" y2="{yb:.1f}" '
-                f'stroke="{COVER_INK}" stroke-width="1.8"/>'
-                f'<line x1="{x - 4:.1f}" y1="{ya:.1f}" x2="{x + 4:.1f}" y2="{ya:.1f}" '
-                f'stroke="{COVER_INK}" stroke-width="1.8"/>'
-                f'<line x1="{x - 4:.1f}" y1="{yb:.1f}" x2="{x + 4:.1f}" y2="{yb:.1f}" '
-                f'stroke="{COVER_INK}" stroke-width="1.8"/>')
+    # No callouts on the curves. At the size a cover device is actually printed, a bracket and its
+    # label are two marks too small to read and one more thing competing with the title; the two
+    # gaps are visible as gaps, and the line beneath says what they are.
     return (
         '<svg class="coverchart" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg">'
         + f'<line x1="{x0}" y1="{y0}" x2="{x0 + w}" y2="{y0}" stroke="{COVER_DIM}" stroke-width="1"/>'
         + planned + actual + earned
-        + f'<line x1="{xd:.1f}" y1="{y0}" x2="{xd:.1f}" y2="{ac - 10:.1f}" stroke="{COVER_DIM}" '
+        + f'<line x1="{xd:.1f}" y1="{y0}" x2="{xd:.1f}" y2="{ac - 12:.1f}" stroke="{COVER_DIM}" '
           'stroke-width="1" stroke-dasharray="3 5"/>'
-        + bracket(xd + 26, ev, ac)
-        + bracket(xd + 10, ev, pv)
-        + f'<text x="{xd + 34:.1f}" y="{ac - 6:.1f}" font-size="15" fill="{COVER_INK}" '
-          'font-family="Linux Biolinum O">cost variance</text>'
-        + f'<text x="{xd + 34:.1f}" y="{ev + 18:.1f}" font-size="15" fill="{COVER_INK}" '
-          'font-family="Linux Biolinum O">schedule variance</text>'
+        + f'<circle cx="{xd:.1f}" cy="{ev:.1f}" r="5" fill="{COVER_HOT}"/>'
         + f'<text x="{x0}" y="284" font-size="15" fill="{COVER_DIM}" font-family="Linux Biolinum O">'
           'planned · earned · actual — the distance between them is the discipline</text>'
         "</svg>")
@@ -759,6 +778,8 @@ def build(book: str, out: pathlib.Path) -> None:
     corpus = corpus.replace("✅", MCQ_KEY)
     print(f"MCQ answer keys marked: {keyed}")
 
+    corpus, _relaid = normalise_list_indent(corpus)
+    print(f"list continuations re-indented for nesting: {_relaid}")
     html = markdown.markdown(corpus, extensions=["tables", "fenced_code", "toc"],
                              extension_configs={"toc": {"anchorlink": False}})
 
@@ -786,6 +807,36 @@ def build(book: str, out: pathlib.Path) -> None:
     # Apparatus mini-heads.
     html = re.sub(r'<h3 id="([^"]+)">((?:Key terms|Sample MCQs|Self-check)[^<]*)</h3>',
                   r'<h3 class="minihead" id="\1">\2</h3>', html)
+
+    # A table inside an ordered-list item terminates the list in python-markdown, so the item after
+    # the table restarts at 1. A five-step worked example then reads 1,2,3,4,1 — visible on the page
+    # and wrong. Carry the count across the break by giving each continuation list a start value.
+    def continue_broken_lists(doc: str) -> str:
+        parts = re.split(r'(<ol[^>]*>|</ol>|<li[\s>])', doc)
+        out, depth, count, carry = [], 0, 0, 0
+        for tok in parts:
+            if tok.startswith("<ol"):
+                depth += 1
+                if depth == 1:
+                    if carry and "start=" not in tok:
+                        tok = tok[:-1] + f' start="{carry + 1}">'
+                    count = carry
+            elif tok == "</ol>":
+                depth -= 1
+                if depth == 0:
+                    carry = count
+            elif tok.startswith("<li") and depth == 1:
+                count += 1
+            elif depth == 0 and tok.strip() and not tok.startswith("<"):
+                # Ordinary prose between lists ends the sequence.
+                carry = 0
+            out.append(tok)
+        return "".join(out)
+
+    before = html
+    html = continue_broken_lists(html)
+    resumed = html.count(' start="') - before.count(' start="')
+    print(f"ordered lists resumed after an interrupting table: {resumed}")
 
     # Worked-example panels (heading para + following <ol>).
     wex = re.compile(r'<p><strong>Worked example ([^<]+)</strong>((?:(?!</p>).)*)</p>\s*'

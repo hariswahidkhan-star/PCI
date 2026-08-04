@@ -163,75 +163,36 @@ Every PCI Standard carries all twenty-five elements below, in this order. No ele
 an element is genuinely inapplicable, it states "Not applicable" **and gives the reason in one
 clause** — a bare "None." is a defect.
 
-```
-## PCI STANDARD <identifier> — <official title>
+The heading is `## PCI STANDARD <identifier> — <official title>`, and the twenty-five elements
+follow it in this order:
 
-**1. Normative requirement.**   One precise mandatory statement. One principal obligation.
-
-**2. Purpose.**                 The professional risk this standard controls.
-
-**3. Scope.**                   Who is governed · which decisions · which projects, programmes or
-                                transactions · whether it applies to preparation, review,
-                                recommendation, approval or assurance.
-
-**4. Defined terms.**           Every term in this standard that could alter compliance.
-
-**5. Required actions.**        The minimum actions necessary for compliance.
-
-**6. Prohibited actions.**      The practices that constitute a breach.
-
-**7. Required evidence.**       What must exist to prove compliance.
-
-**8. Responsible role.**        The role accountable for performance. Never "the team",
-                                "management", "relevant people", "appropriate personnel" or
-                                "the organisation" unless that term is formally defined.
-
-**9. Approval authority.**      Who may approve, reject, waive or escalate.
-
-**10. Independence requirement.** Whether the reviewer must be independent of preparation,
-                                commercial benefit, model development, contract administration,
-                                project sponsorship or AI-tool configuration.
-
-**11. Materiality or threshold.** Numerical, risk, authority, cumulative or trigger-event threshold,
-                                or the professional-judgement criteria that stand in for one.
-
-**12. Exception and waiver.**   Whether an exception is permitted; who approves; what justification;
-                                how long it lasts; compensating controls; reporting. Or: no exception
-                                is permitted.
-
-**13. Escalation trigger.**     The event that requires escalation.
-
-**14. AI application.**         What AI may assist with.
-
-**15. AI prohibition.**         What AI must not decide, approve, certify, sign, waive, authorise or
-                                represent as independently verified.
-
-**16. AI verification.**        The specific human verification method. "Review the AI output" is
-                                insufficient.
-
-**17. External reference.**     Each authority listed separately with issuing organisation, title,
-                                subject, edition or effective date checked, nature of authority,
-                                verification date, applicability limitation.
-
-**18. Jurisdictional caution.** What requires local legal, tax, accounting or regulatory advice.
-
-**19. Related PCI Standards.**  Stable identifiers.
-
-**20. Related Body of Knowledge content.** Certification · domain · Knowledge Area · topic.
-
-**21. Compliance test.**        A test an auditor, assessor or reviewer can actually perform.
-
-**22. Breach indicators.**      Observable indicators that the standard may have been breached.
-
-**23. Consequence within PCI authority.** From the Charter §9 list only.
-
-**24. Examination application.** How the standard can be tested by scenario judgement, evidence
-                                selection, escalation decision, calculation review, ethical dilemma
-                                or AI-verification case — not by memorising standard numbers.
-
-**25. Version and status.**     Version · approval date · effective date · amendment note.
-```
-
+| # | Element | What it carries |
+|---|---|---|
+| 1 | **Normative requirement** | One precise mandatory statement. One principal obligation. |
+| 2 | **Purpose** | The professional risk this standard controls. |
+| 3 | **Scope** | Who is governed · which decisions · which projects, programmes or transactions · whether it applies to preparation, review, recommendation, approval or assurance. |
+| 4 | **Defined terms** | Every term in this standard that could alter compliance. |
+| 5 | **Required actions** | The minimum actions necessary for compliance. |
+| 6 | **Prohibited actions** | The practices that constitute a breach. |
+| 7 | **Required evidence** | What must exist to prove compliance. |
+| 8 | **Responsible role** | The role accountable for performance. Never "the team", "management", "relevant people", "appropriate personnel" or "the organisation" unless that term is formally defined. |
+| 9 | **Approval authority** | Who may approve, reject, waive or escalate. |
+| 10 | **Independence requirement** | Whether the reviewer must be independent of preparation, commercial benefit, model development, contract administration, project sponsorship or AI-tool configuration. |
+| 11 | **Materiality or threshold** | Numerical, risk, authority, cumulative or trigger-event threshold, or the professional-judgement criteria that stand in for one. |
+| 12 | **Exception and waiver** | Whether an exception is permitted; who approves; what justification; how long it lasts; compensating controls; reporting. Or: no exception is permitted. |
+| 13 | **Escalation trigger** | The event that requires escalation. |
+| 14 | **AI application** | What AI may assist with. |
+| 15 | **AI prohibition** | What AI must not decide, approve, certify, sign, waive, authorise or represent as independently verified. |
+| 16 | **AI verification** | The specific human verification method. "Review the AI output" is insufficient. |
+| 17 | **External reference** | Each authority listed separately with issuing organisation, title, subject, edition or effective date checked, nature of authority, verification date, applicability limitation. |
+| 18 | **Jurisdictional caution** | What requires local legal, tax, accounting or regulatory advice. |
+| 19 | **Related PCI Standards** | Stable identifiers. |
+| 20 | **Related Body of Knowledge content** | Certification · domain · Knowledge Area · topic. |
+| 21 | **Compliance test** | A test an auditor, assessor or reviewer can actually perform. |
+| 22 | **Breach indicators** | Observable indicators that the standard may have been breached. |
+| 23 | **Consequence within PCI authority** | From the Charter §9 list only. |
+| 24 | **Examination application** | How the standard can be tested by scenario judgement, evidence selection, escalation decision, calculation review, ethical dilemma or AI-verification case — not by memorising standard numbers. |
+| 25 | **Version and status** | Version · approval date · effective date · amendment note. ``` |
 ### 5.0 Which elements are normative
 
 A standard's twenty-five elements do not all carry obligation, and the structure must say which do.

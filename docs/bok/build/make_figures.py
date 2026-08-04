@@ -2,7 +2,7 @@
 """Render the PCL-AI BoK figure specifications as SVG diagrams.
 
 Each figure is drawn from the exact underlying data in its spec block in the text.
-Style: brand blue #1D4ED8, clean professional diagrams, DejaVu Sans labels.
+Style: brand blue #14432E, clean professional diagrams, DejaVu Sans labels.
 Run with python3.12 (matplotlib installed there). Outputs to build/figures/.
 """
 import pathlib
@@ -11,8 +11,8 @@ matplotlib.use("svg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Polygon, Circle, Rectangle
 
-BLUE, INK, SLATE, LIGHT, GREY = "#1D4ED8", "#0F172A", "#64748B", "#EEF3FF", "#CBD5E1"
-RED, GREEN, AMBER, PALE = "#C13329", "#16A34A", "#D97706", "#F1F5F9"
+BLUE, INK, SLATE, LIGHT, GREY = "#14432E", "#1A1A1A", "#5A6560", "#F2F6F3", "#C8CFC9"
+RED, GREEN, AMBER, PALE = "#8A5A00", "#16A34A", "#8A5A00", "#F6F8F7"
 OUT = pathlib.Path(__file__).resolve().parent / "figures"
 OUT.mkdir(exist_ok=True)
 plt.rcParams.update({
@@ -25,7 +25,7 @@ plt.rcParams.update({
     "lines.linewidth": 2.2, "lines.solid_capstyle": "round",
     "legend.frameon": False, "legend.fontsize": 8,
 })
-CHART_GRID = "#EDF1F7"
+CHART_GRID = "#F2F6F3"
 
 def _premium(fig):
     """Uniform premium pass applied to every figure at save time."""
@@ -203,7 +203,7 @@ def fig_2_2_2():
 def fig_3_1_1():
     fig, ax = plt.subplots(figsize=(6.6, 3.2))
     ax.bar(0, 9.0, color=BLUE)
-    ax.bar(1, 0.7, bottom=9.0, color="#60A5FA")
+    ax.bar(1, 0.7, bottom=9.0, color="#4C7C64")
     ax.bar(2, 9.7, color=BLUE, alpha=0.35)
     ax.bar(3, 0.5, bottom=9.7, color=GREY)
     ax.bar(4, 10.2, color=SLATE, alpha=0.4)
@@ -460,7 +460,7 @@ def fig_12_2_1():
 def fig_13_1_1():
     fig, ax = newfig(5.6, 4.2)
     ax.set_xlim(-5, 5); ax.set_ylim(-4.4, 4.4)
-    for r, lab, c in [(4.1, "ARTIFICIAL INTELLIGENCE", GREY), (2.8, "MACHINE LEARNING", "#93C5FD"),
+    for r, lab, c in [(4.1, "ARTIFICIAL INTELLIGENCE", GREY), (2.8, "MACHINE LEARNING", "#A8C3B4"),
                       (1.5, "GENERATIVE AI", BLUE)]:
         ax.add_patch(Circle((0, -0.2), r, fc=c, alpha=0.30, ec=c, lw=1.4))
     ax.text(0, 3.35, "AI — rules-based validation", ha="center", fontsize=8, color=SLATE)
@@ -490,7 +490,7 @@ def fig_13_4_1():
     for i in range(len(needs)):
         for j in range(len(cats)):
             v = fit[i][j]
-            c = BLUE if v == 2 else ("#93C5FD" if v == 1 else PALE)
+            c = BLUE if v == 2 else ("#A8C3B4" if v == 1 else PALE)
             ax.add_patch(Rectangle((j, len(needs)-1-i), 0.94, 0.94, fc=c, ec="white"))
     ax.set_xticks([j + 0.47 for j in range(len(cats))]); ax.set_xticklabels(cats, fontsize=7.5, rotation=30, ha="right")
     ax.set_yticks([len(needs)-1-i + 0.47 for i in range(len(needs))]); ax.set_yticklabels(needs, fontsize=8)
