@@ -441,7 +441,12 @@ arithmetic, because "escalate early" is advice everyone agrees with and almost n
 **Definition.** An **interest** is anything capable of affecting, or of appearing to affect, a
 person's judgement on a matter before them: a financial stake, an employment or commercial
 relationship, a personal or family connection, authorship of the thing being assured, or a future
-role that depends on the outcome. The appearance is part of the definition, not a softening of it —
+role that depends on the outcome. Where an interest bears on a matter the person is being asked to
+decide, advise on or assure, it is a **conflict of interest** — the term this profession and every
+neighbouring one uses, and the term a register, a code of conduct or an accreditation reviewer will
+look for. Nothing in this book treats a conflict of interest as a lapse of character: it is a
+structural fact about a role, and the professional act is to surface it, not to be free of it.
+The appearance is part of the definition, not a softening of it —
 1.4.1's daylight test asks whether every party seeing the full picture would still regard the
 decision as impartial, and an interest that fails that test has already done its damage whether or
 not it moved a single judgement.
@@ -553,6 +558,7 @@ legal duty.
 | **Silent measure** | An outcome measure reported by two parties, owned by neither, and never accompanied by a proposed action. |
 | **Legal liability** | Who must compensate whom, set by contract and jurisdiction; distinct from professional accountability and capable of sitting elsewhere. |
 | **Declared interest** | Anything capable of affecting, or of appearing to affect, judgement on a matter before a person — financial, employment, personal, authorship of what is being assured, or a future role dependent on the outcome — disclosed in writing to the chair before the item is taken. *Context flag: the stakeholder sense of "interest" (attention paid) is Domain 11, KA 11.1.* |
+| **Conflict of interest** | An interest that bears on a matter the person is being asked to decide, advise on or assure. Not a lapse of character but a structural fact about a role: the professional act is to declare and abstain, not to claim to have none. Where abstention cannot manage it, the role changes rather than the record staying silent. |
 | **Interest duty** | The four steps of 1.2.2a: identify at appointment and at each gate · declare in writing before the item is taken · record in the decision record, nil returns included · abstain, with the minute naming who decided instead. |
 | **Abstention** | The interested party taking no part in the discussion or the decision, minuted with the name of whoever decided in their place. |
 | **Structural interest** | An interest touching the substance of a role rather than a single item; managed by changing the role or the work, never by a declaration followed by the decision being taken anyway. |

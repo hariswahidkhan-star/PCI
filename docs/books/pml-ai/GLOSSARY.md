@@ -6,7 +6,7 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**590 terms**, consolidated from 605 key-terms entries across 16 domains.
+**591 terms**, consolidated from 606 key-terms entries across 16 domains.
 
 ## A
 
@@ -252,6 +252,8 @@
 **Configuration management** — Knowing which version of every controlled item is approved, and how it came to be. *(KA 4.3)*
 
 **Confirmation rule** — The provision that stops a tolerance trigger firing on one period's measurement noise. *(KA 3.3)*
+
+**Conflict of interest** — An interest that bears on a matter the person is being asked to decide, advise on or assure. Not a lapse of character but a structural fact about a role: the professional act is to declare and abstain, not to claim to have none. Where abstention cannot manage it, the role changes rather than the record staying silent. *(KA 1.2)*
 
 **Conflict source** — Structural, resource, information, interest or interpersonal — each with a different remedy. *(KA 11.3)*
 

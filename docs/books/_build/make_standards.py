@@ -66,8 +66,10 @@ FAMILIES = [
         ("ISO/IEC 38507", "governance implications of an organisation's use of artificial "
                           "intelligence"),
         ("ISO/IEC 27001", "information-security management systems"),
-        ("ISO/IEC 27701", "privacy information management, extending the information-security "
-                          "management system"),
+        ("ISO/IEC 27701", "privacy information management. The 2019 edition was an extension to an "
+                          "ISO/IEC 27001 information-security management system; the 2025 edition is "
+                          "a standalone management-system standard that can be certified in its own "
+                          "right. Verify which edition a claim of conformity refers to"),
         ("NIST", "the United States National Institute of Standards and Technology, referenced for "
                  "its AI Risk Management Framework — a voluntary, function-based framework, not a "
                  "standard and not a regulation"),
