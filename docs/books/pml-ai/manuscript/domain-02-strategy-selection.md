@@ -619,6 +619,18 @@ scores are **ordinal judgments** (the arithmetic caution of Domain 8, KA 8.2.1 a
 weights are chosen by whoever runs the model — so the model can be steered by anyone who
 understands it.
 
+Which makes **who scores** a governance question rather than an administrative one. A scoring panel
+is a decision body, so the declaration duty of Domain 1, KA 1.2.2a applies to it in full: each
+scorer identifies any interest in the candidates before the criteria are issued, declares it in
+writing to the chair, and takes no part in scoring the candidate concerned, with the record naming
+who scored in their place. The interest to watch for here is rarely financial — it is usually a
+sponsoring or delivering role in one of the candidates, which is precisely the person whose
+subject knowledge makes them worth having on the panel. Note the sequence, because it is the part
+that gets reversed under time pressure: interests are declared and the weights are fixed **before**
+any candidate is scored, since a weight set after the scores are visible is a way of choosing the
+winner while appearing to apply a model (Domain 10, KA 10.2.3 makes the same point for bids, where
+the stakes are contractual).
+
 **Worked example 2.2.3 — four candidates, two rankings.**
 
 1. **Setup.** Four candidate programmes scored 1–5 against weighted criteria: strategic fit

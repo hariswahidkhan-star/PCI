@@ -1052,7 +1052,12 @@ Domain 7 (KA 7.1.3) established the structure; this domain supplies the sizing a
 | **Management reserve** | Unknown-unknowns and scope change | Judgment and organisational policy | Sponsor / change authority, via change control |
 
 Three governance rules. **The draw protocol is published in advance** — which risk, what evidence,
-what approval — because a reserve released ad hoc is indistinguishable from an overrun.
+what approval — because a reserve released ad hoc is indistinguishable from an overrun. The protocol
+also names who may not approve: a draw approved by the person whose overspend it covers is not a
+controlled reserve whatever the paperwork says, so the approver's interest in the draw is declared
+before the approval and an interested approver stands aside, with the record naming who approved
+instead (Domain 1, KA 1.2.2a). This is the commonest live conflict in cost control, because the
+person with the best information about the draw is usually the person it relieves.
 **Consumption is trended against risk retirement**, not against time: burning 60 % of contingency
 while 20 % of the register has been retired is the signal MCQ 7.1-B describes. And **contingency
 released by retired risks is returned, not reallocated** to convenient overspends; otherwise the

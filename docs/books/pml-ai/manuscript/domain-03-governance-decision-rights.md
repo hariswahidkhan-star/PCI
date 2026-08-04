@@ -661,6 +661,16 @@ briefing audience: contributions become positional, dissent becomes private, and
 gets deferred. Attendance is not membership — the separation of *members* (who decide) from
 *attendees* (who inform) is the cheapest available fix.
 
+**Membership carries a standing declaration.** Both faults above are about whether a member *can*
+decide; the companion question is whether a member *may* decide the item in front of them. Membership
+of a steering committee is an appointment, so it triggers the identification step of Domain 1,
+KA 1.2.2a at the point of joining and again as each item is taken: an interest is declared to the
+chair before the item, the interested member takes no part in it, and the minute records who decided
+instead. The chair's practical instrument is a standing agenda item ahead of the first substantive
+one, which costs a minute and makes the nil return routine rather than pointed — and a body whose
+minutes never record a declaration is far more likely to be one that never asks than one that never
+has any.
+
 **Fault 3 — the agenda consumed by reporting.** Status occupies the meeting and the decisions arrive
 in the last ten minutes, which is why the reliable diagnostic of committee health is not attendance
 but the **share of agenda time spent on decisions**. Status is read in advance; the meeting decides.
@@ -1133,6 +1143,18 @@ independent. *Assurance as accountability transfer* — a leader treats a favour
 as a discharge of their own obligation; Domain 1's principle applies unchanged, an opinion is
 information and not a transfer of accountability.
 
+**Capture has an instrument, and it is not a reorganisation.** Because capture is a defect of
+*independence* rather than of structure, it is reached by the declaration duty of Domain 1,
+KA 1.2.2a: the reviewer who drafted, advised on or is otherwise interested in the thing being
+assured declares it to the commissioning authority before the review starts, and either the review
+passes to someone who did not, or — where no independent alternative exists — the opinion states the
+authorship on its face, so that a reader can discount it knowingly. Prior authorship of the assured
+artefact is a **structural** interest, not an item-by-item one, so the honest remedy is usually to
+move the work rather than to caveat the opinion. The countable check is on the assurance product
+itself: every opinion carries the reviewer's declaration, nil returns included, and the count of
+opinions where the declaration is missing is the measure of how much of the assurance programme is
+of unknown independence.
+
 **The countermeasure** is an **assurance map**: risks and controls down the side, lines across the
 top, and each cell marked as covered, not covered or duplicated — reviewed by the accountable
 authority. It is a half-day artefact that surfaces both gaps and duplication, and its absence is the
@@ -1404,8 +1426,19 @@ meeting into an institutional fact.
 never a resourcing problem: a unique reference; the date; the decision-maker by name and role (never
 a committee alone — a body records the decision, a person is accountable for it); the decision, in
 words that permit only one reading; the options considered and why the chosen one was chosen; the
-information relied on, referenced to its version; the conditions attached, with owners and dates;
-and the review date if the decision is provisional.
+information relied on, referenced to its version; **the interests declared in relation to the
+decision, naming who declared what and what was done about it, with a nil return recorded where
+there were none**; the conditions attached, with owners and dates; and the review date if the
+decision is provisional.
+
+**The declared-interest field is the cheapest of those and the only one that is worthless when it is
+optional.** A field completed only where there was something to declare cannot be distinguished, a
+year later, from a field nobody filled in, so the nil return is the part that carries the evidence.
+Where an interest was declared, the entry states the management action — most often that the
+interested party took no part and who decided instead — because a declaration recorded without an
+action is a record of a conflict rather than of its management. The duty itself, its four steps and
+the case where abstention is not enough are Domain 1, KA 1.2.2a; this is where it lands in the
+governance machinery.
 
 **Why the "information relied on, referenced to its version" line matters more than it looks.**
 When a decision is examined afterwards — in a lessons review, a dispute, an audit or an inquiry —
@@ -2181,9 +2214,13 @@ it must catch — if it cannot, narrow the class rather than raising `X`.
 
 Per-decision fields: reference · date · decision-maker (**named person and role**) · decision (one
 reading only) · options considered and why this one · information relied on **with versions** ·
-conditions with owners and dates · review date if provisional. Monthly integrity checks, each a
-count: entries missing a named decision-maker; entries missing a versioned reference; conditions past
-their date; decision classes with zero or multiple Accountable roles in the RACI (the single-A test);
+**declared interests, with the management action taken and a nil return where there were none**
+(Domain 1, KA 1.2.2a) · conditions with owners and dates · review date if provisional. Monthly
+integrity checks, each a count: entries missing a named decision-maker; entries missing a versioned
+reference; **entries with the declared-interest field blank — neither a declaration nor a nil
+return**; **decisions in which an interested party did not abstain, or abstained without the minute
+naming who decided instead**; conditions past their date; decision classes with zero or multiple
+Accountable roles in the RACI (the single-A test);
 and **re-decisions** — the same question arriving at the same body more than twice, counted excluding
 scheduled reviews of provisional decisions and re-openings forced by a material change, so that the
 number measures the defect and not governance working properly. Every one of these is a number, and a

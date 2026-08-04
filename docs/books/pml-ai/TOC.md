@@ -25,7 +25,8 @@ originality) · How to use this reference · Contents
 - **KA 1.1 — Projects, programmes and portfolios:** 1.1.1 evolution of the discipline · 1.1.2 project
   vs operational leadership · 1.1.3 temporary organisations and the delivery environment
 - **KA 1.2 — The project leader's accountability:** 1.2.1 accountability vs responsibility · 1.2.2 the
-  leader's obligations to sponsor, team, users and public · 1.2.3 professional standards of care
+  leader's obligations to sponsor, team, users, public and the profession · 1.2.2a interests,
+  competence and confidentiality · 1.2.3 professional standards of care
 - **KA 1.3 — Systems thinking and value:** 1.3.1 projects as systems · 1.3.2 outputs, outcomes,
   benefits, value · 1.3.3 leading under uncertainty
 - **KA 1.4 — Ethics and the responsible use of AI:** 1.4.1 professional ethics in delivery decisions ·

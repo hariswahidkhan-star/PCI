@@ -6,13 +6,15 @@
 > Knowledge Area that owns it and regenerate. **KA references are the authority** — the
 > gloss is a pointer to the treatment, never a substitute for it.
 
-**581 terms**, consolidated from 596 key-terms entries across 16 domains.
+**590 terms**, consolidated from 605 key-terms entries across 16 domains.
 
 ## A
 
 **Abdication** — Transferred authority without the information or criteria to exercise it. *(KA 12.3)*
 
 **Abnormally low tender** — A bid materially below its benchmark; the benchmark must be stated, since the bid spread and the buyer's estimate can disagree. *(KA 10.2)*
+
+**Abstention** — The interested party taking no part in the discussion or the decision, minuted with the name of whoever decided in their place. *(KA 1.2)*
 
 **AC** — Actual Cost of the work performed, including period accruals. *(KA 7.2)*
 
@@ -223,6 +225,8 @@
 **Comparison cohort** — Comparable units measured at baseline and review without receiving the change, used to net out other causes. *(KA 16.4)*
   <br/>· *Also read at KA 2.3:* A group that did not receive the change, used to measure the counterfactual improvement.
 
+**Competence limit** — The boundary beyond which a leader may not sign an opinion, estimate or assessment; the professional act is to obtain the competence or to decline in writing. *(KA 1.2)*
+
 **Component** — A project or enabling activity within a programme, with a named owner and a stated consequence of cancellation. *(KA 15.1)*
 
 **Composite fitness** — The product of dimension conformance rates; the share of records fit for use. *(KA 9.4)*
@@ -240,6 +244,8 @@
 **Conditional pass** — Proceeding subject to conditions — a real instrument only if the conditions have owners, dates and consequences. *(KA 3.3)*
 
 **Confidence bound (p_upper)** — `1 − α^(1/n)` — the largest defective fraction consistent with a clean sample of `n`. *(KA 9.3)*
+
+**Confidentiality duty** — The standing obligation to hold entrusted information for the purpose it was given for and no other; it survives the project and the tool, and predates both. *(KA 1.2)*
 
 **Configuration audit** — Verification that the actual state matches the recorded state. *(KA 4.3)*
 
@@ -375,6 +381,8 @@
 
 **Decision tree** — Explicit rollback of decisions and chance events to a present choice. *(KA 8.2)*
 
+**Declared interest** — Anything capable of affecting, or of appearing to affect, judgement on a matter before a person — financial, employment, personal, authorship of what is being assured, or a future role dependent on the outcome — disclosed in writing to the chair before the item is taken. *Context flag: the stakeholder sense of "interest" (attention paid) is Domain 11, KA 11.1.* *(KA 1.2)*
+
 **Decoupling** — Removing a predecessor from a milestone by designing an operable interim arrangement, multiplying the probability by `1/pᵢ`. *(KA 15.1)*
 
 **Defect rate by class (dᵢ)** — The share of records in a class failing that class's defined pass criteria. *(KA 14.1)*
@@ -414,6 +422,8 @@
 **Discovery arrivals** — New items found necessary during build; subtracted from throughput to give the net drain. *(KA 13.2)*
 
 **Discretionary attention** — The leader's working week less recurring commitments; the resource all leadership acts are paid from. *(KA 12.1)*
+
+**Discretionary condition** — A readiness condition that admits degree, is genuinely uncertain at the decision date, and is therefore assessed as a probability. *(KA 16.1)*
 
 **Displaced judgment** — Ceasing to think because a tool is watching. *(KA 8.4)*
 
@@ -558,6 +568,8 @@
 
 ## G
 
+**Gate block** — The set of mandatory preconditions sitting above the readiness arithmetic; while any item is not met the only available decision is hold. *(KA 16.1)*
+
 **Governance** — The decision rights, accountabilities and information flows through which an organisation directs and controls a project. *(KA 3.1)*
 
 **Governance artefact** — A report, portal or template — evidence of governance, never a substitute for decision rights. *(KA 3.1)*
@@ -625,6 +637,8 @@
 
 **Interest** — Attention paid, not stake held; predicts how quickly a party notices. *(KA 11.1)*
 
+**Interest duty** — The four steps of 1.2.2a: identify at appointment and at each gate · declare in writing before the item is taken · record in the decision record, nil returns included · abstain, with the minute naming who decided instead. *(KA 1.2)*
+
 **Interface** — A defined relationship across a boundary at which something must be agreed and verified. *(KA 4.2)*
 
 **Interface agreement** — The parties, content, format, direction, timing, exceptions, verifier and version of one interface. *(KA 4.2)*
@@ -690,6 +704,8 @@
 **Management (delivery context)** — The allocation and control of resources against a plan. *(KA 12.1)*
 
 **Management reserve** — Outside the baseline; unknown-unknowns; sponsor-controlled. *(KA 7.1)*
+
+**Mandatory precondition** — A go-live condition recorded met or not met, with its approving authority named; it carries no probability and admits no economic trade. *(KA 16.1)*
 
 **Marginal capacity of the nth member** — `h − c(n − 1)`; zero at `n` = 81 under the same parameters. *(KA 12.2)*
 
@@ -904,7 +920,7 @@
 
 **Re-decision tax** — The committee slots and delay cost consumed by questions that had already been decided. *(KA 3.3)*
 
-**Readiness conjunction** — `P(clean transition) = ∏ pᵢ` over the `k` necessary conditions; always at or below the averaged dashboard figure. *(KA 16.1)*
+**Readiness conjunction** — `P(clean transition) = ∏ pᵢ` over the `k` necessary **discretionary** conditions; always at or below the averaged dashboard figure. *(KA 16.1)*
 
 **Reallocation distance** — The money that must move to close the gaps: `(1 − index) × denominator`; deficits equal surpluses. *(KA 2.1)*
 
@@ -1081,6 +1097,8 @@
 **Stranded capacity** — Unused constrained resource that no remaining candidate is small enough to use — the signature of greedy failure. *(KA 5.3)*
 
 **Straw options** — An options set built so the preferred option cannot lose. *(KA 2.2)*
+
+**Structural interest** — An interest touching the substance of a role rather than a single item; managed by changing the role or the work, never by a declaration followed by the decision being taken anyway. *(KA 1.2)*
 
 **Sub-additivity of controls** — Combined avoided loss is less than the sum of individual avoided losses, because reductions multiply. *(KA 14.4)*
 

@@ -128,11 +128,45 @@ and the as-built documentation that 16.3.1 shows costs seven times as much to re
 ### 16.1.3 Readiness as a conjunction of conditions
 
 **Definition.** Readiness is the joint satisfaction of every condition necessary for a clean
-transition. It is therefore a **conjunction**, and its probability is the product of the conditions'
-probabilities — not their average, not their weighted average, and not the percentage of conditions
-that are green.
+transition. It has **two blocks**, and only one of them is arithmetic.
 
-This is the most consequential piece of arithmetic in the domain, because the artefact that
+**The gate block: mandatory preconditions.** Some conditions of a transition are not assessments of
+likelihood at all. A **clinical safety case and its hazard log closed by clinical governance**; a
+**regulatory or licence approval granted** by the body empowered to grant it; a **data-protection or
+privacy assessment signed** by the accountable authority; **statutory notifications made**;
+**contractual takeover certificates issued**. Each of these is recorded **met or not met**, with the
+**approving authority named** and dated. None of them carries a probability, none of them is
+weighted, and none of them is available for economic trade against the cost of delay. The rule is one
+line and it has no exceptions clause: **while any item in the gate block is not met, the transition
+does not proceed, whatever the arithmetic below says.** The gate block is also not the project's to
+close — each item is closed by the authority that owns it, which is the point of naming that
+authority on the certificate rather than the project role that chased it.
+
+**The discretionary block: conditions that admit degree.** What remains — training coverage,
+migration reconciliation, device installation, workflow sign-off, champion recruitment, rehearsal of
+the fallback — is genuinely uncertain at the decision date, genuinely a matter of more or less, and
+genuinely tradeable against the cost of waiting. Readiness across *these* is a **conjunction**, and
+its probability is the product of the conditions' probabilities — not their average, not their
+weighted average, and not the percentage of conditions that are green. Everything that follows in
+this KA is about the discretionary block; the gate block sits above it and is answered before it is
+reached.
+
+Keeping the two apart is the professional content of this section, because the failure is not that
+anyone consciously prices a safety approval — it is that a single readiness template invites every
+condition to be entered as a `p`, and a mandatory precondition entered as `p = 0.9` has been
+converted into a nine-in-ten chance that something forbidden is permissible. Two consequences follow.
+A gate-block item must never appear among the `pᵢ`, because a product that contains it can be raised
+by improving something else, which is exactly the trade the item exists to forbid. And a gate-block
+item must never appear in the go/hold economics of 16.1.4, because expressing it as a cost concedes
+that some cost of delay would be large enough to buy it. Domain 14 states the same boundary for
+security and privacy controls — expected annual loss is a legitimate test where consequences are
+cost-compensable and the **wrong test** where the consequence is a statutory penalty, a licence
+condition, a duty of confidence or harm to a person (KA 14.4.4) — and Domain 9 states it for quality,
+where the economic optimum is taken among *compliant* options rather than across them. Domain 16 is
+where the boundary matters most, because this is the decision that is irreversible for the people who
+did not take it.
+
+The conjunction is then the most consequential piece of arithmetic in the domain, because the artefact that
 organisations actually use — a readiness dashboard showing a weighted percentage — is not a
 measurement of readiness at all. The product rule itself is Domain 15's (KA 15.1.3, where a
 six-predecessor programme milestone with no predecessor assessed worse than 0.85 comes to 52.95 per
@@ -153,9 +187,14 @@ true statements about the same event.
 
 **Worked example 16.1.3 — the readiness dashboard that said 90.71 per cent.**
 
-1. **Setup.** Meridian's clinic go-live gate carries **seven** conditions. The transition manager's
-   assessment of the probability that each is fully met at the planned go-live date, for a
-   representative clinic, is: clinician training completed to the roster threshold **0.96**; data
+1. **Setup.** Meridian's clinic go-live gate carries a gate block and **seven** discretionary
+   conditions. The gate block — the clinical safety case and its hazard log closed by clinical
+   governance, the information-governance assessment signed by the accountable authority, and the
+   clinic's takeover certificate issued — was recorded **met**, authority named and dated, before the
+   readiness assessment was convened; those items carry no probability and are not among the seven,
+   which is why no clinical-safety condition appears in the list below. The transition manager's
+   assessment of the probability that each *discretionary* condition is fully met at the planned
+   go-live date, for a representative clinic, is: clinician training completed to the roster threshold **0.96**; data
    migration reconciled and signed off **0.90**; interfaces verified in production **0.94**; network
    and devices installed and load-tested **0.98**; workflow redesign signed off by the clinical lead
    **0.85**; clinical champion in post and trained **0.80**; fallback and business-continuity
@@ -212,9 +251,19 @@ true statements about the same event.
 criteria, and the power to hold as well as to proceed — whose distinguishing feature is that it is
 substantially irreversible for the users, even where it is technically reversible for the system.
 
-The decision has three real options, not two: proceed, hold and remediate, or proceed with a reduced
-scope of users. Pricing them requires the conjunction of 16.1.3 and a cost per failed transition, and
-it is worth doing because the intuitive answer is usually wrong in the expensive direction.
+**The option set exists only above the gate block.** The three options below are available only once
+**every** mandatory precondition of 16.1.3 is recorded met, with its approving authority named. Where
+one is not — an unclosed safety case, an ungranted approval, an unsigned privacy assessment, a
+notification not made, a takeover certificate not issued — there is no option set and there are no
+economics: the only available decision is **hold**, and the arithmetic that follows does not apply
+to it. A paper that prices going live against an open gate-block item has not presented a finely
+balanced judgement; it has costed a decision that was not the decision-maker's to take, and the
+correct response to it is to refuse the question rather than to answer it more carefully.
+
+Above that line, the decision has three real options, not two: proceed, hold and remediate, or
+proceed with a reduced scope of users. Pricing them requires the discretionary conjunction of 16.1.3
+and a cost per failed transition, and it is worth doing because the intuitive answer is usually wrong
+in the expensive direction.
 
 **Worked example 16.1.4 — hold or go, tested against both correlation bounds.**
 
@@ -308,7 +357,10 @@ estimate.
 | **Commissioning** | Progressive proving of a deliverable in its operating environment, from component test to performance demonstration. |
 | **Works test / service test** | Whether the thing was built as specified / whether the organisation can actually run it. |
 | **Service acceptance** | The receiving organisation's formal agreement that the service meets specification. |
-| **Readiness conjunction** | `P(clean transition) = ∏ pᵢ` over the `k` necessary conditions; always at or below the averaged dashboard figure. |
+| **Mandatory precondition** | A go-live condition recorded met or not met, with its approving authority named; it carries no probability and admits no economic trade. |
+| **Gate block** | The set of mandatory preconditions sitting above the readiness arithmetic; while any item is not met the only available decision is hold. |
+| **Discretionary condition** | A readiness condition that admits degree, is genuinely uncertain at the decision date, and is therefore assessed as a probability. |
+| **Readiness conjunction** | `P(clean transition) = ∏ pᵢ` over the `k` necessary **discretionary** conditions; always at or below the averaged dashboard figure. |
 | **Proportional shortfall** | The ratio `p′/p` by which lifting a condition multiplies the conjunction — the correct remediation ranking. |
 | **Hypercare** | A bounded period of elevated support after go-live, with measured exit criteria and a receiving-organisation owner. |
 | **Reversion plan** | The rehearsed route back, with a trigger, a decision-maker, a time limit and a latest-possible-reversion point. |
@@ -391,6 +443,12 @@ closeout has no owner and no baseline (16.1.1).
    thing was built as specified, and nothing whatever about whether the organisation can run it.
 3. *What must a hypercare period state that a date cannot?* — A measured exit criterion, so that the
    period ends when the service is stable rather than when the calendar says so.
+4. *Which readiness conditions get a probability, and which do not?* — Discretionary conditions,
+   which admit degree, get a `pᵢ`; mandatory preconditions are recorded met or not met with their
+   approving authority named, and appear neither in the product nor in the go/hold economics (16.1.3).
+5. *A safety case is not yet closed and the cost of delay is large. What is the option set?* — Hold.
+   There is no option set below the gate block, and pricing the alternatives would state a figure at
+   which the precondition could be waived (16.1.4).
 
 ---
 
@@ -1326,8 +1384,13 @@ honest — which is the whole return on writing it.
 Invariants to test on any transition and closeout, each cheap and each diagnostic.
 
 The handover trigger is a **condition set**, not a date, and each condition is assessable by someone
-who is not delivering it. The readiness figure presented to the go-live decision is the **conjunction
-`∏ pᵢ`**, not an average, and the paper shows both the independent and the `min(pᵢ)` bounds. A
+who is not delivering it. The condition set is **split into two blocks**: no mandatory precondition —
+safety case, regulatory or licence approval, privacy assessment, statutory notification, takeover
+certificate — is represented as a probability, each is recorded met or not met with its approving
+authority named, and **no gate-block item appears anywhere in the go/hold economics**, since a cost
+attached to it is a price at which it could be waived. The readiness figure presented to the go-live
+decision is the **conjunction `∏ pᵢ`** over the *discretionary* conditions, not an average, and the
+paper shows both the independent and the `min(pᵢ)` bounds. A
 **service test** exists and was run by the receiving organisation. Hypercare has a **measured** exit
 criterion. A **rehearsed reversion plan** exists with a latest-possible-reversion point. The receiving
 organisation has a **funded run line** and the whole-life cost appears in the case. Retention releases
@@ -1350,7 +1413,8 @@ decision base failed.
 
 - **Healthcare.** Clinical safety governs the go-live decision and is not delegable to a project
   authority: a clinical safety case and its hazard log must be closed by clinical governance before
-  transition, and a reversion plan must be viable at any point because the fallback is patient care,
+  transition — the leading item of 16.1.3's gate block, recorded met or not met and never as a
+  probability — and a reversion plan must be viable at any point because the fallback is patient care,
   not a batch job. Benefits are overwhelmingly capacity rather than cash (Domain 2, KA 2.3.2), which
   makes the measure definition of 16.4.1 the whole argument.
 - **Public sector and government.** Closure reporting is frequently statutory and published, benefits
@@ -1584,7 +1648,21 @@ to fix retrieval — the one intervention that actually pays here at seven to on
 
 ### Toolkit 16.T.1 — Transition readiness certificate
 
-One page per receiving unit, signed by the receiving organisation. Rows: each readiness condition, its
+One page per receiving unit, signed by the receiving organisation, in **two blocks that never share a
+column**.
+
+**Block A — mandatory preconditions (no probability column).** One row per item: the precondition,
+the **external or independent authority** that grants it, the status recorded as **met / not met**
+only, the date it was granted, and the reference to the granting instrument. The standing rows are
+the safety case and its hazard log closed by the accountable safety authority, regulatory or licence
+approval, the data-protection or privacy assessment, statutory notifications, and contractual
+takeover certificates — with any further precondition the sector imposes. Beneath Block A, a
+**signature line for the approving authority itself**, by name and role, distinct from and above the
+project's and the receiving organisation's signatures: the certificate is not complete on the
+project's signature alone. A single "not met" in Block A ends the certificate — there is no
+weighting, no probability and no offsetting entry, and the certificate is issued as a **hold**.
+
+**Block B — discretionary conditions (the arithmetic).** Rows: each readiness condition, its
 owner (who must not be the person delivering it), its objective assessment method, its assessed
 probability `pᵢ` with the basis of the assessment named, and its evidence reference. Footer, computed
 and printed rather than described: the **conjunction `∏ pᵢ`**, the averaged figure alongside it so the
@@ -1627,7 +1705,8 @@ named verifier, decision-maker — with a monthly count of records missing any o
 ## Exam preparation — Domain 16
 
 **What is assessed.** What handover transfers and what it cannot; condition-based handover; the
-distinction between works tests and service tests; **readiness as a conjunction and its arithmetic**;
+distinction between works tests and service tests; **the split between the gate block of mandatory
+preconditions and the discretionary conditions**; **readiness as a conjunction and its arithmetic**;
 proportional-shortfall ranking of remediation; the hold-or-go decision under both correlation
 assumptions; hypercare exit criteria and the reversion plan; operational transition with a funded run
 line and whole-life cost; retention, defects liability and warranty; **the final account and its
@@ -1645,7 +1724,10 @@ Monthly carrying cost, `EMV` of determination, breakeven settlement price and th
 and the interaction term. Present value of an operating cost over an appraisal horizon. Breakeven
 retrieval rate. Retention cost against `P(need) × consequence`, and the breakeven need probability.
 
-**The traps.** Reporting an averaged readiness figure as a probability (16.1.3, Exercise 16.1) ·
+**The traps.** Entering a mandatory precondition — a safety case, a licence approval, a privacy
+assessment — as a probability in the readiness product, or pricing it in the hold-or-go comparison,
+which states a figure at which it could be waived (16.1.3, 16.1.4) · reporting an averaged readiness
+figure as a probability (16.1.3, Exercise 16.1) ·
 ranking readiness remediation by absolute gap rather than by the ratio `p′/p` (Exercise 16.1) ·
 omitting the residual failure rate after an uplift, which makes readiness work look better than it is
 (MCQ 16.1-D) · treating `min(pᵢ)` as the expected case rather than the correlated bound (16.1.3) ·
@@ -1675,8 +1757,12 @@ lives — behind the whole-life comparison of 16.2.1 and Case study B.
 
 ## Domain 16 summary
 The project ends; the account does not. This domain replaces the handover *date* with a handover
-*condition*, and shows that readiness is a **conjunction**: Meridian's seven go-live conditions,
-averaging **90.71 %** on the programme dashboard, gave a probability of a clean go-live of
+*condition*, and splits that condition set in two. Mandatory preconditions — the safety case and its
+hazard log, regulatory and licence approvals, the privacy assessment, statutory notifications,
+takeover certificates — are recorded met or not met with their approving authority named, carry no
+probability and are never traded against the cost of delay; while one is open the only decision is
+hold. Above that gate block, readiness is a **conjunction**: Meridian's seven discretionary go-live
+conditions, averaging **90.71 %** on the programme dashboard, gave a probability of a clean go-live of
 **49.79 %** — a gap of nearly forty-one percentage points between the number that was reported and the
 number that mattered. The remediation ranking follows the ratio `p′/p`, so the clinical champion at
 0.80 was worth **11.20 points** against **1.04** for training at 0.96; even all seven conditions at

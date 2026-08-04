@@ -257,7 +257,7 @@ changes every quarter records nothing over time.
 | 15.T.1 | Programme dependency register with a computed milestone probability | One row per dependency: reference · milestone it feeds · what is needed · owner on the giving side |
 | 15.T.2 | Multi-period portfolio allocation sheet | A grid: candidates down the side; the binding capability's demand per period across the top, plus |
 | 15.T.3 | Portfolio benefits bridge | A single reconciliation, top to bottom, published with every investment paper: gross claimed benefit |
-| 16.T.1 | Transition readiness certificate | One page per receiving unit, signed by the receiving organisation. Rows: each readiness condition, its |
+| 16.T.1 | Transition readiness certificate | One page per receiving unit, signed by the receiving organisation, in two blocks that never share a |
 | 16.T.2 | Closeout and final account pack | Four sections, each a table. Commercial: per contract — original sum, approved variations, claims |
 | 16.T.3 | Benefits closing account and retention schedule | Two linked artefacts, owned by the benefits owner and reported to the body that approved the case. |
 

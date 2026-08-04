@@ -283,8 +283,8 @@ displaced; D inverts KA 1.2, where accountability for delivery stays with the le
 
 ## Knowledge Area 1.2 — The project leader's accountability
 
-*Topics: 1.2.1 accountability and responsibility · 1.2.2 the obligation set · 1.2.3 the
-professional standard of care.*
+*Topics: 1.2.1 accountability and responsibility · 1.2.2 the obligation set · 1.2.2a interests,
+competence and confidentiality · 1.2.3 the professional standard of care.*
 
 ### 1.2.1 Accountability and responsibility
 
@@ -333,7 +333,7 @@ That is not a policy choice PCI made; it follows from what accountability is.
 
 ### 1.2.2 The obligation set
 
-A project leader owes duties in four directions, and the skill is holding them together honestly
+A project leader owes duties in five directions, and the skill is holding them together honestly
 rather than pretending they never conflict:
 
 | To | Owes | Typical conflict |
@@ -342,6 +342,15 @@ rather than pretending they never conflict:
 | **Team** | Clarity, safety, achievable asks, fair credit | Absorbing schedule pressure by quietly overloading people |
 | **Users / customers** | A result that is genuinely fit for purpose | Delivering on time by descoping what users needed most |
 | **Public / third parties** | Safety, legality, honest claims, environmental care | Cost pressure meeting a safety or compliance margin |
+| **Profession / self** | Work within competence, confidentiality of entrusted information, declaration of interests, honest representation of credentials | Accepting a role, or an opinion, the leader is not competent or not independent to give |
+
+The fifth row is different in kind from the first four and is the one most often left out. The others
+are owed to a party who can notice the breach and complain about it; this one is owed to the standing
+of the discipline, and its breaches are invisible from outside — the panel member with an
+undisclosed stake, the assurance reviewer marking their own plan, the signature on an assessment the
+signatory was not qualified to give. Because nobody is placed to raise them, they have to be raised
+by the person holding them, which is what makes the fifth row an *instrument* rather than a
+sentiment. 1.2.2a supplies the instrument.
 
 **The escalation duty.** When these conflict beyond the leader's authority to resolve, the
 professional act is to escalate with options — not to absorb the conflict silently and hope. An
@@ -427,6 +436,72 @@ arithmetic, because "escalate early" is advice everyone agrees with and almost n
 > thirty-nine audit and then flattening, against a low blue line for the same remedy authorised
 > twenty-six weeks earlier, the gap between them marked as the value of the timing.
 
+### 1.2.2a Interests, competence and confidentiality
+
+**Definition.** An **interest** is anything capable of affecting, or of appearing to affect, a
+person's judgement on a matter before them: a financial stake, an employment or commercial
+relationship, a personal or family connection, authorship of the thing being assured, or a future
+role that depends on the outcome. The appearance is part of the definition, not a softening of it —
+1.4.1's daylight test asks whether every party seeing the full picture would still regard the
+decision as impartial, and an interest that fails that test has already done its damage whether or
+not it moved a single judgement.
+
+The duty is not to have no interests, which is impossible in a discipline where the same small
+population of people sponsors, delivers, assures and buys. It is a four-step sequence, and each step
+has a named owner and a place to live.
+
+- **Identify.** A standing question, asked at appointment to any role and again as each gate,
+  selection panel, evaluation or approval is convened: *do I hold an interest in what is about to be
+  decided?* Asking it once at induction produces a register that is accurate on the day it is
+  written and wrong thereafter, because interests are acquired.
+- **Declare.** In writing, to the chair, **before the item is taken** — not at the end of the
+  discussion, and not after the decision. A declaration made afterwards is not a declaration; it is
+  an explanation.
+- **Record.** In the decision record itself, as a field of its own, with a **nil return** recorded
+  when there is nothing to declare so that silence is evidence rather than an absence of evidence
+  (Domain 3, KA 3.3.4 for the field, and Toolkit 3.T.3 for the monthly counts it makes possible).
+- **Abstain.** The interested party takes no part in the discussion or the decision, and the minute
+  records **who decided instead**. Abstention that is not minuted is indistinguishable from
+  participation when the file is read later, which is when it will be read.
+
+Two rules are hard, and each is hard because the soft version of it is the one that fails in
+practice.
+
+**An interest that cannot be managed by abstention requires the role to change, not the record to be
+silent.** Abstention works for an item; it does not work for a standing position. Where the interest
+touches the substance of the role itself — the assurance lead who wrote the plan, the panel chair
+whose former employer is bidding, the reviewer whose next contract depends on the answer — the
+remedy is to move the person or move the work, and to say in the record that this was done. An
+organisation that meets a structural interest with a declaration and a decision taken anyway has
+recorded the conflict without managing it, which is a worse position than not knowing, because it
+now has evidence that it knew.
+
+**A leader may not sign an opinion, an estimate or an assessment they are not competent to give.**
+The pressure runs the other way, because signing is quick and obtaining competence is slow, and
+because the request usually arrives as a courtesy — *you just need to sign this off*. The
+professional act is to **obtain the competence** — a qualified specialist, a named second signature,
+an independent reviewer of the right discipline — or to **decline**, in writing, saying what would
+have to be true for the signature to be available. A signature is a statement that the signatory
+checked something they were able to check; where that is not so, the file records diligence that did
+not happen, and 1.2.3's whole apparatus of care rests on a document that is not true.
+
+**Confidentiality is a standing duty, not an AI failure mode.** Information entrusted for the work —
+a supplier's pricing, an employee's circumstances, a patient's record, an unannounced strategy — is
+held for the purpose it was given for and no other, and that duty survives the project, the
+employment and the tool. 1.4.2 lists confidentiality leakage among the failure modes to expect from
+AI use, and that entry is a *special case* of this duty rather than its origin: pasting project data
+into a tool is a disclosure for the same reason that discussing it in a lift is, and the obligation
+that both breach was in force before either was possible.
+
+Everything downstream of this subsection is an application of it. Selection scoring depends on who
+scored (Domain 2, KA 2.2.3); steering membership depends on who may vote (Domain 3, KA 3.2.2);
+assurance depends on who may not review their own work (Domain 3, KA 3.3.2); procurement depends on
+declaration and exclusion before the panel is constituted (Domain 10, KA 10.2.3); reserve draws
+depend on who may approve a release that covers their own overspend (Domain 8, KA 8.3.2); and the
+verification signature on an AI-assisted artefact depends on a verifier who is both competent and
+independent (1.4.3). None of those machineries states a rule about **who may not decide**. This one
+does, and they inherit it.
+
 ### 1.2.3 The professional standard of care
 
 Professionals are judged not on outcomes alone but on whether they exercised the **care a
@@ -477,6 +552,12 @@ legal duty.
 | **Timing value of an escalation** | Weeks of earliness × the run rate the remedy recovers — what the *timing* alone is worth, separate from the remedy. |
 | **Silent measure** | An outcome measure reported by two parties, owned by neither, and never accompanied by a proposed action. |
 | **Legal liability** | Who must compensate whom, set by contract and jurisdiction; distinct from professional accountability and capable of sitting elsewhere. |
+| **Declared interest** | Anything capable of affecting, or of appearing to affect, judgement on a matter before a person — financial, employment, personal, authorship of what is being assured, or a future role dependent on the outcome — disclosed in writing to the chair before the item is taken. *Context flag: the stakeholder sense of "interest" (attention paid) is Domain 11, KA 11.1.* |
+| **Interest duty** | The four steps of 1.2.2a: identify at appointment and at each gate · declare in writing before the item is taken · record in the decision record, nil returns included · abstain, with the minute naming who decided instead. |
+| **Abstention** | The interested party taking no part in the discussion or the decision, minuted with the name of whoever decided in their place. |
+| **Structural interest** | An interest touching the substance of a role rather than a single item; managed by changing the role or the work, never by a declaration followed by the decision being taken anyway. |
+| **Competence limit** | The boundary beyond which a leader may not sign an opinion, estimate or assessment; the professional act is to obtain the competence or to decline in writing. |
+| **Confidentiality duty** | The standing obligation to hold entrusted information for the purpose it was given for and no other; it survives the project and the tool, and predates both. |
 | **Standard of care** | The care a competent practitioner would exercise in the circumstances. |
 
 ### Sample MCQs — KA 1.2
@@ -553,6 +634,15 @@ governance defect to the tooling.
    **recovers**, not the size of the problem: 5,712 a week, not 6,120 (1.2.2).
 6. *Is professional accountability the same as legal liability?* — No: liability is set by contract
    and jurisdiction and may sit elsewhere or be capped; take that position from counsel (1.2.1).
+7. *Name the four steps of the interest duty.* — Identify at appointment and at each gate; declare in
+   writing to the chair before the item is taken; record in the decision record, nil returns included;
+   abstain, with the minute naming who decided instead (1.2.2a).
+8. *An interest cannot be managed by abstention. What changes?* — The role or the work, not the
+   record: a declaration followed by the decision being taken anyway records the conflict without
+   managing it (1.2.2a).
+9. *What is the professional response to a request to sign an assessment outside one's competence?* —
+   Obtain the competence — a qualified specialist or a named second signature — or decline in
+   writing, stating what would have to be true for the signature to be available (1.2.2a).
 
 ---
 
@@ -1062,7 +1152,9 @@ decisions taken under pressure. Four recurring tests:
 
 **Conflicts of interest** are handled by disclosure and separation: declared before engagement,
 managed or declined — and tested by daylight, *would every party, seeing the full picture, still
-regard this as impartial?* Where the answer wavers, impartiality has already failed.
+regard this as impartial?* Where the answer wavers, impartiality has already failed. The operating
+instrument is 1.2.2a's four steps — identify, declare, record, abstain — and the daylight test is
+how the first of them is answered honestly.
 
 ### 1.4.2 The responsible-AI principle applied
 
@@ -1090,7 +1182,9 @@ Three concrete leadership acts, which Domain 14 then systematises:
 
 **Name the owner.** Every AI-assisted artefact that informs a decision has a human owner who
 verified it. Anonymous machine output has no place in a governed decision record (Domain 3,
-KA 3.3.4).
+KA 3.3.4). The signature carries the duties of 1.2.2a with it: a verifier who is not competent to
+check the artefact has certified nothing, and one who is verifying work whose outcome they have an
+interest in has certified less than nothing, because the record now says the check was independent.
 
 **Make verification proportionate and real.** A summary for internal reading needs a glance; a
 forecast in a board paper needs recomputation and a source trace; a safety-relevant analysis needs
@@ -1495,8 +1589,14 @@ What a project leader cannot delegate in this domain:
 - **The benefits chain's honesty.** Each claimed benefit traced to a measured outcome with an
   owner. A leader who lets outputs be reported as benefits has authorised the failure of
   Meridian's first eighteen months.
-- **The obligation set, held openly.** Sponsor, team, users, public — with conflicts escalated
-  with options rather than absorbed in silence.
+- **The obligation set, held openly.** Sponsor, team, users, public — and the profession itself,
+  which is the row that says who may not decide — with conflicts escalated with options rather than
+  absorbed in silence.
+- **The declaration that precedes the decision.** Interests identified at appointment and at every
+  gate, declared in writing before the item is taken, recorded with nil returns, and answered by
+  abstention with the minute naming who decided instead. A director's practical test is to open the
+  last three gate papers and look for the field; where it is absent, the organisation has no way of
+  knowing whether it has ever had a problem (1.2.2a).
 - **Bad news made safe.** The single highest-leverage cultural act available, because it converts
   irreversible surprises into recoverable problems — and on Meridian it was worth **USD 148,512**,
   1.13 times the remedy it would have funded, for the price of one message (1.2.2).
@@ -1624,7 +1724,9 @@ whole case study) · saying accountability is "shared" (1.2.1) · assigning acco
 vendor or a tool (MCQ 1.2-A, 1.2-B) · comparing an acceleration cost against annual rather than
 saved-period benefit (Exercise 1.2) · reading a delivery success as a programme success (1.1.1) ·
 accepting "we absorbed it" (1.3.1) · uniform AI verification depth (1.4.3) · judging the standard
-of care by outcome alone (1.2.3) · **netting a one-off capital variance against an annual benefit
+of care by outcome alone (1.2.3) · **treating a declared interest as a licence to decide the item**,
+when declaration is the second step of four and abstention is the fourth (1.2.2a) · **signing an
+opinion or assessment outside one's competence because the request arrived as a courtesy** (1.2.2a) · **netting a one-off capital variance against an annual benefit
 flow** (WE 1.1.1, Exercise 1.4) · **valuing early warning at the size of the problem rather than at
 the run rate the remedy recovers** (WE 1.2.2 — 6,120 instead of 5,712) · **dividing cost by potential
 rather than realistic benefit when computing payback**, which understates it by exactly `1/a`
@@ -1655,9 +1757,13 @@ Project leadership is a distinct profession because temporary work fails distinc
 discovered late become irreversible, teams have no accumulated trust to draw on, and lead time is
 the cheapest resource available and is spent whether used or not. The discipline rests on a
 precise view of accountability — responsibility is delegable, the obligation to answer is not, one
-name per outcome — held across four directions at once (sponsor, team, users, public) with
-conflicts escalated rather than absorbed, and judged by the care a competent practitioner would
-exercise rather than by outcome alone. Two habits of mind make a leader rather than a
+name per outcome — held across five directions at once (sponsor, team, users, public, and the
+profession itself) with conflicts escalated rather than absorbed, and judged by the care a competent
+practitioner would exercise rather than by outcome alone. The fifth direction is the one that says
+who may *not* decide: interests identified, declared in writing before the item is taken, recorded
+with nil returns and answered by abstention; a structural interest met by moving the role rather than
+by a silent record; and no signature given on an opinion, estimate or assessment the signatory is not
+competent to give. Two habits of mind make a leader rather than a
 coordinator: systems thinking, which expects feedback, delay, local optimisation and pressure that
 relocates instead of vanishing; and the outputs–outcomes–benefits–value chain, which Meridian
 turns into arithmetic — 40 clinics installed produce USD 685,440 of annual benefit at 70 %

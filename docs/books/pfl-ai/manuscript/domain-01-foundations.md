@@ -320,7 +320,7 @@ governed habits start in Domain 1 because the failure modes do: a fluent but inv
 verified against the registry discipline (every claimed deal traced to a public record), and
 the stakeholder analysis an AI drafts is walked, party by party, by someone who has sat
 across from those parties. **AI proposes; the professional verifies, decides and remains
-accountable.** Worked example 1.3.3 prices exactly this failure on Kestrel's own facility, and
+accountable.** Worked example 1.3.4 prices exactly this failure on Kestrel's own facility, and
 the number is larger than most readers expect.
 
 **One verification habit specific to this KA.** The two computations above are the ones a machine
@@ -943,8 +943,9 @@ the debt rate and so puts the crossover in the wrong place.
 
 ## Knowledge Area 1.3 — Ethics, fiduciary awareness and responsible AI
 
-*Topics: 1.3.1 obligations and duties · 1.3.2 conflicts and independence · 1.3.3 the
-responsible-AI principle in finance.*
+*Topics: 1.3.1 obligations and duties · 1.3.2 financial crime: bribery, sanctions and the
+money-laundering perimeter · 1.3.3 conflicts and independence · 1.3.4 the responsible-AI principle
+in finance.*
 
 ### 1.3.1 Obligations and duties
 
@@ -959,7 +960,208 @@ misrepresentation, whatever the spreadsheet says. *Candour about limits*: this b
 rule — educational reference, not individualized advice; jurisdiction-specific matters go to
 qualified counsel and advisers — is the same professional humility applied to oneself.
 
-### 1.3.2 Conflicts and independence
+### 1.3.2 Financial crime: bribery, sanctions and the money-laundering perimeter
+
+**Why this belongs in the foundations.** Of the duties listed in 1.3.1, this is the one whose breach
+is a **criminal offence** — for the organisation and, in many regimes, for the individual who
+authorised the payment, tolerated the arrangement or declined to ask. It belongs here rather than in
+a compliance annexe because of where this book's projects are actually developed: in jurisdictions
+the sponsor does not live in, reached through local agents, development consultants and joint-venture
+partners, and financed by institutions whose conditions precedent and continuing covenants routinely
+include anti-corruption and sanctions representations. A conflict of interest (1.3.3) is a
+professional failure priced in fees and franchise. This one is priced in prosecutions, debarment from
+public procurement, an event of default under the finance documents, and a financing that cannot
+close because no lender will take the representation. It is also the duty most often met for the
+first time at the worst moment — on a critical path, in an unfamiliar jurisdiction, on the
+counterparty's recommendation.
+
+**The prohibited acts, in plain terms.** Four families, stated as a leader needs to recognise them
+rather than as any statute frames them.
+
+- **Bribery** is offering, promising or giving — or requesting, agreeing to receive or accepting — a
+  financial or other advantage to secure the improper performance of a function. Both sides of the
+  transaction are caught. The advantage need not be money (a job for a relative, a scholarship, a
+  subcontract, hospitality out of all proportion to the occasion), it need not actually be paid, and
+  the project need not win: the offer completes the act.
+- **Bribery of a foreign public official** is a distinct and usually wider offence, and it is the one
+  this discipline meets most. "Public official" is drawn broadly enough to reach the counterparties a
+  project deals with every day — state-owned utilities and offtakers, permitting and customs
+  authorities, sovereign funds, port and grid operators — and the improper-performance element may
+  not be required at all where the advantage was intended to obtain or retain business.
+- **A facilitation payment is a bribe in most regimes.** A small payment to secure a routine act to
+  which the project is already entitled — releasing a permit that has been granted, clearing goods
+  already cleared, connecting a service already paid for — is prohibited under most anti-bribery
+  regimes whatever it is called locally and however normal it is said to be. The few regimes that
+  carve out an exception define it narrowly and audit it. Treat the category as prohibited, and treat
+  any claimed exception as something to be advised in writing by counsel for that jurisdiction before
+  the payment, not after. A payment made under a genuine threat to personal safety is a different
+  question entirely: it is reported the same day to compliance and counsel, and it is never filed as
+  an ordinary expense.
+- **Failure to prevent.** Several regimes make it an offence for an organisation to fail to prevent
+  bribery committed by an **associated person** — an agent, consultant, joint-venture partner,
+  distributor or subcontractor performing services for or on its behalf. Where such an offence
+  exists, **not knowing what the intermediary did is not a defence**; the organisation is answerable
+  for conduct it never saw. Where a defence exists at all it is a procedures defence, and it turns on
+  what the organisation actually did and can evidence — diligence performed, approval given by
+  someone outside the deal, terms imposed, payments monitored — not on what its policy says.
+
+**Sanctions, and the money-laundering perimeter.** These are separate regimes with separate logic and
+neither is a subset of anti-bribery. **Sanctions** are not one list but many overlapping measures —
+asset freezes, prohibitions on dealing, sectoral and export restrictions — imposed by different
+authorities, engaged by different connecting factors (nationality of a person or entity, place of
+incorporation, the currency a payment settles in, the use of a jurisdiction's financial system or its
+goods), and changed without notice. Two properties matter operationally: a party need not be named to
+be caught, because ownership and control tests can pull an unlisted company into a designation
+through its shareholders; and a screen is a **repeated** control, because a clean party at signing can
+be designated the following quarter. **Money laundering** concerns dealing with the proceeds of
+crime, and its practical bite on a project leader is usually indirect: the project's banks, advisers
+and insurers are themselves regulated, so their obligations arrive as the project's conditions —
+beneficial-ownership disclosure, source-of-funds evidence on equity, customer diligence on every
+payee. A sponsor that cannot evidence where its equity came from does not reach financial close.
+Note also that alerting the subject of a suspicion or of a report — **tipping off** — is itself an
+offence in many regimes, which is why the escalation route below runs where it does.
+
+**Red flags that oblige a leader to stop.** None of these is proof of anything, and treating them as
+accusations is its own failure. Each is a condition under which the professional may not simply
+continue: the flag is resolved and cleared, in writing, or the step does not happen.
+
+| Red flag | Why it is a flag | What it obliges |
+|---|---|---|
+| An agent or adviser whose fee is **success-based and disproportionate** to any service that can be described | The fee is priced against an outcome rather than against work, so what is being bought cannot be read off the invoice; the excess over demonstrable service is unexplained by construction | No engagement until the service is specified, the fee benchmarked against comparable work, and both approved in writing outside the deal team |
+| An **intermediary introduced by the counterparty** | The party on the other side of the negotiation is choosing who sits inside your payment chain — the one relationship a leader cannot diligence by asking the introducer | Disclose the introduction, diligence the party independently of anything the counterparty supplies, and refer the engagement to compliance or counsel before any mandate is signed |
+| An **unexplained offshore payment route** | Distance between where a service is performed and where it is paid is the common signature of both bribery and laundering, and an unexplained route is unexplained however ordinary the bank is | Payment goes to the contracting entity, in the contracting jurisdiction, into an account in its own name — any departure needs a documented commercial reason approved before payment |
+| A request to **route payment to a third jurisdiction**, or to a party other than the contracting one | The same signature, made explicit, and usually made late — after the commercial terms are agreed and the leverage has moved | Stop the payment. Not a treasury exception: the request itself is escalated, and the underlying arrangement is re-examined |
+| A **politically exposed person** in the ownership or control chain | A commercial payment may be a channel to someone who decides the project's permits, tariff or award. This is a status, not a finding of wrongdoing — what it changes is the standard of enquiry and who must approve | Enhanced diligence to natural persons, the connection recorded, and approval at a level above the deal team; where the person can influence a decision affecting the project, expect the answer to be no |
+| **Beneficial ownership that cannot be traced to natural persons** | A chain stopping at a corporate name in a jurisdiction that does not publish is not a diligence result; it is the absence of one | No engagement and no payment on an untraced chain — the leader records what was asked, what was refused, and by whom |
+| **Urgency asserted by the party being diligenced** ("the minister travels on Friday") | Time pressure sourced from the counterparty is the standard method for compressing the one control that would have caught the problem | Programme relief, not diligence relief. The date moves; the check does not |
+
+**Decision rights and escalation.** Who decides is as much of the control as what is decided.
+
+- **Engaging an intermediary is not the deal team's decision.** An agent, adviser or introducer is
+  engaged only on a written justification approved by compliance or counsel together with a named
+  officer **outside the commercial line** — the people whose objectives the engagement does not
+  serve. A team that can appoint its own agent has no control at all.
+- **On discovery, the escalation route is compliance or counsel — never the commercial line.** Not
+  the deal principal, not the sponsor's commercial director, not the counterparty. The commercial
+  line has the strongest incentive to resolve the matter quietly and may itself be the party being
+  reported; and where legal privilege is available at all, the route through counsel is the only one
+  that may preserve it.
+- **Do not investigate, confront or warn.** No questioning of the agent, no call to the counterparty,
+  no note to the intermediary's sponsor. Beyond destroying the evidential position, alerting the
+  subject may be a criminal offence in its own right (tipping off, above).
+- **Preserve the record before anything else.** Correspondence, the diligence file, approval trails
+  and payment instructions are left exactly as they are and protected from routine deletion. This is
+  the one step that cannot be done later.
+- **The leader may not proceed pending clearance.** No payment is made, no mandate or amendment is
+  signed, no condition precedent is certified and no drawdown is requested on the affected item until
+  the flag is cleared in writing by the function that owns it. The milestone slips, and the slippage
+  is reported as what it is. Schedule pressure is not clearance, and a commitment already given to a
+  counterparty is not clearance either. Continuing while the question is open is not a neutral act of
+  waiting — it is a decision to proceed, taken by whoever kept working.
+
+**The evidence that must exist.** The test is not whether the leader believed the transaction clean;
+it is what a lender's reviewer, an auditor or a prosecutor can be shown two years later.
+
+- **Counterparty and beneficial-ownership due diligence** on sponsors, partners, contractors and
+  intermediaries — traced to natural persons, dated, with the source of each fact recorded and the
+  gaps named as gaps rather than smoothed over.
+- **Sanctions screening of sponsors, contractors and their supply chain**, run at financial close and
+  re-run **on change of control**, on the admission of any new party, and on a stated refresh cycle
+  through construction and operation — with the hits, the clearance reasoning and the clearer's name
+  kept, not merely the clean result.
+- **The written intermediary justification**: what service is being bought, why this party, how the
+  fee was set and against what comparison, who approved it and on what date — together with the
+  engagement terms that make the file mean something (anti-bribery warranties, audit and inspection
+  rights, no subcontracting or assignment without consent, termination on breach).
+- **The payment-route record**: which entity was paid, in which jurisdiction, into an account in
+  whose name, against an invoice describing what — and, for any departure from the contracting party
+  or jurisdiction, the reason and the approval that preceded the payment.
+- **The escalation record**: what was raised, by whom, to whom, on what date, what was decided and
+  what was done while the question was open — which is the entry that answers the only question
+  anyone asks afterwards.
+
+**The external instruments, and what each of them is not.** Three are worth naming, because they are
+named constantly and misdescribed almost as often. The **OECD Convention on Combating Bribery of
+Foreign Public Officials in International Business Transactions** is a **treaty**: its obligations
+bind the states that are Party to it, and it takes effect only through each signatory's own domestic
+criminal law, which the signatories have written differently. It is therefore not itself law in any
+jurisdiction, and what applies to a transaction is the domestic offence, not the Convention. The
+**FATF Recommendations** are an **intergovernmental standard** on combating money laundering and the
+financing of terrorism and proliferation: they are addressed to countries and reach a project only
+through national legislation and the supervised institutions that implement it — they are not
+legislation anywhere and confer no obligation directly. **ISO 37001** is a **voluntary
+management-system standard** for anti-bribery management systems; an organisation may be certified
+against it, and **certification is not a legal defence** — it is a third party's opinion about a
+management system at a point in time, and it says nothing about the transaction in front of you. All
+three are named here for identification only, none is reproduced or summarised as a source of
+requirements, and none of the issuing bodies is associated with this book.
+
+**Standing caution — and it is not a formality.** Which offence applies, whether it reaches conduct
+by non-nationals or conduct wholly abroad (**extraterritorial reach**), who counts as an associated
+person, which sanctions regimes are engaged by a given payment route, and whether an
+adequate-procedures defence exists at all, are **jurisdiction-specific and time-variable questions
+for qualified counsel**. Nothing in this topic states the law of any jurisdiction, and nothing in it
+is a compliance programme. What it fixes is the professional standard: the acts a leader must
+recognise, the flags that stop the work, the route the concern travels, and the file that must exist.
+
+**Where the machine helps, and where it must not decide.** Screening and diligence tools are genuine
+accelerants here — name and ownership matching across designation lists, adverse-media sweeps,
+corporate-registry traversal — and they fail in the two directions that matter: false positives that
+tempt a busy team into bulk clearance, and false negatives from transliteration, aliases and
+ownership held one layer beyond what the tool traverses. A screening result is therefore a candidate
+list, never a clearance. **AI proposes; the professional verifies, decides and remains accountable**
+(1.3.4) — which here means a named human clears each hit, states the reason, and signs it, and that
+the reason is recorded in terms someone else can test. A cleared hit with no reasoning on the file is
+indistinguishable, two years later, from a hit nobody looked at.
+
+**Decision walkthrough 1.3.2 — the agent introduced by the counterparty.** *This book's worked
+examples run in five steps; so does this one, with a decision rule in place of a formula, because the
+output here is a decision and not a number. Fictitious throughout.*
+
+1. **Setup.** A sponsor is developing a water concession in a market it has not worked in. Three
+   weeks before bids are due, the grantor's project director recommends a local "development
+   consultant" who "knows how these are evaluated". The consultant proposes a fee payable only on
+   award, set as a percentage of capital cost, with the mandate signed by an entity incorporated in a
+   third jurisdiction and payment to an account in a fourth. The consultant's ownership resolves to a
+   holding company whose shares are held by a nominee; one director shares a surname with a serving
+   regulator. The bid manager wants to sign today.
+2. **The rule.** A red flag that cannot be resolved does not permit the work to continue: the leader
+   stops the specific step, escalates outside the commercial line, preserves the file, and proceeds
+   only on written clearance. Applied to intermediaries, the engagement decision does not belong to
+   the deal team at all.
+3. **Applying it.** Five flags are present at once, not one — a success-only fee that is
+   disproportionate to any describable service; an intermediary introduced by the counterparty; a
+   contracting entity in a third jurisdiction and a payment route to a fourth; an ownership chain
+   that stops at a nominee; and a possible connection to a person who may influence the award. The
+   introduction from the grantor's own project director is the gravest of them, because it means the
+   evaluating side is choosing who is paid on the bidding side. The bid deadline is not a sixth
+   consideration to be weighed against the other five: it is programme pressure, and it is relieved
+   by moving the date or by not bidding.
+4. **Result.** The mandate is not signed and no fee, retainer or expense is paid. The matter goes to
+   compliance and counsel the same day — not to the sponsor's commercial director, and not back to
+   the grantor's project director, who is the subject of the concern. Correspondence, the proposed
+   mandate and the diligence file are preserved. Nobody questions the consultant, and nobody tells
+   him why the signature has not come. The bid team is told only that the engagement is on hold
+   pending clearance and is instructed to plan the bid without an intermediary. If the answer does
+   not arrive before the deadline, the sponsor bids without the consultant or does not bid.
+5. **Interpretation.** Three readings, and the third is the one to carry. **The stop is the
+   decision.** There is no state in which the leader is "still considering" while the mandate is
+   signed and the fee is paid; work that continues has decided to continue, and the person who kept
+   working is the person who decided. **The escalation route is a control, not etiquette.** Sending
+   this to the commercial director would deliver it to the one person whose objectives the engagement
+   serves, and telling the grantor's project director would tip off the source of the introduction —
+   both destroy the enquiry, and the second may be an offence. **And the exposure is not conditional
+   on knowing.** Where a failure-to-prevent offence applies, the sponsor answers for what an
+   associated person does with a fee it approved, whether or not anyone in the deal team ever learns
+   what the fee bought. That is why the control sits at engagement, before the money moves, and it is
+   why "we had no idea" is a description of the problem rather than an answer to it. *Counsel
+   pointer:* whether any offence is engaged on these facts, whose law applies to a bid made by one
+   group company in another company's market, and what the organisation must do having formed a
+   suspicion — including whether a report is mandatory and to whom — are jurisdiction-specific
+   questions for qualified counsel, and the escalation exists precisely so that they are asked by the
+   people qualified to ask them.
+
+### 1.3.3 Conflicts and independence
 
 Project finance concentrates conflicts because the same institutions recur in many roles:
 the adviser who would earn a success fee on close; the sponsor-affiliated contractor pricing
@@ -978,7 +1180,7 @@ reason: partners and committees do sometimes ask to "weigh it commercially", and
 can show that the commercial case points the same way removes the last excuse for not disclosing.
 The structure of the calculation is what carries the lesson.
 
-**Worked example 1.3.2 — the conflict priced at discovery.**
+**Worked example 1.3.3 — the conflict priced at discovery.**
 
 1. **Setup.** Fictitious throughout. An advisory firm holds a mandate advising a grantor on a
    toll-road tender. It is offered a second, unrelated mandate from the lead sponsor of one of the
@@ -1024,7 +1226,7 @@ The structure of the calculation is what carries the lesson.
    regime positively requires are jurisdiction-specific and time-variable questions for qualified
    counsel; nothing here states the law of any jurisdiction.
 
-### 1.3.3 The responsible-AI principle in finance
+### 1.3.4 The responsible-AI principle in finance
 
 The suite principle — **AI proposes; the professional verifies, decides and remains
 accountable** — lands hardest in finance, where machine output *looks* like the work product
@@ -1052,7 +1254,7 @@ caught by different habits, and the second is the one that costs a negotiation. 
 record that satisfies both is short: what was checked, by whom, against what, on what date, and
 what was found. Anything shorter is an assertion that checking happened.
 
-**Worked example 1.3.3 — the precedent that did not exist, priced.**
+**Worked example 1.3.4 — the precedent that did not exist, priced.**
 
 1. **Setup.** Fictitious throughout. Preparing for Kestrel's term-sheet negotiation, an analyst
    asks a general-purpose AI tool for comparable senior margins on recent water-concession
@@ -1101,6 +1303,15 @@ what was found. Anything shorter is an assertion that checking happened.
 | Term | Meaning |
 |---|---|
 | **Fiduciary awareness** | Acting in the principal's interest with loyalty, care and confidentiality. |
+| **Facilitation payment** | A small payment to secure a routine act the project is already entitled to; a bribe in most regimes, whatever it is called locally. |
+| **Failure-to-prevent offence** | An organisation's offence of failing to prevent bribery by an associated person; not knowing what the intermediary did is not a defence. |
+| **Associated person** | Anyone performing services for or on behalf of the organisation — agent, consultant, JV partner, subcontractor — through whom its criminal exposure runs. |
+| **Beneficial ownership** | The natural persons who ultimately own or control a counterparty, traced through the chain rather than to the first corporate name. |
+| **Politically exposed person** | Someone entrusted with a prominent public function, with their close associates and family; a status that raises the standard of enquiry, never a finding of wrongdoing. |
+| **Sanctions screening** | Checking parties and their ownership against applicable designations — at close and on change of control, as a repeated control rather than a one-off. |
+| **Tipping off** | Alerting the subject of a suspicion or a report; an offence in many regimes and fatal to the enquiry in all of them. |
+| **The stop rule** | Where a red flag is unresolved the leader does not proceed pending written clearance: no payment, no signature, no certification. |
+| **Payment-route record** | Which entity was paid, in which jurisdiction, into an account in whose name, against what invoice — with the approved reason for any departure. |
 | **Conflict of interest** | An interest that could bias judgment; declared, managed or declined. |
 | **Daylight test** | Would full disclosure of interests leave the advice trusted? |
 | **Responsible-AI principle** | AI proposes; the professional verifies, decides, remains accountable. |
@@ -1123,7 +1334,7 @@ misrepresentation without preventing it (C); B both refuses the breach and offer
 legitimate route to confidence — evidence. D skips the professional obligation to fix the
 problem before escalating personal exits.
 
-**MCQ 1.3-B `[1.3.2 · Application]`** A bank advising a grantor on a tender also wishes to
+**MCQ 1.3-B `[1.3.3 · Application]`** A bank advising a grantor on a tender also wishes to
 lend to one of the bidders. The minimum acceptable handling is:
 - A. proceed — different departments are involved
 - B. disclose the dual role to the grantor, and either obtain informed consent with effective information barriers or decline one role ✅
@@ -1134,7 +1345,7 @@ lend to one of the bidders. The minimum acceptable handling is:
 department labels alone are not barriers (A); concealment converts a conflict into
 misconduct (C); D is the conflict operating in the open.
 
-**MCQ 1.3-C `[1.3.3 · Recall]`** Under the PCI responsible-AI principle, responsibility for
+**MCQ 1.3-C `[1.3.4 · Recall]`** Under the PCI responsible-AI principle, responsibility for
 an AI-drafted covenant summary used in a credit paper rests with:
 - A. the AI vendor
 - B. the model itself
@@ -1144,7 +1355,7 @@ an AI-drafted covenant summary used in a credit paper rests with:
 *Rationale:* Accountability cannot be delegated to software or its supplier; tool approval
 governs *which* tools may be used, never *who* answers for the output.
 
-**MCQ 1.3-D `[1.3.2 · Application]`** Disclosing a second mandate would cost a firm the 250,000
+**MCQ 1.3-D `[1.3.3 · Application]`** Disclosing a second mandate would cost a firm the 250,000
 fee at risk on it. If concealed and later discovered, the firm loses 900,000 of unpaid fees,
 12,750,000 of jurisdictional franchise and 400,000 of legal cost. The breakeven probability of
 discovery is:
@@ -1153,13 +1364,13 @@ discovery is:
 - C. 1.9608 %
 - D. there is no breakeven — concealment can never pay at any probability
 
-*Rationale:* `250,000/14,050,000 = 1.7794 %` (WE 1.3.2). B divides by the 900,000 of forfeited fees
+*Rationale:* `250,000/14,050,000 = 1.7794 %` (WE 1.3.3). B divides by the 900,000 of forfeited fees
 alone and ignores the franchise, which is the largest term; C counts the franchise and drops the
 forfeited fees and legal cost. D is the answer a reader gives from the duty rather than from the
 arithmetic — the duty is indeed unconditional, but the calculation does have a finite breakeven,
 and being able to state it is what closes a commercial argument.
 
-**MCQ 1.3-E `[1.3.3 · Application]`** A negotiating position taken on an unverified AI-reported
+**MCQ 1.3-E `[1.3.4 · Application]`** A negotiating position taken on an unverified AI-reported
 benchmark held Kestrel's close nine weeks at a cost of delay of 124,133.33 per week. The cost of
 the episode was:
 - A. USD 1,117,200 ✅
@@ -1167,24 +1378,24 @@ the episode was:
 - C. USD 252,000
 - D. USD 124,133
 
-*Rationale:* `9 × 124,133.33 = 1,117,200` (WE 1.3.3). B is the present value of the 60-basis-point
+*Rationale:* `9 × 124,133.33 = 1,117,200` (WE 1.3.4). B is the present value of the 60-basis-point
 prize the false benchmark appeared to offer — the amount at stake, not the amount spent; C is one
 year of that margin difference undiscounted; D prices a single week.
 
-**MCQ 1.3-F `[1.3.3 · Comprehension]`** Under the responsible-AI principle as fixed in this domain,
+**MCQ 1.3-F `[1.3.4 · Comprehension]`** Under the responsible-AI principle as fixed in this domain,
 which statement is correct?
 - A. an approved tool's output may be relied on without further checking, since approval is the control
 - B. verifying a number and verifying a claim are different acts: the first is independent recomputation, the second is tracing the assertion to a source that exists and is the right version ✅
 - C. AI output must be disclosed to the client in every case, however immaterial
 - D. confidentiality obligations do not attach to data entered into an AI tool, because no third party reads it
 
-*Rationale:* 1.3.3 separates the two verification acts precisely because they fail differently and
+*Rationale:* 1.3.4 separates the two verification acts precisely because they fail differently and
 are caught by different habits. A confuses tool governance with output accountability (MCQ 1.3-C);
 C overstates the rule, which attaches to *material* use touching deliverables; D is wrong on the
 foundational point that entering deal data into a tool is itself a disclosure.
 
-**MCQ 1.3-G `[1.3.3 · Evaluation]`** After an unverified benchmark cost Kestrel **1,117,200** of
-delay (WE 1.3.3), four controls are proposed. Which should the leader adopt first?
+**MCQ 1.3-G `[1.3.4 · Evaluation]`** After an unverified benchmark cost Kestrel **1,117,200** of
+delay (WE 1.3.4), four controls are proposed. Which should the leader adopt first?
 - A. prohibit general-purpose AI tools for market and precedent research
 - B. require that no benchmark enter a negotiating position without a source line naming the transaction, the document and the date ✅
 - C. procure an enterprise AI tool whose licence carries a vendor indemnity
@@ -1192,7 +1403,7 @@ delay (WE 1.3.3), four controls are proposed. Which should the leader adopt firs
 
 *Rationale:* the loss arose because an unsourced number became a negotiating position, and a stale
 internal spreadsheet produces the identical loss — so the control that matches the failure is a rule
-about numbers rather than about tools (1.3.3). A is defensible and narrower than the risk: it forgoes
+about numbers rather than about tools (1.3.4). A is defensible and narrower than the risk: it forgoes
 a genuine accelerant while leaving the human failure mode untouched. C buys a commercial remedy the
 profession cannot rely on — on Kestrel's facts none of the 1,117,200 was a loss the licence reached,
 and what a particular indemnity in fact covers is a question for the contract and for counsel rather
@@ -1217,6 +1428,53 @@ duty from the other side — declining to quantify leaves the judgment to whoeve
 one point estimate for another, and an unlabelled prudence misrepresents a forecast exactly as an
 unlabelled optimism does (MCQ 1.3-A).
 
+**MCQ 1.3-I `[1.3.2 · Application]`** Three weeks before bids are due, the grantor's project
+director recommends a local development consultant whose fee is payable only on award, as a
+percentage of capital cost, contracted through an entity in a third jurisdiction. The bid manager
+asks to sign today. The professional response is:
+- A. sign, but cap the fee and add an anti-bribery warranty to the mandate — the warranty transfers the risk
+- B. do not sign, pay nothing, and refer the introduction and the proposed mandate to compliance or counsel; plan the bid without an intermediary and let the deadline take the consequence ✅
+- C. ask the grantor's project director for assurance about the consultant's standing before signing
+- D. sign a short retainer to preserve the option, and complete diligence before any success fee falls due
+
+*Rationale:* several red flags are present at once — a success-only fee disproportionate to any
+describable service, an intermediary introduced by the counterparty, and a contracting route with no
+commercial explanation — and an unresolved flag stops the step (1.3.2). A misreads a warranty as a
+control: it allocates loss between the parties and does nothing about an offence. C asks the source of
+the introduction to vouch for it, and tips off the person who is the subject of the concern. D is the
+commonest professional error in this topic, because it feels prudent — but the retainer is a payment,
+the mandate is a signature, and both are exactly the acts the stop rule prohibits while the question
+is open.
+
+**MCQ 1.3-J `[1.3.2 · Evaluation]`** During construction, a project accountant notices that an
+approved agent's invoices are settled into an account in a jurisdiction unconnected with the
+contract. The most professional route is:
+- A. raise it with the sponsor's commercial director, who owns the agent relationship
+- B. raise it with the agent, who will have a straightforward explanation
+- C. raise it with compliance or counsel, preserve the payment and approval records, make no further payment on that route pending clearance, and tell no one else ✅
+- D. note the anomaly in the next monthly report to lenders and continue paying meanwhile
+
+*Rationale:* the escalation route runs to compliance or counsel and never to the commercial line,
+which has the strongest incentive to settle the matter quietly and may itself be implicated (1.3.2);
+A therefore delivers the concern to the wrong desk. B alerts the subject, which destroys the
+evidential position and may be a criminal offence in its own right. D is the seductive error: it is
+transparent, it is documented, and it continues to pay on the flagged route while the question is
+open — which is a decision to proceed, taken by whoever kept paying.
+
+**MCQ 1.3-K `[1.3.2 · Comprehension]`** A contractor offers its ISO 37001 certification as
+assurance on a bribery question raised in diligence. The correct reading is:
+- A. certification satisfies the point — a certified anti-bribery management system is a defence to the offence
+- B. certification is evidence about a management system at a point in time; it is not a legal defence and says nothing about the transaction being diligenced ✅
+- C. certification is irrelevant, because ISO standards have no standing in financial transactions
+- D. certification binds the contractor's subcontractors, since the standard applies down the supply chain
+
+*Rationale:* ISO 37001 is a voluntary management-system standard, and conformity to it is a third
+party's opinion about a system rather than an answer about this counterparty and this payment
+(1.3.2); whether any defence exists, and what it requires, is a question of the applicable law and for
+counsel. C overcorrects — the certification is relevant evidence about the counterparty's controls,
+just not the evidence being claimed. D asserts a reach the diligence must establish for itself,
+contract by contract.
+
 ### Self-check — KA 1.3
 
 1. *State the daylight test.* — Would every party, seeing the full relationship and fee map,
@@ -1231,6 +1489,17 @@ unlabelled optimism does (MCQ 1.3-A).
 5. *What must accompany a benchmark before it enters a negotiating position?* — A source line: the
    transaction, the document and the date — because a number without a source is an assertion made
    in the presenter's own name.
+6. *Is a facilitation payment a bribe?* — In most regimes, yes, whatever it is called locally; the
+   few narrow exceptions are a matter for written advice from counsel before the payment, not after.
+7. *An unresolved red flag has appeared on an intermediary. Who is told, and what happens meanwhile?*
+   — Compliance or counsel, never the commercial line and never the intermediary; and nothing
+   proceeds — no payment, no signature, no certification — until the flag is cleared in writing.
+8. *Why is "we did not know what the agent did" not an answer?* — Where a failure-to-prevent offence
+   applies the organisation answers for an associated person's conduct regardless of knowledge; the
+   protection, where any exists, is the procedures actually performed and evidenced at engagement.
+9. *What must the file contain on any intermediary?* — Beneficial ownership to natural persons,
+   sanctions screening refreshed on change of control, the written justification of service and fee
+   with its approver, the payment-route record, and the escalation record.
 
 ---
 
@@ -1470,7 +1739,7 @@ adviser's firm lost its public-sector practice in the jurisdiction. A one-line d
 engagement, with barriers or a declined mandate, would have cost the firm the **250,000** fee at
 risk on the second mandate, and nothing else.
 
-**The bill.** WE 1.3.2 prices this case on the firm's own estimates. Private loss on discovery:
+**The bill.** WE 1.3.3 prices this case on the firm's own estimates. Private loss on discovery:
 **900,000** of forfeited fees, **12,750,000** of jurisdictional franchise over five years and
 **400,000** of legal and indemnity cost — **USD 14,050,000**. Cost imposed on parties who had no
 part in the decision: **1,100,000** to re-appoint an adviser, **2,100,000** of fresh evaluation and
@@ -1600,6 +1869,32 @@ Conflicts: relationship · parties affected · disclosure date · handling (barr
 declined) · review date. AI use: tool and environment · data classification cleared ·
 verification steps and named verifier · disclosure status. One register, one owner, standing
 agenda item.
+
+### Toolkit 1.T.5 — Intermediary engagement and financial-crime evidence file (one per intermediary)
+
+The file that must exist before an agent, adviser or introducer is engaged, and be kept current
+afterwards — built so that a lender's reviewer, an auditor or counsel can read it cold.
+
+*Before engagement.* Who introduced the party, and were they on the other side of the negotiation ·
+the service being bought, described in terms someone outside the deal can test · the fee, its basis
+and the comparison it was benchmarked against · beneficial ownership traced to natural persons, with
+the source and date of each fact and any gap named as a gap · sanctions screening of the party and
+its owners, with hits, clearance reasoning and the clearer's name · politically exposed persons
+identified in the ownership, control or management chain · the red-flag triage of 1.3.2, each flag
+marked resolved or open · the approver **outside the commercial line**, and the date.
+
+*In the terms.* Anti-bribery and sanctions warranties · audit and inspection rights over the
+intermediary's records · no subcontracting, assignment or sub-agency without consent · payment only
+to the contracting entity, in the contracting jurisdiction, into an account in its own name ·
+termination on breach, with fees repayable.
+
+*While the engagement runs.* The payment-route record per invoice · screening re-run on change of
+control, on any new party and on the stated refresh cycle · the escalation record — what was raised,
+by whom, to whom, when, what was decided, and what was done while the question was open.
+
+*Rule.* The file is opened before the mandate is signed, not assembled afterwards. An engagement with
+no approver outside the deal team is not approved, and an unresolved flag means the work stops until
+clearance is given in writing.
 
 ### Toolkit 1.T.4 — Recourse-cost worksheet (one per financing route considered)
 
