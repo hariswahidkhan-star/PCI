@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, employer]
 level: professional
-reading_time_min: 10
+reading_time_min: 13
 summary: >
   The Institute publishes a competency set for each of its three credentials — fourteen for PCL-AI,
   nineteen for PFL-AI, twenty-four for PML-AI. This document explains what those sets are, how each
@@ -168,7 +168,7 @@ relationships in full.
 **As a candidate, before applying.** Take the set for the credential you are considering. For each
 competency, write the single artefact you would hand an assessor, and the month you produced it. The
 competencies where you cannot name an artefact are your real preparation list. This is a routing
-exercise, not a score — see *CMP-10* §7 on why a self-rating on its own tells you nothing.
+exercise, not a score — see *CMP-10* §6 on why a self-rating on its own tells you nothing.
 
 **As an employer, designing a role.** Do not require the whole set at leader level; almost no role needs
 that, and the specification will filter out everyone you could afford. Select the subset the role

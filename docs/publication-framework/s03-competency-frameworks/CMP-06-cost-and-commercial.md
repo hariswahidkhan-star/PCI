@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, employer]
 level: professional
-reading_time_min: 14
+reading_time_min: 16
 summary: >
   Cost and commercial competence is not a set of separate skills but one chain — estimate, budget,
   commitment, accrual, actual, forecast, change, final account — in which each link must reconcile to the

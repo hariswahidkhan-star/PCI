@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, academic]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 15
 summary: >
   Every PCL-AI item is tagged at one of three cognitive levels — Recall, Application or Analysis — and the
   intended mix is application-weighted. This document defines each level with the kind of stem it produces,

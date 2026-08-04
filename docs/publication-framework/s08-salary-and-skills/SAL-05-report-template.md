@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [executive, manager, employer, academic]
 level: professional
-reading_time_min: 24
+reading_time_min: 26
 summary: >
   The full section structure of the Institute's annual salary and skills report: every table with its
   columns defined and every cell carrying the placeholder [DATA], every chart specified in words, the

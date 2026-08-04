@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive]
 level: practitioner
-reading_time_min: 14
+reading_time_min: 15
 summary: >
   A monthly report exists to cause a decision, and most of them do not. This guide sets out the one-page
   structure that leads with the decisions required rather than the data, the four-part variance narrative

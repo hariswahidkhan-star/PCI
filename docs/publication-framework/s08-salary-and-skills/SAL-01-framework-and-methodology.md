@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [manager, executive, employer, academic]
 level: professional
-reading_time_min: 17
+reading_time_min: 18
 summary: >
   This document sets out how the Institute will measure reward and skills in project controls: what the
   survey asks, who it asks, how bias is mitigated, the minimum number of responses a cell must contain

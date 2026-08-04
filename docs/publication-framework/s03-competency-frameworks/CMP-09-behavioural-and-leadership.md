@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive, employer]
 level: leader
-reading_time_min: 13
+reading_time_min: 16
 summary: >
   A correct forecast that nobody acts on has changed nothing. This document sets out the five behaviours
   that determine whether a controls, finance or delivery professional is listened to — raising a number
@@ -242,7 +242,7 @@ almost all of it:
   directions: a professional who was wrong and says so has demonstrated more than one who was right.
 
 A behavioural claim with no contemporaneous artefact is a story. Not necessarily untrue — but not
-assessable, and *CMP-10* §3 explains why an assessor cannot give it weight.
+assessable, and *CMP-10* §2 explains why an assessor cannot give it weight.
 
 ## 6. How this goes wrong
 

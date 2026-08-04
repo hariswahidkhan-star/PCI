@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive]
 level: professional
-reading_time_min: 15
+reading_time_min: 16
 summary: >
   Every estimate at completion is a claim about the work that has not been done yet, and the formula only
   encodes which claim you are making. This guide runs the four standard methods over one shared data set so

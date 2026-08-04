@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: leader
-reading_time_min: 12
+reading_time_min: 15
 summary: >
   The PCL-AI examination weights three groups at 40 per cent for project accounting and finance, 40 per
   cent for project management principles and 20 per cent for AI knowledge and practical approach. This
@@ -110,8 +110,12 @@ another.
 | Candidate B — within-group score | 90.0 % | 70.0 % | 20.0 % | |
 | Candidate B — contribution | 0.40 × 90.0 = 36.0 | 0.40 × 70.0 = 28.0 | 0.20 × 20.0 = 4.0 | **68.0 %** |
 
-Both candidates score 68.0 per cent overall and both clear the configured 65 per cent mark. They are not
-equivalent professionals. Candidate B is a stronger accountant and, on this evidence, has close to no
+Both candidates score 68.0 per cent overall and both clear 65 per cent. Throughout this document, 65 per
+cent is used as the reference because it is the platform's **configured** pass mark; the definitive standard
+will be set by a modified-Angoff standard-setting study, and the arithmetic below works the same way against
+whatever standard that study sets. See `EXB-05 — Standard setting: modified Angoff and the pass mark`.
+
+The two candidates are not equivalent professionals. Candidate B is a stronger accountant and, on this evidence, has close to no
 governed-AI judgement at all — and the weighted total conceals that, which is exactly why the result
 carries a domain-level breakdown and why §6 discusses hurdles honestly rather than pretending the issue
 away.
@@ -126,7 +130,7 @@ reach 65 per cent from there, the average across the other two groups must be:
 
 `65 ÷ 0.80 = 81.25 %`
 
-Check: `(0.40 × 81.25) + (0.40 × 81.25) + (0.20 × 0) = 32.5 + 32.5 + 0 = 65.0 %` ✓
+Check: `(0.40 × 81.25) + (0.40 × 81.25) + (0.20 × 0) = 32.5 + 32.5 + 0 = 65.0 %`
 
 So a candidate who writes off Domain 13 has quietly agreed to score above 81 per cent across the other
 twelve domains — nineteen knowledge areas of accounting and thirty-five of project management principles —
@@ -255,7 +259,7 @@ group requires:
 
 `5 ÷ 0.40 = 12.5 %`
 
-Check: `(0.40 × 100) + (0.40 × 12.5) + (0.20 × 100) = 40.0 + 5.0 + 20.0 = 65.0 %` ✓
+Check: `(0.40 × 100) + (0.40 × 12.5) + (0.20 × 100) = 40.0 + 5.0 + 20.0 = 65.0 %`
 
 So on the arithmetic alone, a candidate could score 12.5 per cent across the whole of project management
 principles — cost control, earned value, contracts, lifecycle, scheduling, process cycles and risk — and

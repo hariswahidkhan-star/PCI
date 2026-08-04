@@ -129,9 +129,16 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-head_ "7. Cross-reference integrity (related: IDs must exist)"
+head_ "7. Cross-reference integrity (related: IDs must exist in the registry)"
 # ---------------------------------------------------------------------------
-KNOWN=$(for f in $MANUSCRIPTS; do basename "$f" | cut -d- -f1,2; done | sort -u)
+# Resolve against the ASSET REGISTRY, not against the files on disk. The registry is the
+# contract: a document may legitimately cite a sibling that has not been authored yet, and
+# that is a scheduling fact, not a broken reference. Gates 1 and 2 catch a missing manuscript.
+KNOWN=$(grep -oE '\b[A-Z]{3}-[0-9]{2}\b' "$FRAMEWORK_DIR/ASSET-REGISTRY.md" 2>/dev/null | sort -u)
+if [ -z "$KNOWN" ]; then
+  fail "could not read IDs from ASSET-REGISTRY.md"
+  KNOWN=$(for f in $MANUSCRIPTS; do basename "$f" | cut -d- -f1,2; done | sort -u)
+fi
 BROKEN=0
 for f in $MANUSCRIPTS; do
   rel=$(grep -m1 -E '^related:' "$f" | sed -E 's/^related:[[:space:]]*//; s/[][]//g')

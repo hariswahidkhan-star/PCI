@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 14
+reading_time_min: 16
 summary: >
   A controls dashboard is an instrument that changes decisions, and it should be engineered like one.
   This guide sets out the question a chart must answer before it is drawn, how to choose a chart form for
@@ -173,10 +173,10 @@ The strongest discipline in dashboard design, and the hardest to hold, is that e
 headline number. Not a panel of five related indices from which the reader must synthesise a position —
 one number, with its threshold, its direction and its provisional status.
 
-This is not simplification for its own sake. When a decision is supported by several measures that can
-disagree, the meeting spends its time reconciling the measures rather than making the decision, and the
-person with the strongest view chooses whichever measure supports it. Deciding in advance which single
-number governs a decision removes that choice, which is precisely why it is resisted.
+This is not simplification for its own sake. When several measures that can disagree support one decision,
+the meeting reconciles measures instead of deciding, and the person with the strongest view picks whichever
+measure supports it. Deciding in advance which number governs removes that choice, which is why it is
+resisted.
 
 The supporting detail does not disappear; it moves. The structure that works is overview first, detail on
 demand: one screen answering where we are, where we are heading, what is outside tolerance and what is being

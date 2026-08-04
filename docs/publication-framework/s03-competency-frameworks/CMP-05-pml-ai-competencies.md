@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: professional
-reading_time_min: 24
+reading_time_min: 29
 summary: >
   The PCI Project Management Leader – AI credential publishes twenty-four competencies, the widest of the
   three sets. This document takes each one in turn and states what it is in terms of decisions, what it

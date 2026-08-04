@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, employer, academic]
 level: professional
-reading_time_min: 13
+reading_time_min: 15
 summary: >
   A blueprint cannot validate itself. A job-task analysis is the study that asks practitioners what the
   work actually consists of, how often each task is performed and how badly it goes when performed wrongly,

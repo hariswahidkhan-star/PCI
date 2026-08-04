@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer, academic]
 level: professional
-reading_time_min: 14
+reading_time_min: 15
 summary: >
   A pass mark is not a round number chosen for pass-rate optics; it is a documented judgement about what a
   minimally competent professional must be able to do. This document explains how the PCL-AI passing

@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [employer, manager, practitioner, academic]
 level: professional
-reading_time_min: 15
+reading_time_min: 18
 summary: >
   Ten canonical project controls roles, each defined by what it is accountable for rather than what it is
   called, and a four-level rubric that levels a person on autonomy, scope, judgement and accountability

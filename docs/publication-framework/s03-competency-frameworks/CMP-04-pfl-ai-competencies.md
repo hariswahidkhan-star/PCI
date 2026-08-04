@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: professional
-reading_time_min: 21
+reading_time_min: 26
 summary: >
   The PCI AI Project Finance Leader credential publishes nineteen competencies. This document takes each
   one in turn and states what it is in terms of decisions, what it looks like at each of the four levels,
@@ -116,7 +116,7 @@ not mean a person can say what would make the ninth fail. The competency is anal
 
 **Definition.** Building, auditing and using a model that represents a transaction faithfully enough to
 support a decision — structure, integrity, transparency of assumptions, and the discipline that lets
-someone else find and test any number in it. Depth in *CMP-06* §7.
+someone else find and test any number in it. Depth in *CMP-06* §6.
 
 **By level.** *Foundation* — navigates a model, traces a calculation and updates inputs without breaking
 it. *Practitioner* — builds and maintains model sections to a defined standard: consistent formulae, no

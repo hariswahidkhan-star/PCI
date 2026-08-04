@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: practitioner
-reading_time_min: 15
+reading_time_min: 17
 summary: >
   Examination security exists to protect one thing: that a pass means the same for everyone who earns it.
   This document sets out how the PCL-AI item bank is protected and how leakage is detected, what the

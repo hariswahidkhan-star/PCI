@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive]
 level: practitioner
-reading_time_min: 14
+reading_time_min: 17
 summary: >
   Contingency and management reserve are not two sizes of the same pot. This guide sets out what each
   covers, who owns it, where it sits relative to the cost baseline, how contingency is derived from and

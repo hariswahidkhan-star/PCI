@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 15
+reading_time_min: 18
 summary: >
   A change to the work and a change to the baseline are two separate events with different authorities and
   different dates, and the gap between them is where control is lost. This guide covers who may instruct a
@@ -64,10 +64,9 @@ together:
 2. **The baseline changes.** At some later point — after the value is agreed and a change order issued — the
    budget, the schedule and the measurement yardstick are updated to include the new work.
 
-The interval between those two events is often months. Inside it, the project is performing work its
-baseline does not recognise, incurring cost its budget does not contain, and reporting performance indices
-that measure new work against an old plan. Nothing is wrong with the project; the reporting is simply
-describing a project that no longer exists.
+The interval between them is often months. Inside it, the project performs work its baseline does not
+recognise, incurs cost its budget does not contain, and reports indices that measure new work against an old
+plan. Nothing is wrong with the project; the reporting is describing a project that no longer exists.
 
 Three cases are worth separating, because they are governed differently:
 
@@ -111,11 +110,11 @@ project therefore needs:
 - **A default to notify.** The cost of an unnecessary notice is a small amount of goodwill. The cost of a
   missed one can be the whole claim.
 
-**Change by conduct.** Work can be changed without anyone issuing an instruction — by a drawing revision, by
-a specification clarification that is not clarifying anything, by a client's acts that alter the basis on
-which the work was priced. Whether such changes carry entitlement, and under what label, depends entirely on
-the contract and the governing law. The controls discipline is the same either way: record it as a potential
-change on the day it is noticed, price it, and give notice.
+**Change by conduct.** Work can also be changed without an instruction — by a drawing revision, by a
+specification clarification that clarifies nothing, by acts that alter the basis on which the work was
+priced. Whether that carries entitlement depends entirely on the contract and the governing law; the
+controls discipline does not change. Record it as a potential change on the day it is noticed, price it, and
+give notice.
 
 ## 3. Pricing bases and who carries the productivity risk
 
@@ -125,21 +124,20 @@ most situations.
 
 **Contract or bill rates.** Where the varied work is of similar character and executed under similar
 conditions to work already priced, the existing rates apply. Fast, uncontentious, and it leaves productivity
-risk exactly where the original contract put it.
+risk where the original contract put it.
 
-**Pro-rata or "star" rates.** Where the work is similar in kind but different in conditions — higher, deeper,
-smaller quantities, worse access — a rate is derived from the contract rates and adjusted for the
-difference. The adjustment is the argument; the derivation should be shown, element by element.
+**Pro-rata or "star" rates.** Where the work is similar in kind but different in conditions — higher,
+deeper, smaller quantities, worse access — a rate is derived from the contract rates and adjusted. The
+adjustment is the argument; the derivation should be shown element by element.
 
 **A new rate built up from first principles.** Where the work bears no useful relation to anything priced,
-the rate is constructed from materials, labour hours and rate, plant, on-costs and profit. Quoted and agreed
-before the work starts, it becomes a lump sum and the contractor carries the productivity risk.
+the rate is constructed from materials, labour hours and rate, plant, on-costs and profit. Agreed before
+work starts, it becomes a lump sum and the contractor carries the productivity risk.
 
-**Daywork or cost reimbursement with defined additions.** The work is recorded as it happens — hours,
-materials, plant — and reimbursed at contract daywork rates or at cost plus a stated percentage. This moves
-productivity risk to the paying party, which is exactly why paying parties resist it and why daywork records
-must be signed contemporaneously, every day, by someone with authority. An unsigned daywork sheet produced
-three months later is worth very little.
+**Daywork or cost reimbursement with defined additions.** The work is recorded as it happens and reimbursed
+at daywork rates or at cost plus a stated percentage. This moves productivity risk to the paying party,
+which is why paying parties resist it and why daywork records must be signed every day by someone with
+authority. An unsigned sheet produced three months later is worth very little.
 
 Two points that save money:
 
@@ -168,16 +166,15 @@ why — otherwise a reader sees an overrun where there is extra scope.
 **Bucket 3 — notified, claimed or disputed.** Entitlement is asserted but not accepted. Cost still belongs
 in the forecast where it will be incurred. Recovery is the difficult half, and the discipline is asymmetric:
 **recognise the cost when it is probable; recognise the recovery only when it meets the applicable
-recognition threshold.** Revenue standards work on this principle — under IFRS 15, for example, variable
-consideration such as a claimed variation is constrained until it is highly probable that a significant
-reversal will not occur — but the exact threshold, and the treatment in management accounts as opposed to
-statutory ones, depends on the reporting framework the organisation applies. Take the accounting position
-from the finance function; take the control position from this rule: **never forecast cost net of an
-assumed recovery.**
+recognition threshold.** Revenue standards work on this principle — IFRS 15, for example, constrains
+variable consideration such as a claimed variation — but the exact threshold, and the treatment in
+management accounts as opposed to statutory ones, depends on the reporting framework in use. Take the
+accounting position from the finance function; take the control position from this rule: **never forecast
+cost net of an assumed recovery.**
 
-A useful presentation convention is to report the estimate at completion in two lines: the forecast for the
-baselined scope, and the forecast effect of unincorporated change. A single blended number hides which of
-the two is moving, and they move for entirely different reasons.
+Report the estimate at completion in two lines: the forecast for the baselined scope, and the forecast
+effect of unincorporated change. A single blended number hides which of the two is moving, and they move for
+entirely different reasons.
 
 ## 5. Time-phasing a variation into the baseline
 
@@ -219,23 +216,21 @@ earn their place:
 | Status, next action, owner, next action date | Turns a register into a live control |
 | Age in current status | The single most useful column in the log |
 
-**Ageing is the control.** Set a threshold — for instance, nothing sits in "submitted, awaiting assessment"
-for more than a stated number of weeks — and report the ageing profile every month alongside the values. A
-log where the average age of unpriced variations is rising is a project whose commercial position is
-deteriorating regardless of what the cost report says, because the unpriced book is growing faster than it
-is being closed.
+**Ageing is the control.** Set a threshold — nothing sits in "submitted, awaiting assessment" for more than
+a stated number of weeks — and report the ageing profile monthly alongside the values. A log where the
+average age of unpriced variations is rising is a project whose commercial position is deteriorating
+whatever the cost report says, because the unpriced book is growing faster than it is being closed.
 
-**Code the cost as it is incurred.** Each change should have cost codes that allow its cost to be captured
-separately from the day work starts. Costs that were never coded to the event cannot be isolated a year
-later, and that is precisely when someone will need them.
+**Code the cost as it is incurred.** Each change needs cost codes that capture its cost separately from the
+day work starts. Costs never coded to the event cannot be isolated a year later, which is precisely when
+someone will need them.
 
 ## 7. Cash, and why an unpriced book hurts twice
 
-Variations are paid late even when they go well: instructed, worked, priced, assessed, certified, then paid
-on the ordinary payment terms. Until agreement, work is being funded with nothing certified against it. A
-growing book of instructed-but-unpriced variations is therefore a working capital problem as well as a
-commercial one, and it deepens the funding trough exactly when the base scope is at peak spend. The
-mechanism, and how to model it, is in `BPG-13 — Cash flow forecasting`.
+Even when a variation goes well it is paid late: instructed, worked, priced, assessed, certified, then paid
+on ordinary terms. Until agreement, the work is being funded with nothing certified against it, so a growing
+unpriced book deepens the funding trough exactly when base scope is at peak spend. See
+`BPG-13 — Cash flow forecasting`.
 
 ## 8. How this goes wrong
 
@@ -258,7 +253,8 @@ is contingent.
 in the account and hides the corruption inside a legitimate-looking change.
 
 **A change register that starts at the change order.** Everything instructed-but-unpriced is invisible, and
-the project's exposure is understated by the entire size of the unpriced book.
+the project's exposure is understated by the entire size of the unpriced book. The same register, left
+without an ageing column or an owner, stops being a control and becomes a filing cabinet.
 
 **No cost coding for the change.** The cost is incurred inside the ordinary control accounts, becomes
 indistinguishable from base scope, and the eventual submission has to be reconstructed by estimate. This is
@@ -267,9 +263,6 @@ also how a well-founded claim becomes a global one — see `BPG-12 — Claims an
 **Double-counting between a variation and a claim.** The same disruption recovered once inside a star rate
 and again in a disruption claim. It is the most damaging quantum error there is, because finding one
 instance of it invites the assessor to distrust everything else in the submission.
-
-**Letting the log rot.** Twenty items in "under review", no ageing column, no owner. The log stops being a
-control and becomes a filing cabinet.
 
 ## 9. Worked example
 
@@ -393,9 +386,8 @@ separate assessment.
 **At the event**
 
 - [ ] The change is logged on the day it arises, with its event date — not the day it is priced.
-- [ ] The instruction reference and the name of the person who issued it are recorded.
-- [ ] Where no instruction exists, the direction has been confirmed in writing to the contract
-      representative the same day.
+- [ ] The instruction reference and the name of the person who issued it are recorded; where no instruction
+      exists, the direction has been confirmed in writing to the contract representative the same day.
 - [ ] The notice position has been checked against the contract, and notice given or diarised.
 - [ ] Cost codes for the change are open before work starts.
 
@@ -412,12 +404,11 @@ separate assessment.
 - [ ] Every change is assigned to a bucket: agreed, instructed-unpriced, or claimed/disputed.
 - [ ] Cost is forecast gross; recovery is never netted off.
 - [ ] The estimate at completion separates baselined scope from unincorporated change.
-- [ ] The accounting treatment of disputed recovery has been agreed with the finance function.
 
 **Baseline**
 
-- [ ] Agreed variations are time-phased to the varied work's planned dates.
-- [ ] The schedule is updated in the same cycle as the budget.
+- [ ] Agreed variations are time-phased to the varied work's planned dates, and the schedule is updated in
+      the same cycle as the budget.
 - [ ] The baseline change is in the change log with an approval reference.
 - [ ] Performance trends are annotated where the baseline changed, so a step is not read as performance.
 

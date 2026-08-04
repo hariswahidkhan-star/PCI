@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [manager, employer, academic, practitioner]
 level: professional
-reading_time_min: 14
+reading_time_min: 18
 summary: >
   The structured vocabulary the Institute's salary and skills report uses to classify skills across five
   facets — technical method, tool category, domain, data and AI, and behavioural — with a permanent code

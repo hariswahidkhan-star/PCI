@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, employer]
 level: professional
-reading_time_min: 12
+reading_time_min: 14
 summary: >
   PCI describes competence on a four-point scale — foundation, practitioner, professional and leader —
   applied one competency at a time. This document defines each level by the decisions it carries rather
@@ -258,7 +258,7 @@ that closed six years ago, on a delivery model the organisation abandoned. Ask w
 **The scale is imported into pay banding unchanged.** The moment a level determines a salary band, every
 rating conversation becomes a negotiation, evidence standards fall, and the framework's diagnostic value
 is gone. Use it for development and assessment; if it must inform reward, put a moderation step
-(*CMP-10* §6) between the rating and the money.
+(*CMP-10* §5) between the rating and the money.
 
 ## 8. Checklist
 

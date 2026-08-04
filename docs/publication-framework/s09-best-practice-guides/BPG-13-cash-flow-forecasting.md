@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive]
 level: practitioner
-reading_time_min: 15
+reading_time_min: 17
 summary: >
   A cost S-curve says nothing about whether a project can pay its people next month. This guide sets out the
   four mechanisms that separate progress from cash — measurement and certification, payment terms, retention

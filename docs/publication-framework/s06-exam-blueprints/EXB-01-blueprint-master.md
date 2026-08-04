@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: leader
-reading_time_min: 16
+reading_time_min: 19
 summary: >
   This is the published specification for the PCI AI Project Controls Leader (PCL-AI) examination: the
   three assessment groups and their 40/40/20 weighting, all thirteen domains and sixty-one knowledge

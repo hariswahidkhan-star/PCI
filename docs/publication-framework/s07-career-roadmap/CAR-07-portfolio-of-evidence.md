@@ -69,27 +69,27 @@ One record, five parts. Fitting on one page is a feature.
 a package of control accounts, including method selection and defence to the project director."*
 
 **2. The context.** Enough to make the claim assessable and no more: type of project, contract form,
-approximate scale expressed relatively, your role and your reporting line. Not the client's name, not the
-project's name, not the contract value. §5 and §6 explain why.
+relative scale, your role and reporting line. Not the client, the project or the contract value — §5 and
+§6 explain why.
 
-**3. The action.** What you personally did, in the first person singular, with the decision made
-explicit and the alternative named. *"I selected a performance-persists forecast rather than the
-one-off-variance basis the previous cycle had used, on the grounds that the shortfall was present in three
-consecutive cycles and in both the timesheet and the quantity record."*
+**3. The action.** What you personally did, in the first person singular, with the decision explicit and
+the alternative named. *"I selected a performance-persists forecast rather than the one-off-variance basis
+used the previous cycle, because the shortfall was present in three consecutive cycles and in both the
+timesheet and the quantity record."*
 
-**4. The outcome.** What changed, quantified where you can quantify it without disclosure — proportions,
+**4. The outcome.** What changed, quantified where it can be quantified without disclosure — proportions,
 ratios and index points rather than currency. Include outcomes that went against you; they are more
 persuasive, not less.
 
-**5. The verification.** How a third party could check: a named referee by role, a countersignature, an
-internal audit reference, an artefact that exists independently of you. §7 covers this.
+**5. The verification.** How a third party could check: a referee by role, a countersignature, an audit
+reference, an artefact that exists independently of you. §7 covers this.
 
 A record missing part 3 is a job description; a record missing part 5 is an assertion. Both are common and
 both are discounted immediately by anyone who reads portfolios for a living.
 
 ## 3. The scale that matters: presence, contribution, ownership, change
 
-Weak evidence is usually weak because it describes the wrong rung of this scale.
+Weak evidence is usually weak because it sits at the wrong rung of this scale.
 
 | Level | What it sounds like | What it evidences |
 |---|---|---|
@@ -107,19 +107,19 @@ Institute levels competence; this document is about the record you keep for your
 An ordinary reporting month generates more evidence than most people record in a year. The inventory:
 
 - the accrual position you established at cut-off, and the judgement you made about an incomplete input;
-- the variance narrative you wrote, and the driver you identified before it appeared in the ledger;
+- the variance narrative you wrote, and the driver you identified before it reached the ledger;
 - the change you priced, with the basis, and what happened to it;
 - the schedule update narrative and the delta explanation (`CAR-04` §6);
 - the risk you added that later materialised, or the one you argued to retire;
 - the audit finding you responded to, and the control you changed as a result;
-- the recovery plan you tested for plausibility, and the result of the test;
-- the reconciliation you ran between two systems that disagreed, and what the difference proved to be;
+- the recovery plan you tested for plausibility, and the reconciliation you ran between two systems that
+  disagreed;
 - the template, mapping, rule of credit or automation you built that outlived your involvement;
-- the error you found in your own work and reported before anyone else found it;
+- the error in your own work that you reported before anyone else found it;
 - the forecast you published in advance with a falsification condition (`CAR-03` §6) and how it behaved.
 
 Ten minutes at the end of each cycle, capturing one record from that list, produces a portfolio with
-nothing ever reconstructed after the fact — and reconstruction after the fact is where both accuracy and
+nothing reconstructed after the fact — and reconstruction after the fact is where both accuracy and
 confidentiality tend to fail.
 
 ## 5. Confidentiality: what you may not take, and the test to apply
@@ -130,20 +130,19 @@ screenshots, datasets and models, whether or not you personally created them. Sp
 disclose:
 
 - the identity of the client, project or contract, unless it is genuinely public and your employer is
-  content, and any value, rate or margin — or anything from which one can be derived;
+  content; and any value, rate or margin, or anything from which one can be derived;
 - unpublished claims, disputes, notices, entitlement positions, or subcontractor pricing;
 - personal data about colleagues, including performance, disciplinary and safety matters;
-- security-sensitive site, system or asset information, which in some sectors is a legal matter rather
-  than a commercial one;
-- anything covered by a non-disclosure agreement, and in listed-company contexts anything price-sensitive.
+- security-sensitive site, system or asset information, which in some sectors is a legal matter;
+- anything under a non-disclosure agreement, and in listed-company contexts anything price-sensitive.
 
 **The three-reader test.** Before a record leaves your possession, ask whether it could be read without
 harm or embarrassment by the client, by your employer's commercial director, and by a competitor. If the
 answer to any of the three is no, it is not ready. That is a stricter test than "would anyone recognise
 it", and it is the right one, because the harm from disclosure does not require recognition.
 
-Where the ethical dimension is live — a conflict between what you may say and what you believe should be
-said — the Institute's treatment is in `ETH-04 — Conflicts of interest in project controls`.
+Where a conflict is live between what you may say and what you believe should be said, the Institute's
+treatment is in `ETH-04 — Conflicts of interest in project controls`.
 
 ## 6. Anonymising a case properly
 
@@ -154,36 +153,35 @@ single least informative field. Work through all seven steps.
 named individuals. Replace people with roles: "the project director", "the client's quantity surveyor".
 
 **Step 2 — remove the identifying combination.** This is the step that is missed. Sector, region,
-approximate value, contract form and period, taken together, will identify a project to anyone in that
-market even though no single element names it. The test is not "have I removed the name" but "how many
-projects in the world match this description". If the answer is a small number, keep generalising: widen
-the sector descriptor, drop the region, express the period relatively ("a project in its construction
-phase") rather than by year.
+approximate value, contract form and period, taken together, identify a project to anyone in that market
+even though no single element names it. The test is not "have I removed the name" but "how many projects
+in the world match this description". If the answer is a small number, keep generalising: widen the sector
+descriptor, drop the region, express the period relatively rather than by year.
 
 **Step 3 — index the figures.** Do not round confidential magnitudes; remove them. Choose a base — the
 budget at completion is usually the natural one — set it to 100, and express every other figure as a
 proportion of it. State plainly that figures are indexed. §10 works this through.
 
 **Step 4 — keep the ratios, because they carry the teaching.** Performance indices, variance percentages,
-proportions of budget, days of movement, productivity factors and rates per unit all survive indexation,
-and they are what make the record instructive. A reader learns nothing from a currency amount they cannot
-contextualise and everything from an index that moved from 1.09 to 1.00.
+proportions of budget, days of movement and productivity factors all survive indexation, and they are what
+make the record instructive. A reader learns nothing from a currency amount they cannot contextualise and
+everything from an index that moved from 1.09 to 1.00.
 
 **Step 5 — check for re-identification through the incident itself.** A distinctive event — an unusual
 failure, a well-known dispute, a notable delay — can identify a project more precisely than any figure.
-If the event is distinctive, describe the mechanism without the case, or do not use it.
+Describe its mechanism without the case, or do not use it.
 
-**Step 6 — label the anonymisation.** Say what you did, in the record: *"Figures indexed to a budget of
-100. Project, client and period not identified. No confidential document is reproduced and no figure can
-be derived from this record."* A reader who can see the discipline you applied trusts the rest of it more.
+**Step 6 — label the anonymisation.** In the record: *"Figures indexed to a budget of 100. Project, client
+and period not identified. No confidential document is reproduced and no figure can be derived from this
+record."* A reader who can see the discipline you applied trusts the rest of it more.
 
 **Step 7 — seek permission where it is possible, and record the answer.** For anything more detailed than
-an indexed record, ask in writing and keep the reply. If permission is refused, record the refusal and use
-the method-only version. Silence is not consent.
+an indexed record, ask in writing and keep the reply. If it is refused, record the refusal and use the
+method-only version. Silence is not consent.
 
-**When even the indexed case is identifiable, write the method rather than the case.** "How to test whether
-a recovery claim is plausible" teaches everything the case would have taught, cites no project, and can be
-shown to anyone.
+**Where even the indexed case is identifiable, write the method instead.** "How to test whether a recovery
+claim is plausible" teaches everything the case would have taught, cites no project, and can be shown to
+anyone.
 
 ## 7. Verification without disclosure
 
@@ -196,64 +194,62 @@ supplied privately at the point it is needed, not published.
 development schemes rely on and what `CMP-10 — Assessing competence` describes for formal assessment.
 
 **An independent artefact or audit trace.** A template, procedure or tool you wrote that continued in use;
-a training session recorded in an internal system; a published article on a method; or "this control was
-tested in an internal audit and the finding closed", referenced by type and period rather than by number.
+a training session recorded internally; or "this control was tested in an internal audit and the finding
+closed", referenced by type and period rather than by number.
 
 **Assessed knowledge.** A credential evidences knowledge against a published standard, examined
 independently of your employer. PCI's project controls credential is PCL-AI; it is examined, not
 portfolio-assessed, and PCI is developed with reference to ISO/IEC 17024 personnel-certification
 principles and is not accredited. Credential and portfolio evidence different things — knowledge and
 practice — and neither substitutes for the other. A membership grade is a third thing again: a standing,
-not a certification, and conflating the two ladders is an easy way to look careless.
+not a certification, and conflating the ladders is an easy way to look careless.
 
-Continuing professional development records verify differently again, because they are structured: PCI
-recertification runs on a three-year cycle with a mandatory AI-currency component, and only approved
-entries within the current cycle count. The binding volume is `[CONFIRM: required CPD hours per three-year
-cycle — the student portal currently shows a 30-hour target, and the binding requirement will be published
-with the recertification rules]`. The rules themselves are owned by `CER-08`.
+Continuing professional development records verify differently, being structured: PCI recertification runs
+on a three-year cycle with a mandatory AI-currency component, and only approved entries in the current
+cycle count. The binding volume is `[CONFIRM: required CPD hours per three-year cycle — the student portal
+currently shows a 30-hour target, and the binding requirement will be published with the recertification
+rules]`, and `CER-08` owns the rules.
 
 ## 8. Structuring the portfolio itself
 
 Organise by competency, not by employer: an employer-ordered portfolio makes the reader do the mapping,
-and readers do not. Use the PCL-AI competency set as the index — project controls governance, cost management, planning and
-scheduling, earned value management, forecasting and estimate at completion, performance measurement,
-project risk, commercial and contract controls, predictive analytics, AI-enabled project controls, digital
-reporting, automation, responsible AI, and human validation.
+and readers do not. Use the PCL-AI competency set as the index — project controls governance, cost
+management, planning and scheduling, earned value management, forecasting and estimate at completion,
+performance measurement, project risk, commercial and contract controls, predictive analytics, AI-enabled
+project controls, digital reporting, automation, responsible AI, and human validation.
 
-One page per competency, carrying two evidence records at the highest level you can honestly claim and one
-line naming the gap — what you have not yet done in that competency. The gap line is the most credible
-thing on the page, because a portfolio with no gaps reads as one that has not been audited by its author.
+One page each, carrying two records at the highest level you can honestly claim and one line naming the
+gap. The gap line is the most credible thing on the page, because a portfolio with no gaps reads as one
+its author has never audited.
 
-Keep two versions and only two. A full version, with names, for your own reference and for a conversation
-under non-disclosure; and a shareable version, anonymised by §6, which is the one that leaves your
-possession. A third, half-anonymised version is how a name eventually escapes.
-
-**On leaving an employer.** Capture your own record of decisions before you go, and take nothing else — no
-documents, no extracts, no data, no models. That is a legal boundary in most jurisdictions and an ethical
-one everywhere, and the part you are entitled to keep is also the only part a future employer values.
+Keep two versions and only two: a full one, with names, for your own reference and for a conversation
+under non-disclosure, and a shareable one anonymised by §6. A third, half-anonymised version is how a name
+eventually escapes. And on leaving an employer, capture your own record of decisions before you go and
+take nothing else — no documents, extracts, data or models. That is a legal boundary in most
+jurisdictions, and the part you may keep is the only part a future employer values anyway.
 
 ## 9. How this goes wrong
 
 **Writing it at the end.** Portfolios assembled during a job search are vague about exactly the details
-that matter — the date, the alternative rejected, the number before and after — because those details were
-never captured and cannot be reconstructed honestly.
+that matter — the date, the alternative rejected, the number before and after — because those were never
+captured and cannot now be reconstructed honestly.
 
-**Claiming the team's work.** "We reduced the forecast" is not evidence of anything about you. Claim your
-part and describe it precisely; assessors probe collective verbs first, knowing what they will find.
+**Claiming the team's work.** "We reduced the forecast" evidences nothing about you. Assessors probe
+collective verbs first, knowing what they will find.
 
-**Removing the name and calling it anonymised.** Step 2 of §6 is the one that is skipped, and the
-consequence is a portfolio that identifies a client project to every reader in the sector while its author
+**Removing the name and calling it anonymised.** Step 2 of §6 is the step that gets skipped, and the
+result is a portfolio that identifies a client project to every reader in the sector while its author
 believes it is discreet. Its close relative is rounding rather than indexing: a rounded budget still
 discloses the magnitude, which is usually the confidential part.
 
-**Including a document.** A screenshot of a report, a page of a register, an extract of a model. These are
-the employer's property regardless of who typed them, and including one converts a professional record
-into a disclosure incident.
+**Including a document.** A report screenshot, a register page, a model extract. All are the employer's
+property regardless of who typed them, and one of them converts a professional record into a disclosure
+incident.
 
-**Only recording successes.** A portfolio of unbroken correctness is not believed, because nobody who has
-forecast anything has that record. A documented wrong forecast, with what you learned and what you changed,
-is stronger evidence of judgement than three correct ones — and listing software proficiency instead is
-weaker than either, because it evidences only that you held a licence.
+**Only recording successes.** Unbroken correctness is not believed, because nobody who has forecast
+anything has that record. A documented wrong forecast, with what you learned and changed, is stronger
+evidence of judgement than three correct ones — and a list of software proficiencies is weaker than
+either, evidencing only that you held a licence.
 
 ## 10. Worked example — one record, before and after anonymisation
 
@@ -298,10 +294,9 @@ the magnitudes are gone and unrecoverable, the ratios are intact to within state
 — that one missed accrual can move a reported position across the line between earning and overspending —
 is exactly as instructive as in the confidential version.
 
-**What else was removed, and why.** The budget, because it is the identifying magnitude. The named month,
-because a cut-off calendar is itself a fingerprint and a period combined with a sector and a value band
-narrows the field sharply. And the sector descriptor was widened from a specific process industry to
-"industrial", per step 2.
+**What else was removed, and why.** The budget, as the identifying magnitude; the named month, because a
+cut-off calendar is a fingerprint and period plus sector plus value band narrows the field sharply; and
+the specific process industry, widened to "industrial", per step 2.
 
 ## 11. Checklist — the portfolio audit
 
@@ -317,30 +312,30 @@ narrows the field sharply. And the sector descriptor was widened from a specific
 - The portfolio is indexed by competency, with a stated gap on each page.
 - You captured at least one record in the last reporting cycle.
 
-The cost of not doing this is paid later and in full: at the point you need the evidence, the project has
-finished, the people who could verify it have moved, and what remains is a job title and a date — which is
-precisely what everyone else in the room also has.
+The cost of skipping it is paid later and in full: by the time you need the evidence, the project has
+finished and the people who could verify it have moved, leaving a job title and a date — which is exactly
+what everyone else in the room also has.
 
 ---
 
 ## Related
 
-- `CAR-01 — The project controls career roadmap` — the transitions this evidence is meant to demonstrate
+- `CAR-01 — The project controls career roadmap` — the transitions this evidence demonstrates
 - `CAR-03 — Cost engineer to cost manager` — the forecast record described in §4
-- `CAR-05 — Into project controls leadership` — the movement bridges that become leadership evidence
+- `CAR-05 — Into project controls leadership` — movement bridges as leadership evidence
 - `CMP-02 — Competency levels and how they are evidenced` — how the Institute levels competence
-- `CMP-10 — Assessing competence: evidence, rubrics, moderation` — formal assessment, as distinct from a personal portfolio
-- `CER-08 — Recertification, CPD and the AI-currency requirement` — the rules behind the placeholder in §7
-- `ETH-04 — Conflicts of interest in project controls` — where confidentiality becomes a conduct question
+- `CMP-10 — Assessing competence: evidence, rubrics, moderation` — formal assessment, not a personal portfolio
+- `CER-08 — Recertification, CPD and the AI-currency requirement` — the rules behind the §7 placeholder
+- `ETH-04 — Conflicts of interest in project controls` — when confidentiality becomes conduct
 
 ## Sources and standards
 
 Drawn from the PCI Body of Knowledge, principally Domain 4 (performance management, variance analysis and
 management reporting), Domain 5 (cost management and cost control) and Domain 6 (earned value management
-and forecasting); and from the PCL-AI competency set as published by the Institute, used as the portfolio
-index in §8. Confidentiality guidance is stated as principle rather than as the law of any jurisdiction:
-disclosure obligations, employment terms and data-protection rules vary, and a specific case should be
-checked against the applicable contract and law. No external market, salary or demand data has been used.
+and forecasting); and from the PCL-AI competency set, used as the portfolio index in §8. Confidentiality
+guidance is stated as principle, not as the law of any jurisdiction: disclosure obligations, employment
+terms and data-protection rules vary, and a specific case must be checked against the applicable contract
+and law. No external market, salary or demand data has been used.
 
 ## Status and version
 

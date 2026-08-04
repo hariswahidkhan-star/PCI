@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, academic]
 level: professional
-reading_time_min: 14
+reading_time_min: 18
 summary: >
   An examination is only as good as its item bank, and an item bank is a managed asset with a lifecycle
   rather than a folder of questions. This document sets out the lifecycle the Institute is standing up for

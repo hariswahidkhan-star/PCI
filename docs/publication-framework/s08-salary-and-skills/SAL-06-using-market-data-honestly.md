@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, student, employer]
 level: practitioner
-reading_time_min: 13
+reading_time_min: 15
 summary: >
   How to read published pay and skills data without being misled by it: what a median does and does not
   tell you, why a range without a sample size is not information, why advertised pay is a different

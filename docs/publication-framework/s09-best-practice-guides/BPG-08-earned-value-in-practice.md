@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 14
+reading_time_min: 16
 summary: >
   Earned value management fails at the measurement, not at the arithmetic. This guide sets out what
   planned value, earned value and actual cost each have to be measured against before any index is

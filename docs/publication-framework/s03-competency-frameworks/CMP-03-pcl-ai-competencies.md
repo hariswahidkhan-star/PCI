@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: professional
-reading_time_min: 19
+reading_time_min: 24
 summary: >
   The PCI AI Project Controls Leader credential publishes fourteen competencies. This document takes each
   one in turn and states what it is in terms of decisions, what it looks like at each of the four levels,
@@ -147,7 +147,7 @@ is not.
 **Definition.** Operating the measurement system that relates work performed to work planned and to cost
 incurred: the scope-to-budget structure, the rules of credit that decide how progress is claimed, the
 integrity of the resulting earned value, and the variance analysis that follows from it. Expanded in
-*CMP-06* §4.
+*CMP-06* §3.
 
 **By level.** *Foundation* — applies rules of credit correctly and calculates the standard indices.
 *Practitioner* — owns the performance measurement baseline for a scope, applies and defends rules of
@@ -172,7 +172,7 @@ claim and the physical position disagreed.
 
 **Definition.** Producing a forward view of final cost and date — the estimate at completion (EAC) and the
 forecast completion — choosing the method deliberately, stating the assumptions the answer depends on, and
-defending the result when it is unwelcome. Depth in *CMP-06* §5.
+defending the result when it is unwelcome. Depth in *CMP-06* §4.
 
 **By level.** *Foundation* — calculates an estimate at completion using the prescribed formula and
 identifies where the inputs look wrong. *Practitioner* — produces the periodic forecast for a scope,
@@ -219,7 +219,7 @@ name a decision that a measure changed.
 
 **Definition.** Identifying what could change the outcome, quantifying it where quantification is
 meaningful, assigning ownership that is real, and connecting the analysis to the contingency and the
-decisions it should inform. Depth in *CMP-07* §5.
+decisions it should inform. Depth in *CMP-07* §6.
 
 **By level.** *Foundation* — records risks accurately, maintains the register, chases owners for updates.
 *Practitioner* — facilitates risk identification for a scope, assesses probability and impact with a
@@ -244,7 +244,7 @@ actually matter — and specifically whether it contains the one nobody wants wr
 **Definition.** Controlling the commercial position: what has been instructed, what has been valued, what
 has been agreed, what is claimed and unresolved, and what exposure sits outside the current forecast.
 Includes change and variation control, the substantiation of entitlement, and the interface with the
-contract's notice and time-bar mechanics. Depth in *CMP-06* §6.
+contract's notice and time-bar mechanics. Depth in *CMP-06* §5.
 
 **By level.** *Foundation* — logs instructions and variations, and knows which contract clause governs a
 notice. *Practitioner* — owns the change and variation register for a scope, values changes to procedure,

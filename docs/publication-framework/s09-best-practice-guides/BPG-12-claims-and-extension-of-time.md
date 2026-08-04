@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: professional
-reading_time_min: 16
+reading_time_min: 18
 summary: >
   Delay and disruption are different problems needing different proof, and most submissions fail on
   causation rather than on quantum. This guide separates the two, sets out the causal chain a claim has to
@@ -63,14 +63,14 @@ A claim is an assertion of entitlement arising from an event: additional time, a
 Whatever the contract, the assertion has three parts, and a submission that is strong on one and weak on
 another fails as a whole.
 
-**Cause.** An event occurred, and it is an event for which the contract allocates risk to the other party.
-This is a contractual question before it is a factual one. A ground condition that is genuinely unforeseen
-is a cause under some contracts and a contractor risk under others; the same rainfall is a compensable
-event, a neutral event or nobody's problem depending on what was agreed.
+**Cause.** An event occurred, and the contract allocates its risk to the other party. This is a contractual
+question before it is a factual one: an unforeseen ground condition is a cause under some contracts and a
+contractor risk under others, and the same rainfall is a compensable event, a neutral event or nobody's
+problem depending on what was agreed.
 
-**Effect.** The event produced a consequence — days of critical delay, or degraded productivity, or both.
-This is the part most submissions treat as self-evident, and it is where they are attacked. The effect has
-to be demonstrated by analysis of contemporaneous records, not asserted by proximity in time.
+**Effect.** The event produced a consequence — days of critical delay, degraded productivity, or both. Most
+submissions treat this as self-evident, and it is where they are attacked. The effect must be demonstrated
+by analysis of contemporaneous records, not asserted by proximity in time.
 
 **Quantum.** The consequence had a cost, evidenced from records, calculated on a stated basis, and not
 recovered anywhere else.
@@ -101,12 +101,10 @@ when things happened. Different question, different evidence.
 
 ## 3. Extension of time: what it buys, and what it does not
 
-An extension of time (EOT) adjusts the contractual completion date. On most contracts it does two things:
-
-1. It relieves the contractor of liability for liquidated damages (LDs) for the extended period.
-2. It preserves the contractual mechanism — a completion date that has become impossible is not a date
-   anyone can manage to, and contracts generally provide for its adjustment so that time does not become
-   "at large" in whatever sense the governing law recognises.
+An extension of time (EOT) adjusts the contractual completion date. On most contracts it relieves the
+contractor of liability for liquidated damages (LDs) for the extended period, and it preserves the
+contractual mechanism, since a completion date that has become impossible is not a date anyone can manage
+to.
 
 What an EOT does **not** automatically do is pay for the extended period. Time and money are separate
 questions with separate tests on most contracts, and the outcome depends on the event, the contract and the
@@ -163,20 +161,18 @@ built during the works, not afterwards.
 Several families of method exist for demonstrating the effect of an event on the completion date. Described
 in principle, and without endorsing any:
 
-- **As-planned versus as-built.** Compare the baseline programme with what actually happened and identify
-  where and why the critical sequence diverged. Intuitive and evidence-rich; weak at attributing cause where
-  several things changed at once.
-- **Impacted as-planned.** Insert the delay event into the baseline programme and observe the effect on the
-  computed completion date. Simple and prospective in character; criticised because it tests a plan rather
-  than the project as it actually was.
-- **Time impact analysis.** Insert the event into the programme as it stood immediately before the event,
-  updated with actual progress. More faithful to reality; depends entirely on the quality and frequency of
-  programme updates.
+- **As-planned versus as-built.** Compare the baseline with what actually happened and identify where the
+  critical sequence diverged. Intuitive and evidence-rich; weak at attributing cause where several things
+  changed at once.
+- **Impacted as-planned.** Insert the event into the baseline programme and observe the effect on the
+  computed completion date. Simple; criticised because it tests a plan rather than the project as it was.
+- **Time impact analysis.** Insert the event into the programme as it stood immediately before it, updated
+  with actual progress. More faithful to reality; depends entirely on the quality of programme updates.
 - **Collapsed as-built.** Remove the delay events from the as-built programme and observe when the works
   would have completed without them. Powerful where the as-built record is complete; contentious where it
   is not.
 - **Windows or time-slice analysis.** Divide the project into periods and analyse what drove the critical
-  path in each. Generally the most informative where good periodic updates exist, and the most laborious.
+  path in each. Usually the most informative where good periodic updates exist, and the most laborious.
 
 Three observations that matter more than the taxonomy:
 
@@ -204,12 +200,12 @@ Quantum               = excess hours × demonstrated cost rate
 
 The method stands or falls on the comparability of the mile. Four tests before using a period as the mile:
 
-- **Same work.** Same activity, same specification, same materials.
-- **Same resources.** Same crews or equivalent crews, same supervision, same shift pattern.
-- **Same conditions, apart from the impact.** Not the winter period against the summer one.
-- **Not the learning curve.** A mile taken from the first work performed is flattered by nothing and
-  penalised by inexperience; it usually *understates* productivity and therefore *overstates* the claim,
-  which is precisely the weakness an assessor will look for. Choose a mature period.
+- **Same work** — same activity, specification and materials.
+- **Same resources** — same or equivalent crews, same supervision, same shift pattern.
+- **Same conditions, apart from the impact** — not the winter period against the summer one.
+- **Not the learning curve.** A mile taken from the first work performed is penalised by inexperience, so it
+  *understates* productivity and *overstates* the claim — precisely the weakness an assessor looks for.
+  Choose a mature period.
 
 Where no clean mile exists — and often none does — the fallback is a bottom-up build of the lost hours from
 contemporaneous records, event by event. What must not happen is a leap to a global figure (see §8).
@@ -221,27 +217,25 @@ the difference between a project with records and one without is usually the dif
 and a write-off.
 
 **Programme records.** The accepted baseline, every periodic update with its data date, and the statusing
-that produced it — actual start and finish dates, remaining durations, logic changes with reasons. Updates
-that were re-logicked without a note are worth much less than updates that were.
+that produced it — actual dates, remaining durations, logic changes with reasons. An update re-logicked
+without a note is worth much less than one that explains itself.
 
-**Labour and productivity records.** Timesheets or allocation sheets coded to area, activity and — this is
-the crucial one — to a change or event reference where applicable. Coding at source is what makes a measured
-mile or a bottom-up build possible later. Quantity records installed per period, in the same coding.
+**Labour and productivity records.** Timesheets or allocation sheets coded to area, activity and — the
+crucial one — to a change or event reference where applicable, with quantities installed per period in the
+same coding. Coding at source is what makes a measured mile or a bottom-up build possible later.
 
-**Daily records.** Site diaries recording resources on site, work fronts available, weather, access
-restrictions, instructions received and interruptions. Contemporaneous, dated, and preferably signed.
+**Daily records.** Site diaries recording resources, work fronts available, weather, access restrictions,
+instructions received and interruptions. Contemporaneous, dated, and preferably signed.
 
-**Correspondence and notices.** A notices register showing what was notified, when, under what provision,
-and what response was received. Instructions with their references and issuers.
+**Correspondence and notices.** A notices register showing what was notified, when, under what provision and
+with what response; instructions with their references and issuers.
 
-**Photographs and survey records**, dated and located, showing conditions rather than achievements.
+**Photographs, survey records and meeting minutes** — dated and located, showing conditions rather than
+achievements, and recording access dates and undertakings given.
 
-**Meeting minutes**, especially those recording access dates, availability of work fronts and undertakings
-given.
-
-Two rules about all of the above. First, **the record is made for the project, not for the claim** — records
-manufactured once a dispute is in sight are visibly different and are treated as such. Second,
-**contemporaneous means contemporaneous**: a diary written up weekly from memory is a reconstruction.
+Two rules govern all of it. **The record is made for the project, not for the claim** — records manufactured
+once a dispute is in sight are visibly different and are treated as such. And **contemporaneous means
+contemporaneous**: a diary written up weekly from memory is a reconstruction.
 
 ## 8. How this goes wrong
 

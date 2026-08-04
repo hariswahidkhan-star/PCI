@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, employer]
 level: professional
-reading_time_min: 15
+reading_time_min: 16
 summary: >
   All three PCI credentials carry a group of data, digital and AI competencies, and in every case they
   form one chain: data readiness, analysis, workflow design, reporting and automation, governance, and the
