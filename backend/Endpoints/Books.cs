@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using PCI.Backend.Core;
 using PCI.Backend.Data;
 
@@ -29,9 +30,25 @@ public static class Books
             db.Execute("INSERT INTO cert_document_downloads(cert_document_id,user_id,copy_id,result,ip) VALUES(?,?,?,?,?)",
                 docId, userId, copyId, result, ip);
 
-        // ── Admin: upload/replace the file behind a book (or create the row + file in one call) ──
-        app.MapPost("/api/admin/cert-documents/upload", (HttpRequest req) => gate(req, "resources", adm =>
+        // Raise the request-body cap for this one admin upload route (the global cap stays tight).
+        // Without it the global 6 MB Kestrel limit rejects the request before the handler runs, so a
+        // book over ~4.4 MB decoded answers 413 and DocStore's 25 MiB allowance is unreachable — which
+        // is every Body of Knowledge this module exists to carry.
+        //
+        // Raised inside the gate, not before it as Documents.cs does: GateFn only reads the
+        // Authorization header, so the cap is still lifted before H.Body ever touches the stream, and
+        // an unauthenticated or under-permissioned caller stays held at the tight global cap.
+        static void AllowUpload(HttpContext ctx)
         {
+            var f = ctx.Features.Get<IHttpMaxRequestBodySizeFeature>();
+            if (f is not null && !f.IsReadOnly) f.MaxRequestBodySize = 40_000_000; // ~25 MiB as base64 + JSON
+        }
+
+        // ── Admin: upload/replace the file behind a book (or create the row + file in one call) ──
+        app.MapPost("/api/admin/cert-documents/upload", (HttpContext ctx) => gate(ctx.Request, "resources", adm =>
+        {
+            AllowUpload(ctx);
+            var req = ctx.Request;
             var b = H.Body(req).GetAwaiter().GetResult();
             var (file, err) = DocStore.Decode(H.GetS(b, "file"));
             if (file is null) return Results.Json(new { error = err ?? "file_required" }, statusCode: 400);
