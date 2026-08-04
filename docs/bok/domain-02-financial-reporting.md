@@ -101,8 +101,8 @@ presented. Its principles recur throughout the domain:
   presentation is kept consistent period to period.
 
 **Common pitfall — offsetting project balances.** Netting a contract asset on one contract against a contract
-liability on another (2.2.7) to show a single "net" figure breaches IAS 1's no-offset principle and hides
-information users need. Each contract's position is assessed and presented on its own.
+liability on another (2.2.7) to show a single "net" figure runs against the presentation principle IAS 1
+addresses, and hides information users need. Each contract's position is assessed and presented on its own.
 
 **AI in this KA.** The useful applications here are comparison and consistency work: checking that a draft
 set of statements presents the same line items on the same basis as the prior period, that comparatives have
@@ -1261,7 +1261,7 @@ year; its absence is what turns a period-end loss into a question about when man
 
 ### Advanced 2.A.4 — Portfolio effects and disaggregation
 
-**The principle.** IFRS 15 is applied contract by contract, and IAS 1's no-offset principle (2.1.4) keeps
+**The principle.** IFRS 15 is applied contract by contract, and the presentation principle IAS 1 addresses (2.1.4) keeps
 it that way in presentation: one contract's **contract asset** cannot be netted against another contract's
 **contract liability**, even for the same customer — each contract's cumulative revenue-versus-billing
 position (2.2.7) is struck and presented on its own. A portfolio *view* is legitimate and useful for
