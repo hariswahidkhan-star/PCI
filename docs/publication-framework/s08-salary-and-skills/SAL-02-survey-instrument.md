@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [manager, employer, academic, practitioner]
 level: professional
-reading_time_min: 22
+reading_time_min: 28
 summary: >
   The complete questionnaire for the Institute's salary and skills survey: consent and privacy wording,
   screening, role and level, employment context, contract type, experience and qualifications, the
@@ -30,7 +30,7 @@ gated: false
 related: [SAL-01, SAL-03, SAL-04, SAL-05]
 bok_domains: [13]
 sources: []
-placeholders: 10
+placeholders: 9
 ---
 
 # The survey instrument
@@ -67,7 +67,7 @@ compared across them.
 | *Routing* | The condition under which the question is shown. Unconditional unless stated |
 | *Required* | Whether the respondent may continue without answering |
 | *Note* | Why the question is worded this way. Not shown to the respondent |
-| `[CONFIRM: …]` | Wording or a parameter that cannot be settled without a decision or a legal review |
+| A bracketed `CONFIRM` marker | Wording or a parameter that cannot be settled without a decision or a legal review |
 
 **Three rules bind every question.** No figure, band, average or "typical" value is ever shown to a
 respondent before they answer — anchoring is the fastest way to ruin a pay survey. Every remuneration
@@ -604,7 +604,7 @@ what the research was for, and they answer accordingly next year.
 
 ## 16. Checklist — before this instrument is fielded
 
-- [ ] Every `[CONFIRM: …]` in Block A resolved by legal review in every jurisdiction of fielding
+- [ ] Every bracketed `CONFIRM` marker in Block A resolved by legal review in every jurisdiction of fielding
 - [ ] No figure, band, default or example value appears anywhere before a respondent's own answer
 - [ ] Every remuneration question offers *Prefer not to say* and none is mandatory
 - [ ] Employee and day-rate routing verified end to end, in both directions

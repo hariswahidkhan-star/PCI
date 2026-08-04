@@ -54,9 +54,9 @@ multi-contractor scope, and a "planning manager" who maintains one contractor's 
 upward. Both titles are honest inside their own organisations. Compared with each other, they are noise.
 
 Titles inflate over time, deflate under headcount pressure, absorb local convention, and are frequently
-used as a substitute for pay. They are also the only classification most market data uses. That is the
-single largest reason published pay figures for this profession are unreliable: the cell labelled
-"planner" contains four different jobs.
+used as a substitute for pay. They are also the only classification most market data uses — the single
+largest reason published pay figures for this profession are unreliable. The cell labelled "planner"
+contains four different jobs.
 
 The alternative is not complicated. Classify on two axes that describe the work rather than the label:
 **what the person is accountable for** (the role) and **how much judgement and scope they carry** (the
@@ -73,10 +73,10 @@ employer's title as free text and is never used as the classification variable. 
 are deliberately fewer than most internal structures, because a taxonomy with forty roles cannot be
 applied consistently by the twelve people who have to apply it.
 
-**What this is not.** It is not a pay structure, and it carries no pay implication of any kind. It is not a
-statement that every organisation needs all ten roles — most need three or four. And it is not a
-competency framework: competence is defined in the Institute's competency series, which this document maps
-to rather than duplicates (see §7).
+**What this is not.** Not a pay structure, and it carries no pay implication of any kind. Not a statement
+that every organisation needs all ten roles — most need three or four. And not a competency framework:
+competence is defined in the Institute's competency series, which this document maps to rather than
+duplicates (see §7).
 
 `[CONFIRM: whether this taxonomy is ratified by the Standards Committee as the Institute's published job
 architecture, or published as a research instrument only]`
@@ -377,16 +377,15 @@ portfolio is levelled below a manager of three, because one has reports and the 
 discipline that is usually the wrong way round.
 
 **The everything role.** In a small organisation one person is planner, cost engineer, risk analyst and
-lead. Coding them into all four inflates every cell; coding them into the largest half of their time,
-with the second recorded, is the only defensible option and must be applied consistently.
+lead. Coding them into all four inflates every cell; coding them into the largest half of their time, with
+the second recorded, is the only defensible option and must be applied consistently.
 
-**Roles invented to fit an internal structure.** An organisation adopts the taxonomy and then adds four
-local roles. That is legitimate internally and fatal to comparison — mapped local roles must resolve back
-to one of the ten before any figure is compared with anyone else's.
+**Roles invented to fit an internal structure.** An organisation adopts the taxonomy and adds four local
+roles. Legitimate internally, fatal to comparison — local roles must resolve back to one of the ten before
+any figure is compared with anyone else's.
 
 **Assuming the taxonomy is a pay ladder.** The ten roles are not ordered by value and the four levels
-carry no pay implication. Any organisation using this document to justify a pay position is using it for
-something it does not do; the honest use is job matching, after which pay is a separate question with its
+carry no pay implication. The honest use is job matching, after which pay is a separate question with its
 own evidence.
 
 ## 10. Checklist — matching a job to this taxonomy

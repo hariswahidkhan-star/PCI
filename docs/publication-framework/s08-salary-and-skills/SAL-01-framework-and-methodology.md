@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [manager, executive, employer, academic]
 level: professional
-reading_time_min: 13
+reading_time_min: 17
 summary: >
   This document sets out how the Institute will measure reward and skills in project controls: what the
   survey asks, who it asks, how bias is mitigated, the minimum number of responses a cell must contain
@@ -28,7 +28,7 @@ gated: false
 related: [SAL-02, SAL-03, SAL-05, SAL-06, EXB-06]
 bok_domains: [4]
 sources: []
-placeholders: 5
+placeholders: 6
 ---
 
 # Salary and skills report — framework and methodology
@@ -56,12 +56,11 @@ context. A published "salary guide" that names no sample, no definition of the r
 no method — and which, on inspection, is often a summary of the publisher's own placements or of scraped
 advertisements.
 
-Each of these fails in the same specific way: it reports a number without reporting what the number is a
-number *of*. A figure attached to the word "planner" is meaningless until you know whether that planner
-carries a portfolio or a single package, works on a rotation or from home, is paid a base salary or a
-day rate, in what currency, gross or net, and in which year. Project controls professionals would reject
-a cost report built to that standard in a heartbeat. We should hold market data to the standard we hold
-our own reporting to.
+Each fails in the same specific way: it reports a number without reporting what the number is a number
+*of*. A figure attached to the word "planner" is meaningless until you know whether that planner carries a
+portfolio or a single package, works on a rotation or from home, is paid a base salary or a day rate, in
+what currency, gross or net, and in which year. Project controls professionals would reject a cost report
+built to that standard in a heartbeat. Market data deserves the standard we hold our own reporting to.
 
 ## 2. Why this edition contains no numbers
 
@@ -80,16 +79,16 @@ before fielding can be checked against the report that follows it: if the minimu
 relaxed for one attractive table, that is visible. We are making it easy to catch ourselves.
 
 **Third, it is the discipline we certify.** A controls professional who reports an estimate at completion
-(EAC) they cannot substantiate has failed at the core of the job. The Institute exists to certify people
-who do not do that. A professional body that publishes a methodology before it publishes a number is
-demonstrating, at its own cost, the behaviour it examines candidates on. If we were willing to invent a
-salary range for the sake of a press cycle, no reader should trust anything else we publish.
+(EAC) they cannot substantiate has failed at the core of the job. A professional body that publishes a
+methodology before it publishes a number is demonstrating, at its own cost, the behaviour it examines
+candidates on. If we were willing to invent a salary range for the sake of a press cycle, no reader should
+trust anything else we publish.
 
-What this series is *not* is an apology. Everything needed to run an honest annual report is here: a
-fielded instrument (`SAL-02`), a role taxonomy and levelling rubric that makes comparison possible
-(`SAL-03`), a skills vocabulary (`SAL-04`), and a report template whose tables are structurally complete
-and empty (`SAL-05`). The missing element is field data, and field data is the one thing that cannot be
-written at a desk.
+This is not an apology for an absence. Everything needed to run an honest annual report is here: a fielded
+instrument (`SAL-02`), a role taxonomy and levelling rubric that makes comparison possible (`SAL-03`), a
+skills vocabulary (`SAL-04`), and a report template whose tables are structurally complete and empty
+(`SAL-05`). The missing element is field data, and field data is the one thing that cannot be written at a
+desk.
 
 ## 3. What the report measures
 
@@ -124,14 +123,14 @@ channels (members, candidates, newsletter subscribers), professional social netw
 consultancy contacts who agree to circulate the link without seeing responses, and open publication of the
 survey URL so that participation does not require any relationship with the Institute.
 
-**This produces a non-probability, volunteer sample.** No amount of sample size converts a volunteer
-sample into a probability sample. The report will say so on the same page as its first table, in those
-words, every year. What we can do is characterise the sample precisely, mitigate the biases we can name,
-and refuse to publish where the sample is too thin to bear a claim.
+**This produces a non-probability, volunteer sample.** No sample size converts a volunteer sample into a
+probability sample. The report will say so on the same page as its first table, in those words, every
+year. What we can do is characterise the sample precisely, mitigate the biases we can name, and refuse to
+publish where the sample is too thin to bear a claim.
 
 **Open participation is a deliberate control.** If only members could respond, the sample would be a study
-of PCI members' pay reported as a study of the profession. Anyone in a qualifying role may respond, and
-membership and certification status are recorded as respondent characteristics — never as eligibility.
+of PCI members' pay reported as a study of the profession. Membership and certification status are
+recorded as respondent characteristics — never as eligibility.
 
 ## 5. Self-selection and the other biases we can name
 
@@ -210,13 +209,13 @@ currency and basis before fielding and recorded in the fielding log. A record is
 intended value is unambiguous from the rest of the response; otherwise the affected item — not the whole
 response — is excluded.
 
-**Ineligible responses** are records that fail a screening rule, are duplicates from one respondent, or
-show response patterns inconsistent with genuine completion (straight-lining a matrix, or a completion
-time below a pre-set floor). These are removed and counted.
+**Ineligible responses** fail a screening rule, duplicate one respondent, or show patterns inconsistent
+with genuine completion: a straight-lined matrix, or a completion time below a pre-set floor. These are
+removed and counted.
 
 **Genuine extremes** are real values far from the centre. The rule for handling them — exclusion above a
 stated distance from the quartiles, winsorising to a stated percentile, or retention — is declared before
-the data is examined and applied identically to every cell. It is never chosen after seeing which choice
+the data is examined and applied identically to every cell, never chosen after seeing which choice
 produces the tidier result.
 
 Three disclosure rules apply to all three: the count of records affected is published; nothing is removed
@@ -254,21 +253,21 @@ in every edition, so a reader can reconstruct what was asked and reproduce the c
 
 ## 11. Publication rules and governance
 
-The report is produced under the Institute's editorial governance, and three rules bind its production.
+Three rules bind the report's production.
 
 **No commercial influence over content.** No sponsor, advertiser, employer or recruitment business sees
 results before publication, chooses which cuts are published, or has any role in the methodology. Where a
 partner circulates the survey, that is disclosed and confers nothing else.
 
 **No individual or employer identification.** Free-text answers are screened for identifying detail before
-coding, and identifying detail is removed rather than paraphrased. No employer is named in any output.
-Personal data handling is governed by the consent and privacy provisions in `SAL-02` §2
+coding, and that detail is removed rather than paraphrased. No employer is named in any output. Personal
+data handling is governed by the consent and privacy provisions in `SAL-02` §2
 `[CONFIRM: data controller, lawful basis, retention period and erasure procedure — pending legal review,
 see SAL-02 §2]`.
 
-**Corrections are public.** If a published figure is wrong, the correction is posted to the same channels
-that carried the original, with a dated note in the report itself. A quietly replaced file is a second
-error on top of the first.
+**Corrections are public.** If a published figure is wrong, the correction is posted to the channels that
+carried the original, with a dated note in the report itself. A quietly replaced file is a second error on
+top of the first.
 
 ## 12. Anti-goals — what this report will never claim
 
@@ -308,19 +307,17 @@ type and, optionally, an employer identifier used solely for this test and never
 compared with the old one because both are called "base pay". Rule 6 forbids it; the change log in
 `SAL-05` makes the breach visible.
 
-**Rescue by aggregation.** A thin cell is merged upward until it clears the threshold, and the merged cell
-is then discussed as though it were the original. Permitted only along a declared hierarchy, and labelled.
-
 **The press-release cut.** Someone finds the one comparison that makes a headline, and it is published
-without its denominator. The rule that every figure carries its response count exists precisely for the
-moment when that is inconvenient.
+without its denominator — or a thin cell is merged upward until it clears the threshold and is then
+discussed as though it were the original. The rules that every figure carries its response count, and that
+combination follows a declared hierarchy, exist precisely for the moment when they are inconvenient.
 
 ## 14. Worked example — the arithmetic, stated symbolically
 
-*No illustrative figures are used in this series, by design.* Every other document in the Institute's
-publication programme carries numeric worked examples, because teaching a method requires them. Here they
-would be a hazard: an invented respondent distribution, however clearly labelled, is exactly the kind of
-number that gets screenshotted without its label. So the arithmetic is shown in symbols only.
+*No illustrative figures are used in this series, by design.* Elsewhere in the Institute's publication
+programme numeric worked examples are the backbone of the teaching. Here they would be a hazard: an
+invented respondent distribution, however clearly labelled, is exactly the kind of number that gets
+screenshotted without its label. So the arithmetic is shown in symbols only.
 
 **Post-stratification weight** for stratum *h*, with population and sample counts as defined in §7:
 

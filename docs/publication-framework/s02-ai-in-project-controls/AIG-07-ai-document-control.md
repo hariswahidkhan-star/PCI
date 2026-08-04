@@ -26,7 +26,10 @@ linkedin:
 gated: false
 related: [AIG-08, AIG-10, AIG-12, BPG-11, BPG-12]
 bok_domains: [7, 13]
-sources: []
+sources:
+  - "PCI Body of Knowledge, Domain 7 — Contracts, commercial management, BoQ, invoicing and revenue (Institute manuscript, 2026)"
+  - "PCI Body of Knowledge, Domain 13 — AI for project controls and project management (Institute manuscript, 2026)"
+  - "PCI candidate AI-use policy (Institute, 2026)"
 placeholders: 0
 ---
 

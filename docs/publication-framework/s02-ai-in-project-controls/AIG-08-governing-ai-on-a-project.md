@@ -27,13 +27,15 @@ linkedin:
 gated: false
 related: [AIG-09, AIG-10, AIG-11, ETH-05, TPL-01]
 bok_domains: [12, 13]
-sources: []
+sources:
+  - "PCI Body of Knowledge, Domain 13 — AI for project controls and project management (Institute manuscript, 2026)"
+  - "PCI candidate AI-use policy (Institute, 2026)"
 placeholders: 0
 ---
 
 # Governing AI on a project — the control framework
 
-> The six control objects that make AI use on a project defensible, and the clauses that put them in the project execution plan.
+> Six control objects that make AI use on a project defensible, and the clauses that put them in the plan.
 
 **In one paragraph.** A corporate AI policy does not govern a project; project controls do. This document
 sets out the six control objects that make AI use on a project defensible — permitted-use register,
@@ -42,7 +44,7 @@ control — gives the clauses to write into the project execution plan, and show
 verification effort the framework creates.
 
 **Who this is for.** Project controls managers, project directors, PMO leads and heads of function who
-have to answer for AI-assisted numbers, and the assurance and audit staff who will test the answer.
+answer for AI-assisted numbers, and the assurance and audit staff who test the answer.
 
 ---
 
@@ -65,8 +67,8 @@ turned into artefacts with owners, frequencies and fields.
 
 ## 2. Six control objects
 
-Everything that follows attaches to one of six objects. A framework with all six is auditable; a framework
-with fewer should name which is missing, and why.
+Everything that follows attaches to one of six objects. A framework with all six is auditable; one with
+fewer should name which is missing, and why.
 
 | # | Control object | What it fixes | Owner (typical) | Cadence |
 |---|---|---|---|---|
@@ -293,7 +295,7 @@ uses from the register. What it must not do is keep the register and abandon the
 ## 11. Checklist
 
 - [ ] A permitted-use register exists for this project, with an owner and a review date.
-- [ ] Every row states task, capability class, tool instance, maximum data classification, grounding, verification tier and output-owner role.
+- [ ] Every row states task, capability class, tool instance, maximum data class, grounding, tier and output-owner role.
 - [ ] "A use not in the register is not permitted" is written in the plan; a request route exists; refusals are logged.
 - [ ] Three tiers are defined, every row carries one, and lowering a tier needs a documented decision on measured evidence.
 - [ ] The data classification map names actual project artefacts, and each tool has a maximum classification plus recorded residency and training-on-your-data answers.

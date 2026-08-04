@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: foundation
-reading_time_min: 7
+reading_time_min: 8
 summary: >
   The complete map of the PCL-AI Body of Knowledge on one page: thirteen domains, sixty-one knowledge
   areas, and the three published group weights of forty, forty and twenty per cent. Each domain is
@@ -40,8 +40,7 @@ placeholders: 0
 **In one paragraph.** This is the complete map of the PCL-AI Body of Knowledge on one page: thirteen
 domains, sixty-one knowledge areas, and the three published group weights of forty, forty and twenty per
 cent. Each domain is given the question it answers and the knowledge areas that answer it, so a reader can
-locate any topic by number and see what sits either side of it. It is a reference card, not an argument —
-the case for the weighting is made elsewhere.
+locate any topic by number and see what sits either side of it. It is a reference card, not an argument.
 
 **Who this is for.** Candidates planning revision, controls managers auditing what their function covers,
 and anyone who has been told the framework is broad and wants to see exactly how broad.
@@ -50,15 +49,15 @@ and anyone who has been told the framework is broad and wants to see exactly how
 
 ## 1. How to read the map
 
-Every topic in the Body of Knowledge sits at a numbered address on the pattern **Domain.KA.Topic**. Knowledge
-Area 6.3 is the estimate-at-completion family inside the earned value domain; `6.3.1` is a topic within it.
-Cite the number rather than repeating the content — that convention is what lets an examination item, a
-revision plan and a coverage complaint all name the same place.
+Every topic sits at a numbered address on the pattern **Domain.KA.Topic**. Knowledge Area 6.3 is the
+estimate-at-completion family inside the earned value domain; `6.3.1` is a topic within it. Cite the number
+rather than repeating the content — that convention lets an examination item, a revision plan and a coverage
+complaint all name the same place.
 
-Weights attach to the three **groups**, not to individual domains. There is no published per-domain
-percentage and no per-domain passing requirement. A domain with six knowledge areas is not therefore worth
-more than one with three; knowledge-area counts reflect how much distinct material the subject contains, not
-how heavily it is sampled.
+Weights attach to the three **groups**, not to individual domains: there is no published per-domain
+percentage and no per-domain passing requirement. A domain with six knowledge areas is not worth more than
+one with three; the counts reflect how much distinct material a subject contains, not how heavily it is
+sampled.
 
 ## 2. The map
 
@@ -163,12 +162,12 @@ across the controls lifecycle, the largest knowledge area, carrying the systemat
 ## 6. What the map does not tell you
 
 **It does not give you a per-domain weight.** Coverage is spread within each group across its member domains
-and their knowledge areas. Any published figure claiming a percentage for a single domain did not come from
-the Institute.
+and their knowledge areas. Any figure claiming a percentage for a single domain did not come from the
+Institute.
 
-**It does not confine AI to Domain 13.** Every non-AI domain carries embedded coverage of how AI assists that
+**It does not confine AI to Domain 13.** Every non-AI domain carries embedded coverage of how AI assists its
 subject and where it must not be trusted, and knowledge area 13.5 carries the systematic per-domain
-treatment. Governed-AI judgement can therefore appear inside an item sitting in any group.
+treatment. Governed-AI judgement can appear inside an item sitting in any group.
 
 **It does not tell you where the examination will press.** Scenarios cross domains deliberately: a schedule
 slip carries cost, risk, commercial and reporting consequences, and one item may require all four.

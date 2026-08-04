@@ -55,11 +55,11 @@ planners whose numbers feed one; and PMO leads deciding what a portfolio view sh
 ## 1. The question comes before the chart
 
 The commonest way to build a bad dashboard is to start from the data warehouse and ask what can be
-displayed. The result is a screen that is technically accurate, visually busy and decisionally inert —
-nobody can say what any tile is for, so nobody acts on any of them, so the dashboard becomes something the
-controls team maintains rather than something the project uses.
+displayed. The result is technically accurate, visually busy and decisionally inert: nobody can say what any
+tile is for, so nobody acts on any of them, and the dashboard becomes something the controls team maintains
+rather than something the project uses.
 
-The discipline is to invert the order. Before a chart is drawn, write down three things:
+Invert the order. Before a chart is drawn, write down three things.
 
 **The decision.** Not a topic — a decision. "Whether to release the second tranche of contingency" is a
 decision. "Cost performance" is a topic. If no decision can be named, the chart is being drawn for
@@ -74,32 +74,30 @@ belongs on the chart.
 for a weekly site meeting and a chart designed for a quarterly investment board have different aggregation,
 different periods and often different measures, even when they describe the same work.
 
-Write those three lines and most candidate charts delete themselves. That is the point. A dashboard's
+Write those three lines and most candidate charts delete themselves. That is the point: a dashboard's
 quality is set far more by what it excludes than by what it contains, because attention is the scarce
-resource in every meeting the dashboard was built to serve.
+resource in every meeting it was built to serve.
 
 ## 2. A dashboard is a control instrument
 
-The word "dashboard" carries a bad analogy. A car's dashboard is passive: it reports what the engine is
-doing. A controls dashboard should be closer to an instrument on a process plant — a reading against a
-setpoint, with an alarm band, feeding a control action. Three properties follow.
+The word carries a bad analogy. A car's dashboard is passive: it reports what the engine is doing. A controls
+dashboard should be closer to an instrument on a process plant — a reading against a setpoint, with an alarm
+band, feeding a control action. Three properties follow.
 
 **It shows position against a threshold, not position alone.** A cost performance index (CPI, earned value
 divided by actual cost) of 0.96 means nothing on its own. Against a tolerance of 0.98 it is an exception;
 against a tolerance of 0.90 it is noise. The threshold is part of the reading.
 
-**It shows direction, not only level.** Direction is where the early warning lives. A measure sitting
-comfortably inside tolerance but moving one hundredth a month in the wrong direction is a different
-management situation from the same value moving nowhere, and a snapshot tile cannot tell them apart. Every
-measure that carries a threshold should carry a trend.
+**It shows direction, not only level.** A measure sitting comfortably inside tolerance but moving one
+hundredth a month in the wrong direction is a different management situation from the same value moving
+nowhere, and a snapshot tile cannot tell them apart. Every measure carrying a threshold carries a trend.
 
-**It has a defined response.** For each tile, someone should be able to answer: *what happens when this
-goes amber?* If the answer is "we discuss it", the tile is decoration. If the answer is "the control
-account manager produces a recovery plan within five working days and the change is logged", the tile is an
-instrument. Writing the response down is what converts a reporting artefact into a control.
+**It has a defined response.** For each tile, someone should be able to answer: *what happens when this goes
+amber?* "We discuss it" makes the tile decoration. "The control account manager produces a recovery plan
+within five working days and the change is logged" makes it an instrument.
 
-The corollary is uncomfortable and worth stating plainly: a tile with no defined response should be
-removed, however interesting it is. Interesting is a property of the analyst, not of the project.
+The corollary is worth stating plainly: a tile with no defined response should be removed, however
+interesting it is. Interesting is a property of the analyst, not of the project.
 
 ## 3. Choosing the form for the question
 
@@ -114,19 +112,13 @@ Controls asks a small number of questions repeatedly. Matching form to question 
 | What is this total made of? | Stacked bar, few categories, consistent order across periods | A pie chart with more than about five slices |
 | Are two measures related? | Scatter, with the relationship stated in words | A dual-axis line chart, which manufactures relationships |
 
-Two entries deserve elaboration because they are where dashboards most often mislead.
-
-**Dual axes.** Putting two measures with different units on one chart with two vertical scales lets the
-designer choose the scales, and the choice determines whether the lines appear to move together. Nothing
-about the data forces the appearance. If the point is that two measures are related, say so in words and
-show the relationship as a scatter or as a ratio; if the point is that both matter, use two charts stacked
-with a shared time axis.
-
-**Distributions.** Controls generates distributions constantly — schedule risk output, cost risk output,
-estimate ranges — and then reports them as one number. A cumulative distribution curve with the funded
-confidence level marked is the honest form, because it lets a reader see how much the answer moves for a
-small change in confidence. That slope is often the most decision-relevant thing on the whole dashboard,
-and a single point estimate destroys it. `BPG-17 — Quantitative schedule risk analysis` treats how those
+Two rows mislead most often. **Dual axes** let the designer choose two scales, and that choice — not the
+data — determines whether the lines appear to move together. If the point is that two measures are related,
+say so in words and show a scatter or a ratio; if the point is that both matter, stack two charts on a shared
+time axis. **Distributions** are generated constantly by controls — schedule risk output, cost risk output,
+estimate ranges — and then reported as one number. A cumulative curve with the funded confidence level marked
+lets a reader see how much the answer moves for a small change in confidence, and that slope is often the most
+decision-relevant thing on the dashboard. `BPG-17 — Quantitative schedule risk analysis` covers how those
 distributions are produced and what they may honestly be said to mean.
 
 ## 4. The cut-off problem: a dashboard is only as reliable as its data date
@@ -134,13 +126,12 @@ distributions are produced and what they may honestly be said to mean.
 Every tile inherits the reliability of the data date beneath it. This is not a data-quality footnote; it is
 the single largest source of dashboard error, and it is systematic rather than random.
 
-The mechanism is simple. Cost arrives late. Subcontractor applications, goods-received records, timesheets
-from remote locations and internal recharges all land after the period they belong to. Earned value, by
-contrast, is often computed on time because it is generated by your own team. The result is that at first
-publication the numerator of every efficiency measure is more complete than the denominator, so the measure
-flatters — and it flatters *every month*, in the *same direction*. That is a bias, not noise, and a bias can
-be measured and corrected. `BPG-07 — Accruals and cut-off discipline` covers the accrual practice itself;
-what matters here is what it does to the picture.
+Cost arrives late. Subcontractor applications, goods-received records, remote timesheets and internal
+recharges all land after the period they belong to, while earned value is often computed on time because
+your own team generates it. At first publication, therefore, the numerator of every efficiency measure is
+more complete than the denominator, so the measure flatters — *every month*, in the *same direction*. That is
+a bias, not noise, and a bias can be measured. `BPG-07 — Accruals and cut-off discipline` covers the accrual
+practice; what matters here is what it does to the picture.
 
 Three design consequences follow.
 
@@ -149,21 +140,19 @@ one the meeting acts on. Distinguish it — a hollow marker, a dashed final segm
 label — so nobody reads it as equivalent to the settled history behind it.
 
 **Publish the restatement history.** Keep, for each measure, the value as first published and the value as
-restated one period later. The average movement between them is the measure's completeness bias, and it is
-the most useful diagnostic number a reporting function can hold. Section 8 works it through.
+restated one period later. The average movement between them is the measure's completeness bias — the most
+useful diagnostic number a reporting function can hold. Section 8 works it through.
 
-**Snapshot, do not re-render.** A dashboard that recomputes history from live data every time it is opened
-changes its own past silently. Two people looking at "the March chart" in April and in June see different
-charts, and neither knows it. Store the published figures for each period as issued, and show restatements
-as a deliberate, visible act rather than an invisible refresh.
+**Snapshot, do not re-render.** A dashboard that recomputes history from live data on every open changes its
+own past silently: two people looking at "the March chart" in April and in June see different charts, and
+neither knows it. Store each period's figures as issued, and make restatement a visible act.
 
 ## 5. Accessibility is a correctness requirement
 
-Meaning encoded in colour alone is meaning that some readers do not receive. Assume that some of your
-audience cannot reliably separate red from green, that the report will be printed in greyscale by at least
-one person before the meeting, and that a projector will flatten whatever palette you chose. Under those
-assumptions, a red-amber-green status that is *only* a colour communicates nothing to a meaningful part of
-the room.
+Meaning encoded in colour alone is meaning some readers do not receive. Assume that part of your audience
+cannot reliably separate red from green, that someone will print the report in greyscale before the meeting,
+and that a projector will flatten whatever palette you chose. Under those assumptions a red-amber-green
+status that is *only* a colour communicates nothing to a meaningful part of the room.
 
 The fix is redundant encoding — every status carries at least two signals:
 
@@ -172,13 +161,11 @@ The fix is redundant encoding — every status carries at least two signals:
 - **position**, which is the strongest visual channel available — a value plotted against a marked
   threshold line communicates status before any colour is processed.
 
-Two further rules belong here. Keep the same category in the same order and the same encoding across every
-chart on the dashboard, because a reader who has to relearn the key on each tile will stop reading tiles.
-And give every chart a caption that states the question it answers and the alternative text a screen reader
-or a document conversion will surface: what the chart shows, over what period, and what the reading is. A
-caption that says "CPI trend" is a title; a caption that says "Cost performance index by month, January to
-June, falling from 1.01 to 0.95 against a tolerance of 0.98" is an accessible description and doubles as
-the sentence the reader repeats in the meeting.
+Two further rules. Keep every category in the same order and the same encoding across every tile, because a
+reader who must relearn the key on each one will stop reading tiles. And give every chart a caption that
+doubles as its alternative text: what is shown, over what period, and what the reading is. "CPI trend" is a
+title. "Cost performance index by month, January to June, falling from 1.01 to 0.95 against a tolerance of
+0.98" is an accessible description, and it is also the sentence the reader repeats in the meeting.
 
 ## 6. One number per decision
 
@@ -192,50 +179,42 @@ person with the strongest view chooses whichever measure supports it. Deciding i
 number governs a decision removes that choice, which is precisely why it is resisted.
 
 The supporting detail does not disappear; it moves. The structure that works is overview first, detail on
-demand: one screen that answers where we are, where we are heading, what is outside tolerance and what is
-being done about it — with every red and amber traceable, in one step, to the control account and the
-narrative behind it. What must not happen is the supporting detail being promoted onto the front page
-because someone found it interesting. Every promotion costs attention that the headline numbers were
-competing for.
+demand: one screen answering where we are, where we are heading, what is outside tolerance and what is being
+done — with every red and amber traceable in one step to the control account and its narrative. Every
+promotion of detail onto the front page costs attention the headline numbers were competing for.
 
 Where several measures genuinely bear on one decision, combine them explicitly and publish the combination
-rule, rather than leaving the combination to the reader's judgement in the room. An explicit rule can be
-argued with and improved; an implicit one is re-invented at every meeting.
+rule. An explicit rule can be argued with and improved; an implicit one is re-invented at every meeting.
 
 ## 7. How this goes wrong
 
-**The dashboard that reports everything available.** Built from the warehouse outwards, it contains
-forty tiles, none of which has a defined response. It survives because removing a tile requires someone to
-say it is not needed, and nobody wants that conversation. The test that breaks the deadlock: ask the owner
-of each tile what decision changed because of it in the last six months. Tiles with no answer come off.
+**The dashboard that reports everything available.** Forty tiles, none with a defined response. It survives
+because removing a tile requires someone to say it is not needed. The test that breaks the deadlock: ask each
+tile's owner what decision changed because of it in the last six months. Tiles with no answer come off.
 
-**The axis chosen after the data is seen.** A truncated vertical axis turns a movement of a few hundredths
-into a cliff; a zero-based axis on a ratio that only ever lives between 0.9 and 1.1 turns a serious decline
-into a flat line. Both are defensible in isolation and both are choices about the message. Fix the axis to
-the decision thresholds *before* the period's data arrives, and keep it fixed across periods.
+**The axis chosen after the data is seen.** A truncated axis turns a movement of a few hundredths into a
+cliff; a zero-based axis on a ratio that lives between 0.9 and 1.1 turns a serious decline into a flat line.
+Both are defensible in isolation and both are choices about the message. Fix the axis to the decision
+thresholds *before* the period's data arrives, and keep it fixed across periods.
 
 **Comparing the provisional to the settled.** The current month is compared with a fully restated prior
-month, and the comparison is reported as movement. Roughly half the apparent movement is data completeness.
-This is the failure the worked example below quantifies, and it is the one that most often causes a project
-to relax in the month it should have escalated.
+month and the difference reported as movement. The worked example below quantifies this; it is the failure
+that most often causes a project to relax in the month it should have escalated.
 
-**The refreshing dashboard with no memory.** History changes every time the page loads. Nobody can
-reconstruct what was reported at the time a decision was taken, which makes the dashboard useless as
-evidence and, on a project heading for a dispute, worse than useless.
+**The refreshing dashboard with no memory.** Nobody can reconstruct what was reported when a decision was
+taken, which makes the dashboard useless as evidence and, on a project heading for a dispute, worse.
 
-**Colour doing all the work.** A status column of coloured circles with no labels, no shapes and no values.
-It is fast to build, unreadable in print, ambiguous to some readers and impossible to quote in minutes.
+**Colour doing all the work.** Coloured circles with no labels, shapes or values: fast to build, unreadable
+in print, ambiguous to some readers, impossible to quote in minutes.
 
 **Two dashboards that disagree.** A project view and a portfolio view built on separately maintained
-extracts. The meeting becomes a reconciliation. One source, aggregated automatically through the coding
-structure, is the only cure; when reconciliation is unavoidable, publish the difference and its cause on the
-face of both views rather than letting it be discovered.
+extracts. The meeting becomes a reconciliation. One source, aggregated through the coding structure, is the
+only cure; where reconciliation is unavoidable, publish the difference and its cause on both views rather
+than letting it be discovered.
 
-**The chart that is redrawn until it is acceptable.** Not fraud, and rarely even conscious — a series of
-individually reasonable choices about axis, window and grouping, each nudging the picture. The
-countermeasure is procedural, not ethical: fix the chart specification with the tolerance, review the
-specification at baseline change, and require any mid-period change to the specification to be recorded
-alongside the change to the data.
+**The chart redrawn until it is acceptable.** Rarely conscious — a series of individually reasonable choices
+about axis, window and grouping, each nudging the picture. The countermeasure is procedural: fix the chart
+specification with the tolerance, and record any mid-period change to it alongside the change to the data.
 
 ## 8. Worked example
 
@@ -327,17 +306,15 @@ is, on the project's own restatement history, the month it went red.
 
 ### 8.4 What the numbers do and do not support
 
-The adjusted figure is an expectation, not a measurement: it says that if this month behaves like the last
-five, the settled value will be near 0.93. It does not license reporting 0.93 as the CPI. The correct
-treatment is to report 0.96 as provisional, state the measured restatement bias of −0.03 on the face of the
-chart, and take the escalation action the red threshold requires — recording that the escalation was
-triggered by the adjusted expectation, so that if month 6 settles at 0.96 after all, the decision is
-reviewable rather than embarrassing.
+The adjusted figure is an expectation, not a measurement, and it does not license reporting 0.93 as the CPI.
+The correct treatment is to report 0.96 as provisional, state the measured bias of −0.03 on the face of the
+chart, and take the escalation the red threshold requires — recording that it was triggered by the adjusted
+expectation, so that if month 6 settles at 0.96 after all, the decision is reviewable rather than
+embarrassing.
 
-Three assumptions carry this result and should be stated wherever it is used: the restatement history is
-five points, which is short; the bias is assumed stable, which fails if the cause is fixed or worsens; and
-the bias is specific to this control account's cost-capture pattern, so it may not transfer to another
-account on the same project, let alone another project.
+Three assumptions carry the result: the history is five points, which is short; the bias is assumed stable,
+which fails if its cause is fixed or worsens; and it is specific to this control account's cost-capture
+pattern, so it may not transfer to another account, let alone another project.
 
 ## 9. Checklist
 
@@ -397,8 +374,8 @@ distinguishes an instrument from a picture of one.
 - PCI Canonical Facts (`docs/publication-framework/00-framework/CANONICAL-FACTS.md`), verified August 2026:
   naming, status and claims policy.
 
-No external statistics, benchmarks or vendor capabilities are cited in this guide, because none were
-verified for it. All figures in §8 are illustrative and were constructed for teaching.
+No external statistic, benchmark or vendor capability is cited, because none was verified for this guide.
+All figures in §8 are illustrative and were constructed for teaching.
 
 ## Status and version
 

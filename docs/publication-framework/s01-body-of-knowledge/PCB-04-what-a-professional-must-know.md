@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [student, practitioner, manager, employer]
 level: professional
-reading_time_min: 6
+reading_time_min: 8
 summary: >
   The Body of Knowledge is a syllabus; the credential is a claim. This document states that claim as
   eleven propositions about what a project controls professional must be able to do, gives the concrete
@@ -39,8 +39,7 @@ placeholders: 0
 **In one paragraph.** The Body of Knowledge is a syllabus; the credential is a claim. This document states
 that claim as eleven propositions about what a project controls professional must be able to do, gives the
 concrete test behind each one, names where it sits in the framework, and states plainly what is not being
-claimed. A reader can use it to audit themselves, or to work out in ten minutes whether the person opposite
-them can do the job.
+claimed.
 
 **Who this is for.** Practitioners deciding whether to certify, controls managers assessing their own team,
 and interviewers who want a better question than "tell me about your earned value experience".

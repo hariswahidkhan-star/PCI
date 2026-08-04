@@ -1,0 +1,184 @@
+/* PCI Publication Framework — print stylesheet for the 100 public documents.
+   Adapted from the Body of Knowledge house style (docs/bok/build/print.css) and tuned for
+   single documents rather than a book: no part dividers, no chapter ghosts, no index.
+   Typography: IBM Plex Serif (body) + Inter (display), with system fallbacks.
+   Brand: #1D4ED8 primary · #0F172A navy · #C13329 accent. */
+
+@page {
+  size: A4;
+  margin: 21mm 17mm 19mm 17mm;
+  @bottom-center {
+    content: counter(page);
+    font-family: Inter, "DejaVu Sans", sans-serif; font-size: 8pt; color: #475569;
+    border-top: 0.4pt solid #CBD5E1; padding-top: 1.6mm; margin-bottom: 7mm; width: 100%;
+  }
+  @top-left {
+    content: string(seriesname);
+    font-family: Inter, "DejaVu Sans", sans-serif; font-size: 6.8pt; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #94A3B8;
+  }
+  @top-right {
+    content: string(doctitle);
+    font-family: Inter, "DejaVu Sans", sans-serif; font-size: 6.8pt; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #1D4ED8;
+  }
+}
+@page :first { @top-left { content: none; } @top-right { content: none; } @bottom-center { content: none; } }
+@page plain { @top-left { content: none; } @top-right { content: none; } }
+
+body {
+  font-family: "IBM Plex Serif", Georgia, "DejaVu Serif", serif;
+  font-size: 9.6pt; line-height: 1.54; color: #1E293B;
+  text-align: justify; hyphens: auto;
+  font-variant-numeric: proportional-nums;
+}
+
+/* ---------- Title page ---------- */
+.titlepage { page: plain; page-break-after: always; text-align: left; padding-top: 46mm; }
+.titlepage .docid {
+  font-family: Inter, "DejaVu Sans", sans-serif; font-size: 8.4pt; font-weight: 700;
+  letter-spacing: 0.28em; text-transform: uppercase; color: #C13329; margin-bottom: 5mm;
+}
+.titlepage h1 {
+  font-family: Inter, "DejaVu Sans", sans-serif; font-weight: 800; font-size: 30pt;
+  letter-spacing: -0.025em; line-height: 1.1; color: #0F172A;
+  border: none; margin: 0 0 6mm 0; padding: 0; page-break-before: avoid;
+}
+.titlepage h1::before { content: none; }
+.titlepage .subtitle {
+  font-family: Inter, "DejaVu Sans", sans-serif; font-size: 11.5pt; font-weight: 500;
+  color: #1D4ED8; line-height: 1.55; margin-bottom: 12mm; max-width: 130mm; text-align: left;
+}
+.titlepage .rule { width: 40mm; height: 1.5mm; background: #C13329; margin: 12mm 0; }
+.titlepage .meta {
+  font-family: Inter, "DejaVu Sans", sans-serif; font-size: 8.6pt; color: #64748B;
+  line-height: 1.9; letter-spacing: 0.04em; text-align: left;
+}
+.titlepage .meta .theme { color: #1D4ED8; font-style: italic; letter-spacing: 0.02em; }
+
+/* Running-header sources. Hidden, but their content sets the page strings. */
+.stringsrc { string-set: seriesname content(); height: 0; overflow: hidden; font-size: 0; }
+.stringsrc2 { string-set: doctitle content(); height: 0; overflow: hidden; font-size: 0; }
+
+/* ---------- Front matter ---------- */
+.frontmatter { page: plain; page-break-after: always; }
+.frontmatter h2 {
+  margin-top: 0; border-bottom: 0.5pt solid #DBEAFE; font-size: 12.5pt;
+}
+.frontmatter p { text-align: left; font-size: 8.8pt; line-height: 1.6; }
+.frontmatter .notice {
+  background: #F8FAFC; border: 0.4pt solid #E2E8F0; border-left: 2.6pt solid #C13329;
+  border-radius: 1.4mm; padding: 3.4mm 4mm; margin: 4mm 0;
+}
+.frontmatter .fmtable { font-family: Inter, "DejaVu Sans", sans-serif; font-size: 8.4pt; }
+.frontmatter .fmtable th { width: 46mm; hyphens: none; white-space: nowrap; }
+
+/* ---------- Headings ---------- */
+h1, h2, h3, h4 {
+  font-family: Inter, "DejaVu Sans", sans-serif; color: #0F172A;
+  text-align: left; page-break-after: avoid;
+}
+h1 {
+  font-size: 18pt; font-weight: 800; letter-spacing: -0.015em; line-height: 1.25;
+  border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin: 0 0 7mm 0;
+}
+h2 {
+  font-size: 12.5pt; font-weight: 700; margin: 8.5mm 0 3mm 0;
+  border-bottom: 0.5pt solid #DBEAFE; padding-bottom: 1.4mm;
+}
+h2::before {
+  content: ""; display: inline-block; width: 5.2mm; height: 1.1mm; background: #C13329;
+  margin-right: 2.4mm; vertical-align: 0.55mm;
+}
+h3 { font-size: 10.4pt; font-weight: 700; margin: 6mm 0 2.2mm 0; }
+h4 { font-size: 9.5pt; font-weight: 600; margin: 4.5mm 0 1.8mm 0; }
+
+p { margin: 0 0 2.4mm 0; orphans: 2; widows: 2; }
+strong { color: #0F172A; }
+
+/* The template's lead-in blocks: "In one paragraph." / "Who this is for." */
+p.lead {
+  background: #F5F8FF; border: 0.5pt solid #BFDBFE; border-radius: 1.6mm;
+  padding: 3mm 4mm; margin: 3.5mm 0; text-align: left; font-size: 9.2pt;
+  page-break-inside: avoid;
+}
+
+/* ---------- Tables ---------- */
+table {
+  border-collapse: collapse; width: 100%; margin: 3mm 0 4.2mm 0;
+  font-family: Inter, "DejaVu Sans", sans-serif; font-size: 8.1pt; line-height: 1.42;
+  page-break-inside: avoid;
+}
+th {
+  background: #1D4ED8; color: #FFFFFF; font-weight: 600;
+  border: none; border-bottom: 1pt solid #1E40AF; padding: 1.8mm 2.2mm; text-align: left;
+}
+td { border: none; border-bottom: 0.4pt solid #E2E8F0; padding: 1.6mm 2.2mm; text-align: left; vertical-align: top; }
+tr:nth-child(even) td { background: #F8FAFC; }
+tbody tr:last-child td { border-bottom: 0.8pt solid #CBD5E1; }
+
+/* ---------- Code and formula panels ---------- */
+pre {
+  background: #F8FAFC; border: 0.4pt solid #E2E8F0; border-left: 2.6pt solid #1D4ED8;
+  border-radius: 1.2mm; padding: 2.6mm 3.6mm; font-size: 8.3pt; line-height: 1.5;
+  page-break-inside: avoid; white-space: pre-wrap; margin: 3mm 0;
+}
+code {
+  font-family: "JetBrains Mono", "DejaVu Sans Mono", monospace; font-size: 0.88em;
+  background: none; padding: 0; color: #1E40AF; font-weight: 500;
+}
+pre code { background: none; padding: 0; color: #334155; }
+
+/* ---------- Quotes and callouts ---------- */
+blockquote {
+  border: 0.5pt solid #BFDBFE; background: #F5F8FF; border-radius: 1.6mm;
+  padding: 3mm 4mm 2.6mm 4mm; margin: 3.5mm 0; font-size: 8.6pt; line-height: 1.5;
+  page-break-inside: avoid;
+}
+blockquote p { text-align: left; margin-bottom: 1.6mm; }
+blockquote p:last-child { margin-bottom: 0; }
+
+/* ---------- Lists ---------- */
+ul, ol { margin: 1.4mm 0 2.8mm 0; padding-left: 5.6mm; }
+li { margin-bottom: 0.9mm; }
+li p { margin-bottom: 1mm; }
+
+/* Checklist sections read better tighter. */
+.checklist ul { list-style: none; padding-left: 1mm; }
+
+hr { border: none; border-top: 0.5pt solid #CBD5E1; margin: 6mm 0; }
+a { color: #1D4ED8; text-decoration: none; }
+
+/* ---------- Table of contents ---------- */
+nav.toc { page: plain; page-break-before: always; page-break-after: always; }
+nav.toc::before {
+  content: "Contents";
+  display: block; font-family: Inter, "DejaVu Sans", sans-serif; font-size: 18pt; font-weight: 800;
+  color: #0F172A; border-bottom: 1.2pt solid #1D4ED8; padding-bottom: 3mm; margin-bottom: 6mm;
+}
+nav.toc ul { list-style: none; padding-left: 0; margin: 0; }
+nav.toc > ul > li {
+  font-family: Inter, "DejaVu Sans", sans-serif; font-weight: 700; font-size: 9.6pt;
+  color: #0F172A; margin-top: 3mm;
+}
+nav.toc > ul > li li {
+  font-weight: 400; font-size: 8.6pt; color: #334155; margin-top: 1mm; padding-left: 5mm;
+}
+nav.toc a { color: inherit; display: block; }
+nav.toc a::after {
+  content: leader(".") " " target-counter(attr(href url), page);
+  font-weight: 400; color: #64748B; font-size: 8.2pt;
+}
+
+/* ---------- Closing apparatus ---------- */
+.statusstamp {
+  font-family: Inter, "DejaVu Sans", sans-serif; font-size: 7.8pt; color: #64748B;
+  border-top: 0.5pt solid #CBD5E1; padding-top: 2.4mm; margin-top: 6mm; text-align: left;
+  line-height: 1.6;
+}
+
+/* An unresolved placeholder must be impossible to miss on a printed page. */
+.confirm {
+  background: #FEF3C7; border-bottom: 0.6pt solid #C13329; color: #7C2D12;
+  padding: 0 0.6mm; font-family: Inter, "DejaVu Sans", sans-serif; font-size: 0.92em;
+}

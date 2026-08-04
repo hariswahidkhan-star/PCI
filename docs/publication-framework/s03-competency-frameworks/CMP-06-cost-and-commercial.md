@@ -192,7 +192,41 @@ precisely what a lender's technical adviser is looking for. Two boundaries matte
   is being discounted, at what rate and whose return it represents, not by the presence of a net present
   value in a paper. See *CMP-04* §2.4.
 
-## 7. Worked example: how far one accrual error travels
+## 7. How this goes wrong
+
+**The budget is set below the estimate and the gap is not recorded.** An approval is granted at a number
+the estimator did not support, the difference is absorbed silently, and eight months later the overrun is
+attributed to poor cost control. The competency is the recorded reconciliation between estimate and
+budget, produced at the time by someone who was willing to have the conversation.
+
+**Accruals are driven by invoices.** The cost report then measures the supplier's administrative
+efficiency rather than the project's progress, and it looks best in the months when suppliers are slowest.
+
+**Two cost positions coexist.** The project cost report and the general ledger differ, both are quoted in
+different meetings, and nobody owns the reconciliation. The competent response is a monthly reconciliation
+with each difference explained and aged — not a campaign to make the two systems identical, which will
+fail.
+
+**The forecast method changes without disclosure.** A project switches from index-based to a re-estimate
+in the month the index-based number became unwelcome. The change may be entirely legitimate; not
+disclosing it is not. State the method every period, and flag the period in which it changed.
+
+**Exposure is either buried or omitted.** Buried, it destroys the explanation of forecast movement.
+Omitted, it misleads. Separate reporting of forecast and exposure range is a professional-level habit and
+the fastest way for a candidate to demonstrate this competency.
+
+**Contemporaneous records exist but are unusable.** Photographs without dates, allocation sheets without
+locations, minutes that record attendance rather than instructions. The record is only worth what a
+stranger can reconstruct from it.
+
+**Earned value is validated against the system that produced it.** Checking that the report agrees with
+the tool confirms the export worked. Validation means comparing claimed progress to something outside the
+system — physical inspection, an independent count, a supplier's own records.
+
+**Cost competence is assessed on report quality.** The report is the last link and the easiest to make
+attractive. Assess at the accrual, the reconciliation and the forecast note.
+
+## 8. Worked example: how far one accrual error travels
 
 *Illustrative figures.* A single control account, currency-neutral cost units (cu), status at month 8 of a
 20-month scope. Monetary results rounded to the nearest 1,000 cu; indices shown to three decimal places
@@ -256,40 +290,6 @@ The point for competence assessment: the person who owns the accrual is usually 
 usually the least reviewed number in the pack, and the forecast that the board argues about for an hour
 inherits its error amplified. This is why cost management competence is assessed at the accrual and not at
 the report.
-
-## 8. How this goes wrong
-
-**The budget is set below the estimate and the gap is not recorded.** An approval is granted at a number
-the estimator did not support, the difference is absorbed silently, and eight months later the overrun is
-attributed to poor cost control. The competency is the recorded reconciliation between estimate and
-budget, produced at the time by someone who was willing to have the conversation.
-
-**Accruals are driven by invoices.** The cost report then measures the supplier's administrative
-efficiency rather than the project's progress, and it looks best in the months when suppliers are slowest.
-
-**Two cost positions coexist.** The project cost report and the general ledger differ, both are quoted in
-different meetings, and nobody owns the reconciliation. The competent response is a monthly reconciliation
-with each difference explained and aged — not a campaign to make the two systems identical, which will
-fail.
-
-**The forecast method changes without disclosure.** A project switches from index-based to a re-estimate
-in the month the index-based number became unwelcome. The change may be entirely legitimate; not
-disclosing it is not. State the method every period, and flag the period in which it changed.
-
-**Exposure is either buried or omitted.** Buried, it destroys the explanation of forecast movement.
-Omitted, it misleads. Separate reporting of forecast and exposure range is a professional-level habit and
-the fastest way for a candidate to demonstrate this competency.
-
-**Contemporaneous records exist but are unusable.** Photographs without dates, allocation sheets without
-locations, minutes that record attendance rather than instructions. The record is only worth what a
-stranger can reconstruct from it.
-
-**Earned value is validated against the system that produced it.** Checking that the report agrees with
-the tool confirms the export worked. Validation means comparing claimed progress to something outside the
-system — physical inspection, an independent count, a supplier's own records.
-
-**Cost competence is assessed on report quality.** The report is the last link and the easiest to make
-attractive. Assess at the accrual, the reconciliation and the forecast note.
 
 ## 9. Checklist
 

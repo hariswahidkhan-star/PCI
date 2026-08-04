@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, executive, employer]
 level: professional
-reading_time_min: 7
+reading_time_min: 8
 summary: >
   The Project Controls Institute's Body of Knowledge is a thirteen-domain, sixty-one-knowledge-area
   statement of what a project controls professional must know, weighted forty per cent project
@@ -44,9 +44,7 @@ placeholders: 1
 sixty-one-knowledge-area statement of what a project controls professional must know, weighted forty per
 cent project accounting and finance, forty per cent project management principles and twenty per cent AI.
 This summary explains what the framework claims, how the examination samples from it, what the PCL-AI
-credential therefore asserts about a holder, and the four things it deliberately does not assert. Read it
-and you will know whether the framework describes the job you actually do, and what a PCL-AI on a CV has
-and has not been tested on.
+credential therefore asserts about a holder, and the four things it deliberately does not assert.
 
 **Who this is for.** Project controls managers, cost engineers, planners and commercial managers deciding
 whether to certify; and the heads of function, PMO leads and hiring managers who will read the credential
@@ -174,14 +172,11 @@ rather hear it now than defend it later.
 
 ## 8. How this goes wrong
 
-The most damaging misreading treats the group weights as a study-time rule. They are examination sampling
-weights. A planner strong on Domains 8–10 and weak on 1–4 should not spend forty per cent of revision on
-finance because the group carries forty per cent — they should spend most of it there, because that is where
-the gap is.
-
-The second reads a domain title as a subject boundary. Domain 6 is not "the earned value questions": earned
-value logic appears inside contract, schedule, risk and agile scenarios, because that is where it appears at
-work.
+The most damaging misreading treats a domain title as a subject boundary. Domain 6 is not "the earned value
+questions": earned value logic appears inside contract, schedule, risk and agile scenarios, because that is
+where it appears at work, and examination scenarios cross domains deliberately. The second — reading the
+group weights as a study-time rule — is treated in `PCB-03 — Why 40/40/20` §8, along with the other three
+ways a weighting is misread.
 
 ---
 

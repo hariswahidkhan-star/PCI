@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager, academic, employer]
 level: professional
-reading_time_min: 7
+reading_time_min: 9
 summary: >
   A body of knowledge is only worth as much as its method. This document sets out how the PCL-AI Body of
   Knowledge was authored: the style spine that fixed notation before content, the sequence in which the
@@ -59,12 +59,11 @@ its authority from the confidence of its prose. It has to be built so that a hos
 joins: where a claim is a standard's requirement, where it is the Institute's recommendation, where
 competent practitioners legitimately differ, and where a number came from.
 
-A second problem sits underneath. A reference of this size cannot be written in one pass by one person, and
+A second problem sits underneath. A reference this size cannot be written in one pass by one person, and
 material written in parallel drifts — the same symbol means two things by chapter nine, the same concept is
-defined three times in slightly different words. That drift is not cosmetic. A candidate who meets `PV` as
-Planned Value in one domain and present value in another has been set up to fail an item testing neither.
-
-Both problems are solved before writing, not after.
+defined three times in slightly different words. A candidate who meets `PV` as Planned Value in one domain
+and present value in another has been set up to fail an item testing neither. Both problems are solved
+before writing, not after.
 
 ## 2. The style spine — fixing the conventions before the content
 
@@ -156,22 +155,21 @@ is a question with an answer; "is this chapter deep enough?" is not.
 ## 7. The gates, and what fails at them
 
 Every chapter passes a fixed sequence of reviews before it is treated as content: pattern conformance,
-alignment to the competency framework, technical accuracy, calculation verification, source verification,
-originality, style, legal and company-mention review, diagram and table review, accessibility,
-cross-reference integrity, item validation, and final editorial approval. A reviewer never reviews their own
-draft. One chapter has one owner and one file; two authors never edit the same manuscript concurrently.
+competency alignment, technical accuracy, calculation verification, source verification, originality, style,
+legal and company-mention review, diagram and table review, accessibility, cross-reference integrity, item
+validation, and final editorial approval. A reviewer never reviews their own draft; one chapter has one
+owner and one file.
 
 Four things fail at gate regardless of quality elsewhere: a placeholder citation, an unresolved calculation,
-duplicated prose, and generic filler. Length is explicitly not an acceptance criterion — the standing rule is
-that page count is an output check, never a writing method, and that no phase may be skipped to meet one.
-Content is never merged because it is long.
+duplicated prose, and generic filler. Length is explicitly not an acceptance criterion — page count is an
+output check, never a writing method, and no phase may be skipped to meet one.
 
 ## 8. What is not yet done
 
 Three things are outstanding, and the framework is published saying so.
 
-**Subject-matter-expert review.** Every domain is a **first authored draft**. It has passed the internal
-gates in §7 but not independent subject-matter-expert review, and until it has, it is not treated as final
+**Subject-matter-expert review.** Every domain is a **first authored draft**: it has passed the internal
+gates in §7 but not independent subject-matter-expert review, and until it has, it is not final
 certification content. Panel: `[CONFIRM: the number of subject-matter experts on the first-edition review
 panel and their disciplines]`. Completion: `[CONFIRM: date subject-matter-expert review of the first edition
 completes]`.
@@ -185,10 +183,9 @@ standard will be set by a modified-Angoff study, a documented judgement about wh
 professional must demonstrate.
 
 Publishing a method with its gaps visible invites the objection that the framework is unfinished, which it
-is. The alternative — publishing a confident framework and disclosing the gaps after the first cohort has
-paid — is the reason certification bodies are distrusted. A reader who can see which parts are settled can
-challenge the parts that are not, and that challenge is worth more to the Institute than the appearance of
-completeness.
+is. The alternative — a confident framework whose gaps surface after the first cohort has paid — is the
+reason certification bodies are distrusted. A reader who can see which parts are settled can challenge the
+parts that are not, and that challenge is worth more than the appearance of completeness.
 
 ---
 
