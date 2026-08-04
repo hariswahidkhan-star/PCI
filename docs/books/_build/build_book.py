@@ -402,8 +402,10 @@ def render_law_file(path: pathlib.Path) -> tuple:
 
     laws = 0
     for line in body.split("\n"):
-        head3 = re.match(r"###\s+PCI LAW\s+(\S+)\s+—\s+(.+?)\s*$", line)
-        head2 = re.match(r"##\s+(.+?)\s*$", line)
+        # Law headings are matched at H2 or H3: the rebuilt sets do not agree on level,
+        # and a level mismatch would silently drop the law out of its call-out box.
+        head3 = re.match(r"#{2,3}\s+PCI LAW\s+(\S+)\s+—\s+(.+?)\s*$", line)
+        head2 = re.match(r"##\s+(.+?)\s*$", line) if not head3 else None
         if head3:
             flush()
             law = (head3.group(1), head3.group(2))

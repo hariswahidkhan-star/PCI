@@ -372,6 +372,12 @@ ratio*, *decision-grade*, *verified*.
 - **PCI-PFL-LAW-01.01-PR-04 — Presentation-dependency disclosure.** The preparer must disclose, on
   the face of the output, every respect in which a favourable presentation depends on a non-cash
   item, a timing convention, a horizon choice or an averaging basis.
+- **PCI-PFL-LAW-01.01-PR-05 — Stated and internally consistent appraisal basis.** The preparer must
+  state, for every appraisal or return measure presented, the inflation basis and the currency basis of
+  the cash flows **and** of the discount rate, the horizon and the perspective from which the measure is
+  taken; must keep the cash flows and the discount rate on the same inflation and currency basis; and
+  must not re-base, re-cut or re-select a measure after a result is known in order to produce a preferred
+  conclusion.
 
 **6. Prohibited actions.** Offering an earnings measure or accounting profit as evidence of ability
 to pay on a date; netting a dated cash shortfall against an unrealised or non-cash gain; re-phasing
@@ -392,7 +398,7 @@ may be approved below the level of the person who would have approved the decisi
 **10. Independence requirement.** Independence of preparation is required for the review under
 element 21 wherever the output supports sanction, financial close, a drawing, a *distribution*, a
 covenant certificate or a waiver request. Elsewhere, review by a *competent reviewer* who did not
-prepare the schedule is sufficient.
+prepare the schedule discharges this element.
 
 **11. Materiality or threshold.** The threshold is a cash amount and a date, not a percentage. A
 shortfall is *material* when available cash at a payment date is less than the obligation then due by
@@ -470,10 +476,13 @@ output, without unexplained difference. (b) Traces every obligation date in the 
 document that creates it, with no date unsourced. (c) Adds the itemised non-cash adjustments to the
 cash line and reaches the accounting result stated, without unexplained difference. (d) Confirms that
 every averaging, horizon or timing convention on which a favourable figure depends appears in the
-presentation-dependency disclosure. Compliance is demonstrated when all four steps complete; failure
-of any one is a breach.
+presentation-dependency disclosure. (e) For each appraisal or return measure presented, confirms the
+stated basis is complete and that the cash flows and the discount rate share one inflation and one
+currency basis, by recomputing the measure on the stated basis. Compliance is demonstrated when all five
+steps complete; failure of any one is a breach.
 
-**22. Breach indicators.** A coverage or liquidity conclusion with no dated obligation schedule
+**22. Breach indicators.** A real discount rate applied to nominal cash flows, or a measure whose
+horizon changed between drafts; a coverage or liquidity conclusion with no dated obligation schedule
 behind it; a reconciliation presented as a single net "non-cash" line; an annual average quoted where
 the finance documents test a period; a forecast whose worst date is not identified anywhere; a
 favourable figure whose horizon changed between drafts without a recorded reason.
@@ -518,10 +527,14 @@ transaction, its parties or its competitors. Applies from first contact through 
 engagement and to any later re-engagement.
 
 **4. Defined terms.** *independent*, *evidence*, *decision owner*, *material*, *finance documents*.
-**Connected person** — for this law, a person whose financial position a reasonable party would treat
-as affecting the credential holder's judgement: a spouse or partner, a dependent, a person sharing a
-household, an entity the credential holder or any of them controls or in which any of them holds a
-financial interest, and the credential holder's employer and its group.
+**Reasonable party** — the test applied under this law: a party to the financing, acting with the
+information ordinarily available to that party, who is weighing whether to rely on the credential
+holder's judgement. The test is applied by the credential holder, and where doubt exists it is resolved
+by disclosing rather than by concluding. **Connected person** — for this law, a person whose financial
+position a *reasonable party* would treat as affecting the credential holder's judgement: a spouse or
+partner, a dependant, a person sharing a household, an entity the credential holder or any of them
+controls or in which any of them holds a financial interest, and the credential holder's employer and
+its group.
 
 **5. Required actions.**
 
@@ -564,8 +577,7 @@ more than one party to the same transaction, an independent review of the arrang
 before work begins.
 
 **11. Materiality or threshold.** Disclosure is triggered by the existence of an interest, not by its
-size: the test is whether a reasonable party to the financing would want to know it when weighing the
-judgement, applied by the credential holder and, where doubt exists, resolved by disclosing. A *de
+size, and the test is the *reasonable party* test defined at element 4. A *de
 minimis* register threshold for holdings in widely held listed entities may be set by the engaging
 organisation's governance, must be written down, and must not apply to any party to the transaction.
 *Scale test:* on a small municipal project, the register is a single sheet and the parties are few;
@@ -1172,6 +1184,10 @@ in enough detail that a *competent reviewer* could reach the same value from the
 - **PCI-PFL-LAW-06.03-PR-04 — Currency of assumptions.** The model owner must record a review date for
   each assumption and must re-confirm or replace any assumption whose review date has passed before the
   model is used for a further decision.
+- **PCI-PFL-LAW-06.03-PR-05 — Revenue characterised by its actual basis.** The model owner must record,
+  for every revenue assumption, whether the amount is contracted, regulated, availability-based or
+  forecast, whether it is indexed or fixed, and the credit standing of the party that pays — and must
+  not present a forecast or merchant revenue as though it were contracted.
 
 **6. Prohibited actions.** Entering the same assumption in two places; using an assumption with no
 named owner in a decision-grade case; recording "management estimate" or "market practice" as a
@@ -1218,7 +1234,7 @@ draft register, detect duplicate entry of the same quantity, flag assumptions pa
 compare an assumption set against a previous version, and draft basis statements for confirmation.
 
 **15. AI prohibition.** AI must not be the recorded owner of an assumption, set or approve an
-assumption value, decide that a basis is sufficient, or re-confirm an expired assumption.
+assumption value, decide that a recorded *basis* meets PR-02, or re-confirm an expired assumption.
 
 **16. AI verification.** Source tracing of every AI-extracted assumption to the document, version and
 issuing party stated in its *source line*, by a named human; clause-to-output comparison where the
@@ -1261,10 +1277,14 @@ ratio* by more than the recorded materiality figure, and confirms each has all s
 populated. (b) Traces each of those *source lines* to the document named, at the version named, issued
 by the party named. (c) Searches the input region for duplicate entry of any registered quantity and
 finds none. (d) Confirms every assumption's review date is later than the output date, or that a
-re-confirmation record exists. Compliance is demonstrated when all four complete; an unowned or
-unsourced *material* assumption is a breach.
+re-confirmation record exists. (e) For each revenue assumption, confirms the register records its actual
+basis — contracted, regulated, availability-based or forecast — and that any amount shown as contracted
+is traced to an executed agreement under `PCI-PFL-LAW-12.01`. Compliance is demonstrated when all five
+complete; an unowned or unsourced *material* assumption is a breach, and so is a forecast revenue
+presented as contracted.
 
-**22. Breach indicators.** A register with a "source" column reading "internal"; the same escalation
+**22. Breach indicators.** A merchant price curve shown in the same column as a contracted tariff; a
+register with a "source" column reading "internal"; the same escalation
 rate typed on three sheets; a model released without its register; an assumption dated two years before
 the close it supports; a basis that cites the previous transaction; an owner column populated with a
 team name.
@@ -1275,7 +1295,7 @@ review; certification investigation; suspension or withdrawal of the credential.
 process and a right of appeal (Charter §9). PCI claims no other consequence.
 
 **24. Examination application.** Evidence selection: from a register extract, the candidate identifies
-which assumptions may not be used in a decision-grade case and why. Scenario judgement: a stale price
+which assumptions must not be used in a decision-grade case and why. Scenario judgement: a stale price
 assumption is carried into a close, and the candidate must state the required action. No live
 examination content is exposed.
 
@@ -3443,7 +3463,7 @@ review; certification investigation; suspension or withdrawal of the credential.
 process and a right of appeal (Charter §9). PCI claims no other consequence.
 
 **24. Examination application.** Ethical dilemma: a sponsor presses for a view on deductibility before
-close and the candidate must state what they may and may not say, and what they must obtain. Evidence
+close and the candidate must state what they may say, what they must not say, and what they must obtain. Evidence
 selection: identifying which of four documents constitutes advice the relying party may rely upon. No
 live examination content is exposed.
 
@@ -3512,7 +3532,7 @@ reviewer's working papers supporting each finding.
 party's *decision owner* for engaging a reviewer who satisfies element 10.
 
 **9. Approval authority.** The reviewer alone determines the findings and the conclusion. The engaging
-party may determine the scope **before** the review begins; it may not determine a finding. A dispute
+party may determine the scope **before** the review begins; it must not determine a finding. A dispute
 about a finding is recorded, not resolved by the engaging party.
 
 **10. Independence requirement.** All four limbs of *independent* apply, in relation to the work
@@ -4495,8 +4515,9 @@ programme, compute escalation on uncommitted scope, track claim exposures agains
 dates, reconcile period-on-period movements by component, and flag components that have not moved when
 the programme has.
 
-**15. AI prohibition.** AI must not assess a claim exposure, decide that contingency is adequate,
-certify a cost-to-complete, approve a contingency draw, or conclude that a project remains funded.
+**15. AI prohibition.** AI must not assess a claim exposure, decide that remaining contingency
+covers the remaining assessed risk, certify a cost-to-complete, approve a contingency draw, or conclude
+that a project remains funded.
 
 **16. AI verification.** Independent recomputation, by a named human, of the escalation and time-related
 components; source tracing of each committed-scope figure to the executed commitment; expert judgement,
@@ -4521,7 +4542,7 @@ machine's; and reconciliation of the movement explanation to the underlying chan
 **18. Jurisdictional caution.** The validity of a claim, the effect of a contractual time bar, the
 availability of global claims, statutory adjudication and its enforceability, and the treatment of
 disputed amounts on insolvency are jurisdiction-specific and materially affect assessed exposure — and a
-time bar that is enforceable in one jurisdiction may not be in another. Obtain qualified local legal
+time bar that is enforceable in one jurisdiction might not be enforceable in another. Obtain qualified local legal
 advice on claim validity and time bars before an exposure is assessed as low.
 
 **19. Related PCI Laws.** `PCI-FND-LAW-07`; `PCI-FND-LAW-11`; `PCI-PFL-LAW-14.01`;
@@ -5403,7 +5424,7 @@ review; certification investigation; suspension or withdrawal of the credential.
 process and a right of appeal (Charter §9). PCI claims no other consequence.
 
 **24. Examination application.** AI-verification case: an AI system has rebuilt a debt schedule and the
-candidate must state the verification method, the record required and what may not be relied upon.
+candidate must state the verification method, the record required and what must not be relied upon.
 Scenario judgement: a machine check passes and a human review is proposed to be dropped. No live
 examination content is exposed.
 
@@ -5718,7 +5739,7 @@ strength of a machine's assurance does not satisfy this element.
 signatures, the personal liability of a signatory for a misstatement, statutory or regulatory
 human-oversight obligations for automated decision-making, and restrictions on automated processing that
 produces legal effects on a person are all jurisdiction-specific. A sign-off arrangement lawful in one
-jurisdiction may not satisfy another's requirements for the same document. Obtain qualified local legal
+jurisdiction might not satisfy another's requirements for the same document. Obtain qualified local legal
 advice on signing authority and on automated decision-making before designing a release process.
 
 **19. Related PCI Laws.** `PCI-FND-LAW-01` (professional accountability and the suite principle);
@@ -5768,4 +5789,119 @@ added as PR-05, which converts an unverifiable "approval" into an observable one
 route stated expressly so that unavailability cannot be used to justify automated release.
 
 ---
-<!-- LAWS -->
+## Audit findings — the twenty-five questions of Manual §9
+
+Manual §9 requires every question to be answered before a law is approved, and requires the failure and
+its resolution to be recorded in the law's file. The table below records the working of Stage 9 (red-team
+challenge) and Stage 10 (revision) over the whole set. **A finding is recorded whether or not it
+produced a change**, because a question answered and found satisfactory is part of the record.
+
+| # | Question | Laws affected | What changed |
+|---|---|---|---|
+| 1 | What exact failure does this law prevent? | All 33 | Element 2 rewritten in every law to name a specific observed failure rather than a general risk. Three laws whose v1.0 purpose was a restatement of the rule (`PFL-LAW-06-04`, `PFL-LAW-13-03`, `PFL-LAW-16-03`) now name the failure: an unproduceable figure, a closing record nobody can retrieve, an unbroken automated pipeline. |
+| 2 | Mandatory or only recommended? | All 33 | `should` removed from every normative position. All obligations carry `must` / `must not`; sub-obligations became numbered process requirements at Charter Level 4, which are mandatory. No Recommended Practice (`-RP-NN`) is published in this edition, so nothing in the set is optional. |
+| 3 | Can a professional know whether it applies to them? | All 33 | Element 3 now names the roles, the decisions, the transaction stages **and** whether the law reaches preparation, review, recommendation, approval or assurance — the last of which v1.0 omitted throughout. |
+| 4 | Is the responsible person identifiable? | All 33 | Element 8 names a role, never "the team" or "the organisation". *Model owner*, *decision owner* and *authorised signatory* are defined as single named individuals; `PCI-PFL-LAW-16.03-PR-03` and `PCI-PFL-LAW-14.04` expressly exclude a service account, a shared mailbox or an automated identity. |
+| 5 | Is the required action observable? | All 33 | Element 5 recast as numbered process requirements, each with a subject, an action and an object. Unobservable formulations such as "maintain integrity" or "ensure adequacy" were replaced — for example `PCI-PFL-LAW-14.03-PR-01`, which specifies the five components a *cost-to-complete* is built from. |
+| 6 | Is compliance provable? | All 33 | Element 7 lists retained artefacts only. `PCI-PFL-LAW-13.04-PR-05` replaces "retained" with retrievability **by a person who was not present at close**, because retention without retrievability cannot be proved. |
+| 7 | Is the required evidence proportionate? | 06.03 · 06.04 · 12.01 · 16.01 · 16.02 | Full treatment reserved for *material* items; stated-basis sampling introduced for the remainder, with the basis recorded before the sample is drawn so that "sampling" cannot become "skipping". |
+| 8 | Can the law be audited? | All 33 | **This was v1.0's principal defect.** Every element 21 is now a numbered procedure a reviewer performs — recompute, trace, reconcile, seed an error, retrieve, interview — with a stated pass condition and a stated failure. Four tests require the reviewer to *do* something to the model rather than read it (`06.01`, `06.05`, `16.01`, `16.03`). |
+| 9 | Can it be examined through a scenario? | All 33 | Element 24 now names the item type — scenario judgement, evidence selection, escalation decision, calculation review, ethical dilemma or AI-verification case — and describes a concrete situation. No law is examinable by recalling its number. |
+| 10 | **Can a professional technically comply while defeating its purpose?** | 06.01 · 06.02 · 06.05 · 10.01 · 10.03 · 13.01 · 14.01 · 14.03 · 15.03 · 16.01 | **The highest-yield question in the set.** Ten circumventions were found and closed: a check block whose tolerance is wide enough never to fail (now seeded-error tested, `06.01-PR-03` + element 21(d)); an override register kept but never cleared (`06.02-PR-04`); a regression suite run *after* acceptance (`06.05-PR-04`, with a bounded 48-hour element 12 route so the rule is not simply ignored at a live close); a *CFADS* definition applied correctly but re-derived nowhere after an amendment (`10.01-PR-05`); a compliant minimum ratio reported against the wrong test's level (`10.03-PR-05`); a review whose scope was narrowed after findings were known (`13.01-PR-02`); a sources-and-uses statement balanced by a plug (`14.01-PR-02`); a cost-to-complete that arithmetically cannot rise (`14.03` element 1); a waiver recorded but its knock-on effects never traced (`15.03-PR-04`); and human review reduced because a machine check passed (`16.01-PR-03`). |
+| 11 | Does it conflict with another PCI law? | 06.01 ↔ 06.05 · 10.01 ↔ 10.03 · 13.01 ↔ 13.02 · 16.01 ↔ 16.03 | Four overlaps resolved by allocation rather than by cross-reference: the check block is defined once in `06.01-PR-03` and re-run under `06.05-PR-03`; the *CFADS* definition sits in `10.01` and its reporting in `10.03`; review independence sits in `13.01` and adviser self-description in `13.02`; AI verification method sits in `16.01` and the sign-off in `16.03`, with `16.03` element 10 stating expressly that it does not satisfy `13.01`. |
+| 12 | Does it duplicate an external standard unnecessarily? | 06.01 · 06.02 · 16.01 | The ICAEW Code and the FAST Standard are named as context, and both laws now state expressly that **conformity with either does not satisfy the PCI obligation** and that the PCI obligation does not require conformity with them. ISO/IEC 42001 is characterised as addressing an organisation's management system, not a project's model, so the laws add rather than restate. |
+| 13 | **Does it misrepresent external authority?** | 09.01 · 09.02 · 09.03 · 10.02 · 10.03 · 10.04 · 12.02 · 15.02 · 16.01 · 16.03 | **The highest risk in this volume, and the question most work went into.** Findings: (a) the **Basel Framework** appears in four laws and each now states it is an internationally agreed supervisory standard with **no legal force of its own**, reaching a bank only as a national authority transposes it, never applying to a project or sponsor, and **not the source of any requirement**; (b) the **IFRS Conceptual Framework** is cited once, in `01.01`, expressly as **not a standard**, and no requirement is sourced to it; (c) the **OECD Model Tax Convention** is stated to be **not law in any jurisdiction**; (d) the **Equator Principles**, **IFC Performance Standards** and the market principles behind green and sustainability-linked instruments are all tagged voluntary at every use, and `09.03-PR-03` makes describing a voluntary framework as legislation a breach; (e) the **FAST Standard** and the **ICAEW Code** are stated to impose no obligation of their own; (f) **IESBA** is stated to bind **only where a body, regulator or engagement has adopted it**, and expressly not to be imported by a PCI law; (g) the **OECD Arrangement on Officially Supported Export Credits** is characterised as an inter-governmental understanding, not a treaty and not legislation; (h) the **EU AI Act** is the only instrument called legislation, and is stated to bind only within its jurisdiction and only on systems in scope; (i) **SR 11-7** is characterised as supervisory guidance addressed to supervised institutions, not to advisers. **No clause number, article, edition or effective date is asserted anywhere in this volume except three that were verified**: the IAS 1 → IFRS 18 replacement date of 1 January 2027, ISO/IEC 27001:2022 + Amd 1:2024, and the EU AI Act's phased application dates. `16.02` exists because this failure mode is now largely machine-generated. **Two open items are recorded below the table.** |
+| 14 | **Does it require legal or jurisdiction-specific advice?** | All 33 | **No law in this set records "Not applicable" at element 18**, which was a deliberate target: tax, security interests, insolvency, distributions, sanctions and financial-crime obligations are jurisdiction-specific and this is the volume where a generic caution does most damage. Each element 18 names the specific exposures — for example enforceability of a liability cap (`11.01`), lien priority over lenders' security (`14.02`), distributable-reserve and clawback rules with possible personal liability for directors (`15.01`), estoppel arising from repeated informal waivers (`15.03`), and recognition of a competent body and the tax and insolvency characterisation of an Islamic structure (`09.02`). `12.02` is a jurisdictional caution in its entirety. |
+| 15 | Does it define the relevant materiality threshold? | All 33 | Element 11 in every law states who sets the threshold, in what metric, and where it is recorded. **PCI publishes no percentage anywhere in this volume.** Where a threshold belongs to the transaction — every coverage level, every reserve balance, every consent threshold, every in-balance test — the law requires **the documented figure to be used and tested**, and says expressly that PCI sets none. |
+| 16 | Does it cover AI use? | All 33 | Elements 14, 15 and 16 are populated in every law. Element 16 names a method from the Manual §5.2 list; "review the AI output" appears nowhere. Three laws add a deletion rule — an AI compliance assertion (`09.02`), an AI answer to a construction question (`10.04`) and an untraceable AI citation (`16.02`) are **deleted rather than corrected**, so they cannot survive in a draft. |
+| 17 | Does it preserve human accountability? | All 33 | Every element 9 vests approval in a named human or in a party the finance documents name. `16.03-PR-03` prohibits the unbroken automated pipeline as an architecture; `14.04` element 15 makes an automated identity holding prepare, authorise and reconcile rights a prohibited configuration; `13.01` and `13.02` state that an AI system is never *independent*, because independence is a property of a relationship. |
+| 18 | Does it contain an exception process? | All 33 | Element 12 states either the process — who approves, what justification, how long, what compensating control, to whom reported — or that no exception is permitted. **Nine laws permit no exception at all.** `09.02` records that PCI cannot grant one, because the subject matter is a determination PCI does not make. Three laws (`06.05`, `12.01`, `16.01`) gained a **bounded, reported** exception route in place of a rule that practice was quietly ignoring. |
+| 19 | Does it define escalation? | All 33 | Element 13 lists observable trigger events, not a general duty. *escalation threshold* is defined once and is set by the finance documents or by the adopting organisation's governance, never by PCI. |
+| 20 | Is every important term defined? | All 33 | Fourteen compliance-deciding terms are defined at the head of the volume as required, plus twenty-one transaction and modelling terms, and each law's element 4 defines any term local to it. Definitions were checked against `../registries/TERMINOLOGY_AUDIT.md` before drafting: `EAC` is **not used** and `CTC` is used instead (Issue 1 — one symbol, two formulas inside PFL-AI); bare `PV` is **not used** (Issue 2); *coverage*, *verification*, *sponsor* and *baseline* carry context flags or are avoided; *base case* is used in place of *baseline*. No definition is circular. |
+| 21 | Is the language concrete and modern? | All 33 | **Zero occurrences of the ISO requirement auxiliary**, verified by search. `may not` is not used for any prohibition. Undefined judgement words carrying an obligation — *appropriate*, *adequate*, *reasonable*, *timely*, *sufficient* — were removed or replaced with a stated test. |
+| 22 | **Does it impose an impossible or excessive burden?** | 06.03 · 06.04 · 12.01 · 13.01 · 14.04 · 16.01 · 16.02 | Six burdens were reduced and one deliberately kept. Reduced: full treatment reserved for *material* items with stated-basis sampling elsewhere (`06.03`, `06.04`, `12.01`, `16.01`, `16.02`); review scope and materiality agreed **before** work begins so the reviewer is not asked to test everything (`13.01`). **Kept, deliberately:** `14.04-PR-02` segregation of duties admits no *de minimis*, and a small finance function satisfies it by naming the third role outside the function — a board member or an external administrator — rather than by relaxing the rule. That is stated in element 11 so the small-organisation route is visible rather than left to be discovered. |
+| 23 | **Can it operate on small projects and megaprojects?** | All 33 | Every element 11 carries a *Scale test* naming both a small municipal project and a multi-billion cross-border financing. The test changed six laws: `06.01`, `10.01`, `10.03`, `13.03`, `14.01` and `15.01` now require the relevant record or test **per facility, per tranche or per currency** at scale, because a consolidated position can be true of no facility in the transaction; `14.04` gained the small-organisation segregation route; `13.01` gained per-workstream materiality. |
+| 24 | Can it operate internationally? | All 33 | No law depends on a single jurisdiction's institutions, forms or terminology. Every obligation that could be jurisdiction-bound is expressed as a duty to apply the **finance documents'** own terms and to obtain local advice. British English throughout; the transliteration *Shariah* is used with *Sharia* noted as the same word. |
+| 25 | Is there a clear consequence within PCI authority? | All 33 | Element 23 draws only on the Charter §9 list and states in every law that PCI claims no other consequence. `09.02` adds that PCI claims no authority to rule on any question of religious law; `14.04` and `15.01` add that criminal, regulatory and corporate consequences belong to the relevant authorities and not to PCI. |
+
+### Open items recorded against Q13
+
+Two matters were found during the external-reference pass that this volume cannot close on its own, and
+they are recorded rather than resolved, per Charter §5 Stage 5:
+
+1. **AAOIFI is not registered.** `PCI-PFL-LAW-09.02` names the Accounting and Auditing Organisation for
+   Islamic Financial Institutions, following the PFL-AI manuscript at KA 9.3.1. It has **no entry in
+   `../registries/EXTERNAL_AUTHORITIES.md`**. It is cited by name only, with no standard, number,
+   edition or date asserted, and no requirement is sourced to it. **Action required:** register it, with
+   its category and the note that some jurisdictions have made its standards mandatory by regulation
+   while others leave the question to each institution.
+2. **Manual §6's category list has no value for a voluntary intergovernmental instrument.** The
+   G20/OECD *Principles of Corporate Governance* and the OECD *AI Principles* are Council
+   Recommendations; the OECD *Arrangement on Officially Supported Export Credits* is an
+   inter-governmental understanding. None is an ISO/IEC standard (category 3), an environmental or
+   social framework (category 8) or a professional body's guidance in the ordinary sense (category 5).
+   This volume classifies them as **category 5** and states the instrument's true nature expressly in
+   the applicability limitation, which is the honest choice among the available values. This is a
+   **borderline call, recorded so that it is deliberate rather than accidental** — the same treatment
+   `../registries/EXTERNAL_AUTHORITIES.md` correction C-04 applies to ANSI/EIA-748. **Action required:**
+   extend Manual §6 with a category for voluntary intergovernmental instruments, or confirm the present
+   classification.
+
+---
+
+## Index of PFL-AI Professional Laws
+
+Thirty-three laws · one hundred and fifty-three process requirements · eleven anchor domains. External
+reference categories are the Manual §6 numbers, given in full at the foot of the table.
+
+| ID | Official title | Anchor domain | Principal obligation (element 1, in brief) | External reference categories |
+|---|---|---|---|---|
+| PCI-PFL-LAW-01.01 | Cash-Flow Integrity in Financial Judgement | D1 — Foundations of project finance leadership | Must not present an accounting, earnings or averaged figure as evidence of ability to pay on a date | 2 (and IFRS *Conceptual Framework*, expressly not a standard) |
+| PCI-PFL-LAW-01.02 | Conflict Disclosure and the Two-Hat Rule | D1 — Foundations of project finance leadership | Must disclose in writing, before acting, every interest a reasonable party would want to know | 3 · 5 |
+| PCI-PFL-LAW-05.01 | The Bankability Statement | D5 — Project development and bankability | Must not call a project bankable unless every condition is stated with status, owner and resolution path | 3 · 8 |
+| PCI-PFL-LAW-06.01 | Financial-Model Architecture | D6 — Financial modelling | A decision-grade model must separate inputs, calculations and outputs, no cell serving two roles | 5 |
+| PCI-PFL-LAW-06.02 | Formula Consistency | D6 — Financial modelling | Must not present as calculated any figure that was typed, pasted or overridden | 5 |
+| PCI-PFL-LAW-06.03 | Input and Assumption Traceability | D6 — Financial modelling | Every assumption entered once, in the input region, and recorded in a register that travels with the model | 3 · 5 |
+| PCI-PFL-LAW-06.04 | The Source Line | D6 — Financial modelling | Must withdraw any figure whose source line cannot be produced on request | 3 |
+| PCI-PFL-LAW-06.05 | Model Version Control | D6 — Financial modelling | A model used for a decision must not change except under version control, one authoritative version at a time | 3 · 5 · 10 |
+| PCI-PFL-LAW-09.01 | The Capital-Structure Decision Basis | D9 — Funding structure and sources of capital | Must not propose a structure resting on an uncommitted event unless it is stated as an assumption | 10 |
+| PCI-PFL-LAW-09.02 | Accuracy in Describing Islamic-Finance Structures | D9 — Funding structure and sources of capital | Must not assert Shariah compliance without a producible determination from the competent body | 3 · 5 |
+| PCI-PFL-LAW-09.03 | Sustainable-Finance Claims | D9 — Funding structure and sources of capital | Must not state a sustainability claim at a strength the identified evidence does not support | 1 · 8 |
+| PCI-PFL-LAW-10.01 | The CFADS Definition | D10 — Debt sizing, covenants and credit metrics | Must compute CFADS on the finance documents' definition, item by item | 2 |
+| PCI-PFL-LAW-10.02 | Debt Sizing | D10 — Debt sizing, covenants and credit metrics | Must size to the documented coverage level, tenor and profile, never to a preferred quantum | 2 · 10 |
+| PCI-PFL-LAW-10.03 | Coverage-Ratio Calculation and Reporting | D10 — Debt sizing, covenants and credit metrics | Must report a coverage ratio with its definition, its period basis and its minimum | 2 · 10 |
+| PCI-PFL-LAW-10.04 | Covenant Interpretation | D10 — Debt sizing, covenants and credit metrics | Must not state a legal conclusion on the meaning, breach or consequence of a covenant | 2 · 10 |
+| PCI-PFL-LAW-10.05 | Reserve-Account Governance | D10 — Debt sizing, covenants and credit metrics | Must fund, apply and release a reserve only as the finance documents specify | 2 |
+| PCI-PFL-LAW-11.01 | Risk-Allocation Honesty | D11 — Risk identification and allocation | Must record where each material risk lands once caps, exclusions, insurance and credit are read together | 3 · 4 · 8 |
+| PCI-PFL-LAW-12.01 | Contract-Source Verification | D12 — Contracts and transaction structure | Must take every contractual term from the executed document, read at the clause | 3 · 4 |
+| PCI-PFL-LAW-12.02 | The Tax and Legal Advice Boundary | D12 — Contracts and transaction structure | Must not give legal, tax, accounting, regulatory or insurance advice, and must obtain written advice before adoption | 2 · 3 · 10 |
+| PCI-PFL-LAW-13.01 | Independent Model Review | D13 — Due diligence and financial close | A review relied on outside the reviewer's own team must be performed by a person independent of the work | 3 · 6 · 8 |
+| PCI-PFL-LAW-13.02 | Adviser Independence | D13 — Due diligence and financial close | Must not describe self, firm, advice or output as independent while any limb of the definition fails | 5 · 6 |
+| PCI-PFL-LAW-13.03 | Conditions Precedent | D13 — Due diligence and financial close | A condition is satisfied only when the required evidence is delivered **and** accepted by the entitled party | 3 · 8 |
+| PCI-PFL-LAW-13.04 | Financial-Close Readiness | D13 — Due diligence and financial close | Must not treat a transaction as closed until the complete closing record is captured and retained as one record | 3 |
+| PCI-PFL-LAW-14.01 | Sources-and-Uses Integrity | D14 — Construction monitoring and drawdown | Totals must be equal, and the gap must not be closed with a balancing item or an uncommitted source | 3 · 4 |
+| PCI-PFL-LAW-14.02 | Drawdown Control | D14 — Construction monitoring and drawdown | Must not draw for work not performed, cost not evidenced, or while out of balance undisclosed | 3 · 4 |
+| PCI-PFL-LAW-14.03 | Cost-to-Complete | D14 — Construction monitoring and drawdown | Must build the cost-to-complete from components, never as budget less costs incurred | 2 · 4 |
+| PCI-PFL-LAW-14.04 | Funds-Flow Approval | D14 — Construction monitoring and drawdown | Funds must move only through the documented accounts and order, on instructions under segregation of duties | 3 · 5 |
+| PCI-PFL-LAW-15.01 | Distribution Testing | D15 — Operations, performance and restructuring | Must not permit or make a distribution unless every documented condition is satisfied at the test date | 2 · 5 |
+| PCI-PFL-LAW-15.02 | Refinancing Assessment | D15 — Operations, performance and restructuring | Must assess a refinancing on present value net of every cost of achieving it, not on a headline improvement | 2 · 10 |
+| PCI-PFL-LAW-15.03 | Waivers and Amendments | D15 — Operations, performance and restructuring | A waiver or amendment is effective only from the entitled party, in the required form, with its full effect recorded | 2 · 3 |
+| PCI-PFL-LAW-16.01 | AI-Assisted Financial Modelling | D16 — Data, automation and responsible AI in finance | AI work touching a model or its outputs must be verified by a named method before use | 1 · 3 · 7 · 10 |
+| PCI-PFL-LAW-16.02 | AI Precedent and Market-Term Research | D16 — Data, automation and responsible AI in finance | Must not use an AI statement about the outside world until traced to the primary source and confirmed | 3 · 7 · 9 |
+| PCI-PFL-LAW-16.03 | Human Sign-Off | D16 — Data, automation and responsible AI in finance | Every decision, certification, representation and external report must be approved by a named human before effect | 1 · 3 · 5 |
+
+**Manual §6 external-reference categories used above:** 1 applicable legislation or regulation · 2
+authoritative financial-reporting standard · 3 international voluntary standard · 4 contract framework ·
+5 professional framework · 6 ethical code · 7 industry guidance · 8 voluntary environmental or social
+framework · 9 PCI internal professional law · 10 illustrative practice. **A category is a statement
+about what an instrument is, not about how important it is**, and no instrument in this volume is
+relied upon for a requirement except where element 17 says so expressly.
+
+---
+
+*Version 2.0, compiled 2026-08-04. **Draft for approval under Charter §5** — Stages 6, 11, 12 and 13 not
+performed, Stages 4, 5 and 7 partial; see the stage record in the front matter. Thirty-three laws · one
+hundred and fifty-three process requirements · twenty-five elements in every law, none omitted · zero
+occurrences of the ISO requirement auxiliary · all internal cross-references resolve · British English
+throughout. The official publication of every external instrument always governs.*
+
