@@ -8,19 +8,26 @@ different artefacts.
 
 ### LinkedIn edition — 1080 x 1350 (4:5)
 
-The shareable one. Sixteen curated formulas per credential, one idea per slide, type sized so it stays
-legible when LinkedIn's document viewer scales a page down to phone width.
+The shareable one, and **complete** — 41 to 58 formulas per credential, grouped into numbered sections
+with full-bleed navy dividers, type sized to stay legible when LinkedIn's document viewer scales a page
+down to phone width. Density is the point: a complete reference gets saved, a highlight reel gets
+scrolled past.
 
-**Formulas only — no worked examples.** Each slide carries the expression, what it means, and the mistake
-it attracts. Checks are stated as properties a reader can apply to their own numbers ("total float from
-the starts must equal total float from the finishes") rather than as figures they have to read through.
-Worked arithmetic lives in the reference edition.
+**Formulas only — no worked examples.** Each entry carries the expression, what it means, and the mistake
+it attracts. Checks are stated as properties a reader applies to their own numbers ("total float from the
+starts must equal total float from the finishes") rather than as figures to read through. Worked
+arithmetic lives in the reference edition.
+
+The PML-AI deck's section 04, **the governance arithmetic**, is original to the PML-AI Body of Knowledge
+— decision latency, gate net value, committee capacity, interface topology, the hundred-per-cent rule,
+assessed total impact and baseline drift. It is the most distinctive material in the set because no other
+body publishes it.
 
 | Deck | Credential | Slides | PDF |
 |---|---|---|---|
-| [Project Controls Formulas](linkedin/01-pcl-ai-linkedin.md) | PCL-AI | 17 | `/downloads/pci-pcl-ai-formula-sheet-linkedin.pdf` |
-| [Project Finance Formulas](linkedin/02-pfl-ai-linkedin.md) | PFL-AI | 18 | `/downloads/pci-pfl-ai-formula-sheet-linkedin.pdf` |
-| [Project Management Formulas](linkedin/03-pml-ai-linkedin.md) | PML-AI | 18 | `/downloads/pci-pml-ai-formula-sheet-linkedin.pdf` |
+| [Project Controls Formulas](linkedin/01-pcl-ai-linkedin.md) | PCL-AI | 31 | `/downloads/pci-pcl-ai-formula-sheet-linkedin.pdf` |
+| [Project Finance Formulas](linkedin/02-pfl-ai-linkedin.md) | PFL-AI | 27 | `/downloads/pci-pfl-ai-formula-sheet-linkedin.pdf` |
+| [Project Management Formulas](linkedin/03-pml-ai-linkedin.md) | PML-AI | 32 | `/downloads/pci-pml-ai-formula-sheet-linkedin.pdf` |
 
 ### Reference edition — A4
 
@@ -77,16 +84,26 @@ Any change to a formula or a worked figure must be re-verified numerically befor
 
 Both editions use the platform's own design system, not a bespoke one:
 
+The palette is taken from **the mark itself**, `backend/wwwroot/assets/logo.svg` — not from a CSS
+variable name. The logo is a navy shield carrying a white `PCI` wordmark, a gold `AI`, and a crimson rule
+beneath the wordmark. That crimson rule is the brand's signature gesture and it is the design motif of
+both editions: it is the hairline at the head of every content slide and the bar under every cover title.
+
 | Token | Value | Source |
 |---|---|---|
-| Display type | **Archivo** 700–900 | `backend/wwwroot/assets/fonts/`, self-hosted |
+| Display type | **Archivo** 700–900 | `assets/fonts/`, self-hosted woff2 |
 | Body type | **Inter** 400–700 | same |
-| Primary | `#1D4ED8` | `--red` in `assets/styles.css` (legacy name, blue value) |
-| Bright | `#3B82F6` | `--magenta` |
-| Deep | `#1E3A8A` | `--red-700` |
-| Ink / noir | `#0F172A` / `#0E1525` | `--ink` / `--noir` |
-| Surfaces | `#F1F5F9`, `#E3E8EF` | `--paper-2`, `--line` |
-| Brand gradient | `linear-gradient(160deg,#3B82F6,#1D4ED8,#1E3A8A)` | `--grad-brand` |
+| Navy field | `#1D3C92` → `#13245A` | logo shield gradient |
+| **Crimson** | `#C13329` | logo rule; `--crimson` in `assets/styles.css` |
+| Gold | `#F7EABC` → `#E7CB82` → `#B8923E` | logo "AI" gradient |
+| Ink / surfaces | `#0F172A`, `#F1F5F9`, `#E3E8EF` | `--ink`, `--paper-2`, `--line` |
+
+Crimson is the accent — eyebrows, rules, the edge of every note card. Gold is reserved for section
+numerals, Knowledge-Area references and emphasis inside note cards. Navy carries structure.
+
+> **A trap worth recording.** `--red` in `assets/styles.css` holds `#1D4ED8`, a blue — the variable kept
+> its name through a palette change. Reading the variable name instead of the mark produces an entirely
+> blue document with no red and no gold in it. Take the palette from `logo.svg`.
 
 Fonts are loaded from the repo by `@font-face`, so a build needs no network access and the PDFs carry the
 same typefaces as the website.

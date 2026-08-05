@@ -1,6 +1,7 @@
 /* PCI AI Formula Sheets — REFERENCE EDITION (A4, print).
-   Brand system from backend/wwwroot/assets/styles.css and world.css:
-   Archivo (display) + Inter (body); brand blue #1D4ED8 / #3B82F6 / #1E3A8A. */
+   Brand taken from the mark itself (backend/wwwroot/assets/logo.svg):
+   navy shield #1D3C92 -> #13245A, gold "AI" #E7CB82 -> #B8923E, crimson rule #C13329.
+   Archivo (display) + Inter (body), self-hosted from wwwroot/assets/fonts. */
 
 @font-face {
   font-family: 'Archivo';
@@ -16,9 +17,9 @@
 }
 
 :root {
-  --brand: #1D4ED8;
-  --brand-bright: #3B82F6;
-  --brand-deep: #1E3A8A;
+  --brand: #1D3C92;
+  --brand-bright: #1D3C92;
+  --brand-deep: #13245A;
   --ink: #0F172A;
   --noir: #0E1525;
   --paper: #FFFFFF;
@@ -58,7 +59,7 @@
     font-family: 'Archivo', sans-serif;
     font-size: 9pt;
     font-weight: 700;
-    color: #1D4ED8;
+    color: #1D3C92;
   }
 }
 
@@ -82,7 +83,7 @@ body { margin: 0; padding: 0; }
 /* ---------- cover ---------- */
 
 .titlepage {
-  background: linear-gradient(160deg, #3B82F6 0%, #1D4ED8 50%, #1E3A8A 100%);
+  background: linear-gradient(150deg, #1D3C92 0%, #17306F 55%, #13245A 100%);
   color: #FFFFFF;
   padding: 46mm 22mm 22mm 22mm;
   height: 297mm;
@@ -125,7 +126,7 @@ body { margin: 0; padding: 0; }
   letter-spacing: 0.18em;
   color: #FFFFFF;
   padding-bottom: 5mm;
-  border-bottom: 2pt solid rgba(255,255,255,0.5);
+  border-bottom: 2pt solid rgba(231,203,130,0.5);
 }
 .titlepage .imprint {
   position: absolute;
@@ -154,7 +155,7 @@ h1 {
   color: #0F172A;
   margin: 0 0 5mm 0;
   padding-bottom: 2.4mm;
-  border-bottom: 2.4pt solid #1D4ED8;
+  border-bottom: 2.4pt solid #C13329;
   page-break-after: avoid;
 }
 
@@ -164,10 +165,10 @@ h2 {
   font-size: 13.5pt;
   line-height: 1.2;
   letter-spacing: -0.012em;
-  color: #1E3A8A;
+  color: #13245A;
   margin: 7mm 0 3mm 0;
   padding-left: 3.4mm;
-  border-left: 3pt solid #1D4ED8;
+  border-left: 3pt solid #1D3C92;
   page-break-after: avoid;
 }
 
@@ -175,15 +176,16 @@ h3 {
   font-family: 'Inter', sans-serif;
   font-size: 9.6pt;
   font-weight: 700;
-  color: #1D4ED8;
-  letter-spacing: 0.01em;
+  color: #B8923E;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin: 4.6mm 0 2mm 0;
   page-break-after: avoid;
 }
 
 p { margin: 0 0 2.6mm 0; orphans: 2; widows: 2; }
 strong { font-weight: 700; color: #0F172A; }
-a { color: #1D4ED8; text-decoration: none; font-weight: 500; }
+a { color: #1D3C92; text-decoration: none; font-weight: 500; }
 
 hr { border: 0; border-top: 1pt solid #E3E8EF; margin: 5mm 0; }
 
@@ -195,18 +197,18 @@ li { margin-bottom: 1.3mm; }
 code {
   font-family: 'DejaVu Sans Mono', monospace;
   font-size: 7.5pt;
-  background: #EFF5FF;
-  border: 0.5pt solid #CFE0FB;
+  background: #F4F7FC;
+  border: 0.5pt solid #D6DEEE;
   border-radius: 2px;
   padding: 0.5mm 1.2mm;
-  color: #1E3A8A;
+  color: #13245A;
   white-space: nowrap;
 }
 td:first-child code {
   white-space: normal;
   font-size: 7.6pt;
-  background: #E8F0FE;
-  border-color: #C4D9FA;
+  background: #EAF0FA;
+  border-color: #CBD6EA;
   font-weight: 700;
 }
 
@@ -222,7 +224,7 @@ table {
 }
 thead { display: table-header-group; }
 th {
-  background: #1E3A8A;
+  background: #13245A;
   color: #FFFFFF;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
@@ -241,15 +243,15 @@ td {
 }
 tbody tr:nth-child(even) td { background: #F8FAFC; }
 td strong { color: #0F172A; }
-td:last-child { color: #64748B; font-variant-numeric: tabular-nums; }
+td:last-child { color: #B8923E; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 /* ---------- callouts ---------- */
 
 blockquote {
   margin: 3.4mm 0;
   padding: 2.8mm 3.8mm;
-  border-left: 3pt solid #1D4ED8;
-  background: #F1F6FF;
+  border-left: 3pt solid #C13329;
+  background: #F4F7FC;
   font-size: 8.4pt;
   line-height: 1.5;
   color: #1E293B;
@@ -258,8 +260,8 @@ blockquote {
 }
 blockquote p { margin-bottom: 1.8mm; }
 blockquote p:last-child { margin-bottom: 0; }
-blockquote strong { color: #1E3A8A; }
-blockquote code { background: #E2ECFD; border-color: #C4D9FA; }
+blockquote strong { color: #13245A; }
+blockquote code { background: #EAF0FA; border-color: #CBD6EA; }
 
 /* ---------- notices ---------- */
 

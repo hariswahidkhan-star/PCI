@@ -1,177 +1,298 @@
-# Project Management Formulas
+# The Project Management Formula Sheet
 
-> The 16 that separate a plan from a guess
+> Every formula a delivery leader is accountable for — including the ones only PCI publishes
 
-## Knowing the formula is the easy half
+## What this is
 
-**PML-AI · HOW TO READ THIS**
+**PML-AI · COMPLETE REFERENCE**
 
-Most project managers can compute a critical path and a CPI.
+Forty-six formulas across project and programme delivery: business case, estimating, critical path, earned value, risk, agile and flow, procurement, quality, stakeholders and portfolio.
 
-Far fewer can say when the number stops meaning what they think it means — which is where projects are actually lost.
+Eight of them exist nowhere else. The **governance arithmetic** in section 04 — decision latency, gate net value, committee capacity, baseline drift — is original to the PML-AI Body of Knowledge, because governance is the part of delivery everyone manages by instinct and nobody prices.
 
-This deck gives the formula, and the mistake it attracts.
+> **Save this one.** It is the reference, not a highlight reel.
 
-> **One rule throughout.** Under hybrid delivery, velocity forecasting and earned value answer the same question through different instruments. State which one governs the commitment before you report either.
+## One rule before the rest
 
-## Three points, weighted
+**CONVENTIONS**
 
-**ESTIMATING · DOMAIN 6**
+Under hybrid delivery, velocity forecasting and earned value answer the same question through different instruments.
 
-`tE = (O + 4M + P) ÷ 6`
+State which one governs the commitment **before** you report either.
 
-`σ = (P − O) ÷ 6`
+> **And rates and periods must agree.** An annual rate against monthly periods is the arithmetic error the verification suite catches most often across the whole programme.
 
-PERT weights the most likely case four times.
+# 01 | Business case and benefits
 
-The triangular alternative, `(O + M + P) ÷ 3`, does not — and returns a different duration from identical inputs.
+Domains 2 and 16. Why the project exists, and whether it delivered.
 
-> **Watch for:** three points supplied by one estimator. That is one number wearing three hats.
+## Appraising the case
 
-## Float, and a free integrity check
+**DOMAIN 2 · INVESTMENT**
 
-**CRITICAL PATH · DOMAIN 6**
-
-`EF = ES + Duration`
-
-`LS = LF − Duration`
-
-`TF = LS − ES = LF − EF`
-
-`FF = min(successor ES) − EF`
-
-> **Total float from the starts must equal total float from the finishes.** If the two forms disagree, your forward or backward pass is wrong. It costs nothing to check and catches a whole class of error.
-
-## Two ways to compress. Different risks.
-
-**SCHEDULE COMPRESSION**
-
-`Crash cost slope = (Crash cost − Normal cost) ÷ (Normal − Crash duration)`
-
-| | Mechanism | What it costs you |
+| Formula | Meaning | Domain |
 |---|---|---|
-| **Crashing** | Add resource to critical activities | Direct cost, coordination load |
-| **Fast-tracking** | Overlap what was sequential | Rework risk rises materially |
+| `NPV = Σ CF_t ÷ (1 + r)^t − I_0` | Net present value | 2.3 |
+| `IRR: NPV = 0` | Internal rate of return | 2.3 |
+| `ROI = (Benefit − Cost) ÷ Cost` | Return on investment | 2.3 |
+| `BCR = PV(benefits) ÷ PV(costs)` | Benefit-cost ratio | 2.3 |
+| `Payback` | Period to recover the outlay | 2.3 |
 
-> **Crashing an activity that is not on the critical path** spends money and saves nothing. It happens more often than anyone admits.
+> **Discount both sides or neither.** A benefit-cost ratio that discounts costs and takes benefits at face value will justify almost anything.
 
-## Where you are, in cost terms
+## Measuring what was actually delivered
 
-**EARNED VALUE · DOMAIN 7**
+**DOMAIN 16 · BENEFITS**
 
-`CPI = EV ÷ AC`
+| Formula | Meaning | Domain |
+|---|---|---|
+| `Benefit realised = Actual measure − Baseline measure` | Benefits tracking | 16.3 |
+| `Benefits shortfall = Forecast − Realised` | Realisation gap | 16.3 |
+| `Benefit dependency: benefit lands only when all enablers deliver` | Benefits logic | 15.4 |
 
-`SPI = EV ÷ PV`
+> **Without a pre-delivery baseline, a realisation figure cannot be computed — only asserted.** Capture it before delivery starts, not at handover, when the comparison no longer exists. The Institute registers the benefits measure as `EVA(benefit)` deliberately, to keep it clear of `EV` in earned value.
 
-`Cost to date = Actuals + Accruals`
+# 02 | Estimating and the network
 
-> **That third line breaks the first two.** If `AC` is invoiced cost only, work has been performed that nobody has billed you for. `CPI` overstates performance and `EAC` understates cost — and both errors are invisible in the report.
+Domain 6 — the quantitative flagship. Duration, sequence and float.
 
-## Three forecasts. All defensible.
+## Duration under uncertainty
 
-**FORECASTING**
+**DOMAIN 6 · ESTIMATING**
 
-`EAC = AC + (BAC − EV)` — the variance was a one-off
+| Formula | Meaning | Domain |
+|---|---|---|
+| `tE = (O + 4M + P) ÷ 6` | PERT expected duration | 6.2 |
+| `tE = (O + M + P) ÷ 3` | Triangular expected duration | 6.2 |
+| `σ = (P − O) ÷ 6` | PERT standard deviation | 6.2 |
+| `σ^2 path = Σ σ^2 along the path` | Path variance | 6.4 |
+| `Analogous = Past × (this driver ÷ past driver)` | Top-down estimating | 6.2 |
+| `Parametric = Parameter × Rate` | Rate-based estimating | 6.2 |
 
-`EAC = BAC ÷ CPI` — performance persists
+> **Variances add. Standard deviations do not.** Sum the `σ^2` along the path and take the square root once, at the end. And three points from a single estimator is one number wearing three hats.
 
-`EAC = AC + (BAC − EV) ÷ (CPI × SPI)` — cost and schedule both persist
+## The network and its float
 
-> **The arithmetic is trivial. The assumption is the judgement.** State which one you have chosen, publish a range rather than a point, and be ready to defend the choice to a board.
+**DOMAIN 6 · CRITICAL PATH**
 
-## The check that exposes wishful budgets
+| Formula | Meaning | Domain |
+|---|---|---|
+| `EF = ES + Duration` | Forward pass | 6.3 |
+| `LS = LF − Duration` | Backward pass | 6.3 |
+| `TF = LS − ES = LF − EF` | Total float | 6.3 |
+| `FF = min(successor ES) − EF` | Free float | 6.3 |
+| `Critical path: TF = 0` | The longest path | 6.3 |
+| `Crash cost slope = (Crash − Normal cost) ÷ (Normal − Crash duration)` | Cost per period saved | 6.5 |
 
-**TCPI**
+> **Total float from the starts must equal total float from the finishes.** If the two forms disagree, one of your passes is wrong. It costs nothing to check and catches a whole class of error — and crashing an activity off the critical path spends money to save nothing.
 
-`TCPI = (BAC − EV) ÷ (BAC − AC)`
+# 03 | Cost, earned value and risk
 
-The cost efficiency required on every remaining pound to still land on budget.
+Domains 7 and 8. Where the project stands and where it will end.
 
-Now compare it to the `CPI` you have actually achieved.
+## Position and forecast
 
-> **If TCPI sits far above the CPI achieved**, the budget is asserting an efficiency improvement on work that is already running behind. Nobody has demonstrated it. It is a wish with a decimal place.
+**DOMAIN 7 · EARNED VALUE**
 
-## Ordinal ratings do not multiply
+| Formula | Meaning | Domain |
+|---|---|---|
+| `CV = EV − AC` · `SV = EV − PV` | Variances | 7.3 |
+| `CPI = EV ÷ AC` · `SPI = EV ÷ PV` | Performance indices | 7.3 |
+| `Cost to date = Actuals + Accruals` | True cost to date | 7.2 |
+| `EAC = AC + (BAC − EV)` | The variance was a one-off | 7.4 |
+| `EAC = BAC ÷ CPI` | Performance to date persists | 7.4 |
+| `EAC = AC + (BAC − EV) ÷ (CPI × SPI)` | Cost and schedule both persist | 7.4 |
+| `VAC = BAC − EAC` | Variance at completion | 7.4 |
+| `TCPI = (BAC − EV) ÷ (BAC − AC)` | Efficiency required to hit budget | 7.4 |
 
-**RISK · DOMAIN 8**
+> **The third line breaks the first two.** If `AC` carries invoiced cost alone, `CPI` overstates performance and `EAC` understates cost — both invisibly. And set `TCPI` beside the `CPI` actually achieved: a `TCPI` far above it asserts a gain nobody has demonstrated.
 
-`Risk score = Probability rating × Impact rating`
+## Schedule performance in time
 
-A 3 × 4 = 12 heat-map score is a **sorting device**. Nothing more.
+**DOMAIN 6 · EARNED SCHEDULE**
 
-It cannot be summed across risks. It cannot size a contingency.
+| Formula | Meaning | Domain |
+|---|---|---|
+| `ES` | Earned schedule — the time at which the `EV` achieved was planned | 6.4 |
+| `SV(t) = ES − AT` | Schedule variance in time | 6.4 |
+| `SPI(t) = ES ÷ AT` | Time-based schedule efficiency | 6.4 |
 
-`EMV = Probability × Impact`
+> **`SV` and `SPI` are denominated in money.** At completion `EV = PV`, so both return to zero and 1.00 however late you finished. The time-based pair does not converge, which makes it the honest late-stage measure.
 
-`Contingency ≈ Σ EMV, or P80 − P50 from simulation`
+## Risk, priced properly
 
-> **For anything that touches money, use expected value or simulation.** And note that `EMV` describes a portfolio — applied to one binary event, it returns a number that will never occur.
+**DOMAIN 8 · RISK**
 
-## The law that governs every queue
+| Formula | Meaning | Domain |
+|---|---|---|
+| `EMV = Σ (probability × impact)` | Expected monetary value | 8.2 |
+| `Risk score = Probability rating × Impact rating` | Qualitative sorting only | 8.2 |
+| `Contingency ≈ Σ EMV, or P80 − P50` | Risk-based contingency | 8.3 |
+| `Value of information = EV(with) − EV(without)` | Whether to buy analysis | 8.4 |
+| `Residual exposure = Residual probability × Residual impact` | After response | 8.3 |
 
-**FLOW · DOMAIN 13**
+> **Ordinal ratings do not multiply.** A 3 × 4 = 12 heat-map score is a sorting device. It cannot be summed across risks and it cannot size a contingency. For anything touching money, use expected value or simulation.
 
-`Cycle time = WIP ÷ Throughput`
+# 04 | The governance arithmetic
 
-Halve the work in progress and cycle time halves — at exactly the same throughput.
+Original to the PML-AI Body of Knowledge. Governance is the part of delivery everyone manages by instinct — these formulas price it.
 
-> **This is why limiting WIP speeds delivery** without anybody working faster. It holds only for a stable system over the window you measured.
+## What a decision costs you in time
 
-## Forecasting an adaptive delivery
+**DOMAIN 3 · DECISION LATENCY**
 
-**VELOCITY**
+`E[wait] = M ÷ 2 + L`
 
-`Velocity = Points completed ÷ Sprint`
+Meeting interval `M`, paper lead time `L`. The expected wait for a committee decision — and it **sums across escalation tiers**.
 
-`Sprints remaining = Points remaining ÷ Average velocity`
+> **A monthly committee with a two-week paper deadline has an expected wait of four weeks.** Escalate through two tiers and it is eight, before anyone has disagreed about anything. Multiply that by the cost of delay and governance stops being free.
 
-`Capacity = Members × Available days × Focus factor`
+## The price of elapsed time
 
-> **Two failures here.** Using best-ever velocity rather than a rolling average of recent comparable sprints. And setting the focus factor to 1.0, which assumes nobody attends a meeting, answers a question or takes a day off.
+**DOMAINS 1, 3 · COST OF DELAY**
 
-## Burn-down hides the thing you need to see
+`Cost of delay = Value forgone per unit of elapsed time`
 
-**REPORTING TO A GATE**
+This is the exchange rate between time and money — the price at which governance latency, gate duration and escalation paths are all evaluated.
 
-A **burn-down** plots work remaining. Scope added mid-flight looks identical to slow progress.
+> **Without a cost of delay, every governance argument is aesthetic.** With one, "add another approval tier" becomes a number, and the conversation changes character entirely.
+
+## Is this gate worth holding
+
+**DOMAIN 3 · GATE NET VALUE**
+
+`Gate net value = P(defect) × build-fix cost − [review cost + elapsed × cost of delay + P(defect) × (P(detect) × design-fix + P(miss) × build-fix)]`
+
+A gate earns its place only when the defects it catches cost more than the gate costs to hold.
+
+> **A gate that catches nothing is not free — it costs its review effort plus its elapsed time priced at the cost of delay.** This is the formula that retires stage gates, and almost no organisation computes it.
+
+## Can your governance absorb the demand
+
+**DOMAIN 3 · COMMITTEE CAPACITY**
+
+`Capacity = Meetings per year × Substantive items per meeting`
+
+`Utilisation = Demand ÷ Capacity`
+
+> **Governance queues behave like any other constrained system.** Push utilisation towards 1.0 and the wait time rises non-linearly — which is felt as "the board is a bottleneck" long before anyone measures it.
+
+## The architecture choice, priced
+
+**DOMAIN 4 · INTERFACES**
+
+`Mesh interfaces = n(n − 1) ÷ 2`
+
+`Layered interfaces = n` to an integration layer
+
+Adding one party to a mesh of `n` creates `n` new interfaces, not one.
+
+> **This is the same arithmetic as communication channels, applied to system and organisational design.** It is the case for an integration layer, and it is why adding a party to a late programme so rarely accelerates it.
+
+## The rule that catches missing scope
+
+**DOMAIN 4 · THE HUNDRED-PER-CENT RULE**
+
+`Σ children − parent = 0` at every level of the WBS
+
+A non-zero result is an omission or a duplication. There is no third explanation.
+
+> **Run it as an arithmetic check, not a review opinion.** It is the cheapest scope-assurance test available and it takes one column in a spreadsheet.
+
+## Pricing a change honestly
+
+**DOMAIN 4 · ASSESSED TOTAL IMPACT**
+
+`Assessed total impact = direct + (schedule weeks × cost of delay) + rework + interface re-verification + regression + documentation`
+
+The basis a delegation threshold must read on — not the direct cost alone.
+
+> **Approve on direct cost and you have set your delegation threshold against a fraction of the real number.** Small changes clear the threshold, and the missing terms land later as schedule.
+
+## Measuring the drift
+
+**DOMAIN 4 · BASELINE DRIFT**
+
+`Baseline drift = (change count × average direct cost) + (affected count × average weeks × cost of delay)`
+
+The cumulative-test threshold is derived from the observed change rate.
+
+> **Individually approvable, collectively fatal.** Every change passed its own test; nobody ran the cumulative one. This formula is the cumulative test.
+
+# 05 | Adaptive delivery and flow
+
+Domain 13. The same questions, different instruments.
+
+## Flow and forecast
+
+**DOMAIN 13 · AGILE**
+
+| Formula | Meaning | Domain |
+|---|---|---|
+| `Velocity = Points completed ÷ Sprint` | Delivery rate | 13.3 |
+| `Sprints remaining = Points remaining ÷ Average velocity` | Forecast to completion | 13.3 |
+| `Capacity = Members × Available days × Focus factor` | Sprint capacity | 13.3 |
+| `Cycle time = WIP ÷ Throughput` | Little's Law | 13.4 |
+| `Throughput = Items completed ÷ Period` | Delivery rate in items | 13.4 |
+| `Flow efficiency = Active time ÷ Elapsed time` | Proportion actually worked | 13.4 |
+| `WSJF = Cost of delay ÷ Job size` | Prioritisation | 13.3 |
+
+> **Halve the work in progress and cycle time halves, at the same throughput.** That is why limiting WIP speeds delivery without anyone working faster. And `WSJF` requires a real cost of delay — guess it and you have ranked by guess.
+
+## Burn-down hides the thing you need
+
+**DOMAIN 13 · REPORTING TO A GATE**
+
+A **burn-down** plots work remaining, so scope added mid-flight looks identical to slow progress.
 
 A **burn-up** plots completed work and total scope as two separate lines.
 
-> **Scope growth becomes visible as scope growth.** For any project reporting to a phase gate, use burn-up. The second line is the whole point.
+> **Scope growth becomes visible as scope growth.** For anything reporting to a phase gate, use burn-up. The second line is the entire point.
 
-## The point where the incentive stops working
+# 06 | Procurement, quality and portfolio
 
-**CONTRACTS · DOMAIN 10**
+Domains 9, 10 and 15.
 
-`PTA = [(Ceiling price − Target price) ÷ Buyer share ratio] + Target cost`
+## Where the incentive stops working
 
-Above the point of total assumption, the seller absorbs **every further pound**. The buyer's contribution has hit the ceiling.
+**DOMAIN 10 · CONTRACTS**
 
-> **Check it in one line.** At an actual cost exactly equal to the PTA, the computed final price must equal the ceiling price. If it does not, you have used the seller's share ratio in the denominator instead of the buyer's.
+| Formula | Meaning | Domain |
+|---|---|---|
+| `PTA = [(Ceiling − Target price) ÷ Buyer share] + Target cost` | Point of total assumption | 10.3 |
+| `Fee = Target fee + Share × (Target cost − Actual cost)` | Incentive fee | 10.3 |
+| `Pain/gain = Share ratio × (Actual − Target)` | Target-cost mechanism | 10.3 |
+| `LD exposure = LD rate × Days late` | Liquidated damages | 10.4 |
+| `Weighted score = Σ (criterion weight × score)` | Tender evaluation | 10.2 |
 
-## Why small teams move faster
+> **Above the PTA the seller absorbs every further pound.** Check it in one line: at an actual cost equal to the PTA, the final price must equal the ceiling. If it does not, you have used the seller's share ratio in the denominator instead of the buyer's.
 
-**COMMUNICATION · DOMAIN 11**
+## Quality, measured
 
-`Channels = n(n − 1) ÷ 2`
+**DOMAIN 9 · QUALITY**
 
-Adding one person to a team of `n` creates `n` new channels, not one.
+| Formula | Meaning | Domain |
+|---|---|---|
+| `Cost of quality = Prevention + Appraisal + Internal + External failure` | Total quality cost | 9.2 |
+| `DPMO = (Defects ÷ (Units × Opportunities)) × 1,000,000` | Defect rate | 9.3 |
+| `Control limits = Mean ± 3σ` | Statistical process control | 9.3 |
+| `Process capability = (USL − LSL) ÷ 6σ` | Capability index | 9.3 |
+| `First-pass yield = Passing first time ÷ Started` | Right first time | 9.3 |
 
-> **The growth is quadratic, and that is the entire point.** It is the arithmetic behind why adding people to a late project so rarely accelerates it.
+> **Control limits describe what the process does. Specification limits describe what the customer requires.** A process can be perfectly in control and entirely incapable — and the response to each is different.
 
-## In control and incapable are different states
+## Portfolio and capacity
 
-**QUALITY · DOMAIN 9**
+**DOMAIN 15 · PORTFOLIO**
 
-`Control limits = Mean ± 3σ`
+| Formula | Meaning | Domain |
+|---|---|---|
+| `Portfolio value = Σ NPV of components` | Aggregate value | 15.2 |
+| `Scoring model = Σ (weight × score)` | Prioritisation | 15.2 |
+| `Σ resource demand ≤ Available capacity` | Feasibility constraint | 15.3 |
+| `Resource utilisation = Productive ÷ Available hours` | Utilisation | 7.5 |
 
-`Process capability = (USL − LSL) ÷ 6σ`
-
-**Control limits** describe what your process *does*.
-
-**Specification limits** describe what the customer *requires*.
-
-> **A process can be perfectly in control and entirely incapable.** The response to each is different, and confusing them sends improvement effort in the wrong direction.
+> **Do not plan to 100% utilisation.** It leaves nothing to absorb variability, and queues grow non-linearly as utilisation approaches full — the same effect as committee capacity in section 04, in a different queue.
 
 ## The ten that cost the most
 
@@ -180,27 +301,27 @@ Adding one person to a team of `n` creates `n` new channels, not one.
 1. Risk scores multiplied and then summed
 2. `SV` read as a schedule measure late in a project
 3. `PTA` computed with the seller's share ratio
-4. Velocity taken as best-ever rather than rolling average
+4. Velocity taken as best-ever rather than a rolling average
 5. Burn-down used for gate reporting
 
 ## And the other five
 
 **MOST MISAPPLIED · 6–10**
 
-6. Standard deviations summed along a path — variances add, not deviations
+6. Standard deviations summed along a path
 7. Crashing an activity that is not on the critical path
 8. Control limits confused with specification limits
-9. Resource utilisation targeted at 100%, leaving nothing to absorb variability
-10. Benefits claimed with no pre-delivery baseline ever captured
+9. Change approved on direct cost alone, not assessed total impact
+10. Benefits claimed with no pre-delivery baseline
 
-> **Without a baseline, a realisation figure cannot be computed.** It can only be asserted.
+> **Nine of these produce a report that passes review.** The tenth produces a benefits case that cannot be checked at all.
 
-## The full sheet is free
+## The Body of Knowledge is open
 
 **PCI AI · PROJECT CONTROLS INSTITUTE GLOBAL**
 
-This deck is 16 of them. The complete reference carries the whole quantitative surface of project delivery — business case and benefits, estimating, critical path, earned value, risk, agile and flow, procurement and contracts, quality, stakeholders and portfolio — each with the mistake it attracts and reproducible worked examples.
+Every formula here is developed to full depth in the PML-AI Body of Knowledge — sixteen domains with worked examples and calculation exercises, at the domain cited on each slide. The governance arithmetic in section 04 is original to it.
 
-No registration. No email gate.
+Published openly. **No registration, no email gate.**
 
 **projectcontrolsinstitute.org**

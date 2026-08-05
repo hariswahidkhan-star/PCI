@@ -59,7 +59,8 @@ This sheet is a study aid. It is **not provided in the examination**; candidates
 | `Present value = Amount ÷ (1 + r)^n` | Discounting a provision | — | 1.4.3 |
 | `PoC = Costs incurred ÷ Total estimated costs` | Cost-to-cost percentage of completion | Uninstalled materials inflating the numerator | 2.2.6 |
 | `Cumulative revenue = PoC × Transaction price` | IFRS 15 over-time revenue | Applying to cumulative, then forgetting to deduct revenue already recognised | 2.2.6 |
-| `Allocated price = Transaction price × (SSP_i ÷ Σ SSP)` | IFRS 15 allocation | — | 2.2.5 |
+| `Allocated price_i = Transaction price × (SSP_i ÷ Σ SSP)` | IFRS 15 allocation | — | 2.2.5 |
+| `Capitalised borrowing cost = Weighted-avg qualifying expenditure × rate` | IAS 23 | Capitalisation continued through a suspension | 2.4.4 |
 | `Contract asset / (liability) = Revenue recognised − Amounts billed` | Over/under-billing position | Sign convention reversed | 7.5 |
 
 ---

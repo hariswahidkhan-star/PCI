@@ -18,6 +18,7 @@ Usage:
 """
 import datetime
 import pathlib
+import re
 import sys
 
 import markdown
@@ -33,9 +34,9 @@ INSTITUTION = "Project Controls Institute Global, Inc."
 
 # The cover mark: a bar of the notation the sheet actually contains.
 GLYPHS = {
-    "pcl-ai": "CPI · SPI · EAC · TCPI · TF · EMV",
-    "pfl-ai": "NPV · IRR · DSCR · LLCR · PLCR · WACC",
-    "pml-ai": "PERT · CPM · PTA · EMV · WSJF · ROI",
+    "pcl-ai": "CPI · SPI · EAC · TCPI · ES · TF · EMV · CCC",
+    "pfl-ai": "NPV · IRR · WACC · CFADS · DSCR · LLCR · PLCR",
+    "pml-ai": "PERT · CPM · EMV · E[wait] · WSJF · PTA",
 }
 
 TITLEPAGE = """
@@ -95,6 +96,12 @@ def build(src: pathlib.Path) -> int:
     number = src.name.split("-")[0]
     credential = "-".join(src.stem.split("-")[1:3])
     year = datetime.date.today().year
+
+    # Python-Markdown merges consecutive blockquotes into one, even across a blank line, and lazy
+    # continuation lines make that hard to detect by lookbehind. Precede every blockquote with a
+    # block-level HTML comment instead: harmless where it is not needed, and it keeps a callout
+    # followed by another callout as two separate boxes.
+    body_md = re.sub(r"\n\n(?=> )", "\n\n<!-- -->\n\n", body_md)
 
     body_html = markdown.markdown(
         body_md, extensions=["tables", "attr_list", "sane_lists"], output_format="html5"

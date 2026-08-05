@@ -75,7 +75,7 @@ This sheet is a study aid. The examination specification, including whether any 
 | `PI = 1 + NPV ÷ Initial investment` | Equivalent form — use as a check | — | 4.2 |
 | `Payback = Years before recovery + (Unrecovered ÷ Cash flow in that year)` | Simple payback | Ignores everything after the payback point | 4.2 |
 | `Discounted payback` | As above, on discounted flows | — | 4.2 |
-| `Equivalent annual cost = NPV ÷ AF` | Comparing unequal-life assets | — | 4.3 |
+| `EAV = NPV ÷ AF(r, n)` | Equivalent annual value — unequal lives | — | 4.3 |
 | `Switching value = Δ% in a variable that drives NPV to zero` | Sensitivity breakeven | — | 4.4 |
 
 > **IRR pathologies — the three to know.** (1) **Multiple IRRs** where the cash-flow sign changes more than once; the equation has more than one root. (2) **No IRR** where the flows never cross zero. (3) **Scale and reinvestment blindness** — IRR implicitly assumes reinvestment at the IRR itself, which is why MIRR exists and why NPV governs where the two disagree on ranking.
@@ -86,11 +86,13 @@ This sheet is a study aid. The examination specification, including whether any 
 
 | Formula | Meaning | Watch for | Domain |
 |---|---|---|---|
-| `WACC = (E÷V) × Re + (D÷V) × Rd × (1 − t)` | Weighted average cost of capital | Tax shield applied to equity | 9.1 |
-| `Re = Rf + β × (Rm − Rf)` | CAPM cost of equity | Equity beta used where asset beta is required | 9.1 |
+| `WACC = g × k_d × (1 − T) + (1 − g) × k_e` | Cost of capital, in gearing form (the BoK's canonical statement) | Tax shield applied to the equity term | 9.1 |
+| `g = D ÷ (D + E)` | Gearing — the `g` above | Confused with debt-to-equity | 9.2 |
+| `k_e = R_f + β × (R_m − R_f)` | CAPM cost of equity | Equity beta used where asset beta is required | 9.1 |
 | `Gearing = D ÷ (D + E)` | Leverage as a proportion of capital | Confused with debt-to-equity | 9.2 |
 | `Debt : equity = D ÷ E` | Leverage as a ratio | 60% gearing is 1.5 : 1, not 60 : 40 as a ratio | 9.2 |
-| `β_asset = β_equity ÷ [1 + (1 − t) × D÷E]` | Ungearing beta | — | 9.1 |
+| `β_asset = β_equity ÷ [1 + (1 − T) × D/E]` | Ungearing beta | — | 9.1 |
+| `ICR = EBIT (or EBITDA) ÷ Interest` | Accounting cover; ignores principal entirely | Quoted as if it covered debt service | 10.2 |
 | `Interest cover = EBIT ÷ Interest` | Income-based cover | EBITDA variant is a different covenant | 9.2 |
 | `Leverage = Net debt ÷ EBITDA` | Leverage covenant | Gross vs net debt definition | 10.2 |
 
@@ -116,7 +118,8 @@ This sheet is a study aid. The examination specification, including whether any 
 | `DS = Interest + Scheduled principal` | Debt service | Excluding fees where the covenant includes them | 10.2 |
 | `Cash available to equity = CFADS − DS − Reserve top-ups` | Distributable cash | — | 6.4 |
 | `Lock-up: distributions blocked if DSCR < lock-up threshold` | Distribution test | Lock-up threshold differs from default threshold | 10.3 |
-| `DSRA target = Next 6 or 12 months of debt service` | Reserve sizing | — | 10.3 |
+| `DSRA = Debt service × months ÷ 12` | Reserve, expressed as the shortfall it survives | — | 10.3 |
+| `Lock-up trigger in cash = Debt service × threshold ratio` | The covenant as a number a team can act on | Covenant left as a ratio nobody can operate | 10.3 |
 
 > **CFADS is pre-financing.** Interest and principal are what CFADS is measured *against*. Deducting interest before computing CFADS double-counts it and inflates every cover ratio. This is the most consequential definitional error in project finance.
 
@@ -127,8 +130,8 @@ This sheet is a study aid. The examination specification, including whether any 
 | Formula | Meaning | Domain |
 |---|---|---|
 | `DSCR = CFADS ÷ DS` | Cover in a **single period** | 10.2 |
-| `LLCR = [PV(CFADS over remaining loan life, at kd) + DSRA] ÷ Debt outstanding` | Cover over the **life of the loan** | 10.2 |
-| `PLCR = [PV(CFADS over remaining project life, at kd) + DSRA] ÷ Debt outstanding` | Cover over the **life of the project** | 10.2 |
+| `LLCR = PV(CFADS over loan life, at the loan rate) ÷ Outstanding debt` | Cover over the **life of the loan** | 10.2 |
+| `PLCR = PV(CFADS over project life) ÷ Outstanding debt` | Cover over the **life of the project** | 10.2 |
 | `Minimum DSCR` | The lowest DSCR in any period — the binding constraint | 10.2 |
 | `Average DSCR` | Mean across periods — informative, never the covenant | 10.2 |
 
@@ -140,15 +143,21 @@ This sheet is a study aid. The examination specification, including whether any 
 | **LLCR** | Remaining loan term | Is there enough cash over the loan's life to repay it? |
 | **PLCR** | Remaining project life | Is there headroom *beyond* loan maturity — the tail? |
 
+> **On the reserve term.** The Body of Knowledge states `LLCR` and `PLCR` on CFADS alone. Many term
+sheets add cash reserves to the numerator, which raises both ratios — so state which convention a
+quoted figure uses, because the two are not comparable.
+
 > **PLCR is normally greater than LLCR**, because it discounts cash flows over a longer window against the same debt balance. The gap between them is the **tail** — the cash-generating life of the project after the debt matures. A thin tail is a credit concern even when LLCR looks comfortable, because it removes the lender's room to reschedule.
 
 **Debt sizing from a target ratio**
 
 | Formula | Meaning | Domain |
 |---|---|---|
-| `Debt service capacity_t = CFADS_t ÷ Target DSCR` | Maximum affordable service each period | 10.1 |
-| `Debt capacity = Σ [Capacity_t ÷ (1 + kd)^t]` | Sculpted debt quantum | 10.1 |
-| `Sculpted repayment: principal_t = Capacity_t − Interest_t` | Repayment shaped to cash flow | 10.1 |
+| `Max debt service = CFADS ÷ Target DSCR` | Affordable service per period | 10.1 |
+| `Max debt capacity = Max debt service × AF(r, n)` | Quantum at the loan rate and tenor (level profile) | 10.1 |
+| `Sculpted capacity = Σ [Service_t ÷ (1 + r)^t]` | Quantum where service is sculpted to CFADS | 10.1 |
+| `Sculpted debt service_t = CFADS_t ÷ Target DSCR` | Coverage constant by construction | 10.1 |
+| `Sculpted principal_t = Sculpted service_t − Interest_t` | Repayment shaped to cash flow | 10.1 |
 
 **Sculpting versus annuity.** A sculpted profile sets debt service as a constant multiple of CFADS, so DSCR is flat at the target in every period. An annuity profile sets a constant instalment, so DSCR varies with CFADS. Sculpting maximises debt capacity for a given minimum DSCR — which is why project finance uses it and corporate lending largely does not.
 
@@ -221,11 +230,12 @@ Each is internally consistent and reproducible from this sheet.
 
 - `DS` = 27,500,000 → `DSCR` = 42,000,000 ÷ 27,500,000 = **1.53**
 
-**LLCR and PLCR.** Debt outstanding 210,000,000 · DSRA 12,000,000 · `kd` 7% · CFADS 38,000,000 for 8 remaining loan years, then 36,000,000 for a further 7 project years.
+**LLCR and PLCR.** Debt outstanding 210,000,000 · loan rate 7% · CFADS 38,000,000 for 8 remaining loan years, then 36,000,000 for a further 7 project years.
 
-- PV of CFADS over loan life = 226,909,000 → `LLCR` = (226,909,000 + 12,000,000) ÷ 210,000,000 = **1.14**
-- PV of CFADS over project life = 339,828,000 → `PLCR` = (339,828,000 + 12,000,000) ÷ 210,000,000 = **1.68**
-- The gap is the seven-year tail. `PLCR` > `LLCR`, as it should be.
+- PV of CFADS over loan life = 226,909,000 → `LLCR` = 226,909,000 ÷ 210,000,000 = **1.08**
+- PV of CFADS over project life = 339,828,000 → `PLCR` = 339,828,000 ÷ 210,000,000 = **1.62**
+- The gap is the seven-year tail. `PLCR` > `LLCR`, as it must be wherever a tail exists.
+- Add a 12,000,000 DSRA to each numerator, as many term sheets do, and the pair reads **1.14** and **1.68**. Same project, different convention — which is why the convention has to be stated.
 
 **WACC.** `E` 400,000,000 · `D` 600,000,000 · `Re` 13.5% · `Rd` 7.0% · tax 25%.
 
