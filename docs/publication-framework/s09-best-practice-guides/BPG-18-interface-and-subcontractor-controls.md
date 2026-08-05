@@ -51,8 +51,8 @@ on. The worked example separates one claim into a payment decision and a cost de
 0.065 on the cost performance index caused by a cadence mismatch alone.
 
 **Who this is for.** Project controls managers and cost engineers on projects with substantial subcontracted
-scope; commercial managers and quantity surveyors who certify subcontractor applications; and planners
-managing interfaces between contractors, clients and third parties.
+scope; commercial managers and quantity surveyors who certify applications; and planners managing interfaces
+between contractors, clients and third parties.
 
 ---
 
@@ -95,9 +95,8 @@ That determines the columns:
 | Consequence of late | What it costs, in days or money, against the receiver's critical path |
 | Status and last confirmed | When both parties last agreed the dates, not when the register was edited |
 
-Two columns do the real work. **Float between the two dates** turns an interface from a status into a number,
-and a register sorted by that number is a management agenda. **Consequence of late** makes the provider's
-organisation care; an interface with no stated consequence is a request.
+Two columns do the real work. **Float** turns an interface from a status into a number, and a register sorted
+by it is a management agenda. **Consequence of late** makes the provider's organisation care.
 
 Bilateral confirmation keeps the register alive. A date taken from one party's schedule and never confirmed
 by the other is a hope with a date field. Flag any interface not jointly confirmed within an agreed period
@@ -109,15 +108,14 @@ lever behind them the only control is early identification, long lead times and 
 ## 3. Cadence mismatch: their period end and your cut-off
 
 Subcontractors report on their own commercial cycle: typically a claim to a fixed day of the month — the
-twentieth, say — while your cost cut-off is the last day of the month and your progress measurement is taken
-then.
+twentieth, say — while your cost cut-off is the last day of the month and your progress is measured then.
 
 If the claim is posted unadjusted, the month's cost covers work to the twentieth and the month's earned value
 covers work to the thirtieth. The cost performance index — earned value divided by actual cost — then
 compares thirty days of output with twenty days of input, and it flatters. Next month the missing ten days
-arrive on top of a full month and the index drops for a reason unrelated to performance. The result is a
-sawtooth that costs the controls function its credibility, because everyone can see it and the explanation
-sounds like an excuse.
+arrive on top of a full month and the index drops for a reason unrelated to performance. The resulting
+sawtooth costs the controls function its credibility, because everyone can see it and the explanation sounds
+like an excuse.
 
 Three responses, of which only one is generally right.
 
@@ -129,8 +127,7 @@ commercial application.
 **Accrue the gap.** Estimate the value of work performed between their period end and your cut-off and post
 it as an accrual, so cost and earned value describe the same period. `BPG-07 — Accruals and cut-off
 discipline` owns the accounting treatment; the refinement that belongs here is that **the gap is estimated on
-the verified run rate, not the claimed one**, because the claimed rate imports the over-claim and compounds
-it.
+the verified run rate, not the claimed one**, which otherwise imports the over-claim and compounds it.
 
 **Do nothing and explain it every month.** Common, and not a control. If it really is the only option,
 publish the mismatch on the face of the report — "cost to 20th, progress to 30th". The same mismatch runs the
@@ -150,29 +147,28 @@ computing for each subcontract rather than assuming the drafting handled it. Not
 their consequences vary substantially between contract forms and jurisdictions; the arithmetic of comparing
 two periods does not.
 
-**Retention.** Percentages and release triggers should mirror. Where the subcontract releases retention
-earlier than the head contract, the main contractor funds the difference; `BPG-13 — Cash flow forecasting`
-covers the working-capital consequence.
+**Retention.** Percentages and release triggers should mirror; where the subcontract releases retention
+earlier, the main contractor funds the difference. `BPG-13 — Cash flow forecasting` covers the consequence.
 
 **Payment timing.** Paying subcontractors on shorter terms than you are paid on is a working-capital leak
-whose size is work in progress multiplied by the difference in days. It may be a deliberate commercial
-decision, but it should be a decision with a number attached rather than an accident of two separately
-negotiated documents. Statutory payment regimes constrain what may be agreed in many jurisdictions and
-differ between them; the principle of pricing the gap is general.
+whose size is work in progress multiplied by the difference in days — sometimes a deliberate commercial
+decision, but one that should carry a number rather than be an accident of two separately negotiated
+documents. Statutory payment regimes constrain what may be agreed in many jurisdictions and differ between
+them; the principle of pricing the gap is general.
 
-**Change and variation mechanics.** Where the head contract requires a variation to be instructed and valued
-one way and the subcontract permits another, changes arrive downstream that cannot be passed upstream. Both
-processes must carry the same instruction; `BPG-11 — Change orders and variations` owns the process itself.
+**Change and variation mechanics.** Both processes must be capable of carrying the same instruction, or
+changes arrive downstream that cannot be passed upstream; `BPG-11 — Change orders and variations` owns the
+process itself.
 
 The controls function's role is not to draft the contract but to hold a **back-to-back matrix** — one table
 per subcontract comparing head-contract and subcontract obligation on each dimension, with the gap quantified
-in days, percentage points or currency and an owner for each gap that cannot be closed.
+and an owner for each gap that cannot be closed.
 
 ## 5. Progress claimed versus progress verified
 
-A subcontractor's application states a value of work done. Your measurement states a different one. Both may
-be prepared honestly; the systematic difference is not fraud but the ordinary consequence of a party valuing
-its own output. Three quantities are in play, and conflating any two produces a reporting error.
+A subcontractor's application states a value of work done; your measurement states a different one. Both may
+be prepared honestly — the systematic difference is the ordinary consequence of a party valuing its own
+output. Three quantities are in play, and conflating any two produces a reporting error.
 
 | Quantity | What it is | What it drives |
 |---|---|---|
@@ -197,12 +193,10 @@ month's over-claim is ordinary, a trend is a forecasting signal.
 ## 6. When the subcontractor's own controls are weak
 
 Sooner or later you will engage an organisation that is good at the work and poor at the data: no coded cost
-structure, progress claimed as a percentage judgement, a schedule in a spreadsheet, and a programme manager
-who regards all of this as your problem. It is your problem, because their scope appears in your report. The
-signs show in the first two claims: percentages moving in round numbers, progress tracking the payment curve
-exactly, a schedule with no logic behind the bars, and no answer to what the remaining work consists of.
-
-The responses that work, roughly in order of cost:
+structure, progress claimed as a percentage judgement, a schedule in a spreadsheet. It is your problem,
+because their scope appears in your report. The signs show in the first two claims: percentages moving in
+round numbers, progress tracking the payment curve exactly, a schedule with no logic behind the bars, and no
+answer to what the remaining work consists of. The responses that work, roughly in order of cost:
 
 - **Specify the data at award.** A short data schedule — format, fields, frequency, cut-off, consequence of
   non-delivery — costs nothing at award and is unobtainable afterwards. Specify the *fields*, not the tool;
@@ -217,29 +211,27 @@ The responses that work, roughly in order of cost:
 - **Escalate as a commercial matter.** Weak controls raise the probability of latent overrun, unnotified
   delay and disputed final accounts: a risk-register entry with an owner and an exposure.
 
-Whatever combination is used, record **the basis of the number that reaches your report**. A cost line from
-your own measurement and one from a subcontractor's assertion are different qualities of information.
+Whatever the combination, record **the basis of the number that reaches your report**. A cost line from your
+own measurement and one from an assertion are different qualities of information.
 
 ## 7. How this goes wrong
 
 **The claim is posted as the cost.** No verification, no accrual for the cadence gap, no distinction between
-claimed and certified. Everything downstream — index, forecast, revenue recognition — inherits the
-subcontractor's commercial position. The refined version of the same error is to remove the over-claim from
-the certificate and reintroduce it through an accrual calculated on the claimed run rate.
+claimed and certified. Everything downstream inherits the subcontractor's commercial position. The refined
+version of the same error removes the over-claim from the certificate and reintroduces it through an accrual
+calculated on the claimed run rate.
 
 **Interfaces are recorded as milestones.** One owner, one date, no float column, no consequence. When the
 date slips, both parties can demonstrate they were waiting for the other.
 
-**Third-party interfaces are missing.** Utilities, permitting authorities, the client's operations staff and
-neighbouring projects appear nowhere, because nobody has a contract with them — and they are usually the
-longest-lead and least controllable dependencies on the project.
+**Third-party interfaces are missing**, because nobody in the delivery team has a contract with the utility,
+the authority or the neighbouring project — usually the longest-lead dependencies on the job.
 
 **Back-to-back is assumed, not checked.** The two documents were reviewed by different people at different
 times, and the notice-period and retention differences surface when a claim arrives.
 
-**Materials on site are read as a performance variance.** The valuation pays for stored material, the rules
-of credit do not credit it, the index dip is investigated as a productivity problem, and next month it
-reverses without explanation.
+**Materials on site are read as a performance variance.** The index dip is investigated as a productivity
+problem, and next month it reverses without explanation (§8.6).
 
 **Their schedule is filed rather than integrated.** A bar chart never linked into the project network cannot
 tell you what an interface slip costs, and float comfortable in their network may not exist in yours.
@@ -249,8 +241,8 @@ never priced, never escalated — until the final account arrives with no suppor
 
 ## 8. Worked example
 
-*Illustrative figures. Currency is USD, whole dollars unless stated. One subcontract package, viewed by the
-main contractor. Assumptions stated as they arise; percentages rounded to one decimal place.*
+*Illustrative figures. Currency USD, whole dollars. One subcontract package, viewed by the main contractor.
+Assumptions stated as they arise; percentages to one decimal place.*
 
 ### 8.1 The setup
 
@@ -363,9 +355,8 @@ value of 2,100,000 is a rules-of-credit basis, and the difference:
 2,153,333 − 2,100,000 = 53,333
 ```
 
-is material delivered to site and paid for, which the valuation includes and the rules of credit do not
-credit until installed. It is a timing difference that reverses on installation, and the narrative should say
-so; investigating it as a performance variance would consume a month of attention and find nothing.
+is material delivered to site and paid for, which the valuation includes and the rules of credit do not credit
+until installed. It is a timing difference that reverses on installation, and the narrative should say so.
 
 The schedule reading is unaffected by any of the cost treatment above:
 
@@ -389,7 +380,7 @@ re-confirm the interface dates downstream with the parties that depend on them.
 - [ ] Back-to-back matrix completed: notice periods, retention, payment timing, change mechanics — each gap
       quantified, each with an owner.
 - [ ] Interface points identified, including third parties with no contract.
-- [ ] Rules of credit agreed and written, distinct from the valuation basis.
+- [ ] Rules of credit agreed, distinct from the valuation basis.
 
 **Every period**
 
