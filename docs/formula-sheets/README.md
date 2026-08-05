@@ -1,13 +1,40 @@
 # PCI AI Formula Sheets
 
-Premium quantitative reference sheets for the three credentials in the **PCI AI Project Leadership
-Certification Suite**. Each is a standalone A4 PDF a candidate can print, annotate and keep on a desk.
+Premium quantitative references for the three credentials in the **PCI AI Project Leadership
+Certification Suite**, built in the platform's own brand system.
+
+Each credential ships in **two editions**, built from separate sources because they are genuinely
+different artefacts.
+
+### LinkedIn edition — 1080 x 1350 (4:5)
+
+The shareable one. Sixteen curated formulas per credential, one idea per slide, type sized so it stays
+legible when LinkedIn's document viewer scales a page down to phone width.
+
+| Deck | Credential | Slides | PDF |
+|---|---|---|---|
+| [Project Controls Formulas](linkedin/01-pcl-ai-linkedin.md) | PCL-AI | 18 | `/downloads/pci-pcl-ai-formula-sheet-linkedin.pdf` |
+| [Project Finance Formulas](linkedin/02-pfl-ai-linkedin.md) | PFL-AI | 18 | `/downloads/pci-pfl-ai-formula-sheet-linkedin.pdf` |
+| [Project Management Formulas](linkedin/03-pml-ai-linkedin.md) | PML-AI | 19 | `/downloads/pci-pml-ai-formula-sheet-linkedin.pdf` |
+
+### Reference edition — A4
+
+The complete one. Every formula in the credential, dense, for printing and annotating at a desk.
 
 | # | Sheet | Credential | Pages | PDF |
 |---|---|---|---|---|
-| 01 | [PCL-AI Formula Sheet](01-pcl-ai-formula-sheet.md) | PCI AI Project Controls Leader | 8 | `/downloads/pci-pcl-ai-formula-sheet.pdf` |
-| 02 | [PFL-AI Formula Sheet](02-pfl-ai-formula-sheet.md) | PCI AI Project Finance Leader | 8 | `/downloads/pci-pfl-ai-formula-sheet.pdf` |
-| 03 | [PML-AI Formula Sheet](03-pml-ai-formula-sheet.md) | PCI AI Project Management Leader | 9 | `/downloads/pci-pml-ai-formula-sheet.pdf` |
+| 01 | [PCL-AI Formula Sheet](01-pcl-ai-formula-sheet.md) | Project Controls Leader | 9 | `/downloads/pci-pcl-ai-formula-sheet.pdf` |
+| 02 | [PFL-AI Formula Sheet](02-pfl-ai-formula-sheet.md) | Project Finance Leader | 8 | `/downloads/pci-pfl-ai-formula-sheet.pdf` |
+| 03 | [PML-AI Formula Sheet](03-pml-ai-formula-sheet.md) | Project Management Leader | 9 | `/downloads/pci-pml-ai-formula-sheet.pdf` |
+
+### Why two editions and not one
+
+A4 is the wrong page for LinkedIn. The document viewer fits a page to the screen, so on a ~390px phone an
+A4 page renders at roughly 36% — putting 8pt reference type at about 3pt on screen. A complete sheet at
+LinkedIn-legible type would run past 60 slides, which nobody scrolls.
+
+So the LinkedIn edition curates rather than shrinks, and the reference edition stays complete. The
+formulas, worked figures and "watch for" notes are identical wherever they overlap.
 
 ## What makes these different from a formula list
 
@@ -40,21 +67,47 @@ identities that make a sheet trustworthy:
 
 Any change to a formula or a worked figure must be re-verified numerically before the sheet is rebuilt.
 
+## Brand
+
+Both editions use the platform's own design system, not a bespoke one:
+
+| Token | Value | Source |
+|---|---|---|
+| Display type | **Archivo** 700–900 | `backend/wwwroot/assets/fonts/`, self-hosted |
+| Body type | **Inter** 400–700 | same |
+| Primary | `#1D4ED8` | `--red` in `assets/styles.css` (legacy name, blue value) |
+| Bright | `#3B82F6` | `--magenta` |
+| Deep | `#1E3A8A` | `--red-700` |
+| Ink / noir | `#0F172A` / `#0E1525` | `--ink` / `--noir` |
+| Surfaces | `#F1F5F9`, `#E3E8EF` | `--paper-2`, `--line` |
+| Brand gradient | `linear-gradient(160deg,#3B82F6,#1D4ED8,#1E3A8A)` | `--grad-brand` |
+
+Fonts are loaded from the repo by `@font-face`, so a build needs no network access and the PDFs carry the
+same typefaces as the website.
+
 ## Building
 
 ```bash
 pip install weasyprint markdown
 cd docs/formula-sheets/build
-python3 build_formula_sheets.py                       # build all three
-python3 build_formula_sheets.py 02-pfl-ai-formula-sheet.md   # build one
+
+python3 build_linkedin.py                      # the three LinkedIn decks
+python3 build_formula_sheets.py                # the three A4 reference sheets
+
+python3 build_linkedin.py 02-pfl-ai-linkedin.md          # or one at a time
+python3 build_formula_sheets.py 02-pfl-ai-formula-sheet.md
 ```
 
-Output goes to `backend/wwwroot/downloads/pci-<credential>-formula-sheet.pdf`, served at
-`/downloads/<file>.pdf`. The stylesheet is `build/formula.css` — the Knowledge Series navy-and-gold
-system, tuned denser for quantitative reference, with formulas set in a tinted monospace panel.
+Output goes to `backend/wwwroot/downloads/`, served at `/downloads/<file>.pdf`.
+Stylesheets are `build/linkedin.css` (4:5 slides) and `build/formula.css` (A4 reference).
 
-**Source format.** Line 1 is `# Title`, then a blank line, then `> Subtitle` as a blockquote. The builder
-generates the title page and appends the notices block, so neither belongs in the body.
+**Reference source format.** Line 1 `# Title`, blank line, `> Subtitle`. The builder generates the cover
+and appends the notices block, so neither belongs in the body.
+
+**LinkedIn slide conventions.** `## Heading` starts a slide. A first paragraph in bold becomes the
+eyebrow label. A paragraph containing only a code span becomes a formula card, and consecutive ones merge
+into a single card. A blockquote becomes the dark note card. The final `##` section is rendered as the
+closing gradient slide.
 
 ## Notation rules
 

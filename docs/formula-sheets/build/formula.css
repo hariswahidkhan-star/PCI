@@ -1,35 +1,64 @@
-/* PCI AI Formula Sheets — print stylesheet.
-   Same navy/gold system as the Knowledge Series, tuned for dense quantitative reference. A4. */
+/* PCI AI Formula Sheets — REFERENCE EDITION (A4, print).
+   Brand system from backend/wwwroot/assets/styles.css and world.css:
+   Archivo (display) + Inter (body); brand blue #1D4ED8 / #3B82F6 / #1E3A8A. */
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('../../../backend/wwwroot/assets/fonts/archivo-latin.woff2') format('woff2');
+  font-weight: 700 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../../../backend/wwwroot/assets/fonts/inter-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+}
+
+:root {
+  --brand: #1D4ED8;
+  --brand-bright: #3B82F6;
+  --brand-deep: #1E3A8A;
+  --ink: #0F172A;
+  --noir: #0E1525;
+  --paper: #FFFFFF;
+  --paper-2: #F1F5F9;
+  --line: #E3E8EF;
+  --slate: #475569;
+  --mist: #64748B;
+}
 
 @page {
   size: A4;
-  margin: 17mm 15mm 15mm 15mm;
+  margin: 18mm 16mm 16mm 16mm;
   @top-left {
-    content: "PCI AI · Formula Sheet";
-    font-family: "DejaVu Sans", sans-serif;
-    font-size: 7.2pt;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: #8A8F98;
+    content: "PCI AI · FORMULA SHEET";
+    font-family: 'Inter', sans-serif;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #94A3B8;
   }
   @top-right {
     content: string(doctitle);
-    font-family: "DejaVu Sans", sans-serif;
-    font-size: 7.2pt;
-    letter-spacing: 0.06em;
-    color: #8A8F98;
+    font-family: 'Inter', sans-serif;
+    font-size: 7pt;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #94A3B8;
   }
   @bottom-left {
     content: "projectcontrolsinstitute.org";
-    font-family: "DejaVu Sans", sans-serif;
-    font-size: 7.2pt;
-    color: #A8ADB5;
+    font-family: 'Inter', sans-serif;
+    font-size: 7pt;
+    color: #94A3B8;
   }
   @bottom-right {
     content: counter(page);
-    font-family: "DejaVu Serif", serif;
+    font-family: 'Archivo', sans-serif;
     font-size: 9pt;
-    color: #0B1B2B;
+    font-weight: 700;
+    color: #1D4ED8;
   }
 }
 
@@ -42,133 +71,143 @@
 }
 
 html {
-  font-family: "DejaVu Serif", Georgia, serif;
+  font-family: 'Inter', system-ui, sans-serif;
   font-size: 9.2pt;
-  line-height: 1.42;
-  color: #16202B;
+  line-height: 1.45;
+  color: #0F172A;
 }
 
 body { margin: 0; padding: 0; }
 
-/* ---------- title page ---------- */
+/* ---------- cover ---------- */
 
 .titlepage {
-  background: #0B1B2B;
-  color: #F4F1EA;
-  padding: 44mm 24mm 24mm 24mm;
+  background: linear-gradient(160deg, #3B82F6 0%, #1D4ED8 50%, #1E3A8A 100%);
+  color: #FFFFFF;
+  padding: 46mm 22mm 22mm 22mm;
   height: 297mm;
   box-sizing: border-box;
   page-break-after: always;
   position: relative;
 }
 .titlepage .series {
-  font-family: "DejaVu Sans", sans-serif;
-  font-size: 8.5pt;
-  letter-spacing: 0.26em;
+  font-family: 'Inter', sans-serif;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #C9A227;
-  margin-bottom: 28mm;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 26mm;
 }
 .titlepage h1 {
-  font-size: 40pt;
-  line-height: 1.04;
-  font-weight: normal;
-  margin: 0 0 8mm 0;
-  color: #F4F1EA;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900;
+  font-size: 44pt;
+  line-height: 0.98;
+  letter-spacing: -0.022em;
+  margin: 0 0 7mm 0;
+  color: #FFFFFF;
   border: 0;
   padding: 0;
 }
 .titlepage .subtitle {
-  font-family: "DejaVu Sans", sans-serif;
   font-size: 13pt;
-  line-height: 1.42;
-  color: #C6CBD2;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.88);
   max-width: 120mm;
-  margin-bottom: 22mm;
+  margin-bottom: 18mm;
 }
-/* the formula rule — a bar of notation, set as the cover mark */
 .titlepage .glyphs {
-  font-family: "DejaVu Sans Mono", monospace;
-  font-size: 12pt;
-  letter-spacing: 0.34em;
-  color: #C9A227;
-  opacity: 0.85;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+  letter-spacing: 0.18em;
+  color: #FFFFFF;
   padding-bottom: 5mm;
-  border-bottom: 1.4pt solid #C9A227;
+  border-bottom: 2pt solid rgba(255,255,255,0.5);
 }
 .titlepage .imprint {
   position: absolute;
-  bottom: 24mm;
-  left: 24mm;
-  right: 24mm;
-  font-family: "DejaVu Sans", sans-serif;
-  font-size: 9pt;
-  line-height: 1.65;
-  color: #9AA3AE;
+  bottom: 22mm;
+  left: 22mm;
+  right: 22mm;
+  font-size: 8.5pt;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.7);
 }
-.titlepage .imprint strong { color: #F4F1EA; font-weight: normal; letter-spacing: 0.05em; }
+.titlepage .imprint strong {
+  color: #FFFFFF;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-size: 8pt;
+}
 
 /* ---------- headings ---------- */
 
 h1 {
   string-set: doctitle content();
-  font-size: 20pt;
-  font-weight: normal;
-  color: #0B1B2B;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 19pt;
+  letter-spacing: -0.015em;
+  color: #0F172A;
   margin: 0 0 5mm 0;
-  padding-bottom: 2.6mm;
-  border-bottom: 1.4pt solid #C9A227;
+  padding-bottom: 2.4mm;
+  border-bottom: 2.4pt solid #1D4ED8;
   page-break-after: avoid;
 }
 
 h2 {
-  font-size: 14pt;
-  font-weight: normal;
-  line-height: 1.25;
-  color: #0B1B2B;
-  margin: 6.5mm 0 3mm 0;
-  padding-bottom: 1.8mm;
-  border-bottom: 0.6pt solid #D6D9DE;
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 13.5pt;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  color: #1E3A8A;
+  margin: 7mm 0 3mm 0;
+  padding-left: 3.4mm;
+  border-left: 3pt solid #1D4ED8;
   page-break-after: avoid;
 }
 
 h3 {
-  font-family: "DejaVu Sans", sans-serif;
-  font-size: 10pt;
-  font-weight: bold;
-  color: #12293D;
-  margin: 4.5mm 0 2mm 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 9.6pt;
+  font-weight: 700;
+  color: #1D4ED8;
+  letter-spacing: 0.01em;
+  margin: 4.6mm 0 2mm 0;
   page-break-after: avoid;
 }
 
 p { margin: 0 0 2.6mm 0; orphans: 2; widows: 2; }
+strong { font-weight: 700; color: #0F172A; }
+a { color: #1D4ED8; text-decoration: none; font-weight: 500; }
 
-strong { color: #0B1B2B; }
-a { color: #12293D; text-decoration: none; border-bottom: 0.4pt solid #C9A227; }
-
-hr { border: 0; border-top: 0.6pt solid #DDE0E5; margin: 5mm 0; }
+hr { border: 0; border-top: 1pt solid #E3E8EF; margin: 5mm 0; }
 
 ul, ol { margin: 0 0 3mm 0; padding-left: 5mm; }
-li { margin-bottom: 1.2mm; }
+li { margin-bottom: 1.3mm; }
 
-/* ---------- formula code spans — the signature element ---------- */
+/* ---------- formula spans ---------- */
 
 code {
-  font-family: "DejaVu Sans Mono", monospace;
-  font-size: 7.6pt;
-  background: #F4F1E6;
-  border: 0.4pt solid #E3DCC4;
-  border-radius: 1.4pt;
-  padding: 0.5mm 1.1mm;
-  color: #14202C;
+  font-family: 'DejaVu Sans Mono', monospace;
+  font-size: 7.5pt;
+  background: #EFF5FF;
+  border: 0.5pt solid #CFE0FB;
+  border-radius: 2px;
+  padding: 0.5mm 1.2mm;
+  color: #1E3A8A;
   white-space: nowrap;
 }
-
-/* in the first column of a formula table, let the expression breathe and wrap */
 td:first-child code {
   white-space: normal;
-  font-size: 7.7pt;
-  background: #F7F3E4;
+  font-size: 7.6pt;
+  background: #E8F0FE;
+  border-color: #C4D9FA;
+  font-weight: 700;
 }
 
 /* ---------- tables ---------- */
@@ -176,60 +215,61 @@ td:first-child code {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 2.6mm 0 3.6mm 0;
-  font-family: "DejaVu Sans", sans-serif;
-  font-size: 7.4pt;
-  line-height: 1.3;
+  margin: 2.6mm 0 4mm 0;
+  font-size: 7.6pt;
+  line-height: 1.34;
   page-break-inside: avoid;
 }
 thead { display: table-header-group; }
 th {
-  background: #0B1B2B;
-  color: #F4F1EA;
-  font-weight: bold;
+  background: #1E3A8A;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
   text-align: left;
-  padding: 1.6mm 1.8mm;
+  padding: 1.8mm 2mm;
   border: 0;
-  font-size: 7.4pt;
-  letter-spacing: 0.03em;
+  font-size: 7.2pt;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 td {
-  padding: 1.4mm 1.8mm;
-  border-bottom: 0.4pt solid #DFE2E7;
+  padding: 1.5mm 2mm;
+  border-bottom: 0.5pt solid #E3E8EF;
   vertical-align: top;
+  color: #334155;
 }
-tbody tr:nth-child(even) td { background: #F6F7F9; }
-td strong { color: #0B1B2B; }
-
-/* symbol tables and formula tables: keep the first column tight and distinct */
-td:first-child { color: #0B1B2B; }
+tbody tr:nth-child(even) td { background: #F8FAFC; }
+td strong { color: #0F172A; }
+td:last-child { color: #64748B; font-variant-numeric: tabular-nums; }
 
 /* ---------- callouts ---------- */
 
 blockquote {
   margin: 3.4mm 0;
-  padding: 2.6mm 3.6mm;
-  border-left: 2.4pt solid #C9A227;
-  background: #FAF8F2;
-  font-family: "DejaVu Sans", sans-serif;
+  padding: 2.8mm 3.8mm;
+  border-left: 3pt solid #1D4ED8;
+  background: #F1F6FF;
   font-size: 8.4pt;
-  line-height: 1.48;
-  color: #22303C;
+  line-height: 1.5;
+  color: #1E293B;
   page-break-inside: avoid;
+  border-radius: 0 2px 2px 0;
 }
 blockquote p { margin-bottom: 1.8mm; }
 blockquote p:last-child { margin-bottom: 0; }
-blockquote code { font-size: 7.5pt; background: #F1EBD6; }
+blockquote strong { color: #1E3A8A; }
+blockquote code { background: #E2ECFD; border-color: #C4D9FA; }
 
 /* ---------- notices ---------- */
 
 .notices {
   margin-top: 7mm;
   padding-top: 3.5mm;
-  border-top: 0.6pt solid #D6D9DE;
-  font-family: "DejaVu Sans", sans-serif;
-  font-size: 7pt;
-  line-height: 1.48;
-  color: #5C6670;
+  border-top: 1pt solid #E3E8EF;
+  font-size: 6.8pt;
+  line-height: 1.5;
+  color: #64748B;
 }
 .notices p { margin-bottom: 2.2mm; }
+.notices strong { color: #475569; }
