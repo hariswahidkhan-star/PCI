@@ -138,76 +138,90 @@ body{font-family:'Inter',sans-serif;color:#0F172A;overflow:hidden}
 .top .badge span{font-size:13px;letter-spacing:.13em;text-transform:uppercase;
   color:#64748B;border-left:2px solid #E3E8EF;padding-left:11px}
 
-h1{font-family:'Archivo';font-weight:900;font-size:50px;line-height:1;
+h1{font-family:'Archivo';font-weight:900;font-size:52px;line-height:1;
   letter-spacing:-.036em;margin-bottom:8px;white-space:nowrap}
 .dot{color:#C13329}
 .sub{font-size:15.5px;color:#475569;margin-bottom:14px}
 .sub b{color:#0F172A;font-weight:700}
 
-/* the governed workflow — the spine of the whole domain */
-.pipe{display:flex;align-items:stretch;gap:0;margin-bottom:8px;
-  border:2.5px solid #0F172A;border-radius:9px;overflow:hidden}
-.st{flex:1;padding:11px 14px;border-right:2px solid #E3E8EF}
-.st:last-child{border-right:0}
-.st.ai{background:#EEF3FD}
-.st.hu{background:#FBF0EF}
-.st k{display:block;font-size:10.5px;font-weight:700;letter-spacing:.15em;
-  text-transform:uppercase;color:#94A3B8;margin-bottom:4px}
-.st.ai k{color:#1D4ED8}
-.st.hu k{color:#C13329}
-.st b{font-family:'Archivo';font-weight:900;font-size:16px;letter-spacing:-.015em;
-  display:block;line-height:1.14}
-.st i{font-style:normal;font-size:11.5px;color:#64748B;display:block;margin-top:2px}
-.pipenote{font-size:12.5px;color:#94A3B8;margin-bottom:13px;text-align:right}
+/* ---------- HERO: the governed workflow, given real presence ---------- */
+.pipe{display:flex;align-items:stretch;margin:0 0 9px 0}
+.st{flex:1;position:relative;padding:20px 20px 18px;border-radius:10px;
+  margin-right:26px;border:2.5px solid #0F172A}
+.st:last-child{margin-right:0}
+/* chevron between stages */
+.st:not(:last-child)::after{content:"";position:absolute;right:-19px;top:50%;
+  width:14px;height:14px;margin-top:-7px;border-top:4px solid #0F172A;
+  border-right:4px solid #0F172A;transform:rotate(45deg)}
+.st.ai{background:#1D4ED8;border-color:#1D4ED8}
+.st.hu{background:#C13329;border-color:#C13329}
+.st k{display:block;font-size:11px;font-weight:700;letter-spacing:.17em;
+  text-transform:uppercase;color:#94A3B8;margin-bottom:7px}
+.st.ai k,.st.hu k{color:rgba(255,255,255,.8)}
+.st b{font-family:'Archivo';font-weight:900;font-size:22px;letter-spacing:-.022em;
+  display:block;line-height:1.06;color:#0F172A}
+.st.ai b,.st.hu b{color:#fff}
+.st i{font-style:normal;font-size:12.5px;color:#64748B;display:block;margin-top:6px;
+  line-height:1.24}
+.st.ai i,.st.hu i{color:rgba(255,255,255,.85)}
+.pipenote{font-size:13px;color:#94A3B8;margin-bottom:12px;text-align:right}
 .pipenote b{color:#0F172A;font-weight:700}
+
+/* ---------- closing band ---------- */
+.band{flex:none;background:#0F172A;border-radius:10px;padding:16px 24px;
+  margin-top:12px;display:flex;align-items:center;gap:24px}
+.band b{font-family:'Archivo';font-weight:900;font-size:29px;letter-spacing:-.026em;
+  color:#fff;line-height:1.04;white-space:nowrap}
+.band b em{font-style:normal;color:#F0776C}
+.band span{font-size:13px;color:rgba(255,255,255,.72);line-height:1.36}
 
 .grid{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;gap:24px}
 .col{flex:1;min-width:0}
-.col.wide{flex:1.42}
+.col.wide{flex:1.30}
 
-h2{font-family:'Archivo';font-weight:900;font-size:14.5px;letter-spacing:.01em;
+h2{font-family:'Archivo';font-weight:900;font-size:15.5px;letter-spacing:.01em;
   text-transform:uppercase;color:#0F172A;display:flex;align-items:center;
   padding:0 0 5px 0;margin:0 0 6px 0;border-bottom:2.5px solid #0F172A}
 h2 i{display:inline-block;width:11px;height:11px;border-radius:2px;
   margin-right:8px;font-style:normal;flex:none}
 h2 span{margin-left:auto;font-family:'Inter';font-weight:700;font-size:11px;
   letter-spacing:.06em;color:#94A3B8;white-space:nowrap;padding-left:6px}
-.blk{margin-bottom:12px}
+.blk{margin-bottom:10px}
 
 /* the application map */
 .ap{padding:4.6px 0;border-bottom:1px solid #EEF2F7}
 .ap:last-child{border-bottom:0}
 .ap .hd{display:flex;align-items:baseline;gap:8px}
-.ap .hd b{font-family:'Archivo';font-weight:900;font-size:14px;color:#0F172A;
+.ap .hd b{font-family:'Archivo';font-weight:900;font-size:15.5px;color:#0F172A;
   letter-spacing:-.01em}
 .ap .hd span{margin-left:auto;font-size:10.5px;color:#94A3B8;font-weight:700;white-space:nowrap}
-.ap .ai{font-size:12.3px;color:#1D4ED8;font-weight:700;line-height:1.26;margin-top:1px}
-.ap .hu{font-size:12px;color:#64748B;line-height:1.26;margin-top:1px}
+.ap .ai{font-size:13.4px;color:#1D4ED8;font-weight:700;line-height:1.26;margin-top:1px}
+.ap .hu{font-size:13px;color:#64748B;line-height:1.26;margin-top:1px}
 .ap .hu::before{content:"✓ ";color:#C13329;font-weight:700}
 
 /* compact two-part rows */
 .r{display:flex;align-items:baseline;gap:8px;padding:3.4px 0;border-bottom:1px solid #F3F6FA}
 .r:last-child{border-bottom:0}
-.r b{font-size:12.6px;font-weight:700;color:#0F172A;line-height:1.24}
-.r span{margin-left:auto;font-size:10.8px;color:#94A3B8;text-align:right;
+.r b{font-size:13.4px;font-weight:700;color:#0F172A;line-height:1.24}
+.r span{margin-left:auto;font-size:11.4px;color:#94A3B8;text-align:right;
   line-height:1.22;max-width:52%}
 
 /* simple listed rows */
-.l{font-size:12.6px;color:#334155;line-height:1.3;padding:3.4px 0;
+.l{font-size:13.4px;color:#334155;line-height:1.3;padding:3.4px 0;
   border-bottom:1px solid #F3F6FA;padding-left:17px;text-indent:-17px}
 .l:last-child{border-bottom:0}
 .l b{color:#0F172A;font-weight:700}
 .l::before{content:"—";color:#C13329;font-weight:700;margin-right:7px}
 .l.tick::before{content:"□";color:#1D4ED8;font-weight:700;margin-right:8px}
 
-.chips{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 4px}
-.chips span{font-size:11.6px;font-weight:700;color:#1D4ED8;background:#EEF3FD;
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 3px}
+.chips span{font-size:12.2px;font-weight:700;color:#1D4ED8;background:#EEF3FD;
   border-radius:4px;padding:3px 8px}
 
 .lim{display:flex;align-items:baseline;gap:8px;padding:3.4px 0;border-bottom:1px solid #F3F6FA}
 .lim:last-child{border-bottom:0}
-.lim b{font-size:12.6px;font-weight:700;color:#C13329;line-height:1.24}
-.lim span{margin-left:auto;font-size:10.8px;color:#94A3B8;text-align:right;
+.lim b{font-size:13.4px;font-weight:700;color:#C13329;line-height:1.24}
+.lim span{margin-left:auto;font-size:11.4px;color:#94A3B8;text-align:right;
   line-height:1.22;max-width:56%}
 
 .mat{display:flex;align-items:baseline;gap:8px;padding:3.2px 0;border-bottom:1px solid #F3F6FA}
@@ -232,7 +246,7 @@ def build() -> str:
         f'<div class="ai">{ai}</div><div class="hu">{hu}</div></div>'
         for name, dom, ai, hu in APPLICATION
     )
-    cats = "".join(f'<div class="r"><b>{n}</b><span>{g}</span></div>' for n, g in CATEGORIES)
+    cats = "".join(f"<span>{n}</span>" for n, _ in CATEGORIES)
     refuse = "".join(f'<div class="l">{r}</div>' for r in REFUSE)
     checks = "".join(f'<div class="l tick">{c}</div>' for c in CHECKLIST)
     prompt = "".join(f'<div class="r"><b>{n}</b><span>{d}</span></div>' for n, d in PROMPT)
@@ -240,10 +254,7 @@ def build() -> str:
     quality = "".join(f'<div class="r"><b>{d}</b><span>{q}</span></div>' for d, q in QUALITY)
     strong = "".join(f"<span>{x}</span>" for x in STRONG)
     limits = "".join(f'<div class="lim"><b>{n}</b><span>{d}</span></div>' for n, d in LIMITS)
-    mat = "".join(
-        f'<div class="mat"><em>{i}</em><b>{n}</b><span>{d}</span></div>'
-        for i, (n, d) in enumerate(MATURITY, 1)
-    )
+    mat = "".join(f"<span>{i} {n}</span>" for i, (n, _) in enumerate(MATURITY, 1))
 
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>
 <div class="card">
@@ -256,68 +267,58 @@ def build() -> str:
 
   <h1>AI in project controls, governed<span class="dot">.</span></h1>
   <div class="sub"><b>Domain 13 of the PCL-AI Body of Knowledge — 20% of the credential.</b>
-    Not what AI might do one day. What it does now, where it applies, what you verify, and when a
-    professional refuses to use it.</div>
+    Not what AI might do one day. What it does now, where it applies, what you verify,
+    and when a professional refuses to use it.</div>
 
   <div class="pipe">
     <div class="st"><k>1 · Input</k><b>Governed data</b><i>Quality, lineage, confidentiality</i></div>
-    <div class="st ai"><k>2 · AI proposes</k><b>Draft · extract · forecast · detect</b><i>The step that accelerates</i></div>
-    <div class="st hu"><k>3 · You verify</k><b>Check method, figures, assumptions</b><i>The step that assures</i></div>
-    <div class="st"><k>4 · Output</k><b>A result you own</b><i>Signed, with the trail recorded</i></div>
+    <div class="st ai"><k>2 · AI proposes</k><b>Draft · extract<br>forecast · detect</b><i>The step that accelerates</i></div>
+    <div class="st hu"><k>3 · You verify</k><b>Method, figures,<br>assumptions</b><i>The step that assures</i></div>
+    <div class="st"><k>4 · Output</k><b>A result<br>you own</b><i>Signed, with the trail recorded</i></div>
   </div>
   <div class="pipenote">Every application below is this one shape — <b>KA 13.5.1</b></div>
 
   <div class="grid">
     <div class="col wide">
       <div class="blk">
-        <h2><i style="background:#1D4ED8"></i>Where it applies, domain by domain
-          <span>KA 13.5</span></h2>
+        <h2><i style="background:#1D4ED8"></i>Where it applies, domain by domain<span>KA 13.5</span></h2>
         {apps}
       </div>
       <div class="blk">
-        <h2><i style="background:#0F172A"></i>What a professional prompt contains<span>KA 13.3</span></h2>
-        {prompt}
-        <div class="chips" style="margin-top:6px">{patterns}</div>
+        <h2><i style="background:#0F172A"></i>Tool categories<span>Pick the category, then a governed tool · KA 13.4</span></h2>
+        <div class="chips">{cats}</div>
       </div>
     </div>
 
     <div class="col">
       <div class="blk">
-        <h2><i style="background:#0F172A"></i>Tool categories<span>KA 13.4</span></h2>
-        {cats}
-      </div>
-      <div class="blk">
-        <h2><i style="background:#1D4ED8"></i>The maturity ladder<span>KA 13.7</span></h2>
-        {mat}
-      </div>
-      <div class="blk">
-        <h2><i style="background:#1D4ED8"></i>Data — the fuel<span>KA 13.2</span></h2>
-        {quality}
-      </div>
-    </div>
-
-    <div class="col">
-      <div class="blk">
-        <h2><i style="background:#C13329"></i>When&nbsp;<em style="font-style:normal;text-decoration:underline">not</em>&nbsp;to use AI
-          <span>KA 13.6.4</span></h2>
+        <h2><i style="background:#C13329"></i>When&nbsp;<em style="font-style:normal;text-decoration:underline">not</em>&nbsp;to use AI<span>KA 13.6.4</span></h2>
         {refuse}
+      </div>
+      <div class="blk">
+        <h2><i style="background:#C13329"></i>Hard limits<span>KA 13.1.5</span></h2>
+        {limits}
       </div>
       <div class="blk">
         <h2><i style="background:#1D4ED8"></i>Output assurance checklist<span>KA 13.6.5</span></h2>
         {checks}
       </div>
       <div class="blk">
-        <h2><i style="background:#1D4ED8"></i>Genuinely strong at<span>KA 13.1.5</span></h2>
-        <div class="chips">{strong}</div>
-        <h2 style="margin-top:10px"><i style="background:#C13329"></i>Hard limits<span>KA 13.1.5</span></h2>
-        {limits}
+        <h2><i style="background:#1D4ED8"></i>Maturity<span>KA 13.7</span></h2>
+        <div class="chips">{mat}</div>
       </div>
     </div>
   </div>
 
+  <div class="band">
+    <b>AI proposes.<br>The professional <em>disposes</em>.</b>
+    <span>The tool accelerates. The verification assures. The professional owns the result —
+      and remains accountable for it. That principle is not a caution about technology;
+      it is a statement about where accountability sits, and it does not move.</span>
+  </div>
+
   <div class="foot">
-    <span><b style="font-family:Inter;font-size:12.5px;color:#0F172A">AI proposes. The professional disposes.</b>
-      The tool accelerates, the verification assures, the professional owns the result — and remains accountable for it.<br>
+    <span>Domain 13 of the PCL-AI Body of Knowledge · thirteen domains, sixty-one Knowledge Areas.<br>
       <em>One of three credentials in the PCI AI Project Leadership Certification Suite — PCL-AI · PFL-AI · PML-AI</em></span>
     <b>projectcontrolsinstitute.org</b>
   </div>
