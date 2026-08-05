@@ -11,11 +11,16 @@ different artefacts.
 The shareable one. Sixteen curated formulas per credential, one idea per slide, type sized so it stays
 legible when LinkedIn's document viewer scales a page down to phone width.
 
+**Formulas only — no worked examples.** Each slide carries the expression, what it means, and the mistake
+it attracts. Checks are stated as properties a reader can apply to their own numbers ("total float from
+the starts must equal total float from the finishes") rather than as figures they have to read through.
+Worked arithmetic lives in the reference edition.
+
 | Deck | Credential | Slides | PDF |
 |---|---|---|---|
-| [Project Controls Formulas](linkedin/01-pcl-ai-linkedin.md) | PCL-AI | 18 | `/downloads/pci-pcl-ai-formula-sheet-linkedin.pdf` |
+| [Project Controls Formulas](linkedin/01-pcl-ai-linkedin.md) | PCL-AI | 17 | `/downloads/pci-pcl-ai-formula-sheet-linkedin.pdf` |
 | [Project Finance Formulas](linkedin/02-pfl-ai-linkedin.md) | PFL-AI | 18 | `/downloads/pci-pfl-ai-formula-sheet-linkedin.pdf` |
-| [Project Management Formulas](linkedin/03-pml-ai-linkedin.md) | PML-AI | 19 | `/downloads/pci-pml-ai-formula-sheet-linkedin.pdf` |
+| [Project Management Formulas](linkedin/03-pml-ai-linkedin.md) | PML-AI | 18 | `/downloads/pci-pml-ai-formula-sheet-linkedin.pdf` |
 
 ### Reference edition — A4
 
@@ -33,8 +38,9 @@ A4 is the wrong page for LinkedIn. The document viewer fits a page to the screen
 A4 page renders at roughly 36% — putting 8pt reference type at about 3pt on screen. A complete sheet at
 LinkedIn-legible type would run past 60 slides, which nobody scrolls.
 
-So the LinkedIn edition curates rather than shrinks, and the reference edition stays complete. The
-formulas, worked figures and "watch for" notes are identical wherever they overlap.
+So the LinkedIn edition curates rather than shrinks, and the reference edition stays complete. Formulas
+and "watch for" notes are identical wherever the two overlap; the worked examples appear only in the
+reference edition, which is what someone studying at a desk actually needs them for.
 
 ## What makes these different from a formula list
 

@@ -52,16 +52,6 @@ Every index above divides by `AC`. If `AC` is invoiced cost only, work has been 
 
 > **Before you compute anything:** reconcile goods-received-not-invoiced against the accrual booked. A persistent gap is not a timing quirk. It is a wrong forecast.
 
-## What one missed accrual does
-
-**WORKED · 420M PROGRAMME, MONTH 14**
-
-Invoiced cost only → `CPI` 0.957 → `EAC` **438.9m**
-
-Accrual booked, +12.4m → `CPI` 0.887 → `EAC` **473.3m**
-
-> **The 34.4m swing exceeded the entire 21m contingency.** The board had been told the project was uncomfortable but contained. It was neither — and the forecasting was never wrong. The input was.
-
 ## Three answers. All correct.
 
 **FORECAST · THE EAC FAMILY**
@@ -97,7 +87,7 @@ This is the cost efficiency required on all remaining work to still land on budg
 
 Compare it to the `CPI` you have actually achieved.
 
-> **If TCPI is far above CPI**, the budget is asserting an improvement that nobody has yet demonstrated. On the worked case: TCPI 1.08 against a CPI of 0.89 — the plan needs a 22% efficiency gain on work running 11% below plan.
+> **If TCPI sits far above the CPI achieved**, the budget is asserting an efficiency improvement that nobody has yet demonstrated. That is a wish with a decimal place.
 
 ## Why SV lies to you at the end
 

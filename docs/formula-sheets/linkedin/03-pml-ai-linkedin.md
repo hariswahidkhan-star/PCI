@@ -24,7 +24,7 @@ This deck gives the formula, and the mistake it attracts.
 
 PERT weights the most likely case four times.
 
-The triangular alternative, `(O + M + P) ÷ 3`, does not — and gives a different answer. On 8 / 12 / 22, PERT returns **13.0** and triangular returns **14.0**.
+The triangular alternative, `(O + M + P) ÷ 3`, does not — and returns a different duration from identical inputs.
 
 > **Watch for:** three points supplied by one estimator. That is one number wearing three hats.
 
@@ -89,7 +89,7 @@ The cost efficiency required on every remaining pound to still land on budget.
 
 Now compare it to the `CPI` you have actually achieved.
 
-> **Worked:** TCPI 1.08 against a CPI of 0.89. The budget is asserting a 22% efficiency improvement on work that has run 11% below plan. Nobody has demonstrated that. It is a wish with a decimal place.
+> **If TCPI sits far above the CPI achieved**, the budget is asserting an efficiency improvement on work that is already running behind. Nobody has demonstrated it. It is a wish with a decimal place.
 
 ## Ordinal ratings do not multiply
 
@@ -113,11 +113,9 @@ It cannot be summed across risks. It cannot size a contingency.
 
 `Cycle time = WIP ÷ Throughput`
 
-12 items in progress, 4 completed per week → **3 weeks** cycle time.
+Halve the work in progress and cycle time halves — at exactly the same throughput.
 
-Halve WIP to 6 and cycle time halves to 1.5 weeks, at exactly the same throughput.
-
-> **This is why limiting work in progress speeds delivery** without anybody working faster. It is also only valid for a stable system over the window you measured.
+> **This is why limiting WIP speeds delivery** without anybody working faster. It holds only for a stable system over the window you measured.
 
 ## Forecasting an adaptive delivery
 
@@ -149,17 +147,7 @@ A **burn-up** plots completed work and total scope as two separate lines.
 
 Above the point of total assumption, the seller absorbs **every further pound**. The buyer's contribution has hit the ceiling.
 
-## Check your PTA in one line
-
-**WORKED · FPIF**
-
-Target cost 100,000 · target price 113,000 · ceiling 120,000 · buyer share 80%
-
-`PTA` = (7,000 ÷ 0.80) + 100,000 = **108,750**
-
-At an actual cost of exactly 108,750: overrun 8,750, seller absorbs 20% = 1,750, fee = 11,250, final price = **120,000**.
-
-> **Exactly the ceiling.** If your PTA does not reconcile to the ceiling price this way, you have used the seller's share ratio in the denominator instead of the buyer's.
+> **Check it in one line.** At an actual cost exactly equal to the PTA, the computed final price must equal the ceiling price. If it does not, you have used the seller's share ratio in the denominator instead of the buyer's.
 
 ## Why small teams move faster
 
@@ -167,9 +155,7 @@ At an actual cost of exactly 108,750: overrun 8,750, seller absorbs 20% = 1,750,
 
 `Channels = n(n − 1) ÷ 2`
 
-A team of 9 has **36** channels.
-
-Add one person and it becomes **45** — nine new channels for one new person.
+Adding one person to a team of `n` creates `n` new channels, not one.
 
 > **The growth is quadratic, and that is the entire point.** It is the arithmetic behind why adding people to a late project so rarely accelerates it.
 

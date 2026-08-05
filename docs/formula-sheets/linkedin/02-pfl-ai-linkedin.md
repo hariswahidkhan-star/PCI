@@ -24,7 +24,7 @@ This deck gives the formula, and the mistake it attracts.
 
 `PV(x) = FV ÷ (1 + r)^n`
 
-> **A free check.** The annuity factor must equal the sum of the individual discount factors. At 8% over 5 periods, `AF` = 3.9927 — and the five discount factors sum to 3.9927. If they disagree, your period convention is wrong.
+> **A free check.** The annuity factor must equal the sum of the individual discount factors over the same periods. If the two disagree, your period convention is wrong.
 
 ## Appraisal, and its traps
 
@@ -102,9 +102,7 @@ Interest and principal are what CFADS is measured *against*.
 
 `DS = Interest + Scheduled principal`
 
-Worked: CFADS 42.0m, principal 18.0m, interest 9.5m → `DSCR` = 42.0 ÷ 27.5 = **1.53**
-
-> **The minimum DSCR is the covenant.** The average is informative and is never the test. An average of 1.45 conceals the one period at 0.98 that breaches.
+> **The minimum DSCR is the covenant.** The average is informative and is never the test — a comfortable average conceals the single period that breaches.
 
 ## Cover, over a lifetime
 
@@ -120,13 +118,11 @@ Same debt balance. Different windows.
 
 **THE TAIL**
 
-Worked: debt outstanding 210m, DSRA 12m, `kd` 7%. CFADS of 38m for 8 remaining loan years, then 36m for a further 7 project years.
+`Tail = Project life − Loan life`
 
-`LLCR` = **1.14**
+**PLCR should always exceed LLCR** where a tail exists, because it discounts a longer stream of cash against the same debt balance.
 
-`PLCR` = **1.68**
-
-> **PLCR should always exceed LLCR** where a tail exists. The gap is the project's cash-generating life *after* the debt matures — the lender's room to reschedule. A thin tail is a credit concern even when LLCR looks comfortable.
+> **The gap between the two ratios is the tail** — the project's cash-generating life *after* the debt matures, and the lender's room to reschedule. A thin tail is a credit concern even when LLCR looks comfortable.
 
 ## Sizing the debt backwards
 
@@ -136,9 +132,7 @@ Worked: debt outstanding 210m, DSRA 12m, `kd` 7%. CFADS of 38m for 8 remaining l
 
 `Debt capacity = Σ [Capacity_t ÷ (1 + kd)^t]`
 
-Worked: target DSCR 1.35, `kd` 7%, CFADS of 40, 42, 44, 43, 41m → debt capacity **127.4m**
-
-> **Check it by reversing.** Service exactly that capacity and the DSCR lands on 1.35 in every single period. That is the definition of a sculpted profile.
+> **Check it by reversing.** Service exactly that capacity and the DSCR lands on the target in every single period. If it does not, the discounting and the capacity are on different period conventions.
 
 ## Sculpted or annuity
 
