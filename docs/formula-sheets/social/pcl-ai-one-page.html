@@ -1,70 +1,65 @@
-<!doctype html><html><head><meta charset="utf-8">
-<style>
+<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:'Archivo';src:url('/backend/wwwroot/assets/fonts/archivo-latin.woff2') format('woff2');font-weight:700 900}
 @font-face{font-family:'Inter';src:url('/backend/wwwroot/assets/fonts/inter-latin.woff2') format('woff2');font-weight:400 700}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;background:#fff}
 body{font-family:'Inter',sans-serif;color:#0F172A;overflow:hidden}
 
-.card{position:relative;width:100vw;height:100vh;padding:38px 48px 28px;
+.card{position:relative;width:100vw;height:100vh;padding:40px 46px 26px;
   background:#fff;display:flex;flex-direction:column}
-.card::after{content:"";position:absolute;top:0;left:0;right:0;height:9px;background:#1D4ED8}
+.card::after{content:"";position:absolute;top:0;left:0;right:0;height:11px;background:#1D4ED8}
 
-/* ---------- header ---------- */
-.top{display:flex;align-items:center;margin-bottom:18px}
-.top img{width:60px;height:60px}
-.top .w{font-family:'Archivo';font-weight:900;font-size:32px;letter-spacing:-.02em;
-  margin-left:15px;color:#1D4ED8}
-.top .o{font-size:15px;line-height:1.25;margin-left:15px;padding-left:15px;
+.top{display:flex;align-items:center;margin-bottom:17px}
+.top img{width:66px;height:66px}
+.top .w{font-family:'Archivo';font-weight:900;font-size:35px;letter-spacing:-.02em;
+  margin-left:16px;color:#1D4ED8}
+.top .o{font-size:16px;line-height:1.25;margin-left:16px;padding-left:16px;
   border-left:2px solid #E3E8EF;color:#475569}
-.top .badge{margin-left:auto;display:flex;align-items:center;gap:11px;
-  border:2px solid #1D4ED8;border-radius:999px;padding:8px 17px 8px 14px}
-.top .badge b{font-family:'Archivo';font-weight:900;font-size:21px;color:#1D4ED8}
-.top .badge span{font-size:13px;letter-spacing:.13em;text-transform:uppercase;
-  color:#64748B;border-left:2px solid #E3E8EF;padding-left:11px}
+.top .badge{margin-left:auto;display:flex;align-items:center;gap:12px;
+  border:2.5px solid #1D4ED8;border-radius:999px;padding:9px 19px 9px 16px}
+.top .badge b{font-family:'Archivo';font-weight:900;font-size:23px;color:#1D4ED8}
+.top .badge span{font-size:14px;letter-spacing:.13em;text-transform:uppercase;
+  color:#64748B;border-left:2px solid #E3E8EF;padding-left:12px}
 
-h1{font-family:'Archivo';font-weight:900;font-size:43px;line-height:1;
-  letter-spacing:-.036em;margin-bottom:8px;white-space:nowrap}
+h1{font-family:'Archivo';font-weight:900;font-size:49px;line-height:1;
+  letter-spacing:-.036em;margin-bottom:9px;white-space:nowrap}
 .dot{color:#C13329}
-.sub{font-size:14px;color:#475569;margin-bottom:7px}
+.sub{font-size:15.5px;color:#475569;margin-bottom:9px}
 .sub b{color:#0F172A;font-weight:700}
 
-.legend{display:flex;gap:24px;align-items:center;font-size:12.5px;color:#475569;
-  padding-bottom:8px;border-bottom:2px solid #0F172A;margin-bottom:9px;white-space:nowrap}
-.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;
-  margin-right:8px;vertical-align:-1px;font-style:normal}
-.legend .a i{background:#1D4ED8}
-.legend .b i{background:#0F172A}
-.legend .c i{background:#C13329}
-.legend em{font-style:normal;margin-left:auto;color:#94A3B8;letter-spacing:.1em;
-  text-transform:uppercase;font-size:11.5px;font-weight:700}
+.legend{display:flex;gap:22px;align-items:center;font-size:13.5px;color:#475569;
+  padding-bottom:9px;border-bottom:3px solid #0F172A;margin-bottom:11px;white-space:nowrap}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:3px;
+  margin-right:9px;vertical-align:-2px;font-style:normal}
+.legend em{font-style:normal;margin-left:auto;color:#94A3B8;letter-spacing:.11em;
+  text-transform:uppercase;font-size:13px;font-weight:700}
 
-/* ---------- the formula grid ---------- */
-.grid{flex:1 1 auto;min-height:0;overflow:hidden;column-count:3;column-gap:30px}
+.grid{flex:1 1 auto;min-height:0;overflow:hidden;column-count:3;column-gap:26px;column-fill:balance}
 .grp{break-inside:avoid;margin-bottom:7px}
-.grp h2{font-family:'Archivo';font-weight:900;font-size:12.8px;letter-spacing:.015em;
-  text-transform:uppercase;color:#0F172A;padding-bottom:4px;margin-bottom:4px;
-  border-bottom:2px solid #E3E8EF;display:flex;align-items:center}
-.grp h2 i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;font-style:normal;flex:none}
-.grp h2 span{margin-left:auto;font-family:'Inter';font-weight:700;font-size:10.5px;
-  letter-spacing:.07em;color:#94A3B8;padding-left:6px}
-.A i{background:#1D4ED8}.B i{background:#0F172A}.C i{background:#C13329}
+.grp h2{font-family:'Archivo';font-weight:900;font-size:15px;letter-spacing:.01em;
+  text-transform:uppercase;color:#0F172A;display:flex;align-items:center;
+  padding:0 0 4px 0;margin-bottom:4px;border-bottom:2.5px solid #0F172A}
+.grp h2 i{display:inline-block;width:11px;height:11px;border-radius:2px;
+  margin-right:8px;font-style:normal;flex:none}
+.grp h2 span{margin-left:auto;font-family:'Inter';font-weight:700;font-size:11.5px;
+  letter-spacing:.06em;color:#94A3B8;padding-left:7px;white-space:nowrap}
 
-.f{padding:1.5px 0 2.1px;border-bottom:1px solid #F1F5F9}
+.f{display:flex;align-items:baseline;gap:9px;padding:2.1px 0;
+  border-bottom:1px solid #EEF2F7}
 .f:last-child{border-bottom:0}
-.f code,.f b{display:block;font-family:'Inter';font-weight:700;font-size:12.4px;
-  line-height:1.26;color:#1D4ED8;font-variant-numeric:tabular-nums;letter-spacing:-.004em}
-.f span{display:block;font-size:10px;line-height:1.2;color:#94A3B8;margin-top:1.5px}
+.f code{font-family:'Inter';font-weight:700;font-size:15px;line-height:1.24;
+  color:#1D4ED8;font-variant-numeric:tabular-nums;letter-spacing:-.006em}
+.f span{margin-left:auto;font-size:11.5px;color:#94A3B8;white-space:nowrap;
+  font-variant-numeric:tabular-nums}
 
-/* ---------- footer ---------- */
-.foot{flex:none;display:flex;justify-content:space-between;align-items:flex-end;gap:30px;
-  margin-top:10px;padding-top:11px;border-top:2px solid #0F172A;
-  font-size:12px;line-height:1.42;color:#475569}
-.foot b{font-family:'Archivo';font-weight:900;color:#1D4ED8;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.foot{flex:none;display:flex;justify-content:space-between;align-items:flex-end;gap:28px;
+  margin-top:12px;padding-top:12px;border-top:3px solid #0F172A;
+  font-size:13px;line-height:1.42;color:#475569}
+.foot b{font-family:'Archivo';font-weight:900;color:#1D4ED8;font-size:17px;
+  letter-spacing:-.01em;white-space:nowrap}
 .foot em{font-style:normal;color:#94A3B8}
 </style></head><body>
 <div class="card">
-
   <div class="top">
     <img src="/backend/wwwroot/assets/logo.svg" alt="">
     <span class="w">PCI AI</span>
@@ -73,157 +68,23 @@ h1{font-family:'Archivo';font-weight:900;font-size:43px;line-height:1;
   </div>
 
   <h1>The complete PCL-AI formula sheet<span class="dot">.</span></h1>
-  <div class="sub"><b>Sixty-three formulas.</b> Thirteen domains. Every one cited to the Knowledge Area
-    that develops it in the Body of Knowledge — accounting standards and delivery mechanics on one page.</div>
+  <div class="sub"><b>68 formulas on one page.</b> Every one cited to the Knowledge Area that
+    develops it — the accounting standards and the delivery mechanics a project is measured by, together.</div>
 
   <div class="legend">
-    <span class="a"><i></i>A — Financial reporting &amp; accounting</span>
-    <span class="b"><i></i>B — Project management, controls &amp; delivery</span>
-    <span class="c"><i></i>Where the two meet</span>
-    <em>PCI AI Project Controls Leader</em>
+    <span><i style="background:#1D4ED8"></i>A — Financial reporting &amp; accounting</span>
+    <span><i style="background:#0F172A"></i>B — Project management, controls &amp; delivery</span>
+    <span><i style="background:#C13329"></i>Where the two meet</span>
+    <em>Sixty-one Knowledge Areas</em>
   </div>
 
-  <div class="grid">
-
-    <div class="grp A">
-      <h2><i></i>The accounting model<span>D1</span></h2>
-      <div class="f"><code>A = L + E</code><span>Accounting equation · 1.1.1</span></div>
-      <div class="f"><code>Σ Debits = Σ Credits</code><span>Double-entry invariant · 1.1.3</span></div>
-      <div class="f"><code>Retained earnings = Opening + Income − Expenses − Distributions</code><span>Equity movement · 1.1.1</span></div>
-      <div class="f"><code>Depreciation = (Cost − Residual) ÷ Life</code><span>IAS 16 · 1.3.4</span></div>
-      <div class="f"><code>Carrying amount = Cost − Accum. depreciation − Impairment</code><span>IAS 16 · 1.3.4</span></div>
-    </div>
-
-    <div class="grp A">
-      <h2><i></i>Provisions &amp; obligations<span>D1 · IAS 37</span></h2>
-      <div class="f"><code>Expected value = Σ (probability × outcome)</code><span>Large population · 1.4.3</span></div>
-      <div class="f"><code>PV = Future amount ÷ (1 + r)^n</code><span>Discounting a provision · 1.4.3</span></div>
-    </div>
-
-    <div class="grp A">
-      <h2><i></i>Revenue on a contract<span>D2 · IFRS 15</span></h2>
-      <div class="f"><code>PoC = Costs incurred ÷ Total estimated costs</code><span>Cost-to-cost · 2.2.6</span></div>
-      <div class="f"><code>Cumulative revenue = PoC × Transaction price</code><span>Over time · 2.2.6</span></div>
-      <div class="f"><code>Period revenue = Cumulative − Previously recognised</code><span>Books this month · 2.2.6</span></div>
-      <div class="f"><code>Allocated price = Price × (SSP_i ÷ Σ SSP)</code><span>Allocation · 2.2.5</span></div>
-      <div class="f"><code>Capitalised borrowing cost = Weighted-avg qualifying expenditure × rate</code><span>IAS 23 · 2.4.4</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Budget &amp; estimate<span>D3</span></h2>
-      <div class="f"><code>BAC = Σ control-account budgets + contingency</code><span>Cost baseline · 3.1.4</span></div>
-      <div class="f"><code>Total authorised = BAC + Management reserve</code><span>Full authorisation · 3.1.4</span></div>
-      <div class="f"><code>Analogous = Past cost × (this driver ÷ past driver)</code><span>Analogous · 3.2.2</span></div>
-      <div class="f"><code>Parametric = Parameter × Rate</code><span>Parametric · 3.2.2</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Cost behaviour &amp; control<span>D5</span></h2>
-      <div class="f"><code>Total cost = Fixed + (Variable/unit × Volume)</code><span>Cost behaviour · 5.1.1</span></div>
-      <div class="f"><code>OAR = Budgeted overhead ÷ Budgeted activity base</code><span>Absorption rate · 5.1.3</span></div>
-      <div class="f"><code>Over/(under) absorption = Absorbed − Incurred</code><span>Absorption variance · 5.1.3</span></div>
-      <div class="f"><code>Cost to date = Actuals + Accruals</code><span>True cost to date · 5.2.1</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Variance analysis<span>D4</span></h2>
-      <div class="f"><code>Price variance = (Actual − Std price) × Actual qty</code><span>Price effect · 4.2.3</span></div>
-      <div class="f"><code>Quantity variance = (Actual − Std qty) × Std price</code><span>Quantity effect · 4.2.3</span></div>
-      <div class="f"><code>Total variance = Price variance + Quantity variance</code><span>Reconciliation · 4.2.3</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Earned value — position<span>D6</span></h2>
-      <div class="f"><code>CV = EV − AC</code><span>Cost variance · 6.2.1</span></div>
-      <div class="f"><code>SV = EV − PV</code><span>Schedule variance · 6.2.1</span></div>
-      <div class="f"><code>CPI = EV ÷ AC</code><span>Cost efficiency · 6.2.2</span></div>
-      <div class="f"><code>SPI = EV ÷ PV</code><span>Schedule efficiency · 6.2.2</span></div>
-      <div class="f"><code>% complete = EV ÷ BAC</code><span>Progress by value · 6.1</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Earned value — forecast<span>D6</span></h2>
-      <div class="f"><code>EAC = AC + ETC</code><span>Identity · 6.3.1</span></div>
-      <div class="f"><code>EAC = AC + (BAC − EV)</code><span>Variance was a one-off · 6.3.2</span></div>
-      <div class="f"><code>EAC = BAC ÷ CPI</code><span>Performance persists · 6.3.2</span></div>
-      <div class="f"><code>EAC = AC + (BAC − EV) ÷ CPI</code><span>Same, remaining-work form · 6.3.2</span></div>
-      <div class="f"><code>EAC = AC + (BAC − EV) ÷ (CPI × SPI)</code><span>Cost &amp; schedule persist · 6.3.2</span></div>
-      <div class="f"><code>VAC = BAC − EAC</code><span>Variance at completion · 6.3.4</span></div>
-      <div class="f"><code>TCPI = (BAC − EV) ÷ (BAC − AC)</code><span>To hit budget · 6.2.3</span></div>
-      <div class="f"><code>TCPI = (BAC − EV) ÷ (EAC − AC)</code><span>To hit revised EAC · 6.2.3</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Earned schedule<span>D6</span></h2>
-      <div class="f"><code>ES = M + (EV − PV_M) ÷ (PV_M+1 − PV_M)</code><span>Interpolate cumulative PV · 6.4.3</span></div>
-      <div class="f"><code>SV(t) = ES − AT</code><span>Variance in time · 6.4.3</span></div>
-      <div class="f"><code>SPI(t) = ES ÷ AT</code><span>Efficiency in time · 6.4.3</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Adaptive delivery<span>D9</span></h2>
-      <div class="f"><code>% complete = Points done ÷ Total points</code><span>AgileEVM · 9.5.3</span></div>
-      <div class="f"><code>EV = % complete × BAC</code><span>Earned value · 9.5.3</span></div>
-      <div class="f"><code>Velocity = Points done ÷ Sprint</code><span>Delivery rate · 9.3</span></div>
-      <div class="f"><code>Sprints left = Points left ÷ Velocity</code><span>Forecast · 9.3</span></div>
-      <div class="f"><code>Run rate = Team cost ÷ Sprint</code><span>Cost per sprint · 9.5.2</span></div>
-      <div class="f"><code>Cycle time = WIP ÷ Throughput</code><span>Little's Law · 9.4</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Network &amp; float<span>D10</span></h2>
-      <div class="f"><code>EF = ES + Duration</code><span>Forward pass · 10.2</span></div>
-      <div class="f"><code>LS = LF − Duration</code><span>Backward pass · 10.2</span></div>
-      <div class="f"><code>TF = LS − ES = LF − EF</code><span>Total float · 10.2.4</span></div>
-      <div class="f"><code>FF = min(successor ES) − EF</code><span>Free float · 10.2.4</span></div>
-      <div class="f"><code>Critical path: TF = 0</code><span>Longest path · 10.2.3</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Duration &amp; compression<span>D10</span></h2>
-      <div class="f"><code>tE = (O + 4M + P) ÷ 6</code><span>PERT expected · 10.1.4</span></div>
-      <div class="f"><code>σ = (P − O) ÷ 6</code><span>PERT deviation · 10.1.4</span></div>
-      <div class="f"><code>σ² path = Σ σ² on the path</code><span>Variances add · 10.3.4</span></div>
-      <div class="f"><code>Crash slope = (Crash − Normal cost) ÷ (Normal − Crash duration)</code><span>Cost per period saved · 10.3.1</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Risk &amp; contingency<span>D12 · ISO 31000</span></h2>
-      <div class="f"><code>EMV = Probability × Impact</code><span>Expected value · 12.2.3</span></div>
-      <div class="f"><code>Total EMV = Σ (P_i × I_i)</code><span>Portfolio exposure · 12.2.3</span></div>
-      <div class="f"><code>Contingency ≈ Σ EMV, or P80 − P50</code><span>Risk-based · 12.3.1</span></div>
-    </div>
-
-    <div class="grp B">
-      <h2><i></i>Commercial<span>D7</span></h2>
-      <div class="f"><code>Fee = Target fee + Share × (Target − Actual cost)</code><span>CPIF incentive · 7.1.3</span></div>
-      <div class="f"><code>Pain/gain = Share ratio × (Actual − Target)</code><span>Target cost · 7.1.4</span></div>
-      <div class="f"><code>LD exposure = LD rate × Days late</code><span>Liquidated damages · 7.2.3</span></div>
-      <div class="f"><code>Amount due = Σ(% × item) − Retention − Previous payments</code><span>Interim application · 7.4.3</span></div>
-    </div>
-
-    <div class="grp C">
-      <h2><i></i>Where the two meet<span>D7 · IFRS 15</span></h2>
-      <div class="f"><code>Contract asset / (liability) = Revenue recognised − Amounts billed</code><span>Over/under-billing · 7.5</span></div>
-      <div class="f"><b>EAC &gt; Contract value</b><span>Onerous contract — IAS 37 loss in full, now</span></div>
-    </div>
-
-    <div class="grp A">
-      <h2><i></i>Working capital<span>D11</span></h2>
-      <div class="f"><code>DSO = Receivables ÷ Daily revenue</code><span>Days sales · 11.1.3</span></div>
-      <div class="f"><code>DIO = Inventory ÷ Daily COGS</code><span>Days inventory · 11.A.1</span></div>
-      <div class="f"><code>DPO = Payables ÷ Daily COGS</code><span>Days payables · 11.A.1</span></div>
-      <div class="f"><code>CCC = DSO + DIO − DPO</code><span>Cash conversion · 11.A.1</span></div>
-      <div class="f"><code>Cash freed ≈ Δ DSO × Daily revenue</code><span>Working capital released · 11.A.1</span></div>
-    </div>
-
-  </div>
+  <div class="grid"><div class="grp"><h2><i style="background:#1D4ED8"></i>The accounting model<span>D1</span></h2><div class="f"><code>A = L + E</code><span>1.1.1</span></div><div class="f"><code>Σ Debits = Σ Credits</code><span>1.1.3</span></div><div class="f"><code>Retained earnings = Open + Income − Expenses − Distrib.</code><span>1.1.1</span></div><div class="f"><code>Depreciation = (Cost − Residual) ÷ Useful life</code><span>1.3.4</span></div><div class="f"><code>Carrying amount = Cost − Depreciation − Impairment</code><span>1.3.4</span></div></div><div class="grp"><h2><i style="background:#1D4ED8"></i>Provisions<span>D1 · IAS 37</span></h2><div class="f"><code>Expected value = Σ (probability × outcome)</code><span>1.4.3</span></div><div class="f"><code>Present value = Future amount ÷ (1 + r)^n</code><span>1.4.3</span></div></div><div class="grp"><h2><i style="background:#1D4ED8"></i>Revenue on a contract<span>D2 · IFRS 15</span></h2><div class="f"><code>PoC = Costs incurred ÷ Total est. costs</code><span>2.2.6</span></div><div class="f"><code>Cumulative revenue = PoC × Transaction price</code><span>2.2.6</span></div><div class="f"><code>Period revenue = Cumulative − Recognised</code><span>2.2.6</span></div><div class="f"><code>Allocated price = Price × (SSP_i ÷ Σ SSP)</code><span>2.2.5</span></div><div class="f"><code>Capitalised interest = Weighted-avg expenditure × rate</code><span>2.4.4</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Budget and estimate<span>D3</span></h2><div class="f"><code>BAC = Σ control accounts + contingency</code><span>3.1.4</span></div><div class="f"><code>Total authorised = BAC + Mgmt reserve</code><span>3.1.4</span></div><div class="f"><code>Analogous = Past cost × (driver ÷ past driver)</code><span>3.2.2</span></div><div class="f"><code>Parametric = Parameter × Rate</code><span>3.2.2</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Cost behaviour and control<span>D5</span></h2><div class="f"><code>Total cost = Fixed + (Variable/unit × Volume)</code><span>5.1.1</span></div><div class="f"><code>OAR = Budgeted overhead ÷ Activity base</code><span>5.1.3</span></div><div class="f"><code>Over/(under) absorption = Absorbed − Incurred</code><span>5.1.3</span></div><div class="f"><code>Cost to date = Actuals + Accruals</code><span>5.2.1</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Variance analysis<span>D4</span></h2><div class="f"><code>Price var. = (Actual − Std price) × Actual qty</code><span>4.2.3</span></div><div class="f"><code>Quantity var. = (Actual − Std qty) × Std price</code><span>4.2.3</span></div><div class="f"><code>Total variance = Price var. + Quantity var.</code><span>4.2.3</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Earned value — position<span>D6</span></h2><div class="f"><code>CV = EV − AC</code><span>6.2.1</span></div><div class="f"><code>SV = EV − PV</code><span>6.2.1</span></div><div class="f"><code>CPI = EV ÷ AC</code><span>6.2.2</span></div><div class="f"><code>SPI = EV ÷ PV</code><span>6.2.2</span></div><div class="f"><code>% complete = EV ÷ BAC</code><span>6.1</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Earned value — forecast<span>D6</span></h2><div class="f"><code>EAC = AC + ETC</code><span>6.3.1</span></div><div class="f"><code>EAC = AC + (BAC − EV)</code><span>6.3.2</span></div><div class="f"><code>EAC = BAC ÷ CPI</code><span>6.3.2</span></div><div class="f"><code>EAC = AC + (BAC − EV) ÷ CPI</code><span>6.3.2</span></div><div class="f"><code>EAC = AC + (BAC − EV) ÷ (CPI × SPI)</code><span>6.3.2</span></div><div class="f"><code>VAC = BAC − EAC</code><span>6.3.4</span></div><div class="f"><code>TCPI = (BAC − EV) ÷ (BAC − AC)</code><span>6.2.3</span></div><div class="f"><code>TCPI = (BAC − EV) ÷ (EAC − AC)</code><span>6.2.3</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Earned schedule<span>D6</span></h2><div class="f"><code>ES = M + (EV − PV_M) ÷ (PV_M+1 − PV_M)</code><span>6.4.3</span></div><div class="f"><code>SV(t) = ES − AT</code><span>6.4.3</span></div><div class="f"><code>SPI(t) = ES ÷ AT</code><span>6.4.3</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Adaptive delivery<span>D9</span></h2><div class="f"><code>% complete = Points done ÷ Total points</code><span>9.5.3</span></div><div class="f"><code>EV = % complete × BAC</code><span>9.5.3</span></div><div class="f"><code>Velocity = Points done ÷ Sprint</code><span>9.3</span></div><div class="f"><code>Sprints left = Points left ÷ Velocity</code><span>9.3</span></div><div class="f"><code>Run rate = Team cost ÷ Sprint</code><span>9.5.2</span></div><div class="f"><code>Cycle time = WIP ÷ Throughput</code><span>9.4</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Network and float<span>D10</span></h2><div class="f"><code>EF = ES + Duration</code><span>10.2</span></div><div class="f"><code>LS = LF − Duration</code><span>10.2</span></div><div class="f"><code>TF = LS − ES = LF − EF</code><span>10.2.4</span></div><div class="f"><code>FF = min(successor ES) − EF</code><span>10.2.4</span></div><div class="f"><code>Critical path: TF = 0</code><span>10.2.3</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Duration and compression<span>D10</span></h2><div class="f"><code>tE = (O + 4M + P) ÷ 6</code><span>10.1.4</span></div><div class="f"><code>σ = (P − O) ÷ 6</code><span>10.1.4</span></div><div class="f"><code>σ² path = Σ σ² on the path</code><span>10.3.4</span></div><div class="f"><code>Crash slope = Δ cost ÷ Δ duration</code><span>10.3.1</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Risk and contingency<span>D12 · ISO 31000</span></h2><div class="f"><code>EMV = Probability × Impact</code><span>12.2.3</span></div><div class="f"><code>Total EMV = Σ (P_i × I_i)</code><span>12.2.3</span></div><div class="f"><code>Contingency ≈ Σ EMV, or P80 − P50</code><span>12.3.1</span></div></div><div class="grp"><h2><i style="background:#0F172A"></i>Commercial<span>D7</span></h2><div class="f"><code>Fee = Target fee + Share × (Target − Actual)</code><span>7.1.3</span></div><div class="f"><code>Pain/gain = Share ratio × (Actual − Target)</code><span>7.1.4</span></div><div class="f"><code>LD exposure = LD rate × Days late</code><span>7.2.3</span></div><div class="f"><code>Amount due = Σ(% × item) − Retention − Previous</code><span>7.4.3</span></div></div><div class="grp"><h2><i style="background:#C13329"></i>Where the two languages meet<span>D7 · IFRS 15 · IAS 37</span></h2><div class="f"><code>Contract asset/(liability) = Revenue − Billed</code><span>7.5</span></div><div class="f"><code>EAC &gt; Contract value → onerous contract</code><span>2.4</span></div></div><div class="grp"><h2><i style="background:#1D4ED8"></i>Working capital<span>D11</span></h2><div class="f"><code>DSO = Receivables ÷ Daily revenue</code><span>11.1.3</span></div><div class="f"><code>DIO = Inventory ÷ Daily COGS</code><span>11.A.1</span></div><div class="f"><code>DPO = Payables ÷ Daily COGS</code><span>11.A.1</span></div><div class="f"><code>CCC = DSO + DIO − DPO</code><span>11.A.1</span></div><div class="f"><code>Cash freed ≈ Δ DSO × Daily revenue</code><span>11.A.1</span></div></div></div>
 
   <div class="foot">
     <span>Cited to the PCL-AI Body of Knowledge — thirteen domains, sixty-one Knowledge Areas.
-      Standards named at principle level and described in the Institute's own words, never reproduced.<br>
-      <em>One of three credentials in the PCI AI Project Leadership Certification Suite — PCL-AI · PFL-AI · PML-AI</em></span>
+      Standards named at principle level, never reproduced.<br>
+      <em>One of three credentials in the PCI AI Project Leadership Certification Suite —
+      PCL-AI · PFL-AI · PML-AI</em></span>
     <b>projectcontrolsinstitute.org</b>
   </div>
-
 </div></body></html>
