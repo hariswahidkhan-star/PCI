@@ -101,8 +101,17 @@ Single images for LinkedIn image posts, rendered to PNG at 2x from HTML in
 
 | Graphic | What it is |
 |---|---|
-| `pcl-ai-one-page.png` | **The complete PCL-AI formula sheet on one page** — all 63 formulas, 16 groups, three columns, every entry cited to its Knowledge Area |
+| `pcl-ai-one-page.png` | **The complete PCL-AI formula sheet on one page** — all 68 formulas, 16 groups, three columns, every entry cited to its Knowledge Area |
+| `ai-in-project-controls.png` | **Domain 13 on one page** — the governed workflow, then that same workflow applied across nine domains, with the refusal conditions and the assurance checklist beside it |
 | `pcl-ai-40-40-20.png` | The 40/40/20 examination weighting, led by a proportional bar |
+
+**Why the AI sheet leads with a workflow.** Domain 13 is 20% of the credential and the part
+most easily written as opinion, so the sheet states a shape instead: governed data in,
+the model proposes, the professional verifies, a signed result out — KA 13.5.1. Every
+one of the nine application rows below it is that same shape, marked **AI** and **YOU** in
+the gutter, so the argument is made by repetition rather than assertion. The refusal
+conditions sit on the page beside the applications deliberately: a sheet that says only
+where AI applies is marketing.
 
 **Why the one-page sheet is built the way it is.** Sixty-three formulas cannot be read
 at arm's length in a feed, and pretending otherwise produces a deck instead of a poster.
@@ -111,16 +120,37 @@ organised reference and saves it; at full size every line is sharp and usable. D
 is the hook, so the structure has to carry meaning on its own — colour-coded area chips,
 group headers with their domain, and a KA citation under every formula.
 
+Two of the three are **generated from data** rather than hand-written, so the content can be
+checked against the Body of Knowledge without reading CSS:
+
 ```bash
 python3 -m http.server 8899 &            # serve the repo root; the HTML uses absolute paths
-python3 docs/formula-sheets/social/build_social.py            # build all
+
+python3 docs/formula-sheets/social/make_one_page.py       # → pcl-ai-one-page.html
+python3 docs/formula-sheets/social/make_ai_one_page.py    # → ai-in-project-controls.html
+
+python3 docs/formula-sheets/social/build_social.py            # render all
 python3 docs/formula-sheets/social/build_social.py pcl-ai-one-page
 ```
 
-The builder verifies each render before it will report success: the frame must carry
-brand blue (a wrong URL renders Chromium's blank error page, which once passed silently),
-the foot must have no unpainted strip, and the footer band must contain ink — a grid that
-overruns pushes the footer off the frame and leaves only its rule behind.
+### The build refuses to report success on a bad render
+
+Four checks, each added after a specific failure got through:
+
+- **Brand blue must be present.** A wrong URL renders Chromium's blank error page, which
+  sails through every completeness test because there is nothing to be incomplete.
+- **No unpainted strip at the foot.** The headless viewport is shorter than the window, so
+  a `100vh` layout stops short and the page background fills the gap.
+- **The footer region must carry ink.** A layout that overruns pushes the footer off the
+  frame, leaving only its rule behind. This tests the whole bottom 12%, not a fixed strip —
+  pinning it to one graphic's footer position failed a good render whose footer sat higher.
+- **Nothing may be clipped.** The strongest of the four, and the only one that is not a pixel
+  test. A column that overruns inside `overflow:hidden` produces an image with *nothing wrong
+  with it* — fully painted, footer intact, one row simply gone. So the builder renders a
+  throwaway copy of the page carrying a script that asks the browser which element is
+  clipping its own content, and reads the verdict out of the title. Injecting at build time
+  rather than in each page means the hand-written graphics are checked the same as the
+  generated ones.
 
 ## Brand
 

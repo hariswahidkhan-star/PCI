@@ -43,16 +43,16 @@ APPLICATION = [
 
 # KA 13.4.1 — the category map. Products change; categories do not.
 CATEGORIES = [
-    ("General LLM assistants", "Confidentiality · verify output"),
-    ("Document / RAG &amp; knowledge", "Source access control · citations"),
-    ("Spreadsheet &amp; data analysis", "Check every computation"),
-    ("BI &amp; analytics AI", "Metric definitions must be consistent"),
-    ("Scheduling &amp; PM-suite AI", "Hidden constraints · validate logic"),
-    ("Risk, forecasting &amp; ML", "Data quality · explainability"),
+    ("LLM assistants", "Confidentiality · verify output"),
+    ("Document / RAG", "Source access control · citations"),
+    ("Spreadsheet AI", "Check every computation"),
+    ("BI &amp; analytics", "Metric definitions must be consistent"),
+    ("Scheduling &amp; PM suites", "Hidden constraints · validate logic"),
+    ("Risk &amp; forecasting ML", "Data quality · explainability"),
     ("RPA &amp; process mining", "Scope of control-breach detection"),
-    ("Contract analytics / CLM", "Legal review of extractions"),
-    ("Transcription &amp; meetings", "Confidentiality · accuracy of actions"),
-    ("AI coding &amp; automation", "Test and verify generated code"),
+    ("Contract analytics", "Legal review of extractions"),
+    ("Meeting assistants", "Confidentiality · accuracy of actions"),
+    ("AI coding", "Test and verify generated code"),
 ]
 
 # KA 13.6.4 — the refusal conditions.
@@ -74,6 +74,24 @@ CHECKLIST = [
     "Signed off — named professional, assistance recorded",
 ]
 
+# KA 13.1.5 — the limits every governed workflow is designed around. Each definition
+# is held to one line: a right-aligned leader that wraps reads as ragged, and this is
+# the column a reader scans fastest.
+LIMITS = [
+    ("Hallucination", "invents figures and citations"),
+    ("Data dependence", "garbage in, garbage out"),
+    ("Bias", "reproduces the training data"),
+    ("No reasoning guarantee", "plausible is not correct"),
+    ("No accountability", "a model cannot own a decision"),
+    ("Knowledge cutoff", "unaware of what it was not given"),
+]
+
+# ---------------------------------------------------------------------------
+# Domain 13 material held in reserve. None of it is on this sheet — a one-pager
+# that carries everything carries nothing legibly — but it is kept here so the
+# next graphic in the set starts from the source rather than from recall.
+# ---------------------------------------------------------------------------
+
 # KA 13.7.1 — the maturity ladder.
 MATURITY = [
     ("Ad-hoc", "individuals experimenting, no governance"),
@@ -83,17 +101,9 @@ MATURITY = [
     ("Governed", "measured value, full audit trail"),
 ]
 
-# KA 13.1.5 — honest capabilities, and the limits every workflow is designed around.
+# KA 13.1.5 — what the technology is genuinely strong at.
 STRONG = ["Extraction", "Drafting", "Classification",
           "Pattern detection", "Forecasting", "Summarisation"]
-LIMITS = [
-    ("Hallucination", "confident, false, fabricated figures and citations"),
-    ("Data dependence", "garbage in, garbage out"),
-    ("Bias", "reproduces what the training data carried"),
-    ("No reasoning guarantee", "plausible is not correct"),
-    ("No accountability", "a model cannot own a decision"),
-    ("Knowledge cutoff", "does not know what it was not given"),
-]
 
 # KA 13.2.2 — the dimensions a controls function already manages.
 QUALITY = [
@@ -146,8 +156,8 @@ h1{font-family:'Archivo';font-weight:900;font-size:52px;line-height:1;
 
 /* ---------- HERO: the governed workflow, given real presence ---------- */
 .pipe{display:flex;align-items:stretch;margin:0 0 9px 0}
-.st{flex:1;position:relative;padding:20px 20px 18px;border-radius:10px;
-  margin-right:26px;border:2.5px solid #0F172A}
+.st{flex:1;position:relative;padding:17px 19px 15px;border-radius:10px;
+  margin-right:26px;border:2.5px solid #0F172A;display:flex;flex-direction:column}
 .st:last-child{margin-right:0}
 /* chevron between stages */
 .st:not(:last-child)::after{content:"";position:absolute;right:-19px;top:50%;
@@ -161,10 +171,11 @@ h1{font-family:'Archivo';font-weight:900;font-size:52px;line-height:1;
 .st b{font-family:'Archivo';font-weight:900;font-size:22px;letter-spacing:-.022em;
   display:block;line-height:1.06;color:#0F172A}
 .st.ai b,.st.hu b{color:#fff}
-.st i{font-style:normal;font-size:12.5px;color:#64748B;display:block;margin-top:6px;
-  line-height:1.24}
+/* captions sit on one baseline across all four stages, whatever the headline height */
+.st i{font-style:normal;font-size:12.5px;color:#64748B;display:block;margin-top:auto;
+  padding-top:8px;line-height:1.24}
 .st.ai i,.st.hu i{color:rgba(255,255,255,.85)}
-.pipenote{font-size:13px;color:#94A3B8;margin-bottom:12px;text-align:right}
+.pipenote{font-size:13px;color:#64748B;margin-bottom:12px;text-align:right}
 .pipenote b{color:#0F172A;font-weight:700}
 
 /* ---------- closing band ---------- */
@@ -177,9 +188,9 @@ h1{font-family:'Archivo';font-weight:900;font-size:52px;line-height:1;
 
 .grid{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;gap:24px}
 .col{flex:1;min-width:0}
-.col.wide{flex:1.30}
+.col.wide{flex:1.24}
 
-h2{font-family:'Archivo';font-weight:900;font-size:15.5px;letter-spacing:.01em;
+h2{font-family:'Archivo';font-weight:900;font-size:16px;letter-spacing:.01em;
   text-transform:uppercase;color:#0F172A;display:flex;align-items:center;
   padding:0 0 5px 0;margin:0 0 6px 0;border-bottom:2.5px solid #0F172A}
 h2 i{display:inline-block;width:11px;height:11px;border-radius:2px;
@@ -189,15 +200,20 @@ h2 span{margin-left:auto;font-family:'Inter';font-weight:700;font-size:11px;
 .blk{margin-bottom:10px}
 
 /* the application map */
-.ap{padding:4.6px 0;border-bottom:1px solid #EEF2F7}
+.ap{padding:7.9px 0;border-bottom:1.5px solid #EEF2F7}
 .ap:last-child{border-bottom:0}
-.ap .hd{display:flex;align-items:baseline;gap:8px}
-.ap .hd b{font-family:'Archivo';font-weight:900;font-size:15.5px;color:#0F172A;
-  letter-spacing:-.01em}
-.ap .hd span{margin-left:auto;font-size:10.5px;color:#94A3B8;font-weight:700;white-space:nowrap}
-.ap .ai{font-size:13.4px;color:#1D4ED8;font-weight:700;line-height:1.26;margin-top:1px}
-.ap .hu{font-size:13px;color:#64748B;line-height:1.26;margin-top:1px}
-.ap .hu::before{content:"✓ ";color:#C13329;font-weight:700}
+.ap .hd{display:flex;align-items:baseline;gap:8px;margin-bottom:3.5px}
+.ap .hd b{font-family:'Archivo';font-weight:900;font-size:18px;color:#0F172A;
+  letter-spacing:-.014em}
+.ap .hd span{margin-left:auto;font-size:11.5px;color:#94A3B8;font-weight:700;white-space:nowrap}
+/* each row restates the hero: what the machine proposes, what you check */
+.ap .ln{display:flex;gap:9px;align-items:baseline;margin-top:2.2px}
+.ap .ln em{font-style:normal;flex:none;width:26px;font-size:10.5px;font-weight:700;
+  letter-spacing:.08em;text-align:center;border-radius:3px;padding:2px 0}
+.ap .ai em{background:#1D4ED8;color:#fff}
+.ap .hu em{background:#C13329;color:#fff}
+.ap .ai p{font-size:15px;color:#1D4ED8;font-weight:700;line-height:1.3}
+.ap .hu p{font-size:14.4px;color:#475569;line-height:1.3}
 
 /* compact two-part rows */
 .r{display:flex;align-items:baseline;gap:8px;padding:3.4px 0;border-bottom:1px solid #F3F6FA}
@@ -207,21 +223,21 @@ h2 span{margin-left:auto;font-family:'Inter';font-weight:700;font-size:11px;
   line-height:1.22;max-width:52%}
 
 /* simple listed rows */
-.l{font-size:13.4px;color:#334155;line-height:1.3;padding:3.4px 0;
+.l{font-size:14.2px;color:#334155;line-height:1.3;padding:4.2px 0;
   border-bottom:1px solid #F3F6FA;padding-left:17px;text-indent:-17px}
 .l:last-child{border-bottom:0}
 .l b{color:#0F172A;font-weight:700}
 .l::before{content:"—";color:#C13329;font-weight:700;margin-right:7px}
 .l.tick::before{content:"□";color:#1D4ED8;font-weight:700;margin-right:8px}
 
-.chips{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 3px}
-.chips span{font-size:12.2px;font-weight:700;color:#1D4ED8;background:#EEF3FD;
-  border-radius:4px;padding:3px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin:3px 0}
+.chips span{font-size:12.8px;font-weight:700;color:#1D4ED8;background:#EEF3FD;
+  border:1px solid #CBD9F7;border-radius:4px;padding:3px 8px}
 
-.lim{display:flex;align-items:baseline;gap:8px;padding:3.4px 0;border-bottom:1px solid #F3F6FA}
+.lim{display:flex;align-items:baseline;gap:8px;padding:4.2px 0;border-bottom:1px solid #F3F6FA}
 .lim:last-child{border-bottom:0}
-.lim b{font-size:13.4px;font-weight:700;color:#C13329;line-height:1.24}
-.lim span{margin-left:auto;font-size:11.4px;color:#94A3B8;text-align:right;
+.lim b{font-size:14.2px;font-weight:700;color:#C13329;line-height:1.24}
+.lim span{margin-left:auto;font-size:12.2px;color:#64748B;text-align:right;
   line-height:1.22;max-width:56%}
 
 .mat{display:flex;align-items:baseline;gap:8px;padding:3.2px 0;border-bottom:1px solid #F3F6FA}
@@ -243,18 +259,14 @@ h2 span{margin-left:auto;font-family:'Inter';font-weight:700;font-size:11px;
 def build() -> str:
     apps = "".join(
         f'<div class="ap"><div class="hd"><b>{name}</b><span>{dom}</span></div>'
-        f'<div class="ai">{ai}</div><div class="hu">{hu}</div></div>'
+        f'<div class="ln ai"><em>AI</em><p>{ai}</p></div>'
+        f'<div class="ln hu"><em>YOU</em><p>{hu}</p></div></div>'
         for name, dom, ai, hu in APPLICATION
     )
     cats = "".join(f"<span>{n}</span>" for n, _ in CATEGORIES)
     refuse = "".join(f'<div class="l">{r}</div>' for r in REFUSE)
     checks = "".join(f'<div class="l tick">{c}</div>' for c in CHECKLIST)
-    prompt = "".join(f'<div class="r"><b>{n}</b><span>{d}</span></div>' for n, d in PROMPT)
-    patterns = "".join(f"<span>{x}</span>" for x in PATTERNS)
-    quality = "".join(f'<div class="r"><b>{d}</b><span>{q}</span></div>' for d, q in QUALITY)
-    strong = "".join(f"<span>{x}</span>" for x in STRONG)
     limits = "".join(f'<div class="lim"><b>{n}</b><span>{d}</span></div>' for n, d in LIMITS)
-    mat = "".join(f"<span>{i} {n}</span>" for i, (n, _) in enumerate(MATURITY, 1))
 
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body>
 <div class="card">
@@ -272,7 +284,7 @@ def build() -> str:
 
   <div class="pipe">
     <div class="st"><k>1 · Input</k><b>Governed data</b><i>Quality, lineage, confidentiality</i></div>
-    <div class="st ai"><k>2 · AI proposes</k><b>Draft · extract<br>forecast · detect</b><i>The step that accelerates</i></div>
+    <div class="st ai"><k>2 · AI proposes</k><b>Draft, extract,<br>forecast, detect</b><i>The step that accelerates</i></div>
     <div class="st hu"><k>3 · You verify</k><b>Method, figures,<br>assumptions</b><i>The step that assures</i></div>
     <div class="st"><k>4 · Output</k><b>A result<br>you own</b><i>Signed, with the trail recorded</i></div>
   </div>
@@ -283,10 +295,6 @@ def build() -> str:
       <div class="blk">
         <h2><i style="background:#1D4ED8"></i>Where it applies, domain by domain<span>KA 13.5</span></h2>
         {apps}
-      </div>
-      <div class="blk">
-        <h2><i style="background:#0F172A"></i>Tool categories<span>Pick the category, then a governed tool · KA 13.4</span></h2>
-        <div class="chips">{cats}</div>
       </div>
     </div>
 
@@ -304,8 +312,8 @@ def build() -> str:
         {checks}
       </div>
       <div class="blk">
-        <h2><i style="background:#1D4ED8"></i>Maturity<span>KA 13.7</span></h2>
-        <div class="chips">{mat}</div>
+        <h2><i style="background:#0F172A"></i>Tool categories<span>KA 13.4</span></h2>
+        <div class="chips">{cats}</div>
       </div>
     </div>
   </div>
