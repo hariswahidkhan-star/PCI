@@ -88,6 +88,7 @@ h2 {{ font-size: 58pt; }}
 
 .lede {{ font-size: 24pt; line-height: 1.45; color: {SLATE}; }}
 .slide.navy .lede {{ color: #C9D4EC; }}
+.lede b {{ color: {GOLD}; font-weight: 700; }}
 
 .figs {{ display: flex; gap: 26pt; }}
 .fig {{ flex: 1; }}
@@ -121,7 +122,11 @@ h2 {{ font-size: 58pt; }}
 .slide:not(.navy) .frm .e {{ color: {NAVY_MID}; }}
 .frm .d {{ font-size: 17.5pt; color: #B6C4E2; line-height: 1.35; text-align: right; flex: 1; }}
 .slide:not(.navy) .frm .d {{ color: {MIST}; }}
+/* A stacked row gives the formula the full measure, so it may wrap; the inline layout keeps
+   nowrap because a two-column row has nowhere to wrap to. Without this the longest equations —
+   capitalised borrowing cost, the target-cost fee — run clean off the page edge. */
 .frm.stack {{ display: block; }}
+.frm.stack .e {{ white-space: normal; line-height: 1.25; }}
 .frm.stack .d {{ text-align: left; margin-top: 7pt; }}
 
 .callout {{ background: {PAPER_2}; border-left: 7pt solid {CRIMSON}; padding: 26pt 30pt;
@@ -141,6 +146,36 @@ h2 {{ font-size: 58pt; }}
 .slide.navy .foot {{ border-color: rgba(231,203,130,.32); color: #B6C4E2; }}
 .slide.tint .foot {{ border-color: #DDE3EB; }}
 .foot .pg {{ font-variant-numeric: tabular-nums; }}
+
+/* Two-column comparison: the whole argument for the credential fits in one slide, so it gets a
+   layout of its own rather than being squeezed into prose. */
+.cols {{ display: flex; gap: 30pt; margin-top: 6pt; }}
+.col {{ flex: 1; padding: 24pt 24pt 26pt 24pt; background: rgba(255,255,255,.06);
+        border-top: 4pt solid {GOLD}; }}
+.slide:not(.navy) .col {{ background: {PAPER_2}; border-top-color: {NAVY_MID}; }}
+.col h3 {{ font-family: Archivo, sans-serif; font-weight: 900; font-size: 25pt; margin: 0 0 4pt 0;
+           letter-spacing: -.025em; color: {PAPER}; }}
+.slide:not(.navy) .col h3 {{ color: {INK}; }}
+.col .sub {{ font-size: 14pt; color: {GOLD}; font-weight: 700; letter-spacing: .06em;
+             text-transform: uppercase; margin-bottom: 14pt; }}
+.slide:not(.navy) .col .sub {{ color: {NAVY_MID}; }}
+.col ul {{ margin: 0; padding-left: 19pt; }}
+.col li {{ font-size: 16.5pt; line-height: 1.4; margin-bottom: 8pt; color: #C9D4EC; }}
+.slide:not(.navy) .col li {{ color: {SLATE}; }}
+.col .gap {{ font-size: 16.5pt; line-height: 1.42; color: #8FA3C8;
+             margin-top: 14pt; padding-top: 12pt; border-top: 1pt solid rgba(255,255,255,.18); }}
+.slide:not(.navy) .col .gap {{ color: {MIST}; border-top-color: {LINE}; }}
+
+/* Named standards, as a plain register: the reader should be able to count them. */
+.std {{ display: flex; gap: 18pt; padding: 13pt 0; border-top: 1pt solid {LINE}; }}
+.slide.navy .std {{ border-top-color: rgba(255,255,255,.16); }}
+.std:last-child {{ border-bottom: 1pt solid {LINE}; }}
+.slide.navy .std:last-child {{ border-bottom-color: rgba(255,255,255,.16); }}
+.std .k {{ font-family: Archivo, sans-serif; font-weight: 800; font-size: 20pt; color: {NAVY_MID};
+           width: 152pt; flex: 0 0 152pt; letter-spacing: -.02em; }}
+.slide.navy .std .k {{ color: {GOLD}; }}
+.std .v {{ font-size: 17pt; line-height: 1.35; color: {SLATE}; flex: 1; }}
+.slide.navy .std .v {{ color: #C9D4EC; }}
 .swipe {{ font-size: 17pt; font-weight: 700; color: {GOLD}; margin-top: 28pt;
           display: flex; align-items: center; gap: 10pt; }}
 """
@@ -261,89 +296,148 @@ def frm(expr, note, stack=False):
     return f"<div class='{cls}'><div class='e'>{esc(expr)}</div><div class='d'>{esc(note)}</div></div>"
 
 
+def std(code, what):
+    return f"<div class='std'><div class='k'>{esc(code)}</div><div class='v'>{esc(what)}</div></div>"
+
+
 def build():
     D = load_domains()
     assert len(D) == 13, f"expected 13 domains, parsed {len(D)}"
     F = formulas()
     S = []
 
-    # 1 — cover
+    # 1 — cover. The credential's whole argument is the title.
     S.append(slide(
-        "<div class='eyebrow'>Course outline &middot; 2026</div>"
-        "<h1>Project<br/>Controls,<br/><span class='gold'>governed</span></h1>"
+        "<div class='eyebrow'>PCI PCL-AI &middot; course outline</div>"
+        "<h1>Finance and<br/>delivery.<br/><span class='gold'>One profession.</span></h1>"
         "<div class='bar'></div>"
-        "<div class='lede'>The full PCI PCL-AI syllabus. 13 domains, 61 knowledge areas, and the "
-        "arithmetic each one is examined on.</div>"
-        f"<div class='swipe'><span>The formulas are in here</span>{ARROW}</div>",
+        "<div class='lede'>The syllabus for the AI Project Controls Leader — the credential that "
+        "examines the accounting <b>and</b> the arithmetic of delivery, because a project needs "
+        "both and almost nobody is trained in both.</div>"
+        f"<div class='swipe'><span>13 domains &middot; 61 knowledge areas</span>{ARROW}</div>",
         "PCL-AI", "navy"))
 
-    # 2 — the hook: why the syllabus is shaped this way.
+    # 2 — the thesis. Two professions, and the ground neither of them is examined on.
+    S.append(slide(
+        head("Why this credential exists", "Two professions.<br/>One project.")
+        + "<div class='cols'>"
+          "<div class='col'><div class='sub'>The accountant</div>"
+          "<h3>Knows the money</h3><ul>"
+          "<li>When revenue may be recognised</li>"
+          "<li>What a provision must satisfy</li>"
+          "<li>Which costs may be capitalised</li></ul>"
+          "<div class='gap'>Rarely examined on a critical path, an earning rule, or why a schedule "
+          "slip becomes a cost.</div></div>"
+          "<div class='col'><div class='sub'>The engineer</div>"
+          "<h3>Knows the work</h3><ul>"
+          "<li>Where the critical path runs</li>"
+          "<li>What the float really is</li>"
+          "<li>How progress is measured</li></ul>"
+          "<div class='gap'>Rarely examined on cut-off, a contract asset, or the difference between "
+          "billed and earned.</div></div>"
+          "</div>"
+          "<div class='callout'>A project lives in the overlap. <strong>The overlap is where the "
+          "money is lost</strong>, and it is the one place neither training looks.</div>",
+        "1 / 14", "navy"))
+
+    # 3 — the proof: an accounting failure destroying a delivery metric.
     # 2,200,000 / 1,850,000 = 1.19; with the 240,000 accrual, 2,200,000 / 2,090,000 = 1.05.
     S.append(slide(
-        head("The problem", "A CPI of 1.19<br/>and 1.05 from<br/>the same month")
+        head("What the overlap costs", "A CPI of 1.19<br/>and 1.05 from<br/>the same month")
         + "<div class='point'>Earned value 2,200,000. Invoiced cost 1,850,000. Skip the accrual and "
-          "<b>CPI = 1.19</b>. Book the 240,000 of work already done and <b>CPI = 1.05</b>.</div>"
-          "<div class='point'>Fourteen points on one missing entry, and next month the un-accrued "
-          "version shows an overrun that never happened.</div>"
-          "<div class='callout'>Cut-off is not bookkeeping hygiene. It is the difference between a "
-          "performance index that means something and one that <strong>whipsaws with invoice "
-          "timing</strong>.</div>",
-        "1 / 12", "tint"))
+          "<b>CPI = 1.19</b>. Book the 240,000 already done and <b>CPI = 1.05</b>.</div>"
+          "<div class='point'>The error is <b>accounting</b> — a cut-off failure. The damage is "
+          "<b>delivery</b> — a performance index a board will act on. Fourteen points, one missing "
+          "entry.</div>"
+          "<div class='callout'>An accountant who never reads a CPI will not see it. A planner who "
+          "never raises an accrual will not see it either. <strong>That is the case for this "
+          "credential in one month-end.</strong></div>",
+        "2 / 14", "tint"))
 
-    # 3 — scale
+    # 4 — the shape
     S.append(slide(
-        head("What the syllabus covers", "Thirteen domains.<br/>No filler.")
+        head("The syllabus", "Forty, forty,<br/>twenty")
         + "<div class='figs'>"
           "<div class='fig'><div class='n'>13</div><div class='l'>domains</div></div>"
           "<div class='fig'><div class='n'>61</div><div class='l'>knowledge areas</div></div>"
           "<div class='fig'><div class='n'>26</div><div class='l'>sector case studies</div></div>"
           "</div>"
-          "<div class='callout'>Every technique arrives with <strong>the conditions under which it "
-          "fails</strong>. A method you cannot break is a method you do not yet understand.</div>",
-        "2 / 12"))
+          "<div class='callout'><strong>40%</strong> finance, accounting and reporting &nbsp;&middot;&nbsp; "
+          "<strong>40%</strong> project management &nbsp;&middot;&nbsp; <strong>20%</strong> governed AI. "
+          "The proportions of the Body of Knowledge.</div>",
+        "3 / 14"))
 
-    # 4 — Part One
+    # 5 — the finance half, named. This is the half most delivery credentials do not have.
     S.append(slide(
-        head("Part one &middot; 40% of the Body of Knowledge",
-             "Finance, accounting<br/>and reporting")
-        + "".join(dom_row(i, D[i]) for i in (1, 2, 3, 4)),
-        "3 / 12"))
+        head("The finance half", "Standards a<br/>controls lead<br/>is examined on")
+        + std("IFRS 15", "revenue from contracts with customers — the five-step model, over-time "
+                         "recognition, variable consideration and the constraint")
+        + std("IAS 37", "provisions and contingent liabilities — behind every warranty reserve, "
+                        "onerous-contract charge and dispute disclosure")
+        + std("IAS 2", "the materials and work-in-progress a project holds in store")
+        + std("IAS 16 / IFRS 16", "the plant a project owns, and the plant and premises it leases")
+        + std("IAS 23", "the financing cost of building a major asset")
+        + std("IAS 1", "presentation of financial statements")
+        + std("IAS 11", "the construction-contracts standard IFRS 15 replaced — covered so legacy "
+                        "terminology in an older file still reads"),
+        "4 / 14", "navy"))
 
-    # 5 — formulas: recognition
+    # 6 — finance formulas: the IFRS 15 recognition chain, end to end
     S.append(slide(
-        head("Domains 1&ndash;2 &middot; what you are examined on", "Getting the<br/>number right")
-        + frm(*pick(F[1], "Assets = Liabilities + Equity")[:1],
-              "the identity every ledger must satisfy")
-        + frm(*pick(F[2], "PoC = cost to date / total estimated cost")[:1],
-              "cost-to-cost percentage of completion")
-        + frm(*pick(F[2], "revenue = PoC × transaction price")[:1],
-              "revenue for the period to date")
-        + frm(*pick(F[2], "period revenue = cumulative − prior")[:1],
-              "what actually lands in this month")
+        head("Domain 2 &middot; revenue", "The recognition<br/>chain, in full")
+        + frm(*pick(F[2], "Percentage of completion (PoC) = Costs incurred to date / Total estimated costs")[:1],
+              "over-time recognition by the input method", stack=True)
+        + frm(*pick(F[2], "Cumulative revenue = PoC × Transaction price")[:1],
+              "revenue earned to date", stack=True)
+        + frm(*pick(F[2], "Period revenue = Cumulative revenue − revenue recognised in prior periods")[:1],
+              "what lands in this month", stack=True)
         + frm(*pick(F[2], "Contract asset (liability) = cumulative revenue − cumulative billed")[:1],
               "over- or under-billing, on the balance sheet", stack=True)
         + "<div class='callout'>Recognition is not billing. A project can be profitable, fully "
           "billed and <strong>still carry a contract liability</strong>.</div>",
-        "4 / 12", "tint"))
+        "5 / 14", "tint"))
 
-    # 6 — Part Two, first half
+    # 7 — finance formulas: allocation, measurement, capitalisation
     S.append(slide(
-        head("Part two &middot; 40% of the Body of Knowledge", "Project management")
-        + "".join(dom_row(i, D[i]) for i in (5, 6, 7, 8)),
-        "5 / 12"))
+        head("Domains 1&ndash;2 &middot; measurement", "Before the<br/>number exists")
+        + frm(*pick(F[1], "Assets = Liabilities + Equity")[:1], "the identity every ledger satisfies")
+        + frm(*pick(F[2], "catch-up = PoC × revised price − revenue recognised to date")[:1],
+              "the cumulative catch-up when the price is revised", stack=True)
+        + frm(*pick(F[2], "Revised transaction price = fixed price + constrained variable consideration")[:1],
+              "variable consideration, constrained", stack=True)
+        + frm(*pick(F[2], "Capitalised borrowing cost = weighted-average qualifying expenditure × capitalisation rate")[:1],
+              "IAS 23 — financing cost inside the asset", stack=True)
+        + frm(*pick(F[2], "NRV = estimated selling price − costs to complete and sell")[:1],
+              "IAS 2 — the write-down test on stored materials", stack=True),
+        "6 / 14", "navy"))
 
-    # 7 — formulas: EVM core
+    # 8 — commercial: where the contract becomes cash
     S.append(slide(
-        head("Domain 6 &middot; earned value", "Four measures,<br/>one month-end")
+        head("Domain 7 &middot; commercial", "Contract<br/>to cash")
+        + frm(*pick(F[7], "Amount = quantity × rate")[:1],
+              "the bill-of-quantities line, before anything else happens", stack=True)
+        + frm(*pick(F[7], "amount due = gross value − retention − previous payments")[:1],
+              "the payment application", stack=True)
+        + frm(*pick(F[7], "Fee = target fee + contractor's share × (target cost − actual cost)")[:1],
+              "target-cost pain/gain share", stack=True)
+        + frm(*pick(F[7], "LD exposure = LD rate × forecast days late")[:1],
+              "liquidated damages, forecast not incurred", stack=True)
+        + frm(*pick(F[11], "CCC = DSO + DIO − DPO")[:1],
+              "cash conversion cycle, in days", stack=True),
+        "7 / 14", "tint"))
+
+    # 9 — the delivery half: EVM
+    S.append(slide(
+        head("Domain 6 &middot; earned value", "The delivery<br/>half")
         + frm(*pick(F[6], "CV = EV − AC")[:1], "cost variance")
         + frm(*pick(F[6], "SV = EV − PV")[:1], "schedule variance, in money")
         + frm(*pick(F[6], "CPI = EV / AC")[:1], "cost performance index")
         + frm(*pick(F[6], "SPI = EV / PV")[:1], "schedule performance index")
         + frm(*pick(F[6], "SV(t) = ES − AT")[:1], "earned schedule variance, in time")
         + frm(*pick(F[6], "SPI(t) = ES / AT")[:1], "the index that still works near completion"),
-        "6 / 12", "navy"))
+        "8 / 14", "navy"))
 
-    # 8 — formulas: the EAC family, the flagship
+    # 10 — the EAC family
     S.append(slide(
         head("Domain 6 &middot; the heart of it", "There is no<br/>&lsquo;the&rsquo; EAC")
         + frm(*pick(F[6], "EAC = AC + (BAC − EV)")[:1],
@@ -356,64 +450,57 @@ def build():
               "the team re-estimated the remaining work bottom-up", stack=True)
         + "<div class='callout'>Four methods. Four assumptions. Four different answers from the "
           "same data. <strong>Naming which one you used, and why, is the skill.</strong></div>",
-        "7 / 12", "tint"))
+        "9 / 14", "tint"))
 
-    # 9 — Part Two, second half
+    # 11 — variance, agile, risk
     S.append(slide(
-        head("Part two &middot; continued", "Delivery, schedule,<br/>process and risk")
-        + "".join(dom_row(i, D[i]) for i in (9, 10, 11, 12)),
-        "8 / 12"))
-
-    # 10 — formulas: variance, agile, cash, risk
-    S.append(slide(
-        head("Domains 4, 9, 11, 12", "Where the money<br/>actually moves")
+        head("Domains 4, 9, 12", "Why the number<br/>moved")
         + frm(*pick(F[4], "Price/rate = (actual price − standard price) × actual quantity")[:1],
               "price variance", stack=True)
         + frm(*pick(F[4], "usage/efficiency = (actual quantity − standard quantity) × standard price")[:1],
               "usage variance — the other half of the story", stack=True)
         + frm(*pick(F[9], "EV = (points done / total points) × BAC")[:1],
               "earned value when scope is a backlog", stack=True)
-        + frm(*pick(F[11], "CCC = DSO + DIO − DPO")[:1],
-              "cash conversion cycle, in days", stack=True)
         + frm(*pick(F[12], "EMV = probability × impact")[:1],
               "expected monetary value — how risk enters a forecast", stack=True),
-        "9 / 12", "navy"))
+        "10 / 14", "navy"))
 
-    # 11 — Part Three
+    # 12–13 — the syllabus itself
     S.append(slide(
-        head("Part three &middot; 20% of the Body of Knowledge", "AI, governed")
+        head("Part one &middot; 40%", "Finance, accounting<br/>and reporting")
+        + "".join(dom_row(i, D[i]) for i in (1, 2, 3, 4)),
+        "11 / 14"))
+    S.append(slide(
+        head("Part two &middot; 40%", "Project management")
+        + "".join(dom_row(i, D[i]) for i in (5, 6, 7, 8)),
+        "12 / 14"))
+    S.append(slide(
+        head("Part two &middot; continued", "Delivery, schedule,<br/>process and risk")
+        + "".join(dom_row(i, D[i]) for i in (9, 10, 11, 12)),
+        "13 / 14"))
+
+    # 14 — AI, and the test of whether a model earns its place
+    S.append(slide(
+        head("Part three &middot; 20%", "AI, governed")
         + dom_row(13, D[13])
-        + "<div class='callout'>The largest domain in the volume, and the reason the credential "
-          "exists in this form. It ends where every automated output should end: with "
-          "<strong>a named human who verified it</strong>.</div>",
-        "10 / 12"))
-
-    # 12 — formulas: does the AI control actually work
-    S.append(slide(
-        head("Domain 13 &middot; the part most courses skip", "Is the model<br/>worth running?")
-        + frm(*pick(F[13], "precision = true hits ÷ total flags")[:1],
-              "of everything it flagged, how much was real", stack=True)
-        + frm(*pick(F[13], "recall = true hits ÷ total true cases")[:1],
-              "of everything real, how much it caught", stack=True)
         + frm(*pick(F[13], "F1 = 2 × (precision × recall) ÷ (precision + recall)")[:1],
-              "the single number that refuses to let you game either", stack=True)
-        + frm(*pick(F[13], "net = annual saving − annual cost")[:1],
-              "the only test a sponsor actually asks", stack=True)
-        + "<div class='callout'>A model with 99% recall and 4% precision buries your team in false "
+              "whether the model is worth running at all", stack=True)
+        + "<div class='callout'>A model with 99% recall and 4% precision buries the team in false "
           "positives. <strong>&ldquo;The AI found something&rdquo; is not a control.</strong></div>",
-        "11 / 12", "tint"))
+        "14 / 14", "tint"))
 
-    # 13 — the standards
+    # 15 — what holds the teaching up
     S.append(slide(
-        head("What sits behind the syllabus", "113 standards.<br/>532 process<br/>requirements.")
+        head("Behind the syllabus", "113 standards.<br/>532 process<br/>requirements.")
         + "<div class='point'>Each states its purpose, who owns the decision, what evidence must "
           "exist, what practice is prohibited, what triggers escalation, <b>what AI may never "
           "decide, approve or certify</b> — and a compliance test an assessor can perform.</div>"
-        "<div class='point'>They are certification requirements established by the Institute. They "
-        "are not legislation, and nothing here is legal, tax or accounting advice.</div>",
-        "12 / 12", "navy"))
+          "<div class='point'>They are certification requirements established by the Institute. "
+          "They are not legislation, and nothing here is legal, tax or accounting advice. External "
+          "standards are named and described in the Institute's own words, never reproduced.</div>",
+        "PCL-AI", "navy"))
 
-    # 14 — close
+    # 16 — close
     S.append(slide(
         "<div class='eyebrow'>The principle behind all of it</div>"
         "<h2>AI proposes.<br/>The professional<br/>verifies, decides<br/>and remains "
@@ -423,14 +510,40 @@ def build():
         "projectcontrolsinstitute.org</div>",
         "PCL-AI", "navy"))
 
+    total = len(S)
+    for i, s in enumerate(S):
+        S[i] = re.sub(r"<span class='pg'>[^<]*</span>",
+                      f"<span class='pg'>{i + 1} / {total}</span>", s)
     return f"<style>{CSS}</style>" + "".join(S)
+
+
+def assert_on_brand(doc: str) -> None:
+    """Fail the build if any visible character is missing from the brand fonts.
+
+    A glyph the brand woff2 files do not carry does not error — WeasyPrint quietly substitutes
+    whatever the system has, so an off-brand face lands on a slide and nothing says so. That is how
+    a DejaVu arrow reached the cover and a DejaVu sigma reached two formula slides. Checking the
+    document text against the fonts' own cmaps turns a silent substitution into a failed build.
+    """
+    from fontTools.ttLib import TTFont
+    covered = set()
+    for name in ("inter-latin", "inter-latin-ext", "archivo-latin", "archivo-latin-ext"):
+        covered |= set(TTFont(str(FONTS / f"{name}.woff2")).getBestCmap())
+    text = re.sub(r"<[^>]+>", "", re.sub(r"<style>.*?</style>", "", doc, flags=re.S))
+    text = html.unescape(text)
+    missing = {c for c in text if ord(c) not in covered and c not in " \n\t\r"}
+    if missing:
+        raise SystemExit("glyphs not in the brand fonts: "
+                         + ", ".join(f"{c!r} U+{ord(c):04X}" for c in sorted(missing)))
 
 
 def main():
     OUT.mkdir(exist_ok=True)
     from weasyprint import HTML
     path = OUT / "PCI-PCL-AI-Course-Outline-LinkedIn.pdf"
-    HTML(string=build(), base_url=str(HERE)).write_pdf(str(path))
+    doc = build()
+    assert_on_brand(doc)
+    HTML(string=doc, base_url=str(HERE)).write_pdf(str(path))
     print(f"built: {path.name}")
 
 
