@@ -183,6 +183,18 @@ body { margin: 0; padding: 0; }
   font-variant-numeric: tabular-nums;
 }
 
+/* ---------- exhibit label ---------- */
+
+.exhibit {
+  font-family: 'Inter', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #B8923E;
+  margin: 0 0 10px 0;
+}
+
 /* ---------- formula index table — the dense reference layout ---------- */
 
 .slide table {
@@ -208,10 +220,23 @@ body { margin: 0; padding: 0; }
   font-variant-numeric: tabular-nums;
   white-space: normal;
 }
-.slide td:last-child {
+.slide td:last-child:not(:nth-child(2)) {
   color: #B8923E; font-weight: 700; font-size: 22px;
   text-align: right; white-space: nowrap;
 }
+
+/* two-column comparison tables: equal columns, both left-aligned */
+.slide table.pair td { width: 50%; }
+.slide table.pair td:last-child { color: #475569; font-weight: 400; text-align: left; }
+
+/* long tables tighten rather than overflow a fixed-height slide */
+.slide table.dense { font-size: 23px; line-height: 1.24; }
+.slide table.dense td { padding: 11px 14px; }
+.slide table.dense td:last-child:not(:nth-child(2)) { font-size: 20px; }
+.slide table.verydense { font-size: 21px; line-height: 1.2; }
+.slide table.verydense td { padding: 8px 12px; }
+.slide table.verydense th { padding: 10px 12px; font-size: 18px; }
+.slide table.verydense td:last-child:not(:nth-child(2)) { font-size: 19px; }
 .slide td code {
   font-family: 'Inter', sans-serif; font-weight: 700;
   font-size: 25px; color: #13245A;

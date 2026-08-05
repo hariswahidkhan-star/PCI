@@ -1,50 +1,90 @@
-# The Project Controls Formula Sheet
+# Two Languages, One Project
 
-> Every formula the discipline runs on — and the mistake each one attracts
+> The complete formula reference for the PCI AI Project Controls Leader — IFRS and IAS on one side, earned value and critical path on the other
 
-## What this is
+## A chartered accountant cannot build a schedule
 
-**PCL-AI · COMPLETE REFERENCE**
+**WHY THIS CREDENTIAL EXISTS**
 
-Fifty-eight formulas across the whole of project controls: accounting, revenue recognition, budgeting, cost, earned value, forecasting, scheduling, risk, commercial and working capital.
+They can tell you exactly when revenue is recognised under **IFRS 15**, how a provision is measured under **IAS 37**, and which borrowing costs qualify for capitalisation under **IAS 23**.
 
-Every one is drawn from the PCL-AI Body of Knowledge and carries the Knowledge Area where it is worked in full.
+Ask them to build a time-phased cost baseline, compute an estimate at completion, or read a critical path, and the training stops.
 
-Against each, the error it attracts in practice — because a correct formula on a compromised input produces a confident, well-formatted, entirely wrong answer.
+> **This is not a criticism.** It is the boundary of a syllabus. ACCA, ICAEW, CPA and CIMA never claimed to teach project delivery.
 
-> **Save this one.** It is the reference, not a highlight reel.
+## A planning engineer cannot close a period
 
-## Two symbols. One page. Constant collision.
+**THE MIRROR IMAGE**
 
-**NOTATION · THE CLASH RULE**
+They can build a four-thousand-activity network, defend the float, compute earned value under three different measurement rules and forecast an outturn three ways.
 
-`PV` is **Planned Value** in earned value.
+Ask them when the revenue on that work becomes recognisable, what a contract asset is, or why the cost report will not reconcile to the accounts, and the training stops.
 
-`PV(x)` is **present value** in discounting.
+> **Also not a criticism.** PMI, AACE and the engineering degrees never claimed to teach financial reporting.
 
-Both appear in the same monthly cost report.
+## And the project sits in the gap
 
-> **Write "present value" in words, or `PV(x)`, whenever you discount.** This pair collides more often than any other in the discipline, and the Style Spine fixes it as a rule rather than a preference.
+**THE PROBLEM**
 
-# 01 | Accounting and reporting
+Every capital project is measured twice. Once in the language of delivery — earned value, float, forecast. Once in the language of the accounts — recognised revenue, provisions, contract assets.
 
-Domains 1 and 2. Where project reality becomes a number the accounts will recognise.
+The two must reconcile to the same reality. Nobody is trained to make them.
 
-## The accounting core
+> **This is where projects are lost.** Not in the schedule, and not in the ledger — in the space between them, where each profession assumes the other has it covered.
 
-**DOMAINS 1–2 · THE MODEL**
+## What the PCL-AI credential certifies
+
+**THE ANSWER**
+
+| Area | Weight | What it covers |
+|---|---|---|
+| **A · Financial reporting and accounting** | **40%** | IFRS 15, IAS 37, IAS 23, IAS 16, IAS 2, IFRS 16, IAS 1 — applied to contracts |
+| **B · Project management, controls and delivery** | **40%** | Budgeting, earned value, forecasting, scheduling, risk, commercial |
+| **C · AI for project controls** | **20%** | Governed use, with the professional accountable |
+
+Thirteen domains. Sixty-one Knowledge Areas.
+
+> **The 40/40/20 split is the entire argument.** A controls professional who cannot follow a cost from commitment through accrual to recognised revenue cannot explain their own numbers to a board — and a finance professional who cannot read a schedule cannot challenge the forecast behind the accounts.
+
+## Every formula in the discipline
+
+**HOW TO USE THIS REFERENCE**
+
+Both languages, in full, with the mistake each formula attracts. Every entry cites the Knowledge Area where the Body of Knowledge works it through.
+
+Standards are named at principle level and described in the Institute's own words — never reproduced.
+
+> **Save this.** It is the complete reference, not a highlight reel.
+
+# I | The language of the accounts
+
+Domains 1 and 2. What a chartered accountant knows, stated for a controls professional.
+
+## The model everything rests on
+
+**DOMAIN 1 · THE ACCOUNTING MODEL**
 
 | Formula | Meaning | KA |
 |---|---|---|
 | `A = L + E` | The accounting equation | 1.1.1 |
 | `Σ Debits = Σ Credits` | Double-entry invariant | 1.1.3 |
 | `Retained earnings = Opening + Income − Expenses − Distributions` | Equity movement | 1.1.1 |
-| `Depreciation = (Cost − Residual) ÷ Useful life` | Straight line | 1.3.4 |
-| `Carrying amount = Cost − Accumulated depreciation − Impairment` | Net book value | 1.3.4 |
 
-> **A trial balance that balances proves arithmetic, not correctness.** Both sides can be equally and identically wrong.
+> **A trial balance that balances proves arithmetic, not truth.** Both sides can be equally and identically wrong — which is exactly what an un-booked accrual does to a cost report.
 
-## Provisions and the time value of an obligation
+## IAS 16 and IAS 2 — assets and inventory
+
+**DOMAIN 1–2 · MEASUREMENT**
+
+| Formula | Standard | KA |
+|---|---|---|
+| `Depreciation = (Cost − Residual) ÷ Useful life` | **IAS 16** Property, Plant and Equipment | 1.3.4 |
+| `Carrying amount = Cost − Accumulated depreciation − Impairment` | **IAS 16** | 1.3.4 |
+| `Inventory = lower of cost and net realisable value` | **IAS 2** Inventories | 2.4 |
+
+> **IAS 16 decides what is capitalised and what is expensed** — and that decision moves cost between the balance sheet and the profit and loss without any change to the project itself. A controls professional who does not know where the line sits cannot explain a variance that was caused by an accounting judgement.
+
+## IAS 37 — provisions and onerous contracts
 
 **DOMAIN 1 · IAS 37**
 
@@ -53,27 +93,74 @@ Domains 1 and 2. Where project reality becomes a number the accounts will recogn
 | `Expected value = Σ (probability_i × outcome_i)` | Provision over a large population | 1.4.3 |
 | `Present value = Future amount ÷ (1 + r)^n` | Discounting a provision | 1.4.3 |
 
-> **Expected value applies to a population.** For a single obligation with one outcome, the most likely amount is the measure — using expected value there produces a number that will never be paid.
+> **Two traps.** Expected value applies to a **population**; for a single obligation the most likely amount is the measure, and expected value returns a figure that will never be paid. And when a contract becomes onerous, IAS 37 requires the loss to be recognised **in full, immediately** — not spread across the remaining programme. That is the accounting mirror of a forecast overrun.
 
-## Revenue on a contract
+## IAS 23 — borrowing costs
 
-**DOMAIN 2 · IFRS 15**
+**DOMAIN 2 · IAS 23**
+
+`Capitalised borrowing cost = Weighted-average qualifying expenditure × rate`
+
+Interest on funds borrowed to build a qualifying asset is capitalised into the asset, not expensed.
+
+> **Capitalisation must be suspended** during extended periods in which active development is interrupted. A project sitting idle still accrues interest — but that interest stops being part of the asset, and starts hitting the profit and loss. Very few controls functions track this.
+
+## IFRS 15 — the five-step model
+
+**DOMAIN 2 · THE FLAGSHIP KNOWLEDGE AREA**
+
+| | The five steps |
+|---|---|
+| 1 | Identify the contract |
+| 2 | Identify the performance obligations |
+| 3 | Determine the transaction price |
+| 4 | Allocate the price to the obligations |
+| 5 | Recognise revenue as, or when, each obligation is satisfied |
+
+**IFRS 15** replaced **IAS 11** Construction Contracts. The percentage-of-completion habit survived; the standard that authorised it did not.
+
+> **This is the single largest Knowledge Area in the credential** — around 12% of the examination. It is also the one most project professionals have never been taught.
+
+## IFRS 15 — the arithmetic
+
+**DOMAIN 2 · REVENUE**
 
 | Formula | Meaning | KA |
 |---|---|---|
-| `PoC = Costs incurred ÷ Total estimated costs` | Cost-to-cost percentage of completion | 2.2.6 |
-| `Cumulative revenue = PoC × Transaction price` | Over-time revenue | 2.2.6 |
-| `Allocated price_i = Transaction price × (SSP_i ÷ Σ SSP)` | Allocation to obligations | 2.2.5 |
-| `Capitalised borrowing cost = Weighted-avg qualifying expenditure × rate` | IAS 23 | 2.4.4 |
-| `Contract asset / (liability) = Revenue recognised − Amounts billed` | Over- and under-billing | 7.5 |
+| `PoC = Costs incurred ÷ Total estimated costs` | Cost-to-cost input method | 2.2.6 |
+| `Cumulative revenue = PoC × Transaction price` | Over-time recognition | 2.2.6 |
+| `Allocated price_i = Transaction price × (SSP_i ÷ Σ SSP)` | Allocation by standalone selling price | 2.2.5 |
+| `Period revenue = Cumulative revenue − Previously recognised` | What actually books this month | 2.2.6 |
 
-> **`PoC` is cumulative, and so is the revenue it produces.** Deduct what you have already recognised before booking the period. And uninstalled materials sitting in the numerator inflate progress that has not happened.
+> **`PoC` is cumulative and so is the revenue it produces.** Forget the fourth line and you recognise the same revenue twice. And uninstalled materials sitting in the numerator inflate progress that has not physically happened — which is why IFRS 15 requires them to be excluded from the measure.
 
-# 02 | Budget, cost and variance
+## The position the contract creates
 
-Domains 3 to 5. The baseline, the cost states, and the bridge from plan to actual.
+**DOMAIN 7 · CONTRACT ASSETS AND LIABILITIES**
 
-## Building the baseline
+`Contract asset / (liability) = Revenue recognised − Amounts billed`
+
+Recognise more than you have billed and you carry a **contract asset**. Bill more than you have earned and you carry a **contract liability**.
+
+> **This single line is where the two languages meet.** The left-hand term comes from IFRS 15. The right-hand term comes from the valuation your commercial team submitted. If your controls function cannot compute it, the finance team is deriving your project's position without you.
+
+## IFRS 16 and IAS 1
+
+**DOMAIN 2 · COMPLETING THE PICTURE**
+
+| Standard | What it governs | KA |
+|---|---|---|
+| **IFRS 16** Leases | Right-of-use asset and lease liability — plant and accommodation move onto the balance sheet | 2.4 |
+| **IAS 1** Presentation | The structure of the statements a project's numbers land in | 1.2, 2.1 |
+| **IAS 8** | Accounting policies, changes in estimate and errors | 2.4 |
+
+> **IFRS 16 changed project cost structures without changing a single project.** Operating leases that once sat in the cost line became assets and liabilities — which moved the same site cabin from opex to depreciation plus interest.
+
+# II | The language of delivery
+
+Domains 3 to 12. What a planning engineer knows, stated for a finance professional.
+
+## The baseline
 
 **DOMAIN 3 · BUDGET**
 
@@ -84,33 +171,24 @@ Domains 3 to 5. The baseline, the cost states, and the bridge from plan to actua
 | `Analogous estimate = Past cost × (this driver ÷ past driver)` | Analogous estimating | 3.2.2 |
 | `Parametric estimate = Parameter × Rate` | Parametric estimating | 3.2.2 |
 
-> **Management reserve sits outside `BAC`.** Fold it in and you have quietly given yourself a contingency nobody approved and the baseline no longer measures anything.
+> **Management reserve sits outside `BAC`.** Fold it in and the baseline stops measuring anything, because you have quietly granted yourself a contingency nobody approved. AACE estimate classes govern how accurate any of this is entitled to be.
 
-## Cost behaviour and absorption
+## The three states of a cost
 
-**DOMAIN 5 · COST**
+**DOMAIN 5 · COST CONTROL**
 
 | Formula | Meaning | KA |
 |---|---|---|
 | `Total cost = Fixed + (Variable per unit × Volume)` | Cost behaviour | 5.1.1 |
 | `OAR = Budgeted overhead ÷ Budgeted activity base` | Overhead absorption rate | 5.1.3 |
 | `Over/(under) absorption = Absorbed − Incurred` | Absorption variance | 5.1.3 |
+| `Cost to date = Actuals + Accruals` | True cost to date | 5.2.1 |
 
-## The one line that governs every index
-
-**DOMAIN 5 · THE COST STATES**
-
-`Cost to date = Actuals + Accruals`
-
-Cost moves through three states — **commitment**, then **accrual**, then **actual**. Only the third has an invoice.
-
-If `AC` carries invoiced cost alone, work has been performed that nobody has billed you for.
-
-> **`CPI` overstates performance and `EAC` understates cost, and both errors are invisible in the report.** Reconcile goods-received-not-invoiced against the accrual booked before you compute anything in the next section.
+> **Commitment, then accrual, then actual.** Only the third has an invoice. If `AC` carries invoiced cost alone, every index below is wrong in the same direction — and the accrual you failed to book is the same number the accountant needs for cut-off.
 
 ## The variance bridge
 
-**DOMAIN 4 · VARIANCE**
+**DOMAIN 4 · VARIANCE ANALYSIS**
 
 | Formula | Meaning | KA |
 |---|---|---|
@@ -118,13 +196,9 @@ If `AC` carries invoiced cost alone, work has been performed that nobody has bil
 | `Quantity variance = (Actual qty − Standard qty) × Standard price` | Quantity effect | 4.2.3 |
 | `Total variance = Price variance + Quantity variance` | Reconciliation check | 4.2.3 |
 
-> **Note which multiplier belongs to which.** Price variance takes **actual** quantity; quantity variance takes **standard** price. Swap them and the two will not sum to the total — which is exactly why the third line exists.
+> **Price takes actual quantity; quantity takes standard price.** Swap the multipliers and the two will not sum to the total — which is precisely why the third line is on the sheet.
 
-# 03 | Earned value and forecasting
-
-Domain 6, with Domain 9 for adaptive delivery. Where you are, and where you will end.
-
-## Position
+## Earned value — position
 
 **DOMAIN 6 · THE INDICES**
 
@@ -136,48 +210,24 @@ Domain 6, with Domain 9 for adaptive delivery. Where you are, and where you will
 | `SPI = EV ÷ PV` | Schedule efficiency in cost terms | 6.2.2 |
 | `% complete = EV ÷ BAC` | Progress by value | 6.1 |
 
-> **`SV` and `SPI` are denominated in money, not time.** At completion `EV = PV`, so both return to zero and 1.00 however late you finished. They are honest early and misleading late.
+> **`SV` and `SPI` are denominated in money, not time.** At completion `EV = PV`, so both return to zero and 1.00 however late you finished. Honest early, misleading late.
 
-## The EAC family
+## Earned value — forecast
 
-**DOMAIN 6 · FORECAST**
+**DOMAIN 6 · THE EAC FAMILY**
 
 | Formula | The assumption it encodes | KA |
 |---|---|---|
 | `EAC = AC + ETC` | Identity — always true | 6.3.1 |
 | `EAC = AC + (BAC − EV)` | The variance was a one-off | 6.3.2 |
 | `EAC = BAC ÷ CPI` | Performance to date persists | 6.3.2 |
-| `EAC = AC + (BAC − EV) ÷ CPI` | Same assumption, remaining-work form | 6.3.2 |
 | `EAC = AC + (BAC − EV) ÷ (CPI × SPI)` | Cost and schedule both persist | 6.3.2 |
 | `VAC = BAC − EAC` | Variance at completion | 6.3.4 |
+| `TCPI = (BAC − EV) ÷ (BAC − AC)` | Efficiency required to hit budget | 6.2.3 |
 
-> **The arithmetic is trivial. The assumption is the professional judgement** — and it is the assumption a board will ask you to defend, not the division.
+> **The arithmetic is trivial; the assumption is the judgement.** Set `TCPI` beside the `CPI` you have achieved — a `TCPI` far above it asserts a gain nobody has demonstrated. And an identity worth knowing: when `EAC = BAC ÷ CPI`, `TCPI (to EAC)` equals `CPI` exactly.
 
-## Which EAC, and why
-
-**DECISION AID**
-
-| If | Then |
-|---|---|
-| The variance was a closed, one-off event | `AC + (BAC − EV)` |
-| Performance to date will persist | `BAC ÷ CPI` |
-| Cost **and** schedule pressure both persist | `AC + (BAC − EV) ÷ (CPI × SPI)` |
-| Remaining scope differs materially | Bottom-up ETC — indices do not apply |
-
-> **Publish the range and name the assumption against each.** A single EAC quoted to the nearest thousand claims a precision the method cannot support.
-
-## The check that exposes a wishful budget
-
-**DOMAIN 6 · TCPI**
-
-| Formula | Meaning | KA |
-|---|---|---|
-| `TCPI (to BAC) = (BAC − EV) ÷ (BAC − AC)` | Efficiency needed to still hit budget | 6.2.3 |
-| `TCPI (to EAC) = (BAC − EV) ÷ (EAC − AC)` | Efficiency needed to hit a revised forecast | 6.2.3 |
-
-> **Set `TCPI` beside the `CPI` you have actually achieved.** A `TCPI` far above it is asserting an efficiency gain nobody has demonstrated. And an identity worth knowing: when `EAC = BAC ÷ CPI`, `TCPI (to EAC)` equals `CPI` exactly.
-
-## Schedule performance, measured in time
+## Schedule performance in time
 
 **DOMAIN 6 · EARNED SCHEDULE**
 
@@ -187,11 +237,38 @@ Domain 6, with Domain 9 for adaptive delivery. Where you are, and where you will
 | `SV(t) = ES − AT` | Schedule variance in time | 6.4.3 |
 | `SPI(t) = ES ÷ AT` | Time-based schedule efficiency | 6.4.3 |
 
-> **These do not converge at completion.** Late in a project, earned schedule is the honest measure and the currency-based pair is not. Use cumulative planned value in the interpolation, never the period figure.
+> **These do not converge at completion**, which is what makes them the honest late-stage measure. Use cumulative planned value in the interpolation, never the period figure.
 
-## Earned value under adaptive delivery
+## The network
 
-**DOMAIN 9 · AGILE EVM**
+**DOMAIN 10 · CRITICAL PATH**
+
+| Formula | Meaning | KA |
+|---|---|---|
+| `EF = ES + Duration` | Forward pass | 10.2 |
+| `LS = LF − Duration` | Backward pass | 10.2 |
+| `Total float = LS − ES = LF − EF` | Slack without delaying the project | 10.2.4 |
+| `Free float = min(successor ES) − EF` | Slack without delaying a successor | 10.2.4 |
+| `tE = (O + 4M + P) ÷ 6` · `σ = (P − O) ÷ 6` | PERT three-point estimate | 10.1.4 |
+| `σ^2 path = Σ σ^2 along the path` | Path variance | 10.3.4 |
+
+> **Total float from the starts must equal total float from the finishes.** If they disagree, a pass is wrong. And variances add along a path — standard deviations do not.
+
+## Risk and contingency
+
+**DOMAIN 12 · ISO 31000**
+
+| Formula | Meaning | KA |
+|---|---|---|
+| `EMV = Probability × Impact` | Expected monetary value | 12.2.3 |
+| `Total EMV = Σ (P_i × I_i)` | Portfolio exposure | 12.2.3 |
+| `Contingency ≈ Σ EMV, or P80 − P50` | Risk-based contingency | 12.3.1 |
+
+> **A percentage of budget is a habit, not an analysis.** And note where this lands in the accounts: a risk that becomes probable and measurable stops being contingency and becomes an **IAS 37 provision**. The two professions are describing the same event with different words.
+
+## Adaptive delivery
+
+**DOMAIN 9 · AGILE**
 
 | Formula | Meaning | KA |
 |---|---|---|
@@ -202,132 +279,128 @@ Domain 6, with Domain 9 for adaptive delivery. Where you are, and where you will
 | `Run rate = Team cost ÷ Sprint` | Cost per sprint | 9.5.2 |
 | `Cycle time = WIP ÷ Throughput` | Little's Law | 9.4 |
 
-> **Point inflation breaks the first two lines.** If a story point in sprint 20 is smaller than in sprint 4, `% complete` rises without work being done. And use a rolling average velocity, never best-ever.
+> **Point inflation breaks the first two lines**, and it is invisible unless someone is watching. Note that IFRS 15 still applies to agile delivery — the standard does not care how you organised the work.
 
-# 04 | Schedule and risk
+## Commercial and cash
 
-Domains 10 and 12. The network, its float, and the uncertainty priced into contingency.
-
-## Network and float
-
-**DOMAIN 10 · CPM**
+**DOMAINS 7, 11 · CONTRACT AND WORKING CAPITAL**
 
 | Formula | Meaning | KA |
 |---|---|---|
-| `EF = ES + Duration` | Forward pass | 10.2 |
-| `LS = LF − Duration` | Backward pass | 10.2 |
-| `Total float = LS − ES = LF − EF` | Slack without delaying the project | 10.2.4 |
-| `Free float = min(successor ES) − EF` | Slack without delaying a successor | 10.2.4 |
-| `Critical path: TF = 0` | The longest path | 10.2.3 |
-
-> **A free integrity check.** Total float from the starts must equal total float from the finishes. If the two disagree, one of your passes is wrong — and constraints can manufacture a zero float that is not a critical path at all.
-
-## Duration under uncertainty
-
-**DOMAIN 10 · PERT**
-
-| Formula | Meaning | KA |
-|---|---|---|
-| `tE = (O + 4M + P) ÷ 6` | PERT expected duration | 10.1.4 |
-| `σ = (P − O) ÷ 6` | PERT standard deviation | 10.1.4 |
-| `σ^2 path = Σ σ^2 along the path` | Path variance | 10.3.4 |
-| `Crash cost slope = (Crash − Normal cost) ÷ (Normal − Crash duration)` | Cost per period saved | 10.3.1 |
-
-> **Variances add. Standard deviations do not.** Sum the `σ^2` along the path and take the square root once, at the end. And crashing an activity that is not on the critical path spends money to save nothing.
-
-## Risk, and where contingency comes from
-
-**DOMAIN 12 · RISK**
-
-| Formula | Meaning | KA |
-|---|---|---|
-| `EMV = Probability × Impact` | Expected monetary value | 12.2.3 |
-| `Total EMV = Σ (P_i × I_i)` | Portfolio exposure | 12.2.3 |
-| `Contingency ≈ Σ EMV, or P80 − P50` | Risk-based contingency | 12.3.1 |
-
-> **A percentage of budget is a habit, not an analysis.** If contingency does not reconcile to quantified exposure, nobody can say what it is for or when it may be released.
-
-# 05 | Commercial and cash
-
-Domains 7 and 11. The contract, the valuation and the working capital underneath.
-
-## Contract mechanics
-
-**DOMAIN 7 · COMMERCIAL**
-
-| Formula | Meaning | KA |
-|---|---|---|
-| `Fee = Target fee + Contractor share × (Target cost − Actual cost)` | CPIF incentive fee | 7.1.3 |
+| `Fee = Target fee + Contractor share × (Target − Actual cost)` | CPIF incentive fee | 7.1.3 |
 | `Pain/gain = Share ratio × (Actual − Target)` | Target-cost mechanism | 7.1.4 |
 | `LD exposure = LD rate × Days late` | Liquidated damages | 7.2.3 |
-| `Remeasured value = Actual quantity × BoQ rate` | Remeasurement | 7.3.4 |
-
-## Getting paid
-
-**DOMAIN 7 · VALUATION**
-
-`Amount due = Σ(% complete × item amount) − Retention − Previous payments`
-
-Every interim application is this line. The failures are always in the last two terms.
-
-> **Retention release is the one most often missed** at the milestone that triggers it — and previous payments must be cumulative, or you will bill the same work twice and find out at final account.
-
-## Working capital
-
-**DOMAIN 11 · CASH CYCLE**
-
-| Formula | Meaning | KA |
-|---|---|---|
-| `DSO = Receivables ÷ Daily revenue` | Days sales outstanding | 11.1.3 |
-| `DIO = Inventory ÷ Daily COGS` | Days inventory outstanding | 11.A.1 |
-| `DPO = Payables ÷ Daily COGS` | Days payables outstanding | 11.A.1 |
+| `Amount due = Σ(% complete × item) − Retention − Previous payments` | Interim application | 7.4.3 |
+| `DSO = Receivables ÷ Daily revenue` · `DPO = Payables ÷ Daily COGS` | Working capital days | 11.1.3 |
 | `CCC = DSO + DIO − DPO` | Cash conversion cycle | 11.A.1 |
-| `Cash freed ≈ Δ DSO × Daily revenue` | Working capital released | 11.A.1 |
 
-> **`DPO` carries a minus sign.** Paying suppliers later shortens your cash cycle and lengthens theirs — which is a commercial decision about the supply chain, not a treasury optimisation.
+> **Liquidated damages are the commercial event; IAS 37 is the accounting consequence.** Once they are probable and measurable, they are a provision — recognised now, not when the deduction lands.
 
-## Never accept this number
+# III | Where the two languages meet
 
-**PROGRESS MEASUREMENT**
+The integration. This is what neither profession is taught, and what the credential exists for.
 
-| Work package character | Method |
+## One cost, two destinations
+
+**THE INTEGRATION SPINE**
+
+A cost is incurred on site. It then travels two paths at once.
+
+| Path | Sequence |
 |---|---|
-| Spans a single period | 0/100 |
-| Two periods, discrete ends | 50/50 |
-| Countable homogeneous output | Units complete |
-| Long, with verifiable stages | Milestone weighting |
-| No discrete output | Level of effort — never the default |
+| **Delivery** | Commitment → accrual → `AC` → `CPI` → `EAC` |
+| **Accounts** | Accrual → `PoC` → cumulative revenue → contract asset or liability |
 
-> **Fix the method per work package before work starts.** And never accept a percentage complete supplied by the party being measured. That figure is a commercial position, not a measurement.
+**The accrual is the shared node.** Both paths depend on it, and only one profession is usually watching it.
+
+> **Fail to book it and two things happen simultaneously:** `CPI` overstates delivery performance, and `PoC` understates revenue. The project looks efficient and under-billed at the same time — a combination that reads as good news in both languages.
+
+## The reconciliation nobody owns
+
+**THE TEST**
+
+| Question | Language | Who answers it |
+|---|---|---|
+| What has this cost us? | Delivery | Project controls |
+| What may we recognise? | Accounts | Finance |
+| Do those two rest on the same accrual? | **Both** | **Nobody, usually** |
+
+> **A standing unreconciled difference between the cost report and the ledger is not a timing quirk.** It is two sets of books, and it will be discovered by an auditor rather than by you.
+
+## The same event, two vocabularies
+
+**A TRANSLATION TABLE**
+
+| The delivery language | The accounting language |
+|---|---|
+| Contingency drawdown for a probable risk | **IAS 37** provision |
+| Forecast overrun on a fixed-price contract | **IAS 37** onerous contract — recognise the loss in full, now |
+| Progress claimed but not yet certified | **IFRS 15** contract asset |
+| Advance payment received | **IFRS 15** contract liability |
+| Interest on funds during the build | **IAS 23** capitalised borrowing cost |
+| Site accommodation lease | **IFRS 16** right-of-use asset |
+| Cost to date including accruals | The cut-off the accounts depend on |
+
+> **Every row is one event described twice.** A professional fluent in only one column is guessing at the other — and boards ask questions in both.
+
+## The onerous contract test
+
+**WHERE A FORECAST BECOMES A LOSS**
+
+When `EAC` exceeds the contract value, the delivery language calls it a negative `VAC`.
+
+The accounting language calls it an **onerous contract** under IAS 37 — and requires the entire expected loss to be recognised **immediately**, not spread over the remaining programme.
+
+> **This is the highest-stakes translation in the discipline.** A controls professional who reports a deteriorating EAC without knowing it triggers an immediate provision has told the board half of the news. The half they left out is the half that hits this period's results.
+
+# IV | Reference
+
+## Standards named in this credential
+
+**AT PRINCIPLE LEVEL, NEVER REPRODUCED**
+
+| Standard | Governs | Domains |
+|---|---|---|
+| **IFRS 15** | Revenue from contracts with customers | 2.2, 2.3, 7.5, 9.5 |
+| **IAS 37** | Provisions, contingent liabilities, onerous contracts | 1.4, 2.2, 2.4 |
+| **IAS 16** | Property, plant and equipment | 1.3, 2.4 |
+| **IAS 23** | Borrowing costs | 2.4 |
+| **IAS 2** | Inventories | 2.4 |
+| **IFRS 16** | Leases | 2.4 |
+| **IAS 1** | Presentation of financial statements | 1.2, 2.1 |
+| **IAS 11** *(legacy)* | Construction contracts — superseded by IFRS 15 | 2.4 |
+| **ISO 31000** | Risk management | 12 |
+| **AACE TCM** | Total cost management, estimate classes | 3.2 |
+| **PMBOK Guide** | Process groups and practices | 8 |
 
 ## The ten that cost the most
 
 **MOST MISAPPLIED · 1–5**
 
-1. `CPI` computed on invoiced cost, with no accrual
+1. `CPI` computed on invoiced cost, with no accrual booked
 2. `SV` read as a schedule measure late in a project
 3. A single `EAC` presented as *the* forecast
-4. `TCPI` never set beside the `CPI` achieved
-5. Percentage complete supplied by the measured party
+4. A deteriorating `EAC` reported without the **IAS 37** onerous-contract consequence
+5. Percentage complete supplied by the party being measured
 
 ## And the other five
 
 **MOST MISAPPLIED · 6–10**
 
-6. Standard deviations summed along a schedule path
-7. `EMV` applied to a single binary event
-8. Contingency set as a percentage of budget
-9. Crashing an activity that is not on the critical path
+6. `PoC` computed with uninstalled materials in the numerator
+7. Cumulative revenue booked without deducting what was already recognised
+8. Contingency set as a percentage instead of quantified exposure
+9. Standard deviations summed along a schedule path
 10. Management reserve folded inside `BAC`
 
-> **Every one of these produces a report that passes review.** That is precisely why they are the expensive ones.
+> **Note how the list divides.** Five are delivery errors, five are accounting errors, and every one of them lands on the same project. That division is the argument for this credential in a single slide.
 
-## The Body of Knowledge is open
+## Learn both. Nobody else teaches both.
 
 **PCI AI · PROJECT CONTROLS INSTITUTE GLOBAL**
 
-Every formula here is developed to full handbook depth in the PCL-AI Body of Knowledge — thirteen domains, sixty-one Knowledge Areas, with worked examples, figures and self-check exercises at the KA cited on each slide.
+Accountancy teaches the accounts. Engineering teaches delivery. The **PCI AI Project Controls Leader** teaches the two together, because a capital project is measured in both and reconciled by whoever can speak them.
 
-Published openly. **No registration, no email gate.**
+Thirteen domains, sixty-one Knowledge Areas, weighted 40% finance, 40% delivery, 20% governed AI. The Body of Knowledge is published openly — **no registration, no email gate**.
 
 **projectcontrolsinstitute.org**

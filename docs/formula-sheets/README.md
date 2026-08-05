@@ -18,14 +18,27 @@ it attracts. Checks are stated as properties a reader applies to their own numbe
 starts must equal total float from the finishes") rather than as figures to read through. Worked
 arithmetic lives in the reference edition.
 
+**The PCL-AI deck leads on the positioning, because the positioning is the product.** A chartered
+accountant knows IFRS 15, IAS 37 and IAS 23 but cannot build a schedule; a planning engineer knows
+earned value and critical path but cannot say when revenue becomes recognisable. Every capital project is
+measured in both languages and reconciled by neither profession. The deck is built in four parts —
+*the language of the accounts*, *the language of delivery*, *where the two meet*, and *reference* — so the
+40/40/20 weighting is argued rather than asserted. Part III is the material that exists nowhere else: the
+accrual as the shared node, the translation table between delivery events and their accounting
+consequences, and the onerous-contract test where a deteriorating EAC becomes an immediate IAS 37 loss.
+
 The PML-AI deck's section 04, **the governance arithmetic**, is original to the PML-AI Body of Knowledge
 — decision latency, gate net value, committee capacity, interface topology, the hundred-per-cent rule,
-assessed total impact and baseline drift. It is the most distinctive material in the set because no other
-body publishes it.
+assessed total impact and baseline drift. No other body publishes it.
+
+**Presentation follows the curriculum bodies.** Every table is a numbered **Exhibit**, sections are
+numbered parts with full-bleed dividers, standards are cited by number and full title at principle level
+and never reproduced, and each formula carries the Knowledge Area that develops it. Long tables tighten
+automatically by row count rather than overflowing a fixed-height slide.
 
 | Deck | Credential | Slides | PDF |
 |---|---|---|---|
-| [Project Controls Formulas](linkedin/01-pcl-ai-linkedin.md) | PCL-AI | 31 | `/downloads/pci-pcl-ai-formula-sheet-linkedin.pdf` |
+| [Two Languages, One Project](linkedin/01-pcl-ai-linkedin.md) | PCL-AI | 36 | `/downloads/pci-pcl-ai-formula-sheet-linkedin.pdf` |
 | [Project Finance Formulas](linkedin/02-pfl-ai-linkedin.md) | PFL-AI | 27 | `/downloads/pci-pfl-ai-formula-sheet-linkedin.pdf` |
 | [Project Management Formulas](linkedin/03-pml-ai-linkedin.md) | PML-AI | 32 | `/downloads/pci-pml-ai-formula-sheet-linkedin.pdf` |
 

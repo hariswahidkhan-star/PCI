@@ -124,7 +124,7 @@ def build(src: pathlib.Path) -> int:
     blocks = tokenise("\n".join(lines[start:]))
     md = markdown.Markdown(extensions=["tables", "sane_lists"], output_format="html5")
 
-    parts, slide_no = [], 0
+    parts, slide_no, exhibit_no = [], 0, 0
     for i, (kind, head, content) in enumerate(blocks):
         last = i == len(blocks) - 1
 
@@ -149,6 +149,23 @@ def build(src: pathlib.Path) -> int:
             )
             parts.append(CLOSING.format(heading=head, body=html, year=year))
             continue
+
+        # Number every table as an exhibit, the way a curriculum body does, and tag it with
+        # its row count so the stylesheet can tighten a long one rather than overflow the slide.
+        def label(m):
+            nonlocal exhibit_no
+            exhibit_no += 1
+            rows = m.group(0).count("<tr>") - 1          # less the header row
+            cols = m.group(0).split("</tr>")[0].count("<th>")
+            klass = "dense" if rows > 5 else ""
+            if rows > 8:
+                klass = "verydense"
+            if cols == 2:
+                klass += " pair"
+            return (f'<div class="exhibit">Exhibit {exhibit_no}</div>'
+                    f'<table class="{klass.strip()}">' + m.group(0)[len("<table>"):])
+
+        html = re.sub(r"<table>.*?</table>", label, html, flags=re.DOTALL)
 
         eyebrow = ""
         m = re.match(r"\s*<p><strong>(.*?)</strong></p>", html, re.DOTALL)
