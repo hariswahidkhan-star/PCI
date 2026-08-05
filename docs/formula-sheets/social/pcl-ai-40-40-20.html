@@ -1,0 +1,120 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:'Archivo';src:url('/backend/wwwroot/assets/fonts/archivo-latin.woff2') format('woff2');font-weight:700 900}
+@font-face{font-family:'Inter';src:url('/backend/wwwroot/assets/fonts/inter-latin.woff2') format('woff2');font-weight:400 700}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#0D2170}
+body{font-family:'Inter',sans-serif;color:#fff;overflow:hidden}
+
+.card{
+  position:relative;width:100vw;height:100vh;padding:5.8vh 84px 5.5vh;
+  background:
+    radial-gradient(120% 80% at 85% -10%, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 55%),
+    linear-gradient(168deg,#2E60E8 0%,#1D4ED8 38%,#15379F 82%,#0D2170 100%);
+  display:flex;flex-direction:column;
+}
+/* faint engineering grid, for depth */
+.card::before{
+  content:"";position:absolute;inset:0;opacity:.14;
+  background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:90px 90px;
+  -webkit-mask-image:radial-gradient(85% 65% at 50% 30%,#000 0%,transparent 78%);
+          mask-image:radial-gradient(85% 65% at 50% 30%,#000 0%,transparent 78%);
+}
+.card>*{position:relative;z-index:1}
+
+.lockup{display:flex;align-items:center;margin-bottom:54px}
+.lockup img{width:74px;height:74px}
+.lockup .w{font-family:'Archivo';font-weight:900;font-size:40px;letter-spacing:-.02em;margin-left:19px}
+.lockup .o{font-size:19px;line-height:1.25;margin-left:19px;padding-left:19px;
+  border-left:2px solid rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
+
+.eyebrow{font-size:21px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.72);margin-bottom:22px}
+
+.hero{font-family:'Archivo';font-weight:900;font-size:152px;line-height:.88;
+  letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin-bottom:20px}
+.hero .sep{font-family:'Inter',sans-serif;font-weight:700;color:rgba(255,255,255,.4);
+  font-size:.26em;vertical-align:.62em;letter-spacing:.06em;margin:0 .06em}
+
+.head{font-family:'Archivo';font-weight:900;font-size:56px;line-height:1.04;
+  letter-spacing:-.03em;margin-bottom:38px}
+.dot{color:#FF5A4D}
+
+/* the proportional bar — the point of the whole graphic */
+.bar{display:flex;height:82px;border-radius:10px;overflow:hidden;
+  box-shadow:0 18px 44px rgba(6,20,70,.34)}
+.seg{display:flex;align-items:center;justify-content:center;
+  font-family:'Archivo';font-weight:900;font-size:34px;letter-spacing:-.01em}
+.s1{width:40%;background:#FFFFFF;color:#12309A}
+.s2{width:40%;background:#8FAEF5;color:#0E2570}
+.s3{width:20%;background:#C13329;color:#FFFFFF}
+.barkey{display:flex;margin:15px 0 34px;font-size:19px;letter-spacing:.14em;
+  text-transform:uppercase;font-weight:700;color:rgba(255,255,255,.7)}
+.barkey span:nth-child(1){width:40%}
+.barkey span:nth-child(2){width:40%}
+.barkey span:nth-child(3){width:20%}
+
+.rows{flex:0 0 auto}
+.row{display:flex;gap:24px;padding:20px 0;border-top:2px solid rgba(255,255,255,.2)}
+.row:last-child{border-bottom:2px solid rgba(255,255,255,.2)}
+.chip{width:16px;height:16px;border-radius:4px;margin-top:11px;flex:none}
+.c1{background:#FFFFFF}.c2{background:#8FAEF5}.c3{background:#C13329}
+.rt{flex:1}
+.rt b{display:block;font-family:'Archivo';font-weight:900;font-size:31px;
+  letter-spacing:-.018em;margin-bottom:7px}
+.rt p{font-size:23px;line-height:1.34;color:rgba(255,255,255,.78)}
+.pc{font-family:'Archivo';font-weight:900;font-size:36px;width:96px;text-align:right;
+  font-variant-numeric:tabular-nums;flex:none}
+
+.foot{display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:auto;padding-top:26px;font-size:21px;color:rgba(255,255,255,.72)}
+.foot b{font-family:'Archivo';font-weight:900;color:#fff;font-size:23px;letter-spacing:-.01em}
+</style></head><body>
+<div class="card">
+
+  <div class="lockup">
+    <img src="/backend/wwwroot/assets/logo.svg" alt="">
+    <span class="w">PCI AI</span>
+    <span class="o">Project Controls<br>Institute Global, Inc.</span>
+  </div>
+
+  <div class="eyebrow">What PCL-AI certifies</div>
+  <div class="hero">40<span class="sep">·</span>40<span class="sep">·</span>20</div>
+  <div class="head">The weighting is the argument<span class="dot">.</span></div>
+
+  <div class="bar">
+    <div class="seg s1">40%</div>
+    <div class="seg s2">40%</div>
+    <div class="seg s3">20%</div>
+  </div>
+  <div class="barkey"><span>Accounting</span><span>Delivery</span><span>AI</span></div>
+
+  <div class="rows">
+    <div class="row">
+      <span class="chip c1"></span>
+      <span class="rt"><b>Financial reporting &amp; accounting</b>
+        <p>IFRS 15 · IAS 37 · IAS 23 · IAS 16 · IAS 2 · IFRS 16 · IAS 1</p></span>
+      <span class="pc">40%</span>
+    </div>
+    <div class="row">
+      <span class="chip c2"></span>
+      <span class="rt"><b>Project management &amp; controls</b>
+        <p>Budgeting · earned value · forecasting · scheduling · risk · commercial</p></span>
+      <span class="pc">40%</span>
+    </div>
+    <div class="row">
+      <span class="chip c3"></span>
+      <span class="rt"><b>AI for project controls</b>
+        <p>Governed use — the professional remains accountable</p></span>
+      <span class="pc">20%</span>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Thirteen domains · Sixty-one Knowledge Areas</span>
+    <b>projectcontrolsinstitute.org</b>
+  </div>
+
+</div></body></html>
