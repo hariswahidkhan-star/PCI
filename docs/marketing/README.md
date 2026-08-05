@@ -9,6 +9,8 @@ Knowledge (PCL-AI, PFL-AI, PML-AI) and the PCI Standards that sit behind them.
 |---|---|
 | `assets/PCI-Overview-Onepager.pdf` | One-page A4 overview of the suite. The leave-behind: hand it to someone who asked "what is this?" and it answers without a call. |
 | `assets/carousel-*.pdf` | Six 8-slide LinkedIn document posts, 1080 pt square. Upload as a *document* post, not an image. |
+| `course-outline-pcl-ai.md` | The PCL-AI syllabus: a short lead-in post for the feed, and the full outline for a LinkedIn Article. |
+| `assets/PCI-PCL-AI-Course-Outline.pdf` | The same outline as a 3-page A4 document post, rendered from that file so the two cannot drift. |
 | `linkedin-launch-20-posts.md` | Twenty copy-paste text posts in the Institute's voice. |
 | `pci-linkedin-launch-pack.pdf` | The twenty posts, typeset for reading offline. |
 | `build_assets.py` | Builds everything under `assets/`. |
@@ -62,6 +64,12 @@ drift — re-verify before a launch push.
 rest on sampled independent recomputation. `CALCULATION_ASSURANCE.md` §4 states that the two
 positions must never be quoted as one number, so every asset that prints 15,613 names the two volumes
 it covers in the same breath. Do not drop that scoping to make the line shorter.
+
+**No examination weighting appears anywhere.** The course outline states 40/40/20 as the *Body of
+Knowledge's* proportion, which is what the volume's own part dividers say. That is not an
+examination weighting, and the examination blueprint records its weighting as an open decision — so
+no exam percentage is published and none should be added. The honest answer to the question is that
+the syllabus is settled and the examination weighting is not yet.
 
 **Worked-example and question counts are deliberately absent.** Earlier drafts printed per-volume
 totals that could not be reproduced from the manuscripts by any consistent counting method. Rather

@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
-"""Build the shareable marketing assets: an A4 one-page overview and LinkedIn carousels.
+"""Build the shareable marketing assets: an A4 one-page overview, LinkedIn carousels, and the
+PCL-AI course outline as a document post.
 
-Both are set in the publication design system — the same Libertine superfamily, the same green,
-the same restraint — so a reader who meets a carousel and later opens a volume is not meeting two
-different organisations.
+All of them are set in the publication design system — the same Libertine superfamily, the same
+green, the same restraint — so a reader who meets a carousel and later opens a volume is not meeting
+two different organisations.
 
-Carousels are square (1080 pt) because that is what LinkedIn document posts display well.
+Carousels are square (1080 pt) because that is what LinkedIn document posts display well. The course
+outline is A4: it is read, not swiped.
+
+The outline is rendered from `course-outline-pcl-ai.md` rather than duplicated here, so the text
+someone pastes into an Article and the text in the PDF cannot drift apart.
 
 Usage:  python3 build_assets.py
 """
+import html
 import pathlib
+import re
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -363,12 +370,151 @@ CAROUSELS = {
 }
 
 
+# ---------------------------------------------------------------- course outline
+
+OUTLINE_CSS = f"""
+{BASE}
+  @page {{ size: A4; margin: 20mm 22mm 16mm 22mm;
+           @bottom-center {{ content: counter(page); font-family: "Linux Biolinum O", sans-serif;
+                             font-size: 8pt; color: {MUTED}; }} }}
+  @page :first {{ @bottom-center {{ content: none; }} }}
+  body {{ font-size: 10pt; line-height: 1.5; }}
+  /* Hyphenation off on the title: the credential code is the one string that must never break, and
+     "PCL-AI" split across two lines reads as two different things. */
+  h1 {{ font-family: "Linux Libertine Display O", serif; font-size: 25pt; color: {GREEN};
+        font-weight: normal; line-height: 1.12; margin: 2mm 0 3mm 0; hyphens: none; }}
+  .lede {{ font-size: 11pt; color: {MUTED}; margin-bottom: 5mm; }}
+  .counts {{ font-family: "Linux Biolinum O", sans-serif; font-variant-caps: small-caps;
+             font-feature-settings: "smcp" 1, "onum" 1; letter-spacing: .1em; font-size: 10pt;
+             color: {GREEN}; border-top: 2pt solid {GREEN}; border-bottom: 1pt solid {RULE};
+             padding: 2.5mm 0; margin-bottom: 6mm; }}
+  /* A part opener may not be the last thing on a page: a heading stranded above its first domain
+     reads as a mistake, and on a two-page document post it is the first thing anyone notices. */
+  h2 {{ font-family: "Linux Libertine Display O", serif; font-size: 15pt; color: {GREEN};
+        font-weight: normal; margin: 7mm 0 1mm 0; page-break-after: avoid; }}
+  .partnote {{ font-size: 9pt; color: {MUTED}; font-style: italic; margin-bottom: 3.5mm;
+               page-break-after: avoid; }}
+  h3 {{ font-family: "Linux Biolinum O", sans-serif; font-size: 10.2pt; font-weight: 600;
+        color: {INK}; margin: 4.5mm 0 1mm 0; page-break-after: avoid; }}
+  h3 .ka {{ font-weight: normal; color: {MUTED}; font-feature-settings: "onum" 1; }}
+  .kas {{ font-size: 9.2pt; color: {INK}; margin: 0 0 1.5mm 0; }}
+  .why {{ font-size: 9.2pt; color: {MUTED}; font-style: italic; margin: 0 0 1mm 0;
+          padding-left: 4mm; border-left: 1pt solid {RULE}; }}
+  /* A domain is one unit: its heading, its knowledge areas and the line explaining why it is there
+     travel together. Splitting them strands a note at the top of a page with nothing above it to
+     say which domain it belongs to. */
+  .dom {{ page-break-inside: avoid; }}
+  .behind {{ background: {TINT}; border-left: 2pt solid {GREEN}; padding: 4mm 5mm;
+             margin-top: 7mm; font-size: 9.2pt; }}
+  .behind h2 {{ font-size: 12pt; margin: 0 0 2mm 0; }}
+  .principle {{ font-style: italic; color: {GREEN}; font-size: 10.5pt; margin-top: 3mm; }}
+  .foot {{ margin-top: 6mm; border-top: 1pt solid {RULE}; padding-top: 2.5mm;
+           font-family: "Linux Biolinum O", sans-serif; font-size: 8pt; color: {MUTED}; }}
+"""
+
+
+def _inline(s: str) -> str:
+    """Markdown bold/italic to HTML, everything else escaped."""
+    s = html.escape(s.strip())
+    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
+    return re.sub(r"\*(.+?)\*", r"<em>\1</em>", s)
+
+
+def outline_html() -> str:
+    """Render the outline section of course-outline-pcl-ai.md as the document post.
+
+    Only the part after "## 2 — The outline" is used: everything above it is publishing instructions
+    for whoever posts, not content for the reader.
+    """
+    md = (HERE / "course-outline-pcl-ai.md").read_text(encoding="utf-8")
+    body = md.split("## 2 — The outline", 1)[1]
+    body = body.split("*Project Controls Institute Global")[0]
+
+    # Paragraph-fold: the source hard-wraps, so runs of lines join into one logical block. But the
+    # source also puts a heading, its domain line, its knowledge areas and its note on consecutive
+    # lines with no blank between them, so a blank line alone is not enough to tell blocks apart —
+    # these markers each begin a new one, and a heading or domain line is always a block by itself.
+    STARTS = (re.compile(r"^#{1,6} "), re.compile(r"^\*\*"), re.compile(r"^\*[^*]"))
+    SOLO = re.compile(r"^(#{1,6} |\*\*Domain )")
+    blocks, buf = [], []
+
+    def flush():
+        if buf:
+            blocks.append(" ".join(buf))
+            buf.clear()
+
+    for line in body.splitlines():
+        s = line.strip()
+        if s in ("", "---"):
+            flush()
+            continue
+        if any(p.match(s) for p in STARTS):
+            flush()
+        buf.append(s)
+        if SOLO.match(s):
+            flush()
+    flush()
+
+    PRINCIPLE = "AI proposes"
+    out = []
+    in_dom = False
+
+    def close_dom():
+        nonlocal in_dom
+        if in_dom:
+            out.append("</div>")
+            in_dom = False
+
+    for b in blocks:
+        # A new domain, a new part or the standing note all end the domain currently open.
+        if b.startswith(("**Domain ", "#", "### What sits behind")):
+            close_dom()
+        if b.startswith("### What sits behind"):
+            # The standing note opens its own boxed section, so it is an h2 inside .behind rather
+            # than a second document title.
+            out.append(f"<div class='behind'><h2>{_inline(b[4:])}</h2>")
+        elif b.startswith("### "):
+            out.append(f"<h1>{_inline(b[4:])}</h1>")
+        elif b.startswith("#### "):
+            out.append(f"<h2>{_inline(b[5:])}</h2>")
+        elif b.strip("* ").startswith(PRINCIPLE):
+            out.append(f"<p class='principle'>{_inline(b.strip('* '))}</p>")
+        elif b.startswith("**Domain "):
+            # "**Domain 1 · Title** — 5 knowledge areas"
+            m = re.match(r"\*\*(.+?)\*\*\s*—\s*(.+)", b)
+            out.append("<div class='dom'>")
+            in_dom = True
+            out.append(f"<h3>{_inline(m.group(1))} <span class='ka'>— {_inline(m.group(2))}</span></h3>")
+        elif b.startswith("*") and b.endswith("*") and not b.startswith("**"):
+            cls = "partnote" if "per cent of the Body of Knowledge" in b else "why"
+            out.append(f"<p class='{cls}'>{_inline(b.strip('*'))}</p>")
+        elif b.startswith("**13 domains"):
+            out.append(f"<div class='counts'>{_inline(b)}</div>")
+        elif b.startswith("### What sits behind") or b.startswith("What sits behind"):
+            out.append(f"<h2>{_inline(b.lstrip('# '))}</h2>")
+        elif "·" in b and not b.startswith("**") and len(b) > 60:
+            out.append(f"<p class='kas'>{_inline(b)}</p>")
+        else:
+            out.append(f"<p>{_inline(b)}</p>")
+
+    close_dom()
+    doc = "".join(out)
+    # The .behind box was opened at the standing-note heading; close it and sign off.
+    doc += ("</div><div class='foot'>Project Controls Institute Global · "
+            "projectcontrolsinstitute.org</div>")
+    return f"<style>{OUTLINE_CSS}</style>{doc}"
+
+
 def main() -> None:
     OUT.mkdir(exist_ok=True)
     from weasyprint import HTML
 
     HTML(string=ONEPAGER).write_pdf(str(OUT / "PCI-Overview-Onepager.pdf"))
     print("built: PCI-Overview-Onepager.pdf")
+
+    path = OUT / "PCI-PCL-AI-Course-Outline.pdf"
+    HTML(string=outline_html(), base_url=str(HERE)).write_pdf(str(path))
+    print(f"built: {path.name}")
 
     for name, slides in CAROUSELS.items():
         doc = f"<style>{CAROUSEL_CSS}</style>" + "".join(slides)
