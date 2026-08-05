@@ -97,26 +97,39 @@ Any change to a formula or a worked figure must be re-verified numerically befor
 
 Both editions use the platform's own design system, not a bespoke one:
 
-The palette is taken from **the mark itself**, `backend/wwwroot/assets/logo.svg` — not from a CSS
-variable name. The logo is a navy shield carrying a white `PCI` wordmark, a gold `AI`, and a crimson rule
-beneath the wordmark. That crimson rule is the brand's signature gesture and it is the design motif of
-both editions: it is the hairline at the head of every content slide and the bar under every cover title.
+The palette is **sampled from the rendered site**, not read off variable names or guessed from the
+logo file. Serve `backend/wwwroot`, screenshot `index.html` with the bundled Chromium, and sample the
+pixels — that is the only method that has produced the right answer:
 
-| Token | Value | Source |
+```bash
+python3 -m http.server 8899 --directory backend/wwwroot &
+/opt/pw-browsers/chromium-1194/chrome-linux/chrome --headless --no-sandbox \
+  --window-size=1440,1600 --screenshot=site.png http://localhost:8899/index.html
+```
+
+| Token | Value | Where it appears on the site |
 |---|---|---|
-| Display type | **Archivo** 700–900 | `assets/fonts/`, self-hosted woff2 |
-| Body type | **Inter** 400–700 | same |
-| Navy field | `#1D3C92` → `#13245A` | logo shield gradient |
-| **Crimson** | `#C13329` | logo rule; `--crimson` in `assets/styles.css` |
-| Gold | `#F7EABC` → `#E7CB82` → `#B8923E` | logo "AI" gradient |
-| Ink / surfaces | `#0F172A`, `#F1F5F9`, `#E3E8EF` | `--ink`, `--paper-2`, `--line` |
+| Display type | **Archivo** 700–900 | every heading |
+| Body type | **Inter** 400–700 | body, navigation |
+| **Primary blue** | `#1D4ED8` | the `PCI AI` wordmark, buttons, links, emphasised text |
+| **Crimson** | `#C13329` | *sparingly* — the full-stop dot after a headline, the chat bubble |
+| Ink | `#0F172A` | headings, the top bar |
+| Ground | `#FFFFFF` | the site is light, and so are the decks |
+| Logo navy | `#1D3C92` → `#13245A` | the shield tile only |
 
-Crimson is the accent — eyebrows, rules, the edge of every note card. Gold is reserved for section
-numerals, Knowledge-Area references and emphasis inside note cards. Navy carries structure.
+**The mark is embedded**, not approximated: `assets/logo.svg` is inlined as a data URI and appears as the
+full lockup (tile + `PCI AI` + institution line) on the cover, every section divider and the closing
+slide, and as a small tile in every content footer.
 
-> **A trap worth recording.** `--red` in `assets/styles.css` holds `#1D4ED8`, a blue — the variable kept
-> its name through a palette change. Reading the variable name instead of the mark produces an entirely
-> blue document with no red and no gold in it. Take the palette from `logo.svg`.
+**The signature gesture is the crimson dot** closing a headline — the site does it on its hero
+("…control projects.") and the decks do it on dividers and the closing slide. Crimson is punctuation
+here, never a field or a rule.
+
+> **Two traps worth recording, both of which caught me.** First, `--red` in `assets/styles.css` holds
+> `#1D4ED8`, a blue — the variable kept its name through a palette change, so reading the name gives the
+> wrong colour with total confidence. Second, `logo.svg` alone is also misleading: the mark is a navy
+> tile with gold lettering, but the *site* is light with blue as its primary and gold nowhere in the UI.
+> Sample the rendered page.
 
 Fonts are loaded from the repo by `@font-face`, so a build needs no network access and the PDFs carry the
 same typefaces as the website.

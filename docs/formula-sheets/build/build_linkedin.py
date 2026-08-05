@@ -28,11 +28,22 @@ import sys
 import markdown
 from weasyprint import CSS, HTML
 
+import base64
+
 HERE = pathlib.Path(__file__).resolve().parent
 SRC = HERE.parent / "linkedin"
 ROOT = HERE.parent.parent.parent
 CSS_FILE = HERE / "linkedin.css"
 OUT = ROOT / "backend" / "wwwroot" / "downloads"
+
+# The site's own mark, embedded so the PDF is self-contained.
+LOGO_SVG = ROOT / "backend" / "wwwroot" / "assets" / "logo.svg"
+LOGO = "data:image/svg+xml;base64," + base64.b64encode(LOGO_SVG.read_bytes()).decode()
+
+def lockup(org: bool = True) -> str:
+    org_html = ('<span class="org">Project Controls<br/>Institute Global, Inc.</span>' if org else "")
+    return (f'<div class="lockup"><img src="{LOGO}" alt="PCI AI"/>'
+            f'<span class="word">PCI AI</span>{org_html}</div>')
 
 GLYPHS = {
     "pcl": "CPI · SPI · EAC · TCPI · ES · TF · EMV · CCC",
@@ -41,15 +52,16 @@ GLYPHS = {
 }
 
 COVER = """
-<div class="cover">
+<div class="cover ondark">
+  {lockup}
   <div class="series">PCI AI · Formula Sheet</div>
   <h1>{title}</h1>
   <div class="rule"></div>
   <div class="subtitle">{subtitle}</div>
   <div class="glyphs">{glyphs}</div>
   <div class="imprint">
-    <strong>PROJECT CONTROLS INSTITUTE GLOBAL</strong>
-    First edition · {year} · AI proposes. The professional disposes.
+    Project Controls Institute Global, Inc. · First edition {year}<br/>
+    AI proposes. The professional disposes.
   </div>
 </div>
 """
@@ -57,16 +69,16 @@ COVER = """
 DIVIDER = """
 <div class="divider">
   <div class="num">{num}</div>
-  <h2>{name}</h2>
-  <div class="rule"></div>
+  <h2>{name}<span class="dot">.</span></h2>
   {standfirst}
+  {lockup}
 </div>
 """
 
 CLOSING = """
-<div class="closing">
-  <h2>{heading}</h2>
-  <div class="rule"></div>
+<div class="closing ondark">
+  {lockup}
+  <h2>{heading}<span class="dot">.</span></h2>
   {body}
   <div class="imprint">
     Educational publication. PCI is not accredited by ANAB, IAS or any ISO/IEC 17024 body.
@@ -134,7 +146,7 @@ def build(src: pathlib.Path) -> int:
             standfirst = md.convert(content.strip()) if content.strip() else ""
             parts.append(
                 DIVIDER.format(num=num.strip(), name=name.strip() or num.strip(),
-                               standfirst=standfirst)
+                               standfirst=standfirst, lockup=lockup())
             )
             continue
 
@@ -147,7 +159,7 @@ def build(src: pathlib.Path) -> int:
                 "<p><strong>projectcontrolsinstitute.org</strong></p>",
                 '<div class="url">projectcontrolsinstitute.org</div>',
             )
-            parts.append(CLOSING.format(heading=head, body=html, year=year))
+            parts.append(CLOSING.format(heading=head, body=html, year=year, lockup=lockup()))
             continue
 
         # Number every table as an exhibit, the way a curriculum body does, and tag it with
@@ -176,13 +188,14 @@ def build(src: pathlib.Path) -> int:
         slide_no += 1
         parts.append(
             f'<div class="slide">{eyebrow}<h2>{head}</h2><div class="titlerule"></div>{html}'
-            f'<div class="foot"><span>{credential} Formula Sheet</span>'
-            f'<span class="n">{slide_no:02d}</span></div></div>'
+            f'<div class="foot"><span class="n">{slide_no:02d}</span>'
+            f'<img src="{LOGO}" alt=""/>{credential} Formula Sheet</div></div>'
         )
 
     html_doc = (
         f"<!doctype html><html><head><meta charset='utf-8'><title>{title}</title></head><body>"
-        + COVER.format(title=title, subtitle=subtitle, glyphs=GLYPHS.get(key, ""), year=year)
+        + COVER.format(title=title, subtitle=subtitle, glyphs=GLYPHS.get(key, ""),
+                     year=year, lockup=lockup())
         + "".join(parts)
         + "</body></html>"
     )
