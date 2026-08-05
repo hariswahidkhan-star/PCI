@@ -31,9 +31,13 @@ public static class Books
                 docId, userId, copyId, result, ip);
 
         // Raise the request-body cap for this one admin upload route (the global cap stays tight).
-        // Without it the global 6 MB Kestrel limit rejects the request before the handler runs, so a
-        // book over ~4.4 MB decoded answers 413 and DocStore's 25 MiB allowance is unreachable — which
-        // is every Body of Knowledge this module exists to carry.
+        // Without it the global 6 MB Kestrel limit stops the body read for anything over ~4.4 MB
+        // decoded, which is every Body of Knowledge this module exists to carry, and DocStore's 25 MiB
+        // allowance is unreachable.
+        //
+        // The failure does not present as a 413. H.BodyEl catches the read exception and returns an
+        // empty map, so the handler runs on an empty body and answers 400 `no_file` — an admin who
+        // just attached a 1,000-page book is told there was no file. Verified by reproduction.
         //
         // Raised inside the gate, not before it as Documents.cs does: GateFn only reads the
         // Authorization header, so the cap is still lifted before H.Body ever touches the stream, and
@@ -65,11 +69,33 @@ public static class Books
             }
             else
             {
-                var certId = Certs.TryResolve(db, H.GetS(b, "certification_id", "certification"));
-                if (H.GetS(b, "certification_id", "certification") is { Length: > 0 } && certId is null)
-                    return Results.Json(new { error = "bad_certification" }, statusCode: 400);
-                if (certId is not null && !adm.CanCert(certId.Value))
-                    return Results.Json(new { error = "certification_forbidden" }, statusCode: 403);
+                // A NULL certification_id means "every certification": /api/me/cert-documents matches
+                // `d.certification_id IS NULL OR d.certification_id IN (…enrolled…)`, so such a row
+                // reaches every candidate. Certs.TryResolve folds a missing value to the founding
+                // certification, which is right for a book about one credential but wrong for one that
+                // governs all of them — the Standards volume would reach PCL-AI candidates only. An
+                // explicit "all" asks for the cross-credential row; omitting the field keeps the old
+                // default, so nothing that used to work changes.
+                var certRaw = H.GetS(b, "certification_id", "certification");
+                var wantsAll = string.Equals(certRaw, "all", StringComparison.OrdinalIgnoreCase);
+                long? certId;
+                if (wantsAll)
+                {
+                    // Publishing to every certification is only for an admin who is not scoped to a
+                    // subset of them. CanCert(null) reads a null as the founding certification, so it
+                    // would wave through an admin scoped to that one alone.
+                    if (adm.CertScope is not null)
+                        return Results.Json(new { error = "certification_forbidden" }, statusCode: 403);
+                    certId = null;
+                }
+                else
+                {
+                    certId = Certs.TryResolve(db, certRaw);
+                    if (certRaw is { Length: > 0 } && certId is null)
+                        return Results.Json(new { error = "bad_certification" }, statusCode: 400);
+                    if (certId is not null && !adm.CanCert(certId.Value))
+                        return Results.Json(new { error = "certification_forbidden" }, statusCode: 403);
+                }
                 var title = (H.GetS(b, "title") ?? "").Trim();
                 if (title.Length == 0) return Results.Json(new { error = "title_required" }, statusCode: 400);
                 id = db.ExecuteReturningId(@"INSERT INTO cert_documents(certification_id,kind,title,description,route_key,watermark,published,sort_order)

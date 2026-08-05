@@ -33,11 +33,16 @@ import urllib.request
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 
 # certification codes resolve server-side via Certs.TryResolve; ids 1/2/3 on a seeded install.
+# `kind` is "bok" for the three volumes, matching the rows a fresh install already seeds — a
+# migration seeds one Body of Knowledge per certification, two of them carrying an early, much
+# smaller file. Uploading under a different kind or title would leave those seeded rows in place and
+# students would see two Bodies of Knowledge per credential, one of them stale. See adopt().
 VOLUMES = {
     "pcl": {
         "path": ROOT / "docs/bok/build/pcl-ai-bok.pdf",
         "certification_id": "PCL-AI",
-        "title": "PCL-AI Body of Knowledge",
+        "kind": "bok",
+        "title": "PCI PCL-AI Body of Knowledge",
         "filename": "PCI-PCL-AI-Body-of-Knowledge.pdf",
         "description": "The complete Body of Knowledge for the PCI AI Project Controls Leader "
                        "credential: 13 domains, 61 knowledge areas.",
@@ -45,7 +50,8 @@ VOLUMES = {
     "pfl": {
         "path": ROOT / "docs/books/pfl-ai/build/pfl-ai-bok-draft.pdf",
         "certification_id": "PFL-AI",
-        "title": "PFL-AI Body of Knowledge",
+        "kind": "bok",
+        "title": "PCI PFL-AI Body of Knowledge",
         "filename": "PCI-PFL-AI-Body-of-Knowledge.pdf",
         "description": "The complete Body of Knowledge for the PCI AI Project Finance Leader "
                        "credential: 16 domains, 61 knowledge areas.",
@@ -53,22 +59,29 @@ VOLUMES = {
     "pml": {
         "path": ROOT / "docs/books/pml-ai/build/pml-ai-bok-draft.pdf",
         "certification_id": "PML-AI",
-        "title": "PML-AI Body of Knowledge",
+        "kind": "bok",
+        "title": "PCI PML-AI Body of Knowledge",
         "filename": "PCI-PML-AI-Body-of-Knowledge.pdf",
         "description": "The complete Body of Knowledge for the PCI Project Management Leader – AI "
                        "credential: 16 domains, 63 knowledge areas.",
     },
-    # The Standards volume governs all three credentials, so it carries no certification of its own.
-    # Certs.TryResolve maps an empty certification to the default; passing none keeps the row general.
+    # The Standards volume governs all three credentials, so it belongs to none of them. "all" stores
+    # a NULL certification_id, which /api/me/cert-documents matches for every candidate. Omitting the
+    # field instead would fold it onto the founding certification and hide it from PFL-AI and PML-AI.
+    # Nothing seeds it, so this one is genuinely new.
     "standards": {
         "path": ROOT / "docs/books/laws/PCI-Standards.pdf",
-        "certification_id": None,
+        "certification_id": "all",
+        "kind": "book",
         "title": "PCI Standards",
         "filename": "PCI-Standards.pdf",
         "description": "The 113 mandatory PCI Standards and their 532 process requirements, with "
                        "the Charter and Drafting Manual that govern them.",
     },
 }
+
+# Certification code → id, for matching the seeded rows. Fixed by the migration in Data/MultiCert.cs.
+CERT_IDS = {"PCL-AI": 1, "PFL-AI": 2, "PML-AI": 3}
 
 # Kestrel's per-request ceiling on the upload route, and DocStore's decoded-bytes cap. Checked here
 # so an oversized volume fails with a sentence instead of a bare 413 after a long upload.
@@ -120,6 +133,36 @@ def login(base: str, email: str, password: str) -> str:
     return token
 
 
+def get(url: str, token: str) -> dict:
+    req = urllib.request.Request(url)
+    req.add_header("Authorization", f"Bearer {token}")
+    try:
+        with urllib.request.urlopen(req) as r:
+            return json.loads(r.read() or b"{}")
+    except urllib.error.HTTPError as e:
+        raise SystemExit(f"  HTTP {e.code} from {url}\n  {(e.read() or b'').decode()[:300]}")
+
+
+def adopt(base: str, token: str) -> dict:
+    """Map each volume key to the id of the row it should replace, where one already exists.
+
+    A fresh install seeds a Body of Knowledge row per certification, and two of them already carry an
+    early file. Creating new rows beside those leaves every candidate looking at two Bodies of
+    Knowledge for their credential, one of them stale and much smaller — so match on
+    (certification, kind) and replace in place. Replacing versions the outgoing file rather than
+    discarding it, so the seeded copy stays recoverable from the row's history.
+    """
+    rows = get(f"{base}/api/admin/cert_documents", token).get("rows") or []
+    found = {}
+    for key, v in VOLUMES.items():
+        want_cert = CERT_IDS.get(v["certification_id"])   # None for the "all" row
+        for r in rows:
+            if r.get("kind") == v["kind"] and r.get("certification_id") == want_cert:
+                found[key] = r["id"]
+                break
+    return found
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -132,6 +175,10 @@ def main() -> None:
                          "snapshotted into cert_document_versions first")
     ap.add_argument("--reason", default="rebuilt from source",
                     help="recorded against a replaced file in the version history")
+    ap.add_argument("--no-adopt", action="store_true",
+                    help="always create new rows instead of replacing the matching existing one "
+                         "(the default matches on certification and kind, so a re-run updates in "
+                         "place rather than leaving two copies of a volume on the shelf)")
     ap.add_argument("--watermark", action="store_true",
                     help="stamp each student's copy with their name and student number")
     ap.add_argument("--draft", action="store_true",
@@ -170,6 +217,12 @@ def main() -> None:
     print(f"\nsigning in to {base} as {args.email}")
     token = login(base, args.email, password)
 
+    # An explicit --replace always wins; otherwise adopt whatever row already holds this volume, so a
+    # re-run updates the book in place instead of stacking a second copy beside it.
+    if not args.no_adopt:
+        for key, doc_id in adopt(base, token).items():
+            replace.setdefault(key, str(doc_id))
+
     print()
     for key, v, raw, b64 in jobs:
         payload = {
@@ -177,7 +230,7 @@ def main() -> None:
             "filename": v["filename"],
             "title": v["title"],
             "description": v["description"],
-            "kind": "book",
+            "kind": v["kind"],
             "watermark": bool(args.watermark),
             "published": not args.draft,
         }
