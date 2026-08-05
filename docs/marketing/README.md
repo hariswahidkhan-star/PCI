@@ -35,15 +35,32 @@ pitch.
 The **volumes** are set in the editorial system — Libertine, green, old-style figures,
 `docs/books/_build/DESIGN_SYSTEM.md`. That is right for a thousand-page book and wrong for a feed.
 
-Anything made for **LinkedIn** uses the website brand instead, so someone who taps through to
-projectcontrolsinstitute.org arrives somewhere that looks like where they came from: Archivo for
-display at the site's tight tracking, Inter for text, and the blue palette from
-`backend/wwwroot/assets/styles.css` (`#1D4ED8` primary, `#3B82F6`, `#1E3A8A`, ink `#0F172A`). The
-brand fonts are the committed woff2 files in `backend/wwwroot/assets/fonts/` and are embedded in
-every PDF, so nothing depends on the reader having them.
+Anything made for **LinkedIn** uses the Institute's own identity instead, so someone who taps
+through to projectcontrolsinstitute.org arrives somewhere that looks like where they came from.
 
-The carousels and the one-pager still carry the editorial system from an earlier round. Moving them
-to the website brand is a straightforward follow-up and has not been done.
+**The identity is `backend/wwwroot/assets/logo.svg`.** It is the only brand mark in the repository
+and therefore the authority on what the Institute looks like:
+
+| Element | Colour |
+|---|---|
+| Field (gradient) | `#1D3C92` → `#13245A` navy |
+| Wordmark | `#FFFFFF` |
+| "AI" (gradient) | `#F7EABC` → `#E7CB82` → `#B8923E` gold |
+| Accent bar under the wordmark | `#C13329` crimson — also `--crimson` in `styles.css` |
+
+Type is **Archivo** 800–900 for display at the site's `-0.022em` tracking and **Inter** 400–700 for
+text, from the committed woff2 files in `backend/wwwroot/assets/fonts/`. They are embedded in every
+PDF, so nothing depends on the reader having them.
+
+Two traps worth knowing. The `#1D4ED8` that dominates `styles.css` is the **link** blue, not the
+brand — an earlier cut of the outline deck was built on it, with no gold and no crimson, and looked
+like a generic SaaS template. And WeasyPrint has no `background-clip: text`, so the logo's gold
+*gradient* on type paints a solid gold box over transparent letters; use the mid stop as a flat
+colour instead.
+
+The carousels and the one-pager still carry the editorial system from an earlier round, so the feed
+assets do not yet match each other. Moving them to the identity above is a straightforward follow-up
+and has not been done.
 
 **Shape matters more than most people expect.** LinkedIn renders a document at its own aspect ratio
 inside a fixed-width column, so an A4 page arrives with body text around 9 px on a phone. Feed
