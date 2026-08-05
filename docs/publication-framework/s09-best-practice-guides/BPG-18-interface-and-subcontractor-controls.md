@@ -71,8 +71,7 @@ conversation. Treating it as a measurement transfers the subcontractor's optimis
 every month in the same direction.
 
 **Their control weakness becomes your reporting weakness.** No clause converts data you never received into a
-number you can report. You will either measure their work yourself or report an estimate; decide which in
-advance rather than discover it at cut-off.
+number you can report. Decide in advance whether you will measure their work yourself or report an estimate.
 
 ## 2. The interface register, and why an interface is not a milestone
 
@@ -313,11 +312,10 @@ Cost to be recognised at 30 June for this package:
 
 **A coincidence worth noticing, because it is a trap.** The 2,153,333 is within 3,333 of the 2,150,000
 claimed, so posting the claim would have been almost exactly right this month — which is why the shortcut
-survives. But the two figures are right for different reasons and composed differently: 2,153,333 is
-2,020,000 of verified work plus 133,333 of estimated work, and that composition supports three separate
-actions — certify 319,000, accrue 133,333 with no payment attached, pursue the 130,000 over-claim. The single
-figure supports none of them, and the agreement between the two will not survive a change in either the
-over-claim or the run rate.
+survives. But the two are right for different reasons and composed differently: 2,153,333 is 2,020,000 of
+verified work plus 133,333 of estimated work, and that composition supports three separate actions — certify
+319,000, accrue 133,333 with no payment attached, pursue the 130,000 over-claim. The single figure supports
+none of them, and the agreement between the two will not survive a change in the over-claim or the run rate.
 
 ### 8.5 What it does to the reported indices
 
@@ -427,8 +425,8 @@ invisible in the report, and all of them arriving together in the final account.
   naming, status and claims policy.
 
 Notice periods, time bars, retention mechanics, payment terms and statutory payment regimes vary between
-contract forms and jurisdictions. This guide names no contract form and reproduces no clause; mechanisms are
-described generically, and the arithmetic is to be applied to the documents in force on the reader's project.
+contract forms and jurisdictions. This guide names no contract form and reproduces no clause; the arithmetic
+is to be applied to the documents in force on the reader's project.
 
 ## Status and version
 
