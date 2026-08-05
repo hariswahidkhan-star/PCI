@@ -20,13 +20,14 @@ Each publication ships as four assets so it can move across every channel withou
 | # | Title | Status | PDF |
 |---|---|---|---|
 | 01 | [Knowing Early — An Executive Summary of the Project Controls Body of Knowledge](01-project-controls-body-of-knowledge/01-publication.md) | First edition · 22 pp | `/downloads/pci-knowledge-01-project-controls-body-of-knowledge.pdf` |
+| 02 | [Show Your Work — The Project Controls Competency Framework](02-project-controls-competency-framework/01-publication.md) | First edition · 24 pp | `/downloads/pci-knowledge-02-project-controls-competency-framework.pdf` |
 
 ## Planned
 
-Project Controls Competency Framework · Project Finance Competency Framework · Project Management
-Competency Framework · AI in Project Controls (Executive Guide) · AI in Project Finance · AI in Project
-Management · Code of Ethics · Certification Handbook · Examination Blueprint · Certification Learning
-Outcomes · Project Controls Career Roadmap · Best Practices Guide · Professional Templates Collection.
+Project Finance Competency Framework · Project Management Competency Framework · AI in Project Controls
+(Executive Guide) · AI in Project Finance · AI in Project Management · Code of Ethics · Certification
+Handbook · Examination Blueprint · Certification Learning Outcomes · Project Controls Career Roadmap ·
+Best Practices Guide · Professional Templates Collection.
 
 Publications are authored one at a time and reviewed before the next begins.
 
@@ -66,6 +67,16 @@ credibility is the product.
 - **Standards are described, never reproduced.** Named at awareness level, explained in our own words.
 - **British English. No emojis. No marketing language.**
 - **The notices block appears on every PDF**, unaltered.
+
+## Naming
+
+The credential is the **PCI AI Project Controls Leader (PCL-AI)** — one of three in the PCI AI Project
+Leadership Certification Suite, alongside PFL-AI (finance) and PML-AI (management). The live platform is
+the source of truth for credential names; parts of the `docs/` archive still carry the pre-rename
+`PCP-AI`, which must not be used in anything published.
+
+Where a publication states a competency set, it must match the platform's published list in
+`backend/Data/MultiCert.cs` verbatim — that list is what candidates and employers see.
 
 ## Voice
 

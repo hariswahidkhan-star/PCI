@@ -43,7 +43,7 @@ Project controls is not reporting. Reporting describes what has already happened
 
 That distinction is the whole subject. It is also where most organisations lose money.
 
-This publication summarises the **PCP-AI Body of Knowledge**: thirteen domains and sixty-one knowledge areas, weighted 40% financial reporting and accounting, 40% project management and delivery, 20% artificial intelligence. It is written for people who commission, fund, govern or lead project delivery, and who need to judge whether their control function is working.
+This publication summarises the **PCL-AI Body of Knowledge**: thirteen domains and sixty-one knowledge areas, weighted 40% financial reporting and accounting, 40% project management and delivery, 20% artificial intelligence. It is written for people who commission, fund, govern or lead project delivery, and who need to judge whether their control function is working.
 
 **Six findings frame everything that follows.**
 
@@ -191,7 +191,7 @@ These failures share one property: **they do not produce an obviously wrong repo
 
 ## 7. The architecture of the Body of Knowledge
 
-The PCP-AI Body of Knowledge is organised as **thirteen domains containing sixty-one knowledge areas**, grouped into three competency areas.
+The PCL-AI Body of Knowledge is organised as **thirteen domains containing sixty-one knowledge areas**, grouped into three competency areas.
 
 | Area | Competency | Weighting | Domains |
 |---|---|---|---|
@@ -692,8 +692,8 @@ Standards and frameworks are referred to by name and described in this publicati
 - ISO/IEC 42001 — *Information technology — Artificial intelligence — Management system*.
 
 **PCI AI publications**
-- *The PCP-AI Body of Knowledge* — thirteen domains, sixty-one knowledge areas, developed to full handbook depth.
-- *PCP-AI Examination Content Outline* — the authoritative public syllabus.
+- *The PCL-AI Body of Knowledge* — thirteen domains, sixty-one knowledge areas, developed to full handbook depth.
+- *PCL-AI Examination Content Outline* — the authoritative public syllabus.
 - Further titles in this Knowledge Series, including the Project Controls Competency Framework and the AI in Project Controls Executive Guide.
 
 ---
