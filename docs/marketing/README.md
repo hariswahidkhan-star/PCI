@@ -10,7 +10,8 @@ Knowledge (PCL-AI, PFL-AI, PML-AI) and the PCI Standards that sit behind them.
 | `assets/PCI-Overview-Onepager.pdf` | One-page A4 overview of the suite. The leave-behind: hand it to someone who asked "what is this?" and it answers without a call. |
 | `assets/carousel-*.pdf` | Six 8-slide LinkedIn document posts, 1080 pt square. Upload as a *document* post, not an image. |
 | `course-outline-pcl-ai.md` | The PCL-AI syllabus: a short lead-in post for the feed, and the full outline for a LinkedIn Article. |
-| `assets/PCI-PCL-AI-Course-Outline.pdf` | The same outline as a 3-page A4 document post, rendered from that file so the two cannot drift. |
+| `assets/PCI-PCL-AI-Course-Outline-LinkedIn.pdf` | **The one to post.** 8 slides, 1080×1350, in the website brand. Upload as a *document* post. |
+| `assets/PCI-PCL-AI-Course-Outline.pdf` | The same outline as a 3-page A4 read — for email, a website download, or print. Not for the feed. |
 | `linkedin-launch-20-posts.md` | Twenty copy-paste text posts in the Institute's voice. |
 | `pci-linkedin-launch-pack.pdf` | The twenty posts, typeset for reading offline. |
 | `build_assets.py` | Builds everything under `assets/`. |
@@ -28,6 +29,25 @@ Knowledge (PCL-AI, PFL-AI, PML-AI) and the PCI Standards that sit behind them.
 
 Each deck ends on a PCI Standards slide, so the teaching lands on the framework rather than on a
 pitch.
+
+## Two design systems, on purpose
+
+The **volumes** are set in the editorial system — Libertine, green, old-style figures,
+`docs/books/_build/DESIGN_SYSTEM.md`. That is right for a thousand-page book and wrong for a feed.
+
+Anything made for **LinkedIn** uses the website brand instead, so someone who taps through to
+projectcontrolsinstitute.org arrives somewhere that looks like where they came from: Archivo for
+display at the site's tight tracking, Inter for text, and the blue palette from
+`backend/wwwroot/assets/styles.css` (`#1D4ED8` primary, `#3B82F6`, `#1E3A8A`, ink `#0F172A`). The
+brand fonts are the committed woff2 files in `backend/wwwroot/assets/fonts/` and are embedded in
+every PDF, so nothing depends on the reader having them.
+
+The carousels and the one-pager still carry the editorial system from an earlier round. Moving them
+to the website brand is a straightforward follow-up and has not been done.
+
+**Shape matters more than most people expect.** LinkedIn renders a document at its own aspect ratio
+inside a fixed-width column, so an A4 page arrives with body text around 9 px on a phone. Feed
+assets are 1080×1350 (4:5), the tallest ratio shown without cropping.
 
 ## Claims discipline
 
