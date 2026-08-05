@@ -124,7 +124,7 @@ Domains 2, 6 and 14. What the ratios are actually measured on.
 
 Each level is paid only after the one above it is satisfied.
 
-## The most consequential definition in the model
+## The most consequential definition in the model {statement}
 
 **DOMAIN 2 · CFADS**
 
@@ -164,7 +164,7 @@ Domain 10 — the quantitative flagship. The three questions every lender asks.
 
 > **The minimum DSCR is the covenant. The average never is.** A comfortable average conceals the single period that breaches — and the single period is what triggers lock-up.
 
-## Why all three exist
+## Why all three exist {statement}
 
 **THE TAIL**
 
@@ -187,7 +187,7 @@ Domain 10 — the quantitative flagship. The three questions every lender asks.
 
 > **Check it by reversing.** Service exactly the sized capacity and the DSCR must land on the target in every period. If it does not, the capacity and the discounting are on different period conventions.
 
-## Sculpted or annuity
+## Sculpted or annuity {statement}
 
 **REPAYMENT SHAPE**
 

@@ -305,3 +305,189 @@ body { margin: 0; padding: 0; }
   position: absolute; bottom: 76px; left: 84px; right: 84px;
   font-size: 20px; line-height: 1.6; color: rgba(255,255,255,0.55);
 }
+
+
+/* ===================================================================
+   SLIDE ARCHETYPES
+   A 36-slide deck of one layout is monotony. Five shapes, alternating:
+   statement (dark, full-bleed), split (the contrast), stat (one number),
+   data (the tables), divider. Rhythm is what makes a deck feel designed.
+   =================================================================== */
+
+/* ---------- statement: dark, full-bleed, one idea ---------- */
+
+.statement {
+  width: 1080px; height: 1350px;
+  box-sizing: border-box;
+  padding: 110px 84px 108px 84px;
+  background: #0F172A;
+  color: #FFFFFF;
+  page-break-after: always;
+  position: relative;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.statement .eyebrow {
+  font-size: 21px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #7F9CEC; margin: 0 0 30px 0;
+}
+.statement h2 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900; font-size: 88px; line-height: 0.98;
+  letter-spacing: -0.036em; color: #FFFFFF;
+  margin: 0 0 36px 0; padding: 0; border: 0;
+}
+.statement p { font-size: 33px; line-height: 1.4; color: rgba(255,255,255,0.82); margin: 0 0 24px 0; }
+.statement p strong { color: #FFFFFF; font-weight: 700; }
+.statement code {
+  font-family: 'Inter', sans-serif; font-weight: 700;
+  color: #9DB6F2; background: rgba(127,156,236,0.14);
+  border-radius: 4px; padding: 1px 8px;
+}
+.statement blockquote {
+  margin: 14px 0 0 0; padding: 0 0 0 30px;
+  border-left: 8px solid #C13329; background: none;
+  font-size: 30px; line-height: 1.4; color: rgba(255,255,255,0.9);
+}
+.statement blockquote p { font-size: 30px; color: rgba(255,255,255,0.9); }
+.statement blockquote strong { color: #7F9CEC; }
+.statement .foot { color: rgba(255,255,255,0.42); }
+.statement .foot .n { color: #7F9CEC; }
+
+/* ---------- split: the contrast, side by side ---------- */
+
+.split {
+  width: 1080px; height: 1350px;
+  box-sizing: border-box;
+  page-break-after: always;
+  position: relative;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+.split::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 9px; background: #1D4ED8; z-index: 2;
+}
+.split .head {
+  padding: 92px 80px 34px 80px;
+}
+.split .head .eyebrow {
+  font-size: 21px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #1D4ED8; margin: 0 0 20px 0;
+}
+.split .head h2 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900; font-size: 62px; line-height: 1.02;
+  letter-spacing: -0.03em; color: #0F172A; margin: 0; padding: 0; border: 0;
+}
+.split .cols { display: flex; height: 860px; }
+.split .col { width: 50%; box-sizing: border-box; padding: 46px 44px; }
+.split .col:first-child { background: #F1F5F9; }
+.split .col:last-child { background: #EEF3FD; }
+.split .col h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900; font-size: 34px; line-height: 1.1;
+  letter-spacing: -0.02em; color: #0F172A;
+  margin: 0 0 10px 0; padding: 0;
+}
+.split .col .role {
+  font-size: 19px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: #1D4ED8; margin-bottom: 26px;
+}
+.split .col:first-child .role { color: #64748B; }
+.split .col p { font-size: 26px; line-height: 1.42; color: #334155; margin: 0 0 18px 0; }
+.split .col p strong { color: #0F172A; font-weight: 700; }
+.split .col ul { margin: 0 0 18px 0; padding-left: 30px; }
+.split .col li { font-size: 25px; line-height: 1.38; color: #334155; margin-bottom: 12px; }
+.split .col li strong { color: #0F172A; }
+.split .col code {
+  font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.95em;
+  color: #1D4ED8; background: rgba(29,78,216,0.09); border-radius: 4px; padding: 1px 7px;
+}
+.split .foot {
+  position: absolute; left: 80px; right: 80px; bottom: 46px;
+  font-size: 19px; font-weight: 500; color: #94A3B8; letter-spacing: 0.04em;
+}
+.split .foot img { width: 32px; height: 32px; vertical-align: middle; margin-right: 13px; }
+.split .foot .n {
+  font-family: 'Archivo', sans-serif; font-weight: 900; color: #1D4ED8;
+  float: right; font-size: 22px;
+}
+
+/* ---------- stat: one number, filling the frame ---------- */
+
+.statslide {
+  width: 1080px; height: 1350px;
+  box-sizing: border-box;
+  padding: 110px 84px 108px 84px;
+  background: #1D4ED8;
+  color: #FFFFFF;
+  page-break-after: always;
+  position: relative;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.statslide .eyebrow {
+  font-size: 21px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(255,255,255,0.72); margin: 0 0 26px 0;
+}
+.statslide .bignum {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900; font-size: 190px; line-height: 0.9;
+  letter-spacing: -0.05em; color: #FFFFFF; margin: 0 0 28px 0;
+}
+.statslide h2 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 900; font-size: 56px; line-height: 1.04;
+  letter-spacing: -0.03em; color: #FFFFFF;
+  margin: 0 0 26px 0; padding: 0; border: 0;
+}
+.statslide p { font-size: 31px; line-height: 1.4; color: rgba(255,255,255,0.88); margin: 0 0 20px 0; }
+.statslide p strong { color: #FFFFFF; font-weight: 700; }
+.statslide table { width: 100%; border-collapse: collapse; margin: 8px 0 22px 0; }
+.statslide th { display: none; }
+.statslide td {
+  padding: 18px 0; font-size: 29px; color: rgba(255,255,255,0.9);
+  border-bottom: 2px solid rgba(255,255,255,0.22); vertical-align: top;
+}
+.statslide td:first-child {
+  font-family: 'Archivo', sans-serif; font-weight: 900;
+  color: #FFFFFF; width: 26%; font-size: 34px;
+}
+.statslide td:last-child { text-align: left; }
+.statslide .foot { color: rgba(255,255,255,0.55); }
+.statslide .foot .n { color: #FFFFFF; }
+
+/* ---------- data slides fill the frame rather than float ---------- */
+
+.slide { justify-content: flex-start; padding-top: 104px; }
+.slide h2 { font-size: 62px; margin-bottom: 26px; }
+
+
+/* ---------- one global footer rule for every archetype ---------- */
+
+.slide .foot, .split .foot, .statement .foot, .statslide .foot {
+  position: absolute; left: 80px; right: 80px; bottom: 46px;
+  font-size: 19px; font-weight: 500; letter-spacing: 0.04em;
+  line-height: 32px;
+}
+.slide .foot img, .split .foot img, .statement .foot img, .statslide .foot img {
+  width: 32px; height: 32px; vertical-align: middle; margin-right: 13px;
+}
+.slide .foot .n, .split .foot .n, .statement .foot .n, .statslide .foot .n {
+  font-family: 'Archivo', sans-serif; font-weight: 900;
+  float: right; font-size: 22px; line-height: 32px;
+}
+.statement .foot, .statslide .foot { color: rgba(255,255,255,0.5); }
+.statement .foot .n { color: #7F9CEC; }
+.statslide .foot .n { color: #FFFFFF; }
+.slide .foot, .split .foot { color: #94A3B8; }
+.slide .foot .n, .split .foot .n { color: #1D4ED8; }
+
+/* statement slides carry content above the footer, not behind it */
+.statement { padding-bottom: 128px; }
+.statslide { padding-bottom: 128px; }
+
+
+/* the big figure must hold one line */
+.statslide .bignum { font-size: 158px; letter-spacing: -0.055em; white-space: nowrap; }
+.statslide table { margin-top: 4px; }
+.statslide thead { display: none; }

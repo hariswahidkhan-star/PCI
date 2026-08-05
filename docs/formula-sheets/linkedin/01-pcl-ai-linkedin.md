@@ -2,49 +2,53 @@
 
 > The complete formula reference for the PCI AI Project Controls Leader — IFRS and IAS on one side, earned value and critical path on the other
 
-## A chartered accountant cannot build a schedule
+## Two professions. One project. Neither trained for it. {split}
 
 **WHY THIS CREDENTIAL EXISTS**
 
-They can tell you exactly when revenue is recognised under **IFRS 15**, how a provision is measured under **IAS 37**, and which borrowing costs qualify for capitalisation under **IAS 23**.
+*The chartered accountant*
 
-Ask them to build a time-phased cost baseline, compute an estimate at completion, or read a critical path, and the training stops.
+Knows exactly when revenue is recognised under **IFRS 15**, how a provision is measured under **IAS 37**, which borrowing costs qualify under **IAS 23**.
 
-> **This is not a criticism.** It is the boundary of a syllabus. ACCA, ICAEW, CPA and CIMA never claimed to teach project delivery.
+Cannot build a time-phased cost baseline, compute an estimate at completion, or read a critical path.
 
-## A planning engineer cannot close a period
+ACCA, ICAEW, CPA and CIMA never claimed to teach delivery.
 
-**THE MIRROR IMAGE**
+%%
 
-They can build a four-thousand-activity network, defend the float, compute earned value under three different measurement rules and forecast an outturn three ways.
+*The planning engineer*
 
-Ask them when the revenue on that work becomes recognisable, what a contract asset is, or why the cost report will not reconcile to the accounts, and the training stops.
+Knows how to build a four-thousand-activity network, defend the float, earn value under three measurement rules and forecast an outturn three ways.
 
-> **Also not a criticism.** PMI, AACE and the engineering degrees never claimed to teach financial reporting.
+Cannot say when that work becomes recognisable revenue, what a contract asset is, or why the cost report will not reconcile.
 
-## And the project sits in the gap
+PMI, AACE and the engineering degrees never claimed to teach reporting.
 
-**THE PROBLEM**
+## Every capital project is measured twice {statement}
 
-Every capital project is measured twice. Once in the language of delivery — earned value, float, forecast. Once in the language of the accounts — recognised revenue, provisions, contract assets.
+**THE GAP**
 
-The two must reconcile to the same reality. Nobody is trained to make them.
+Once in the language of delivery — earned value, float, forecast.
 
-> **This is where projects are lost.** Not in the schedule, and not in the ledger — in the space between them, where each profession assumes the other has it covered.
+Once in the language of the accounts — recognised revenue, provisions, contract assets.
 
-## What the PCL-AI credential certifies
+The two must reconcile to the same reality, and nobody is trained to make them.
 
-**THE ANSWER**
+> **This is where projects are lost.** Not in the schedule and not in the ledger, but in the space between them — where each profession assumes the other has it covered.
 
-| Area | Weight | What it covers |
-|---|---|---|
-| **A · Financial reporting and accounting** | **40%** | IFRS 15, IAS 37, IAS 23, IAS 16, IAS 2, IFRS 16, IAS 1 — applied to contracts |
-| **B · Project management, controls and delivery** | **40%** | Budgeting, earned value, forecasting, scheduling, risk, commercial |
-| **C · AI for project controls** | **20%** | Governed use, with the professional accountable |
+## The weighting is the argument {stat}
+
+**WHAT PCL-AI CERTIFIES**
+
+40·40·20
+
+| Share | Area |
+|---|---|
+| 40% | **Financial reporting and accounting** — IFRS 15, IAS 37, IAS 23, IAS 16, IAS 2, IFRS 16, IAS 1 |
+| 40% | **Project management, controls and delivery** — budgeting, earned value, scheduling, risk, commercial |
+| 20% | **AI for project controls** — governed use, the professional accountable |
 
 Thirteen domains. Sixty-one Knowledge Areas.
-
-> **The 40/40/20 split is the entire argument.** A controls professional who cannot follow a cost from commitment through accrual to recognised revenue cannot explain their own numbers to a board — and a finance professional who cannot read a schedule cannot challenge the forecast behind the accounts.
 
 ## Every formula in the discipline
 
@@ -95,7 +99,7 @@ Domains 1 and 2. What a chartered accountant knows, stated for a controls profes
 
 > **Two traps.** Expected value applies to a **population**; for a single obligation the most likely amount is the measure, and expected value returns a figure that will never be paid. And when a contract becomes onerous, IAS 37 requires the loss to be recognised **in full, immediately** — not spread across the remaining programme. That is the accounting mirror of a forecast overrun.
 
-## IAS 23 — borrowing costs
+## IAS 23 — borrowing costs {statement}
 
 **DOMAIN 2 · IAS 23**
 
@@ -134,7 +138,7 @@ Interest on funds borrowed to build a qualifying asset is capitalised into the a
 
 > **`PoC` is cumulative and so is the revenue it produces.** Forget the fourth line and you recognise the same revenue twice. And uninstalled materials sitting in the numerator inflate progress that has not physically happened — which is why IFRS 15 requires them to be excluded from the measure.
 
-## The position the contract creates
+## The position the contract creates {statement}
 
 **DOMAIN 7 · CONTRACT ASSETS AND LIABILITIES**
 
@@ -300,7 +304,7 @@ Domains 3 to 12. What a planning engineer knows, stated for a finance profession
 
 The integration. This is what neither profession is taught, and what the credential exists for.
 
-## One cost, two destinations
+## One cost, two destinations {statement}
 
 **THE INTEGRATION SPINE**
 
@@ -343,7 +347,7 @@ A cost is incurred on site. It then travels two paths at once.
 
 > **Every row is one event described twice.** A professional fluent in only one column is guessing at the other — and boards ask questions in both.
 
-## The onerous contract test
+## The onerous contract test {statement}
 
 **WHERE A FORECAST BECOMES A LOSS**
 

@@ -137,7 +137,7 @@ Domains 7 and 8. Where the project stands and where it will end.
 
 Original to the PML-AI Body of Knowledge. Governance is the part of delivery everyone manages by instinct — these formulas price it.
 
-## What a decision costs you in time
+## What a decision costs you in time {statement}
 
 **DOMAIN 3 · DECISION LATENCY**
 
@@ -147,7 +147,7 @@ Meeting interval `M`, paper lead time `L`. The expected wait for a committee dec
 
 > **A monthly committee with a two-week paper deadline has an expected wait of four weeks.** Escalate through two tiers and it is eight, before anyone has disagreed about anything. Multiply that by the cost of delay and governance stops being free.
 
-## The price of elapsed time
+## The price of elapsed time {statement}
 
 **DOMAINS 1, 3 · COST OF DELAY**
 
@@ -189,7 +189,7 @@ Adding one party to a mesh of `n` creates `n` new interfaces, not one.
 
 > **This is the same arithmetic as communication channels, applied to system and organisational design.** It is the case for an integration layer, and it is why adding a party to a late programme so rarely accelerates it.
 
-## The rule that catches missing scope
+## The rule that catches missing scope {statement}
 
 **DOMAIN 4 · THE HUNDRED-PER-CENT RULE**
 
@@ -209,7 +209,7 @@ The basis a delegation threshold must read on — not the direct cost alone.
 
 > **Approve on direct cost and you have set your delegation threshold against a fraction of the real number.** Small changes clear the threshold, and the missing terms land later as schedule.
 
-## Measuring the drift
+## Measuring the drift {statement}
 
 **DOMAIN 4 · BASELINE DRIFT**
 
@@ -239,7 +239,7 @@ Domain 13. The same questions, different instruments.
 
 > **Halve the work in progress and cycle time halves, at the same throughput.** That is why limiting WIP speeds delivery without anyone working faster. And `WSJF` requires a real cost of delay — guess it and you have ranked by guess.
 
-## Burn-down hides the thing you need
+## Burn-down hides the thing you need {statement}
 
 **DOMAIN 13 · REPORTING TO A GATE**
 

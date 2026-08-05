@@ -8,7 +8,10 @@ Slide conventions in the markdown:
   # Title / > Subtitle        the gradient cover (first two lines of the file)
   # 01 | Section name         a full-bleed navy section divider; any following
                               paragraph becomes its standfirst
-  ## Heading                  a content slide
+  ## Heading {statement}      a dark full-bleed statement slide
+  ## Heading {split}          a two-column contrast; halves separated by a line of %%
+  ## Heading {stat}           a blue slide led by one large figure (first line = the figure)
+  ## Heading                  a data slide (the default)
   **EYEBROW**                 first paragraph of a slide becomes the eyebrow label
   `formula`                   a paragraph of only code becomes a formula card;
                               consecutive ones merge into one card
@@ -150,6 +153,12 @@ def build(src: pathlib.Path) -> int:
             )
             continue
 
+        kindtag = ""
+        m_tag = re.search(r"\s*\{(\w+)\}\s*$", head)
+        if m_tag:
+            kindtag = m_tag.group(1)
+            head = head[: m_tag.start()].strip()
+
         md.reset()
         html = merge_formula_runs(md.convert(content))
 
@@ -161,6 +170,47 @@ def build(src: pathlib.Path) -> int:
             )
             parts.append(CLOSING.format(heading=head, body=html, year=year, lockup=lockup()))
             continue
+
+        eyebrow_html, body_html = "", html
+        m_eb = re.match(r"\s*<p><strong>(.*?)</strong></p>", body_html, re.DOTALL)
+        if m_eb:
+            eyebrow_html = f'<div class="eyebrow">{m_eb.group(1)}</div>'
+            body_html = body_html[m_eb.end():]
+
+        if kindtag in ("statement", "split", "stat"):
+            slide_no += 1
+            foot = (f'<div class="foot"><span class="n">{slide_no:02d}</span>'
+                    f'<img src="{LOGO}" alt=""/>{credential} Formula Sheet</div>')
+
+            if kindtag == "statement":
+                parts.append(
+                    f'<div class="statement">{eyebrow_html}'
+                    f'<h2>{head}<span class="dot">.</span></h2>{body_html}{foot}</div>')
+                continue
+
+            if kindtag == "stat":
+                figure, _, rest = body_html.partition("</p>")
+                figure = re.sub(r"</?p>", "", figure)
+                parts.append(
+                    f'<div class="statslide">{eyebrow_html}'
+                    f'<div class="bignum">{figure}</div>'
+                    f'<h2>{head}</h2>{rest}{foot}</div>')
+                continue
+
+            def role(col: str) -> str:
+                return re.sub(r"^\s*<p><em>(.*?)</em></p>",
+                              r'<div class="role">\1</div>', col, count=1, flags=re.DOTALL)
+
+            left, _, right = body_html.partition("<p>%%</p>")
+            left, right = role(left), role(right)
+            parts.append(
+                f'<div class="split"><div class="head">{eyebrow_html}'
+                f'<h2>{head}</h2></div><div class="cols">'
+                f'<div class="col">{left}</div><div class="col">{right}</div></div>{foot}</div>')
+            continue
+
+        html = body_html
+        eyebrow = eyebrow_html
 
         # Number every table as an exhibit, the way a curriculum body does, and tag it with
         # its row count so the stylesheet can tighten a long one rather than overflow the slide.
@@ -178,12 +228,6 @@ def build(src: pathlib.Path) -> int:
                     f'<table class="{klass.strip()}">' + m.group(0)[len("<table>"):])
 
         html = re.sub(r"<table>.*?</table>", label, html, flags=re.DOTALL)
-
-        eyebrow = ""
-        m = re.match(r"\s*<p><strong>(.*?)</strong></p>", html, re.DOTALL)
-        if m:
-            eyebrow = f'<div class="eyebrow">{m.group(1)}</div>'
-            html = html[m.end():]
 
         slide_no += 1
         parts.append(
