@@ -182,6 +182,25 @@ h2 {{ font-size: 58pt; }}
 /* The figures carry a viewBox and no intrinsic size, so they scale to the measure. Left at their
    authored width they render at 880 CSS px = 660 pt inside a 916 pt column — about 72% of the
    slide, which reads as a thumbnail dropped on the page rather than as the slide's subject. */
+.cred {{ margin-bottom: 24pt; }}
+.cred {{ font-family: Archivo, sans-serif; font-weight: 900; font-size: 34pt; color: {GOLD};
+         letter-spacing: -.025em; }}
+.cred span {{ display: block; font-family: Inter, sans-serif; font-weight: 500; font-size: 19pt;
+              color: #C9D4EC; letter-spacing: 0; margin-top: 4pt; }}
+
+/* The suite. The one this outline covers is lit; the other two are named but recede, so the reader
+   learns the range without losing which document they are holding. */
+.suite {{ display: flex; gap: 22pt; margin-top: 6pt; }}
+.cert {{ flex: 1; padding: 22pt 20pt 24pt 20pt; border-top: 5pt solid rgba(255,255,255,.22);
+         background: rgba(255,255,255,.05); }}
+.cert.on {{ border-top-color: {GOLD}; background: rgba(231,203,130,.14); }}
+.cert .code {{ font-family: Archivo, sans-serif; font-weight: 900; font-size: 27pt;
+               letter-spacing: -.03em; color: #93A6CB; }}
+.cert.on .code {{ color: {GOLD}; }}
+.cert .full {{ font-size: 16pt; line-height: 1.3; color: #93A6CB; margin-top: 6pt; }}
+.cert.on .full {{ color: {PAPER}; }}
+.cert .tag {{ font-size: 13pt; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+              color: {GOLD}; margin-top: 12pt; }}
 .fig-wrap {{ margin: 4pt 0 10pt 0; }}
 .fig-wrap svg {{ display: block; width: 100%; height: auto; }}
 .swipe {{ font-size: 17pt; font-weight: 700; color: {GOLD}; margin-top: 28pt;
@@ -283,7 +302,8 @@ ARROW = ("<svg width='30' height='13' viewBox='0 0 30 13' fill='none'>"
 def slide(body, page, cls=""):
     c = ("slide " + cls).strip()
     return (f"<div class='{c}'><div class='body'>{body}</div>"
-            f"<div class='foot'><span>Project Controls Institute Global</span>"
+            f"<div class='foot'><span>Project Controls Institute Global "
+            f"&nbsp;&middot;&nbsp; <b>PCI PCL-AI</b></span>"
             f"<span class='pg'>{page}</span></div></div>")
 
 
@@ -316,16 +336,35 @@ def build():
 
     # 1 — cover. The credential's whole argument is the title.
     S.append(slide(
-        "<div class='eyebrow'>PCI PCL-AI &middot; course outline</div>"
+        "<div class='eyebrow'>Course outline &middot; one of three PCI certifications</div>"
         "<h1>Finance and<br/>delivery.<br/><span class='gold'>One profession.</span></h1>"
         "<div class='bar'></div>"
-        "<div class='lede'>The syllabus for the AI Project Controls Leader — the credential that "
-        "examines the accounting <b>and</b> the arithmetic of delivery, because a project needs "
-        "both and almost nobody is trained in both.</div>"
+        "<div class='cred'>PCI PCL-AI<span>PCI AI Project Controls Leader</span></div>"
+        "<div class='lede'>The syllabus for the credential that examines the accounting <b>and</b> "
+        "the arithmetic of delivery, because a project needs both and almost nobody is trained in "
+        "both.</div>"
         f"<div class='swipe'><span>13 domains &middot; 61 knowledge areas</span>{ARROW}</div>",
         "PCL-AI", "navy"))
 
-    # 2 — the thesis. Two professions, and the ground neither of them is examined on.
+    # 2 — which of the three this is. Credential names are the platform's own, from
+    # backend/Data/MultiCert.cs, so the deck and the certifications table cannot disagree.
+    S.append(slide(
+        head("The PCI AI certification suite", "Three credentials.<br/>This is the first.")
+        + "<div class='suite'>"
+          "<div class='cert on'><div class='code'>PCL-AI</div>"
+          "<div class='full'>PCI AI Project Controls Leader</div>"
+          "<div class='tag'>This outline</div></div>"
+          "<div class='cert'><div class='code'>PFL-AI</div>"
+          "<div class='full'>PCI AI Project Finance Leader</div></div>"
+          "<div class='cert'><div class='code'>PML-AI</div>"
+          "<div class='full'>PCI Project Management Leader &ndash; AI</div></div>"
+          "</div>"
+          "<div class='callout'>Each has its own Body of Knowledge and its own examination. "
+          "<strong>PCL-AI is the one that sits where cost, schedule and the ledger meet</strong> — "
+          "the subject of everything that follows.</div>",
+        "", "navy"))
+
+    # 3 — the thesis. Two professions, and the ground neither of them is examined on.
     S.append(slide(
         head("Why this credential exists", "Two professions.<br/>One project.")
         + "<div class='cols'>"
