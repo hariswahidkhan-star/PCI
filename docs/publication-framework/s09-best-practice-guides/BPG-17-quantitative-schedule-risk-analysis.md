@@ -51,7 +51,7 @@ and why running the analysis on a schedule that fails a quality review produces 
 constraint set. Every figure in the worked example is hand-computed and checkable.
 
 **Who this is for.** Planners and schedulers who run or commission the analysis; project controls managers
-who must defend its output; and project and programme managers asked to commit to a date that came out of it.
+who must defend its output; and project managers asked to commit to a date that came out of it.
 
 ---
 
@@ -108,14 +108,13 @@ double-counts or omits.
 
 **Duration uncertainty** is the variability in how long work takes when it goes ahead as planned:
 productivity varies, weather varies, the crew is better or worse than assumed. It applies to every activity,
-is modelled by the three-point range, and carries no probability of occurrence — the work happens, the
-duration varies.
+is modelled by the three-point range, and carries no probability of occurrence.
 
 **Risk events** are discrete occurrences from the register that may or may not happen: a permit refused, a
 vendor failure, contaminated ground. They carry a probability of occurrence *and* an impact range, strike
-specific activities, and are modelled by mapping register entries onto the activities they would hit. That
-mapping is the **risk-driver** approach, and its virtue is that the model inherits the register instead of
-running on a parallel set of assumptions.
+specific activities, and are modelled by mapping register entries onto the activities they would hit — the
+**risk-driver** approach, whose virtue is that the model inherits the register instead of running on a
+parallel set of assumptions.
 
 The double-count happens when an estimator, asked for a pessimistic duration, includes a register entry —
 "twelve weeks if the permit is late" — and the modeller then loads the permit risk onto the same activity.
@@ -139,16 +138,15 @@ moves; the P80 and P90 move a lot.
 Two structural cases matter, and they run in opposite directions. **Along a chain**, correlation increases
 the total's variability: four independent activities of equal spread give a chain whose spread is twice one
 activity's, because standard deviations add in quadrature, while perfectly correlated they give four times.
-**At a merge**, correlation *reduces* the penalty: paths driven by one shared cause tend to be ready together
-or late together, so the milestone's probability approaches that of a single path, whereas independent paths
-multiply their probabilities. Section 8 computes both. Because they pull opposite ways, "assume some
-correlation to be safe" is not a conservative default.
+**At a merge**, correlation *reduces* the penalty: paths driven by one shared cause tend to be ready or late
+together, so the milestone's probability approaches that of a single path, whereas independent paths multiply
+their probabilities. Section 8 computes both. Because they pull opposite ways, "assume some correlation to be
+safe" is not a conservative default.
 
 The practical method needs no mathematics. List the shared drivers explicitly before the model is built — one
 weather season, one commissioning contractor, one approval authority, one specialist crew — and record which
 activities each touches. That list, not a coefficient chosen by feel, belongs in the basis document. Where
-the tool demands a coefficient, record where the number came from and treat it as an assumption to be tested
-by sensitivity.
+the tool demands a coefficient, record its provenance and treat it as an assumption to test by sensitivity.
 
 ## 5. What the analysis needs before it is worth running
 
@@ -156,8 +154,7 @@ QSRA amplifies whatever is underneath it. Five preconditions, each checkable in 
 
 - **The schedule recalculates** — every activity except the first and last has a predecessor and a successor;
   date constraints are rare and justified; negative float is absent or explained; long lags are defended;
-  progress is not out of sequence. `BPG-05 — Schedule quality — a practical review` and
-  `TPL-14 — Schedule quality review checklist` own these checks.
+  progress is not out of sequence. `BPG-05 — Schedule quality — a practical review` and `TPL-14` own these.
 - **The critical path is the work, not the constraints.** A network held together by imposed dates does not
   respond to sampled durations, so sampling it yields a distribution of the constraint set.
 - **The level of detail suits simulation** — thousands of short activities give spurious precision and an
@@ -198,8 +195,8 @@ disposes.
 
 **Run on a schedule that fails its quality review.** Constraints hold the dates, dangling activities never
 move, out-of-sequence progress has corrupted the critical path — and the model produces a smooth, plausible
-curve regardless. That plausibility is the danger: nothing in the result announces that the network could not
-respond. Run the quality checks first and publish them alongside the distribution.
+curve regardless. Nothing in the result announces that the network could not respond, which is exactly why
+the quality checks are run first and published alongside the distribution.
 
 **Ranges anchored on the deterministic durations.** Plus or minus ten per cent on every activity tells you
 only that someone had a spreadsheet. Uniform ranges signal that elicitation did not happen.
