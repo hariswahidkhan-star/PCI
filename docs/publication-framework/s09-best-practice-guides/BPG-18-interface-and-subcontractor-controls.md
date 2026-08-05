@@ -10,7 +10,7 @@ date: 2026-08-04
 authors: [PCI Editorial]
 audience: [practitioner, manager]
 level: practitioner
-reading_time_min: 15
+reading_time_min: 16
 summary: >
   Most of the scope on a large project is delivered by organisations that do not report to you and whose
   data arrives on their calendar, not yours. This guide covers the interface register and why an interface
@@ -85,12 +85,12 @@ That determines the columns:
 |---|---|
 | Interface reference | A permanent identifier both parties quote; never renumbered |
 | Parties and direction | The two organisations named, and who provides and who receives |
-| What crosses | The deliverable, information set, access or connection, defined tightly enough to check |
+| What crosses | The deliverable, information, access or connection, defined tightly enough to check |
 | Acceptance criterion | What the receiver must be able to do with it before it counts as delivered |
 | Required-by date | The receiver's need date, from their schedule |
 | Committed date | The provider's date, from theirs |
 | Float between them | Required-by minus committed; the interface's health, in days |
-| Owner, each side | A named individual on the provider side and on the receiver side |
+| Owner, each side | A named individual on each side |
 | Consequence of late | What it costs, in days or money, against the receiver's critical path |
 | Status and last confirmed | When both parties last agreed the dates, not when the register was edited |
 
@@ -120,8 +120,7 @@ Three responses, of which only one is generally right.
 
 **Move their cut-off.** Contractually cleanest: require the subcontract's valuation date to coincide with the
 project's cut-off. Negotiate it at award, when it costs nothing; it is usually impossible later. Where their
-accounting calendar makes this impractical, require a *progress return* on your cut-off, separate from the
-commercial application.
+accounting calendar makes that impractical, require a *progress return* on your cut-off instead.
 
 **Accrue the gap.** Estimate the value of work performed between their period end and your cut-off and post
 it as an accrual, so cost and earned value describe the same period. `BPG-07 — Accruals and cut-off
@@ -129,9 +128,9 @@ discipline` owns the accounting treatment; the refinement that belongs here is t
 the verified run rate, not the claimed one**, which otherwise imports the over-claim and compounds it.
 
 **Do nothing and explain it every month.** Common, and not a control. If it really is the only option,
-publish the mismatch on the face of the report — "cost to 20th, progress to 30th". The same mismatch runs the
+publish the mismatch on the face of the report — "cost to 20th, progress to 30th". The mismatch also runs the
 other way on schedule: their progress update is stale on arrival, and their float is calculated against their
-own network, not yours.
+own network.
 
 ## 4. Back-to-back obligations, and the gaps that are not
 
@@ -178,15 +177,15 @@ output. Three quantities are in play, and conflating any two produces a reportin
 Certified value and earned value are close relatives, not the same quantity, and their difference is usually
 informative: a valuation typically pays for materials delivered to site, while rules of credit credit
 installed work only. That gap is a *timing* difference reversing on installation, and reporting it as a
-performance variance is the mistake the worked example illustrates.
-`BPG-06 — Progress measurement and rules of credit` owns the rules that make earned value mean something.
+performance variance is the mistake the worked example illustrates. `BPG-06 — Progress measurement and rules
+of credit` owns the rules behind earned value.
 
 Agree the verification method at award, because retrofitting it is a negotiation. In descending order of
 reliability: joint measurement of installed quantities against a bill; witnessed milestone achievement
 against defined criteria; independent survey on a sample with a stated rule; and last, review of the
-subcontractor's own records — a review of an assertion rather than a measurement, and to be labelled as such
-wherever the number appears. **Verify on a sample with a rule, not on whatever looks suspicious**, because a
-sample chosen by suspicion cannot be extrapolated. And **record the over-claim, do not just remove it**: one
+subcontractor's own records — a review of an assertion rather than a measurement, to be labelled as such
+wherever the number appears. **Verify on a sample with a rule, not on whatever looks suspicious**: a sample
+chosen by suspicion cannot be extrapolated. And **record the over-claim, do not just remove it** — one
 month's over-claim is ordinary, a trend is a forecasting signal.
 
 ## 6. When the subcontractor's own controls are weak
@@ -223,9 +222,6 @@ calculated on the claimed run rate.
 **Interfaces are recorded as milestones.** One owner, one date, no float column, no consequence. When the
 date slips, both parties can demonstrate they were waiting for the other.
 
-**Third-party interfaces are missing**, because nobody in the delivery team has a contract with the utility,
-the authority or the neighbouring project — usually the longest-lead dependencies on the job.
-
 **Back-to-back is assumed, not checked.** The two documents were reviewed by different people at different
 times, and the notice-period and retention differences surface when a claim arrives.
 
@@ -254,9 +250,9 @@ Assumptions stated as they arise; percentages to one decimal place.*
 | Retention | 5 %, back-to-back with the head contract |
 | Previously certified, net of retention | 1,600,000 |
 
-At 20 June the subcontractor applies for a cumulative gross value of **2,150,000**; your quantity surveyor's
-measure supports **2,020,000**. Measured cumulative value at 20 March was **820,000**. Earned value at
-30 June under the project's rules of credit is **2,100,000**.
+At 20 June the subcontractor applies for a cumulative gross value of **2,150,000**; your measure supports
+**2,020,000**. Measured cumulative value at 20 March was **820,000**. Earned value at 30 June under the
+project's rules of credit is **2,100,000**.
 
 ### 8.2 The over-claim
 
@@ -342,7 +338,7 @@ swing = 1.040 − 0.975 = 0.065
 **A swing of 0.065 on the cost performance index, produced entirely by a ten-day mismatch between two
 calendars.** On a tolerance band a few hundredths wide that is the difference between green and an exception
 report — and next month, when the missing ten days land on top of a full period, the index falls for a reason
-unconnected to how the work was performed.
+unconnected to performance.
 
 ### 8.6 Reading both indices correctly
 
@@ -364,9 +360,9 @@ planned completion at 30 June = 2,400,000 ÷ 4,800,000 = 50.0 %
 SPI = 0.875
 ```
 
-A schedule performance index of 0.875 with a 6.0 per cent over-claim on the latest application is a specific
-management situation — behind, and valuing optimistically, which is the ordinary sequence — and the moment to
-re-confirm the interface dates downstream with the parties that depend on them.
+A schedule performance index of 0.875 with a 6.0 per cent over-claim is a specific management situation —
+behind, and valuing optimistically, which is the ordinary sequence — and the moment to re-confirm the
+interface dates downstream with the parties that depend on them.
 
 ## 9. Checklist
 
@@ -399,16 +395,16 @@ re-confirm the interface dates downstream with the parties that depend on them.
 
 Projects rarely lose control of subcontracted scope through one large failure. They do it through a claim
 posted as a cost, an interface with one owner and a notice period seven days out of step — each small, each
-invisible in the report, and all of them arriving together in the final account.
+invisible in the report, all of them arriving together in the final account.
 
 ---
 
 ## Related
 
 - `BPG-06 — Progress measurement and rules of credit` — what makes earned value on subcontracted scope mean something
-- `BPG-07 — Accruals and cut-off discipline` — the accounting treatment behind the gap accrual in §8.4
+- `BPG-07 — Accruals and cut-off discipline` — the treatment behind the gap accrual in §8.4
 - `BPG-11 — Change orders and variations` — the change process that must carry an instruction both ways
-- `BPG-12 — Claims and extension of time` — where notice-period gaps and unpassed subcontractor claims end up
+- `BPG-12 — Claims and extension of time` — where notice-period gaps and unpassed claims end up
 - `BPG-13 — Cash flow forecasting` — the working-capital effect of terms that are not back-to-back
 - `BPG-05 — Schedule quality — a practical review` — the checks to apply before integrating their schedule
 
