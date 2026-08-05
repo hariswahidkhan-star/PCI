@@ -55,7 +55,7 @@ GLYPHS = {
 }
 
 COVER = """
-<div class="cover ondark">
+<div class="cover">
   {lockup}
   <div class="series">PCI AI · Formula Sheet</div>
   <h1>{title}</h1>
@@ -79,7 +79,7 @@ DIVIDER = """
 """
 
 CLOSING = """
-<div class="closing ondark">
+<div class="closing">
   {lockup}
   <h2>{heading}<span class="dot">.</span></h2>
   {body}

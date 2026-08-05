@@ -74,15 +74,22 @@ def render(name: str, overhead: int) -> pathlib.Path:
 def verify(path: pathlib.Path) -> None:
     """The frame must be fully painted, and must actually be the graphic.
 
-    A wrong URL renders Chromium's error page, which is white, uniform, and sails
-    through a discontinuity check — so test that the frame is predominantly the
-    brand ground before testing that it is complete.
+    A wrong URL renders Chromium's error page: white, near-empty, and it sails
+    through a completeness check because there is nothing to be incomplete. Test
+    for the brand instead — every graphic carries a substantial amount of #1D4ED8
+    somewhere, on a light ground or a dark one, and an error page carries none.
     """
     im = Image.open(path).convert("RGB")
-    sample = list(im.resize((40, 50)).getdata())
-    blueish = sum(1 for r, g, b in sample if b > r + 25 and b > 60)
-    if blueish < len(sample) * 0.5:
-        raise SystemExit(f"FAIL {path.name}: frame is not the brand ground — bad URL or failed render")
+    # Sample the full-resolution frame on a stride. Resizing first averages a small
+    # blue element into a white ground and hides it, which failed this check once.
+    pts = [(x, y) for y in range(0, im.height, 9) for x in range(0, im.width, 9)]
+    brand = sum(1 for x, y in pts
+                if abs(im.getpixel((x, y))[0] - 0x1D) < 70
+                and abs(im.getpixel((x, y))[1] - 0x4E) < 70
+                and abs(im.getpixel((x, y))[2] - 0xD8) < 70)
+    if brand < len(pts) * 0.02:
+        raise SystemExit(
+            f"FAIL {path.name}: no brand blue in the frame — bad URL or failed render")
 
     prev, steps = None, []
     for y in range(im.height - 1, int(im.height * 0.85), -4):

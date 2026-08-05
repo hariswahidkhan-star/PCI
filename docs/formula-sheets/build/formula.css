@@ -83,8 +83,9 @@ body { margin: 0; padding: 0; }
 /* ---------- cover ---------- */
 
 .titlepage {
-  background: #0F172A;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #0F172A;
+  border-top: 4mm solid #1D4ED8;
   padding: 46mm 22mm 22mm 22mm;
   height: 297mm;
   box-sizing: border-box;
@@ -97,7 +98,7 @@ body { margin: 0; padding: 0; }
   font-weight: 700;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.72);
+  color: #1D4ED8;
   margin-bottom: 26mm;
 }
 .titlepage h1 {
@@ -107,7 +108,7 @@ body { margin: 0; padding: 0; }
   line-height: 0.98;
   letter-spacing: -0.022em;
   margin: 0 0 7mm 0;
-  color: #FFFFFF;
+  color: #0F172A;
   border: 0;
   padding: 0;
 }
@@ -115,7 +116,7 @@ body { margin: 0; padding: 0; }
   font-size: 13pt;
   font-weight: 400;
   line-height: 1.4;
-  color: rgba(255,255,255,0.88);
+  color: #475569;
   max-width: 120mm;
   margin-bottom: 18mm;
 }
@@ -124,9 +125,9 @@ body { margin: 0; padding: 0; }
   font-weight: 700;
   font-size: 11pt;
   letter-spacing: 0.18em;
-  color: #FFFFFF;
+  color: #1D4ED8;
   padding-bottom: 5mm;
-  border-bottom: 2pt solid rgba(127,156,236,0.35);
+  border-bottom: 1pt solid #E3E8EF;
 }
 .titlepage .imprint {
   position: absolute;
@@ -135,10 +136,10 @@ body { margin: 0; padding: 0; }
   right: 22mm;
   font-size: 8.5pt;
   line-height: 1.7;
-  color: rgba(255,255,255,0.7);
+  color: #64748B;
 }
 .titlepage .imprint strong {
-  color: #FFFFFF;
+  color: #0F172A;
   font-weight: 700;
   letter-spacing: 0.1em;
   font-size: 8pt;
