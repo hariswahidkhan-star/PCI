@@ -72,8 +72,18 @@ def render(name: str, overhead: int) -> pathlib.Path:
 
 
 def verify(path: pathlib.Path) -> None:
-    """The frame must be fully painted — no background strip left at the foot."""
+    """The frame must be fully painted, and must actually be the graphic.
+
+    A wrong URL renders Chromium's error page, which is white, uniform, and sails
+    through a discontinuity check — so test that the frame is predominantly the
+    brand ground before testing that it is complete.
+    """
     im = Image.open(path).convert("RGB")
+    sample = list(im.resize((40, 50)).getdata())
+    blueish = sum(1 for r, g, b in sample if b > r + 25 and b > 60)
+    if blueish < len(sample) * 0.5:
+        raise SystemExit(f"FAIL {path.name}: frame is not the brand ground — bad URL or failed render")
+
     prev, steps = None, []
     for y in range(im.height - 1, int(im.height * 0.85), -4):
         px = im.getpixel((40, y))

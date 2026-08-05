@@ -24,22 +24,30 @@ body{font-family:'Inter',sans-serif;color:#fff;overflow:hidden}
 }
 .card>*{position:relative;z-index:1}
 
-.lockup{display:flex;align-items:center;margin-bottom:54px}
+.lockup{display:flex;align-items:center;margin-bottom:40px}
 .lockup img{width:74px;height:74px}
 .lockup .w{font-family:'Archivo';font-weight:900;font-size:40px;letter-spacing:-.02em;margin-left:19px}
 .lockup .o{font-size:19px;line-height:1.25;margin-left:19px;padding-left:19px;
   border-left:2px solid rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
 
-.eyebrow{font-size:21px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(255,255,255,.72);margin-bottom:22px}
+.lockup .badge{margin-left:auto;display:flex;align-items:center;gap:14px;
+  border:2px solid rgba(255,255,255,.42);border-radius:999px;padding:11px 22px 11px 18px}
+.lockup .badge b{font-family:'Archivo';font-weight:900;font-size:26px;letter-spacing:-.01em}
+.lockup .badge span{font-size:17px;letter-spacing:.13em;text-transform:uppercase;
+  color:rgba(255,255,255,.8);border-left:2px solid rgba(255,255,255,.3);padding-left:14px}
 
-.hero{font-family:'Archivo';font-weight:900;font-size:152px;line-height:.88;
+.credential{font-family:'Archivo';font-weight:900;font-size:33px;letter-spacing:-.012em;
+  margin-bottom:9px}
+.eyebrow{font-size:20px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.68);margin-bottom:20px}
+
+.hero{font-family:'Archivo';font-weight:900;font-size:140px;line-height:.9;
   letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin-bottom:20px}
 .hero .sep{font-family:'Inter',sans-serif;font-weight:700;color:rgba(255,255,255,.4);
   font-size:.26em;vertical-align:.62em;letter-spacing:.06em;margin:0 .06em}
 
 .head{font-family:'Archivo';font-weight:900;font-size:56px;line-height:1.04;
-  letter-spacing:-.03em;margin-bottom:38px}
+  letter-spacing:-.03em;margin-bottom:32px}
 .dot{color:#FF5A4D}
 
 /* the proportional bar — the point of the whole graphic */
@@ -57,7 +65,7 @@ body{font-family:'Inter',sans-serif;color:#fff;overflow:hidden}
 .barkey span:nth-child(3){width:20%}
 
 .rows{flex:0 0 auto}
-.row{display:flex;gap:24px;padding:20px 0;border-top:2px solid rgba(255,255,255,.2)}
+.row{display:flex;gap:24px;padding:18px 0;border-top:2px solid rgba(255,255,255,.2)}
 .row:last-child{border-bottom:2px solid rgba(255,255,255,.2)}
 .chip{width:16px;height:16px;border-radius:4px;margin-top:11px;flex:none}
 .c1{background:#FFFFFF}.c2{background:#8FAEF5}.c3{background:#C13329}
@@ -68,8 +76,8 @@ body{font-family:'Inter',sans-serif;color:#fff;overflow:hidden}
 .pc{font-family:'Archivo';font-weight:900;font-size:36px;width:96px;text-align:right;
   font-variant-numeric:tabular-nums;flex:none}
 
-.foot{display:flex;justify-content:space-between;align-items:baseline;
-  margin-top:auto;padding-top:26px;font-size:21px;color:rgba(255,255,255,.72)}
+.foot{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;line-height:1.45;
+  margin-top:auto;padding-top:24px;font-size:20px;color:rgba(255,255,255,.72)}
 .foot b{font-family:'Archivo';font-weight:900;color:#fff;font-size:23px;letter-spacing:-.01em}
 </style></head><body>
 <div class="card">
@@ -78,9 +86,11 @@ body{font-family:'Inter',sans-serif;color:#fff;overflow:hidden}
     <img src="/backend/wwwroot/assets/logo.svg" alt="">
     <span class="w">PCI AI</span>
     <span class="o">Project Controls<br>Institute Global, Inc.</span>
+    <span class="badge"><b>PCL-AI</b><span>Certification</span></span>
   </div>
 
-  <div class="eyebrow">What PCL-AI certifies</div>
+  <div class="credential">PCI AI Project Controls Leader</div>
+  <div class="eyebrow">The examination weighting</div>
   <div class="hero">40<span class="sep">·</span>40<span class="sep">·</span>20</div>
   <div class="head">The weighting is the argument<span class="dot">.</span></div>
 
@@ -113,7 +123,9 @@ body{font-family:'Inter',sans-serif;color:#fff;overflow:hidden}
   </div>
 
   <div class="foot">
-    <span>Thirteen domains · Sixty-one Knowledge Areas</span>
+    <span>Thirteen domains · Sixty-one Knowledge Areas<br>
+      <em style="font-style:normal;color:rgba(255,255,255,.55)">One of three credentials in the PCI AI Project Leadership Certification Suite —
+      PCL-AI · PFL-AI · PML-AI</em></span>
     <b>projectcontrolsinstitute.org</b>
   </div>
 
