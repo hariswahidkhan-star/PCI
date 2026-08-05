@@ -348,20 +348,7 @@ def build():
           "money is lost</strong>, and it is the one place neither training looks.</div>",
         "1 / 14", "navy"))
 
-    # 3 — the proof: an accounting failure destroying a delivery metric.
-    # 2,200,000 / 1,850,000 = 1.19; with the 240,000 accrual, 2,200,000 / 2,090,000 = 1.05.
-    S.append(slide(
-        head("What the overlap costs", "A CPI of 1.19<br/>and 1.05 from<br/>the same month")
-        + f"<div class='fig-wrap'>{charts.cpi_gap()}</div>"
-        + "<div class='point'>Earned value 2,200,000. Invoiced cost 1,850,000. The error is "
-          "<b>accounting</b> — a cut-off failure. The damage is <b>delivery</b> — a performance "
-          "index a board will act on.</div>"
-          "<div class='callout'>An accountant who never reads a CPI will not see it. A planner who "
-          "never raises an accrual will not see it either. <strong>That is the case for this "
-          "credential in one month-end.</strong></div>",
-        "2 / 14", "tint"))
-
-    # 4 — the shape
+    # The shape
     S.append(slide(
         head("The syllabus", "Forty, forty,<br/>twenty")
         + f"<div class='fig-wrap'>{charts.weight_bar()}</div>"
@@ -442,15 +429,7 @@ def build():
         + frm(*pick(F[6], "SPI(t) = ES / AT")[:1], "the index that still works near completion"),
         "8 / 14", "navy"))
 
-    # 10 — the EAC family
-    S.append(slide(
-        head("Domain 6 &middot; the heart of it", "There is no<br/>&lsquo;the&rsquo; EAC")
-        + f"<div class='fig-wrap'>{charts.eac_fan()}</div>"
-        + "<div class='callout'>Three formula-valid forecasts, <strong>130,000 apart</strong>, from "
-          "one month's data. Naming which one you used, and why, is the skill.</div>",
-        "9 / 14", "tint"))
-
-    # 11 — variance, agile, risk
+    # Variance, agile, risk
     S.append(slide(
         head("Domains 4, 9, 12", "Why the number<br/>moved")
         + frm(*pick(F[4], "Price/rate = (actual price − standard price) × actual quantity")[:1],
