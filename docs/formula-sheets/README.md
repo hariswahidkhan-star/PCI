@@ -93,6 +93,35 @@ identities that make a sheet trustworthy:
 
 Any change to a formula or a worked figure must be re-verified numerically before the sheet is rebuilt.
 
+## Social graphics
+
+Single images for LinkedIn image posts, rendered to PNG at 2x from HTML in
+`social/` by `social/build_social.py`. Output lands in
+`backend/wwwroot/assets/social/`.
+
+| Graphic | What it is |
+|---|---|
+| `pcl-ai-one-page.png` | **The complete PCL-AI formula sheet on one page** — all 63 formulas, 16 groups, three columns, every entry cited to its Knowledge Area |
+| `pcl-ai-40-40-20.png` | The 40/40/20 examination weighting, led by a proportional bar |
+
+**Why the one-page sheet is built the way it is.** Sixty-three formulas cannot be read
+at arm's length in a feed, and pretending otherwise produces a deck instead of a poster.
+The design assumes two viewings: at feed size the reader sees a dense, obviously
+organised reference and saves it; at full size every line is sharp and usable. Density
+is the hook, so the structure has to carry meaning on its own — colour-coded area chips,
+group headers with their domain, and a KA citation under every formula.
+
+```bash
+python3 -m http.server 8899 &            # serve the repo root; the HTML uses absolute paths
+python3 docs/formula-sheets/social/build_social.py            # build all
+python3 docs/formula-sheets/social/build_social.py pcl-ai-one-page
+```
+
+The builder verifies each render before it will report success: the frame must carry
+brand blue (a wrong URL renders Chromium's blank error page, which once passed silently),
+the foot must have no unpainted strip, and the footer band must contain ink — a grid that
+overruns pushes the footer off the frame and leaves only its rule behind.
+
 ## Brand
 
 Both editions use the platform's own design system, not a bespoke one:

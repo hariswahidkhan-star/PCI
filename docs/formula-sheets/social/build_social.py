@@ -91,6 +91,13 @@ def verify(path: pathlib.Path) -> None:
         raise SystemExit(
             f"FAIL {path.name}: no brand blue in the frame — bad URL or failed render")
 
+    # The footer must actually be on the frame. A grid that overruns pushes it off the
+    # bottom, leaving only its rule behind — which looks fine until you read the edge.
+    band = im.crop((0, int(im.height * 0.965), im.width, im.height - 4))
+    ink = sum(1 for px in band.getdata() if sum(px) < 620)
+    if ink < band.width * band.height * 0.004:
+        raise SystemExit(f"FAIL {path.name}: footer band is empty — content overran the frame")
+
     prev, steps = None, []
     for y in range(im.height - 1, int(im.height * 0.85), -4):
         px = im.getpixel((40, y))
