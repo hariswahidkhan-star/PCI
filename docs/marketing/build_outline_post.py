@@ -26,6 +26,9 @@ import pathlib
 import re
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import charts
+
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 OUT = HERE / "assets"
@@ -176,6 +179,11 @@ h2 {{ font-size: 58pt; }}
 .slide.navy .std .k {{ color: {GOLD}; }}
 .std .v {{ font-size: 17pt; line-height: 1.35; color: {SLATE}; flex: 1; }}
 .slide.navy .std .v {{ color: #C9D4EC; }}
+/* The figures carry a viewBox and no intrinsic size, so they scale to the measure. Left at their
+   authored width they render at 880 CSS px = 660 pt inside a 916 pt column — about 72% of the
+   slide, which reads as a thumbnail dropped on the page rather than as the slide's subject. */
+.fig-wrap {{ margin: 4pt 0 10pt 0; }}
+.fig-wrap svg {{ display: block; width: 100%; height: auto; }}
 .swipe {{ font-size: 17pt; font-weight: 700; color: {GOLD}; margin-top: 28pt;
           display: flex; align-items: center; gap: 10pt; }}
 """
@@ -344,11 +352,10 @@ def build():
     # 2,200,000 / 1,850,000 = 1.19; with the 240,000 accrual, 2,200,000 / 2,090,000 = 1.05.
     S.append(slide(
         head("What the overlap costs", "A CPI of 1.19<br/>and 1.05 from<br/>the same month")
-        + "<div class='point'>Earned value 2,200,000. Invoiced cost 1,850,000. Skip the accrual and "
-          "<b>CPI = 1.19</b>. Book the 240,000 already done and <b>CPI = 1.05</b>.</div>"
-          "<div class='point'>The error is <b>accounting</b> — a cut-off failure. The damage is "
-          "<b>delivery</b> — a performance index a board will act on. Fourteen points, one missing "
-          "entry.</div>"
+        + f"<div class='fig-wrap'>{charts.cpi_gap()}</div>"
+        + "<div class='point'>Earned value 2,200,000. Invoiced cost 1,850,000. The error is "
+          "<b>accounting</b> — a cut-off failure. The damage is <b>delivery</b> — a performance "
+          "index a board will act on.</div>"
           "<div class='callout'>An accountant who never reads a CPI will not see it. A planner who "
           "never raises an accrual will not see it either. <strong>That is the case for this "
           "credential in one month-end.</strong></div>",
@@ -357,14 +364,12 @@ def build():
     # 4 — the shape
     S.append(slide(
         head("The syllabus", "Forty, forty,<br/>twenty")
+        + f"<div class='fig-wrap'>{charts.weight_bar()}</div>"
         + "<div class='figs'>"
           "<div class='fig'><div class='n'>13</div><div class='l'>domains</div></div>"
           "<div class='fig'><div class='n'>61</div><div class='l'>knowledge areas</div></div>"
           "<div class='fig'><div class='n'>26</div><div class='l'>sector case studies</div></div>"
-          "</div>"
-          "<div class='callout'><strong>40%</strong> finance, accounting and reporting &nbsp;&middot;&nbsp; "
-          "<strong>40%</strong> project management &nbsp;&middot;&nbsp; <strong>20%</strong> governed AI. "
-          "The proportions of the Body of Knowledge.</div>",
+          "</div>",
         "3 / 14"))
 
     # 5 — the finance half, named. This is the half most delivery credentials do not have.
@@ -440,16 +445,9 @@ def build():
     # 10 — the EAC family
     S.append(slide(
         head("Domain 6 &middot; the heart of it", "There is no<br/>&lsquo;the&rsquo; EAC")
-        + frm(*pick(F[6], "EAC = AC + (BAC − EV)")[:1],
-              "the overrun was one-off; the rest runs to plan", stack=True)
-        + frm(*pick(F[6], "EAC = BAC / CPI")[:1],
-              "performance to date persists — usually the honest default", stack=True)
-        + frm(*pick(F[6], "EAC = AC + (BAC − EV)/(CPI × SPI)")[:1],
-              "cost and schedule pressure both continue", stack=True)
-        + frm(*pick(F[6], "EAC = AC + ETC")[:1],
-              "the team re-estimated the remaining work bottom-up", stack=True)
-        + "<div class='callout'>Four methods. Four assumptions. Four different answers from the "
-          "same data. <strong>Naming which one you used, and why, is the skill.</strong></div>",
+        + f"<div class='fig-wrap'>{charts.eac_fan()}</div>"
+        + "<div class='callout'>Three formula-valid forecasts, <strong>130,000 apart</strong>, from "
+          "one month's data. Naming which one you used, and why, is the skill.</div>",
         "9 / 14", "tint"))
 
     # 11 — variance, agile, risk
