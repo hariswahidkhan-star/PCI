@@ -1,16 +1,78 @@
-# Honorary Fellow (PCI) — LinkedIn post
+# Honorary Fellow (PCI) — LinkedIn
 
-**Graphic:** `backend/wwwroot/assets/social/honorary-fellow.png` (2160×2700, 4:5)
+**Carousel (post this):** `backend/wwwroot/assets/social/honorary-carousel/honorary-fellow-carousel.pdf`
+— 7 slides, 4:5, plus the individual PNGs in the same folder
+**Generator:** `docs/formula-sheets/social/make_honorary_carousel.py`
+
+**One-page sheet (secondary):** `backend/wwwroot/assets/social/honorary-fellow.png`
 **Generator:** `docs/formula-sheets/social/make_honorary.py`
+
 **Apply:** Admin@pciai.org · `projectcontrolsinstitute.org/honorary-application.html`
 
-Every claim below is traceable to `backend/wwwroot/route-honorary.html` and
+Every claim in both is traceable to `backend/wwwroot/route-honorary.html` and
 `backend/wwwroot/honorary-application.html`. Nothing is softened in the retelling, and no
 recognition, accreditation or outcome claim appears anywhere.
 
 ---
 
-## The post
+## Which asset to post
+
+**Post the carousel.** A feed is read on a phone, where a document page renders at roughly a
+third of its width — the one-page sheet's body type lands near 7px there, which is a grey
+wall nobody reads. The carousel carries one idea per slide at a size that survives that
+reduction.
+
+The one-page sheet is a reference, not a post. Use it as the download behind the carousel,
+on the honorary route page, or in an email to a shortlisted applicant — places where someone
+has already decided to read and can open it full-screen.
+
+| Slide | Carries |
+|---|---|
+| 1 | Conferred, never purchased — the premise |
+| 2 | Why this needs saying: most honorary titles are bought |
+| 3 | What it costs: nothing, and payment buys no entitlement |
+| 4 | The bar: 8 years, 3 managerial, a distinguished record — all three |
+| 5 | Meeting the bar entitles you to nothing; the board may decline |
+| 6 | It is not a certification — the line against PCL-AI, PFL-AI, PML-AI |
+| 7 | The four steps, and where to apply |
+
+---
+
+## Carousel caption
+
+Post this as the text above the carousel. It is short on purpose — the slides carry the
+argument, and a caption that repeats them gives people a reason not to swipe.
+
+> Most honorary titles in this profession are bought.
+>
+> Not in those words. A nomination fee, an assessment fee, a credential fee, a ceremony
+> ticket — and a review that has never once declined an applicant who paid.
+>
+> Honorary Fellow (PCI) is the opposite, and our terms are published so you can hold us to
+> it. No fee of any kind to apply or to receive it. A real bar: eight years in the
+> discipline, three of them managerial, and a record of distinguished contribution — all
+> three, not any one.
+>
+> And meeting that bar entitles you to nothing. Conferral is at the board's discretion, and
+> we may decline without stating reasons. A distinction granted to everyone who qualifies to
+> be considered is not a distinction.
+>
+> It is also not a certification. PCL-AI, PFL-AI and PML-AI are earned by passing the
+> examination, on every route. Nobody is given one for a distinguished career — including
+> people who have one.
+>
+> Seven slides on what it is, what it is not, and how the board decides.
+>
+> Apply: Admin@pciai.org
+>
+> Project Controls Institute Global, Inc.
+
+---
+
+## Long-form post
+
+Use this when posting the one-page sheet as a single image, or as a follow-up article. For
+the carousel, use the short caption above instead.
 
 Most honorary titles in this profession are bought.
 
@@ -114,9 +176,9 @@ everyone: PCL-AI, PFL-AI and PML-AI are earned by examination, and the Founding 
 carries no fee.
 
 **Suggested posting note**
-Post the graphic as a single image, not a document — the sheet is designed to read at feed
-size as an obviously organised reference and at full size as a legible one. Put the links in
-the first comment.
+Upload the carousel PDF as a **document post** — that is what LinkedIn renders as a swipeable
+carousel; uploading the PNGs as an image gallery works but loses the page-turn affordance.
+Put the links in the first comment, not the caption.
 
 ---
 
@@ -136,3 +198,10 @@ nothing that matters.
 **What is deliberately absent.** No claim of accreditation or external recognition. No
 suggestion that recognition improves employment outcomes. No named honorary recipients. No
 count of awards conferred. No implication that applying is likely to succeed.
+
+**Why the dense sheet is not the post.** The first version of this shipped as a single
+one-page graphic. Opened on a phone it was unreadable — the body type reduces to about 7px in
+a feed, which is the same failure already recorded in `docs/formula-sheets/README.md` about
+A4 pages rendering at 36% on a phone. Density is a virtue in a reference and a defect in a
+post. The rule worth keeping: **if a slide carries more than about sixty words, it is not a
+slide.**

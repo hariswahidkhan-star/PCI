@@ -93,6 +93,23 @@ identities that make a sheet trustworthy:
 
 Any change to a formula or a worked figure must be re-verified numerically before the sheet is rebuilt.
 
+## Carousels
+
+`social/make_honorary_carousel.py` builds a seven-slide deck and assembles it into a PDF,
+because LinkedIn's carousel is a document post rather than an image gallery. It renders
+through `build_social` so the slides get the same clipping and paint checks as everything
+else.
+
+**A dense sheet is not a post.** This was learned twice. A feed is read on a phone, where a
+4:5 page renders at roughly a third of its width — so a one-pager's 14px body type arrives at
+about 5px, and the reader sees a grey rectangle. The one-page graphics below are references:
+things someone saves, opens full-screen, and returns to. A carousel is the format for the
+feed itself, and its governing constraint is not how much fits but how little can be on a
+slide and still earn the swipe.
+
+The working rule: **body copy at ~34px on a 1080px slide, and if a slide carries more than
+about sixty words, it is not a slide.**
+
 ## Social graphics
 
 Single images for LinkedIn image posts, rendered to PNG at 2x from HTML in

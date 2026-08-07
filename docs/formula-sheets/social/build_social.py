@@ -31,6 +31,10 @@ CHROME = "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"
 PORT = 8899
 W, H, SCALE = 1080, 1350, 2
 
+# Primary blue, crimson, ink — the three colours sampled from the rendered site. A
+# graphic that carries none of them did not render.
+BRAND = ((0x1D, 0x4E, 0xD8), (0xC1, 0x33, 0x29), (0x0F, 0x17, 0x2A))
+
 FLAGS = [
     "--headless", "--disable-gpu", "--no-sandbox", "--hide-scrollbars",
     f"--force-device-scale-factor={SCALE}",
@@ -68,7 +72,13 @@ for (const el of document.querySelectorAll('*')) {
 </script>"""
 
 
-def overflow(name: str, overhead: int) -> None:
+def url_for(path: pathlib.Path) -> str:
+    """The served URL for a file in the repo. Everything is served from the repo root
+    because the graphics reference fonts and the logo by absolute path."""
+    return f"http://localhost:{PORT}/{path.relative_to(ROOT).as_posix()}"
+
+
+def overflow(src: pathlib.Path, overhead: int) -> None:
     """Fail on content that a hidden overflow silently ate.
 
     A graphic whose grid overruns is clipped, not broken: the frame is fully painted,
@@ -81,34 +91,37 @@ def overflow(name: str, overhead: int) -> None:
     URL in it still resolves, and injecting here rather than in each page means the
     hand-written graphics get the same check as the generated ones.
     """
-    src = HERE / f"{name}.html"
-    probe = HERE / f".{name}.guard.html"
+    probe = src.with_name(f".{src.stem}.guard.html")
     probe.write_text(src.read_text(encoding="utf-8") + GUARD, encoding="utf-8")
     try:
         dom = subprocess.run(
             [CHROME, *FLAGS, f"--window-size={W},{H + overhead}", "--dump-dom",
-             f"http://localhost:{PORT}/docs/formula-sheets/social/{probe.name}"],
+             url_for(probe)],
             capture_output=True, text=True,
         ).stdout
     finally:
         probe.unlink(missing_ok=True)
     if "<title>OVERFLOW " in dom:
         detail = dom.split("<title>OVERFLOW ")[1].split("</title>")[0]
-        raise SystemExit(f"FAIL {name}: content is clipped — {detail}")
+        raise SystemExit(f"FAIL {src.stem}: content is clipped — {detail}")
 
 
-def render(name: str, overhead: int) -> pathlib.Path:
-    OUT.mkdir(parents=True, exist_ok=True)
+def render(src: pathlib.Path, dest: pathlib.Path, overhead: int) -> pathlib.Path:
+    dest.parent.mkdir(parents=True, exist_ok=True)
     raw = pathlib.Path(tempfile.mkdtemp()) / "raw.png"
-    url = f"http://localhost:{PORT}/docs/formula-sheets/social/{name}.html"
     subprocess.run(
         [CHROME, *FLAGS, f"--window-size={W},{H + overhead}",
-         f"--screenshot={raw}", url],
+         f"--screenshot={raw}", url_for(src)],
         capture_output=True, check=True,
     )
-    img = Image.open(raw).crop((0, 0, W * SCALE, H * SCALE))
-    dest = OUT / f"{name}.png"
-    img.save(dest, optimize=True)
+    Image.open(raw).crop((0, 0, W * SCALE, H * SCALE)).save(dest, optimize=True)
+    return dest
+
+
+def build(src: pathlib.Path, dest: pathlib.Path, overhead: int) -> pathlib.Path:
+    """Check, render, verify. The one entry point callers should use."""
+    overflow(src, overhead)
+    verify(render(src, dest, overhead))
     return dest
 
 
@@ -116,21 +129,25 @@ def verify(path: pathlib.Path) -> None:
     """The frame must be fully painted, and must actually be the graphic.
 
     A wrong URL renders Chromium's error page: white, near-empty, and it sails
-    through a completeness check because there is nothing to be incomplete. Test
-    for the brand instead — every graphic carries a substantial amount of #1D4ED8
-    somewhere, on a light ground or a dark one, and an error page carries none.
+    through a completeness check because there is nothing to be incomplete. Test for
+    the brand instead — every graphic carries a substantial field of blue, crimson or
+    ink, and an error page carries none of them.
+
+    Check all three, not blue alone: a slide deliberately set on the dark ground has no
+    blue on it at all, and a blue-only test called that a failed render.
     """
     im = Image.open(path).convert("RGB")
     # Sample the full-resolution frame on a stride. Resizing first averages a small
-    # blue element into a white ground and hides it, which failed this check once.
+    # brand element into a white ground and hides it, which failed this check once.
     pts = [(x, y) for y in range(0, im.height, 9) for x in range(0, im.width, 9)]
-    brand = sum(1 for x, y in pts
-                if abs(im.getpixel((x, y))[0] - 0x1D) < 70
-                and abs(im.getpixel((x, y))[1] - 0x4E) < 70
-                and abs(im.getpixel((x, y))[2] - 0xD8) < 70)
+    brand = 0
+    for x, y in pts:
+        px = im.getpixel((x, y))
+        if any(all(abs(px[i] - c[i]) < 70 for i in range(3)) for c in BRAND):
+            brand += 1
     if brand < len(pts) * 0.02:
         raise SystemExit(
-            f"FAIL {path.name}: no brand blue in the frame — bad URL or failed render")
+            f"FAIL {path.name}: no brand colour in the frame — bad URL or failed render")
 
     # The footer must actually be on the frame. A layout that overruns pushes it off
     # the bottom, leaving only its rule behind — which looks fine until you read the
@@ -158,5 +175,4 @@ if __name__ == "__main__":
     over = viewport_overhead()
     print(f"viewport overhead: {over}px")
     for n in names:
-        overflow(n, over)
-        verify(render(n, over))
+        build(HERE / f"{n}.html", OUT / f"{n}.png", over)
