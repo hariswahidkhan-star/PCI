@@ -1,7 +1,13 @@
 # Certuvo — official preparation platform announcement
 
-**Carousel (post this):** `backend/wwwroot/assets/social/certuvo-carousel/certuvo-official-platform-carousel.pdf`
+**Carousel (post this):**
+`backend/wwwroot/assets/social/certuvo-carousel/Certuvo-Official-Preparation-Platform-PCI-AI-Certification.pdf`
 — 7 slides, 4:5, plus the individual PNGs in the same folder
+
+**The filename is deliberate.** LinkedIn shows a document post's filename as the document
+title, under the frame and in search. It is indexed text, not housekeeping — so it is
+written as a title carrying the terms people search, not as `deck-final-v3.pdf`.
+
 **Generator:** `docs/formula-sheets/social/make_certuvo_carousel.py`
 
 Every claim traces to `backend/wwwroot/certuvo.html`, `impartiality-policy.html`,
@@ -44,9 +50,10 @@ adjusted before it goes out.
 
 > PCI sets the standard. Certuvo is where you meet it.
 >
-> Certuvo is the official preparation platform for the PCI AI certifications — PCL-AI, PFL-AI
-> and PML-AI. Fully online, self-paced, built around scenario practice that mirrors the
-> examination rather than drilling recall.
+> Certuvo is the official exam preparation platform for the PCI AI project controls
+> certifications — PCL-AI, PFL-AI and PML-AI. Fully online project controls training,
+> self-paced, built around scenario-based practice that mirrors the examination rather than
+> drilling recall.
 >
 > Now the half that most announcements leave out.
 >
@@ -75,33 +82,38 @@ adjusted before it goes out.
 | Slide | Carries |
 |---|---|
 | 1 | PCI sets the standard, Certuvo is where you meet it — the announcement |
-| 2 | What it delivers: study, scenario banks, mocks, readiness |
+| 2 | Project controls exam preparation: study, scenario banks, mocks, readiness |
 | 3 | Why the format matters — the exam is entirely scenario-based |
-| 4 | What this does not mean — no role in standard, cut score, decision *(dark)* |
+| 4 | What this does not mean — no role in standard, cut score, decision *(accent)* |
 | 5 | Completing the courses confers no advantage |
 | 6 | You do not have to use it |
 | 7 | Why the separation exists, and where to prepare |
 
-Slides 1, 4 and 7 are on the dark ground — an inked cover to stop the scroll in a white
-feed, an inked pivot, an inked close. Slide 4 is the one that matters: the deck is built so
+Slides 1, 4 and 7 sit on the bright accent tint — cover, pivot, close. The deck is light
+throughout: a feed reads brighter than a stage, and the tint carries the same rhythm a dark
+field would without the weight. Slide 4 is the one that matters, and the deck is ordered so
 that a reader who swipes no further than it has still received the governance point.
 
-**Co-branding.** The cover carries a PCI AI / Certuvo lockup, two marks either side of a
-hairline with neither subordinated, and Certuvo's mark appears in every slide footer and in
-the closing call to action. Announcing a relationship while showing only our own mark is
-what makes a partnership post read as a press release about ourselves. Mark files and their
-provenance are in `backend/wwwroot/assets/partners/`.
+**Co-branding.** Every slide carries both marks in the running header — PCI AI, hairline,
+Certuvo — and the cover carries the same lockup at full size. Certuvo's own mark, not its
+name set in our typeface, also closes the deck in the call to action. Announcing a
+relationship while showing only our own mark is what makes a partnership post read as a
+press release about ourselves. Mark files and their provenance are in
+`backend/wwwroot/assets/partners/`.
+
+**Progress counter.** Every slide is numbered `01 / 07`. Completion is what LinkedIn weights
+on a carousel, and a reader who can see how much is left finishes the deck.
 
 ---
 
 ## Supplementary deliverables
 
-**SEO title (57 chars)**
-Certuvo: The Official Preparation Platform for PCI AI
+**SEO title (59 chars)**
+Certuvo: Official PCI AI Project Controls Exam Preparation
 
-**Meta description (149 chars)**
-Certuvo is PCI AI's official preparation platform for PCL-AI, PFL-AI and PML-AI — scenario
-practice that mirrors the exam, with no role in certification.
+**Meta description (156 chars)**
+Certuvo is the official exam preparation platform for the PCI AI project controls
+certifications — PCL-AI, PFL-AI, PML-AI. Scenario practice, no role in certification.
 
 **First comment**
 What Certuvo provides, and how impartiality is protected:

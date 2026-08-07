@@ -18,8 +18,8 @@ Archetypes available to a deck:
     .row        large listed rows, tick or cross
     .step       numbered process rows
     .cta        the closing apply strip
-Set ink=True for a slide on the dark ground; alternating them gives the deck a
-rhythm instead of seven identical white pages.
+Set tint=True for a slide on the bright accent ground; alternating them gives the
+deck a rhythm instead of seven identical white pages, without going dark.
 """
 import pathlib
 
@@ -37,8 +37,10 @@ body{font-family:'Inter',sans-serif;color:#0F172A;background:#fff;overflow:hidde
 .s{position:relative;width:100vw;height:100vh;padding:62px 68px 52px;
   display:flex;flex-direction:column;background:#fff}
 .s::after{content:"";position:absolute;top:0;left:0;right:0;height:14px;background:#1D4ED8}
-.s.ink{background:#0F172A;color:#fff}
-.s.ink::after{background:#C13329}
+/* The accent ground is a bright tint, not a dark field. It carries the same rhythm
+   across a deck while every slide stays light — a feed reads brighter than a stage. */
+.s.tint{background:#EDF2FD}
+.s.tint::after{background:#C13329}
 
 /* ---------- furniture ---------- */
 /* Lockup pinned top, footer pinned bottom, content centred in what is left. Letting
@@ -50,51 +52,39 @@ body{font-family:'Inter',sans-serif;color:#0F172A;background:#fff;overflow:hidde
 .top{display:flex;align-items:center;gap:17px;margin-bottom:40px}
 .top .tile{width:66px;height:66px;flex:none}
 .top .w{font-family:'Archivo';font-weight:900;font-size:34px;letter-spacing:-.02em;color:#1D4ED8}
-.s.ink .top .w{color:#fff}
 .top .rule{width:2px;height:46px;background:#E3E8EF;border:0;flex:none;margin:0 2px}
-.s.ink .top .rule{background:rgba(255,255,255,.3)}
+.s.tint .top .rule{background:#C7D6F5}
 .top .pt{height:37px;flex:none}
 /* progress counter: a reader who can see how much is left finishes the deck */
 .top .n{margin-left:auto;font-family:'Archivo';font-weight:900;font-size:25px;
   color:#0F172A;letter-spacing:.04em;white-space:nowrap}
 .top .n em{font-style:normal;color:#CBD5E1}
-.s.ink .top .n{color:#fff}
-.s.ink .top .n em{color:rgba(255,255,255,.4)}
-
-/* one ground-aware swap for every partner mark, whatever its size */
-.dark{display:none}
-.s.ink .light{display:none}
-.s.ink .dark{display:inline}
+.s.tint .top .n em{color:#9DB4E8}
 
 .eyebrow{font-size:25px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
   color:#1D4ED8;margin-bottom:26px}
-.s.ink .eyebrow{color:#F0776C}
+.s.tint .eyebrow{color:#C13329}
 
 h1{font-family:'Archivo';font-weight:900;font-size:96px;line-height:.98;
   letter-spacing:-.038em;margin-bottom:30px}
 h1.sm{font-size:78px}
 .dot{color:#C13329}
-.s.ink .dot{color:#F0776C}
 
 p{font-size:34px;line-height:1.45;color:#475569;max-width:22ch}
-.s.ink p{color:rgba(255,255,255,.8)}
+.s.tint p{color:#42536B}
 p.wide{max-width:none}
 p b{color:#0F172A;font-weight:700}
-.s.ink p b{color:#fff}
 p + p{margin-top:22px}
 
 .kicker{margin-top:34px;padding-top:28px;border-top:4px solid #0F172A;
   font-family:'Archivo';font-weight:900;font-size:42px;line-height:1.14;
   letter-spacing:-.02em;color:#0F172A;max-width:26ch}
-.s.ink .kicker{border-color:rgba(255,255,255,.28);color:#fff}
 .kicker em{font-style:normal;color:#C13329}
-.s.ink .kicker em{color:#F0776C}
 
 .foot{margin-top:36px;padding-top:26px;border-top:2px solid #E3E8EF;display:flex;
   justify-content:space-between;align-items:baseline;font-size:23px;color:#94A3B8}
-.s.ink .foot{border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.5)}
+.s.tint .foot{border-color:#C7D6F5;color:#64748B}
 .foot b{font-weight:700;color:#1D4ED8}
-.s.ink .foot b{color:#fff}
 
 /* ---------- co-brand lockup: two marks, one hairline ----------
    For an announcement about a relationship. Showing only our own mark and naming the
@@ -107,10 +97,8 @@ p + p{margin-top:22px}
   letter-spacing:-.022em;color:#1D4ED8}
 .cobrand hr{width:3px;height:70px;background:#E3E8EF;border:0;flex:none;margin:0}
 .cobrand .partner{height:58px;flex:none}
-.s.ink .cobrand .pci b{color:#fff}
-.s.ink .cobrand hr{background:rgba(255,255,255,.28)}
+.s.tint .cobrand hr{background:#C7D6F5}
 
-/* a partner mark set inline in the footer, light and dark variants swapped by ground */
 /* ---------- cover ---------- */
 .badge{display:inline-flex;align-items:center;gap:16px;border:4px solid #1D4ED8;
   border-radius:999px;padding:12px 28px 12px 24px;margin-bottom:36px;align-self:flex-start}
@@ -139,15 +127,13 @@ p + p{margin-top:22px}
 .row{display:flex;align-items:baseline;gap:22px;padding:24px 0;
   border-bottom:2px solid #E3E8EF}
 .row:last-child{border-bottom:0}
-.s.ink .row{border-color:rgba(255,255,255,.18)}
+.s.tint .row{border-color:#C7D6F5}
 .row em{font-style:normal;flex:none;font-family:'Archivo';font-weight:900;font-size:34px;
   color:#C13329;width:44px}
 .row.tick em{color:#1D4ED8}
 .row b{font-size:38px;font-weight:700;letter-spacing:-.01em;color:#0F172A}
-.s.ink .row b{color:#fff}
 .row span{margin-left:auto;text-align:right;font-size:25px;color:#64748B;
   line-height:1.28;max-width:46%}
-.s.ink .row span{color:rgba(255,255,255,.62)}
 
 /* ---------- numbered process ---------- */
 .step{display:flex;gap:24px;align-items:flex-start;padding:22px 0;
@@ -172,6 +158,10 @@ p + p{margin-top:22px}
 .cta p b{color:#fff;font-weight:700}
 /* a partner's name belongs in its own mark, not set in our typeface */
 .cta .ctamark{height:40px;display:block;margin-top:2px}
+/* The strip is reversed, so a ground override must not reach inside it. `.s.tint p`
+   outranks `.cta p` on specificity and turned this copy dark grey on blue. */
+.s.tint .cta p{color:rgba(255,255,255,.78)}
+.s.tint .cta p b{color:#fff}
 """
 
 # A deck sets this to a mark path stem (without the .png / -white.png suffix) when the
@@ -180,11 +170,10 @@ PARTNER: str | None = None
 
 
 def lockup(n: str) -> str:
-    partner = ""
-    if PARTNER:
-        partner = ('<hr class="rule">'
-                   f'<img class="pt light" src="{PARTNER}.png" alt="">'
-                   f'<img class="pt dark" src="{PARTNER}-white.png" alt="">')
+    # Every ground is light, so the mark's own colour reads everywhere and only the
+    # blue build is emitted. The white build is kept for reversed elements — the CTA
+    # strip — and would ghost on the tint if it shipped here too.
+    partner = f'<hr class="rule"><img class="pt" src="{PARTNER}.png" alt="">' if PARTNER else ""
     # a cover carries no number, and "/ 07" on its own reads as a missing value
     count = f'<span class="n">{n}<em>&thinsp;/&thinsp;__TOTAL__</em></span>' if n else ""
     return ('<div class="top">'
@@ -193,13 +182,13 @@ def lockup(n: str) -> str:
             f'{partner}{count}</div>')
 
 
-def slide(n: str, body: str, foot: str, ink: bool = False, show_foot: bool = True,
+def slide(n: str, body: str, foot: str, tint: bool = False, show_foot: bool = True,
           show_top: bool = True) -> str:
     """One slide. show_top=False on a cover that carries its own co-brand lockup, so the
     same marks do not appear twice on the one slide that most needs to look composed."""
     top = lockup(n) if show_top else ""
     return (f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head>'
-            f'<body><div class="s{" ink" if ink else ""}">{top}'
+            f'<body><div class="s{" tint" if tint else ""}">{top}'
             f'<div class="body">{body}</div>{foot if show_foot else ""}</div></body></html>')
 
 

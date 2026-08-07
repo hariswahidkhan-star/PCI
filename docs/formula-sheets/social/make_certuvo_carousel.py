@@ -30,16 +30,16 @@ OUT = bs.ROOT / "backend" / "wwwroot" / "assets" / "social" / "certuvo-carousel"
 MARK = "/backend/wwwroot/assets/partners/certuvo-mark"
 kit.PARTNER = MARK          # both marks ride the header bar on every slide
 
-FOOT = kit.footer("Official preparation platform for PCI AI")
+FOOT = kit.footer("Project controls certification &middot; official exam preparation")
 
 COBRAND = f'''<div class="cobrand">
   <span class="pci"><img src="/backend/wwwroot/assets/logo.svg" alt=""><b>PCI AI</b></span>
-  <hr><img class="partner" src="{MARK}-white.png" alt="Certuvo">
+  <hr><img class="partner" src="{MARK}.png" alt="Certuvo">
 </div>'''
 
 
-def slide(n, body, ink=False, show_foot=True, show_top=True):
-    return kit.slide(n, body, FOOT, ink=ink, show_foot=show_foot, show_top=show_top)
+def slide(n, body, tint=False, show_foot=True, show_top=True):
+    return kit.slide(n, body, FOOT, tint=tint, show_foot=show_foot, show_top=show_top)
 
 
 SLIDES = {}
@@ -48,20 +48,21 @@ SLIDES["01-cover"] = slide("", f"""
   {COBRAND}
   <div class="eyebrow">Official preparation platform</div>
   <h1>PCI sets the<br>standard.<br>Certuvo is where<br>you meet it<span class="dot">.</span></h1>
-  <p class="wide"><b>For the PCI AI certifications</b><br>PCL-AI &middot; PFL-AI &middot; PML-AI</p>
-""", ink=True, show_top=False)
+  <p class="wide"><b>Official exam preparation for the PCI AI project controls
+    certifications</b><br>PCL-AI &middot; PFL-AI &middot; PML-AI</p>
+""", tint=True, show_top=False)
 
 SLIDES["02-what"] = slide("01", """
-  <div class="eyebrow">What it delivers</div>
+  <div class="eyebrow">Project controls exam preparation</div>
   <h1 class="sm">Study and<br>practice, fully<br>online<span class="dot">.</span></h1>
-  <div class="row tick"><em>&mdash;</em><b>Study aligned to the body of knowledge</b></div>
-  <div class="row tick"><em>&mdash;</em><b>Scenario banks that mirror the exam</b></div>
+  <div class="row tick"><em>&mdash;</em><b>Study aligned to the PCL-AI body of knowledge</b></div>
+  <div class="row tick"><em>&mdash;</em><b>Scenario question banks that mirror the exam</b></div>
   <div class="row tick"><em>&mdash;</em><b>Full-length mock examinations</b></div>
-  <div class="row tick"><em>&mdash;</em><b>Progress and readiness insight</b></div>
+  <div class="row tick"><em>&mdash;</em><b>Progress tracking and exam readiness</b></div>
 """)
 
 SLIDES["03-scenario"] = slide("02", """
-  <div class="eyebrow">Why the format matters</div>
+  <div class="eyebrow">Why the exam format matters</div>
   <h1 class="sm">The exam is<br>entirely<br>scenario-based<span class="dot">.</span></h1>
   <p class="wide">Every question puts you in a situation and asks for the best course
     of action. Certuvo's practice mirrors that format, so the examination feels
@@ -75,7 +76,7 @@ SLIDES["04-separation"] = slide("03", """
   <div class="row"><em>&times;</em><b>No role in setting the standard</b></div>
   <div class="row"><em>&times;</em><b>No role in setting the cut score</b></div>
   <div class="row"><em>&times;</em><b>No role in any certification decision</b></div>
-""", ink=True)
+""", tint=True)
 
 SLIDES["05-no-advantage"] = slide("04", """
   <div class="eyebrow">Stated plainly</div>
@@ -87,7 +88,7 @@ SLIDES["05-no-advantage"] = slide("04", """
 """)
 
 SLIDES["06-optional"] = slide("05", """
-  <div class="eyebrow">What candidates should know</div>
+  <div class="eyebrow">What certification candidates should know</div>
   <h1 class="sm">You do not<br>have to use it<span class="dot">.</span></h1>
   <p class="wide">Certuvo is the official preparation, not a requirement. Candidates may
     prepare however they wish &mdash; self-study, an employer programme, a recognised
@@ -108,8 +109,11 @@ SLIDES["07-why"] = slide("06", f"""
     <span><k>Prepare with</k><img class="ctamark" src="{MARK}-white.png" alt="Certuvo"></span>
     <p>Enrolled candidates practise inside<br>the PCI portal<br>
       <b>projectcontrolsinstitute.org</b></p></div>
-""", ink=True, show_foot=False)
+""", tint=True, show_foot=False)
 
 
 if __name__ == "__main__":
-    kit.render_deck(SLIDES, WORK, OUT, "certuvo-official-platform-carousel.pdf")
+    # LinkedIn shows a document post's filename as its title, so the filename is indexed
+    # text rather than housekeeping. It reads as a title and carries the search terms.
+    kit.render_deck(SLIDES, WORK, OUT,
+                    "Certuvo-Official-Preparation-Platform-PCI-AI-Certification.pdf")

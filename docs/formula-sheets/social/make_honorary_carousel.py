@@ -30,8 +30,8 @@ OUT = bs.ROOT / "backend" / "wwwroot" / "assets" / "social" / "honorary-carousel
 FOOT = kit.footer("Honorary Fellow (PCI) &middot; board-conferred recognition")
 
 
-def slide(n, body, ink=False, show_foot=True):
-    return kit.slide(n, body, FOOT, ink=ink, show_foot=show_foot)
+def slide(n, body, tint=False, show_foot=True):
+    return kit.slide(n, body, FOOT, tint=tint, show_foot=show_foot)
 
 
 SLIDES = {}
@@ -50,7 +50,7 @@ SLIDES["02-problem"] = slide("01", """
     fee. A ceremony ticket. And a review that has never once declined an applicant
     who paid.</p>
   <div class="kicker">The letters arrive.<br><em>The distinction does not.</em></div>
-""", ink=True)
+""", tint=True)
 
 SLIDES["03-fee"] = slide("02", """
   <div class="eyebrow">What it costs to apply</div>
@@ -84,7 +84,7 @@ SLIDES["05-discretion"] = slide("04", """
   <div class="kicker">A distinction granted to everyone
     who qualifies to be considered is not a distinction.
     <em>It is a mailing list.</em></div>
-""", ink=True)
+""", tint=True)
 
 SLIDES["06-boundary"] = slide("05", """
   <div class="eyebrow">The line we will not blur</div>
