@@ -1,4 +1,33 @@
-<!doctype html><html><head><meta charset="utf-8"><style>
+#!/usr/bin/env python3
+"""The shared slide system for PCI AI LinkedIn carousels.
+
+One implementation, because two decks that drift apart stop reading as one
+institution. Slide furniture, type scale and the archetypes live here; each deck
+supplies only its content and its order.
+
+The governing constraint is the phone. A 4:5 slide renders at roughly a third of
+its width in a feed, so body copy is set at ~34px to land near 12px there, and a
+slide carrying more than about sixty words has already failed.
+
+Archetypes available to a deck:
+    .badge      cover chip
+    h1 / h1.sm  the statement
+    p           supporting copy, capped at 22ch so it never sets as a paragraph
+    .kicker     the rule-off line that lands the point
+    .gates      three big-number cards
+    .row        large listed rows, tick or cross
+    .step       numbered process rows
+    .cta        the closing apply strip
+Set ink=True for a slide on the dark ground; alternating them gives the deck a
+rhythm instead of seven identical white pages.
+"""
+import pathlib
+
+from PIL import Image
+
+import build_social as bs
+
+CSS = """
 @font-face{font-family:'Archivo';src:url('/backend/wwwroot/assets/fonts/archivo-latin.woff2') format('woff2');font-weight:700 900}
 @font-face{font-family:'Inter';src:url('/backend/wwwroot/assets/fonts/inter-latin.woff2') format('woff2');font-weight:400 700}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -113,12 +142,42 @@ p + p{margin-top:22px}
 .cta p{margin-left:auto;text-align:right;font-size:22px;color:rgba(255,255,255,.78);
   max-width:44%;line-height:1.34}
 .cta p b{color:#fff;font-weight:700}
-</style></head><body><div class="s ink"><div class="top"><img src="/backend/wwwroot/assets/logo.svg" alt=""><span class="w">PCI AI</span><span class="n">04</span></div><div class="body">
-  <div class="eyebrow">What meeting the bar gets you</div>
-  <h1>Nothing,<br>automatically<span class="dot">.</span></h1>
-  <p class="wide">Conferral is at the board's sole discretion. We may ask for more
-    information. We may decline without stating reasons.</p>
-  <div class="kicker">A distinction granted to everyone
-    who qualifies to be considered is not a distinction.
-    <em>It is a mailing list.</em></div>
-</div><div class="foot"><span>Honorary Fellow (PCI) &middot; board-conferred recognition</span><b>projectcontrolsinstitute.org</b></div></div></body></html>
+"""
+
+LOCKUP = ('<div class="top"><img src="/backend/wwwroot/assets/logo.svg" alt="">'
+          '<span class="w">PCI AI</span><span class="n">{n}</span></div>')
+
+
+def slide(n: str, body: str, foot: str, ink: bool = False, show_foot: bool = True) -> str:
+    return (f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head>'
+            f'<body><div class="s{" ink" if ink else ""}">{LOCKUP.format(n=n)}'
+            f'<div class="body">{body}</div>{foot if show_foot else ""}</div></body></html>')
+
+
+def footer(line: str) -> str:
+    return (f'<div class="foot"><span>{line}</span>'
+            '<b>projectcontrolsinstitute.org</b></div>')
+
+
+def render_deck(slides: dict, work: pathlib.Path, out: pathlib.Path,
+                pdf_name: str) -> pathlib.Path:
+    """Write, check, render and verify every slide, then assemble the PDF.
+
+    LinkedIn's carousel is a document post, so the deck ships as one PDF as well as
+    the individual frames.
+    """
+    work.mkdir(parents=True, exist_ok=True)
+    over = bs.viewport_overhead()
+    print(f"viewport overhead: {over}px")
+
+    pages = []
+    for name, html in slides.items():
+        src = work / f"{name}.html"
+        src.write_text(html, encoding="utf-8")
+        pages.append(bs.build(src, out / f"{name}.png", over))
+
+    first, *rest = [Image.open(p).convert("RGB") for p in pages]
+    pdf = out / pdf_name
+    first.save(pdf, save_all=True, append_images=rest, resolution=200.0)
+    print(f"OK  {pdf.relative_to(bs.ROOT)}  {len(pages)} slides")
+    return pdf
