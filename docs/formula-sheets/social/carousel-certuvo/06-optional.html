@@ -16,13 +16,26 @@ body{font-family:'Inter',sans-serif;color:#0F172A;background:#fff;overflow:hidde
    two auto margins split the slack instead floats the content at a different height
    on every slide, which reads as carelessness when they are swiped in sequence. */
 .body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
-.top{display:flex;align-items:center;gap:18px;margin-bottom:40px}
-.top img{width:66px;height:66px;flex:none}
+/* Running co-brand bar. Both marks ride every slide: a deck about a relationship that
+   shows one party's mark on six of seven pages is a press release about that party. */
+.top{display:flex;align-items:center;gap:17px;margin-bottom:40px}
+.top .tile{width:66px;height:66px;flex:none}
 .top .w{font-family:'Archivo';font-weight:900;font-size:34px;letter-spacing:-.02em;color:#1D4ED8}
 .s.ink .top .w{color:#fff}
-.top .n{margin-left:auto;font-family:'Archivo';font-weight:900;font-size:26px;
-  color:#CBD5E1;letter-spacing:.06em}
-.s.ink .top .n{color:rgba(255,255,255,.45)}
+.top .rule{width:2px;height:46px;background:#E3E8EF;border:0;flex:none;margin:0 2px}
+.s.ink .top .rule{background:rgba(255,255,255,.3)}
+.top .pt{height:37px;flex:none}
+/* progress counter: a reader who can see how much is left finishes the deck */
+.top .n{margin-left:auto;font-family:'Archivo';font-weight:900;font-size:25px;
+  color:#0F172A;letter-spacing:.04em;white-space:nowrap}
+.top .n em{font-style:normal;color:#CBD5E1}
+.s.ink .top .n{color:#fff}
+.s.ink .top .n em{color:rgba(255,255,255,.4)}
+
+/* one ground-aware swap for every partner mark, whatever its size */
+.dark{display:none}
+.s.ink .light{display:none}
+.s.ink .dark{display:inline}
 
 .eyebrow{font-size:25px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
   color:#1D4ED8;margin-bottom:26px}
@@ -69,11 +82,6 @@ p + p{margin-top:22px}
 .s.ink .cobrand hr{background:rgba(255,255,255,.28)}
 
 /* a partner mark set inline in the footer, light and dark variants swapped by ground */
-.pmark{height:21px;vertical-align:-4px;margin-right:9px}
-.pmark.dark{display:none}
-.s.ink .pmark.light{display:none}
-.s.ink .pmark.dark{display:inline}
-
 /* ---------- cover ---------- */
 .badge{display:inline-flex;align-items:center;gap:16px;border:4px solid #1D4ED8;
   border-radius:999px;padding:12px 28px 12px 24px;margin-bottom:36px;align-self:flex-start}
@@ -135,7 +143,7 @@ p + p{margin-top:22px}
 .cta p b{color:#fff;font-weight:700}
 /* a partner's name belongs in its own mark, not set in our typeface */
 .cta .ctamark{height:40px;display:block;margin-top:2px}
-</style></head><body><div class="s"><div class="top"><img src="/backend/wwwroot/assets/logo.svg" alt=""><span class="w">PCI AI</span><span class="n">05</span></div><div class="body">
+</style></head><body><div class="s"><div class="top"><img class="tile" src="/backend/wwwroot/assets/logo.svg" alt=""><span class="w">PCI AI</span><hr class="rule"><img class="pt light" src="/backend/wwwroot/assets/partners/certuvo-mark.png" alt=""><img class="pt dark" src="/backend/wwwroot/assets/partners/certuvo-mark-white.png" alt=""><span class="n">05<em>&thinsp;/&thinsp;07</em></span></div><div class="body">
   <div class="eyebrow">What candidates should know</div>
   <h1 class="sm">You do not<br>have to use it<span class="dot">.</span></h1>
   <p class="wide">Certuvo is the official preparation, not a requirement. Candidates may
@@ -143,4 +151,4 @@ p + p{margin-top:22px}
     training partner, or nothing at all.</p>
   <div class="kicker">Eligibility and the examination
     are set by PCI. <em>Only by PCI.</em></div>
-</div><div class="foot"><span><img class="pmark light" src="/backend/wwwroot/assets/partners/certuvo-mark.png" alt="Certuvo"><img class="pmark dark" src="/backend/wwwroot/assets/partners/certuvo-mark-white.png" alt="Certuvo">official preparation platform</span><b>projectcontrolsinstitute.org</b></div></div></body></html>
+</div><div class="foot"><span>Official preparation platform for PCI AI</span><b>projectcontrolsinstitute.org</b></div></div></body></html>

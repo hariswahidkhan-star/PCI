@@ -28,11 +28,9 @@ WORK = HERE / "carousel-certuvo"
 OUT = bs.ROOT / "backend" / "wwwroot" / "assets" / "social" / "certuvo-carousel"
 
 MARK = "/backend/wwwroot/assets/partners/certuvo-mark"
-# both variants ship on every slide; the kit shows whichever suits the ground
-FOOT = kit.footer(
-    f'<img class="pmark light" src="{MARK}.png" alt="Certuvo">'
-    f'<img class="pmark dark" src="{MARK}-white.png" alt="Certuvo">'
-    "official preparation platform")
+kit.PARTNER = MARK          # both marks ride the header bar on every slide
+
+FOOT = kit.footer("Official preparation platform for PCI AI")
 
 COBRAND = f'''<div class="cobrand">
   <span class="pci"><img src="/backend/wwwroot/assets/logo.svg" alt=""><b>PCI AI</b></span>
