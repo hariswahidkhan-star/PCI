@@ -82,8 +82,15 @@ adjusted before it goes out.
 | 6 | You do not have to use it |
 | 7 | Why the separation exists, and where to prepare |
 
-Slide 4 is the pivot and is the only slide on the dark ground. The deck is built so that a
-reader who swipes only to slide 4 has still received the governance point.
+Slides 1, 4 and 7 are on the dark ground — an inked cover to stop the scroll in a white
+feed, an inked pivot, an inked close. Slide 4 is the one that matters: the deck is built so
+that a reader who swipes no further than it has still received the governance point.
+
+**Co-branding.** The cover carries a PCI AI / Certuvo lockup, two marks either side of a
+hairline with neither subordinated, and Certuvo's mark appears in every slide footer and in
+the closing call to action. Announcing a relationship while showing only our own mark is
+what makes a partnership post read as a press release about ourselves. Mark files and their
+provenance are in `backend/wwwroot/assets/partners/`.
 
 ---
 

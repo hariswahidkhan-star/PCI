@@ -83,6 +83,26 @@ p + p{margin-top:22px}
 .foot b{font-weight:700;color:#1D4ED8}
 .s.ink .foot b{color:#fff}
 
+/* ---------- co-brand lockup: two marks, one hairline ----------
+   For an announcement about a relationship. Showing only our own mark and naming the
+   other party in text is what makes a partnership post read as a press release about
+   ourselves. The marks share a baseline and a rule; neither is subordinated. */
+.cobrand{display:flex;align-items:center;gap:36px;margin-bottom:46px}
+.cobrand .pci{display:flex;align-items:center;gap:17px;flex:none}
+.cobrand .pci img{width:86px;height:86px}
+.cobrand .pci b{font-family:'Archivo';font-weight:900;font-size:44px;
+  letter-spacing:-.022em;color:#1D4ED8}
+.cobrand hr{width:3px;height:70px;background:#E3E8EF;border:0;flex:none;margin:0}
+.cobrand .partner{height:58px;flex:none}
+.s.ink .cobrand .pci b{color:#fff}
+.s.ink .cobrand hr{background:rgba(255,255,255,.28)}
+
+/* a partner mark set inline in the footer, light and dark variants swapped by ground */
+.pmark{height:21px;vertical-align:-4px;margin-right:9px}
+.pmark.dark{display:none}
+.s.ink .pmark.light{display:none}
+.s.ink .pmark.dark{display:inline}
+
 /* ---------- cover ---------- */
 .badge{display:inline-flex;align-items:center;gap:16px;border:4px solid #1D4ED8;
   border-radius:999px;padding:12px 28px 12px 24px;margin-bottom:36px;align-self:flex-start}
@@ -142,15 +162,21 @@ p + p{margin-top:22px}
 .cta p{margin-left:auto;text-align:right;font-size:22px;color:rgba(255,255,255,.78);
   max-width:44%;line-height:1.34}
 .cta p b{color:#fff;font-weight:700}
+/* a partner's name belongs in its own mark, not set in our typeface */
+.cta .ctamark{height:40px;display:block;margin-top:2px}
 """
 
 LOCKUP = ('<div class="top"><img src="/backend/wwwroot/assets/logo.svg" alt="">'
           '<span class="w">PCI AI</span><span class="n">{n}</span></div>')
 
 
-def slide(n: str, body: str, foot: str, ink: bool = False, show_foot: bool = True) -> str:
+def slide(n: str, body: str, foot: str, ink: bool = False, show_foot: bool = True,
+          show_top: bool = True) -> str:
+    """One slide. show_top=False on a cover that carries its own co-brand lockup, so the
+    same marks do not appear twice on the one slide that most needs to look composed."""
+    top = LOCKUP.format(n=n) if show_top else ""
     return (f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head>'
-            f'<body><div class="s{" ink" if ink else ""}">{LOCKUP.format(n=n)}'
+            f'<body><div class="s{" ink" if ink else ""}">{top}'
             f'<div class="body">{body}</div>{foot if show_foot else ""}</div></body></html>')
 
 

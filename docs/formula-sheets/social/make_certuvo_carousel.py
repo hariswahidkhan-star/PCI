@@ -27,21 +27,31 @@ HERE = pathlib.Path(__file__).resolve().parent
 WORK = HERE / "carousel-certuvo"
 OUT = bs.ROOT / "backend" / "wwwroot" / "assets" / "social" / "certuvo-carousel"
 
-FOOT = kit.footer("Certuvo &middot; PCI AI's official preparation platform")
+MARK = "/backend/wwwroot/assets/partners/certuvo-mark"
+# both variants ship on every slide; the kit shows whichever suits the ground
+FOOT = kit.footer(
+    f'<img class="pmark light" src="{MARK}.png" alt="Certuvo">'
+    f'<img class="pmark dark" src="{MARK}-white.png" alt="Certuvo">'
+    "official preparation platform")
+
+COBRAND = f'''<div class="cobrand">
+  <span class="pci"><img src="/backend/wwwroot/assets/logo.svg" alt=""><b>PCI AI</b></span>
+  <hr><img class="partner" src="{MARK}-white.png" alt="Certuvo">
+</div>'''
 
 
-def slide(n, body, ink=False, show_foot=True):
-    return kit.slide(n, body, FOOT, ink=ink, show_foot=show_foot)
+def slide(n, body, ink=False, show_foot=True, show_top=True):
+    return kit.slide(n, body, FOOT, ink=ink, show_foot=show_foot, show_top=show_top)
 
 
 SLIDES = {}
 
-SLIDES["01-cover"] = slide("", """
-  <span class="badge"><b>Certuvo</b><span>Official preparation platform</span></span>
+SLIDES["01-cover"] = slide("", f"""
+  {COBRAND}
+  <div class="eyebrow">Official preparation platform</div>
   <h1>PCI sets the<br>standard.<br>Certuvo is where<br>you meet it<span class="dot">.</span></h1>
-  <p class="wide"><b>Certuvo is the official preparation platform for the PCI AI
-    certifications</b> &mdash; PCL-AI, PFL-AI and PML-AI.</p>
-""")
+  <p class="wide"><b>For the PCI AI certifications</b><br>PCL-AI &middot; PFL-AI &middot; PML-AI</p>
+""", ink=True, show_top=False)
 
 SLIDES["02-what"] = slide("01", """
   <div class="eyebrow">What it delivers</div>
@@ -88,7 +98,7 @@ SLIDES["06-optional"] = slide("05", """
     are set by PCI. <em>Only by PCI.</em></div>
 """)
 
-SLIDES["07-why"] = slide("06", """
+SLIDES["07-why"] = slide("06", f"""
   <div class="eyebrow">Why we structure it this way</div>
   <h1 class="sm">A credential is<br>worth what it<br>refuses to sell<span class="dot">.</span></h1>
   <p class="wide">Separating preparation from certification is the single most important
@@ -96,10 +106,11 @@ SLIDES["07-why"] = slide("06", """
     attached, and why the limits are published rather than implied.</p>
   <div class="kicker">PCI sets the standard.<br>Certuvo prepares you for it.<br>
     <em>Neither does the other's job.</em></div>
-  <div class="cta"><span><k>Prepare</k><u>Certuvo</u></span>
+  <div class="cta">
+    <span><k>Prepare with</k><img class="ctamark" src="{MARK}-white.png" alt="Certuvo"></span>
     <p>Enrolled candidates practise inside<br>the PCI portal<br>
       <b>projectcontrolsinstitute.org</b></p></div>
-""", show_foot=False)
+""", ink=True, show_foot=False)
 
 
 if __name__ == "__main__":
