@@ -125,3 +125,27 @@ python3 build_assets.py
 Writes all seven PDFs into `assets/`. The design follows
 `docs/books/_build/DESIGN_SYSTEM.md` — same faces, same green, same small caps and old-style
 figures — so an asset and the book it points to read as one publication.
+
+## The enrolment growth model
+
+`build_growth_model.py` builds `growth-model.html` — a self-contained interactive model for what a
+given enrolment target costs to reach. Levers cover price and discount, membership and recert
+attach, channel mix, per-channel funnel economics, partner deal size, and fixed team cost; every
+figure recomputes live.
+
+```bash
+cd docs/marketing && python3 build_growth_model.py
+```
+
+Prices open at the platform's own seeded defaults from `backend/schema.sql` — exam $500 less 30%,
+membership $99 less 50%, recert $99 on the three-year cycle — so the model starts from PCI's real
+numbers. Every *conversion rate* in it is an assumption and stays one until there is enough traffic
+to replace it.
+
+**The credibility lever is the important one.** It scales lead-to-enrolment for the fact that a new
+institute converts worse than an established one. At the 50% default it roughly doubles the spend
+against a recognised credential. It is not moved by marketing — it moves when accreditation
+progresses, when reviewers are named, and when pass rates are published.
+
+The brand woff2 files are inlined as data URIs because the artifact CSP blocks external hosts and a
+linked webfont there fails silently into a system fallback.
