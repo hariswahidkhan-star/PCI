@@ -399,6 +399,28 @@ def verify():
                  and str(mp8.cell(r, 1).value) not in all_names]
     check(f"MAP holds one-click links to the estate ({links} links, all valid)",
           links >= 34 and not bad_links, f"bad={bad_links}")
+    # navigation: a way back from every sheet, and a MAP that covers all of them
+    _nav_bad, _nav_ok = [], 0
+    for _ws in wb.worksheets:
+        _c = _ws.cell(3, 1) if _ws.title == "MAP" else _ws.cell(2, 1)
+        _loc = _c.hyperlink.location if _c.hyperlink else None
+        _tgt = _loc.split("!")[0].strip("'") if _loc else None
+        if _tgt and _tgt in wb.sheetnames and str(_c.value or "").startswith("\u25c0"):
+            _nav_ok += 1
+        else:
+            _nav_bad.append(_ws.title)
+    check("every sheet has a working back-to-MAP link",
+          not _nav_bad and _nav_ok == len(wb.worksheets), f"missing on {_nav_bad[:4]}")
+    _map_listed = {str(mp8.cell(r, 1).value) for r in range(5, 90)
+                   if mp8.cell(r, 1).hyperlink}
+    check("MAP describes every sheet, and names no sheet that is missing",
+          _map_listed == all_names - {"MAP"},
+          f"unlisted={sorted(all_names - {'MAP'} - _map_listed)}")
+    check("MAP explains rather than labels (four columns, full sentences)",
+          mp8.cell(4, 3).value == "Who types on it"
+          and all(len(str(mp8.cell(r, 2).value or "")) > 60
+                  and str(mp8.cell(r, 2).value or "").rstrip().endswith(".")
+                  for r in range(5, 90) if mp8.cell(r, 1).hyperlink))
     check("Dashboard scheduler tiles live",
           any("Content Scheduler" in str(wb["Dashboard"].cell(r, 6).value or "")
               for r in range(4, 34)))

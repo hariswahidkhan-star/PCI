@@ -2825,85 +2825,64 @@ gl.print_area = f"A1:B{_gr + 1}"
 gl.print_title_rows = "1:3"
 gl.sheet_properties.tabColor = "FF808080"
 
-# ------------------------------------ 5b. MAP sheet — one-click navigation
-# 40 tabs deserve a contents page: every sheet, grouped, hyperlinked.
+# ------------------------------------ 5b. MAP sheet — the contents page
+# 42 tabs deserve a contents page that explains rather than labels. The old
+# version used terse noun phrases ("Tracked links — the only links we share"),
+# which told a new joiner nothing about who touches a sheet or what to do on
+# it. Four columns now: the sheet, what it is, who types on it, and what you
+# actually do there.
+from map_data import MAP_GROUPS as _MAP_GROUPS
+from openpyxl.worksheet.hyperlink import Hyperlink as _HL
+
 mp = wb.create_sheet("MAP")
 mp.sheet_view.showGridLines = False
-title_row(mp, 4, "MAP  —  every tab, one click",
-          "Click any name to jump there. Colour groups: gold = start here, green = "
-          "guides, blue = daily work, navy = results, purple = management, grey = "
-          "reference. New joiners: START HERE, then TEAM GUIDE, then PLATFORM GUIDE.")
-_MAP_GROUPS = [
- ("READ FIRST", [
-  ("START HERE", "The operating model: rules, targets, roster, domains"),
-  ("TEAM GUIDE", "Where to log what — the 15-minute onboarding"),
-  ("GROWTH PLAYBOOK", "23 growth techniques in working detail"),
-  ("PLATFORM GUIDE", "How to use every platform, step by step"),
-  ("PR & Target Directory", "Named routes: publications, podcasts, boards, skips"),
-  ("UPGRADE NOTES", "The changelog: what was tested and changed")]),
- ("DAILY WORK", [
-  ("DAILY ENTRY", "The one sheet everyone fills, every day"),
-  ("LinkedIn Outreach", "One row per lead — the honorary engine"),
-  ("Partnership Pipeline", "Organisations: associations, universities, employers"),
-  ("Content Calendar", "Every piece of content, planned to published"),
-  ("Content Scheduler", "Cadences, windows and coverage per platform"),
-  ("Community & PR", "Answers, mentions, press and communities"),
-  ("Job Postings", "Every open role on every board"),
-  ("Link Building", "Off-page SEO: every link prospect to live"),
-  ("Experiments", "A/B tests with honest conclusions"),
-  ("UTM Builder", "Tracked links — the only links we share"),
-  ("SEO Clusters", "Pillars and spokes with Search Console numbers"),
-  ("Keyword Plan", "76 graded keywords: what to attack, in order"),
-  ("Article Bank", "5,000+ article briefs with keywords + AI prompts"),
-  ("Glossary", "Every term this workbook uses, in plain English"),
-  ("Daily Log", "Optional auto day-summary")]),
- ("RESULTS", [
-  ("Weekly Pulse", "This week vs last week, live"),
-  ("Dashboard", "The cumulative record + headline KPIs"),
-  ("Summary", "One page for management"),
-  ("Objective Performance", "Results by campaign and by brand"),
-  ("Team Scorecard", "Per-person outreach numbers"),
-  ("Employee Score", "The weighted score behind reviews"),
-  ("Weekly Review", "Friday wins, misses and next week"),
-  ("Platform Progress", "Activity per platform vs value rank"),
-  ("Who Did What", "Per-person split per platform"),
-  ("Accounts Register", "Every account, its owner and vault entry")]),
- ("MANAGEMENT", [
-  ("Master Tasks", "The full workstream list"),
-  ("Platform Setup", "All 133 platforms: setup, rank, geography"),
-  ("Publishing Plan", "The ten publishing platforms, ranked"),
-  ("Channel Costs", "What each paid channel costs"),
-  ("QA & Compliance", "The 15 checks that protect reputation"),
-  ("Message Bank", "Approved outreach messages only")]),
- ("REFERENCE", [
-  ("LinkedIn Playbook", "The outreach method, step by step"),
-  ("How-To Guides", "Training manual per workstream"),
-  ("Benchmarks", "What good numbers look like in 2026"),
-  ("Lists", "Every dropdown's source values")]),
-]
-from openpyxl.worksheet.hyperlink import Hyperlink as _HL
-_mr = 4
+title_row(mp, 4, "MAP  —  what every tab is for, and what you do on it",
+          "Click a name in the first column to jump straight there; every sheet has a "
+          "◀ MAP link to come back. Read the WHO TYPES ON IT column before you touch a "
+          "sheet — most of this workbook calculates itself and is not meant to be typed "
+          "in. New here? START HERE, then TEAM GUIDE, then PLATFORM GUIDE.")
+header_band(mp, 4, ["Sheet (click to open)", "What this sheet is",
+                    "Who types on it", "What you do here, and when"],
+            widths=[24, 62, 20, 58])
+_mr = 5
 for _gname, _entries in _MAP_GROUPS:
     section(mp, _mr, 4, _gname)
     _mr += 1
-    for _sname, _desc in _entries:
+    for _sname, _what, _who, _do in _entries:
+        if _sname not in wb.sheetnames:
+            raise SystemExit(f"MAP names a sheet that does not exist: {_sname!r}")
         c = mp.cell(_mr, 1)
         c.value = _sname
         c.hyperlink = _HL(ref=f"A{_mr}", location=f"'{_sname}'!A1")
         c.font = Font(name="Arial", size=10, bold=True, color="1D4ED8", underline="single")
-        mp.merge_cells(start_row=_mr, start_column=2, end_row=_mr, end_column=4)
-        d = mp.cell(_mr, 2)
-        d.value = _desc
-        d.font = BODY
-        if _mr % 2 == 0:
-            for _c in range(1, 5):
-                mp.cell(_mr, _c).fill = ZEBRA
-        mp.row_dimensions[_mr].height = 17
+        mp.cell(_mr, 2).value = _what
+        mp.cell(_mr, 3).value = _who
+        mp.cell(_mr, 4).value = _do
+        for _c in range(1, 5):
+            cell = mp.cell(_mr, _c)
+            if _c != 1:
+                cell.font = BODY
+            cell.border = BOX
+            cell.alignment = Alignment(wrap_text=True, vertical="top",
+                                       indent=1 if _c == 1 else 0)
+            if _mr % 2 == 0:
+                cell.fill = ZEBRA
+        mp.cell(_mr, 3).font = BODYB if _who == "Everyone" else GREYNOTE
+        mp.row_dimensions[_mr].height = max(
+            30, 11 * max(-(-len(_what) // 60), -(-len(_do) // 56)) + 8)
         _mr += 1
     _mr += 1
-mp.column_dimensions["A"].width = 24
-for _cl in ("B", "C", "D"):
-    mp.column_dimensions[_cl].width = 22
+_mpn = mp.cell(_mr, 1)
+_mpn.value = ("Colour of a tab tells you the same thing: gold = read first, green = "
+              "guides, blue = you type here, navy = results (read-only), purple = "
+              "manager, grey = reference. If a cell will not let you type in it, it is a "
+              "formula — that is the file working, not a fault.")
+_mpn.font = GREYNOTE
+_mpn.alignment = WRAP
+mp.merge_cells(start_row=_mr, start_column=1, end_row=_mr, end_column=4)
+mp.row_dimensions[_mr].height = 30
+mp.freeze_panes = "A5"
+mp.print_title_rows = "1:4"
 mp.protection.sheet = True
 mp.print_area = f"A1:D{_mr}"
 mp.sheet_properties.tabColor = "FFC9A227"
@@ -3710,6 +3689,58 @@ wp.cell(3, 2).value = "=TODAY()-MOD(TODAY()-IF(N('START HERE'!$B$22)=0,2,'START 
 wp.cell(3, 3).value = ('=IF(N(\'START HERE\'!$B$22)=1,"Sunday-Thursday week '
                        '(set on START HERE)","Monday-Sunday week (set on START HERE)")')
 wp.cell(3, 3).font = GREYNOTE
+
+# --- a way back. Forty-two tabs is too many to navigate by the tab strip, so
+# every sheet gets a "◀ MAP" link in the same place: cell A2, immediately under
+# the title. Column A is frozen on almost every sheet and row 2 sits above
+# every freeze point, so the link stays on screen however far you scroll. The
+# subtitle shifts one column right to make room, which reads as a hanging
+# indent rather than a hole.
+from openpyxl.worksheet.hyperlink import Hyperlink as _HL2
+
+_nav_added = 0
+for ws in wb.worksheets:
+    if ws.title == "MAP":
+        continue
+    # free cell A2 by re-merging the subtitle from column B
+    _sub = next((m for m in list(ws.merged_cells.ranges)
+                 if m.min_row == 2 and m.max_row == 2 and m.min_col == 1), None)
+    if _sub is not None:
+        _end = _sub.max_col
+        _src = ws.cell(2, 1)
+        _txt = _src.value
+        _f, _fl, _al, _bd = (copymod.copy(_src.font), copymod.copy(_src.fill),
+                             copymod.copy(_src.alignment), copymod.copy(_src.border))
+        ws.unmerge_cells(str(_sub))
+        ws.cell(2, 1).value = None
+        if _end >= 2:
+            _dst = ws.cell(2, 2)
+            _dst.value = _txt
+            _dst.font, _dst.fill, _dst.alignment, _dst.border = _f, _fl, _al, _bd
+            if _end > 2:
+                ws.merge_cells(start_row=2, start_column=2, end_row=2, end_column=_end)
+    _nav = ws.cell(2, 1)
+    _nav.value = "◀  MAP"
+    _nav.hyperlink = _HL2(ref="A2", location="'MAP'!A1")
+    _nav.font = Font(name="Arial", size=9, bold=True, color="1D4ED8", underline="single")
+    _nav.fill = PatternFill("solid", fgColor="FFEAF1FB")
+    _nav.border = BOX
+    _nav.alignment = Alignment(horizontal="center", vertical="center")
+    if "A" not in ws.column_dimensions or (ws.column_dimensions["A"].width or 0) < 8:
+        ws.column_dimensions["A"].width = 8
+    if (ws.row_dimensions[2].height or 0) < 18:
+        ws.row_dimensions[2].height = 18
+    _nav_added += 1
+# the MAP's own way back is to the rulebook
+_mapnav = wb["MAP"].cell(3, 1)
+_mapnav.value = "◀  START HERE"
+_mapnav.hyperlink = _HL2(ref="A3", location="'START HERE'!A1")
+_mapnav.font = Font(name="Arial", size=9, bold=True, color="1D4ED8", underline="single")
+_mapnav.fill = PatternFill("solid", fgColor="FFEAF1FB")
+_mapnav.border = BOX
+_mapnav.alignment = Alignment(horizontal="center", vertical="center")
+wb["MAP"].row_dimensions[3].height = 18
+print(f"back-to-MAP link added on {_nav_added} sheets")
 
 # --- every fill colour written as six hex digits comes back out of the file
 # as "00RRGGBB" — alpha zero. Excel ignores the alpha channel on a solid fill;
