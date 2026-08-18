@@ -1,0 +1,276 @@
+/* PCI AI Knowledge Series — print stylesheet.
+   Navy title page, clean body pages, single gold accent. A4. */
+
+@page {
+  size: A4;
+  margin: 18mm 17mm 16mm 17mm;
+  @top-left {
+    content: "PCI AI · Knowledge Series";
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 7.5pt;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #8A8F98;
+  }
+  @top-right {
+    content: string(doctitle);
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 7.5pt;
+    letter-spacing: 0.06em;
+    color: #8A8F98;
+  }
+  @bottom-left {
+    content: "projectcontrolsinstitute.org";
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 7.5pt;
+    color: #A8ADB5;
+  }
+  @bottom-right {
+    content: counter(page);
+    font-family: "DejaVu Serif", serif;
+    font-size: 9pt;
+    color: #0B1B2B;
+  }
+}
+
+@page :first {
+  margin: 0;
+  @top-left { content: ""; }
+  @top-right { content: ""; }
+  @bottom-left { content: ""; }
+  @bottom-right { content: ""; }
+}
+
+html {
+  font-family: "DejaVu Serif", Georgia, serif;
+  font-size: 9.4pt;
+  line-height: 1.44;
+  color: #16202B;
+}
+
+body { margin: 0; padding: 0; hyphens: auto; }
+
+/* ---------- title page ---------- */
+
+.titlepage {
+  background: #0B1B2B;
+  color: #F4F1EA;
+  padding: 46mm 24mm 24mm 24mm;
+  height: 297mm;
+  box-sizing: border-box;
+  page-break-after: always;
+  position: relative;
+}
+.titlepage .series {
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 8.5pt;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #C9A227;
+  margin-bottom: 30mm;
+}
+.titlepage h1 {
+  font-size: 40pt;
+  line-height: 1.04;
+  font-weight: normal;
+  margin: 0 0 8mm 0;
+  color: #F4F1EA;
+  border: 0;
+  padding: 0;
+}
+.titlepage .subtitle {
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 13pt;
+  line-height: 1.42;
+  color: #C6CBD2;
+  max-width: 118mm;
+  margin-bottom: 26mm;
+}
+/* the breaking rule — solid, then dotted */
+.titlepage .rule-solid {
+  border-top: 1.6pt solid #C9A227;
+  width: 62%;
+  margin: 0;
+}
+.titlepage .rule-dotted {
+  border-top: 1.2pt dotted #C9A227;
+  width: 34%;
+  margin: -1.6pt 0 0 62%;
+  opacity: 0.72;
+}
+.titlepage .imprint {
+  position: absolute;
+  bottom: 24mm;
+  left: 24mm;
+  right: 24mm;
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 9pt;
+  line-height: 1.65;
+  color: #9AA3AE;
+}
+.titlepage .imprint strong { color: #F4F1EA; font-weight: normal; letter-spacing: 0.05em; }
+
+/* ---------- headings ---------- */
+
+h1 {
+  string-set: doctitle content();
+  font-size: 21pt;
+  font-weight: normal;
+  line-height: 1.2;
+  color: #0B1B2B;
+  margin: 0 0 6mm 0;
+  padding-bottom: 3mm;
+  border-bottom: 1.4pt solid #C9A227;
+  page-break-after: avoid;
+}
+
+h2 {
+  font-size: 15pt;
+  font-weight: normal;
+  line-height: 1.25;
+  color: #0B1B2B;
+  margin: 7.5mm 0 3.4mm 0;
+  padding-bottom: 2mm;
+  border-bottom: 0.6pt solid #D6D9DE;
+  page-break-after: avoid;
+  page-break-before: auto;
+}
+
+h3 {
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 10.5pt;
+  font-weight: bold;
+  color: #12293D;
+  margin: 5mm 0 2mm 0;
+  page-break-after: avoid;
+}
+
+h4 {
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 9.5pt;
+  font-weight: bold;
+  color: #3C4650;
+  margin: 5mm 0 2mm 0;
+  page-break-after: avoid;
+}
+
+p { margin: 0 0 2.9mm 0; text-align: justify; orphans: 2; widows: 2; }
+
+strong { color: #0B1B2B; }
+em { color: #2A3540; }
+
+a { color: #12293D; text-decoration: none; border-bottom: 0.4pt solid #C9A227; }
+
+hr {
+  border: 0;
+  border-top: 0.6pt solid #DDE0E5;
+  margin: 5.5mm 0;
+}
+
+/* ---------- lists ---------- */
+
+ul, ol { margin: 0 0 3.6mm 0; padding-left: 5.5mm; }
+li { margin-bottom: 1.3mm; text-align: justify; }
+li > strong:first-child { color: #0B1B2B; }
+
+/* ---------- tables ---------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3mm 0 4mm 0;
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 7.5pt;
+  line-height: 1.32;
+  page-break-inside: avoid;
+}
+thead { display: table-header-group; }
+th {
+  background: #0B1B2B;
+  color: #F4F1EA;
+  font-weight: bold;
+  text-align: left;
+  padding: 1.7mm 2mm;
+  border: 0;
+  font-size: 7.6pt;
+  letter-spacing: 0.03em;
+}
+td {
+  padding: 1.5mm 2mm;
+  border-bottom: 0.4pt solid #DFE2E7;
+  vertical-align: top;
+}
+tbody tr:nth-child(even) td { background: #F6F7F9; }
+td strong { color: #0B1B2B; }
+
+/* ---------- callouts and figure specs ---------- */
+
+blockquote {
+  margin: 4mm 0;
+  padding: 2.8mm 4mm;
+  border-left: 2.4pt solid #C9A227;
+  background: #FAF8F2;
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 8.8pt;
+  line-height: 1.5;
+  color: #22303C;
+  page-break-inside: avoid;
+}
+blockquote p { margin-bottom: 2mm; text-align: left; }
+blockquote p:last-child { margin-bottom: 0; }
+
+blockquote.figspec {
+  border-left: 2.4pt solid #5B6B7C;
+  background: #F3F5F7;
+  color: #3A4753;
+  font-size: 8.3pt;
+}
+
+blockquote.equation {
+  text-align: center;
+  border-left: 0;
+  border-top: 1.2pt solid #C9A227;
+  border-bottom: 1.2pt solid #C9A227;
+  background: #FFFFFF;
+  padding: 5mm 4mm;
+}
+blockquote.equation p { text-align: center; }
+blockquote.equation p:first-child {
+  font-family: "DejaVu Serif", serif;
+  font-size: 17pt;
+  color: #0B1B2B;
+  margin-bottom: 3mm;
+}
+
+/* ---------- front matter ---------- */
+
+.frontmatter {
+  page-break-after: always;
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 8.4pt;
+  line-height: 1.55;
+  color: #46505B;
+}
+.frontmatter h2 {
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 11pt;
+  border-bottom: 0.6pt solid #C9A227;
+  margin-top: 0;
+}
+.frontmatter p { text-align: left; }
+
+/* ---------- notices ---------- */
+
+.notices {
+  margin-top: 8mm;
+  padding-top: 4mm;
+  border-top: 0.6pt solid #D6D9DE;
+  font-family: "DejaVu Sans", sans-serif;
+  font-size: 7.2pt;
+  line-height: 1.5;
+  color: #5C6670;
+}
+.notices p { text-align: left; margin-bottom: 2.4mm; }
+
+/* keep section 1 off the title page */
+h2#executive-summary { page-break-before: auto; }

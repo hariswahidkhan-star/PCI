@@ -1,0 +1,128 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:'Archivo';src:url('/backend/wwwroot/assets/fonts/archivo-latin.woff2') format('woff2');font-weight:700 900}
+@font-face{font-family:'Inter';src:url('/backend/wwwroot/assets/fonts/inter-latin.woff2') format('woff2');font-weight:400 700}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;background:#fff}
+body{font-family:'Inter',sans-serif;color:#0F172A;overflow:hidden}
+
+.card{position:relative;width:100vw;height:100vh;padding:5.6vh 84px 5.2vh;
+  background:#FFFFFF;display:flex;flex-direction:column}
+/* brand rule at the head, the one on every page of the site */
+.card::after{content:"";position:absolute;top:0;left:0;right:0;height:10px;background:#1D4ED8}
+/* faint grid, for structure rather than decoration */
+.card::before{content:"";position:absolute;inset:0;opacity:.55;
+  background-image:linear-gradient(#EEF2F8 1px,transparent 1px),
+                   linear-gradient(90deg,#EEF2F8 1px,transparent 1px);
+  background-size:90px 90px;
+  -webkit-mask-image:radial-gradient(78% 58% at 62% 26%,#000 0%,transparent 76%);
+          mask-image:radial-gradient(78% 58% at 62% 26%,#000 0%,transparent 76%)}
+.card>*{position:relative;z-index:1}
+
+.lockup{display:flex;align-items:center;margin-bottom:40px}
+.lockup img{width:74px;height:74px}
+.lockup .w{font-family:'Archivo';font-weight:900;font-size:40px;letter-spacing:-.02em;
+  margin-left:19px;color:#1D4ED8}
+.lockup .o{font-size:19px;line-height:1.25;margin-left:19px;padding-left:19px;
+  border-left:2px solid #E3E8EF;color:#475569}
+.lockup .badge{margin-left:auto;display:flex;align-items:center;gap:14px;
+  border:2px solid #1D4ED8;border-radius:999px;padding:11px 22px 11px 18px}
+.lockup .badge b{font-family:'Archivo';font-weight:900;font-size:26px;
+  letter-spacing:-.01em;color:#1D4ED8}
+.lockup .badge span{font-size:17px;letter-spacing:.13em;text-transform:uppercase;
+  color:#64748B;border-left:2px solid #E3E8EF;padding-left:14px}
+
+.credential{font-family:'Archivo';font-weight:900;font-size:33px;
+  letter-spacing:-.012em;margin-bottom:9px;color:#0F172A}
+.eyebrow{font-size:20px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:#1D4ED8;margin-bottom:20px}
+
+.hero{font-family:'Archivo';font-weight:900;font-size:140px;line-height:.9;
+  letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin-bottom:20px;color:#0F172A}
+.hero .sep{font-family:'Inter',sans-serif;font-weight:700;color:#93A3B8;
+  font-size:.26em;vertical-align:.62em;letter-spacing:.06em;margin:0 .06em}
+
+.head{font-family:'Archivo';font-weight:900;font-size:56px;line-height:1.04;
+  letter-spacing:-.03em;margin-bottom:32px;color:#0F172A}
+.dot{color:#C13329}
+
+.bar{display:flex;height:82px;border-radius:10px;overflow:hidden;
+  box-shadow:0 14px 34px rgba(15,23,42,.13)}
+.seg{display:flex;align-items:center;justify-content:center;
+  font-family:'Archivo';font-weight:900;font-size:34px;letter-spacing:-.01em;color:#fff}
+.s1{width:40%;background:#1D4ED8}
+.s2{width:40%;background:#8FAEF5;color:#12309A}
+.s3{width:20%;background:#C13329}
+.barkey{display:flex;margin:15px 0 34px;font-size:19px;letter-spacing:.14em;
+  text-transform:uppercase;font-weight:700;color:#64748B}
+.barkey span:nth-child(1){width:40%}
+.barkey span:nth-child(2){width:40%}
+.barkey span:nth-child(3){width:20%}
+
+.rows{flex:0 0 auto}
+.row{display:flex;gap:24px;padding:18px 0;border-top:2px solid #E3E8EF}
+.row:last-child{border-bottom:2px solid #E3E8EF}
+.chip{width:16px;height:16px;border-radius:4px;margin-top:11px;flex:none}
+.c1{background:#1D4ED8}.c2{background:#8FAEF5}.c3{background:#C13329}
+.rt{flex:1}
+.rt b{display:block;font-family:'Archivo';font-weight:900;font-size:31px;
+  letter-spacing:-.018em;margin-bottom:7px;color:#0F172A}
+.rt p{font-size:23px;line-height:1.34;color:#475569}
+.pc{font-family:'Archivo';font-weight:900;font-size:36px;width:96px;text-align:right;
+  font-variant-numeric:tabular-nums;flex:none;color:#1D4ED8}
+
+.foot{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;
+  line-height:1.45;margin-top:auto;padding-top:24px;font-size:20px;color:#475569;
+  border-top:2px solid #E3E8EF}
+.foot b{font-family:'Archivo';font-weight:900;color:#1D4ED8;font-size:23px;letter-spacing:-.01em}
+</style></head><body>
+<div class="card">
+
+  <div class="lockup">
+    <img src="/backend/wwwroot/assets/logo.svg" alt="">
+    <span class="w">PCI AI</span>
+    <span class="o">Project Controls<br>Institute Global, Inc.</span>
+    <span class="badge"><b>PCL-AI</b><span>Certification</span></span>
+  </div>
+
+  <div class="credential">PCI AI Project Controls Leader</div>
+  <div class="eyebrow">The examination weighting</div>
+  <div class="hero">40<span class="sep">·</span>40<span class="sep">·</span>20</div>
+  <div class="head">The weighting is the argument<span class="dot">.</span></div>
+
+  <div class="bar">
+    <div class="seg s1">40%</div>
+    <div class="seg s2">40%</div>
+    <div class="seg s3">20%</div>
+  </div>
+  <div class="barkey"><span>Accounting</span><span>Delivery</span><span>AI</span></div>
+
+  <div class="rows">
+    <div class="row">
+      <span class="chip c1"></span>
+      <span class="rt"><b>Financial reporting &amp; accounting</b>
+        <p>IFRS 15 · IAS 37 · IAS 23 · IAS 16 · IAS 2 · IFRS 16 · IAS 1</p></span>
+      <span class="pc">40%</span>
+    </div>
+    <div class="row">
+      <span class="chip c2"></span>
+      <span class="rt"><b>Project management &amp; controls</b>
+        <p>Budgeting · earned value · forecasting · scheduling · risk · commercial</p></span>
+      <span class="pc">40%</span>
+    </div>
+    <div class="row">
+      <span class="chip c3"></span>
+      <span class="rt"><b>AI for project controls</b>
+        <p>Governed use — the professional remains accountable</p></span>
+      <span class="pc">20%</span>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Thirteen domains · Sixty-one Knowledge Areas<br>
+      <em style="font-style:normal;color:#64748B">One of three credentials in the PCI AI Project Leadership
+      Certification Suite — PCL-AI · PFL-AI · PML-AI</em></span>
+    <b>projectcontrolsinstitute.org</b>
+  </div>
+
+</div></body></html>

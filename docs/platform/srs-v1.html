@@ -1,0 +1,1759 @@
+<title>PCI Workforce OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
+
+<style>
+:root{
+  --ink:#101720; --ink-2:#2A3542; --graphite:#5A6672; --graphite-2:#7C8794;
+  --paper:#FBFCFD; --paper-2:#F2F5F8; --paper-3:#E8EDF2;
+  --rule:#DDE3E8; --rule-strong:#C3CDD6;
+  --navy:#1F3864; --band:#2E5C9A; --gold:#C9A227; --gold-ink:#7A6115;
+  --ok:#2E7D5B; --warn:#B8860B; --crit:#B3261E; --ok-bg:#E7F2EC; --warn-bg:#FAF3E0; --crit-bg:#FBEAE8;
+  --shadow:0 1px 2px rgba(16,23,32,.05), 0 8px 24px -12px rgba(16,23,32,.14);
+  --rail:300px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#E8EDF2; --ink-2:#C3CDD6; --graphite:#94A1AE; --graphite-2:#798694;
+    --paper:#0D1319; --paper-2:#141C25; --paper-3:#1D2732;
+    --rule:#26313D; --rule-strong:#374553;
+    --navy:#8FB3E8; --band:#6E9BD6; --gold:#E0BC4E; --gold-ink:#E0BC4E;
+    --ok:#6BC49A; --warn:#DDBA5A; --crit:#EF8F86;
+    --ok-bg:#152A22; --warn-bg:#2A2313; --crit-bg:#2C1715;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#E8EDF2; --ink-2:#C3CDD6; --graphite:#94A1AE; --graphite-2:#798694;
+  --paper:#0D1319; --paper-2:#141C25; --paper-3:#1D2732;
+  --rule:#26313D; --rule-strong:#374553;
+  --navy:#8FB3E8; --band:#6E9BD6; --gold:#E0BC4E; --gold-ink:#E0BC4E;
+  --ok:#6BC49A; --warn:#DDBA5A; --crit:#EF8F86;
+  --ok-bg:#152A22; --warn-bg:#2A2313; --crit-bg:#2C1715;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:15.5px; line-height:1.62; -webkit-font-smoothing:antialiased;
+}
+.wrap{display:grid; grid-template-columns:var(--rail) minmax(0,1fr); gap:0; align-items:start}
+
+/* ---------- contents rail ---------- */
+.rail{
+  position:sticky; top:0; height:100vh; overflow-y:auto; padding:26px 20px 60px;
+  border-right:1px solid var(--rule); background:var(--paper-2);
+}
+.rail .mark{display:flex; gap:10px; align-items:baseline; margin-bottom:4px}
+.rail .mark b{font-family:"Newsreader",Georgia,serif; font-weight:600; font-size:19px; letter-spacing:-.01em}
+.rail .mark span{font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--graphite); letter-spacing:.08em}
+.rail .sub{font-size:11.5px; color:var(--graphite); margin:0 0 20px; line-height:1.45}
+.rail nav{display:flex; flex-direction:column; gap:1px}
+.rail a{
+  display:grid; grid-template-columns:34px 1fr; gap:8px; align-items:baseline;
+  color:var(--ink-2); text-decoration:none; font-size:12.8px; padding:5px 7px;
+  border-radius:4px; line-height:1.35;
+}
+.rail a code{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--graphite-2)}
+.rail a:hover{background:var(--paper-3); color:var(--ink)}
+.rail a:focus-visible{outline:2px solid var(--band); outline-offset:1px}
+.rail .grp{
+  font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--graphite-2); margin:16px 0 5px 7px;
+}
+
+/* ---------- document body ---------- */
+main{padding:0 0 120px; min-width:0}
+/* the container is wide enough for dense tables and diagrams; running prose is
+   held to a reading measure by its own max-width, so the two do not fight */
+.inner{max-width:1060px; padding:0 40px}
+@media (max-width:1080px){
+  .wrap{grid-template-columns:1fr}
+  .rail{position:static; height:auto; border-right:0; border-bottom:1px solid var(--rule)}
+  .inner{padding:0 22px}
+}
+
+/* masthead */
+header.mast{
+  border-bottom:2px solid var(--navy); padding:38px 40px 0; margin-bottom:0;
+}
+@media (max-width:1080px){ header.mast{padding:26px 22px 0} }
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--band); margin:0 0 12px;
+}
+h1{
+  font-family:"Newsreader",Georgia,serif; font-weight:500; font-size:clamp(30px,4.6vw,46px);
+  line-height:1.08; letter-spacing:-.02em; margin:0 0 12px; text-wrap:balance; max-width:24ch;
+}
+.standfirst{font-size:17px; color:var(--ink-2); margin:0 0 26px; max-width:62ch; line-height:1.55}
+
+/* revision block — engineering drawing convention */
+.revblock{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  border:1px solid var(--rule-strong); border-bottom:none; margin:0 0 34px;
+  font-family:"IBM Plex Mono",monospace;
+}
+.revblock div{padding:9px 12px; border-bottom:1px solid var(--rule-strong); border-right:1px solid var(--rule-strong)}
+.revblock div:last-child{border-right:none}
+.revblock dt{font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--graphite-2); margin:0 0 3px}
+.revblock dd{margin:0; font-size:12.5px; color:var(--ink); font-weight:500}
+
+/* sections */
+section{padding:44px 0 0; scroll-margin-top:20px}
+h2{
+  font-family:"Newsreader",Georgia,serif; font-weight:600; font-size:27px; line-height:1.18;
+  letter-spacing:-.015em; margin:0 0 6px; text-wrap:balance; max-width:30ch;
+  display:grid; grid-template-columns:auto 1fr; gap:13px; align-items:baseline;
+}
+h2 .cl{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500; color:var(--band);
+  letter-spacing:.02em; padding-top:5px;
+}
+h3{
+  font-family:"IBM Plex Sans",sans-serif; font-weight:600; font-size:16.5px; margin:32px 0 8px;
+  letter-spacing:-.005em; display:grid; grid-template-columns:auto 1fr; gap:11px; align-items:baseline;
+}
+h3 .cl{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:500; color:var(--graphite-2)}
+h4{font-size:14px; font-weight:600; margin:22px 0 6px; color:var(--ink)}
+.lede{font-size:16px; color:var(--ink-2); margin:0 0 4px; max-width:64ch}
+p{margin:0 0 14px; max-width:68ch}
+ul,ol{margin:0 0 15px; padding-left:22px; max-width:68ch}
+li{margin:0 0 6px}
+li>ul,li>ol{margin:6px 0 4px}
+strong{font-weight:600}
+a{color:var(--band)}
+code{
+  font-family:"IBM Plex Mono",monospace; font-size:.875em; background:var(--paper-3);
+  padding:1.5px 5px; border-radius:3px; color:var(--ink)
+}
+hr{border:none; border-top:1px solid var(--rule); margin:40px 0 0}
+
+/* tables */
+.tbl{overflow-x:auto; margin:0 0 20px; max-width:1000px; border:1px solid var(--rule); border-radius:5px; background:var(--paper)}
+table{border-collapse:collapse; width:100%; font-size:13.2px; min-width:520px}
+th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--rule); vertical-align:top}
+th{
+  background:var(--paper-2); font-weight:600; font-size:10.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--graphite); white-space:nowrap; position:sticky; top:0;
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--paper-2)}
+td code{font-size:11.5px; white-space:nowrap}
+.num{font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap}
+
+/* chips */
+.chip{
+  display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:9.5px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; padding:2.5px 7px; border-radius:3px;
+  border:1px solid; white-space:nowrap; line-height:1.5;
+}
+.c-ok{color:var(--ok); border-color:var(--ok); background:var(--ok-bg)}
+.c-warn{color:var(--warn); border-color:var(--warn); background:var(--warn-bg)}
+.c-crit{color:var(--crit); border-color:var(--crit); background:var(--crit-bg)}
+.c-gold{color:var(--gold-ink); border-color:var(--gold); background:var(--warn-bg)}
+.c-flat{color:var(--graphite); border-color:var(--rule-strong); background:var(--paper-2)}
+.c-navy{color:var(--band); border-color:var(--band); background:var(--paper-2)}
+
+/* callouts */
+.note{
+  border-left:3px solid var(--band); background:var(--paper-2); padding:14px 18px;
+  margin:0 0 20px; border-radius:0 5px 5px 0; max-width:70ch;
+}
+.note.gold{border-left-color:var(--gold)}
+.note.crit{border-left-color:var(--crit)}
+.note p:last-child{margin-bottom:0}
+.note .hd{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--graphite); margin:0 0 6px; font-weight:600;
+}
+
+/* agent / spec cards */
+.spec{
+  border:1px solid var(--rule); border-radius:6px; margin:0 0 16px; background:var(--paper); max-width:960px;
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.spec>.hd{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+  padding:11px 16px; background:var(--paper-2); border-bottom:1px solid var(--rule);
+}
+.spec>.hd .nm{display:flex; gap:10px; align-items:baseline; min-width:0}
+.spec>.hd .id{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--band); font-weight:600}
+.spec>.hd .t{font-weight:600; font-size:14.5px}
+.spec .bd{padding:14px 16px}
+.spec dl{display:grid; grid-template-columns:118px minmax(0,1fr); gap:5px 14px; margin:0; font-size:13.2px}
+.spec dt{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--graphite-2); padding-top:3px;
+}
+.spec dd{margin:0; color:var(--ink-2)}
+.spec dd code{font-size:11.5px}
+@media (max-width:620px){ .spec dl{grid-template-columns:1fr; gap:2px 0} .spec dt{margin-top:8px} }
+
+/* phase ladder */
+.phases{display:flex; flex-direction:column; gap:0; margin:0 0 22px; max-width:960px; border:1px solid var(--rule); border-radius:6px; overflow:hidden}
+.ph{display:grid; grid-template-columns:64px 1fr auto; gap:14px; padding:13px 16px; border-bottom:1px solid var(--rule); align-items:start}
+.ph:last-child{border-bottom:none}
+.ph:nth-child(odd){background:var(--paper-2)}
+.ph .n{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--band); font-weight:600; padding-top:2px}
+.ph .t{font-weight:600; font-size:14px; margin:0 0 3px}
+.ph .d{font-size:13px; color:var(--ink-2); margin:0}
+.ph .w{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--graphite); white-space:nowrap; padding-top:3px}
+
+/* diagrams */
+.dgm{
+  margin:0 0 22px; padding:18px; max-width:1000px; border:1px solid var(--rule); border-radius:6px;
+  background:var(--paper-2); overflow-x:auto;
+}
+.dgm .cap{
+  font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--graphite); margin:0 0 12px;
+}
+pre.mermaid{background:transparent; margin:0; text-align:center}
+
+/* code blocks */
+pre.code{
+  max-width:960px; background:var(--paper-2); border:1px solid var(--rule); border-radius:5px; padding:14px 16px;
+  overflow-x:auto; font-family:"IBM Plex Mono",monospace; font-size:12px; line-height:1.62;
+  margin:0 0 20px; color:var(--ink-2);
+}
+pre.code b{color:var(--band); font-weight:600}
+pre.code i{color:var(--graphite-2); font-style:normal}
+
+/* wireframe */
+.wf{
+  max-width:1000px; border:1px solid var(--rule-strong); border-radius:5px; overflow:hidden; margin:0 0 20px;
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; background:var(--paper);
+}
+.wf .bar{background:var(--navy); color:#fff; padding:7px 12px; font-size:11px; letter-spacing:.05em}
+:root[data-theme="dark"] .wf .bar, :root:not([data-theme="light"]) .wf .bar{color:var(--paper)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .wf .bar{background:#22405F; color:#E8EDF2}}
+.wf .row{display:flex; gap:1px; background:var(--rule)}
+.wf .cell{flex:1; background:var(--paper-2); padding:11px 12px; min-height:60px}
+.wf .cell.k{background:var(--paper-3)}
+.wf .lbl{color:var(--graphite-2); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; margin-bottom:5px}
+.wf .val{font-size:17px; font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums}
+.wf .ln{height:7px; background:var(--rule); border-radius:2px; margin:5px 0}
+.wf .ln.s{width:55%} .wf .ln.m{width:78%}
+
+.foot{
+  margin-top:60px; padding:22px 40px 0; border-top:1px solid var(--rule);
+  font-size:12.5px; color:var(--graphite);
+}
+@media (max-width:1080px){ .foot{padding:22px 22px 0} }
+@media print{ .rail{display:none} .wrap{grid-template-columns:1fr} }
+</style>
+
+<div class="wrap">
+<aside class="rail">
+  <div class="mark"><b>Workforce&nbsp;OS</b><span>SRS v1.0</span></div>
+  <p class="sub">Software requirements specification. Derived wholly from <em>PCI_AI_Growth_OS.xlsx</em> rev. 18&nbsp;Aug&nbsp;2026.</p>
+  <nav>
+    <div class="grp">Front matter</div>
+    <a href="#s0"><code>0</code><span>Document control &amp; how to review</span></a>
+    <a href="#s1"><code>1</code><span>Purpose, scope, non-goals</span></a>
+    <a href="#s2"><code>2</code><span>Source of truth: sheet → system</span></a>
+    <div class="grp">Design</div>
+    <a href="#s3"><code>3</code><span>Architecture</span></a>
+    <a href="#s4"><code>4</code><span>Data model</span></a>
+    <a href="#s5"><code>5</code><span>Deterministic KPI &amp; rules engine</span></a>
+    <a href="#s6"><code>6</code><span>Agent workforce</span></a>
+    <a href="#s7"><code>7</code><span>Action, approval &amp; governance</span></a>
+    <a href="#s8"><code>8</code><span>Scheduling &amp; workers</span></a>
+    <a href="#s9"><code>9</code><span>AI provider abstraction</span></a>
+    <a href="#s10"><code>10</code><span>Learning loop</span></a>
+    <div class="grp">Interfaces</div>
+    <a href="#s11"><code>11</code><span>API specification</span></a>
+    <a href="#s12"><code>12</code><span>Frontend &amp; UX</span></a>
+    <a href="#s13"><code>13</code><span>Integrations &amp; connectors</span></a>
+    <div class="grp">Delivery</div>
+    <a href="#s14"><code>14</code><span>Non-functional requirements</span></a>
+    <a href="#s15"><code>15</code><span>Observability</span></a>
+    <a href="#s16"><code>16</code><span>Testing strategy</span></a>
+    <a href="#s17"><code>17</code><span>Deployment</span></a>
+    <a href="#s18"><code>18</code><span>Rollout &amp; phase gates</span></a>
+    <div class="grp">Annexes</div>
+    <a href="#a-a"><code>A</code><span>Agent prompt contract</span></a>
+    <a href="#a-b"><code>B</code><span>Sequence diagrams</span></a>
+    <a href="#a-c"><code>C</code><span>Wireframes</span></a>
+    <a href="#a-d"><code>D</code><span>Open decisions &amp; risks</span></a>
+  </nav>
+</aside>
+
+<main>
+<header class="mast">
+  <p class="eyebrow">Project Controls Institute Global · Software Requirements Specification</p>
+  <h1>PCI Workforce OS</h1>
+  <p class="standfirst">A multi-tenant platform that turns the Growth&nbsp;OS workbook into an operating system: sixteen coordinated AI agents that plan, draft and measure the marketing function, every consequential action gated by a named human, and every number computed in SQL rather than guessed by a model.</p>
+  <dl class="revblock">
+    <div><dt>Document</dt><dd>PCI-WOS-SRS-001</dd></div>
+    <div><dt>Revision</dt><dd>1.0 · for review</dd></div>
+    <div><dt>Source of truth</dt><dd>Growth OS · 42 sheets</dd></div>
+    <div><dt>Scope</dt><dd>Phase 0 of 6</dd></div>
+    <div><dt>Status</dt><dd>Awaiting sign-off</dd></div>
+  </dl>
+</header>
+
+<div class="inner">
+
+<!-- ══════════════════════════════ 0 ══════════════════════════════ -->
+<section id="s0">
+<h2><span class="cl">0</span><span>Document control and how to review this</span></h2>
+<p class="lede">You asked for the SRS first and then a phase-by-phase review rather than the whole system in one delivery. This document is built for exactly that: it is the only artefact produced before any code, and it is numbered so each later phase can be signed off against the clauses it claims to implement.</p>
+
+<h3><span class="cl">0.1</span><span>What this document is, and is not</span></h3>
+<p>It <strong>is</strong> the complete specification of the target system: architecture, schema, agent contracts, governance, APIs, screens, tests, deployment and rollout. Everything a delivery team needs to cost and build the platform without re-litigating the design.</p>
+<p>It is <strong>not</strong> code, and it deliberately contains no implementation. Section&nbsp;18 sets out six build phases; each has an entry gate that names the clauses it must satisfy and an exit gate that must be demonstrated before the next begins.</p>
+
+<h3><span class="cl">0.2</span><span>How to review it</span></h3>
+<ol>
+  <li><strong>Read §1, §2 and §7 first.</strong> Those three settle what the system is, where its rules come from, and what it is never allowed to do without a human. If any of the three is wrong, everything downstream is wrong.</li>
+  <li><strong>Then §6 — the agent roster.</strong> Sixteen agents, each with a mission, typed inputs and outputs, tools, memory, schedule and approval class. This is where you will have the strongest opinions.</li>
+  <li><strong>Then Annex&nbsp;D — open decisions.</strong> Eleven questions that need your answer before Phase&nbsp;1 can start. Nine are business decisions, not technical ones.</li>
+  <li><strong>Everything else can be reviewed lazily,</strong> at the start of the phase that implements it.</li>
+</ol>
+
+<h3><span class="cl">0.3</span><span>Honest scope assessment</span></h3>
+<div class="note gold">
+  <p class="hd">Read this before costing anything</p>
+  <p>The system specified here is roughly <strong>3.5–4.5 engineer-years</strong> of work: two senior backend, one frontend, one platform/DevOps, plus a part-time designer, over about twelve months to a hardened multi-tenant release. A single engineer building it alone should expect two to three years, and the agent layer will drift out of date faster than they can finish it.</p>
+  <p>The recommendation in §18 is therefore a <strong>thin vertical slice first</strong>: one tenant, four agents, three connectors, the full approval spine. That is a 10–14 week build for two engineers and it produces something PCI can genuinely run on. The remaining twelve agents are then additive rather than architectural.</p>
+</div>
+
+<h3><span class="cl">0.4</span><span>Two constraints that shaped the whole design</span></h3>
+<p>These are not preferences. They come from the source workbook itself and from platform terms of service, and they rule out the most obvious version of this product.</p>
+<div class="note crit">
+  <p class="hd">Constraint 1 · No automated LinkedIn actions <span class="chip c-crit">Hard</span></p>
+  <p>The workbook's Golden Rule&nbsp;5 reads: <em>“No bulk sending, no automation tools, no bots, no scraping. LinkedIn restricts accounts for this and it destroys reply rates.”</em> LinkedIn's User Agreement independently prohibits automated access and scraping.</p>
+  <p>The LinkedIn Outreach agent (§6.9) therefore <strong>drafts and queues; a human sends</strong>. It never holds a LinkedIn session, never automates a click, and never scrapes a profile. It composes a personalised note from data the operator has already captured, the operator reviews and sends it inside LinkedIn, and the platform records what was sent. Any design in which the agent transmits on LinkedIn's behalf would breach both PCI's own rules and LinkedIn's terms, and would put at risk the accounts the entire commercial strategy depends on.</p>
+</div>
+<div class="note crit">
+  <p class="hd">Constraint 2 · Models never compute a KPI <span class="chip c-crit">Hard</span></p>
+  <p>An independent numerical audit of the workbook found that every serious defect in it was a <em>silent arithmetic error</em> — revenue-this-week reading 2.5× revenue-to-date, acceptance rates above 100%, meetings erased by their own success. None of them threw an error; all of them would have been quoted to a board.</p>
+  <p>Language models are worse at this than spreadsheets, and they fail less visibly. So the platform splits hard: <strong>every number is computed in SQL</strong> against an immutable event log (§5), and agents may only read those numbers. An agent that needs a figure calls the metric API; it is never permitted to derive one from raw rows in its context window. Judgment, drafting, prioritisation and classification are the model's job. Arithmetic is the database's.</p>
+</div>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 1 ══════════════════════════════ -->
+<section id="s1">
+<h2><span class="cl">1</span><span>Purpose, scope and non-goals</span></h2>
+
+<h3><span class="cl">1.1</span><span>Problem statement</span></h3>
+<p>PCI runs its entire marketing and commercial function out of a 42-sheet workbook covering 133 platforms, 11 campaign objectives, 7 brands, 5,683 article briefs and a scored daily operating rhythm for every employee. The workbook works — it is internally consistent and independently audited — but it has four ceilings that no amount of spreadsheet engineering removes:</p>
+<ul>
+  <li><strong>It cannot act.</strong> It records work after the fact. Nothing in it drafts an article, proposes next week's schedule, or notices at 09:00 that follow-ups are overdue.</li>
+  <li><strong>It cannot be trusted concurrently.</strong> One shared file, several people, no row-level locking. Sorting a shared log moves other people's rows under them.</li>
+  <li><strong>It has a hard capacity.</strong> 1,006 daily rows and 1,203 leads. Beyond that, data is silently invisible to every report.</li>
+  <li><strong>It does not compound.</strong> Nothing learns. Last quarter's evidence about what worked is prose in a playbook, not a policy the system applies.</li>
+</ul>
+
+<h3><span class="cl">1.2</span><span>Product definition</span></h3>
+<p><strong>PCI Workforce OS</strong> is a multi-tenant enterprise SaaS platform in which a coordinated workforce of AI agents runs the operating model the workbook defines. The agents plan, research, draft, schedule, measure and report. Humans set intent, approve anything consequential, and do the work that must legitimately be done by a person. The platform keeps the record, computes the truth, and remembers what worked.</p>
+
+<h3><span class="cl">1.3</span><span>In scope</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Capability</th><th>Requirement summary</th><th>Clause</th></tr></thead>
+<tbody>
+<tr><td>Operating-model engine</td><td>Every workbook sheet expressed as entities, rules, schedules and KPIs</td><td><code>§2, §4, §5</code></td></tr>
+<tr><td>Agent workforce</td><td>16 agents with typed contracts, memory, schedules and tools</td><td><code>§6</code></td></tr>
+<tr><td>Approval spine</td><td>Risk-classed proposed actions; human sign-off for publish, outreach, spend</td><td><code>§7</code></td></tr>
+<tr><td>Scheduling</td><td>Cron, calendar-aware, tenant-timezone, Sunday- or Monday-start weeks</td><td><code>§8</code></td></tr>
+<tr><td>Provider neutrality</td><td>OpenAI, Anthropic, Google interchangeable per task class</td><td><code>§9</code></td></tr>
+<tr><td>Learning</td><td>Outcome capture → evaluation → versioned playbook policy</td><td><code>§10</code></td></tr>
+<tr><td>Executive reporting</td><td>KPI dashboards, weekly pulse, per-person scorecards, data-health gate</td><td><code>§5.6, §12</code></td></tr>
+<tr><td>Governance</td><td>Full audit log, RBAC, tenant isolation, retention, kill switches</td><td><code>§7, §14</code></td></tr>
+<tr><td>Multi-tenancy</td><td>Thousands of organisations on shared infrastructure with hard isolation</td><td><code>§4.2, §14.2</code></td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">1.4</span><span>Explicit non-goals</span></h3>
+<p>Naming these now prevents scope drift later.</p>
+<ul>
+  <li><strong>Not a general chatbot.</strong> There is a conversational surface, but it is a control plane over typed workflows, not an open-ended assistant.</li>
+  <li><strong>Not a CRM replacement.</strong> The workbook itself concedes that at sustained volume the lead log belongs in a CRM. Workforce OS owns activity, campaign and content; it integrates with a CRM rather than becoming one.</li>
+  <li><strong>Not a scraper or automation harness.</strong> See §0.4. Official APIs only, or a human in the loop.</li>
+  <li><strong>No model fine-tuning in v1.</strong> Learning is retrieval plus explicit versioned policy (§10). Fine-tuning is a Phase&nbsp;6 option, not a foundation.</li>
+  <li><strong>No autonomous spend.</strong> Every currency-denominated action requires human approval, without exception and without a bypass flag.</li>
+</ul>
+
+<h3><span class="cl">1.5</span><span>Actors and roles</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Role</th><th>Represents</th><th>Core permissions</th></tr></thead>
+<tbody>
+<tr><td><code>owner</code></td><td>Founder / MD</td><td>Everything, including tenant settings, spend approval, agent enablement, kill switch</td></tr>
+<tr><td><code>exec</code></td><td>Board / investor</td><td>Read-only dashboards and reports; no operational data, no PII</td></tr>
+<tr><td><code>manager</code></td><td>Marketing manager</td><td>Approve publish and outreach, assign work, set targets, run the weekly review</td></tr>
+<tr><td><code>operator</code></td><td>Marketing executive</td><td>Log activity, draft, claim briefs, execute approved actions, send own outreach</td></tr>
+<tr><td><code>reviewer</code></td><td>Compliance / editor</td><td>QA queue, compliance checks, message-bank approval; cannot publish</td></tr>
+<tr><td><code>analyst</code></td><td>SEO / data</td><td>Read all metrics, manage keyword and cluster plans, run experiments</td></tr>
+<tr><td><code>agent</code></td><td>A system agent</td><td>Machine principal: read scoped data, write proposals only — never a side effect</td></tr>
+<tr><td><code>platform_admin</code></td><td>PCI staff (SaaS)</td><td>Cross-tenant operations, billing, provider keys. No tenant content by default.</td></tr>
+</tbody></table></div>
+<p>Roles compose additively and are tenant-scoped. <code>agent</code> is deliberately the weakest principal in the system: it can propose, and it can read what its contract grants. It cannot approve, cannot publish, cannot spend, and cannot escalate itself.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 2 ══════════════════════════════ -->
+<section id="s2">
+<h2><span class="cl">2</span><span>Source of truth: every sheet, and what it becomes</span></h2>
+<p class="lede">The workbook is the specification. This clause maps all 42 sheets onto the system so nothing is lost in translation and no requirement is invented. Four destinations: an <strong>entity</strong> (a table people write to), a <strong>derived view</strong> (SQL, never a model), a <strong>rule or reference set</strong> (configuration), or an <strong>agent responsibility</strong>.</p>
+
+<h3><span class="cl">2.1</span><span>Sheets that become entities</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Sheet</th><th>Cols</th><th>Entity</th><th>Grain</th><th>Notes carried across</th></tr></thead>
+<tbody>
+<tr><td>DAILY ENTRY</td><td class="num">14</td><td><code>activity_event</code></td><td>One unit of work done</td><td>The spine. Every derived number traces here. Objective + brand mandatory.</td></tr>
+<tr><td>LinkedIn Outreach</td><td class="num">42</td><td><code>lead</code> + <code>lead_touch</code></td><td>One person; one interaction</td><td>Split: 42 columns is a lifecycle, not a row. Touches become events.</td></tr>
+<tr><td>Partnership Pipeline</td><td class="num">25</td><td><code>partner_org</code> + <code>deal</code></td><td>One organisation; one opportunity</td><td>Signed only when a real date exists — never on typed text.</td></tr>
+<tr><td>Content Calendar</td><td class="num">19</td><td><code>content_item</code></td><td>One asset</td><td>Status and published_at both required to count as published.</td></tr>
+<tr><td>Content Scheduler</td><td class="num">15</td><td><code>schedule</code></td><td>Platform × cadence × window</td><td>Coverage matched on platform <em>and</em> brand <em>and</em> objective.</td></tr>
+<tr><td>Community &amp; PR</td><td class="num">21</td><td><code>community_action</code></td><td>One thread or mention</td><td>Substantive contributions only; likes are engagement events.</td></tr>
+<tr><td>Job Postings</td><td class="num">13</td><td><code>job_posting</code></td><td>Role × board</td><td>Applicant funnel counts.</td></tr>
+<tr><td>Link Building</td><td class="num">14</td><td><code>link_prospect</code></td><td>One target domain</td><td><code>went_live_at</code> is the only thing that counts as a backlink.</td></tr>
+<tr><td>Experiments</td><td class="num">19</td><td><code>experiment</code></td><td>One A/B test</td><td>Promoted to a first-class framework in §10.3.</td></tr>
+<tr><td>UTM Builder</td><td class="num">8</td><td><code>tracked_link</code></td><td>One tagged URL</td><td>Generated server-side; canonical UTM grammar enforced.</td></tr>
+<tr><td>SEO Clusters</td><td class="num">15</td><td><code>pillar</code> + <code>spoke</code></td><td>Pillar; supporting article</td><td>Joined to briefs by ID, not by title text.</td></tr>
+<tr><td>Keyword Plan</td><td class="num">16</td><td><code>keyword</code></td><td>One search term</td><td>Difficulty is evidence-graded, not tool-scored.</td></tr>
+<tr><td>Article Bank</td><td class="num">16</td><td><code>brief</code></td><td>One article brief</td><td>5,683 rows seed the tenant. Prompt is a template, not free text.</td></tr>
+<tr><td>Master Tasks</td><td class="num">16</td><td><code>task</code></td><td>One workstream task</td><td>Owner and due date become mandatory, not optional.</td></tr>
+<tr><td>Platform Setup</td><td class="num">17</td><td><code>platform_account</code></td><td>One account</td><td>133 rows seed the catalogue. Secrets by vault reference only.</td></tr>
+<tr><td>Accounts Register</td><td class="num">10</td><td><em>view of</em> <code>platform_account</code></td><td>—</td><td>Not a second table. A projection with 2FA and ownership.</td></tr>
+<tr><td>Channel Costs</td><td class="num">4</td><td><code>channel_cost</code></td><td>Tool × month</td><td>Becomes monthly rather than a single figure.</td></tr>
+<tr><td>QA &amp; Compliance</td><td class="num">9</td><td><code>compliance_check</code> + <code>run</code></td><td>Check; each execution</td><td>15 checks; several auto-evaluated (§5.6).</td></tr>
+<tr><td>Message Bank</td><td class="num">9</td><td><code>message_template</code></td><td>One approved template</td><td>Versioned, approval-gated, character-limit enforced.</td></tr>
+<tr><td>PR &amp; Target Directory</td><td class="num">7</td><td><code>outreach_target</code></td><td>One named route</td><td>Includes deliberate skips with reasons — a denylist with provenance.</td></tr>
+<tr><td>Weekly Review</td><td class="num">20</td><td><code>weekly_review</code></td><td>Person × week</td><td>Narrative fields stay human. Numbers come from §5.</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">2.2</span><span>Sheets that become derived views — computed in SQL, never by a model</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Sheet</th><th>Becomes</th><th>Refresh</th><th>Defect it must not reintroduce</th></tr></thead>
+<tbody>
+<tr><td>Dashboard</td><td><code>mv_kpi_cumulative</code> + tiles</td><td>5&nbsp;min incremental</td><td>Two revenue definitions in adjacent tiles</td></tr>
+<tr><td>Weekly Pulse</td><td><code>mv_kpi_weekly</code></td><td>On event + hourly</td><td>4-week average over a partial week ÷ hard 4</td></tr>
+<tr><td>Summary</td><td><code>v_exec_summary</code></td><td>Live</td><td>“Five numbers that matter” with no revenue in them</td></tr>
+<tr><td>Objective Performance</td><td><code>mv_objective_perf</code></td><td>Hourly</td><td>Untagged rows leaking out of the total</td></tr>
+<tr><td>Team Scorecard</td><td><code>mv_person_perf</code></td><td>Hourly</td><td>Rates above 100% from independent columns</td></tr>
+<tr><td>Employee Score</td><td><code>v_person_score</code></td><td>Live</td><td>Two components computing the same ratio; score shown before the data gate</td></tr>
+<tr><td>Platform Progress</td><td><code>mv_platform_activity</code></td><td>Hourly</td><td>One text date blanking all 133 rows</td></tr>
+<tr><td>Who Did What</td><td><code>v_person_platform</code></td><td>Live</td><td>Cumulative-only with no week filter</td></tr>
+<tr><td>Daily Log</td><td><code>v_daily_rollup</code></td><td>Live</td><td>—</td></tr>
+</tbody></table></div>
+<div class="note">
+  <p class="hd">Why this table matters more than it looks</p>
+  <p>Each row in the right-hand column is a real defect found by independent audit of the workbook, and every one produced a plausible-looking wrong number rather than an error. §16.3 turns all nine into executable regression tests that run against the platform's own SQL. The workbook's scars become the platform's test suite.</p>
+</div>
+
+<h3><span class="cl">2.3</span><span>Sheets that become rules and reference data</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Sheet</th><th>Becomes</th><th>Content</th></tr></thead>
+<tbody>
+<tr><td>START HERE §3</td><td><code>target_policy</code></td><td>8 daily targets per person; weekly = daily × working days</td></tr>
+<tr><td>START HERE §4</td><td><code>golden_rule</code></td><td>10 non-negotiable rules, machine-checked where possible (§7.5)</td></tr>
+<tr><td>START HERE §2, §6, §11</td><td><code>tenant_settings</code></td><td>Programme start, working days, week-start day, roster, owned domains</td></tr>
+<tr><td>Lists</td><td><code>ref_*</code> tables</td><td>25 controlled vocabularies: 133 platforms, 11 objectives, 7 brands, 15 activity types, 13 areas, 11 outcomes, 9 funnel stages, per-platform logging rules</td></tr>
+<tr><td>Benchmarks</td><td><code>benchmark</code></td><td>Metric bands with named source and check date — provenance is mandatory</td></tr>
+<tr><td>Publishing Plan</td><td><code>publishing_rule</code></td><td>Per-platform canonical and outbound-link behaviour</td></tr>
+<tr><td>Glossary</td><td><code>glossary_term</code></td><td>~70 terms; surfaced as inline help throughout the UI</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">2.4</span><span>Sheets that become agent knowledge and responsibility</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Sheet</th><th>Owning agent</th><th>How it is used</th></tr></thead>
+<tbody>
+<tr><td>GROWTH PLAYBOOK (23 techniques)</td><td>Marketing Strategy</td><td>Retrieval corpus + the technique registry a strategy proposal must cite. Technique 15 (“what not to do”) becomes a hard denylist.</td></tr>
+<tr><td>PLATFORM GUIDE (133 rows)</td><td>Publishing, Content Planning</td><td>Per-platform cadence, format constraints and KPI — a capability table the agents plan within.</td></tr>
+<tr><td>LinkedIn Playbook</td><td>LinkedIn Outreach</td><td>Method steps and limits; bounds what the agent may draft.</td></tr>
+<tr><td>How-To Guides</td><td>Knowledge Management</td><td>Workstream procedures; grounds operator-facing answers.</td></tr>
+<tr><td>TEAM GUIDE</td><td>Knowledge Management</td><td>“Where does this belong?” classification — becomes an actual classifier.</td></tr>
+<tr><td>MAP, UPGRADE NOTES</td><td>—</td><td>Navigation and changelog. Replaced by the platform's own information architecture and release notes.</td></tr>
+</tbody></table></div>
+<p>The three remaining sheets are presentational (MAP), historical (UPGRADE NOTES) or already covered as projections (Accounts Register). Every one of the 42 is accounted for.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 3 ══════════════════════════════ -->
+<section id="s3">
+<h2><span class="cl">3</span><span>Architecture</span></h2>
+
+<h3><span class="cl">3.1</span><span>Containers</span></h3>
+<div class="dgm">
+  <p class="cap">Figure 3.1 — Container view</p>
+<pre class="mermaid">
+flowchart TB
+  subgraph edge[" "]
+    direction LR
+    U["Browser · React 18 + TS"]
+    X["Executive read-only"]
+  end
+  GW["API Gateway · YARP<br/>TLS · rate limit · tenant resolve"]
+  subgraph svc["ASP.NET Core 8"]
+    API["Core API<br/>REST + SSE"]
+    ORCH["Orchestrator<br/>agent runtime"]
+    POL["Policy &amp; Approval<br/>engine"]
+    MET["Metric service<br/>SQL only"]
+  end
+  subgraph work["Workers · Hangfire"]
+    SCH["Scheduler"]
+    EXE["Action executors"]
+    ING["Ingestion"]
+    EVAL["Evaluation"]
+  end
+  PG[("PostgreSQL 16<br/>RLS per tenant")]
+  RD[("Redis 7<br/>cache · queue · locks")]
+  BLOB[("Object store<br/>artefacts")]
+  VAULT[["Secrets vault"]]
+  subgraph ai["Provider adapters"]
+    OA["OpenAI"]:::p
+    AN["Anthropic"]:::p
+    GG["Google"]:::p
+  end
+  EXT["Connectors<br/>GSC · GA4 · LinkedIn API<br/>ESP · Stripe"]
+
+  U --> GW
+  X --> GW
+  GW --> API
+  API --> POL
+  API --> MET
+  API --> ORCH
+  ORCH --> ai
+  ORCH --> POL
+  POL --> EXE
+  SCH --> ORCH
+  ING --> EXT
+  EVAL --> PG
+  API --> PG
+  API --> RD
+  MET --> PG
+  ORCH --> RD
+  EXE --> EXT
+  API --> BLOB
+  ORCH --> VAULT
+  classDef p fill:#EAF0F9,stroke:#2E5C9A,color:#1F3864;
+</pre>
+</div>
+
+<h3><span class="cl">3.2</span><span>Technology decisions and why</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Layer</th><th>Choice</th><th>Rationale</th></tr></thead>
+<tbody>
+<tr><td>Frontend</td><td>React 18, TypeScript strict, Vite, TanStack Query + Router, Tailwind + Radix primitives</td><td>Matches the existing PCI frontend stack, so one team maintains both. Radix gives accessible primitives without a design-system lock-in.</td></tr>
+<tr><td>Backend</td><td>ASP.NET Core 8, minimal API, vertical-slice per feature, MediatR for in-process dispatch</td><td>Consistent with the existing PCI backend. Vertical slices keep an agent's read model, handler and policy in one folder.</td></tr>
+<tr><td>Database</td><td>PostgreSQL 16 — row-level security, partitioned event tables, <code>pgvector</code>, <code>pg_partman</code></td><td>One engine for relational, tenant isolation, time-series partitioning and embeddings. Avoids a separate vector store in v1.</td></tr>
+<tr><td>Cache / queue</td><td>Redis 7 — read cache, distributed locks, rate-limit counters, SSE fan-out</td><td>Also the Hangfire lock provider and the per-tenant AI cost-budget counter.</td></tr>
+<tr><td>Background work</td><td>Hangfire with PostgreSQL storage</td><td>Durable, inspectable, in-process with the .NET stack. Jobs survive restarts and are visible in a dashboard from day one.</td></tr>
+<tr><td>Scheduling</td><td>Quartz-style cron in the Scheduler worker, evaluated in tenant timezone</td><td>Weeks must be able to start Sunday (Gulf) or Monday. §8.2.</td></tr>
+<tr><td>Agent runtime</td><td>Custom orchestrator over provider SDKs; typed tool contracts; no third-party agent framework</td><td>The approval spine in §7 is the product's core value. Delegating control flow to a framework would put the safety-critical path outside our tests.</td></tr>
+<tr><td>Observability</td><td>OpenTelemetry → Prometheus + Loki + Tempo; Grafana; Sentry</td><td>One trace spans HTTP → agent run → provider call → proposed action → approval → execution. §15.</td></tr>
+<tr><td>Deployment</td><td>Docker multi-stage; Kubernetes (or Render/Fly for early phases); GitHub Actions</td><td>Phase 1–2 can run on a single compose host. §17 sets the promotion path.</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">3.3</span><span>The four planes</span></h3>
+<p>Every request belongs to exactly one plane, and the planes have different guarantees. Confusing them is the most common way platforms like this become unsafe.</p>
+<div class="tbl"><table>
+<thead><tr><th>Plane</th><th>Contains</th><th>Guarantee</th><th>May cause a side effect?</th></tr></thead>
+<tbody>
+<tr><td><strong>Record</strong></td><td>Activity events, leads, content, deals — the immutable log</td><td>Append-only, auditable, replayable</td><td>No — it <em>is</em> the record</td></tr>
+<tr><td><strong>Truth</strong></td><td>Metric service, derived views, data-health checks</td><td>Deterministic. Same inputs → same output, forever</td><td>No — read-only by construction</td></tr>
+<tr><td><strong>Judgment</strong></td><td>Agent runs, model calls, proposals, drafts</td><td>Non-deterministic, fully logged, replayable, never trusted</td><td><strong>No</strong> — emits proposals only</td></tr>
+<tr><td><strong>Effect</strong></td><td>Action executors, connectors, notifications</td><td>Idempotent, retryable, authorised by an approval record</td><td>Yes — and only here</td></tr>
+</tbody></table></div>
+<p>The single most important architectural invariant in this document: <strong>the judgment plane cannot reach the effect plane directly.</strong> Every path between them passes through the policy and approval engine (§7), which is ordinary deterministic code with its own tests.</p>
+
+<h3><span class="cl">3.4</span><span>Environments</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Env</th><th>Purpose</th><th>AI providers</th><th>Connectors</th><th>Data</th></tr></thead>
+<tbody>
+<tr><td><code>local</code></td><td>Development</td><td>Recorded fixtures by default; live behind a flag</td><td>All stubbed</td><td>Seeded synthetic tenant</td></tr>
+<tr><td><code>ci</code></td><td>Automated tests</td><td>Fixtures only — no network</td><td>Contract mocks</td><td>Ephemeral per run</td></tr>
+<tr><td><code>staging</code></td><td>Rehearsal, phase demos</td><td>Live, low-cost models, hard budget cap</td><td>Sandbox credentials</td><td>Anonymised copy</td></tr>
+<tr><td><code>prod</code></td><td>Live tenants</td><td>Live, per-task routing policy</td><td>Real, per-tenant credentials</td><td>Real</td></tr>
+</tbody></table></div>
+<p><code>ci</code> makes no outbound model calls. Agent behaviour is tested against recorded provider responses, which makes the suite fast, free and deterministic; live-provider tests run as a separate nightly job against <code>staging</code> (§16.5).</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 4 ══════════════════════════════ -->
+<section id="s4">
+<h2><span class="cl">4</span><span>Data model</span></h2>
+
+<h3><span class="cl">4.1</span><span>Core entity relationships</span></h3>
+<div class="dgm">
+  <p class="cap">Figure 4.1 — Principal entities (abridged)</p>
+<pre class="mermaid">
+erDiagram
+  TENANT ||--o{ APP_USER : employs
+  TENANT ||--o{ PLATFORM_ACCOUNT : owns
+  TENANT ||--o{ ACTIVITY_EVENT : records
+  TENANT ||--o{ AGENT_RUN : executes
+  APP_USER ||--o{ ACTIVITY_EVENT : logs
+  PLATFORM_ACCOUNT }o--|| REF_PLATFORM : instantiates
+  ACTIVITY_EVENT }o--|| REF_OBJECTIVE : "tagged (required)"
+  ACTIVITY_EVENT }o--|| REF_BRAND : "tagged (required)"
+  ACTIVITY_EVENT }o--|| REF_ACTIVITY_TYPE : classifies
+  LEAD ||--o{ LEAD_TOUCH : "has history"
+  LEAD_TOUCH }o--|| ACTIVITY_EVENT : "may emit"
+  PARTNER_ORG ||--o{ DEAL : negotiates
+  BRIEF ||--o| CONTENT_ITEM : "realised as"
+  KEYWORD ||--o| BRIEF : "targeted by"
+  PILLAR ||--o{ SPOKE : anchors
+  SPOKE }o--|| BRIEF : "written from"
+  SCHEDULE ||--o{ CONTENT_ITEM : "planned into"
+  AGENT_RUN ||--o{ PROPOSED_ACTION : emits
+  PROPOSED_ACTION ||--o| APPROVAL : requires
+  APPROVAL ||--o| EXECUTED_ACTION : authorises
+  EXECUTED_ACTION ||--o{ AUDIT_ENTRY : writes
+  AGENT_RUN ||--o{ RUN_OUTCOME : "evaluated by"
+</pre>
+</div>
+
+<h3><span class="cl">4.2</span><span>Multi-tenancy: shared schema with row-level security</span></h3>
+<p><strong>Decision.</strong> One database, one schema, <code>tenant_id uuid not null</code> on every tenant-owned table, PostgreSQL RLS enforcing isolation. Not schema-per-tenant, and not database-per-tenant.</p>
+<p><strong>Why.</strong> The target is thousands of organisations. Schema-per-tenant multiplies migration time by tenant count and exhausts connection pooling; database-per-tenant multiplies infrastructure cost and operational surface. RLS puts isolation in the engine rather than in application code, where a forgotten <code>WHERE</code> clause becomes a cross-tenant data breach.</p>
+<pre class="code"><i>-- every tenant table follows this exact pattern</i>
+<b>ALTER TABLE</b> activity_event <b>ENABLE ROW LEVEL SECURITY</b>;
+<b>ALTER TABLE</b> activity_event <b>FORCE ROW LEVEL SECURITY</b>;   <i>-- applies to the owner too</i>
+
+<b>CREATE POLICY</b> tenant_isolation <b>ON</b> activity_event
+  <b>USING</b>      (tenant_id = current_setting('app.tenant_id')::uuid)
+  <b>WITH CHECK</b> (tenant_id = current_setting('app.tenant_id')::uuid);
+
+<i>-- the API sets this once per connection checkout, from the validated JWT claim.</i>
+<i>-- No application query ever names tenant_id in a filter; forgetting it is now</i>
+<i>-- impossible rather than merely discouraged.</i></pre>
+<p><strong>Escape hatch, deliberately narrow.</strong> A single <code>platform_admin</code> role may set <code>app.bypass_rls</code> for cross-tenant operations. Every such session is logged with the operator's identity, the reason, and the statements executed. Enterprise tenants who require physical separation are offered a dedicated deployment of the same image — a commercial decision, not an architectural fork.</p>
+
+<h3><span class="cl">4.3</span><span>The activity event — the spine</span></h3>
+<p>Everything in the truth plane traces to this one table. Its constraints encode the workbook's hardest-won lessons.</p>
+<pre class="code"><b>CREATE TABLE</b> activity_event (
+  id                bigint <b>GENERATED ALWAYS AS IDENTITY</b>,
+  tenant_id         uuid        <b>NOT NULL</b>,
+  occurred_on       date        <b>NOT NULL</b>,        <i>-- a real date. never text.</i>
+  occurred_at       timestamptz <b>NULL</b>,            <i>-- optional precision</i>
+  actor_user_id     uuid        <b>NULL</b>,            <i>-- null = unattributed, and reported as such</i>
+  actor_agent_id    uuid        <b>NULL</b>,
+  platform_id       int         <b>NOT NULL REFERENCES</b> ref_platform,
+  activity_type_id  int         <b>NOT NULL REFERENCES</b> ref_activity_type,
+  objective_id      int         <b>NOT NULL REFERENCES</b> ref_objective,   <i>-- mandatory</i>
+  brand_id          int         <b>NOT NULL REFERENCES</b> ref_brand,       <i>-- mandatory</i>
+  quantity          int         <b>NULL CHECK</b> (quantity <b>BETWEEN</b> 0 <b>AND</b> 2000),
+  minutes           int         <b>NULL CHECK</b> (minutes  <b>BETWEEN</b> 0 <b>AND</b> 960),
+  description       text        <b>NOT NULL CHECK</b> (length(description) <b>BETWEEN</b> 3 <b>AND</b> 2000),
+  evidence_url      text        <b>NULL</b>,
+  result_id         int         <b>NULL REFERENCES</b> ref_result,
+  blocker_note      text        <b>NULL</b>,
+  source            text        <b>NOT NULL DEFAULT</b> 'ui'
+                    <b>CHECK</b> (source <b>IN</b> ('ui','import','connector','agent_execution')),
+  created_at        timestamptz <b>NOT NULL DEFAULT</b> now(),
+  <b>PRIMARY KEY</b> (tenant_id, occurred_on, id),
+  <b>CONSTRAINT</b> not_future  <b>CHECK</b> (occurred_on &lt;= current_date + 1),
+  <b>CONSTRAINT</b> has_actor   <b>CHECK</b> (actor_user_id <b>IS NOT NULL OR</b> actor_agent_id <b>IS NOT NULL</b>)
+) <b>PARTITION BY RANGE</b> (occurred_on);
+
+<i>-- monthly partitions via pg_partman; 24 months hot, then compressed archive.</i>
+<b>CREATE INDEX</b> ON activity_event (tenant_id, occurred_on <b>DESC</b>, activity_type_id);
+<b>CREATE INDEX</b> ON activity_event (tenant_id, actor_user_id, occurred_on <b>DESC</b>);
+<b>CREATE INDEX</b> ON activity_event (tenant_id, platform_id, occurred_on <b>DESC</b>);</pre>
+<div class="note">
+  <p class="hd">Five constraints, five audit findings</p>
+  <ul style="margin-bottom:0">
+    <li><code>occurred_on date NOT NULL</code> — a text date landed in cumulative totals and in no week. The type makes it impossible.</li>
+    <li><code>not_future</code> — one wrong-year typo multiplied every cumulative figure and drove platform ages negative.</li>
+    <li><code>quantity ≤ 2000</code>, <code>minutes ≤ 960</code> — <code>100000</code> in a quantity field read as 1,250,200% of target and printed “On target”.</li>
+    <li><code>objective_id</code>, <code>brand_id</code> <code>NOT NULL</code> — untagged rows fell through every bucket and vanished from the total.</li>
+    <li><code>has_actor</code> — a row with minutes and no name counted for the team and for nobody, so the per-person block could never reconcile.</li>
+  </ul>
+</div>
+
+<h3><span class="cl">4.4</span><span>The governance tables</span></h3>
+<pre class="code"><b>CREATE TABLE</b> agent_run (
+  id             uuid <b>PRIMARY KEY</b>,
+  tenant_id      uuid <b>NOT NULL</b>,
+  agent_key      text <b>NOT NULL</b>,              <i>-- 'seo', 'content_qa', …</i>
+  agent_version  text <b>NOT NULL</b>,              <i>-- prompt + policy version, for replay</i>
+  trigger        text <b>NOT NULL</b>,              <i>-- 'schedule' | 'event' | 'manual' | 'parent_run'</i>
+  parent_run_id  uuid <b>NULL REFERENCES</b> agent_run,
+  input_digest   text <b>NOT NULL</b>,              <i>-- sha256 of the resolved input contract</i>
+  status         text <b>NOT NULL</b>,              <i>-- queued|running|succeeded|failed|cancelled|budget_exceeded</i>
+  started_at     timestamptz, finished_at timestamptz,
+  provider       text, model text,
+  tokens_in      int, tokens_out int, cost_usd numeric(10,4),
+  error          jsonb
+);
+
+<b>CREATE TABLE</b> proposed_action (
+  id             uuid <b>PRIMARY KEY</b>,
+  tenant_id      uuid <b>NOT NULL</b>,
+  agent_run_id   uuid <b>NOT NULL REFERENCES</b> agent_run,
+  action_type    text <b>NOT NULL</b>,              <i>-- see the registry in §7.2</i>
+  risk_class     text <b>NOT NULL</b>,              <i>-- auto | notify | approve | dual_approve</i>
+  payload        jsonb <b>NOT NULL</b>,             <i>-- schema-validated per action_type</i>
+  rationale      text <b>NOT NULL</b>,              <i>-- why. shown to the approver verbatim.</i>
+  citations      jsonb <b>NOT NULL DEFAULT</b> '[]', <i>-- metric ids + doc ids the claim rests on</i>
+  expected_effect jsonb,                        <i>-- the agent's own prediction — scored later (§10)</i>
+  state          text <b>NOT NULL DEFAULT</b> 'pending',
+  idempotency_key text <b>NOT NULL</b>,
+  <b>UNIQUE</b> (tenant_id, idempotency_key)
+);
+
+<b>CREATE TABLE</b> approval (
+  id                uuid <b>PRIMARY KEY</b>,
+  proposed_action_id uuid <b>NOT NULL REFERENCES</b> proposed_action,
+  decision          text <b>NOT NULL CHECK</b> (decision <b>IN</b> ('approved','rejected','amended')),
+  decided_by        uuid <b>NOT NULL</b>,           <i>-- a real person. never an agent.</i>
+  decided_at        timestamptz <b>NOT NULL DEFAULT</b> now(),
+  amended_payload   jsonb <b>NULL</b>,              <i>-- what the human changed — training signal</i>
+  note              text,
+  <b>CONSTRAINT</b> human_only <b>CHECK</b> (decided_by <b>IS NOT NULL</b>)
+);</pre>
+<p><code>audit_entry</code> is append-only, hash-chained (<code>prev_hash</code>, <code>entry_hash</code>) so tampering is detectable, and retained for seven years. Every state transition on every table above writes one.</p>
+
+<h3><span class="cl">4.5</span><span>Reference data and seeding</span></h3>
+<p>A new tenant is seeded from the workbook's controlled vocabularies: 133 platforms with area, priority, value rank, geography and logging rule; 11 objectives with value ranks; 7 brands; 15 activity types; 13 areas; 76 keywords; 7 pillars; 5,683 briefs; 23 growth techniques; 15 compliance checks; the benchmark table with its sources. Reference rows are <strong>global by default and overridable per tenant</strong> — a tenant may add a platform or rename an objective without forking the catalogue. The seed is a versioned migration, so the provenance of every value is traceable to a workbook revision.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 5 ══════════════════════════════ -->
+<section id="s5">
+<h2><span class="cl">5</span><span>Deterministic KPI and rules engine</span></h2>
+<p class="lede">This clause is the truth plane. It exists so that no number anyone acts on has ever passed through a language model.</p>
+
+<h3><span class="cl">5.1</span><span>Metric definition as data</span></h3>
+<p>Metrics are not scattered SQL strings. Each is a row in <code>metric_definition</code>: a stable key, a human definition, the SQL expression, its grain, its unit, its dependencies, and the version it was introduced at. The metric service compiles definitions into parameterised queries; nothing else in the platform may compute a KPI.</p>
+<pre class="code">{
+  "key": "revenue_recorded_total",
+  "label": "Total revenue recorded",
+  "definition": "Certification revenue with a real purchase date, plus enterprise deal
+                 value with a real contract-signed date. A typed note is not a sale.",
+  "unit": "currency", "grain": ["tenant","period","brand","objective"],
+  "sql": "SELECT coalesce(sum(l.revenue),0) FROM lead l
+            WHERE l.purchase_date BETWEEN @from AND @to
+          UNION ALL
+          SELECT coalesce(sum(d.value),0) FROM deal d
+            WHERE d.contract_signed_date BETWEEN @from AND @to",
+  "supersedes": null, "introduced_in": "1.0"
+}</pre>
+<div class="note gold">
+  <p class="hd">One definition per concept — enforced, not encouraged</p>
+  <p>The audit's headline defect was two revenue definitions in adjacent dashboard tiles, which made revenue-this-week read 2.5× revenue-to-date. The registry makes that structurally impossible: a metric key resolves to exactly one expression, dashboards reference metrics by key, and a CI check fails the build if any UI component computes a figure locally. Superseding a definition requires a new key and an explicit <code>supersedes</code> link, so historical reports stay reproducible.</p>
+</div>
+
+<h3><span class="cl">5.2</span><span>Period arithmetic</span></h3>
+<p>Every windowed metric resolves its period through one service, never inline. Rules, all of them fixes for real defects:</p>
+<ul>
+  <li>Week start is <code>tenant_settings.week_start_dow</code> — Sunday for Gulf teams, Monday otherwise. The workbook hard-coded Monday and quietly bucketed every Sunday of Gulf output into the previous week.</li>
+  <li>Windows are <strong>half-open</strong>: <code>[start, end)</code>. A closed upper bound on a bare date excluded everything logged on the last day of the period with a time of day.</li>
+  <li>Trailing averages use <strong>completed periods only</strong>, and divide by periods actually elapsed since the programme start. A 28-day window ending mid-week divided by a hard 4 read 20% low on a Monday and correct on a Friday.</li>
+  <li>Targets multiply by <strong>person-days</strong> — distinct (person, day) pairs with logged work — never by headcount × calendar days. That single error understated attainment 2.9× and produced “behind target” verdicts against an inflated bar.</li>
+</ul>
+
+<h3><span class="cl">5.3</span><span>Containment rules for ratios</span></h3>
+<p>Any rate whose numerator and denominator come from independent columns is computed with a guarded denominator: <code>rate = num / greatest(den, num)</code>. Separately, the contradiction is <em>counted and surfaced</em> rather than smoothed away — because the underlying event is a logging failure a manager must fix, not a rounding artefact.</p>
+<p>In the workbook, marking a lead accepted without logging the connection request pushed acceptance to 123% and earned that person +32.5 points on a 100-point score. The sheet rewarded the single commonest logging slip. Guarded denominators cap the rate; <code>dh_accepted_without_request</code> (§5.6) names the rows responsible.</p>
+
+<h3><span class="cl">5.4</span><span>Progressive states, not terminal flags</span></h3>
+<p>A meeting is counted from <code>meeting_date IS NOT NULL</code>, never from a status field. Status is single-valued and moves forward, so counting meetings by status erased every meeting that progressed to application or sale — success deleted the evidence, and the cumulative tile read lower than the weekly one. The general rule: <strong>a lifecycle fact is recorded as a dated event, and counted from that date.</strong> Status is for showing where something is now, never for counting what has happened.</p>
+
+<h3><span class="cl">5.5</span><span>The 23 techniques and 8 targets as executable policy</span></h3>
+<p>Targets become <code>target_policy</code> rows the engine evaluates per person per period: 30 leads researched, 20 connection requests, 15 first messages, 10 follow-ups, 2 posts, 3 community answers, 5 partnership contacts, 15 engagements — each per person per working day, with the weekly figure derived from <code>working_days_per_week</code>. Attainment, streaks and shortfalls are metrics like any other.</p>
+<p>The growth techniques become a registry with structure: preconditions, steps, cadence, the KPI that proves it, and the log it writes to. Technique 15 — <em>what not to do</em> — inverts into a denylist the policy engine consults: no engagement pods, no automated LinkedIn tooling, no article-directory spam, no bulk PDF submission. An agent proposal that matches a denylist entry is rejected before a human ever sees it, with the technique cited as the reason.</p>
+
+<h3><span class="cl">5.6</span><span>Data health as a gating subsystem</span></h3>
+<p>Ten checks run continuously. Each returns a count that must be zero, the rows responsible, and a plain-English explanation of what breaks while it is not.</p>
+<div class="tbl"><table>
+<thead><tr><th>Check key</th><th>Detects</th><th>Consequence while non-zero</th></tr></thead>
+<tbody>
+<tr><td><code>dh_unreadable_date</code></td><td>Dates that are not dates</td><td>Counted cumulatively, invisible weekly. Impossible by schema; retained for imports.</td></tr>
+<tr><td><code>dh_future_dated</code></td><td><code>occurred_on &gt; today</code></td><td>Inflates every cumulative figure; drives platform ages negative</td></tr>
+<tr><td><code>dh_accepted_no_request</code></td><td>Accepted with no logged request</td><td>Acceptance and reply rates untrustworthy</td></tr>
+<tr><td><code>dh_unknown_actor</code></td><td>Actor not on the roster</td><td>Per-person figures cannot reconcile to the team total</td></tr>
+<tr><td><code>dh_published_no_date</code></td><td>Status published, no date</td><td>Counted cumulatively, absent from every weekly view</td></tr>
+<tr><td><code>dh_dated_not_published</code></td><td>Date set, status not published</td><td>The mirror error — weekly sees it, cumulative does not</td></tr>
+<tr><td><code>dh_signed_no_value</code></td><td>Signed deal, no value</td><td>In neither open pipeline nor booked revenue</td></tr>
+<tr><td><code>dh_duplicate_lead</code></td><td>Same person twice</td><td>Inflates every funnel rate</td></tr>
+<tr><td><code>dh_published_no_platform</code></td><td>Published, no platform</td><td>Belongs to no schedule; silently depresses coverage</td></tr>
+<tr><td><code>dh_impossible_value</code></td><td>Negatives in count or currency fields</td><td>Turns a headline KPI negative with nothing to show for it</td></tr>
+</tbody></table></div>
+<p><strong>Gating behaviour.</strong> Any non-zero check marks affected metrics <code>degraded</code>. A degraded metric renders with a visible warning, cannot be included in an exported executive report, and blocks the Reporting agent from publishing a board pack. This is the single most valuable control in the system: it makes the platform refuse to present numbers it cannot stand behind.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 6 ══════════════════════════════ -->
+<section id="s6">
+<h2><span class="cl">6</span><span>The agent workforce</span></h2>
+<p class="lede">Sixteen agents. Each has one mission, a typed input contract, a typed output contract, an explicit tool allowlist, a defined memory scope, a schedule, and a fixed approval class. An agent that cannot state its mission in one sentence is two agents.</p>
+
+<h3><span class="cl">6.1</span><span>Universal agent contract</span></h3>
+<p>Every agent, without exception, obeys these six rules. They are enforced by the runtime, not by prompt instruction alone.</p>
+<ol>
+  <li><strong>Emits proposals, never effects.</strong> The only writes an agent can perform are <code>proposed_action</code> rows and its own run record.</li>
+  <li><strong>Cites or abstains.</strong> Every factual claim carries a citation — a metric key with a period, or a document ID with a span. An uncited claim is stripped by the output validator, and a proposal that loses its supporting claim is rejected.</li>
+  <li><strong>Never computes.</strong> Numbers come from the metric API. The runtime blocks the sequence “raw rows in context → arithmetic in output”; §16.4 tests it adversarially.</li>
+  <li><strong>Declares an expected effect.</strong> A prediction with a metric, a direction and a horizon. §10 scores it. An agent whose predictions are unreliable loses autonomy.</li>
+  <li><strong>Runs inside a budget.</strong> Tokens, wall-clock, tool calls and currency, per run and per tenant per day. Exceeding any of them fails the run cleanly and notifies.</li>
+  <li><strong>Is reproducible.</strong> Prompt version, model, parameters, resolved inputs and full transcript are persisted. Any run can be replayed and diffed.</li>
+</ol>
+
+<h3><span class="cl">6.2</span><span>Orchestration topology</span></h3>
+<div class="dgm">
+  <p class="cap">Figure 6.1 — Who invokes whom</p>
+<pre class="mermaid">
+flowchart TB
+  SCHED["A02 · Scheduler<br/><i>time and cadence</i>"]
+  ORCH["A01 · Master Orchestrator<br/><i>mission decomposition · arbitration</i>"]
+  SCHED --> ORCH
+  ORCH --> STRAT["A03 Marketing Strategy"]
+  STRAT --> SEO["A04 SEO"]
+  STRAT --> PARTN["A11 Partnerships"]
+  STRAT --> PR["A12 PR"]
+  SEO --> PLAN["A05 Content Planning"]
+  PLAN --> QA["A06 Content QA"]
+  QA --> PUB["A07 Publishing"]
+  ORCH --> LEAD["A10 Lead Generation"]
+  LEAD --> OUT["A09 LinkedIn Outreach"]
+  ORCH --> ANA["A13 Analytics"]
+  ANA --> REP["A14 Reporting"]
+  ANA --> FIN["A15 Finance"]
+  KM["A08 Knowledge Mgmt"] -.-> STRAT
+  KM -.-> PLAN
+  KM -.-> OUT
+  COMP["A16 Compliance"] -.->|"veto"| QA
+  COMP -.->|"veto"| PUB
+  COMP -.->|"veto"| OUT
+  REP --> HUMAN(["Approval queue<br/>a named human"])
+  PUB --> HUMAN
+  OUT --> HUMAN
+  PARTN --> HUMAN
+  classDef v fill:#FBEAE8,stroke:#B3261E,color:#B3261E;
+  class COMP v;
+</pre>
+</div>
+<p>Compliance is drawn differently on purpose. It is not a step in a pipeline — it holds a <strong>veto over three other agents</strong> and can be invoked at any point. Its rejections are terminal and cannot be overridden by another agent, only by a named human with a recorded reason.</p>
+
+<h3><span class="cl">6.3</span><span>A01 · Master Orchestrator</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A01</span><span class="t">Master Orchestrator</span></div><span class="chip c-navy">Approval: none — proposes only</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Turn a standing objective into a sequenced plan of agent runs, arbitrate contention for scarce resources, and stop work that is no longer worth doing.</dd>
+    <dt>Trigger</dt><dd>Scheduler (daily 06:00 tenant time, Monday 05:30 for the weekly cycle); manual; escalation from any child run.</dd>
+    <dt>Inputs</dt><dd><code>tenant_settings</code>, active <code>objective</code> set with value ranks, current period metrics, open <code>proposed_action</code> backlog, capacity (roster × working hours), AI budget remaining.</dd>
+    <dt>Outputs</dt><dd><code>RunPlan</code> — an ordered list of <code>{agent_key, input, budget, depends_on}</code> with a stated reason per entry, plus a <code>ContentionReport</code> when demand exceeds capacity.</dd>
+    <dt>Tools</dt><dd><code>metrics.query</code>, <code>agents.enqueue</code>, <code>capacity.read</code>, <code>budget.read</code>, <code>playbook.search</code></dd>
+    <dt>Memory</dt><dd>Last 30 run plans with outcomes; the 12-week rolling record of which agents' predictions held.</dd>
+    <dt>Guardrails</dt><dd>Cannot enqueue itself. Maximum fan-out 12 per plan. Cannot raise a child's budget above its own remaining allocation. Cannot enable a disabled agent.</dd>
+    <dt>KPIs</dt><dd>Plan completion rate; proportion of plans whose predicted effect was realised; approval-queue depth held under target; cost per completed objective.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.4</span><span>A02 · Scheduler</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A02</span><span class="t">Scheduler</span></div><span class="chip c-flat">Deterministic — not a model</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Fire the right work at the right moment in the tenant's own calendar, and never twice.</dd>
+    <dt>Note</dt><dd><strong>This agent contains no language model.</strong> It is ordinary scheduling code, listed here because the workbook treats cadence as a first-class responsibility and the roster must be complete. Making it deterministic is the point: a missed or duplicated schedule is a correctness bug, not a judgment call.</dd>
+    <dt>Inputs</dt><dd><code>schedule</code> rows, cadence definitions, tenant timezone and week-start, holiday calendar, <code>agent_schedule</code> cron set.</dd>
+    <dt>Outputs</dt><dd>Enqueued runs with idempotency keys; <code>ScheduleDriftReport</code> where planned and published diverge.</dd>
+    <dt>Guardrails</dt><dd>Cadence cycle length in days — monthly is 30.44, not 0.25 weeks, which over-counted by 8.3%. End before start yields no plan rather than a negative count. A schedule window may not open in the past on creation.</dd>
+    <dt>KPIs</dt><dd>Fire accuracy within ±60s; zero duplicate executions; schedule coverage vs plan.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.5</span><span>A03 · Marketing Strategy · A04 · SEO</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A03</span><span class="t">Marketing Strategy</span></div><span class="chip c-warn">Approval: manager</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Recommend where the next hundred hours should go, and say what it expects in return.</dd>
+    <dt>Trigger</dt><dd>Weekly (Monday 06:00); on a KPI breaching its benchmark band by more than 20%.</dd>
+    <dt>Inputs</dt><dd>Objective performance with value ranks and share of minutes; platform activity vs value rank; benchmark bands; the 23-technique registry; last 8 weeks of experiment results; capacity.</dd>
+    <dt>Outputs</dt><dd><code>StrategyProposal</code> — reallocation of effort across objectives and platforms, each line citing a technique ID and the metric that motivates it, with an <code>expected_effect</code> per line.</dd>
+    <dt>Tools</dt><dd><code>metrics.query</code>, <code>playbook.search</code>, <code>benchmarks.read</code>, <code>experiments.read</code>, <code>capacity.read</code></dd>
+    <dt>Memory</dt><dd>Every prior proposal with its approval decision, amendments, and realised effect. Amendments are the strongest signal available about what this tenant's managers actually want.</dd>
+    <dt>Guardrails</dt><dd>May not propose a technique on the denylist. May not propose more hours than capacity. Must reconcile against the <em>value rank vs share of minutes</em> comparison the workbook defines. Cannot alter targets — only recommend.</dd>
+    <dt>KPIs</dt><dd>Proposal acceptance rate; realised-vs-predicted effect; hours shifted toward higher-value objectives.</dd>
+  </dl></div>
+</div>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A04</span><span class="t">SEO</span></div><span class="chip c-warn">Approval: manager for site changes</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Decide which search terms are winnable now, keep the pillar–spoke structure coherent, and find what is decaying.</dd>
+    <dt>Trigger</dt><dd>Weekly (Tuesday 07:00); on GSC ingestion completing; on a pillar losing position.</dd>
+    <dt>Inputs</dt><dd>Search Console impressions, clicks, position by query and page; keyword plan with evidence-graded difficulty; pillar/spoke graph and internal links; competitor SERP snapshots; published content performance.</dd>
+    <dt>Outputs</dt><dd><code>KeywordPriorityUpdate</code>; <code>ClusterGapReport</code> (pillars missing spokes, orphan pages, cannibalisation); <code>RefreshList</code> (decaying pages, ranked by recoverable traffic).</dd>
+    <dt>Tools</dt><dd><code>gsc.query</code>, <code>keywords.read/propose</code>, <code>clusters.read</code>, <code>content.read</code>, <code>serp.snapshot</code>, <code>metrics.query</code></dd>
+    <dt>Guardrails</dt><dd>Difficulty must be justified by observed SERP occupancy, never asserted. May not recommend a term whose SERP is owned by a named authority when domain authority is below the configured floor — the workbook's own rule that a young domain attacks Easy terms first. Volume figures are labelled editorial estimates, never presented as tool data.</dd>
+    <dt>KPIs</dt><dd>Share of published briefs that reach page 1; cluster completeness; recovered traffic from refreshes.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.6</span><span>A05 · Content Planning · A06 · Content QA</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A05</span><span class="t">Content Planning</span></div><span class="chip c-warn">Approval: manager for the calendar</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Convert priority keywords into a scheduled, staffed, format-appropriate content plan — and draft the first version.</dd>
+    <dt>Trigger</dt><dd>Weekly (Tuesday 09:00, after A04); on a brief being claimed; on schedule coverage falling below 80%.</dd>
+    <dt>Inputs</dt><dd>Keyword priorities, the 5,683-brief bank with effort and priority, schedule coverage per platform, platform capability table (format and cadence limits), writer capacity and claims, publishing rules.</dd>
+    <dt>Outputs</dt><dd><code>ContentPlan</code> (brief → platform → date → owner); <code>DraftArticle</code> per assigned brief, with the brief's own prompt as its contract; <code>RepurposePlan</code> for the syndication waterfall.</dd>
+    <dt>Tools</dt><dd><code>briefs.read/claim</code>, <code>schedules.read</code>, <code>platforms.capabilities</code>, <code>content.draft</code>, <code>knowledge.search</code>, <code>metrics.query</code></dd>
+    <dt>Guardrails</dt><dd>A draft may not invent a statistic — every factual claim carries a citation or is cut. A format must be one the target platform actually supports (LinkedIn's native scheduler cannot post carousels; Pinterest Idea Pins were retired in 2023). Syndicated copies must carry a canonical target. Never claims a certification outcome PCI cannot evidence.</dd>
+    <dt>KPIs</dt><dd>Plan-to-published conversion; QA pass rate at first submission; editing time per draft; coverage held at or above 100%.</dd>
+  </dl></div>
+</div>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A06</span><span class="t">Content QA</span></div><span class="chip c-crit">Blocking gate</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Refuse to let anything be published that is untrue, unsourced, off-brand, non-compliant or technically broken.</dd>
+    <dt>Trigger</dt><dd>Every draft, without exception, before any publish proposal can exist.</dd>
+    <dt>Inputs</dt><dd>The draft, its brief, the golden rules, brand voice guide, claims policy, publishing rule for the target platform, canonical and link requirements, the glossary.</dd>
+    <dt>Outputs</dt><dd><code>QAVerdict</code> — <code>pass</code> / <code>revise</code> / <code>reject</code>, itemised by check, each with the offending span and a suggested fix. A <code>reject</code> is terminal for that draft version.</dd>
+    <dt>Tools</dt><dd><code>claims.verify</code>, <code>rules.read</code>, <code>links.check</code>, <code>readability.score</code>, <code>plagiarism.check</code>, <code>knowledge.search</code></dd>
+    <dt>Guardrails</dt><dd>Cannot be skipped, cannot be self-approved, cannot be invoked by the agent that produced the draft. Every uncited factual claim is a <code>revise</code> at minimum. Any honorary-certification wording that implies an award has been granted is an automatic <code>reject</code> under Golden Rule 1.</dd>
+    <dt>KPIs</dt><dd>Defects caught pre-publish vs post-publish; false-rejection rate as judged on human override; median time in queue.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.7</span><span>A07 · Publishing</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A07</span><span class="t">Publishing</span></div><span class="chip c-gold">Approval: human sign-off, always</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Prepare an approved asset for its destination, execute the publish once a human has signed it off, and record what actually happened.</dd>
+    <dt>Trigger</dt><dd>QA verdict <code>pass</code> plus a scheduled slot; a manual publish request.</dd>
+    <dt>Inputs</dt><dd>Approved content item, target platform account, schedule slot, platform capability and limits, tracked link, canonical target, asset references.</dd>
+    <dt>Outputs</dt><dd><code>PublishAction</code> (risk class <code>approve</code>) carrying the exact payload that will be transmitted, rendered for human review; on execution, a <code>content_item</code> update with the live URL and a <code>activity_event</code>.</dd>
+    <dt>Tools</dt><dd>Per-platform connectors (official APIs only), <code>utm.build</code>, <code>assets.read</code>, <code>schedules.read</code></dd>
+    <dt>Guardrails</dt><dd>No publish without an approval record. No platform without an official API — for those, the agent produces a copy-ready package and a manual task, and never claims a publish that did not occur. Rate limits and format constraints respected per platform. Publishing sets status <em>and</em> <code>published_at</code> together, in one transaction, because the workbook proved that setting one without the other breaks reporting in two opposite directions.</dd>
+    <dt>KPIs</dt><dd>Publish success rate; time from approval to live; schedule coverage; zero unapproved publishes (a hard invariant, alerted on).</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.8</span><span>A08 · Knowledge Management</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A08</span><span class="t">Knowledge Management</span></div><span class="chip c-navy">Approval: none — read and index</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Be the single place any agent or person goes to find out what PCI knows, and keep it current and attributed.</dd>
+    <dt>Trigger</dt><dd>On document change; nightly re-index; on any agent's <code>knowledge.search</code>.</dd>
+    <dt>Inputs</dt><dd>Playbook, platform and how-to guides, message bank, glossary, benchmarks with sources, published content, experiment conclusions, prior agent rationales, approval amendments.</dd>
+    <dt>Outputs</dt><dd>Chunked, embedded, permission-scoped index (<code>pgvector</code>); <code>KnowledgeGap</code> reports; <code>StaleDocument</code> flags where a document contradicts a newer verified fact.</dd>
+    <dt>Guardrails</dt><dd>Every chunk keeps its source, span and effective date. Contradictions are surfaced, never silently reconciled. Tenant-scoped: no cross-tenant retrieval, ever, and this is asserted by test (§16.2). Answers cite or say “not documented”.</dd>
+    <dt>KPIs</dt><dd>Citation coverage on agent outputs; retrieval precision on a labelled question set; stale-document backlog.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.9</span><span>A09 · LinkedIn Outreach · A10 · Lead Generation</span></h3>
+<div class="note crit">
+  <p class="hd">Design consequence of §0.4</p>
+  <p>A09 is a <strong>drafting and queueing assistant</strong>. It never holds a LinkedIn session, never automates an action, never scrapes. The operator sends every message by hand inside LinkedIn and confirms it in the platform. This is slower than the automated version, and it is the only version that does not breach PCI's Golden Rule 5 and LinkedIn's User Agreement, or risk the accounts the commercial strategy depends on.</p>
+</div>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A09</span><span class="t">LinkedIn Outreach</span></div><span class="chip c-gold">Approval: human sends</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Give each operator a prioritised queue of leads with a genuinely personalised, compliant, character-legal draft ready to send.</dd>
+    <dt>Trigger</dt><dd>Daily 07:30 tenant time; on a follow-up becoming due; on a reply being recorded.</dd>
+    <dt>Inputs</dt><dd>Lead records with ICP fit and intent signals, lead score and priority band, approved message templates, prior touch history, follow-up schedule, per-person daily target and remaining allowance, denylist (declined, do-not-contact, duplicates).</dd>
+    <dt>Outputs</dt><dd><code>OutreachQueue</code> — leads in priority order, each with a <code>DraftMessage</code>, the personalisation evidence it drew on, the template it derives from, and a character count against the limit. Plus <code>FollowUpDue</code> and <code>ReplyTriage</code> classifications.</dd>
+    <dt>Tools</dt><dd><code>leads.read</code>, <code>templates.read</code> (approved only), <code>knowledge.search</code>, <code>metrics.query</code>, <code>tasks.create</code></dd>
+    <dt>Guardrails</dt><dd>Hard character limits: 300 for messages, 200 for connection notes, enforced before the draft is shown. Never asserts an award has been granted — invitation language only. Never invents a fact about PCI. Cannot exceed the daily target; the queue truncates rather than tempting an operator past a platform limit. A lead marked Declined or Do Not Contact can never re-enter the queue. Personalisation must quote a real field from the record, and the draft shows which one.</dd>
+    <dt>KPIs</dt><dd>Acceptance rate vs the 30% benchmark; reply rate vs 15%; drafts sent unedited; zero limit breaches; zero contacts to a denylisted person.</dd>
+  </dl></div>
+</div>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A10</span><span class="t">Lead Generation</span></div><span class="chip c-warn">Approval: manager for list additions</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Find and score people who match the ideal profile, using permitted sources only, and never twice.</dd>
+    <dt>Trigger</dt><dd>Daily 06:30; when the qualified queue falls below three days of target.</dd>
+    <dt>Inputs</dt><dd>ICP definition, existing leads (for deduplication), converted-lead characteristics, segment performance, permitted sources with their licence terms.</dd>
+    <dt>Outputs</dt><dd><code>LeadCandidateBatch</code> with an ICP-fit score, the intent signals observed, the source and its licence basis, and a duplicate verdict against the whole existing corpus.</dd>
+    <dt>Guardrails</dt><dd>Licensed and permitted sources only — Sales Navigator used by a human, opted-in submissions, public directories whose terms allow it, partner-supplied lists with a lawful basis. <strong>No scraping.</strong> Every candidate carries the lawful basis for holding their data; a candidate without one is discarded, not queued. Deduplication runs on normalised URL and name+company before a record is created.</dd>
+    <dt>KPIs</dt><dd>Qualified leads per hour of human time; conversion by source; duplicate rate at zero; hit rate of the fit score against realised outcomes.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.10</span><span>A11 · Partnerships · A12 · PR</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A11</span><span class="t">Partnerships</span></div><span class="chip c-gold">Approval: owner for anything contractual</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Identify organisations worth a partnership, propose the specific offer, and keep every deal honestly staged.</dd>
+    <dt>Trigger</dt><dd>Weekly (Wednesday 08:00); on a stage change; on a next-step date falling due.</dd>
+    <dt>Inputs</dt><dd>Partner pipeline with stages and values, target directory with deliberate skips, prior partnership outcomes by organisation type, brand and objective priorities, capacity.</dd>
+    <dt>Outputs</dt><dd><code>PartnerTargetList</code> ranked by fit; <code>OfferProposal</code> (what they get, what PCI gets, precedent cited); <code>StageAdvanceProposal</code> with the evidence for the move; <code>StaleDealAlert</code>.</dd>
+    <dt>Guardrails</dt><dd>May not propose a target the directory records as a deliberate skip without explicitly arguing against the recorded reason. May not advance a deal to signed without a real contract date — a typed note is not a signature, and in the workbook that error booked 9,000 of revenue that reconciled to no month. Cannot commit PCI to terms; it drafts, the owner signs.</dd>
+    <dt>KPIs</dt><dd>Targets to first meeting; meeting to signed; cycle time by organisation type; forecast accuracy on open value.</dd>
+  </dl></div>
+</div>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A12</span><span class="t">PR</span></div><span class="chip c-warn">Approval: manager to send; owner for statements</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Earn mentions and links from real publications by answering real requests, quickly and on expertise.</dd>
+    <dt>Trigger</dt><dd>Journalist-request feeds every 2 hours during business hours; weekly for planned outreach; on a data study completing.</dd>
+    <dt>Inputs</dt><dd>Journalist requests, spokesperson expertise kits, target publication directory, prior placement history, published data studies, the post-HARO source stack.</dd>
+    <dt>Outputs</dt><dd><code>PitchDraft</code> (80–120 words, data-led, quote-ready); <code>RequestRelevanceScore</code>; <code>PlacementRecord</code> with the earned link; <code>DataStudyAngle</code> proposals.</dd>
+    <dt>Guardrails</dt><dd>Answers only on genuine expertise — an off-expertise pitch is refused with the reason. Every statistic cited is attributed to a named source and year. No fabricated credentials or invented credibility markers, which the golden rules identify as the hardest damage to undo. A statement made on PCI's behalf requires owner approval.</dd>
+    <dt>KPIs</dt><dd>Pitch-to-placement rate; referring domains earned; response time to a request; zero unattributed statistics published.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.11</span><span>A13 · Analytics · A14 · Reporting · A15 · Finance</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A13</span><span class="t">Analytics</span></div><span class="chip c-navy">Approval: none — interprets only</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Explain <em>why</em> the numbers moved, and say honestly when the data cannot support an explanation.</dd>
+    <dt>Trigger</dt><dd>Daily 07:00 for anomalies; Monday 06:30 for the weekly read; on any data-health check turning non-zero.</dd>
+    <dt>Inputs</dt><dd>All computed metrics with periods, benchmark bands with sources, experiment results, activity mix, external ingestion (GSC, GA4, platform insights), data-health state.</dd>
+    <dt>Outputs</dt><dd><code>AnomalyReport</code> with candidate causes ranked by evidential support; <code>DriverAnalysis</code>; <code>DataQualityFinding</code>; <code>InsufficientEvidence</code> where a question cannot be answered.</dd>
+    <dt>Guardrails</dt><dd>Reads metrics through the API — never derives one. Must distinguish correlation from cause in words, not merely in caveats. Must declare when a sample is too small for the claim. Where a data-health check is non-zero it must say which figures are affected before interpreting anything.</dd>
+    <dt>KPIs</dt><dd>Anomaly precision and recall against human-confirmed events; explanation accepted-by-manager rate; time to detect a real regression.</dd>
+  </dl></div>
+</div>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A14</span><span class="t">Reporting</span></div><span class="chip c-warn">Approval: manager to circulate; owner for board</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Produce the weekly pulse, the monthly review and the board pack, at the right altitude for each audience, from numbers the platform can stand behind.</dd>
+    <dt>Trigger</dt><dd>Monday 07:00 weekly; first working day monthly; on request.</dd>
+    <dt>Inputs</dt><dd>Metric snapshots with period definitions, analytics narrative, targets and attainment, data-health state, prior period reports, audience profile.</dd>
+    <dt>Outputs</dt><dd><code>WeeklyPulse</code>, <code>ExecutiveSummary</code>, <code>BoardPack</code> (PDF), <code>PersonScorecardPack</code> — each carrying the exact period definition, the metric versions used, and the data-health state at generation.</dd>
+    <dt>Guardrails</dt><dd><strong>Refuses to generate an external report while any data-health check is non-zero</strong>, naming the check and the affected figures. Never restates a number in prose that differs from the figure in the table. Executive audience receives no PII. Every figure is traceable to a metric key and period.</dd>
+    <dt>KPIs</dt><dd>Report accepted without correction; time to produce; zero figures contradicted by a later restatement.</dd>
+  </dl></div>
+</div>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A15</span><span class="t">Finance Dashboard</span></div><span class="chip c-gold">Approval: owner for all spend</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Keep the unit economics of the programme visible, and never let money move without a person deciding.</dd>
+    <dt>Trigger</dt><dd>Daily 06:00 for cost ingestion; monthly for the economics review; on any budget threshold being crossed.</dd>
+    <dt>Inputs</dt><dd>Channel costs by month, AI provider spend by tenant and agent, revenue recorded (certification and enterprise), pipeline value, person-days invested, budget policy.</dd>
+    <dt>Outputs</dt><dd><code>UnitEconomics</code> (cost per meeting, cost per certification, revenue per unit of channel cost, AI cost per published asset); <code>BudgetAlert</code>; <code>SpendProposal</code> — always risk class <code>approve</code>, always to the owner.</dd>
+    <dt>Guardrails</dt><dd>No autonomous spend, ever, with no bypass flag in any environment. AI spend is metered per tenant per day and the agent is the enforcement point: at 80% of budget it warns, at 100% non-essential agents are suspended and the owner is notified. Cost-per-outcome is presented as a trend, never as an absolute, because early-programme denominators are misleadingly small.</dd>
+    <dt>KPIs</dt><dd>Forecast vs actual spend; cost per meeting trend; AI cost per published asset; zero unapproved spend.</dd>
+  </dl></div>
+</div>
+
+<h3><span class="cl">6.12</span><span>A16 · Compliance</span></h3>
+<div class="spec">
+  <div class="hd"><div class="nm"><span class="id">A16</span><span class="t">Compliance</span></div><span class="chip c-crit">Veto authority over A06, A07, A09</span></div>
+  <div class="bd"><dl>
+    <dt>Mission</dt><dd>Stop the platform from doing anything that damages PCI's standing, breaches a platform's terms, or breaks the law — before it happens.</dd>
+    <dt>Trigger</dt><dd>Pre-execution on every <code>approve</code>-class action; daily rule sweep; weekly check cycle; on any rule or policy change.</dd>
+    <dt>Inputs</dt><dd>The 10 golden rules, 15 compliance checks, platform terms per connector, claims policy, consent and lawful-basis records, data-retention policy, the technique denylist, jurisdiction settings.</dd>
+    <dt>Outputs</dt><dd><code>ComplianceVerdict</code> (<code>clear</code> / <code>conditions</code> / <code>blocked</code>) with the rule cited and the offending element identified; <code>CheckCycleResult</code>; <code>PolicyDriftAlert</code>.</dd>
+    <dt>Guardrails</dt><dd>A <code>blocked</code> verdict is terminal for that action and cannot be overridden by any agent. A human override requires <code>owner</code> role, a written reason, and writes a permanent audit entry that appears in the board pack. Compliance cannot be disabled — the kill switch can stop every other agent, but not this one.</dd>
+    <dt>KPIs</dt><dd>Blocked actions that would have caused real harm; false-block rate; check-cycle completion; zero golden-rule breaches reaching execution.</dd>
+  </dl></div>
+</div>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 7 ══════════════════════════════ -->
+<section id="s7">
+<h2><span class="cl">7</span><span>Action, approval and governance</span></h2>
+<p class="lede">This clause is the reason the platform can be trusted with a real business. Everything an agent wants to do in the world becomes a typed, risk-classed, human-gateable record before anything happens.</p>
+
+<h3><span class="cl">7.1</span><span>The action lifecycle</span></h3>
+<div class="dgm">
+  <p class="cap">Figure 7.1 — From proposal to effect</p>
+<pre class="mermaid">
+stateDiagram-v2
+  [*] --> Proposed : agent emits
+  Proposed --> Rejected_Policy : policy engine · denylist, budget, rate
+  Proposed --> Blocked : A16 Compliance veto
+  Proposed --> AutoApproved : risk = auto
+  Proposed --> AwaitingApproval : risk = approve / dual
+  AwaitingApproval --> Approved : human signs
+  AwaitingApproval --> Amended : human edits, then signs
+  AwaitingApproval --> Rejected_Human : human declines
+  AwaitingApproval --> Expired : TTL lapses
+  AutoApproved --> Executing
+  Approved --> Executing
+  Amended --> Executing
+  Executing --> Executed : connector confirms
+  Executing --> Failed : retries exhausted
+  Executed --> Verified : effect observed in data
+  Executed --> Reverted : compensating action
+  Verified --> [*]
+  Rejected_Policy --> [*]
+  Blocked --> [*]
+  Rejected_Human --> [*]
+  Expired --> [*]
+  Failed --> [*]
+  Reverted --> [*]
+</pre>
+</div>
+<p>Three properties matter. <strong>Expiry</strong>: an approval request that no one answers lapses rather than executing late — a publish approved on Monday and executed on Friday may be wrong. <strong>Amendment is a first-class outcome</strong>: what a human changed before approving is the highest-quality training signal in the system, and §10 uses it. <strong>Verification is separate from execution</strong>: a connector reporting success is not the same as the effect appearing in the data, and the gap between them is measured.</p>
+
+<h3><span class="cl">7.2</span><span>Action registry and risk classes</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Action type</th><th>Risk</th><th>Approver</th><th>Reversible?</th><th>TTL</th></tr></thead>
+<tbody>
+<tr><td><code>draft.create</code></td><td><span class="chip c-flat">auto</span></td><td>—</td><td>Yes</td><td>—</td></tr>
+<tr><td><code>brief.assign</code></td><td><span class="chip c-flat">auto</span></td><td>—</td><td>Yes</td><td>—</td></tr>
+<tr><td><code>task.create</code></td><td><span class="chip c-flat">auto</span></td><td>—</td><td>Yes</td><td>—</td></tr>
+<tr><td><code>keyword.reprioritise</code></td><td><span class="chip c-navy">notify</span></td><td>Analyst informed</td><td>Yes</td><td>—</td></tr>
+<tr><td><code>schedule.create</code></td><td><span class="chip c-warn">approve</span></td><td>Manager</td><td>Yes</td><td>72 h</td></tr>
+<tr><td><code>content.publish</code></td><td><span class="chip c-gold">approve</span></td><td>Manager</td><td>Partly — a delete is not an unpublish</td><td>24 h</td></tr>
+<tr><td><code>outreach.send</code></td><td><span class="chip c-gold">approve</span></td><td>Operator sends; manager samples</td><td><strong>No</strong></td><td>8 h</td></tr>
+<tr><td><code>email.campaign.send</code></td><td><span class="chip c-gold">approve</span></td><td>Manager + consent check</td><td><strong>No</strong></td><td>24 h</td></tr>
+<tr><td><code>pr.pitch.send</code></td><td><span class="chip c-gold">approve</span></td><td>Manager</td><td><strong>No</strong></td><td>4 h — requests go cold</td></tr>
+<tr><td><code>partner.offer.send</code></td><td><span class="chip c-crit">dual</span></td><td>Manager + owner</td><td><strong>No</strong></td><td>72 h</td></tr>
+<tr><td><code>spend.commit</code></td><td><span class="chip c-crit">dual</span></td><td>Manager + owner</td><td>Sometimes</td><td>7 d</td></tr>
+<tr><td><code>site.change</code></td><td><span class="chip c-warn">approve</span></td><td>Manager</td><td>Yes — versioned</td><td>72 h</td></tr>
+<tr><td><code>data.export</code></td><td><span class="chip c-warn">approve</span></td><td>Owner if PII present</td><td><strong>No</strong></td><td>24 h</td></tr>
+<tr><td><code>agent.config.change</code></td><td><span class="chip c-crit">dual</span></td><td>Owner + platform admin</td><td>Yes</td><td>—</td></tr>
+</tbody></table></div>
+<p>Risk classes are <strong>configured per tenant but floored globally</strong>. A tenant may make an <code>auto</code> action require approval; it may never reduce <code>content.publish</code>, <code>outreach.send</code>, <code>email.campaign.send</code>, <code>partner.offer.send</code> or <code>spend.commit</code> below <code>approve</code>. That floor is a constant in code with no configuration path, and a test asserts it cannot be lowered through the API.</p>
+
+<h3><span class="cl">7.3</span><span>The approval experience</span></h3>
+<p>An approval that is tedious gets rubber-stamped, and a rubber-stamped approval is worse than none because it manufactures a false audit trail. So the queue is designed for a decision in under thirty seconds:</p>
+<ul>
+  <li><strong>The exact payload</strong>, rendered as it will appear — the actual post, the actual message, not a summary of it.</li>
+  <li><strong>Why</strong>, in the agent's own words, with its citations resolvable in one click.</li>
+  <li><strong>What it expects to happen</strong> — the prediction, so the approver can disagree with the reasoning rather than only the wording.</li>
+  <li><strong>What changed</strong> if this is a revision, as a diff.</li>
+  <li><strong>Inline amendment.</strong> Editing then approving is one action, not a rejection followed by a new proposal.</li>
+  <li><strong>Batch where safe.</strong> Twelve drafts for one platform can be approved together; twelve outreach messages cannot, and the interface does not offer it.</li>
+</ul>
+
+<h3><span class="cl">7.4</span><span>Kill switches</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Scope</th><th>Who</th><th>Effect</th><th>In flight</th></tr></thead>
+<tbody>
+<tr><td>One agent</td><td>Manager</td><td>No new runs; queued runs cancelled</td><td>Completes, then stops</td></tr>
+<tr><td>One action type</td><td>Manager</td><td>Proposals rejected at policy</td><td>Approved actions still execute</td></tr>
+<tr><td>All agents, one tenant</td><td>Owner</td><td>Full pause; platform becomes a record-keeping system</td><td>Cancelled where reversible</td></tr>
+<tr><td>One connector</td><td>Owner or platform admin</td><td>Executions queue rather than fail</td><td>Held, retried on resume</td></tr>
+<tr><td>Global</td><td>Platform admin</td><td>All agent activity, all tenants</td><td>Cancelled; incident opened</td></tr>
+</tbody></table></div>
+<p>Every switch is reversible, takes effect within 5 seconds, writes an audit entry with the actor and reason, and notifies the tenant owner. Compliance (A16) is exempt from all of them.</p>
+
+<h3><span class="cl">7.5</span><span>Golden rules as machine checks</span></h3>
+<p>Seven of the ten golden rules are mechanically checkable. The remaining three are surfaced as mandatory attestations in the approval interface, because a rule that cannot be tested must at least be consciously affirmed.</p>
+<div class="tbl"><table>
+<thead><tr><th>#</th><th>Rule</th><th>Enforcement</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Never say a certification has been awarded or guaranteed</td><td><span class="chip c-ok">Automated</span> Claim classifier on every outbound draft; A16 blocks</td></tr>
+<tr><td>2</td><td>Never invent facts about PCI</td><td><span class="chip c-ok">Automated</span> Uncited factual claim is stripped; numeric claims about PCI resolve to a metric or fail</td></tr>
+<tr><td>3</td><td>Personalise every message</td><td><span class="chip c-ok">Automated</span> Draft must quote a real record field; the field is shown to the approver</td></tr>
+<tr><td>4</td><td>300 / 200 character limits</td><td><span class="chip c-ok">Automated</span> Hard validation before the draft is rendered</td></tr>
+<tr><td>5</td><td>No bulk sending, automation, bots or scraping</td><td><span class="chip c-ok">Automated</span> Architectural — no LinkedIn automation exists to invoke (§0.4)</td></tr>
+<tr><td>6</td><td>Respect daily limits; stop on a warning</td><td><span class="chip c-ok">Automated</span> Queue truncates at target; a platform warning trips the connector switch</td></tr>
+<tr><td>7</td><td>Never contact someone who declined</td><td><span class="chip c-ok">Automated</span> Denylist enforced at queue build and again at send</td></tr>
+<tr><td>8</td><td>Answer first, promote second</td><td><span class="chip c-warn">Attested</span> QA heuristic scores value-before-link; approver confirms</td></tr>
+<tr><td>9</td><td>No passwords in the record; 2FA everywhere</td><td><span class="chip c-ok">Automated</span> Secret-pattern scan on write; 2FA state is a compliance check</td></tr>
+<tr><td>10</td><td>Log everything the same day, with evidence</td><td><span class="chip c-warn">Attested</span> Same-day rate is a metric; evidence-URL completeness is reported</td></tr>
+</tbody></table></div>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 8-10 ══════════════════════════════ -->
+<section id="s8">
+<h2><span class="cl">8</span><span>Scheduling and background workers</span></h2>
+
+<h3><span class="cl">8.1</span><span>Worker classes</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Worker</th><th>Responsibility</th><th>Concurrency</th><th>Failure policy</th></tr></thead>
+<tbody>
+<tr><td><code>scheduler</code></td><td>Evaluate cron and cadence, enqueue runs</td><td>Singleton, leader-elected</td><td>Missed windows replayed once, then reported — never silently skipped</td></tr>
+<tr><td><code>agent-runner</code></td><td>Execute agent runs</td><td>Per tenant cap; global pool</td><td>3 retries, exponential backoff; poison queue after</td></tr>
+<tr><td><code>action-executor</code></td><td>Execute approved actions via connectors</td><td>Per connector rate limit</td><td>Idempotent retry; compensating action on partial failure</td></tr>
+<tr><td><code>ingestion</code></td><td>Pull GSC, GA4, platform insights, costs</td><td>Per source</td><td>Backfill on recovery; watermark per source</td></tr>
+<tr><td><code>metrics-refresh</code></td><td>Refresh materialised views</td><td>Serialised per tenant</td><td>Incremental where possible; full nightly</td></tr>
+<tr><td><code>evaluation</code></td><td>Score predictions against outcomes (§10)</td><td>Batch nightly</td><td>Idempotent by run ID</td></tr>
+<tr><td><code>notification</code></td><td>Deliver email, in-app, push, digest</td><td>Pooled</td><td>At-least-once with dedupe key</td></tr>
+<tr><td><code>retention</code></td><td>Purge and archive on policy</td><td>Nightly</td><td>Dry-run report before first destructive run</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">8.2</span><span>Calendar correctness</span></h3>
+<p>All scheduling is evaluated in the tenant's timezone against the tenant's week definition. Requirements: <code>week_start_dow</code> configurable (Sunday for Gulf teams); holiday calendars per tenant with per-region overrides; DST transitions must not double-fire or skip — schedules anchor to local wall-clock time and a skipped hour fires once on recovery; cadence cycle lengths in days (daily 1, 3× weekly 7/3, weekly 7, fortnightly 14, monthly 30.44); a window whose end precedes its start produces no plan and raises a validation error rather than a negative count.</p>
+
+<h3><span class="cl">8.3</span><span>Idempotency</span></h3>
+<p>Every enqueued unit carries a deterministic key — <code>{tenant}:{agent}:{period}:{input_digest}</code> for runs, and the client-supplied or derived <code>idempotency_key</code> for actions. Redis holds the key for 24 hours; PostgreSQL holds a unique constraint permanently. A duplicate is a no-op that returns the original result. This is what makes “retry safely” true rather than aspirational, and it is the reason a connector timeout cannot double-publish.</p>
+</section>
+
+<section id="s9">
+<h2><span class="cl">9</span><span>AI provider abstraction</span></h2>
+
+<h3><span class="cl">9.1</span><span>The seam</span></h3>
+<p>Providers sit behind one interface, and no agent code names a provider or a model. Routing is policy, held as data.</p>
+<pre class="code"><b>public interface</b> ILlmProvider {
+  <b>string</b> Key { <b>get</b>; }                       <i>// "openai" | "anthropic" | "google"</i>
+  ProviderCapabilities Capabilities { <b>get</b>; }   <i>// context, tools, json mode, vision, cache</i>
+  Task&lt;LlmResponse&gt; CompleteAsync(LlmRequest r, CancellationToken ct);
+  IAsyncEnumerable&lt;LlmDelta&gt; StreamAsync(LlmRequest r, CancellationToken ct);
+  Task&lt;EmbeddingResponse&gt; EmbedAsync(EmbeddingRequest r, CancellationToken ct);
+  TokenEstimate Estimate(LlmRequest r);
+}
+
+<i>// LlmRequest is provider-neutral: messages, typed tool definitions, response schema,</i>
+<i>// temperature, max tokens, cache hints, and a task_class. The adapter translates —</i>
+<i>// tool-call shapes, system-prompt placement, JSON-mode semantics and streaming</i>
+<i>// deltas all differ between providers, and that difference stops at the adapter.</i></pre>
+
+<h3><span class="cl">9.2</span><span>Routing by task class</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Task class</th><th>Needs</th><th>Primary</th><th>Fallback</th><th>Budget/call</th></tr></thead>
+<tbody>
+<tr><td><code>classify</code></td><td>Cheap, fast, schema-bound</td><td>Small model</td><td>Any</td><td>$0.002</td></tr>
+<tr><td><code>draft_long</code></td><td>Long output, voice control</td><td>Frontier</td><td>Alt frontier</td><td>$0.20</td></tr>
+<tr><td><code>reason_plan</code></td><td>Multi-step, tool use</td><td>Frontier, extended thinking</td><td>Alt frontier</td><td>$0.35</td></tr>
+<tr><td><code>critique</code></td><td>Adversarial, independent</td><td><strong>Different vendor</strong> from the drafter</td><td>Any other</td><td>$0.08</td></tr>
+<tr><td><code>extract</code></td><td>Structured from messy input</td><td>Mid-tier</td><td>Any</td><td>$0.01</td></tr>
+<tr><td><code>embed</code></td><td>Retrieval</td><td>Dedicated embedding model</td><td>Same vendor</td><td>$0.0001</td></tr>
+</tbody></table></div>
+<div class="note">
+  <p class="hd">Why <code>critique</code> must cross vendors</p>
+  <p>A model reviewing its own family's output shares its blind spots and its characteristic failure modes. Content QA (A06) therefore runs on a different vendor from Content Planning (A05) by policy, not by coincidence. This is the strongest practical argument for the provider abstraction: it is not only about commercial leverage, it measurably improves the quality of the gate.</p>
+</div>
+
+<h3><span class="cl">9.3</span><span>Operational requirements</span></h3>
+<ul>
+  <li><strong>Circuit breaker</strong> per provider: 5 failures in 60s opens for 30s, then half-opens. Fallback preserves the task class rather than downgrading capability silently.</li>
+  <li><strong>Full transcript persistence</strong>: request, response, tokens, cost, latency, model version — for replay, cost attribution and dispute resolution.</li>
+  <li><strong>Prompt caching</strong> where the provider supports it. Long stable system content is placed first for cache eligibility; measured savings are reported.</li>
+  <li><strong>Cost metering</strong> per tenant, per agent, per day, with the enforcement points described in A15.</li>
+  <li><strong>Key custody</strong>: platform-supplied keys by default; enterprise tenants may bring their own, held in the vault and never logged. Provider choice can be restricted per tenant for data-residency reasons.</li>
+  <li><strong>Model pinning</strong>: a tenant may pin a model version so behaviour does not shift under them mid-quarter. Deprecations surface as an actionable alert with a migration window.</li>
+</ul>
+</section>
+
+<section id="s10">
+<h2><span class="cl">10</span><span>The learning loop</span></h2>
+<p class="lede">"Learns from prior runs" has to mean something falsifiable. Here it means four specific mechanisms, each measurable, and none of them requiring model training.</p>
+
+<h3><span class="cl">10.1</span><span>Prediction scoring</span></h3>
+<p>Every proposal carries an <code>expected_effect</code>: a metric key, a direction, a magnitude and a horizon. The evaluation worker scores it when the horizon closes, producing a per-agent calibration record. Calibration then drives autonomy: an agent whose predictions hold for eight consecutive weeks may have a configured action type relaxed by one risk step — but only within the global floor of §7.2, so <code>outreach.send</code> and <code>spend.commit</code> can never be relaxed at all. An agent whose calibration degrades tightens automatically.</p>
+
+<h3><span class="cl">10.2</span><span>Amendment mining</span></h3>
+<p>When a human edits a proposal before approving, the diff is the most valuable signal in the platform: it is a domain expert stating precisely what was wrong, at no extra cost. Amendments are clustered by action type and recurring patterns become candidate policy rules, surfaced to the owner as: <em>“the last 14 outreach drafts were all edited to remove the phrase X — add it to the banned-phrase list?”</em> Accepting writes a versioned policy rule; the platform's behaviour changes without anyone touching a prompt.</p>
+
+<h3><span class="cl">10.3</span><span>Experiments as a first-class framework</span></h3>
+<p>The workbook's Experiments sheet becomes a real A/B framework: hypothesis, variants, the metric being judged, sample sizes, an explicit significance test, and a decision. A significant result promotes into the playbook as a versioned rule with its evidence attached; the promotion is what closes the loop. Insignificant results are retained — the workbook's own instruction to record the disappointing outcomes is what makes the corpus honest, and an agent that can see what failed proposes better than one that only sees what worked.</p>
+
+<h3><span class="cl">10.4</span><span>Retrieval that improves</span></h3>
+<p>The knowledge index is scored against a labelled question set. Retrieval quality is a tracked metric, chunking and ranking changes are evaluated against it, and documents contradicted by newer verified facts are flagged rather than silently outranked. Agents cite what they retrieved, so a bad answer is traceable to a bad chunk.</p>
+
+<h3><span class="cl">10.5</span><span>What is deliberately excluded from v1</span></h3>
+<p>No fine-tuning, no reinforcement from implicit signals, no autonomous prompt rewriting. Each would make behaviour harder to explain and to roll back, and none is necessary to get the compounding effect the four mechanisms above already deliver. Prompt changes are code changes: versioned, reviewed, tested, deployable and revertible.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 11 ══════════════════════════════ -->
+<section id="s11">
+<h2><span class="cl">11</span><span>API specification</span></h2>
+
+<h3><span class="cl">11.1</span><span>Conventions</span></h3>
+<p>REST over HTTPS at <code>/api/v1</code>, JSON, cursor pagination, RFC 9457 problem details for errors, <code>Idempotency-Key</code> required on all unsafe methods, ETags on resources, SSE for live streams. Tenant comes from the validated JWT, never from a path or query parameter — a tenant-in-URL design invites the exact confusion RLS exists to prevent. Every response carries <code>X-Request-Id</code> matching the trace.</p>
+
+<h3><span class="cl">11.2</span><span>Surface</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Method &amp; path</th><th>Purpose</th><th>Roles</th></tr></thead>
+<tbody>
+<tr><td><code>POST /activity</code></td><td>Log a unit of work</td><td>operator+</td></tr>
+<tr><td><code>POST /activity/bulk</code></td><td>Import (validated, atomic per row, error report)</td><td>manager+</td></tr>
+<tr><td><code>GET /metrics/{key}</code></td><td>One metric, with period and dimensions</td><td>role-scoped</td></tr>
+<tr><td><code>POST /metrics/batch</code></td><td>Dashboard fetch in one round trip</td><td>role-scoped</td></tr>
+<tr><td><code>GET /metrics/{key}/lineage</code></td><td>Definition, SQL, dependencies, version — auditability of a figure</td><td>analyst+</td></tr>
+<tr><td><code>GET /data-health</code></td><td>All checks, counts, offending rows</td><td>manager+</td></tr>
+<tr><td><code>GET /agents</code> · <code>PATCH /agents/{key}</code></td><td>Roster; enable, schedule, budget, risk config</td><td>owner</td></tr>
+<tr><td><code>POST /agents/{key}/runs</code></td><td>Trigger a run manually</td><td>manager+</td></tr>
+<tr><td><code>GET /agents/runs/{id}</code></td><td>Run detail: inputs, transcript, cost, outputs</td><td>manager+</td></tr>
+<tr><td><code>GET /agents/runs/{id}/stream</code></td><td>SSE progress for a live run</td><td>manager+</td></tr>
+<tr><td><code>POST /agents/runs/{id}/replay</code></td><td>Re-run with identical inputs; returns a diff</td><td>owner</td></tr>
+<tr><td><code>GET /approvals</code></td><td>Queue, filterable by type, risk, age</td><td>role-scoped</td></tr>
+<tr><td><code>POST /approvals/{id}/decide</code></td><td>Approve, amend-and-approve, or reject</td><td>per action type</td></tr>
+<tr><td><code>POST /approvals/batch-decide</code></td><td>Batch — only for action types that permit it</td><td>per action type</td></tr>
+<tr><td><code>GET /actions/{id}</code></td><td>Full lifecycle, including verification</td><td>manager+</td></tr>
+<tr><td><code>POST /actions/{id}/revert</code></td><td>Compensating action where one exists</td><td>owner</td></tr>
+<tr><td><code>POST /killswitch</code></td><td>Engage or release, with scope and reason</td><td>owner+</td></tr>
+<tr><td><code>GET /audit</code></td><td>Hash-chained log, filterable, exportable</td><td>owner</td></tr>
+<tr><td><code>GET /reports/{type}</code></td><td>Weekly pulse, exec summary, board pack</td><td>role-scoped</td></tr>
+<tr><td><code>POST /connectors/{key}/authorise</code></td><td>OAuth handshake</td><td>owner</td></tr>
+<tr><td><code>POST /webhooks/{source}</code></td><td>Inbound events, signature-verified</td><td>—</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">11.3</span><span>Two representative contracts</span></h3>
+<pre class="code"><b>POST</b> /api/v1/approvals/{id}/decide
+{
+  "decision": "amended",
+  "amended_payload": { "body": "…the operator's edited text…" },
+  "note": "Removed the implied guarantee in sentence 2 — Golden Rule 1.",
+  "attestations": ["value_before_link"]     <i>// required for attested rules (§7.5)</i>
+}
+<i>-- 200</i> { "action_id":"…", "state":"executing", "amendment_recorded":<b>true</b> }
+<i>-- 409</i> problem+json  <i>// already decided, or expired — the state machine is authoritative</i>
+<i>-- 422</i> problem+json  <i>// amendment fails schema or a compliance rule; violations itemised</i>
+
+<b>GET</b> /api/v1/metrics/revenue_recorded_total?period=2026-W34&amp;by=brand
+<i>-- 200</i>
+{
+  "key":"revenue_recorded_total", "version":"1.0", "unit":"currency",
+  "period": { "key":"2026-W34", "from":"2026-08-17", "to":"2026-08-24",
+              "half_open":<b>true</b>, "week_start_dow":1 },
+  "value": 21500,
+  "by": [ {"brand":"PCL-AI certification","value":12000},
+          {"brand":"PCI AI - Institute (umbrella)","value":9500} ],
+  "health": { "state":"ok", "failing_checks":[] },
+  "computed_at":"2026-08-18T06:00:11Z", "source":"mv_kpi_weekly"
+}</pre>
+<p>The <code>health</code> block appears on every metric response. A consumer — including an agent — can therefore never read a figure without also being told whether the platform stands behind it.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 12 ══════════════════════════════ -->
+<section id="s12">
+<h2><span class="cl">12</span><span>Frontend and UX architecture</span></h2>
+
+<h3><span class="cl">12.1</span><span>Four surfaces, four different jobs</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Surface</th><th>Primary user</th><th>Job</th><th>Design consequence</th></tr></thead>
+<tbody>
+<tr><td><strong>Today</strong></td><td>Operator</td><td>What do I do now, and log it as I go</td><td>Single column, one decision per screen, mobile-first</td></tr>
+<tr><td><strong>Approvals</strong></td><td>Manager</td><td>Decide in under 30 seconds without losing rigour</td><td>Payload-forward, diff-first, keyboard-driven</td></tr>
+<tr><td><strong>Command</strong></td><td>Manager, analyst</td><td>What is happening across the estate</td><td>Dense, scannable, state encoded in form as well as number</td></tr>
+<tr><td><strong>Executive</strong></td><td>Owner, board</td><td>Are we winning, and can I trust this</td><td>Few numbers, large, each with provenance and a health state</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">12.2</span><span>Information-design rules</span></h3>
+<ul>
+  <li><strong>Every number is traceable.</strong> Clicking a KPI opens its lineage — definition, SQL, period, dependencies, last computed. The workbook's board-facing figures were wrong for months because nobody could see how they were built.</li>
+  <li><strong>Degraded data looks degraded.</strong> A metric affected by a failing health check renders with a visible marker and cannot be exported. Never a bare number with a footnote.</li>
+  <li><strong>Read-only reads as read-only.</strong> The workbook's biggest day-one confusion was people trying to type into calculated cells. Computed surfaces are visually distinct from input surfaces, everywhere and consistently.</li>
+  <li><strong>Agent activity is legible.</strong> A persistent indicator shows what is running, what is waiting for whom, and what an agent last did — no invisible work.</li>
+  <li><strong>Empty states teach.</strong> A fresh tenant shows what will appear here and what to do first, never a wall of zeros or red.</li>
+  <li><strong>Accessibility is a requirement.</strong> WCAG 2.2 AA: keyboard paths for every action including approval, visible focus, semantic tables, no colour-only state, respected reduced-motion.</li>
+</ul>
+
+<h3><span class="cl">12.3</span><span>Frontend structure</span></h3>
+<pre class="code">src/
+  app/            <i>routing, providers, error boundaries, auth guards</i>
+  surfaces/
+    today/        <i>operator queue, quick-log, my score</i>
+    approvals/    <i>queue, payload renderers per action type, diff view</i>
+    command/      <i>pulse, objectives, platforms, people, content, pipeline</i>
+    executive/    <i>KPI board, health gate, report export</i>
+    admin/        <i>agents, schedules, budgets, connectors, roles, audit</i>
+  domain/         <i>generated types from OpenAPI — single source of truth</i>
+  metrics/        <i>useMetric hooks; every read goes through here, never ad hoc fetch</i>
+  components/     <i>primitives + KpiTile, HealthBadge, LineagePopover, PayloadCard</i>
+  design/         <i>tokens, theme; light and dark defined together</i></pre>
+<p>Two structural rules enforced in CI: the frontend may not compute a KPI (no arithmetic on metric values outside <code>metrics/</code>), and no component may render an unlabelled number — every figure carries its metric key in the DOM for test and lineage purposes.</p>
+</section>
+
+<section id="s13">
+<h2><span class="cl">13</span><span>Integrations and connectors</span></h2>
+<div class="tbl"><table>
+<thead><tr><th>Connector</th><th>Direction</th><th>Auth</th><th>Notes and limits</th></tr></thead>
+<tbody>
+<tr><td>Google Search Console</td><td>In</td><td>OAuth</td><td>Query, page, position, CTR. 16-month window; daily pull with watermark.</td></tr>
+<tr><td>Google Analytics 4</td><td>In</td><td>OAuth</td><td>Acquisition by channel, conversions. Sampling must be detected and disclosed.</td></tr>
+<tr><td>LinkedIn Marketing API</td><td>Both</td><td>OAuth</td><td><strong>Company page only.</strong> Page posts and page analytics. No personal-profile automation (§0.4).</td></tr>
+<tr><td>Meta Graph</td><td>Both</td><td>OAuth</td><td>Facebook page and Instagram business publishing and insights.</td></tr>
+<tr><td>X API</td><td>Both</td><td>OAuth</td><td>Post and metrics; tier-dependent limits — degrade gracefully, never silently.</td></tr>
+<tr><td>YouTube Data</td><td>Both</td><td>OAuth</td><td>Upload, scheduled publish, analytics.</td></tr>
+<tr><td>Google Business Profile</td><td>Both</td><td>OAuth</td><td>Posts, reviews, questions.</td></tr>
+<tr><td>ESP (SendGrid / Mailchimp / Brevo)</td><td>Both</td><td>API key</td><td>Campaign send behind consent verification; opens, clicks, unsubscribes back.</td></tr>
+<tr><td>WhatsApp Business</td><td>Out</td><td>Token</td><td>Pre-approved templates only; opt-in record mandatory per recipient.</td></tr>
+<tr><td>Stripe</td><td>In</td><td>Key + webhook</td><td>Certification revenue reconciliation against order references.</td></tr>
+<tr><td>Credly</td><td>Both</td><td>API key</td><td>Badge issuance and share tracking.</td></tr>
+<tr><td>CMS (WordPress / headless)</td><td>Out</td><td>OAuth / key</td><td>Publish with canonical and schema. Versioned, revertible.</td></tr>
+<tr><td>Slack / Teams</td><td>Out</td><td>OAuth</td><td>Approval requests and alerts, with deep links back.</td></tr>
+<tr><td>Journalist requests</td><td>In</td><td>Varies</td><td>Feed ingestion and relevance scoring for A12.</td></tr>
+</tbody></table></div>
+<p>Every connector implements one interface: <code>Authorise</code>, <code>HealthCheck</code>, <code>Capabilities</code>, <code>Execute</code> (idempotent), <code>Verify</code>, <code>Limits</code>. Capabilities are declarative, so an agent asking for something a platform cannot do fails at planning time with a clear reason rather than at execution. A platform with no official API gets no connector — the Publishing agent produces a copy-ready package and a manual task, and the platform never records a publish that did not happen.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 14-17 ══════════════════════════════ -->
+<section id="s14">
+<h2><span class="cl">14</span><span>Non-functional requirements</span></h2>
+
+<h3><span class="cl">14.1</span><span>Performance and scale targets</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Requirement</th><th>Target</th><th>Measured by</th></tr></thead>
+<tbody>
+<tr><td>API read p95</td><td>&lt; 200 ms</td><td>OTel histogram per route</td></tr>
+<tr><td>Metric batch (20 KPIs) p95</td><td>&lt; 500 ms</td><td>Dashboard load trace</td></tr>
+<tr><td>Activity write p99</td><td>&lt; 300 ms</td><td>Write path trace</td></tr>
+<tr><td>Agent run (single-step) p95</td><td>&lt; 45 s</td><td>Run duration by agent</td></tr>
+<tr><td>Approval queue interactive</td><td>&lt; 150 ms to render next item</td><td>Frontend RUM</td></tr>
+<tr><td>Tenant scale</td><td>5,000 tenants; 200 users each</td><td>Load test, §16.6</td></tr>
+<tr><td>Data scale</td><td>50M activity events; 5M leads per shard</td><td>Partitioned; query plans asserted</td></tr>
+<tr><td>Concurrent agent runs</td><td>500 platform-wide; 10 per tenant default</td><td>Queue depth and saturation</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">14.2</span><span>Security</span></h3>
+<ul>
+  <li><strong>Isolation</strong>: RLS on every tenant table with <code>FORCE</code>; the automated test suite attempts cross-tenant reads on every endpoint and every agent tool as a standing test (§16.2), not a one-off review.</li>
+  <li><strong>Authentication</strong>: OIDC with PKCE; short-lived access tokens with refresh rotation; mandatory MFA for <code>owner</code> and <code>platform_admin</code>; SSO and SCIM for enterprise.</li>
+  <li><strong>Authorisation</strong>: policy evaluated server-side per request; the frontend hides what a user cannot do but is never the control.</li>
+  <li><strong>Secrets</strong>: vault-held, never in the database, never logged, redacted in transcripts. Platform account credentials are references only — the workbook's Golden Rule 9, carried into the schema as a write-time pattern scan.</li>
+  <li><strong>Encryption</strong>: TLS 1.3 in transit; AES-256 at rest; per-tenant data keys so a tenant can be cryptographically erased.</li>
+  <li><strong>Prompt injection</strong>: all retrieved and ingested content is untrusted. Tool calls are schema-validated and allowlisted per agent; a tool invocation whose arguments derive from untrusted text is flagged and, for any <code>approve</code>-class action, routed to a human regardless of configuration.</li>
+  <li><strong>Supply chain</strong>: pinned dependencies, SBOM per release, automated CVE gate, signed images.</li>
+</ul>
+
+<h3><span class="cl">14.3</span><span>Privacy and data protection</span></h3>
+<p>Leads and contacts are personal data. Requirements: a recorded lawful basis per contact; purpose limitation enforced by role; subject access and erasure fulfilled within 30 days including derived stores and the vector index; retention policy per data class with automated purge; regional data residency for EU and Gulf tenants; processing records and a DPIA template shipped as part of onboarding. Erasure must reach the knowledge index — an embedded chunk containing a person's data is personal data, and a system that forgets everywhere except its retrieval layer has not complied.</p>
+
+<h3><span class="cl">14.4</span><span>Availability and continuity</span></h3>
+<p>99.9% monthly for the API; 99.5% for agent execution (degradation is acceptable, data loss is not). RPO 5 minutes via PITR; RTO 1 hour. Backups tested by monthly restore rehearsal — an untested backup is not a backup. Graceful degradation is specified explicitly: if all AI providers are unavailable the platform remains a fully functional record-keeping and reporting system, which is precisely what the workbook is today. Nothing an agent does is on the critical path of a human logging their work.</p>
+</section>
+
+<section id="s15">
+<h2><span class="cl">15</span><span>Observability</span></h2>
+<p>One trace spans the whole causal chain: HTTP request → agent run → provider call → proposed action → approval → execution → verification. That single property is what makes “why did the system do this?” answerable in minutes rather than never.</p>
+<div class="tbl"><table>
+<thead><tr><th>Signal</th><th>Instrumentation</th><th>Alert</th></tr></thead>
+<tbody>
+<tr><td>Unapproved execution</td><td>Invariant check on every execution</td><td><span class="chip c-crit">Page immediately</span> — this must be impossible</td></tr>
+<tr><td>Cross-tenant access</td><td>RLS denial counter, query audit</td><td><span class="chip c-crit">Page immediately</span></td></tr>
+<tr><td>Golden-rule breach reaching execution</td><td>A16 post-hoc sweep</td><td><span class="chip c-crit">Page immediately</span></td></tr>
+<tr><td>Data-health check non-zero</td><td>Per-check gauge</td><td>Notify manager; block external reports</td></tr>
+<tr><td>Approval queue age</td><td>Histogram by action type</td><td>Warn at 4h for time-sensitive types</td></tr>
+<tr><td>Agent failure rate</td><td>Per agent, per version</td><td>Warn at 10%; auto-disable at 40%</td></tr>
+<tr><td>Provider health</td><td>Latency, error rate, breaker state</td><td>Warn on open breaker</td></tr>
+<tr><td>AI spend</td><td>Per tenant per day</td><td>Warn at 80%; suspend non-essential at 100%</td></tr>
+<tr><td>Calibration drift</td><td>Rolling prediction accuracy per agent</td><td>Warn on sustained decline; tighten autonomy</td></tr>
+<tr><td>Metric freshness</td><td>Age of each materialised view</td><td>Warn beyond 2× expected interval</td></tr>
+</tbody></table></div>
+<p>Dashboards: an executive health page, an operations page (queues, workers, providers, spend), and a per-agent page showing runs, cost, calibration and amendment patterns. Every alert links to a runbook; an alert with no runbook is a defect and is treated as one.</p>
+</section>
+
+<section id="s16">
+<h2><span class="cl">16</span><span>Testing strategy</span></h2>
+<p class="lede">The workbook was proved by six verification layers and 213 assertions, and that discipline is why its defects were found before a manager acted on them. The platform inherits the approach and extends it.</p>
+
+<h3><span class="cl">16.1</span><span>Layers</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Layer</th><th>Scope</th><th>Gate</th></tr></thead>
+<tbody>
+<tr><td>Unit</td><td>Rules, period arithmetic, risk classification, validators</td><td>90% on the policy and metric engines</td></tr>
+<tr><td>Metric truth</td><td>Every metric vs an independent implementation on a fixture dataset</td><td>100% of metrics; zero disagreements</td></tr>
+<tr><td>Integration</td><td>API + DB + Redis on real containers</td><td>Every endpoint, every role, every failure mode</td></tr>
+<tr><td>Agent contract</td><td>Each agent against recorded provider responses</td><td>Output schema, citation presence, guardrail refusals</td></tr>
+<tr><td>Approval spine</td><td>Every action type through the full state machine</td><td>Zero paths from judgment to effect that bypass approval</td></tr>
+<tr><td>Isolation</td><td>Cross-tenant attempts on every endpoint and tool</td><td>Zero leaks — release-blocking</td></tr>
+<tr><td>E2E</td><td>Playwright: the five critical journeys</td><td>Green on every PR</td></tr>
+<tr><td>Load</td><td>Sustained tenant and event volume</td><td>§14.1 targets met</td></tr>
+<tr><td>Adversarial</td><td>Prompt injection, jailbreak, tool abuse, poisoned retrieval</td><td>Documented refusals; no privilege escalation</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">16.2</span><span>Isolation testing as a standing suite</span></h3>
+<p>Two tenants are seeded with recognisably distinct data. Every endpoint, every agent tool and every retrieval path is then exercised as tenant A attempting to reach tenant B's data — by ID, by search, by export, by report, and by asking an agent for it in natural language. Any leak fails the build. This runs on every pull request, not at audit time, because a tenant-isolation bug found in production is a company-ending event for a B2B platform.</p>
+
+<h3><span class="cl">16.3</span><span>The workbook's defects as regression tests</span></h3>
+<p>Each of the nine defects in §2.2 becomes an executable test that injects the exact adversarial input and asserts the corrected behaviour: the lead accepted without a logged request, the date typed as text, the wrong-year typo, the meeting that progressed past its status, the schedule whose end precedes its start, the minutes logged under a misspelled name, the deal signed with a typed note, the content published without a date, the negative value pasted past validation. These are the highest-value tests in the suite because each one represents a real failure that reached a real report.</p>
+
+<h3><span class="cl">16.4</span><span>Testing the no-arithmetic invariant</span></h3>
+<p>An adversarial suite hands agents raw rows and asks for totals, ratios and comparisons in prompts designed to tempt computation. The assertion is that the agent calls the metric API or declines — and that any number appearing in its output resolves to a metric response in the same run's transcript. An unsourced figure in agent output fails the test. This is the mechanical enforcement of §0.4's second constraint.</p>
+
+<h3><span class="cl">16.5</span><span>Provider drift detection</span></h3>
+<p>A nightly job runs the golden-set agent tasks against live providers and compares behaviour to the recorded baseline: schema adherence, refusal behaviour, citation discipline, cost and latency. A model updated under us shows up here rather than in a customer's board pack. Drift beyond threshold opens a ticket with the diff attached.</p>
+
+<h3><span class="cl">16.6</span><span>Load profile</span></h3>
+<p>Test against a realistic shape, not a flat average: a 09:00 logging spike as the team starts, a Monday 06:00–08:00 report burst, continuous agent runs through the day, and a month-end reporting peak. Assert §14.1 targets under the peak, verify the per-tenant agent cap prevents one tenant starving others, and confirm graceful degradation when a provider is removed mid-run.</p>
+</section>
+
+<section id="s17">
+<h2><span class="cl">17</span><span>Deployment</span></h2>
+
+<h3><span class="cl">17.1</span><span>Images and topology</span></h3>
+<p>Four images from one multi-stage Dockerfile: <code>api</code>, <code>orchestrator</code>, <code>workers</code>, <code>web</code> (static, CDN-served). Non-root, distroless runtime, read-only filesystem, health and readiness probes, SBOM and signature per build. Phase 1–2 run on a single Docker Compose host with managed PostgreSQL and Redis; Phase 3 onward on Kubernetes with HPA on queue depth for workers and on request rate for the API. The <code>scheduler</code> is a leader-elected singleton — two schedulers means double-firing, which for <code>outreach.send</code> means contacting a person twice.</p>
+
+<h3><span class="cl">17.2</span><span>Pipeline and release discipline</span></h3>
+<p>On pull request: lint, typecheck, unit, metric-truth, integration, agent-contract, isolation, E2E, container scan. On merge to main: build, sign, push, deploy to staging, run smoke and drift suites. Production is a manual promotion of a staging-verified image. Migrations are expand–contract in separate releases so a rollback never needs a down-migration against live data. Feature flags per tenant let an agent be enabled for one organisation before all.</p>
+<p><strong>Prompts are versioned artefacts.</strong> A prompt change is a code change: reviewed, tested against the golden set, deployed with the release, and revertible independently. A prompt edited in a database by a support engineer is an unversioned production change to business logic, and the platform provides no such path.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ 18 ══════════════════════════════ -->
+<section id="s18">
+<h2><span class="cl">18</span><span>Rollout and phase gates</span></h2>
+<p class="lede">Six phases. Each has an entry gate naming the clauses it implements and an exit gate that must be demonstrated, not asserted. Nothing in a later phase begins until the prior gate is signed. This is the structure you asked for, and it is also how the risk stays bounded.</p>
+
+<div class="phases">
+  <div class="ph"><div class="n">P0</div><div><p class="t">This document</p><p class="d">Specification review and sign-off. Annex D answered. <strong>Exit gate:</strong> §1, §2, §6 and §7 approved in writing; the eleven open decisions closed.</p></div><div class="w">now</div></div>
+  <div class="ph"><div class="n">P1</div><div><p class="t">Foundation — the record and the truth</p><p class="d">Tenancy with RLS, auth and roles, activity ingestion, reference seeding from the workbook, metric engine, all ten data-health checks, audit log. No agents at all. <strong>Exit gate:</strong> PCI's live workbook data imported; every metric reconciles to the workbook cell-for-cell; the nine regression tests of §16.3 pass; isolation suite green.</p></div><div class="w">6–8 wk</div></div>
+  <div class="ph"><div class="n">P2</div><div><p class="t">The approval spine and first four agents</p><p class="d">Action registry, policy engine, approval queue, kill switches, notifications, provider abstraction with two vendors. Agents A02 Scheduler, A08 Knowledge, A13 Analytics, A06 Content QA — chosen deliberately: none of them can cause an external effect. <strong>Exit gate:</strong> zero paths from judgment to effect proven by test; a manager completes a real approval cycle; §16.4 passes.</p></div><div class="w">6–8 wk</div></div>
+  <div class="ph"><div class="n">P3</div><div><p class="t">Content chain, end to end</p><p class="d">A05 Content Planning, A07 Publishing, A04 SEO. Three connectors: GSC, LinkedIn company page, CMS. Command and Today surfaces. <strong>Exit gate:</strong> a brief goes keyword → draft → QA → approval → published → measured, with no manual step outside the approval itself, and the published URL appears in the metrics.</p></div><div class="w">8–10 wk</div></div>
+  <div class="ph"><div class="n">P4</div><div><p class="t">Commercial chain</p><p class="d">A09 Outreach (draft-and-queue), A10 Lead Generation, A11 Partnerships, A12 PR, A16 Compliance with full veto. Consent and lawful-basis records. <strong>Exit gate:</strong> golden-rule enforcement demonstrated against a red-team attempt; zero denylist contacts; acceptance and reply rates measured against benchmark.</p></div><div class="w">8–10 wk</div></div>
+  <div class="ph"><div class="n">P5</div><div><p class="t">Intelligence and the executive layer</p><p class="d">A01 Master Orchestrator, A03 Strategy, A14 Reporting, A15 Finance. Executive surface, board pack, the §10 learning loop with calibration and amendment mining. <strong>Exit gate:</strong> a board pack generated with zero manual correction; report generation correctly refused while a health check is non-zero; calibration recorded for four consecutive weeks.</p></div><div class="w">8–10 wk</div></div>
+  <div class="ph"><div class="n">P6</div><div><p class="t">Multi-tenant hardening and commercial readiness</p><p class="d">Load to 5,000 tenants, SSO and SCIM, residency, billing, self-serve onboarding, SOC 2 readiness, penetration test, DR rehearsal. <strong>Exit gate:</strong> §14.1 targets met under peak profile; external penetration test closed; restore rehearsal inside RTO.</p></div><div class="w">10–12 wk</div></div>
+</div>
+
+<h3><span class="cl">18.1</span><span>Why this order</span></h3>
+<p>The record and the truth come before any agent because an agent reasoning over untrustworthy numbers produces confident nonsense, and because P1 alone already beats the workbook on concurrency, capacity and integrity. The approval spine comes before any agent that can act, so the safety property is established while it is cheap to change. The four P2 agents are deliberately incapable of external effect — the spine gets exercised with real work before anything can reach the outside world. Publishing precedes outreach because a bad post can be deleted and a bad message cannot. The orchestrator comes last, not first, because it needs real agents with real calibration histories to arbitrate between; built first it would be a scheduler with pretensions.</p>
+
+<h3><span class="cl">18.2</span><span>Migration from the workbook</span></h3>
+<p>The workbook stays authoritative until the P1 exit gate is signed. It is then imported — reference data as a versioned seed, transactional rows through the validated bulk endpoint, with a rejection report for every row that fails the constraints in §4.3. Those rejections are valuable: they are the file's accumulated data-quality debt, made explicit for the first time. A four-week dual-run follows, in which the platform and the workbook are reconciled weekly and any divergence is explained before the workbook is retired to read-only archive. No cutover event, no data-loss risk, and a real reconciliation record at the end of it.</p>
+</section>
+<hr>
+
+<!-- ══════════════════════════════ ANNEXES ══════════════════════════════ -->
+<section id="a-a">
+<h2><span class="cl">A</span><span>Annex A · Agent prompt contract</span></h2>
+<p>Every agent prompt is assembled from the same seven blocks, in this order, so that behaviour is comparable across agents and a change to shared policy propagates everywhere. Blocks 1–4 are stable and cache-eligible; 5–7 vary per run.</p>
+<pre class="code"><b>[1] IDENTITY</b>      Agent key, version, mission in one sentence, and the named
+                  human role accountable for its output.
+
+<b>[2] INVARIANTS</b>    The six universal rules of §6.1, verbatim and identical across
+                  all agents. Includes: you emit proposals, never effects; you
+                  cite or you abstain; you never compute a number.
+
+<b>[3] POLICY</b>       Tenant golden rules, technique denylist, claims policy, brand
+                  voice, character limits, jurisdiction constraints. Injected from
+                  the database — never hard-coded in the prompt file.
+
+<b>[4] TOOLS</b>        Typed tool definitions, allowlisted for this agent. Each carries
+                  its schema, its cost, and whether its result is trusted or
+                  untrusted input.
+
+<b>[5] CONTEXT</b>      Resolved inputs for this run: metric values (with keys and
+                  periods), retrieved documents (with source and span), prior-run
+                  memory, and the current data-health state.
+
+<b>[6] TASK</b>         The specific instruction, and the output schema it must satisfy.
+
+<b>[7] OUTPUT</b>       Required shape: proposals[], each with payload, rationale,
+                  citations[], expected_effect. Plus abstentions[] — what it chose
+                  not to propose and why, which is often the more useful half.</pre>
+<p><strong>Block 7's <code>abstentions</code> array is not decoration.</strong> An agent that says “I did not propose a schedule for Pinterest because its native scheduler caps at 30 days and the requested window is 90” is far more useful than one that silently proposes nothing, and it makes the reasoning reviewable. Abstentions are surfaced in the run detail view and mined in §10.2 alongside amendments.</p>
+<p>Output validation is mechanical and runs before a human ever sees the result: schema conformance, every citation resolvable, every number matching a metric response in the same transcript, no policy-violating content, expected_effect present and well-formed. A response failing validation is retried once with the violations fed back, then failed. It is never partially accepted.</p>
+</section>
+
+<section id="a-b">
+<h2><span class="cl">B</span><span>Annex B · Sequence diagrams</span></h2>
+
+<div class="dgm">
+  <p class="cap">Figure B.1 — Content: keyword to published, with the QA gate and human sign-off</p>
+<pre class="mermaid">
+sequenceDiagram
+  autonumber
+  participant S as Scheduler
+  participant SEO as A04 SEO
+  participant CP as A05 Planning
+  participant QA as A06 Content QA
+  participant C as A16 Compliance
+  participant P as Policy engine
+  participant H as Manager
+  participant PUB as A07 Publishing
+  participant X as CMS connector
+  participant M as Metric service
+
+  S->>SEO: run(weekly)
+  SEO->>M: metrics.query(gsc_position, cluster_gaps)
+  M-->>SEO: values + health:ok
+  SEO->>CP: KeywordPriorityUpdate
+  CP->>CP: select brief, draft
+  CP->>QA: DraftArticle
+  QA->>C: check claims + golden rules
+  C-->>QA: clear
+  QA-->>CP: verdict: pass
+  CP->>P: propose content.publish
+  P->>P: risk=approve · denylist · budget
+  P->>H: approval request (payload · rationale · citations)
+  H-->>P: amended + approved
+  P->>PUB: authorised action
+  PUB->>X: publish (idempotent)
+  X-->>PUB: live URL
+  PUB->>M: write activity_event + content_item
+  Note over PUB,M: status and published_at set in ONE transaction
+  M-->>H: coverage and pulse updated
+</pre>
+</div>
+
+<div class="dgm">
+  <p class="cap">Figure B.2 — Outreach: the human sends, and the compliance gate runs twice</p>
+<pre class="mermaid">
+sequenceDiagram
+  autonumber
+  participant S as Scheduler
+  participant LG as A10 Lead Gen
+  participant OA as A09 Outreach
+  participant C as A16 Compliance
+  participant O as Operator
+  participant LI as LinkedIn (manual)
+  participant M as Metric service
+
+  S->>LG: run(daily 06:30)
+  LG->>LG: score fit · dedupe · lawful basis
+  LG-->>OA: qualified queue
+  OA->>M: remaining daily allowance
+  M-->>OA: 12 of 20 sent
+  OA->>OA: draft from approved template · personalise · count chars
+  OA->>C: pre-check (limits · claims · denylist)
+  C-->>OA: clear
+  OA->>O: queue of 8 drafts, each with evidence
+  O->>O: review · edit
+  O->>C: confirm send intent
+  C-->>O: clear (second gate, at send time)
+  O->>LI: sends manually inside LinkedIn
+  O->>M: confirm sent → lead_touch + activity_event
+  Note over O,LI: no automation touches LinkedIn — §0.4
+  M-->>O: acceptance and reply rates update
+</pre>
+</div>
+
+<div class="dgm">
+  <p class="cap">Figure B.3 — The learning loop closing on one proposal</p>
+<pre class="mermaid">
+sequenceDiagram
+  autonumber
+  participant A as Any agent
+  participant P as Policy engine
+  participant H as Human
+  participant E as Evaluation worker
+  participant PB as Playbook policy
+  participant OWN as Owner
+
+  A->>P: proposal + expected_effect(metric, direction, horizon)
+  P->>H: approval request
+  H->>P: amended + approved
+  P->>E: record amendment diff
+  Note over E: horizon elapses
+  E->>E: score prediction vs realised metric
+  E->>A: calibration update (per agent, rolling 12 wk)
+  E->>E: cluster amendments by action type
+  E->>OWN: "14 outreach drafts edited to remove phrase X — add to banned list?"
+  OWN->>PB: accept → versioned policy rule
+  PB-->>A: policy block updated on next run
+</pre>
+</div>
+</section>
+
+<section id="a-c">
+<h2><span class="cl">C</span><span>Annex C · Wireframes</span></h2>
+
+<h4>C.1 — Approvals queue: the payload is the interface</h4>
+<div class="wf">
+  <div class="bar">APPROVALS &nbsp;·&nbsp; 7 waiting &nbsp;·&nbsp; 2 expiring within 2h</div>
+  <div class="row">
+    <div class="cell k" style="max-width:200px">
+      <div class="lbl">Queue</div>
+      <div>▸ content.publish &nbsp;3</div>
+      <div>▸ outreach.send &nbsp;&nbsp;&nbsp;2 <span class="chip c-crit">2h</span></div>
+      <div>▸ pr.pitch.send &nbsp;&nbsp;&nbsp;1 <span class="chip c-crit">40m</span></div>
+      <div>▸ spend.commit &nbsp;&nbsp;&nbsp;&nbsp;1 <span class="chip c-crit">dual</span></div>
+      <div class="ln m"></div><div class="ln s"></div>
+    </div>
+    <div class="cell">
+      <div class="lbl">The exact post that will go out — LinkedIn company page</div>
+      <div class="ln m"></div><div class="ln"></div><div class="ln m"></div><div class="ln s"></div>
+      <div class="lbl" style="margin-top:14px">Why · A05 Content Planning</div>
+      <div style="font-size:11px; line-height:1.5">Cluster “Earned value management” has a pillar and no
+      spoke on forecasting. Keyword <em>eac forecasting</em> graded Easy, 4 competitors, none authoritative.
+      <span class="chip c-navy">2 citations</span></div>
+      <div class="lbl" style="margin-top:14px">Expects</div>
+      <div style="font-size:11px">gsc_clicks_page ↑ 40–70 / month within 8 weeks</div>
+    </div>
+    <div class="cell k" style="max-width:172px">
+      <div class="lbl">Checks</div>
+      <div style="font-size:11px; line-height:1.9">
+        <span class="chip c-ok">QA pass</span><br>
+        <span class="chip c-ok">Claims cited</span><br>
+        <span class="chip c-ok">Canonical set</span><br>
+        <span class="chip c-ok">Format legal</span><br>
+        <span class="chip c-ok">Rules clear</span>
+      </div>
+      <div class="lbl" style="margin-top:14px">Decide</div>
+      <div style="font-size:11px; line-height:1.8">Approve &nbsp;<code>A</code><br>Edit &amp; approve &nbsp;<code>E</code><br>Reject &nbsp;<code>R</code><br>Skip &nbsp;<code>J</code></div>
+    </div>
+  </div>
+</div>
+
+<h4>C.2 — Executive board: every number carries its provenance</h4>
+<div class="wf">
+  <div class="bar">EXECUTIVE &nbsp;·&nbsp; Week 34, 2026 &nbsp;·&nbsp; Mon-start &nbsp;·&nbsp; DATA HEALTH: 1 CHECK FAILING</div>
+  <div class="row">
+    <div class="cell"><div class="lbl">Revenue recorded</div><div class="val">$21,500</div><div style="font-size:10px;color:#5A6672">▲ 18% vs W33 &nbsp;·&nbsp; <span style="text-decoration:underline">lineage</span></div></div>
+    <div class="cell"><div class="lbl">Meetings booked</div><div class="val">11</div><div style="font-size:10px;color:#5A6672">by meeting date &nbsp;·&nbsp; <span style="text-decoration:underline">lineage</span></div></div>
+    <div class="cell"><div class="lbl">Acceptance rate</div><div class="val">31%</div><div style="font-size:10px;color:#5A6672">benchmark 27–30% &nbsp;·&nbsp; Expandi 2026</div></div>
+    <div class="cell k"><div class="lbl">Content published</div><div class="val">9 <span class="chip c-warn">degraded</span></div><div style="font-size:10px;color:#B8860B">2 rows published with no date</div></div>
+  </div>
+  <div class="row">
+    <div class="cell" style="flex:2">
+      <div class="lbl">Hours by objective vs value rank — the rebalancing question</div>
+      <div class="ln m"></div><div class="ln s"></div><div class="ln"></div><div class="ln s"></div>
+      <div style="font-size:10.5px;color:#5A6672;margin-top:6px">Honorary Outreach (rank 1) holds 12% of minutes. Strategy agent proposes +8pts.</div>
+    </div>
+    <div class="cell k">
+      <div class="lbl">Board pack</div>
+      <div style="font-size:11px;line-height:1.6">Blocked while a health check is failing.<br><br>
+      <span class="chip c-crit">Cannot export</span></div>
+    </div>
+  </div>
+</div>
+
+<h4>C.3 — Today: one operator, one screen, log as you go</h4>
+<div class="wf">
+  <div class="bar">TODAY &nbsp;·&nbsp; Tue 18 Aug &nbsp;·&nbsp; 4 of 8 targets met &nbsp;·&nbsp; 3h 20m logged</div>
+  <div class="row">
+    <div class="cell">
+      <div class="lbl">Outreach queue · 8 drafts ready, 8 of 20 remaining today</div>
+      <div style="font-size:11px;line-height:1.7">1 · A. Rahman — Cost Manager, ADNOC &nbsp;<span class="chip c-navy">score 84</span><br>
+      &nbsp;&nbsp;&nbsp;“…your 14 years on offshore EPC…” &nbsp;<span class="chip c-ok">186/200</span><br>
+      2 · S. Iqbal — PMO Director, L&amp;T &nbsp;<span class="chip c-navy">score 79</span></div>
+      <div class="lbl" style="margin-top:12px">Due today</div>
+      <div style="font-size:11px">3 follow-ups · 1 brief drafted, awaiting your edit</div>
+    </div>
+    <div class="cell k" style="max-width:190px">
+      <div class="lbl">Log it</div>
+      <div style="font-size:11px;line-height:1.9">Platform ▾<br>What kind ▾<br>How many · Minutes<br>Objective ▾ &nbsp;Brand ▾<br>Evidence link</div>
+      <div class="lbl" style="margin-top:12px">Your week</div>
+      <div class="val" style="font-size:15px">72 / 100</div>
+      <div style="font-size:10px;color:#5A6672">Fix first: acceptance rate</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="a-d">
+<h2><span class="cl">D</span><span>Annex D · Open decisions and risk register</span></h2>
+
+<h3><span class="cl">D.1</span><span>Decisions needed before Phase 1 starts</span></h3>
+<p>Nine of these eleven are business decisions rather than technical ones. Each has a recommendation so none of them needs to be a long conversation.</p>
+<div class="tbl"><table>
+<thead><tr><th>#</th><th>Decision</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td>D1</td><td>Is Workforce OS a PCI-internal platform, or a product sold to other institutes?</td><td>Build multi-tenant, run single-tenant. Costs ~15% more in P1 and avoids a rewrite if the answer becomes “sell it”.</td></tr>
+<tr><td>D2</td><td>Does the LinkedIn constraint in §0.4 stand?</td><td><strong>Yes, without exception.</strong> It is your own Golden Rule 5. Automating it risks the accounts the whole strategy rests on.</td></tr>
+<tr><td>D3</td><td>Which CRM is authoritative for leads at volume?</td><td>Decide now even if adoption is later — it changes whether <code>lead</code> is a source of truth or a projection.</td></tr>
+<tr><td>D4</td><td>Who holds <code>owner</code>, and who deputises when they are unavailable?</td><td>Two named owners. A single approver becomes the bottleneck that gets designed around.</td></tr>
+<tr><td>D5</td><td>Monthly AI spend ceiling per tenant?</td><td>Start at $400/month for PCI's team size; the metering makes it adjustable with evidence.</td></tr>
+<tr><td>D6</td><td>Which three AI providers, and any residency constraints?</td><td>Two at launch (one primary, one for cross-vendor critique), third as fallback. Gulf residency may constrain the choice.</td></tr>
+<tr><td>D7</td><td>Do executives and board members get platform logins, or PDFs?</td><td>PDFs in P1–P4; the executive surface in P5. Read-only board access is a support burden before the numbers are stable.</td></tr>
+<tr><td>D8</td><td>Retention period for lead personal data?</td><td>24 months from last contact, then anonymise. Set it before import, not after.</td></tr>
+<tr><td>D9</td><td>Does the workbook remain a supported export?</td><td>Yes for 12 months. It is the fallback if the platform is unavailable and it eases adoption.</td></tr>
+<tr><td>D10</td><td>Compliance regime to design against — GDPR, UK GDPR, Gulf laws?</td><td>Design to the strictest applicable (GDPR) and configure down. Retrofitting is far more expensive.</td></tr>
+<tr><td>D11</td><td>Build team shape?</td><td>Two senior backend, one frontend, one platform, part-time design. One engineer cannot hold §7 and §9 safely.</td></tr>
+</tbody></table></div>
+
+<h3><span class="cl">D.2</span><span>Risk register</span></h3>
+<div class="tbl"><table>
+<thead><tr><th>Risk</th><th>Sev</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td>An agent takes a consequential action without approval</td><td><span class="chip c-crit">Critical</span></td><td>Architectural separation of planes (§3.3); global risk floor with no config path; standing test; invariant alert that pages</td></tr>
+<tr><td>Cross-tenant data leak</td><td><span class="chip c-crit">Critical</span></td><td>RLS with FORCE; isolation suite on every PR; retrieval scoped and tested; per-tenant encryption keys</td></tr>
+<tr><td>Platform account restricted or banned</td><td><span class="chip c-crit">Critical</span></td><td>Official APIs only; no automation on LinkedIn; rate limits respected; warning trips the connector switch</td></tr>
+<tr><td>A confidently wrong number reaches the board</td><td><span class="chip c-crit">Critical</span></td><td>SQL-only truth plane; health gate blocks export; metric-truth tests; lineage on every figure</td></tr>
+<tr><td>Approval fatigue producing rubber-stamping</td><td><span class="chip c-warn">High</span></td><td>30-second design target; safe batching only; measure decision time and flag suspiciously fast approvals</td></tr>
+<tr><td>Prompt injection via ingested content</td><td><span class="chip c-warn">High</span></td><td>All retrieved content untrusted; allowlisted schema-validated tools; injection-derived tool calls forced to human review</td></tr>
+<tr><td>AI cost overrun</td><td><span class="chip c-warn">High</span></td><td>Per-tenant per-day metering; task-class routing; caching; suspension at ceiling</td></tr>
+<tr><td>Provider model change breaking behaviour</td><td><span class="chip c-warn">High</span></td><td>Version pinning; nightly drift detection; cross-vendor fallback</td></tr>
+<tr><td>Scope expansion beyond the phase plan</td><td><span class="chip c-warn">High</span></td><td>Written exit gates; non-goals in §1.4; new capability enters the next phase, never the current one</td></tr>
+<tr><td>Team abandons the platform for the spreadsheet</td><td><span class="chip c-warn">High</span></td><td>P1 must beat the workbook on the operator's own terms; dual-run with reconciliation; workbook export retained</td></tr>
+<tr><td>Key person dependency on the spec author</td><td><span class="chip c-flat">Medium</span></td><td>This document; ADRs per decision; prompts and metrics as reviewed code</td></tr>
+</tbody></table></div>
+
+<div class="note gold">
+  <p class="hd">The one sentence to take from this document</p>
+  <p>The value of this platform is not that AI agents can do marketing work — plenty of tools claim that. It is that <strong>every number it shows you is computed in SQL and traceable to its definition, and every action it takes in the world was signed off by a named human whose decision is on the record.</strong> Those two properties are what make it safe to run a business on, and §3.3, §5 and §7 exist to make them structurally true rather than merely intended.</p>
+</div>
+</section>
+
+</div>
+
+<footer class="foot">
+  <p><strong>PCI-WOS-SRS-001 rev 1.0</strong> · Derived from PCI_AI_Growth_OS.xlsx (42 sheets, rev 18 Aug 2026) · Phase 0 deliverable · Awaiting sign-off on §1, §2, §6, §7 and Annex D.</p>
+</footer>
+</main>
+</div>
