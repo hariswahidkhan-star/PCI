@@ -2,7 +2,7 @@
 platform:      Instagram / Facebook
 type:          carousel
 title:         The five project KPIs that actually change a decision
-meta:          CPI 0.854 and a required 1.088 to recover: a 27% step change that does not arrive because someone asked for more effort. Eight slides on KPIs that force a call.
+meta:          CPI 0.854, and 1.088 needed to recover: a 27% step change that does not arrive because someone asked for more effort. Eight slides on KPIs that force a call.
 primary_kw:    project dashboard KPIs *
 secondary_kw:  TCPI, contingency drawdown, float erosion, cash conversion cycle
 pillar:        Project controls fundamentals
