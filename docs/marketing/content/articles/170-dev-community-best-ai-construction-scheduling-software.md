@@ -3,7 +3,7 @@ platform:      DEV Community
 type:          comparison
 title:         How to evaluate AI construction scheduling software
 meta:          How to evaluate AI construction scheduling software on your own files: the five jobs these tools do, and a precision and recall harness for scoring them.
-primary_kw:    evaluate AI construction scheduling software
+primary_kw:    evaluate AI construction scheduling software *
 secondary_kw:  best AI construction scheduling software, precision recall F1, schedule quality checking, PCL-AI
 pillar:        AI in project controls
 credential:    PCL-AI

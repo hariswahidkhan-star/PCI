@@ -30,7 +30,14 @@ FM_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.S)
 # The trailing publisher note goes by several labels. It was headed "Links:" in a handful of
 # flagship files, which this pattern did not match, so their instruction sheets were read as
 # body links and the files were reported as over-linked when they were not.
-NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal[- ]?links?|Internal linking note|Linking note|Links?\s*[:(.,])", re.I | re.M)
+# Labels the trailing publisher note goes by. Agents keep coining new ones — "Internal links",
+# "**Linking note.**", "Internal links, as placed in the body", and now "Estate links" — and a
+# missed label makes that file's instruction sheet read as body links, which is what put files
+# on the over-linked list that were never over-linked. A general "any phrase containing link"
+# pattern was tried and is worse: it matches ordinary prose ("a party to link", "calendar link")
+# while still missing "Internal links now in the body:", where words sit between the label and
+# its colon. So the list is explicit, and adding to it is the maintenance cost.
+NOTE_RE = re.compile(r"^\s*[*_]{0,2}(Internal[- ]?links?|Estate[- ]?links?|Internal linking note|Linking note|Links?\s*[:(.,])", re.I | re.M)
 URL_RE = re.compile(r"https?://[^\s)\"'`<>]+")
 
 try:

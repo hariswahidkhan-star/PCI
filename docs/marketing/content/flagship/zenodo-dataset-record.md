@@ -1,15 +1,15 @@
 ---
 platform:      Zenodo (CERN / OpenAIRE open repository) — record description field for a DOI deposit
 type:          repository-record
-title:         The PCI Standards: 113 mandatory Standards and 532 process requirements for project controls, project finance and governed AI
-when_to_post:  Not on a posting clock. A published Zenodo record registers its DOI with DataCite at the moment you press publish, the files become permanent, and there is no unpublishing — so the deposit waits until the requirement text is final, not until launch week wants a link. Sequence: reserve the DOI in the deposit form first (Zenodo issues it before publication), give the reserved DOI to the PM World Journal manuscript and the own-site Body of Knowledge page so both carry a real identifier on the day they appear, publish the record once the hub page is live and indexed, then check the DOI actually resolves before any asset announces it. Registration and OpenAIRE harvesting are not instantaneous; a launch tweet pointing at a DOI that 404s for an hour is worse than no DOI. Publish at least a week ahead of the journal submission deadline you are aiming at, because a reference list with a resolving DOI is checked once and a reference list without one is queried.
+title:         "The PCI Standards: 113 mandatory Standards and 532 process requirements for project controls, project finance and governed AI"
+when_to_post:  "Not on a posting clock. A published Zenodo record registers its DOI with DataCite at the moment you press publish, the files become permanent, and there is no unpublishing — so the deposit waits until the requirement text is final, not until launch week wants a link. Sequence: reserve the DOI in the deposit form first (Zenodo issues it before publication), give the reserved DOI to the PM World Journal manuscript and the own-site Body of Knowledge page so both carry a real identifier on the day they appear, publish the record once the hub page is live and indexed, then check the DOI actually resolves before any asset announces it. Registration and OpenAIRE harvesting are not instantaneous; a launch tweet pointing at a DOI that 404s for an hour is worse than no DOI. Publish at least a week ahead of the journal submission deadline you are aiming at, because a reference list with a resolving DOI is checked once and a reference list without one is queried."
 word_count:    303 words / 1,989 characters (the description field only, from "The PCI Standards are" to "forms no part of this deposit"; the deposit-form sheet and the notes are working material and are not deposited)
 hashtags:      None, and none may be added. Zenodo has no hashtags; it has a Keywords field that feeds DataCite, OpenAIRE and every downstream index, and a hashtag pasted into it is a dead term nobody searches. Enter these, one per line, exactly — project controls; earned value management; cost engineering; project finance; accrual accounting; revenue cut-off; forecasting; AI governance; professional certification; body of knowledge.
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    suite — PCL-AI, PFL-AI and PML-AI all named, because the deposit is the framework all three rest on
 target_domain: projectcontrolsinstitute.org
 canonical:     original deposit — the Zenodo record is the citable copy of record; the own-site Standards and Body of Knowledge pages remain the readable copy and are not canonicalised to Zenodo
-schema:        Dataset / Standard (Zenodo emits DataCite; see the resource-type decision below)
+schema:        "Publication / Standard — the DataCite resource type this record is deposited as; Publication / Report only where the menu offers no Standard"
 ab_id:         n/a — flagship launch asset, not an Article Bank brief
 
 notes: |
@@ -28,12 +28,13 @@ notes: |
   Note also that Zenodo's access right and its licence are separate fields. An ND record is still
   Open Access in Zenodo's own terms. Do not let the two questions be answered as one.
 
-  RESOURCE TYPE — SECOND DECISION. The filename calls this a dataset record; the deposit may not be
-  one. Check the resource-type menu in the form. If "Publication → Standard" is offered, that is the
-  honest pick and it is what DataCite will carry. "Publication → Report" is the safe fallback.
-  Choose "Dataset" only if the requirements are deposited as structured, machine-readable rows
-  rather than as a document, because the type governs how OpenAIRE and every aggregator file the
-  record, and a document filed as a dataset is found by nobody looking for either.
+  RESOURCE TYPE — SETTLED, AND HERE IS THE REASONING. This is a document, so it deposits as
+  "Publication → Standard" where the menu offers it, and "Publication → Report" where it does not.
+  The front matter now carries that one value rather than a choice, and the filename says deposit
+  rather than dataset for the same reason. "Dataset" is correct only if the requirements are
+  uploaded as structured, machine-readable rows rather than as a document; if that is ever what
+  ships, the type and the front matter change together. The type governs how OpenAIRE and every
+  aggregator file the record, and a document filed as a dataset is found by nobody looking for either.
 
   CREATORS — THIRD DECISION, AND THE ONE MOST LIKELY TO BE FUDGED. Zenodo creators are people or
   organisations with identifiers. Enter the named authors of the framework, or enter Project
@@ -109,7 +110,7 @@ Paste everything between the rules into the Description field. Nothing else goes
 
 ---
 
-The PCI Standards are the certification requirements of the Project Controls Institute Global: 113 mandatory Standards carrying 532 process requirements. This record deposits the framework in full, so what a project controls credential examines can be cited and checked rather than described.
+The PCI Standards are the certification requirements of the Project Controls Institute Global: 113 mandatory Standards carrying 532 process requirements. This record deposits the framework in full, so the requirements a project controls credential rests on can be cited and checked rather than described.
 
 Accountancy examinations rarely test float; engineering examinations rarely test cut-off. Requirements on recognition, accrual and cut-off sit alongside progress measurement, schedule integrity, float and forecasting, and a further group governs where an AI system may act on a project record and where it may not.
 

@@ -3,7 +3,7 @@ platform:      Quora
 type:          qa-list
 title:         What is the 100% rule in a work breakdown structure?
 meta:          The 100% rule: a WBS holds all of the scope and nothing more. Worked arithmetic on what a missing branch and a double-counted one each do to CPI.
-primary_kw:    100% rule
+primary_kw:    100% rule *
 secondary_kw:  work breakdown structure, scope baseline, work package, control account
 pillar:        Planning and scheduling
 credential:    PML-AI

@@ -2,7 +2,7 @@
 platform:      Medium
 type:          guide
 title:         Project cash flow forecasting: the S-curve a CFO reads
-meta:          Project cash flow forecasting worked in full: the four curves, peak funding, the payment-term lever worth £1.30m, and the cash conversion cycle.
+meta:          Project cash flow forecasting in full: the four curves, the £1.30m funding peak, the supplier-terms lever that removes it, and the cash conversion cycle.
 primary_kw:    project cash flow forecasting
 secondary_kw:  S-curve, peak funding requirement, cash conversion cycle, retention and certification lag
 pillar:        Cost control and estimating
@@ -10,7 +10,7 @@ credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /project-cash-flow-forecasting (own site #030)
 schema:        Article + FAQPage
-word_count:    1791
+word_count:    1,973
 hashtags:      #ProjectControls #ProjectFinance #CostEngineering #ConstructionFinance #PMO
 ab_id:         AB-00096
 ---
@@ -74,7 +74,7 @@ Peak funding falls from £1.30m to nil and the contract self-finances from perio
 
 Fifteen days of supplier terms was worth more to the funding requirement than a 5% cost saving would have been, and it was available at signature rather than earned on site.
 
-On margin the ranking reverses. Five per cent off the £19.2m cost is £0.96m the business keeps for good, while the terms change moves £1.30m of timing and leaves the margin at £4.80m exactly where it was. The two levers answer different questions, so be clear which one you are being asked to improve before claiming either.
+On margin the ranking reverses. Five per cent off the £19.2m cost is £0.96m the business keeps for good, while the terms change moves £1.30m of timing and leaves the margin at £4.80m. Be clear which of the two you are being asked to improve.
 
 ## Which levers actually move the peak
 
@@ -101,7 +101,7 @@ At portfolio level the same question is asked with three ratios. Take revenue fo
 
 **Cash conversion cycle** = 54.0 + 54.5 − 89.6 = **18.9 days**. Converting those days back into money uses cost of sales, not revenue: 18.9 ÷ 365 × 77.0 = **£3.99m** of working capital tied up.
 
-Ten days off DSO releases 10 ÷ 365 × 96.0 = **£2.63m** of cash, permanently, with no change to revenue or cost. That one runs off revenue, because receivables are billed at the contract price, so it will not tie to the £3.99m figure above at the same daily rate. Mixing the two denominators in one sentence is how these ratios get argued about. That is larger than most cost-reduction programmes deliver, and it comes from billing on time and settling certification disputes faster.
+Ten days off DSO releases 10 ÷ 365 × 96.0 = **£2.63m** of cash, permanently, with no change to revenue or cost. That one runs off revenue, because receivables are billed at the contract price, so it will not tie back to the £3.99m at the same daily rate. That is larger than most cost-reduction programmes deliver, and it comes from billing on time and settling certification disputes faster.
 
 The warning attached to a short cycle: a contractor with a negative cash conversion cycle is being financed by its supply chain, and the position reverses violently when volumes fall.
 
@@ -123,13 +123,15 @@ The two assumptions the forecast is most sensitive to, each with the value of a 
 
 What not to send is a 48-column spreadsheet. A finance director reviewing eleven contracts needs the funding number and its sensitivity, and will ask for the model if the summary raises a question.
 
-## The overlap this sits in
+## Where the planner and the treasurer disagree
 
 Cash forecasting is where a delivery discipline and a finance discipline each hold half the answer. The planner knows when the work happens and the treasurer knows when the money moves, and the forecast needs both at once.
 
-A chartered accountant is examined on working capital and cut-off but not on time-phasing a baseline. An engineer is examined on the baseline but not on the certification lag that turns it into cash. The space between them is where a profitable contract becomes an insolvent one.
+Neither is trained on the other's half. Working capital and cut-off sit inside an accountant's training; time-phasing a baseline does not. Sequence, float and measured progress sit inside an engineer's; the certification lag that turns any of it into cash does not.
 
-The PCI AI Project Finance Leader (PFL-AI) credential examines both sides, across 16 domains and 61 knowledge areas, with a Body of Knowledge weighted 40% finance and reporting, 40% project management and 20% governed AI. Its worked material sits alongside 92 sector case studies across the three volumes.
+Which is why the peak funding number so often arrives late. It is nobody's output, and the space it falls into is where a profitable contract becomes an insolvent one.
+
+The PCI AI Project Finance Leader (PFL-AI) credential covers both halves, across 16 domains and 61 knowledge areas taking in the funding peak, the certification lag and the retention tail. Its Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management and governed AI, and sits alongside 92 sector case studies across the three volumes.
 
 ## Frequently asked questions
 

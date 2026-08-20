@@ -10,7 +10,7 @@ credential:    PCL-AI
 target_domain: projectcontrolsinstitute.org
 canonical:     canonical -> /earned-value-worked-example (own site #021)
 schema:        Article + FAQPage
-word_count:    1,740
+word_count:    1,795
 hashtags:      #ProjectControls #EarnedValue #CostEngineering #Scheduling #ProjectManagement
 ab_id:         AB-00080
 ---
@@ -168,4 +168,4 @@ Rarely by working harder. The TCPI of 1.093 says the remaining work must run 21%
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this version exists for readers, not for link equity.*
 
-*Estate links, as placed in the body. This is a Medium republish, so both links leave the platform for the estate and neither is a same-domain internal link. Step four links to [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas), because the £500k spread in that table asks which of the four answers a forecaster is prepared to sign. The closing section links to [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification), because a control number crossing into the ledger raises who has been examined on both halves. One estate link per domain and no more: the earned value pillar and the formulas cheat sheet proposed earlier were dropped rather than stacked three-deep on the hub, and the old `/eac-formulas` target does not exist — the real slug is `/four-eac-formulas`. Reciprocal: the hub's own EAC guide has honest reason to point back here, for the worked month-end that produces its inputs.*
+*Linking note. Estate links, as placed in the body: this is a Medium republish, so both links leave the platform for the estate and neither is a same-domain internal link. Step four links to [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas), because the £500k spread in that table asks which of the four answers a forecaster is prepared to sign. The closing section links to [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification), because a control number crossing into the ledger raises who has been examined on both halves. One estate link per domain and no more: the earned value pillar and the formulas cheat sheet proposed earlier were dropped rather than stacked three-deep on the hub, and the old `/eac-formulas` target does not exist — the real slug is `/four-eac-formulas`. Reciprocal: the hub's own EAC guide has honest reason to point back here, for the worked month-end that produces its inputs.*
