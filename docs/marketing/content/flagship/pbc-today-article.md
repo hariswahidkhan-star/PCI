@@ -39,10 +39,18 @@ notes: |
   HOOK B (contrast first) per _STORY.md §2, which names it for articles. Not blended with A or C, and
   deliberately different from the Project Times byline, which took hook C. The title question is
   answered inside the first 56 words, before any preamble.
-  NUMBERS AUDIT: 2,200,000 / 1,850,000 / 240,000 / 2,090,000 / 1.19 / 1.05 from the worked example in
-  _STORY.md §3, with every division shown. The margin figures are arithmetic on those same numbers and
-  introduce nothing new: 2,200,000 − 1,850,000 = 350,000, 350,000 ÷ 2,200,000 = 0.159, and
+  NUMBERS AUDIT: 2,200,000 / 1,850,000 / 240,000 / 2,090,000 from the worked example in _STORY.md §3,
+  with every division shown. The margin figures are arithmetic on those same numbers and introduce
+  nothing new: 2,200,000 − 1,850,000 = 350,000, 350,000 ÷ 2,200,000 = 0.159, and
   2,200,000 − 2,090,000 = 110,000, 110,000 ÷ 2,200,000 = 0.05, a movement of close to eleven points.
+  NO CPI IN THIS PIECE, AND THAT IS DELIBERATE. The sibling assets read 2,200,000 as earned value and
+  divide it by actual cost to get a cost performance index of 1.19. This article cannot: it is a
+  cost-value reconciliation written for quantity surveyors, so 2,200,000 is value at bill rates, and a
+  number carrying 15.9 per cent margin is not the budgeted cost of work performed. Dividing it by cost
+  gives a value-to-cost ratio, not CPI — an earlier draft printed 1.19 and 1.05 here and called them
+  index points, which is the Institute's own core formula stated wrongly in front of the readers most
+  likely to catch it. The margin story is the piece's argument and it stands on its own; the index
+  story belongs to the assets where 2,200,000 is earned value.
   Register figures used: 13 domains and 61 knowledge areas, 113 mandatory PCI Standards carrying 532
   process requirements, and 40/40/20 stated explicitly as the Body of Knowledge's shape with the
   examination blueprint named as undecided in the same sentence. 15,613 is omitted: it is true only in
@@ -86,10 +94,8 @@ Value of work executed at bill rates is 2,200,000. Cost posted to the ledger is 
 > 2,200,000 − 1,850,000 = 350,000
 >
 > 350,000 ÷ 2,200,000 = 0.159
->
-> 2,200,000 ÷ 1,850,000 = 1.19
 
-The reconciliation reports just under 16 per cent, and the cost performance index reads 1.19. Both are correct on the evidence in the system. A careful reviewer signs them.
+The reconciliation reports just under 16 per cent. It is correct on the evidence in the system, and a careful reviewer signs it.
 
 Now the entry the system has not seen: subcontractors have executed 240,000 of work not applied for at the reporting date. Accrue it.
 
@@ -99,7 +105,7 @@ Now the entry the system has not seen: subcontractors have executed 240,000 of w
 >
 > 110,000 ÷ 2,200,000 = 0.05
 
-Margin is 5 per cent and the index is 1.05. Close to eleven points of margin and fourteen index points moved on one journal entry, and nothing happened on site. The month closed twice: once for the ledger, once for the measure.
+Margin is 5 per cent. Close to eleven points moved on one journal entry, and nothing happened on site. The month closed twice: once for the ledger, once for the measure.
 
 The job did not lose eleven points of margin this period. It never had them.
 

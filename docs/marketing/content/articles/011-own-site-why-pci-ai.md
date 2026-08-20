@@ -117,7 +117,7 @@ PCI is an independent certifying body with three AI-era credentials, each with i
 | PFL-AI | PCI AI Project Finance Leader | 16 | 61 | The financial position: appraisal, modelling, capital structure, coverage, bankability |
 | PML-AI | PCI Project Management Leader – AI | 16 | 63 | End-to-end delivery: initiation, governance, execution, adaptive delivery, benefits |
 
-The Bodies of Knowledge are built in a deliberate proportion: **40% finance and reporting, 40% project management, 20% governed AI**. No holder can pass by knowing only the side they came from.
+The Bodies of Knowledge are built in a deliberate proportion: **40% finance and reporting, 40% project management, 20% governed AI**. The syllabus never lets a candidate read only the side they came from.
 
 Underneath the three volumes sit **113 mandatory PCI Standards carrying 532 process requirements**, and **92 sector case studies across the three volumes** (26, 33 and 33 respectively).
 

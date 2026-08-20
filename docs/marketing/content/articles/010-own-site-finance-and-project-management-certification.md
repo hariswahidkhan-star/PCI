@@ -96,7 +96,7 @@ This is why the PCI Bodies of Knowledge are built in proportions of 40% finance 
 | Typical holder | Planning and project controls lead, PMO analyst, scheduler | Cost controller, project accountant, commercial finance lead | Project or programme manager, project director |
 | The overlap it closes | Makes measurement legible to finance | Makes financial consequence legible to delivery | Makes the contract and the plan one object |
 
-All three are examined against the same underlying Body of Knowledge proportions, so a PCL-AI holder is examined on the financial consequence of their measurements, and a PFL-AI holder is examined on how the measurement they consume was produced.
+All three Bodies of Knowledge are built in the same proportions, so a PCL-AI candidate studies the financial consequence of their measurements, and a PFL-AI candidate studies how the measurement they consume was produced.
 
 ## What sits underneath the credentials
 
@@ -143,7 +143,7 @@ And the AI question becomes answerable. Somebody in the room can say what precis
 ## Frequently asked questions
 
 **Is this a finance qualification or a project management one?**
-Both, deliberately. The Bodies of Knowledge are weighted 40% to finance and reporting, 40% to project management and 20% to governed AI, so no holder can pass by knowing only one side. The point is the crossing between them, because that is where projects lose money and where neither traditional syllabus goes.
+Both, deliberately. The Bodies of Knowledge devote 40% to finance and reporting, 40% to project management and 20% to governed AI, so the syllabus never lets a candidate read only the side they came from. The point is the crossing between them, because that is where projects lose money and where neither traditional syllabus goes.
 
 **Why not just take an accounting qualification and a project management one?**
 You can, and some people do. It takes years and still leaves the handover unexamined, because each syllabus stops at its own boundary. Neither will ask you what a revised estimate at completion does to recognised revenue, which is the question a project actually poses every month. [The standard a project controls certification is decided against](https://projectcontrolsinstitute.org/project-controls-certification) is the wider comparison.

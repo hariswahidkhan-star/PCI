@@ -103,7 +103,7 @@ On annual revenue of **£480m**, a day is 480 ÷ 365 = **£1.32m**, so 45 days t
 
 Retention makes it worse. At **5%** of a **£180m** contract, **£9m** sits with the customer until completion and often half of it until the defects period ends, which can be a year after the last person leaves site.
 
-An engineer is examined on progress measurement and float, and almost never on a contract asset or a retention release. An accountant is examined on when revenue may be recognised, and almost never on rules of credit. EPC contracts fail commercially in exactly that gap, which is why the PCI Project Management Leader – AI (PML-AI) credential, at 16 domains and 63 knowledge areas, examines both, with the Body of Knowledge weighted 40 finance and reporting, 40 project management and 20 governed AI.
+An engineer is examined on progress measurement and float, and almost never on a contract asset or a retention release. An accountant is examined on when revenue may be recognised, and almost never on rules of credit. EPC contracts fail commercially in exactly that gap, which is why the PCI Project Management Leader – AI (PML-AI) credential covers both sides, across 16 domains and 63 knowledge areas. Its Body of Knowledge devotes 40 per cent to finance and reporting, 40 to project management and 20 to governed AI.
 
 ## Frequently asked questions
 
