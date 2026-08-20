@@ -121,9 +121,9 @@ This is the overlap PCI was built around. An engineer is examined on float and p
 
 ## Where CPM is examined
 
-PCL-AI examines 13 domains across 61 knowledge areas, with project scheduling as one of them and earned value, cost control and risk sitting next to it.
+Critical path method is not examined as arithmetic by the PCI AI Project Controls Leader (PCL-AI). The forward and backward pass is a calculation a piece of software does correctly every time; what a scenario asks is which path you would believe, what you would do about a constraint someone else applied, and what the delay costs the account it lands in.
 
-The Body of Knowledge runs in a 40 / 40 / 20 proportion of finance and reporting, project management, and governed AI. Critical path arithmetic sits in the middle block and the consequences of it sit in the first.
+That is why the driving path appears in more than one of the 13 domains rather than in a scheduling chapter on its own. The delay is calculated in one domain and paid for in another.
 
 ## Frequently asked questions
 

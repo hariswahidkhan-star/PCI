@@ -93,7 +93,9 @@ The scarce profile is not a planner or a cost engineer. It is somebody who can h
 
 A project's percentage complete is a delivery measure and a revenue measure at the same time, and the two professions that own it were trained in different rooms. The person employers cannot find is the one who can say what a change to a rules-of-credit table does to this month's reported revenue, and then defend that answer to a cost engineer and an auditor in the same meeting.
 
-That is the profile organisations struggle to hire, and it is why PCI's credentials are built across the seam: the PCI AI Project Controls Leader (PCL-AI) covers 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) 16 domains and 63 knowledge areas. The Body of Knowledge is proportioned 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI; those are the syllabus's proportions, not an examination weighting.
+That is the profile organisations struggle to hire, and it is why PCI's credentials are built across the seam: the PCI AI Project Controls Leader (PCL-AI) covers 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) 16 domains and 63 knowledge areas.
+
+The Body of Knowledge is proportioned 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI. Those are the syllabus's proportions, not an examination weighting.
 
 Sector spread is deliberate too: the three volumes carry 92 sector case studies between them, 26 in the first and 33 in each of the other two.
 
