@@ -44,12 +44,23 @@ def phase_of(r):
     return 5, "Social amplification"
 
 
-def clean(md, limit=None):
-    """Markdown to plain paste-ready text. Link text is kept and the URL dropped, because a
-    person pasting into LinkedIn wants the sentence, not the syntax; the URL they need is in
-    its own column."""
+def clean(md, limit=None, keep_urls=True):
+    """Markdown to plain paste-ready text, with the links kept.
+
+    An earlier cut dropped the URL and kept only the anchor text, on the reasoning that the
+    link the piece carries is already in its own column. That was wrong: it left a poster
+    copying a cell with a sentence whose link had silently vanished, and only 58 of 347 rows
+    still had a URL anywhere in the copy. An inline link is placed where it is because that
+    sentence raises the question the target answers, so the position matters as much as the
+    address. Markdown links now render as "anchor text (url)" — the sentence still reads, and
+    where the link belongs is visible. Bare URLs pass through untouched, which is what social
+    posts and first comments want.
+    """
     t = re.sub(r"^#{1,6}\s*", "", md, flags=re.M)
-    t = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", t)
+    if keep_urls:
+        t = re.sub(r"\[([^\]]*)\]\((https?://[^)]*)\)", r"\1 (\2)", t)
+    else:
+        t = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", t)
     t = re.sub(r"[*_`]", "", t)
     t = re.sub(r"^\s*>\s?", "", t, flags=re.M)
     t = re.sub(r"\n{3,}", "\n\n", t).strip()
@@ -167,13 +178,18 @@ def build():
         if not link and r["links"]:
             l = r["links"][0]
             link = f"https://{l['domain']}{l['path']}"
-        short = r["words"] < 420
-        copy = clean(r["body"], 3000) if short else \
-            f"Long-form — see entry {n} in the copy pack"
+        # Put the copy in the cell wherever it fits. An Excel cell holds 32,767 characters,
+        # so the only pieces that genuinely need the copy pack are full-length articles; a
+        # 700-word carousel script is perfectly pasteable and sending someone to a second
+        # document for it just costs them a page-flip per post. The cap is set well below the
+        # cell limit so a long cell stays readable rather than merely legal.
+        txt = clean(r["body"])
+        copy = txt if len(txt) <= 7000 else \
+            f"Full article — see entry {n} in the copy pack ({r['words']:,} words)"
         vals = [n, r["phase_name"], week, r["platform"][:110], r["type"], r["title"],
                 r["kw"], link, "" if r["hashtags"].lower().startswith(("n/a", "none"))
                 else r["hashtags"][:220], f"{r['words']:,} w", copy,
-                clean(r["when"], 600), "", "", ""]
+                clean(r["when"], 600, keep_urls=False), "", "", ""]
         for i, v in enumerate(vals, 1):
             c = ws.cell(row=n + 1, column=i, value=v)
             c.border = BORDER
