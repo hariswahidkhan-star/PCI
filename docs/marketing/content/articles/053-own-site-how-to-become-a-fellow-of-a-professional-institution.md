@@ -17,7 +17,7 @@ ab_id:         —
 
 # How to become a fellow of a professional institution
 
-To become a fellow of a professional institution you evidence sustained contribution above competent practice, against that institution's published criteria, usually through a nomination supported by a proposer and independent referees. Seniority alone does not qualify anyone. What qualifies you is something that changed in the discipline because of your work, corroborated by people who are not you.
+How to become a fellow of a professional institution comes down to evidence: sustained contribution above competent practice, assessed against that institution's published criteria and usually carried by a nomination with a proposer and independent referees behind it. Seniority alone does not qualify anyone. What qualifies you is something that changed in the discipline because of your work, corroborated by people who are not you.
 
 Fellowship is the grade most professionals are eligible for years before they apply, and most applications fail on evidence rather than merit.
 

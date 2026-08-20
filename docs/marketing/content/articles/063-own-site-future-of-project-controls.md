@@ -36,7 +36,7 @@ The useful way to read a forecast about a profession is column by column. The mi
 | Finance interface | A hand-off at month end | A continuous feed into revenue, WIP and cash | Nothing PCI publishes is accounting advice; the judgements remain judgements |
 | Assurance | Sampled after the event | Provenance attached at the point the number is made | An auditor still asks who decided |
 
-The pattern in the middle column is one thing: the interval between an event and its measurement collapses. The pattern in the right-hand column is also one thing: the decisions that were always hard are now the whole job.
+The pattern in the middle column is one thing: the interval between an event and its measurement collapses. The pattern in the right-hand column is also one thing: the decisions that were always hard are now the whole job, and [which decisions a person still owns](https://pciai.org/ai-in-project-controls) is the shorter list than most tool briefings suggest.
 
 ## Change one: measurement stops being monthly
 
@@ -56,7 +56,7 @@ That makes the forecaster's job explicit rather than hidden. Publish the method,
 
 ## Change three: the finance boundary closes
 
-This is the change that gets least attention and moves the most money. Project controls has always fed finance; the difference is that the feed is becoming direct enough that a measurement error becomes a reporting error in the same period.
+This is the change that gets least attention and moves the most money. Project controls has always fed finance; the difference is that the feed is becoming direct enough that a measurement error becomes a reporting error in the same period. What that feed looks like today, step by step, is [the controls-to-finance handshake at month end](https://projectcontrolsinstitute.org/month-end-close-for-projects).
 
 Consider the cash side, where the discipline's work shows up fastest. The cash conversion cycle for a contracting business is days of unbilled work in progress, plus days of receivables, minus days of payables.
 
@@ -76,7 +76,7 @@ That is why the future of project controls is a finance conversation as much as 
 
 When a number is produced by a person, its provenance is the person. When it is produced by a model over data of mixed quality, provenance has to be recorded deliberately or it does not exist.
 
-The working standard is unglamorous: inputs, method, model version, date, reviewer, owner — attached to the output, not filed separately. A team that does this can answer an auditor's question in a minute; a team that does not is reconstructing history under pressure.
+The working standard is unglamorous: inputs, method, model version, date, reviewer, owner — attached to the output, not filed separately. A team that does this can answer an auditor's question in a minute; a team that does not is reconstructing history under pressure. Applying it to the monthly pack itself is a specific discipline: [keeping the audit trail on AI-drafted reporting](https://pciai.org/generative-ai-project-reporting).
 
 Expect this to be demanded contractually before it is demanded by regulation. Clients who have been handed one confident AI-generated forecast that turned out to be wrong tend to ask for the audit trail on the next one.
 
@@ -84,7 +84,7 @@ Expect this to be demanded contractually before it is demanded by regulation. Cl
 
 Knowing which question a number answers. Physical progress, earned progress and cost-to-cost progress are three different measures that a report will happily call "percent complete".
 
-Statistical literacy at a practical level. Enough to ask what a model's error rate is on your own data, and enough to say why a P80 is not a promise.
+Statistical literacy at a practical level. Enough to ask what a model's error rate is on your own data — [measuring precision and recall on a golden set you own](https://pciai.org/ai-in-project-management-2026) is the whole method — and enough to say why a P80 is not a promise.
 
 The finance vocabulary of a project: work in progress, contract assets and liabilities, cut-off, provisions, revenue over time. Not to do the accountant's job, but to see the consequence of a measurement before it lands in the accounts.
 
@@ -117,4 +117,4 @@ Measure the unbilled work in progress in days, not pounds, and ask what created 
 
 ---
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "modelling project cash flow and the S-curve", and to [the month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with the anchor "the controls-to-finance handshake at month end".*
+*Internal links: now placed in the body. Same-domain: "which decisions a person still owns" follows the change table, where the right-hand column raises exactly that; "keeping the audit trail on AI-drafted reporting" sits in the provenance section, which raises how the standard applies to the monthly pack; "measuring precision and recall on a golden set you own" sits beside the statistical-literacy skill, which raises how an error rate is actually measured. One cross-estate link only, to the hub: "the controls-to-finance handshake at month end" where the closing finance boundary is described. The note previously proposed a second hub link to project cash flow forecasting; it was dropped rather than retargeted, because two links to one domain from one piece is the pattern the link architecture forbids and the month-end page is the better-placed of the two. Reciprocal: the AI in project management pillar could point here for the four structural changes.*

@@ -17,7 +17,7 @@ ab_id:         AB-00601
 
 # Total float definition, examples and why it matters
 
-Total float is the number of working days an activity can slip from its early dates without delaying project completion or a contractual date. It is calculated as late start minus early start, which is the same as late finish minus early finish. Zero total float means the activity is critical.
+Total float is the number of working days an activity can slip from its early dates without delaying project completion or a contractual date. That total float definition comes straight from the arithmetic: late start minus early start, which is the same as late finish minus early finish. Zero total float means the activity is critical.
 
 Float is a property of a path, not of an activity. It is the gap between two chains of work, so it moves when either chain moves, and it can vanish without anybody using it.
 
@@ -59,7 +59,7 @@ Take an eight-activity fit-out. Durations are working days and every relationshi
 | F6 Furniture delivery | 8 | 28 | 23 | 43 | **15** | **15** |
 | F7 Handover | 43 | 48 | 43 | 48 | 0 | 0 |
 
-The critical path is F1–F2–F4–F5–F7: 8 + 14 + 9 + 12 + 5 = **48 days**.
+The critical path is F1–F2–F4–F5–F7: 8 + 14 + 9 + 12 + 5 = **48 days**. Every float value in the table is a by-product of the two passes above, which are set out activity by activity in [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method).
 
 Read the setting-out row carefully. It has four days of total float and none of it is free, because its successor starts the moment it finishes. Telling the joiner that setting out has four days spare hands away the partitions team's contingency.
 
@@ -87,7 +87,7 @@ Three causes, and only one of them is real delay.
 
 **The other path moved.** Float is the gap between two chains. If the driving chain gets shorter, everyone else's float grows, and if it gets longer, their float shrinks without anyone touching their work.
 
-**A constraint ate it.** A "Finish On or Before" date caps the late dates on everything feeding it. Paths with genuine slack then report zero float, and the schedule loses its ability to say which delay matters.
+**A constraint ate it.** A "Finish On or Before" date caps the late dates on everything feeding it. Paths with genuine slack then report zero float, and the schedule loses its ability to say which delay matters. Keeping constraints to the few the contract actually imposes is part of [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6).
 
 **The calendars are mixed.** Float is expressed in working days on the relevant calendar, so an activity on a seven-day calendar and one on a five-day calendar can report different float for the same physical slack. Compare float across calendars only after converting it.
 
@@ -140,11 +140,11 @@ Easily, and it usually means the activity is on a short branch feeding a long on
 Show the trend, not the value. A trade told it has ten days spare will use them, and the ten days were never a private allowance. Reporting float erosion at the path level keeps the early warning without inviting anyone to spend it.
 
 **How much float should a schedule start with?**
-Enough to cover the risk in the network, which is a question for a quantitative schedule risk analysis rather than a rule of thumb. Where the P80 date sits several weeks beyond the deterministic finish, the difference is the contingency the programme actually needs. Adding arbitrary padding to activities hides the same time in a place nobody can manage.
+Enough to cover the risk in the network, which is a question of [how much float the programme actually needs](https://projectcontrolsinstitute.org/schedule-risk-analysis) rather than a rule of thumb. Where the P80 date sits several weeks beyond the deterministic finish, the difference is the contingency the programme actually needs. Adding arbitrary padding to activities hides the same time in a place nobody can manage.
 
 **What is the difference between float and buffer?**
 Float is calculated by the network from logic and durations. A buffer is placed deliberately, usually as an activity at the end of a chain, and it is owned and released by a named person. Critical chain scheduling replaces distributed float with pooled buffers for exactly that reason.
 
 ---
 
-*Internal links: this piece should link to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "how much float the programme actually needs", to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with that anchor, and to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "how scheduling and cost are examined together".*
+*Internal links now in the body, all on this domain: [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method) sits under the worked network, where the reader has just been shown a float column and needs to know which passes produced it; [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) sits in the constraint paragraph, which raises how to stop a "Finish On or Before" date flattening float; and [how much float the programme actually needs](https://projectcontrolsinstitute.org/schedule-risk-analysis) sits in the FAQ that asks how much float a schedule should start with. The fourth link proposed here, to PCL-AI certification, was dropped: three same-domain links is the limit, and the credential is already named in the section on where float is examined. Reciprocal worth making: the critical path method definition should link back with the anchor "how total float is calculated".*

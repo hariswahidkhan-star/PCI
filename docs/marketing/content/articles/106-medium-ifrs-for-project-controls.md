@@ -21,7 +21,7 @@ IFRS for project controls comes down to a short list of standards. IFRS 15 sets 
 
 Nothing below is accounting advice. It describes, in the Institute's own words, what these standards do, so that a project controls professional understands what their numbers are used for after they leave the cost report.
 
-The reason to read it is narrow and practical. The estimate at completion you revise on a Tuesday afternoon is an input to reported profit, and almost nobody tells cost engineers that.
+The reason to read it is narrow and practical. The estimate at completion you revise on a Tuesday afternoon is an input to reported profit, and almost nobody tells cost engineers that. [What a forecast movement does to revenue and margin](https://projectcontrolsinstitute.org/eac-accounting) is worked line by line elsewhere; this piece is about the standards it lands in.
 
 ## Which standards does IFRS for project controls actually cover?
 
@@ -146,7 +146,7 @@ IFRS 16 brings most leases onto the balance sheet as a right-of-use asset and a 
 
 A chartered accountant is examined on when revenue may be recognised and what a provision must satisfy. They are almost never examined on a critical path or an earning rule.
 
-An engineer is examined on float and progress measurement. They are almost never examined on cut-off or a contract asset.
+An engineer is examined on float and progress measurement. They are almost never examined on cut-off or a contract asset. [How far each controls credential reaches across that boundary](https://credentialfinder.org/best-project-controls-certification) is the question a comparison has to answer.
 
 A project lives in the overlap. The estimate at completion is produced by one profession and consumed, unaltered, by the other, and neither is trained to interrogate what the other did with it.
 
@@ -192,4 +192,4 @@ Finance owns the entry and project controls owns the estimate behind it. The arg
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and not as a backlink.*
 
-*Internal links: this piece should link to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with that anchor, to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with that anchor, and to [the PFL-AI credential](https://projectcontrolsinstitute.org/finance-and-project-management-certification) with the anchor "where forecasting meets financial reporting".*
+*Internal links, as placed in the body. The opening links to [what a forecast movement does to revenue and margin](https://projectcontrolsinstitute.org/eac-accounting), because the sentence saying a Tuesday-afternoon forecast is an input to reported profit raises exactly that mechanism. The overlap section links to [how far each controls credential reaches across that boundary](https://credentialfinder.org/best-project-controls-certification), because setting the accountant's examination against the engineer's asks which credential covers both. Four links to one domain were proposed; the cap is one per domain, so IFRS 15 for construction and the month-end close were dropped and the PFL-AI credential is named in the body without a second hub link. Reciprocal: the hub's IFRS 15 guide should point back here for the wider set of standards a cost forecast feeds.*

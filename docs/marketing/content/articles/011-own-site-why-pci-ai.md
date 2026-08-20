@@ -33,7 +33,7 @@ The market is not empty. It is segmented, and each segment examines the part of 
 
 PCI claims no equivalence with, endorsement by, or affiliation to PMI, AACE International, any accountancy body or any other organisation. They are independent bodies, they set their own standards, and naming them here says nothing about their view of PCI.
 
-Read each body's published requirements before you pay anything. The table is a map of what gets examined, not a ranking.
+Read each body's published requirements before you pay anything. The table is a map of what gets examined, not a ranking, and [what project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification) sets out what an independent examination can and cannot evidence.
 
 ## What none of these qualifications examines
 
@@ -138,11 +138,13 @@ A certifying body that overstates its position is worth nothing, so the current 
 
 The PCI Standards are certification requirements established by the Institute. They are not law, and nothing PCI publishes is legal, tax or accounting advice.
 
+Anyone weighing that position will want to know who is behind it: [what the Institute is and how it is governed](https://projectcontrolsinstitute.org/project-controls-institute) covers the legal form, what it publishes and how a candidate starts.
+
 ## Which credential fits which accountability
 
 Choose by the question you are asked to answer in a meeting, not by your job title.
 
-If you are asked to defend a date, a float position or a progress figure, PCL-AI is the closest fit. Measurement sits at the centre, and the finance content exists so you can say what your measurement did to the reported number.
+If you are asked to defend a date, a float position or a progress figure, PCL-AI is the closest fit. Measurement sits at the centre, and the finance content exists so you can say what your measurement did to the reported number. [The PCL-AI credential in detail](https://projectcontrolsinstitute.org/pcl-ai-certification) sets out the domains, the entry rule and the shape of the examination.
 
 If you are asked to defend a forecast, a margin or a cash position, PFL-AI fits. Reporting sits at the centre, and the delivery content exists so you can interrogate a forecast rather than receive it.
 
@@ -178,4 +180,4 @@ Take the one matching what you are accountable for now, not where you would like
 
 ---
 
-*Internal links: this pillar should link to [the project controls certification pillar](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "project controls certification routes", to [the Project Controls Institute guide](https://projectcontrolsinstitute.org/project-controls-institute) with the anchor "what the Institute is and how it is governed", to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "the PCL-AI credential in detail", and to [why a finance and project management certification exists](https://projectcontrolsinstitute.org/finance-and-project-management-certification) with the anchor "the finance and delivery overlap"; the online certification, certification cost and AI project controls certification pieces link back here with the anchor "why the PCI credentials exist".*
+*Internal linking note: three same-domain links are now in the body. [What project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification) sits under the market table, where the reader is told to read each body's requirements and asks what an examination can evidence. [What the Institute is and how it is governed](https://projectcontrolsinstitute.org/project-controls-institute) sits under the honest-status table, where the legal form and accreditation position raise the question of who stands behind the scheme. [The PCL-AI credential in detail](https://projectcontrolsinstitute.org/pcl-ai-certification) sits in the accountability section, at the paragraph that names PCL-AI. The link to the finance and project management certification piece was dropped to hold the two-to-three internal cap, and because that piece covers the same overlap this one already argues at length. Reciprocal link worth making: the online certification, certification cost and AI project controls certification pieces should point here with the anchor "why the PCI credentials exist".*

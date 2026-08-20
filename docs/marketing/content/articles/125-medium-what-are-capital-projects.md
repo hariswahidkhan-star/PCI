@@ -116,7 +116,7 @@ A capital project is a temporary organisation spending permanent money, so its c
 
 ## Capitalisation: when spend becomes an asset
 
-At some point the money spent stops being project cost and becomes an asset on the balance sheet. That transition is governed by the accounting standards, and project controls supplies the evidence for it.
+At some point the money spent stops being project cost and becomes an asset on the balance sheet. That transition is governed by the accounting standards, and [how those reporting standards land on a project's cost report](https://projectcontrolsinstitute.org/ifrs-for-project-controls) decides what evidence project controls has to supply.
 
 Directly attributable costs of bringing the asset to the location and condition needed for its intended use may be capitalised. Site preparation, installation, testing and attributable professional fees qualify; general administration, training and the cost of an idle period do not.
 
@@ -181,4 +181,4 @@ Not always, but the larger and more regulated they are, the more likely it is re
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this pillar should link to [the capital project management process](https://projectcontrolsinstitute.org/capital-project-management-process) with that anchor, to [what project controls is](https://projectcontrolsinstitute.org/what-is-project-controls) with that anchor, and to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) with that anchor.*
+*Internal links: one is now placed in the body. The reporting standards guide (projectcontrolsinstitute.org) sits on "how those reporting standards land on a project's cost report", in the capitalisation section, which tells the reader the transition is governed by the standards and then does not say which evidence that obliges the cost report to carry. The note also proposed the capital project management process and the project controls pillar; both are dropped from this republish, because three links to a single domain from one article is a link-scheme pattern, and both are the own-site original's internal links. Reciprocal: the capital project management process page should link back here with the anchor "what a twelve-month delay does to the business case", since the NPV arithmetic in this piece is the reason its gates exist.*

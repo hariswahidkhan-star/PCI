@@ -31,6 +31,8 @@ The Body of Knowledge is built in three groups, in a deliberate 40 / 40 / 20 pro
 
 Those proportions describe the Body of Knowledge, not an examination blueprint. Item counts and the pass mark are set by a job-task analysis and a modified-Angoff standard-setting study before the examination goes live, and they are not published yet.
 
+The proportion itself is deliberate rather than conventional, and [why PCI AI exists](https://projectcontrolsinstitute.org/why-pci-ai) sets out what it is a response to: qualifications that examine measurement or reporting, and never the handover between them.
+
 Governed AI appears twice over: as a domain in its own right, and inside the other twelve, because that is where model output actually lands.
 
 ## Who PCL-AI suits, and who it does not
@@ -65,7 +67,7 @@ A recall-based answer stops there and reports that the project is on time and ov
 
 SPI is cost-weighted, so it rises when any work earns value, including work with plenty of float. The critical path can be 15 days late while SPI reads exactly 1.00, because early, low-risk activities over-earned and masked it.
 
-So the competent next move is to read total float on the driving path before saying anything about schedule, and to report the two independently. Earned value tells you about volume of work; float tells you about the finish date.
+So the competent next move is to read total float on the driving path before saying anything about schedule, and to report the two independently. Earned value tells you about volume of work; float tells you about the finish date. [The earned value formulas in full](https://projectcontrolsinstitute.org/earned-value-management), including where each index stops being reliable, are the underlying material for items of this kind.
 
 The cost side still needs a forecast. If cost performance to date is the best predictor, EAC = BAC / CPI = 30.0 / 0.889 = **£33.75m**, giving a variance at completion of −£3.75m.
 
@@ -109,7 +111,7 @@ Certuvo is PCI's official platform for preparation and study, and candidates may
 
 ## What PCL-AI does not claim
 
-PCI is not accredited by ANAB, IAS or any ISO/IEC accreditation body. The scheme is designed with reference to ISO/IEC 17024 personnel-certification principles, and the current status is published rather than implied.
+PCI is not accredited by ANAB, IAS or any ISO/IEC accreditation body. The scheme is designed with reference to ISO/IEC 17024 personnel-certification principles, and the current status is published rather than implied. [The certifying body behind the credential](https://projectcontrolsinstitute.org/project-controls-institute) sets out its legal form, what it publishes and what it refuses to claim.
 
 No pass rates, holder numbers or salary outcomes are published, because a founding-stage body that published those would be inventing them.
 
@@ -137,4 +139,4 @@ It is maintained rather than permanent. Certification is kept current through a 
 
 ---
 
-*Internal links: this guide should link to [why the PCI credentials exist](https://projectcontrolsinstitute.org/why-pci-ai) with the anchor "why PCI AI exists", to [the Project Controls Institute guide](https://projectcontrolsinstitute.org/project-controls-institute) with the anchor "the certifying body behind it", to [Certuvo](https://projectcontrolsinstitute.org/certuvo) with the anchor "PCI's official preparation platform", and to [earned value management](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value formulas in full".*
+*Internal linking note: three same-domain links are now in the body. [Why PCI AI exists](https://projectcontrolsinstitute.org/why-pci-ai) sits under the 40 / 40 / 20 table, where a reader asks what that proportion is a response to. [The earned value formulas in full](https://projectcontrolsinstitute.org/earned-value-management) sits inside the worked item, where SPI is shown misleading on a late critical path. [The certifying body behind the credential](https://projectcontrolsinstitute.org/project-controls-institute) sits in the section on what PCL-AI does not claim, where the accreditation position raises the question of who runs the scheme. The Certuvo link was dropped to hold the two-to-three internal cap; the preparation section names the platform without needing to send the reader away mid-answer. Reciprocal link worth making: the earned value pillar and the exam-questions piece should point here with the anchor "what PCL-AI examines".*

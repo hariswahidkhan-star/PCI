@@ -54,7 +54,7 @@ Prolongation, priced separately: 14 × £9,800 a day = **£137,200**.
 Choose the programme before you know the answer. The accepted baseline as updated to the last cut-off before the event is the defensible choice. Analysing from a programme built after the event, with the delay already showing in it, is the first thing the other side will attack.
 
 **Slide 6 — Step 4: impact it and measure the movement**
-Insert the fragnet, re-run the critical path, and read the movement of the contractual completion date. That movement is the entitlement. The duration of the event is not the entitlement, which is why 21 days became 14.
+Insert the fragnet, re-run the critical path, and read the movement of the contractual completion date. That movement is the entitlement. Time impact analysis is one accepted method of showing it; [how the main delay analysis methods differ](https://projectcontrolsinstitute.org/delay-analysis-techniques) decides which one holds up when it is challenged. The duration of the event is not the entitlement, which is why 21 days became 14.
 
 **Slide 7 — Step 5: price the time separately**
 Time-related cost is site establishment, supervision, plant on hire and insurances for the extended period. It is not the tender preliminaries rate reused because it was to hand. Price the actual period, evidence it from the ledger, and keep it apart from the entitlement argument.
@@ -66,4 +66,4 @@ Where two delays overlap, the outcome turns on what the contemporaneous records 
 
 *Figures are a worked example. Read your own contract; PCI publishes certification requirements and nothing here is legal advice.*
 
-*Internal links (bio link and caption of the follow-up post): [delay analysis techniques](https://projectcontrolsinstitute.org/delay-analysis-techniques) with that anchor, [the critical path method](https://projectcontrolsinstitute.org/critical-path-method) with that anchor, and [total float](https://projectcontrolsinstitute.org/total-float) with that anchor.*
+*Linking note. One link, in slide 6, because that is where the carousel commits to a single method of demonstrating the movement and a reader immediately asks whether another method would give a different answer; the hub page compares the recognised methods and is the bio link for this post. The earlier draft asked for three hub links, and three to one domain from one asset is the density _LINK_ARCHITECTURE.md §2 rules out, so the critical path and float pages were dropped: slide 3 uses float as an input rather than asking what float is, so neither link had a question to answer. Anchor is on how the methods differ, which keeps it away from the primary keyword and away from the anchors used elsewhere for the same page. No reciprocal is due: an article does not link back to a carousel.*

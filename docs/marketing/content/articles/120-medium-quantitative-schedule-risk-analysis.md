@@ -1,8 +1,8 @@
 ---
 platform:      Medium
 type:          guide
-title:         Quantitative schedule risk analysis: a starter guide
-meta:          A beginner's guide to quantitative schedule risk analysis: the vocabulary in one table, ten iterations run by hand, and the five mistakes that ruin a model.
+title:         Quantitative schedule risk analysis (QSRA): a guide
+meta:          A beginner's guide to quantitative schedule risk analysis (QSRA): the vocabulary in one table, ten iterations by hand, and five mistakes that ruin a model.
 primary_kw:    quantitative schedule risk analysis QSRA
 secondary_kw:  Monte Carlo simulation, criticality index, merge bias, P80 date
 pillar:        Risk management
@@ -15,7 +15,7 @@ hashtags:      #RiskManagement #ProjectControls #Scheduling #PMO #ProjectManagem
 ab_id:         AB-00081
 ---
 
-# Quantitative schedule risk analysis: a starter guide
+# Quantitative schedule risk analysis (QSRA): a starter guide
 
 Quantitative schedule risk analysis (QSRA) replaces a single finish date with a range of dates and the odds attached to each. You give every activity a low, likely and high duration, map risk events onto the activities they would hit, then run the network thousands of times. The output is a confidence level, such as a P80 date.
 
@@ -23,7 +23,7 @@ The intimidating part is usually the vocabulary rather than the maths. This piec
 
 ## What is quantitative schedule risk analysis (QSRA)?
 
-It is the practice of testing a programme against uncertainty instead of accepting its dates. The deterministic critical path method returns one answer, calculated from durations treated as facts.
+It is the practice of testing a programme against uncertainty instead of accepting its dates, and it is the numerical half of [how schedule risk analysis fits the wider risk process](https://projectcontrolsinstitute.org/schedule-risk-analysis). The deterministic critical path method returns one answer, calculated from durations treated as facts.
 
 They are not facts. Every duration is an estimate with a range behind it, and a QSRA makes that range explicit, samples from it repeatedly, and records where the project finished each time.
 
@@ -158,4 +158,4 @@ It helps, because an unlevelled network assumes resources that do not exist and 
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this guide should link up to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with that anchor, across to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with that anchor, and to the [critical path method](https://projectcontrolsinstitute.org/critical-path-method) and [total float](https://projectcontrolsinstitute.org/total-float) definitions with those anchors.*
+*Internal links: one is now placed in the body. The schedule risk analysis pillar (projectcontrolsinstitute.org) sits on "how schedule risk analysis fits the wider risk process", in the sentence defining QSRA as the numerical half of that process — the reader's immediate question is what the other half is. The note also proposed the Monte Carlo cost simulation how-to and the critical path and total float definitions; all three are dropped from this republish, because four links to one domain in one piece is the footprint pattern the estate has to stay clear of, and they are the own-site original's internal links. Reciprocal: the Monte Carlo cost simulation piece should link back here with the anchor "ten iterations of a schedule simulation worked by hand", since it assumes the reader has seen a simulation done long-hand.*

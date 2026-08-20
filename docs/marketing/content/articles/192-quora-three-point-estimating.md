@@ -81,6 +81,8 @@ If the activities were perfectly correlated, the standard deviations would add i
 
 That is a 1.7-day difference on three activities. Across a hundred-activity programme, assuming independence is the single largest source of false confidence in a risk analysis, and it always understates the tail.
 
+Setting correlation, and handling merge bias where paths converge, is a simulation job rather than a spreadsheet one. [How these ranges feed a schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) covers the method and what the inputs have to look like before the output means anything.
+
 ## Where does the estimate meet the accounts?
 
 The expected value from a three-point estimate is a mean, not a target, and the two get budgeted differently. A budget set at the mean will be exceeded roughly half the time by design, which is why the contingency sits above it and is drawn down against named risks.
@@ -113,4 +115,4 @@ It can propose ranges from comparable historical activities and flag where an es
 
 ---
 
-*Internal links: this answer should link once, at the end, to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "how these ranges feed a schedule risk analysis", and to [Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with the anchor "running the same inputs through a cost simulation"; Quora links are nofollow, so judge this on qualified traffic, not backlinks.*
+*Internal links: the body now carries one link, to https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis, anchored "How these ranges feed a schedule risk analysis". It sits at the end of the correlation section, where the answer has just shown that assuming independence understates the tail — the question that raises is how correlation and merge bias are handled properly, which is that page's subject. The Monte Carlo cost simulation link was dropped: one link to a domain per answer is the limit, and this sentence asks a schedule-risk question rather than a cost-simulation one. Quora links are nofollow, so judge this on qualified traffic, not backlinks. Reciprocal: none — the hub should not link out to a Quora answer.*

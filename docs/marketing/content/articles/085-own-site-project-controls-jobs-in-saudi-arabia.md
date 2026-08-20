@@ -17,7 +17,7 @@ ab_id:         AB-00119
 
 # Project controls jobs in Saudi Arabia: the giga-projects
 
-The Saudi giga-programmes hire project controls people because programme-scale delivery fails at the seams between contracts rather than inside them. What they are buying is consolidation: one cost position and one schedule position across dozens of contractors reporting in different formats on different cycles.
+Project controls jobs in Saudi Arabia sit overwhelmingly on the giga-programmes, and what those programmes are buying is consolidation: one cost position and one schedule position across dozens of contractors reporting in different formats on different cycles. They hire for it because programme-scale delivery fails at the seams between contracts rather than inside them.
 
 That is a different job from project controls on a single contract, and it is the reason experienced planners and cost engineers arrive and still find the first six months hard.
 
@@ -79,7 +79,7 @@ Estimate at completion is the forecast of total cost. Budget at completion (BAC)
 | Remaining work at CPI × SPI | EAC = AC + (BAC − EV) ÷ (CPI × SPI) | 104 + 309 ÷ 0.79625 = **492.1** | Schedule pressure will add cost, so lateness compounds the overrun | Fixed end date, acceleration likely, time-related cost significant |
 | Bottom-up re-estimate | EAC = AC + a re-estimated ETC | Whatever the estimate says | Past performance no longer predicts the remaining scope | After a rebaseline, a major change, or a change of contractor |
 
-The same data produces **413 to 492**, a spread of SAR 79m. The method is not a detail buried in the appendix; it is most of the answer.
+The same data produces **413 to 492**, a spread of SAR 79m. The method is not a detail buried in the appendix; it is most of the answer, and [where each of the four methods breaks down](https://projectcontrolsinstitute.org/four-eac-formulas) decides which one you can defend in the room.
 
 Two supporting numbers finish the picture. Variance at completion on the CPI method is BAC − EAC = 400 − 457.1 = **−57.1**.
 
@@ -101,7 +101,7 @@ Working here brings requirements that have nothing to do with planning technique
 
 **Professional registration.** Engineers working in Saudi Arabia are generally required to register with the Saudi Council of Engineers, with qualifications verified as part of the process. Requirements and processing times change, so confirm the current position with the employer and the Council before you resign anything.
 
-**Saudization.** The Nitaqat framework sets nationalisation targets by sector and firm size, and it shapes which roles are open to expatriate hire and which are not. It also means genuine demand for developing Saudi controls professionals, which is a growing part of senior job descriptions.
+**Saudization.** The Nitaqat framework sets nationalisation targets by sector and firm size, and it shapes which roles are open to expatriate hire and which are not. It also means genuine demand for developing Saudi controls professionals, which is a growing part of senior job descriptions, and the routes that feed it are covered regionally in [the planning routes available inside the Kingdom](https://pciglobal.ai/planning-engineer-course-in-saudi-arabia).
 
 **Attestation and mobilisation.** Degree attestation, medicals, visa processing and client approval of your CV run in series more often than in parallel. Three to four months from offer to start is normal, and it is longer if a client approval sits in the chain.
 
@@ -111,7 +111,7 @@ Working here brings requirements that have nothing to do with planning technique
 
 ## What gets people hired, and what gets them stuck
 
-Hired: evidence of consolidating multiple contractors into one position, a forecast you chose the method for and defended, and the ability to explain an interface delay to somebody who does not read schedules.
+Hired: evidence of consolidating multiple contractors into one position, a forecast you chose the method for and defended, and the ability to explain an interface delay to somebody who does not read schedules. How each of those is actually put to you, and what a strong answer sounds like, is in [the project controls questions interviewers really ask](https://pciworld.org/project-controls-interview-questions).
 
 Stuck: deep skill in one tool and one package type, reporting that has never been challenged by an external party, and a career spent entirely on one side of the client-contractor line.
 
@@ -121,7 +121,7 @@ The fastest correction is exposure rather than another course. Ask for the conso
 
 There is no credible count of open project controls roles in the Kingdom, and any figure quoted to you is either a single job board's stale index or a recruiter's marketing. We do not publish one.
 
-We also publish no salary figures for this market and no claim about what a credential does to pay, because neither can be sourced honestly.
+We also publish no salary figures for this market and no claim about what a credential does to pay, because neither can be sourced honestly. What can be described without inventing anything is [how project controls pay is banded by scope](https://pciworld.org/project-controls-salary), which is the structure underneath any figure you collect yourself.
 
 What can be stated is the syllabus. PCI examines the finance and delivery overlap deliberately across three credentials: PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
 
@@ -132,7 +132,7 @@ The calculation content behind PFL-AI and PML-AI has been verified by **15,613 m
 ## Frequently asked questions
 
 **Do I need Gulf experience to get hired on a Saudi programme?**
-It shortens the conversation but it is not a hard requirement at senior level, where programme-scale consolidation experience from anywhere is scarcer than regional familiarity. Below that, employers weight in-region experience heavily because mobilisation cost and time are real. Lead with the specific capability the role names rather than with years.
+It shortens the conversation but it is not a hard requirement at senior level, where programme-scale consolidation experience from anywhere is scarcer than regional familiarity. Below that, employers weight in-region experience heavily because mobilisation cost and time are real, which is why many people reach the Kingdom by way of the Emirates and [where the UAE demand sits by employer type](https://pciworld.org/planning-engineer-jobs-in-uae). Lead with the specific capability the role names rather than with years.
 
 **Is the work in Riyadh?**
 Some of it. A large share of giga-programme delivery is on remote sites, run on rotation from camp accommodation, with the corporate and client functions in Riyadh or Jeddah. Confirm the actual location, the rotation pattern and whether family status is available before you compare two offers, because those terms change the value of a package more than the headline does.
@@ -148,4 +148,4 @@ The one that closes your evidenced gap. Planners moving into programme roles usu
 
 ---
 
-*Internal links: link to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas), [where planning engineer jobs in the UAE sit](https://pciworld.org/planning-engineer-jobs-in-uae) and [a planning engineer course in Saudi Arabia](https://pciglobal.ai/planning-engineer-course-in-saudi-arabia), each with that anchor; the earned value management and project controls salary pieces should link back here with the anchor "project controls jobs in Saudi Arabia".*
+*Linking note: the links are now in the body. Two cross-estate links, one per domain — "where each of the four methods breaks down" follows the EAC spread, which is the question the roll-up section leaves open; "the planning routes available inside the Kingdom" follows the Saudization paragraph, and is the rare satellite-to-satellite link, justified because local training routes are regional territory rather than the hub's. Three same-domain links: "the project controls questions interviewers really ask", "how project controls pay is banded by scope" beside the statement that no salary figure is published, and "where the UAE demand sits by employer type" in the in-region experience answer. Reciprocal: the project controls salary tool should link back here with the anchor "what programme-scale controls work asks for".*

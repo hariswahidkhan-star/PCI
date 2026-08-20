@@ -17,9 +17,9 @@ ab_id:         AB-00269
 
 # What is the 100% rule in a work breakdown structure?
 
-The 100% rule says a work breakdown structure must contain 100% of the project's scope and nothing beyond it. At every level, the child elements must add up to exactly their parent. Work that is not in the WBS is not in the project: it has no budget, no owner and no way to earn value.
+The 100% rule WBS decomposition must satisfy is this: a work breakdown structure must contain 100% of the project's scope and nothing beyond it. At every level, the child elements must add up to exactly their parent. Work that is not in the WBS is not in the project: it has no budget, no owner and no way to earn value.
 
-The 100% rule WBS decomposition must satisfy runs in two directions at once. Vertically, the split must be complete and non-overlapping. Horizontally, the top of the structure must equal the scope the project committed to deliver.
+The rule runs in two directions at once. Vertically, the split must be complete and non-overlapping. Horizontally, the top of the structure must equal the scope the project committed to deliver.
 
 ## What is the 100% rule WBS decomposition must satisfy?
 
@@ -41,7 +41,7 @@ Now watch what it does to a branch that is performing perfectly. At month nine, 
 
 Add the stray £0.40m and the actual cost becomes £2.50m. CPI = 2.10 ÷ 2.50 = 0.840, and EAC = BAC ÷ CPI = 4.20 ÷ 0.840 = **£5.00m**.
 
-A branch delivering exactly to budget now forecasts an £0.80m overrun. No one on the civils team can explain it, because the cause is not in their scope. It is in the gap.
+A branch delivering exactly to budget now forecasts an £0.80m overrun. No one on the civils team can explain it, because the cause is not in their scope. It is in the gap. Run the same figures against [a full month of earned value worked end to end](https://projectcontrolsinstitute.org/earned-value-worked-example) and nothing in the method differs — only whether every cost had a budget line to land on.
 
 ## What happens when scope is counted twice?
 
@@ -103,4 +103,4 @@ Sum every level and compare it to its parent, then read the contract's deliverab
 
 ---
 
-*Internal links: this answer should link once, at the end, to [the critical path method](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how work packages become a critical path", and to [a worked month-end example](https://projectcontrolsinstitute.org/earned-value-worked-example) with the anchor "what a gap in the WBS does to CPI"; Quora links are nofollow, so treat this as qualified traffic rather than a backlink.*
+*Internal links: one, in the body. [A full month of earned value worked end to end](https://projectcontrolsinstitute.org/earned-value-worked-example) sits with the stray-cost arithmetic, where a CPI of 0.840 on a branch that is performing raises the question of what the same calculation looks like when every cost has a budget line. The critical path page in the original note was dropped rather than placed: it would have been a second link to the same domain, and this answer is about scope coverage, not about logic and float — the schedule question is properly the subject of the WBS versus schedule answer, which is where that link belongs. No reciprocal link is proposed: Quora links are nofollow, so this earns qualified readers rather than equity.*

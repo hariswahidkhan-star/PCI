@@ -124,7 +124,7 @@ Where statutory or chartered status is required for a piece of work, that requir
 
 Start from what you are asked to defend in a meeting.
 
-If you are asked to defend a date, a float position or a progress figure, PCL-AI is the closest fit. The measurement discipline is the centre of it, and the finance content exists so that you can say what your measurement did to the reported number.
+If you are asked to defend a date, a float position or a progress figure, PCL-AI is the closest fit. The measurement discipline is the centre of it, and the finance content exists so that you can say what your measurement did to the reported number. [What the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification), domain by domain, is the place to test that against your own week.
 
 If you are asked to defend a forecast, a margin or a cash position, PFL-AI fits. The reporting content is the centre, and the delivery content exists so that you can interrogate the forecast rather than receive it.
 
@@ -136,7 +136,7 @@ None of the three is a beginner's qualification, and none of them is a replaceme
 
 The month-end conversation changes first. A cost engineer who can state what their revised estimate at completion does to recognised revenue is no longer handing over a number and hoping.
 
-The forecast basis improves next, because someone who knows the number will be consumed under IFRS 15 writes down why it moved. That written basis is the difference between a forecast that survives an audit and one that survives a meeting.
+The forecast basis improves next, because someone who knows [how a forecast is consumed under IFRS 15](https://projectcontrolsinstitute.org/ifrs-for-project-controls) writes down why it moved. That written basis is the difference between a forecast that survives an audit and one that survives a meeting.
 
 And the AI question becomes answerable. Somebody in the room can say what precision and recall the model achieved on this project's data, and whether that is good enough for the decision being taken.
 
@@ -146,7 +146,7 @@ And the AI question becomes answerable. Somebody in the room can say what precis
 Both, deliberately. The Bodies of Knowledge are weighted 40% to finance and reporting, 40% to project management and 20% to governed AI, so no holder can pass by knowing only one side. The point is the crossing between them, because that is where projects lose money and where neither traditional syllabus goes.
 
 **Why not just take an accounting qualification and a project management one?**
-You can, and some people do. It takes years and still leaves the handover unexamined, because each syllabus stops at its own boundary. Neither will ask you what a revised estimate at completion does to recognised revenue, which is the question a project actually poses every month.
+You can, and some people do. It takes years and still leaves the handover unexamined, because each syllabus stops at its own boundary. Neither will ask you what a revised estimate at completion does to recognised revenue, which is the question a project actually poses every month. [The standard a project controls certification is decided against](https://projectcontrolsinstitute.org/project-controls-certification) is the wider comparison.
 
 **What does the AI component cover?**
 The governed use of machine output in project decisions. That includes reading precision, recall and F1 rather than headline accuracy, understanding base rates, knowing when a model's training data no longer resembles your project, and keeping an audit trail when generated text enters a report someone signs.
@@ -162,4 +162,4 @@ Take the one that matches what you are accountable for now, not the one that mat
 
 ---
 
-*Internal links: this piece should link to [why PCI AI](https://projectcontrolsinstitute.org/why-pci-ai), [project controls certification](https://projectcontrolsinstitute.org/project-controls-certification), [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification), [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) and [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting).*
+*Internal linking note: three same-domain links are now in the body. [What the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification) sits in the choosing section, at the paragraph that names PCL-AI as the fit for someone defending dates and progress. [How a forecast is consumed under IFRS 15](https://projectcontrolsinstitute.org/ifrs-for-project-controls) sits where the piece says a holder writes down why the forecast moved. [The standard a project controls certification is decided against](https://projectcontrolsinstitute.org/project-controls-certification) answers the FAQ asking why two separate qualifications are not enough. The why-PCI-AI and budgeting pieces were dropped to hold the two-to-three internal cap; the why-PCI-AI pillar links here instead, which keeps the flow one way. Reciprocal link worth making: the PCL-AI certification guide should point back here with the anchor "why the two syllabuses leave a gap".*

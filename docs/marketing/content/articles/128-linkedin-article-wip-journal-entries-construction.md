@@ -98,7 +98,7 @@ Check the margin two ways. Cumulative margin is 13.33 − 12.00 = **£1.33m**. T
 
 A £2.40m forecast movement removed £0.47m of profit in the month it was recognised, and it did so through the revenue line, not through cost. That is the point most project teams have never been shown: the forecast is not management information, it is a posting.
 
-The same mechanism, at the point where it turns a contract onerous, is worked in [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting).
+The same mechanism, at the point where the forecast pushes total cost past total price, stops being a margin movement and becomes a provision in the month it is first expected.
 
 ## The materials adjustment changes the revenue figure
 
@@ -131,7 +131,7 @@ Every figure above depends on cost, progress and billing being measured to the s
 
 Accrue for goods received and not invoiced, or the cost is understated and progress is understated with it, and the margin flatters itself. Recognise progress to a later date than cost and the margin flatters itself the other way.
 
-The discipline that makes this hold together is set out in [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects), and it is worth more than any accounting policy decision.
+The discipline that makes this hold together is [the handshake between the cost report and the ledger at cut-off](https://projectcontrolsinstitute.org/month-end-close-for-projects), and it is worth more than any accounting policy decision.
 
 Across the PCI AI Project Finance Leader (PFL-AI) and PCI Project Management Leader – AI (PML-AI) materials, and those two only, 15,613 machine calculation checks run and all pass. Arithmetic like the postings above is checked rather than asserted, because a certifying body that publishes a wrong worked example has no case to answer.
 
@@ -158,4 +158,4 @@ Finance posts them; the project supplies every input that matters. Costs incurre
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with that anchor, to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, and to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) as the pillar page it supports.*
+*Internal links: one link is in the body, in the cut-off section, where the piece says every figure above depends on cost, progress and billing being measured to the same date. "The handshake between the cost report and the ledger at cut-off" points to https://projectcontrolsinstitute.org/month-end-close-for-projects, which is the procedure that answers it. The forecast-movement paragraph now makes its own point about provisions instead of carrying a second link to the same domain. Reciprocal: https://projectcontrolsinstitute.org/eac-accounting could cite this piece for the postings a forecast movement actually produces.*

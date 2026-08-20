@@ -29,7 +29,7 @@ The definition contains the control. The model is a writing tool applied to a fi
 
 ## Which parts of a report can a model draft?
 
-Most of the prose and none of the arithmetic. The table is the working split.
+Most of the prose and none of the arithmetic. The table is the working split, and it follows the same rule that decides [which project controls tasks AI is good for](https://pciai.org/ai-in-project-controls).
 
 | Report section | Model role | Evidence required | Who signs |
 |---|---|---|---|
@@ -44,6 +44,8 @@ Most of the prose and none of the arithmetic. The table is the working split.
 
 The rule running through the right-hand column: whoever signs the figure was accountable for it before the model existed and remains accountable after.
 
+The schedule narrative row has an exercise upstream of it. Run [the structural checks a model can make over a programme](https://pciai.org/llm-schedule-review) before those dates reach a report, because a narrative drafted over a defective network is fluent and wrong.
+
 ## What must the audit trail contain?
 
 Six items, kept with the pack. Each is cheap to capture at the time and painful to reconstruct later.
@@ -52,7 +54,7 @@ The **input set** exactly as supplied, with the cut-off date and time. The **pro
 
 The **output as first generated**, before editing, so the reviewer's changes are visible. The **reviewer and the owner**, by name. The **checks performed**, listed rather than implied.
 
-That is the same evidence an auditor has always wanted from a spreadsheet-derived number. Nothing about a language model changes the question.
+That is the same evidence an auditor has always wanted from a spreadsheet-derived number. Nothing about a language model changes the question, and [the provenance clause of a controls AI policy](https://pciai.org/ai-policy-for-project-controls) is where the requirement gets written down.
 
 ## Worked example: the variance paragraph
 
@@ -74,7 +76,7 @@ What it does not return is an explanation of why performance slipped, because th
 
 This is where projects lose money, and it is the boundary a drafting tool cannot see. An engineer is examined on float, earning rules and progress measurement, and almost never on cut-off or a contract asset. An accountant is examined on when revenue may be recognised and what a provision must satisfy, and almost never on a driving path.
 
-IFRS 15 sets out a five-step model, described here in PCI's own words. Identify the contract with the customer. Identify the distinct performance obligations within it.
+IFRS 15 sets out a five-step model, described here in PCI's own words; [how the five-step model applies to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction) is worked through in full separately. Identify the contract with the customer. Identify the distinct performance obligations within it.
 
 Determine the transaction price, including variable consideration and the limit on how much of it may be recognised. Allocate that price across the obligations. Recognise revenue as each obligation is satisfied, over time where the criteria for that are met, otherwise at a point in time.
 
@@ -137,4 +139,4 @@ Supply the cause and the decision every month, and reject any draft containing n
 
 ---
 
-*Internal links: this how-to should link to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how the five-step model applies to a construction contract", to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with the anchor "the cut-off that fixes these inputs", and to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar it supports".*
+*Internal links: placed in the body. Three on pciai.org — the AI in project controls pillar, where the draft-versus-compute split is stated; the LLM schedule review protocol, beside the schedule narrative row, because the network should be checked before its dates are narrated; and the AI policy template, at the audit trail, where provenance becomes a written rule. One cross-estate link, to the hub's IFRS 15 for construction page, at the sentence that describes the five-step model, since that is where a reader asks how progress is measured on a construction contract. The second hub link the note originally proposed, to month-end close for projects, was dropped to hold the one-link-per-domain cap; the cut-off is named in the body without it. Reciprocal: the hub's month-end close piece has the stronger claim to link here, from its reporting-pack step, and the Qatar course guide links here from the AI question in its FAQ.*

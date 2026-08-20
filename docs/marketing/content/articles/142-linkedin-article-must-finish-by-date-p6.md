@@ -78,7 +78,7 @@ Four things, and each one costs you somewhere different.
 
 **Resource levelling behaves differently.** Levelling routines that prioritise by total float will order work against the constrained values, which is not the same order as the unconstrained network.
 
-**Schedule risk analysis distorts.** A quantitative model run on a constrained network reports criticality indices against imposed late dates. Run the simulation on the unconstrained copy, then compare the resulting distribution of finish dates with the contract date afterwards.
+**Schedule risk analysis distorts.** A quantitative model run on a constrained network reports criticality indices against imposed late dates. Run the simulation on the unconstrained copy, then compare the resulting distribution of finish dates with the contract date afterwards. The setup decides the answer more than the tool does, and [how a quantitative schedule risk analysis is put together](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) is the part most teams skip.
 
 **Delay analysis gets harder.** Float ownership arguments start from what float existed and when it was consumed. A constraint that suppressed float for six months makes that question far more expensive to answer than it needed to be.
 
@@ -121,4 +121,4 @@ Use a deadline or expected finish field where the tool offers one, which reports
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "what total float actually tells you", to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the forward and backward passes work", and to [quantitative schedule risk analysis for beginners](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "testing the date with a QSRA".*
+*Linking note: one cross-estate link now sits in the body, in the section on what breaks when the whole network is negative. The piece tells the reader to re-run the risk model on an unconstrained copy, which raises the question of how such a model is built, and the hub's quantitative schedule risk analysis guide answers it. The note originally proposed two further hub links, to total float and the critical path method. Both were dropped: only one link per domain per piece is allowed, and this article works the float arithmetic and both passes itself, so those links would have pointed at answers the reader had just been given. Nothing here raises a question the other four domains answer, so no second cross-estate link was forced in. A reciprocal link back to this piece would fit on the total float page, where negative float and imposed constraints come up.*

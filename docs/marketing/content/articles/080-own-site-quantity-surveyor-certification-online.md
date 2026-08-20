@@ -38,7 +38,7 @@ A completion certificate says you finished the videos. A pass record says somebo
 
 It changes access and cost, not standard. Measurement, valuation, contract administration and cost reporting are taught perfectly well from a screen, because they are worked on documents rather than in a workshop.
 
-It does not change supervised experience. Chartered routes assess judgement built over years on real contracts, and no online product substitutes for that. Any provider suggesting otherwise is describing something a chartered body has not agreed to.
+It does not change supervised experience. Chartered routes assess judgement built over years on real contracts, and no online product substitutes for that; [the four global quantity surveying routes compared](https://pciglobal.ai/quantity-surveyor-certification) sets out what each of them assesses. Any provider suggesting otherwise is describing something a chartered body has not agreed to.
 
 It also does not change the local rules. Standard methods of measurement, contract forms and payment legislation differ by market, so check the syllabus states which market it teaches, or that it teaches principles and says so plainly.
 
@@ -50,9 +50,9 @@ Is the syllabus published in full — domains and knowledge areas — before pur
 
 Is there an examination, is it proctored, and is the pass mark stated? An assessment nobody fails is a marketing device.
 
-Can a third party verify the certificate from an issuer's record, using a reference, without contacting you? A PDF is not a credential.
+Can a third party verify the certificate from an issuer's record, using a reference, without contacting you? A PDF is not a credential, and the practical test is whether an employer can [check a credential record independently](https://projectcontrolsinstitute.org/verify.html) before they ring you.
 
-Who issues it, and are they independent of the trainer who taught you? Marking your own homework is common in this market.
+Who issues it, and are they independent of the trainer who taught you? Marking your own homework is common in this market, and [an honest comparison of providers in one crowded market](https://pciglobal.ai/project-controls-course-india) shows how quickly the distinction gets blurred.
 
 What happens on failure, and what does a re-sit cost? A provider without a documented answer has not built an examination.
 
@@ -124,4 +124,4 @@ Examined knowledge is rarely wasted, but chartered bodies set their own entry ro
 
 ---
 
-*Internal links: this guide should link to [quantity surveyor certification](https://pciglobal.ai/quantity-surveyor-certification) with the anchor "the four global quantity surveying routes compared", to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how a valuation becomes recognised revenue", and to [credential verification](https://credentialfinder.org/verify) with the anchor "check a credential record independently".*
+*Linking note: the links are now in the body. One cross-estate link only — "check a credential record independently" sits on the verification check, which is the question the whole piece turns on; the credentialfinder.org/verify address originally proposed does not exist, and the Institute's verification page is the real destination. Two same-domain links: "the four global quantity surveying routes compared" follows the sentence on what chartered routes assess, and "an honest comparison of providers in one crowded market" follows the independence check. The IFRS 15 link proposed earlier was dropped rather than retargeted: it would have been a second link to the same domain from one piece, and this guide only touches revenue recognition in passing. Reciprocal: the global quantity surveying routes guide should link back here with the anchor "what an online quantity surveying credential actually gives you".*

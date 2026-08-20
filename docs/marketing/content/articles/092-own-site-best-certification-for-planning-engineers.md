@@ -41,7 +41,7 @@ A credential is worth its fee if its examination covers the ones you cannot yet 
 | Primavera P6 or MS Project certificates | Vendors and training providers | Software operation | Usually none | Product test or attendance | Whenever the version changes | Proves the tool, not the judgement |
 | PCL-AI | Project Controls Institute | Finance and reporting, project management and governed AI as one syllabus | Around three years of professional experience in any field | Scenario multiple choice, single best answer, remotely proctored | Recertification on a CPD cycle including an AI-currency component | A young body, not accredited, so read the syllabus |
 
-The honest reading: PSP and PMI-SP compete directly, PMP sits beside them rather than above them, and a tool certificate belongs on the same CV but never in the same sentence.
+The honest reading: PSP and PMI-SP compete directly, PMP sits beside them rather than above them, and a tool certificate belongs on the same CV but never in the same sentence. Planners who also carry the cost report should widen the shortlist to [the cross-family comparison of controls credentials](https://credentialfinder.org/best-project-controls-certification), which adds the cost and chartered routes to this table.
 
 ## The examination every planner should pass on paper first
 
@@ -61,7 +61,7 @@ Backward pass down the other chain. F must start by day 37, so C must finish by 
 
 Total float on B = 14 − 6 = **8 days**. Total float on C = 28 − 20 = **8 days**. It is the same eight days, shared once along the chain, not eight days each.
 
-Free float is where people come unstuck. B's free float is C's earliest start minus B's earliest finish: 20 − 20 = **zero**. C's free float is F's earliest start minus C's earliest finish: 37 − 29 = **8 days**. All of the slack sits at the end of the chain, so a single day lost on B moves C immediately even though the completion date does not flinch.
+Free float is where people come unstuck, because [total float and free float measure different slack](https://projectcontrolsinstitute.org/total-float). B's free float is C's earliest start minus B's earliest finish: 20 − 20 = **zero**. C's free float is F's earliest start minus C's earliest finish: 37 − 29 = **8 days**. All of the slack sits at the end of the chain, so a single day lost on B moves C immediately even though the completion date does not flinch.
 
 Now delay it. Ten days lost on D, which is critical, pushes completion from 49 to **59**, day for day. Ten days lost on B pushes C to finish at 39, so F starts at 39 and completion moves to **51** — eight days absorbed by float, two days landing on the client's date.
 
@@ -99,14 +99,14 @@ PCI is not accredited by ANAB, UKAS or any other ISO/IEC 17024 accreditation bod
 
 Learn the network by hand, then buy the tool training if you cannot yet build and status a programme without help.
 
-Take a scheduling credential when your judgement needs a witness other than your line manager: PSP if your market runs on AACE and you want the practical assessment, PMI-SP if your organisation is built on PMI's framework.
+Take a scheduling credential when your judgement needs a witness other than your line manager: PSP if your market runs on AACE and you want the practical assessment, PMI-SP if your organisation is built on PMI's framework. Before committing to the first, read [what the PSP examination covers and who it suits](https://credentialfinder.org/aace-psp-certification-guide), because the practical exercises are where candidates underestimate the load.
 
 Add the finance and AI boundary when the questions you cannot answer stop being about float and start being about what the forecast did to the accounts.
 
 ## Frequently asked questions
 
 **Is PSP or PMI-SP better for a planning engineer?**
-Neither is better in the abstract. PSP suits engineering, construction and energy markets where AACE credentials are named in job advertisements, and its practical exercises test production rather than recall. PMI-SP suits organisations already standardised on PMI's framework and processes. Check which acronym appears in the roles you want, because that is the only ranking that pays.
+Neither is better in the abstract. PSP suits engineering, construction and energy markets where AACE credentials are named in job advertisements, and its practical exercises test production rather than recall. PMI-SP suits organisations already standardised on PMI's framework and processes. The two are set against each other line by line in [the PMI-SP and PSP comparison](https://credentialfinder.org/pmi-sp-vs-aace-psp), including fees, format and renewal. Check which acronym appears in the roles you want, because that is the only ranking that pays.
 
 **Do I need PMP as a planner?**
 Not to plan. PMP helps when you intend to move into managing the project rather than the programme, or when your employer uses it as a promotion gate. As evidence of scheduling competence it is indirect, since it examines project management broadly rather than network logic and delay in depth.
@@ -122,4 +122,4 @@ The opposite so far. Tools generate and review schedules quickly, and someone ha
 
 ---
 
-*Internal links: this page should link to [the critical path method explained](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [what total float really means](https://projectcontrolsinstitute.org/total-float) with that anchor, to [best project controls certification](https://credentialfinder.org/best-project-controls-certification) with that anchor, and to [planning engineer interview questions](https://pciworld.org/planning-engineer-interview-questions) with that anchor; the PMI-SP and PSP comparison pages should link back here with the anchor "best certification for planning engineers".*
+*Linking note: one cross-estate link is in the body, to the hub's page on [total float and free float](https://projectcontrolsinstitute.org/total-float), placed at the point where the worked network shows eight days of total float and zero free float on the same activity — the exact place a reader asks what the difference is. Three same-domain links sit where the text raises them: the cross-family comparison after the options table, the PSP guide in the sequencing section, and the PMI-SP versus PSP comparison in the FAQ that asks which of the two is better. The earlier note also proposed the critical path page on the hub, which would have been a second link to the same domain, and a careers page on pciworld.org that no sentence here calls for; both were dropped rather than retargeted. Reciprocal link worth making: the PSP guide and the PMI-SP comparison can each point back here once, describing this page as the shortlist for planners.*

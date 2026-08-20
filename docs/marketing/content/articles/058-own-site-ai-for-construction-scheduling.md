@@ -35,7 +35,7 @@ The honest split is between structure, which a machine reads reliably, and inten
 | Logic review | Poorly; the model sees a relationship, not a reason | Nothing will fix this; it is a judgement |
 | Resource and access reality | Poorly; the constraint usually is not in the file | The site knowledge that never got written down |
 
-Buy the top of that table without embarrassment. The structural checks alone repay themselves on any programme large enough to have been touched by more than one planner.
+Buy the top of that table without embarrassment. The structural checks alone repay themselves on any programme large enough to have been touched by more than one planner. Which product does it best is a separate question, and it is settled by testing on your own files rather than by a league table — [how to judge AI construction scheduling software](https://pciai.org/best-ai-construction-scheduling-software) sets out the scoring.
 
 ## The arithmetic a model does not change
 
@@ -57,9 +57,9 @@ F needs both C and E, and both finish at day 50, so F runs 50 to 80 and G runs 8
 
 Backward pass from a day-100 finish: G late start 80, F late start 50, C late start 35, E late start 10, B late start 10, D late start 15, A late start 0.
 
-Total float is late start minus early start. Every activity has **zero float except D, which has 5 days**. So the programme has **two critical paths**: A–B–C–F–G at 10 + 25 + 15 + 30 + 20 = 100 days, and A–E–F–G at 10 + 40 + 30 + 20 = 100 days.
+Total float is late start minus early start. Every activity has **zero float except D, which has 5 days**. So the programme has **two critical paths**: A–B–C–F–G at 10 + 25 + 15 + 30 + 20 = 100 days, and A–E–F–G at 10 + 40 + 30 + 20 = 100 days. Anyone who wants the method rather than this one network will find [the forward and backward pass in full](https://projectcontrolsinstitute.org/critical-path-method) worked step by step.
 
-That is the first thing to test any scheduling assistant on. Ask it for "the critical path" and see whether it returns one chain. A summary that names only the concrete route has hidden the steel delivery that is equally capable of finishing the job late.
+That is the first thing to test any scheduling assistant on. Ask it for "the critical path" and see whether it returns one chain. A summary that names only the concrete route has hidden the steel delivery that is equally capable of finishing the job late. What to paste, what to ask and what to check afterwards is set out as [a schedule review protocol for planning teams](https://pciai.org/llm-schedule-review).
 
 ## Why compressing one path buys nothing
 
@@ -115,7 +115,7 @@ Keep the provenance. The file version, the settings, the model version and the d
 
 Price the review. Structural checks generate volume, and volume without an owner becomes noise within two cycles. Decide in advance how many hours a month go into resolving flags.
 
-Name the owner. Someone signs the programme. Under PCI's principle, AI proposes and the professional disposes, which means the person signing must be able to explain the logic changes as well as the arithmetic.
+Name the owner. Someone signs the programme. Under PCI's principle, AI proposes and the professional disposes, which means the person signing must be able to explain the logic changes as well as the arithmetic. That principle is not specific to scheduling; it is what sets [AI's honest strengths and limits in project controls](https://pciai.org/ai-in-project-controls) across cost, risk and reporting too.
 
 ## Frequently asked questions
 
@@ -136,4 +136,4 @@ The planner, always. The model can draft it and check that every claim in the dr
 
 ---
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [best AI construction scheduling software](https://pciai.org/best-ai-construction-scheduling-software) with the anchor "how the tools in this category compare", and to [the critical path method explained](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "the forward and backward pass in full".*
+*Internal links: now placed in the body. Same-domain: "how to judge AI construction scheduling software" follows the capability table, where the question becomes which product to buy; "a schedule review protocol for planning teams" sits beside the instruction to interrogate an assistant about the critical path, because that raises how to run the review properly; "AI's honest strengths and limits in project controls" sits in the governance section, where the AI-proposes-professional-disposes principle is stated and a reader asks whether it holds beyond scheduling. One cross-estate link only, to the hub: "the forward and backward pass in full" after the two critical paths are derived, for the reader who wants the method rather than this network. Reciprocal: the software comparison should point back here for the worked programme.*

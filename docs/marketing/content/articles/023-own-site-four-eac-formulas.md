@@ -23,7 +23,7 @@ Estimate at completion (EAC) is the forecast total cost of the scope in question
 
 ## Step one: fix the inputs before you forecast anything
 
-A forecast is only as good as the four numbers under it, all measured to the same cut-off.
+A forecast is only as good as the four numbers under it, all measured to the same cut-off, and [the method these four numbers come from](https://projectcontrolsinstitute.org/earned-value-management) defines each one precisely.
 
 Our example is a rail systems package. BAC is €24.0m over 30 months, and we are reporting at the end of month 14.
 
@@ -32,6 +32,8 @@ At cut-off: PV = €11.5m, EV = €10.2m, AC = €12.4m.
 From those, CPI = 10.2 ÷ 12.4 = **0.823** and SPI = 10.2 ÷ 11.5 = **0.887**. The package is 10.2 ÷ 24.0 = **42.5%** complete by value, with €13.8m of budgeted work still to earn.
 
 Before going further, check that actual cost includes accruals for work done and goods received, and excludes anything paid for that has not been installed. A forecast built on an incomplete AC understates the problem by exactly the amount of the missing accrual.
+
+Building those inputs is its own exercise: [a worked month-end that produces these inputs](https://projectcontrolsinstitute.org/earned-value-worked-example) runs a package from quantities and accruals through to PV, EV and AC.
 
 ## Step two: diagnose the cause of the variance
 
@@ -85,7 +87,7 @@ Take a contract price of €27.5m on this package.
 | €26.2m (method 1) | 12.4 ÷ 26.2 = 47.3% | €13.02m |
 | €29.2m (method 2) | 12.4 ÷ 29.2 = 42.5% | €11.68m |
 
-A €1.34m difference in reported revenue, from a choice about a forecast method, on identical delivery. That is why the EAC is a finance number as much as a controls one.
+A €1.34m difference in reported revenue, from a choice about a forecast method, on identical delivery. That is why the EAC is a finance number as much as a controls one, and it is the reason [where forecasting meets financial reporting](https://projectcontrolsinstitute.org/finance-and-project-management-certification) is examined as one subject rather than two.
 
 The second consequence is sharper. At an EAC of €29.2m against a price of €27.5m, the contract is expected to lose €1.7m. Under the applicable financial reporting standards, an expected loss on a contract is generally recognised in full in the period it becomes apparent, rather than spread across the remaining programme.
 
@@ -96,9 +98,13 @@ Neither of these is a discretionary presentation choice, and neither is legal, t
 Because the EAC feeds it, it helps to know where it feeds. The five-step model in IFRS 15, described here in PCI's own words rather than reproduced:
 
 1. **Identify the contract.** An agreement with a customer that creates enforceable rights and obligations, has commercial substance, and where collection is considered.
+
 2. **Identify the performance obligations.** The distinct promises within it. On an integrated construction or systems contract these are often combined into a single obligation, because the individual items are not distinct in the context of the contract.
+
 3. **Determine the transaction price.** Including variable elements such as variations, claims and incentives, constrained so that revenue is only taken where a significant reversal is not expected.
+
 4. **Allocate the price.** Across the obligations on a relative standalone selling price basis, where there is more than one.
+
 5. **Recognise revenue as obligations are satisfied.** Over time where the criteria are met, measured by a chosen method of progress. The cost-based input method is the one your EAC drives.
 
 Step three is where a controls team is usually most useful, because unapproved variations sitting in the change log are exactly the variable consideration that step three is asking about.
@@ -133,4 +139,4 @@ It can assemble the inputs, flag control accounts whose behaviour has changed, a
 
 ---
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the full month-end example](https://projectcontrolsinstitute.org/earned-value-worked-example) with the anchor "a worked month-end that produces these inputs", and to [the PFL-AI credential](https://projectcontrolsinstitute.org/finance-and-project-management-certification) with the anchor "where forecasting meets financial reporting".*
+*Internal linking note: three same-domain links now sit in the body. "The method these four numbers come from" points at the earned value pillar, placed on the sentence that makes the whole forecast depend on four inputs measured to one cut-off. "A worked month-end that produces these inputs" points at the worked example, placed after the accrual check in step one, where a reader is being told to verify inputs the piece has simply handed them. "Where forecasting meets financial reporting" points at the finance and project management certification page, placed at the €1.34m revenue swing, which is the exact point where a controls decision becomes an accounting one. No cross-estate link is carried; the accounting overlap is hub territory by design. A GEO fix was also made: the five-step revenue model was one 140-word block and is now five separate blocks, each able to be lifted on its own. Reciprocal: the worked example and the reporting thresholds guide should link back here with an anchor naming this as the forecast-method choice.*

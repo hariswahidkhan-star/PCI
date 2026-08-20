@@ -17,9 +17,9 @@ ab_id:         AB-00264
 
 # BCWS vs BCWP: the old names for PV and EV explained
 
-BCWS is the budgeted cost of work scheduled, now called planned value. BCWP is the budgeted cost of work performed, now called earned value. BCWS is what the baseline said you would have completed in money terms by today; BCWP is the budget value of what you actually completed.
+BCWS vs BCWP is a difference of one word. BCWS is the budgeted cost of work scheduled, now called planned value; BCWP is the budgeted cost of work performed, now called earned value. BCWS is what the baseline said you would have completed in money terms by today; BCWP is the budget value of what you actually completed.
 
-The **BCWS vs BCWP** confusion comes from the shared first two letters. Both are priced at budget rates. The difference is one word: *scheduled* against *performed*.
+The confusion comes from the shared first two letters. Both are priced at budget rates, and the word that separates them is *scheduled* against *performed*.
 
 ## BCWS vs BCWP: what is the difference, exactly?
 

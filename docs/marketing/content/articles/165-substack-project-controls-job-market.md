@@ -119,9 +119,9 @@ Demand follows sanctioned capital, with a lag of roughly two to four quarters be
 | Asia-Pacific | Transmission, metro and industrial capacity | Local agencies, often not in English |
 | Africa | Mining and power projects reaching close | Owner and lender-side advisory roles |
 
-Two structural points hold everywhere. Owner-side roles are advertised least and paid most, because they are filled from contractor-side people who have already done the work. And the sharpest demand sits where finance and delivery meet, on programmes where the controls function has to produce a forecast the reporting team can use directly.
+Two structural points hold everywhere. Owner-side roles are advertised least and paid most, because they are filled from contractor-side people who have already done the work, which is [the gate most planning careers actually turn on](https://pciworld.org/senior-planning-engineer-career-path). And the sharpest demand sits where finance and delivery meet, on programmes where the controls function has to produce a forecast the reporting team can use directly.
 
-That overlap is what the three PCI credentials examine: PCI AI Project Controls Leader (PCL-AI) across 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) across 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) across 16 domains and 63 knowledge areas.
+That overlap is what the three PCI credentials examine: PCI AI Project Controls Leader (PCL-AI) across 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) across 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) across 16 domains and 63 knowledge areas. Anyone weighing those against the established alternatives needs [which controls certification fits which role](https://credentialfinder.org/best-project-controls-certification), not a job count.
 
 ## What a job count cannot tell you
 
@@ -152,4 +152,4 @@ You cannot count them directly, which is why every posting-based estimate unders
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this is not a republish of a PCI site page.*
 
-*Internal links: this piece should link to [how to become a planning engineer](https://pciworld.org/how-to-become-a-planning-engineer) with the anchor "the route into the roles this count is made of", to [the senior planning engineer career path](https://pciworld.org/senior-planning-engineer-career-path) with the anchor "what the next gate actually asks for", and to [the best project controls certification comparison](https://credentialfinder.org/best-project-controls-certification) with the anchor "comparing the credentials employers name".*
+*Linking note — the links now in the body: "the gate most planning careers actually turn on" points at pciworld.org/senior-planning-engineer-career-path from the paragraph on owner-side demand, because saying those roles are filled from contractor-side people raises what the progression actually requires; "which controls certification fits which role" points at credentialfinder.org/best-project-controls-certification from the paragraph naming the three PCI credentials, because a reader shown three credentials asks how they sit against the established ones. Two links, two domains, one each — and nothing to the regional or AI sites, because this piece raises neither question. Reciprocal: the senior planning engineer career path piece could cite this method note where it says demand follows sanctioned capital.*

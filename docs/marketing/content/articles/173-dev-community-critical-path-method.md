@@ -1,7 +1,7 @@
 ---
 platform:      DEV Community
 type:          glossary
-title:         Critical path method: the algorithm and a worked example
+title:         Critical path method definition, algorithm and example
 meta:          A critical path method definition, the forward and backward pass written as an algorithm, a worked float table, and what CPM assumes on a real network.
 primary_kw:    critical path method definition
 secondary_kw:  forward and backward pass, total float, longest path, topological sort
@@ -15,9 +15,9 @@ hashtags:      #algorithms #python #computerscience #tutorial
 ab_id:         AB-00591
 ---
 
-# Critical path method: the algorithm and a worked example
+# Critical path method definition, algorithm and example
 
-The critical path method finds the longest path of dependent activities through a network and uses it to set the earliest possible finish date. Activities on that path have zero total float, so a day lost on any of them is a day lost to the project. It is two passes over a topologically sorted graph.
+A critical path method definition, in one sentence: it finds the longest path of dependent activities through a network and uses that path to set the earliest possible finish date. Activities on it have zero total float, so a day lost on any of them is a day lost to the project. The calculation is two passes over a topologically sorted graph.
 
 CPM was developed in the late 1950s by DuPont and Remington Rand for plant maintenance, at almost the same time as the US Navy's PERT technique. The arithmetic has not changed since.
 
@@ -154,11 +154,11 @@ CPM is the base layer. The others are checks on it, and none replaces it.
 
 Four assumptions, each of which fails on a real project in a way worth naming.
 
-Durations are deterministic. They are not, which is why a P80 date from a schedule risk analysis usually sits weeks after the CPM date.
+Durations are deterministic. They are not, which is why [testing the CPM date against uncertainty](https://projectcontrolsinstitute.org/schedule-risk-analysis) usually puts the P80 date weeks after the calculated one.
 
 Resources are unlimited. They are not, and levelling to real crew sizes typically produces a later date and a different driving path.
 
-The logic is complete and correct. On a network with open ends and hard constraints, the calculated critical path is arithmetic performed on a wrong graph.
+The logic is complete and correct. On a network with open ends and hard constraints, the calculated critical path is arithmetic performed on a wrong graph. Screen the network before reading the dates, by hand, by script, or by [putting a language model through the schedule logic](https://pciai.org/llm-schedule-review).
 
 Work happens in the planned sequence. When it does not, the out-of-sequence setting decides the answer, and retained logic and progress override return different finish dates from the same update.
 
@@ -193,4 +193,4 @@ On work with physical dependencies it is unavoidable, because concrete cures at 
 
 *First published on projectcontrolsinstitute.org; the `canonical_url` on this post points there. DEV prohibits stub posts, so the complete algorithm and the worked pass are here rather than behind a link.*
 
-*Internal links: this piece should link to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "how total float is calculated and read", to [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "testing the CPM date against uncertainty", to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with that anchor, and to [what is project controls](https://projectcontrolsinstitute.org/what-is-project-controls) with the anchor "where scheduling sits in project controls".*
+*Internal links: two are now in the body. "Testing the CPM date against uncertainty" points at projectcontrolsinstitute.org/schedule-risk-analysis, placed in the assumption that durations are deterministic, because that sentence raises where a P80 date comes from and this piece does not answer it. "Putting a language model through the schedule logic" points at pciai.org/llm-schedule-review, placed in the assumption that the logic is complete, because that sentence raises how a network gets screened before its dates are trusted. The total float, Primavera P6 and what-is-project-controls links proposed earlier were dropped: one link per domain per piece, and the float question is already answered here in the worked table. Reciprocal: the total float definition on the hub should link back to the critical path method page for the two-pass calculation, with an anchor about how the critical path is computed rather than what it is.*

@@ -23,7 +23,7 @@ This post publishes no product league table. PCI has not tested these products, 
 
 ## Best AI construction scheduling software: the five jobs compared
 
-Most disappointment with these tools comes from buying one job and expecting another. The categories behave differently, need different data, and fail differently.
+Most disappointment with these tools comes from buying one job and expecting another. The categories behave differently, need different data, and fail differently, and [what each one actually does on a live programme](https://pciai.org/ai-for-construction-scheduling) is worth reading before a demo.
 
 | Category | What it does | Data it needs | How it fails | Two-week test |
 |---|---|---|---|---|
@@ -35,7 +35,7 @@ Most disappointment with these tools comes from buying one job and expecting ano
 
 Rows two and four hold most of the immediate value, because both replace genuinely repetitive work and both can be scored objectively.
 
-Rows one and three need more care. A generated schedule and a simulation both look authoritative, and both encode assumptions nobody in the room chose.
+Rows one and three need more care. A generated schedule and a simulation both look authoritative, and both encode assumptions nobody in the room chose. [How duration ranges and correlations get set and defended](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) is the part no product does for you.
 
 ## Why a vendor league table is the wrong artefact
 
@@ -167,4 +167,4 @@ Not inherently. A simulation is only as good as the ranges and correlations fed 
 
 *First published on pciai.org; the `canonical_url` on this post points there. DEV prohibits promotional-first posts, so this carries the method and the harness rather than a product pitch.*
 
-*Internal links: this comparison should link to [what critical path method is](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the forward and backward pass produce float", to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "setting ranges a simulation can defend", and to [using large language models to review schedules](https://pciai.org/llm-schedule-review) with the anchor "the manual protocol these products automate".*
+*Linking note — the links now in the body: "what each one actually does on a live programme" points at pciai.org/ai-for-construction-scheduling from the five-jobs section, because saying the categories behave differently raises what each does in practice; "how duration ranges and correlations get set and defended" points at projectcontrolsinstitute.org/quantitative-schedule-risk-analysis from the paragraph on generated schedules and simulations, because "ranges and correlations you can defend" raises how that defence is built. Two links, one per domain, and no product links of any kind. Reciprocal: the quantitative schedule risk analysis guide could cite this scoring harness where it warns that precision in an output flatters weak inputs.*

@@ -17,9 +17,9 @@ ab_id:         AB-00253
 
 # IFRS 15 vs IAS 11: what really changed for construction
 
-IFRS 15 replaced IAS 11 for periods beginning on or after 1 January 2018. The arithmetic of cost-to-cost survived; almost nothing around it did. The unit of account moved from the contract to the performance obligation, claims became harder to recognise, and the loss rule left the revenue standard altogether.
+IFRS 15 vs IAS 11 is not a change of formula. IFRS 15 replaced IAS 11 for periods beginning on or after 1 January 2018, and the arithmetic of cost-to-cost survived; almost nothing around it did. The unit of account moved from the contract to the performance obligation, claims became harder to recognise, and the loss rule left the revenue standard altogether.
 
-So IFRS 15 vs IAS 11 is not a change of formula. It is a change in what is being measured, and in how much has to be true before a number may be booked.
+What changed is what is being measured, and how much has to be true before a number may be booked.
 
 This piece is written for LinkedIn and is not on the PCI site. It sits under the Institute's cost control and estimating pillar, which is where contract accounting and cost engineering meet.
 
@@ -100,7 +100,7 @@ IFRS 15 contains no onerous contract provision. When a contract is expected to l
 
 The practical effect on a project is unchanged in one respect. The whole expected loss is still recognised as soon as it is expected, rather than bled across the remaining programme.
 
-What did change is which team owns the judgement and which cost base feeds it. That is a live question the month a forecast crosses the line, and it is worked in full in [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting).
+What did change is which team owns the judgement and which cost base feeds it. That is a live question the month a forecast crosses the line, and [the accounting treatment of a moving estimate at completion](https://projectcontrolsinstitute.org/eac-accounting) works it through in full.
 
 ## What the cost engineer has to produce that IAS 11 never asked for
 
@@ -112,7 +112,7 @@ Three deliverables became accounting inputs rather than management information.
 
 **A contract map** showing which agreements with the same customer were negotiated together, because that determines whether you are reporting on one contract or three.
 
-None of those come from the finance function. They come from the people who run the cost report and the commercial file, which is exactly the overlap the [PCI AI Project Finance Leader (PFL-AI)](https://projectcontrolsinstitute.org/finance-and-project-management-certification) credential examines across 16 domains and 61 knowledge areas.
+None of those come from the finance function. They come from the people who run the cost report and the commercial file, which is exactly the overlap the PCI AI Project Finance Leader (PFL-AI) credential examines across 16 domains and 61 knowledge areas.
 
 ## Frequently asked questions
 
@@ -137,4 +137,4 @@ The cost engineer, the commercial manager and the planner, not only the accounta
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with that anchor, to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, and to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) as the pillar it supports.*
+*Internal links: one link is in the body and that is deliberate. In the section on the loss rule leaving the revenue standard, "the accounting treatment of a moving estimate at completion" points to https://projectcontrolsinstitute.org/eac-accounting, because the sentence asks which cost base feeds a provision the month a forecast crosses the line and that page answers it. The PFL-AI mention near the end is left unlinked: a second link to the same domain in one piece is a footprint rather than a help. Reciprocal: https://projectcontrolsinstitute.org/ifrs-15-for-construction could cite this piece where it explains why a claim assessed as probable does not enter the transaction price.*

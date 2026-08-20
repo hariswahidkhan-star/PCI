@@ -17,7 +17,7 @@ ab_id:         —
 
 # Is CCP certification worth it? An honest assessment
 
-CCP certification is worth it if you already own a cost report and work in a market that names AACE credentials in job advertisements. It is not worth it if you are hoping a certificate will substitute for the experience the examination assumes, or if your employers have never asked for one.
+Two conditions make CCP certification worth it: you already own a cost report, and you work in a market that names AACE credentials in job advertisements. It is not worth it if you are hoping a certificate will substitute for the experience the examination assumes, or if your employers have never asked for one.
 
 That is the whole test. The rest of this page is how to apply it to your own situation before spending the fee and the eighty hours.
 
@@ -31,7 +31,7 @@ Two features matter more than the syllabus list. The examination assumes real ex
 
 ## Is CCP certification worth it for your role?
 
-Sort yourself into a row before you sort the credentials.
+Sort yourself into a row before you sort the credentials. The routes open to a cost engineer across the bodies, rather than within AACE alone, are set against each other in [an honest comparison of cost engineer routes](https://projectcontrolsinstitute.org/cost-engineer-certification).
 
 | If your week looks like this | Is it worth it | Why |
 |---|---|---|
@@ -46,7 +46,7 @@ The last row is the one most cost engineers are actually in, and it is worth the
 
 ## What does it cost, all in?
 
-Five lines, not one: membership, application, the examination sitting, any retake, and recertification each cycle. Read them off AACE's fee page on the day you decide, split by member and non-member.
+Five lines, not one: membership, application, the examination sitting, any retake, and recertification each cycle. Read them off AACE's fee page on the day you decide, split by member and non-member, then see [how those five lines add up across a career](https://credentialfinder.org/aace-certification-cost).
 
 Then price the part that never appears on an invoice. Eighty hours at a self-valuation of USD 40 an hour is **USD 3,200**, which is several times any sitting fee. At six hours a week it is thirteen to fourteen weeks of evenings.
 
@@ -54,7 +54,7 @@ If the fee is what is stopping you, the fee is not what is stopping you.
 
 ## Can you already do the arithmetic the credential assumes?
 
-Try this before booking anything. If it is uncomfortable, that is useful information and it cost nothing.
+Try this before booking anything, then work through [a fuller set of CCP-style problems](https://credentialfinder.org/ccp-exam-questions). If it is uncomfortable, that is useful information and it cost nothing.
 
 An option on a capital scheme costs **£2.0m** more to build and saves **£340,000** a year in operating cost for eight years. Is it worth doing?
 
@@ -107,7 +107,7 @@ You want a salary figure attached to the decision. No body worth holding a crede
 Plan for eighty to a hundred hours across four to six months if you are working full time. Split it: hand calculations first, then economic analysis, then the written component, which most candidates underestimate because writing to a brief under time pressure is a separate skill from knowing the material.
 
 **Is CCP better than PMP?**
-They are not competing. CCP examines the money side of an asset for a cost specialist; PMP examines managing projects broadly. Cost engineers who hold both usually took CCP for the technical depth and PMP because an employer or client named it. Check which acronym appears in the roles you want.
+They are not competing, and [how the two credentials divide the work](https://credentialfinder.org/aace-ccp-vs-pmp) is the useful comparison. CCP examines the money side of an asset for a cost specialist; PMP examines managing projects broadly. Cost engineers who hold both usually took CCP for the technical depth and PMP because an employer or client named it. Check which acronym appears in the roles you want.
 
 **Does CCP expire?**
 The credential runs on a recertification cycle with a continuing-education requirement, so it lapses if you stop maintaining it. Price the cycle cost multiplied by the years you expect to hold the credential, because over fifteen years the renewals outweigh the original sitting fee.
@@ -123,4 +123,4 @@ If you sign forecasts that a finance function then books, yes. The cost credenti
 
 ---
 
-*Internal links: this page should link to [what AACE certification costs](https://credentialfinder.org/aace-certification-cost) with that anchor, to [cost engineer certification routes compared](https://projectcontrolsinstitute.org/cost-engineer-certification) with that anchor, to [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "how cash flow forecasts hold up"; the CCP exam questions page should link back here with the anchor "whether CCP certification is worth it".*
+*Linking note: one cross-estate link is in the body, to the hub's [comparison of cost engineer routes](https://projectcontrolsinstitute.org/cost-engineer-certification), placed where the reader is asked to sort themselves into a row and the obvious next question is what else a cost engineer could sit. Three same-domain links sit in the sentences that raise them: the AACE fee arithmetic in the cost section, the CCP problem set beside the self-test, and the CCP versus PMP comparison in the FAQ that asks which is better. The earlier note proposed three hub links; two of them, the EAC accounting page and the cash flow forecasting page, were dropped rather than retargeted, because one link per domain is the cap and the cost engineer routes page answers the question this piece actually raises. Opening rewritten so the answer states its two conditions first. Reciprocal link worth making: the CCP exam questions page should point back here once, for the reader who wants the decision before the practice.*

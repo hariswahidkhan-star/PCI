@@ -88,7 +88,7 @@ Check the assignment before every reporting cycle, and record the baseline name 
 
 ## The performance factor, and the forecast it produces
 
-Setting 5 chooses how P6 turns remaining budget into an estimate to complete. The options map directly onto the standard forecasting methods.
+Setting 5 chooses how P6 turns remaining budget into an estimate to complete. The options map directly onto [the recognised EAC methods under another name](https://projectcontrolsinstitute.org/four-eac-formulas).
 
 | P6 ETC technique | Equivalent EAC method | Assumption you are signing |
 |---|---|---|
@@ -131,4 +131,4 @@ For cumulative reporting, no. For period-by-period performance, yes, because wit
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this piece is not a republish of a PCI site page.*
 
-*Internal links: this piece should link to [build a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with the anchor "the schedule settings that decide the measurement", to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with that anchor, and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "what each performance factor assumes".*
+*Linking note — the links now in the body: "the recognised EAC methods under another name" points at projectcontrolsinstitute.org/four-eac-formulas from the paragraph on setting 5, because that sentence raises which forecasting method a P6 performance factor quietly commits you to. That is the only cross-estate link here — nothing else in the piece raises a question another domain answers better, and a second link to the same domain would be a pattern rather than a reference. Reciprocal: the four EAC formulas guide could point back here where it notes that a scheduling tool picks a performance factor by default.*

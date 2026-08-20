@@ -52,12 +52,16 @@ Treat them as three distinct types with three distinct units. If your integratio
 Revenue on a construction contract is not recognised because a valuation was certified. It follows a five-step sequence, described here in our own words rather than reproduced from the standard.
 
 1. **Identify the contract.** An agreement with enforceable rights and obligations, where the consideration is probable.
+
 2. **Identify the performance obligations.** The distinct promises inside it. On many construction contracts the whole works is a single obligation; on some it is not.
+
 3. **Determine the transaction price.** Including variable consideration such as variations, claims and liquidated damages, constrained so a significant reversal is not expected.
+
 4. **Allocate the price** across the identified obligations.
+
 5. **Recognise revenue as each obligation is satisfied**, over time where the criteria are met, using a method that faithfully depicts progress.
 
-Step five is the socket your model output plugs into. Nothing here is accounting advice; it is a description of the mechanism your data will feed.
+Step five is the socket your model output plugs into, and [which costs may sit in a cost-to-cost measure](https://projectcontrolsinstitute.org/ifrs-15-for-construction) decides what that socket accepts. Nothing here is accounting advice; it is a description of the mechanism your data will feed.
 
 ## The arithmetic, in full
 
@@ -109,7 +113,7 @@ Then pin the cut-off. A progress reading taken three days after the accounting c
 
 ## What changes about the job
 
-The tasks that compress are the ones a project manager was doing at eleven at night: chasing status, reconciling versions, assembling a pack. That gain is real and should be taken.
+The tasks that compress are the ones a project manager was doing at eleven at night: chasing status, reconciling versions, assembling a pack. That gain is real and should be taken, and it is most of what sits behind the question of [what a project manager's job becomes when the tools take the assembly work](https://pciai.org/will-ai-replace-project-managers).
 
 The tasks that grow are the ones the tools create demand for. More flags need dispositioning, more outputs need challenging, and more numbers arrive with a plausible face and no provenance.
 
@@ -138,4 +142,4 @@ A number, with its measure name and exclusions attached. Recommendations hide th
 
 *First published on pciai.org; the `canonical_url` on this post points there. DEV prohibits stub posts that link out, so the whole argument including the failure table is here rather than behind a link.*
 
-*Internal links: this piece should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [whether AI will replace project managers](https://pciai.org/will-ai-replace-project-managers) with the anchor "what changes in the project manager's role", and to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "the five-step model applied to a construction contract".*
+*Linking note — the links now in the body: "which costs may sit in a cost-to-cost measure" points at projectcontrolsinstitute.org/ifrs-15-for-construction from step five, because the failure mode described here is a physical percentage entering a measure that has its own exclusion rules; "what a project manager's job becomes when the tools take the assembly work" points at pciai.org/will-ai-replace-project-managers from the section on what changes about the job, because that paragraph raises exactly that question. Two links, one per domain — the pillar link the earlier note proposed would have been a second on the same host. Reciprocal: the IFRS 15 for construction guide could point back here for the uninstalled-materials arithmetic worked end to end.*

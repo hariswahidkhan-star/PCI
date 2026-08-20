@@ -17,7 +17,7 @@ ab_id:         AB-00290
 
 # How to apply for an extension of time in construction
 
-You apply for an extension of time by giving notice inside the period the contract sets, naming the delaying event and the clause that entitles you, then submitting an analysis showing the event's effect on the critical path, supported by contemporaneous records. Time is awarded for delay to the completion date, not to the activity.
+How to apply for an extension of time, in order: give notice inside the period the contract sets, name the delaying event and the clause that entitles you, then submit an analysis showing the event's effect on the critical path, supported by contemporaneous records. Time is awarded for delay to the completion date, not to the activity.
 
 Most claims that fail do not fail on the analysis. They fail on the notice, and they fail early.
 
@@ -68,7 +68,7 @@ The common outcome is that time and money are treated differently: an award of t
 | As-planned versus as-built windows | Good as-built records across the whole period | Retrospective assessment of a long, multi-event delay | Judgement-heavy; two analysts can reach different windows |
 | Collapsed as-built | A defensible as-built programme with logic | Retrospective, where the baseline is weak or was never agreed | Requires as-built logic that is reconstructed, and therefore arguable |
 
-The choice is driven by the records available and by when the assessment is being made, not by which method gives the bigger number. Assessors know the methods, and a prospective method used retrospectively to avoid inconvenient as-built data is visible immediately.
+The choice is driven by the records available and by when the assessment is being made, not by which method gives the bigger number. Where the records leave a genuine choice, [the methods compared against the conditions each one needs](https://projectcontrolsinstitute.org/delay-analysis-techniques) is the fuller version of that table. Assessors know the methods, and a prospective method used retrospectively to avoid inconvenient as-built data is visible immediately.
 
 ## What records decide the outcome?
 
@@ -114,4 +114,4 @@ Failure to demonstrate critical path effect. A submission that shows an activity
 
 ---
 
-*Internal links: this answer should link once, at the end, to [delay analysis techniques](https://projectcontrolsinstitute.org/delay-analysis-techniques) with the anchor "how each delay analysis method is applied", and to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "why float decides the size of the claim"; Quora links are nofollow, so treat this as qualified traffic rather than a backlink.*
+*Internal links: one, in the body. [The methods compared against the conditions each one needs](https://projectcontrolsinstitute.org/delay-analysis-techniques) sits under the method table, where a reader who has just been told the records decide the method asks which method their records will actually support. The total float page in the original note was dropped rather than placed: it would have been a second link to the same domain, and float is carried by the recovery schedule answer, where compression makes it the whole question. No reciprocal link is proposed: Quora links are nofollow, so this is qualified traffic rather than a backlink.*

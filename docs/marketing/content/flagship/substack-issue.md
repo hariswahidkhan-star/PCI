@@ -3,11 +3,11 @@ platform:      Substack — issue 1 of "The Overlap"
 type:          substack-newsletter
 newsletter:    The Overlap
 cadence:       Monthly, sent in the week after most month-ends close
-title:         Issue one: fourteen points and one missing accrual
-meta:          A cost performance index of 1.19 and one of 1.05, same month, same job, one missing accrual. Issue one of The Overlap, and the rules it writes under.
+title:         Issue one: fourteen points and work done not yet invoiced
+meta:          One missing accrual for work done not yet invoiced moves a cost performance index from 1.19 to 1.05. Issue one of The Overlap, and the rules it writes under.
 when_to_post:  Launch month, Tuesday 07:00 UK, in the week after month-end close. Send at least four days clear of the LinkedIn newsletter issue so a reader subscribed to both does not receive two launch letters in one morning. Substack email opens peak on the first send, so this is the letter that sets the cadence promise in public. Issue two must go out in the same week of the following month.
-word_count:    1,288 (issue copy only, excluding front matter and the subject-line block)
-char_count:    7,309 including headings
+word_count:    1,643 (issue copy only, excluding front matter and the subject-line block)
+char_count:    9,417 including headings
 primary_kw:    work done not yet invoiced *
 secondary_kw:  cost performance index accrual, cut-off date, earned value management, project controls certification
 pillar:        Project controls fundamentals
@@ -34,7 +34,11 @@ notes: |
   No examination weighting appears anywhere.
   The arithmetic is illustrative. Round figures, no currency, no client, no sector, no date, and an
   explicit refusal to claim a frequency, because no researched frequency exists to cite.
-  No FAQ block by design: it is an article device and would break the letter's register.
+  FOUR QUESTIONS, WRITTEN AS A LETTER WOULD WRITE THEM. An FAQ block is an article device and a
+  transplanted one would break the register, so the block is framed as the four questions this issue
+  will get and answered in the first person the rest of the letter uses. Each answer is 40–80 words
+  and self-contained, which is the extractability the block exists for. Nothing in it is a reader
+  quotation: issue one has no readers yet, and inventing one would be inventing a testimonial.
   Three links, three domains, all in context. Anchors differ from every other flagship asset. The
   full linking note sits below the letter, as it does on every other asset in this set.
   PRIMARY KEYWORD DIFFERS FROM THE LINKEDIN NEWSLETTER'S ON PURPOSE. Both are issue one of The
@@ -42,33 +46,37 @@ notes: |
   term the two would compete with each other and nothing could be done about it afterwards. LinkedIn
   keeps "cost performance index accrual"; this takes "work done not yet invoiced", which is the
   phrase this letter actually turns on. Both are off-plan long tails no own-site page targets.
-  It is a subject tag rather than a search target, so the placement rule in _BRIEF.md §4 is not
-  applied: a newsletter is push-distributed to subscribers, and rewriting a letter's title or its
-  headings around a keyword string would cost the register that makes people open the next one.
+  It is a subject tag as much as a search target, but the placement rule in _BRIEF.md §4 turned out
+  to cost the letter nothing, so it is applied. The phrase sits in the title, in the H1, in the
+  opening sentence and in the meta. The H1 moved from "one missing accrual" to "work done not yet
+  invoiced", which is the same thing said precisely rather than generically, and the issue-one
+  framing that a newsletter title needs survives intact. The subject-line and preview-text options
+  above the letter are production fields, not the letter's opening, and are set as headed lists so
+  nobody — reader or crawler — reads them as the first paragraph.
   "Hit reply" is load-bearing. If replies are not monitored by a person, cut the line rather than
   break it.
 ---
 
-**SUBJECT LINE OPTIONS** (pick one; A/B the first two)
+### Subject line options (pick one; A/B the top two)
 
-1. Your CPI reads 1.19. The missing accrual says 1.05.
-2. Fourteen CPI points went missing in an accrual
-3. The forecast was wrong before you signed it
-4. 1.19 or 1.05: which number reaches the board?
-5. Issue one: the number two systems disagreed about
+- Your CPI reads 1.19. The missing accrual says 1.05.
+- Fourteen CPI points went missing in an accrual
+- The forecast was wrong before you signed it
+- 1.19 or 1.05: which number reaches the board?
+- Issue one: the number two systems disagreed about
 
-**PREVIEW TEXT OPTIONS** (Substack shows roughly 100 characters after the subject)
+### Preview text options (Substack shows roughly 100 characters after the subject)
 
-1. Same month, same job, both numbers defensible. Here is the arithmetic in full.
-2. A letter about the places project finance and project delivery report the same month differently.
+- Same month, same job, both numbers defensible. Here is the arithmetic in full.
+- A letter about the places project finance and project delivery report the same month differently.
 
 ---
 
-# Issue one: fourteen points and one missing accrual
+# Issue one: fourteen points and work done not yet invoiced
 
 *The Overlap is a monthly letter about the places where project finance and project delivery report the same month differently. It arrives in the week after most month-ends close, while the answer still matters.*
 
-Accountancy exams rarely test float. Engineering exams rarely test cut-off. Projects need both.
+Accountancy exams rarely test float. Engineering exams rarely test cut-off. Projects need both. The gap between them has a name: work done not yet invoiced, sitting in neither system on the day the cost report is signed.
 
 I have wanted to write that down properly for a long time, and email turned out to be the only place to do it. Long enough to show the working, short enough that you might actually check it.
 
@@ -126,7 +134,7 @@ The Body of Knowledge is 40 per cent finance and reporting, 40 per cent project 
 
 Governed AI sits in there for an unglamorous reason. A model will produce a forecast faster than you can check it, and it will produce one whether or not the accrual was ever posted.
 
-Automation changes how quickly a wrong number reaches the board. It does not move whose name is on it, which is why the syllabus treats [what a model may propose and what it may never decide by itself](https://pciai.org/ai-governance-in-project-controls) as a governance question rather than a tooling one.
+Automation changes how quickly a wrong number reaches the board. It does not move whose name is on it, which is why the syllabus treats [what a model may propose and what it may never decide by itself](https://pciai.org/ai-policy-for-project-controls) as a governance question rather than a tooling one.
 
 ## The rules this letter writes under
 
@@ -148,6 +156,24 @@ There is no shortage of material. The three Bodies of Knowledge carry 92 sector 
 
 Issue two takes estimate at completion. Four accepted methods, four different assumptions about how the rest of the job will behave, and at least three of them defensible in the same meeting while disagreeing with each other. Most forecast arguments are really an argument about which of the four everyone thinks they are using.
 
+## Four questions this issue will get
+
+**Is this not just a matter of chasing the accruals harder?**
+
+No, and that is the clerical version of the answer. The structural version is that the two halves of the ratio sit on different bases. Earned value accrues itself the moment work is performed. Invoiced cost waits for a supplier's billing run. Divide one by the other and you have measured billing habits rather than performance, which is why capable teams reproduce it every month.
+
+**Does it not wash out over a full year?**
+
+It does. The timing difference reverses, and by the annual accounts the effect has gone. Nothing gets decided annually, though. Re-baselining, contingency release, descoping and a board forming a view on whether the job is fine all happen on a month, and the month is where the fourteen points sit.
+
+**How often does the missing accrual actually happen?**
+
+I do not know, and neither does anyone who quotes you a figure. There is no researched frequency I can point at, so there is no number for it in this letter and there will not be one. What I can tell you is the condition: the arithmetic bites wherever the cost cut-off and the progress date differ and nobody accrues the gap between them. Whether those two dates match on your job is a question you can settle this week.
+
+**What does 40/40/20 mean for the examination?**
+
+Nothing yet. Those are the Body of Knowledge's proportions — 40 per cent finance and reporting, 40 project management, 20 governed AI — and they describe the syllabus rather than the paper. The exam blueprint is still an open decision. Anyone quoting you an examination weighting, for this credential or any other, is reading from a marketing document rather than a published one.
+
 ## Before then
 
 Two things, and the first one is free.
@@ -164,4 +190,4 @@ And if the arithmetic here has ever cost you a quarter, hit reply and tell me wh
 
 ---
 
-*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [What a model may propose and what it may never decide by itself](https://pciai.org/ai-governance-in-project-controls) on pciai.org answers "where does the model's authority stop", raised by the governed-AI clause. [The 13 domains and 61 knowledge areas](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what would examining both sides actually cover", and carries the ask. [Set side by side on what each one examines](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers the reader who already holds a credential and wants to know what this adds. No pciworld.org and no pciglobal.ai link: this letter raises no career and no regional question, and a link with no question behind it is the footprint _LINK_ARCHITECTURE.md exists to avoid. Anchors differ from those used by the LinkedIn newsletter issue, which points at the same Body of Knowledge page. In replies, send anyone arguing about cut-off dates to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) and anyone wanting the full month worked through to [the earned value worked example](https://projectcontrolsinstitute.org/earned-value-worked-example).*
+*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [What a model may propose and what it may never decide by itself](https://pciai.org/ai-policy-for-project-controls) on pciai.org answers "where does the model's authority stop", raised by the governed-AI clause. That anchor previously pointed at an AI-governance slug on pciai.org that does not exist; the policy page is the one that carries the argument. [The 13 domains and 61 knowledge areas](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what would examining both sides actually cover", and carries the ask. [Set side by side on what each one examines](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers the reader who already holds a credential and wants to know what this adds. No pciworld.org and no pciglobal.ai link: this letter raises no career and no regional question, and a link with no question behind it is the footprint _LINK_ARCHITECTURE.md exists to avoid. Anchors differ from those used by the LinkedIn newsletter issue, which points at the same Body of Knowledge page. In replies, send anyone arguing about cut-off dates to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) and anyone wanting the full month worked through to [the earned value worked example](https://projectcontrolsinstitute.org/earned-value-worked-example).*

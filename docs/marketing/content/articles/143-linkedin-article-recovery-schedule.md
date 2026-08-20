@@ -17,7 +17,7 @@ ab_id:         AB-00199
 
 # How to build a recovery schedule the engineer accepts
 
-A recovery schedule is a revised programme showing how the remaining work will meet the contract completion date after progress has fallen behind. It is not a new baseline and not an extension of time. Build it in six steps: status honestly, size the gap in days, isolate the driving path, price the levers, test the logic, submit the assumptions.
+A recovery schedule is a revised programme showing how the remaining work will meet the contract completion date after progress has fallen behind. It is not a new baseline and not an extension of time. How to build a recovery schedule comes down to six steps: status honestly, size the gap in days, isolate the driving path, price the levers, test the logic, submit the assumptions.
 
 Written for LinkedIn as an original. It sits under the Institute's planning and scheduling pillar.
 
@@ -33,7 +33,7 @@ The commercial reality is simpler than the drafting. The engineer is asking you 
 
 It is not a re-baseline. Re-baselining resets the measurement datum and usually needs agreement, and doing it inside a recovery submission looks like an attempt to erase the variance you were asked to explain.
 
-It is not an extension of time claim. Entitlement and recovery are separate arguments, and mixing them weakens both. Submit the recovery position, preserve the notices, and keep the entitlement analysis in its own document.
+It is not an extension of time claim. Entitlement and recovery are separate arguments, and mixing them weakens both. Submit the recovery position, preserve the notices, and keep the entitlement analysis in its own document, built with [the techniques used to analyse delay after the event](https://projectcontrolsinstitute.org/delay-analysis-techniques).
 
 It is not an acceleration instruction either. Building a recovery schedule does not by itself decide who pays for the additional cost, and that question turns on the contract and the facts.
 
@@ -138,4 +138,4 @@ Say so, with the number. A submission showing 23 days of achievable recovery aga
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [choosing a delay analysis technique](https://projectcontrolsinstitute.org/delay-analysis-techniques) with the anchor "how the delay is analysed afterwards", to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "float on the paths behind the driving path", and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "what acceleration does to the cash curve".*
+*Linking note: one cross-estate link now sits in the body, in the section separating recovery from entitlement. That sentence tells the reader to keep the entitlement analysis in its own document, which raises the question of how that analysis is actually done, and the hub's comparison of delay analysis techniques answers it. The note originally proposed two more hub links, to total float and project cash flow forecasting. Both were dropped because only one link per domain is allowed per piece, and the float behind the driving path is explained in step three of this article rather than elsewhere. A reciprocal link back to this piece would fit on the delay analysis techniques page, where the difference between a recovery submission and an entitlement position deserves a pointer.*

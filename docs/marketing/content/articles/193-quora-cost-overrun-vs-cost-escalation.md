@@ -2,7 +2,7 @@
 platform:      Quora
 type:          qa-list
 title:         Cost overrun vs cost escalation: what is the difference?
-meta:          A cost overrun is an outcome measured against a baseline. Escalation is a change in price levels over time. Worked numbers separating the two on one project.
+meta:          Cost overrun vs cost escalation: an overrun is an outcome against a baseline; escalation is a price-level change over time. Worked numbers separate the two.
 primary_kw:    cost overrun vs cost escalation
 secondary_kw:  escalation allowance, price adjustment clause, cost baseline, contingency drawdown
 pillar:        Cost control and estimating
@@ -80,7 +80,7 @@ And the baseline question bites here too. Against the sanctioned £11.25m, the s
 
 Escalation is largely outside a project team's control, but the exposure to it is not. Fixing rates early, placing material orders against a firm price, and agreeing a price adjustment mechanism are all decisions taken by people on the project.
 
-Productivity and quantity growth are inside the team's control, and in the example above they account for £0.98m of the £1.15m. That is the number a monthly review should be spending its time on.
+Productivity and quantity growth are inside the team's control, and in the example above they account for £0.98m of the £1.15m. That is the number a monthly review should be spending its time on, and the trending and commitment disciplines that [catch an overrun before the outturn](https://projectcontrolsinstitute.org/cost-control-in-construction) are what make it visible in month four rather than month fourteen.
 
 The practical test: if the same work, at the same rates as the day it was priced, would still have cost more than budget, escalation is not your problem. Something else is.
 
@@ -116,4 +116,4 @@ Bridge from budget to forecast with named components: escalation variance, quant
 
 ---
 
-*Internal links: this answer should link once, at the end, to [cost control in construction](https://projectcontrolsinstitute.org/cost-control-in-construction) with the anchor "catching overruns before the outturn", and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "how the forecast at completion is built"; Quora links are nofollow, so this is for readers, not link equity.*
+*Internal links: the body now carries one link, to https://projectcontrolsinstitute.org/cost-control-in-construction, anchored "catch an overrun before the outturn". It sits on the sentence identifying the £0.98m of productivity and quantity growth as the controllable part — the question that raises is how a monthly review surfaces that early, which is that page's subject. The four EAC formulas link was dropped: one link to a domain per answer is the limit, and this piece separates causes rather than choosing a forecast method. Quora links are nofollow, so this is for readers, not link equity. Reciprocal: none — the hub should not link out to a Quora answer.*

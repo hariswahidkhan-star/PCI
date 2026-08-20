@@ -59,7 +59,7 @@ Rank the drivers rather than the job titles. The sectors where the drivers stack
 
 The pattern is consistent. Pay rises where the controls function is on the critical path of the money, not merely reporting on it.
 
-Geography stacks on top of this. The same sector pays differently where a market is short of experienced people and where the work carries rotation, mobilisation or remote-site conditions, which is what makes the [Saudi giga-programme roles](https://pciworld.org/project-controls-jobs-in-saudi-arabia) their own case.
+Geography stacks on top of this. The same sector pays differently where a market is short of experienced people and where the work carries rotation, mobilisation or remote-site conditions, which is what makes the Saudi giga-programme roles their own case.
 
 ## Which sectors put your numbers in front of an auditor?
 
@@ -100,7 +100,7 @@ Titles are inconsistent between employers. A project controls manager at one con
 
 Package structure differs by sector and location. Rotation allowances, site uplifts, tax treatment and completion bonuses form a large part of the difference between two roles that show the same base figure.
 
-Use the drivers above to work out where a role sits, and use PCI's own-site [five-band project controls scope ladder](https://pciworld.org/project-controls-salary) to work out which band you are genuinely in before you compare anything.
+Use the drivers above to work out where a role sits, and settle [which of the five scope bands your role genuinely occupies](https://pciworld.org/project-controls-salary) before you compare anything.
 
 ## Frequently asked questions
 
@@ -125,4 +125,4 @@ No. PCI publishes certification requirements and the Bodies of Knowledge behind 
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [the five-band project controls scope ladder](https://pciworld.org/project-controls-salary) with that anchor, to [project controls jobs in Saudi Arabia](https://pciworld.org/project-controls-jobs-in-saudi-arabia) with that anchor, and to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) as the accounting explainer it depends on.*
+*Linking note: two cross-estate links now sit in the body. The pciworld.org scope-ladder link sits in the section on why national salary averages mislead, because that sentence raises the question of which band a role is actually in and that page answers it. The hub link to IFRS 15 for construction sits where progress measurement is described as driving reported revenue, which this piece names but deliberately does not explain in full. The second pciworld.org link, to the Saudi giga-programme roles, was dropped: one link per domain per piece, and the band question is the stronger placement. The sentence about Gulf market conditions stands without it. A reciprocal link back to this piece would sit naturally on the project controls salary page, where the question of which sector pays for which drivers comes up.*

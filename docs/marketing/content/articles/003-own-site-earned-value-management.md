@@ -17,9 +17,9 @@ ab_id:         AB-00091
 
 # What is earned value management? The practitioner's guide
 
-Earned value management is a method that compares the value of work actually completed against what that work was budgeted to cost and against what has been spent. It produces two variances and two indices from three numbers, and from those it produces a forecast of the final cost. Its purpose is a defensible outturn, not a dashboard.
+Earned value management compares the value of work actually completed against what that work was budgeted to cost and against what has been spent. So the short answer to *what is earned value management* is this: planned value, earned value and actual cost, with every other measure built as arithmetic on top of those three.
 
-So the short answer to *what is earned value management* is this: planned value, earned value and actual cost, with every other measure built as arithmetic on top of those three.
+It produces two variances and two indices from those numbers, and from those a forecast of the final cost. Its purpose is a defensible outturn, not a dashboard.
 
 ## What is earned value management measuring? The three inputs
 

@@ -19,7 +19,7 @@ ab_id:         AB-00100
 
 Employers are not asking for prompt engineering. The AI skills in project controls that appear in serious requirements are verification skills: can you check a generated forecast against the ledger, name what the method assumed, and refuse a number you cannot source? Tool literacy is assumed. Scrutiny is what gets paid for.
 
-Written for LinkedIn as an original. It sits under the Institute's [AI in project controls](https://pciai.org/ai-in-project-controls) pillar.
+Written for LinkedIn as an original. It sits under the Institute's AI in project controls pillar.
 
 ## Why this piece carries no survey percentage
 
@@ -54,7 +54,7 @@ CPI = 6.30 ÷ 7.80 = **0.808**. SPI = 6.30 ÷ 7.00 = **0.90**. Remaining work, B
 
 The generated report says: *estimate at completion £19.50m, forecast overrun £1.50m, cost performance below plan but recoverable.*
 
-The arithmetic is correct. EAC = AC + (BAC − EV) = 7.80 + 11.70 = £19.50m. That is the first of [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).
+The arithmetic is correct. EAC = AC + (BAC − EV) = 7.80 + 11.70 = £19.50m. That is the first of [the four standard EAC methods](https://projectcontrolsinstitute.org/four-eac-formulas).
 
 What the report did not say is what that method assumes: that the £1.50m variance to date was a one-off, and that all remaining work runs exactly to budget. Nobody has asserted either.
 
@@ -111,7 +111,7 @@ Then run those checks against a generated version of the same report and record 
 
 Third, write down [the rule for what project data may go into a hosted tool](https://pciai.org/ai-policy-for-project-controls). One page, agreed with whoever owns information security. Teams that skip this find out about it during an incident.
 
-The [PCI AI Project Controls Leader (PCL-AI)](https://pciai.org/ai-project-controls-certification) credential examines this territory across 13 domains and 61 knowledge areas, and the finance-side equivalent sits in PFL-AI.
+The PCI AI Project Controls Leader (PCL-AI) credential examines this territory across 13 domains and 61 knowledge areas, and the finance-side equivalent sits in PFL-AI.
 
 ## Frequently asked questions
 
@@ -136,4 +136,4 @@ Hand over a one-page forecast with a labelled EAC and ask which method produced 
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [AI in project controls](https://pciai.org/ai-in-project-controls) as the pillar it supports, to [building an AI policy for a project controls team](https://pciai.org/ai-policy-for-project-controls) with that anchor, and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor.*
+*Internal links: two links are in the body, on two different domains. "The rule for what project data may go into a hosted tool" points to https://pciai.org/ai-policy-for-project-controls, in the ninety-day list where the reader is told to write that rule down and will want a template. "The four standard EAC methods" points to https://projectcontrolsinstitute.org/four-eac-formulas, where the generated report's method is named. The standfirst pillar link and the PCL-AI link were removed: the piece carried four links, three of them to one domain, which is the density the link-spam policy names. Reciprocal: https://pciai.org/ai-project-controls-certification could cite this piece for the interview test that separates verification from calculation.*

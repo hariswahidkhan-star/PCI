@@ -17,7 +17,7 @@ ab_id:         AB-00601
 
 # Total float definition: the formula and a worked network
 
-Total float is the number of working days an activity can slip from its early dates without delaying project completion or a contractual date. It is calculated as late start minus early start, which is the same as late finish minus early finish. Zero total float means the activity is critical.
+Total float is the number of working days an activity can slip from its early dates without delaying project completion or a contractual date. That is the total float definition planners work to, and the calculation behind it is late start minus early start, which is the same as late finish minus early finish. Zero total float means the activity is critical.
 
 Float is a property of a path rather than of an activity. It is the gap between two chains of work, so it moves when either chain moves, and it can vanish without anybody having used it.
 
@@ -59,7 +59,7 @@ Take an eight-activity fit-out. Durations are working days and every relationshi
 | F6 Furniture delivery | 8 | 28 | 23 | 43 | **15** | **15** |
 | F7 Handover | 43 | 48 | 43 | 48 | 0 | 0 |
 
-The critical path is F1–F2–F4–F5–F7: 8 + 14 + 9 + 12 + 5 = **48 days**.
+The critical path is F1–F2–F4–F5–F7: 8 + 14 + 9 + 12 + 5 = **48 days**. Those two passes are also [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method) on any network, which is why float and the critical path are the same arithmetic read two ways.
 
 Read the setting-out row carefully. It has four days of total float and none of it is free, because its successor starts the moment it finishes.
 
@@ -132,6 +132,8 @@ The PCI AI Project Controls Leader (PCL-AI) examines 13 domains across 61 knowle
 
 The Body of Knowledge runs in a 40 / 40 / 20 proportion of finance and reporting, project management, and governed AI. Float belongs in the middle block and its consequences belong in the first, which is why the examination asks about both together.
 
+Which credential a planner should sit is a different question from what float is, and [a comparison of the certifications open to planning engineers](https://credentialfinder.org/best-certification-for-planning-engineers) answers it better than a definition page can.
+
 PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
 ## Frequently asked questions
@@ -155,4 +157,4 @@ Float is calculated by the network from logic and durations. A buffer is placed 
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this piece should link to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "how much float the programme actually needs", to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with that anchor, and to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "how scheduling and cost are examined together".*
+*Internal links: two are now placed in the body. The critical path method definition (projectcontrolsinstitute.org) sits on "how the critical path is calculated", directly after the worked forward and backward pass, because the reader has just done the arithmetic that produces both numbers. The planning-engineer certification comparison (credentialfinder.org) sits on "a comparison of the certifications open to planning engineers", where the examination section raises a question a definition page cannot settle. The note originally proposed two further hub links (schedule risk analysis and the Primavera P6 guide) plus a PCL-AI page: they are dropped from this republish, since one article carrying four links to a single domain is the footprint this estate has to avoid. They belong on the own-site original. Reciprocal: the critical path method page should link back here with the anchor "free, interfering and negative float, worked", which it references but does not derive.*

@@ -99,7 +99,7 @@ Put that in front of the sponsor. Five months at 0.900, and finishing on budget 
 | Remaining work at CPI and SPI | AC + (BAC − EV) ÷ (CPI × SPI) | 1,729 + 2,044.7 ÷ 0.8037 = **4,273.1** | Schedule pressure keeps costing money |
 | Bottom-up re-estimate | AC + a fresh ETC of £2,310k | 1,729 + 2,310 = **4,039.0** | The team can re-estimate honestly |
 
-A spread of £3.77m to £4.27m, half a million pounds wide, from one set of inputs. That range is the method asking which assumption you are prepared to sign.
+A spread of £3.77m to £4.27m, half a million pounds wide, from one set of inputs. That range is the method asking which assumption you are prepared to sign, and the answer comes from [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas) rather than from the arithmetic.
 
 Here the cause settles it. Circuit terminations are running slower than the rate embedded in the estimate, which is a productivity error and therefore systemic, so the CPI method is the defensible default.
 
@@ -143,7 +143,7 @@ The earning rules themselves. Move CA-05 off level of effort onto a milestone ru
 
 And one that reaches the accounts. The 43.2% above is a control number built in baseline money.
 
-It is not a revenue percentage, and it should not travel into the ledger without someone who understands both sides signing it. That crossing point is where a project reports one position on the delivery side and a different one in the accounts.
+It is not a revenue percentage, and it should not travel into the ledger without someone who understands both sides signing it. That crossing point is where a project reports one position on the delivery side and a different one in the accounts, and [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification) is a fair question to ask of any credential you already hold.
 
 ## Frequently asked questions
 
@@ -166,4 +166,4 @@ Rarely by working harder. The TCPI of 1.093 says the remaining work must run 21%
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this version exists for readers, not for link equity.*
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the earned value formulas cheat sheet](https://projectcontrolsinstitute.org/earned-value-formulas-cheat-sheet) with the anchor "every earned value formula in one place", and to [the EAC method guide](https://projectcontrolsinstitute.org/eac-formulas) with the anchor "choosing between the four EAC formulas".*
+*Internal links, as placed in the body. Step four links to [choosing an EAC method by the cause of the variance](https://projectcontrolsinstitute.org/four-eac-formulas), because the £500k spread in that table asks which of the four answers a forecaster is prepared to sign. The closing section links to [which certifications examine the reporting side as well as the site](https://credentialfinder.org/best-project-controls-certification), because a control number crossing into the ledger raises who has been examined on both halves. One link per domain and no more: the earned value pillar and the formulas cheat sheet proposed earlier were dropped rather than stacked three-deep on the hub, and the old `/eac-formulas` target does not exist — the real slug is `/four-eac-formulas`. Reciprocal: the hub's own EAC guide has honest reason to point back here, for the worked month-end that produces its inputs.*

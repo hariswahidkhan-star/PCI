@@ -89,11 +89,11 @@ As entered, 1,100 characters. Only the first line or so shows before the descrip
 >
 > Published by the Project Controls Institute, an independent certifying body. The PCI AI Project Controls Leader (PCL-AI) examines 13 domains and 61 knowledge areas, covering finance and reporting alongside project management in one credential.
 >
-> Read the Body of Knowledge and test it against your own last month-end: projectcontrolsinstitute.org/body-of-knowledge
+> Slide 20 carries the address of the Body of Knowledge itself. Read it against your own last month-end, then go back to your last forecast and find the accrual nobody asked about.
 >
 > The figures above are illustrative arithmetic, not a case study.
 
-Keywords earn their place in sentences a practitioner would actually write: *earned value*, *cost performance index*, *month-end close*, *EAC*, *accrual*, *cut-off*. None appears twice. The URL is printed in full because the description is the one field where a link is reliably live, and because a printed URL survives being copied into a forum post.
+Keywords earn their place in sentences a practitioner would actually write: *earned value*, *cost performance index*, *month-end close*, *EAC*, *accrual*, *cut-off*. None appears twice. The description carries no URL of its own: the deck's one address is printed large on slide 20, where it travels with the file into every embed and every download, and printing the same destination twice in one upload buys nothing a reader does not already have.
 
 ## 1.3 Tags
 
@@ -319,7 +319,7 @@ The heading line of each entry below is the headline as printed on the slide. No
 
 > Judge a certifying body by what it refuses to claim.
 
-**Foot line:** How to check any credential rather than take its word for it: credentialfinder.org/how-to-verify-a-certification
+**Foot line:** What each of the main controls credentials puts in its own examination, read side by side: credentialfinder.org/best-project-controls-certification
 
 ---
 
@@ -403,10 +403,10 @@ No logo on any slide except 1 and 20.
 
 **Repurposing.** Slides 3, 8, 9 and 15 each stand alone as a single image elsewhere in the run. Slide 8 in particular is a checklist a cost team will pin up. Export those four separately at 2× rather than screenshotting the PDF.
 
-**Measurement.** Outbound clicks to the Body of Knowledge page, embeds, and downloads. Views are the least informative number on the page: a deck is doing its job when it turns up inside somebody else's site, and that shows up weeks later.
+**Measurement.** Embeds, downloads, and sessions arriving at the Body of Knowledge page in the days after an embed appears. SlideShare will not report a click on the slide 20 address, because that address is typed rather than clicked, so read it at the destination instead. Views are the least informative number on the page: a deck is doing its job when it turns up inside somebody else's site, and that shows up weeks later.
 
 **What not to do next.** Do not upload a second deck of the same twenty slides re-titled for a different search. One deck, one subject, revised in place. A second version competes with the first, and the first one is the one with the embeds.
 
 ---
 
-*Links: three, one to each domain, each answering a question the sentence it sits in raises. The [PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) on projectcontrolsinstitute.org, from slide 20 and the description, because the deck ends by asking a reader to check their own last forecast and the 13 domains that examine both sides of that question live there. [PCI's policy on what a model may decide](https://pciai.org/ai-policy-for-project-controls) on pciai.org, from slide 13, because that slide draws a line between proposing an accrual and approving one and a reader will want to see where the line is actually written. [How to verify a certification](https://credentialfinder.org/how-to-verify-a-certification) on credentialfinder.org, from slide 19, because a slide that lists what PCI has not got invites the question of how anyone would check, and that is the page that answers it. In-slide links may or may not be live in the SlideShare player depending on how the PDF is processed, so all three are printed as readable text and the primary one is repeated in the description, where a link is reliably clickable. Test them after upload; do not assume.*
+*Linking note: three addresses in the deck, one per domain, each printed once and each in the sentence that raises the question it answers. Slide 20 carries projectcontrolsinstitute.org/body-of-knowledge, because the deck closes by asking a reader to check their own last forecast and the 13 domains that examine both sides of that question live there. Slide 13 carries pciai.org/ai-policy-for-project-controls, because that slide draws a line between proposing an accrual and approving one, and the reader's next question is where the line is actually written down. Slide 19 carries credentialfinder.org/best-project-controls-certification, because a slide listing what PCI has not got invites the question of how anyone would judge it, and the honest answer is to read what each credential examines, PCI's included. That slide previously pointed at a verification page on credentialfinder.org that does not exist; the comparison page is real and answers the same question better. Three earlier duplicates were cut: the Body of Knowledge address was printed in the SlideShare description as well as on slide 20, and the pciai.org and credentialfinder.org addresses were repeated in this note as live links. One destination per domain, printed once, is the whole discipline — a deck that travels a slide at a time cannot afford to look like a link block. No pciworld.org and no pciglobal.ai address anywhere: the deck raises no career and no regional question. Reciprocally, the hub's earned value pillar should cite this deck once, with the anchor "the twenty-slide walk-through of the missing accrual", since an embed of slide 3 is the one citation this format can genuinely earn. Test whichever in-slide URLs SlideShare renders live after upload; do not assume any of them are clickable.*

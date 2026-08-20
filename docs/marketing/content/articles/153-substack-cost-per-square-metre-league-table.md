@@ -1,7 +1,7 @@
 ---
 platform:      Substack
 type:          data-study
-title:         Cost per square metre: reading the city league table
+title:         Cost per square metre to build: reading a league table
 meta:          A published cost per square metre to build ranks a normalised basket, not your building. The five adjustments that decide a city ranking, with the arithmetic.
 primary_kw:    cost per square metre to build
 secondary_kw:  construction cost benchmarking, gross internal area, location factor, comparable projects
@@ -15,9 +15,9 @@ hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00306
 ---
 
-# Cost per square metre: reading the city league table
+# Cost per square metre to build: reading a league table
 
-A city league table ranks a normalised basket of building types on a stated basis. It does not tell you what your building will cost in that city. Change the area definition, the scope inclusions, the currency basis, the specification or the date, and the order of the table changes with it.
+A published cost per square metre to build ranks a normalised basket of building types on a stated basis. It does not tell you what your building will cost in that city. Change the area definition, the scope inclusions, the currency basis, the specification or the date, and the order of the table changes with it.
 
 *Written first for this newsletter. No published league table is reproduced here and no city rates are quoted. The worked example uses invented figures to show the method, which is the part that transfers.*
 
@@ -63,7 +63,7 @@ Start from projects you have delivered or priced, not from published averages. T
 
 Record each comparable at the elemental level rather than as a single rate. A total rate cannot be adjusted honestly, because you cannot tell whether the difference sits in the substructure, the frame or the services.
 
-Then apply the adjustments in a fixed order and show each step: area basis, scope, location factor, time factor, market conditions, specification. A benchmark that arrives as one number with no ladder underneath it will not survive a challenge from a contractor who has priced the job.
+Then apply the adjustments in a fixed order and show each step: area basis, scope, location factor, time factor, market conditions, specification. A benchmark that arrives as one number with no ladder underneath it will not survive a challenge from a contractor who has priced the job, and it will not convert into [a control budget anyone can monitor against](https://projectcontrolsinstitute.org/cost-control-in-construction) either.
 
 Every rate should carry four fields with it: area basis, inclusion list, price base date and source. If any field is blank, the rate is an anecdote.
 
@@ -71,7 +71,7 @@ Benchmarking of this kind is taught through worked sector material rather than r
 
 ## Can an AI model pick your comparables?
 
-It can propose them, and that is worth having, because the tedious part of benchmarking is finding candidates rather than adjusting them. What matters is measuring how well it proposes.
+It can propose them, and that is worth having, because the tedious part of benchmarking is finding candidates rather than adjusting them. That is the pattern across estimating generally: [where a model helps an estimator and where it does not](https://pciai.org/ai-for-cost-estimating-in-construction) turns on whether anyone measures how well it proposes.
 
 Score it like any classifier. Take a validation run: the model proposes 40 projects as comparable, a cost manager confirms 24 of them, rejects 16, and separately identifies 6 genuine comparables the model missed. There were 30 genuine comparables in the set.
 
@@ -109,4 +109,4 @@ Yes, as a sense check on an estimate built from quantities, never as the estimat
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so nothing here duplicates a page the PCI site needs to rank.*
 
-*Internal links: this piece should link to [cost control in construction](https://pciglobal.ai/cost-control-in-construction) with the anchor "how a benchmark becomes a control budget", to [AI for cost estimating in construction](https://projectcontrolsinstitute.org/ai-for-cost-estimating-in-construction) with the anchor "where a model helps an estimator and where it does not", and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "turning a benchmark into a budget you can control".*
+*Linking note: two links are now in the body, one per domain. "A control budget anyone can monitor against" sits in the section on building a defensible benchmark set (https://projectcontrolsinstitute.org/cost-control-in-construction), because that paragraph asks what a benchmark has to become before it is any use. "Where a model helps an estimator and where it does not" sits at the top of the comparables-scoring section (https://pciai.org/ai-for-cost-estimating-in-construction). Two corrections were needed on the way: cost control is a hub page, not a regional one, and AI for cost estimating lives on pciai.org rather than on the hub. Budgeting and forecasting was dropped, because the hub link is already spent. Reciprocal: none warranted.*

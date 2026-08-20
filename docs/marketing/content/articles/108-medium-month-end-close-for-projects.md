@@ -94,7 +94,7 @@ It contains actual cost by control account with the accrual schedule and its evi
 
 It also contains the contingency position, the commitment register, and a short note on any control account breaching the variance threshold. Anything the financial controller has to ask for is something the close did not produce.
 
-The forecast is the item carrying reporting consequences. Estimate at completion is the denominator of the progress fraction under a cost-to-cost measure, so moving it moves recognised revenue and margin in the same period.
+The forecast is the item carrying reporting consequences. Estimate at completion is the denominator of the progress fraction under a cost-to-cost measure, so moving it moves recognised revenue and margin in the same period. [How a revised forecast lands on each financial statement line](https://projectcontrolsinstitute.org/eac-accounting) is the part of the handover most closes never look at.
 
 ## Where the close usually goes wrong
 
@@ -137,4 +137,4 @@ The close produces the inputs and earned value interprets them. Handle cut-off, 
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution rather than as a backlink.*
 
-*Internal links: this piece should link to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with that anchor, and to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) with that anchor.*
+*Internal links, as placed in the body. The WD+4 handover links to [how a revised forecast lands on each financial statement line](https://projectcontrolsinstitute.org/eac-accounting), because saying the forecast carries reporting consequences invites the reader to ask which lines move and by how much. That is the only estate link: three hub links were proposed and the cap is one per domain, so the earned value pillar and the IFRS guide were dropped rather than stacked. Reciprocal: the hub's EAC accounting guide should point back here for the close that produces the inputs it depends on.*

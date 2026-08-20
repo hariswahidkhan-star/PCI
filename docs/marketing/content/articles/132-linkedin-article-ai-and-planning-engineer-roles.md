@@ -19,7 +19,7 @@ ab_id:         AB-00147
 
 No, and the honest version of that answer is more useful than either the hype or the reassurance. AI and planning engineer roles are separating into two halves: the mechanical half, which is already being automated, and the judgement half, which decides what the logic means. Only one of those halves is at risk.
 
-Written for LinkedIn as an original. It sits under the Institute's [AI in project controls](https://pciai.org/ai-in-project-controls) pillar.
+Written for LinkedIn as an original. It sits under the Institute's AI in project controls pillar.
 
 ## What is the planner's job, once you strip out the software?
 
@@ -84,7 +84,7 @@ They pay for the ability to say, in a meeting where money is at stake, why the d
 
 They also increasingly pay for the ability to review a machine-produced schedule properly. Checking a generated network is a harder skill than building one, because a wrong network that is internally consistent looks exactly like a right one.
 
-That reviewing skill is why governed AI carries 20% of the Body of Knowledge's proportions across PCI's credentials, alongside 40% finance and reporting and 40% project management. The [PCI AI Project Controls Leader (PCL-AI)](https://pciai.org/ai-project-controls-certification) credential examines the schedule side of that across 13 domains and 61 knowledge areas.
+That reviewing skill is why governed AI carries 20% of the Body of Knowledge's proportions across PCI's credentials, alongside 40% finance and reporting and 40% project management. The [PCI AI Project Controls Leader (PCL-AI)](https://projectcontrolsinstitute.org/pcl-ai-certification) credential examines the schedule side of that across 13 domains and 61 knowledge areas.
 
 ## Which planning roles are genuinely exposed?
 
@@ -117,4 +117,4 @@ Learn to review, not just produce. Be able to take any schedule and state within
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [AI in project controls](https://pciai.org/ai-in-project-controls) as the pillar it supports, to [will AI replace planning engineers](https://pciai.org/will-ai-replace-planning-engineers) with that anchor, and to [using large language models to review schedules](https://pciai.org/llm-schedule-review) with that anchor.*
+*Internal links: two links are in the body, on two different domains. "A working review protocol for machine-produced schedules" points to https://pciai.org/llm-schedule-review, in the paragraph that lists the three things a generated network breaks and says a protocol handles all three. "PCI AI Project Controls Leader (PCL-AI)" points to https://projectcontrolsinstitute.org/pcl-ai-certification, because the credential itself is the hub's territory and the sentence asks what it examines. The standfirst pillar link was removed: with the protocol link already going to that domain, a second one is a tell rather than a help. Reciprocal: https://pciai.org/will-ai-replace-planning-engineers could cite this piece for the four-activity float example.*

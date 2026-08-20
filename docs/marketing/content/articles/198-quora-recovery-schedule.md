@@ -64,7 +64,7 @@ Crashing means paying for a shorter duration. Take an activity with a normal dur
 
 The cost of the saving is 275,000 − 200,000 = £75,000 for 5 days, or **£15,000 per day saved**. Compare that against the liquidated damages it avoids. At £12,000 per day, crashing loses £3,000 for every day it buys.
 
-Compression also moves the critical path. If the second-longest path sits 7 days behind the critical one, compressing the critical path by more than 7 days makes that second path critical, and further spending on the first path buys nothing at all.
+Compression also moves the critical path. If the second-longest path sits 7 days behind the critical one, compressing the critical path by more than 7 days makes that second path critical, and further spending on the first path buys nothing at all. Those seven days are [total float, measured against the project rather than the activity](https://projectcontrolsinstitute.org/total-float), and the figure decides where compression stops paying.
 
 Fast tracking — overlapping activities that were planned in sequence — costs less in cash and more in risk, because it usually means starting work on information that is not yet final. That rework risk belongs in the recovery schedule as a named assumption, not as optimism buried in a duration.
 
@@ -110,4 +110,4 @@ Yes, early, and rarely late. A gap identified at 15% complete has most of the wo
 
 ---
 
-*Internal links: this answer should link once, at the end, to [delay analysis techniques](https://projectcontrolsinstitute.org/delay-analysis-techniques) with the anchor "how delay is analysed and attributed", and to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "why compression moves the critical path"; Quora links are nofollow, so treat this as qualified traffic rather than a backlink.*
+*Internal links: one, in the body. [Total float, measured against the project rather than the activity](https://projectcontrolsinstitute.org/total-float) sits in the compression paragraph, where a reader told that seven days of slack on the second path caps what crashing can buy asks what that number is and how it is measured. The delay analysis page in the original note was dropped rather than placed here: it would have been a second link to the same domain, and attribution of delay is the subject of the extension of time answer, which carries that link instead. No reciprocal link is proposed: Quora links are nofollow, so this is qualified traffic rather than a backlink.*

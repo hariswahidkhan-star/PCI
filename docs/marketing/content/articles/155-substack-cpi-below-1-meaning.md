@@ -101,7 +101,7 @@ Validate the inputs first, as above. Acting on a number that reverses next month
 
 Write down the cause in one sentence per control account. "The piling rate was taken from a different ground condition" is actionable. "Productivity is below plan" is a restatement of the index.
 
-Re-forecast with the method that matches the cause, and show the range rather than a single figure. A forecast with no visible alternatives cannot be challenged, and one that cannot be challenged should not be trusted.
+Re-forecast with the method that matches the cause, and show the range rather than a single figure. [Which forecast method matches your cause](https://projectcontrolsinstitute.org/four-eac-formulas) is the whole decision, because a forecast with no visible alternatives cannot be challenged, and one that cannot be challenged should not be trusted.
 
 Fix the estimating basis for work not yet started, which is usually the largest available recovery. Nothing you do to a completed trade recovers its money; what the analysis buys you is the chance not to repeat the error on the next twelve.
 
@@ -129,10 +129,10 @@ Set a threshold in the cost control procedure and apply it without discussion. A
 Not directly, but the forecast it drives does. Where progress is measured by a cost-based input method, revenue follows costs incurred divided by total expected costs, and total expected costs is your EAC. Raising the EAC lowers percentage complete and reverses revenue already recognised. Nothing here is accounting advice; the point is the timing of the conversation.
 
 **Can an AI model predict which control accounts will fall below 1?**
-It can flag accounts whose behaviour has changed against their own history, which is genuinely useful across a portfolio of hundreds. Score it honestly before relying on it: precision, recall and F1 on a validation set of accounts a human has already reviewed. An alert tool with no measured false-positive rate will be ignored within two months, and it should be.
+It can flag accounts whose behaviour has changed against their own history, which is genuinely useful across a portfolio of hundreds. Score it honestly before relying on it, because [how to test whether a model actually helps a controls team](https://pciai.org/ai-in-project-controls) comes down to precision, recall and F1 on a validation set of accounts a human has already reviewed. An alert tool with no measured false-positive rate will be ignored within two months, and it should be.
 
 ---
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this is not a republish of a PCI site page.*
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "which forecast method matches your cause", and to [earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with the anchor "setting a variance threshold that gets applied".*
+*Linking note: two links are now in the body, one per domain. "Which forecast method matches your cause" sits in the list of what to do about a poor index (https://projectcontrolsinstitute.org/four-eac-formulas), because that instruction is useless without the four methods beside it. "How to test whether a model actually helps a controls team" sits in the FAQ on predictive flagging (https://pciai.org/ai-in-project-controls). The pillar page and the reporting-thresholds page were dropped: both are hub pages, and this piece already spends its one hub link. The title is written the way a person asks the question rather than around the exact search string, and the definition sentence answers it in the first line, which is the point of the opening. Reciprocal: none warranted.*

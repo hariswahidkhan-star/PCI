@@ -38,7 +38,7 @@ Neither substitutes for the other, and a good career often uses both.
 | National or employer scheme | Government skills frameworks, contractor in-house grading | Line-manager assessment against a competence matrix | Progression within that market or firm | Portability beyond it |
 | Independent certifying body | Examined credentials against a published Body of Knowledge | Proctored examination | A verifiable record of examined knowledge | Site and commercial experience, which no exam replaces |
 
-Requirements, routes and titles are set by each body and change. Check the current position with the body itself rather than with a training provider selling preparation for it.
+Requirements, routes and titles are set by each body and change. Check the current position with the body itself rather than with a training provider selling preparation for it. The same test separates a credible course from a marketing one, worked through for a single Gulf market in [how to judge a course before you pay](https://pciglobal.ai/project-controls-courses-dubai).
 
 ## What does a quantity surveyor actually get examined on?
 
@@ -64,7 +64,7 @@ Cost-value reconciliation is blunt at this point: £9.0m certified against £8.9
 
 This is where projects lose money and where almost no quantity surveying route examines you properly.
 
-IFRS 15 sets out a five-step model, described here in PCI's own words. Identify the contract with the customer. Identify the distinct performance obligations within it.
+IFRS 15 sets out a five-step model, described here in PCI's own words and worked line by line in [how the five-step model applies to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction). Identify the contract with the customer. Identify the distinct performance obligations within it.
 
 Determine the transaction price, including variable consideration and the limit on how much of it may be recognised. Allocate that price across the obligations. Recognise revenue as each obligation is satisfied, over time where the criteria for that are met, otherwise at a point in time.
 
@@ -96,7 +96,7 @@ A surveyor who shortens the cycle by valuing earlier and closing variations fast
 
 If you want a protected title and a long career in one market, take the chartered route in that market and start logging experience now. Nothing else substitutes for it.
 
-If you already have the site and commercial experience but keep losing arguments at the finance interface, an examined credential covering revenue, cut-off and forecasting closes the gap that the chartered route left open.
+If you already have the site and commercial experience but keep losing arguments at the finance interface, an examined credential covering revenue, cut-off and forecasting closes the gap that the chartered route left open, and [what an online quantity surveying credential actually gives you](https://pciglobal.ai/quantity-surveyor-certification-online) sets out what that buys and what it cannot.
 
 If you are moving across from engineering or estimating, get examined knowledge first, because it makes you employable in a junior commercial seat where the experience accumulates.
 
@@ -120,11 +120,11 @@ In markets where clients specify chartered status for valuation, expert or lead 
 Broadly, the quantity surveyor owns the commercial position with the client: measurement, valuation, variations and claims. The cost engineer owns the internal cost position, budget structure and forecast. In oil, gas and process work the second title is more common; in buildings and civils the first.
 
 **Does a quantity surveying credential transfer between countries?**
-The knowledge does; the title and the measurement rules often do not. Standard methods of measurement, contract forms and payment legislation differ by market, and a body's title may or may not be recognised elsewhere. Examined credentials with a published syllabus travel more easily because an employer can see what was tested.
+The knowledge does; the title and the measurement rules often do not. Standard methods of measurement, contract forms and payment legislation differ by market, and a body's title may or may not be recognised elsewhere; [what actually counts in the UK market](https://pciglobal.ai/project-controls-certification-uk) shows how local that judgement gets. Examined credentials with a published syllabus travel more easily because an employer can see what was tested.
 
 **Will AI take over quantity take-off?**
 Take-off is already partly automated. What does not automate is deciding what is in scope, what a variation is worth, whether a cost depicts progress, and what to accrue at cut-off. The role moves towards verifying machine output, which requires more accounting literacy rather than less.
 
 ---
 
-*Internal links: this guide should link to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how the five-step model applies to a construction contract", to [cost engineer certification](https://projectcontrolsinstitute.org/cost-engineer-certification) with the anchor "how the cost engineering routes compare", and to [quantity surveyor certification online](https://pciglobal.ai/quantity-surveyor-certification-online) with the anchor "what an online quantity surveying credential actually gives you".*
+*Linking note: the links are now in the body. One cross-estate link only — "how the five-step model applies to a construction contract" sits in the ledger section, where the piece asks what a valuation becomes once it reaches the accounts and does not answer that in full. Three same-domain links: "how to judge a course before you pay" follows the warning about providers selling preparation; "what an online quantity surveying credential actually gives you" follows the route-choice paragraph for readers who already hold the experience; "what actually counts in the UK market" sits in the portability answer, where the piece says recognition is local without saying what local looks like. The cost engineer certification link proposed earlier was dropped rather than retargeted: it would have been a second link to the same domain from one piece. Reciprocal: the online quantity surveying guide should link back here with the anchor "the four global quantity surveying routes compared".*

@@ -17,9 +17,9 @@ ab_id:         AB-03683
 
 # Is project controls stressful? Where the pressure lands
 
-Yes, in bursts you can see coming. The load is periodic rather than constant: cut-off week, forecast sign-off, and any window where a claim or a gate is live. The underlying cause is simple — you publish a number that several people would prefer said something else.
+Yes, in bursts you can see coming. People asking *is project controls stressful* usually want to know whether it is the grinding kind or the concentrated kind, and it is the concentrated kind: cut-off week, forecast sign-off, and any window where a claim or a gate is live.
 
-People asking **is project controls stressful** usually want to know whether it is the grinding kind or the concentrated kind. It is the concentrated kind, which is survivable if the month is designed properly and corrosive if it is not.
+The load is periodic rather than constant, and the underlying cause is simple: you publish a number that several people would prefer said something else. That is survivable if the month is designed properly and corrosive if it is not.
 
 ## What does the hard week actually look like?
 
@@ -109,7 +109,7 @@ Keep a trend register, so cost movements are visible before they become a foreca
 
 Have an escalation route that does not depend on your seniority, and use it early. The people who burn out are the ones absorbing a governance failure personally.
 
-Learn the finance side of your own numbers. A large share of month-end friction is a controls professional and an accountant using the same word for different things, and the person who can speak both languages spends far less of their month in translation. If you are weighing the career overall rather than the month, [what a project controls engineer actually does](https://pciworld.org/what-does-a-project-controls-engineer-do) sets out the work behind the pressure.
+Learn the finance side of your own numbers. A large share of month-end friction is a controls professional and an accountant using the same word for different things, and the person who can speak both languages spends far less of their month in translation. If you are weighing the career overall rather than the month, [a day in the project controls role](https://pciworld.org/what-does-a-project-controls-engineer-do) sets out the work behind the pressure.
 
 ## Frequently asked questions
 

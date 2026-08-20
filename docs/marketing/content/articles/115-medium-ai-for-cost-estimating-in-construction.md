@@ -39,7 +39,7 @@ The right-hand column is the estimating file in miniature. Every failure listed 
 
 ## The four estimating methods, and where the model sits
 
-AI does not replace an estimating method. It sits inside one, which is why "we use AI for estimating" tells a reviewer nothing by itself.
+AI does not replace an estimating method. It sits inside one, which is why "we use AI for estimating" tells a reviewer nothing by itself. What a reviewer needs is the method named, and the written rules that decide [how governed AI applies across the controls lifecycle](https://pciai.org/ai-in-project-controls).
 
 | Method | How the number is built | Data required | Best used for | Typical failure |
 |---|---|---|---|---|
@@ -76,7 +76,7 @@ Do that correction once. A team that adjusts for bias and then adds the same all
 
 ## What happens to the estimate after award
 
-An estimate does not stop mattering when the job starts. Where revenue is recognised over time using a cost-to-cost input measure, expected total cost is the denominator of the progress percentage, so the estimate drives reported revenue every month.
+An estimate does not stop mattering when the job starts. Where revenue is recognised over time on a [percentage-of-completion basis using the cost-to-cost input method](https://projectcontrolsinstitute.org/ifrs-15-for-construction), expected total cost is the denominator of the progress percentage, so the estimate drives reported revenue every month.
 
 Take a contract priced at £11,000,000 with £4,200,000 of cost incurred. On the original £8,400,000 expected cost, progress is 4,200,000 ÷ 8,400,000 = **50.0%** and revenue to date is 0.50 × 11,000,000 = **£5,500,000**.
 
@@ -138,4 +138,4 @@ Only if your measured error has changed. Contingency should follow the spread yo
 
 *First published on pciai.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "percentage of completion and the cost-to-cost input method", and to [cost control methods that catch overruns early](https://projectcontrolsinstitute.org/cost-control-in-construction) with the anchor "keeping the estimate honest once the work starts".*
+*Internal links: two are now placed in the body. The AI in project controls pillar (pciai.org) sits on "how governed AI applies across the controls lifecycle", in the sentence saying that "we use AI for estimating" tells a reviewer nothing — the reviewer's next question is what rules govern the model, which is what that pillar answers. IFRS 15 for construction (projectcontrolsinstitute.org) sits on "percentage-of-completion basis using the cost-to-cost input method", where the guide first says expected cost is the denominator of recognised revenue. The originally proposed third link, to cost control in construction, was dropped: it would have been a second link to the same domain in one piece, which is the footprint pattern this run avoids. It belongs on the own-site original as one of its internal links instead. Reciprocal: the cost control in construction page should link back here with the anchor "measuring estimating error and bias on your own jobs", since it raises the question and does not answer it.*

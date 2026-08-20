@@ -75,7 +75,7 @@ The civil workstream in the same month: planned value £1.40m, earned value £1.
 
 A programme CPI of 0.944 reads as a small problem. Underneath it, one workstream is forecasting a 32% overrun and the other is subsidising the appearance.
 
-That is the case for WBS-level reporting rather than programme-level reporting, and it applies as much to conventional work as to agile. Report the indices at the level where a manager can act, and let the total be a total rather than a message.
+That is the case for WBS-level reporting rather than programme-level reporting, and it applies as much to conventional work as to agile. Report the indices at the level where a manager can act, and let the total be a total rather than a message. Deciding [which metric triggers which decision](https://projectcontrolsinstitute.org/project-performance-management) is the other half of that design.
 
 Set an exception threshold per workstream instead of per programme. A 5% variance on £1.8m is worth a paragraph; the same 5% on the programme total is invisible.
 
@@ -126,4 +126,4 @@ Forecast the workstreams separately and add them, never blend the indices first.
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so nothing here duplicates a page the PCI site needs to rank.*
 
-*Internal links: this piece should link to [what is earned value management](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value mechanics behind these indices", to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "output methods and how progress is measured for revenue", and to [project performance management](https://projectcontrolsinstitute.org/project-performance-management) with the anchor "reporting at the level a manager can act on".*
+*Linking note — the links now in the body: "which metric triggers which decision" points at projectcontrolsinstitute.org/project-performance-management from the roll-up section, because the sentence about reporting at the level a manager can act on raises what each metric should trigger. One cross-estate link only — the IFRS 15 passage describes the standard in PCI's own words and makes its point without one, and a second link to the same domain would read as placement rather than reference. Reciprocal: the project performance management guide could cite this piece as the hybrid-delivery case where a programme roll-up hides a failing workstream.*

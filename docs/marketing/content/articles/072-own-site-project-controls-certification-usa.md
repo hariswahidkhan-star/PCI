@@ -17,7 +17,7 @@ ab_id:         —
 
 # Project controls certification USA: what actually counts
 
-In the United States there is no licence to practise project controls, so a certification is worth exactly what the body behind it assessed. American employers screen on two things instead: whether you were examined against a published standard, and whether you can run an earned value forecast that survives a government review.
+No state licence to practise project controls exists, so the project controls certification USA employers trust is worth exactly what the body behind it assessed. They screen on two things instead: whether you were examined against a published standard, and whether you can run an earned value forecast that survives a government review.
 
 ## The project controls certification USA employers actually ask for
 
@@ -31,13 +31,13 @@ Five different things carry the word certification on an American résumé, and 
 | Employer EVMS training record | Your employer | None | You were briefed on their system |
 | Independent certification against a published Body of Knowledge | A certifying body, by examination | CPD cycle and recertification | You met a published standard on the day |
 
-PCI claims no equivalence with, endorsement by, or affiliation to PMI, AACE International or any other organisation. They are independent bodies that set their own requirements, and naming them here says nothing about their view of PCI.
+PCI claims no equivalence with, endorsement by, or affiliation to PMI, AACE International or any other organisation. They are independent bodies that set their own requirements, and naming them here says nothing about their view of PCI. How those families differ in scope, fee and renewal is set out in [a like-for-like comparison of the main project controls certifications](https://credentialfinder.org/best-project-controls-certification).
 
 The test that cuts through all five: if the organisation that taught you also decided whether you passed, you bought training.
 
 ## Why EIA-748 changes what an American employer screens for
 
-Large US federal contracts in defence, energy, space and some transportation require the contractor to run an earned value management system complying with ANSI/EIA-748, and to submit periodic cost and schedule data to the customer.
+Large US federal contracts in defence, energy, space and some transportation require the contractor to run an earned value management system complying with ANSI/EIA-748, and to submit periodic cost and schedule data to the customer. If that system is new to you, start with [what earned value measures and how](https://projectcontrolsinstitute.org/earned-value-management), because every screening question below assumes it.
 
 That standard sets out guidelines grouped into five areas: organisation, planning and budgeting, accounting considerations, analysis and management reports, and revisions and data maintenance. It describes what a system must do, not how any one project should be run.
 
@@ -110,10 +110,10 @@ American programmes lose money in that gap every month, and the person who can s
 No. There is no state licence to practise project controls, unlike professional engineering. What regulates the work is contractual: federal and large commercial contracts specify the management system, the reporting deliverables and often the qualifications of key personnel. That is why an examined credential and demonstrable EIA-748 literacy carry more weight than any job title.
 
 **Which certification do US employers value most?**
-It depends entirely on the role. Cost and estimating roles look towards the AACE International family, scheduling roles towards technical scheduling credentials, and delivery roles towards project management credentials. Rather than chasing a ranking, read three job specifications for the role you actually want and count which credentials appear. That list is more reliable than any comparison article.
+It depends entirely on the role. Cost and estimating roles look towards the AACE International family, scheduling roles towards technical scheduling credentials, and delivery roles towards project management credentials; for cost work that crosses borders, [how quantity surveying credentials compare across markets](https://pciglobal.ai/quantity-surveyor-certification) belongs on the same shortlist. Rather than chasing a ranking, read three job specifications for the role you actually want and count which credentials appear. That list is more reliable than any comparison article.
 
 **Does an international certification work in the US?**
-Yes, where it can be verified and its syllabus is public. American recruiters are used to credentials issued elsewhere and judge them on assessment quality, not on the issuing country. A credential with an independent examination, a published Body of Knowledge and a checkable credential ID is legible anywhere. Immigration status and clearance eligibility are separate questions that no certification affects.
+Yes, where it can be verified and its syllabus is public. American recruiters are used to credentials issued elsewhere and judge them on assessment quality, not on the issuing country, which is the same test [British employers apply to an overseas credential](https://pciglobal.ai/project-controls-certification-uk). A credential with an independent examination, a published Body of Knowledge and a checkable credential ID is legible anywhere. Immigration status and clearance eligibility are separate questions that no certification affects.
 
 **How much does project controls certification cost in the USA?**
 Published fees change, so treat any figure you read as stale. Budget for four components instead: membership or enrolment, the examination fee, optional preparation, and recurring recertification. Then compare shortlisted options over nine years rather than at checkout, because entry price and total cost of ownership frequently rank in opposite orders.
@@ -126,4 +126,4 @@ No. PCI is not accredited by ANAB, IAS or any ISO/IEC 17024 accreditation body, 
 
 ---
 
-*Internal links: this guide should link to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "how each EAC method is derived", to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "earned value from first principles", to [project controls certification UK](https://pciglobal.ai/project-controls-certification-uk) with the anchor "the British routes compared", and to [the best project controls certification comparison](https://credentialfinder.org/best-project-controls-certification) with the anchor "an honest comparison of the credentials"; the UK and Gulf geo guides link back here with the anchor "how the American market screens".*
+*Internal links: placed in the body. Two on pciglobal.ai — quantity surveyor certification, in the FAQ on which credential a role wants, for cost work that crosses borders; and project controls certification UK, in the FAQ on international credentials, where the same three-part test is applied by another market. Two cross-estate links, one per domain: the hub's earned value management pillar at the EIA-748 paragraph, because a reader meeting a compliant EVMS for the first time needs the mechanics; and credentialfinder's comparison after the five-row table, which is the sentence that names the credential families without ranking them. That second link is satellite to satellite, kept because comparison is credentialfinder's territory and the piece deliberately declines to rank. The originally proposed four EAC formulas link was dropped — the EAC table here works all four methods with the arithmetic shown, so the sentence raises no question the hub page answers. Reciprocal: the UK guide links back here from its overseas-credential FAQ.*

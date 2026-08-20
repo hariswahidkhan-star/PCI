@@ -17,9 +17,9 @@ ab_id:         AB-00043
 
 # Will AI replace project managers? A practitioner's view
 
-No. AI is removing the assembly work — status collection, document search, first-draft plans, forecasts and reports — and leaving the part that carries consequences: deciding what to do about a number, committing to it in front of a client, and being answerable when money moves. The job gets smaller and heavier at once.
+Will AI replace project managers? No. AI is removing the assembly work — status collection, document search, first-draft plans, forecasts and reports — and leaving the part that carries consequences: deciding what to do about a number, committing to it in front of a client, and being answerable when money moves. The job gets smaller and heavier at once.
 
-Anyone asking will AI replace project managers is usually asking something narrower: which parts of my week survive, and what should I be good at in five years. It is answered here with a task list, a worked forecast, and the decisions that stay with a person.
+Anyone asking the question is usually asking something narrower: which parts of my week survive, and what should I be good at in five years. It is answered here with a task list, a worked forecast, and the decisions that stay with a person.
 
 ## Where does a project manager's week actually go?
 
@@ -42,7 +42,7 @@ Most project management weeks contain more administration than management. The t
 
 Read the two ends together. The top of the table is where the hours are, and it is disappearing; the bottom is where the job is, and it is not.
 
-That is a repricing of the role, not a removal of it. A project manager who was valued for keeping the register tidy is exposed. One who is valued for taking decisions under pressure is not.
+That is a repricing of the role, not a removal of it. A project manager who was valued for keeping the register tidy is exposed. One who is valued for taking decisions under pressure is not. The same repricing is running through [the planning engineer's role](https://pciai.org/will-ai-replace-planning-engineers), where the assembly work went first and the judgement stayed.
 
 ## Will AI replace project managers when the forecast is automated?
 
@@ -56,7 +56,7 @@ Cost variance is EV − AC = 8,640,000 − 9,600,000 = **−£960,000**. Schedul
 
 Cost performance index is EV ÷ AC = 8,640,000 ÷ 9,600,000 = **0.90**. Schedule performance index is EV ÷ PV = 8,640,000 ÷ 9,600,000 = **0.90**. The package is earning 90p of budgeted value for every pound spent, and running at 90% of planned progress.
 
-Now forecast the outturn. There are four standard estimate at completion (EAC) methods, and every one of them is arithmetically correct.
+Now forecast the outturn. There are four standard estimate at completion (EAC) methods, and every one of them is arithmetically correct; [how to choose and defend an EAC method](https://projectcontrolsinstitute.org/four-eac-formulas) is the part that is not arithmetic at all.
 
 | EAC method | Formula | Result on these numbers | What it assumes |
 |---|---|---|---|
@@ -95,7 +95,7 @@ Read a number and know which question it answers. When a report says 38.5% compl
 
 Be able to challenge a forecast. Ask which EAC method produced it, what that method assumes, and what the other three said.
 
-Write the assumption down beside the output. An AI-assisted forecast with its inputs, model version and reviewer recorded is auditable; the same number without them is a rumour with decimals.
+Write the assumption down beside the output. An AI-assisted forecast with its inputs, model version and reviewer recorded is auditable; the same number without them is a rumour with decimals. That record is [the standard PCI holds AI-assisted work to](https://pciai.org/ai-in-project-controls), and it applies to a schedule or a risk range just as much as a forecast.
 
 Keep the escalation. The moment a project manager stops being the person who says the uncomfortable thing early, the role really has been replaced — not by software, but by a reporting process.
 
@@ -126,4 +126,4 @@ Enough to ask two questions: which progress measure is driving the reported perc
 
 ---
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "how to choose and defend an EAC method", and to [whether AI will replace planning engineers](https://pciai.org/will-ai-replace-planning-engineers) with the anchor "the same question asked of the planning role".*
+*Internal links: now placed in the body. Same-domain: "the planning engineer's role" follows the repricing point, because a reader asks immediately whether the same thing is happening next door; "the standard PCI holds AI-assisted work to" sits beside the instruction to record inputs, method and reviewer, which raises whose standard that is. One cross-estate link only, to the hub: "how to choose and defend an EAC method" where the four methods are introduced and the choice between them is called a claim about cause. Opening rewritten so the primary keyword sits in the first line with the answer, not in the second paragraph. Reciprocal: the planning-engineer piece should point back here on the forecast choice.*

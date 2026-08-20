@@ -130,7 +130,7 @@ The warning attached to a short cycle: a contractor with a negative cash convers
 
 ## Three ways an S-curve lies
 
-**It is drawn from the contract, not the plan.** A curve fitted to the payment schedule reproduces the commercial negotiation rather than the work. If the shape does not come from the time-phased baseline, it is decoration.
+**It is drawn from the contract, not the plan.** A curve fitted to the payment schedule reproduces the commercial negotiation rather than the work. If the shape does not come from [the time-phased cost baseline](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting), it is decoration.
 
 **Cost is back-loaded and value is front-loaded.** Where the schedule of rates carries margin in early activities, the value curve rises faster than the cost curve and the contract looks profitable throughout, then collapses in the final quarter. Plot the ratio of the two each period and the divergence shows early.
 
@@ -171,4 +171,4 @@ Through the forecast cost at completion, which drives measured progress and ther
 
 *First published on projectcontrolsinstitute.org; the `canonical_url` on this post points there. DEV prohibits stub posts, so the full build including the S-curve arithmetic is here.*
 
-*Internal links: this guide should link to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with that anchor, and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "how the time-phased baseline is built".*
+*Internal links: one is now in the body. "The time-phased cost baseline" points at projectcontrolsinstitute.org/project-budgeting-and-forecasting, placed where the piece says an S-curve drawn from the payment schedule is decoration, because that sentence raises where the baseline behind the curve is supposed to come from and this piece assumes it exists. The eac-accounting and month-end-close links proposed earlier were dropped: one link per domain per piece, and those two sentences are already answered in place. No second domain earns a link here — cash arithmetic raises no question that the AI, careers, regional or verification sites answer better. Reciprocal: the eac-accounting page should link back to this one from its cash-effect paragraph, with an anchor about peak funding rather than about cash flow generally.*

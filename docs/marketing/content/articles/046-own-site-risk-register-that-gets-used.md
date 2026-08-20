@@ -76,7 +76,7 @@ Use the matrix to triage. Use currency and days to decide anything that costs mo
 | Expected value (probability × impact) | A single mean figure per risk and a total | That you can state a probability and an impact you would defend | Half a day | It is a mean, so it never happens; ignores correlation and the tail |
 | Three-point ranges plus Monte Carlo | A distribution and confidence levels such as P50 and P80 | Ranges and correlations that came from somewhere real | Two to five days | Weak inputs produce a confident-looking wrong curve |
 
-Run all three in that order. The matrix picks the twenty rows worth quantifying, expected value gives the opening contingency figure, and the simulation tests whether it survives the tail.
+Run all three in that order. The matrix picks the twenty rows worth quantifying, expected value gives the opening contingency figure, and [a Monte Carlo run over the same inputs](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) tests whether it survives the tail.
 
 ## The arithmetic, shown
 
@@ -92,7 +92,7 @@ Take six quantified risks on a substructure and steel package. Probabilities are
 | Commissioning spares shortfall | 0.15 | £60,000 | £9,000 |
 | **Total** | | | **£585,500** |
 
-The steel impact of £260,000 is not a guess. Three weeks is fifteen working days; time-related site costs run at £14,000 a day, giving £210,000, and the erection subcontractor has quoted £50,000 for an extended shift pattern. 15 × 14,000 + 50,000 = £260,000.
+The steel impact of £260,000 is not a guess. Three weeks is fifteen working days; time-related site costs run at £14,000 a day, giving £210,000, and the erection subcontractor has quoted £50,000 for an extended shift pattern. 15 × 14,000 + 50,000 = £260,000. The arithmetic assumes those fifteen days land on the path driving completion, and [whether risk days actually reach the completion date](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) is settled in the schedule model rather than in the register.
 
 The total of £585,500 is a mean, and a mean is the one outcome that will not occur. It is a reasonable opening contingency figure and a poor closing one. Note also that the top two rows carry £387,000 of the £585,500, which is 66 per cent — so the management effort belongs on two risks, not six.
 
@@ -120,6 +120,8 @@ Align the monthly review with the cost report date rather than holding a separat
 Contingency comes out of the register. That is the point of quantifying it, and it is where project controls and finance have to agree on vocabulary.
 
 Contingency held inside a project budget for identified risks is a control account, not an accounting provision. A provision has recognition criteria of its own under the accounting standards, tested by the finance team rather than set in a risk workshop.
+
+The two vocabularies meet at the estimate at completion, which is where [a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) and the treatment of contingency has to hold up in both.
 
 This is the overlap the discipline keeps failing at. An engineer is examined on probability and float, almost never on when an obligation may be recognised. An accountant is examined on recognition, almost never on a risk-adjusted forecast. The contingency line sits in both.
 
@@ -150,4 +152,4 @@ The project manager, not the risk manager. The person who chairs it is the perso
 
 ---
 
-*Internal links: this how-to should link up to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with the anchor "schedule risk analysis", across to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with the anchor "run the simulation across the same inputs", and to [quantitative schedule risk analysis for beginners](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "quantitative schedule risk analysis"; the [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) guide should link here with the anchor "the contingency position in the risk register".*
+*Internal links now in the body, all on this domain: [a Monte Carlo run over the same inputs](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) sits where the three sizing methods are ordered and the reader asks what the third one involves; [whether risk days actually reach the completion date](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) sits under the £260,000 delay arithmetic, which rests on those days driving completion; and [a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) sits where contingency is distinguished from an accounting provision. The schedule risk analysis pillar was dropped in favour of the EAC link: three same-domain links is the limit, and two schedule-risk links in one piece would have said the same thing twice. Reciprocal worth making: the [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) guide should link back with the anchor "the contingency position in the risk register".*

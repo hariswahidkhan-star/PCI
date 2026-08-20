@@ -69,7 +69,7 @@ Take a programme with a budget at completion (BAC) of £120m. At the data date: 
 
 Cost variance is EV − AC = 42 − 50 = **−£8m**. Schedule variance is EV − PV = 42 − 48 = **−£6m**. The indices are CPI = 42 ÷ 50 = **0.84** and SPI = 42 ÷ 48 = **0.875**.
 
-Four EAC methods, four answers, same inputs.
+Four EAC methods, four answers, same inputs; [how to choose and defend an EAC method](https://projectcontrolsinstitute.org/four-eac-formulas) is the part that stays with a person.
 
 | Method | Formula | What it assumes | Answer |
 |---|---|---|---|
@@ -128,7 +128,7 @@ Assurance moves upstream. When outputs are generated quickly, the control has to
 
 ## How PCI examines this
 
-PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination.
+PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination, and [what an AI project controls credential should examine](https://pciai.org/ai-project-controls-certification) is the test to apply to any of them, including these.
 
 | Credential | Full name | Shape | Centre of gravity |
 |---|---|---|---|
@@ -145,7 +145,7 @@ PCI is an independent certifying body. Nothing on this page is legal, tax or acc
 ## Frequently asked questions
 
 **Will AI replace project controls professionals?**
-No, but it changes the task mix sharply. The assembly and checking work compresses, and the work that survives is choosing methods, defending forecasts and owning decisions. The risk to an individual is not redundancy; it is spending a career on the part that automates and never building the part that does not.
+No, but it changes the task mix sharply. The assembly and checking work compresses, and the work that survives is choosing methods, defending forecasts and owning decisions. The risk to an individual is not redundancy; it is spending a career on the part that automates and never building the part that does not. For planners specifically, [what happens to the planning engineer's role](https://pciai.org/will-ai-replace-planning-engineers) is worked through case by case.
 
 **Can AI produce an estimate at completion I can put in a board pack?**
 It can produce every method and test them against your history, which is genuinely useful. It cannot choose between them, because the choice is a claim about what caused the variance and whether that cause persists. Present the range, name the method you chose, and say why.
@@ -154,11 +154,11 @@ It can produce every method and test them against your history, which is genuine
 There is no universal threshold. Demand precision and recall measured on your own data, then price the review time each setting implies and the cost of the errors each setting misses. A model with 0.60 precision that saves 25 hours a month may beat one with 0.90 precision that flags almost nothing.
 
 **Is our project data good enough for this?**
-Usually the cost data is, the schedule data is patchy, and the link between them is the weak point. Before buying anything, check whether your control accounts reconcile to your work breakdown structure and whether progress is measured by a rule that someone can state out loud.
+Usually the cost data is, the schedule data is patchy, and the link between them is the weak point; [what AI does with a live construction schedule](https://pciai.org/ai-for-construction-scheduling) depends almost entirely on that patchiness. Before buying anything, check whether your control accounts reconcile to your work breakdown structure and whether progress is measured by a rule that someone can state out loud.
 
 **Does using AI create an audit problem?**
 Only if you cannot show provenance. An AI-assisted number is no different from a spreadsheet-derived one: the auditor asks what the inputs were, what method was applied, who reviewed it and who owns it. Keep the model version and the input set with the output and the question is answerable.
 
 ---
 
-*Internal links: this pillar should link to [AI project controls certification](https://pciai.org/ai-project-controls-certification) with the anchor "what an AI project controls credential should examine", to [AI for construction scheduling](https://pciai.org/ai-for-construction-scheduling) with the anchor "AI applied to a live schedule", to [whether AI will replace planning engineers](https://pciai.org/will-ai-replace-planning-engineers) with the anchor "what happens to the planning engineer's role", and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "how to choose and defend an EAC method".*
+*Linking note: one cross-estate link is in the body, to the hub's [how to choose and defend an EAC method](https://projectcontrolsinstitute.org/four-eac-formulas), placed at the point where four methods give four answers from identical inputs and the piece says the choice is a claim about cause. Three same-domain links sit in the sentences that raise them: what an AI credential should examine, beside PCI's own three; AI applied to a live construction schedule, in the FAQ about patchy schedule data; and the planning engineer's future, in the FAQ about replacement. As the pillar for this domain, it links out sparingly and takes cluster links back rather than pointing at every sibling. Reciprocal links worth making: each of the three cluster pages should cite this pillar once, naming the governed-AI line it depends on.*

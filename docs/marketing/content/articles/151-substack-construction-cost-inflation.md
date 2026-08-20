@@ -66,7 +66,7 @@ Compare that with the shortcut most estimates carry, which is one year at the he
 
 This is the step that turns an estimating adjustment into a reported number, and it catches teams out at the first period after a re-forecast.
 
-Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs. Raising the escalation allowance raises total expected costs, so the percentage complete falls even though nothing on site changed.
+Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs, which is the mechanism set out in [measuring progress on a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction). Raising the escalation allowance raises total expected costs, so the percentage complete falls even though nothing on site changed.
 
 Continue the example. Costs incurred are £12.0m and the contract price is £54.0m.
 
@@ -80,9 +80,13 @@ That is £0.85m of revenue that has to come back out, produced by an assumption 
 The five-step revenue model behind that, in the Institute's own words rather than reproduced from the standard:
 
 1. **Identify the contract** — an agreement with a customer creating enforceable rights and obligations, with commercial substance and a considered view on collection.
+
 2. **Identify the performance obligations** — the distinct promises inside it, which on an integrated construction contract are frequently combined into one.
+
 3. **Determine the transaction price** — including variable elements such as variations, claims and incentives, constrained so revenue is not taken where a significant reversal is expected.
+
 4. **Allocate the price** across those obligations where there is more than one.
+
 5. **Recognise revenue as obligations are satisfied**, over time where the criteria are met, measured by a chosen method of progress. The cost-based input method is the one your escalation assumption drives.
 
 Nothing here is accounting advice. The point for a controls team is narrower: your escalation assumption is an input to reported revenue, so it needs an owner and a date.
@@ -112,10 +116,10 @@ At every re-baseline and at least annually, with the previous assumption kept vi
 Arithmetically yes, and practically almost never. Falling tender prices usually reflect margin compression rather than falling resource cost, and a contractor bidding at a loss is a different risk arriving under a different name. Hold the allowance at zero and record why.
 
 **Can an AI model set the rate?**
-It can assemble the series, align base dates, and test whether your basket weights match your actual spend, which is tedious and easy to get wrong by hand. It should not choose the rate on its own. If you cannot state the basket, the base date and the source in one sentence, the number is not defensible in front of an auditor.
+It can assemble the series, align base dates, and test whether your basket weights match your actual spend, which is tedious and easy to get wrong by hand. It should not choose the rate on its own, and where that line sits belongs in [a written policy on what a model may decide](https://pciai.org/ai-policy-for-project-controls) rather than in whatever the tool defaults to. If you cannot state the basket, the base date and the source in one sentence, the number is not defensible in front of an auditor.
 
 ---
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so nothing here is a copy of a page on the PCI site.*
 
-*Internal links: this piece should link to [cost control in construction](https://pciglobal.ai/cost-control-in-construction) with the anchor "how escalation sits inside a cost control system", to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how total expected costs drive revenue", and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "where the escalation line belongs in the budget".*
+*Linking note: two links are now in the body, one per domain. "Measuring progress on a construction contract" sits in the revenue paragraph (https://projectcontrolsinstitute.org/ifrs-15-for-construction), because that sentence asks how total expected costs drive the progress measure and the page answers it. "A written policy on what a model may decide" sits in the FAQ on whether a model may set the escalation rate (https://pciai.org/ai-policy-for-project-controls), which is the question that sentence raises. The three links originally proposed here all resolved to the hub once cost control was corrected to its real home there, and one link per domain is the limit, so budgeting and forecasting was dropped rather than retargeted. No reciprocal link is warranted: a hub page has no reason to point back at a newsletter issue.*

@@ -23,7 +23,7 @@ Schedule risk analysis tests a programme's dates against uncertainty instead of 
 
 Schedule risk analysis is the practice of quantifying how likely a plan is to be achieved. A deterministic critical path schedule returns one date. This returns the odds attached to that date and to every date around it.
 
-It exists in two grades. The qualitative grade scores threats against activities and ranks them. The quantitative grade, normally called QSRA, simulates the whole network and returns a distribution of finish dates and float.
+It exists in two grades. The qualitative grade scores threats against activities and ranks them. The quantitative grade, normally called QSRA, simulates the whole network and returns a distribution of finish dates and float, and [what building a QSRA actually involves](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) — ranging every activity, mapping the risks, reading the iterations — is a working method rather than a definition.
 
 Only the second grade produces a number you can defend in a contingency line. A heat map tells a board which risks are worst. It does not tell them whether the committed date needs another six weeks.
 
@@ -64,6 +64,8 @@ Anchoring is the standard failure. Show someone a planned 40 days and the range 
 Duration ranging captures ordinary variability. It does not capture a discrete event such as a permit refusal or a failed factory acceptance test, which either happens or does not.
 
 The risk driver method handles these properly. Each register risk carries a probability and a multiplicative impact range, and is mapped to every activity it would affect. When the simulation fires that risk, all mapped activities stretch together.
+
+None of that works on a register of unowned, unquantified rows, which is why [what keeps a risk register in use](https://projectcontrolsinstitute.org/risk-register-that-gets-used) — a named owner, days or money attached, a fixed review date — is a prerequisite for the model rather than an administrative preference.
 
 That mapping is also how correlation enters the model honestly. One late vendor hitting nine fabrication activities is not nine independent events, and treating it as such understates the tail badly.
 
@@ -127,7 +129,7 @@ The governance rule that works is simple. The project team plans to the P50, the
 
 Drawdown is then tracked as a curve. If the contingency is falling faster than time is passing, the forecast is already wrong and the monthly report should say so.
 
-This is where schedule risk meets cost risk. Extended time-related costs, preliminaries and site overheads convert delay days into money, so the schedule P80 feeds directly into the cost risk model rather than sitting beside it.
+This is where schedule risk meets cost risk. Extended time-related costs, preliminaries and site overheads convert delay days into money, so the schedule P80 feeds directly into the cost risk model rather than sitting beside it. The mechanics on the cost side — ranging estimate lines, handling correlation, reading contingency off the distribution — are worked through in [running the same simulation on cost](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation).
 
 ## Where the method fails
 
@@ -167,4 +169,4 @@ It needs to be current, not complete. Map the risks that have a credible route t
 
 ---
 
-*Internal links: this piece should link to the [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) beginner's guide, [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation), [how to build a risk register stakeholders actually use](https://projectcontrolsinstitute.org/risk-register-that-gets-used), the [critical path method](https://projectcontrolsinstitute.org/critical-path-method) definition and the [total float](https://projectcontrolsinstitute.org/total-float) definition, and upward to the [project controls](https://projectcontrolsinstitute.org/what-is-project-controls) pillar.*
+*Internal linking note: three same-domain links are now in the body. [What building a QSRA actually involves](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) sits where the piece separates the two grades of analysis and the reader is left asking what the quantitative grade takes to run. [What keeps a risk register in use](https://projectcontrolsinstitute.org/risk-register-that-gets-used) sits in the risk-driver section, where mapping register risks onto activities assumes a register worth mapping. [Running the same simulation on cost](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) sits where the schedule P80 is handed to the cost risk model. The critical path method and total float definitions were dropped: the piece already carries two to three internal links, and adding them would push it past the cap without answering a question the prose raises. Reciprocal link worth making: the QSRA guide and the Monte Carlo cost guide should point back here with the anchor "why a deterministic date understates the finish".*

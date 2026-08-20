@@ -17,7 +17,7 @@ ab_id:         AB-00591
 
 # Critical path method definition, worked end to end
 
-The critical path method is a scheduling technique that finds the longest path of dependent activities through a network and uses it to set the earliest possible completion date. Activities on that path have no spare time, so a day lost on any of them is a day lost to the project. Everything else has float.
+The critical path method is a scheduling technique that finds the longest path of dependent activities through a network and uses it to set the earliest possible completion date. That is the critical path method definition in one sentence. Activities on that path have no spare time, so a day lost on any of them is a day lost to the project. Everything else has float.
 
 CPM came out of the late 1950s, from DuPont and Remington Rand working on plant maintenance, at almost the same time as the US Navy's PERT technique. The arithmetic has not changed since.
 
@@ -64,6 +64,8 @@ The project takes **80 working days**.
 The critical path is **A–B–C–E–F–G**, and it checks out: 5 + 20 + 12 + 15 + 18 + 10 = 80.
 
 Procurement is not critical. It also has two days of float against a 30-day duration, which makes it a path to watch weekly rather than a path to relax about.
+
+Whether those two days are the activity's own to spend is a separate question, and it is answered by [how total float is calculated and read](https://projectcontrolsinstitute.org/total-float).
 
 ## What happens when the critical path moves?
 
@@ -152,4 +154,4 @@ On work with physical dependencies it is unavoidable, because concrete cures at 
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this piece should link to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "how total float is calculated and read", to [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "testing the CPM date against uncertainty", to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with that anchor, and to [what is project controls](https://projectcontrolsinstitute.org/what-is-project-controls) with the anchor "where scheduling sits in project controls".*
+*Internal links: one is now placed in the body. The total float definition (projectcontrolsinstitute.org) sits on "how total float is calculated and read", immediately after the worked network shows procurement carrying two days of float — the sentence asks whose two days those are, and that page answers it. The note originally proposed three more links to the same domain (schedule risk analysis, the Primavera P6 guide, the project controls pillar); all three are dropped from this republish, because four links to one domain from one article is a link-scheme footprint rather than a service to the reader. They are the own-site original's internal links and belong there. Reciprocal: the total float page should link back here with the anchor "the forward and backward pass worked end to end", since it uses the passes without deriving them.*

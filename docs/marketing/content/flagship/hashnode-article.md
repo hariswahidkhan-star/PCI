@@ -92,9 +92,9 @@ Paste the canonical into the republishing field in the Hashnode post settings be
 
 *Fourteen CPI points moved on a fact that was true on the 30th and posted on the 4th. One date column cannot hold that.*
 
-Your CPI reads 1.19. The missing accrual says 1.05. Which number reaches the board?
+Your CPI reads 1.19. The missing accrual says 1.05. Which number reaches the board is settled by the project cost data model underneath them: it needs two dates on every fact, the date the cost was incurred and the date the system found out about it.
 
-Whichever one the schema can represent. A project cost data model needs two dates on every fact: the date the cost was incurred, and the date the system found out about it. Store one and the distance between those numbers has nowhere to live.
+Store one and the distance between those numbers has nowhere to live. The board gets whichever number the schema can represent.
 
 ## Where the fourteen points went
 

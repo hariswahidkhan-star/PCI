@@ -33,13 +33,13 @@ Both are respected. Neither substitutes for the other, and holding one does not 
 | Renewal | Recertification cycle with continuing education | Professional development units on a fixed cycle |
 | Travels well in | Engineering, construction, energy, mining, government cost communities | Almost every sector, and most HR filters |
 
-Requirements and fees are revised, so confirm both against the current AACE and PMI handbooks before you plan a study calendar.
+Requirements and fees are revised, so confirm both against the current AACE and PMI handbooks before you plan a study calendar. The AACE side of that, from application through to each renewal cycle, is totalled in [what an AACE credential costs over ten years](https://credentialfinder.org/aace-certification-cost).
 
 ## The difference in one question each
 
 A PMP-flavoured item gives you a situation and asks what you do next: a sponsor changes scope mid-sprint, a supplier misses a gate, a stakeholder escalates. The answer is a decision and a process.
 
-A CCP-flavoured item gives you numbers and asks what they mean.
+A CCP-flavoured item gives you numbers and asks what they mean; [the kinds of problem the CCP paper sets](https://credentialfinder.org/ccp-exam-questions) show how far that goes.
 
 Take a package with a budget at completion of **£9.00m**. Planned value is **£3.90m**, earned value is **£3.60m**, actual cost is **£4.05m**.
 
@@ -72,7 +72,7 @@ Cut the certification lag by ten days and you release 10 × 49,315 = **£493,000
 
 Here is the boundary that decides whether a project reports a profit.
 
-Revenue on a long-term contract is recognised under a five-step model, described here in plain terms rather than reproduced from the standard. Identify the contract with the customer. Identify the distinct promises in it.
+Revenue on a long-term contract is recognised under a five-step model, described here in plain terms rather than reproduced from the standard, and set out at length in [how that model is applied to construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction). Identify the contract with the customer. Identify the distinct promises in it.
 
 Determine the transaction price, including any variable amounts and the limit on recognising them. Allocate that price across the promises. Recognise revenue as each promise is satisfied, over time or at a point in time.
 
@@ -95,7 +95,7 @@ The project lives in the overlap, and the overlap is where the money is lost. PC
 | You sign forecasts that a finance function then books | A credential covering both sides | Neither CCP nor PMP examines the accounting treatment |
 | You are early in your career | Neither yet | Both set experience gates for good reasons |
 
-Two credentials in one year rarely changes anything an employer can see. One credential plus a worked example from your own project changes an interview.
+Two credentials in one year rarely changes anything an employer can see. One credential plus a worked example from your own project changes an interview. Whether the CCP repays its fee and study hours at all is worked through in [an honest assessment of what the CCP returns](https://credentialfinder.org/ccp-certification-worth-it).
 
 ## Where PCI fits
 
@@ -135,4 +135,4 @@ Not automatically, but it shifts the burden of proof onto the syllabus. Ask any 
 
 ---
 
-*Internal links: this comparison should link to [the four EAC methods worked through](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, to [how IFRS 15 applies to construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "the five-step revenue model", to [best project controls certification](https://credentialfinder.org/best-project-controls-certification) with that anchor, and to [cost engineer certification routes](https://projectcontrolsinstitute.org/cost-engineer-certification) with that anchor; the AACE certification cost and CCP exam questions pages should link back here with the anchor "AACE CCP vs PMP".*
+*Linking note: one cross-estate link is in the body, to the hub's treatment of [the five-step revenue model applied to construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction), placed in the section on the variation that is claimed but not yet agreed — the sentence that raises what may actually be recognised. Three same-domain links sit where the reader asks the question: the CCP exam problems where the piece contrasts a numeric item with a situational one, the AACE cost total beside the warning that fees are revised, and the CCP return-on-fee assessment after the sequencing table. The earlier note proposed three hub links; two would have breached the one-per-domain rule, so the EAC formulas and cost engineer pages were dropped, and the best-certification comparison was retargeted to the sibling pages this piece genuinely raises. Reciprocal link worth making: the CCP exam questions page should point back here once when it explains why the paper is numeric where the PMP is situational.*

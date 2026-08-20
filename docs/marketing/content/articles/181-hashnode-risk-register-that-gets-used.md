@@ -48,7 +48,7 @@ Anything beyond these ten columns will mostly not be maintained past month three
 
 Store `probability` as a float, not a category. Once likelihood is held as "High", expected value cannot be computed and the register degrades into colour.
 
-Store `schedule_impact` in working days on the affected path, not calendar days on the activity; whether that path drives handover is what [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) tests.
+Store `schedule_impact` in working days on the affected path, not calendar days on the activity; whether that path drives handover is what schedule risk analysis tests.
 
 Movement is the column senior people read first. A risk that has not moved in four months is either well managed or not being looked at, and the register should show which.
 
@@ -151,4 +151,4 @@ The project manager, not the risk manager. Whoever chairs is the person the room
 
 *First published on projectcontrolsinstitute.org; the republishing field in Draft Settings carries the canonical home, so this copy exists for the tag feeds.*
 
-*Internal links: this how-to should link up to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with that anchor, across to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with the anchor "run the simulation across the same inputs", and to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with that anchor.*
+*Internal links: one is now in the body. "A Monte Carlo cost simulation" points at projectcontrolsinstitute.org/monte-carlo-cost-simulation, kept because it sits in the strongest sentence in the piece: the three sizing methods run in order, and that sentence raises how the tail gets tested once expected value has set the opening contingency. The second link to the same domain, on schedule risk analysis in the column-schema section, was removed and the sentence left standing; one link per domain per piece is the cap, and that aside was the weaker placement. No second domain earns a link here. Reciprocal: the Monte Carlo cost simulation page should point back for the register that supplies its inputs, with an anchor about probability and impact columns rather than about risk registers generally.*

@@ -17,7 +17,7 @@ ab_id:         —
 
 # Project controls courses in Dubai: how to choose one
 
-Choose a project controls course in Dubai on who assesses you, not on who teaches you. A licensed institute in the city can lawfully deliver training and issue a certificate of attendance; that licence says nothing about whether anyone examined your competence. Those are two different purchases at similar prices.
+Project controls courses in Dubai divide into four kinds, and what separates them is who assesses you rather than who teaches you. A licensed institute in the city can lawfully deliver training and issue a certificate of attendance; that licence says nothing about whether anyone examined your competence. Those are two different purchases at similar prices.
 
 What follows is how to tell them apart, what a Gulf employer actually tests, and the calculation a course in this market should leave you able to run.
 
@@ -36,7 +36,7 @@ Most careers need both. The mistake is paying certification prices for row one, 
 
 ## What KHDA licensing does and does not mean
 
-Private training institutes in Dubai are licensed by the Knowledge and Human Development Authority, and courses are attested through that framework. Elsewhere in the UAE, other emirates run their own regulators, so a Dubai attestation is not automatically an Abu Dhabi one.
+Private training institutes in Dubai are licensed by the Knowledge and Human Development Authority, and courses are attested through that framework. Elsewhere in the UAE, other emirates run their own regulators, so a Dubai attestation is not automatically an Abu Dhabi one. [The training options across the rest of the UAE](https://pciglobal.ai/project-controls-training-uae) split the same way, between teaching and assessment.
 
 A KHDA-attested certificate confirms that a licensed provider delivered an approved course. It confirms attendance and delivery. It is not a statement that an independent body examined your competence, and no honest provider will tell you otherwise.
 
@@ -58,7 +58,7 @@ The cash conversion cycle is DSO + DIO − DPO = 92 + 25 − 48 = **69 days**. A
 
 Now the useful part. Twelve of those 92 receivable days are a certification lag: work completed, measured late, submitted late. Remove them and the cycle falls to 57 days, releasing 12 × 419,178 = **AED 5.0m**.
 
-That is a project controls result, not a finance one. It comes from measuring on time, submitting a clean application and closing out variations before they age.
+That is a project controls result, not a finance one. It comes from measuring on time, submitting a clean application and closing out variations before they age. [How a project cash flow forecast is built](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) is where those days stop being a year-end surprise and become a curve you plan against.
 
 ## Retention, which is where the year's profit is sitting
 
@@ -122,7 +122,7 @@ No. KHDA attestation confirms that a licensed provider delivered an approved cou
 No. A remotely proctored examination can be sat from anywhere with a stable connection and a quiet room, which is why geography has largely stopped deciding this. Test your device, camera, microphone and connection in the room you will actually use, at the time of day you will sit, before you book a slot.
 
 **Which is better first: Primavera P6 training or certification?**
-Learn the tool first if you cannot yet build and update a schedule, because that is the entry ticket for planning roles across the Gulf. Certify afterwards, once you have used the tool on real work for a quarter, so the examination is testing judgement you actually have rather than a syllabus you memorised.
+Learn the tool first if you cannot yet build and update a schedule, because that is the entry ticket for planning roles across the Gulf, and [how to choose a P6 course here](https://pciglobal.ai/primavera-p6-course-in-dubai) is a separate decision with its own traps. Certify afterwards, once you have used the tool on real work for a quarter, so the examination is testing judgement you actually have rather than a syllabus you memorised.
 
 **Will a course help me get a UAE visa or equivalency?**
 No. Employment visas and academic equivalency run through government processes concerned with degrees and employment, not with professional certificates. Ask your employer or the relevant authority about those directly. A certification's value here is professional credibility, and it should be sold to you on that basis alone.
@@ -132,4 +132,4 @@ Published prices change too quickly to quote, so compare structure instead of he
 
 ---
 
-*Internal links: this guide should link to [project controls training in the UAE](https://pciglobal.ai/project-controls-training-uae) with the anchor "the wider UAE training options", to [Primavera P6 course in Dubai](https://pciglobal.ai/primavera-p6-course-dubai) with the anchor "choosing P6 training in Dubai", to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "modelling project cash flow", and to [the project controls course pillar](https://projectcontrolsinstitute.org/project-controls-course) with the anchor "how the course routes compare"; the India and Qatar geo guides link back here with the anchor "the Dubai course market".*
+*Internal links: placed in the body. Two on pciglobal.ai — project controls training UAE, where the KHDA section notes that other emirates regulate separately; and the Primavera P6 course in Dubai, in the FAQ that tells a reader to learn the tool first. The original note pointed that second link at /primavera-p6-course-dubai, which does not exist; the live slug is /primavera-p6-course-in-dubai and that is what is now in the body. One cross-estate link, to the hub's project cash flow forecasting page, after the cash conversion cycle arithmetic, because that is the sentence that makes a reader want the curve behind the days. The hub course pillar link was dropped to hold one link per cross-estate domain. Reciprocal: the Qatar guide links back here as the UAE comparison, and the UAE training guide links here for the Dubai detail.*

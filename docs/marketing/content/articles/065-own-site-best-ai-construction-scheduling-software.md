@@ -23,7 +23,7 @@ This page does not publish a product league table. PCI has not tested these prod
 
 ## Best AI construction scheduling software: the five jobs compared
 
-Most disappointment with these tools comes from buying one job and expecting another. The categories below behave differently, need different data, and fail differently.
+Most disappointment with these tools comes from buying one job and expecting another. The categories below behave differently, need different data, and fail differently. What they look like on a real programme, arithmetic included, is worked through in [AI applied to a live construction programme](https://pciai.org/ai-for-construction-scheduling).
 
 | Category | What it does | Data it needs | How it fails | How to test it in two weeks |
 |---|---|---|---|---|
@@ -75,7 +75,7 @@ Backward pass. D must finish by day 19, so it must start by day 15. B must there
 
 Total float on C is 9 − 5 = **4 days**. The critical path is A → B → D, and the project duration is **19 days**.
 
-Any scheduling tool produces that in milliseconds. What no tool produces is the knowledge that C's six days assume a crane which is committed to another face of the building for the first fortnight — in which case C is not floating at all, and the schedule is wrong in a way no rule check will ever flag.
+Any scheduling tool produces that in milliseconds, and [how total float is calculated from the two passes](https://projectcontrolsinstitute.org/critical-path-method) is the method behind it. What no tool produces is the knowledge that C's six days assume a crane which is committed to another face of the building for the first fortnight — in which case C is not floating at all, and the schedule is wrong in a way no rule check will ever flag.
 
 That is the reason the planner survives the automation. The rules operate on the file; the risk lives in the physical world the file is meant to represent.
 
@@ -95,7 +95,7 @@ Keep the last three updates and the as-built. That is the test set for every pro
 
 ## How PCI examines this
 
-PCI certifies the controls discipline through the PCI AI Project Controls Leader (PCL-AI), which holds 13 domains and 61 knowledge areas. Its Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI, so the evaluation method above — measured error rates, stated definitions, provenance for machine-assisted numbers — is examined as competence rather than treated as a tooling preference.
+PCI certifies the controls discipline through the PCI AI Project Controls Leader (PCL-AI), which holds 13 domains and 61 knowledge areas. Its Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI, so the evaluation method above — measured error rates, stated definitions, provenance for machine-assisted numbers — is examined as competence rather than treated as a tooling preference. None of that is specific to scheduling; [the same test applied across project controls](https://pciai.org/ai-in-project-controls) is what governed AI means in practice.
 
 The companion credentials are the PCI AI Project Finance Leader (PFL-AI), with 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI), with 16 domains and 63 knowledge areas. The calculation content of the PFL-AI and PML-AI volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
 
@@ -110,7 +110,7 @@ The one that does the job you actually need on the data you actually have. Decid
 It can draft one from comparable past schedules, which is a real head start on a repeat building type. It cannot know this site's access constraints, crane strategy or client sequencing preferences, so treat the draft as a first pass to be argued with, never as a baseline.
 
 **Will these tools replace planners?**
-They remove the checking, formatting and consolidation, which is a large share of the week. What remains is logic design, resolving out-of-sequence progress, and defending a completion date — the parts that require knowing how the work will be built.
+They remove the checking, formatting and consolidation, which is a large share of the week. What remains is logic design, resolving out-of-sequence progress, and defending a completion date — the parts that require knowing how the work will be built. [The honest answer on planning roles](https://pciai.org/will-ai-replace-planning-engineers) takes that task by task, including the retained-logic decision no tool can make.
 
 **How much data do we need before AI scheduling is useful?**
 For quality checking, none beyond the current file — it runs on rules. For generation and risk, you need a library of past schedules with as-built dates and consistent coding, and consistency is usually the binding constraint rather than volume.
@@ -123,4 +123,4 @@ Not inherently. A simulation is only as good as the ranges and correlations fed 
 
 ---
 
-*Internal links: this comparison should link to [AI for construction scheduling](https://pciai.org/ai-for-construction-scheduling) with the anchor "AI applied to a live schedule", to [what critical path method is](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the forward and backward pass produce float", and to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "setting ranges a simulation can defend".*
+*Internal links: now placed in the body. Same-domain: "AI applied to a live construction programme" introduces the five jobs, where a reader asks what these categories look like in practice; "the same test applied across project controls" sits in the examination section, which raises whether the evaluation method is a scheduling habit or a standard; "the honest answer on planning roles" answers the FAQ asking whether planners are replaced. One cross-estate link only, to the hub: "how total float is calculated from the two passes" beside the worked network, where the float figure appears without its derivation. The note previously proposed a second hub link to quantitative schedule risk analysis; it was dropped rather than retargeted, because a piece may carry only one link to any given domain and the critical path page sits in the stronger sentence. Reciprocal: the AI for construction scheduling guide should point back here on choosing between products.*

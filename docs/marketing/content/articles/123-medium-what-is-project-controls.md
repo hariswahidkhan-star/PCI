@@ -17,9 +17,9 @@ ab_id:         AB-00027
 
 # What is project controls? A practitioner's full answer
 
-Project controls is the discipline that measures where a project has got to, what it has cost, and what it will cost if nothing changes. It covers planning, scheduling, estimating, cost control, earned value, risk and reporting. Its job is to produce numbers a decision can be taken on, and to say when they cannot be trusted.
+Project controls is the discipline that measures where a project has got to, what it has cost, and what it will cost if nothing changes. The short answer to *what is project controls* is the measurement and forecasting function of a project, run independently of the people whose performance it measures. It covers planning, scheduling, estimating, cost control, earned value, risk and reporting.
 
-The short answer to *what is project controls* is this: the measurement and forecasting function of a project, run independently of the people whose performance it measures.
+Its job is to produce numbers a decision can be taken on, and to say when they cannot be trusted.
 
 ## What is project controls responsible for, function by function?
 
@@ -109,7 +109,7 @@ A project lives in the overlap. The classic loss is a package reporting 62% comp
 
 Earned value is a control number, not a revenue number. Treating one as the other is how a project can be simultaneously ahead on the cost report and in trouble in the accounts.
 
-The PCI credentials are built around that overlap. The [PCI AI Project Controls Leader (PCL-AI) Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) sets **13 domains and 61 knowledge areas** in the proportions **40 / 40 / 20** across finance and reporting, project management, and governed AI.
+The PCI credentials are built around that overlap. The PCI AI Project Controls Leader (PCL-AI) Body of Knowledge sets **13 domains and 61 knowledge areas** in the proportions **40 / 40 / 20** across finance and reporting, project management, and governed AI.
 
 ## What AI has changed, and what it has not
 
@@ -135,11 +135,11 @@ The last row is the job. Any of the first four can be right on their own while t
 
 ## How to get into project controls
 
-Most people arrive sideways, from site engineering, quantity surveying, finance or planning support. The fastest useful skill is the monthly cycle above, because it is the one thing every controls job has in common.
+Most people arrive sideways, from site engineering, quantity surveying, finance or planning support. If you are coming from outside the discipline, read [what a project controls engineer does day to day](https://pciworld.org/what-does-a-project-controls-engineer-do) before you read anything about qualifications. The fastest useful skill is the monthly cycle above, because it is the one thing every controls job has in common.
 
 After that, depth beats breadth. Learn one scheduling tool properly, learn cost coding structures, and learn to read a set of accounts well enough to know what your cost report is feeding.
 
-Certification routes, and what each one is actually evidence of, are set out in [the certification pillar](https://projectcontrolsinstitute.org/project-controls-certification). If you want the measurement side first, start with [earned value management](https://projectcontrolsinstitute.org/earned-value-management).
+What each qualification is actually evidence of is a separate question, answered in [certification routes in project controls](https://projectcontrolsinstitute.org/project-controls-certification). If you want the measurement side first, learn earned value before anything else.
 
 ## Frequently asked questions
 
@@ -165,4 +165,4 @@ It has a fixed rhythm rather than constant crisis: cut-off, forecast, report, re
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this pillar should link to [the certification pillar](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "certification routes in project controls", to the [earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "earned value management", and to the [PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) with that anchor.*
+*Internal links: this republish carried three links to one domain, which is the pattern that gets a whole estate discounted, so it now carries two to two different domains. The certification pillar (projectcontrolsinstitute.org) sits on "certification routes in project controls", in the section on getting into the discipline, where the reader has just been told what to learn and not what any of it is evidence of. The role page (pciworld.org) sits on "what a project controls engineer does day to day", in the same section, because someone arriving from site engineering wants the job before the qualification and a careers site answers that better than a definition pillar can. The earned value link and the Body of Knowledge link were removed here and the sentences kept; both belong on the own-site original, where they are internal links rather than cross-estate ones. Reciprocal: the certification pillar should link back here with the anchor "the seven controls functions and the monthly cycle", which it assumes rather than sets out.*

@@ -73,6 +73,8 @@ Recovering 330 hours needs 330 ÷ 24.5 = **13.5**, so **14 further possessions**
 
 If the path carried **6 weeks** of total float, the completion date moves by **8 weeks**. Critical path arithmetic is unforgiving here: float absorbs the first part of the loss silently, which is exactly why the effect is usually noticed late.
 
+Model usable hours per possession as a range rather than a point and you get [a P50 and a P80 completion date](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) instead of one optimistic figure that nobody can defend at the next gate.
+
 The same logic applies to signalling commissioning windows, station closures and third-party consents. Model them as activities with named owners, not as assumptions in the estimate's basis.
 
 ## Which causes actually recur on rail schemes?
@@ -100,6 +102,8 @@ For the sponsor, expenditure on an asset under construction sits on the balance 
 For the contractor, revenue on a long-term contract is usually recognised over time by measuring progress, commonly cost incurred against total forecast cost. Raising the forecast cost lowers the measured percentage complete, so a delivery decision made on site becomes a correction to revenue already reported.
 
 An engineer is examined on float, possessions and progress measurement, and almost never on cut-off, capitalisation or a contract asset. An accountant is examined on when revenue may be recognised, and almost never on a possession productivity rate. Rail programmes lose money precisely in that gap, which is why the PCI AI Project Finance Leader (PFL-AI) credential, at 16 domains and 61 knowledge areas, examines both sides rather than one, against 113 mandatory PCI Standards carrying 532 process requirements.
+
+Which qualifications carry weight on a British programme is a separate question from what they examine, and [what actually counts as a project controls qualification in the UK](https://pciglobal.ai/project-controls-certification-uk) works through the routes available in that market.
 
 ## How should a rail cost report be presented so it cannot be misread?
 
@@ -129,4 +133,4 @@ Design deliverables approved against plan, in the year before main works start. 
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "how a P50 and a P80 date are produced", to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "what total float absorbs before a date moves", and to [project controls certification in the UK](https://pciglobal.ai/project-controls-certification-uk) with that anchor.*
+*Linking note: two cross-estate links now sit in the body. The hub link to quantitative schedule risk analysis sits after the possession arithmetic, because ranging usable hours is what turns a single date into a P50 and a P80, and this piece stops at the point estimate. The pciglobal.ai link sits after the credential paragraph, which names what a credential examines but not which routes a British programme's market offers, and that is the regional domain's territory. The proposed second hub link to total float was dropped: only one link per domain is allowed per piece, and the six weeks of float in the possession example is worked here rather than elsewhere. A reciprocal link back to this piece would fit on the UK certification page, where rail and public-sector programmes are the obvious employer.*

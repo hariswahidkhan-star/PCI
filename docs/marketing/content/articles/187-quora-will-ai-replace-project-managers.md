@@ -17,9 +17,9 @@ ab_id:         AB-00043
 
 # Will AI replace project managers? What actually changes
 
-No. Automation takes the reporting, collation and drafting work, which is most of the visible week and none of the value. What remains is deciding which forecast the business acts on, which risks get funded, and who is told what — decisions that carry consequences a tool cannot hold.
+No. The honest version of *will AI replace project managers* is that automation takes the reporting, collation and drafting work, which is most of the visible week and none of the value. What remains is deciding which forecast the business acts on, which risks get funded, and who is told what — decisions that carry consequences a tool cannot hold.
 
-Asking **will AI replace project managers** is really asking whether the accountable part of the role is large enough to survive without the administrative part around it. The forecast is the clearest test, so start there.
+The question underneath it is whether the accountable part of the role is large enough to survive without the administrative part around it. The forecast is the clearest test, so start there.
 
 ## Four forecasts from one dataset
 

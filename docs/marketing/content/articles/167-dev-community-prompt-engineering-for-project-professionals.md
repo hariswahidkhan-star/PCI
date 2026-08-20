@@ -88,7 +88,7 @@ The `Boundary` block is the part that stops a drafting tool from becoming an ana
 
 ## The arithmetic goes in code, not in the prompt
 
-Compute the indices where the control accounts live, then pass the results in. Budget at completion (BAC) £12.0m, planned value (PV) £4.20m, earned value (EV) £3.78m, actual cost (AC) £4.20m at the data date.
+Compute the indices where the control accounts live, then pass the results in. The definitions behind them sit in [earned value's own measurement rules](https://projectcontrolsinstitute.org/earned-value-management), not in the wording of a prompt. Budget at completion (BAC) £12.0m, planned value (PV) £4.20m, earned value (EV) £3.78m, actual cost (AC) £4.20m at the data date.
 
 Cost variance is EV − AC = 3.78 − 4.20 = **−£0.42m**. Schedule variance is EV − PV = 3.78 − 4.20 = **−£0.42m**. Both indices land at 3.78 ÷ 4.20 = **0.90**.
 
@@ -134,7 +134,7 @@ Re-run the whole set when the model version changes. Providers update models wit
 
 ## What must never go into a prompt
 
-Four categories, worth writing into a team policy rather than leaving to judgement.
+Four categories, worth writing into [a team policy with a data classification table](https://pciai.org/ai-policy-for-project-controls) rather than leaving to judgement.
 
 **Client-confidential commercial data** where the contract restricts disclosure to third parties, which a hosted model usually is unless your agreement says otherwise.
 
@@ -179,4 +179,4 @@ Asking for an answer instead of a checkable answer. Adding "list every figure an
 
 *First published on pciai.org; the `canonical_url` on this post points there. DEV prohibits stub posts, so the full text including the harness lives here.*
 
-*Internal links: this how-to should link to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar it supports", to [using large language models to review schedules](https://pciai.org/llm-schedule-review) with the anchor "the same discipline applied to a schedule export", and to [earned value management](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "where the CPI and SPI in the worked prompt come from".*
+*Linking note — the links now in the body: "earned value's own measurement rules" points at projectcontrolsinstitute.org/earned-value-management from the section putting arithmetic in code, because the worked CPI, SPI and EAC figures raise where those measures are defined; "a team policy with a data classification table" points at pciai.org/ai-policy-for-project-controls from the paragraph on what must never go into a prompt, because that sentence sends the four categories to a policy and raises what such a policy contains. Two links, one per domain — the earlier note's third link would have been a second on the same host. Reciprocal: the AI policy template could cite this harness where clause 6 asks for a golden-set score before live use.*

@@ -85,7 +85,7 @@ Keep the two steps in separate columns of the estimate summary and label them. B
 
 ## Where the estimate lands in the accounts
 
-An estimate does not stop working when the job starts. On a contract where revenue is recognised over time using a cost-to-cost input measure, expected total cost is the denominator of percentage complete, so the estimate drives reported revenue every month.
+An estimate does not stop working when the job starts. On a contract where revenue is recognised over time by [percentage of completion on a cost-to-cost basis](https://projectcontrolsinstitute.org/ifrs-15-for-construction), expected total cost is the denominator of percentage complete, so the estimate drives reported revenue every month.
 
 Take a contract priced at £11,000,000 with £4,200,000 of cost incurred. Using the original £8,400,000 expected cost, progress is 4,200,000 ÷ 8,400,000 = **50.0%** and revenue to date is 0.50 × 11,000,000 = **£5,500,000**.
 
@@ -99,7 +99,7 @@ This describes a mechanism. Nothing PCI publishes is legal, tax or accounting ad
 
 Ask what the training data was: tender values or outturn cost. A model trained on what jobs were sold for has learned the market's optimism rather than the cost of building.
 
-Ask for precision and recall on scope-completeness flags, measured on your projects. A checker that raises 200 items to find 40 real ones costs review time that has to be budgeted, and that arithmetic belongs in the business case.
+Ask for precision and recall on scope-completeness flags, measured on your projects. A checker that raises 200 items to find 40 real ones costs review time that has to be budgeted, and [how to score a flagging model on your own data](https://pciai.org/ai-in-project-controls) is the arithmetic that belongs in the business case.
 
 Ask whether it will show its comparables. An estimate that cannot be traced to the jobs behind it cannot be defended to a board, however good the number turns out to be.
 
@@ -144,4 +144,4 @@ Only if your measured spread has changed. Contingency should follow the MAPE you
 
 *First published on pciai.org; the republishing field in Draft Settings carries the canonical back to it. Treat this version as tag-feed reach rather than as a ranking page.*
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "percentage of completion and the cost-to-cost input method", and to [cost control methods that catch overruns early](https://projectcontrolsinstitute.org/cost-control-in-construction) with the anchor "keeping the estimate honest once the work starts".*
+*Internal links: two are now in the body. "How to score a flagging model on your own data" points at pciai.org/ai-in-project-controls, placed in the vendor question about scope-completeness flags, because that sentence raises how precision, recall and review hours are actually computed. "Percentage of completion on a cost-to-cost basis" points at projectcontrolsinstitute.org/ifrs-15-for-construction, placed where the estimate becomes the denominator of progress, because that sentence raises how the measure works and this guide only uses its output. The cost-control-in-construction link proposed earlier was dropped: one link per domain per piece, and the IFRS 15 sentence is the stronger of the two. Reciprocal: the AI in project controls pillar should point here for estimating error and bias, with an anchor about measuring MAPE on completed packages.*

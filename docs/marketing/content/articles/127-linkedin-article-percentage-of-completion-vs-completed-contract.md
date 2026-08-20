@@ -36,7 +36,7 @@ This is a LinkedIn original written under the Institute's cost control and estim
 | Loss-making contracts | Full expected loss recognised as soon as expected | Full expected loss recognised as soon as expected |
 | Where permitted | The over-time pattern under IFRS 15 and ASC 606 | Not an IFRS policy choice; persists mainly in US tax rules for small contractors |
 
-The last row is the one people get wrong in interviews. Completed contract is not a policy a listed contractor may elect under IFRS. Where an IFRS reporter recognises everything at handover it is because the obligation failed the over-time test, and the three conditions behind that test are set out in [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
+The last row is the one people get wrong in interviews. Completed contract is not a policy a listed contractor may elect under IFRS. Where an IFRS reporter recognises everything at handover it is because the obligation failed the over-time test, and it is [the three conditions behind that over-time test](https://projectcontrolsinstitute.org/ifrs-15-for-construction) that decide the answer.
 
 ## When does the percentage of completion method produce a different answer?
 
@@ -88,7 +88,7 @@ Both tables above are identical in cash terms. Recognition does not bill anyone,
 
 A contractor can report the £2.10m of year one profit while its bank balance falls, because retention is held, applications are certified late, and materials are paid for before they are installed.
 
-That gap between recognised profit and available cash is a separate discipline, worked out in [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting).
+That gap between recognised profit and available cash is a separate discipline, forecast on the certification and payment calendar rather than on the revenue curve.
 
 ## What the choice does to a bank covenant and a tax bill
 
@@ -141,4 +141,4 @@ The same one as the statutory accounts, or the board is managing a different bus
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with that anchor, to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with that anchor, and to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) as the pillar it supports.*
+*Internal links: one link sits in the body, in the row-by-row comparison where the piece says an IFRS reporter only recognises at a point in time when the over-time test fails. "The three conditions behind that over-time test" points to https://projectcontrolsinstitute.org/ifrs-15-for-construction, which is where those conditions are set out. The cash paragraph is left unlinked because a second link to the same domain in one piece is the pattern to avoid, not a service to the reader. Reciprocal: https://projectcontrolsinstitute.org/project-cash-flow-forecasting could cite this piece where it separates recognised profit from collected cash.*

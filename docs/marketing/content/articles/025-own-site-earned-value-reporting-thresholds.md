@@ -23,7 +23,7 @@ Get them wrong in either direction and the reporting system stops working. Too l
 
 ## Why a single percentage fails
 
-Take two control accounts on the same project, at the same cut-off, under a rule that says any variance beyond 10% must be explained.
+Take two control accounts on the same project, at the same cut-off, under a rule that says any variance beyond 10% must be explained. The arithmetic is ordinary, and [what earned value measures before any threshold is applied](https://projectcontrolsinstitute.org/earned-value-management) covers it. The rule is the problem.
 
 **CA-A**, a small builder's-work account. EV £74k, AC £112k. CV = −£38k, so CV% = −38 ÷ 74 = **−51.4%**.
 
@@ -83,6 +83,8 @@ Cost variance is the familiar one. It is rarely the earliest signal available.
 | Change | Any instruction above £25k unapproved for more than 30 days | Work delivered before it is authorised is the classic unrecoverable cost |
 | Data quality | Accruals below 95% of the previous period's pattern, or a cut-off mismatch | A forecast built on incomplete actuals is worse than no forecast |
 
+Two of those triggers depend on which forecast method produced the EAC, so set them alongside [the four EAC formulas behind the forecast trigger](https://projectcontrolsinstitute.org/four-eac-formulas) rather than in isolation.
+
 The hard stop deserves its own line in the procedure. When the forecast crosses the contract price the contract is expected to lose money, and under the applicable financial reporting standards an expected loss is generally recognised in full in the period it becomes apparent rather than spread over the remaining work.
 
 That is a finance consequence with a date attached, and it is created by a controls number. Nothing PCI publishes is accounting advice, but the operating rule is simple enough: the month the forecast crosses the price, finance hears about it.
@@ -107,7 +109,7 @@ So set a threshold on it. DSO rising more than five days in a period, or any unb
 
 ## The escalation ladder
 
-A threshold with no named owner is a threshold nobody crosses.
+A threshold with no named owner is a threshold nobody crosses. Pairing each trigger with an owner and a decision is what [turning project metrics into decisions](https://projectcontrolsinstitute.org/project-performance-management) applies across the whole reporting pack.
 
 | Level | Trigger | Owner | Decision they hold | Deadline |
 |---|---|---|---|---|
@@ -145,4 +147,4 @@ They should, and float is often the earlier signal. Dates do not move until floa
 
 ---
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the metrics-to-decisions guide](https://projectcontrolsinstitute.org/project-performance-management) with the anchor "turning project metrics into decisions", and to [the EAC method guide](https://projectcontrolsinstitute.org/eac-formulas) with the anchor "the four EAC formulas behind the forecast trigger".*
+*Internal linking note: three same-domain links now sit in the body. "What earned value measures before any threshold is applied" points at the earned value pillar, placed where the two control accounts are introduced and the piece needs the reader to accept the variance arithmetic before attacking the rule. "The four EAC formulas behind the forecast trigger" points at the EAC guide, placed under the non-cost trigger table, because two of those triggers move with the forecast method chosen. "Turning project metrics into decisions" points at the performance management guide, placed at the head of the escalation ladder, where ownership of a trigger is first raised. The original note pointed the EAC link at /eac-formulas, which does not exist; the live page is /four-eac-formulas. No cross-estate link is carried. Reciprocal: the cheat sheet and the performance management guide should each link back here with an anchor about when a variance becomes reportable.*

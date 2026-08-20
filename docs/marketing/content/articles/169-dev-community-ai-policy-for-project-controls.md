@@ -99,6 +99,8 @@ Auditors ask who. A function name is not an answer and neither is a tool name.
 
 Model versions change without the name changing. Recording the version lets you reproduce a figure challenged eight months later; pinning it in the client stops the figure moving meanwhile.
 
+Clause 5 is easier to adopt with an example in front of it: [a worked provenance manifest for AI-drafted commentary](https://pciai.org/generative-ai-project-reporting) shows those fields filled in around a variance paragraph.
+
 ## Clause 6: evaluation before live use
 
 > No tool is used on live work until it has been measured on a golden set of at least [30] items drawn from closed work, with precision, recall and F1 recorded, and until the review effort each threshold implies has been estimated and budgeted.
@@ -149,7 +151,7 @@ A miscoded cost or an unflagged constraint crosses that boundary silently, which
 
 Governance sits inside the governed AI portion of the Body of Knowledge, proportioned 40/40/20 across finance and reporting, project management, and governed AI.
 
-The PCI AI Project Controls Leader (PCL-AI) credential has 13 domains and 61 knowledge areas, and behind the syllabus sit 113 mandatory PCI Standards carrying 532 process requirements.
+The PCI AI Project Controls Leader (PCL-AI) credential has 13 domains and 61 knowledge areas, and [how the PCL-AI credential is structured and examined](https://projectcontrolsinstitute.org/pcl-ai-certification) is set out on the Institute's site. Behind the syllabus sit 113 mandatory PCI Standards carrying 532 process requirements.
 
 PCI is an independent certifying body. This template is guidance, not legal, tax or accounting advice, and the PCI Standards are certification requirements set by the Institute rather than law.
 
@@ -171,4 +173,4 @@ The register lint, the retention of the provenance record, the secret scan and t
 
 *First published on pciai.org; the `canonical_url` on this post points there. DEV prohibits stub posts, so the full template including the register schema is here.*
 
-*Internal links: this template should link to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar it supports", to [prompt engineering for project professionals](https://pciai.org/prompt-engineering-for-project-professionals) with the anchor "how to specify and test a prompt", and to [using large language models to review schedules](https://pciai.org/llm-schedule-review) with the anchor "a governed workflow the policy has to cover".*
+*Linking note — the links now in the body: "a worked provenance manifest for AI-drafted commentary" points at pciai.org/generative-ai-project-reporting from clause 5, because a provenance clause raises what a filled-in record actually looks like; "how the PCL-AI credential is structured and examined" points at projectcontrolsinstitute.org/pcl-ai-certification from the section on how PCI examines governance, because naming the credential raises what it covers and how it is taken. Two links, one per domain — the earlier note proposed three on a single host, which is the pattern to avoid. Reciprocal: the generative AI reporting how-to could point back here for the policy clauses its manifest is evidence against.*

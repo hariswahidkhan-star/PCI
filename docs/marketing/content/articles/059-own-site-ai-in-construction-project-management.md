@@ -35,7 +35,7 @@ The table below reflects functions where deployment is common on large projects,
 | Cost and forecasting | Runs every forecasting method and tests each against project history | Which method to publish, because that is a claim about cause |
 | Reporting | Drafts commentary in the house format, in minutes | Ownership of the number in front of the client |
 
-Nothing in the right-hand column becomes automatable by buying a better product. Those are decisions with consequences attached, and consequences need an owner.
+Nothing in the right-hand column becomes automatable by buying a better product. Those are decisions with consequences attached, and consequences need an owner. The same split runs through the rest of the discipline, and [where AI helps and where it misleads across project controls](https://pciai.org/ai-in-project-controls) follows the same line between structure and judgement.
 
 ## The percentage problem
 
@@ -47,12 +47,16 @@ They are not interchangeable, and on a job with front-loaded costs — piling, t
 
 ## The five-step model, in PCI's own words
 
-Revenue on a construction contract is not recognised because a valuation was certified. It follows a five-step sequence, described here in plain terms rather than reproduced from the standard.
+Revenue on a construction contract is not recognised because a valuation was certified. It follows a five-step sequence, described here in plain terms rather than reproduced from the standard, and worked through at length in [the five-step model applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
 
 1. **Identify the contract.** A contract with enforceable rights and obligations, where consideration is probable.
+
 2. **Identify the performance obligations.** The distinct promises in it. On many construction contracts the whole works is one obligation; on some it is not.
+
 3. **Determine the transaction price.** Including variable consideration such as incentives, claims and liquidated damages, constrained so that a significant reversal is not likely.
+
 4. **Allocate the price** across the identified obligations.
+
 5. **Recognise revenue as each obligation is satisfied**, over time where the criteria are met, using a method that faithfully depicts progress.
 
 Step five is where the AI-generated percentage arrives, and where it can go wrong. This is a description of the mechanism, not accounting advice; nothing PCI publishes is legal, tax or accounting advice.
@@ -89,7 +93,7 @@ The tasks that compress are the ones a project manager was probably doing at ele
 
 The tasks that grow are the ones the tools create demand for. More flags need dispositioning, more model outputs need challenging, and more numbers arrive with a plausible face and no provenance.
 
-The skill that becomes decisive is the ability to read a number and know which question it answers. That has always been a controls skill; AI has made it a delivery skill too, because the outputs now arrive directly on the project manager's desk without passing through anyone who was trained to check them.
+The skill that becomes decisive is the ability to read a number and know which question it answers. That has always been a controls skill; AI has made it a delivery skill too, because the outputs now arrive directly on the project manager's desk without passing through anyone who was trained to check them. Whether that adds up to a shrinking role is a fair question, and [what stays with the project manager once the assembly work goes](https://pciai.org/will-ai-replace-project-managers) is the longer answer to it.
 
 ## How PCI examines this
 
@@ -111,11 +115,11 @@ It can find the clauses, the notice periods and the prior correspondence quickly
 In the handover between measurement and reporting. A tool that produces a defensible physical percentage, mapped without thought onto a revenue measure, moves margin in the accounts without anyone deciding to move it. That failure is silent, monthly and cumulative.
 
 **Do we need new controls to use these tools?**
-Not new in kind. Provenance for every AI-assisted number, a measured baseline on your own data, a review step that is funded, and a named owner. Those are the same four controls you should already have for a spreadsheet nobody understands.
+Not new in kind. Provenance for every AI-assisted number, a measured baseline on your own data, a review step that is funded, and a named owner. Those are the same four controls you should already have for a spreadsheet nobody understands, and they fit on one page — [an AI policy for project controls you can adapt](https://pciai.org/ai-policy-for-project-controls) sets out the wording.
 
 **Should a project manager learn the accounting side?**
 Enough of it to know which percentage the report is using and what the earning rule is. A delivery lead who can ask "is this cost-to-cost or physical?" catches the error above in one question, and that question takes ten seconds.
 
 ---
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [whether AI will replace project managers](https://pciai.org/will-ai-replace-project-managers) with the anchor "what changes in the project manager's role", and to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "the five-step model applied to a construction contract".*
+*Internal links: now placed in the body. Same-domain: "where AI helps and where it misleads across project controls" follows the application table, where the split between structure and judgement is stated; "what stays with the project manager once the assembly work goes" closes the section on the changing role, which raises exactly that question; "an AI policy for project controls you can adapt" answers the FAQ asking whether new controls are needed. One cross-estate link only, to the hub: "the five-step model applied to a construction contract" where the five steps are introduced in PCI's own words and a reader wants the full treatment. Reciprocal: the project-manager piece should point back here for the progress-percentage arithmetic.*

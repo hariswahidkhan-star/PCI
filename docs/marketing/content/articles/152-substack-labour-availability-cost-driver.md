@@ -1,7 +1,7 @@
 ---
 platform:      Substack
 type:          data-study
-title:         Labour availability: pricing construction's cost driver
+title:         Construction labour cost driver: how to price scarcity
 meta:          Scarcity is the construction labour cost driver you cannot hedge: it lifts the rate and cuts output at once. How to price it, schedule it and fund it.
 primary_kw:    construction labour cost driver
 secondary_kw:  productivity factor, overtime efficiency, cash conversion cycle, resource levelling
@@ -15,7 +15,7 @@ hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00305
 ---
 
-# Labour availability: pricing construction's cost driver
+# Construction labour cost driver: how to price scarcity
 
 Labour availability hurts more than any other input because scarcity does two things at once: it raises the rate you pay and lowers the output you get per paid hour. The second effect is usually about twice the size of the first, which is why labour availability keeps being named the number-one construction labour cost driver in contractor surveys.
 
@@ -90,7 +90,7 @@ Fully subcontracted: CCC = 62 + 21 − 45 = **38 days**. Working capital tied up
 
 Self-performed with 38% direct labour paid weekly, so labour effectively sits at seven days: blended payables = (0.38 × 7) + (0.62 × 45) = 2.66 + 27.90 = 30.6 days. CCC = 62 + 21 − 30.6 = **52.4 days**, and working capital rises to 52.4 ÷ 365 × £38m = **£5.46m**.
 
-A £1.50m funding swing, with no change to the contract, the scope or the margin. When a shortage pushes you to self-perform work you had planned to sublet, that is the number to put in front of the finance director, and it belongs in the cash flow forecast the same week the decision is made.
+A £1.50m funding swing, with no change to the contract, the scope or the margin. When a shortage pushes you to self-perform work you had planned to sublet, that is the number to put in front of the finance director, and it belongs on the [S-curve the project draws its cash from](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) the same week the decision is made.
 
 The finance and delivery overlap runs through the cost control and working capital domains of the PCI AI Project Finance Leader (PFL-AI) syllabus, which spans 16 domains and 61 knowledge areas.
 
@@ -119,10 +119,10 @@ It fixes your availability and worsens everyone else's, briefly. In a regional s
 Contemporaneously, or not at all. Daily allocation sheets tying hours to areas, quantity records signed at the same frequency, and a measured baseline period before the disruption began. A retrospective global claim built from the final cost against the tender is the weakest form of the argument and the one most often rejected.
 
 **Can AI forecast labour demand usefully?**
-It is genuinely good at the tedious part: aggregating crew demand across a portfolio, spotting where two projects need the same scarce trade in the same month, and testing whether a levelled programme is achievable against the recruitment you have actually made. It cannot tell you whether the local market has those people. That answer comes from your supply chain, and it should be written down with a date.
+It is genuinely good at the tedious part: aggregating crew demand across a portfolio, spotting where two projects need the same scarce trade in the same month, and testing whether a levelled programme is achievable against the recruitment you have actually made. That is roughly [what a model can and cannot do with a resourced programme](https://pciai.org/ai-for-construction-scheduling), and the boundary matters: it cannot tell you whether the local market has those people. That answer comes from your supply chain, and it should be written down with a date.
 
 ---
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this piece is not a republish of anything on the PCI site.*
 
-*Internal links: this piece should link to [cost control in construction](https://pciglobal.ai/cost-control-in-construction) with the anchor "how labour hours feed the cost control cycle", to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "what a working capital swing does to the cash curve", and to [the critical path method](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "why resource levelling moves the critical path".*
+*Linking note: two links are now in the body, one per domain. "The S-curve the project draws its cash from" sits in the working capital paragraph (https://projectcontrolsinstitute.org/project-cash-flow-forecasting), because a £1.50m funding swing raises the question of where it shows on the cash curve. "What a model can and cannot do with a resourced programme" sits in the FAQ on forecasting labour demand (https://pciai.org/ai-for-construction-scheduling). The critical path link originally proposed was dropped: the hub already carries this piece's one permitted link, and the cost control link named the wrong host, since cost control lives on the hub rather than on the regional site. Reciprocal: none — the hub's cash flow page should not point back at a newsletter issue.*

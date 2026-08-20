@@ -53,7 +53,7 @@ Those figures are illustrative arithmetic, not project data. Run the same two di
 
 Not in itself. Interest during construction is the financing cost of money drawn while the asset is being built, and it is a planned line in every project-financed structure. It becomes an overrun when the schedule extends and nobody re-runs the calculation.
 
-Take **US$9.0bn** of debt drawn evenly across four years at **7%**. The average drawn balance is roughly half the peak, so about **US$4.5bn**, giving 4.5 × 0.07 = **US$315m a year**, or about **US$1.26bn** over the drawdown period.
+Take **US$9.0bn** of debt drawn evenly across four years at **7%**. The average drawn balance is roughly half the peak, so about **US$4.5bn**, giving 4.5 × 0.07 = **US$315m a year**, or about **US$1.26bn** over the drawdown period. Real facilities draw on an S-curve rather than a straight line, so [how the drawdown curve is modelled](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) moves that figure before the programme does.
 
 Now delay completion by twelve months with the facility fully drawn. Holding **US$9.0bn** for an extra year at 7% adds **US$630m** — half the entire planned financing cost of the build, from one year of slip.
 
@@ -134,4 +134,4 @@ Yes. The contractor's earned value measures the contractor's scope against the c
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [earned value management](https://projectcontrolsinstitute.org/earned-value-management) as the pillar it supports, to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "how the drawdown and the cash trough are modelled", and to [project controls training in the UAE](https://pciglobal.ai/project-controls-training-uae) with that anchor.*
+*Linking note: one cross-estate link now sits in the body, in the section on interest during construction. The arithmetic there assumes an even drawdown, which raises the question of what a real drawdown curve does to the financing number, and the hub's cash flow forecasting guide answers it. The note originally proposed a second hub link to the earned value pillar; it was dropped, since only one link per domain is allowed and this piece works the CPI and SPI arithmetic itself. The proposed pciglobal.ai link to UAE training was dropped as well, for a different reason: nothing in the article raises a question a regional training page answers, and a link placed to reach a regional domain is the pattern this run avoids. A reciprocal link back to this piece would fit on the cash flow forecasting page, where interest during construction on a financed asset is mentioned but not worked.*

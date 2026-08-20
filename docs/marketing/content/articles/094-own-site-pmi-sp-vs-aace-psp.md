@@ -19,7 +19,7 @@ ab_id:         AB-00061
 
 PMI-SP vs AACE PSP is a choice between two scheduling credentials with different assessment philosophies. PMI-SP examines scheduling inside PMI's project management framework through objective questions. PSP examines planning and scheduling as a production and forensic discipline, with practical exercises as well as objective ones.
 
-Pick by two things: which acronym your market names, and whether you want an assessment that makes you produce work rather than recognise answers.
+Pick by two things: which acronym your market names, and whether you want an assessment that makes you produce work rather than recognise answers. If PMP and the tool certificates are still on your list, [the wider shortlist for planners](https://credentialfinder.org/best-certification-for-planning-engineers) sets all five against each other first.
 
 ## PMI-SP vs AACE PSP on the axes that matter
 
@@ -48,7 +48,7 @@ Against the contract date of 110, the project is now **9 days** late. Fourteen d
 
 That single step is where most disputes actually live. If float belongs to the project rather than to either party, the employer's event may consume it and the contractor recovers nine days, not fourteen.
 
-If the contract says otherwise, the answer changes. Naming the method is easy; showing which days went where is the examinable skill.
+If the contract says otherwise, the answer changes. Naming the method is easy; showing which days went where is the examinable skill, and [which delay analysis method suits which dispute](https://projectcontrolsinstitute.org/delay-analysis-techniques) is a separate decision the examination expects you to defend.
 
 Add a concurrent contractor-caused delay of **6 days** in the same window and the answer stops being arithmetic and becomes contract interpretation. A good candidate says exactly that, then states what records would be needed to argue it.
 
@@ -104,7 +104,7 @@ PCI is not accredited by ANAB, UKAS or any other ISO/IEC 17024 accreditation bod
 
 Search live job advertisements for the roles you want in your region and count which of the two acronyms appears. In Gulf and international EPC work PSP is named far more often; in PMI-standardised organisations PMI-SP is.
 
-Then ask what you need to prove. If your weakness is vocabulary and framework alignment, PMI-SP's objective paper matches it. If your weakness is producing defensible analysis under time pressure, PSP's practical exercises are the better training, and the harder paper.
+Then ask what you need to prove. If your weakness is vocabulary and framework alignment, PMI-SP's objective paper matches it. If your weakness is producing defensible analysis under time pressure, PSP's practical exercises are the better training, and the harder paper; [the PSP's scope, fees and practical component](https://credentialfinder.org/aace-psp-certification-guide) set out what that commitment involves.
 
 Finally, ask which renewal you will actually keep up. A lapsed credential is worse than none, because it dates your last serious study on your own CV.
 
@@ -123,8 +123,8 @@ No. Plenty of senior planners hold neither and are hired on their programmes. A 
 PSP is the closer fit, since AACE's material treats forensic analysis of the programme directly and the practical exercises reward showing your working. Claims work is still won by records rather than credentials, so the credential opens the door and the contemporaneous evidence decides the outcome.
 
 **How much preparation should I plan?**
-Around eighty hours over five or six months suits a working planner for either paper, and more for PSP if the practical format is unfamiliar. Sit a timed mock early. Study only the domains it exposes, and practise at least one full delay analysis by hand, because that is the skill that decays fastest between projects.
+Around eighty hours over five or six months suits a working planner for either paper, and more for PSP if the practical format is unfamiliar. Sit a timed mock early; [a week-by-week PMI-SP study plan](https://credentialfinder.org/pmi-sp-exam-prep) shows how those hours spread around a working month-end. Study only the domains it exposes, and practise at least one full delay analysis by hand, because that is the skill that decays fastest between projects.
 
 ---
 
-*Internal links: this comparison should link to [delay analysis techniques compared](https://projectcontrolsinstitute.org/delay-analysis-techniques) with that anchor, to [what total float really means](https://projectcontrolsinstitute.org/total-float) with that anchor, to [best certification for planning engineers](https://credentialfinder.org/best-certification-for-planning-engineers) with that anchor, and to [best project controls certification](https://credentialfinder.org/best-project-controls-certification) with that anchor; the PMI-SP exam prep and PSP certification guide pages should link back here with the anchor "PMI-SP vs AACE PSP".*
+*Linking note: one cross-estate link is in the body, to the hub's comparison of [which delay analysis method suits which dispute](https://projectcontrolsinstitute.org/delay-analysis-techniques), placed where the worked update turns fourteen days of delay into nine days of entitlement and the reader asks how the method is chosen. Three same-domain links sit where the text raises them: the wider planner shortlist in the opening, the PSP guide beside the sentence about practical exercises, and the PMI-SP study plan in the FAQ on preparation hours. The earlier note also proposed the hub's total float page, a second link to the same domain, so it was dropped; the best-certification comparison was dropped too, since this piece already sends the same reader to the planner shortlist. Reciprocal link worth making: the PMI-SP exam prep page can point back here once when it explains why a candidate might sit PSP instead.*

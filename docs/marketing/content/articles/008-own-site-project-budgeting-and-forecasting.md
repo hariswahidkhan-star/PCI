@@ -115,7 +115,7 @@ Work remaining, measured in budget, is BAC − EV = £10,000,000 − £3,600,000
 | 3. Remaining work at CPI and SPI | EAC = AC + (BAC − EV) / (CPI × SPI) | Schedule pressure will keep damaging cost efficiency | £4.2m + (£6.4m / 0.771) = **£12,496,296** |
 | 4. Bottom-up estimate to complete | EAC = AC + fresh ETC | Neither history nor indices apply, because the remaining work differs from the work done | £4.2m + £7.1m = **£11,300,000** |
 
-The spread is £1.9m, which is 19% of the original budget, on identical data. The method is not a detail.
+The spread is £1.9m, which is 19% of the original budget, on identical data. The method is not a detail. Which formula answers which cause of variance, and how to defend the one you signed, is worked method by method in [how to run all four EAC formulas and pick one](https://projectcontrolsinstitute.org/four-eac-formulas).
 
 Method one is the optimist's answer and is only defensible when you can name the one-off event and show it is closed. Method two is the default in most organisations because it is quick, objective and hard to argue with.
 
@@ -147,7 +147,7 @@ Take 30 days from work performed to application submitted and certified, 75 days
 
 On a business turning over £60m a year, that is 60 / 365 × £60,000,000 = **£9.9m** of working capital funded by the contractor at any moment. Extend certification by 15 days and the funding requirement rises to £12.3m without a single extra pound of cost.
 
-This is why the time-phased forecast matters as much as the total. The number at the bottom of the cost report is a solvency question before it is a profitability one.
+This is why the time-phased forecast matters as much as the total. The number at the bottom of the cost report is a solvency question before it is a profitability one, and turning the baseline into dated receipts and payments is its own exercise, set out in [how a cash flow forecast is built from payment terms](https://projectcontrolsinstitute.org/project-cash-flow-forecasting).
 
 ## Why the forecast is a financial statement number
 
@@ -155,7 +155,7 @@ A chartered accountant is examined on when revenue may be recognised and what a 
 
 Here is the mechanism, on the numbers above. Under cost-to-cost measurement, progress equals costs incurred divided by forecast total costs. Moving the forecast from £10.0m to £11.67m cuts measured progress from 42% to 36% at unchanged actual cost, and cumulative revenue falls with it.
 
-If the same movement takes forecast cost above contract value, the contract is onerous and the whole expected loss is recognised at once rather than spread across the remaining work.
+If the same movement takes forecast cost above contract value, the contract is onerous and the whole expected loss is recognised at once rather than spread across the remaining work. [Which reporting standards consume a cost forecast](https://projectcontrolsinstitute.org/ifrs-for-project-controls) — revenue, provisions, capitalisation, borrowing costs and leases — is worth knowing before the month it happens.
 
 So the forecast a cost engineer signs is not a management estimate that finance later interprets. It is the input to a reported number, and the month it moves is the month the profit moves.
 
@@ -193,4 +193,4 @@ Rarely, and only through formal change control with the sponsor's approval. Re-b
 
 ---
 
-*Internal links: this piece should link to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas), [EAC accounting](https://projectcontrolsinstitute.org/eac-accounting), [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls), [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) and [cost control methods that catch overruns early](https://projectcontrolsinstitute.org/cost-control-in-construction).*
+*Internal linking note: three same-domain links are now in the body. [How to run all four EAC formulas and pick one](https://projectcontrolsinstitute.org/four-eac-formulas) sits under the forecasting table, where a £1.9m spread on identical data raises the question of which method to sign. [How a cash flow forecast is built from payment terms](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) sits in the working capital section, where the cycle has to become a dated profile. [Which reporting standards consume a cost forecast](https://projectcontrolsinstitute.org/ifrs-for-project-controls) sits where a forecast above contract value triggers a provision. The EAC accounting and cost control pieces were dropped to hold the two-to-three internal cap, and the IFRS pillar covers the same handover more directly here. Reciprocal link worth making: the four EAC formulas and cash flow forecasting pieces should point back here with the anchor "how a budget becomes a baseline and a forecast".*

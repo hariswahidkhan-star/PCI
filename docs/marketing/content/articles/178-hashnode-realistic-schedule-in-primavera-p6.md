@@ -79,7 +79,7 @@ Durations derived from rates assume the resource turns up. Loading the schedule 
 
 Take three parallel activities each needing 8 fitters when only 16 exist. Unlevelled, the network finishes in 43 days; levelled to the real crew, one activity waits and the finish moves to **52 days**.
 
-Levelling changes the driving path, so recheck the critical path afterwards. A resource-limited finish and a logic-driven finish answer different questions, and the report has to say which one it shows.
+Levelling changes the driving path, so run [the forward and backward pass that calculate the critical path](https://projectcontrolsinstitute.org/critical-path-method) again afterwards. A resource-limited finish and a logic-driven finish answer different questions, and the report has to say which one it shows.
 
 ## Step seven: baseline, then write down the progress rules
 
@@ -172,10 +172,10 @@ Only when scope, funding or contractual dates change, and always with a recorded
 It is the short document recording calendars, productivity rates and their sources, key assumptions, constraints and their justification, and the progress rules. You need one, because it turns a file into something a third party can audit. Two or three pages is usually enough.
 
 **Can AI build the schedule?**
-It can draft logic from a scope document, find missing successors and compare durations against rates achieved on similar work. It should not issue a date you cannot explain. Every output still needs the quantity, the rate and the assumption written next to it, because that is what you will be asked for.
+It can draft logic from a scope document, find missing successors and compare durations against rates achieved on similar work, which is [as far as AI gets on a construction schedule](https://pciai.org/ai-for-construction-scheduling) today. It should not issue a date you cannot explain. Every output still needs the quantity, the rate and the assumption written next to it, because that is what you will be asked for.
 
 ---
 
 *First published on projectcontrolsinstitute.org; this version is marked as republished in Draft Settings with the canonical set to the original.*
 
-*Internal links: this guide should link to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "what total float actually tells you", and to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "testing the date with a QSRA".*
+*Internal links: two are now in the body. "The forward and backward pass that calculate the critical path" points at projectcontrolsinstitute.org/critical-path-method, placed in step six, because levelling moves the driving path and that sentence raises how the path is recalculated. "As far as AI gets on a construction schedule" points at pciai.org/ai-for-construction-scheduling, placed in the FAQ answer on whether AI can build the schedule, because that answer raises where the tooling actually stops. The total float and QSRA links proposed earlier were dropped to hold one link per domain; the critical path sentence was the strongest of the three. Reciprocal: the critical path method page should point back here for schedule quality screening, with an anchor about the checks run over a P6 export.*

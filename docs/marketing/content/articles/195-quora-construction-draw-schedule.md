@@ -54,7 +54,7 @@ Retention held to date across these three months is 26,000 + 32,000 + 37,000 = �
 | Cash flow forecast | Project controls team | What the project expects to need | Nothing — it is a forecast | Built on the valuation date, not the payment date |
 | Payment application | Contractor | What is claimed this period | Certification | Claimed early, certified late |
 
-The third row is where most project teams lose money without noticing. A cash flow forecast built from the valuation curve shows cash leaving on the day work is done and arriving on the day it is valued, and neither is true.
+The third row is where most project teams lose money without noticing. A cash flow forecast built from the valuation curve shows cash leaving on the day work is done and arriving on the day it is valued, and neither is true. What the project needs instead is [a cash flow forecast built on the dates money actually moves](https://projectcontrolsinstitute.org/project-cash-flow-forecasting), which is a different curve from the valuation one.
 
 ## Why does a fully funded project still run short of cash?
 
@@ -85,7 +85,7 @@ That figure belongs in the cost plan as a line, because it is a real cost driven
 
 Retention release matters for the same reason. On a build contract of £4.80m within the £6.00m, retention at 5% is £240,000, commonly released half at practical completion and half at the end of the defects period. A contractor forecasting that £120,000 tail into the wrong quarter has a cash problem that has nothing to do with construction.
 
-This is the overlap PCI examines directly: the same person needs to read a programme and a funding structure. The PCI AI Project Finance Leader (PFL-AI) credential covers 16 domains and 61 knowledge areas, sitting alongside 92 sector case studies across the three volumes of the Body of Knowledge.
+This is the overlap PCI examines directly: the same person needs to read a programme and a funding structure. The PCI AI Project Finance Leader (PFL-AI) credential covers 16 domains and 61 knowledge areas, sitting alongside 92 sector case studies across the three volumes of the Body of Knowledge. Anyone weighing that against the qualifications already on their desk should start from [which credentials examine the money as well as the programme](https://credentialfinder.org/best-project-controls-certification), rather than from the names.
 
 ## Frequently asked questions
 
@@ -109,4 +109,4 @@ By owning the evidence pack and its timing: valuation, cost-to-complete, updated
 
 ---
 
-*Internal links: this answer should link once, at the end, to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "forecasting cash against funding dates", and to [what capital projects are](https://projectcontrolsinstitute.org/what-are-capital-projects) with the anchor "how capital projects are funded and controlled"; Quora links are nofollow, so this earns qualified readers, not link equity.*
+*Internal links: two, in the body, one per domain. [A cash flow forecast built on the dates money actually moves](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) sits in the paragraph under the document comparison, where the sentence says a forecast drawn from the valuation curve is wrong on both ends and the reader is left asking what to build instead. [Which credentials examine the money as well as the programme](https://credentialfinder.org/best-project-controls-certification) sits beside the PFL-AI paragraph, where naming a credential raises the question of how it compares with the ones the reader already holds. The second hub link in the original note — to the capital projects page — was dropped rather than placed: one link per domain per answer is the rule, and the cash flow page is the one the draw-cycle arithmetic actually asks for. No reciprocal link is proposed: Quora links are nofollow, so this earns qualified readers rather than equity, and an own-site page has no reason to send readers to a Quora thread.*

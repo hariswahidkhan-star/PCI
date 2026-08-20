@@ -23,7 +23,7 @@ The figures below are placeholders. Replace each with a number you collected you
 
 ## Why a single planning engineer salary figure is always wrong
 
-Two people with the same job title can be doing different jobs. One updates progress against a baseline somebody else built; the other owns the baseline, the forecast and the argument with the client about both.
+Two people with the same job title can be doing different jobs. One updates progress against a baseline somebody else built; the other owns the baseline, the forecast and the argument with the client about both, and [the route from a first site role to owning a baseline](https://pciworld.org/how-to-become-a-planning-engineer) is how the second one got there.
 
 They are priced differently because they carry different risk. A number quoted without the scope attached tells you nothing you can use in a negotiation.
 
@@ -41,6 +41,8 @@ Fill this in for every offer or advert you are weighing, one row each.
 | Scope owned | One sentence: what you would be accountable for | Sets which band the number should sit in at all |
 
 The output is one figure per opportunity on the same basis. That is the only thing you should compare.
+
+Gulf packages need one extra line, because the end-of-service gratuity accrues on the basic wage alone and the split decides what it is worth: [what a planning engineer salary in the UAE is made of](https://pciworld.org/planning-engineer-salary-uae) works that arithmetic through.
 
 ## Step one: normalise a staff offer
 
@@ -103,11 +105,13 @@ Two verified offers beat twenty averages. Collect the two.
 
 The fourth row is the one that reprices people. Planners who can carry a forecast into a finance conversation stop being interchangeable, because most cannot.
 
+Scope moves in steps rather than smoothly, and [the project controls salary bands](https://pciworld.org/project-controls-salary) set out where each step happens and what an employer expects at it.
+
 ## What this page will not tell you
 
 We publish no salary table and no figure for what a credential does to pay. Nobody can isolate that effect honestly without a control group, and anyone showing you a percentage is selling something.
 
-What a credential does is narrower and checkable. It is independent evidence that somebody examined your knowledge against a published syllabus, which shortens the part of a hiring conversation where you are asked to prove what you know.
+What a credential does is narrower and checkable. It is independent evidence that somebody examined your knowledge against a published syllabus, which shortens the part of a hiring conversation where you are asked to prove what you know. Which of them are examined that way, and on what, is set out in [the planning credentials compared on what each examines](https://projectcontrolsinstitute.org/planning-engineer-certification).
 
 PCI examines the overlap where projects lose money: PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
 
@@ -134,4 +138,4 @@ Once a year, and again before any conversation about promotion or a move. Rates 
 
 ---
 
-*Internal links: link to [the project controls salary bands](https://pciworld.org/project-controls-salary), [what a planning engineer salary in the UAE is made of](https://pciworld.org/planning-engineer-salary-uae) and [how to become a planning engineer](https://pciworld.org/how-to-become-a-planning-engineer), each with that anchor; the planning engineer certification and project controls manager pieces should link back here with the anchor "planning engineer salary".*
+*Linking note: the links are now in the body. Three same-domain links — "the route from a first site role to owning a baseline" sits where the piece says two people with one title hold different scopes; "what a planning engineer salary in the UAE is made of" follows the worksheet, which does not carry a gratuity line; "the project controls salary bands" follows the scope table, where the piece says scope sets the band without saying what the bands are. One cross-estate link only: "the planning credentials compared on what each examines" answers the question raised by saying a credential is evidence of examined knowledge. No salary uplift figure is claimed anywhere, here or at the destination. Reciprocal: the project controls salary tool should link back here with the anchor "the planning engineer salary worksheet".*

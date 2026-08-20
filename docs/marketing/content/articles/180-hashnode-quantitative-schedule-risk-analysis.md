@@ -1,8 +1,8 @@
 ---
 platform:      Hashnode
 type:          guide
-title:         Quantitative schedule risk analysis: run it in 20 lines
-meta:          A code-first guide to quantitative schedule risk analysis: ten iterations by hand, a Monte Carlo in 20 lines of Python, merge bias, and reading the P80 date.
+title:         Quantitative schedule risk analysis (QSRA) in 20 lines
+meta:          A code-first guide to quantitative schedule risk analysis (QSRA): ten iterations by hand, a Monte Carlo in 20 lines of Python, and how to read a P80 date.
 primary_kw:    quantitative schedule risk analysis QSRA
 secondary_kw:  Monte Carlo simulation, criticality index, merge bias, P80 date
 pillar:        Risk management
@@ -15,15 +15,15 @@ hashtags:      #python #datascience #statistics #tutorial
 ab_id:         AB-00081
 ---
 
-# Quantitative schedule risk analysis: run it in 20 lines
+# Quantitative schedule risk analysis (QSRA) in 20 lines
 
-Quantitative schedule risk analysis replaces one finish date with a distribution of dates and the confidence attached to each. You give every activity a low, likely and high duration, map risk events onto the activities they would hit, then recalculate the network thousands of times. The output is a confidence level, such as a P80 date.
+Quantitative schedule risk analysis (QSRA) replaces one finish date with a distribution of dates and the confidence attached to each. You give every activity a low, likely and high duration, map risk events onto the activities they would hit, then recalculate the network thousands of times. The output is a confidence level, such as a P80 date.
 
 The intimidating part is the vocabulary rather than the maths. This piece runs ten iterations by hand, then the same model in twenty lines of Python so you can check one against the other.
 
 ## What is quantitative schedule risk analysis (QSRA)?
 
-It is the practice of testing a programme against uncertainty instead of accepting its dates. Deterministic critical path method returns one answer, calculated from durations treated as facts.
+It is the practice of testing a programme against uncertainty instead of accepting its dates, and it is the quantitative grade of a wider discipline: [which grade a review actually needs](https://projectcontrolsinstitute.org/schedule-risk-analysis) is worth settling before anyone opens a tool. Deterministic critical path method returns one answer, calculated from durations treated as facts.
 
 They are not facts. Every duration is an estimate with a range behind it, and a QSRA samples that range repeatedly to produce a distribution of finish dates, from which any confidence level can be read.
 
@@ -185,4 +185,4 @@ Then the analysis has found the problem it exists to find, and the honest option
 
 *First published on projectcontrolsinstitute.org; this Hashnode version is flagged as republished with the canonical pointing to the original.*
 
-*Internal links: this guide should link up to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with that anchor, across to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with that anchor, and to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "what total float actually tells you".*
+*Internal links: one is now in the body. "Which grade a review actually needs" points at projectcontrolsinstitute.org/schedule-risk-analysis, placed in the definition section, because that sentence raises the qualitative-against-quantitative choice this piece assumes has already been made. The Monte Carlo cost simulation and total float links proposed earlier were dropped to hold one link per domain; the risk-register how-to carries the Monte Carlo link instead, which spreads the anchors rather than repeating them. No second domain earns a link here. Reciprocal: the schedule risk analysis pillar already points at this page for what building a QSRA involves, so the pair is complete and needs nothing added.*

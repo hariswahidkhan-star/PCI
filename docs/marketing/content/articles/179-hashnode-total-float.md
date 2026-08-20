@@ -17,7 +17,7 @@ ab_id:         AB-00601
 
 # Total float definition, the forward pass and the traps
 
-Total float is the number of working days an activity can slip from its early dates before the project completion date or a contractual date moves. It is late start minus early start, which is the same as late finish minus early finish. Zero total float means the activity is critical.
+Total float is the number of working days an activity can slip from its early dates before the project completion date or a contractual date moves. That is the total float definition; the arithmetic behind it is late start minus early start, which is the same as late finish minus early finish. Zero total float means the activity is critical.
 
 Float is a property of a path rather than of an activity. It is the gap between two chains of work, so it moves when either chain moves, and it can vanish while nobody has used any of it.
 
@@ -178,7 +178,7 @@ Easily, and it usually means the activity sits on a short branch feeding a long 
 Show the trend rather than the value. A trade told it has ten days spare will use them, and those ten days were never a private allowance. Reporting float erosion at path level keeps the early warning without inviting anyone to spend it.
 
 **How much float should a schedule start with?**
-Enough to cover the uncertainty in the network, which is a question for a quantitative schedule risk analysis rather than a rule of thumb. Where the P80 date sits weeks beyond the deterministic finish, that gap is the contingency the programme needs. Padding durations hides the same time where nobody can manage it.
+Enough to cover the uncertainty in the network, which is a matter of [sizing schedule contingency with a QSRA](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) rather than a rule of thumb. Where the P80 date sits weeks beyond the deterministic finish, that gap is the contingency the programme needs. Padding durations hides the same time where nobody can manage it.
 
 **What is the difference between float and buffer?**
 Float is calculated by the network from logic and durations. A buffer is placed deliberately, usually as an activity at the end of a chain, and it is owned and released by a named person. Critical chain scheduling replaces distributed float with pooled buffers for exactly that reason.
@@ -187,4 +187,4 @@ Float is calculated by the network from logic and durations. A buffer is placed 
 
 *First published on projectcontrolsinstitute.org; the canonical is set through the republishing field in Draft Settings, so the definition ranks on the PCI site rather than here.*
 
-*Internal links: this piece should link to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "how much float the programme actually needs", and to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with that anchor.*
+*Internal links: one is now in the body. "Sizing schedule contingency with a QSRA" points at projectcontrolsinstitute.org/quantitative-schedule-risk-analysis, placed in the FAQ answer on how much float a schedule should start with, because that question is exactly the one the QSRA page answers and no rule of thumb does. The critical path method and Primavera P6 links proposed earlier were dropped: one link per domain per piece, and this piece already works both passes itself, so the float question does not need to be sent elsewhere. No second domain earns a link — float arithmetic raises no AI, careers, regional or verification question. Reciprocal: the QSRA page should point back here from its criticality-index section, with an anchor about a path that carries float and still drives the finish.*

@@ -35,7 +35,7 @@ Full guide in the link in bio.
 A capital project creates or materially improves a long-lived asset: a plant, a line, a terminal, a network. The spend is committed up front and recovered over decades of use, which is why the decision to build is a financing decision before it is an engineering one.
 
 **Slide 2 — The lifecycle, one line each**
-Identify the need. Select an option. Define it well enough to commit. Sanction. Execute. Commission and hand over. Operate, maintain, and eventually decommission. Each stage buys better information than the one before it.
+Identify the need. Select an option. Define it well enough to commit. Sanction. Execute. Commission and hand over. Operate, maintain, and eventually decommission. Each stage buys better information than the one before it, and [what each gate has to approve](https://projectcontrolsinstitute.org/capital-project-management-process) is written down stage by stage.
 
 **Slide 3 — The arithmetic**
 Worked case. Capital cost **£240m**. Operating cost **£15m a year for 30 years = £450m**.
@@ -71,4 +71,4 @@ A planner is rarely examined on capitalisation. An accountant is rarely examined
 
 *Figures are a worked example. PCI publishes certification requirements; nothing here is accounting, tax or investment advice.*
 
-*Internal links (bio link and caption of the follow-up post): [what capital projects are](https://projectcontrolsinstitute.org/what-are-capital-projects) with that anchor, [the capital project management process](https://projectcontrolsinstitute.org/capital-project-management-process) with that anchor, and [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with that anchor.*
+*Linking note. One link, in slide 2, because that is the slide that lists the stages and immediately raises the question of what each gate actually approves; the hub page answers it stage by stage and is also the bio link this carousel points at. The earlier draft of this note asked for three hub links from one asset, which is the density _LINK_ARCHITECTURE.md §2 rules out, so the definition page and the budgeting guide were dropped rather than retargeted at something the slides do not ask about. Anchor is on what a gate approves, not on the primary keyword, so it differs from the anchors other pieces use for the same page. No reciprocal is due: an article does not link back to a carousel.*

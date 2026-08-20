@@ -64,7 +64,7 @@ Measure the work, apply the contract rates, value the instructed changes, deal w
 Certify to the mechanism, in writing, by the date. A certificate issued a day late is not a small administrative point; in many forms it changes what becomes payable. This is the slide people screenshot after it has happened to them once.
 
 **Slide 9 — The monthly overlay**
-On top of the week: the programme update, the position on every open extension of time, the movement in the final account forecast, and the release or top-up of contingency. All to one cut-off, so that the cost report, the certificate and the accounts describe the same month.
+On top of the week: the programme update, the position on every open extension of time, the movement in the final account forecast, and the release or top-up of contingency. All to one cut-off, so that the cost report, the certificate and the accounts describe the same month. A certificate that slips past that cut-off moves real money into the next one, which is why [building a cash flow forecast from certified value](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) is part of this job and not only the finance team's.
 
 **Slide 10 — The five-minute test**
 Pick an instruction from three months ago. Ask for four numbers: date of awareness, date of notice, value quoted, days it moved completion. If that takes longer than five minutes, the regime is not running, whatever the file structure looks like.
@@ -73,4 +73,4 @@ Pick an instruction from three months ago. Ask for four numbers: date of awarene
 
 *Periods shown are one common set. Read your own contract, because an amended form changes them. PCI publishes certification requirements and nothing here is legal advice.*
 
-*Internal links (bio link and caption of the follow-up post): [what project controls is](https://projectcontrolsinstitute.org/what-is-project-controls) with that anchor, [delay analysis techniques](https://projectcontrolsinstitute.org/delay-analysis-techniques) with that anchor, and [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with that anchor.*
+*Linking note. One link, in slide 9, because the monthly overlay is where the certificate stops being paperwork and becomes a payment date, and the question the slide raises is what a late certificate does to the money. The hub's cash flow page answers that, and it is the bio link for this post. The earlier draft asked for three hub links from one carousel, which is the density _LINK_ARCHITECTURE.md §2 rules out; the project controls definition and the delay analysis page were dropped because slides 1 and 9 mention both subjects without asking anything either page answers. Anchor names what the destination shows rather than repeating the primary keyword. No reciprocal is due: an article does not link back to a carousel.*

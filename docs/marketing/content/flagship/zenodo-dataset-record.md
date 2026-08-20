@@ -3,7 +3,7 @@ platform:      Zenodo (CERN / OpenAIRE open repository) — record description f
 type:          repository-record
 title:         The PCI Standards: 113 mandatory Standards and 532 process requirements for project controls, project finance and governed AI
 when_to_post:  Not on a posting clock. A published Zenodo record registers its DOI with DataCite at the moment you press publish, the files become permanent, and there is no unpublishing — so the deposit waits until the requirement text is final, not until launch week wants a link. Sequence: reserve the DOI in the deposit form first (Zenodo issues it before publication), give the reserved DOI to the PM World Journal manuscript and the own-site Body of Knowledge page so both carry a real identifier on the day they appear, publish the record once the hub page is live and indexed, then check the DOI actually resolves before any asset announces it. Registration and OpenAIRE harvesting are not instantaneous; a launch tweet pointing at a DOI that 404s for an hour is worse than no DOI. Publish at least a week ahead of the journal submission deadline you are aiming at, because a reference list with a resolving DOI is checked once and a reference list without one is queried.
-word_count:    300 words / 1,970 characters (the description field only, from "The PCI Standards are" to "forms no part of this deposit"; the deposit-form sheet and the notes are working material and are not deposited)
+word_count:    303 words / 1,989 characters (the description field only, from "The PCI Standards are" to "forms no part of this deposit"; the deposit-form sheet and the notes are working material and are not deposited)
 hashtags:      None, and none may be added. Zenodo has no hashtags; it has a Keywords field that feeds DataCite, OpenAIRE and every downstream index, and a hashtag pasted into it is a dead term nobody searches. Enter these, one per line, exactly — project controls; earned value management; cost engineering; project finance; accrual accounting; revenue cut-off; forecasting; AI governance; professional certification; body of knowledge.
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 credential:    suite — PCL-AI, PFL-AI and PML-AI all named, because the deposit is the framework all three rest on
@@ -68,14 +68,17 @@ notes: |
   repository record must open by saying what the record is. The contrast then lands as the scope
   rationale, which is what a cataloguer reads that paragraph for anyway.
 
-  LINKS — ONE IN PROSE, ONE HELD BACK, AND WHY. Two domains, one link each, per
+  LINKS — ONE URL IN THE RECORD, ONE RELATION HELD BACK, AND WHY. One link, one domain, per
   _LINK_ARCHITECTURE.md §2. The hub Body of Knowledge URL sits in the final paragraph, in the
-  sentence that raises the question it answers (where is the full text). credentialfinder.org is
-  NOT in the description: it belongs in the Related identifiers field, and only once it is true. A
-  related identifier is a machine-readable assertion about the world, not a link placement, so
-  "IsReferencedBy" may not be added until that page actually cites the DOI. Asserting a relation
-  that does not yet exist is a false statement in structured metadata, and it is checkable by
-  anyone who follows it. Add it the week the verification guide goes live, not before.
+  sentence that raises the question it answers (where is the full text). It appears once. The
+  Related identifiers field carries that same URL as `IsDocumentedBy`, which is a metadata
+  assertion in the deposit form rather than a second link, so the form sheet below names the page
+  instead of restating the address. credentialfinder.org is NOT in this record at all: the
+  verification guide that would have carried the relation does not exist on that domain, and a
+  related identifier pointing at a page nobody has published is a false statement in structured
+  metadata that anyone can check by following it. When a PCI page does cite the DOI, add
+  `IsReferencedBy` to the hub's own verification page at /verify.html, and add it the week that
+  citation goes live, not before.
   No pciai.org, pciworld.org or pciglobal.ai link. This record raises no AI-tooling, career or
   regional question, and a repository deposit is the last place an estate should look like an
   estate.
@@ -116,7 +119,7 @@ Three credentials rest on the framework: the PCI AI Project Controls Leader (PCL
 
 The PCI Standards are the Institute's own certification requirements. They are not law, not a national or international standard, and nothing here is legal, tax or accounting advice. No ISO, IFRS, IAS, PMI or AACE text, table or figure is reproduced; those documents are named, not quoted.
 
-Revisions are deposited as new versions under the same concept DOI: cite the version DOI where exact wording matters, the concept DOI where it does not. The Bodies of Knowledge built on these Standards are published in full at https://projectcontrolsinstitute.org/body-of-knowledge. The examination blueprint is an open decision and forms no part of this deposit.
+Revisions are deposited as new versions under the same concept DOI: cite the version DOI where exact wording matters, the concept DOI where it does not. The Bodies of Knowledge built on these Standards are published in full at https://projectcontrolsinstitute.org/body-of-knowledge, the readable copy. The examination blueprint is an open decision and forms no part of this deposit.
 
 ---
 
@@ -135,7 +138,7 @@ Working material. None of this is the description.
 | Access right | Open Access |
 | Licence | **Decision required — see the table below.** |
 | Keywords | project controls; earned value management; cost engineering; project finance; accrual accounting; revenue cut-off; forecasting; AI governance; professional certification; body of knowledge |
-| Related identifiers | `IsDocumentedBy` → https://projectcontrolsinstitute.org/body-of-knowledge. Add `IsReferencedBy` → https://credentialfinder.org/how-to-verify-a-certification only once that page cites the DOI. |
+| Related identifiers | `IsDocumentedBy` → the hub Body of Knowledge page, using the same URL the description already gives. Add `IsReferencedBy` → the hub's credential verification page at `/verify.html` only once that page cites the DOI. No verification page exists on credentialfinder.org, so no relation to that domain is asserted here. |
 | Communities | Search for an open community in standards, project management or engineering education and request to join. Do not create one for a single record. |
 
 ## The licence decision
@@ -151,4 +154,4 @@ Zenodo requires a licence and applies it per version. Version 1.0 keeps whatever
 | CC0 1.0 | Everything waived | A Standard that may be altered and reissued with no attribution stops being checkable, which defeats the reason for depositing it |
 | Restricted | Metadata public, files on request | An uncitable record earns nothing; the DOI exists and no one can use it |
 
-**Linking note.** Two external links, one per domain, both chosen because the sentence they sit in raises a question the target answers. `projectcontrolsinstitute.org/body-of-knowledge` sits in the description, in the sentence asking where the full requirement text is published, anchored on the Bodies of Knowledge rather than on the primary keyword. `credentialfinder.org/how-to-verify-a-certification` sits in Related identifiers and is added only after that page cites the DOI, because a related identifier asserts a fact rather than placing a link.
+**Linking note.** One external link, to one domain, because only one sentence in this record raises a question another page answers. The hub Body of Knowledge page sits in the description's closing paragraph, in the sentence asking where the full requirement text is published, named as the readable copy rather than by the primary keyword. It appears once: the Related identifiers field reuses that same address as `IsDocumentedBy`, which is a form field rather than a second placement, so the deposit sheet names the page instead of repeating the URL. No credentialfinder.org link is used anywhere: the verification guide it would have pointed at was never authored, and a related identifier aimed at a page that does not exist is a false assertion in machine-readable metadata. The reciprocal that is worth making runs the other way — whichever PCI page first cites this deposit should cite the DOI itself, and once the hub's verification page does, `IsReferencedBy` can be pointed back at it.

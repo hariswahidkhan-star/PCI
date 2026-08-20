@@ -19,7 +19,7 @@ ab_id:         AB-00026
 
 A project controls salary is a price for the decisions you are trusted to own, not for the title on your contract or the years on your CV. Work out which of five scope bands you are genuinely in, and the range you should be asking for follows. The ladder and the self-score below take twenty minutes.
 
-Project controls is not one job. Planner, cost engineer, cost controller, estimator, risk analyst and controls lead sit in the same function and are paid on different curves, so the band matters more than the discipline.
+Project controls is not one job. Planner, cost engineer, cost controller, estimator, risk analyst and controls lead sit in the same function and are paid on different curves, so the band matters more than the discipline. To put one specific offer on a comparable basis first, use [the planning engineer salary worksheet](https://pciworld.org/planning-engineer-salary).
 
 ## What is a project controls salary actually a price for?
 
@@ -41,7 +41,7 @@ Read the middle column, not the title column. Titles are inconsistent between co
 | 4 — Integration | Cost and schedule together, across contracts, into the accounts | One integrated position, thresholds, the accrual, the cash view | The commercial and finance leads call you first | Project controls lead, project controls manager |
 | 5 — Function | The method, the assurance and the people | Programme-level reporting, the controls standard, audit-ready evidence | An external party relied on your reporting | Head of project controls, programme controls director |
 
-Most careers stall between band 2 and band 3, and almost every large step in pay happens at the 3-to-4 boundary. That is where the job stops being about producing numbers and starts being about their consequences.
+Most careers stall between band 2 and band 3, and almost every large step in pay happens at the 3-to-4 boundary. That is where the job stops being about producing numbers and starts being about their consequences. What each rung asks before it lets you past is set out in [the gates on each rung of a planning career](https://pciworld.org/senior-planning-engineer-career-path).
 
 ## The ten-question self-score
 
@@ -68,7 +68,7 @@ The 3-to-4 boundary is crossed by one capability: being able to say what the del
 
 A band 3 planner reports that the pipeline test slipped three weeks. A band 4 controls lead reports that the slip moves a certification milestone past the cut-off, which moves revenue recognition into the next period and pushes the receipt into the quarter after that.
 
-Same fact. Two different conversations, and only one of them gets invited back.
+Same fact. Two different conversations, and only one of them gets invited back. The daily and monthly rhythm that produces the second conversation is described in [what a project controls engineer does](https://pciworld.org/what-does-a-project-controls-engineer-do).
 
 ## The cash arithmetic that moves you up a band
 
@@ -124,11 +124,11 @@ Each teaches a different half of the job. Contractors teach production, cost and
 Not on its own. A band is scope, and scope is granted by an employer who believes you can carry it. What examined knowledge does is remove the objection that you have never been tested on the half of the job your degree skipped, which is usually the finance half for engineers and the delivery half for accountants.
 
 **How do I ask for a band 4 salary while doing a band 3 job?**
-You do not. You ask for the band 4 scope first, in writing, with the specific accountabilities named, then the pay conversation follows the scope by a review cycle. Asking for the money before the scope invites the answer that you are already paid correctly for what you do, which will be true.
+You do not. You ask for the band 4 scope first, in writing, with the specific accountabilities named, then the pay conversation follows the scope by a review cycle. The accountabilities worth naming are the ones set out in [the route into a project controls manager's job](https://projectcontrolsinstitute.org/how-to-become-a-project-controls-manager). Asking for the money before the scope invites the answer that you are already paid correctly for what you do, which will be true.
 
 **Are these bands the same everywhere?**
 The ladder is stable across markets because it is built on accountability rather than pay. The figures attached to each rung are not, and they move with sector, contract type and local employment cost. Rebuild your own figures using the normalisation worksheet before any negotiation.
 
 ---
 
-*Internal links: link to [the planning engineer salary worksheet](https://pciworld.org/planning-engineer-salary), [what a project controls engineer does](https://pciworld.org/what-does-a-project-controls-engineer-do) and [how to become a project controls manager](https://projectcontrolsinstitute.org/how-to-become-a-project-controls-manager), each with that anchor; the project controls vs project management and cost controller certification pieces should link back here with the anchor "project controls salary".*
+*Linking note: the links are now in the body. Three same-domain links — "the planning engineer salary worksheet" answers the reader who has one offer to normalise before using the ladder; "the gates on each rung of a planning career" follows the sentence naming the 3-to-4 boundary without saying what clears it; "what a project controls engineer does" follows the band 3 against band 4 comparison. One cross-estate link only: "the route into a project controls manager's job" sits in the answer that tells you to ask for the scope first, because that is where the accountabilities are named. Reciprocal: the project controls vs project management piece should link back here with the anchor "how project controls pay follows scope".*

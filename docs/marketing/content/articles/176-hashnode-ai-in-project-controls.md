@@ -126,7 +126,7 @@ Four methods, four answers, identical inputs.
 
 Worked through: 50 + 78 = £128.0m, and 120 ÷ 0.84 = £142.9m. Method three uses CPI × SPI = 0.735, so 50 + (78 ÷ 0.735) = £156.1m, and method four takes a re-priced remaining scope of £86m for £136.0m.
 
-The spread is **£28.1m on the same inputs**. A model returns all four in microseconds and can tell you which one has been closest across your last thirty projects, which is genuinely useful evidence.
+The spread is **£28.1m on the same inputs**. A model returns all four in microseconds and can tell you which one has been closest across your last thirty projects, which is genuinely useful evidence. Which one you publish still turns on the cause of the variance, and [the four methods run on one dataset](https://projectcontrolsinstitute.org/four-eac-formulas) sets out what each of them assumes.
 
 It cannot tell you whether the flood that caused this overrun is over. That is the difference between backtesting and causation, and no amount of training data closes it.
 
@@ -187,7 +187,7 @@ Assurance moves upstream. When outputs are generated in seconds, the control has
 
 ## How PCI examines this
 
-PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination.
+PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination, and [what an AI project controls credential should examine](https://pciai.org/ai-project-controls-certification) is a fair question to put to any of them.
 
 | Credential | Full name | Shape |
 |---|---|---|
@@ -222,4 +222,4 @@ Only when provenance is missing. An AI-assisted number is no different from a sp
 
 *First published on pciai.org; this Hashnode version is flagged as republished in Draft Settings with the canonical pointing there. Reach here comes from tag feeds, not from search.*
 
-*Internal links: this piece should link to [AI project controls certification](https://pciai.org/ai-project-controls-certification) with the anchor "what an AI project controls credential should examine", to [AI for cost estimating in construction](https://pciai.org/ai-for-cost-estimating-in-construction) with the anchor "measuring estimating error and bias on your own jobs", and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "how to choose and defend an EAC method".*
+*Internal links: two are now in the body. "The four methods run on one dataset" points at projectcontrolsinstitute.org/four-eac-formulas, placed after the £28.1m spread, because that sentence raises which method a person should publish and this piece deliberately stops at showing the range. "What an AI project controls credential should examine" points at pciai.org/ai-project-controls-certification, placed where the three credentials are introduced, because the sentence raises what examinable content an AI credential ought to carry. The cost-estimating link proposed earlier was dropped to hold one link per domain; that piece links here instead, which is the right direction for a cluster page pointing at its pillar. Reciprocal: the AI cost estimating guide already points back to this pillar for the precision and recall arithmetic.*

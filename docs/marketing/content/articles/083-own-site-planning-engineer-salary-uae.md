@@ -17,9 +17,9 @@ ab_id:         —
 
 # Planning engineer salary UAE: what the market really pays
 
-In the UAE, the headline number is the least informative part of the offer. What the market really pays is a package: a basic wage plus allowances, no personal income tax, and a statutory end-of-service gratuity calculated on the basic alone. Two offers with identical totals can differ by tens of thousands over five years.
+A planning engineer salary UAE offer is a package rather than a number: a basic wage plus allowances, no personal income tax, and a statutory end-of-service gratuity calculated on the basic alone. The headline total is the least informative part of it. Two offers with identical totals can differ by tens of thousands over five years.
 
-This piece is about how the package works and how to price one, because that arithmetic is checkable. The figures used are placeholders for your own.
+This piece is about how the package works and how to price one, because that arithmetic is checkable. To put a UAE offer beside one at home on the same basis, start from [the worksheet that turns any offer into one comparable figure](https://pciworld.org/planning-engineer-salary). The figures used below are placeholders for your own.
 
 ## Planning engineer salary UAE offers: what the package is made of
 
@@ -89,6 +89,8 @@ Then subtract what the package does not cover but your life requires: school fee
 
 That last row is uncomfortable and real. Parts of this market still price by passport rather than by capability, and the practical defence is evidence: a credential somebody else can verify, and a scope statement that names what you owned.
 
+Which employers sit at which end of that first row, and which sectors are actually hiring, is set out in [how the UAE market for planners is structured](https://pciworld.org/planning-engineer-jobs-in-uae).
+
 ## Where to get real figures
 
 We publish no UAE salary table, because PCI holds no primary dataset it can stand behind. What follows is how to build a defensible one in an afternoon.
@@ -105,7 +107,7 @@ Take the median of your verified points, not the mean. One senior outlier will o
 
 ## What UAE employers actually test at interview
 
-Tool depth gets your CV opened. Primavera P6 is close to mandatory on the contractor and consultant side, and increasingly the enterprise version rather than the standalone.
+Tool depth gets your CV opened. Primavera P6 is close to mandatory on the contractor and consultant side, and increasingly the enterprise version rather than the standalone. Where to acquire it locally, and what the classroom and online options in the Emirates actually cost, is a regional question answered in [the training options actually available in the UAE](https://pciglobal.ai/project-controls-training-uae).
 
 What decides the offer is different. Expect to be asked how you built a baseline that a client accepted, how you handled a delay event and what records supported it, and what your progress figure did to the payment application.
 
@@ -126,8 +128,8 @@ Employers routinely require attestation of the degree certificate for a work per
 Less common than in the UK or Australia, and usually structured through an agency that becomes your sponsor. The visa is tied to that sponsorship, so the risk profile differs from contracting at home. Price it accordingly, and read the notice provisions before the rate.
 
 **How do I compare two UAE offers quickly?**
-Put both on the same basis: annual guaranteed cash, plus the value of anything you would otherwise buy, plus the gratuity accrual on the stated basic, minus anything you must pay yourself. Then compare the scope sentence for each role, because the one that puts you closer to owning a forecast will be worth more within two years regardless of which pays more today.
+Put both on the same basis: annual guaranteed cash, plus the value of anything you would otherwise buy, plus the gratuity accrual on the stated basic, minus anything you must pay yourself. Then compare the scope sentence for each role, because the one that puts you closer to owning a forecast will be worth more within two years regardless of which pays more today. Where owning a forecast sits relative to everything else is set out in [the five scope bands project controls pay follows](https://pciworld.org/project-controls-salary).
 
 ---
 
-*Internal links: link to [the planning engineer salary worksheet](https://pciworld.org/planning-engineer-salary), [where planning engineer jobs in the UAE sit](https://pciworld.org/planning-engineer-jobs-in-uae) and [project controls training in the UAE](https://pciglobal.ai/project-controls-training-uae), each with that anchor; the Dubai courses and Gulf giga-projects pieces should link back here with the anchor "planning engineer salary UAE".*
+*Linking note: the links are now in the body. Three same-domain links — "the worksheet that turns any offer into one comparable figure" answers the reader who needs a comparable basis before the gratuity arithmetic means anything; "how the UAE market for planners is structured" follows the employer-type row; "the five scope bands project controls pay follows" sits in the answer that tells you to compare scope rather than headline. One cross-estate link only, and it is the rare satellite-to-satellite case: local training routes are regional territory, not the hub's, so "the training options actually available in the UAE" sits on the sentence about acquiring P6 depth in this market. Anchors here deliberately differ from the ones the planning engineer salary worksheet uses for the same pages. Reciprocal: the Dubai courses piece should link back here with the anchor "what a UAE package is actually worth over five years".*

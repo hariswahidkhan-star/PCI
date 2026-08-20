@@ -36,6 +36,8 @@ It differs from every other thing the word "fellow" attaches to. Four separate i
 
 Read down the third column. Only two of the four involve an assessment of what you can do, and honorary fellowship is not one of them.
 
+The second row is the one most readers actually want. An elected fellowship grade is applied for against published criteria with a proposer and referees behind it, and [how an elected fellowship grade is won](https://projectcontrolsinstitute.org/how-to-become-a-fellow-of-a-professional-institution) is a separate process from anything a board confers at its discretion.
+
 ## Why institutions confer honorary fellowships
 
 Three reasons, and they are all reputational rather than technical.
@@ -90,7 +92,7 @@ PCI makes no claim of accreditation, recognition, endorsement, affiliation or pa
 
 Use the exact form the conferring body publishes, and nothing else.
 
-PCI publishes the honorary recognition as "Honorary Fellow (PCI)" and the Fellow membership grade with the post-nominal FPCI. Those are different things conferred by different processes, and inventing a hybrid of the two is a misrepresentation even when it is accidental.
+PCI publishes the honorary recognition as "Honorary Fellow (PCI)" and the Fellow membership grade with the post-nominal FPCI. Those are different things conferred by different processes, and inventing a hybrid of the two is a misrepresentation even when it is accidental. Which of the two a planner, cost engineer or controls lead should be working towards is set out in [the fellowship routes open to project professionals](https://projectcontrolsinstitute.org/fellowship-for-project-professionals).
 
 On a CV, put honorary recognition under honours or professional recognition, never under qualifications or certifications. If a form asks for professional qualifications and all you hold is an honorary fellowship, the correct answer to that question is none.
 
@@ -129,4 +131,4 @@ For the honorary recognition itself, generally no, because there is no competenc
 
 ---
 
-*Internal links: this guide should link to [the PCL-AI certification guide](https://projectcontrolsinstitute.org/pcl-ai-certification) with that anchor, to [how to become a fellow of a professional institution](https://projectcontrolsinstitute.org/how-to-become-a-fellow-of-a-professional-institution), and to [fellowship for project professionals](https://projectcontrolsinstitute.org/fellowship-for-project-professionals); the professional fellowship application piece should link back here with the anchor "what an honorary fellowship in engineering recognises".*
+*Internal links now in the body, all on this domain: [the PCL-AI certification guide](https://projectcontrolsinstitute.org/pcl-ai-certification) where the examined route is set against the honorary one; [how an elected fellowship grade is won](https://projectcontrolsinstitute.org/how-to-become-a-fellow-of-a-professional-institution) under the four-way table, where the elected grade is named and not explained; and [the fellowship routes open to project professionals](https://projectcontrolsinstitute.org/fellowship-for-project-professionals) where the reader is choosing between the recognition and the membership grade. Three same-domain links is the limit, so nothing further was added. Reciprocal worth making: the professional fellowship application piece should link back with the anchor "what an honorary fellowship recognises".*

@@ -41,7 +41,7 @@ Consider a fixed-price contract of £100m with a forecast cost of £80m and £40
 
 Now the cost engineer revises the forecast to £90m. Progress becomes 40 / 90 = 44.4%, revenue becomes £44.4m, and **reported margin falls from £10m to £4.4m** — a £5.6m movement caused by a forecast, not by a transaction.
 
-Very few of the people who move that number have ever been examined on what it does. That is the gap the Institute was formed to close, and it is why its credentials examine both sides rather than one.
+Very few of the people who move that number have ever been examined on what it does. That is the gap the Institute was formed to close, and it is why its credentials examine both sides rather than one. [The gap the PCI credentials were built to close](https://projectcontrolsinstitute.org/why-pci-ai) is argued in full against what the existing qualifications already examine.
 
 ## Who the credentials are for
 
@@ -80,7 +80,7 @@ The examination is criterion-referenced rather than graded on a curve. Everyone 
 
 ## How preparation stays separate from the decision
 
-PCI owns the standard, the Bodies of Knowledge and the examinations. Certuvo is PCI's official platform for preparation and study.
+PCI owns the standard, the Bodies of Knowledge and the examinations. Certuvo is [where PCI's official preparation sits](https://projectcontrolsinstitute.org/certuvo), separately from the certification decision.
 
 That separation is deliberate. A body that both trains you and decides whether you passed has an obvious conflict, and employers discount the credential accordingly.
 
@@ -118,7 +118,7 @@ No. The entry requirement is around three years of professional experience in an
 Scenario-based multiple choice with a single best answer. Each item places you in a realistic project situation — reading a cost and schedule position, interpreting earned value indices, judging whether an AI-generated forecast can be trusted — and asks what a competent professional would do next. It tests applied judgement rather than recall.
 
 **Which credential should I choose?**
-Choose by what you are accountable for. Defending dates, float and progress points to PCL-AI. Defending a forecast, a margin or a cash position points to PFL-AI. Defending delivery of the whole scope points to PML-AI. All three Bodies of Knowledge share the same 40/40/20 proportions, so a second credential covers ground you have already met.
+Choose by what you are accountable for. Defending dates, float and progress points to PCL-AI, and [what sitting PCL-AI involves](https://projectcontrolsinstitute.org/pcl-ai-certification) is set out domain by domain. Defending a forecast, a margin or a cash position points to PFL-AI. Defending delivery of the whole scope points to PML-AI. All three Bodies of Knowledge share the same 40/40/20 proportions, so a second credential covers ground you have already met.
 
 **How long does certification take?**
 It depends on preparation, because the pathway is online and self-paced. The fixed constraint is the 12-month scheduling window that opens when the examination fee is paid. Working practitioners typically plan around a small number of weak domains rather than the whole syllabus, which shortens the calendar considerably.
@@ -128,4 +128,4 @@ No. PCI sets the standard, publishes the Bodies of Knowledge, owns the examinati
 
 ---
 
-*Internal links: this guide should link to [why the PCI credentials exist](https://projectcontrolsinstitute.org/why-pci-ai) with the anchor "why PCI AI exists", to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "the PCL-AI credential", to [Certuvo](https://projectcontrolsinstitute.org/certuvo) with the anchor "PCI's official preparation platform", and to [the project controls certification pillar](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "how project controls certification routes compare".*
+*Internal linking note: three same-domain links are now in the body. [The gap the PCI credentials were built to close](https://projectcontrolsinstitute.org/why-pci-ai) sits after the £5.6m illustration, where the reader asks why an institute was formed for this. [Where PCI's official preparation sits](https://projectcontrolsinstitute.org/certuvo) sits in the separation-of-preparation section, at the first mention of Certuvo. [What sitting PCL-AI involves](https://projectcontrolsinstitute.org/pcl-ai-certification) answers the FAQ on choosing a credential. The link to the certification pillar was dropped to hold the two-to-three internal cap; the why-PCI-AI link already carries the comparison a reader needs at this point. Reciprocal link worth making: the PCL-AI guide and the certification pillar should point here with the anchor "the certifying body and how it is governed".*

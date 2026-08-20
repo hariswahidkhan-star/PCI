@@ -185,7 +185,7 @@ Set the governance in one line: the team plans to the P50, the sponsor holds the
 
 Then track drawdown as a curve against time. If contingency is falling faster than the work is progressing, the forecast is already wrong and the monthly report should say so first.
 
-Contingency is capital held against a probability. It lands in the funding requirement, in the cash profile and eventually in reported margin, which is why it belongs in a finance syllabus rather than a scheduling one. The calculation content behind the PCI AI Project Finance Leader (PFL-AI) and PCI Project Management Leader – AI (PML-AI) volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
+Contingency is capital held against a probability. It lands in the funding requirement, in [the cash profile the project draws against](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) and eventually in reported margin, which is why it belongs in a finance syllabus rather than a scheduling one. The calculation content behind the PCI AI Project Finance Leader (PFL-AI) and PCI Project Management Leader – AI (PML-AI) volumes is verified by 15,613 machine calculation checks, all passing; PCL-AI has no equivalent suite.
 
 ## Frequently asked questions
 
@@ -208,4 +208,4 @@ No, and any claim that it does should be corrected. The output is conditional on
 
 *First published on projectcontrolsinstitute.org; the `canonical_url` on this post points there. DEV prohibits stub posts, so the full method including the simulation code lives here.*
 
-*Internal links: this how-to should link to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with that anchor, to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with that anchor, and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "where contingency lands in the cash profile".*
+*Linking note — the links now in the body: "the cash profile the project draws against" points at projectcontrolsinstitute.org/project-cash-flow-forecasting from step 9, because saying contingency lands in the funding requirement raises where that money shows up in the cash curve. One cross-estate link only — the earlier note proposed three to the same host, which is the pattern that gets a group of sites discounted together, and the rest of this piece is method and code that needs no reference. Reciprocal: the cash flow forecasting guide could cite this simulation where it needs a P80 funding figure to profile.*

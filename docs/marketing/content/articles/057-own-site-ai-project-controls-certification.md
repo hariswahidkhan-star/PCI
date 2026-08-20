@@ -23,7 +23,7 @@ The category is new enough that the label is being used loosely. This page sets 
 
 ## What separates an AI project controls certification from an AI course
 
-Three products are being sold under overlapping names, and they answer different questions.
+Three products are being sold under overlapping names, and they answer different questions. The delivery side of the market has the same problem, so it is worth reading [how the four things sold as an AI project management certification differ](https://pciai.org/ai-project-management-certification) before comparing any two prices.
 
 | What it is | What it examines | What it does not tell an employer |
 |---|---|---|
@@ -39,7 +39,7 @@ The PCI AI Project Controls Leader (PCL-AI) Body of Knowledge holds 13 domains a
 
 The finance group runs from double-entry mechanics and project cost coding through revenue from contracts, budgeting and forecasting, to variance analysis and reporting by exception. The delivery group covers cost control, earned value, contracts and commercial management, lifecycle and gates, agile and hybrid delivery, scheduling, business process cycles and quantified risk.
 
-The AI domain covers concepts, data, prompting, tooling, applied workflows, governance and capability across the whole controls lifecycle. Its task statements include evaluating outputs with golden sets and precision and recall, and pricing the review step that evaluation implies.
+The AI domain covers concepts, data, prompting, tooling, applied workflows, governance and capability across the whole controls lifecycle. The scope follows practice rather than prediction, because [what AI does and does not do in a controls function](https://pciai.org/ai-in-project-controls) is already a working question on live projects. Its task statements include evaluating outputs with golden sets and precision and recall, and pricing the review step that evaluation implies.
 
 That last point is the one that distinguishes an examinable AI competency from an opinion about AI. A candidate who can compute precision and recall on a flagged transaction set, and say what the review time costs, has demonstrated something an employer can use.
 
@@ -55,7 +55,7 @@ PCI publishes its fees in US dollars, paid as a single one-time payment, with no
 | Recertification / renewal | **USD 99** per three-year cycle | Keeps membership and access active |
 | Exam retake | To be confirmed | Displayed before any retake booking is completed |
 
-The arithmetic over six years, on those published figures, is the bundle at 399.50 plus one renewal at 99 at the start of the second three-year cycle: **USD 498.50**. Preparation is on top of that and is the line most people underestimate, because it is measured in hours rather than dollars.
+The arithmetic over six years, on those published figures, is the bundle at 399.50 plus one renewal at 99 at the start of the second three-year cycle: **USD 498.50**. Set that against [the full cost of a project controls certification, renewals included](https://projectcontrolsinstitute.org/project-controls-certification-cost) before deciding which route is cheaper across a career. Preparation is on top of that and is the line most people underestimate, because it is measured in hours rather than dollars.
 
 Two honest caveats. Exam payment buys registration access, not a credential — certification is awarded only after eligibility, assessment and verification. And membership is not itself a certification, which is a distinction some bodies blur and this one should not.
 
@@ -73,7 +73,7 @@ The credential is aimed at people who are already accountable for a number, or a
 
 The examination is scenario-based multiple choice, single best answer, delivered under proctoring either online or at a test centre. Scenario items ask for a decision and its justification rather than a definition.
 
-Recertification runs on a three-year CPD cycle with a mandatory AI-currency component. That component exists because the governed-AI content dates faster than anything else in the syllabus, and a credential that ignores this ages badly.
+Recertification runs on a three-year CPD cycle with a mandatory AI-currency component. That component exists because the governed-AI content dates faster than anything else in the syllabus, and a credential that ignores this ages badly. The direction of travel is worth knowing before you commit: [what actually changes in project controls over the next few years](https://pciai.org/future-of-project-controls) is continuous measurement, forecasting with a named owner and provenance as a deliverable, none of which is a product.
 
 Preparation is available through Certuvo, PCI's official platform for preparation and study, and through the published Body of Knowledge, which is free to read. Candidates newer to the discipline can come in through the PCI Foundation pathway instead of applying directly.
 
@@ -113,4 +113,4 @@ Judge it as you would any purchase: the published fee, the preparation hours at 
 
 ---
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "what AI does and does not do in a controls function", to [AI project management certification](https://pciai.org/ai-project-management-certification) with the anchor "the delivery-side equivalent", and to [PCI's published certification costs](https://projectcontrolsinstitute.org/project-controls-certification-cost) with the anchor "the full fee breakdown including renewal".*
+*Internal links: now placed in the body. Same-domain: "what AI does and does not do in a controls function" sits in the AI-domain paragraph, where a reader asking what is examined next asks what the technology actually does; "how the four things sold as an AI project management certification differ" sits where the three overlapping products are separated, because that sentence raises the comparison; "what actually changes in project controls over the next few years" sits beside the AI-currency requirement, which raises the question of what dates and what does not. One cross-estate link only, to the hub: "the full cost of a project controls certification, renewals included" in the fees section, where the six-year arithmetic invites the wider comparison. Reciprocal: the AI project management certification comparison should point back here when it names the controls-side credential.*

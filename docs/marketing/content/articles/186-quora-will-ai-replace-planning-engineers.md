@@ -17,9 +17,9 @@ ab_id:         AB-00042
 
 # Will AI replace planning engineers? What the job becomes
 
-No — a model can compute a critical path, screen a network for defects and draft the narrative, because those are arithmetic and pattern work. It cannot decide whether the logic matches how the work will be built, and it cannot sign a completion date. The hours shrink; the accountability does not.
+Will AI replace planning engineers? No. A model can compute a critical path, screen a network for defects and draft the narrative, because those are arithmetic and pattern work. It cannot decide whether the logic matches how the work will be built, and it cannot sign a completion date. The hours shrink; the accountability does not.
 
-I have run planning teams through two tool generations, and the question **will AI replace planning engineers** is usually a proxy for a different one: which parts of my week are about to disappear, and is what remains enough of a job. Here is the honest split, with the arithmetic.
+I have run planning teams through two tool generations, and the question is usually a proxy for a different one: which parts of my week are about to disappear, and is what remains enough of a job. Here is the honest split, with the arithmetic.
 
 ## What can a model actually compute in a schedule?
 

@@ -76,7 +76,7 @@ The four forecasting methods are not equally acceptable as the reported number. 
 
 Early in a contract the indices are noisy and a bottom-up estimate to complete is the only honest answer. Late on, the indices are a large sample and the bottom-up estimate carries the optimism.
 
-One test cuts through all four. Compute TCPI against the forecast you propose, (BAC − EV) ÷ (EAC − AC). If it implies an efficiency the contract has never demonstrated, the forecast is a wish with a spreadsheet attached. The four methods are worked on one dataset in [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).
+One test cuts through all four. Compute TCPI against the forecast you propose, (BAC − EV) ÷ (EAC − AC). If it implies an efficiency the contract has never demonstrated, the forecast is a wish with a spreadsheet attached. All four are worked against the same figures in [the EAC method comparison](https://projectcontrolsinstitute.org/four-eac-formulas).
 
 ## Change of estimate, not correction of error
 
@@ -140,10 +140,10 @@ No. A provision is required only when the contract is expected to be loss-making
 The project owns the estimate; finance owns the accounting treatment. That split works only when the project understands the number is a reporting input and finance can interrogate the basis of estimate. Where one side owns both, the forecast drifts towards whatever the reporting cycle needs, which is the failure this discipline exists to prevent.
 
 **How does this relate to earned value?**
-Earned value produces the evidence and a cost-to-cost measure consumes it: EV supports the claim that the estimate to complete is credible, and actual cost supplies the numerator of the progress fraction. The wider treatment is in [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls).
+Earned value produces the evidence and a cost-to-cost measure consumes it: EV supports the claim that the estimate to complete is credible, and actual cost supplies the numerator of the progress fraction.
 
 ---
 
 *First published on projectcontrolsinstitute.org; the canonical is set through Draft Settings to the original, because the accounting page is the one that should rank.*
 
-*Internal links: this guide should link to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) with that anchor, to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "building and maintaining the control budget".*
+*Internal links: one is now in the body. "The EAC method comparison" points at projectcontrolsinstitute.org/four-eac-formulas, kept because the section on which forecast survives an audit raises exactly that question and stops short of working the arithmetic. The anchor was reworded so it differs from the cost-control piece pointing at the same page. The second link to the same domain, on IFRS for project controls in the earned value FAQ, was removed with its closing sentence: "the wider treatment is in" answered nothing the question had asked, and the cap is one link per domain per piece. The project budgeting link proposed earlier was dropped for the same reason. Reciprocal: the IFRS for project controls page should point here for the cumulative catch-up arithmetic, with an anchor about what a forecast movement does to reported margin.*

@@ -10,7 +10,7 @@ secondary_kw:  precision recall F1, AI governance, anomaly detection, cost perfo
 pillar:        AI in project controls
 credential:    PCL-AI (suite named once)
 target_domain: pciai.org
-canonical:     canonical -> https://pciai.org/ai-governance-in-project-controls
+canonical:     canonical -> https://pciai.org/ai-in-project-controls
 schema:        Article
 hashtags:      DEV tags, four (the maximum), lowercase, no hash — ai, datascience, machinelearning, python
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
@@ -23,9 +23,11 @@ canonical_instruction: |
   happened and the fix is slower than the ten seconds it takes now.
 notes: |
   REPUBLISHED, CANONICAL SET. DEV supports canonical_url, so this may legitimately carry a near-copy
-  of the pciai.org original on AI governance in project controls. It is an adaptation, not a paste:
-  the site page argues from decision rights inwards, this argues from a confusion matrix outwards,
-  which is the only order a data person will read.
+  of the pciai.org pillar on AI in project controls. It is an adaptation, not a paste: the site page
+  argues from decision rights inwards, this argues from a confusion matrix outwards, which is the
+  only order a data person will read. The canonical is the pillar that targets the inherited primary
+  keyword, and it is the page that exists. An earlier draft pointed at an AI-governance slug that was
+  never authored, and a canonical aimed at a 404 hands the ranking straight back to dev.to.
   PRIMARY KEYWORD IS INHERITED, NOT TARGETED, and the placement rule in _BRIEF.md §4 is therefore
   not applied to it. The phrase appears once, inside the first 100 words, and is deliberately absent
   from the H1, the H2s and the description: the canonical hands ranking for this subject to the
@@ -70,7 +72,7 @@ title: Precision, recall and the accrual no model can see
 published: true
 description: A cost report can be arithmetically perfect and still wrong. Precision, recall, F1, and why a model flag is not a control.
 tags: ai, datascience, machinelearning, python
-canonical_url: https://pciai.org/ai-governance-in-project-controls
+canonical_url: https://pciai.org/ai-in-project-controls
 ---
 ```
 

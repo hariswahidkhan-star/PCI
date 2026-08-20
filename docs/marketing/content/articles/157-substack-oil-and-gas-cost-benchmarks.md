@@ -117,7 +117,7 @@ The cash conversion cycle is days sales outstanding plus days inventory outstand
 
 Take a services contractor with **US$840m** of annual revenue, DSO of **74 days** including unbilled work, DIO of **41 days** across materials and work in progress, and DPO of **58 days**.
 
-CCC = 74 + 41 − 58 = **57 days**. Daily revenue is 840 ÷ 365 = **US$2.30m**, so the cycle ties up 57 × 2.30 = **US$131m** of cash permanently.
+CCC = 74 + 41 − 58 = **57 days**. Daily revenue is 840 ÷ 365 = **US$2.30m**, so the cycle ties up 57 × 2.30 = **US$131m** of cash permanently, which is the sum [an S-curve cash forecast has to carry](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) if the funding line is to be right.
 
 Now let approvals slip and DSO rise by 10 days: 10 × 2.30 = **US$23m** of additional funding, from an administrative delay that appears in no cost report and moves no CPI.
 
@@ -138,7 +138,7 @@ No, and it is barely comparable within either. Water depth, host facility, sour 
 Re-base the price base annually and re-test the location factors whenever a market moves sharply, which in fabrication and specialist labour can be within a single quarter. Keep the original entries untouched and hold the adjustments separately, so a re-base never destroys the source measurement.
 
 **Can a model normalise benchmarks automatically?**
-It can propose the adjustments and it can find candidate comparables quickly, which is the tedious part. Measure it before trusting it: run a validation set a cost manager has already reviewed, and report precision and recall for the proposals. A tool described only as AI-assisted, with no measured error rate, cannot be cited in an estimate basis document.
+It can propose the adjustments and it can find candidate comparables quickly, which is the tedious part. Measure it before trusting it: run a validation set a cost manager has already reviewed, and report precision and recall for the proposals. A tool described only as AI-assisted, with no measured error rate, cannot be cited in an estimate basis document, and the same discipline applies to [keeping an audit trail when a model writes into a report](https://pciai.org/generative-ai-project-reporting).
 
 ---
 
@@ -146,4 +146,4 @@ It can propose the adjustments and it can find candidate comparables quickly, wh
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this piece is not a republish of anything on the PCI site.*
 
-*Internal links: this piece should link to [cost control in construction](https://projectcontrolsinstitute.org/cost-control-in-construction) with the anchor "how a benchmark becomes a control budget", to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "modelling the cash the cycle ties up", and to [project controls training in the UAE](https://pciglobal.ai/project-controls-training-uae) with that anchor.*
+*Linking note: two links are now in the body, one per domain. "An S-curve cash forecast has to carry" sits on the US$131m working capital figure (https://projectcontrolsinstitute.org/project-cash-flow-forecasting), because that number is meaningless until it appears on a funding curve. "Keeping an audit trail when a model writes into a report" sits in the FAQ on automatic normalisation (https://pciai.org/generative-ai-project-reporting), which is the question raised by a tool whose output has to survive an estimate basis review. Cost control in construction was dropped as the second hub link. The regional training page was dropped too: nothing in this piece asks where project controls are taught in the Gulf, and a link with no question behind it is the pattern the architecture exists to avoid. Reciprocal: none warranted.*

@@ -37,7 +37,7 @@ Money spent in stages 1 to 3 is small and buys most of the influence over the ou
 
 ## Stage 1: identify
 
-The purpose is to establish that a need exists and that capital is a plausible answer to it.
+The purpose is to establish that a need exists and that capital is a plausible answer to it, which first requires agreement on [what counts as a capital project](https://projectcontrolsinstitute.org/what-are-capital-projects) rather than an operating cost.
 
 Deliverables are deliberately thin: the problem stated, a cost range wide enough to be honest, an indicative duration, and the constraints that would kill it. A screening estimate should be presented as a range, never a point.
 
@@ -83,13 +83,13 @@ A sanction estimate is not one number. It is a build-up, and every line should b
 
 The escalation line is worked, not assumed. At 3.5 per cent a year over a weighted 2.4 years to the midpoint of construction, the factor is 1.035^2.4 = 1.0861, so escalation is 8.61 per cent. Seventy-eight per cent of the base estimate is not yet under firm price, which is 0.78 × 62.0 = £48.4m, and 48.4 × 0.0861 = **£4.2m**.
 
-Contingency at £7.6m is 12.3 per cent of the base estimate, and that percentage is an output of the risk analysis rather than an input to it. A contingency set as a round percentage first and justified afterwards is a budget decision wearing a risk analysis as cover.
+Contingency at £7.6m is 12.3 per cent of the base estimate, and that percentage is an output of [the simulation that produces a P80 contingency](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) rather than an input to it. A contingency set as a round percentage first and justified afterwards is a budget decision wearing a risk analysis as cover.
 
 Management reserve sits outside the project deliberately. Its release is a governance act, so the project cannot quietly absorb the P50 to P80 gap.
 
 ## Stage 4: execute
 
-The purpose is delivery against the sanctioned position, and the controls job changes character. Before sanction it estimates what a thing might cost; after sanction it measures what the thing is costing and forecasts where it lands.
+The purpose is delivery against the sanctioned position, and the controls job changes character. Before sanction it estimates what a thing might cost; after sanction it measures what the thing is costing and forecasts where it lands, which is the whole of [building and maintaining the control budget](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting).
 
 The baseline is frozen, progress is measured against rules of credit agreed in advance, and every change is trended before it is approved.
 
@@ -146,4 +146,4 @@ Estimating, scheduling and risk quantification, plus the business-case arithmeti
 
 ---
 
-*Internal links: this guide should link to [what are capital projects](https://projectcontrolsinstitute.org/what-are-capital-projects) with that anchor, to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "building and maintaining the control budget", and to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "quantifying the risk that sets contingency"; the [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) guide should link here with the anchor "the capital project management process".*
+*Internal links now in the body, all on this domain: [what counts as a capital project](https://projectcontrolsinstitute.org/what-are-capital-projects) sits in stage 1, where the reader has to decide whether capital is the right answer at all; [the simulation that produces a P80 contingency](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) sits under the sanction estimate, where the £7.6m contingency line has to come from somewhere; and [building and maintaining the control budget](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) sits in stage 4, where the job changes from estimating to measuring. The proposed link to quantitative schedule risk analysis was retargeted: the £7.6m is a cost contingency at P80, so the cost simulation is the page that answers the sentence. Reciprocal worth making: the [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) guide should link back with the anchor "the gated capital project process".*

@@ -11,7 +11,7 @@ credential:    suite (PCL-AI lead)
 target_domain: projectcontrolsinstitute.org
 canonical:     original — written for this publication, never a copy of the own-site pillar
 schema:        Article
-word_count:    1,329 (headline through the end of the author biography, including the standfirst and table cells, excluding front matter and the linking note)
+word_count:    1,605 (headline through the end of the author biography, including the standfirst and table cells, excluding front matter and the linking note). If the publication's house length is tighter, the four buyer's questions are the block to cut, and the piece stands without them.
 hashtags:      None. Training Industry is an edited publication with a byline and an author block, not a feed. Hashtags in a submitted manuscript mark it as repurposed social copy to the first editor who opens it. Tag the piece only in the LinkedIn post that points at it once it is live.
 cta_link:      https://projectcontrolsinstitute.org/body-of-knowledge
 ab_id:         n/a — flagship launch asset, not an Article Bank brief
@@ -37,14 +37,19 @@ notes: |
   DOES NOT DISPARAGE TRAINING. The reader buys, builds or sells it. The failure described is in the map
   that decides which courses exist, never in the courses, and the piece says so twice. Same discipline as
   _STORY.md §7.5 applied to a different profession: attack the structure, never the practitioner.
-  NO FAQ BLOCK, DELIBERATELY. _BRIEF.md §8 specifies one for articles; an edited trade publication does
-  not print a FAQ under a byline. The AEO work is done instead by the five-row capability table, the
-  standalone definition sentences and the arithmetic shown as division, all of which are more extractable
-  than a FAQ and native to the page. The FAQ block lives on the own-site pillar, where it belongs.
+  NO FAQ BLOCK; A BUYER'S CHECKLIST INSTEAD. _BRIEF.md §8 specifies a FAQ for articles, and an edited
+  trade publication does not print one under a byline — it reads as repurposed blog copy to the first
+  editor who opens the manuscript. The four questions before "The part that belongs to you" do the same
+  AEO work in the form this readership already uses: questions a training buyer puts to a provider,
+  each answered in 40–80 self-contained words. They are questions to ask, not questions PCI has been
+  asked, so nothing in them is invented reader testimony. The rest of the extractable work is done by
+  the five-row capability table, the standalone definition sentences and the arithmetic shown as
+  division. The reader-facing FAQ block lives on the own-site pillar, where it belongs.
   HOOK B (contrast first) per _STORY.md §2, which names it for articles. Not blended with A or C. The
   contrast is stated in the curricula rather than the examinations, because that is the reader's frame,
   and the examination version follows in the same breath. The title question is answered inside the
-  first 55 words, before any preamble.
+  first 52 words, before any preamble, and the answer sentence names project controls training itself
+  rather than leaving the term to the paragraph after it.
   NUMBERS AUDIT: 2,200,000 / 1,850,000 / 240,000 / 2,090,000 / 1.19 / 1.05 from the worked example, every
   division shown, no currency, no sector, no client, no date, and no claim about how often it happens.
   Register figures used: 13/61, 16/61 and 16/63 across the three credentials; 113 mandatory PCI Standards
@@ -69,9 +74,9 @@ notes: |
 
 *Two curricula, both sound, meeting at a number neither examines. Here is how to find that seam on your capability map, and the calculation that shows a project team why it matters.*
 
-A finance curriculum rarely teaches float. A delivery curriculum rarely teaches cut-off. Both are taught well. The capability gap on a project team is usually not inside either one: it sits on the join between them, where a single number is assembled from two sources and nobody has been examined on the handover.
+A finance curriculum rarely teaches float. A delivery curriculum rarely teaches cut-off. Both are taught well. The gap project controls training leaves open is not inside either course: it sits on the join between them, where a single number is assembled from two sources and nobody has been examined on the handover.
 
-That is why project controls training can review well and change little. The course was not weak. The map that decided which courses exist was drawn from the organisation chart, and no chart has a box for a seam.
+That is why a well-reviewed course changes so little. The course was not weak. The map that decided which courses exist was drawn from the organisation chart, and no chart has a box for a seam.
 
 ## What the gap looks like in one calculation
 
@@ -116,7 +121,9 @@ Check those rows against your own catalogue before you accept them; the shape is
 ## Three fixes for a project controls training plan
 
 1. **Name the join as a capability.** "Reconcile earned value to the cost ledger at a common date, and evidence the accrual" is a capability, not an interface issue. Put it on the map, give it one named owner, and teach it with both functions in the same room, because two functions taught separately will each learn their own half again.
+
 2. **Teach it against a live report, not a case study.** Bring last month's real cost report into the session and ask for two dates: when the ledger closed, and when progress was measured. If they differ and no accrual bridges them, the session has paid for itself before the content starts.
+
 3. **When you fund a credential, read what it examines rather than what it promises.** A syllabus that will not show you its domains is telling you something, and half an hour on [how to check what a credential actually examines](https://credentialfinder.org/best-project-controls-certification) is worth more than any provider's own page, this Institute's included.
 
 ## The training that machine output depreciates first
@@ -138,6 +145,24 @@ Behind them sit 113 mandatory PCI Standards carrying 532 process requirements, w
 15,613 machine calculation checks run against PFL-AI and PML-AI, all passing; PCL-AI has no equivalent suite. That is a statement about the material in two of the three sets. It is not a statement about anybody who has sat anything.
 
 The PCL-AI Body of Knowledge is 40 per cent finance and reporting, 40 per cent project management, 20 per cent governed use of machine output. That is the shape of the syllabus and not an examination weighting: the syllabus is settled, the exam blueprint is still an open decision, and anyone quoting you an exam weighting is reading you a marketing document.
+
+## Four questions to ask before you fund a course
+
+**Which handovers does this course examine, rather than describe?**
+
+Description is cheap, and any syllabus will cover a handover in a slide. Ask which handovers a delegate is assessed on, with both functions present, and what that assessment requires them to produce. If the answer is a knowledge check, the course teaches recognition. The seam needs somebody who can reconcile two sources and defend the result under challenge.
+
+**What does a delegate bring back that a colleague can use on Monday?**
+
+Learning transfer on this subject is concrete: a stated cost cut-off date, a stated progress date, an accrual with evidence behind it, and one line under the report naming all three. If a provider cannot name the artefact a delegate produces, the course will review well and change nothing, which is the failure this article is about.
+
+**Do the finance and delivery cohorts ever sit in the same room?**
+
+Two functions taught separately each learn their own half again, more thoroughly. The join is the one capability that cannot be taught to one side at a time, because the exercise needs the person who owns the ledger and the person who owns the progress measurement to disagree in front of each other and settle it.
+
+**What is examined by a third party here, and what is only attended?**
+
+Attendance evidences exposure. Examination evidences a capability somebody outside your organisation is prepared to stand behind. For a capability that appears only at a handover, that difference decides whether a manager can be told the call was made competently, or only that a course was completed on time and within budget.
 
 ## The part that belongs to you
 

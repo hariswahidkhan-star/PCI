@@ -42,9 +42,9 @@ notes: |
 
 # Your cost report and your ledger close on different dates
 
-Your cost report and your ledger almost never close on the same date, and the difference between them is work that is done and not yet invoiced. Earned value has already counted it. The ledger has not seen it. Until somebody accrues it, cost performance index reads high, the forecast reads comfortable, and both numbers are defensible.
+Your cost report cut-off and your ledger close almost never fall on the same date, and the difference between them is work that is done and not yet invoiced. Earned value has already counted it. The ledger has not seen it. Until somebody accrues it, cost performance index reads high, the forecast reads comfortable, and both numbers are defensible.
 
-Both systems have a date. Finance closes on the cost report cut-off. Planning closes on the data date. Nobody owns the days in between, and that is where this lives.
+Both systems have a date. Finance closes to its own reporting calendar. Planning closes on the data date. Nobody owns the days in between, and that is where this lives.
 
 ## Why does CPI move when nothing on site changed?
 

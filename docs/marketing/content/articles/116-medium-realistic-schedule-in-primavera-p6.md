@@ -116,7 +116,7 @@ The last screen matters most. Give the network to someone who will argue with it
 
 ## What the schedule does to the cash
 
-A programme is a cash instrument, and this is the part of the overlap finance usually sees before delivery does.
+A programme is a cash instrument, and this is the part of the overlap finance usually sees before delivery does. Loading those dates into a payment profile is [how the programme drives the cash curve](https://projectcontrolsinstitute.org/project-cash-flow-forecasting).
 
 The cash conversion cycle measures how long money is tied up between paying for work and being paid for it. It is days sales outstanding, plus days of unbilled work in progress, minus days payable outstanding.
 
@@ -146,10 +146,10 @@ Only when scope, funding or contractual dates change, and always with a recorded
 It is the short document recording calendars, productivity rates and their sources, key assumptions, constraints and their justification, and the progress rules. You need one, because it is what turns a file into something a third party can audit. Two or three pages is normally enough.
 
 **Can AI build the schedule?**
-It can draft logic from a scope document, spot missing successors, and compare your durations against rates achieved on similar work. It should not issue a date you cannot explain. Every output still needs the quantity, the rate and the assumption written next to it, because that is what you will be asked for.
+It can draft logic from a scope document, [review a network for missing successors and open ends](https://pciai.org/llm-schedule-review), and compare your durations against rates achieved on similar work. It should not issue a date you cannot explain. Every output still needs the quantity, the rate and the assumption written next to it, because that is what you will be asked for.
 
 ---
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this guide should link to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "what total float actually tells you", to [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "testing the date with a QSRA", and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "how the programme drives the cash curve".*
+*Internal links: two are now placed in the body. Project cash flow forecasting (projectcontrolsinstitute.org) sits on "how the programme drives the cash curve" in the working-capital section, which raises the payment profile and does not build one. The schedule review piece on pciai.org sits on "review a network for missing successors and open ends" in the FAQ answer about what a model may and may not do to a schedule. The note originally proposed three further links to the hub — critical path method, total float and schedule risk analysis — and they are dropped here: four links to one domain in one article is the pattern that gets a whole estate discounted. Those three belong on the own-site original as its internal links. Reciprocal: the schedule risk analysis page should link back here with the anchor "the schedule quality screen a QSRA assumes has been done", because a risk analysis run on an unscreened network produces a confident wrong curve.*

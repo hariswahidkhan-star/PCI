@@ -19,7 +19,7 @@ ab_id:         AB-00217
 
 Most earned value misconceptions are not arithmetic errors. They are misreadings of what the numbers mean. SPI is not a schedule measure, percent complete is not progress, and no single EAC formula is the forecast. Earned value is the budgeted cost of the work actually done, expressed in currency, and every misconception below starts by forgetting that.
 
-Written for LinkedIn as an original. It sits under the Institute's [earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management).
+Written for LinkedIn as an original. It sits under the Institute's earned value management pillar.
 
 ## What does earned value actually measure?
 
@@ -113,7 +113,7 @@ What scales badly is the reporting apparatus, not the method. A defence-programm
 
 ## Are variance thresholds just a reporting formality?
 
-Only where nobody has attached a name and a required response to them. [Earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) that trigger a paragraph are decoration. Thresholds that trigger an owner, a date and a decision are controls.
+Only where nobody has attached a name and a required response to them. Thresholds that trigger a paragraph are decoration. [Thresholds that trigger an owner, a date and a decision](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) are controls.
 
 The honest companion to a threshold is the to-complete performance index. TCPI to BAC = (BAC − EV) ÷ (BAC − AC) = 7.6 ÷ 6.5 = **1.169**.
 
@@ -125,7 +125,7 @@ Because each of them makes a report easier to sign. SPI returning to 1.00 remove
 
 None of these are lies when they are written. They become lies when the writer knows the assumption and does not disclose it, which is a competence question before it is an ethics one.
 
-That gap between the person who owns the earning rule and the person who owns the ledger is exactly what the [PCI AI Project Controls Leader (PCL-AI)](https://projectcontrolsinstitute.org/pcl-ai-certification) credential examines, across 13 domains and 61 knowledge areas.
+That gap between the person who owns the earning rule and the person who owns the ledger is exactly what the PCI AI Project Controls Leader (PCL-AI) credential examines, across 13 domains and 61 knowledge areas.
 
 ## Frequently asked questions
 
@@ -150,4 +150,4 @@ No. SV = EV − PV compares against the plan, so a package resequenced deliberat
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) as the pillar it supports, to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, and to [earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with that anchor.*
+*Internal links: one link is in the body, in the threshold section, where the sentence separates a threshold that produces a paragraph from one that produces a decision. "Thresholds that trigger an owner, a date and a decision" points to https://projectcontrolsinstitute.org/earned-value-reporting-thresholds, which is how those gates are designed. The standfirst pillar mention and the PCL-AI mention are left unlinked: three links to one domain from a single piece is the density that gets a group of sites devalued together. Reciprocal: https://projectcontrolsinstitute.org/earned-value-management could cite this piece for the proof that methods 2 and 3 are the same formula.*

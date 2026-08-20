@@ -82,7 +82,7 @@ Four calculations, in the order you use them.
 
 **Schedule performance index.** SPI = EV ÷ PV = 1,555.3 ÷ 1,742.0 = **0.893**.
 
-Read them together. You are getting 90 pence of budgeted work for every pound spent, and you are a tenth short of the value you should have earned by now. The full formula set sits in [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management).
+Read them together. You are getting 90 pence of budgeted work for every pound spent, and you are a tenth short of the value you should have earned by now.
 
 Remaining budgeted work is BAC − EV = 3,600 − 1,555.3 = **£2,044.7k**.
 
@@ -101,7 +101,7 @@ That is the number to put in front of a sponsor. The crew has run at 0.900 for f
 
 A spread of £3.77m to £4.27m from one set of inputs. That range is the method asking which assumption you are prepared to sign.
 
-The cause decides it. Circuit terminations are running slower than the estimated rate, a productivity error and therefore systemic, so the CPI method is the defensible default. The full comparison sits in [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).
+The cause decides it. Circuit terminations are running slower than the estimated rate, a productivity error and therefore systemic, so the CPI method is the defensible default. The other three, and the conditions under which each of them beats the CPI method, are set out in [choosing between the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).
 
 **Variance at completion.** VAC = BAC − EAC = 3,600 − 4,002.1 = **−£402.1k**. That is the contingency conversation, and it belongs in month five rather than month nine.
 
@@ -176,4 +176,4 @@ Rarely by working harder. The TCPI of 1.093 says the remaining work must run 21 
 
 *First published on projectcontrolsinstitute.org; this Hashnode version is flagged as republished, with the canonical pointing at the original worked month.*
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with that anchor, to [the earned value formulas cheat sheet](https://projectcontrolsinstitute.org/earned-value-formulas-cheat-sheet) with the anchor "every earned value formula in one place", and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "choosing between the four EAC formulas".*
+*Internal links: the body carries one link, to https://projectcontrolsinstitute.org/four-eac-formulas, anchored "choosing between the four EAC formulas". It sits where the four forecasts produce a £3.77m–£4.27m spread and the reader has to pick one, which is exactly the question that page answers. The earlier link to the earned value management pillar was removed and the cheat-sheet link was not added: this is a republication whose canonical already points home, and a second or third link to the same domain in one piece is a pattern worth avoiding. Reciprocal: none needed — the hub original is the canonical parent, not a peer.*

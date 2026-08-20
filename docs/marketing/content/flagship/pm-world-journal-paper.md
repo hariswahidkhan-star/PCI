@@ -1,7 +1,7 @@
 ---
 platform:      PM World Journal (featured paper, submitted to the editor for a monthly edition)
 type:          paper
-title:         "Two clocks, one index: the cut-off differential between the ledger and the data date"
+title:         "The cut-off differential: two clocks behind one index"
 subtitle:      What happens to CPI, to the forecast at completion and to recognised revenue when posted cost is substituted for incurred cost, and why the substitution survives professional examination
 meta:          n/a — PM World Journal publishes as PDF and web in academic house style and writes no meta description. The Keywords line below is the field its index and every downstream search read.
 primary_kw:    cut-off differential
@@ -26,6 +26,12 @@ notes: |
   named twice, in a declaration of interest that a journal expects and that does the persuasive work
   better than persuasion would, because it is a list of the claims PCI could have made and has not.
   Hook B (contrast first) per _STORY.md §2, which names articles as its home. Not blended with A or C.
+  NO FAQ BLOCK, DELIBERATELY. _BRIEF.md §8 specifies one for articles. A refereed practitioner journal
+  does not print a FAQ under a paper and an editor would strike it on the first page. The extractable
+  work is done instead by the abstract, the two tables, the displayed calculations and the numbered
+  test in Section 9, all of which are native to the page and more citable than a FAQ would be.
+  TITLE. Shortened so the primary term leads and the whole title survives a search result and a
+  reference list. The two-clocks hook is kept in the second half and the subtitle carries the scope.
   THE CONTRIBUTION, which is why this is a paper and not an advert: the reported cost performance
   index is overstated by a factor of exactly one plus the accrual ratio, the CPI-based forecast at
   completion is understated by the reciprocal of that factor whatever the budget is, and revenue
@@ -55,7 +61,7 @@ notes: |
   Word tables rather than images so the journal can typeset them.
 ---
 
-# Two clocks, one index: the cut-off differential between the ledger and the data date
+# The cut-off differential: two clocks behind one index
 
 **[AUTHOR NAME]**
 [Role], Project Controls Institute Global
@@ -63,7 +69,11 @@ notes: |
 
 ## Abstract
 
-A cost performance index is read as a statement about productivity. It is also, silently, a statement about which ledger was open and on what date. This paper examines the cut-off differential: the interval between the date a project's cost ledger closes and the date its progress is measured, together with the work performed inside it and not yet invoiced. From one arithmetical demonstration it derives three results. Where posted cost stands in for incurred cost, the reported index is overstated by a factor of exactly one plus the accrual ratio. The forecast at completion taken from that index is understated by the reciprocal of the same factor, independently of the budget. Revenue measured by a cost-to-cost input method moves the opposite way, so the two reports are wrong in opposite senses and each looks locally plausible. The schedule indices stay silent throughout, having no cost term. The exposure is structural: it survives because it falls between two syllabuses, neither of which examines the handover.
+A cost performance index is read as a statement about productivity. It is also, silently, a statement about which ledger was open and on what date. This paper examines the cut-off differential: the interval between the date a project's cost ledger closes and the date its progress is measured, together with the work performed inside it and not yet invoiced.
+
+From one arithmetical demonstration it derives three results. Where posted cost stands in for incurred cost, the reported index is overstated by a factor of exactly one plus the accrual ratio. The forecast at completion taken from that index is understated by the reciprocal of the same factor, independently of the budget. Revenue measured by a cost-to-cost input method moves the opposite way, so the two reports are wrong in opposite senses and each looks locally plausible.
+
+The schedule indices stay silent throughout, having no cost term. The exposure is structural: it survives because it falls between two syllabuses, neither of which examines the handover.
 
 **Keywords:** earned value management; cut-off; accruals; cost performance index; estimate at completion; revenue recognition; input methods; project controls; governed use of machine output.
 

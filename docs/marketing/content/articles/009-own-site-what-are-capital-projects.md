@@ -17,7 +17,7 @@ ab_id:         AB-00207
 
 # What are capital projects? The complete beginner's guide
 
-Capital projects are large, discrete investments that create or materially extend a long-lived asset. They are funded from a capital budget rather than from operating expenditure, sanctioned through defined stage gates, and capitalised on the balance sheet instead of being expensed. Size alone does not make one; the creation of a durable asset does.
+Capital projects are large, discrete investments that create or materially extend a long-lived asset. The full answer to *what are capital projects* has three parts: they are funded from a capital budget rather than from operating expenditure, sanctioned through defined stage gates, and capitalised on the balance sheet instead of being expensed. Size alone does not make one; the creation of a durable asset does.
 
 ## What are capital projects, and what makes them different?
 
@@ -58,9 +58,9 @@ Capital projects are governed by gates because the cost of being wrong grows fas
 | Commissioning and handover | Prove it works and transfer it | Test records, as-built information, operating readiness | Accept into operations |
 | Close-out and benefits | Confirm the investment did what it promised | Final account, lessons, benefits review | Was the business case delivered? |
 
-The final investment decision is the point of no meaningful return. Before it, the money spent is study cost. After it, commitments are placed and the cost of cancellation climbs steeply.
+The final investment decision is the point of no meaningful return. Before it, the money spent is study cost. After it, commitments are placed and the cost of cancellation climbs steeply. What happens inside each stage, and what a sponsor is actually deciding at each gate, is set out in [the capital project process stage by stage](https://projectcontrolsinstitute.org/capital-project-management-process).
 
-Two estimates matter around that gate. The sanction estimate supports the investment decision. The control estimate, produced from the same basis, becomes the budget the project is measured against, and the two should reconcile line by line.
+Two estimates matter around that gate. The sanction estimate supports the investment decision. The control estimate, produced from the same basis, becomes the budget the project is measured against, and the two should reconcile line by line. How that control estimate becomes a time-phased baseline, and how the forecast against it is kept honest afterwards, is covered in [turning a sanction estimate into a budget and a forecast](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting).
 
 ## Front-end loading: why definition maturity governs outcome
 
@@ -128,7 +128,7 @@ The practical implication is that the cost report has to be codeable to that bou
 
 The **sponsor** owns the business case and the money, and is the only person who can change either. The **project director** owns delivery of the sanctioned scope.
 
-**Project controls** owns the measurement: budget, schedule, progress, forecast, change and risk. The value of the function comes from being independent of the people whose performance it measures.
+**Project controls** owns the measurement: budget, schedule, progress, forecast, change and risk. The value of the function comes from being independent of the people whose performance it measures, and [the project controls function and the monthly cycle it runs on](https://projectcontrolsinstitute.org/what-is-project-controls) sets out what that ownership involves in practice.
 
 **Estimating** owns the basis of cost, **procurement** owns the commitment strategy, and **operations readiness** owns whether anyone can actually run the thing on the day it is handed over.
 
@@ -172,4 +172,4 @@ Not always, but the larger and more regulated they are, the more likely it is re
 
 ---
 
-*Internal links: this piece should link to [the capital project management process](https://projectcontrolsinstitute.org/capital-project-management-process), [what is project controls](https://projectcontrolsinstitute.org/what-is-project-controls), [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting), [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) and [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis).*
+*Internal linking note: three same-domain links are now in the body. [The capital project process stage by stage](https://projectcontrolsinstitute.org/capital-project-management-process) sits under the stage-gate table, where the reader has just been told each gate is a decision and asks what is decided. [Turning a sanction estimate into a budget and a forecast](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) sits at the sanction and control estimate paragraph. [The project controls function and the monthly cycle it runs on](https://projectcontrolsinstitute.org/what-is-project-controls) is the upward pillar link, placed where the piece assigns the measurement to project controls. The IFRS and schedule risk pieces were dropped to hold the two-to-three internal cap. Reciprocal link worth making: the capital project management process piece should point back here with the anchor "what makes an investment a capital project".*

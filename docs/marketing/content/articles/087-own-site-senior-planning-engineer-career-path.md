@@ -77,8 +77,6 @@ The spread is £51.3m to £60.47m — **£9.17m** of difference produced by noth
 
 One more measure earns its place. To-complete performance index: TCPI = (BAC − EV) ÷ (BAC − AC) = 28.8 ÷ 25.5 = **1.129**. The remaining work must run 13% more efficiently than the plan, against the 0.853 achieved so far. That is the arithmetic way of saying a recovery narrative is not credible.
 
-The methods, and where each of them fails, are set out in [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).
-
 ## What P80 means, and why you will be asked
 
 A deterministic programme gives one date. A schedule risk analysis gives a distribution, and senior planners are asked for the number from the distribution.

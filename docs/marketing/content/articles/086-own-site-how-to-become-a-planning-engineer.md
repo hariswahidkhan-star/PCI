@@ -49,13 +49,13 @@ The trade route produces some of the best planners in the industry, because dura
 
 **1. Learn the method before the tool.** Critical path method, float, calendars, constraints, earning rules. A planner who knows the method can learn any tool in a fortnight; the reverse is not true.
 
-**2. Get onto live work in any adjacent seat.** Site engineer, document controller, cost clerk, graduate PMO analyst. Proximity to a real programme beats a better title away from one.
+**2. Get onto live work in any adjacent seat.** Site engineer, document controller, cost clerk, graduate PMO analyst. Proximity to a real programme beats a better title away from one, and [what the controls seat next to you actually does](https://pciworld.org/what-does-a-project-controls-engineer-do) is worth reading before you pick which seat to take.
 
 **3. Own one package end to end for a full cycle.** Build it, status it, report it, and sit in the meeting where it is challenged. One package done properly evidences more than three years of assisting.
 
 **4. Learn what a duration is made of.** Quantity, output rate, crew, calendar. Anyone who cannot derive a duration from a bill is guessing in public.
 
-**5. Learn to read a cost report.** Not produce one, read it. Planners who can see where their float shows up in money get promoted; planners who only speak in days do not.
+**5. Learn to read a cost report.** Not produce one, read it. Planners who can see where their float shows up in money get promoted; planners who only speak in days do not, and [the rungs above a first planning job](https://pciworld.org/senior-planning-engineer-career-path) show what each promotion actually asks for.
 
 **6. Certify against the gap you cannot yet evidence.** For most planners that is the finance and reporting side of the boundary rather than more scheduling technique.
 
@@ -93,7 +93,7 @@ The critical path is A → B → D → E → H: 10 + 20 + 12 + 25 + 8 = **75 day
 
 The interesting row is F. It carries 25 days of total float and zero free float, which means every day F slips pushes G immediately, even though the completion date does not move until the 25 days are gone. Float belongs to the path, not to the activity, and the person who spends it is rarely the person who needed it.
 
-Total float against free float is the thing junior planners most often get wrong in front of a client. The full treatment is in [what total float really means](https://projectcontrolsinstitute.org/total-float), and the method itself in [the critical path method explained](https://projectcontrolsinstitute.org/critical-path-method).
+Total float against free float is the thing junior planners most often get wrong in front of a client, and [what total float really means](https://projectcontrolsinstitute.org/total-float) works that distinction through in full.
 
 ## What your first schedule review will actually ask
 
@@ -107,11 +107,13 @@ Four questions, in this order, from anyone senior enough to matter.
 
 **"What would you do about it?"** Recovery options with a cost attached. Reporting the slip and stopping is half the job.
 
+The interview version of the same four questions, with the twenty that come up most often, is in [the questions planning interviews actually open with](https://pciworld.org/planning-engineer-interview-questions).
+
 ## The tools, honestly
 
 Primavera P6 is the default on large capital work and the one most adverts name. Microsoft Project dominates smaller and internal projects, and Asta Powerproject is common in UK building work.
 
-Learn one properly and understand what it hides: a constraint quietly doing the work of logic, a calendar that makes a five-day activity span nine, an actual start dated in the future. If Primavera is the requirement in your market, work through [a Primavera P6 practice test](https://projectcontrolsinstitute.org/primavera-p6-practice-test) before an interview rather than after one.
+Learn one properly and understand what it hides: a constraint quietly doing the work of logic, a calendar that makes a five-day activity span nine, an actual start dated in the future. If Primavera is the requirement in your market, work through a practice test before an interview rather than after one.
 
 ## Where a credential fits
 
@@ -119,7 +121,7 @@ The planning role is where delivery meets money, and the money side is what stal
 
 PCI examines that overlap deliberately. The PCI AI Project Controls Leader (PCL-AI) credential covers 13 domains and 61 knowledge areas, and its Body of Knowledge is weighted **40 / 40 / 20** across finance and reporting, project management, and governed AI.
 
-It rests on **113 mandatory PCI Standards carrying 532 process requirements**, with worked material spanning **92 sector case studies** across three volumes. No credential guarantees a role; it evidences examined competence, which is a different and more defensible claim. For what the planning credentials actually examine, start with [planning engineer certification compared](https://projectcontrolsinstitute.org/planning-engineer-certification).
+It rests on **113 mandatory PCI Standards carrying 532 process requirements**, with worked material spanning **92 sector case studies** across three volumes. No credential guarantees a role; it evidences examined competence, which is a different and more defensible claim.
 
 ## Frequently asked questions
 
@@ -137,4 +139,4 @@ It happens, mostly through PMO and reporting routes, but it is harder and it sho
 
 ---
 
-*Internal links: link to [what total float really means](https://projectcontrolsinstitute.org/total-float), [the critical path method explained](https://projectcontrolsinstitute.org/critical-path-method), [a Primavera P6 practice test](https://projectcontrolsinstitute.org/primavera-p6-practice-test) and [planning engineer certification compared](https://projectcontrolsinstitute.org/planning-engineer-certification), each with that anchor; the senior planning engineer career path and planning engineer interview questions pieces should link back here with the anchor "how to become a planning engineer".*
+*Linking note: this piece carried four links to one domain, which is a footprint rather than a recommendation, so three were removed. The one kept is "what total float really means", because the worked network above turns on the total-float-against-free-float distinction and does not resolve it. The critical path method link went because the article works the method in full itself; the practice test and certification links went as surplus to the same domain, and both sentences stand without them. Three same-domain links replace them: "what the controls seat next to you actually does" at the adjacent-seat step, "the rungs above a first planning job" at the step about reading a cost report, and "the questions planning interviews actually open with" after the schedule-review section. Reciprocal: the planning engineer interview questions piece should link back here with the anchor "the route into a first planning role".*

@@ -21,7 +21,7 @@ Certuvo is PCI's official platform for preparation and study. It provides struct
 
 ## What Certuvo is, and what it deliberately is not
 
-The Project Controls Institute owns the standard, the Bodies of Knowledge and the examinations. Certuvo is the platform that delivers the learning and practice behind them.
+The Project Controls Institute owns the standard, the Bodies of Knowledge and the examinations; if the body itself is new to you, start with [who sets the standard](https://projectcontrolsinstitute.org/project-controls-institute). Certuvo is the platform that delivers the learning and practice behind them.
 
 | | PCI | Certuvo |
 |---|---|---|
@@ -43,11 +43,13 @@ Keeping preparation and assessment apart is a core principle of credible personn
 
 The practical consequence for you is simple. Candidates may prepare through self-study, employer training, real project experience, Certuvo, or any combination, and none of those routes changes how the examination is scored.
 
+Which of those routes is worth paying for is a different question, and [how to judge a preparation route](https://projectcontrolsinstitute.org/project-controls-training) is where to settle it.
+
 ## What the platform provides
 
 Study material aligned to each certification's Body of Knowledge, structured so you can work through one domain at a time rather than reading front to back.
 
-Scenario-based question practice in the same format as the examination: a realistic project situation, four defensible-looking options, and a single best answer.
+Scenario-based question practice in the same format as the examination: a realistic project situation, four defensible-looking options, and a single best answer. If you want the scope behind that format first, [the PCL-AI credential and its exam format](https://projectcontrolsinstitute.org/pcl-ai-certification) sets out the domains being sampled.
 
 Full-length mock examinations under timed conditions, plus progress tracking that shows where your judgement is holding and where it is not.
 
@@ -136,4 +138,4 @@ After your mocks are consistently comfortable, not before. The examination fee o
 
 ---
 
-*Internal links: this guide should link to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "the PCL-AI credential and its exam format", to [the Project Controls Institute guide](https://projectcontrolsinstitute.org/project-controls-institute) with the anchor "who sets the standard", and to [project controls training](https://projectcontrolsinstitute.org/project-controls-training) with the anchor "how to judge a preparation route".*
+*Internal linking note: three same-domain links now sit in the body. "Who sets the standard" points at the Project Controls Institute guide, placed where the piece first names the body that owns the examinations, because a reader meeting Certuvo first will ask who PCI is. "How to judge a preparation route" points at the project controls training guide, placed where the piece says any preparation route is permitted, which immediately raises how to choose between them. "The PCL-AI credential and its exam format" points at the PCL-AI certification page, placed where the practice format is described, because the next question is what the format is sampling. No cross-estate link is carried: every question this piece raises is answered on the hub. Reciprocal: the project controls training and project controls certification online pieces should link back here with the anchor "PCI's official preparation platform".*

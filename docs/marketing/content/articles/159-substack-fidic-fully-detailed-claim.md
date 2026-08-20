@@ -49,11 +49,17 @@ The deeming provision is the second trap. If the statement of the contractual or
 Seven steps, in this order, starting the day the notice goes out.
 
 1. **Fix the awareness date and write it down.** Record who knew what, when, and from which document. Every period in the procedure runs from this date, so it is the first thing an opponent will attack.
+
 2. **Open the record file immediately.** Allocation sheets, daily diaries, dated photographs, progress measurement, plant returns and correspondence, filed against the event reference rather than by date.
+
 3. **State the contractual basis clause by clause.** Name the sub-clause relied on, state what it requires, and show that the facts meet it. A claim that describes a hardship without identifying a contractual route is a complaint.
+
 4. **Prove the delay against the programme.** Use an accepted programme, a defined data date and a named analysis method, and show the critical path before and after the event.
+
 5. **Prove the money from actual cost.** Take prolongation from what the site actually cost in the delay period, and disruption from measured productivity, not from tender allowances.
+
 6. **Link cause to effect, record by record.** Each head of claim should trace to specific records. Global claims, which lump every event against every cost, are the easiest form to defeat.
+
 7. **Submit inside the period, and keep the transmittal proof.** Serve it in the manner and to the address the contract specifies. A submission emailed to the wrong recipient is not a submission.
 
 ## How do you prove the time?
@@ -74,7 +80,7 @@ Total float is what makes that arithmetic honest. A 34-day event on an activity 
 | As-planned versus as-built | A reliable as-built record | Retrospective claims where the programme updates are poor |
 | Collapsed as-built | A complete, logic-linked as-built programme | Rare, because the as-built logic is usually a reconstruction |
 
-Name the method in the submission and say why it suits the event. Switching method between events in one claim invites the argument that the method was chosen for its answer.
+Name the method in the submission and say why it suits the event, which is the harder half of [choosing and defending a delay analysis method](https://projectcontrolsinstitute.org/delay-analysis-techniques). Switching method between events in one claim invites the argument that the method was chosen for its answer.
 
 ## How do you prove the money?
 
@@ -131,10 +137,10 @@ No. Time and money are separate entitlements with separate tests, and an event c
 Analyse it rather than assert it. Show which delays were genuinely critical in the same window, using consistent updates, and then apply the treatment your contract and its governing law require. Concurrency is a question about what actually drove the completion date, and it is answered with programme updates and records, not with a paragraph of argument.
 
 **Can an AI tool draft the submission?**
-It can assemble a chronology, index records against an event and draft descriptive sections, which removes real effort from a fixed 84-day window. It cannot decide the contractual basis or select the delay analysis method, and its output must be checked against the records it cites. Any tool used should be named in the claim file, with the human who verified it.
+It can assemble a chronology, index records against an event and draft descriptive sections, which removes real effort from a fixed 84-day window. It cannot decide the contractual basis or select the delay analysis method, and that boundary is exactly what [a policy naming the decisions a model may not take](https://pciai.org/ai-policy-for-project-controls) is for; its output must also be checked against the records it cites. Any tool used should be named in the claim file, with the human who verified it.
 
 ---
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this piece is not a copy of a PCI site page.*
 
-*Internal links: this piece should link to [delay analysis techniques](https://projectcontrolsinstitute.org/delay-analysis-techniques) with the anchor "choosing and defending a delay analysis method", to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "how float decides whether an event delays anything", and to [the critical path method](https://projectcontrolsinstitute.org/critical-path-method) with that anchor.*
+*Linking note: two links are now in the body, one per domain. "Choosing and defending a delay analysis method" sits under the table of analysis methods (https://projectcontrolsinstitute.org/delay-analysis-techniques), because the instruction to name a method and justify it raises the question of how the choice is defended. "A policy naming the decisions a model may not take" sits in the FAQ on AI drafting (https://pciai.org/ai-policy-for-project-controls), which is where the piece draws that line. Total float and the critical path method were both dropped: both are hub pages, and the delay-analysis link is the stronger of the three. Reciprocal: none warranted, though a future piece on prolongation cost would have a real reason to point back at the measured-mile arithmetic here.*

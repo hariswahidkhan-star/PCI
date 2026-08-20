@@ -52,7 +52,7 @@ The mistake is treating them as interchangeable evidence. Only one column is ass
 
 **Is there an experience requirement, and is it verified?** Credentials with no entry bar are a subscription, not a standard.
 
-**Is AI examined throughout, or bolted on?** AI turns up in estimating, progress measurement, forecasting, risk and reporting. A single "AI module" at the end of an otherwise unchanged syllabus tells you the body has not reworked the discipline, only the brochure.
+**Is AI examined throughout, or bolted on?** AI turns up in estimating, progress measurement, forecasting, risk and reporting, and [where AI actually turns up in a controls function](https://pciai.org/ai-in-project-controls) is the map worth checking a syllabus against. A single "AI module" at the end of an otherwise unchanged syllabus tells you the body has not reworked the discipline, only the brochure.
 
 **What is published about fees, retakes and refunds?** A body that will not state the retake fee before you sit is telling you something.
 
@@ -71,9 +71,13 @@ That is £3,000,000 of revenue resting on which measure of progress the entity a
 The five-step sequence behind that judgement, in PCI's own words rather than reproduced from the standard:
 
 1. **Identify the contract** — an agreement creating enforceable rights and obligations, where collecting the consideration is probable.
+
 2. **Identify the performance obligations** — the distinct promises within it. On many construction contracts the works form a single obligation; on some they do not.
+
 3. **Determine the transaction price** — including variable amounts such as incentives, claims and liquidated damages, constrained so that a significant reversal of revenue is not likely.
+
 4. **Allocate the price** to the obligations identified.
+
 5. **Recognise revenue as each obligation is satisfied** — over time where the criteria are met, using a measure that faithfully depicts progress towards complete satisfaction.
 
 The AI-generated 45% is an *output* measure of physical work. The 37.5% is an *input* measure. Both can be legitimate; mixing them mid-contract is not, and the person who spots that in ten seconds is the person a certification should be identifying.
@@ -82,7 +86,7 @@ Nothing here is accounting advice. It is a description of how the mechanism work
 
 ## What PCI examines, and what it costs
 
-PCI certifies delivery leadership through the PCI Project Management Leader – AI (PML-AI): 16 domains and 63 knowledge areas. The controls credential, the PCI AI Project Controls Leader (PCL-AI), holds 13 domains and 61 knowledge areas, and the finance credential, the PCI AI Project Finance Leader (PFL-AI), holds 16 domains and 61 knowledge areas.
+PCI certifies delivery leadership through the PCI Project Management Leader – AI (PML-AI): 16 domains and 63 knowledge areas. The controls credential, the PCI AI Project Controls Leader (PCL-AI), holds 13 domains and 61 knowledge areas, and [what an AI project controls credential should examine](https://pciai.org/ai-project-controls-certification) sets out that side in full. The finance credential, the PCI AI Project Finance Leader (PFL-AI), holds 16 domains and 61 knowledge areas.
 
 Each Body of Knowledge is proportioned 40/40/20 across finance and reporting, project management, and governed AI. AI is examined inside the other two blocks as well, because that is where it turns up in practice.
 
@@ -102,7 +106,7 @@ If you are early in a project career and want to be credible about AI in intervi
 
 If you already hold a project management credential and your employer funds continuing education, the add-on module is the cheapest way to stay current — but it is maintenance, not a new claim.
 
-If you want a line that a client, a board or a tribunal will take seriously, you need an independently examined credential with a published syllabus, an experience requirement and a proctored scenario-based examination. That is the only one of the four that transfers between employers and sectors.
+If you want a line that a client, a board or a tribunal will take seriously, you need an independently examined credential with a published syllabus, an experience requirement and a proctored scenario-based examination. That is the only one of the four that transfers between employers and sectors, and [an honest comparison of the main project controls credentials](https://credentialfinder.org/best-project-controls-certification) is the place to start narrowing the shortlist.
 
 ## Frequently asked questions
 
@@ -123,4 +127,4 @@ No, and it should not pretend to. A credential examines whether you can govern t
 
 ---
 
-*Internal links: this comparison should link to [AI project controls certification](https://pciai.org/ai-project-controls-certification) with the anchor "what an AI project controls credential should examine", to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", and to [the best project controls certification comparison](https://credentialfinder.org/best-project-controls-certification) with the anchor "how the main project controls credentials compare".*
+*Internal links: now placed in the body. Same-domain: "where AI actually turns up in a controls function" sits in the bolted-on question, which raises what a reworked syllabus should cover; "what an AI project controls credential should examine" sits where the controls-side credential is named alongside the delivery one. One cross-estate link only, and to a satellite rather than the hub for a stated reason: comparison is credentialfinder.org's territory, so "an honest comparison of the main project controls credentials" closes the buying section where a reader is choosing between named credentials. The five-step list was split into separate items so each step stands alone for extraction. Reciprocal: the AI project controls certification guide should point back here when it separates the products sold under similar names.*

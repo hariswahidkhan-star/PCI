@@ -17,9 +17,9 @@ ab_id:         AB-00091
 
 # What is earned value management? A practitioner's guide
 
-Earned value management compares the budgeted value of the work actually finished against what that work was planned to cost and against what has been spent. Three numbers produce two variances, two indices and a forecast of the final cost. Its output is a defensible outturn, not a dashboard.
+What is earned value management? It is the method that compares the budgeted value of the work actually finished against what that work was planned to cost and against what has been spent. Three numbers produce two variances, two indices and a forecast of the final cost. Its output is a defensible outturn, not a dashboard.
 
-So the short answer to *what is earned value management* is this: planned value, earned value and actual cost, with every other measure built as arithmetic on top of those three.
+Those three numbers are planned value, earned value and actual cost, and every other measure is arithmetic built on top of them.
 
 Everything below is worked on one package, so the figures agree with each other and can be checked line by line.
 
@@ -142,7 +142,7 @@ Useful now: assembling the inputs, flagging control accounts whose behaviour has
 
 Not acceptable: a forecast nobody can explain. If you cannot name the method that produced the EAC and the assumption it rests on, you cannot defend it, and an unexplainable forecast is worse than a wrong one you understand.
 
-Defending a forecast under challenge is what a scenario-based examination is for, and [the project controls certification pillar](https://projectcontrolsinstitute.org/project-controls-certification) sets out how the PCI credentials assess it.
+Defending a forecast under challenge is what a scenario-based examination is for, and that is how the PCI credentials assess this material rather than by recall.
 
 ## Frequently asked questions
 
@@ -168,4 +168,4 @@ For a single package, yes, and plenty of good cost engineers still do. The diffi
 
 *First published on projectcontrolsinstitute.org; the canonical for this article points there, and Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this piece should link to [what is project controls](https://projectcontrolsinstitute.org/what-is-project-controls) with the anchor "the wider project controls discipline", to [the certification pillar](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "how earned value is examined", and to [the PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) with the anchor "PCL-AI Body of Knowledge".*
+*Internal links now in the body: one only, to [the PCI AI Project Controls Leader (PCL-AI) Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge), placed where the piece explains that earned value is not revenue and the reader asks where the two are examined together. The second link to the same domain, to the certification page, was removed: this is a republish on an off-estate platform, and two links to one domain in one article is the pattern to avoid. The sentence it sat in was kept intact. The canonical in the front matter already points home, and Medium links are nofollow, so this piece earns readers rather than equity. No further link should be added here.*

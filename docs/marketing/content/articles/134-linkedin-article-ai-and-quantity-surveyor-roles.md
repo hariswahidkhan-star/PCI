@@ -1,7 +1,7 @@
 ---
 platform:      LinkedIn Article
 type:          faq
-title:         Will AI replace quantity surveyors? An honest answer
+title:         AI and quantity surveyor roles: the measurable answer
 meta:          AI and quantity surveyor roles, answered with worked precision, recall and F1 on an automated take-off, and why a 0.90 score leaves a bill you cannot price.
 primary_kw:    AI and quantity surveyor roles
 secondary_kw:  automated take-off, precision recall F1, IFRS 15 five-step model, interim valuation
@@ -15,11 +15,11 @@ hashtags:      #QuantitySurveying #ProjectControls #CostEngineering #ProjectFina
 ab_id:         AB-00148
 ---
 
-# Will AI replace quantity surveyors? An honest answer
+# AI and quantity surveyor roles: the measurable answer
 
-Not the role, and the reason is measurable rather than sentimental. AI and quantity surveyor roles are being reshaped at the take-off, where automated classification is now good but not good enough to price from. A tool scoring 0.90 on F1 has still under-measured, and somebody has to find the missing 11%.
+AI is not replacing the role, and the reason is measurable rather than sentimental. AI and quantity surveyor roles are being reshaped at the take-off, where automated classification is now good but not good enough to price from. A tool scoring 0.90 on F1 has still under-measured, and somebody has to find the missing 11%.
 
-Written for LinkedIn as an original. It sits under the Institute's [AI in project controls](https://pciai.org/ai-in-project-controls) pillar.
+Written for LinkedIn as an original. It sits under the Institute's pillar on [what AI actually changes in project controls](https://pciai.org/ai-in-project-controls).
 
 ## What does the evidence actually support?
 
@@ -97,7 +97,7 @@ Explain why a claim assessed as probable at £4.0m might enter revenue at £1.5m
 
 Say what a contract asset is, why it is not a receivable, and what has to happen for the balance to move.
 
-That combined ground, measurement discipline plus the accounting consequence, is what the [PCI AI Project Finance Leader (PFL-AI)](https://projectcontrolsinstitute.org/finance-and-project-management-certification) credential examines across 16 domains and 61 knowledge areas.
+That combined ground, measurement discipline plus the accounting consequence, is what the PCI AI Project Finance Leader (PFL-AI) credential examines across 16 domains and 61 knowledge areas.
 
 ## Where should a firm actually deploy this?
 
@@ -130,4 +130,4 @@ It pushes certification towards the overlap. Measurement standards on their own 
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [AI in project controls](https://pciai.org/ai-in-project-controls) as the pillar it supports, to [quantity surveyor certification](https://pciglobal.ai/quantity-surveyor-certification) with that anchor, and to [IFRS 15 for construction contracts](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with that anchor.*
+*Internal links: two links are in the body, on two different domains. "What AI actually changes in project controls" points to https://pciai.org/ai-in-project-controls, the pillar this piece sits under, with an anchor that differs from the other role pieces rather than repeating one phrase across all of them. "IFRS 15 for construction contracts" points to https://projectcontrolsinstitute.org/ifrs-15-for-construction, where the piece walks the five steps and the reader will want the fuller treatment. The PFL-AI mention later on is left unlinked so the hub is cited once, not twice. Reciprocal: https://pciglobal.ai/quantity-surveyor-certification could cite this piece for the precision, recall and F1 arithmetic on an automated take-off.*

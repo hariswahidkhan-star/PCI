@@ -65,7 +65,7 @@ F1 is the harmonic mean: 2 × (0.655 × 0.810) ÷ (0.655 + 0.810) = 1.0611 ÷ 1.
 
 Tightening the threshold makes the tool look better on precision and worse where it matters. For schedule logic, recall is the number to protect, and this is the opposite of the trade-off you want in cost benchmarking.
 
-The reason is asymmetric. A spurious link is visible, because it produces a date somebody knows is wrong. A missing link is invisible, because it produces float that does not exist and a critical path that runs through the wrong work.
+The reason is asymmetric. A spurious link is visible, because it produces a date somebody knows is wrong. A missing link is invisible, because it produces float that does not exist and a critical path that runs through the wrong work — and [how a critical path is calculated and read](https://projectcontrolsinstitute.org/critical-path-method) is the only way to see that the wrong work is on it.
 
 ## What does one missing link cost?
 
@@ -77,7 +77,7 @@ Now restore the link the model missed: system testing, 15 days, cannot start unt
 
 Completion moves to 62 days. Path B is now critical, and Path A has 62 − 53 = **9 days** of float. The generated programme understated the duration by 9 days, or 17%, and pointed the recovery effort at the wrong path.
 
-Nobody would have found that by looking at the dates, because every date in the generated programme was internally consistent. It is found by checking that every activity has a predecessor and a successor, that open ends are deliberate, and that the critical path reads like a sequence a site engineer recognises.
+Nobody would have found that by looking at the dates, because every date in the generated programme was internally consistent. It is found by [the review protocol that catches a missing link](https://pciai.org/llm-schedule-review): check that every activity has a predecessor and a successor, that open ends are deliberate, and that the critical path reads like a sequence a site engineer recognises.
 
 ## What has to be in place before you use one?
 
@@ -104,7 +104,7 @@ Between those two, the useful pattern is one direction only: generate the draft,
 ## Frequently asked questions
 
 **Will generative scheduling replace planning engineers?**
-Not on current evidence, and the reason is accountability rather than capability. Someone has to defend the programme in a progress meeting, an adjudication and a claim, and to know which milestone carries damages. The task most at risk is first-draft production, which is a small share of a senior planner's week and the least valuable part of it.
+Not on current evidence, and the reason is accountability rather than capability. Someone has to defend the programme in a progress meeting, an adjudication and a claim, and to know which milestone carries damages. The task most at risk is first-draft production, which is a small share of a senior planner's week and the least valuable part of it; [what the rest of that week is spent on](https://pciworld.org/senior-planning-engineer-career-path) is the part that gets people promoted.
 
 **Can it produce a contract-compliant programme?**
 Only as a starting point. Contract programmes carry specific requirements on activity coding, calendars, milestone naming, resource loading, constraint use and open ends, and each is checkable. Run the compliance check you would run on any subcontractor's submission, because a generated programme fails these checks more often than an experienced planner's does.

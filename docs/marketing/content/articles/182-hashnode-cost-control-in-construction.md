@@ -103,7 +103,7 @@ Corrected AC = 4.60 + 0.85 − 0.22 − 0.09 = **£5.14m**. Corrected CPI = 5.00
 
 The package crossed from comfortably under to overspending on accrual discipline alone, with no new transaction and no new work.
 
-A cost engineer who never tests cut-off and an accountant who never tests the earning rule can both sign that report, and both be wrong. That overlap is why the PCI AI Project Controls Leader (PCL-AI) examines reporting and delivery in one credential across 13 domains and 61 knowledge areas, rather than assuming somebody else covers the other half. The scope is set out in [what project controls covers](https://projectcontrolsinstitute.org/what-is-project-controls).
+A cost engineer who never tests cut-off and an accountant who never tests the earning rule can both sign that report, and both be wrong. That overlap is why the PCI AI Project Controls Leader (PCL-AI) examines reporting and delivery in one credential across 13 domains and 61 knowledge areas, rather than assuming somebody else covers the other half.
 
 ## What turns a variance into an action
 
@@ -142,4 +142,4 @@ A cost controller who reports to project controls rather than to the person whos
 
 *First published on projectcontrolsinstitute.org; this version is marked as republished in Draft Settings and the canonical points to the original article.*
 
-*Internal links: this guide should link to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, to [what project controls covers](https://projectcontrolsinstitute.org/what-is-project-controls) with that anchor, and to [earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with the anchor "the threshold that turns a variance into an action".*
+*Internal links: one is now in the body. "The four EAC formulas" points at projectcontrolsinstitute.org/four-eac-formulas, kept because the worked package reaches a forecast and that sentence raises which method to choose when the overrun is a contracted rate rather than a one-off. The second link to the same domain, a closing sentence pointing at what-is-project-controls, was removed with the sentence: it existed to carry a link rather than to answer anything, and the cap is one link per domain per piece. The earned value reporting thresholds link proposed earlier was dropped for the same reason. No second domain earns a link here. Reciprocal: the four EAC formulas page should point back to this one for commitment control, with an anchor about catching the overrun on signature day.*

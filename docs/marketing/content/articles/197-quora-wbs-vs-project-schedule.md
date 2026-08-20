@@ -17,7 +17,7 @@ ab_id:         AB-00270
 
 # WBS vs project schedule: what is the difference?
 
-A work breakdown structure decomposes the project's scope into deliverables. A project schedule sequences the activities that produce those deliverables, in time, with logic and durations. The WBS answers what the project will produce; the schedule answers when, in what order, and with how much float.
+WBS vs project schedule is a division of labour between two documents. A work breakdown structure decomposes the project's scope into deliverables. A project schedule sequences the activities that produce those deliverables, in time, with logic and durations. The WBS answers what the project will produce; the schedule answers when, in what order, and with how much float.
 
 One depends on the other. The schedule is built from the WBS, never the reverse, because you cannot sequence work you have not defined.
 
@@ -69,6 +69,8 @@ Take work package 1.2.3, cable trenches, budget £900,000. The planner writes fi
 
 The arithmetic, so it can be checked. The longest path is A + B + C + D = 20 + 15 + 10 + 12 = **57 days**, and that path is critical. The alternative route through E runs 20 + 8 + 10 + 12 = 50 days, so E has 57 − 50 = **7 days of total float**.
 
+Those early and late dates come from a forward and a backward pass through the logic, which is [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method) and is work no WBS can do.
+
 The WBS element has now acquired a duration of 57 days, but it acquired it from the schedule. Change the logic and the same scope, the same budget and the same owner produce a different answer.
 
 ## Which one comes first, and why does the order matter?
@@ -111,4 +113,4 @@ Report performance at control account level, which sits in the WBS, and report d
 
 ---
 
-*Internal links: this answer should link once, at the end, to [the critical path method](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", and to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with the anchor "turning work packages into a logic-linked schedule"; Quora links are nofollow, so this is for qualified readers, not link equity.*
+*Internal links: one, in the body. [How the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method) sits immediately under the float table, where a reader who has just been shown early dates, late dates and seven days of float asks where those columns came from. The Primavera P6 page in the original note was dropped rather than placed: a second link to the same domain in one answer is the pattern the link rules exist to prevent, and the tool question is a different question from the one this answer asks. No reciprocal link is proposed: Quora links are nofollow, so this is for qualified readers rather than equity.*

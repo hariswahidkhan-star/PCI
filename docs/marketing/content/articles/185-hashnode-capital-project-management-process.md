@@ -119,7 +119,7 @@ An owner capitalises the cost of bringing an asset to the condition and location
 
 A contractor building the same asset faces the opposite question, recognising revenue over time as it satisfies its obligation, with progress commonly measured by cost incurred against total expected cost — a measure the project's own forecast produces.
 
-The same facts become a capitalisation cut-off for one party and a revenue measure for the other, and both rest on a project controls number. An engineer is examined on progress measurement and almost never on cut-off; an accountant, the reverse. The gate process either closes that gap or institutionalises it, and the work either side of it is set out in [what project controls covers](https://projectcontrolsinstitute.org/what-is-project-controls).
+The same facts become a capitalisation cut-off for one party and a revenue measure for the other, and both rest on a project controls number. An engineer is examined on progress measurement and almost never on cut-off; an accountant, the reverse. The gate process either closes that gap or institutionalises it.
 
 ## What a gate actually tests
 
@@ -152,4 +152,4 @@ Estimating, scheduling and risk quantification, plus the business-case arithmeti
 
 *First published on projectcontrolsinstitute.org; the republishing field in Draft Settings sets the canonical back to the original stage-by-stage guide.*
 
-*Internal links: this guide should link to [what are capital projects](https://projectcontrolsinstitute.org/what-are-capital-projects) with that anchor, to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "building and maintaining the control budget", and to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "quantifying the risk that sets contingency".*
+*Internal links: the body carries one link, to https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis, anchored "the quantified risk analysis". It sits on the contingency line of the sanction estimate, where the sentence says the 12.3 per cent is an output of the analysis rather than an input — the question of how that number is derived is what the target page answers. The link to what project controls covers was removed: it was a trailing clause rather than a question the sentence raised, and a second link to the same domain in one republished piece is a pattern worth avoiding. Reciprocal: none needed — the hub original is the canonical parent.*

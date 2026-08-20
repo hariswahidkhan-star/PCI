@@ -105,7 +105,7 @@ The warning attached to a short cycle: a contractor with a negative cash convers
 
 ## Three ways an S-curve lies
 
-**It is drawn from the contract rather than the plan.** A curve fitted to the payment schedule reproduces the commercial negotiation instead of the work. If the shape does not come from the time-phased baseline, it is decoration.
+**It is drawn from the contract rather than the plan.** A curve fitted to the payment schedule reproduces the commercial negotiation instead of the work. If the shape does not come from [a time-phased baseline built from the estimate](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting), it is decoration.
 
 **Cost is back-loaded while value is front-loaded.** Where the schedule of rates carries margin in early activities, the value curve rises faster than the cost curve and the contract looks profitable throughout, then collapses in the final quarter. Compare the two as a ratio each month and the divergence shows early.
 
@@ -150,4 +150,4 @@ Through the forecast cost at completion, which drives measured progress and ther
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this piece should link to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with that anchor, and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with that anchor.*
+*Internal links, as placed in the body. The first of the three ways an S-curve lies links to [a time-phased baseline built from the estimate](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting), because saying a curve must come from the plan rather than the payment schedule raises where that plan comes from. One estate link only: three hub links were proposed and the cap is one per domain, so the EAC accounting and month-end close targets were dropped rather than stacked. Reciprocal: the hub's budgeting and forecasting guide should point here, because a time-phased budget raises the funding peak it does not itself calculate.*

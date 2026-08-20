@@ -70,7 +70,7 @@ Renewal compounds quietly. If your cycle requires 30 professional development un
 | You already hold PMP and schedule full time | Maybe | It is depth in your actual subject, and a second renewal obligation |
 | Your weakness is cost and forecasting | No | You would be certifying the half you already have |
 
-The honest test is one search. Read six live job advertisements for the role you want in your region and count the acronyms. That count settles the question faster than any comparison article.
+The honest test is one search. Read six live job advertisements for the role you want in your region and count the acronyms. That count settles the question faster than any comparison article. Where the count comes back mixed, [how the planner credentials compare on scope](https://credentialfinder.org/best-certification-for-planning-engineers) is the next thing to read.
 
 ## What does PMI-SP not prove?
 
@@ -86,7 +86,7 @@ An engineer is examined on float. An accountant is examined on recognition and p
 
 ## Is PMI-SP worth it compared with AACE PSP?
 
-They answer different worries.
+They answer different worries, and [the two scheduling papers set side by side](https://credentialfinder.org/pmi-sp-vs-aace-psp) shows where the assessment shapes diverge.
 
 PMI-SP suits you if your organisation runs on PMI's processes and your evidence gap is framework fluency. PSP suits you if your market names AACE, or if you want an assessment that includes practical exercises and therefore proves output rather than recall.
 
@@ -119,14 +119,14 @@ It is recognised as a scheduling credential wherever PMI is known, which is most
 No. They are separate credentials with separate eligibility routes, and PMI-SP is the more specific one for a planner. Holding PMP first is common because employers ask for it, not because the sequence is required. Each carries its own renewal cycle, so two credentials means two obligations.
 
 **How long does preparation take?**
-Plan around eighty hours across five or six months, which is roughly three hours a week and survives a live project. Sit a timed mock in week one, then study only the domains it exposes. Candidates who read the syllabus front to back usually spend longer and score no better.
+Plan around eighty hours across five or six months, which is roughly three hours a week and survives a live project. Sit a timed mock in week one, then study only the domains it exposes, which is the shape [a PMI-SP preparation schedule](https://credentialfinder.org/pmi-sp-exam-prep) takes when it is built around a live job. Candidates who read the syllabus front to back usually spend longer and score no better.
 
 **What happens if I let it lapse?**
 You lose the credential and, with it, the right to use the marks. Reinstatement rules and any suspension period are published by PMI, and they change, so check before assuming a lapse is recoverable. A lapsed credential on a CV also dates your last serious study, which is worse than never having held it.
 
 **Is it worth it if I plan to move into project controls management?**
-Partly. It certifies the scheduling half of the job and leaves the cost, forecasting and reporting half untested. Controls managers are usually caught out by the forecast conversation rather than the programme one, so pair a scheduling credential with something that examines cost and the accounting treatment it feeds.
+Partly. It certifies the scheduling half of the job and leaves the cost, forecasting and reporting half untested. Controls managers are usually caught out by the forecast conversation rather than the programme one, so pair a scheduling credential with something that examines cost and the accounting treatment it feeds. [What a project controls certification has to prove](https://projectcontrolsinstitute.org/project-controls-certification) sets out how wide that second syllabus needs to be.
 
 ---
 
-*Internal links: this page should link to [PMI-SP vs AACE PSP compared](https://credentialfinder.org/pmi-sp-vs-aace-psp) with that anchor, to [what total float really means](https://projectcontrolsinstitute.org/total-float) with that anchor, to [best certification for planning engineers](https://credentialfinder.org/best-certification-for-planning-engineers) with that anchor, and to [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification) with that anchor; the PMI-SP exam prep page should link back here with the anchor "is PMI-SP worth it".*
+*Linking note: one cross-estate link is in the body, to the hub's page on [what a project controls certification has to prove](https://projectcontrolsinstitute.org/project-controls-certification), placed in the closing FAQ where the answer says a scheduling credential leaves the cost and reporting half untested. Three same-domain links sit where the question arises: the PSP comparison in the section that asks which of the two to sit, the planner shortlist after the job-advertisement count, and the PMI-SP study plan in the FAQ on preparation hours. The earlier note also proposed the hub's total float page; that would have been a second link to the same domain, and the float arithmetic here is already worked in full, so it was dropped rather than retargeted. Reciprocal link worth making: the PMI-SP exam prep page can point back here once, for the reader deciding whether to prepare at all.*

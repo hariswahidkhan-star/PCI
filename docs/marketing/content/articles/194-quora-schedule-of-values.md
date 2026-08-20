@@ -78,7 +78,7 @@ A valuation certifies what may be billed. It does not, by itself, determine reve
 
 Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs. On this job, take £1.58m of cost incurred against a forecast total cost of £3.62m: 1.58 ÷ 3.62 = 43.6%, so cumulative revenue is 43.6% × £4.00m = **£1.746m**.
 
-Gross value certified to date is £1.795m. The £49,000 excess is billing ahead of revenue, and it sits as a contract liability rather than as profit.
+Gross value certified to date is £1.795m. The £49,000 excess is billing ahead of revenue, and it sits as a contract liability rather than as profit. The mechanics of that gap — which measure of progress applies, and what it does to the number the accounts report — are set out in [why billed value and recognised revenue differ](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
 
 Retention behaves differently again. The £85,500 withheld is a timing difference in cash, not a reduction in revenue, so it sits as an amount receivable until release. Treatment depends on the contract and the reporting framework applied, and nothing PCI publishes is accounting advice.
 
@@ -106,4 +106,4 @@ Where the contract permits it, unfixed materials properly delivered and protecte
 
 ---
 
-*Internal links: this answer should link once, at the end, to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "turning a valuation into a cash forecast", and to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "why billed value and recognised revenue differ"; Quora links are nofollow, so treat this as qualified traffic rather than a backlink.*
+*Internal links: the body now carries one link, to https://projectcontrolsinstitute.org/ifrs-15-for-construction, anchored "why billed value and recognised revenue differ". It sits on the £49,000 gap between gross value certified and cumulative revenue, which is the point in the answer where a reader asks why the two numbers are not the same. The project cash flow forecasting link was dropped: one link to a domain per answer is the limit, and nothing in this answer raises a cash-forecasting question — retention is handled in a sentence. Quora links are nofollow, so treat this as qualified traffic rather than a backlink. Reciprocal: none — the hub should not link out to a Quora answer.*

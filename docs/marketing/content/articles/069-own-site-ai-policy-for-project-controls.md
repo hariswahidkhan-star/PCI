@@ -27,6 +27,8 @@ It is the written rule set that decides three questions in advance: which tools 
 
 The distinguishing feature of a controls team's version is the third question. Cost engineers and planners produce figures that other people rely on financially, so accountability has to attach to a person, not to a process.
 
+Which tools are worth approving at all is the prior question, and it is answered by [what AI actually does well in project controls](https://pciai.org/ai-in-project-controls) rather than by a policy clause.
+
 ## What are the nine clauses?
 
 | # | Clause | The question it settles |
@@ -73,11 +75,11 @@ That test resolves the grey cases faster than any decision tree, and people reme
 
 > Every AI-assisted output used in a report, forecast, claim or decision has one named owner. The owner reviews the output, understands how it was produced, and is accountable for it exactly as if they had produced it by hand. Accountability is not transferred to the supplier of the tool.
 
-Auditors ask who. A function name is not an answer, and neither is a tool name.
+Auditors ask who. A function name is not an answer, and neither is a tool name, and some decisions do not move to a tool at all: [the Institute's position on which decisions a model may not make](https://projectcontrolsinstitute.org/ai-decision-policy) is published separately.
 
 > For each AI-assisted output retained in a report pack, the record includes: the inputs supplied, the prompt or configuration used, the tool and model version, the date, the reviewer and the owner. Records are retained for [period], matching the retention applied to the report they support.
 
-Model versions change without the name changing. Recording the version is what lets you reproduce a figure that is challenged eight months later.
+Model versions change without the name changing, and so does an unversioned prompt, which is why [how to specify and test a prompt](https://pciai.org/prompt-engineering-for-project-professionals) belongs beside this clause. Recording both is what lets you reproduce a figure that is challenged eight months later.
 
 ## Clause 6: evaluation before live use
 
@@ -121,7 +123,7 @@ Do not claim external endorsement the organisation does not hold. Alignment with
 
 ## How does PCI examine this?
 
-Governance sits inside the governed AI portion of the Body of Knowledge, which is proportioned 40/40/20 across finance and reporting, project management, and governed AI.
+Governance sits inside the governed AI portion of the Body of Knowledge, which is proportioned 40/40/20 across finance and reporting, project management, and governed AI. What a candidate is asked about it is set out in [how governed AI is examined](https://pciai.org/ai-project-controls-certification).
 
 The PCI AI Project Controls Leader (PCL-AI) credential has 13 domains and 61 knowledge areas, and behind the syllabus sit 113 mandatory PCI Standards carrying 532 process requirements.
 
@@ -146,4 +148,4 @@ The same way as any other tool. An embedded feature in a scheduling or finance s
 
 ---
 
-*Internal links: this template should link to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar it supports", to [prompt engineering for project professionals](https://pciai.org/prompt-engineering-for-project-professionals) with the anchor "how to specify and test a prompt", and to [AI project controls certification](https://pciai.org/ai-project-controls-certification) with the anchor "how governed AI is examined".*
+*Internal links: placed in the body. Three on pciai.org — the AI in project controls pillar, at the point the definition raises which tools are worth approving; prompt engineering, inside the provenance clause, because an unversioned prompt is as unreproducible as an unversioned model; and AI project controls certification, where the piece says how governance is examined. One cross-estate link, to the hub's AI decision policy, in the accountability clause, since a reader asking "who owns this output" next asks which decisions cannot be delegated at all. No second hub link was added: the accountability clause is the only sentence here that genuinely raises a hub question. Reciprocal: the LLM schedule review how-to links here from its confidentiality and overreach section, which is where a reader is sent to write the rule down.*

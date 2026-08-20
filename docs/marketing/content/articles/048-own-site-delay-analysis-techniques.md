@@ -67,7 +67,7 @@ The spread between 18 and 12 days on one event is the entire argument. On time-r
 
 Because a delay event that consumes float delays activities without delaying completion, and only completion delay earns an extension of time.
 
-That makes float ownership a commercial question dressed as a technical one. Under most standard forms, float in the programme is not owned by either party and is available to the project on a first-come basis, which means whoever consumes it first benefits from it. Some contracts say otherwise, and some say nothing, which is worse.
+That makes [total float and who owns it](https://projectcontrolsinstitute.org/total-float) a commercial question dressed as a technical one. Under most standard forms, float in the programme is not owned by either party and is available to the project on a first-come basis, which means whoever consumes it first benefits from it. Some contracts say otherwise, and some say nothing, which is worse.
 
 The practical consequence: an event assessed on the baseline, where float is at its maximum, and the same event assessed on a month-eight update, where float has been eroded, will give different answers. Neither is arithmetic error. They are answers to different questions.
 
@@ -77,7 +77,7 @@ Concurrency is where two delays, one the employer's responsibility and one the c
 
 The prevailing approach on many contracts is that the contractor gets time but not money for the concurrent period: an extension of time so it is not liable for liquidated damages, and no prolongation cost because it would have been delayed anyway.
 
-The definitional fight is what counts as concurrent. True concurrency, where both delays are on the critical path at the same time, is rare. What is common is sequential delay that overlaps loosely and is argued as concurrent by whichever party benefits.
+The definitional fight is what counts as concurrent. True concurrency, where both delays are on the critical path at the same time, is rare, and it turns on [how a critical path is identified](https://projectcontrolsinstitute.org/critical-path-method) in the update being argued over. What is common is sequential delay that overlaps loosely and is argued as concurrent by whichever party benefits.
 
 Windows analysis handles concurrency better than the other three because it shows, window by window, what was driving the finish rather than asserting a single cause for the whole job.
 
@@ -87,7 +87,7 @@ This is the part programmes discover too late. Technique selection is limited by
 
 Without saved monthly programme updates, time impact analysis and windows are both unavailable, because both need the programme as it stood at a point in time. What is left is impacted as-planned, which is the weakest, or an as-built reconstruction, which is expensive and contestable.
 
-The minimum record set is short and cheap: a baseline that was accepted, a monthly update saved and never overwritten, dated correspondence for each event, site diaries and allocation sheets, and a note of the programme's critical path each month.
+The minimum record set is short and cheap: a baseline that was accepted, a monthly update saved and never overwritten, dated correspondence for each event, site diaries and allocation sheets, and a note of the programme's critical path each month. Those updates only help if they were sound when they were saved, which is a matter of [keeping programme updates that survive challenge](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) rather than of storage.
 
 Saving one file a month for three years costs nothing. Reconstructing thirty-six months of programme from site diaries is expensive, slow, and produces a weaker answer.
 
@@ -128,4 +128,4 @@ Yes, and most practitioners do. P6 holds baselines and dated updates, which is w
 
 ---
 
-*Internal links: this comparison should link to the [critical path method](https://projectcontrolsinstitute.org/critical-path-method) definition with the anchor "how the critical path is calculated", to [what is total float](https://projectcontrolsinstitute.org/total-float) with the anchor "total float and who owns it", and to [how to build a realistic project schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with the anchor "keeping programme updates that survive challenge"; the [what project controls is](https://projectcontrolsinstitute.org/what-is-project-controls) pillar should link here with the anchor "delay analysis techniques".*
+*Internal links now in the body, all on this domain: [total float and who owns it](https://projectcontrolsinstitute.org/total-float) sits where float ownership decides entitlement, which is the question the section raises and does not answer; [how a critical path is identified](https://projectcontrolsinstitute.org/critical-path-method) sits in the concurrency section, because concurrency turns entirely on which path was driving; and [keeping programme updates that survive challenge](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) sits with the minimum record set, where the reader learns the updates must have been sound at the time. Three same-domain links is the limit, so nothing further was added. Reciprocal worth making: the [what project controls is](https://projectcontrolsinstitute.org/what-is-project-controls) pillar should link back with the anchor "how delay is analysed after the event".*

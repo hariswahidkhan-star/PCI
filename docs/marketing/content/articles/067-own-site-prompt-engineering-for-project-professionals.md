@@ -52,7 +52,7 @@ Four cover almost all project work. Each has a distinct failure mode, and knowin
 | Calculation check | Confirming that a stated figure follows from stated inputs | Arithmetic that looks right and is not | Compute in the tool; ask the model to reconcile, not to calculate |
 | Drafting | Turning your numbers into house-format commentary | Confident causal claims nobody made | Supply the cause; forbid the model from proposing one |
 
-Adversarial review is a variant of drafting worth naming separately. Give the model the finished paragraph and ask what a sceptical auditor would challenge first. It is good at that, because it is a language task rather than a numerical one.
+Adversarial review is a variant of drafting worth naming separately. Give the model the finished paragraph and ask what a sceptical auditor would challenge first. It is good at that, because it is a language task rather than a numerical one. Pointed at a programme file instead of a paragraph, the same four patterns become [a protocol for reviewing a schedule export with a language model](https://pciai.org/llm-schedule-review).
 
 ## A worked prompt: variance commentary that survives review
 
@@ -60,7 +60,7 @@ Start with numbers you computed yourself. Budget at completion (BAC) £12.0m, pl
 
 Cost variance is EV − AC = 3.78 − 4.20 = **−£0.42m**. Schedule variance is EV − PV = 3.78 − 4.20 = **−£0.42m**. Both indices land at 3.78 ÷ 4.20 = **0.90**.
 
-The independent estimate at completion on the assumption that performance continues is BAC ÷ CPI = 12.0 ÷ 0.90 = **£13.33m**, a variance at completion of −£1.33m against budget.
+The independent estimate at completion on the assumption that performance continues is BAC ÷ CPI = 12.0 ÷ 0.90 = **£13.33m**, a variance at completion of −£1.33m against budget. Anyone unsure where those indices come from will find [the earned value method behind these figures](https://projectcontrolsinstitute.org/earned-value-management) set out in full.
 
 The prompt then reads, in substance:
 
@@ -68,7 +68,7 @@ The prompt then reads, in substance:
 
 Each clause earns its place. The figures are supplied so nothing is inferred. The cause is supplied so nothing is invented. The final line is the verification hook, and it is what a reviewer checks first.
 
-What comes back is a paragraph that took ninety seconds instead of forty minutes, with an input list you can tick against the source. What does not come back is a claim about why the façade needed rework, because you forbade it.
+What comes back is a paragraph that took ninety seconds instead of forty minutes, with an input list you can tick against the source. What does not come back is a claim about why the façade needed rework, because you forbade it. Scaling that from one paragraph to a whole monthly pack is [drafting project reporting without losing the audit trail](https://pciai.org/generative-ai-project-reporting).
 
 ## Why should the model not do the arithmetic?
 
@@ -108,7 +108,7 @@ Four categories, and they are worth writing into a team policy rather than leavi
 
 ## How does PCI examine prompting?
 
-Prompting sits inside the governed AI portion of the Body of Knowledge, which is proportioned 40/40/20 across finance and reporting, project management, and governed AI across the three credentials.
+Prompting sits inside the governed AI portion of the Body of Knowledge, which is proportioned 40/40/20 across finance and reporting, project management, and governed AI across the three credentials. It is one skill inside [the wider governed-AI picture in project controls](https://pciai.org/ai-in-project-controls), not a discipline of its own.
 
 The AI domain covers concepts, data, prompting, tooling, applied workflows, governance and capability. The examinable skill is not clever wording. It is whether a candidate can specify a task precisely, verify the output and say who owns the result.
 
@@ -133,4 +133,4 @@ Asking for an answer instead of asking for a checkable answer. Adding "list ever
 
 ---
 
-*Internal links: this how-to should link to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar it supports", to [using large language models to review schedules](https://pciai.org/llm-schedule-review) with the anchor "the same discipline applied to a schedule export", and to [earned value management](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "where the CPI and SPI in the worked prompt come from".*
+*Internal links: now placed in the body. Same-domain: "a protocol for reviewing a schedule export with a language model" follows the pattern table, where a reader asks what the patterns look like on a programme; "drafting project reporting without losing the audit trail" follows the worked prompt, which raises what happens when one paragraph becomes a pack; "the wider governed-AI picture in project controls" sits in the examination section, which raises where prompting fits in the syllabus. One cross-estate link only, to the hub: "the earned value method behind these figures" beside the CPI, SPI and EAC arithmetic the prompt is built on. Reciprocal: the LLM schedule review how-to should point back here for the five parts of a usable prompt.*

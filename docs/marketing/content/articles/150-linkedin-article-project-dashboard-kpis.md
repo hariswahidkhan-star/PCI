@@ -2,7 +2,7 @@
 platform:      LinkedIn Article
 type:          faq
 title:         Which project dashboard KPIs actually earn their place
-meta:          A project dashboard needs about nine KPIs, each with an owner, a formula, a threshold and an action. The nine, the earned value arithmetic, and what to cut.
+meta:          Project dashboard KPIs need an owner, a formula, a threshold and an action. The nine that earn their place, the earned value arithmetic, and what to cut.
 primary_kw:    project dashboard KPIs
 secondary_kw:  earned value metrics, contingency drawdown, TCPI, precision and recall
 pillar:        Project controls fundamentals
@@ -17,9 +17,9 @@ ab_id:         AB-00282
 
 # Which project dashboard KPIs actually earn their place
 
-A project dashboard needs about nine indicators, not thirty. Each one needs an owner, a formula, a threshold and a decision it triggers. If a number cannot change what somebody does this week, it is reporting rather than control, and it belongs in the appendix.
+Project dashboard KPIs should number about nine, not thirty. Each one needs an owner, a formula, a threshold and a decision it triggers. If a number cannot change what somebody does this week, it is reporting rather than control, and it belongs in the appendix.
 
-Project dashboard KPIs fail for one of two reasons: nobody owns them, or nobody agreed in advance what happens when they turn red.
+They fail for one of two reasons: nobody owns them, or nobody agreed in advance what happens when they turn red.
 
 Written for LinkedIn as an original. It sits under the Institute's project controls fundamentals pillar.
 
@@ -107,7 +107,7 @@ One data date across everything. Cost from one date and schedule from another pr
 
 Stamp the data date on the page and state the method behind the EAC. Change the method only with a note explaining why, because an EAC that improves in the month its method changes is the finding auditors look for.
 
-Agree thresholds before the first report and write them into the reporting procedure. Thresholds negotiated after a number turns red are not thresholds, and everyone involved knows it.
+Agree thresholds before the first report and write them into the reporting procedure, taking [thresholds that trigger an action rather than a conversation](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) as the starting point. Thresholds negotiated after a number turns red are not thresholds, and everyone involved knows it.
 
 ## Frequently asked questions
 
@@ -124,7 +124,7 @@ Whatever your organisation can justify and will act on, written down before repo
 Monthly for cost and forecast, weekly for schedule, float and productivity on active construction. Cost data usually cannot be trusted at a weekly cadence because accruals and commitments lag, and a weekly CPI mostly measures invoice timing. Match the frequency to the underlying data, not to the meeting diary.
 
 **Should AI-generated forecasts appear on the dashboard?**
-Only with the same evidence you would demand of a person: what the model predicted, what happened, and the precision and recall of those predictions over a meaningful sample. Label the output as model-generated, name the owner who accepts it, and keep the record. An unlabelled model output on a board pack is an unattributable claim.
+Only with the same evidence you would demand of a person: what the model predicted, what happened, and the precision and recall of those predictions over a meaningful sample. Label the output as model-generated, name the owner who accepts it, and keep [the audit trail model-written reporting needs](https://pciai.org/generative-ai-project-reporting). An unlabelled model output on a board pack is an unattributable claim.
 
 ---
 
@@ -132,4 +132,4 @@ Only with the same evidence you would demand of a person: what the model predict
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [earned value management](https://projectcontrolsinstitute.org/earned-value-management) as the pillar it supports, to [earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with the anchor "how to set a threshold that triggers an action", and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "forecasting the cash trough and its date".*
+*Linking note: two cross-estate links now sit in the body. The hub link to earned value reporting thresholds sits in the section on what makes the numbers trustworthy, at the sentence telling the reader to agree thresholds in advance, because the obvious next question is what those thresholds should be. The pciai.org link sits in the closing FAQ on model-generated forecasts, where the piece asks for a record of what a model predicted and that page sets out what the trail has to contain. The note originally proposed two more hub links, to the earned value pillar and to cash flow forecasting; both were dropped, since only one link per domain is allowed and this piece works the earned value block and the cash trough itself. A reciprocal link back to this piece would fit on the reporting thresholds page, where the question of which indicators belong on the front page comes up.*

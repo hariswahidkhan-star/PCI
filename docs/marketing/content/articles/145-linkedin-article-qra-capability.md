@@ -64,7 +64,7 @@ Most organisations that believe they are governed are repeatable, because the dr
 
 Someone who is not the project manager spending it. That single separation does more for capability than any modelling improvement.
 
-Set the funding confidence level as policy, hold the difference between the project level and the portfolio level centrally, and require a named risk to be cited on every drawdown. Contingency released against scope growth is an unapproved budget increase, and the register should show that distinction plainly.
+Set the funding confidence level as policy, hold the difference between the project level and the portfolio level centrally, and require a named risk to be cited on every drawdown. Contingency released against scope growth is an unapproved budget increase, and [a quantified register people actually maintain](https://projectcontrolsinstitute.org/risk-register-that-gets-used) should show that distinction plainly.
 
 Re-run the model at gates and at defined triggers, such as a major risk realising or a significant change to the base estimate. Monthly re-runs turn the exercise into a report nobody reads, and annual ones are too late to change a decision.
 
@@ -82,7 +82,7 @@ F1 is the harmonic mean of the two: 2 × (0.70 × 0.60) ÷ (0.70 + 0.60) = 0.84 
 
 Now the judgement that F1 cannot make for you. F1 weights a false alarm and a missed risk equally, and on a capital project they are not equal: a false alarm costs a reviewer twenty minutes, while a missed risk can cost a quarter's margin.
 
-So state which error is more expensive in your context, weight recall accordingly, and report the two numbers separately rather than hiding them inside a single score. A model at 0.60 recall is missing two risks in five, and that sentence is the one the risk committee needs to hear.
+So state which error is more expensive in your context, weight recall accordingly, and report the two numbers separately rather than hiding them inside a single score. A model at 0.60 recall is missing two risks in five, and that sentence is the one the risk committee needs to hear. Which decisions such a model may originate, and which it may only inform, belongs in writing before any of it reaches a board pack; [an AI policy template for project controls teams](https://pciai.org/ai-policy-for-project-controls) sets out the clauses to settle.
 
 Governed AI is the third element of the Body of Knowledge behind PCI's credentials, whose proportions are 40 per cent finance and reporting, 40 per cent project management and 20 per cent governed AI. The reason it is only 20 per cent is that the other 80 per cent is what the model has to be checked against.
 
@@ -131,4 +131,4 @@ Quantify the risk register. Replace probability and impact colour scores with co
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [the schedule risk analysis pillar](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "schedule risk analysis", to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with the anchor "how the simulation is actually run", and to [how to build a risk register stakeholders actually use](https://projectcontrolsinstitute.org/risk-register-that-gets-used) with the anchor "quantifying the risk register".*
+*Linking note: two cross-estate links now sit in the body. The hub link to the risk register guide sits in the contingency ownership section, because that sentence asks the register to show a distinction most registers cannot, and the guide is about building one that is maintained rather than filed. The pciai.org link sits in the section on measuring a flagging model, where the piece raises what the model may and may not decide but does not settle it. The note originally proposed three hub links, to the schedule risk analysis pillar, the Monte Carlo guide and the risk register guide; two were dropped because a piece may carry only one link to any one domain, and the register is the input the whole capability depends on. A reciprocal link back to this piece would fit on the AI policy page, where measuring precision and recall is named but not worked.*

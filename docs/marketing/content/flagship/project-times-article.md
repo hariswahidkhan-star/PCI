@@ -36,7 +36,8 @@ notes: |
   which are more extractable than a FAQ and native to the page. The FAQ block lives on the own-site
   pillar, where it belongs.
   HOOK C (consequence first) per _STORY.md §2, which names it for readers cold to PCI. Not blended.
-  The title question is answered inside the first 58 words, before any preamble.
+  The title question is answered inside the first 55 words, before any preamble, and the answer
+  sentence carries the primary keyword itself rather than a paraphrase of it.
   NUMBERS AUDIT: 2,200,000 / 1,850,000 / 240,000 / 2,090,000 / 1.19 / 1.05 from the worked example
   with every division shown. 240,000 ÷ 1,850,000 = 0.13 is arithmetic on those same figures, not new
   data. The forecast sentence states the direction explicitly — correcting the index raises the
@@ -67,7 +68,7 @@ notes: |
 
 *Earned value is produced by the project. Actual cost is produced by the ledger. Here are the four questions to ask before you sign what comes out of the division.*
 
-Fourteen CPI points went missing in an accrual, not a schedule. Project controls produced the earned value. Finance produced the cost. Nobody produced the accrual that reconciles them, and the project manager signed the result. The boundary between project controls and project management is not a reporting line. It is a number with two authors and one signature.
+Fourteen CPI points went missing in an accrual, not a schedule. Project controls produced the earned value. Finance produced the cost. Nobody produced the accrual that reconciles them, and the project manager signed the result. Project controls vs project management is not a reporting line. It is a number with two authors and one signature.
 
 ## What fourteen points looks like
 

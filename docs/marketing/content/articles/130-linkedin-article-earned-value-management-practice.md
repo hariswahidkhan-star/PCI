@@ -17,9 +17,9 @@ ab_id:         AB-00216
 
 # Earned value management practice, not compliance theatre
 
-Earned value becomes management when the numbers change a decision, and theatre when they change a report. The difference is set before any data is collected, by the earning rules, the cut-off discipline and who owns the forecast. Better dashboards do not fix it.
+An earned value management practice is one where the numbers change a decision; theatre is where they change a report. The difference is set before any data is collected, by the earning rules, the cut-off discipline and who owns the forecast. Better dashboards do not fix it.
 
-Run as an earned value management practice, the system produces one or two numbers a director can act on each month. Run as compliance, it produces eight indices nobody has ever overruled.
+Run properly, the system produces one or two numbers a director can act on each month. Run as compliance, it produces eight indices nobody has ever overruled.
 
 This is a LinkedIn original written under the Institute's earned value pillar.
 
@@ -72,7 +72,7 @@ Choose by cause. A one-off event that has finished argues for the first row. A r
 
 The first row is the one that gets picked in theatre, because it produces the smallest number and requires no argument. It is defensible only when someone can name the event that has ended.
 
-Using the CPI method, variance at completion is 18.0 − 19.45 = **−€1.45m**. That is what the contingency conversation is actually about, and the four methods are compared in detail in [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).
+Using the CPI method, variance at completion is 18.0 − 19.45 = **−€1.45m**. That is what the contingency conversation is actually about, and it turns on [how the four EAC formulas differ in what they assume](https://projectcontrolsinstitute.org/four-eac-formulas).
 
 ## The money variance says nothing about the date
 
@@ -82,7 +82,7 @@ Only the network answers the date question. On this package the driving path run
 
 "The driving path has lost 20 days of float and the commissioning window closes in April" is actionable. "SV is minus 0.9" is a number waiting for a translator.
 
-Earned schedule closes part of the gap by converting earned value into the week the baseline said you would reach it, which at least gives an answer in time units. It still does not name the activity, and the [critical path method](https://projectcontrolsinstitute.org/critical-path-method) does.
+Earned schedule closes part of the gap by converting earned value into the week the baseline said you would reach it, which at least gives an answer in time units. It still does not name the activity. Only the critical path through the network does that.
 
 ## Three settings that decide whether any of it is honest
 
@@ -100,7 +100,7 @@ Reporting every variance guarantees that none of them is acted on. A threshold n
 
 Two gates work better than one. A significance gate in money, so a 30% variance on a €40k package does not consume a steering group, and a materiality gate in percentage, so a 2% variance on a €18m package still gets seen.
 
-Attach an owner and a deadline to each gate. A variance report that arrives without a named decision-maker is the definition of theatre, and the design of those gates is set out in [earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds).
+Attach an owner and a deadline to each gate. A variance report that arrives without a named decision-maker is the definition of theatre.
 
 ## Where to switch earned value off
 
@@ -131,4 +131,4 @@ Because it is an accounting input. On a contract measured cost-to-cost, a moveme
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, to [earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with that anchor, and to [what is earned value management](https://projectcontrolsinstitute.org/earned-value-management) as the pillar it supports.*
+*Internal links: one link is in the body, at the end of the four-forecast table, where the piece says a €1.8m spread comes from one dataset. "How the four EAC formulas differ in what they assume" points to https://projectcontrolsinstitute.org/four-eac-formulas, which is the question that sentence raises. The threshold section and the earned schedule paragraph previously carried two more links to the same domain and now stand on their own; three links to one domain from one piece is the footprint to avoid. Reciprocal: https://projectcontrolsinstitute.org/earned-value-reporting-thresholds could cite this piece for the two-gate design and the TCPI test that follows it.*

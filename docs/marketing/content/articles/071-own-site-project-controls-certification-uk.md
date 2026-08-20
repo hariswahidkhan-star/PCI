@@ -17,7 +17,7 @@ ab_id:         —
 
 # Project controls certification UK: what actually counts
 
-Five different things are sold in Britain as a project controls certification: a regulated qualification, a chartered designation, a vendor certificate, a course certificate and an independent certification. Only three are assessed against a published standard by a body that can take the award back. That difference, not the fee, is what a UK employer checks.
+Project controls certification UK employers accept comes in five forms, and they are sold at similar prices: a regulated qualification, a chartered designation, a vendor certificate, a course certificate and an independent certification. Only three are assessed against a published standard by a body that can take the award back. That difference, not the fee, is what a UK employer checks.
 
 ## What counts as a project controls certification UK employers recognise
 
@@ -39,7 +39,7 @@ The single question that sorts them: does the organisation that taught you also 
 
 **Regulated** means the qualification sits on a national framework. In England that is the Regulated Qualifications Framework, overseen by Ofqual; Wales, Scotland and Northern Ireland run their own equivalents. It tells you the level and the quality-assurance route, not that any employer wants it.
 
-**Chartered** means a body holding a Royal Charter has assessed you and admitted you to a designation it controls. APM awards Chartered Project Professional. RICS, ICE and CIOB run their own routes for surveying, engineering and construction management.
+**Chartered** means a body holding a Royal Charter has assessed you and admitted you to a designation it controls. APM awards Chartered Project Professional. RICS, ICE and CIOB run their own routes for surveying, engineering and construction management, and [the surveying routes and what each of them assesses](https://pciglobal.ai/quantity-surveyor-certification) are set out separately.
 
 **Accredited** is the one most often misused. In the UK, accreditation of a certification body against ISO/IEC 17024 is granted by UKAS, the national accreditation body. A provider saying it is "accredited" without naming the accreditation body and a certificate number has told you nothing.
 
@@ -103,7 +103,7 @@ The PCI Standards are certification requirements established by the Institute. T
 
 Decide the role first. Planning, cost, commercial and risk are different jobs, and the credential that fits a planner is not the one that fits a contract manager.
 
-Take the free route before the paid one. Read the published syllabus, sit a timed mock, and find out which domains you actually fail rather than which ones you feel weak in.
+Take the free route before the paid one. Read the published syllabus, sit a timed mock, and find out which domains you actually fail rather than which ones you feel weak in. If the choice of route is still open, start with [what an examined certification proves](https://projectcontrolsinstitute.org/project-controls-certification).
 
 Compare on cost of ownership over nine years, not on entry price. Examination fee, membership, preparation and two renewal cycles belong in the same total, and options often reverse their ranking once counted properly. Keep the tool certificate alongside it: P6 competence still gets a CV opened in Britain, it simply does not get a forecast defended.
 
@@ -113,7 +113,7 @@ Compare on cost of ownership over nine years, not on entry price. Examination fe
 No. There is no statutory licence to practise project controls in the UK, and no single body owns the title. What exists is a mix of regulated qualifications, chartered designations from bodies such as APM, RICS and ICE, vendor certificates and independent certifications. Employers judge them by who assessed you and against what published standard, not by any official status.
 
 **Does an overseas certification count in the UK?**
-It counts to the extent that a UK employer can verify it and understand what was assessed. A credential with a published syllabus, an independent examination and a verifiable credential record travels well. One with none of those travels badly regardless of the country that issued it. Right-to-work and any role-specific security clearance are separate matters entirely.
+It counts to the extent that a UK employer can verify it and understand what was assessed. A credential with a published syllabus, an independent examination and a verifiable credential record travels well, and the test runs the same way in reverse — [how American employers screen credentials](https://pciglobal.ai/project-controls-certification-usa) turns on exactly those three things. One with none of those travels badly regardless of the country that issued it. Right-to-work and any role-specific security clearance are separate matters entirely.
 
 **Do I need chartered status as well?**
 Not to work in project controls, and the two answer different questions. Chartered status recognises assessed professional standing within a specific discipline and is maintained by CPD. A subject certification evidences that you met a published standard of technical competence. Many senior UK practitioners hold both, and the sensible order is usually the technical one first.
@@ -129,4 +129,4 @@ No, and PCI claims no accreditation, recognition, endorsement, affiliation or pa
 
 ---
 
-*Internal links: this guide should link to [the project controls certification pillar](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "how the certification routes compare", to [project controls certification online](https://projectcontrolsinstitute.org/project-controls-certification-online) with the anchor "how remote proctoring works", to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "forecasting final cost properly", and to [project controls certification USA](https://pciglobal.ai/project-controls-certification-usa) with the anchor "the American routes compared"; the USA, Dubai and UAE geo guides link back here with the anchor "the UK routes explained".*
+*Internal links: placed in the body. Two on pciglobal.ai — quantity surveyor certification, where the chartered section names RICS and a reader asks what the surveying routes assess; and project controls certification USA, in the FAQ on overseas credentials, which is the sentence that raises how another market applies the same test. One cross-estate link, to the hub's project controls certification pillar, where the closing sequence tells a reader to read a published syllabus before paying. The note originally proposed three hub links; two were dropped to hold the one-link-per-domain cap, and the pillar was kept because it is the only one the prose actually asks for. Reciprocal: the USA and UAE guides link back here from their own overseas-credential passages, with distinct anchors.*

@@ -2,7 +2,7 @@
 platform:      Own site — projectcontrolsinstitute.org
 type:          guide
 title:         Quantitative schedule risk analysis: a beginner's guide
-meta:          A beginner's guide to quantitative schedule risk analysis: the vocabulary, ten hand-run iterations you can check, and five mistakes to avoid.
+meta:          A beginner's guide to quantitative schedule risk analysis (QSRA): the vocabulary, ten hand-run iterations you can check, and five mistakes to avoid.
 primary_kw:    quantitative schedule risk analysis QSRA
 secondary_kw:  Monte Carlo simulation, criticality index, merge bias, P80 date
 pillar:        Risk management
@@ -23,7 +23,7 @@ The intimidating part is usually the vocabulary, not the maths. This page fixes 
 
 ## What is quantitative schedule risk analysis (QSRA)?
 
-It is the practice of testing a programme against uncertainty instead of accepting its dates. The deterministic critical path method returns one answer, calculated from durations treated as facts.
+It is the practice of testing a programme against uncertainty instead of accepting its dates, and it is the quantified end of [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis); the qualitative end ranks risks in a workshop and never recalculates the network. The deterministic critical path method returns one answer, calculated from durations treated as facts.
 
 They are not facts. Every duration is an estimate with a range behind it, and the QSRA makes that range explicit, samples from it repeatedly, and records where the project finished each time.
 
@@ -48,7 +48,7 @@ The result is a distribution of thousands of finish dates, from which any confid
 
 Two paths converge on a handover milestone. Path X is most likely 46 days, ranging 40 to 64. Path Y is most likely 48 days, ranging 44 to 58.
 
-Deterministic CPM says the milestone lands at day **48**, because Y is longer. X has two days of total float and is therefore, in a bar chart, not a problem.
+[The deterministic critical path method](https://projectcontrolsinstitute.org/critical-path-method) says the milestone lands at day **48**, because Y is longer. X has two days of total float and is therefore, in a bar chart, not a problem.
 
 Now sample ten times. Each iteration draws one duration per path and takes the later of the two, because the milestone waits for both. The draws are illustrative; the arithmetic is exactly what a tool performs.
 
@@ -139,4 +139,4 @@ Then you have found the problem the analysis exists to find, and the honest opti
 
 ---
 
-*Internal links: this guide should link up to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with that anchor, across to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with that anchor, and to the [critical path method](https://projectcontrolsinstitute.org/critical-path-method) and [total float](https://projectcontrolsinstitute.org/total-float) definitions; the project scheduler certification piece should link here with the anchor "quantitative schedule risk analysis".*
+*Internal links now in the body, all on this domain: [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) in the definition section, where a reader asks what else sits under schedule risk beyond simulation; [the deterministic critical path method](https://projectcontrolsinstitute.org/critical-path-method) at the point the worked example quotes a single deterministic date and the reader needs to know how that date was produced; and [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) where the P80 has to reach the cost forecast. The total float definition was dropped rather than added as a fourth: three same-domain links is the limit here. Reciprocal worth making: the project scheduler certification piece should link back with the anchor "quantifying schedule risk on a programme".*

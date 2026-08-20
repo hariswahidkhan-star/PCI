@@ -87,7 +87,7 @@ Compare spend to date against the sanction curve, then let earned value tell you
 
 At month 30 of a 60-month programme, the sanction curve says 46% of installed cost should be spent. Actual spend is 51%. On its own that says the project is ahead, or it says money has gone out without work coming in, and the curve cannot distinguish them.
 
-Add earned value at 45%. On a BAC of US$16.8bn: PV = 0.46 × 16.8 = **US$7.73bn**, AC = 0.51 × 16.8 = **US$8.57bn**, EV = 0.45 × 16.8 = **US$7.56bn**.
+Add earned value at 45%, measured the way [earned value is measured on a capital project](https://projectcontrolsinstitute.org/earned-value-management) rather than claimed. On a BAC of US$16.8bn: PV = 0.46 × 16.8 = **US$7.73bn**, AC = 0.51 × 16.8 = **US$8.57bn**, EV = 0.45 × 16.8 = **US$7.56bn**.
 
 CPI = EV ÷ AC = 7.56 ÷ 8.57 = **0.882**. SPI = EV ÷ PV = 7.56 ÷ 7.73 = **0.978**. Cost variance = 7.56 − 8.57 = −**US$1.01bn**.
 
@@ -128,7 +128,7 @@ Contingency drawn against physical progress, tracked monthly from the first quar
 By systems turned over against plan, and by punch list ageing, not by cost. The construction spend curve is nearly flat through commissioning while the completion date, and therefore every financing and revenue consequence, is still being decided. A metric set that stops at construction stops one step before the expensive part.
 
 **Can a model select comparable plants for you?**
-It can shortlist candidates from a database far faster than an analyst, and it will confidently propose plants whose boundaries do not match. Score any such tool on a validation set the cost team has already reviewed, report precision and recall, and keep human review on the survivors. Speed in shortlisting is worth having; unmeasured judgement is not.
+It can shortlist candidates from a database far faster than an analyst, and it will confidently propose plants whose boundaries do not match. That split between speed and judgement is [an honest account of where AI sits on a large build](https://pciai.org/ai-in-construction-project-management): score any such tool on a validation set the cost team has already reviewed, report precision and recall, and keep human review on the survivors. Speed in shortlisting is worth having; unmeasured judgement is not.
 
 ---
 
@@ -136,4 +136,4 @@ It can shortlist candidates from a database far faster than an analyst, and it w
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so nothing here duplicates a PCI site page.*
 
-*Internal links: this piece should link to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how progress becomes reported revenue", to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with that anchor, and to [project controls training in the UAE](https://pciglobal.ai/project-controls-training-uae) with the anchor "where this material is taught in the Gulf".*
+*Linking note: two links are now in the body, one per domain. "Earned value is measured on a capital project" sits where earned value first enters the spend-curve arithmetic (https://projectcontrolsinstitute.org/earned-value-management), because the piece uses EV without defining it and that sentence is where a reader stops. "An honest account of where AI sits on a large build" sits in the FAQ on shortlisting comparable plants (https://pciai.org/ai-in-construction-project-management). The IFRS 15 link was dropped rather than added: the revenue section already walks the five steps in PCI's own words, and one hub link per piece is the limit. The Gulf training page was dropped because no sentence here asks where the material is taught. Reciprocal: none warranted.*

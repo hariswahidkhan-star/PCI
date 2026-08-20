@@ -17,9 +17,9 @@ ab_id:         AB-00042
 
 # Will AI replace planning engineers? The honest answer
 
-No. AI removes most of the assembly work in planning — updating, checking, formatting, first-draft commentary — and leaves the two things it cannot do: deciding whether the logic reflects how the work will be built, and standing behind a forecast date when money depends on it. The role shrinks in hours and grows in consequence.
+Will AI replace planning engineers? No. It removes most of the assembly work — updating, checking, formatting, first-draft commentary — and leaves the two things it cannot do: deciding whether the logic reflects how the work will be built, and standing behind a forecast date when money depends on it. The role shrinks in hours and grows in consequence.
 
-People asking will AI replace planning engineers usually mean will the job still exist in ten years. It will. The rest of this page is the detail behind that, including the arithmetic that shows exactly where a model stops being able to help.
+People asking the question usually mean will the job still exist in ten years. It will. The rest of this page is the detail behind that, including the arithmetic that shows exactly where a model stops being able to help.
 
 ## Will AI replace planning engineers, or the tasks they do?
 
@@ -69,7 +69,7 @@ The teams that do shrink are the ones whose planning function was mostly adminis
 
 More than before, because the checking burden has moved. When a person builds a forward and backward pass by hand, errors are slow and visible; when a tool produces it instantly, errors are fast and invisible.
 
-Two examples are worth keeping in mind. A programme can have more than one critical path, and a summary that names only one has hidden half the exposure. And total float belongs to somebody under most contracts — the arithmetic tells you there are five days, the contract tells you who may spend them.
+Two examples are worth keeping in mind. A programme can have more than one critical path, and a summary that names only one has hidden half the exposure; [a network with two governing chains, worked through by hand](https://pciai.org/ai-for-construction-scheduling) shows how easily an assistant reports just the one. And total float belongs to somebody under most contracts, so the arithmetic tells you there are five days while [who owns the float under your contract](https://projectcontrolsinstitute.org/total-float) decides who may spend them.
 
 The same holds on the cost side. Four estimate-at-completion methods produce four different final costs from identical inputs, and choosing between them is a statement about what caused the variance. A model computes all four; it cannot tell you whether the cause has passed.
 
@@ -87,7 +87,7 @@ Four things, in order of return.
 
 **The finance side of your own numbers.** Know how your progress measure becomes revenue, what cut-off means, and why a physical percentage and a cost-to-cost percentage are not the same. This is where planners become indispensable rather than replaceable.
 
-**Evaluation, not tools.** How to score a model's output against known outcomes using precision and recall, and how to price the review step. Tool skills date within a year; evaluation does not.
+**Evaluation, not tools.** How to score a model's output against known outcomes using precision and recall, and how to price the review step. Tool skills date within a year; evaluation does not, and it is [what governed AI requires across cost and schedule](https://pciai.org/ai-in-project-controls) rather than a planning speciality.
 
 **Quantified risk.** Three-point ranges, correlation, criticality indices, and what a P80 date commits you to. The analysis is now cheap, which means the interpretation is now the scarce part.
 
@@ -115,4 +115,4 @@ Ask of every number: which question does this answer? Physical progress or earne
 
 ---
 
-*Internal links: this piece should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [AI for construction scheduling](https://pciai.org/ai-for-construction-scheduling) with the anchor "AI applied to a live programme, with the arithmetic", and to [total float and who owns it](https://projectcontrolsinstitute.org/total-float) with the anchor "who owns the float under your contract".*
+*Internal links: now placed in the body. Same-domain: "a network with two governing chains, worked through by hand" sits where the multiple-critical-path trap is named, because that sentence raises how a summary hides one; "what governed AI requires across cost and schedule" sits beside the advice to learn evaluation rather than tools, which raises whose standard that is. One cross-estate link only, to the hub: "who owns the float under your contract" in the same float sentence, where the arithmetic and the entitlement plainly diverge. Opening rewritten so the question is answered with the primary keyword in the first line rather than the second paragraph. Reciprocal: the AI for construction scheduling guide should point back here on what the planner's role becomes.*

@@ -17,9 +17,9 @@ ab_id:         AB-03684
 
 # Is project controls in demand? How to check it yourself
 
-Yes, wherever capital is actually being executed rather than announced. Demand tracks sanctioned capital, contract form and lender or audit scrutiny, not fashion. Nobody can quote you a credible global headcount, so the useful answer is a method you can run on your own market this week.
+Yes, wherever capital is actually being executed rather than announced. Demand tracks sanctioned capital, contract form and lender or audit scrutiny, not fashion. Nobody can quote you a credible global headcount, so *is project controls in demand* is best answered with a method you can run on your own market this week.
 
-The reason **is project controls in demand** produces so much confident nonsense online is that the question is usually answered with a number nobody sourced. Below is where the numbers break down, and what to measure instead.
+The confident nonsense online comes from answering it with a number nobody sourced. Below is where the numbers break down, and what to measure instead.
 
 ## Why nobody can give you a real headcount
 

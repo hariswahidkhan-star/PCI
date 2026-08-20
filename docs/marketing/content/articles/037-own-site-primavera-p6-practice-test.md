@@ -34,9 +34,11 @@ Six skill areas.
 | Integration | How do you assign resources? | The schedule says 62% and the cost report says 47%: reconcile them |
 | Judgement | What is a baseline? | Defend this date to a client who wants six weeks removed |
 
+The integration row is where most planners lose marks, and [a matching set of earned value practice problems](https://projectcontrolsinstitute.org/earned-value-practice-questions) drills the cost side of that reconciliation.
+
 ## Tier one: the network
 
-Work these by hand first. Durations are working days on one calendar, all relationships finish-to-start with no lag.
+Work these by hand first. Durations are working days on one calendar, all relationships finish-to-start with no lag. If the arithmetic is not yet automatic, [the forward and backward pass in full](https://projectcontrolsinstitute.org/critical-path-method) works a seven-activity network through both directions before you start.
 
 | Activity | Duration | Predecessors |
 |---|---:|---|
@@ -67,7 +69,7 @@ Work these by hand first. Durations are working days on one calendar, all relati
 
 **A4. T2 has zero free float; T3 has three days.** Free float is the delay an activity can absorb without moving its successor's early start. T3 starts at 14 and T2 finishes at 14, so nothing is spare. T5 starts at 29 and T3 finishes at 26.
 
-The three days belong to the chain, not to T2. That is interfering float: if T2 uses them, T3 loses them.
+The three days belong to the chain, not to T2. That is interfering float: if T2 uses them, T3 loses them, and [how total float and free float differ](https://projectcontrolsinstitute.org/total-float) sets the three measures out side by side.
 
 **A5. The project finishes in 48 days, five late, and the foundations chain gains float.** T4 now runs 4–34, T5 runs 34–42, T6 runs 42–48. T3 must now finish by 34 but still finishes at 26, so its total float rises from 3 to 8. Float belongs to a path, not to an activity.
 
@@ -149,7 +151,7 @@ Score each tier separately. A rising arithmetic score with a flat method score m
 
 ## If you use an AI marker, score the marker
 
-Automated schedule checkers flag defects and are wrong often enough to need measuring. The standard measures are precision, recall and F1.
+Automated schedule checkers flag defects and are wrong often enough to need measuring. The standard measures are precision, recall and F1. How to run one of these reviews without handing it the judgement is set out in [a protocol for reviewing a schedule with a language model](https://pciai.org/llm-schedule-review).
 
 Take a checker that flags **48** relationships as defective. **36** flags are genuine, and the schedule actually contains **45** defective relationships.
 
@@ -181,4 +183,4 @@ No. It means you can read one and challenge it, which is the harder half of the 
 
 ---
 
-*Internal links: this piece should link to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "how total float and free float differ", to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "the forward and backward pass in full", to [earned value practice questions](https://projectcontrolsinstitute.org/earned-value-practice-questions) with that anchor, and to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "how scheduling is examined".*
+*Internal linking note: three same-domain links now sit in the body. "The forward and backward pass in full" points at the critical path method definition, placed in the tier one instructions, where a candidate about to work a network by hand needs the method rather than the answer. "How total float and free float differ" points at the total float definition, placed in answer A4, which is the exact point where free float, total float and interfering float have to be told apart. "A matching set of earned value practice problems" points at the earned value practice questions, placed under the skill-area table, whose integration row asks the reader to reconcile a schedule percentage with a cost percentage. The anchor was changed from the target's bare keyword so the two pages do not share an anchor. One cross-estate link is carried: "a protocol for reviewing a schedule with a language model" to pciai.org, placed at the AI-marker section, since governed use of a model is that domain's subject. The fourth proposal, a PCL-AI link on "how scheduling is examined", was dropped to stay inside the internal cap. Reciprocal: the P6 online course piece should link back here with an anchor about testing your own network arithmetic.*

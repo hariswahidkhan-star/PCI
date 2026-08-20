@@ -17,9 +17,9 @@ ab_id:         AB-00102
 
 # Project financing for project controls professionals
 
-Project financing funds an asset on the strength of its own forecast cash flows. Lenders take security over a single-purpose company and have limited recourse to the sponsors, so the cost report and the programme stop being management documents and become conditions of drawing money.
+Project financing for project controls professionals starts from one fact: the money is lent against the asset's own forecast cash flows. Lenders take security over a single-purpose company and have limited recourse to the sponsors, so the cost report and the programme stop being management documents and become conditions of drawing money.
 
-Project financing for project controls professionals is therefore not a finance topic to be handed upstairs. It is a set of tests your monthly outputs have to pass, in someone else's format, to a date you do not control.
+It is therefore not a finance topic to be handed upstairs. It is a set of tests your monthly outputs have to pass, in someone else's format, to a date you do not control.
 
 This is a LinkedIn original under the Institute's cost control and estimating pillar.
 
@@ -82,7 +82,7 @@ Read those two percentages together and the discipline makes sense. A 3.5% miss 
 
 **Contingency drawing rules.** Contingency in a project-financed structure is usually not the sponsor's to spend. Drawing it needs a stated cause and, above a threshold, lender consent.
 
-None of this works if the cost report and the programme disagree. The forecast that supports a drawdown, the forecast that supports revenue recognition and the forecast the project team believes have to be the same forecast, which is the point argued in [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting).
+None of this works if the cost report and the programme disagree. The forecast that supports a drawdown, the forecast that supports revenue recognition and the forecast the project team believes have to be the same forecast, produced once and used three times.
 
 ## Delay costs money twice, and only one part is obvious
 
@@ -108,7 +108,7 @@ Net working capital funded = 40.5 + 10.4 − 23.7 = **£27.2m**, on a cash conve
 
 Ten days off receivable days releases 10 / 365 × 200 = **£5.5m**, permanently, with no change to revenue or cost. Almost all of it comes from applications that match the certification rules rather than from chasing.
 
-The finance director's version of this question is worked through in [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting).
+The finance director's version of this question is the same arithmetic run on the certification calendar rather than on the cost report.
 
 ## Frequently asked questions
 
@@ -133,4 +133,4 @@ Not from a scheduling course, and not from an accounting qualification either, b
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with that anchor, to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, and to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) as the pillar it supports.*
+*Internal links: one link is in the body, in the closing question of the FAQ, which asks where a project controls professional learns the finance side properly. "PCI AI Project Finance Leader (PFL-AI)" points to https://projectcontrolsinstitute.org/finance-and-project-management-certification, the page that says what that credential examines. The drawdown paragraph and the working capital paragraph previously carried two further links to the same domain; both now make their point without one, because three links to one domain in a single piece is the pattern that gets a cluster devalued. Reciprocal: https://projectcontrolsinstitute.org/project-cash-flow-forecasting could cite this piece for what a drawdown certificate demands of a cash forecast.*

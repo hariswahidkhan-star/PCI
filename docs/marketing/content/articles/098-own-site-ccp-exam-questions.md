@@ -23,7 +23,7 @@ Everything below is original PCI material. It contains no AACE questions, becaus
 
 ## What CCP exam questions are built around
 
-AACE publishes the scope and structure for the Certified Cost Professional in its own certification handbook. Take the current domain list and item counts from there, not from a study blog.
+AACE publishes the scope and structure for the Certified Cost Professional in its own certification handbook. Take the current domain list and item counts from there, not from a study blog. The fees sit on the same pages, and [what the credential costs from application to renewal](https://credentialfinder.org/aace-certification-cost) totals them line by line.
 
 The shape is stable enough to prepare against. Four kinds of item recur, and each fails candidates differently.
 
@@ -34,7 +34,7 @@ The shape is stable enough to prepare against. Four kinds of item recur, and eac
 | Economic analysis | Cash flows, a rate and a horizon | Comparing options over different lives without normalising them |
 | Written response | A situation and an audience | Producing arithmetic when the question asked for a recommendation |
 
-The last row is where experienced people are caught. A senior reader wants the number and the assumption behind it, in that order.
+The last row is where experienced people are caught. A senior reader wants the number and the assumption behind it, in that order, which is [what separates the CCP paper from the PMP's situational items](https://credentialfinder.org/aace-ccp-vs-pmp).
 
 ## Seven practice problems, worked in full
 
@@ -125,11 +125,11 @@ Now price it. Reviewing 480 flags at twelve minutes each is **96 hours** of some
 
 ## How to use these
 
-Do them cold, then do them again a fortnight later. Practice questions build recall when you read them and judgement when you re-derive them.
+Do them cold, then do them again a fortnight later, and when you want more, [twenty-five further problems worked line by line](https://projectcontrolsinstitute.org/project-controls-exam-questions) cover the same ground from the controls side. Practice questions build recall when you read them and judgement when you re-derive them.
 
 Write one short recommendation for each: three sentences naming the number, the assumption and what you would do next. That is the written component in miniature, and it is the part that cannot be crammed.
 
-Track which ones you got wrong for the right reason. A slip in arithmetic is a different problem from choosing a forecasting method you cannot defend, and only the second one fails you.
+Track which ones you got wrong for the right reason. A slip in arithmetic is a different problem from choosing a forecasting method you cannot defend, and only the second one fails you. If most of them expose gaps rather than slips, the prior question is [whether the CCP is the right credential for your week](https://credentialfinder.org/ccp-certification-worth-it).
 
 ## Where the cost paper stops
 
@@ -160,4 +160,4 @@ Memorise the small set above and understand what each one assumes. A formula rec
 
 ---
 
-*Internal links: this page should link to [project controls exam questions worked in full](https://projectcontrolsinstitute.org/project-controls-exam-questions) with that anchor, to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, to [whether CCP certification is worth it](https://credentialfinder.org/ccp-certification-worth-it) with that anchor, and to [earned value practice questions](https://projectcontrolsinstitute.org/earned-value-practice-questions) with that anchor; the AACE certification cost page should link back here with the anchor "what CCP exam questions actually test".*
+*Linking note: one cross-estate link is in the body, to the hub's [twenty-five further problems worked line by line](https://projectcontrolsinstitute.org/project-controls-exam-questions), placed in the section on how to use practice questions, where a reader who has done these seven asks for more. Three same-domain links sit where the text raises the question: the AACE fee total beside the pointer to the certification handbook, the CCP versus PMP comparison after the item-type table, and the return-on-fee assessment where the reader is told to sort slips from gaps. The earlier note proposed three hub links; the EAC formulas and earned value practice pages were dropped rather than retargeted, since one link per domain is the cap and the exam questions page is the closest answer to the question this piece raises. Reciprocal link worth making: the AACE cost page can point back here once, describing what the paper actually asks.*

@@ -32,7 +32,7 @@ One dataset runs through the cost answers so you can follow it end to end: budge
 ## Project controls interview questions on measurement and earned value
 
 **1. What is project controls, in one sentence?**
-The discipline that establishes what a project is meant to cost and take, measures what it is actually costing and taking, and forecasts where it will land in time for someone to do something about it. The last clause is the one that matters — analysis delivered after the decision is history, not control.
+The discipline that establishes what a project is meant to cost and take, measures what it is actually costing and taking, and forecasts where it will land in time for someone to do something about it. The last clause is the one that matters — analysis delivered after the decision is history, not control. The usual follow-up is what that means between month-ends, so have the ordinary week straight: [what a project controls engineer does in a normal week](https://pciworld.org/what-does-a-project-controls-engineer-do) is the version to answer with.
 
 **2. What does earned value actually tell you? Work it on the numbers.**
 Cost variance CV = EV − AC = 5.25 − 6.10 = **−£0.85m**. Schedule variance SV = EV − PV = 5.25 − 5.80 = **−£0.55m**. Cost performance index CPI = 5.25 ÷ 6.10 = **0.861**. Schedule performance index SPI = 5.25 ÷ 5.80 = **0.905**. The project buys about 86p of work per pound spent and has delivered about 90% of the value it planned by now. Behind and overspending together is the combination with no benign reading.
@@ -121,7 +121,7 @@ PCI examines both sides across three credentials: PCI AI Project Controls Leader
 
 The Bodies of Knowledge are weighted **40 / 40 / 20** across finance and reporting, project management and governed AI, carry **92 sector case studies** across three volumes, and rest on **113 mandatory PCI Standards with 532 process requirements**. The calculation material behind PFL-AI and PML-AI has been verified by **15,613 machine calculation checks, all passing** — a suite covering PFL-AI and PML-AI only, with no equivalent for PCL-AI.
 
-Those are statements about the examined material, not about anyone's career. For what an independent credential can actually evidence, see [what a certified project controls professional proves](https://projectcontrolsinstitute.org/certified-project-controls-professional).
+Those are statements about the examined material, not about anyone's career. An interviewer who asks what the letters after your name are worth is asking a narrower question than it sounds, and [what the title certifies and what it does not](https://projectcontrolsinstitute.org/certified-project-controls-professional) is the honest answer to give.
 
 ## Frequently asked questions
 
@@ -129,10 +129,10 @@ Those are statements about the examined material, not about anyone's career. For
 Take one real project you worked on and be able to walk through its baseline, its earning rules, one month's variance and the forecast you produced, with numbers. Then practise the earned value and EAC arithmetic by hand until it is automatic. Depth on one project beats a shallow tour of five, because the follow-up questions go down, not across.
 
 **Will I be given a numerical test?**
-Frequently, and usually a short one: variances and indices from a small dataset, sometimes an EAC and a to-complete index. Practise it on paper. The single most common failure is not the mathematics but reaching for a spreadsheet when the interviewer wanted to see the method. Working through [project controls exam questions](https://projectcontrolsinstitute.org/project-controls-exam-questions) is close preparation.
+Frequently, and usually a short one: variances and indices from a small dataset, sometimes an EAC and a to-complete index. Practise it on paper. The single most common failure is not the mathematics but reaching for a spreadsheet when the interviewer wanted to see the method. Working scenario questions of the same shape, cold and untimed, is close preparation.
 
 **Do I need to know accounting standards?**
-You need the shape of the model and the vocabulary — performance obligation, transaction price, over-time recognition, contract asset, cut-off, accrual. Nobody expects a project controls candidate to quote a standard. Being able to explain how your progress figure reaches the revenue line puts you ahead of most of the field. Start with [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls).
+You need the shape of the model and the vocabulary — performance obligation, transaction price, over-time recognition, contract asset, cut-off, accrual. Nobody expects a project controls candidate to quote a standard. Being able to explain how your progress figure reaches the revenue line puts you ahead of most of the field.
 
 **How much scheduling do I need if I am applying on the cost side?**
 Enough to read a network and to know what a driving path is, because your forecast depends on it. The schedule questions asked of cost candidates are usually about connection rather than technique. The scheduling-specific set is covered in [planning engineer interview questions](https://pciworld.org/planning-engineer-interview-questions).
@@ -142,4 +142,4 @@ Who owns the baseline and who may change it. Whether the earning rules are writt
 
 ---
 
-*Internal links: link to [what a certified project controls professional proves](https://projectcontrolsinstitute.org/certified-project-controls-professional), [project controls exam questions](https://projectcontrolsinstitute.org/project-controls-exam-questions), [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) and [planning engineer interview questions](https://pciworld.org/planning-engineer-interview-questions), each with that anchor; the what does a project controls engineer do and senior planning engineer career path pieces should link back here with the anchor "project controls interview questions".*
+*Internal linking note: two same-domain links sit in the body — [what a project controls engineer does in a normal week](https://pciworld.org/what-does-a-project-controls-engineer-do) in answer 1, where the interviewer's obvious follow-up is what the role does between month-ends, and [planning engineer interview questions](https://pciworld.org/planning-engineer-interview-questions) in the FAQ on how much scheduling a cost-side candidate needs. One cross-estate link remains, to the hub: [what the title certifies and what it does not](https://projectcontrolsinstitute.org/certified-project-controls-professional), placed where the piece asks what an independent credential evidences. The earlier links to the hub's exam-questions and IFRS pages were removed — three links to one domain from one piece is a link-scheme footprint, and the credential sentence was the strongest of the three, so both sentences were kept and the links dropped rather than retargeted. Reciprocal link worth making: [what does a project controls engineer do](https://pciworld.org/what-does-a-project-controls-engineer-do) and [senior planning engineer career path](https://pciworld.org/senior-planning-engineer-career-path) should point here with the anchor "the interview questions and the arithmetic behind them".*

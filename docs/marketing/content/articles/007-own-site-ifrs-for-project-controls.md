@@ -51,7 +51,7 @@ IFRS 15 replaced the old construction-contract approach with a single model buil
 
 **Step five: recognise revenue as each obligation is satisfied.** Either over time, as the work progresses, or at a point in time when control passes.
 
-Step five is the one that pulls project controls into financial reporting. Revenue is recognised over time when the customer receives and consumes the benefit as work is performed, or controls the asset as it is created, or when the asset has no alternative use to the contractor and there is an enforceable right to payment for work completed to date. Most construction contracts meet at least one of those tests.
+Step five is the one that pulls project controls into financial reporting. Revenue is recognised over time when the customer receives and consumes the benefit as work is performed, or controls the asset as it is created, or when the asset has no alternative use to the contractor and there is an enforceable right to payment for work completed to date. Most construction contracts meet at least one of those tests, and [the five steps applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction) works through which ones qualify, what counts as a single contract, and when a variation becomes revenue.
 
 ## Measuring progress: input methods and output methods
 
@@ -77,7 +77,7 @@ Progress is now 40 / 90 = 44.4%. Cumulative revenue becomes 44.4% × £100m = £
 
 That is a £5.6m reduction in profit in a single period, produced by a forecast, not by a transaction. The cross-check works: total expected margin is now £10m, and 44.4% of £10m is £4.4m.
 
-This is the single most useful thing a cost engineer can understand about IFRS. The estimate at completion is not an internal management number. It is a direct input to reported revenue, and a £10m movement on this contract removed £5.6m of profit before anyone had signed a purchase order.
+This is the single most useful thing a cost engineer can understand about IFRS. The estimate at completion is not an internal management number. It is a direct input to reported revenue, and a £10m movement on this contract removed £5.6m of profit before anyone had signed a purchase order. The route that revision takes from spreadsheet to ledger is traced in [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting).
 
 ## When the contract turns onerous
 
@@ -135,7 +135,7 @@ A project lives in the overlap. The estimate at completion is produced by one pr
 
 The failure pattern follows from that. The forecast is optimistic for three quarters because nobody wants to be the person who moved it, then it moves £15m in one month and the loss is recognised in full under IAS 37 in that same month. The engineering event happened over nine months. The financial event happened in one.
 
-That gap is the reason the PCI AI Project Finance Leader (PFL-AI) exists, with 16 domains across 61 knowledge areas, and why the Body of Knowledge is built in proportions of 40% finance and reporting, 40% project management and 20% governed AI. The calculation logic behind the PFL-AI and PML-AI Bodies of Knowledge has been verified through 15,613 machine calculation checks, all passing.
+That gap is the reason [a credential that examines both sides of the handover](https://projectcontrolsinstitute.org/finance-and-project-management-certification) exists at all. The PCI AI Project Finance Leader (PFL-AI) covers 16 domains across 61 knowledge areas, and its Body of Knowledge is built in proportions of 40% finance and reporting, 40% project management and 20% governed AI. The calculation logic behind the PFL-AI and PML-AI Bodies of Knowledge has been verified through 15,613 machine calculation checks, all passing.
 
 ## What a project controls professional should be able to produce
 
@@ -169,4 +169,4 @@ Finance owns the entry, project controls owns the estimate behind it, and the di
 
 ---
 
-*Internal links: this piece should link to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction), [EAC accounting](https://projectcontrolsinstitute.org/eac-accounting), [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects), [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting), and to the [PFL-AI certification](https://projectcontrolsinstitute.org/finance-and-project-management-certification) overview.*
+*Internal linking note: three same-domain links are now in the body. [The five steps applied to a construction contract](https://projectcontrolsinstitute.org/ifrs-15-for-construction) sits at the end of step five, where the over-time tests are stated and the reader asks which contracts pass them. [How a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) sits in the worked example, at the sentence that says the estimate at completion is a direct input to reported revenue. [A credential that examines both sides of the handover](https://projectcontrolsinstitute.org/finance-and-project-management-certification) sits where the piece names the gap between the two professions. The month-end close and cash flow forecasting pieces were dropped to hold the two-to-three internal cap; neither question is raised sharply enough in this prose to justify a fourth and fifth link. Reciprocal link worth making: the EAC accounting and IFRS 15 for construction pieces should point back here with the anchor "the five standards a cost forecast feeds".*

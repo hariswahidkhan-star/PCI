@@ -1,7 +1,7 @@
 ---
 platform:      Substack
 type:          faq
-title:         What are the four EAC formulas and when each applies
+title:         When to use each EAC formula, and what each assumes
 meta:          The four estimate at completion formulas run on one set of numbers, and when to use each EAC formula: match the method to the cause, then test it with TCPI.
 primary_kw:    when to use each EAC formula
 secondary_kw:  estimate at completion, cost performance index, to-complete performance index, bottom-up ETC
@@ -15,7 +15,7 @@ hashtags:      n/a (Substack — no hashtags)
 ab_id:         AB-00267
 ---
 
-# What are the four EAC formulas and when each applies
+# When to use each EAC formula, and what each assumes
 
 The four estimate at completion formulas are: actual cost plus remaining budget, budget divided by cost performance index, actual cost plus remaining budget divided by CPI times SPI, and a bottom-up re-estimate. Each assumes something different about the work still to come. Knowing when to use each EAC formula is a judgement about cause, not about arithmetic.
 
@@ -51,7 +51,7 @@ From those: CPI = 27.4 ÷ 31.9 = **0.859**. SPI = 27.4 ÷ 30.5 = **0.898**. Cost
 
 A spread of $62.5m to $71.6m, which is $9.1m, or 16% of the budget. That range is not a flaw in the method. It is the method showing how much of the forecast is assumption rather than measurement.
 
-Before running any of it, check that actual cost is complete. Missing accruals for work done and goods received depress AC, flatter CPI, and produce a forecast that improves for a month and then collapses.
+Before running any of it, check that actual cost is complete. Missing accruals for work done and goods received depress AC, flatter CPI, and produce a forecast that improves for a month and then collapses. If the month-end that produces these inputs is the part you are unsure of, [a full month of earned value worked end to end](https://projectcontrolsinstitute.org/earned-value-worked-example) shows where each figure comes from.
 
 ## When to use each EAC formula: matching the method to the cause
 
@@ -122,4 +122,4 @@ Where progress is measured by a cost-based input method, yes, because that metho
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this piece is not a copy of the PCI site's earned value pages.*
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [a worked month-end that produces these inputs](https://projectcontrolsinstitute.org/earned-value-worked-example) with that anchor, and to [the PFL-AI credential](https://projectcontrolsinstitute.org/finance-and-project-management-certification) with the anchor "where forecasting meets financial reporting".*
+*Linking note: one link is now in the body. "A full month of earned value worked end to end" sits beside the warning about incomplete actual cost (https://projectcontrolsinstitute.org/earned-value-worked-example), because that sentence raises the question of where EV and AC come from in the first place. All three links proposed here pointed at the hub, and one link per domain is the limit, so the pillar page and the credential page were dropped rather than retargeted at something this piece does not raise. Nothing else in the piece asks a question another domain answers, so one link is the honest count. Reciprocal: none warranted.*

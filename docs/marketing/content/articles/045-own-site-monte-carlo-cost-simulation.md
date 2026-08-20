@@ -117,11 +117,11 @@ A contingency figure with no owner is spent by month two and argued about in mon
 
 Set the governance in one line: the team plans to the P50, the sponsor holds the gap to the P80, and release happens against defined trigger events rather than against optimism.
 
-Then track drawdown as a curve against time. If contingency is falling faster than the work is progressing, the forecast is already wrong and the monthly report should say so before somebody else notices.
+Then track drawdown as a curve against time. If contingency is falling faster than the work is progressing, the forecast is already wrong and the monthly report should say so before somebody else notices. Which line the drawdown moves, and how the movement is reported, is covered in [where contingency sits inside the budget and the forecast](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting).
 
 ## Why this belongs in a finance syllabus
 
-Contingency is not a schedule artefact. It is capital held against a probability, and it shows up in the funding requirement, in the cash profile, and eventually in reported margin.
+Contingency is not a schedule artefact. It is capital held against a probability, and it shows up in the funding requirement, in the cash profile, and eventually in reported margin. Where in the year that money has to be available is a question for [the S-curve behind a project cash flow forecast](https://projectcontrolsinstitute.org/project-cash-flow-forecasting), not for the risk model.
 
 The £5.89m above has to be funded, and the delay days that produced part of it arrive as time-related cost, extended overheads and later certification — which means later cash. A schedule risk result that never crosses into the cost model and the cash forecast changes nothing at all. That crossing is set out from the schedule side in [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis).
 
@@ -146,4 +146,4 @@ No, and any statement that it does should be corrected. The output is conditiona
 
 ---
 
-*Internal links: this how-to should link to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with that anchor, to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with that anchor, and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with that anchor; the cost engineer certification and project budgeting and forecasting pieces should link back here with the anchor "how to run a Monte Carlo cost simulation".*
+*Internal links now in the body, all on this domain: [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) where the schedule side of the same contingency question is raised; [the S-curve behind a project cash flow forecast](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) where contingency becomes a funding requirement with a date on it; and [where contingency sits inside the budget and the forecast](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) in the drawdown step, which raises which line the money moves against. The schedule risk analysis pillar was dropped as a fourth: three same-domain links is the limit, and the QSRA guide already carries the reader there. Reciprocal worth making: the cost engineer certification piece should link back with the anchor "sizing contingency by simulation".*

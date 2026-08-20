@@ -27,11 +27,11 @@ The PMI Scheduling Professional certification covers developing, maintaining and
 
 Two things follow from that, and they shape how you prepare. The examination is framework-led, so PMI's terms and process boundaries matter as much as the network arithmetic. And it is scenario-based, so items describe a situation and ask what you would do next.
 
-If your working life is Primavera P6 on an EPC site, expect a vocabulary gap before you expect a technique gap.
+If your working life is Primavera P6 on an EPC site, expect a vocabulary gap before you expect a technique gap. Whether the credential pays off in that market at all is the prior question, answered in [a candid look at who PMI-SP suits](https://credentialfinder.org/pmi-sp-worth-it).
 
 ## A twelve-week PMI-SP exam prep plan
 
-Eight hours a week, front-loaded on arithmetic. Adjust the calendar, not the order.
+Eight hours a week, front-loaded on arithmetic. If [the forward and backward pass by hand](https://projectcontrolsinstitute.org/critical-path-method) is not yet automatic, weeks one and two are the whole plan. Adjust the calendar, not the order.
 
 | Weeks | Focus | Hours | What you should be able to do at the end |
 |---|---|---|---|
@@ -105,7 +105,7 @@ PMI-SP examines the programme. It does not examine what the programme does to th
 
 Progress measurement is the join. A steelwork package budgeted at **£6.5m** with 740 of 1,850 tonnes erected earns 740 ÷ 1,850 × 6.5 = **£2.60m** on a units-installed rule. On a 70/30 rule split between erection and bolt-out, with 500 tonnes bolted out, it earns (0.400 × 0.70) + (0.270 × 0.30) = 0.361, so 0.361 × 6.5 = **£2.35m**.
 
-The same tonnage on the same day is worth **£250,000** more or less depending on a rule written months earlier. That number leaves the programme, sets the cost performance index, and eventually influences what the finance function may recognise as revenue.
+The same tonnage on the same day is worth **£250,000** more or less depending on a rule written months earlier. That number leaves the programme, sets the cost performance index, and eventually influences what the finance function may recognise as revenue. Which credentials cover that join and which stop at the programme is set out in [the planner's credential shortlist](https://credentialfinder.org/best-certification-for-planning-engineers).
 
 A chartered accountant is examined on recognition and provisions but not on float. An engineer is examined on float but not on cut-off. PCI AI Project Controls Leader (PCL-AI) examines both sides in one syllabus across 13 domains and 61 knowledge areas, with every PCI Body of Knowledge holding the same proportions: 40% finance and reporting, 40% project management, 20% governed AI.
 
@@ -120,7 +120,7 @@ Eighty to a hundred hours for a working planner, spread across about three month
 No. PMI-SP has its own eligibility route based on scheduling experience and education, published in PMI's handbook. Holding PMP first makes the framework language familiar, which shortens the middle of the plan, but it is a convenience rather than a prerequisite.
 
 **Is PMI-SP better than AACE PSP?**
-Neither is better in the abstract. PMI-SP suits organisations standardised on PMI's framework; PSP suits engineering, construction and energy markets that name AACE credentials and tests production through practical exercises. Read six live job advertisements for the role you want and count which acronym appears.
+Neither is better in the abstract, and [where the two scheduling papers actually differ](https://credentialfinder.org/pmi-sp-vs-aace-psp) matters more than which is harder. PMI-SP suits organisations standardised on PMI's framework; PSP suits engineering, construction and energy markets that name AACE credentials and tests production through practical exercises. Read six live job advertisements for the role you want and count which acronym appears.
 
 **Can I prepare without a course?**
 Yes, and many do. The free exam content outline, a current scheduling reference and disciplined hand practice cover the ground. A course helps most with pacing and with the framework vocabulary, so buy it for structure rather than for content you could read yourself.
@@ -133,4 +133,4 @@ It runs on a professional development cycle, so it lapses if you stop maintainin
 
 ---
 
-*Internal links: this page should link to [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method) with that anchor, to [what total float really means](https://projectcontrolsinstitute.org/total-float) with that anchor, to [best certification for planning engineers](https://credentialfinder.org/best-certification-for-planning-engineers) with that anchor, and to [the AACE PSP certification guide](https://credentialfinder.org/aace-psp-certification-guide) with that anchor; the PMI-SP versus PSP comparison should link back here with the anchor "a realistic PMI-SP study plan".*
+*Linking note: one cross-estate link is in the body, to the hub's worked [forward and backward pass by hand](https://projectcontrolsinstitute.org/critical-path-method), placed at the start of the twelve-week plan, where the reader is told weeks one and two are the whole plan if that arithmetic is not automatic. Three same-domain links sit where the question is raised: whether PMI-SP suits the reader's market, after the note about a vocabulary gap; the planner shortlist where the piece shows what the scheduling paper leaves untested; and the PMI-SP versus PSP comparison in the FAQ that asks which is better. The earlier note also proposed the hub's total float page — a second link to the same domain, so it was dropped — and the PSP guide, which the PSP comparison link now covers more directly. Reciprocal link worth making: the PMI-SP versus PSP comparison should point back here once, for the reader who has already chosen PMI-SP.*

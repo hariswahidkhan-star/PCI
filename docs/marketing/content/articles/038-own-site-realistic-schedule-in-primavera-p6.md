@@ -71,7 +71,7 @@ Open ends are the other common defect. Only the first activity should have no pr
 
 A constraint overrides the network's own arithmetic, so each one is a small piece of the schedule that no longer calculates.
 
-The usual damage comes from a "Finish On or Before" date, which caps the late dates on everything feeding it. Paths that had genuine slack report zero float, and the schedule loses its ability to tell you which delay actually matters.
+The usual damage comes from a "Finish On or Before" date, which caps the late dates on everything feeding it. Paths that had genuine slack report zero float, and the schedule loses its ability to tell you which delay actually matters. A hard constraint destroys [what total float actually tells you](https://projectcontrolsinstitute.org/total-float) before it destroys anything else.
 
 Where a date is contractual, model it as a milestone with a constraint and say so in the basis of schedule. Where it is a preference, take it out and let the logic produce the date.
 
@@ -81,7 +81,7 @@ Durations from rates assume the resource is there. Loading the schedule tests th
 
 Take three parallel activities each needing 8 fitters when only 16 fitters exist. Unlevelled, the network finishes in 43 days; levelled to the real crew, one activity waits and the finish moves to **52 days**.
 
-Levelling changes the driving path, so check the critical path again afterwards. A resource-limited finish date and a logic-driven finish date are different answers to different questions, and the report should say which one it is showing.
+Levelling changes the driving path, so check the critical path again afterwards; [how the critical path is calculated](https://projectcontrolsinstitute.org/critical-path-method) shows why the driving chain moves when a duration or a resource does. A resource-limited finish date and a logic-driven finish date are different answers to different questions, and the report should say which one it is showing.
 
 ## Step seven: baseline, then set the progress rules
 
@@ -114,7 +114,7 @@ The last screen matters most: give the network to someone who will argue with it
 
 ## What the schedule does to cash
 
-A programme is a cash instrument, and this is the part of the overlap that finance sees before delivery does.
+A programme is a cash instrument, and this is the part of the overlap that finance sees before delivery does. [How the programme drives the cash curve](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) works the S-curve side of the same arithmetic.
 
 The cash conversion cycle measures how long money is tied up between paying for work and being paid for it. It is days sales outstanding, plus days of unbilled work in progress, minus days payable outstanding.
 
@@ -149,4 +149,4 @@ It can draft logic from a scope document, spot missing successors, and compare y
 
 ---
 
-*Internal links: this guide should link to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "what total float actually tells you", to [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "testing the date with a QSRA", and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "how the programme drives the cash curve".*
+*Internal linking note: three same-domain links now sit in the body. "What total float actually tells you" points at the total float definition, placed in step five where a hard constraint is shown wiping out the float calculation and the reader has to know what was lost. "How the critical path is calculated" points at the critical path method definition, placed in step six where levelling moves the driving path. "How the programme drives the cash curve" points at project cash flow forecasting, placed at the head of the cash section, which raises the S-curve without drawing one. No cross-estate link is carried: every question this guide raises is answered on the hub. The fourth proposal, a schedule risk analysis link on "testing the date with a QSRA", was dropped because this guide never puts a range around the date, so the sentence that would carry it does not exist. Reciprocal: the critical path method definition should link back here with an anchor about building a network that calculates its own date.*

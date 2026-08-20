@@ -39,7 +39,7 @@ Buy the top of that table without embarrassment. Structural checking alone repay
 
 ## The arithmetic a model does not change
 
-Take a seven-activity network for a steel-framed building, durations in working days.
+Take a seven-activity network for a steel-framed building, durations in working days. No tool changes the method underneath it, and [the forward and backward pass, worked step by step](https://projectcontrolsinstitute.org/critical-path-method) is where to start if it is unfamiliar.
 
 | Activity | Duration | Predecessors |
 |---|---:|---|
@@ -117,7 +117,7 @@ Keep the provenance: file version, calculation settings, model version and date,
 
 Price the review. Structural checks generate volume, and volume without an owner becomes noise inside two cycles, so decide in advance how many hours a month go into clearing flags.
 
-Name the owner. Somebody signs the programme, and under the principle PCI certifies against — AI proposes, the professional disposes — that person must be able to explain the logic changes as well as the arithmetic.
+Name the owner. Somebody signs the programme, and under the principle PCI certifies against — AI proposes, the professional disposes — that person must be able to explain the logic changes as well as the arithmetic. The same rule governs cost, forecasting and risk, which is set out in [how governed AI applies across the controls lifecycle](https://pciai.org/ai-in-project-controls).
 
 The three PCI credentials each carry their own Body of Knowledge and examination, proportioned 40/40/20 across finance and reporting, project management, and governed AI: the PCI AI Project Controls Leader (PCL-AI) with 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) with 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) with 16 domains and 63 knowledge areas. PCI is an independent certifying body and claims no accreditation, endorsement, affiliation or equivalence with any other organisation.
 
@@ -142,4 +142,4 @@ The planner, without exception. The model can draft it and verify that each clai
 
 *First published on pciai.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [best AI construction scheduling software](https://pciai.org/best-ai-construction-scheduling-software) with the anchor "how the tools in this category compare", and to [the critical path method explained](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "the forward and backward pass in full".*
+*Internal links, as placed in the body. The worked network links to [the forward and backward pass, worked step by step](https://projectcontrolsinstitute.org/critical-path-method), because a reader meeting a forward pass in one line may need the method itself first. The governance section links to [how governed AI applies across the controls lifecycle](https://pciai.org/ai-in-project-controls), because "AI proposes, the professional disposes" is stated here for a schedule and holds for cost and risk too. Two links, two domains, one each: the software comparison was dropped as it would have been a second link to the same domain. Reciprocal: the pillar should point back here for the arithmetic worked on a live network.*

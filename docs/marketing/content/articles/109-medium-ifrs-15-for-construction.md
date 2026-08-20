@@ -107,7 +107,7 @@ The status of each variation against the three-row table above, and a recoverabi
 
 Get those three right and the revenue calculation is mechanical. Get them wrong and no journal entry can detect it, because the error sits in the measurement rather than the posting.
 
-All three are outputs of the close, which is why cut-off discipline decides the quality of the revenue number more than the accounting policy does.
+All three are outputs of the close, which is why [the cut-off discipline of a five-day month-end](https://projectcontrolsinstitute.org/month-end-close-for-projects) decides the quality of the revenue number more than the accounting policy does.
 
 ## The overlap this sits in
 
@@ -138,4 +138,4 @@ The cost engineer and the commercial manager, not only the accountant. The forec
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is for readers rather than for link equity.*
 
-*Internal links: this piece should link to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) with that anchor, to [how the estimate at completion reaches the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, and to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with that anchor.*
+*Internal links, as placed in the body. The section on what the cost engineer must produce each month links to [the cut-off discipline of a five-day month-end](https://projectcontrolsinstitute.org/month-end-close-for-projects), because saying all three outputs come from the close asks what that close actually consists of. One estate link only: three were proposed to the same domain, and the rule is one per domain, so the IFRS pillar and the EAC accounting guide were dropped. Reciprocal: the hub's IFRS pillar should point here for the construction-specific measure of progress, which it summarises rather than works.*

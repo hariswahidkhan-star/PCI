@@ -31,7 +31,7 @@ Neither chart is a forecast of what the project will cost. Both are a statement 
 
 ## How do you read a P-value by hand?
 
-Rank the iterations and count. The simulation software does nothing more mysterious than this, and doing it once by hand removes most of the mystique.
+Rank the iterations and count. The simulation software does nothing more mysterious than this, and doing it once by hand removes most of the mystique. Where the iterations come from is the separate job, and [how a Monte Carlo cost model is built, step by step](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) covers that side of it.
 
 Take ten iteration results, sorted, in millions of pounds: **48.6, 49.9, 50.8, 51.7, 52.3, 53.0, 54.1, 55.6, 57.9, 61.2**.
 
@@ -132,4 +132,4 @@ No, it structures it. Every input is a judgement, from the ranges to the correla
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with the anchor "how the simulation is built", to [quantitative schedule risk analysis for beginners](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with the anchor "the same method applied to dates", and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "where contingency sits in the forecast".*
+*Linking note: one cross-estate link now sits in the body, in the section on reading a P-value by hand. That passage explains what to do with the iterations but not where they come from, which is precisely the question the hub's Monte Carlo cost simulation guide answers. The note originally proposed two further hub links, to quantitative schedule risk analysis and to project budgeting and forecasting. Both were dropped because a piece may carry only one link to any given domain, and the Monte Carlo guide is the closest match to what this article leaves unexplained. Nothing in the piece raises a question the AI, careers, regional or comparison domains answer, so no second cross-estate link was invented. A reciprocal link back to this piece would fit on the Monte Carlo simulation page, at the point where the output curve has to be read.*

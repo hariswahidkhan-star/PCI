@@ -25,7 +25,7 @@ Use a bottom-up ETC when the work still to come is not like the work already don
 
 Estimate to complete is the forecast cost of the work remaining at the data date. A bottom-up ETC builds that figure from the remaining quantities, the resources needed to install them, current rates and the time the programme says it will take.
 
-The alternative is an index-based ETC, which divides the remaining budget by a performance index and accepts whatever comes out. That is an extrapolation of the past, not an estimate of the future.
+The alternative is an index-based ETC, which divides the remaining budget by a performance index and accepts whatever comes out. Those are [the index-based forecasts this one is checked against](https://projectcontrolsinstitute.org/four-eac-formulas), and each is an extrapolation of the past rather than an estimate of the future.
 
 Both produce an estimate at completion, because EAC = AC + ETC in every method. What differs is where the ETC came from and what you are able to say when someone asks why.
 
@@ -84,10 +84,15 @@ Check the credibility of the original budget while you are there. TCPI = (BAC âˆ
 Six steps, in this order. Skipping the first two is how a bottom-up ETC ends up as the old estimate with a new date on it.
 
 1. Fix the data date and freeze the actual cost, accruals included. An ETC built on an understated AC understates the EAC by the same amount.
+
 2. Take the remaining quantities from the current programme and the site measure, never from the budget. The budget's quantities are what the estimator assumed.
+
 3. Price with rates you can point at: signed subcontracts, current purchase orders, agreed labour rates, quoted plant hire.
+
 4. Cost the time separately. Take the time-related items from the current critical path, because a package that finishes eight weeks late carries eight weeks of preliminaries whatever the quantities do.
+
 5. Keep identified risk out of the ETC and in the contingency line. Blending them hides whether an overrun is funded or unfunded.
+
 6. Have each package owner sign their number. An ETC nobody owns is a spreadsheet, and it will be renegotiated in the meeting.
 
 ## Bottom-up or index-based: which one, and how often?
@@ -139,4 +144,4 @@ The package owners for their rows, the project controls manager for the assembly
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so nothing here is a copy of a page on the PCI site.*
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "the three index-based forecasts this one is checked against", and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "how a re-estimate becomes a controlled budget".*
+*Linking note: one link is now in the body. "The index-based forecasts this one is checked against" sits where the index method is first described (https://projectcontrolsinstitute.org/four-eac-formulas), because a reader meeting "divides the remaining budget by a performance index" wants to know which indices and which formulas. The pillar page and the budgeting page were dropped: all three proposals were hub pages and one link per domain is the limit. Nothing in this piece raises a question the other four domains answer, so a second link would have been decoration. Reciprocal: none warranted.*

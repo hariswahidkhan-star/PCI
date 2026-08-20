@@ -48,7 +48,7 @@ Whoever signs the figure was accountable for it before the model existed and rem
 
 ## The provenance manifest
 
-Six items, written next to the generated text at generation time. Each is cheap to capture and painful to reconstruct eight months later when a figure is challenged.
+Six items, written next to the generated text at generation time. Each is cheap to capture and painful to reconstruct eight months later when a figure is challenged. The cut-off itself comes from [the close timetable the project runs to](https://projectcontrolsinstitute.org/month-end-close-for-projects), not from whenever the pack was assembled.
 
 ```json
 {
@@ -120,7 +120,9 @@ That arithmetic belongs in the pack a model helps you draft, and it is the part 
 
 ## What must never be generated
 
-**The numbers**, computed where the ledger, cost tool or schedule lives and then supplied. **The cause of a variance**, which is a finding from a review rather than an inference from a trend.
+**The numbers**, computed where the ledger, cost tool or schedule lives and then supplied. A model can still be pointed at a schedule export to [find structural defects a planner then verifies in the tool](https://pciai.org/llm-schedule-review), which is a search task rather than a sourcing one.
+
+**The cause of a variance**, which is a finding from a review rather than an inference from a trend.
 
 **Quotations**, because no output should be attributed to somebody who did not say it. **Contract interpretation**, because what an entitlement clause means is a commercial question with money attached.
 
@@ -155,4 +157,4 @@ Make the cause a required field and fail generation when it is empty. Generic co
 
 *First published on pciai.org; the `canonical_url` on this post points there. DEV prohibits stub posts, so the full method including the manifest is here.*
 
-*Internal links: this how-to should link to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how the five-step model applies to a construction contract", to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with the anchor "the cut-off that fixes these inputs", and to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar it supports".*
+*Linking note — the links now in the body: "the close timetable the project runs to" points at projectcontrolsinstitute.org/month-end-close-for-projects from the provenance manifest section, because fixing inputs at a cut-off raises what sets that cut-off; "find structural defects a planner then verifies in the tool" points at pciai.org/llm-schedule-review from the list of what must never be generated, because saying the schedule owns its own numbers raises what a model may legitimately do with a schedule export. Two links, one per domain — the IFRS 15 passage here is written in PCI's own words and stands without one. Reciprocal: the month-end close guide could point at this piece where it reaches the commentary drafted after the cut-off.*

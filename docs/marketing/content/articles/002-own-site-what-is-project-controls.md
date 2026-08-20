@@ -2,7 +2,7 @@
 platform:      Own site — projectcontrolsinstitute.org
 type:          pillar
 title:         What is project controls, and who actually does it?
-meta:          Project controls explained by a practitioner: the functions, the monthly cycle, the arithmetic behind a forecast, and how it differs from project management.
+meta:          What is project controls? The functions, the monthly cycle, the arithmetic behind a defended forecast, and how it differs from project management.
 primary_kw:    what is project controls
 secondary_kw:  project controls functions, project controls team, cost and schedule integration
 pillar:        Project controls fundamentals
@@ -17,9 +17,9 @@ ab_id:         AB-00027
 
 # What is project controls, and who actually does it?
 
-Project controls is the discipline that measures where a project has got to, what it has cost, and what it will cost if nothing changes. It covers planning, scheduling, estimating, cost control, earned value, risk and reporting. Its job is to produce numbers a decision can be taken on, and to say honestly when they cannot be trusted.
+Project controls is the discipline that measures where a project has got to, what it has cost, and what it will cost if nothing changes. The short answer to *what is project controls* is this: the measurement and forecasting function of a project, run independently of the people whose performance it measures.
 
-So the short answer to *what is project controls* is: the measurement and forecasting function of a project, run independently of the people whose performance it measures.
+It covers planning, scheduling, estimating, cost control, earned value, risk and reporting. Its job is to produce numbers a decision can be taken on, and to say honestly when they cannot be trusted.
 
 ## What is project controls responsible for, function by function
 

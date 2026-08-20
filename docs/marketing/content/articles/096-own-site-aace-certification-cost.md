@@ -39,7 +39,7 @@ Four of those five are invisible at the checkout. The fifth, recertification, is
 
 AACE International publishes fees for each of its certifications on its own certification pages, split by member and non-member. That is the only source worth using, and it takes about ten minutes to read.
 
-The credentials sit at different levels and are priced accordingly. CCP for cost professionals, CEP for estimating, PSP for planning and scheduling, EVP for earned value, DRMP for decision and risk, CCT at technician level, and CFCC for forensic claims work.
+The credentials sit at different levels and are priced accordingly. CCP for cost professionals, CEP for estimating, PSP for planning and scheduling, EVP for earned value, DRMP for decision and risk, CCT at technician level, and CFCC for forensic claims work. Level is what sets the price, so check [the PSP's eligibility gate and assessment format](https://credentialfinder.org/aace-psp-certification-guide) before comparing its fee with a single-paper credential.
 
 Two structural points survive any fee revision. Membership almost always pays for itself if you sit one examination in the year, and multi-part credentials cost more than the headline sitting fee suggests.
 
@@ -92,7 +92,9 @@ Now forecast the outturn. Four accepted methods, four different assumptions abou
 
 Four defensible numbers from one dataset, spanning **£3.13m**. The gap between the cheapest and dearest credential on your shortlist is a few hundred dollars. The gap between two forecasting assumptions on one package is three million pounds.
 
-Then the part a cost examination stops short of. Revenue on a contract like this is recognised as the performance obligation is satisfied, and where progress is measured by costs incurred against total expected costs, your EAC is the denominator. Move the EAC from £25.40m to £28.53m and you move reported progress, reported revenue and reported margin in the same keystroke — and if forecast cost passes the contract price, the expected loss is recognised in full as soon as it is known rather than spread across the remaining months.
+Then the part a cost examination stops short of. Revenue on a contract like this is recognised as the performance obligation is satisfied, and where progress is measured by costs incurred against total expected costs, your EAC is the denominator.
+
+Move the EAC from £25.40m to £28.53m and you move reported progress, reported revenue and reported margin in the same keystroke, which is [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) step by step — and if forecast cost passes the contract price, the expected loss is recognised in full as soon as it is known rather than spread across the remaining months.
 
 A chartered accountant is examined on recognition and provisions, almost never on an earning rule. An engineer is examined on progress measurement, almost never on cut-off. The number above sits between them, which is why PCI examines both sides in one syllabus rather than treating the join as somebody else's subject.
 
@@ -110,7 +112,7 @@ Stated plainly: PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17
 Usually yes, on arithmetic alone. Bodies price examinations lower for members, and the saving on a single sitting often covers most of a year's membership. Do the subtraction for your own case: member fee plus membership against non-member fee. If the difference is close, join for the recommended practices rather than the discount.
 
 **How much does recertification cost over a career?**
-More than the examination, given enough years. A credential renewed every three years for fifteen years is five renewal payments plus the continuing education behind them. Price a credential on its cycle cost multiplied by the years you expect to hold it, not on the sitting fee.
+More than the examination, given enough years. A credential renewed every three years for fifteen years is five renewal payments plus the continuing education behind them. Price a credential on its cycle cost multiplied by the years you expect to hold it, not on the sitting fee, then ask [whether the CCP earns back that ten-year total](https://credentialfinder.org/ccp-certification-worth-it).
 
 **Are training courses included in the certification fee?**
 No, and treat any provider that bundles them with suspicion. If the organisation taking your training fee also decides whether you passed, you bought a course rather than a certification. Preparation and the certification decision should sit with different parties.
@@ -119,8 +121,8 @@ No, and treat any provider that bundles them with suspicion. If the organisation
 It is gone, and a retake is charged separately, usually with a waiting period attached. Read the retake policy before you book, because the waiting period is often the more expensive half. Ask any body, including this one, what its retake fee and waiting period are before paying.
 
 **Is a cheaper certification a worse one?**
-Not reliably. Fee levels reflect an organisation's cost base and age more than examination quality. Judge on what is examined, who decides the pass mark and how it was set, then use price to separate two credentials that are genuinely equivalent on those tests.
+Not reliably. Fee levels reflect an organisation's cost base and age more than examination quality. Judge on what is examined — [what the CCP paper asks that the PMP does not](https://credentialfinder.org/aace-ccp-vs-pmp) is the clearest illustration — then on who decides the pass mark and how it was set, and use price only to separate two credentials that are genuinely equivalent on those tests.
 
 ---
 
-*Internal links: this page should link to [what a project controls certification actually costs](https://projectcontrolsinstitute.org/project-controls-certification-cost) with that anchor, to [the four EAC formulas worked through](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "the four EAC methods", to [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting) with that anchor, and to [best project controls certification](https://credentialfinder.org/best-project-controls-certification) with that anchor; the CCP and PSP pages should link back here with the anchor "what AACE certification costs".*
+*Linking note: one cross-estate link is in the body, to the hub's account of [how a forecast becomes reported profit](https://projectcontrolsinstitute.org/eac-accounting), placed at the sentence where moving the EAC moves reported revenue and margin — the point at which a cost reader asks what the accounting actually does. Three same-domain links sit where the question is raised: the PSP guide beside the note that AACE credentials sit at different levels, the CCP return-on-fee page in the FAQ on lifetime recertification cost, and the CCP versus PMP comparison in the FAQ that says to judge on what is examined. The earlier note proposed three hub links; the certification cost page and the EAC formulas page were dropped as surplus to the one-per-domain rule, and the best-certification comparison was dropped because this piece already routes the same reader to two closer siblings. Reciprocal link worth making: the CCP and PSP pages can each point back here once, with anchors naming this page as the fee and renewal arithmetic.*

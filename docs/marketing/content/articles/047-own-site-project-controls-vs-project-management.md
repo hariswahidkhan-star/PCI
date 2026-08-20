@@ -39,13 +39,13 @@ The row that matters most is the last-but-one. The two roles fail in opposite di
 
 Project controls produces six things every month: an updated schedule, a progress measurement, a cost report, a forecast at completion, a risk and contingency position, and a variance narrative that explains what moved.
 
-Each of those is a measurement with a method behind it. Progress is measured against rules of credit agreed at the start, not by asking a foreman for a percentage.
+Each of those is a measurement with a method behind it, and those methods are most of [what the discipline of project controls covers](https://projectcontrolsinstitute.org/what-is-project-controls). Progress is measured against rules of credit agreed at the start, not by asking a foreman for a percentage.
 
 Project management consumes all six and turns them into decisions: accelerate, re-sequence, raise a change, escalate, or accept and revise the commitment.
 
 ## Where the split gets tested: one month-end, in numbers
 
-A £12,000,000 package, month nine. Controls reports the position; management decides what to do about it.
+A £12,000,000 package, month nine. Controls reports the position; management decides what to do about it. The figures below come out of [the standard earned value method](https://projectcontrolsinstitute.org/earned-value-management).
 
 Planned value is £4,200,000 — the budgeted cost of the work the baseline said would be complete by now. Earned value is £3,780,000 — the budgeted cost of the work actually complete, measured against the rules of credit. Actual cost is £4,300,000.
 
@@ -87,7 +87,7 @@ What does not work is folding controls into management and keeping no method. Th
 
 ## Which career is which?
 
-Project management routes run through delivery: package management, contract administration, then a project manager role. Project controls routes run through a specialism: planner, cost engineer, estimator or risk analyst, then a controls lead who covers all four.
+Project management routes run through delivery: package management, contract administration, then a project manager role. Project controls routes run through a specialism: planner, cost engineer, estimator or risk analyst, then a controls lead who covers all four. Each of those specialisms has its own [certification routes in project controls](https://projectcontrolsinstitute.org/project-controls-certification), and they diverge earlier than the job titles suggest.
 
 The two converge at the top. A project controls manager on a large capital programme and a project manager on the same programme are doing recognisably similar governance work with different centres of gravity.
 
@@ -128,4 +128,4 @@ Sustain a method under pressure. Any competent manager can build a schedule and 
 
 ---
 
-*Internal links: this comparison should link up to [what project controls is](https://projectcontrolsinstitute.org/what-is-project-controls) with that anchor, to the [earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "earned value management", and to [project controls certification](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "certification routes in project controls"; the [how to become a project controls manager](https://projectcontrolsinstitute.org/how-to-become-a-project-controls-manager) piece should link here with the anchor "project controls vs project management".*
+*Internal links now in the body, all on this domain: [what the discipline of project controls covers](https://projectcontrolsinstitute.org/what-is-project-controls) sits beside the six monthly outputs, where a reader asks what the function is as a whole; [the standard earned value method](https://projectcontrolsinstitute.org/earned-value-management) opens the month-end example, because the PV, EV and AC arithmetic that follows has to come from somewhere; and [certification routes in project controls](https://projectcontrolsinstitute.org/project-controls-certification) sits in the careers section, where the specialisms are named. Three same-domain links is the limit, so nothing further was added. Reciprocal worth making: the [how to become a project controls manager](https://projectcontrolsinstitute.org/how-to-become-a-project-controls-manager) piece should link back with the anchor "where controls stops and management starts".*

@@ -61,7 +61,7 @@ Here is the gap made concrete. A PMO receives a monthly return: the package is 6
 
 Read as earned value, that looks good. Earned value is 0.62 × 8,000,000 = £4,960,000. Cost performance index is EV ÷ AC = 4,960,000 ÷ 4,300,000 = **1.153**. Estimate at completion is BAC ÷ CPI = 8,000,000 ÷ 1.153 = **£6.94m**, an underrun of about £1.06m. The dashboard turns green.
 
-Now ask where the 62 per cent came from. If it is a package manager's judgement rather than rules of credit applied to measurable quantities, it can be wrong by a lot. Measured properly — steel erected against tonnes planned, cable pulled against metres planned — the same package earns 48 per cent.
+Now ask where the 62 per cent came from, which is a question about [how earned value is actually measured](https://projectcontrolsinstitute.org/earned-value-management). If it is a package manager's judgement rather than rules of credit applied to measurable quantities, it can be wrong by a lot. Measured properly — steel erected against tonnes planned, cable pulled against metres planned — the same package earns 48 per cent.
 
 Earned value becomes 0.48 × 8,000,000 = £3,840,000. CPI is 3,840,000 ÷ 4,300,000 = **0.893**. EAC is 8,000,000 ÷ 0.893 = **£8.96m**, an overrun of about £0.96m.
 
@@ -78,13 +78,13 @@ A PMO that cannot ask where the percentage came from will report the first numbe
 | Cannot tell you | Whether a reported forecast is credible | Whether the portfolio should have funded this at all | How progress was measured | — |
 | Suits | PMO leads, portfolio analysts, assurance roles | Planners, cost engineers, controls leads | Finance business partners on capital work | Delivery leaders accountable for the reported position |
 
-The pattern in that table is the point. Each of the first three is a competent answer to part of the problem, and each assumes somebody else has covered the rest.
+The pattern in that table is the point. Each of the first three is a competent answer to part of the problem, and each assumes somebody else has covered the rest. The second column is [what a project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification), and it is the column most PMO holders assume they already have.
 
 ## Does a PMO certification make you a project controls professional?
 
 No, and treating it as one is a common and expensive career mistake.
 
-The two disciplines share vocabulary and diverge on method. A PMO lead can define cost performance index and explain its use in reporting. Producing a defensible one requires knowing how the earned value was measured, whether accruals are in the actual cost, whether the cut-off is clean, and what the commitment position is.
+The two disciplines share vocabulary and diverge on method. A PMO lead can define cost performance index and explain its use in reporting. Producing a defensible one requires knowing how the earned value was measured, whether accruals are in the actual cost, whether the cut-off is clean, and what the commitment position is. Using a number against producing one is the same divide that separates [project controls from project management](https://projectcontrolsinstitute.org/project-controls-vs-project-management).
 
 The reverse also holds. A strong cost engineer is not automatically ready to run a PMO, because portfolio prioritisation, stakeholder governance and methodology design are genuine skills that the technical route never teaches.
 
@@ -129,4 +129,4 @@ No. They examine different material, and the gap is technical rather than presen
 
 ---
 
-*Internal links: this guide should link to [project controls certification](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "project controls certification", to [project controls vs project management](https://projectcontrolsinstitute.org/project-controls-vs-project-management) with that anchor, and to the [earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "how earned value is actually measured"; the [certified project controls professional](https://projectcontrolsinstitute.org/certified-project-controls-professional) guide should link here with the anchor "PMO certification and where it stops".*
+*Internal links now in the body, all on this domain: [how earned value is actually measured](https://projectcontrolsinstitute.org/earned-value-management) sits at the point the £2m example turns on where the 62 per cent came from; [what a project controls certification examines](https://projectcontrolsinstitute.org/project-controls-certification) sits under the comparison table, naming the second column; and [project controls from project management](https://projectcontrolsinstitute.org/project-controls-vs-project-management) sits where using a number is separated from producing one. Anchors were varied from the note so that no two pieces pointing at these pages read the same. Three same-domain links is the limit, so nothing further was added. Reciprocal worth making: the [certified project controls professional](https://projectcontrolsinstitute.org/certified-project-controls-professional) guide should link back with the anchor "PMO certification and where it stops".*

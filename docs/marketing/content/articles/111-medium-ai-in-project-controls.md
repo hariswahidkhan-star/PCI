@@ -85,7 +85,7 @@ The arithmetic, so it can be checked. Method one is 50 + 78 = £128.0m. Method t
 
 Method three uses CPI × SPI = 0.84 × 0.875 = 0.735, so 50 + (78 ÷ 0.735) = 50 + 106.1 = £156.1m. Method four re-prices the remaining scope at £86m, giving 50 + 86 = £136.0m.
 
-That is a spread of **£28.1m on identical inputs**. A model produces all four in milliseconds and can tell you which one has been closest across your last thirty projects. It cannot tell you whether the flood that caused this overrun is over.
+That is a spread of **£28.1m on identical inputs**. A model produces all four in milliseconds and can tell you which one has been closest across your last thirty projects. It cannot tell you whether the flood that caused this overrun is over, which is why [how to choose and defend an EAC method](https://projectcontrolsinstitute.org/four-eac-formulas) stays a human judgement.
 
 One further number frames the conversation. The to-complete performance index needed to land on the original budget is (BAC − EV) ÷ (BAC − AC) = 78 ÷ 70 = **1.114**.
 
@@ -135,7 +135,7 @@ Assurance moves upstream. When outputs are produced in minutes, the control has 
 
 ## How PCI examines this
 
-PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination.
+PCI certifies three AI-era credentials, each with its own Body of Knowledge and examination, and [what an AI-era controls credential has to examine](https://pciai.org/ai-project-controls-certification) is a fair question to put to any of them.
 
 | Credential | Full name | Shape | Centre of gravity |
 |---|---|---|---|
@@ -173,4 +173,4 @@ With the checks that are deterministic and cheap to verify: schedule structural 
 
 *First published on pciai.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this piece should link to [AI project controls certification](https://pciai.org/ai-project-controls-certification) with the anchor "what an AI project controls credential should examine", to [AI for construction scheduling](https://pciai.org/ai-for-construction-scheduling) with the anchor "AI applied to a live schedule", and to [the four EAC formulas](https://projectcontrolsinstitute.org/eac-formulas) with the anchor "how to choose and defend an EAC method".*
+*Internal links, as placed in the body. The forecast section links to [how to choose and defend an EAC method](https://projectcontrolsinstitute.org/four-eac-formulas), because the £28.1m spread on identical inputs asks how anyone picks one; the certification section links to [what an AI-era controls credential has to examine](https://pciai.org/ai-project-controls-certification), because naming three credentials raises what an examination of this subject should contain. Two links, two domains, one each. The AI for construction scheduling target was dropped: it would have been a second link to the same domain. The proposed `/eac-formulas` slug does not exist and was corrected to `/four-eac-formulas`. Reciprocal: the scheduling guide on this domain should point back here for the pillar treatment of governed AI.*

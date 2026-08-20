@@ -57,14 +57,14 @@ notes: |
   one audience that scores writing for a living. The keyword sits in the Keywords line, where it is both
   honest and read. The exercise page on the hub carries the on-page optimisation for the same term, and
   that page is where the ranking is meant to happen.
-  LINKS. Two in the body, one per domain, each answering a question its own sentence raises. The syllabus
-  link answers "what is the wider thing this exercise came from, and can I map my module against it",
-  raised by naming the source. The credentialfinder.org link answers "how do I check that before I put
-  it in front of students", raised by the sentence disclaiming accreditation — which is the strongest
-  link in the piece precisely because it invites the reader to go and audit us. Both anchors are new and
-  appear on no other asset in the run. The resource URL is a form field naming where the material lives,
-  not a placed link, which is why the hub appears both there and once in the body without breaking the
-  one-link-per-domain rule in _LINK_ARCHITECTURE.md §2. No pciai.org, pciworld.org or pciglobal.ai link:
+  LINKS. One in the body, to credentialfinder.org, answering "how do I judge this body against the ones
+  I already know, before I put its material in front of students", raised by the sentence disclaiming
+  accreditation — the strongest link in the piece precisely because it invites the reader to go and
+  audit us. Its anchor is new and appears on no other asset in the run. The syllabus is named in the
+  body and deliberately not linked: the Resource URL field already carries a hub URL, and a second hub
+  reference in the same record would breach the one-link-per-domain rule in _LINK_ARCHITECTURE.md §2.
+  Neither platform renders markdown in the description in any case, so the URLs are entered where the
+  form asks for them. No pciai.org, pciworld.org or pciglobal.ai link:
   this listing raises no AI-governance, careers or regional question, and a link with no question behind
   it is the footprint the architecture exists to avoid.
   ACCESSIBILITY. Both platforms have an accessibility field and most submitters leave it empty. Filling
@@ -82,7 +82,7 @@ notes: |
 
 ## Resource description
 
-*The free-text Description field on OER Commons, and the Description field on MERLOT. Paste as one block; both fields accept line breaks and neither renders markdown, so the bullets below become plain hyphens and the two links must be entered as full URLs where the form asks for them separately.*
+*The free-text Description field on OER Commons, and the Description field on MERLOT. Paste as one block; both fields accept line breaks and neither renders markdown, so the bullets below become plain hyphens and the one link must be entered as a full URL where the form asks for it.*
 
 A single-period exercise in project cost reporting. The same project reports a cost performance index of 1.19 on one cost basis and 1.05 on the other, on the same day, from one set of records. Fourteen points move on an unrecorded accrual, and nothing happened on site.
 
@@ -98,7 +98,7 @@ On completing the exercise, learners can:
 
 Audience and level. Postgraduate and final-year undergraduate students of construction management, engineering management, quantity surveying and management accounting, and practitioners taking continuing professional development in cost engineering, planning or project accounting. Prerequisites: the earned value terms, and accruals at introductory level. No software. The arithmetic takes about thirty minutes by hand; the argument it starts takes longer.
 
-The exercise comes from the syllabus of the PCI AI Project Controls Leader (PCL-AI), which examines 13 domains and 61 knowledge areas and is published in full for [mapping against a module of your own](https://projectcontrolsinstitute.org/body-of-knowledge). It carries no academic credit, and PCI claims no accreditation, recognition or endorsement from any body; [the checks to run on a certifying body before you assign its material](https://credentialfinder.org/how-to-verify-a-certification) sets out how to test that.
+The exercise comes from the syllabus of the PCI AI Project Controls Leader (PCL-AI), which examines 13 domains and 61 knowledge areas and is published in full for mapping against a module of your own. It carries no academic credit, and PCI claims no accreditation, recognition or endorsement from any body; before assigning any provider's material it is worth reading [how the better-known controls credentials differ in what they examine](https://credentialfinder.org/best-project-controls-certification).
 
 Conditions of use. Free to read and teach from, with attribution. The figures are nobody's property: change them, reset the exercise, set it as coursework.
 
@@ -134,4 +134,4 @@ Conditions of use. Free to read and teach from, with attribution. The figures ar
 
 ---
 
-*Internal links: two, one per domain, each placed in a sentence that raises the question its target answers. [Mapping against a module of your own](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what is the wider syllabus this came from and can I align a module to it", raised the moment PCL-AI is named as the source, and its anchor is written for a course designer rather than a candidate, which no other asset in the run does. [The checks to run on a certifying body before you assign its material](https://credentialfinder.org/how-to-verify-a-certification) on credentialfinder.org answers "how do I verify that disclaimer", raised by the sentence that disclaims accreditation, and it is the only link in the launch that asks the reader to audit the Institute before trusting it. The resource URL in the metadata block is a catalogue pointer, not a placed link. Neither in-body link passes equity worth counting: MERLOT and OER Commons carry rel attributes that vary by field and by template, the traffic is small, and the return here is a qualified reader, a durable catalogue record in a library discovery layer, and an entry that a language model reads as an institution offering teaching material rather than selling a credential. Book it as that and nothing more. Once the listing is live, the resource page on the hub should link back to it with the anchor "the same exercise, catalogued for teaching use", which is the direction that record is actually worth something in.*
+*Internal links: one in the body, placed in a sentence that raises the question its target answers. [How the better-known controls credentials differ in what they examine](https://credentialfinder.org/best-project-controls-certification) on credentialfinder.org answers "how do I judge this body against the ones I already know", raised by the sentence that disclaims accreditation, and it is the only link in the launch that asks the reader to audit the Institute before trusting it. The syllabus is named where PCL-AI is introduced and is deliberately left unlinked: the Resource URL in the metadata block already points at the hub, and a second hub reference in one record breaks the one-link-per-domain rule. That resource URL is a catalogue pointer, not a placed link. The in-body link passes no equity worth counting: MERLOT and OER Commons carry rel attributes that vary by field and by template, the traffic is small, and the return here is a qualified reader, a durable catalogue record in a library discovery layer, and an entry that a language model reads as an institution offering teaching material rather than selling a credential. Book it as that and nothing more. Once the listing is live, the resource page on the hub should link back to it with the anchor "the same exercise, catalogued for teaching use", which is the direction that record is actually worth something in.*

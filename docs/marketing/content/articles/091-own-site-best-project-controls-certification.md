@@ -55,7 +55,7 @@ Schedule variance = EV − PV = 6.60 − 7.20 = **−£0.60m**.
 Cost performance index = EV ÷ AC = 6.60 ÷ 7.40 = **0.892**.
 Schedule performance index = EV ÷ PV = 6.60 ÷ 7.20 = **0.917**.
 
-Now forecast the outturn. Four accepted methods, each assuming something different about the rest of the job.
+Now forecast the outturn using [the four accepted EAC methods](https://projectcontrolsinstitute.org/four-eac-formulas), each assuming something different about the rest of the job.
 
 | EAC method | Arithmetic | Result | What it assumes |
 |---|---|---|---|
@@ -84,7 +84,7 @@ Same site, same month, same field data. One assumption chosen by a planner decid
 | Sign a forecast that a finance function then books | PCI's PFL-AI or PCL-AI | A young body with no accreditation; judge the published syllabus |
 | Prove chartered professional standing | ICE, RICS or equivalent | Slow, and not a project controls examination |
 
-Pick the row that matches your next eighteen months, not the row with the most familiar acronym.
+Pick the row that matches your next eighteen months, not the row with the most familiar acronym. Anyone sitting in the first row can compare [what each scheduling credential examines](https://credentialfinder.org/best-certification-for-planning-engineers) before paying a fee.
 
 ## What it costs, over ten years rather than at the checkout
 
@@ -94,7 +94,7 @@ PCI publishes its fees. The PCL-AI examination is listed at **USD 500** with a c
 
 A candidate who passes first time and stays a member pays 49.50 + 350 = **USD 399.50** in year one, then 99 at each renewal. Over ten years that is 399.50 + (3 × 99) = **USD 696.50**.
 
-For AACE and PMI, gather the same five lines from their own fee pages on the day you decide, because member and non-member pricing differ and published figures go stale within a year. Then add the hours: eighty hours of preparation valued at even USD 40 an hour is USD 3,200 of your own time, which dwarfs every fee here.
+For AACE and PMI, gather the same five lines from their own fee pages on the day you decide, because member and non-member pricing differ and published figures go stale within a year. The five lines for the AACE credentials, and what they come to once renewals are counted, are set out in [the AACE fee and renewal breakdown](https://credentialfinder.org/aace-certification-cost). Then add the hours: eighty hours of preparation valued at even USD 40 an hour is USD 3,200 of your own time, which dwarfs every fee here.
 
 ## Where PCI fits, and what it does not claim
 
@@ -113,7 +113,7 @@ Stated plainly: PCI is not accredited by ANAB, UKAS, IAS or any other ISO/IEC 17
 ## Frequently asked questions
 
 **Which project controls certification do employers ask for most?**
-It depends on the market. Gulf and international EPC work commonly names AACE credentials; organisations built around PMI's methods name PMP or PMI-SP; UK infrastructure often asks for chartered status alongside a controls credential. Read six live job advertisements for the role you want and count the acronyms. That is a better signal than any ranking page.
+It depends on the market. Gulf and international EPC work commonly names AACE credentials; organisations built around PMI's methods name PMP or PMI-SP; UK infrastructure often asks for chartered status alongside a controls credential. Where an advertisement names both, [the difference between what CCP and PMP examine](https://credentialfinder.org/aace-ccp-vs-pmp) decides which one answers the job description. Read six live job advertisements for the role you want and count the acronyms. That is a better signal than any ranking page.
 
 **Is a certification worth it without experience?**
 Usually not yet. Every credible body sets an experience gate for a reason: the examinations ask what you would do in a realistic situation, not what a term means. Spend the first years getting reps, read the published Bodies of Knowledge free, and sit when the scenarios read like your own month-end.
@@ -126,4 +126,4 @@ No body worth holding a credential from will promise that. What certification do
 
 ---
 
-*Internal links: this comparison should link to [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification) with that anchor, to [the four EAC formulas worked through](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "the four EAC methods", to [how EAC reaches the financial statements](https://projectcontrolsinstitute.org/eac-accounting) with the anchor "what the forecast does to the accounts", and to [best certification for planning engineers](https://credentialfinder.org/best-certification-for-planning-engineers) with that anchor; the certification cost and CCP comparison pages should link back here with the anchor "best project controls certification".*
+*Linking note: the body now carries one cross-estate link, to the hub's [four accepted EAC methods](https://projectcontrolsinstitute.org/four-eac-formulas), placed where the piece introduces four defensible forecasts from one dataset and the reader needs the arithmetic behind each. Three same-domain links sit in the sections that raise them: the scheduling comparison after the shortlist table, the AACE fee breakdown in the cost section, and the CCP/PMP comparison in the FAQ on what employers ask for. The earlier note proposed three separate links to the hub; that breaches the one-link-per-domain rule, so the certification pillar and the EAC accounting page were dropped rather than retargeted. Reciprocal link worth making: the AACE cost page and the CCP/PMP comparison can each point back here once, with distinct anchors describing this page as the cross-family comparison.*

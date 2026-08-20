@@ -91,7 +91,7 @@ Three, and each of them gets harder rather than easier as the tools improve.
 
 **Translation between the cost report and the accounts.** [Estimate at completion](https://projectcontrolsinstitute.org/eac-accounting) is a project number until the moment it drives a margin, an accrual or an onerous contract provision, at which point it is an accounting input with an audit trail attached.
 
-That last one is the whole design of the [PCI AI Project Finance Leader (PFL-AI)](https://projectcontrolsinstitute.org/finance-and-project-management-certification) credential, which examines the finance side across 16 domains and 61 knowledge areas.
+That last one is the whole design of the PCI AI Project Finance Leader (PFL-AI) credential, which examines the finance side across 16 domains and 61 knowledge areas.
 
 ## What should a cost engineer be able to demonstrate now?
 
@@ -124,4 +124,4 @@ It changes what they are buying. Producing the pack was the deliverable for a lo
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [AI in project controls](https://pciai.org/ai-in-project-controls) as the pillar it supports, to [AI for cost estimating in construction](https://pciai.org/ai-for-cost-estimating-in-construction) with that anchor, and to [how estimate at completion flows into the accounts](https://projectcontrolsinstitute.org/eac-accounting) with that anchor.*
+*Internal links: two links are in the body, on two different domains. "AI in project controls" points to https://pciai.org/ai-in-project-controls, the pillar this piece sits under. "Estimate at completion" points to https://projectcontrolsinstitute.org/eac-accounting, in the sentence that says a project number becomes an accounting input the moment it drives a margin or a provision. The PFL-AI mention that followed is left unlinked, because a second link to the hub in the same piece adds nothing the first does not already carry. Reciprocal: https://pciai.org/ai-for-cost-estimating-in-construction could cite this piece for the double-counted accrual and the £0.55m forecast swing it produced.*

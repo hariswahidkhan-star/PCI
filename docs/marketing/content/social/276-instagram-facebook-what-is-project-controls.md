@@ -51,7 +51,7 @@ Overrun on trend: **£11.25m**, with sixteen months still to run.
 The two numbers came from different places. 55% is money leaving the bank, which nobody disputes. 40% is work verified against a written scale: metres installed, drawings approved, tests passed. Progress you cannot evidence is an opinion with a percentage sign on it.
 
 **Slide 5 — Controls is not project management**
-The project manager decides. Project controls measures, forecasts and tells the truth about the gap. Putting both in one person is common on small jobs and it is also how forecasts start agreeing with whatever the last steering pack said.
+The project manager decides. Project controls measures, forecasts and tells the truth about the gap. Where the line between them actually falls is set out in [the comparison of the two roles](https://projectcontrolsinstitute.org/project-controls-vs-project-management), decision by decision. Putting both in one person is common on small jobs and it is also how forecasts start agreeing with whatever the last steering pack said.
 
 **Slide 6 — The four things it does every month**
 Measure progress against a baseline. Book cost to the same breakdown as that baseline. Forecast the outturn and say which method produced it. Value the change that has been instructed but not yet priced. One cut-off for all four.
@@ -67,10 +67,10 @@ Contingency is not a percentage somebody liked. Run the risks, take a P50 and a 
 An engineer is rarely examined on cut-off. The money is lost in the overlap.
 
 **Slide 10 — Where to start**
-Learn the measurement first, the forecasting second and the reporting last. That order is deliberate. The PCI credentials examine both sides of the overlap, and the Body of Knowledge is weighted 40 finance and reporting, 40 project management, 20 governed AI.
+Learn the measurement first, the forecasting second and the reporting last. That order is deliberate, and it makes more sense once you have read [what the role does in a normal week](https://pciworld.org/what-does-a-project-controls-engineer-do). The PCI credentials examine both sides of the overlap, and the Body of Knowledge is weighted 40 finance and reporting, 40 project management, 20 governed AI.
 
 ---
 
 *Figures are a worked example. PCI publishes certification requirements; nothing here is accounting advice.*
 
-*Internal links (bio link and caption of the follow-up post): [what project controls is](https://projectcontrolsinstitute.org/what-is-project-controls) with that anchor, [project controls versus project management](https://projectcontrolsinstitute.org/project-controls-vs-project-management) with that anchor, and [the earned value management guide](https://projectcontrolsinstitute.org/earned-value-management) with that anchor.*
+*Linking note. Two links, one to each of two domains, each sitting in the slide that raises the question it answers. Slide 5 asks who owns which decision, so it carries the hub's comparison of the two roles. Slide 10 asks where a newcomer starts, so it carries the pciworld.org piece on what the role does in a normal week, because the careers question is that site's territory rather than the hub's. The earlier draft of this note proposed three hub links; three to one domain from a single asset is the pattern _LINK_ARCHITECTURE.md §2 rules out, so the earned value guide was dropped rather than retargeted — it belongs as an internal link on the hub page slide 5 points at. Instagram and Facebook captions carry no live link, so the hub URL is the one that goes in the bio, and the pciworld URL goes in the caption of the follow-up post. No reciprocal is due: an article does not link back to a carousel.*

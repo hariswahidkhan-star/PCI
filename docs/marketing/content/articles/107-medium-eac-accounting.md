@@ -43,7 +43,7 @@ A £5.0m movement in the forecast therefore removed **£2.81m** of previously re
 
 **Position three, EAC moves to £68.0m.** The contract is now expected to lose 64.0 − 68.0 = **£4.0m**. Progress = 26.0 ÷ 68.0 = **38.24%**, cumulative revenue = **£24.47m** against costs of £26.0m, so £1.53m of loss is already recognised through normal measurement.
 
-The full expected loss must be taken as soon as it is expected rather than spread. The provision is 4.00 − 1.53 = **£2.47m**, booked in the period the forecast crossed the line. That step sits under the provisions standard, IAS 37, not the revenue standard, and people get it wrong in interviews and in practice.
+The full expected loss must be taken as soon as it is expected rather than spread. The provision is 4.00 − 1.53 = **£2.47m**, booked in the period the forecast crossed the line. That step sits under the provisions standard, IAS 37, not the revenue standard, and people get it wrong in interviews and in practice. [Which reporting standards a cost forecast feeds](https://projectcontrolsinstitute.org/ifrs-for-project-controls) is worth knowing before the month it matters.
 
 ## Which EAC method survives an audit
 
@@ -132,4 +132,4 @@ Earned value produces the evidence for the estimate and a cost-to-cost measure c
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this piece should link to [IFRS for project controls](https://projectcontrolsinstitute.org/ifrs-for-project-controls) with that anchor, to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, and to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with the anchor "the close that produces these inputs".*
+*Internal links, as placed in the body. The provision arithmetic links to [which reporting standards a cost forecast feeds](https://projectcontrolsinstitute.org/ifrs-for-project-controls), because naming IAS 37 alongside the revenue standard raises which standard governs which half. That is the only estate link here: three were proposed, all to the same domain, and the cap is one. The four EAC formulas and the month-end close are both discussed in the body on their own terms, which is enough without a second and third hub link. Reciprocal: the hub's month-end close guide should point back here, since its forecast lock is the step with the reporting consequence.*

@@ -81,7 +81,7 @@ Take a programme with a budget at completion (BAC) of £48m. At the data date, p
 
 Cost variance is EV − AC = 17 − 19 = **−£2m**. Schedule variance is EV − PV = 17 − 20 = **−£3m**. The indices are CPI = 17 ÷ 19 = **0.89** and SPI = 17 ÷ 20 = **0.85**.
 
-Four estimate at completion methods, four answers, identical inputs.
+Four estimate at completion methods, four answers, identical inputs, and [when each of the four EAC formulas applies](https://projectcontrolsinstitute.org/four-eac-formulas) is the judgement the table cannot make for you.
 
 | EAC method | Formula | What it assumes | Answer |
 |---|---|---|---|
@@ -126,7 +126,7 @@ That is a scoping defect rather than a modelling defect, and it is the most comm
 
 ## What does governed AI require in practice?
 
-Governed AI is the principle PCI certifies against: AI proposes, the professional disposes. A tool may generate the schedule, the forecast or the risk analysis. A competent person validates it, understands how it was produced, and owns the decision that follows.
+Governed AI is the principle PCI certifies against: AI proposes, the professional disposes. A tool may generate the schedule, the forecast or the risk analysis. A competent person validates it, understands how it was produced, and owns the decision that follows. Worked out across cost, schedule, risk and reporting, that principle becomes [governed AI across the controls discipline](https://pciai.org/ai-in-project-controls).
 
 That principle becomes five requirements, none of them difficult.
 
@@ -142,7 +142,7 @@ That principle becomes five requirements, none of them difficult.
 
 ## How does PCI examine this?
 
-PCI certifies three AI-era credentials, each with its own Body of Knowledge and its own examination.
+PCI certifies three AI-era credentials, each with its own Body of Knowledge and its own examination. Telling those apart from the rest of the market is a separate exercise, because [four different things are sold as an AI project management certification](https://pciai.org/ai-project-management-certification) and only one of them is independently assessed.
 
 | Credential | Full name | Shape | Centre of gravity |
 |---|---|---|---|
@@ -159,7 +159,7 @@ PCI is an independent certifying body. Nothing on this page is legal, tax or acc
 ## Frequently asked questions
 
 **Will AI replace project managers?**
-No, but it changes what the job consists of. The collection, reconciliation and drafting compress hard, while choosing methods, defending forecasts and carrying accountability do not compress at all. The individual risk is not redundancy. It is spending a decade becoming excellent at the part that automated.
+No, but it changes what the job consists of. The collection, reconciliation and drafting compress hard, while choosing methods, defending forecasts and carrying accountability do not compress at all. The individual risk is not redundancy. It is spending a decade becoming excellent at the part that automated, and [which parts of the project manager's week survive](https://pciai.org/will-ai-replace-project-managers) is worked through task by task.
 
 **Can I put an AI-generated estimate at completion in a board pack?**
 Only with the method named and the reasoning stated. The model can produce all four methods and rank them against your history, which is genuinely useful. The choice between them is a claim about what caused the variance and whether that cause persists, and that claim is yours.
@@ -178,4 +178,4 @@ Start with one task that is high volume, low judgement and easy to check, such a
 
 ---
 
-*Internal links: this pillar should link to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar", to [AI project management certification](https://pciai.org/ai-project-management-certification) with the anchor "what an AI project management credential should examine", to [whether AI will replace project managers](https://pciai.org/will-ai-replace-project-managers) with the anchor "what happens to the project manager's role", and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with the anchor "how to choose and defend an EAC method".*
+*Internal links: now placed in the body. Same-domain: "governed AI across the controls discipline" sits where the AI-proposes-professional-disposes principle is stated and a reader asks how far it reaches; "four different things are sold as an AI project management certification" opens the credentials section, which raises how PCI's differ from the rest of the market; "which parts of the project manager's week survive" answers the first FAQ, which asks the question directly. One cross-estate link only, to the hub: "when each of the four EAC formulas applies" beside the four-method table, where the £9.8m spread raises the choice. Reciprocal: the AI project management certification comparison and the project manager piece should both point back here for the precision-and-recall worked example.*

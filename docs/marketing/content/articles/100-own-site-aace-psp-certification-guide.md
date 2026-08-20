@@ -17,7 +17,7 @@ ab_id:         —
 
 # AACE PSP certification guide: scope, cost and who it fits
 
-The PSP is AACE International's Planning and Scheduling Professional credential. It examines schedule development, maintenance and control across the project life cycle, including the forensic use of a programme, and it is assessed by written examination with practical exercises rather than recall alone. It suits planners with real site experience and a market that names AACE.
+The PSP is AACE International's Planning and Scheduling Professional credential, and this AACE PSP certification guide sets out what it examines: schedule development, maintenance and control across the project life cycle, including the forensic use of a programme, assessed by written examination with practical exercises rather than recall alone. It suits planners with real site experience and a market that names AACE.
 
 It is not an entry-level certificate, and it is not a software qualification.
 
@@ -42,7 +42,7 @@ The practical exercises are what make PSP different from a multiple-choice crede
 
 ## What it costs
 
-Five lines, and only the first is visible at the checkout: membership, application or eligibility review, the examination sitting, any retake, and recertification each cycle. Member and non-member pricing differ. Read them from AACE's fee page on the day you decide.
+Five lines, and only the first is visible at the checkout: membership, application or eligibility review, the examination sitting, any retake, and recertification each cycle. Member and non-member pricing differ. Read them from AACE's fee page on the day you decide, and see [the five fee lines totalled over a ten-year hold](https://credentialfinder.org/aace-certification-cost) for what they come to once renewals repeat.
 
 For contrast, PCI publishes its own figures in full. The PCL-AI certification examination is listed at **USD 500** with a current 30% discount applied, taking it to **USD 350**; student membership and registration is **USD 99 a year**, discounted 50% to **USD 49.50**; recertification and renewal is **USD 99 per three-year cycle**. Year one is 49.50 + 350 = **USD 399.50**, and ten years is 399.50 + (3 × 99) = **USD 696.50**.
 
@@ -58,6 +58,8 @@ Then the line that dwarfs both. A hundred hours of preparation, valued at USD 40
 | Planner moving into claims and delay work | PSP, then consider forensic specialisation | Forensic use of a programme is already inside the PSP scope |
 | Planner who keeps being asked what the programme does to the forecast | PSP plus a finance-side credential | PSP stops at the schedule; the cost report and the accounts do not |
 | Someone who mainly operates P6 | A tool certificate first, then PSP | Prove the software, then prove the judgement, and never confuse the two |
+
+Two rows often describe the same planner. Where they do, [the PSP and PMI-SP compared paper by paper](https://credentialfinder.org/pmi-sp-vs-aace-psp) settles which one to sit first.
 
 ## Preparation: the calendar and the calculations
 
@@ -75,7 +77,7 @@ Two days, from a calendar file nobody reviewed. Multiply that across a programme
 
 ### Float is not yours until you can say whose it is
 
-Total float is the shared slack along a chain, not an allowance sitting on each activity. Free float is the slack an activity can consume without moving its immediate successor.
+Total float is the shared slack along a chain, not an allowance sitting on each activity, and [what total float actually is, with worked examples](https://projectcontrolsinstitute.org/total-float), is the first thing an examiner probes. Free float is the slack an activity can consume without moving its immediate successor.
 
 The distinction decides money. If a contractor consumes float early and an employer change later needs that float, the argument about who owned it is the whole claim, and PSP-level work is where the evidence for it is built.
 
@@ -117,7 +119,7 @@ Membership is not usually the gate; the experience and education requirements ar
 Substantial, with academic study allowed to substitute for part of it under AACE's published rules. The practical answer is different from the eligibility answer: if you have never defended a programme to a hostile audience, the scenarios will read as abstract and you will lose marks you could have kept by waiting a year.
 
 **Is PSP recognised outside engineering and construction?**
-Less so. It carries most weight in engineering, construction, energy and infrastructure markets, and in Gulf and international EPC work where AACE credentials appear by name in job advertisements. In organisations built on PMI's methods, PMI-SP is the acronym on the requisition.
+Less so. It carries most weight in engineering, construction, energy and infrastructure markets, and in Gulf and international EPC work where AACE credentials appear by name in job advertisements. In organisations built on PMI's methods, PMI-SP is the acronym on the requisition, and [a twelve-week PMI-SP study plan](https://credentialfinder.org/pmi-sp-exam-prep) is the better use of the same hundred hours.
 
 **Does a Primavera P6 certificate cover the same ground?**
 No. A tool certificate proves you can operate software, which is often the entry ticket for a first role. PSP assesses the judgement behind the network, the status and the delay narrative, and no vendor test asks about any of it.
@@ -127,4 +129,4 @@ If your programme feeds a cost report that someone books, yes. PSP proves you ca
 
 ---
 
-*Internal links: this page should link to [what AACE certification costs](https://credentialfinder.org/aace-certification-cost) with that anchor, to [delay analysis techniques compared](https://projectcontrolsinstitute.org/delay-analysis-techniques) with that anchor, to [what total float really means](https://projectcontrolsinstitute.org/total-float) with that anchor, and to [a realistic PMI-SP study plan](https://credentialfinder.org/pmi-sp-exam-prep) with that anchor; the best certification for planning engineers page should link back here with the anchor "the AACE PSP certification guide".*
+*Linking note: one cross-estate link is in the body, to the hub's definition of [total float, with worked examples](https://projectcontrolsinstitute.org/total-float), placed in the section arguing that float ownership decides money — the sentence that makes a reader want the definition nailed down. Three same-domain links sit where the question is raised: the AACE fee total in the cost section, the PSP versus PMI-SP comparison under the fit table where two rows often describe the same planner, and the PMI-SP study plan in the FAQ about PMI-standardised employers. The earlier note also proposed the hub's delay analysis page; that would have been a second link to the same domain, so it was dropped rather than retargeted. Opening reworked so the credential is defined first and the guide names itself in the same sentence. Reciprocal link worth making: the planner shortlist should point back here once, as the detailed PSP page.*

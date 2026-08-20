@@ -116,7 +116,7 @@ Two fields carry most of the value. `activities_examined` lets you catch a model
 
 **Two: redact before you send.** Strip client names, subcontractor rates, personal names and anything commercially restricted. IDs and durations are usually enough for a structural review.
 
-**Three: state your thresholds in the prompt.** Activities over 44 working days, lags over 10 days, any constraint other than start-no-earlier-than. Without your numbers the model applies whatever convention it absorbed.
+**Three: state your thresholds in the prompt.** Activities over 44 working days, lags over 10 days, any constraint other than start-no-earlier-than. Without your numbers the model applies whatever convention it absorbed, which is why [specifying and scoring a prompt](https://pciai.org/prompt-engineering-for-project-professionals) is a skill in its own right.
 
 **Four: constrain the output** to the schema above and validate on receipt.
 
@@ -128,7 +128,7 @@ Two fields carry most of the value. `activities_examined` lets you catch a model
 
 ## Worked example: does it understand the critical path?
 
-Test any model on a network small enough to check by hand. Six activities, durations in working days: A takes 5 and starts the job; B takes 10 and follows A; C takes 4 and also follows A; D takes 8 and follows B; E takes 10 and follows C; F takes 4 and needs both D and E.
+Test any model on a network small enough to check by hand, using [the forward and backward passes exactly as a planner works them](https://projectcontrolsinstitute.org/critical-path-method). Six activities, durations in working days: A takes 5 and starts the job; B takes 10 and follows A; C takes 4 and also follows A; D takes 8 and follows B; E takes 10 and follows C; F takes 4 and needs both D and E.
 
 Forward pass, earliest start and earliest finish:
 
@@ -199,4 +199,4 @@ Score it against a manual audit of the same update. Count flags raised, flags a 
 
 *First published on pciai.org; the `canonical_url` on this post points there. DEV prohibits stub posts that link out to a full article elsewhere, so the complete protocol is here rather than behind a link.*
 
-*Internal links: this how-to should link to [the critical path method](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the forward and backward passes work", to [prompt engineering for project professionals](https://pciai.org/prompt-engineering-for-project-professionals) with the anchor "how to specify and test the prompt this pipeline sends", and to [AI in project controls](https://pciai.org/ai-in-project-controls) with the anchor "the governed-AI controls pillar it supports".*
+*Linking note — the links now in the body: "the forward and backward passes exactly as a planner works them" points at projectcontrolsinstitute.org/critical-path-method from the worked example, because that section asks a model to reproduce arithmetic the reader has to be able to check by hand; "specifying and scoring a prompt" points at pciai.org/prompt-engineering-for-project-professionals from step three, because telling a model your thresholds raises how a prompt gets specified and tested. Two links, one per domain, and the pillar link the earlier note proposed was dropped rather than stacked on the same host. Reciprocal: the prompt engineering how-to could point back here as the schedule-shaped case of the same discipline.*

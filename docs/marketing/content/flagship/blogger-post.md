@@ -77,9 +77,10 @@ notes: |
   target answers. The credentialfinder.org page is one no other flagship asset links to, and it is
   chosen for this audience specifically: a planner part-way through another certification. Blogger's
   own rule in the plan says to link to the original article; the canonical does that at head level,
-  and the closing first-published line names it in text, so no second hub link is added. Two links to
-  one domain in one post is the footprint _LINK_ARCHITECTURE.md §2 exists to prevent, and the rule
-  does not bend because the platform is a small one.
+  and the closing first-published line names the page in words rather than as a URL, so the post
+  carries exactly one hub link. Two links to one domain in one post is the footprint
+  _LINK_ARCHITECTURE.md §2 exists to prevent, and the rule does not bend because the platform is a
+  small one, or because the second one was only a URL sitting in a sign-off line.
   AEO: the title's question is answered in 51 words, every H2 except the sign-off and the questions
   header is one a person would actually type, and four questions close the post answered in 40 to 80
   words each. None of the four repeats the LinkedIn article's FAQ block, which already owns what an
@@ -189,8 +190,8 @@ The number comes from whoever knows what was delivered. The entry is posted by w
 
 ---
 
-*First published at projectcontrolsinstitute.org/earned-value-worked-example, where the same month is worked end to end with every figure shown.*
+*First published as the earned value worked example on projectcontrolsinstitute.org, where the same month is worked end to end with every figure shown.*
 
 ---
 
-*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [Which certifications examine cost and which examine only the schedule](https://credentialfinder.org/best-certification-for-planning-engineers) on credentialfinder.org answers "does the certification I am already studying for cover this?", raised by the examination section, and it is a page no other flagship asset links to. [What AI can and cannot decide in project controls](https://pciai.org/ai-in-project-controls) on pciai.org answers "so who is allowed to let the model produce this number?", raised in the AI section. [The 13 domains and 61 knowledge areas of PCL-AI](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what would examining both sides actually cover?", raised by the ask. No pciworld.org or pciglobal.ai link: this post raises no career and no regional question, and a link with no question behind it is the footprint we are avoiding. The closing first-published line stays unlinked because the canonical already carries that relationship and a second hub link in one post breaks the one-link-per-domain rule. In comments, point anyone asking about the two closing dates at [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) and anyone asking which forecast to use at [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).*
+*Internal links: three, one per domain, each sitting in a sentence that raises the question the target answers. [Which certifications examine cost and which examine only the schedule](https://credentialfinder.org/best-certification-for-planning-engineers) on credentialfinder.org answers "does the certification I am already studying for cover this?", raised by the examination section, and it is a page no other flagship asset links to. [What AI can and cannot decide in project controls](https://pciai.org/ai-in-project-controls) on pciai.org answers "so who is allowed to let the model produce this number?", raised in the AI section. [The 13 domains and 61 knowledge areas of PCL-AI](https://projectcontrolsinstitute.org/body-of-knowledge) on the hub answers "what would examining both sides actually cover?", raised by the ask. No pciworld.org or pciglobal.ai link: this post raises no career and no regional question, and a link with no question behind it is the footprint we are avoiding. The closing first-published line now names the origin page in words instead of printing its URL: the canonical already carries that relationship, and a second hub address in one post breaks the one-link-per-domain rule whether or not it is marked up as a link. In comments, point anyone asking about the two closing dates at [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) and anyone asking which forecast to use at [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas).*

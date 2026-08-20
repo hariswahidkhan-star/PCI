@@ -17,9 +17,9 @@ ab_id:         AB-00042
 
 # Will AI replace planning engineers? A planner's answer
 
-No. AI takes most of the assembly work out of planning — updating, checking, formatting, first-draft commentary — and leaves the two things it cannot do: deciding whether the logic reflects how the work will be built, and standing behind a forecast date when money depends on it. The role shrinks in hours and grows in consequence.
+No. Ask a planner *will AI replace planning engineers* and the answer is that AI takes most of the assembly work out of planning — updating, checking, formatting, first-draft commentary — and leaves the two things it cannot do: deciding whether the logic reflects how the work will be built, and standing behind a forecast date when money depends on it. The role shrinks in hours and grows in consequence.
 
-People who ask will AI replace planning engineers usually mean whether the job exists in ten years. It does. What follows is the detail, including the arithmetic that shows exactly where a model stops being able to help.
+The people asking usually mean whether the job exists in ten years. It does. What follows is the detail, including the arithmetic that shows exactly where a model stops being able to help.
 
 ## Will AI replace planning engineers, or only some of their tasks?
 
@@ -56,7 +56,7 @@ Retained logic gives 10 + 12 = day 22, then 30 days of steel erection and 20 of 
 
 Ten days of forecast completion, decided by a setting. No model can choose correctly, because the right answer depends on whether the remaining pile caps are physically dependent on the remaining piles — a question answered by the drawings and the site, not the file.
 
-A planner who understands that difference is worth more in an AI-heavy environment, not less, because the tool now produces both answers instantly and somebody still has to say which one goes to the client.
+A planner who understands that difference is worth more in an AI-heavy environment, not less, because the tool now produces both answers instantly and somebody still has to say which one goes to the client. [What AI does well and badly on a live programme](https://pciai.org/ai-for-construction-scheduling) is the same split, worked through a network by hand.
 
 ## If scheduling gets faster, do teams get smaller?
 
@@ -70,7 +70,7 @@ The teams that do shrink are the ones whose planning function was largely admini
 
 More than before, because the checking burden has moved. When a person builds a forward and backward pass by hand, errors are slow and visible; when a tool produces it instantly, errors are fast and invisible.
 
-Two examples are worth carrying around. A programme can have more than one critical path, and a summary naming only one has hidden half the exposure. Total float belongs to somebody under most contracts, so the arithmetic tells you there are five days and the contract tells you who may spend them.
+Two examples are worth carrying around. A programme can have more than one critical path, and a summary naming only one has hidden half the exposure. Total float belongs to somebody under most contracts, so the arithmetic tells you there are five days and the contract tells you who may spend them. [Who owns total float under your contract](https://projectcontrolsinstitute.org/total-float) is the second half of that arithmetic, and the half more often got wrong.
 
 The same applies on the cost side. Four estimate-at-completion methods produce four different final costs from identical inputs, and choosing between them is a statement about what caused the variance. A model computes all four; it cannot tell you whether the cause has passed.
 
@@ -120,4 +120,4 @@ Ask of every number: which question does this answer? Physical progress or earne
 
 *First published on pciai.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this piece should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [AI for construction scheduling](https://pciai.org/ai-for-construction-scheduling) with the anchor "AI applied to a live programme, with the arithmetic", and to [total float and who owns it](https://projectcontrolsinstitute.org/total-float) with the anchor "who owns the float under your contract".*
+*Internal links, as placed in the body. The out-of-sequence section links to [what AI does well and badly on a live programme](https://pciai.org/ai-for-construction-scheduling), because a tool producing two forecast dates instantly raises what else it can and cannot be trusted with. The arithmetic section links to [who owns total float under your contract](https://projectcontrolsinstitute.org/total-float), because saying float belongs to somebody raises to whom. Two links, two domains, one each: the AI in project controls pillar was dropped as it would have been a second link to the same domain. Reciprocal: the pillar should point back here for the planner's answer to the replacement question.*

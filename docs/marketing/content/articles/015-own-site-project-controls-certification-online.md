@@ -30,7 +30,7 @@ Four different products are sold under similar wording, and the difference decid
 | Online-proctored certification examination | Applied competence against a published standard | Credential with a verifiable record | You met the standard on the day |
 | Fully online certification pathway | The same, with eligibility, decision and renewal online | Credential, plus a maintenance obligation | You met the standard and keep it current |
 
-Only the bottom two rows are certification. The top two are training, and training is useful — just not the same purchase.
+Only the bottom two rows are certification. The top two are training, and training is useful — just not the same purchase. If you are still deciding which of the two you need, [how the certification routes compare](https://projectcontrolsinstitute.org/project-controls-certification) sets out what each one is evidence of.
 
 The test is simple: ask who decides whether you passed. If the organisation that taught you also awards the outcome, you are buying a course. If an independent body assesses you against a published standard and can revoke the credential, you are buying certification.
 
@@ -58,6 +58,8 @@ Published fees change, so no figure is quoted here. The structure does not chang
 | Rescheduling | The body or the test provider | How late can you move a slot without paying twice? |
 | Recertification | The certifying body | How often, and what CPD evidence is needed? |
 | Your own time | You | How many hours, and where do they come from? |
+
+Preparation is the line most often assumed to be compulsory. It is not: [PCI's official preparation platform](https://projectcontrolsinstitute.org/certuvo) is optional, and the certification decision is made independently of whether you used it.
 
 With PCI, the examination fee opens a 12-month scheduling window from the payment date, and the deadline appears in your confirmation and dashboard. That window is the reason not to pay early: it starts whether or not you have started studying.
 
@@ -103,9 +105,9 @@ PCI is not accredited by ANAB, IAS or any ISO/IEC accreditation body, and does n
 
 The examination is scenario-based multiple choice with a single best answer, and its item counts and pass mark follow a job-task analysis and a modified-Angoff standard-setting study before go-live rather than being set by marketing.
 
-The syllabus is published in three Bodies of Knowledge — PCL-AI over 13 domains and 61 knowledge areas, PFL-AI over 16 and 61, PML-AI over 16 and 63 — each built to the same 40% finance and reporting, 40% project management, 20% governed AI proportions.
+The syllabus is published in three Bodies of Knowledge — PCL-AI over 13 domains and 61 knowledge areas, PFL-AI over 16 and 61, PML-AI over 16 and 63 — each built to the same 40% finance and reporting, 40% project management, 20% governed AI proportions. For the first of those, [what the PCL-AI examination covers](https://projectcontrolsinstitute.org/pcl-ai-certification) is set out domain by domain.
 
-Ask any other online provider for the same three things: the published syllabus, who sets the pass mark and how, and their accreditation position stated plainly. The answers are more informative than the price.
+Ask any other online provider for the same three things: the published syllabus, who sets the pass mark and how, and their accreditation position stated plainly. The answers are more informative than the price, and [a side-by-side comparison of the main credentials](https://credentialfinder.org/best-project-controls-certification) is a quicker way to see how the answers differ.
 
 ## Frequently asked questions
 
@@ -129,4 +131,4 @@ You resit. A criterion-referenced examination has no quota, so a fail means you 
 
 ---
 
-*Internal links: this guide should link to [the project controls certification pillar](https://projectcontrolsinstitute.org/project-controls-certification) with the anchor "how the certification routes compare", to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "what the PCL-AI examination covers", to [Certuvo](https://projectcontrolsinstitute.org/certuvo) with the anchor "PCI's official preparation platform", and to [the Project Controls Institute guide](https://projectcontrolsinstitute.org/project-controls-institute) with the anchor "who awards the credential"; the project controls course online and certification cost pieces link back here with the anchor "the online certification route".*
+*Internal linking note: three same-domain links now sit in the body. "How the certification routes compare" points at the project controls certification pillar, placed under the four-products table where a reader has just learned the categories differ and needs the wider view. "PCI's official preparation platform" points at Certuvo, placed in the cost section where the piece raises whether preparation is a required line or an optional one. "What the PCL-AI examination covers" points at the PCL-AI page, placed where the three Bodies of Knowledge are named and the obvious next question is what the first of them contains. One cross-estate link is carried: "a side-by-side comparison of the main credentials" to credentialfinder.org, placed where the piece tells you to interrogate other providers, because comparison is that domain's territory rather than the hub's. The fourth proposal in the original note, a second hub link on "who awards the credential", was dropped to stay inside the two-to-three internal cap; the certification pillar already answers it. Reciprocal: the project controls course online and certification cost pieces should link back here with the anchor "the fully online certification route".*

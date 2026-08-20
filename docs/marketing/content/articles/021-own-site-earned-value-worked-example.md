@@ -31,7 +31,7 @@ Cut-off drift is the single most common defect in a controls system. Progress me
 
 ## Step one: earn the value, account by account
 
-Earned value is the budgeted cost of work actually complete. It is measured in baseline money, never in what the work turned out to cost.
+Earned value is the budgeted cost of work actually complete. It is measured in baseline money, never in what the work turned out to cost. Readers who want the surrounding method rather than the arithmetic will find it in [what earned value management measures and why](https://projectcontrolsinstitute.org/earned-value-management).
 
 Each control account has an earning rule agreed before the work started. Here is the position at cut-off.
 
@@ -72,7 +72,7 @@ Planned value comes straight off the baseline curve at the same date: PV = **£1
 
 ## Step three: variances and indices
 
-Four calculations, in the order you use them.
+Four calculations, in the order you use them. If you want the units and sign conventions beside you while they run, [every earned value formula in one place](https://projectcontrolsinstitute.org/earned-value-formulas-cheat-sheet) carries them.
 
 **Cost variance.** CV = EV − AC = 1,555.3 − 1,729.0 = **−£173.7k**.
 
@@ -101,7 +101,7 @@ That is the number to put in front of the sponsor. The crew has run at 0.900 for
 
 A spread of £3.77m to £4.27m, half a million pounds wide, from one set of inputs. That range is the method asking which assumption you are prepared to sign.
 
-Here the cause decides it. Circuit terminations are running slower than the rate in the estimate, which is a productivity error and therefore systemic, so the CPI method is the defensible default.
+Here the cause decides it. Circuit terminations are running slower than the rate in the estimate, which is a productivity error and therefore systemic, so the CPI method is the defensible default. [Choosing between the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) works that judgement through case by case.
 
 **Variance at completion.** VAC = BAC − EAC = 3,600 − 4,001.9 = **−£401.9k**. That is what the contingency conversation is actually about, and it should be raised in month five rather than month nine.
 
@@ -164,4 +164,4 @@ Rarely by working harder. The TCPI of 1.093 says the remaining work has to run 2
 
 ---
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the earned value formulas cheat sheet](https://projectcontrolsinstitute.org/earned-value-formulas-cheat-sheet) with the anchor "every earned value formula in one place", and to [the EAC method guide](https://projectcontrolsinstitute.org/eac-formulas) with the anchor "choosing between the four EAC formulas".*
+*Internal linking note: three same-domain links now sit in the body. "What earned value management measures and why" points at the earned value pillar, placed at the definition of earned value in step one, where a reader arriving for the arithmetic may still need the method around it. "Every earned value formula in one place" points at the cheat sheet, placed at the head of the variances and indices step, which is exactly where units and sign conventions get looked up. "Choosing between the four EAC formulas" points at the EAC guide, placed where the piece picks one of the four forecasts and has to justify the choice. The original note pointed that last link at /eac-formulas, which does not exist; the live page is /four-eac-formulas. No cross-estate link is carried: the whole piece is hub territory. Reciprocal: the EAC guide and the cheat sheet should each link back here with an anchor naming this as the worked month-end behind their numbers.*

@@ -19,7 +19,7 @@ ab_id:         AB-00032
 
 An earned value formulas cheat sheet needs four things a printed list usually leaves out: the units each measure is in, the sign convention, what the formula assumes, and one dataset carried through all of them so the numbers agree. This page gives all four, then shows where each formula stops working.
 
-Everything below is built from four inputs: PV, EV, AC and BAC.
+Everything below is built from four inputs: PV, EV, AC and BAC. Where those four come from, and why the method exists at all, is covered in [what earned value management is for](https://projectcontrolsinstitute.org/earned-value-management).
 
 ## The four inputs, defined so they stand alone
 
@@ -36,6 +36,8 @@ Everything below is built from four inputs: PV, EV, AC and BAC.
 One project, carried through every formula on this page. A process plant control system, BAC $8.0m over 24 months, reporting at the end of month nine.
 
 At cut-off: PV = $3.2m, EV = $2.9m, AC = $3.4m.
+
+Those three arrive already built here. A separate piece shows [these formulas applied to a full month-end](https://projectcontrolsinstitute.org/earned-value-worked-example), including how earned value is earned account by account and how actual cost is accrued before any formula runs.
 
 ## What belongs on an earned value formulas cheat sheet
 
@@ -129,8 +131,8 @@ Because it is built from the same value curve as everything else, and value is t
 Yes, and it is a familiar pattern. Under-claimed progress, generous earning rules or actuals that have not caught up will all lift CPI. So will a project that is quietly deferring work rather than doing it, since neither EV nor AC accrues on work nobody has started.
 
 **What is a sensible reporting threshold on these variances?**
-A percentage gate on its own floods you with small accounts and misses large ones, so most mature systems pair a percentage with an absolute value, and add a second higher absolute trigger that fires regardless of percentage. The thresholds belong in the baseline documentation, set once, and not adjusted at month-end to avoid writing a report.
+A percentage gate on its own floods you with small accounts and misses large ones, so most mature systems pair a percentage with an absolute value, and add a second higher absolute trigger that fires regardless of percentage. The thresholds belong in the baseline documentation, set once, and not adjusted at month-end to avoid writing a report, and [when a variance should trigger action](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) sets out the two-gate design in full.
 
 ---
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the full month-end example](https://projectcontrolsinstitute.org/earned-value-worked-example) with the anchor "these formulas applied to a full month-end", and to [the reporting thresholds guide](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with the anchor "when a variance should trigger action".*
+*Internal linking note: three same-domain links now sit in the body. "What earned value management is for" points at the earned value pillar, placed on the sentence that names PV, EV, AC and BAC as the only inputs, because the obvious next question is where those four come from. "These formulas applied to a full month-end" points at the worked example, placed under the worked dataset, where the numbers are handed over already built and a practitioner will ask how they were assembled. "When a variance should trigger action" points at the reporting thresholds guide, placed in the answer that raises percentage and absolute gates without setting them. No cross-estate link is carried: nothing here is answered better off the hub. Reciprocal: the worked example and the reporting thresholds guide should each link back with an anchor describing this page as the formula reference, not as the pillar.*

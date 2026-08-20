@@ -46,7 +46,7 @@ Eight metrics is roughly the practical ceiling for a monthly cycle. Beyond it, t
 
 ## Leading and lagging, and why most packs are all lagging
 
-CPI, SPI and actual cost describe work that has already happened. They are lagging by construction, and by the time they move the money has gone.
+CPI, SPI and actual cost describe work that has already happened. They are lagging by construction, and by the time they move the money has gone. [The measurement system these indices come from](https://projectcontrolsinstitute.org/earned-value-management) explains how each one is built.
 
 Leading indicators describe the conditions that produce next month's CPI. Drawing approvals outstanding, permits not yet granted, materials with no confirmed delivery date, vacancies against the planned resource curve, rework raised as a proportion of work inspected.
 
@@ -70,7 +70,7 @@ Two habits corrupt the measure. Constraints applied to hold a date, which manufa
 
 ## Measuring the measurement: precision, recall and F1
 
-Once an early-warning model sits on top of these metrics, whether it is a rule set or something trained, it becomes a thing that must itself be measured.
+Once an early-warning model sits on top of these metrics, whether it is a rule set or something trained, it becomes a thing that must itself be measured. Whether such a model is worth having at all is a separate question, and [what AI can and cannot be trusted with in project controls](https://pciai.org/ai-in-project-controls) is where it is argued out.
 
 Take a portfolio of 180 control accounts. The model flags accounts it expects to finish more than 5% over budget. At completion we can score it.
 
@@ -111,6 +111,8 @@ The artefact that makes this real is short. For each metric: the trigger value, 
 
 Thresholds are set at baseline and not adjusted at month-end. A threshold moved to avoid writing a report is a governance failure, and it is visible in the audit trail whether or not anyone looks.
 
+Choosing the trigger values themselves is the harder half of that table, and [setting variance thresholds that trigger action](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) works through the percentage and absolute gates.
+
 ## The number that has to reconcile
 
 One discipline separates a performance report that survives scrutiny from one that does not. The cost position on the report has to reconcile to the ledger, every period, with the differences named.
@@ -138,4 +140,4 @@ The metrics do not change. What changes is that you now have a second thing to m
 
 ---
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the reporting thresholds guide](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with the anchor "setting variance thresholds that trigger action", and to [the PCL-AI Body of Knowledge](https://projectcontrolsinstitute.org/body-of-knowledge) with the anchor "PCL-AI Body of Knowledge".*
+*Internal linking note: three same-domain links now sit in the body. The Body of Knowledge link was already in place at the reconciliation section, where the finance and delivery overlap is named. Two were added: "the measurement system these indices come from" points at the earned value pillar, placed where CPI, SPI and actual cost are called lagging by construction and a reader may not yet know how they are built; and "setting variance thresholds that trigger action" points at the reporting thresholds guide, placed under the metric-trigger-owner table, which sets trigger values without explaining how to choose them. One cross-estate link is carried: "what AI can and cannot be trusted with in project controls" to pciai.org, placed where an early-warning model first appears, because whether to run one at all is that domain's subject rather than the hub's. Reciprocal: the reporting thresholds guide should link back here with an anchor about turning measurement into decisions.*

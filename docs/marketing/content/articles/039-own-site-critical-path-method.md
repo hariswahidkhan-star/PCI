@@ -17,7 +17,7 @@ ab_id:         AB-00591
 
 # Critical path method definition, with a worked example
 
-The critical path method is a scheduling technique that finds the longest path of dependent activities through a network and uses it to set the earliest possible completion date. Activities on that path have no spare time, so a day lost on any of them is a day lost to the project. Everything else has float.
+The critical path method definition, in one sentence: it is a scheduling technique that finds the longest path of dependent activities through a network and uses that path to set the earliest possible completion date. Activities on that path have no spare time, so a day lost on any of them is a day lost to the project. Everything else has float.
 
 CPM was developed in the late 1950s, by DuPont and Remington Rand for plant maintenance work, at almost the same time as the US Navy's PERT technique. The arithmetic has not changed since.
 
@@ -49,7 +49,7 @@ The project takes **80 working days**.
 
 **Backward pass.** Work right to left from day 80, taking the earliest start where paths split. G must start by 70. F by 52. E by 37. C by 25. D must finish by 37, so it must start by 7. B by 5. A by 0.
 
-**Total float** is late start minus early start, which is the same as late finish minus early finish.
+**Total float** is late start minus early start, which is the same as late finish minus early finish. [How total float is calculated and read](https://projectcontrolsinstitute.org/total-float) covers free float and the near-critical band alongside it.
 
 | Activity | ES | EF | LS | LF | Total float |
 |---|---:|---:|---:|---:|---:|
@@ -101,11 +101,11 @@ CPM is the base layer. The others are checks on it, and none of them replaces it
 
 Four assumptions, each of which fails on a real project in a way worth naming.
 
-Durations are deterministic. They are not, which is why a P80 date from a schedule risk analysis is usually weeks later than the CPM date.
+Durations are deterministic. They are not, which is why a P80 date is usually weeks later than the CPM date, and [testing the CPM date against uncertainty](https://projectcontrolsinstitute.org/schedule-risk-analysis) is a separate exercise with its own inputs.
 
 Resources are unlimited. They are not, and levelling to real crew sizes usually produces a later date and a different driving path.
 
-The logic is complete and correct. On a schedule with open ends and hard constraints, the calculated critical path is arithmetic performed on a wrong network.
+The logic is complete and correct. On a schedule with open ends and hard constraints, the calculated critical path is arithmetic performed on a wrong network, which is what [the eight steps that keep a network honest](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) exist to prevent.
 
 Work happens in the planned sequence. When it does not, the out-of-sequence setting decides the answer, and retained logic and progress override can produce different finish dates from the same update.
 
@@ -144,4 +144,4 @@ On work with physical dependencies it is unavoidable, because concrete cures at 
 
 ---
 
-*Internal links: this piece should link to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "how total float is calculated and read", to [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) with the anchor "testing the CPM date against uncertainty", to [building a realistic schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with that anchor, and to [what is project controls](https://projectcontrolsinstitute.org/what-is-project-controls) with the anchor "where scheduling sits in project controls".*
+*Internal linking note: three same-domain links now sit in the body. "How total float is calculated and read" points at the total float definition, placed on the total float formula, immediately before the float table a reader has to interpret. "Testing the CPM date against uncertainty" points at the schedule risk analysis guide, placed on the deterministic-durations assumption, which is the sentence that raises the P80 date. "The eight steps that keep a network honest" points at the realistic-schedule guide, placed on the assumption that the logic is complete, because a reader who has just been told the arithmetic can be run on a wrong network will ask how to avoid building one. That anchor was written descriptively rather than reusing the target's own keyword. The fourth proposal, a link to what is project controls, was dropped to stay inside the two-to-three internal cap; it is the weakest of the four here, since this is a glossary entry rather than an orientation piece. No cross-estate link is carried. An AEO fix was also made: the opening now carries the phrase "critical path method definition" in its first line while still answering in one sentence. Reciprocal: the realistic-schedule guide and the P6 practice test already point here for the forward and backward pass.*

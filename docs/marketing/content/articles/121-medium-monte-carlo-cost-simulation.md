@@ -63,7 +63,7 @@ That £2.40m gap opens before a single risk event is added. The most likely valu
 
 Ranging captures how a line behaves when the work goes normally. It does not capture an event that either happens or does not happen.
 
-Model those separately, each with its own probability and impact range.
+Model those separately, each with its own probability and impact range, drawn from [the register the ranges came from](https://projectcontrolsinstitute.org/risk-register-that-gets-used) rather than invented at the modelling stage.
 
 | Risk event | Probability | Impact (mean) | Expected value |
 |---|---:|---:|---:|
@@ -158,4 +158,4 @@ No, and any statement that it does should be corrected in the room. The output i
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this piece should link to [quantitative schedule risk analysis](https://projectcontrolsinstitute.org/quantitative-schedule-risk-analysis) with that anchor, to [how to build a risk register that gets used](https://projectcontrolsinstitute.org/risk-register-that-gets-used) with the anchor "the register the ranges came from", and to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with that anchor.*
+*Internal links: one is now placed in the body. The risk register how-to (projectcontrolsinstitute.org) sits on "the register the ranges came from", in the sentence that tells the reader to model discrete risks with their own probability and impact — the obvious next question is where a defensible probability comes from, and that piece answers it. The note also proposed the QSRA guide and the cash flow forecasting page: both are dropped from this republish, since three links to a single domain in one article reads as a link scheme rather than as help, and both belong on the own-site original as internal links. Reciprocal: the risk register piece should link back here with the anchor "pricing the register at P80", because it produces the probabilities and impacts this simulation consumes.*

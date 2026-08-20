@@ -53,7 +53,7 @@ Unbilled work in progress **£3.10m**.
 Required improvement = 1.088 ÷ 0.854 = **27%**.
 
 **Slide 4 — KPI 1: CPI, and the call it forces**
-0.854 means 85p of budgeted work delivered for every £1 spent, sustained over nine months. Threshold: below 0.95 for two consecutive months. Action: rebaseline, remove scope, or fund the £4.53m. Doing none of the three is also a decision, taken quietly.
+0.854 means 85p of budgeted work delivered for every £1 spent, sustained over nine months. Threshold: below 0.95 for two consecutive months. Action: rebaseline, remove scope, or fund the £4.53m. That gap comes from a single forecast method, and [the four ways of calculating an estimate at completion](https://projectcontrolsinstitute.org/four-eac-formulas) do not agree with each other, so the pack should name the one it used. Doing none of the three is also a decision, taken quietly.
 
 **Slide 5 — KPI 2: the TCPI gap, as a credibility test**
 TCPI says the remaining £17.95m of work must be delivered at 1.088 to still land on £26.4m. The job has run at 0.854 for nine months. A 27% step change needs a named cause: a different crew, a different method, a settled claim. No cause, no recovery plan.
@@ -72,4 +72,4 @@ Left alone for the remaining thirteen months it is another 49 days. Action: cras
 
 *Figures are a worked example. PCI publishes certification requirements; nothing here is accounting advice.*
 
-*Internal links (bio link and caption of the follow-up post): [project performance management](https://projectcontrolsinstitute.org/project-performance-management) with that anchor, [earned value reporting thresholds](https://projectcontrolsinstitute.org/earned-value-reporting-thresholds) with that anchor, and [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor.*
+*Linking note. One link, in slide 4, because the £4.53m variance is quoted as a fact when it is the output of one forecasting method, and the reader who notices that asks what the alternatives would have given. The hub page compares the four methods and their assumptions, and it is the bio link for this post. The earlier draft asked for three hub links from one carousel, the density _LINK_ARCHITECTURE.md §2 rules out; the performance management and reporting threshold pages were dropped because slides 1 and 4 set thresholds without raising a question either page answers. Anchor names the four methods rather than repeating the primary keyword. No reciprocal is due: an article does not link back to a carousel.*

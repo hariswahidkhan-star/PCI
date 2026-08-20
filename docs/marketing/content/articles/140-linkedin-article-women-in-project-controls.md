@@ -48,7 +48,7 @@ The second row is the one worth staring at. In most functions, nobody applies to
 
 The figures below are illustrative. They are not PCI data and they are not a claim about the profession; they show what the calculation looks like when you run it on your own function.
 
-A controls function of **120 people**, mapped to the [five-band project controls scope ladder](https://pciworld.org/project-controls-salary).
+A controls function of **120 people**, mapped to the five bands of scope set out below.
 
 | Band | People | Women | Share |
 |---|---:|---:|---:|
@@ -103,9 +103,9 @@ It cannot promise an outcome, and any body that does is misleading you.
 
 What an examination can do is produce documentary evidence of capability that does not depend on who staffed you to which project. PCI's credentials are examined against published Bodies of Knowledge, with the PCI AI Project Controls Leader (PCL-AI) at 13 domains and 61 knowledge areas, the PCI AI Project Finance Leader (PFL-AI) at 16 domains and 61 knowledge areas, and the PCI Project Management Leader – AI (PML-AI) at 16 domains and 63 knowledge areas.
 
-A credential is one documentary input among several, and a third party can [verify a PCI credential](https://credentialfinder.org/verify) independently. It does not replace the record of what you have owned, and it is not a substitute for an organisation fixing its own second gate.
+A credential is one documentary input among several, and a hiring manager can [check a PCI credential directly with the Institute](https://projectcontrolsinstitute.org/verify.html) rather than take a CV on trust. It does not replace the record of what you have owned, and it is not a substitute for an organisation fixing its own second gate.
 
-For anyone entering the profession, the practical version of all this is to make the invisible decisions visible. Ask which artefact you will own this year, get the answer written down, and keep the record of what you signed. [How to become a planning engineer](https://pciworld.org/how-to-become-a-planning-engineer) sets out the same evidence trail for the scheduling route.
+For anyone entering the profession, the practical version of all this is to make the invisible decisions visible. Ask which artefact you will own this year, get the answer written down, and keep the record of what you signed. The route into [a first planning engineer role](https://pciworld.org/how-to-become-a-planning-engineer) sets out the same evidence trail on the scheduling side.
 
 ## Frequently asked questions
 
@@ -130,4 +130,4 @@ There is no reliable series to answer that, which is itself the honest answer. A
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [the five-band project controls scope ladder](https://pciworld.org/project-controls-salary) with that anchor, to [how to become a planning engineer](https://pciworld.org/how-to-become-a-planning-engineer) with that anchor, and to [verify a PCI credential](https://credentialfinder.org/verify) with that anchor.*
+*Linking note: two cross-estate links now sit in the body. The pciworld.org link on the planning engineer route sits in the paragraph about making invisible allocation decisions visible, because that is where a reader entering the profession asks what the first documented step looks like. The hub verification link sits where the piece says a credential is a documentary input, because the question that sentence raises is how a third party checks it. The earlier link to credentialfinder.org/verify was wrong — no such page exists — and it has been retargeted to the Institute's own verification page. The second pciworld.org link, to the salary scope ladder, was dropped to keep one link per domain; the funnel table names the five bands itself, so the sentence loses nothing. A reciprocal link back to this piece would fit on the planning engineer route page, where progression evidence is discussed.*

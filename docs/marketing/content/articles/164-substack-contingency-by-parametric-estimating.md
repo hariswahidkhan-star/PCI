@@ -104,7 +104,7 @@ Take the higher figure and use the register for mitigation planning, not for siz
 
 Most organisations should run two of these and explain the difference. A parametric figure alongside a register expected value gives a range and a reason, and the reason is the part a sanction committee actually needs.
 
-Be careful about percentiles. A parametric model calibrated to average cost growth returns an expected value, not a P80. If a funding level at a stated confidence is required, that comes from a distribution, and the model gives you a central estimate to put a distribution around rather than a substitute for one.
+Be careful about percentiles. A parametric model calibrated to average cost growth returns an expected value, not a P80. If a funding level at a stated confidence is required, that comes from a distribution, which means [sampling the ranged estimate to read a P80 off the result](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation). The model gives you a central estimate to put a distribution around rather than a substitute for one.
 
 ## Where the contingency lands in the accounts
 
@@ -141,4 +141,4 @@ No, and mixing them is a common reporting failure. Contingency covers identified
 
 *Written newsletter-first for Substack as an original. Substack sets no canonical, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this piece should link to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with the anchor "putting a distribution around the central estimate", to [how to build a risk register that gets used](https://projectcontrolsinstitute.org/risk-register-that-gets-used) with the anchor "what the register is genuinely for", and to [project budgeting and forecasting](https://projectcontrolsinstitute.org/project-budgeting-and-forecasting) with the anchor "how drawdown moves the forecast".*
+*Linking note — the links now in the body: "sampling the ranged estimate to read a P80 off the result" points at projectcontrolsinstitute.org/monte-carlo-cost-simulation from the paragraph on percentiles, because the sentence saying a parametric model returns an expected value rather than a P80 raises where a funding level at a stated confidence actually comes from. One cross-estate link only — the register, the drawdown rules and the IAS 37 passage are complete in themselves, and two links to the same domain would be a footprint rather than a reference. Reciprocal: the Monte Carlo how-to could point back here for the systemic-risk half that a ranged estimate does not price.*

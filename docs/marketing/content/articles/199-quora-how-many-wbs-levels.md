@@ -17,7 +17,7 @@ ab_id:         AB-00271
 
 # How many WBS levels should a project actually have?
 
-Most work breakdown structures settle at four to six levels, and the number is an outcome rather than a target. Decompose until each lowest element can be estimated with confidence, owned by one person, scheduled as activities of sensible length and measured objectively — then stop.
+How many WBS levels a project needs is four to six on most jobs, and the number is an outcome rather than a target. Decompose until each lowest element can be estimated with confidence, owned by one person, scheduled as activities of sensible length and measured objectively — then stop.
 
 Depth is not a sign of rigour. A seven-level WBS on a £20m job is usually a sign that nobody applied a stopping test.
 
@@ -73,7 +73,7 @@ Rolling wave planning makes depth vary over time as well. Far-term scope sits at
 
 ## Where does the WBS stop and the schedule start?
 
-The WBS stops at the work package. Below that, the planner writes activities, links them, and calculates dates and float.
+The WBS stops at the work package. Below that, the planner writes activities, links them, and calculates dates and float. Those dates come out of [the method that turns logic and durations into a completion date](https://projectcontrolsinstitute.org/critical-path-method), which is schedule work rather than structure work.
 
 The join is one-to-one in one direction: every activity belongs to exactly one work package. That single rule is what lets you roll schedule progress up into cost reporting without a reconciliation exercise.
 
@@ -113,4 +113,4 @@ Three signs. Status updates take longer than the analysis of them, elements are 
 
 ---
 
-*Internal links: this answer should link once, at the end, to [the critical path method](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how work packages become scheduled activities", and to [a worked month-end example](https://projectcontrolsinstitute.org/earned-value-worked-example) with the anchor "what control account reporting looks like in practice"; Quora links are nofollow, so this is for qualified readers, not link equity.*
+*Internal links: one, in the body. [The method that turns logic and durations into a completion date](https://projectcontrolsinstitute.org/critical-path-method) sits where the WBS hands over to the schedule, because a reader told the structure stops at the work package immediately asks what produces the dates below it. The worked month-end example in the original note was dropped rather than placed: a second link to the same domain in one answer is the footprint the link rules exist to prevent, and the earned value arithmetic belongs to the answer on the 100% rule, which carries that link. The anchor here differs from the one used on the WBS versus schedule answer, which points at the same page from a different question. No reciprocal link is proposed: Quora links are nofollow, so this is for qualified readers rather than equity.*

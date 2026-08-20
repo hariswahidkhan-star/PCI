@@ -80,7 +80,7 @@ Two risks both scoring 12 can differ by an order of magnitude in money. Use the 
 | Expected value (probability × impact) | A single mean figure per risk and a total | That you can state a probability and an impact you would defend | Half a day | It is a mean, so it never happens; ignores correlation and the tail |
 | Three-point ranges plus Monte Carlo | A distribution and confidence levels such as P50 and P80 | Ranges and correlations that came from somewhere real | Two to five days | Weak inputs produce a confident-looking wrong curve |
 
-Run all three in that order. The matrix picks the rows worth quantifying, expected value produces the opening contingency figure, and the simulation tests whether it survives the tail.
+Run all three in that order. The matrix picks the rows worth quantifying, expected value produces the opening contingency figure, and [running the simulation across the same inputs](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) tests whether that figure survives the tail.
 
 ## The arithmetic, shown
 
@@ -160,4 +160,4 @@ About two hours for a register of thirty rows, if the owners have updated their 
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this piece should link to [how to run a Monte Carlo cost simulation](https://projectcontrolsinstitute.org/monte-carlo-cost-simulation) with the anchor "run the simulation across the same inputs", to the [schedule risk analysis](https://projectcontrolsinstitute.org/schedule-risk-analysis) pillar with that anchor, and to [month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with the anchor "the contingency position in the monthly close".*
+*Internal links: one is now placed in the body. The Monte Carlo how-to (projectcontrolsinstitute.org) sits on "running the simulation across the same inputs", in the sentence describing the third sizing method — the reader has just been told expected value is a mean that never happens, so the question of how the tail gets tested is live at exactly that point. The note also proposed the schedule risk analysis pillar and the month-end close piece; both are dropped from this republish, because three links to one domain from a single article is the link-scheme pattern rather than an editorial one, and both are the own-site original's internal links. Reciprocal: the month-end close piece should link back here with the anchor "the contingency drawdown curve behind the forecast", since it reports the position this register produces.*

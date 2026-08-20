@@ -17,7 +17,7 @@ ab_id:         AB-00053
 
 # Project controls course India: an honest comparison
 
-A project controls course in India is usually one of five things: software training, an academic programme, preparation for a foreign credential, an employer's internal course, or an examined certification. Only the last assesses you independently. The first is what most people buy, and it is the one that expires fastest.
+Every project controls course India offers falls into one of five kinds: software training, an academic programme, preparation for a foreign credential, an employer's internal course, or an examined certification. Only the last assesses you independently. The first is what most people buy, and it is the one that expires fastest.
 
 ## The five kinds of project controls course India actually sells
 
@@ -65,7 +65,7 @@ Backward pass on the other chain. F must start by day 42, so C must finish by 42
 
 So B has total float of 19 − 10 = **9 days** and C has total float of 34 − 25 = **9 days**. It is the same nine days, shared once between them, not nine days each.
 
-Now the part that catches people. B's free float is the earliest start of C minus B's earliest finish: 25 − 25 = **zero**. Spend a single day of B's float and C moves. Spend all nine and C has none left, and the next delay lands straight on the completion date.
+Now the part that catches people. B's free float is the earliest start of C minus B's earliest finish: 25 − 25 = **zero**. Spend a single day of B's float and C moves. Spend all nine and C has none left, and the next delay lands straight on the completion date. [How total float and free float differ](https://projectcontrolsinstitute.org/total-float) is the distinction that catches candidates in interviews.
 
 A course that never made you compute that leaves you able to open a schedule and point at the red bars, and unable to explain why a delay everyone called "within float" landed on the critical path six weeks later.
 
@@ -75,7 +75,7 @@ Two markets, and they screen differently.
 
 Domestic infrastructure and EPC work tests tools, quantities, measurement and site reality first. A candidate who can build a resource-loaded schedule and reconcile it to a bill of quantities is immediately employable.
 
-Work destined for the Gulf, or for Indian arms of international contractors, tests reporting discipline: earned value, forecast defence, change control and the monthly pack that reaches a client's cost auditor. That market pays more and asks for evidence that survives verification, which is why an examined credential travels further than a printed certificate.
+Work destined for the Gulf, or for Indian arms of international contractors, tests reporting discipline: earned value, forecast defence, change control and the monthly pack that reaches a client's cost auditor. That market pays more and asks for evidence that survives verification, which is why an examined credential travels further than a printed certificate. [The training routes on offer across the UAE](https://pciglobal.ai/project-controls-training-uae) show what those employers expect to see.
 
 Neither market rewards a certificate list. Both reward a candidate who can show one worked example from their own project, with the numbers in it.
 
@@ -117,7 +117,7 @@ It is often enough for a first role and rarely enough for the second. P6 skill g
 Yes. PCI's pathway is fully online: eligibility at application, self-paced preparation, a remotely proctored examination, an independent decision and a verifiable digital credential. Test your device, camera and connection in the room you will sit in, at the hour you will sit, because a connection that works at 10pm proves nothing about 8am.
 
 **Do I need an engineering degree?**
-Not for PCI. Entry is around three years of professional experience in any field, counted full-time-equivalent, with no degree requirement. People reach this discipline from quantity surveying, site engineering, accounts and planning, and the examination tests applied judgement rather than pedigree. Other bodies set their own rules, so check their published criteria.
+Not for PCI. Entry is around three years of professional experience in any field, counted full-time-equivalent, with no degree requirement. People reach this discipline from quantity surveying, site engineering, accounts and planning, and the examination tests applied judgement rather than pedigree. If you are coming across from surveying, [the quantity surveying credential routes](https://pciglobal.ai/quantity-surveyor-certification) run on different rules and are compared separately. Other bodies set their own rules, so check their published criteria.
 
 **How long should a project controls course take?**
 For tool training, days. For an examined credential, your preparation sets the calendar rather than any timetable. Eighty hours over about six months is realistic for a working practitioner, and the fixed constraint with PCI is the 12-month scheduling window that opens when the examination fee is paid.
@@ -127,4 +127,4 @@ No certifying body worth holding a credential from will promise that, and PCI pu
 
 ---
 
-*Internal links: this comparison should link to [the project controls course pillar](https://projectcontrolsinstitute.org/project-controls-course) with the anchor "how the course routes compare", to [Primavera P6 certification](https://projectcontrolsinstitute.org/primavera-p6-certification) with the anchor "what P6 certification does and does not prove", to [total float explained](https://projectcontrolsinstitute.org/total-float) with the anchor "total float and free float", and to [project controls training in the UAE](https://pciglobal.ai/project-controls-training-uae) with the anchor "the Gulf training options".*
+*Internal links: placed in the body. Two on pciglobal.ai — project controls training UAE, at the paragraph about work destined for the Gulf, which is where a reader asks what that market expects; and quantity surveyor certification, in the FAQ on degrees, for the surveyors who arrive by that route. One cross-estate link, to the hub's total float page, immediately after the free-float arithmetic, because the worked example raises the distinction and the hub owns the definition. Two further hub links in the original note, to the course pillar and to Primavera P6 certification, were dropped to hold one cross-estate link per domain; P6 is already treated on its own pages. Reciprocal: the UAE training guide has no reason to link back here, but the hub's project controls course pillar does, as the India entry in its regional set.*

@@ -70,7 +70,7 @@ The cash conversion cycle is 44.6 + 60.8 − 59.3 = **46.1 days**. That is the w
 
 Here is the part that belongs to project controls rather than to the finance function. Unbilled work in progress is created by the gap between work done and work valued, and that gap is measurement, documentation and notice — exactly the material a controls team produces.
 
-Close ten days of that gap by measuring earlier and substantiating better, and the business releases roughly 10 × 493,151 = **£4,931,510** of cash, having won no new work and cut no cost. There is no software purchase in that sentence and no financing cost either.
+Close ten days of that gap by measuring earlier and substantiating better, and the business releases roughly 10 × 493,151 = **£4,931,510** of cash, having won no new work and cut no cost. There is no software purchase in that sentence and no financing cost either. [How the cash curve and the funding peak are modelled](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) shows where those days sit on a single contract.
 
 This is why the future of the discipline is a finance conversation as much as a delivery one. The overlap between the two is where the money sits, and it is precisely the overlap that neither profession is traditionally examined on.
 
@@ -90,7 +90,7 @@ Statistical literacy at a working level. Enough to ask what a model's error rate
 
 The finance vocabulary of a project: work in progress, contract assets and liabilities, cut-off, provisions, revenue over time. Not to do the accountant's job, but to see the consequence of a measurement before it reaches the accounts.
 
-Writing a defensible narrative. When numbers arrive automatically, the scarce skill is the paragraph explaining what moved, why, and what will be done about it.
+Writing a defensible narrative. When numbers arrive automatically, the scarce skill is the paragraph explaining what moved, why, and what will be done about it. [Keeping the audit trail when a model drafts the commentary](https://pciai.org/generative-ai-project-reporting) is the governance half of the same skill.
 
 ## How PCI has built for this
 
@@ -121,4 +121,4 @@ Measure unbilled work in progress in days rather than pounds, then ask what crea
 
 *First published on pciai.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "modelling project cash flow and the S-curve", and to [the month-end close for projects](https://projectcontrolsinstitute.org/month-end-close-for-projects) with the anchor "the controls-to-finance handshake at month end".*
+*Internal links, as placed in the body. The cash conversion arithmetic links to [how the cash curve and the funding peak are modelled](https://projectcontrolsinstitute.org/project-cash-flow-forecasting), because a figure released across a portfolio raises where those days sit on one contract. The skills section links to [keeping the audit trail when a model drafts the commentary](https://pciai.org/generative-ai-project-reporting), because provenance as a deliverable is stated here and worked there. Two links, two domains, one each: the month-end close was dropped, being a second link to the same domain, and the AI pillar gave way to the reporting piece that answers the provenance question directly. Reciprocal: the AI in project controls pillar has a genuine reason to point here for what changes next in the discipline.*

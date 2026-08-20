@@ -8,7 +8,7 @@ secondary_kw:  estimate at completion, cost-to-cost input method, variance at co
 pillar:        Earned value management
 credential:    PFL-AI
 target_domain: projectcontrolsinstitute.org
-canonical:     canonical -> /eac-formulas (own site #023)
+canonical:     canonical -> /four-eac-formulas (own site #023)
 schema:        HowTo
 word_count:    1692
 hashtags:      #ProjectControls #EarnedValue #ProjectFinance #CostEngineering #RiskManagement
@@ -96,9 +96,13 @@ Neither of these is a discretionary presentation choice, and nothing here is leg
 Because the EAC feeds it, it helps to know where it feeds. The five-step model in IFRS 15, described in PCI's own words rather than reproduced:
 
 1. **Identify the contract.** An agreement with a customer creating enforceable rights and obligations, with commercial substance, where collection is considered.
+
 2. **Identify the performance obligations.** The distinct promises inside it. On an integrated construction or systems contract these are often combined into a single obligation, because the individual items are not distinct in the context of the contract.
+
 3. **Determine the transaction price.** Including variable elements such as variations, claims and incentives, constrained so revenue is taken only where a significant reversal is not expected.
+
 4. **Allocate the price.** Across the obligations on a relative standalone selling price basis, where there is more than one.
+
 5. **Recognise revenue as obligations are satisfied.** Over time where the criteria are met, measured by a chosen method of progress. The cost-based input method is the one your EAC drives.
 
 Step three is where a controls team is usually most useful, because unapproved variations sitting in the change log are precisely the variable consideration step three is asking about.
@@ -137,4 +141,4 @@ It can assemble the inputs, flag control accounts whose behaviour has shifted, a
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution, not as a backlink.*
 
-*Internal links: this piece should link to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "the earned value management pillar", to [the full month-end example](https://projectcontrolsinstitute.org/earned-value-worked-example) with the anchor "a worked month-end that produces these inputs", and to [the PFL-AI credential](https://projectcontrolsinstitute.org/finance-and-project-management-certification) with the anchor "where forecasting meets financial reporting".*
+*Internal links, as placed in the body. The one estate link sits in the five-step section, on [the PCI AI Project Finance Leader (PFL-AI) credential](https://projectcontrolsinstitute.org/finance-and-project-management-certification), because that paragraph asks who is examined on the crossing between a forecast and a ledger. It stays at one: the earned value pillar and the worked month-end proposed earlier would have put three links on a single domain, which is the footprint this run avoids. Reciprocal: the hub's worked month-end example has honest reason to point here, because its own forecast table raises the method choice this piece settles.*

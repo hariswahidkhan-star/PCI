@@ -43,7 +43,9 @@ Five routes exist, and they answer different questions. The table sets each one 
 
 The routes are not rivals. A planner with method and no tool is unemployable on an EPC bid; a planner with tool and no method produces schedules that pass a file check and fail a challenge.
 
-We do not publish other providers' fees here, because they change by region and by reseller. Ask for the current published price, and ask separately whether the examination fee is included in it.
+Which of the two an employer can actually verify is a separate matter, and it is covered in [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification).
+
+We do not publish other providers' fees here, because they change by region and by reseller. A route priced in one market tells you nothing about another, which is why [Primavera P6 course options in Dubai](https://pciglobal.ai/primavera-p6-course-in-dubai) are set out separately. Ask for the current published price, and ask separately whether the examination fee is included in it.
 
 ## Is Primavera P6 certification worth it?
 
@@ -126,4 +128,4 @@ Ask what you build during the course, who reviews it, and whether you leave with
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so treat this republish as distribution and qualified traffic, not as a backlink.*
 
-*Internal links: this piece should link to [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification) with that anchor, to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "how to read total float", and to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "the tool-neutral scheduling credential".*
+*Internal links: two are now placed in the body. The certification pillar (projectcontrolsinstitute.org) sits on "what a project controls certification actually proves", straight after the sentence separating tool skill from method — the reader's next question is which of the two an employer can verify. The Dubai course page (pciglobal.ai) sits on "Primavera P6 course options in Dubai", in the sentence saying fees and routes change by region, because a regional page is the honest answer to a regional question and the hub does not hold that detail. The note originally proposed three further hub links (critical path method, total float, a PCL-AI page). They are dropped from this republish: one article pointing four times at one domain is the pattern that costs an estate its standing, and those three are the own-site original's internal links. Reciprocal: the certification pillar should link back here with the anchor "tool training against method certification, compared", which is the distinction it asserts without working through.*

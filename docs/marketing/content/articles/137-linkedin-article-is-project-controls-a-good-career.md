@@ -77,7 +77,7 @@ Not at a title change. It steps up when the organisation stops treating your out
 
 Before that line you produce numbers and somebody else signs them. After it, the sentence "we are forecasting £11.7m and here is why" has your name attached when a lender, a client or an auditor tests it.
 
-PCI's own-site [five-band project controls scope ladder](https://pciworld.org/project-controls-salary) sets out the bands in detail. The short version is that most careers stall one band below the signature.
+The bands people describe as seniority are really bands of scope, and the short version is that most careers stall one band below the signature.
 
 ## Is project controls a good career if you dislike conflict?
 
@@ -128,4 +128,4 @@ It is not a gate in most markets, and no credential guarantees a role. What a cr
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [what a project controls engineer does](https://pciworld.org/what-does-a-project-controls-engineer-do) with that anchor, to [the four EAC formulas and what each assumes](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor, and to [project controls vs project management](https://projectcontrolsinstitute.org/project-controls-vs-project-management) as the pillar-adjacent explainer.*
+*Internal links: two links are in the body, on two different domains. "What a project controls engineer does" points to https://pciworld.org/what-does-a-project-controls-engineer-do, in the section describing the shape of a normal month, where a reader will want the task-level account. "The four EAC formulas and what each assumes" points to https://projectcontrolsinstitute.org/four-eac-formulas, under the table where four defensible answers span £1.9m. The scope-ladder link to the same careers domain was removed and the sentence now makes its own point; one link per domain per piece is the rule. Reciprocal: https://pciworld.org/project-controls-salary could cite this piece for the point at which a forecast becomes a signature.*

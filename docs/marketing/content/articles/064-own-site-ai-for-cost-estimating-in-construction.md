@@ -76,19 +76,19 @@ Do that correction once, not twice. A team that adjusts for bias and then adds t
 
 ## What happens to the estimate after award
 
-An estimate does not stop being useful when the job starts. On a contract where revenue is recognised over time using a cost-to-cost input measure, expected total cost becomes the denominator of the percentage complete — so the estimate drives the reported revenue every month.
+An estimate does not stop being useful when the job starts. On a contract where revenue is recognised over time using a cost-to-cost input measure, expected total cost becomes the denominator of the percentage complete — so the estimate drives the reported revenue every month. That measure and its alternatives are set out in [percentage of completion and the cost-to-cost input method](https://projectcontrolsinstitute.org/ifrs-15-for-construction).
 
 Take a contract priced at £11,000,000 with £4,200,000 of cost incurred. Using the original £8,400,000 expected cost, progress is 4,200,000 ÷ 8,400,000 = **50.0%**, and revenue to date is 0.50 × 11,000,000 = **£5,500,000**.
 
 Using the bias-corrected £8,993,576, progress is 46.7% and revenue to date is **£5,137,000**. The same work, the same month, £363,000 of difference, decided by an estimating assumption made before the contract was signed.
 
-That is the overlap this Institute exists for. A quantity surveyor who prices well and an accountant who closes cleanly can both do their jobs perfectly and still publish the wrong number, because the estimate is a finance input and almost nobody is examined on both sides of that handover.
+That is the overlap this Institute exists for. A quantity surveyor who prices well and an accountant who closes cleanly can both do their jobs perfectly and still publish the wrong number, because the estimate is a finance input and almost nobody is examined on both sides of that handover. The same crossing catches machine-measured progress too, which is [how an AI-derived percentage reaches the monthly accounts](https://pciai.org/ai-in-construction-project-management).
 
 This describes the mechanism. Nothing PCI publishes is legal, tax or accounting advice.
 
 ## What to demand from a vendor
 
-Ask for precision and recall on scope-completeness flags, measured on your projects, not theirs. A flagging tool that raises 200 items to find 40 real ones costs review time you have to budget for.
+Ask for precision and recall on scope-completeness flags, measured on your projects, not theirs. A flagging tool that raises 200 items to find 40 real ones costs review time you have to budget for. Scoring an output before trusting it is [the evaluation discipline behind governed AI](https://pciai.org/ai-in-project-controls), not an estimating refinement.
 
 Ask what the training data was: tender values or outturn costs. A model trained on what jobs were sold for learns the market's optimism, not the cost of building.
 
@@ -124,11 +124,11 @@ No. It compresses take-off, pricing and checking, which is most of the hours, an
 Coded historical cost with outturn values, not just tender sums, and a work breakdown that has stayed stable enough for the codes to mean the same thing across jobs. Most contractors have the cost and have lost the coding consistency, and that is the work to do first.
 
 **Does an AI-assisted estimate cause audit problems?**
-Not if provenance is recorded. Keep the inputs, comparables, model version, adjustments applied and the reviewer with the estimate. An auditor's question is who decided and on what basis, and that is answerable with a record and unanswerable without one.
+Not if provenance is recorded. Keep the inputs, comparables, model version, adjustments applied and the reviewer with the estimate. An auditor's question is who decided and on what basis, and that is answerable with a record and unanswerable without one. Writing that requirement down once, as [a written AI policy covering provenance and ownership](https://pciai.org/ai-policy-for-project-controls), saves arguing it estimate by estimate.
 
 **Should the contingency change if we use AI?**
 Only if your measured error has changed. Contingency should follow the spread you can demonstrate on your own completed jobs, and it should be set after correcting for bias, not on top of a correction that has already been applied.
 
 ---
 
-*Internal links: this guide should link to [the AI in project controls pillar](https://pciai.org/ai-in-project-controls) with the anchor "how governed AI applies across the controls lifecycle", to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "percentage of completion and the cost-to-cost input method", and to [cost control methods that catch overruns early](https://projectcontrolsinstitute.org/cost-control-in-construction) with the anchor "keeping the estimate honest once the work starts".*
+*Internal links: now placed in the body. Same-domain: "the evaluation discipline behind governed AI" sits where the vendor is asked for precision and recall, which raises whose standard that is; "how an AI-derived percentage reaches the monthly accounts" follows the estimate-to-revenue crossing, because that paragraph raises what happens when a machine supplies the percentage; "a written AI policy covering provenance and ownership" answers the audit FAQ. One cross-estate link only, to the hub: "percentage of completion and the cost-to-cost input method" where expected total cost becomes the denominator. The note previously proposed a second hub link to cost control in construction; it was dropped rather than retargeted, because one link per domain per piece is the cap and the IFRS 15 page sits in the stronger sentence. Reciprocal: the construction project management guide should point back here for the bias and MAPE arithmetic.*

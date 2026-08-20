@@ -41,7 +41,7 @@ Five routes exist, and they answer different questions. The table sets them agai
 | Employer-led, on a live schedule | Your organisation's coding, calendars and reporting rules | Your updates survive review, or they do not | You can work in that estate | Not portable; you learn one company's habits |
 | Method certification, such as PCI AI Project Controls Leader (PCL-AI) | Scheduling method, cost integration, risk and reporting | Scenario-based examination independent of any tool | You can build and defend a programme in any tool | Will not teach you which button to press |
 
-The routes are not rivals. A planner with method and no tool is unemployable on an EPC bid; a planner with tool and no method produces schedules that pass a file check and fail a challenge.
+The routes are not rivals. A planner with method and no tool is unemployable on an EPC bid; a planner with tool and no method produces schedules that pass a file check and fail a challenge. The wider question of [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification) sits behind every row of that table.
 
 We do not publish other providers' fees here, because they change by region and reseller. Ask for the current published price, and ask separately whether the examination fee is included.
 
@@ -61,7 +61,7 @@ The difference shows up in three places, and none of them is a menu.
 
 Add a second rig and an operator writes 15 days. A planner checks the binding constraint: both rigs share one crane for the reinforcement cages, and the crane cycles 6 cages a day. The duration is 118 ÷ 6 = 19.7, so **20 working days**, and the second rig buys 10 days rather than 15.
 
-**Float that is read, not admired.** Total float is the time an activity can slip from its early dates without moving the completion date, and it is calculated as late start minus early start. An operator reports the critical path; a planner reports the near-critical paths, because those are the ones that become critical during the month.
+**Float that is read, not admired.** Total float is the time an activity can slip from its early dates without moving the completion date, and it is calculated as late start minus early start; [how to read total float](https://projectcontrolsinstitute.org/total-float) covers free float and interfering float alongside it. An operator reports the critical path; a planner reports the near-critical paths, because those are the ones that become critical during the month.
 
 **Progress rules that are declared.** When work happens out of sequence, retained logic holds the remaining part of an activity behind its unfinished predecessors, while progress override lets the remaining work carry on regardless.
 
@@ -91,9 +91,11 @@ Match the purchase to the gap, not to the brochure.
 | Moving from delivery into controls | Method certification with cost and risk in it | Tool-only training |
 | Leading a planning team | Method certification, and a standard for how your team schedules | Anything sold on completion certificates |
 
+Where the answer is a method credential rather than a tool course, [how the planning credentials compare](https://credentialfinder.org/best-certification-for-planning-engineers) narrows the shortlist before you spend anything.
+
 ## Where scheduling sits in the PCI curriculum
 
-PCL-AI examines 13 domains across 61 knowledge areas, and project scheduling is one domain among them rather than the whole subject.
+PCL-AI examines 13 domains across 61 knowledge areas, and project scheduling is one domain among them rather than the whole subject. What [the tool-neutral scheduling credential](https://projectcontrolsinstitute.org/pcl-ai-certification) covers in the other twelve is set out in full there.
 
 The Body of Knowledge is built in a 40 / 40 / 20 proportion of finance and reporting, project management, and governed AI. Scheduling sits in the middle block, next to cost management, earned value and risk, because that is where it is actually used.
 
@@ -118,4 +120,4 @@ Ask what you build during the course, who reviews it, and whether you leave with
 
 ---
 
-*Internal links: this piece should link to [what a project controls certification actually proves](https://projectcontrolsinstitute.org/project-controls-certification) with that anchor, to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [the total float definition](https://projectcontrolsinstitute.org/total-float) with the anchor "how to read total float", and to [PCL-AI certification](https://projectcontrolsinstitute.org/pcl-ai-certification) with the anchor "the tool-neutral scheduling credential".*
+*Internal linking note: three same-domain links now sit in the body. "What a project controls certification actually proves" points at the certification pillar, placed under the five-route table where the piece asserts that routes prove different things. "How to read total float" points at the total float definition, placed on the sentence that defines float and then immediately asks the reader to act on the near-critical band. "The tool-neutral scheduling credential" points at the PCL-AI page, placed where the curriculum section says scheduling is one domain of thirteen and the reader will want the other twelve. One cross-estate link is carried: "how the planning credentials compare" to credentialfinder.org, placed after the buy-this table, because choosing between method credentials is that domain's territory. The fourth proposal in the original note, a link to the critical path method definition, was dropped to stay inside the two-to-three internal cap; this piece defines total float and only mentions the critical path in passing, so the float link is the one that earns its place. Reciprocal: the P6 practice test should link back here with an anchor about the difference between tool training and method training.*

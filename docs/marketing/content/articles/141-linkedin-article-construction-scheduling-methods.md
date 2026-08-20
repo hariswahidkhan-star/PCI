@@ -36,7 +36,7 @@ A contract usually demands one of them and a site usually runs on another. That 
 
 ## How does the critical path method calculate a date?
 
-CPM runs a forward pass for early dates, then a backward pass for late dates, and the difference between them is float. It is arithmetic, not judgement, once the logic and durations are set.
+CPM runs a forward pass for early dates, then a backward pass for late dates, and the difference between them is float. It is arithmetic, not judgement, once the logic and durations are set. Setting them is where the judgement sits, and [the eight steps behind a P6 network that holds up](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) cover that half of the work.
 
 Take six activities in working days. A (10) leads to B (15) and C (8). B leads to E (6), C leads to D (12), and both E and D lead to F (4).
 
@@ -94,7 +94,7 @@ Progress measurement is not only a delivery number. Where revenue is recognised 
 
 CPM percentage complete and LOB unit counts are not the same measurement, and they will not give finance the same answer in the same month. If your commercial team bases valuations on units complete while the programme reports activity percentages, the two positions diverge quietly until the year-end audit finds them.
 
-An engineer is examined on float and progress measurement and almost never on cut-off. An accountant is examined on when revenue may be recognised and almost never on the critical path. Scheduling method choice lands squarely in that gap, which is why the PCI Project Management Leader – AI (PML-AI) credential, at 16 domains and 63 knowledge areas, examines both sides rather than one.
+An engineer is examined on float and progress measurement and almost never on cut-off. An accountant is examined on when revenue may be recognised and almost never on the critical path. Scheduling method choice lands squarely in that gap, which is why the PCI Project Management Leader – AI (PML-AI) credential, at 16 domains and 63 knowledge areas, examines both sides rather than one. Planners weighing that against the credentials already on the market can read [a side-by-side comparison of the planner credentials](https://credentialfinder.org/best-certification-for-planning-engineers) before choosing.
 
 ## Frequently asked questions
 
@@ -119,4 +119,4 @@ Rarely. Contract programmes are assessed on logic, float and the ability to demo
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [the critical path method definition](https://projectcontrolsinstitute.org/critical-path-method) with the anchor "how the critical path is calculated", to [total float](https://projectcontrolsinstitute.org/total-float) with the anchor "what total float actually tells you", and to [how to build a realistic project schedule in Primavera P6](https://projectcontrolsinstitute.org/realistic-schedule-in-primavera-p6) with the anchor "building the network properly in P6".*
+*Linking note: two cross-estate links now sit in the body. The hub link on building a P6 network sits in the CPM section, at the sentence that says the arithmetic only holds once logic and durations are set, because setting them is exactly what that guide covers and this piece does not. The credentialfinder.org link sits in the closing section, where the piece names the credential that examines both delivery and finance and a planner reasonably asks how the existing scheduling credentials compare. The note originally proposed three hub links, to the critical path method, total float and the P6 guide. Two were dropped: only one link per domain per piece is allowed, and this article already works the critical path and total float arithmetic itself, so those two targets would have answered a question the body had already answered. A reciprocal link back to this piece would fit on the critical path method page, where the limits of activity-based planning on repetitive work come up.*

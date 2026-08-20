@@ -2,7 +2,7 @@
 platform:      Quora
 type:          qa-list
 title:         Control account vs work package: what is the difference?
-meta:          A control account is where earned value is measured; a work package is where the work is planned. Worked numbers showing why the roll-up hides overruns.
+meta:          Control account vs work package: the account is where earned value is measured; the package is where work is planned. Worked numbers on the roll-up trap.
 primary_kw:    control account vs work package
 secondary_kw:  control account manager, work breakdown structure, planning package, earned value measurement
 pillar:        Earned value management
@@ -83,7 +83,7 @@ The control account is usually the level at which cost codes are set, so it is w
 
 It is also where the estimate at completion is built, and the EAC is a financial reporting input, not only a controls one. Where progress towards a performance obligation is measured by a cost-based input method, the measure is costs incurred divided by total expected costs — and total expected costs is the sum of your control account EACs.
 
-On the numbers above, that £0.31m difference is not a presentational nicety. It moves the percentage complete, and the percentage complete moves revenue.
+On the numbers above, that £0.31m difference is not a presentational nicety. It moves the percentage complete, and the percentage complete moves revenue. What that percentage is worth depends entirely on the measurement rules underneath it, and [how earned value is measured and reported](https://projectcontrolsinstitute.org/earned-value-management) sets out those rules and where each measure stops working.
 
 This overlap is the reason PCI examines both sides. The PCI Project Management Leader – AI (PML-AI) credential covers 16 domains and 63 knowledge areas, built so that the person who owns the control account understands what their forecast does to the accounts.
 
@@ -109,4 +109,4 @@ Owning the baseline, agreeing the measurement rules, explaining variance in writ
 
 ---
 
-*Internal links: this answer should link once, at the end, to [the earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "how earned value is measured and reported", and to [a full worked month-end](https://projectcontrolsinstitute.org/earned-value-worked-example) with the anchor "a worked month-end example"; Quora links are nofollow, so this is for qualified readers, not link equity.*
+*Internal links: the body now carries one link, to https://projectcontrolsinstitute.org/earned-value-management, anchored "how earned value is measured and reported". It sits in the section on where the control account meets the ledger, on the sentence saying the percentage complete moves revenue — the question that raises is what makes the percentage trustworthy, and the measurement rules are what that page sets out. The second proposed link, to the worked month-end example, was dropped: one link to a domain per answer is the limit, and Quora links are nofollow anyway, so this is placed for qualified readers rather than link equity. Reciprocal: none — the hub should not link out to a Quora answer.*

@@ -39,7 +39,7 @@ The row that matters most is the second from the bottom. The two roles fail in o
 
 Project controls produces six things on a monthly cycle: an updated schedule, a progress measurement, a cost report, a forecast at completion, a risk and contingency position, and a variance narrative explaining what moved.
 
-Each is a measurement with a method behind it. Progress is measured against rules of credit agreed at the start, not by asking a foreman for a percentage on the day of the cut-off.
+Each is a measurement with a method behind it. Progress is measured against rules of credit agreed at the start, not by asking a foreman for a percentage on the day of the cut-off, which is [how earned value is measured against rules of credit](https://projectcontrolsinstitute.org/earned-value-management) rather than claimed.
 
 Project management consumes all six and converts them into decisions: accelerate, re-sequence, raise a change, escalate, or accept the position and revise the commitment.
 
@@ -152,4 +152,4 @@ Sustain a method under pressure. Any competent manager can build a schedule and 
 
 *First published on projectcontrolsinstitute.org; the canonical points there. Medium links are nofollow, so this republish is here for readers rather than for link equity.*
 
-*Internal links: this comparison should link to [what project controls is](https://projectcontrolsinstitute.org/what-is-project-controls) with that anchor, to the [earned value management pillar](https://projectcontrolsinstitute.org/earned-value-management) with the anchor "earned value management", and to [the four EAC formulas](https://projectcontrolsinstitute.org/four-eac-formulas) with that anchor.*
+*Internal links: one is now placed in the body. The earned value pillar (projectcontrolsinstitute.org) sits on "how earned value is measured against rules of credit", in the sentence that names rules of credit without defining them — the reader's question at that point is what a rule of credit is and who agrees it. The note also proposed the project controls definition pillar and the four EAC formulas; both are dropped from this republish. Three links to one domain is a footprint, and the EAC link would have pointed at a page answering a question this article has already answered in full in its own table, which is the weakest reason there is to place a link. Both are the own-site original's internal links. Reciprocal: the four EAC formulas page should link back here with the anchor "who chooses the EAC method, and who lives with it", since it derives the formulas without settling the decision rights.*

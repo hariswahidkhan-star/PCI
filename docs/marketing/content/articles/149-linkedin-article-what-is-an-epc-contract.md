@@ -59,7 +59,7 @@ Submit the baseline within the stated period and in the stated form, because an 
 
 Give notice inside the stated window when a delay event occurs, and record the facts contemporaneously: instructions, access, weather, resources, approvals. The record beats a retrospective narrative written six months later, every time.
 
-Keep the as-planned, as-built and as-updated versions retrievable. Delay analysis depends on showing what the programme said before anyone knew how the story ended.
+Keep the as-planned, as-built and as-updated versions retrievable. Delay analysis depends on showing what the programme said before anyone knew how the story ended, and [the method chosen to analyse the delay](https://projectcontrolsinstitute.org/delay-analysis-techniques) decides which of those versions has to survive.
 
 ## How is progress measured and paid on an EPC job?
 
@@ -128,4 +128,4 @@ It can be, and convertible arrangements are common: reimbursable during early en
 
 *Written for LinkedIn as an original. LinkedIn supports no canonical tag, so this piece is not a copy of anything on the PCI site.*
 
-*Internal links: this article should link to [IFRS 15 for construction](https://projectcontrolsinstitute.org/ifrs-15-for-construction) with the anchor "how the five-step model applies to a construction contract", to [project cash flow forecasting](https://projectcontrolsinstitute.org/project-cash-flow-forecasting) with the anchor "modelling retention and the cash trough", and to [delay analysis techniques](https://projectcontrolsinstitute.org/delay-analysis-techniques) with the anchor "what the programme record has to prove".*
+*Linking note: one cross-estate link now sits in the body, in the section on what the planner owes the contract. That paragraph tells the reader to keep every version of the programme retrievable, which raises the question of what a delay analysis will later do with them, and the hub's comparison of delay analysis techniques answers it. The note originally proposed two further hub links, to IFRS 15 for construction and to cash flow forecasting; both were dropped because a piece may carry only one link to any one domain, and this article already works the five-step model and the cash conversion cycle in its own words. Nothing here raises a question the AI, careers, regional or comparison domains answer, so no second cross-estate link was forced. A reciprocal link back to this piece would fit on the delay analysis page, where the contractual programme obligations under an EPC form deserve a pointer.*
